@@ -146,6 +146,24 @@ interface DrupalStreamWrapperInterface extends StreamWrapperInterface {
   public function getExternalUrl();
 
   /**
+   * Returns the local writable target of the resource within the stream.
+   *
+   * This function should be used in place of calls to realpath() or similar
+   * functions when attempting to determine the location of a file. While
+   * functions like realpath() may return the location of a read-only file, this
+   * method may return a URI or path suitable for writing that is completely
+   * separate from the URI used for reading.
+   *
+   * @param $uri
+   *   Optional URI.
+   *
+   * @return
+   *   Returns a string representing a location suitable for writing of a file,
+   *   or FALSE if unable to write to the file such as with read-only streams.
+   */
+  public function getTarget($uri = NULL);
+
+  /**
    * Returns the MIME type of the resource.
    *
    * @param $uri
@@ -155,6 +173,7 @@ interface DrupalStreamWrapperInterface extends StreamWrapperInterface {
    *    - 'mimetypes': a list of mimetypes, keyed by an identifier,
    *    - 'extensions': the mapping itself, an associative array in which
    *      the key is the extension and the value is the mimetype identifier.
+   *
    * @return
    *   Returns a string containing the MIME type of the resource.
    */
@@ -169,6 +188,7 @@ interface DrupalStreamWrapperInterface extends StreamWrapperInterface {
    * @param $mode
    *   Integer value for the permissions. Consult PHP chmod() documentation
    *   for more information.
+   *
    * @return
    *   Returns TRUE on success or FALSE on failure.
    */
@@ -187,6 +207,23 @@ interface DrupalStreamWrapperInterface extends StreamWrapperInterface {
    *   wrapper does not provide an implementation.
    */
   public function realpath();
+
+  /**
+   * Gets the name of the directory from a given path.
+   *
+   * This method is usually accessed through drupal_dirname(), which wraps
+   * around the normal PHP dirname() function, which does not support stream
+   * wrappers.
+   *
+   * @param $uri
+   *   An optional URI.
+   *
+   * @return
+   *   A string containing the directory name, or FALSE if not applicable.
+   *
+   * @see drupal_dirname()
+   */
+  public function dirname($uri = NULL);
 }
 
 
@@ -227,6 +264,7 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
 
   /**
    * Gets the path that the wrapper is responsible for.
+   * @TODO: Review this method name in D8 per http://drupal.org/node/701358
    *
    * @return
    *   String specifying the path.
@@ -245,6 +283,20 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
    */
   function getUri() {
     return $this->uri;
+  }
+
+  /**
+   *  Base implementation of getTarget().
+   */
+  function getTarget($uri = NULL) {
+    if (!isset($uri)) {
+      $uri = $this->uri;
+    }
+
+    list($scheme, $target) = explode('://', $uri, 2);
+
+    // Remove erroneous leading or trailing, forward-slashes and backslashes.
+    return trim($target, '\/');
   }
 
   /**
@@ -303,7 +355,7 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
     if (!isset($uri)) {
       $uri = $this->uri;
     }
-    $path = $this->getDirectoryPath() . '/' . file_uri_target($uri);
+    $path = $this->getDirectoryPath() . '/' . $this->getTarget($uri);
     $realpath = realpath($path);
     if (!$realpath) {
       // This file does not yet exist.
@@ -327,8 +379,10 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
    *   A bit mask of STREAM_USE_PATH and STREAM_REPORT_ERRORS.
    * @param &$opened_path
    *   A string containing the path actually opened.
+   *
    * @return
    *   Returns TRUE if file was opened successfully.
+   *
    * @see http://php.net/manual/en/streamwrapper.stream-open.php
    */
   public function stream_open($uri, $mode, $options, &$opened_path) {
@@ -353,8 +407,10 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
    *   - LOCK_UN to release a lock (shared or exclusive).
    *   - LOCK_NB if you don't want flock() to block while locking (not
    *     supported on Windows).
+   *
    * @return
    *   Always returns TRUE at the present time.
+   *
    * @see http://php.net/manual/en/streamwrapper.stream-lock.php
    */
   public function stream_lock($operation) {
@@ -370,8 +426,10 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
    *
    * @param $count
    *   Maximum number of bytes to be read.
+   *
    * @return
    *   The string that was read, or FALSE in case of an error.
+   *
    * @see http://php.net/manual/en/streamwrapper.stream-read.php
    */
   public function stream_read($count) {
@@ -383,8 +441,10 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
    *
    * @param $data
    *   The string to be written.
+   *
    * @return
    *   The number of bytes written (integer).
+   *
    * @see http://php.net/manual/en/streamwrapper.stream-write.php
    */
   public function stream_write($data) {
@@ -396,6 +456,7 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
    *
    * @return
    *   TRUE if end-of-file has been reached.
+   *
    * @see http://php.net/manual/en/streamwrapper.stream-eof.php
    */
   public function stream_eof() {
@@ -409,8 +470,10 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
    *   The byte offset to got to.
    * @param $whence
    *   SEEK_SET, SEEK_CUR, or SEEK_END.
+   *
    * @return
    *   TRUE on success.
+   *
    * @see http://php.net/manual/en/streamwrapper.stream-seek.php
    */
   public function stream_seek($offset, $whence) {
@@ -422,6 +485,7 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
    *
    * @return
    *   TRUE if data was successfully stored (or there was no data to store).
+   *
    * @see http://php.net/manual/en/streamwrapper.stream-flush.php
    */
   public function stream_flush() {
@@ -433,6 +497,7 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
    *
    * @return
    *   The current offset in bytes from the beginning of file.
+   *
    * @see http://php.net/manual/en/streamwrapper.stream-tell.php
    */
   public function stream_tell() {
@@ -445,6 +510,7 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
    * @return
    *   An array with file status, or FALSE in case of an error - see fstat()
    *   for a description of this array.
+   *
    * @see http://php.net/manual/en/streamwrapper.stream-stat.php
    */
   public function stream_stat() {
@@ -456,6 +522,7 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
    *
    * @return
    *   TRUE if stream was successfully closed.
+   *
    * @see http://php.net/manual/en/streamwrapper.stream-close.php
    */
   public function stream_close() {
@@ -467,8 +534,10 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
    *
    * @param $uri
    *   A string containing the uri to the resource to delete.
+   *
    * @return
    *   TRUE if resource was successfully deleted.
+   *
    * @see http://php.net/manual/en/streamwrapper.unlink.php
    */
   public function unlink($uri) {
@@ -483,12 +552,41 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
    *   The uri to the file to rename.
    * @param $to_uri
    *   The new uri for file.
+   *
    * @return
    *   TRUE if file was successfully renamed.
+   *
    * @see http://php.net/manual/en/streamwrapper.rename.php
    */
   public function rename($from_uri, $to_uri) {
     return rename($this->getLocalPath($from_uri), $this->getLocalPath($to_uri));
+  }
+
+  /**
+   * Gets the name of the directory from a given path.
+   *
+   * This method is usually accessed through drupal_dirname(), which wraps
+   * around the PHP dirname() function because it does not support stream
+   * wrappers.
+   *
+   * @param $uri
+   *   A URI or path.
+   *
+   * @return
+   *   A string containing the directory name.
+   *
+   * @see drupal_dirname()
+   */
+  public function dirname($uri = NULL) {
+    list($scheme, $target) = explode('://', $uri, 2);
+    $target  = $this->getTarget($uri);
+    $dirname = dirname($target);
+
+    if ($dirname == '.') {
+      $dirname = '';
+    }
+
+    return $scheme . '://' . $dirname;
   }
 
   /**
@@ -500,8 +598,10 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
    *   Permission flags - see mkdir().
    * @param $options
    *   A bit mask of STREAM_REPORT_ERRORS and STREAM_MKDIR_RECURSIVE.
+   *
    * @return
    *   TRUE if directory was successfully created.
+   *
    * @see http://php.net/manual/en/streamwrapper.mkdir.php
    */
   public function mkdir($uri, $mode, $options) {
@@ -510,7 +610,7 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
     if ($recursive) {
       // $this->getLocalPath() fails if $uri has multiple levels of directories
       // that do not yet exist.
-      $localpath = $this->getDirectoryPath() . '/' . file_uri_target($uri);
+      $localpath = $this->getDirectoryPath() . '/' . $this->getTarget($uri);
     }
     else {
       $localpath = $this->getLocalPath($uri);
@@ -530,8 +630,10 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
    *   A string containing the URI to the directory to delete.
    * @param $options
    *   A bit mask of STREAM_REPORT_ERRORS.
+   *
    * @return
    *   TRUE if directory was successfully removed.
+   *
    * @see http://php.net/manual/en/streamwrapper.rmdir.php
    */
   public function rmdir($uri, $options) {
@@ -551,9 +653,11 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
    *   A string containing the URI to get information about.
    * @param $flags
    *   A bit mask of STREAM_URL_STAT_LINK and STREAM_URL_STAT_QUIET.
+   *
    * @return
    *   An array with file status, or FALSE in case of an error - see fstat()
    *   for a description of this array.
+   *
    * @see http://php.net/manual/en/streamwrapper.url-stat.php
    */
   public function url_stat($uri, $flags) {
@@ -573,8 +677,10 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
    *   A string containing the URI to the directory to open.
    * @param $options
    *   Unknown (parameter is not documented in PHP Manual).
+   *
    * @return
    *   TRUE on success.
+   *
    * @see http://php.net/manual/en/streamwrapper.dir-opendir.php
    */
   public function dir_opendir($uri, $options) {
@@ -589,6 +695,7 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
    *
    * @return
    *   The next filename, or FALSE if there are no more files in the directory.
+   *
    * @see http://php.net/manual/en/streamwrapper.dir-readdir.php
    */
   public function dir_readdir() {
@@ -600,6 +707,7 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
    *
    * @return
    *   TRUE on success.
+   *
    * @see http://php.net/manual/en/streamwrapper.dir-rewinddir.php
    */
   public function dir_rewinddir() {
@@ -611,6 +719,7 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
    *
    * @return
    *   TRUE on success.
+   *
    * @see http://php.net/manual/en/streamwrapper.dir-closedir.php
    */
   public function dir_closedir() {
@@ -638,7 +747,7 @@ class DrupalPublicStreamWrapper extends DrupalLocalStreamWrapper {
    * Return the HTML URI of a public file.
    */
   function getExternalUrl() {
-    $path = str_replace('\\', '/', file_uri_target($this->uri));
+    $path = str_replace('\\', '/', $this->getTarget());
     return $GLOBALS['base_url'] . '/' . self::getDirectoryPath() . '/' . drupal_encode_path($path);
   }
 }
@@ -666,7 +775,7 @@ class DrupalPrivateStreamWrapper extends DrupalLocalStreamWrapper {
    * Return the HTML URI of a private file.
    */
   function getExternalUrl() {
-    $path = str_replace('\\', '/', file_uri_target($this->uri));
+    $path = str_replace('\\', '/', $this->getTarget());
     return url('system/files/' . $path, array('absolute' => TRUE));
   }
 }
@@ -691,7 +800,7 @@ class DrupalTemporaryStreamWrapper extends DrupalLocalStreamWrapper {
    * Overrides getExternalUrl().
    */
   public function getExternalUrl() {
-    $path = str_replace('\\', '/', file_uri_target($this->uri));
+    $path = str_replace('\\', '/', $this->getTarget());
     return url('system/temporary/' . $path, array('absolute' => TRUE));
   }
 }
