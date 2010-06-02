@@ -323,14 +323,6 @@ class InsertQuery extends Query {
   protected $table;
 
   /**
-   * Whether or not this query is "delay-safe". Different database drivers
-   * may or may not implement this feature in their own ways.
-   *
-   * @var boolean
-   */
-  protected $delay;
-
-  /**
    * An array of fields on which to insert.
    *
    * @var array
@@ -368,7 +360,6 @@ class InsertQuery extends Query {
     if (!isset($options['return'])) {
       $options['return'] = Database::RETURN_INSERT_ID;
     }
-    $options += array('delay' => FALSE);
     parent::__construct($connection, $options);
     $this->table = $table;
   }
@@ -471,11 +462,8 @@ class InsertQuery extends Query {
    * @return
    *   The last insert ID of the query, if one exists. If the query
    *   was given multiple sets of values to insert, the return value is
-   *   undefined. If the query is flagged "delayed", then the insert ID
-   *   won't be created until later when the query actually runs so the
-   *   return value is also undefined. If no fields are specified, this
-   *   method will do nothing and return NULL. That makes it safe to use
-   *   in multi-insert loops.
+   *   undefined. If no fields are specified, this method will do nothing and
+   *   return NULL. That makes it safe to use in multi-insert loops.
    */
   public function execute() {
     // If validation fails, simply return NULL.
