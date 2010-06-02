@@ -1165,7 +1165,7 @@ function user_category_load($uid, &$map, $index) {
     $accounts[$uid] = user_load($uid);
   }
   $valid = TRUE;
-  if ($account = $accounts[$uid]) {
+  if (($account = $accounts[$uid]) && isset($map[$index + 1]) && $map[$index + 1] == 'edit') {
     // Since the path is like user/%/edit/category_name, the category name will
     // be at a position 2 beyond the index corresponding to the % wildcard.
     $category_index = $index + 2;
