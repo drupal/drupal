@@ -230,7 +230,7 @@ function xmlrpc_server_multicall($methodcalls) {
     elseif ($ok) {
       $result = xmlrpc_server_call($xmlrpc_server, $method, $params);
     }
-    if ($result->is_error) {
+    if (is_object($result) && !empty($result->is_error)) {
       $return[] = array(
         'faultCode' => $result->code,
         'faultString' => $result->message
