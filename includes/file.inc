@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.209 2010/05/11 10:56:04 dries Exp $
+// $Id: file.inc,v 1.210 2010/06/02 13:09:34 dries Exp $
 
 /**
  * @file
@@ -165,6 +165,8 @@ function file_stream_wrapper_get_class($scheme) {
  * @return
  *   A string containing the name of the scheme, or FALSE if none. For example,
  *   the URI "public://example.txt" would return "public".
+ *
+ * @see file_uri_target()
  */
 function file_uri_scheme($uri) {
   $data = explode('://', $uri, 2);
@@ -205,18 +207,14 @@ function file_stream_wrapper_valid_scheme($scheme) {
  *   A string containing the target (path), or FALSE if none.
  *   For example, the URI "public://sample/test.txt" would return
  *   "sample/test.txt".
+ *
+ * @see file_uri_scheme()
  */
 function file_uri_target($uri) {
-  $data = explode('://', $uri, 2);
-
-  if (count($data) != 2) {
-    return FALSE;
+  if ($scheme = file_uri_scheme($uri)) {
+    return file_stream_wrapper_get_instance_by_scheme($scheme)->getTarget($uri);
   }
-
-  // Remove erroneous beginning forward slash.
-  $data[1] = ltrim($data[1], '\/');
-
-  return $data[1];
+  return FALSE;
 }
 
 /**
@@ -225,7 +223,6 @@ function file_uri_target($uri) {
  * A stream is referenced as "scheme://target".
  *
  * The following actions are taken:
- * - Remove all occurrences of the wrapper's directory path
  * - Remove trailing slashes from target
  * - Trim erroneous leading slashes from target. e.g. ":///" becomes "://".
  *
@@ -240,15 +237,9 @@ function file_stream_wrapper_uri_normalize($uri) {
   if ($scheme && file_stream_wrapper_valid_scheme($scheme)) {
     $target = file_uri_target($uri);
 
-    // Remove all occurrences of the wrapper's directory path.
-    $directory_path = file_stream_wrapper_get_instance_by_scheme($scheme)->getDirectoryPath();
-    $target = str_replace($directory_path, '', $target);
-
-    // Trim trailing slashes from target.
-    $target = rtrim($target, '/');
-
-    // Trim erroneous leading slashes from target.
-    $uri = $scheme . '://' . ltrim($target, '/');
+    if ($target !== FALSE) {
+      $uri = $scheme . '://' . $target;
+    }
   }
   return $uri;
 }
@@ -1880,14 +1871,7 @@ function drupal_dirname($uri) {
   $scheme = file_uri_scheme($uri);
 
   if ($scheme && file_stream_wrapper_valid_scheme($scheme)) {
-    $target  = file_uri_target($uri);
-    $dirname = dirname($target);
-
-    if ($dirname == '.') {
-      $dirname = '';
-    }
-
-    return $scheme . '://' . $dirname;
+    return file_stream_wrapper_get_instance_by_scheme($scheme)->dirname($uri);
   }
   else {
     return dirname($uri);
