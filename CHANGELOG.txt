@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.366 2010/05/23 15:28:00 webchick Exp $
+// $Id: CHANGELOG.txt,v 1.367 2010/06/02 19:39:17 dries Exp $
 
 Drupal 7.0, xxxx-xx-xx (development version)
 ----------------------
@@ -7,7 +7,7 @@ Drupal 7.0, xxxx-xx-xx (development version)
     * Drupal now requires MySQL >= 5.0.15 or PostgreSQL >= 8.3.
     * Added query builders for INSERT, UPDATE, DELETE, MERGE, and SELECT queries.
     * Support for master/slave replication, transactions, multi-insert queries,
-      delayed inserts, and other features.
+      and other features.
     * Added support for the SQLite database engine.
     * Default to InnoDB engine, rather than MyISAM, on MySQL when available.
       This offers increased scalability and data integrity.
