@@ -74,6 +74,8 @@ function system_requirements($phase) {
   if (version_compare($phpversion, DRUPAL_MINIMUM_PHP) < 0) {
     $requirements['php']['description'] = $t('Your PHP installation is too old. Drupal requires at least PHP %version.', array('%version' => DRUPAL_MINIMUM_PHP));
     $requirements['php']['severity'] = REQUIREMENT_ERROR;
+    // If PHP is old, it's not safe to continue with the requirements check.
+    return $requirements;
   }
 
   // Test PHP register_globals setting.
