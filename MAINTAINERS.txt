@@ -228,7 +228,6 @@ RDF module
 - Stéphane Corlosquet 'scor' <http://drupal.org/user/52142>
 
 Search module
-- Jennifer Hodgdon 'jhodgdon' <http://drupal.org/user/155601>
 - Doug Green 'douggreen' <http://drupal.org/user/29191>
 
 Shortcut module
