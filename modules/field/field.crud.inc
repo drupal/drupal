@@ -1,5 +1,5 @@
 <?php
-// $Id: field.crud.inc,v 1.61 2010/05/31 07:59:27 dries Exp $
+// $Id: field.crud.inc,v 1.62 2010/06/03 13:08:52 dries Exp $
 
 /**
  * @file
@@ -704,14 +704,14 @@ function field_update_instance($instance) {
   // Check that the specified field exists.
   $field = field_read_field($instance['field_name']);
   if (empty($field)) {
-    throw new FieldException("Attempt to update an instance of a nonexistent field.");
+    throw new FieldException(t('Attempt to update an instance of a nonexistent field @field.', array('@field' => $instance['field_name'])));
   }
 
   // Check that the field instance exists (even if it is inactive, since we
   // want to be able to replace inactive widgets with new ones).
   $prior_instance = field_read_instance($instance['entity_type'], $instance['field_name'], $instance['bundle'], array('include_inactive' => TRUE));
   if (empty($prior_instance)) {
-    throw new FieldException("Attempt to update a field instance that doesn't exist.");
+    throw new FieldException(t("Attempt to update an instance of field @field on bundle @bundle that doesn't exist.", array('@field' => $instance['field_name'], '@bundle' => $instance['bundle'])));
   }
 
   $instance['id'] = $prior_instance['id'];
