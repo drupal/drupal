@@ -1,5 +1,5 @@
 <?php
-// $Id: search-block-form.tpl.php,v 1.3 2008/12/30 16:43:18 dries Exp $
+// $Id: search-block-form.tpl.php,v 1.4 2010/06/03 13:18:48 dries Exp $
 
 /**
  * @file
@@ -34,5 +34,8 @@
  */
 ?>
 <div class="container-inline">
+  <?php if (empty($variables['form']['#block']->title)) : ?>
+    <h2 class="element-invisible"><?php print t('Search form'); ?></h2>
+  <?php endif; ?>
   <?php print $search_form; ?>
 </div>
