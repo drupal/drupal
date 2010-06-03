@@ -1,4 +1,4 @@
-// $Id: MAINTAINERS.txt,v 1.41 2010/04/20 07:13:34 webchick Exp $
+// $Id: MAINTAINERS.txt,v 1.42 2010/06/03 13:50:54 dries Exp $
 
 Drupal core is maintained by the community.  To participate, go to
 
@@ -228,7 +228,6 @@ RDF module
 - Stéphane Corlosquet 'scor' <http://drupal.org/user/52142>
 
 Search module
-- Jennifer Hodgdon 'jhodgdon' <http://drupal.org/user/155601>
 - Doug Green 'douggreen' <http://drupal.org/user/29191>
 
 Shortcut module
