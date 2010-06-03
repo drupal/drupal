@@ -126,9 +126,14 @@ function locale_language_from_user($languages) {
 function locale_language_from_session($languages) {
   $param = variable_get('locale_language_negotiation_session_param', 'language');
 
-  // Request parameter.
+  // Request parameter: we need to update the session parameter only if we have
+  // an authenticated user.
   if (isset($_GET[$param]) && isset($languages[$langcode = $_GET[$param]])) {
-    return $_SESSION[$param] = $langcode;
+    global $user;
+    if ($user->uid) {
+      $_SESSION[$param] = $langcode;
+    }
+    return $langcode;
   }
 
   // Session parameter.
