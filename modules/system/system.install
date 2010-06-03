@@ -2362,11 +2362,13 @@ function system_update_7052() {
  */
 function system_update_7053() {
   // Navigation block is now defined in system module.
-  db_update('block')
-    ->fields(array('module' => 'system'))
-    ->condition('module', 'user')
-    ->condition('delta', 'navigation')
-    ->execute();
+  if (db_table_exists('block')) {
+    db_update('block')
+      ->fields(array('module' => 'system'))
+      ->condition('module', 'user')
+      ->condition('delta', 'navigation')
+      ->execute();
+  }
 
   // Create the same menus as in menu_install().
   db_insert('menu_custom')
