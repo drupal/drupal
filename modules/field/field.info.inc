@@ -1,5 +1,5 @@
 <?php
-// $Id: field.info.inc,v 1.45 2010/05/23 19:10:23 dries Exp $
+// $Id: field.info.inc,v 1.46 2010/06/03 21:06:38 dries Exp $
 
 /**
  * @file
@@ -521,7 +521,7 @@ function field_info_bundles($entity_type = NULL) {
  * @return
  *   An array of field definitions, keyed by field name. Each field has an
  *   additional property, 'bundles', which is an array of all the bundles to
- *   which this field belongs.
+ *   which this field belongs keyed by entity type.
  */
 function field_info_fields() {
   $info = _field_info_collate_fields();
@@ -538,7 +538,7 @@ function field_info_fields() {
  * @return
  *   The field array, as returned by field_read_fields(), with an
  *   additional element 'bundles', whose value is an array of all the bundles
- *   this field belongs to.
+ *   this field belongs to keyed by entity type.
  *
  * @see field_info_field_by_id()
  */
