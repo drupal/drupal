@@ -5,5 +5,6 @@ core = 7.x
 package = Core
 version = VERSION
 files[] = dashboard.module
+files[] = dashboard.test
 dependencies[] = block
 configure = admin/dashboard/customize
