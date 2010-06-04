@@ -1,4 +1,4 @@
-/* $Id: contextual.css,v 1.5 2010/05/05 06:38:57 webchick Exp $ */
+/* $Id: contextual.css,v 1.6 2010/06/04 20:38:55 dries Exp $ */
 
 /**
  * Contextual links regions.
@@ -18,8 +18,8 @@ div.contextual-links-wrapper {
   display: none;
   font-size: 90%;
   position: absolute;
-  right: 5px;
-  top: 0px;
+  right: 5px; /* LTR */
+  top: 2px;
   z-index: 999;
 }
 html.js div.contextual-links-wrapper {
@@ -27,51 +27,53 @@ html.js div.contextual-links-wrapper {
 }
 a.contextual-links-trigger {
   background: transparent url(images/gear-select.png) no-repeat 2px 0;
+  border: 1px solid transparent;
   display: none;
   height: 18px;
-  margin: 2px 1px 0 1px;
+  margin: 0;
   padding: 0 2px;
   outline: none;
-  text-indent: 34px;
+  text-indent: 34px; /* LTR */
   width: 28px;
   overflow: hidden;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  -khtml-border-radius: 4px;
+  border-radius: 4px;
 }
 a.contextual-links-trigger:hover,
 div.contextual-links-active a.contextual-links-trigger {
   background-position: 2px -18px;
 }
 div.contextual-links-active a.contextual-links-trigger {
+  background-position: 2px -18px;
   background-color: #fff;
-  border: #ccc 1px solid;
+  border-color: #ccc;
   border-bottom: none;
-  padding: 0 2px;
-  margin: 1px 0 0 0;
   position: relative;
   z-index: 1;
-  border-radius-topleft: 4px;
-  border-radius-topright: 4px;
-  -moz-border-radius-topleft: 4px;
-  -moz-border-radius-topright: 4px;
-  -webkit-border-radius-topleft: 4px;
-  -webkit-border-radius-topright: 4px;
+  -moz-border-radius: 4px 4px 0 0;
+  -webkit-border-bottom-right-radius: 0;
+  -webkit-border-bottom-left-radius: 0;
+  border-radius: 4px 4px 0 0;
 }
 div.contextual-links-wrapper ul.contextual-links {
   background-color: #fff;
-  border: #ccc 1px solid;
+  border: 1px solid #ccc;
   display: none;
   margin: 0;
   padding: 0.25em 0;
   position: absolute;
   right: 0;
   text-align: left;
-  top: 19px;
+  top: 18px;
   white-space: nowrap;
-  -moz-border-radius: 4px;
-  -moz-border-radius-topright: 0;
-  -webkit-border-radius: 4px;
-  -webkit-border-radius-topright: 0;
-  border-radius: 4px;
-  border-radius-topright: 0;
+  -moz-border-radius: 4px 0 4px 4px; /* LTR */
+  -webkit-border-top-left-radius: 4px; /* LTR */
+  -webkit-border-top-right-radius: 0; /* LTR */
+  -webkit-border-bottom-right-radius: 4px;
+  -webkit-border-bottom-left-radius: 4px;
+  border-radius: 4px 0 4px 4px; /* LTR */
 }
 .contextual-links-region:hover a.contextual-links-trigger,
 div.contextual-links-active a.contextual-links-trigger,
@@ -89,7 +91,6 @@ div.contextual-links-wrapper a {
   text-decoration: none;
 }
 ul.contextual-links li a {
-  /* Color made important so not easily overriden with '#footer a' type selectors */
   color: #333 !important;
   display: block;
   margin: 0.25em 0;
