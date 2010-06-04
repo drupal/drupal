@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.593 2010/05/28 10:17:02 dries Exp $
+// $Id: taxonomy.module,v 1.594 2010/06/04 20:34:44 dries Exp $
 
 /**
  * @file
@@ -674,8 +674,8 @@ function taxonomy_terms_static_reset() {
 /**
  * Return an array of all vocabulary objects.
  *
- * @param $type
- *   If set, return only those vocabularies associated with this node type.
+ * @return
+ *   An array of all vocabulary objects, indexed by vid.
  */
 function taxonomy_get_vocabularies() {
   return taxonomy_vocabulary_load_multiple(FALSE, array());
