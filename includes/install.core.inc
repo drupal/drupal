@@ -1531,6 +1531,7 @@ function install_check_requirements($install_state) {
     $writable = FALSE;
     $conf_path = './' . conf_path(FALSE, TRUE);
     $settings_file = $conf_path . '/settings.php';
+    $default_settings_file = './sites/default/default.settings.php';
     $file = $conf_path;
     $exists = FALSE;
     // Verify that the directory exists.
@@ -1545,12 +1546,24 @@ function install_check_requirements($install_state) {
       }
     }
 
+    // If default.settings.php does not exist, or is not readable, throw an
+    // error.
+    if (!drupal_verify_install_file($default_settings_file, FILE_EXIST|FILE_READABLE)) {
+      $requirements['default settings file exists'] = array(
+        'title'       => st('Default settings file'),
+        'value'       => st('The default settings file does not exist.'),
+        'severity'    => REQUIREMENT_ERROR,
+        'description' => st('The @drupal installer requires that the %default-file file not be modified in any way from the original download.', array('@drupal' => drupal_install_profile_distribution_name(), '%default-file' => $default_settings_file)),
+      );
+    }
+
+    // If settings.php does not exist, throw an error.
     if (!$exists) {
       $requirements['settings file exists'] = array(
         'title'       => st('Settings file'),
         'value'       => st('The settings file does not exist.'),
         'severity'    => REQUIREMENT_ERROR,
-        'description' => st('The @drupal installer requires that you create a settings file as part of the installation process. Copy the %default_file file to %file. More details about installing Drupal are available in <a href="@install_txt">INSTALL.txt</a>.', array('@drupal' => drupal_install_profile_distribution_name(), '%file' => $file, '%default_file' => $conf_path . '/default.settings.php', '@install_txt' => base_path() . 'INSTALL.txt')),
+        'description' => st('The @drupal installer requires that you create a settings file as part of the installation process. Copy the %default_file file to %file. More details about installing Drupal are available in <a href="@install_txt">INSTALL.txt</a>.', array('@drupal' => drupal_install_profile_distribution_name(), '%file' => $file, '%default_file' => $default_settings_file, '@install_txt' => base_path() . 'INSTALL.txt')),
       );
     }
     else {
@@ -1558,6 +1571,7 @@ function install_check_requirements($install_state) {
         'title'       => st('Settings file'),
         'value'       => st('The %file file exists.', array('%file' => $file)),
       );
+      // If settings.php is not writable, throw an error.
       if (!$writable) {
         $requirements['settings file writable'] = array(
           'title'       => st('Settings file'),
