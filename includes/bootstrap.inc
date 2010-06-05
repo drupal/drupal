@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.394 2010/06/01 18:26:44 dries Exp $
+// $Id: bootstrap.inc,v 1.395 2010/06/05 13:30:42 dries Exp $
 
 /**
  * @file
@@ -2051,11 +2051,10 @@ function _drupal_exception_handler($exception) {
   catch (Exception $exception2) {
     // Another uncaught exception was thrown while handling the first one.
     // If we are displaying errors, then do so with no possibility of a further uncaught exception being thrown.
-    $error_level = variable_get('error_level', ERROR_REPORTING_DISPLAY_ALL);
-    if ($error_level == ERROR_REPORTING_DISPLAY_ALL || (defined('MAINTENANCE_MODE') && MAINTENANCE_MODE == 'update')) {
-      print 'Additional uncaught exception thrown while handling exception.<br /><br />';
-      print '<b>Original</b><br />' . _drupal_render_exception_safe($exception) . '<br /><br />';
-      print '<b>Additional</b><br />' . _drupal_render_exception_safe($exception2) . '<br /><br />';
+    if (error_displayable()) {
+      print '<h1>Additional uncaught exception thrown while handling exception.</h1>';
+      print '<h2>Original</h2><p>' . _drupal_render_exception_safe($exception) . '</p>';
+      print '<h2>Additional</h2><p>' . _drupal_render_exception_safe($exception2) . '</p><hr />';
     }
   }
 }
@@ -2963,11 +2962,10 @@ function _drupal_shutdown_function() {
   }
   catch (Exception $exception) {
     // If we are displaying errors, then do so with no possibility of a further uncaught exception being thrown.
-    $error_level = variable_get('error_level', ERROR_REPORTING_DISPLAY_ALL);
-    if ($error_level == ERROR_REPORTING_DISPLAY_ALL || (defined('MAINTENANCE_MODE') && MAINTENANCE_MODE == 'update')) {
-      require_once DRUPAL_ROOT . '/includes/errors.inc';
-      print 'Uncaught exception thrown in shutdown function.<br /><br />';
-      print _drupal_render_exception_safe($exception) . '<br /><br />';
+   require_once DRUPAL_ROOT . '/includes/errors.inc';
+   if (error_displayable()) {
+      print '<h1>Uncaught exception thrown in shutdown function.</h1>';
+      print '<p>' . _drupal_render_exception_safe($exception) . '</p><hr />';
     }
   }
 }

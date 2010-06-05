@@ -1,5 +1,5 @@
 <?php
-// $Id: session.inc,v 1.83 2010/05/01 08:12:22 dries Exp $
+// $Id: session.inc,v 1.84 2010/06/05 13:30:42 dries Exp $
 
 /**
  * @file
@@ -140,46 +140,58 @@ function _drupal_session_read($sid) {
 function _drupal_session_write($sid, $value) {
   global $user, $is_https;
 
-  if (!drupal_save_session()) {
-    // We don't have anything to do if we are not allowed to save the session.
-    return;
-  }
-
-  $fields = array(
-    'uid' => $user->uid,
-    'cache' => isset($user->cache) ? $user->cache : 0,
-    'hostname' => ip_address(),
-    'session' => $value,
-    'timestamp' => REQUEST_TIME,
-  );
-  $key = array('sid' => $sid);
-  if ($is_https) {
-    $key['ssid'] = $sid;
-    $insecure_session_name = substr(session_name(), 1);
-    // The "secure pages" setting allows a site to simultaneously use both
-    // secure and insecure session cookies. If enabled, use the insecure session
-    // identifier as the sid.
-    if (variable_get('https', FALSE) && isset($_COOKIE[$insecure_session_name])) {
-      $key['sid'] = $_COOKIE[$insecure_session_name];
+  // The exception handler is not active at this point, so we need to do it manually.
+  try {
+    if (!drupal_save_session()) {
+      // We don't have anything to do if we are not allowed to save the session.
+      return;
     }
-  }
-  db_merge('sessions')
-    ->key($key)
-    ->fields($fields)
-    ->execute();
 
-  // Last access time is updated no more frequently than once every 180 seconds.
-  // This reduces contention in the users table.
-  if ($user->uid && REQUEST_TIME - $user->access > variable_get('session_write_interval', 180)) {
-    db_update('users')
-      ->fields(array(
-        'access' => REQUEST_TIME
-      ))
-      ->condition('uid', $user->uid)
+    $fields = array(
+      'uid' => $user->uid,
+      'cache' => isset($user->cache) ? $user->cache : 0,
+      'hostname' => ip_address(),
+      'session' => $value,
+      'timestamp' => REQUEST_TIME,
+    );
+    $key = array('sid' => $sid);
+    if ($is_https) {
+      $key['ssid'] = $sid;
+      $insecure_session_name = substr(session_name(), 1);
+      // The "secure pages" setting allows a site to simultaneously use both
+      // secure and insecure session cookies. If enabled, use the insecure session
+      // identifier as the sid.
+      if (variable_get('https', FALSE) && isset($_COOKIE[$insecure_session_name])) {
+        $key['sid'] = $_COOKIE[$insecure_session_name];
+      }
+    }
+    db_merge('sessions')
+      ->key($key)
+      ->fields($fields)
       ->execute();
-  }
 
-  return TRUE;
+    // Last access time is updated no more frequently than once every 180 seconds.
+    // This reduces contention in the users table.
+    if ($user->uid && REQUEST_TIME - $user->access > variable_get('session_write_interval', 180)) {
+      db_update('users')
+        ->fields(array(
+          'access' => REQUEST_TIME
+        ))
+        ->condition('uid', $user->uid)
+        ->execute();
+    }
+
+    return TRUE;
+  }
+  catch (Exception $exception) {
+    require_once DRUPAL_ROOT . '/includes/errors.inc';
+    // If we are displaying errors, then do so with no possibility of a further uncaught exception being thrown.
+    if (error_displayable()) {
+      print '<h1>Uncaught exception thrown in session handler.</h1>';
+      print '<p>' . _drupal_render_exception_safe($exception) . '</p><hr />';
+    }
+    return FALSE;
+  }
 }
 
 /**
