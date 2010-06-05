@@ -207,6 +207,19 @@ class FormsTestCase extends DrupalWebTestCase {
       }
     }
   }
+
+  /**
+   * Test Form API protections against input forgery.
+   *
+   * @see _form_test_input_forgery()
+   */
+  function testInputForgery() {
+    $this->drupalGet('form-test/input-forgery');
+    $checkbox = $this->xpath('//input[@name="checkboxes[two]"]');
+    $checkbox[0]['value'] = 'FORGERY';
+    $this->drupalPost(NULL, array('checkboxes[one]' => TRUE, 'checkboxes[two]' => TRUE), t('Submit'));
+    $this->assertText('An illegal choice has been detected.', t('Input forgery was detected.'));
+  }
 }
 
 /**

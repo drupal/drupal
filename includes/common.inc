@@ -2481,7 +2481,9 @@ function drupal_exit($destination = NULL) {
  *   An associative array.
  */
 function drupal_map_assoc($array, $function = NULL) {
-  $array = array_combine($array, $array);
+  // array_combine() fails with empty arrays:
+  // http://bugs.php.net/bug.php?id=34857.
+  $array = !empty($array) ? array_combine($array, $array) : array();
   if (is_callable($function)) {
     $array = array_map($function, $array);
   }

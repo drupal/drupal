@@ -941,7 +941,7 @@ function _form_validate(&$elements, &$form_state, $form_id = NULL) {
           $options = $elements['#options'];
         }
         if (is_array($elements['#value'])) {
-          $value = $elements['#type'] == 'checkboxes' ? array_keys(array_filter($elements['#value'])) : $elements['#value'];
+          $value = $elements['#type'] == 'checkboxes' ? array_keys($elements['#value']) : $elements['#value'];
           foreach ($value as $v) {
             if (!isset($options[$v])) {
               form_error($elements, $t('An illegal choice has been detected. Please contact the site administrator.'));
@@ -1804,11 +1804,8 @@ function form_type_checkboxes_value($element, $input = FALSE) {
     }
     return $value;
   }
-  // If the checkboxes are enabled, and NULL input is submitted, it means
-  // they're intentionally unchecked, so we need to return an empty array to
-  // prevent the default value from being used.
-  elseif (!isset($input) && empty($element['#disabled'])) {
-    return array();
+  else {
+    return is_array($input) ? drupal_map_assoc($input) : array();
   }
 }
 
