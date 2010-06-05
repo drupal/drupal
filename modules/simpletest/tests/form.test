@@ -1,5 +1,5 @@
 <?php
-// $Id: form.test,v 1.51 2010/05/27 12:29:39 dries Exp $
+// $Id: form.test,v 1.52 2010/06/05 13:18:09 dries Exp $
 
 /**
  * @file
@@ -206,6 +206,19 @@ class FormsTestCase extends DrupalWebTestCase {
         }
       }
     }
+  }
+
+  /**
+   * Test Form API protections against input forgery.
+   *
+   * @see _form_test_input_forgery()
+   */
+  function testInputForgery() {
+    $this->drupalGet('form-test/input-forgery');
+    $checkbox = $this->xpath('//input[@name="checkboxes[two]"]');
+    $checkbox[0]['value'] = 'FORGERY';
+    $this->drupalPost(NULL, array('checkboxes[one]' => TRUE, 'checkboxes[two]' => TRUE), t('Submit'));
+    $this->assertText('An illegal choice has been detected.', t('Input forgery was detected.'));
   }
 }
 

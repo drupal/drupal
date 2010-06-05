@@ -1,5 +1,5 @@
 <?php
-// $Id: form_test.module,v 1.39 2010/04/28 16:11:22 dries Exp $
+// $Id: form_test.module,v 1.40 2010/06/05 13:18:09 dries Exp $
 
 /**
  * @file
@@ -97,6 +97,14 @@ function form_test_menu() {
     'title' => t('Form test'),
     'page callback' => 'drupal_get_form',
     'page arguments' => array('_form_test_disabled_elements'),
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
+  $items['form-test/input-forgery'] = array(
+    'title' => t('Form test'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('_form_test_input_forgery'),
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
@@ -856,6 +864,35 @@ function _form_test_disabled_elements($form, &$form_state) {
  * Return the form values via JSON.
  */
 function _form_test_disabled_elements_submit($form, &$form_state) {
+  drupal_json_output($form_state['values']);
+  exit();
+}
+
+/**
+ * Build a form to test input forgery of enabled elements.
+ */
+function _form_test_input_forgery($form, &$form_state) {
+  // For testing that a user can't submit a value not matching one of the
+  // allowed options.
+  $form['checkboxes'] = array(
+    '#type' => 'checkboxes',
+    '#options' => array(
+      'one' => 'One',
+      'two' => 'Two',
+    ),
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Submit'),
+  );
+  return $form;
+}
+
+/**
+ * Return the form values via JSON.
+ */
+function _form_test_input_forgery_submit($form, &$form_state) {
   drupal_json_output($form_state['values']);
   exit();
 }
