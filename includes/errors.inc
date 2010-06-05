@@ -139,6 +139,29 @@ function _drupal_render_exception_safe($exception) {
 }
 
 /**
+ * Determines whether an error should be displayed.
+ *
+ * When in maintenance mode or when error_level is ERROR_REPORTING_DISPLAY_ALL,
+ * all errors should be displayed. For ERROR_REPORTING_DISPLAY_SOME, $error
+ * will be examined to determine if it should be displayed.
+ *
+ * @param $error
+ *   Optional error to examine for ERROR_REPORTING_DISPLAY_SOME.
+ *
+ * @return
+ *   TRUE if an error should be displayed.
+ */
+function error_displayable($error = NULL) {
+  $error_level = variable_get('error_level', ERROR_REPORTING_DISPLAY_ALL);
+  $updating = (defined('MAINTENANCE_MODE') && MAINTENANCE_MODE == 'update');
+  $all_errors_displayed = ($error_level == ERROR_REPORTING_DISPLAY_ALL);
+  $error_needs_display = ($error_level == ERROR_REPORTING_DISPLAY_SOME &&
+    isset($error) && $error['%type'] != 'Notice' && $error['%type'] != 'Strict warning');
+
+  return ($updating || $all_errors_displayed || $error_needs_display);
+}
+
+/**
  * Log a PHP error or exception, display an error page in fatal cases.
  *
  * @param $error
@@ -200,9 +223,7 @@ function _drupal_log_error($error, $fatal = FALSE) {
   else {
     // Display the message if the current error reporting level allows this type
     // of message to be displayed, and unconditionnaly in update.php.
-    $error_level = variable_get('error_level', ERROR_REPORTING_DISPLAY_ALL);
-    $display_error = $error_level == ERROR_REPORTING_DISPLAY_ALL || ($error_level == ERROR_REPORTING_DISPLAY_SOME && $error['%type'] != 'Notice' && $error['%type'] != 'Strict warning');
-    if ($display_error || (defined('MAINTENANCE_MODE') && MAINTENANCE_MODE == 'update')) {
+    if (error_displayable($error)) {
       $class = 'error';
 
       // If error type is 'User notice' then treat it as debug information
