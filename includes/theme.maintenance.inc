@@ -141,33 +141,6 @@ function theme_task_list($variables) {
  */
 function theme_install_page($variables) {
   drupal_add_http_header('Content-Type', 'text/html; charset=utf-8');
-
-  // Delay setting the message variable so it can be processed below.
-  $variables['show_messages'] = FALSE;
-
-  // Special handling of error messages
-  $messages = drupal_set_message();
-  if (isset($messages['error'])) {
-    $title = count($messages['error']) > 1 ? st('The following errors must be resolved before you can continue the installation process') : st('The following error must be resolved before you can continue the installation process');
-    $variables['messages'] .= '<h3>' . $title . ':</h3>';
-    $variables['messages'] .= theme('status_messages', array('display' => 'error'));
-    $variables['content'] .= '<p>' . st('Check the error messages and <a href="!url">try again</a>.', array('!url' => check_url(request_uri()))) . '</p>';
-  }
-
-  // Special handling of warning messages
-  if (isset($messages['warning'])) {
-    $title = count($messages['warning']) > 1 ? st('The following installation warnings should be carefully reviewed') : st('The following installation warning should be carefully reviewed');
-    $variables['messages'] .= '<h4>' . $title . ':</h4>';
-    $variables['messages'] .= theme('status_messages', array('display' => 'warning'));
-  }
-
-  // Special handling of status messages
-  if (isset($messages['status'])) {
-    $title = count($messages['status']) > 1 ? st('The following installation warnings should be carefully reviewed, but in most cases may be safely ignored') : st('The following installation warning should be carefully reviewed, but in most cases may be safely ignored');
-    $variables['messages'] .= '<h4>' . $title . ':</h4>';
-    $variables['messages'] .= theme('status_messages', array('display' => 'status'));
-  }
-
   return theme('maintenance_page', $variables);
 }
 
