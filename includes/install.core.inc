@@ -1,5 +1,5 @@
 <?php
-// $Id: install.core.inc,v 1.21 2010/06/04 09:18:15 dries Exp $
+// $Id: install.core.inc,v 1.22 2010/06/05 12:02:33 dries Exp $
 
 /**
  * @file
@@ -700,7 +700,7 @@ function install_display_output($output, $install_state) {
     $active_task = $install_state['installation_finished'] ? NULL : $install_state['active_task'];
     drupal_add_region_content('sidebar_first', theme('task_list', array('items' => install_tasks_to_display($install_state), 'active' => $active_task)));
   }
-  print theme($install_state['database_tables_exist'] ? 'maintenance_page' : 'install_page', array('content' => $output));
+  print theme('install_page', array('content' => $output));
   exit;
 }
 
