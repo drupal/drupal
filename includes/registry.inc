@@ -1,5 +1,5 @@
 <?php
-// $Id: registry.inc,v 1.30 2010/04/04 13:44:49 dries Exp $
+// $Id: registry.inc,v 1.31 2010/06/06 00:33:05 webchick Exp $
 
 /**
  * @file
@@ -56,46 +56,53 @@ function _registry_update() {
     $files["$filename"] = array('module' => '', 'weight' => 0);
   }
 
-  // Allow modules to manually modify the list of files before the registry
-  // parses them. The $modules array provides the .info file information, which
-  // includes the list of files registered to each module. Any files in the
-  // list can then be added to the list of files that the registry will parse,
-  // or modify attributes of a file.
-  drupal_alter('registry_files', $files, $modules);
-  foreach (registry_get_parsed_files() as $filename => $file) {
-    // Add the file creation and modification dates to those files we have
-    // already parsed.
-    if (isset($files[$filename])) {
-      $files[$filename]['filectime'] = $file['filectime'];
-      $files[$filename]['filemtime'] = $file['filemtime'];
+  $transaction = db_transaction();
+  try {
+    // Allow modules to manually modify the list of files before the registry
+    // parses them. The $modules array provides the .info file information, which
+    // includes the list of files registered to each module. Any files in the
+    // list can then be added to the list of files that the registry will parse,
+    // or modify attributes of a file.
+    drupal_alter('registry_files', $files, $modules);
+    foreach (registry_get_parsed_files() as $filename => $file) {
+      // Add the file creation and modification dates to those files we have
+      // already parsed.
+      if (isset($files[$filename])) {
+        $files[$filename]['filectime'] = $file['filectime'];
+        $files[$filename]['filemtime'] = $file['filemtime'];
+      }
+      else {
+        // Flush the registry of resources in files that are no longer on disc
+        // or are in files that no installed modules require to be parsed.
+        db_delete('registry')
+          ->condition('filename', $filename)
+          ->execute();
+        db_delete('registry_file')
+          ->condition('filename', $filename)
+          ->execute();
+      }
     }
-    else {
-      // Flush the registry of resources in files that are no longer on disc
-      // or are in files that no installed modules require to be parsed.
-      db_delete('registry')
-        ->condition('filename', $filename)
-        ->execute();
-      db_delete('registry_file')
-        ->condition('filename', $filename)
-        ->execute();
-    }
-  }
-  $parsed_files = _registry_parse_files($files);
+    $parsed_files = _registry_parse_files($files);
 
-  $unchanged_resources = array();
-  $lookup_cache = array();
-  if ($cache = cache_get('lookup_cache', 'cache_bootstrap')) {
-    $lookup_cache = $cache->data;
-  }
-  foreach ($lookup_cache as $key => $file) {
-    // If the file for this cached resource is carried over unchanged from
-    // the last registry build, then we can safely re-cache it.
-    if ($file && in_array($file, array_keys($files)) && !in_array($file, $parsed_files)) {
-      $unchanged_resources[$key] = $file;
+    $unchanged_resources = array();
+    $lookup_cache = array();
+    if ($cache = cache_get('lookup_cache', 'cache_bootstrap')) {
+      $lookup_cache = $cache->data;
     }
+    foreach ($lookup_cache as $key => $file) {
+      // If the file for this cached resource is carried over unchanged from
+      // the last registry build, then we can safely re-cache it.
+      if ($file && in_array($file, array_keys($files)) && !in_array($file, $parsed_files)) {
+        $unchanged_resources[$key] = $file;
+      }
+    }
+    module_implements('', FALSE, TRUE);
+    _registry_check_code(REGISTRY_RESET_LOOKUP_CACHE);
   }
-  module_implements('', FALSE, TRUE);
-  _registry_check_code(REGISTRY_RESET_LOOKUP_CACHE);
+  catch (Exception $e) {
+    $transaction->rollback('registry', $e->getMessage(), array(), WATCHDOG_ERROR);
+    throw $e;
+  }
 
   // We have some unchanged resources, warm up the cache - no need to pay
   // for looking them up again.
@@ -130,23 +137,25 @@ function _registry_parse_files($files) {
       $modified_file = !isset($file['filectime']) || !isset($file['filemtime'])
                   || $filectime != $file['filectime'] || $filemtime != $file['filemtime'];
       if ($modified_file) {
-        $contents = file_get_contents($filename);
-        $parsed_files[] = $filename;
-        // We update the filectime/filemtime after we've saved the files resources
-        // rather than here, so if we don't make it through this rebuild, the next
-        // run will reparse the file.
-        _registry_parse_file($filename, $contents, $file['module'], $file['weight']);
-        db_merge('registry_file')
-          ->key(array('filename' => $filename))
-          ->fields(array(
-            'filectime' => $filectime,
-            'filemtime' => $filemtime,
-          ))
+        // Delete registry entries for this file, so we can insert the new resources.
+        db_delete('registry')
+          ->condition('filename', $filename)
           ->execute();
+        $parsed_files[$filename] = $file;
       }
     }
   }
-  return $parsed_files;
+  foreach ($parsed_files as $filename => $file) {
+    _registry_parse_file($filename, file_get_contents($filename), $file['module'], $file['weight']);
+    db_merge('registry_file')
+      ->key(array('filename' => $filename))
+      ->fields(array(
+        'filectime' => $filectime,
+        'filemtime' => $filemtime,
+      ))
+      ->execute();
+  }
+  return array_keys($parsed_files);
 }
 
 /**
@@ -162,10 +171,6 @@ function _registry_parse_files($files) {
  *   (optional) Weight of the module.
  */
 function _registry_parse_file($filename, $contents, $module = '', $weight = 0) {
-  // Delete registry entries for this file, so we can insert the new resources.
-  db_delete('registry')
-    ->condition('filename', $filename)
-    ->execute();
   if (preg_match_all('/^\s*(?:abstract)?\s*(class|interface)\s+([a-zA-Z0-9_]+)/m', $contents, $matches)) {
     $query = db_insert('registry')->fields(array('name', 'type', 'filename', 'module', 'weight'));
     foreach ($matches[2] as $key => $name) {
