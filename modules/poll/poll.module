@@ -461,11 +461,11 @@ function poll_validate($node, $form) {
 }
 
 /**
- * Implements hook_node_prepare_translation().
+ * Implements hook_field_attach_prepare_translation_alter().
  */
-function poll_node_prepare_translation($node) {
-  if ($node->type == 'poll') {
-    $node->choice = $node->translation_source->choice;
+function poll_field_attach_prepare_translation_alter(&$entity, $context) {
+  if ($context['entity_type'] == 'node' && $entity->type == 'poll') {
+    $entity->choice = $context['source_entity']->choice;
   }
 }
 

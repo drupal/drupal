@@ -226,10 +226,33 @@ function field_default_view($entity_type, $entity, $field, $instance, $langcode,
   return $addition;
 }
 
-function field_default_prepare_translation($entity_type, $entity, $field, $instance, $langcode, &$items) {
-  $addition = array();
-  if (isset($entity->translation_source->$field['field_name'])) {
-    $addition[$field['field_name']] = $entity->translation_source->$field['field_name'];
+/**
+ * Copies source field values into the entity to be prepared.
+ *
+ * @param $entity_type
+ *   The type of $entity; e.g. 'node' or 'user'.
+ * @param $entity
+ *   The entity to be prepared for translation.
+ * @param $field
+ *   The field structure for the operation.
+ * @param $instance
+ *   The instance structure for $field on $entity's bundle.
+ * @param $langcode
+ *   The language the entity has to be translated in.
+ * @param $items
+ *   $entity->{$field['field_name']}[$langcode], or an empty array if unset.
+ * @param $source_entity
+ *   The source entity holding the field values to be translated.
+ * @param $source_langcode
+ *   The source language from which translate.
+ */
+function field_default_prepare_translation($entity_type, $entity, $field, $instance, $langcode, &$items, $source_entity, $source_langcode) {
+  $field_name = $field['field_name'];
+  // If the field is untranslatable keep using LANGUAGE_NONE.
+  if ($langcode == LANGUAGE_NONE) {
+    $source_langcode = LANGUAGE_NONE;
   }
-  return $addition;
+  if (isset($source_entity->{$field_name}[$source_langcode])) {
+    $items = $source_entity->{$field_name}[$source_langcode];
+  }
 }
