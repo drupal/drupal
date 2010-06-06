@@ -1,5 +1,5 @@
 <?php
-// $Id: node.api.php,v 1.68 2010/05/23 19:10:23 dries Exp $
+// $Id: node.api.php,v 1.69 2010/06/06 00:24:16 webchick Exp $
 
 /**
  * @file
@@ -96,8 +96,7 @@
  *   an existing node, it will already be loaded; see the Loading section
  *   above):
  *   - hook_prepare() (node-type-specific)
- *   - hook_node_prepare() (all); if translation.module is enabled, this will
- *     also invoke hook_node_prepare_translation() on all modules.
+ *   - hook_node_prepare() (all)
  *   - hook_form() (node-type-specific)
  *   - field_attach_form()
  * - Validating a node during editing form submit (calling
@@ -552,21 +551,6 @@ function hook_node_prepare($node) {
   if (!isset($node->comment)) {
     $node->comment = variable_get("comment_$node->type", COMMENT_NODE_OPEN);
   }
-}
-
-/**
- * Act on a node object being cloned for translation.
- *
- * This hook is invoked from translation_node_prepare() after the node is
- * loaded. $node->language is set to the language being requested, and
- * $node->translation_source is set to the node object being cloned.
- *
- * @param $node
- *   The node object being prepared for translation.
- *
- * @ingroup node_api_hooks
- */
-function hook_node_prepare_translation($node) {
 }
 
 /**

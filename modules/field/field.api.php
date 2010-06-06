@@ -1,5 +1,5 @@
 <?php
-// $Id: field.api.php,v 1.82 2010/05/23 19:10:23 dries Exp $
+// $Id: field.api.php,v 1.83 2010/06/06 00:24:16 webchick Exp $
 
 /**
  * @ingroup field_fieldable_type
@@ -564,8 +564,6 @@ function hook_field_delete_revision($entity_type, $entity, $field, $instance, $l
 /**
  * Define custom prepare_translation behavior for this module's field types.
  *
- * TODO: This hook may or may not survive in Field API.
- *
  * @param $entity_type
  *   The type of $entity.
  * @param $entity
@@ -578,8 +576,20 @@ function hook_field_delete_revision($entity_type, $entity, $field, $instance, $l
  *   The language associated to $items.
  * @param $items
  *   $entity->{$field['field_name']}[$langcode], or an empty array if unset.
+ * @param $source_entity
+ *   The source entity from which field values are being copied.
+ * @param $source_langcode
+ *   The source language from which field values are being copied.
  */
-function hook_field_prepare_translation($entity_type, $entity, $field, $instance, $langcode, &$items) {
+function hook_field_prepare_translation($entity_type, $entity, $field, $instance, $langcode, &$items, $source_entity, $source_langcode) {
+  // If the translating user is not permitted to use the assigned text format,
+  // we must not expose the source values.
+  $field_name = $field['field_name'];
+  $formats = filter_formats();
+  $format_id = $source_entity->{$field_name}[$source_langcode][0]['format'];
+  if (!filter_access($formats[$format_id])) {
+    $items = array();
+  }
 }
 
 /**
@@ -1177,6 +1187,26 @@ function hook_field_attach_purge($entity_type, $entity, $field, $instance) {
  */
 function hook_field_attach_view_alter(&$output, $context) {
   // @todo Needs function body.
+}
+
+/**
+ * Perform alterations on field_attach_prepare_translation().
+ *
+ * This hook is invoked after the field module has performed the operation.
+ *
+ * @param &$entity
+ *   The entity being prepared for translation.
+ * @param $context
+ *   An associative array containing:
+ *   - entity_type: The type of $entity; e.g. 'node' or 'user'.
+ *   - langcode: The language the entity has to be translated in.
+ *   - source_entity: The entity holding the field values to be translated.
+ *   - source_langcode: The source language from which translate.
+ */
+function hook_field_attach_prepare_translation_alter(&$entity, $context) {
+  if ($context['entity_type'] == 'custom_entity_type') {
+    $entity->custom_field = $context['source_entity']->custom_field;
+  }
 }
 
 /**

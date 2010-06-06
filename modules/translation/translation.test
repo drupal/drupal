@@ -1,5 +1,5 @@
 <?php
-// $Id: translation.test,v 1.25 2010/03/31 20:05:06 dries Exp $
+// $Id: translation.test,v 1.26 2010/06/06 00:24:16 webchick Exp $
 
 class TranslationTestCase extends DrupalWebTestCase {
   protected $book;
@@ -48,7 +48,7 @@ class TranslationTestCase extends DrupalWebTestCase {
     // Submit translation in Spanish.
     $node_translation_title = $this->randomName();
     $node_translation_body = $this->randomName();
-    $node_translation = $this->createTranslation($node->nid, $node_translation_title, $node_translation_body, 'es');
+    $node_translation = $this->createTranslation($node, $node_translation_title, $node_translation_body, 'es');
 
     // Attempt to submit a duplicate translation by visiting the node/add page
     // with identical query string.
@@ -153,13 +153,16 @@ class TranslationTestCase extends DrupalWebTestCase {
    * @param string $body Body of basic page in specified language.
    * @param string $language Language code.
    */
-  function createTranslation($nid, $title, $body, $language) {
-    $this->drupalGet('node/add/page', array('query' => array('translation' => $nid, 'language' => $language)));
+  function createTranslation($node, $title, $body, $language) {
+    $this->drupalGet('node/add/page', array('query' => array('translation' => $node->nid, 'language' => $language)));
+
+    $body_key = "body[$language][0][value]";
+    $this->assertFieldByXPath('//input[@id="edit-title"]', $node->title, "Original title value correctly populated.");
+    $this->assertFieldByXPath("//textarea[@name='$body_key']", $node->body[$node->language][0]['value'], "Original body value correctly populated.");
 
     $edit = array();
-    $langcode = LANGUAGE_NONE;
     $edit["title"] = $title;
-    $edit["body[$language][0][value]"] = $body;
+    $edit[$body_key] = $body;
     $this->drupalPost(NULL, $edit, t('Save'));
     $this->assertRaw(t('Basic page %title has been created.', array('%title' => $title)), t('Translation created.'));
 
