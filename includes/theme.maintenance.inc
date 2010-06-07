@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.maintenance.inc,v 1.61 2010/06/05 12:02:33 dries Exp $
+// $Id: theme.maintenance.inc,v 1.62 2010/06/07 06:38:10 dries Exp $
 
 /**
  * @file
@@ -156,17 +156,7 @@ function theme_install_page($variables) {
  *     FALSE can be useful to postpone the messages to a subsequent page.
  */
 function theme_update_page($variables) {
-  // Set required headers.
   drupal_add_http_header('Content-Type', 'text/html; charset=utf-8');
-
-  // Special handling of warning messages.
-  $messages = drupal_set_message();
-  if (isset($messages['warning'])) {
-    $title = count($messages['warning']) > 1 ? 'The following update warnings should be carefully reviewed before continuing' : 'The following update warning should be carefully reviewed before continuing';
-    $variables['messages'] .= '<h4>' . $title . ':</h4>';
-    $variables['messages'] .= theme('status_messages', array('display' => 'warning'));
-  }
-
   return theme('maintenance_page', $variables);
 }
 
