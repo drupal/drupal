@@ -2339,8 +2339,7 @@ function theme_get_suggestions($args, $base, $delimiter = '__') {
 /**
  * The variables array generated here is a mirror of template_preprocess_page().
  * This preprocessor will run its course when theme_maintenance_page() is
- * invoked. It is also used in theme_install_page() and theme_update_page() to
- * keep all the variables consistent.
+ * invoked.
  *
  * An alternate template file of "maintenance-page--offline.tpl.php" can be
  * used when the database is offline to hide errors and completely replace the
@@ -2437,8 +2436,6 @@ function template_preprocess_maintenance_page(&$variables) {
 /**
  * The variables array generated here is a mirror of template_process_html().
  * This processor will run its course when theme_maintenance_page() is invoked.
- * It is also used in theme_install_page() and theme_update_page() to keep all
- * the variables consistent.
  *
  * @see maintenance-page.tpl.php
  */
