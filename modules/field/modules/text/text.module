@@ -1,5 +1,5 @@
 <?php
-// $Id: text.module,v 1.56 2010/06/08 05:41:05 webchick Exp $
+// $Id: text.module,v 1.57 2010/06/08 06:15:13 dries Exp $
 
 /**
  * @file
@@ -524,6 +524,7 @@ function text_field_widget_form(&$form, &$form_state, $field, $instance, $langco
         '#type' => 'textfield',
         '#default_value' => isset($items[$delta]['value']) ? $items[$delta]['value'] : NULL,
         '#size' => $instance['widget']['settings']['size'],
+        '#maxlength' => $field['settings']['max_length'],
         '#attributes' => array('class' => array('text-full')),
       );
       break;
