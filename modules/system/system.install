@@ -1863,11 +1863,22 @@ function system_update_7013() {
       // schema found.
     }
   }
+
+  // Check to see if timezone was overriden in update_prepare_d7_bootstrap().
+  $offset = variable_get('date_temporary_timezone');
+  // If not, use the default.
+  if (!isset($offset)) {
+    $offset = variable_get('date_default_timezone', 0);
+  }
+
   // If the previous default time zone was a non-zero offset, guess the site's
   // intended time zone based on that offset and the server's daylight saving
   // time status.
-  if (!$timezone && ($offset = variable_get('date_default_timezone', 0)) && ($timezone_name = timezone_name_from_abbr('', intval($offset), date('I'))) && isset($timezones[$timezone_name])) {
-    $timezone = $timezone_name;
+  if (!$timezone && $offset) {
+    $timezone_name = timezone_name_from_abbr('', intval($offset), date('I'));
+    if ($timezone_name && isset($timezones[$timezone_name])) {
+      $timezone = $timezone_name;
+    }
   }
   // Otherwise, the default time zone offset was zero, which is UTC.
   if (!$timezone) {
@@ -1875,6 +1886,8 @@ function system_update_7013() {
   }
   variable_set('date_default_timezone', $timezone);
   drupal_set_message('The default time zone has been set to <em>' . check_plain($timezone) . '</em>. Check the ' . l('date and time configuration page', 'admin/config/regional/settings') . ' to configure it correctly.', 'warning');
+  // Remove temporary override.
+  variable_del('date_temporary_timezone');
 }
 
 /**
