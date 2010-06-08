@@ -151,6 +151,16 @@ function toolbar_preprocess_html(&$vars) {
 }
 
 /**
+ * Implements hook_preprocess_toolbar().
+ *
+ * Adding the 'overlay-displace-top' class to the toolbar pushes the overlay
+ * down, so it appears below the toolbar.
+ */
+function toolbar_preprocess_toolbar(&$variables) {
+  $variables['classes_array'][] = "overlay-displace-top";
+}
+
+/**
  * Implements hook_system_info_alter().
  *
  * Indicate that the 'page_top' region (in which the toolbar will be displayed)

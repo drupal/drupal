@@ -15,9 +15,8 @@ Drupal.behaviors.toolbar = {
     // Toggling toolbar drawer.
     $('#toolbar a.toggle', context).once('toolbar-toggle').click(function(e) {
       Drupal.toolbar.toggle();
-      // As the toolbar is an overlay displaced region, overlay should be
-      // notified of it's height change to adapt its position.
-      $(window).triggerHandler('resize.overlay-event');
+      // Allow resize event handlers to recalculate sizes/positions.
+      $(window).triggerHandler('resize');
       return false;
     });
   }

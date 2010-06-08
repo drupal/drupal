@@ -7,7 +7,7 @@
 Drupal.behaviors.dashboard = {
     attach: function (context, settings) {
     $('#dashboard', context).once(function () {
-      $(this).prepend('<div class="customize"><ul class="action-links"><li><a href="#">' + Drupal.t('Customize dashboard') + '</a></li></ul><div class="canvas"></div></div>');
+      $(this).prepend('<div class="customize clearfix"><ul class="action-links"><li><a href="#">' + Drupal.t('Customize dashboard') + '</a></li></ul><div class="canvas"></div></div>');
       $('.customize .action-links a', this).click(Drupal.behaviors.dashboard.enterCustomizeMode);
     });
     Drupal.behaviors.dashboard.addPlaceholders();
