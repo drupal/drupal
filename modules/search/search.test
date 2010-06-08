@@ -1,5 +1,5 @@
 <?php
-// $Id: search.test,v 1.63 2010/05/12 15:53:43 dries Exp $
+// $Id: search.test,v 1.64 2010/06/08 06:34:36 webchick Exp $
 
 // The search index can contain different types of content. Typically the type is 'node'.
 // Here we test with _test_ and _test2_ as the type.
@@ -674,13 +674,15 @@ class SearchCommentTestCase extends DrupalWebTestCase {
     // Create and log in an administrative user having access to the Full HTML
     // text format.
     $full_html_format = db_query_range('SELECT * FROM {filter_format} WHERE name = :name', 0, 1, array(':name' => 'Full HTML'))->fetchObject();
-    $this->admin_user = $this->drupalCreateUser(array(
+    $permissions = array(
       'administer filters',
       filter_permission_name($full_html_format),
       'administer permissions',
       'create page content',
       'post comments without approval',
-    ));
+      'access comments',
+    );
+    $this->admin_user = $this->drupalCreateUser($permissions);
     $this->drupalLogin($this->admin_user);
   }
 
@@ -700,12 +702,7 @@ class SearchCommentTestCase extends DrupalWebTestCase {
     // Allow anonymous users to search content.
     $edit = array(
       DRUPAL_ANONYMOUS_RID . '[search content]' => 1,
-      // @todo Comments are added to search index without checking first whether
-      //   anonymous users are allowed to access comments.
       DRUPAL_ANONYMOUS_RID . '[access comments]' => 1,
-      // @todo Without this permission, "Login or register to post comments" is
-      //   added to the search index.  Comment.module is not guilty; that text
-      //   seems to be added via node links.
       DRUPAL_ANONYMOUS_RID . '[post comments]' => 1,
     );
     $this->drupalPost('admin/people/permissions', $edit, t('Save permissions'));
@@ -757,6 +754,96 @@ class SearchCommentTestCase extends DrupalWebTestCase {
     $this->drupalPost('', $edit, t('Search'));
     $this->assertNoText($comment_body, t('Comment body text not found in search results.'));
   }
+
+  /**
+   * Verify access rules for comment indexing with different permissions.
+   */
+  function testSearchResultsCommentAccess() {
+    $comment_body = 'Test comment body';
+    $this->comment_subject = 'Test comment subject';
+    $this->admin_role = $this->admin_user->roles;
+    unset($this->admin_role[DRUPAL_AUTHENTICATED_RID]);
+    $this->admin_role = key($this->admin_role);
+
+    // Create a node.
+    variable_set('comment_preview_article', DRUPAL_OPTIONAL);
+    $this->node = $this->drupalCreateNode(array('type' => 'article'));
+
+    // Post a comment using 'Full HTML' text format.
+    $edit_comment = array();
+    $edit_comment['subject'] = $this->comment_subject;
+    $edit_comment['comment_body[' . LANGUAGE_NONE . '][0][value]'] = '<h1>' . $comment_body . '</h1>';
+    $this->drupalPost('comment/reply/' . $this->node->nid, $edit_comment, t('Save'));
+
+    $this->drupalLogout();
+    $this->setRolePermissions(DRUPAL_ANONYMOUS_RID);
+    $this->checkCommentAccess('Anon user has search permission but no access comments permission, comments should not be indexed');
+
+    $this->setRolePermissions(DRUPAL_ANONYMOUS_RID, TRUE);
+    $this->checkCommentAccess('Anon user has search permission and access comments permission, comments should be indexed', TRUE);
+
+    $this->drupalLogin($this->admin_user);
+    $this->drupalGet('admin/people/permissions');
+
+    // Disable search access for authenticated user to test admin user.
+    $this->setRolePermissions(DRUPAL_AUTHENTICATED_RID, FALSE, FALSE);
+
+    $this->setRolePermissions($this->admin_role);
+    $this->checkCommentAccess('Admin user has search permission but no access comments permission, comments should not be indexed');
+
+    $this->setRolePermissions($this->admin_role, TRUE);
+    $this->checkCommentAccess('Admin user has search permission and access comments permission, comments should be indexed', TRUE);
+
+    $this->setRolePermissions(DRUPAL_AUTHENTICATED_RID);
+    $this->checkCommentAccess('Authenticated user has search permission but no access comments permission, comments should not be indexed');
+
+    $this->setRolePermissions(DRUPAL_AUTHENTICATED_RID, TRUE);
+    $this->checkCommentAccess('Authenticated user has search permission and access comments permission, comments should be indexed', TRUE);
+
+    // Verify that access comments permission is inherited from the
+    // authenticated role.
+    $this->setRolePermissions(DRUPAL_AUTHENTICATED_RID, TRUE, FALSE);
+    $this->setRolePermissions($this->admin_role);
+    $this->checkCommentAccess('Admin user has search permission and no access comments permission, but comments should be indexed because admin user inherits authenticated user\'s permission to access comments', TRUE);
+
+    // Verify that search content permission is inherited from the authenticated
+    // role.
+    $this->setRolePermissions(DRUPAL_AUTHENTICATED_RID, TRUE, TRUE);
+    $this->setRolePermissions($this->admin_role, TRUE, FALSE);
+    $this->checkCommentAccess('Admin user has access comments permission and no search permission, but comments should be indexed because admin user inherits authenticated user\'s permission to search', TRUE);
+    
+  }
+
+  /**
+   * Set permissions for role.
+   */
+  function setRolePermissions($rid, $access_comments = FALSE, $search_content = TRUE) {
+    $permissions = array(
+      'access comments' => $access_comments,
+      'search content' => $search_content,
+    );
+    user_role_change_permissions($rid, $permissions);
+  }
+
+  /**
+   * Update search index and search for comment.
+   */
+  function checkCommentAccess($message, $assume_access = FALSE) {
+    // Invoke search index update.
+    search_touch_node($this->node->nid);
+    $this->cronRun();
+
+    // Search for the comment subject.
+    $edit = array(
+      'search_block_form' => "'" . $this->comment_subject . "'",
+    );
+    $this->drupalPost('', $edit, t('Search'));
+    $method = $assume_access ? 'assertText' : 'assertNoText';
+    $verb = $assume_access ? 'found' : 'not found';
+    $this->{$method}($this->node->title, "Node $verb in search results: " . $message);
+    $this->{$method}($this->comment_subject, "Comment subject $verb in search results: " . $message);
+  }
+
 }
 
 /**
