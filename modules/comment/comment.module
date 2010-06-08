@@ -1281,14 +1281,38 @@ function comment_node_delete($node) {
  * Implements hook_node_update_index().
  */
 function comment_node_update_index($node) {
-  $mode = variable_get('comment_default_mode_' . $node->type, COMMENT_MODE_THREADED);
-  $comments_per_page = variable_get('comment_default_per_page_' . $node->type, 50);
-  if ($node->comment && $cids = comment_get_thread($node, $mode, $comments_per_page)) {
-    $comments = comment_load_multiple($cids);
-    comment_prepare_thread($comments);
-    $build = comment_view_multiple($comments, $node);
+  $index_comments = &drupal_static(__FUNCTION__);
+
+  if ($index_comments === NULL) {
+    // Find and save roles that can 'access comments' or 'search content'.
+    $perms = array('access comments' => array(), 'search content' => array());
+    $result = db_query("SELECT rid, permission FROM {role_permission} WHERE permission IN ('access comments', 'search content')");
+    foreach ($result as $record) {
+      $perms[$record->permission][$record->rid] = $record->rid;
+    }
+
+    // Prevent indexing of comments if there are any roles that can search but
+    // not view comments.
+    $index_comments = TRUE;
+    foreach ($perms['search content'] as $rid) {
+      if (!isset($perms['access comments'][$rid]) && ($rid <= DRUPAL_AUTHENTICATED_RID || !isset($perms['access comments'][DRUPAL_AUTHENTICATED_RID]))) {
+        $index_comments = FALSE;
+        break;
+      }
+    }
   }
-  return drupal_render($build);
+
+  if ($index_comments) {
+    $mode = variable_get('comment_default_mode_' . $node->type, COMMENT_MODE_THREADED);
+    $comments_per_page = variable_get('comment_default_per_page_' . $node->type, 50);
+    if ($node->comment && $cids = comment_get_thread($node, $mode, $comments_per_page)) {
+      $comments = comment_load_multiple($cids);
+      comment_prepare_thread($comments);
+      $build = comment_view_multiple($comments, $node);
+      return drupal_render($build);
+    }
+  }
+  return '';
 }
 
 /**
@@ -1307,7 +1331,7 @@ function comment_update_index() {
  */
 function comment_node_search_result($node) {
   // Do not make a string if comments are hidden.
-  if ($node->comment != COMMENT_NODE_HIDDEN) {
+  if (user_access('access comments') && $node->comment != COMMENT_NODE_HIDDEN) {
     $comments = db_query('SELECT comment_count FROM {node_comment_statistics} WHERE nid = :nid', array('nid' => $node->nid))->fetchField();
     // Do not make a string if comments are closed and there are currently
     // zero comments.
