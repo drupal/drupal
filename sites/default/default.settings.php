@@ -205,9 +205,10 @@ $drupal_hash_salt = '';
 /**
  * Base URL (optional).
  *
- * If you are experiencing issues with different site domains,
- * uncomment the Base URL statement below (remove the leading hash sign)
- * and fill in the absolute URL to your Drupal installation.
+ * If Drupal is generating incorrect URLs on your site, which could
+ * be in HTML headers (links to CSS and JS files) or visible links on pages
+ * (such as in menus), uncomment the Base URL statement below (remove the
+ * leading hash sign) and fill in the absolute URL to your Drupal installation.
  *
  * You might also want to force users to use a given domain.
  * See the .htaccess file for more information.
