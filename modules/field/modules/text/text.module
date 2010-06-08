@@ -524,6 +524,7 @@ function text_field_widget_form(&$form, &$form_state, $field, $instance, $langco
         '#type' => 'textfield',
         '#default_value' => isset($items[$delta]['value']) ? $items[$delta]['value'] : NULL,
         '#size' => $instance['widget']['settings']['size'],
+        '#maxlength' => $field['settings']['max_length'],
         '#attributes' => array('class' => array('text-full')),
       );
       break;
