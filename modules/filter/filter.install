@@ -249,6 +249,7 @@ function filter_update_7003() {
       $query->fields('d6_upgrade_filter', array('format', 'weight'));
       $query->condition('module', $module);
       $query->condition('delta', $old_delta);
+      $query->distinct();
       $result = $query->execute();
       foreach ($result as $record) {
         db_insert('filter')
