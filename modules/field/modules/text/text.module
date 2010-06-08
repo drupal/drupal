@@ -43,7 +43,6 @@ function text_field_info() {
     'text_long' => array(
       'label' => t('Long text'),
       'description' => t('This field stores long text in the database.'),
-      'settings' => array('max_length' => ''),
       'instance_settings' => array('text_processing' => 0),
       'default_widget' => 'text_textarea',
       'default_formatter' => 'text_default',
@@ -51,7 +50,6 @@ function text_field_info() {
     'text_with_summary' => array(
       'label' => t('Long text and summary'),
       'description' => t('This field stores long text in the database along with optional summary text.'),
-      'settings' => array('max_length' => ''),
       'instance_settings' => array('text_processing' => 1, 'display_summary' => 0),
       'default_widget' => 'text_textarea_with_summary',
       'default_formatter' => 'text_summary_or_trimmed',
@@ -118,17 +116,21 @@ function text_field_schema($field) {
 function text_field_settings_form($field, $instance, $has_data) {
   $settings = $field['settings'];
 
-  $form['max_length'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Maximum length'),
-    '#default_value' => $settings['max_length'],
-    '#required' => TRUE,
-    '#description' => t('The maximum length of the field in characters.'),
-    '#element_validate' => array('_element_validate_integer_positive'),
-    // @todo: If $has_data, add a validate handler that only allows
-    // max_length to increase.
-    '#disabled' => $has_data,
-  );
+  $form = array();
+
+  if ($field['type'] == 'text') {
+    $form['max_length'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Maximum length'),
+      '#default_value' => $settings['max_length'],
+      '#required' => TRUE,
+      '#description' => t('The maximum length of the field in characters.'),
+      '#element_validate' => array('_element_validate_integer_positive'),
+      // @todo: If $has_data, add a validate handler that only allows
+      // max_length to increase.
+      '#disabled' => $has_data,
+    );
+  }
 
   return $form;
 }
