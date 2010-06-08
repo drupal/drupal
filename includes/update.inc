@@ -1,5 +1,5 @@
 <?php
-// $Id: update.inc,v 1.53 2010/06/08 05:44:07 webchick Exp $
+// $Id: update.inc,v 1.54 2010/06/08 15:08:35 webchick Exp $
 
 /**
  * @file
@@ -482,7 +482,15 @@ function update_fix_d7_requirements() {
     );
 
     db_create_table('date_format_type', $schema['date_format_type']);
+    // Sites that have the Drupal 6 Date module installed already have the
+    // following tables.
+    if (db_table_exists('date_formats')) {
+      db_rename_table('date_formats', 'd6_date_formats');
+    }
     db_create_table('date_formats', $schema['date_formats']);
+    if (db_table_exists('date_format_locale')) {
+      db_rename_table('date_format_locale', 'd6_date_format_locale');
+    }
     db_create_table('date_format_locale', $schema['date_format_locale']);
 
     // Add the queue table.
