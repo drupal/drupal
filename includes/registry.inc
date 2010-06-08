@@ -1,5 +1,5 @@
 <?php
-// $Id: registry.inc,v 1.31 2010/06/06 00:33:05 webchick Exp $
+// $Id: registry.inc,v 1.32 2010/06/08 03:16:05 webchick Exp $
 
 /**
  * @file
@@ -129,13 +129,17 @@ function registry_get_parsed_files() {
  */
 function _registry_parse_files($files) {
   $parsed_files = array();
+  $filetimes = array();
   foreach ($files as $filename => $file) {
     if (file_exists($filename)) {
-      $filectime = filectime($filename);
-      $filemtime = filemtime($filename);
+      $filetimes[$filename] = array(
+        'filectime' => filectime($filename),
+        'filemtime' => filemtime($filename),
+      );
 
       $modified_file = !isset($file['filectime']) || !isset($file['filemtime'])
-                  || $filectime != $file['filectime'] || $filemtime != $file['filemtime'];
+                  || $filetimes[$filename]['filectime'] != $file['filectime'] 
+                  || $filetimes[$filename]['filemtime'] != $file['filemtime'];
       if ($modified_file) {
         // Delete registry entries for this file, so we can insert the new resources.
         db_delete('registry')
@@ -150,8 +154,8 @@ function _registry_parse_files($files) {
     db_merge('registry_file')
       ->key(array('filename' => $filename))
       ->fields(array(
-        'filectime' => $filectime,
-        'filemtime' => $filemtime,
+        'filectime' => $filetimes[$filename]['filectime'],
+        'filemtime' => $filetimes[$filename]['filemtime'],
       ))
       ->execute();
   }
