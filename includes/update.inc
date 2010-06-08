@@ -1,5 +1,5 @@
 <?php
-// $Id: update.inc,v 1.52 2010/06/08 05:29:05 webchick Exp $
+// $Id: update.inc,v 1.53 2010/06/08 05:44:07 webchick Exp $
 
 /**
  * @file
@@ -199,7 +199,11 @@ function update_prepare_d7_bootstrap() {
 
   // Set a valid timezone for 6 -> 7 upgrade process.
   drupal_bootstrap(DRUPAL_BOOTSTRAP_VARIABLES);
-  if (is_numeric(variable_get('date_default_timezone', 0))) {
+  $timezone_offset = variable_get('date_default_timezone', 0);
+  if (is_numeric($timezone_offset)) {
+    // Save the original offset.
+    variable_set('date_temporary_timezone', $timezone_offset);
+    // Set the timezone for this request only.
     $GLOBALS['conf']['date_default_timezone'] = 'UTC';
   }
 }
