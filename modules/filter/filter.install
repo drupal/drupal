@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.install,v 1.37 2010/05/01 08:12:23 dries Exp $
+// $Id: filter.install,v 1.38 2010/06/08 16:13:47 webchick Exp $
 
 /**
  * @file
@@ -249,6 +249,7 @@ function filter_update_7003() {
       $query->fields('d6_upgrade_filter', array('format', 'weight'));
       $query->condition('module', $module);
       $query->condition('delta', $old_delta);
+      $query->distinct();
       $result = $query->execute();
       foreach ($result as $record) {
         db_insert('filter')
