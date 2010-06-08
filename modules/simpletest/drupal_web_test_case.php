@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.218 2010/05/29 13:51:27 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.219 2010/06/08 06:16:01 dries Exp $
 
 /**
  * Base class for Drupal tests.
@@ -2451,7 +2451,7 @@ class DrupalWebTestCase extends DrupalTestCase {
    * @return
    *   TRUE on pass, FALSE on fail.
    */
-  protected function assertTextHelper($text, $message, $group, $not_exists) {
+  protected function assertTextHelper($text, $message = '', $group, $not_exists) {
     if ($this->plainTextContent === FALSE) {
       $this->plainTextContent = filter_xss($this->content, array());
     }
@@ -2517,7 +2517,7 @@ class DrupalWebTestCase extends DrupalTestCase {
    * @return
    *   TRUE on pass, FALSE on fail.
    */
-  protected function assertUniqueTextHelper($text, $message, $group, $be_unique) {
+  protected function assertUniqueTextHelper($text, $message = '', $group, $be_unique) {
     if ($this->plainTextContent === FALSE) {
       $this->plainTextContent = filter_xss($this->content, array());
     }
@@ -2583,7 +2583,7 @@ class DrupalWebTestCase extends DrupalTestCase {
    * @return
    *   TRUE on pass, FALSE on fail.
    */
-  protected function assertTitle($title, $message, $group = 'Other') {
+  protected function assertTitle($title, $message = '', $group = 'Other') {
     return $this->assertEqual(current($this->xpath('//title')), $title, $message, $group);
   }
 
@@ -2599,7 +2599,7 @@ class DrupalWebTestCase extends DrupalTestCase {
    * @return
    *   TRUE on pass, FALSE on fail.
    */
-  protected function assertNoTitle($title, $message, $group = 'Other') {
+  protected function assertNoTitle($title, $message = '', $group = 'Other') {
     return $this->assertNotEqual(current($this->xpath('//title')), $title, $message, $group);
   }
 
@@ -2617,7 +2617,7 @@ class DrupalWebTestCase extends DrupalTestCase {
    * @return
    *   TRUE on pass, FALSE on fail.
    */
-  protected function assertFieldByXPath($xpath, $value, $message, $group = 'Other') {
+  protected function assertFieldByXPath($xpath, $value, $message = '', $group = 'Other') {
     $fields = $this->xpath($xpath);
 
     // If value specified then check array for match.
@@ -2689,7 +2689,7 @@ class DrupalWebTestCase extends DrupalTestCase {
    * @return
    *   TRUE on pass, FALSE on fail.
    */
-  protected function assertNoFieldByXPath($xpath, $value, $message, $group = 'Other') {
+  protected function assertNoFieldByXPath($xpath, $value, $message = '', $group = 'Other') {
     $fields = $this->xpath($xpath);
 
     // If value specified then check array for match.
