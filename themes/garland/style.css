@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.82 2010/05/18 11:56:59 dries Exp $ */
+/* $Id: style.css,v 1.83 2010/06/08 05:16:29 webchick Exp $ */
 
 /**
  * Generic elements
@@ -629,15 +629,31 @@ div#branding strong {
   margin-bottom: 2em;
 }
 
-/* Don't display any header elements when within the overlay, and adjust the
-   page height accordingly. */
-body.overlay #header * {
+/**
+ * Overlay
+ */
+#overlay #overlay-tabs li a {
+  background: #d9eaf5;
+  color: #000;
+}
+#overlay #overlay-tabs li a:hover,
+#overlay #overlay-tabs li a:focus {
+  background: #fff;
+}
+#overlay #overlay-tabs li.active a {
+  background: url("images/body.png") repeat-x scroll 50% -58px #edf5fa;
+  color: #fff;
+}
+#overlay-content {
+  padding: 1px;
+}
+#overlay-content #header {
   display: none;
 }
-
-body.overlay {
-  margin-top: -80px;
+#overlay-content #wrapper {
+  background-position: 50% -80px;
 }
+
 
 /**
  * Primary navigation

@@ -1,31 +1,30 @@
-// $Id: overlay-parent.js,v 1.43 2010/05/28 19:11:42 dries Exp $
+// $Id: overlay-parent.js,v 1.44 2010/06/08 05:16:29 webchick Exp $
 
 (function ($) {
 
 /**
  * Open the overlay, or load content into it, when an admin link is clicked.
- *
- * http://docs.jquery.com/Namespaced_Events
  */
 Drupal.behaviors.overlayParent = {
   attach: function (context, settings) {
-    // Make sure the onhashchange handling below is only processed once.
     if (this.processed) {
       return;
     }
     this.processed = true;
 
-    // Bind event handlers to the parent window.
     $(window)
-    // When the hash (URL fragment) changes, open the overlay if needed.
-    .bind('hashchange.overlay-event', Drupal.overlay.hashchangeHandler)
-    // Trigger the hashchange event once, after the page is loaded, so that
-    // permalinks open the overlay.
-    .trigger('hashchange.overlay-event');
-    // Instead of binding a click event handler to every link we bind one to the
-    // document and only handle events that bubble up. This allows other scripts
-    // to bind their own handlers to links and also to prevent overlay's handling.
-    $(document).bind('click.overlay-event', Drupal.overlay.clickHandler);
+      // When the hash (URL fragment) changes, open the overlay if needed.
+      .bind('hashchange.drupal-overlay', $.proxy(Drupal.overlay, 'eventhandlerOperateByURLFragment'))
+      // Trigger the hashchange handler once, after the page is loaded, so that
+      // permalinks open the overlay.
+      .triggerHandler('hashchange.drupal-overlay');
+
+    $(document)
+      // Instead of binding a click event handler to every link we bind one to
+      // the document and only handle events that bubble up. This allows other
+      // scripts to bind their own handlers to links and also to prevent
+      // overlay's handling.
+      .bind('click.drupal-overlay mouseup.drupal-overlay', $.proxy(Drupal.overlay, 'eventhandlerOverrideLink'));
   }
 };
 
@@ -40,228 +39,93 @@ Drupal.behaviors.overlayParent = {
  * - drupalOverlayClose: This event is triggered when the overlay is closed.
  * - drupalOverlayBeforeLoad: This event is triggered right before a new URL
  *   is loaded into the overlay.
+ * - drupalOverlayReady: This event is triggered when the DOM of the overlay
+ *   child document is fully loaded.
  * - drupalOverlayLoad: This event is triggered when the overlay is finished
  *   loading.
+ * - drupalOverlayResize: This event is triggered when the overlay is being
+ *   resized to match the parent window.
  */
 Drupal.overlay = Drupal.overlay || {
-  options: {},
   isOpen: false,
   isOpening: false,
   isClosing: false,
-  isLoading: false,
-
-  resizeTimeoutID: null,
-  lastHeight: 0,
-
-  $wrapper: null,
-  $dialog: null,
-  $dialogTitlebar: null,
-  $container: null,
-  $iframe: null,
-
-  $iframeWindow: null,
-  $iframeDocument: null,
-  $iframeBody: null
+  isLoading: false
 };
 
+Drupal.overlay.prototype = {};
+
 /**
- * Open an overlay.
+ * Open the overlay.
  *
- * Ensure that only one overlay is opened ever. Use Drupal.overlay.load() if
- * the overlay is already open but a new page needs to be opened.
- *
- * @param options
- *   Properties of the overlay to open:
- *   - url: the URL of the page to open in the overlay.
- *   - width: width of the overlay in pixels.
- *   - height: height of the overlay in pixels.
- *   - autoFit: boolean indicating whether the overlay should be resized to
- *     fit the contents of the document loaded.
- *   - customDialogOptions: an object with custom jQuery UI Dialog options.
+ * @param url
+ *   The URL of the page to open in the overlay.
  *
  * @return
- *   If the overlay was opened true, otherwise false.
+ *   TRUE if the overlay was opened, FALSE otherwise.
  */
-Drupal.overlay.open = function (options) {
-  var self = this;
-
+Drupal.overlay.open = function (url) {
   // Just one overlay is allowed.
-  if (self.isOpen || self.isOpening) {
-    return false;
+  if (this.isOpen || this.isOpening) {
+    return this.load(url);
   }
-  self.isOpening = true;
-
-  var defaultOptions = {
-    url: options.url,
-    width: options.width,
-    height: options.height,
-    autoFit: (options.autoFit == undefined || options.autoFit),
-    customDialogOptions: options.customDialogOptions || {}
-  };
-
-  self.options = $.extend(defaultOptions, options);
+  this.isOpening = true;
 
   // Create the dialog and related DOM elements.
-  self.create();
+  this.create();
 
-  // Open the dialog.
-  self.$container.dialog('open');
+  this.isOpening = false;
+  this.isOpen = true;
+  $(document.documentElement).addClass('overlay-open');
 
   // Allow other scripts to respond to this event.
   $(document).trigger('drupalOverlayOpen');
 
-  return true;
+  return this.load(url);
 };
 
 /**
  * Create the underlying markup and behaviors for the overlay.
- *
- * Reuses jQuery UI's dialog component to construct the overlay markup and
- * behaviors, sanitizing the options previously set in self.options.
  */
 Drupal.overlay.create = function () {
-  var self = this;
-  var $window = $(window);
-  var $body = $('body');
+  this.$container = $(Drupal.theme('overlayContainer'))
+    .appendTo(document.body);
 
-  var delayedOuterResize = function() {
-    setTimeout(self.outerResize, 1);
-  };
+  // Overlay uses transparent iframes that cover the full parent window.
+  // When the overlay is open the scrollbar of the parent window is hidden.
+  // Because some browsers show a white iframe background for a short moment
+  // while loading a page into an iframe, overlay uses two iframes. By loading
+  // the page in a hidden (inactive) iframe the user doesn't see the white
+  // background. When the page is loaded the active and inactive iframes
+  // are switched.
+  this.activeFrame = this.$iframeA = $(Drupal.theme('overlayElement'))
+    .appendTo(this.$container);
 
-  // Open callback for jQuery UI Dialog.
-  var dialogOpen = function () {
-    // Unbind the keypress handler installed by ui.dialog itself.
-    // IE does not fire keypress events for some non-alphanumeric keys
-    // such as the tab character. http://www.quirksmode.org/js/keys.html
-    // Also, this is not necessary here because we need to deal with an
-    // iframe element that contains a separate window.
-    // We'll try to provide our own behavior from bindChild() method.
-    self.$dialog.unbind('keypress.ui-dialog');
+  this.inactiveFrame = this.$iframeB = $(Drupal.theme('overlayElement'))
+    .appendTo(this.$container);
 
-    // Add title to close button features for accessibility.
-    self.$dialogTitlebar.find('.ui-dialog-titlebar-close').attr('title', Drupal.t('Close'));
+  this.$iframeA.bind('load.drupal-overlay', { self: this.$iframeA[0], sibling: this.$iframeB }, $.proxy(this, 'loadChild'));
+  this.$iframeB.bind('load.drupal-overlay', { self: this.$iframeB[0], sibling: this.$iframeA }, $.proxy(this, 'loadChild'));
 
-    // Replace the title span element with an h1 element for accessibility.
-    var $dialogTitle = self.$dialogTitlebar.find('.ui-dialog-title');
-    $dialogTitle.replaceWith(Drupal.theme('overlayTitleHeader', $dialogTitle.html()));
+  // Add a second class "drupal-overlay-open" to indicate these event handlers
+  // should only be bound when the overlay is open.
+  var eventClass = '.drupal-overlay.drupal-overlay-open';
+  $(window)
+    .bind('resize' + eventClass, $.proxy(this, 'eventhandlerOuterResize'));
+  $(document)
+    .bind('drupalOverlayLoad' + eventClass, $.proxy(this, 'eventhandlerOuterResize'))
+    .bind('drupalOverlayReady' + eventClass +
+          ' drupalOverlayClose' + eventClass, $.proxy(this, 'eventhandlerSyncURLFragment'))
+    .bind('drupalOverlayBeforeClose' + eventClass +
+          ' drupalOverlayBeforeLoad' + eventClass +
+          ' drupalOverlayResize' + eventClass, $.proxy(this, 'eventhandlerDispatchEvent'))
+    .bind('keydown' + eventClass, $.proxy(this, 'eventhandlerRestrictKeyboardNavigation'));
 
-    // Wrap the dialog into a div so we can center it using CSS.
-    self.$dialog.wrap(Drupal.theme('overlayWrapper'));
-    self.$wrapper = self.$dialog.parent();
-
-    self.$dialog.css({
-      // Remove some CSS properties added by ui.dialog itself.
-      position: '', left: '', top: '', height: ''
-    });
-
-    // Add a class to the body to indicate the overlay is open.
-    $body.addClass('overlay-open');
-
-    // Adjust overlay size when window is resized.
-    $window.bind('resize.overlay-event', delayedOuterResize);
-
-    if (self.options.autoFit) {
-      $body.addClass('overlay-autofit');
-    }
-    else {
-      // Add scrollbar to the iframe when autoFit is disabled.
-      self.$iframe.css('overflow', 'auto').attr('scrolling', 'yes');
-    }
-
-    // Compute initial dialog size.
-    self.outerResize();
-
-    // Load the document on hidden iframe (see bindChild method).
-    self.load(self.options.url);
-
-    if ($.isFunction(self.options.onOverlayOpen)) {
-      self.options.onOverlayOpen(self);
-    }
-
-    self.isOpen = true;
-    self.isOpening = false;
-  };
-
-  // Before close callback for jQuery UI Dialog.
-  var dialogBeforeClose = function () {
-    // Prevent double execution when close is requested more than once.
-    if (!self.isOpen || self.isClosing) {
-      return false;
-    }
-
-    // Allow other scripts to decide if the overlay can be closed. If an event-
-    // handler returns false the overlay won't be closed. The external script
-    // should call Drupal.overlay.close() again when it is ready for closing.
-    var event = $.Event('drupalOverlayBeforeClose');
-    $(document).trigger(event);
-    if (event.isDefaultPrevented()) {
-      return false;
-    }
-
-    self.isClosing = true;
-
-    // Stop all animations.
-    $window.unbind('resize.overlay-event', delayedOuterResize);
-    clearTimeout(self.resizeTimeoutID);
-  };
-
-  // Close callback for jQuery UI Dialog.
-  var dialogClose = function () {
-    $(document).unbind('keydown.overlay-event');
-
-    $body.removeClass('overlay-open').removeClass('overlay-autofit');
-
-    // When the iframe is still loading don't destroy it immediately but after
-    // the content is loaded (see self.load).
-    if (!self.isLoading) {
-      // As some browsers (webkit) fire a load event when the iframe is removed,
-      // load handlers need to be unbound before removing the iframe.
-      self.$iframe.unbind('load.overlay-event');
-      self.destroy();
-    }
-
-    self.isOpen = false;
-    self.isClosing = false;
-
-    self.lastHeight = 0;
-
-    // Allow other scripts to respond to this event.
-    $(document).trigger('drupalOverlayClose');
-  };
-
-  // Default jQuery UI Dialog options.
-  var dialogOptions = {
-    autoOpen: false,
-    closeOnEscape: true,
-    dialogClass: 'overlay',
-    draggable: false,
-    modal: true,
-    resizable: false,
-    title: Drupal.t('Loading...'),
-    zIndex: 500,
-
-    // When the width is not set, use an empty string instead, so that CSS will
-    // be able to handle it.
-    width: self.options.width || '',
-    height: self.options.height,
-
-    open: dialogOpen,
-    beforeclose: dialogBeforeClose,
-    close: dialogClose
-  };
-
-  // Create the overlay container and iframe.
-  self.$iframe = $(Drupal.theme('overlayElement'));
-  self.$container = $(Drupal.theme('overlayContainer')).append(self.$iframe);
-
-  // Allow external script to override the default jQuery UI Dialog options.
-  $.extend(dialogOptions, self.options.customDialogOptions);
-
-  // Create the jQuery UI Dialog.
-  self.$container.dialog(dialogOptions);
-  // Cache dialog selector.
-  self.$dialog = self.$container.parents('.' + dialogOptions.dialogClass);
-  self.$dialogTitlebar = self.$dialog.find('.ui-dialog-titlebar');
+  if ($('.overlay-displace-top, .overlay-displace-bottom').length) {
+    $(document)
+      .bind('drupalOverlayResize' + eventClass, $.proxy(this, 'eventhandlerAlterDisplacedElements'))
+      .bind('drupalOverlayClose' + eventClass, $.proxy(this, 'eventhandlerRestoreDisplacedElements'));
+  }
 };
 
 /**
@@ -269,318 +133,163 @@ Drupal.overlay.create = function () {
  *
  * Use this method to change the URL being loaded in the overlay if it is
  * already open.
+ *
+ * @return
+ *   TRUE if URL is loaded into the overlay, FALSE otherwise.
  */
 Drupal.overlay.load = function (url) {
-  var self = this;
-  var iframeElement = self.$iframe.get(0);
-
-  self.isLoading = true;
-
-  // Change the overlay title.
-  self.$container.dialog('option', 'title', Drupal.t('Loading...'));
-  // Remove any existing shortcut button markup in the title section.
-  self.$dialogTitlebar.find('.add-or-remove-shortcuts').remove();
-
-  // Remove any existing tabs in the title section, but only if requested url
-  // is not one of those tabs. If the latter, set that tab active. Only check
-  // for tabs when the overlay is not empty.
-  if (self.$iframeBody) {
-    var urlPath = self.getPath(url);
-
-    // Get the primary tabs
-    var $tabs = self.$dialogTitlebar.find('ul');
-    var $tabsLinks = $tabs.find('> li > a');
-
-    // Check if clicked on a primary tab
-    var $activeLink = $tabsLinks.filter(function () { return self.getPath(this) == urlPath; });
-
-    if ($activeLink.length) {
-      var active_tab = Drupal.t('(active tab)');
-      $tabsLinks.parent().removeClass('active').find('element-invisible:contains(' + active_tab + ')').appendTo($activeLink);
-      $activeLink.parent().addClass('active');
-      removeTabs = false;
-    }
-    else {
-      // Get the secondary tabs
-      var $secondary = self.$iframeBody.find('ul.secondary');
-      var $secondaryLinks = $secondary.find('> li > a');
-
-      // Check if clicked on a secondary tab
-      var $activeLinkSecondary = $secondaryLinks.filter(function () { return self.getPath(this) == urlPath; });
-
-      if ($activeLinkSecondary.length) {
-        var active_tab = Drupal.t('(active tab)');
-        $secondaryLinks.parent().removeClass('active').find('element-invisible:contains(' + active_tab + ')').appendTo($activeLinkSecondary);
-        $activeLinkSecondary.parent().addClass('active');
-        removeTabs = false;
-      }
-      else {
-        $tabs.remove();
-      }
-    }
+  if (!this.isOpen) {
+    return false;
   }
-
-  self.$iframeWindow = null;
-  self.$iframeDocument = null;
-  self.$iframeBody = null;
-
-  // No need to resize while loading.
-  clearTimeout(self.resizeTimeoutID);
 
   // Allow other scripts to respond to this event.
   $(document).trigger('drupalOverlayBeforeLoad');
 
-  // While the overlay is loading, we remove the loaded class from the dialog.
-  // After the loading is finished, the loaded class is added back. The loaded
-  // class is being used to hide the iframe while loading.
-  // See overlay-parent.css .overlay-loaded #overlay-element.
-  self.$dialog.removeClass('overlay-loaded');
-  self.$iframe.once('overlay-event-load')
-    .bind('load.overlay-event', function () {
-      self.isLoading = false;
+  $(document.documentElement).addClass('overlay-loading');
 
-      // Only continue when overlay is still open and not closing.
-      if (self.isOpen && !self.isClosing) {
-        self.$dialog.addClass('overlay-loaded');
-
-        // Allow other scripts to respond to this event.
-        $(document).trigger('drupalOverlayLoad');
-      }
-      else {
-        self.destroy();
-      }
-  });
-
-  // Get the document object of the iframe window.
-  // See http://xkr.us/articles/dom/iframe-document/.
-  var iframeDocument = (iframeElement.contentWindow || iframeElement.contentDocument);
-  if (iframeDocument.document) {
-    iframeDocument = iframeDocument.document;
-  }
+  // The contentDocument property is not supported in IE until IE8.
+  var iframeDocument = this.inactiveFrame[0].contentDocument || this.inactiveFrame[0].contentWindow.document;
 
   // location.replace doesn't create a history entry. location.href does.
   // In this case, we want location.replace, as we're creating the history
   // entry using URL fragments.
   iframeDocument.location.replace(url);
+
+  // Immediately move the focus to the iframe.
+  this.inactiveFrame.focus();
+  return true;
 };
 
 /**
  * Close the overlay and remove markup related to it from the document.
+ *
+ * @return
+ *   TRUE if the overlay was closed, FALSE otherwise.
  */
 Drupal.overlay.close = function () {
-  return this.$container.dialog('close');
+  // Prevent double execution when close is requested more than once.
+  if (!this.isOpen || this.isClosing) {
+    return false;
+  }
+
+  // Allow other scripts to respond to this event.
+  var event = $.Event('drupalOverlayBeforeClose');
+  $(document).trigger(event);
+  // If a handler returned false, the close will be prevented.
+  if (event.isDefaultPrevented()) {
+    return false;
+  }
+
+  this.isClosing = true;
+  this.isOpen = false;
+  $(document.documentElement).removeClass('overlay-open');
+
+  // Allow other scripts to respond to this event.
+  $(document).trigger('drupalOverlayClose');
+
+  // When the iframe is still loading don't destroy it immediately but after
+  // the content is loaded (see Drupal.overlay.loadChild).
+  if (!this.isLoading) {
+    this.destroy();
+    this.isClosing = false;
+  }
+  return true;
 };
 
 /**
  * Destroy the overlay.
  */
 Drupal.overlay.destroy = function () {
-  var self = this;
+  $([document, window]).unbind('.drupal-overlay-open');
+  this.$iframeA.unbind('.drupal-overlay');
+  this.$iframeB.unbind('.drupal-overlay');
+  this.$container.remove();
 
-  self.$container.dialog('destroy').remove();
-  self.$wrapper.remove();
+  this.$container = null;
+  this.$iframeA = null;
+  this.$iframeB = null;
 
-  self.$wrapper = null;
-  self.$dialog = null;
-  self.$dialogTitlebar = null;
-  self.$container = null;
-  self.$iframe = null;
-
-  self.$iframeWindow = null;
-  self.$iframeDocument = null;
-  self.$iframeBody = null;
+  this.iframeWindow = null;
 };
 
 /**
  * Redirect the overlay parent window to the given URL.
  *
- * @param link
+ * @param url
  *   Can be an absolute URL or a relative link to the domain root.
  */
-Drupal.overlay.redirect = function (link) {
-  if (link.indexOf('http') != 0 && link.indexOf('https') != 0) {
-    var absolute = location.href.match(/https?:\/\/[^\/]*/)[0];
-    link = absolute + link;
-  }
+Drupal.overlay.redirect = function (url) {
+  // Create a native Link object, so we can use its object methods.
+  var link = $(url.link(url)).get(0);
 
   // If the link is already open, force the hashchange event to simulate reload.
-  if (location.href == link) {
-    $(window).trigger('hashchange.overlay-event');
+  if (window.location.href == link.href) {
+    $(window).triggerHandler('hashchange.drupal-overlay');
   }
 
-  location.href = link;
+  window.location.href = link.href;
   return true;
 };
 
 /**
  * Bind the child window.
  *
- * Add tabs on the overlay, keyboard actions and display animation.
+ * Note that this function is fired earlier than Drupal.overlay.loadChild.
  */
 Drupal.overlay.bindChild = function (iframeWindow, isClosing) {
-  var self = this;
-  self.$iframeWindow = iframeWindow.jQuery;
-  self.$iframeDocument = self.$iframeWindow(iframeWindow.document);
-  self.$iframeBody = self.$iframeWindow('body');
+  this.iframeWindow = iframeWindow;
 
   // We are done if the child window is closing.
-  if (isClosing || self.isClosing || !self.isOpen) {
+  if (isClosing || this.isClosing || !this.isOpen) {
     return;
   }
 
-  // Make sure the parent window URL matches the child window URL.
-  self.syncChildLocation(iframeWindow.document.location);
+  // Allow other scripts to respond to this event.
+  $(document).trigger('drupalOverlayReady');
+};
 
-  // Unbind the mousedown handler installed by ui.dialog because the
-  // handler interferes with use of the scroll bar in Chrome & Safari.
-  // After unbinding from the document we bind a handler to the dialog overlay
-  // which returns false to prevent event bubbling.
-  // See http://dev.jqueryui.com/ticket/4671.
-  // See https://bugs.webkit.org/show_bug.cgi?id=19033.
-  // Do the same for the click handler as prevents default handling of clicks in
-  // displaced regions (e.g. opening a link in a new browser tab when CTRL was
-  // pressed while clicking).
-  $(document).unbind('mousedown.dialog-overlay click.dialog-overlay');
-  $('.ui-widget-overlay').bind('mousedown.dialog-overlay click.dialog-overlay', function (){return false;});
-
-  // Unbind the keydown and keypress handlers installed by ui.dialog because
-  // they interfere with use of browser's keyboard hotkeys like CTRL+w.
-  // This may cause problems when using modules that implement keydown or
-  // keypress handlers as they aren't blocked when overlay is open.
-  $(document).unbind('keydown.dialog-overlay keypress.dialog-overlay');
-
-  // Reset the scroll to the top of the window so that the overlay is visible again.
-  window.scrollTo(0, 0);
-
-  var iframeTitle = self.$iframeDocument.attr('title');
-
-  // Update the dialog title with the child window title.
-  self.$container.dialog('option', 'title', iframeTitle);
-  self.$dialogTitlebar.find('.ui-dialog-title').focus();
-  // Add a title attribute to the iframe for accessibility.
-  self.$iframe.attr('title', Drupal.t('@title dialog', { '@title': iframeTitle }));
-
-  // Remove any existing shortcut button markup in the title section.
-  self.$dialogTitlebar.find('.add-or-remove-shortcuts').remove();
-  // If the shortcut add/delete button exists, move it to the dialog title.
-  var $addToShortcuts = self.$iframeWindow('.add-or-remove-shortcuts');
-  if ($addToShortcuts.length) {
-    // Move the button markup to the title section. We need to copy markup
-    // instead of moving the DOM element, because Webkit and IE browsers will
-    // not move DOM elements between two DOM documents.
-    $addToShortcuts = $(self.$iframeWindow('<div>').append($addToShortcuts).remove().html());
-
-    self.$dialogTitlebar.find('.ui-dialog-title').after($addToShortcuts);
+/**
+ * Event handler: load event handler for the overlay iframe.
+ *
+ * @param event
+ *   Event being triggered, with the following restrictions:
+ *   - event.type: load
+ *   - event.currentTarget: iframe
+ */
+Drupal.overlay.loadChild = function (event) {
+  var iframe = event.data.self;
+  var iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
+  var iframeWindow = iframeDocument.defaultView || iframeDocument.parentWindow;
+  if (iframeWindow.location == 'about:blank') {
+    return;
   }
 
-  // Remove any existing tabs in the title section.
-  self.$dialogTitlebar.find('ul').remove();
-  // If there are tabs in the page, move them to the titlebar.
-  var $tabs = self.$iframeWindow('ul.primary');
-  if ($tabs.length) {
-    // Move the tabs markup to the title section. We need to copy markup
-    // instead of moving the DOM element, because Webkit and IE browsers will
-    // not move DOM elements between two DOM documents.
-    $tabs = $(self.$iframeWindow('<div>').append($tabs).remove().html());
+  this.isLoading = false;
+  $(document.documentElement).removeClass('overlay-loading');
+  event.data.sibling.removeClass('overlay-active');
 
-    self.$dialogTitlebar.append($tabs);
+  // Only continue when overlay is still open and not closing.
+  if (this.isOpen && !this.isClosing) {
+    // And child document is an actual overlayChild.
+    if (iframeWindow.Drupal && iframeWindow.Drupal.overlayChild) {
+      this.activeFrame = $(iframe)
+        .addClass('overlay-active')
+        // Add a title attribute to the iframe for accessibility.
+        .attr('title', Drupal.t('@title dialog', { '@title': iframeWindow.document.title }));;
+      this.inactiveFrame = event.data.sibling;
 
-    // Remove any classes from the list element to avoid theme styles
-    // clashing with our styling.
-    $tabs.removeAttr('class');
+      // Load an empty document into the inactive iframe.
+      (this.inactiveFrame[0].contentDocument || this.inactiveFrame[0].contentWindow.document).location.replace('about:blank');
+
+      // Allow other scripts to respond to this event.
+      $(document).trigger('drupalOverlayLoad');
+    }
+    else {
+      window.location = iframeWindow.location.href.replace(/([?&]?)render=overlay&?/g, '$1').replace(/\?$/, '');
+    }
   }
-
-  // Re-attach the behaviors we lost while copying elements from the iframe
-  // document to the parent document.
-  Drupal.attachBehaviors(self.$dialogTitlebar);
-
-  // Try to enhance keyboard based navigation of the overlay.
-  // Logic inspired by the open() method in ui.dialog.js, and
-  // http://wiki.codetalks.org/wiki/index.php/Docs/Keyboard_navigable_JS_widgets
-
-  // Get a reference to the close button.
-  var $closeButton = self.$dialogTitlebar.find('.ui-dialog-titlebar-close');
-
-  // Search tabbable elements on the iframed document to speed up related
-  // keyboard events.
-  // @todo: Do we need to provide a method to update these references when
-  // AJAX requests update the DOM on the child document?
-  var $iframeTabbables = self.$iframeWindow(':tabbable:not(form)');
-  var $firstTabbable = $iframeTabbables.filter(':first');
-  var $lastTabbable = $iframeTabbables.filter(':last');
-
-  // Unbind keyboard event handlers that may have been enabled previously.
-  $(document).unbind('keydown.overlay-event');
-  $closeButton.unbind('keydown.overlay-event');
-
-  // When the focus leaves the close button, then we want to jump to the
-  // first/last inner tabbable element of the child window.
-  $closeButton.bind('keydown.overlay-event', function (event) {
-    if (event.keyCode && event.keyCode == $.ui.keyCode.TAB) {
-      var $target = (event.shiftKey ? $lastTabbable : $firstTabbable);
-      if (!$target.size()) {
-        $target = self.$iframeDocument;
-      }
-      $target.focus();
-      return false;
-    }
-  });
-
-  // When the focus leaves the child window, then drive the focus to the
-  // close button of the dialog.
-  self.$iframeDocument.bind('keydown.overlay-event', function (event) {
-    if (event.keyCode) {
-      if (event.keyCode == $.ui.keyCode.TAB) {
-        if (event.shiftKey && event.target == $firstTabbable.get(0)) {
-          $closeButton.focus();
-          return false;
-        }
-        else if (!event.shiftKey && event.target == $lastTabbable.get(0)) {
-          $closeButton.focus();
-          return false;
-        }
-      }
-      else if (event.keyCode == $.ui.keyCode.ESCAPE) {
-        self.close();
-        return false;
-      }
-    }
-  });
-
-  // When the focus is captured by the parent document, then try
-  // to drive the focus back to the first tabbable element, or the
-  // close button of the dialog (default).
-  $(document).bind('keydown.overlay-event', function (event) {
-    if (event.keyCode && event.keyCode == $.ui.keyCode.TAB) {
-      if (!self.$iframeWindow(':tabbable:not(form):first').focus().size()) {
-          $closeButton.focus();
-      }
-      return false;
-    }
-  });
-
-  // Adjust overlay to fit the iframe content?
-  if (self.options.autoFit) {
-    self.innerResize();
-
-    var delayedResize = function() {
-      if (!self.isOpen) {
-        clearTimeout(self.resizeTimeoutID);
-        return;
-      }
-
-      self.innerResize();
-      iframeWindow.scrollTo(0, 0);
-      self.resizeTimeoutID = setTimeout(delayedResize, 150);
-    };
-
-    clearTimeout(self.resizeTimeoutID);
-    self.resizeTimeoutID = setTimeout(delayedResize, 150);
-  }
-
-  // Scroll to anchor in overlay. This needs to be done after delayedResize().
-  if (iframeWindow.document.location.hash) {
-    window.scrollTo(0, self.$iframeWindow(iframeWindow.document.location.hash).position().top);
+  else {
+    this.destroy();
   }
 };
 
@@ -589,131 +298,151 @@ Drupal.overlay.bindChild = function (iframeWindow, isClosing) {
  *
  * @param url
  *   The url to be tested.
+ *
  * @return boolean
  *   TRUE if the URL represents an administrative link, FALSE otherwise.
  */
 Drupal.overlay.isAdminLink = function (url) {
-  var self = this;
-  var path = self.getPath(url);
+  var path = this.getPath(url);
 
   // Turn the list of administrative paths into a regular expression.
-  if (!self.adminPathRegExp) {
+  if (!this.adminPathRegExp) {
     var adminPaths = '^(' + Drupal.settings.overlay.paths.admin.replace(/\s+/g, ')$|^(') + ')$';
     var nonAdminPaths = '^(' + Drupal.settings.overlay.paths.non_admin.replace(/\s+/g, ')$|^(') + ')$';
     adminPaths = adminPaths.replace(/\*/g, '.*');
     nonAdminPaths = nonAdminPaths.replace(/\*/g, '.*');
-    self.adminPathRegExp = new RegExp(adminPaths);
-    self.nonAdminPathRegExp = new RegExp(nonAdminPaths);
+    this.adminPathRegExp = new RegExp(adminPaths);
+    this.nonAdminPathRegExp = new RegExp(nonAdminPaths);
   }
 
-  return self.adminPathRegExp.exec(path) && !self.nonAdminPathRegExp.exec(path);
+  return this.adminPathRegExp.exec(path) && !this.nonAdminPathRegExp.exec(path);
 };
 
 /**
- * Resize overlay according to the size of its content.
+ * Event handler: resizes overlay according to the size of the parent window.
  *
- * @todo: Watch for experience in the way we compute the size of the iframed
- * document. There are many ways to do it, and none of them seem to be perfect.
- * Note, though, that the size of the iframe itself may affect the size of the
- * child document, especially on fluid layouts.
+ * @param event
+ *   Event being triggered, with the following restrictions:
+ *   - event.type: any
+ *   - event.currentTarget: any
  */
-Drupal.overlay.innerResize = function (height) {
-  var self = Drupal.overlay;
-  // Proceed only if the dialog still exists.
-  if (!self.isOpen || self.isClosing) {
+Drupal.overlay.eventhandlerOuterResize = function (event) {
+  // Proceed only if the overlay still exists.
+  if (!(this.isOpen || this.isOpening) || this.isClosing || !this.iframeWindow) {
     return;
   }
 
-  // When no height is given try to get height when iframe content is loaded.
-  if (!height && self.$iframeBody) {
-    height = self.$iframeBody.outerHeight() + 25;
+  // IE6 uses position:absolute instead of position:fixed.
+  if (typeof document.body.style.maxHeight != 'string') {
+    this.activeFrame.height($(window).height());
   }
 
-  // Only resize when height actually is changed.
-  if (height && height != self.lastHeight) {
-    // Resize the container.
-    self.$container.height(height);
-    // Keep the dim background grow or shrink with the dialog.
-    $.ui.dialog.overlay.resize();
-
-    self.lastHeight = height;
-  }
+  // Allow other scripts to respond to this event.
+  $(document).trigger('drupalOverlayResize');
 };
 
 /**
- * Resize overlay according to the size of the parent window.
+ * Event handler: resizes displaced elements so they won't overlap the scrollbar
+ * of overlay's iframe.
+ *
+ * @param event
+ *   Event being triggered, with the following restrictions:
+ *   - event.type: any
+ *   - event.currentTarget: any
  */
-Drupal.overlay.outerResize = function () {
-  var self = Drupal.overlay;
-  // Proceed only if the dialog still exists.
-  if (!(self.isOpen || self.isOpening) || self.isClosing) {
+Drupal.overlay.eventhandlerAlterDisplacedElements = function (event) {
+  // Proceed only if the overlay still exists.
+  if (!(this.isOpen || this.isOpening) || this.isClosing || !this.iframeWindow) {
     return;
   }
 
-  // Consider any region that should be visible above the overlay (such as
-  // an admin toolbar).
-  var $displaceTop = $('.overlay-displace-top');
-  var displaceTopHeight = 0;
-  $displaceTop.each(function () {
-    displaceTopHeight += $(this).height();
+  $(this.iframeWindow.document.body).css({
+    marginTop: Drupal.overlay.getDisplacement('top'),
+    marginBottom: Drupal.overlay.getDisplacement('bottom')
+  })
+  // IE7 isn't reflowing the document immediately.
+  // @todo This might be fixed in a cleaner way.
+  .addClass('overlay-trigger-reflow').removeClass('overlay-trigger-reflow');
+
+  var documentHeight = this.iframeWindow.document.body.clientHeight;
+  var documentWidth = this.iframeWindow.document.body.clientWidth;
+  // IE6 doesn't support maxWidth, use width instead.
+  var maxWidthName = (typeof document.body.style.maxWidth == 'string') ? 'maxWidth' : 'width';
+
+  // Consider any element that should be visible above the overlay (such as
+  // a toolbar).
+  $('.overlay-displace-top, .overlay-displace-bottom').each(function () {
+    var data = $(this).data();
+    var maxWidth = documentWidth;
+    // In IE, Shadow filter makes element to overlap the scrollbar with 1px.
+    if (this.filters && this.filters.length && this.filters.item('DXImageTransform.Microsoft.Shadow')) {
+      maxWidth -= 1;
+    }
+
+    // Prevent displaced elements overlapping window's scrollbar.
+    var currentMaxWidth = parseInt($(this).css(maxWidthName));
+    if ((data.drupalOverlay && data.drupalOverlay.maxWidth) || isNaN(currentMaxWidth) || currentMaxWidth > maxWidth || currentMaxWidth <= 0) {
+      $(this).css(maxWidthName, maxWidth);
+      (data.drupalOverlay = data.drupalOverlay || {}).maxWidth = true;
+    }
+
+    // Use a more rigerous approach if the displaced element still overlaps
+    // window's scrollbar; clip the element on the right.
+    var offset = $(this).offset();
+    var offsetRight = offset.left + $(this).outerWidth();
+    if ((data.drupalOverlay && data.drupalOverlay.clip) || offsetRight > maxWidth) {
+      $(this).css('clip', 'rect(auto, ' + (maxWidth - offset.left) + 'px, ' + (documentHeight - offset.top) + 'px, auto)');
+      (data.drupalOverlay = data.drupalOverlay || {}).clip = true;
+    }
   });
-
-  self.$wrapper.css('top', displaceTopHeight);
-
-  // When the overlay has no height yet, make it fit exactly in the window,
-  // or the configured height when autoFit is disabled.
-  if (!self.lastHeight) {
-    var titleBarHeight = self.$dialogTitlebar.outerHeight(true);
-
-    if (self.options.autoFit || self.options.height == undefined ||!isNan(self.options.height)) {
-      self.lastHeight = parseInt($(window).height() - displaceTopHeight - titleBarHeight - 45);
-    }
-    else {
-      self.lastHeight = self.options.height;
-    }
-
-    self.$container.height(self.lastHeight);
-  }
-
-  if (self.options.autoFit) {
-    self.innerResize();
-  }
-
-  // Make the dim background grow or shrink with the dialog.
-  $.ui.dialog.overlay.resize();
 };
 
 /**
- * Click event handler.
+ * Event handler: restores size of displaced elements as they where before
+ * overlay was opened.
  *
- * Instead of binding a click event handler to every link we bind one to the
- * document and handle events that bubble up. This allows other scripts to bind
- * their own handlers to links and also to prevent overlay's handling.
+ * @param event
+ *   Event being triggered, with the following restrictions:
+ *   - event.type: any
+ *   - event.currentTarget: any
+ */
+Drupal.overlay.eventhandlerRestoreDisplacedElements = function (event) {
+  var $displacedElements = $('.overlay-displace-top, .overlay-displace-bottom');
+  try {
+    $displacedElements.css({ maxWidth: null, clip: null });
+  }
+  // IE bug that doesn't allow unsetting style.clip (http://dev.jquery.com/ticket/6512).
+  catch (err) {
+    $displacedElements.attr('style', function (index, attr) {
+      return attr.replace(/clip\s*:\s*rect\([^)]+\);?/i, '');
+    });
+  }
+};
+
+Drupal.overlay.linksToRestore = [];
+
+/**
+ * Event handler: overrides href of administrative links to be opened in
+ * the overlay.
  *
- * This handler makes links in displaced regions work correctly, even when the
- * overlay is open.
- *
- * This click event handler should be bound any document (for example the
+ * This click event handler should be bound to any document (for example the
  * overlay iframe) of which you want links to open in the overlay.
+ *
+ * @param event
+ *   Event being triggered, with the following restrictions:
+ *   - event.type: click, mouseup
+ *   - event.currentTarget: document
  *
  * @see Drupal.overlayChild.behaviors.addClickHandler
  */
-Drupal.overlay.clickHandler = function (event) {
-  var self = Drupal.overlay;
-
-  var $target = $(event.target);
-
-  if (self.isOpen && $target.closest('.overlay-displace-top, .overlay-displace-bottom').length) {
-    // Click events in displaced regions could potentionally change the size of
-    // that region (e.g. the toggle button of the toolbar module). Trigger the
-    // resize event to force a recalculation of overlay's size/position.
-    $(window).triggerHandler('resize.overlay-event');
-  }
-
-  // Only continue by left-click or right-click.
-  if (!(event.button == 0 || event.button == 2)) {
+Drupal.overlay.eventhandlerOverrideLink = function (event) {
+  // In some browsers the click event isn't fired for right-clicks. Use the
+  // mouseup event for right-clicks and the click event for everything else.
+  if ((event.type == 'click' && event.button == 2) || (event.type == 'mouseup' && event.button != 2)) {
     return;
   }
+
+  var $target = $(event.target);
 
   // Only continue if clicked target (or one of its parents) is a link.
   if (!$target.is('a')) {
@@ -728,30 +457,45 @@ Drupal.overlay.clickHandler = function (event) {
     return;
   }
 
-  var href = $target.attr('href');
-  // Only continue if link has an href attribute and is not just linking to
-  // an anchor.
-  if (href != undefined && href != '' && href.charAt(0) != '#') {
+  // Close the overlay when the link contains the overlay-close class.
+  if ($target.hasClass('overlay-close')) {
+    // Clearing the overlay URL fragment will close the overlay.
+    $.bbq.pushState();
+    return;
+  }
+
+  var target = $target[0];
+  var href = target.href;
+  // Only handle links that have an href attribute and use the http(s) protocol.
+  if (href != undefined && href != '' && target.protocol.match(/^https?\:/)) {
+    var anchor = href.replace(target.ownerDocument.location.href, '');
+    // Skip anchor links.
+    if (anchor.length == 0 || anchor.charAt(0) == '#') {
+      return;
+    }
     // Open admin links in the overlay.
-    if (self.isAdminLink(href)) {
-      href = self.fragmentizeLink($target.get(0));
+    else if (this.isAdminLink(href)) {
+      href = this.fragmentizeLink($target.get(0));
       // Only override default behavior when left-clicking and user is not
       // pressing the ALT, CTRL, META (Command key on the Macintosh keyboard)
       // or SHIFT key.
       if (event.button == 0 && !event.altKey && !event.ctrlKey && !event.metaKey && !event.shiftKey) {
         // Redirect to a fragmentized href. This will trigger a hashchange event.
-        self.redirect(href);
+        this.redirect(href);
         // Prevent default action and further propagation of the event.
         return false;
       }
-      // Otherwise only alter clicked link's href. This is being picked up by
+      // Otherwise alter clicked link's href. This is being picked up by
       // the default action handler.
       else {
-        $target.attr('href', href);
+        $target
+          // Restore link's href attribute on blur or next click.
+          .one('blur mousedown', { target: target, href: target.href }, function (event) { $(event.data.target).attr('href', event.data.href); })
+          .attr('href', href);
       }
     }
     // Open external links in a new window.
-    else if ($target.get(0).hostname != window.location.hostname) {
+    else if (target.hostname != window.location.hostname) {
       // Add a target attribute to the clicked link. This is being picked up by
       // the default action handler.
       if (!$target.attr('target')) {
@@ -761,43 +505,31 @@ Drupal.overlay.clickHandler = function (event) {
     // Non-admin links should close the overlay and open in the main window.
     // Only handle them if the overlay is open and the clicked link is inside
     // the overlay iframe, else default action will do fine.
-    else if (self.isOpen) {
-      var inFrame = false;
-      // W3C: http://www.w3.org/TR/DOM-Level-2-Events/events.html#Events-UIEvent-view
-      if (event.view && event.view.frameElement != null) {
-        inFrame = true;
-      }
-      // IE: http://msdn.microsoft.com/en-us/library/ms534331%28VS.85%29.aspx
-      else if (event.target.ownerDocument.parentWindow && event.target.ownerDocument.parentWindow.frameElement != null) {
-        inFrame = true;
+    else if (this.isOpen && target.ownerDocument === this.iframeWindow.document) {
+      // When the link has a destination query parameter and that destination
+      // is an admin link we need to fragmentize it. This will make it reopen
+      // in the overlay.
+      var params = $.deparam.querystring(href);
+      if (params.destination && this.isAdminLink(params.destination)) {
+        var fragmentizedDestination = $.param.fragment(this.getPath(window.location), { overlay: params.destination });
+        $target.attr('href', $.param.querystring(href, { destination: fragmentizedDestination }));
       }
 
-      // Add a target attribute to the clicked link. This is being picked up by
-      // the default action handler.
-      if (inFrame) {
-        // When the link has a destination query parameter and that destination
-        // is an admin link we need to fragmentize it. This will make it reopen
-        // in the overlay.
-        var params = $.deparam.querystring(href);
-        if (params.destination && self.isAdminLink(params.destination)) {
-          var fragmentizedDestination = $.param.fragment(self.getPath(window.location), { overlay: params.destination });
-          href = $.param.querystring(href, { destination: fragmentizedDestination });
-          $target.attr('href', href);
-        }
-
-        // Make the link to be opening in the immediate parent of the frame.
-        $target.attr('target', '_parent');
-      }
+      // Make the link to be opening in the immediate parent of the frame.
+      $target.attr('target', '_parent');
     }
   }
 };
 
 /**
- * Open, reload, or close the overlay, based on the current URL fragment.
+ * Event handler: opens or closes the overlay based on the current URL fragment.
+ *
+ * @param event
+ *   Event being triggered, with the following restrictions:
+ *   - event.type: hashchange
+ *   - event.currentTarget: document
  */
-Drupal.overlay.hashchangeHandler = function (event) {
-  var self = Drupal.overlay;
-
+Drupal.overlay.eventhandlerOperateByURLFragment = function (event) {
   // If we changed the hash to reflect an internal redirect in the overlay,
   // its location has already been changed, so don't do anything.
   if ($.data(window.location, window.location.href) === 'redirect') {
@@ -809,49 +541,114 @@ Drupal.overlay.hashchangeHandler = function (event) {
   var state = $.bbq.getState('overlay');
   if (state) {
     // Append render variable, so the server side can choose the right
-    // rendering and add child modal frame code to the page if needed.
-    var linkURL = Drupal.settings.basePath + state;
-    linkURL = $.param.querystring(linkURL, {'render': 'overlay'});
+    // rendering and add child frame code to the page if needed.
+    var url = $.param.querystring(Drupal.settings.basePath + state, { render: 'overlay' });
 
-    var path = self.getPath(state);
-    self.resetActiveClass(path);
-
-    // If the modal frame is already open, replace the loaded document with
-    // this new one.
-    if (self.isOpen) {
-      self.load(linkURL);
-    }
-    else {
-      // There is not an overlay opened yet; we should open a new one.
-      var overlayOptions = {
-        url: linkURL
-      };
-      $(document).one('drupalOverlayClose', function () {
-        // Clear the overlay URL fragment.
-        $.bbq.pushState();
-        self.resetActiveClass(self.getPath(window.location));
-      });
-      self.open(overlayOptions);
-    }
+    this.open(url);
+    this.resetActiveClass(this.getPath(url));
   }
   // If there is no overlay URL in the fragment and the overlay is (still)
   // open, close the overlay.
-  else if (self.isOpen && !self.isClosing) {
-    self.close();
+  else if (this.isOpen && !this.isClosing) {
+    this.close();
+    this.resetActiveClass(this.getPath(window.location));
   }
 };
 
 /**
- * Make a regular admin link into a URL that will trigger the overlay to open.
+ * Event handler: makes sure the internal overlay URL is reflected in the parent
+ * URL fragment.
+ *
+ * Normally the parent URL fragment determines the overlay location. However, if
+ * the overlay redirects internally, the parent doesn't get informed, and the
+ * parent URL fragment will be out of date. This is a sanity check to make
+ * sure we're in the right place.
+ *
+ * The parent URL fragment is also not updated automatically when overlay's
+ * open, close or load functions are used directly (instead of through
+ * eventhandlerOperateByURLFragment).
+ *
+ * @param event
+ *   Event being triggered, with the following restrictions:
+ *   - event.type: drupalOverlayReady, drupalOverlayClose
+ *   - event.currentTarget: document
+ */
+Drupal.overlay.eventhandlerSyncURLFragment = function (event) {
+  if (this.isOpen) {
+    var expected = $.bbq.getState('overlay');
+    // This is just a sanity check, so we're comparing paths, not query strings.
+    if (this.getPath(Drupal.settings.basePath + expected) != this.getPath(this.iframeWindow.document.location)) {
+      // There may have been a redirect inside the child overlay window that the
+      // parent wasn't aware of. Update the parent URL fragment appropriately.
+      var newLocation = Drupal.overlay.fragmentizeLink(this.iframeWindow.document.location);
+      // Set a 'redirect' flag on the new location so the hashchange event handler
+      // knows not to change the overlay's content.
+      $.data(window.location, newLocation, 'redirect');
+      // Use location.replace() so we don't create an extra history entry.
+      window.location.replace(newLocation);
+    }
+  }
+  else {
+    $.bbq.pushState();
+  }
+};
+
+/**
+ * Event handler: makes sure that when the overlay is open no elements (except
+ * for elements inside any displaced elements) of the parent document are
+ * reachable through keyboard (TAB) navigation.
+ *
+ * @param event
+ *   Event being triggered, with the following restrictions:
+ *   - event.type: keydown
+ *   - event.currentTarget: document
+ */
+Drupal.overlay.eventhandlerRestrictKeyboardNavigation = function (event) {
+  if (!this.$tabbables) {
+    this.$tabbables = $(':tabbable');
+  }
+
+  if (event.keyCode && event.keyCode == $.ui.keyCode.TAB) {
+    // Whenever the focus is not inside the overlay (or an displaced element)
+    // move the focus along until it is.
+    var direction = event.shiftKey ? -1 : 1;
+    var current = this.$tabbables.index(event.target);
+    var $allowedParent = $('#overlay-container, .overlay-displace-top, .overlay-displace-bottom');
+    if (current != -1 && this.$tabbables[current + direction] && !this.$tabbables.eq(current + direction).closest($allowedParent).length) {
+      while (this.$tabbables[current + direction] && !this.$tabbables.eq(current + direction).closest($allowedParent).length) {
+        current = current + direction;
+      }
+      // Move focus.
+      this.$tabbables.eq(current).focus();
+    }
+  }
+};
+
+/**
+ * Event handler: dispatches events to the overlay document.
+ *
+ * @param event
+ *   Event being triggered, with the following restrictions:
+ *   - event.type: any
+ *   - event.currentTarget: any
+ */
+Drupal.overlay.eventhandlerDispatchEvent = function (event) {
+  if (this.iframeWindow && this.iframeWindow.document) {
+    this.iframeWindow.jQuery(this.iframeWindow.document).trigger(event);
+  }
+};
+
+/**
+ * Make a regular admin link into an URL that will trigger the overlay to open.
  *
  * @param link
  *   A Javascript Link object (i.e. an <a> element).
+ *
  * @return
- *   A URL that will trigger the overlay (in the form
+ *   An URL that will trigger the overlay (in the form
  *   /node/1#overlay=admin/config).
  */
 Drupal.overlay.fragmentizeLink = function (link) {
-  var self = this;
   // Don't operate on links that are already overlay-ready.
   var params = $.deparam.fragment(link.href);
   if (params.overlay) {
@@ -861,41 +658,13 @@ Drupal.overlay.fragmentizeLink = function (link) {
   // Determine the link's original destination. Set ignorePathFromQueryString to
   // true to prevent transforming this link into a clean URL while clean URLs
   // may be disabled.
-  var path = self.getPath(link, true);
+  var path = this.getPath(link, true);
   // Preserve existing query and fragment parameters in the URL, except for
-  // "render=overlay" which is re-added in Drupal.overlay.hashchangeHandler.
+  // "render=overlay" which is re-added in Drupal.overlay.eventhandlerOperateByURLFragment.
   var destination = path + link.search.replace(/&?render=overlay/, '').replace(/\?$/, '') + link.hash;
 
   // Assemble and return the overlay-ready link.
   return $.param.fragment(window.location.href, { overlay: destination });
-};
-
-/**
- * Make sure the internal overlay URL is reflected in the parent URL fragment.
- *
- * Normally the parent URL fragment determines the overlay location. However, if
- * the overlay redirects internally, the parent doesn't get informed, and the
- * parent URL fragment will be out of date. This is a sanity check to make
- * sure we're in the right place.
- *
- * @param childLocation
- *   The child window's location object.
- */
-Drupal.overlay.syncChildLocation = function (childLocation) {
-  var expected = $.bbq.getState('overlay');
-  // This is just a sanity check, so we're comparing paths, not query strings.
-  expected = Drupal.settings.basePath + expected.replace(/\?.+/, '');
-  var actual = childLocation.pathname;
-  if (expected !== actual) {
-    // There may have been a redirect inside the child overlay window that the
-    // parent wasn't aware of. Update the parent URL fragment appropriately.
-    var newLocation = Drupal.overlay.fragmentizeLink(childLocation);
-    // Set a 'redirect' flag on the new location so the hashchange event handler
-    // knows not to change the overlay's content.
-    $.data(window.location, newLocation, 'redirect');
-    // Using location.replace so we don't create an extra history entry.
-    window.location.replace(newLocation);
-  }
 };
 
 /**
@@ -913,6 +682,8 @@ Drupal.overlay.refreshRegions = function (data) {
     $.each(region_info, function (regionClass) {
       var regionName = region_info[regionClass];
       var regionSelector = '.' + regionClass;
+      // Allow special behaviors to detach.
+      Drupal.detachBehaviors($(regionSelector));
       $.get(Drupal.settings.basePath + Drupal.settings.overlay.ajaxCallback + '/' + regionName, function (newElement) {
         $(regionSelector).replaceWith($(newElement));
         Drupal.attachBehaviors($(regionSelector), Drupal.settings);
@@ -922,7 +693,8 @@ Drupal.overlay.refreshRegions = function (data) {
 };
 
 /**
- * Reset the active class on links in displaced regions according to given path.
+ * Reset the active class on links in displaced elements according to
+ * given path.
  *
  * @param activePath
  *   Path to match links against.
@@ -933,7 +705,7 @@ Drupal.overlay.resetActiveClass = function(activePath) {
 
   $('.overlay-displace-top, .overlay-displace-bottom')
   .find('a[href]')
-  // Remove active class from all links in displaced regions.
+  // Remove active class from all links in displaced elements.
   .removeClass('active')
   // Add active class to links that match activePath.
   .each(function () {
@@ -953,8 +725,9 @@ Drupal.overlay.resetActiveClass = function(activePath) {
  *   Link object or string to get the Drupal path from.
  * @param ignorePathFromQueryString
  *   Boolean whether to ignore path from query string if path appears empty.
+ *
  * @return
- *   The drupal path.
+ *   The Drupal path.
  */
 Drupal.overlay.getPath = function (link, ignorePathFromQueryString) {
   if (typeof link == 'string') {
@@ -967,11 +740,11 @@ Drupal.overlay.getPath = function (link, ignorePathFromQueryString) {
   if (path.charAt(0) != '/') {
     path = '/' + path;
   }
-  path = path.replace(new RegExp(Drupal.settings.basePath + "(?:index.php)?"), '');
+  path = path.replace(new RegExp(Drupal.settings.basePath + '(?:index.php)?'), '');
   if (path == '' && !ignorePathFromQueryString) {
     // If the path appears empty, it might mean the path is represented in the
     // query string (clean URLs are not used).
-    var match = new RegExp("([?&])q=(.+)([&#]|$)").exec(link.search);
+    var match = new RegExp('([?&])q=(.+)([&#]|$)').exec(link.search);
     if (match && match.length == 4) {
       path = match[2];
     }
@@ -981,31 +754,41 @@ Drupal.overlay.getPath = function (link, ignorePathFromQueryString) {
 };
 
 /**
+ * Get the total displacement of given region.
+ *
+ * @param region
+ *   Region name. Either "top" or "bottom".
+ *
+ * @return
+ *   The total displacement of given region in pixels.
+ */
+Drupal.overlay.getDisplacement = function (region) {
+  var displacement = 0;
+  var lastDisplaced = $('.overlay-displace-' + region + ':last');
+  if (lastDisplaced.length) {
+    displacement = lastDisplaced.offset().top + lastDisplaced.outerHeight();
+
+    // Remove height added by IE Shadow filter.
+    if (lastDisplaced[0].filters && lastDisplaced[0].filters.length && lastDisplaced[0].filters.item('DXImageTransform.Microsoft.Shadow')) {
+      displacement -= lastDisplaced[0].filters.item('DXImageTransform.Microsoft.Shadow').strength;
+      displacement = Math.max(0, displacement);
+    }
+  }
+  return displacement;
+};
+
+/**
  * Theme function to create the overlay iframe element.
  */
-Drupal.theme.prototype.overlayElement = function () {
-  return '<iframe id="overlay-element" frameborder="0" name="overlay-element" scrolling="no" allowtransparency="true"/>';
-};
-
-/**
- * Theme function to create a container for the overlay iframe element.
- */
 Drupal.theme.prototype.overlayContainer = function () {
-  return '<div id="overlay-container"/>';
+  return '<div id="overlay-container" role="dialog"><div class="overlay-modal-background"/></div>';
 };
 
 /**
- * Theme function for the overlay title markup.
+ * Theme function to create an overlay iframe element.
  */
-Drupal.theme.prototype.overlayTitleHeader = function (text) {
-  return '<h1 id="ui-dialog-title-overlay-container" class="ui-dialog-title" tabindex="-1" unselectable="on">' + text + '</h1>';
-};
-
-/**
- * Theme function to create a wrapper for the jquery UI dialog.
- */
-Drupal.theme.prototype.overlayWrapper = function () {
-  return '<div id="overlay-wrapper"/>';
+Drupal.theme.prototype.overlayElement = function (url) {
+  return '<iframe class="overlay-element" frameborder="0" scrolling="auto" allowtransparency="true" role="document"/>';
 };
 
 })(jQuery);

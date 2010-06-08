@@ -1,165 +1,48 @@
-/* $Id: overlay-parent.css,v 1.14 2010/04/28 20:08:39 dries Exp $ */
+/* $Id: overlay-parent.css,v 1.15 2010/06/08 05:16:29 webchick Exp $ */
 
-/**
- * ui-dialog overlay.
- */
-.ui-widget-overlay {
-  opacity: 1;
-  filter: none;
+html.overlay-open,
+html.overlay-open body {
+  height: 100%;
+  overflow: hidden;
+}
+
+#overlay-container,
+.overlay-modal-background,
+.overlay-element {
+  height: 100%;
+  left: 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 500;
+}
+
+.overlay-modal-background {
   /* Using a transparent png renders faster than using opacity */
   background: transparent url(images/background.png) repeat;
 }
 
-body.overlay-autofit {
-  overflow-y: scroll;
-}
-
-/**
- * Overlay wrapper.
- */
-#overlay-wrapper {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
+.overlay-element {
+  background: transparent;
+  left: -200%;
   z-index: 501;
-  padding: 20px 0 15px 0;
+}
+.overlay-element.overlay-active {
+  left: 0;
+}
+
+html.overlay-open .displace-top,
+html.overlay-open .displace-bottom {
+  z-index: 600;
 }
 
 /**
- * jQuery UI Dialog classes.
+ * IE6 shows elements with position:fixed as position:static so replace
+ * it with position:absolute;
  */
-.overlay {
-  position: static;
-  padding-right: 26px;
-  margin: 0 auto;
-  width: 88%;
-  min-width: 700px;
-  min-height: 100px;
-}
-
-.overlay.ui-widget-content,
-.overlay .ui-widget-header {
-  background: none;
-  border: none;
-}
-
-.overlay .ui-dialog-titlebar {
-  white-space: nowrap;
-  padding: 0 20px;
-}
-
-.overlay .ui-dialog-title {
-  margin: 0;
-  padding: 0.3em 0;
-  color: #fff;
-  font-size: 20px;
-}
-.overlay .ui-dialog-title:active,
-.overlay .ui-dialog-title:focus {
-  outline: 0;
-}
-.overlay .ui-dialog-titlebar-close,
-.overlay .ui-dialog-titlebar-close:hover {
-  display: block;
-  right: -25px;
-  top: 100%;
-  margin: 0;
-  border: none;
-  padding: 0;
-  width: 26px;
-  height: 36px;
-  background: transparent url(images/close.png) no-repeat;
-  border-top-left-radius: 0;
-  -moz-border-radius-topleft: 0;
-  -webkit-border-top-left-radius: 0;
-}
-.overlay .ui-dialog-titlebar-close span {
-  display: none;
-}
-.overlay .ui-dialog-content {
-  color: #292929;
-  background-color: #f8f8f8;
-}
-
-/**
- * Overlay content.
- */
-.overlay #overlay-container {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  overflow: visible;
-  background: #fff;
-}
-.overlay #overlay-element {
-  overflow: hidden;
-  width: 100%;
-  height: 100%;
-}
-
-/**
- * Tabs on the overlay.
- */
-.overlay .ui-dialog-titlebar ul {
+* html #overlay-container,
+* html .overlay-modal-background,
+* html .overlay-element
+{
   position: absolute;
-  right: 20px;
-  bottom: 0;
-  margin: 0;
-  line-height: 27px;
-  text-transform: uppercase;
-}
-.overlay .ui-dialog-titlebar ul li {
-  display: inline;
-  list-style: none;
-  margin: 0 0 0 -3px;
-  padding: 0;
-}
-
-.overlay .ui-dialog-titlebar ul li a,
-.overlay .ui-dialog-titlebar ul li a:active,
-.overlay .ui-dialog-titlebar ul li a:visited,
-.overlay .ui-dialog-titlebar ul li a:hover {
-  display: inline-block;
-  background-color: #a6a7a2;
-  border-radius: 8px 8px 0 0;
-  -moz-border-radius: 8px 8px 0 0;
-  -webkit-border-top-left-radius: 8px;
-  -webkit-border-top-right-radius: 8px;
-  color: #000;
-  font-weight: bold;
-  padding: 0 14px;
-  text-decoration: none;
-  font-size: 11px;
-  margin: 0;
-}
-.overlay .ui-dialog-titlebar ul li.active a,
-.overlay .ui-dialog-titlebar ul li.active a.active,
-.overlay .ui-dialog-titlebar ul li.active a:active,
-.overlay .ui-dialog-titlebar ul li.active a:visited {
-  background-color: #fff;
-  margin: 0;
-}
-.overlay .ui-dialog-titlebar ul li a:hover {
-  color: #fff;
-}
-.overlay .ui-dialog-titlebar ul li.active a:hover {
-  color: #000;
-}
-
-/**
- * Add to shortcuts link
- */
-.overlay div.add-or-remove-shortcuts {
-  padding-top: 0.9em;
-}
-
-/**
- * IE 6 Fix.
- *
- * Use filter to support transparency in IE6 for the overlay background.
- */
-* html .ui-widget-overlay {
-  filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='modules/overlay/images/background.png', sizingMethod='scale');
-  background: none;
 }

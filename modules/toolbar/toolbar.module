@@ -1,5 +1,5 @@
 <?php
-// $Id: toolbar.module,v 1.40 2010/05/23 18:23:32 dries Exp $
+// $Id: toolbar.module,v 1.41 2010/06/08 05:16:29 webchick Exp $
 
 /**
  * @file
@@ -148,6 +148,16 @@ function toolbar_preprocess_html(&$vars) {
       $vars['classes_array'][] = 'toolbar-drawer';
     }
   }
+}
+
+/**
+ * Implements hook_preprocess_toolbar().
+ *
+ * Adding the 'overlay-displace-top' class to the toolbar pushes the overlay
+ * down, so it appears below the toolbar.
+ */
+function toolbar_preprocess_toolbar(&$variables) {
+  $variables['classes_array'][] = "overlay-displace-top";
 }
 
 /**

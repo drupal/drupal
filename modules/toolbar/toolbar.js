@@ -1,4 +1,4 @@
-// $Id: toolbar.js,v 1.18 2010/05/23 18:23:32 dries Exp $
+// $Id: toolbar.js,v 1.19 2010/06/08 05:16:29 webchick Exp $
 (function ($) {
 
 Drupal.toolbar = Drupal.toolbar || {};
@@ -15,9 +15,8 @@ Drupal.behaviors.toolbar = {
     // Toggling toolbar drawer.
     $('#toolbar a.toggle', context).once('toolbar-toggle').click(function(e) {
       Drupal.toolbar.toggle();
-      // As the toolbar is an overlay displaced region, overlay should be
-      // notified of it's height change to adapt its position.
-      $(window).triggerHandler('resize.overlay-event');
+      // Allow resize event handlers to recalculate sizes/positions.
+      $(window).triggerHandler('resize');
       return false;
     });
   }

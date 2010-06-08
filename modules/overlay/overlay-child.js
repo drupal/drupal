@@ -1,31 +1,24 @@
-// $Id: overlay-child.js,v 1.8 2010/04/24 07:14:29 dries Exp $
+// $Id: overlay-child.js,v 1.9 2010/06/08 05:16:29 webchick Exp $
 
 (function ($) {
-
-/**
- * Overlay object for child windows.
- */
-Drupal.overlayChild = Drupal.overlayChild || { processed: false, behaviors: {} };
 
 /**
  * Attach the child dialog behavior to new content.
  */
 Drupal.behaviors.overlayChild = {
   attach: function (context, settings) {
-    var self = Drupal.overlayChild;
-    var settings = settings.overlayChild || {};
-
     // Make sure this behavior is not processed more than once.
-    if (self.processed) {
+    if (this.processed) {
       return;
     }
-    self.processed = true;
+    this.processed = true;
 
-    // If we cannot reach the parent window, then we have nothing else to do
-    // here.
-    if (!$.isPlainObject(parent.Drupal) || !$.isPlainObject(parent.Drupal.overlay)) {
-      return;
+    // If we cannot reach the parent window, break out of the overlay.
+    if (!parent.Drupal || !parent.Drupal.overlay) {
+      window.location = window.location.href.replace(/([?&]?)render=overlay&?/g, '$1').replace(/\?$/, '');
     }
+
+    var settings = settings.overlayChild || {};
 
     // If a form has been submitted successfully, then the server side script
     // may have decided to tell us the parent window to close the popup dialog.
@@ -34,12 +27,11 @@ Drupal.behaviors.overlayChild = {
       // Use setTimeout to close the child window from a separate thread,
       // because the current one is busy processing Drupal behaviors.
       setTimeout(function () {
-        // We need to store the parent variable locally because it will
-        // disappear as soon as we close the iframe.
-        var p = parent;
-        p.Drupal.overlay.close();
         if (typeof settings.redirect == 'string') {
-          p.Drupal.overlay.redirect(settings.redirect);
+          parent.Drupal.overlay.redirect(settings.redirect);
+        }
+        else {
+          parent.Drupal.overlay.close();
         }
       }, 1);
       return;
@@ -54,10 +46,22 @@ Drupal.behaviors.overlayChild = {
     // Ok, now we can tell the parent window we're ready.
     parent.Drupal.overlay.bindChild(window);
 
+    // IE8 crashes on certain pages if this isn't called; reason unknown.
+    window.scrollTo(window.scrollX, window.scrollY);
+
     // Attach child related behaviors to the iframe document.
-    self.attachBehaviors(context, settings);
+    Drupal.overlayChild.attachBehaviors(context, settings);
   }
 };
+
+/**
+ * Overlay object for child windows.
+ */
+Drupal.overlayChild = Drupal.overlayChild || {
+  behaviors: {}
+};
+
+Drupal.overlayChild.prototype = {};
 
 /**
  * Attach child related behaviors to the iframe document.
@@ -69,16 +73,6 @@ Drupal.overlayChild.attachBehaviors = function (context, settings) {
 };
 
 /**
- * Scroll to the top of the page.
- *
- * This makes the overlay visible to users even if it is not as tall as the
- * previously shown overlay was.
- */
-Drupal.overlayChild.behaviors.scrollToTop = function (context, settings) {
-  window.scrollTo(0, 0);
-};
-
-/**
  * Capture and handle clicks.
  *
  * Instead of binding a click event handler to every link we bind one to the
@@ -86,7 +80,7 @@ Drupal.overlayChild.behaviors.scrollToTop = function (context, settings) {
  * to bind their own handlers to links and also to prevent overlay's handling.
  */
 Drupal.overlayChild.behaviors.addClickHandler = function (context, settings) {
-  $(document).bind('click.overlay-event', parent.Drupal.overlay.clickHandler);
+  $(document).bind('click.drupal-overlay mouseup.drupal-overlay', $.proxy(parent.Drupal.overlay, 'eventhandlerOverrideLink'));
 };
 
 /**
@@ -109,6 +103,72 @@ Drupal.overlayChild.behaviors.parseForms = function (context, settings) {
       $(this).attr('target', '_new');
     }
   });
+};
+
+/**
+ * Replace the overlay title with a message while loading another page.
+ */
+Drupal.overlayChild.behaviors.loading = function (context, settings) {
+  var $title;
+  var text = Drupal.t('Loading');
+  var dots = '';
+
+  $(document).bind('drupalOverlayBeforeLoad.drupal-overlay.drupal-overlay-child-loading', function () {
+    $title = $('#overlay-title').text(text);
+    var id = setInterval(function () {
+      dots = (dots.length > 10) ? '' : dots + '.';
+      $title.text(text + dots);
+    }, 500);
+  });
+};
+
+/**
+ * Switch active tab immediately.
+ */
+Drupal.overlayChild.behaviors.tabs = function (context, settings) {
+  var $tabsLinks = $('#overlay-tabs > li > a');
+
+  $('#overlay-tabs > li > a').bind('click.drupal-overlay', function () {
+    var active_tab = Drupal.t('(active tab)');
+    $tabsLinks.parent().siblings().removeClass('active').find('element-invisible:contains(' + active_tab + ')').appendTo(this);
+    $(this).parent().addClass('active');
+  });
+};
+
+/**
+ * If the shortcut add/delete button exists, move it to the overlay titlebar.
+ */
+Drupal.overlayChild.behaviors.shortcutAddLink = function (context, settings) {
+  // Remove any existing shortcut button markup from the titlebar.
+  $('#overlay-titlebar').find('.add-or-remove-shortcuts').remove();
+  // If the shortcut add/delete button exists, move it to the titlebar.
+  var $addToShortcuts = $('.add-or-remove-shortcuts');
+  if ($addToShortcuts.length) {
+    $addToShortcuts.insertAfter('#overlay-title');
+  }
+
+  $(document).bind('drupalOverlayBeforeLoad.drupal-overlay.drupal-overlay-child-loading', function () {
+    $('#overlay-titlebar').find('.add-or-remove-shortcuts').remove();
+  });
+};
+
+/**
+ * Use displacement from parent window.
+ */
+Drupal.overlayChild.behaviors.alterTableHeaderOffset = function (context, settings) {
+  if (Drupal.settings.tableHeaderOffset) {
+    Drupal.overlayChild.prevTableHeaderOffset = Drupal.settings.tableHeaderOffset;
+  }
+  Drupal.settings.tableHeaderOffset = 'Drupal.overlayChild.tableHeaderOffset';
+};
+
+/**
+ * Callback for Drupal.settings.tableHeaderOffset.
+ */
+Drupal.overlayChild.tableHeaderOffset = function () {
+  var topOffset = Drupal.overlayChild.prevTableHeaderOffset ? eval(Drupal.overlayChild.prevTableHeaderOffset + '()') : 0;
+
+  return topOffset + parseInt($(document.body).css('marginTop'));
 };
 
 })(jQuery);

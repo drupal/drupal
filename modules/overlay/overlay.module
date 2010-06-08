@@ -1,5 +1,5 @@
 <?php
-// $Id: overlay.module,v 1.19 2010/05/23 18:23:32 dries Exp $
+// $Id: overlay.module,v 1.20 2010/06/08 05:16:29 webchick Exp $
 
 /**
  * @file
@@ -41,6 +41,18 @@ function overlay_permission() {
     'access overlay' => array(
       'title' => t('Access the administrative overlay'),
       'description' => t('View administrative pages in the overlay.'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_theme().
+ */
+function overlay_theme() {
+  return array(
+    'overlay' => array(
+      'render element' => 'page',
+      'template' => 'overlay',
     ),
   );
 }
@@ -150,8 +162,7 @@ function overlay_library() {
       $module_path . '/overlay-parent.css' => array(),
     ),
     'dependencies' => array(
-      array('system', 'ui.dialog'),
-      array('system', 'ui.position'),
+      array('system', 'ui'),
       array('system', 'jquery-bbq'),
     ),
   );
@@ -163,8 +174,8 @@ function overlay_library() {
     'js' => array(
       $module_path . '/overlay-child.js' => array(),
     ),
-    'dependencies' => array(
-      array('system', 'ui'),
+    'css' => array(
+      $module_path . '/overlay-child.css' => array(),
     ),
   );
 
@@ -221,6 +232,11 @@ function overlay_page_alter(&$page) {
       $page[$skipped_region]['#access'] = FALSE;
     }
   }
+
+  if (overlay_get_mode() == 'child') {
+    // Add the overlay wrapper before the html wrapper.
+    array_unshift($page['#theme_wrappers'], 'overlay');
+  }
 }
 
 /**
@@ -255,7 +271,7 @@ function overlay_system_info_alter(&$info, $file, $type) {
 }
 
 /**
- * Preprocess template variables for html.tpl.php.
+ * Implements hook_preprocess_html().
  *
  * If the current page request is inside the overlay, add appropriate classes
  * to the <body> element, and simplify the page title.
@@ -272,7 +288,7 @@ function overlay_preprocess_html(&$variables) {
 }
 
 /**
- * Preprocess template variables for maintenance-page.tpl.php.
+ * Implements hook_preprocess_maintenance_page().
  *
  * If the current page request is inside the overlay, add appropriate classes
  * to the <body> element, and simplify the page title.
@@ -284,7 +300,30 @@ function overlay_preprocess_maintenance_page(&$variables) {
 }
 
 /**
- * Preprocess template variables for page.tpl.php.
+ * Preprocesses template variables for overlay.tpl.php
+ *
+ * @see overlay.tpl.php
+ */
+function template_preprocess_overlay(&$variables) {
+  $variables['tabs']              = menu_primary_local_tasks();
+  $variables['title']             = drupal_get_title();
+
+  $variables['content_attributes_array']['class'][] = 'clearfix';
+}
+
+/**
+ * Processes variables for overlay.tpl.php
+ *
+ * @see template_preprocess_overlay()
+ * @see overlay.tpl.php
+ */
+function template_process_overlay(&$variables) {
+  // Place the rendered HTML for the page body into a top level variable.
+  $variables['page'] = $variables['page']['#children'];
+}
+
+/**
+ * Implements hook_preprocess_page().
  *
  * Display breadcrumbs correctly inside the overlay.
  *
@@ -296,17 +335,10 @@ function overlay_preprocess_page(&$variables) {
     $overlay_breadcrumb = drupal_get_breadcrumb();
     array_shift($overlay_breadcrumb);
     $variables['breadcrumb'] = theme('breadcrumb', array('breadcrumb' => $overlay_breadcrumb));
-  }
-}
 
-/**
- * Preprocess template variables for toolbar.tpl.php.
- *
- * Adding the 'overlay-displace-top' class to the toolbar pushes the overlay
- * down, so it appears below the toolbar.
- */
-function overlay_preprocess_toolbar(&$variables) {
-  $variables['classes_array'][] = "overlay-displace-top";
+    $variables['tabs'] = '';
+    $variables['primary_local_tasks'] = '';
+  }
 }
 
 /**
@@ -477,9 +509,6 @@ function overlay_set_mode($mode = NULL) {
 
     case 'child':
       drupal_add_library('overlay', 'child');
-      // Pass child's document height on to parent document as quickly as
-      // possible so it can be updated accordingly.
-      drupal_add_js('if (parent.Drupal && parent.Drupal.overlay) { parent.Drupal.overlay.innerResize(jQuery(document.body).outerHeight()); }', array('type' => 'inline', 'scope' => 'footer'));
 
       // Allow modules to act upon overlay events.
       module_invoke_all('overlay_child_initialize');
