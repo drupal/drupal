@@ -1,5 +1,5 @@
 <?php
-// $Id: update.inc,v 1.51 2010/05/26 19:51:01 dries Exp $
+// $Id: update.inc,v 1.52 2010/06/08 05:29:05 webchick Exp $
 
 /**
  * @file
@@ -733,10 +733,15 @@ function update_do_one($module, $number, $dependency_map, &$context) {
       $ret['results']['query'] = $function($context['sandbox']);
       $ret['results']['success'] = TRUE;
     }
-    // @TODO We may want to do different error handling for different exception
-    // types, but for now we'll just print the message.
+    // @TODO We may want to do different error handling for different
+    // exception types, but for now we'll just log the exception and
+    // return the message for printing.
     catch (Exception $e) {
-      $ret['#abort'] = array('success' => FALSE, 'query' => $e->getMessage());
+      watchdog_exception('update', $e);
+
+      require_once DRUPAL_ROOT . '/includes/errors.inc';
+      $variables = _drupal_decode_exception($e);
+      $ret['#abort'] = array('success' => FALSE, 'query' => t('%type: %message in %function (line %line of %file).', $variables));
     }
 
     if ($context['log']) {
