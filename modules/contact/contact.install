@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.install,v 1.24 2010/04/20 07:46:33 webchick Exp $
+// $Id: contact.install,v 1.25 2010/06/08 03:48:14 webchick Exp $
 
 /**
  * @file
@@ -90,18 +90,6 @@ function contact_uninstall() {
 }
 
 /**
- * Implements hook_update_dependencies().
- */
-function contact_update_dependencies() {
-  // Contact update 7002 calls the new user_role_grant_permissions() and
-  // therefore needs to run after user_update_7006();
-  $dependencies['contact'][7002] = array(
-    'user' => 7006,
-  );
-  return $dependencies;
-}
-
-/**
  * @defgroup updates-6.x-to-7.x Contact updates from 6.x to 7.x
  * @{
  */
@@ -128,7 +116,16 @@ function contact_update_7001() {
  * Enable the 'access user contact forms' for registered users by default.
  */
 function contact_update_7002() {
-  user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array('access user contact forms'));
+  // Do not use user_role_grant_permission() since it relies on
+  // hook_permission(), which will not run for contact module if it is
+  // disabled.
+  db_merge('role_permission')
+    ->key(array(
+      'rid' => DRUPAL_AUTHENTICATED_RID,
+      'permission' => 'access user contact forms',
+      'module' => 'contact',
+    ))
+    ->execute();
 }
 
 /**
