@@ -482,7 +482,15 @@ function update_fix_d7_requirements() {
     );
 
     db_create_table('date_format_type', $schema['date_format_type']);
+    // Sites that have the Drupal 6 Date module installed already have the
+    // following tables.
+    if (db_table_exists('date_formats')) {
+      db_rename_table('date_formats', 'd6_date_formats');
+    }
     db_create_table('date_formats', $schema['date_formats']);
+    if (db_table_exists('date_format_locale')) {
+      db_rename_table('date_format_locale', 'd6_date_format_locale');
+    }
     db_create_table('date_format_locale', $schema['date_format_locale']);
 
     // Add the queue table.
