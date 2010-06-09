@@ -2091,7 +2091,16 @@ function url($path = NULL, array $options = array()) {
 }
 
 /**
- * Return TRUE if a path is external (e.g. http://example.com).
+ * Return TRUE if a path is external to Drupal (e.g. http://example.com).
+ *
+ * If a path cannot be assessed by Drupal's menu handler, then we must
+ * treat it as potentially insecure.
+ *
+ * @param $path
+ *   The internal path or external URL being linked to, such as "node/34" or
+ *   "http://example.com/foo".
+ * @return 
+ *   Boolean TRUE or FALSE, where TRUE indicates an external path.
  */
 function url_is_external($path) {
   $colonpos = strpos($path, ':');
