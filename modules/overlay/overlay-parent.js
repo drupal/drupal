@@ -545,7 +545,7 @@ Drupal.overlay.eventhandlerOperateByURLFragment = function (event) {
     var url = $.param.querystring(Drupal.settings.basePath + state, { render: 'overlay' });
 
     this.open(url);
-    this.resetActiveClass(this.getPath(url));
+    this.resetActiveClass(this.getPath(Drupal.settings.basePath + state));
   }
   // If there is no overlay URL in the fragment and the overlay is (still)
   // open, close the overlay.
@@ -712,7 +712,7 @@ Drupal.overlay.resetActiveClass = function(activePath) {
     var linkDomain = this.protocol + this.hostname;
     var linkPath = self.getPath(this);
 
-    if (linkDomain == windowDomain && linkPath == activePath) {
+    if (linkDomain == windowDomain && activePath.indexOf(linkPath) === 0) {
       $(this).addClass('active');
     }
   });
