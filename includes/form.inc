@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.467 2010/06/05 13:18:09 dries Exp $
+// $Id: form.inc,v 1.468 2010/06/10 07:00:03 dries Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -483,15 +483,6 @@ function form_state_keys_no_cache() {
  * $form_state['values']['pass']['pass2'] = 'password';
  * $form_state['values']['op'] = t('Create new account');
  * drupal_form_submit('user_register_form', $form_state);
- * // Create a new node
- * $form_state = array();
- * module_load_include('inc', 'node', 'node.pages');
- * $node = array('type' => 'story');
- * $form_state['values']['title'] = 'My node';
- * $form_state['values']['body'] = 'This is the body text!';
- * $form_state['values']['name'] = 'robo-user';
- * $form_state['values']['op'] = t('Save');
- * drupal_form_submit('story_node_form', $form_state, (object) $node);
  * @endcode
  */
 function drupal_form_submit($form_id, &$form_state) {
