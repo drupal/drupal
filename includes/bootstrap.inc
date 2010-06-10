@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.395 2010/06/05 13:30:42 dries Exp $
+// $Id: bootstrap.inc,v 1.396 2010/06/10 06:51:38 dries Exp $
 
 /**
  * @file
@@ -566,6 +566,7 @@ function drupal_settings_initialize() {
   if (file_exists(DRUPAL_ROOT . '/' . conf_path() . '/settings.php')) {
     include_once DRUPAL_ROOT . '/' . conf_path() . '/settings.php';
   }
+  $is_https = isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on';
 
   if (isset($base_url)) {
     // Parse fixed base URL from settings.php.
@@ -580,7 +581,7 @@ function drupal_settings_initialize() {
   }
   else {
     // Create base URL
-    $http_protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https' : 'http';
+    $http_protocol = $is_https ? 'https' : 'http';
     $base_root = $http_protocol . '://' . $_SERVER['HTTP_HOST'];
 
     $base_url = $base_root;
@@ -596,7 +597,6 @@ function drupal_settings_initialize() {
       $base_path = '/';
     }
   }
-  $is_https = $http_protocol == 'https';
   $base_secure_url = str_replace('http://', 'https://', $base_url);
   $base_insecure_url = str_replace('https://', 'http://', $base_url);
 
