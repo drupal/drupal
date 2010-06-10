@@ -1,5 +1,5 @@
 <?php
-// $Id: user.install,v 1.49 2010/05/28 10:17:52 dries Exp $
+// $Id: user.install,v 1.50 2010/06/10 06:57:20 dries Exp $
 
 /**
  * @file
@@ -160,6 +160,13 @@ function user_schema() {
         'default' => '',
         'description' => "User's signature.",
       ),
+      'signature_format' => array(
+        'type' => 'int',
+        'size' => 'small',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The {filter_format}.format of the signature.',
+      ),
       'created' => array(
         'type' => 'int',
         'not null' => TRUE,
@@ -228,6 +235,9 @@ function user_schema() {
       'name' => array('name'),
     ),
     'primary key' => array('uid'),
+    'foreign keys' => array(
+      'signature_format' => array('filter_format' => 'format'),
+    ),
   );
 
   $schema['users_roles'] = array(

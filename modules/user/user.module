@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1173 2010/05/27 12:29:39 dries Exp $
+// $Id: user.module,v 1.1174 2010/06/10 06:57:20 dries Exp $
 
 /**
  * @file
@@ -1082,11 +1082,13 @@ function user_account_form(&$form, &$form_state) {
     '#weight' => 1,
     '#access' => (!$register && variable_get('user_signatures', 0)),
   );
+
   $form['signature_settings']['signature'] = array(
-    '#type' => 'textarea',
+    '#type' => 'text_format',
     '#title' => t('Signature'),
     '#default_value' => isset($account->signature) ? $account->signature : '',
     '#description' => t('Your signature will be publicly displayed at the end of your comments.'),
+    '#format' => isset($account->signature_format) ? $account->signature_format : NULL,
   );
 
   // Picture/avatar.
@@ -1179,6 +1181,11 @@ function user_account_form_validate($form, &$form_state) {
     // Make sure the signature isn't longer than the size of the database field.
     // Signatures are disabled by default, so make sure it exists first.
     if (isset($form_state['values']['signature'])) {
+      // Move text format for user signature into 'signature_format'.
+      $form_state['values']['signature_format'] = $form_state['values']['signature']['format'];
+      // Move text value for user signature into 'signature'.
+      $form_state['values']['signature'] = $form_state['values']['signature']['value'];
+
       $user_schema = drupal_get_schema('users');
       if (drupal_strlen($form_state['values']['signature']) > $user_schema['fields']['signature']['length']) {
         form_set_error('signature', t('The signature is too long: it must be %max characters or less.', array('%max' => $user_schema['fields']['signature']['length'])));
@@ -3186,7 +3193,11 @@ function user_forms() {
  */
 function user_comment_view($comment) {
   if (variable_get('user_signatures', 0) && !empty($comment->signature)) {
-    $comment->signature = check_markup($comment->signature, $comment->format, '', TRUE);
+    // @todo This alters and replaces the original object value, so a
+    //   hypothetical process of loading, viewing, and saving will hijack the
+    //   stored data. Consider renaming to $comment->signature_safe or similar
+    //   here and elsewhere in Drupal 8.
+    $comment->signature = check_markup($comment->signature, $comment->signature_format, '', TRUE);
   }
   else {
     $comment->signature = '';
@@ -3559,6 +3570,16 @@ function user_modules_uninstalled($modules) {
    db_delete('role_permission')
      ->condition('module', $modules, 'IN')
      ->execute();
+}
+
+/**
+ * Implements hook_filter_format_delete().
+ */
+function user_filter_format_delete($format, $fallback) {
+  db_update('users')
+    ->fields(array('signature_format' => $fallback->format))
+    ->condition('signature_format', $format->format)
+    ->execute();
 }
 
 /**

@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.880 2010/06/08 06:34:36 webchick Exp $
+// $Id: comment.module,v 1.881 2010/06/10 06:57:20 dries Exp $
 
 /**
  * @file
@@ -1633,7 +1633,7 @@ class CommentController extends DrupalDefaultEntityController {
     $query->addField('n', 'type', 'node_type');
     $query->innerJoin('users', 'u', 'base.uid = u.uid');
     $query->addField('u', 'name', 'registered_name');
-    $query->fields('u', array('uid', 'signature', 'picture'));
+    $query->fields('u', array('uid', 'signature', 'signature_format', 'picture'));
     return $query;
   }
 

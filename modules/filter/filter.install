@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.install,v 1.38 2010/06/08 16:13:47 webchick Exp $
+// $Id: filter.install,v 1.39 2010/06/10 06:57:20 dries Exp $
 
 /**
  * @file
@@ -387,11 +387,11 @@ function filter_update_7005() {
   // Note that the update of the node body field is handled separately, in
   // node_update_7006(), as is the update of the comment body field, in
   // comment_update_7013().
-  foreach (array('block_custom') as $table) {
+  foreach (array('block_custom' => 'format', 'users' => 'signature_format') as $table => $column) {
     if (db_table_exists($table)) {
       db_update($table)
-        ->fields(array('format' => $default_format))
-        ->condition('format', 0)
+        ->fields(array($column => $default_format))
+        ->condition($column, 0)
         ->execute();
     }
   }
