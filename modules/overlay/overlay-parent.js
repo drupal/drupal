@@ -1,4 +1,4 @@
-// $Id: overlay-parent.js,v 1.45 2010/06/09 15:04:52 dries Exp $
+// $Id: overlay-parent.js,v 1.46 2010/06/10 16:36:56 dries Exp $
 
 (function ($) {
 
@@ -613,7 +613,7 @@ Drupal.overlay.eventhandlerRestrictKeyboardNavigation = function (event) {
     // move the focus along until it is.
     var direction = event.shiftKey ? -1 : 1;
     var current = this.$tabbables.index(event.target);
-    var $allowedParent = $('#overlay-container, .overlay-displace-top, .overlay-displace-bottom');
+    var $allowedParent = '#overlay-container, .overlay-displace-top, .overlay-displace-bottom';
     if (current != -1 && this.$tabbables[current + direction] && !this.$tabbables.eq(current + direction).closest($allowedParent).length) {
       while (this.$tabbables[current + direction] && !this.$tabbables.eq(current + direction).closest($allowedParent).length) {
         current = current + direction;
