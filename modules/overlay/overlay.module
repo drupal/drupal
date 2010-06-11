@@ -1,5 +1,5 @@
 <?php
-// $Id: overlay.module,v 1.20 2010/06/08 05:16:29 webchick Exp $
+// $Id: overlay.module,v 1.21 2010/06/11 12:30:30 dries Exp $
 
 /**
  * @file
@@ -68,9 +68,12 @@ function overlay_theme() {
 function overlay_init() {
   // @todo: custom_theme does not exist anymore.
   global $custom_theme;
-  // Only act if the user has access to administration pages. Other modules can
-  // also enable the overlay directly for other uses of the JavaScript.
-  if (user_access('access overlay')) {
+
+  $mode = overlay_get_mode();
+
+  // Only act if the user has access to the overlay and a mode was not already
+  // set. Other modules can also enable the overlay directly for other uses.
+  if (empty($mode) && user_access('access overlay')) {
     $current_path = current_path();
     // After overlay is enabled on the modules page, redirect to
     // <front>#overlay=admin/modules to actually enable the overlay.
@@ -469,16 +472,28 @@ function overlay_get_mode() {
 }
 
 /**
- * Set overlay mode and add proper JavaScript and styles to the page.
+ * Sets the overlay mode and adds proper JavaScript and styles to the page.
+ *
+ * Note that since setting the overlay mode triggers a variety of behaviors
+ * (including hooks being invoked), it can only be done once per page request.
+ * Therefore, the first call to this function which passes along a value of the
+ * $mode parameter controls the overlay mode that will be used.
  *
  * @param $mode
- *   To set the mode, pass in either 'parent' or 'child'. 'parent' is used in
- *   the context of a parent window (a regular browser window), and JavaScript
- *   is added so that administrative links in the parent window will open in
- *   an overlay. 'child' is used in the context of the child overlay window (the
- *   page actually appearing within the overlay iframe) and JavaScript and CSS
- *   are added so that Drupal behaves nicely from within the overlay.
- *
+ *   To set the mode, pass in one of the following values:
+ *   - 'parent': This is used in the context of a parent window (a regular
+ *     browser window). If set, JavaScript is added so that administrative
+ *     links in the parent window will open in an overlay.
+ *   - 'child': This is used in the context of the child overlay window (the
+ *     page actually appearing within the overlay iframe). If set, JavaScript
+ *     and CSS are added so that Drupal behaves nicely from within the overlay.
+ *   - 'none': This is used to avoid adding any overlay-related code to the
+ *     page at all. Modules can set this to explicitly prevent the overlay from
+ *     being used. For example, since the overlay module itself sets the mode
+ *     to 'parent' or 'child' in overlay_init() when certain conditions are
+ *     met, other modules which want to override that behavior can do so by
+ *     setting the mode to 'none' earlier in the page request - e.g., in their
+ *     own hook_init() implementations, if they have a lower weight.
  *   This parameter is optional, and if omitted, the current mode will be
  *   returned with no action taken.
  *
@@ -486,6 +501,7 @@ function overlay_get_mode() {
  *   The current mode, if any has been set, or NULL if no mode has been set.
  *
  * @ingroup overlay_api
+ * @see overlay_init()
  */
 function overlay_set_mode($mode = NULL) {
   global $base_path;
