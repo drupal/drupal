@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1174 2010/06/10 06:57:20 dries Exp $
+// $Id: user.module,v 1.1175 2010/06/11 11:12:13 dries Exp $
 
 /**
  * @file
@@ -2114,8 +2114,8 @@ function user_login_submit($form, &$form_state) {
  * populated and login tasks are performed.
  */
 function user_external_login_register($name, $module) {
-  $account = user_load_by_name($name);
-  if (!$account->uid) {
+  $account = user_external_load($name);
+  if (!$account) {
     // Register this new user.
     $userinfo = array(
       'name' => $name,
