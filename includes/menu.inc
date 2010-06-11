@@ -1277,10 +1277,10 @@ function menu_tree_check_access(&$tree, $node_links = array()) {
 
   if ($node_links) {
     $nids = array_keys($node_links);
-    $select = db_select('node');
-    $select->addField('node', 'nid');
+    $select = db_select('node', 'n');
+    $select->addField('n', 'nid');
     $select->condition('status', 1);
-    $select->condition('nid', $nids, 'IN');
+    $select->condition('n.nid', $nids, 'IN');
     $select->addTag('node_access');
     $nids = $select->execute()->fetchCol();
     foreach ($nids as $nid) {
