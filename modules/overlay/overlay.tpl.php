@@ -6,7 +6,7 @@
  * Default theme implementation to display a page in the overlay.
  *
  * Available variables:
- * - $title: the (sanitized) title of the node.
+ * - $title: the (sanitized) title of the page.
  * - $page: The rendered page content.
  * - $tabs (array): Tabs linking to any sub-pages beneath the current page
  *   (e.g., the view and edit tabs when displaying a node).
