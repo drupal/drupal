@@ -2929,6 +2929,7 @@ function drupal_placeholder($variables) {
  *   Array of shutdown functions to be executed.
  *
  * @see register_shutdown_function()
+ * @ingroup php_wrappers
  */
 function &drupal_register_shutdown_function($callback = NULL, $parameters = NULL) {
   // We cannot use drupal_static() here because the static cache is reset
