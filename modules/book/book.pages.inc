@@ -1,5 +1,5 @@
 <?php
-// $Id: book.pages.inc,v 1.25 2010/03/13 06:55:50 dries Exp $
+// $Id: book.pages.inc,v 1.26 2010/06/11 11:06:37 dries Exp $
 
 /**
  * @file
@@ -219,19 +219,15 @@ function book_remove_form_submit($form, &$form_state) {
 }
 
 /**
- * AJAX callback to replace the book parent select options.
+ * Renders a new parent page select element when the book selection changes.
  *
- * This function is called when the selected book is changed. It updates the
- * cached form (either the node form or the book outline form) and returns
- * rendered output to be used to replace the select containing the possible
- * parent pages in the newly selected book.
+ * This function is called via AJAX when the selected book is changed on a node
+ * or book outline form. It creates a new parent page select element, adds it
+ * to the cached form, and then returns the rendered element so it can be
+ * displayed on the form.
  *
- * @param $build_id
- *   The form's build_id.
- * @param $bid
- *   A bid from from among those in the form's book select.
  * @return
- *   Prints the replacement HTML in JSON format.
+ *   The rendered parent page select element.
  */
 function book_form_update() {
   // Load the form based upon the $_POST data sent via the ajax call.
