@@ -1,3 +1,4 @@
+/* $Id: overlay-child.css,v 1.2 2010/06/11 14:07:32 dries Exp $ */
 
 html.js {
   background: transparent !important;
@@ -15,7 +16,7 @@ html.js body {
   position: relative;
   padding: .2em;
   padding-right: 26px;
-  width: 78%;
+  width: 88%;
 }
 #overlay-titlebar {
   padding: 0 20px;

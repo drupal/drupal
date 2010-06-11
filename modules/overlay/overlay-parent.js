@@ -1,4 +1,4 @@
-// $Id: overlay-parent.js,v 1.46 2010/06/10 16:36:56 dries Exp $
+// $Id: overlay-parent.js,v 1.47 2010/06/11 14:07:32 dries Exp $
 
 (function ($) {
 
@@ -386,7 +386,7 @@ Drupal.overlay.eventhandlerAlterDisplacedElements = function (event) {
       (data.drupalOverlay = data.drupalOverlay || {}).maxWidth = true;
     }
 
-    // Use a more rigerous approach if the displaced element still overlaps
+    // Use a more rigorous approach if the displaced element still overlaps
     // window's scrollbar; clip the element on the right.
     var offset = $(this).offset();
     var offsetRight = offset.left + $(this).outerWidth();
@@ -398,7 +398,7 @@ Drupal.overlay.eventhandlerAlterDisplacedElements = function (event) {
 };
 
 /**
- * Event handler: restores size of displaced elements as they where before
+ * Event handler: restores size of displaced elements as they were before
  * overlay was opened.
  *
  * @param event
@@ -418,8 +418,6 @@ Drupal.overlay.eventhandlerRestoreDisplacedElements = function (event) {
     });
   }
 };
-
-Drupal.overlay.linksToRestore = [];
 
 /**
  * Event handler: overrides href of administrative links to be opened in
@@ -609,7 +607,7 @@ Drupal.overlay.eventhandlerRestrictKeyboardNavigation = function (event) {
   }
 
   if (event.keyCode && event.keyCode == $.ui.keyCode.TAB) {
-    // Whenever the focus is not inside the overlay (or an displaced element)
+    // Whenever the focus is not inside the overlay (or a displaced element)
     // move the focus along until it is.
     var direction = event.shiftKey ? -1 : 1;
     var current = this.$tabbables.index(event.target);
@@ -639,13 +637,13 @@ Drupal.overlay.eventhandlerDispatchEvent = function (event) {
 };
 
 /**
- * Make a regular admin link into an URL that will trigger the overlay to open.
+ * Make a regular admin link into a URL that will trigger the overlay to open.
  *
  * @param link
  *   A Javascript Link object (i.e. an <a> element).
  *
  * @return
- *   An URL that will trigger the overlay (in the form
+ *   A URL that will trigger the overlay (in the form
  *   /node/1#overlay=admin/config).
  */
 Drupal.overlay.fragmentizeLink = function (link) {
@@ -781,14 +779,14 @@ Drupal.overlay.getDisplacement = function (region) {
  * Theme function to create the overlay iframe element.
  */
 Drupal.theme.prototype.overlayContainer = function () {
-  return '<div id="overlay-container" role="dialog"><div class="overlay-modal-background"/></div>';
+  return '<div id="overlay-container" role="dialog"><div class="overlay-modal-background"></div></div>';
 };
 
 /**
  * Theme function to create an overlay iframe element.
  */
 Drupal.theme.prototype.overlayElement = function (url) {
-  return '<iframe class="overlay-element" frameborder="0" scrolling="auto" allowtransparency="true" role="document"/>';
+  return '<iframe class="overlay-element" frameborder="0" scrolling="auto" allowtransparency="true" role="document"></iframe>';
 };
 
 })(jQuery);
