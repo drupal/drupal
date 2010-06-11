@@ -2114,8 +2114,8 @@ function user_login_submit($form, &$form_state) {
  * populated and login tasks are performed.
  */
 function user_external_login_register($name, $module) {
-  $account = user_load_by_name($name);
-  if (!$account->uid) {
+  $account = user_external_load($name);
+  if (!$account) {
     // Register this new user.
     $userinfo = array(
       'name' => $name,
