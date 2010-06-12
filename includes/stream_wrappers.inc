@@ -1,5 +1,5 @@
 <?php
-// $Id: stream_wrappers.inc,v 1.16 2010/06/02 13:09:34 dries Exp $
+// $Id: stream_wrappers.inc,v 1.17 2010/06/12 08:15:15 webchick Exp $
 
 /**
  * @file
@@ -793,7 +793,7 @@ class DrupalTemporaryStreamWrapper extends DrupalLocalStreamWrapper {
    * Implements abstract public function getDirectoryPath()
    */
   public function getDirectoryPath() {
-    return variable_get('file_temporary_path', sys_get_temp_dir());
+    return variable_get('file_temporary_path', file_directory_temp());
   }
 
   /**
