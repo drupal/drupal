@@ -752,7 +752,7 @@ class FileDirectoryTest extends FileTestCase {
   function testFileDirectoryTemp() {
     // Temporary directory handling.
     variable_set('file_directory_temp', NULL);
-    $temp = file_directory_path('temporary');
+    $temp = file_directory_temp();
     $this->assertTrue(!is_null($temp), t('Properly set and retrieved temp directory %directory.', array('%directory' => $temp)), 'File');
   }
 

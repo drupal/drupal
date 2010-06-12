@@ -1958,5 +1958,50 @@ function drupal_tempnam($directory, $prefix) {
 }
 
 /**
+ * Get the path of system-appropriate temporary directory.
+ */
+function file_directory_temp() {
+  $temporary_directory = variable_get('file_directory_temp', NULL);
+
+  if (is_null($temporary_directory)) {
+    $directories = array();
+
+    // Has PHP been set with an upload_tmp_dir?
+    if (ini_get('upload_tmp_dir')) {
+      $directories[] = ini_get('upload_tmp_dir');
+    }
+
+    // Operating system specific dirs.
+    if (substr(PHP_OS, 0, 3) == 'WIN') {
+      $directories[] = 'c:\\windows\\temp';
+      $directories[] = 'c:\\winnt\\temp';
+      $path_delimiter = '\\';
+    }
+    else {
+      $directories[] = '/tmp';
+      $path_delimiter = '/';
+    }
+    // PHP may be able to find an alternative tmp directory.
+    $directories[] = sys_get_temp_dir();
+
+    foreach ($directories as $directory) {
+      if (is_dir($directory) && is_writable($directory)) {
+        $temporary_directory = $directory;
+        break;
+      }
+    }
+
+    // if a directory has been found, use it, otherwise default to 'files/tmp' or 'files\\tmp';
+    if (empty($temporary_directory)) {
+      $temporary_directory = file_directory_path() . $path_delimiter .'tmp';
+    }
+    // Save the path of the discovered directory.
+    variable_set('file_directory_temp', $temporary_directory);
+  }
+
+  return $temporary_directory;
+}
+
+/**
  * @} End of "defgroup file".
  */
