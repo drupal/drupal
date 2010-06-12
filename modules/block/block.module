@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.421 2010/05/13 07:53:02 dries Exp $
+// $Id: block.module,v 1.422 2010/06/12 08:42:46 webchick Exp $
 
 /**
  * @file
@@ -242,6 +242,15 @@ function block_page_build(&$page) {
         $page[$region] = $blocks;
       }
     }
+    // Once we've finished attaching all blocks to the page, clear the static
+    // cache to allow modules to alter the block list differently in different
+    // contexts. For example, any code that triggers hook_page_build() more
+    // than once in the same page request may need to alter the block list
+    // differently each time, so that only certain parts of the page are
+    // actually built. We do not clear the cache any earlier than this, though,
+    // because it is used each time block_get_blocks_by_region() gets called
+    // above.
+    drupal_static_reset('block_list');
   }
   else {
     // Append region description if we are rendering the regions demo page.
