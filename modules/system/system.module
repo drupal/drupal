@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.933 2010/05/20 08:47:00 dries Exp $
+// $Id: system.module,v 1.934 2010/06/12 08:33:50 webchick Exp $
 
 /**
  * @file
@@ -3140,7 +3140,7 @@ function system_time_zones($blank = NULL) {
  */
 function system_check_http_request() {
   // Try to get the content of the front page via drupal_http_request().
-  $result = drupal_http_request(url('', array('absolute' => TRUE)));
+  $result = drupal_http_request(url('', array('absolute' => TRUE, 'max_redirects' => 0)));
   // We only care that we get a http response - this means that Drupal
   // can make a http request.
   $works = isset($result->code) && ($result->code >= 100) && ($result->code < 600);
