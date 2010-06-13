@@ -1,4 +1,4 @@
-// $Id: autocomplete.js,v 1.36 2010/04/30 05:23:43 webchick Exp $
+// $Id: autocomplete.js,v 1.37 2010/06/13 05:31:02 dries Exp $
 (function ($) {
 
 /**
@@ -115,7 +115,7 @@ Drupal.jsAC.prototype.selectDown = function () {
   if (this.selected && this.selected.nextSibling) {
     this.highlight(this.selected.nextSibling);
   }
-  else {
+  else if (this.popup) {
     var lis = $('li', this.popup);
     if (lis.size() > 0) {
       this.highlight(lis.get(0));
