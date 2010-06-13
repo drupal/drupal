@@ -1,4 +1,4 @@
-// $Id: overlay-parent.js,v 1.47 2010/06/11 14:07:32 dries Exp $
+// $Id: overlay-parent.js,v 1.48 2010/06/13 05:47:47 dries Exp $
 
 (function ($) {
 
@@ -275,7 +275,7 @@ Drupal.overlay.loadChild = function (event) {
       this.activeFrame = $(iframe)
         .addClass('overlay-active')
         // Add a title attribute to the iframe for accessibility.
-        .attr('title', Drupal.t('@title dialog', { '@title': iframeWindow.document.title }));;
+        .attr('title', Drupal.t('@title dialog', { '@title': iframeWindow.jQuery('#overlay-title').text() }));
       this.inactiveFrame = event.data.sibling;
 
       // Load an empty document into the inactive iframe.

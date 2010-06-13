@@ -1,5 +1,5 @@
 <?php
-// $Id: toolbar.module,v 1.41 2010/06/08 05:16:29 webchick Exp $
+// $Id: toolbar.module,v 1.42 2010/06/13 05:47:47 dries Exp $
 
 /**
  * @file
@@ -309,7 +309,7 @@ function toolbar_menu_navigation_links($tree) {
       $link = $item['link']['localized_options'];
       $link['href'] = $item['link']['href'];
       // Add icon placeholder.
-      $link['title'] = '<span class="icon"></span>' . $item['link']['title'];
+      $link['title'] = '<span class="icon"></span>' . check_plain($item['link']['title']);
       // Add admin link ID.
       $link['attributes'] = array('id' => 'toolbar-link-' . $id);
       if (!empty($item['link']['description'])) {

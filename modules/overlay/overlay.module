@@ -1,5 +1,5 @@
 <?php
-// $Id: overlay.module,v 1.21 2010/06/11 12:30:30 dries Exp $
+// $Id: overlay.module,v 1.22 2010/06/13 05:47:47 dries Exp $
 
 /**
  * @file
@@ -285,8 +285,6 @@ function overlay_preprocess_html(&$variables) {
   if (overlay_get_mode() == 'child') {
     // Add overlay class, so themes can react to being displayed in the overlay.
     $variables['classes_array'][] = 'overlay';
-    // Do not include site name or slogan in the overlay title.
-    $variables['head_title'] = drupal_get_title();
   }
 }
 
