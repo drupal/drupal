@@ -63,7 +63,7 @@ abstract class DrupalTestCase {
   protected $skipClasses = array(__CLASS__ => TRUE);
 
   /**
-   * Constructor for DrupalWebTestCase.
+   * Constructor for DrupalTestCase.
    *
    * @param $test_id
    *   Tests with the same id are reported together.
