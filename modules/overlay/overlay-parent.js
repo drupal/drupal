@@ -275,7 +275,7 @@ Drupal.overlay.loadChild = function (event) {
       this.activeFrame = $(iframe)
         .addClass('overlay-active')
         // Add a title attribute to the iframe for accessibility.
-        .attr('title', Drupal.t('@title dialog', { '@title': iframeWindow.document.title }));;
+        .attr('title', Drupal.t('@title dialog', { '@title': iframeWindow.jQuery('#overlay-title').text() }));
       this.inactiveFrame = event.data.sibling;
 
       // Load an empty document into the inactive iframe.

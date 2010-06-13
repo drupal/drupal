@@ -285,8 +285,6 @@ function overlay_preprocess_html(&$variables) {
   if (overlay_get_mode() == 'child') {
     // Add overlay class, so themes can react to being displayed in the overlay.
     $variables['classes_array'][] = 'overlay';
-    // Do not include site name or slogan in the overlay title.
-    $variables['head_title'] = drupal_get_title();
   }
 }
 
