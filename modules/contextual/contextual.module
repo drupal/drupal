@@ -78,10 +78,10 @@ function contextual_preprocess(&$variables, $hook) {
     $keys = array_keys($hooks[$hook]['variables']);
     $key = $keys[0];
   }
-  else {
+  else if (!empty($hooks[$hook]['render element'])) {
     $key = $hooks[$hook]['render element'];
   }
-  if (isset($variables[$key])) {
+  if (!empty($key) && isset($variables[$key])) {
     $element = $variables[$key];
   }
 
