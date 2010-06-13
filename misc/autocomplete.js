@@ -115,7 +115,7 @@ Drupal.jsAC.prototype.selectDown = function () {
   if (this.selected && this.selected.nextSibling) {
     this.highlight(this.selected.nextSibling);
   }
-  else {
+  else if (this.popup) {
     var lis = $('li', this.popup);
     if (lis.size() > 0) {
       this.highlight(lis.get(0));
