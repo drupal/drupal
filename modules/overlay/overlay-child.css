@@ -1,4 +1,4 @@
-/* $Id: overlay-child.css,v 1.2 2010/06/11 14:07:32 dries Exp $ */
+/* $Id: overlay-child.css,v 1.3 2010/06/13 06:03:47 dries Exp $ */
 
 html.js {
   background: transparent !important;
@@ -10,6 +10,7 @@ html.js body {
 }
 
 #overlay {
+  display: table;
   margin: 0 auto;
   min-height: 100px;
   min-width: 700px;
