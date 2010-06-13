@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.219 2010/06/08 06:16:01 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.220 2010/06/13 13:14:18 dries Exp $
 
 /**
  * Base class for Drupal tests.
@@ -63,7 +63,7 @@ abstract class DrupalTestCase {
   protected $skipClasses = array(__CLASS__ => TRUE);
 
   /**
-   * Constructor for DrupalWebTestCase.
+   * Constructor for DrupalTestCase.
    *
    * @param $test_id
    *   Tests with the same id are reported together.
