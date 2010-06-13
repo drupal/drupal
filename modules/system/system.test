@@ -1740,6 +1740,31 @@ class UpdateScriptFunctionalTest extends DrupalWebTestCase {
   }
 
   /**
+   * Tests the detection of requirements for the update script to proceed.
+   */
+  function testUpdateRequirements() {
+    $this->drupalLogin($this->update_user);
+    $this->drupalGet($this->update_url, array('external' => TRUE));
+    $this->assertResponse(200);
+    // Test if disabling a module that another enabled module depends on will
+    // prevent the update from proceeding.
+    module_disable(array('block'), FALSE);
+    $this->assertFalse(module_exists('block'), t('Block module is disabled.'));
+    $this->assertTrue(module_exists('dashboard'), t('Dashboard module is enabled.'));
+    $this->drupalGet($this->update_url, array('external' => TRUE));
+    $this->assertText(t('Unresolved dependency'), t('The update process cannot proceed when a module dependency is not enabled.'));
+
+    // Test if modules required by the current install profile are not required
+    // to be enabled for an update to proceed.
+    module_enable(array('block'));
+    $this->assertTrue(module_exists('block'), t('Block module is enabled.'));
+    module_disable(array('overlay'));
+    $this->assertFalse(module_exists('overlay'), t('Overlay module is disabled.'));
+    $this->drupalGet($this->update_url, array('external' => TRUE));
+    $this->assertNoText(t('Unresolved dependency'), t('The update process can proceed when modules from the install profile are disabled.'));
+  }
+
+  /**
    * Tests the effect of using the update script on the theme system.
    */
   function testThemeSystem() {

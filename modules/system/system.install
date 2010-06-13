@@ -364,8 +364,8 @@ function system_requirements($phase) {
   if ($phase == 'update') {
     $files = system_rebuild_module_data();
     foreach ($files as $module => $file) {
-      // Ignore disabled modules.
-      if (!$file->status) {
+      // Ignore disabled modules and install profiles.
+      if (!$file->status || preg_match('/\.profile$/', $file->filename)) {
         continue;
       }
       // Check the module's PHP version.
