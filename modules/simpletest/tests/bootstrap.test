@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.test,v 1.30 2010/05/12 08:26:15 dries Exp $
+// $Id: bootstrap.test,v 1.31 2010/06/14 13:24:32 dries Exp $
 
 class BootstrapIPAddressTestCase extends DrupalWebTestCase {
 
@@ -16,8 +16,9 @@ class BootstrapIPAddressTestCase extends DrupalWebTestCase {
 
     $this->remote_ip = '127.0.0.1';
     $this->proxy_ip = '127.0.0.2';
-    $this->forwarded_ip = '127.0.0.3';
-    $this->cluster_ip = '127.0.0.4';
+    $this->proxy2_ip = '127.0.0.3';
+    $this->forwarded_ip = '127.0.0.4';
+    $this->cluster_ip = '127.0.0.5';
     $this->untrusted_ip = '0.0.0.0';
 
     drupal_static_reset('ip_address');
@@ -42,23 +43,23 @@ class BootstrapIPAddressTestCase extends DrupalWebTestCase {
     // Test the normal IP address.
     $this->assertTrue(
       ip_address() == $this->remote_ip,
-      t('Got remote IP address')
+      t('Got remote IP address.')
     );
 
     // Proxy forwarding on but no proxy addresses defined.
     variable_set('reverse_proxy', 1);
     $this->assertTrue(
       ip_address() == $this->remote_ip,
-      t('Proxy forwarding without trusted proxies got remote IP address')
+      t('Proxy forwarding without trusted proxies got remote IP address.')
     );
 
     // Proxy forwarding on and proxy address not trusted.
-    variable_set('reverse_proxy_addresses', array($this->proxy_ip));
+    variable_set('reverse_proxy_addresses', array($this->proxy_ip, $this->proxy2_ip));
     drupal_static_reset('ip_address');
     $_SERVER['REMOTE_ADDR'] = $this->untrusted_ip;
     $this->assertTrue(
       ip_address() == $this->untrusted_ip,
-      t('Proxy forwarding with untrusted proxy got remote IP address')
+      t('Proxy forwarding with untrusted proxy got remote IP address.')
     );
 
     // Proxy forwarding on and proxy address trusted.
@@ -67,7 +68,16 @@ class BootstrapIPAddressTestCase extends DrupalWebTestCase {
     drupal_static_reset('ip_address');
     $this->assertTrue(
       ip_address() == $this->forwarded_ip,
-      t('Proxy forwarding with trusted proxy got forwarded IP address')
+      t('Proxy forwarding with trusted proxy got forwarded IP address.')
+    );
+
+    // Multi-tier architecture with comma separated values in header.
+    $_SERVER['REMOTE_ADDR'] = $this->proxy_ip;
+    $_SERVER['HTTP_X_FORWARDED_FOR'] = implode(', ', array($this->untrusted_ip, $this->forwarded_ip, $this->proxy2_ip));
+    drupal_static_reset('ip_address');
+    $this->assertTrue(
+      ip_address() == $this->forwarded_ip,
+      t('Proxy forwarding with trusted 2-tier proxy got forwarded IP address.')
     );
 
     // Custom client-IP header.
@@ -76,8 +86,10 @@ class BootstrapIPAddressTestCase extends DrupalWebTestCase {
     drupal_static_reset('ip_address');
     $this->assertTrue(
       ip_address() == $this->cluster_ip,
-      t('Cluster environment got cluster client IP')
+      t('Cluster environment got cluster client IP.')
     );
+
+    // Verifies that drupal_valid_http_host() prevents invalid characters.
     $this->assertFalse(drupal_valid_http_host('security/.drupal.org:80'), t('HTTP_HOST with / is invalid'));
     $this->assertFalse(drupal_valid_http_host('security\\.drupal.org:80'), t('HTTP_HOST with \\ is invalid'));
     $this->assertFalse(drupal_valid_http_host('security<.drupal.org:80'), t('HTTP_HOST with &lt; is invalid'));
