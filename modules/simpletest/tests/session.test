@@ -1,5 +1,5 @@
 <?php
-// $Id: session.test,v 1.28 2010/05/12 08:26:15 dries Exp $
+// $Id: session.test,v 1.29 2010/06/14 12:31:46 dries Exp $
 
 /**
  * @file
@@ -274,7 +274,7 @@ class SessionHttpsTestCase extends DrupalWebTestCase {
     // Check insecure cookie is not set.
     $this->assertFalse(isset($this->cookies[$insecure_session_name]));
     $ssid = $this->cookies[$secure_session_name]['value'];
-    $this->assertSessionIds($ssid, $ssid, 'Session has two secure SIDs');
+    $this->assertSessionIds('', $ssid, 'Session has NULL for SID and a correct secure SID.');
     $cookie = $secure_session_name . '=' . $ssid;
 
     // Verify that user is logged in on secure URL.
@@ -303,11 +303,17 @@ class SessionHttpsTestCase extends DrupalWebTestCase {
     variable_set('https', TRUE);
 
     $this->curlClose();
-    $this->drupalGet('session-test/set/1');
+    // Start an anonymous session on the insecure site.
+    $session_data = $this->randomName();
+    $this->drupalGet('session-test/set/' . $session_data);
     // Check secure cookie on insecure page.
     $this->assertFalse(isset($this->cookies[$secure_session_name]), 'The secure cookie is not sent on insecure pages.');
     // Check insecure cookie on insecure page.
     $this->assertFalse($this->cookies[$insecure_session_name]['secure'], 'The insecure cookie does not have the secure attribute');
+
+    // Store the anonymous cookie so we can validate that its session is killed
+    // after login.
+    $anonymous_cookie = $insecure_session_name . '=' . $this->cookies[$insecure_session_name]['value'];
 
     // Check that password request form action is not secure.
     $this->drupalGet('user/password');
@@ -339,6 +345,11 @@ class SessionHttpsTestCase extends DrupalWebTestCase {
       $secure_session_name . '=' . $ssid,
     );
 
+    // Test that session data saved before login is still available on the
+    // authenticated session.
+    $this->drupalGet('session-test/get');
+    $this->assertText($session_data, 'Session correctly returned the stored data set by the anonymous session.');
+
     foreach ($cookies as $cookie_key => $cookie) {
       foreach (array('admin/config', $this->httpsUrl('admin/config')) as $url_key => $url) {
         $this->curlClose();
@@ -354,6 +365,33 @@ class SessionHttpsTestCase extends DrupalWebTestCase {
         }
       }
     }
+
+    // Test that session data saved before login is not available using the 
+    // pre-login anonymous cookie.
+    $this->cookies = array();
+    $this->drupalGet('session-test/get', array('Cookie: ' . $anonymous_cookie));
+    $this->assertNoText($session_data, 'Initial anonymous session is inactive after login.');
+
+    // Clear browser cookie jar.
+    $this->cookies = array();
+
+    // Start an anonymous session on the secure site.
+    $this->drupalGet($this->httpsUrl('session-test/set/1'));
+
+    // Mock a login to the secure site using the secure session cookie.
+    $this->drupalGet('user');
+    $form = $this->xpath('//form[@id="user-login"]');
+    $form[0]['action'] = $this->httpsUrl('user');
+    $this->drupalPost(NULL, $edit, t('Log in'), array(), array('Cookie: ' . $secure_session_name . '=' . $this->cookies[$secure_session_name]['value']));
+
+    // Get the insecure session cookie set by the secure login POST request.
+    $headers = $this->drupalGetHeaders(TRUE);
+    strtok($headers[0]['set-cookie'], ';=');
+    $session_id = strtok(';=');
+
+    // Test that the user is also authenticated on the insecure site.
+    $this->drupalGet("user/{$user->uid}/edit", array(), array('Cookie: ' . $insecure_session_name . '=' . $session_id));
+    $this->assertResponse(200);
   }
 
   /**
@@ -375,7 +413,7 @@ class SessionHttpsTestCase extends DrupalWebTestCase {
       ':sid' => $sid,
       ':ssid' => $ssid,
     );
-    return $this->assertTrue(db_query('SELECT sid FROM {sessions} WHERE sid = :sid AND ssid = :ssid', $args)->fetchField(), $assertion_text);
+    return $this->assertTrue(db_query('SELECT timestamp FROM {sessions} WHERE sid = :sid AND ssid = :ssid', $args)->fetchField(), $assertion_text);
   }
 
   protected function httpsUrl($url) {
@@ -383,3 +421,4 @@ class SessionHttpsTestCase extends DrupalWebTestCase {
     return $base_url . '/modules/simpletest/tests/https.php?q=' . $url;
   }
 }
+

@@ -1,5 +1,5 @@
 <?php
-// $Id: session.inc,v 1.84 2010/06/05 13:30:42 dries Exp $
+// $Id: session.inc,v 1.85 2010/06/14 12:31:46 dries Exp $
 
 /**
  * @file
@@ -147,6 +147,7 @@ function _drupal_session_write($sid, $value) {
       return;
     }
 
+    // Either ssid or sid or both will be added from $key below.
     $fields = array(
       'uid' => $user->uid,
       'cache' => isset($user->cache) ? $user->cache : 0,
@@ -154,17 +155,22 @@ function _drupal_session_write($sid, $value) {
       'session' => $value,
       'timestamp' => REQUEST_TIME,
     );
-    $key = array('sid' => $sid);
+
+    // The "secure pages" setting allows a site to simultaneously use both secure
+    // and insecure session cookies. If enabled and both cookies are presented
+    // then use both keys. If not enabled but on HTTPS then use the PHP session
+    // id as 'ssid'. If on HTTP then use the PHP session id as 'sid'.
     if ($is_https) {
       $key['ssid'] = $sid;
       $insecure_session_name = substr(session_name(), 1);
-      // The "secure pages" setting allows a site to simultaneously use both
-      // secure and insecure session cookies. If enabled, use the insecure session
-      // identifier as the sid.
       if (variable_get('https', FALSE) && isset($_COOKIE[$insecure_session_name])) {
         $key['sid'] = $_COOKIE[$insecure_session_name];
       }
     }
+    else {
+      $key['sid'] = $sid;
+    }
+
     db_merge('sessions')
       ->key($key)
       ->fields($fields)
@@ -198,11 +204,11 @@ function _drupal_session_write($sid, $value) {
  * Initialize the session handler, starting a session if needed.
  */
 function drupal_session_initialize() {
-  global $user;
+  global $user, $is_https;
 
   session_set_save_handler('_drupal_session_open', '_drupal_session_close', '_drupal_session_read', '_drupal_session_write', '_drupal_session_destroy', '_drupal_session_garbage_collection');
 
-  if (isset($_COOKIE[session_name()])) {
+  if (isset($_COOKIE[session_name()]) || ($is_https && variable_get('https', FALSE) && isset($_COOKIE[substr(session_name(), 1)]))) {
     // If a session cookie exists, initialize the session. Otherwise the
     // session is only started on demand in drupal_session_commit(), making
     // anonymous users not use a session cookie unless something is stored in
@@ -298,6 +304,9 @@ function drupal_session_regenerate() {
   global $user, $is_https;
   if ($is_https && variable_get('https', FALSE)) {
     $insecure_session_name = substr(session_name(), 1);
+    if (isset($_COOKIE[$insecure_session_name])) {
+      $old_insecure_session_id = $_COOKIE[$insecure_session_name];
+    }
     $params = session_get_cookie_params();
     $session_id = drupal_hash_base64(uniqid(mt_rand(), TRUE) . drupal_random_bytes(55));
     setcookie($insecure_session_name, $session_id, REQUEST_TIME + $params['lifetime'], $params['path'], $params['domain'], FALSE, $params['httponly']);
@@ -318,11 +327,27 @@ function drupal_session_regenerate() {
   }
 
   if (isset($old_session_id)) {
+    $fields = array('sid' => session_id());
+    if ($is_https) {
+      $fields['ssid'] = session_id();
+      // If the "secure pages" setting is enabled, use the newly-created
+      // insecure session identifier as the regenerated sid.
+      if (variable_get('https', FALSE)) {
+        $fields['sid'] = $session_id;
+      }
+    }
     db_update('sessions')
-      ->fields(array(
-        $is_https ? 'ssid' : 'sid' => session_id()
-      ))
-      ->condition('sid', $old_session_id)
+      ->fields($fields)
+      ->condition($is_https ? 'ssid' : 'sid', $old_session_id)
+      ->execute();
+  }
+  elseif (isset($old_insecure_session_id)) {
+    // If logging in to the secure site, and there was no active session on the
+    // secure site but a session was active on the insecure site, update the
+    // insecure session with the new session identifiers.
+    db_update('sessions')
+      ->fields(array('sid' => $session_id, 'ssid' => session_id()))
+      ->condition('sid', $old_insecure_session_id)
       ->execute();
   }
   date_default_timezone_set(drupal_get_user_timezone());
