@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.211 2010/06/12 08:15:15 webchick Exp $
+// $Id: file.inc,v 1.212 2010/06/14 13:33:45 dries Exp $
 
 /**
  * @file
@@ -1982,7 +1982,11 @@ function file_directory_temp() {
       $path_delimiter = '/';
     }
     // PHP may be able to find an alternative tmp directory.
-    $directories[] = sys_get_temp_dir();
+    // This function exists in PHP 5 >= 5.2.1, but Drupal
+    // requires PHP 5 >= 5.2.0, so we check for it.
+    if (function_exists('sys_get_temp_dir')) {
+      $directories[] = sys_get_temp_dir();
+    }
 
     foreach ($directories as $directory) {
       if (is_dir($directory) && is_writable($directory)) {
@@ -1991,9 +1995,9 @@ function file_directory_temp() {
       }
     }
 
-    // if a directory has been found, use it, otherwise default to 'files/tmp' or 'files\\tmp';
+    // if a directory has been found, use it, otherwise default to 'files/tmp' or 'files\\tmp'.
     if (empty($temporary_directory)) {
-      $temporary_directory = file_directory_path() . $path_delimiter .'tmp';
+      $temporary_directory = file_directory_path() . $path_delimiter . 'tmp';
     }
     // Save the path of the discovered directory.
     variable_set('file_directory_temp', $temporary_directory);
