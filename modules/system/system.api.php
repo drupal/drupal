@@ -285,6 +285,25 @@ function hook_entity_update($entity, $type) {
 }
 
 /**
+ * Alter or execute an EntityFieldQuery.
+ *
+ * @param EntityFieldQuery $query
+ *   An EntityFieldQuery. One of the most important properties to be changed is
+ *   EntityFieldQuery::executeCallback. If this is set to an existing function,
+ *   this function will get the query as its single argument and its result
+ *   will be the returned as the result of EntityFieldQuery::execute(). This can
+ *   be used to change the behavior of EntityFieldQuery entirely. For example,
+ *   the default implementation can only deal with one field storage engine, but
+ *   it is possible to write a module that can query across field storage
+ *   engines. Also, the default implementation presumes entities are stored in
+ *   SQL, but the execute callback could instead query any other entity storage,
+ *   local or remote.
+ */
+function hook_entity_query_alter($query) {
+  $query->executeCallback = 'my_module_query_callback';
+}
+
+/**
  * Define administrative paths.
  *
  * Modules may specify whether or not the paths they define in hook_menu() are

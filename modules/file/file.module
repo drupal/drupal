@@ -969,8 +969,11 @@ function file_get_file_references($file, $field = NULL, $age = FIELD_LOAD_REVISI
   foreach ($fields as $field_name => $file_field) {
     if ((empty($field_type) || $field['type'] == $field_type) && !isset($references[$field_name])) {
       // Get each time this file is used within a field.
-      $cursor = 0;
-      $references[$field_name] = field_attach_query($file_field['id'], array(array('fid', $file->fid)), array('limit' => FIELD_QUERY_NO_LIMIT, 'cursor' => &$cursor, 'age'=> $age));
+      $query = new EntityFieldQuery;
+      $query
+        ->fieldCondition($file_field, 'fid', $file->fid)
+        ->age($age);
+      $references[$field_name] = $query->execute();
     }
   }
 

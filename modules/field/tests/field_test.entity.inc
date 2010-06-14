@@ -27,6 +27,8 @@ function field_test_entity_info() {
       'name' => t('Test Entity'),
       'fieldable' => TRUE,
       'field cache' => FALSE,
+      'base table' => 'test_entity',
+      'revision table' => 'test_entity_revision',
       'entity keys' => array(
         'id' => 'ftid',
         'revision' => 'ftvid',
@@ -46,6 +48,29 @@ function field_test_entity_info() {
         'bundle' => 'fttype',
       ),
       'bundles' => $bundles,
+      'view modes' => $test_entity_modes,
+    ),
+    'test_entity_bundle_key' => array(
+      'name' => t('Test Entity with a bundle key.'),
+      'base table' => 'test_entity_bundle_key',
+      'fieldable' => TRUE,
+      'field cache' => FALSE,
+      'entity keys' => array(
+        'id' => 'ftid',
+        'bundle' => 'fttype',
+      ),
+      'bundles' => array('bundle1' => array('label' => 'Bundle1'), 'bundle2' => array('label' => 'Bundle2')),
+      'view modes' => $test_entity_modes,
+    ),
+    'test_entity_bundle' => array(
+      'name' => t('Test Entity with a specified bundle.'),
+      'base table' => 'test_entity_bundle',
+      'fieldable' => TRUE,
+      'field cache' => FALSE,
+      'entity keys' => array(
+        'id' => 'ftid',
+      ),
+      'bundles' => array('test_entity_2' => array('label' => 'Test entity 2')),
       'view modes' => $test_entity_modes,
     ),
   );

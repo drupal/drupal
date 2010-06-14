@@ -102,28 +102,6 @@ define('FIELD_LOAD_CURRENT', 'FIELD_LOAD_CURRENT');
 define('FIELD_LOAD_REVISION', 'FIELD_LOAD_REVISION');
 
 /**
- * @name Field query flags
- * @{
- * Flags for field_attach_query().
- */
-
-/**
- * Limit argument for field_attach_query() to request all available
- * entities instead of a limited number.
- */
-define('FIELD_QUERY_NO_LIMIT', 'FIELD_QUERY_NO_LIMIT');
-
-/**
- * Cursor return value for field_attach_query() to indicate that no
- * more data is available.
- */
-define('FIELD_QUERY_COMPLETE', 'FIELD_QUERY_COMPLETE');
-
-/**
- * @} End of "Field query flags".
- */
-
-/**
  * Exception class thrown by hook_field_update_forbid().
  */
 class FieldUpdateForbiddenException extends FieldException {}
@@ -877,8 +855,12 @@ function field_get_items($entity_type, $entity, $field_name, $langcode = NULL) {
  *   TRUE if the field has data for any entity; FALSE otherwise.
  */
 function field_has_data($field) {
-  $results = field_attach_query($field['id'], array(), array('limit' => 1));
-  return !empty($results);
+  $query = new EntityFieldQuery();
+  return (bool) $query
+    ->fieldCondition($field)
+    ->range(0, 1)
+    ->count()
+    ->execute();
 }
 
 /**

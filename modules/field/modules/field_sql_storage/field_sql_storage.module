@@ -482,127 +482,114 @@ function field_sql_storage_field_storage_purge($entity_type, $entity, $field, $i
 /**
  * Implements hook_field_storage_query().
  */
-function field_sql_storage_field_storage_query($field_id, $conditions, $options) {
-  $load_current = $options['age'] == FIELD_LOAD_CURRENT;
-
-  $field = field_info_field_by_id($field_id);
-  $field_name = $field['field_name'];
-  $table = $load_current ? _field_sql_storage_tablename($field) : _field_sql_storage_revision_tablename($field);
-  $field_columns = array_keys($field['columns']);
-
-  // Build the query.
-  $query = db_select($table, 't');
-  $query->join('field_config_entity_type', 'e', 't.etid = e.etid');
-
-  // Add conditions.
-  foreach ($conditions as $condition) {
-    // A condition is either a (column, value, operator) triple, or a
-    // (column, value) pair with implied operator.
-    @list($column, $value, $operator) = $condition;
-    // Translate operator and value if needed.
-    switch ($operator) {
-      case 'STARTS_WITH':
-        $operator = 'LIKE';
-        $value = db_like($value) . '%';
-        break;
-
-      case 'ENDS_WITH':
-        $operator = 'LIKE';
-        $value = '%' . db_like($value);
-        break;
-
-      case 'CONTAINS':
-        $operator = 'LIKE';
-        $value = '%' . db_like($value) . '%';
-        break;
+function field_sql_storage_field_storage_query(EntityFieldQuery $query) {
+  $groups = array();
+  if ($query->age == FIELD_LOAD_CURRENT) {
+    $tablename_function = '_field_sql_storage_tablename';
+    $id_key = 'entity_id';
+  }
+  else {
+    $tablename_function = '_field_sql_storage_revision_tablename';
+    $id_key = 'revision_id';
+  }
+  $table_aliases = array();
+  // Add tables for the fields used.
+  foreach ($query->fields as $key => $field) {
+    $tablename = $tablename_function($field);
+    // Every field needs a new table.
+    $table_alias = $tablename . $key;
+    $table_aliases[$key] = $table_alias;
+    if ($key) {
+      $select_query->join($tablename, $table_alias, "$table_alias.etid = $field_base_table.etid AND $table_alias.$id_key = $field_base_table.$id_key");
     }
-    // Translate field columns into prefixed db columns.
-    if (in_array($column, $field_columns)) {
-      $column = _field_sql_storage_columnname($field_name, $column);
+    else {
+      $select_query = db_select($tablename, $table_alias);
+      $select_query->fields($table_alias, array('entity_id', 'revision_id', 'bundle'));
+      // As only a numeric ID is stored instead of the entity type add the
+      // field_config_entity_type table to resolve the etid to a more readable
+      // name.
+      $select_query->join('field_config_entity_type', 'fcet', "fcet.etid = $table_alias.etid");
+      $select_query->addField('fcet', 'type', 'entity_type');
+      $field_base_table = $table_alias;
     }
-    // Translate entity types into numeric ids. Expressing the condition on the
-    // local 'etid' column rather than the JOINed 'type' column avoids a
-    // filesort.
-    if ($column == 'type') {
-      $column = 't.etid';
-      if (is_array($value)) {
-        foreach (array_keys($value) as $key) {
-          $value[$key] = _field_sql_storage_etid($value[$key]);
+    if ($field['cardinality'] != 1) {
+      $select_query->distinct();
+    }
+  }
+
+  // Add field conditions.
+  foreach ($query->fieldConditions as $key => $condition) {
+    $table_alias = $table_aliases[$key];
+    $field = $condition['field'];
+    // Add the specified condition.
+    $sql_field = "$table_alias." . _field_sql_storage_columnname($field['field_name'], $condition['column']);
+    $query->addCondition($select_query, $sql_field, $condition);
+    // Add delta / language group conditions.
+    foreach (array('delta', 'language') as $column) {
+      if (isset($condition[$column . '_group'])) {
+        $group_name = $condition[$column . '_group'];
+        if (!isset($groups[$column][$group_name])) {
+          $groups[$column][$group_name] = $table_alias;
+        }
+        else {
+          $select_query->where("$table_alias.$column = " . $groups[$column][$group_name] . ".$column");
         }
       }
-      else {
-        $value = _field_sql_storage_etid($value);
-      }
     }
-    // Track condition on 'deleted'.
-    if ($column == 'deleted') {
-      $condition_deleted = TRUE;
-    }
-
-    $query->condition($column, $value, $operator);
   }
 
-  // Exclude deleted data unless we have a condition on it.
-  if (!isset($condition_deleted)) {
-    $query->condition('deleted', 0);
+  // Add field orders.
+  foreach ($query->fieldOrder as $key => $order) {
+    $table_alias = $table_aliases[$key];
+    $field = $order['field'];
+    $sql_field = "$table_alias." . _field_sql_storage_columnname($field['field_name'], $order['column']);
+    $select_query->orderBy($sql_field, $order['direction']);
   }
 
-  // For a count query, return the count now.
-  if ($options['count']) {
-    return $query
-      ->fields('t', array('etid', 'entity_id', 'revision_id'))
-      ->distinct()
-      ->countQuery()
-      ->execute()
-      ->fetchField();
+  if (isset($query->deleted)) {
+    $select_query->condition("$field_base_table.deleted", (int) $query->deleted);
   }
-
-  // For a data query, add fields.
-  $query
-    ->fields('t', array('bundle', 'entity_id', 'revision_id'))
-    ->fields('e', array('type'))
-    // We need to ensure entities arrive in a consistent order for the
-    // range() operation to work.
-    ->orderBy('t.etid')
-    ->orderBy('t.entity_id');
-
-  // Initialize results array
-  $return = array();
-
-  // Getting $count entities possibly requires reading more than $count rows
-  // since fields with multiple values span over several rows. We query for
-  // batches of $count rows until we've either read $count entities or received
-  // less rows than asked for.
-  $entity_count = 0;
-  do {
-    if ($options['limit'] != FIELD_QUERY_NO_LIMIT) {
-      $query->range($options['cursor'], $options['limit']);
+  if ($query->propertyConditions || $query->propertyOrder) {
+    if (empty($query->entityConditions['entity_type']['value'])) {
+      throw new EntityFieldQueryException('Property conditions and orders must have an entity type defined.');
     }
-    $results = $query->execute();
-
-    $row_count = 0;
-    foreach ($results as $row) {
-      $row_count++;
-      $options['cursor']++;
-      // If querying all revisions and the entity type has revisions, we need
-      // to key the results by revision_ids.
-      $entity_type = entity_get_info($row->type);
-      $id = ($load_current || empty($entity_type['entity keys']['revision'])) ? $row->entity_id : $row->revision_id;
-
-      if (!isset($return[$row->type][$id])) {
-        $return[$row->type][$id] = entity_create_stub_entity($row->type, array($row->entity_id, $row->revision_id, $row->bundle));
-        $entity_count++;
-      }
-    }
-  } while ($options['limit'] != FIELD_QUERY_NO_LIMIT && $row_count == $options['limit'] && $entity_count < $options['limit']);
-
-  // The query is complete when the last batch returns less rows than asked
-  // for.
-  if ($row_count < $options['limit']) {
-    $options['cursor'] = FIELD_QUERY_COMPLETE;
+    $entity_type = $query->entityConditions['entity_type']['value'];
+    $entity_base_table = _field_sql_storage_query_join_entity($select_query, $entity_type, $field_base_table);
+    $query->entityConditions['entity_type']['operator'] = '=';
+    $query->processProperty($select_query, $entity_base_table);
   }
+  foreach ($query->entityConditions as $key => $condition) {
+    $sql_field = $key == 'entity_type' ? 'fcet.type' : "$field_base_table.$key";
+    $query->addCondition($select_query, $sql_field, $condition);
+  }
+  foreach ($query->entityOrder as $key => $direction) {
+    $sql_field = $key == 'entity_type' ? 'fcet.type' : "$field_base_table.$key";
+    $query->orderBy($sql_field, $direction);
+  }
+  return $query->finishQuery($select_query, $id_key);
+}
 
-  return $return;
+/**
+ * Adds the base entity table to a field query object.
+ *
+ * @param SelectQuery $select_query
+ *   A SelectQuery containing at least one table as specified by
+ *   _field_sql_storage_tablename().
+ * @param $entity_type
+ *   The entity type for which the base table should be joined.
+ * @param $field_base_table
+ *   Name of a table in $select_query. As only INNER JOINs are used, it does
+ *   not matter which.
+ *
+ * @return
+ *   The name of the entity base table joined in.
+ */
+function _field_sql_storage_query_join_entity(SelectQuery $select_query, $entity_type, $field_base_table) {
+  $entity_info = entity_get_info($entity_type);
+  $entity_base_table = $entity_info['base table'];
+  $entity_field = $entity_info['entity keys']['id'];
+  $select_query->join($entity_base_table, $entity_base_table, "$entity_base_table.$entity_field = $field_base_table.entity_id");
+  return $entity_base_table;
 }
 
 /**
