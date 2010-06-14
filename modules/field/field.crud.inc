@@ -1,5 +1,5 @@
 <?php
-// $Id: field.crud.inc,v 1.63 2010/06/05 12:05:25 dries Exp $
+// $Id: field.crud.inc,v 1.64 2010/06/14 15:41:02 dries Exp $
 
 /**
  * @file
@@ -1036,25 +1036,23 @@ function field_purge_batch($batch_size) {
   $instances = field_read_instances(array('deleted' => 1), array('include_deleted' => 1));
 
   foreach ($instances as $instance) {
+    // field_purge_data() will need the field array.
     $field = field_info_field_by_id($instance['field_id']);
+    // Retrieve some entities.
+    $query = new EntityFieldQuery;
+    $results = $query
+      ->fieldCondition($field)
+      ->entityCondition('bundle', $instance['bundle'])
+      ->deleted(TRUE)
+      ->range(0, $batch_size)
+      ->execute();
 
-    // Retrieve some pseudo-entities.
-    $entity_types = field_attach_query($instance['field_id'], array(array('bundle', $instance['bundle']), array('deleted', 1)), array('limit' => $batch_size));
-
-    if (count($entity_types) > 0) {
-      // Field data for the instance still exists.
-      foreach ($entity_types as $entity_type => $entities) {
-        field_attach_load($entity_type, $entities, FIELD_LOAD_CURRENT, array('field_id' => $field['id'], 'deleted' => 1));
-
-        foreach ($entities as $id => $entity) {
-          // field_attach_query() may return more results than we asked for.
-          // Stop when he have done our batch size.
-          if ($batch_size-- <= 0) {
-            return;
-          }
-
+    if ($results) {
+      foreach ($results as $entity_type => $stub_entities) {
+        field_attach_load($entity_type, $stub_entities, FIELD_LOAD_CURRENT, array('field_id' => $field['id'], 'deleted' => 1));
+        foreach ($stub_entities as $stub_entity) {
           // Purge the data for the entity.
-          field_purge_data($entity_type, $entity, $field, $instance);
+          field_purge_data($entity_type, $stub_entity, $field, $instance);
         }
       }
     }
@@ -1164,4 +1162,3 @@ function field_purge_field($field) {
 /**
  * @} End of "defgroup field_purge".
  */
-

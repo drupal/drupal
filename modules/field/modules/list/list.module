@@ -1,5 +1,5 @@
 <?php
-// $Id: list.module,v 1.32 2010/05/12 08:55:47 dries Exp $
+// $Id: list.module,v 1.33 2010/06/14 15:41:02 dries Exp $
 
 /**
  * @file
@@ -99,7 +99,7 @@ function list_field_schema($field) {
  *
  * @todo: If $has_data, add a form validate function to verify that the
  * new allowed values do not exclude any keys for which data already
- * exists in the databae (use field_attach_query()) to find out.
+ * exists in the field storage (use EntityFieldQuery to find out).
  * Implement the validate function via hook_field_update_forbid() so
  * list.module does not depend on form submission.
  */

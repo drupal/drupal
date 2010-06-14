@@ -1,5 +1,5 @@
 <?php
-// $Id: field_test.install,v 1.2 2009/12/04 16:49:46 dries Exp $
+// $Id: field_test.install,v 1.3 2010/06/14 15:41:02 dries Exp $
 
 /**
  * @file
@@ -49,6 +49,37 @@ function field_test_schema() {
       'ftvid' => array('ftvid'),
     ),
     'primary key' => array('ftid'),
+  );
+  $schema['test_entity_bundle_key'] = array(
+    'description' => 'The base table for test entities with a bundle key.',
+    'fields' => array(
+      'ftid' => array(
+        'description' => 'The primary indentifier for a test_entity_bundle_key.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'fttype' => array(
+        'description' => 'The type of this test_entity.',
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => FALSE,
+        'default' => '',
+      ),
+    ),
+  );
+  $schema['test_entity_bundle'] = array(
+    'description' => 'The base table for test entities with a bundle.',
+    'fields' => array(
+      'ftid' => array(
+        'description' => 'The primary indentifier for a test_entity_bundle.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
   );
   $schema['test_entity_revision'] = array(
     'description' => 'Stores information about each saved version of a {test_entity}.',

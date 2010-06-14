@@ -1,5 +1,5 @@
 <?php
-// $Id: field.api.php,v 1.83 2010/06/06 00:24:16 webchick Exp $
+// $Id: field.api.php,v 1.84 2010/06/14 15:41:02 dries Exp $
 
 /**
  * @ingroup field_fieldable_type
@@ -1470,24 +1470,20 @@ function hook_field_storage_delete_revision($entity_type, $entity, $fields) {
 }
 
 /**
- * Handle a field query.
+ * Execute an EntityFieldQuery.
  *
- * This hook is invoked from field_attach_query() to ask the field storage
- * module to handle a field query.
+ * This hook is called to find the entities having certain entity and field
+ * conditions and sort them in the given field order. If the field storage
+ * engine also handles property sorts and orders, it should unset those
+ * properties in the called object to signal that those have been handled.
  *
- * @param $field_name
- *   The name of the field to query.
- * @param $conditions
- *   See field_attach_query(). A storage module that doesn't support querying a
- *   given column should raise a FieldQueryException. Incompatibilities should
- *   be mentioned on the module project page.
- * @param $options
- *   See field_attach_query(). All option keys are guaranteed to be specified.
+ * @param EntityFieldQuery $query
+ *   An EntityFieldQuery.
  *
  * @return
- *   See field_attach_query().
+ *   See EntityFieldQuery::execute() for the return values.
  */
-function hook_field_storage_query($field_name, $conditions, $options) {
+function hook_field_storage_query($query) {
   // @todo Needs function body
 }
 
@@ -1658,34 +1654,6 @@ function hook_field_storage_pre_update($entity_type, $entity, &$skip_fields) {
 }
 
 /**
- * Act before the storage backend runs the query.
- *
- * This hook should be implemented by modules that use
- * hook_field_storage_pre_load(), hook_field_storage_pre_insert() and
- * hook_field_storage_pre_update() to bypass the regular storage engine, to
- * handle field queries.
- *
- * @param $field_name
- *   The name of the field to query.
- * @param $conditions
- *   See field_attach_query().
- *   A storage module that doesn't support querying a given column should raise
- *   a FieldQueryException. Incompatibilities should be mentioned on the module
- *   project page.
- * @param $options
- *   See field_attach_query(). All option keys are guaranteed to be specified.
- * @param $skip_field
- *   Boolean, always coming as FALSE.
- * @return
- *   See field_attach_query().
- *   The $skip_field parameter should be set to TRUE if the query has been
- *   handled.
- */
-function hook_field_storage_pre_query($field_name, $conditions, $options, &$skip_field) {
-  // @todo Needs function body.
-}
-
-/**
  * Alters the display settings of a field before it gets displayed.
  *
  * Note that instead of hook_field_display_alter(), which is called for all
@@ -1837,8 +1805,12 @@ function hook_field_update_forbid($field, $prior_field, $has_data) {
     // Identify the keys that will be lost.
     $lost_keys = array_diff(array_keys($field['settings']['allowed_values']), array_keys($prior_field['settings']['allowed_values']));
     // If any data exist for those keys, forbid the update.
-    $count = field_attach_query($prior_field['id'], array('value', $lost_keys, 'IN'), 1);
-    if ($count > 0) {
+    $query = new EntityFieldQuery;
+    $found = $query
+      ->fieldCondition($prior_field['field_name'], 'value', $lost_keys)
+      ->range(0, 1)
+      ->execute();
+    if ($found) {
       throw new FieldUpdateForbiddenException("Cannot update a list field not to include keys with existing data");
     }
   }

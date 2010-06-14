@@ -1,5 +1,5 @@
 <?php
-// $Id: field_test.field.inc,v 1.10 2010/05/18 18:30:49 dries Exp $
+// $Id: field_test.field.inc,v 1.11 2010/06/14 15:41:02 dries Exp $
 
 /**
  * @file
@@ -26,6 +26,14 @@ function field_test_field_info() {
       'default_widget' => 'test_field_widget',
       'default_formatter' => 'field_test_default',
     ),
+    'shape' => array(
+      'label' => t('Shape'),
+      'description' => t('Another dummy field type.'),
+      'settings' => array(),
+      'instance_settings' => array(),
+      'default_widget' => 'test_field_widget',
+      'default_formatter' => 'field_test_default',
+    ),
     'hidden_test_field' => array(
       'no_ui' => TRUE,
       'label' => t('Hidden from UI test field'),
@@ -42,18 +50,36 @@ function field_test_field_info() {
  * Implements hook_field_schema().
  */
 function field_test_field_schema($field) {
-  return array(
-    'columns' => array(
-      'value' => array(
-        'type' => 'int',
-        'size' => 'tiny',
-        'not null' => FALSE,
+  if ($field['type'] == 'test_field') {
+    return array(
+      'columns' => array(
+        'value' => array(
+          'type' => 'int',
+          'size' => 'medium',
+          'not null' => FALSE,
+        ),
       ),
-    ),
-    'indexes' => array(
-      'value' => array('value'),
-    ),
-  );
+      'indexes' => array(
+        'value' => array('value'),
+      ),
+    );
+  }
+  else {
+    return array(
+      'columns' => array(
+        'shape' => array(
+          'type' => 'varchar',
+          'length' => 32,
+          'not null' => FALSE,
+        ),
+        'color' => array(
+          'type' => 'varchar',
+          'length' => 32,
+          'not null' => FALSE,
+        ),
+      ),
+    );
+  }
 }
 
 /**
