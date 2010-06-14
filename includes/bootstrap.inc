@@ -2493,13 +2493,21 @@ function ip_address() {
         // If an array of known reverse proxy IPs is provided, then trust
         // the XFF header if request really comes from one of them.
         $reverse_proxy_addresses = variable_get('reverse_proxy_addresses', array());
-        if (!empty($reverse_proxy_addresses) && in_array($ip_address, $reverse_proxy_addresses, TRUE)) {
-          // The "X-Forwarded-For" header is a comma+space separated list of IP addresses,
-          // the left-most being the farthest downstream client. If there is more than
-          // one proxy, we are interested in the most recent one (i.e. last one in the list).
-          $ip_address_parts = explode(',', $_SERVER[$reverse_proxy_header]);
-          $ip_address = trim(array_pop($ip_address_parts));
-        }
+
+        // Turn XFF header into an array.
+        $forwarded = explode(',', $_SERVER[$reverse_proxy_header]);
+
+        // Trim the forwarded IPs; they may have been delimited by commas and spaces.
+        $forwarded = array_map('trim', $forwarded);
+
+        // Tack direct client IP onto end of forwarded array.
+        $forwarded[] = $ip_address;
+
+        // Eliminate all trusted IPs.
+        $untrusted = array_diff($forwarded, $reverse_proxy_addresses);
+
+        // The right-most IP is the most specific we can trust.
+        $ip_address = array_pop($untrusted);
       }
     }
   }
