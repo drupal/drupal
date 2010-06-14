@@ -2269,8 +2269,10 @@ function _system_rebuild_module_data() {
     drupal_alter('system_info', $modules[$key]->info, $modules[$key], $type);
   }
 
-  // The install profile is required.
-  $modules[$profile]->info['required'] = TRUE;
+  // The install profile is required, if it's a valid module.
+  if (isset($modules[$profile])) {
+    $modules[$profile]->info['required'] = TRUE;
+  }
 
   return $modules;
 }
