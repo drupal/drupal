@@ -316,8 +316,8 @@ class DatabaseSchema_mysql extends DatabaseSchema {
     }
     $query = 'ALTER TABLE {' . $table . '} ADD ';
     $query .= $this->createFieldSql($field, $this->processField($spec));
-    if (count($keys_new)) {
-      $query .= ', ADD ' . implode(', ADD ', $this->createKeysSql($keys_new));
+    if ($keys_sql = $this->createKeysSql($keys_new)) {
+      $query .= ', ADD ' . implode(', ADD ', $keys_sql);
     }
     $this->connection->query($query);
     if (isset($spec['initial'])) {
@@ -439,8 +439,8 @@ class DatabaseSchema_mysql extends DatabaseSchema {
     }
 
     $sql = 'ALTER TABLE {' . $table . '} CHANGE `' . $field . '` ' . $this->createFieldSql($field_new, $this->processField($spec));
-    if (count($keys_new)) {
-      $sql .= ', ADD ' . implode(', ADD ', $this->createKeysSql($keys_new));
+    if ($keys_sql = $this->createKeysSql($keys_new)) {
+      $sql .= ', ADD ' . implode(', ADD ', $keys_sql);
     }
     $this->connection->query($sql);
   }
