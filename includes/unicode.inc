@@ -1,5 +1,5 @@
 <?php
-// $Id: unicode.inc,v 1.43 2010/06/10 15:20:48 dries Exp $
+// $Id: unicode.inc,v 1.44 2010/06/14 12:37:15 dries Exp $
 
 /**
  * Indicates an error during check for PHP unicode support.
@@ -411,14 +411,20 @@ function _mime_header_decode($matches) {
 }
 
 /**
- * Decode all HTML entities (including numerical ones) to regular UTF-8 bytes.
- * Double-escaped entities will only be decoded once ("&amp;lt;" becomes "&lt;", not "<").
+ * Decodes all HTML entities (including numerical ones) to regular UTF-8 bytes.
+ *
+ * Double-escaped entities will only be decoded once ("&amp;lt;" becomes "&lt;",
+ * not "<"). Be careful when using this function, as decode_entities can revert
+ * previous sanitization efforts (&lt;script&gt; will become <script>).
  *
  * @param $text
  *   The text to decode entities in.
  * @param $exclude
  *   An array of characters which should not be decoded. For example,
  *   array('<', '&', '"'). This affects both named and numerical entities.
+ *
+ * @return
+ *   The input $text, with all HTML entities decoded once.
  */
 function decode_entities($text, $exclude = array()) {
   static $html_entities;
