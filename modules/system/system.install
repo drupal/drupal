@@ -269,8 +269,18 @@ function system_requirements($phase) {
     // By default no private files directory is configured. For private files
     // to be secure the admin needs to provide a path outside the webroot.
     variable_get('file_private_path', FALSE),
-    variable_get('file_temporary_path', sys_get_temp_dir()),
   );
+
+  // Do not check for the temporary files directory at install time
+  // unless it has been set in settings.php. In this case the user has
+  // no alternative but to fix the directory if it is not writable.
+  if ($phase == 'install') {
+    $directories[] = variable_get('file_temporary_path', FALSE);
+  }
+  else {
+    $directories[] = variable_get('file_temporary_path', file_directory_temp());
+  }
+
   $requirements['file system'] = array(
     'title' => $t('File system'),
   );
