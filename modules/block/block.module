@@ -365,6 +365,11 @@ function _block_rehash($theme = NULL) {
   foreach ($database_blocks as $block) {
     // Preserve info which is not in the database.
     $block->info = $current_blocks[$block->module][$block->delta]['info'];
+    // The cache mode can only by set from hook_block_info(), so that has
+    // precedence over the database's value.
+    if (isset($current_blocks[$block->module][$block->delta]['cache'])) {
+      $block->cache = $current_blocks[$block->module][$block->delta]['cache'];
+    }
     // Blocks stored in the database override the blocks defined in code.
     $current_blocks[$block->module][$block->delta] = get_object_vars($block);
     // Preserve this block.
@@ -395,7 +400,7 @@ function _block_rehash($theme = NULL) {
         $block['region'] = BLOCK_REGION_NONE;
       }
       // There is no point saving disabled blocks. Still, we need to save them
-      // beecause the 'title' attribute is saved to the {blocks} table.
+      // because the 'title' attribute is saved to the {blocks} table.
       if (isset($block['bid'])) {
         // If the block has a bid property, it comes from the database and
         // the record needs to be updated, so set the primary key to 'bid'
@@ -562,7 +567,7 @@ function block_theme_initialize($theme) {
     $result = db_query("SELECT * FROM {block} WHERE theme = :theme", array(':theme' => $default_theme), array('fetch' => PDO::FETCH_ASSOC));
     foreach ($result as $block) {
       // If the region isn't supported by the theme, assign the block to the theme's default region.
-      if (!array_key_exists($block['region'], $regions)) {
+      if ($block['status'] && !array_key_exists($block['region'], $regions)) {
         $block['region'] = system_default_region($theme);
       }
       $block['theme'] = $theme;
@@ -842,6 +847,14 @@ function _block_get_cache_id($block) {
  * Implements hook_flush_caches().
  */
 function block_flush_caches() {
+  // Rehash blocks for active themes. We don't use list_themes() here,
+  // because if MAINTENANCE_MODE is defined it skips reading the database,
+  // and we can't tell which themes are active.
+  $themes = db_query("SELECT name FROM {system} WHERE type = 'theme' AND status = 1");
+  foreach ($themes as $theme) {
+    _block_rehash($theme->name);
+  }
+
   return array('cache_block');
 }
 

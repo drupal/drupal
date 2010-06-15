@@ -261,6 +261,29 @@ class BlockTestCase extends DrupalWebTestCase {
     ));
     $this->assertFieldByXPath($xpath, FALSE, t('Custom block found in %region_name region.', array('%region_name' => $region['name'])));
   }
+
+  /**
+   * Test _block_rehash().
+   */
+  function testBlockRehash() {
+    module_enable(array('block_test'));
+    $this->assertTrue(module_exists('block_test'), t('Test block module enabled.'));
+
+    // Our new block should be inserted in the database when we visit the
+    // block management page.
+    $this->drupalGet('admin/structure/block');
+    // Our test block's caching should default to DRUPAL_CACHE_PER_ROLE.
+    $current_caching = db_query("SELECT cache FROM {block} WHERE module = 'block_test' AND delta = 'test_cache'")->fetchField();
+    $this->assertEqual($current_caching, DRUPAL_CACHE_PER_ROLE, t('Test block cache mode defaults to DRUPAL_CACHE_PER_ROLE.'));
+
+    // Disable caching for this block.
+    variable_set('block_test_caching', DRUPAL_NO_CACHE);
+    // Flushing all caches should call _block_rehash().
+    drupal_flush_all_caches();
+    // Verify that the database is updated with the new caching mode.
+    $current_caching = db_query("SELECT cache FROM {block} WHERE module = 'block_test' AND delta = 'test_cache'")->fetchField();
+    $this->assertEqual($current_caching, DRUPAL_NO_CACHE, t("Test block's database entry updated to DRUPAL_NO_CACHE."));
+  }
 }
 
 class NonDefaultBlockAdmin extends DrupalWebTestCase {
