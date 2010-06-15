@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.936 2010/06/14 12:27:46 dries Exp $
+// $Id: system.module,v 1.937 2010/06/15 16:19:28 dries Exp $
 
 /**
  * @file
@@ -2850,6 +2850,8 @@ function system_cron() {
 function system_flush_caches() {
   // Rebuild list of date formats.
   system_date_formats_rebuild();
+  // Reset the menu static caches.
+  menu_reset_static_cache();
 }
 
 /**
