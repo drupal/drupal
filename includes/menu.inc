@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.395 2010/06/11 10:39:10 dries Exp $
+// $Id: menu.inc,v 1.396 2010/06/16 05:07:16 dries Exp $
 
 /**
  * @file
@@ -1279,7 +1279,7 @@ function menu_tree_check_access(&$tree, $node_links = array()) {
     $nids = array_keys($node_links);
     $select = db_select('node', 'n');
     $select->addField('n', 'nid');
-    $select->condition('status', 1);
+    $select->condition('n.status', 1);
     $select->condition('n.nid', $nids, 'IN');
     $select->addTag('node_access');
     $nids = $select->execute()->fetchCol();
