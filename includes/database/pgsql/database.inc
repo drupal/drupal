@@ -40,6 +40,13 @@ class DatabaseConnection_pgsql extends DatabaseConnection {
 
     $dsn = 'pgsql:host=' . $connection_options['host'] . ' dbname=' . $connection_options['database'] . ' port=' . $connection_options['port'];
     parent::__construct($dsn, $connection_options['username'], $connection_options['password'], array(
+      // Prepared statements are most effective for performance when queries
+      // are recycled (used several times). However, if they are not re-used,
+      // prepared statements become ineffecient. Since most of Drupal's
+      // prepared queries are not re-used, it should be faster to emulate
+      // the preparation than to actually ready statements for re-use. If in
+      // doubt, reset to FALSE and measure performance.
+      PDO::ATTR_EMULATE_PREPARES => TRUE,
       // Convert numeric values to strings when fetching.
       PDO::ATTR_STRINGIFY_FETCHES => TRUE,
       // Force column names to lower case.
