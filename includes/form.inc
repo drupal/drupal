@@ -47,6 +47,7 @@
  *     '#type' => 'submit',
  *     '#value' => t('Submit'),
  *   );
+ *   return $form;
  * }
  * function my_module_example_form_validate($form, &$form_state) {
  *   // Validation logic.
@@ -66,6 +67,7 @@
  *     '#type' => 'submit',
  *     '#value' => $extra,
  *   );
+ *   return $form;
  * }
  * @endcode
  *
@@ -104,7 +106,20 @@
  *   support is provided for it in the Form API, but by tradition it was
  *   the location where application-specific data was stored for communication
  *   between the submit, validation, and form builder functions, especially
- *   in a multi-step-style form.
+ *   in a multi-step-style form. Form implementations may use any key(s) within
+ *   $form_state (other than the keys listed here and other reserved ones used
+ *   by Form API internals) for this kind of storage. The recommended way to
+ *   ensure that the chosen key doesn't conflict with ones used by the Form API
+ *   or other modules is to use the module name as the key name or a prefix for
+ *   the key name. For example, the Node module uses $form_state['node'] in node
+ *   editing forms to store information about the node being edited, and this
+ *   information stays available across successive clicks of the "Preview"
+ *   button as well as when the "Save" button is finally clicked.
+ * - 'temporary': Since values for all non-reserved keys in $form_state persist
+ *   throughout a multistep form sequence, the Form API provides the 'temporary'
+ *   key for modules to use for communicating information across form-related
+ *   functions during a single page request only. There is no use-case for this
+ *   functionality in core.
  * - 'triggering_element': (read-only) The form element that triggered
  *   submission. This is the same as the deprecated
  *   $form_state['clicked_button']. It is the element that caused submission,
