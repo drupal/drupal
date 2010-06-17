@@ -1039,7 +1039,7 @@ function field_purge_batch($batch_size) {
     // field_purge_data() will need the field array.
     $field = field_info_field_by_id($instance['field_id']);
     // Retrieve some entities.
-    $query = new EntityFieldQuery;
+    $query = new EntityFieldQuery();
     $results = $query
       ->fieldCondition($field)
       ->entityCondition('bundle', $instance['bundle'])

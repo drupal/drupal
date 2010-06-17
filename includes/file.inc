@@ -262,7 +262,7 @@ function file_stream_wrapper_get_instance_by_uri($uri) {
   $scheme = file_uri_scheme($uri);
   $class = file_stream_wrapper_get_class($scheme);
   if (class_exists($class)) {
-    $instance = new $class;
+    $instance = new $class();
     $instance->setUri($uri);
     return $instance;
   }
@@ -293,7 +293,7 @@ function file_stream_wrapper_get_instance_by_uri($uri) {
 function file_stream_wrapper_get_instance_by_scheme($scheme) {
   $class = file_stream_wrapper_get_class($scheme);
   if (class_exists($class)) {
-    $instance = new $class;
+    $instance = new $class();
     $instance->setUri($scheme . '://');
     return $instance;
   }
@@ -1662,7 +1662,7 @@ function file_scan_directory($dir, $mask, $options = array(), $depth = 0) {
         elseif ($depth >= $options['min_depth'] && preg_match($mask, $filename)) {
           // Always use this match over anything already set in $files with the
           // same $$options['key'].
-          $file = new StdClass;
+          $file = new stdClass();
           $file->uri = $uri;
           $file->filename = $filename;
           $file->name = pathinfo($filename, PATHINFO_FILENAME);

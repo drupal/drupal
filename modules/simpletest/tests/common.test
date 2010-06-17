@@ -30,7 +30,7 @@ class DrupalAlterTestCase extends DrupalWebTestCase {
     $base_theme_info = array();
 
     $array = array('foo' => 'bar');
-    $entity = new stdClass;
+    $entity = new stdClass();
     $entity->foo = 'bar';
 
     // Verify alteration of a single argument.

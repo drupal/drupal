@@ -153,7 +153,7 @@ function filter_admin_format_form($form, &$form_state, $format) {
   foreach ($filter_info as $name => $filter) {
     // Create an empty filter object for new/unconfigured filters.
     if (!isset($filters[$name])) {
-      $filters[$name] = new stdClass;
+      $filters[$name] = new stdClass();
       $filters[$name]->status = 0;
       $filters[$name]->weight = $filter['weight'];
       $filters[$name]->settings = array();

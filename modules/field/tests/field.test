@@ -2826,7 +2826,7 @@ class FieldBulkDeleteTestCase extends FieldTestCase {
     $field = reset($this->fields);
 
     // There are 10 entities of this bundle.
-    $query = new EntityFieldQuery;
+    $query = new EntityFieldQuery();
     $found = $query
       ->fieldCondition($field)
       ->entityCondition('bundle', $bundle)
@@ -2843,7 +2843,7 @@ class FieldBulkDeleteTestCase extends FieldTestCase {
     $this->assertEqual($instances[0]['bundle'], $bundle, 'The deleted instance is for the correct bundle');
 
     // There are 0 entities of this bundle with non-deleted data.
-    $query = new EntityFieldQuery;
+    $query = new EntityFieldQuery();
     $found = $query
       ->fieldCondition($field)
       ->entityCondition('bundle', $bundle)
@@ -2852,7 +2852,7 @@ class FieldBulkDeleteTestCase extends FieldTestCase {
 
     // There are 10 entities of this bundle when deleted fields are allowed, and
     // their values are correct.
-    $query = new EntityFieldQuery;
+    $query = new EntityFieldQuery();
     $found = $query
       ->fieldCondition($field)
       ->entityCondition('bundle', $bundle)
@@ -2889,7 +2889,7 @@ class FieldBulkDeleteTestCase extends FieldTestCase {
       field_purge_batch($batch_size);
 
       // There are $count deleted entities left.
-      $query = new EntityFieldQuery;
+      $query = new EntityFieldQuery();
       $found = $query
         ->fieldCondition($field)
         ->entityCondition('bundle', $bundle)

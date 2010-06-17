@@ -242,7 +242,7 @@ function drupal_mail_system($module, $key) {
   if (empty($instances[$class])) {
     $interfaces = class_implements($class);
     if (isset($interfaces['MailSystemInterface'])) {
-      $instances[$class] = new $class;
+      $instances[$class] = new $class();
     }
     else {
       throw new Exception(t('Class %class does not implement interface %interface', array('%class' => $class, '%interface' => 'MailSystemInterface')));

@@ -1805,7 +1805,7 @@ function hook_field_update_forbid($field, $prior_field, $has_data) {
     // Identify the keys that will be lost.
     $lost_keys = array_diff(array_keys($field['settings']['allowed_values']), array_keys($prior_field['settings']['allowed_values']));
     // If any data exist for those keys, forbid the update.
-    $query = new EntityFieldQuery;
+    $query = new EntityFieldQuery();
     $found = $query
       ->fieldCondition($prior_field['field_name'], 'value', $lost_keys)
       ->range(0, 1)

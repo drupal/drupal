@@ -268,7 +268,7 @@ function _openid_test_endpoint_authenticate() {
   );
 
   // Sign the message using the MAC key that was exchanged during association.
-  $association = new stdClass;
+  $association = new stdClass();
   $association->mac_key = variable_get('mac_key');
   $keys_to_sign = explode(',', $response['openid.signed']);
   $response['openid.sig'] = _openid_signature($association, $response, $keys_to_sign);

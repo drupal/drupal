@@ -147,7 +147,7 @@ function system_admin_menu_block_page() {
 function system_admin_by_module() {
   $module_info = system_get_info('module');
   foreach ($module_info as $module => $info) {
-    $module_info[$module] = new StdClass();
+    $module_info[$module] = new stdClass();
     $module_info[$module]->info = $info;
   }
   uasort($module_info, 'system_sort_modules_by_info_name');

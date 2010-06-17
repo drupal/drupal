@@ -363,7 +363,7 @@ function dashboard_update() {
       foreach ($blocks as $weight => $block_string) {
         // Parse the query string to determine the block's module and delta.
         preg_match('/block-([^-]+)-(.+)/', $block_string, $matches);
-        $block = new stdClass;
+        $block = new stdClass();
         $block->module = $matches[1];
         $block->delta = $matches[2];
 
