@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.229 2010/03/07 07:55:14 webchick Exp $
+// $Id: menu.module,v 1.230 2010/06/17 13:44:45 dries Exp $
 
 /**
  * @file
@@ -596,7 +596,6 @@ function menu_form_alter(&$form, $form_state, $form_id) {
       return;
     }
     $link = $form['#node']->menu;
-    $form['#submit'][] = 'menu_node_form_submit';
 
     $form['menu'] = array(
       '#type' => 'fieldset',
@@ -661,15 +660,13 @@ function menu_form_alter(&$form, $form_state, $form_id) {
 }
 
 /**
- * Submit handler for node form.
- *
- * @see menu_form_alter()
+ * Implements hook_node_submit().
  */
-function menu_node_form_submit($form, &$form_state) {
+function menu_node_submit($node, $form, $form_state) {
   // Decompose the selected menu parent option into 'menu_name' and 'plid', if
   // the form used the default parent selection widget.
   if (!empty($form_state['values']['menu']['parent'])) {
-    list($form_state['values']['menu']['menu_name'], $form_state['values']['menu']['plid']) = explode(':', $form_state['values']['menu']['parent']);
+    list($node->menu['menu_name'], $node->menu['plid']) = explode(':', $form_state['values']['menu']['parent']);
   }
 }
 

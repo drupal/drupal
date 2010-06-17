@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.126 2010/05/10 06:34:39 dries Exp $
+// $Id: node.pages.inc,v 1.127 2010/06/17 13:44:45 dries Exp $
 
 /**
  * @file
@@ -76,12 +76,15 @@ function node_add($type) {
 }
 
 function node_form_validate($form, &$form_state) {
+  // $form_state['node'] contains the actual entity being edited, but we must
+  // not update it with form values that have not yet been validated, so we
+  // create a pseudo-entity to use during validation.
   $node = (object) $form_state['values'];
   node_validate($node, $form);
 
   // Field validation. Requires access to $form_state, so this cannot be
   // done in node_validate() as it currently exists.
-  field_attach_form_validate('node', $node, $form, $form_state);
+  entity_form_field_validate('node', $form, $form_state);
 }
 
 /**
@@ -89,27 +92,28 @@ function node_form_validate($form, &$form_state) {
  */
 function node_form($form, &$form_state, $node) {
   global $user;
-  // This form has its own multistep persistence.
-  if ($form_state['rebuild']) {
-    $form_state['input'] = array();
-  }
 
-  if (isset($form_state['node'])) {
-    $node = (object) ($form_state['node'] + (array) $node);
-  }
-  if (isset($form_state['node_preview'])) {
-    $form['#prefix'] = $form_state['node_preview'];
-  }
-  foreach (array('title') as $key) {
-    if (!isset($node->$key)) {
-      $node->$key = NULL;
+  // During initial form build, add the node entity to the form state for use
+  // during form building and processing. During a rebuild, use what is in the
+  // form state.
+  if (!isset($form_state['node'])) {
+    if (!isset($node->title)) {
+      $node->title = NULL;
     }
-  }
-  if (!isset($form_state['node_preview'])) {
     node_object_prepare($node);
+    $form_state['node'] = $node;
   }
   else {
+    $node = $form_state['node'];
+  }
+
+  // Some special stuff when previewing a node.
+  if (isset($form_state['node_preview'])) {
+    $form['#prefix'] = $form_state['node_preview'];
     $node->in_preview = TRUE;
+  }
+  else {
+    unset($node->in_preview);
   }
 
   // Identify this as a node edit form.
@@ -140,7 +144,9 @@ function node_form($form, &$form_state, $node) {
   if (!isset($form['title']['#weight'])) {
     $form['title']['#weight'] = -5;
   }
-
+  // @todo Legacy support. Modules adding form building and processing functions
+  //   to the node form are encouraged to access the node using
+  //   $form_state['node']. Remove in Drupal 8.
   $form['#node'] = $node;
 
   $form['additional_settings'] = array(
@@ -299,8 +305,9 @@ function node_form_delete_submit($form, &$form_state) {
 
 
 function node_form_build_preview($form, &$form_state) {
-  $node = node_form_submit_build_node($form, $form_state);
+  $node = $form['#builder_function']($form, $form_state);
   $form_state['node_preview'] = node_preview($node);
+  $form_state['rebuild'] = TRUE;
 }
 
 /**
@@ -382,7 +389,7 @@ function theme_node_preview($variables) {
 }
 
 function node_form_submit($form, &$form_state) {
-  $node = node_form_submit_build_node($form, $form_state);
+  $node = $form['#builder_function']($form, $form_state);
   $insert = empty($node->nid);
   node_save($node);
   $node_link = l(t('view'), 'node/' . $node->nid);
@@ -398,7 +405,6 @@ function node_form_submit($form, &$form_state) {
     drupal_set_message(t('@type %title has been updated.', $t_args));
   }
   if ($node->nid) {
-    unset($form_state['rebuild']);
     $form_state['values']['nid'] = $node->nid;
     $form_state['nid'] = $node->nid;
     $form_state['redirect'] = 'node/' . $node->nid;
@@ -407,25 +413,42 @@ function node_form_submit($form, &$form_state) {
     // In the unlikely case something went wrong on save, the node will be
     // rebuilt and node form redisplayed the same way as in preview.
     drupal_set_message(t('The post could not be saved.'), 'error');
+    $form_state['rebuild'] = TRUE;
   }
   // Clear the page and block caches.
   cache_clear_all();
 }
 
 /**
- * Build a node by processing submitted form values and prepare for a form rebuild.
+ * Updates the form state's node entity by processing this submission's values.
+ *
+ * This is the default #builder_function for the node form. It is called
+ * during the "Save" and "Preview" submit handlers to retrieve the entity to
+ * save or preview. This function can also be called by a "Next" button of a
+ * wizard to update the form state's entity with the current step's values
+ * before proceeding to the next step.
+ *
+ * @see node_form()
  */
 function node_form_submit_build_node($form, &$form_state) {
-  // Unset any button-level handlers, execute all the form-level submit
-  // functions to process the form values into an updated node.
+  // @todo Legacy support for modules that extend the node form with form-level
+  //   submit handlers that adjust $form_state['values'] prior to those values
+  //   being used to update the entity. Module authors are encouraged to instead
+  //   adjust the node directly within a hook_node_submit() implementation. For
+  //   Drupal 8, evaluate whether the pattern of triggering form-level submit
+  //   handlers during button-level submit processing is worth supporting
+  //   properly, and if so, add a Form API function for doing so.
   unset($form_state['submit_handlers']);
   form_execute_handlers('submit', $form, $form_state);
-  $node = node_submit((object) $form_state['values']);
 
-  field_attach_submit('node', $node, $form, $form_state);
+  $node = $form_state['node'];
+  entity_form_submit_build_entity('node', $node, $form, $form_state);
 
-  $form_state['node'] = (array) $node;
-  $form_state['rebuild'] = TRUE;
+  node_submit($node);
+  foreach (module_implements('node_submit') as $module) {
+    $function = $module . '_node_submit';
+    $function($node, $form, $form_state);
+  }
   return $node;
 }
 

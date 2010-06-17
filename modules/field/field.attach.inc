@@ -1,5 +1,5 @@
 <?php
-// $Id: field.attach.inc,v 1.90 2010/06/14 15:41:02 dries Exp $
+// $Id: field.attach.inc,v 1.91 2010/06/17 13:44:45 dries Exp $
 
 /**
  * @file
@@ -546,9 +546,6 @@ function field_attach_form($entity_type, $entity, &$form, &$form_state, $langcod
   $form['#pre_render'][] = '_field_extra_fields_pre_render';
   $form['#entity_type'] = $entity_type;
   $form['#bundle'] = $bundle;
-
-  // Save the original entity to allow later re-use.
-  $form_state['entity'] = $entity;
 
   // Let other modules make changes to the form.
   // Avoid module_invoke_all() to let parameters be taken by reference.

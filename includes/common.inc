@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1176 2010/06/09 14:55:30 dries Exp $
+// $Id: common.inc,v 1.1177 2010/06/17 13:44:44 dries Exp $
 
 /**
  * @file
@@ -6632,6 +6632,54 @@ function entity_uri($entity_type, $entity) {
  */
 function entity_invoke($op, $entity_type, $entity) {
   module_invoke_all('entity_' . $op, $entity, $entity_type);
+}
+
+/**
+ * Helper function for attaching field API validation to entity forms.
+ */
+function entity_form_field_validate($entity_type, $form, &$form_state) {
+  // All field attach API functions act on an entity object, but during form
+  // validation, we don't have one. $form_state contains the entity as it was
+  // prior to processing the current form submission, and we must not update it
+  // until we have fully validated the submitted input. Therefore, for
+  // validation, act on a pseudo entity created out of the form values.
+  $pseudo_entity = (object) $form_state['values'];
+  field_attach_form_validate($entity_type, $pseudo_entity, $form, $form_state);
+}
+
+/**
+ * Helper function for copying submitted values to entity properties for simple entity forms.
+ *
+ * During the submission handling of an entity form's "Save", "Preview", and
+ * possibly other buttons, the form state's entity needs to be updated with the
+ * submitted form values. Each entity form implements its own
+ * $form['#builder_function'] for doing this, appropriate for the particular
+ * entity and form. Many of these entity builder functions can call this helper
+ * function to re-use its logic of copying $form_state['values'][PROPERTY]
+ * values to $entity->PROPERTY for all entries in $form_state['values'] that are
+ * not field data, and calling field_attach_submit() to copy field data.
+ *
+ * For some entity forms (e.g., forms with complex non-field data and forms that
+ * simultaneously edit multiple entities), this behavior may be inappropriate,
+ * so the #builder_function for such forms needs to implement the required
+ * functionality instead of calling this function. 
+ */
+function entity_form_submit_build_entity($entity_type, $entity, $form, &$form_state) {
+  $info = entity_get_info($entity_type);
+  list(, , $bundle) = entity_extract_ids($entity_type, $entity);
+
+  // Copy top-level form values that are not for fields to entity properties,
+  // without changing existing entity properties that are not being edited by
+  // this form. Copying field values must be done using field_attach_submit().
+  $values_excluding_fields = $info['fieldable'] ? array_diff_key($form_state['values'], field_info_instances($entity_type, $bundle)) : $form_state['values'];
+  foreach ($values_excluding_fields as $key => $value) {
+    $entity->$key = $value;
+  }
+
+  // Copy field values to the entity.
+  if ($info['fieldable']) {
+    field_attach_submit($entity_type, $entity, $form, $form_state);
+  }
 }
 
 /**

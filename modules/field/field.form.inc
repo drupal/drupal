@@ -1,5 +1,5 @@
 <?php
-// $Id: field.form.inc,v 1.49 2010/05/23 07:30:56 dries Exp $
+// $Id: field.form.inc,v 1.50 2010/06/17 13:44:45 dries Exp $
 
 /**
  * @file
@@ -359,17 +359,12 @@ function field_default_form_errors($entity_type, $entity, $field, $instance, $la
  * to return just the changed part of the form.
  */
 function field_add_more_submit($form, &$form_state) {
-  // Set the form to rebuild and run submit handlers.
-  if (isset($form['#builder_function']) && function_exists($form['#builder_function'])) {
-    $entity = $form['#builder_function']($form, $form_state);
-
-    // Make the changes we want to the form state.
-    $field_name = $form_state['clicked_button']['#field_name'];
-    $langcode = $form_state['clicked_button']['#language'];
-    if ($form_state['values'][$field_name . '_add_more']) {
-      $form_state['field_item_count'][$field_name] = count($form_state['values'][$field_name][$langcode]);
-    }
+  $field_name = $form_state['clicked_button']['#field_name'];
+  $langcode = $form_state['clicked_button']['#language'];
+  if ($form_state['values'][$field_name . '_add_more']) {
+    $form_state['field_item_count'][$field_name] = count($form_state['values'][$field_name][$langcode]);
   }
+  $form_state['rebuild'] = TRUE;
 }
 
 /**

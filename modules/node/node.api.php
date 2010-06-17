@@ -1,5 +1,5 @@
 <?php
-// $Id: node.api.php,v 1.69 2010/06/06 00:24:16 webchick Exp $
+// $Id: node.api.php,v 1.70 2010/06/17 13:44:45 dries Exp $
 
 /**
  * @file
@@ -661,6 +661,34 @@ function hook_node_validate($node, $form) {
     if ($node->start > $node->end) {
       form_set_error('time', t('An event may not end before it starts.'));
     }
+  }
+}
+
+/**
+ * Act on a node after validated form values have been copied to it.
+ *
+ * This hook is invoked when a node form is submitted with either the "Save" or
+ * "Preview" button, after form values have been copied to the form state's node
+ * object, but before the node is saved or previewed. It is a chance for modules
+ * to adjust the node's properties from what they are simply after a copy from
+ * $form_state['values']. This hook is intended for adjusting non-field-related
+ * properties. See hook_field_attach_submit() for customizing field-related
+ * properties.
+ *
+ * @param $node
+ *   The node being updated in response to a form submission.
+ * @param $form
+ *   The form being used to edit the node.
+ * @param $form_state
+ *   The form state array.
+ *
+ * @ingroup node_api_hooks
+ */
+function hook_node_submit($node, $form, &$form_state) {
+  // Decompose the selected menu parent option into 'menu_name' and 'plid', if
+  // the form used the default parent selection widget.
+  if (!empty($form_state['values']['menu']['parent'])) {
+    list($node->menu['menu_name'], $node->menu['plid']) = explode(':', $form_state['values']['menu']['parent']);
   }
 }
 
