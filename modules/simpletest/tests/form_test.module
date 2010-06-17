@@ -1143,8 +1143,6 @@ function form_test_form_user_register_form_alter(&$form, &$form_state) {
   if (!empty($_REQUEST['field'])) {
     $node = (object)array('type' => 'page');
     field_attach_form('node', $node, $form, $form_state);
-    // The form API requires the builder function to set rebuilding, so do so.
-    $form['#builder_function'] = 'form_test_user_register_form_rebuild';
   }
 }
 

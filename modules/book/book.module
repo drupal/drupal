@@ -416,19 +416,33 @@ function book_form_alter(&$form, &$form_state, $form_id) {
 
     if ($access) {
       _book_add_form_elements($form, $form_state, $node);
+      // Since the "Book" dropdown can't trigger a form submission when
+      // JavaScript is disabled, add a submit button to do that. book.css hides
+      // this button when JavaScript is enabled.
       $form['book']['pick-book'] = array(
         '#type' => 'submit',
         '#value' => t('Change book (update list of parents)'),
-         // Submit the node form so the parent select options get updated.
-         // This is typically only used when JS is disabled. Since the parent options
-         // won't be changed via AJAX, a button is provided in the node form to submit
-         // the form and generate options in the parent select corresponding to the
-         // selected book. This is similar to what happens during a node preview.
-        '#submit' => array('node_form_submit_build_node'),
+        '#submit' => array('book_pick_book_nojs_submit'),
         '#weight' => 20,
       );
     }
   }
+}
+
+/**
+ * Submit handler to change a node's book.
+ *
+ * This handler is run when JavaScript is disabled. It triggers the form to
+ * rebuild so that the "Parent item" options are changed to reflect the newly
+ * selected book. When JavaScript is enabled, the submit button that triggers
+ * this handler is hidden, and the "Book" dropdown directly triggers the
+ * book_form_update() AJAX callback instead.
+ *
+ * @see book_form_update()
+ */
+function book_pick_book_nojs_submit($form, &$form_state) {
+  $form_state['node']->book = $form_state['values']['book'];
+  $form_state['rebuild'] = TRUE;
 }
 
 /**

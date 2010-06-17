@@ -366,15 +366,18 @@ function poll_form($node, &$form_state) {
  * return just the changed part of the form.
  */
 function poll_more_choices_submit($form, &$form_state) {
-  include_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'node') . '/node.pages.inc';
-  // Set the form to rebuild and run submit handlers.
-  node_form_submit_build_node($form, $form_state);
-
   // Make the changes we want to the form state.
   if ($form_state['values']['poll_more']) {
     $n = $_GET['q'] == 'system/ajax' ? 1 : 5;
     $form_state['choice_count'] = count($form_state['values']['choice']) + $n;
   }
+  // Renumber the choices. This invalidates the corresponding key/value
+  // associations in $form_state['input'], so clear that out. This requires
+  // poll_form() to rebuild the choices with the values in
+  // $form_state['node']->choice, which it does.
+  $form_state['node']->choice = array_values($form_state['values']['choice']);
+  unset($form_state['input']['choice']);
+  $form_state['rebuild'] = TRUE;
 }
 
 function _poll_choice_form($key, $chid = NULL, $value = '', $votes = 0, $weight = 0, $size = 10) {
