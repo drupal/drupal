@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.287 2010/06/01 05:08:40 dries Exp $
+// $Id: system.admin.inc,v 1.288 2010/06/17 13:16:57 dries Exp $
 
 /**
  * @file
@@ -147,7 +147,7 @@ function system_admin_menu_block_page() {
 function system_admin_by_module() {
   $module_info = system_get_info('module');
   foreach ($module_info as $module => $info) {
-    $module_info[$module] = new StdClass();
+    $module_info[$module] = new stdClass();
     $module_info[$module]->info = $info;
   }
   uasort($module_info, 'system_sort_modules_by_info_name');

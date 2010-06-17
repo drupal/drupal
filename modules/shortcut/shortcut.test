@@ -1,5 +1,5 @@
 <?php
-// $Id: shortcut.test,v 1.1 2010/03/06 06:33:14 dries Exp $
+// $Id: shortcut.test,v 1.2 2010/06/17 13:16:57 dries Exp $
 
 /**
  * @file
@@ -48,7 +48,7 @@ class ShortcutTestCase extends DrupalWebTestCase {
    * Creates a generic shortcut set.
    */
   function generateShortcutSet($title = '', $default_links = TRUE) {
-    $set = new stdClass;
+    $set = new stdClass();
     $set->title = empty($title) ? $this->randomName(10) : $title;
     if ($default_links) {
       $set->links = array();

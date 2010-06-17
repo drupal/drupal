@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.test,v 1.67 2010/05/26 10:54:30 dries Exp $
+// $Id: filter.test,v 1.68 2010/06/17 13:16:57 dries Exp $
 
 /**
  * Tests for text format and filter CRUD operations.
@@ -22,14 +22,14 @@ class FilterCRUDTestCase extends DrupalWebTestCase {
    */
   function testTextFormatCRUD() {
     // Add a text format with minimum data only.
-    $format = new stdClass;
+    $format = new stdClass();
     $format->name = 'Empty format';
     filter_format_save($format);
     $this->verifyTextFormat($format);
     $this->verifyFilters($format);
 
     // Add another text format specifying all possible properties.
-    $format = new stdClass;
+    $format = new stdClass();
     $format->name = 'Custom format';
     $format->filters = array(
       'filter_url' => array(
@@ -877,7 +877,7 @@ class FilterUnitTestCase extends DrupalUnitTestCase {
    */
   function testFilter() {
     // Setup dummy filter object.
-    $filter = new stdClass;
+    $filter = new stdClass();
     $filter->settings = array(
       'allowed_html' => '<a> <em> <strong> <cite> <blockquote> <code> <ul> <ol> <li> <dl> <dt> <dd>',
       'filter_html_help' => 1,
@@ -919,7 +919,7 @@ class FilterUnitTestCase extends DrupalUnitTestCase {
    */
   function testNoFollowFilter() {
     // Setup dummy filter object.
-    $filter = new stdClass;
+    $filter = new stdClass();
     $filter->settings = array(
       'allowed_html' => '<a>',
       'filter_html_help' => 1,
@@ -982,7 +982,7 @@ class FilterUnitTestCase extends DrupalUnitTestCase {
    */
   function testUrlFilter() {
     // Setup dummy filter object.
-    $filter = new stdClass;
+    $filter = new stdClass();
     $filter->settings = array(
       'filter_url_length' => 496,
     );

@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.test,v 1.24 2010/05/27 12:29:39 dries Exp $
+// $Id: openid.test,v 1.25 2010/06/17 13:16:57 dries Exp $
 
 /**
  * Base class for OpenID tests.
@@ -457,7 +457,7 @@ class OpenIDUnitTest extends DrupalWebTestCase {
       'openid.baz' => 'abc3',
       'foobar.foo' => 'abc4',
     );
-    $association = new stdClass;
+    $association = new stdClass();
     $association->mac_key = "1234567890abcdefghij\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\xF0\xF1\xF2\xF3\xF4\xF5\xF6\xF7\xF8\xF9";
     $this->assertEqual(_openid_signature($association, $response, array('foo', 'bar')), 'QnKZQzSFstT+GNiJDFOptdcZjrc=', t('Expected signature calculated.'));
   }

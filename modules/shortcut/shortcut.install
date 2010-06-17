@@ -1,5 +1,5 @@
 <?php
-// $Id: shortcut.install,v 1.4 2010/02/26 18:31:29 dries Exp $
+// $Id: shortcut.install,v 1.5 2010/06/17 13:16:57 dries Exp $
 
 /**
  * @file
@@ -12,7 +12,7 @@
 function shortcut_install() {
   $t = get_t();
   // Create an initial default shortcut set.
-  $shortcut_set = new StdClass();
+  $shortcut_set = new stdClass();
   $shortcut_set->title = $t('Default');
   $shortcut_set->links = array(
     array(

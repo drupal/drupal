@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.admin.inc,v 1.61 2010/04/24 14:49:13 dries Exp $
+// $Id: filter.admin.inc,v 1.62 2010/06/17 13:16:57 dries Exp $
 
 /**
  * @file
@@ -153,7 +153,7 @@ function filter_admin_format_form($form, &$form_state, $format) {
   foreach ($filter_info as $name => $filter) {
     // Create an empty filter object for new/unconfigured filters.
     if (!isset($filters[$name])) {
-      $filters[$name] = new stdClass;
+      $filters[$name] = new stdClass();
       $filters[$name]->status = 0;
       $filters[$name]->weight = $filter['weight'];
       $filters[$name]->settings = array();

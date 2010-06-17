@@ -1,5 +1,5 @@
 <?php
-// $Id: mail.inc,v 1.31 2010/05/04 15:11:21 dries Exp $
+// $Id: mail.inc,v 1.32 2010/06/17 13:16:57 dries Exp $
 
 /**
  * @file
@@ -242,7 +242,7 @@ function drupal_mail_system($module, $key) {
   if (empty($instances[$class])) {
     $interfaces = class_implements($class);
     if (isset($interfaces['MailSystemInterface'])) {
-      $instances[$class] = new $class;
+      $instances[$class] = new $class();
     }
     else {
       throw new Exception(t('Class %class does not implement interface %interface', array('%class' => $class, '%interface' => 'MailSystemInterface')));

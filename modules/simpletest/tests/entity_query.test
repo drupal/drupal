@@ -1,6 +1,6 @@
 <?php
 
-// $Id: entity_query.test,v 1.1 2010/06/14 15:41:03 dries Exp $
+// $Id: entity_query.test,v 1.2 2010/06/17 13:16:57 dries Exp $
 
 /**
  * @file
@@ -100,7 +100,7 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
 
     // Create entities which have a 'bundle key' defined.
     for ($i = 1; $i < 7; $i++) {
-      $entity = new stdClass;
+      $entity = new stdClass();
       $entity->ftid = $i;
       $entity->fttype = ($i < 5) ? 'bundle1' : 'bundle2';
 
@@ -109,7 +109,7 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
       field_attach_insert('test_entity_bundle_key', $entity);
     }
 
-    $entity = new stdClass;
+    $entity = new stdClass();
     $entity->ftid = 5;
     $entity->fttype = 'bundle2';
     $entity->{$this->field_names[1]}[LANGUAGE_NONE][0]['shape'] = 'square';
@@ -127,7 +127,7 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
 
     // Create entities with support for revisions.
     for ($i = 1; $i < 5; $i++) {
-      $entity = new stdClass;
+      $entity = new stdClass();
       $entity->ftid = $i;
       $entity->ftvid = $i;
       $entity->fttype = 'test_bundle';
@@ -140,7 +140,7 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
 
     // Add two revisions to an entity.
     for ($i = 100; $i < 102; $i++) {
-      $entity = new stdClass;
+      $entity = new stdClass();
       $entity->ftid = 4;
       $entity->ftvid = $i;
       $entity->fttype = 'test_bundle';
@@ -753,7 +753,7 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
     ), t('Test offset on a field.'), TRUE);
 
     for ($i = 6; $i < 10; $i++) {
-      $entity = new stdClass;
+      $entity = new stdClass();
       $entity->ftid = $i;
       $entity->{$this->field_names[0]}[LANGUAGE_NONE][0]['value'] = $i - 5;
       drupal_write_record('test_entity_bundle', $entity);

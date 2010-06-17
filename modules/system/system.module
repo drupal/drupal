@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.937 2010/06/15 16:19:28 dries Exp $
+// $Id: system.module,v 1.938 2010/06/17 13:16:57 dries Exp $
 
 /**
  * @file
@@ -2225,7 +2225,7 @@ function _system_rebuild_module_data() {
 
   // Include the install profile in modules that are loaded.
   $profile = drupal_get_profile();
-  $modules[$profile] = new stdClass;
+  $modules[$profile] = new stdClass();
   $modules[$profile]->name = $profile;
   $modules[$profile]->uri = 'profiles/' . $profile . '/' . $profile . '.profile';
   $modules[$profile]->filename = $profile . '.profile';
