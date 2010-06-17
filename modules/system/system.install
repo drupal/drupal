@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.475 2010/06/14 13:33:45 dries Exp $
+// $Id: system.install,v 1.476 2010/06/17 02:12:44 webchick Exp $
 
 /**
  * @file
@@ -372,10 +372,11 @@ function system_requirements($phase) {
 
   // Display an error if a newly introduced dependency in a module is not resolved.
   if ($phase == 'update') {
+    $profile = drupal_get_profile();
     $files = system_rebuild_module_data();
     foreach ($files as $module => $file) {
       // Ignore disabled modules and install profiles.
-      if (!$file->status || preg_match('/\.profile$/', $file->filename)) {
+      if (!$file->status || $module == $profile) {
         continue;
       }
       // Check the module's PHP version.
