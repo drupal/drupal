@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.213 2010/06/17 13:16:57 dries Exp $
+// $Id: file.inc,v 1.214 2010/06/20 23:53:52 webchick Exp $
 
 /**
  * @file
@@ -548,8 +548,8 @@ function file_save(stdClass $file) {
  *   A file object.
  * @param $destination
  *   A string containing the destination that $source should be copied to.
- *   This should be a stream wrapper URI. If this value is omitted, Drupal's
- *   public files scheme will be used, "public://".
+ *   This must be a stream wrapper URI. If this value is omitted, Drupal's
+ *   default files scheme will be used, usually "public://".
  * @param $replace
  *   Replace behavior when the destination file already exists:
  *   - FILE_EXISTS_REPLACE - Replace the existing file. If a managed file with
@@ -610,8 +610,9 @@ function file_copy(stdClass $source, $destination = NULL, $replace = FILE_EXISTS
  * @param $source
  *   A string specifying the filepath or URI of the original file.
  * @param $destination
- *   A URI containing the destination that $source should be copied to. If
- *   NULL the default scheme will be used as the destination.
+ *   A URI containing the destination that $source should be copied to.
+ *   This must be a stream wrapper URI. If this value is omitted, Drupal's
+ *   default files scheme will be used, usually "public://".
  * @param $replace
  *   Replace behavior when the destination file already exists:
  *   - FILE_EXISTS_REPLACE - Replace the existing file.
@@ -746,9 +747,9 @@ function file_destination($destination, $replace) {
  * @param $source
  *   A file object.
  * @param $destination
- *   A string containing the destination that $source should be moved to. This
- *   must be a URI matching a Drupal stream wrapper. If this value is omitted,
- *   Drupal's 'files' directory will be used.
+ *   A string containing the destination that $source should be moved to.
+ *   This must be a stream wrapper URI. If this value is omitted, Drupal's
+ *   default files scheme will be used, usually "public://".
  * @param $replace
  *   Replace behavior when the destination file already exists:
  *   - FILE_EXISTS_REPLACE - Replace the existing file. If a managed file with
@@ -808,9 +809,9 @@ function file_move(stdClass $source, $destination = NULL, $replace = FILE_EXISTS
  * @param $source
  *   A string specifying the filepath or URI of the original file.
  * @param $destination
- *   A string containing the destination that $source should be moved to. This
- *   must be a URI matching a Drupal stream wrapper. If this value is omitted,
- *   Drupal's 'files' directory will be used.
+ *   A string containing the destination that $source should be moved to.
+ *   This must be a stream wrapper URI. If this value is omitted, Drupal's
+ *   default files scheme will be used, usually "public://".
  * @param $replace
  *   Replace behavior when the destination file already exists:
  *   - FILE_EXISTS_REPLACE - Replace the existing file.
@@ -1098,8 +1099,9 @@ function file_space_used($uid = NULL, $status = FILE_STATUS_PERMANENT) {
  *   An optional, associative array of callback functions used to validate the
  *   file. See file_validate() for a full discussion of the array format.
  * @param $destination
- *   A string containing the URI $source should be copied to.  Defaults to
- *  "temporary://".
+ *   A string containing the URI $source should be copied to.
+ *   This must be a stream wrapper URI. If this value is omitted, Drupal's
+ *   temporary files scheme will be used ("temporary://").
  * @param $replace
  *   Replace behavior when the destination file already exists:
  *   - FILE_EXISTS_REPLACE: Replace the existing file.
@@ -1457,9 +1459,9 @@ function file_validate_image_resolution(stdClass $file, $maximum_dimensions = 0,
  * @param $data
  *   A string containing the contents of the file.
  * @param $destination
- *   A string containing the destination URI. If no value is provided then a
- *   randomly name will be generated and the file saved in Drupal's files
- *   directory.
+ *   A string containing the destination URI.
+ *   This must be a stream wrapper URI. If this value is omitted, Drupal's
+ *   default files scheme will be used, usually "public://".
  * @param $replace
  *   Replace behavior when the destination file already exists:
  *   - FILE_EXISTS_REPLACE - Replace the existing file. If a managed file with
@@ -1515,9 +1517,10 @@ function file_save_data($data, $destination = NULL, $replace = FILE_EXISTS_RENAM
  * @param $data
  *   A string containing the contents of the file.
  * @param $destination
- *   A string containing the destination location. If no value is provided
- *   then a randomly name will be generated and the file saved in Drupal's
- *   files directory.
+ *   A string containing the destination location.
+ *   This must be a stream wrapper URI.  If no value is provided, a
+ *   randomized name will be generated and the file is saved using Drupal's
+ *   default files scheme, usually "public://".
  * @param $replace
  *   Replace behavior when the destination file already exists:
  *   - FILE_EXISTS_REPLACE - Replace the existing file.
