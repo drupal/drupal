@@ -80,6 +80,8 @@ function block_admin_display_form($form, &$form_state, $blocks, $theme) {
       '#type' => 'weight',
       '#default_value' => $block['weight'],
       '#delta' => $weight_delta,
+      '#title_display' => 'invisible',
+      '#title' => t('Weight for @row', array('@row' => $block['info'])),
     );
     $form[$key]['region'] = array(
       '#type' => 'select',

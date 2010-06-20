@@ -130,6 +130,12 @@ div.tree-child-last {
 div.tree-child-horizontal {
   background: url(../../misc/tree.png) no-repeat -11px center;
 }
+.tabledrag-toggle-weight-wrapper {
+  text-align: right; /* LTR */
+}
+.tabledrag-toggle-weight {
+  font-size: 0.9em;
+}
 
 /**
  * Progress bar

@@ -137,7 +137,9 @@ function field_ui_field_overview_form($form, &$form_state, $entity_type, $bundle
         '#type' => 'textfield',
         '#default_value' => $weight,
         '#size' => 3,
-       ),
+        '#title_display' => 'invisible',
+        '#title' => t('Weight for @row', array('@row' => $instance['label'])),
+      ),
       'hidden_name' => array(
         '#type' => 'hidden',
         '#default_value' => $instance['field_name'],
@@ -171,6 +173,8 @@ function field_ui_field_overview_form($form, &$form_state, $entity_type, $bundle
         '#type' => 'textfield',
         '#default_value' => $weight,
         '#size' => 3,
+        '#title_display' => 'invisible',
+        '#title' => t('Weight for @row', array('@row' => $extra_field['label'])),
       ),
       'edit' => array(
         '#markup' => isset($extra_field['edit']) ? $extra_field['edit'] : '',
@@ -226,6 +230,8 @@ function field_ui_field_overview_form($form, &$form_state, $entity_type, $bundle
         '#type' => 'textfield',
         '#default_value' => $weight,
         '#size' => 3,
+        '#title_display' => 'invisible',
+        '#title' => t('Weight for new field'),
       ),
       'hidden_name' => array(
         '#type' => 'hidden',
@@ -263,6 +269,8 @@ function field_ui_field_overview_form($form, &$form_state, $entity_type, $bundle
         '#type' => 'textfield',
         '#default_value' => $weight,
         '#size' => 3,
+        '#title_display' => 'invisible',
+        '#title' => t('Weight for added field'),
       ),
       'hidden_name' => array(
         '#type' => 'hidden',

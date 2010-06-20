@@ -106,15 +106,16 @@ function _menu_overview_tree_form($tree) {
         '#type' => 'weight',
         '#delta' => 50,
         '#default_value' => isset($form_state[$mlid]['weight']) ? $form_state[$mlid]['weight'] : $item['weight'],
+        '#title_display' => 'invisible',
+        '#title' => t('Weight for @row', array('@row' => $item['title'])),
       );
       $form[$mlid]['mlid'] = array(
         '#type' => 'hidden',
         '#value' => $item['mlid'],
       );
       $form[$mlid]['plid'] = array(
-        '#type' => 'textfield',
+        '#type' => 'hidden',
         '#default_value' => isset($form_state[$mlid]['plid']) ? $form_state[$mlid]['plid'] : $item['plid'],
-        '#size' => 6,
       );
       // Build a list of operations.
       $operations = array();
