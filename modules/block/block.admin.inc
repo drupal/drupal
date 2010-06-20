@@ -1,5 +1,5 @@
 <?php
-// $Id: block.admin.inc,v 1.80 2010/05/13 07:53:02 dries Exp $
+// $Id: block.admin.inc,v 1.81 2010/06/20 17:34:51 webchick Exp $
 
 /**
  * @file
@@ -80,6 +80,8 @@ function block_admin_display_form($form, &$form_state, $blocks, $theme) {
       '#type' => 'weight',
       '#default_value' => $block['weight'],
       '#delta' => $weight_delta,
+      '#title_display' => 'invisible',
+      '#title' => t('Weight for @row', array('@row' => $block['info'])),
     );
     $form[$key]['region'] = array(
       '#type' => 'select',

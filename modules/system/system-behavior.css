@@ -1,4 +1,4 @@
-/* $Id: system-behavior.css,v 1.9 2010/04/28 20:08:39 dries Exp $ */
+/* $Id: system-behavior.css,v 1.10 2010/06/20 17:34:51 webchick Exp $ */
 
 /**
  * Autocomplete
@@ -129,6 +129,12 @@ div.tree-child-last {
 }
 div.tree-child-horizontal {
   background: url(../../misc/tree.png) no-repeat -11px center;
+}
+.tabledrag-toggle-weight-wrapper {
+  text-align: right; /* LTR */
+}
+.tabledrag-toggle-weight {
+  font-size: 0.9em;
 }
 
 /**

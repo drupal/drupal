@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.admin.inc,v 1.79 2010/05/04 20:31:53 dries Exp $
+// $Id: menu.admin.inc,v 1.80 2010/06/20 17:34:51 webchick Exp $
 
 /**
  * @file
@@ -106,15 +106,16 @@ function _menu_overview_tree_form($tree) {
         '#type' => 'weight',
         '#delta' => 50,
         '#default_value' => isset($form_state[$mlid]['weight']) ? $form_state[$mlid]['weight'] : $item['weight'],
+        '#title_display' => 'invisible',
+        '#title' => t('Weight for @row', array('@row' => $item['title'])),
       );
       $form[$mlid]['mlid'] = array(
         '#type' => 'hidden',
         '#value' => $item['mlid'],
       );
       $form[$mlid]['plid'] = array(
-        '#type' => 'textfield',
+        '#type' => 'hidden',
         '#default_value' => isset($form_state[$mlid]['plid']) ? $form_state[$mlid]['plid'] : $item['plid'],
-        '#size' => 6,
       );
       // Build a list of operations.
       $operations = array();
