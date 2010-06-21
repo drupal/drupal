@@ -1395,12 +1395,12 @@ function field_ui_field_edit_form_submit($form, &$form_state) {
  * Helper functions to handle multipage redirects.
  */
 function field_ui_get_destinations($destinations) {
-  $query = array();
   $path = array_shift($destinations);
+  $options = drupal_parse_url($path);
   if ($destinations) {
-    $query['destinations'] = $destinations;
+    $options['query']['destinations'] = $destinations;
   }
-  return array($path, array('query' => $query));
+  return array($options['path'], $options);
 }
 
 /**
