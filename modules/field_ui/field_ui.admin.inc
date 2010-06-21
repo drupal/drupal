@@ -1,5 +1,5 @@
 <?php
-// $Id: field_ui.admin.inc,v 1.53 2010/06/20 17:34:51 webchick Exp $
+// $Id: field_ui.admin.inc,v 1.54 2010/06/21 03:11:49 webchick Exp $
 
 /**
  * @file
@@ -1395,12 +1395,12 @@ function field_ui_field_edit_form_submit($form, &$form_state) {
  * Helper functions to handle multipage redirects.
  */
 function field_ui_get_destinations($destinations) {
-  $query = array();
   $path = array_shift($destinations);
+  $options = drupal_parse_url($path);
   if ($destinations) {
-    $query['destinations'] = $destinations;
+    $options['query']['destinations'] = $destinations;
   }
-  return array($path, array('query' => $query));
+  return array($options['path'], $options);
 }
 
 /**
