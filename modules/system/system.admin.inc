@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.288 2010/06/17 13:16:57 dries Exp $
+// $Id: system.admin.inc,v 1.289 2010/06/21 02:27:47 webchick Exp $
 
 /**
  * @file
@@ -828,7 +828,7 @@ function system_modules($form, $form_state = array()) {
   // Remove hidden modules from display list.
   $visible_files = $files;
   foreach ($visible_files as $filename => $file) {
-    if (!empty($file->info['hidden']) || !empty($file->info['required'])) {
+    if (!empty($file->info['hidden'])) {
       unset($visible_files[$filename]);
     }
   }
@@ -849,10 +849,19 @@ function system_modules($form, $form_state = array()) {
   // Used when checking if module implements a help page.
   $help_arg = module_exists('help') ? drupal_help_arg() : FALSE;
 
+  // Used when displaying modules that are required by the install profile.
+  require_once DRUPAL_ROOT . '/includes/install.inc';
+  $distribution_name = check_plain(drupal_install_profile_distribution_name());
+
   // Iterate through each of the modules.
   foreach ($visible_files as $filename => $module) {
     $extra = array();
     $extra['enabled'] = (bool) $module->status;
+    if (!empty($module->info['required'] )) {
+      $extra['disabled'] = TRUE;
+      $extra['required_by'][] = $distribution_name;
+    }
+
     // If this module requires other modules, add them to the array.
     foreach ($module->requires as $requires => $v) {
       if (!isset($files[$requires])) {
@@ -929,6 +938,7 @@ function system_modules($form, $form_state = array()) {
     }
     $form['modules'][$module->info['package']][$filename] = _system_modules_build_row($module->info, $extra);
   }
+
   // Add basic information to the fieldsets.
   foreach (element_children($form['modules']) as $package) {
     $form['modules'][$package] += array(

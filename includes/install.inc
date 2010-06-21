@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.135 2010/05/18 18:11:13 dries Exp $
+// $Id: install.inc,v 1.136 2010/06/21 02:27:47 webchick Exp $
 
 /**
  * Indicates that a module has not been installed yet.
@@ -187,8 +187,18 @@ function drupal_set_installed_schema_version($module, $version) {
  * @see install_profile_info()
  */
 function drupal_install_profile_distribution_name() {
-  global $install_state;
-  return $install_state['profile_info']['distribution_name'];
+  // During installation, the profile information is stored in the global
+  // installation state (it might not be saved anywhere yet).
+  if (drupal_installation_attempted()) {
+    global $install_state;
+    return $install_state['profile_info']['distribution_name'];
+  }
+  // At all other times, we load the profile via standard methods.
+  else {
+    $profile = drupal_get_profile();
+    $info = install_profile_info($profile);
+    return $info['distribution_name'];
+  }
 }
 
 /**
