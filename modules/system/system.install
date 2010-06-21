@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.476 2010/06/17 02:12:44 webchick Exp $
+// $Id: system.install,v 1.477 2010/06/21 00:00:38 webchick Exp $
 
 /**
  * @file
@@ -1794,18 +1794,7 @@ function system_update_7007() {
  * the choice order. Rename chorder to weight.
  */
 function system_update_7008() {
-  if (db_table_exists('poll_votes')) {
-    // Add chid column and convert existing votes.
-    db_add_field('poll_votes', 'chid', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0));
-    db_add_index('poll_votes', 'chid', array('chid'));
-    db_query("UPDATE {poll_votes} SET chid = (SELECT chid FROM {poll_choices} c WHERE {poll_votes}.chorder = c.chorder AND {poll_votes}.nid = c.nid)");
-    // Remove old chorder column.
-    db_drop_field('poll_votes', 'chorder');
-  }
-  if (db_table_exists('poll_choices')) {
-    // Change the chorder column to weight in poll_choices.
-    db_change_field('poll_choices', 'chorder', 'weight', array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'tiny'));
-  }
+  // Moved to poll_update_7001().
 }
 
 /**
