@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1179 2010/06/21 01:35:25 webchick Exp $
+// $Id: common.inc,v 1.1180 2010/06/21 14:59:14 webchick Exp $
 
 /**
  * @file
@@ -659,7 +659,8 @@ function drupal_encode_path($path) {
  */
 function drupal_goto($path = '', array $options = array(), $http_response_code = 302) {
   // A destination in $_GET always overrides the function arguments.
-  if (isset($_GET['destination'])) {
+  // We do not allow absolute URLs to be passed via $_GET, as this can be an attack vector.
+  if (isset($_GET['destination']) && !url_is_external($_GET['destination'])) {
     $destination = drupal_parse_url($_GET['destination']);
     $path = $destination['path'];
     $options['query'] = $destination['query'];
