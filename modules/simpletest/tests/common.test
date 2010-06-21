@@ -101,13 +101,13 @@ class CommonURLUnitTest extends DrupalWebTestCase {
     $class = $this->randomName();
     $link = l($this->randomName(), $_GET['q'], array('attributes' => array('class' => array($class))));
     $this->assertTrue($this->hasClass($link, $class), t('Custom class @class is present on link when requested', array('@class' => $class)));
-    $this->assertTrue($this->hasClass($link, 'active'), t('Class @class is present on link to the current page', array('@class' => 'active')));    
+    $this->assertTrue($this->hasClass($link, 'active'), t('Class @class is present on link to the current page', array('@class' => 'active')));
   }
 
   private function hasClass($link, $class) {
     return preg_match('|class="([^\"\s]+\s+)*' . $class . '|', $link);
   }
-  
+
   /**
    * Test drupal_get_query_parameters().
    */
@@ -811,7 +811,8 @@ class CascadingStylesheetsUnitTest extends DrupalUnitTestCase {
     // - Optimized expected content: name.css.optimized.css
     $testfiles = array(
       'css_input_without_import.css',
-      'css_input_with_import.css'
+      'css_input_with_import.css',
+      'comment_hacks.css'
     );
     $path = drupal_get_path('module', 'simpletest') . '/files/css_test_files';
     foreach ($testfiles as $file) {
