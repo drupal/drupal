@@ -1,7 +1,7 @@
 ; $Id$
 name = Field SQL storage
 description = Stores field data in an SQL database.
-package = Core - fields
+package = Core
 version = VERSION
 core = 7.x
 files[] = field_sql_storage.module

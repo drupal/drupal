@@ -1,7 +1,7 @@
 ; $Id$
 name = Text
 description = Defines simple text field types.
-package = Core - fields
+package = Core
 version = VERSION
 core = 7.x
 files[] = text.module

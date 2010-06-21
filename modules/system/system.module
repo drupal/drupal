@@ -2263,6 +2263,12 @@ function _system_rebuild_module_data() {
     // Merge in defaults and save.
     $modules[$key]->info = $module->info + $defaults;
 
+    // Install profiles are hidden by default, unless explicitly specified
+    // otherwise in the .info file.
+    if ($key == $profile && !isset($modules[$key]->info['hidden'])) {
+      $modules[$key]->info['hidden'] = TRUE;
+    }
+
     // Invoke hook_system_info_alter() to give installed modules a chance to
     // modify the data in the .info files if necessary.
     $type = 'module';

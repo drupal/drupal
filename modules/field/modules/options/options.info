@@ -1,7 +1,7 @@
 ; $Id$
 name = Options
 description = Defines selection, check box and radio button widgets for text and numeric fields.
-package = Core - fields
+package = Core
 version = VERSION
 core = 7.x
 files[]=options.module
