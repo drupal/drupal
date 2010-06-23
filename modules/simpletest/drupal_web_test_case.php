@@ -1430,10 +1430,10 @@ class DrupalWebTestCase extends DrupalTestCase {
       '!method' => !empty($curl_options[CURLOPT_NOBODY]) ? 'HEAD' : (empty($curl_options[CURLOPT_POSTFIELDS]) ? 'GET' : 'POST'),
       '@url' => isset($original_url) ? $original_url : $url,
       '@status' => $status,
-      '!length' => format_size(strlen($this->content))
+      '!length' => format_size(strlen($this->drupalGetContent()))
     );
     $message = t('!method @url returned @status (!length).', $message_vars);
-    $this->assertTrue($this->content !== FALSE, $message, t('Browser'));
+    $this->assertTrue($this->drupalGetContent() !== FALSE, $message, t('Browser'));
     return $this->drupalGetContent();
   }
 
@@ -1498,7 +1498,7 @@ class DrupalWebTestCase extends DrupalTestCase {
     if (!$this->elements) {
       // DOM can load HTML soup. But, HTML soup can throw warnings, suppress
       // them.
-      @$htmlDom = DOMDocument::loadHTML($this->content);
+      @$htmlDom = DOMDocument::loadHTML($this->drupalGetContent());
       if ($htmlDom) {
         $this->pass(t('Valid HTML found on "@path"', array('@path' => $this->getUrl())), t('Browser'));
         // It's much easier to work with simplexml than DOM, luckily enough
@@ -1731,7 +1731,7 @@ class DrupalWebTestCase extends DrupalTestCase {
     if (isset($path)) {
       $this->drupalGet($path, $options);
     }
-    $content = $this->content;
+    $content = $this->drupalGetContent();
     $return = drupal_json_decode($this->drupalPost(NULL, $edit, array('path' => $ajax_path, 'triggering_element' => $triggering_element), $options, $headers, $form_html_id));
 
     // We need $ajax_settings['wrapper'] to perform DOM manipulation.
@@ -2376,7 +2376,7 @@ class DrupalWebTestCase extends DrupalTestCase {
     if (!$message) {
       $message = t('Raw "@raw" found', array('@raw' => $raw));
     }
-    return $this->assert(strpos($this->content, $raw) !== FALSE, $message, $group);
+    return $this->assert(strpos($this->drupalGetContent(), $raw) !== FALSE, $message, $group);
   }
 
   /**
@@ -2396,7 +2396,7 @@ class DrupalWebTestCase extends DrupalTestCase {
     if (!$message) {
       $message = t('Raw "@raw" not found', array('@raw' => $raw));
     }
-    return $this->assert(strpos($this->content, $raw) === FALSE, $message, $group);
+    return $this->assert(strpos($this->drupalGetContent(), $raw) === FALSE, $message, $group);
   }
 
   /**
@@ -2453,7 +2453,7 @@ class DrupalWebTestCase extends DrupalTestCase {
    */
   protected function assertTextHelper($text, $message = '', $group, $not_exists) {
     if ($this->plainTextContent === FALSE) {
-      $this->plainTextContent = filter_xss($this->content, array());
+      $this->plainTextContent = filter_xss($this->drupalGetContent(), array());
     }
     if (!$message) {
       $message = !$not_exists ? t('"@text" found', array('@text' => $text)) : t('"@text" not found', array('@text' => $text));
@@ -2519,7 +2519,7 @@ class DrupalWebTestCase extends DrupalTestCase {
    */
   protected function assertUniqueTextHelper($text, $message = '', $group, $be_unique) {
     if ($this->plainTextContent === FALSE) {
-      $this->plainTextContent = filter_xss($this->content, array());
+      $this->plainTextContent = filter_xss($this->drupalGetContent(), array());
     }
     if (!$message) {
       $message = '"' . $text . '"' . ($be_unique ? ' found only once' : ' found more than once');
