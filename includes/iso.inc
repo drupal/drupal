@@ -386,7 +386,7 @@ function _locale_get_predefined_list() {
     'lv' => array('Latvian', 'Latviešu'),
     'mg' => array('Malagasy'),
     'mh' => array('Marshallese'),
-    'mi' => array('Maori'),
+    'mi' => array('Māori'),
     'mk' => array('Macedonian', 'Македонски'),
     'ml' => array('Malayalam', 'മലയാളം'),
     'mn' => array('Mongolian'),
