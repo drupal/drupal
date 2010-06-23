@@ -19,7 +19,9 @@ function book_install() {
  */
 function book_uninstall() {
   // Delete menu links.
-  db_query("DELETE FROM {menu_links} WHERE module = 'book'");
+  db_delete('menu_links')
+    ->condition('module', 'book')
+    ->execute();
   menu_cache_clear_all();
 }
 
