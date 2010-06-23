@@ -1,5 +1,5 @@
 <?php
-// $Id: book.install,v 1.35 2010/05/05 06:55:25 webchick Exp $
+// $Id: book.install,v 1.36 2010/06/23 19:05:15 dries Exp $
 
 /**
  * @file
@@ -19,7 +19,9 @@ function book_install() {
  */
 function book_uninstall() {
   // Delete menu links.
-  db_query("DELETE FROM {menu_links} WHERE module = 'book'");
+  db_delete('menu_links')
+    ->condition('module', 'book')
+    ->execute();
   menu_cache_clear_all();
 }
 
