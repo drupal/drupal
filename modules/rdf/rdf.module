@@ -1,5 +1,5 @@
 <?php
-// $Id: rdf.module,v 1.40 2010/05/05 15:49:04 dries Exp $
+// $Id: rdf.module,v 1.41 2010/06/23 02:40:56 dries Exp $
 
 /**
  * @file
@@ -548,7 +548,7 @@ function rdf_preprocess_field(&$variables) {
       // the file. We correct this by adding a resource attribute to the div if
       // this field has a URI.
       if (isset($item['uri'])) {
-        if (isset($element[$delta]['#image_style'])) {
+        if (!empty($element[$delta]['#image_style'])) {
           $variables['item_attributes_array'][$delta]['resource'] = image_style_url($element[$delta]['#image_style'], $item['uri']);
         }
         else {
