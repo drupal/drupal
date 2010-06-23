@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.478 2010/06/21 16:03:45 webchick Exp $
+// $Id: system.install,v 1.479 2010/06/23 13:17:51 dries Exp $
 
 /**
  * @file
@@ -2384,14 +2384,16 @@ function system_update_7053() {
       ->execute();
   }
 
-  // Create the same menus as in menu_install().
-  db_insert('menu_custom')
-    ->fields(array('menu_name' => 'user-menu', 'title' => 'User Menu', 'description' => "The <em>User</em> menu contains links related to the user's account, as well as the 'Log out' link."))
-    ->execute();
+  if (db_table_exists('menu_custom')) {
+    // Create the same menus as in menu_install().
+    db_insert('menu_custom')
+      ->fields(array('menu_name' => 'user-menu', 'title' => 'User Menu', 'description' => "The <em>User</em> menu contains links related to the user's account, as well as the 'Log out' link."))
+      ->execute();
 
-  db_insert('menu_custom')
-    ->fields(array('menu_name' => 'management', 'title' => 'Management', 'description' => "The <em>Management</em> menu contains links for administrative tasks."))
-    ->execute();
+    db_insert('menu_custom')
+      ->fields(array('menu_name' => 'management', 'title' => 'Management', 'description' => "The <em>Management</em> menu contains links for administrative tasks."))
+      ->execute();
+  }
 }
 
 /**
