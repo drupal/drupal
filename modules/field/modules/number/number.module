@@ -1,5 +1,5 @@
 <?php
-// $Id: number.module,v 1.39 2010/05/06 05:59:31 webchick Exp $
+// $Id: number.module,v 1.40 2010/06/23 13:45:40 dries Exp $
 
 /**
  * @file
@@ -173,8 +173,8 @@ function number_field_instance_settings_form($field, $instance) {
  * Implements hook_field_validate().
  *
  * Possible error codes:
- * - 'number_min': The value is smaller than the allowed minimum value.
- * - 'number_max': The value is larger than the allowed maximum value.
+ * - 'number_min': The value is less than the allowed minimum value.
+ * - 'number_max': The value is greater than the allowed maximum value.
  */
 function number_field_validate($entity_type, $entity, $field, $instance, $langcode, $items, &$errors) {
   foreach ($items as $delta => $item) {
@@ -182,13 +182,13 @@ function number_field_validate($entity_type, $entity, $field, $instance, $langco
       if (is_numeric($instance['settings']['min']) && $item['value'] < $instance['settings']['min']) {
         $errors[$field['field_name']][$langcode][$delta][] = array(
           'error' => 'number_min',
-          'message' => t('%name: the value may be no smaller than %min.', array('%name' => t($instance['label']), '%min' => $instance['settings']['min'])),
+          'message' => t('%name: the value may be no less than %min.', array('%name' => t($instance['label']), '%min' => $instance['settings']['min'])),
         );
       }
       if (is_numeric($instance['settings']['max']) && $item['value'] > $instance['settings']['max']) {
         $errors[$field['field_name']][$langcode][$delta][] = array(
           'error' => 'number_max',
-          'message' => t('%name: the value may be no larger than %max.', array('%name' => t($instance['label']), '%max' => $instance['settings']['max'])),
+          'message' => t('%name: the value may be no greater than %max.', array('%name' => t($instance['label']), '%max' => $instance['settings']['max'])),
         );
       }
     }
