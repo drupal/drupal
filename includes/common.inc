@@ -6630,20 +6630,6 @@ function entity_uri($entity_type, $entity) {
 }
 
 /**
- * Invokes entity insert/update hooks.
- *
- * @param $op
- *   One of 'insert' or 'update'.
- * @param $entity_type
- *   The entity type; e.g. 'node' or 'user'.
- * @param $entity
- *   The entity object being operated on.
- */
-function entity_invoke($op, $entity_type, $entity) {
-  module_invoke_all('entity_' . $op, $entity, $entity_type);
-}
-
-/**
  * Helper function for attaching field API validation to entity forms.
  */
 function entity_form_field_validate($entity_type, $form, &$form_state) {

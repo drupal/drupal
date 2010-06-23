@@ -261,8 +261,6 @@ function hook_entity_load($entities, $type) {
 /**
  * Act on entities when inserted.
  *
- * Generic insert hook called for all entity types via entity_invoke().
- *
  * @param $entity
  *   The entity object.
  * @param $type
@@ -273,8 +271,6 @@ function hook_entity_insert($entity, $type) {
 
 /**
  * Act on entities when updated.
- *
- * Generic update hook called for all entity types via entity_invoke().
  *
  * @param $entity
  *   The entity object.
