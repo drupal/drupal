@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1180 2010/06/21 14:59:14 webchick Exp $
+// $Id: common.inc,v 1.1181 2010/06/23 02:45:34 dries Exp $
 
 /**
  * @file
@@ -6627,20 +6627,6 @@ function entity_uri($entity_type, $entity) {
     }
   }
   return $entity->uri ? $entity->uri : NULL;
-}
-
-/**
- * Invokes entity insert/update hooks.
- *
- * @param $op
- *   One of 'insert' or 'update'.
- * @param $entity_type
- *   The entity type; e.g. 'node' or 'user'.
- * @param $entity
- *   The entity object being operated on.
- */
-function entity_invoke($op, $entity_type, $entity) {
-  module_invoke_all('entity_' . $op, $entity, $entity_type);
 }
 
 /**

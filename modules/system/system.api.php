@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.169 2010/06/14 15:41:03 dries Exp $
+// $Id: system.api.php,v 1.170 2010/06/23 02:45:35 dries Exp $
 
 /**
  * @file
@@ -261,8 +261,6 @@ function hook_entity_load($entities, $type) {
 /**
  * Act on entities when inserted.
  *
- * Generic insert hook called for all entity types via entity_invoke().
- *
  * @param $entity
  *   The entity object.
  * @param $type
@@ -273,8 +271,6 @@ function hook_entity_insert($entity, $type) {
 
 /**
  * Act on entities when updated.
- *
- * Generic update hook called for all entity types via entity_invoke().
  *
  * @param $entity
  *   The entity object.

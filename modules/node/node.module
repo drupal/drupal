@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1277 2010/05/31 08:02:33 dries Exp $
+// $Id: node.module,v 1.1278 2010/06/23 02:45:35 dries Exp $
 
 /**
  * @file
@@ -1075,7 +1075,7 @@ function node_save($node) {
     $function('node', $node);
 
     module_invoke_all('node_' . $op, $node);
-    entity_invoke($op, 'node', $node);
+    module_invoke_all('entity_' . $op, $node, 'node');
 
     // Update the node access table for this node. There's no need to delete
     // existing records if the node is new.

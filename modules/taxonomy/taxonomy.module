@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.594 2010/06/04 20:34:44 dries Exp $
+// $Id: taxonomy.module,v 1.595 2010/06/23 02:45:35 dries Exp $
 
 /**
  * @file
@@ -378,13 +378,13 @@ function taxonomy_vocabulary_save($vocabulary) {
   if (!empty($vocabulary->vid) && !empty($vocabulary->name)) {
     $status = drupal_write_record('taxonomy_vocabulary', $vocabulary, 'vid');
     module_invoke_all('taxonomy_vocabulary_update', $vocabulary);
-    entity_invoke('update', 'taxonomy_vocabulary', $vocabulary);
+    module_invoke_all('entity_update', $vocabulary, 'taxonomy_vocabulary');
   }
   elseif (empty($vocabulary->vid)) {
     $status = drupal_write_record('taxonomy_vocabulary', $vocabulary);
     field_attach_create_bundle('taxonomy_term', $vocabulary->machine_name);
     module_invoke_all('taxonomy_vocabulary_insert', $vocabulary);
-    entity_invoke('insert', 'taxonomy_vocabulary', $vocabulary);
+    module_invoke_all('entity_insert', $vocabulary, 'taxonomy_vocabulary');
   }
 
   cache_clear_all();
@@ -486,7 +486,7 @@ function taxonomy_term_save($term) {
     $status = drupal_write_record('taxonomy_term_data', $term);
     field_attach_insert('taxonomy_term', $term);
     module_invoke_all('taxonomy_term_insert', $term);
-    entity_invoke('insert', 'taxonomy_term', $term);
+    module_invoke_all('entity_insert', $term, 'taxonomy_term');
     if (!isset($term->parent)) {
       $term->parent = array(0);
     }
@@ -495,7 +495,7 @@ function taxonomy_term_save($term) {
     $status = drupal_write_record('taxonomy_term_data', $term, 'tid');
     field_attach_update('taxonomy_term', $term);
     module_invoke_all('taxonomy_term_update', $term);
-    entity_invoke('update', 'taxonomy_term', $term);
+    module_invoke_all('entity_update', $term, 'taxonomy_term');
     if (isset($term->parent)) {
       db_delete('taxonomy_term_hierarchy')
         ->condition('tid', $term->tid)

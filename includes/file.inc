@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.214 2010/06/20 23:53:52 webchick Exp $
+// $Id: file.inc,v 1.215 2010/06/23 02:45:34 dries Exp $
 
 /**
  * @file
@@ -517,13 +517,13 @@ function file_save(stdClass $file) {
     drupal_write_record('file_managed', $file);
     // Inform modules about the newly added file.
     module_invoke_all('file_insert', $file);
-    entity_invoke('insert', 'file', $file);
+    module_invoke_all('entity_insert', $file, 'file');
   }
   else {
     drupal_write_record('file_managed', $file, 'fid');
     // Inform modules that the file has been updated.
     module_invoke_all('file_update', $file);
-    entity_invoke('update', 'file', $file);
+    module_invoke_all('entity_update', $file, 'file');
   }
 
   return $file;

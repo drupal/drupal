@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.882 2010/06/17 13:44:44 dries Exp $
+// $Id: comment.module,v 1.883 2010/06/23 02:45:35 dries Exp $
 
 /**
  * @file
@@ -1451,7 +1451,7 @@ function comment_save($comment) {
       field_attach_update('comment', $comment);
       // Allow modules to respond to the updating of a comment.
       module_invoke_all('comment_update', $comment);
-      entity_invoke('update', 'comment', $comment);
+      module_invoke_all('entity_update', $comment, 'comment');
     }
     else {
       // Add the comment to database. This next section builds the thread field.
@@ -1540,7 +1540,7 @@ function comment_save($comment) {
 
       // Tell the other modules a new comment has been submitted.
       module_invoke_all('comment_insert', $comment);
-      entity_invoke('insert', 'comment', $comment);
+      module_invoke_all('entity_insert', $comment, 'comment');
     }
     if ($comment->status == COMMENT_PUBLISHED) {
       module_invoke_all('comment_publish', $comment);

@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1175 2010/06/11 11:12:13 dries Exp $
+// $Id: user.module,v 1.1176 2010/06/23 02:45:35 dries Exp $
 
 /**
  * @file
@@ -511,7 +511,7 @@ function user_save($account, $edit = array(), $category = 'account') {
       }
 
       user_module_invoke('update', $edit, $user, $category);
-      entity_invoke('update', 'user', $user);
+      module_invoke_all('entity_update', $user, 'user');
     }
     else {
       // Allow 'uid' to be set by the caller. There is no danger of writing an
@@ -544,7 +544,7 @@ function user_save($account, $edit = array(), $category = 'account') {
       field_attach_insert('user', $user);
 
       user_module_invoke('insert', $edit, $user, $category);
-      entity_invoke('insert', 'user', $user);
+      module_invoke_all('entity_insert', $user, 'user');
 
       // Save user roles.
       if (isset($edit['roles']) && is_array($edit['roles'])) {
