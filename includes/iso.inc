@@ -1,5 +1,5 @@
 <?php
-// $Id: iso.inc,v 1.10 2010/04/30 08:15:56 dries Exp $
+// $Id: iso.inc,v 1.11 2010/06/23 19:06:10 dries Exp $
 
 /**
  * @file
@@ -386,7 +386,7 @@ function _locale_get_predefined_list() {
     'lv' => array('Latvian', 'Latviešu'),
     'mg' => array('Malagasy'),
     'mh' => array('Marshallese'),
-    'mi' => array('Maori'),
+    'mi' => array('Māori'),
     'mk' => array('Macedonian', 'Македонски'),
     'ml' => array('Malayalam', 'മലയാളം'),
     'mn' => array('Mongolian'),
