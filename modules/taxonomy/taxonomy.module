@@ -375,6 +375,8 @@ function taxonomy_vocabulary_save($vocabulary) {
     $vocabulary->module = 'taxonomy';
   }
 
+  module_invoke_all('taxonomy_vocabulary_presave', $vocabulary);
+
   if (!empty($vocabulary->vid) && !empty($vocabulary->name)) {
     $status = drupal_write_record('taxonomy_vocabulary', $vocabulary, 'vid');
     module_invoke_all('taxonomy_vocabulary_update', $vocabulary);

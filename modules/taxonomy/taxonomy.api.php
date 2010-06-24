@@ -26,6 +26,20 @@ function hook_taxonomy_vocabulary_load($vocabularies) {
   }
 }
 
+
+/**
+ * Act on taxonomy vocabularies before they are saved.
+ *
+ * Modules implementing this hook can act on the vocabulary object before it is
+ * inserted or updated.
+ *
+ * @param $vocabulary
+ *   A taxonomy vocabulary object.
+ */
+function hook_taxonomy_vocabulary_presave($vocabulary) {
+  $vocabulary->foo = 'bar';
+}
+
 /**
  * Act on taxonomy vocabularies when inserted.
  *
