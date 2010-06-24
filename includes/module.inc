@@ -173,6 +173,7 @@ function system_list($type) {
  */
 function system_list_reset() {
   drupal_static_reset('system_list');
+  drupal_static_reset('list_themes');
   cache_clear_all('bootstrap_modules', 'cache_bootstrap');
   cache_clear_all('system_list', 'cache_bootstrap');
 }
