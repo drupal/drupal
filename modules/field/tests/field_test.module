@@ -1,5 +1,5 @@
 <?php
-// $Id: field_test.module,v 1.7 2010/05/01 08:12:23 dries Exp $
+// $Id: field_test.module,v 1.8 2010/06/24 17:24:40 webchick Exp $
 
 /**
  * @file
@@ -190,4 +190,25 @@ function field_test_field_update($entity_type, $entity, $field, $instance, $item
 function field_test_field_delete($entity_type, $entity, $field, $instance, $items) {
   $args = func_get_args();
   field_test_memorize(__FUNCTION__, $args);
+}
+
+/**
+ * Implements hook_entity_query_alter().
+ */
+function field_test_entity_query_alter(&$query) {
+  if (!empty($query->alterMyExecuteCallbackPlease)) {
+    $query->executeCallback = 'field_test_dummy_field_storage_query';
+  }
+}
+
+/**
+ * Pseudo-implements hook_field_storage_query().
+ */
+function field_test_dummy_field_storage_query(EntityFieldQuery $query) {
+  // Return dummy values that will be checked by the test.
+  return array(
+    'user' => array(
+      1 => entity_create_stub_entity('user', array(1, NULL, NULL)),
+    ),
+  );
 }
