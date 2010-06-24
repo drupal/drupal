@@ -176,13 +176,6 @@ function field_cron() {
 }
 
 /**
- * Implements hook_modules_installed().
- */
-function field_modules_installed($modules) {
-  field_cache_clear();
-}
-
-/**
  * Implements hook_modules_uninstalled().
  */
 function field_modules_uninstalled($modules) {
