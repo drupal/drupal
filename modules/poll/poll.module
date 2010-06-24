@@ -492,6 +492,7 @@ function poll_load($nodes) {
     $poll->allowvotes = FALSE;
     if (user_access('vote on polls') && $poll->active) {
       if ($user->uid) {
+        // If authenticated, find existing vote based on uid.
         $poll->vote = db_query('SELECT chid FROM {poll_vote} WHERE nid = :nid AND uid = :uid', array(':nid' => $node->nid, ':uid' => $user->uid))->fetchField();
         if (empty($poll->vote)) {
           $poll->vote = -1;
@@ -499,10 +500,14 @@ function poll_load($nodes) {
         }
       }
       elseif (!empty($_SESSION['poll_vote'][$node->nid])) {
+        // Otherwise the user is anonymous. Look for an existing vote in the
+        // user's session.
         $poll->vote = $_SESSION['poll_vote'][$node->nid];
       }
       else {
-        $poll->allowvotes = !db_query("SELECT 1 FROM {poll_vote} WHERE nid = :nid AND hostname = :hostname", array(':nid' => $node->nid, ':hostname' => ip_address()))->fetchField();
+        // Finally, query the database for an existing vote based on anonymous
+        // user's hostname.
+        $poll->allowvotes = !db_query("SELECT 1 FROM {poll_vote} WHERE nid = :nid AND hostname = :hostname AND uid = 0", array(':nid' => $node->nid, ':hostname' => ip_address()))->fetchField();
       }
     }
     foreach ($poll as $key => $value) {
@@ -732,7 +737,7 @@ function poll_vote($form, &$form_state) {
       'nid' => $node->nid,
       'chid' => $choice,
       'uid' => $user->uid,
-      'hostname' => $user->uid ? '' : ip_address(),
+      'hostname' => ip_address(),
       'timestamp' => REQUEST_TIME,
     ))
     ->execute();
