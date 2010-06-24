@@ -763,14 +763,38 @@ class EntityFieldQuery {
    *   @endcode
    */
   public function execute() {
+    // Give a chance to other modules to alter the query.
     drupal_alter('entity_query', $this);
+
+    // Execute the query using the correct callback.
+    $result = call_user_func($this->queryCallback(), $this);
+
+    // Sanity checks.
+    if (!empty($this->propertyConditions)) {
+      throw new EntityFieldQueryException(t('Property query conditions were not handled in !function.', array('!function' => $function)));
+    }
+    if (!empty($this->propertyOrderBy)) {
+      throw new EntityFieldQueryException(t('Property query order by was not handled in !function.', array('!function' => $function)));
+    }
+    return $result;
+  }
+
+  /**
+   * Determines the query callback to use for this entity query.
+   *
+   * @return
+   *   A callback that can be used with call_user_func().
+   */
+  public function queryCallback() {
+    // Use the override from $this->executeCallback. It can be set either
+    // while building the query, or using hook_entity_query_alter().
     if (function_exists($this->executeCallback)) {
-      return $this->executeCallback($this);
+      return $this->executeCallback;
     }
     // If there are no field conditions and sorts, and no execute callback
     // then we default to querying entity tables in SQL.
     if (empty($this->fields)) {
-      return $this->propertyQuery();
+      return array($this, 'propertyQuery');
     }
     // If no override, find the storage engine to be used.
     foreach ($this->fields as $field) {
@@ -781,18 +805,13 @@ class EntityFieldQuery {
         throw new EntityFieldQueryException(t("Can't handle more than one field storage engine"));
       }
     }
-    if (empty($storage)) {
+    if ($storage) {
+      // Use hook_field_storage_query() from the field storage.
+      return $storage . '_field_storage_query';
+    }
+    else {
       throw new EntityFieldQueryException(t("Field storage engine not found."));
     }
-    $function = $storage . '_field_storage_query';
-    $result = $function($this);
-    if (!empty($this->propertyConditions)) {
-      throw new EntityFieldQueryException(t('Property query conditions were not handled in !function.', array('!function' => $function)));
-    }
-    if (!empty($this->propertyOrderBy)) {
-      throw new EntityFieldQueryException(t('Property query order by was not handled in !function.', array('!function' => $function)));
-    }
-    return $result;
   }
 
   /**
