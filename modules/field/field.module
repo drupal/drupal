@@ -1,5 +1,5 @@
 <?php
-// $Id: field.module,v 1.75 2010/06/14 15:41:02 dries Exp $
+// $Id: field.module,v 1.76 2010/06/24 21:37:49 dries Exp $
 /**
  * @file
  * Attach custom data fields to Drupal entities.
@@ -173,13 +173,6 @@ function field_theme() {
 function field_cron() {
   $limit = variable_get('field_purge_batch_size', 10);
   field_purge_batch($limit);
-}
-
-/**
- * Implements hook_modules_installed().
- */
-function field_modules_installed($modules) {
-  field_cache_clear();
 }
 
 /**
