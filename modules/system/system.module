@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.939 2010/06/21 02:27:47 webchick Exp $
+// $Id: system.module,v 1.940 2010/06/24 17:28:10 webchick Exp $
 
 /**
  * @file
@@ -3283,7 +3283,10 @@ function system_page_alter(&$page) {
  * Run the automated cron if enabled.
  */
 function system_run_automated_cron() {
-  if (($threshold = variable_get('cron_safe_threshold', DRUPAL_CRON_DEFAULT_THRESHOLD)) > 0) {
+  // If the site is not fully installed, suppress the automated cron run.
+  // Otherwise it could be triggered prematurely by AJAX requests during
+  // installation.
+  if (($threshold = variable_get('cron_safe_threshold', DRUPAL_CRON_DEFAULT_THRESHOLD)) > 0 && variable_get('install_task') == 'done') {
     $cron_last = variable_get('cron_last', NULL);
     if (!isset($cron_last) || (REQUEST_TIME - $cron_last > $threshold)) {
       drupal_cron_run();
