@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.192 2010/05/09 13:49:33 dries Exp $
+// $Id: module.inc,v 1.193 2010/06/24 17:32:01 webchick Exp $
 
 /**
  * @file
@@ -173,6 +173,7 @@ function system_list($type) {
  */
 function system_list_reset() {
   drupal_static_reset('system_list');
+  drupal_static_reset('list_themes');
   cache_clear_all('bootstrap_modules', 'cache_bootstrap');
   cache_clear_all('system_list', 'cache_bootstrap');
 }
