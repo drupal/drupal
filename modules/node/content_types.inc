@@ -1,5 +1,5 @@
 <?php
-// $Id: content_types.inc,v 1.114 2010/05/05 06:55:25 webchick Exp $
+// $Id: content_types.inc,v 1.115 2010/06/24 22:23:06 webchick Exp $
 
 /**
  * @file
@@ -363,13 +363,13 @@ function node_type_form_submit($form, &$form_state) {
 
   node_types_rebuild();
   menu_rebuild();
-  node_add_body_field($type);
   $t_args = array('%name' => $type->name);
 
   if ($status == SAVED_UPDATED) {
     drupal_set_message(t('The content type %name has been updated.', $t_args));
   }
   elseif ($status == SAVED_NEW) {
+    node_add_body_field($type);
     drupal_set_message(t('The content type %name has been added.', $t_args));
     watchdog('node', 'Added content type %name.', $t_args, WATCHDOG_NOTICE, l(t('view'), 'admin/structure/types'));
   }
