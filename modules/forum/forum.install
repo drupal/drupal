@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.install,v 1.47 2010/05/23 19:10:23 dries Exp $
+// $Id: forum.install,v 1.48 2010/06/24 12:59:22 webchick Exp $
 
 /**
  * @file
@@ -291,5 +291,16 @@ function forum_update_7001() {
   );
   db_create_table('forum_index', $forum_index);
 
-  db_query('INSERT INTO {forum_index} (SELECT n.nid, n.title, f.tid, n.sticky, n.created, ncs.last_comment_timestamp, ncs.comment_count FROM {node} n INNER JOIN {forum} f on n.vid = f.vid INNER JOIN {node_comment_statistics} ncs ON n.nid = ncs.nid)');
+  $select = db_select('node', 'n');
+  $forum_alias = $select->join('forum', 'f', 'n.vid = f.vid');
+  $ncs_alias = $select->join('node_comment_statistics', 'ncs', 'n.nid = ncs.nid');
+  $select
+    ->fields('n', array('nid', 'title', 'sticky', 'created'))
+    ->fields($forum_alias, array('tid'))
+    ->fields($ncs_alias, array('last_comment_timestamp', 'comment_count'));
+
+  db_insert('forum_index')
+    ->fields(array('nid', 'title', 'sticky', 'created', 'tid', 'last_comment_timestamp', 'comment_count'))
+    ->from($select)
+    ->execute();
 }
