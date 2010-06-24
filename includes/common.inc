@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1181 2010/06/23 02:45:34 dries Exp $
+// $Id: common.inc,v 1.1182 2010/06/24 18:51:33 dries Exp $
 
 /**
  * @file
@@ -1224,25 +1224,30 @@ function filter_xss_admin($string) {
 }
 
 /**
- * Filter XSS.
+ * Filters an HTML string to prevent cross-site-scripting (XSS) vulnerabilities.
  *
- * Based on kses by Ulf Harnhammar, see
- * http://sourceforge.net/projects/kses
- *
- * For examples of various XSS attacks, see:
- * http://ha.ckers.org/xss.html
+ * Based on kses by Ulf Harnhammar, see http://sourceforge.net/projects/kses.
+ * For examples of various XSS attacks, see: http://ha.ckers.org/xss.html.
  *
  * This code does four things:
- * - Removes characters and constructs that can trick browsers
- * - Makes sure all HTML entities are well-formed
- * - Makes sure all HTML tags and attributes are well-formed
- * - Makes sure no HTML tags contain URLs with a disallowed protocol (e.g. javascript:)
+ * - Removes characters and constructs that can trick browsers.
+ * - Makes sure all HTML entities are well-formed.
+ * - Makes sure all HTML tags and attributes are well-formed.
+ * - Makes sure no HTML tags contain URLs with a disallowed protocol (e.g.
+ *   javascript:).
  *
  * @param $string
- *   The string with raw HTML in it. It will be stripped of everything that can cause
- *   an XSS attack.
+ *   The string with raw HTML in it. It will be stripped of everything that can
+ *   cause an XSS attack.
  * @param $allowed_tags
  *   An array of allowed tags.
+ *
+ * @return
+ *   An XSS safe version of $string, or an empty string if $string is not
+ *   valid UTF-8.
+ *
+ * @see drupal_validate_utf8()
+ * @ingroup sanitization
  */
 function filter_xss($string, $allowed_tags = array('a', 'em', 'strong', 'cite', 'blockquote', 'code', 'ul', 'ol', 'li', 'dl', 'dt', 'dd')) {
   // Only operate on valid UTF-8 strings. This is necessary to prevent cross
