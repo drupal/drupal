@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.api.php,v 1.9 2010/05/14 04:41:54 webchick Exp $
+// $Id: taxonomy.api.php,v 1.10 2010/06/24 22:21:51 webchick Exp $
 
 /**
  * @file
@@ -24,6 +24,20 @@ function hook_taxonomy_vocabulary_load($vocabularies) {
   foreach ($vocabularies as $vocabulary) {
     $vocabulary->synonyms = variable_get('taxonomy_' . $vocabulary->vid . '_synonyms', FALSE);
   }
+}
+
+
+/**
+ * Act on taxonomy vocabularies before they are saved.
+ *
+ * Modules implementing this hook can act on the vocabulary object before it is
+ * inserted or updated.
+ *
+ * @param $vocabulary
+ *   A taxonomy vocabulary object.
+ */
+function hook_taxonomy_vocabulary_presave($vocabulary) {
+  $vocabulary->foo = 'bar';
 }
 
 /**

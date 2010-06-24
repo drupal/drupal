@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.595 2010/06/23 02:45:35 dries Exp $
+// $Id: taxonomy.module,v 1.596 2010/06/24 22:21:51 webchick Exp $
 
 /**
  * @file
@@ -374,6 +374,8 @@ function taxonomy_vocabulary_save($vocabulary) {
   if (!isset($vocabulary->module)) {
     $vocabulary->module = 'taxonomy';
   }
+
+  module_invoke_all('taxonomy_vocabulary_presave', $vocabulary);
 
   if (!empty($vocabulary->vid) && !empty($vocabulary->name)) {
     $status = drupal_write_record('taxonomy_vocabulary', $vocabulary, 'vid');
