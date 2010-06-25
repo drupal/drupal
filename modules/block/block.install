@@ -91,7 +91,7 @@ function block_schema() {
         'not null' => TRUE,
         'default' => 1,
         'size' => 'tiny',
-        'description' => 'Binary flag to indicate block cache mode. (-1: Do not cache, 1: Cache per role, 2: Cache per user, 4: Cache per page, 8: Block cache global) See BLOCK_CACHE_* constants in block.module for more detailed information.',
+        'description' => 'Binary flag to indicate block cache mode. (-2: Custom cache, -1: Do not cache, 1: Cache per role, 2: Cache per user, 4: Cache per page, 8: Block cache global) See DRUPAL_CACHE_* constants in ../includes/common.inc for more detailed information.',
       ),
     ),
     'primary key' => array('bid'),
@@ -254,7 +254,7 @@ function block_update_7004() {
       'weight' => 0,
       'region' => 'help',
       'pages' => '',
-      'cache' => 1,
+      'cache' => DRUPAL_CACHE_PER_ROLE,
     ));
     // Add new system generated main page content block.
     $insert->values(array(
@@ -265,7 +265,7 @@ function block_update_7004() {
       'weight' => 0,
       'region' => 'content',
       'pages' => '',
-      'cache' => -1,
+      'cache' => DRUPAL_NO_CACHE,
     ));
   }
   $insert->execute();
@@ -301,9 +301,9 @@ function block_update_7004() {
         'status' => 1,
         'weight' => 5,
         'region' => 'help',
-        'visibility' => 1,
+        'visibility' => BLOCK_VISIBILITY_LISTED,
         'pages' => 'contact',
-        'cache' => -1,
+        'cache' => DRUPAL_NO_CACHE,
       ));
     }
     drupal_set_message('The contact form information setting was migrated to <a href="' . url('admin/structure/block/manage/block/' . $bid . '/configure') . '">a custom block</a> and set up to only show on the site-wide contact page. The block was set to use the default text format, which might differ from the HTML based format used before. Check the block and ensure that the output is right.');
@@ -324,9 +324,9 @@ function block_update_7004() {
         'status' => 1,
         'weight' => 5,
         'region' => 'help',
-        'visibility' => 1,
+        'visibility' => BLOCK_VISIBILITY_LISTED,
         'pages' => 'user/register',
-        'cache' => -1,
+        'cache' => DRUPAL_NO_CACHE,
       ));
     }
     drupal_set_message('The user registration guidelines were migrated to <a href="' . url('admin/structure/block/manage/block/' . $bid . '/configure') . '">a custom block</a> and set up to only show on the user registration page. The block was set to use the default text format, which might differ from the HTML based format used before. Check the block and ensure that the output is right.');
@@ -347,9 +347,9 @@ function block_update_7004() {
         'status' => 1,
         'weight' => 0,
         'region' => 'highlight',
-        'visibility' => 1,
+        'visibility' => BLOCK_VISIBILITY_LISTED,
         'pages' => '<front>',
-        'cache' => -1,
+        'cache' => DRUPAL_NO_CACHE,
       ));
     }
     drupal_set_message('The site mission was migrated to <a href="' . url('admin/structure/block/manage/block/' . $bid . '/configure') . '">a custom block</a> and set up to only show on the front page in the highlighted content region. The block was set to use the default text format, which might differ from the HTML based format used before. Check the block and ensure that the output is right. If your theme does not have a highlighted content region, you might need to <a href="' . url('admin/structure/block') . '">relocate the block</a>.');
@@ -375,7 +375,7 @@ function block_update_7004() {
         'weight' => -10,
         'region' => 'footer',
         'pages' => '',
-        'cache' => -1,
+        'cache' => DRUPAL_NO_CACHE,
       ));
     }
     drupal_set_message('The footer message was migrated to <a href="' . url('admin/structure/block/manage/block/' . $bid . '/configure') . '">a custom block</a> and set up to appear in the footer. The block was set to use the default text format, which might differ from the HTML based format used before. Check the block and ensure that the output is right. If your theme does not have a footer region, you might need to <a href="' . url('admin/structure/block') . '">relocate the block</a>.');
