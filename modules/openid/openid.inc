@@ -51,6 +51,11 @@ define('OPENID_NS_1_1', 'http://openid.net/signon/1.1');
 define('OPENID_NS_1_0', 'http://openid.net/signon/1.0');
 
 /**
+ * OpenID namespace used in Yadis documents.
+ */
+define('OPENID_NS_OPENID', 'http://openid.net/xmlns/1.0');
+
+/**
  * OpenID Simple Registration extension.
  */
 define('OPENID_NS_SREG', 'http://openid.net/extensions/sreg/1.1');
@@ -148,11 +153,11 @@ function _openid_xrds_parse($raw_xml) {
         foreach ($service_element->Type as $type) {
           $service['types'][] = (string)$type;
         }
-        if ($service_element->children(OPENID_NS_XRD)->Delegate) {
-          $service['identity'] = (string)$service_element->children(OPENID_NS_XRD)->Delegate;
-        }
         if ($service_element->children(OPENID_NS_XRD)->LocalID) {
           $service['identity'] = (string)$service_element->children(OPENID_NS_XRD)->LocalID;
+        }
+        elseif ($service_element->children(OPENID_NS_OPENID)->Delegate) {
+          $service['identity'] = (string)$service_element->children(OPENID_NS_OPENID)->Delegate;
         }
         else {
           $service['identity'] = FALSE;
