@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.401 2010/06/25 20:42:48 dries Exp $
+// $Id: bootstrap.inc,v 1.402 2010/06/25 21:28:47 dries Exp $
 
 /**
  * @file
@@ -1603,7 +1603,8 @@ function watchdog_exception($type, Exception $exception, $message = NULL, $varia
  * Log a system message.
  *
  * @param $type
- *   The category to which this message belongs.
+ *   The category to which this message belongs. Can be any string, but the
+ *   general practice is to use the name of the module calling watchdog().
  * @param $message
  *   The message to store in the log. Keep $message translatable
  *   by not concatenating dynamic values into it! Variables in the
@@ -1615,7 +1616,8 @@ function watchdog_exception($type, Exception $exception, $message = NULL, $varia
  *   NULL if message is already translated or not possible to
  *   translate.
  * @param $severity
- *   The severity of the message, as per RFC 3164.
+ *   The severity of the message, as per RFC 3164. Possible values are
+ *   WATCHDOG_ERROR, WATCHDOG_WARNING, etc.
  * @param $link
  *   A link to associate with the message.
  *
