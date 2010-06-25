@@ -1,6 +1,6 @@
-; $Id: field_ui.info,v 1.2 2009/11/02 03:41:58 webchick Exp $
+; $Id: field_ui.info,v 1.3 2010/06/25 18:51:05 dries Exp $
 name = Field UI
-description = User Interface for the Field API.
+description = User interface for the Field API.
 package = Core
 version = VERSION
 core = 7.x
