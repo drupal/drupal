@@ -112,7 +112,7 @@ function image_update_7000() {
   if (!db_table_exists('image_styles')) {
     $schema = array();
 
-    $schema['cache_image'] = drupal_get_schema_unprocessed('system', 'cache');
+    $schema['cache_image'] = system_schema_cache_7054();
     $schema['cache_image']['description'] = 'Cache table used to store information about image manipulations that are in-progress.';
 
     $schema['image_styles'] = array(

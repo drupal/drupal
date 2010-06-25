@@ -660,7 +660,6 @@ function system_schema() {
     ),
     'primary key' => array('cid'),
   );
-
   $schema['cache_bootstrap'] = $schema['cache'];
   $schema['cache_bootstrap']['description'] = 'Cache table for data required to bootstrap Drupal, may be routed to a shared memory cache.';
   $schema['cache_form'] = $schema['cache'];
@@ -1580,6 +1579,58 @@ function system_schema() {
   return $schema;
 }
 
+/**
+ * The cache schema corresponding to system_update_7054.
+ *
+ * Drupal 7 adds several new cache tables. Since they all have identical schema
+ * this helper function allows them to re-use the same definition, without
+ * relying on system_schema(), which may change with future updates.
+ */
+function system_schema_cache_7054() {
+  return array(
+    'description' => 'Generic cache table for caching things not separated out into their own tables. Contributed modules may also use this to store cached items.',
+    'fields' => array(
+      'cid' => array(
+        'description' => 'Primary Key: Unique cache ID.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'data' => array(
+        'description' => 'A collection of data to cache.',
+        'type' => 'blob',
+        'not null' => FALSE,
+        'size' => 'big',
+      ),
+      'expire' => array(
+        'description' => 'A Unix timestamp indicating when the cache entry should expire, or 0 for never.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'created' => array(
+        'description' => 'A Unix timestamp indicating when the cache entry was created.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'serialized' => array(
+        'description' => 'A flag to indicate whether content is serialized (1) or not (0).',
+        'type' => 'int',
+        'size' => 'small',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'indexes' => array(
+      'expire' => array('expire'),
+    ),
+    'primary key' => array('cid'),
+  );
+}
+
+
 // Updates for core.
 
 function system_update_last_removed() {
@@ -2400,7 +2451,10 @@ function system_update_7053() {
  * Remove {cache_*}.headers columns.
  */
 function system_update_7054() {
-  $cache_tables = array('cache', 'cache_filter', 'cache_form', 'cache_menu', 'cache_page', 'cache_path');
+  // Update: update_fix_d7_requirements() installs this version for cache_path
+  // already, so we don't include it in this particular update. It should be
+  // included in later updates though.
+  $cache_tables = array('cache', 'cache_filter', 'cache_form', 'cache_menu', 'cache_page');
   foreach ($cache_tables as $table) {
     db_drop_field($table, 'headers');
   }
