@@ -1216,6 +1216,11 @@ function system_library() {
     ),
     'dependencies' => array(
       array('system', 'ui.widget'),
+      array('system', 'ui.button'),
+      array('system', 'ui.draggable'),
+      array('system', 'ui.mouse'),
+      array('system', 'ui.position'),
+      array('system', 'ui.resizable'),
     ),
   );
   $libraries['ui.draggable'] = array(
