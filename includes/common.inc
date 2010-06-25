@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1182 2010/06/24 18:51:33 dries Exp $
+// $Id: common.inc,v 1.1183 2010/06/25 18:56:11 dries Exp $
 
 /**
  * @file
@@ -2758,7 +2758,7 @@ function drupal_get_css($css = NULL) {
     $css = drupal_add_css();
   }
 
-  // Allow modules to alter the CSS items.
+  // Allow modules and themes to alter the CSS items.
   drupal_alter('css', $css);
 
   // Sort CSS items according to their weights.
