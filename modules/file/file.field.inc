@@ -1,5 +1,5 @@
 <?php
-// $Id: file.field.inc,v 1.26 2010/04/13 15:23:03 dries Exp $
+// $Id: file.field.inc,v 1.27 2010/06/25 04:36:49 webchick Exp $
 
 /**
  * @file
@@ -122,9 +122,12 @@ function file_field_instance_settings_form($field, $instance) {
     '#type' => 'textfield',
     '#title' => t('Allowed file extensions'),
     '#default_value' => $extensions,
-    '#description' => t('Separate extensions with a space or comma and do not include the leading dot. Leaving this blank will allow users to upload a file with any extension.'),
+    '#description' => t('Separate extensions with a space or comma and do not include the leading dot.'),
     '#element_validate' => array('_file_generic_settings_extensions'),
     '#weight' => 1,
+    // By making this field required, we prevent a potential security issue
+    // that would allow files of any type to be uploaded.
+    '#required' => TRUE,
   );
 
   $form['max_filesize'] = array(
