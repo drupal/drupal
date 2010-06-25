@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.400 2010/06/24 18:56:10 dries Exp $
+// $Id: bootstrap.inc,v 1.401 2010/06/25 20:42:48 dries Exp $
 
 /**
  * @file
@@ -1647,7 +1647,7 @@ function watchdog($type, $message, $variables = array(), $severity = WATCHDOG_NO
     );
 
     // Call the logging hooks to log/process the message
-    foreach (module_implements('watchdog', TRUE) as $module) {
+    foreach (module_implements('watchdog') as $module) {
       module_invoke($module, 'watchdog', $log_entry);
     }
 
