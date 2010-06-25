@@ -318,7 +318,7 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
     ), t('Test sort entity bundle in ascending order.'), TRUE);
 
     $query = new EntityFieldQuery();
-    $foo = $query
+    $query
       ->entityCondition('entity_type', 'test_entity_bundle_key')
       ->entityOrderBy('bundle', 'DESC')
       ->propertyOrderBy('ftid', 'DESC');
@@ -378,8 +378,9 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
     ), t('Test sort entity revision_id property in descending order.'), TRUE);
 
     $query = new EntityFieldQuery();
-    $query->entityCondition('entity_type', 'test_entity_bundle_key');
-    $query->fieldOrderBy($this->fields[0], 'value', 'ASC');
+    $query
+      ->entityCondition('entity_type', 'test_entity_bundle_key')
+      ->fieldOrderBy($this->fields[0], 'value', 'ASC');
     $this->assertEntityFieldQuery($query, array(
       array('test_entity_bundle_key', 1),
       array('test_entity_bundle_key', 2),
@@ -388,8 +389,9 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
     ), t('Test sort field in ascending order without field condition.'), TRUE);
 
     $query = new EntityFieldQuery();
-    $query->entityCondition('entity_type', 'test_entity_bundle_key');
-    $query->fieldOrderBy($this->fields[0], 'value', 'DESC');
+    $query
+      ->entityCondition('entity_type', 'test_entity_bundle_key')
+      ->fieldOrderBy($this->fields[0], 'value', 'DESC');
     $this->assertEntityFieldQuery($query, array(
       array('test_entity_bundle_key', 4),
       array('test_entity_bundle_key', 3),
@@ -398,9 +400,10 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
     ), t('Test sort field in descending order without field condition.'), TRUE);
 
     $query = new EntityFieldQuery();
-    $query->entityCondition('entity_type', 'test_entity_bundle_key');
-    $query->fieldCondition($this->fields[0], 'value', 0, '>');
-    $query->fieldOrderBy($this->fields[0], 'value', 'asc');
+    $query
+      ->entityCondition('entity_type', 'test_entity_bundle_key')
+      ->fieldCondition($this->fields[0], 'value', 0, '>')
+      ->fieldOrderBy($this->fields[0], 'value', 'asc');
     $this->assertEntityFieldQuery($query, array(
       array('test_entity_bundle_key', 1),
       array('test_entity_bundle_key', 2),
@@ -409,9 +412,10 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
     ), t('Test sort field in ascending order.'), TRUE);
 
     $query = new EntityFieldQuery();
-    $query->entityCondition('entity_type', 'test_entity_bundle_key');
-    $query->fieldCondition($this->fields[0], 'value', 0, '>');
-    $query->fieldOrderBy($this->fields[0], 'value', 'desc');
+    $query
+      ->entityCondition('entity_type', 'test_entity_bundle_key')
+      ->fieldCondition($this->fields[0], 'value', 0, '>')
+      ->fieldOrderBy($this->fields[0], 'value', 'desc');
     $this->assertEntityFieldQuery($query, array(
       array('test_entity_bundle_key', 4),
       array('test_entity_bundle_key', 3),
@@ -715,38 +719,42 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
     ), t('Test entity condition with "starts_with" operation, and property and field conditions.'));
 
     $query = new EntityFieldQuery();
-    $query->entityCondition('entity_type', 'test_entity_bundle_key');
-    $query->propertyOrderBy('ftid', 'asc');
-    $query->range(0, 2);
+    $query
+      ->entityCondition('entity_type', 'test_entity_bundle_key')
+      ->propertyOrderBy('ftid', 'asc')
+      ->range(0, 2);
     $this->assertEntityFieldQuery($query, array(
       array('test_entity_bundle_key', 1),
       array('test_entity_bundle_key', 2),
     ), t('Test limit on a property.'), TRUE);
 
     $query = new EntityFieldQuery();
-    $query->entityCondition('entity_type', 'test_entity_bundle_key');
-    $query->fieldCondition($this->fields[0], 'value', 0, '>=');
-    $query->fieldOrderBy($this->fields[0], 'value', 'asc');
-    $query->range(0, 2);
+    $query
+      ->entityCondition('entity_type', 'test_entity_bundle_key')
+      ->fieldCondition($this->fields[0], 'value', 0, '>=')
+      ->fieldOrderBy($this->fields[0], 'value', 'asc')
+      ->range(0, 2);
     $this->assertEntityFieldQuery($query, array(
       array('test_entity_bundle_key', 1),
       array('test_entity_bundle_key', 2),
     ), t('Test limit on a field.'), TRUE);
 
     $query = new EntityFieldQuery();
-    $query->entityCondition('entity_type', 'test_entity_bundle_key');
-    $query->propertyOrderBy('ftid', 'asc');
-    $query->range(4, 6);
+    $query
+      ->entityCondition('entity_type', 'test_entity_bundle_key')
+      ->propertyOrderBy('ftid', 'asc')
+      ->range(4, 6);
     $this->assertEntityFieldQuery($query, array(
       array('test_entity_bundle_key', 5),
       array('test_entity_bundle_key', 6),
     ), t('Test offset on a property.'), TRUE);
 
     $query = new EntityFieldQuery();
-    $query->entityCondition('entity_type', 'test_entity_bundle_key');
-    $query->fieldCondition($this->fields[0], 'value', 0, '>');
-    $query->fieldOrderBy($this->fields[0], 'value', 'asc');
-    $query->range(2, 4);
+    $query
+      ->entityCondition('entity_type', 'test_entity_bundle_key')
+      ->fieldCondition($this->fields[0], 'value', 0, '>')
+      ->fieldOrderBy($this->fields[0], 'value', 'asc')
+      ->range(2, 4);
     $this->assertEntityFieldQuery($query, array(
       array('test_entity_bundle_key', 3),
       array('test_entity_bundle_key', 4),
@@ -772,15 +780,17 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
     ), t('Select a field across multiple entities.'));
 
     $query = new EntityFieldQuery();
-    $query->fieldCondition($this->fields[1], 'shape', 'square');
-    $query->fieldCondition($this->fields[1], 'color', 'blue');
+    $query
+      ->fieldCondition($this->fields[1], 'shape', 'square')
+      ->fieldCondition($this->fields[1], 'color', 'blue');
     $this->assertEntityFieldQuery($query, array(
       array('test_entity_bundle', 5),
     ), t('Test without a delta group.'));
 
     $query = new EntityFieldQuery();
-    $query->fieldCondition($this->fields[1], 'shape', 'square', '=', 'group');
-    $query->fieldCondition($this->fields[1], 'color', 'blue', '=', 'group');
+    $query
+      ->fieldCondition($this->fields[1], 'shape', 'square', '=', 'group')
+      ->fieldCondition($this->fields[1], 'color', 'blue', '=', 'group');
     $this->assertEntityFieldQuery($query, array(), t('Test with a delta group.'));
 
     // Test query on a deleted field.
