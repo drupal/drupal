@@ -1348,6 +1348,15 @@ function install_profile_modules(&$install_state) {
   $modules = variable_get('install_profile_modules', array());
   $files = system_rebuild_module_data();
   variable_del('install_profile_modules');
+
+  // Install dependencies first.
+  $modules = array_flip($modules);
+  foreach ($modules as $module => $weight) {
+    $modules[$module] = $files[$module]->sort;
+  }
+  arsort($modules);
+  $modules = array_keys($modules);
+
   $operations = array();
   foreach ($modules as $module) {
     $operations[] = array('_install_module_batch', array($module, $files[$module]->info['name']));
