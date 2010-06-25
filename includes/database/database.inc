@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.124 2010/05/26 07:52:12 dries Exp $
+// $Id: database.inc,v 1.125 2010/06/25 20:28:49 dries Exp $
 
 /**
  * @file
@@ -40,7 +40,7 @@
  * one would instead call the Drupal functions:
  * @code
  * $result = db_query_range('SELECT n.nid, n.title, n.created
- *   FROM {node} n WHERE n.uid = :uid', array(':uid' => $uid), 0, 10);
+ *   FROM {node} n WHERE n.uid = :uid', 0, 10, array(':uid' => $uid));
  * foreach($result as $record) {
  *   // Perform operations on $node->title, etc. here.
  * }
