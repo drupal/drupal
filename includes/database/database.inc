@@ -40,7 +40,7 @@
  * one would instead call the Drupal functions:
  * @code
  * $result = db_query_range('SELECT n.nid, n.title, n.created
- *   FROM {node} n WHERE n.uid = :uid', array(':uid' => $uid), 0, 10);
+ *   FROM {node} n WHERE n.uid = :uid', 0, 10, array(':uid' => $uid));
  * foreach($result as $record) {
  *   // Perform operations on $node->title, etc. here.
  * }
