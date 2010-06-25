@@ -1,5 +1,5 @@
 <?php
-// $Id: field_ui.admin.inc,v 1.54 2010/06/21 03:11:49 webchick Exp $
+// $Id: field_ui.admin.inc,v 1.55 2010/06/25 19:31:07 dries Exp $
 
 /**
  * @file
@@ -31,7 +31,7 @@ function field_ui_fields_list() {
     $rows[$field_name]['data'][2] = implode(', ', $cell['data'][2]);
   }
   if (empty($rows)) {
-    $output = t('No fields have been defined for any content type yet.');
+    $output = t('No fields have been defined yet.');
   }
   else {
     // Sort rows by field name.
@@ -432,7 +432,7 @@ function _field_ui_field_overview_form_validate_add_new($form, &$form_state) {
  */
 function _field_ui_field_overview_form_validate_add_existing($form, &$form_state) {
   // The form element might be absent if no existing fields can be added to
-  // this content type
+  // this bundle.
   if (isset($form_state['values']['_add_existing_field'])) {
     $field = $form_state['values']['_add_existing_field'];
 
@@ -1077,7 +1077,7 @@ function field_ui_widget_type_form_submit($form, &$form_state) {
 }
 
 /**
- * Menu callback; present a form for removing a field from a content type.
+ * Menu callback; present a form for removing a field instance from a bundle.
  */
 function field_ui_field_delete_form($form, &$form_state, $instance) {
   $bundle = $instance['bundle'];
@@ -1107,7 +1107,9 @@ function field_ui_field_delete_form($form, &$form_state, $instance) {
 }
 
 /**
- * Remove a field from a content type.
+ * Removes a field instance from a bundle.
+ *
+ * If the field has no more instances, it will be marked as deleted too.
  */
 function field_ui_field_delete_form_submit($form, &$form_state) {
   $form_values = $form_state['values'];
