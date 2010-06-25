@@ -1,5 +1,5 @@
 <?php
-// $Id: block.install,v 1.41 2010/05/19 19:14:43 dries Exp $
+// $Id: block.install,v 1.42 2010/06/25 17:47:22 dries Exp $
 
 /**
  * @file
@@ -187,6 +187,11 @@ function block_install() {
     ->condition('name', 'block')
     ->execute();
 }
+
+/**
+ * @defgroup updates-6.x-to-7.x Block updates from 6.x to 7.x
+ * @{
+ */
 
 /**
  * Set system.weight to a low value for block module.
@@ -389,8 +394,19 @@ function block_update_7004() {
 }
 
 /**
- * Remove {cache_block}.headers column.
+ * Recreates cache_block table.
+ *
+ * Converts fields that hold serialized variables from text to blob.
+ * Removes 'headers' column.
  */
 function block_update_7005() {
-  db_drop_field('cache_block', 'headers');
+  $schema = system_schema_cache_7054();
+
+  db_drop_table('cache_block');
+  db_create_table('cache_block', $schema);
 }
+
+/**
+ * @} End of "defgroup updates-6.x-to-7.x"
+ * The next series of updates should start at 8000.
+ */

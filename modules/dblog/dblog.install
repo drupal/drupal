@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.install,v 1.21 2010/04/28 05:29:55 webchick Exp $
+// $Id: dblog.install,v 1.22 2010/06/25 17:47:22 dries Exp $
 
 /**
  * @file
@@ -38,7 +38,7 @@ function dblog_schema() {
         'description' => 'Text of log message to be passed into the t() function.',
       ),
       'variables' => array(
-        'type' => 'text',
+        'type' => 'blob',
         'not null' => TRUE,
         'size' => 'big',
         'description' => 'Serialized array of variables that match the message string and that is passed into the t() function.',
@@ -116,6 +116,19 @@ function dblog_update_7002() {
  */
 function dblog_update_7003() {
   db_change_field('watchdog', 'type', 'type', array('type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''));
+}
+
+/**
+ * Converts fields that store serialized variables from text to blob.
+ */
+function dblog_update_7004() {
+  $spec = array(
+    'type' => 'blob',
+    'not null' => TRUE,
+    'size' => 'big',
+    'description' => 'Serialized array of variables that match the message string and that is passed into the t() function.',
+  );
+  db_change_field('watchdog', 'variables', 'variables', $spec);
 }
 
 /**

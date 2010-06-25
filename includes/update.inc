@@ -1,5 +1,5 @@
 <?php
-// $Id: update.inc,v 1.56 2010/06/25 12:27:28 dries Exp $
+// $Id: update.inc,v 1.57 2010/06/25 17:47:22 dries Exp $
 
 /**
  * @file
@@ -512,7 +512,7 @@ function update_fix_d7_requirements() {
           'description' => 'The queue name.',
         ),
         'data' => array(
-          'type' => 'text',
+          'type' => 'blob',
           'not null' => FALSE,
           'size' => 'big',
           'serialize' => TRUE,

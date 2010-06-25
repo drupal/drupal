@@ -1,5 +1,5 @@
 <?php
-// $Id: user.install,v 1.50 2010/06/10 06:57:20 dries Exp $
+// $Id: user.install,v 1.51 2010/06/25 17:47:22 dries Exp $
 
 /**
  * @file
@@ -219,7 +219,7 @@ function user_schema() {
         'description' => 'E-mail address used for initial account creation.',
       ),
       'data' => array(
-        'type' => 'text',
+        'type' => 'blob',
         'not null' => FALSE,
         'size' => 'big',
         'serialize' => TRUE,
@@ -624,6 +624,21 @@ function user_update_7008() {
     variable_set('user_register', USER_REGISTER_VISITORS);
   }
 }
+
+/**
+ * Converts fields that store serialized variables from text to blob.
+ */
+function user_update_7009() {
+  $spec = array(
+    'type' => 'blob',
+    'not null' => FALSE,
+    'size' => 'big',
+    'serialize' => TRUE,
+    'description' => 'A serialized array of name value pairs that are related to the user. Any form values posted during user edit are stored and are loaded into the $user object during user_load(). Use of this field is discouraged and it will likely disappear in a future version of Drupal.',
+  );
+  db_change_field('users', 'data', 'data', $spec);
+}
+
 /**
  * @} End of "defgroup user-updates-6.x-to-7.x"
  * The next series of updates should start at 8000.

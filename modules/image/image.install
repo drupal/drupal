@@ -1,5 +1,5 @@
 <?php
-// $Id: image.install,v 1.9 2010/06/25 12:27:28 dries Exp $
+// $Id: image.install,v 1.10 2010/06/25 17:47:22 dries Exp $
 
 /**
  * @file
@@ -86,7 +86,7 @@ function image_schema() {
       ),
       'data' => array(
         'description' => 'The configuration data for the effect.',
-        'type' => 'text',
+        'type' => 'blob',
         'not null' => TRUE,
         'size' => 'big',
         'serialize' => TRUE,
@@ -168,7 +168,7 @@ function image_update_7000() {
         ),
         'data' => array(
           'description' => 'The configuration data for the effect.',
-          'type' => 'text',
+          'type' => 'blob',
           'not null' => TRUE,
           'size' => 'big',
           'serialize' => TRUE,
@@ -183,6 +183,7 @@ function image_update_7000() {
         'isid' => array('image_styles' => 'isid'),
       ),
     );
+
     db_create_table('cache_image', $schema['cache_image']);
     db_create_table('image_styles', $schema['image_styles']);
     db_create_table('image_effect', $schema['image_effects']);

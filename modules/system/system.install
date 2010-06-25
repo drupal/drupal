@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.480 2010/06/25 12:27:28 dries Exp $
+// $Id: system.install,v 1.481 2010/06/25 17:47:22 dries Exp $
 
 /**
  * @file
@@ -511,7 +511,7 @@ function system_schema() {
       ),
       'value' => array(
         'description' => 'The value of the variable.',
-        'type' => 'text',
+        'type' => 'blob',
         'not null' => TRUE,
         'size' => 'big',
         'translatable' => TRUE,
@@ -546,7 +546,7 @@ function system_schema() {
       ),
       'parameters' => array(
         'description' => 'Parameters to be passed to the callback function.',
-        'type' => 'text',
+        'type' => 'blob',
         'not null' => TRUE,
         'size' => 'big',
       ),
@@ -585,7 +585,7 @@ function system_schema() {
       ),
       'batch' => array(
         'description' => 'A serialized array containing the processing data for the batch.',
-        'type' => 'text',
+        'type' => 'blob',
         'not null' => FALSE,
         'size' => 'big',
       ),
@@ -913,12 +913,12 @@ function system_schema() {
       ),
       'load_functions' => array(
         'description' => 'A serialized array of function names (like node_load) to be called to load an object corresponding to a part of the current path.',
-        'type' => 'text',
+        'type' => 'blob',
         'not null' => TRUE,
       ),
       'to_arg_functions' => array(
         'description' => 'A serialized array of function names (like user_uid_optional_to_arg) to be called to replace a part of the router path with another string.',
-        'type' => 'text',
+        'type' => 'blob',
         'not null' => TRUE,
       ),
       'access_callback' => array(
@@ -930,7 +930,7 @@ function system_schema() {
       ),
       'access_arguments' => array(
         'description' => 'A serialized array of arguments for the access callback.',
-        'type' => 'text',
+        'type' => 'blob',
         'not null' => FALSE,
       ),
       'page_callback' => array(
@@ -942,7 +942,7 @@ function system_schema() {
       ),
       'page_arguments' => array(
         'description' => 'A serialized array of arguments for the page callback.',
-        'type' => 'text',
+        'type' => 'blob',
         'not null' => FALSE,
       ),
       'delivery_callback' => array(
@@ -1112,7 +1112,7 @@ function system_schema() {
       ),
       'options' => array(
         'description' => 'A serialized array of options to be passed to the url() or l() function, such as a query string or HTML attributes.',
-        'type' => 'text',
+        'type' => 'blob',
         'not null' => FALSE,
         'translatable' => TRUE,
       ),
@@ -1268,7 +1268,7 @@ function system_schema() {
         'description' => 'The queue name.',
       ),
       'data' => array(
-        'type' => 'text',
+        'type' => 'blob',
         'not null' => FALSE,
         'size' => 'big',
         'serialize' => TRUE,
@@ -1447,7 +1447,7 @@ function system_schema() {
       ),
       'session' => array(
         'description' => 'The serialized contents of $_SESSION, an array of name/value pairs that persists across page requests by this session ID. Drupal loads $_SESSION from here at the start of each request and saves it at the end.',
-        'type' => 'text',
+        'type' => 'blob',
         'not null' => FALSE,
         'size' => 'big',
       ),
@@ -1524,7 +1524,7 @@ function system_schema() {
       ),
       'info' => array(
         'description' => "A serialized array containing information from the module's .info file; keys can include name, description, package, version, core, dependencies, dependents, and php.",
-        'type' => 'text',
+        'type' => 'blob',
         'not null' => FALSE,
       ),
     ),
@@ -2454,10 +2454,93 @@ function system_update_7054() {
   // Update: update_fix_d7_requirements() installs this version for cache_path
   // already, so we don't include it in this particular update. It should be
   // included in later updates though.
-  $cache_tables = array('cache', 'cache_filter', 'cache_form', 'cache_menu', 'cache_page');
-  foreach ($cache_tables as $table) {
-    db_drop_field($table, 'headers');
+  $cache_tables = array('cache', 'cache_form', 'cache_menu', 'cache_page');
+  $schema = system_schema_cache_7054();
+  foreach ($cache_tables as $table => $description) {
+    db_drop_table($table);
+    db_create_table($table, $schema);
   }
+}
+
+/**
+ * Converts fields that store serialized variables from text to blob.
+ */
+function system_update_7055() {
+  $spec = array(
+    'description' => 'The value of the variable.',
+    'type' => 'blob',
+    'not null' => TRUE,
+    'size' => 'big',
+    'translatable' => TRUE,
+  );
+  db_change_field('variable', 'value', 'value', $spec);
+
+  $spec = array(
+    'description' => 'Parameters to be passed to the callback function.',
+    'type' => 'blob',
+    'not null' => TRUE,
+    'size' => 'big',
+  );
+  db_change_field('actions', 'parameters', 'parameters', $spec);
+
+  $spec = array(
+    'description' => 'A serialized array containing the processing data for the batch.',
+    'type' => 'blob',
+    'not null' => FALSE,
+    'size' => 'big',
+  );
+  db_change_field('batch', 'batch', 'batch', $spec);
+
+  $spec = array(
+    'description' => 'A serialized array of function names (like node_load) to be called to load an object corresponding to a part of the current path.',
+    'type' => 'blob',
+    'not null' => TRUE,
+  );
+  db_change_field('menu_router', 'load_functions', 'load_functions', $spec);
+
+  $spec = array(
+    'description' => 'A serialized array of function names (like user_uid_optional_to_arg) to be called to replace a part of the router path with another string.',
+    'type' => 'blob',
+    'not null' => TRUE,
+  );
+  db_change_field('menu_router', 'to_arg_functions', 'to_arg_functions', $spec);
+
+  $spec = array(
+    'description' => 'A serialized array of arguments for the access callback.',
+    'type' => 'blob',
+    'not null' => FALSE,
+  );
+  db_change_field('menu_router', 'access_arguments', 'access_arguments', $spec);
+
+  $spec = array(
+    'description' => 'A serialized array of arguments for the page callback.',
+    'type' => 'blob',
+    'not null' => FALSE,
+  );
+  db_change_field('menu_router', 'page_arguments', 'page_arguments', $spec);
+
+  $spec = array(
+    'description' => 'A serialized array of options to be passed to the url() or l() function, such as a query string or HTML attributes.',
+    'type' => 'blob',
+    'not null' => FALSE,
+    'translatable' => TRUE,
+  );
+  db_change_field('menu_links', 'options', 'options', $spec);
+
+  $spec = array(
+    'description' => 'The serialized contents of $_SESSION, an array of name/value pairs that persists across page requests by this session ID. Drupal loads $_SESSION from here at the start of each request and saves it at the end.',
+    'type' => 'blob',
+    'not null' => FALSE,
+    'size' => 'big',
+  );
+  db_change_field('sessions', 'session', 'session', $spec);
+
+  $spec = array(
+    'description' => "A serialized array containing information from the module's .info file; keys can include name, description, package, version, core, dependencies, dependents, and php.",
+    'type' => 'blob',
+    'not null' => FALSE,
+  );
+  db_change_field('system', 'info', 'info', $spec);
 }
 
 /**

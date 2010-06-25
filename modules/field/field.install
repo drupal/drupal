@@ -1,5 +1,5 @@
 <?php
-// $Id: field.install,v 1.18 2010/03/27 05:52:49 webchick Exp $
+// $Id: field.install,v 1.19 2010/06/25 17:47:22 dries Exp $
 
 /**
  * @file
@@ -72,8 +72,8 @@ function field_schema() {
         'description' => '@TODO',
       ),
       'data' => array(
-        'type' => 'text',
-        'size' => 'medium',
+        'type' => 'blob',
+        'size' => 'big',
         'not null' => TRUE,
         'serialize' => TRUE,
         'description' => 'Serialized data containing the field properties that do not warrant a dedicated column.',
@@ -143,8 +143,8 @@ function field_schema() {
         'default' => ''
       ),
       'data' => array(
-        'type' => 'text',
-        'size' => 'medium',
+        'type' => 'blob',
+        'size' => 'big',
         'not null' => TRUE,
         'serialize' => TRUE,
       ),

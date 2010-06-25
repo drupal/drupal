@@ -1,5 +1,5 @@
 <?php
-// $Id: rdf.install,v 1.3 2010/02/26 18:31:29 dries Exp $
+// $Id: rdf.install,v 1.4 2010/06/25 17:47:22 dries Exp $
 
 /**
  * @file
@@ -27,7 +27,7 @@ function rdf_schema() {
       ),
       'mapping' => array(
         'description' => 'The serialized mapping of the bundle type and fields to RDF terms.',
-        'type' => 'text',
+        'type' => 'blob',
         'not null' => FALSE,
         'size' => 'big',
         'serialize' => TRUE,
