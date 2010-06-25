@@ -3031,15 +3031,15 @@ function node_query_node_access_alter(QueryAlterableInterface $query) {
     if (!($table instanceof SelectQueryInterface) && $table == 'node') {
 
       // The node_access table has the access grants for any given node.
-      $access_alias = $query->join('node_access', 'na', "na.nid = {$nalias}.nid");
+      $access_alias = $query->join('node_access', 'na', '%alias.nid = ' . $nalias . '.nid');
       $or = db_or();
       // If any grant exists for the specified user, then user has access
       // to the node for the specified operation.
       foreach ($grants as $realm => $gids) {
         foreach ($gids as $gid) {
           $or->condition(db_and()
-            ->condition("{$access_alias}.gid", $gid)
-            ->condition("{$access_alias}.realm", $realm)
+            ->condition($access_alias . '.gid', $gid)
+            ->condition($access_alias . '.realm', $realm)
           );
         }
       }
@@ -3048,7 +3048,7 @@ function node_query_node_access_alter(QueryAlterableInterface $query) {
         $query->condition($or);
       }
 
-      $query->condition("{$access_alias}.grant_$op", 1, '>=');
+      $query->condition($access_alias . '.grant_' . $op, 1, '>=');
     }
   }
 }

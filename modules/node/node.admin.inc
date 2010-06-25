@@ -119,14 +119,12 @@ function node_filters() {
 function node_build_filter_query(SelectQueryInterface $query) {
   // Build query
   $filter_data = isset($_SESSION['node_overview_filter']) ? $_SESSION['node_overview_filter'] : array();
-  $counter = 0;
   foreach ($filter_data as $index => $filter) {
     list($key, $value) = $filter;
     switch ($key) {
       case 'term':
-        $index = 'ti' . $counter++;
-        $query->join('taxonomy_index', $index, "n.nid = $index.nid");
-        $query->condition($index . '.tid', $value);
+        $alias = $query->join('taxonomy_index', 'ti', "n.nid = %alias.nid");
+        $query->condition($alias . '.tid', $value);
         break;
       case 'status':
         // Note: no exploitable hole as $key/$value have already been checked when submitted
