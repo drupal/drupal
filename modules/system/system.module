@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.940 2010/06/24 17:28:10 webchick Exp $
+// $Id: system.module,v 1.941 2010/06/25 18:20:27 dries Exp $
 
 /**
  * @file
@@ -1216,6 +1216,11 @@ function system_library() {
     ),
     'dependencies' => array(
       array('system', 'ui.widget'),
+      array('system', 'ui.button'),
+      array('system', 'ui.draggable'),
+      array('system', 'ui.mouse'),
+      array('system', 'ui.position'),
+      array('system', 'ui.resizable'),
     ),
   );
   $libraries['ui.draggable'] = array(
