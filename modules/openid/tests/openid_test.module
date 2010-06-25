@@ -1,5 +1,5 @@
 <?php
-// $Id: openid_test.module,v 1.15 2010/06/17 13:16:57 dries Exp $
+// $Id: openid_test.module,v 1.16 2010/06/25 18:31:37 dries Exp $
 
 /**
  * @file
@@ -88,7 +88,7 @@ function openid_test_yadis_xrds() {
     }
     drupal_add_http_header('Content-Type', 'application/xrds+xml');
     print '<?xml version="1.0" encoding="UTF-8"?>
-      <xrds:XRDS xmlns:xrds="xri://$xrds" xmlns="xri://$xrd*($v*2.0)">
+      <xrds:XRDS xmlns:xrds="xri://$xrds" xmlns="xri://$xrd*($v*2.0)" xmlns:openid="http://openid.net/xmlns/1.0">
         <XRD>
           <Status cid="' . check_plain(variable_get('openid_test_canonical_id_status', 'verified')) . '"/>
           <ProviderID>xri://@</ProviderID>
@@ -100,6 +100,7 @@ function openid_test_yadis_xrds() {
             <Type>http://specs.openid.net/auth/2.0/signon</Type>
             <Type>http://openid.net/srv/ax/1.0</Type>
             <URI>' . url('openid-test/endpoint', array('absolute' => TRUE)) . '</URI>
+            <LocalID>http://example.com/xrds</LocalID>
           </Service>
           <Service priority="15">
             <Type>http://specs.openid.net/auth/2.0/signon</Type>
@@ -119,6 +120,15 @@ function openid_test_yadis_xrds() {
           <Service priority="20">
             <Type>http://specs.openid.net/auth/2.0/server</Type>
             <URI>' . url('openid-test/endpoint', array('absolute' => TRUE)) . '</URI>
+          </Service>';
+    }
+    elseif (arg(3) == 'delegate') {
+      print '
+          <Service priority="5">
+            <Type>http://specs.openid.net/auth/2.0/signon</Type>
+            <Type>http://openid.net/srv/ax/1.0</Type>
+            <URI>' . url('openid-test/endpoint', array('absolute' => TRUE)) . '</URI>
+            <openid:Delegate>http://example.com/xrds-delegate</openid:Delegate>
           </Service>';
     }
     print '
@@ -158,6 +168,7 @@ function openid_test_yadis_http_equiv() {
  */
 function openid_test_html_openid1() {
   drupal_add_html_head_link(array('rel' => 'openid.server', 'href' => url('openid-test/endpoint', array('absolute' => TRUE))));
+  drupal_add_html_head_link(array('rel' => 'openid.delegate', 'href' => 'http://example.com/html-openid1'));
   return t('This page includes a &lt;link rel=...&gt; element containing the URL of an OpenID Provider Endpoint.');
 }
 
@@ -166,6 +177,7 @@ function openid_test_html_openid1() {
  */
 function openid_test_html_openid2() {
   drupal_add_html_head_link(array('rel' => 'openid2.provider', 'href' => url('openid-test/endpoint', array('absolute' => TRUE))));
+  drupal_add_html_head_link(array('rel' => 'openid2.local_id', 'href' => 'http://example.com/html-openid2'));
   return t('This page includes a &lt;link rel=...&gt; element containing the URL of an OpenID Provider Endpoint.');
 }
 
@@ -248,6 +260,18 @@ function _openid_test_endpoint_associate() {
  */
 function _openid_test_endpoint_authenticate() {
   module_load_include('inc', 'openid');
+
+  $expected_identity = variable_get('openid_test_identity');
+  if ($expected_identity && $_REQUEST['openid_identity'] != $expected_identity) {
+    $response = variable_get('openid_test_response', array()) + array(
+      'openid.ns' => OPENID_NS_2_0,
+      'openid.mode' => 'error',
+      'openid.error' => 'Unexpted identity',
+    );
+    drupal_add_http_header('Content-Type', 'text/plain');
+    header('Location: ' . url($_REQUEST['openid_return_to'], array('query' => $response, 'external' => TRUE)));
+    return;
+  }
 
   // Generate unique identifier for this authentication.
   $nonce = _openid_nonce();
