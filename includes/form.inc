@@ -3017,7 +3017,12 @@ function theme_form($variables) {
   $element = $variables['element'];
   // Anonymous div to satisfy XHTML compliance.
   $action = $element['#action'] ? 'action="' . check_url($element['#action']) . '" ' : '';
-  return '<form ' . $action . ' accept-charset="UTF-8" method="' . $element['#method'] . '" id="' . $element['#id'] . '"' . drupal_attributes($element['#attributes']) . ">\n<div>" . $element['#children'] . "\n</div></form>\n";
+
+  if (empty($element['#attributes']['accept-charset'])) {
+    $element['#attributes']['accept-charset'] = "UTF-8";
+  }
+
+  return '<form '. $action .' method="'. $element['#method'] .'" id="'. $element['#id'] .'"'. drupal_attributes($element['#attributes']) .">\n<div>". $element['#children'] ."\n</div></form>\n";
 }
 
 /**
