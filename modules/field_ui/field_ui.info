@@ -1,6 +1,6 @@
 ; $Id$
 name = Field UI
-description = User Interface for the Field API.
+description = User interface for the Field API.
 package = Core
 version = VERSION
 core = 7.x
