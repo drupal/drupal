@@ -512,7 +512,7 @@ function update_fix_d7_requirements() {
           'description' => 'The queue name.',
         ),
         'data' => array(
-          'type' => 'text',
+          'type' => 'blob',
           'not null' => FALSE,
           'size' => 'big',
           'serialize' => TRUE,

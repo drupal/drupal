@@ -220,7 +220,7 @@ function database_test_schema() {
       ),
       'info' => array(
         'description' => "The person's data in serialized form.",
-        'type' => 'text',
+        'type' => 'blob',
         'serialize' => TRUE,
       ),
     ),

@@ -27,7 +27,7 @@ function rdf_schema() {
       ),
       'mapping' => array(
         'description' => 'The serialized mapping of the bundle type and fields to RDF terms.',
-        'type' => 'text',
+        'type' => 'blob',
         'not null' => FALSE,
         'size' => 'big',
         'serialize' => TRUE,

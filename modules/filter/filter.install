@@ -46,7 +46,7 @@ function filter_schema() {
         'description' => 'Filter enabled status. (1 = enabled, 0 = disabled)',
       ),
       'settings' => array(
-        'type' => 'text',
+        'type' => 'blob',
         'not null' => FALSE,
         'size' => 'big',
         'serialize' => TRUE,
@@ -420,6 +420,24 @@ function filter_update_7008() {
       user_role_grant_permissions($rid, $permissions);
     }
   }
+}
+
+/**
+ * Converts fields that store serialized variables from text to blob.
+ */
+function filter_update_7009() {
+  $spec = array(
+    'type' => 'blob',
+    'not null' => FALSE,
+    'size' => 'big',
+    'serialize' => TRUE,
+    'description' => 'A serialized array of name value pairs that store the filter settings for the specific format.',
+  );
+  db_change_field('filter', 'settings', 'settings', $spec);
+
+  $schema = system_schema_cache_7054();
+  db_drop_table('cache_filter');
+  db_create_table('cache_filter', $schema);
 }
 
 /**
