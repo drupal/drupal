@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.470 2010/06/16 05:06:15 dries Exp $
+// $Id: form.inc,v 1.471 2010/06/25 20:19:13 dries Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -3017,7 +3017,12 @@ function theme_form($variables) {
   $element = $variables['element'];
   // Anonymous div to satisfy XHTML compliance.
   $action = $element['#action'] ? 'action="' . check_url($element['#action']) . '" ' : '';
-  return '<form ' . $action . ' accept-charset="UTF-8" method="' . $element['#method'] . '" id="' . $element['#id'] . '"' . drupal_attributes($element['#attributes']) . ">\n<div>" . $element['#children'] . "\n</div></form>\n";
+
+  if (empty($element['#attributes']['accept-charset'])) {
+    $element['#attributes']['accept-charset'] = "UTF-8";
+  }
+
+  return '<form '. $action .' method="'. $element['#method'] .'" id="'. $element['#id'] .'"'. drupal_attributes($element['#attributes']) .">\n<div>". $element['#children'] ."\n</div></form>\n";
 }
 
 /**
