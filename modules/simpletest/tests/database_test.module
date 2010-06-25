@@ -1,5 +1,5 @@
 <?php
-// $Id: database_test.module,v 1.13 2010/01/30 07:59:25 dries Exp $
+// $Id: database_test.module,v 1.14 2010/06/25 19:33:47 dries Exp $
 
 /**
  * Implements hook_query_alter().
@@ -11,8 +11,8 @@ function database_test_query_alter(QueryAlterableInterface $query) {
   }
 
   if ($query->hasTag('database_test_alter_add_join')) {
-    $people_alias = $query->join('test', 'people', "test_task.pid=people.id");
-    $name_field = $query->addField('people', 'name', 'name');
+    $people_alias = $query->join('test', 'people', "test_task.pid = %alias.id");
+    $name_field = $query->addField($people_alias, 'name', 'name');
     $query->condition($people_alias . '.id', 2);
   }
 
