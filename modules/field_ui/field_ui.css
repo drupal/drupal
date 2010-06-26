@@ -1,8 +1,7 @@
-/* $Id: field_ui.css,v 1.2 2010/05/23 19:10:23 dries Exp $ */
+/* $Id: field_ui.css,v 1.3 2010/06/26 02:06:53 dries Exp $ */
 
 /* 'Manage fields' overview */
-#field-overview .label-add-new-field,
-#field-overview .label-add-existing-field {
+#field-overview tr.add-new .label-input {
   float: left; /* LTR */
 }
 #field-overview tr.add-new .tabledrag-changed {
@@ -11,7 +10,7 @@
 #field-overview tr.add-new .description {
   margin-bottom: 0;
 }
-#field-overview .new {
+#field-overview tr.add-new .add-new-placeholder {
   font-weight: bold;
   padding-bottom: .5em;
 }
