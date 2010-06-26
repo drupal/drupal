@@ -801,29 +801,45 @@ class MergeQuery extends Query {
 
     // In the degenerate case of this query type, we have to run multiple
     // queries as there is no universal single-query mechanism that will work.
-    // Our degenerate case is not designed for performance efficiency but
-    // for comprehensibility. Any practical database driver will override
-    // this method with database-specific logic, so this function serves only
-    // as a fallback to aid developers of new drivers.
 
     // Wrap multiple queries in a transaction, if the database supports it.
     $transaction = $this->connection->startTransaction();
 
-    // Manually check if the record already exists.
-    $select = $this->connection->select($this->table);
-    foreach ($this->keyFields as $field => $value) {
-      $select->condition($field, $value);
-    }
+    try {
+      // Manually check if the record already exists.
+      // We build a 'SELECT 1 FROM table WHERE conditions FOR UPDATE' query,
+      // that will lock the rows that matches our set of conditions as well as
+      // return the information that there are such rows.
+      $select = $this->connection->select($this->table);
+      $select->addExpression('1');
+      foreach ($this->keyFields as $field => $value) {
+        $select->condition($field, $value);
+      }
 
-    $select = $select->countQuery();
-    $sql = (string) $select;
-    $arguments = $select->getArguments();
-    $num_existing = $this->connection->query($sql, $arguments)->fetchField();
+      // Using SELECT FOR UPDATE syntax will lock the rows we want to attempt to update.
+      $sql = ((string) $select) . ' FOR UPDATE';
+      $arguments = $select->getArguments();
 
+      // If there are no existing records, run an insert query.
+      if (!$this->connection->query($sql, $arguments)->fetchField()) {
+        // If there is no existing record, run an insert query.
+        $insert_fields = $this->insertFields + $this->keyFields;
+        try {
+          $this->connection->insert($this->table, $this->queryOptions)->fields($insert_fields)->execute();
+          return MergeQuery::STATUS_INSERT;
+        }
+        catch (Exception $e) {
+          // The insert query failed, maybe it's because a racing insert query
+          // beat us in inserting the same row. Retry the select query, if it
+          // returns a row, ignore the error and continue with the update
+          // query below.
+          if (!$this->connection->query($sql, $arguments)->fetchField()) {
+            throw $e;
+          }
+        }
+      }
 
-    if ($num_existing) {
-      // If there is already an existing record, run an update query.
-
+      // Proceed with an update query if a row was found.
       if ($this->updateFields) {
         $update_fields = $this->updateFields;
       }
@@ -835,7 +851,7 @@ class MergeQuery extends Query {
         }
       }
       if ($update_fields || $this->expressionFields) {
-        // Only run the update if there are no fields or expressions to update.
+        // Only run the update if there are fields or expressions to update.
         $update = $this->connection->update($this->table, $this->queryOptions)->fields($update_fields);
         foreach ($this->keyFields as $field => $value) {
           $update->condition($field, $value);
@@ -847,13 +863,12 @@ class MergeQuery extends Query {
         return MergeQuery::STATUS_UPDATE;
       }
     }
-    else {
-      // If there is no existing record, run an insert query.
-      $insert_fields = $this->insertFields + $this->keyFields;
-      $this->connection->insert($this->table, $this->queryOptions)->fields($insert_fields)->execute();
-      return MergeQuery::STATUS_INSERT;
+    catch (Exception $e) {
+      // Something really wrong happened here, bubble up the exception to the
+      // caller.
+      $transaction->rollback();
+      throw $e;
     }
-
     // Transaction commits here where $transaction looses scope.
   }
 
