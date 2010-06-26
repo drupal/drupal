@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.172 2010/06/26 12:34:44 dries Exp $
+// $Id: system.api.php,v 1.173 2010/06/26 21:38:38 dries Exp $
 
 /**
  * @file
@@ -3512,34 +3512,6 @@ function hook_date_formats_alter(&$formats) {
 }
 
 /**
- * Alters the router item for the active menu handler.
- *
- * Called by menu_execute_active_handler() to allow modules to alter the
- * information that will be used to handle the page request. Only use this
- * hook if an alteration specific to the page request is needed. Otherwise
- * use hook_menu_alter().
- *
- * @param $router_item
- *   An array with the following keys:
- *   - access: Boolean. Whether the user is allowed to see this page.
- *   - file: A path to a file to include prior to invoking the page callback.
- *   - page_callback: The function to call to build the page content.
- *   - page_arguments: Arguments to pass to the page callback.
- *   - delivery_callback: The function to call to deliver the result of the
- *     page callback to the browser.
- * @param $path
- *   The drupal path that was used for retrieving the router item.
- *
- * @see menu_execute_active_handler()
- * @see hook_menu()
- * @see hook_menu_alter()
- */
-function hook_menu_active_handler_alter(&$router_item, $path = NULL) {
-  // Turn off access for all pages for all users.
-  $router_item['access'] = FALSE;
-}
-
-/**
  * Alters the delivery callback used to send the result of the page callback to the browser.
  *
  * Called by drupal_deliver_page() to allow modules to alter how the
@@ -3550,7 +3522,7 @@ function hook_menu_active_handler_alter(&$router_item, $path = NULL) {
  * it can be used to set the delivery callback based on a HTTP request
  * header (as shown in the code sample). To specify a delivery callback
  * based on path information, use hook_menu(), hook_menu_alter() or
- * hook_menu_active_handler_alter().
+ * hook_page_delivery_callback_alter().
  *
  * This hook can also be used as an API function that can be used to explicitly
  * set the delivery callback from some other function. For example, for a module

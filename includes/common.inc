@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1183 2010/06/25 18:56:11 dries Exp $
+// $Id: common.inc,v 1.1184 2010/06/26 21:38:38 dries Exp $
 
 /**
  * @file
@@ -2273,7 +2273,7 @@ function l($text, $path, array $options = array()) {
  * callback is drupal_deliver_html_page() which delivers the content as an HTML
  * page, complete with blocks in addition to the content. This default can be
  * overridden on a per menu item basis by setting 'delivery callback' in
- * hook_menu(), hook_menu_alter(), or hook_menu_active_handler_alter().
+ * hook_menu(), hook_menu_alter().
  * Additionally, modules may use hook_page_delivery_callback_alter() to specify
  * a different delivery callback to use for the page request.
  *
@@ -2303,7 +2303,6 @@ function l($text, $path, array $options = array()) {
  * @see menu_execute_active_handler()
  * @see hook_menu()
  * @see hook_menu_alter()
- * @see hook_menu_active_handler_alter()
  * @see hook_page_delivery_callback_alter()
  */
 function drupal_deliver_page($page_callback_result, $default_delivery_callback = NULL) {
