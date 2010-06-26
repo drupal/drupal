@@ -14,7 +14,7 @@ class FileFieldTestCase extends DrupalWebTestCase {
 
   function setUp() {
     parent::setUp('file');
-    $this->admin_user = $this->drupalCreateUser(array('access content', 'access administration pages', 'administer site configuration', 'administer content types', 'administer nodes', 'create article content', 'edit any article content', 'delete any article content'));
+    $this->admin_user = $this->drupalCreateUser(array('access content', 'access administration pages', 'administer site configuration', 'administer users', 'administer content types', 'administer nodes', 'create article content', 'edit any article content', 'delete any article content'));
     $this->drupalLogin($this->admin_user);
   }
 
@@ -55,11 +55,31 @@ class FileFieldTestCase extends DrupalWebTestCase {
     $field['settings'] = array_merge($field['settings'], $field_settings);
     field_create_field($field);
 
+    $this->attachFileField($name, 'node', $type_name, $instance_settings, $widget_settings);
+  }
+
+  /**
+   * Attach a file field to an entity.
+   *
+   * @param $name
+   *   The name of the new field (all lowercase), exclude the "field_" prefix.
+   * @param $entity_type
+   *   The entity type this field will be added to.
+   * @param $bundle
+   *   The bundle this field will be added to.
+   * @param $field_settings
+   *   A list of field settings that will be added to the defaults.
+   * @param $instance_settings
+   *   A list of instance settings that will be added to the instance defaults.
+   * @param $widget_settings
+   *   A list of widget settings that will be added to the widget defaults.
+   */
+  function attachFileField($name, $entity_type, $bundle, $instance_settings = array(), $widget_settings = array()) {
     $instance = array(
-      'field_name' => $field['field_name'],
-      'entity_type' => 'node',
+      'field_name' => $name,
       'label' => $name,
-      'bundle' => $type_name,
+      'entity_type' => $entity_type,
+      'bundle' => $bundle,
       'required' => !empty($instance_settings['required']),
       'settings' => array(),
       'widget' => array(
@@ -212,6 +232,9 @@ class FileFieldRevisionTestCase extends FileFieldTestCase {
     $field = field_info_field($field_name);
     $instance = field_info_instance('node', $field_name, $type_name);
 
+    // Attach the same fields to users.
+    $this->attachFileField($field_name, 'user', 'user');
+
     $test_file = $this->getTestFile('text');
 
     // Create a new node with the uploaded file.
@@ -265,8 +288,21 @@ class FileFieldRevisionTestCase extends FileFieldTestCase {
     $this->assertFileEntryExists($node_file_r3, t('Second file entry is still available after deleting second revision, since it is being used by the third revision.'));
     $this->assertFileIsPermanent($node_file_r3, t('Second file entry is still permanent after deleting second revision, since it is being used by the third revision.'));
 
-    // Delete the third revision and check that the file is deleted also.
+    // Attach the second file to a user.
+    $user = $this->drupalCreateUser();
+    $edit = array();
+    $edit[$field_name][LANGUAGE_NONE][0] = (array) $node_file_r3;
+    user_save($user, $edit);
+    $this->drupalGet('user/' . $user->uid . '/edit');
+
+    // Delete the third revision and check that the file is not deleted yet.
     $this->drupalPost('node/' . $nid . '/revisions/' . $node_vid_r3 . '/delete', array(), t('Delete'));
+    $this->assertFileExists($node_file_r3, t('Second file is still available after deleting third revision, since it is being used by the user.'));
+    $this->assertFileEntryExists($node_file_r3, t('Second file entry is still available after deleting third revision, since it is being used by the user.'));
+    $this->assertFileIsPermanent($node_file_r3, t('Second file entry is still permanent after deleting third revision, since it is being used by the user.'));
+
+    // Delete the user and check that the file is also deleted.
+    user_delete($user->uid);
     // TODO: This seems like a bug in File API. Clearing the stat cache should
     // not be necessary here. The file really is deleted, but stream wrappers
     // doesn't seem to think so unless we clear the PHP file stat() cache.

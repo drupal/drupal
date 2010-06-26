@@ -248,6 +248,23 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
         array('test_entity', 101),
     ), t('Test revision age.'));
 
+    // Test that fields attached to the non-revision supporting entity
+    // 'test_entity_bundle_key' are reachable in FIELD_LOAD_REVISION.
+    $query = new EntityFieldQuery();
+    $query
+      ->fieldCondition($this->fields[0], 'value', 100, '<')
+      ->age(FIELD_LOAD_REVISION);
+    $this->assertEntityFieldQuery($query, array(
+        array('test_entity_bundle_key', 1),
+        array('test_entity_bundle_key', 2),
+        array('test_entity_bundle_key', 3),
+        array('test_entity_bundle_key', 4),
+        array('test_entity', 1),
+        array('test_entity', 2),
+        array('test_entity', 3),
+        array('test_entity', 4),
+    ), t('Test that fields are reachable from FIELD_LOAD_REVISION even for non-revision entities.'));
+
     // Test entity sort by entity_id.
     $query = new EntityFieldQuery();
     $query
