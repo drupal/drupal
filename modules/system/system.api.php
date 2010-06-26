@@ -2050,15 +2050,18 @@ function hook_flush_caches() {
 /**
  * Perform necessary actions after modules are installed.
  *
- * This function differs from hook_install() as it gives all other
- * modules a chance to perform actions when a module is installed,
- * whereas hook_install() will only be called on the module actually
- * being installed.
- *
- * @see hook_install()
+ * This function differs from hook_install() in that it gives all other modules
+ * a chance to perform actions when a module is installed, whereas
+ * hook_install() is only called on the module actually being installed. See
+ * module_enable() for a detailed description of the order in which install and
+ * enable hooks are invoked.
  *
  * @param $modules
  *   An array of the installed modules.
+ *
+ * @see module_enable()
+ * @see hook_modules_enabled()
+ * @see hook_install()
  */
 function hook_modules_installed($modules) {
   if (in_array('lousy_module', $modules)) {
@@ -2069,15 +2072,18 @@ function hook_modules_installed($modules) {
 /**
  * Perform necessary actions after modules are enabled.
  *
- * This function differs from hook_enable() as it gives all other
- * modules a chance to perform actions when modules are enabled,
- * whereas hook_enable() will only be called on the module actually
- * being enabled.
- *
- * @see hook_enable()
+ * This function differs from hook_enable() in that it gives all other modules a
+ * chance to perform actions when modules are enabled, whereas hook_enable() is
+ * only called on the module actually being enabled. See module_enable() for a
+ * detailed description of the order in which install and enable hooks are
+ * invoked.
  *
  * @param $modules
  *   An array of the enabled modules.
+ *
+ * @see hook_enable()
+ * @see hook_modules_installed()
+ * @see module_enable()
  */
 function hook_modules_enabled($modules) {
   if (in_array('lousy_module', $modules)) {
@@ -2089,15 +2095,15 @@ function hook_modules_enabled($modules) {
 /**
  * Perform necessary actions after modules are disabled.
  *
- * This function differs from hook_disable() as it gives all other
- * modules a chance to perform actions when modules are disabled,
- * whereas hook_disable() will only be called on the module actually
- * being disabled.
- *
- * @see hook_disable()
+ * This function differs from hook_disable() in that it gives all other modules
+ * a chance to perform actions when modules are disabled, whereas hook_disable()
+ * is only called on the module actually being disabled.
  *
  * @param $modules
  *   An array of the disabled modules.
+ *
+ * @see hook_disable()
+ * @see hook_modules_uninstalled()
  */
 function hook_modules_disabled($modules) {
   if (in_array('lousy_module', $modules)) {
@@ -2108,18 +2114,18 @@ function hook_modules_disabled($modules) {
 /**
  * Perform necessary actions after modules are uninstalled.
  *
- * This function differs from hook_uninstall() as it gives all other
- * modules a chance to perform actions when a module is uninstalled,
- * whereas hook_uninstall() will only be called on the module actually
- * being uninstalled.
+ * This function differs from hook_uninstall() in that it gives all other
+ * modules a chance to perform actions when a module is uninstalled, whereas
+ * hook_uninstall() is only called on the module actually being uninstalled.
  *
  * It is recommended that you implement this module if your module
  * stores data that may have been set by other modules.
  *
- * @see hook_uninstall()
- *
  * @param $modules
  *   An array of the uninstalled modules.
+ *
+ * @see hook_uninstall()
+ * @see hook_modules_disabled()
  */
 function hook_modules_uninstalled($modules) {
   foreach ($modules as $module) {
@@ -2683,11 +2689,11 @@ function hook_query_TAG_alter(QueryAlterableInterface $query) {
  * If the module implements hook_schema(), the database tables will
  * be created before this hook is fired.
  *
- * The hook will be called the first time a module is installed, and the
- * module's schema version will be set to the module's greatest numbered update
- * hook. Because of this, anytime a hook_update_N() is added to the module, this
- * function needs to be updated to reflect the current version of the database
- * schema.
+ * This hook will only be called the first time a module is enabled or after it
+ * is re-enabled after being uninstalled. The module's schema version will be
+ * set to the module's greatest numbered update hook. Because of this, anytime a
+ * hook_update_N() is added to the module, this function needs to be updated to
+ * reflect the current version of the database schema.
  *
  * See the Schema API documentation at
  * @link http://drupal.org/node/146843 http://drupal.org/node/146843 @endlink
@@ -2701,8 +2707,12 @@ function hook_query_TAG_alter(QueryAlterableInterface $query) {
  * Please be sure that anything added or modified in this function that can
  * be removed during uninstall should be removed with hook_uninstall().
  *
- * @see hook_uninstall()
  * @see hook_schema()
+ * @see module_enable()
+ * @see hook_enable()
+ * @see hook_disable()
+ * @see hook_uninstall()
+ * @see hook_modules_installed()
  */
 function hook_install() {
   // Populate the default {node_access} record.
@@ -2910,6 +2920,8 @@ function hook_update_last_removed() {
  *
  * @see hook_install()
  * @see hook_schema()
+ * @see hook_disable()
+ * @see hook_modules_uninstalled()
  */
 function hook_uninstall() {
   variable_del('upload_file_types');
@@ -2918,7 +2930,11 @@ function hook_uninstall() {
 /**
  * Perform necessary actions after module is enabled.
  *
- * The hook is called everytime module is enabled.
+ * The hook is called every time the module is enabled.
+ *
+ * @see module_enable()
+ * @see hook_install()
+ * @see hook_modules_enabled()
  */
 function hook_enable() {
   mymodule_cache_rebuild();
@@ -2927,7 +2943,10 @@ function hook_enable() {
 /**
  * Perform necessary actions before module is disabled.
  *
- * The hook is called everytime module is disabled.
+ * The hook is called every time the module is disabled.
+ *
+ * @see hook_uninstall()
+ * @see hook_modules_disabled()
  */
 function hook_disable() {
   mymodule_cache_rebuild();
