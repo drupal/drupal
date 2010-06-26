@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.admin.inc,v 1.80 2010/06/20 17:34:51 webchick Exp $
+// $Id: menu.admin.inc,v 1.81 2010/06/26 17:43:22 dries Exp $
 
 /**
  * @file
@@ -86,6 +86,9 @@ function menu_overview_form($form, &$form_state, $menu) {
 
 /**
  * Recursive helper function for menu_overview_form().
+ *
+ * @param $tree
+ *   The menu_tree retrieved by menu_tree_data.
  */
 function _menu_overview_tree_form($tree) {
   $form = &drupal_static(__FUNCTION__, array('#tree' => TRUE));
@@ -105,7 +108,7 @@ function _menu_overview_tree_form($tree) {
       $form[$mlid]['weight'] = array(
         '#type' => 'weight',
         '#delta' => 50,
-        '#default_value' => isset($form_state[$mlid]['weight']) ? $form_state[$mlid]['weight'] : $item['weight'],
+        '#default_value' => $item['weight'],
         '#title_display' => 'invisible',
         '#title' => t('Weight for @row', array('@row' => $item['title'])),
       );
@@ -115,7 +118,7 @@ function _menu_overview_tree_form($tree) {
       );
       $form[$mlid]['plid'] = array(
         '#type' => 'hidden',
-        '#default_value' => isset($form_state[$mlid]['plid']) ? $form_state[$mlid]['plid'] : $item['plid'],
+        '#default_value' => $item['plid'],
       );
       // Build a list of operations.
       $operations = array();
