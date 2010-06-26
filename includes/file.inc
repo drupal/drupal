@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.215 2010/06/23 02:45:34 dries Exp $
+// $Id: file.inc,v 1.216 2010/06/26 19:55:47 dries Exp $
 
 /**
  * @file
@@ -1098,6 +1098,12 @@ function file_space_used($uid = NULL, $status = FILE_STATUS_PERMANENT) {
  * @param $validators
  *   An optional, associative array of callback functions used to validate the
  *   file. See file_validate() for a full discussion of the array format.
+ *   If no extension validator is provided it will default to a limited safe
+ *   list of extensions which is as follows: "jpg jpeg gif png txt
+ *   doc xls pdf ppt pps odt ods odp". To allow all extensions you must
+ *   explicitly set the 'file_validate_extensions' validator to an empty array
+ *   (Beware: this is not safe and should only be allowed for trusted users, if
+ *   at all).
  * @param $destination
  *   A string containing the URI $source should be copied to.
  *   This must be a stream wrapper URI. If this value is omitted, Drupal's
@@ -1160,28 +1166,56 @@ function file_save_upload($source, $validators = array(), $destination = FALSE, 
       return FALSE;
   }
 
-  // Build the list of non-munged extensions.
-  // @todo: this should not be here. we need to figure out the right place.
-  $extensions = '';
-  foreach ($user->roles as $rid => $name) {
-    $extensions .= ' ' . variable_get("upload_extensions_$rid",
-    variable_get('upload_extensions_default', 'jpg jpeg gif png txt html doc xls pdf ppt pps odt ods odp'));
-  }
-
   // Begin building file object.
   $file = new stdClass();
   $file->uid      = $user->uid;
   $file->status   = 0;
-  $file->filename = file_munge_filename(trim(basename($_FILES['files']['name'][$source]), '.'), $extensions);
+  $file->filename = trim(basename($_FILES['files']['name'][$source]), '.');
   $file->uri      = $_FILES['files']['tmp_name'][$source];
   $file->filemime = file_get_mimetype($file->filename);
   $file->filesize = $_FILES['files']['size'][$source];
 
-  // Rename potentially executable files, to help prevent exploits.
-  if (preg_match('/\.(php|pl|py|cgi|asp|js)$/i', $file->filename) && (substr($file->filename, -4) != '.txt')) {
+  $extensions = '';
+  if (isset($validators['file_validate_extensions'])) {
+    if (isset($validators['file_validate_extensions'][0])) {
+      // Build the list of non-munged extensions if the caller provided them.
+      $extensions = $validators['file_validate_extensions'][0];
+    }
+    else {
+      // If 'file_validate_extensions' is set and the list is empty then the
+      // caller wants to allow any extension. In this case we have to remove the
+      // validator or else it will reject all extensions.
+      unset($validators['file_validate_extensions']);
+    }
+  }
+  else {
+    // No validator was provided, so add one using the default list.
+    // Build a default non-munged safe list for file_munge_filename().
+    $extensions = 'jpg jpeg gif png txt doc xls pdf ppt pps odt ods odp';
+    $validators['file_validate_extensions'] = array();
+    $validators['file_validate_extensions'][0] = $extensions;
+  }
+
+  if (!empty($extensions)) {
+    // Munge the filename to protect against possible malicious extension hiding
+    // within an unknown file type (ie: filename.html.foo).
+    $file->filename = file_munge_filename($file->filename, $extensions);
+  }
+
+  // Rename potentially executable files, to help prevent exploits (i.e. will
+  // rename filename.php.foo and filename.php to filename.php.foo.txt and
+  // filename.php.txt, respectively). Don't rename if 'allow_insecure_uploads'
+  // evaluates to TRUE.
+  if (!variable_get('allow_insecure_uploads', 0) && preg_match('/\.(php|pl|py|cgi|asp|js)(\.|$)/i', $file->filename) && (substr($file->filename, -4) != '.txt')) {
     $file->filemime = 'text/plain';
     $file->uri .= '.txt';
     $file->filename .= '.txt';
+    // The .txt extension may not be in the allowed list of extensions. We have
+    // to add it here or else the file upload will fail.
+    if (!empty($extensions)) {
+      $validators['file_validate_extensions'][0] .= ' txt';
+      drupal_set_message(t('For security reasons, your upload has been renamed to %filename.', array('%filename' => $file->filename)));
+    }
   }
 
   // If the destination is not provided, use the temporary directory.

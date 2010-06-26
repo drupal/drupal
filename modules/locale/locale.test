@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.test,v 1.72 2010/05/27 12:29:39 dries Exp $
+// $Id: locale.test,v 1.73 2010/06/26 19:55:47 dries Exp $
 
 /**
  * @file
@@ -758,7 +758,7 @@ class LocaleImportFunctionalTest extends DrupalWebTestCase {
    *   Additional options to pass to the translation import form.
    */
   function importPoFile($contents, array $options = array()) {
-    $name = tempnam(file_directory_path('temporary'), "po_");
+    $name = tempnam(file_directory_path('temporary'), "po_") . '.po';
     file_put_contents($name, $contents);
     $options['files[file]'] = $name;
     $this->drupalPost('admin/config/regional/translate/import', $options, t('Import'));
@@ -905,7 +905,7 @@ class LocaleExportFunctionalTest extends DrupalWebTestCase {
   function testExportTranslation() {
     // First import some known translations.
     // This will also automatically enable the 'fr' language.
-    $name = tempnam(file_directory_path('temporary'), "po_");
+    $name = tempnam(file_directory_path('temporary'), "po_") . '.po';
     file_put_contents($name, $this->getPoFile());
     $this->drupalPost('admin/config/regional/translate/import', array(
       'langcode' => 'fr',

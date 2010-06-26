@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.admin.inc,v 1.53 2010/05/18 20:53:29 dries Exp $
+// $Id: aggregator.admin.inc,v 1.54 2010/06/26 19:55:47 dries Exp $
 
 /**
  * @file
@@ -300,7 +300,8 @@ function aggregator_form_opml_validate($form, &$form_state) {
  */
 function aggregator_form_opml_submit($form, &$form_state) {
   $data = '';
-  if ($file = file_save_upload('upload')) {
+  $validators = array('file_validate_extensions' => array('opml xml'));
+  if ($file = file_save_upload('upload', $validators)) {
     $data = file_get_contents($file->uri);
   }
   else {
