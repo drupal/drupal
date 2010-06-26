@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.471 2010/06/25 20:19:13 dries Exp $
+// $Id: form.inc,v 1.472 2010/06/26 18:11:27 dries Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -2042,12 +2042,32 @@ function _form_set_value(&$form_values, $element, $parents, $value) {
   }
 }
 
+/**
+ * Allows PHP array processing of multiple select options with the same value.
+ *
+ * Used for form select elements which need to validate HTML option groups
+ * and multiple options which may return the same value. Associative PHP arrays
+ * cannot handle these structures, since they share a common key.
+ *
+ * @param $array
+ *   The form options array to process.
+ *
+ * @return
+ *   An array with all hierarchical elements flattened to a single array.
+ */
 function form_options_flatten($array) {
   // Always reset static var when first entering the recursion.
   drupal_static_reset('_form_options_flatten');
   return _form_options_flatten($array);
 }
 
+/**
+ * Helper function for form_options_flatten().
+ *
+ * Iterates over arrays which may share common values and produces a flat
+ * array that has removed duplicate keys. Also handles cases where objects
+ * are passed as array values.
+ */
 function _form_options_flatten($array) {
   $return = &drupal_static(__FUNCTION__);
 
@@ -2090,7 +2110,7 @@ function theme_select($variables) {
 }
 
 /**
- * Convert a select form element's options array into an HTML.
+ * Converts a select form element's options array into an HTML.
  *
  * @param $element
  *   An associative array containing the properties of the element.
