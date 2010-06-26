@@ -693,8 +693,6 @@ function locale_languages_configure_form_submit($form, &$form_state) {
  * The URL language provider configuration form.
  */
 function locale_language_providers_url_form($form, &$form_state) {
-  $form = array();
-
   $form['locale_language_negotiation_url_part'] = array(
     '#title' => t('Part of the URL that determines language'),
     '#type' => 'radios',
@@ -715,8 +713,6 @@ function locale_language_providers_url_form($form, &$form_state) {
  * The URL language provider configuration form.
  */
 function locale_language_providers_session_form($form, &$form_state) {
-  $form = array();
-
   $form['locale_language_negotiation_session_param'] = array(
     '#title' => t('Request/session parameter'),
     '#type' => 'textfield',

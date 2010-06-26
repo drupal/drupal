@@ -635,7 +635,7 @@ function user_admin_settings() {
     '#rows' => 3,
   );
 
-  return system_settings_form($form, FALSE);
+  return system_settings_form($form);
 }
 
 /**
