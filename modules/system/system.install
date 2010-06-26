@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.481 2010/06/25 17:47:22 dries Exp $
+// $Id: system.install,v 1.482 2010/06/26 12:40:33 dries Exp $
 
 /**
  * @file
@@ -1568,11 +1568,11 @@ function system_schema() {
       ),
     ),
     'unique keys' => array(
-      'alias_language_pid' => array('alias', 'language', 'pid'),
+      'alias_language' => array('alias', 'language'),
     ),
     'primary key' => array('pid'),
     'indexes' => array(
-      'source_language_pid' => array('source', 'language', 'pid'),
+      'source_language' => array('source', 'language'),
     ),
   );
 
@@ -2541,6 +2541,18 @@ function system_update_7055() {
     'not null' => FALSE,
   );
   db_change_field('system', 'info', 'info', $spec);
+}
+
+/**
+ * Remove pid from indexes and unique keys of {}url_alias}.
+ */
+function system_update_7056() {
+  // Drop indexes.
+  db_drop_index('url_alias', 'source_language_pid');
+  db_drop_unique_key('url_alias', 'alias_language_pid');
+  // Add indexes back.
+  db_add_index('url_alias', 'source_language', array('source', 'language'));
+  db_add_unique_key('url_alias', 'alias_language', array('alias', 'language'));
 }
 
 /**
