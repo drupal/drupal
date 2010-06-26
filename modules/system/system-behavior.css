@@ -1,4 +1,4 @@
-/* $Id: system-behavior.css,v 1.10 2010/06/20 17:34:51 webchick Exp $ */
+/* $Id: system-behavior.css,v 1.11 2010/06/26 20:10:24 dries Exp $ */
 
 /**
  * Autocomplete
@@ -302,10 +302,11 @@ html.js .js-hide {
  * the site where visual display is undesirable. Information provided in this
  * manner should be kept concise, to avoid unnecessary burden on the user. Must
  * not be used for focusable elements (such as links and form elements) as this
- * causes issues for keyboard only or voice recognition users.
+ * causes issues for keyboard only or voice recognition users. "!important" is
+ * used to prevent unintentional overrides.
  */
 .element-invisible {
-  height: 0;
-  overflow: hidden;
-  position: absolute;
+  position: absolute !important;
+  clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
+  clip: rect(1px, 1px, 1px, 1px);
 }
