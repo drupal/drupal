@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.admin.inc,v 1.33 2010/04/24 14:49:13 dries Exp $
+// $Id: forum.admin.inc,v 1.34 2010/06/26 21:32:20 dries Exp $
 
 /**
  * @file
@@ -210,25 +210,25 @@ function forum_admin_settings($form) {
   $number = drupal_map_assoc(array(5, 10, 15, 20, 25, 30, 35, 40, 50, 60, 80, 100, 150, 200, 250, 300, 350, 400, 500));
   $form['forum_hot_topic'] = array('#type' => 'select',
     '#title' => t('Hot topic threshold'),
-    '#default_value' => 15,
+    '#default_value' => variable_get('forum_hot_topic', 15),
     '#options' => $number,
     '#description' => t('The number of replies a topic must have to be considered "hot".'),
   );
   $number = drupal_map_assoc(array(10, 25, 50, 75, 100));
   $form['forum_per_page'] = array('#type' => 'select',
     '#title' => t('Topics per page'),
-    '#default_value' => 25,
+    '#default_value' => variable_get('forum_per_page', 25),
     '#options' => $number,
     '#description' => t('Default number of forum topics displayed per page.'),
   );
   $forder = array(1 => t('Date - newest first'), 2 => t('Date - oldest first'), 3 => t('Posts - most active first'), 4 => t('Posts - least active first'));
   $form['forum_order'] = array('#type' => 'radios',
     '#title' => t('Default order'),
-    '#default_value' => '1',
+    '#default_value' => variable_get('forum_order', 1),
     '#options' => $forder,
     '#description' => t('Default display order for topics.'),
   );
-  return system_settings_form($form, TRUE);
+  return system_settings_form($form);
 }
 
 /**

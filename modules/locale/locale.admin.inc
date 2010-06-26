@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.admin.inc,v 1.15 2010/06/26 19:55:47 dries Exp $
+// $Id: locale.admin.inc,v 1.16 2010/06/26 21:32:20 dries Exp $
 
 /**
  * @file
@@ -693,8 +693,6 @@ function locale_languages_configure_form_submit($form, &$form_state) {
  * The URL language provider configuration form.
  */
 function locale_language_providers_url_form($form, &$form_state) {
-  $form = array();
-
   $form['locale_language_negotiation_url_part'] = array(
     '#title' => t('Part of the URL that determines language'),
     '#type' => 'radios',
@@ -715,8 +713,6 @@ function locale_language_providers_url_form($form, &$form_state) {
  * The URL language provider configuration form.
  */
 function locale_language_providers_session_form($form, &$form_state) {
-  $form = array();
-
   $form['locale_language_negotiation_session_param'] = array(
     '#title' => t('Request/session parameter'),
     '#type' => 'textfield',

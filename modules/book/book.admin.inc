@@ -1,5 +1,5 @@
 <?php
-// $Id: book.admin.inc,v 1.35 2010/05/01 08:12:22 dries Exp $
+// $Id: book.admin.inc,v 1.36 2010/06/26 21:32:20 dries Exp $
 
 /**
  * @file
@@ -34,7 +34,7 @@ function book_admin_settings() {
   $form['book_allowed_types'] = array(
     '#type' => 'checkboxes',
     '#title' => t('Content types allowed in book outlines'),
-    '#default_value' => array('book'),
+    '#default_value' => variable_get('book_allowed_types', array('book')),
     '#options' => $types,
     '#description' => t('Users with the %outline-perm permission can add all content types.', array('%outline-perm' => t('Administer book outlines'))),
     '#required' => TRUE,
@@ -42,14 +42,14 @@ function book_admin_settings() {
   $form['book_child_type'] = array(
     '#type' => 'radios',
     '#title' => t('Content type for child pages'),
-    '#default_value' => 'book',
+    '#default_value' => variable_get('book_child_type', 'book'),
     '#options' => $types,
     '#required' => TRUE,
   );
   $form['array_filter'] = array('#type' => 'value', '#value' => TRUE);
   $form['#validate'][] = 'book_admin_settings_validate';
 
-  return system_settings_form($form, TRUE);
+  return system_settings_form($form);
 }
 
 /**

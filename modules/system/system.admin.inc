@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.289 2010/06/21 02:27:47 webchick Exp $
+// $Id: system.admin.inc,v 1.290 2010/06/26 21:32:20 dries Exp $
 
 /**
  * @file
@@ -643,7 +643,7 @@ function system_theme_settings($form, &$form_state, $key = '') {
     }
   }
 
-  $form = system_settings_form($form, FALSE);
+  $form = system_settings_form($form);
   // We don't want to call system_settings_form_submit(), so change #submit.
   array_pop($form['#submit']);
   $form['#submit'][] = 'system_theme_settings_submit';
@@ -1567,7 +1567,7 @@ function system_site_information_settings() {
 
   $form['#validate'][] = 'system_site_information_settings_validate';
 
-  return system_settings_form($form, FALSE);
+  return system_settings_form($form);
 }
 
 /**
@@ -1596,7 +1596,7 @@ function system_logging_settings() {
   $form['error_level'] = array(
     '#type' => 'radios',
     '#title' => t('Error messages to display'),
-    '#default_value' => ERROR_REPORTING_DISPLAY_ALL,
+    '#default_value' => variable_get('error_level', ERROR_REPORTING_DISPLAY_ALL),
     '#options' => array(
       ERROR_REPORTING_HIDE => t('None'),
       ERROR_REPORTING_DISPLAY_SOME => t('Errors and warnings'),
@@ -1695,7 +1695,7 @@ function system_performance_settings() {
   $form['#submit'][] = 'drupal_clear_css_cache';
   $form['#submit'][] = 'drupal_clear_js_cache';
 
-  return system_settings_form($form, FALSE);
+  return system_settings_form($form);
 }
 
 /**
@@ -1715,11 +1715,10 @@ function system_clear_cache_submit($form, &$form_state) {
  * @see system_settings_form()
  */
 function system_file_system_settings() {
-
   $form['file_public_path'] = array(
     '#type' => 'textfield',
     '#title' => t('Public file system path'),
-    '#default_value' => file_directory_path(),
+    '#default_value' => variable_get('file_public_path', file_directory_path()),
     '#maxlength' => 255,
     '#description' => t('A local file system path where public files will be stored. This directory must exist and be writable by Drupal. This directory must be relative to the Drupal installation directory and be accessible over the web.'),
     '#after_build' => array('system_check_directory'),
@@ -1728,7 +1727,7 @@ function system_file_system_settings() {
   $form['file_private_path'] = array(
     '#type' => 'textfield',
     '#title' => t('Private file system path'),
-    '#default_value' => file_directory_path('private'),
+    '#default_value' => variable_get('file_private_path', file_directory_path('private')),
     '#maxlength' => 255,
     '#description' => t('A local file system path where private files will be stored. This directory must exist and be writable by Drupal. This directory should not be accessible over the web.'),
     '#after_build' => array('system_check_directory'),
@@ -1737,7 +1736,7 @@ function system_file_system_settings() {
   $form['file_temporary_path'] = array(
     '#type' => 'textfield',
     '#title' => t('Temporary directory'),
-    '#default_value' => file_directory_path('temporary'),
+    '#default_value' => variable_get('file_temporary_path', file_directory_path('temporary')),
     '#maxlength' => 255,
     '#description' => t('A local file system path where temporary files will be stored. This directory should not be accessible over the web.'),
     '#after_build' => array('system_check_directory'),
@@ -1752,13 +1751,13 @@ function system_file_system_settings() {
     $form['file_default_scheme'] = array(
       '#type' => 'radios',
       '#title' => t('Default download method'),
-      '#default_value' => isset($options['public']) ? 'public' : key($options),
+      '#default_value' => variable_get('file_default_scheme', isset($options['public']) ? 'public' : key($options)),
       '#options' => $options,
       '#description' => t('This setting is used as the preferred download method. The use of public files is more efficient, but does not provide any access control.'),
     );
   }
 
-  return system_settings_form($form, TRUE);
+  return system_settings_form($form);
 }
 
 /**
@@ -1783,7 +1782,7 @@ function system_image_toolkit_settings() {
     $form['image_toolkit'] = array(
       '#type' => 'radios',
       '#title' => t('Select an image processing toolkit'),
-      '#default_value' => $current_toolkit,
+      '#default_value' => variable_get('image_toolkit', $current_toolkit),
       '#options' => $toolkits_available
     );
   }
@@ -1797,7 +1796,7 @@ function system_image_toolkit_settings() {
     $form['image_toolkit_settings'] = $function();
   }
 
-  return system_settings_form($form, TRUE);
+  return system_settings_form($form);
 }
 
 /**
@@ -1807,29 +1806,28 @@ function system_image_toolkit_settings() {
  * @see system_settings_form()
  */
 function system_rss_feeds_settings() {
-
   $form['feed_description'] = array(
     '#type' => 'textarea',
     '#title' => t('Feed description'),
-    '#default_value' => '',
+    '#default_value' => variable_get('feed_description', ''),
     '#description' => t('Description of your site, included in each feed.')
   );
   $form['feed_default_items'] = array(
     '#type' => 'select',
     '#title' => t('Number of items in each feed'),
-    '#default_value' => 10,
+    '#default_value' => variable_get('feed_default_items', 10),
     '#options' => drupal_map_assoc(array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30)),
     '#description' => t('Default number of items to include in each feed.')
   );
   $form['feed_item_length'] = array(
     '#type' => 'select',
     '#title' => t('Feed content'),
-    '#default_value' => 'fulltext',
+    '#default_value' => variable_get('feed_item_length', 'fulltext'),
     '#options' => array('title' => t('Titles only'), 'teaser' => t('Titles plus teaser'), 'fulltext' => t('Full text')),
     '#description' => t('Global setting for the default display of content items in each feed.')
   );
 
-  return system_settings_form($form, TRUE);
+  return system_settings_form($form);
 }
 
 /**
@@ -1916,7 +1914,7 @@ function system_regional_settings() {
     '#description' => t('Only applied if users may set their own time zone.')
   );
 
-  return system_settings_form($form, FALSE);
+  return system_settings_form($form);
 }
 
 /**
@@ -1991,7 +1989,7 @@ function system_date_time_settings() {
   // Display a message if no date types configured.
   $form['#empty_text'] = t('No date types available. <a href="@link">Add date type</a>.', array('@link' => url('admin/config/regional/date-time/types/add')));
 
-  return system_settings_form($form, FALSE);
+  return system_settings_form($form);
 }
 
 /**
@@ -2152,17 +2150,17 @@ function system_site_maintenance_mode() {
   $form['maintenance_mode'] = array(
     '#type' => 'checkbox',
     '#title' => t('Put site into maintenance mode'),
-    '#default_value' => 0,
+    '#default_value' => variable_get('maintenance_mode', 0),
     '#description' => t('When enabled, only users with the "Access site in maintenance mode" <a href="@permissions-url">permission</a> are able to access your site to perform maintenance; all other visitors see the maintenance mode message configured below. Authorized users can log in directly via the <a href="@user-login">user login</a> page.', array('@permissions-url' => url('admin/people/permissions'), '@user-login' => url('user'))),
   );
   $form['maintenance_mode_message'] = array(
     '#type' => 'textarea',
     '#title' => t('Maintenance mode message'),
-    '#default_value' => t('@site is currently under maintenance. We should be back shortly. Thank you for your patience.', array('@site' => variable_get('site_name', 'Drupal'))),
+    '#default_value' => variable_get('maintenance_mode_message', t('@site is currently under maintenance. We should be back shortly. Thank you for your patience.', array('@site' => variable_get('site_name', 'Drupal')))),
     '#description' => t('Message to show visitors when the site is in maintenance mode.')
   );
 
-  return system_settings_form($form, TRUE);
+  return system_settings_form($form);
 }
 
 /**
@@ -2193,7 +2191,7 @@ function system_clean_url_settings($form, &$form_state) {
     $form['clean_url'] = array(
       '#type' => 'checkbox',
       '#title' => t('Enable clean URLs'),
-      '#default_value' => 0,
+      '#default_value' => variable_get('clean_url', 0),
       '#description' => t('Use URLs like <code>example.com/user</code> instead of <code>example.com/?q=user</code>.'),
     );
     $form = system_settings_form($form);

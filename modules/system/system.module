@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.941 2010/06/25 18:20:27 dries Exp $
+// $Id: system.module,v 1.942 2010/06/26 21:32:20 dries Exp $
 
 /**
  * @file
@@ -2573,32 +2573,11 @@ function system_default_region($theme) {
   return isset($regions[0]) ? $regions[0] : '';
 }
 
-function _system_settings_form_automatic_defaults($form) {
-  // Get an array of all non-property keys
-  $keys = element_children($form);
-
-  foreach ($keys as $key) {
-    // If the property (key) '#default_value' exists, replace it.
-    if (array_key_exists('#default_value', $form[$key])) {
-      $form[$key]['#default_value'] = variable_get($key, $form[$key]['#default_value']);
-    }
-    else {
-      // Recurse through child elements
-      $form[$key] = _system_settings_form_automatic_defaults($form[$key]);
-    }
-  }
-
-  return $form;
-}
-
 /**
  * Add default buttons to a form and set its prefix.
  *
  * @param $form
  *   An associative array containing the structure of the form.
- * @param $automatic_defaults
- *   Automatically load the saved values for each field from the system variables
- *   (defaults to TRUE).
  *
  * @return
  *   The form structure.
@@ -2606,13 +2585,9 @@ function _system_settings_form_automatic_defaults($form) {
  * @see system_settings_form_submit()
  * @ingroup forms
  */
-function system_settings_form($form, $automatic_defaults = TRUE) {
+function system_settings_form($form) {
   $form['actions']['#type'] = 'actions';
   $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save configuration'));
-
-  if ($automatic_defaults) {
-    $form = _system_settings_form_automatic_defaults($form);
-  }
 
   if (!empty($_POST) && form_get_errors()) {
     drupal_set_message(t('The settings have not been saved because of the errors.'), 'error');

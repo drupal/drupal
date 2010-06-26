@@ -1,5 +1,5 @@
 <?php
-// $Id: search.admin.inc,v 1.14 2010/01/30 07:59:25 dries Exp $
+// $Id: search.admin.inc,v 1.15 2010/06/26 21:32:20 dries Exp $
 
 /**
  * @file
@@ -83,7 +83,7 @@ function search_admin_settings($form) {
   $form['indexing_throttle']['search_cron_limit'] = array(
     '#type' => 'select',
     '#title' => t('Number of items to index per cron run'),
-    '#default_value' => 100,
+    '#default_value' => variable_get('search_cron_limit', 100),
     '#options' => $items,
     '#description' => t('The maximum number of items indexed in each pass of a <a href="@cron">cron maintenance task</a>. If necessary, reduce the number of items to prevent timeouts and memory errors while indexing.', array('@cron' => url('admin/reports/status')))
   );
@@ -98,7 +98,7 @@ function search_admin_settings($form) {
   $form['indexing_settings']['minimum_word_size'] = array(
     '#type' => 'textfield',
     '#title' => t('Minimum word length to index'),
-    '#default_value' => 3,
+    '#default_value' => variable_get('minimum_word_size', 3),
     '#size' => 5,
     '#maxlength' => 3,
     '#description' => t('The number of characters a word has to be to be indexed. A lower setting means better search result ranking, but also a larger database. Each search query must contain at least one keyword that is this size (or longer).')
@@ -106,7 +106,7 @@ function search_admin_settings($form) {
   $form['indexing_settings']['overlap_cjk'] = array(
     '#type' => 'checkbox',
     '#title' => t('Simple CJK handling'),
-    '#default_value' => TRUE,
+    '#default_value' => variable_get('overlap_cjk', TRUE),
     '#description' => t('Whether to apply a simple Chinese/Japanese/Korean tokenizer based on overlapping sequences. Turn this off if you want to use an external preprocessor for this instead. Does not affect other languages.')
   );
 
@@ -116,7 +116,7 @@ function search_admin_settings($form) {
   );
   $form['active']['search_active_modules'] = array(
     '#type' => 'checkboxes',
-    '#default_value' => array('node', 'user'),
+    '#default_value' => variable_get('search_active_modules', array('node', 'user')),
     '#options' => _search_get_module_names(),
     '#description' => t('Determine which search modules are active from the available modules.')
   );
@@ -131,7 +131,7 @@ function search_admin_settings($form) {
     }
   }
 
-  return system_settings_form($form, TRUE);
+  return system_settings_form($form);
 }
 
 /**

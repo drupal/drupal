@@ -1,5 +1,5 @@
 <?php
-// $Id: user.admin.inc,v 1.110 2010/05/27 12:29:39 dries Exp $
+// $Id: user.admin.inc,v 1.111 2010/06/26 21:32:20 dries Exp $
 
 /**
  * @file
@@ -635,7 +635,7 @@ function user_admin_settings() {
     '#rows' => 3,
   );
 
-  return system_settings_form($form, FALSE);
+  return system_settings_form($form);
 }
 
 /**
