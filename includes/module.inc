@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.194 2010/06/24 21:40:06 dries Exp $
+// $Id: module.inc,v 1.195 2010/06/26 12:34:44 dries Exp $
 
 /**
  * @file
@@ -286,8 +286,25 @@ function module_load_all_includes($type, $name = NULL) {
 }
 
 /**
- * Enable a given list of modules.
+ * Enables or installs a given list of modules.
  *
+ * Definitions:
+ * - "Enabling" is the process of activating a module for use by Drupal.
+ * - "Disabling" is the process of deactivating a module.
+ * - "Installing" is the process of enabling it for the first time or after it
+ *   has been uninstalled.
+ * - "Uninstalling" is the process of removing all traces of a module.
+ *
+ * Order of events:
+ * - Gather and add module dependencies to $module_list (if applicable).
+ * - For each module that is being enabled:
+ *   - Install module schema and update system registries and caches.
+ *   - If the module is being enabled for the first time or had been
+ *     uninstalled, invoke hook_install() and add it to the list of installed
+ *     modules.
+ *   - Invoke hook_enable().
+ * - Invoke hook_modules_installed().
+ * - Invoke hook_modules_enabled().
  * @param $module_list
  *   An array of module names.
  * @param $enable_dependencies
@@ -297,6 +314,11 @@ function module_load_all_includes($type, $name = NULL) {
  *
  * @return
  *   FALSE if one or more dependencies are missing, TRUE otherwise.
+ *
+ * @see hook_install()
+ * @see hook_enable()
+ * @see hook_modules_installed()
+ * @see hook_modules_enabled()
  */
 function module_enable($module_list, $enable_dependencies = TRUE) {
   if ($enable_dependencies) {
