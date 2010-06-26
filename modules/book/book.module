@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.545 2010/06/25 19:33:47 dries Exp $
+// $Id: book.module,v 1.546 2010/06/26 12:42:47 dries Exp $
 
 /**
  * @file
@@ -397,9 +397,6 @@ function book_get_books() {
  * Implements hook_form_alter().
  *
  * Adds the book fieldset to the node form.
- *
- * @see book_pick_book_submit()
- * @see book_submit()
  */
 function book_form_alter(&$form, &$form_state, $form_id) {
   if (!empty($form['#node_edit_form'])) {
