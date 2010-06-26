@@ -1,5 +1,5 @@
 <?php
-// $Id: field_sql_storage.module,v 1.47 2010/06/14 15:41:02 dries Exp $
+// $Id: field_sql_storage.module,v 1.48 2010/06/26 02:16:23 dries Exp $
 
 /**
  * @file
@@ -358,6 +358,9 @@ function field_sql_storage_field_storage_load($entity_type, $entities, $age, $fi
  */
 function field_sql_storage_field_storage_write($entity_type, $entity, $op, $fields) {
   list($id, $vid, $bundle) = entity_extract_ids($entity_type, $entity);
+  if (!isset($vid)) {
+    $vid = $id;
+  }
   $etid = _field_sql_storage_etid($entity_type);
 
   foreach ($fields as $field_id) {
@@ -380,14 +383,12 @@ function field_sql_storage_field_storage_write($entity_type, $entity, $op, $fiel
           ->condition('entity_id', $id)
           ->condition('language', $languages, 'IN')
           ->execute();
-        if (isset($vid)) {
-          db_delete($revision_name)
-            ->condition('etid', $etid)
-            ->condition('entity_id', $id)
-            ->condition('revision_id', $vid)
-            ->condition('language', $languages, 'IN')
-            ->execute();
-        }
+        db_delete($revision_name)
+          ->condition('etid', $etid)
+          ->condition('entity_id', $id)
+          ->condition('revision_id', $vid)
+          ->condition('language', $languages, 'IN')
+          ->execute();
       }
     }
 
@@ -398,9 +399,7 @@ function field_sql_storage_field_storage_write($entity_type, $entity, $op, $fiel
       $columns[] = _field_sql_storage_columnname($field_name, $column);
     }
     $query = db_insert($table_name)->fields($columns);
-    if (isset($vid)) {
-      $revision_query = db_insert($revision_name)->fields($columns);
-    }
+    $revision_query = db_insert($revision_name)->fields($columns);
 
     foreach ($field_languages as $langcode) {
       $items = (array) $entity->{$field_name}[$langcode];
@@ -433,9 +432,7 @@ function field_sql_storage_field_storage_write($entity_type, $entity, $op, $fiel
     // Execute the query if we have values to insert.
     if ($do_insert) {
       $query->execute();
-      if (isset($vid)) {
-        $revision_query->execute();
-      }
+      $revision_query->execute();
     }
   }
 }
