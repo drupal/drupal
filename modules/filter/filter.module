@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.333 2010/06/25 20:20:47 dries Exp $
+// $Id: filter.module,v 1.334 2010/06/26 01:55:29 dries Exp $
 
 /**
  * @file
@@ -260,8 +260,12 @@ function filter_format_save(&$format) {
  *
  * @param $format
  *   The text format object to be deleted.
+ * @param $fallback_id
+ *   (optional) The ID of the text format to use to reassign content that is
+ *   currently using $format. If omitted, the currently stored
+ *   filter_fallback_format() is used.
  */
-function filter_format_delete($format) {
+function filter_format_delete($format, $fallback_id = NULL) {
   db_delete('filter_format')
     ->condition('format', $format->format)
     ->execute();
@@ -270,7 +274,10 @@ function filter_format_delete($format) {
     ->execute();
 
   // Allow modules to react on text format deletion.
-  $fallback = filter_format_load(filter_fallback_format());
+  if (empty($fallback_id)) {
+    $fallback_id = filter_fallback_format();
+  }
+  $fallback = filter_format_load($fallback_id);
   module_invoke_all('filter_format_delete', $format, $fallback);
 
   filter_formats_reset();
@@ -487,11 +494,6 @@ function filter_default_format($account = NULL) {
  * configured securely. For example, when the Filter module is installed, this
  * format is initialized to output plain text. Installation profiles and site
  * administrators have the freedom to configure it further.
- *
- * When a text format is deleted, all content that previously had that format
- * assigned should be switched to the fallback format. To facilitate this,
- * Drupal passes in the fallback format object as one of the parameters of
- * hook_filter_format_delete().
  *
  * Note that the fallback format is completely distinct from the default
  * format, which differs per user and is simply the first format which that

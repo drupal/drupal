@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.admin.inc,v 1.62 2010/06/17 13:16:57 dries Exp $
+// $Id: filter.admin.inc,v 1.63 2010/06/26 01:55:29 dries Exp $
 
 /**
  * @file
@@ -322,12 +322,25 @@ function filter_admin_format_form_submit($form, &$form_state) {
 function filter_admin_delete($form, &$form_state, $format) {
   $form['#format'] = $format;
 
+  $fallback_options = array();
+  foreach (filter_formats() as $id => $fallback_format) {
+    if ($id != $format->format) {
+      $fallback_options[$id] = $fallback_format->name;
+    }
+  }
+  $form['fallback'] = array(
+    '#type' => 'select',
+    '#title' => t('Replacement text format'),
+    '#options' => $fallback_options,
+    '#default_value' => filter_fallback_format(),
+    '#description' => t('Content assigned to the deleted text format will be reassigned to the chosen one.'),
+  );
+
   return confirm_form($form,
     t('Are you sure you want to delete the text format %format?', array('%format' => $format->name)),
     'admin/config/content/formats',
-    t('If you have any content left in this text format, it will be switched to the %fallback text format. This action cannot be undone.', array('%fallback' => filter_fallback_format_title())),
-    t('Delete'),
-    t('Cancel')
+    NULL,
+    t('Delete')
   );
 }
 
@@ -336,7 +349,7 @@ function filter_admin_delete($form, &$form_state, $format) {
  */
 function filter_admin_delete_submit($form, &$form_state) {
   $format = $form['#format'];
-  filter_format_delete($format);
+  filter_format_delete($format, $form_state['values']['fallback']);
   drupal_set_message(t('Deleted text format %format.', array('%format' => $format->name)));
 
   $form_state['redirect'] = 'admin/config/content/formats';
