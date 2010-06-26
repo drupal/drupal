@@ -1,8 +1,7 @@
 /* $Id$ */
 
 /* 'Manage fields' overview */
-#field-overview .label-add-new-field,
-#field-overview .label-add-existing-field {
+#field-overview tr.add-new .label-input {
   float: right;
 }
 

@@ -49,24 +49,6 @@ function field_ui_help($path, $arg) {
 }
 
 /**
- * Implements hook_theme().
- */
-function field_ui_theme() {
-  return array(
-    'field_ui_field_overview_form' => array(
-      'render element' => 'form',
-      'file' => 'field_ui.admin.inc',
-      'template' => 'field_ui-field-overview-form',
-    ),
-    'field_ui_display_overview_table' => array(
-      'render element' => 'elements',
-      'file' => 'field_ui.admin.inc',
-      'template' => 'field_ui-display-overview-table',
-    ),
-  );
-}
-
-/**
  * Implements hook_menu().
  */
 function field_ui_menu() {
@@ -286,6 +268,33 @@ function _field_ui_view_mode_menu_access($entity_type, $bundle, $view_mode, $acc
       }
     }
   }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function field_ui_theme() {
+  return array(
+    'field_ui_display_overview_table' => array(
+      'render element' => 'elements',
+      'file' => 'field_ui.admin.inc',
+      'template' => 'field_ui-display-overview-table',
+    ),
+    'field_ui_table' => array(
+      'render element' => 'elements',
+    ),
+  );
+}
+
+/**
+ * Implements hook_element_info().
+ */
+function field_ui_element_info() {
+  return array(
+    'table' => array(
+      '#theme' => 'field_ui_table',
+    ),
+  );
 }
 
 /**
