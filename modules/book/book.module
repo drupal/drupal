@@ -397,9 +397,6 @@ function book_get_books() {
  * Implements hook_form_alter().
  *
  * Adds the book fieldset to the node form.
- *
- * @see book_pick_book_submit()
- * @see book_submit()
  */
 function book_form_alter(&$form, &$form_state, $form_id) {
   if (!empty($form['#node_edit_form'])) {
