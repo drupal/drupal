@@ -235,15 +235,15 @@ function hook_filter_format_update($format) {
 /**
  * Perform actions when a text format has been deleted.
  *
- * It is recommended for modules to implement this hook, when they store
- * references to text formats to replace existing references to the deleted
- * text format with the fallback format.
+ * All modules storing references to text formats have to implement this hook.
+ *
+ * When a text format is deleted, all content that previously had that format
+ * assigned needs to be switched to the passed fallback format.
  *
  * @param $format
  *   The format object of the format being deleted.
  * @param $fallback
- *   The format object of the site's fallback format, which is always available
- *   to all users.
+ *   The format object of the format to use as replacement.
  *
  * @see hook_filter_format_insert()
  * @see hook_filter_format_update()
