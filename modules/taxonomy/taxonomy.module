@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.596 2010/06/24 22:21:51 webchick Exp $
+// $Id: taxonomy.module,v 1.597 2010/06/27 16:49:58 dries Exp $
 
 /**
  * @file
@@ -1025,6 +1025,8 @@ function _taxonomy_get_tid_from_term($term) {
 
 /**
  * Implodes a list of tags of a certain vocabulary into a string.
+ *
+ * @see drupal_explode_tags()
  */
 function taxonomy_implode_tags($tags, $vid = NULL) {
   $typed_tags = array();
