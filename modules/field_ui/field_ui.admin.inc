@@ -515,7 +515,7 @@ function _field_ui_field_overview_form_validate_add_new($form, &$form_state) {
       // Add the 'field_' prefix.
       if (substr($field_name, 0, 6) != 'field_') {
         $field_name = 'field_' . $field_name;
-        form_set_value($form['_add_new_field']['field_name'], $field_name, $form_state);
+        form_set_value($form['table']['_add_new_field']['field_name'], $field_name, $form_state);
       }
 
       // Invalid field name.
