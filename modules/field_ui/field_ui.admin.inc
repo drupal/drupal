@@ -1,5 +1,5 @@
 <?php
-// $Id: field_ui.admin.inc,v 1.56 2010/06/26 02:06:53 dries Exp $
+// $Id: field_ui.admin.inc,v 1.57 2010/06/27 18:05:54 webchick Exp $
 
 /**
  * @file
@@ -515,7 +515,7 @@ function _field_ui_field_overview_form_validate_add_new($form, &$form_state) {
       // Add the 'field_' prefix.
       if (substr($field_name, 0, 6) != 'field_') {
         $field_name = 'field_' . $field_name;
-        form_set_value($form['_add_new_field']['field_name'], $field_name, $form_state);
+        form_set_value($form['table']['_add_new_field']['field_name'], $field_name, $form_state);
       }
 
       // Invalid field name.
