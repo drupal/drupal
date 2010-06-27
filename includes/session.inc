@@ -315,18 +315,12 @@ function drupal_session_regenerate() {
 
   if (drupal_session_started()) {
     $old_session_id = session_id();
-    session_regenerate_id();
   }
-  else {
-    // Start the session when it doesn't exist yet.
-    // Preserve the logged in user, as it will be reset to anonymous
-    // by _drupal_session_read.
-    $account = $user;
-    drupal_session_start();
-    $user = $account;
-  }
+  session_id(drupal_hash_base64(uniqid(mt_rand(), TRUE) . drupal_random_bytes(55)));
 
   if (isset($old_session_id)) {
+    $params = session_get_cookie_params();
+    setcookie(session_name(), session_id(), REQUEST_TIME + $params['lifetime'], $params['path'], $params['domain'], $params['secure'], $params['httponly']);
     $fields = array('sid' => session_id());
     if ($is_https) {
       $fields['ssid'] = session_id();
@@ -349,6 +343,14 @@ function drupal_session_regenerate() {
       ->fields(array('sid' => $session_id, 'ssid' => session_id()))
       ->condition('sid', $old_insecure_session_id)
       ->execute();
+  }
+  else {
+    // Start the session when it doesn't exist yet.
+    // Preserve the logged in user, as it will be reset to anonymous
+    // by _drupal_session_read.
+    $account = $user;
+    drupal_session_start();
+    $user = $account;
   }
   date_default_timezone_set(drupal_get_user_timezone());
 }
