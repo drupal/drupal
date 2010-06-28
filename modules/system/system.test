@@ -1,5 +1,5 @@
 <?php
-// $Id: system.test,v 1.128 2010/06/26 21:32:20 dries Exp $
+// $Id: system.test,v 1.129 2010/06/28 20:27:34 dries Exp $
 
 /**
  * Helper class for module test cases.
@@ -1818,6 +1818,10 @@ class ShutdownFunctionsTest extends DrupalWebTestCase {
     $this->drupalGet('system-test/shutdown-functions/' . $arg1 . '/' . $arg2);
     $this->assertText(t('First shutdown function, arg1 : @arg1, arg2: @arg2', array('@arg1' => $arg1, '@arg2' => $arg2)));
     $this->assertText(t('Second shutdown function, arg1 : @arg1, arg2: @arg2', array('@arg1' => $arg1, '@arg2' => $arg2)));
+
+    // Make sure exceptions displayed through _drupal_render_exception_safe()
+    // are correctly escaped.
+    $this->assertText('Drupal is &lt;blink&gt;awesome&lt;/blink&gt;.');
   }
 }
 

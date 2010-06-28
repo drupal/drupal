@@ -1,5 +1,5 @@
 <?php
-// $Id: errors.inc,v 1.7 2010/06/28 19:57:34 dries Exp $
+// $Id: errors.inc,v 1.8 2010/06/28 20:27:34 dries Exp $
 
 /**
  * @file
@@ -135,7 +135,7 @@ function _drupal_decode_exception($exception) {
  *   An error message.
  */
 function _drupal_render_exception_safe($exception) {
-  return strtr('%type: %message in %function (line %line of %file).', _drupal_decode_exception($exception));
+  return check_plain(strtr('%type: %message in %function (line %line of %file).', _drupal_decode_exception($exception)));
 }
 
 /**
