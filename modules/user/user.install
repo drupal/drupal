@@ -1,5 +1,5 @@
 <?php
-// $Id: user.install,v 1.53 2010/06/28 03:25:21 webchick Exp $
+// $Id: user.install,v 1.54 2010/06/28 14:59:24 webchick Exp $
 
 /**
  * @file
@@ -682,7 +682,7 @@ function user_update_7010() {
  * displays a warning to users that they may need to go and modify the wording
  * of their templates.
  */
-function user_update_7010() {
+function user_update_7011() {
   $message = '';
 
   $tokens = array(
