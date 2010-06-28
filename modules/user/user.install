@@ -1,5 +1,5 @@
 <?php
-// $Id: user.install,v 1.51 2010/06/25 17:47:22 dries Exp $
+// $Id: user.install,v 1.52 2010/06/28 02:05:47 webchick Exp $
 
 /**
  * @file
@@ -324,6 +324,23 @@ function user_install() {
 }
 
 /**
+ * Implements hook_update_dependencies().
+ */
+function user_update_dependencies() {
+  // Run all the critical user upgrades before everything.
+  $dependencies['system'][7000] = array(
+    'user' => 7008,
+  );
+  // user_update_7006 relies on filter_update_7002.
+  // TODO: move user_update_7006 down below in the upgrade process.
+  $dependencies['user'][7006] = array(
+    'filter' => 7002,
+  );
+
+  return $dependencies;
+}
+
+/**
  * @defgroup user-updates-6.x-to-7.x User updates from 6.x to 7.x
  * @{
  */
@@ -637,6 +654,20 @@ function user_update_7009() {
     'description' => 'A serialized array of name value pairs that are related to the user. Any form values posted during user edit are stored and are loaded into the $user object during user_load(). Use of this field is discouraged and it will likely disappear in a future version of Drupal.',
   );
   db_change_field('users', 'data', 'data', $spec);
+}
+
+/**
+ * Update the {user}.signature_format column.
+ */
+function user_update_7010() {
+  // It was previously possible for a value of "0" to be stored in database
+  // tables to indicate that a particular piece of text should be filtered
+  // using the default text format.
+  $default_format = variable_get('filter_default_format', 1);
+  db_update('users')
+    ->fields(array('signature_format' => $default_format))
+    ->condition('signature_format', 0)
+    ->execute();
 }
 
 /**

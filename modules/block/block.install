@@ -1,5 +1,5 @@
 <?php
-// $Id: block.install,v 1.43 2010/06/25 20:25:54 dries Exp $
+// $Id: block.install,v 1.44 2010/06/28 02:05:47 webchick Exp $
 
 /**
  * @file
@@ -394,12 +394,26 @@ function block_update_7004() {
 }
 
 /**
+ * Update the {block_custom}.format column.
+ */
+function block_update_7005() {
+  // It was previously possible for a value of "0" to be stored in database
+  // tables to indicate that a particular piece of text should be filtered
+  // using the default text format.
+  $default_format = variable_get('filter_default_format', 1);
+  db_update('block_custom')
+    ->fields(array('format' => $default_format))
+    ->condition('format', 0)
+    ->execute();
+}
+
+/**
  * Recreates cache_block table.
  *
  * Converts fields that hold serialized variables from text to blob.
  * Removes 'headers' column.
  */
-function block_update_7005() {
+function block_update_7006() {
   $schema = system_schema_cache_7054();
 
   db_drop_table('cache_block');

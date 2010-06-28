@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.install,v 1.40 2010/06/25 17:47:22 dries Exp $
+// $Id: filter.install,v 1.41 2010/06/28 02:05:47 webchick Exp $
 
 /**
  * @file
@@ -137,19 +137,6 @@ function filter_install() {
 
   // Set the fallback format to plain text.
   variable_set('filter_fallback_format', $plain_text_format->format);
-}
-
-/**
- * Implements hook_update_dependencies().
- */
-function filter_update_dependencies() {
-  // Filter update 7005 migrates block data and therefore needs to run after
-  // the {block_custom} table is properly set up.
-  $dependencies['filter'][7005] = array(
-    'taxonomy' => 7002,
-  );
-
-  return $dependencies;
 }
 
 /**
@@ -321,7 +308,6 @@ function filter_update_7004() {
  * in cases that used to rely on a single site-wide default.
  */
 function filter_update_7005() {
-
   // Move role data from the filter system to the user permission system.
   $all_roles = array_keys(user_roles());
   $default_format = variable_get('filter_default_format', 1);
@@ -379,22 +365,6 @@ function filter_update_7005() {
     ->fields(array('weight' => -1))
     ->condition('format', $default_format)
     ->execute();
-
-  // It was previously possible for a value of "0" to be stored in database
-  // tables to indicate that a particular piece of text should be filtered
-  // using the default text format. Therefore, we have to convert all such
-  // instances (in Drupal core) to explicitly use the appropriate format.
-  // Note that the update of the node body field is handled separately, in
-  // node_update_7006(), as is the update of the comment body field, in
-  // comment_update_7013().
-  foreach (array('block_custom' => 'format', 'users' => 'signature_format') as $table => $column) {
-    if (db_table_exists($table)) {
-      db_update($table)
-        ->fields(array($column => $default_format))
-        ->condition($column, 0)
-        ->execute();
-    }
-  }
 
   // We do not delete the 'filter_default_format' variable, since other modules
   // may need it in their update functions.
