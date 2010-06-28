@@ -25,7 +25,7 @@ class DatabaseSchema_mysql extends DatabaseSchema {
   const COMMENT_MAX_COLUMN = 255;
 
   /**
-   * Get information about the table and database name from the db_prefix.
+   * Get information about the table and database name from the prefix.
    *
    * @return
    *   A keyed array with information about the database, table name and prefix.

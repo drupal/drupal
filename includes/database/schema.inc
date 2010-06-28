@@ -170,11 +170,11 @@ abstract class DatabaseSchema implements QueryPlaceholderInterface {
   }
 
   /**
-   * Get information about the table name and schema from the db_prefix.
+   * Get information about the table name and schema from the prefix.
    *
    * @param
    *   Name of table to look prefix up for. Defaults to 'default' because thats
-   *   default key for db_prefix.
+   *   default key for prefix.
    * @return
    *   A keyed array with information about the schema, table name and prefix.
    */
