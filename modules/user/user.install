@@ -670,6 +670,50 @@ function user_update_7010() {
     ->execute();
 }
 
+
+/**
+ * Updates email templates to use new tokens.
+ *
+ * This function upgrades customized email templates from the old !token format
+ * to the new core tokens format. Additionally, in Drupal 7 we no longer e-mail
+ * plain text passwords to users, and there is no token for a plain text
+ * password in the new token system. Therefore, it also modifies any saved
+ * templates using the old '!password' token such that the token is removed, and
+ * displays a warning to users that they may need to go and modify the wording
+ * of their templates.
+ */
+function user_update_7010() {
+  $message = '';
+
+  $tokens = array(
+    '!site-name-token' => '[site:name]',
+    '!site-url-token' => '[site:url]',
+    '!user-name-token' => '[user:name]',
+    '!user-mail-token' => '[user:mail]',
+    '!site-login-url-token' => '[site:login-url]',
+    '!site-url-brief-token' => '[site:url-brief]',
+    '!user-edit-url-token' => '[user:edit-url]',
+    '!user-one-time-login-url-token' => '[user:one-time-login-url]',
+    '!user-cancel-url-token' => '[user:cancel-url]',
+    '!password' => '',
+  );
+
+  $result = db_select('variable', 'v')
+    ->fields('v', array('name', 'value'))
+    ->condition('value', db_like('user_mail_') . '%', 'LIKE')
+    ->execute();
+
+  foreach ($result as $row) {
+    if (empty($message) && (strpos($row->value, '!password') !== FALSE)) {
+      $message = t('The ability to send users their passwords in plain text has been removed in Drupal 7. Your existing email templates have been modified to remove it. You should <a href="@template-url">review these templates</a> to make sure they read properly.', array('@template-url' => url('admin/config/people/accounts')));
+    }
+
+    variable_set($row->name, str_replace(array_keys($tokens), $tokens, $row->value));
+  }
+
+  return $message;
+}
+
 /**
  * @} End of "defgroup user-updates-6.x-to-7.x"
  * The next series of updates should start at 8000.
