@@ -38,3 +38,4 @@ files[] = tests/theme.test
 files[] = tests/unicode.test
 files[] = tests/update.test
 files[] = tests/xmlrpc.test
+files[] = tests/upgrade/upgrade.test
