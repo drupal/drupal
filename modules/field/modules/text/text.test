@@ -373,3 +373,78 @@ class TextSummaryTestCase extends DrupalWebTestCase {
     $this->assertIdentical($summary, $expected, t('Generated summary "@summary" matches expected "@expected".', array('@summary' => $summary, '@expected' => $expected)));
   }
 }
+
+class TextTranslationTestCase extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Text translation',
+      'description' => 'Check if the text field is correctly prepared for translation.',
+      'group' => 'Field types',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('locale', 'translation');
+
+    $this->format = 3;
+    $this->admin = $this->drupalCreateUser(array('administer languages', 'administer content types', 'access administration pages', 'bypass node access', "use text format $this->format"));
+    $this->translator = $this->drupalCreateUser(array('create article content', 'edit own article content', 'translate content'));
+
+    // Enable an additional language.
+    $this->drupalLogin($this->admin);
+    $edit = array('langcode' => 'fr');
+    $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
+
+    // Set "Article" content type to use multilingual support with translation.
+    $edit = array('language_content_type' => 2);
+    $this->drupalPost('admin/structure/types/manage/article', $edit, t('Save content type'));
+    $this->assertRaw(t('The content type %type has been updated.', array('%type' => 'Article')), t('Article content type has been updated.'));
+  }
+
+  /**
+   * Check that user that does not have access the field format cannot see the
+   * source value when creating a translation.
+   */
+  function testMultipleTextField() {
+    // Make node body multiple.
+    $edit = array('field[cardinality]' => -1);
+    $this->drupalPost('admin/structure/types/manage/article/fields/body', $edit, t('Save settings'));
+    $this->drupalGet('node/add/article');
+    $this->assertFieldByXPath("//input[@name='body_add_more']", t('Add another item'), t('Body field cardinality set to multiple.'));
+
+    $body = array(
+      $this->randomName(),
+      $this->randomName(),
+    );
+
+    // Create an article with the first body input format set to "Full HTML".
+    $langcode = 'en';
+    $edit = array(
+      "title" => $this->randomName(),
+      'language' => $langcode,
+    );
+    $this->drupalPost('node/add/article', $edit, t('Save'));
+
+    // Populate the body field: the first item gets the "Full HTML" input
+    // format, the second one "Filtered HTML".
+    $format = $this->format;
+    foreach ($body as $delta => $value) {
+      $edit = array(
+        "body[$langcode][$delta][value]" => $value,
+        "body[$langcode][$delta][format]" => $format--,
+      );
+      $this->drupalPost('node/1/edit', $edit, t('Save'));
+      $this->assertText($body[$delta], t('The body field with delta @delta has been saved.', array('@delta' => $delta)));
+    }
+
+    // Login as translator.
+    $this->drupalLogout();
+    $this->drupalLogin($this->translator);
+
+    // Translate the article in french.
+    $this->drupalGet('node/1/translate');
+    $this->clickLink(t('add translation'));
+    $this->assertNoText($body[0], t('The body field with delta @delta is hidden.', array('@delta' => 0)));
+    $this->assertText($body[1], t('The body field with delta @delta is shown.', array('@delta' => 1)));
+  }
+}
