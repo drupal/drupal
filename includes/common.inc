@@ -1975,6 +1975,10 @@ function format_username($account) {
  *     Drupal on a web server that cannot be configured to automatically find
  *     index.php, then hook_url_outbound_alter() can be implemented to force
  *     this value to 'index.php'.
+ *   - 'entity_type': The entity type of the object that called url(). Only set if
+ *     url() is invoked by entity_uri().
+ *   - 'entity': The entity object (such as a node) for which the URL is being
+ *     generated. Only set if url() is invoked by entity_uri().
  *
  * @return
  *   A string containing a URL to the given path.
@@ -6629,6 +6633,10 @@ function entity_uri($entity_type, $entity) {
       if (!isset($entity->uri['options'])) {
         $entity->uri['options'] = array();
       }
+      // Pass the entity data to url() so that alter functions do not need to
+      // lookup this entity again.
+      $entity->uri['options']['entity_type'] = $entity_type;
+      $entity->uri['options']['entity'] = $entity;
     }
     else {
       $entity->uri = FALSE;
