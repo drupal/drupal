@@ -682,7 +682,7 @@ function user_update_7010() {
  * displays a warning to users that they may need to go and modify the wording
  * of their templates.
  */
-function user_update_7010() {
+function user_update_7011() {
   $message = '';
 
   $tokens = array(
