@@ -1,5 +1,5 @@
 <?php
-// $Id: text.module,v 1.57 2010/06/08 06:15:13 dries Exp $
+// $Id: text.module,v 1.58 2010/06/28 20:58:42 dries Exp $
 
 /**
  * @file
@@ -601,8 +601,10 @@ function text_field_prepare_translation($entity_type, $entity, $field, $instance
   // we must not expose the source values.
   $field_name = $field['field_name'];
   $formats = filter_formats();
-  $format_id = $source_entity->{$field_name}[$source_langcode][0]['format'];
-  if (!filter_access($formats[$format_id])) {
-    $items = array();
+  foreach ($source_entity->{$field_name}[$source_langcode] as $delta => $item) {
+    $format_id = $item['format'];
+    if (!filter_access($formats[$format_id])) {
+      unset($items[$delta]);
+    }
   }
 }
