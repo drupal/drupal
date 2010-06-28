@@ -1,5 +1,5 @@
 <?php
-// $Id: install.core.inc,v 1.23 2010/06/25 12:35:14 dries Exp $
+// $Id: install.core.inc,v 1.24 2010/06/28 19:57:34 dries Exp $
 
 /**
  * @file
@@ -800,7 +800,7 @@ function install_verify_completed_task() {
  * Verifies the existing settings in settings.php.
  */
 function install_verify_settings() {
-  global $db_prefix, $databases;
+  global $databases;
 
   // Verify existing settings (if any).
   if (!empty($databases) && install_verify_pdo()) {
@@ -834,7 +834,7 @@ function install_verify_pdo() {
  *   The form API definition for the database configuration form.
  */
 function install_settings_form($form, &$form_state, &$install_state) {
-  global $databases, $db_prefix;
+  global $databases;
   $profile = $install_state['parameters']['profile'];
   $install_locale = $install_state['parameters']['locale'];
 
@@ -945,6 +945,10 @@ function install_settings_form($form, &$form_state, &$install_state) {
  * Form API validate for install_settings form.
  */
 function install_settings_form_validate($form, &$form_state) {
+  // TODO: remove when PIFR will be updated to use 'db_prefix' instead of
+  // 'prefix' in the database settings form.
+  $form_state['values']['prefix'] = $form_state['values']['db_prefix'];
+
   form_set_value($form['_database'], $form_state['values'], $form_state);
   $errors = install_database_errors($form_state['values'], $form_state['values']['settings_file']);
   foreach ($errors as $name => $message) {
@@ -959,8 +963,8 @@ function install_database_errors($database, $settings_file) {
   global $databases;
   $errors = array();
   // Verify the table prefix.
-  if (!empty($database['db_prefix']) && is_string($database['db_prefix']) && !preg_match('/^[A-Za-z0-9_.]+$/', $database['db_prefix'])) {
-    $errors['db_prefix'] = st('The database table prefix you have entered, %db_prefix, is invalid. The table prefix can only contain alphanumeric characters, periods, or underscores.', array('%db_prefix' => $database['db_prefix']));
+  if (!empty($database['prefix']) && is_string($database['prefix']) && !preg_match('/^[A-Za-z0-9_.]+$/', $database['prefix'])) {
+    $errors['prefix'] = st('The database table prefix you have entered, %prefix, is invalid. The table prefix can only contain alphanumeric characters, periods, or underscores.', array('%prefix' => $database['prefix']));
   }
 
   if (!empty($database['port']) && !is_numeric($database['port'])) {
@@ -1000,14 +1004,10 @@ function install_database_errors($database, $settings_file) {
 function install_settings_form_submit($form, &$form_state) {
   global $install_state;
 
-  $database = array_intersect_key($form_state['values']['_database'], array_flip(array('driver', 'database', 'username', 'password', 'host', 'port')));
+  $database = array_intersect_key($form_state['values']['_database'], array_flip(array('driver', 'database', 'username', 'password', 'host', 'port', 'prefix')));
   // Update global settings array and save.
   $settings['databases'] = array(
     'value'    => array('default' => array('default' => $database)),
-    'required' => TRUE,
-  );
-  $settings['db_prefix'] = array(
-    'value'    => $form_state['values']['db_prefix'],
     'required' => TRUE,
   );
   $settings['drupal_hash_salt'] = array(

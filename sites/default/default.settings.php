@@ -1,5 +1,5 @@
 <?php
-// $Id: default.settings.php,v 1.47 2010/06/25 18:07:07 dries Exp $
+// $Id: default.settings.php,v 1.48 2010/06/28 19:57:34 dries Exp $
 
 /**
  * @file
@@ -61,6 +61,7 @@
  *   'password' => 'password',
  *   'host' => 'localhost',
  *   'port' => 3306,
+ *   'prefix' => 'myprefix_',
  * );
  *
  * The "driver" property indicates what Drupal database driver the
@@ -106,44 +107,45 @@
  *   'username' => 'username',
  *   'password' => 'password',
  *   'host' => 'localhost',
+ *   'prefix' => 'main_',
  * );
  *
  * You can optionally set prefixes for some or all database table names
- * by using the $db_prefix setting. If a prefix is specified, the table
+ * by using the 'prefix' setting. If a prefix is specified, the table
  * name will be prepended with its value. Be sure to use valid database
  * characters only, usually alphanumeric and underscore. If no prefixes
  * are desired, leave it as an empty string ''.
  *
- * To have all database names prefixed, set $db_prefix as a string:
+ * To have all database names prefixed, set 'prefix' as a string:
  *
- *   $db_prefix = 'main_';
+ *   'prefix' => 'main_',
  *
- * To provide prefixes for specific tables, set $db_prefix as an array.
+ * To provide prefixes for specific tables, set 'prefix' as an array.
  * The array's keys are the table names and the values are the prefixes.
- * The 'default' element holds the prefix for any tables not specified
- * elsewhere in the array. Example:
+ * The 'default' element is mandatory and holds the prefix for any tables
+ * not specified elsewhere in the array. Example:
  *
- *   $db_prefix = array(
+ *   'prefix' => array(
  *     'default'   => 'main_',
- *     'users'      => 'shared_',
+ *     'users'     => 'shared_',
  *     'sessions'  => 'shared_',
  *     'role'      => 'shared_',
  *     'authmap'   => 'shared_',
- *   );
+ *   ),
  *
- * You can also use db_prefix as a reference to a schema/database. This maybe
+ * You can also use a reference to a schema/database as a prefix. This maybe
  * useful if your Drupal installation exists in a schema that is not the default
  * or you want to access several databases from the same code base at the same
  * time.
  * Example:
  *
- *  $db_prefix = array(
- *    'default' => 'main.',
- *     'users'      => 'shared.',
+ *   'prefix' => array(
+ *     'default'   => 'main.',
+ *     'users'     => 'shared.',
  *     'sessions'  => 'shared.',
  *     'role'      => 'shared.',
  *     'authmap'   => 'shared.',
- *  );
+ *   );
  *
  * NOTE: MySQL and SQLite's definition of a schema is a database.
  *
@@ -154,6 +156,7 @@
  *     'username' => 'username',
  *     'password' => 'password',
  *     'host' => 'localhost',
+ *     'prefix' => '',
  *   );
  *   $databases['default']['default'] = array(
  *     'driver' => 'pgsql',
@@ -161,6 +164,7 @@
  *     'username' => 'username',
  *     'password' => 'password',
  *     'host' => 'localhost',
+ *     'prefix' => '',
  *   );
  *   $databases['default']['default'] = array(
  *     'driver' => 'sqlite',
@@ -168,7 +172,6 @@
  *   );
  */
 $databases = array();
-$db_prefix = '';
 
 /**
  * Access control for update.php script.

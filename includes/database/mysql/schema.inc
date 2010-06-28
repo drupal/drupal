@@ -1,5 +1,5 @@
 <?php
-// $Id: schema.inc,v 1.37 2010/06/14 12:26:32 dries Exp $
+// $Id: schema.inc,v 1.38 2010/06/28 19:57:34 dries Exp $
 
 /**
  * @file
@@ -25,7 +25,7 @@ class DatabaseSchema_mysql extends DatabaseSchema {
   const COMMENT_MAX_COLUMN = 255;
 
   /**
-   * Get information about the table and database name from the db_prefix.
+   * Get information about the table and database name from the prefix.
    *
    * @return
    *   A keyed array with information about the database, table name and prefix.
