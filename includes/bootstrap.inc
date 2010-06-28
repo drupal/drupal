@@ -2695,7 +2695,7 @@ function _registry_check_code($type, $name = NULL) {
   $cache_key = $type[0] . $name;
   if (isset($lookup_cache[$cache_key])) {
     if ($lookup_cache[$cache_key]) {
-      require DRUPAL_ROOT . '/' . $lookup_cache[$cache_key];
+      require_once DRUPAL_ROOT . '/' . $lookup_cache[$cache_key];
     }
     return (bool) $lookup_cache[$cache_key];
   }
@@ -2717,7 +2717,7 @@ function _registry_check_code($type, $name = NULL) {
   $lookup_cache[$cache_key] = $file;
 
   if ($file) {
-    require DRUPAL_ROOT . '/' . $file;
+    require_once DRUPAL_ROOT . '/' . $file;
     return TRUE;
   }
   else {
