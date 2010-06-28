@@ -1,5 +1,5 @@
 <?php
-// $Id: user.admin.inc,v 1.111 2010/06/26 21:32:20 dries Exp $
+// $Id: user.admin.inc,v 1.112 2010/06/28 03:25:21 webchick Exp $
 
 /**
  * @file
@@ -422,7 +422,7 @@ function user_admin_settings() {
   );
   // These email tokens are shared for all settings, so just define
   // the list once to help ensure they stay in sync.
-  $email_token_help = t('You can use the following tokens in your e-mail message text: !site-name-token, !site-url-token, !user-name-token, !user-mail-token, !site-login-url-token, !user-edit-url-token, !user-one-time-login-url-token, !user-cancel-url-token', array('!site-name-token' => '[site:name]', '!site-url-token' => '[site:url]', '!user-name-token' => '[user:name]', '!user-mail-token' => '[user:mail]', '!site-login-url-token' => '[site:login-url]', '!user-edit-url-token' => '[user:edit-url]', '!user-one-time-login-url-token' => '[user:one-time-login-url]', '!user-cancel-url-token' => '[user:cancel-url]'));
+  $email_token_help = t('Available variables are: [site:name], [site:url], [user:name], [user:mail], [site:login-url], [site:url-brief], [user:edit-url], [user:one-time-login-url], [user:cancel-url].');
 
   $form['email_admin_created'] = array(
     '#type' => 'fieldset',
