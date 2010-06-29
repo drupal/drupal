@@ -1,6 +1,6 @@
 #!/usr/bin/env php
 <?php
-// $Id: dump-database-d6.sh,v 1.1 2010/06/28 02:05:47 webchick Exp $
+// $Id: dump-database-d6.sh,v 1.2 2010/06/29 00:21:00 webchick Exp $
 
 /**
  * Dump a Drupal 6 database into a Drupal 7 PHP script to test the upgrade
@@ -29,7 +29,7 @@ include_once './includes/bootstrap.inc';
 drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
 
 // Include the utility drupal_var_export() function.
-include_once dirname(__FILE__) . '/../includes/variable.inc';
+include_once dirname(__FILE__) . '/../includes/utility.inc';
 
 // Output the PHP header.
 $output = "<?php\n\n";
