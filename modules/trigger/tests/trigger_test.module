@@ -1,5 +1,5 @@
 <?php
-// $Id: trigger_test.module,v 1.7 2010/03/26 20:44:10 dries Exp $
+// $Id: trigger_test.module,v 1.8 2010/06/29 18:24:10 dries Exp $
 
 /**
  * @file
@@ -35,7 +35,6 @@ function trigger_test_action_info() {
         'comment_insert',
         'comment_update',
         'comment_delete',
-        'user_presave',
         'user_insert',
         'user_update',
         'user_delete',

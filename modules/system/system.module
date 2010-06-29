@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.942 2010/06/26 21:32:20 dries Exp $
+// $Id: system.module,v 1.943 2010/06/29 18:24:10 dries Exp $
 
 /**
  * @file
@@ -2861,7 +2861,7 @@ function system_action_info() {
       'type' => 'user',
       'label' => t('Ban IP address of current user'),
       'configurable' => FALSE,
-      'triggers' => array(),
+      'triggers' => array('any'),
     ),
     'system_goto_action' => array(
       'type' => 'system',

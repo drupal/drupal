@@ -1,5 +1,5 @@
 <?php
-// $Id: trigger.module,v 1.62 2010/04/11 18:33:44 dries Exp $
+// $Id: trigger.module,v 1.63 2010/06/29 18:24:10 dries Exp $
 
 /**
  * @file
@@ -145,9 +145,6 @@ function trigger_trigger_info() {
        ),
      ),
      'user' => array(
-       'user_presave' => array(
-         'label' => t('When either creating a new user account or updating an existing'),
-       ),
        'user_insert' => array(
          'label' => t('After creating a new user account'),
        ),
@@ -488,15 +485,8 @@ function trigger_user_login(&$edit, $account, $category) {
  * Implements hook_user_logout().
  */
 function trigger_user_logout($account) {
-  $edit = NULL;
+  $edit = array();
   _trigger_user('user_logout', $edit, $account);
-}
-
-/**
- * Implements hook_user_presave().
- */
-function trigger_user_presave(&$edit, $account, $category) {
-  _trigger_user('user_presave', $edit, $account, $category);
 }
 
 /**
@@ -528,7 +518,8 @@ function trigger_user_cancel($edit, $account, $method) {
  * Implements hook_user_delete().
  */
 function trigger_user_delete($account) {
-  _trigger_user('user_delete', $edit, $account, $method);
+  $edit = array();
+  _trigger_user('user_delete', $edit, $account, NULL);
 }
 
 /**
@@ -557,7 +548,7 @@ function _trigger_user($hook, &$edit, $account, $category = NULL) {
       if (!isset($objects[$type])) {
         $objects[$type] = _trigger_normalize_user_context($type, $account);
       }
-      $context['account'] = $account;
+      $context['user'] = $account;
       actions_do($aid, $objects[$type], $context);
     }
     else {
