@@ -1,5 +1,5 @@
 <?php
-// $Id: file.test,v 1.15 2010/06/26 02:16:23 dries Exp $
+// $Id: file.test,v 1.16 2010/06/29 00:57:19 dries Exp $
 
 /**
  * @file
@@ -647,7 +647,6 @@ class FileTokenReplaceTestCase extends FileFieldTestCase {
     // Generate and test sanitized tokens.
     $tests = array();
     $tests['[file:fid]'] = $file->fid;
-    $tests['[file:uid]'] = $file->uid;
     $tests['[file:name]'] = check_plain($file->filename);
     $tests['[file:description]'] = filter_xss($file->description);
     $tests['[file:path]'] = filter_xss($file->uri);
@@ -657,7 +656,7 @@ class FileTokenReplaceTestCase extends FileFieldTestCase {
     $tests['[file:timestamp]'] = format_date($file->timestamp, 'medium', '', NULL, $language->language);
     $tests['[file:timestamp:short]'] = format_date($file->timestamp, 'short', '', NULL, $language->language);
     $tests['[file:owner]'] = $this->admin_user->name;
-    $tests['[file:owner:uid]'] = $this->admin_user->uid;
+    $tests['[file:owner:uid]'] = $file->uid;
 
     // Test to make sure that we generated something for each token.
     $this->assertFalse(in_array(0, array_map('strlen', $tests)), t('No empty tokens generated.'));

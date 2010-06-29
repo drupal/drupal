@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.test,v 1.82 2010/06/01 17:58:29 dries Exp $
+// $Id: comment.test,v 1.83 2010/06/29 00:57:19 dries Exp $
 
 class CommentHelperCase extends DrupalWebTestCase {
   protected $admin_user;
@@ -1187,9 +1187,6 @@ class CommentTokenReplaceTestCase extends CommentHelperCase {
     // Generate and test sanitized tokens.
     $tests = array();
     $tests['[comment:cid]'] = $comment->cid;
-    $tests['[comment:pid]'] = $comment->pid;
-    $tests['[comment:nid]'] = $comment->nid;
-    $tests['[comment:uid]'] = $comment->uid;
     $tests['[comment:hostname]'] = check_plain($comment->hostname);
     $tests['[comment:name]'] = filter_xss($comment->name);
     $tests['[comment:mail]'] = check_plain($this->admin_user->mail);
@@ -1200,8 +1197,11 @@ class CommentTokenReplaceTestCase extends CommentHelperCase {
     $tests['[comment:edit-url]'] = url('comment/' . $comment->cid . '/edit', $url_options);
     $tests['[comment:created:since]'] = format_interval(REQUEST_TIME - $comment->created, 2, $language->language);
     $tests['[comment:changed:since]'] = format_interval(REQUEST_TIME - $comment->changed, 2, $language->language);
+    $tests['[comment:parent:cid]'] = $comment->pid;
     $tests['[comment:parent:title]'] = check_plain($parent_comment->subject);
+    $tests['[comment:node:nid]'] = $comment->nid;
     $tests['[comment:node:title]'] = check_plain($node->title);
+    $tests['[comment:author:uid]'] = $comment->uid;
     $tests['[comment:author:name]'] = check_plain($this->admin_user->name);
 
     // Test to make sure that we generated something for each token.

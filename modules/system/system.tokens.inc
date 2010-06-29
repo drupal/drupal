@@ -1,5 +1,5 @@
 <?php
-// $Id: system.tokens.inc,v 1.9 2010/04/20 09:48:06 webchick Exp $
+// $Id: system.tokens.inc,v 1.10 2010/06/29 00:57:19 dries Exp $
 
 /**
  * @file
@@ -88,10 +88,6 @@ function system_token_info() {
   $file['fid'] = array(
     'name' => t("File ID"),
     'description' => t("The unique ID of the uploaded file."),
-  );
-  $file['uid'] = array(
-    'name' => t("User ID"),
-    'description' => t("The unique ID of the user who owns the file."),
   );
   $file['name'] = array(
     'name' => t("File name"),
@@ -235,10 +231,6 @@ function system_tokens($type, $tokens, array $data = array(), array $options = a
         // Basic keys and values.
         case 'fid':
           $replacements[$original] = $file->fid;
-          break;
-
-        case 'uid':
-          $replacements[$original] = $file->uid;
           break;
 
         // Essential file data

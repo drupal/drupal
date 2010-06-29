@@ -1,5 +1,5 @@
 <?php
-// $Id: node.tokens.inc,v 1.14 2010/04/20 09:48:06 webchick Exp $
+// $Id: node.tokens.inc,v 1.15 2010/06/29 00:57:19 dries Exp $
 
 /**
  * @file
@@ -30,10 +30,6 @@ function node_token_info() {
   $node['tnid'] = array(
     'name' => t("Translation set ID"),
     'description' => t("The unique ID of the original-language version of this node, if one exists."),
-  );
-  $node['uid'] = array(
-    'name' => t("User ID"),
-    'description' => t("The unique ID of the user who posted the node."),
   );
   $node['type'] = array(
     'name' => t("Content type"),
@@ -123,10 +119,6 @@ function node_tokens($type, $tokens, array $data = array(), array $options = arr
 
         case 'tnid':
           $replacements[$original] = $node->tnid;
-          break;
-
-        case 'uid':
-          $replacements[$original] = $node->uid;
           break;
 
         case 'type':
