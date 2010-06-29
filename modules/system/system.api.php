@@ -67,9 +67,6 @@ function hook_hook_info_alter(&$hooks) {
  * can be loaded via entity_load() and, optionally, to which fields can be
  * attached).
  *
- * @see entity_load()
- * @see hook_entity_info_alter()
- *
  * @return
  *   An array whose keys are entity type names and whose values identify
  *   properties of those types that the system needs to know about:
@@ -155,6 +152,9 @@ function hook_hook_info_alter(&$hooks) {
  *     default (e.g. right after the module exposing the view mode is enabled),
  *     but administrators can later use the Field UI to apply custom display
  *     settings specific to the view mode.
+ *
+ * @see entity_load()
+ * @see hook_entity_info_alter()
  */
 function hook_entity_info() {
   $return = array(
@@ -230,10 +230,10 @@ function hook_entity_info() {
  * entity. All properties that are available in hook_entity_info() can be
  * altered here.
  *
- * @see hook_entity_info()
- *
  * @param $entity_info
  *   The entity info array, keyed by entity name.
+ *
+ * @see hook_entity_info()
  */
 function hook_entity_info_alter(&$entity_info) {
   // Set the controller class for nodes to an alternate implementation of the
@@ -1765,6 +1765,7 @@ function hook_theme($existing, $type, $theme, $path) {
  *
  * @param $theme_registry
  *   The entire cache of theme registry information, post-processing.
+ *
  * @see hook_theme()
  * @see _theme_process_registry()
  */
@@ -1862,11 +1863,11 @@ function hook_xmlrpc() {
  * definition, so module must be prepared to handle either format for
  * each callback being altered.
  *
- * @see hook_xmlrpc()
- *
  * @param $methods
  *   Associative array of method callback definitions returned from
  *   hook_xmlrpc.
+ *
+ * @see hook_xmlrpc()
  */
 function hook_xmlrpc_alter(&$methods) {
 
@@ -2038,10 +2039,10 @@ function hook_mail($key, &$message, $params) {
  * tables that will be cleared by the Clear button on the Performance page or
  * whenever drupal_flush_all_caches is invoked.
  *
- * @see drupal_flush_all_caches()
- *
  * @return
  *   An array of cache table names.
+ *
+ * @see drupal_flush_all_caches()
  */
 function hook_flush_caches() {
   return array('cache_example');
@@ -2626,12 +2627,13 @@ function hook_schema_alter(&$schema) {
  * Structured (aka dynamic) queries that have tags associated may be altered by any module
  * before the query is executed.
  *
+ * @param $query
+ *   A Query object describing the composite parts of a SQL query.
+ *
  * @see hook_query_TAG_alter()
  * @see node_query_node_access_alter()
  * @see QueryAlterableInterface
  * @see SelectQueryInterface
- * @param $query
- *   A Query object describing the composite parts of a SQL query.
  */
 function hook_query_alter(QueryAlterableInterface $query) {
   if ($query->hasTag('micro_limit')) {
@@ -2642,13 +2644,13 @@ function hook_query_alter(QueryAlterableInterface $query) {
 /**
  * Perform alterations to a structured query for a given tag.
  *
+ * @param $query
+ *   An Query object describing the composite parts of a SQL query.
+ *
  * @see hook_query_alter()
  * @see node_query_node_access_alter()
  * @see QueryAlterableInterface
  * @see SelectQueryInterface
- *
- * @param $query
- *   An Query object describing the composite parts of a SQL query.
  */
 function hook_query_TAG_alter(QueryAlterableInterface $query) {
   // Skip the extra expensive alterations if site has no node access control modules.
@@ -2911,8 +2913,8 @@ function hook_update_last_removed() {
  * - variables that the module has set using variable_set() or system_settings_form()
  * - modifications to existing tables
  *
- * The module should not remove its entry from the {system} table. Database tables
- * defined by hook_schema() will be removed automatically.
+ * The module should not remove its entry from the {system} table. Database
+ * tables defined by hook_schema() will be removed automatically.
  *
  * The uninstall hook will fire when the module gets uninstalled but before the
  * module's database tables are removed, allowing your module to query its own
@@ -3235,6 +3237,7 @@ function hook_install_tasks_alter(&$tasks, $install_state) {
  *   An array of mimetypes correlated to the extensions that relate to them.
  *   The array has 'mimetypes' and 'extensions' elements, each of which is an
  *   array.
+ *
  * @see file_default_mimetype_mapping()
  */
 function hook_file_mimetype_mapping_alter(&$mapping) {
@@ -3395,11 +3398,11 @@ function hook_archiver_info_alter(&$info) {
  * recommended that each date type starts with the module name. A date type
  * can consist of letters, numbers and underscores.
  *
- * @see hook_date_formats()
- * @see format_date()
- *
  * @return
  *   A list of date types in 'key' => 'label' format.
+ *
+ * @see hook_date_formats()
+ * @see format_date()
  */
 function hook_date_format_types() {
   return array(
@@ -3458,8 +3461,6 @@ function hook_date_format_types_alter(&$types) {
  * that aren't specific to any one locale, for example, "Y m". For these cases
  * the locales field should be omitted.
  *
- * @see hook_date_format_types()
- *
  * @return
  *   A list of date formats. Each date format is a keyed array
  *   consisting of three elements:
@@ -3478,6 +3479,8 @@ function hook_date_format_types_alter(&$types) {
  *     first one will be used unless overridden via
  *     admin/config/regional/date-time/locale. If your date format is not
  *     language specific, leave this field empty.
+ *
+ * @see hook_date_format_types()
  */
 function hook_date_formats() {
   return array(
