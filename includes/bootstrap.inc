@@ -902,10 +902,12 @@ function drupal_page_is_cacheable($allow_caching = NULL) {
  *
  * @param $hook
  *   The name of the bootstrap hook to invoke.
+ *
+ * @see bootstrap_hooks()
  */
 function bootstrap_invoke_all($hook) {
-  // _drupal_bootstrap_page_cache() already loaded the bootstrap modules, so we
-  // don't need to tell module_list() to reset its bootstrap list.
+  // Bootstrap modules should have been loaded when this function is called, so
+  // we don't need to tell module_list() to reset its bootstrap list.
   foreach (module_list(FALSE, TRUE) as $module) {
     drupal_load('module', $module);
     module_invoke($module, $hook);
