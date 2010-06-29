@@ -1101,7 +1101,8 @@ class DrupalWebTestCase extends DrupalTestCase {
     // Make a request to the logout page, and redirect to the user page, the
     // idea being if you were properly logged out you should be seeing a login
     // screen.
-    $this->drupalGet('user/logout', array('query' => array('destination' => 'user')));
+    $this->drupalGet('user/logout');
+    $this->drupalGet('user');
     $pass = $this->assertField('name', t('Username field found.'), t('Logout'));
     $pass = $pass && $this->assertField('pass', t('Password field found.'), t('Logout'));
 
@@ -2964,7 +2965,9 @@ class DrupalWebTestCase extends DrupalTestCase {
   }
 
   /**
-   * Assert that the most recently sent e-mail message has a field with the given value.
+   * Asserts that the most recently sent e-mail message has the given value.
+   *
+   * The field in $name must have the content described in $value.
    *
    * @param $name
    *   Name of field or message property to assert. Examples: subject, body, id, ...
@@ -2972,6 +2975,7 @@ class DrupalWebTestCase extends DrupalTestCase {
    *   Value of the field to assert.
    * @param $message
    *   Message to display.
+   *
    * @return
    *   TRUE on pass, FALSE on fail.
    */
@@ -2982,13 +2986,76 @@ class DrupalWebTestCase extends DrupalTestCase {
   }
 
   /**
-   * Log verbose message in a text file.
+   * Asserts that the most recently sent e-mail message has the string in it.
+   *
+   * @param $field_name
+   *   Name of field or message property to assert: subject, body, id, ...
+   * @param $string
+   *   String to search for.
+   * @param $email_depth
+   *   Number of emails to search for string, starting with most recent.
+   *
+   * @return
+   *   TRUE on pass, FALSE on fail.
+   */
+  protected function assertMailString($field_name, $string, $email_depth) {
+    $mails = $this->drupalGetMails();
+    $string_found = FALSE;
+    for ($i = sizeof($mails) -1; $i >= sizeof($mails) - $email_depth && $i >= 0; $i--) {
+      $mail = $mails[$i];
+      // Normalize whitespace, as we don't know what the mail system might have
+      // done. Any run of whitespace becomes a single space.
+      $normalized_mail = preg_replace('/\s+/', ' ', $mail[$field_name]);
+      $normalized_string = preg_replace('/\s+/', ' ', $string);
+      $string_found = (FALSE !== strpos($normalized_mail, $normalized_string));
+      if ($string_found) {
+        break;
+      }
+    }
+    return $this->assertTrue($string_found, t('Expected text found in @field of email message: "@expected".', array('@field' => $field_name, '@expected' => $string)));
+  }
+
+  /**
+   * Asserts that the most recently sent e-mail message has the pattern in it.
+   *
+   * @param $field_name
+   *   Name of field or message property to assert: subject, body, id, ...
+   * @param $regex
+   *   Pattern to search for.
+   *
+   * @return
+   *   TRUE on pass, FALSE on fail.
+   */
+  protected function assertMailPattern($field_name, $regex, $message) {
+    $mails = $this->drupalGetMails();
+    $mail = end($mails);
+    $regex_found = preg_match("/$regex/", $mail[$field_name]);
+    return $this->assertTrue($regex_found, t('Expected text found in @field of email message: "@expected".', array('@field' => $field_name, '@expected' => $regex)));
+  }
+
+  /**
+   * Outputs to verbose the most recent $count emails sent.
+   *
+   * @param $count
+   *   Optional number of emails to output.
+   */
+  protected function verboseEmail($count = 1) {
+    $mails = $this->drupalGetMails();
+    for ($i = sizeof($mails) -1; $i >= sizeof($mails) - $count && $i >= 0; $i--) {
+      $mail = $mails[$i];
+      $this->verbose(t('Email:') . '<pre>' . print_r($mail, TRUE) . '</pre>');
+    }
+  }
+
+  /**
+   * Logs verbose message in a text file.
    *
    * The a link to the vebose message will be placed in the test results via
    * as a passing assertion with the text '[verbose message]'.
    *
    * @param $message
    *   The verbose message to be stored.
+   *
    * @see simpletest_verbose()
    */
   protected function verbose($message) {
@@ -3001,7 +3068,7 @@ class DrupalWebTestCase extends DrupalTestCase {
 }
 
 /**
- * Log verbose message in a text file.
+ * Logs verbose message in a text file.
  *
  * If verbose mode is enabled then page requests will be dumped to a file and
  * presented on the test result screen. The messages will be placed in a file
@@ -3013,8 +3080,10 @@ class DrupalWebTestCase extends DrupalTestCase {
  *   The original file directory, before it was changed for testing purposes.
  * @param $test_class
  *   The active test case class.
+ *
  * @return
  *   The ID of the message to be placed in related assertion messages.
+ *
  * @see DrupalTestCase->originalFileDirectory
  * @see DrupalWebTestCase->verbose()
  */

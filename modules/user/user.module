@@ -3373,7 +3373,7 @@ function user_action_info() {
       'label' => t('Block current user'),
       'type' => 'user',
       'configurable' => FALSE,
-      'triggers' => array(),
+      'triggers' => array('any'),
     ),
   );
 }
@@ -3384,22 +3384,25 @@ function user_action_info() {
  * @ingroup actions
  */
 function user_block_user_action(&$entity, $context = array()) {
+  // First priority: If there is a $entity->uid, block that user.
+  // This is most likely a user object or the author if a node or comment.
   if (isset($entity->uid)) {
     $uid = $entity->uid;
   }
   elseif (isset($context['uid'])) {
     $uid = $context['uid'];
   }
+  // If neither of those are valid, then block the current user.
   else {
-    global $user;
-    $uid = $user->uid;
+    $uid = $GLOBALS['user']->uid;
   }
   db_update('users')
     ->fields(array('status' => 0))
     ->condition('uid', $uid)
     ->execute();
   drupal_session_destroy_uid($uid);
-  watchdog('action', 'Blocked user %name.', array('%name' => $user->name));
+  $account = user_load($uid);
+  watchdog('action', 'Blocked user %name.', array('%name' => $account->name));
 }
 
 /**

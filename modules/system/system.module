@@ -2861,7 +2861,7 @@ function system_action_info() {
       'type' => 'user',
       'label' => t('Ban IP address of current user'),
       'configurable' => FALSE,
-      'triggers' => array(),
+      'triggers' => array('any'),
     ),
     'system_goto_action' => array(
       'type' => 'system',

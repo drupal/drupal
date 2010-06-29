@@ -81,7 +81,8 @@ function user_tokens($type, $tokens, array $data = array(), array $options = arr
       switch ($name) {
         // Basic user account information.
         case 'uid':
-          $replacements[$original] = $account->uid;
+          // In the case of hook user_presave uid is not set yet.
+          $replacements[$original] = !empty($account->uid) ? $account->uid : t('not yet assigned');
           break;
 
         case 'name':
@@ -94,20 +95,21 @@ function user_tokens($type, $tokens, array $data = array(), array $options = arr
           break;
 
         case 'url':
-          $replacements[$original] = url("user/$account->uid", $url_options);
+          $replacements[$original] = !empty($account->uid) ? url("user/$account->uid", $url_options) : t('not yet assigned');
           break;
 
         case 'edit-url':
-          $replacements[$original] = url("user/$account->uid/edit", $url_options);
+          $replacements[$original] = !empty($account->uid) ? url("user/$account->uid/edit", $url_options) : t('not yet assigned');
           break;
 
         // These tokens are default variations on the chained tokens handled below.
         case 'last-login':
-          $replacements[$original] = format_date($account->login, 'medium', '', NULL, $language_code);
+          $replacements[$original] = !empty($account->login) ? format_date($account->login, 'medium', '', NULL, $language_code) : t('never');
           break;
 
         case 'created':
-          $replacements[$original] = format_date($account->created, 'medium', '', NULL, $language_code);
+          // In the case of user_presave the created date may not yet be set.
+          $replacements[$original] = !empty($account->created) ? format_date($account->created, 'medium', '', NULL, $language_code) : t('not yet created');
           break;
       }
     }
