@@ -188,15 +188,6 @@ function search_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'search.admin.inc',
   );
-  $items['admin/reports/search'] = array(
-    'title' => 'Top search phrases',
-    'description' => 'View most popular search phrases.',
-    'page callback' => 'dblog_top',
-    'page arguments' => array('search'),
-    'access arguments' => array('access site reports'),
-    'file path' => drupal_get_path('module', 'dblog'),
-    'file' => 'dblog.admin.inc',
-  );
 
   // Add paths for searching. We add each module search path twice: once without
   // and once with %menu_tail appended. The reason for this is that we want to
