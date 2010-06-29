@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.module,v 1.52 2010/03/27 14:24:14 dries Exp $
+// $Id: dblog.module,v 1.53 2010/06/29 00:39:15 dries Exp $
 
 /**
  * @file
@@ -70,6 +70,18 @@ function dblog_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'dblog.admin.inc',
   );
+
+  if (module_exists('search')) {
+    $items['admin/reports/search'] = array(
+      'title' => 'Top search phrases',
+      'description' => 'View most popular search phrases.',
+      'page callback' => 'dblog_top',
+      'page arguments' => array('search'),
+      'access arguments' => array('access site reports'),
+      'file' => 'dblog.admin.inc',
+    );
+  }
+
   return $items;
 }
 
