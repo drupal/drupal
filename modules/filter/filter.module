@@ -638,6 +638,10 @@ function filter_list_format($format_id) {
         $filter->title = $filter_info[$name]['title'];
         // Unpack stored filter settings.
         $filter->settings = (isset($filter->settings) ? unserialize($filter->settings) : array());
+        // Merge in default settings.
+        if (isset($filter_info[$name]['default settings'])) {
+          $filter->settings += $filter_info[$name]['default settings'];
+        }
 
         $format_filters[$name] = $filter;
       }
