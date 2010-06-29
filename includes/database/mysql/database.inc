@@ -96,7 +96,7 @@ class DatabaseConnection_mysql extends DatabaseConnection {
       $new_id = $this->query('INSERT INTO {sequences} () VALUES ()', array(), array('return' => Database::RETURN_INSERT_ID));
     }
     if (!$this->shutdownRegistered) {
-      register_shutdown_function(array($this, 'nextIdDelete'));
+      drupal_register_shutdown_function(array($this, 'nextIdDelete'));
       $shutdownRegistered = TRUE;
     }
     return $new_id;
