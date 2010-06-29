@@ -1730,7 +1730,6 @@ class NodeTokenReplaceTestCase extends DrupalWebTestCase {
     $tests['[node:nid]'] = $node->nid;
     $tests['[node:vid]'] = $node->vid;
     $tests['[node:tnid]'] = $node->tnid;
-    $tests['[node:uid]'] = $node->uid;
     $tests['[node:type]'] = 'article';
     $tests['[node:type-name]'] = 'Article';
     $tests['[node:title]'] = check_plain($node->title);
@@ -1739,6 +1738,7 @@ class NodeTokenReplaceTestCase extends DrupalWebTestCase {
     $tests['[node:language]'] = check_plain($node->language);
     $tests['[node:url]'] = url('node/' . $node->nid, $url_options);
     $tests['[node:edit-url]'] = url('node/' . $node->nid . '/edit', $url_options);
+    $tests['[node:author:uid]'] = $node->uid;
     $tests['[node:author:name]'] = check_plain($account->name);
     $tests['[node:created:since]'] = format_interval(REQUEST_TIME - $node->created, 2, $language->language);
     $tests['[node:changed:since]'] = format_interval(REQUEST_TIME - $node->changed, 2, $language->language);

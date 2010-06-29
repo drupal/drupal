@@ -31,18 +31,6 @@ function comment_token_info() {
     'name' => t("Comment ID"),
     'description' => t("The unique ID of the comment."),
   );
-  $comment['pid'] = array(
-    'name' => t("Parent ID"),
-    'description' => t("The unique ID of the comment's parent, if comment threading is active."),
-  );
-  $comment['nid'] = array(
-    'name' => t("Node ID"),
-    'description' => t("The unique ID of the node the comment was posted to."),
-  );
-  $comment['uid'] = array(
-    'name' => t("User ID"),
-    'description' => t("The unique ID of the user who posted the comment."),
-  );
   $comment['hostname'] = array(
     'name' => t("IP Address"),
     'description' => t("The IP address of the computer the comment was posted from."),
@@ -136,18 +124,6 @@ function comment_tokens($type, $tokens, array $data = array(), array $options = 
         // Simple key values on the comment.
         case 'cid':
           $replacements[$original] = $comment->cid;
-          break;
-
-        case 'pid':
-          $replacements[$original] = $comment->pid;
-          break;
-
-        case 'nid':
-          $replacements[$original] = $comment->nid;
-          break;
-
-        case 'uid':
-          $replacements[$original] = $comment->uid;
           break;
 
         // Poster identity information for comments

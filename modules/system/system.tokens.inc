@@ -89,10 +89,6 @@ function system_token_info() {
     'name' => t("File ID"),
     'description' => t("The unique ID of the uploaded file."),
   );
-  $file['uid'] = array(
-    'name' => t("User ID"),
-    'description' => t("The unique ID of the user who owns the file."),
-  );
   $file['name'] = array(
     'name' => t("File name"),
     'description' => t("The name of the file on disk."),
@@ -235,10 +231,6 @@ function system_tokens($type, $tokens, array $data = array(), array $options = a
         // Basic keys and values.
         case 'fid':
           $replacements[$original] = $file->fid;
-          break;
-
-        case 'uid':
-          $replacements[$original] = $file->uid;
           break;
 
         // Essential file data

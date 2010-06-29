@@ -31,10 +31,6 @@ function node_token_info() {
     'name' => t("Translation set ID"),
     'description' => t("The unique ID of the original-language version of this node, if one exists."),
   );
-  $node['uid'] = array(
-    'name' => t("User ID"),
-    'description' => t("The unique ID of the user who posted the node."),
-  );
   $node['type'] = array(
     'name' => t("Content type"),
     'description' => t("The type of the node."),
@@ -123,10 +119,6 @@ function node_tokens($type, $tokens, array $data = array(), array $options = arr
 
         case 'tnid':
           $replacements[$original] = $node->tnid;
-          break;
-
-        case 'uid':
-          $replacements[$original] = $node->uid;
           break;
 
         case 'type':
