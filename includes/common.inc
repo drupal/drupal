@@ -2021,10 +2021,21 @@ function drupal_load_stylesheet($file, $optimize = NULL) {
 
     if ($_optimize) {
       // Perform some safe CSS optimizations.
-      $contents = preg_replace('<
-        \s*([@{}:;,]|\)\s|\s\()\s* |  # Remove whitespace around separators, but keep space around parentheses.
-        /\*([^*\\\\]|\*(?!/))+\*/     # Remove comments that are not CSS hacks.
-        >x', '\1', $contents);
+      // Regexp to match comment blocks.
+      $comment     = '/\*[^*]*\*+(?:[^/*][^*]*\*+)*/';
+      // Regexp to match double quoted strings.
+      $double_quot = '"[^"\\\\]*(?:\\\\.[^"\\\\]*)*"';
+      // Regexp to match single quoted strings.
+      $single_quot = "'[^'\\\\]*(?:\\\\.[^'\\\\]*)*'";
+      $contents = preg_replace_callback(
+        "<$double_quot|$single_quot|$comment>Sus",  // Match all comment blocks along
+        "_process_comment",                         // with double/single quoted strings
+        $contents);                                 // and feed them to _process_comment().
+      $contents = preg_replace(
+        '<\s*([@{}:;,]|\)\s|\s\()\s*>S',            // Remove whitespace around separators,
+        '\1', $contents);                           // but keep space around parentheses.
+      // End the file with a new line.
+      $contents .= "\n";
     }
 
     // Change back directory.
@@ -2032,6 +2043,41 @@ function drupal_load_stylesheet($file, $optimize = NULL) {
   }
 
   return $contents;
+}
+
+/**
+ * Process comment blocks.
+ *
+ * This is the callback function for the preg_replace_callback()
+ * used in drupal_load_stylesheet_content(). Support for comment
+ * hacks is implemented here.
+ */
+function _process_comment($matches) {
+  static $keep_nextone = FALSE;
+
+  // Quoted string, keep it.
+  if ($matches[0][0] == "'" || $matches[0][0] == '"') {
+    return $matches[0];
+  }
+  // End of IE-Mac hack, keep it.
+  if ($keep_nextone) {
+    $keep_nextone = FALSE;
+    return $matches[0];
+  }
+  switch (strrpos($matches[0], '\\')) {
+    case FALSE :
+      // No backslash, strip it.
+      return '';
+
+    case drupal_strlen($matches[0])-3 :
+      // Ends with \*/ so is a multi line IE-Mac hack, keep the next one also.
+      $keep_nextone = TRUE;
+      return '/*_\*/';
+
+    default :
+      // Single line IE-Mac hack.
+      return '/*\_*/';
+  }
 }
 
 /**
