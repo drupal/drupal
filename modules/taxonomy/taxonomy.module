@@ -509,8 +509,9 @@ function taxonomy_form_alter(&$form, $form_state, $form_id) {
       $terms = empty($node->nid) ? array() : taxonomy_node_get_terms($node);
     }
     else {
-      // After preview the terms must be converted to objects.
-      if (isset($form_state['node_preview'])) {
+      // After a preview or form reload, the terms must be converted to objects.
+      reset($node->taxonomy);
+      if (!is_object(current($node->taxonomy))) {
         $node->taxonomy = taxonomy_preview_terms($node);
       }
       $terms = $node->taxonomy;
