@@ -406,7 +406,6 @@ function _color_rewrite_stylesheet($theme, &$info, &$paths, $palette, $style) {
   $themes = list_themes();
   // Prepare color conversion table.
   $conversion = $palette;
-  unset($conversion['base']);
   foreach ($conversion as $k => $v) {
     $conversion[$k] = drupal_strtolower($v);
   }
