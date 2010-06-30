@@ -116,9 +116,6 @@ function search_theme() {
       'file' => 'search.pages.inc',
       'template' => 'search-results',
     ),
-    'search_results_listing' => array(
-      'variables' => array('title' => NULL, 'content' => NULL),
-    ),
   );
 }
 
