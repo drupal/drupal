@@ -1,5 +1,5 @@
 <?php
-// $Id: shortcut.test,v 1.2 2010/06/17 13:16:57 dries Exp $
+// $Id: shortcut.test,v 1.3 2010/06/30 15:12:59 dries Exp $
 
 /**
  * @file
@@ -239,6 +239,31 @@ class ShortcutSetsTestCase extends ShortcutTestCase {
   }
 
   /**
+   * Tests switching a user's shortcut set and creating one at the same time.
+   */
+  function testShortcutSetSwitchCreate() {
+    $edit = array(
+      'set' => 'new',
+      'new' => $this->randomName(10),
+    );
+    $this->drupalPost('user/' . $this->admin_user->uid . '/shortcuts', $edit, t('Change set'));
+    $current_set = shortcut_current_displayed_set($this->admin_user);
+    $this->assertNotEqual($current_set->set_name, $this->set->set_name, 'A shortcut set can be switched to at the same time as it is created.');
+    $this->assertEqual($current_set->title, $edit['new'], 'The new set is correctly assigned to the user.');
+  }
+
+  /**
+   * Tests switching a user's shortcut set without providing a new set name.
+   */
+  function testShortcutSetSwitchNoSetName() {
+    $edit = array('set' => 'new');
+    $this->drupalPost('user/' . $this->admin_user->uid . '/shortcuts', $edit, t('Change set'));
+    $this->assertText(t('The new set name is required.'));
+    $current_set = shortcut_current_displayed_set($this->admin_user);
+    $this->assertEqual($current_set->set_name, $this->set->set_name, 'Attempting to switch to a new shortcut set without providing a set name does not succeed.');
+  }
+
+  /**
    * Tests that shortcut_set_save() correctly updates existing links.
    */
   function testShortcutSetSave() {
@@ -263,6 +288,18 @@ class ShortcutSetsTestCase extends ShortcutTestCase {
     $this->drupalPost('admin/config/user-interface/shortcut/' . $set->set_name . '/edit', array('title' => $new_title), t('Save'));
     $set = shortcut_set_load($set->set_name);
     $this->assertTrue($set->title == $new_title, 'Shortcut set has been successfully renamed.');
+  }
+
+  /**
+   * Tests renaming a shortcut set to the same name as another set.
+   */
+  function testShortcutSetRenameAlreadyExists() {
+    $set = $this->generateShortcutSet($this->randomName(10));
+    $existing_title = $this->set->title;
+    $this->drupalPost('admin/config/user-interface/shortcut/' . $set->set_name . '/edit', array('title' => $existing_title), t('Save'));
+    $this->assertRaw(t('The shortcut set %name already exists. Choose another name.', array('%name' => $existing_title)));
+    $set = shortcut_set_load($set->set_name);
+    $this->assertNotEqual($set->title, $existing_title, t('The shortcut set %title cannot be renamed to %new-title because a shortcut set with that title already exists.', array('%title' => $set->title, '%new-title' => $existing_title)));
   }
 
   /**
