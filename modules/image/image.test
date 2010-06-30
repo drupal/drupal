@@ -1,5 +1,5 @@
 <?php
-// $Id: image.test,v 1.22 2010/05/23 19:10:23 dries Exp $
+// $Id: image.test,v 1.23 2010/06/30 22:37:49 webchick Exp $
 
 /**
  * @file
@@ -167,7 +167,7 @@ class ImageStylesPathAndUrlUnitTest extends DrupalWebTestCase {
     // Create the directories for the styles.
     $d = $scheme . '://styles/' . $this->style_name;
     $status = file_prepare_directory($d, FILE_CREATE_DIRECTORY);
-    $this->assertNotIdentical(FALSE, $status, t('Created the directory for the generated images for the test style.' ));
+    $this->assertNotIdentical(FALSE, $status, t('Created the directory for the generated images for the test style.'));
 
     // Create a working copy of the file.
     $files = $this->drupalGetTestFiles('image');
@@ -212,8 +212,8 @@ class ImageStylesPathAndUrlUnitTest extends DrupalWebTestCase {
     $this->drupalGet($expected_generated_url);
     $this->assertEqual($actual_generated_url, $expected_generated_url, t('Got the download URL for an existing file.'));
     $this->assertRaw(file_get_contents($generated_uri), t('URL returns expected file.'));
-    $this->assertEqual($this->drupalGetHeader('Content-Type'), $image_info['mime_type'], t('Expected Content-Type was reported.'));
-    $this->assertEqual($this->drupalGetHeader('Content-Length'), $image_info['file_size'], t('Expected Content-Length was reported.'));
+    $this->assertEqual($this->drupalGetHeader('Content-Type'), $generated_image_info['mime_type'], t('Expected Content-Type was reported.'));
+    $this->assertEqual($this->drupalGetHeader('Content-Length'), $generated_image_info['file_size'], t('Expected Content-Length was reported.'));
   }
 }
 
@@ -692,10 +692,12 @@ class ImageFieldDisplayTestCase extends ImageFieldTestCase {
    * Tests for image field settings.
    */
   function testImageFieldSettings() {
+    $test_image = current($this->drupalGetTestFiles('image'));
+    list(, $test_image_extension) = explode('.', $test_image->filename);
     $field_name = strtolower($this->randomName());
     $instance_settings = array(
       'alt_field' => 1,
-      'file_extensions' => 'gif jpg jpeg',
+      'file_extensions' => $test_image_extension,
       'max_filesize' => '50 KB',
       'max_resolution' => '100x100',
       'min_resolution' => '10x10',
@@ -709,12 +711,11 @@ class ImageFieldDisplayTestCase extends ImageFieldTestCase {
 
     $this->drupalGet('node/add/article');
     $this->assertText(t('Files must be less than 50 KB.'), t('Image widget max file size is displayed on article form.'));
-    $this->assertText(t('Allowed file types: gif jpg jpeg.'), t('Image widget allowed file types displayed on article form.'));
+    $this->assertText(t('Allowed file types: ' . $test_image_extension . '.'), t('Image widget allowed file types displayed on article form.'));
     $this->assertText(t('Images must be between 10x10 and 100x100 pixels.'), t('Image widget allowed resolution displayed on article form.'));
 
     // We have to create the article first and then edit it because the alt
     // and title fields do not display until the image has been attached.
-    $test_image = current($this->drupalGetTestFiles('image'));
     $nid = $this->uploadNodeImage($test_image, $field_name, 'article');
     $this->drupalGet('node/' . $nid . '/edit');
     $this->assertFieldByName($field_name . '[' . LANGUAGE_NONE . '][0][alt]', '', t('Alt field displayed on article form.'));
@@ -817,20 +818,33 @@ class ImageFieldValidateTestCase extends ImageFieldTestCase {
    */
   function testResolution() {
     $field_name = strtolower($this->randomName());
+    $min_resolution = 50;
+    $max_resolution = 100;
     $instance_settings = array(
-      'max_resolution' => '100x100',
-      'min_resolution' => '50x50',
+      'max_resolution' => $max_resolution . 'x' . $max_resolution,
+      'min_resolution' => $min_resolution . 'x' . $min_resolution,
     );
     $this->createImageField($field_name, 'article', array(), $instance_settings);
 
-    // Use image-test.png which has a resolution of 40x20.
-    $test_image = current($this->drupalGetTestFiles('image', 48006));
-    $nid = $this->uploadNodeImage($test_image, $field_name, 'article');
-    $this->assertText(t('The specified file image-test.png could not be uploaded. The image is too small; the minimum dimensions are 50x50 pixels.'), t('Node save failed when minimum image resolution was not met.'));
-
-    // Use image-1.png which has a resolution of 360x240.
-    $test_image = current($this->drupalGetTestFiles('image', 64027));
-    $nid = $this->uploadNodeImage($test_image, $field_name, 'article');
+    // We want a test image that is too small, and a test image that is too
+    // big, so cycle through test image files until we have what we need.
+    $image_that_is_too_big = FALSE;
+    $image_that_is_too_small = FALSE;
+    foreach ($this->drupalGetTestFiles('image') as $image) {
+      $info = image_get_info($image->uri);
+      if ($info['width'] > $max_resolution) {
+        $image_that_is_too_big = $image;
+      }
+      if ($info['width'] < $min_resolution) {
+        $image_that_is_too_small = $image;
+      }
+      if ($image_that_is_too_small && $image_that_is_too_big) {
+        break;
+      }
+    }
+    $nid = $this->uploadNodeImage($image_that_is_too_small, $field_name, 'article');
+    $this->assertText(t('The specified file ' . $image_that_is_too_small->filename . ' could not be uploaded. The image is too small; the minimum dimensions are 50x50 pixels.'), t('Node save failed when minimum image resolution was not met.'));
+    $nid = $this->uploadNodeImage($image_that_is_too_big, $field_name, 'article');
     $this->assertText(t('The image was resized to fit within the maximum allowed dimensions of 100x100 pixels.'), t('Image exceeding max resolution was properly resized.'));
   }
 }

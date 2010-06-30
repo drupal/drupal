@@ -1,5 +1,5 @@
 <?php
-// $Id: file.test,v 1.16 2010/06/29 00:57:19 dries Exp $
+// $Id: file.test,v 1.17 2010/06/30 22:37:49 webchick Exp $
 
 /**
  * @file
@@ -491,8 +491,8 @@ class FileFieldValidateTestCase extends FileFieldTestCase {
     $field = field_info_field($field_name);
     $instance = field_info_instance('node', $field_name, $type_name);
 
-    // Get the test file (a GIF image).
     $test_file = $this->getTestFile('image');
+    list(, $test_file_extension) = explode('.', $test_file->filename);
 
     // Disable extension checking.
     $this->updateFileField($field_name, $type_name, array('file_extensions' => ''));
@@ -513,7 +513,7 @@ class FileFieldValidateTestCase extends FileFieldTestCase {
     $this->assertRaw($error_message, t('Node save failed when file uploaded with the wrong extension.'));
 
     // Enable extension checking for text and image files.
-    $this->updateFileField($field_name, $type_name, array('file_extensions' => 'txt gif'));
+    $this->updateFileField($field_name, $type_name, array('file_extensions' => "txt $test_file_extension"));
 
     // Check that the file can be uploaded with extension checking.
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);

@@ -1,5 +1,5 @@
 <?php
-// $Id: file.test,v 1.57 2010/06/26 19:55:47 dries Exp $
+// $Id: file.test,v 1.58 2010/06/30 22:37:49 webchick Exp $
 
 /**
  *  @file
@@ -563,6 +563,7 @@ class FileSaveUploadTest extends FileHookTestCase {
     $this->drupalLogin($account);
 
     $this->image = current($this->drupalGetTestFiles('image'));
+    list(, $this->image_extension) = explode('.', $this->image->filename);
     $this->assertTrue(is_file($this->image->uri), t("The image file we're going to upload exists."));
 
     $this->phpfile = current($this->drupalGetTestFiles('php'));
@@ -665,8 +666,8 @@ class FileSaveUploadTest extends FileHookTestCase {
     // Reset the hook counters.
     file_test_reset();
 
-    $extensions = 'foo gif';
-    // Now tell file_save_upload() to allow ".gif".
+    $extensions = 'foo ' . $this->image_extension;
+    // Now tell file_save_upload() to allow the extension of our test image.
     $edit = array(
       'file_test_replace' => FILE_EXISTS_REPLACE,
       'files[file_test_upload]' => drupal_realpath($this->image->uri),
@@ -747,12 +748,12 @@ class FileSaveUploadTest extends FileHookTestCase {
   function testHandleFileMunge() {
     // Ensure insecure uploads are disabled for this test.
     variable_set('allow_insecure_uploads', 0);
-    $this->image = file_move($this->image, $this->image->uri . '.foo.gif');
+    $this->image = file_move($this->image, $this->image->uri . '.foo.' . $this->image_extension);
 
     // Reset the hook counters to get rid of the 'move' we just called.
     file_test_reset();
 
-    $extensions = 'gif';
+    $extensions = $this->image_extension;
     $edit = array(
       'files[file_test_upload]' => drupal_realpath($this->image->uri),
       'extensions' => $extensions,
@@ -760,7 +761,7 @@ class FileSaveUploadTest extends FileHookTestCase {
 
     $munged_filename = $this->image->filename;
     $munged_filename = substr($munged_filename, 0, strrpos($munged_filename, '.'));
-    $munged_filename .= '_.gif';
+    $munged_filename .= '_.' . $this->image_extension;
 
     $this->drupalPost('file-test/upload', $edit, t('Submit'));
     $this->assertResponse(200, t('Received a 200 response for posted test file.'));
