@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.350 2010/06/29 00:39:16 dries Exp $
+// $Id: search.module,v 1.351 2010/06/30 15:47:50 dries Exp $
 
 /**
  * @file
@@ -115,9 +115,6 @@ function search_theme() {
       'variables' => array('results' => NULL, 'type' => NULL),
       'file' => 'search.pages.inc',
       'template' => 'search-results',
-    ),
-    'search_results_listing' => array(
-      'variables' => array('title' => NULL, 'content' => NULL),
     ),
   );
 }

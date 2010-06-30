@@ -1,5 +1,5 @@
 <?php
-// $Id: search.pages.inc,v 1.19 2010/05/01 01:04:24 webchick Exp $
+// $Id: search.pages.inc,v 1.20 2010/06/30 15:47:50 dries Exp $
 
 /**
  * @file
@@ -34,31 +34,13 @@ function search_view($type = 'node') {
 
       // Construct the search form.
       $build['search_form'] = drupal_get_form('search_form', NULL, $keys, $type);
-      $build['search_results'] = array(
-        '#theme' => 'search_results_listing',
-        '#content' => $results,
-      );
+      $build['search_results'] = array('#markup' => $results);
 
       return $build;
     }
   }
 
   return drupal_get_form('search_form', NULL, empty($keys) ? '' : $keys, $type);
-}
-
-/**
- * Returns HTML for a listing of search results.
- *
- * @param $variables
- *   An associative array containing:
- *   - title: The subject of the listing.
- *   - content: The content of the listing.
- *
- * @ingroup themeable
- */
-function theme_search_results_listing($variables) {
-  $output = '<h2 class="title">' . $variables['title'] . '</h2><div>' . $variables['content'] . '</div>';
-  return $output;
 }
 
 /**
