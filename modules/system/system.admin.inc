@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.290 2010/06/26 21:32:20 dries Exp $
+// $Id: system.admin.inc,v 1.291 2010/06/30 15:51:51 dries Exp $
 
 /**
  * @file
@@ -1405,7 +1405,7 @@ function system_modules_uninstall_submit($form, &$form_state) {
 function system_ip_blocking($default_ip = '') {
   $output = '';
   $rows = array();
-  $header = array(t('IP address'), t('Operations'));
+  $header = array(t('Blocked IP addresses'), t('Operations'));
   $result = db_query('SELECT * FROM {blocked_ips}');
   foreach ($result as $ip) {
     $rows[] = array(
@@ -1436,15 +1436,15 @@ function system_ip_blocking_form($form, $form_state, $default_ip) {
   $form['ip'] = array(
     '#title' => t('IP address'),
     '#type' => 'textfield',
-    '#size' => 64,
-    '#maxlength' => 32,
+    '#size' => 48,
+    '#maxlength' => 40,
     '#default_value' => $default_ip,
     '#description' => t('Enter a valid IP address.'),
   );
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array(
     '#type' => 'submit',
-    '#value' => t('Save'),
+    '#value' => t('Add'),
   );
   $form['#submit'][] = 'system_ip_blocking_form_submit';
   $form['#validate'][] = 'system_ip_blocking_form_validate';

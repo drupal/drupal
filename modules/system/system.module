@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.943 2010/06/29 18:24:10 dries Exp $
+// $Id: system.module,v 1.944 2010/06/30 15:51:51 dries Exp $
 
 /**
  * @file
@@ -135,7 +135,7 @@ function system_help($path, $arg) {
     case 'admin/config/system/actions/configure':
       return t('An advanced action offers additional configuration options which may be filled out below. Changing the <em>Description</em> field is recommended, in order to better identify the precise action taking place. This description will be displayed in modules such as the Trigger module when assigning actions to system events, so it is best if it is as descriptive as possible (for example, "Send e-mail to Moderation Team" rather than simply "Send e-mail").');
     case 'admin/config/people/ip-blocking':
-      return '<p>' . t('IP addresses listed here are blocked from your site before any modules are loaded. You may add IP addresses to the list, or delete existing entries.') . '</p>';
+      return '<p>' . t('IP addresses listed here are blocked from your site. Blocked addresses are completely forbidden from accessing the site and instead see a brief message explaining the situation.') . '</p>';
     case 'admin/reports/status':
       return '<p>' . t("Here you can find a short overview of your site's parameters as well as any problems detected with your installation. It may be useful to copy and paste this information into support requests filed on drupal.org's support forums and project issue queues.") . '</p>';
   }
