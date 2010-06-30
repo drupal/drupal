@@ -214,6 +214,11 @@ define('LANGUAGE_LTR', 0);
  */
 define('LANGUAGE_RTL', 1);
 
+// Hide E_DEPRECATED messages.
+if (defined('E_DEPRECATED')) {
+  error_reporting(error_reporting() ^ E_DEPRECATED);
+}
+
 /**
  * Start the timer with the specified name. If you start and stop
  * the same timer multiple times, the measured intervals will be
