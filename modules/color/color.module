@@ -1,5 +1,5 @@
 <?php
-// $Id: color.module,v 1.86 2010/05/01 08:12:23 dries Exp $
+// $Id: color.module,v 1.87 2010/06/30 15:03:06 dries Exp $
 
 /**
  * Implements hook_help().
@@ -406,7 +406,6 @@ function _color_rewrite_stylesheet($theme, &$info, &$paths, $palette, $style) {
   $themes = list_themes();
   // Prepare color conversion table.
   $conversion = $palette;
-  unset($conversion['base']);
   foreach ($conversion as $k => $v) {
     $conversion[$k] = drupal_strtolower($v);
   }
