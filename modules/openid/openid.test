@@ -392,9 +392,11 @@ class OpenIDRegistrationTestCase extends OpenIDWebTestCase {
     // Tell openid_test.module to respond with these AX fields.
     variable_set('openid_test_response', array(
       'openid.ns.ext123' => 'http://openid.net/srv/ax/1.0',
-      'openid.ext123.value.mail_ao' => 'john@example.com',
-      'openid.ext123.count.name_son' => '1',
-      'openid.ext123.value.name_son.1' => 'john',
+      'openid.ext123.type.mail456' => 'http://axschema.org/contact/email',
+      'openid.ext123.value.mail456' => 'john@example.com',
+      'openid.ext123.type.name789' => 'http://schema.openid.net/namePerson/friendly',
+      'openid.ext123.count.name789' => '1',
+      'openid.ext123.value.name789.1' => 'john',
     ));
 
     // Use a User-supplied Identity that is the URL of an XRDS document.
