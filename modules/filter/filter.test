@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.test,v 1.68 2010/06/17 13:16:57 dries Exp $
+// $Id: filter.test,v 1.69 2010/07/01 19:41:18 dries Exp $
 
 /**
  * Tests for text format and filter CRUD operations.
@@ -912,6 +912,9 @@ class FilterUnitTestCase extends DrupalUnitTestCase {
 
     $f = _filter_html('<p onerror="alert(0);" />', $filter);
     $this->assertNoNormalized($f, 'onerror', t('HTML filter should remove on* attributes on default.'));
+
+    $f = _filter_html('<code onerror>&nbsp;</code>', $filter);    
+    $this->assertNoNormalized($f, 'onerror', t('HTML filter should remove empty on* attributes on default.'));
   }
 
   /**
