@@ -148,7 +148,7 @@ function poll_update_7001() {
   db_add_field('poll_votes', 'chid', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0));
   db_add_index('poll_votes', 'chid', array('chid'));
   db_update('poll_votes')
-    ->expression('chid', DatabaseConnection::prefixTables('COALESCE((SELECT chid FROM {poll_choices} c WHERE {poll_votes}.chorder = c.chorder AND {poll_votes}.nid = c.nid), 0)'))
+    ->expression('chid', Database::getConnection()->prefixTables('COALESCE((SELECT chid FROM {poll_choices} c WHERE {poll_votes}.chorder = c.chorder AND {poll_votes}.nid = c.nid), 0)'))
     ->execute();
   // Delete invalid votes.
   db_delete('poll_votes')->condition('chid', 0)->execute();
