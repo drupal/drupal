@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.module,v 1.91 2010/05/27 12:29:39 dries Exp $
+// $Id: openid.module,v 1.92 2010/07/01 19:06:56 dries Exp $
 
 /**
  * @file
@@ -175,7 +175,7 @@ function openid_form_user_register_form_alter(&$form, &$form_state) {
       // Use the nickname returned by Simple Registration if available.
       $form['account']['name']['#default_value'] = $sreg_values['nickname'];
     }
-    elseif ($ax_name_values = openid_extract_ax_values($ax_values, array('name_ao', 'name_son'))) {
+    elseif ($ax_name_values = openid_extract_ax_values($ax_values, array('http://axschema.org/namePerson/friendly', 'http://schema.openid.net/namePerson/friendly'))) {
       // Else, use the first nickname returned by AX if available.
       $form['account']['name']['#default_value'] = current($ax_name_values);
     }
@@ -187,7 +187,7 @@ function openid_form_user_register_form_alter(&$form, &$form_state) {
       // Use the email returned by Simple Registration if available.
       $form['account']['mail']['#default_value'] = $sreg_values['email'];
     }
-    elseif ($ax_mail_values = openid_extract_ax_values($ax_values, array('mail_ao', 'mail_son'))) {
+    elseif ($ax_mail_values = openid_extract_ax_values($ax_values, array('http://axschema.org/contact/email', 'http://schema.openid.net/contact/email'))) {
       // Else, use the first nickname returned by AX if available.
       $form['account']['mail']['#default_value'] = current($ax_mail_values);
     }

@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.inc,v 1.34 2010/06/25 18:31:37 dries Exp $
+// $Id: openid.inc,v 1.35 2010/07/01 19:06:56 dries Exp $
 
 /**
  * @file
@@ -658,22 +658,26 @@ function openid_extract_namespace($response, $extension_namespace, $fallback_pre
  *
  * @param $values
  *   An array as returned by openid_extract_namespace(..., OPENID_NS_AX).
- * @param $aliases
- *   An array of aliases used in the fetch request.
+ * @param $uris
+ *   An array of identifier URIs.
  * @return
  *   An array of values.
  * @see http://openid.net/specs/openid-attribute-exchange-1_0.html#fetch_response
  */
-function openid_extract_ax_values($values, $aliases) {
+function openid_extract_ax_values($values, $uris) {
   $output = array();
-  foreach ($aliases as $alias) {
-    if (isset($values['count.' . $alias])) {
-      for ($i = 1; $i <= $values['count.' . $alias]; $i++) {
-        $output[] = $values['value.' . $alias . '.' . $i];
+  foreach ($values as $key => $value) {
+    if (in_array($value, $uris) && preg_match('/^type\.([^.]+)$/', $key, $matches)) {
+      $alias = $matches[1];
+      if (isset($values['count.' . $alias])) {
+        for ($i = 1; $i <= $values['count.' . $alias]; $i++) {
+          $output[] = $values['value.' . $alias . '.' . $i];
+        }
       }
-    }
-    elseif (isset($values['value.' . $alias])) {
-      $output[] = $values['value.' . $alias];
+      elseif (isset($values['value.' . $alias])) {
+        $output[] = $values['value.' . $alias];
+      }
+      break;
     }
   }
   return $output;
