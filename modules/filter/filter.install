@@ -140,6 +140,18 @@ function filter_install() {
 }
 
 /**
+ * Implements hook_update_dependencies().
+ */
+function filter_update_dependencies() {
+  // Filter update 7007 migrates permissions and therefore needs to run after
+  // the {role} table is properly set up.
+  $dependencies['filter'][7005] = array(
+    'user' => 7007,
+  );
+
+  return $dependencies;
+}
+/**
  * @defgroup updates-6.x-to-7.x Filter updates from 6.x to 7.x
  * @{
  */
