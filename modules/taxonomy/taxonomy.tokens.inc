@@ -26,10 +26,6 @@ function taxonomy_token_info() {
     'name' => t("Term ID"),
     'description' => t("The unique ID of the taxonomy term."),
   );
-  $term['vid'] = array(
-    'name' => t("Vocabulary ID"),
-    'description' => t("The unique ID of the vocabulary the term belongs to."),
-  );
   $term['name'] = array(
     'name' => t("Name"),
     'description' => t("The name of the taxonomy term."),
@@ -104,10 +100,6 @@ function taxonomy_tokens($type, $tokens, array $data = array(), array $options =
       switch ($name) {
         case 'tid':
           $replacements[$original] = $term->tid;
-          break;
-
-        case 'vid':
-          $replacements[$original] = $term->vid;
           break;
 
         case 'name':
