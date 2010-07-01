@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.397 2010/06/26 21:38:38 dries Exp $
+// $Id: menu.inc,v 1.398 2010/07/01 00:46:57 dries Exp $
 
 /**
  * @file
@@ -457,8 +457,6 @@ function menu_execute_active_handler($path = NULL, $deliver = TRUE) {
       menu_rebuild();
     }
     if ($router_item = menu_get_item($path)) {
-      // hook_menu_alter() lets modules control menu router information that
-      // doesn't depend on the details of a particular page request.
       if ($router_item['access']) {
         if ($router_item['include_file']) {
           require_once DRUPAL_ROOT . '/' . $router_item['include_file'];

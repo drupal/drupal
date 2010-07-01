@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.175 2010/06/29 00:23:57 dries Exp $
+// $Id: system.api.php,v 1.176 2010/07/01 00:46:57 dries Exp $
 
 /**
  * @file
@@ -3524,8 +3524,7 @@ function hook_date_formats_alter(&$formats) {
  * information unrelated to the path of the page accessed. For example,
  * it can be used to set the delivery callback based on a HTTP request
  * header (as shown in the code sample). To specify a delivery callback
- * based on path information, use hook_menu(), hook_menu_alter() or
- * hook_page_delivery_callback_alter().
+ * based on path information, use hook_menu() or hook_menu_alter().
  *
  * This hook can also be used as an API function that can be used to explicitly
  * set the delivery callback from some other function. For example, for a module

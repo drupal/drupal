@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1187 2010/06/28 19:57:34 dries Exp $
+// $Id: common.inc,v 1.1188 2010/07/01 00:46:57 dries Exp $
 
 /**
  * @file
@@ -2275,10 +2275,9 @@ function l($text, $path, array $options = array()) {
  * sends the content to the browser in the needed format. The default delivery
  * callback is drupal_deliver_html_page() which delivers the content as an HTML
  * page, complete with blocks in addition to the content. This default can be
- * overridden on a per menu item basis by setting 'delivery callback' in
- * hook_menu(), hook_menu_alter().
- * Additionally, modules may use hook_page_delivery_callback_alter() to specify
- * a different delivery callback to use for the page request.
+ * overridden on a per menu router item basis by setting 'delivery callback' in
+ * hook_menu() or hook_menu_alter(), and can also be overridden on a per request
+ * basis in hook_page_delivery_callback_alter().
  *
  * For example, the same page callback function can be used for an HTML
  * version of the page and an AJAX version of the page. The page callback
@@ -2300,8 +2299,7 @@ function l($text, $path, array $options = array()) {
  *   (Optional) If given, it is the name of a delivery function most likely
  *   to be appropriate for the page request as determined by the calling
  *   function (e.g., menu_execute_active_handler()). If not given, it is
- *   determined from the menu router information of the current page. In either
- *   case, modules have a final chance to alter which function is called.
+ *   determined from the menu router information of the current page.
  *
  * @see menu_execute_active_handler()
  * @see hook_menu()
@@ -2310,14 +2308,11 @@ function l($text, $path, array $options = array()) {
  */
 function drupal_deliver_page($page_callback_result, $default_delivery_callback = NULL) {
   if (!isset($default_delivery_callback) && ($router_item = menu_get_item())) {
-    drupal_alter('menu_active_handler', $router_item);
     $default_delivery_callback = $router_item['delivery_callback'];
   }
   $delivery_callback = !empty($default_delivery_callback) ? $default_delivery_callback : 'drupal_deliver_html_page';
-  // Give modules a final chance to alter the delivery callback used. This is
-  // for modules that need to decide which delivery callback to use based on
-  // information made available during page callback execution and for pages
-  // without router items.
+  // Give modules a chance to alter the delivery callback used, based on
+  // request-time context (e.g., HTTP request headers).
   drupal_alter('page_delivery_callback', $delivery_callback);
   if (function_exists($delivery_callback)) {
     $delivery_callback($page_callback_result);
