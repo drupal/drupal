@@ -461,13 +461,14 @@ function file_create_htaccess($directory, $private = TRUE) {
 }
 
 /**
- * Load file objects from the database.
+ * Loads file objects from the database.
  *
  * @param $fids
  *   An array of file IDs.
  * @param $conditions
- *   An array of conditions to match against the {files} table. These
- *   should be supplied in the form array('field_name' => 'field_value').
+ *   An array of conditions to match against the {file_managed} table.
+ *   These should be supplied in the form array('field_name' =>
+ *   'field_value').
  *
  * @return
  *   An array of file objects, indexed by fid.
