@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.tokens.inc,v 1.6 2010/01/29 22:56:54 dries Exp $
+// $Id: taxonomy.tokens.inc,v 1.7 2010/07/01 00:42:34 dries Exp $
 
 /**
  * @file
@@ -25,10 +25,6 @@ function taxonomy_token_info() {
   $term['tid'] = array(
     'name' => t("Term ID"),
     'description' => t("The unique ID of the taxonomy term."),
-  );
-  $term['vid'] = array(
-    'name' => t("Vocabulary ID"),
-    'description' => t("The unique ID of the vocabulary the term belongs to."),
   );
   $term['name'] = array(
     'name' => t("Name"),
@@ -104,10 +100,6 @@ function taxonomy_tokens($type, $tokens, array $data = array(), array $options =
       switch ($name) {
         case 'tid':
           $replacements[$original] = $term->tid;
-          break;
-
-        case 'vid':
-          $replacements[$original] = $term->vid;
           break;
 
         case 'name':

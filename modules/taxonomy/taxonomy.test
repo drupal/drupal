@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.test,v 1.80 2010/05/28 10:17:02 dries Exp $
+// $Id: taxonomy.test,v 1.81 2010/07/01 00:42:34 dries Exp $
 
 /**
  * @file
@@ -993,7 +993,6 @@ class TaxonomyTokenReplaceTestCase extends TaxonomyWebTestCase {
     // Generate and test sanitized tokens.
     $tests = array();
     $tests['[term:tid]'] = $term2->tid;
-    $tests['[term:vid]'] = $term2->vid;
     $tests['[term:name]'] = check_plain($term2->name);
     $tests['[term:description]'] = check_markup($term2->description, $term2->format);
     $tests['[term:url]'] = url('taxonomy/term/' . $term2->tid, array('absolute' => TRUE));
