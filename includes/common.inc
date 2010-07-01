@@ -1441,7 +1441,7 @@ function _filter_xss_attributes($attr) {
   }
 
   // The attribute list ends with a valueless attribute like "selected".
-  if ($mode == 1) {
+  if ($mode == 1 && !$skip) {
     $attrarr[] = $attrname;
   }
   return $attrarr;

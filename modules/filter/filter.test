@@ -912,6 +912,9 @@ class FilterUnitTestCase extends DrupalUnitTestCase {
 
     $f = _filter_html('<p onerror="alert(0);" />', $filter);
     $this->assertNoNormalized($f, 'onerror', t('HTML filter should remove on* attributes on default.'));
+
+    $f = _filter_html('<code onerror>&nbsp;</code>', $filter);    
+    $this->assertNoNormalized($f, 'onerror', t('HTML filter should remove empty on* attributes on default.'));
   }
 
   /**
