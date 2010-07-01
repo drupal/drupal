@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.install,v 1.41 2010/06/28 02:05:47 webchick Exp $
+// $Id: filter.install,v 1.42 2010/07/01 15:14:27 webchick Exp $
 
 /**
  * @file
@@ -139,6 +139,18 @@ function filter_install() {
   variable_set('filter_fallback_format', $plain_text_format->format);
 }
 
+/**
+ * Implements hook_update_dependencies().
+ */
+function filter_update_dependencies() {
+  // Filter update 7007 migrates permissions and therefore needs to run after
+  // the {role} table is properly set up.
+  $dependencies['filter'][7005] = array(
+    'user' => 7007,
+  );
+
+  return $dependencies;
+}
 /**
  * @defgroup updates-6.x-to-7.x Filter updates from 6.x to 7.x
  * @{
