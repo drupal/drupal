@@ -1,0 +1,60 @@
+<?php
+// $Id: dashboard.test,v 1.1 2010/07/02 15:24:31 webchick Exp $
+
+/**
+ * @file
+ * Tests for the dashboard module.
+ */
+
+class DashboardAccessTestCase extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Dashboard access',
+      'description' => 'Test access control for the dashboard.',
+      'group' => 'Dashboard',
+    );
+  }
+
+  function setUp() {
+    parent::setUp();
+
+    // Create and log in an administrative user having access to the dashboard.
+    $admin_user = $this->drupalCreateUser(array('access administration pages', 'administer blocks'));
+    $this->drupalLogin($admin_user);
+
+    // Make sure that the dashboard is using the same theme as the rest of the
+    // site (and in particular, the same theme used on 403 pages). This forces
+    // the dashboard blocks to be the same for an administrator as for a
+    // regular user, and therefore lets us test that the dashboard blocks
+    // themselves are specifically removed for a user who does not have access
+    // to the dashboard page.
+    theme_enable(array('stark'));
+    variable_set('theme_default', 'stark');
+    variable_set('admin_theme', 'stark');
+  }
+
+  /**
+   * Test adding a block to the dashboard and checking access to it.
+   */
+  function testDashboardAccess() {
+    // Add a new custom block to a dashboard region.
+    $custom_block = array();
+    $custom_block['info'] = $this->randomName(8);
+    $custom_block['title'] = $this->randomName(8);
+    $custom_block['body[value]'] = $this->randomName(32);
+    $custom_block['regions[stark]'] = 'dashboard_main';
+    $this->drupalPost('admin/structure/block/add', $custom_block, t('Save block'));
+
+    // Ensure admin access.
+    $this->drupalGet('admin');
+    $this->assertResponse(200, t('Admin has access to the dashboard.'));
+    $this->assertRaw($custom_block['title'], t('Admin has access to a dashboard block.'));
+
+    // Ensure non-admin access is denied.
+    $normal_user = $this->drupalCreateUser();
+    $this->drupalLogin($normal_user);
+    $this->drupalGet('admin');
+    $this->assertResponse(403, t('Non-admin has no access to the dashboard.'));
+    $this->assertNoText($custom_block['title'], t('Non-admin has no access to a dashboard block.'));
+  }
+}
