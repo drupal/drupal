@@ -4594,27 +4594,15 @@ function drupal_cron_run() {
   // Try to allocate enough time to run all the hook_cron implementations.
   drupal_set_time_limit(240);
 
-  // Fetch the cron semaphore
-  $semaphore = variable_get('cron_semaphore', FALSE);
-
   $return = FALSE;
   // Grab the defined cron queues.
   $queues = module_invoke_all('cron_queue_info');
   drupal_alter('cron_queue_info', $queues);
 
-  if ($semaphore) {
-    if (REQUEST_TIME - $semaphore > 3600) {
-      // Either cron has been running for more than an hour or the semaphore
-      // was not reset due to a database error.
-      watchdog('cron', 'Cron has been running for more than an hour and is most likely stuck.', array(), WATCHDOG_ERROR);
-
-      // Release cron semaphore
-      variable_del('cron_semaphore');
-    }
-    else {
-      // Cron is still running normally.
-      watchdog('cron', 'Attempting to re-run cron while it is already running.', array(), WATCHDOG_WARNING);
-    }
+  // Try to acquire cron lock.
+  if (!lock_acquire('cron', 240.0)) {
+    // Cron is still running normally.
+    watchdog('cron', 'Attempting to re-run cron while it is already running.', array(), WATCHDOG_WARNING);
   }
   else {
     // Make sure every queue exists. There is no harm in trying to recreate an
@@ -4625,9 +4613,6 @@ function drupal_cron_run() {
     // Register shutdown callback
     drupal_register_shutdown_function('drupal_cron_cleanup');
 
-    // Lock cron semaphore
-    variable_set('cron_semaphore', REQUEST_TIME);
-
     // Iterate through the modules calling their cron handlers (if any):
     module_invoke_all('cron');
 
@@ -4635,8 +4620,8 @@ function drupal_cron_run() {
     variable_set('cron_last', REQUEST_TIME);
     watchdog('cron', 'Cron run completed.', array(), WATCHDOG_NOTICE);
 
-    // Release cron semaphore
-    variable_del('cron_semaphore');
+    // Release cron lock.
+    lock_release('cron');
 
     // Return TRUE so other functions can check if it did run successfully
     $return = TRUE;

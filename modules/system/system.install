@@ -2576,6 +2576,13 @@ function system_update_7057() {
 }
 
 /**
+ * Remove cron semaphore variable.
+ */
+function system_update_7058() {
+  variable_del('cron_semaphore');
+}
+
+/**
  * @} End of "defgroup updates-6.x-to-7.x"
  * The next series of updates should start at 8000.
  */
