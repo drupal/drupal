@@ -1337,10 +1337,83 @@ function form_error(&$element, $message = '') {
 }
 
 /**
- * Walk through the structured form array, adding any required
- * properties to each element and mapping the incoming input
- * data to the proper elements. Also, execute any #process handlers
- * attached to a specific element.
+ * Walk through the structured form array, adding any required properties to
+ * each element and mapping the incoming input data to the proper elements.
+ * Also, execute any #process handlers attached to a specific element.
+ *
+ * This is one of the three primary functions that recursively iterates a form
+ * array. This one does it for completing the form building process. The other
+ * two are _form_validate() (invoked via drupal_validate_form() and used to
+ * invoke validation logic for each element) and drupal_render() (for rendering
+ * each element). Each of these three pipelines provides ample opportunity for
+ * modules to customize what happens. For example, during this function's life
+ * cycle, the following functions get called for each element:
+ * - $element['#value_callback']: A function that implements how user input is
+ *   mapped to an element's #value property. This defaults to a function named
+ *   'form_type_TYPE_value' where TYPE is $element['#type'].
+ * - $element['#process']: An array of functions called after user input has
+ *   been mapped to the element's #value property. These functions can be used
+ *   to dynamically add child elements: for example, for the 'date' element
+ *   type, one of the functions in this array is form_process_date(), which adds
+ *   the individual 'year', 'month', 'day', etc. child elements. These functions
+ *   can also be used to set additional properties or implement special logic
+ *   other than adding child elements: for example, for the 'fieldset' element
+ *   type, one of the functions in this array is form_process_fieldset(), which
+ *   adds the attributes and JavaScript needed to make the fieldset collapsible
+ *   if the #collapsible property is set. The #process functions are called in
+ *   preorder traversal, meaning they are called for the parent element first,
+ *   then for the child elements.
+ * - $element['#after_build']: An array of functions called after form_builder()
+ *   is done with its processing of the element. These are called in postorder
+ *   traversal, meaning they are called for the child elements first, then for
+ *   the parent element.
+ * There are similar properties containing callback functions invoked by
+ * _form_validate() and drupal_render(), appropriate for those operations.
+ *
+ * Developers are strongly encouraged to integrate the functionality needed by
+ * their form or module within one of these three pipelines, using the
+ * appropriate callback property, rather than implementing their own recursive
+ * traversal of a form array. This facilitates proper integration between
+ * multiple modules. For example, module developers are familiar with the
+ * relative order in which hook_form_alter() implementations and #process
+ * functions run. A custom traversal function that affects the building of a
+ * form is likely to not integrate with hook_form_alter() and #process in the
+ * expected way. Also, deep recursion within PHP is both slow and memory
+ * intensive, so it is best to minimize how often it's done.
+ *
+ * As stated above, each element's #process functions are executed after its
+ * #value has been set. This enables those functions to execute conditional
+ * logic based on the current value. However, all of form_builder() runs before
+ * drupal_validate_form() is called, so during #process function execution, the
+ * element's #value has not yet been validated, so any code that requires
+ * validated values must reside within a submit handler.
+ *
+ * As a security measure, user input is used for an element's #value only if the
+ * element exists within $form, is not disabled (as per the #disabled property),
+ * and can be accessed (as per the #access property, except that forms submitted
+ * using drupal_form_submit() bypass #access restrictions). When user input is
+ * ignored due to #disabled and #access restrictions, the element's default
+ * value is used.
+ *
+ * Because of the preorder traversal, where #process functions of an element run
+ * before user input for its child elements is processed, and because of the
+ * Form API security of user input processing with respect to #access and
+ * #disabled described above, this generally means that #process functions
+ * should not use an element's (unvalidated) #value to affect the #disabled or
+ * #access of child elements. Use-cases where a developer may be tempted to
+ * implement such conditional logic usually fall into one of two categories:
+ * - Where user input from the current submission must affect the structure of a
+ *   form, including properties like #access and #disabled that affect how the
+ *   next submission needs to be processed, a multi-step workflow is needed.
+ *   This is most commonly implemented with a submit handler setting persistent
+ *   data within $form_state based on *validated* values in
+ *   $form_state['values'] and setting $form_state['rebuild']. The form building
+ *   functions must then be implmented to use the $form_state data to rebuild
+ *   the form with the structure appropriate for the new state.
+ * - Where user input must affect the rendering of the form without affecting
+ *   its structure, the necessary conditional rendering logic should reside
+ *   within functions that run during the rendering phase (#pre_render, #theme,
+ *   #theme_wrappers, and #post_render).
  *
  * @param $form_id
  *   A unique string identifying the form for validation, submission,
@@ -1572,19 +1645,20 @@ function _form_builder_handle_input_element($form_id, &$element, &$form_state) {
     }
   }
 
+  // With JavaScript or other easy hacking, input can be submitted even for
+  // elements with #access=FALSE or #disabled=TRUE. For security, these must
+  // not be processed. Forms that set #disabled=TRUE on an element do not
+  // expect input for the element, and even forms submitted with
+  // drupal_form_submit() must not be able to get around this. Forms that set
+  // #access=FALSE on an element usually allow access for some users, so forms
+  // submitted with drupal_form_submit() may bypass access restriction and be
+  // treated as high-privelege users instead.
+  $process_input = empty($element['#disabled']) && ($form_state['programmed'] || ($form_state['process_input'] && (!isset($element['#access']) || $element['#access'])));
+
   // Set the element's #value property.
   if (!isset($element['#value']) && !array_key_exists('#value', $element)) {
     $value_callback = !empty($element['#value_callback']) ? $element['#value_callback'] : 'form_type_' . $element['#type'] . '_value';
-
-    // With JavaScript or other easy hacking, input can be submitted even for
-    // elements with #access=FALSE or #disabled=TRUE. For security, these must
-    // not be processed. Forms that set #disabled=TRUE on an element do not
-    // expect input for the element, and even forms submitted with
-    // drupal_form_submit() must not be able to get around this. Forms that set
-    // #access=FALSE on an element usually allow access for some users, so forms
-    // submitted with drupal_form_submit() may bypass access restriction and be
-    // treated as high-privelege users instead.
-    if (empty($element['#disabled']) && ($form_state['programmed'] || ($form_state['process_input'] && (!isset($element['#access']) || $element['#access'])))) {
+    if ($process_input) {
       // Get the input for the current element. NULL values in the input need to
       // be explicitly distinguished from missing input. (see below)
       $input = $form_state['input'];
@@ -1647,18 +1721,10 @@ function _form_builder_handle_input_element($form_id, &$element, &$form_state) {
   }
 
   // Determine which element (if any) triggered the submission of the form and
-  // keep track of all the buttons in the form for form_state_values_clean().
-  // @todo We need to add a #access check here, so that someone can't fake the
-  //   click of a button they shouldn't have access to, but first we need to
-  //   fix file.module's managed_file element pipeline to handle the click of
-  //   the remove button in a submit handler instead of in a #process function.
-  //   During the first run of form_builder() after the form is submitted,
-  //   #process functions need to return the expanded element with child
-  //   elements' #access properties matching what they were when the form was
-  //   displayed to the user, since that is what we are processing input for.
-  //   Changes to the form (like toggling the upload/remove button) need to wait
-  //   until form rebuild: http://drupal.org/node/736298.
-  if (!empty($form_state['input'])) {
+  // keep track of all the clickable buttons in the form for
+  // form_state_values_clean(). Enforce the same input processing restrictions
+  // as above.
+  if ($process_input) {
     // Detect if the element triggered the submission via AJAX.
     if (_form_element_triggered_scripted_submission($element, $form_state)) {
       $form_state['triggering_element'] = $element;
@@ -1671,11 +1737,7 @@ function _form_builder_handle_input_element($form_id, &$element, &$form_state) {
       // All buttons in the form need to be tracked for
       // form_state_values_clean() and for the form_builder() code that handles
       // a form submission containing no button information in $_POST.
-      // @todo When #access is checked in an outer if statement (see above), it
-      //   won't need to be checked here.
-      if ($form_state['programmed'] || !isset($element['#access']) || $element['#access']) {
-        $form_state['buttons'][] = $element;
-      }
+      $form_state['buttons'][] = $element;
       if (_form_button_was_clicked($element, $form_state)) {
         $form_state['triggering_element'] = $element;
       }
