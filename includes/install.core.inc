@@ -1,5 +1,5 @@
 <?php
-// $Id: install.core.inc,v 1.24 2010/06/28 19:57:34 dries Exp $
+// $Id: install.core.inc,v 1.25 2010/07/02 15:32:10 dries Exp $
 
 /**
  * @file
@@ -1548,7 +1548,6 @@ function install_check_requirements($install_state) {
       // Check to make sure a settings.php already exists.
       $file = $settings_file;
       if (drupal_verify_install_file($settings_file, FILE_EXIST)) {
-        $exists = TRUE;
         // If it does, make sure it is writable.
         $writable = drupal_verify_install_file($settings_file, FILE_READABLE|FILE_WRITABLE);
         $exists = TRUE;
