@@ -1,5 +1,5 @@
 <?php
-// $Id: toolbar.module,v 1.42 2010/06/13 05:47:47 dries Exp $
+// $Id: toolbar.module,v 1.43 2010/07/02 02:22:26 dries Exp $
 
 /**
  * @file
@@ -279,14 +279,13 @@ function toolbar_view() {
  */
 function toolbar_get_menu_tree() {
   $tree = array();
-  $admin_link = db_query("SELECT * FROM {menu_links} WHERE menu_name = 'management' AND module = 'system' AND link_path = 'admin'")->fetchAssoc();
+  $admin_link = db_query('SELECT * FROM {menu_links} WHERE menu_name = :menu_name AND module = :module AND link_path = :path', array(':menu_name' => 'management', ':module' => 'system', ':path' => 'admin'))->fetchAssoc();
   if ($admin_link) {
-    // @todo Use a function like book_menu_subtree_data().
-    $tree = menu_tree_all_data('management', $admin_link, $admin_link['depth'] + 1);
-    // The tree will be a sub-tree with the admin link as a single root item.
-    // @todo It is wrong to assume it's the last.
-    $admin_link = array_pop($tree);
-    $tree = $admin_link['below'] ? $admin_link['below'] : array();
+    $tree = menu_build_tree('management', array(
+      'expanded' => array($admin_link['mlid']),
+      'min_depth' => $admin_link['depth'] + 1,
+      'max_depth' => $admin_link['depth'] + 1,
+    ));
   }
 
   return $tree;
