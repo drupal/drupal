@@ -1,5 +1,5 @@
 <?php
-// $Id: file.field.inc,v 1.27 2010/06/25 04:36:49 webchick Exp $
+// $Id: file.field.inc,v 1.28 2010/07/02 12:37:57 dries Exp $
 
 /**
  * @file
@@ -767,32 +767,45 @@ function theme_file_widget_multiple($variables) {
       continue;
     }
 
-    // Render all the buttons in the field as an "operation".
-    $operations = '';
+    // Delay rendering of the buttons, so that they can be rendered later in the
+    // "operations" column.
+    $operations_elements = array();
     foreach (element_children($element[$key]) as $sub_key) {
       if (isset($element[$key][$sub_key]['#type']) && $element[$key][$sub_key]['#type'] == 'submit') {
-        $operations .= drupal_render($element[$key][$sub_key]);
+        hide($element[$key][$sub_key]);
+        $operations_elements[] = &$element[$key][$sub_key];
       }
     }
 
-    // Render the "Display" option in its own own column.
-    $display = '';
+    // Delay rendering of the "Display" option and the weight selector, so that
+    // each can be rendered later in its own column.
     if ($element['#display_field']) {
-      unset($element[$key]['display']['#title']);
-      $display = array(
-        'data' => drupal_render($element[$key]['display']),
-        'class' => array('checkbox'),
-      );
+      hide($element[$key]['display']);
     }
-
-    // Render the weight in its own column.
-    $element[$key]['_weight']['#attributes']['class'] = array($weight_class);
-    $weight = drupal_render($element[$key]['_weight']);
+    hide($element[$key]['_weight']);
 
     // Render everything else together in a column, without the normal wrappers.
     $element[$key]['#theme_wrappers'] = array();
     $information = drupal_render($element[$key]);
 
+    // Render the previously hidden elements, using render() instead of
+    // drupal_render(), to undo the earlier hide().
+    $operations = '';
+    foreach ($operations_elements as $operation_element) {
+      $operations .= render($operation_element);
+    }
+    $display = '';
+    if ($element['#display_field']) {
+      unset($element[$key]['display']['#title']);
+      $display = array(
+        'data' => render($element[$key]['display']),
+        'class' => array('checkbox'),
+      );
+    }
+    $element[$key]['_weight']['#attributes']['class'] = array($weight_class);
+    $weight = render($element[$key]['_weight']);
+
+    // Arrange the row with all of the rendered columns.
     $row = array();
     $row[] = $information;
     if ($element['#display_field']) {

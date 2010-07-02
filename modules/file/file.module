@@ -1,5 +1,5 @@
 <?php
-// $Id: file.module,v 1.30 2010/06/17 13:16:57 dries Exp $
+// $Id: file.module,v 1.31 2010/07/02 12:37:57 dries Exp $
 
 /**
  * @file
@@ -65,6 +65,7 @@ function file_element_info() {
     '#process' => array('file_managed_file_process'),
     '#value_callback' => 'file_managed_file_value',
     '#element_validate' => array('file_managed_file_validate'),
+    '#pre_render' => array('file_managed_file_pre_render'),
     '#theme' => 'file_managed_file',
     '#theme_wrappers' => array('form_element'),
     '#progress_indicator' => 'throbber',
@@ -384,25 +385,6 @@ function file_managed_file_process($element, &$form_state, $form) {
     '#weight' => -5,
   );
 
-  // @todo It is not good to call these private functions. This should be
-  //   refactored so that the file deletion happens during a submit handler,
-  //   and form changes affected by that (such as toggling the upload and remove
-  //   buttons) happens during the 2nd run of this function that is triggered by
-  //   a form rebuild: http://drupal.org/node/736298.
-  if (_form_button_was_clicked($element['remove_button'], $form_state) || _form_element_triggered_scripted_submission($element['remove_button'], $form_state)) {
-    // If it's a temporary file we can safely remove it immediately, otherwise
-    // it's up to the implementing module to clean up files that are in use.
-    if ($element['#file'] && $element['#file']->status == 0) {
-      file_delete($element['#file']);
-    }
-    $element['#file'] = FALSE;
-    $fid = 0;
-  }
-
-  // Set access on the buttons.
-  $element['upload_button']['#access'] = empty($fid);
-  $element['remove_button']['#access'] = !empty($fid);
-
   $element['fid'] = array(
     '#type' => 'hidden',
     '#value' => $fid,
@@ -436,7 +418,6 @@ function file_managed_file_process($element, &$form_state, $form) {
     '#name' => 'files[' . implode('_', $element['#parents']) . ']',
     '#type' => 'file',
     '#size' => 22,
-    '#access' => empty($fid),
     '#theme_wrappers' => array(),
     '#weight' => -10,
   );
@@ -565,13 +546,50 @@ function file_managed_file_validate(&$element, &$form_state) {
 }
 
 /**
- * Submit handler for non-JavaScript uploads.
+ * Submit handler for upload and remove buttons of managed_file elements.
  */
 function file_managed_file_submit($form, &$form_state) {
-  // Do not redirect and leave the page after uploading a file. This keeps
-  // all the current form values in place. The file is saved by the
-  // #value_callback on the form element.
-  $form_state['redirect'] = FALSE;
+  // Determine whether it was the upload or the remove button that was clicked,
+  // and set $element to the managed_file element that contains that button.
+  $parents = $form_state['triggering_element']['#array_parents'];
+  $button_key = array_pop($parents);
+  $element = $form;
+  foreach ($parents as $parent) {
+    $element = $element[$parent];
+  }
+
+  // No action is needed here for the upload button, because all file uploads on
+  // the form are processed by file_managed_file_value() regardless of which
+  // button was clicked. Action is needed here for the remove button, because we
+  // only remove a file in response to its remove button being clicked.
+  if ($button_key == 'remove_button') {
+    // If it's a temporary file we can safely remove it immediately, otherwise
+    // it's up to the implementing module to clean up files that are in use.
+    if ($element['#file'] && $element['#file']->status == 0) {
+      file_delete($element['#file']);
+    }
+    // Update both $form_state['values'] and $form_state['input'] to reflect
+    // that the file has been removed, so that the form is rebuilt correctly.
+    // $form_state['values'] must be updated in case additional submit handlers
+    // run, and for form building functions that run during the rebuild, such as
+    // when the managed_file element is part of a field widget.
+    // $form_state['input'] must be updated so that file_managed_file_value()
+    // has correct information during the rebuild. The Form API provides no
+    // equivalent of form_set_value() for updating $form_state['input'], so
+    // inline that implementation with the same logic that form_set_value()
+    // uses.
+    $values_element = $element['#extended'] ? $element['fid'] : $element;
+    form_set_value($values_element, NULL, $form_state);
+    _form_set_value($form_state['input'], $values_element, $values_element['#parents'], NULL);
+  }
+
+  // Set the form to rebuild so that $form is correctly updated in response to
+  // processing the file removal. Since this function did not change $form_state
+  // if the upload button was clicked, a rebuild isn't necessary in that
+  // situation and setting $form_state['redirect'] to FALSE would suffice.
+  // However, we choose to always rebuild, to keep the form processing workflow
+  // consistent between the two buttons.
+  $form_state['rebuild'] = TRUE;
 }
 
 /**
@@ -623,6 +641,38 @@ function theme_file_managed_file($variables) {
   $output .= drupal_render_children($element);
   $output .= '</div>';
   return $output;
+}
+
+/**
+ * #pre_render callback to hide display of the upload or remove controls.
+ *
+ * Upload controls are hidden when a file is already uploaded. Remove controls
+ * are hidden when there is no file attached. Controls are hidden here instead
+ * of in file_managed_file_process(), because #access for these buttons depends
+ * on the managed_file element's #value. See the documentation of form_builder()
+ * for more detailed information about the relationship between #process,
+ * #value, and #access.
+ *
+ * Because #access is set here, it affects display only and does not prevent
+ * JavaScript or other untrusted code from submitting the form as though access
+ * were enabled. The form processing functions for these elements should not
+ * assume that the buttons can't be "clicked" just because they are not
+ * displayed.
+ *
+ * @see file_managed_file_process()
+ * @see form_builder()
+ */
+function file_managed_file_pre_render($element) {
+  // If we already have a file, we don't want to show the upload controls.
+  if (!empty($element['#value']['fid'])) {
+    $element['upload']['#access'] = FALSE;
+    $element['upload_button']['#access'] = FALSE;
+  }
+  // If we don't already have a file, there is nothing to remove.
+  else {
+    $element['remove_button']['#access'] = FALSE;
+  }
+  return $element;
 }
 
 /**

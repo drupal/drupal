@@ -1,5 +1,5 @@
 <?php
-// $Id: file.test,v 1.17 2010/06/30 22:37:49 webchick Exp $
+// $Id: file.test,v 1.18 2010/07/02 12:37:57 dries Exp $
 
 /**
  * @file
@@ -14,7 +14,7 @@ class FileFieldTestCase extends DrupalWebTestCase {
 
   function setUp() {
     parent::setUp('file');
-    $this->admin_user = $this->drupalCreateUser(array('access content', 'access administration pages', 'administer site configuration', 'administer users', 'administer content types', 'administer nodes', 'create article content', 'edit any article content', 'delete any article content'));
+    $this->admin_user = $this->drupalCreateUser(array('access content', 'access administration pages', 'administer site configuration', 'administer users', 'administer content types', 'administer nodes', 'bypass node access'));
     $this->drupalLogin($this->admin_user);
   }
 
@@ -199,6 +199,84 @@ class FileFieldTestCase extends DrupalWebTestCase {
   function assertFileIsPermanent($file, $message = NULL) {
     $message = isset($message) ? $message : t('File %file is permanent.', array('%file' => $file->uri));
     $this->assertTrue($file->status == FILE_STATUS_PERMANENT, $message);
+  }
+}
+
+
+/**
+ * Test class to test file field upload and remove buttons, with and without AJAX.
+ */
+class FileFieldWidgetTestCase extends FileFieldTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'File field widget test',
+      'description' => 'Test upload and remove buttons, with and without AJAX.',
+      'group' => 'File',
+    );
+  }
+
+  /**
+   * Tests upload and remove buttons, with and without AJAX.
+   *
+   * @todo This function currently only tests the "remove" button of a single-
+   *   valued field. Tests should be added for the "upload" button and for each
+   *   button of a multi-valued field. Tests involving multiple AJAX steps on
+   *   the same page will become easier after http://drupal.org/node/789186
+   *   lands. Testing the "upload" button in AJAX context requires more
+   *   investigation into how jQuery uploads files, so that drupalPostAJAX() can
+   *   emulate that correctly.
+   */
+  function testWidget() {
+    // Use 'page' instead of 'article', so that the 'article' image field does
+    // not conflict with this test. If in the future the 'page' type gets its
+    // own default file or image field, this test can be made more robust by
+    // using a custom node type.
+    $type_name = 'page';
+    $field_name = strtolower($this->randomName());
+    $this->createFileField($field_name, $type_name);
+    $field = field_info_field($field_name);
+    $instance = field_info_instance('node', $field_name, $type_name);
+
+    $test_file = $this->getTestFile('text');
+
+    foreach (array('nojs', 'js') as $type) {
+      // Create a new node with the uploaded file and ensure it got uploaded
+      // successfully.
+      $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
+      $node = node_load($nid, NULL, TRUE);
+      $node_file = (object) $node->{$field_name}[LANGUAGE_NONE][0];
+      $this->assertFileExists($node_file, t('New file saved to disk on node creation.'));
+
+      // Ensure the edit page has a remove button instead of an upload button.
+      $this->drupalGet("node/$nid/edit");
+      $this->assertNoFieldByXPath('//input[@type="submit"]', t('Upload'), t('Node with file does not display the "Upload" button.'));
+      $this->assertFieldByXpath('//input[@type="submit"]', t('Remove'), t('Node with file displays the "Remove" button.'));
+
+      // "Click" the remove button (emulating either a nojs or js submission).
+      switch ($type) {
+        case 'nojs':
+          $this->drupalPost(NULL, array(), t('Remove'));
+          break;
+        case 'js':
+          // @todo This can be simplified after http://drupal.org/node/789186
+          //   lands.
+          preg_match('/jQuery\.extend\(Drupal\.settings, (.*?)\);/', $this->content, $matches);
+          $settings = drupal_json_decode($matches[1]);
+          $button = $this->xpath('//input[@type="submit" and @value="' . t('Remove') . '"]');
+          $button_id = (string) $button[0]['id'];
+          $this->drupalPostAJAX(NULL, array(), array((string) $button[0]['name'] => (string) $button[0]['value']), $settings['ajax'][$button_id]['url'], array(), array(), NULL, $settings['ajax'][$button_id]);
+          break;
+      }
+
+      // Ensure the page now has an upload button instead of a remove button.
+      $this->assertNoFieldByXPath('//input[@type="submit"]', t('Remove'), t('After clicking the "Remove" button, it is no longer displayed.'));
+      $this->assertFieldByXpath('//input[@type="submit"]', t('Upload'), t('After clicking the "Remove" button, the "Upload" button is displayed.'));
+
+      // Save the node and ensure it does not have the file.
+      $this->drupalPost(NULL, array(), t('Save'));
+      $node = node_load($nid, NULL, TRUE);
+      $this->assertTrue(empty($node->{$field_name}[LANGUAGE_NONE][0]['fid']), t('File was successfully removed from the node.'));
+    }
   }
 }
 
