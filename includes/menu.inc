@@ -979,80 +979,37 @@ function menu_tree_all_data($menu_name, $link = NULL, $max_depth = NULL) {
     // If the static variable doesn't have the data, check {cache_menu}.
     $cache = cache_get($cid, 'cache_menu');
     if ($cache && isset($cache->data)) {
-      // If the cache entry exists, it will just be the cid for the actual data.
-      // This avoids duplication of large amounts of data.
-      $cache = cache_get($cache->data, 'cache_menu');
-      if ($cache && isset($cache->data)) {
-        $data = $cache->data;
-      }
+      // If the cache entry exists, it contains the parameters for
+      // menu_build_tree().
+      $tree_parameters = $cache->data;
     }
-    // If the tree data was not in the cache, $data will be NULL.
-    if (!isset($data)) {
-      // Build the query using a LEFT JOIN since there is no match in
-      // {menu_router} for an external link.
-      $query = db_select('menu_links', 'ml', array('fetch' => PDO::FETCH_ASSOC));
-      $query->addTag('translatable');
-      $query->leftJoin('menu_router', 'm', 'm.path = ml.router_path');
-      $query->fields('ml');
-      $query->fields('m', array(
-        'load_functions',
-        'to_arg_functions',
-        'access_callback',
-        'access_arguments',
-        'page_callback',
-        'page_arguments',
-        'delivery_callback',
-        'title',
-        'title_callback',
-        'title_arguments',
-        'theme_callback',
-        'theme_arguments',
-        'type',
-        'description',
-      ));
-      for ($i = 1; $i <= MENU_MAX_DEPTH; $i++) {
-        $query->orderBy('p' . $i, 'ASC');
-      }
-      $query->condition('ml.menu_name', $menu_name);
-      if (isset($max_depth)) {
-        $query->condition('ml.depth', $max_depth, '<=');
-      }
+    // If the tree data was not in the cache, build $tree_parameters.
+    if (!isset($tree_parameters)) {
+      $tree_parameters = array(
+        'min_depth' => 1,
+        'max_depth' => $max_depth,
+      );
       if ($mlid) {
         // The tree is for a single item, so we need to match the values in its
         // p columns and 0 (the top level) with the plid values of other links.
-        $args = array(0);
+        $parents = array(0);
         for ($i = 1; $i < MENU_MAX_DEPTH; $i++) {
-          $args[] = $link["p$i"];
+          if (!empty($link["p$i"])) {
+            $parents[] = $link["p$i"];
+          }
         }
-        $args = array_unique($args);
-        $query->condition('ml.plid', $args, 'IN');
-        $parents = $args;
-        $parents[] = $link['mlid'];
+        $tree_parameters['expanded'] = $parents;
+        $tree_parameters['active_trail'] = $parents;
+        $tree_parameters['active_trail'][] = $mlid;
       }
-      else {
-        // Get all links in this menu.
-        $parents = array();
-      }
-      // Select the links from the table, and build an ordered array of links
-      // using the query result object.
-      $links = array();
-      foreach ($query->execute() as $item) {
-        $links[] = $item;
-      }
-      $data['tree'] = menu_tree_data($links, $parents);
-      $data['node_links'] = array();
-      menu_tree_collect_node_links($data['tree'], $data['node_links']);
-      // Cache the data, if it is not already in the cache.
-      $tree_cid = _menu_tree_cid($menu_name, $data);
-      if (!cache_get($tree_cid, 'cache_menu')) {
-        cache_set($tree_cid, $data, 'cache_menu');
-      }
-      // Cache the cid of the (shared) data using the menu and item-specific cid.
-      cache_set($cid, $tree_cid, 'cache_menu');
+
+      // Cache the tree building parameters using the page-specific cid.
+      cache_set($cid, $tree_parameters, 'cache_menu');
     }
-    // Check access for the current user to each item in the tree.
-    menu_tree_check_access($data['tree'], $data['node_links']);
-    $tree[$cid] = $data['tree'];
+
+    // Build the tree using the parameters; the resulting tree will be cached
+    // by _menu_build_tree()).
+    $tree[$cid] = menu_build_tree($menu_name, $tree_parameters);
   }
 
   return $tree[$cid];
@@ -1091,23 +1048,25 @@ function menu_tree_page_data($menu_name, $max_depth = NULL) {
       // If the static variable doesn't have the data, check {cache_menu}.
       $cache = cache_get($cid, 'cache_menu');
       if ($cache && isset($cache->data)) {
-        // If the cache entry exists, it will just be the cid for the actual data.
-        // This avoids duplication of large amounts of data.
-        $cache = cache_get($cache->data, 'cache_menu');
-        if ($cache && isset($cache->data)) {
-          $data = $cache->data;
-        }
+        // If the cache entry exists, it contains the parameters for
+        // menu_build_tree().
+        $tree_parameters = $cache->data;
       }
-      // If the tree data was not in the cache, $data will be NULL.
-      if (!isset($data)) {
-        // Build and run the query, and build the tree.
+      // If the tree data was not in the cache, build $tree_parameters.
+      if (!isset($tree_parameters)) {
+        $tree_parameters = array(
+          'min_depth' => 1,
+          'max_depth' => $max_depth,
+        );
+        // If the item for the current page is accessible, build the tree
+        // parameters accordingly.
         if ($item['access']) {
           // Check whether a menu link exists that corresponds to the current path.
           $args[] = $item['href'];
           if (drupal_is_front_page()) {
             $args[] = '<front>';
           }
-          $parents = db_select('menu_links')
+          $active_link = db_select('menu_links')
             ->fields('menu_links', array(
               'p1',
               'p2',
@@ -1122,10 +1081,10 @@ function menu_tree_page_data($menu_name, $max_depth = NULL) {
             ->condition('link_path', $args, 'IN')
             ->execute()->fetchAssoc();
 
-          if (empty($parents)) {
+          if (empty($active_link)) {
             // If no link exists, we may be on a local task that's not in the links.
             // TODO: Handle the case like a local task on a specific node in the menu.
-            $parents = db_select('menu_links')
+            $active_link = db_select('menu_links')
               ->fields('menu_links', array(
                 'p1',
                 'p2',
@@ -1140,11 +1099,13 @@ function menu_tree_page_data($menu_name, $max_depth = NULL) {
               ->condition('link_path', $item['tab_root'])
               ->execute()->fetchAssoc();
           }
-          // We always want all the top-level links with plid == 0.
-          $parents[] = '0';
 
-          // Use array_values() so that the indices are numeric for array_merge().
-          $args = $parents = array_unique(array_values($parents));
+          // We always want all the top-level links with plid == 0.
+          $active_link[] = '0';
+
+          // Use array_values() so that the indices are numeric.
+          $parents = $active_link = array_unique(array_values($active_link));
+
           $expanded = variable_get('menu_expanded', array());
           // Check whether the current menu has any links set to be expanded.
           if (in_array($menu_name, $expanded)) {
@@ -1156,72 +1117,31 @@ function menu_tree_page_data($menu_name, $max_depth = NULL) {
                 ->condition('menu_name', $menu_name)
                 ->condition('expanded', 1)
                 ->condition('has_children', 1)
-                ->condition('plid', $args, 'IN')
-                ->condition('mlid', $args, 'NOT IN')
+                ->condition('plid', $parents, 'IN')
+                ->condition('mlid', $parents, 'NOT IN')
                 ->execute();
               $num_rows = FALSE;
               foreach ($result as $item) {
-                $args[] = $item['mlid'];
+                $parents[] = $item['mlid'];
                 $num_rows = TRUE;
               }
             } while ($num_rows);
           }
+          $tree_parameters['expanded'] = $parents;
+          $tree_parameters['active_trail'] = $active_link;
         }
+        // Otherwise, only show the top-level menu items when access is denied.
         else {
-          // Show only the top-level menu items when access is denied.
-          $args = array(0);
-          $parents = array();
+          $tree_parameters['expanded'] = array(0);
         }
-        // Select the links from the table, and recursively build the tree. We
-        // LEFT JOIN since there is no match in {menu_router} for an external
-        // link.
-        $query = db_select('menu_links', 'ml', array('fetch' => PDO::FETCH_ASSOC));
-        $query->addTag('translatable');
-        $query->leftJoin('menu_router', 'm', 'm.path = ml.router_path');
-        $query->fields('ml');
-        $query->fields('m', array(
-          'load_functions',
-          'to_arg_functions',
-          'access_callback',
-          'access_arguments',
-          'page_callback',
-          'page_arguments',
-          'delivery_callback',
-          'title',
-          'title_callback',
-          'title_arguments',
-          'theme_callback',
-          'theme_arguments',
-          'type',
-          'description',
-        ));
-        for ($i = 1; $i <= MENU_MAX_DEPTH; $i++) {
-          $query->orderBy('p' . $i, 'ASC');
-        }
-        $query->condition('ml.menu_name', $menu_name);
-        $query->condition('ml.plid', $args, 'IN');
-        if (isset($max_depth)) {
-          $query->condition('ml.depth', $max_depth, '<=');
-        }
-        // Build an ordered array of links using the query result object.
-        $links = array();
-        foreach ($query->execute() as $item) {
-          $links[] = $item;
-        }
-        $data['tree'] = menu_tree_data($links, $parents);
-        $data['node_links'] = array();
-        menu_tree_collect_node_links($data['tree'], $data['node_links']);
-        // Cache the data, if it is not already in the cache.
-        $tree_cid = _menu_tree_cid($menu_name, $data);
-        if (!cache_get($tree_cid, 'cache_menu')) {
-          cache_set($tree_cid, $data, 'cache_menu');
-        }
-        // Cache the cid of the (shared) data using the page-specific cid.
-        cache_set($cid, $tree_cid, 'cache_menu');
+
+        // Cache the tree building parameters using the page-specific cid.
+        cache_set($cid, $tree_parameters, 'cache_menu');
       }
-      // Check access for the current user to each item in the tree.
-      menu_tree_check_access($data['tree'], $data['node_links']);
-      $tree[$cid] = $data['tree'];
+
+      // Build the tree using the parameters; the resulting tree will be cached
+      // by _menu_build_tree().
+      $tree[$cid] = menu_build_tree($menu_name, $tree_parameters);
     }
     return $tree[$cid];
   }
@@ -1230,10 +1150,116 @@ function menu_tree_page_data($menu_name, $max_depth = NULL) {
 }
 
 /**
- * Helper function - compute the real cache ID for menu tree data.
+ * Build a menu tree, translate links, and check access.
+ *
+ * @param $menu_name
+ *   The name of the menu.
+ * @param $parameters
+ *   (optional) An associative array of build parameters. Possible keys:
+ *   - expanded: An array of parent link ids to return only menu links that are
+ *     children of one of the plids in this list. If empty, the whole menu tree
+ *     is built.
+ *   - active_trail: An array of mlids, representing the coordinates of the
+ *     currently active menu link.
+ *   - min_depth: The minimum depth of menu links in the resulting tree.
+ *     Defaults to 1, which is the default to build a whole tree for a menu, i.e.
+ *     excluding menu container itself.
+ *   - max_depth: The maximum depth of menu links in the resulting tree.
+ *
+ * @return
+ *   A fully built menu tree.
  */
-function _menu_tree_cid($menu_name, $data) {
-  return 'links:' . $menu_name . ':tree-data:' . $GLOBALS['language']->language . ':' . hash('sha256', serialize($data));
+function menu_build_tree($menu_name, array $parameters = array()) {
+  // Build the menu tree.
+  $data = _menu_build_tree($menu_name, $parameters);
+  // Check access for the current user to each item in the tree.
+  menu_tree_check_access($data['tree'], $data['node_links']);
+  return $data['tree'];
+}
+
+/**
+ * Build a menu tree.
+ *
+ * This function may be used build the data for a menu tree only, for example
+ * to further massage the data manually before further processing happens.
+ * menu_tree_check_access() needs to be invoked afterwards.
+ *
+ * @see menu_build_tree()
+ */
+function _menu_build_tree($menu_name, array $parameters = array()) {
+  // Static cache of already built menu trees.
+  $trees = &drupal_static(__FUNCTION__, array());
+
+  // Build the cache id; sort parents to prevent duplicate storage and remove
+  // default parameter values.
+  if (isset($parameters['expanded'])) {
+    sort($parameters['expanded']);
+  }
+  $tree_cid = 'links:' . $menu_name . ':tree-data:' . $GLOBALS['language']->language . ':' . hash('sha256', serialize($parameters));
+
+  // If we do not have this tree in the static cache, check {cache_menu}.
+  if (!isset($trees[$tree_cid])) {
+    $cache = cache_get($tree_cid, 'cache_menu');
+    if ($cache && isset($cache->data)) {
+      $trees[$tree_cid] = $cache->data;
+    }
+  }
+
+  if (!isset($trees[$tree_cid])) {
+    // Select the links from the table, and recursively build the tree. We
+    // LEFT JOIN since there is no match in {menu_router} for an external
+    // link.
+    $query = db_select('menu_links', 'ml', array('fetch' => PDO::FETCH_ASSOC));
+    $query->addTag('translatable');
+    $query->leftJoin('menu_router', 'm', 'm.path = ml.router_path');
+    $query->fields('ml');
+    $query->fields('m', array(
+      'load_functions',
+      'to_arg_functions',
+      'access_callback',
+      'access_arguments',
+      'page_callback',
+      'page_arguments',
+      'delivery_callback',
+      'title',
+      'title_callback',
+      'title_arguments',
+      'theme_callback',
+      'theme_arguments',
+      'type',
+      'description',
+    ));
+    for ($i = 1; $i <= MENU_MAX_DEPTH; $i++) {
+      $query->orderBy('p' . $i, 'ASC');
+    }
+    $query->condition('ml.menu_name', $menu_name);
+    if (!empty($parameters['expanded'])) {
+      $query->condition('ml.plid', $parameters['expanded'], 'IN');
+    }
+    $min_depth = (isset($parameters['min_depth']) ? $parameters['min_depth'] : 1);
+    if ($min_depth != 1) {
+      $query->condition('ml.depth', $min_depth, '>=');
+    }
+    if (isset($parameters['max_depth'])) {
+      $query->condition('ml.depth', $parameters['max_depth'], '<=');
+    }
+
+    // Build an ordered array of links using the query result object.
+    $links = array();
+    foreach ($query->execute() as $item) {
+      $links[] = $item;
+    }
+    $active_link = (isset($parameters['active_trail']) ? $parameters['active_trail'] : array());
+    $data['tree'] = menu_tree_data($links, $active_link, $min_depth);
+    $data['node_links'] = array();
+    menu_tree_collect_node_links($data['tree'], $data['node_links']);
+
+    // Cache the data, if it is not already in the cache.
+    cache_set($tree_cid, $data, 'cache_menu');
+    $trees[$tree_cid] = $data;
+  }
+
+  return $trees[$tree_cid];
 }
 
 /**
