@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.484 2010/06/29 16:52:11 dries Exp $
+// $Id: system.install,v 1.485 2010/07/02 15:31:10 dries Exp $
 
 /**
  * @file
@@ -2573,6 +2573,13 @@ function system_update_7057() {
     'default' => '',
   );
   db_change_field('sessions', 'sid', 'sid', $spec);
+}
+
+/**
+ * Remove cron semaphore variable.
+ */
+function system_update_7058() {
+  variable_del('cron_semaphore');
 }
 
 /**
