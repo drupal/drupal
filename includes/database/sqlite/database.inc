@@ -212,7 +212,7 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
 
   public function rollback($savepoint_name = 'drupal_transaction') {
     if ($this->savepointSupport) {
-      return parent::rollBack($savepoint_name, $type, $message, $variables, $severity, $link);
+      return parent::rollBack($savepoint_name);
     }
 
     if (!$this->inTransaction()) {
