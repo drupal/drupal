@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.32 2010/06/01 09:24:09 dries Exp $
+// $Id: database.inc,v 1.33 2010/07/04 02:26:10 webchick Exp $
 
 /**
  * @file
@@ -212,7 +212,7 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
 
   public function rollback($savepoint_name = 'drupal_transaction') {
     if ($this->savepointSupport) {
-      return parent::rollBack($savepoint_name, $type, $message, $variables, $severity, $link);
+      return parent::rollBack($savepoint_name);
     }
 
     if (!$this->inTransaction()) {
