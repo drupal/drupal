@@ -216,7 +216,7 @@ define('LANGUAGE_RTL', 1);
 
 // Hide E_DEPRECATED messages.
 if (defined('E_DEPRECATED')) {
-  error_reporting(error_reporting() ^ E_DEPRECATED);
+  error_reporting(error_reporting() & ~E_DEPRECATED);
 }
 
 /**
