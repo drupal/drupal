@@ -1,0 +1,62 @@
+/* $Id: maintenance-page.css,v 1.1 2010/07/06 05:25:51 webchick Exp $ */
+
+body.maintenance-page {
+  background-color: #fff;
+  color: #000;
+}
+.maintenance-page #page-wrapper {
+  margin-left: auto;
+  margin-right: auto;
+  width: 800px;
+  border: 1px solid #cbcbcb;
+  margin-top: 40px;
+}
+.maintenance-page #page {
+  margin: 20px 40px 40px;
+}
+.maintenance-page #main-wrapper {
+  min-height: inherit;
+}
+.maintenance-page #header,
+.maintenance-page #messages,
+.maintenance-page #main {
+  width: auto;
+}
+.maintenance-page #header div.section, 
+.maintenance-page #navigation div.section, 
+.maintenance-page #messages, 
+.maintenance-page #main {
+  width: 700px;
+}
+.maintenance-page #main {
+  margin: 0;
+}
+.maintenance-page #content .section {
+  padding: 0 0 0 10px;
+}
+.maintenance-page #header {
+  background-color: #fff;
+  background-image: none;
+}
+.maintenance-page #header #name-and-slogan {
+  margin-bottom: 50px;
+  padding-top: 20px;
+  font-size: 90%;
+}
+.maintenance-page #header,
+.maintenance-page #header a,
+.maintenance-page #header a:hover,
+.maintenance-page #header a:hover {
+  color: #777;
+}
+.maintenance-page  h1#page-title {
+  line-height: 1em;
+  margin-top: 0;
+}
+.maintenance-page #messages {
+  padding: 0;
+  margin-top: 30px;
+}
+.maintenance-page #messages div.section {
+  padding: 0;
+}

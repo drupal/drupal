@@ -1,0 +1,15 @@
+/* $Id: layout-rtl.css,v 1.1 2010/07/06 05:25:51 webchick Exp $ */
+
+/* ---------- Basic Layout RTL Styles ----------- */
+
+#content,
+.sidebar,
+#triptych-first,
+#triptych-middle,
+#triptych-last,
+#footer-firstcolumn,
+#footer-secondcolumn,
+#footer-thirdcolumn,
+#footer-fourthcolumn {
+  float: right;
+}

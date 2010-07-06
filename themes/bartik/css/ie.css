@@ -1,0 +1,24 @@
+/* $Id: ie.css,v 1.1 2010/07/06 05:25:51 webchick Exp $ */
+
+.block {
+  zoom: 1;
+}
+input.form-text {
+  font-family: sans-serif;
+}
+#password-strength-text {
+  margin-top: 0;
+}
+fieldset legend {
+  left: -8px;
+  padding: 0;
+}
+.tabs ul.primary {
+  height: auto;
+}
+.tabs ul.primary li a.active {
+  padding: 0 7px 0 10px; /* LTR */
+}
+#footer-wrapper #footer .block {
+  height: 100%;
+}

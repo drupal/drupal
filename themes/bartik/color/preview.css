@@ -1,0 +1,62 @@
+/* $Id: preview.css,v 1.1 2010/07/06 05:25:51 webchick Exp $ */
+
+/* Bring in the rest of the theme's CSS styles. */
+@import url("../css/style.css");
+
+/* From color.css. */
+#preview, #preview-header {
+  background-color: #000000;
+}
+/* Undoing Seven's reset. */
+#preview #preview-header #preview-logo img {
+  border: 0;
+}
+
+/* ---------- Basic Preview Styles ----------- */
+
+#preview {
+  width: 640px;
+  overflow: hidden;
+  font-size: 1em;
+}
+#preview #preview-header div.section,
+#preview #preview-navigation div.section,
+#preview #preview-featured div.section,
+#preview #preview-main {
+  width: 960px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 20px;
+}
+#preview #preview-content,
+#preview .sidebar {
+  display: inline;
+  float: left; /* LTR */
+  position: relative;
+}
+#preview #preview-content {
+  width: 720px;
+}
+#preview .sidebar {
+  width: 240px;
+}
+#preview #preview-content .section,
+.sidebar .section {
+  padding: 0 10px;
+}
+#preview #footer-wrapper {
+  padding: 35px 20px 30px;
+}
+#preview #footer-firstcolumn,
+#preview #footer-secondcolumn,
+#preview #footer-thirdcolumn,
+#preview #footer-fourthcolumn {
+  padding: 0 10px;
+  width: 220px;
+  display: inline;
+  float: left; /* LTR */
+  position: relative;
+}
+#preview #footer {
+  width: 940px;
+}

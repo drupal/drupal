@@ -1,0 +1,11 @@
+/* $Id: ie-rtl.css,v 1.1 2010/07/06 05:25:51 webchick Exp $ */
+
+fieldset legend {
+  left: 6px;
+}
+.tabs ul.primary li a.active {
+  padding: 0 10px 0 7px;
+}
+ul.action-links li a {
+  zoom: 1;
+}

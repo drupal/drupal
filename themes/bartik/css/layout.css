@@ -1,0 +1,73 @@
+/* $Id: layout.css,v 1.1 2010/07/06 05:25:51 webchick Exp $ */
+
+/* ---------- Basic Layout Styles ----------- */
+
+#header div.section,
+#navigation div.section,
+#featured div.section,
+#messages,
+#main,
+#triptych,
+#footer-columns,
+#footer {
+  width: 960px;
+  margin-left: auto;
+  margin-right: auto;
+}
+#content,
+.sidebar,
+#triptych-first,
+#triptych-middle,
+#triptych-last,
+#footer-firstcolumn,
+#footer-secondcolumn,
+#footer-thirdcolumn,
+#footer-fourthcolumn {
+  display: inline;
+  float: left; /* LTR */
+  position: relative;
+}
+.one-sidebar #content {
+  width: 720px;
+}
+.two-sidebars #content {
+  width: 480px;
+}
+.no-sidebars #content {
+  width: 960px;
+  float: none;
+}
+.sidebar {
+  width: 240px;
+}
+#main-wrapper {
+  min-height: 500px;
+}
+#messages div.section,
+#content .section,
+.sidebar .section {
+  padding: 0 15px;
+}
+#breadcrumb {
+  margin: 0 15px;
+}
+#triptych-first,
+#triptych-middle,
+#triptych-last {
+  margin: 20px 20px 30px;
+  width: 280px;
+}
+#footer-wrapper {
+  padding: 35px 5px 30px;
+}
+#footer-firstcolumn,
+#footer-secondcolumn,
+#footer-thirdcolumn,
+#footer-fourthcolumn {
+  padding: 0 10px;
+  width: 220px;
+}
+#footer {
+  width: 940px;
+  min-width: 920px;
+}

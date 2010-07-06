@@ -1,0 +1,254 @@
+/* $Id: style-rtl.css,v 1.1 2010/07/06 05:25:51 webchick Exp $ */
+
+/* ------------------ Reset Styles ------------------ */
+
+caption,
+th,
+td {
+  text-align: right;
+}
+blockquote{
+  border-left: none;
+  border-right: 4px solid #afafaf;
+}
+blockquote:before {
+  content: "\201D";
+}
+blockquote:after {
+  content: "\201C";
+}
+
+/* ------------------ List Styles ------------------ */
+
+.region-content ul,
+.region-content ol {
+  padding: 2.5em 0 0.25em 0;
+}
+.item-list ul li {
+  padding: 0.2em 0 0 0.5em;
+}
+ul.tips {
+  padding: 0 1.25em 0 0;
+}
+
+/* ------------------ Header ------------------ */
+
+#header #logo {
+  float: right;
+  padding: 15px 0 15px 30px;
+}
+/* Menus when in the header region. */
+#header div.block-menu,
+#header div#block-system-main-menu,
+#header div#block-system-secondary-menu {
+  float: right;
+}
+#header .block-menu li a,
+#header #block-system-main-menu li a,
+#header #block-system-secondary-menu li a {
+  float: right;
+  border-left: 1px solid #555;
+
+  border-right: none;
+}
+#header .block-menu li.first a,
+#header #block-system-main-menu li.first a,
+#header #block-system-secondary-menu li.first a {
+  padding-right: 0;
+  padding-left: 12px;
+}
+#header .block-menu li.last a,
+#header #block-system-main-menu li.last a,
+#header #block-system-secondary-menu li.last a {
+  padding-left: 0;
+  padding-right: 12px;
+  border-left: none;
+}
+#header #block-search-form {
+  float: left;
+}
+#header #block-user-login {
+  left: 2%;
+  right: auto;
+  float: left;
+}
+#header #block-user-login .form-text {
+  margin-left: 5px;
+}
+#header #block-user-login .item-list ul li {
+  margin: 0 15px 0 5px;
+}
+#header #block-user-login .userbox {
+  margin-right: 10px;
+}
+
+/* --------------- Main Navigation ------------ */
+
+#navigation ul.links li.first {
+  padding-right: 2px;
+  padding-left: 0;
+}
+
+/* ----------------- Content ------------------ */
+
+#block-system-main .submitted .user-picture img {
+  float: right;
+  margin-left: 5px;
+  margin-right: 0;
+}
+#block-system-main div.field-name-taxonomy-tags div.field-label,
+#block-system-main div.field-name-taxonomy-tags div.field-items,
+#block-system-main div.field-name-taxonomy-tags div.field-item {
+  float: right;
+  padding-left: 10px;
+  padding-right: 0;
+}
+#block-system-main .link-wrapper {
+  margin-right: 236px;
+  margin-left: 0;
+}
+
+/* ----------------- Comments ----------------- */
+
+#comment-wrapper div.user-picture img {
+  margin-right: 0;
+}
+#comments .attribution {
+  float: right;
+}
+#comments .comment-arrow {
+  background: url(../images/comment-arrow-rtl.png);
+  margin-right: -45px;
+}
+#comments .comment-text {
+  margin-right: 140px;
+  margin-left: 0;
+}
+#comments .indented {
+  margin-right: 40px;
+  margin-left: 0;
+}
+
+/* -------------- Password Meter  ------------- */
+
+#password-strength {
+  left: auto;
+  margin-top: 2em;
+  right: 16em;
+}
+#password-strength-text {
+  margin-top: 0;
+  float: left;
+}
+.form-item-pass-pass2 label {
+  clear: right;
+}
+
+/* ------------------ Footer ------------------ */
+
+#footer-columns ul {
+  padding-right: 0;
+}
+#footer-columns li a {
+  padding: 0.8em 20px 0.8em 2px;
+}
+#footer li a {
+  float: right;
+  border-left: 1px solid #555;
+  border-color: rgba(255,255,255,0.15);  
+  border-right: none;
+}
+#footer li.first a {
+  padding-right: 0;
+  padding-left: 12px;
+}
+#footer li.last a {
+  padding-left: 0;
+  padding-right: 12px;
+  border-left: none;
+}
+
+/* --------------- System Tabs  --------------- */
+
+.tabs ul.primary li {
+  margin: 0 0 0 5px;
+  float: right;
+  zoom: 1;
+}
+.tabs ul.secondary li {
+  float: right;
+}
+.tabs ul.secondary li:first-child {
+  padding-right: 0;
+}
+.tabs ul.secondary li:last-child {
+  border-left: none;
+}
+ul.action-links li a {
+  background-position: right center;
+  padding-left: 0;
+  padding-right: 15px;
+}
+
+/* -------------- Form Elements   ------------- */
+
+.fieldset-legend span.summary {
+  margin-left: 0;
+}
+#user-profile-form input#edit-submit {
+  margin-left: 0;
+}
+.password-suggestions ul li {
+  margin-right: 1.2em;
+  margin-left: 0;
+}
+
+/* Animated throbber */
+html.js input.form-autocomplete {
+  background-position: 1% 4px;
+}
+html.js input.throbbing {
+  background-position: 1% -16px;
+}
+
+/* Comment form */
+#comment-form .form-type-textfield label,
+#comment-form .form-type-item label {
+  float: right;
+}
+#comment-form .form-type-textfield input,
+#comment-form .form-item .username {
+  float: left;
+}
+#comment-form .form-item .description {
+  float: left;
+}
+
+/* -------------- Shortcut Links ------------- */
+
+.shortcut-wrapper h1#page-title {
+  float: right;
+}
+
+/* ---------- Poll ----------- */
+
+.poll .vote-form {
+  text-align: right;
+}
+.poll .total {
+  text-align: left;
+}
+
+/* ---------- Color Form ----------- */
+
+.color-form #palette {
+  margin-left: 0;
+  margin-right: 20px;
+}
+.color-form .form-item label {
+  float: right;
+}
+.color-form #palette .lock {
+  right: -20px;
+  left: 0;
+}

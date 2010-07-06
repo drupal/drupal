@@ -1,0 +1,11 @@
+/* $Id: ie6.css,v 1.1 2010/07/06 05:25:51 webchick Exp $ */
+
+#content {
+  overflow: hidden;
+}
+.form-item-search-block-form {
+  width: 50%;
+}
+.tabs ul.primary {
+  zoom: 1;
+}
