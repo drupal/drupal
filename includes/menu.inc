@@ -2281,6 +2281,7 @@ function menu_cache_clear_all() {
  * Resets the menu system static cache.
  */
 function menu_reset_static_cache() {
+  drupal_static_reset('_menu_build_tree');
   drupal_static_reset('menu_tree');
   drupal_static_reset('menu_tree_all_data');
   drupal_static_reset('menu_tree_page_data');
