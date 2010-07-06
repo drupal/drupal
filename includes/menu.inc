@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.399 2010/07/02 02:22:26 dries Exp $
+// $Id: menu.inc,v 1.400 2010/07/06 07:27:07 webchick Exp $
 
 /**
  * @file
@@ -2281,6 +2281,7 @@ function menu_cache_clear_all() {
  * Resets the menu system static cache.
  */
 function menu_reset_static_cache() {
+  drupal_static_reset('_menu_build_tree');
   drupal_static_reset('menu_tree');
   drupal_static_reset('menu_tree_all_data');
   drupal_static_reset('menu_tree_page_data');
