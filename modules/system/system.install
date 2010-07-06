@@ -2213,27 +2213,7 @@ function system_update_7034() {
  * Migrate upload module files to the new {file_managed} table.
  */
 function system_update_7035() {
-  if (!db_table_exists('upload')) {
-    return;
-  }
-
-  // The old {files} tables still exists.  We migrate core data from upload
-  // module, but any contrib module using it will need to do its own update.
-  $result = db_query('SELECT f.fid, uid, filename, filepath AS uri, filemime, filesize, status, timestamp FROM {files} f INNER JOIN {upload} u ON u.fid = f.fid', array(), array('fetch' => PDO::FETCH_ASSOC));
-
-  // We will convert filepaths to uri using the default schmeme
-  // and stripping off the existing file directory path.
-  $basename = variable_get('file_directory_path', conf_path() . '/files');
-  $scheme = variable_get('file_default_scheme', 'public') . '://';
-  $fids = array();
-  // TODO: does this function need to run in batch mode, or should we use a multi-insert?
-  foreach ($result as $file) {
-    $file['uri'] = $scheme . str_replace($basename, '', $file['uri']);
-    $file['uri'] = file_stream_wrapper_uri_normalize($file['uri']);
-    db_insert('file_managed')->fields($file)->execute();
-    $fids[] = $file['fid'];
-  }
-  // TODO: delete the found fids from {files}?
+  // Update merged into system_update_7059().
 }
 
 /**
@@ -2580,6 +2560,211 @@ function system_update_7057() {
  */
 function system_update_7058() {
   variable_del('cron_semaphore');
+}
+
+/**
+ * Migrate upload.module to file.module.
+ */
+function system_update_7059(&$sandbox) {
+  if (!db_table_exists('upload')) {
+    return;
+  }
+
+  if (!isset($sandbox['progress'])) {
+    // Initialize batch update information.
+    $sandbox['progress'] = 0;
+    $sandbox['last_vid_processed'] = -1;
+    $sandbox['max'] = db_query("SELECT COUNT(DISTINCT u.vid) FROM {upload} u")->fetchField();
+
+    // Check which node types have upload.module attachments enabled.
+    $context['types'] = array();
+    foreach (node_type_get_types() as $node_type => $node_info) {
+      if (variable_get('upload_' . $node_type, 1)) {
+        $context['types'][$node_type] = $node_type;
+      }
+      variable_del('upload_' . $node_type);
+    }
+
+    // The {upload} table will be deleted when this update is complete so we
+    // want to be careful to migrate all the data, even for node types that
+    // may have had attachments disabled after files were uploaded. Look for
+    // any other node types referenced by the upload records and add those to
+    // the list. The admin can always remove the field later.
+    $results = db_query('SELECT DISTINCT type FROM {node} n INNER JOIN {upload} u ON n.vid = u.vid');
+    foreach ($results as $row) {
+      if (!isset($context['types'][$row->type])) {
+        drupal_set_message('The content type <em>' . $row->type . '</em> had uploads disabled but contained uploaded file data. Uploads have been re-enabled to migrate the existing data. You may delete the "File attachments" field in the <em>' . $row->type . '</em> type if this data is not necessary.');
+        $context['types'][$row->type] = $row->type;
+      }
+    }
+
+    // Create a single "field_upload" field on all the content types that have
+    // uploads enabled, then add an instance to each enabled type.
+    if (count($context['types']) > 0) {
+      module_enable(array('file'));
+      module_load_include('inc', 'field', 'field.crud');
+
+      $field = array(
+        'field_name' => 'file',
+        'type' => 'file',
+        'locked' => FALSE,
+        'cardinality' => FIELD_CARDINALITY_UNLIMITED,
+        'translatable' => FALSE,
+        'settings' => array(
+          'display_field' => 1,
+          'display_default' => variable_get('upload_list_default', 1),
+          'uri_scheme' => variable_get('file_default_scheme', 'public'),
+          'default_file' => 0,
+        ),
+      );
+
+      $upload_size = variable_get('upload_uploadsize_default', 1);
+      $instance = array(
+        'field_name' => 'file',
+        'entity_type' => 'node',
+        'bundle' => NULL,
+        'label' => 'File attachments',
+        'widget_type' => 'file_generic',
+        'required' => 0,
+        'description' => '',
+        'widget' => array(
+          'weight' => '1',
+          'settings' => array(
+            'progress_indicator' => 'throbber',
+          ),
+          'type' => 'file_generic',
+        ),
+        'settings' => array(
+          'max_filesize' => $upload_size ? ($upload_size . ' MB') : '',
+          'file_extensions' => variable_get('upload_extensions_default', 'jpg jpeg gif png txt doc xls pdf ppt pps odt ods odp'),
+          'file_directory' => '',
+          'description_field' => 1,
+        ),
+        'display' => array(
+          'full' => array(
+            'label' => 'hidden',
+            'type' => 'file_table',
+            'settings' => array(),
+            'weight' => 0,
+            'module' => 'file',
+          ),
+          'teaser' => array(
+            'label' => 'hidden',
+            'type' => 'hidden',
+            'settings' => array(),
+            'weight' => 0,
+            'module' => NULL,
+          ),
+          'rss' => array(
+            'label' => 'hidden',
+            'type' => 'file_table',
+            'settings' => array(),
+            'weight' => 0,
+            'module' => 'file',
+          ),
+        ),
+      );
+
+      // Create the field. Save the field id for the data insertion later on.
+      $field = field_create_field($field);
+      $sandbox['field_id'] = $field['id'];
+
+      // Create the instances.
+      foreach ($context['types'] as $bundle) {
+        $instance['bundle'] = $bundle;
+        field_create_instance($instance);
+      }
+    }
+    else {
+      // No uploads or content types with uploads enabled.
+      db_drop_table('upload');
+      // We're done: return without specifying a #progress.
+      return;
+    }
+  }
+
+  // Migrate a batch of files from the upload table to the appropriate field.
+  $limit = 500;
+  $result = db_query_range('SELECT DISTINCT u.fid, u.vid, u.list, u.description, n.nid, n.type FROM {upload} u INNER JOIN {node_revision} nr ON u.vid = nr.vid INNER JOIN {node} n ON n.nid = nr.nid WHERE u.vid > :lastvid ORDER BY u.vid, u.weight', 0, $limit, array(':lastvid' => $sandbox['last_vid_processed']));
+  foreach ($result as $record) {
+    // Note that we still reference the old files table here, since upload will
+    // not know about the new FID in the new file_managed table.
+    $file = db_select('files', 'f')
+      ->fields('f', array('fid', 'uid', 'filename', 'filepath', 'filemime', 'filesize', 'status', 'timestamp'))
+      ->condition('f.fid', $record->fid)
+      ->execute()
+      ->fetchAssoc();
+    if (!$file) {
+      continue;
+    }
+
+    $file['description'] = $record->description;
+    $file['display'] = $record->list;
+
+    $node_revisions[$record->vid]['nid'] = $record->nid;
+    $node_revisions[$record->vid]['vid'] = $record->vid;
+    $node_revisions[$record->vid]['type'] = $record->type;
+    $node_revisions[$record->vid]['file'][LANGUAGE_NONE][] = $file;
+  }
+
+  // To make sure we process an entire node all at once, toss the last node
+  // revision (which might be partial) unless it's the last one.
+  if ((count($node_revisions) > 1) && ($result->rowCount() == $limit)) {
+    array_pop($node_revisions);
+  }
+  else {
+    $finished = TRUE;
+  }
+
+  $basename = variable_get('file_directory_path', conf_path() . '/files');
+  $scheme = variable_get('file_default_scheme', 'public') . '://';
+  foreach ($node_revisions as $vid => $revision) {
+    // We will convert filepaths to uri using the default scheme
+    // and stripping off the existing file directory path.
+    $fids = array();
+    foreach ($revision['file'][LANGUAGE_NONE] as $delta => $file) {
+      // Insert into the file_managed table.
+      $file['uri'] = $scheme . str_replace($basename, '', $file['filepath']);
+      $file['uri'] = file_stream_wrapper_uri_normalize($file['uri']);
+      unset($file['filepath']);
+      // Each fid should only be stored once in file_managed.
+      db_merge('file_managed')
+        ->key(array(
+          'fid' => $file['fid'],
+        ))
+        ->fields(array(
+          'uid' => $file['uid'],
+          'filename' => $file['filename'],
+          'uri' => $file['uri'],
+          'filemime' => $file['filemime'],
+          'filesize' => $file['filesize'],
+          'status' => $file['status'],
+          'timestamp' => $file['timestamp'],
+        ))
+        ->execute();
+
+      // Update the node field with the file URI.
+      $revision['file'][LANGUAGE_NONE][$delta] = $file;
+    }
+
+    // Insert the revision's files into the field_upload table.
+    $node = (object) $revision;
+    field_sql_storage_field_storage_write('node', $node, FIELD_STORAGE_INSERT, array($sandbox['field_id']));
+
+    // Update our progress information for the batch update.
+    $sandbox['progress']++;
+    $sandbox['last_vid_processed'] = $vid;
+  }
+
+  // If there's no max value then there's nothing to update and we're finished.
+  if (empty($sandbox['max']) || isset($finished)) {
+    db_drop_table('upload');
+    return t('Upload module has been migrated to File module.');
+  }
+  else {
+    // Indicate our current progress to the batch update system.
+    $sandbox['#finished'] = $sandbox['progress'] / $sandbox['max'];
+  }
 }
 
 /**
