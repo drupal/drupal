@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.945 2010/07/07 01:14:18 dries Exp $
+// $Id: system.module,v 1.946 2010/07/07 17:56:42 webchick Exp $
 
 /**
  * @file
@@ -279,11 +279,6 @@ function system_element_info() {
     '#method' => 'post',
     '#action' => request_uri(),
     '#theme_wrappers' => array('form'),
-    '#attached' => array(
-      'js' => array(
-        'misc/form.js' => array('weight' => JS_LIBRARY + 1),
-      ),
-    ),
   );
   $types['page'] = array(
     '#show_messages' => TRUE,

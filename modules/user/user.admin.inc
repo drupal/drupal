@@ -1,5 +1,5 @@
 <?php
-// $Id: user.admin.inc,v 1.113 2010/07/07 01:14:18 dries Exp $
+// $Id: user.admin.inc,v 1.114 2010/07/07 17:56:42 webchick Exp $
 
 /**
  * @file
@@ -91,6 +91,8 @@ function user_filter_form() {
       '#value' => t('Reset'),
     );
   }
+
+  drupal_add_js('misc/form.js');
 
   return $form;
 }

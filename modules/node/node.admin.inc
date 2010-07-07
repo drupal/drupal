@@ -1,5 +1,5 @@
 <?php
-// $Id: node.admin.inc,v 1.96 2010/07/07 01:14:18 dries Exp $
+// $Id: node.admin.inc,v 1.97 2010/07/07 17:56:42 webchick Exp $
 
 /**
  * @file
@@ -195,6 +195,8 @@ function node_filter_form() {
     $form['filters']['actions']['undo'] = array('#type' => 'submit', '#value' => t('Undo'));
     $form['filters']['actions']['reset'] = array('#type' => 'submit', '#value' => t('Reset'));
   }
+
+  drupal_add_js('misc/form.js');
 
   return $form;
 }

@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.475 2010/07/07 01:14:18 dries Exp $
+// $Id: form.inc,v 1.476 2010/07/07 17:56:42 webchick Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -2851,6 +2851,9 @@ function form_process_fieldset(&$element, &$form_state) {
     $group = $element['#group'];
     $form_state['groups'][$group][] = &$element;
   }
+
+  // Contains form element summary functionalities.
+  $element['#attached']['js']['misc/form.js'] = array('weight' => JS_LIBRARY + 1);
 
   // The .form-wrapper class is required for #states to treat fieldsets like
   // containers.
