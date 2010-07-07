@@ -91,6 +91,39 @@ class MenuRouterTestCase extends DrupalWebTestCase {
   }
 
   /**
+   * Make sure the maintenance mode can be bypassed using hook_menu_site_status_alter().
+   *
+   * @see hook_menu_site_status_alter().
+   */
+  function testMaintenanceModeLoginPaths() {
+    variable_set('maintenance_mode', TRUE);
+
+    $offline_message = t('@site is currently under maintenance. We should be back shortly. Thank you for your patience.', array('@site' => variable_get('site_name', 'Drupal')));
+    $this->drupalLogout();
+    $this->drupalGet('node');
+    $this->assertText($offline_message);
+    $this->drupalGet('menu_login_callback');
+    $this->assertText('This is menu_login_callback().', t('Maintenance mode can be bypassed through hook_login_paths().'));
+  }
+
+  /**
+   * Test that an authenticated user hitting 'user/login' gets redirected to
+   * 'user' and 'user/register' gets redirected to the user edit page.
+   */
+  function testAuthUserUserLogin() {
+    $loggedInUser = $this->drupalCreateUser(array());
+    $this->drupalLogin($loggedInUser);
+
+    $this->DrupalGet('user/login');
+    // Check that we got to 'user'.
+    $this->assertTrue($this->url == url('user', array('absolute' => TRUE)), t("Logged-in user redirected to q=user on accessing q=user/login"));
+
+    // user/register should redirect to user/UID/edit.
+    $this->DrupalGet('user/register');
+    $this->assertTrue($this->url == url('user/' . $this->loggedInUser->uid . '/edit', array('absolute' => TRUE)), t("Logged-in user redirected to q=user/UID/edit on accessing q=user/register"));
+  }
+
+  /**
    * Test the theme callback when it is set to use an optional theme.
    */
   function testThemeCallbackOptionalTheme() {
@@ -491,4 +524,3 @@ class MenuTreeDataTestCase extends DrupalUnitTestCase {
     return $this->assert($link1['mlid'] == $link2['mlid'], $message ? $message : t('First link is identical to second link'));
   }
 }
-

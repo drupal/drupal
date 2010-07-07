@@ -3961,5 +3961,30 @@ function hook_filetransfer_backends() {
 }
 
 /**
+ * Control site status before menu dispatching.
+ *
+ * The hook is called after checking whether the site is offline but before 
+ * the current router item is retrieved and executed by
+ * menu_execute_active_handler(). If the site is in offline mode,
+ * $menu_site_status is set to MENU_SITE_OFFLINE.
+ *
+ * @param $menu_site_status
+ *   Supported values are MENU_SITE_OFFLINE, MENU_ACCESS_DENIED,
+ *   MENU_NOT_FOUND and MENU_SITE_ONLINE. Any other value than
+ *   MENU_SITE_ONLINE will skip the default menu handling system and be passed
+ *   for delivery to drupal_deliver_page() with a NULL
+ *   $default_delivery_callback.
+ * @param $path
+ *   Contains the system path that is going to be loaded. This is read only,
+ *   use hook_url_inbound_alter() to change the path.
+ */
+function hook_menu_site_status_alter(&$menu_site_status, $path) {
+  // Allow access to my_module/authentication even if site is in offline mode.
+  if ($menu_site_status == MENU_SITE_OFFLINE && user_is_anonymous() && $path == 'my_module/authentication') {
+    $menu_site_status = MENU_SITE_ONLINE;
+  }
+}
+
+/**
  * @} End of "addtogroup hooks".
  */

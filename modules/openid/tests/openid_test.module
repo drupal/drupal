@@ -65,6 +65,16 @@ function openid_test_menu() {
 }
 
 /**
+ * Implements hook_menu_site_status_alter().
+ */
+function openid_test_menu_site_status_alter(&$menu_site_status, $path) {
+  // Allow access to openid endpoint and identity even in offline mode.
+  if ($menu_site_status == MENU_SITE_OFFLINE && user_is_anonymous() && in_array($path, array('openid-test/yadis/xrds', 'openid-test/endpoint'))) {
+    $menu_site_status = MENU_SITE_ONLINE;
+  }
+}
+
+/**
  * Menu callback; XRDS document that references the OP Endpoint URL.
  */
 function openid_test_yadis_xrds() {

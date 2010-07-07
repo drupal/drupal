@@ -770,8 +770,6 @@ class SiteMaintenanceTestCase extends DrupalWebTestCase {
     $this->assertText($offline_message);
     $this->drupalGet('user/register');
     $this->assertText($offline_message);
-    $this->drupalGet('user/password');
-    $this->assertText($offline_message);
 
     // Verify that user is able to log in.
     $this->drupalGet('user');
@@ -804,6 +802,23 @@ class SiteMaintenanceTestCase extends DrupalWebTestCase {
     $this->drupalLogout();
     $this->drupalGet('');
     $this->assertRaw($offline_message, t('Found the site offline message.'));
+
+    // Verify that custom site offline message is not displayed on user/password.
+    $this->drupalGet('user/password');
+    $this->assertText(t('Username or e-mail address'), t('Anonymous users can access user/password'));
+
+    // Submit password reset form.
+    $edit = array(
+      'name' => $this->user->name,
+    );
+    $this->drupalPost('user/password', $edit, t('E-mail new password'));
+    $mails = $this->drupalGetMails();
+    $start = strpos($mails[0]['body'], 'user/reset/'. $this->user->uid);
+    $path = substr($mails[0]['body'], $start, 66 + strlen($this->user->uid));
+
+    // Log in with temporary login link.
+    $this->drupalPost($path, array(), t('Log in'));
+    $this->assertText($user_message);
   }
 }
 

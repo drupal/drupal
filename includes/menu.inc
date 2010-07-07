@@ -239,6 +239,11 @@ define('MENU_ACCESS_DENIED', 3);
 define('MENU_SITE_OFFLINE', 4);
 
 /**
+ * Internal menu status code -- Everything is working fine.
+ */
+define('MENU_SITE_ONLINE', 5);
+
+/**
  * @} End of "Menu status codes".
  */
 
@@ -447,10 +452,17 @@ function menu_get_item($path = NULL, $router_item = NULL) {
  *   the result to the caller (FALSE).
  */
 function menu_execute_active_handler($path = NULL, $deliver = TRUE) {
-  if (_menu_site_is_offline()) {
-    $page_callback_result = MENU_SITE_OFFLINE;
-  }
-  else {
+  // Check if site is offline.
+  $page_callback_result = _menu_site_is_offline() ? MENU_SITE_OFFLINE : MENU_SITE_ONLINE;
+
+  // Allow other modules to change the site status but not the path because that
+  // would not change the global variable. hook_url_inbound_alter() can be used
+  // to change the path. Code later will not use the $read_only_path variable.
+  $read_only_path = !empty($path) ? $path : $_GET['q'];
+  drupal_alter('menu_site_status', $page_callback_result, $read_only_path);
+
+  // Only continue if the site status is not set.
+  if ($page_callback_result == MENU_SITE_ONLINE) {
     // Rebuild if we know it's needed, or if the menu masks are missing which
     // occurs rarely, likely due to a race condition of multiple rebuilds.
     if (variable_get('menu_rebuild_needed', FALSE) || !variable_get('menu_masks', array())) {
@@ -3387,15 +3399,7 @@ function _menu_site_is_offline($check_only = FALSE) {
       }
     }
     else {
-      // Anonymous users get a FALSE at the login prompt, TRUE otherwise.
-      if (user_is_anonymous()) {
-        return ($_GET['q'] != 'user' && $_GET['q'] != 'user/login');
-      }
-      // Logged in users are unprivileged here, so they are logged out.
-      if (!$check_only) {
-        require_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'user') . '/user.pages.inc';
-        user_logout();
-      }
+      return TRUE;
     }
   }
   return FALSE;
