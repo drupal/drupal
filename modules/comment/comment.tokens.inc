@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.tokens.inc,v 1.12 2010/06/29 00:57:19 dries Exp $
+// $Id: comment.tokens.inc,v 1.13 2010/07/07 17:00:42 webchick Exp $
 
 /**
  * @file
@@ -148,7 +148,7 @@ function comment_tokens($type, $tokens, array $data = array(), array $options = 
           break;
 
         case 'homepage':
-          $replacements[$original] = $sanitize ? filter_xss_bad_protocol($comment->homepage) : $comment->homepage;
+          $replacements[$original] = $sanitize ? check_url($comment->homepage) : $comment->homepage;
           break;
 
         case 'title':

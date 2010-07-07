@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.599 2010/06/07 06:38:09 dries Exp $
+// $Id: theme.inc,v 1.600 2010/07/07 17:00:42 webchick Exp $
 
 /**
  * @file
@@ -1854,7 +1854,7 @@ function theme_item_list($variables) {
  *   - url: The url for the link.
  */
 function theme_more_help_link($variables) {
-  return '<div class="more-help-link">' . t('<a href="@link">More help</a>', array('@link' => check_url($variables['url']))) . '</div>';
+  return '<div class="more-help-link">' . l(t('More help'), $variables['url']) . '</div>';
 }
 
 /**
@@ -1868,7 +1868,7 @@ function theme_more_help_link($variables) {
 function theme_feed_icon($variables) {
   $text = t('Subscribe to @feed-title', array('@feed-title' => $variables['title']));
   if ($image = theme('image', array('path' => 'misc/feed.png', 'alt' => $text))) {
-    return '<a href="' . check_url($variables['url']) . '" title="' . $text . '" class="feed-icon">' . $image . '</a>';
+    return l($image, $variables['url'], array('html' => TRUE, 'attributes' => array('class' => array('feed-icon'), 'title' => $text)));
   }
 }
 
@@ -1918,7 +1918,7 @@ function theme_html_tag($variables) {
  *   - title: A descriptive verb for the link, like 'Read more'.
  */
 function theme_more_link($variables) {
-  return '<div class="more-link">' . t('<a href="@link" title="@title">More</a>', array('@link' => check_url($variables['url']), '@title' => $variables['title'])) . '</div>';
+  return '<div class="more-link">' . l(t('More'), $variables['url'], array('attributes' => array('title' => $variables['title']))) . '</div>';
 }
 
 /**
@@ -2172,7 +2172,7 @@ function template_preprocess_html(&$variables) {
   if (theme_get_setting('toggle_favicon')) {
     $favicon = theme_get_setting('favicon');
     $type = theme_get_setting('favicon_mimetype');
-    drupal_add_html_head_link(array('rel' => 'shortcut icon', 'href' => check_url($favicon), 'type' => $type));
+    drupal_add_html_head_link(array('rel' => 'shortcut icon', 'href' => drupal_strip_dangerous_protocols($favicon), 'type' => $type));
   }
 
   // Construct page title.
@@ -2355,7 +2355,7 @@ function template_preprocess_maintenance_page(&$variables) {
   if (theme_get_setting('toggle_favicon')) {
     $favicon = theme_get_setting('favicon');
     $type = theme_get_setting('favicon_mimetype');
-    drupal_add_html_head_link(array('rel' => 'shortcut icon', 'href' => check_url($favicon), 'type' => $type));
+    drupal_add_html_head_link(array('rel' => 'shortcut icon', 'href' => drupal_strip_dangerous_protocols($favicon), 'type' => $type));
   }
 
   global $theme;
