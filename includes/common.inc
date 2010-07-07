@@ -1202,10 +1202,75 @@ function flood_is_allowed($name, $threshold, $window = 3600, $identifier = NULL)
  */
 
 /**
- * Prepare a URL for use in an HTML attribute. Strips harmful protocols.
+ * Strips dangerous protocols (e.g. 'javascript:') from a URI.
+ *
+ * This function must be called for all URIs within user-entered input prior
+ * to being output to an HTML attribute value. It is often called as part of
+ * check_url() or filter_xss(), but those functions return an HTML-encoded
+ * string, so this function can be called independently when the output needs to
+ * be a plain-text string for passing to t(), l(), drupal_attributes(), or
+ * another function that will call check_plain() separately.
+ *
+ * @param $uri
+ *   A plain-text URI that might contain dangerous protocols.
+ *
+ * @return
+ *   A plain-text URI stripped of dangerous protocols. As with all plain-text
+ *   strings, this return value must not be output to an HTML page without
+ *   check_plain() being called on it. However, it can be passed to functions
+ *   expecting plain-text strings.
+ *
+ * @see check_url()
+ */
+function drupal_strip_dangerous_protocols($uri) {
+  static $allowed_protocols;
+
+  if (!isset($allowed_protocols)) {
+    $allowed_protocols = array_flip(variable_get('filter_allowed_protocols', array('ftp', 'http', 'https', 'irc', 'mailto', 'news', 'nntp', 'rtsp', 'sftp', 'ssh', 'telnet', 'webcal')));
+  }
+
+  // Iteratively remove any invalid protocol found.
+  do {
+    $before = $uri;
+    $colonpos = strpos($uri, ':');
+    if ($colonpos > 0) {
+      // We found a colon, possibly a protocol. Verify.
+      $protocol = substr($uri, 0, $colonpos);
+      // If a colon is preceded by a slash, question mark or hash, it cannot
+      // possibly be part of the URL scheme. This must be a relative URL, which
+      // inherits the (safe) protocol of the base document.
+      if (preg_match('![/?#]!', $protocol)) {
+        break;
+      }
+      // Check if this is a disallowed protocol. Per RFC2616, section 3.2.3
+      // (URI Comparison) scheme comparison must be case-insensitive.
+      if (!isset($allowed_protocols[strtolower($protocol)])) {
+        $uri = substr($uri, $colonpos + 1);
+      }
+    }
+  } while ($before != $uri);
+
+  return $uri;
+}
+
+/**
+ * Strips dangerous protocols (e.g. 'javascript:') from a URI and encodes it for output to an HTML attribute value.
+ *
+ * @param $uri
+ *   A plain-text URI that might contain dangerous protocols.
+ *
+ * @return
+ *   A URI stripped of dangerous protocols and encoded for output to an HTML
+ *   attribute value. Because it is already encoded, it should not be set as a
+ *   value within a $attributes array passed to drupal_attributes(), because
+ *   drupal_attributes() expects those values to be plain-text strings. To pass
+ *   a filtered URI to drupal_attributes(), call
+ *   drupal_strip_dangerous_protocols() instead.
+ *
+ * @see drupal_strip_dangerous_protocols()
  */
 function check_url($uri) {
-  return filter_xss_bad_protocol($uri, FALSE);
+  return check_plain(drupal_strip_dangerous_protocols($uri));
 }
 
 /**
@@ -1453,45 +1518,21 @@ function _filter_xss_attributes($attr) {
  * @param $string
  *   The string with the attribute value.
  * @param $decode
- *   Whether to decode entities in the $string. Set to FALSE if the $string
- *   is in plain text, TRUE otherwise. Defaults to TRUE.
+ *   (Deprecated) Whether to decode entities in the $string. Set to FALSE if the
+ *   $string is in plain text, TRUE otherwise. Defaults to TRUE. This parameter
+ *   is deprecated and will be removed in Drupal 8. To process a plain-text URI,
+ *   call drupal_strip_dangerous_protocols() or check_url() instead.
  * @return
  *   Cleaned up and HTML-escaped version of $string.
  */
 function filter_xss_bad_protocol($string, $decode = TRUE) {
-  static $allowed_protocols;
-
-  if (!isset($allowed_protocols)) {
-    $allowed_protocols = array_flip(variable_get('filter_allowed_protocols', array('ftp', 'http', 'https', 'irc', 'mailto', 'news', 'nntp', 'rtsp', 'sftp', 'ssh', 'telnet', 'webcal')));
-  }
-
   // Get the plain text representation of the attribute value (i.e. its meaning).
+  // @todo Remove the $decode parameter in Drupal 8, and always assume an HTML
+  //   string that needs decoding.
   if ($decode) {
     $string = decode_entities($string);
   }
-
-  // Iteratively remove any invalid protocol found.
-  do {
-    $before = $string;
-    $colonpos = strpos($string, ':');
-    if ($colonpos > 0) {
-      // We found a colon, possibly a protocol. Verify.
-      $protocol = substr($string, 0, $colonpos);
-      // If a colon is preceded by a slash, question mark or hash, it cannot
-      // possibly be part of the URL scheme. This must be a relative URL,
-      // which inherits the (safe) protocol of the base document.
-      if (preg_match('![/?#]!', $protocol)) {
-        break;
-      }
-      // Per RFC2616, section 3.2.3 (URI Comparison) scheme comparison must be case-insensitive
-      // Check if this is a disallowed protocol.
-      if (!isset($allowed_protocols[strtolower($protocol)])) {
-        $string = substr($string, $colonpos + 1);
-      }
-    }
-  } while ($before != $string);
-
-  return check_plain($string);
+  return check_plain(drupal_strip_dangerous_protocols($string));
 }
 
 /**
@@ -1993,13 +2034,13 @@ function url($path = NULL, array $options = array()) {
   );
 
   if (!isset($options['external'])) {
-    // Return an external link if $path contains an allowed absolute URL.
-    // Only call the slow filter_xss_bad_protocol if $path contains a ':'
-    // before any / ? or #.
-    // Note: we could use url_is_external($path) here, but that would
-    // require another function call, and performance inside url() is critical.
+    // Return an external link if $path contains an allowed absolute URL. Only
+    // call the slow drupal_strip_dangerous_protocols() if $path contains a ':'
+    // before any / ? or #. Note: we could use url_is_external($path) here, but
+    // that would require another function call, and performance inside url() is
+    // critical.
     $colonpos = strpos($path, ':');
-    $options['external'] = ($colonpos !== FALSE && !preg_match('![/?#]!', substr($path, 0, $colonpos)) && filter_xss_bad_protocol($path, FALSE) == check_plain($path));
+    $options['external'] = ($colonpos !== FALSE && !preg_match('![/?#]!', substr($path, 0, $colonpos)) && drupal_strip_dangerous_protocols($path) == $path);
   }
 
   // Preserve the original path before altering or aliasing.
@@ -2113,9 +2154,9 @@ function url($path = NULL, array $options = array()) {
  */
 function url_is_external($path) {
   $colonpos = strpos($path, ':');
-  // Only call the slow filter_xss_bad_protocol if $path contains a ':'
-  // before any / ? or #.
-  return $colonpos !== FALSE && !preg_match('![/?#]!', substr($path, 0, $colonpos)) && filter_xss_bad_protocol($path, FALSE) == check_plain($path);
+  // Only call the slow drupal_strip_dangerous_protocols() if $path contains a
+  // ':' before any / ? or #.
+  return $colonpos !== FALSE && !preg_match('![/?#]!', substr($path, 0, $colonpos)) && drupal_strip_dangerous_protocols($path) == $path;
 }
 
 /**

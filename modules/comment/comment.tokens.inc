@@ -148,7 +148,7 @@ function comment_tokens($type, $tokens, array $data = array(), array $options = 
           break;
 
         case 'homepage':
-          $replacements[$original] = $sanitize ? filter_xss_bad_protocol($comment->homepage) : $comment->homepage;
+          $replacements[$original] = $sanitize ? check_url($comment->homepage) : $comment->homepage;
           break;
 
         case 'title':

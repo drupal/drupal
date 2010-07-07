@@ -1190,7 +1190,7 @@ class CommentTokenReplaceTestCase extends CommentHelperCase {
     $tests['[comment:hostname]'] = check_plain($comment->hostname);
     $tests['[comment:name]'] = filter_xss($comment->name);
     $tests['[comment:mail]'] = check_plain($this->admin_user->mail);
-    $tests['[comment:homepage]'] = filter_xss_bad_protocol($comment->homepage);
+    $tests['[comment:homepage]'] = check_url($comment->homepage);
     $tests['[comment:title]'] = filter_xss($comment->subject);
     $tests['[comment:body]'] = _text_sanitize($instance, LANGUAGE_NONE, $comment->comment_body[LANGUAGE_NONE][0], 'value');
     $tests['[comment:url]'] = url('comment/' . $comment->cid, $url_options + array('fragment' => 'comment-' . $comment->cid));
