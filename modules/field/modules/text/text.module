@@ -1,5 +1,5 @@
 <?php
-// $Id: text.module,v 1.58 2010/06/28 20:58:42 dries Exp $
+// $Id: text.module,v 1.59 2010/07/07 13:30:06 dries Exp $
 
 /**
  * @file
@@ -513,14 +513,13 @@ function text_field_widget_settings_form($field, $instance) {
 /**
  * Implements hook_field_widget_form().
  */
-function text_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $base) {
-  $element = $base;
+function text_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
   $summary_widget = array();
   $main_widget = array();
 
   switch ($instance['widget']['type']) {
     case 'text_textfield':
-      $main_widget = $base + array(
+      $main_widget = $element + array(
         '#type' => 'textfield',
         '#default_value' => isset($items[$delta]['value']) ? $items[$delta]['value'] : NULL,
         '#size' => $instance['widget']['settings']['size'],
@@ -548,7 +547,7 @@ function text_field_widget_form(&$form, &$form_state, $field, $instance, $langco
       // Fall through to the next case.
 
     case 'text_textarea':
-      $main_widget = $base + array(
+      $main_widget = $element + array(
         '#type' => 'textarea',
         '#default_value' => isset($items[$delta]['value']) ? $items[$delta]['value'] : NULL,
         '#rows' => $instance['widget']['settings']['rows'],
