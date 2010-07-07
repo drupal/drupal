@@ -106,7 +106,7 @@ function locale_update_7001() {
  * Allow longer javascript file names.
  */
 function locale_update_7002() {
-  db_change_field('languages', 'javascript', 'javascript', array('type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''));
+  // Update moved to update_fix_d7_requirements().
 }
 
 /**

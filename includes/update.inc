@@ -591,6 +591,11 @@ function update_fix_d7_requirements() {
     // Add new primary key.
     db_add_primary_key('sessions', array('sid', 'ssid'));
 
+    // Allow longer javascript file names.
+    if (db_table_exists('languages')) {
+      db_change_field('languages', 'javascript', 'javascript', array('type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''));
+    }
+
     variable_set('update_d7_requirements', TRUE);
   }
 
