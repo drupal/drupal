@@ -1,5 +1,5 @@
 <?php
-// $Id: entity.inc,v 1.10 2010/06/24 17:24:39 webchick Exp $
+// $Id: entity.inc,v 1.11 2010/07/07 13:13:44 dries Exp $
 
 /**
  * Interface for entity controller classes.
@@ -758,7 +758,7 @@ class EntityFieldQuery {
    *   Note if the entity type is known, then the following snippet will load
    *   the entities found:
    *   @code
-   *     $result = $query->execute;
+   *     $result = $query->execute();
    *     $entities = entity_load($my_type, array_keys($result[$my_type]));
    *   @endcode
    */
