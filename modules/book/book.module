@@ -189,13 +189,6 @@ function book_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'book.pages.inc',
   );
-  $items['book/js/form'] = array(
-    'page callback' => 'book_form_update',
-    'delivery callback' => 'ajax_deliver',
-    'access arguments' => array('access content'),
-    'type' => MENU_CALLBACK,
-    'file' => 'book.pages.inc',
-  );
 
   return $items;
 }
@@ -481,6 +474,8 @@ function _book_parent_select($book_link) {
       '#description' => t('The parent page in the book. The maximum depth for a book and all child pages is !maxdepth. Some pages in the selected book may not be available as parents if selecting them would exceed this limit.', array('!maxdepth' => MENU_MAX_DEPTH)),
       '#options' => book_toc($book_link['bid'], $book_link['parent_depth_limit'], array($book_link['mlid'])),
       '#attributes' => array('class' => array('book-title-select')),
+      '#prefix' => '<div id="edit-book-plid-wrapper">',
+      '#suffix' => '</div>',
     );
   }
 
@@ -491,8 +486,11 @@ function _book_parent_select($book_link) {
  * Build the common elements of the book form for the node and outline forms.
  */
 function _book_add_form_elements(&$form, &$form_state, $node) {
-  // Need this for AJAX.
-  $form_state['cache'] = TRUE;
+  // If the form is being processed during the AJAX callback of our book bid
+  // dropdown, then $form_state will hold the value that was selected.
+  if (isset($form_state['values']['book'])) {
+    $node->book = $form_state['values']['book'];
+  }
 
   $form['book'] = array(
     '#type' => 'fieldset',
@@ -557,12 +555,25 @@ function _book_add_form_elements(&$form, &$form_state, $node) {
     '#weight' => -5,
     '#attributes' => array('class' => array('book-title-select')),
     '#ajax' => array(
-      'path' => 'book/js/form',
+      'callback' => 'book_form_update',
       'wrapper' => 'edit-book-plid-wrapper',
       'effect' => 'fade',
       'speed' => 'fast',
     ),
   );
+}
+
+/**
+ * Renders a new parent page select element when the book selection changes.
+ *
+ * This function is called via AJAX when the selected book is changed on a node
+ * or book outline form.
+ *
+ * @return
+ *   The rendered parent page select element.
+ */
+function book_form_update($form, $form_state) {
+  return $form['book']['plid'];
 }
 
 /**
