@@ -1,5 +1,5 @@
 <?php
-// $Id: book.pages.inc,v 1.26 2010/06/11 11:06:37 dries Exp $
+// $Id: book.pages.inc,v 1.27 2010/07/07 01:07:33 dries Exp $
 
 /**
  * @file
@@ -216,36 +216,4 @@ function book_remove_form_submit($form, &$form_state) {
     drupal_set_message(t('The post has been removed from the book.'));
   }
   $form_state['redirect'] = 'node/' . $node->nid;
-}
-
-/**
- * Renders a new parent page select element when the book selection changes.
- *
- * This function is called via AJAX when the selected book is changed on a node
- * or book outline form. It creates a new parent page select element, adds it
- * to the cached form, and then returns the rendered element so it can be
- * displayed on the form.
- *
- * @return
- *   The rendered parent page select element.
- */
-function book_form_update() {
-  // Load the form based upon the $_POST data sent via the ajax call.
-  list($form, $form_state) = ajax_get_form();
-
-  $bid = $_POST['book']['bid'];
-
-  // Validate the bid.
-  if (isset($form['book']['bid']['#options'][$bid])) {
-    $book_link = $form['#node']->book;
-    $book_link['bid'] = $bid;
-    // Get the new options and update the cache.
-    $form['book']['plid'] = _book_parent_select($book_link);
-    form_set_cache($form['values']['form_build_id'], $form, $form_state);
-
-    // Build the new select element and return it.
-    $form_state = array();
-    $form = form_builder($form['form_id']['#value'], $form, $form_state);
-    return $form['book']['plid'];
-  }
 }
