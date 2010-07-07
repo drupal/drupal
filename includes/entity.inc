@@ -758,7 +758,7 @@ class EntityFieldQuery {
    *   Note if the entity type is known, then the following snippet will load
    *   the entities found:
    *   @code
-   *     $result = $query->execute;
+   *     $result = $query->execute();
    *     $entities = entity_load($my_type, array_keys($result[$my_type]));
    *   @endcode
    */
