@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.176 2010/07/01 00:46:57 dries Exp $
+// $Id: system.api.php,v 1.177 2010/07/07 00:57:44 dries Exp $
 
 /**
  * @file
@@ -2812,12 +2812,14 @@ function hook_update_N(&$sandbox) {
     // We'll -1 to disregard the uid 0...
     $sandbox['max'] = db_query('SELECT COUNT(DISTINCT uid) FROM {users}')->fetchField() - 1;
   }
-  db_select('users', 'u')
+
+  $users = db_select('users', 'u')
     ->fields('u', array('uid', 'name'))
     ->condition('uid', $sandbox['current_uid'], '>')
     ->range(0, 3)
     ->orderBy('uid', 'ASC')
     ->execute();
+
   foreach ($users as $user) {
     $user->name .= '!';
     db_update('users')
