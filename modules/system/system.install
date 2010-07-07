@@ -2593,7 +2593,7 @@ function system_update_7059(&$sandbox) {
     $results = db_query('SELECT DISTINCT type FROM {node} n INNER JOIN {upload} u ON n.vid = u.vid');
     foreach ($results as $row) {
       if (!isset($context['types'][$row->type])) {
-        drupal_set_message('The content type <em>' . $row->type . '</em> had uploads disabled but contained uploaded file data. Uploads have been re-enabled to migrate the existing data. You may delete the "File attachments" field in the <em>' . $row->type . '</em> type if this data is not necessary.');
+        drupal_set_message(t('The content type %rowtype had uploads disabled but contained uploaded file data. Uploads have been re-enabled to migrate the existing data. You may delete the "File attachments" field in the %rowtype type if this data is not necessary.', array('%rowtype' => $row->type)));
         $context['types'][$row->type] = $row->type;
       }
     }
