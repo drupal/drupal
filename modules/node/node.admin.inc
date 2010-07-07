@@ -196,8 +196,6 @@ function node_filter_form() {
     $form['filters']['actions']['reset'] = array('#type' => 'submit', '#value' => t('Reset'));
   }
 
-  drupal_add_js('misc/form.js');
-
   return $form;
 }
 

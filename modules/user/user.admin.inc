@@ -92,8 +92,6 @@ function user_filter_form() {
     );
   }
 
-  drupal_add_js('misc/form.js');
-
   return $form;
 }
 

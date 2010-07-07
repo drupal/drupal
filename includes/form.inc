@@ -2852,9 +2852,6 @@ function form_process_fieldset(&$element, &$form_state) {
     $form_state['groups'][$group][] = &$element;
   }
 
-  // Contains form element summary functionalities.
-  $element['#attached']['js']['misc/form.js'] = array('weight' => JS_LIBRARY + 1);
-
   // The .form-wrapper class is required for #states to treat fieldsets like
   // containers.
   if (!isset($element['#attributes']['class'])) {
