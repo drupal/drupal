@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.install,v 1.60 2010/06/02 10:25:15 dries Exp $
+// $Id: locale.install,v 1.61 2010/07/07 05:44:03 webchick Exp $
 
 /**
  * @file
@@ -106,7 +106,7 @@ function locale_update_7001() {
  * Allow longer javascript file names.
  */
 function locale_update_7002() {
-  db_change_field('languages', 'javascript', 'javascript', array('type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''));
+  // Update moved to update_fix_d7_requirements().
 }
 
 /**

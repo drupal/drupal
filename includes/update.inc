@@ -1,5 +1,5 @@
 <?php
-// $Id: update.inc,v 1.59 2010/06/27 16:51:38 dries Exp $
+// $Id: update.inc,v 1.60 2010/07/07 05:44:03 webchick Exp $
 
 /**
  * @file
@@ -590,6 +590,11 @@ function update_fix_d7_requirements() {
     db_drop_primary_key('sessions');
     // Add new primary key.
     db_add_primary_key('sessions', array('sid', 'ssid'));
+
+    // Allow longer javascript file names.
+    if (db_table_exists('languages')) {
+      db_change_field('languages', 'javascript', 'javascript', array('type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''));
+    }
 
     variable_set('update_d7_requirements', TRUE);
   }
