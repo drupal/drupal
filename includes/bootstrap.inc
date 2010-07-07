@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.405 2010/06/29 18:50:36 dries Exp $
+// $Id: bootstrap.inc,v 1.406 2010/07/07 17:53:28 webchick Exp $
 
 /**
  * @file
@@ -2261,8 +2261,10 @@ function drupal_valid_test_ua($user_agent) {
   // The file properties add more entropy not easily accessible to others.
   $filepath = DRUPAL_ROOT . '/includes/bootstrap.inc';
   $key = $drupal_hash_salt . filectime($filepath) . fileinode($filepath);
-  // The HMAC must match.
-  return $hmac == drupal_hmac_base64($check_string, $key);
+  $time_diff = REQUEST_TIME - $time;
+  // Since we are making a local request a 5 second time window is allowed,
+  // and the HMAC must match.
+  return ($time_diff >= 0) && ($time_diff <= 5) && ($hmac == drupal_hmac_base64($check_string, $key));
 }
 
 /**
