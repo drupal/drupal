@@ -96,6 +96,7 @@ define('FILE_STATUS_PERMANENT', 1);
  *
  * @return
  *   Returns the entire Drupal stream wrapper registry.
+ *
  * @see hook_stream_wrappers()
  * @see hook_stream_wrappers_alter()
  */
@@ -149,6 +150,7 @@ function file_get_stream_wrappers($filter = STREAM_WRAPPERS_ALL) {
  *
  * @param $scheme
  *   Stream scheme.
+ *
  * @return
  *   Return string if a scheme has a registered handler, or FALSE.
  */
@@ -162,6 +164,7 @@ function file_stream_wrapper_get_class($scheme) {
  *
  * @param $uri
  *   A stream, referenced as "scheme://target".
+ *
  * @return
  *   A string containing the name of the scheme, or FALSE if none. For example,
  *   the URI "public://example.txt" would return "public".
@@ -183,6 +186,7 @@ function file_uri_scheme($uri) {
  *
  * @param $scheme
  *   A URI scheme, a stream is referenced as "scheme://target".
+ *
  * @return
  *   Returns TRUE if the string is the name of a validated stream,
  *   or FALSE if the scheme does not have a registered handler.
@@ -203,6 +207,7 @@ function file_stream_wrapper_valid_scheme($scheme) {
  *
  * @param $uri
  *   A stream, referenced as "scheme://target".
+ *
  * @return
  *   A string containing the target (path), or FALSE if none.
  *   For example, the URI "public://sample/test.txt" would return
@@ -228,6 +233,7 @@ function file_uri_target($uri) {
  *
  * @param $uri
  *   String reference containing the URI to normalize.
+ *
  * @return
  *   The normalized URI.
  */
@@ -252,6 +258,7 @@ function file_stream_wrapper_uri_normalize($uri) {
  *
  * @param $uri
  *   A stream, referenced as "scheme://target".
+ *
  * @return
  *   Returns a new stream wrapper object appropriate for the given URI or FALSE
  *   if no registered handler could be found. For example, a URI of
@@ -284,6 +291,7 @@ function file_stream_wrapper_get_instance_by_uri($uri) {
  *
  * @param $scheme
  *   If the stream was "public://target", "public" would be the scheme.
+ *
  * @return
  *   Returns a new stream wrapper object appropriate for the given $scheme.
  *   For example, for the public scheme a stream wrapper object
@@ -320,6 +328,7 @@ function file_stream_wrapper_get_instance_by_scheme($scheme) {
  * @param $uri
  *   The URI to a file for which we need an external URL, or the path to a
  *   shipped file.
+ *
  * @return
  *   A string containing a URL that may be used to access the file.
  *   If the provided string already contains a preceding 'http', nothing is done
@@ -379,6 +388,7 @@ function file_create_url($uri) {
  *   A bitmask to indicate if the directory should be created if it does
  *   not exist (FILE_CREATE_DIRECTORY) or made writable if it is read-only
  *   (FILE_MODIFY_PERMISSIONS).
+ *
  * @return
  *   TRUE if the directory exists (or was created) and is writable. FALSE
  *   otherwise.
@@ -504,6 +514,7 @@ function file_load($fid) {
  *
  * @param $file
  *   A file object returned by file_load().
+ *
  * @return
  *   The updated file object.
  *
@@ -620,6 +631,7 @@ function file_copy(stdClass $source, $destination = NULL, $replace = FILE_EXISTS
  *   - FILE_EXISTS_RENAME - Append _{incrementing number} until the filename is
  *       unique.
  *   - FILE_EXISTS_ERROR - Do nothing and return FALSE.
+ *
  * @return
  *   The path to the new file, or FALSE in the event of an error.
  *
@@ -709,6 +721,7 @@ function file_build_uri($path) {
  *   - FILE_EXISTS_RENAME - Append _{incrementing number} until the filename is
  *       unique.
  *   - FILE_EXISTS_ERROR - Do nothing and return FALSE.
+ *
  * @return
  *   The destination filepath, or FALSE if the file already exists
  *   and FILE_EXISTS_ERROR is specified.
@@ -761,6 +774,7 @@ function file_destination($destination, $replace) {
  *   - FILE_EXISTS_RENAME - Append _{incrementing number} until the filename is
  *       unique.
  *   - FILE_EXISTS_ERROR - Do nothing and return FALSE.
+ *
  * @return
  *   Resulting file object for success, or FALSE in the event of an error.
  *
@@ -819,6 +833,7 @@ function file_move(stdClass $source, $destination = NULL, $replace = FILE_EXISTS
  *   - FILE_EXISTS_RENAME - Append _{incrementing number} until the filename is
  *       unique.
  *   - FILE_EXISTS_ERROR - Do nothing and return FALSE.
+ *
  * @return
  *   The URI of the moved file, or FALSE in the event of an error.
  *
@@ -889,6 +904,7 @@ function file_munge_filename($filename, $extensions, $alerts = TRUE) {
  *
  * @param $filename
  *   String with the filename to be unmunged.
+ *
  * @return
  *   An unmunged filename string.
  */
@@ -906,6 +922,7 @@ function file_unmunge_filename($filename) {
  *   String filename
  * @param $directory
  *   String containing the directory or parent URI.
+ *
  * @return
  *   File path consisting of $directory and a unique filename based off
  *   of $basename.
@@ -958,6 +975,7 @@ function file_create_filename($basename, $directory) {
  * @param $force
  *   Boolean indicating that the file should be deleted even if
  *   hook_file_references() reports that the file is in use.
+ *
  * @return mixed
  *   TRUE for success, FALSE in the event of an error, or an array if the file
  *   is being used by another module. The array keys are the module's name and
@@ -996,6 +1014,7 @@ function file_delete(stdClass $file, $force = FALSE) {
  *
  * @param $path
  *   A string containing a file path or (streamwrapper) URI.
+ *
  * @return
  *   TRUE for success or path does not exist, or FALSE in the event of an
  *   error.
@@ -1039,6 +1058,7 @@ function file_unmanaged_delete($path) {
  *
  * @param $path
  *   A string containing either an URI or a file or directory path.
+ *
  * @return
  *   TRUE for success or if path does not exist, FALSE in the event of an
  *   error.
@@ -1072,6 +1092,7 @@ function file_unmanaged_delete_recursive($path) {
  * @param $status
  *   Optional. File Status to return. Combine with a bitwise OR(|) to return
  *   multiple statuses. The default status is FILE_STATUS_PERMANENT.
+ *
  * @return
  *   An integer containing the number of bytes used.
  */
@@ -1115,6 +1136,7 @@ function file_space_used($uid = NULL, $status = FILE_STATUS_PERMANENT) {
  *   - FILE_EXISTS_RENAME: Append _{incrementing number} until the filename is
  *     unique.
  *   - FILE_EXISTS_ERROR: Do nothing and return FALSE.
+ *
  * @return
  *   An object containing the file information if the upload succeeded, FALSE
  *   in the event of an error, or NULL if no file was uploaded. The
@@ -1310,6 +1332,7 @@ function file_save_upload($source, $validators = array(), $destination = FALSE, 
  *   functions should return an array of error messages; an empty array
  *   indicates that the file passed validation. The functions will be called in
  *   the order specified.
+ *
  * @return
  *   An array containing validation error messages.
  *
@@ -1356,6 +1379,7 @@ function file_validate_name_length(stdClass $file) {
  *   A Drupal file object.
  * @param $extensions
  *   A string with a space separated list of allowed extensions.
+ *
  * @return
  *   An array. If the file extension is not allowed, it will contain an error
  *   message.
@@ -1385,6 +1409,7 @@ function file_validate_extensions(stdClass $file, $extensions) {
  * @param $user_limit
  *   An integer specifying the maximum number of bytes the user is allowed.
  *   Zero indicates that no limit should be enforced.
+ *
  * @return
  *   An array. If the file size exceeds limits, it will contain an error
  *   message.
@@ -1415,6 +1440,7 @@ function file_validate_size(stdClass $file, $file_limit = 0, $user_limit = 0) {
  *
  * @param $file
  *   A Drupal file object.
+ *
  * @return
  *   An array. If the file is not an image, it will contain an error message.
  *
@@ -1448,6 +1474,7 @@ function file_validate_is_image(stdClass $file) {
  * @param $minimum_dimensions
  *   An optional string in the form WIDTHxHEIGHT. This will check that the
  *   image meets a minimum size. A value of 0 indicates no restriction.
+ *
  * @return
  *   An array. If the file is an image and did not meet the requirements, it
  *   will contain an error message.
@@ -1505,6 +1532,7 @@ function file_validate_image_resolution(stdClass $file, $maximum_dimensions = 0,
  *   - FILE_EXISTS_RENAME - Append _{incrementing number} until the filename is
  *       unique.
  *   - FILE_EXISTS_ERROR - Do nothing and return FALSE.
+ *
  * @return
  *   A file object, or FALSE on error.
  *
@@ -1562,6 +1590,7 @@ function file_save_data($data, $destination = NULL, $replace = FILE_EXISTS_RENAM
  *   - FILE_EXISTS_RENAME - Append _{incrementing number} until the filename is
  *                          unique.
  *   - FILE_EXISTS_ERROR - Do nothing and return FALSE.
+ *
  * @return
  *   A string with the path of the resulting file, or FALSE on error.
  *
@@ -1729,6 +1758,7 @@ function file_scan_directory($dir, $mask, $options = array(), $depth = 0) {
  * @param $scheme
  *   A string representing the scheme of a stream. The default wrapper is
  *   is assumed if this is not provided.
+ *
  * @return
  *   A string containing the directory path of a stream. FALSE is returned if
  *   the scheme is invalid or a wrapper could not be instantiated.
@@ -1812,6 +1842,7 @@ function file_get_mimetype($uri, $mapping = NULL) {
  * @param $mode
  *   Integer value for the permissions. Consult PHP chmod() documentation for
  *   more information.
+ *
  * @return
  *   TRUE for success, FALSE in the event of an error.
  *
