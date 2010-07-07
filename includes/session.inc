@@ -1,5 +1,5 @@
 <?php
-// $Id: session.inc,v 1.86 2010/06/27 20:55:14 dries Exp $
+// $Id: session.inc,v 1.87 2010/07/07 13:52:00 dries Exp $
 
 /**
  * @file
@@ -309,7 +309,10 @@ function drupal_session_regenerate() {
     }
     $params = session_get_cookie_params();
     $session_id = drupal_hash_base64(uniqid(mt_rand(), TRUE) . drupal_random_bytes(55));
-    setcookie($insecure_session_name, $session_id, REQUEST_TIME + $params['lifetime'], $params['path'], $params['domain'], FALSE, $params['httponly']);
+    // If the session cookie lifetime is set, the session will expire $params['lifetime'] seconds from the current request.
+    // If it is not set, it will expire when the browser is closed.
+    $expire = $params['lifetime'] ? REQUEST_TIME + $params['lifetime'] : 0;
+    setcookie($insecure_session_name, $session_id, $expire, $params['path'], $params['domain'], FALSE, $params['httponly']);
     $_COOKIE[$insecure_session_name] = $session_id;
   }
 
@@ -320,7 +323,8 @@ function drupal_session_regenerate() {
 
   if (isset($old_session_id)) {
     $params = session_get_cookie_params();
-    setcookie(session_name(), session_id(), REQUEST_TIME + $params['lifetime'], $params['path'], $params['domain'], $params['secure'], $params['httponly']);
+    $expire = $params['lifetime'] ? REQUEST_TIME + $params['lifetime'] : 0;
+    setcookie(session_name(), session_id(), $expire, $params['path'], $params['domain'], $params['secure'], $params['httponly']);
     $fields = array('sid' => session_id());
     if ($is_https) {
       $fields['ssid'] = session_id();
