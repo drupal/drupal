@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.473 2010/07/02 12:37:57 dries Exp $
+// $Id: form.inc,v 1.474 2010/07/07 00:56:45 dries Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -747,7 +747,7 @@ function drupal_process_form($form_id, &$form, &$form_state) {
       // here, though.
       if (!variable_get('cache', 0) && !empty($form_state['values']['form_build_id'])) {
         cache_clear_all('form_' . $form_state['values']['form_build_id'], 'cache_form');
-        cache_clear_all('storage_' . $form_state['values']['form_build_id'], 'cache_form');
+        cache_clear_all('form_state_' . $form_state['values']['form_build_id'], 'cache_form');
       }
 
       // If batches were set in the submit handlers, we process them now,
