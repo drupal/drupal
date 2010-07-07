@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.test,v 1.27 2010/07/01 19:06:57 dries Exp $
+// $Id: openid.test,v 1.28 2010/07/07 08:05:01 webchick Exp $
 
 /**
  * Base class for OpenID tests.
@@ -143,6 +143,38 @@ class OpenIDFunctionalTestCase extends OpenIDWebTestCase {
     $this->assertLink($this->web_user->name, 0, t('User was logged in.'));
 
     // Verify user was redirected away from user/login to an accessible page.
+    $this->assertResponse(200);
+  }
+
+  /**
+   * Test login using OpenID during maintenance mode.
+   */
+  function testLoginMaintenanceMode() {
+    $this->web_user = $this->drupalCreateUser(array('access site in maintenance mode'));
+    $this->drupalLogin($this->web_user);
+
+    // Use a User-supplied Identity that is the URL of an XRDS document.
+    $identity = url('openid-test/yadis/xrds', array('absolute' => TRUE));
+    $this->addIdentity($identity);
+    $this->drupalLogout();
+
+    // Enable maintenance mode.
+    variable_set('maintenance_mode', 1);
+
+    // Test logging in via the user/login page while the site is offline.
+    $edit = array('openid_identifier' => $identity);
+    $this->drupalPost('user/login', $edit, t('Log in'));
+
+    // Check we are on the OpenID redirect form.
+    $this->assertTitle(t('OpenID redirect'), t('OpenID redirect page was displayed.'));
+
+    // Submit form to the OpenID Provider Endpoint.
+    $this->drupalPost(NULL, array(), t('Send'));
+
+    $this->assertLink($this->web_user->name, 0, t('User was logged in.'));
+
+    // Verify user was redirected away from user/login to an accessible page.
+    $this->assertText(t('Operating in maintenance mode.'));
     $this->assertResponse(200);
   }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: openid_test.module,v 1.16 2010/06/25 18:31:37 dries Exp $
+// $Id: openid_test.module,v 1.17 2010/07/07 08:05:01 webchick Exp $
 
 /**
  * @file
@@ -62,6 +62,16 @@ function openid_test_menu() {
     'type' => MENU_CALLBACK,
   );
   return $items;
+}
+
+/**
+ * Implements hook_menu_site_status_alter().
+ */
+function openid_test_menu_site_status_alter(&$menu_site_status, $path) {
+  // Allow access to openid endpoint and identity even in offline mode.
+  if ($menu_site_status == MENU_SITE_OFFLINE && user_is_anonymous() && in_array($path, array('openid-test/yadis/xrds', 'openid-test/endpoint'))) {
+    $menu_site_status = MENU_SITE_ONLINE;
+  }
 }
 
 /**

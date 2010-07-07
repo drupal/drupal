@@ -1,5 +1,5 @@
 <?php
-// $Id: menu_test.module,v 1.14 2010/04/26 14:06:23 dries Exp $
+// $Id: menu_test.module,v 1.15 2010/07/07 08:05:01 webchick Exp $
 
 /**
  * @file
@@ -189,6 +189,12 @@ function menu_test_menu() {
     'type' => MENU_LOCAL_TASK,
   );
 
+  $items['menu_login_callback'] = array(
+    'title' => 'Used as a login path',
+    'page callback' => 'menu_login_callback',
+    'access callback' => TRUE,
+  );
+
   return $items;
 }
 
@@ -328,4 +334,21 @@ function menu_test_static_variable($value = NULL) {
     $variable = $value;
   }
   return $variable;
+}
+
+/**
+ * Implements hook_menu_site_status_alter().
+ */
+function menu_test_menu_site_status_alter(&$menu_site_status, $path) {
+  // Allow access to ?q=menu_login_callback even if in maintenance mode.
+  if ($menu_site_status == MENU_SITE_OFFLINE && $path == 'menu_login_callback') {
+    $menu_site_status = MENU_SITE_ONLINE;
+  }
+}
+
+/**
+ * Menu callback to be used as a login path.
+ */
+function menu_login_callback() {
+  return 'This is menu_login_callback().';
 }
