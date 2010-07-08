@@ -20,8 +20,14 @@ Drupal.behaviors.overlayChild = {
 
     var settings = settings.overlayChild || {};
 
+    // If the entire parent window should be refreshed when the overlay is
+    // closed, pass that information to the parent window.
+    if (settings.refreshPage) {
+      parent.Drupal.overlay.refreshPage = true;
+    }
+
     // If a form has been submitted successfully, then the server side script
-    // may have decided to tell us the parent window to close the popup dialog.
+    // may have decided to tell the parent window to close the popup dialog.
     if (settings.closeOverlay) {
       parent.Drupal.overlay.bindChild(window, true);
       // Use setTimeout to close the child window from a separate thread,
@@ -38,7 +44,7 @@ Drupal.behaviors.overlayChild = {
     }
 
     // If one of the regions displaying outside the overlay needs to be
-    // reloaded, let the parent window know.
+    // reloaded immediately, let the parent window know.
     if (settings.refreshRegions) {
       parent.Drupal.overlay.refreshRegions(settings.refreshRegions);
     }

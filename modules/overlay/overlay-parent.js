@@ -116,6 +116,7 @@ Drupal.overlay.create = function () {
     .bind('drupalOverlayLoad' + eventClass, $.proxy(this, 'eventhandlerOuterResize'))
     .bind('drupalOverlayReady' + eventClass +
           ' drupalOverlayClose' + eventClass, $.proxy(this, 'eventhandlerSyncURLFragment'))
+    .bind('drupalOverlayClose' + eventClass, $.proxy(this, 'eventhandlerRefreshPage'))
     .bind('drupalOverlayBeforeClose' + eventClass +
           ' drupalOverlayBeforeLoad' + eventClass +
           ' drupalOverlayResize' + eventClass, $.proxy(this, 'eventhandlerDispatchEvent'))
@@ -458,7 +459,7 @@ Drupal.overlay.eventhandlerOverrideLink = function (event) {
   // Close the overlay when the link contains the overlay-close class.
   if ($target.hasClass('overlay-close')) {
     // Clearing the overlay URL fragment will close the overlay.
-    $.bbq.pushState();
+    $.bbq.removeState('overlay');
     return;
   }
 
@@ -587,7 +588,22 @@ Drupal.overlay.eventhandlerSyncURLFragment = function (event) {
     }
   }
   else {
-    $.bbq.pushState();
+    $.bbq.removeState('overlay');
+  }
+};
+
+/**
+ * Event handler: if the child window suggested that the parent refresh on
+ * close, force a page refresh.
+ *
+ * @param event
+ *   Event being triggered, with the following restrictions:
+ *   - event.type: drupalOverlayClose
+ *   - event.currentTarget: document
+ */
+Drupal.overlay.eventhandlerRefreshPage = function (event) {
+  if (Drupal.overlay.refreshPage) {
+    window.location.reload(true);
   }
 };
 
