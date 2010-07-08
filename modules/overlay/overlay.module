@@ -1,5 +1,5 @@
 <?php
-// $Id: overlay.module,v 1.22 2010/06/13 05:47:47 dries Exp $
+// $Id: overlay.module,v 1.23 2010/07/08 12:20:23 dries Exp $
 
 /**
  * @file
@@ -551,18 +551,21 @@ function overlay_overlay_parent_initialize() {
 function overlay_overlay_child_initialize() {
   // Check if the parent window needs to refresh any page regions on this page
   // request.
-  overlay_trigger_regions_to_refresh();
+  overlay_trigger_refresh();
   // If this is a POST request, or a GET request with a token parameter, we
   // have an indication that something in the supplemental regions of the
   // overlay might change during the current page request. We therefore store
   // the initial rendered content of those regions here, so that we can compare
   // it to the same content rendered in overlay_exit(), at the end of the page
   // request. This allows us to check if anything actually did change, and, if
-  // so, trigger an AJAX refresh of the parent window.
+  // so, trigger an immediate AJAX refresh of the parent window.
   if (!empty($_POST) || isset($_GET['token'])) {
     foreach (overlay_supplemental_regions() as $region) {
       overlay_store_rendered_content($region, overlay_render_region($region));
     }
+    // In addition, notify the parent window that when the overlay closes,
+    // the entire parent window should be refreshed.
+    overlay_request_page_refresh();
   }
   // Indicate that when the main page rendering occurs later in the page
   // request, only the regions that appear within the overlay should be
@@ -797,7 +800,7 @@ function overlay_store_rendered_content($id = NULL, $content = NULL) {
  *   The name of the page region to refresh. The parent window will trigger a
  *   refresh of this region on the next page load.
  *
- * @see overlay_trigger_regions_to_refresh()
+ * @see overlay_trigger_refresh()
  * @see Drupal.overlay.refreshRegions()
  */
 function overlay_request_refresh($region) {
@@ -806,16 +809,27 @@ function overlay_request_refresh($region) {
 }
 
 /**
- * Check if the parent window needs to refresh any regions on this page load.
+ * Request that the entire parent window be reloaded when the overlay closes.
  *
- * If the previous page load requested that any page regions be refreshed, pass
- * that request via JavaScript to the child window, so it can in turn pass the
- * request to the parent window.
+ * @see overlay_trigger_refresh()
+ */
+function overlay_request_page_refresh() {
+  $_SESSION['overlay_refresh_parent'] = TRUE;
+}
+
+/**
+ * Check if the parent window needs to be refreshed on this page load.
+ *
+ * If the previous page load requested that any page regions be refreshed, or
+ * if it requested that the entire page be refreshed when the overlay closes,
+ * pass that request via JavaScript to the child window, so it can in turn pass
+ * the request to the parent window.
  *
  * @see overlay_request_refresh()
+ * @see overlay_request_page_refresh()
  * @see Drupal.overlay.refreshRegions()
  */
-function overlay_trigger_regions_to_refresh() {
+function overlay_trigger_refresh() {
   if (!empty($_SESSION['overlay_regions_to_refresh'])) {
     $settings = array(
       'overlayChild' => array(
@@ -824,6 +838,10 @@ function overlay_trigger_regions_to_refresh() {
     );
     drupal_add_js($settings, array('type' => 'setting'));
     unset($_SESSION['overlay_regions_to_refresh']);
+  }
+  if (!empty($_SESSION['overlay_refresh_parent'])) {
+    drupal_add_js(array('overlayChild' => array('refreshPage' => TRUE)), array('type' => 'setting'));
+    unset($_SESSION['overlay_refresh_parent']);
   }
 }
 
