@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.test,v 1.56 2010/04/28 05:54:55 webchick Exp $
+// $Id: forum.test,v 1.57 2010/07/08 03:41:27 webchick Exp $
 
 class ForumTestCase extends DrupalWebTestCase {
   protected $admin_user;
@@ -353,9 +353,6 @@ class ForumTestCase extends DrupalWebTestCase {
    *   The exptected HTTP response code.
    */
   private function verifyForums($node_user, $node, $admin, $response = 200) {
-    $crumb = '›';
-    $quote = '&#039;';
-
     $response2 = ($admin) ? 200 : 403;
 
     // View forum help node.
@@ -382,7 +379,13 @@ class ForumTestCase extends DrupalWebTestCase {
     $this->drupalGet('node/' . $node->nid);
     $this->assertResponse(200);
     $this->assertTitle($node->title . ' | Drupal', t('Forum node was displayed'));
-    $this->assertText(t('Home ' . $crumb . ' Forums ' . $crumb . ' @container ' . $crumb . ' @forum', array('@container' => $this->container['name'], '@forum' => $this->forum['name'])), t('Breadcrumbs were displayed'));
+    $breadcrumb = array(
+      l(t('Home'), NULL),
+      l(t('Forums'), 'forum'),
+      l($this->container['name'], 'forum/' . $this->container['tid']),
+      l($this->forum['name'], 'forum/' . $this->forum['tid']),
+    );
+    $this->assertRaw(theme('breadcrumb', array('breadcrumb' => $breadcrumb)), t('Breadcrumbs were displayed'));
 
     // View forum edit node.
     $this->drupalGet('node/' . $node->nid . '/edit');
@@ -424,18 +427,20 @@ class ForumTestCase extends DrupalWebTestCase {
    *   A row from taxonomy_term_data table in array.
    */
   private function verifyForumView($forum, $parent = NULL) {
-    $crumb = '›';
-
     // View forum page.
     $this->drupalGet('forum/' . $forum['tid']);
     $this->assertResponse(200);
     $this->assertTitle($forum['name'] . ' | Drupal', t('Forum name was displayed'));
+
+    $breadcrumb = array(
+      l(t('Home'), NULL),
+      l(t('Forums'), 'forum'),
+    );
     if (isset($parent)) {
-      $this->assertText(t('Home ' . $crumb . ' Forums ' . $crumb . ' @name', array('@name' => $parent['name'])), t('Breadcrumbs were displayed'));
+      $breadcrumb[] = l($parent['name'], 'forum/' . $parent['tid']);
     }
-    else {
-      $this->assertText(t('Home ' . $crumb . ' Forums'), t('Breadcrumbs were displayed'));
-    }
+
+    $this->assertRaw(theme('breadcrumb', array('breadcrumb' => $breadcrumb)), t('Breadcrumbs were displayed'));
   }
 
   /**
@@ -462,8 +467,6 @@ class ForumTestCase extends DrupalWebTestCase {
    *   An array of forum node IDs.
    */
   private function viewForumTopics($nids) {
-    $crumb = '›';
-
     for ($i = 0; $i < 2; $i++) {
       foreach ($nids as $nid) {
         $this->drupalGet('node/' . $nid);

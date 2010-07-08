@@ -1,5 +1,5 @@
 <?php
-// $Id: node.test,v 1.88 2010/06/29 00:57:19 dries Exp $
+// $Id: node.test,v 1.89 2010/07/08 03:41:27 webchick Exp $
 
 /**
  * Test the node_load_multiple() function.
@@ -678,7 +678,8 @@ class NodePostSettingsTestCase extends DrupalWebTestCase {
 
     // Check that the post information is displayed.
     $node = $this->drupalGetNodeByTitle($edit["title"]);
-    $this->assertRaw('<span class="submitted">', t('Post information is displayed.'));
+    $elements = $this->xpath('//div[contains(@class,:class)]', array(':class' => 'submitted'));
+    $this->assertEqual(count($elements), 1, t('Post information is displayed.'));
   }
 
   /**
@@ -1474,8 +1475,10 @@ class NodeBlockFunctionalTest extends DrupalWebTestCase {
     $custom_block['title'] = $this->randomName();
     $custom_block['types[article]'] = TRUE;
     $custom_block['body[value]'] = $this->randomName(32);
-    $custom_block['regions[garland]'] = 'content';
-    $custom_block['regions[seven]'] = 'content';
+    $custom_block['regions[' . variable_get('theme_default', 'bartik') . ']'] = 'content';
+    if ($admin_theme = variable_get('admin_theme')) {
+      $custom_block['regions[' . $admin_theme . ']'] = 'content';
+    }
     $this->drupalPost('admin/structure/block/add', $custom_block, t('Save block'));
 
     $bid = db_query("SELECT bid FROM {block_custom} WHERE info = :info", array(':info' => $custom_block['info']))->fetchField();

@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.test,v 1.26 2010/03/18 06:26:36 dries Exp $
+// $Id: blog.test,v 1.27 2010/07/08 03:41:27 webchick Exp $
 
 class BlogTestCase extends DrupalWebTestCase {
   protected $big_user;
@@ -122,9 +122,6 @@ class BlogTestCase extends DrupalWebTestCase {
    *   HTTP response code.
    */
   private function verifyBlogs($node_user, $node, $admin, $response = 200) {
-    $crumb = '›';
-    $quote = '&#039;';
-
     $response2 = ($admin) ? 200 : 403;
 
     // View blog help node.
@@ -144,7 +141,12 @@ class BlogTestCase extends DrupalWebTestCase {
     $this->drupalGet('node/' . $node->nid);
     $this->assertResponse(200);
     $this->assertTitle($node->title . ' | Drupal', t('Blog node was displayed'));
-    $this->assertText(t('Home ' . $crumb . ' Blogs ' . $crumb . ' @name' . $quote . 's blog', array('@name' => format_username($node_user))), t('Breadcrumbs were displayed'));
+    $breadcrumb = array(
+      l(t('Home'), NULL),
+      l(t('Blogs'), 'blog'),
+      l(t("!name's blog", array('!name' => format_username($node_user))), 'blog/' . $node_user->uid),
+    );
+    $this->assertRaw(theme('breadcrumb', array('breadcrumb' => $breadcrumb)), t('Breadcrumbs were displayed'));
 
     // View blog edit node.
     $this->drupalGet('node/' . $node->nid . '/edit');
@@ -176,8 +178,6 @@ class BlogTestCase extends DrupalWebTestCase {
    *   The logged in user.
    */
   private function verifyBlogLinks($user) {
-    $crumb = '›';
-
     // Confirm blog entries link exists on the user page.
     $this->drupalGet('user/' . $user->uid);
     $this->assertResponse(200);

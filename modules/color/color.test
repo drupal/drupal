@@ -1,5 +1,5 @@
 <?php
-// $Id: color.test,v 1.4 2010/04/11 18:33:43 dries Exp $
+// $Id: color.test,v 1.5 2010/07/08 03:41:27 webchick Exp $
 
 /**
  * @file
@@ -22,8 +22,13 @@ class ColorTestCase extends DrupalWebTestCase {
 
   function setUp() {
     parent::setUp('color');
+
     // Create users.
     $this->big_user = $this->drupalCreateUser(array('administer themes'));
+
+    // This test relies on Garland, the mother of all the colorable themes.
+    theme_enable(array('garland'));
+    variable_set('theme_default', 'garland');
   }
 
   /**
@@ -55,7 +60,6 @@ class ColorTestCase extends DrupalWebTestCase {
     $stylesheet_content = join("\n", file($stylesheets[0]));
     $matched = preg_match('/(.*color: #0c7a00.*)/i', $stylesheet_content, $matches);
     $this->assertTrue($matched == 1, 'Make sure the color we changed is in the color stylesheet.');
-
   }
 
 }

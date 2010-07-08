@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.test,v 1.19 2010/06/30 15:51:50 dries Exp $
+// $Id: statistics.test,v 1.20 2010/07/08 03:41:27 webchick Exp $
 
 /**
  * Sets up a base class for the Statistics module.
@@ -165,7 +165,7 @@ class StatisticsReportsTestCase extends StatisticsTestCase {
 
     // Configure and save the block.
     $block = block_load('statistics', 'popular');
-    $block->theme = 'garland';
+    $block->theme = variable_get('theme_default', 'bartik');
     $block->status = 1;
     $block->pages = '';
     $block->region = 'sidebar_first';

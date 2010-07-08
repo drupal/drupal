@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.487 2010/07/07 05:59:14 webchick Exp $
+// $Id: system.install,v 1.488 2010/07/08 03:41:27 webchick Exp $
 
 /**
  * @file
@@ -480,11 +480,11 @@ function system_install() {
   system_rebuild_theme_data();
 
   // Enable the default theme.
-  variable_set('theme_default', 'garland');
+  variable_set('theme_default', 'bartik');
   db_update('system')
     ->fields(array('status' => 1))
     ->condition('type', 'theme')
-    ->condition('name', 'garland')
+    ->condition('name', 'bartik')
     ->execute();
 
   // Populate the cron key variable.
