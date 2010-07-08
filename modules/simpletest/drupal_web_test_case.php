@@ -2117,7 +2117,7 @@ class DrupalWebTestCase extends DrupalTestCase {
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
   protected function assertLink($label, $index = 0, $message = '', $group = 'Other') {
-    $links = $this->xpath('//a[text()=:label]', array(':label' => $label));
+    $links = $this->xpath('//a[normalize-space(text())=:label]', array(':label' => $label));
     $message = ($message ?  $message : t('Link with label %label found.', array('%label' => $label)));
     return $this->assert(isset($links[$index]), $message, $group);
   }
@@ -2137,7 +2137,7 @@ class DrupalWebTestCase extends DrupalTestCase {
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
   protected function assertNoLink($label, $message = '', $group = 'Other') {
-    $links = $this->xpath('//a[text()=:label]', array(':label' => $label));
+    $links = $this->xpath('//a[normalize-space(text())=:label]', array(':label' => $label));
     $message = ($message ?  $message : t('Link with label %label not found.', array('%label' => $label)));
     return $this->assert(empty($links), $message, $group);
   }
@@ -2199,7 +2199,7 @@ class DrupalWebTestCase extends DrupalTestCase {
    */
   protected function clickLink($label, $index = 0) {
     $url_before = $this->getUrl();
-    $urls = $this->xpath('//a[text()=:label]', array(':label' => $label));
+    $urls = $this->xpath('//a[normalize-space(text())=:label]', array(':label' => $label));
 
     if (isset($urls[$index])) {
       $url_target = $this->getAbsoluteUrl($urls[$index]['href']);
