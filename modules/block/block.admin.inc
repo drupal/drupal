@@ -228,7 +228,7 @@ function block_admin_configure($form, &$form_state, $module, $delta) {
     '#tree' => TRUE,
   );
 
-  $theme_default = variable_get('theme_default', 'garland');
+  $theme_default = variable_get('theme_default', 'bartik');
   foreach (list_themes() as $key => $theme) {
     // Only display enabled themes
     if ($theme->status) {

@@ -46,7 +46,7 @@ function _drupal_maintenance_theme() {
 
     // We use the default theme as the maintenance theme. If a default theme
     // isn't specified in the database or in settings.php, we use Garland.
-    $custom_theme = variable_get('maintenance_theme', variable_get('theme_default', 'garland'));
+    $custom_theme = variable_get('maintenance_theme', variable_get('theme_default', 'bartik'));
   }
 
   // Ensure that system.module is loaded.

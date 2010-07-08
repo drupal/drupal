@@ -33,11 +33,11 @@ class BlockTestCase extends DrupalWebTestCase {
 
     // Define the existing regions
     $this->regions = array();
-    $this->regions[] = array('name' => 'header', 'class' => 'region region-header clearfix');
-    $this->regions[] = array('name' => 'sidebar_first');
-    $this->regions[] = array('name' => 'content');
-    $this->regions[] = array('name' => 'sidebar_second');
-    $this->regions[] = array('name' => 'footer');
+    $this->regions[] = 'header';
+    $this->regions[] = 'sidebar_first';
+    $this->regions[] = 'content';
+    $this->regions[] = 'sidebar_second';
+    $this->regions[] = 'footer';
   }
 
   /**
@@ -120,7 +120,7 @@ class BlockTestCase extends DrupalWebTestCase {
     // Set the created custom block to a specific region.
     $bid = db_query("SELECT bid FROM {block_custom} WHERE info = :info", array(':info' => $custom_block['info']))->fetchField();
     $edit = array();
-    $edit['block_' . $bid . '[region]'] = $this->regions[1]['name'];
+    $edit['block_' . $bid . '[region]'] = $this->regions[1];
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
 
     // Confirm that the custom block is being displayed using configured text format.
@@ -228,7 +228,7 @@ class BlockTestCase extends DrupalWebTestCase {
 
     // For convenience of developers, put the navigation block back.
     $edit = array();
-    $edit[$block['module'] . '_' . $block['delta'] . '[region]'] = $this->regions[1]['name'];
+    $edit[$block['module'] . '_' . $block['delta'] . '[region]'] = $this->regions[1];
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
     $this->assertText(t('The block settings have been updated.'), t('Block successfully move to first sidebar region.'));
 
@@ -237,18 +237,13 @@ class BlockTestCase extends DrupalWebTestCase {
   }
 
   function moveBlockToRegion($block, $region) {
-    // If an id for an region hasn't been specified, we assume it's the same as the name.
-    if (!(isset($region['class']))) {
-      $region['class'] = 'region region-' . str_replace('_', '-', $region['name']);
-    }
-
     // Set the created block to a specific region.
     $edit = array();
-    $edit[$block['module'] . '_' . $block['delta'] . '[region]'] = $region['name'];
+    $edit[$block['module'] . '_' . $block['delta'] . '[region]'] = $region;
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
 
     // Confirm that the block was moved to the proper region.
-    $this->assertText(t('The block settings have been updated.'), t('Block successfully moved to %region_name region.', array( '%region_name' => $region['name'])));
+    $this->assertText(t('The block settings have been updated.'), t('Block successfully moved to %region_name region.', array( '%region_name' => $region)));
 
     // Confirm that the block is being displayed.
     $this->drupalGet('node');
@@ -256,10 +251,10 @@ class BlockTestCase extends DrupalWebTestCase {
 
     // Confirm that the custom block was found at the proper region.
     $xpath = $this->buildXPathQuery('//div[@class=:region-class]//div[@id=:block-id]/*', array(
-      ':region-class' => $region['class'],
+      ':region-class' => 'region region-' . str_replace('_', '-', $region),
       ':block-id' => 'block-' . $block['module'] . '-' . $block['delta'],
     ));
-    $this->assertFieldByXPath($xpath, FALSE, t('Custom block found in %region_name region.', array('%region_name' => $region['name'])));
+    $this->assertFieldByXPath($xpath, FALSE, t('Custom block found in %region_name region.', array('%region_name' => $region)));
   }
 
   /**
@@ -327,12 +322,17 @@ class NewDefaultThemeBlocks extends DrupalWebTestCase {
     $this->drupalLogin($admin_user);
 
     // Ensure no other theme's blocks are in the block table yet.
-    $count = db_query_range("SELECT 1 FROM {block} WHERE theme NOT IN ('garland', 'seven')", 0, 1)->fetchField();
-    $this->assertFalse($count, t('Only Garland and Seven have blocks.'));
+    $themes = array();
+    $themes['default'] = variable_get('theme_default', 'bartik');
+    if ($admin_theme = variable_get('admin_theme')) {
+      $themes['admin'] = $admin_theme;
+    }
+    $count = db_query_range('SELECT 1 FROM {block} WHERE theme NOT IN (:themes)', 0, 1, array(':themes' => $themes))->fetchField();
+    $this->assertFalse($count, t('Only the default theme and the admin theme have blocks.'));
 
     // Populate list of all blocks for matching against new theme.
     $blocks = array();
-    $result = db_query("SELECT * FROM {block} WHERE theme = 'garland'");
+    $result = db_query('SELECT * FROM {block} WHERE theme = :theme', array(':theme' => $themes['default']));
     foreach ($result as $block) {
       // $block->theme and $block->bid will not match, so remove them.
       unset($block->theme, $block->bid);
@@ -340,10 +340,10 @@ class NewDefaultThemeBlocks extends DrupalWebTestCase {
     }
 
     // Turn on the Stark theme and ensure that it contains all of the blocks
-    // that Garland did.
+    // the default theme had.
     theme_enable(array('stark'));
     variable_set('theme_default', 'stark');
-    $result = db_query("SELECT * FROM {block} WHERE theme='stark'");
+    $result = db_query('SELECT * FROM {block} WHERE theme = :theme', array(':theme' => 'stark'));
     foreach ($result as $block) {
       unset($block->theme, $block->bid);
       $this->assertEqual($blocks[$block->module][$block->delta], $block, t('Block %name matched', array('%name' => $block->module . '-' . $block->delta)));

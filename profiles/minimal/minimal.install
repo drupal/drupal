@@ -8,11 +8,12 @@
  */
 function minimal_install() {
   // Enable some standard blocks.
+  $default_theme = variable_get('theme_default', 'bartik');
   $values = array(
     array(
       'module' => 'system',
       'delta' => 'main',
-      'theme' => 'garland',
+      'theme' => $default_theme,
       'status' => 1,
       'weight' => 0,
       'region' => 'content',
@@ -22,7 +23,7 @@ function minimal_install() {
     array(
       'module' => 'user',
       'delta' => 'login',
-      'theme' => 'garland',
+      'theme' => $default_theme,
       'status' => 1,
       'weight' => 0,
       'region' => 'sidebar_first',
@@ -32,7 +33,7 @@ function minimal_install() {
     array(
       'module' => 'system',
       'delta' => 'navigation',
-      'theme' => 'garland',
+      'theme' => $default_theme,
       'status' => 1,
       'weight' => 0,
       'region' => 'sidebar_first',
@@ -42,7 +43,7 @@ function minimal_install() {
     array(
       'module' => 'system',
       'delta' => 'management',
-      'theme' => 'garland',
+      'theme' => $default_theme,
       'status' => 1,
       'weight' => 1,
       'region' => 'sidebar_first',
@@ -52,7 +53,7 @@ function minimal_install() {
     array(
       'module' => 'system',
       'delta' => 'help',
-      'theme' => 'garland',
+      'theme' => $default_theme,
       'status' => 1,
       'weight' => 0,
       'region' => 'help',

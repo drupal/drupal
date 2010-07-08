@@ -165,7 +165,7 @@ class StatisticsReportsTestCase extends StatisticsTestCase {
 
     // Configure and save the block.
     $block = block_load('statistics', 'popular');
-    $block->theme = 'garland';
+    $block->theme = variable_get('theme_default', 'bartik');
     $block->status = 1;
     $block->pages = '';
     $block->region = 'sidebar_first';

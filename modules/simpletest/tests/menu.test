@@ -20,6 +20,7 @@ class MenuRouterTestCase extends DrupalWebTestCase {
     parent::setUp('menu_test');
     // Make the tests below more robust by explicitly setting the default theme
     // and administrative theme that they expect.
+    theme_enable(array('garland'));
     variable_set('theme_default', 'garland');
     variable_set('admin_theme', 'seven');
   }

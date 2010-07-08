@@ -480,11 +480,11 @@ function system_install() {
   system_rebuild_theme_data();
 
   // Enable the default theme.
-  variable_set('theme_default', 'garland');
+  variable_set('theme_default', 'bartik');
   db_update('system')
     ->fields(array('status' => 1))
     ->condition('type', 'theme')
-    ->condition('name', 'garland')
+    ->condition('name', 'bartik')
     ->execute();
 
   // Populate the cron key variable.
