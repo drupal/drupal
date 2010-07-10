@@ -60,7 +60,7 @@ function statistics_exit() {
 
   if (variable_get('statistics_count_content_views', 0)) {
     // We are counting content views.
-    if ((arg(0) == 'node') && is_numeric(arg(1)) && arg(2) == '') {
+    if (arg(0) == 'node' && is_numeric(arg(1)) && arg(2) == NULL) {
       // A node has been viewed, so update the node's counters.
       db_merge('node_counter')
         ->key(array('nid' => arg(1)))

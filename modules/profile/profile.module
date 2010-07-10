@@ -177,7 +177,7 @@ function profile_block_save($delta = '', $edit = array()) {
 function profile_block_view($delta = '') {
   if (user_access('access user profiles')) {
     $output = '';
-    if ((arg(0) == 'node') && is_numeric(arg(1)) && (arg(2) == NULL)) {
+    if (arg(0) == 'node' && is_numeric(arg(1)) && arg(2) == NULL) {
       $node = node_load(arg(1));
       $account = user_load($node->uid);
 
