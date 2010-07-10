@@ -1,5 +1,5 @@
 <?php
-// $Id: trigger.module,v 1.63 2010/06/29 18:24:10 dries Exp $
+// $Id: trigger.module,v 1.64 2010/07/10 01:44:28 dries Exp $
 
 /**
  * @file
@@ -467,7 +467,7 @@ function _trigger_normalize_user_context($type, $account) {
     // If a single node is being viewed, return the node.
     case 'node':
       // If we are viewing an individual node, return the node.
-      if ((arg(0) == 'node') && is_numeric(arg(1)) && (arg(2) == NULL)) {
+      if (arg(0) == 'node' && is_numeric(arg(1)) && arg(2) == NULL) {
         return node_load(array('nid' => arg(1)));
       }
       break;

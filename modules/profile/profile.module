@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.291 2010/05/29 11:37:33 dries Exp $
+// $Id: profile.module,v 1.292 2010/07/10 01:44:28 dries Exp $
 
 /**
  * @file
@@ -177,7 +177,7 @@ function profile_block_save($delta = '', $edit = array()) {
 function profile_block_view($delta = '') {
   if (user_access('access user profiles')) {
     $output = '';
-    if ((arg(0) == 'node') && is_numeric(arg(1)) && (arg(2) == NULL)) {
+    if (arg(0) == 'node' && is_numeric(arg(1)) && arg(2) == NULL) {
       $node = node_load(arg(1));
       $account = user_load($node->uid);
 
