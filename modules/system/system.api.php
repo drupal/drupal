@@ -2603,8 +2603,8 @@ function hook_schema() {
  *
  * When a module modifies the database structure of another module (by
  * changing, adding or removing fields, keys or indexes), it should
- * implement hook_schema_alter() to update the default $schema to take
- * it's changes into account.
+ * implement hook_schema_alter() to update the default $schema to take its
+ * changes into account.
  *
  * See hook_schema() for details on the schema definition structure.
  *
