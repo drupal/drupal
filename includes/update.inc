@@ -75,9 +75,9 @@ function update_prepare_d7_bootstrap() {
   // still being used.
   include_once DRUPAL_ROOT . '/includes/install.inc';
   drupal_bootstrap(DRUPAL_BOOTSTRAP_CONFIGURATION);
-  global $databases, $db_url, $update_rewrite_settings;
+  global $databases, $db_url, $db_prefix, $update_rewrite_settings;
   if (empty($databases) && !empty($db_url)) {
-    $databases = update_parse_db_url($db_url);
+    $databases = update_parse_db_url($db_url, $db_prefix);
     // Record the fact that the settings.php file will need to be rewritten.
     $update_rewrite_settings = TRUE;
     $settings_file = conf_path() . '/settings.php';
@@ -312,9 +312,9 @@ function update_fix_d7_requirements() {
 
   // Rewrite the settings.php file if necessary, see
   // update_prepare_d7_bootstrap().
-  global $update_rewrite_settings, $db_url;
+  global $update_rewrite_settings, $db_url, $db_prefix;
   if (!empty($update_rewrite_settings)) {
-    $databases = update_parse_db_url($db_url);
+    $databases = update_parse_db_url($db_url, $db_prefix);
     $salt = drupal_hash_base64(drupal_random_bytes(55));
     file_put_contents(conf_path() . '/settings.php', "\n" . '$databases = ' . var_export($databases, TRUE) . ";\n\$drupal_hash_salt = '$salt';", FILE_APPEND);
   }
@@ -674,7 +674,7 @@ function update_fix_d7_install_profile() {
  * @return
  *   Drupal 7 DBTNG compatible array of database connection information.
  */
-function update_parse_db_url($db_url) {
+function update_parse_db_url($db_url, $db_prefix) {
   $databases = array();
   if (!is_array($db_url)) {
     $db_url = array('default' => $db_url);
@@ -691,6 +691,9 @@ function update_parse_db_url($db_url) {
       'host' => urldecode($url['host']),
       'port' => isset($url['port']) ? urldecode($url['port']) : '',
     );
+    if (isset($db_prefix)) {
+      $databases[$database]['default']['prefix'] = $db_prefix;
+    }
   }
   return $databases;
 }
