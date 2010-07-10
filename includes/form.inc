@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.476 2010/07/07 17:56:42 webchick Exp $
+// $Id: form.inc,v 1.477 2010/07/10 00:03:37 webchick Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -1505,6 +1505,14 @@ function form_builder($form_id, $element, &$form_state) {
       $element[$key]['#access'] = FALSE;
     }
 
+    // Make child elements inherit their parent's #disabled and #allow_focus
+    // values unless they specify their own.
+    foreach (array('#disabled', '#allow_focus') as $property) {
+      if (isset($element[$property]) && !isset($element[$key][$property])) {
+        $element[$key][$property] = $element[$property];
+      }
+    }
+
     // Don't squash existing parents value.
     if (!isset($element[$key]['#parents'])) {
       // Check to see if a tree of child elements is present. If so,
@@ -2522,12 +2530,8 @@ function form_process_radios($element) {
           '#attributes' => $element['#attributes'],
           '#parents' => $element['#parents'],
           '#id' => drupal_html_id('edit-' . implode('-', $parents_for_id)),
+          '#ajax' => isset($element['#ajax']) ? $element['#ajax'] : NULL,
         );
-        foreach (array('#ajax', '#disabled', '#allow_focus') as $property) {
-          if (isset($element[$property])) {
-            $element[$key][$property] = $element[$property];
-          }
-        }
       }
     }
   }
@@ -2623,12 +2627,8 @@ function form_process_checkboxes($element) {
           '#return_value' => $key,
           '#default_value' => isset($value[$key]) ? $key : NULL,
           '#attributes' => $element['#attributes'],
+          '#ajax' => isset($element['#ajax']) ? $element['#ajax'] : NULL,
         );
-        foreach (array('#ajax', '#disabled', '#allow_focus') as $property) {
-          if (isset($element[$property])) {
-            $element[$key][$property] = $element[$property];
-          }
-        }
       }
     }
   }
@@ -2808,12 +2808,8 @@ function form_process_tableselect($element) {
             '#attributes' => $element['#attributes'],
             '#parents' => $element['#parents'],
             '#id' => drupal_html_id('edit-' . implode('-', $parents_for_id)),
+            '#ajax' => isset($element['#ajax']) ? $element['#ajax'] : NULL,
           );
-        }
-        foreach (array('#ajax', '#disabled', '#allow_focus') as $property) {
-          if (isset($element[$property])) {
-            $element[$key][$property] = $element[$property];
-          }
         }
       }
     }

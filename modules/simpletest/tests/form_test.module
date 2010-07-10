@@ -1,5 +1,5 @@
 <?php
-// $Id: form_test.module,v 1.42 2010/07/02 12:37:57 dries Exp $
+// $Id: form_test.module,v 1.43 2010/07/10 00:03:37 webchick Exp $
 
 /**
  * @file
@@ -851,6 +851,19 @@ function _form_test_disabled_elements($form, &$form_state) {
       'year' => 1979,
     ),
   );
+
+  // The #disabled state should propagate to children.
+  $form['disabled_container'] = array(
+    '#disabled' => TRUE,
+  );
+  foreach (array('textfield', 'textarea', 'hidden') as $type) {
+    $form['disabled_container']['disabled_container_' . $type] = array(
+      '#type' => $type,
+      '#title' => $type,
+      '#default_value' => $type,
+      '#test_hijack_value' => 'HIJACK',
+    );
+  }
 
   $form['submit'] = array(
     '#type' => 'submit',

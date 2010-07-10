@@ -1,5 +1,5 @@
 <?php
-// $Id: form.test,v 1.53 2010/07/02 12:37:57 dries Exp $
+// $Id: form.test,v 1.54 2010/07/10 00:03:37 webchick Exp $
 
 /**
  * @file
@@ -185,26 +185,43 @@ class FormsTestCase extends DrupalWebTestCase {
     // element. drupalPost() emulates a browser by not submitting input for
     // disabled elements, so we need to un-disable those elements first.
     $this->drupalGet('form-test/disabled-elements');
+    $disabled_elements = array();
     foreach ($this->xpath('//*[@disabled]') as $element) {
+      $disabled_elements[] = (string) $element['name'];
       unset($element['disabled']);
     }
+
+    // All the elements should be marked as disabled, including the ones below
+    // the disabled container.
+    $this->assertEqual(count($disabled_elements), 20, t('The correct elements have the disabled property in the HTML code.'));
+
     $this->drupalPost(NULL, $edit, t('Submit'));
     $returned_values['hijacked'] = drupal_json_decode($this->content);
 
     // Ensure that the returned values match the form's default values in both
     // cases.
     foreach ($returned_values as $type => $values) {
-      foreach (element_children($form) as $key) {
-        if (isset($form[$key]['#default_value'])) {
-          $expected_value = $form[$key]['#default_value'];
+      $this->assertFormValuesDefault($values, $form);
+    }
+  }
 
-          if ($key == 'checkboxes_multiple') {
-            // Checkboxes values are not filtered out.
-            $values[$key] = array_filter($values[$key]);
-          }
-          $this->assertIdentical($expected_value, $values[$key], t('Default value for %type: expected %expected, returned %returned.', array('%type' => $key, '%expected' => var_export($expected_value, TRUE), '%returned' => var_export($values[$key], TRUE))));
+  /**
+   * Assert that the values submitted to a form matches the default values of the elements.
+   */
+  function assertFormValuesDefault($values, $form) {
+    foreach (element_children($form) as $key) {
+      if (isset($form[$key]['#default_value'])) {
+        $expected_value = $form[$key]['#default_value'];
+
+        if ($key == 'checkboxes_multiple') {
+          // Checkboxes values are not filtered out.
+          $values[$key] = array_filter($values[$key]);
         }
+        $this->assertIdentical($expected_value, $values[$key], t('Default value for %type: expected %expected, returned %returned.', array('%type' => $key, '%expected' => var_export($expected_value, TRUE), '%returned' => var_export($values[$key], TRUE))));
       }
+
+      // Recurse children.
+      $this->assertFormValuesDefault($values, $form[$key]);
     }
   }
 

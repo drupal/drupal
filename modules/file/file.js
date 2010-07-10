@@ -1,4 +1,4 @@
-// $Id: file.js,v 1.3 2010/05/01 21:55:13 dries Exp $
+// $Id: file.js,v 1.4 2010/07/10 00:03:37 webchick Exp $
 
 /**
  * @file
@@ -92,17 +92,18 @@ Drupal.file = Drupal.file || {
       $enabledFields = $(this).parents('div.form-managed-file').find('input.form-file');
     }
 
-    var $disabledFields = $('div.form-managed-file input.form-file').not($enabledFields);
-
-    // Disable upload fields other than the one we're currently working with.
-    $disabledFields.attr('disabled', 'disabled');
-
-    // All the other mousedown handlers (like Drupal's AJAX behaviors) are
-    // excuted before any timeout functions will be called, so this effectively
-    // re-enables the file fields after other processing is complete even though
-    // it is only a 1 second timeout.
+    // Temporarily disable upload fields other than the one we're currently
+    // working with. Filter out fields that are already disabled so that they
+    // do not get enabled when we re-enable these fields at the end of behavior
+    // processing. Re-enable in a setTimeout set to a relatively short amount
+    // of time (1 second). All the other mousedown handlers (like Drupal's AJAX
+    // behaviors) are excuted before any timeout functions are called, so we
+    // don't have to worry about the fields being re-enabled too soon.
+    // @todo If the previous sentence is true, why not set the timeout to 0?
+    var $fieldsToTemporarilyDisable = $('div.form-managed-file input.form-file').not($enabledFields).not(':disabled');
+    $fieldsToTemporarilyDisable.attr('disabled', 'disabled');
     setTimeout(function (){
-      $disabledFields.attr('disabled', '');
+      $fieldsToTemporarilyDisable.attr('disabled', '');
     }, 1000);
   },
   /**
