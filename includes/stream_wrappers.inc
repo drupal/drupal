@@ -477,7 +477,9 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
    * @see http://php.net/manual/en/streamwrapper.stream-seek.php
    */
   public function stream_seek($offset, $whence) {
-    return fseek($this->handle, $offset, $whence);
+    // fseek returns 0 on success and -1 on a failure.
+    // stream_seek   1 on success and  0 on a failure.
+    return !fseek($this->handle, $offset, $whence);
   }
 
   /**
@@ -711,7 +713,11 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
    * @see http://php.net/manual/en/streamwrapper.dir-rewinddir.php
    */
   public function dir_rewinddir() {
-    return rewinddir($this->handle);
+    rewinddir($this->handle);
+    // We do not really have a way to signal a failure as rewinddir() does not
+    // have a return value and there is no way to read a directory handler
+    // without advancing to the next file.
+    return TRUE;
   }
 
   /**
@@ -723,7 +729,10 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
    * @see http://php.net/manual/en/streamwrapper.dir-closedir.php
    */
   public function dir_closedir() {
-    return closedir($this->handle);
+    closedir($this->handle);
+    // We do not really have a way to signal a failure as closedir() does not
+    // have a return value.
+    return TRUE;
   }
 }
 
