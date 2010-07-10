@@ -1,5 +1,5 @@
 <?php
-// $Id: update.inc,v 1.60 2010/07/07 05:44:03 webchick Exp $
+// $Id: update.inc,v 1.61 2010/07/10 01:57:32 dries Exp $
 
 /**
  * @file
@@ -141,8 +141,7 @@ function update_prepare_d7_bootstrap() {
     $schema['registry_file'] = array(
       'fields' => array(
         'filename'   => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE),
-        'filectime'  => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
-        'filemtime'  => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+        'hash'   => array('type' => 'varchar', 'length' => 64, 'not null' => TRUE),
       ),
       'primary key' => array('filename'),
     );

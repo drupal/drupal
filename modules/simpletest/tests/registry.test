@@ -1,5 +1,5 @@
 <?php
-// $Id: registry.test,v 1.17 2010/05/01 08:12:23 dries Exp $
+// $Id: registry.test,v 1.18 2010/07/10 01:57:32 dries Exp $
 
 class RegistryParseFileTestCase extends DrupalWebTestCase {
   public static function getInfo() {
@@ -71,10 +71,11 @@ class RegistryParseFilesTestCase extends DrupalWebTestCase {
       file_save_data($this->$fileType->contents, $this->$fileType->fileName);
 
       if ($fileType == 'existing_changed') {
+        // Add a record with an incorrect hash.
+        $this->$fileType->fakeHash = hash('sha256', mt_rand());
         db_insert('registry_file')
           ->fields(array(
-            'filectime' => mt_rand(1, 1000000),
-            'filemtime' => mt_rand(1, 1000000),
+            'hash' => $this->$fileType->fakeHash,
             'filename' => $this->$fileType->fileName,
           ))
           ->execute();
@@ -104,10 +105,9 @@ class RegistryParseFilesTestCase extends DrupalWebTestCase {
         $foundName = db_query('SELECT name FROM {registry} WHERE name = :name', array(':name' => $this->$fileType->$resource))->fetchField();
         $this->assertTrue($this->$fileType->$resource == $foundName, t('Resource "@resource" found.', array('@resource' => $this->$fileType->$resource)));
       }
-      // Test that we have the right file creation and modification dates.
-      $dates = db_query('SELECT filectime, filemtime FROM {registry_file} WHERE filename = :filename', array(':filename' => $this->$fileType->fileName))->fetchObject();
-      $this->assertEqual($dates->filectime, filectime($this->$fileType->fileName), t('File creation date matches for %filename.', array('%filename' => $this->$fileType->fileName)));
-      $this->assertEqual($dates->filemtime, filemtime($this->$fileType->fileName), t('File modification date matches for %filename.', array('%filename' => $this->$fileType->fileName)));
+      // Test that we have the right hash.
+      $hash = db_query('SELECT hash FROM {registry_file} WHERE filename = :filename', array(':filename' => $this->$fileType->fileName))->fetchField();
+      $this->assertTrue(hash('sha256', $this->$fileType->contents) == $hash, t('sha-256 for "@filename" matched.' . $fileType . $hash, array('@filename' => $this->$fileType->fileName)));
     }
   }
 
@@ -119,8 +119,7 @@ class RegistryParseFilesTestCase extends DrupalWebTestCase {
     foreach ($this->fileTypes as $fileType) {
       $files[$this->$fileType->fileName] = array('module' => '', 'weight' => 0);
       if ($fileType == 'existing_changed') {
-        $files[$this->$fileType->fileName]['filectime'] = mt_rand(1, 1000000);
-        $files[$this->$fileType->fileName]['filemtime'] = mt_rand(1, 1000000);
+        $files[$this->$fileType->fileName]['hash'] = $this->$fileType->fakeHash;
       }
     }
     return $files;

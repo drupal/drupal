@@ -1,5 +1,5 @@
 <?php
-// $Id: registry.inc,v 1.32 2010/06/08 03:16:05 webchick Exp $
+// $Id: registry.inc,v 1.33 2010/07/10 01:57:32 dries Exp $
 
 /**
  * @file
@@ -65,11 +65,9 @@ function _registry_update() {
     // or modify attributes of a file.
     drupal_alter('registry_files', $files, $modules);
     foreach (registry_get_parsed_files() as $filename => $file) {
-      // Add the file creation and modification dates to those files we have
-      // already parsed.
+      // Add the hash for those files we have already parsed.
       if (isset($files[$filename])) {
-        $files[$filename]['filectime'] = $file['filectime'];
-        $files[$filename]['filemtime'] = $file['filemtime'];
+        $files[$filename]['hash'] = $file['hash'];
       }
       else {
         // Flush the registry of resources in files that are no longer on disc
@@ -129,22 +127,15 @@ function registry_get_parsed_files() {
  */
 function _registry_parse_files($files) {
   $parsed_files = array();
-  $filetimes = array();
   foreach ($files as $filename => $file) {
     if (file_exists($filename)) {
-      $filetimes[$filename] = array(
-        'filectime' => filectime($filename),
-        'filemtime' => filemtime($filename),
-      );
-
-      $modified_file = !isset($file['filectime']) || !isset($file['filemtime'])
-                  || $filetimes[$filename]['filectime'] != $file['filectime'] 
-                  || $filetimes[$filename]['filemtime'] != $file['filemtime'];
-      if ($modified_file) {
+      $hash = hash_file('sha256', $filename);
+      if (empty($file['hash']) || $file['hash'] != $hash) {
         // Delete registry entries for this file, so we can insert the new resources.
         db_delete('registry')
           ->condition('filename', $filename)
           ->execute();
+        $file['hash'] = $hash;
         $parsed_files[$filename] = $file;
       }
     }
@@ -154,8 +145,7 @@ function _registry_parse_files($files) {
     db_merge('registry_file')
       ->key(array('filename' => $filename))
       ->fields(array(
-        'filectime' => $filetimes[$filename]['filectime'],
-        'filemtime' => $filetimes[$filename]['filemtime'],
+        'hash' => $file['hash'],
       ))
       ->execute();
   }

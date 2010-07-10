@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.488 2010/07/08 03:41:27 webchick Exp $
+// $Id: system.install,v 1.489 2010/07/10 01:57:32 dries Exp $
 
 /**
  * @file
@@ -1346,17 +1346,11 @@ function system_schema() {
         'length' => 255,
         'not null' => TRUE,
       ),
-      'filectime'  => array(
-        'description' => "The creation time of the file when last parsed.",
-        'type' => 'int',
+      'hash'  => array(
+        'description' => "sha-256 hash of the file's contents when last parsed.",
+        'type' => 'varchar',
+        'length' => 64,
         'not null' => TRUE,
-        'default' => 0,
-      ),
-      'filemtime'  => array(
-        'description' => "The modification time of the file when last parsed.",
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
       ),
     ),
     'primary key' => array('filename'),
