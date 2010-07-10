@@ -465,7 +465,7 @@ function image_field_formatter_view($entity_type, $entity, $field, $instance, $l
 
   // Check if the formatter involves a particular image style.
   $matches = array();
-  if (preg_match('/__([a-z0-9_]+)/', $display['type'], $matches)) {
+  if (preg_match('/__([a-z0-9_-]+)/', $display['type'], $matches)) {
     $image_style = $matches[1];
   }
 
