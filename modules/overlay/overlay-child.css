@@ -72,9 +72,6 @@ html.js body {
 #overlay-close:focus {
   padding: 0;
 }
-#overlay-close span {
-  display: none;
-}
 
 /**
  * Tabs on the overlay.

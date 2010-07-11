@@ -27,7 +27,7 @@
       <h1 id="overlay-title"<?php print $title_attributes; ?>><?php print $title; ?></h1>
     </div>
     <div id="overlay-close-wrapper">
-      <a id="overlay-close" href="#" class="overlay-close"><span><?php t('Close overlay'); ?></span></a>
+      <a id="overlay-close" href="#" class="overlay-close"><span class="element-invisible"><?php print t('Close overlay'); ?></span></a>
     </div>
     <?php if ($tabs): ?><ul id="overlay-tabs"><?php print render($tabs); ?></ul><?php endif; ?>
   </div>
