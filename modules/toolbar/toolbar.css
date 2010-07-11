@@ -27,9 +27,12 @@ body.toolbar-drawer {
 
 /**
  * Base styles.
+ *
+ * We use a keyword for the toolbar font size to make it display consistently
+ * across different themes, while still allowing browsers to resize the text.
  */
 #toolbar {
-  font: normal 0.9em "Lucida Grande", Verdana, sans-serif;
+  font: normal small "Lucida Grande", Verdana, sans-serif;
   background: #666;
   color: #ccc;
   position: fixed;
@@ -52,8 +55,9 @@ body.toolbar-drawer {
 }
 
 #toolbar a {
-  text-decoration: none;
   color: #fff;
+  font-size: .846em;
+  text-decoration: none;
 }
 
 #toolbar ul li,
