@@ -1,4 +1,4 @@
-/* $Id: overlay-child.css,v 1.3 2010/06/13 06:03:47 dries Exp $ */
+/* $Id: overlay-child.css,v 1.4 2010/07/11 22:03:45 dries Exp $ */
 
 html.js {
   background: transparent !important;
@@ -71,9 +71,6 @@ html.js body {
 #overlay-close:hover,
 #overlay-close:focus {
   padding: 0;
-}
-#overlay-close span {
-  display: none;
 }
 
 /**
