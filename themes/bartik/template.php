@@ -75,6 +75,13 @@ function bartik_process_page(&$variables) {
 }
 
 /**
+ * Implements hook_preprocess_maintenance_page().
+ */
+function bartik_preprocess_maintenance_page(&$variables) {
+  drupal_add_css(drupal_get_path('theme', 'bartik') . '/css/maintenance-page.css');
+}
+
+/**
  * Override or insert variables into the maintenance page template.
  */
 function bartik_process_maintenance_page(&$variables) {
