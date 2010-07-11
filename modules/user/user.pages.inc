@@ -491,7 +491,6 @@ function user_cancel_methods() {
       '#return_value' => $name,
       '#default_value' => $default_method,
       '#parents' => array('user_cancel_method'),
-      '#required' => TRUE,
     );
   }
   return $form;
