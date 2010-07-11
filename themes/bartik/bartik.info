@@ -1,4 +1,4 @@
-; $Id: bartik.info,v 1.1 2010/07/06 05:25:51 webchick Exp $
+; $Id: bartik.info,v 1.2 2010/07/11 22:06:40 dries Exp $
 
 name = Bartik
 description = A flexible, recolorable theme with many regions.
@@ -11,7 +11,6 @@ stylesheets[all][] = css/layout.css
 stylesheets[all][] = css/style.css
 stylesheets[all][] = css/colors.css
 stylesheets[print][] = css/print.css
-stylesheets[all][] = css/maintenance-page.css
 
 scripts[] = scripts/search.js
 

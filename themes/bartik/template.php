@@ -1,5 +1,5 @@
 <?php
-// $Id: template.php,v 1.1 2010/07/06 05:25:51 webchick Exp $
+// $Id: template.php,v 1.2 2010/07/11 22:06:40 dries Exp $
 
 /**
  * Add body classes if certain regions have content.
@@ -72,6 +72,13 @@ function bartik_process_page(&$variables) {
     // Make sure the shortcut link is the first item in title_suffix.
     $variables['title_suffix']['add_or_remove_shortcut']['#weight'] = -100;
   }
+}
+
+/**
+ * Implements hook_preprocess_maintenance_page().
+ */
+function bartik_preprocess_maintenance_page(&$variables) {
+  drupal_add_css(drupal_get_path('theme', 'bartik') . '/css/maintenance-page.css');
 }
 
 /**
