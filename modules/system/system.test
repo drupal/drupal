@@ -1510,7 +1510,6 @@ class TokenReplaceTestCase extends DrupalWebTestCase {
     $tests = array();
     $tests['[site:name]'] = check_plain(variable_get('site_name', 'Drupal'));
     $tests['[site:slogan]'] = check_plain(variable_get('site_slogan', ''));
-    $tests['[site:mission]'] = filter_xss(variable_get('site_mission', ''));
     $tests['[site:mail]'] = 'simpletest@example.com';
     $tests['[site:url]'] = url('<front>', $url_options);
     $tests['[site:url-brief]'] = preg_replace('!^https?://!', '', url('<front>', $url_options));
@@ -1527,7 +1526,6 @@ class TokenReplaceTestCase extends DrupalWebTestCase {
     // Generate and test unsanitized tokens.
     $tests['[site:name]'] = variable_get('site_name', 'Drupal');
     $tests['[site:slogan]'] = variable_get('site_slogan', '');
-    $tests['[site:mission]'] = variable_get('site_mission', '');
 
     foreach ($tests as $input => $expected) {
       $output = token_replace($input, array(), array('language' => $language, 'sanitize' => FALSE));

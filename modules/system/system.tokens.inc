@@ -36,10 +36,6 @@ function system_token_info() {
     'name' => t("Slogan"),
     'description' => t("The slogan of the site."),
   );
-  $site['mission'] = array(
-    'name' => t("Mission"),
-    'description' => t("The optional 'mission' of the site."),
-  );
   $site['mail'] = array(
     'name' => t("Email"),
     'description' => t("The administrative email address for the site."),
@@ -158,11 +154,6 @@ function system_tokens($type, $tokens, array $data = array(), array $options = a
         case 'slogan':
           $slogan = variable_get('site_slogan', '');
           $replacements[$original] = $sanitize ? check_plain($slogan) : $slogan;
-          break;
-
-        case 'mission':
-          $mission = variable_get('site_mission', '');
-          $replacements[$original] = $sanitize ? filter_xss($mission) : $mission;
           break;
 
         case 'mail':
