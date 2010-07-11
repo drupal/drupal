@@ -48,7 +48,6 @@ ul.tips {
 #header #block-system-secondary-menu li a {
   float: right;
   border-left: 1px solid #555;
-
   border-right: none;
 }
 #header .block-menu li.first a,
