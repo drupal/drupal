@@ -1,4 +1,4 @@
-/* $Id: style-rtl.css,v 1.1 2010/07/06 05:25:51 webchick Exp $ */
+/* $Id: style-rtl.css,v 1.2 2010/07/11 22:12:26 dries Exp $ */
 
 /* ------------------ Reset Styles ------------------ */
 
@@ -48,7 +48,6 @@ ul.tips {
 #header #block-system-secondary-menu li a {
   float: right;
   border-left: 1px solid #555;
-
   border-right: none;
 }
 #header .block-menu li.first a,
