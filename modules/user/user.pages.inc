@@ -1,5 +1,5 @@
 <?php
-// $Id: user.pages.inc,v 1.73 2010/06/17 13:44:45 dries Exp $
+// $Id: user.pages.inc,v 1.74 2010/07/11 22:14:28 dries Exp $
 
 /**
  * @file
@@ -491,7 +491,6 @@ function user_cancel_methods() {
       '#return_value' => $name,
       '#default_value' => $default_method,
       '#parents' => array('user_cancel_method'),
-      '#required' => TRUE,
     );
   }
   return $form;
