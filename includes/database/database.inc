@@ -878,6 +878,9 @@ abstract class DatabaseConnection extends PDO {
    * @see DatabaseTransaction::rollback()
    */
   public function rollback($savepoint_name = 'drupal_transaction') {
+    if (!$this->supportsTransactions()) {
+      return;
+    }
     if (!$this->inTransaction()) {
       throw new DatabaseTransactionNoActiveException();
     }
@@ -901,9 +904,7 @@ abstract class DatabaseConnection extends PDO {
         return;
       }
     }
-    if ($this->supportsTransactions()) {
-      parent::rollBack();
-    }
+    parent::rollBack();
   }
 
   /**
