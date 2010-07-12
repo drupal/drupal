@@ -1,4 +1,4 @@
-/* $Id: toolbar.css,v 1.23 2010/07/11 00:59:37 webchick Exp $ */
+/* $Id: toolbar.css,v 1.24 2010/07/12 15:13:13 webchick Exp $ */
 
 body.toolbar {
   padding-top: 2.2em;
@@ -118,11 +118,13 @@ body.toolbar-drawer {
 
 #toolbar div.toolbar-menu ul li a:focus,
 #toolbar div.toolbar-menu ul li a:hover,
+#toolbar div.toolbar-menu ul li a:active,
 #toolbar div.toolbar-menu ul li a.active:focus {
   background: #444;
 }
 
 #toolbar div.toolbar-menu ul li a.active:hover,
+#toolbar div.toolbar-menu ul li a.active:active,
 #toolbar div.toolbar-menu ul li a.active,
 #toolbar div.toolbar-menu ul li.active-trail a {
   text-shadow: #333 0 1px 0;
