@@ -118,11 +118,13 @@ body.toolbar-drawer {
 
 #toolbar div.toolbar-menu ul li a:focus,
 #toolbar div.toolbar-menu ul li a:hover,
+#toolbar div.toolbar-menu ul li a:active,
 #toolbar div.toolbar-menu ul li a.active:focus {
   background: #444;
 }
 
 #toolbar div.toolbar-menu ul li a.active:hover,
+#toolbar div.toolbar-menu ul li a.active:active,
 #toolbar div.toolbar-menu ul li a.active,
 #toolbar div.toolbar-menu ul li.active-trail a {
   text-shadow: #333 0 1px 0;
