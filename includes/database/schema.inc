@@ -187,7 +187,7 @@ abstract class DatabaseSchema implements QueryPlaceholderInterface {
     // contains a schema reference in which case we will change the schema key
     // to the value before the period in the prefix. Everything after the dot
     // will be prefixed onto the front of the table.
-    if ($pos = strpos($info['prefix'], '.') !== FALSE) {
+    if (($pos = strpos($info['prefix'], '.')) !== FALSE) {
       // Grab everything before the period.
       $info['schema'] = substr($info['prefix'], 0, $pos);
       // Grab everything after the dot, and prefix on to the table.
