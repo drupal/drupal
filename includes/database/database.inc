@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.126 2010/06/28 19:57:34 dries Exp $
+// $Id: database.inc,v 1.127 2010/07/12 15:14:16 webchick Exp $
 
 /**
  * @file
@@ -878,6 +878,9 @@ abstract class DatabaseConnection extends PDO {
    * @see DatabaseTransaction::rollback()
    */
   public function rollback($savepoint_name = 'drupal_transaction') {
+    if (!$this->supportsTransactions()) {
+      return;
+    }
     if (!$this->inTransaction()) {
       throw new DatabaseTransactionNoActiveException();
     }
@@ -901,9 +904,7 @@ abstract class DatabaseConnection extends PDO {
         return;
       }
     }
-    if ($this->supportsTransactions()) {
-      parent::rollBack();
-    }
+    parent::rollBack();
   }
 
   /**
