@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.admin.inc,v 1.34 2010/06/26 21:32:20 dries Exp $
+// $Id: forum.admin.inc,v 1.35 2010/07/12 15:09:39 webchick Exp $
 
 /**
  * @file
@@ -257,7 +257,7 @@ function forum_overview($form, &$form_state) {
   }
 
   // Remove the alphabetical reset.
-  unset($form['reset_alphabetical']);
+  unset($form['actions']['reset_alphabetical']);
 
   // The form needs to have submit and validate handlers set explicitly.
   $form['#theme'] = 'taxonomy_overview_terms';
