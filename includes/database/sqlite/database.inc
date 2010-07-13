@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.33 2010/07/04 02:26:10 webchick Exp $
+// $Id: database.inc,v 1.34 2010/07/13 04:30:08 dries Exp $
 
 /**
  * @file
@@ -47,6 +47,8 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
     parent::__construct('sqlite:' . $connection_options['database'], '', '', array(
       // Force column names to lower case.
       PDO::ATTR_CASE => PDO::CASE_LOWER,
+      // Convert numeric values to strings when fetching.
+      PDO::ATTR_STRINGIFY_FETCHES => TRUE,
     ));
 
     $this->exec('PRAGMA encoding="UTF-8"');
@@ -207,7 +209,7 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
     }
     // The transaction gets committed when the transaction object gets destroyed
     // because it gets out of scope.
-    return (int) $this->query('SELECT value FROM {sequences}')->fetchField();
+    return $this->query('SELECT value FROM {sequences}')->fetchField();
   }
 
   public function rollback($savepoint_name = 'drupal_transaction') {
