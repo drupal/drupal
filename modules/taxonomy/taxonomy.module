@@ -7,6 +7,14 @@
  */
 
 /**
+ * Users can create new terms in a free-tagging vocabulary when
+ * submitting a taxonomy_autocomplete_widget. We store a term object
+ * whose tid is 'autocreate' as a field data item during widget
+ * validation and then actually create the term if/when that field
+ * data item makes it to taxonomy_field_insert/update().
+ */
+
+/**
  * Implements hook_help().
  */
 function taxonomy_help($path, $arg) {
@@ -1142,21 +1150,21 @@ function taxonomy_field_schema($field) {
  * - 'taxonomy_term_illegal_value': The value is not part of the list of allowed values.
  */
 function taxonomy_field_validate($entity_type, $entity, $field, $instance, $langcode, $items, &$errors) {
-  // Build an array of term IDs so they can be loaded with
+  // Build an array of existing term IDs so they can be loaded with
   // taxonomy_term_load_multiple();
   foreach ($items as $delta => $item) {
-    if (!empty($item['tid'])) {
+    if (!empty($item['tid']) && $item['tid'] != 'autocreate') {
       $tids[] = $item['tid'];
     }
   }
   if (!empty($tids)) {
     $terms = taxonomy_term_load_multiple($tids);
 
-    // Check each item to ensure it can be found in the allowed values for this
-    // field.
+    // Check each existing item to ensure it can be found in the
+    // allowed values for this field.
     foreach ($items as $delta => $item) {
       $validate = TRUE;
-      if (!empty($item['tid'])) {
+      if (!empty($item['tid']) && $item['tid'] != 'autocreate') {
         $validate = FALSE;
         foreach ($field['settings']['allowed_values'] as $settings) {
           // If no parent is specified, check if the term is in the vocabulary.
@@ -1221,25 +1229,36 @@ function taxonomy_field_formatter_info() {
 function taxonomy_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
   $element = array();
 
+  // Terms whose tid is 'autocreate' do not exist
+  // yet and $item['taxonomy_term'] is not set. Theme such terms as
+  // just their name.
+
   switch ($display['type']) {
     case 'taxonomy_term_reference_link':
       foreach ($items as $delta => $item) {
-        $term = $item['taxonomy_term'];
-        $uri = entity_uri('taxonomy_term', $term);
-        $element[$delta] = array(
-          '#type' => 'link',
-          '#title' => $term->name,
-          '#href' => $uri['path'],
-          '#options' => $uri['options'],
-        );
+        if ($item['tid'] == 'autocreate') {
+          $element[$delta] = array(
+            '#markup' => check_plain($item['name']),
+          );
+        }
+        else {
+          $term = $item['taxonomy_term'];
+          $uri = entity_uri('taxonomy_term', $term);
+          $element[$delta] = array(
+            '#type' => 'link',
+            '#title' => $term->name,
+            '#href' => $uri['path'],
+            '#options' => $uri['options'],
+          );
+        }
       }
       break;
 
     case 'taxonomy_term_reference_plain':
       foreach ($items as $delta => $item) {
-        $term = $item['taxonomy_term'];
+        $name = ($item['tid'] != 'autocreate' ? $item['taxonomy_term']->name : $item['name']);
         $element[$delta] = array(
-          '#markup' => check_plain($term->name),
+          '#markup' => check_plain($name),
         );
       }
       break;
@@ -1282,7 +1301,9 @@ function taxonomy_field_formatter_prepare_view($entity_type, $entities, $field, 
   foreach ($entities as $id => $entity) {
     foreach ($items[$id] as $delta => $item) {
       // Force the array key to prevent duplicates.
-      $tids[$item['tid']] = $item['tid'];
+      if ($item['tid'] != 'autocreate') {
+        $tids[$item['tid']] = $item['tid'];
+      }
     }
   }
   if ($tids) {
@@ -1297,6 +1318,10 @@ function taxonomy_field_formatter_prepare_view($entity_type, $entities, $field, 
         if (isset($terms[$item['tid']])) {
           // Replace the instance value with the term data.
           $items[$id][$delta]['taxonomy_term'] = $terms[$item['tid']];
+        }
+        // Terms to be created are not in $terms, but are still legitimate.
+        else if ($item['tid'] == 'autocreate') {
+          // Leave the item in place.
         }
         // Otherwise, unset the instance value, since the term does not exist.
         else {
@@ -1351,6 +1376,7 @@ function taxonomy_field_widget_form(&$form, &$form_state, $field, $instance, $la
 function taxonomy_autocomplete_validate($element, &$form_state) {
   // Autocomplete widgets do not send their tids in the form, so we must detect
   // them here and process them independently.
+  $value = array();
   if ($tags = $element['#value']) {
     // Collect candidate vocabularies.
     $field = $form_state['field'][$element['#field_name']][$element['#language']]['field'];
@@ -1361,28 +1387,23 @@ function taxonomy_autocomplete_validate($element, &$form_state) {
 
     // Translate term names into actual terms.
     $typed_terms = drupal_explode_tags($tags);
-    $values = array();
     foreach ($typed_terms as $typed_term) {
       // See if the term exists in the chosen vocabulary and return the tid;
-      // otherwise, create a new term.
+      // otherwise, create a new 'autocreate' term for insert/update.
       if ($possibilities = taxonomy_term_load_multiple(array(), array('name' => trim($typed_term), 'vid' => $vids))) {
         $term = array_pop($possibilities);
       }
       else {
         $vocabulary = taxonomy_vocabulary_load($vids[0]);
-        $term = (object) array(
+        $term = array(
+          'tid' => 'autocreate',
           'vid' => $vids[0],
           'name' => $typed_term,
           'vocabulary_machine_name' => $vocabulary->machine_name,
         );
-        taxonomy_term_save($term);
       }
-      $values[] = $term->tid;
+      $value[] = (array)$term;
     }
-    $value = options_array_transpose(array('tid' => $values));
-  }
-  else {
-    $value = array();
   }
 
   form_set_value($element, $value, $form_state);
@@ -1488,6 +1509,22 @@ function taxonomy_rdf_mapping() {
  * to avoid unnecessary writes in SQL.
  * @{
  */
+
+/**
+ * Implements hook_field_presave().
+ *
+ * Create any new terms defined in a freetagging vocabulary.
+ */
+function taxonomy_field_presave($entity_type, $entity, $field, $instance, $langcode, &$items) {
+  foreach ($items as $delta => $item) {
+    if ($item['tid'] == 'autocreate') {
+      $term = (object) $item;
+      unset($term->tid);
+      taxonomy_term_save($term);
+      $items[$delta]['tid'] = $term->tid;
+    }
+  }
+}
 
 /**
  * Implements hook_field_insert().
