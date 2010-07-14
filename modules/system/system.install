@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.489 2010/07/10 01:57:32 dries Exp $
+// $Id: system.install,v 1.490 2010/07/14 20:30:09 dries Exp $
 
 /**
  * @file
@@ -1632,6 +1632,18 @@ function system_update_last_removed() {
 }
 
 /**
+ * Implements hook_update_dependencies().
+ */
+function system_update_dependencies() {
+  // Update 7053 adds new blocks, so make sure the block tables are updated.
+  $dependencies['system'][7053] = array(
+    'block' => 7002,
+  );
+
+  return $dependencies;
+}
+
+/**
  * @defgroup updates-6.x-to-7.x System updates from 6.x to 7.x
  * @{
  */
@@ -1770,6 +1782,10 @@ function system_update_7004(&$sandbox) {
     ),
   );
 
+  $moved_deltas = array(
+    'user' => array('navigation' => 'system'),
+  );
+
   // Only run this the first time through the batch update.
   if (!isset($sandbox['progress'])) {
     // Rename forum module's block variables.
@@ -1785,7 +1801,7 @@ function system_update_7004(&$sandbox) {
     }
   }
 
-  update_fix_d7_block_deltas($sandbox, $renamed_deltas);
+  update_fix_d7_block_deltas($sandbox, $renamed_deltas, $moved_deltas);
 
 }
 
@@ -1844,14 +1860,14 @@ function system_update_7008() {
 }
 
 /**
- * Rename the variables for primary and secondary links.
- *
+ * Rename the variable for primary links.
  */
 function system_update_7009() {
-  db_update('variable')
-    ->fields(array('name' => 'main_menu_links_source'))
-    ->condition('name', 'menu_primary_links_source')
-    ->execute();
+  $current_primary = variable_get('menu_primary_links_source');
+  if (isset($current_primary)) {
+    variable_set('menu_main_links_source', $current_primary);
+    variable_del('menu_primary_links_source');
+  }
 }
 
 /**
@@ -2400,15 +2416,6 @@ function system_update_7052() {
  * Upgrade standard blocks and menus.
  */
 function system_update_7053() {
-  // Navigation block is now defined in system module.
-  if (db_table_exists('block')) {
-    db_update('block')
-      ->fields(array('module' => 'system'))
-      ->condition('module', 'user')
-      ->condition('delta', 'navigation')
-      ->execute();
-  }
-
   if (db_table_exists('menu_custom')) {
     // Create the same menus as in menu_install().
     db_insert('menu_custom')
@@ -2417,6 +2424,29 @@ function system_update_7053() {
 
     db_insert('menu_custom')
       ->fields(array('menu_name' => 'management', 'title' => 'Management', 'description' => "The <em>Management</em> menu contains links for administrative tasks."))
+      ->execute();
+  }
+
+  block_flush_caches();
+
+  // Show the new menu blocks along the navigation block.
+  $blocks = db_query("SELECT theme, status, region, weight, visibility, pages FROM {block} WHERE module = 'system' AND delta = 'navigation'");
+  $deltas = db_or()
+    ->condition('delta', 'user-menu')
+    ->condition('delta', 'management');
+
+  foreach ($blocks as $block) {
+    db_update('block')
+      ->fields(array(
+        'status' => $block->status,
+        'region' => $block->region,
+        'weight' => $block->weight,
+        'visibility' => $block->visibility,
+        'pages' => $block->pages,
+      ))
+      ->condition('theme', $block->theme)
+      ->condition('module', 'system')
+      ->condition($deltas)
       ->execute();
   }
 }
