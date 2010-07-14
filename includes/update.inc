@@ -220,6 +220,7 @@ function update_prepare_d7_bootstrap() {
  *   An associative array.  Keys are module names, values an associative array
  *   mapping the old block deltas to the new block deltas for the module.
  *   Example:
+ *   @code
  *     $renamed_deltas = array(
  *       'mymodule' =>
  *         array(
@@ -227,8 +228,21 @@ function update_prepare_d7_bootstrap() {
  *           1 => 'mymodule-block-2',
  *         ),
  *     );
+ *   @endcode
+ * @param $moved_deltas
+ *   An associative array. Keys are source module names, values an associative
+ *   array mapping the (possibly renamed) block name to the new module name.
+ *   Example:
+ *   @code
+ *     $moved_deltas = array(
+ *       'user' =>
+ *         array(
+ *           'navigation' => 'system',
+ *         ),
+ *     );
+ *   @endcode
  */
-function update_fix_d7_block_deltas(&$sandbox, $renamed_deltas) {
+function update_fix_d7_block_deltas(&$sandbox, $renamed_deltas, $moved_deltas) {
   // Loop through each block and make changes to the block tables.
   // Only run this the first time through the batch update.
   if (!isset($sandbox['progress'])) {
@@ -239,15 +253,32 @@ function update_fix_d7_block_deltas(&$sandbox, $renamed_deltas) {
         foreach ($deltas as $old_delta => $new_delta) {
           // Only do the update if the old block actually exists.
           $block_exists = db_query("SELECT COUNT(*) FROM {" . $table . "} WHERE module = :module AND delta = :delta", array(
-            ':module' => $module,
-            ':delta' => $old_delta,
-          ))
-          ->fetchField();
+              ':module' => $module,
+              ':delta' => $old_delta,
+            ))
+            ->fetchField();
           if ($block_exists) {
             db_update($table)
               ->fields(array('delta' => $new_delta))
               ->condition('module', $module)
               ->condition('delta', $old_delta)
+              ->execute();
+          }
+        }
+      }
+      foreach ($moved_deltas as $old_module => $deltas) {
+        foreach ($deltas as $delta => $new_module) {
+          // Only do the update if the old block actually exists.
+          $block_exists = db_query("SELECT COUNT(*) FROM {" . $table . "} WHERE module = :module AND delta = :delta", array(
+              ':module' => $old_module,
+              ':delta' => $delta,
+            ))
+            ->fetchField();
+          if ($block_exists) {
+            db_update($table)
+              ->fields(array('module' => $new_module))
+              ->condition('module', $old_module)
+              ->condition('delta', $delta)
               ->execute();
           }
         }
@@ -277,6 +308,17 @@ function update_fix_d7_block_deltas(&$sandbox, $renamed_deltas) {
           // block, and mark this user for a database update.
           $data['block'][$module][$new_delta] = $data['block'][$module][$old_delta];
           unset($data['block'][$module][$old_delta]);
+          $user_needs_update = TRUE;
+        }
+      }
+    }
+    foreach ($moved_deltas as $old_module => $deltas) {
+      foreach ($deltas as $delta => $new_module) {
+        if (isset($data['block'][$old_module][$delta])) {
+          // Transfer the old block visibility settings to the moved
+          // block, and mark this user for a database update.
+          $data['block'][$new_module][$delta] = $data['block'][$old_module][$delta];
+          unset($data['block'][$old_module][$delta]);
           $user_needs_update = TRUE;
         }
       }
