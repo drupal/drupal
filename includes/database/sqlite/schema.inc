@@ -20,8 +20,10 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
   protected $defaultSchema = 'main';
 
   public function tableExists($table) {
+    $info = $this->getPrefixInfo($table);
+
     // Don't use {} around sqlite_master table.
-    return (bool) $this->connection->query("SELECT name FROM sqlite_master WHERE type = 'table' AND name LIKE '{" . $table . "}'", array(), array())->fetchField();
+    return (bool) $this->connection->query('SELECT 1 FROM ' . $info['schema'] . '.sqlite_master WHERE type = :type AND name = :name', array(':type' => 'table', ':name' => $info['table']))->fetchField();
   }
 
   public function fieldExists($table, $column) {
@@ -53,16 +55,12 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
     $info = $this->getPrefixInfo($tablename);
     if (!empty($schema['unique keys'])) {
       foreach ($schema['unique keys'] as $key => $fields) {
-        // Normally we don't escape double quotes (we use single quotes) but
-        // describing the index name like this is faster and is readable.
-        $index = "\"{$info['schema']}\".\"{$info['table']}_$key\"";
-        $sql[] = 'CREATE UNIQUE INDEX ' . $index . ' ON ' . $info['table'] . ' (' . $this->createKeySql($fields) . "); \n";
+        $sql[] = 'CREATE UNIQUE INDEX ' . $info['schema'] . '.' . $info['table'] . '_' . $key . ' ON ' . $info['table'] . ' (' . $this->createKeySql($fields) . "); \n";
       }
     }
     if (!empty($schema['indexes'])) {
       foreach ($schema['indexes'] as $key => $fields) {
-        $index = "\"{$info['schema']}\".\"{$info['table']}_$key\"";
-        $sql[] = 'CREATE INDEX ' . $index . ' ON ' . $info['table'] . ' (' . $this->createKeySql($fields) . "); \n";
+        $sql[] = 'CREATE INDEX ' . $info['schema'] . '.' . $info['table'] . '_' . $key . ' ON ' . $info['table'] . ' (' . $this->createKeySql($fields) . "); \n";
       }
     }
     return $sql;
@@ -296,10 +294,14 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
    *
    * @param $table
    *   Name of the table to be altered.
+   * @param $old_schema
+   *   The old schema array for the table.
    * @param $new_schema
    *   The new schema array for the table.
+   * @param $mapping
+   *   An optional mapping between old fields => new fields.
    */
-  protected function alterTable($table, $new_schema) {
+  protected function alterTable($table, $old_schema, $new_schema, array $mapping = array()) {
     $i = 0;
     do {
       $new_table = $table . '_' . $i++;
@@ -307,19 +309,35 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
 
     $this->createTable($new_table, $new_schema);
 
-    $select = $this->connection->select($table)->fields($table, array_keys($new_schema['fields']));
+    // Complete the mapping.
+    $old_keys = array_keys($old_schema['fields']);
+    $mapping += array_combine($old_keys, $old_keys);
+
+    $select = $this->connection->select($table);
+    $fields = &$select->getFields();
+
+    // Map the fields.
+    foreach ($old_keys as $key) {
+      if (isset($mapping[$key])) {
+        // Don't use ->addField() here because it messes-up with the aliases.
+        $fields[$mapping[$key]] = array(
+          'field' => $key,
+          'table' => $table,
+          'alias' => $mapping[$key],
+        );
+      }
+    }
+
+    // Execute the data migration query.
     $this->connection->insert($new_table)
       ->from($select)
       ->execute();
+
     $old_count = $this->connection->query('SELECT COUNT(*) FROM {' . $table . '}')->fetchField();
     $new_count = $this->connection->query('SELECT COUNT(*) FROM {' . $new_table . '}')->fetchField();
     if ($old_count == $new_count) {
-      do {
-        $temp_table = $table . '_' . $i++;
-      } while ($this->tableExists($temp_table));
-      $this->renameTable($table, $temp_table);
+      $this->dropTable($table);
       $this->renameTable($new_table, $table);
-      $this->dropTable($temp_table);
     }
   }
 
@@ -338,8 +356,15 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
    */
   protected function introspectSchema($table) {
     $mapped_fields = array_flip($this->getFieldTypeMap());
-    $schema = array();
-    $result = $this->connection->query("PRAGMA table_info('{" . $table . "}')");
+    $schema = array(
+      'fields' => array(),
+      'primary key' => array(),
+      'unique keys' => array(),
+      'indexes' => array(),
+    );
+
+    $info = $this->getPrefixInfo($table);
+    $result = $this->connection->query('PRAGMA ' . $info['schema'] . '.table_info(' . $info['table'] . ')');
     foreach ($result as $row) {
       if (preg_match('/^([^(]+)\((.*)\)$/', $row->type, $matches)) {
         $type = $matches[1];
@@ -369,7 +394,7 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
       }
     }
     $indexes = array();
-    $result = $this->connection->query("PRAGMA index_list('{" . $table . "}')");
+    $result = $this->connection->query('PRAGMA ' . $info['schema'] . '.index_list(' . $info['table'] . ')');
     foreach ($result as $row) {
       if (strpos($row->name, 'sqlite_autoindex_') !== 0) {
         $indexes[] = array(
@@ -378,13 +403,11 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
         );
       }
     }
-    // Get length of table name and underscore.
-    $n = strlen($this->connection->prefixTables('{' . $table . '}')) + 1;
     foreach ($indexes as $index) {
       $name = $index['name'];
       // Get index name without prefix.
-      $index_name = substr($name, $n);
-      $result = $this->connection->query("PRAGMA index_info('$name')");
+      $index_name = substr($name, strlen($info['table']) + 1);
+      $result = $this->connection->query('PRAGMA ' . $info['schema'] . '.index_info(' . $name . ')');
       foreach ($result as $row) {
         $schema[$index['schema_key']][$index_name][] = $row->name;
       }
@@ -393,11 +416,15 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
   }
 
   public function dropField($table, $field) {
-    if ($this->fieldExists($table, $field)) {
+    if (!$this->fieldExists($table, $field)) {
       return FALSE;
     }
 
-    $new_schema = $this->introspectSchema($table);
+    $old_schema = $this->introspectSchema($table);
+    $new_schema = $old_schema;
+
+    $mapping = array($field => NULL);
+
     unset($new_schema['fields'][$field]);
     foreach ($new_schema['indexes'] as $index => $fields) {
       foreach ($fields as $key => $field_name) {
@@ -410,7 +437,7 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
         unset($new_schema['indexes'][$index]);
       }
     }
-    $this->alterTable($table, $new_schema);
+    $this->alterTable($table, $old_schema, $new_schema, $mapping);
     return TRUE;
   }
 
@@ -422,19 +449,61 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
       throw new DatabaseSchemaObjectExistsException(t("Cannot rename field %table.%name to %name_new: target field already exists.", array('%table' => $table, '%name' => $field, '%name_new' => $field_new)));
     }
 
-    $new_schema = $this->introspectSchema($table);
+    $old_schema = $this->introspectSchema($table);
+    $new_schema = $old_schema;
+
+    // Map the old field to the new field.
+    if ($field != $field_new) {
+      $mapping[$field] = $field_new;
+    }
+    else {
+      $mapping = array();
+    }
+
+    // Remove the previous definition and swap in the new one.
     unset($new_schema['fields'][$field]);
     $new_schema['fields'][$field_new] = $spec;
-    if (isset($keys_new['primary keys'])) {
-      $new_schema['primary keys'] = $keys_new['primary keys'];
-      $keys_new['primary keys'];
+
+    // Map the former indexes to the new column name.
+    $new_schema['primary key'] = $this->mapKeyDefinition($new_schema['primary key'], $mapping);
+    foreach (array('unique keys', 'indexes') as $k) {
+      foreach ($new_schema[$k] as &$key_definition) {
+        $key_definition = $this->mapKeyDefinition($key_definition, $mapping);
+      }
+    }
+
+    // Add in the keys from $keys_new.
+    if (isset($keys_new['primary key'])) {
+      $new_schema['primary key'] = $keys_new['primary key'];
     }
     foreach (array('unique keys', 'indexes') as $k) {
       if (!empty($keys_new[$k])) {
         $new_schema[$k] = $keys_new[$k] + $new_schema[$k];
       }
     }
-    $this->alterTable($table, $new_schema);
+
+    $this->alterTable($table, $old_schema, $new_schema, $mapping);
+  }
+
+  /**
+   * Utility method: rename columns in an index definition according to a new mapping.
+   *
+   * @param $key_definition
+   *   The key definition.
+   * @param $mapping
+   *   The new mapping.
+   */
+  protected function mapKeyDefinition(array $key_definition, array $mapping) {
+    foreach ($key_definition as &$field) {
+      // The key definition can be an array($field, $length).
+      if (is_array($field)) {
+        $field = &$field[0];
+      }
+      if (isset($mapping[$field])) {
+        $field = $mapping[$field];
+      }
+    }
+    return $key_definition;
   }
 
   public function addIndex($table, $name, $fields) {
@@ -453,7 +522,9 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
   }
 
   public function indexExists($table, $name) {
-    return $this->connection->query('PRAGMA index_info({' . $table . '}_' . $name . ')')->fetchField() != '';
+    $info = $this->getPrefixInfo($table);
+
+    return $this->connection->query('PRAGMA ' . $info['schema'] . '.index_info(' . $info['table'] . '_' . $name . ')')->fetchField() != '';
   }
 
   public function dropIndex($table, $name) {
@@ -461,7 +532,9 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
       return FALSE;
     }
 
-    $this->connection->query('DROP INDEX ' . $this->prefixNonTable($table, $name));
+    $info = $this->getPrefixInfo($table);
+
+    $this->connection->query('DROP INDEX ' . $info['schema'] . '.' . $info['table'] . '_' . $name);
     return TRUE;
   }
 
@@ -485,7 +558,9 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
       return FALSE;
     }
 
-    $this->connection->query('DROP INDEX ' . $this->prefixNonTable($table, $name));
+    $info = $this->getPrefixInfo($table);
+
+    $this->connection->query('DROP INDEX ' . $info['schema'] . '.' . $info['table'] . '_' . $name);
     return TRUE;
   }
 
@@ -494,23 +569,27 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
       throw new DatabaseSchemaObjectDoesNotExistException(t("Cannot add primary key to table %table: table doesn't exist.", array('%table' => $table)));
     }
 
-    $new_schema = $this->introspectSchema($table);
+    $old_schema = $this->introspectSchema($table);
+    $new_schema = $old_schema;
+
     if (!empty($new_schema['primary key'])) {
       throw new DatabaseSchemaObjectExistsException(t("Cannot add primary key to table %table: primary key already exists.", array('%table' => $table)));
     }
 
     $new_schema['primary key'] = $fields;
-    $this->alterTable($table, $new_schema);
+    $this->alterTable($table, $old_schema, $new_schema);
   }
 
   public function dropPrimaryKey($table) {
-    $new_schema = $this->introspectSchema($table);
+    $old_schema = $this->introspectSchema($table);
+    $new_schema = $old_schema;
+
     if (empty($new_schema['primary key'])) {
       return FALSE;
     }
 
     unset($new_schema['primary key']);
-    $this->alterTable($table, $new_schema);
+    $this->alterTable($table, $old_schema, $new_schema);
     return TRUE;
   }
 
@@ -519,9 +598,11 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
       throw new DatabaseSchemaObjectDoesNotExistException(t("Cannot set default value of field %table.%field: field doesn't exist.", array('%table' => $table, '%field' => $field)));
     }
 
-    $new_schema = $this->introspectSchema($table);
+    $old_schema = $this->introspectSchema($table);
+    $new_schema = $old_schema;
+
     $new_schema['fields'][$field]['default'] = $default;
-    $this->alterTable($table, $new_schema);
+    $this->alterTable($table, $old_schema, $new_schema);
   }
 
   public function fieldSetNoDefault($table, $field) {
@@ -529,9 +610,11 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
       throw new DatabaseSchemaObjectDoesNotExistException(t("Cannot remove default value of field %table.%field: field doesn't exist.", array('%table' => $table, '%field' => $field)));
     }
 
-    $new_schema = $this->introspectSchema($table);
+    $old_schema = $this->introspectSchema($table);
+    $new_schema = $old_schema;
+
     unset($new_schema['fields'][$field]['default']);
-    $this->alterTable($table, $new_schema);
+    $this->alterTable($table, $old_schema, $new_schema);
   }
 
   public function findTables($table_expression) {

@@ -165,8 +165,12 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
   }
 
   public function queryTemporary($query, array $args = array(), array $options = array()) {
+    // Generate a new temporary table name and protect it from prefixing.
+    // SQLite requires that temporary tables to be non-qualified.
     $tablename = $this->generateTemporaryTableName();
-    $this->query(preg_replace('/^SELECT/i', 'CREATE TEMPORARY TABLE {' . $tablename . '} AS SELECT', $query), $args, $options);
+    $this->prefixes[$tablename] = '';
+
+    $this->query(preg_replace('/^SELECT/i', 'CREATE TEMPORARY TABLE ' . $tablename . ' AS SELECT', $query), $args, $options);
     return $tablename;
   }
 
