@@ -572,6 +572,7 @@ function _menu_load_objects(&$item, &$map) {
  *   A menu router or menu link item
  * @param $map
  *   An array of path arguments (ex: array('node', '5'))
+ *
  * @return
  *   $item['access'] becomes TRUE if the item is accessible, FALSE otherwise.
  */
@@ -2530,6 +2531,7 @@ function _menu_navigation_links_rebuild($menu) {
  *   (optional) The name of a menu that the links will be cloned for. If not
  *   set, the cloned links will be in the same menu as the original set of
  *   links that were passed in.
+ *
  * @return
  *   An array of menu links with the same properties as the passed-in array,
  *   but with the link identifiers removed so that a new link will be created
@@ -2553,6 +2555,7 @@ function menu_links_clone($links, $menu_name = NULL) {
  *
  * @param $menu_name
  *   The name of the menu whose links should be returned.
+ *
  * @return
  *   An array of menu links.
  */
@@ -2926,6 +2929,7 @@ function _menu_find_router_path($link_path) {
  * @param $link_title
  *   Title of the link to insert or new title to update the link to.
  *   Unused for delete.
+ *
  * @return
  *   The insert op returns the mlid of the new item. Others op return NULL.
  */
