@@ -1,5 +1,5 @@
 <?php
-// $Id: path.inc,v 1.64 2010/06/17 13:48:53 dries Exp $
+// $Id: path.inc,v 1.65 2010/07/16 02:51:44 dries Exp $
 
 /**
  * @file
@@ -436,6 +436,7 @@ function path_delete($criteria) {
  *
  * @param $path
  *   A Drupal path.
+ *
  * @return
  *   TRUE if the path is administrative, FALSE otherwise.
  *
