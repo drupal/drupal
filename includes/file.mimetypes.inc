@@ -1,5 +1,5 @@
 <?php
-// $Id: file.mimetypes.inc,v 1.4 2009/08/31 05:47:33 dries Exp $
+// $Id: file.mimetypes.inc,v 1.5 2010/07/16 02:40:48 dries Exp $
 
 /**
  * @file
@@ -13,6 +13,7 @@
  *
  * @return
  *   Array of mimetypes correlated to the extensions that relate to them.
+ *
  * @see file_get_mimetype()
  */
 function file_mimetype_mapping() {
@@ -30,6 +31,7 @@ function file_mimetype_mapping() {
  *
  * @return
  *   Array of mimetypes correlated to the extensions that relate to them.
+ *
  * @see file_get_mimetype()
  */
 function file_default_mimetype_mapping() {
