@@ -172,6 +172,7 @@ function unicode_requirements() {
  *
  * @param &$data
  *   The XML data which will be parsed later.
+ *
  * @return
  *   An XML parser object or FALSE on error.
  *
@@ -221,6 +222,7 @@ function drupal_xml_parser_create(&$data) {
  *   The data to be converted.
  * @param $encoding
  *   The encoding that the data is in
+ *
  * @return
  *   Converted data or FALSE.
  */
@@ -257,6 +259,7 @@ function drupal_convert_to_utf8($data, $encoding) {
  *   The string to truncate.
  * @param $len
  *   An upper limit on the returned string length.
+ *
  * @return
  *   The truncated string.
  */
