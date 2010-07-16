@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.293 2010/05/12 08:26:14 dries Exp $
+// $Id: locale.module,v 1.294 2010/07/16 02:37:06 dries Exp $
 
 /**
  * @file
@@ -1000,7 +1000,7 @@ function locale_form_comment_form_alter(&$form, &$form_state, $form_id) {
   // If a content type has multilingual support we set the content language as
   // comment language.
   if (empty($form['language']['#value']) && locale_multilingual_node_type($form['#node']->type)) {
-    global $language;
-    $form['language']['#value'] = $language->language;
+    global $language_content;
+    $form['language']['#value'] = $language_content->language;
   }
 }

@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.api.php,v 1.11 2010/05/12 08:26:14 dries Exp $
+// $Id: locale.api.php,v 1.12 2010/07/16 02:37:06 dries Exp $
 
 /**
  * @file
@@ -68,8 +68,8 @@ function hook_language_init() {
 function hook_language_switch_links_alter(array &$links, $type, $path) {
   global $language;
 
-  if ($type == LANGUAGE_TYPE_CONTENT && isset($links[$language])) {
-    foreach ($links[$language] as $link) {
+  if ($type == LANGUAGE_TYPE_CONTENT && isset($links[$language->language])) {
+    foreach ($links[$language->language] as $link) {
       $link['attributes']['class'][] = 'active-language';
     }
   }

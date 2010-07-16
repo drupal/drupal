@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1191 2010/07/07 17:00:42 webchick Exp $
+// $Id: common.inc,v 1.1192 2010/07/16 02:37:05 dries Exp $
 
 /**
  * @file
@@ -1551,8 +1551,8 @@ function filter_xss_bad_protocol($string, $decode = TRUE) {
  * Arbitrary elements may be added using the $args associative array.
  */
 function format_rss_channel($title, $link, $description, $items, $langcode = NULL, $args = array()) {
-  global $language;
-  $langcode = $langcode ? $langcode : $language->language;
+  global $language_content;
+  $langcode = $langcode ? $langcode : $language_content->language;
 
   $output = "<channel>\n";
   $output .= ' <title>' . check_plain($title) . "</title>\n";
@@ -1997,8 +1997,8 @@ function format_username($account) {
  *   - 'external': Whether the given path is an external URL.
  *   - 'language': An optional language object. If the path being linked to is
  *     internal to the site, $options['language'] is used to look up the alias
- *     for the URL. If $options['language'] is omitted, the global $language
- *     will be used.
+ *     for the URL. If $options['language'] is omitted, the global
+ *     $language_content will be used.
  *   - 'https': Whether this URL should point to a secure location. If not
  *     defined, the current scheme is used, so the user stays on http or https
  *     respectively. TRUE enforces HTTPS and FALSE enforces HTTP, but HTTPS can
@@ -5342,9 +5342,12 @@ function drupal_render_cid_parts($granularity = NULL) {
   global $theme, $base_root, $user;
 
   $cid_parts[] = $theme;
-  if (module_exists('locale')) {
-    global $language;
-    $cid_parts[] = $language->language;
+  // If Locale is enabled but we have only one language we do not need it as cid
+  // part.
+  if (drupal_multilingual()) {
+    foreach (language_types_configurable() as $language_type) {
+      $cid_parts[] = $GLOBALS[$language_type]->language;
+    }
   }
 
   if (!empty($granularity)) {

@@ -1,5 +1,5 @@
 <?php
-// $Id: color.module,v 1.87 2010/06/30 15:03:06 dries Exp $
+// $Id: color.module,v 1.88 2010/07/16 02:37:05 dries Exp $
 
 /**
  * Implements hook_help().
@@ -73,7 +73,7 @@ function _color_theme_select_form_alter(&$form, &$form_state) {
  * Callback for the theme to alter the resources used.
  */
 function _color_html_alter(&$vars) {
-  global $language, $theme_key;
+  global $theme_key;
   $themes = list_themes();
 
   // Override stylesheets.
@@ -102,7 +102,7 @@ function _color_html_alter(&$vars) {
  * Callback for the theme to alter the resources used.
  */
 function _color_page_alter(&$vars) {
-  global $language, $theme_key;
+  global $theme_key;
 
   // Override logo.
   $logo = variable_get('color_' . $theme_key . '_logo');
