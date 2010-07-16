@@ -13,6 +13,7 @@
  *
  * @return
  *   Array of mimetypes correlated to the extensions that relate to them.
+ *
  * @see file_get_mimetype()
  */
 function file_mimetype_mapping() {
@@ -30,6 +31,7 @@ function file_mimetype_mapping() {
  *
  * @return
  *   Array of mimetypes correlated to the extensions that relate to them.
+ *
  * @see file_get_mimetype()
  */
 function file_default_mimetype_mapping() {
