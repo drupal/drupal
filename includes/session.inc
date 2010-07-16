@@ -61,6 +61,7 @@ function _drupal_session_close() {
  *
  * @param $sid
  *   Session ID.
+ *
  * @return
  *   Either an array of the session data, or an empty string, if no data
  *   was found or the user is anonymous.
@@ -134,6 +135,7 @@ function _drupal_session_read($sid) {
  *   Session ID.
  * @param $value
  *   Serialized array of the session data.
+ *
  * @return
  *   This function will always return TRUE.
  */
@@ -447,6 +449,7 @@ function _drupal_session_garbage_collection($lifetime) {
  * @param $status
  *   Disables writing of session data when FALSE, (re-)enables
  *   writing when TRUE.
+ *
  * @return
  *   FALSE if writing session data has been disabled. Otherwise, TRUE.
  */
