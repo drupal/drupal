@@ -1,5 +1,5 @@
 <?php
-// $Id: image.inc,v 1.39 2010/01/25 10:38:34 dries Exp $
+// $Id: image.inc,v 1.40 2010/07/16 02:39:38 dries Exp $
 
 /**
  * @file
@@ -85,6 +85,7 @@ function image_get_toolkit() {
  *   An image object returned by image_load().
  * @param $params
  *   An optional array of parameters to pass to the toolkit method.
+ *
  * @return
  *   Mixed values (typically Boolean indicating successful operation).
  */
@@ -109,6 +110,7 @@ function image_toolkit_invoke($method, stdClass $image, array $params = array())
  *   String specifying the path of the image file.
  * @param $toolkit
  *   An optional image toolkit name to override the default.
+ *
  * @return
  *   FALSE, if the file could not be found or is not an image. Otherwise, a
  *   keyed array containing information about the image:
@@ -155,6 +157,7 @@ function image_get_info($filepath, $toolkit = FALSE) {
  *   The target width, in pixels.
  * @param $height
  *   The target height, in pixels.
+ *
  * @return
  *   TRUE or FALSE, based on success.
  *
@@ -189,6 +192,7 @@ function image_scale_and_crop(stdClass $image, $width, $height) {
  * @param $upscale
  *   Boolean indicating that files smaller than the dimensions will be scaled
  *   up. This generally results in a low quality image.
+ *
  * @return
  *   TRUE or FALSE, based on success.
  *
@@ -233,6 +237,7 @@ function image_scale(stdClass $image, $width = NULL, $height = NULL, $upscale = 
  *   The target width, in pixels.
  * @param $height
  *   The target height, in pixels.
+ *
  * @return
  *   TRUE or FALSE, based on success.
  *
@@ -259,6 +264,7 @@ function image_resize(stdClass $image, $width, $height) {
  *   0xff00ff for magenta, and 0xffffff for white. For images that support
  *   transparency, this will default to transparent. Otherwise it will
  *   be white.
+ *
  * @return
  *   TRUE or FALSE, based on success.
  *
@@ -282,6 +288,7 @@ function image_rotate(stdClass $image, $degrees, $background = NULL) {
  *   The target width, in pixels.
  * @param $height
  *   The target height, in pixels.
+ *
  * @return
  *   TRUE or FALSE, based on success.
  *
@@ -305,6 +312,7 @@ function image_crop(stdClass $image, $x, $y, $width, $height) {
  *
  * @param $image
  *   An image object returned by image_load().
+ *
  * @return
  *   TRUE or FALSE, based on success.
  *
@@ -325,6 +333,7 @@ function image_desaturate(stdClass $image) {
  *   Path to an image file.
  * @param $toolkit
  *   An optional, image toolkit name to override the default.
+ *
  * @return
  *   An image object or FALSE if there was a problem loading the file. The
  *   image object has the following properties:
@@ -367,6 +376,7 @@ function image_load($file, $toolkit = FALSE) {
  * @param $destination
  *   Destination path where the image should be saved. If it is empty the
  *   original image file will be overwritten.
+ *
  * @return
  *   TRUE or FALSE, based on success.
  *
