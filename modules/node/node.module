@@ -2354,7 +2354,7 @@ function node_block_list_alter(&$blocks) {
  *   The link should be an absolute URL.
  */
 function node_feed($nids = FALSE, $channel = array()) {
-  global $base_url, $language;
+  global $base_url, $language_content;
 
   if ($nids === FALSE) {
     $nids = db_select('node', 'n')
@@ -2409,7 +2409,7 @@ function node_feed($nids = FALSE, $channel = array()) {
     'title'       => variable_get('site_name', 'Drupal'),
     'link'        => $base_url,
     'description' => variable_get('feed_description', ''),
-    'language'    => $language->language
+    'language'    => $language_content->language
   );
   $channel_extras = array_diff_key($channel, $channel_defaults);
   $channel = array_merge($channel_defaults, $channel);
