@@ -87,6 +87,7 @@ define('MAIL_LINE_ENDINGS', isset($_SERVER['WINDIR']) || strpos($_SERVER['SERVER
  * @param $send
  *   Send the message directly, without calling drupal_mail_system()->mail()
  *   manually.
+ *
  * @return
  *   The $message array structure containing all details of the
  *   message. If already sent ($send = TRUE), then the 'result' element
@@ -218,6 +219,7 @@ function drupal_mail($module, $key, $to, $language, $params = array(), $from = N
  * @param $key
  *   A key to identify the e-mail sent. The final e-mail ID for the e-mail
  *   alter hook in drupal_mail() would have been {$module}_{$key}.
+ *
  * @return MailSystemInterface
  */
 function drupal_mail_system($module, $key) {
@@ -287,6 +289,7 @@ interface MailSystemInterface {
    *    - headers: Associative array containing all additional mail headers not
    *      defined by one of the other parameters.  PHP's mail() looks for Cc
    *      and Bcc headers and sends the mail to addresses in these headers too.
+   *
    * @return
    *   TRUE if the mail was successfully accepted for delivery, otherwise FALSE.
    */
@@ -354,6 +357,7 @@ function drupal_wrap_mail($text, $indent = '') {
  * @param $allowed_tags (optional)
  *   If supplied, a list of tags that will be transformed. If omitted, all
  *   all supported tags are transformed.
+ *
  * @return
  *   The transformed string.
  */
