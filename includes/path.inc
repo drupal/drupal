@@ -436,6 +436,7 @@ function path_delete($criteria) {
  *
  * @param $path
  *   A Drupal path.
+ *
  * @return
  *   TRUE if the path is administrative, FALSE otherwise.
  *
