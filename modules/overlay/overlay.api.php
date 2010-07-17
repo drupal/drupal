@@ -1,5 +1,5 @@
 <?php
-// $Id: overlay.api.php,v 1.1 2009/12/02 07:28:22 webchick Exp $
+// $Id: overlay.api.php,v 1.2 2010/07/17 02:12:36 dries Exp $
 
 /**
  * @file
@@ -32,13 +32,8 @@ function hook_overlay_parent_initialize() {
  * within the confines of the overlay.
  */
 function hook_overlay_child_initialize() {
-  // Use a different theme for content administration pages.
-  if (arg(0) == 'admin' && arg(1) == 'content') {
-    if ($theme = variable_get('content_administration_pages_theme', FALSE)) {
-      global $custom_theme;
-      $custom_theme = $theme;
-    }
-  }
+  // Add our custom JavaScript.
+  drupal_add_js(drupal_get_path('module', 'hook') . '/hook-overlay-child.js');
 }
 
 /**

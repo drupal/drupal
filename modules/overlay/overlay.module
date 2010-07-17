@@ -1,5 +1,5 @@
 <?php
-// $Id: overlay.module,v 1.23 2010/07/08 12:20:23 dries Exp $
+// $Id: overlay.module,v 1.24 2010/07/17 02:12:36 dries Exp $
 
 /**
  * @file
@@ -66,9 +66,6 @@ function overlay_theme() {
  * @see overlay_set_mode()
  */
 function overlay_init() {
-  // @todo: custom_theme does not exist anymore.
-  global $custom_theme;
-
   $mode = overlay_get_mode();
 
   // Only act if the user has access to the overlay and a mode was not already
@@ -87,13 +84,7 @@ function overlay_init() {
       if (!path_is_admin($current_path)) {
         overlay_close_dialog($current_path);
       }
-      // If system module did not switch the theme yet (i.e. this is not an
-      // admin page, per se), we should switch the theme here.
-      $admin_theme = variable_get('admin_theme', 0);
-      if ($custom_theme != $admin_theme) {
-        $custom_theme = $admin_theme;
-        drupal_add_css(drupal_get_path('module', 'system') . '/admin.css');
-      }
+
       // Indicate that we are viewing an overlay child page.
       overlay_set_mode('child');
 
