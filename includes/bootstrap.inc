@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.409 2010/07/10 17:27:50 webchick Exp $
+// $Id: bootstrap.inc,v 1.410 2010/07/17 02:00:50 dries Exp $
 
 /**
  * @file
@@ -1689,7 +1689,7 @@ function drupal_set_message($message = NULL, $type = 'status', $repeat = TRUE) {
       $_SESSION['messages'][$type][] = $message;
     }
 
-    // Mark this page has being not cacheable.
+    // Mark this page as being uncacheable.
     drupal_page_is_cacheable(FALSE);
   }
 
