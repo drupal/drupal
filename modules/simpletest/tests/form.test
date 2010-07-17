@@ -1,5 +1,5 @@
 <?php
-// $Id: form.test,v 1.54 2010/07/10 00:03:37 webchick Exp $
+// $Id: form.test,v 1.55 2010/07/17 18:52:39 dries Exp $
 
 /**
  * @file
@@ -1173,5 +1173,39 @@ class FormsArbitraryRebuildTestCase extends DrupalWebTestCase {
     $this->assertText('Test a multiple valued field', 'Form has been rebuilt.');
     $this->assertFieldByName('name', 'foo', 'Entered user name has been kept.');
     $this->assertFieldByName('mail', 'bar@example.com', 'Entered mail address has been kept.');
+  }
+}
+
+/**
+ * Tests form API file inclusion.
+ */
+class FormsFileInclusionTestCase extends DrupalWebTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Form API file inclusion',
+      'description' => 'Tests form API file inclusion.',
+      'group' => 'Form API',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('form_test');
+  }
+
+  /**
+   * Tests loading an include specified in hook_menu().
+   */
+  function testLoadMenuInclude() {
+    $this->drupalPostAJAX('form-test/load-include-menu', array(), array('op' => t('Save')), 'system/ajax', array(), array(), 'form-test-load-include-menu');
+    $this->assertText('Submit callback called.');
+  }
+
+  /**
+   * Tests loading a custom specified inlcude.
+   */
+  function testLoadCustomInclude() {
+    $this->drupalPost('form-test/load-include-custom', array(), t('Save'));
+    $this->assertText('Submit callback called.');
   }
 }

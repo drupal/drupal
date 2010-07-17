@@ -1,8 +1,9 @@
-; $Id: form_test.info,v 1.1 2009/01/28 07:43:26 webchick Exp $
+; $Id: form_test.info,v 1.2 2010/07/17 18:52:39 dries Exp $
 name = "FormAPI Test"
 description = "Support module for Form API tests."
 package = Testing
 version = VERSION
 core = 7.x
 files[] = form_test.module
+files[] = form_test.file.inc
 hidden = TRUE
