@@ -153,6 +153,23 @@ function form_test_menu() {
     );
   }
 
+  $items['form-test/load-include-menu'] = array(
+    'title' => 'FAPI test loading includes',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('form_test_load_include_menu'),
+    'access callback' => TRUE,
+    'file' => 'form_test.file.inc',
+    'type' => MENU_CALLBACK,
+  );
+
+  $items['form-test/load-include-custom'] = array(
+    'title' => 'FAPI test loading includes',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('form_test_load_include_custom'),
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
   return $items;
 }
 
@@ -1181,4 +1198,21 @@ function form_test_two_instances() {
   $return['node_form_1'] = drupal_get_form('page_node_form', $node1);
   $return['node_form_2'] = drupal_get_form('page_node_form', $node2);
   return $return;
+}
+
+/**
+ * Menu callback for testing custom form includes.
+ */
+function form_test_load_include_custom($form, &$form_state) {
+  $form['button'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save'),
+    '#submit' => array('form_test_load_include_submit'),
+  );
+  // Specify the include file and enable form caching. That way the form is
+  // cached when it is submitted, but needs to find the specified submit handler
+  // in the include.
+  $form_state['build_info']['files'][] = array('module' => 'form_test', 'name' => 'form_test.file');
+  $form_state['cache'] = TRUE;
+  return $form;
 }
