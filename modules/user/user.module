@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1180 2010/07/07 08:05:01 webchick Exp $
+// $Id: user.module,v 1.1181 2010/07/17 11:30:01 dries Exp $
 
 /**
  * @file
@@ -437,9 +437,9 @@ function user_save($account, $edit = array(), $category = 'account') {
 
           // Prepare the pictures directory.
           file_prepare_directory($picture_directory, FILE_CREATE_DIRECTORY);
-          $destination = file_stream_wrapper_uri_normalize($picture_directory . '/picture-' . $account->uid . '.' . $info['extension']);
+          $destination = file_stream_wrapper_uri_normalize($picture_directory . '/picture-' . $account->uid . '-' . REQUEST_TIME . '.' . $info['extension']);
 
-          if ($picture = file_move($picture, $destination, FILE_EXISTS_REPLACE)) {
+          if ($picture = file_move($picture, $destination, FILE_EXISTS_RENAME)) {
             $picture->status |= FILE_STATUS_PERMANENT;
             $edit['picture'] = file_save($picture);
           }

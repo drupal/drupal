@@ -1,5 +1,5 @@
 <?php
-// $Id: user.test,v 1.95 2010/06/10 06:57:20 dries Exp $
+// $Id: user.test,v 1.96 2010/07/17 11:30:01 dries Exp $
 
 class UserRegistrationTestCase extends DrupalWebTestCase {
   public static function getInfo() {
@@ -914,6 +914,13 @@ class UserPictureTestCase extends DrupalWebTestCase {
 
       // Check if file is located in proper directory.
       $this->assertTrue(is_file($pic_path), t('File is located in proper directory'));
+
+      // Set new picture dimensions.
+      $test_dim = ($info['width'] + 5) . 'x' . ($info['height'] + 5);
+      variable_set('user_picture_dimensions', $test_dim);
+
+      $pic_path2 = $this->saveUserPicture($image);
+      $this->assertNotEqual($pic_path, $pic_path2, t('Filename of second picture is different.'));
     }
   }
 
@@ -921,11 +928,9 @@ class UserPictureTestCase extends DrupalWebTestCase {
     $edit = array('files[picture_upload]' => drupal_realpath($image->uri));
     $this->drupalPost('user/' . $this->user->uid . '/edit', $edit, t('Save'));
 
-    $img_info    = image_get_info($image->uri);
-    $picture_dir = variable_get('user_picture_path', 'pictures');
-    $pic_path    = 'public://' . $picture_dir . '/picture-' . $this->user->uid . '.' . $img_info['extension'];
-
-    return $pic_path;
+    // Load actual user data from database.
+    $account = user_load($this->user->uid, TRUE);
+    return isset($account->picture) ? $account->picture->uri : NULL;
   }
 }
 
