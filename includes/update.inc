@@ -1,5 +1,5 @@
 <?php
-// $Id: update.inc,v 1.63 2010/07/14 20:30:09 dries Exp $
+// $Id: update.inc,v 1.64 2010/07/17 19:44:06 dries Exp $
 
 /**
  * @file
@@ -68,7 +68,7 @@ function update_check_incompatibility($name, $type = 'module') {
  * the bootstrap to be successful.
  *
  * No access check has been performed when this function is called, so no
- * changes to the database should be made here.
+ * irreversible changes to the database are made here.
  */
 function update_prepare_d7_bootstrap() {
   // Allow the bootstrap to proceed even if a Drupal 6 settings.php file is
