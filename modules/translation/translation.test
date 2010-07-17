@@ -53,7 +53,7 @@ class TranslationTestCase extends DrupalWebTestCase {
     // Attempt to submit a duplicate translation by visiting the node/add page
     // with identical query string.
     $languages = language_list();
-    $this->drupalGet('node/add/page', array('query' => array('translation' => $node->nid, 'language' => 'es')));
+    $this->drupalGet('node/add/page', array('query' => array('translation' => $node->nid, 'target' => 'es')));
     $this->assertRaw(t('A translation of %title in %language already exists', array('%title' => $node_title, '%language' => $languages['es']->name)), t('Message regarding attempted duplicate translation is displayed.'));
 
     // Attempt a resubmission of the form - this emulates using the back button
@@ -154,7 +154,7 @@ class TranslationTestCase extends DrupalWebTestCase {
    * @param string $language Language code.
    */
   function createTranslation($node, $title, $body, $language) {
-    $this->drupalGet('node/add/page', array('query' => array('translation' => $node->nid, 'language' => $language)));
+    $this->drupalGet('node/add/page', array('query' => array('translation' => $node->nid, 'target' => $language)));
 
     $body_key = "body[$language][0][value]";
     $this->assertFieldByXPath('//input[@id="edit-title"]', $node->title, "Original title value correctly populated.");
