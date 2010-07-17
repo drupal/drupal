@@ -1689,7 +1689,7 @@ function drupal_set_message($message = NULL, $type = 'status', $repeat = TRUE) {
       $_SESSION['messages'][$type][] = $message;
     }
 
-    // Mark this page has being not cacheable.
+    // Mark this page as being uncacheable.
     drupal_page_is_cacheable(FALSE);
   }
 
