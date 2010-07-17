@@ -1,4 +1,4 @@
-// $Id: field_ui.js,v 1.3 2010/05/23 19:10:23 dries Exp $
+// $Id: field_ui.js,v 1.4 2010/07/17 19:19:39 dries Exp $
 
 (function($) {
 
@@ -134,6 +134,8 @@ Drupal.behaviors.fieldManageDisplayDrag = {
             var value = 'hidden';
           }
           $select.val(value);
+          // Fire AJAX update of formatter settings.
+          $select.change();
         }
         $select.removeData('noUpdate');
       }

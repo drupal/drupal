@@ -1,5 +1,5 @@
 <?php
-// $Id: field_ui.api.php,v 1.7 2010/07/16 02:45:34 dries Exp $
+// $Id: field_ui.api.php,v 1.8 2010/07/17 19:19:39 dries Exp $
 
 /**
  * @file
@@ -129,6 +129,71 @@ function hook_field_widget_settings_form($field, $instance) {
   }
 
   return $form;
+}
+
+
+/**
+ * Returns form elements for a formatter's settings.
+ *
+ * @param $field
+ *   The field structure being configured.
+ * @param $instance
+ *   The instance structure being configured.
+ * @param $view_mode
+ *   The view mode being configured.
+ * @param $form
+ *   The (entire) configuration form array, which will usually have no use here.
+ * @param $form_state
+ *   The form state of the (entire) configuration form.
+ *
+ * @return
+ *   The form elements for the formatter settings.
+ */
+function hook_field_formatter_settings_form($field, $instance, $view_mode, $form, &$form_state) {
+  $display = $instance['display'][$view_mode];
+  $settings = $display['settings'];
+
+  $element = array();
+
+  if ($display['type'] == 'text_trimmed' || $display['type'] == 'text_summary_or_trimmed') {
+    $element['trim_length'] = array(
+      '#title' => t('Length'),
+      '#type' => 'textfield',
+      '#size' => 20,
+      '#default_value' => $settings['trim_length'],
+      '#element_validate' => array('_element_validate_integer_positive'),
+      '#required' => TRUE,
+    );
+  }
+
+  return $element;
+
+}
+
+/**
+ * Returns a short summary for the current formatter settings of an instance.
+ *
+ * @param $field
+ *   The field structure.
+ * @param $instance
+ *   The instance structure.
+ * @param $view_mode
+ *   The view mode for which a settings summary is requested.
+ *
+ * @return
+ *   A string containing a short summary of the formatter settings.
+ */
+function hook_field_formatter_settings_summary($field, $instance, $view_mode) {
+  $display = $instance['display'][$view_mode];
+  $settings = $display['settings'];
+
+  $summary = '';
+
+  if ($display['type'] == 'text_trimmed' || $display['type'] == 'text_summary_or_trimmed') {
+    $summary = t('Length: @chars chars', array('@chars' => $settings['trim_length']));
+  }
+
+  return $summary;
 }
 
 /**

@@ -1,4 +1,4 @@
-/* $Id: field_ui.css,v 1.3 2010/06/26 02:06:53 dries Exp $ */
+/* $Id: field_ui.css,v 1.4 2010/07/17 19:19:39 dries Exp $ */
 
 /* 'Manage fields' overview */
 #field-overview tr.add-new .label-input {
@@ -15,10 +15,37 @@
   padding-bottom: .5em;
 }
 
-/* Manage display */
+/* 'Manage display' overview */
 .field-display-overview tr.region-title td {
   font-weight: bold;
 }
 .field-display-overview tr.region-populated {
   display: none;
+}
+.field-display-overview .field-formatter-summary-cell {
+  line-height: 1em;
+}
+.field-display-overview .field-formatter-summary {
+  float: left;
+  font-size: 0.9em;
+}
+.field-display-overview td.field-formatter-summary-cell span.warning {
+  display: block;
+  float: left;
+  margin-right: .5em;
+}
+.field-display-overview .field-formatter-settings-edit-wrapper {
+  float: right;
+}
+.field-display-overview .field-formatter-settings-edit {
+  float: right;
+}
+.field-display-overview tr.field-formatter-settings-editing td {
+  vertical-align: top;
+}
+.field-display-overview tr.field-formatter-settings-editing .field-formatter-type {
+  display: none;
+}
+.field-display-overview .field-formatter-settings-edit-form .formatter-name{
+  font-weight: bold;
 }
