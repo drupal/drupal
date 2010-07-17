@@ -68,7 +68,7 @@ function update_check_incompatibility($name, $type = 'module') {
  * the bootstrap to be successful.
  *
  * No access check has been performed when this function is called, so no
- * changes to the database should be made here.
+ * irreversible changes to the database are made here.
  */
 function update_prepare_d7_bootstrap() {
   // Allow the bootstrap to proceed even if a Drupal 6 settings.php file is
