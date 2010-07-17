@@ -724,6 +724,10 @@ function field_ui_display_overview_form($form, &$form_state, $entity_type, $bund
     return $form;
   }
 
+  $form_state += array(
+    'formatter_settings_edit' => NULL,
+  );
+
   $table = array(
     '#theme' => 'field_ui_display_overview_table',
     '#field_rows' => array(),
@@ -742,7 +746,6 @@ function field_ui_display_overview_form($form, &$form_state, $entity_type, $bund
 
   foreach ($instances as $name => $instance) {
     $display = $instance['display'][$view_mode];
-
     $table[$name]['human_name'] = array(
       '#markup' => check_plain($instance['label']),
     );
@@ -762,13 +765,115 @@ function field_ui_display_overview_form($form, &$form_state, $entity_type, $bund
     );
     $field = field_info_field($instance['field_name']);
 
+    // The handling of the 'hidden' region in field_ui.js relies on the
+    // 'formatter type' select, so it is present in all cases, and hidden with
+    // CSS when the row is in 'edit settings' mode.
     $formatter_options = field_ui_formatter_options($field['type']);
     $formatter_options['hidden'] = t('<Hidden>');
     $table[$name]['type'] = array(
       '#type' => 'select',
       '#options' => $formatter_options,
       '#default_value' => $display['type'],
+      '#ajax' => array(
+        'callback' => 'field_ui_formatter_settings_js',
+        'wrapper' => 'field-display-overview-wrapper',
+        'effect' => 'fade',
+      ),
+      '#field_name' => $name,
+      '#op' => 'change_type',
     );
+    // Formatter settings.
+
+    // Check the currently selected formatter, and merge persisted values for
+    // formatter settings.
+    if (isset($form_state['values']['settings'][$name]['type'])) {
+      $formatter_type = $form_state['values']['settings'][$name]['type'];
+    }
+    else {
+      $formatter_type = $display['type'];
+    }
+    if (isset($form_state['formatter_settings'][$name])) {
+      $settings = $form_state['formatter_settings'][$name];
+    }
+    else {
+      $settings = $display['settings'];
+    }
+    $settings += field_info_formatter_settings($formatter_type);
+
+    $instance['display'][$view_mode]['type'] = $formatter_type;
+    $formatter = field_info_formatter_types($formatter_type);
+    $instance['display'][$view_mode]['module'] = $formatter['module'];
+    $instance['display'][$view_mode]['settings'] = $settings;
+
+    // Base button element for the various formatter settings actions.
+    $base_button = array(
+      '#submit' => array('field_ui_formatter_settings_submit'),
+      '#ajax' => array(
+        'callback' => 'field_ui_formatter_settings_js',
+        'wrapper' => 'field-display-overview-wrapper',
+        'effect' => 'fade',
+      ),
+      '#field_name' => $name,
+    );
+
+    if ($form_state['formatter_settings_edit'] == $name) {
+      // We are currently editing this field's formatter settings. Display the
+      // settings form and submit buttons.
+      $table[$name]['settings_edit_form'] = array();
+      $additions = module_invoke($formatter['module'], 'field_formatter_settings_form', $field, $instance, $view_mode, $form, $form_state);
+      if (is_array($additions)) {
+        $table[$name]['settings_edit_form'] = array(
+          '#type' => 'container',
+          '#attributes' => array('class' => array('field-formatter-settings-edit-form')),
+        );
+        $table[$name]['settings_edit_form']['label'] = array(
+          '#markup' => t('Format settings:') . ' <span class="formatter-name">' . $formatter['label'] . '</span>',
+        );
+        $table[$name]['settings_edit_form']['settings'] = $additions;
+        $table[$name]['settings_edit_form']['actions'] = array('#type' => 'actions');
+        $table[$name]['settings_edit_form']['actions']['save_settings'] = $base_button + array(
+          '#type' => 'submit',
+          '#name' => $name . '_formatter_settings_update',
+          '#value' => t('Update'),
+          '#op' => 'update',
+        );
+        $table[$name]['settings_edit_form']['actions']['cancel_settings'] = $base_button + array(
+          '#type' => 'submit',
+          '#name' => $name . '_formatter_settings_cancel',
+          '#value' => t('Cancel'),
+          '#op' => 'cancel',
+          // Do not check errors for the 'Cancel' button.
+          '#limit_validation_errors' => array(),
+        );
+        $table[$name]['#settings_editing'] = TRUE;
+        // When formatter is changed, cancel the currently edited settings. The
+        // select 'formatter type' input is hidden in editing mode, so this only
+        // happens is the row is dragged into the 'hidden' section.
+        $table[$name]['type']['#ajax']['trigger_as'] = array('name' => $name . '_formatter_settings_cancel');
+      }
+    }
+    else {
+      // Display a summary of the current formatter settings.
+      $summary = module_invoke($formatter['module'], 'field_formatter_settings_summary', $field, $instance, $view_mode);
+      $table[$name]['settings_summary'] = array();
+      $table[$name]['settings_edit'] = array();
+      if ($summary) {
+        $table[$name]['settings_summary'] = array(
+          '#markup' => '<div class="field-formatter-summary">' . $summary . '</div>',
+        );
+        $table[$name]['settings_edit'] = $base_button + array(
+          '#type' => 'image_button',
+          '#name' => $name . '_formatter_settings_edit',
+          '#src' => 'misc/configure.png',
+          '#attributes' => array('class' => array('field-formatter-settings-edit'), 'alt' => t('Edit')),
+          '#op' => 'edit',
+          // Do not check errors for the 'Edit' button.
+          '#limit_validation_errors' => array(),
+          '#prefix' => '<div class="field-formatter-settings-edit-wrapper">',
+          '#suffix' => '</div>',
+        );
+      }
+    }
     $table['#field_rows'][] = $name;
 
     // Collect default formatters for the JS script.
@@ -796,8 +901,11 @@ function field_ui_display_overview_form($form, &$form_state, $entity_type, $bund
       '#options' => $extra_visibility_options,
       '#default_value' => $display['visible'] ? 'visible' : 'hidden',
     );
+    $table[$name]['settings_summary'] = array();
+    $table[$name]['settings_edit'] = array();
     $table['#field_rows'][] = $name;
   }
+
   $form['settings'] = $table;
 
   // Custom display settings.
@@ -834,9 +942,71 @@ function field_ui_display_overview_form($form, &$form_state, $entity_type, $bund
 
   $form['#attached']['js'][] = drupal_get_path('module', 'field_ui') . '/field_ui.js';
   $form['#attached']['css'][] = drupal_get_path('module', 'field_ui') . '/field_ui.css';
+
   drupal_add_js(array('fieldDefaultFormatters' => $default_formatters), 'setting');
 
   return $form;
+}
+
+
+/**
+ * Form submit handler for the formatter settings buttons.
+ */
+function field_ui_formatter_settings_submit($form, &$form_state) {
+  $trigger = $form_state['triggering_element'];
+  $field_name = $trigger['#field_name'];
+  $op = $trigger['#op'];
+
+  switch ($op) {
+    case 'edit':
+      // Store the field whose settings are currently being edited.
+      $form_state['formatter_settings_edit'] = $field_name;
+      break;
+
+    case 'update':
+      // Store the saved settings.
+      $values = $form_state['values']['settings'][$field_name]['settings_edit_form']['settings'];
+      $form_state['formatter_settings'][$field_name] = $values;
+      // Fall-through to the 'cancel' case.
+    case 'cancel':
+      // Unset the field as being currently edited.
+      $form_state['formatter_settings_edit'] = NULL;
+      break;
+  }
+
+  $form_state['rebuild'] = TRUE;
+}
+
+/**
+ * AJAX handler for the formatter settings buttons.
+ */
+function field_ui_formatter_settings_js($form, &$form_state) {
+  $trigger = $form_state['triggering_element'];
+  $field_name = $trigger['#field_name'];
+  $op = $trigger['#op'];
+
+  // Apply the AJAX effect to updated elements.
+  switch ($op) {
+    case 'change_type':
+      $updated = array('settings_summary');
+      break;
+
+    case 'edit':
+      $updated = array('settings_edit_form');
+      break;
+
+    case 'update':
+    case 'cancel':
+      $updated = array('type', 'settings_summary', 'settings_edit');
+      break;
+  }
+  foreach ($updated as $key) {
+    $element = &$form['settings'][$field_name][$key];
+    $element['#prefix'] = '<div class="ajax-new-content">' . (isset($element['#prefix']) ? $element['#prefix'] : '');
+    $element['#suffix'] = (isset($element['#suffix']) ? $element['#suffix'] : '') . '</div>';
+  }
+
+  return $form['settings'];
 }
 
 /**
@@ -867,17 +1037,15 @@ function template_preprocess_field_ui_display_overview_table(&$vars) {
 
       $row = new stdClass();
       foreach (element_children($element) as $child) {
-        if (array_key_exists('label', $element[$child])) {
-          $row->{$child} = new stdClass();
-          $row->{$child}->label = drupal_render($element[$child]['label']);
-          $row->{$child}->type = drupal_render($element[$child]['type']);
-        }
-        else {
-          $row->{$child} = drupal_render($element[$child]);
-        }
+        $row->{$child} = drupal_render($element[$child]);
       }
+      $row->settings_class = (!empty($element['#settings_class']) ? $element['#settings_class'] : '');
       $row->class = 'draggable';
+      if (isset($element['#settings_editing'])) {
+        $row->class .= ' field-formatter-settings-editing';
+      }
       $row->label_class = 'label-field';
+      $row->id = 'row-' . strtr($key, '_', '-');
       $rows[$visibility][] = $row;
     }
   }
@@ -897,7 +1065,29 @@ function field_ui_display_overview_form_submit($form, &$form_state) {
   // Save data for 'regular' fields.
   foreach ($form['#fields'] as $field_name) {
     $instance = field_info_instance($entity_type, $field_name, $bundle);
-    $instance['display'][$view_mode] = $form_values['settings'][$field_name];
+    $values = $form_values['settings'][$field_name];
+    // Get formatter settings. They lie either directly in submitted form
+    // values (if the whole form was submitted while some formatter
+    // settings were being edited), or have been persisted in
+    // $form_state.
+    $settings = $instance['display'][$view_mode]['settings'];
+    if (isset($values['settings_edit_form']['settings'])) {
+      $settings = $values['settings_edit_form']['settings'];
+    }
+    elseif (isset($form_state['formatter_settings'][$field_name])) {
+      $settings = $form_state['formatter_settings'][$field_name];
+    }
+
+    // Only save settings actually used by the selected formatter.
+    $default_settings = field_info_formatter_settings($values['type']);
+    $settings = array_intersect_key($settings, $default_settings);
+
+    $instance['display'][$view_mode] = array(
+      'label' => $values['label'],
+      'type' => $values['type'],
+      'weight' => $values['weight'],
+      'settings' => $settings,
+    );
     field_update_instance($instance);
   }
 

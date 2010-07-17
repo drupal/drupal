@@ -940,6 +940,28 @@ div.add-or-remove-shortcuts {
   border: #ccc 1px solid;
 }
 
+/* Field UI */
+
+.field-display-overview input.field-formatter-settings-edit {
+  margin: 0;
+  padding: 1px 8px;
+}
+.field-display-overview tr.field-formatter-settings-changed {
+  background: #FFFFBB;
+}
+.field-display-overview tr.drag {
+  background: #FFEE77;
+}
+.field-display-overview tr.field-formatter-settings-editing {
+  background: #D5E9F2;
+}
+.field-display-overview .field-formatter-settings-edit-form .form-item {
+  margin: 10px 0;
+}
+.field-display-overview .field-formatter-settings-edit-form .form-submit {
+  margin-bottom: 0;
+}
+
 /* Recent content block */
 #dashboard div#block-node-recent div.content {
   padding: 0;

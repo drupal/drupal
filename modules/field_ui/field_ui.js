@@ -134,6 +134,8 @@ Drupal.behaviors.fieldManageDisplayDrag = {
             var value = 'hidden';
           }
           $select.val(value);
+          // Fire AJAX update of formatter settings.
+          $select.change();
         }
         $select.removeData('noUpdate');
       }
