@@ -197,7 +197,7 @@ kbd {
   background-color: #e0e0d8;
 }
 #branding div.breadcrumb {
-  font-size: 11px;
+  font-size: 0.875em;
   padding-bottom: 5px;
 }
 #branding div.block {
@@ -280,7 +280,7 @@ div.status {
   color: #000;
   margin: 0;
   padding-bottom: 10px;
-  font-size: 18px;
+  font-size: 1.313em;
   font-weight: normal;
   float: left;
 }
@@ -302,7 +302,7 @@ ul.primary {
   padding: 3px 0 0 8px;
   line-height: 30px;
   text-transform: uppercase;
-  font-size: 12px;
+  font-size: 0.96em;
 }
 ul.primary li {
   display: inline;
@@ -342,7 +342,7 @@ ul.primary li.active a:hover {
 ul.secondary {
   float: none;
   clear: both;
-  font-size: 12px;
+  font-size: 0.75em;
   text-align: right;
   padding: 4px 10px 10px;
   line-height: 18px;
@@ -387,7 +387,7 @@ ul.secondary li.active a.active {
   padding: 0 10px 10px 0;
 }
 #secondary-links ul.links li a {
-  font-size: 9px;
+  font-size: 0.563em;
   line-height: 10px;
   background: #777;
   color: #fff;
@@ -448,7 +448,7 @@ ul.admin-list li:last-child {
 }
 
 ul.node-type-list .label {
-  font-size: 15px;
+  font-size: 0.938em;
 }
 ul.node-type-list li a,
 ul.admin-list li a {
@@ -472,7 +472,7 @@ ul.admin-list li div.description a {
  */
 table {
   width: 100%;
-  font-size: 12px;
+  font-size: 0.92em;
   margin: 0 0 10px;
   border: 1px solid #bebfb9;
 }
@@ -500,7 +500,7 @@ tr.drag-previous {
   background: #ffb;
 }
 table th {
-  font-size: 12px;
+  font-size: 0.75em;
   text-transform: uppercase;
   background: #e1e2dc;
   font-weight: normal;
@@ -622,7 +622,7 @@ div.teaser-checkbox .form-item,
   text-transform: none;
 }
 .form-item label.option {
-  font-size: 12px;
+  font-size: 0.75em;
 }
 .form-item label.option input {
   vertical-align: middle;
@@ -640,7 +640,7 @@ div.teaser-checkbox .form-item,
 .filter-wrapper .form-item,
 .filter-wrapper .filter-guidelines,
 .filter-wrapper .filter-help {
-  font-size: 12px;
+  font-size: 0.75em;
   padding: 0;
 }
 ul.tips,
@@ -648,7 +648,7 @@ div.description,
 .form-item div.description {
   margin: 5px 0;
   line-height: 15px;
-  font-size: 12px;
+  font-size: 0.938em;
   color: #666;
 }
 ul.tips li {
@@ -769,7 +769,7 @@ div.admin-panel {
   border: 1px solid #ccc;
 }
 div.admin-panel h3 {
-  font-size: 12px;
+  font-size: 0.938em;
   text-transform: uppercase;
   margin: 0;
   padding-bottom: 9px;
@@ -798,7 +798,7 @@ dl.multiselect dd {
 }
 dl.multiselect select,
 dl.multiselect dd select {
-  font-size: 12px;
+  font-size: 0.75em;
   background: #fff;
   border: 1px solid #ccc;
 }
@@ -814,7 +814,7 @@ div.admin-options {
 }
 div.admin-options label {
   text-transform: uppercase;
-  font: 12px/30px Lucida Grande, Lucida Sans Unicode, sans-serif;
+  font: 0.75em/1.875em Lucida Grande, Lucida Sans Unicode, sans-serif;
 }
 div.admin-options label,
 div.admin-options div.form-item {

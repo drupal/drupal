@@ -180,7 +180,7 @@ input,
 select,
 textarea,
 body {
-  font: 13px/20px "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font: 0.81em/1.25em "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 /**
