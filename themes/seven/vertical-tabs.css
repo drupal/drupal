@@ -1,4 +1,4 @@
-/* $Id: vertical-tabs.css,v 1.5 2010/03/20 14:45:05 dries Exp $ */
+/* $Id: vertical-tabs.css,v 1.6 2010/07/18 01:36:06 dries Exp $ */
 
 /**
  * Override of misc/vertical-tabs.css.
@@ -17,7 +17,7 @@ div.vertical-tabs fieldset {
 
 div.vertical-tabs .vertical-tabs-list {
   line-height: 10px;
-  font-size: 11px;
+  font-size: 0.875em;
   width: 25%;
   float: left;
   list-style-type: none;
@@ -43,7 +43,7 @@ div.vertical-tabs ul li.vertical-tab-button a {
 
 div.vertical-tabs ul li.vertical-tab-button .summary {
   display: block;
-  font-size: 9px;
+  font-size: 0.75em;
   color: #666;
   padding-top: 0.4em;
 }

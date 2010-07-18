@@ -1,4 +1,4 @@
-/* $Id: reset.css,v 1.9 2010/04/28 20:08:39 dries Exp $ */
+/* $Id: reset.css,v 1.10 2010/07/18 01:36:06 dries Exp $ */
 
 /**
  * Reset CSS styles.
@@ -180,7 +180,7 @@ input,
 select,
 textarea,
 body {
-  font: 13px/20px "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font: 0.81em/1.25em "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 /**
