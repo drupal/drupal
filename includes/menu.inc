@@ -922,8 +922,10 @@ function menu_tree_output($tree) {
     if ($i == $num_items - 1) {
       $class[] = 'last';
     }
-    // Set a class if the link has children.
-    if ($data['below']) {
+    // Set a class for the <li>-tag. Since $data['below'] may contain local
+    // tasks, only set 'expanded' class if the link also has children within
+    // the current menu.
+    if ($data['link']['has_children'] && $data['below']) {
       $class[] = 'expanded';
     }
     elseif ($data['link']['has_children']) {
