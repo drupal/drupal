@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.402 2010/07/16 02:54:09 dries Exp $
+// $Id: menu.inc,v 1.403 2010/07/19 21:57:49 dries Exp $
 
 /**
  * @file
@@ -922,8 +922,10 @@ function menu_tree_output($tree) {
     if ($i == $num_items - 1) {
       $class[] = 'last';
     }
-    // Set a class if the link has children.
-    if ($data['below']) {
+    // Set a class for the <li>-tag. Since $data['below'] may contain local
+    // tasks, only set 'expanded' class if the link also has children within
+    // the current menu.
+    if ($data['link']['has_children'] && $data['below']) {
       $class[] = 'expanded';
     }
     elseif ($data['link']['has_children']) {
