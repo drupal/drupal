@@ -1321,6 +1321,9 @@ class DatabaseCondition implements QueryConditionInterface, Countable {
               $condition['value']->compile($connection, $queryPlaceholder);
               $placeholders[] = (string) $condition['value'];
               $arguments += $condition['value']->arguments();
+              // Subqueries are the actual value of the operator, we don't
+              // need to add another below.
+              $operator['use_value'] = FALSE;
             }
             // We assume that if there is a delimiter, then the value is an
             // array. If not, it is a scalar. For simplicity, we first convert
