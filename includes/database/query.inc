@@ -1,5 +1,5 @@
 <?php
-// $Id: query.inc,v 1.52 2010/06/26 01:40:05 dries Exp $
+// $Id: query.inc,v 1.53 2010/07/19 13:28:19 dries Exp $
 
 /**
  * @ingroup database
@@ -486,9 +486,18 @@ class InsertQuery extends Query {
     // we wrap it in a transaction so that it is atomic where possible. On many
     // databases, such as SQLite, this is also a notable performance boost.
     $transaction = $this->connection->startTransaction();
-    $sql = (string) $this;
-    foreach ($this->insertValues as $insert_values) {
-      $last_insert_id = $this->connection->query($sql, $insert_values, $this->queryOptions);
+
+    try {
+      $sql = (string) $this;
+      foreach ($this->insertValues as $insert_values) {
+        $last_insert_id = $this->connection->query($sql, $insert_values, $this->queryOptions);
+      }
+    }
+    catch (Exception $e) {
+      // One of the INSERTs failed, rollback the whole batch.
+      $transaction->rollback();
+      // Rethrow the exception for the calling code.
+      throw $e;
     }
 
     // Re-initialize the values array so that we can re-use this query.
