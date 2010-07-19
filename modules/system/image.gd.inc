@@ -1,5 +1,5 @@
 <?php
-// $Id: image.gd.inc,v 1.15 2010/01/30 07:59:25 dries Exp $
+// $Id: image.gd.inc,v 1.16 2010/07/19 22:20:49 dries Exp $
 
 /**
  * @file
@@ -336,7 +336,7 @@ function image_gd_create_tmp(stdClass $image, $width, $height) {
  */
 function image_gd_get_info(stdClass $image) {
   $details = FALSE;
-  $data = getimagesize($image->source);
+  $data = getimagesize(drupal_realpath($image->source));
 
   if (isset($data) && is_array($data)) {
     $extensions = array('1' => 'gif', '2' => 'jpg', '3' => 'png');
