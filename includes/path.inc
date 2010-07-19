@@ -1,5 +1,5 @@
 <?php
-// $Id: path.inc,v 1.65 2010/07/16 02:51:44 dries Exp $
+// $Id: path.inc,v 1.66 2010/07/19 22:12:14 dries Exp $
 
 /**
  * @file
@@ -335,7 +335,7 @@ function drupal_path_alias_whitelist_rebuild($source = NULL) {
   // path it corresponds to. This is the portion of the path before the first
   // '/', if present, otherwise the whole path itself.
   $whitelist = array();
-  $result = db_query("SELECT SUBSTRING_INDEX(source, '/', 1) AS path FROM {url_alias} GROUP BY path");
+  $result = db_query("SELECT DISTINCT SUBSTRING_INDEX(source, '/', 1) AS path FROM {url_alias}");
   foreach ($result as $row) {
     $whitelist[$row->path] = TRUE;
   }
