@@ -1360,7 +1360,7 @@ class DrupalWebTestCase extends DrupalTestCase {
 
     if (!isset($this->curlHandle)) {
       $this->curlHandle = curl_init();
-      $curl_options = $this->additionalCurlOptions + array(
+      $curl_options = array(
         CURLOPT_COOKIEJAR => $this->cookieFile,
         CURLOPT_URL => $base_url,
         CURLOPT_FOLLOWLOCATION => FALSE,
