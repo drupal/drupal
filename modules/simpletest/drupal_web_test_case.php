@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.224 2010/07/08 12:22:59 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.225 2010/07/19 21:54:46 dries Exp $
 
 /**
  * Global variable that holds information about the tests being run.
@@ -1360,7 +1360,7 @@ class DrupalWebTestCase extends DrupalTestCase {
 
     if (!isset($this->curlHandle)) {
       $this->curlHandle = curl_init();
-      $curl_options = $this->additionalCurlOptions + array(
+      $curl_options = array(
         CURLOPT_COOKIEJAR => $this->cookieFile,
         CURLOPT_URL => $base_url,
         CURLOPT_FOLLOWLOCATION => FALSE,
