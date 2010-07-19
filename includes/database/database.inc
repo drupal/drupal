@@ -646,7 +646,7 @@ abstract class DatabaseConnection extends PDO {
    * @return string
    *   The name of the class that should be used for this driver.
    */
-  protected function getDriverClass($class) {
+  public function getDriverClass($class) {
     if (empty($this->driverClasses[$class])) {
       $this->driverClasses[$class] = $class . '_' . $this->driver();
       if (!class_exists($this->driverClasses[$class])) {

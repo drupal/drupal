@@ -601,11 +601,8 @@ class SelectQueryExtender implements SelectQueryInterface {
   /* Implementations of QueryExtendableInterface. */
 
   public function extend($extender_name) {
-    $override_class = $this->connection->driver();
-    if (class_exists($override_class)) {
-      $extender_name = $override_class;
-    }
-    return new $extender_name($this, $this->connection);
+    $class = $this->connection->getDriverClass($extender_name);
+    return new $class($this, $this->connection);
   }
 
   /* Alter accessors to expose the query data to alter hooks. */
