@@ -27,7 +27,7 @@ class InsertQuery_pgsql extends InsertQuery {
     $max_placeholder = 0;
     $blobs = array();
     $blob_count = 0;
-    foreach ($this->insertValues as &$insert_values) {
+    foreach ($this->insertValues as $insert_values) {
       foreach ($this->insertFields as $idx => $field) {
         if (isset($table_information->blob_fields[$field])) {
           $blobs[$blob_count] = fopen('php://memory', 'a');
@@ -45,8 +45,13 @@ class InsertQuery_pgsql extends InsertQuery {
       }
     }
     if (!empty($this->fromQuery)) {
-      foreach ($this->fromQuery->getArguments() as $key => $value) {
-        $stmt->bindParam($key, $value);
+      // bindParam stores only a reference to the variable that is followed when
+      // the statement is executed. We pass $arguments[$key] instead of $value
+      // because the second argument to bindParam is passed by reference and
+      // the foreach statement assigns the element to the existing reference.
+      $arguments = $this->fromQuery->getArguments();
+      foreach ($arguments as $key => $value) {
+        $stmt->bindParam($key, $arguments[$key]);
       }
     }
 
@@ -138,13 +143,13 @@ class UpdateQuery_pgsql extends UpdateQuery {
           // We assume that an expression will never happen on a BLOB field,
           // which is a fairly safe assumption to make since in most cases
           // it would be an invalid query anyway.
-          $stmt->bindParam($placeholder, $argument);
+          $stmt->bindParam($placeholder, $data['arguments'][$placeholder]);
         }
       }
       unset($fields[$field]);
     }
 
-    foreach ($fields as $field => &$value) {
+    foreach ($fields as $field => $value) {
       $placeholder = ':db_update_placeholder_' . ($max_placeholder++);
 
       if (isset($table_information->blob_fields[$field])) {
@@ -155,7 +160,7 @@ class UpdateQuery_pgsql extends UpdateQuery {
         ++$blob_count;
       }
       else {
-        $stmt->bindParam($placeholder, $value);
+        $stmt->bindParam($placeholder, $fields[$field]);
       }
     }
 
@@ -163,8 +168,8 @@ class UpdateQuery_pgsql extends UpdateQuery {
       $this->condition->compile($this->connection, $this);
 
       $arguments = $this->condition->arguments();
-      foreach ($arguments as $placeholder => &$value) {
-        $stmt->bindParam($placeholder, $value);
+      foreach ($arguments as $placeholder => $value) {
+        $stmt->bindParam($placeholder, $arguments[$placeholder]);
       }
     }
 
