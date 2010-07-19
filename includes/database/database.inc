@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.127 2010/07/12 15:14:16 webchick Exp $
+// $Id: database.inc,v 1.128 2010/07/19 13:23:21 dries Exp $
 
 /**
  * @file
@@ -646,7 +646,7 @@ abstract class DatabaseConnection extends PDO {
    * @return string
    *   The name of the class that should be used for this driver.
    */
-  protected function getDriverClass($class) {
+  public function getDriverClass($class) {
     if (empty($this->driverClasses[$class])) {
       $this->driverClasses[$class] = $class . '_' . $this->driver();
       if (!class_exists($this->driverClasses[$class])) {

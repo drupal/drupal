@@ -1,5 +1,5 @@
 <?php
-// $Id: select.inc,v 1.42 2010/06/01 09:24:09 dries Exp $
+// $Id: select.inc,v 1.43 2010/07/19 13:23:21 dries Exp $
 
 /**
  * @ingroup database
@@ -601,11 +601,8 @@ class SelectQueryExtender implements SelectQueryInterface {
   /* Implementations of QueryExtendableInterface. */
 
   public function extend($extender_name) {
-    $override_class = $this->connection->driver();
-    if (class_exists($override_class)) {
-      $extender_name = $override_class;
-    }
-    return new $extender_name($this, $this->connection);
+    $class = $this->connection->getDriverClass($extender_name);
+    return new $class($this, $this->connection);
   }
 
   /* Alter accessors to expose the query data to alter hooks. */
