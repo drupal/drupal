@@ -13,9 +13,7 @@ Drupal.behaviors.password = {
       var innerWrapper = $(this).parent();
       var outerWrapper = $(this).parent().parent();
 
-      // Add the password strength layers.
-      var passwordStrength = $('span.password-strength', innerWrapper);
-      var passwordResult = $('span.password-result', passwordStrength);
+      // Add identifying class to password element parent.
       innerWrapper.addClass('password-parent');
 
       // Add the password confirmation layer.
@@ -25,10 +23,10 @@ Drupal.behaviors.password = {
       var confirmChild = $('span', confirmResult);
 
       // Add the description box.
-      var passwordMeter = '<div id="password-strength"><div id="password-strength-text" aria-live="assertive"></div><div class="password-strength-title">' + translate.strengthTitle + '</div><div id="password-indicator"><div id="indicator"></div></div></div>';
+      var passwordMeter = '<div class="password-strength"><div class="password-strength-text" aria-live="assertive"></div><div class="password-strength-title">' + translate['strengthTitle'] + '</div><div class="password-indicator"><div class="indicator"></div></div></div>';
       $(confirmInput).parent().after('<div class="password-suggestions description"></div>');
       $(innerWrapper).prepend(passwordMeter);
-      var passwordDescription = $("div.password-suggestions", outerWrapper).hide();
+      var passwordDescription = $('div.password-suggestions', outerWrapper).hide();
 
       // Check the password strength.
       var passwordCheck = function () {
@@ -50,10 +48,10 @@ Drupal.behaviors.password = {
         }
 
         // Adjust the length of the strength indicator.
-        $('#indicator').css('width', result.strength + '%');
+        $(innerWrapper).find('.indicator').css('width', result.strength + '%');
 
         // Update the strength indication text.
-        $("#password-strength-text").html(result.indicatorText);
+        $(innerWrapper).find('.password-strength-text').html(result.indicatorText);
 
         passwordCheckMatch();
       };

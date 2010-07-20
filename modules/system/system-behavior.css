@@ -204,7 +204,7 @@ dl.multiselect .form-item {
 /**
  * Password strength indicator
  */
-#password-strength {
+.password-strength {
   width: 17em;
   float: right;  /* LTR */
   margin-top: 1.4em;
@@ -212,16 +212,16 @@ dl.multiselect .form-item {
 .password-strength-title {
   display: inline;
 }
-#password-strength-text {
+.password-strength-text {
   float: right; /* LTR */
   font-weight: bold;
 }
-#password-indicator {
+.password-indicator {
   background-color: #C4C4C4;
   height: 0.3em;
   width: 100%;
 }
-#password-indicator div {
+.password-indicator div {
   height: 100%;
   width: 0%;
   background-color: #47C965;
