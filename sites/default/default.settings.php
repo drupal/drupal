@@ -1,5 +1,5 @@
 <?php
-// $Id: default.settings.php,v 1.48 2010/06/28 19:57:34 dries Exp $
+// $Id: default.settings.php,v 1.49 2010/07/20 21:12:47 dries Exp $
 
 /**
  * @file
@@ -53,7 +53,7 @@
  *
  * Each database connection is specified as an array of settings,
  * similar to the following:
- *
+ * @code
  * array(
  *   'driver' => 'mysql',
  *   'database' => 'databasename',
@@ -62,7 +62,9 @@
  *   'host' => 'localhost',
  *   'port' => 3306,
  *   'prefix' => 'myprefix_',
+ *   'collation' => 'utf8_general_ci',
  * );
+ * @endcode
  *
  * The "driver" property indicates what Drupal database driver the
  * connection should use.  This is usually the same as the name of the
@@ -86,11 +88,12 @@
  * fall back to the single master server.
  *
  * The general format for the $databases array is as follows:
- *
+ * @code
  * $databases['default']['default'] = $info_array;
  * $databases['default']['slave'][] = $info_array;
  * $databases['default']['slave'][] = $info_array;
  * $databases['extra']['default'] = $info_array;
+ * @endcode
  *
  * In the above example, $info_array is an array of settings described above.
  * The first line sets a "default" database that has one master database
@@ -100,7 +103,7 @@
  * "extra".
  *
  * For a single database configuration, the following is sufficient:
- *
+ * @code
  * $databases['default']['default'] = array(
  *   'driver' => 'mysql',
  *   'database' => 'databasename',
@@ -108,7 +111,9 @@
  *   'password' => 'password',
  *   'host' => 'localhost',
  *   'prefix' => 'main_',
+ *   'collation' => 'utf8_general_ci',
  * );
+ * @endcode
  *
  * You can optionally set prefixes for some or all database table names
  * by using the 'prefix' setting. If a prefix is specified, the table
@@ -117,14 +122,14 @@
  * are desired, leave it as an empty string ''.
  *
  * To have all database names prefixed, set 'prefix' as a string:
- *
+ * @code
  *   'prefix' => 'main_',
- *
+ * @endcode
  * To provide prefixes for specific tables, set 'prefix' as an array.
  * The array's keys are the table names and the values are the prefixes.
  * The 'default' element is mandatory and holds the prefix for any tables
  * not specified elsewhere in the array. Example:
- *
+ * @code
  *   'prefix' => array(
  *     'default'   => 'main_',
  *     'users'     => 'shared_',
@@ -132,13 +137,13 @@
  *     'role'      => 'shared_',
  *     'authmap'   => 'shared_',
  *   ),
- *
+ * @endcode
  * You can also use a reference to a schema/database as a prefix. This maybe
  * useful if your Drupal installation exists in a schema that is not the default
  * or you want to access several databases from the same code base at the same
  * time.
  * Example:
- *
+ * @code
  *   'prefix' => array(
  *     'default'   => 'main.',
  *     'users'     => 'shared.',
@@ -146,10 +151,11 @@
  *     'role'      => 'shared.',
  *     'authmap'   => 'shared.',
  *   );
- *
+ * @endcode
  * NOTE: MySQL and SQLite's definition of a schema is a database.
  *
  * Database configuration format:
+ * @code
  *   $databases['default']['default'] = array(
  *     'driver' => 'mysql',
  *     'database' => 'databasename',
@@ -170,6 +176,7 @@
  *     'driver' => 'sqlite',
  *     'database' => '/path/to/databasefilename',
  *   );
+ * @endcode
  */
 $databases = array();
 
