@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1181 2010/07/17 11:30:01 dries Exp $
+// $Id: user.module,v 1.1182 2010/07/20 10:17:59 dries Exp $
 
 /**
  * @file
@@ -3361,7 +3361,12 @@ function user_form_process_password_confirm($element) {
   );
 
   $element['#attached']['js'][] = drupal_get_path('module', 'user') . '/user.js';
-  $element['#attached']['js'][] = array('data' => $js_settings, 'type' => 'setting');
+  // Ensure settings are only added once per page.
+  static $already_added = FALSE;
+  if (!$already_added) {
+    $already_added = TRUE;
+    $element['#attached']['js'][] = array('data' => $js_settings, 'type' => 'setting');
+  }
 
   return $element;
 }
