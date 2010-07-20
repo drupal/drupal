@@ -47,8 +47,15 @@ class DatabaseConnection_mysql extends DatabaseConnection {
       PDO::ATTR_CASE => PDO::CASE_LOWER,
     ));
 
-    // Force MySQL to use the UTF-8 character set by default.
-    $this->exec('SET NAMES "utf8"');
+    // Force MySQL to use the UTF-8 character set. Also set the collation, if a
+    // certain one has been set; otherwise, MySQL defaults to 'utf8_general_ci'
+    // for UTF-8.
+    if (!empty($connection_options['collation'])) {
+      $this->exec('SET NAMES utf8 COLLATE ' . $connection_options['collation']);
+    }
+    else {
+      $this->exec('SET NAMES utf8');
+    }
 
     // Force MySQL's behavior to conform more closely to SQL standards.
     // This allows Drupal to run almost seamlessly on many different

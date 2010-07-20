@@ -74,10 +74,12 @@ class DatabaseSchema_mysql extends DatabaseSchema {
    *   An array of SQL statements to create the table.
    */
   protected function createTableSql($name, $table) {
-    // Provide some defaults if needed
+    $info = $this->connection->getConnectionOptions();
+
+    // Provide defaults if needed.
     $table += array(
       'mysql_engine' => 'InnoDB',
-      'mysql_character_set' => 'UTF8',
+      'mysql_character_set' => 'utf8',
     );
 
     $sql = "CREATE TABLE {" . $name . "} (\n";
@@ -97,6 +99,13 @@ class DatabaseSchema_mysql extends DatabaseSchema {
     $sql = substr($sql, 0, -3) . "\n) ";
 
     $sql .= 'ENGINE = ' . $table['mysql_engine'] . ' DEFAULT CHARACTER SET ' . $table['mysql_character_set'];
+    // By default, MySQL uses the default collation for new tables, which is
+    // 'utf8_general_ci' for utf8. If an alternate collation has been set, it
+    // needs to be explicitly specified.
+    // @see DatabaseConnection_mysql
+    if (!empty($info['collation'])) {
+      $sql .= ' COLLATE ' . $info['collation'];
+    }
 
     // Add table comment.
     if (!empty($table['description'])) {
