@@ -1022,11 +1022,16 @@ class CommentBlockFunctionalTest extends CommentHelperCase {
     $comment2 = $this->postComment($this->node, $this->randomName(), $this->randomName());
     $comment3 = $this->postComment($this->node, $this->randomName());
 
-    // Test that a user without the 'access comments' permission can not see the block.
+    // Test that a user without the 'access comments' permission cannot see the
+    // block.
     $this->drupalLogout();
+    user_role_revoke_permissions(DRUPAL_ANONYMOUS_RID, array('access comments'));
     $this->drupalGet('');
     $this->assertNoText($block['title'], t('Block was not found.'));
+    user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access comments'));
 
+    // Test that a user with the 'access comments' permission can see the
+    // block.
     $this->drupalLogin($this->web_user);
     $this->drupalGet('');
     $this->assertText($block['title'], t('Block was found.'));
