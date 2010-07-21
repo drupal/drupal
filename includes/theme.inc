@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.601 2010/07/08 03:41:26 webchick Exp $
+// $Id: theme.inc,v 1.602 2010/07/21 00:27:24 dries Exp $
 
 /**
  * @file
@@ -228,6 +228,7 @@ function _drupal_theme_initialize($theme, $base_theme = array(), $registry_callb
 
 /**
  * Get the theme registry.
+ *
  * @return
  *   The theme registry array if it has been stored in memory, NULL otherwise.
  */
@@ -237,8 +238,10 @@ function theme_get_registry() {
 
 /**
  * Store the theme registry in memory.
+ *
  * @param $registry
  *   A registry array as returned by _theme_build_registry()
+ *
  * @return
  *   The theme registry array stored in memory
  */
@@ -542,6 +545,7 @@ function _theme_build_registry($theme, $base_theme, $theme_engine) {
  *
  * @param $refresh
  *   Whether to reload the list of themes from the database. Defaults to FALSE.
+ *
  * @return
  *   An associative array of the currently available themes. The keys are the
  *   names of the themes and the values are objects having the following
@@ -1099,9 +1103,10 @@ function drupal_find_theme_templates($cache, $extension, $path) {
  * given for $theme.
  *
  * @param $setting_name
- *  The name of the setting to be retrieved.
+ *   The name of the setting to be retrieved.
  * @param $theme
- *  The name of a given theme; defaults to the current theme.
+ *   The name of a given theme; defaults to the current theme.
+ *
  * @return
  *   The value of the requested setting, NULL if the setting does not exist.
  */
@@ -1992,6 +1997,19 @@ function theme_indentation($variables) {
  * @} End of "ingroup themeable".
  */
 
+/**
+ * Returns HTML output for a single table cell for theme_table().
+ * 
+ * @param $cell
+ *   Array of cell information, or string to display in cell.
+ * @param bool $header
+ *   TRUE if this cell is a table header cell, FALSE if it is an ordinary
+ *   table cell. If $cell is an array with element 'header' set to TRUE, that
+ *   will override the $header parameter.
+ *
+ * @return
+ *   HTML for the cell.
+ */
 function _theme_table_cell($cell, $header = FALSE) {
   $attributes = '';
 
