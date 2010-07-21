@@ -1,5 +1,5 @@
 <?php
-// $Id: system.test,v 1.132 2010/07/11 01:01:11 webchick Exp $
+// $Id: system.test,v 1.133 2010/07/21 00:26:21 dries Exp $
 
 /**
  * Helper class for module test cases.
@@ -1149,7 +1149,7 @@ class SystemBlockTestCase extends DrupalWebTestCase {
     // Confirm that the block is hidden.
     $this->assertNoRaw('id="block-system-powered-by"', t('Block no longer appears on page.'));
 
-    // For convenience of developers, set the block to it's default settings.
+    // For convenience of developers, set the block to its default settings.
     $edit = array();
     $edit['system_powered-by[region]'] = 'footer';
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));

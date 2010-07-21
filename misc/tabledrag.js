@@ -1,4 +1,4 @@
-// $Id: tabledrag.js,v 1.39 2010/06/20 17:34:51 webchick Exp $
+// $Id: tabledrag.js,v 1.40 2010/07/21 00:26:21 dries Exp $
 (function ($) {
 
 /**
@@ -681,7 +681,7 @@ Drupal.tableDrag.prototype.updateFields = function (changedRow) {
 Drupal.tableDrag.prototype.updateField = function (changedRow, group) {
   var rowSettings = this.rowSettings(group, changedRow);
 
-  // Set the row as it's own target.
+  // Set the row as its own target.
   if (rowSettings.relationship == 'self' || rowSettings.relationship == 'group') {
     var sourceRow = changedRow;
   }
