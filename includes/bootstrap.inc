@@ -2115,7 +2115,7 @@ function _drupal_bootstrap_page_cache() {
   // If there is no session cookie and cache is enabled (or forced), try
   // to serve a cached page.
   if (!isset($_COOKIE[session_name()]) && $cache_enabled) {
-    // Make sure there is a user object because it's timestamp will be
+    // Make sure there is a user object because its timestamp will be
     // checked, hook_boot might check for anonymous user etc.
     $user = drupal_anonymous_user();
     // Get the page from the cache.

@@ -1149,7 +1149,7 @@ class SystemBlockTestCase extends DrupalWebTestCase {
     // Confirm that the block is hidden.
     $this->assertNoRaw('id="block-system-powered-by"', t('Block no longer appears on page.'));
 
-    // For convenience of developers, set the block to it's default settings.
+    // For convenience of developers, set the block to its default settings.
     $edit = array();
     $edit['system_powered-by[region]'] = 'footer';
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
