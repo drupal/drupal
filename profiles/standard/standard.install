@@ -1,5 +1,5 @@
 <?php
-// $Id: standard.install,v 1.19 2010/07/20 02:05:13 dries Exp $
+// $Id: standard.install,v 1.20 2010/07/22 23:39:14 dries Exp $
 
 /**
  * Implements hook_install().
@@ -414,6 +414,14 @@ function standard_install() {
   db_insert('users_roles')
     ->fields(array('uid' => 1, 'rid' => $admin_role->rid))
     ->execute();
+
+  // Create a Home link in the main menu.
+  $item = array(
+    'link_title' => 'Home',
+    'link_path' => '<front>',
+    'menu_name' => 'main-menu',
+  );
+  menu_link_save($item);
 
   // Update the menu router information.
   menu_rebuild();
