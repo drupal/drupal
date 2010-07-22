@@ -136,14 +136,6 @@ class UserRegistrationTestCase extends DrupalWebTestCase {
     $this->assertEqual($new_user->language, '', t('Correct language field.'));
     $this->assertEqual($new_user->picture, '', t('Correct picture field.'));
     $this->assertEqual($new_user->init, $mail, t('Correct init field.'));
-
-    // Make the user timezone configurable, which will create a second fieldset
-    // on the registration page and cause the account information elements to
-    // be put in a fieldset.
-    variable_set('user_default_timezone', DRUPAL_USER_TIMEZONE_SELECT);
-    $this->drupalLogout();
-    $this->drupalGet('user/register');
-    $this->assertText(t('Account information'), t('Account settings fieldset was not hidden.'));
   }
 }
 
