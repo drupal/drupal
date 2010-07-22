@@ -372,10 +372,13 @@ function search_simplify($text) {
   // Readable regexp: ([number]+)[punctuation]+(?=[number])
   $text = preg_replace('/([' . PREG_CLASS_NUMBERS . ']+)[' . PREG_CLASS_PUNCTUATION . ']+(?=[' . PREG_CLASS_NUMBERS . '])/u', '\1', $text);
 
+  // Multiple dot and dash groups are word boundaries and replaced with space.
+  // No need to use the unicode modifer here because 0-127 ASCII characters
+  // can't match higher UTF-8 characters as the leftmost bit of those are 1.
+  $text = preg_replace('/[.-]{2,}/', ' ', $text);
+
   // The dot, underscore and dash are simply removed. This allows meaningful
-  // search behavior with acronyms and URLs. No need to use the unicode modifer
-  // here because 0-127 ASCII characters can't match higher UTF-8 characters as
-  // the leftmost bit of those are 1.
+  // search behavior with acronyms and URLs. See unicode note directly above.
   $text = preg_replace('/[._-]+/', '', $text);
 
   // With the exception of the rules above, we consider all punctuation,
