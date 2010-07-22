@@ -16,29 +16,31 @@ function xmlrpc_server($callbacks) {
   $xmlrpc_server = new stdClass();
   // Define built-in XML-RPC method names
   $defaults = array(
-      'system.multicall' => 'xmlrpc_server_multicall',
+    'system.multicall' => 'xmlrpc_server_multicall',
     array(
       'system.methodSignature',
       'xmlrpc_server_method_signature',
       array('array', 'string'),
-      'Returns an array describing the return type and required parameters of a method.'
+      'Returns an array describing the return type and required parameters of a method.',
     ),
     array(
       'system.getCapabilities',
       'xmlrpc_server_get_capabilities',
       array('struct'),
-      'Returns a struct describing the XML-RPC specifications supported by this server.'
+      'Returns a struct describing the XML-RPC specifications supported by this server.',
     ),
     array(
       'system.listMethods',
       'xmlrpc_server_list_methods',
       array('array'),
-      'Returns an array of available methods on this server.'),
+      'Returns an array of available methods on this server.',
+    ),
     array(
       'system.methodHelp',
       'xmlrpc_server_method_help',
       array('string', 'string'),
-      'Returns a documentation string for the specified method.')
+      'Returns a documentation string for the specified method.',
+    ),
   );
   // We build an array of all method names by combining the built-ins
   // with those defined by modules implementing the _xmlrpc hook.
@@ -86,9 +88,7 @@ function xmlrpc_server($callbacks) {
 <methodResponse>
   <params>
   <param>
-    <value>' .
-    xmlrpc_value_get_xml($r)
-    . '</value>
+    <value>' . xmlrpc_value_get_xml($r) . '</value>
   </param>
   </params>
 </methodResponse>
@@ -181,23 +181,27 @@ function xmlrpc_server_call($xmlrpc_server, $methodname, $args) {
             $ok = FALSE;
           }
           break;
+
         case 'base64':
         case 'string':
           if (!is_string($arg)) {
             $ok = FALSE;
           }
           break;
+
         case 'boolean':
           if ($arg !== FALSE && $arg !== TRUE) {
             $ok = FALSE;
           }
           break;
+
         case 'float':
         case 'double':
           if (!is_float($arg)) {
             $ok = FALSE;
           }
           break;
+
         case 'date':
         case 'dateTime.iso8601':
           if (!$arg->is_date) {
@@ -239,7 +243,7 @@ function xmlrpc_server_multicall($methodcalls) {
     if (is_object($result) && !empty($result->is_error)) {
       $return[] = array(
         'faultCode' => $result->code,
-        'faultString' => $result->message
+        'faultString' => $result->message,
       );
     }
     else {
@@ -248,7 +252,6 @@ function xmlrpc_server_multicall($methodcalls) {
   }
   return $return;
 }
-
 
 /**
  * XML-RPC method system.listMethods maps to this function.
@@ -267,20 +270,20 @@ function xmlrpc_server_get_capabilities() {
   return array(
     'xmlrpc' => array(
       'specUrl' => 'http://www.xmlrpc.com/spec',
-      'specVersion' => 1
+      'specVersion' => 1,
     ),
     'faults_interop' => array(
       'specUrl' => 'http://xmlrpc-epi.sourceforge.net/specs/rfc.fault_codes.php',
-      'specVersion' => 20010516
+      'specVersion' => 20010516,
     ),
     'system.multicall' => array(
       'specUrl' => 'http://www.xmlrpc.com/discuss/msgReader$1208',
-      'specVersion' => 1
+      'specVersion' => 1,
     ),
     'introspection' => array(
-    'specUrl' => 'http://scripts.incutio.com/xmlrpc/introspection.html',
-    'specVersion' => 1
-    )
+      'specUrl' => 'http://scripts.incutio.com/xmlrpc/introspection.html',
+      'specVersion' => 1,
+    ),
   );
 }
 
@@ -289,6 +292,7 @@ function xmlrpc_server_get_capabilities() {
  *
  * @param $methodname
  *   Name of method for which we return a method signature.
+ *
  * @return
  *   An array of types representing the method signature of the
  *   function that the methodname maps to. The methodSignature of
@@ -321,3 +325,4 @@ function xmlrpc_server_method_help($method) {
   $xmlrpc_server = xmlrpc_server_get();
   return $xmlrpc_server->help[$method];
 }
+

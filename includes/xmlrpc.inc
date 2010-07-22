@@ -65,7 +65,7 @@ function xmlrpc_value_calculate_type($xmlrpc_value) {
     return 'double';
   }
   if (is_int($xmlrpc_value->data)) {
-      return 'int';
+    return 'int';
   }
   if (is_array($xmlrpc_value->data)) {
     // empty or integer-indexed arrays are 'array', string-indexed arrays 'struct'
@@ -98,18 +98,18 @@ function xmlrpc_value_get_xml($xmlrpc_value) {
   switch ($xmlrpc_value->type) {
     case 'boolean':
       return '<boolean>' . (($xmlrpc_value->data) ? '1' : '0') . '</boolean>';
-      break;
+
     case 'int':
       return '<int>' . $xmlrpc_value->data . '</int>';
-      break;
+
     case 'double':
       return '<double>' . $xmlrpc_value->data . '</double>';
-      break;
+
     case 'string':
       // Note: we don't escape apostrophes because of the many blogging clients
       // that don't support numerical entities (and XML in general) properly.
       return '<string>' . htmlspecialchars($xmlrpc_value->data) . '</string>';
-      break;
+
     case 'array':
       $return = '<array><data>' . "\n";
       foreach ($xmlrpc_value->data as $item) {
@@ -117,7 +117,7 @@ function xmlrpc_value_get_xml($xmlrpc_value) {
       }
       $return .= '</data></array>';
       return $return;
-      break;
+
     case 'struct':
       $return = '<struct>' . "\n";
       foreach ($xmlrpc_value->data as $name => $value) {
@@ -126,13 +126,12 @@ function xmlrpc_value_get_xml($xmlrpc_value) {
       }
       $return .= '</struct>';
       return $return;
-      break;
+
     case 'date':
       return xmlrpc_date_get_xml($xmlrpc_value->data);
-      break;
+
     case 'base64':
       return xmlrpc_base64_get_xml($xmlrpc_value->data);
-      break;
   }
   return FALSE;
 }
@@ -150,9 +149,12 @@ function xmlrpc_value_get_xml($xmlrpc_value) {
  */
 function xmlrpc_message($message) {
   $xmlrpc_message = new stdClass();
-  $xmlrpc_message->array_structs = array();   // The stack used to keep track of the current array/struct
-  $xmlrpc_message->array_structs_types = array(); // The stack used to keep track of if things are structs or array
-  $xmlrpc_message->current_struct_name = array();  // A stack as well
+  // The stack used to keep track of the current array/struct
+  $xmlrpc_message->array_structs = array();
+  // The stack used to keep track of if things are structs or array
+  $xmlrpc_message->array_structs_types = array();
+  // A stack as well
+  $xmlrpc_message->current_struct_name = array();
   $xmlrpc_message->message = $message;
   return $xmlrpc_message;
 }
@@ -238,11 +240,13 @@ function xmlrpc_message_tag_open($parser, $tag, $attr) {
     case 'fault':
       $xmlrpc_message->messagetype = $tag;
       break;
+
     // Deal with stacks of arrays and structs
     case 'data':
       $xmlrpc_message->array_structs_types[] = 'array';
       $xmlrpc_message->array_structs[] = array();
       break;
+
     case 'struct':
       $xmlrpc_message->array_structs_types[] = 'struct';
       $xmlrpc_message->array_structs[] = array();
@@ -272,19 +276,23 @@ function xmlrpc_message_tag_close($parser, $tag) {
       $value = (int)trim($xmlrpc_message->current_tag_contents);
       $value_flag = TRUE;
       break;
+
     case 'double':
       $value = (double)trim($xmlrpc_message->current_tag_contents);
       $value_flag = TRUE;
       break;
+
     case 'string':
       $value = $xmlrpc_message->current_tag_contents;
       $value_flag = TRUE;
       break;
+
     case 'dateTime.iso8601':
       $value = xmlrpc_date(trim($xmlrpc_message->current_tag_contents));
       // $value = $iso->getTimestamp();
       $value_flag = TRUE;
       break;
+
     case 'value':
       // If no type is indicated, the type is string
       // We take special care for empty values
@@ -294,41 +302,47 @@ function xmlrpc_message_tag_close($parser, $tag) {
       }
       unset($xmlrpc_message->last_open);
       break;
+
     case 'boolean':
       $value = (boolean)trim($xmlrpc_message->current_tag_contents);
       $value_flag = TRUE;
       break;
+
     case 'base64':
       $value = base64_decode(trim($xmlrpc_message->current_tag_contents));
       $value_flag = TRUE;
       break;
+
     // Deal with stacks of arrays and structs
     case 'data':
     case 'struct':
-      $value = array_pop($xmlrpc_message->array_structs );
+      $value = array_pop($xmlrpc_message->array_structs);
       array_pop($xmlrpc_message->array_structs_types);
       $value_flag = TRUE;
       break;
+
     case 'member':
       array_pop($xmlrpc_message->current_struct_name);
       break;
+
     case 'name':
       $xmlrpc_message->current_struct_name[] = trim($xmlrpc_message->current_tag_contents);
       break;
+
     case 'methodName':
       $xmlrpc_message->methodname = trim($xmlrpc_message->current_tag_contents);
       break;
   }
   if ($value_flag) {
-    if (count($xmlrpc_message->array_structs ) > 0) {
+    if (count($xmlrpc_message->array_structs) > 0) {
       // Add value to struct or array
-      if ($xmlrpc_message->array_structs_types[count($xmlrpc_message->array_structs_types)-1] == 'struct') {
+      if ($xmlrpc_message->array_structs_types[count($xmlrpc_message->array_structs_types) - 1] == 'struct') {
         // Add to struct
-        $xmlrpc_message->array_structs [count($xmlrpc_message->array_structs )-1][$xmlrpc_message->current_struct_name[count($xmlrpc_message->current_struct_name)-1]] = $value;
+        $xmlrpc_message->array_structs[count($xmlrpc_message->array_structs) - 1][$xmlrpc_message->current_struct_name[count($xmlrpc_message->current_struct_name) - 1]] = $value;
       }
       else {
         // Add to array
-        $xmlrpc_message->array_structs [count($xmlrpc_message->array_structs )-1][] = $value;
+        $xmlrpc_message->array_structs[count($xmlrpc_message->array_structs) - 1][] = $value;
       }
     }
     else {
@@ -611,3 +625,4 @@ function xmlrpc_error_msg() {
 function xmlrpc_clear_error() {
   xmlrpc_error(NULL, NULL, TRUE);
 }
+
