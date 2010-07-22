@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.39 2010/06/16 04:56:07 dries Exp $
+// $Id: database.inc,v 1.40 2010/07/22 23:54:32 dries Exp $
 
 /**
  * @file
@@ -33,7 +33,7 @@ class DatabaseConnection_pgsql extends DatabaseConnection {
 
     // PostgreSQL in trust mode doesn't require a password to be supplied.
     if (empty($connection_options['password'])) {
-      $connection_options['password'] = null;
+      $connection_options['password'] = NULL;
     }
 
     $this->connectionOptions = $connection_options;

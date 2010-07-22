@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.136 2010/06/21 02:27:47 webchick Exp $
+// $Id: install.inc,v 1.137 2010/07/22 23:54:32 dries Exp $
 
 /**
  * Indicates that a module has not been installed yet.
@@ -1050,5 +1050,5 @@ function db_run_tasks($driver) {
   $task_class = 'DatabaseTasks_' . $driver;
   $DatabaseTasks = new $task_class();
   $DatabaseTasks->runTasks();
-  return true;
+  return TRUE;
 }
