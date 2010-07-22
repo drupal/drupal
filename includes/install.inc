@@ -1050,5 +1050,5 @@ function db_run_tasks($driver) {
   $task_class = 'DatabaseTasks_' . $driver;
   $DatabaseTasks = new $task_class();
   $DatabaseTasks->runTasks();
-  return true;
+  return TRUE;
 }
