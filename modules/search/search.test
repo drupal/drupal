@@ -1,5 +1,5 @@
 <?php
-// $Id: search.test,v 1.64 2010/06/08 06:34:36 webchick Exp $
+// $Id: search.test,v 1.65 2010/07/22 16:16:42 dries Exp $
 
 // The search index can contain different types of content. Typically the type is 'node'.
 // Here we test with _test_ and _test2_ as the type.
@@ -935,22 +935,22 @@ class SearchCommentCountToggleTestCase extends DrupalWebTestCase {
     $this->drupalPost('', $edit, t('Search'));
     $this->assertNoText(t('0 comments'), t('Empty comment count does not display for nodes with comment status set to Hidden'));
     $this->assertNoText(t('1 comment'), t('Non-empty comment count does not display for nodes with comment status set to Hidden'));
-  }  
+  }
 }
 
 /**
- * Test search_simplify() on every Unicode character.
+ * Test search_simplify() on every Unicode character, and some other cases.
  */
 class SearchSimplifyTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Search simplify',
-      'description' => 'Check that simplification works as intended.',
+      'description' => 'Check that the search_simply() function works as intended.',
       'group' => 'Search',
     );
   }
 
-  function testSearchSimplify() {
+  function testSearchSimplifyUnicode() {
     $input = file_get_contents(DRUPAL_ROOT . '/modules/search/tests/UnicodeTest.txt');
     $strings = explode(chr(10), $input);
     foreach ($strings as $key => $string) {
@@ -968,6 +968,23 @@ class SearchSimplifyTestCase extends DrupalWebTestCase {
     }
     // Diff really does not like files starting with \0 so test it separately.
     $this->assertIdentical(' ', search_simplify($string), t('Search simplify works for ASCII control characters.'));
+  }
+
+  /**
+   * Tests that search_simplify() does the right thing with punctuation.
+   */
+  function testSearchSimplifyPunctuation() {
+    $cases = array(
+      array('20.03/94-28,876', '20039428876', 'Punctuation removed from numbers'),
+      array('great...drupal--module', 'great drupal module', 'Multiple dot and dashes are word boundaries'),
+      array('very_great-drupal.module', 'verygreatdrupalmodule', 'Single dot, dash, underscore are removed'),
+      array('regular,punctuation;word', 'regular punctuation word', 'Punctuation is a word boundary'),
+    );
+
+    foreach ($cases as $case) {
+      $out = trim(search_simplify($case[0]));
+      $this->assertEqual($out, $case[1], $case[2]);
+    }
   }
 }
 
