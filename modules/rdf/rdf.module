@@ -1,5 +1,5 @@
 <?php
-// $Id: rdf.module,v 1.42 2010/07/14 20:26:52 dries Exp $
+// $Id: rdf.module,v 1.43 2010/07/23 04:39:32 dries Exp $
 
 /**
  * @file
@@ -80,6 +80,7 @@ function rdf_rdf_namespaces() {
     'content'  => 'http://purl.org/rss/1.0/modules/content/',
     'dc'       => 'http://purl.org/dc/terms/',
     'foaf'     => 'http://xmlns.com/foaf/0.1/',
+    'og'       => 'http://ogp.me/ns#',
     'owl'      => 'http://www.w3.org/2002/07/owl#',
     'rdf'      => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
     'rdfs'     => 'http://www.w3.org/2000/01/rdf-schema#',

@@ -1,5 +1,5 @@
 <?php
-// $Id: standard.install,v 1.20 2010/07/22 23:39:14 dries Exp $
+// $Id: standard.install,v 1.21 2010/07/23 04:39:32 dries Exp $
 
 /**
  * Implements hook_install().
@@ -247,7 +247,7 @@ function standard_install() {
       'mapping' => array(
         'rdftype' => array('sioc:Item', 'foaf:Document'),
         'field_image' => array(
-          'predicates' => array('rdfs:seeAlso'),
+          'predicates' => array('og:image', 'rdfs:seeAlso'),
           'type' => 'rel',
         ),
         'field_tags' => array(
