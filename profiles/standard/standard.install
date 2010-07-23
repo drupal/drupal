@@ -247,7 +247,7 @@ function standard_install() {
       'mapping' => array(
         'rdftype' => array('sioc:Item', 'foaf:Document'),
         'field_image' => array(
-          'predicates' => array('rdfs:seeAlso'),
+          'predicates' => array('og:image', 'rdfs:seeAlso'),
           'type' => 'rel',
         ),
         'field_tags' => array(
