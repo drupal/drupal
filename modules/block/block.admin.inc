@@ -41,7 +41,15 @@ function block_admin_display($theme = NULL) {
 }
 
 /**
- * Generate main blocks administration form.
+ * Form builder for the main blocks administration form.
+ *
+ * @param $blocks
+ *   An array of all blocks returned by modules in hook_block_info().
+ * @param $theme
+ *   A string representing the name of the theme to edit blocks for.
+ *
+ * @see block_admin_display_form_submit()
+ * @ingroup forms
  */
 function block_admin_display_form($form, &$form_state, $blocks, $theme) {
 
@@ -117,7 +125,9 @@ function block_admin_display_form($form, &$form_state, $blocks, $theme) {
 }
 
 /**
- * Process main blocks administration form submissions.
+ * Form submission handler for the main blocks administration form.
+ *
+ * @see block_admin_display_form()
  */
 function block_admin_display_form_submit($form, &$form_state) {
   $txn = db_transaction();
@@ -184,7 +194,18 @@ function _block_compare($a, $b) {
 }
 
 /**
- * Menu callback; displays the block configuration form.
+ * Form builder for the block configuration form.
+ *
+ * Also used by block_add_block_form() for adding a new custom block.
+ *
+ * @param $module
+ *   Name of the module that implements the block to be configured.
+ * @param $delta
+ *   Unique ID of the block within the context of $module.
+ *
+ * @see block_admin_configure_validate()
+ * @see block_admin_configure_submit()
+ * @ingroup forms
  */
 function block_admin_configure($form, &$form_state, $module, $delta) {
   $block = block_load($module, $delta);
@@ -363,6 +384,12 @@ function block_admin_configure($form, &$form_state, $module, $delta) {
   return $form;
 }
 
+/**
+ * Form validation handler for the block configuration form.
+ *
+ * @see block_admin_configure()
+ * @see block_admin_configure_submit()
+ */
 function block_admin_configure_validate($form, &$form_state) {
   if ($form_state['values']['module'] == 'block') {
     $custom_block_exists = (bool) db_query_range('SELECT 1 FROM {block_custom} WHERE bid <> :bid AND info = :info', 0, 1, array(
@@ -375,6 +402,12 @@ function block_admin_configure_validate($form, &$form_state) {
   }
 }
 
+/**
+ * Form submission handler for the block configuration form.
+ *
+ * @see block_admin_configure()
+ * @see block_admin_configure_validate()
+ */
 function block_admin_configure_submit($form, &$form_state) {
   if (!form_get_errors()) {
     $txn = db_transaction();
@@ -424,12 +457,22 @@ function block_admin_configure_submit($form, &$form_state) {
 }
 
 /**
- * Menu callback: display the custom block addition form.
+ * Form builder for the add block form.
+ *
+ * @see block_add_block_form_validate()
+ * @see block_add_block_form_submit()
+ * @ingroup forms
  */
 function block_add_block_form($form, &$form_state) {
   return block_admin_configure($form, $form_state, 'block', NULL);
 }
 
+/**
+ * Form validation handler for the add block form.
+ *
+ * @see block_add_block_form()
+ * @see block_add_block_form_submit()
+ */
 function block_add_block_form_validate($form, &$form_state) {
   $custom_block_exists = (bool) db_query_range('SELECT 1 FROM {block_custom} WHERE info = :info', 0, 1, array(':info' => $form_state['values']['info']))->fetchField();
 
@@ -439,7 +482,12 @@ function block_add_block_form_validate($form, &$form_state) {
 }
 
 /**
- * Save the new custom block.
+ * Form submission handler for the add block form.
+ *
+ * Saves the new custom block.
+ *
+ * @see block_add_block_form()
+ * @see block_add_block_form_validate()
  */
 function block_add_block_form_submit($form, &$form_state) {
   $delta = db_insert('block_custom')
@@ -499,7 +547,15 @@ function block_add_block_form_submit($form, &$form_state) {
 }
 
 /**
- * Menu callback; confirm deletion of custom blocks.
+ * Form builder for the custom block deletion form.
+ *
+ * @param $module
+ *   The name of the module that implements the block to be deleted. This should
+ *   always equal 'block' since it only allows custom blocks to be deleted.
+ * @param $delta
+ *   The unique ID of the block within the context of $module.
+ *
+ * @see block_custom_block_delete_submit()
  */
 function block_custom_block_delete($form, &$form_state, $module, $delta) {
   $block = block_load($module, $delta);
@@ -511,7 +567,9 @@ function block_custom_block_delete($form, &$form_state, $module, $delta) {
 }
 
 /**
- * Deletion of custom blocks.
+ * Form submission handler for the custom block deletion form.
+ *
+ * @see block_custom_block_delete()
  */
 function block_custom_block_delete_submit($form, &$form_state) {
   db_delete('block_custom')
