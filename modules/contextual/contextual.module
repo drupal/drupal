@@ -1,5 +1,5 @@
 <?php
-// $Id: contextual.module,v 1.6 2010/06/13 05:36:58 dries Exp $
+// $Id: contextual.module,v 1.7 2010/07/24 17:28:25 dries Exp $
 
 /**
  * @file
@@ -78,7 +78,7 @@ function contextual_preprocess(&$variables, $hook) {
     $keys = array_keys($hooks[$hook]['variables']);
     $key = $keys[0];
   }
-  else if (!empty($hooks[$hook]['render element'])) {
+  elseif (!empty($hooks[$hook]['render element'])) {
     $key = $hooks[$hook]['render element'];
   }
   if (!empty($key) && isset($variables[$key])) {

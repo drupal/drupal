@@ -36,7 +36,7 @@
  * @author      Vincent Blavet <vincent@phpconcept.net>
  * @copyright   1997-2008 The Authors
  * @license     http://www.opensource.org/licenses/bsd-license.php New BSD License
- * @version     CVS: $Id: system.tar.inc,v 1.6 2010/07/22 23:54:32 dries Exp $
+ * @version     CVS: $Id: system.tar.inc,v 1.7 2010/07/24 17:28:26 dries Exp $
  * @link        http://pear.php.net/package/Archive_Tar
  */
 
@@ -47,7 +47,7 @@ define ('ARCHIVE_TAR_END_BLOCK', pack("a512", ''));
 * Creates a (compressed) Tar archive
 *
 * @author   Vincent Blavet <vincent@phpconcept.net>
-* @version  $Revision: 1.6 $
+* @version  $Revision: 1.7 $
 * @license  http://www.opensource.org/licenses/bsd-license.php New BSD License
 * @package  Archive_Tar
 */
@@ -146,7 +146,7 @@ class Archive_Tar
         if ($this->_compress) { // assert zlib or bz2 extension support
             if ($this->_compress_type == 'gz')
                 $extname = 'zlib';
-            else if ($this->_compress_type == 'bz2')
+            elseif ($this->_compress_type == 'bz2')
                 $extname = 'bz2';
 
             if (!extension_loaded($extname)) {
@@ -650,9 +650,9 @@ class Archive_Tar
     {
         if ($this->_compress_type == 'gz')
             $this->_file = @gzopen($this->_tarname, "wb9");
-        else if ($this->_compress_type == 'bz2')
+        elseif ($this->_compress_type == 'bz2')
             $this->_file = @bzopen($this->_tarname, "w");
-        else if ($this->_compress_type == 'none')
+        elseif ($this->_compress_type == 'none')
             $this->_file = @fopen($this->_tarname, "wb");
         else
             $this->_error('Unknown or missing compression type ('
@@ -703,9 +703,9 @@ class Archive_Tar
 
         if ($this->_compress_type == 'gz')
             $this->_file = @gzopen($v_filename, "rb");
-        else if ($this->_compress_type == 'bz2')
+        elseif ($this->_compress_type == 'bz2')
             $this->_file = @bzopen($v_filename, "r");
-        else if ($this->_compress_type == 'none')
+        elseif ($this->_compress_type == 'none')
             $this->_file = @fopen($v_filename, "rb");
         else
             $this->_error('Unknown or missing compression type ('
@@ -752,9 +752,9 @@ class Archive_Tar
         if (is_resource($this->_file)) {
             if ($this->_compress_type == 'gz')
                 @gzclose($this->_file);
-            else if ($this->_compress_type == 'bz2')
+            elseif ($this->_compress_type == 'bz2')
                 @bzclose($this->_file);
-            else if ($this->_compress_type == 'none')
+            elseif ($this->_compress_type == 'none')
                 @fclose($this->_file);
             else
                 $this->_error('Unknown or missing compression type ('
@@ -801,9 +801,9 @@ class Archive_Tar
           if ($p_len === null) {
               if ($this->_compress_type == 'gz')
                   @gzputs($this->_file, $p_binary_data);
-              else if ($this->_compress_type == 'bz2')
+              elseif ($this->_compress_type == 'bz2')
                   @bzwrite($this->_file, $p_binary_data);
-              else if ($this->_compress_type == 'none')
+              elseif ($this->_compress_type == 'none')
                   @fputs($this->_file, $p_binary_data);
               else
                   $this->_error('Unknown or missing compression type ('
@@ -811,9 +811,9 @@ class Archive_Tar
           } else {
               if ($this->_compress_type == 'gz')
                   @gzputs($this->_file, $p_binary_data, $p_len);
-              else if ($this->_compress_type == 'bz2')
+              elseif ($this->_compress_type == 'bz2')
                   @bzwrite($this->_file, $p_binary_data, $p_len);
-              else if ($this->_compress_type == 'none')
+              elseif ($this->_compress_type == 'none')
                   @fputs($this->_file, $p_binary_data, $p_len);
               else
                   $this->_error('Unknown or missing compression type ('
@@ -832,9 +832,9 @@ class Archive_Tar
       if (is_resource($this->_file)) {
           if ($this->_compress_type == 'gz')
               $v_block = @gzread($this->_file, 512);
-          else if ($this->_compress_type == 'bz2')
+          elseif ($this->_compress_type == 'bz2')
               $v_block = @bzread($this->_file, 512);
-          else if ($this->_compress_type == 'none')
+          elseif ($this->_compress_type == 'none')
               $v_block = @fread($this->_file, 512);
           else
               $this->_error('Unknown or missing compression type ('
@@ -854,11 +854,11 @@ class Archive_Tar
           if ($this->_compress_type == 'gz') {
               @gzseek($this->_file, gztell($this->_file)+($p_len*512));
           }
-          else if ($this->_compress_type == 'bz2') {
+          elseif ($this->_compress_type == 'bz2') {
               // ----- Replace missing bztell() and bzseek()
               for ($i=0; $i<$p_len; $i++)
                   $this->_readBlock();
-          } else if ($this->_compress_type == 'none')
+          } elseif ($this->_compress_type == 'none')
               @fseek($this->_file, ftell($this->_file)+($p_len*512));
           else
               $this->_error('Unknown or missing compression type ('
@@ -1834,11 +1834,11 @@ class Archive_Tar
                     // ----- Ignore this directory
                     // Should be the first $i=0, but no check is done
                 }
-                else if ($v_list[$i] == "..") {
+                elseif ($v_list[$i] == "..") {
                     // ----- Ignore it and ignore the $i-1
                     $i--;
                 }
-                else if (   ($v_list[$i] == '')
+                elseif (   ($v_list[$i] == '')
 				         && ($i!=(sizeof($v_list)-1))
 						 && ($i!=0)) {
                     // ----- Ignore only the double '//' in path,

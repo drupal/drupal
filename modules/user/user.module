@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1184 2010/07/24 16:53:28 dries Exp $
+// $Id: user.module,v 1.1185 2010/07/24 17:28:27 dries Exp $
 
 /**
  * @file
@@ -3201,7 +3201,7 @@ function user_build_filter_query(SelectQuery $query) {
       $permission_alias = $query->join('role_permission', 'p', $user_role_alias . '.rid = %alias.rid');
       $query->condition($permission_alias . '.permission', $value);
     }
-    else if ($key == 'role') {
+    elseif ($key == 'role') {
       $user_roles_alias = $query->join('users_roles', 'ur', '%alias.uid = u.uid');
       $query->condition($user_role_alias . '.rid' , $value);
     }

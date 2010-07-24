@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.pages.inc,v 1.30 2010/05/19 19:22:24 dries Exp $
+// $Id: simpletest.pages.inc,v 1.31 2010/07/24 17:28:26 dries Exp $
 
 /**
  * @file
@@ -344,7 +344,7 @@ function simpletest_result_form_submit($form, &$form_state) {
   if ($form_state['values']['filter'] == 'all') {
     $classes = array_merge($pass, $fail);
   }
-  else if ($form_state['values']['filter'] == 'pass') {
+  elseif ($form_state['values']['filter'] == 'pass') {
     $classes = $pass;
   }
   else {

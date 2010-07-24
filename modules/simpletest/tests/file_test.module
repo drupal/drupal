@@ -1,5 +1,5 @@
 <?php
-// $Id: file_test.module,v 1.23 2010/06/26 19:55:47 dries Exp $
+// $Id: file_test.module,v 1.24 2010/07/24 17:28:26 dries Exp $
 
 /**
  * @file
@@ -113,7 +113,7 @@ function _file_test_form_submit(&$form, &$form_state) {
   if ($form_state['values']['allow_all_extensions']) {
     $validators['file_validate_extensions'] = array();
   }
-  else if (!empty($form_state['values']['extensions'])) {
+  elseif (!empty($form_state['values']['extensions'])) {
     $validators['file_validate_extensions'] = array($form_state['values']['extensions']);
   }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.128 2010/07/19 13:23:21 dries Exp $
+// $Id: database.inc,v 1.129 2010/07/24 17:28:25 dries Exp $
 
 /**
  * @file
@@ -1341,7 +1341,7 @@ abstract class Database {
             'default' => '',
           );
         }
-        else if (!is_array($database_info[$index][$target]['prefix'])) {
+        elseif (!is_array($database_info[$index][$target]['prefix'])) {
           // Transform the flat form into an array form.
           $database_info[$index][$target]['prefix'] = array(
             'default' => $database_info[$index][$target]['prefix'],

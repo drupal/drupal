@@ -1,5 +1,5 @@
 <?php
-// $Id: system_test.module,v 1.30 2010/06/28 20:27:34 dries Exp $
+// $Id: system_test.module,v 1.31 2010/07/24 17:28:26 dries Exp $
 
 /**
  * Implements hook_menu().
@@ -263,11 +263,11 @@ function system_test_page_build(&$page) {
     $page['footer'] = drupal_set_page_content();
     $page['footer']['main']['#markup'] = '<div id="system-test-content">' . $page['footer']['main']['#markup'] . '</div>';
   }
-  else if ($menu_item['path'] == 'system-test/main-content-fallback') {
+  elseif ($menu_item['path'] == 'system-test/main-content-fallback') {
     drupal_set_page_content();
     $main_content_display = FALSE;
   }
-  else if ($menu_item['path'] == 'system-test/main-content-duplication') {
+  elseif ($menu_item['path'] == 'system-test/main-content-duplication') {
     drupal_set_page_content();
   }
 }

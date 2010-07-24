@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.567 2010/06/20 23:55:08 webchick Exp $
+// $Id: forum.module,v 1.568 2010/07/24 17:28:25 dries Exp $
 
 /**
  * @file
@@ -761,7 +761,7 @@ function forum_forum_load($tid = NULL) {
     }
   }
   // If $tid is 0, create an empty object to hold the child terms.
-  else if ($tid === 0) {
+  elseif ($tid === 0) {
     $forum_term = (object) array(
       'tid' => 0,
     );

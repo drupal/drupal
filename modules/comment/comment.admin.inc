@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.admin.inc,v 1.47 2010/06/25 21:24:35 dries Exp $
+// $Id: comment.admin.inc,v 1.48 2010/07/24 17:28:25 dries Exp $
 
 /**
  * @file
@@ -168,7 +168,7 @@ function comment_admin_overview_submit($form, &$form_state) {
       if ($operation == 'unpublish') {
         $comment->status = COMMENT_NOT_PUBLISHED;
       }
-      else if ($operation == 'publish') {
+      elseif ($operation == 'publish') {
         $comment->status = COMMENT_PUBLISHED;
       }
       comment_save($comment);

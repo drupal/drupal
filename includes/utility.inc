@@ -1,5 +1,5 @@
 <?php
-// $Id: utility.inc,v 1.1 2010/06/28 02:05:47 webchick Exp $
+// $Id: utility.inc,v 1.2 2010/07/24 17:28:25 dries Exp $
 
 /**
  * @file
@@ -31,10 +31,10 @@ function drupal_var_export($var, $prefix = '') {
       $output .= ')';
     }
   }
-  else if (is_bool($var)) {
+  elseif (is_bool($var)) {
     $output = $var ? 'TRUE' : 'FALSE';
   }
-  else if (is_string($var)) {
+  elseif (is_string($var)) {
     $line_safe_var = str_replace("\n", '\n', $var);
     if (strpos($var, "\n") !== FALSE || strpos($var, "'") !== FALSE) {
       // If the string contains a line break or a single quote, use the

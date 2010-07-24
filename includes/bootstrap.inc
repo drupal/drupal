@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.412 2010/07/21 00:26:21 dries Exp $
+// $Id: bootstrap.inc,v 1.413 2010/07/24 17:28:25 dries Exp $
 
 /**
  * @file
@@ -2181,7 +2181,7 @@ function _drupal_bootstrap_database() {
       if (!isset($value['prefix'])) {
         $current_prefix = '';
       }
-      else if (is_array($value['prefix'])) {
+      elseif (is_array($value['prefix'])) {
         $current_prefix = $value['prefix']['default'];
       }
       else {

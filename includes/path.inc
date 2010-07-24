@@ -1,5 +1,5 @@
 <?php
-// $Id: path.inc,v 1.66 2010/07/19 22:12:14 dries Exp $
+// $Id: path.inc,v 1.67 2010/07/24 17:28:25 dries Exp $
 
 /**
  * @file
@@ -112,7 +112,7 @@ function drupal_lookup_path($action, $path = '', $path_language = NULL) {
         return FALSE;
       }
       // For system paths which were not cached, query aliases individually.
-      else if (!isset($cache['no_aliases'][$path_language][$path])) {
+      elseif (!isset($cache['no_aliases'][$path_language][$path])) {
         // Get the most fitting result falling back with alias without language
         $alias = db_query("SELECT alias FROM {url_alias} WHERE source = :source AND language IN (:language, :language_none) ORDER BY language DESC, pid DESC", array(
           ':source' => $path,
