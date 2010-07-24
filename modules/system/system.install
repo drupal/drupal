@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.490 2010/07/14 20:30:09 dries Exp $
+// $Id: system.install,v 1.491 2010/07/24 17:24:02 dries Exp $
 
 /**
  * @file
@@ -1380,7 +1380,10 @@ function system_schema() {
         'not null' => TRUE
       ),
     ),
-    'indexes' => array('value' => array('value')),
+    'indexes' => array(
+      'value' => array('value'),
+      'expire' => array('expire'),
+    ),
     'primary key' => array('name'),
   );
 
