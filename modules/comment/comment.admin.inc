@@ -168,7 +168,7 @@ function comment_admin_overview_submit($form, &$form_state) {
       if ($operation == 'unpublish') {
         $comment->status = COMMENT_NOT_PUBLISHED;
       }
-      else if ($operation == 'publish') {
+      elseif ($operation == 'publish') {
         $comment->status = COMMENT_PUBLISHED;
       }
       comment_save($comment);

@@ -92,7 +92,7 @@ function overlay_init() {
       unset($_GET['render']);
     }
     // Do not enable the overlay if we already are on an admin page.
-    else if (!path_is_admin($current_path)) {
+    elseif (!path_is_admin($current_path)) {
       // Otherwise add overlay parent code and our behavior.
       overlay_set_mode('parent');
     }

@@ -113,7 +113,7 @@ function _file_test_form_submit(&$form, &$form_state) {
   if ($form_state['values']['allow_all_extensions']) {
     $validators['file_validate_extensions'] = array();
   }
-  else if (!empty($form_state['values']['extensions'])) {
+  elseif (!empty($form_state['values']['extensions'])) {
     $validators['file_validate_extensions'] = array($form_state['values']['extensions']);
   }
 

@@ -2181,7 +2181,7 @@ function _drupal_bootstrap_database() {
       if (!isset($value['prefix'])) {
         $current_prefix = '';
       }
-      else if (is_array($value['prefix'])) {
+      elseif (is_array($value['prefix'])) {
         $current_prefix = $value['prefix']['default'];
       }
       else {

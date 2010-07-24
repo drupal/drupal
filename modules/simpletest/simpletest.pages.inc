@@ -344,7 +344,7 @@ function simpletest_result_form_submit($form, &$form_state) {
   if ($form_state['values']['filter'] == 'all') {
     $classes = array_merge($pass, $fail);
   }
-  else if ($form_state['values']['filter'] == 'pass') {
+  elseif ($form_state['values']['filter'] == 'pass') {
     $classes = $pass;
   }
   else {

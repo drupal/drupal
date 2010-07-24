@@ -1341,7 +1341,7 @@ abstract class Database {
             'default' => '',
           );
         }
-        else if (!is_array($database_info[$index][$target]['prefix'])) {
+        elseif (!is_array($database_info[$index][$target]['prefix'])) {
           // Transform the flat form into an array form.
           $database_info[$index][$target]['prefix'] = array(
             'default' => $database_info[$index][$target]['prefix'],

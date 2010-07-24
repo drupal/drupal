@@ -761,7 +761,7 @@ function forum_forum_load($tid = NULL) {
     }
   }
   // If $tid is 0, create an empty object to hold the child terms.
-  else if ($tid === 0) {
+  elseif ($tid === 0) {
     $forum_term = (object) array(
       'tid' => 0,
     );
