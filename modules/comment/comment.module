@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.883 2010/06/23 02:45:35 dries Exp $
+// $Id: comment.module,v 1.884 2010/07/24 17:48:16 dries Exp $
 
 /**
  * @file
@@ -1944,14 +1944,12 @@ function comment_form($form, &$form_state, $comment) {
   $form['node_type'] = array('#type' => 'value', '#value' => 'comment_node_' . $node->type);
 
   // Only show the save button if comment previews are optional or if we are
-  // already previewing the submission. However, if there are form errors,
-  // we hide the save button no matter what, so that optional form elements
-  // (e.g., captchas) can be updated.
+  // already previewing the submission.
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save'),
-    '#access' => ($comment->cid && user_access('administer comments')) || variable_get('comment_preview_' . $node->type, DRUPAL_OPTIONAL) != DRUPAL_REQUIRED || (!form_get_errors() && isset($form_state['comment_preview'])),
+    '#access' => ($comment->cid && user_access('administer comments')) || variable_get('comment_preview_' . $node->type, DRUPAL_OPTIONAL) != DRUPAL_REQUIRED || isset($form_state['comment_preview']),
     '#weight' => 19,
   );
   $form['actions']['preview'] = array(
