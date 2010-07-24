@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.test,v 1.39 2010/03/24 08:51:42 dries Exp $
+// $Id: aggregator.test,v 1.40 2010/07/24 17:42:22 dries Exp $
 
 /**
  * @file
@@ -246,6 +246,12 @@ EOF;
 
   function getRSS091Sample() {
     return $GLOBALS['base_url'] . '/' . drupal_get_path('module', 'aggregator') . '/tests/aggregator_test_rss091.xml';
+  }
+
+  function getAtomSample() {
+    // The content of this sample ATOM feed is based directly off of the
+    // example provided in RFC 4287.
+    return $GLOBALS['base_url'] . '/' . drupal_get_path('module', 'aggregator') . '/tests/aggregator_test_atom.xml';
   }
 
   function createSampleNodes() {
@@ -686,3 +692,51 @@ class AggregatorCronTestCase extends AggregatorTestCase {
     $this->assertEqual(5, db_query('SELECT COUNT(*) FROM {aggregator_item} WHERE fid = :fid', array(':fid' => $feed->fid))->fetchField(), 'Expected number of items in database.');
   }
 }
+
+/**
+ * Tests for feed parsing.
+ */
+class FeedParserTestCase extends AggregatorTestCase {
+  function getInfo() {
+    return array(
+      'name' => 'Feed parser functionality',
+      'description' => 'Test the built-in feed parser with valid feed samples.',
+      'group' => 'Aggregator',
+    );
+  }
+
+  function setUp() {
+    parent::setUp();
+    // Do not remove old aggregator items during these tests, since our sample
+    // feeds have hardcoded dates in them (which may be expired when this test
+    // is run).
+    variable_set('aggregator_clear', AGGREGATOR_CLEAR_NEVER);
+  }
+
+  /**
+   * Test a feed that uses the RSS 0.91 format.
+   */
+  function testRSS091Sample() {
+    $feed = $this->createFeed($this->getRSS091Sample());
+    aggregator_refresh($feed);
+    $this->drupalGet('aggregator/sources/' . $feed->fid);
+    $this->assertResponse(200, t('Feed %name exists.', array('%name' => $feed->title)));
+    $this->assertText('First example feed item title');
+    $this->assertLinkByHref('http://example.com/example-turns-one');
+    $this->assertText('First example feed item description.');
+  }
+
+  /**
+   * Test a feed that uses the Atom format.
+   */
+  function testAtomSample() {
+    $feed = $this->createFeed($this->getAtomSample());
+    aggregator_refresh($feed);
+    $this->drupalGet('aggregator/sources/' . $feed->fid);
+    $this->assertResponse(200, t('Feed %name exists.', array('%name' => $feed->title)));
+    $this->assertText('Atom-Powered Robots Run Amok');
+    $this->assertLinkByHref('http://example.org/2003/12/13/atom03');
+    $this->assertText('Some text.');
+  }
+}
+
