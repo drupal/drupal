@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.491 2010/07/24 17:24:02 dries Exp $
+// $Id: system.install,v 1.492 2010/07/24 18:12:27 dries Exp $
 
 /**
  * @file
@@ -1564,12 +1564,10 @@ function system_schema() {
         'default' => '',
       ),
     ),
-    'unique keys' => array(
-      'alias_language' => array('alias', 'language'),
-    ),
     'primary key' => array('pid'),
     'indexes' => array(
-      'source_language' => array('source', 'language'),
+      'alias_language_pid' => array('alias', 'language', 'pid'),
+      'source_language_pid' => array('source', 'language', 'pid'),
     ),
   );
 
@@ -2299,9 +2297,10 @@ function system_update_7042() {
   // Rename the fields, and increase their length to 255 characters.
   db_change_field('url_alias', 'src', 'source', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''));
   db_change_field('url_alias', 'dst', 'alias', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''));
-  // Add indexes back.
+  // Add indexes back. We replace the unique key with an index since it never
+  // provided any meaningful unique constraint ('pid' is a primary key).
   db_add_index('url_alias', 'source_language_pid', array('source', 'language', 'pid'));
-  db_add_unique_key('url_alias', 'alias_language_pid', array('alias', 'language', 'pid'));
+  db_add_index('url_alias', 'alias_language_pid', array('alias', 'language', 'pid'));
 }
 
 /**
@@ -2554,18 +2553,6 @@ function system_update_7055() {
     'not null' => FALSE,
   );
   db_change_field('system', 'info', 'info', $spec);
-}
-
-/**
- * Remove pid from indexes and unique keys of {url_alias}.
- */
-function system_update_7056() {
-  // Drop indexes.
-  db_drop_index('url_alias', 'source_language_pid');
-  db_drop_unique_key('url_alias', 'alias_language_pid');
-  // Add indexes back.
-  db_add_index('url_alias', 'source_language', array('source', 'language'));
-  db_add_unique_key('url_alias', 'alias_language', array('alias', 'language'));
 }
 
 /**
