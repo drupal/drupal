@@ -1380,7 +1380,10 @@ function system_schema() {
         'not null' => TRUE
       ),
     ),
-    'indexes' => array('value' => array('value')),
+    'indexes' => array(
+      'value' => array('value'),
+      'expire' => array('expire'),
+    ),
     'primary key' => array('name'),
   );
 
