@@ -1,4 +1,4 @@
-// $Id: vertical-tabs.js,v 1.13 2010/04/28 20:25:21 dries Exp $
+// $Id: vertical-tabs.js,v 1.14 2010/07/24 16:56:31 dries Exp $
 
 (function ($) {
 
@@ -49,7 +49,14 @@ Drupal.behaviors.verticalTabs = {
       $('> li:last', tab_list).addClass('last');
 
       if (!tab_focus) {
-        tab_focus = $('> .vertical-tabs-pane:first', this);
+        // If the current URL has a fragment and one of the tabs contains an
+        // element that matches the URL fragment, activate that tab.
+        if (window.location.hash && $(window.location.hash, this).length) {
+          tab_focus = $(window.location.hash, this).closest('.vertical-tabs-pane');
+        }
+        else {
+          tab_focus = $('> .vertical-tabs-pane:first', this);
+        }
       }
       if (tab_focus.length) {
         tab_focus.data('verticalTab').focus();
