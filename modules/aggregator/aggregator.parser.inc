@@ -177,7 +177,6 @@ function aggregator_element_start($parser, $name, $attributes) {
   switch ($name) {
     case 'image':
     case 'textinput':
-    case 'content':
     case 'summary':
     case 'tagline':
     case 'subtitle':
@@ -186,16 +185,20 @@ function aggregator_element_start($parser, $name, $attributes) {
       $element = $name;
       break;
     case 'id':
+    case 'content':
       if ($element != 'item') {
         $element = $name;
       }
     case 'link':
-      if (!empty($attributes['rel']) && $attributes['rel'] == 'alternate') {
+      // According to RFC 4287, link elements in Atom feeds without a 'rel'
+      // attribute should be interpreted as though the relation type is
+      // "alternate".
+      if (!empty($attributes['HREF']) && (empty($attributes['REL']) || $attributes['REL'] == 'alternate')) {
         if ($element == 'item') {
-          $items[$item]['link'] = $attributes['href'];
+          $items[$item]['link'] = $attributes['HREF'];
         }
         else {
-          $channel['link'] = $attributes['href'];
+          $channel['link'] = $attributes['HREF'];
         }
       }
       break;
@@ -223,12 +226,12 @@ function aggregator_element_end($parser, $name) {
     case 'textinput':
     case 'item':
     case 'entry':
-    case 'content':
     case 'info':
       $element = '';
       break;
     case 'id':
-      if ($element == 'id') {
+    case 'content':
+      if ($element == $name) {
         $element = '';
       }
   }

@@ -17,14 +17,14 @@
       <description>Example updates</description>
     </image>
     <item>
-      <title>Example turns one</title>
+      <title>First example feed item title</title>
       <link>http://example.com/example-turns-one</link>
-      <description>Example turns one.</description>
+      <description>First example feed item description.</description>
     </item>
     <item>
-      <title>Example turns two</title>
+      <title>Second example feed item title</title>
       <link>http://example.com/example-turns-two</link>
-      <description>Example turns two.</description>
+      <description>Second example feed item description.</description>
     </item>
   </channel>
 </rss>
