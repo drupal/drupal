@@ -2479,9 +2479,8 @@ function template_preprocess_region(&$variables) {
   $variables['content'] = $variables['elements']['#children'];
   $variables['region'] = $variables['elements']['#region'];
 
-  $region = drupal_region_class($variables['region']);
-  $variables['classes_array'][] = $region;
-  $variables['theme_hook_suggestions'][] = 'region__' . $region;
+  $variables['classes_array'][] = drupal_region_class($variables['region']);
+  $variables['theme_hook_suggestions'][] = 'region__' . $variables['region'];
 }
 
 /**
