@@ -70,6 +70,8 @@ Drupal.overlay.open = function (url) {
     return this.load(url);
   }
   this.isOpening = true;
+  // Store the original document title.
+  this.originalTitle = document.title;
 
   // Create the dialog and related DOM elements.
   this.create();
@@ -184,6 +186,8 @@ Drupal.overlay.close = function () {
   this.isClosing = true;
   this.isOpen = false;
   $(document.documentElement).removeClass('overlay-open');
+  // Restore the original document title.
+  document.title = this.originalTitle;
 
   // Allow other scripts to respond to this event.
   $(document).trigger('drupalOverlayClose');
@@ -273,6 +277,9 @@ Drupal.overlay.loadChild = function (event) {
   if (this.isOpen && !this.isClosing) {
     // And child document is an actual overlayChild.
     if (iframeWindow.Drupal && iframeWindow.Drupal.overlayChild) {
+      // Replace the document title with title of iframe.
+      document.title = iframeWindow.document.title;
+
       this.activeFrame = $(iframe)
         .addClass('overlay-active')
         // Add a title attribute to the iframe for accessibility.
