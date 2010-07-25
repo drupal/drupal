@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.602 2010/07/21 00:27:24 dries Exp $
+// $Id: theme.inc,v 1.603 2010/07/25 02:45:27 dries Exp $
 
 /**
  * @file
@@ -2479,9 +2479,8 @@ function template_preprocess_region(&$variables) {
   $variables['content'] = $variables['elements']['#children'];
   $variables['region'] = $variables['elements']['#region'];
 
-  $region = drupal_region_class($variables['region']);
-  $variables['classes_array'][] = $region;
-  $variables['theme_hook_suggestions'][] = 'region__' . $region;
+  $variables['classes_array'][] = drupal_region_class($variables['region']);
+  $variables['theme_hook_suggestions'][] = 'region__' . $variables['region'];
 }
 
 /**

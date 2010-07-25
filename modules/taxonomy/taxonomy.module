@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.598 2010/07/14 20:26:52 dries Exp $
+// $Id: taxonomy.module,v 1.599 2010/07/25 02:45:27 dries Exp $
 
 /**
  * @file
@@ -649,14 +649,12 @@ function template_preprocess_taxonomy_term(&$variables) {
   // languages.
   field_attach_preprocess('taxonomy_term', $term, $variables['content'], $variables);
 
+  // Gather classes, and clean up name so there are no underscores.
   $vocabulary_name_css = str_replace('_', '-', $term->vocabulary_machine_name);
-
-  // Gather classes.
   $variables['classes_array'][] = 'vocabulary-' . $vocabulary_name_css;
 
-  // Clean up name so there are no underscores.
-  $variables['theme_hook_suggestions'][] = 'taxonomy-term__' . $vocabulary_name_css;
-  $variables['theme_hook_suggestions'][] = 'taxonomy-term__' . $term->tid;
+  $variables['theme_hook_suggestions'][] = 'taxonomy_term__' . $term->vocabulary_machine_name;
+  $variables['theme_hook_suggestions'][] = 'taxonomy_term__' . $term->tid;
 }
 
 /**
