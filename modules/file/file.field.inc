@@ -255,8 +255,8 @@ function file_field_presave($entity_type, $entity, $field, $instance, $langcode,
   // cleaned up.
   foreach ($items as $item) {
     $file = file_load($item['fid']);
-    if (($file->status & FILE_STATUS_PERMANENT) == 0) {
-      $file->status |= FILE_STATUS_PERMANENT;
+    if (!$file->status) {
+      $file->status = FILE_STATUS_PERMANENT;
       file_save($file);
     }
   }

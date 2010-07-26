@@ -805,10 +805,11 @@ function system_schema() {
         'default' => 0,
       ),
       'status' => array(
-        'description' => 'A bitmapped field indicating the status of the file. The least significant bit indicates temporary (0) or permanent (1). Temporary files older than DRUPAL_MAXIMUM_TEMP_FILE_AGE will be removed during a cron run.',
+        'description' => 'A field indicating the status of the file. Two status are defined in core: temporary (0) and permanent (1). Temporary files older than DRUPAL_MAXIMUM_TEMP_FILE_AGE will be removed during a cron run.',
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
+        'size' => 'tiny',
       ),
       'timestamp' => array(
         'description' => 'UNIX timestamp for when the file was added.',
@@ -2193,10 +2194,11 @@ function system_update_7034() {
         'default' => 0,
       ),
       'status' => array(
-        'description' => 'A bitmapped field indicating the status of the file the least sigifigant bit indicates temporary (1) or permanent (0). Temporary files older than DRUPAL_MAXIMUM_TEMP_FILE_AGE will be removed during a cron run.',
+        'description' => 'A field indicating the status of the file. Two status are defined in core: temporary (0) and permanent (1). Temporary files older than DRUPAL_MAXIMUM_TEMP_FILE_AGE will be removed during a cron run.',
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
+        'size' => 'tiny',
       ),
       'timestamp' => array(
         'description' => 'UNIX timestamp for when the file was added.',
