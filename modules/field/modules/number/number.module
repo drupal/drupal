@@ -1,5 +1,5 @@
 <?php
-// $Id: number.module,v 1.40 2010/06/23 13:45:40 dries Exp $
+// $Id: number.module,v 1.41 2010/07/26 02:59:13 dries Exp $
 
 /**
  * @file
@@ -118,11 +118,7 @@ function number_field_settings_form($field, $instance, $has_data) {
     $form['decimal_separator'] = array(
       '#type' => 'select',
       '#title' => t('Decimal marker'),
-      '#options' => array(
-        '.' => 'decimal point',
-        ',' => 'comma',
-        ' ' => 'space',
-      ),
+      '#options' => array('.' => t('Decimal point'), ',' => t('Comma')),
       '#default_value' => $settings['decimal_separator'],
       '#description' => t('The character users will input to mark the decimal point in forms.'),
     );
@@ -250,6 +246,67 @@ function number_field_formatter_info() {
       'field types' => array('number_integer', 'number_decimal', 'number_float'),
     ),
   );
+}
+
+/**
+ * Implements hook_field_formatter_settings_form().
+ */
+function number_field_formatter_settings_form($field, $instance, $view_mode, $form, &$form_state) {
+  $display = $instance['display'][$view_mode];
+  $settings = $display['settings'];
+
+  $options = array(
+    ''  => t('<none>'),
+    '.' => t('Decimal point'),
+    ',' => t('Comma'),
+    ' ' => t('Space'),
+  );
+  $form['thousand_separator'] = array(
+    '#type' => 'select',
+    '#title' => t('Thousand marker'),
+    '#options' => $options,
+    '#default_value' => $settings['thousand_separator'],
+  );
+
+  if ($display['type'] == 'number_decimal' || $display['type'] == 'number_float') {
+    $form['decimal_separator'] = array(
+      '#type' => 'select',
+      '#title' => t('Decimal marker'),
+      '#options' => array('.' => t('Decimal point'), ',' => t('Comma')),
+      '#default_value' => $settings['decimal_separator'],
+    );
+    $form['scale'] = array(
+      '#type' => 'select',
+      '#title' => t('Scale'),
+      '#options' => drupal_map_assoc(range(0, 10)),
+      '#default_value' => $settings['scale'],
+      '#description' => t('The number of digits to the right of the decimal.'),
+    );
+  }
+
+  $form['prefix_suffix'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Display prefix and suffix.'),
+    '#default_value' => $settings['prefix_suffix'],
+  );
+
+  return $form;
+}
+
+/**
+ * Implements hook_field_formatter_settings_summary().
+ */
+function number_field_formatter_settings_summary($field, $instance, $view_mode) {
+  $display = $instance['display'][$view_mode];
+  $settings = $display['settings'];
+
+  $summary = array();
+  $summary[] = number_format(1234.1234567890, $settings['scale'], $settings['decimal_separator'], $settings['thousand_separator']);
+  if ($settings['prefix_suffix']) {
+    $summary[] = t('Display with prefix and suffix.');
+  }
+
+  return implode('<br />', $summary);
 }
 
 /**
