@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.413 2010/07/24 17:28:25 dries Exp $
+// $Id: bootstrap.inc,v 1.414 2010/07/26 03:05:36 dries Exp $
 
 /**
  * @file
@@ -1645,7 +1645,7 @@ function watchdog($type, $message, $variables = array(), $severity = WATCHDOG_NO
       'link'        => $link,
       'user'        => $user,
       'request_uri' => $base_root . request_uri(),
-      'referer'     => $_SERVER['HTTP_REFERER'],
+      'referer'     => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '',
       'ip'          => ip_address(),
       'timestamp'   => REQUEST_TIME,
     );
