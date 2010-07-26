@@ -731,19 +731,19 @@ function drupal_install_mkdir($file, $mask, $message = TRUE) {
     if ($mask & $m) {
       switch ($m) {
         case FILE_READABLE:
-          $mod += 444;
+          $mod |= 0444;
           break;
         case FILE_WRITABLE:
-          $mod += 222;
+          $mod |= 0222;
           break;
         case FILE_EXECUTABLE:
-          $mod += 111;
+          $mod |= 0111;
           break;
       }
     }
   }
 
-  if (@drupal_mkdir($file, intval("0$mod", 8))) {
+  if (@drupal_mkdir($file, $mod)) {
     return TRUE;
   }
   else {
