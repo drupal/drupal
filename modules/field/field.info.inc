@@ -523,6 +523,7 @@ function field_info_bundles($entity_type = NULL) {
  *   which this field belongs keyed by entity type.
  */
 function field_info_fields() {
+  $field = array();
   $info = _field_info_collate_fields();
   foreach ($info['fields'] as $key => $field) {
     if (!$field['deleted']) {
