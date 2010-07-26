@@ -507,7 +507,7 @@ function _field_invoke_get_instances($entity_type, $bundle, $options) {
  *       'array_parents' => an array of keys indicating the path to the field
  *         element within the full $form structure. This entry is populated at
  *         form build time.
- *       'errors' => the array ok field validation errors reported on the
+ *       'errors' => the array of field validation errors reported on the
  *         field. This entry is populated at form validation time.
  *     ),
  *   ),
