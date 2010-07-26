@@ -1051,9 +1051,19 @@ function form_test_form_form_test_state_persist_alter(&$form, &$form_state) {
  * Form builder to test programmatic form submissions.
  */
 function form_test_programmatic_form($form, &$form_state) {
-  $form['submitted_field'] = array(
-    '#title' => 'Submitted',
+  $form['textfield'] = array(
+    '#title' => 'Textfield',
     '#type' => 'textfield',
+  );
+  $form['checkboxes'] = array(
+    '#type' => 'checkboxes',
+    '#options' => array(
+      1 => 'First checkbox',
+      2 => 'Second checkbox',
+    ),
+    // Both checkboxes are selected by default so that we can test the ability
+    // of programmatic form submissions to uncheck them.
+    '#default_value' => array(1, 2),
   );
 
   return $form;
@@ -1066,8 +1076,8 @@ function form_test_programmatic_form($form, &$form_state) {
  * explicitly required here.
  */
 function form_test_programmatic_form_validate($form, &$form_state) {
-  if (empty($form_state['values']['submitted_field'])) {
-    form_set_error('submitted_field', t('Submitted field is required.'));
+  if (empty($form_state['values']['textfield'])) {
+    form_set_error('textfield', t('Textfield is required.'));
   }
 }
 
@@ -1075,10 +1085,10 @@ function form_test_programmatic_form_validate($form, &$form_state) {
  * Form submit handler for programmatic form submissions.
  *
  * To test that the submission handler is correctly executed, we store the
- * submitted value in a place we can access from the caller context.
+ * submitted values in a place we can access from the caller context.
  */
 function form_test_programmatic_form_submit($form, &$form_state) {
-  $form_state['storage']['programmatic_form_submit'] = $form_state['values']['submitted_field'];
+  $form_state['storage']['programmatic_form_submit'] = $form_state['values'];
 }
 
 /**

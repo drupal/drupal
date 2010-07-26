@@ -1978,8 +1978,22 @@ function form_type_checkboxes_value($element, $input = FALSE) {
     }
     return $value;
   }
+  elseif (is_array($input)) {
+    // Programmatic form submissions use NULL to indicate that a checkbox
+    // should be unchecked; see drupal_form_submit(). We therefore remove all
+    // NULL elements from the array before constructing the return value, to
+    // simulate the behavior of web browsers (which do not send unchecked
+    // checkboxes to the server at all). This will not affect non-programmatic
+    // form submissions, since a checkbox can never legitimately be NULL.
+    foreach ($input as $key => $value) {
+      if (is_null($value)) {
+        unset($input[$key]);
+      }
+    }
+    return drupal_map_assoc($input);
+  }
   else {
-    return is_array($input) ? drupal_map_assoc($input) : array();
+    return array();
   }
 }
 
