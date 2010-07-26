@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.138 2010/07/25 00:25:37 dries Exp $
+// $Id: install.inc,v 1.139 2010/07/26 13:20:01 dries Exp $
 
 /**
  * Indicates that a module has not been installed yet.
@@ -731,19 +731,19 @@ function drupal_install_mkdir($file, $mask, $message = TRUE) {
     if ($mask & $m) {
       switch ($m) {
         case FILE_READABLE:
-          $mod += 444;
+          $mod |= 0444;
           break;
         case FILE_WRITABLE:
-          $mod += 222;
+          $mod |= 0222;
           break;
         case FILE_EXECUTABLE:
-          $mod += 111;
+          $mod |= 0111;
           break;
       }
     }
   }
 
-  if (@drupal_mkdir($file, intval("0$mod", 8))) {
+  if (@drupal_mkdir($file, $mod)) {
     return TRUE;
   }
   else {
