@@ -13,6 +13,7 @@
  * directly.
  */
 interface DrupalEntityControllerInterface {
+
   /**
    * Constructor.
    *
@@ -22,12 +23,12 @@ interface DrupalEntityControllerInterface {
   public function __construct($entityType);
 
   /**
-   * Reset the internal, static entity cache.
+   * Resets the internal, static entity cache.
    */
   public function resetCache();
 
   /**
-   * Load one or more entities.
+   * Loads one or more entities.
    *
    * @param $ids
    *   An array of entity IDs, or FALSE to load all entities.
@@ -48,16 +49,72 @@ interface DrupalEntityControllerInterface {
  */
 class DrupalDefaultEntityController implements DrupalEntityControllerInterface {
 
+  /**
+   * Static cache of entities.
+   *
+   * @var array
+   */
   protected $entityCache;
+
+  /**
+   * Entity type for this controller instance.
+   *
+   * @var string
+   */
   protected $entityType;
+
+  /**
+   * Array of information about the entity.
+   *
+   * @var array
+   *
+   * @see entity_get_info()
+   */
   protected $entityInfo;
+
+  /**
+   * Additional arguments to pass to hook_TYPE_load().
+   *
+   * Set before calling DrupalDefaultEntityController::attachLoad().
+   *
+   * @var array
+   */
   protected $hookLoadArguments;
+
+  /**
+   * Name of the entity's ID field in the entity database table.
+   *
+   * @var string
+   */
   protected $idKey;
+
+  /**
+   * Name of entity's revision database table field, if it supports revisions.
+   *
+   * Has the value FALSE if this entity does not use revisions.
+   *
+   * @var string
+   */
   protected $revisionKey;
+
+  /**
+   * The table that stores revisions, if the entity supports revisions.
+   *
+   * @var string
+   */
   protected $revisionTable;
 
   /**
-   * Constructor. Set basic variables.
+   * Whether this entity type should use the static cache.
+   *
+   * Set by entity info.
+   *
+   * @var boolean
+   */
+  protected $cache;
+
+  /**
+   * Constructor: sets basic variables.
    */
   public function __construct($entityType) {
     $this->entityType = $entityType;
@@ -79,10 +136,16 @@ class DrupalDefaultEntityController implements DrupalEntityControllerInterface {
     $this->cache = !empty($this->entityInfo['static cache']);
   }
 
+  /**
+   * Implements DrupalEntityControllerInterface::resetCache().
+   */
   public function resetCache() {
     $this->entityCache = array();
   }
 
+  /**
+   * Implements DrupalEntityControllerInterface::load().
+   */
   public function load($ids = array(), $conditions = array()) {
     $entities = array();
 
@@ -153,7 +216,7 @@ class DrupalDefaultEntityController implements DrupalEntityControllerInterface {
   }
 
   /**
-   * Build the query to load the entity.
+   * Builds the query to load the entity.
    *
    * This has full revision support. For entities requiring special queries,
    * the class can be extended, and the default query can be constructed by
@@ -163,6 +226,14 @@ class DrupalDefaultEntityController implements DrupalEntityControllerInterface {
    * into terms, however it can also support $conditions on different tables.
    * See CommentController::buildQuery() or TaxonomyTermController::buildQuery()
    * for examples.
+   *
+   * @param $ids
+   *   An array of entity IDs, or FALSE to load all entities.
+   * @param $conditions
+   *   An array of conditions in the form 'field' => $value.
+   * @param $revision_id
+   *   The ID of the revision to load, or FALSE if this query is asking for the
+   *   most current revision(s).
    *
    * @return SelectQuery
    *   A SelectQuery object for loading the entity.
@@ -213,8 +284,7 @@ class DrupalDefaultEntityController implements DrupalEntityControllerInterface {
   }
 
   /**
-   * Attach data to entities upon loading.
-   *
+   * Attaches data to entities upon loading.
    * This will attach fields, if the entity is fieldable. It calls
    * hook_entity_load() for modules which need to add data to all entities.
    * It also calls hook_TYPE_load() on the loaded entities. For example
@@ -222,6 +292,12 @@ class DrupalDefaultEntityController implements DrupalEntityControllerInterface {
    * expects special parameters apart from the queried entities, you can set
    * $this->hookLoadArguments prior to calling the method.
    * See NodeController::attachLoad() for an example.
+   *
+   * @param $queried_entities
+   *   Associative array of query results, keyed on the entity ID.
+   * @param $revision_id
+   *   ID of the revision that was loaded, or FALSE if teh most current revision
+   *   was loaded.
    */
   protected function attachLoad(&$queried_entities, $revision_id = FALSE) {
     // Attach fields.
@@ -249,12 +325,15 @@ class DrupalDefaultEntityController implements DrupalEntityControllerInterface {
   }
 
   /**
-   * Get entities from the static cache.
+   * Gets entities from the static cache.
    *
    * @param $ids
    *   If not empty, return entities that match these IDs.
    * @param $conditions
    *   If set, return entities that match all of these conditions.
+   *
+   * @return
+   *   Array of entities from the entity cache.
    */
   protected function cacheGet($ids, $conditions = array()) {
     $entities = array();
@@ -284,7 +363,10 @@ class DrupalDefaultEntityController implements DrupalEntityControllerInterface {
   }
 
   /**
-   * Store entities in the static entity cache.
+   * Stores entities in the static entity cache.
+   *
+   * @param $entities
+   *   Entities to store in the cache.
    */
   protected function cacheSet($entities) {
     $this->entityCache += $entities;
