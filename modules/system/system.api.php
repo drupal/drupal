@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.179 2010/07/10 01:59:02 dries Exp $
+// $Id: system.api.php,v 1.180 2010/07/26 13:38:30 dries Exp $
 
 /**
  * @file
@@ -1146,6 +1146,10 @@ function hook_menu_link_delete($link) {
  *       does not need to be altered if there is more than one tab.
  *     - output: A list of of tabs, each one being an associative array as
  *       described above.
+ * @param $router_item
+ *   The menu system router item of the page.
+ * @param $root_path
+ *   The path to the root item for this set of tabs.
  */
 function hook_menu_local_tasks_alter(&$data, $router_item, $root_path) {
   // Add an action linking to node/add to all pages.
