@@ -1,5 +1,5 @@
 <?php
-// $Id: file.field.inc,v 1.28 2010/07/02 12:37:57 dries Exp $
+// $Id: file.field.inc,v 1.29 2010/07/26 03:04:29 dries Exp $
 
 /**
  * @file
@@ -255,8 +255,8 @@ function file_field_presave($entity_type, $entity, $field, $instance, $langcode,
   // cleaned up.
   foreach ($items as $item) {
     $file = file_load($item['fid']);
-    if (($file->status & FILE_STATUS_PERMANENT) == 0) {
-      $file->status |= FILE_STATUS_PERMANENT;
+    if (!$file->status) {
+      $file->status = FILE_STATUS_PERMANENT;
       file_save($file);
     }
   }

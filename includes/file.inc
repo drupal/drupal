@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.218 2010/07/07 01:10:35 dries Exp $
+// $Id: file.inc,v 1.219 2010/07/26 03:04:29 dries Exp $
 
 /**
  * @file
@@ -1090,17 +1090,15 @@ function file_unmanaged_delete_recursive($path) {
  *   Optional. A user id, specifying NULL returns the total space used by all
  *   non-temporary files.
  * @param $status
- *   Optional. File Status to return. Combine with a bitwise OR(|) to return
- *   multiple statuses. The default status is FILE_STATUS_PERMANENT.
+ *   Optional. The file status to consider. The default is to only
+ *   consider files in status FILE_STATUS_PERMANENT.
  *
  * @return
  *   An integer containing the number of bytes used.
  */
 function file_space_used($uid = NULL, $status = FILE_STATUS_PERMANENT) {
   $query = db_select('file_managed', 'f');
-  // Use separate placeholders for the status to avoid a bug in some versions
-  // of PHP. See http://drupal.org/node/352956.
-  $query->where('f.status & :status1 = :status2', array(':status1' => $status, ':status2' => $status));
+  $query->condition('f.status', $status);
   $query->addExpression('SUM(f.filesize)', 'filesize');
   if (!is_null($uid)) {
     $query->condition('f.uid', $uid);
@@ -1549,7 +1547,7 @@ function file_save_data($data, $destination = NULL, $replace = FILE_EXISTS_RENAM
     $file->filename = basename($uri);
     $file->filemime = file_get_mimetype($file->uri);
     $file->uid      = $user->uid;
-    $file->status  |= FILE_STATUS_PERMANENT;
+    $file->status   = FILE_STATUS_PERMANENT;
     // If we are replacing an existing file re-use its database record.
     if ($replace == FILE_EXISTS_REPLACE) {
       $existing_files = file_load_multiple(array(), array('uri' => $uri));

@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.947 2010/07/26 02:44:03 dries Exp $
+// $Id: system.module,v 1.948 2010/07/26 03:04:29 dries Exp $
 
 /**
  * @file
@@ -2794,9 +2794,8 @@ function system_cron() {
   // Remove temporary files that are older than DRUPAL_MAXIMUM_TEMP_FILE_AGE.
   // Use separate placeholders for the status to avoid a bug in some versions
   // of PHP. See http://drupal.org/node/352956.
-  $result = db_query('SELECT fid FROM {file_managed} WHERE status & :permanent1 <> :permanent2 AND timestamp < :timestamp', array(
-    ':permanent1' => FILE_STATUS_PERMANENT,
-    ':permanent2' => FILE_STATUS_PERMANENT,
+  $result = db_query('SELECT fid FROM {file_managed} WHERE status <> :permanent AND timestamp < :timestamp', array(
+    ':permanent' => FILE_STATUS_PERMANENT,
     ':timestamp' => REQUEST_TIME - DRUPAL_MAXIMUM_TEMP_FILE_AGE
   ));
   foreach ($result as $row) {

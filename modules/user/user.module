@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1185 2010/07/24 17:28:27 dries Exp $
+// $Id: user.module,v 1.1186 2010/07/26 03:04:29 dries Exp $
 
 /**
  * @file
@@ -431,7 +431,7 @@ function user_save($account, $edit = array(), $category = 'account') {
         $picture = $edit['picture'];
         // If the picture is a temporary file move it to its final location and
         // make it permanent.
-        if (($picture->status & FILE_STATUS_PERMANENT) == 0) {
+        if (!$picture->status) {
           $info = image_get_info($picture->uri);
           $picture_directory =  variable_get('file_default_scheme', 'public') . '://' . variable_get('user_picture_path', 'pictures');
 
@@ -440,7 +440,7 @@ function user_save($account, $edit = array(), $category = 'account') {
           $destination = file_stream_wrapper_uri_normalize($picture_directory . '/picture-' . $account->uid . '-' . REQUEST_TIME . '.' . $info['extension']);
 
           if ($picture = file_move($picture, $destination, FILE_EXISTS_RENAME)) {
-            $picture->status |= FILE_STATUS_PERMANENT;
+            $picture->status = FILE_STATUS_PERMANENT;
             $edit['picture'] = file_save($picture);
           }
         }
