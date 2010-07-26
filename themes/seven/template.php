@@ -1,5 +1,5 @@
 <?php
-// $Id: template.php,v 1.17 2010/05/12 09:22:24 dries Exp $
+// $Id: template.php,v 1.18 2010/07/26 13:13:23 dries Exp $
 
 /**
  * Override or insert variables into the maintenance page template.
@@ -96,5 +96,9 @@ function seven_css_alter(&$css) {
   // Use Seven's vertical tabs style instead of the default one.
   if (isset($css['misc/vertical-tabs.css'])) {
     $css['misc/vertical-tabs.css']['data'] = drupal_get_path('theme', 'seven') . '/vertical-tabs.css';
+  }
+  // Use Seven's jQuery UI theme style instead of the default one.
+  if (isset($css['misc/ui/jquery.ui.theme.css'])) {
+    $css['misc/ui/jquery.ui.theme.css']['data'] = drupal_get_path('theme', 'seven') . '/jquery.ui.theme.css';
   }
 }
