@@ -1,5 +1,5 @@
 <?php
-// $Id: path.inc,v 1.67 2010/07/24 17:28:25 dries Exp $
+// $Id: path.inc,v 1.68 2010/07/26 02:59:57 dries Exp $
 
 /**
  * @file
@@ -395,7 +395,7 @@ function path_save(&$path) {
   $status = drupal_write_record('url_alias', $path, (!empty($path['pid']) ? 'pid' : NULL));
 
   // Verify that a record was written.
-  if (isset($status) && $status) {
+  if ($status) {
     if ($status === SAVED_NEW) {
       module_invoke_all('path_insert', $path);
     }
