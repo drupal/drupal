@@ -1,5 +1,5 @@
 <?php
-// $Id: form.test,v 1.55 2010/07/17 18:52:39 dries Exp $
+// $Id: form.test,v 1.56 2010/07/26 13:07:59 dries Exp $
 
 /**
  * @file
@@ -973,10 +973,19 @@ class FormsProgrammaticTestCase extends DrupalWebTestCase {
     $current_batch = $batch =& batch_get();
     $batch = array();
 
-    $this->submitForm();
-    $this->submitForm('test 1');
-    $this->submitForm();
-    $this->submitForm('test 2');
+    // Test that a programmatic form submission is rejected when a required
+    // textfield is omitted and correctly processed when it is provided.
+    $this->submitForm(array(), FALSE);
+    $this->submitForm(array('textfield' => 'test 1'), TRUE);
+    $this->submitForm(array(), FALSE);
+    $this->submitForm(array('textfield' => 'test 2'), TRUE);
+
+    // Test that a programmatic form submission can turn on and off checkboxes
+    // which are, by default, checked.
+    $this->submitForm(array('textfield' => 'dummy value', 'checkboxes' => array(1 => 1, 2 => 2)), TRUE);
+    $this->submitForm(array('textfield' => 'dummy value', 'checkboxes' => array(1 => 1, 2 => NULL)), TRUE);
+    $this->submitForm(array('textfield' => 'dummy value', 'checkboxes' => array(1 => NULL, 2 => 2)), TRUE);
+    $this->submitForm(array('textfield' => 'dummy value', 'checkboxes' => array(1 => NULL, 2 => NULL)), TRUE);
 
     // Restore the current batch status.
     $batch = $current_batch;
@@ -984,30 +993,36 @@ class FormsProgrammaticTestCase extends DrupalWebTestCase {
 
   /**
    * Helper function used to programmatically submit the form defined in
-   * form_test.module with the given value.
+   * form_test.module with the given values.
    *
-   * @param string $value
-   *   The field value to be submitted.
+   * @param $values
+   *   An array of field values to be submitted.
+   * @param $valid_input
+   *   A boolean indicating whether or not the form submission is expected to
+   *   be valid.
    */
-  private function submitForm($value = NULL) {
-    // Programmatically submit the given value.
-    $form_state = array('values' => array('submitted_field' => $value));
+  private function submitForm($values, $valid_input) {
+    // Programmatically submit the given values.
+    $form_state = array('values' => $values);
     drupal_form_submit('form_test_programmatic_form', $form_state);
 
+    // Check that the form returns an error when expected, and vice versa.
     $errors = form_get_errors();
     $valid_form = empty($errors);
-    $valid_input = !empty($value);
-
-    // If no value was passed the form should return an error and viceversa.
-    $args = array('%value' => $value, '%errors' => $valid_form ? '' : implode(' ', $errors));
-    $this->assertTrue($valid_input == $valid_form, t('Input value: %value<br/>Validation handler errors: %errors', $args));
+    $args = array(
+      '%values' => print_r($values, TRUE),
+      '%errors' => $valid_form ? t('None') : implode(' ', $errors),
+    );
+    $this->assertTrue($valid_input == $valid_form, t('Input values: %values<br/>Validation handler errors: %errors', $args));
 
     // We check submitted values only if we have a valid input.
     if ($valid_input) {
-      // By fetching the value from $form_state['storage'] we ensure that the
+      // By fetching the values from $form_state['storage'] we ensure that the
       // submission handler was properly executed.
-      $submitted_value = $form_state['storage']['programmatic_form_submit'];
-      $this->assertTrue($submitted_value == $value, t('Submission handler correctly executed: %submitted_value', array('%submitted_value' => $submitted_value)));
+      $stored_values = $form_state['storage']['programmatic_form_submit'];
+      foreach ($values as $key => $value) {
+        $this->assertTrue(isset($stored_values[$key]) && $stored_values[$key] == $value, t('Submission handler correctly executed: %stored_key is %stored_value', array('%stored_key' => $key, '%stored_value' => print_r($value, TRUE))));
+      }
     }
   }
 }
