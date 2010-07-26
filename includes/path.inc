@@ -395,7 +395,7 @@ function path_save(&$path) {
   $status = drupal_write_record('url_alias', $path, (!empty($path['pid']) ? 'pid' : NULL));
 
   // Verify that a record was written.
-  if (isset($status) && $status) {
+  if ($status) {
     if ($status === SAVED_NEW) {
       module_invoke_all('path_insert', $path);
     }
