@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.946 2010/07/07 17:56:42 webchick Exp $
+// $Id: system.module,v 1.947 2010/07/26 02:44:03 dries Exp $
 
 /**
  * @file
@@ -2653,7 +2653,9 @@ function _system_sort_requirements($a, $b) {
  * a function like check_plain() or filter_xss().
  *
  * @param $form
- *   Additional elements to add to the form; for example, hidden elements.
+ *   Additional elements to add to the form. These can be regular form elements,
+ *   #value elements, etc., and their values will be available to the submit
+ *   handler.
  * @param $question
  *   The question to ask the user (e.g. "Are you sure you want to delete the
  *   block <em>foo</em>?"). The page title will be set to this value.
