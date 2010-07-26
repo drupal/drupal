@@ -1645,7 +1645,7 @@ function watchdog($type, $message, $variables = array(), $severity = WATCHDOG_NO
       'link'        => $link,
       'user'        => $user,
       'request_uri' => $base_root . request_uri(),
-      'referer'     => $_SERVER['HTTP_REFERER'],
+      'referer'     => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '',
       'ip'          => ip_address(),
       'timestamp'   => REQUEST_TIME,
     );
