@@ -500,29 +500,31 @@ Drupal.overlay.eventhandlerOverrideLink = function (event) {
           .attr('href', href);
       }
     }
-    // Open external links in a new window.
-    else if (target.hostname != window.location.hostname) {
-      // Add a target attribute to the clicked link. This is being picked up by
-      // the default action handler.
-      if (!$target.attr('target')) {
-        $target.attr('target', '_new');
-      }
-    }
-    // Non-admin links should close the overlay and open in the main window.
-    // Only handle them if the overlay is open and the clicked link is inside
-    // the overlay iframe, else default action will do fine.
+    // Non-admin links should close the overlay and open in the main window,
+    // which is the default action for a link. We only need to handle them
+    // if the overlay is open and the clicked link is inside the overlay iframe.
     else if (this.isOpen && target.ownerDocument === this.iframeWindow.document) {
-      // When the link has a destination query parameter and that destination
-      // is an admin link we need to fragmentize it. This will make it reopen
-      // in the overlay.
-      var params = $.deparam.querystring(href);
-      if (params.destination && this.isAdminLink(params.destination)) {
-        var fragmentizedDestination = $.param.fragment(this.getPath(window.location), { overlay: params.destination });
-        $target.attr('href', $.param.querystring(href, { destination: fragmentizedDestination }));
+      // Open external links in a new window.
+      if (target.hostname != window.location.hostname) {
+        // Add a target attribute to the clicked link. This is being picked up by
+        // the default action handler.
+        if (!$target.attr('target')) {
+          $target.attr('target', '_new');
+        }
       }
+      else {
+        // When the link has a destination query parameter and that destination
+        // is an admin link we need to fragmentize it. This will make it reopen
+        // in the overlay.
+        var params = $.deparam.querystring(href);
+        if (params.destination && this.isAdminLink(params.destination)) {
+          var fragmentizedDestination = $.param.fragment(this.getPath(window.location), { overlay: params.destination });
+          $target.attr('href', $.param.querystring(href, { destination: fragmentizedDestination }));
+        }
 
-      // Make the link to be opening in the immediate parent of the frame.
-      $target.attr('target', '_parent');
+        // Make the link open in the immediate parent of the frame.
+        $target.attr('target', '_parent');
+      }
     }
   }
 };
