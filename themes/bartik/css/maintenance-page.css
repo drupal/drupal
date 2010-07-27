@@ -1,4 +1,4 @@
-/* $Id: maintenance-page.css,v 1.2 2010/07/11 22:12:26 dries Exp $ */
+/* $Id: maintenance-page.css,v 1.3 2010/07/27 15:50:58 dries Exp $ */
 
 body.maintenance-page {
   background-color: #fff;
@@ -40,13 +40,14 @@ body.maintenance-page {
 }
 .maintenance-page #header #name-and-slogan {
   margin-bottom: 50px;
+  margin-left: 0;
   padding-top: 20px;
   font-size: 90%;
 }
-.maintenance-page #header,
-.maintenance-page #header a,
-.maintenance-page #header a:hover,
-.maintenance-page #header a:hover {
+.maintenance-page #header #name-and-slogan,
+.maintenance-page #header #name-and-slogan a,
+.maintenance-page #header #name-and-slogan a:hover,
+.maintenance-page #header #name-and-slogan a:hover {
   color: #777;
 }
 .maintenance-page  h1#page-title {
