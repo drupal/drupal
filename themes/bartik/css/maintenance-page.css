@@ -40,13 +40,14 @@ body.maintenance-page {
 }
 .maintenance-page #header #name-and-slogan {
   margin-bottom: 50px;
+  margin-left: 0;
   padding-top: 20px;
   font-size: 90%;
 }
-.maintenance-page #header,
-.maintenance-page #header a,
-.maintenance-page #header a:hover,
-.maintenance-page #header a:hover {
+.maintenance-page #header #name-and-slogan,
+.maintenance-page #header #name-and-slogan a,
+.maintenance-page #header #name-and-slogan a:hover,
+.maintenance-page #header #name-and-slogan a:hover {
   color: #777;
 }
 .maintenance-page  h1#page-title {
