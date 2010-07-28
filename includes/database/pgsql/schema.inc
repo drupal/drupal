@@ -1,5 +1,5 @@
 <?php
-// $Id: schema.inc,v 1.34 2010/04/07 15:07:59 dries Exp $
+// $Id: schema.inc,v 1.35 2010/07/28 10:52:12 dries Exp $
 
 /**
  * @file
@@ -245,12 +245,6 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
 
       'blob:big' => 'bytea',
       'blob:normal' => 'bytea',
-
-      'date:normal' => 'date',
-
-      'datetime:normal' => 'timestamp without time zone',
-
-      'time:normal'     => 'time without time zone',
 
       'serial:tiny' => 'serial',
       'serial:small' => 'serial',

@@ -1,5 +1,5 @@
 <?php
-// $Id: schema.inc,v 1.18 2010/07/14 20:25:10 dries Exp $
+// $Id: schema.inc,v 1.19 2010/07/28 10:52:12 dries Exp $
 
 /**
  * @file
@@ -216,12 +216,6 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
 
       'blob:big'        => 'BLOB',
       'blob:normal'     => 'BLOB',
-
-      'date:normal'     => 'DATE',
-
-      'time:normal'   => 'TIME',
-
-      'datetime:normal' => 'TIMESTAMP',
     );
     return $map;
   }

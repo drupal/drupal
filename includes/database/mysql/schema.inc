@@ -1,5 +1,5 @@
 <?php
-// $Id: schema.inc,v 1.39 2010/07/20 21:12:47 dries Exp $
+// $Id: schema.inc,v 1.40 2010/07/28 10:52:12 dries Exp $
 
 /**
  * @file
@@ -233,12 +233,6 @@ class DatabaseSchema_mysql extends DatabaseSchema {
 
       'blob:big'        => 'LONGBLOB',
       'blob:normal'     => 'BLOB',
-
-      'date:normal'     => 'DATE',
-
-      'datetime:normal' => 'DATETIME',
-
-      'time:normal'     => 'TIME',
     );
     return $map;
   }
