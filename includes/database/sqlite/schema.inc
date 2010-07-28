@@ -216,12 +216,6 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
 
       'blob:big'        => 'BLOB',
       'blob:normal'     => 'BLOB',
-
-      'date:normal'     => 'DATE',
-
-      'time:normal'   => 'TIME',
-
-      'datetime:normal' => 'TIMESTAMP',
     );
     return $map;
   }

@@ -156,22 +156,6 @@ function database_test_schema() {
     'primary key' => array('tid'),
   );
 
-  $schema['test_date'] = array(
-    'description' => 'A simple table including a datetime field for testing datetime behavior.',
-    'fields' => array(
-      'id' => array(
-        'description' => 'Simple unique ID.',
-        'type' => 'serial',
-        'not null' => TRUE,
-      ),
-      'dummy_date' => array(
-        'description' => 'A dummy datetime field.',
-        'type' => 'datetime',
-      ),
-    ),
-    'primary key' => array('id'),
-    );
-
   $schema['test_null'] = array(
     'description' => 'Basic test table for NULL value handling.',
     'fields' => array(

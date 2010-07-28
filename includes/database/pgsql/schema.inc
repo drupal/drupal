@@ -246,12 +246,6 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
       'blob:big' => 'bytea',
       'blob:normal' => 'bytea',
 
-      'date:normal' => 'date',
-
-      'datetime:normal' => 'timestamp without time zone',
-
-      'time:normal'     => 'time without time zone',
-
       'serial:tiny' => 'serial',
       'serial:small' => 'serial',
       'serial:medium' => 'serial',
