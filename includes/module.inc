@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.196 2010/07/16 11:18:02 dries Exp $
+// $Id: module.inc,v 1.197 2010/07/28 01:46:59 dries Exp $
 
 /**
  * @file
@@ -195,18 +195,16 @@ function system_list_reset() {
  */
 function _module_build_dependencies($files) {
   require_once DRUPAL_ROOT . '/includes/graph.inc';
-  $roots = $files;
   foreach ($files as $filename => $file) {
     $graph[$file->name]['edges'] = array();
     if (isset($file->info['dependencies']) && is_array($file->info['dependencies'])) {
       foreach ($file->info['dependencies'] as $dependency) {
         $dependency_data = drupal_parse_dependency($dependency);
         $graph[$file->name]['edges'][$dependency_data['name']] = $dependency_data;
-        unset($roots[$dependency_data['name']]);
       }
     }
   }
-  drupal_depth_first_search($graph, array_keys($roots));
+  drupal_depth_first_search($graph);
   foreach ($graph as $module => $data) {
     $files[$module]->required_by = isset($data['reverse_paths']) ? $data['reverse_paths'] : array();
     $files[$module]->requires = isset($data['paths']) ? $data['paths'] : array();
