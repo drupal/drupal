@@ -1,5 +1,5 @@
 <?php
-// $Id: template.php,v 1.39 2010/03/04 09:03:08 dries Exp $
+// $Id: template.php,v 1.40 2010/07/28 02:15:52 dries Exp $
 
 /**
  * Return a themed breadcrumb trail.
@@ -111,6 +111,14 @@ function garland_preprocess_page(&$vars) {
   $slogan_text = $vars['site_slogan'];
   $site_name_text = $vars['site_name'];
   $vars['site_name_and_slogan'] = $site_name_text . ' ' . $slogan_text;
+}
+
+/**
+ * Override or insert variables into the block template.
+ */
+function garland_preprocess_block(&$vars) {
+  $vars['title_attributes_array']['class'][] = 'title';
+  $vars['classes_array'][] = 'clearfix';
 }
 
 /**
