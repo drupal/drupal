@@ -1694,6 +1694,9 @@ function system_performance_settings() {
 
   $form['#submit'][] = 'drupal_clear_css_cache';
   $form['#submit'][] = 'drupal_clear_js_cache';
+  // This form allows page compression settings to be changed, which can
+  // invalidate the page cache, so it needs to be cleared on form submit.
+  $form['#submit'][] = 'system_clear_page_cache_submit';
 
   return system_settings_form($form);
 }
@@ -1706,6 +1709,15 @@ function system_performance_settings() {
 function system_clear_cache_submit($form, &$form_state) {
   drupal_flush_all_caches();
   drupal_set_message(t('Caches cleared.'));
+}
+
+/**
+ * Submit callback; clear the page cache.
+ *
+ * @ingroup forms
+ */
+function system_clear_page_cache_submit($form, &$form_state) {
+  cache_clear_all('*', 'cache_page', TRUE);
 }
 
 /**
