@@ -53,12 +53,14 @@ define('MAIL_LINE_ENDINGS', isset($_SERVER['WINDIR']) || strpos($_SERVER['SERVER
  *   }
  *
  *   function example_mail($key, &$message, $params) {
- *     $language = $message['language'];
- *     $variables = user_mail_tokens($params['account'], $language);
+ *     $data['user'] = $params['account'];
+ *     $options['language'] = $message['language'];
+ *     user_mail_tokens($variables, $data, $options);
  *     switch($key) {
  *       case 'notice':
- *         $message['subject'] = t('Notification from !site', $variables, $language->language);
- *         $message['body'][] = t("Dear !username\n\nThere is new content available on the site.", $variables, $language->language);
+ *         $langcode = $message['language']->language;
+ *         $message['subject'] = t('Notification from !site', $variables, array('langcode' => $langcode));
+ *         $message['body'][] = t("Dear !username\n\nThere is new content available on the site.", $variables, array('langcode' => $langcode));
  *         break;
  *     }
  *   }
