@@ -1,4 +1,4 @@
-/* $Id: overlay-child.css,v 1.5 2010/07/28 01:23:22 dries Exp $ */
+/* $Id: overlay-child.css,v 1.6 2010/07/28 01:26:00 dries Exp $ */
 
 html.js {
   background: transparent !important;
@@ -39,7 +39,6 @@ html.js body {
 #overlay-title {
   color: #fff;
   float: left;
-  font-family: Verdana,sans-serif;
   font-size: 20px;
   margin: 0;
   padding: 0.3em 0;
