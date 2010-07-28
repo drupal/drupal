@@ -114,6 +114,14 @@ function garland_preprocess_page(&$vars) {
 }
 
 /**
+ * Override or insert variables into the block template.
+ */
+function garland_preprocess_block(&$vars) {
+  $vars['title_attributes_array']['class'][] = 'title';
+  $vars['classes_array'][] = 'clearfix';
+}
+
+/**
  * Override or insert variables into the page template.
  */
 function garland_process_page(&$vars) {
