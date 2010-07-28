@@ -1543,6 +1543,16 @@ class DatabaseSelectTestCase extends DatabaseTestCase {
     sort($sorted_ids_second_set);
     $this->assertEqual($sorted_ids_second_set, $sorted_ids, t('After sorting the second random list, the result matches the sorted version of the first random list.'));
   }
+
+  /**
+   * Test that aliases are renamed when duplicates.
+   */
+  function testSelectDuplicateAlias() {
+    $query = db_select('test', 't');
+    $alias1 = $query->addField('t', 'name', 'the_alias');
+    $alias2 = $query->addField('t', 'age', 'the_alias');
+    $this->assertNotIdentical($alias1, $alias2, 'Duplicate aliases are renamed.');
+  }
 }
 
 /**
