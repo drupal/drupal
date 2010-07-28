@@ -1,5 +1,5 @@
 <?php
-// $Id: page.tpl.php,v 1.1 2010/07/06 05:25:51 webchick Exp $
+// $Id: page.tpl.php,v 1.2 2010/07/28 01:40:39 dries Exp $
 
 /**
  * @file
@@ -66,7 +66,7 @@
  * Regions:
  * - $page['header']: Items for the header region.
  * - $page['featured']: Items for the featured region.
- * - $page['highlight']: Items for the highlighted content region.
+ * - $page['highlighted']: Items for the highlighted content region.
  * - $page['help']: Dynamic help text, mostly for admin pages.
  * - $page['content']: The main content of the current page.
  * - $page['sidebar_first']: Items for the first sidebar.
@@ -168,7 +168,7 @@
 
 
     <div id="content" class="column"><div class="section">
-      <?php if ($page['highlight']): ?><div id="highlight"><?php print render($page['highlight']); ?></div><?php endif; ?>
+      <?php if ($page['highlighted']): ?><div id="highlighted"><?php print render($page['highlighted']); ?></div><?php endif; ?>
       <a id="main-content"></a>
       <?php print render($title_prefix); ?>
       <?php if ($title): ?>

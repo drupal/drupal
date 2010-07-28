@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.948 2010/07/26 03:04:29 dries Exp $
+// $Id: system.module,v 1.949 2010/07/28 01:40:39 dries Exp $
 
 /**
  * @file
@@ -2350,7 +2350,7 @@ function _system_rebuild_theme_data() {
       'content' => 'Content',
       'header' => 'Header',
       'footer' => 'Footer',
-      'highlight' => 'Highlighted content',
+      'highlighted' => 'Highlighted',
       'help' => 'Help',
       'page_top' => 'Page top',
       'page_bottom' => 'Page bottom',

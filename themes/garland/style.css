@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.83 2010/06/08 05:16:29 webchick Exp $ */
+/* $Id: style.css,v 1.84 2010/07/28 01:40:39 dries Exp $ */
 
 /**
  * Generic elements
@@ -622,7 +622,7 @@ div#branding strong {
   color: #529ad6;
 }
 
-#highlight {
+#highlighted {
   padding: 1em;
   background-color: #fff;
   border: 1px solid #e0e5fb;
