@@ -346,7 +346,7 @@ function block_update_7004() {
         'theme' => $theme,
         'status' => 1,
         'weight' => 0,
-        'region' => 'highlight',
+        'region' => 'highlighted',
         'visibility' => BLOCK_VISIBILITY_LISTED,
         'pages' => '<front>',
         'cache' => DRUPAL_NO_CACHE,

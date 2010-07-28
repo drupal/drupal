@@ -18,7 +18,7 @@ regions[header] = Header
 regions[help] = Help
 regions[page_top] = Page top
 regions[page_bottom] = Page bottom
-regions[highlight] = Highlighted
+regions[highlighted] = Highlighted
 
 regions[featured] = Featured
 regions[content] = Content

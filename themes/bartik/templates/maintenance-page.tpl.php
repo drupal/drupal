@@ -66,7 +66,7 @@
   <div id="main-wrapper"><div id="main" class="clearfix">
 
     <div id="content" class="column"><div class="section">
-      <?php if ($highlight): ?><div id="highlight"><?php print $highlight; ?></div><?php endif; ?>
+      <?php if ($highlighted): ?><div id="highlighted"><?php print $highlighted; ?></div><?php endif; ?>
       <a id="main-content"></a>
       <?php if ($title): ?>
         <h1 class="title" id="page-title">

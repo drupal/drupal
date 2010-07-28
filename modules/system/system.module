@@ -2350,7 +2350,7 @@ function _system_rebuild_theme_data() {
       'content' => 'Content',
       'header' => 'Header',
       'footer' => 'Footer',
-      'highlight' => 'Highlighted content',
+      'highlighted' => 'Highlighted',
       'help' => 'Help',
       'page_top' => 'Page top',
       'page_bottom' => 'Page bottom',
