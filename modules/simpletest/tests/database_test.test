@@ -1,5 +1,5 @@
 <?php
-// $Id: database_test.test,v 1.93 2010/05/28 10:13:38 dries Exp $
+// $Id: database_test.test,v 1.94 2010/07/28 01:51:06 dries Exp $
 
 /**
  * Dummy class for fetching into a class.
@@ -1542,6 +1542,16 @@ class DatabaseSelectTestCase extends DatabaseTestCase {
     $sorted_ids_second_set = $randomized_ids_second_set;
     sort($sorted_ids_second_set);
     $this->assertEqual($sorted_ids_second_set, $sorted_ids, t('After sorting the second random list, the result matches the sorted version of the first random list.'));
+  }
+
+  /**
+   * Test that aliases are renamed when duplicates.
+   */
+  function testSelectDuplicateAlias() {
+    $query = db_select('test', 't');
+    $alias1 = $query->addField('t', 'name', 'the_alias');
+    $alias2 = $query->addField('t', 'age', 'the_alias');
+    $this->assertNotIdentical($alias1, $alias2, 'Duplicate aliases are renamed.');
   }
 }
 

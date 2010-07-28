@@ -1,5 +1,5 @@
 <?php
-// $Id: select.inc,v 1.43 2010/07/19 13:23:21 dries Exp $
+// $Id: select.inc,v 1.44 2010/07/28 01:51:06 dries Exp $
 
 /**
  * @ingroup database
@@ -1125,14 +1125,14 @@ class SelectQuery extends Query implements SelectQueryInterface {
     }
 
     // If that's already in use, try the table name and field name.
-    if (!empty($this->tables[$alias])) {
+    if (!empty($this->fields[$alias])) {
       $alias = $table_alias . '_' . $field;
     }
 
     // If that is already used, just add a counter until we find an unused alias.
     $alias_candidate = $alias;
     $count = 2;
-    while (!empty($this->tables[$alias_candidate])) {
+    while (!empty($this->fields[$alias_candidate])) {
       $alias_candidate = $alias . '_' . $count++;
     }
     $alias = $alias_candidate;
