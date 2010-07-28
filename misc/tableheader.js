@@ -1,118 +1,111 @@
-// $Id: tableheader.js,v 1.31 2010/05/23 18:23:32 dries Exp $
+// $Id: tableheader.js,v 1.32 2010/07/28 01:38:28 dries Exp $
 (function ($) {
 
-Drupal.tableHeaderDoScroll = function () {
-  if ($.isFunction(Drupal.tableHeaderOnScroll)) {
-    Drupal.tableHeaderOnScroll();
-  }
-};
-
+/**
+ * Attaches sticky table headers.
+ */
 Drupal.behaviors.tableHeader = {
   attach: function (context, settings) {
-    // This breaks in anything less than IE 7. Prevent it from running.
-    if ($.browser.msie && parseInt($.browser.version, 10) < 7) {
+    if (!$.support.positionFixed) {
       return;
     }
 
-    $('table.sticky-enabled thead', context).once('tableheader', function () {
-      // Clone the table header so it inherits original jQuery properties. Hide
-      // the table to avoid a flash of the header clone upon page load.
-      var headerClone = $(this).clone(true).hide().insertBefore(this.parentNode).wrap('<table class="sticky-header"></table>').parent().css({
-        position: 'fixed',
-        top: '0px'
-      });
-
-      headerClone = $(headerClone)[0];
-
-      // Store parent table.
-      var table = $(this).parent('table')[0];
-      headerClone.table = table;
-      // Finish initializing header positioning.
-      tracker(headerClone);
-      // We hid the header to avoid it showing up erroneously on page load;
-      // we need to unhide it now so that it will show up when expected.
-      $(headerClone).children('thead').show();
-
-      $(table).addClass('sticky-table');
+    $('table.sticky-enabled', context).once('tableheader', function () {
+      $(this).data("drupal-tableheader", new Drupal.tableHeader(this));
     });
+  }
+};
 
-    // Define the anchor holding var.
-    var prevAnchor = '';
+/**
+ * Constructor for the tableHeader object. Provides sticky table headers.
+ *
+ * @param table
+ *   DOM object for the table to add a sticky header to.
+ */
+Drupal.tableHeader = function (table) {
+  var self = this;
 
-    // Track positioning and visibility.
-    function tracker(e) {
-      // Reset top position of sticky table headers to the current top offset.
-      var topOffset = Drupal.settings.tableHeaderOffset ? eval(Drupal.settings.tableHeaderOffset + '()') : 0;
-      $('.sticky-header').css('top', topOffset + 'px');
-      // Save positioning data.
-      var viewHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
-      if (e.viewHeight != viewHeight) {
-        e.viewHeight = viewHeight;
-        e.vPosition = $(e.table).offset().top - 4 - topOffset;
-        e.hPosition = $(e.table).offset().left;
-        e.vLength = e.table.clientHeight - 100;
-        // Resize header and its cell widths.
-        var parentCell = $('th', e.table);
-        $('th', e).each(function (index) {
-          var cellWidth = parentCell.eq(index).css('width');
-          // Exception for IE7.
-          if (cellWidth == 'auto') {
-            cellWidth = parentCell.get(index).clientWidth + 'px';
-          }
-          $(this).css('width', cellWidth);
-        });
-        $(e).css('width', $(e.table).css('width'));
+  this.originalTable = $(table);
+  this.originalHeader = $(table).children('thead');
+  this.originalHeaderCells = this.originalHeader.find('> tr > th');
+
+  // Clone the table header so it inherits original jQuery properties. Hide
+  // the table to avoid a flash of the header clone upon page load.
+  this.stickyTable = $('<table class="sticky-header"/>')
+    .insertBefore(this.originalTable)
+    .css({ position: 'fixed', top: '0px' });
+  this.stickyHeader = this.originalHeader.clone(true)
+    .hide()
+    .appendTo(this.stickyTable);
+  this.stickyHeaderCells = this.stickyHeader.find('> tr > th');
+
+  this.originalTable.addClass('sticky-table');
+  $(window)
+    .bind('scroll.drupal-tableheader', $.proxy(this, 'eventhandlerRecalculateStickyHeader'))
+    .bind('resize.drupal-tableheader', { calculateWidth: true }, $.proxy(this, 'eventhandlerRecalculateStickyHeader'))
+    // Make sure the anchor being scrolled into view is not hidden beneath the
+    // sticky table header. Adjust the scrollTop if it does.
+    .bind('drupalDisplaceAnchor.drupal-tableheader', function () {
+      window.scrollBy(0, -self.stickyTable.outerHeight());
+    })
+    // Make sure the element being focused is not hidden beneath the sticky
+    // table header. Adjust the scrollTop if it does.
+    .bind('drupalDisplaceFocus.drupal-tableheader', function (event) {
+      if (self.stickyVisible && event.clientY < (self.stickyOffsetTop + self.stickyTable.outerHeight()) && event.$target.closest('sticky-header').length === 0) {
+        window.scrollBy(0, -self.stickyTable.outerHeight());
       }
+    })
+    .triggerHandler('resize.drupal-tableheader');
 
-      // Track horizontal positioning relative to the viewport and set visibility.
-      var hScroll = document.documentElement.scrollLeft || document.body.scrollLeft;
-      var vOffset = (document.documentElement.scrollTop || document.body.scrollTop) - e.vPosition;
-      var visState = (vOffset > 0 && vOffset < e.vLength) ? 'visible' : 'hidden';
-      $(e).css({ left: -hScroll + e.hPosition + 'px', visibility: visState });
+  // We hid the header to avoid it showing up erroneously on page load;
+  // we need to unhide it now so that it will show up when expected.
+  this.stickyHeader.show();
+};
 
-      // Check the previous anchor to see if we need to scroll to make room for the header.
-      // Get the height of the header table and scroll up that amount.
-      if (prevAnchor != location.hash) {
-        if (location.hash != '') {
-          var scrollLocation = $('td' + location.hash).offset().top - $(e).height();
-          $('body, html').scrollTop(scrollLocation);
-        }
-        prevAnchor = location.hash;
+/**
+ * Event handler: recalculates position of the sticky table header.
+ *
+ * @param event
+ *   Event being triggered.
+ */
+Drupal.tableHeader.prototype.eventhandlerRecalculateStickyHeader = function (event) {
+  var self = this;
+  var calculateWidth = event.data && event.data.calculateWidth;
+
+  // Reset top position of sticky table headers to the current top offset.
+  this.stickyOffsetTop = Drupal.settings.tableHeaderOffset ? eval(Drupal.settings.tableHeaderOffset + '()') : 0;
+  this.stickyTable.css('top', this.stickyOffsetTop + 'px');
+
+  // Save positioning data.
+  var viewHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
+  if (calculateWidth || this.viewHeight !== viewHeight) {
+    this.viewHeight = viewHeight;
+    this.vPosition = this.originalTable.offset().top - 4 - this.stickyOffsetTop;
+    this.hPosition = this.originalTable.offset().left;
+    this.vLength = this.originalTable[0].clientHeight - 100;
+    calculateWidth = true;
+  }
+
+  // Track horizontal positioning relative to the viewport and set visibility.
+  var hScroll = document.documentElement.scrollLeft || document.body.scrollLeft;
+  var vOffset = (document.documentElement.scrollTop || document.body.scrollTop) - this.vPosition;
+  this.stickyVisible = vOffset > 0 && vOffset < this.vLength;
+  this.stickyTable.css({ left: (-hScroll + this.hPosition) + 'px', visibility: this.stickyVisible ? 'visible' : 'hidden' });
+
+  // Only perform expensive calculations if the sticky header is actually
+  // visible or when forced.
+  if (this.stickyVisible && (calculateWidth || !this.widthCalculated)) {
+    this.widthCalculated = true;
+    // Resize header and its cell widths.
+    this.stickyHeaderCells.each(function (index) {
+      var cellWidth = self.originalHeaderCells.eq(index).css('width');
+      // Exception for IE7.
+      if (cellWidth == 'auto') {
+        cellWidth = self.originalHeaderCells.get(index).clientWidth + 'px';
       }
-    }
-
-    // Only attach to scrollbars once, even if Drupal.attachBehaviors is called
-    //  multiple times.
-    $('body').once(function () {
-      $(window).scroll(Drupal.tableHeaderDoScroll);
-      $(document.documentElement).scroll(Drupal.tableHeaderDoScroll);
+      $(this).css('width', cellWidth);
     });
-
-    // Track scrolling.
-    Drupal.tableHeaderOnScroll = function () {
-      $('table.sticky-header').each(function () {
-        tracker(this);
-      });
-    };
-
-    // Track resizing.
-    var time = null;
-    var resize = function () {
-      // Ensure minimum time between adjustments.
-      if (time) {
-        return;
-      }
-      time = setTimeout(function () {
-        $('table.sticky-header').each(function () {
-          // Force cell width calculation.
-          this.viewHeight = 0;
-          tracker(this);
-        });
-        // Reset timer.
-        time = null;
-      }, 250);
-    };
-    $(window).resize(resize);
+    this.stickyTable.css('width', this.originalTable.css('width'));
   }
 };
 

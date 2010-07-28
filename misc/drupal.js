@@ -1,4 +1,4 @@
-// $Id: drupal.js,v 1.68 2010/05/24 07:22:12 dries Exp $
+// $Id: drupal.js,v 1.69 2010/07/28 01:38:28 dries Exp $
 
 var Drupal = Drupal || { 'settings': {}, 'behaviors': {}, 'locale': {} };
 
@@ -331,7 +331,21 @@ $('html').addClass('js');
 // 'js enabled' cookie.
 document.cookie = 'has_js=1; path=/';
 
-// Attach all behaviors.
+/**
+ * Additions to jQuery.support.
+ */
+$(function () {
+  /**
+   * Boolean indicating whether or not position:fixed is supported.
+   */
+  if (jQuery.support.positionFixed === undefined) {
+    var el = $('<div style="position:fixed; top:10px" />').appendTo(document.body);
+    jQuery.support.positionFixed = el[0].offsetTop === 10;
+    el.remove();
+  }
+});
+
+//Attach all behaviors.
 $(function () {
   Drupal.attachBehaviors(document, Drupal.settings);
 });
