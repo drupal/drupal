@@ -1,5 +1,5 @@
 <?php
-// $Id: user.admin.inc,v 1.115 2010/07/28 02:04:44 dries Exp $
+// $Id: user.admin.inc,v 1.116 2010/07/29 01:39:32 dries Exp $
 
 /**
  * @file
@@ -395,7 +395,7 @@ function user_admin_settings() {
     '#size' => 10,
     '#maxlength' => 10,
     '#field_suffix' => ' ' . t('pixels'),
-    '#description' => t('Maximum allowed dimensions for uploaded pictures.'),
+    '#description' => t('Pictures larger than this will be scaled down to this size.'),
   );
   $form['personalization']['pictures']['user_picture_file_size'] = array(
     '#type' => 'textfield',
@@ -404,7 +404,7 @@ function user_admin_settings() {
     '#size' => 10,
     '#maxlength' => 10,
     '#field_suffix' => ' ' . t('KB'),
-    '#description' => t('Maximum allowed file size for uploaded pictures.'),
+    '#description' => t('Maximum allowed file size for uploaded pictures. Upload size is normally limited only by the PHP maximum post and file upload settings, and images are automatically scaled down to the dimensions specified above.'),
   );
   $form['personalization']['pictures']['user_picture_guidelines'] = array(
     '#type' => 'textarea',

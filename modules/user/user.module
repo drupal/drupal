@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1186 2010/07/26 03:04:29 dries Exp $
+// $Id: user.module,v 1.1187 2010/07/29 01:39:32 dries Exp $
 
 /**
  * @file
@@ -1113,7 +1113,7 @@ function user_account_form(&$form, &$form_state) {
     '#type' => 'file',
     '#title' => t('Upload picture'),
     '#size' => 48,
-    '#description' => t('Your virtual face or picture. Maximum dimensions are %dimensions pixels and the maximum size is %size kB.', array('%dimensions' => variable_get('user_picture_dimensions', '85x85'), '%size' => variable_get('user_picture_file_size', '30'))) . ' ' . filter_xss_admin(variable_get('user_picture_guidelines', '')),
+    '#description' => t('Your virtual face or picture. Pictures larger than @dimensions pixels will be scaled down.', array('@dimensions' => variable_get('user_picture_dimensions', '85x85'))) . ' ' . filter_xss_admin(variable_get('user_picture_guidelines', '')),
   );
   $form['#validate'][] = 'user_validate_picture';
 }
