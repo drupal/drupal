@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.479 2010/07/26 13:07:59 dries Exp $
+// $Id: form.inc,v 1.480 2010/07/29 00:46:09 dries Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -287,7 +287,8 @@ function drupal_build_form($form_id, &$form_state) {
     // have to rebuild the form to proceed. In addition, if there is stored
     // form_state data from a previous step, we'll retrieve it so it can
     // be passed on to the form processing code.
-    if (isset($form_state['input']['form_id']) && $form_state['input']['form_id'] == $form_id && !empty($form_state['input']['form_build_id'])) {
+    $check_cache = isset($form_state['input']['form_id']) && $form_state['input']['form_id'] == $form_id && !empty($form_state['input']['form_build_id']);
+    if ($check_cache) {
       $form_build_id = $form_state['input']['form_build_id'];
       $form = form_get_cache($form_build_id, $form_state);
     }
@@ -308,6 +309,13 @@ function drupal_build_form($form_id, &$form_state) {
         }
       }
 
+      // If we attempted to serve the form from cache, uncacheable $form_state
+      // keys need to be removed after retrieving and preparing the form, except
+      // any that were already set prior to retrieving the form.
+      if ($check_cache) {
+        $form_state_before_retrieval = $form_state;
+      }
+
       $form = drupal_retrieve_form($form_id, $form_state);
       $form_build_id = 'form-' . drupal_hash_base64(uniqid(mt_rand(), TRUE) . mt_rand());
       $form['#build_id'] = $form_build_id;
@@ -321,6 +329,24 @@ function drupal_build_form($form_id, &$form_state) {
       // Store a copy of the unprocessed form to cache in case
       // $form_state['cache'] is set.
       $original_form = $form;
+
+      // form_set_cache() removes uncacheable $form_state keys defined in
+      // form_state_keys_no_cache() in order for multi-step forms to work
+      // properly. This means that form processing logic for single-step forms
+      // using $form_state['cache'] may depend on data stored in those keys
+      // during drupal_retrieve_form()/drupal_prepare_form(), but form
+      // processing should not depend on whether the form is cached or not, so
+      // $form_state is adjusted to match what it would be after a
+      // form_set_cache()/form_get_cache() sequence. These exceptions are
+      // allowed to survive here:
+      // - always_process: Does not make sense in conjunction with form caching
+      //   in the first place, since passing form_build_id as a GET parameter is
+      //   not desired.
+      // - temporary: Any assigned data is expected to survives within the same
+      //   page request.
+      if ($check_cache) {
+        $form_state = array_diff_key($form_state, array_flip(array_diff(form_state_keys_no_cache(), array('always_process', 'temporary')))) + $form_state_before_retrieval;
+      }
     }
 
     // Now that we know we have a form, we'll process it (validating,
