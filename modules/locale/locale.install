@@ -145,6 +145,7 @@ function locale_uninstall() {
   variable_del('locale_js_directory');
   variable_del('javascript_parsed');
   variable_del('locale_field_language_fallback');
+  variable_del('locale_cache_length');
 
   foreach (language_types() as $type) {
     variable_del("language_negotiation_$type");

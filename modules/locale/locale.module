@@ -480,7 +480,7 @@ function locale_field_language_alter(&$display_language, $context) {
  * @param $entity
  *   The entity to be displayed.
  * @param $langcode
- *   The language code $entity has to be displayed in. 
+ *   The language code $entity has to be displayed in.
  */
 function locale_field_language_fallback(&$display_language, $entity, $langcode) {
   // Lazily init fallback candidates to avoid unnecessary calls.
@@ -650,7 +650,7 @@ function locale($string = NULL, $context = NULL, $langcode = NULL) {
         // Refresh database stored cache of translations for given language.
         // We only store short strings used in current version, to improve
         // performance and consume less memory.
-        $result = db_query("SELECT s.source, s.context, t.translation, t.language FROM {locales_source} s LEFT JOIN {locales_target} t ON s.lid = t.lid AND t.language = :language WHERE s.textgroup = 'default' AND s.version = :version AND LENGTH(s.source) < 75", array(':language' => $langcode, ':version' => VERSION));
+        $result = db_query("SELECT s.source, s.context, t.translation, t.language FROM {locales_source} s LEFT JOIN {locales_target} t ON s.lid = t.lid AND t.language = :language WHERE s.textgroup = 'default' AND s.version = :version AND LENGTH(s.source) < :length", array(':language' => $langcode, ':version' => VERSION, ':length' => variable_get('locale_cache_length', 75)));
         foreach ($result as $data) {
           $locale_t[$langcode][$data->context][$data->source] = (empty($data->translation) ? TRUE : $data->translation);
         }
