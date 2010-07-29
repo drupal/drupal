@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1193 2010/07/24 17:28:25 dries Exp $
+// $Id: common.inc,v 1.1194 2010/07/29 02:00:27 dries Exp $
 
 /**
  * @file
@@ -6277,6 +6277,11 @@ function drupal_flush_all_caches() {
   foreach ($cache_tables as $table) {
     cache_clear_all('*', $table, TRUE);
   }
+
+  // Rebuild the bootstrap module list. We do this here so that developers
+  // can get new hook_boot() implementations registered without having to
+  // write a hook_update_N() function.
+  _system_update_bootstrap_status();
 }
 
 /**
