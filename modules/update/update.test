@@ -493,3 +493,44 @@ class UpdateTestContribCase extends UpdateTestHelper {
 
 }
 
+class UpdateTestUploadCase extends UpdateTestHelper {
+  public static function getInfo() {
+    return array(
+      'name' => 'Upload and extract module functionality',
+      'description' => 'Tests the update module\'s upload and extraction functionality.',
+      'group' => 'Update',
+    );
+  }
+
+  public function setUp() {
+    parent::setUp('update');
+    variable_set('allow_authorize_operations', TRUE);
+    $admin_user = $this->drupalCreateUser(array('administer software updates', 'administer site configuration'));
+    $this->drupalLogin($admin_user);
+  }
+
+  /**
+   * Tests upload and extraction of a module.
+   */
+  public function testUploadModule() {
+    // Images are not valid archives, so get one and try to install it.
+    $invalidArchiveFile = reset($this->drupalGetTestFiles('image'));
+    $edit = array(
+      'files[project_upload]' => $invalidArchiveFile->uri,
+    );
+    // This also checks that the correct archive extensions are allowed.
+    $this->drupalPost('admin/modules/install', $edit, t('Install'));
+    $this->assertText(t('Only files with the following extensions are allowed: @archive_extensions.', array('@archive_extensions' => archiver_get_extensions())),'Only valid archives can be uploaded.');
+
+    // Check to ensure an existing module can't be reinstalled. Also checks that
+    // the archive was extracted since we can't know if the module is already
+    // installed until after extraction.
+    $validArchiveFile = drupal_get_path('module', 'update') . '/tests/aaa_update_test.tar.gz';
+    $edit = array(
+      'files[project_upload]' => $validArchiveFile,
+    );
+    $this->drupalPost('admin/modules/install', $edit, t('Install'));
+    $this->assertText(t('@module_name is already installed.', array('@module_name' => 'AAA Update test')), 'Existing module was extracted and not reinstalled.');
+  }
+}
+

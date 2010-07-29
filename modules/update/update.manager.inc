@@ -457,17 +457,9 @@ function update_manager_update_ready_form_submit($form, &$form_state) {
 function update_manager_install_form($form, &$form_state, $context) {
   $form = array();
 
-  // Collect all the supported archive file extensions for the UI text.
-  $extensions = array();
-  $archiver_info = archiver_get_info();
-  foreach ($archiver_info as $info) {
-    if (!empty($info['extensions'])) {
-      $extensions += $info['extensions'];
-    }
-  }
   $form['help_text'] = array(
     '#prefix' => '<p>',
-    '#markup' => t('To install a new module or theme, either enter the URL of an archive file you wish to install, or upload the archive file that you have downloaded. You can find <a href="@module_url">modules</a> and <a href="@theme_url">themes</a> at <a href="@drupal_org_url">http://drupal.org</a>. The following archive extensions are supported: %extensions', array('@module_url' => 'http://drupal.org/project/modules', '@theme_url' => 'http://drupal.org/project/themes', '@drupal_org_url' => 'http://drupal.org', '%extensions' => implode(', ', $extensions))),
+    '#markup' => t('To install a new module or theme, either enter the URL of an archive file you wish to install, or upload the archive file that you have downloaded. You can find <a href="@module_url">modules</a> and <a href="@theme_url">themes</a> at <a href="@drupal_org_url">http://drupal.org</a>.<br/>The following archive extensions are supported: %extensions.', array('@module_url' => 'http://drupal.org/project/modules', '@theme_url' => 'http://drupal.org/project/themes', '@drupal_org_url' => 'http://drupal.org', '%extensions' => archiver_get_extensions())),
     '#suffix' => '</p>',
   );
 
@@ -538,10 +530,13 @@ function update_manager_install_form_submit($form, &$form_state) {
     }
   }
   elseif ($_FILES['files']['name']['project_upload']) {
+    $validators = array('file_validate_extensions' => array(archiver_get_extensions()));
     $field = 'project_upload';
-    // @todo: add some validators here.
-    $finfo = file_save_upload($field, array(), NULL, FILE_EXISTS_REPLACE);
-    // @todo: find out if the module is already instealled, if so, throw an error.
+    if (!($finfo = file_save_upload($field, $validators, NULL, FILE_EXISTS_REPLACE))) {
+      // Failed to upload the file. file_save_upload() calls form_set_error() on
+      // failure.
+      return;
+    }
     $local_cache = $finfo->uri;
   }
 

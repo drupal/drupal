@@ -6778,6 +6778,27 @@ function archiver_get_info() {
 }
 
 /**
+ * Returns a string of supported archive extensions.
+ *
+ * @return
+ *   A space-separated string of extensions suitable for use by the file
+ *   validation system.
+ */
+function archiver_get_extensions() {
+  $valid_extensions = array();
+  foreach (archiver_get_info() as $archive) {
+    foreach ($archive['extensions'] as $extension) {
+      foreach (explode('.', $extension) as $part) {
+        if (!in_array($part, $valid_extensions)) {
+          $valid_extensions[] = $part;
+        }
+      }
+    }
+  }
+  return implode(' ', $valid_extensions);
+}
+
+/**
  * Create the appropriate archiver for the specified file.
  *
  * @param $file
