@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.884 2010/07/24 17:48:16 dries Exp $
+// $Id: comment.module,v 1.885 2010/07/29 00:50:56 dries Exp $
 
 /**
  * @file
@@ -913,26 +913,28 @@ function comment_view($comment, $node, $view_mode = 'full') {
     '#view_mode' => $view_mode,
   );
 
-  $prefix = '';
-  $is_threaded = isset($comment->divs) && variable_get('comment_default_mode_' . $node->type, COMMENT_MODE_THREADED) == COMMENT_MODE_THREADED;
+  if (empty($comment->in_preview)) {
+    $prefix = '';
+    $is_threaded = isset($comment->divs) && variable_get('comment_default_mode_' . $node->type, COMMENT_MODE_THREADED) == COMMENT_MODE_THREADED;
 
-  // Add 'new' anchor if needed.
-  if (!empty($comment->first_new)) {
-    $prefix .= "<a id=\"new\"></a>\n";
-  }
+    // Add 'new' anchor if needed.
+    if (!empty($comment->first_new)) {
+      $prefix .= "<a id=\"new\"></a>\n";
+    }
 
-  // Add indentation div or close open divs as needed.
-  if ($is_threaded) {
-    $prefix .= $comment->divs <= 0 ? str_repeat('</div>', abs($comment->divs)) : "\n" . '<div class="indented">';
-  }
+    // Add indentation div or close open divs as needed.
+    if ($is_threaded) {
+      $prefix .= $comment->divs <= 0 ? str_repeat('</div>', abs($comment->divs)) : "\n" . '<div class="indented">';
+    }
 
-  // Add anchor for each comment.
-  $prefix .= "<a id=\"comment-$comment->cid\"></a>\n";
-  $build['#prefix'] = $prefix;
+    // Add anchor for each comment.
+    $prefix .= "<a id=\"comment-$comment->cid\"></a>\n";
+    $build['#prefix'] = $prefix;
 
-  // Close all open divs.
-  if ($is_threaded && !empty($comment->divs_final)) {
-    $build['#suffix'] = str_repeat('</div>', $comment->divs_final);
+    // Close all open divs.
+    if ($is_threaded && !empty($comment->divs_final)) {
+      $build['#suffix'] = str_repeat('</div>', $comment->divs_final);
+    }
   }
 
   // Allow modules to modify the structured comment.
@@ -2009,11 +2011,7 @@ function comment_preview($comment) {
     $comment->changed = REQUEST_TIME;
     $comment->in_preview = TRUE;
     $comment_build = comment_view($comment, $node);
-    $comment_build += array(
-      '#weight' => -100,
-      '#prefix' => '<div class="preview">',
-      '#suffix' => '</div>',
-    );
+    $comment_build['#weight'] = -100;
 
     $form['comment_preview'] = $comment_build;
   }
