@@ -1,5 +1,5 @@
 <?php
-// $Id: unicode.inc,v 1.45 2010/07/16 11:17:25 dries Exp $
+// $Id: unicode.inc,v 1.46 2010/07/29 00:38:24 dries Exp $
 
 /**
  * Indicates an error during check for PHP unicode support.
@@ -430,25 +430,42 @@ function _mime_header_decode($matches) {
  *   The input $text, with all HTML entities decoded once.
  */
 function decode_entities($text, $exclude = array()) {
-  static $html_entities;
-  if (!isset($html_entities)) {
-    include DRUPAL_ROOT . '/includes/unicode.entities.inc';
-  }
-
   // Flip the exclude list so that we can do quick lookups later.
   $exclude = array_flip($exclude);
 
+  // Prepare the callback function.
+  _decode_entities(NULL, $exclude);
+
   // Use a regexp to select all entities in one pass, to avoid decoding
-  // double-escaped entities twice. The PREG_REPLACE_EVAL modifier 'e' is
-  // being used to allow for a callback (see
-  // http://php.net/manual/en/reference.pcre.pattern.modifiers).
-  return preg_replace('/&(#x?)?([A-Za-z0-9]+);/e', '_decode_entities("$1", "$2", "$0", $html_entities, $exclude)', $text);
+  // double-escaped entities twice.
+  return preg_replace_callback('/&(#x?)?([A-Za-z0-9]+);/', '_decode_entities', $text);
 }
 
 /**
  * Helper function for decode_entities
+ *
+ * @param $matches
+ *   An array of matches found by preg_replace_callback(). Elements 0, 1, and 2
+ *   of $matches must be the original entity, its prefix, and its codepoint.
+ * @param $set_exclude
+ *   An array of entities that should be excluded from decoding. This should
+ *   only be set during a preparatory call before preg_replace_callback().
+ *
+ * @return
+ *   The decoded entity for a given match, or the original encoded entity if
+ *   the entity is in the list of excluded entities.
  */
-function _decode_entities($prefix, $codepoint, $original, &$html_entities, &$exclude) {
+function _decode_entities($matches = NULL, $set_exclude = NULL) {
+  static $html_entities, $exclude;
+  if (!isset($html_entities)) {
+    include DRUPAL_ROOT . '/includes/unicode.entities.inc';
+  }
+  if (isset($set_exclude)) {
+    // This is a preparatory call.
+    $exclude = $set_exclude;
+    return;
+  }
+  list($original, $prefix, $codepoint) = $matches;
   // Named entity
   if (!$prefix) {
     // A named entity not in the exclude list.
