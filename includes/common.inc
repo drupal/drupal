@@ -6277,6 +6277,11 @@ function drupal_flush_all_caches() {
   foreach ($cache_tables as $table) {
     cache_clear_all('*', $table, TRUE);
   }
+
+  // Rebuild the bootstrap module list. We do this here so that developers
+  // can get new hook_boot() implementations registered without having to
+  // write a hook_update_N() function.
+  _system_update_bootstrap_status();
 }
 
 /**
