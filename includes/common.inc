@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1195 2010/07/29 02:27:43 dries Exp $
+// $Id: common.inc,v 1.1196 2010/07/30 01:52:54 dries Exp $
 
 /**
  * @file
@@ -1997,8 +1997,8 @@ function format_username($account) {
  *   - 'external': Whether the given path is an external URL.
  *   - 'language': An optional language object. If the path being linked to is
  *     internal to the site, $options['language'] is used to look up the alias
- *     for the URL. If $options['language'] is omitted, the global
- *     $language_content will be used.
+ *     for the URL. If $options['language'] is omitted, the global $language_url
+ *     will be used.
  *   - 'https': Whether this URL should point to a secure location. If not
  *     defined, the current scheme is used, so the user stays on http or https
  *     respectively. TRUE enforces HTTPS and FALSE enforces HTTP, but HTTPS can

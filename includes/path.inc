@@ -1,5 +1,5 @@
 <?php
-// $Id: path.inc,v 1.68 2010/07/26 02:59:57 dries Exp $
+// $Id: path.inc,v 1.69 2010/07/30 01:52:54 dries Exp $
 
 /**
  * @file
@@ -44,7 +44,7 @@ function drupal_path_initialize() {
  *   found.
  */
 function drupal_lookup_path($action, $path = '', $path_language = NULL) {
-  global $language_content;
+  global $language_url;
   // Use the advanced drupal_static() pattern, since this is called very often.
   static $drupal_static_fast;
   if (!isset($drupal_static_fast)) {
@@ -71,7 +71,11 @@ function drupal_lookup_path($action, $path = '', $path_language = NULL) {
     }
   }
 
-  $path_language = $path_language ? $path_language : $language_content->language;
+  // If no language is explicitly specified we default to the current URL
+  // language. If we used a language different from the one conveyed by the
+  // requested URL, we might end up being unable to check if there is a path
+  // alias matching the URL path.
+  $path_language = $path_language ? $path_language : $language_url->language;
 
   if ($action == 'wipe') {
     $cache = array();
