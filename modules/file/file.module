@@ -1,5 +1,5 @@
 <?php
-// $Id: file.module,v 1.31 2010/07/02 12:37:57 dries Exp $
+// $Id: file.module,v 1.32 2010/07/30 01:45:28 dries Exp $
 
 /**
  * @file
@@ -1017,7 +1017,7 @@ function file_get_file_references($file, $field = NULL, $age = FIELD_LOAD_REVISI
   $fields = isset($field) ? array($field['field_name'] => $field) : field_info_fields();
 
   foreach ($fields as $field_name => $file_field) {
-    if ((empty($field_type) || $field['type'] == $field_type) && !isset($references[$field_name])) {
+    if ((empty($field_type) || $file_field['type'] == $field_type) && !isset($references[$field_name])) {
       // Get each time this file is used within a field.
       $query = new EntityFieldQuery();
       $query
