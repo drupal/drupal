@@ -344,7 +344,7 @@ function image_image_default_styles() {
     'effects' => array(
       array(
         'name' => 'image_scale',
-        'data' => array('width' => 640, 'height' => 640, 'upscale' => 0),
+        'data' => array('width' => 480, 'height' => 480, 'upscale' => 0),
         'weight' => 0,
       ),
     )
