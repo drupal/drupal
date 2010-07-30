@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.test,v 1.82 2010/07/14 20:26:52 dries Exp $
+// $Id: taxonomy.test,v 1.83 2010/07/30 03:06:18 dries Exp $
 
 /**
  * @file
@@ -451,6 +451,12 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
 
     $this->drupalGet('node/' . $node->nid);
     $this->assertText($term2->name, t('Term is displayed when viewing the node.'));
+
+    //Preview the node
+    $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Preview'));
+    $this->assertNoUniqueText($term2->name, t('Term is displayed when previewing the node.'));
+    $this->drupalPost(NULL, NULL, t('Preview'));
+    $this->assertNoUniqueText($term2->name, t('Term is displayed when previewing the node again.'));
   }
 
   /**

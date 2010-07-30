@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.127 2010/06/17 13:44:45 dries Exp $
+// $Id: node.pages.inc,v 1.128 2010/07/30 03:06:18 dries Exp $
 
 /**
  * @file
@@ -339,11 +339,10 @@ function node_preview($node) {
     field_attach_prepare_view('node', $nodes, 'full');
 
     // Display a preview of the node.
-    // Previewing alters $node so it needs to be cloned.
     if (!form_get_errors()) {
-      $cloned_node = clone $node;
-      $cloned_node->in_preview = TRUE;
-      $output = theme('node_preview', array('node' => $cloned_node));
+      $node->in_preview = TRUE;
+      $output = theme('node_preview', array('node' => $node));
+      unset($node->in_preview);
     }
     drupal_set_title(t('Preview'), PASS_THROUGH);
 

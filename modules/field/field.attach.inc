@@ -1,5 +1,5 @@
 <?php
-// $Id: field.attach.inc,v 1.93 2010/07/30 02:47:27 dries Exp $
+// $Id: field.attach.inc,v 1.94 2010/07/30 03:06:18 dries Exp $
 
 /**
  * @file
@@ -1035,10 +1035,17 @@ function field_attach_delete_revision($entity_type, $entity) {
 /**
  * Prepare field data prior to display.
  *
- * This function must be called before field_attach_view(). It lets field
- * types and formatters load additional data needed for display, and
- * therefore accepts an array of entities to allow query optimisation when
- * displaying lists of entities.
+ * This function lets field types and formatters load additional data
+ * needed for display that is not automatically loaded during
+ * field_attach_load(). It accepts an array of entities to allow query
+ * optimisation when displaying lists of entities.
+ *
+ * field_attach_prepare_view() and field_attach_view() are two halves
+ * of the same operation. It is safe to call
+ * field_attach_prepare_view() multiple times on the same entity
+ * before calling field_attach_view() on it, but calling any Field
+ * API operation on an entity between passing that entity to these two
+ * functions may yield incorrect results.
  *
  * @param $entity_type
  *   The type of $entities; e.g. 'node' or 'user'.
@@ -1076,8 +1083,12 @@ function field_attach_prepare_view($entity_type, $entities, $view_mode) {
  * Each field is displayed according to the display options specified in the
  * $instance definition for the given $view_mode.
  *
- * The entity must have run through field_attach_prepare_view() beforehands.
- * @see field_attach_prepare_view()
+ * field_attach_prepare_view() and field_attach_view() are two halves
+ * of the same operation. It is safe to call
+ * field_attach_prepare_view() multiple times on the same entity
+ * before calling field_attach_view() on it, but calling any Field
+ * API operation on an entity between passing that entity to these two
+ * functions may yield incorrect results.
  *
  * Sample structure:
  * @code
