@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.257 2010/07/16 02:38:16 dries Exp $
+// $Id: locale.inc,v 1.258 2010/07/30 02:47:27 dries Exp $
 
 /**
  * @file
@@ -1775,7 +1775,7 @@ function _locale_rebuild_js($langcode = NULL) {
  */
 function _locale_translate_language_list($translation, $limit_language) {
   // Add CSS.
-  drupal_add_css(drupal_get_path('module', 'locale') . '/locale.css', array('preprocess' => FALSE));
+  drupal_add_css(drupal_get_path('module', 'locale') . '/locale.css');
 
   $languages = language_list();
   unset($languages['en']);

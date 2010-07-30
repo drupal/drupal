@@ -1,5 +1,5 @@
 <?php
-// $Id: tracker.pages.inc,v 1.31 2010/01/14 06:23:40 webchick Exp $
+// $Id: tracker.pages.inc,v 1.32 2010/07/30 02:47:28 dries Exp $
 
 /**
  * @file
@@ -113,7 +113,7 @@ function tracker_page($account = NULL, $set_title = FALSE) {
     '#theme' => 'table',
     '#empty' => t('No content available.'),
     '#attached' => array(
-      'css' => array(drupal_get_path('module', 'tracker') . '/tracker.css' => array('preprocess' => FALSE)),
+      'css' => array(drupal_get_path('module', 'tracker') . '/tracker.css' => array()),
     ),
   );
   $page['pager'] = array(

@@ -1,5 +1,5 @@
 <?php
-// $Id: common.test,v 1.116 2010/07/07 17:00:43 webchick Exp $
+// $Id: common.test,v 1.117 2010/07/30 02:47:28 dries Exp $
 
 /**
  * @file
@@ -621,7 +621,7 @@ class CascadingStylesheetsTestCase extends DrupalWebTestCase {
   function testRenderInlinePreprocess() {
     $css = 'body { padding: 0px; }';
     $css_preprocessed = '<style type="text/css" media="all">' . drupal_load_stylesheet_content($css, TRUE) . '</style>';
-    drupal_add_css($css, 'inline');
+    drupal_add_css($css, array('type' => 'inline', 'preprocess' => TRUE));
     $styles = drupal_get_css();
     $this->assertEqual(trim($styles), $css_preprocessed, t('Rendering preprocessed inline CSS adds it to the page.'));
   }
@@ -631,7 +631,7 @@ class CascadingStylesheetsTestCase extends DrupalWebTestCase {
    */
   function testRenderInlineNoPreprocess() {
     $css = 'body { padding: 0px; }';
-    drupal_add_css($css, array('type' => 'inline', 'preprocess' => FALSE));
+    drupal_add_css($css, array('type' => 'inline'));
     $styles = drupal_get_css();
     $this->assertTrue(strpos($styles, $css) > 0, t('Rendering non-preprocessed inline CSS adds it to the page.'));
   }
@@ -641,7 +641,7 @@ class CascadingStylesheetsTestCase extends DrupalWebTestCase {
    */
   function testRenderInlineFullPage() {
     $css = 'body { font-size: 254px; }';
-    $expected = 'font-size:254px;';
+    $expected = $css;
 
     // Create a node, using the PHP filter that tests drupal_add_css().
     $php_format_id = db_query_range('SELECT format FROM {filter_format} WHERE name = :name', 0, 1, array(':name' => 'PHP code'))->fetchField();

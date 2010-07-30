@@ -1,5 +1,5 @@
 <?php
-// $Id: color.module,v 1.88 2010/07/16 02:37:05 dries Exp $
+// $Id: color.module,v 1.89 2010/07/30 02:47:27 dries Exp $
 
 /**
  * Implements hook_help().
@@ -189,7 +189,7 @@ function color_scheme_form($complete_form, &$form_state, $theme) {
       ),
       // Add custom CSS.
       'css' => array(
-        $base . '/color.css' => array('preprocess' => FALSE),
+        $base . '/color.css' => array(),
       ),
       // Add custom JavaScript.
       'js' => array(

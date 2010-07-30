@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1196 2010/07/30 01:52:54 dries Exp $
+// $Id: common.inc,v 1.1197 2010/07/30 02:47:27 dries Exp $
 
 /**
  * @file
@@ -2642,27 +2642,26 @@ function drupal_add_html_head_link($attributes, $header = FALSE) {
  * Calling drupal_static_reset('drupal_add_css') will clear all cascading
  * stylesheets added so far.
  *
- * If preprocessing is turned on, the cascading style sheets added using this
- * function will be preprocessed before they are added to the HTML header of the
- * page. Preprocessing merges all the CSS files into one file, which is then
- * compressed by removing all extraneous white space. Note that preprocessed
- * inline stylesheets will not be aggregated into this single file; instead,
- * they will just be compressed when being output on the page. External
- * stylesheets will also not be aggregated.
+ * If CSS aggregation/compression is enabled, all cascading style sheets added
+ * with $options['preprocess'] set to TRUE will be merged into one aggregate
+ * file and compressed by removing all extraneous white space.
+ * Preprocessed inline stylesheets will not be aggregated into this single file;
+ * instead, they are just compressed upon output on the page. Externally hosted
+ * stylesheets are never aggregated or compressed.
  *
- * The reason for merging the CSS files is outlined quite thoroughly here:
+ * The reason for aggregating the files is outlined quite thoroughly here:
  * http://www.die.net/musings/page_load_time/ "Load fewer external objects. Due
  * to request overhead, one bigger file just loads faster than two smaller ones
  * half its size."
  *
- * However, you should *not* preprocess every file as this can lead to redundant
- * caches. You should set $options['preprocess'] to FALSE when your styles are
- * only used on a few pages of the site. This could be a special admin page, the
- * homepage, or a handful of pages that does not represent the majority of the
- * pages on your site.
+ * $options['preprocess'] should be only set to TRUE when a file is required for
+ * all typical visitors and most pages of a site. It is critical that all
+ * preprocessed files are added unconditionally on every page, even if the
+ * files do not happen to be needed on a page. This is normally done by calling
+ * drupal_add_css() in a hook_init() implementation.
  *
- * Typical candidates for preprocessing are for example styles for nodes across
- * the site, or styles used in the theme.
+ * Non-preprocessed files should only be added to the page when they are
+ * actually needed.
  *
  * @param $data
  *   (optional) The stylesheet data to be added, depending on what is passed
@@ -2710,9 +2709,8 @@ function drupal_add_html_head_link($attributes, $header = FALSE) {
  *     always come last.
  *   - 'media': The media type for the stylesheet, e.g., all, print, screen.
  *     Defaults to 'all'.
- *   - 'preprocess': If TRUE, Allows the CSS to be aggregated and compressed if
- *     the Optimize CSS feature has been turned on under the performance
- *     section.  Defaults to TRUE.
+ *   - 'preprocess': If TRUE and CSS aggregation/compression is enabled, the
+ *     styles will be aggregated and compressed. Defaults to FALSE.
  *   - 'browsers': An array containing information specifying which browsers
  *     should load the CSS item. See drupal_pre_render_conditional_comments()
  *     for details.
@@ -2740,7 +2738,7 @@ function drupal_add_css($data = NULL, $options = NULL) {
       'type' => 'file',
       'weight' => CSS_DEFAULT,
       'media' => 'all',
-      'preprocess' => TRUE,
+      'preprocess' => FALSE,
       'data' => $data,
       'browsers' => array(),
     );
@@ -3576,6 +3574,25 @@ function drupal_region_class($region) {
  * Calling drupal_static_reset('drupal_add_js') will clear all JavaScript added
  * so far.
  *
+ * If JavaScript aggregation is enabled, all JavaScript files added with
+ * $options['preprocess'] set to TRUE will be merged into one aggregate file.
+ * Preprocessed inline JavaScript will not be aggregated into this single file.
+ * Externally hosted JavaScripts are never aggregated.
+ *
+ * The reason for aggregating the files is outlined quite thoroughly here:
+ * http://www.die.net/musings/page_load_time/ "Load fewer external objects. Due
+ * to request overhead, one bigger file just loads faster than two smaller ones
+ * half its size."
+ *
+ * $options['preprocess'] should be only set to TRUE when a file is required for
+ * all typical visitors and most pages of a site. It is critical that all
+ * preprocessed files are added unconditionally on every page, even if the
+ * files are not needed on a page. This is normally done by calling
+ * drupal_add_css() in a hook_init() implementation.
+ *
+ * Non-preprocessed files should only be added to the page when they are
+ * actually needed.
+ *
  * @param $data
  *   (optional) If given, the value depends on the $options parameter:
  *   - 'file': Path to the file relative to base_path().
@@ -3617,9 +3634,8 @@ function drupal_region_class($region) {
  *   - cache: If set to FALSE, the JavaScript file is loaded anew on every page
  *     call; in other words, it is not cached. Used only when 'type' references
  *     a JavaScript file. Defaults to TRUE.
- *   - preprocess: Aggregate the JavaScript if the JavaScript optimization
- *     setting has been toggled in admin/config/development/performance. Note
- *     that JavaScript of type 'external' is not aggregated. Defaults to TRUE.
+ *   - preprocess: If TRUE and JavaScript aggregation is enabled, the script
+ *     file will be aggregated. Defaults to FALSE.
  *
  * @return
  *   The current array of JavaScript files, settings, and in-line code,
@@ -3712,7 +3728,7 @@ function drupal_js_defaults($data = NULL) {
     'scope' => 'header',
     'cache' => TRUE,
     'defer' => FALSE,
-    'preprocess' => TRUE,
+    'preprocess' => FALSE,
     'version' => NULL,
     'data' => $data,
   );

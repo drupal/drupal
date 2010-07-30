@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.352 2010/07/22 16:16:42 dries Exp $
+// $Id: search.module,v 1.353 2010/07/30 02:47:28 dries Exp $
 
 /**
  * @file
@@ -95,6 +95,13 @@ function search_help($path, $arg) {
 <li>Consider loosening your query with <em>OR</em>. <em>bike OR shed</em> will often show more results than <em>bike shed</em>.</li>
 </ul>');
   }
+}
+
+/**
+ * Implements hook_init().
+ */
+function search_init() {
+  drupal_add_css(drupal_get_path('module', 'search') . '/search.css', array('preprocess' => TRUE));
 }
 
 /**
@@ -875,9 +882,6 @@ function search_get_keys() {
  *   An HTML string containing the search form.
  */
 function search_form($form, &$form_state, $action = '', $keys = '', $type = NULL, $prompt = NULL) {
-  // Add CSS
-  drupal_add_css(drupal_get_path('module', 'search') . '/search.css', array('preprocess' => FALSE));
-
   if (!$action) {
     $action = 'search/' . $type;
   }

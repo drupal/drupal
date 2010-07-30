@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1187 2010/07/29 01:39:32 dries Exp $
+// $Id: user.module,v 1.1188 2010/07/30 02:47:28 dries Exp $
 
 /**
  * @file
@@ -1784,7 +1784,7 @@ function user_menu_site_status_alter(&$menu_site_status, $path) {
  * Implements hook_init().
  */
 function user_init() {
-  drupal_add_css(drupal_get_path('module', 'user') . '/user.css');
+  drupal_add_css(drupal_get_path('module', 'user') . '/user.css', array('preprocess' => TRUE));
 }
 
 /**

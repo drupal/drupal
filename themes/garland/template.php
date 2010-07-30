@@ -1,5 +1,5 @@
 <?php
-// $Id: template.php,v 1.40 2010/07/28 02:15:52 dries Exp $
+// $Id: template.php,v 1.41 2010/07/30 02:47:28 dries Exp $
 
 /**
  * Return a themed breadcrumb trail.
@@ -42,7 +42,7 @@ function garland_preprocess_html(&$vars) {
     $vars['classes_array'][] = 'fluid-width';
   }
   // Add conditional CSS for IE6.
-  drupal_add_css(path_to_theme() . '/fix-ie.css', array('weight' => CSS_THEME, 'browsers' => array('IE' => 'lt IE 7', '!IE' => FALSE), 'preprocess' => FALSE));
+  drupal_add_css(path_to_theme() . '/fix-ie.css', array('weight' => CSS_THEME, 'browsers' => array('IE' => 'lt IE 7', '!IE' => FALSE)));
 }
 
 /**

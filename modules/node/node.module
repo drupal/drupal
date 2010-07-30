@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1280 2010/07/16 02:37:06 dries Exp $
+// $Id: node.module,v 1.1281 2010/07/30 02:47:28 dries Exp $
 
 /**
  * @file
@@ -1998,7 +1998,7 @@ function _node_custom_theme() {
  * Implements hook_init().
  */
 function node_init() {
-  drupal_add_css(drupal_get_path('module', 'node') . '/node.css');
+  drupal_add_css(drupal_get_path('module', 'node') . '/node.css', array('preprocess' => TRUE));
 }
 
 function node_last_changed($nid) {

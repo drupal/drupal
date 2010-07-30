@@ -1,5 +1,5 @@
 <?php
-// $Id: image.admin.inc,v 1.20 2010/04/24 14:49:14 dries Exp $
+// $Id: image.admin.inc,v 1.21 2010/07/30 02:47:28 dries Exp $
 
 /**
  * @file
@@ -16,7 +16,7 @@ function image_style_list() {
   $page['image_style_list'] = array(
     '#markup' => theme('image_style_list', array('styles' => $styles)),
     '#attached' => array(
-      'css' => array(drupal_get_path('module', 'image') . '/image.admin.css' => array('preprocess' => FALSE)),
+      'css' => array(drupal_get_path('module', 'image') . '/image.admin.css' => array()),
     ),
   );
 
@@ -48,7 +48,7 @@ function image_style_form($form, &$form_state, $style) {
 
   $form_state['image_style'] = $style;
   $form['#tree'] = TRUE;
-  $form['#attached']['css'][drupal_get_path('module', 'image') . '/image.admin.css'] = array('preprocess' => FALSE);
+  $form['#attached']['css'][drupal_get_path('module', 'image') . '/image.admin.css'] = array();
 
   // Show the thumbnail preview.
   $form['preview'] = array(
@@ -383,7 +383,7 @@ function image_effect_form($form, &$form_state, $style, $effect) {
   }
 
   $form['#tree'] = TRUE;
-  $form['#attached']['css'][drupal_get_path('module', 'image') . '/image.admin.css'] = array('preprocess' => FALSE);
+  $form['#attached']['css'][drupal_get_path('module', 'image') . '/image.admin.css'] = array();
   if (function_exists($effect['form callback'])) {
     $form['data'] = call_user_func($effect['form callback'], $effect['data']);
   }

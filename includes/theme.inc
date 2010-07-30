@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.603 2010/07/25 02:45:27 dries Exp $
+// $Id: theme.inc,v 1.604 2010/07/30 02:47:27 dries Exp $
 
 /**
  * @file
@@ -164,7 +164,7 @@ function _drupal_theme_initialize($theme, $base_theme = array(), $registry_callb
   // And now add the stylesheets properly
   foreach ($final_stylesheets as $media => $stylesheets) {
     foreach ($stylesheets as $stylesheet) {
-      drupal_add_css($stylesheet, array('weight' => CSS_THEME, 'media' => $media));
+      drupal_add_css($stylesheet, array('weight' => CSS_THEME, 'media' => $media, 'preprocess' => TRUE));
     }
   }
 
@@ -189,7 +189,7 @@ function _drupal_theme_initialize($theme, $base_theme = array(), $registry_callb
 
   // Add scripts used by this theme.
   foreach ($final_scripts as $script) {
-    drupal_add_js($script, array('weight' => JS_THEME));
+    drupal_add_js($script, array('weight' => JS_THEME, 'preprocess' => TRUE));
   }
 
   $theme_engine = NULL;

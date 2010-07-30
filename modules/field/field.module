@@ -1,5 +1,5 @@
 <?php
-// $Id: field.module,v 1.76 2010/06/24 21:37:49 dries Exp $
+// $Id: field.module,v 1.77 2010/07/30 02:47:27 dries Exp $
 /**
  * @file
  * Attach custom data fields to Drupal entities.
@@ -163,6 +163,13 @@ function field_theme() {
       'render element' => 'element',
     ),
   );
+}
+
+/**
+ * Implements hook_init().
+ */
+function field_init() {
+  drupal_add_css(drupal_get_path('module', 'field') . '/theme/field.css', array('preprocess' => TRUE));
 }
 
 /**
@@ -811,7 +818,6 @@ function field_view_field($entity_type, $entity, $field_name, $display = array()
 
     if (isset($result[$field_name])) {
       $output = $result[$field_name];
-      $output['#attached']['css'][] = drupal_get_path('module', 'field') . '/theme/field.css';
     }
   }
 

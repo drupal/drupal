@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.885 2010/07/29 00:50:56 dries Exp $
+// $Id: comment.module,v 1.886 2010/07/30 02:47:27 dries Exp $
 
 /**
  * @file
@@ -287,6 +287,13 @@ function comment_menu() {
   );
 
   return $items;
+}
+
+/**
+ * Implements hook_init().
+ */
+function comment_init() {
+  drupal_add_css(drupal_get_path('module', 'comment') . '/comment.css', array('preprocess' => TRUE));
 }
 
 /**
@@ -716,7 +723,6 @@ function comment_node_page_additions($node) {
       $comments = comment_load_multiple($cids);
       comment_prepare_thread($comments);
       $build = comment_view_multiple($comments, $node);
-      $build['#attached']['css'][] = drupal_get_path('module', 'comment') . '/comment.css';
       $build['pager']['#theme'] = 'pager';
       $additions['comments'] = $build;
     }
