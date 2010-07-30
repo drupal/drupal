@@ -39,3 +39,4 @@ files[] = tests/unicode.test
 files[] = tests/update.test
 files[] = tests/xmlrpc.test
 files[] = tests/upgrade/upgrade.test
+files[] = tests/upgrade/upgrade.poll.test
