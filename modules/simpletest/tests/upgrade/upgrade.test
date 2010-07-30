@@ -1,5 +1,5 @@
 <?php
-// $Id: upgrade.test,v 1.2 2010/06/29 00:21:00 webchick Exp $
+// $Id: upgrade.test,v 1.3 2010/07/30 01:28:00 dries Exp $
 
 /**
  * Perform end-to-end tests of the upgrade path.
@@ -22,6 +22,11 @@ abstract class UpgradePathTestCase extends DrupalWebTestCase {
   var $upgradeErrors = array();
 
   /**
+   * Array of modules loaded when the test starts.
+   */
+  var $loadedModules = array();
+
+  /**
    * Override of DrupalWebTestCase::setUp() specialized for upgrade testing.
    */
   protected function setUp() {
@@ -30,6 +35,8 @@ abstract class UpgradePathTestCase extends DrupalWebTestCase {
     // Reset flags.
     $this->upgradedSite = FALSE;
     $this->upgradeErrors = array();
+
+    $this->loadedModules = module_list();
 
     // Generate a temporary prefixed database to ensure that tests have a clean starting point.
     $this->databasePrefix = 'simpletest' . mt_rand(1000, 1000000);
@@ -258,8 +265,14 @@ abstract class UpgradePathTestCase extends DrupalWebTestCase {
     // of the child site directly from this request.
     $this->upgradedSite = TRUE;
 
-    // Reload module list and implementations.
-    module_list(TRUE);
+    // Reload module list. For modules that are enabled in the test database,
+    // but not on the test client, we need to load the code here.
+    $new_modules = array_diff(module_list(TRUE), $this->loadedModules);
+    foreach ($new_modules as $module) {
+      drupal_load('module', $module);
+    }
+
+    // Reload hook implementations
     module_implements('', FALSE, TRUE);
 
     // Rebuild caches.
@@ -274,6 +287,24 @@ abstract class UpgradePathTestCase extends DrupalWebTestCase {
     $this->checkPermissions(array(), TRUE);
 
     return TRUE;
+  }
+
+  /**
+   * Force uninstall all modules from a test database, except those listed.
+   *
+   * @param $modules
+   *   The list of modules to keep installed. Required core modules will
+   *   always be kept.
+   */
+  protected function uninstallModulesExcept(array $modules) {
+    $required_modules = array('block', 'dblog', 'filter', 'node', 'system', 'update', 'user');
+
+    $modules = array_merge($required_modules, $modules);
+
+    db_delete('system')
+      ->condition('type', 'module')
+      ->condition('name', $modules, 'NOT IN')
+      ->execute();
   }
 
 }
