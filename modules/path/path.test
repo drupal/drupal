@@ -242,8 +242,8 @@ class PathLanguageTestCase extends DrupalWebTestCase {
     parent::setUp('path', 'locale', 'translation');
 
     // Create and login user.
-    $web_user = $this->drupalCreateUser(array('edit any page content', 'create page content', 'administer url aliases', 'create url aliases', 'administer languages', 'translate content', 'access administration pages'));
-    $this->drupalLogin($web_user);
+    $this->web_user = $this->drupalCreateUser(array('edit any page content', 'create page content', 'administer url aliases', 'create url aliases', 'administer languages', 'translate content', 'access administration pages'));
+    $this->drupalLogin($this->web_user);
 
     // Enable French language.
     $edit = array();
@@ -251,13 +251,9 @@ class PathLanguageTestCase extends DrupalWebTestCase {
 
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
 
-    // Set language negotiation to "Path prefix with fallback".
-    include_once DRUPAL_ROOT . '/includes/locale.inc';
-    variable_set('language_negotiation_' . LANGUAGE_TYPE_CONTENT, locale_language_negotiation_info());
-    variable_set('locale_language_negotiation_url_part', LOCALE_LANGUAGE_NEGOTIATION_URL_PREFIX);
-
-    // Force inclusion of language.inc.
-    drupal_language_initialize();
+    // Enable URL language detection and selection.
+    $edit = array('language[enabled][locale-url]' => 1);
+    $this->drupalPost('admin/config/regional/language/configure', $edit, t('Save settings'));
   }
 
   /**
@@ -268,26 +264,26 @@ class PathLanguageTestCase extends DrupalWebTestCase {
     variable_set('language_content_type_page', 2);
 
     $english_node = $this->drupalCreateNode(array('type' => 'page'));
+    $english_alias = $this->randomName();
 
     // Edit the node to set language and path.
     $edit = array();
     $edit['language'] = 'en';
-    $edit['path[alias]'] = $this->randomName();
+    $edit['path[alias]'] = $english_alias;
     $this->drupalPost('node/' . $english_node->nid . '/edit', $edit, t('Save'));
 
     // Confirm that the alias works.
-    $this->drupalGet($edit['path[alias]']);
+    $this->drupalGet($english_alias);
     $this->assertText($english_node->title, 'Alias works.');
 
     // Translate the node into French.
     $this->drupalGet('node/' . $english_node->nid . '/translate');
     $this->clickLink(t('add translation'));
     $edit = array();
-    $langcode = 'fr';
-    $edit["body[$langcode][0][value]"] = $this->randomName();
-    $langcode = LANGUAGE_NONE;
     $edit["title"] = $this->randomName();
-    $edit['path[alias]'] = $this->randomName();
+    $edit["body[fr][0][value]"] = $this->randomName();
+    $french_alias = $this->randomName();
+    $edit['path[alias]'] = $french_alias;
     $this->drupalPost(NULL, $edit, t('Save'));
 
     // Clear the path lookup cache.
@@ -306,6 +302,50 @@ class PathLanguageTestCase extends DrupalWebTestCase {
     $languages = language_list();
     $url = url('node/' . $french_node->nid, array('language' => $languages[$french_node->language]));
     $this->assertTrue(strpos($url, $edit['path[alias]']), t('URL contains the path alias.'));
+
+    // Confirm that the alias works even when changing language negotiation
+    // options. Enable User language detection and selection over URL one.
+    $edit = array(
+      'language[enabled][locale-user]' => 1,
+      'language[weight][locale-user]' => -9,
+      'language[enabled][locale-url]' => 1,
+      'language[weight][locale-url]' => -8,
+    );
+    $this->drupalPost('admin/config/regional/language/configure', $edit, t('Save settings'));
+
+    // Change user language preference.
+    $edit = array('language' => 'fr');
+    $this->drupalPost("user/{$this->web_user->uid}/edit", $edit, t('Save'));
+
+    // Check that the English alias works. In this situation French is the
+    // current UI and content language, while URL language is English (since we
+    // do not have a path prefix we fall back to the site's default language).
+    // We need to ensure that the user language preference is not taken into
+    // account while determining the path alias language, because if this
+    // happens we have no way to check that the path alias is valid: there is no
+    // path alias for French matching the english alias. So drupal_lookup_path()
+    // needs to use the URL language to check whether the alias is valid.
+    $this->drupalGet($english_alias);
+    $this->assertText($english_node->title, 'Alias for English translation works.');
+
+    // Check that the French alias works.
+    $this->drupalGet("fr/$french_alias");
+    $this->assertText($french_node->title, 'Alias for French translation works.');
+
+    // Disable URL language negotiation.
+    $edit = array('language[enabled][locale-url]' => FALSE);
+    $this->drupalPost('admin/config/regional/language/configure', $edit, t('Save settings'));
+
+    // Check that the English alias still works.
+    $this->drupalGet($english_alias);
+    $this->assertText($english_node->title, 'Alias for English translation works.');
+
+    // Check that the French alias is not available. We check the unprefixed
+    // alias because we disabled URL language negotiation above. In this
+    // situation only aliases in the default language and language neutral ones
+    // should keep working.
+    $this->drupalGet($french_alias);
+    $this->assertResponse(404, t('Alias for French translation is unavailable when URL language negotiation is disabled.'));
   }
 }
 
@@ -334,13 +374,9 @@ class PathLanguageUITestCase extends DrupalWebTestCase {
 
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
 
-    // Set language negotiation to "Path prefix with fallback".
-    include_once DRUPAL_ROOT . '/includes/locale.inc';
-    variable_set('language_negotiation_' . LANGUAGE_TYPE_CONTENT, locale_language_negotiation_info());
-    variable_set('locale_language_negotiation_url_part', LOCALE_LANGUAGE_NEGOTIATION_URL_PREFIX);
-
-    // Force inclusion of language.inc.
-    drupal_language_initialize();
+    // Enable URL language detection and selection.
+    $edit = array('language[enabled][locale-url]' => 1);
+    $this->drupalPost('admin/config/regional/language/configure', $edit, t('Save settings'));
   }
 
   /**

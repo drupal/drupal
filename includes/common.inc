@@ -1997,8 +1997,8 @@ function format_username($account) {
  *   - 'external': Whether the given path is an external URL.
  *   - 'language': An optional language object. If the path being linked to is
  *     internal to the site, $options['language'] is used to look up the alias
- *     for the URL. If $options['language'] is omitted, the global
- *     $language_content will be used.
+ *     for the URL. If $options['language'] is omitted, the global $language_url
+ *     will be used.
  *   - 'https': Whether this URL should point to a secure location. If not
  *     defined, the current scheme is used, so the user stays on http or https
  *     respectively. TRUE enforces HTTPS and FALSE enforces HTTP, but HTTPS can

@@ -1452,9 +1452,9 @@ class LocalePathFunctionalTest extends DrupalWebTestCase {
     );
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add custom language'));
 
-    // Set language negotiation.
-    drupal_load('module', 'locale');
-    variable_set('language_negotiation_' . LANGUAGE_TYPE_CONTENT, locale_language_negotiation_info());
+    // Enable URL language detection and selection.
+    $edit = array('language[enabled][locale-url]' => 1);
+    $this->drupalPost('admin/config/regional/language/configure', $edit, t('Save settings'));
 
     // Create a node.
     $node = $this->drupalCreateNode(array('type' => 'page'));
