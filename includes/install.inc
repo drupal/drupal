@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.139 2010/07/26 13:20:01 dries Exp $
+// $Id: install.inc,v 1.140 2010/07/30 01:59:14 dries Exp $
 
 /**
  * Indicates that a module has not been installed yet.
@@ -278,7 +278,7 @@ abstract class DatabaseTasks {
       'arguments'   => array(
         'CREATE TABLE drupal_install_test (id int NULL)',
         'Drupal can use CREATE TABLE database commands.',
-        'Failed to <strong>CREATE</strong> a test table on your %name database server with the command %query. %name reports the following message: %error.<p>Are you sure the configured username has the necessary %name permissions to create tables in the database?</p>',
+        'Failed to <strong>CREATE</strong> a test table on your database server with the command %query. The server reports the following message: %error.<p>Are you sure the configured username has the necessary permissions to create tables in the database?</p>',
         TRUE,
       ),
     ),
@@ -286,28 +286,28 @@ abstract class DatabaseTasks {
       'arguments'   => array(
         'INSERT INTO drupal_install_test (id) VALUES (1)',
         'Drupal can use INSERT database commands.',
-        'Failed to <strong>INSERT</strong> a value into a test table on your %name database server. We tried inserting a value with the command %query and %name reported the following error: %error.',
+        'Failed to <strong>INSERT</strong> a value into a test table on your database server. We tried inserting a value with the command %query and the server reported the following error: %error.',
       ),
     ),
     array(
       'arguments'   => array(
         'UPDATE drupal_install_test SET id = 2',
         'Drupal can use UPDATE database commands.',
-        'Failed to <strong>UPDATE</strong> a value in a test table on your %name database server. We tried updating a value with the command %query and %name reported the following error: %error.',
+        'Failed to <strong>UPDATE</strong> a value in a test table on your database server. We tried updating a value with the command %query and the server reported the following error: %error.',
       ),
     ),
     array(
       'arguments'   => array(
         'DELETE FROM drupal_install_test',
         'Drupal can use DELETE database commands.',
-        'Failed to <strong>DELETE</strong> a value from a test table on your %name database server. We tried deleting a value with the command %query and %name reported the following error: %error.',
+        'Failed to <strong>DELETE</strong> a value from a test table on your database server. We tried deleting a value with the command %query and the server reported the following error: %error.',
       ),
     ),
     array(
       'arguments'   => array(
         'DROP TABLE drupal_install_test',
         'Drupal can use DROP TABLE database commands.',
-        'Failed to <strong>DROP</strong> a test table from your %name database server. We tried dropping a table with the command %query and %name reported the following error %error.',
+        'Failed to <strong>DROP</strong> a test table from your database server. We tried dropping a table with the command %query and the server reported the following error %error.',
       ),
     ),
   );
@@ -394,7 +394,7 @@ abstract class DatabaseTasks {
       $this->pass('Drupal can CONNECT to the database ok.');
     }
     catch (Exception $e) {
-      $this->fail(st('Failed to connect to your %name database server. %name reports the following message: %error.<ul><li>Is the database server running?</li><li>Does the database exist, and have you entered the correct database name?</li><li>Have you entered the correct username and password?</li><li>Have you entered the correct database hostname?</li></ul>', array('%error' => $e->getMessage(), '%name' => $this->name())));
+      $this->fail(st('Failed to connect to your database server. The server reports the following message: %error.<ul><li>Is the database server running?</li><li>Does the database exist, and have you entered the correct database name?</li><li>Have you entered the correct username and password?</li><li>Have you entered the correct database hostname?</li></ul>', array('%error' => $e->getMessage())));
       return FALSE;
     }
     return TRUE;
