@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.module,v 1.91 2010/03/30 07:17:19 webchick Exp $
+// $Id: simpletest.module,v 1.92 2010/07/30 01:34:38 dries Exp $
 
 /**
  * @file
@@ -86,19 +86,6 @@ function simpletest_theme() {
     'simpletest_result_summary' => array(
       'render element' => 'form',
       'file' => 'simpletest.pages.inc',
-    ),
-  );
-}
-
-/**
- * Implements hook_stream_wrappers().
- */
-function simpletest_test_stream_wrappers() {
-  return array(
-    'simpletest' => array(
-      'name' => t('Simpletest files'),
-      'class' => 'DrupalSimpleTestStreamWrapper',
-      'description' => t('Stream Wrapper for Simpletest files.'),
     ),
   );
 }
