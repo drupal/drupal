@@ -91,19 +91,6 @@ function simpletest_theme() {
 }
 
 /**
- * Implements hook_stream_wrappers().
- */
-function simpletest_test_stream_wrappers() {
-  return array(
-    'simpletest' => array(
-      'name' => t('Simpletest files'),
-      'class' => 'DrupalSimpleTestStreamWrapper',
-      'description' => t('Stream Wrapper for Simpletest files.'),
-    ),
-  );
-}
-
-/**
  * Implements hook_js_alter().
  */
 function simpletest_js_alter(&$javascript) {
