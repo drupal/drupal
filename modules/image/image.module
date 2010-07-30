@@ -1,5 +1,5 @@
 <?php
-// $Id: image.module,v 1.43 2010/05/31 11:42:11 dries Exp $
+// $Id: image.module,v 1.44 2010/07/30 01:37:54 dries Exp $
 
 /**
  * @file
@@ -344,7 +344,7 @@ function image_image_default_styles() {
     'effects' => array(
       array(
         'name' => 'image_scale',
-        'data' => array('width' => 640, 'height' => 640, 'upscale' => 0),
+        'data' => array('width' => 480, 'height' => 480, 'upscale' => 0),
         'weight' => 0,
       ),
     )
