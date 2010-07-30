@@ -542,7 +542,6 @@ function field_attach_form($entity_type, $entity, &$form, &$form_state, $langcod
 
   // Add custom weight handling.
   list($id, $vid, $bundle) = entity_extract_ids($entity_type, $entity);
-  $form['#attached']['css'][] = drupal_get_path('module', 'field') . '/theme/field.css';
   $form['#pre_render'][] = '_field_extra_fields_pre_render';
   $form['#entity_type'] = $entity_type;
   $form['#bundle'] = $bundle;
@@ -1128,9 +1127,6 @@ function field_attach_view($entity_type, $entity, $view_mode, $langcode = NULL) 
   $output['#pre_render'][] = '_field_extra_fields_pre_render';
   $output['#entity_type'] = $entity_type;
   $output['#bundle'] = $bundle;
-
-  // Include CSS styles.
-  $output['#attached']['css'][] = drupal_get_path('module', 'field') . '/theme/field.css';
 
   // Let other modules alter the renderable array.
   $context = array(

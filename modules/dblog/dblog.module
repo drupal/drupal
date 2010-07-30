@@ -91,7 +91,7 @@ function dblog_menu() {
 function dblog_init() {
   if (arg(0) == 'admin' && arg(1) == 'reports') {
     // Add the CSS for this module
-    drupal_add_css(drupal_get_path('module', 'dblog') . '/dblog.css', array('preprocess' => FALSE));
+    drupal_add_css(drupal_get_path('module', 'dblog') . '/dblog.css');
   }
 }
 

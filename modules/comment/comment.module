@@ -290,6 +290,13 @@ function comment_menu() {
 }
 
 /**
+ * Implements hook_init().
+ */
+function comment_init() {
+  drupal_add_css(drupal_get_path('module', 'comment') . '/comment.css', array('preprocess' => TRUE));
+}
+
+/**
  * Implements hook_menu_alter().
  */
 function comment_menu_alter(&$items) {
@@ -716,7 +723,6 @@ function comment_node_page_additions($node) {
       $comments = comment_load_multiple($cids);
       comment_prepare_thread($comments);
       $build = comment_view_multiple($comments, $node);
-      $build['#attached']['css'][] = drupal_get_path('module', 'comment') . '/comment.css';
       $build['pager']['#theme'] = 'pager';
       $additions['comments'] = $build;
     }

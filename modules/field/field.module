@@ -166,6 +166,13 @@ function field_theme() {
 }
 
 /**
+ * Implements hook_init().
+ */
+function field_init() {
+  drupal_add_css(drupal_get_path('module', 'field') . '/theme/field.css', array('preprocess' => TRUE));
+}
+
+/**
  * Implements hook_cron().
  *
  * Purges some deleted Field API data, if any exists.
@@ -811,7 +818,6 @@ function field_view_field($entity_type, $entity, $field_name, $display = array()
 
     if (isset($result[$field_name])) {
       $output = $result[$field_name];
-      $output['#attached']['css'][] = drupal_get_path('module', 'field') . '/theme/field.css';
     }
   }
 

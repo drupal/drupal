@@ -1784,7 +1784,7 @@ function user_menu_site_status_alter(&$menu_site_status, $path) {
  * Implements hook_init().
  */
 function user_init() {
-  drupal_add_css(drupal_get_path('module', 'user') . '/user.css');
+  drupal_add_css(drupal_get_path('module', 'user') . '/user.css', array('preprocess' => TRUE));
 }
 
 /**

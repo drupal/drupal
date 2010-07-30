@@ -1066,6 +1066,7 @@ function system_library() {
     'js' => array(
       'misc/jquery.js' => array('weight' => JS_LIBRARY - 20),
     ),
+    'preprocess' => TRUE,
   );
 
   // jQuery Once.
@@ -1076,6 +1077,7 @@ function system_library() {
     'js' => array(
       'misc/jquery.once.js' => array('weight' => JS_LIBRARY - 19),
     ),
+    'preprocess' => TRUE,
   );
 
   // jQuery Form Plugin.
@@ -1120,7 +1122,7 @@ function system_library() {
       'misc/farbtastic/farbtastic.js' => array(),
     ),
     'css' => array(
-      'misc/farbtastic/farbtastic.css' => array('preprocess' => FALSE),
+      'misc/farbtastic/farbtastic.css' => array(),
     ),
   );
 
@@ -1816,14 +1818,15 @@ function _system_filetransfer_backend_form_common() {
  * Implements hook_init().
  */
 function system_init() {
+  $path = drupal_get_path('module', 'system');
   // Add the CSS for this module.
   if (arg(0) == 'admin' || (variable_get('node_admin_theme', '0') && arg(0) == 'node' && (arg(1) == 'add' || arg(2) == 'edit' || arg(2) == 'delete'))) {
-    drupal_add_css(drupal_get_path('module', 'system') . '/admin.css', array('weight' => CSS_SYSTEM));
+    drupal_add_css($path . '/admin.css', array('weight' => CSS_SYSTEM));
   }
-  drupal_add_css(drupal_get_path('module', 'system') . '/system.css', array('weight' => CSS_SYSTEM));
-  drupal_add_css(drupal_get_path('module', 'system') . '/system-behavior.css', array('weight' => CSS_SYSTEM));
-  drupal_add_css(drupal_get_path('module', 'system') . '/system-menus.css', array('weight' => CSS_SYSTEM));
-  drupal_add_css(drupal_get_path('module', 'system') . '/system-messages.css', array('weight' => CSS_SYSTEM));
+  drupal_add_css($path . '/system.css', array('weight' => CSS_SYSTEM, 'preprocess' => TRUE));
+  drupal_add_css($path . '/system-behavior.css', array('weight' => CSS_SYSTEM, 'preprocess' => TRUE));
+  drupal_add_css($path . '/system-menus.css', array('weight' => CSS_SYSTEM, 'preprocess' => TRUE));
+  drupal_add_css($path . '/system-messages.css', array('weight' => CSS_SYSTEM, 'preprocess' => TRUE));
 
 
   // Ignore slave database servers for this request.

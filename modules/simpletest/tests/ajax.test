@@ -53,7 +53,7 @@ class AJAXFrameworkTestCase extends AJAXTestCase {
    * Test behavior of ajax_render_error().
    */
   function testAJAXRenderError() {
-    $result = $this->drupalGetAJAX('ajax-test/render-error');
+    $result = $this->discardSettings($this->drupalGetAJAX('ajax-test/render-error'));
     // Verify default error message.
     $this->assertEqual($result[0]['command'], 'alert', t('ajax_render_error() invokes alert command.'));
     $this->assertEqual($result[0]['text'], t('An error occurred while handling the request: The server received invalid input.'), t('Default error message is output.'));
@@ -61,7 +61,7 @@ class AJAXFrameworkTestCase extends AJAXTestCase {
     $edit = array(
       'message' => 'Custom error message.',
     );
-    $result = $this->drupalGetAJAX('ajax-test/render-error', array('query' => $edit));
+    $result = $this->discardSettings($this->drupalGetAJAX('ajax-test/render-error', array('query' => $edit)));
     $this->assertEqual($result[0]['text'], $edit['message'], t('Custom error message is output.'));
   }
 }

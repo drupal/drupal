@@ -113,7 +113,7 @@ function tracker_page($account = NULL, $set_title = FALSE) {
     '#theme' => 'table',
     '#empty' => t('No content available.'),
     '#attached' => array(
-      'css' => array(drupal_get_path('module', 'tracker') . '/tracker.css' => array('preprocess' => FALSE)),
+      'css' => array(drupal_get_path('module', 'tracker') . '/tracker.css' => array()),
     ),
   );
   $page['pager'] = array(

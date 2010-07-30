@@ -286,7 +286,7 @@ function _aggregator_category_title($category) {
  * Implements hook_init().
  */
 function aggregator_init() {
-  drupal_add_css(drupal_get_path('module', 'aggregator') . '/aggregator.css');
+  drupal_add_css(drupal_get_path('module', 'aggregator') . '/aggregator.css', array('preprocess' => TRUE));
 }
 
 /**

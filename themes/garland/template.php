@@ -42,7 +42,7 @@ function garland_preprocess_html(&$vars) {
     $vars['classes_array'][] = 'fluid-width';
   }
   // Add conditional CSS for IE6.
-  drupal_add_css(path_to_theme() . '/fix-ie.css', array('weight' => CSS_THEME, 'browsers' => array('IE' => 'lt IE 7', '!IE' => FALSE), 'preprocess' => FALSE));
+  drupal_add_css(path_to_theme() . '/fix-ie.css', array('weight' => CSS_THEME, 'browsers' => array('IE' => 'lt IE 7', '!IE' => FALSE)));
 }
 
 /**

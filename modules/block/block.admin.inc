@@ -10,7 +10,7 @@
  * Menu callback for admin/structure/block/demo.
  */
 function block_admin_demo($theme = NULL) {
-  drupal_add_css(drupal_get_path('module', 'block') . '/block.css', array('preprocess' => FALSE));
+  drupal_add_css(drupal_get_path('module', 'block') . '/block.css');
   return '';
 }
 
@@ -53,7 +53,7 @@ function block_admin_display($theme = NULL) {
  */
 function block_admin_display_form($form, &$form_state, $blocks, $theme) {
 
-  drupal_add_css(drupal_get_path('module', 'block') . '/block.css', array('preprocess' => FALSE));
+  drupal_add_css(drupal_get_path('module', 'block') . '/block.css');
 
   $block_regions = system_region_list($theme, REGIONS_VISIBLE) + array(BLOCK_REGION_NONE => '<' . t('none') . '>');
 

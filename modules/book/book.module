@@ -222,7 +222,7 @@ function book_admin_paths() {
  * Implements hook_init().
  */
 function book_init() {
-  drupal_add_css(drupal_get_path('module', 'book') . '/book.css');
+  drupal_add_css(drupal_get_path('module', 'book') . '/book.css', array('preprocess' => TRUE));
 }
 
 /**
