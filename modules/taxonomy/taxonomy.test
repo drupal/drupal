@@ -451,6 +451,12 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
 
     $this->drupalGet('node/' . $node->nid);
     $this->assertText($term2->name, t('Term is displayed when viewing the node.'));
+
+    //Preview the node
+    $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Preview'));
+    $this->assertNoUniqueText($term2->name, t('Term is displayed when previewing the node.'));
+    $this->drupalPost(NULL, NULL, t('Preview'));
+    $this->assertNoUniqueText($term2->name, t('Term is displayed when previewing the node again.'));
   }
 
   /**
