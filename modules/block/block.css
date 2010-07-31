@@ -1,4 +1,4 @@
-/* $Id: block.css,v 1.7 2009/10/05 02:43:01 webchick Exp $ */
+/* $Id: block.css,v 1.8 2010/07/31 12:54:58 webchick Exp $ */
 
 #blocks tr.region-title td {
   font-weight: bold;
@@ -15,4 +15,23 @@
   margin-top: 4px;
   margin-bottom: 4px;
   padding: 3px;
+}
+a.block-demo-backlink,
+a.block-demo-backlink:link,
+a.block-demo-backlink:visited {
+  background-color: #B4D7F0;
+  border-radius: 0 0 10px 10px;
+  -moz-border-radius: 0 0 10px 10px;
+  -webkit-border-radius: 0 0 10px 10px;
+  color: #000;
+  font-family: "Lucida Grande", Verdana, sans-serif;
+  font-size: small;
+  line-height: 20px;
+  left: 20px; /*LTR*/
+  padding: 5px 10px;
+  position: fixed;
+  z-index: 499;
+}
+a.block-demo-backlink:hover {
+  text-decoration: underline;
 }

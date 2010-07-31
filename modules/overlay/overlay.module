@@ -1,5 +1,5 @@
 <?php
-// $Id: overlay.module,v 1.27 2010/07/28 02:50:00 dries Exp $
+// $Id: overlay.module,v 1.28 2010/07/31 12:54:59 webchick Exp $
 
 /**
  * @file
@@ -542,7 +542,6 @@ function overlay_set_mode($mode = NULL) {
   switch ($overlay_mode) {
     case 'parent':
       drupal_add_library('overlay', 'parent');
-      drupal_add_library('overlay', 'jquery-bbq');
 
       // Allow modules to act upon overlay events.
       module_invoke_all('overlay_parent_initialize');
