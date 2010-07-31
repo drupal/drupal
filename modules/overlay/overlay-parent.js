@@ -481,7 +481,12 @@ Drupal.overlay.eventhandlerOverrideLink = function (event) {
     }
     // Open admin links in the overlay.
     else if (this.isAdminLink(href)) {
-      href = this.fragmentizeLink($target.get(0));
+      // If the link contains the overlay-restore class and the overlay-context
+      // state is set, also update the parent window's location.
+      var parentLocation = ($target.hasClass('overlay-restore') && typeof $.bbq.getState('overlay-context') == 'string')
+        ? Drupal.settings.basePath + $.bbq.getState('overlay-context')
+        : null;
+      href = this.fragmentizeLink($target.get(0), parentLocation);
       // Only override default behavior when left-clicking and user is not
       // pressing the ALT, CTRL, META (Command key on the Macintosh keyboard)
       // or SHIFT key.
@@ -513,6 +518,10 @@ Drupal.overlay.eventhandlerOverrideLink = function (event) {
         }
       }
       else {
+        // Add the overlay-context state to the link, so "overlay-restore" links
+        // can restore the context.
+        $target.attr('href', $.param.fragment(href, { 'overlay-context': this.getPath(window.location) + window.location.search }));
+
         // When the link has a destination query parameter and that destination
         // is an admin link we need to fragmentize it. This will make it reopen
         // in the overlay.
@@ -666,12 +675,14 @@ Drupal.overlay.eventhandlerDispatchEvent = function (event) {
  *
  * @param link
  *   A Javascript Link object (i.e. an <a> element).
+ * @param parentLocation
+ *   (optional) URL to override the parent window's location with.
  *
  * @return
  *   A URL that will trigger the overlay (in the form
  *   /node/1#overlay=admin/config).
  */
-Drupal.overlay.fragmentizeLink = function (link) {
+Drupal.overlay.fragmentizeLink = function (link, parentLocation) {
   // Don't operate on links that are already overlay-ready.
   var params = $.deparam.fragment(link.href);
   if (params.overlay) {
@@ -687,7 +698,7 @@ Drupal.overlay.fragmentizeLink = function (link) {
   var destination = path + link.search.replace(/&?render=overlay/, '').replace(/\?$/, '') + link.hash;
 
   // Assemble and return the overlay-ready link.
-  return $.param.fragment(window.location.href, { overlay: destination });
+  return $.param.fragment(parentLocation || window.location.href, { overlay: destination });
 };
 
 /**

@@ -294,6 +294,15 @@ function block_page_build(&$page) {
           '#weight' => 15,
         );
       }
+      $page['page_top']['backlink'] = array(
+        '#type' => 'link',
+        '#title' => t('Exit block region demonstration'),
+        '#href' => 'admin/structure/block/list' . (variable_get('theme_default', 'garland') == $theme ? '' : '/' . $theme),
+        // Add the "overlay-restore" class to indicate this link should restore
+        // the context in which the region demonstration page was opened.
+        '#options' => array('attributes' => array('class' => array('block-demo-backlink', 'overlay-restore'))),
+        '#weight' => -10,
+      );
     }
   }
 }
@@ -978,6 +987,18 @@ function block_form_system_performance_settings_alter(&$form, &$form_state) {
     '#description' => $disabled ? t('Block caching is inactive because you have enabled modules defining content access restrictions.') : NULL,
     '#weight' => -1,
   );
+}
+
+/**
+ * Implements hook_admin_paths().
+ */
+function block_admin_paths() {
+  $paths = array(
+    // Exclude the block demonstration page from admin (overlay) treatment.
+    // This allows us to present this page in its true form, full page.
+    'admin/structure/block/demo/*' => FALSE,
+  );
+  return $paths;
 }
 
 /**
