@@ -735,7 +735,9 @@ Drupal.overlay.resetActiveClass = function(activePath) {
     var linkDomain = this.protocol + this.hostname;
     var linkPath = self.getPath(this);
 
-    if (linkDomain == windowDomain && activePath.indexOf(linkPath) === 0) {
+    // A link matches if it is part of the active trail of activePath, except
+    // for frontpage links.
+    if (linkDomain == windowDomain && (activePath + '/').indexOf(linkPath + '/') === 0 && (linkPath !== '' || activePath === '')) {
       $(this).addClass('active');
     }
   });
