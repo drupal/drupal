@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.140 2010/07/30 01:59:14 dries Exp $
+// $Id: install.inc,v 1.141 2010/07/31 12:29:31 webchick Exp $
 
 /**
  * Indicates that a module has not been installed yet.
@@ -237,7 +237,9 @@ function drupal_detect_database_types() {
   require_once DRUPAL_ROOT . '/includes/database/database.inc';
   spl_autoload_register('db_autoload');
   foreach (file_scan_directory(DRUPAL_ROOT . '/includes/database', '/^[a-z]*$/i', array('recurse' => FALSE)) as $file) {
-    $drivers[$file->filename] = $file->uri;
+    if (file_exists($file->uri . '/database.inc') && file_exists($file->uri . '/install.inc')) {
+      $drivers[$file->filename] = $file->uri;
+    }
   }
 
   foreach ($drivers as $driver => $file) {
