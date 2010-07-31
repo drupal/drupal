@@ -593,29 +593,25 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
     drupal_static_reset('taxonomy_get_treeterms');
     list($term1, $term2, $term3) = taxonomy_get_tree($this->vocabulary->vid);
 
-    // Change the order to term2, term3, term1. Emulate the reordering done by
-    // tabledrag.js by changing the page HTML source. Each term has three hidden
-    // fields, "tid:1:0[tid]", "tid:1:0[parent]", and "tid:1:0[depth]". The
-    // order of the input fields in the page is used when the form is processed.
     $this->drupalGet('admin/structure/taxonomy/' . $this->vocabulary->machine_name);
-    $reorder = array(
-      'tid:' . $term1->tid . ':0' => 'tid:' . $term2->tid . ':0',
-      'tid:' . $term2->tid . ':0' => 'tid:' . $term3->tid . ':0',
-      'tid:' . $term3->tid . ':0' => 'tid:' . $term1->tid . ':0',
-      );
-    $this->drupalSetContent(strtr($this->drupalGetContent(), $reorder));
 
-    // Make term3 a child of term2, and update all hidden fields.
+    // Each term has four hidden fields, "tid:1:0[tid]", "tid:1:0[parent]",
+    // "tid:1:0[depth]", and "tid:1:0[weight]". Change the order to term2,
+    // term3, term1 by setting weight property, make term3 a child of term2 by
+    // setting the parent and depth properties, and update all hidden fields.
     $edit = array(
       'tid:' . $term2->tid . ':0[tid]' => $term2->tid,
       'tid:' . $term2->tid . ':0[parent]' => 0,
       'tid:' . $term2->tid . ':0[depth]' => 0,
+      'tid:' . $term2->tid . ':0[weight]' => 0,
       'tid:' . $term3->tid . ':0[tid]' => $term3->tid,
       'tid:' . $term3->tid . ':0[parent]' => $term2->tid,
       'tid:' . $term3->tid . ':0[depth]' => 1,
+      'tid:' . $term3->tid . ':0[weight]' => 1,
       'tid:' . $term1->tid . ':0[tid]' => $term1->tid,
       'tid:' . $term1->tid . ':0[parent]' => 0,
       'tid:' . $term1->tid . ':0[depth]' => 0,
+      'tid:' . $term1->tid . ':0[weight]' => 2,
     );
     $this->drupalPost(NULL, $edit, t('Save'));
 
