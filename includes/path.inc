@@ -1,5 +1,5 @@
 <?php
-// $Id: path.inc,v 1.69 2010/07/30 01:52:54 dries Exp $
+// $Id: path.inc,v 1.70 2010/07/31 04:10:30 dries Exp $
 
 /**
  * @file
@@ -131,6 +131,7 @@ function drupal_lookup_path($action, $path = '', $path_language = NULL) {
     // isn't a path that has this alias
     elseif ($action == 'source' && !isset($cache['no_source'][$path_language][$path])) {
       // Look for the value $path within the cached $map
+      $source = FALSE;
       if (!isset($cache['map'][$path_language]) || !($source = array_search($path, $cache['map'][$path_language]))) {
         // Get the most fitting result falling back with alias without language
         if ($source = db_query("SELECT source FROM {url_alias} WHERE alias = :alias AND language IN (:language, :language_none) ORDER BY language DESC, pid DESC", array(
@@ -139,7 +140,6 @@ function drupal_lookup_path($action, $path = '', $path_language = NULL) {
                      ':language_none' => LANGUAGE_NONE))
             ->fetchField()) {
           $cache['map'][$path_language][$source] = $path;
-          return $source;
         }
         else {
           // We can't record anything into $map because we do not have a valid
@@ -148,6 +148,7 @@ function drupal_lookup_path($action, $path = '', $path_language = NULL) {
           $cache['no_source'][$path_language][$path] = TRUE;
         }
       }
+      return $source;
     }
   }
 

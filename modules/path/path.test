@@ -1,5 +1,5 @@
 <?php
-// $Id: path.test,v 1.36 2010/07/30 01:52:54 dries Exp $
+// $Id: path.test,v 1.37 2010/07/31 04:10:30 dries Exp $
 
 /**
  * @file
@@ -346,6 +346,22 @@ class PathLanguageTestCase extends DrupalWebTestCase {
     // should keep working.
     $this->drupalGet($french_alias);
     $this->assertResponse(404, t('Alias for French translation is unavailable when URL language negotiation is disabled.'));
+
+    // drupal_lookup_path() has an internal static cache. Check to see that
+    // it has the appropriate contents at this point.
+    drupal_lookup_path('wipe');
+    $french_node_path = drupal_lookup_path('source', $french_alias, $french_node->language);
+    $this->assertEqual($french_node_path, 'node/' . $french_node->nid, t('Normal path works.'));
+    // Second call should return the same path.
+    $french_node_path = drupal_lookup_path('source', $french_alias, $french_node->language);
+    $this->assertEqual($french_node_path, 'node/' . $french_node->nid, t('Normal path is the same.'));
+
+    // Confirm that the alias works.
+    $french_node_alias = drupal_lookup_path('alias', 'node/' . $french_node->nid, $french_node->language);
+    $this->assertEqual($french_node_alias, $french_alias, t('Alias works.'));
+    // Second call should return the same alias.
+    $french_node_alias = drupal_lookup_path('alias', 'node/' . $french_node->nid, $french_node->language);
+    $this->assertEqual($french_node_alias, $french_alias, t('Alias is the same.'));
   }
 }
 
