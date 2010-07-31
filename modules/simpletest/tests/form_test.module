@@ -882,6 +882,64 @@ function _form_test_disabled_elements($form, &$form_state) {
     );
   }
 
+  // Text format.
+  $form['text_format'] = array(
+    '#type' => 'text_format',
+    '#title' => 'Text format',
+    '#disabled' => TRUE,
+    '#default_value' => 'Text value',
+    '#format' => 1,
+    '#expected_value' => array(
+      'value' => 'Text value',
+      'format' => 1,
+    ),
+    '#test_hijack_value' => array(
+      'value' => 'HIJACK',
+      'format' => 2,
+    ),
+  );
+
+  // Password fields.
+  $form['password'] = array(
+    '#type' => 'password',
+    '#title' => 'Password',
+    '#disabled' => TRUE,
+  );
+  $form['password_confirm'] = array(
+    '#type' => 'password_confirm',
+    '#title' => 'Password confirm',
+    '#disabled' => TRUE,
+  );
+
+  // Files.
+  $form['file'] = array(
+    '#type' => 'file',
+    '#title' => 'File',
+    '#disabled' => TRUE,
+  );
+  $form['managed_file'] = array(
+    '#type' => 'managed_file',
+    '#title' => 'Managed file',
+    '#disabled' => TRUE,
+  );
+
+  // Buttons.
+  $form['image_button'] = array(
+    '#type' => 'image_button',
+    '#value' => 'Image button',
+    '#disabled' => TRUE,
+  );
+  $form['button'] = array(
+    '#type' => 'button',
+    '#value' => 'Button',
+    '#disabled' => TRUE,
+  );
+  $form['submit_disabled'] = array(
+    '#type' => 'submit',
+    '#value' => 'Submit',
+    '#disabled' => TRUE,
+  );
+
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Submit'),
