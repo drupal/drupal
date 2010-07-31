@@ -237,7 +237,9 @@ function drupal_detect_database_types() {
   require_once DRUPAL_ROOT . '/includes/database/database.inc';
   spl_autoload_register('db_autoload');
   foreach (file_scan_directory(DRUPAL_ROOT . '/includes/database', '/^[a-z]*$/i', array('recurse' => FALSE)) as $file) {
-    $drivers[$file->filename] = $file->uri;
+    if (file_exists($file->uri . '/database.inc') && file_exists($file->uri . '/install.inc')) {
+      $drivers[$file->filename] = $file->uri;
+    }
   }
 
   foreach ($drivers as $driver => $file) {
