@@ -1,4 +1,4 @@
-// $Id: overlay-parent.js,v 1.51 2010/07/27 13:47:31 dries Exp $
+// $Id: overlay-parent.js,v 1.52 2010/07/31 11:55:31 dries Exp $
 
 (function ($) {
 
@@ -735,7 +735,9 @@ Drupal.overlay.resetActiveClass = function(activePath) {
     var linkDomain = this.protocol + this.hostname;
     var linkPath = self.getPath(this);
 
-    if (linkDomain == windowDomain && activePath.indexOf(linkPath) === 0) {
+    // A link matches if it is part of the active trail of activePath, except
+    // for frontpage links.
+    if (linkDomain == windowDomain && (activePath + '/').indexOf(linkPath + '/') === 0 && (linkPath !== '' || activePath === '')) {
       $(this).addClass('active');
     }
   });
