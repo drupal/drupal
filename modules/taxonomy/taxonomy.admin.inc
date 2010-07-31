@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.admin.inc,v 1.106 2010/06/17 13:44:45 dries Exp $
+// $Id: taxonomy.admin.inc,v 1.107 2010/07/31 13:01:50 webchick Exp $
 
 /**
  * @file
@@ -284,6 +284,7 @@ function taxonomy_overview_terms($form, &$form_state, $vocabulary) {
   // An array of the terms to be displayed on this page.
   $current_page = array();
 
+  $delta = 0;
   $term_deltas = array();
   $tree = taxonomy_get_tree($vocabulary->vid);
   $term = current($tree);
@@ -292,6 +293,7 @@ function taxonomy_overview_terms($form, &$form_state, $vocabulary) {
     if (empty($term)) {
       break;
     }
+    $delta++;
     // Count entries before the current page.
     if ($page && ($page * $page_increment) > $before_entries && !isset($back_step)) {
       $before_entries++;
@@ -392,6 +394,13 @@ function taxonomy_overview_terms($form, &$form_state, $vocabulary) {
         // Same as above, the depth is modified by javascript, so it's a default_value.
         '#default_value' => $term->depth,
       );
+      $form[$key]['weight'] = array(
+        '#type' => 'weight',
+        '#delta' => $delta,
+        '#title_display' => 'invisible',
+        '#title' => t('Weight for added term'),
+        '#default_value' => $term->weight,
+      );
     }
     $form[$key]['edit'] = array('#type' => 'link', '#title' => t('edit'), '#href' => 'taxonomy/term/' . $term->tid . '/edit', '#options' => array('query' => drupal_get_destination()));
   }
@@ -446,8 +455,8 @@ function taxonomy_overview_terms_submit($form, &$form_state) {
     return;
   }
 
-  $order = array_flip(array_keys($form_state['input'])); // Get the $_POST order.
-  $form_state['values'] = array_merge($order, $form_state['values']); // Update our original form with the new order.
+  // Sort term order based on weight.
+  uasort($form_state['values'], 'drupal_sort_weight');
 
   $vocabulary = $form['#vocabulary'];
   $hierarchy = 0; // Update the current hierarchy type as we go.
@@ -562,6 +571,7 @@ function theme_taxonomy_overview_terms($variables) {
     drupal_add_js(array('taxonomy' => array('backStep' => $back_step, 'forwardStep' => $forward_step)), 'setting');
     drupal_add_css(drupal_get_path('module', 'taxonomy') . '/taxonomy.css');
   }
+  drupal_add_tabledrag('taxonomy', 'order', 'sibling', 'term-weight');
 
   $errors = form_get_errors() != FALSE ? form_get_errors() : array();
   $rows = array();
@@ -577,8 +587,9 @@ function theme_taxonomy_overview_terms($variables) {
         $term['depth']['#attributes']['class'] = array('term-depth');
         $row[0] .= drupal_render($term['parent']) . drupal_render($term['tid']) . drupal_render($term['depth']);
       }
+      $term['weight']['#attributes']['class'] = array('term-weight');
+      $row[] = drupal_render($term['weight']);
       $row[] = drupal_render($term['edit']);
-
       $row = array('data' => $row);
       $rows[$key] = $row;
     }
@@ -619,7 +630,7 @@ function theme_taxonomy_overview_terms($variables) {
     $rows[] = array(array('data' => $form['#empty_text'], 'colspan' => '2'));
   }
 
-  $header = array(t('Name'), t('Operations'));
+  $header = array(t('Name'), t('Weight'), t('Operations'));
   $output = theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('id' => 'taxonomy')));
   $output .= drupal_render_children($form);
   $output .= theme('pager', array('tags' => NULL));
