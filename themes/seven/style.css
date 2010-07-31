@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.59 2010/07/18 01:36:06 dries Exp $ */
+/* $Id: style.css,v 1.60 2010/07/31 04:01:51 dries Exp $ */
 
 /**
  * Generic elements.
@@ -627,6 +627,13 @@ div.teaser-checkbox .form-item,
 .form-item label.option input {
   vertical-align: middle;
 }
+.form-disabled input.form-autocomplete,
+.form-disabled input.form-text,
+.form-disabled textarea.form-textarea,
+.form-disabled select.form-select {
+  background-color: #eee;
+  color: #777;
+}
 
 /* Filter */
 .filter-wrapper {
@@ -698,6 +705,13 @@ input.form-submit:active {
   color: #fff;
   border-color: #555;
   text-shadow: #222 0px -1px 0px;
+}
+input.form-button-disabled,
+input.form-button-disabled:active {
+  background: #eee none;
+  border-color: #eee;
+  text-shadow: none;
+  color: #999;
 }
 form input#edit-delete {
   background: #eee;

@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.480 2010/07/29 00:46:09 dries Exp $
+// $Id: form.inc,v 1.481 2010/07/31 04:01:51 dries Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -2368,15 +2368,16 @@ function theme_fieldset($variables) {
  */
 function theme_radio($variables) {
   $element = $variables['element'];
+  $element['#attributes']['type'] = 'radio';
+  $element['#attributes']['name'] = $element['#name'];
+  $element['#attributes']['id'] = $element['#id'];
+  $element['#attributes']['value'] = $element['#return_value'];
+  if (check_plain($element['#value']) == $element['#return_value']) {
+    $element['#attributes']['checked'] = 'checked';
+  }
   _form_set_class($element, array('form-radio'));
-  $output = '<input type="radio" ';
-  $output .= 'id="' . $element['#id'] . '" ';
-  $output .= 'name="' . $element['#name'] . '" ';
-  $output .= 'value="' . $element['#return_value'] . '" ';
-  $output .= (check_plain($element['#value']) == $element['#return_value']) ? ' checked="checked" ' : ' ';
-  $output .= drupal_attributes($element['#attributes']) . ' />';
 
-  return $output;
+  return '<input' . drupal_attributes($element['#attributes']) . ' />';
 }
 
 /**
@@ -2602,19 +2603,17 @@ function form_process_radios($element) {
 function theme_checkbox($variables) {
   $element = $variables['element'];
   $t = get_t();
-  _form_set_class($element, array('form-checkbox'));
-  $checkbox = '<input ';
-  $checkbox .= 'type="checkbox" ';
-  $checkbox .= 'name="' . $element['#name'] . '" ';
-  $checkbox .= 'id="' . $element['#id'] . '" ' ;
-  $checkbox .= 'value="' . $element['#return_value'] . '" ';
+  $element['#attributes']['type'] = 'checkbox';
+  $element['#attributes']['name'] = $element['#name'];
+  $element['#attributes']['id'] = $element['#id'];
+  $element['#attributes']['value'] = $element['#return_value'];
   // Unchecked checkbox has #value of integer 0.
   if ($element['#value'] !== 0 && $element['#value'] == $element['#return_value']) {
-    $checkbox .= 'checked="checked" ';
+    $element['#attributes']['checked'] = 'checked';
   }
-  $checkbox .= drupal_attributes($element['#attributes']) . ' />';
+  _form_set_class($element, array('form-checkbox'));
 
-  return $checkbox;
+  return '<input' . drupal_attributes($element['#attributes']) . ' />';
 }
 
 /**
@@ -3057,9 +3056,18 @@ function theme_submit($variables) {
  */
 function theme_button($variables) {
   $element = $variables['element'];
+  $element['#attributes']['type'] = 'submit';
+  if (!empty($element['#name'])) {
+    $element['#attributes']['name'] = $element['#name'];
+  }
+  $element['#attributes']['id'] = $element['#id'];
+  $element['#attributes']['value'] = $element['#value'];
   $element['#attributes']['class'][] = 'form-' . $element['#button_type'];
+  if (!empty($element['#attributes']['disabled'])) {
+    $element['#attributes']['class'][] = 'form-button-disabled';
+  }
 
-  return '<input type="submit" ' . (empty($element['#name']) ? '' : 'name="' . $element['#name'] . '" ') . 'id="' . $element['#id'] . '" value="' . check_plain($element['#value']) . '" ' . drupal_attributes($element['#attributes']) . " />\n";
+  return '<input' . drupal_attributes($element['#attributes']) . ' />';
 }
 
 /**
@@ -3074,15 +3082,24 @@ function theme_button($variables) {
  */
 function theme_image_button($variables) {
   $element = $variables['element'];
-  $element['#attributes']['class'][] = 'form-' . $element['#button_type'];
+  $element['#attributes']['type'] = 'submit';
+  $element['#attributes']['name'] = $element['#name'];
+  if (!empty($element['#value'])) {
+    $element['#attributes']['value'] = $element['#value'];
+  }
+  $element['#attributes']['id'] = $element['#id'];
+  $element['#attributes']['src'] = file_create_url($element['#src']);
+  if (!empty($element['#title'])) {
+    $element['#attributes']['alt'] = $element['#title'];
+    $element['#attributes']['title'] = $element['#title'];
+  }
 
-  return '<input type="image" name="' . $element['#name'] . '" ' .
-    (!empty($element['#value']) ? ('value="' . check_plain($element['#value']) . '" ') : '') .
-    'id="' . $element['#id'] . '" ' .
-    drupal_attributes($element['#attributes']) .
-    ' src="' . file_create_url($element['#src']) . '" ' .
-    (!empty($element['#title']) ? 'alt="' . check_plain($element['#title']) . '" title="' . check_plain($element['#title']) . '" ' : '' ) .
-    "/>\n";
+  $element['#attributes']['class'][] = 'form-' . $element['#button_type'];
+  if (!empty($element['#attributes']['disabled'])) {
+    $element['#attributes']['class'][] = 'form-button-disabled';
+  }
+
+  return '<input' . drupal_attributes($element['#attributes']) . ' />';
 }
 
 /**
@@ -3097,7 +3114,11 @@ function theme_image_button($variables) {
  */
 function theme_hidden($variables) {
   $element = $variables['element'];
-  return '<input type="hidden" name="' . $element['#name'] . '" id="' . $element['#id'] . '" value="' . check_plain($element['#value']) . "\" " . drupal_attributes($element['#attributes']) . " />\n";
+  $element['#attributes']['type'] = 'hidden';
+  $element['#attributes']['name'] = $element['#name'];
+  $element['#attributes']['id'] = $element['#id'];
+  $element['#attributes']['value'] = $element['#value'];
+  return '<input' . drupal_attributes($element['#attributes']) . " />\n";
 }
 
 /**
@@ -3113,20 +3134,33 @@ function theme_hidden($variables) {
  */
 function theme_textfield($variables) {
   $element = $variables['element'];
-  $size = empty($element['#size']) ? '' : ' size="' . $element['#size'] . '"';
-  $maxlength = empty($element['#maxlength']) ? '' : ' maxlength="' . $element['#maxlength'] . '"';
-  $class = array('form-text');
-  $extra = '';
-  $output = '';
+  $element['#attributes']['type'] = 'text';
+  $element['#attributes']['name'] = $element['#name'];
+  $element['#attributes']['id'] = $element['#id'];
+  $element['#attributes']['value'] = $element['#value'];
+  if (!empty($element['#size'])) {
+    $element['#attributes']['size'] = $element['#size'];
+  }
+  if (!empty($element['#maxlength'])) {
+    $element['#attributes']['maxlength'] = $element['#maxlength'];
+  }
+  _form_set_class($element, array('form-text'));
 
+  $extra = '';
   if ($element['#autocomplete_path'] && drupal_valid_path($element['#autocomplete_path'])) {
     drupal_add_js('misc/autocomplete.js');
-    $class[] = 'form-autocomplete';
-    $extra =  '<input class="autocomplete" type="hidden" id="' . $element['#id'] . '-autocomplete" value="' . check_url(url($element['#autocomplete_path'], array('absolute' => TRUE))) . '" disabled="disabled" />';
-  }
-  _form_set_class($element, $class);
+    $element['#attributes']['class'][] = 'form-autocomplete';
 
-  $output .= '<input type="text"' . $maxlength . ' name="' . $element['#name'] . '" id="' . $element['#id'] . '"' . $size . ' value="' . check_plain($element['#value']) . '"' . drupal_attributes($element['#attributes']) . ' />';
+    $attributes = array();
+    $attributes['type'] = 'hidden';
+    $attributes['id'] = $element['#id'] . '-autocomplete';
+    $attributes['value'] = url($element['#autocomplete_path'], array('absolute' => TRUE));
+    $attributes['disabled'] = 'disabled';
+    $attributes['class'][] = 'autocomplete';
+    $extra = '<input' . drupal_attributes($attributes) . ' />';
+  }
+
+  $output = '<input' . drupal_attributes($element['#attributes']) . ' />';
 
   return $output . $extra;
 }
@@ -3143,14 +3177,16 @@ function theme_textfield($variables) {
  */
 function theme_form($variables) {
   $element = $variables['element'];
-  // Anonymous div to satisfy XHTML compliance.
-  $action = $element['#action'] ? 'action="' . check_url($element['#action']) . '" ' : '';
-
+  if (!empty($element['#action'])) {
+    $element['#attributes']['action'] = drupal_strip_dangerous_protocols($element['#action']);
+  }
+  $element['#attributes']['method'] = $element['#method'];
   if (empty($element['#attributes']['accept-charset'])) {
     $element['#attributes']['accept-charset'] = "UTF-8";
   }
-
-  return '<form '. $action .' method="'. $element['#method'] .'" id="'. $element['#id'] .'"'. drupal_attributes($element['#attributes']) .">\n<div>". $element['#children'] ."\n</div></form>\n";
+  $element['#attributes']['id'] = $element['#id'];
+  // Anonymous DIV to satisfy XHTML compliance.
+  return '<form' . drupal_attributes($element['#attributes']) . '><div>' . $element['#children'] . '</div></form>';
 }
 
 /**
@@ -3166,10 +3202,16 @@ function theme_form($variables) {
  */
 function theme_textarea($variables) {
   $element = $variables['element'];
+  $element['#attributes']['name'] = $element['#name'];
+  $element['#attributes']['id'] = $element['#id'];
+  $element['#attributes']['value'] = $element['#value'];
+  $element['#attributes']['cols'] = $element['#cols'];
+  $element['#attributes']['rows'] = $element['#rows'];
+  _form_set_class($element, array('form-textarea'));
+
   $wrapper_attributes = array(
     'class' => array('form-textarea-wrapper'),
   );
-  $class = array('form-textarea');
 
   // Add resizable behavior.
   if (!empty($element['#resizable'])) {
@@ -3178,10 +3220,7 @@ function theme_textarea($variables) {
   }
 
   $output = '<div' . drupal_attributes($wrapper_attributes) . '>';
-
-  _form_set_class($element, $class);
-  $output .= '<textarea cols="' . $element['#cols'] . '" rows="' . $element['#rows'] . '" name="' . $element['#name'] . '" id="' . $element['#id'] . '" ' . drupal_attributes($element['#attributes']) . '>' . check_plain($element['#value']) . '</textarea>';
-
+  $output .= '<textarea' . drupal_attributes($element['#attributes']) . '>' . check_plain($element['#value']) . '</textarea>';
   $output .= '</div>';
   return $output;
 }
@@ -3199,12 +3238,19 @@ function theme_textarea($variables) {
  */
 function theme_password($variables) {
   $element = $variables['element'];
-  $size = $element['#size'] ? ' size="' . $element['#size'] . '" ' : '';
-  $maxlength = $element['#maxlength'] ? ' maxlength="' . $element['#maxlength'] . '" ' : '';
-
+  $element['#attributes']['type'] = 'password';
+  $element['#attributes']['name'] = $element['#name'];
+  $element['#attributes']['id'] = $element['#id'];
+  $element['#attributes']['value'] = $element['#value'];
+  if (!empty($element['#size'])) {
+    $element['#attributes']['size'] = $element['#size'];
+  }
+  if (!empty($element['#maxlength'])) {
+    $element['#attributes']['maxlength'] = $element['#maxlength'];
+  }
   _form_set_class($element, array('form-text'));
-  $output = '<input type="password" name="' . $element['#name'] . '" id="' . $element['#id'] . '" ' . $maxlength . $size . drupal_attributes($element['#attributes']) . ' />';
-  return $output;
+
+  return '<input' . drupal_attributes($element['#attributes']) . ' />';
 }
 
 /**
@@ -3237,17 +3283,30 @@ function form_process_weight($element) {
  */
 function theme_file($variables) {
   $element = $variables['element'];
+  $element['#attributes']['type'] = 'file';
+  $element['#attributes']['name'] = $element['#name'];
+  $element['#attributes']['id'] = $element['#id'];
+  if (!empty($element['#size'])) {
+    $element['#attributes']['size'] = $element['#size'];
+  }
   _form_set_class($element, array('form-file'));
-  return '<input type="file" name="' . $element['#name'] . '"' . ($element['#attributes'] ? ' ' . drupal_attributes($element['#attributes']) : '') . ' id="' . $element['#id'] . '" size="' . $element['#size'] . "\" />\n";
+
+  return '<input' . drupal_attributes($element['#attributes']) . ' />';
 }
 
 /**
  * Returns HTML for a form element.
  *
- * Each form element is wrapped in a DIV with #type and #name classes. In
- * addition to the element itself, the div contains a label before or after
- * the element based on the optional #title_display property. After the label
- * and fields this function outputs the optional element #description.
+ * Each form element is wrapped in a DIV container having the following CSS
+ * classes:
+ * - form-item: Generic for all form elements.
+ * - form-type-#type: The internal element #type.
+ * - form-item-#name: The internal form element #name (usually derived from the
+ *   $form structure and set via form_builder()).
+ * - form-disabled: Only set if the form element is #disabled.
+ *
+ * In addition to the element itself, the DIV contains a label for the element
+ * based on the optional #title_display property, and an optional #description.
  *
  * The optional #title_display property can have these values:
  * - before: The label is output before the element. This is the default.
@@ -3297,6 +3356,10 @@ function theme_form_element($variables) {
   }
   if (!empty($element['#name'])) {
     $attributes['class'][] = 'form-item-' . strtr($element['#name'], array(' ' => '-', '_' => '-', '[' => '-', ']' => ''));
+  }
+  // Add a class for disabled elements to facilitate cross-browser styling.
+  if (!empty($element['#attributes']['disabled'])) {
+    $attributes['class'][] = 'form-disabled';
   }
   $output = '<div' . drupal_attributes($attributes) . '>' . "\n";
 

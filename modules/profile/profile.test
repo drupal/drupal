@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.test,v 1.26 2010/05/29 11:37:33 dries Exp $
+// $Id: profile.test,v 1.27 2010/07/31 04:01:51 dries Exp $
 
 /**
  * A class for common methods for testing profile fields.
@@ -335,7 +335,7 @@ class ProfileTestAutocomplete extends ProfileTestCase {
     $this->setProfileField($field, $field['value']);
 
     // Set some html for what we want to see in the page output later.
-    $autocomplete_html = '<input class="autocomplete" type="hidden" id="' . drupal_html_id('edit-' . $field['form_name'] . '-autocomplete') . '" value="' . url('profile/autocomplete/' . $field['fid'], array('absolute' => TRUE)) . '" disabled="disabled" />';
+    $autocomplete_html = '<input type="hidden" id="' . drupal_html_id('edit-' . $field['form_name'] . '-autocomplete') . '" value="' . url('profile/autocomplete/' . $field['fid'], array('absolute' => TRUE)) . '" disabled="disabled" class="autocomplete" />';
     $field_html = '<input type="text" maxlength="255" name="' . $field['form_name'] . '" id="' . drupal_html_id('edit-' . $field['form_name']) . '" size="60" value="' . $field['value'] . '" class="form-text form-autocomplete required" />';
 
     // Check that autocompletion html is found on the user's profile edit page.

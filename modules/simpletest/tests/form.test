@@ -1,5 +1,5 @@
 <?php
-// $Id: form.test,v 1.56 2010/07/26 13:07:59 dries Exp $
+// $Id: form.test,v 1.57 2010/07/31 04:01:51 dries Exp $
 
 /**
  * @file
@@ -193,7 +193,7 @@ class FormsTestCase extends DrupalWebTestCase {
 
     // All the elements should be marked as disabled, including the ones below
     // the disabled container.
-    $this->assertEqual(count($disabled_elements), 20, t('The correct elements have the disabled property in the HTML code.'));
+    $this->assertEqual(count($disabled_elements), 32, t('The correct elements have the disabled property in the HTML code.'));
 
     $this->drupalPost(NULL, $edit, t('Submit'));
     $returned_values['hijacked'] = drupal_json_decode($this->content);
@@ -211,7 +211,12 @@ class FormsTestCase extends DrupalWebTestCase {
   function assertFormValuesDefault($values, $form) {
     foreach (element_children($form) as $key) {
       if (isset($form[$key]['#default_value'])) {
-        $expected_value = $form[$key]['#default_value'];
+        if (isset($form[$key]['#expected_value'])) {
+          $expected_value = $form[$key]['#expected_value'];
+        }
+        else {
+          $expected_value = $form[$key]['#default_value'];
+        }
 
         if ($key == 'checkboxes_multiple') {
           // Checkboxes values are not filtered out.
@@ -223,6 +228,65 @@ class FormsTestCase extends DrupalWebTestCase {
       // Recurse children.
       $this->assertFormValuesDefault($values, $form[$key]);
     }
+  }
+
+  /**
+   * Verify markup for disabled form elements.
+   *
+   * @see _form_test_disabled_elements()
+   */
+  function testDisabledMarkup() {
+    $this->drupalGet('form-test/disabled-elements');
+    $form_state = array();
+    $form = _form_test_disabled_elements(array(), $form_state);
+    $type_map = array(
+      'textarea' => 'textarea',
+      'select' => 'select',
+      'weight' => 'select',
+      'date' => 'select',
+    );
+
+    foreach ($form as $name => $item) {
+      // Skip special #types.
+      if (!isset($item['#type']) || in_array($item['#type'], array('hidden', 'text_format'))) {
+        continue;
+      }
+      // Setup XPath and CSS class depending on #type.
+      if (in_array($item['#type'], array('image_button', 'button', 'submit'))) {
+        $path = "//!type[contains(@class, :div-class) and @value=:value]";
+        $class = 'form-button-disabled';
+      }
+      else {
+        // starts-with() required for checkboxes.
+        $path = "//div[contains(@class, :div-class)]/descendant::!type[starts-with(@name, :name)]";
+        $class = 'form-disabled';
+      }
+      // Replace DOM element name in $path according to #type.
+      $type = 'input';
+      if (isset($type_map[$item['#type']])) {
+        $type = $type_map[$item['#type']];
+      }
+      $path = strtr($path, array('!type' => $type));
+      // Verify that the element exists.
+      $element = $this->xpath($path, array(
+        ':name' => check_plain($name),
+        ':div-class' => $class,
+        ':value' => isset($item['#value']) ? $item['#value'] : '',
+      ));
+      $this->assertTrue(isset($element[0]), t('Disabled form element class found for #type %type.', array('%type' => $item['#type'])));
+    }
+
+    // Verify special element #type text-format.
+    $element = $this->xpath('//div[contains(@class, :div-class)]/descendant::textarea[@name=:name]', array(
+      ':name' => 'text_format[value]',
+      ':div-class' => 'form-disabled',
+    ));
+    $this->assertTrue(isset($element[0]), t('Disabled form element class found for #type %type.', array('%type' => 'text_format[value]')));
+    $element = $this->xpath('//div[contains(@class, :div-class)]/descendant::select[@name=:name]', array(
+      ':name' => 'text_format[format]',
+      ':div-class' => 'form-disabled',
+    ));
+    $this->assertTrue(isset($element[0]), t('Disabled form element class found for #type %type.', array('%type' => 'text_format[format]')));
   }
 
   /**
