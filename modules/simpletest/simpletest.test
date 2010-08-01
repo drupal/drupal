@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.test,v 1.43 2010/06/28 19:57:34 dries Exp $
+// $Id: simpletest.test,v 1.44 2010/08/01 23:35:01 dries Exp $
 
 class SimpleTestFunctionalTest extends DrupalWebTestCase {
   /**
@@ -154,7 +154,7 @@ class SimpleTestFunctionalTest extends DrupalWebTestCase {
     $this->assertAssertion(t('Created permissions: @perms', array('@perms' => $this->valid_permission)), 'Role', 'Pass', 'simpletest.test', 'SimpleTestFunctionalTest->stubTest()');
     $this->assertAssertion(t('Invalid permission %permission.', array('%permission' => $this->invalid_permission)), 'Role', 'Fail', 'simpletest.test', 'SimpleTestFunctionalTest->stubTest()');
 
-    // Check that a warning is catched by simpletest.
+    // Check that a warning is caught by simpletest.
     $this->assertAssertion('Division by zero', 'Warning', 'Fail', 'simpletest.test', 'SimpleTestFunctionalTest->stubTest()');
 
     // Check that the backtracing code works for specific assert function.
