@@ -1,5 +1,5 @@
 <?php
-// $Id: trigger.test,v 1.33 2010/06/29 18:24:10 dries Exp $
+// $Id: trigger.test,v 1.34 2010/08/01 19:52:56 dries Exp $
 
 /**
  * Provides common helper methods.
@@ -567,7 +567,7 @@ class TriggerOtherTestCase extends TriggerWebTestCase {
     $this->drupalPost('admin/structure/trigger/user', $edit, t('Assign'), array(), array(), 'trigger-user-insert-assign-form');
 
     // Set action variable to FALSE.
-    variable_set( $action_id, FALSE );
+    variable_set($action_id, FALSE);
 
     // Create an unblocked user
     $web_user = $this->drupalCreateUser(array('administer users'));
