@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1197 2010/07/30 02:47:27 dries Exp $
+// $Id: common.inc,v 1.1198 2010/08/01 19:54:31 dries Exp $
 
 /**
  * @file
@@ -2149,7 +2149,7 @@ function url($path = NULL, array $options = array()) {
  * @param $path
  *   The internal path or external URL being linked to, such as "node/34" or
  *   "http://example.com/foo".
- * @return 
+ * @return
  *   Boolean TRUE or FALSE, where TRUE indicates an external path.
  */
 function url_is_external($path) {
@@ -6719,7 +6719,7 @@ function entity_form_field_validate($entity_type, $form, &$form_state) {
  * For some entity forms (e.g., forms with complex non-field data and forms that
  * simultaneously edit multiple entities), this behavior may be inappropriate,
  * so the #builder_function for such forms needs to implement the required
- * functionality instead of calling this function. 
+ * functionality instead of calling this function.
  */
 function entity_form_submit_build_entity($entity_type, $entity, $form, &$form_state) {
   $info = entity_get_info($entity_type);
