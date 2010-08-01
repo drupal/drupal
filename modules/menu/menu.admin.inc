@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.admin.inc,v 1.82 2010/06/26 21:32:20 dries Exp $
+// $Id: menu.admin.inc,v 1.83 2010/08/01 23:33:18 dries Exp $
 
 /**
  * @file
@@ -308,7 +308,7 @@ function menu_edit_item($form, &$form_state, $type, $item, $menu) {
     '#title' => t('Description'),
     '#default_value' => isset($item['options']['attributes']['title']) ? $item['options']['attributes']['title'] : '',
     '#rows' => 1,
-    '#description' => t('The description displayed when hovering over a menu link.'),
+    '#description' => t('Shown when hovering over the menu link.'),
   );
   $form['enabled'] = array(
     '#type' => 'checkbox',
