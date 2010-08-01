@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1281 2010/07/30 02:47:28 dries Exp $
+// $Id: node.module,v 1.1282 2010/08/01 00:18:20 dries Exp $
 
 /**
  * @file
@@ -2159,7 +2159,7 @@ function theme_node_recent_block($variables) {
   if ($rows) {
     $output = theme('table', array('rows' => $rows));
     if (user_access('access content overview')) {
-      $output .= theme('more_link', array('url' => url('admin/content'), 'title' => t('Show more content')));
+      $output .= theme('more_link', array('url' => 'admin/content', 'title' => t('Show more content')));
     }
   }
 
