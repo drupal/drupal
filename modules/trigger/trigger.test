@@ -567,7 +567,7 @@ class TriggerOtherTestCase extends TriggerWebTestCase {
     $this->drupalPost('admin/structure/trigger/user', $edit, t('Assign'), array(), array(), 'trigger-user-insert-assign-form');
 
     // Set action variable to FALSE.
-    variable_set( $action_id, FALSE );
+    variable_set($action_id, FALSE);
 
     // Create an unblocked user
     $web_user = $this->drupalCreateUser(array('administer users'));
