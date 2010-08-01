@@ -245,7 +245,7 @@ function blog_block_view($delta = '') {
       $block['content']['blog_list'] = $node_title_list;
       $block['content']['blog_more'] = array(
         '#theme' => 'more_link',
-        '#url' => url('blog'),
+        '#url' => 'blog',
         '#title' => t('Read the latest blog entries.'),
       );
 

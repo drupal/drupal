@@ -700,7 +700,7 @@ function forum_block_view_pre_render($elements) {
   $result = $elements['#query']->execute();
   if ($node_title_list = node_title_list($result)) {
     $elements['forum_list'] = $node_title_list;
-    $elements['forum_more'] = array('#theme' => 'more_link', '#url' => url('forum'), '#title' => t('Read the latest forum topics.'));
+    $elements['forum_more'] = array('#theme' => 'more_link', '#url' => 'forum', '#title' => t('Read the latest forum topics.'));
   }
   return $elements;
 }
