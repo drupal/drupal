@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.219 2010/07/26 03:04:29 dries Exp $
+// $Id: file.inc,v 1.220 2010/08/01 01:33:42 webchick Exp $
 
 /**
  * @file
@@ -1784,9 +1784,15 @@ function file_upload_max_size() {
   static $max_size = -1;
 
   if ($max_size < 0) {
+    // Start with post_max_size.
+    $max_size = parse_size(ini_get('post_max_size'));
+
+    // If upload_max_size is less, then reduce. Except if upload_max_size is
+    // zero, which indicates no limit.
     $upload_max = parse_size(ini_get('upload_max_filesize'));
-    $post_max = parse_size(ini_get('post_max_size'));
-    $max_size = ($upload_max < $post_max) ? $upload_max : $post_max;
+    if ($upload_max > 0 && $upload_max < $max_size) {
+      $max_size = $upload_max;
+    }
   }
   return $max_size;
 }
