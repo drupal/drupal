@@ -308,7 +308,7 @@ function menu_edit_item($form, &$form_state, $type, $item, $menu) {
     '#title' => t('Description'),
     '#default_value' => isset($item['options']['attributes']['title']) ? $item['options']['attributes']['title'] : '',
     '#rows' => 1,
-    '#description' => t('The description displayed when hovering over a menu link.'),
+    '#description' => t('Shown when hovering over the menu link.'),
   );
   $form['enabled'] = array(
     '#type' => 'checkbox',

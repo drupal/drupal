@@ -508,9 +508,13 @@ function menu_node_save($node) {
     elseif (trim($link['link_title'])) {
       $link['link_title'] = trim($link['link_title']);
       $link['link_path'] = "node/$node->nid";
-      // If not already set, use the node's title as link title attribute.
-      if (empty($link['options']['attributes']['title']) && !$link['customized']) {
-        $link['options']['attributes']['title'] = trim($node->title);
+      if (trim($link['description'])) {
+        $link['options']['attributes']['title'] = trim($link['description']);
+      }
+      else {
+        // If the description field was left empty, remove the title attribute
+        // from the menu link.
+        unset($link['options']['attributes']['title']);
       }
       if (!menu_link_save($link)) {
         drupal_set_message(t('There was an error saving the menu link.'), 'error');
@@ -635,6 +639,14 @@ function menu_form_alter(&$form, $form_state, $form_id) {
       '#type' => 'textfield',
       '#title' => t('Menu link title'),
       '#default_value' => $link['link_title'],
+    );
+
+    $form['menu']['link']['description'] = array(
+      '#type' => 'textarea',
+      '#title' => t('Description'),
+      '#default_value' => isset($link['options']['attributes']['title']) ? $link['options']['attributes']['title'] : '',
+      '#rows' => 1,
+      '#description' => t('Shown when hovering over the menu link.'),
     );
 
     $default = ($link['mlid'] ? $link['menu_name'] . ':' . $link['plid'] : variable_get('menu_parent_' . $type, 'main-menu:0'));
