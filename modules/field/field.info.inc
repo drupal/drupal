@@ -576,6 +576,25 @@ function field_info_field_by_id($field_id) {
 }
 
 /**
+ * Returns the same data as field_info_field_by_id() for every field.
+ *
+ * This function is typically used when handling all fields of some entities
+ * to avoid thousands of calls to field_info_field_by_id().
+ *
+ * @return
+ *   An array, each key is a field ID and the values are field arrays as
+ *   returned by field_read_fields(), with an additional element 'bundles',
+ *   whose value is an array of all the bundle this field belongs to.
+ *
+ * @see field_info_field()
+ * @see field_info_field_by_id()
+ */
+function field_info_field_by_ids() {
+  $info = _field_info_collate_fields();
+  return $info['fields'];
+}
+
+/**
  * Retrieves information about field instances.
  *
  * @param $entity_type
