@@ -175,26 +175,32 @@ abstract class DatabaseSchema implements QueryPlaceholderInterface {
    * @param
    *   Name of table to look prefix up for. Defaults to 'default' because thats
    *   default key for prefix.
+   * @param $add_prefix
+   *   Boolean that indicates whether the given table name should be prefixed.
+   *
    * @return
    *   A keyed array with information about the schema, table name and prefix.
    */
-  protected function getPrefixInfo($table = 'default') {
+  protected function getPrefixInfo($table = 'default', $add_prefix = TRUE) {
     $info = array(
       'schema' => $this->defaultSchema,
       'prefix' => $this->connection->tablePrefix($table),
     );
+    if ($add_prefix) {
+      $table = $info['prefix'] . $table;
+    }
     // If the prefix contains a period in it, then that means the prefix also
     // contains a schema reference in which case we will change the schema key
     // to the value before the period in the prefix. Everything after the dot
     // will be prefixed onto the front of the table.
-    if (($pos = strpos($info['prefix'], '.')) !== FALSE) {
+    if (($pos = strpos($table, '.')) !== FALSE) {
       // Grab everything before the period.
-      $info['schema'] = substr($info['prefix'], 0, $pos);
-      // Grab everything after the dot, and prefix on to the table.
-      $info['table'] = substr($info['prefix'], ++$pos) . $table;
+      $info['schema'] = substr($table, 0, $pos);
+      // Grab everything after the dot.
+      $info['table'] = substr($table, ++$pos);
     }
     else {
-      $info['table'] = $info['prefix'] . $table;
+      $info['table'] = $table;
     }
     return $info;
   }
@@ -230,15 +236,17 @@ abstract class DatabaseSchema implements QueryPlaceholderInterface {
    *   The name of the table in question.
    * @param $operator
    *   The operator to apply on the 'table' part of the condition.
+   * @param $add_prefix
+   *   Boolean to indicate whether the table name needs to be prefixed.
    *
    * @return QueryConditionInterface
    *   A DatabaseCondition object.
    */
-  protected function buildTableNameCondition($table_name, $operator = '=') {
+  protected function buildTableNameCondition($table_name, $operator = '=', $add_prefix = TRUE) {
     $info = $this->connection->getConnectionOptions();
 
     // Retrive the table name and schema
-    $table_info = $this->getPrefixInfo($table_name);
+    $table_info = $this->getPrefixInfo($table_name, $add_prefix);
 
     $condition = new DatabaseCondition('AND');
     $condition->condition('table_catalog', $info['database']);
@@ -278,7 +286,8 @@ abstract class DatabaseSchema implements QueryPlaceholderInterface {
    *   Array, both the keys and the values are the matching tables.
    */
   public function findTables($table_expression) {
-    $condition = $this->buildTableNameCondition($table_expression, 'LIKE');
+    $condition = $this->buildTableNameCondition($table_expression, 'LIKE', FALSE);
+
     $condition->compile($this->connection, $this);
     // Normally, we would heartily discourage the use of string
     // concatenation for conditionals like this however, we

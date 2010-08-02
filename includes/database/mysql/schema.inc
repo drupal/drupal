@@ -30,16 +30,19 @@ class DatabaseSchema_mysql extends DatabaseSchema {
    * @return
    *   A keyed array with information about the database, table name and prefix.
    */
-  protected function getPrefixInfo($table = 'default') {
+  protected function getPrefixInfo($table = 'default', $add_prefix = TRUE) {
     $info = array('prefix' => $this->connection->tablePrefix($table));
-    if (($pos = strpos($info['prefix'], '.')) !== FALSE) {
-      $info['database'] = substr($info['prefix'], 0, $pos);
-      $info['table'] = substr($info['prefix'], ++$pos) . $table;
+    if ($add_prefix) {
+      $table = $info['prefix'] . $table;
+    }
+    if (($pos = strpos($table, '.')) !== FALSE) {
+      $info['database'] = substr($table, 0, $pos);
+      $info['table'] = substr($table, ++$pos);
     }
     else {
       $db_info = Database::getConnectionInfo();
       $info['database'] = $db_info['default']['database'];
-      $info['table'] = $info['prefix'] . $table;
+      $info['table'] = $table;
     }
     return $info;
   }
@@ -52,10 +55,10 @@ class DatabaseSchema_mysql extends DatabaseSchema {
    * database as the schema unless specified otherwise, and exclude table_catalog
    * from the condition criteria.
    */
-  protected function buildTableNameCondition($table_name, $operator = '=') {
+  protected function buildTableNameCondition($table_name, $operator = '=', $add_prefix = TRUE) {
     $info = $this->connection->getConnectionOptions();
 
-    $table_info = $this->getPrefixInfo($table_name);
+    $table_info = $this->getPrefixInfo($table_name, $add_prefix);
 
     $condition = new DatabaseCondition('AND');
     $condition->condition('table_schema', $table_info['database']);
