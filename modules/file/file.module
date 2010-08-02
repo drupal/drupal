@@ -1,5 +1,5 @@
 <?php
-// $Id: file.module,v 1.32 2010/07/30 01:45:28 dries Exp $
+// $Id: file.module,v 1.33 2010/08/02 13:26:40 dries Exp $
 
 /**
  * @file
@@ -88,10 +88,10 @@ function file_theme() {
   return array(
     // file.module.
     'file_link' => array(
-      'variables' => array('file' => NULL),
+      'variables' => array('file' => NULL, 'icon_directory' => NULL),
     ),
     'file_icon' => array(
-      'variables' => array('file' => NULL),
+      'variables' => array('file' => NULL, 'icon_directory' => NULL),
     ),
     'file_managed_file' => array(
       'render element' => 'element',
@@ -681,14 +681,17 @@ function file_managed_file_pre_render($element) {
  * @param $variables
  *   An associative array containing:
  *   - file: A file object to which the link will be created.
+ *   - icon_directory: (optional) A path to a directory of icons to be used for
+ *     files. Defaults to the value of the "file_icon_directory" variable.
  *
  * @ingroup themeable
  */
 function theme_file_link($variables) {
   $file = $variables['file'];
+  $icon_directory = $variables['icon_directory'];
 
   $url = file_create_url($file->uri);
-  $icon = theme('file_icon', array('file' => $file));
+  $icon = theme('file_icon', array('file' => $file, 'icon_directory' => $icon_directory));
 
   // Set options as per anchor format described at
   // http://microformats.org/wiki/file-format-examples
@@ -716,14 +719,17 @@ function theme_file_link($variables) {
  * @param $variables
  *   An associative array containing:
  *   - file: A file object for which to make an icon.
+ *   - icon_directory: (optional) A path to a directory of icons to be used for
+ *     files. Defaults to the value of the "file_icon_directory" variable.
  *
  * @ingroup themeable
  */
 function theme_file_icon($variables) {
   $file = $variables['file'];
+  $icon_directory = $variables['icon_directory'];
 
   $mime = check_plain($file->filemime);
-  $icon_url = file_icon_url($file);
+  $icon_url = file_icon_url($file, $icon_directory);
   return '<img class="file-icon" alt="" title="' . $mime . '" src="' . $icon_url . '" />';
 }
 
