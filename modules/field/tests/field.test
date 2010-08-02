@@ -2076,29 +2076,45 @@ class FieldCrudTestCase extends FieldTestCase {
    * Test updating a field.
    */
   function testUpdateField() {
-    // Create a decimal 5.2 field.
-    $field = array('field_name' => 'decimal53', 'type' => 'number_decimal', 'cardinality' => 3, 'settings' => array('precision' => 5, 'scale' => 2));
-    $field = field_create_field($field);
-    $instance = array('field_name' => 'decimal53', 'entity_type' => 'test_entity', 'bundle' => 'test_bundle');
+    // Create a field with a defined cardinality, so that we can ensure it's
+    // respected. Since cardinality enforcement is consistent across database
+    // systems, it makes a good test case.
+    $cardinality = 4;
+    $field_definition = array(
+      'field_name' => 'field_update',
+      'type' => 'test_field',
+      'cardinality' => $cardinality,
+    );
+    $field_definition = field_create_field($field_definition);
+    $instance = array(
+      'field_name' => 'field_update',
+      'entity_type' => 'test_entity',
+      'bundle' => 'test_bundle',
+    );
     $instance = field_create_instance($instance);
 
-    // Update it to a deciaml 5.3 field.
-    $field['settings']['scale'] = 3;
-    field_update_field($field);
-
-    // Save values with 2, 3, and 4 decimal places.
-    $entity = field_test_create_stub_entity(0, 0, $instance['bundle']);
-    $entity->decimal53[LANGUAGE_NONE][0]['value'] = '1.23';
-    $entity->decimal53[LANGUAGE_NONE][1]['value'] = '1.235';
-    $entity->decimal53[LANGUAGE_NONE][2]['value'] = '1.2355';
-    field_attach_insert('test_entity', $entity);
-    $entity = field_test_create_stub_entity(0, 0, $instance['bundle']);
-
-    // Verify that the updated 5.3 field rounds to 3 decimal places.
-    field_attach_load('test_entity', array(0 => $entity));
-    $this->assertEqual($entity->decimal53[LANGUAGE_NONE][0]['value'], '1.23', t('2 decimal places are left alone'));
-    $this->assertEqual($entity->decimal53[LANGUAGE_NONE][1]['value'], '1.235', t('3 decimal places are left alone'));
-    $this->assertEqual($entity->decimal53[LANGUAGE_NONE][2]['value'], '1.236', t('4 decimal places are rounded to 3'));
+    do {
+      // We need a unique ID for our entity. $cardinality will do.
+      $id = $cardinality;
+      $entity = field_test_create_stub_entity($id, $id, $instance['bundle']);
+      // Fill in the entity with more values than $cardinality.
+      for ($i = 0; $i < 20; $i++) {
+        $entity->field_update[LANGUAGE_NONE][$i]['value'] = $i;
+      }
+      // Save the entity.
+      field_attach_insert('test_entity', $entity);
+      // Load back and assert there are $cardinality number of values.
+      $entity = field_test_create_stub_entity($id, $id, $instance['bundle']);
+      field_attach_load('test_entity', array($id => $entity));
+      $this->assertEqual(count($entity->field_update[LANGUAGE_NONE]), $field_definition['cardinality'], 'Cardinality is kept');
+      // Now check the values themselves.
+      for ($delta = 0; $delta < $cardinality; $delta++) {
+        $this->assertEqual($entity->field_update[LANGUAGE_NONE][$delta]['value'], $delta, 'Value is kept');
+      }
+      // Increase $cardinality and set the field cardinality to the new value.
+      $field_definition['cardinality'] = ++$cardinality;
+      field_update_field($field_definition);
+    } while ($cardinality < 6);
   }
 
   /**
