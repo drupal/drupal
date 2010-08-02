@@ -1,4 +1,4 @@
-/* $Id: reset.css,v 1.10 2010/07/18 01:36:06 dries Exp $ */
+/* $Id: reset.css,v 1.11 2010/08/02 11:22:22 dries Exp $ */
 
 /**
  * Reset CSS styles.
@@ -188,7 +188,7 @@ body {
  *
  * Consider adding your own selectors to this instead of finding ways
  * to sneak the clearfix class into Drupal's markup.
- * From http://www.positioniseverything.net/easyclearing.html
+ * From http://perishablepress.com/press/2009/12/06/new-clearfix-hack
  */
 ul.links:after,
 div.admin-panel .body:after,
@@ -206,24 +206,17 @@ ul.inline:after {
   display: none;
   clear: none;
 }
-.form-item,
-ul.links,
-div.admin-panel .body,
-.clearfix {
-  display: inline-block;
-}
-
-/* Hides from IE-mac \*/
+/* IE6 */
 * html .form-item,
 * html ul.links,
 * html div.admin-panel .body,
 * html .clearfix {
   height: 1%;
 }
-.form-item,
-ul.links,
-div.admin-panel .body,
-.clearfix {
-  display: block;
+/* IE7 */
+*:first-child + html .form-item,
+*:first-child + html ul.links,
+*:first-child + html div.admin-panel .body,
+*:first-child + html .clearfix {
+  min-height: 1%;
 }
-/* End hide from IE-mac */

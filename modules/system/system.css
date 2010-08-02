@@ -1,4 +1,4 @@
-/* $Id: system.css,v 1.77 2010/05/23 18:23:32 dries Exp $ */
+/* $Id: system.css,v 1.78 2010/08/02 11:22:22 dries Exp $ */
 
 /*
 ** HTML elements
@@ -397,7 +397,7 @@ table.sticky-header {
 
 /*
 ** Markup free clearing
-** Details: http://www.positioniseverything.net/easyclearing.html
+** Details: http://perishablepress.com/press/2009/12/06/new-clearfix-hack
 */
 .clearfix:after {
   content: ".";
@@ -406,16 +406,11 @@ table.sticky-header {
   clear: both;
   visibility: hidden;
 }
-
-.clearfix {
-  display: inline-block;
-}
-
-/* Hides from IE-mac \*/
+/* IE6 */
 * html .clearfix {
   height: 1%;
 }
-.clearfix {
-  display: block;
+/* IE7 */
+*:first-child + html .clearfix {
+  min-height: 1%;
 }
-/* End hide from IE-mac */
