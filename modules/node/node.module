@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1282 2010/08/01 00:18:20 dries Exp $
+// $Id: node.module,v 1.1283 2010/08/02 05:29:08 webchick Exp $
 
 /**
  * @file
@@ -1876,6 +1876,10 @@ function node_menu() {
     );
   }
   $items['node/%node'] = array(
+    'title callback' => 'node_page_title',
+    'title arguments' => array(1),
+    // The page callback also invokes drupal_set_title() in case
+    // the menu router's title is overridden by a menu link.
     'page callback' => 'node_page_view',
     'page arguments' => array(1),
     'access callback' => 'node_access',
@@ -2502,6 +2506,9 @@ function node_page_default() {
  * Menu callback; view a single node.
  */
 function node_page_view($node) {
+  // If there is a menu link to this node, the link becomes the last part
+  // of the active trail, and the link name becomes the page title.
+  // Thus, we must explicitly set the page title to be the node title.
   drupal_set_title($node->title);
   $uri = entity_uri('node', $node);
   // Set the node path as the canonical URL to prevent duplicate content.
