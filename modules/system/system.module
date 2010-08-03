@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.950 2010/07/30 02:47:28 dries Exp $
+// $Id: system.module,v 1.951 2010/08/03 02:06:42 dries Exp $
 
 /**
  * @file
@@ -2621,9 +2621,6 @@ function system_settings_form_submit($form, &$form_state) {
   }
 
   drupal_set_message(t('The configuration options have been saved.'));
-
-  cache_clear_all();
-  drupal_theme_rebuild();
 }
 
 /**
