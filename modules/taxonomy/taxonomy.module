@@ -493,25 +493,24 @@ function taxonomy_term_save($term) {
   module_invoke_all('taxonomy_term_presave', $term);
 
   if (empty($term->tid)) {
+    $op = 'insert';
     $status = drupal_write_record('taxonomy_term_data', $term);
     field_attach_insert('taxonomy_term', $term);
-    module_invoke_all('taxonomy_term_insert', $term);
-    module_invoke_all('entity_insert', $term, 'taxonomy_term');
     if (!isset($term->parent)) {
       $term->parent = array(0);
     }
   }
   else {
+    $op = 'update';
     $status = drupal_write_record('taxonomy_term_data', $term, 'tid');
     field_attach_update('taxonomy_term', $term);
-    module_invoke_all('taxonomy_term_update', $term);
-    module_invoke_all('entity_update', $term, 'taxonomy_term');
     if (isset($term->parent)) {
       db_delete('taxonomy_term_hierarchy')
         ->condition('tid', $term->tid)
         ->execute();
     }
   }
+
   if (isset($term->parent)) {
     if (!is_array($term->parent)) {
       $term->parent = array($term->parent);
@@ -536,7 +535,13 @@ function taxonomy_term_save($term) {
     }
     $query->execute();
   }
+
+  // Reset the taxonomy term static variables.
   taxonomy_terms_static_reset();
+
+  // Invoke the taxonomy hooks.
+  module_invoke_all("taxonomy_term_$op", $term);
+  module_invoke_all("entity_$op", $term, 'taxonomy_term');
 
   return $status;
 }
@@ -675,6 +680,7 @@ function taxonomy_terms_static_reset() {
   drupal_static_reset('taxonomy_term_count_nodes');
   drupal_static_reset('taxonomy_get_tree');
   drupal_static_reset('taxonomy_get_parents');
+  drupal_static_reset('taxonomy_get_parents_all');
   drupal_static_reset('taxonomy_get_children');
   entity_get_controller('taxonomy_term')->resetCache();
 }

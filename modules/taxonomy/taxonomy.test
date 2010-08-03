@@ -1005,7 +1005,22 @@ class TaxonomyTokenReplaceTestCase extends TaxonomyWebTestCase {
     $edit[$this->instance['field_name'] . '[' . $this->langcode . '][]'] = $term2->tid;
     $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
 
-    // Generate and test sanitized tokens.
+    // Generate and test sanitized tokens for term1.
+    $tests = array();
+    $tests['[term:tid]'] = $term1->tid;
+    $tests['[term:name]'] = check_plain($term1->name);
+    $tests['[term:description]'] = check_markup($term1->description, $term1->format);
+    $tests['[term:url]'] = url('taxonomy/term/' . $term1->tid, array('absolute' => TRUE));
+    $tests['[term:node-count]'] = 0;
+    $tests['[term:parent:name]'] = '[term:parent:name]';
+    $tests['[term:vocabulary:name]'] = check_plain($this->vocabulary->name);
+    
+    foreach ($tests as $input => $expected) {
+      $output = token_replace($input, array('term' => $term1), array('language' => $language));
+      $this->assertFalse(strcmp($output, $expected), t('Sanitized taxonomy term token %token replaced.', array('%token' => $input)));
+    }
+
+    // Generate and test sanitized tokens for term2.
     $tests = array();
     $tests['[term:tid]'] = $term2->tid;
     $tests['[term:name]'] = check_plain($term2->name);
