@@ -1,5 +1,5 @@
 <?php
-// $Id: field.api.php,v 1.87 2010/08/01 19:49:35 dries Exp $
+// $Id: field.api.php,v 1.88 2010/08/03 01:54:24 dries Exp $
 
 /**
  * @ingroup field_fieldable_type
@@ -73,14 +73,12 @@ function hook_field_extra_fields() {
  * @see hook_field_extra_fields()
  */
 function hook_field_extra_fields_alter(&$info) {
-  // Force node title to always be at the top of the list
-  // by default.
+  // Force node title to always be at the top of the list by default.
   foreach (node_type_get_types() as $bundle) {
     if (isset($info['node'][$bundle]['title'])) {
       $info['node'][$bundle]['title']['weight'] = -20;
     }
   }
-
 }
 
 /**

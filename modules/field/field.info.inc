@@ -1,5 +1,5 @@
 <?php
-// $Id: field.info.inc,v 1.50 2010/08/01 19:49:35 dries Exp $
+// $Id: field.info.inc,v 1.51 2010/08/03 01:54:24 dries Exp $
 
 /**
  * @file
@@ -225,6 +225,18 @@ function _field_info_collate_fields($reset = FALSE) {
         // are thus not in $definitions['instances'].
         $info['fields'][$instance['field_id']]['bundles'][$instance['entity_type']][] = $instance['bundle'];
       }
+
+      // Populate 'extra_fields'.
+      $extra = module_invoke_all('field_extra_fields');
+      drupal_alter('field_extra_fields', $extra);
+      // Merge in saved settings.
+      foreach ($extra as $entity_type => $bundles) {
+        foreach ($bundles as $bundle => $extra_fields) {
+          $extra_fields = _field_info_prepare_extra_fields($extra_fields, $entity_type, $bundle);
+          $info['extra_fields'][$entity_type][$bundle] = $extra_fields;
+        }
+      }
+
       cache_set('field_info_fields', $info, 'cache_field');
     }
   }
@@ -368,6 +380,54 @@ function _field_info_prepare_instance_widget($field, $widget) {
   $widget['settings'] += field_info_widget_settings($widget['type']);
 
   return $widget;
+}
+
+/**
+ * Prepares 'extra fields' for the current run-time context.
+ *
+ * @param $extra_fields
+ *   The array of extra fields, as collected in hook_field_extra_fields().
+ * @param $entity_type
+ *   The entity type.
+ * @param $bundle
+ *   The bundle name.
+ */
+function _field_info_prepare_extra_fields($extra_fields, $entity_type, $bundle) {
+  $entity_type_info = entity_get_info($entity_type);
+  $bundle_settings = field_bundle_settings($entity_type, $bundle);
+  $extra_fields += array('form' => array(), 'display' => array());
+
+  $result = array();
+  // Extra fields in forms.
+  foreach ($extra_fields['form'] as $name => $field_data) {
+    $settings = isset($bundle_settings['extra_fields']['form'][$name]) ? $bundle_settings['extra_fields']['form'][$name] : array();
+    if (isset($settings['weight'])) {
+      $field_data['weight'] = $settings['weight'];
+    }
+    $result['form'][$name] = $field_data;
+  }
+
+  // Extra fields in displayed entities.
+  $data = $extra_fields['display'];
+  foreach ($extra_fields['display'] as $name => $field_data) {
+    $settings = isset($bundle_settings['extra_fields']['display'][$name]) ? $bundle_settings['extra_fields']['display'][$name] : array();
+    $view_modes = array_merge(array('default'), array_keys($entity_type_info['view modes']));
+    foreach ($view_modes as $view_mode) {
+      if (isset($settings[$view_mode])) {
+        $field_data['display'][$view_mode] = $settings[$view_mode];
+      }
+      else {
+        $field_data['display'][$view_mode] = array(
+          'weight' => $field_data['weight'],
+          'visible' => TRUE,
+        );
+      }
+    }
+    unset($field_data['weight']);
+    $result['display'][$name] = $field_data;
+  }
+
+  return $result;
 }
 
 /**
