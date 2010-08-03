@@ -3195,7 +3195,7 @@ function drupal_build_css_cache($css) {
         $base = base_path() . dirname($stylesheet['data']) . '/';
         _drupal_build_css_path(NULL, $base);
         // Prefix all paths within this CSS file, ignoring external and absolute paths.
-        $data .= preg_replace_callback('/url\([\'"]?(?![a-z]+:|\/+)([^\'")]+)[\'"]?\)/i', '_drupal_build_css_path', $contents);
+        $data .= preg_replace_callback('/url\(\s*[\'"]?(?![a-z]+:|\/+)([^\'")]+)[\'"]?\s*\)/i', '_drupal_build_css_path', $contents);
       }
     }
 
@@ -3327,7 +3327,7 @@ function drupal_load_stylesheet_content($contents, $optimize = FALSE) {
 
   // Replaces @import commands with the actual stylesheet content.
   // This happens recursively but omits external files.
-  $contents = preg_replace_callback('/@import\s*(?:url\()?[\'"]?(?![a-z]+:)([^\'"\()]+)[\'"]?\)?;/', '_drupal_load_stylesheet', $contents);
+  $contents = preg_replace_callback('/@import\s*(?:url\(\s*)?[\'"]?(?![a-z]+:)([^\'"\()]+)[\'"]?\s*\)?\s*;/', '_drupal_load_stylesheet', $contents);
   return $contents;
 }
 
@@ -3351,7 +3351,7 @@ function _drupal_load_stylesheet($matches) {
   // Alter all internal url() paths. Leave external paths alone. We don't need
   // to normalize absolute paths here (i.e. remove folder/... segments) because
   // that will be done later.
-  return preg_replace('/url\s*\(([\'"]?)(?![a-z]+:|\/+)/i', 'url(\1'. $directory, $file);
+  return preg_replace('/url\(\s*([\'"]?)(?![a-z]+:|\/+)/i', 'url(\1'. $directory, $file);
 }
 
 /**
