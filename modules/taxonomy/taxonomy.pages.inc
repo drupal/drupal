@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.pages.inc,v 1.51 2010/02/10 06:28:10 webchick Exp $
+// $Id: taxonomy.pages.inc,v 1.52 2010/08/03 02:02:02 dries Exp $
 
 /**
  * @file
@@ -27,7 +27,7 @@ function taxonomy_term_page($term) {
   $breadcrumb[] = l(t('Home'), NULL);
   $breadcrumb = array_reverse($breadcrumb);
   drupal_set_breadcrumb($breadcrumb);
-  drupal_add_feed(url('taxonomy/term/' . $term->tid . '/feed'), 'RSS - ' . $term->name);
+  drupal_add_feed('taxonomy/term/' . $term->tid . '/feed', 'RSS - ' . $term->name);
 
   $build['term_heading'] = array(
     '#prefix' => '<div class="term-listing-heading">',

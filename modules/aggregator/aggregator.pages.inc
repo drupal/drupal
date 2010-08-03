@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.pages.inc,v 1.42 2010/04/24 14:49:13 dries Exp $
+// $Id: aggregator.pages.inc,v 1.43 2010/08/03 02:02:01 dries Exp $
 
 /**
  * @file
@@ -13,7 +13,7 @@
  *   The items HTML.
  */
 function aggregator_page_last() {
-  drupal_add_feed(url('aggregator/rss'), variable_get('site_name', 'Drupal') . ' ' . t('aggregator'));
+  drupal_add_feed('aggregator/rss', variable_get('site_name', 'Drupal') . ' ' . t('aggregator'));
 
   $items = aggregator_feed_items_load('sum');
 
@@ -65,7 +65,7 @@ function aggregator_page_source_form($form, $form_state, $feed) {
 *   The rendered list of items for a category.
  */
 function aggregator_page_category($category) {
-  drupal_add_feed(url('aggregator/rss/' . $category['cid']), variable_get('site_name', 'Drupal') . ' ' . t('aggregator - @title', array('@title' => $category['title'])));
+  drupal_add_feed('aggregator/rss/' . $category['cid'], variable_get('site_name', 'Drupal') . ' ' . t('aggregator - @title', array('@title' => $category['title'])));
 
   // It is safe to include the cid in the query because it's loaded from the
   // database by aggregator_category_load.
@@ -321,7 +321,7 @@ function aggregator_page_sources() {
     $feed->url = url('aggregator/sources/' . $feed->fid);
     $output .= theme('aggregator_summary_items', array('summary_items' => $summary_items, 'source' => $feed));
   }
-  $output .= theme('feed_icon', array('url' => url('aggregator/opml'), 'title' => t('OPML feed')));
+  $output .= theme('feed_icon', array('url' => 'aggregator/opml', 'title' => t('OPML feed')));
 
   return theme('aggregator_wrapper', array('content' => $output));
 }
