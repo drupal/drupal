@@ -49,6 +49,17 @@ function openid_menu_site_status_alter(&$menu_site_status, $path) {
 }
 
 /**
+ * Implements hook_admin_paths().
+ */
+function openid_admin_paths() {
+  $paths = array(
+    'user/*/openid' => TRUE,
+    'user/*/openid/delete' => TRUE,
+  );
+  return $paths;
+}
+
+/**
  * Implements hook_help().
  */
 function openid_help($path, $arg) {

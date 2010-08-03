@@ -167,6 +167,16 @@ function shortcut_menu() {
 }
 
 /**
+ * Implements hook_admin_paths().
+ */
+function shortcut_admin_paths() {
+  $paths = array(
+    'user/*/shortcuts' => TRUE,
+  );
+  return $paths;
+}
+
+/**
  * Implements hook_theme().
  */
 function shortcut_theme() {
