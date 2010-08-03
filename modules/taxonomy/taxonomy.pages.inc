@@ -27,7 +27,7 @@ function taxonomy_term_page($term) {
   $breadcrumb[] = l(t('Home'), NULL);
   $breadcrumb = array_reverse($breadcrumb);
   drupal_set_breadcrumb($breadcrumb);
-  drupal_add_feed(url('taxonomy/term/' . $term->tid . '/feed'), 'RSS - ' . $term->name);
+  drupal_add_feed('taxonomy/term/' . $term->tid . '/feed', 'RSS - ' . $term->name);
 
   $build['term_heading'] = array(
     '#prefix' => '<div class="term-listing-heading">',
