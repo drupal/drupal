@@ -1,5 +1,5 @@
 <?php
-// $Id: field.crud.inc,v 1.66 2010/08/03 01:49:23 dries Exp $
+// $Id: field.crud.inc,v 1.67 2010/08/03 23:01:14 dries Exp $
 
 /**
  * @file
@@ -764,7 +764,7 @@ function _field_write_instance($instance, $update = FALSE) {
         $weights[] = $existing_instance['widget']['weight'];
       }
     }
-    foreach (field_extra_fields($instance['entity_type'], $instance['bundle'], 'form') as $extra) {
+    foreach (field_info_extra_fields($instance['entity_type'], $instance['bundle'], 'form') as $extra) {
       $weights[] = $extra['weight'];
     }
     $instance['widget']['weight'] = $weights ? max($weights) + 1 : 0;
@@ -798,7 +798,7 @@ function _field_write_instance($instance, $update = FALSE) {
           $weights[] = $existing_instance['display'][$view_mode]['weight'];
         }
       }
-      foreach (field_extra_fields($instance['entity_type'], $instance['bundle'], 'display') as $extra) {
+      foreach (field_info_extra_fields($instance['entity_type'], $instance['bundle'], 'display') as $extra) {
         $weights[] = $extra['display'][$view_mode]['weight'];
       }
       $display['weight'] = $weights ? max($weights) + 1 : 0;

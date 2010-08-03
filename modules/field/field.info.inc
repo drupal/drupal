@@ -1,5 +1,5 @@
 <?php
-// $Id: field.info.inc,v 1.51 2010/08/03 01:54:24 dries Exp $
+// $Id: field.info.inc,v 1.52 2010/08/03 23:01:14 dries Exp $
 
 /**
  * @file
@@ -697,6 +697,67 @@ function field_info_instance($entity_type, $field_name, $bundle_name) {
   if (isset($info['instances'][$entity_type][$bundle_name][$field_name])) {
     return $info['instances'][$entity_type][$bundle_name][$field_name];
   }
+}
+
+/**
+ * Returns a list and settings of pseudo-field elements in a given bundle.
+ *
+ * If $context is 'form', an array with the following structure:
+ * @code
+ *   array(
+ *     'name_of_pseudo_field_component' => array(
+ *       'label' => The human readable name of the component,
+ *       'description' => A short description of the component content,
+ *       'weight' => The weight of the component in edit forms,
+ *     ),
+ *     'name_of_other_pseudo_field_component' => array(
+ *       // ...
+ *     ),
+ *   );
+ * @endcode
+ *
+ * If $context is 'display', an array with the following structure:
+ * @code
+ *   array(
+ *     'name_of_pseudo_field_component' => array(
+ *       'label' => The human readable name of the component,
+ *       'description' => A short description of the component content,
+ *       // One entry per view mode, including the 'default' mode:
+ *       'display' => array(
+ *         'default' => array(
+ *           'weight' => The weight of the component in displayed entities in
+ *             this view mode,
+ *           'visibility' => Whether the component is visible or hidden in
+ *             displayed entities in this view mode,
+ *         ),
+ *         'teaser' => array(
+ *           // ...
+ *         ),
+ *       ),
+ *     ),
+ *     'name_of_other_pseudo_field_component' => array(
+ *       // ...
+ *     ),
+ *   );
+ * @endcode
+ *
+ * @param $entity_type
+ *   The type of entity; e.g. 'node' or 'user'.
+ * @param $bundle
+ *   The bundle name.
+ * @param $context
+ *   The context for which the list of pseudo-fields is requested. Either
+ *   'form' or 'display'.
+ *
+ * @return
+ *   The array of pseudo-field elements in the bundle.
+ */
+function field_info_extra_fields($entity_type, $bundle, $context) {
+  $info = _field_info_collate_fields();
+  if (isset($info['extra_fields'][$entity_type][$bundle][$context])) {
+    return $info['extra_fields'][$entity_type][$bundle][$context];
+  }
+  return array();
 }
 
 /**

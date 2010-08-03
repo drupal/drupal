@@ -1,5 +1,5 @@
 <?php
-// $Id: field_ui.admin.inc,v 1.58 2010/07/17 19:19:39 dries Exp $
+// $Id: field_ui.admin.inc,v 1.59 2010/08/03 23:01:14 dries Exp $
 
 /**
  * @file
@@ -182,7 +182,7 @@ function field_ui_field_overview_form($form, &$form_state, $entity_type, $bundle
   $field_types = field_info_field_types();
   $widget_types = field_info_widget_types();
 
-  $extra_fields = field_extra_fields($entity_type, $bundle, 'form');
+  $extra_fields = field_info_extra_fields($entity_type, $bundle, 'form');
 
   // Store each default weight so that we can add the 'add new' rows after them.
   $weights = array();
@@ -709,7 +709,7 @@ function field_ui_display_overview_form($form, &$form_state, $entity_type, $bund
   // Gather type information.
   $instances = field_info_instances($entity_type, $bundle);
   $field_types = field_info_field_types();
-  $extra_fields = field_extra_fields($entity_type, $bundle, 'display');
+  $extra_fields = field_info_extra_fields($entity_type, $bundle, 'display');
 
   $form += array(
     '#entity_type' => $entity_type,
