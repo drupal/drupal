@@ -1,5 +1,5 @@
 <?php
-// $Id: shortcut.module,v 1.25 2010/06/30 15:12:59 dries Exp $
+// $Id: shortcut.module,v 1.26 2010/08/03 23:07:01 dries Exp $
 
 /**
  * @file
@@ -164,6 +164,16 @@ function shortcut_menu() {
   );
 
   return $items;
+}
+
+/**
+ * Implements hook_admin_paths().
+ */
+function shortcut_admin_paths() {
+  $paths = array(
+    'user/*/shortcuts' => TRUE,
+  );
+  return $paths;
 }
 
 /**

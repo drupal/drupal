@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.module,v 1.93 2010/07/07 08:05:01 webchick Exp $
+// $Id: openid.module,v 1.94 2010/08/03 23:07:01 dries Exp $
 
 /**
  * @file
@@ -46,6 +46,17 @@ function openid_menu_site_status_alter(&$menu_site_status, $path) {
   if ($menu_site_status == MENU_SITE_OFFLINE && user_is_anonymous() && $path == 'openid/authenticate') {
     $menu_site_status = MENU_SITE_ONLINE;
   }
+}
+
+/**
+ * Implements hook_admin_paths().
+ */
+function openid_admin_paths() {
+  $paths = array(
+    'user/*/openid' => TRUE,
+    'user/*/openid/delete' => TRUE,
+  );
+  return $paths;
 }
 
 /**

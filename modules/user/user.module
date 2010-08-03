@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1188 2010/07/30 02:47:28 dries Exp $
+// $Id: user.module,v 1.1189 2010/08/03 23:07:01 dries Exp $
 
 /**
  * @file
@@ -1778,6 +1778,18 @@ function user_menu_site_status_alter(&$menu_site_status, $path) {
       drupal_goto('user/' . $GLOBALS['user']->uid . '/edit');
     }
   }
+}
+
+/**
+ * Implements hook_admin_paths().
+ */
+function user_admin_paths() {
+  $paths = array(
+    'user/*/cancel' => TRUE,
+    'user/*/edit' => TRUE,
+    'user/*/edit/*' => TRUE,
+  );
+  return $paths;
 }
 
 /**
