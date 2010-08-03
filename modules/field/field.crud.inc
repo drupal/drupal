@@ -1,5 +1,5 @@
 <?php
-// $Id: field.crud.inc,v 1.65 2010/06/17 13:16:57 dries Exp $
+// $Id: field.crud.inc,v 1.66 2010/08/03 01:49:23 dries Exp $
 
 /**
  * @file
@@ -40,7 +40,7 @@
  * - field_name (string)
  *     The name of the field. Each field name is unique within Field API.
  *     When a field is attached to an entity, the field's data is stored
- *     in $entity->$field_name.
+ *     in $entity->$field_name. Maximum length is 32 characters.
  * - type (string)
  *     The type of the field, such as 'text' or 'image'. Field types
  *     are defined by modules that implement hook_field_info().
@@ -53,7 +53,9 @@
  * - translatable (integer)
  *     Whether the field is translatable.
  * - locked (integer)
- *     TODO: undefined.
+ *     Whether or not the field is available for editing. If TRUE, users can't
+ *     change field settings or create new instances of the field in the UI.
+ *     Defaults to FALSE.
  * - module (string, read-only)
  *     The name of the module that implements the field type.
  * - active (integer, read-only)
@@ -189,9 +191,6 @@
  *        - ...
  *
  * Bundles are represented by two strings, an entity type and a bundle name.
- *
- * TODO D7 : document max length for field types, widget types,
- * formatter names...
  */
 /**
  * @} End of "defgroup field_structs".
