@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.441 2010/08/01 00:18:20 dries Exp $
+// $Id: aggregator.module,v 1.442 2010/08/04 03:54:54 dries Exp $
 
 /**
  * @file
@@ -547,9 +547,9 @@ function aggregator_save_feed($edit) {
     if (!empty($edit['category'])) {
       foreach ($edit['category'] as $cid => $value) {
         if ($value) {
-          db_merge('aggregator_category_feed')
-            ->key(array('fid' => $edit['fid']))
+          db_insert('aggregator_category_feed')
             ->fields(array(
+              'fid' => $edit['fid'],
               'cid' => $cid,
             ))
             ->execute();
