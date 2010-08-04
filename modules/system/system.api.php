@@ -147,11 +147,11 @@ function hook_hook_info_alter(&$hooks) {
  *     described by an array with the following key/value pairs:
  *     - label: The human-readable name of the view mode
  *     - custom settings: A boolean specifying whether the view mode should by
- *     default use its own custom field display settings. If FALSE, entities
- *     displayed in this view mode will reuse the 'default' display settings by
- *     default (e.g. right after the module exposing the view mode is enabled),
- *     but administrators can later use the Field UI to apply custom display
- *     settings specific to the view mode.
+ *       default use its own custom field display settings. If FALSE, entities
+ *       displayed in this view mode will reuse the 'default' display settings
+ *       by default (e.g. right after the module exposing the view mode is
+ *       enabled), but administrators can later use the Field UI to apply custom
+ *       display settings specific to the view mode.
  *
  * @see entity_load()
  * @see hook_entity_info_alter()
