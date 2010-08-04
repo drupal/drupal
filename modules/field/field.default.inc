@@ -65,12 +65,10 @@ function field_default_validate($entity_type, $entity, $field, $instance, $langc
 }
 
 function field_default_submit($entity_type, $entity, $field, $instance, $langcode, &$items, $form, &$form_state) {
-  // Reorder items to account for drag-n-drop reordering.
-  if (field_behaviors_widget('multiple values', $instance) == FIELD_BEHAVIOR_DEFAULT) {
-    $items = _field_sort_items($field, $items);
-  }
   // Filter out empty values.
   $items = _field_filter_items($field, $items);
+  // Reorder items to account for drag-n-drop reordering.
+  $items = _field_sort_items($field, $items);
 }
 
 /**
