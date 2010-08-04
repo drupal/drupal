@@ -1,5 +1,5 @@
 <?php
-// $Id: file.test,v 1.18 2010/07/02 12:37:57 dries Exp $
+// $Id: file.test,v 1.19 2010/08/04 03:50:17 dries Exp $
 
 /**
  * @file
@@ -96,7 +96,6 @@ class FileFieldTestCase extends DrupalWebTestCase {
    * Update an existing file field with new settings.
    */
   function updateFileField($name, $type_name, $instance_settings = array(), $widget_settings = array()) {
-    $field = field_info_field($name);
     $instance = field_info_instance('node', $name, $type_name);
     $instance['settings'] = array_merge($instance['settings'], $instance_settings);
     $instance['widget']['settings'] = array_merge($instance['widget']['settings'], $widget_settings);
@@ -246,6 +245,9 @@ class FileFieldWidgetTestCase extends FileFieldTestCase {
       $node = node_load($nid, NULL, TRUE);
       $node_file = (object) $node->{$field_name}[LANGUAGE_NONE][0];
       $this->assertFileExists($node_file, t('New file saved to disk on node creation.'));
+      // Test file download.
+      $this->drupalGet(file_create_url($node_file->uri));
+      $this->assertResponse(200, t('Confirmed that the generated URL is correct by downloading the shipped file.'));
 
       // Ensure the edit page has a remove button instead of an upload button.
       $this->drupalGet("node/$nid/edit");
@@ -277,6 +279,27 @@ class FileFieldWidgetTestCase extends FileFieldTestCase {
       $node = node_load($nid, NULL, TRUE);
       $this->assertTrue(empty($node->{$field_name}[LANGUAGE_NONE][0]['fid']), t('File was successfully removed from the node.'));
     }
+
+    // Test private download method.
+    $edit = array('field[settings][uri_scheme]' => 'private');
+    $this->drupalPost("admin/structure/types/manage/$type_name/fields/$field_name", $edit, t('Save settings'));
+    // Create a new node with the uploaded file and ensure it got uploaded
+    // successfully.
+    $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
+    $node = node_load($nid, NULL, TRUE);
+    $node_file = (object) $node->{$field_name}[LANGUAGE_NONE][0];
+    $this->assertFileExists($node_file, t('New file saved to disk on node creation.'));
+    // Test file download.
+    $this->drupalGet(file_create_url($node_file->uri));
+    $this->assertResponse(200, t('Confirmed that the generated URL is correct by downloading the shipped file.'));
+    // Ensure we can't change 'uri_scheme' field settings while there are some
+    // entities with uploaded files.
+    $this->drupalGet("admin/structure/types/manage/$type_name/fields/$field_name");
+    $this->assertFieldByXpath('//input[@id="edit-field-settings-uri-scheme-public" and @disabled="disabled"]', 'public', t('Upload destination setting disabled.'));
+    // Delete node and confirm that setting could be changed.
+    node_delete($nid);
+    $this->drupalGet("admin/structure/types/manage/$type_name/fields/$field_name");
+    $this->assertFieldByXpath('//input[@id="edit-field-settings-uri-scheme-public" and not(@disabled)]', 'public', t('Upload destination setting enabled.'));
   }
 }
 
