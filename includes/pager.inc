@@ -1,5 +1,5 @@
 <?php
-// $Id: pager.inc,v 1.80 2010/05/06 05:59:30 webchick Exp $
+// $Id: pager.inc,v 1.81 2010/08/04 03:46:16 dries Exp $
 
 /**
  * @file
@@ -58,7 +58,6 @@ class PagerDefault extends SelectQueryExtender {
    * to it.
    */
   public function execute() {
-    global $pager_page_array, $pager_total, $pager_total_items, $pager_limits;
 
     // Add convenience tag to mark that this is an extended query. We have to
     // do this in the constructor to ensure that it is set before preExecute()
@@ -73,21 +72,9 @@ class PagerDefault extends SelectQueryExtender {
     }
     $this->ensureElement();
 
-    $page = isset($_GET['page']) ? $_GET['page'] : '';
-
-    // Convert comma-separated $page to an array, used by other functions.
-    $pager_page_array = explode(',', $page);
-
-    if (!isset($pager_page_array[$this->element])) {
-      $pager_page_array[$this->element] = 0;
-    }
-
-    // We calculate the total of pages as ceil(items / limit).
-    $pager_total_items[$this->element] = $this->getCountQuery()->execute()->fetchField();
-    $pager_total[$this->element] = ceil($pager_total_items[$this->element] / $this->limit);
-    $pager_page_array[$this->element] = max(0, min((int) $pager_page_array[$this->element], ((int) $pager_total[$this->element]) - 1));
-    $pager_limits[$this->element] = $this->limit;
-    $this->range($pager_page_array[$this->element] * $this->limit, $this->limit);
+    $total_items = $this->getCountQuery()->execute()->fetchField();
+    $current_page = pager_default_initialize($total_items, $this->limit, $this->element);
+    $this->range($current_page * $this->limit, $this->limit);
 
     // Now that we've added our pager-based range instructions, run the query normally.
     return $this->query->execute();
@@ -168,6 +155,124 @@ class PagerDefault extends SelectQueryExtender {
     $this->element = $element;
     return $this;
   }
+}
+
+/**
+ * Returns the current page being requested for display within a pager.
+ *
+ * @param $element
+ *  An optional integer to distinguish between multiple pagers on one page.
+ *
+ * @return
+ *  The number of the current requested page, within the pager represented by
+ *  $element. This is determined from the URL query parameter $_GET['page'], or
+ *  0 by default. Note that this number may differ from the actual page being
+ *  displayed. For example, if a search for "example text" brings up three
+ *  pages of results, but a users visits search/node/example+text?page=10, this
+ *  function will return 10, even though the default pager implementation
+ *  adjusts for this and still displays the third page of search results at
+ *  that URL.
+ *
+ * @see pager_default_initialize()
+ */
+function pager_find_page($element = 0) {
+  $page = isset($_GET['page']) ? $_GET['page'] : '';
+  $page_array = explode(',', $page);
+  if (!isset($page_array[$element])) {
+    $page_array[$element] = 0;
+  }
+  return (int) $page_array[$element];
+}
+
+/**
+ * Initializes a pager for theme('pager').
+ *
+ * This function sets up the necessary global variables so that future calls
+ * to theme('pager') will render a pager that correctly corresponds to the
+ * items being displayed.
+ *
+ * If the items being displayed result from a database query peformed using
+ * Drupal's database API, and if you have control over the construction of the
+ * database query, you do not need to call this function directly; instead, you
+ * can simply extend the query object with the 'PagerDefault' extender before
+ * executing it. For example:
+ * @code
+ *   $query = db_select('some_table')->extend('PagerDefault');
+ * @endcode
+ *
+ * However, if you are using a different method for generating the items to be
+ * paged through, then you should call this function in preparation.
+ *
+ * The following example shows how this function can be used in a page callback
+ * that invokes an external datastore with an SQL-like syntax:
+ * @code
+ *   // First find the total number of items and initialize the pager.
+ *   $where = "status = 1";
+ *   $total = mymodule_select("SELECT COUNT(*) FROM data " . $where)->result();
+ *   $num_per_page = variable_get('mymodule_num_per_page', 10);
+ *   $page = pager_default_initialize($total, $num_per_page);
+ *
+ *   // Next, retrieve and display the items for the current page.
+ *   $offset = $num_per_page * $page;
+ *   $result = mymodule_select("SELECT * FROM data " . $where . " LIMIT %d, %d", $offset, $num_per_page)->fetchAll();
+ *   $output = theme('mymodule_results', array('result' => $result));
+ *
+ *   // Finally, display the pager controls, and return.
+ *   $output .= theme('pager');
+ *   return $output;
+ * @endcode
+ *
+ * A second example involves a page callback that invokes an external search
+ * service where the total number of matching results is provided as part of
+ * the returned set (so that we do not need a separate query in order to obtain
+ * this information). Here, we call pager_find_page() to calculate the desired
+ * offset before the search is invoked:
+ * @code
+ *   // Perform the query, using the requested offset from pager_find_page().
+ *   // This comes from a URL parameter, so here we are assuming that the URL
+ *   // parameter corresponds to an actual page of results that will exist
+ *   // within the set.
+ *   $page = pager_find_page();
+ *   $num_per_page = variable_get('mymodule_num_per_page', 10);
+ *   $offset = $num_per_page * $page;
+ *   $result = mymodule_remote_search($keywords, $offset, $num_per_page);
+ *
+ *   // Now that we have the total number of results, initialize the pager.
+ *   pager_default_initialize($result->total, $num_per_page);
+ *
+ *   // Display the search results.
+ *   $output = theme('search_results', array('results' => $result->data, 'type' => 'remote'));
+ *
+ *   // Finally, display the pager controls, and return.
+ *   $output .= theme('pager');
+ *   return $output;
+ * @endcode
+ *
+ * @param $total
+ *  The total number of items to be paged.
+ * @param $limit
+ *  The number of items the calling code will display per page.
+ * @param $element
+ *  An optional integer to distinguish between multiple pagers on one page.
+ *
+ * @return
+ *   The number of the current page, within the pager represented by $element.
+ *   This is determined from the URL query parameter $_GET['page'], or 0 by
+ *   default. However, if a page that does not correspond to the actual range
+ *   of the result set was requested, this function will return the closest
+ *   page actually within the result set.
+ */
+function pager_default_initialize($total, $limit, $element = 0) {
+  global $pager_page_array, $pager_total, $pager_total_items, $pager_limits;
+
+  $page = pager_find_page($element);
+
+  // We calculate the total of pages as ceil(items / limit).
+  $pager_total_items[$element] = $total;
+  $pager_total[$element] = ceil($pager_total_items[$element] / $limit);
+  $pager_page_array[$element] = max(0, min($page, ((int) $pager_total[$element]) - 1));
+  $pager_limits[$element] = $limit;
+  return $pager_page_array[$element];
 }
 
 /**
