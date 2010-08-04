@@ -1,5 +1,5 @@
 <?php
-// $Id: field.default.inc,v 1.38 2010/06/17 13:44:45 dries Exp $
+// $Id: field.default.inc,v 1.39 2010/08/04 06:55:35 webchick Exp $
 
 /**
  * @file
@@ -65,12 +65,10 @@ function field_default_validate($entity_type, $entity, $field, $instance, $langc
 }
 
 function field_default_submit($entity_type, $entity, $field, $instance, $langcode, &$items, $form, &$form_state) {
-  // Reorder items to account for drag-n-drop reordering.
-  if (field_behaviors_widget('multiple values', $instance) == FIELD_BEHAVIOR_DEFAULT) {
-    $items = _field_sort_items($field, $items);
-  }
   // Filter out empty values.
   $items = _field_filter_items($field, $items);
+  // Reorder items to account for drag-n-drop reordering.
+  $items = _field_sort_items($field, $items);
 }
 
 /**

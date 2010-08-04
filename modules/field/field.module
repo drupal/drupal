@@ -1,5 +1,5 @@
 <?php
-// $Id: field.module,v 1.79 2010/08/03 23:01:14 dries Exp $
+// $Id: field.module,v 1.80 2010/08/04 06:55:35 webchick Exp $
 /**
  * @file
  * Attach custom data fields to Drupal entities.
@@ -322,24 +322,18 @@ function _field_sort_items($field, $items) {
  * (copied form element_sort(), which acts on #weight keys)
  */
 function _field_sort_items_helper($a, $b) {
-  $a_weight = (is_array($a) && isset($a['_weight'])) ? $a['_weight'] : 0;
-  $b_weight = (is_array($b) && isset($b['_weight'])) ? $b['_weight'] : 0;
-  if ($a_weight == $b_weight) {
-    return 0;
-  }
-  return ($a_weight < $b_weight) ? -1 : 1;
+  $a_weight = (is_array($a) ? $a['_weight'] : 0);
+  $b_weight = (is_array($b) ? $b['_weight'] : 0);
+  return $a_weight - $b_weight;
 }
 
 /**
  * Same as above, using ['_weight']['#value']
  */
 function _field_sort_items_value_helper($a, $b) {
-  $a_weight = (is_array($a) && isset($a['_weight']['#value'])) ? $a['_weight']['#value'] : 0;
-  $b_weight = (is_array($b) && isset($b['_weight']['#value'])) ? $b['_weight']['#value'] : 0;
-  if ($a_weight == $b_weight) {
-    return 0;
-  }
-  return ($a_weight < $b_weight) ? -1 : 1;
+  $a_weight = (is_array($a) && isset($a['_weight']['#value']) ? $a['_weight']['#value'] : 0);
+  $b_weight = (is_array($b) && isset($b['_weight']['#value']) ? $b['_weight']['#value'] : 0);
+  return $a_weight - $b_weight;
 }
 
 /**
