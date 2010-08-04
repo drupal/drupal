@@ -1062,19 +1062,28 @@ class UserAdminTestCase extends DrupalWebTestCase {
     $this->drupalPost('admin/people', $edit, t('Filter'));
 
     // Check if the correct users show up.
-    $this->assertNoText($user_a->name, t('User A not on filtered by perm  admin users page'));
+    $this->assertNoText($user_a->name, t('User A not on filtered by perm admin users page'));
     $this->assertText($user_b->name, t('Found user B on filtered by perm admin users page'));
     $this->assertText($user_c->name, t('Found user C on filtered by perm admin users page'));
 
+    // Filter the users by role. Grab the system-generated role name for User C.
+    $edit['role'] = max(array_flip($user_c->roles));
+    $this->drupalPost('admin/people', $edit, t('Refine'));
+
+    // Check if the correct users show up when filtered by role.
+    $this->assertNoText($user_a->name, t('User A not on filtered by role on admin users page'));
+    $this->assertNoText($user_b->name, t('User B not on filtered by role on admin users page'));
+    $this->assertText($user_c->name, t('User C on filtered by role on admin users page'));
+
     // Test blocking of a user.
-    $account = user_load($user_b->uid);
-    $this->assertEqual($account->status, 1, 'User B not blocked');
+    $account = user_load($user_c->uid);
+    $this->assertEqual($account->status, 1, 'User C not blocked');
     $edit = array();
     $edit['operation'] = 'block';
     $edit['accounts[' . $account->uid . ']'] = TRUE;
     $this->drupalPost('admin/people', $edit, t('Update'));
-    $account = user_load($user_b->uid, TRUE);
-    $this->assertEqual($account->status, 0, 'User B blocked');
+    $account = user_load($user_c->uid, TRUE);
+    $this->assertEqual($account->status, 0, 'User C blocked');
   }
 }
 

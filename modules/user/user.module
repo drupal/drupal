@@ -3209,13 +3209,13 @@ function user_build_filter_query(SelectQuery $query) {
       if (user_access($value, $account)) {
         continue;
       }
-      $user_role_alias = $query->join('users_roles', 'ur', '%alias.uid = u.uid');
-      $permission_alias = $query->join('role_permission', 'p', $user_role_alias . '.rid = %alias.rid');
+      $users_roles_alias = $query->join('users_roles', 'ur', '%alias.uid = u.uid');
+      $permission_alias = $query->join('role_permission', 'p', $users_roles_alias . '.rid = %alias.rid');
       $query->condition($permission_alias . '.permission', $value);
     }
     elseif ($key == 'role') {
-      $user_roles_alias = $query->join('users_roles', 'ur', '%alias.uid = u.uid');
-      $query->condition($user_role_alias . '.rid' , $value);
+      $users_roles_alias = $query->join('users_roles', 'ur', '%alias.uid = u.uid');
+      $query->condition($users_roles_alias . '.rid' , $value);
     }
     else {
       $query->condition($filters[$key]['field'], $value);
