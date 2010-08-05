@@ -961,7 +961,7 @@ function locale_block_view($type) {
  */
 function locale_url_outbound_alter(&$path, &$options, $original_path) {
   // Only modify internal URLs.
-  if (!$options['external']) {
+  if (!$options['external'] && drupal_multilingual()) {
     static $callbacks;
 
     if (!isset($callbacks)) {
