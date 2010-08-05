@@ -281,7 +281,7 @@ function dashboard_region_descriptions() {
  * Return an array of dashboard region names.
  */
 function dashboard_regions() {
-  static $regions;
+  $regions = &drupal_static(__FUNCTION__);
   if (!isset($regions)) {
     $regions = array_keys(dashboard_region_descriptions());
   }
