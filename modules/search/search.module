@@ -170,7 +170,7 @@ function search_menu() {
   $items['search'] = array(
     'title' => 'Search',
     'page callback' => 'search_view',
-    'access arguments' => array('search content'),
+    'access callback' => 'search_is_active',
     'type' => MENU_SUGGESTED_ITEM,
     'file' => 'search.pages.inc',
   );
@@ -201,8 +201,9 @@ function search_menu() {
   // http://drupal.org/node/245103 for details.
 
   drupal_static_reset('search_get_info');
-  if ($active = variable_get('search_active_modules', array('node', 'user'))) {
-    foreach (array_intersect_key(search_get_info(), array_flip($active)) as $module => $search_info) {
+  $default_info = search_get_default_module_info();
+  if ($default_info) {
+    foreach (search_get_info() as $module => $search_info) {
       $path = 'search/' . $search_info['path'];
       $items[$path] = array(
         'title' => $search_info['title'],
@@ -210,9 +211,9 @@ function search_menu() {
         'page arguments' => array($module),
         'access callback' => '_search_menu_access',
         'access arguments' => array($module),
-        'type' => $module == 'node' ? MENU_DEFAULT_LOCAL_TASK : MENU_LOCAL_TASK,
+        'type' => MENU_LOCAL_TASK,
         'file' => 'search.pages.inc',
-        'weight' => $module == 'node' ? -10 : 0,
+        'weight' => $module == $default_info['module'] ? -10 : 0,
       );
       $items["$path/%menu_tail"] = array(
         'title' => $search_info['title'],
@@ -226,9 +227,9 @@ function search_menu() {
         'file' => 'search.pages.inc',
         'weight' => 0,
         // These tabs are not subtabs.
-        'tab_root' => 'search/node/%',
+        'tab_root' => 'search/' . $default_info['path'] . '/%',
         // These tabs need to display at the same level.
-        'tab_parent' => 'search',
+        'tab_parent' => 'search/' . $default_info['path'],
       );
     }
   }
@@ -236,19 +237,63 @@ function search_menu() {
 }
 
 /**
- * Get information about all available search hooks.
+ * Determines access for the ?q=search path.
  */
-function search_get_info() {
+function search_is_active() {
+  // This path cannot be accessed if there are no active modules.
+  return user_access('search content') && search_get_info();
+}
+
+/**
+ * Returns information about available search modules.
+ *
+ * @param $all
+ *   If TRUE, information about all enabled modules implementing
+ *   hook_search_info() will be returned. If FALSE (default), only modules that
+ *   have been set to active on the search settings page will be returned.
+ *
+ * @return
+ *   Array of hook_search_info() return values, keyed by module name. The
+ *   'title' and 'path' array elements will be set to defaults for each module
+ *   if not supplied by hook_search_info(), and an additional array element of
+ *   'module' will be added (set to the module name).
+ */
+function search_get_info($all = FALSE) {
   $search_hooks = &drupal_static(__FUNCTION__);
 
   if (!isset($search_hooks)) {
     foreach (module_implements('search_info') as $module) {
       $search_hooks[$module] = call_user_func($module . '_search_info');
-      // Use module name as the default.
+      // Use module name as the default value.
       $search_hooks[$module] += array('title' => $module, 'path' => $module);
+      // Include the module name itself in the array.
+      $search_hooks[$module]['module'] = $module;
     }
   }
-  return $search_hooks;
+
+  if ($all) {
+    return $search_hooks;
+  }
+
+  $active = variable_get('search_active_modules', array('node', 'user'));
+  return array_intersect_key($search_hooks, array_flip($active));
+}
+
+/**
+ * Returns information about the default search module.
+ *
+ * @return
+ *    The search_get_info() array element for the default search module, if any.
+ */
+function search_get_default_module_info() {
+  $info = search_get_info();
+  $default = variable_get('search_default_module', 'node');
+  if (isset($info[$default])) {
+    return $info[$default];
+  }
+  // The variable setting does not match any active module, so just return
+  // the info for the first active module (if any).
+  return reset($info);
 }
 
 /**
@@ -867,23 +912,42 @@ function search_get_keys() {
  */
 
 /**
- * Render a search form.
+ * Builds a search form.
  *
  * @param $action
- *   Form action. Defaults to "search/$type". This will be run through url().
+ *   Form action. Defaults to "search/$path", where $path is the search path
+ *   associated with the $type module in its hook_search_info(). This will be
+ *   run through url().
  * @param $keys
  *   The search string entered by the user, containing keywords for the search.
  * @param $type
- *   The type of search to render the node for. Must be the name of module
- *   which implements hook_search(). Defaults to 'node'.
+ *   The search module to render the form for: a module that implements
+ *   hook_search_info(). If not supplied, the default search module is used.
  * @param $prompt
- *   A piece of text to put before the form (e.g. "Enter your keywords")
+ *   Label for the keywords field. Defaults to t('Enter your keywords') if NULL.
+ *   Supply '' to omit.
+ *
  * @return
- *   An HTML string containing the search form.
+ *   A Form API array for the search form.
  */
 function search_form($form, &$form_state, $action = '', $keys = '', $type = NULL, $prompt = NULL) {
+  $module_info = FALSE;
+  if (!$type) {
+    $module_info = search_get_default_module_info();
+  }
+  else {
+    $info = search_get_info();
+    $module_info = isset($info[$type]) ? $info[$type] : FALSE;
+  }
+
+  // Sanity check.
+  if (!$module_info) {
+    form_set_error(NULL, t('Search is currently disabled.'), 'error');
+    return $form;
+  }
+
   if (!$action) {
-    $action = 'search/' . $type;
+    $action = 'search/' . $module_info['path'];
   }
   if (is_null($prompt)) {
     $prompt = t('Enter your keywords');
@@ -945,7 +1009,13 @@ function search_box_form_submit($form, &$form_state) {
   }
 
   $form_id = $form['form_id']['#value'];
-  $form_state['redirect'] = 'search/node/' . trim($form_state['values'][$form_id]);
+  $info = search_get_default_module_info();
+  if ($info) {
+    $form_state['redirect'] = 'search/' . $info['path'] . '/' . trim($form_state['values'][$form_id]);
+  }
+  else {
+    form_set_error(NULL, t('Search is currently disabled.'), 'error');
+  }
 }
 
 /**
@@ -976,19 +1046,25 @@ function template_preprocess_search_block_form(&$variables) {
 }
 
 /**
- * Perform a standard search on the given keys, and return the formatted results.
+ * Performs a search by calling hook_search_execute().
+ *
+ * @param $keys
+ *   Keyword query to search on.
+ * @param $module
+ *   Search module to search.
+ *
+ * @return
+ *   Formatted search results. No return value if $keys are not supplied or
+ *   if the given search module is not active.
  */
-function search_data($keys = NULL, $type = 'node') {
-
-  if (isset($keys)) {
-    if (module_hook($type, 'search_execute')) {
-      $results = module_invoke($type, 'search_execute', $keys);
-      if (module_hook($type, 'search_page')) {
-        return module_invoke($type, 'search_page', $results);
-      }
-      else {
-        return theme('search_results', array('results' => $results, 'type' => $type));
-      }
+function search_data($keys, $module) {
+  if (module_hook($module, 'search_execute')) {
+    $results = module_invoke($module, 'search_execute', $keys);
+    if (module_hook($module, 'search_page')) {
+      return module_invoke($module, 'search_page', $results);
+    }
+    else {
+      return theme('search_results', array('results' => $results, 'type' => $module));
     }
   }
 }
@@ -1116,6 +1192,9 @@ function _search_excerpt_replace(&$text) {
   $text = preg_quote($text, '/');
 }
 
+/**
+ * Implements hook_forms().
+ */
 function search_forms() {
   $forms['search_block_form']= array(
     'callback' => 'search_box',
@@ -1123,3 +1202,4 @@ function search_forms() {
   );
   return $forms;
 }
+

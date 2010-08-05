@@ -8,39 +8,60 @@
 
 /**
  * Menu callback; presents the search form and/or search results.
+ *
+ * @param $module
+ *   Search module to use for the search.
  */
-function search_view($type = 'node') {
+function search_view($module = NULL) {
+  $info = FALSE;
+  $redirect = FALSE;
+
+  if (!empty($module)) {
+    $active_module_info = search_get_info();
+    if (isset($active_module_info[$module])) {
+      $info = $active_module_info[$module];
+    }
+  }
+
+  if (empty($info)) {
+    // No path or invalid path: find the default module. Note that if there
+    // are no enabled search modules, this function should never be called,
+    // since hook_menu() would not have defined any search paths.
+    $info = search_get_default_module_info();
+    $redirect = TRUE;
+  }
+
   // Search form submits with POST but redirects to GET. This way we can keep
   // the search query URL clean as a whistle:
-  // search/type/keyword+keyword
+  // search/type_path/keyword+keyword
   if (!isset($_POST['form_id'])) {
     $keys = search_get_keys();
-    if ($_GET['q'] != 'search' && $type == 'node' && !$keys) {
-      // Due to how search_menu() sets up the tabs, path search/node would
-      // display two sets of tabs. So instead, if there are no keywords and
-      // we're on the node tab, just redirect to the bare 'search' path.
-      drupal_goto('search');
+    if ($redirect) {
+      // Redirect from bare /search or an invalid path to the default search path.
+      $path = 'search/' . $info['path'];
+      if ($keys) {
+        $path .= '/' . $keys;
+      }
+      drupal_goto($path);
     }
-
-    // Only perform search if there is non-whitespace search term:
+    // Only perform search if there is a non-whitespace search term.
     $results = '';
     if (trim($keys)) {
       // Log the search keys.
-      $info = search_get_info();
-      watchdog('search', 'Searched %type for %keys.', array('%keys' => $keys, '%type' => $info[$type]['title']), WATCHDOG_NOTICE, l(t('results'), 'search/' . $type . '/' . $keys));
+      watchdog('search', 'Searched %type for %keys.', array('%keys' => $keys, '%type' => $info['title']), WATCHDOG_NOTICE, l(t('results'), 'search/' . $info['path'] . '/' . $keys));
 
       // Collect the search results.
-      $results = search_data($keys, $type);
+      $results = search_data($keys, $info['module']);
 
       // Construct the search form.
-      $build['search_form'] = drupal_get_form('search_form', NULL, $keys, $type);
+      $build['search_form'] = drupal_get_form('search_form', NULL, $keys, $info['module']);
       $build['search_results'] = array('#markup' => $results);
 
       return $build;
     }
   }
 
-  return drupal_get_form('search_form', NULL, empty($keys) ? '' : $keys, $type);
+  return drupal_get_form('search_form', NULL, empty($keys) ? '' : $keys, $info['module']);
 }
 
 /**
@@ -113,10 +134,9 @@ function search_form_submit($form, &$form_state) {
   $keys = $form_state['values']['processed_keys'];
   if ($keys == '') {
     form_set_error('keys', t('Please enter some keywords.'));
-    // Fall through to the drupal_goto() call.
+    // Fall through to the form redirect.
   }
 
-  $type = $form_state['values']['module'] ? $form_state['values']['module'] : 'node';
   $form_state['redirect'] = $form_state['action'] . '/' . $keys;
   return;
 }

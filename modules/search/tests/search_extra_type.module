@@ -1,0 +1,34 @@
+<?php
+// $Id$
+
+/**
+ * @file
+ * Dummy module implementing a search type for search module testing.
+ */
+
+/**
+ * Implements hook_search_info().
+ */
+function search_extra_type_search_info() {
+  return array(
+    'title' => 'Dummy search type',
+    'path' => 'dummy_path',
+  );
+}
+
+/**
+ * Implements hook_search_execute().
+ *
+ * This is a dummy search, so when search "executes", we just return a dummy
+ * result.
+ */
+function search_extra_type_search_execute() {
+  return array(
+    array(
+      'link' => url('node'),
+      'type' => 'Dummy result type',
+      'title' => 'Dummy title',
+      'snippet' => 'Dummy search snippet to display',
+    ),
+  );
+}
