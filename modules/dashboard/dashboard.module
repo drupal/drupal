@@ -1,5 +1,5 @@
 <?php
-// $Id: dashboard.module,v 1.31 2010/06/17 13:16:57 dries Exp $
+// $Id: dashboard.module,v 1.32 2010/08/05 08:39:08 webchick Exp $
 
 /**
  * Implements hook_help().
@@ -281,7 +281,7 @@ function dashboard_region_descriptions() {
  * Return an array of dashboard region names.
  */
 function dashboard_regions() {
-  static $regions;
+  $regions = &drupal_static(__FUNCTION__);
   if (!isset($regions)) {
     $regions = array_keys(dashboard_region_descriptions());
   }
