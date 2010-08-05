@@ -1,5 +1,5 @@
 <?php
-// $Id: filetransfer.test,v 1.6 2009/11/10 17:27:53 webchick Exp $
+// $Id: filetransfer.test,v 1.7 2010/08/05 23:26:35 webchick Exp $
 
 
 class FileTranferTest extends DrupalWebTestCase {
@@ -80,7 +80,7 @@ class FileTranferTest extends DrupalWebTestCase {
 
     $gotit = TRUE;
     try {
-      $this->testConnection->copyDirectory($source, DRUPAL_ROOT . '/'. file_directory_path());
+      $this->testConnection->copyDirectory($source, DRUPAL_ROOT . '/' . file_directory_path());
     }
     catch (FileTransferException $e) {
       $gotit = FALSE;

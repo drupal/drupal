@@ -1,5 +1,5 @@
 <?php
-// $Id: database_test.test,v 1.95 2010/07/28 10:52:12 dries Exp $
+// $Id: database_test.test,v 1.96 2010/08/05 23:26:35 webchick Exp $
 
 /**
  * Dummy class for fetching into a class.
@@ -48,7 +48,7 @@ class DatabaseTestCase extends DrupalWebTestCase {
     }
 
     foreach ($schema as $name => $data) {
-      $this->assertTrue(db_table_exists($name), t('Table @name created successfully.', array('@name' => $name)));
+      $this->assertTrue(db_table_exists($name), 'Table ' . $name . ' created successfully.');
     }
   }
 
@@ -191,25 +191,25 @@ class DatabaseConnectionTestCase extends DatabaseTestCase {
     $db1 = Database::getConnection('default', 'default');
     $db2 = Database::getConnection('slave', 'default');
 
-    $this->assertNotNull($db1, t('default connection is a real connection object.'));
-    $this->assertNotNull($db2, t('slave connection is a real connection object.'));
-    $this->assertNotIdentical($db1, $db2, t('Each target refers to a different connection.'));
+    $this->assertNotNull($db1, 'default connection is a real connection object.');
+    $this->assertNotNull($db2, 'slave connection is a real connection object.');
+    $this->assertNotIdentical($db1, $db2, 'Each target refers to a different connection.');
 
     // Try to open those targets another time, that should return the same objects.
     $db1b = Database::getConnection('default', 'default');
     $db2b = Database::getConnection('slave', 'default');
-    $this->assertIdentical($db1, $db1b, t('A second call to getConnection() returns the same object.'));
-    $this->assertIdentical($db2, $db2b, t('A second call to getConnection() returns the same object.'));
+    $this->assertIdentical($db1, $db1b, 'A second call to getConnection() returns the same object.');
+    $this->assertIdentical($db2, $db2b, 'A second call to getConnection() returns the same object.');
 
     // Try to open an unknown target.
     $unknown_target = $this->randomName();
     $db3 = Database::getConnection($unknown_target, 'default');
-    $this->assertNotNull($db3, t('Opening an unknown target returns a real connection object.'));
-    $this->assertIdentical($db1, $db3, t('An unknown target opens the default connection.'));
+    $this->assertNotNull($db3, 'Opening an unknown target returns a real connection object.');
+    $this->assertIdentical($db1, $db3, 'An unknown target opens the default connection.');
 
     // Try to open that unknown target another time, that should return the same object.
     $db3b = Database::getConnection($unknown_target, 'default');
-    $this->assertIdentical($db3, $db3b, t('A second call to getConnection() returns the same object.'));
+    $this->assertIdentical($db3, $db3b, 'A second call to getConnection() returns the same object.');
   }
 
   /**
@@ -227,7 +227,7 @@ class DatabaseConnectionTestCase extends DatabaseTestCase {
     $db1 = Database::getConnection('default', 'default');
     $db2 = Database::getConnection('slave', 'default');
 
-    $this->assertIdentical($db1, $db2, t('Both targets refer to the same connection.'));
+    $this->assertIdentical($db1, $db2, 'Both targets refer to the same connection.');
   }
 
   /**
@@ -242,7 +242,7 @@ class DatabaseConnectionTestCase extends DatabaseTestCase {
     $db2 = Database::getConnection('default', 'default');
 
     // Opening a connection after closing it should yield an object different than the original.
-    $this->assertNotIdentical($db1, $db2, t('Opening the default connection after it is closed returns a new object.'));
+    $this->assertNotIdentical($db1, $db2, 'Opening the default connection after it is closed returns a new object.');
   }
 
   /**
@@ -257,8 +257,8 @@ class DatabaseConnectionTestCase extends DatabaseTestCase {
 
     // In the MySQL driver, the port can be different, so check individual
     // options.
-    $this->assertEqual($connection_info['default']['driver'], $connectionOptions['driver'], t('The default connection info driver matches the current connection options driver.'));
-    $this->assertEqual($connection_info['default']['database'], $connectionOptions['database'], t('The default connection info database matches the current connection options database.'));
+    $this->assertEqual($connection_info['default']['driver'], $connectionOptions['driver'], 'The default connection info driver matches the current connection options driver.');
+    $this->assertEqual($connection_info['default']['database'], $connectionOptions['database'], 'The default connection info database matches the current connection options database.');
 
     // Set up identical slave and confirm connection options are identical.
     Database::addConnectionInfo('default', 'slave', $connection_info['default']);
@@ -267,7 +267,7 @@ class DatabaseConnectionTestCase extends DatabaseTestCase {
 
     // Get a fresh copy of the default connection options.
     $connectionOptions = $db->getConnectionOptions();
-    $this->assertIdentical($connectionOptions, $connectionOptions2, t('The default and slave connection options are identical.'));
+    $this->assertIdentical($connectionOptions, $connectionOptions2, 'The default and slave connection options are identical.');
 
     // Set up a new connection with different connection info.
     $test = $connection_info['default'];
@@ -277,7 +277,7 @@ class DatabaseConnectionTestCase extends DatabaseTestCase {
 
     // Get a fresh copy of the default connection options.
     $connectionOptions = $db->getConnectionOptions();
-    $this->assertNotEqual($connection_info['default']['database'], $connectionOptions['database'], t('The test connection info database does not match the current connection options database.'));
+    $this->assertNotEqual($connection_info['default']['database'], $connectionOptions['database'], 'The test connection info database does not match the current connection options database.');
   }
 }
 
@@ -302,14 +302,14 @@ class DatabaseFetchTestCase extends DatabaseTestCase {
   function testQueryFetchDefault() {
     $records = array();
     $result = db_query('SELECT name FROM {test} WHERE age = :age', array(':age' => 25));
-    $this->assertTrue($result instanceof DatabaseStatementInterface, t('Result set is a Drupal statement object.'));
+    $this->assertTrue($result instanceof DatabaseStatementInterface, 'Result set is a Drupal statement object.');
     foreach ($result as $record) {
       $records[] = $record;
-      $this->assertTrue(is_object($record), t('Record is an object.'));
-      $this->assertIdentical($record->name, 'John', t('25 year old is John.'));
+      $this->assertTrue(is_object($record), 'Record is an object.');
+      $this->assertIdentical($record->name, 'John', '25 year old is John.');
     }
 
-    $this->assertIdentical(count($records), 1, t('There is only one record.'));
+    $this->assertIdentical(count($records), 1, 'There is only one record.');
   }
 
   /**
@@ -320,11 +320,11 @@ class DatabaseFetchTestCase extends DatabaseTestCase {
     $result = db_query('SELECT name FROM {test} WHERE age = :age', array(':age' => 25), array('fetch' => PDO::FETCH_OBJ));
     foreach ($result as $record) {
       $records[] = $record;
-      $this->assertTrue(is_object($record), t('Record is an object.'));
-      $this->assertIdentical($record->name, 'John', t('25 year old is John.'));
+      $this->assertTrue(is_object($record), 'Record is an object.');
+      $this->assertIdentical($record->name, 'John', '25 year old is John.');
     }
 
-    $this->assertIdentical(count($records), 1, t('There is only one record.'));
+    $this->assertIdentical(count($records), 1, 'There is only one record.');
   }
 
   /**
@@ -335,12 +335,12 @@ class DatabaseFetchTestCase extends DatabaseTestCase {
     $result = db_query('SELECT name FROM {test} WHERE age = :age', array(':age' => 25), array('fetch' => PDO::FETCH_ASSOC));
     foreach ($result as $record) {
       $records[] = $record;
-      if ($this->assertTrue(is_array($record), t('Record is an array.'))) {
-        $this->assertIdentical($record['name'], 'John', t('Record can be accessed associatively.'));
+      if ($this->assertTrue(is_array($record), 'Record is an array.')) {
+        $this->assertIdentical($record['name'], 'John', 'Record can be accessed associatively.');
       }
     }
 
-    $this->assertIdentical(count($records), 1, t('There is only one record.'));
+    $this->assertIdentical(count($records), 1, 'There is only one record.');
   }
 
   /**
@@ -353,12 +353,12 @@ class DatabaseFetchTestCase extends DatabaseTestCase {
     $result = db_query('SELECT name FROM {test} WHERE age = :age', array(':age' => 25), array('fetch' => 'FakeRecord'));
     foreach ($result as $record) {
       $records[] = $record;
-      if ($this->assertTrue($record instanceof FakeRecord, t('Record is an object of class FakeRecord.'))) {
-        $this->assertIdentical($record->name, 'John', t('25 year old is John.'));
+      if ($this->assertTrue($record instanceof FakeRecord, 'Record is an object of class FakeRecord.')) {
+        $this->assertIdentical($record->name, 'John', '25 year old is John.');
       }
     }
 
-    $this->assertIdentical(count($records), 1, t('There is only one record.'));
+    $this->assertIdentical(count($records), 1, 'There is only one record.');
   }
 }
 
@@ -387,8 +387,8 @@ class DatabaseFetch2TestCase extends DatabaseTestCase {
     $result = db_query('SELECT name FROM {test} WHERE age = :age', array(':age' => 25), array('fetch' => PDO::FETCH_NUM));
     foreach ($result as $record) {
       $records[] = $record;
-      if ($this->assertTrue(is_array($record), t('Record is an array.'))) {
-        $this->assertIdentical($record[0], 'John', t('Record can be accessed numerically.'));
+      if ($this->assertTrue(is_array($record), 'Record is an array.')) {
+        $this->assertIdentical($record[0], 'John', 'Record can be accessed numerically.');
       }
     }
 
@@ -403,13 +403,13 @@ class DatabaseFetch2TestCase extends DatabaseTestCase {
     $result = db_query('SELECT name FROM {test} WHERE age = :age', array(':age' => 25), array('fetch' => PDO::FETCH_BOTH));
     foreach ($result as $record) {
       $records[] = $record;
-      if ($this->assertTrue(is_array($record), t('Record is an array.'))) {
-        $this->assertIdentical($record[0], 'John', t('Record can be accessed numerically.'));
-        $this->assertIdentical($record['name'], 'John', t('Record can be accessed associatively.'));
+      if ($this->assertTrue(is_array($record), 'Record is an array.')) {
+        $this->assertIdentical($record[0], 'John', 'Record can be accessed numerically.');
+        $this->assertIdentical($record['name'], 'John', 'Record can be accessed associatively.');
       }
     }
 
-    $this->assertIdentical(count($records), 1, t('There is only one record.'));
+    $this->assertIdentical(count($records), 1, 'There is only one record.');
   }
 
   /**
@@ -419,12 +419,12 @@ class DatabaseFetch2TestCase extends DatabaseTestCase {
     $records = array();
     $result = db_query('SELECT name FROM {test} WHERE age > :age', array(':age' => 25));
     $column = $result->fetchCol();
-    $this->assertIdentical(count($column), 3, t('fetchCol() returns the right number of records.'));
+    $this->assertIdentical(count($column), 3, 'fetchCol() returns the right number of records.');
 
     $result = db_query('SELECT name FROM {test} WHERE age > :age', array(':age' => 25));
     $i = 0;
     foreach ($result as $record) {
-      $this->assertIdentical($record->name, $column[$i++], t('Column matches direct accesss.'));
+      $this->assertIdentical($record->name, $column[$i++], 'Column matches direct accesss.');
     }
   }
 }
@@ -456,9 +456,9 @@ class DatabaseInsertTestCase extends DatabaseTestCase {
     $query->execute();
 
     $num_records_after = db_query('SELECT COUNT(*) FROM {test}')->fetchField();
-    $this->assertIdentical($num_records_before + 1, (int) $num_records_after, t('Record inserts correctly.'));
+    $this->assertIdentical($num_records_before + 1, (int) $num_records_after, 'Record inserts correctly.');
     $saved_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'Yoko'))->fetchField();
-    $this->assertIdentical($saved_age, '29', t('Can retrieve after inserting.'));
+    $this->assertIdentical($saved_age, '29', 'Can retrieve after inserting.');
   }
 
   /**
@@ -485,13 +485,13 @@ class DatabaseInsertTestCase extends DatabaseTestCase {
     $query->execute();
 
     $num_records_after = (int) db_query('SELECT COUNT(*) FROM {test}')->fetchField();
-    $this->assertIdentical($num_records_before + 3, $num_records_after, t('Record inserts correctly.'));
+    $this->assertIdentical($num_records_before + 3, $num_records_after, 'Record inserts correctly.');
     $saved_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'Larry'))->fetchField();
-    $this->assertIdentical($saved_age, '30', t('Can retrieve after inserting.'));
+    $this->assertIdentical($saved_age, '30', 'Can retrieve after inserting.');
     $saved_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'Curly'))->fetchField();
-    $this->assertIdentical($saved_age, '31', t('Can retrieve after inserting.'));
+    $this->assertIdentical($saved_age, '31', 'Can retrieve after inserting.');
     $saved_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'Moe'))->fetchField();
-    $this->assertIdentical($saved_age, '32', t('Can retrieve after inserting.'));
+    $this->assertIdentical($saved_age, '32', 'Can retrieve after inserting.');
   }
 
   /**
@@ -506,7 +506,7 @@ class DatabaseInsertTestCase extends DatabaseTestCase {
       'name' => 'Larry',
       'age' => '30',
     ));
-    $query->execute();  // This should run the insert, but leave the fields intact.
+    $query->execute(); // This should run the insert, but leave the fields intact.
 
     // We should be able to specify values in any order if named.
     $query->values(array(
@@ -520,13 +520,13 @@ class DatabaseInsertTestCase extends DatabaseTestCase {
     $query->execute();
 
     $num_records_after = db_query('SELECT COUNT(*) FROM {test}')->fetchField();
-    $this->assertIdentical((int) $num_records_before + 3, (int) $num_records_after, t('Record inserts correctly.'));
+    $this->assertIdentical((int) $num_records_before + 3, (int) $num_records_after, 'Record inserts correctly.');
     $saved_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'Larry'))->fetchField();
-    $this->assertIdentical($saved_age, '30', t('Can retrieve after inserting.'));
+    $this->assertIdentical($saved_age, '30', 'Can retrieve after inserting.');
     $saved_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'Curly'))->fetchField();
-    $this->assertIdentical($saved_age, '31', t('Can retrieve after inserting.'));
+    $this->assertIdentical($saved_age, '31', 'Can retrieve after inserting.');
     $saved_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'Moe'))->fetchField();
-    $this->assertIdentical($saved_age, '32', t('Can retrieve after inserting.'));
+    $this->assertIdentical($saved_age, '32', 'Can retrieve after inserting.');
   }
 
   /**
@@ -542,11 +542,11 @@ class DatabaseInsertTestCase extends DatabaseTestCase {
       ->values(array('Moe', '32'))
       ->execute();
     $saved_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'Larry'))->fetchField();
-    $this->assertIdentical($saved_age, '30', t('Can retrieve after inserting.'));
+    $this->assertIdentical($saved_age, '30', 'Can retrieve after inserting.');
     $saved_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'Curly'))->fetchField();
-    $this->assertIdentical($saved_age, '31', t('Can retrieve after inserting.'));
+    $this->assertIdentical($saved_age, '31', 'Can retrieve after inserting.');
     $saved_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'Moe'))->fetchField();
-    $this->assertIdentical($saved_age, '32', t('Can retrieve after inserting.'));
+    $this->assertIdentical($saved_age, '32', 'Can retrieve after inserting.');
   }
 
   /**
@@ -560,7 +560,7 @@ class DatabaseInsertTestCase extends DatabaseTestCase {
       ))
       ->execute();
 
-    $this->assertIdentical($id, '5', t('Auto-increment ID returned successfully.'));
+    $this->assertIdentical($id, '5', 'Auto-increment ID returned successfully.');
   }
 
   /**
@@ -573,7 +573,7 @@ class DatabaseInsertTestCase extends DatabaseTestCase {
     // re-ordered.
     $query->addExpression('tp.age', 'age');
     $query
-      ->fields('tp', array('name','job'))
+      ->fields('tp', array('name', 'job'))
       ->condition('tp.name', 'Meredith');
 
     // The resulting query should be equivalent to:
@@ -586,7 +586,7 @@ class DatabaseInsertTestCase extends DatabaseTestCase {
       ->execute();
 
     $saved_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'Meredith'))->fetchField();
-    $this->assertIdentical($saved_age, '30', t('Can retrieve after inserting.'));
+    $this->assertIdentical($saved_age, '30', 'Can retrieve after inserting.');
   }
 }
 
@@ -608,12 +608,12 @@ class DatabaseInsertLOBTestCase extends DatabaseTestCase {
    */
   function testInsertOneBlob() {
     $data = "This is\000a test.";
-    $this->assertTrue(strlen($data) === 15, t('Test data contains a NULL.'));
+    $this->assertTrue(strlen($data) === 15, 'Test data contains a NULL.');
     $id = db_insert('test_one_blob')
       ->fields(array('blob1' => $data))
       ->execute();
     $r = db_query('SELECT * FROM {test_one_blob} WHERE id = :id', array(':id' => $id))->fetchAssoc();
-    $this->assertTrue($r['blob1'] === $data, t('Can insert a blob: id @id, @data.', array('@id' => $id, '@data' => serialize($r))));
+    $this->assertTrue($r['blob1'] === $data, 'Can insert a blob: id ' . $id . ', ' . serialize($r) . '.');
   }
 
   /**
@@ -627,7 +627,7 @@ class DatabaseInsertLOBTestCase extends DatabaseTestCase {
       ))
       ->execute();
     $r = db_query('SELECT * FROM {test_two_blobs} WHERE id = :id', array(':id' => $id))->fetchAssoc();
-    $this->assertTrue($r['blob1'] === 'This is' && $r['blob2'] === 'a test', t('Can insert multiple blobs per row.'));
+    $this->assertTrue($r['blob1'] === 'This is' && $r['blob2'] === 'a test', 'Can insert multiple blobs per row.');
   }
 }
 
@@ -654,7 +654,7 @@ class DatabaseInsertDefaultsTestCase extends DatabaseTestCase {
     $schema = drupal_get_schema('test');
 
     $job = db_query('SELECT job FROM {test} WHERE id = :id', array(':id' => $id))->fetchField();
-    $this->assertEqual($job, $schema['fields']['job']['default'], t('Default field value is set.'));
+    $this->assertEqual($job, $schema['fields']['job']['default'], 'Default field value is set.');
   }
 
   /**
@@ -666,13 +666,14 @@ class DatabaseInsertDefaultsTestCase extends DatabaseTestCase {
     try {
       $result = db_insert('test')->execute();
       // This is only executed if no exception has been thrown.
-      $this->fail(t('Expected exception NoFieldsException has not been thrown.'));
-    } catch (NoFieldsException $e) {
-      $this->pass(t('Expected exception NoFieldsException has been thrown.'));
+      $this->fail('Expected exception NoFieldsException has not been thrown.');
+    }
+    catch (NoFieldsException $e) {
+      $this->pass('Expected exception NoFieldsException has been thrown.');
     }
 
     $num_records_after = (int) db_query('SELECT COUNT(*) FROM {test}')->fetchField();
-    $this->assertIdentical($num_records_before, $num_records_after, t('Do nothing as no fields are specified.'));
+    $this->assertIdentical($num_records_before, $num_records_after, 'Do nothing as no fields are specified.');
   }
 
   /**
@@ -687,7 +688,7 @@ class DatabaseInsertDefaultsTestCase extends DatabaseTestCase {
     $schema = drupal_get_schema('test');
 
     $job = db_query('SELECT job FROM {test} WHERE id = :id', array(':id' => $id))->fetchField();
-    $this->assertEqual($job, $schema['fields']['job']['default'], t('Default field value is set.'));
+    $this->assertEqual($job, $schema['fields']['job']['default'], 'Default field value is set.');
   }
 }
 
@@ -712,10 +713,10 @@ class DatabaseUpdateTestCase extends DatabaseTestCase {
       ->fields(array('name' => 'Tiffany'))
       ->condition('id', 1)
       ->execute();
-    $this->assertIdentical($num_updated, 1, t('Updated 1 record.'));
+    $this->assertIdentical($num_updated, 1, 'Updated 1 record.');
 
     $saved_name = db_query('SELECT name FROM {test} WHERE id = :id', array(':id' => 1))->fetchField();
-    $this->assertIdentical($saved_name, 'Tiffany', t('Updated name successfully.'));
+    $this->assertIdentical($saved_name, 'Tiffany', 'Updated name successfully.');
   }
 
   /**
@@ -726,10 +727,10 @@ class DatabaseUpdateTestCase extends DatabaseTestCase {
       ->fields(array('job' => 'Musician'))
       ->condition('job', 'Singer')
       ->execute();
-    $this->assertIdentical($num_updated, 2, t('Updated 2 records.'));
+    $this->assertIdentical($num_updated, 2, 'Updated 2 records.');
 
     $num_matches = db_query('SELECT COUNT(*) FROM {test} WHERE job = :job', array(':job' => 'Musician'))->fetchField();
-    $this->assertIdentical($num_matches, '2', t('Updated fields successfully.'));
+    $this->assertIdentical($num_matches, '2', 'Updated fields successfully.');
   }
 
   /**
@@ -740,10 +741,10 @@ class DatabaseUpdateTestCase extends DatabaseTestCase {
       ->fields(array('job' => 'Musician'))
       ->condition('age', 26, '>')
       ->execute();
-    $this->assertIdentical($num_updated, 2, t('Updated 2 records.'));
+    $this->assertIdentical($num_updated, 2, 'Updated 2 records.');
 
     $num_matches = db_query('SELECT COUNT(*) FROM {test} WHERE job = :job', array(':job' => 'Musician'))->fetchField();
-    $this->assertIdentical($num_matches, '2', t('Updated fields successfully.'));
+    $this->assertIdentical($num_matches, '2', 'Updated fields successfully.');
   }
 
   /**
@@ -754,10 +755,10 @@ class DatabaseUpdateTestCase extends DatabaseTestCase {
       ->fields(array('job' => 'Musician'))
       ->where('age > :age', array(':age' => 26))
       ->execute();
-    $this->assertIdentical($num_updated, 2, t('Updated 2 records.'));
+    $this->assertIdentical($num_updated, 2, 'Updated 2 records.');
 
     $num_matches = db_query('SELECT COUNT(*) FROM {test} WHERE job = :job', array(':job' => 'Musician'))->fetchField();
-    $this->assertIdentical($num_matches, '2', t('Updated fields successfully.'));
+    $this->assertIdentical($num_matches, '2', 'Updated fields successfully.');
   }
 
   /**
@@ -769,10 +770,10 @@ class DatabaseUpdateTestCase extends DatabaseTestCase {
       ->where('age > :age', array(':age' => 26))
       ->condition('name', 'Ringo');
     $num_updated = $update->execute();
-    $this->assertIdentical($num_updated, 1, t('Updated 1 record.'));
+    $this->assertIdentical($num_updated, 1, 'Updated 1 record.');
 
     $num_matches = db_query('SELECT COUNT(*) FROM {test} WHERE job = :job', array(':job' => 'Musician'))->fetchField();
-    $this->assertIdentical($num_matches, '1', t('Updated fields successfully.'));
+    $this->assertIdentical($num_matches, '1', 'Updated fields successfully.');
   }
 
 }
@@ -801,10 +802,10 @@ class DatabaseUpdateComplexTestCase extends DatabaseTestCase {
         ->condition('name', 'Paul')
       );
     $num_updated = $update->execute();
-    $this->assertIdentical($num_updated, 2, t('Updated 2 records.'));
+    $this->assertIdentical($num_updated, 2, 'Updated 2 records.');
 
     $num_matches = db_query('SELECT COUNT(*) FROM {test} WHERE job = :job', array(':job' => 'Musician'))->fetchField();
-    $this->assertIdentical($num_matches, '2', t('Updated fields successfully.'));
+    $this->assertIdentical($num_matches, '2', 'Updated fields successfully.');
   }
 
   /**
@@ -815,10 +816,10 @@ class DatabaseUpdateComplexTestCase extends DatabaseTestCase {
       ->fields(array('job' => 'Musician'))
       ->condition('name', array('John', 'Paul'), 'IN')
       ->execute();
-    $this->assertIdentical($num_updated, 2, t('Updated 2 records.'));
+    $this->assertIdentical($num_updated, 2, 'Updated 2 records.');
 
     $num_matches = db_query('SELECT COUNT(*) FROM {test} WHERE job = :job', array(':job' => 'Musician'))->fetchField();
-    $this->assertIdentical($num_matches, '2', t('Updated fields successfully.'));
+    $this->assertIdentical($num_matches, '2', 'Updated fields successfully.');
   }
 
   /**
@@ -831,10 +832,10 @@ class DatabaseUpdateComplexTestCase extends DatabaseTestCase {
       ->fields(array('job' => 'Musician'))
       ->condition('name', array('John', 'Paul', 'George'), 'NoT IN')
       ->execute();
-    $this->assertIdentical($num_updated, 1, t('Updated 1 record.'));
+    $this->assertIdentical($num_updated, 1, 'Updated 1 record.');
 
     $num_matches = db_query('SELECT COUNT(*) FROM {test} WHERE job = :job', array(':job' => 'Musician'))->fetchField();
-    $this->assertIdentical($num_matches, '1', t('Updated fields successfully.'));
+    $this->assertIdentical($num_matches, '1', 'Updated fields successfully.');
   }
 
   /**
@@ -845,10 +846,10 @@ class DatabaseUpdateComplexTestCase extends DatabaseTestCase {
       ->fields(array('job' => 'Musician'))
       ->condition('age', array(25, 26), 'BETWEEN')
       ->execute();
-    $this->assertIdentical($num_updated, 2, t('Updated 2 records.'));
+    $this->assertIdentical($num_updated, 2, 'Updated 2 records.');
 
     $num_matches = db_query('SELECT COUNT(*) FROM {test} WHERE job = :job', array(':job' => 'Musician'))->fetchField();
-    $this->assertIdentical($num_matches, '2', t('Updated fields successfully.'));
+    $this->assertIdentical($num_matches, '2', 'Updated fields successfully.');
   }
 
   /**
@@ -859,10 +860,10 @@ class DatabaseUpdateComplexTestCase extends DatabaseTestCase {
       ->fields(array('job' => 'Musician'))
       ->condition('name', '%ge%', 'LIKE')
       ->execute();
-    $this->assertIdentical($num_updated, 1, t('Updated 1 record.'));
+    $this->assertIdentical($num_updated, 1, 'Updated 1 record.');
 
     $num_matches = db_query('SELECT COUNT(*) FROM {test} WHERE job = :job', array(':job' => 'Musician'))->fetchField();
-    $this->assertIdentical($num_matches, '1', t('Updated fields successfully.'));
+    $this->assertIdentical($num_matches, '1', 'Updated fields successfully.');
   }
 
   /**
@@ -876,15 +877,15 @@ class DatabaseUpdateComplexTestCase extends DatabaseTestCase {
       ->fields(array('job' => 'Musician'))
       ->expression('age', 'age + :age', array(':age' => 4))
       ->execute();
-    $this->assertIdentical($num_updated, 1, t('Updated 1 record.'));
+    $this->assertIdentical($num_updated, 1, 'Updated 1 record.');
 
     $num_matches = db_query('SELECT COUNT(*) FROM {test} WHERE job = :job', array(':job' => 'Musician'))->fetchField();
-    $this->assertIdentical($num_matches, '1', t('Updated fields successfully.'));
+    $this->assertIdentical($num_matches, '1', 'Updated fields successfully.');
 
     $person = db_query('SELECT * FROM {test} WHERE name = :name', array(':name' => 'Ringo'))->fetch();
-    $this->assertEqual($person->name, 'Ringo', t('Name set correctly.'));
-    $this->assertEqual($person->age, $before_age + 4, t('Age set correctly.'));
-    $this->assertEqual($person->job, 'Musician', t('Job set correctly.'));
+    $this->assertEqual($person->name, 'Ringo', 'Name set correctly.');
+    $this->assertEqual($person->age, $before_age + 4, 'Age set correctly.');
+    $this->assertEqual($person->job, 'Musician', 'Job set correctly.');
     $GLOBALS['larry_test'] = 0;
   }
 
@@ -897,10 +898,10 @@ class DatabaseUpdateComplexTestCase extends DatabaseTestCase {
       ->condition('name', 'Ringo')
       ->expression('age', 'age + :age', array(':age' => 4))
       ->execute();
-    $this->assertIdentical($num_updated, 1, t('Updated 1 record.'));
+    $this->assertIdentical($num_updated, 1, 'Updated 1 record.');
 
     $after_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'Ringo'))->fetchField();
-    $this->assertEqual($before_age + 4, $after_age, t('Age updated correctly'));
+    $this->assertEqual($before_age + 4, $after_age, 'Age updated correctly');
   }
 }
 
@@ -922,7 +923,7 @@ class DatabaseUpdateLOBTestCase extends DatabaseTestCase {
    */
   function testUpdateOneBlob() {
     $data = "This is\000a test.";
-    $this->assertTrue(strlen($data) === 15, t('Test data contains a NULL.'));
+    $this->assertTrue(strlen($data) === 15, 'Test data contains a NULL.');
     $id = db_insert('test_one_blob')
       ->fields(array('blob1' => $data))
       ->execute();
@@ -934,7 +935,7 @@ class DatabaseUpdateLOBTestCase extends DatabaseTestCase {
       ->execute();
 
     $r = db_query('SELECT * FROM {test_one_blob} WHERE id = :id', array(':id' => $id))->fetchAssoc();
-    $this->assertTrue($r['blob1'] === $data, t('Can update a blob: id @id, @data.', array('@id' => $id, '@data' => serialize($r))));
+    $this->assertTrue($r['blob1'] === $data, 'Can update a blob: id ' . $id . ', ' . serialize($r) . '.');
   }
 
   /**
@@ -954,7 +955,7 @@ class DatabaseUpdateLOBTestCase extends DatabaseTestCase {
       ->execute();
 
     $r = db_query('SELECT * FROM {test_two_blobs} WHERE id = :id', array(':id' => $id))->fetchAssoc();
-    $this->assertTrue($r['blob1'] === 'and so' && $r['blob2'] === 'is this', t('Can update multiple blobs per row.'));
+    $this->assertTrue($r['blob1'] === 'and so' && $r['blob2'] === 'is this', 'Can update multiple blobs per row.');
   }
 }
 
@@ -994,10 +995,10 @@ class DatabaseDeleteTruncateTestCase extends DatabaseTestCase {
       ->condition('pid', $subquery, 'IN');
 
     $num_deleted = $delete->execute();
-    $this->assertEqual($num_deleted, 1, t("Deleted 1 record."));
+    $this->assertEqual($num_deleted, 1, "Deleted 1 record.");
 
     $num_records_after = db_query('SELECT COUNT(*) FROM {test_task}')->fetchField();
-    $this->assertEqual($num_records_before, $num_records_after + $num_deleted, t('Deletion adds up.'));
+    $this->assertEqual($num_records_before, $num_records_after + $num_deleted, 'Deletion adds up.');
   }
 
   /**
@@ -1009,10 +1010,10 @@ class DatabaseDeleteTruncateTestCase extends DatabaseTestCase {
     $num_deleted = db_delete('test')
       ->condition('id', 1)
       ->execute();
-    $this->assertIdentical($num_deleted, 1, t('Deleted 1 record.'));
+    $this->assertIdentical($num_deleted, 1, 'Deleted 1 record.');
 
     $num_records_after = db_query('SELECT COUNT(*) FROM {test}')->fetchField();
-    $this->assertEqual($num_records_before, $num_records_after + $num_deleted, t('Deletion adds up.'));
+    $this->assertEqual($num_records_before, $num_records_after + $num_deleted, 'Deletion adds up.');
   }
 
   /**
@@ -1024,7 +1025,7 @@ class DatabaseDeleteTruncateTestCase extends DatabaseTestCase {
     db_truncate('test')->execute();
 
     $num_records_after = db_query("SELECT COUNT(*) FROM {test}")->fetchField();
-    $this->assertEqual(0, $num_records_after, t('Truncate really deletes everything.'));
+    $this->assertEqual(0, $num_records_after, 'Truncate really deletes everything.');
   }
 }
 
@@ -1055,15 +1056,15 @@ class DatabaseMergeTestCase extends DatabaseTestCase {
       ))
       ->execute();
 
-    $this->assertEqual($result, MergeQuery::STATUS_INSERT, t('Insert status returned.'));
+    $this->assertEqual($result, MergeQuery::STATUS_INSERT, 'Insert status returned.');
 
     $num_records_after = db_query('SELECT COUNT(*) FROM {test_people}')->fetchField();
-    $this->assertEqual($num_records_before + 1, $num_records_after, t('Merge inserted properly.'));
+    $this->assertEqual($num_records_before + 1, $num_records_after, 'Merge inserted properly.');
 
     $person = db_query('SELECT * FROM {test_people} WHERE job = :job', array(':job' => 'Presenter'))->fetch();
-    $this->assertEqual($person->name, 'Tiffany', t('Name set correctly.'));
-    $this->assertEqual($person->age, 31, t('Age set correctly.'));
-    $this->assertEqual($person->job, 'Presenter', t('Job set correctly.'));
+    $this->assertEqual($person->name, 'Tiffany', 'Name set correctly.');
+    $this->assertEqual($person->age, 31, 'Age set correctly.');
+    $this->assertEqual($person->job, 'Presenter', 'Job set correctly.');
   }
 
   /**
@@ -1080,15 +1081,15 @@ class DatabaseMergeTestCase extends DatabaseTestCase {
       ))
       ->execute();
 
-    $this->assertEqual($result, MergeQuery::STATUS_UPDATE, t('Update status returned.'));
+    $this->assertEqual($result, MergeQuery::STATUS_UPDATE, 'Update status returned.');
 
     $num_records_after = db_query('SELECT COUNT(*) FROM {test_people}')->fetchField();
-    $this->assertEqual($num_records_before, $num_records_after, t('Merge updated properly.'));
+    $this->assertEqual($num_records_before, $num_records_after, 'Merge updated properly.');
 
     $person = db_query('SELECT * FROM {test_people} WHERE job = :job', array(':job' => 'Speaker'))->fetch();
-    $this->assertEqual($person->name, 'Tiffany', t('Name set correctly.'));
-    $this->assertEqual($person->age, 31, t('Age set correctly.'));
-    $this->assertEqual($person->job, 'Speaker', t('Job set correctly.'));
+    $this->assertEqual($person->name, 'Tiffany', 'Name set correctly.');
+    $this->assertEqual($person->age, 31, 'Age set correctly.');
+    $this->assertEqual($person->job, 'Speaker', 'Job set correctly.');
   }
 
   /**
@@ -1107,12 +1108,12 @@ class DatabaseMergeTestCase extends DatabaseTestCase {
       ->execute();
 
     $num_records_after = db_query('SELECT COUNT(*) FROM {test_people}')->fetchField();
-    $this->assertEqual($num_records_before, $num_records_after, t('Merge updated properly.'));
+    $this->assertEqual($num_records_before, $num_records_after, 'Merge updated properly.');
 
     $person = db_query('SELECT * FROM {test_people} WHERE job = :job', array(':job' => 'Speaker'))->fetch();
-    $this->assertEqual($person->name, 'Tiffany', t('Name set correctly.'));
-    $this->assertEqual($person->age, 30, t('Age skipped correctly.'));
-    $this->assertEqual($person->job, 'Speaker', t('Job set correctly.'));
+    $this->assertEqual($person->name, 'Tiffany', 'Name set correctly.');
+    $this->assertEqual($person->age, 30, 'Age skipped correctly.');
+    $this->assertEqual($person->job, 'Speaker', 'Job set correctly.');
   }
 
   /**
@@ -1131,12 +1132,12 @@ class DatabaseMergeTestCase extends DatabaseTestCase {
       ->execute();
 
     $num_records_after = db_query('SELECT COUNT(*) FROM {test_people}')->fetchField();
-    $this->assertEqual($num_records_before, $num_records_after, t('Merge updated properly.'));
+    $this->assertEqual($num_records_before, $num_records_after, 'Merge updated properly.');
 
     $person = db_query('SELECT * FROM {test_people} WHERE job = :job', array(':job' => 'Speaker'))->fetch();
-    $this->assertEqual($person->name, 'Joe', t('Name set correctly.'));
-    $this->assertEqual($person->age, 30, t('Age skipped correctly.'));
-    $this->assertEqual($person->job, 'Speaker', t('Job set correctly.'));
+    $this->assertEqual($person->name, 'Joe', 'Name set correctly.');
+    $this->assertEqual($person->age, 30, 'Age skipped correctly.');
+    $this->assertEqual($person->job, 'Speaker', 'Job set correctly.');
   }
 
   /**
@@ -1162,12 +1163,12 @@ class DatabaseMergeTestCase extends DatabaseTestCase {
       ->execute();
 
     $num_records_after = db_query('SELECT COUNT(*) FROM {test_people}')->fetchField();
-    $this->assertEqual($num_records_before, $num_records_after, t('Merge updated properly.'));
+    $this->assertEqual($num_records_before, $num_records_after, 'Merge updated properly.');
 
     $person = db_query('SELECT * FROM {test_people} WHERE job = :job', array(':job' => 'Speaker'))->fetch();
-    $this->assertEqual($person->name, 'Tiffany', t('Name set correctly.'));
-    $this->assertEqual($person->age, $age_before + 4, t('Age updated correctly.'));
-    $this->assertEqual($person->job, 'Speaker', t('Job set correctly.'));
+    $this->assertEqual($person->name, 'Tiffany', 'Name set correctly.');
+    $this->assertEqual($person->age, $age_before + 4, 'Age updated correctly.');
+    $this->assertEqual($person->job, 'Speaker', 'Job set correctly.');
   }
 
   /**
@@ -1181,12 +1182,12 @@ class DatabaseMergeTestCase extends DatabaseTestCase {
       ->execute();
 
     $num_records_after = db_query('SELECT COUNT(*) FROM {test_people}')->fetchField();
-    $this->assertEqual($num_records_before + 1, $num_records_after, t('Merge inserted properly.'));
+    $this->assertEqual($num_records_before + 1, $num_records_after, 'Merge inserted properly.');
 
     $person = db_query('SELECT * FROM {test_people} WHERE job = :job', array(':job' => 'Presenter'))->fetch();
-    $this->assertEqual($person->name, '', t('Name set correctly.'));
-    $this->assertEqual($person->age, 0, t('Age set correctly.'));
-    $this->assertEqual($person->job, 'Presenter', t('Job set correctly.'));
+    $this->assertEqual($person->name, '', 'Name set correctly.');
+    $this->assertEqual($person->age, 0, 'Age set correctly.');
+    $this->assertEqual($person->job, 'Presenter', 'Job set correctly.');
   }
 
   /**
@@ -1200,12 +1201,12 @@ class DatabaseMergeTestCase extends DatabaseTestCase {
       ->execute();
 
     $num_records_after = db_query('SELECT COUNT(*) FROM {test_people}')->fetchField();
-    $this->assertEqual($num_records_before, $num_records_after, t('Merge skipped properly.'));
+    $this->assertEqual($num_records_before, $num_records_after, 'Merge skipped properly.');
 
     $person = db_query('SELECT * FROM {test_people} WHERE job = :job', array(':job' => 'Speaker'))->fetch();
-    $this->assertEqual($person->name, 'Meredith', t('Name skipped correctly.'));
-    $this->assertEqual($person->age, 30, t('Age skipped correctly.'));
-    $this->assertEqual($person->job, 'Speaker', t('Job skipped correctly.'));
+    $this->assertEqual($person->name, 'Meredith', 'Name skipped correctly.');
+    $this->assertEqual($person->age, 30, 'Age skipped correctly.');
+    $this->assertEqual($person->job, 'Speaker', 'Job skipped correctly.');
 
     db_merge('test_people')
       ->key(array('job' => 'Speaker'))
@@ -1214,12 +1215,12 @@ class DatabaseMergeTestCase extends DatabaseTestCase {
       ->execute();
 
     $num_records_after = db_query('SELECT COUNT(*) FROM {test_people}')->fetchField();
-    $this->assertEqual($num_records_before, $num_records_after, t('Merge skipped properly.'));
+    $this->assertEqual($num_records_before, $num_records_after, 'Merge skipped properly.');
 
     $person = db_query('SELECT * FROM {test_people} WHERE job = :job', array(':job' => 'Speaker'))->fetch();
-    $this->assertEqual($person->name, 'Meredith', t('Name skipped correctly.'));
-    $this->assertEqual($person->age, 30, t('Age skipped correctly.'));
-    $this->assertEqual($person->job, 'Speaker', t('Job skipped correctly.'));
+    $this->assertEqual($person->name, 'Meredith', 'Name skipped correctly.');
+    $this->assertEqual($person->age, 30, 'Age skipped correctly.');
+    $this->assertEqual($person->job, 'Speaker', 'Job skipped correctly.');
   }
 
   /**
@@ -1236,10 +1237,10 @@ class DatabaseMergeTestCase extends DatabaseTestCase {
         ->execute();
     }
     catch (InvalidMergeQueryException $e) {
-      $this->pass(t('InvalidMergeQueryException thrown for invalid query.'));
+      $this->pass('InvalidMergeQueryException thrown for invalid query.');
       return;
     }
-    $this->fail(t('No InvalidMergeQueryException thrown'));
+    $this->fail('No InvalidMergeQueryException thrown');
   }
 }
 
@@ -1270,7 +1271,7 @@ class DatabaseSelectTestCase extends DatabaseTestCase {
       $num_records++;
     }
 
-    $this->assertEqual($num_records, 4, t('Returned the correct number of rows.'));
+    $this->assertEqual($num_records, 4, 'Returned the correct number of rows.');
   }
 
   /**
@@ -1287,11 +1288,11 @@ class DatabaseSelectTestCase extends DatabaseTestCase {
       $num_records++;
     }
 
-    $query = (string)$query;
+    $query = (string) $query;
     $expected = "/* Testing query comments */ SELECT test.name AS name, test.age AS age\nFROM \n{test} test";
 
-    $this->assertEqual($num_records, 4, t('Returned the correct number of rows.'));
-    $this->assertEqual($query, $expected, t('The flattened query contains the comment string.'));
+    $this->assertEqual($num_records, 4, 'Returned the correct number of rows.');
+    $this->assertEqual($query, $expected, 'The flattened query contains the comment string.');
   }
 
   /**
@@ -1305,13 +1306,13 @@ class DatabaseSelectTestCase extends DatabaseTestCase {
     $result = $query->execute();
 
     // Check that the aliases are being created the way we want.
-    $this->assertEqual($name_field, 'name', t('Name field alias is correct.'));
-    $this->assertEqual($age_field, 'age', t('Age field alias is correct.'));
+    $this->assertEqual($name_field, 'name', 'Name field alias is correct.');
+    $this->assertEqual($age_field, 'age', 'Age field alias is correct.');
 
     // Ensure that we got the right record.
     $record = $result->fetch();
-    $this->assertEqual($record->$name_field, 'George', t('Fetched name is correct.'));
-    $this->assertEqual($record->$age_field, 27, t('Fetched age is correct.'));
+    $this->assertEqual($record->$name_field, 'George', 'Fetched name is correct.');
+    $this->assertEqual($record->$age_field, 27, 'Fetched age is correct.');
   }
 
   /**
@@ -1325,13 +1326,13 @@ class DatabaseSelectTestCase extends DatabaseTestCase {
     $result = $query->execute();
 
     // Check that the aliases are being created the way we want.
-    $this->assertEqual($name_field, 'name', t('Name field alias is correct.'));
-    $this->assertEqual($age_field, 'double_age', t('Age field alias is correct.'));
+    $this->assertEqual($name_field, 'name', 'Name field alias is correct.');
+    $this->assertEqual($age_field, 'double_age', 'Age field alias is correct.');
 
     // Ensure that we got the right record.
     $record = $result->fetch();
-    $this->assertEqual($record->$name_field, 'George', t('Fetched name is correct.'));
-    $this->assertEqual($record->$age_field, 27*2, t('Fetched age expression is correct.'));
+    $this->assertEqual($record->$name_field, 'George', 'Fetched name is correct.');
+    $this->assertEqual($record->$age_field, 27 * 2, 'Fetched age expression is correct.');
   }
 
   /**
@@ -1346,14 +1347,14 @@ class DatabaseSelectTestCase extends DatabaseTestCase {
     $result = $query->execute();
 
     // Check that the aliases are being created the way we want.
-    $this->assertEqual($age_double_field, 'expression', t('Double age field alias is correct.'));
-    $this->assertEqual($age_triple_field, 'expression_2', t('Triple age field alias is correct.'));
+    $this->assertEqual($age_double_field, 'expression', 'Double age field alias is correct.');
+    $this->assertEqual($age_triple_field, 'expression_2', 'Triple age field alias is correct.');
 
     // Ensure that we got the right record.
     $record = $result->fetch();
-    $this->assertEqual($record->$name_field, 'George', t('Fetched name is correct.'));
-    $this->assertEqual($record->$age_double_field, 27*2, t('Fetched double age expression is correct.'));
-    $this->assertEqual($record->$age_triple_field, 27*3, t('Fetched triple age expression is correct.'));
+    $this->assertEqual($record->$name_field, 'George', 'Fetched name is correct.');
+    $this->assertEqual($record->$age_double_field, 27 * 2, 'Fetched double age expression is correct.');
+    $this->assertEqual($record->$age_triple_field, 27 * 3, 'Fetched triple age expression is correct.');
   }
 
   /**
@@ -1366,17 +1367,17 @@ class DatabaseSelectTestCase extends DatabaseTestCase {
       ->execute()->fetchObject();
 
     // Check that all fields we asked for are present.
-    $this->assertNotNull($record->id, t('ID field is present.'));
-    $this->assertNotNull($record->name, t('Name field is present.'));
-    $this->assertNotNull($record->age, t('Age field is present.'));
-    $this->assertNotNull($record->job, t('Job field is present.'));
+    $this->assertNotNull($record->id, 'ID field is present.');
+    $this->assertNotNull($record->name, 'Name field is present.');
+    $this->assertNotNull($record->age, 'Age field is present.');
+    $this->assertNotNull($record->job, 'Job field is present.');
 
     // Ensure that we got the right record.
     // Check that all fields we asked for are present.
-    $this->assertEqual($record->id, 2, t('ID field has the correct value.'));
-    $this->assertEqual($record->name, 'George', t('Name field has the correct value.'));
-    $this->assertEqual($record->age, 27, t('Age field has the correct value.'));
-    $this->assertEqual($record->job, 'Singer', t('Job field has the correct value.'));
+    $this->assertEqual($record->id, 2, 'ID field has the correct value.');
+    $this->assertEqual($record->name, 'George', 'Name field has the correct value.');
+    $this->assertEqual($record->age, 27, 'Age field has the correct value.');
+    $this->assertEqual($record->job, 'Singer', 'Job field has the correct value.');
   }
 
   /**
@@ -1389,17 +1390,17 @@ class DatabaseSelectTestCase extends DatabaseTestCase {
       ->execute()->fetchObject();
 
     // Check that all fields we asked for are present.
-    $this->assertNotNull($record->id, t('ID field is present.'));
-    $this->assertNotNull($record->name, t('Name field is present.'));
-    $this->assertNotNull($record->age, t('Age field is present.'));
-    $this->assertNotNull($record->job, t('Job field is present.'));
+    $this->assertNotNull($record->id, 'ID field is present.');
+    $this->assertNotNull($record->name, 'Name field is present.');
+    $this->assertNotNull($record->age, 'Age field is present.');
+    $this->assertNotNull($record->job, 'Job field is present.');
 
     // Ensure that we got the right record.
     // Check that all fields we asked for are present.
-    $this->assertEqual($record->id, 2, t('ID field has the correct value.'));
-    $this->assertEqual($record->name, 'George', t('Name field has the correct value.'));
-    $this->assertEqual($record->age, 27, t('Age field has the correct value.'));
-    $this->assertEqual($record->job, 'Singer', t('Job field has the correct value.'));
+    $this->assertEqual($record->id, 2, 'ID field has the correct value.');
+    $this->assertEqual($record->name, 'George', 'Name field has the correct value.');
+    $this->assertEqual($record->age, 27, 'Age field has the correct value.');
+    $this->assertEqual($record->job, 'Singer', 'Job field has the correct value.');
   }
 
   /**
@@ -1413,8 +1414,8 @@ class DatabaseSelectTestCase extends DatabaseTestCase {
       ->isNull('age')
       ->execute()->fetchCol();
 
-    $this->assertEqual(count($names), 1, t('Correct number of records found with NULL age.'));
-    $this->assertEqual($names[0], 'Fozzie', t('Correct record returned for NULL age.'));
+    $this->assertEqual(count($names), 1, 'Correct number of records found with NULL age.');
+    $this->assertEqual($names[0], 'Fozzie', 'Correct record returned for NULL age.');
   }
 
   /**
@@ -1429,9 +1430,9 @@ class DatabaseSelectTestCase extends DatabaseTestCase {
       ->orderBy('name')
       ->execute()->fetchCol();
 
-    $this->assertEqual(count($names), 2, t('Correct number of records found withNOT NULL age.'));
-    $this->assertEqual($names[0], 'Gonzo', t('Correct record returned for NOT NULL age.'));
-    $this->assertEqual($names[1], 'Kermit', t('Correct record returned for NOT NULL age.'));
+    $this->assertEqual(count($names), 2, 'Correct number of records found withNOT NULL age.');
+    $this->assertEqual($names[0], 'Gonzo', 'Correct record returned for NOT NULL age.');
+    $this->assertEqual($names[1], 'Kermit', 'Correct record returned for NOT NULL age.');
   }
 
   /**
@@ -1452,10 +1453,10 @@ class DatabaseSelectTestCase extends DatabaseTestCase {
     $names = $query_1->execute()->fetchCol();
 
     // Ensure we only get 2 records.
-    $this->assertEqual(count($names), 2, t('UNION correctly discarded duplicates.'));
+    $this->assertEqual(count($names), 2, 'UNION correctly discarded duplicates.');
 
-    $this->assertEqual($names[0], 'George', t('First query returned correct name.'));
-    $this->assertEqual($names[1], 'Ringo', t('Second query returned correct name.'));
+    $this->assertEqual($names[0], 'George', 'First query returned correct name.');
+    $this->assertEqual($names[1], 'Ringo', 'Second query returned correct name.');
   }
 
   /**
@@ -1475,11 +1476,11 @@ class DatabaseSelectTestCase extends DatabaseTestCase {
     $names = $query_1->execute()->fetchCol();
 
     // Ensure we get all 3 records.
-    $this->assertEqual(count($names), 3, t('UNION ALL correctly preserved duplicates.'));
+    $this->assertEqual(count($names), 3, 'UNION ALL correctly preserved duplicates.');
 
-    $this->assertEqual($names[0], 'George', t('First query returned correct first name.'));
-    $this->assertEqual($names[1], 'Ringo', t('Second query returned correct second name.'));
-    $this->assertEqual($names[2], 'Ringo', t('Third query returned correct name.'));
+    $this->assertEqual($names[0], 'George', 'First query returned correct first name.');
+    $this->assertEqual($names[1], 'Ringo', 'Second query returned correct second name.');
+    $this->assertEqual($names[2], 'Ringo', 'Third query returned correct name.');
   }
 
   /**
@@ -1514,7 +1515,7 @@ class DatabaseSelectTestCase extends DatabaseTestCase {
       ->orderBy('id')
       ->execute()
       ->fetchCol();
-    $this->assertEqual($ordered_ids, $expected_ids, t('A query without random ordering returns IDs in the correct order.'));
+    $this->assertEqual($ordered_ids, $expected_ids, 'A query without random ordering returns IDs in the correct order.');
 
     // Now perform the same query, but instead choose a random ordering. We
     // expect this to contain a differently ordered version of the original
@@ -1525,10 +1526,10 @@ class DatabaseSelectTestCase extends DatabaseTestCase {
       ->orderRandom()
       ->execute()
       ->fetchCol();
-    $this->assertNotEqual($randomized_ids, $ordered_ids, t('A query with random ordering returns an unordered set of IDs.'));
+    $this->assertNotEqual($randomized_ids, $ordered_ids, 'A query with random ordering returns an unordered set of IDs.');
     $sorted_ids = $randomized_ids;
     sort($sorted_ids);
-    $this->assertEqual($sorted_ids, $ordered_ids, t('After sorting the random list, the result matches the original query.'));
+    $this->assertEqual($sorted_ids, $ordered_ids, 'After sorting the random list, the result matches the original query.');
 
     // Now perform the exact same query again, and make sure the order is
     // different.
@@ -1538,10 +1539,10 @@ class DatabaseSelectTestCase extends DatabaseTestCase {
       ->orderRandom()
       ->execute()
       ->fetchCol();
-    $this->assertNotEqual($randomized_ids_second_set, $randomized_ids, t('Performing the query with random ordering a second time returns IDs in a different order.'));
+    $this->assertNotEqual($randomized_ids_second_set, $randomized_ids, 'Performing the query with random ordering a second time returns IDs in a different order.');
     $sorted_ids_second_set = $randomized_ids_second_set;
     sort($sorted_ids_second_set);
-    $this->assertEqual($sorted_ids_second_set, $sorted_ids, t('After sorting the second random list, the result matches the sorted version of the first random list.'));
+    $this->assertEqual($sorted_ids_second_set, $sorted_ids, 'After sorting the second random list, the result matches the sorted version of the first random list.');
   }
 
   /**
@@ -1593,7 +1594,7 @@ class DatabaseSelectSubqueryTestCase extends DatabaseTestCase {
     // WHERE tt.task = 'code'
     $people = $select->execute()->fetchCol();
 
-    $this->assertEqual(count($people), 1, t('Returned the correct number of rows.'));
+    $this->assertEqual(count($people), 1, 'Returned the correct number of rows.');
   }
 
   /**
@@ -1619,7 +1620,7 @@ class DatabaseSelectSubqueryTestCase extends DatabaseTestCase {
     //   INNER JOIN test t ON t.id=tt.pid
     $people = $select->execute()->fetchCol();
 
-    $this->assertEqual(count($people), 1, t('Returned the correct number of rows.'));
+    $this->assertEqual(count($people), 1, 'Returned the correct number of rows.');
   }
 
   /**
@@ -1642,7 +1643,7 @@ class DatabaseSelectSubqueryTestCase extends DatabaseTestCase {
     // FROM test tt2
     // WHERE tt2.pid IN (SELECT tt.pid AS pid FROM test_task tt WHERE tt.priority=1)
     $people = $select->execute()->fetchCol();
-    $this->assertEqual(count($people), 5, t('Returned the correct number of rows.'));
+    $this->assertEqual(count($people), 5, 'Returned the correct number of rows.');
   }
 
   /**
@@ -1666,7 +1667,7 @@ class DatabaseSelectSubqueryTestCase extends DatabaseTestCase {
     //   INNER JOIN (SELECT tt.pid AS pid FROM test_task tt WHERE priority=1) tt ON t.id=tt.pid
     $people = $select->execute()->fetchCol();
 
-    $this->assertEqual(count($people), 2, t('Returned the correct number of rows.'));
+    $this->assertEqual(count($people), 2, 'Returned the correct number of rows.');
   }
 }
 
@@ -1697,11 +1698,11 @@ class DatabaseSelectOrderedTestCase extends DatabaseTestCase {
     $last_age = 0;
     foreach ($result as $record) {
       $num_records++;
-      $this->assertTrue($record->age >= $last_age, t('Results returned in correct order.'));
+      $this->assertTrue($record->age >= $last_age, 'Results returned in correct order.');
       $last_age = $record->age;
     }
 
-    $this->assertEqual($num_records, 4, t('Returned the correct number of rows.'));
+    $this->assertEqual($num_records, 4, 'Returned the correct number of rows.');
   }
 
   /**
@@ -1728,11 +1729,11 @@ class DatabaseSelectOrderedTestCase extends DatabaseTestCase {
       $num_records++;
       foreach ($record as $kk => $col) {
         if ($expected[$k][$kk] != $results[$k][$kk]) {
-          $this->assertTrue(FALSE, t('Results returned in correct order.'));
+          $this->assertTrue(FALSE, 'Results returned in correct order.');
         }
       }
     }
-    $this->assertEqual($num_records, 4, t('Returned the correct number of rows.'));
+    $this->assertEqual($num_records, 4, 'Returned the correct number of rows.');
   }
 
   /**
@@ -1749,11 +1750,11 @@ class DatabaseSelectOrderedTestCase extends DatabaseTestCase {
     $last_age = 100000000;
     foreach ($result as $record) {
       $num_records++;
-      $this->assertTrue($record->age <= $last_age, t('Results returned in correct order.'));
+      $this->assertTrue($record->age <= $last_age, 'Results returned in correct order.');
       $last_age = $record->age;
     }
 
-    $this->assertEqual($num_records, 4, t('Returned the correct number of rows.'));
+    $this->assertEqual($num_records, 4, 'Returned the correct number of rows.');
   }
 }
 
@@ -1787,12 +1788,12 @@ class DatabaseSelectComplexTestCase extends DatabaseTestCase {
     $last_priority = 0;
     foreach ($result as $record) {
       $num_records++;
-      $this->assertTrue($record->$priority_field >= $last_priority, t('Results returned in correct order.'));
-      $this->assertNotEqual($record->$name_field, 'Ringo', t('Taskless person not selected.'));
+      $this->assertTrue($record->$priority_field >= $last_priority, 'Results returned in correct order.');
+      $this->assertNotEqual($record->$name_field, 'Ringo', 'Taskless person not selected.');
       $last_priority = $record->$priority_field;
     }
 
-    $this->assertEqual($num_records, 7, t('Returned the correct number of rows.'));
+    $this->assertEqual($num_records, 7, 'Returned the correct number of rows.');
   }
 
   /**
@@ -1813,11 +1814,11 @@ class DatabaseSelectComplexTestCase extends DatabaseTestCase {
 
     foreach ($result as $record) {
       $num_records++;
-      $this->assertTrue(strcmp($record->$name_field, $last_name) >= 0, t('Results returned in correct order.'));
+      $this->assertTrue(strcmp($record->$name_field, $last_name) >= 0, 'Results returned in correct order.');
       $last_priority = $record->$name_field;
     }
 
-    $this->assertEqual($num_records, 8, t('Returned the correct number of rows.'));
+    $this->assertEqual($num_records, 8, 'Returned the correct number of rows.');
   }
 
   /**
@@ -1836,7 +1837,7 @@ class DatabaseSelectComplexTestCase extends DatabaseTestCase {
     $records = array();
     foreach ($result as $record) {
       $num_records++;
-      $this->assertTrue($record->$count_field >= $last_count, t('Results returned in correct order.'));
+      $this->assertTrue($record->$count_field >= $last_count, 'Results returned in correct order.');
       $last_count = $record->$count_field;
       $records[$record->$task_field] = $record->$count_field;
     }
@@ -1850,10 +1851,10 @@ class DatabaseSelectComplexTestCase extends DatabaseTestCase {
     );
 
     foreach ($correct_results as $task => $count) {
-      $this->assertEqual($records[$task], $count, t("Correct number of '@task' records found.", array('@task' => $task)));
+      $this->assertEqual($records[$task], $count, "Correct number of '" . $task . "' records found.");
     }
 
-    $this->assertEqual($num_records, 6, t('Returned the correct number of total rows.'));
+    $this->assertEqual($num_records, 6, 'Returned the correct number of total rows.');
   }
 
   /**
@@ -1873,8 +1874,8 @@ class DatabaseSelectComplexTestCase extends DatabaseTestCase {
     $records = array();
     foreach ($result as $record) {
       $num_records++;
-      $this->assertTrue($record->$count_field >= 2, t('Record has the minimum count.'));
-      $this->assertTrue($record->$count_field >= $last_count, t('Results returned in correct order.'));
+      $this->assertTrue($record->$count_field >= 2, 'Record has the minimum count.');
+      $this->assertTrue($record->$count_field >= $last_count, 'Results returned in correct order.');
       $last_count = $record->$count_field;
       $records[$record->$task_field] = $record->$count_field;
     }
@@ -1884,10 +1885,10 @@ class DatabaseSelectComplexTestCase extends DatabaseTestCase {
     );
 
     foreach ($correct_results as $task => $count) {
-      $this->assertEqual($records[$task], $count, t("Correct number of '@task' records found.", array('@task' => $task)));
+      $this->assertEqual($records[$task], $count, "Correct number of '" . $task . "' records found.");
     }
 
-    $this->assertEqual($num_records, 1, t('Returned the correct number of total rows.'));
+    $this->assertEqual($num_records, 1, 'Returned the correct number of total rows.');
   }
 
   /**
@@ -1905,7 +1906,7 @@ class DatabaseSelectComplexTestCase extends DatabaseTestCase {
       $num_records++;
     }
 
-    $this->assertEqual($num_records, 2, t('Returned the correct number of rows.'));
+    $this->assertEqual($num_records, 2, 'Returned the correct number of rows.');
   }
 
   /**
@@ -1922,7 +1923,7 @@ class DatabaseSelectComplexTestCase extends DatabaseTestCase {
       $num_records++;
     }
 
-    $this->assertEqual($num_records, 6, t('Returned the correct number of rows.'));
+    $this->assertEqual($num_records, 6, 'Returned the correct number of rows.');
   }
 
   /**
@@ -1936,13 +1937,13 @@ class DatabaseSelectComplexTestCase extends DatabaseTestCase {
 
     $count = $query->countQuery()->execute()->fetchField();
 
-    $this->assertEqual($count, 4, t('Counted the correct number of records.'));
+    $this->assertEqual($count, 4, 'Counted the correct number of records.');
 
     // Now make sure we didn't break the original query!  We should still have
     // all of the fields we asked for.
     $record = $query->execute()->fetch();
-    $this->assertEqual($record->$name_field, 'George', t('Correct data retrieved.'));
-    $this->assertEqual($record->$age_field, 27, t('Correct data retrieved.'));
+    $this->assertEqual($record->$name_field, 'George', 'Correct data retrieved.');
+    $this->assertEqual($record->$age_field, 27, 'Correct data retrieved.');
   }
 
   /**
@@ -1957,20 +1958,20 @@ class DatabaseSelectComplexTestCase extends DatabaseTestCase {
 
     // Check that the 'all_fields' statement is handled properly.
     $tables = $query->getTables();
-    $this->assertEqual($tables['test']['all_fields'], 1, t('Query correctly sets \'all_fields\' statement.'));
+    $this->assertEqual($tables['test']['all_fields'], 1, 'Query correctly sets \'all_fields\' statement.');
     $tables = $count->getTables();
-    $this->assertFalse(isset($tables['test']['all_fields']), t('Count query correctly unsets \'all_fields\' statement.'));
+    $this->assertFalse(isset($tables['test']['all_fields']), 'Count query correctly unsets \'all_fields\' statement.');
 
     // Check that the ordering clause is handled properly.
     $orderby = $query->getOrderBy();
-    $this->assertEqual($orderby['name'], 'ASC', t('Query correctly sets ordering clause.'));
+    $this->assertEqual($orderby['name'], 'ASC', 'Query correctly sets ordering clause.');
     $orderby = $count->getOrderBy();
-    $this->assertFalse(isset($orderby['name']), t('Count query correctly unsets ordering caluse.'));
+    $this->assertFalse(isset($orderby['name']), 'Count query correctly unsets ordering caluse.');
 
     // Make sure that the count query works.
     $count = $count->execute()->fetchField();
 
-    $this->assertEqual($count, 4, t('Counted the correct number of records.'));
+    $this->assertEqual($count, 4, 'Counted the correct number of records.');
   }
 
   /**
@@ -1983,7 +1984,7 @@ class DatabaseSelectComplexTestCase extends DatabaseTestCase {
 
     $count = $query->countQuery()->execute()->fetchField();
 
-    $this->assertEqual($count, 6, t('Counted the correct number of records.'));
+    $this->assertEqual($count, 6, 'Counted the correct number of records.');
   }
 
   /**
@@ -2000,7 +2001,7 @@ class DatabaseSelectComplexTestCase extends DatabaseTestCase {
     $query->condition(db_or()->condition('age', 26)->condition('age', 27));
 
     $job = $query->execute()->fetchField();
-    $this->assertEqual($job, 'Songwriter', t('Correct data retrieved.'));
+    $this->assertEqual($job, 'Songwriter', 'Correct data retrieved.');
   }
 
   /**
@@ -2013,8 +2014,8 @@ class DatabaseSelectComplexTestCase extends DatabaseTestCase {
     $query->addField($alias, 'job', 'otherjob');
     $query->where("$alias.name <> test.name");
     $crowded_job = $query->execute()->fetch();
-    $this->assertEqual($crowded_job->job, $crowded_job->otherjob, t('Correctly joined same table twice.'));
-    $this->assertNotEqual($crowded_job->name, $crowded_job->othername, t('Correctly joined same table twice.'));
+    $this->assertEqual($crowded_job->job, $crowded_job->otherjob, 'Correctly joined same table twice.');
+    $this->assertNotEqual($crowded_job->name, $crowded_job->othername, 'Correctly joined same table twice.');
   }
 }
 
@@ -2058,7 +2059,7 @@ class DatabaseSelectPagerDefaultTestCase extends DatabaseTestCase {
         $correct_number = $count - ($limit * $page);
       }
 
-      $this->assertEqual(count($data->names), $correct_number, t('Correct number of records returned by pager: @number', array('@number' => $correct_number)));
+      $this->assertEqual(count($data->names), $correct_number, 'Correct number of records returned by pager: ' . $correct_number);
     }
   }
 
@@ -2092,7 +2093,7 @@ class DatabaseSelectPagerDefaultTestCase extends DatabaseTestCase {
         $correct_number = $count - ($limit * $page);
       }
 
-      $this->assertEqual(count($data->names), $correct_number, t('Correct number of records returned by pager: @number', array('@number' => $correct_number)));
+      $this->assertEqual(count($data->names), $correct_number, 'Correct number of records returned by pager: ' . $correct_number);
     }
   }
 
@@ -2114,7 +2115,7 @@ class DatabaseSelectPagerDefaultTestCase extends DatabaseTestCase {
     $ages = $outer_query
       ->execute()
       ->fetchCol();
-    $this->assertEqual($ages, array(25, 26, 27, 28), t('Inner pager query returned the correct ages.'));
+    $this->assertEqual($ages, array(25, 26, 27, 28), 'Inner pager query returned the correct ages.');
   }
 
   /**
@@ -2134,7 +2135,7 @@ class DatabaseSelectPagerDefaultTestCase extends DatabaseTestCase {
     $ages = $query
       ->execute()
       ->fetchCol();
-    $this->assertEqual($ages, array('George', 'Ringo'), t('Pager query with having expression returned the correct ages.'));
+    $this->assertEqual($ages, array('George', 'Ringo'), 'Pager query with having expression returned the correct ages.');
   }
 }
 
@@ -2172,8 +2173,8 @@ class DatabaseSelectTableSortDefaultTestCase extends DatabaseTestCase {
       $first = array_shift($data->tasks);
       $last = array_pop($data->tasks);
 
-      $this->assertEqual($first->task, $sort['first'], t('Items appear in the correct order.'));
-      $this->assertEqual($last->task, $sort['last'], t('Items appear in the correct order.'));
+      $this->assertEqual($first->task, $sort['first'], 'Items appear in the correct order.');
+      $this->assertEqual($last->task, $sort['last'], 'Items appear in the correct order.');
     }
   }
 
@@ -2198,8 +2199,8 @@ class DatabaseSelectTableSortDefaultTestCase extends DatabaseTestCase {
       $first = array_shift($data->tasks);
       $last = array_pop($data->tasks);
 
-      $this->assertEqual($first->task, $sort['first'], t('Items appear in the correct order sorting by @field @sort.', array('@field' => $sort['field'], '@sort' => $sort['sort'])));
-      $this->assertEqual($last->task, $sort['last'], t('Items appear in the correct order sorting by @field @sort.', array('@field' => $sort['field'], '@sort' => $sort['sort'])));
+      $this->assertEqual($first->task, $sort['first'], 'Items appear in the correct order sorting by ' . $sort['field'] . ' ' . $sort['sort'] . '.');
+      $this->assertEqual($last->task, $sort['last'], 'Items appear in the correct order sorting by ' . $sort['field'] . ' ' . $sort['sort'] . '.');
     }
   }
 }
@@ -2230,8 +2231,8 @@ class DatabaseTaggingTestCase extends DatabaseTestCase {
 
     $query->addTag('test');
 
-    $this->assertTrue($query->hasTag('test'), t('hasTag() returned true.'));
-    $this->assertFalse($query->hasTag('other'), t('hasTag() returned false.'));
+    $this->assertTrue($query->hasTag('test'), 'hasTag() returned true.');
+    $this->assertFalse($query->hasTag('other'), 'hasTag() returned false.');
   }
 
   /**
@@ -2245,8 +2246,8 @@ class DatabaseTaggingTestCase extends DatabaseTestCase {
     $query->addTag('test');
     $query->addTag('other');
 
-    $this->assertTrue($query->hasAllTags('test', 'other'), t('hasAllTags() returned true.'));
-    $this->assertFalse($query->hasAllTags('test', 'stuff'), t('hasAllTags() returned false.'));
+    $this->assertTrue($query->hasAllTags('test', 'other'), 'hasAllTags() returned true.');
+    $this->assertFalse($query->hasAllTags('test', 'stuff'), 'hasAllTags() returned false.');
   }
 
   /**
@@ -2259,8 +2260,8 @@ class DatabaseTaggingTestCase extends DatabaseTestCase {
 
     $query->addTag('test');
 
-    $this->assertTrue($query->hasAnyTag('test', 'other'), t('hasAnyTag() returned true.'));
-    $this->assertFalse($query->hasAnyTag('other', 'stuff'), t('hasAnyTag() returned false.'));
+    $this->assertTrue($query->hasAnyTag('test', 'other'), 'hasAnyTag() returned true.');
+    $this->assertFalse($query->hasAnyTag('other', 'stuff'), 'hasAnyTag() returned false.');
   }
 
   /**
@@ -2281,10 +2282,10 @@ class DatabaseTaggingTestCase extends DatabaseTestCase {
     $query->addMetaData('test', $data);
 
     $return = $query->getMetaData('test');
-    $this->assertEqual($data, $return, t('Corect metadata returned.'));
+    $this->assertEqual($data, $return, 'Corect metadata returned.');
 
     $return = $query->getMetaData('nothere');
-    $this->assertNull($return, t('Non-existent key returned NULL.'));
+    $this->assertNull($return, 'Non-existent key returned NULL.');
   }
 }
 
@@ -2319,7 +2320,7 @@ class DatabaseAlterTestCase extends DatabaseTestCase {
       $num_records++;
     }
 
-    $this->assertEqual($num_records, 2, t('Returned the correct number of rows.'));
+    $this->assertEqual($num_records, 2, 'Returned the correct number of rows.');
   }
 
   /**
@@ -2336,14 +2337,14 @@ class DatabaseAlterTestCase extends DatabaseTestCase {
 
     $records = $result->fetchAll();
 
-    $this->assertEqual(count($records), 2, t('Returned the correct number of rows.'));
+    $this->assertEqual(count($records), 2, 'Returned the correct number of rows.');
 
-    $this->assertEqual($records[0]->name, 'George', t('Correct data retrieved.'));
-    $this->assertEqual($records[0]->$tid_field, 4, t('Correct data retrieved.'));
-    $this->assertEqual($records[0]->$task_field, 'sing', t('Correct data retrieved.'));
-    $this->assertEqual($records[1]->name, 'George', t('Correct data retrieved.'));
-    $this->assertEqual($records[1]->$tid_field, 5, t('Correct data retrieved.'));
-    $this->assertEqual($records[1]->$task_field, 'sleep', t('Correct data retrieved.'));
+    $this->assertEqual($records[0]->name, 'George', 'Correct data retrieved.');
+    $this->assertEqual($records[0]->$tid_field, 4, 'Correct data retrieved.');
+    $this->assertEqual($records[0]->$task_field, 'sing', 'Correct data retrieved.');
+    $this->assertEqual($records[1]->name, 'George', 'Correct data retrieved.');
+    $this->assertEqual($records[1]->$tid_field, 5, 'Correct data retrieved.');
+    $this->assertEqual($records[1]->$task_field, 'sleep', 'Correct data retrieved.');
   }
 
   /**
@@ -2364,11 +2365,11 @@ class DatabaseAlterTestCase extends DatabaseTestCase {
 
     $records = $result->fetchAll();
 
-    $this->assertEqual(count($records), 1, t('Returned the correct number of rows.'));
-    $this->assertEqual($records[0]->$name_field, 'John', t('Correct data retrieved.'));
-    $this->assertEqual($records[0]->$tid_field, 2, t('Correct data retrieved.'));
-    $this->assertEqual($records[0]->$pid_field, 1, t('Correct data retrieved.'));
-    $this->assertEqual($records[0]->$task_field, 'sleep', t('Correct data retrieved.'));
+    $this->assertEqual(count($records), 1, 'Returned the correct number of rows.');
+    $this->assertEqual($records[0]->$name_field, 'John', 'Correct data retrieved.');
+    $this->assertEqual($records[0]->$tid_field, 2, 'Correct data retrieved.');
+    $this->assertEqual($records[0]->$pid_field, 1, 'Correct data retrieved.');
+    $this->assertEqual($records[0]->$task_field, 'sleep', 'Correct data retrieved.');
   }
 
   /**
@@ -2382,8 +2383,8 @@ class DatabaseAlterTestCase extends DatabaseTestCase {
     $query->addTag('database_test_alter_change_fields');
 
     $record = $query->execute()->fetch();
-    $this->assertEqual($record->$name_field, 'George', t('Correct data retrieved.'));
-    $this->assertFalse(isset($record->$age_field), t('Age field not found, as intended.'));
+    $this->assertEqual($record->$name_field, 'George', 'Correct data retrieved.');
+    $this->assertFalse(isset($record->$age_field), 'Age field not found, as intended.');
   }
 
   /**
@@ -2400,8 +2401,8 @@ class DatabaseAlterTestCase extends DatabaseTestCase {
     // Ensure that we got the right record.
     $record = $result->fetch();
 
-    $this->assertEqual($record->$name_field, 'George', t('Fetched name is correct.'));
-    $this->assertEqual($record->$age_field, 27*3, t('Fetched age expression is correct.'));
+    $this->assertEqual($record->$name_field, 'George', 'Fetched name is correct.');
+    $this->assertEqual($record->$age_field, 27 * 3, 'Fetched age expression is correct.');
   }
 
   /**
@@ -2416,7 +2417,7 @@ class DatabaseAlterTestCase extends DatabaseTestCase {
 
     $num_records = count($query->execute()->fetchAll());
 
-    $this->assertEqual($num_records, 4, t('Returned the correct number of rows.'));
+    $this->assertEqual($num_records, 4, 'Returned the correct number of rows.');
   }
 
   /**
@@ -2440,8 +2441,8 @@ class DatabaseAlterTestCase extends DatabaseTestCase {
     $name_field = $query->addField('pq', 'name');
 
     $record = $query->execute()->fetch();
-    $this->assertEqual($record->$name_field, 'George', t('Fetched name is correct.'));
-    $this->assertEqual($record->$age_field, 27*3, t('Fetched age expression is correct.'));
+    $this->assertEqual($record->$name_field, 'George', 'Fetched name is correct.');
+    $this->assertEqual($record->$age_field, 27 * 3, 'Fetched age expression is correct.');
   }
 }
 
@@ -2475,31 +2476,31 @@ class DatabaseRegressionTestCase extends DatabaseTestCase {
       ))->execute();
 
     $from_database = db_query('SELECT name FROM {test} WHERE name = :name', array(':name' => $name))->fetchField();
-    $this->assertIdentical($name, $from_database, t("The database handles UTF-8 characters cleanly."));
+    $this->assertIdentical($name, $from_database, "The database handles UTF-8 characters cleanly.");
   }
 
   /**
    * Test the db_table_exists() function.
    */
   function testDBTableExists() {
-    $this->assertIdentical(TRUE, db_table_exists('node'), t('Returns true for existent table.'));
-    $this->assertIdentical(FALSE, db_table_exists('nosuchtable'), t('Returns false for nonexistent table.'));
+    $this->assertIdentical(TRUE, db_table_exists('node'), 'Returns true for existent table.');
+    $this->assertIdentical(FALSE, db_table_exists('nosuchtable'), 'Returns false for nonexistent table.');
   }
 
   /**
    * Test the db_field_exists() function.
    */
   function testDBFieldExists() {
-    $this->assertIdentical(TRUE, db_field_exists('node', 'nid'), t('Returns true for existent column.'));
-    $this->assertIdentical(FALSE, db_field_exists('node', 'nosuchcolumn'), t('Returns false for nonexistent column.'));
+    $this->assertIdentical(TRUE, db_field_exists('node', 'nid'), 'Returns true for existent column.');
+    $this->assertIdentical(FALSE, db_field_exists('node', 'nosuchcolumn'), 'Returns false for nonexistent column.');
   }
 
   /**
    * Test the db_index_exists() function.
    */
   function testDBIndexExists() {
-    $this->assertIdentical(TRUE, db_index_exists('node', 'node_created'), t('Returns true for existent index.'));
-    $this->assertIdentical(FALSE, db_index_exists('node', 'nosuchindex'), t('Returns false for nonexistent index.'));
+    $this->assertIdentical(TRUE, db_index_exists('node', 'node_created'), 'Returns true for existent index.');
+    $this->assertIdentical(FALSE, db_index_exists('node', 'nosuchindex'), 'Returns false for nonexistent index.');
   }
 }
 
@@ -2527,10 +2528,10 @@ class DatabaseLoggingTestCase extends DatabaseTestCase {
 
     $queries = Database::getLog('testing', 'default');
 
-    $this->assertEqual(count($queries), 2, t('Correct number of queries recorded.'));
+    $this->assertEqual(count($queries), 2, 'Correct number of queries recorded.');
 
     foreach ($queries as $query) {
-      $this->assertEqual($query['caller']['function'], __FUNCTION__, t('Correct function in query log.'));
+      $this->assertEqual($query['caller']['function'], __FUNCTION__, 'Correct function in query log.');
     }
   }
 
@@ -2549,8 +2550,8 @@ class DatabaseLoggingTestCase extends DatabaseTestCase {
     $queries1 = Database::getLog('testing1');
     $queries2 = Database::getLog('testing2');
 
-    $this->assertEqual(count($queries1), 2, t('Correct number of queries recorded for log 1.'));
-    $this->assertEqual(count($queries2), 1, t('Correct number of queries recorded for log 2.'));
+    $this->assertEqual(count($queries1), 2, 'Correct number of queries recorded for log 1.');
+    $this->assertEqual(count($queries2), 1, 'Correct number of queries recorded for log 2.');
   }
 
   /**
@@ -2566,13 +2567,13 @@ class DatabaseLoggingTestCase extends DatabaseTestCase {
 
     db_query('SELECT name FROM {test} WHERE age > :age', array(':age' => 25))->fetchCol();
 
-    db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'Ringo'), array('target' => 'slave'));//->fetchCol();
+    db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'Ringo'), array('target' => 'slave')); //->fetchCol();
 
     $queries1 = Database::getLog('testing1');
 
-    $this->assertEqual(count($queries1), 2, t('Recorded queries from all targets.'));
-    $this->assertEqual($queries1[0]['target'], 'default', t('First query used default target.'));
-    $this->assertEqual($queries1[1]['target'], 'slave', t('Second query used slave target.'));
+    $this->assertEqual(count($queries1), 2, 'Recorded queries from all targets.');
+    $this->assertEqual($queries1[0]['target'], 'default', 'First query used default target.');
+    $this->assertEqual($queries1[1]['target'], 'slave', 'Second query used slave target.');
   }
 
   /**
@@ -2596,9 +2597,9 @@ class DatabaseLoggingTestCase extends DatabaseTestCase {
 
     $queries1 = Database::getLog('testing1');
 
-    $this->assertEqual(count($queries1), 2, t('Recorded queries from all targets.'));
-    $this->assertEqual($queries1[0]['target'], 'default', t('First query used default target.'));
-    $this->assertEqual($queries1[1]['target'], 'default', t('Second query used default target as fallback.'));
+    $this->assertEqual(count($queries1), 2, 'Recorded queries from all targets.');
+    $this->assertEqual($queries1[0]['target'], 'default', 'First query used default target.');
+    $this->assertEqual($queries1[1]['target'], 'default', 'Second query used default target as fallback.');
   }
 
   /**
@@ -2624,8 +2625,8 @@ class DatabaseLoggingTestCase extends DatabaseTestCase {
     $queries1 = Database::getLog('testing1');
     $queries2 = Database::getLog('testing1', 'test2');
 
-    $this->assertEqual(count($queries1), 1, t('Correct number of queries recorded for first connection.'));
-    $this->assertEqual(count($queries2), 1, t('Correct number of queries recorded for second connection.'));
+    $this->assertEqual(count($queries1), 1, 'Correct number of queries recorded for first connection.');
+    $this->assertEqual(count($queries2), 1, 'Correct number of queries recorded for second connection.');
   }
 }
 
@@ -2651,12 +2652,12 @@ class DatabaseRangeQueryTestCase extends DrupalWebTestCase {
   function testRangeQuery() {
     // Test if return correct number of rows.
     $range_rows = db_query_range("SELECT name FROM {system} ORDER BY name", 2, 3)->fetchAll();
-    $this->assertEqual(count($range_rows), 3, t('Range query work and return correct number of rows.'));
+    $this->assertEqual(count($range_rows), 3, 'Range query work and return correct number of rows.');
 
     // Test if return target data.
     $raw_rows = db_query('SELECT name FROM {system} ORDER BY name')->fetchAll();
     $raw_rows = array_slice($raw_rows, 2, 3);
-    $this->assertEqual($range_rows, $raw_rows, t('Range query work and return target data.'));
+    $this->assertEqual($range_rows, $raw_rows, 'Range query work and return target data.');
   }
 }
 
@@ -2690,19 +2691,19 @@ class DatabaseTemporaryQueryTestCase extends DrupalWebTestCase {
     $this->drupalGet('database_test/db_query_temporary');
     $data = json_decode($this->drupalGetContent());
     if ($data) {
-      $this->assertEqual($this->countTableRows("system"), $data->row_count, t('The temporary table contains the correct amount of rows.'));
-      $this->assertFalse(db_table_exists($data->table_name), t('The temporary table is, indeed, temporary.'));
+      $this->assertEqual($this->countTableRows("system"), $data->row_count, 'The temporary table contains the correct amount of rows.');
+      $this->assertFalse(db_table_exists($data->table_name), 'The temporary table is, indeed, temporary.');
     }
     else {
-      $this->fail(t("The creation of the temporary table failed."));
+      $this->fail("The creation of the temporary table failed.");
     }
 
     // Now try to run two db_query_temporary() in the same request.
     $table_name_system = db_query_temporary('SELECT status FROM {system}', array());
     $table_name_users = db_query_temporary('SELECT uid FROM {users}', array());
 
-    $this->assertEqual($this->countTableRows($table_name_system), $this->countTableRows("system"), t('A temporary table was created successfully in this request.'));
-    $this->assertEqual($this->countTableRows($table_name_users), $this->countTableRows("users"), t('A second temporary table was created successfully in this request.'));
+    $this->assertEqual($this->countTableRows($table_name_system), $this->countTableRows("system"), 'A temporary table was created successfully in this request.');
+    $this->assertEqual($this->countTableRows($table_name_users), $this->countTableRows("users"), 'A second temporary table was created successfully in this request.');
   }
 }
 
@@ -2737,7 +2738,7 @@ class DatabaseBasicSyntaxTestCase extends DatabaseTestCase {
       ':a4' => ' a ',
       ':a5' => 'test.',
     ));
-    $this->assertIdentical($result->fetchField(), 'This is a test.', t('Basic CONCAT works.'));
+    $this->assertIdentical($result->fetchField(), 'This is a test.', 'Basic CONCAT works.');
   }
 
   /**
@@ -2750,7 +2751,7 @@ class DatabaseBasicSyntaxTestCase extends DatabaseTestCase {
       ':a3' => '.',
       ':age' => 25,
     ));
-    $this->assertIdentical($result->fetchField(), 'The age of John is 25.', t('Field CONCAT works.'));
+    $this->assertIdentical($result->fetchField(), 'The age of John is 25.', 'Field CONCAT works.');
   }
 
   /**
@@ -2769,14 +2770,14 @@ class DatabaseBasicSyntaxTestCase extends DatabaseTestCase {
       ->countQuery()
       ->execute()
       ->fetchField();
-    $this->assertIdentical($num_matches, '2', t('Found 2 records.'));
+    $this->assertIdentical($num_matches, '2', 'Found 2 records.');
     // Match only "Ring_" using a LIKE expression with no wildcards.
     $num_matches = db_select('test', 't')
       ->condition('name', db_like('Ring_'), 'LIKE')
       ->countQuery()
       ->execute()
       ->fetchField();
-    $this->assertIdentical($num_matches, '1', t('Found 1 record.'));
+    $this->assertIdentical($num_matches, '1', 'Found 1 record.');
   }
 
   /**
@@ -2800,14 +2801,14 @@ class DatabaseBasicSyntaxTestCase extends DatabaseTestCase {
       ->countQuery()
       ->execute()
       ->fetchField();
-    $this->assertIdentical($num_matches, '2', t('Found 2 records.'));
+    $this->assertIdentical($num_matches, '2', 'Found 2 records.');
     // Match only the former using a LIKE expression with no wildcards.
     $num_matches = db_select('test', 't')
       ->condition('name', db_like('abc%\_'), 'LIKE')
       ->countQuery()
       ->execute()
       ->fetchField();
-    $this->assertIdentical($num_matches, '1', t('Found 1 record.'));
+    $this->assertIdentical($num_matches, '1', 'Found 1 record.');
   }
 }
 
@@ -2850,7 +2851,7 @@ class DatabaseInvalidDataTestCase extends DatabaseTestCase {
           'job' => 'Singer',
         ))
         ->execute();
-      $this->fail(t('Insert succeedded when it should not have.'));
+      $this->fail('Insert succeedded when it should not have.');
     }
     catch (Exception $e) {
       // Check if the first record was inserted.
@@ -2862,14 +2863,14 @@ class DatabaseInvalidDataTestCase extends DatabaseTestCase {
           // Database engines that don't support transactions can leave partial
           // inserts in place when an error occurs. This is the case for MySQL
           // when running on a MyISAM table.
-          $this->pass(t("The whole transaction has not been rolled-back when a duplicate key insert occurs, this is expected because the database doesn't support transactions"));
+          $this->pass("The whole transaction has not been rolled-back when a duplicate key insert occurs, this is expected because the database doesn't support transactions");
         }
         else {
-          $this->fail(t('The whole transaction is rolled back when a duplicate key insert occurs.'));
+          $this->fail('The whole transaction is rolled back when a duplicate key insert occurs.');
         }
       }
       else {
-        $this->pass(t('The whole transaction is rolled back when a duplicate key insert occurs.'));
+        $this->pass('The whole transaction is rolled back when a duplicate key insert occurs.');
       }
 
       // Ensure the other values were not inserted.
@@ -2878,7 +2879,7 @@ class DatabaseInvalidDataTestCase extends DatabaseTestCase {
         ->condition('age', array(17, 75), 'IN')
         ->execute()->fetchObject();
 
-      $this->assertFalse($record, t('The rest of the insert aborted as expected.'));
+      $this->assertFalse($record, 'The rest of the insert aborted as expected.');
     }
   }
 
@@ -2906,7 +2907,7 @@ class DatabaseQueryTestCase extends DatabaseTestCase {
   function testArraySubstitution() {
     $names = db_query('SELECT name FROM {test} WHERE age IN (:ages) ORDER BY age', array(':ages' => array(25, 26, 27)))->fetchAll();
 
-    $this->assertEqual(count($names), 3, t('Correct number of names returned'));
+    $this->assertEqual(count($names), 3, 'Correct number of names returned');
   }
 }
 
@@ -2972,19 +2973,19 @@ class DatabaseTransactionTestCase extends DatabaseTestCase {
       ))
       ->execute();
 
-    $this->assertTrue($connection->inTransaction(), t('In transaction before calling nested transaction.'));
+    $this->assertTrue($connection->inTransaction(), 'In transaction before calling nested transaction.');
 
     // We're already in a transaction, but we call ->transactionInnerLayer
     // to nest another transaction inside the current one.
     $this->transactionInnerLayer($suffix, $rollback);
 
-    $this->assertTrue($connection->inTransaction(), t('In transaction after calling nested transaction.'));
+    $this->assertTrue($connection->inTransaction(), 'In transaction after calling nested transaction.');
 
     if ($rollback) {
       // Roll back the transaction, if requested.
       // This rollback should propagate to the last savepoint.
       $txn->rollback();
-      $this->assertTrue(($connection->transactionDepth() == $depth), t('Transaction has rolled back to the last savepoint after calling rollback().'));
+      $this->assertTrue(($connection->transactionDepth() == $depth), 'Transaction has rolled back to the last savepoint after calling rollback().');
     }
   }
 
@@ -3000,7 +3001,7 @@ class DatabaseTransactionTestCase extends DatabaseTestCase {
   protected function transactionInnerLayer($suffix, $rollback = FALSE) {
     $connection = Database::getConnection();
 
-    $this->assertTrue($connection->inTransaction(), t('In transaction in nested transaction.'));
+    $this->assertTrue($connection->inTransaction(), 'In transaction in nested transaction.');
 
     $depth = $connection->transactionDepth();
     // Start a transaction. If we're being called from ->transactionOuterLayer,
@@ -3010,7 +3011,7 @@ class DatabaseTransactionTestCase extends DatabaseTestCase {
     $txn = db_transaction();
 
     $depth2 = $connection->transactionDepth();
-    $this->assertTrue($depth < $depth2, t('Transaction depth is has increased with new transaction.'));
+    $this->assertTrue($depth < $depth2, 'Transaction depth is has increased with new transaction.');
 
     // Insert a single row into the testing table.
     db_insert('test')
@@ -3020,13 +3021,13 @@ class DatabaseTransactionTestCase extends DatabaseTestCase {
       ))
       ->execute();
 
-    $this->assertTrue($connection->inTransaction(), t('In transaction inside nested transaction.'));
+    $this->assertTrue($connection->inTransaction(), 'In transaction inside nested transaction.');
 
     if ($rollback) {
       // Roll back the transaction, if requested.
       // This rollback should propagate to the last savepoint.
       $txn->rollback();
-      $this->assertTrue(($connection->transactionDepth() == $depth), t('Transaction has rolled back to the last savepoint after calling rollback().'));
+      $this->assertTrue(($connection->transactionDepth() == $depth), 'Transaction has rolled back to the last savepoint after calling rollback().');
     }
   }
 
@@ -3047,9 +3048,9 @@ class DatabaseTransactionTestCase extends DatabaseTestCase {
       // Neither of the rows we inserted in the two transaction layers
       // should be present in the tables post-rollback.
       $saved_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'DavidB'))->fetchField();
-      $this->assertNotIdentical($saved_age, '24', t('Cannot retrieve DavidB row after commit.'));
+      $this->assertNotIdentical($saved_age, '24', 'Cannot retrieve DavidB row after commit.');
       $saved_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'DanielB'))->fetchField();
-      $this->assertNotIdentical($saved_age, '19', t('Cannot retrieve DanielB row after commit.'));
+      $this->assertNotIdentical($saved_age, '19', 'Cannot retrieve DanielB row after commit.');
     }
     catch (Exception $e) {
       $this->fail($e->getMessage());
@@ -3073,9 +3074,9 @@ class DatabaseTransactionTestCase extends DatabaseTestCase {
       // Because our current database claims to not support transactions,
       // the inserted rows should be present despite the attempt to roll back.
       $saved_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'DavidB'))->fetchField();
-      $this->assertIdentical($saved_age, '24', t('DavidB not rolled back, since transactions are not supported.'));
+      $this->assertIdentical($saved_age, '24', 'DavidB not rolled back, since transactions are not supported.');
       $saved_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'DanielB'))->fetchField();
-      $this->assertIdentical($saved_age, '19', t('DanielB not rolled back, since transactions are not supported.'));
+      $this->assertIdentical($saved_age, '19', 'DanielB not rolled back, since transactions are not supported.');
     }
     catch (Exception $e) {
       $this->fail($e->getMessage());
@@ -3095,9 +3096,9 @@ class DatabaseTransactionTestCase extends DatabaseTestCase {
 
       // Because we committed, both of the inserted rows should be present.
       $saved_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'DavidA'))->fetchField();
-      $this->assertIdentical($saved_age, '24', t('Can retrieve DavidA row after commit.'));
+      $this->assertIdentical($saved_age, '24', 'Can retrieve DavidA row after commit.');
       $saved_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'DanielA'))->fetchField();
-      $this->assertIdentical($saved_age, '19', t('Can retrieve DanielA row after commit.'));
+      $this->assertIdentical($saved_age, '19', 'Can retrieve DanielA row after commit.');
     }
     catch (Exception $e) {
       $this->fail($e->getMessage());
@@ -3127,9 +3128,9 @@ class DatabaseNextIdCase extends DrupalWebTestCase {
     // We can test for exact increase in here because we know there is no
     // other process operating on these tables -- normally we could only
     // expect $second > $first.
-    $this->assertEqual($first + 1, $second, t('The second call from a sequence provides a number increased by one.'));
+    $this->assertEqual($first + 1, $second, 'The second call from a sequence provides a number increased by one.');
     $result = db_next_id(1000);
-    $this->assertEqual($result, 1001, t('Sequence provides a larger number than the existing ID.'));
+    $this->assertEqual($result, 1001, 'Sequence provides a larger number than the existing ID.');
   }
 }
 
@@ -3151,8 +3152,8 @@ class DatabaseEmptyStatementTestCase extends DrupalWebTestCase {
   function testEmpty() {
     $result = new DatabaseStatementEmpty();
 
-    $this->assertTrue($result instanceof DatabaseStatementInterface, t('Class implements expected interface'));
-    $this->assertNull($result->fetchObject(), t('Null result returned.'));
+    $this->assertTrue($result instanceof DatabaseStatementInterface, 'Class implements expected interface');
+    $this->assertNull($result->fetchObject(), 'Null result returned.');
   }
 
   /**
@@ -3162,11 +3163,11 @@ class DatabaseEmptyStatementTestCase extends DrupalWebTestCase {
     $result = new DatabaseStatementEmpty();
 
     foreach ($result as $record) {
-      $this->fail(t('Iterating empty result set should not iterate.'));
+      $this->fail('Iterating empty result set should not iterate.');
       return;
     }
 
-    $this->pass(t('Iterating empty result set skipped iteration.'));
+    $this->pass('Iterating empty result set skipped iteration.');
   }
 
   /**
@@ -3175,6 +3176,6 @@ class DatabaseEmptyStatementTestCase extends DrupalWebTestCase {
   function testEmptyFetchAll() {
     $result = new DatabaseStatementEmpty();
 
-    $this->assertEqual($result->fetchAll(), array(), t('Empty array returned from empty result set.'));
+    $this->assertEqual($result->fetchAll(), array(), 'Empty array returned from empty result set.');
   }
 }

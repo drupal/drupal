@@ -1,5 +1,5 @@
 <?php
-// $Id: schema.test,v 1.19 2010/03/28 11:45:11 dries Exp $
+// $Id: schema.test,v 1.20 2010/08/05 23:26:35 webchick Exp $
 
 /**
  * @file
@@ -40,7 +40,7 @@ class SchemaTestCase extends DrupalWebTestCase {
     db_create_table('test_table', $table_specification);
 
     // Assert that the table exists.
-    $this->assertTrue(db_table_exists('test_table'), t('The table exists.'));
+    $this->assertTrue(db_table_exists('test_table'), 'The table exists.');
 
     // Assert that the table comment has been set.
     $this->checkSchemaComment($table_specification['description'], 'test_table');
@@ -49,46 +49,46 @@ class SchemaTestCase extends DrupalWebTestCase {
     $this->checkSchemaComment($table_specification['fields']['test_field']['description'], 'test_table', 'test_field');
 
     // An insert without a value for the column 'test_table' should fail.
-    $this->assertFalse($this->tryInsert(), t('Insert without a default failed.'));
+    $this->assertFalse($this->tryInsert(), 'Insert without a default failed.');
 
     // Add a default value to the column.
     db_field_set_default('test_table', 'test_field', 0);
     // The insert should now succeed.
-    $this->assertTrue($this->tryInsert(), t('Insert with a default succeeded.'));
+    $this->assertTrue($this->tryInsert(), 'Insert with a default succeeded.');
 
     // Remove the default.
     db_field_set_no_default('test_table', 'test_field');
     // The insert should fail again.
-    $this->assertFalse($this->tryInsert(), t('Insert without a default failed.'));
+    $this->assertFalse($this->tryInsert(), 'Insert without a default failed.');
 
     // Test for fake index and test for the boolean result of indexExists().
     $index_exists = Database::getConnection()->schema()->indexExists('test_table', 'test_field');
-    $this->assertIdentical($index_exists, FALSE, t('Fake index does not exists'));
+    $this->assertIdentical($index_exists, FALSE, 'Fake index does not exists');
     // Add index.
     db_add_index('test_table', 'test_field', array('test_field'));
     // Test for created index and test for the boolean result of indexExists().
     $index_exists = Database::getConnection()->schema()->indexExists('test_table', 'test_field');
-    $this->assertIdentical($index_exists, TRUE, t('Index created.'));
+    $this->assertIdentical($index_exists, TRUE, 'Index created.');
 
     // Rename the table.
     db_rename_table('test_table', 'test_table2');
 
     // Index should be renamed.
     $index_exists = Database::getConnection()->schema()->indexExists('test_table2', 'test_field');
-    $this->assertTrue($index_exists, t('Index was renamed.'));
+    $this->assertTrue($index_exists, 'Index was renamed.');
 
     // We need the default so that we can insert after the rename.
     db_field_set_default('test_table2', 'test_field', 0);
-    $this->assertFalse($this->tryInsert(), t('Insert into the old table failed.'));
-    $this->assertTrue($this->tryInsert('test_table2'), t('Insert into the new table succeeded.'));
+    $this->assertFalse($this->tryInsert(), 'Insert into the old table failed.');
+    $this->assertTrue($this->tryInsert('test_table2'), 'Insert into the new table succeeded.');
 
     // We should have successfully inserted exactly two rows.
     $count = db_query('SELECT COUNT(*) FROM {test_table2}')->fetchField();
-    $this->assertEqual($count, 2, t('Two fields were successfully inserted.'));
+    $this->assertEqual($count, 2, 'Two fields were successfully inserted.');
 
     // Try to drop the table.
     db_drop_table('test_table2');
-    $this->assertFalse(db_table_exists('test_table2'), t('The dropped table does not exist.'));
+    $this->assertFalse(db_table_exists('test_table2'), 'The dropped table does not exist.');
 
     // Recreate the table.
     db_create_table('test_table', $table_specification);
@@ -104,19 +104,19 @@ class SchemaTestCase extends DrupalWebTestCase {
     // Assert that the column comment has been set.
     $this->checkSchemaComment('Changed column description.', 'test_table', 'test_serial');
 
-    $this->assertTrue($this->tryInsert(), t('Insert with a serial succeeded.'));
+    $this->assertTrue($this->tryInsert(), 'Insert with a serial succeeded.');
     $max1 = db_query('SELECT MAX(test_serial) FROM {test_table}')->fetchField();
-    $this->assertTrue($this->tryInsert(), t('Insert with a serial succeeded.'));
+    $this->assertTrue($this->tryInsert(), 'Insert with a serial succeeded.');
     $max2 = db_query('SELECT MAX(test_serial) FROM {test_table}')->fetchField();
-    $this->assertTrue($max2 > $max1, t('The serial is monotone.'));
+    $this->assertTrue($max2 > $max1, 'The serial is monotone.');
 
     $count = db_query('SELECT COUNT(*) FROM {test_table}')->fetchField();
-    $this->assertEqual($count, 2, t('There were two rows.'));
+    $this->assertEqual($count, 2, 'There were two rows.');
   }
 
   function tryInsert($table = 'test_table') {
     try {
-       db_insert($table)
+      db_insert($table)
          ->fields(array('id' => mt_rand(10, 20)))
          ->execute();
       return TRUE;
@@ -139,7 +139,7 @@ class SchemaTestCase extends DrupalWebTestCase {
   function checkSchemaComment($description, $table, $column = NULL) {
     if (method_exists(Database::getConnection()->schema(), 'getComment')) {
       $comment = Database::getConnection()->schema()->getComment($table, $column);
-      $this->assertEqual($comment, $description, t('The comment matches the schema description.'));
+      $this->assertEqual($comment, $description, 'The comment matches the schema description.');
     }
   }
 
@@ -159,7 +159,7 @@ class SchemaTestCase extends DrupalWebTestCase {
     // Now set up columns for the other types.
     $types = array('int', 'float', 'numeric');
     foreach ($types as $type) {
-      $column_spec = array('type' => $type, 'unsigned'=> TRUE);
+      $column_spec = array('type' => $type, 'unsigned' => TRUE);
       if ($type == 'numeric') {
         $column_spec += array('precision' => 10, 'scale' => 0);
       }
@@ -169,9 +169,9 @@ class SchemaTestCase extends DrupalWebTestCase {
     }
 
     // Finally, check each column and try to insert invalid values into them.
-    foreach($table_spec['fields'] as $column_name => $column_spec) {
-      $this->assertTrue(db_field_exists($table_name, $column_name), t('Unsigned @type column was created.', array('@type' => $column_spec['type'])));
-      $this->assertFalse($this->tryUnsignedInsert($table_name, $column_name), t('Unsigned @type column rejected a negative value.', array('@type' => $column_spec['type'])));
+    foreach ($table_spec['fields'] as $column_name => $column_spec) {
+      $this->assertTrue(db_field_exists($table_name, $column_name), 'Unsigned ' . $column_spec['type'] . ' column was created.');
+      $this->assertFalse($this->tryUnsignedInsert($table_name, $column_name), 'Unsigned ' . $column_spec['type'] . ' column rejected a negative value.');
     }
   }
 

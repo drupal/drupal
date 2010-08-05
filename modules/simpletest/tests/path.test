@@ -1,5 +1,5 @@
 <?php
-// $Id: path.test,v 1.5 2010/04/06 19:49:03 dries Exp $
+// $Id: path.test,v 1.6 2010/08/05 23:26:35 webchick Exp $
 
 /**
  * @file
@@ -42,7 +42,7 @@ class DrupalMatchPathTestCase extends DrupalWebTestCase {
     foreach ($tests as $patterns => $cases) {
       foreach ($cases as $path => $expected_result) {
         $actual_result = drupal_match_path($path, $patterns);
-        $this->assertIdentical($actual_result, $expected_result, t('Tried matching the path <code>@path</code> to the pattern <pre>@patterns</pre> - expected @expected, got @actual.', array('@path' => $path, '@patterns' => $patterns, '@expected' => var_export($expected_result, TRUE), '@actual' => var_export($actual_result, TRUE))));
+        $this->assertIdentical($actual_result, $expected_result, 'Tried matching the path <code>' . $path . '</code> to the pattern <pre>' . $patterns . '</pre> - expected ' . var_export($expected_result, TRUE) . ', got ' . var_export($actual_result, TRUE) . '.');
       }
     }
   }
@@ -197,8 +197,8 @@ class UrlAlterFunctionalTest extends DrupalWebTestCase {
    */
   function testCurrentUrlRequestedPath() {
     $this->drupalGet('url-alter-test/bar');
-    $this->assertRaw('request_path=url-alter-test/bar', t('request_path() returns the requested path.'));
-    $this->assertRaw('current_path=url-alter-test/foo', t('current_path() returns the internal path.'));
+    $this->assertRaw('request_path=url-alter-test/bar', 'request_path() returns the requested path.');
+    $this->assertRaw('current_path=url-alter-test/foo', 'current_path() returns the internal path.');
   }
 
   /**
@@ -216,7 +216,7 @@ class UrlAlterFunctionalTest extends DrupalWebTestCase {
     $result = url($original);
     $base_path = base_path() . (variable_get('clean_url', '0') ? '' : '?q=');
     $result = substr($result, strlen($base_path));
-    $this->assertIdentical($result, $final, t('Altered outbound URL %original, expected %final, and got %result.', array('%original' => $original, '%final' => $final, '%result' => $result)));
+    $this->assertIdentical($result, $final, 'Altered outbound URL ' . $original . ', expected ' . $final . ', and got ' . $result . '.');
   }
 
   /**
@@ -233,6 +233,6 @@ class UrlAlterFunctionalTest extends DrupalWebTestCase {
   protected function assertUrlInboundAlter($original, $final) {
     // Test inbound altering.
     $result = drupal_get_normal_path($original);
-    $this->assertIdentical($result, $final, t('Altered inbound URL %original, expected %final, and got %result.', array('%original' => $original, '%final' => $final, '%result' => $result)));
+    $this->assertIdentical($result, $final, 'Altered inbound URL ' . $original . ', expected ' . $final . ', and got ' . $result . '.');
   }
 }

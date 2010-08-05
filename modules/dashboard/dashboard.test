@@ -1,5 +1,5 @@
 <?php
-// $Id: dashboard.test,v 1.1 2010/07/02 15:24:31 webchick Exp $
+// $Id: dashboard.test,v 1.2 2010/08/05 23:26:34 webchick Exp $
 
 /**
  * @file
@@ -47,14 +47,14 @@ class DashboardAccessTestCase extends DrupalWebTestCase {
 
     // Ensure admin access.
     $this->drupalGet('admin');
-    $this->assertResponse(200, t('Admin has access to the dashboard.'));
-    $this->assertRaw($custom_block['title'], t('Admin has access to a dashboard block.'));
+    $this->assertResponse(200, 'Admin has access to the dashboard.');
+    $this->assertRaw($custom_block['title'], 'Admin has access to a dashboard block.');
 
     // Ensure non-admin access is denied.
     $normal_user = $this->drupalCreateUser();
     $this->drupalLogin($normal_user);
     $this->drupalGet('admin');
-    $this->assertResponse(403, t('Non-admin has no access to the dashboard.'));
-    $this->assertNoText($custom_block['title'], t('Non-admin has no access to a dashboard block.'));
+    $this->assertResponse(403, 'Non-admin has no access to the dashboard.');
+    $this->assertNoText($custom_block['title'], 'Non-admin has no access to a dashboard block.');
   }
 }

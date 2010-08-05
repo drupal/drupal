@@ -1,5 +1,5 @@
 <?php
-// $Id: search.test,v 1.66 2010/08/05 07:11:15 webchick Exp $
+// $Id: search.test,v 1.67 2010/08/05 23:26:35 webchick Exp $
 
 // The search index can contain different types of content. Typically the type is 'node'.
 // Here we test with _test_ and _test2_ as the type.
@@ -91,14 +91,14 @@ class SearchMatchTestCase extends DrupalWebTestCase {
    */
   function _testQueries() {
     /*
-      Note: OR queries that include short words in OR groups are only accepted
-      if the ORed terms are ANDed with at least one long word in the rest of the query.
+     Note: OR queries that include short words in OR groups are only accepted
+     if the ORed terms are ANDed with at least one long word in the rest of the query.
 
-      e.g. enim dolore OR ut = enim (dolore OR ut) = (enim dolor) OR (enim ut) -> good
-      e.g. dolore OR ut = (dolore) OR (ut) -> bad
+     e.g. enim dolore OR ut = enim (dolore OR ut) = (enim dolor) OR (enim ut) -> good
+     e.g. dolore OR ut = (dolore) OR (ut) -> bad
 
-      This is a design limitation to avoid full table scans.
-    */
+     This is a design limitation to avoid full table scans.
+     */
     $queries = array(
       // Simple AND queries.
       'ipsum' => array(1),
@@ -262,7 +262,7 @@ class SearchBikeShed extends DrupalWebTestCase {
     $edit = array();
     $edit['keys'] = 'bike shed ' . $this->randomName();
     $this->drupalPost('search/node', $edit, t('Search'));
-    $this->assertText(t('Consider loosening your query with OR. bike OR shed will often show more results than bike shed.'), t('Help text is displayed when search returns no results.'));
+    $this->assertText(t('Consider loosening your query with OR. bike OR shed will often show more results than bike shed.'), 'Help text is displayed when search returns no results.');
   }
 }
 
@@ -301,31 +301,31 @@ class SearchAdvancedSearchForm extends DrupalWebTestCase {
    * Test using the advanced search form to limit search to nodes of type "Basic page".
    */
   function testNodeType() {
-    $this->assertTrue($this->node->type == 'page', t('Node type is Basic page.'));
+    $this->assertTrue($this->node->type == 'page', 'Node type is Basic page.');
 
     // Assert that the dummy title doesn't equal the real title.
     $dummy_title = 'Lorem ipsum';
-    $this->assertNotEqual($dummy_title, $this->node->title, t("Dummy title doens't equal node title"));
+    $this->assertNotEqual($dummy_title, $this->node->title, "Dummy title doens't equal node title");
 
     // Search for the dummy title with a GET query.
     $this->drupalGet('search/node/' . $dummy_title);
-    $this->assertNoText($this->node->title, t('Basic page node is not found with dummy title.'));
+    $this->assertNoText($this->node->title, 'Basic page node is not found with dummy title.');
 
     // Search for the title of the node with a GET query.
     $this->drupalGet('search/node/' . $this->node->title);
-    $this->assertText($this->node->title, t('Basic page node is found with GET query.'));
+    $this->assertText($this->node->title, 'Basic page node is found with GET query.');
 
     // Search for the title of the node with a POST query.
     $edit = array('or' => $this->node->title);
     $this->drupalPost('search/node', $edit, t('Advanced search'));
-    $this->assertText($this->node->title, t('Basic page node is found with POST query.'));
+    $this->assertText($this->node->title, 'Basic page node is found with POST query.');
 
     // Advanced search type option.
     $this->drupalPost('search/node', array_merge($edit, array('type[page]' => 'page')), t('Advanced search'));
-    $this->assertText($this->node->title, t('Basic page node is found with POST query and type:page.'));
+    $this->assertText($this->node->title, 'Basic page node is found with POST query and type:page.');
 
     $this->drupalPost('search/node', array_merge($edit, array('type[article]' => 'article')), t('Advanced search'));
-    $this->assertText('bike shed', t('Article node is not found with POST query and type:article.'));
+    $this->assertText('bike shed', 'Article node is not found with POST query and type:article.');
   }
 }
 
@@ -396,7 +396,7 @@ class SearchRankingTestCase extends DrupalWebTestCase {
     variable_set('statistics_count_content_views', 1);
 
     // Then View one of the nodes a bunch of times.
-    for ($i = 0; $i < 5; $i ++) {
+    for ($i = 0; $i < 5; $i++) {
       $this->drupalGet('node/' . $nodes['views'][1]->nid);
     }
 
@@ -419,7 +419,7 @@ class SearchRankingTestCase extends DrupalWebTestCase {
   function testHTMLRankings() {
     // Login with sufficient privileges.
     $this->drupalLogin($this->drupalCreateUser(array('create page content')));
-    
+
     // Test HTML tags with different weights.
     $sorted_tags = array('h1', 'h2', 'h3', 'h4', 'a', 'h5', 'h6', 'notag');
     $shuffled_tags = $sorted_tags;
@@ -451,7 +451,7 @@ class SearchRankingTestCase extends DrupalWebTestCase {
 
     // Refresh variables after the treatment.
     $this->refreshVariables();
-    
+
     // Disable all other rankings.
     $node_ranks = array('sticky', 'promote', 'recent', 'comments', 'views');
     foreach ($node_ranks as $node_rank) {
@@ -464,7 +464,8 @@ class SearchRankingTestCase extends DrupalWebTestCase {
       // Assert the results.
       if ($tag == 'notag') {
         $this->assertEqual($set[$tag_rank]['node']->nid, $nodes[$tag]->nid, 'Search tag ranking for plain text order.');
-      } else {
+      }
+      else {
         $this->assertEqual($set[$tag_rank]['node']->nid, $nodes[$tag]->nid, 'Search tag ranking for "&lt;' . $sorted_tags[$tag_rank] . '&gt;" order.');
       }
     }
@@ -489,7 +490,7 @@ class SearchRankingTestCase extends DrupalWebTestCase {
 
       // Assert the results.
       $this->assertEqual($set[0]['node']->nid, $node->nid, 'Search tag ranking for "&lt;' . $tag . '&gt;" order.');
-      
+
       // Delete node so it doesn't show up in subsequent search results.
       node_delete($node->nid);
     }
@@ -506,8 +507,8 @@ class SearchRankingTestCase extends DrupalWebTestCase {
 
     // See testRankings() above - build a node that will rank high for sticky.
     $settings = array(
-      'type' => 'page', 
-      'title' => array(LANGUAGE_NONE => array(array('value' => 'Drupal rocks'))), 
+      'type' => 'page',
+      'title' => array(LANGUAGE_NONE => array(array('value' => 'Drupal rocks'))),
       'body' => array(LANGUAGE_NONE => array(array('value' => "Drupal's search rocks"))),
       'sticky' => 1,
     );
@@ -555,13 +556,13 @@ class SearchBlockTestCase extends DrupalWebTestCase {
   function testSearchFormBlock() {
     // Set block title to confirm that the interface is availble.
     $this->drupalPost('admin/structure/block/manage/search/form/configure', array('title' => $this->randomName(8)), t('Save block'));
-    $this->assertText(t('The block configuration has been saved.'), t('Block configuration set.'));
+    $this->assertText(t('The block configuration has been saved.'), 'Block configuration set.');
 
     // Set the block to a region to confirm block is availble.
     $edit = array();
     $edit['search_form[region]'] = 'footer';
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
-    $this->assertText(t('The block settings have been updated.'), t('Block successfully move to footer region.'));
+    $this->assertText(t('The block settings have been updated.'), 'Block successfully move to footer region.');
   }
 
   /**
@@ -726,20 +727,20 @@ class SearchCommentTestCase extends DrupalWebTestCase {
       'search_block_form' => "'" . $edit_comment['subject'] . "'",
     );
     $this->drupalPost('', $edit, t('Search'));
-    $this->assertText($node->title, t('Node found in search results.'));
-    $this->assertText($edit_comment['subject'], t('Comment subject found in search results.'));
+    $this->assertText($node->title, 'Node found in search results.');
+    $this->assertText($edit_comment['subject'], 'Comment subject found in search results.');
 
     // Search for the comment body.
     $edit = array(
       'search_block_form' => "'" . $comment_body . "'",
     );
     $this->drupalPost('', $edit, t('Search'));
-    $this->assertText($node->title, t('Node found in search results.'));
+    $this->assertText($node->title, 'Node found in search results.');
 
     // Verify that comment is rendered using proper format.
-    $this->assertText($comment_body, t('Comment body text found in search results.'));
-    $this->assertNoRaw(t('n/a'), t('HTML in comment body is not hidden.'));
-    $this->assertNoRaw(check_plain($edit_comment['comment_body[' . LANGUAGE_NONE . '][0][value]']), t('HTML in comment body is not escaped.'));
+    $this->assertText($comment_body, 'Comment body text found in search results.');
+    $this->assertNoRaw(t('n/a'), 'HTML in comment body is not hidden.');
+    $this->assertNoRaw(check_plain($edit_comment['comment_body[' . LANGUAGE_NONE . '][0][value]']), 'HTML in comment body is not escaped.');
 
     // Hide comments.
     $this->drupalLogin($this->admin_user);
@@ -752,7 +753,7 @@ class SearchCommentTestCase extends DrupalWebTestCase {
 
     // Search for $title.
     $this->drupalPost('', $edit, t('Search'));
-    $this->assertNoText($comment_body, t('Comment body text not found in search results.'));
+    $this->assertNoText($comment_body, 'Comment body text not found in search results.');
   }
 
   /**
@@ -811,7 +812,7 @@ class SearchCommentTestCase extends DrupalWebTestCase {
     $this->setRolePermissions(DRUPAL_AUTHENTICATED_RID, TRUE, TRUE);
     $this->setRolePermissions($this->admin_role, TRUE, FALSE);
     $this->checkCommentAccess('Admin user has access comments permission and no search permission, but comments should be indexed because admin user inherits authenticated user\'s permission to search', TRUE);
-    
+
   }
 
   /**
@@ -848,9 +849,9 @@ class SearchCommentTestCase extends DrupalWebTestCase {
 
 /**
  * Tests that comment count display toggles properly on comment status of node
- * 
+ *
  * Issue 537278
- * 
+ *
  * - Nodes with comment status set to Open should always how comment counts
  * - Nodes with comment status set to Closed should show comment counts
  *     only when there are comments
@@ -859,7 +860,7 @@ class SearchCommentTestCase extends DrupalWebTestCase {
 class SearchCommentCountToggleTestCase extends DrupalWebTestCase {
   protected $searching_user;
   protected $searchable_nodes;
-  
+
   public static function getInfo() {
     return array(
       'name' => 'Comment count toggle',
@@ -876,23 +877,23 @@ class SearchCommentCountToggleTestCase extends DrupalWebTestCase {
 
     // Create initial nodes.
     $node_params = array('type' => 'article', 'body' => array(LANGUAGE_NONE => array(array('value' => 'SearchCommentToggleTestCase'))));
-    
+
     $this->searchable_nodes['1 comment'] = $this->drupalCreateNode($node_params);
     $this->searchable_nodes['0 comments'] = $this->drupalCreateNode($node_params);
-    
+
     // Login with sufficient privileges.
     $this->drupalLogin($this->searching_user);
-    
+
     // Create a comment array
     $edit_comment = array();
     $edit_comment['subject'] = $this->randomName();
     $edit_comment['comment_body[' . LANGUAGE_NONE . '][0][value]'] = $this->randomName();
     $filtered_html_format_id = db_query_range('SELECT format FROM {filter_format} WHERE name = :name', 0, 1, array(':name' => 'Filtered HTML'))->fetchField();
     $edit_comment['comment_body[' . LANGUAGE_NONE . '][0][format]'] = $filtered_html_format_id;
-    
+
     // Post comment to the test node with comment
     $this->drupalPost('comment/reply/' . $this->searchable_nodes['1 comment']->nid, $edit_comment, t('Save'));
-    
+
     // First update the index. This does the initial processing.
     node_update_index();
 
@@ -913,28 +914,28 @@ class SearchCommentCountToggleTestCase extends DrupalWebTestCase {
 
     // Test comment count display for nodes with comment status set to Open
     $this->drupalPost('', $edit, t('Search'));
-    $this->assertText(t('0 comments'), t('Empty comment count displays for nodes with comment status set to Open'));
-    $this->assertText(t('1 comment'), t('Non-empty comment count displays for nodes with comment status set to Open'));
-    
+    $this->assertText(t('0 comments'), 'Empty comment count displays for nodes with comment status set to Open');
+    $this->assertText(t('1 comment'), 'Non-empty comment count displays for nodes with comment status set to Open');
+
     // Test comment count display for nodes with comment status set to Closed
     $this->searchable_nodes['0 comments']->comment = COMMENT_NODE_CLOSED;
     node_save($this->searchable_nodes['0 comments']);
     $this->searchable_nodes['1 comment']->comment = COMMENT_NODE_CLOSED;
     node_save($this->searchable_nodes['1 comment']);
-    
+
     $this->drupalPost('', $edit, t('Search'));
-    $this->assertNoText(t('0 comments'), t('Empty comment count does not display for nodes with comment status set to Closed'));
-    $this->assertText(t('1 comment'), t('Non-empty comment count displays for nodes with comment status set to Closed'));
+    $this->assertNoText(t('0 comments'), 'Empty comment count does not display for nodes with comment status set to Closed');
+    $this->assertText(t('1 comment'), 'Non-empty comment count displays for nodes with comment status set to Closed');
 
     // Test comment count display for nodes with comment status set to Hidden
     $this->searchable_nodes['0 comments']->comment = COMMENT_NODE_HIDDEN;
     node_save($this->searchable_nodes['0 comments']);
     $this->searchable_nodes['1 comment']->comment = COMMENT_NODE_HIDDEN;
-    node_save($this->searchable_nodes['1 comment']);    
-    
+    node_save($this->searchable_nodes['1 comment']);
+
     $this->drupalPost('', $edit, t('Search'));
-    $this->assertNoText(t('0 comments'), t('Empty comment count does not display for nodes with comment status set to Hidden'));
-    $this->assertNoText(t('1 comment'), t('Non-empty comment count does not display for nodes with comment status set to Hidden'));
+    $this->assertNoText(t('0 comments'), 'Empty comment count does not display for nodes with comment status set to Hidden');
+    $this->assertNoText(t('1 comment'), 'Non-empty comment count does not display for nodes with comment status set to Hidden');
   }
 }
 
@@ -967,7 +968,7 @@ class SearchSimplifyTestCase extends DrupalWebTestCase {
       $string .= chr($i);
     }
     // Diff really does not like files starting with \0 so test it separately.
-    $this->assertIdentical(' ', search_simplify($string), t('Search simplify works for ASCII control characters.'));
+    $this->assertIdentical(' ', search_simplify($string), 'Search simplify works for ASCII control characters.');
   }
 
   /**
