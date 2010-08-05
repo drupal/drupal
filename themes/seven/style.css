@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.60 2010/07/31 04:01:51 dries Exp $ */
+/* $Id: style.css,v 1.61 2010/08/05 06:53:13 webchick Exp $ */
 
 /**
  * Generic elements.
@@ -247,26 +247,26 @@ div.messages {
   padding: 9px;
   margin: 0.5em 0 0;
   color: #036;
-  background: #bdf;
-  border: 1px solid #ace;
+  background: #f8fff0;
+  border-left: 16px solid #be7;
 }
 div.warning {
   color: #840;
-  background: #fe6;
-  border-color: #ed5;
+  background: #fffce5;
+  border-left: 16px solid #ed5;
 }
 div.error {
-  color: #fff;
-  background: #e63;
-  border-color: #d52;
+  color: #8c2e0b;
+  background: #fef5f1;
+  border-left: 16px solid #ed541d;
 }
 div.error p.error {
   color: #333;
 }
 div.status {
-  color: #360;
-  background: #cf8;
-  border-color: #be7;
+  color: #234600;
+  background: #f8fff0;
+  border-left: 16px solid #be7;
 }
 
 /**
@@ -533,20 +533,26 @@ table tr.selected td {
   border-color: #eeb;
 }
 table.system-status-report tr {
- border-bottom: 1px solid #bebfb9;
+  border-bottom: 1px solid #ccc;
 }
-table.system-status-report tr.ok td {
-  background-color: #dfd;
+table.system-status-report tr.ok {
+  color: #255b1e;
+  background-color: #e5ffe2;
 }
-table.system-status-report tr.info td {
+table.system-status-report tr.info {
+  color: #040f37;
   background-color: #bdf;
 }
-table.system-status-report tr.warning td {
-  background-color: #ffd;
+table.system-status-report tr.warning {
+  color: #840;
+  background-color: #fffce5;
 }
-table.system-status-report tr.error td {
-  background-color: #fdd;
+table.system-status-report tr.error {
+  color: #8c2e0b;
+  background-color: #fef5f1;
 }
+
+
 /**
  * Fieldsets.
  *
@@ -994,4 +1000,37 @@ div.add-or-remove-shortcuts {
 }
 #user-login-form .openid-links .user-link {
   margin-left: 1.5em; /* LTR */
+}
+
+
+/* Available Updates */
+.update tr.ok {
+  color: #255b1e;
+  background: #e5ffe2;
+  border-bottom: 1px solid #89D47F;
+}
+.update tr.warning {
+  color: #840;
+  background: #fffce5;
+  border-bottom: 1px solid #ed5;
+}
+.update tr.warning .version-recommended {
+  background: #ffe;
+}
+.update tr.unknown {
+  background: #ddd;
+}
+.update tr.error {
+  color: #840;
+  background: #fffce5;
+  border-bottom: 1px solid #ed5;
+}
+.update tr.error .version-recommended {
+  background: #fdd;
+}
+table tbody tr.update-security,
+table tbody tr.update-unsupported {
+  color: #840;
+  background: #fffce5;
+  border-bottom: 1px solid #ed5;
 }
