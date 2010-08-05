@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1200 2010/08/05 07:56:14 webchick Exp $
+// $Id: common.inc,v 1.1201 2010/08/05 08:36:08 webchick Exp $
 
 /**
  * @file
@@ -5912,7 +5912,7 @@ function drupal_schema_fields_sql($table, $prefix = NULL) {
  * @param $table
  *   The name of the table; this must be defined by a hook_schema()
  *   implementation.
- * @param $object
+ * @param $record
  *   An object or array representing the record to write, passed in by
  *   reference. The function will fill in defaults from the schema and add an
  *   ID value to serial fields.
@@ -5926,10 +5926,10 @@ function drupal_schema_fields_sql($table, $prefix = NULL) {
  *   Failure to write a record will return FALSE. Otherwise SAVED_NEW or
  *   SAVED_UPDATED is returned depending on the operation performed. The $object
  *   parameter will contain values for any serial fields defined by the $table.
- *   For example, $object->nid or $object['nid'] will be populated after
+ *   For example, $record->nid or $record['nid'] will be populated after
  *   inserting a new a new node.
  */
-function drupal_write_record($table, &$object, $primary_keys = array()) {
+function drupal_write_record($table, &$record, $primary_keys = array()) {
   // Standardize $primary_keys to an array.
   if (is_string($primary_keys)) {
     $primary_keys = array($primary_keys);
@@ -5940,19 +5940,10 @@ function drupal_write_record($table, &$object, $primary_keys = array()) {
     return FALSE;
   }
 
-  // Convert to an object if needed.
-  if (is_array($object)) {
-    $object = (object) $object;
-    $array = TRUE;
-  }
-  else {
-    $array = FALSE;
-  }
-
+  $object = (object) $record;
   $fields = array();
 
-  // Go through our schema, build SQL, and when inserting, fill in defaults for
-  // fields that are not set.
+  // Go through the schema to determine fields to write.
   foreach ($schema['fields'] as $field => $info) {
     if ($info['type'] == 'serial') {
       // Skip serial types if we are updating.
@@ -5965,23 +5956,17 @@ function drupal_write_record($table, &$object, $primary_keys = array()) {
     }
 
     if (!property_exists($object, $field)) {
-      // Skip fields that are not provided, unless we are inserting and a
-      // default value is provided by the schema.
-      if (!empty($primary_keys) || !isset($info['default'])) {
-        continue;
-      }
-      $object->$field = $info['default'];
+      // Skip fields that are not provided, default values are already known 
+      // by the database.
+      continue;
     }
 
     // Build array of fields to update or insert.
     if (empty($info['serialize'])) {
       $fields[$field] = $object->$field;
     }
-    elseif (isset($object->$field)) {
-      $fields[$field] = serialize($object->$field);
-    }
     else {
-      $fields[$field] = '';
+      $fields[$field] = serialize($object->$field);
     }
 
     // Type cast to proper datatype, except when the value is NULL and the
@@ -6004,11 +5989,6 @@ function drupal_write_record($table, &$object, $primary_keys = array()) {
   }
 
   if (empty($fields)) {
-    // No changes requested.
-    // If we began with an array, convert back so we don't surprise the caller.
-    if ($array) {
-      $object = (array) $object;
-    }
     return;
   }
 
@@ -6060,9 +6040,18 @@ function drupal_write_record($table, &$object, $primary_keys = array()) {
     $return = FALSE;
   }
 
-  // If we began with an array, convert back so we don't surprise the caller.
-  if ($array) {
-    $object = (array) $object;
+  // If we are inserting, populate empty fields with default values.
+  if (empty($primary_keys)) {
+    foreach ($schema['fields'] as $field => $info) {
+      if (isset($info['default']) && !property_exists($object, $field)) {
+        $object->$field = $info['default'];
+      }
+    }
+  }
+
+  // If we began with an array, convert back.
+  if (is_array($record)) {
+    $record = (array) $object;
   }
 
   return $return;
