@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.296 2010/08/02 11:26:20 dries Exp $
+// $Id: locale.module,v 1.297 2010/08/05 08:08:43 webchick Exp $
 
 /**
  * @file
@@ -961,7 +961,7 @@ function locale_block_view($type) {
  */
 function locale_url_outbound_alter(&$path, &$options, $original_path) {
   // Only modify internal URLs.
-  if (!$options['external']) {
+  if (!$options['external'] && drupal_multilingual()) {
     static $callbacks;
 
     if (!isset($callbacks)) {
