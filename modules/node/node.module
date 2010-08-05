@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1283 2010/08/02 05:29:08 webchick Exp $
+// $Id: node.module,v 1.1284 2010/08/05 07:11:14 webchick Exp $
 
 /**
  * @file
@@ -2565,7 +2565,7 @@ function _node_index_node($node) {
  * Implements hook_form_FORM_ID_alter().
  */
 function node_form_search_form_alter(&$form, $form_state) {
-  if ($form['module']['#value'] == 'node' && user_access('use advanced search')) {
+  if (isset($form['module']) && $form['module']['#value'] == 'node' && user_access('use advanced search')) {
     // Keyword boxes:
     $form['advanced'] = array(
       '#type' => 'fieldset',

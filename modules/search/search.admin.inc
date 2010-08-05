@@ -1,5 +1,5 @@
 <?php
-// $Id: search.admin.inc,v 1.15 2010/06/26 21:32:20 dries Exp $
+// $Id: search.admin.inc,v 1.16 2010/08/05 07:11:15 webchick Exp $
 
 /**
  * @file
@@ -31,7 +31,7 @@ function search_reindex_confirm_submit(&$form, &$form_state) {
  */
 function _search_get_module_names() {
 
-  $search_info = search_get_info();
+  $search_info = search_get_info(TRUE);
   $modules = db_select('system', 's')
     ->fields('s', array('name', 'info'))
     ->condition('s.status', 1)
@@ -48,10 +48,11 @@ function _search_get_module_names() {
 }
 
 /**
- * Menu callback; displays the search module settings page.
+ * Menu callback: displays the search module settings page.
  *
  * @ingroup forms
- * @see system_settings_form()
+ *
+ * @see search_admin_settings_validate()
  * @see search_admin_settings_submit()
  * @see search_admin_reindex_submit()
  */
@@ -118,9 +119,16 @@ function search_admin_settings($form) {
     '#type' => 'checkboxes',
     '#default_value' => variable_get('search_active_modules', array('node', 'user')),
     '#options' => _search_get_module_names(),
-    '#description' => t('Determine which search modules are active from the available modules.')
+    '#description' => t('Choose which search modules are active from the available modules.')
   );
-
+  $form['active']['search_default_module'] = array(
+    '#title' => t('Default search module'),
+    '#type' => 'radios',
+    '#default_value' => 'node',
+    '#options' => _search_get_module_names(),
+    '#description' => t('Choose which search module is the default.')
+  );
+  $form['#validate'][] = 'search_admin_settings_validate';
   $form['#submit'][] = 'search_admin_settings_submit';
 
   // Per module settings
@@ -135,7 +143,21 @@ function search_admin_settings($form) {
 }
 
 /**
- * Submit callback.
+ * Form validation handler for search_admin_settings().
+ */
+function search_admin_settings_validate($form, &$form_state) {
+  // Check whether we selected a valid default.
+  if ($form_state['clicked_button']['#value'] != t('Reset to defaults')) {
+    $new_modules = array_filter($form_state['values']['search_active_modules']);
+    $default = $form_state['values']['search_default_module'];
+    if (!in_array($default, $new_modules, TRUE)) {
+      form_set_error('search_default_module', t('Your default search module is not selected as an active module.'));
+    }
+  }
+}
+
+/**
+ * Form submission handler for search_admin_settings().
  */
 function search_admin_settings_submit($form, &$form_state) {
   // If these settings change, the index needs to be rebuilt.
@@ -159,7 +181,7 @@ function search_admin_settings_submit($form, &$form_state) {
 }
 
 /**
- * Submit callback.
+ * Form submission handler for reindex button on search_admin_settings_form().
  */
 function search_admin_reindex_submit($form, &$form_state) {
   // send the user to the confirmation page
