@@ -208,16 +208,19 @@ function _file_generic_settings_file_directory_validate($element, &$form_state) 
  * Implements hook_field_load().
  */
 function file_field_load($entity_type, $entities, $field, $instances, $langcode, &$items, $age) {
+
+  $fids = array();
   foreach ($entities as $id => $entity) {
     // Load the files from the files table.
-    $fids = array();
     foreach ($items[$id] as $delta => $item) {
       if (!empty($item['fid'])) {
         $fids[] = $item['fid'];
       }
     }
-    $files = file_load_multiple($fids);
+  }
+  $files = file_load_multiple($fids);
 
+  foreach ($entities as $id => $entity) {
     foreach ($items[$id] as $delta => $item) {
       // If the file does not exist, mark the entire item as empty.
       if (empty($item['fid']) || !isset($files[$item['fid']])) {
