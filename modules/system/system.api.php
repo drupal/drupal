@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.181 2010/08/04 03:47:28 dries Exp $
+// $Id: system.api.php,v 1.182 2010/08/05 07:56:14 webchick Exp $
 
 /**
  * @file
@@ -888,7 +888,9 @@ function hook_page_build(&$page) {
  *   - "delivery callback": The function to call to package the result of the
  *     page callback function and send it to the browser. Defaults to
  *     drupal_deliver_html_page() unless a value is inherited from a parent menu
- *     item.
+ *     item. Note that this function is called even if the access checks fail,
+ *     so any custom delivery callback function should take that into account.
+ *     See drupal_deliver_html_page() for an example.
  *   - "access callback": A function returning a boolean value that determines
  *     whether the user has access rights to this menu item. Defaults to
  *     user_access() unless a value is inherited from a parent menu item.
