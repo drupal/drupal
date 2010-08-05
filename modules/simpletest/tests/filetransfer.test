@@ -80,7 +80,7 @@ class FileTranferTest extends DrupalWebTestCase {
 
     $gotit = TRUE;
     try {
-      $this->testConnection->copyDirectory($source, DRUPAL_ROOT . '/'. file_directory_path());
+      $this->testConnection->copyDirectory($source, DRUPAL_ROOT . '/' . file_directory_path());
     }
     catch (FileTransferException $e) {
       $gotit = FALSE;

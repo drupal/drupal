@@ -39,7 +39,7 @@ class PollTestCase extends DrupalWebTestCase {
     if ($test_preview) {
       $this->drupalPost(NULL, $edit, t('Preview'));
       foreach ($choices as $k => $choice_text) {
-        $this->assertRaw($choice_text, t('Choice @choice found was in preview.', array('@choice' => $k)));
+        $this->assertRaw($choice_text, 'Choice ' . $k . ' found was in preview.');
       }
       list($edit, $index) = $this->_pollGenerateEdit($title, $choices, $index);
     }
@@ -47,7 +47,7 @@ class PollTestCase extends DrupalWebTestCase {
     $this->drupalPost(NULL, $edit, t('Save'));
     $node = $this->drupalGetNodeByTitle($title);
     $this->assertText(t('@type @title has been created.', array('@type' => node_type_get_name('poll'), '@title' => $title)), 'Poll has been created.');
-    $this->assertTrue($node->nid, t('Poll has been found in the database.'));
+    $this->assertTrue($node->nid, 'Poll has been found in the database.');
 
     return isset($node->nid) ? $node->nid : FALSE;
   }
@@ -132,7 +132,7 @@ class PollCreateTestCase extends PollTestCase {
     // Verify 'Vote' button no longer appears.
     $this->drupalGet('node/' . $poll_nid);
     $elements = $this->xpath('//input[@id="edit-vote"]');
-    $this->assertTrue(empty($elements), t("Vote button doesn't appear."));
+    $this->assertTrue(empty($elements), "Vote button doesn't appear.");
 
     // Verify status on 'poll' page is 'closed'.
     $this->drupalGet('poll');
@@ -150,7 +150,7 @@ class PollCreateTestCase extends PollTestCase {
     $this->drupalPost('node/' . $poll_nid, $vote_edit, t('Vote'));
     $this->assertText('Your vote was recorded.', 'Your vote was recorded.');
     $elements = $this->xpath('//input[@value="Cancel your vote"]');
-    $this->assertTrue(isset($elements[0]), t("'Cancel your vote' button appears."));
+    $this->assertTrue(isset($elements[0]), "'Cancel your vote' button appears.");
 
     // Edit the poll node and close the poll.
     $this->drupalLogout();
@@ -161,7 +161,7 @@ class PollCreateTestCase extends PollTestCase {
     // Verify 'Cancel your vote' button no longer appears.
     $this->drupalGet('node/' . $poll_nid);
     $elements = $this->xpath('//input[@value="Cancel your vote"]');
-    $this->assertTrue(empty($elements), t("'Cancel your vote' button no longer appears."));
+    $this->assertTrue(empty($elements), "'Cancel your vote' button no longer appears.");
   }
 }
 
@@ -201,7 +201,7 @@ class PollVoteTestCase extends PollTestCase {
     $this->assertText('Your vote was recorded.', 'Your vote was recorded.');
     $this->assertText('Total votes: 1', 'Vote count updated correctly.');
     $elements = $this->xpath('//input[@value="Cancel your vote"]');
-    $this->assertTrue(isset($elements[0]), t("'Cancel your vote' button appears."));
+    $this->assertTrue(isset($elements[0]), "'Cancel your vote' button appears.");
 
     $this->drupalGet("node/$poll_nid/votes");
     $this->assertText(t('This table lists all the recorded votes for this poll. If anonymous users are allowed to vote, they will be identified by the IP address of the computer they used when they voted.'), 'Vote table text.');
@@ -237,7 +237,7 @@ class PollVoteTestCase extends PollTestCase {
     $this->assertText('Your vote was recorded.', 'Your vote was recorded.');
     $this->assertText('Total votes: 1', 'Vote count updated correctly.');
     $elements = $this->xpath('//input[@value="Cancel your vote"]');
-    $this->assertTrue(empty($elements), t("'Cancel your vote' button does not appear."));
+    $this->assertTrue(empty($elements), "'Cancel your vote' button does not appear.");
   }
 }
 
@@ -261,13 +261,13 @@ class PollBlockTestCase extends PollTestCase {
   function testRecentBlock() {
     // Set block title to confirm that the interface is available.
     $this->drupalPost('admin/structure/block/manage/poll/recent/configure', array('title' => $this->randomName(8)), t('Save block'));
-    $this->assertText(t('The block configuration has been saved.'), t('Block configuration set.'));
+    $this->assertText(t('The block configuration has been saved.'), 'Block configuration set.');
 
     // Set the block to a region to confirm block is available.
     $edit = array();
     $edit['poll_recent[region]'] = 'footer';
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
-    $this->assertText(t('The block settings have been updated.'), t('Block successfully move to footer region.'));
+    $this->assertText(t('The block settings have been updated.'), 'Block successfully move to footer region.');
 
     // Create a poll which should appear in recent polls block.
     $title = $this->randomName();
@@ -344,9 +344,9 @@ class PollJSAddChoice extends DrupalWebTestCase {
     $commands = $this->drupalPostAJAX(NULL, $edit, array('op' => t('More choices')));
     $this->content = $commands[1]['data'];
 
-    $this->assertFieldByName('choice[chid:0][chtext]', $edit['choice[new:0][chtext]'], t('Field !i found', array('!i' => 0)));
-    $this->assertFieldByName('choice[chid:1][chtext]', $edit['choice[new:1][chtext]'], t('Field !i found', array('!i' => 1)));
-    $this->assertFieldByName('choice[new:0][chtext]', '', t('Field !i found', array('!i' => 2)));
+    $this->assertFieldByName('choice[chid:0][chtext]', $edit['choice[new:0][chtext]'], 'Field ' . 0 . ' found');
+    $this->assertFieldByName('choice[chid:1][chtext]', $edit['choice[new:1][chtext]'], 'Field ' . 1 . ' found');
+    $this->assertFieldByName('choice[new:0][chtext]', '', 'Field ' . 2 . ' found');
   }
 }
 
@@ -403,49 +403,49 @@ class PollVoteCheckHostname extends PollTestCase {
 
     // User1 vote on Poll.
     $this->drupalPost('node/' . $this->poll_nid, $edit, t('Vote'));
-    $this->assertText(t('Your vote was recorded.'), t('%user vote was recorded.', array('%user' => $this->web_user1->name)));
-    $this->assertText(t('Total votes: @votes', array('@votes' => 1)), t('Vote count updated correctly.'));
+    $this->assertText(t('Your vote was recorded.'), $this->web_user1->name . ' vote was recorded.');
+    $this->assertText(t('Total votes: @votes', array('@votes' => 1)), 'Vote count updated correctly.');
 
     // Check to make sure User1 cannot vote again.
     $this->drupalGet('node/' . $this->poll_nid);
     $elements = $this->xpath('//input[@value="Vote"]');
-    $this->assertTrue(empty($elements), t("%user is not able to vote again.", array('%user' => $this->web_user1->name)));
+    $this->assertTrue(empty($elements), "" . $this->web_user1->name . " is not able to vote again.");
     $elements = $this->xpath('//input[@value="Cancel your vote"]');
-    $this->assertTrue(!empty($elements), t("'Cancel your vote' button appears."));
+    $this->assertTrue(!empty($elements), "'Cancel your vote' button appears.");
 
     // Logout User1.
     $this->drupalLogout();
 
     // Fill the page cache by requesting the poll.
     $this->drupalGet('node/' . $this->poll_nid);
-    $this->assertEqual($this->drupalGetHeader('x-drupal-cache'), 'MISS', t('Page was cacheable but was not in the cache.'));
+    $this->assertEqual($this->drupalGetHeader('x-drupal-cache'), 'MISS', 'Page was cacheable but was not in the cache.');
     $this->drupalGet('node/' . $this->poll_nid);
-    $this->assertEqual($this->drupalGetHeader('x-drupal-cache'), 'HIT', t('Page was cached.'));
+    $this->assertEqual($this->drupalGetHeader('x-drupal-cache'), 'HIT', 'Page was cached.');
 
     // Anonymous user vote on Poll.
     $this->drupalPost(NULL, $edit, t('Vote'));
-    $this->assertText(t('Your vote was recorded.'), t('Anonymous vote was recorded.'));
-    $this->assertText(t('Total votes: @votes', array('@votes' => 2)), t('Vote count updated correctly.'));
+    $this->assertText(t('Your vote was recorded.'), 'Anonymous vote was recorded.');
+    $this->assertText(t('Total votes: @votes', array('@votes' => 2)), 'Vote count updated correctly.');
     $elements = $this->xpath('//input[@value="Cancel your vote"]');
-    $this->assertTrue(!empty($elements), t("'Cancel your vote' button appears."));
+    $this->assertTrue(!empty($elements), "'Cancel your vote' button appears.");
 
     // Check to make sure Anonymous user cannot vote again.
     $this->drupalGet('node/' . $this->poll_nid);
-    $this->assertFalse($this->drupalGetHeader('x-drupal-cache'), t('Page was not cacheable.'));
+    $this->assertFalse($this->drupalGetHeader('x-drupal-cache'), 'Page was not cacheable.');
     $elements = $this->xpath('//input[@value="Vote"]');
-    $this->assertTrue(empty($elements), t("Anonymous is not able to vote again."));
+    $this->assertTrue(empty($elements), "Anonymous is not able to vote again.");
     $elements = $this->xpath('//input[@value="Cancel your vote"]');
-    $this->assertTrue(!empty($elements), t("'Cancel your vote' button appears."));
+    $this->assertTrue(!empty($elements), "'Cancel your vote' button appears.");
 
     // Login User2.
     $this->drupalLogin($this->web_user2);
 
     // User2 vote on poll.
     $this->drupalPost('node/' . $this->poll_nid, $edit, t('Vote'));
-    $this->assertText(t('Your vote was recorded.'), t('%user vote was recorded.', array('%user' => $this->web_user2->name)));
+    $this->assertText(t('Your vote was recorded.'), $this->web_user2->name . ' vote was recorded.');
     $this->assertText(t('Total votes: @votes', array('@votes' => 3)), 'Vote count updated correctly.');
     $elements = $this->xpath('//input[@value="Cancel your vote"]');
-    $this->assertTrue(empty($elements), t("'Cancel your vote' button does not appear."));
+    $this->assertTrue(empty($elements), "'Cancel your vote' button does not appear.");
 
     // Logout User2.
     $this->drupalLogout();
@@ -461,22 +461,22 @@ class PollVoteCheckHostname extends PollTestCase {
     // Check to make sure Anonymous user can vote again with a new session after
     // a hostname change.
     $this->drupalGet('node/' . $this->poll_nid);
-    $this->assertEqual($this->drupalGetHeader('x-drupal-cache'), 'MISS', t('Page was cacheable but was not in the cache.'));
+    $this->assertEqual($this->drupalGetHeader('x-drupal-cache'), 'MISS', 'Page was cacheable but was not in the cache.');
     $this->drupalPost(NULL, $edit, t('Vote'));
-    $this->assertText(t('Your vote was recorded.'), t('%user vote was recorded.', array('%user' => $this->web_user2->name)));
+    $this->assertText(t('Your vote was recorded.'), $this->web_user2->name . ' vote was recorded.');
     $this->assertText(t('Total votes: @votes', array('@votes' => 4)), 'Vote count updated correctly.');
     $elements = $this->xpath('//input[@value="Cancel your vote"]');
-    $this->assertTrue(!empty($elements), t("'Cancel your vote' button appears."));
+    $this->assertTrue(!empty($elements), "'Cancel your vote' button appears.");
 
     // Check to make sure Anonymous user cannot vote again with a new session,
     // and that the vote from the previous session cannot be cancelledd.
     $this->curlClose();
     $this->drupalGet('node/' . $this->poll_nid);
-    $this->assertEqual($this->drupalGetHeader('x-drupal-cache'), 'MISS', t('Page was cacheable but was not in the cache.'));
+    $this->assertEqual($this->drupalGetHeader('x-drupal-cache'), 'MISS', 'Page was cacheable but was not in the cache.');
     $elements = $this->xpath('//input[@value="Vote"]');
-    $this->assertTrue(empty($elements), t('Anonymous is not able to vote again.'));
+    $this->assertTrue(empty($elements), 'Anonymous is not able to vote again.');
     $elements = $this->xpath('//input[@value="Cancel your vote"]');
-    $this->assertTrue(empty($elements), t("'Cancel your vote' button does not appear."));
+    $this->assertTrue(empty($elements), "'Cancel your vote' button does not appear.");
 
     // Login User1.
     $this->drupalLogin($this->web_user1);
@@ -484,9 +484,9 @@ class PollVoteCheckHostname extends PollTestCase {
     // Check to make sure User1 still cannot vote even after hostname changed.
     $this->drupalGet('node/' . $this->poll_nid);
     $elements = $this->xpath('//input[@value="Vote"]');
-    $this->assertTrue(empty($elements), t("%user is not able to vote again.", array('%user' => $this->web_user1->name)));
+    $this->assertTrue(empty($elements), "" . $this->web_user1->name . " is not able to vote again.");
     $elements = $this->xpath('//input[@value="Cancel your vote"]');
-    $this->assertTrue(!empty($elements), t("'Cancel your vote' button appears."));
+    $this->assertTrue(!empty($elements), "'Cancel your vote' button appears.");
   }
 }
 
@@ -562,11 +562,11 @@ class PollTokenReplaceTestCase extends PollTestCase {
     $tests['[node:poll-duration]'] = format_interval($poll->runtime, 1, $language->language);
 
     // Test to make sure that we generated something for each token.
-    $this->assertFalse(in_array(0, array_map('strlen', $tests)), t('No empty tokens generated.'));
+    $this->assertFalse(in_array(0, array_map('strlen', $tests)), 'No empty tokens generated.');
 
     foreach ($tests as $input => $expected) {
       $output = token_replace($input, array('node' => $poll), array('language' => $language));
-      $this->assertFalse(strcmp($output, $expected), t('Sanitized poll token %token replaced.', array('%token' => $input)));
+      $this->assertFalse(strcmp($output, $expected), 'Sanitized poll token ' . $input . ' replaced.');
     }
 
     // Generate and test unsanitized tokens.
@@ -574,7 +574,7 @@ class PollTokenReplaceTestCase extends PollTestCase {
 
     foreach ($tests as $input => $expected) {
       $output = token_replace($input, array('node' => $poll), array('language' => $language, 'sanitize' => FALSE));
-      $this->assertFalse(strcmp($output, $expected), t('Unsanitized poll token %token replaced.', array('%token' => $input)));
+      $this->assertFalse(strcmp($output, $expected), 'Unsanitized poll token ' . $input . ' replaced.');
     }
   }
 }
@@ -597,33 +597,33 @@ class PollExpirationTestCase extends PollTestCase {
     $title = $this->randomName();
     $choices = $this->_generateChoices(2);
     $poll_nid = $this->pollCreate($title, $choices, FALSE);
-    $this->assertTrue($poll_nid, t('Poll for auto-expire test created.'), t('Poll'));
+    $this->assertTrue($poll_nid, 'Poll for auto-expire test created.', 'Poll');
 
     // Visit the poll edit page and verify that by default, expiration
     // is set to unlimited.
     $this->drupalGet("node/$poll_nid/edit");
-    $this->assertField('runtime', t('Poll expiration setting found.'), t('Poll'));
+    $this->assertField('runtime', 'Poll expiration setting found.', 'Poll');
     $elements = $this->xpath('//select[@id="edit-runtime"]/option[@selected="selected"]');
-    $this->assertTrue(isset($elements[0]['value']) && $elements[0]['value'] == 0, t('Poll expiration set to unlimited.'), t('Poll'));
+    $this->assertTrue(isset($elements[0]['value']) && $elements[0]['value'] == 0, 'Poll expiration set to unlimited.', 'Poll');
 
     // Set the expiration to one week.
     $edit = array();
     $poll_expiration = 604800; // One week.
     $edit['runtime'] = $poll_expiration;
     $this->drupalPost(NULL, $edit, t('Save'));
-    $this->assertRaw(t('Poll %title has been updated.', array('%title' => $title)), t('Poll expiration settings saved.'), t('Poll'));
+    $this->assertRaw(t('Poll %title has been updated.', array('%title' => $title)), 'Poll expiration settings saved.', 'Poll');
 
     // Make sure that the changed expiration settings is kept.
     $this->drupalGet("node/$poll_nid/edit");
     $elements = $this->xpath('//select[@id="edit-runtime"]/option[@selected="selected"]');
-    $this->assertTrue(isset($elements[0]['value']) && $elements[0]['value'] == $poll_expiration, t('Poll expiration set to unlimited.'), t('Poll'));
+    $this->assertTrue(isset($elements[0]['value']) && $elements[0]['value'] == $poll_expiration, 'Poll expiration set to unlimited.', 'Poll');
 
     // Force a cron run. Since the expiration date has not yet been reached,
     // the poll should remain active.
     drupal_cron_run();
     $this->drupalGet("node/$poll_nid/edit");
     $elements = $this->xpath('//input[@id="edit-active-1"]');
-    $this->assertTrue(isset($elements[0]) && !empty($elements[0]['checked']), t('Poll is still active.'), t('Poll'));
+    $this->assertTrue(isset($elements[0]) && !empty($elements[0]['checked']), 'Poll is still active.', 'Poll');
 
     // Test expiration. Since REQUEST_TIME is a constant and we don't
     // want to keep SimpleTest waiting until the moment of expiration arrives,
@@ -638,6 +638,6 @@ class PollExpirationTestCase extends PollTestCase {
     drupal_cron_run();
     $this->drupalGet("node/$poll_nid/edit");
     $elements = $this->xpath('//input[@id="edit-active-0"]');
-    $this->assertTrue(isset($elements[0]) && !empty($elements[0]['checked']), t('Poll has expired.'), t('Poll'));
+    $this->assertTrue(isset($elements[0]) && !empty($elements[0]['checked']), 'Poll has expired.', 'Poll');
   }
 }

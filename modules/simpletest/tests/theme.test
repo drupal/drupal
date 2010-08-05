@@ -32,25 +32,25 @@ class ThemeUnitTest extends DrupalWebTestCase {
     variable_set('site_frontpage', 'nobody-home');
     $args = array('node', '1', 'edit');
     $suggestions = theme_get_suggestions($args, 'page');
-    $this->assertEqual($suggestions, array('page__node', 'page__node__%', 'page__node__1', 'page__node__edit'), t('Found expected node edit page suggestions'));
+    $this->assertEqual($suggestions, array('page__node', 'page__node__%', 'page__node__1', 'page__node__edit'), 'Found expected node edit page suggestions');
     // Check attack vectors.
     $args = array('node', '\\1');
     $suggestions = theme_get_suggestions($args, 'page');
-    $this->assertEqual($suggestions, array('page__node', 'page__node__%', 'page__node__1'), t('Removed invalid \\ from suggestions'));
+    $this->assertEqual($suggestions, array('page__node', 'page__node__%', 'page__node__1'), 'Removed invalid \\ from suggestions');
     $args = array('node', '1/');
     $suggestions = theme_get_suggestions($args, 'page');
-    $this->assertEqual($suggestions, array('page__node', 'page__node__%', 'page__node__1'), t('Removed invalid / from suggestions'));
+    $this->assertEqual($suggestions, array('page__node', 'page__node__%', 'page__node__1'), 'Removed invalid / from suggestions');
     $args = array('node', "1\0");
     $suggestions = theme_get_suggestions($args, 'page');
-    $this->assertEqual($suggestions, array('page__node', 'page__node__%', 'page__node__1'), t('Removed invalid \\0 from suggestions'));
+    $this->assertEqual($suggestions, array('page__node', 'page__node__%', 'page__node__1'), 'Removed invalid \\0 from suggestions');
   }
 
   /**
-  * Preprocess functions for the base hook should run even for suggestion implementations.
-  */
+   * Preprocess functions for the base hook should run even for suggestion implementations.
+   */
   function testPreprocessForSuggestions() {
     $this->drupalGet('theme-test/suggestion');
-    $this->assertText('test_theme_breadcrumb__suggestion: 1', t('Theme hook suggestion ran with data available from a preprocess function for the base hook.'));
+    $this->assertText('test_theme_breadcrumb__suggestion: 1', 'Theme hook suggestion ran with data available from a preprocess function for the base hook.');
   }
 
   /**
@@ -64,7 +64,7 @@ class ThemeUnitTest extends DrupalWebTestCase {
     $suggestions = theme_get_suggestions(explode('/', $_GET['q']), 'page');
     // Set it back to not annoy the batch runner.
     $_GET['q'] = $q;
-    $this->assertTrue(in_array('page__front', $suggestions), t('Front page template was suggested.'));
+    $this->assertTrue(in_array('page__front', $suggestions), 'Front page template was suggested.');
   }
 }
 
@@ -85,11 +85,11 @@ class ThemeTableUnitTest extends DrupalWebTestCase {
    */
   function testThemeTableStickyHeaders() {
     $header = array('one', 'two', 'three');
-    $rows = array(array(1,2,3), array(4,5,6), array(7,8,9));
+    $rows = array(array(1, 2, 3), array(4, 5, 6), array(7, 8, 9));
     $this->content = theme('table', array('header' => $header, 'rows' => $rows));
     $js = drupal_add_js();
-    $this->assertTrue(isset($js['misc/tableheader.js']), t('tableheader.js was included when $sticky = TRUE.'));
-    $this->assertRaw('sticky-enabled',  t('Table has a class of sticky-enabled when $sticky = TRUE.'));
+    $this->assertTrue(isset($js['misc/tableheader.js']), 'tableheader.js was included when $sticky = TRUE.');
+    $this->assertRaw('sticky-enabled', 'Table has a class of sticky-enabled when $sticky = TRUE.');
     drupal_static_reset('drupal_add_js');
   }
 
@@ -98,14 +98,14 @@ class ThemeTableUnitTest extends DrupalWebTestCase {
    */
   function testThemeTableNoStickyHeaders() {
     $header = array('one', 'two', 'three');
-    $rows = array(array(1,2,3), array(4,5,6), array(7,8,9));
+    $rows = array(array(1, 2, 3), array(4, 5, 6), array(7, 8, 9));
     $attributes = array();
     $caption = NULL;
     $colgroups = array();
     $this->content = theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => $attributes, 'caption' => $caption, 'colgroups' => $colgroups, 'sticky' => FALSE));
     $js = drupal_add_js();
-    $this->assertFalse(isset($js['misc/tableheader.js']), t('tableheader.js was not included because $sticky = FALSE.'));
-    $this->assertNoRaw('sticky-enabled',  t('Table does not have a class of sticky-enabled because $sticky = FALSE.'));
+    $this->assertFalse(isset($js['misc/tableheader.js']), 'tableheader.js was not included because $sticky = FALSE.');
+    $this->assertNoRaw('sticky-enabled', 'Table does not have a class of sticky-enabled because $sticky = FALSE.');
     drupal_static_reset('drupal_add_js');
   }
 
@@ -122,8 +122,8 @@ class ThemeTableUnitTest extends DrupalWebTestCase {
       ),
     );
     $this->content = theme('table', array('header' => $header, 'rows' => array(), 'empty' => t('No strings available.')));
-    $this->assertRaw('<tr class="odd"><td colspan="3" class="empty message">No strings available.</td>', t('Correct colspan was set on empty message.'));
-    $this->assertRaw('<thead><tr><th>Header 1</th>', t('Table header was printed.'));
+    $this->assertRaw('<tr class="odd"><td colspan="3" class="empty message">No strings available.</td>', 'Correct colspan was set on empty message.');
+    $this->assertRaw('<thead><tr><th>Header 1</th>', 'Table header was printed.');
   }
 
 }
@@ -178,7 +178,7 @@ class ThemeHookInitUnitTest extends DrupalWebTestCase {
    */
   function testThemeInitializationHookInit() {
     $this->drupalGet('theme-test/hook-init');
-    $this->assertRaw('Themed output generated in hook_init()', t('Themed output generated in hook_init() correctly appears on the page.'));
-    $this->assertRaw('garland/style.css', t("The default theme's CSS appears on the page when the theme system is initialized in hook_init()."));
+    $this->assertRaw('Themed output generated in hook_init()', 'Themed output generated in hook_init() correctly appears on the page.');
+    $this->assertRaw('garland/style.css', "The default theme's CSS appears on the page when the theme system is initialized in hook_init().");
   }
 }

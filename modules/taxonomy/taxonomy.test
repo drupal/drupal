@@ -7,8 +7,8 @@
  */
 
 /**
-* Class with common helper methods.
-*/
+ * Class with common helper methods.
+ */
 class TaxonomyWebTestCase extends DrupalWebTestCase {
 
   /**
@@ -41,8 +41,8 @@ class TaxonomyWebTestCase extends DrupalWebTestCase {
 }
 
 /**
-* Tests for the taxonomy vocabulary interface.
-*/
+ * Tests for the taxonomy vocabulary interface.
+ */
 class TaxonomyVocabularyFunctionalTest extends TaxonomyWebTestCase {
 
   public static function getInfo() {
@@ -75,22 +75,22 @@ class TaxonomyVocabularyFunctionalTest extends TaxonomyWebTestCase {
     $edit['description'] = $this->randomName();
     $edit['machine_name'] = $machine_name;
     $this->drupalPost(NULL, $edit, t('Save'));
-    $this->assertRaw(t('Created new vocabulary %name.', array('%name' => $edit['name'])), t('Vocabulary created successfully'));
+    $this->assertRaw(t('Created new vocabulary %name.', array('%name' => $edit['name'])), 'Vocabulary created successfully');
 
     // Edit the vocabulary.
     $this->drupalGet('admin/structure/taxonomy');
-    $this->assertText($edit['name'], t('Vocabulary found in the vocabulary overview listing.'));
+    $this->assertText($edit['name'], 'Vocabulary found in the vocabulary overview listing.');
     $this->clickLink(t('edit vocabulary'));
     $edit = array();
     $edit['name'] = $this->randomName();
     $this->drupalPost(NULL, $edit, t('Save'));
     $this->drupalGet('admin/structure/taxonomy');
-    $this->assertText($edit['name'], t('Vocabulary found in the vocabulary overview listing.'));
+    $this->assertText($edit['name'], 'Vocabulary found in the vocabulary overview listing.');
 
     // Try to submit a vocabulary with a duplicate machine name.
     $edit['machine_name'] = $machine_name;
     $this->drupalPost('admin/structure/taxonomy/add', $edit, t('Save'));
-    $this->assertText(t('This machine-readable name is already in use by another vocabulary and must be unique.'), t('Duplicate machine name validation was successful'));
+    $this->assertText(t('This machine-readable name is already in use by another vocabulary and must be unique.'), 'Duplicate machine name validation was successful');
 
     // Try to submit an invalid machine name.
     $edit['machine_name'] = '!&^%';
@@ -122,7 +122,7 @@ class TaxonomyVocabularyFunctionalTest extends TaxonomyWebTestCase {
 
     // Check that the weights are saved in the database correctly.
     foreach ($vocabularies as $key => $vocabulary) {
-      $this->assertEqual($new_vocabularies[$key]->weight, $vocabularies[$key]->weight, t('The vocabulary weight was changed.'));
+      $this->assertEqual($new_vocabularies[$key]->weight, $vocabularies[$key]->weight, 'The vocabulary weight was changed.');
     }
   }
 
@@ -136,10 +136,10 @@ class TaxonomyVocabularyFunctionalTest extends TaxonomyWebTestCase {
       taxonomy_vocabulary_delete($key);
     }
     // Confirm that no vocabularies are found in the database.
-    $this->assertFalse(taxonomy_get_vocabularies(), t('No vocabularies found in the database'));
+    $this->assertFalse(taxonomy_get_vocabularies(), 'No vocabularies found in the database');
     $this->drupalGet('admin/structure/taxonomy');
     // Check the default message for no vocabularies.
-    $this->assertText(t('No vocabularies available.'), t('No vocabularies were found.'));
+    $this->assertText(t('No vocabularies available.'), 'No vocabularies were found.');
   }
 
   /**
@@ -152,26 +152,26 @@ class TaxonomyVocabularyFunctionalTest extends TaxonomyWebTestCase {
       'machine_name' => drupal_strtolower($this->randomName()),
     );
     $this->drupalPost('admin/structure/taxonomy/add', $edit, t('Save'));
-    $this->assertText(t('Created new vocabulary'), t('New vocabulary was created.'));
+    $this->assertText(t('Created new vocabulary'), 'New vocabulary was created.');
 
     // Check the created vocabulary.
     $vocabularies = taxonomy_get_vocabularies();
-    $vid = $vocabularies[count($vocabularies)-1]->vid;
+    $vid = $vocabularies[count($vocabularies) -1]->vid;
     entity_get_controller('taxonomy_vocabulary')->resetCache();
     $vocabulary = taxonomy_vocabulary_load($vid);
-    $this->assertTrue($vocabulary, t('Vocabulary found in database'));
+    $this->assertTrue($vocabulary, 'Vocabulary found in database');
 
     // Delete the vocabulary.
     $edit = array();
     $this->drupalPost('admin/structure/taxonomy/' . $vocabulary->machine_name . '/edit', $edit, t('Delete'));
-    $this->assertRaw(t('Are you sure you want to delete the vocabulary %name?', array('%name' => $vocabulary->name)), t('[confirm deletion] Asks for confirmation.'));
-    $this->assertText(t('Deleting a vocabulary will delete all the terms in it. This action cannot be undone.'), t('[confirm deletion] Inform that all terms will be deleted.'));
+    $this->assertRaw(t('Are you sure you want to delete the vocabulary %name?', array('%name' => $vocabulary->name)), '[confirm deletion] Asks for confirmation.');
+    $this->assertText(t('Deleting a vocabulary will delete all the terms in it. This action cannot be undone.'), '[confirm deletion] Inform that all terms will be deleted.');
 
     // Confirm deletion.
     $this->drupalPost(NULL, NULL, t('Delete'));
-    $this->assertRaw(t('Deleted vocabulary %name.', array('%name' => $vocabulary->name)), t('Vocabulary deleted'));
+    $this->assertRaw(t('Deleted vocabulary %name.', array('%name' => $vocabulary->name)), 'Vocabulary deleted');
     entity_get_controller('taxonomy_vocabulary')->resetCache();
-    $this->assertFalse(taxonomy_vocabulary_load($vid), t('Vocabulary is not found in the database'));
+    $this->assertFalse(taxonomy_vocabulary_load($vid), 'Vocabulary is not found in the database');
   }
 }
 
@@ -206,15 +206,15 @@ class TaxonomyVocabularyUnitTest extends TaxonomyWebTestCase {
     $vid = count($vocabularies) + 1;
     $vocabulary = taxonomy_vocabulary_load($vid);
     // This should not return an object because no such vocabulary exists.
-    $this->assertTrue(empty($vocabulary), t('No object loaded.'));
+    $this->assertTrue(empty($vocabulary), 'No object loaded.');
 
     // Create a new vocabulary.
     $this->createVocabulary();
     // Load the vocabulary with the same $vid from earlier.
     // This should return a vocabulary object since it now matches a real vid.
     $vocabulary = taxonomy_vocabulary_load($vid);
-    $this->assertTrue(!empty($vocabulary) && is_object($vocabulary), t('Vocabulary is an object'));
-    $this->assertTrue($vocabulary->vid == $vid, t('Valid vocabulary vid is the same as our previously invalid one.'));
+    $this->assertTrue(!empty($vocabulary) && is_object($vocabulary), 'Vocabulary is an object');
+    $this->assertTrue($vocabulary->vid == $vid, 'Valid vocabulary vid is the same as our previously invalid one.');
   }
 
   /**
@@ -256,8 +256,8 @@ class TaxonomyVocabularyUnitTest extends TaxonomyWebTestCase {
    */
   function testTaxonomyVocabularyLoadStaticReset() {
     $original_vocabulary = taxonomy_vocabulary_load($this->vocabulary->vid);
-    $this->assertTrue(is_object($original_vocabulary), t('Vocabulary loaded successfully'));
-    $this->assertEqual($this->vocabulary->name, $original_vocabulary->name, t('Vocabulary loaded successfully'));
+    $this->assertTrue(is_object($original_vocabulary), 'Vocabulary loaded successfully');
+    $this->assertEqual($this->vocabulary->name, $original_vocabulary->name, 'Vocabulary loaded successfully');
 
     // Change the name and description.
     $vocabulary = $original_vocabulary;
@@ -273,7 +273,7 @@ class TaxonomyVocabularyUnitTest extends TaxonomyWebTestCase {
     // Delete the vocabulary.
     taxonomy_vocabulary_delete($this->vocabulary->vid);
     $vocabularies = taxonomy_get_vocabularies();
-    $this->assertTrue(!isset($vocabularies[$this->vocabulary->vid]), t('The vocabulary was deleted'));
+    $this->assertTrue(!isset($vocabularies[$this->vocabulary->vid]), 'The vocabulary was deleted');
   }
 
   /**
@@ -300,28 +300,28 @@ class TaxonomyVocabularyUnitTest extends TaxonomyWebTestCase {
     // Fetch the names for all vocabularies, confirm that they are keyed by
     // machine name.
     $names = taxonomy_vocabulary_get_names();
-    $this->assertEqual($names[$vocabulary1->machine_name]->name, $vocabulary1->name, t('Vocabulary 1 name found.'));
+    $this->assertEqual($names[$vocabulary1->machine_name]->name, $vocabulary1->name, 'Vocabulary 1 name found.');
 
     // Fetch all of the vocabularies using taxonomy_get_vocabularies().
     // Confirm that the vocabularies are ordered by weight.
     $vocabularies = taxonomy_get_vocabularies();
-    $this->assertEqual(array_shift($vocabularies)->vid, $vocabulary1->vid, t('Vocabulary was found in the vocabularies array.'));
-    $this->assertEqual(array_shift($vocabularies)->vid, $vocabulary2->vid, t('Vocabulary was found in the vocabularies array.'));
-    $this->assertEqual(array_shift($vocabularies)->vid, $vocabulary3->vid, t('Vocabulary was found in the vocabularies array.'));
+    $this->assertEqual(array_shift($vocabularies)->vid, $vocabulary1->vid, 'Vocabulary was found in the vocabularies array.');
+    $this->assertEqual(array_shift($vocabularies)->vid, $vocabulary2->vid, 'Vocabulary was found in the vocabularies array.');
+    $this->assertEqual(array_shift($vocabularies)->vid, $vocabulary3->vid, 'Vocabulary was found in the vocabularies array.');
 
     // Fetch the vocabularies with taxonomy_vocabulary_load_multiple(), specifying IDs.
     // Ensure they are returned in the same order as the original array.
     $vocabularies = taxonomy_vocabulary_load_multiple(array($vocabulary3->vid, $vocabulary2->vid, $vocabulary1->vid));
-    $this->assertEqual(array_shift($vocabularies)->vid, $vocabulary3->vid, t('Vocabulary loaded successfully by ID.'));
-    $this->assertEqual(array_shift($vocabularies)->vid, $vocabulary2->vid, t('Vocabulary loaded successfully by ID.'));
-    $this->assertEqual(array_shift($vocabularies)->vid, $vocabulary1->vid, t('Vocabulary loaded successfully by ID.'));
+    $this->assertEqual(array_shift($vocabularies)->vid, $vocabulary3->vid, 'Vocabulary loaded successfully by ID.');
+    $this->assertEqual(array_shift($vocabularies)->vid, $vocabulary2->vid, 'Vocabulary loaded successfully by ID.');
+    $this->assertEqual(array_shift($vocabularies)->vid, $vocabulary1->vid, 'Vocabulary loaded successfully by ID.');
 
     // Fetch vocabulary 1 by name.
     $vocabulary = current(taxonomy_vocabulary_load_multiple(array(), array('name' => $vocabulary1->name)));
-    $this->assertTrue($vocabulary->vid == $vocabulary1->vid, t('Vocabulary loaded successfully by name.'));
+    $this->assertTrue($vocabulary->vid == $vocabulary1->vid, 'Vocabulary loaded successfully by name.');
 
     // Fetch vocabulary 1 by name and ID.
-    $this->assertTrue(current(taxonomy_vocabulary_load_multiple(array($vocabulary1->vid), array('name' => $vocabulary1->name)))->vid == $vocabulary1->vid, t('Vocabulary loaded successfully by name and ID.'));
+    $this->assertTrue(current(taxonomy_vocabulary_load_multiple(array($vocabulary1->vid), array('name' => $vocabulary1->name)))->vid == $vocabulary1->vid, 'Vocabulary loaded successfully by name and ID.');
   }
 }
 
@@ -405,21 +405,21 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
     // Check the hierarchy.
     $children = taxonomy_get_children($term1->tid);
     $parents = taxonomy_get_parents($term2->tid);
-    $this->assertTrue(isset($children[$term2->tid]), t('Child found correctly.'));
-    $this->assertTrue(isset($parents[$term1->tid]), t('Parent found correctly.'));
+    $this->assertTrue(isset($children[$term2->tid]), 'Child found correctly.');
+    $this->assertTrue(isset($parents[$term1->tid]), 'Parent found correctly.');
 
     // Load and save a term, confirming that parents are still set.
     $term = taxonomy_term_load($term2->tid);
     taxonomy_term_save($term);
     $parents = taxonomy_get_parents($term2->tid);
-    $this->assertTrue(isset($parents[$term1->tid]), t('Parent found correctly.'));
+    $this->assertTrue(isset($parents[$term1->tid]), 'Parent found correctly.');
 
     // Create a third term and save this as a parent of term2.
     $term3 = $this->createTerm($this->vocabulary);
     $term2->parent = array($term1->tid, $term3->tid);
     taxonomy_term_save($term2);
     $parents = taxonomy_get_parents($term2->tid);
-    $this->assertTrue(isset($parents[$term1->tid]) && isset($parents[$term3->tid]), t('Both parents found successfully.'));
+    $this->assertTrue(isset($parents[$term1->tid]) && isset($parents[$term3->tid]), 'Both parents found successfully.');
   }
 
   /**
@@ -437,26 +437,26 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
     $langcode = LANGUAGE_NONE;
     $edit["title"] = $this->randomName();
     $edit["body[$langcode][0][value]"] = $this->randomName();
-    $edit[$this->instance['field_name'] . '[' . $langcode .'][]'] = $term1->tid;
+    $edit[$this->instance['field_name'] . '[' . $langcode . '][]'] = $term1->tid;
     $this->drupalPost('node/add/article', $edit, t('Save'));
 
     // Check that the term is displayed when the node is viewed.
     $node = $this->drupalGetNodeByTitle($edit["title"]);
     $this->drupalGet('node/' . $node->nid);
-    $this->assertText($term1->name, t('Term is displayed when viewing the node.'));
+    $this->assertText($term1->name, 'Term is displayed when viewing the node.');
 
     // Edit the node with a different term.
     $edit[$this->instance['field_name'] . '[' . $langcode . '][]'] = $term2->tid;
     $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
 
     $this->drupalGet('node/' . $node->nid);
-    $this->assertText($term2->name, t('Term is displayed when viewing the node.'));
+    $this->assertText($term2->name, 'Term is displayed when viewing the node.');
 
     //Preview the node
     $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Preview'));
-    $this->assertNoUniqueText($term2->name, t('Term is displayed when previewing the node.'));
+    $this->assertNoUniqueText($term2->name, 'Term is displayed when previewing the node.');
     $this->drupalPost(NULL, NULL, t('Preview'));
-    $this->assertNoUniqueText($term2->name, t('Term is displayed when previewing the node again.'));
+    $this->assertNoUniqueText($term2->name, 'Term is displayed when previewing the node again.');
   }
 
   /**
@@ -485,19 +485,19 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
     // Preview and verify the terms appear but are not created.
     $this->drupalPost('node/add/page', $edit, t('Preview'));
     foreach ($terms as $term) {
-      $this->assertText($term, t('The term appears on the node preview'));
+      $this->assertText($term, 'The term appears on the node preview');
     }
     $tree = taxonomy_get_tree($this->vocabulary->vid);
-    $this->assertTrue(empty($tree), t('The terms are not created on preview.'));
+    $this->assertTrue(empty($tree), 'The terms are not created on preview.');
 
     // taxonomy.module does not maintain its static caches.
     drupal_static_reset();
 
     // Save, creating the terms.
     $this->drupalPost('node/add/page', $edit, t('Save'));
-    $this->assertRaw(t('@type %title has been created.', array('@type' => t('Basic page'), '%title' => $edit["title"])), t('The node was created successfully'));
+    $this->assertRaw(t('@type %title has been created.', array('@type' => t('Basic page'), '%title' => $edit["title"])), 'The node was created successfully');
     foreach ($terms as $term) {
-      $this->assertText($term, t('The term was saved and appears on the node page'));
+      $this->assertText($term, 'The term was saved and appears on the node page');
     }
 
     // Get the created terms.
@@ -513,9 +513,9 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
     $this->drupalGet('node/' . $node->nid);
 
     foreach ($term_names as $term_name) {
-      $this->assertText($term_name, t('The term %name appears on the node page after one term %deleted was deleted', array('%name' => $term_name, '%deleted' => $term1->name)));
+      $this->assertText($term_name, 'The term ' . $term_name . ' appears on the node page after one term ' . $term1->name . ' was deleted');
     }
-    $this->assertNoText($term1->name, t('The deleted term %name does not appear on the node page.', array('%name' => $term1->name)));
+    $this->assertNoText($term1->name, 'The deleted term ' . $term1->name . ' does not appear on the node page.');
   }
 
   /**
@@ -535,7 +535,7 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
 
     $terms = taxonomy_get_term_by_name($edit['name']);
     $term = reset($terms);
-    $this->assertNotNull($term, t('Term found in database'));
+    $this->assertNotNull($term, 'Term found in database');
 
     // Submitting a term takes us to the add page; we need the List page.
     $this->drupalGet('admin/structure/taxonomy/' . $this->vocabulary->machine_name);
@@ -545,8 +545,8 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
     // the first edit link found on the listing page is to our term.
     $this->clickLink(t('edit'));
 
-    $this->assertText($edit['name'], t('The randomly generated term name is present.'));
-    $this->assertText($edit['description[value]'], t('The randomly generated term description is present.'));
+    $this->assertText($edit['name'], 'The randomly generated term name is present.');
+    $this->assertText($edit['description[value]'], 'The randomly generated term description is present.');
 
     $edit = array(
       'name' => $this->randomName(14),
@@ -558,13 +558,13 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
 
     // Check that the term is still present at admin UI after edit.
     $this->drupalGet('admin/structure/taxonomy/' . $this->vocabulary->machine_name);
-    $this->assertText($edit['name'], t('The randomly generated term name is present.'));
+    $this->assertText($edit['name'], 'The randomly generated term name is present.');
     $this->assertLink(t('edit'));
 
     // View the term and check that it is correct.
     $this->drupalGet('taxonomy/term/' . $term->tid);
-    $this->assertText($edit['name'], t('The randomly generated term name is present.'));
-    $this->assertText($edit['description[value]'], t('The randomly generated term description is present.'));
+    $this->assertText($edit['name'], 'The randomly generated term name is present.');
+    $this->assertText($edit['description[value]'], 'The randomly generated term description is present.');
 
     // Check that the term feed page is working.
     $this->drupalGet('taxonomy/term/' . $term->tid . '/feed');
@@ -575,7 +575,7 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
 
     // Assert that the term no longer exists.
     $this->drupalGet('taxonomy/term/' . $term->tid);
-    $this->assertResponse(404, t('The taxonomy term page was not found'));
+    $this->assertResponse(404, 'The taxonomy term page was not found');
   }
 
   /**
@@ -619,9 +619,9 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
     drupal_static_reset('taxonomy_get_treeparent');
     drupal_static_reset('taxonomy_get_treeterms');
     $terms = taxonomy_get_tree($this->vocabulary->vid);
-    $this->assertEqual($terms[0]->tid, $term2->tid, t('Term 2 was moved above term 1.'));
-    $this->assertEqual($terms[1]->parents, array($term2->tid), t('Term 3 was made a child of term 2.'));
-    $this->assertEqual($terms[2]->tid, $term1->tid, t('Term 1 was moved below term 2.'));
+    $this->assertEqual($terms[0]->tid, $term2->tid, 'Term 2 was moved above term 1.');
+    $this->assertEqual($terms[1]->parents, array($term2->tid), 'Term 3 was made a child of term 2.');
+    $this->assertEqual($terms[2]->tid, $term1->tid, 'Term 1 was moved below term 2.');
 
     $this->drupalPost('admin/structure/taxonomy/' . $this->vocabulary->machine_name, array(), t('Reset to alphabetical'));
     // Submit confirmation form.
@@ -631,10 +631,10 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
     drupal_static_reset('taxonomy_get_treeparent');
     drupal_static_reset('taxonomy_get_treeterms');
     $terms = taxonomy_get_tree($this->vocabulary->vid);
-    $this->assertEqual($terms[0]->tid, $term1->tid, t('Term 1 was moved to back above term 2.'));
-    $this->assertEqual($terms[1]->tid, $term2->tid, t('Term 2 was moved to back below term 1.'));
-    $this->assertEqual($terms[2]->tid, $term3->tid, t('Term 3 is still below term 2.'));
-    $this->assertEqual($terms[2]->parents, array($term2->tid), t('Term 3 is still a child of term 2.').var_export($terms[1]->tid,1));
+    $this->assertEqual($terms[0]->tid, $term1->tid, 'Term 1 was moved to back above term 2.');
+    $this->assertEqual($terms[1]->tid, $term2->tid, 'Term 2 was moved to back below term 1.');
+    $this->assertEqual($terms[2]->tid, $term3->tid, 'Term 3 is still below term 2.');
+    $this->assertEqual($terms[2]->parents, array($term2->tid), 'Term 3 is still a child of term 2.');
   }
 
   /**
@@ -645,19 +645,19 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
 
     // Load the term with the exact name.
     $terms = taxonomy_get_term_by_name($term->name);
-    $this->assertTrue(isset($terms[$term->tid]), t('Term loaded using exact name.'));
+    $this->assertTrue(isset($terms[$term->tid]), 'Term loaded using exact name.');
 
     // Load the term with space concatenated.
     $terms  = taxonomy_get_term_by_name('  ' . $term->name . '   ');
-    $this->assertTrue(isset($terms[$term->tid]), t('Term loaded with extra whitespace.'));
+    $this->assertTrue(isset($terms[$term->tid]), 'Term loaded with extra whitespace.');
 
     // Load the term with name uppercased.
     $terms = taxonomy_get_term_by_name(strtoupper($term->name));
-    $this->assertTrue(isset($terms[$term->tid]), t('Term loaded with uppercased name.'));
+    $this->assertTrue(isset($terms[$term->tid]), 'Term loaded with uppercased name.');
 
     // Load the term with name lowercased.
     $terms = taxonomy_get_term_by_name(strtolower($term->name));
-    $this->assertTrue(isset($terms[$term->tid]), t('Term loaded with lowercased name.'));
+    $this->assertTrue(isset($terms[$term->tid]), 'Term loaded with lowercased name.');
 
     // Try to load an invalid term name.
     $terms = taxonomy_get_term_by_name('Banana');
@@ -705,12 +705,12 @@ class TaxonomyLoadMultipleUnitTest extends TaxonomyWebTestCase {
     // Load the terms from the vocabulary.
     $terms = taxonomy_term_load_multiple(NULL, array('vid' => $vocabulary->vid));
     $count = count($terms);
-    $this->assertTrue($count == 5, t('Correct number of terms were loaded. !count terms.', array('!count' => $count)));
+    $this->assertTrue($count == 5, 'Correct number of terms were loaded. ' . $count . ' terms.');
 
     // Load the same terms again by tid.
     $terms2 = taxonomy_term_load_multiple(array_keys($terms));
-    $this->assertTrue($count == count($terms2), t('Five terms were loaded by tid'));
-    $this->assertEqual($terms, $terms2, t('Both arrays contain the same terms'));
+    $this->assertTrue($count == count($terms2), 'Five terms were loaded by tid');
+    $this->assertEqual($terms, $terms2, 'Both arrays contain the same terms');
 
     // Load the terms by tid, with a condition on vid.
     $terms3 = taxonomy_term_load_multiple(array_keys($terms2), array('vid' => $vocabulary->vid));
@@ -724,15 +724,15 @@ class TaxonomyLoadMultipleUnitTest extends TaxonomyWebTestCase {
 
     // Load terms from the vocabulary by vid.
     $terms4 = taxonomy_term_load_multiple(NULL, array('vid' => $vocabulary->vid));
-    $this->assertTrue(count($terms4 == 4), t('Correct number of terms were loaded.'));
+    $this->assertTrue(count($terms4 == 4), 'Correct number of terms were loaded.');
     $this->assertFalse(isset($terms4[$deleted->tid]));
 
     // Create a single term and load it by name.
     $term = $this->createTerm($vocabulary);
     $loaded_terms = taxonomy_term_load_multiple(array(), array('name' => $term->name));
-    $this->assertEqual(count($loaded_terms), 1, t('One term was loaded'));
+    $this->assertEqual(count($loaded_terms), 1, 'One term was loaded');
     $loaded_term = reset($loaded_terms);
-    $this->assertEqual($term->tid, $loaded_term->tid, t('Term loaded by name successfully.'));
+    $this->assertEqual($term->tid, $loaded_term->tid, 'Term loaded by name successfully.');
   }
 }
 
@@ -768,7 +768,7 @@ class TaxonomyHooksTestCase extends TaxonomyWebTestCase {
     $this->drupalPost('admin/structure/taxonomy/' . $vocabulary->machine_name . '/add', $edit, t('Save'));
     $terms = taxonomy_get_term_by_name($edit['name']);
     $term = reset($terms);
-    $this->assertEqual($term->antonym, $edit['antonym'], t('Antonym was loaded into the term object'));
+    $this->assertEqual($term->antonym, $edit['antonym'], 'Antonym was loaded into the term object');
 
     // Update the term with a different antonym.
     $edit = array(
@@ -778,12 +778,12 @@ class TaxonomyHooksTestCase extends TaxonomyWebTestCase {
     $this->drupalPost('taxonomy/term/' . $term->tid . '/edit', $edit, t('Save'));
     taxonomy_terms_static_reset();
     $term = taxonomy_term_load($term->tid);
-    $this->assertEqual($edit['antonym'], $term->antonym, t('Antonym was successfully edited'));
+    $this->assertEqual($edit['antonym'], $term->antonym, 'Antonym was successfully edited');
 
     // Delete the term.
     taxonomy_term_delete($term->tid);
     $antonym = db_query('SELECT tid FROM {taxonomy_term_antonym} WHERE tid = :tid', array(':tid' => $term->tid))->fetchField();
-    $this->assertFalse($antonym, t('The antonym were deleted from the database.'));
+    $this->assertFalse($antonym, 'The antonym were deleted from the database.');
   }
 }
 
@@ -852,10 +852,10 @@ class TaxonomyTermFieldTestCase extends TaxonomyWebTestCase {
     $entity->{$this->field_name}[$langcode][0]['tid'] = $term->tid;
     try {
       field_attach_validate('test_entity', $entity);
-      $this->pass(t('Correct term does not cause validation error'));
+      $this->pass('Correct term does not cause validation error');
     }
     catch (FieldValidationException $e) {
-      $this->fail(t('Correct term does not cause validation error'));
+      $this->fail('Correct term does not cause validation error');
     }
 
     $entity = field_test_create_stub_entity();
@@ -863,10 +863,10 @@ class TaxonomyTermFieldTestCase extends TaxonomyWebTestCase {
     $entity->{$this->field_name}[$langcode][0]['tid'] = $bad_term->tid;
     try {
       field_attach_validate('test_entity', $entity);
-      $this->fail(t('Wrong term causes validation error'));
+      $this->fail('Wrong term causes validation error');
     }
     catch (FieldValidationException $e) {
-      $this->pass(t('Wrong term causes validation error'));
+      $this->pass('Wrong term causes validation error');
     }
   }
 
@@ -912,7 +912,7 @@ class TaxonomyTermFieldTestCase extends TaxonomyWebTestCase {
     // Display creation form.
     $langcode = LANGUAGE_NONE;
     $this->drupalGet('test-entity/add/test-bundle');
-    $this->assertFieldByName("{$this->field_name}[$langcode]", '', t('Widget is displayed'));
+    $this->assertFieldByName("{$this->field_name}[$langcode]", '', 'Widget is displayed');
 
     // Submit with some value.
     $edit = array(
@@ -921,7 +921,7 @@ class TaxonomyTermFieldTestCase extends TaxonomyWebTestCase {
     $this->drupalPost(NULL, $edit, t('Save'));
     preg_match('|test-entity/(\d+)/edit|', $this->url, $match);
     $id = $match[1];
-    $this->assertRaw(t('test_entity @id has been created.', array('@id' => $id)), t('Entity was created'));
+    $this->assertRaw(t('test_entity @id has been created.', array('@id' => $id)), 'Entity was created');
 
     // Display the object.
     $entity = field_test_entity_test_load($id);
@@ -929,7 +929,7 @@ class TaxonomyTermFieldTestCase extends TaxonomyWebTestCase {
     field_attach_prepare_view($entity_type, $entities, 'full');
     $entity->content = field_attach_view($entity_type, $entity, 'full');
     $this->content = drupal_render($entity->content);
-    $this->assertText($term->name, t('Term name is displayed'));
+    $this->assertText($term->name, 'Term name is displayed');
   }
 }
 
@@ -1014,10 +1014,10 @@ class TaxonomyTokenReplaceTestCase extends TaxonomyWebTestCase {
     $tests['[term:node-count]'] = 0;
     $tests['[term:parent:name]'] = '[term:parent:name]';
     $tests['[term:vocabulary:name]'] = check_plain($this->vocabulary->name);
-    
+
     foreach ($tests as $input => $expected) {
       $output = token_replace($input, array('term' => $term1), array('language' => $language));
-      $this->assertFalse(strcmp($output, $expected), t('Sanitized taxonomy term token %token replaced.', array('%token' => $input)));
+      $this->assertFalse(strcmp($output, $expected), 'Sanitized taxonomy term token ' . $input . ' replaced.');
     }
 
     // Generate and test sanitized tokens for term2.
@@ -1031,11 +1031,11 @@ class TaxonomyTokenReplaceTestCase extends TaxonomyWebTestCase {
     $tests['[term:vocabulary:name]'] = check_plain($this->vocabulary->name);
 
     // Test to make sure that we generated something for each token.
-    $this->assertFalse(in_array(0, array_map('strlen', $tests)), t('No empty tokens generated.'));
+    $this->assertFalse(in_array(0, array_map('strlen', $tests)), 'No empty tokens generated.');
 
     foreach ($tests as $input => $expected) {
       $output = token_replace($input, array('term' => $term2), array('language' => $language));
-      $this->assertFalse(strcmp($output, $expected), t('Sanitized taxonomy term token %token replaced.', array('%token' => $input)));
+      $this->assertFalse(strcmp($output, $expected), 'Sanitized taxonomy term token ' . $input . ' replaced.');
     }
 
     // Generate and test unsanitized tokens.
@@ -1046,7 +1046,7 @@ class TaxonomyTokenReplaceTestCase extends TaxonomyWebTestCase {
 
     foreach ($tests as $input => $expected) {
       $output = token_replace($input, array('term' => $term2), array('language' => $language, 'sanitize' => FALSE));
-      $this->assertFalse(strcmp($output, $expected), t('Unsanitized taxonomy term token %token replaced.', array('%token' => $input)));
+      $this->assertFalse(strcmp($output, $expected), 'Unsanitized taxonomy term token ' . $input . ' replaced.');
     }
 
     // Generate and test sanitized tokens.
@@ -1058,11 +1058,11 @@ class TaxonomyTokenReplaceTestCase extends TaxonomyWebTestCase {
     $tests['[vocabulary:term-count]'] = 2;
 
     // Test to make sure that we generated something for each token.
-    $this->assertFalse(in_array(0, array_map('strlen', $tests)), t('No empty tokens generated.'));
+    $this->assertFalse(in_array(0, array_map('strlen', $tests)), 'No empty tokens generated.');
 
     foreach ($tests as $input => $expected) {
       $output = token_replace($input, array('vocabulary' => $this->vocabulary), array('language' => $language));
-      $this->assertFalse(strcmp($output, $expected), t('Sanitized taxonomy vocabulary token %token replaced.', array('%token' => $input)));
+      $this->assertFalse(strcmp($output, $expected), 'Sanitized taxonomy vocabulary token ' . $input . ' replaced.');
     }
 
     // Generate and test unsanitized tokens.
@@ -1071,7 +1071,7 @@ class TaxonomyTokenReplaceTestCase extends TaxonomyWebTestCase {
 
     foreach ($tests as $input => $expected) {
       $output = token_replace($input, array('vocabulary' => $this->vocabulary), array('language' => $language, 'sanitize' => FALSE));
-      $this->assertFalse(strcmp($output, $expected), t('Unsanitized taxonomy vocabulary token %token replaced.', array('%token' => $input)));
+      $this->assertFalse(strcmp($output, $expected), 'Unsanitized taxonomy vocabulary token ' . $input . ' replaced.');
     }
   }
 }

@@ -15,7 +15,7 @@ abstract class OpenIDWebTestCase extends DrupalWebTestCase {
     $this->drupalPost('', $edit, t('Log in'));
 
     // Check we are on the OpenID redirect form.
-    $this->assertTitle(t('OpenID redirect'), t('OpenID redirect page was displayed.'));
+    $this->assertTitle(t('OpenID redirect'), 'OpenID redirect page was displayed.');
 
     // Submit form to the OpenID Provider Endpoint.
     $this->drupalPost(NULL, array(), t('Send'));
@@ -126,7 +126,7 @@ class OpenIDFunctionalTestCase extends OpenIDWebTestCase {
 
     // Test logging in via the login block on the front page.
     $this->submitLoginForm($identity);
-    $this->assertLink($this->web_user->name, 0, t('User was logged in.'));
+    $this->assertLink($this->web_user->name, 0, 'User was logged in.');
 
     $this->drupalLogout();
 
@@ -135,12 +135,12 @@ class OpenIDFunctionalTestCase extends OpenIDWebTestCase {
     $this->drupalPost('user/login', $edit, t('Log in'));
 
     // Check we are on the OpenID redirect form.
-    $this->assertTitle(t('OpenID redirect'), t('OpenID redirect page was displayed.'));
+    $this->assertTitle(t('OpenID redirect'), 'OpenID redirect page was displayed.');
 
     // Submit form to the OpenID Provider Endpoint.
     $this->drupalPost(NULL, array(), t('Send'));
 
-    $this->assertLink($this->web_user->name, 0, t('User was logged in.'));
+    $this->assertLink($this->web_user->name, 0, 'User was logged in.');
 
     // Verify user was redirected away from user/login to an accessible page.
     $this->assertResponse(200);
@@ -166,12 +166,12 @@ class OpenIDFunctionalTestCase extends OpenIDWebTestCase {
     $this->drupalPost('user/login', $edit, t('Log in'));
 
     // Check we are on the OpenID redirect form.
-    $this->assertTitle(t('OpenID redirect'), t('OpenID redirect page was displayed.'));
+    $this->assertTitle(t('OpenID redirect'), 'OpenID redirect page was displayed.');
 
     // Submit form to the OpenID Provider Endpoint.
     $this->drupalPost(NULL, array(), t('Send'));
 
-    $this->assertLink($this->web_user->name, 0, t('User was logged in.'));
+    $this->assertLink($this->web_user->name, 0, 'User was logged in.');
 
     // Verify user was redirected away from user/login to an accessible page.
     $this->assertText(t('Operating in maintenance mode.'));
@@ -187,14 +187,14 @@ class OpenIDFunctionalTestCase extends OpenIDWebTestCase {
     // Add identity to user's profile.
     $identity = url('openid-test/yadis/xrds', array('absolute' => TRUE));
     $this->addIdentity($identity);
-    $this->assertText($identity, t('Identity appears in list.'));
+    $this->assertText($identity, 'Identity appears in list.');
 
     // Delete the newly added identity.
     $this->clickLink(t('Delete'));
     $this->drupalPost(NULL, array(), t('Confirm'));
 
-    $this->assertText(t('OpenID deleted.'), t('Identity deleted'));
-    $this->assertNoText($identity, t('Identity no longer appears in list.'));
+    $this->assertText(t('OpenID deleted.'), 'Identity deleted');
+    $this->assertNoText($identity, 'Identity no longer appears in list.');
   }
 
   /**
@@ -218,11 +218,11 @@ class OpenIDFunctionalTestCase extends OpenIDWebTestCase {
       'accounts[' . $this->web_user->uid . ']' => TRUE,
     );
     $this->drupalPost('admin/people', $edit, t('Update'));
-    $this->assertRaw('The update has been performed.', t('Account was blocked.'));
+    $this->assertRaw('The update has been performed.', 'Account was blocked.');
     $this->drupalLogout();
 
     $this->submitLoginForm($identity);
-    $this->assertRaw(t('The username %name has not been activated or is blocked.', array('%name' => $this->web_user->name)), t('User login was blocked.'));
+    $this->assertRaw(t('The username %name has not been activated or is blocked.', array('%name' => $this->web_user->name)), 'User login was blocked.');
   }
 
   /**
@@ -246,14 +246,14 @@ class OpenIDFunctionalTestCase extends OpenIDWebTestCase {
     $this->drupalPost('user/' . $this->web_user->uid . '/openid', $edit, t('Add an OpenID'));
 
     if ($claimed_id === FALSE) {
-      $this->assertRaw(t('Sorry, that is not a valid OpenID. Ensure you have spelled your ID correctly.'), t('Invalid identity was rejected.'));
+      $this->assertRaw(t('Sorry, that is not a valid OpenID. Ensure you have spelled your ID correctly.'), 'Invalid identity was rejected.');
       return;
     }
 
     // OpenID 1 used a HTTP redirect, OpenID 2 uses a HTML form that is submitted automatically using JavaScript.
     if ($version == 2) {
       // Check we are on the OpenID redirect form.
-      $this->assertTitle(t('OpenID redirect'), t('OpenID redirect page was displayed.'));
+      $this->assertTitle(t('OpenID redirect'), 'OpenID redirect page was displayed.');
 
       // Submit form to the OpenID Provider Endpoint.
       $this->drupalPost(NULL, array(), t('Send'));
@@ -262,7 +262,7 @@ class OpenIDFunctionalTestCase extends OpenIDWebTestCase {
     if (!isset($claimed_id)) {
       $claimed_id = $identity;
     }
-    $this->assertRaw(t('Successfully added %identity', array('%identity' => $claimed_id)), t('Identity %identity was added.', array('%identity' => $identity)));
+    $this->assertRaw(t('Successfully added %identity', array('%identity' => $claimed_id)), 'Identity ' . $identity . ' was added.');
   }
 }
 
@@ -295,13 +295,13 @@ class OpenIDRegistrationTestCase extends OpenIDWebTestCase {
     // Use a User-supplied Identity that is the URL of an XRDS document.
     $identity = url('openid-test/yadis/xrds', array('absolute' => TRUE));
     $this->submitLoginForm($identity);
-    $this->assertRaw(t('Once you have verified your e-mail address, you may log in via OpenID.'), t('User was asked to verify e-mail address.'));
-    $this->assertRaw(t('A welcome message with further instructions has been sent to your e-mail address.'), t('A welcome message was sent to the user.'));
+    $this->assertRaw(t('Once you have verified your e-mail address, you may log in via OpenID.'), 'User was asked to verify e-mail address.');
+    $this->assertRaw(t('A welcome message with further instructions has been sent to your e-mail address.'), 'A welcome message was sent to the user.');
 
     $user = user_load_by_name('john');
-    $this->assertTrue($user, t('User was registered with right username.'));
-    $this->assertEqual($user->mail, 'john@example.com', t('User was registered with right email address.'));
-    $this->assertFalse($user->data, t('No additional user info was saved.'));
+    $this->assertTrue($user, 'User was registered with right username.');
+    $this->assertEqual($user->mail, 'john@example.com', 'User was registered with right email address.');
+    $this->assertFalse($user->data, 'No additional user info was saved.');
 
     $this->submitLoginForm($identity);
     $this->assertRaw(t('You must validate your email address for this account before logging in via OpenID.'));
@@ -314,7 +314,7 @@ class OpenIDRegistrationTestCase extends OpenIDWebTestCase {
 
     // Verify that the account was activated.
     $this->submitLoginForm($identity);
-    $this->assertLink('john', 0, t('User was logged in.'));
+    $this->assertLink('john', 0, 'User was logged in.');
   }
 
   /**
@@ -329,17 +329,17 @@ class OpenIDRegistrationTestCase extends OpenIDWebTestCase {
     // Use a User-supplied Identity that is the URL of an XRDS document.
     $identity = url('openid-test/yadis/xrds', array('absolute' => TRUE));
     $this->submitLoginForm($identity);
-    $this->assertLink('john', 0, t('User was logged in.'));
+    $this->assertLink('john', 0, 'User was logged in.');
 
     $user = user_load_by_name('john');
-    $this->assertTrue($user, t('User was registered with right username.'));
-    $this->assertEqual($user->mail, 'john@example.com', t('User was registered with right email address.'));
-    $this->assertFalse($user->data, t('No additional user info was saved.'));
+    $this->assertTrue($user, 'User was registered with right username.');
+    $this->assertEqual($user->mail, 'john@example.com', 'User was registered with right email address.');
+    $this->assertFalse($user->data, 'No additional user info was saved.');
 
     $this->drupalLogout();
 
     $this->submitLoginForm($identity);
-    $this->assertLink('john', 0, t('User was logged in.'));
+    $this->assertLink('john', 0, 'User was logged in.');
   }
 
   /**
@@ -355,28 +355,28 @@ class OpenIDRegistrationTestCase extends OpenIDWebTestCase {
     $identity = url('openid-test/yadis/xrds', array('absolute' => TRUE));
     $this->submitLoginForm($identity);
 
-    $this->assertRaw(t('Account registration using the information provided by your OpenID provider failed due to the reasons listed below. Complete the registration by filling out the form below. If you already have an account, you can <a href="@login">log in</a> now and add your OpenID under "My account".', array('@login' => url('user/login'))), t('User was asked to complete the registration process manually.'));
-    $this->assertRaw(t('The name %name is already taken.', array('%name' => $web_user->name)), t('Form validation error for username was displayed.'));
-    $this->assertRaw(t('The e-mail address %mail is not valid.', array('%mail' => 'mail@invalid#')), t('Form validation error for e-mail address was displayed.'));
+    $this->assertRaw(t('Account registration using the information provided by your OpenID provider failed due to the reasons listed below. Complete the registration by filling out the form below. If you already have an account, you can <a href="@login">log in</a> now and add your OpenID under "My account".', array('@login' => url('user/login'))), 'User was asked to complete the registration process manually.');
+    $this->assertRaw(t('The name %name is already taken.', array('%name' => $web_user->name)), 'Form validation error for username was displayed.');
+    $this->assertRaw(t('The e-mail address %mail is not valid.', array('%mail' => 'mail@invalid#')), 'Form validation error for e-mail address was displayed.');
 
     // Enter username and e-mail address manually.
     $edit = array('name' => 'john', 'mail' => 'john@example.com');
     $this->drupalPost(NULL, $edit, t('Create new account'));
-    $this->assertRaw(t('Once you have verified your e-mail address, you may log in via OpenID.'), t('User was asked to verify e-mail address.'));
+    $this->assertRaw(t('Once you have verified your e-mail address, you may log in via OpenID.'), 'User was asked to verify e-mail address.');
 
     $user = user_load_by_name('john');
-    $this->assertTrue($user, t('User was registered with right username.'));
-    $this->assertFalse($user->data, t('No additional user info was saved.'));
+    $this->assertTrue($user, 'User was registered with right username.');
+    $this->assertFalse($user->data, 'No additional user info was saved.');
 
     // Follow the one-time login that was sent in the welcome e-mail.
     $this->drupalGet(user_pass_reset_url($user));
     $this->drupalPost(NULL, array(), t('Log in'));
 
     // The user is taken to user/%uid/edit.
-    $this->assertFieldByName('mail', 'john@example.com', t('User was registered with right e-mail address.'));
+    $this->assertFieldByName('mail', 'john@example.com', 'User was registered with right e-mail address.');
 
     $this->clickLink(t('OpenID identities'));
-    $this->assertRaw($identity, t('OpenID identity was registered.'));
+    $this->assertRaw($identity, 'OpenID identity was registered.');
   }
 
   /**
@@ -390,28 +390,28 @@ class OpenIDRegistrationTestCase extends OpenIDWebTestCase {
     // Use a User-supplied Identity that is the URL of an XRDS document.
     $identity = url('openid-test/yadis/xrds', array('absolute' => TRUE));
     $this->submitLoginForm($identity);
-    $this->assertRaw(t('Complete the registration by filling out the form below. If you already have an account, you can <a href="@login">log in</a> now and add your OpenID under "My account".', array('@login' => url('user/login'))), t('User was asked to complete the registration process manually.'));
-    $this->assertNoRaw(t('You must enter a username.'), t('Form validation error for username was not displayed.'));
-    $this->assertNoRaw(t('You must enter an e-mail address.'), t('Form validation error for e-mail address was not displayed.'));
+    $this->assertRaw(t('Complete the registration by filling out the form below. If you already have an account, you can <a href="@login">log in</a> now and add your OpenID under "My account".', array('@login' => url('user/login'))), 'User was asked to complete the registration process manually.');
+    $this->assertNoRaw(t('You must enter a username.'), 'Form validation error for username was not displayed.');
+    $this->assertNoRaw(t('You must enter an e-mail address.'), 'Form validation error for e-mail address was not displayed.');
 
     // Enter username and e-mail address manually.
     $edit = array('name' => 'john', 'mail' => 'john@example.com');
     $this->drupalPost(NULL, $edit, t('Create new account'));
-    $this->assertRaw(t('Once you have verified your e-mail address, you may log in via OpenID.'), t('User was asked to verify e-mail address.'));
+    $this->assertRaw(t('Once you have verified your e-mail address, you may log in via OpenID.'), 'User was asked to verify e-mail address.');
 
     $user = user_load_by_name('john');
-    $this->assertTrue($user, t('User was registered with right username.'));
-    $this->assertFalse($user->data, t('No additional user info was saved.'));
+    $this->assertTrue($user, 'User was registered with right username.');
+    $this->assertFalse($user->data, 'No additional user info was saved.');
 
     // Follow the one-time login that was sent in the welcome e-mail.
     $this->drupalGet(user_pass_reset_url($user));
     $this->drupalPost(NULL, array(), t('Log in'));
 
     // The user is taken to user/%uid/edit.
-    $this->assertFieldByName('mail', 'john@example.com', t('User was registered with right e-mail address.'));
+    $this->assertFieldByName('mail', 'john@example.com', 'User was registered with right e-mail address.');
 
     $this->clickLink(t('OpenID identities'));
-    $this->assertRaw($identity, t('OpenID identity was registered.'));
+    $this->assertRaw($identity, 'OpenID identity was registered.');
   }
 
   /**
@@ -434,11 +434,11 @@ class OpenIDRegistrationTestCase extends OpenIDWebTestCase {
     // Use a User-supplied Identity that is the URL of an XRDS document.
     $identity = url('openid-test/yadis/xrds', array('absolute' => TRUE));
     $this->submitLoginForm($identity);
-    $this->assertLink('john', 0, t('User was logged in.'));
+    $this->assertLink('john', 0, 'User was logged in.');
 
     $user = user_load_by_name('john');
-    $this->assertTrue($user, t('User was registered with right username.'));
-    $this->assertEqual($user->mail, 'john@example.com', t('User was registered with right email address.'));
+    $this->assertTrue($user, 'User was registered with right username.');
+    $this->assertEqual($user->mail, 'john@example.com', 'User was registered with right email address.');
   }
 }
 
@@ -463,25 +463,25 @@ class OpenIDUnitTest extends DrupalWebTestCase {
    * Test _openid_dh_XXX_to_XXX() functions.
    */
   function testConversion() {
-    $this->assertEqual(_openid_dh_long_to_base64('12345678901234567890123456789012345678901234567890'), 'CHJ/Y2mq+DyhUCZ0evjH8ZbOPwrS', t('_openid_dh_long_to_base64() returned expected result.'));
-    $this->assertEqual(_openid_dh_base64_to_long('BsH/g8Nrpn2dtBSdu/sr1y8hxwyx'), '09876543210987654321098765432109876543210987654321', t('_openid_dh_base64_to_long() returned expected result.'));
+    $this->assertEqual(_openid_dh_long_to_base64('12345678901234567890123456789012345678901234567890'), 'CHJ/Y2mq+DyhUCZ0evjH8ZbOPwrS', '_openid_dh_long_to_base64() returned expected result.');
+    $this->assertEqual(_openid_dh_base64_to_long('BsH/g8Nrpn2dtBSdu/sr1y8hxwyx'), '09876543210987654321098765432109876543210987654321', '_openid_dh_base64_to_long() returned expected result.');
 
-    $this->assertEqual(_openid_dh_long_to_binary('12345678901234567890123456789012345678901234567890'), "\x08r\x7fci\xaa\xf8<\xa1P&tz\xf8\xc7\xf1\x96\xce?\x0a\xd2", t('_openid_dh_long_to_binary() returned expected result.'));
-    $this->assertEqual(_openid_dh_binary_to_long("\x06\xc1\xff\x83\xc3k\xa6}\x9d\xb4\x14\x9d\xbb\xfb+\xd7/!\xc7\x0c\xb1"), '09876543210987654321098765432109876543210987654321', t('_openid_dh_binary_to_long() returned expected result.'));
+    $this->assertEqual(_openid_dh_long_to_binary('12345678901234567890123456789012345678901234567890'), "\x08r\x7fci\xaa\xf8<\xa1P&tz\xf8\xc7\xf1\x96\xce?\x0a\xd2", '_openid_dh_long_to_binary() returned expected result.');
+    $this->assertEqual(_openid_dh_binary_to_long("\x06\xc1\xff\x83\xc3k\xa6}\x9d\xb4\x14\x9d\xbb\xfb+\xd7/!\xc7\x0c\xb1"), '09876543210987654321098765432109876543210987654321', '_openid_dh_binary_to_long() returned expected result.');
   }
 
   /**
    * Test _openid_dh_xorsecret().
    */
   function testOpenidDhXorsecret() {
-    $this->assertEqual(_openid_dh_xorsecret('123456790123456790123456790', "abc123ABC\x00\xFF"), "\xa4'\x06\xbe\xf1.\x00y\xff\xc2\xc1", t('_openid_dh_xorsecret() returned expected result.'));
+    $this->assertEqual(_openid_dh_xorsecret('123456790123456790123456790', "abc123ABC\x00\xFF"), "\xa4'\x06\xbe\xf1.\x00y\xff\xc2\xc1", '_openid_dh_xorsecret() returned expected result.');
   }
 
   /**
    * Test _openid_get_bytes().
    */
   function testOpenidGetBytes() {
-    $this->assertEqual(strlen(_openid_get_bytes(20)), 20, t('_openid_get_bytes() returned expected result.'));
+    $this->assertEqual(strlen(_openid_get_bytes(20)), 20, '_openid_get_bytes() returned expected result.');
   }
 
   /**
@@ -501,7 +501,7 @@ class OpenIDUnitTest extends DrupalWebTestCase {
     );
     $association = new stdClass();
     $association->mac_key = "1234567890abcdefghij\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\xF0\xF1\xF2\xF3\xF4\xF5\xF6\xF7\xF8\xF9";
-    $this->assertEqual(_openid_signature($association, $response, array('foo', 'bar')), 'QnKZQzSFstT+GNiJDFOptdcZjrc=', t('Expected signature calculated.'));
+    $this->assertEqual(_openid_signature($association, $response, array('foo', 'bar')), 'QnKZQzSFstT+GNiJDFOptdcZjrc=', 'Expected signature calculated.');
   }
 
   /**
@@ -512,26 +512,26 @@ class OpenIDUnitTest extends DrupalWebTestCase {
     // section 7.2. If the user-supplied string starts with xri:// it should be
     // stripped and the resulting string should be treated as an XRI when it
     // starts with "=", "@", "+", "$", "!" or "(".
-    $this->assertTrue(_openid_is_xri('xri://=foo'), t('_openid_is_xri() returned expected result for an xri identifier with xri scheme.'));
-    $this->assertTrue(_openid_is_xri('xri://@foo'), t('_openid_is_xri() returned expected result for an xri identifier with xri scheme.'));
-    $this->assertTrue(_openid_is_xri('xri://+foo'), t('_openid_is_xri() returned expected result for an xri identifier with xri scheme.'));
-    $this->assertTrue(_openid_is_xri('xri://$foo'), t('_openid_is_xri() returned expected result for an xri identifier with xri scheme.'));
-    $this->assertTrue(_openid_is_xri('xri://!foo'), t('_openid_is_xri() returned expected result for an xri identifier with xri scheme..'));
-    $this->assertTrue(_openid_is_xri('xri://(foo'), t('_openid_is_xri() returned expected result for an xri identifier with xri scheme..'));
+    $this->assertTrue(_openid_is_xri('xri://=foo'), '_openid_is_xri() returned expected result for an xri identifier with xri scheme.');
+    $this->assertTrue(_openid_is_xri('xri://@foo'), '_openid_is_xri() returned expected result for an xri identifier with xri scheme.');
+    $this->assertTrue(_openid_is_xri('xri://+foo'), '_openid_is_xri() returned expected result for an xri identifier with xri scheme.');
+    $this->assertTrue(_openid_is_xri('xri://$foo'), '_openid_is_xri() returned expected result for an xri identifier with xri scheme.');
+    $this->assertTrue(_openid_is_xri('xri://!foo'), '_openid_is_xri() returned expected result for an xri identifier with xri scheme..');
+    $this->assertTrue(_openid_is_xri('xri://(foo'), '_openid_is_xri() returned expected result for an xri identifier with xri scheme..');
 
-    $this->assertTrue(_openid_is_xri('=foo'), t('_openid_is_xri() returned expected result for an xri identifier.'));
-    $this->assertTrue(_openid_is_xri('@foo'), t('_openid_is_xri() returned expected result for an xri identifier.'));
-    $this->assertTrue(_openid_is_xri('+foo'), t('_openid_is_xri() returned expected result for an xri identifier.'));
-    $this->assertTrue(_openid_is_xri('$foo'), t('_openid_is_xri() returned expected result for an xri identifier.'));
-    $this->assertTrue(_openid_is_xri('!foo'), t('_openid_is_xri() returned expected result for an xri identifier.'));
-    $this->assertTrue(_openid_is_xri('(foo'), t('_openid_is_xri() returned expected result for an xri identifier.'));
+    $this->assertTrue(_openid_is_xri('=foo'), '_openid_is_xri() returned expected result for an xri identifier.');
+    $this->assertTrue(_openid_is_xri('@foo'), '_openid_is_xri() returned expected result for an xri identifier.');
+    $this->assertTrue(_openid_is_xri('+foo'), '_openid_is_xri() returned expected result for an xri identifier.');
+    $this->assertTrue(_openid_is_xri('$foo'), '_openid_is_xri() returned expected result for an xri identifier.');
+    $this->assertTrue(_openid_is_xri('!foo'), '_openid_is_xri() returned expected result for an xri identifier.');
+    $this->assertTrue(_openid_is_xri('(foo'), '_openid_is_xri() returned expected result for an xri identifier.');
 
-    $this->assertFalse(_openid_is_xri('foo'), t('_openid_is_xri() returned expected result for an http URL.'));
-    $this->assertFalse(_openid_is_xri('xri://foo'), t('_openid_is_xri() returned expected result for an http URL.'));
-    $this->assertFalse(_openid_is_xri('http://foo/'), t('_openid_is_xri() returned expected result for an http URL.'));
-    $this->assertFalse(_openid_is_xri('http://example.com/'), t('_openid_is_xri() returned expected result for an http URL.'));
-    $this->assertFalse(_openid_is_xri('user@example.com/'), t('_openid_is_xri() returned expected result for an http URL.'));
-    $this->assertFalse(_openid_is_xri('http://user@example.com/'), t('_openid_is_xri() returned expected result for an http URL.'));
+    $this->assertFalse(_openid_is_xri('foo'), '_openid_is_xri() returned expected result for an http URL.');
+    $this->assertFalse(_openid_is_xri('xri://foo'), '_openid_is_xri() returned expected result for an http URL.');
+    $this->assertFalse(_openid_is_xri('http://foo/'), '_openid_is_xri() returned expected result for an http URL.');
+    $this->assertFalse(_openid_is_xri('http://example.com/'), '_openid_is_xri() returned expected result for an http URL.');
+    $this->assertFalse(_openid_is_xri('user@example.com/'), '_openid_is_xri() returned expected result for an http URL.');
+    $this->assertFalse(_openid_is_xri('http://user@example.com/'), '_openid_is_xri() returned expected result for an http URL.');
   }
 
   /**
@@ -541,15 +541,15 @@ class OpenIDUnitTest extends DrupalWebTestCase {
     // Test that the normalization is according to OpenID Authentication 2.0,
     // section 7.2 and 11.5.2.
 
-    $this->assertEqual(openid_normalize('$foo'), '$foo', t('openid_normalize() correctly normalized an XRI.'));
-    $this->assertEqual(openid_normalize('xri://$foo'), '$foo', t('openid_normalize() correctly normalized an XRI with an xri:// scheme.'));
+    $this->assertEqual(openid_normalize('$foo'), '$foo', 'openid_normalize() correctly normalized an XRI.');
+    $this->assertEqual(openid_normalize('xri://$foo'), '$foo', 'openid_normalize() correctly normalized an XRI with an xri:// scheme.');
 
-    $this->assertEqual(openid_normalize('example.com/'), 'http://example.com/', t('openid_normalize() correctly normalized a URL with a missing scheme.'));
-    $this->assertEqual(openid_normalize('example.com'), 'http://example.com/', t('openid_normalize() correctly normalized a URL with a missing scheme and empty path.'));
-    $this->assertEqual(openid_normalize('http://example.com'), 'http://example.com/', t('openid_normalize() correctly normalized a URL with an empty path.'));
+    $this->assertEqual(openid_normalize('example.com/'), 'http://example.com/', 'openid_normalize() correctly normalized a URL with a missing scheme.');
+    $this->assertEqual(openid_normalize('example.com'), 'http://example.com/', 'openid_normalize() correctly normalized a URL with a missing scheme and empty path.');
+    $this->assertEqual(openid_normalize('http://example.com'), 'http://example.com/', 'openid_normalize() correctly normalized a URL with an empty path.');
 
-    $this->assertEqual(openid_normalize('http://example.com/path'), 'http://example.com/path', t('openid_normalize() correctly normalized a URL with a path.'));
+    $this->assertEqual(openid_normalize('http://example.com/path'), 'http://example.com/path', 'openid_normalize() correctly normalized a URL with a path.');
 
-    $this->assertEqual(openid_normalize('http://example.com/path#fragment'), 'http://example.com/path', t('openid_normalize() correctly normalized a URL with a fragment.'));
+    $this->assertEqual(openid_normalize('http://example.com/path#fragment'), 'http://example.com/path', 'openid_normalize() correctly normalized a URL with a fragment.');
   }
 }

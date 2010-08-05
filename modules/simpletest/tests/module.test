@@ -77,9 +77,9 @@ class ModuleUnitTest extends DrupalWebTestCase {
    */
   protected function assertModuleList(Array $expected_values, $condition) {
     $expected_values = array_combine($expected_values, $expected_values);
-    $this->assertEqual($expected_values, module_list(), t('@condition: module_list() returns correct results', array('@condition' => $condition)));
+    $this->assertEqual($expected_values, module_list(), $condition . ': module_list() returns correct results');
     ksort($expected_values);
-    $this->assertIdentical($expected_values, module_list(FALSE, FALSE, TRUE), t('@condition: module_list() returns correctly sorted results', array('@condition' => $condition)));
+    $this->assertIdentical($expected_values, module_list(FALSE, FALSE, TRUE), $condition . ': module_list() returns correctly sorted results');
   }
 
   /**
@@ -88,16 +88,16 @@ class ModuleUnitTest extends DrupalWebTestCase {
   function testModuleImplements() {
     // Clear the cache.
     cache_clear_all('module_implements', 'cache_bootstrap');
-    $this->assertFalse(cache_get('module_implements', 'cache_bootstrap'), t('The module implements cache is empty.'));
+    $this->assertFalse(cache_get('module_implements', 'cache_bootstrap'), 'The module implements cache is empty.');
     $this->drupalGet('');
-    $this->assertTrue(cache_get('module_implements', 'cache_bootstrap'), t('The module implements cache is populated after requesting a page.'));
+    $this->assertTrue(cache_get('module_implements', 'cache_bootstrap'), 'The module implements cache is populated after requesting a page.');
 
     // Test again with an authenticated user.
     $this->user = $this->drupalCreateUser();
     $this->drupalLogin($this->user);
     cache_clear_all('module_implements', 'cache_bootstrap');
     $this->drupalGet('');
-    $this->assertTrue(cache_get('module_implements', 'cache_bootstrap'), t('The module implements cache is populated after requesting a page.'));
+    $this->assertTrue(cache_get('module_implements', 'cache_bootstrap'), 'The module implements cache is populated after requesting a page.');
 
     // Make sure group include files are detected properly even when the file is
     // already loaded when the cache is rebuilt.
@@ -116,23 +116,23 @@ class ModuleUnitTest extends DrupalWebTestCase {
    */
   function testDependencyResolution() {
     module_enable(array('module_test'), FALSE);
-    $this->assertTrue(module_exists('module_test'), t('Test module is enabled.'));
+    $this->assertTrue(module_exists('module_test'), 'Test module is enabled.');
 
     // First, create a fake missing dependency. Forum depends on poll, which
     // depends on a made-up module, foo. Nothing should be installed.
     variable_set('dependency_test', 'missing dependency');
     $result = module_enable(array('forum'));
-    $this->assertFalse($result, t('module_enable() returns FALSE if dependencies are missing.'));
-    $this->assertFalse(module_exists('forum'), t('module_enable() aborts if dependencies are missing.'));
+    $this->assertFalse($result, 'module_enable() returns FALSE if dependencies are missing.');
+    $this->assertFalse(module_exists('forum'), 'module_enable() aborts if dependencies are missing.');
 
     // Now, fix the missing dependency. module_enable() should work.
     variable_set('dependency_test', 'dependency');
     $result = module_enable(array('forum'));
-    $this->assertTrue($result, t('module_enable() returns the correct value.'));
+    $this->assertTrue($result, 'module_enable() returns the correct value.');
     // Verify that the fake dependency chain was installed.
-    $this->assertTrue(module_exists('poll') && module_exists('php'), t('Dependency chain was installed by module_enable().'));
+    $this->assertTrue(module_exists('poll') && module_exists('php'), 'Dependency chain was installed by module_enable().');
     // Finally, verify that the original module was installed.
-    $this->assertTrue(module_exists('forum'), t('Module installation with unlisted dependencies succeeded.'));
+    $this->assertTrue(module_exists('forum'), 'Module installation with unlisted dependencies succeeded.');
   }
 }
 
@@ -168,8 +168,8 @@ class ModuleInstallTestCase extends DrupalWebTestCase {
     // Check for data that was inserted using drupal_write_record() while the
     // 'module_test' module was being installed and enabled.
     $data = db_query("SELECT data FROM {module_test}")->fetchCol();
-    $this->assertTrue(in_array('Data inserted in hook_install()', $data), t('Data inserted using drupal_write_record() in hook_install() is correctly saved.'));
-    $this->assertTrue(in_array('Data inserted in hook_enable()', $data), t('Data inserted using drupal_write_record() in hook_enable() is correctly saved.'));
+    $this->assertTrue(in_array('Data inserted in hook_install()', $data), 'Data inserted using drupal_write_record() in hook_install() is correctly saved.');
+    $this->assertTrue(in_array('Data inserted in hook_enable()', $data), 'Data inserted using drupal_write_record() in hook_enable() is correctly saved.');
   }
 }
 
@@ -200,6 +200,6 @@ class ModuleUninstallTestCase extends DrupalWebTestCase {
 
     // Are the perms defined by module_test removed from {role_permission}.
     $count = db_query("SELECT COUNT(rid) FROM {role_permission} WHERE permission = :perm", array(':perm' => 'module_test perm'))->fetchField();
-    $this->assertEqual(0, $count, t('Permissions were all removed.'));
+    $this->assertEqual(0, $count, 'Permissions were all removed.');
   }
 }

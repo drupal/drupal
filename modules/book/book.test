@@ -5,10 +5,10 @@ class BookTestCase extends DrupalWebTestCase {
   protected $book;
   // $book_author is a user with permission to author a book.
   protected $book_author;
-  // $web_user is a user with permission to view a book 
+  // $web_user is a user with permission to view a book
   // and access the printer-friendly version.
   protected $web_user;
-  
+
   public static function getInfo() {
     return array(
       'name' => 'Book functionality',
@@ -19,12 +19,12 @@ class BookTestCase extends DrupalWebTestCase {
 
   function setUp() {
     parent::setUp('book');
-    
+
     // Create users.
     $this->book_author = $this->drupalCreateUser(array('create new books', 'create book content', 'edit own book content', 'add content to books'));
     $this->web_user = $this->drupalCreateUser(array('access printer-friendly version'));
   }
-  
+
   /**
    * Create a new book with a page hierarchy.
    */
@@ -52,7 +52,7 @@ class BookTestCase extends DrupalWebTestCase {
     $nodes[] = $this->createBookNode($book->nid); // Node 4.
 
     $this->drupalLogout();
-    
+
     return $nodes;
   }
 
@@ -63,7 +63,7 @@ class BookTestCase extends DrupalWebTestCase {
     // Create new book.
     $nodes = $this->createBook();
     $book = $this->book;
-    
+
     $this->drupalLogin($this->web_user);
 
     // Check that book pages display along with the correct outlines and
@@ -119,23 +119,23 @@ class BookTestCase extends DrupalWebTestCase {
 
     // Check outline structure.
     if ($nodes !== NULL) {
-      $this->assertPattern($this->generateOutlinePattern($nodes), t('Node ' . $number . ' outline confirmed.'));
+      $this->assertPattern($this->generateOutlinePattern($nodes), 'Node ' . $number . ' outline confirmed.');
     }
     else {
-      $this->pass(t('Node ' . $number . ' doesn\'t have outline.'));
+      $this->pass('Node ' . $number . ' doesn\'t have outline.');
     }
 
     // Check previous, up, and next links.
     if ($previous) {
-      $this->assertRaw(l('‹ ' . $previous->title, 'node/' . $previous->nid, array('attributes' => array('class' => array('page-previous'), 'title' => t('Go to previous page')))), t('Previous page link found.'));
+      $this->assertRaw(l('‹ ' . $previous->title, 'node/' . $previous->nid, array('attributes' => array('class' => array('page-previous'), 'title' => t('Go to previous page')))), 'Previous page link found.');
     }
 
     if ($up) {
-      $this->assertRaw(l('up', 'node/' . $up->nid, array('attributes' => array('class' => array('page-up'), 'title' => t('Go to parent page')))), t('Up page link found.'));
+      $this->assertRaw(l('up', 'node/' . $up->nid, array('attributes' => array('class' => array('page-up'), 'title' => t('Go to parent page')))), 'Up page link found.');
     }
 
     if ($next) {
-      $this->assertRaw(l($next->title . ' ›', 'node/' . $next->nid, array('attributes' => array('class' => array('page-next'), 'title' => t('Go to next page')))), t('Next page link found.'));
+      $this->assertRaw(l($next->title . ' ›', 'node/' . $next->nid, array('attributes' => array('class' => array('page-next'), 'title' => t('Go to next page')))), 'Next page link found.');
     }
 
     // Compute the expected breadcrumb.
@@ -153,12 +153,12 @@ class BookTestCase extends DrupalWebTestCase {
     }
 
     // Compare expected and got breadcrumbs.
-    $this->assertIdentical($expected_breadcrumb, $got_breadcrumb, t('The breadcrumb is correctly displayed on the page.'));
+    $this->assertIdentical($expected_breadcrumb, $got_breadcrumb, 'The breadcrumb is correctly displayed on the page.');
 
     // Check printer friendly version.
     $this->drupalGet('book/export/html/' . $node->nid);
-    $this->assertText($node->title, t('Printer friendly title found.'));
-    $this->assertRaw(check_markup($node->body[LANGUAGE_NONE][0]['value'], $node->body[LANGUAGE_NONE][0]['format']), t('Printer friendly body found.'));
+    $this->assertText($node->title, 'Printer friendly title found.');
+    $this->assertRaw(check_markup($node->body[LANGUAGE_NONE][0]['value'], $node->body[LANGUAGE_NONE][0]['format']), 'Printer friendly body found.');
 
     $number++;
   }
@@ -206,44 +206,44 @@ class BookTestCase extends DrupalWebTestCase {
 
     // Check to make sure the book node was created.
     $node = $this->drupalGetNodeByTitle($edit['title']);
-    $this->assertNotNull(($node === FALSE ? NULL : $node), t('Book node found in database.'));
+    $this->assertNotNull(($node === FALSE ? NULL : $node), 'Book node found in database.');
     $number++;
 
     return $node;
   }
-  
+
   /**
    * Tests book export ("printer-friendly version") functionality.
    */
   function testBookExport() {
     // Create a book.
     $nodes = $this->createBook();
-    
+
     // Login as web user and view printer-friendly version.
     $this->drupalLogin($this->web_user);
     $this->drupalGet('node/' . $this->book->nid);
     $this->clickLink(t('Printer-friendly version'));
-    
+
     // Make sure each part of the book is there.
     foreach ($nodes as $node) {
-      $this->assertText($node->title, t('Node title found in printer friendly version.'));
-      $this->assertRaw(check_markup($node->body[LANGUAGE_NONE][0]['value'], $node->body[LANGUAGE_NONE][0]['format']), t('Node body found in printer friendly version.'));
+      $this->assertText($node->title, 'Node title found in printer friendly version.');
+      $this->assertRaw(check_markup($node->body[LANGUAGE_NONE][0]['value'], $node->body[LANGUAGE_NONE][0]['format']), 'Node body found in printer friendly version.');
     }
-    
+
     // Make sure we can't export an unsupported format.
     $this->drupalGet('book/export/foobar/' . $this->book->nid);
-    $this->assertResponse('404', t('Unsupported export format returned "not found".'));    
-    
+    $this->assertResponse('404', 'Unsupported export format returned "not found".');
+
     // Make sure an anonymous user cannot view printer-friendly version.
     $this->drupalLogout();
-    
+
     // Load the book and verify there is no printer-friendly version link.
     $this->drupalGet('node/' . $this->book->nid);
-    $this->assertNoLink(t('Printer-friendly version'), t('Anonymous user is not shown link to printer-friendly version.'));
-    
+    $this->assertNoLink(t('Printer-friendly version'), 'Anonymous user is not shown link to printer-friendly version.');
+
     // Try getting the URL directly, and verify it fails.
     $this->drupalGet('book/export/html/' . $this->book->nid);
-    $this->assertResponse('403', t('Anonymous user properly forbidden.'));
+    $this->assertResponse('403', 'Anonymous user properly forbidden.');
   }
 }
 
@@ -267,12 +267,12 @@ class BookBlockTestCase extends DrupalWebTestCase {
   function testBookNavigationBlock() {
     // Set block title to confirm that the interface is availble.
     $this->drupalPost('admin/structure/block/manage/book/navigation/configure', array('title' => $this->randomName(8)), t('Save block'));
-    $this->assertText(t('The block configuration has been saved.'), t('Block configuration set.'));
+    $this->assertText(t('The block configuration has been saved.'), 'Block configuration set.');
 
     // Set the block to a region to confirm block is availble.
     $edit = array();
     $edit['book_navigation[region]'] = 'footer';
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
-    $this->assertText(t('The block settings have been updated.'), t('Block successfully move to footer region.'));
+    $this->assertText(t('The block settings have been updated.'), 'Block successfully move to footer region.');
   }
 }
