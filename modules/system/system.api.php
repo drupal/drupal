@@ -372,27 +372,20 @@ function hook_entity_prepare_view($entities, $type) {
  *
  * This hook will only be called if cron.php is run (e.g. by crontab).
  *
- * Modules that require to schedule some commands to be executed at regular
- * intervals can implement hook_cron(). The engine will then call the hook
- * at the appropriate intervals defined by the administrator. This interface
- * is particularly handy to implement timers or to automate certain tasks.
- * Database maintenance, recalculation of settings or parameters are good
- * candidates for cron tasks.
+ * Modules that require some commands to be executed periodically can
+ * implement hook_cron(). The engine will then call the hook whenever a cron
+ * run happens, as defined by the administrator. Typical tasks managed by
+ * hook_cron() are database maintenance, backups, recalculation of settings
+ * or parameters, automated mailing, and retrieving remote data.
  *
- * Short-running or not resource intensive tasks can be executed directly.
+ * Short-running or non-resource-intensive tasks can be executed directly in
+ * the hook_cron() implementation.
  *
- * Long-running tasks should use the queue API. To do this, one or more queues
- * need to be defined via hook_cron_queue_info(). Items that need to be
- * processed are appended to the defined queue, instead of processing them
- * directly in hook_cron().
- * Examples of jobs that are good candidates for
- * hook_cron_queue_info() include automated mailing, retrieving remote data, and
- * intensive file tasks.
- *
- * @return
- *   None.
- *
- * @see hook_cron_queue_info()
+ * Long-running tasks and tasks that could time out, such as retrieving remote
+ * data, sending email, and intensive file tasks, should use the queue API
+ * instead of executing the tasks directly. To do this, first define one or
+ * more queues via hook_cron_queue_info(). Then, add items that need to be
+ * processed to the defined queues.
  */
 function hook_cron() {
   // Short-running operation example, not using a queue:
