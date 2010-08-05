@@ -25,7 +25,7 @@ class RegistryParseFileTestCase extends DrupalWebTestCase {
     _registry_parse_file($this->fileName, $this->getFileContents());
     foreach (array('className', 'interfaceName') as $resource) {
       $foundName = db_query('SELECT name FROM {registry} WHERE name = :name', array(':name' => $this->$resource))->fetchField();
-      $this->assertTrue($this->$resource == $foundName, 'Resource "' . $this->$resource . '" found.');
+      $this->assertTrue($this->$resource == $foundName, t('Resource "@resource" found.', array('@resource' => $this->$resource)));
     }
   }
 
@@ -103,11 +103,11 @@ class RegistryParseFilesTestCase extends DrupalWebTestCase {
       // Test that we have all the right resources.
       foreach (array('className', 'interfaceName') as $resource) {
         $foundName = db_query('SELECT name FROM {registry} WHERE name = :name', array(':name' => $this->$fileType->$resource))->fetchField();
-        $this->assertTrue($this->$fileType->$resource == $foundName, 'Resource "' . $this->$fileType->$resource . '" found.');
+        $this->assertTrue($this->$fileType->$resource == $foundName, t('Resource "@resource" found.', array('@resource' => $this->$fileType->$resource)));
       }
       // Test that we have the right hash.
       $hash = db_query('SELECT hash FROM {registry_file} WHERE filename = :filename', array(':filename' => $this->$fileType->fileName))->fetchField();
-      $this->assertTrue(hash('sha256', $this->$fileType->contents) == $hash, 'sha-256 for "' . $this->$fileType->fileName . '" matched.' . $fileType . $hash);
+      $this->assertTrue(hash('sha256', $this->$fileType->contents) == $hash, t('sha-256 for "@filename" matched.' . $fileType . $hash, array('@filename' => $this->$fileType->fileName)));
     }
   }
 

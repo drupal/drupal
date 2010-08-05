@@ -35,13 +35,13 @@ class UnicodeUnitTest extends DrupalWebTestCase {
     // mbstring was not detected on this installation, there is no way to test
     // multibyte features. Treat that as an exception.
     if ($multibyte == UNICODE_SINGLEBYTE) {
-      $this->error('Unable to test Multibyte features: mbstring extension was not detected.');
+      $this->error(t('Unable to test Multibyte features: mbstring extension was not detected.'));
     }
 
     $multibyte = UNICODE_MULTIBYTE;
 
     $this->extendedMode = TRUE;
-    $this->pass('Testing in mbstring mode');
+    $this->pass(t('Testing in mbstring mode'));
 
     $this->helperTestStrToLower();
     $this->helperTestStrToUpper();
@@ -61,7 +61,7 @@ class UnicodeUnitTest extends DrupalWebTestCase {
 
     $this->extendedMode = FALSE;
 
-    $this->pass('Testing in emulated (best-effort) mode');
+    $this->pass(t('Testing in emulated (best-effort) mode'));
 
     $this->helperTestStrToLower();
     $this->helperTestStrToUpper();
@@ -81,7 +81,7 @@ class UnicodeUnitTest extends DrupalWebTestCase {
     }
 
     foreach ($testcase as $input => $output) {
-      $this->assertEqual(drupal_strtolower($input), $output, $input . ' is lowercased as ' . $output);
+      $this->assertEqual(drupal_strtolower($input), $output, t('%input is lowercased as %output', array('%input' => $input, '%output' => $output)));
     }
   }
 
@@ -95,7 +95,7 @@ class UnicodeUnitTest extends DrupalWebTestCase {
     }
 
     foreach ($testcase as $input => $output) {
-      $this->assertEqual(drupal_strtoupper($input), $output, $input . ' is uppercased as ' . $output);
+      $this->assertEqual(drupal_strtoupper($input), $output, t('%input is uppercased as %output', array('%input' => $input, '%output' => $output)));
     }
   }
 
@@ -111,7 +111,7 @@ class UnicodeUnitTest extends DrupalWebTestCase {
     }
 
     foreach ($testcase as $input => $output) {
-      $this->assertEqual(drupal_ucfirst($input), $output, $input . ' is ucfirst-ed as ' . $output);
+      $this->assertEqual(drupal_ucfirst($input), $output, t('%input is ucfirst-ed as %output', array('%input' => $input, '%output' => $output)));
     }
   }
 
@@ -122,7 +122,7 @@ class UnicodeUnitTest extends DrupalWebTestCase {
     );
 
     foreach ($testcase as $input => $output) {
-      $this->assertEqual(drupal_strlen($input), $output, $input . ' length is ' . $output);
+      $this->assertEqual(drupal_strlen($input), $output, t('%input length is %output', array('%input' => $input, '%output' => $output)));
     }
   }
 
@@ -182,7 +182,7 @@ class UnicodeUnitTest extends DrupalWebTestCase {
     foreach ($testcase as $test) {
       list($input, $start, $length, $output) = $test;
       $result = drupal_substr($input, $start, $length);
-      $this->assertEqual($result, $output, $input . ' substring at offset ' . $start . ' for ' . $length . ' characters is ' . $output . ' (got ' . $result . ')');
+      $this->assertEqual($result, $output, t('%input substring at offset %offset for %length characters is %output (got %result)', array('%input' => $input, '%offset' => $start, '%length' => $length, '%output' => $output, '%result' => $result)));
     }
   }
 
@@ -214,7 +214,7 @@ class UnicodeUnitTest extends DrupalWebTestCase {
       '&euro;' => '€',
     );
     foreach ($testcase as $input => $output) {
-      $this->assertEqual(decode_entities($input), $output, 'Make sure the decoded entity of ' . $input . ' is ' . $output);
+      $this->assertEqual(decode_entities($input), $output, t('Make sure the decoded entity of @input is @output', array('@input' => $input, '@output' => $output)));
     }
   }
 
@@ -244,7 +244,7 @@ class UnicodeUnitTest extends DrupalWebTestCase {
     );
     $exclude = array('<', '&', '"');
     foreach ($testcase as $input => $output) {
-      $this->assertIdentical(decode_entities($input, $exclude), $output, 'Make sure the decoded entity of ' . $input . ', excluding ' . implode(',', $exclude) . ', is ' . $output);
+      $this->assertIdentical(decode_entities($input, $exclude), $output, t('Make sure the decoded entity of %input, excluding %excludes, is %output', array('%input' => $input, '%excludes' => implode(',', $exclude), '%output' => $output)));
     }
   }
 
@@ -330,7 +330,7 @@ class UnicodeUnitTest extends DrupalWebTestCase {
     foreach ($cases as $case) {
       list($input, $max_length, $expected) = $case;
       $output = truncate_utf8($input, $max_length, $wordsafe, $ellipsis);
-      $this->assertEqual($output, $expected, $input . ' truncate to ' . $max_length . ' characters with ' . ($wordsafe ? 'word-safe' : 'not word-safe') . ', ' . ($ellipsis ? 'ellipsis' : 'not ellipsis') . ' is ' . $expected . ' (got ' . $output . ')');
+      $this->assertEqual($output, $expected, t('%input truncate to %length characters with %wordsafe, %ellipsis is %expected (got %output)', array('%input' => $input, '%length' => $max_length, '%output' => $output, '%expected' => $expected, '%wordsafe' => ($wordsafe ? 'word-safe' : 'not word-safe'), '%ellipsis' => ($ellipsis ? 'ellipsis' : 'not ellipsis'))));
     }
   }
 }

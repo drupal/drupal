@@ -60,11 +60,11 @@ class FilterCRUDTestCase extends DrupalWebTestCase {
     // Delete the text format.
     filter_format_delete($format);
     $db_format = db_query("SELECT * FROM {filter_format} WHERE format = :format", array(':format' => $format->format))->fetchObject();
-    $this->assertFalse($db_format, 'Database: Deleted text format no longer exists.');
+    $this->assertFalse($db_format, t('Database: Deleted text format no longer exists.'));
     $db_filters = db_query("SELECT * FROM {filter} WHERE format = :format", array(':format' => $format->format))->fetchObject();
-    $this->assertFalse($db_filters, 'Database: Filters for deleted text format no longer exist.');
+    $this->assertFalse($db_filters, t('Database: Filters for deleted text format no longer exist.'));
     $formats = filter_formats();
-    $this->assertTrue(!isset($formats[$format->format]), 'filter_formats: Deleted text format no longer exists.');
+    $this->assertTrue(!isset($formats[$format->format]), t('filter_formats: Deleted text format no longer exists.'));
   }
 
   /**
@@ -78,17 +78,17 @@ class FilterCRUDTestCase extends DrupalWebTestCase {
       ->condition('format', $format->format)
       ->execute()
       ->fetchObject();
-    $this->assertEqual($db_format->format, $format->format, 'Database: Proper format id for text format ' . $t_args['%format'] . '.');
-    $this->assertEqual($db_format->name, $format->name, 'Database: Proper title for text format ' . $t_args['%format'] . '.');
-    $this->assertEqual($db_format->cache, $format->cache, 'Database: Proper cache indicator for text format ' . $t_args['%format'] . '.');
-    $this->assertEqual($db_format->weight, $format->weight, 'Database: Proper weight for text format ' . $t_args['%format'] . '.');
+    $this->assertEqual($db_format->format, $format->format, t('Database: Proper format id for text format %format.', $t_args));
+    $this->assertEqual($db_format->name, $format->name, t('Database: Proper title for text format %format.', $t_args));
+    $this->assertEqual($db_format->cache, $format->cache, t('Database: Proper cache indicator for text format %format.', $t_args));
+    $this->assertEqual($db_format->weight, $format->weight, t('Database: Proper weight for text format %format.', $t_args));
 
     // Verify filter_format_load().
     $filter_format = filter_format_load($format->format);
-    $this->assertEqual($filter_format->format, $format->format, 'filter_format_load: Proper format id for text format ' . $t_args['%format'] . '.');
-    $this->assertEqual($filter_format->name, $format->name, 'filter_format_load: Proper title for text format ' . $t_args['%format'] . '.');
-    $this->assertEqual($filter_format->cache, $format->cache, 'filter_format_load: Proper cache indicator for text format ' . $t_args['%format'] . '.');
-    $this->assertEqual($filter_format->weight, $format->weight, 'filter_format_load: Proper weight for text format ' . $t_args['%format'] . '.');
+    $this->assertEqual($filter_format->format, $format->format, t('filter_format_load: Proper format id for text format %format.', $t_args));
+    $this->assertEqual($filter_format->name, $format->name, t('filter_format_load: Proper title for text format %format.', $t_args));
+    $this->assertEqual($filter_format->cache, $format->cache, t('filter_format_load: Proper cache indicator for text format %format.', $t_args));
+    $this->assertEqual($filter_format->weight, $format->weight, t('filter_format_load: Proper weight for text format %format.', $t_args));
 
     // Verify the 'cache' text format property according to enabled filters.
     $filter_info = filter_get_filters();
@@ -102,7 +102,7 @@ class FilterCRUDTestCase extends DrupalWebTestCase {
         break;
       }
     }
-    $this->assertEqual($filter_format->cache, $cacheable, 'Text format contains proper cache property.');
+    $this->assertEqual($filter_format->cache, $cacheable, t('Text format contains proper cache property.'));
   }
 
   /**
@@ -116,20 +116,20 @@ class FilterCRUDTestCase extends DrupalWebTestCase {
       $t_args = array('%format' => $format->name, '%filter' => $name);
 
       // Verify that filter status is properly stored.
-      $this->assertEqual($filter->status, $format_filters[$name]['status'], 'Database: Proper status for ' . $t_args['%filter'] . ' in text format ' . $t_args['%format'] . '.');
+      $this->assertEqual($filter->status, $format_filters[$name]['status'], t('Database: Proper status for %filter in text format %format.', $t_args));
 
       // Verify that filter settings were properly stored.
-      $this->assertEqual(unserialize($filter->settings), isset($format_filters[$name]['settings']) ? $format_filters[$name]['settings'] : array(), 'Database: Proper filter settings for ' . $t_args['%filter'] . ' in text format ' . $t_args['%format'] . '.');
+      $this->assertEqual(unserialize($filter->settings), isset($format_filters[$name]['settings']) ? $format_filters[$name]['settings'] : array(), t('Database: Proper filter settings for %filter in text format %format.', $t_args));
 
       // Verify that each filter has a module name assigned.
-      $this->assertTrue(!empty($filter->module), 'Database: Proper module name for ' . $t_args['%filter'] . ' in text format ' . $t_args['%format'] . '.');
+      $this->assertTrue(!empty($filter->module), t('Database: Proper module name for %filter in text format %format.', $t_args));
 
       // Remove the filter from the copy of saved $format to check whether all
       // filters have been processed later.
       unset($format_filters[$name]);
     }
     // Verify that all filters have been processed.
-    $this->assertTrue(empty($format_filters), 'Database contains values for all filters in the saved format.');
+    $this->assertTrue(empty($format_filters), t('Database contains values for all filters in the saved format.'));
 
     // Verify filter_list_format().
     $filters = filter_list_format($format->format);
@@ -138,20 +138,20 @@ class FilterCRUDTestCase extends DrupalWebTestCase {
       $t_args = array('%format' => $format->name, '%filter' => $name);
 
       // Verify that filter status is properly stored.
-      $this->assertEqual($filter->status, $format_filters[$name]['status'], 'filter_list_format: Proper status for ' . $t_args['%filter'] . ' in text format ' . $t_args['%format'] . '.');
+      $this->assertEqual($filter->status, $format_filters[$name]['status'], t('filter_list_format: Proper status for %filter in text format %format.', $t_args));
 
       // Verify that filter settings were properly stored.
-      $this->assertEqual($filter->settings, isset($format_filters[$name]['settings']) ? $format_filters[$name]['settings'] : array(), 'filter_list_format: Proper filter settings for ' . $t_args['%filter'] . ' in text format ' . $t_args['%format'] . '.');
+      $this->assertEqual($filter->settings, isset($format_filters[$name]['settings']) ? $format_filters[$name]['settings'] : array(), t('filter_list_format: Proper filter settings for %filter in text format %format.', $t_args));
 
       // Verify that each filter has a module name assigned.
-      $this->assertTrue(!empty($filter->module), 'filter_list_format: Proper module name for ' . $t_args['%filter'] . ' in text format ' . $t_args['%format'] . '.');
+      $this->assertTrue(!empty($filter->module), t('filter_list_format: Proper module name for %filter in text format %format.', $t_args));
 
       // Remove the filter from the copy of saved $format to check whether all
       // filters have been processed later.
       unset($format_filters[$name]);
     }
     // Verify that all filters have been processed.
-    $this->assertTrue(empty($format_filters), 'filter_list_format: Loaded filters contain values for all filters in the saved format.');
+    $this->assertTrue(empty($format_filters), t('filter_list_format: Loaded filters contain values for all filters in the saved format.'));
   }
 }
 
@@ -204,7 +204,7 @@ class FilterAdminTestCase extends DrupalWebTestCase {
 
     // Verify that deleted text format no longer exists.
     $this->drupalGet('admin/config/content/formats/' . $format->format);
-    $this->assertResponse(404, 'Deleted text format no longer exists.');
+    $this->assertResponse(404, t('Deleted text format no longer exists.'));
   }
 
   /**
@@ -219,44 +219,44 @@ class FilterAdminTestCase extends DrupalWebTestCase {
     list($filtered, $full, $plain) = $this->checkFilterFormats();
 
     // Check that the fallback format exists and cannot be deleted.
-    $this->assertTrue(!empty($plain) && $plain == filter_fallback_format(), 'The fallback format is set to plain text.');
+    $this->assertTrue(!empty($plain) && $plain == filter_fallback_format(), t('The fallback format is set to plain text.'));
     $this->drupalGet('admin/config/content/formats');
-    $this->assertNoRaw('admin/config/content/formats/' . $plain . '/delete', 'Delete link for the fallback format not found.');
+    $this->assertNoRaw('admin/config/content/formats/' . $plain . '/delete', t('Delete link for the fallback format not found.'));
     $this->drupalGet('admin/config/content/formats/' . $plain . '/delete');
-    $this->assertResponse(403, 'The fallback format cannot be deleted.');
+    $this->assertResponse(403, t('The fallback format cannot be deleted.'));
 
     // Verify access permissions to Full HTML format.
-    $this->assertTrue(filter_access(filter_format_load($full), $this->admin_user), 'Admin user may use Full HTML.');
-    $this->assertFalse(filter_access(filter_format_load($full), $this->web_user), 'Web user may not use Full HTML.');
+    $this->assertTrue(filter_access(filter_format_load($full), $this->admin_user), t('Admin user may use Full HTML.'));
+    $this->assertFalse(filter_access(filter_format_load($full), $this->web_user), t('Web user may not use Full HTML.'));
 
     // Add an additional tag.
     $edit = array();
     $edit['filters[filter_html][settings][allowed_html]'] = '<a> <em> <strong> <cite> <code> <ul> <ol> <li> <dl> <dt> <dd> <quote>';
     $this->drupalPost('admin/config/content/formats/' . $filtered, $edit, t('Save configuration'));
-    $this->assertFieldByName('filters[filter_html][settings][allowed_html]', $edit['filters[filter_html][settings][allowed_html]'], 'Allowed HTML tag added.');
+    $this->assertFieldByName('filters[filter_html][settings][allowed_html]', $edit['filters[filter_html][settings][allowed_html]'], t('Allowed HTML tag added.'));
 
     $result = db_query('SELECT * FROM {cache_filter}')->fetchObject();
-    $this->assertFalse($result, 'Cache cleared.');
+    $this->assertFalse($result, t('Cache cleared.'));
 
     $elements = $this->xpath('//select[@name=:first]/following::select[@name=:second]', array(
       ':first' => 'filters[' . $first_filter . '][weight]',
       ':second' => 'filters[' . $second_filter . '][weight]',
     ));
-    $this->assertTrue(!empty($elements), 'Order confirmed in admin interface.');
+    $this->assertTrue(!empty($elements), t('Order confirmed in admin interface.'));
 
     // Reorder filters.
     $edit = array();
     $edit['filters[' . $second_filter . '][weight]'] = 1;
     $edit['filters[' . $first_filter . '][weight]'] = 2;
     $this->drupalPost(NULL, $edit, t('Save configuration'));
-    $this->assertFieldByName('filters[' . $second_filter . '][weight]', 1, 'Order saved successfully.');
-    $this->assertFieldByName('filters[' . $first_filter . '][weight]', 2, 'Order saved successfully.');
+    $this->assertFieldByName('filters[' . $second_filter . '][weight]', 1, t('Order saved successfully.'));
+    $this->assertFieldByName('filters[' . $first_filter . '][weight]', 2, t('Order saved successfully.'));
 
     $elements = $this->xpath('//select[@name=:first]/following::select[@name=:second]', array(
       ':first' => 'filters[' . $second_filter . '][weight]',
       ':second' => 'filters[' . $first_filter . '][weight]',
     ));
-    $this->assertTrue(!empty($elements), 'Reorder confirmed in admin interface.');
+    $this->assertTrue(!empty($elements), t('Reorder confirmed in admin interface.'));
 
     $result = db_query('SELECT * FROM {filter} WHERE format = :format ORDER BY weight ASC', array(':format' => $filtered));
     $filters = array();
@@ -265,7 +265,7 @@ class FilterAdminTestCase extends DrupalWebTestCase {
         $filters[] = $filter;
       }
     }
-    $this->assertTrue(($filters[0]->name == $second_filter && $filters[1]->name == $first_filter), 'Order confirmed in database.');
+    $this->assertTrue(($filters[0]->name == $second_filter && $filters[1]->name == $first_filter), t('Order confirmed in database.'));
 
     // Add format.
     $edit = array();
@@ -274,18 +274,18 @@ class FilterAdminTestCase extends DrupalWebTestCase {
     $edit['filters[' . $second_filter . '][status]'] = TRUE;
     $edit['filters[' . $first_filter . '][status]'] = TRUE;
     $this->drupalPost('admin/config/content/formats/add', $edit, t('Save configuration'));
-    $this->assertRaw(t('Added text format %format.', array('%format' => $edit['name'])), 'New filter created.');
+    $this->assertRaw(t('Added text format %format.', array('%format' => $edit['name'])), t('New filter created.'));
 
     $format = $this->getFormat($edit['name']);
-    $this->assertNotNull($format, 'Format found in database.');
+    $this->assertNotNull($format, t('Format found in database.'));
 
-    $this->assertFieldByName('roles[2]', '', 'Role found.');
-    $this->assertFieldByName('filters[' . $second_filter . '][status]', '', 'Line break filter found.');
-    $this->assertFieldByName('filters[' . $first_filter . '][status]', '', 'Url filter found.');
+    $this->assertFieldByName('roles[2]', '', t('Role found.'));
+    $this->assertFieldByName('filters[' . $second_filter . '][status]', '', t('Line break filter found.'));
+    $this->assertFieldByName('filters[' . $first_filter . '][status]', '', t('Url filter found.'));
 
     // Delete new filter.
     $this->drupalPost('admin/config/content/formats/' . $format->format . '/delete', array(), t('Delete'));
-    $this->assertRaw(t('Deleted text format %format.', array('%format' => $edit['name'])), 'Format successfully deleted.');
+    $this->assertRaw(t('Deleted text format %format.', array('%format' => $edit['name'])), t('Format successfully deleted.'));
 
     // Allow authenticated users on full HTML.
     $format = filter_format_load($full);
@@ -293,14 +293,14 @@ class FilterAdminTestCase extends DrupalWebTestCase {
     $edit['roles[1]'] = 0;
     $edit['roles[2]'] = 1;
     $this->drupalPost('admin/config/content/formats/' . $full, $edit, t('Save configuration'));
-    $this->assertRaw(t('The text format %format has been updated.', array('%format' => $format->name)), 'Full HTML format successfully updated.');
+    $this->assertRaw(t('The text format %format has been updated.', array('%format' => $format->name)), t('Full HTML format successfully updated.'));
 
     // Switch user.
     $this->drupalLogout();
     $this->drupalLogin($this->web_user);
 
     $this->drupalGet('node/add/page');
-    $this->assertRaw('<option value="' . $full . '">Full HTML</option>', 'Full HTML filter accessible.');
+    $this->assertRaw('<option value="' . $full . '">Full HTML</option>', t('Full HTML filter accessible.'));
 
     // Use filtered HTML and see if it removes tags that are not allowed.
     $body = '<em>' . $this->randomName() . '</em>';
@@ -313,20 +313,20 @@ class FilterAdminTestCase extends DrupalWebTestCase {
     $edit["body[$langcode][0][value]"] = $text;
     $edit["body[$langcode][0][format]"] = $filtered;
     $this->drupalPost('node/add/page', $edit, t('Save'));
-    $this->assertRaw(t('Basic page %title has been created.', array('%title' => $edit["title"])), 'Filtered node created.');
+    $this->assertRaw(t('Basic page %title has been created.', array('%title' => $edit["title"])), t('Filtered node created.'));
 
     $node = $this->drupalGetNodeByTitle($edit["title"]);
-    $this->assertTrue($node, 'Node found in database.');
+    $this->assertTrue($node, t('Node found in database.'));
 
     $this->drupalGet('node/' . $node->nid);
-    $this->assertRaw($body . $extra_text, 'Filter removed invalid tag.');
+    $this->assertRaw($body . $extra_text, t('Filter removed invalid tag.'));
 
     // Use plain text and see if it escapes all tags, whether allowed or not.
     $edit = array();
     $edit["body[$langcode][0][format]"] = $plain;
     $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
     $this->drupalGet('node/' . $node->nid);
-    $this->assertText(check_plain($text), 'The "Plain text" text format escapes all HTML tags.');
+    $this->assertText(check_plain($text), t('The "Plain text" text format escapes all HTML tags.'));
 
     // Switch user.
     $this->drupalLogout();
@@ -337,22 +337,22 @@ class FilterAdminTestCase extends DrupalWebTestCase {
     $edit = array();
     $edit['filters[filter_html][settings][allowed_html]'] = '<a> <em> <strong> <cite> <code> <ul> <ol> <li> <dl> <dt> <dd>';
     $this->drupalPost('admin/config/content/formats/' . $filtered, $edit, t('Save configuration'));
-    $this->assertFieldByName('filters[filter_html][settings][allowed_html]', $edit['filters[filter_html][settings][allowed_html]'], 'Changes reverted.');
+    $this->assertFieldByName('filters[filter_html][settings][allowed_html]', $edit['filters[filter_html][settings][allowed_html]'], t('Changes reverted.'));
 
     // Full HTML.
     $edit = array();
     $edit['roles[2]'] = FALSE;
     $this->drupalPost('admin/config/content/formats/' . $full, $edit, t('Save configuration'));
-    $this->assertRaw(t('The text format %format has been updated.', array('%format' => $format->name)), 'Full HTML format successfully reverted.');
-    $this->assertFieldByName('roles[2]', $edit['roles[2]'], 'Changes reverted.');
+    $this->assertRaw(t('The text format %format has been updated.', array('%format' => $format->name)), t('Full HTML format successfully reverted.'));
+    $this->assertFieldByName('roles[2]', $edit['roles[2]'], t('Changes reverted.'));
 
     // Filter order.
     $edit = array();
     $edit['filters[' . $second_filter . '][weight]'] = 2;
     $edit['filters[' . $first_filter . '][weight]'] = 1;
     $this->drupalPost('admin/config/content/formats/' . $filtered, $edit, t('Save configuration'));
-    $this->assertFieldByName('filters[' . $second_filter . '][weight]', $edit['filters[' . $second_filter . '][weight]'], 'Changes reverted.');
-    $this->assertFieldByName('filters[' . $first_filter . '][weight]', $edit['filters[' . $first_filter . '][weight]'], 'Changes reverted.');
+    $this->assertFieldByName('filters[' . $second_filter . '][weight]', $edit['filters[' . $second_filter . '][weight]'], t('Changes reverted.'));
+    $this->assertFieldByName('filters[' . $first_filter . '][weight]', $edit['filters[' . $first_filter . '][weight]'], t('Changes reverted.'));
   }
 
   /**
@@ -441,28 +441,28 @@ class FilterFormatAccessTestCase extends DrupalWebTestCase {
   function testFormatPermissions() {
     // Make sure that a regular user only has access to the text format they
     // were granted access to, as well to the fallback format.
-    $this->assertTrue(filter_access($this->allowed_format, $this->web_user), 'A regular user has access to a text format they were granted access to.');
-    $this->assertFalse(filter_access($this->disallowed_format, $this->web_user), 'A regular user does not have access to a text format they were not granted access to.');
-    $this->assertTrue(filter_access(filter_format_load(filter_fallback_format()), $this->web_user), 'A regular user has access to the fallback format.');
+    $this->assertTrue(filter_access($this->allowed_format, $this->web_user), t('A regular user has access to a text format they were granted access to.'));
+    $this->assertFalse(filter_access($this->disallowed_format, $this->web_user), t('A regular user does not have access to a text format they were not granted access to.'));
+    $this->assertTrue(filter_access(filter_format_load(filter_fallback_format()), $this->web_user), t('A regular user has access to the fallback format.'));
 
     // Perform similar checks as above, but now against the entire list of
     // available formats for this user.
-    $this->assertTrue(in_array($this->allowed_format->format, array_keys(filter_formats($this->web_user))), 'The allowed format appears in the list of available formats for a regular user.');
-    $this->assertFalse(in_array($this->disallowed_format->format, array_keys(filter_formats($this->web_user))), 'The disallowed format does not appear in the list of available formats for a regular user.');
-    $this->assertTrue(in_array(filter_fallback_format(), array_keys(filter_formats($this->web_user))), 'The fallback format appears in the list of available formats for a regular user.');
+    $this->assertTrue(in_array($this->allowed_format->format, array_keys(filter_formats($this->web_user))), t('The allowed format appears in the list of available formats for a regular user.'));
+    $this->assertFalse(in_array($this->disallowed_format->format, array_keys(filter_formats($this->web_user))), t('The disallowed format does not appear in the list of available formats for a regular user.'));
+    $this->assertTrue(in_array(filter_fallback_format(), array_keys(filter_formats($this->web_user))), t('The fallback format appears in the list of available formats for a regular user.'));
 
     // Make sure that a regular user only has permission to use the format
     // they were granted access to.
-    $this->assertTrue(user_access(filter_permission_name($this->allowed_format), $this->web_user), 'A regular user has permission to use the allowed text format.');
-    $this->assertFalse(user_access(filter_permission_name($this->disallowed_format), $this->web_user), 'A regular user does not have permission to use the disallowed text format.');
+    $this->assertTrue(user_access(filter_permission_name($this->allowed_format), $this->web_user), t('A regular user has permission to use the allowed text format.'));
+    $this->assertFalse(user_access(filter_permission_name($this->disallowed_format), $this->web_user), t('A regular user does not have permission to use the disallowed text format.'));
 
     // Make sure that the allowed format appears on the node form and that
     // the disallowed format does not.
     $this->drupalLogin($this->web_user);
     $this->drupalGet('node/add/page');
-    $this->assertRaw($this->formatSelectorHTML($this->allowed_format), 'The allowed text format appears as an option when adding a new node.');
-    $this->assertNoRaw($this->formatSelectorHTML($this->disallowed_format), 'The disallowed text format does not appear as an option when adding a new node.');
-    $this->assertRaw($this->formatSelectorHTML(filter_format_load(filter_fallback_format())), 'The fallback format appears as an option when adding a new node.');
+    $this->assertRaw($this->formatSelectorHTML($this->allowed_format), t('The allowed text format appears as an option when adding a new node.'));
+    $this->assertNoRaw($this->formatSelectorHTML($this->disallowed_format), t('The disallowed text format does not appear as an option when adding a new node.'));
+    $this->assertRaw($this->formatSelectorHTML(filter_format_load(filter_fallback_format())), t('The fallback format appears as an option when adding a new node.'));
   }
 
   function testFormatRoles() {
@@ -472,17 +472,17 @@ class FilterFormatAccessTestCase extends DrupalWebTestCase {
     // Check that this role appears in the list of roles that have access to an
     // allowed text format, but does not appear in the list of roles that have
     // access to a disallowed text format.
-    $this->assertTrue(in_array($rid, array_keys(filter_get_roles_by_format($this->allowed_format))), 'A role which has access to a text format appears in the list of roles that have access to that format.');
-    $this->assertFalse(in_array($rid, array_keys(filter_get_roles_by_format($this->disallowed_format))), 'A role which does not have access to a text format does not appear in the list of roles that have access to that format.');
+    $this->assertTrue(in_array($rid, array_keys(filter_get_roles_by_format($this->allowed_format))), t('A role which has access to a text format appears in the list of roles that have access to that format.'));
+    $this->assertFalse(in_array($rid, array_keys(filter_get_roles_by_format($this->disallowed_format))), t('A role which does not have access to a text format does not appear in the list of roles that have access to that format.'));
 
     // Check that the correct text format appears in the list of formats
     // available to that role.
-    $this->assertTrue(in_array($this->allowed_format->format, array_keys(filter_get_formats_by_role($rid))), 'A text format which a role has access to appears in the list of formats available to that role.');
-    $this->assertFalse(in_array($this->disallowed_format->format, array_keys(filter_get_formats_by_role($rid))), 'A text format which a role does not have access to does not appear in the list of formats available to that role.');
+    $this->assertTrue(in_array($this->allowed_format->format, array_keys(filter_get_formats_by_role($rid))), t('A text format which a role has access to appears in the list of formats available to that role.'));
+    $this->assertFalse(in_array($this->disallowed_format->format, array_keys(filter_get_formats_by_role($rid))), t('A text format which a role does not have access to does not appear in the list of formats available to that role.'));
 
     // Check that the fallback format is always allowed.
-    $this->assertEqual(filter_get_roles_by_format(filter_format_load(filter_fallback_format())), user_roles(), 'All roles have access to the fallback format.');
-    $this->assertTrue(in_array(filter_fallback_format(), array_keys(filter_get_formats_by_role($rid))), 'The fallback format appears in the list of allowed formats for any role.');
+    $this->assertEqual(filter_get_roles_by_format(filter_format_load(filter_fallback_format())), user_roles(), t('All roles have access to the fallback format.'));
+    $this->assertTrue(in_array(filter_fallback_format(), array_keys(filter_get_formats_by_role($rid))), t('The fallback format appears in the list of allowed formats for any role.'));
   }
 
   /**
@@ -516,19 +516,19 @@ class FilterFormatAccessTestCase extends DrupalWebTestCase {
     $this->clickLink(t('Edit'));
 
     // Verify that body field is read-only and contains replacement value.
-    $this->assertFieldByXPath("//textarea[@name='$body_value_key' and @disabled='disabled']", t('This field has been disabled because you do not have sufficient permissions to edit it.'), 'Text format access denied message found.');
+    $this->assertFieldByXPath("//textarea[@name='$body_value_key' and @disabled='disabled']", t('This field has been disabled because you do not have sufficient permissions to edit it.'), t('Text format access denied message found.'));
 
     // Verify that title can be changed, but preview displays original body.
     $new_edit = array();
     $new_edit['title'] = $this->randomName(8);
     $this->drupalPost(NULL, $new_edit, t('Preview'));
-    $this->assertText($edit[$body_value_key], 'Old body found in preview.');
+    $this->assertText($edit[$body_value_key], t('Old body found in preview.'));
 
     // Save and verify that only the title was changed.
     $this->drupalPost(NULL, $new_edit, t('Save'));
-    $this->assertNoText($edit['title'], 'Old title not found.');
-    $this->assertText($new_edit['title'], 'New title found.');
-    $this->assertText($edit[$body_value_key], 'Old body found.');
+    $this->assertNoText($edit['title'], t('Old title not found.'));
+    $this->assertText($new_edit['title'], t('New title found.'));
+    $this->assertText($edit[$body_value_key], t('Old body found.'));
 
     // Delete the Full HTML text format.
     filter_format_delete($this->full_html_format);
@@ -536,8 +536,8 @@ class FilterFormatAccessTestCase extends DrupalWebTestCase {
 
     // Verify that body field can be edited and a new format can be selected.
     $this->drupalGet('node/' . $node->nid . '/edit');
-    $this->assertNoFieldByXPath("//textarea[@name='$body_value_key' and @disabled='disabled']", NULL, 'Text format access denied message not found.');
-    $this->assertFieldByXPath("//select[@name='$body_format_key']", NULL, 'Text format selector found.');
+    $this->assertNoFieldByXPath("//textarea[@name='$body_value_key' and @disabled='disabled']", NULL, t('Text format access denied message not found.'));
+    $this->assertFieldByXPath("//select[@name='$body_format_key']", NULL, t('Text format selector found.'));
   }
 
   /**
@@ -598,8 +598,8 @@ class FilterDefaultFormatTestCase extends DrupalWebTestCase {
 
     // Check that each user's default format is the lowest weighted format that
     // the user has access to.
-    $this->assertEqual(filter_default_format($first_user), $first_format->format, "The first user's default format is the lowest weighted format that the user has access to.");
-    $this->assertEqual(filter_default_format($second_user), $second_format->format, "The second user's default format is the lowest weighted format that the user has access to, and is different than the first user's.");
+    $this->assertEqual(filter_default_format($first_user), $first_format->format, t("The first user's default format is the lowest weighted format that the user has access to."));
+    $this->assertEqual(filter_default_format($second_user), $second_format->format, t("The second user's default format is the lowest weighted format that the user has access to, and is different than the first user's."));
 
     // Reorder the two formats, and check that both users now have the same
     // default.
@@ -607,7 +607,7 @@ class FilterDefaultFormatTestCase extends DrupalWebTestCase {
     $edit['formats[' . $second_format->format . '][weight]'] = $minimum_weight - 3;
     $this->drupalPost('admin/config/content/formats', $edit, t('Save changes'));
     $this->resetFilterCaches();
-    $this->assertEqual(filter_default_format($first_user), filter_default_format($second_user), 'After the formats are reordered, both users have the same default format.');
+    $this->assertEqual(filter_default_format($first_user), filter_default_format($second_user), t('After the formats are reordered, both users have the same default format.'));
   }
 
   /**
@@ -635,7 +635,7 @@ class FilterNoFormatTestCase extends DrupalWebTestCase {
 
     // Make sure that when this text is run through check_markup() with no text
     // format, it is filtered as though it is in the fallback format.
-    $this->assertEqual(check_markup($text), check_markup($text, filter_fallback_format()), 'Text with no format is filtered the same as text in the fallback format.');
+    $this->assertEqual(check_markup($text), check_markup($text, filter_fallback_format()), t('Text with no format is filtered the same as text in the fallback format.'));
   }
 }
 
@@ -658,24 +658,24 @@ class FilterUnitTestCase extends DrupalUnitTestCase {
     // Single line breaks should be changed to <br /> tags, while paragraphs
     // separated with double line breaks should be enclosed with <p></p> tags.
     $f = _filter_autop("aaa\nbbb\n\nccc");
-    $this->assertEqual(str_replace("\n", '', $f), "<p>aaa<br />bbb</p><p>ccc</p>", 'Line breaking basic case.');
+    $this->assertEqual(str_replace("\n", '', $f), "<p>aaa<br />bbb</p><p>ccc</p>", t('Line breaking basic case.'));
 
     // Text within some contexts should not be processed.
     $f = _filter_autop("<script>aaa\nbbb\n\nccc</script>");
-    $this->assertEqual($f, "<script>aaa\nbbb\n\nccc</script>", 'Line breaking -- do not break scripts.');
+    $this->assertEqual($f, "<script>aaa\nbbb\n\nccc</script>", t('Line breaking -- do not break scripts.'));
 
     $f = _filter_autop('<p><div>  </div></p>');
-    $this->assertEqual(substr_count($f, '<p>'), substr_count($f, '</p>'), 'Make sure line breaking produces matching paragraph tags.');
+    $this->assertEqual(substr_count($f, '<p>'), substr_count($f, '</p>'), t('Make sure line breaking produces matching paragraph tags.'));
 
     $f = _filter_autop('<div><p>  </p></div>');
-    $this->assertEqual(substr_count($f, '<p>'), substr_count($f, '</p>'), 'Make sure line breaking produces matching paragraph tags.');
+    $this->assertEqual(substr_count($f, '<p>'), substr_count($f, '</p>'), t('Make sure line breaking produces matching paragraph tags.'));
 
     $f = _filter_autop('<blockquote><pre>aaa</pre></blockquote>');
-    $this->assertEqual(substr_count($f, '<p>'), substr_count($f, '</p>'), 'Make sure line breaking produces matching paragraph tags.');
+    $this->assertEqual(substr_count($f, '<p>'), substr_count($f, '</p>'), t('Make sure line breaking produces matching paragraph tags.'));
 
     $limit = max(ini_get('pcre.backtrack_limit'), ini_get('pcre.recursion_limit'));
     $f = _filter_autop($this->randomName($limit));
-    $this->assertNotEqual($f, '', 'Make sure line breaking can process long strings.');
+    $this->assertNotEqual($f, '', t('Make sure line breaking can process long strings.'));
   }
 
   /**
@@ -693,172 +693,172 @@ class FilterUnitTestCase extends DrupalUnitTestCase {
   function testHtmlFilter() {
     // Tag stripping, different ways to work around removal of HTML tags.
     $f = filter_xss('<script>alert(0)</script>');
-    $this->assertNoNormalized($f, 'script', 'HTML tag stripping -- simple script without special characters.');
+    $this->assertNoNormalized($f, 'script', t('HTML tag stripping -- simple script without special characters.'));
 
     $f = filter_xss('<script src="http://www.example.com" />');
-    $this->assertNoNormalized($f, 'script', 'HTML tag stripping -- empty script with source.');
+    $this->assertNoNormalized($f, 'script', t('HTML tag stripping -- empty script with source.'));
 
     $f = filter_xss('<ScRipt sRc=http://www.example.com/>');
-    $this->assertNoNormalized($f, 'script', 'HTML tag stripping evasion -- varying case.');
+    $this->assertNoNormalized($f, 'script', t('HTML tag stripping evasion -- varying case.'));
 
     $f = filter_xss("<script\nsrc\n=\nhttp://www.example.com/\n>");
-    $this->assertNoNormalized($f, 'script', 'HTML tag stripping evasion -- multiline tag.');
+    $this->assertNoNormalized($f, 'script', t('HTML tag stripping evasion -- multiline tag.'));
 
     $f = filter_xss('<script/a src=http://www.example.com/a.js></script>');
-    $this->assertNoNormalized($f, 'script', 'HTML tag stripping evasion -- non whitespace character after tag name.');
+    $this->assertNoNormalized($f, 'script', t('HTML tag stripping evasion -- non whitespace character after tag name.'));
 
     $f = filter_xss('<script/src=http://www.example.com/a.js></script>');
-    $this->assertNoNormalized($f, 'script', 'HTML tag stripping evasion -- no space between tag and attribute.');
+    $this->assertNoNormalized($f, 'script', t('HTML tag stripping evasion -- no space between tag and attribute.'));
 
     // Null between < and tag name works at least with IE6.
     $f = filter_xss("<\0scr\0ipt>alert(0)</script>");
-    $this->assertNoNormalized($f, 'ipt', 'HTML tag stripping evasion -- breaking HTML with nulls.');
+    $this->assertNoNormalized($f, 'ipt', t('HTML tag stripping evasion -- breaking HTML with nulls.'));
 
     $f = filter_xss("<scrscriptipt src=http://www.example.com/a.js>");
-    $this->assertNoNormalized($f, 'script', 'HTML tag stripping evasion -- filter just removing "script".');
+    $this->assertNoNormalized($f, 'script', t('HTML tag stripping evasion -- filter just removing "script".'));
 
     $f = filter_xss('<<script>alert(0);//<</script>');
-    $this->assertNoNormalized($f, 'script', 'HTML tag stripping evasion -- double opening brackets.');
+    $this->assertNoNormalized($f, 'script', t('HTML tag stripping evasion -- double opening brackets.'));
 
     $f = filter_xss('<script src=http://www.example.com/a.js?<b>');
-    $this->assertNoNormalized($f, 'script', 'HTML tag stripping evasion -- no closing tag.');
+    $this->assertNoNormalized($f, 'script', t('HTML tag stripping evasion -- no closing tag.'));
 
     // DRUPAL-SA-2008-047: This doesn't seem exploitable, but the filter should
     // work consistently.
     $f = filter_xss('<script>>');
-    $this->assertNoNormalized($f, 'script', 'HTML tag stripping evasion -- double closing tag.');
+    $this->assertNoNormalized($f, 'script', t('HTML tag stripping evasion -- double closing tag.'));
 
     $f = filter_xss('<script src=//www.example.com/.a>');
-    $this->assertNoNormalized($f, 'script', 'HTML tag stripping evasion -- no scheme or ending slash.');
+    $this->assertNoNormalized($f, 'script', t('HTML tag stripping evasion -- no scheme or ending slash.'));
 
     $f = filter_xss('<script src=http://www.example.com/.a');
-    $this->assertNoNormalized($f, 'script', 'HTML tag stripping evasion -- no closing bracket.');
+    $this->assertNoNormalized($f, 'script', t('HTML tag stripping evasion -- no closing bracket.'));
 
     $f = filter_xss('<script src=http://www.example.com/ <');
-    $this->assertNoNormalized($f, 'script', 'HTML tag stripping evasion -- opening instead of closing bracket.');
+    $this->assertNoNormalized($f, 'script', t('HTML tag stripping evasion -- opening instead of closing bracket.'));
 
     $f = filter_xss('<nosuchtag attribute="newScriptInjectionVector">');
-    $this->assertNoNormalized($f, 'nosuchtag', 'HTML tag stripping evasion -- unknown tag.');
+    $this->assertNoNormalized($f, 'nosuchtag', t('HTML tag stripping evasion -- unknown tag.'));
 
     $f = filter_xss('<?xml:namespace ns="urn:schemas-microsoft-com:time">');
-    $this->assertTrue(stripos($f, '<?xml') === FALSE, 'HTML tag stripping evasion -- starting with a question sign (processing instructions).');
+    $this->assertTrue(stripos($f, '<?xml') === FALSE, t('HTML tag stripping evasion -- starting with a question sign (processing instructions).'));
 
     $f = filter_xss('<t:set attributeName="innerHTML" to="&lt;script defer&gt;alert(0)&lt;/script&gt;">');
-    $this->assertNoNormalized($f, 't:set', 'HTML tag stripping evasion -- colon in the tag name (namespaces\' tricks).');
+    $this->assertNoNormalized($f, 't:set', t('HTML tag stripping evasion -- colon in the tag name (namespaces\' tricks).'));
 
     $f = filter_xss('<img """><script>alert(0)</script>', array('img'));
-    $this->assertNoNormalized($f, 'script', 'HTML tag stripping evasion -- a malformed image tag.');
+    $this->assertNoNormalized($f, 'script', t('HTML tag stripping evasion -- a malformed image tag.'));
 
     $f = filter_xss('<blockquote><script>alert(0)</script></blockquote>', array('blockquote'));
-    $this->assertNoNormalized($f, 'script', 'HTML tag stripping evasion -- script in a blockqoute.');
+    $this->assertNoNormalized($f, 'script', t('HTML tag stripping evasion -- script in a blockqoute.'));
 
     $f = filter_xss("<!--[if true]><script>alert(0)</script><![endif]-->");
-    $this->assertNoNormalized($f, 'script', 'HTML tag stripping evasion -- script within a comment.');
+    $this->assertNoNormalized($f, 'script', t('HTML tag stripping evasion -- script within a comment.'));
 
     // Dangerous attributes removal.
     $f = filter_xss('<p onmouseover="http://www.example.com/">', array('p'));
-    $this->assertNoNormalized($f, 'onmouseover', 'HTML filter attributes removal -- events, no evasion.');
+    $this->assertNoNormalized($f, 'onmouseover', t('HTML filter attributes removal -- events, no evasion.'));
 
     $f = filter_xss('<li style="list-style-image: url(javascript:alert(0))">', array('li'));
-    $this->assertNoNormalized($f, 'style', 'HTML filter attributes removal -- style, no evasion.');
+    $this->assertNoNormalized($f, 'style', t('HTML filter attributes removal -- style, no evasion.'));
 
     $f = filter_xss('<img onerror   =alert(0)>', array('img'));
-    $this->assertNoNormalized($f, 'onerror', 'HTML filter attributes removal evasion -- spaces before equals sign.');
+    $this->assertNoNormalized($f, 'onerror', t('HTML filter attributes removal evasion -- spaces before equals sign.'));
 
     $f = filter_xss('<img onabort!#$%&()*~+-_.,:;?@[/|\]^`=alert(0)>', array('img'));
-    $this->assertNoNormalized($f, 'onabort', 'HTML filter attributes removal evasion -- non alphanumeric characters before equals sign.');
+    $this->assertNoNormalized($f, 'onabort', t('HTML filter attributes removal evasion -- non alphanumeric characters before equals sign.'));
 
     $f = filter_xss('<img oNmediAError=alert(0)>', array('img'));
-    $this->assertNoNormalized($f, 'onmediaerror', 'HTML filter attributes removal evasion -- varying case.');
+    $this->assertNoNormalized($f, 'onmediaerror', t('HTML filter attributes removal evasion -- varying case.'));
 
     // Works at least with IE6.
     $f = filter_xss("<img o\0nfocus\0=alert(0)>", array('img'));
-    $this->assertNoNormalized($f, 'focus', 'HTML filter attributes removal evasion -- breaking with nulls.');
+    $this->assertNoNormalized($f, 'focus', t('HTML filter attributes removal evasion -- breaking with nulls.'));
 
     // Only whitelisted scheme names allowed in attributes.
     $f = filter_xss('<img src="javascript:alert(0)">', array('img'));
-    $this->assertNoNormalized($f, 'javascript', 'HTML scheme clearing -- no evasion.');
+    $this->assertNoNormalized($f, 'javascript', t('HTML scheme clearing -- no evasion.'));
 
     $f = filter_xss('<img src=javascript:alert(0)>', array('img'));
-    $this->assertNoNormalized($f, 'javascript', 'HTML scheme clearing evasion -- no quotes.');
+    $this->assertNoNormalized($f, 'javascript', t('HTML scheme clearing evasion -- no quotes.'));
 
     // A bit like CVE-2006-0070.
     $f = filter_xss('<img src="javascript:confirm(0)">', array('img'));
-    $this->assertNoNormalized($f, 'javascript', 'HTML scheme clearing evasion -- no alert ;)');
+    $this->assertNoNormalized($f, 'javascript', t('HTML scheme clearing evasion -- no alert ;)'));
 
     $f = filter_xss('<img src=`javascript:alert(0)`>', array('img'));
-    $this->assertNoNormalized($f, 'javascript', 'HTML scheme clearing evasion -- grave accents.');
+    $this->assertNoNormalized($f, 'javascript', t('HTML scheme clearing evasion -- grave accents.'));
 
     $f = filter_xss('<img dynsrc="javascript:alert(0)">', array('img'));
-    $this->assertNoNormalized($f, 'javascript', 'HTML scheme clearing -- rare attribute.');
+    $this->assertNoNormalized($f, 'javascript', t('HTML scheme clearing -- rare attribute.'));
 
     $f = filter_xss('<table background="javascript:alert(0)">', array('table'));
-    $this->assertNoNormalized($f, 'javascript', 'HTML scheme clearing -- another tag.');
+    $this->assertNoNormalized($f, 'javascript', t('HTML scheme clearing -- another tag.'));
 
     $f = filter_xss('<base href="javascript:alert(0);//">', array('base'));
-    $this->assertNoNormalized($f, 'javascript', 'HTML scheme clearing -- one more attribute and tag.');
+    $this->assertNoNormalized($f, 'javascript', t('HTML scheme clearing -- one more attribute and tag.'));
 
     $f = filter_xss('<img src="jaVaSCriPt:alert(0)">', array('img'));
-    $this->assertNoNormalized($f, 'javascript', 'HTML scheme clearing evasion -- varying case.');
+    $this->assertNoNormalized($f, 'javascript', t('HTML scheme clearing evasion -- varying case.'));
 
     $f = filter_xss('<img src=&#106;&#97;&#118;&#97;&#115;&#99;&#114;&#105;&#112;&#116;&#58;&#97;&#108;&#101;&#114;&#116;&#40;&#48;&#41;>', array('img'));
-    $this->assertNoNormalized($f, 'javascript', 'HTML scheme clearing evasion -- UTF-8 decimal encoding.');
+    $this->assertNoNormalized($f, 'javascript', t('HTML scheme clearing evasion -- UTF-8 decimal encoding.'));
 
     $f = filter_xss('<img src=&#00000106&#0000097&#00000118&#0000097&#00000115&#0000099&#00000114&#00000105&#00000112&#00000116&#0000058&#0000097&#00000108&#00000101&#00000114&#00000116&#0000040&#0000048&#0000041>', array('img'));
-    $this->assertNoNormalized($f, 'javascript', 'HTML scheme clearing evasion -- long UTF-8 encoding.');
+    $this->assertNoNormalized($f, 'javascript', t('HTML scheme clearing evasion -- long UTF-8 encoding.'));
 
     $f = filter_xss('<img src=&#x6A&#x61&#x76&#x61&#x73&#x63&#x72&#x69&#x70&#x74&#x3A&#x61&#x6C&#x65&#x72&#x74&#x28&#x30&#x29>', array('img'));
-    $this->assertNoNormalized($f, 'javascript', 'HTML scheme clearing evasion -- UTF-8 hex encoding.');
+    $this->assertNoNormalized($f, 'javascript', t('HTML scheme clearing evasion -- UTF-8 hex encoding.'));
 
     $f = filter_xss("<img src=\"jav\tascript:alert(0)\">", array('img'));
-    $this->assertNoNormalized($f, 'script', 'HTML scheme clearing evasion -- an embedded tab.');
+    $this->assertNoNormalized($f, 'script', t('HTML scheme clearing evasion -- an embedded tab.'));
 
     $f = filter_xss('<img src="jav&#x09;ascript:alert(0)">', array('img'));
-    $this->assertNoNormalized($f, 'script', 'HTML scheme clearing evasion -- an encoded, embedded tab.');
+    $this->assertNoNormalized($f, 'script', t('HTML scheme clearing evasion -- an encoded, embedded tab.'));
 
     $f = filter_xss('<img src="jav&#x000000A;ascript:alert(0)">', array('img'));
-    $this->assertNoNormalized($f, 'script', 'HTML scheme clearing evasion -- an encoded, embedded newline.');
+    $this->assertNoNormalized($f, 'script', t('HTML scheme clearing evasion -- an encoded, embedded newline.'));
 
     // With &#xD; this test would fail, but the entity gets turned into
     // &amp;#xD;, so it's OK.
     $f = filter_xss('<img src="jav&#x0D;ascript:alert(0)">', array('img'));
-    $this->assertNoNormalized($f, 'script', 'HTML scheme clearing evasion -- an encoded, embedded carriage return.');
+    $this->assertNoNormalized($f, 'script', t('HTML scheme clearing evasion -- an encoded, embedded carriage return.'));
 
     $f = filter_xss("<img src=\"\n\n\nj\na\nva\ns\ncript:alert(0)\">", array('img'));
-    $this->assertNoNormalized($f, 'cript', 'HTML scheme clearing evasion -- broken into many lines.');
+    $this->assertNoNormalized($f, 'cript', t('HTML scheme clearing evasion -- broken into many lines.'));
 
     $f = filter_xss("<img src=\"jav\0a\0\0cript:alert(0)\">", array('img'));
-    $this->assertNoNormalized($f, 'cript', 'HTML scheme clearing evasion -- embedded nulls.');
+    $this->assertNoNormalized($f, 'cript', t('HTML scheme clearing evasion -- embedded nulls.'));
 
     $f = filter_xss('<img src=" &#14;  javascript:alert(0)">', array('img'));
-    $this->assertNoNormalized($f, 'javascript', 'HTML scheme clearing evasion -- spaces and metacharacters before scheme.');
+    $this->assertNoNormalized($f, 'javascript', t('HTML scheme clearing evasion -- spaces and metacharacters before scheme.'));
 
     $f = filter_xss('<img src="vbscript:msgbox(0)">', array('img'));
-    $this->assertNoNormalized($f, 'vbscript', 'HTML scheme clearing evasion -- another scheme.');
+    $this->assertNoNormalized($f, 'vbscript', t('HTML scheme clearing evasion -- another scheme.'));
 
     $f = filter_xss('<img src="nosuchscheme:notice(0)">', array('img'));
-    $this->assertNoNormalized($f, 'nosuchscheme', 'HTML scheme clearing evasion -- unknown scheme.');
+    $this->assertNoNormalized($f, 'nosuchscheme', t('HTML scheme clearing evasion -- unknown scheme.'));
 
     // Netscape 4.x javascript entities.
     $f = filter_xss('<br size="&{alert(0)}">', array('br'));
-    $this->assertNoNormalized($f, 'alert', 'Netscape 4.x javascript entities.');
+    $this->assertNoNormalized($f, 'alert', t('Netscape 4.x javascript entities.'));
 
     // DRUPAL-SA-2008-006: Invalid UTF-8, these only work as reflected XSS with
     // Internet Explorer 6.
     $f = filter_xss("<p arg=\"\xe0\">\" style=\"background-image: url(javascript:alert(0));\"\xe0<p>", array('p'));
-    $this->assertNoNormalized($f, 'style', 'HTML filter -- invalid UTF-8.');
+    $this->assertNoNormalized($f, 'style', t('HTML filter -- invalid UTF-8.'));
 
     $f = filter_xss("\xc0aaa");
-    $this->assertEqual($f, '', 'HTML filter -- overlong UTF-8 sequences.');
+    $this->assertEqual($f, '', t('HTML filter -- overlong UTF-8 sequences.'));
 
     $f = filter_xss("Who&#039;s Online");
-    $this->assertNormalized($f, "who's online", 'HTML filter -- html entity number');
+    $this->assertNormalized($f, "who's online", t('HTML filter -- html entity number'));
 
     $f = filter_xss("Who&amp;#039;s Online");
-    $this->assertNormalized($f, "who&#039;s online", 'HTML filter -- encoded html entity number');
+    $this->assertNormalized($f, "who&#039;s online", t('HTML filter -- encoded html entity number'));
 
     $f = filter_xss("Who&amp;amp;#039; Online");
-    $this->assertNormalized($f, "who&amp;#039; online", 'HTML filter -- double encoded html entity number');
+    $this->assertNormalized($f, "who&amp;#039; online", t('HTML filter -- double encoded html entity number'));
   }
 
   /**
@@ -887,34 +887,34 @@ class FilterUnitTestCase extends DrupalUnitTestCase {
     // HTML filter is not able to secure some tags, these should never be
     // allowed.
     $f = _filter_html('<script />', $filter);
-    $this->assertNoNormalized($f, 'script', 'HTML filter should always remove script tags.');
+    $this->assertNoNormalized($f, 'script', t('HTML filter should always remove script tags.'));
 
     $f = _filter_html('<iframe />', $filter);
-    $this->assertNoNormalized($f, 'iframe', 'HTML filter should always remove iframe tags.');
+    $this->assertNoNormalized($f, 'iframe', t('HTML filter should always remove iframe tags.'));
 
     $f = _filter_html('<object />', $filter);
-    $this->assertNoNormalized($f, 'object', 'HTML filter should always remove object tags.');
+    $this->assertNoNormalized($f, 'object', t('HTML filter should always remove object tags.'));
 
     $f = _filter_html('<style />', $filter);
-    $this->assertNoNormalized($f, 'style', 'HTML filter should always remove style tags.');
+    $this->assertNoNormalized($f, 'style', t('HTML filter should always remove style tags.'));
 
     // Some tags make CSRF attacks easier, let the user take the risk herself.
     $f = _filter_html('<img />', $filter);
-    $this->assertNoNormalized($f, 'img', 'HTML filter should remove img tags on default.');
+    $this->assertNoNormalized($f, 'img', t('HTML filter should remove img tags on default.'));
 
     $f = _filter_html('<input />', $filter);
-    $this->assertNoNormalized($f, 'img', 'HTML filter should remove input tags on default.');
+    $this->assertNoNormalized($f, 'img', t('HTML filter should remove input tags on default.'));
 
     // Filtering content of some attributes is infeasible, these shouldn't be
     // allowed too.
     $f = _filter_html('<p style="display: none;" />', $filter);
-    $this->assertNoNormalized($f, 'style', 'HTML filter should remove style attribute on default.');
+    $this->assertNoNormalized($f, 'style', t('HTML filter should remove style attribute on default.'));
 
     $f = _filter_html('<p onerror="alert(0);" />', $filter);
-    $this->assertNoNormalized($f, 'onerror', 'HTML filter should remove on* attributes on default.');
+    $this->assertNoNormalized($f, 'onerror', t('HTML filter should remove on* attributes on default.'));
 
-    $f = _filter_html('<code onerror>&nbsp;</code>', $filter);
-    $this->assertNoNormalized($f, 'onerror', 'HTML filter should remove empty on* attributes on default.');
+    $f = _filter_html('<code onerror>&nbsp;</code>', $filter);    
+    $this->assertNoNormalized($f, 'onerror', t('HTML filter should remove empty on* attributes on default.'));
   }
 
   /**
@@ -932,23 +932,23 @@ class FilterUnitTestCase extends DrupalUnitTestCase {
     // Test if the rel="nofollow" attribute is added, even if we try to prevent
     // it.
     $f = _filter_html('<a href="http://www.example.com/">text</a>', $filter);
-    $this->assertNormalized($f, 'rel="nofollow"', 'Spam deterrent -- no evasion.');
+    $this->assertNormalized($f, 'rel="nofollow"', t('Spam deterrent -- no evasion.'));
 
     $f = _filter_html('<A href="http://www.example.com/">text</a>', $filter);
-    $this->assertNormalized($f, 'rel="nofollow"', 'Spam deterrent evasion -- capital A.');
+    $this->assertNormalized($f, 'rel="nofollow"', t('Spam deterrent evasion -- capital A.'));
 
     $f = _filter_html("<a/href=\"http://www.example.com/\">text</a>", $filter);
-    $this->assertNormalized($f, 'rel="nofollow"', 'Spam deterrent evasion -- non whitespace character after tag name.');
+    $this->assertNormalized($f, 'rel="nofollow"', t('Spam deterrent evasion -- non whitespace character after tag name.'));
 
     $f = _filter_html("<\0a\0 href=\"http://www.example.com/\">text</a>", $filter);
-    $this->assertNormalized($f, 'rel="nofollow"', 'Spam deterrent evasion -- some nulls.');
+    $this->assertNormalized($f, 'rel="nofollow"', t('Spam deterrent evasion -- some nulls.'));
 
     $f = _filter_html('<!--[if true]><a href="http://www.example.com/">text</a><![endif]-->', $filter);
-    $this->assertNormalized($f, 'rel="nofollow"', 'Spam deterrent evasion -- link within a comment.');
+    $this->assertNormalized($f, 'rel="nofollow"', t('Spam deterrent evasion -- link within a comment.'));
 
     $f = _filter_html('<a href="http://www.example.com/" rel="follow">text</a>', $filter);
-    $this->assertNoNormalized($f, 'rel="follow"', 'Spam deterrent evasion -- with rel set - rel="follow" removed.');
-    $this->assertNormalized($f, 'rel="nofollow"', 'Spam deterrent evasion -- with rel set - rel="nofollow" added.');
+    $this->assertNoNormalized($f, 'rel="follow"', t('Spam deterrent evasion -- with rel set - rel="follow" removed.'));
+    $this->assertNormalized($f, 'rel="nofollow"', t('Spam deterrent evasion -- with rel set - rel="nofollow" added.'));
   }
 
   /**
@@ -957,13 +957,13 @@ class FilterUnitTestCase extends DrupalUnitTestCase {
   function testAdminHtmlFilter() {
     // DRUPAL-SA-2008-044
     $f = filter_xss_admin('<object />');
-    $this->assertNoNormalized($f, 'object', 'Admin HTML filter -- should not allow object tag.');
+    $this->assertNoNormalized($f, 'object', t('Admin HTML filter -- should not allow object tag.'));
 
     $f = filter_xss_admin('<script />');
-    $this->assertNoNormalized($f, 'script', 'Admin HTML filter -- should not allow script tag.');
+    $this->assertNoNormalized($f, 'script', t('Admin HTML filter -- should not allow script tag.'));
 
     $f = filter_xss_admin('<style /><iframe /><frame /><frameset /><meta /><link /><embed /><applet /><param /><layer />');
-    $this->assertEqual($f, '', 'Admin HTML filter -- should never allow some tags.');
+    $this->assertEqual($f, '', t('Admin HTML filter -- should never allow some tags.'));
   }
 
   /**
@@ -992,73 +992,73 @@ class FilterUnitTestCase extends DrupalUnitTestCase {
 
     // Converting URLs.
     $f = _filter_url('http://www.example.com/', $filter);
-    $this->assertEqual($f, '<a href="http://www.example.com/">http://www.example.com/</a>', 'Converting URLs.');
+    $this->assertEqual($f, '<a href="http://www.example.com/">http://www.example.com/</a>', t('Converting URLs.'));
 
     $f = _filter_url('http://www.example.com/?a=1&b=2', $filter);
-    $this->assertEqual($f, '<a href="http://www.example.com/?a=1&amp;b=2">http://www.example.com/?a=1&amp;b=2</a>', 'Converting URLs -- ampersands.');
+    $this->assertEqual($f, '<a href="http://www.example.com/?a=1&amp;b=2">http://www.example.com/?a=1&amp;b=2</a>', t('Converting URLs -- ampersands.'));
 
     $f = _filter_url('ftp://user:pass@ftp.example.com/dir1/dir2', $filter);
-    $this->assertEqual($f, '<a href="ftp://user:pass@ftp.example.com/dir1/dir2">ftp://user:pass@ftp.example.com/dir1/dir2</a>', 'Converting URLs -- FTP scheme.');
+    $this->assertEqual($f, '<a href="ftp://user:pass@ftp.example.com/dir1/dir2">ftp://user:pass@ftp.example.com/dir1/dir2</a>', t('Converting URLs -- FTP scheme.'));
 
     // Converting domain names.
     $f = _filter_url('www.example.com', $filter);
-    $this->assertEqual($f, '<a href="http://www.example.com">www.example.com</a>', 'Converting domain names.');
+    $this->assertEqual($f, '<a href="http://www.example.com">www.example.com</a>', t('Converting domain names.'));
 
     $f = _filter_url('<li>www.example.com</li>', $filter);
-    $this->assertEqual($f, '<li><a href="http://www.example.com">www.example.com</a></li>', 'Converting domain names -- domain in a list.');
+    $this->assertEqual($f, '<li><a href="http://www.example.com">www.example.com</a></li>', t('Converting domain names -- domain in a list.'));
 
     $f = _filter_url('(www.example.com/dir?a=1&b=2#a)', $filter);
-    $this->assertEqual($f, '(<a href="http://www.example.com/dir?a=1&amp;b=2#a">www.example.com/dir?a=1&amp;b=2#a</a>)', 'Converting domain names --  domain in parentheses.');
+    $this->assertEqual($f, '(<a href="http://www.example.com/dir?a=1&amp;b=2#a">www.example.com/dir?a=1&amp;b=2#a</a>)', t('Converting domain names --  domain in parentheses.'));
 
     // Converting e-mail addresses.
     $f = _filter_url('johndoe@example.com', $filter);
-    $this->assertEqual($f, '<a href="mailto:johndoe@example.com">johndoe@example.com</a>', 'Converting e-mail addresses.');
+    $this->assertEqual($f, '<a href="mailto:johndoe@example.com">johndoe@example.com</a>', t('Converting e-mail addresses.'));
 
     $f = _filter_url('aaa@sub.tv', $filter);
-    $this->assertEqual($f, '<a href="mailto:aaa@sub.tv">aaa@sub.tv</a>', 'Converting e-mail addresses -- a short e-mail from Tuvalu.');
+    $this->assertEqual($f, '<a href="mailto:aaa@sub.tv">aaa@sub.tv</a>', t('Converting e-mail addresses -- a short e-mail from Tuvalu.'));
 
     // URL trimming.
     $filter->settings['filter_url_length'] = 28;
 
     $f = _filter_url('http://www.example.com/d/ff.ext?a=1&b=2#a1', $filter);
-    $this->assertNormalized($f, 'http://www.example.com/d/ff....', 'URL trimming.');
+    $this->assertNormalized($f, 'http://www.example.com/d/ff....', t('URL trimming.'));
 
     // Not breaking existing links.
     $f = _filter_url('<a href="http://www.example.com">www.example.com</a>', $filter);
-    $this->assertEqual($f, '<a href="http://www.example.com">www.example.com</a>', 'Converting URLs -- do not break existing links.');
+    $this->assertEqual($f, '<a href="http://www.example.com">www.example.com</a>', t('Converting URLs -- do not break existing links.'));
 
     $f = _filter_url('<a href="foo">http://www.example.com</a>', $filter);
-    $this->assertEqual($f, '<a href="foo">http://www.example.com</a>', 'Converting URLs -- do not break existing, relative links.');
+    $this->assertEqual($f, '<a href="foo">http://www.example.com</a>', t('Converting URLs -- do not break existing, relative links.'));
 
     // Addresses within some tags such as code or script should not be converted.
     $f = _filter_url('<code>http://www.example.com</code>', $filter);
-    $this->assertEqual($f, '<code>http://www.example.com</code>', 'Converting URLs -- skip code contents.');
+    $this->assertEqual($f, '<code>http://www.example.com</code>', t('Converting URLs -- skip code contents.'));
 
     $f = _filter_url('<code><em>http://www.example.com</em></code>', $filter);
-    $this->assertEqual($f, '<code><em>http://www.example.com</em></code>', 'Converting URLs -- really skip code contents.');
+    $this->assertEqual($f, '<code><em>http://www.example.com</em></code>', t('Converting URLs -- really skip code contents.'));
 
     $f = _filter_url('<script>http://www.example.com</script>', $filter);
-    $this->assertEqual($f, '<script>http://www.example.com</script>', 'Converting URLs -- do not process scripts.');
+    $this->assertEqual($f, '<script>http://www.example.com</script>', t('Converting URLs -- do not process scripts.'));
 
     // Addresses in attributes should not be converted.
     $f = _filter_url('<p xmlns="http://www.example.com" />', $filter);
-    $this->assertEqual($f, '<p xmlns="http://www.example.com" />', 'Converting URLs -- do not convert addresses in attributes.');
+    $this->assertEqual($f, '<p xmlns="http://www.example.com" />', t('Converting URLs -- do not convert addresses in attributes.'));
 
     $f = _filter_url('<a title="Go to www.example.com" href="http://www.example.com">text</a>', $filter);
-    $this->assertEqual($f, '<a title="Go to www.example.com" href="http://www.example.com">text</a>', 'Converting URLs -- do not break existing links with custom title attribute.');
+    $this->assertEqual($f, '<a title="Go to www.example.com" href="http://www.example.com">text</a>', t('Converting URLs -- do not break existing links with custom title attribute.'));
 
     // Even though a dot at the end of a URL can indicate a fully qualified
     // domain name, such usage is rare compared to using a link at the end
     // of a sentence, so remove the dot from the link.
     // @todo It can also be used at the end of a filename or a query string.
     $f = _filter_url('www.example.com.', $filter);
-    $this->assertEqual($f, '<a href="http://www.example.com">www.example.com</a>.', 'Converting URLs -- do not recognize a dot at the end of a domain name (FQDNs).');
+    $this->assertEqual($f, '<a href="http://www.example.com">www.example.com</a>.', t('Converting URLs -- do not recognize a dot at the end of a domain name (FQDNs).'));
 
     $f = _filter_url('http://www.example.com.', $filter);
-    $this->assertEqual($f, '<a href="http://www.example.com">http://www.example.com</a>.', 'Converting URLs -- do not recognize a dot at the end of an URL (FQDNs).');
+    $this->assertEqual($f, '<a href="http://www.example.com">http://www.example.com</a>.', t('Converting URLs -- do not recognize a dot at the end of an URL (FQDNs).'));
 
     $f = _filter_url('www.example.com/index.php?a=.', $filter);
-    $this->assertEqual($f, '<a href="http://www.example.com/index.php?a=">www.example.com/index.php?a=</a>.', 'Converting URLs -- do forget about a dot at the end of a query string.');
+    $this->assertEqual($f, '<a href="http://www.example.com/index.php?a=">www.example.com/index.php?a=</a>.', t('Converting URLs -- do forget about a dot at the end of a query string.'));
   }
 
   /**
@@ -1069,114 +1069,114 @@ class FilterUnitTestCase extends DrupalUnitTestCase {
   function testHtmlCorrectorFilter() {
     // Tag closing.
     $f = _filter_htmlcorrector('<p>text');
-    $this->assertEqual($f, '<p>text</p>', 'HTML corrector -- tag closing at the end of input.');
+    $this->assertEqual($f, '<p>text</p>', t('HTML corrector -- tag closing at the end of input.'));
 
     $f = _filter_htmlcorrector('<p>text<p><p>text');
-    $this->assertEqual($f, '<p>text</p><p></p><p>text</p>', 'HTML corrector -- tag closing.');
+    $this->assertEqual($f, '<p>text</p><p></p><p>text</p>', t('HTML corrector -- tag closing.'));
 
     $f = _filter_htmlcorrector("<ul><li>e1<li>e2");
-    $this->assertEqual($f, "<ul><li>e1</li><li>e2</li></ul>", 'HTML corrector -- unclosed list tags.');
+    $this->assertEqual($f, "<ul><li>e1</li><li>e2</li></ul>", t('HTML corrector -- unclosed list tags.'));
 
     $f = _filter_htmlcorrector('<div id="d">content');
-    $this->assertEqual($f, '<div id="d">content</div>', 'HTML corrector -- unclosed tag with attribute.');
+    $this->assertEqual($f, '<div id="d">content</div>', t('HTML corrector -- unclosed tag with attribute.'));
 
     // XHTML slash for empty elements.
     $f = _filter_htmlcorrector('<hr><br>');
-    $this->assertEqual($f, '<hr /><br />', 'HTML corrector -- XHTML closing slash.');
+    $this->assertEqual($f, '<hr /><br />', t('HTML corrector -- XHTML closing slash.'));
 
     $f = _filter_htmlcorrector('<P>test</P>');
-    $this->assertEqual($f, '<p>test</p>', 'HTML corrector -- Convert uppercased tags to proper lowercased ones.');
+    $this->assertEqual($f, '<p>test</p>', t('HTML corrector -- Convert uppercased tags to proper lowercased ones.'));
 
     $f = _filter_htmlcorrector('<P>test</p>');
-    $this->assertEqual($f, '<p>test</p>', 'HTML corrector -- Convert uppercased tags to proper lowercased ones.');
+    $this->assertEqual($f, '<p>test</p>', t('HTML corrector -- Convert uppercased tags to proper lowercased ones.'));
 
     $f = _filter_htmlcorrector('test<hr />');
-    $this->assertEqual($f, 'test<hr />', 'HTML corrector -- Let proper XHTML pass through.');
+    $this->assertEqual($f, 'test<hr />', t('HTML corrector -- Let proper XHTML pass through.'));
 
     $f = _filter_htmlcorrector('test<hr/>');
-    $this->assertEqual($f, 'test<hr />', 'HTML corrector -- Let proper XHTML pass through, but ensure there is a single space before the closing slash.');
+    $this->assertEqual($f, 'test<hr />', t('HTML corrector -- Let proper XHTML pass through, but ensure there is a single space before the closing slash.'));
 
     $f = _filter_htmlcorrector('test<hr    />');
-    $this->assertEqual($f, 'test<hr />', 'HTML corrector -- Let proper XHTML pass through, but ensure there are not too many spaces before the closing slash.');
+    $this->assertEqual($f, 'test<hr />', t('HTML corrector -- Let proper XHTML pass through, but ensure there are not too many spaces before the closing slash.'));
 
     $f = _filter_htmlcorrector('<span class="test" />');
-    $this->assertEqual($f, '<span class="test"></span>', 'HTML corrector -- Convert XHTML that is properly formed but that would not be compatible with typical HTML user agents.');
+    $this->assertEqual($f, '<span class="test"></span>', t('HTML corrector -- Convert XHTML that is properly formed but that would not be compatible with typical HTML user agents.'));
 
     $f = _filter_htmlcorrector('test1<br class="test">test2');
-    $this->assertEqual($f, 'test1<br class="test" />test2', 'HTML corrector -- Automatically close single tags.');
+    $this->assertEqual($f, 'test1<br class="test" />test2', t('HTML corrector -- Automatically close single tags.'));
 
     $f = _filter_htmlcorrector('line1<hr>line2');
-    $this->assertEqual($f, 'line1<hr />line2', 'HTML corrector -- Automatically close single tags.');
+    $this->assertEqual($f, 'line1<hr />line2', t('HTML corrector -- Automatically close single tags.'));
 
     $f = _filter_htmlcorrector('line1<HR>line2');
-    $this->assertEqual($f, 'line1<hr />line2', 'HTML corrector -- Automatically close single tags.');
+    $this->assertEqual($f, 'line1<hr />line2', t('HTML corrector -- Automatically close single tags.'));
 
     $f = _filter_htmlcorrector('<img src="http://example.com/test.jpg">test</img>');
-    $this->assertEqual($f, '<img src="http://example.com/test.jpg" />test', 'HTML corrector -- Automatically close single tags.');
+    $this->assertEqual($f, '<img src="http://example.com/test.jpg" />test', t('HTML corrector -- Automatically close single tags.'));
 
     $f = _filter_htmlcorrector('<br></br>');
-    $this->assertEqual($f, '<br />', "HTML corrector -- Transform empty tags to a single closed tag if the tag's content model is EMPTY.");
+    $this->assertEqual($f, '<br />', t("HTML corrector -- Transform empty tags to a single closed tag if the tag's content model is EMPTY."));
 
     $f = _filter_htmlcorrector('<div></div>');
-    $this->assertEqual($f, '<div></div>', "HTML corrector -- Do not transform empty tags to a single closed tag if the tag's content model is not EMPTY.");
+    $this->assertEqual($f, '<div></div>', t("HTML corrector -- Do not transform empty tags to a single closed tag if the tag's content model is not EMPTY."));
 
     $f = _filter_htmlcorrector('<p>line1<br/><hr/>line2</p>');
-    $this->assertEqual($f, '<p>line1<br /></p><hr />line2', 'HTML corrector -- Move non-inline elements outside of inline containers.');
+    $this->assertEqual($f, '<p>line1<br /></p><hr />line2', t('HTML corrector -- Move non-inline elements outside of inline containers.'));
 
     $f = _filter_htmlcorrector('<p>line1<div>line2</div></p>');
-    $this->assertEqual($f, '<p>line1</p><div>line2</div>', 'HTML corrector -- Move non-inline elements outside of inline containers.');
+    $this->assertEqual($f, '<p>line1</p><div>line2</div>', t('HTML corrector -- Move non-inline elements outside of inline containers.'));
 
     $f = _filter_htmlcorrector('<p>test<p>test</p>\n');
-    $this->assertEqual($f, '<p>test</p><p>test</p>\n', 'HTML corrector -- Auto-close improperly nested tags.');
+    $this->assertEqual($f, '<p>test</p><p>test</p>\n', t('HTML corrector -- Auto-close improperly nested tags.'));
 
     $f = _filter_htmlcorrector('<p>Line1<br><STRONG>bold stuff</b>');
-    $this->assertEqual($f, '<p>Line1<br /><strong>bold stuff</strong></p>', 'HTML corrector -- Properly close unclosed tags, and remove useless closing tags.');
+    $this->assertEqual($f, '<p>Line1<br /><strong>bold stuff</strong></p>', t('HTML corrector -- Properly close unclosed tags, and remove useless closing tags.'));
 
     $f = _filter_htmlcorrector('test <!-- this is a comment -->');
-    $this->assertEqual($f, 'test <!-- this is a comment -->', 'HTML corrector -- Do not touch HTML comments.');
+    $this->assertEqual($f, 'test <!-- this is a comment -->', t('HTML corrector -- Do not touch HTML comments.'));
 
     $f = _filter_htmlcorrector('test <!--this is a comment-->');
-    $this->assertEqual($f, 'test <!--this is a comment-->', 'HTML corrector -- Do not touch HTML comments.');
+    $this->assertEqual($f, 'test <!--this is a comment-->', t('HTML corrector -- Do not touch HTML comments.'));
 
     $f = _filter_htmlcorrector('test <!-- comment <p>another
     <strong>multiple</strong> line
     comment</p> -->');
     $this->assertEqual($f, 'test <!-- comment <p>another
     <strong>multiple</strong> line
-    comment</p> -->', 'HTML corrector -- Do not touch HTML comments.');
+    comment</p> -->', t('HTML corrector -- Do not touch HTML comments.'));
 
     $f = _filter_htmlcorrector('test <!-- comment <p>another comment</p> -->');
-    $this->assertEqual($f, 'test <!-- comment <p>another comment</p> -->', 'HTML corrector -- Do not touch HTML comments.');
+    $this->assertEqual($f, 'test <!-- comment <p>another comment</p> -->', t('HTML corrector -- Do not touch HTML comments.'));
 
     $f = _filter_htmlcorrector('test <!--break-->');
-    $this->assertEqual($f, 'test <!--break-->', 'HTML corrector -- Do not touch HTML comments.');
+    $this->assertEqual($f, 'test <!--break-->', t('HTML corrector -- Do not touch HTML comments.'));
 
     $f = _filter_htmlcorrector('<p>test\n</p>\n');
-    $this->assertEqual($f, '<p>test\n</p>\n', 'HTML corrector -- New-lines are accepted and kept as-is.');
+    $this->assertEqual($f, '<p>test\n</p>\n', t('HTML corrector -- New-lines are accepted and kept as-is.'));
 
     $f = _filter_htmlcorrector('<p>دروبال');
-    $this->assertEqual($f, '<p>دروبال</p>', 'HTML corrector -- Encoding is correctly kept.');
+    $this->assertEqual($f, '<p>دروبال</p>', t('HTML corrector -- Encoding is correctly kept.'));
 
     $f = _filter_htmlcorrector('<script type="text/javascript">alert("test")</script>');
     $this->assertEqual($f, '<script type="text/javascript">
 <!--//--><![CDATA[// ><!--
 alert("test")
 //--><!]]>
-</script>', 'HTML corrector -- CDATA added to script element');
+</script>', t('HTML corrector -- CDATA added to script element'));
 
     $f = _filter_htmlcorrector('<p><script type="text/javascript">alert("test")</script></p>');
     $this->assertEqual($f, '<p><script type="text/javascript">
 <!--//--><![CDATA[// ><!--
 alert("test")
 //--><!]]>
-</script></p>', 'HTML corrector -- CDATA added to a nested script element');
+</script></p>', t('HTML corrector -- CDATA added to a nested script element'));
 
     $f = _filter_htmlcorrector('<p><style> /* Styling */ body {color:red}</style></p>');
     $this->assertEqual($f, '<p><style>
 <!--/*--><![CDATA[/* ><!--*/
  /* Styling */ body {color:red}
 /*--><!]]>*/
-</style></p>', 'HTML corrector -- CDATA added to a style element.');
+</style></p>', t('HTML corrector -- CDATA added to a style element.'));
   }
 
   /**
@@ -1240,16 +1240,16 @@ alert("test")
     // Test that characters that have special meaning in XML are changed into
     // entities.
     $f = $function('<>&"');
-    $this->assertEqual($f, '&lt;&gt;&amp;&quot;', 'The ' . $replacements['@function'] . '() function correctly filters basic HTML entities.');
+    $this->assertEqual($f, '&lt;&gt;&amp;&quot;', t('The @function() function correctly filters basic HTML entities.', $replacements));
 
     // A single quote can also be used for evil things in some contexts.
     $f = $function('\'');
-    $this->assertEqual($f, '&#039;', 'The ' . $replacements['@function'] . '() function correctly filters single quotes.');
+    $this->assertEqual($f, '&#039;', t('The @function() function correctly filters single quotes.', $replacements));
 
     // Test that the filter is not fooled by different evasion techniques.
     // Ignore PHP 5.3+ invalid multibyte sequence warning.
     $f = @$function("\xc2\"");
-    $this->assertEqual($f, '', 'The ' . $replacements['@function'] . '() function correctly filters invalid UTF-8.');
+    $this->assertEqual($f, '', t('The @function() function correctly filters invalid UTF-8.', $replacements));
   }
 }
 
@@ -1281,8 +1281,8 @@ class FilterHooksTestCase extends DrupalWebTestCase {
     $edit['name'] = $name;
     $edit['roles[1]'] = 1;
     $this->drupalPost('admin/config/content/formats/add', $edit, t('Save configuration'));
-    $this->assertRaw(t('Added text format %format.', array('%format' => $name)), 'New format created.');
-    $this->assertText('hook_filter_format_insert invoked.', 'hook_filter_format_insert was invoked.');
+    $this->assertRaw(t('Added text format %format.', array('%format' => $name)), t('New format created.'));
+    $this->assertText('hook_filter_format_insert invoked.', t('hook_filter_format_insert was invoked.'));
 
     $format_id = db_query("SELECT format FROM {filter_format} WHERE name = :name", array(':name' => $name))->fetchField();
 
@@ -1290,8 +1290,8 @@ class FilterHooksTestCase extends DrupalWebTestCase {
     $edit = array();
     $edit['roles[2]'] = 1;
     $this->drupalPost('admin/config/content/formats/' . $format_id, $edit, t('Save configuration'));
-    $this->assertRaw(t('The text format %format has been updated.', array('%format' => $name)), 'Format successfully updated.');
-    $this->assertText('hook_filter_format_update invoked.', 'hook_filter_format_update() was invoked.');
+    $this->assertRaw(t('The text format %format has been updated.', array('%format' => $name)), t('Format successfully updated.'));
+    $this->assertText('hook_filter_format_update invoked.', t('hook_filter_format_update() was invoked.'));
 
     // Add a new custom block.
     $custom_block = array();
@@ -1301,16 +1301,16 @@ class FilterHooksTestCase extends DrupalWebTestCase {
     // Use the format created.
     $custom_block['body[format]'] = $format_id;
     $this->drupalPost('admin/structure/block/add', $custom_block, t('Save block'));
-    $this->assertText(t('The block has been created.'), 'New block successfully created.');
+    $this->assertText(t('The block has been created.'), t('New block successfully created.'));
 
     // Verify the new block is in the database.
     $bid = db_query("SELECT bid FROM {block_custom} WHERE info = :info", array(':info' => $custom_block['info']))->fetchField();
-    $this->assertNotNull($bid, 'New block found in database');
+    $this->assertNotNull($bid, t('New block found in database'));
 
     // Delete the text format.
     $this->drupalPost('admin/config/content/formats/' . $format_id . '/delete', array(), t('Delete'));
-    $this->assertRaw(t('Deleted text format %format.', array('%format' => $name)), 'Format successfully deleted.');
-    $this->assertText('hook_filter_format_delete invoked.', 'hook_filter_format_delete() was invoked.');
+    $this->assertRaw(t('Deleted text format %format.', array('%format' => $name)), t('Format successfully deleted.'));
+    $this->assertText('hook_filter_format_delete invoked.', t('hook_filter_format_delete() was invoked.'));
 
     // Verify that the deleted format was replaced with the fallback format.
     $current_format = db_select('block_custom', 'b')
@@ -1318,7 +1318,7 @@ class FilterHooksTestCase extends DrupalWebTestCase {
       ->condition('bid', $bid)
       ->execute()
       ->fetchField();
-    $this->assertEqual($current_format, filter_fallback_format(), 'Deleted text format replaced with the fallback format.');
+    $this->assertEqual($current_format, filter_fallback_format(), t('Deleted text format replaced with the fallback format.'));
   }
 }
 

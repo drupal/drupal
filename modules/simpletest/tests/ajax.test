@@ -44,9 +44,9 @@ class AJAXFrameworkTestCase extends AJAXTestCase {
   function testAJAXRender() {
     $result = $this->drupalGetAJAX('ajax-test/render');
     // Verify that JavaScript settings are contained (always first).
-    $this->assertIdentical($result[0]['command'], 'settings', 'drupal_add_js() settings are contained first.');
+    $this->assertIdentical($result[0]['command'], 'settings', t('drupal_add_js() settings are contained first.'));
     // Verify that basePath is contained in JavaScript settings.
-    $this->assertEqual($result[0]['settings']['basePath'], base_path(), 'Base path is contained in JavaScript settings.');
+    $this->assertEqual($result[0]['settings']['basePath'], base_path(), t('Base path is contained in JavaScript settings.'));
   }
 
   /**
@@ -55,14 +55,14 @@ class AJAXFrameworkTestCase extends AJAXTestCase {
   function testAJAXRenderError() {
     $result = $this->discardSettings($this->drupalGetAJAX('ajax-test/render-error'));
     // Verify default error message.
-    $this->assertEqual($result[0]['command'], 'alert', 'ajax_render_error() invokes alert command.');
-    $this->assertEqual($result[0]['text'], t('An error occurred while handling the request: The server received invalid input.'), 'Default error message is output.');
+    $this->assertEqual($result[0]['command'], 'alert', t('ajax_render_error() invokes alert command.'));
+    $this->assertEqual($result[0]['text'], t('An error occurred while handling the request: The server received invalid input.'), t('Default error message is output.'));
     // Verify custom error message.
     $edit = array(
       'message' => 'Custom error message.',
     );
     $result = $this->discardSettings($this->drupalGetAJAX('ajax-test/render-error', array('query' => $edit)));
-    $this->assertEqual($result[0]['text'], $edit['message'], 'Custom error message is output.');
+    $this->assertEqual($result[0]['text'], $edit['message'], t('Custom error message is output.'));
   }
 }
 
@@ -86,9 +86,9 @@ class AJAXCommandsTestCase extends AJAXTestCase {
     $commands[] = ajax_command_settings(array('foo' => 42));
     $result = $this->drupalGetAJAX('ajax-test/render', array('query' => array('commands' => $commands)));
     // Verify that JavaScript settings are contained (always first).
-    $this->assertIdentical($result[0]['command'], 'settings', 'drupal_add_js() settings are contained first.');
+    $this->assertIdentical($result[0]['command'], 'settings', t('drupal_add_js() settings are contained first.'));
     // Verify that the custom setting is contained.
-    $this->assertEqual($result[1]['settings']['foo'], 42, 'Custom setting is output.');
+    $this->assertEqual($result[1]['settings']['foo'], 42, t('Custom setting is output.'));
   }
 
   /**
@@ -192,7 +192,7 @@ class AJAXFormValuesTestCase extends AJAXTestCase {
    */
   function testSimpleAJAXFormValue() {
     // Verify form values of a select element.
-    foreach (array('red', 'green', 'blue') as $item) {
+    foreach(array('red', 'green', 'blue') as $item) {
       $edit = array(
         'select' => $item,
       );
@@ -202,7 +202,7 @@ class AJAXFormValuesTestCase extends AJAXTestCase {
     }
 
     // Verify form values of a checkbox element.
-    foreach (array(FALSE, TRUE) as $item) {
+    foreach(array(FALSE, TRUE) as $item) {
       $edit = array(
         'checkbox' => $item,
       );
@@ -270,8 +270,8 @@ class AJAXMultiFormTestCase extends AJAXTestCase {
     // each form.
     $this->drupalGet('form-test/two-instances-of-same-form');
     foreach ($field_xpaths as $form_id => $field_xpath) {
-      $this->assert(count($this->xpath($field_xpath . $field_items_xpath_suffix)) == 1, 'Found the correct number of field items on the initial page.');
-      $this->assertFieldByXPath($field_xpath . $button_xpath_suffix, NULL, 'Found the "add more" button on the initial page.');
+      $this->assert(count($this->xpath($field_xpath . $field_items_xpath_suffix)) == 1, t('Found the correct number of field items on the initial page.'));
+      $this->assertFieldByXPath($field_xpath . $button_xpath_suffix, NULL, t('Found the "add more" button on the initial page.'));
     }
     $this->assertNoDuplicateIds(t('Initial page contains unique IDs'), 'Other');
 
@@ -282,13 +282,13 @@ class AJAXMultiFormTestCase extends AJAXTestCase {
     preg_match('/jQuery\.extend\(Drupal\.settings, (.*?)\);/', $this->content, $matches);
     $settings = drupal_json_decode($matches[1]);
     foreach ($field_xpaths as $form_id => $field_xpath) {
-      for ($i = 0; $i < 2; $i++) {
+      for ($i=0; $i<2; $i++) {
         $button = $this->xpath($field_xpath . $button_xpath_suffix);
         $button_id = (string) $button[0]['id'];
         $commands = $this->drupalPostAJAX(NULL, array(), array($button_name => $button_value), 'system/ajax', array(), array(), $form_id, $settings['ajax'][$button_id]);
         $settings = array_merge_recursive($settings, $commands[0]['settings']);
-        $this->assert(count($this->xpath($field_xpath . $field_items_xpath_suffix)) == $i + 2, 'Found the correct number of field items after an AJAX submission.');
-        $this->assertFieldByXPath($field_xpath . $button_xpath_suffix, NULL, 'Found the "add more" button after an AJAX submission.');
+        $this->assert(count($this->xpath($field_xpath . $field_items_xpath_suffix)) == $i+2, t('Found the correct number of field items after an AJAX submission.'));
+        $this->assertFieldByXPath($field_xpath . $button_xpath_suffix, NULL, t('Found the "add more" button after an AJAX submission.'));
         $this->assertNoDuplicateIds(t('Updated page contains unique IDs'), 'Other');
       }
     }
@@ -322,8 +322,8 @@ class AJAXElementValidation extends AJAXTestCase {
     // Post with 'drivertext' as the triggering element.
     $post_result = $this->drupalPostAJAX('ajax_validation_test', $edit, 'drivertext');
     // Look for a validation failure in the resultant JSON.
-    $this->assertNoText(t('Error message'), "No error message in resultant JSON");
-    $this->assertText('ajax_forms_test_validation_form_callback invoked', 'The correct callback was invoked');
+    $this->assertNoText(t('Error message'), t("No error message in resultant JSON"));
+    $this->assertText('ajax_forms_test_validation_form_callback invoked', t('The correct callback was invoked'));
   }
 }
 
