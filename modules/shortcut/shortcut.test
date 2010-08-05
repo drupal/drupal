@@ -1,5 +1,5 @@
 <?php
-// $Id: shortcut.test,v 1.4 2010/08/05 23:26:35 webchick Exp $
+// $Id: shortcut.test,v 1.5 2010/08/05 23:53:38 webchick Exp $
 
 /**
  * @file
@@ -74,7 +74,7 @@ class ShortcutTestCase extends DrupalWebTestCase {
 
   /**
    * Extracts information from shortcut set links.
-   *
+   * 
    * @param object $set
    *   The shortcut set object to extract information from.
    * @param string $key
@@ -131,7 +131,7 @@ class ShortcutLinksTestCase extends ShortcutTestCase {
       $this->assertResponse(200);
       $saved_set = shortcut_set_load($set->set_name);
       $paths = $this->getShortcutInformation($saved_set, 'link_path');
-      $this->assertTrue(in_array($test['path'], $paths), 'Shortcut created: ' . $test['path']);
+      $this->assertTrue(in_array($test['path'], $paths), 'Shortcut created: '. $test['path']);
       $this->assertLink($title, 0, 'Shortcut link found on the page.');
     }
   }
@@ -283,7 +283,7 @@ class ShortcutSetsTestCase extends ShortcutTestCase {
    */
   function testShortcutSetRename() {
     $set = $this->set;
-
+    
     $new_title = $this->randomName(10);
     $this->drupalPost('admin/config/user-interface/shortcut/' . $set->set_name . '/edit', array('title' => $new_title), t('Save'));
     $set = shortcut_set_load($set->set_name);
@@ -299,7 +299,7 @@ class ShortcutSetsTestCase extends ShortcutTestCase {
     $this->drupalPost('admin/config/user-interface/shortcut/' . $set->set_name . '/edit', array('title' => $existing_title), t('Save'));
     $this->assertRaw(t('The shortcut set %name already exists. Choose another name.', array('%name' => $existing_title)));
     $set = shortcut_set_load($set->set_name);
-    $this->assertNotEqual($set->title, $existing_title, 'The shortcut set ' . $set->title . ' cannot be renamed to ' . $existing_title . ' because a shortcut set with that title already exists.');
+    $this->assertNotEqual($set->title, $existing_title, t('The shortcut set %title cannot be renamed to %new-title because a shortcut set with that title already exists.', array('%title' => $set->title, '%new-title' => $existing_title)));
   }
 
   /**

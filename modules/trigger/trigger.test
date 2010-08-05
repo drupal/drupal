@@ -1,5 +1,5 @@
 <?php
-// $Id: trigger.test,v 1.35 2010/08/05 23:26:36 webchick Exp $
+// $Id: trigger.test,v 1.36 2010/08/05 23:53:39 webchick Exp $
 
 /**
  * Provides common helper methods.
@@ -78,10 +78,10 @@ class TriggerContentTestCase extends TriggerWebTestCase {
       $edit[$info['property']] = !$info['expected'];
       $this->drupalPost('node/add/page', $edit, t('Save'));
       // Make sure the text we want appears.
-      $this->assertRaw(t('!post %title has been created.', array('!post' => 'Basic page', '%title' => $edit["title"])), 'Make sure the Basic page has actually been created');
+      $this->assertRaw(t('!post %title has been created.', array('!post' => 'Basic page', '%title' => $edit["title"])), t('Make sure the Basic page has actually been created'));
       // Action should have been fired.
       $loaded_node = $this->drupalGetNodeByTitle($edit["title"]);
-      $this->assertTrue($loaded_node->$info['property'] == $info['expected'], 'Make sure the ' . $info['name'] . ' action fired.');
+      $this->assertTrue($loaded_node->$info['property'] == $info['expected'], t('Make sure the @action action fired.', array('@action' => $info['name'])));
       // Leave action assigned for next test
 
       // There should be an error when the action is assigned to the trigger
@@ -90,13 +90,13 @@ class TriggerContentTestCase extends TriggerWebTestCase {
       // This action already assigned in this test.
       $edit = array('aid' => $hash);
       $this->drupalPost('admin/structure/trigger/node', $edit, t('Assign'), array(), array(), 'trigger-node-presave-assign-form');
-      $this->assertRaw(t('The action you chose is already assigned to that trigger.'), 'Check to make sure an error occurs when assigning an action to a trigger twice.');
+      $this->assertRaw(t('The action you chose is already assigned to that trigger.'), t('Check to make sure an error occurs when assigning an action to a trigger twice.'));
 
       // The action should be able to be unassigned from a trigger.
       $this->drupalPost('admin/structure/trigger/unassign/node/node_presave/' . $hash, array(), t('Unassign'));
-      $this->assertRaw(t('Action %action has been unassigned.', array('%action' => ucfirst($info['name']))), 'Check to make sure the ' . $info['name'] . ' action can be unassigned from the trigger.');
+      $this->assertRaw(t('Action %action has been unassigned.', array('%action' => ucfirst($info['name']))), t('Check to make sure the @action action can be unassigned from the trigger.', array('@action' => $info['name'])));
       $assigned = db_query("SELECT COUNT(*) FROM {trigger_assignments} WHERE aid IN (:keys)", array(':keys' => $content_actions))->fetchField();
-      $this->assertFalse($assigned, 'Check to make sure unassign worked properly at the database level.');
+      $this->assertFalse($assigned, t('Check to make sure unassign worked properly at the database level.'));
     }
   }
 
@@ -128,7 +128,7 @@ class TriggerContentTestCase extends TriggerWebTestCase {
     );
     $this->drupalPost('admin/content', $edit, t('Update'));
     $count = variable_get('trigger_test_generic_any_action', 0);
-    $this->assertTrue($count == 2, 'Action was triggered 2 times. Actual: ' . $count);
+    $this->assertTrue($count == 2, t('Action was triggered 2 times. Actual: %count', array('%count' => $count)));
   }
 
   /**
@@ -238,11 +238,11 @@ class TriggerCronTestCase extends TriggerWebTestCase {
 
     // Make sure the non-configurable action has fired.
     $action_run = variable_get('trigger_test_system_cron_action', FALSE);
-    $this->assertTrue($action_run, 'Check that the cron run triggered the test action.');
+    $this->assertTrue($action_run, t('Check that the cron run triggered the test action.'));
 
     // Make sure that both configurable actions have fired.
     $action_run = variable_get('trigger_test_system_cron_conf_action', 0) == 2;
-    $this->assertTrue($action_run, 'Check that the cron run triggered both complex actions.');
+    $this->assertTrue($action_run, t('Check that the cron run triggered both complex actions.'));
   }
 }
 
@@ -298,7 +298,7 @@ class TriggerActionTestCase extends TriggerWebTestCase {
         '@user_created' => isset($account->created) ? format_date($account->created, 'medium') : t('not yet created'),
         )
       );
-    return trim($message);
+      return trim($message);
   }
 
 
@@ -317,7 +317,7 @@ class TriggerActionTestCase extends TriggerWebTestCase {
     $trigger_type = preg_replace('/_.*/', '', $trigger);
     $this->drupalPost("admin/structure/trigger/$trigger_type", $edit, t('Assign'), array(), array(), $form_html_id);
     $actions = trigger_get_assigned_actions($trigger);
-    $this->assertTrue(!empty($actions[$action]), 'Simple action ' . $action . ' assigned to trigger ' . $trigger);
+    $this->assertTrue(!empty($actions[$action]), t('Simple action @action assigned to trigger @trigger', array('@action' => $action, '@trigger' => $trigger)));
   }
 
   /**
@@ -395,7 +395,8 @@ class TriggerActionTestCase extends TriggerWebTestCase {
    */
   function assertSystemMessageTokenReplacement($trigger, $account) {
     $expected = $this->generateTokenExpandedComparison($trigger, $account);
-    $this->assertText($expected, 'Expected system message to contain token-replaced text "' . $expected . '" found in configured system message action');
+    $this->assertText($expected,
+      t('Expected system message to contain token-replaced text "@expected" found in configured system message action', array('@expected' => $expected )) );
   }
 
 
@@ -414,7 +415,7 @@ class TriggerActionTestCase extends TriggerWebTestCase {
     $expected = $this->generateTokenExpandedComparison($trigger, $account);
     $this->assertMailString('subject', $expected, $email_depth);
     $this->assertMailString('body', $expected, $email_depth);
-    $this->assertMail('to', $account->mail, 'Mail sent to correct destination');
+    $this->assertMail('to', $account->mail, t('Mail sent to correct destination'));
   }
 }
 
@@ -510,7 +511,7 @@ class TriggerUserActionTestCase extends TriggerActionTestCase {
     $this->drupalPost("node/{$node->nid}", array('comment_body[und][0][value]' => t("my comment"), 'subject' => t("my comment subject")), t('Save'));
     // Posting a comment should have blocked this user.
     $account = user_load($test_user->uid, TRUE);
-    $this->assertTrue($account->status == 0, 'Account is blocked');
+    $this->assertTrue($account->status == 0, t('Account is blocked'));
     $comment_author_uid = $account->uid;
     // Now rehabilitate the comment author so it can be be blocked again when
     // the comment is updated.
@@ -522,7 +523,7 @@ class TriggerUserActionTestCase extends TriggerActionTestCase {
     // Our original comment will have been comment 1.
     $this->drupalPost("comment/1/edit", array('comment_body[und][0][value]' => t("my comment, updated"), 'subject' => t("my comment subject")), t('Save'));
     $comment_author_account = user_load($comment_author_uid, TRUE);
-    $this->assertTrue($comment_author_account->status == 0, 'Comment author account (uid=' . $comment_author_uid . ') is blocked after update to comment');
+    $this->assertTrue($comment_author_account->status == 0, t('Comment author account (uid=@uid) is blocked after update to comment', array('@uid' => $comment_author_uid)));
 
     // Verify that the comment was updated.
     $test_user = $this->drupalCreateUser(array('administer actions', 'create article content', 'access comments', 'administer comments', 'post comments without approval', 'edit own comments'));
@@ -582,7 +583,7 @@ class TriggerOtherTestCase extends TriggerWebTestCase {
     $this->drupalPost('admin/people/create', $edit, t('Create new account'));
 
     // Verify that the action variable has been set.
-    $this->assertTrue(variable_get($action_id, FALSE), 'Check that creating a user triggered the test action.');
+    $this->assertTrue(variable_get($action_id, FALSE), t('Check that creating a user triggered the test action.'));
 
     // Reset the action variable.
     variable_set($action_id, FALSE);
@@ -601,11 +602,11 @@ class TriggerOtherTestCase extends TriggerWebTestCase {
 
     // Verify that the action has been assigned to the correct hook.
     $actions = trigger_get_assigned_actions('user_login');
-    $this->assertEqual(1, count($actions), 'One Action assigned to the hook');
-    $this->assertEqual($actions[$aid]['label'], $action_edit['actions_label'], 'Correct action label found.');
+    $this->assertEqual(1, count($actions), t('One Action assigned to the hook'));
+    $this->assertEqual($actions[$aid]['label'], $action_edit['actions_label'], t('Correct action label found.'));
 
     // User should get the configured message at login.
-    $contact_user = $this->drupalCreateUser(array('access site-wide contact form'));
+    $contact_user = $this->drupalCreateUser(array('access site-wide contact form'));;
     $this->drupalLogin($contact_user);
     $this->assertText($action_edit['message']);
   }
@@ -636,7 +637,7 @@ class TriggerOtherTestCase extends TriggerWebTestCase {
     $this->drupalPost(NULL, $edit, t('Save'));
 
     // Verify that the action variable has been set.
-    $this->assertTrue(variable_get($action_id, FALSE), 'Check that creating a comment triggered the action.');
+    $this->assertTrue(variable_get($action_id, FALSE), t('Check that creating a comment triggered the action.'));
   }
 
   /**
@@ -672,7 +673,7 @@ class TriggerOtherTestCase extends TriggerWebTestCase {
     taxonomy_term_save($term);
 
     // Verify that the action variable has been set.
-    $this->assertTrue(variable_get($action_id, FALSE), 'Check that creating a taxonomy term triggered the action.');
+    $this->assertTrue(variable_get($action_id, FALSE), t('Check that creating a taxonomy term triggered the action.'));
   }
 
 }
@@ -716,10 +717,10 @@ class TriggerOrphanedActionsTestCase extends DrupalWebTestCase {
     $edit["title"] = '!SimpleTest test node! ' . $this->randomName(10);
     $edit["body[$langcode][0][value]"] = '!SimpleTest test body! ' . $this->randomName(32) . ' ' . $this->randomName(32);
     $this->drupalPost('node/add/page', $edit, t('Save'));
-    $this->assertRaw(t('!post %title has been created.', array('!post' => 'Basic page', '%title' => $edit["title"])), 'Make sure the Basic page has actually been created');
+    $this->assertRaw(t('!post %title has been created.', array('!post' => 'Basic page', '%title' => $edit["title"])), t('Make sure the Basic page has actually been created'));
 
     // Action should have been fired.
-    $this->assertTrue(variable_get('trigger_test_generic_any_action', FALSE), 'Trigger test action successfully fired.');
+    $this->assertTrue(variable_get('trigger_test_generic_any_action', FALSE), t('Trigger test action successfully fired.'));
 
     // Disable the module that provides the action and make sure the trigger
     // doesn't white screen.
@@ -730,6 +731,6 @@ class TriggerOrphanedActionsTestCase extends DrupalWebTestCase {
 
     // If the node body was updated successfully we have dealt with the
     // unavailable action.
-    $this->assertRaw(t('!post %title has been updated.', array('!post' => 'Basic page', '%title' => $edit["title"])), 'Make sure the Basic page can be updated with the missing trigger function.');
+    $this->assertRaw(t('!post %title has been updated.', array('!post' => 'Basic page', '%title' => $edit["title"])), t('Make sure the Basic page can be updated with the missing trigger function.'));
   }
 }

@@ -1,5 +1,5 @@
 <?php
-// $Id: xmlrpc.test,v 1.18 2010/08/05 23:26:35 webchick Exp $
+// $Id: xmlrpc.test,v 1.19 2010/08/05 23:53:38 webchick Exp $
 
 /**
  * Perform basic XML-RPC tests that do not require addition callbacks.
@@ -129,7 +129,7 @@ class XMLRPCValidator1IncTestCase extends DrupalWebTestCase {
     $int_5     = mt_rand(-100, 100);
     $bool_5    = (($int_5 % 2) == 0);
     $string_5  = $this->randomName();
-    $double_5  = (double) (mt_rand(-1000, 1000) / 100);
+    $double_5  = (double)(mt_rand(-1000, 1000) / 100);
     $time_5    = REQUEST_TIME;
     $base64_5  = $this->randomName(100);
     $l_res_5 = xmlrpc_test_manyTypesTest($int_5, $bool_5, $string_5, $double_5, xmlrpc_date($time_5), $base64_5);
@@ -214,7 +214,7 @@ class XMLRPCMessagesTestCase extends DrupalWebTestCase {
       $xml_message_l = xmlrpc_test_message_sized_in_kb($size);
       $xml_message_r = xmlrpc($xml_url, 'messages.messageSizedInKB', $size);
 
-      $this->assertEqual($xml_message_l, $xml_message_r, 'XML-RPC messages.messageSizedInKB of ' . $size . ' Kb size received');
+      $this->assertEqual($xml_message_l, $xml_message_r, t('XML-RPC messages.messageSizedInKB of %s Kb size received', array('%s' => $size)));
     }
   }
 }

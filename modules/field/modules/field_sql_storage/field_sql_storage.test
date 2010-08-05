@@ -1,5 +1,5 @@
 <?php
-// $Id: field_sql_storage.test,v 1.20 2010/08/05 23:26:34 webchick Exp $
+// $Id: field_sql_storage.test,v 1.21 2010/08/05 23:53:37 webchick Exp $
 
 /**
  * @file
@@ -41,7 +41,7 @@ class FieldSqlStorageTestCase extends DrupalWebTestCase {
     $t1 = _field_sql_storage_etid('t1');
     $t2 = _field_sql_storage_etid('t2');
 
-    $this->assertEqual($t1 + 1, $t2, 'Entity type ids are sequential');
+    $this->assertEqual($t1+1, $t2, 'Entity type ids are sequential');
     $this->assertIdentical(variable_get('field_sql_storage_t1_etid', NULL), $t1, 'First entity type variable is correct');
     $this->assertIdentical(variable_get('field_sql_storage_t2_etid', NULL), $t2, 'Second entity type variable is correct');
     $this->assertEqual(db_query("SELECT etid FROM {field_config_entity_type} WHERE type='t1'")->fetchField(), $t1, 'First entity type in database is correct');
@@ -141,7 +141,7 @@ class FieldSqlStorageTestCase extends DrupalWebTestCase {
     $rows = db_select($this->table, 't')->fields('t')->execute()->fetchAllAssoc('delta', PDO::FETCH_ASSOC);
     foreach ($values as $delta => $value) {
       if ($delta < $this->field['cardinality']) {
-        $this->assertEqual($rows[$delta][$this->field_name . '_value'], $value['value'], "Value $delta is inserted correctly");
+        $this->assertEqual($rows[$delta][$this->field_name . '_value'], $value['value'], t("Value $delta is inserted correctly"));
       }
       else {
         $this->assertFalse(array_key_exists($delta, $rows), "No extraneous value gets inserted.");
@@ -160,7 +160,7 @@ class FieldSqlStorageTestCase extends DrupalWebTestCase {
     $rows = db_select($this->table, 't')->fields('t')->execute()->fetchAllAssoc('delta', PDO::FETCH_ASSOC);
     foreach ($values as $delta => $value) {
       if ($delta < $this->field['cardinality']) {
-        $this->assertEqual($rows[$delta][$this->field_name . '_value'], $value['value'], "Value $delta is updated correctly");
+        $this->assertEqual($rows[$delta][$this->field_name . '_value'], $value['value'], t("Value $delta is updated correctly"));
       }
       else {
         $this->assertFalse(array_key_exists($delta, $rows), "No extraneous value gets updated.");
@@ -190,7 +190,7 @@ class FieldSqlStorageTestCase extends DrupalWebTestCase {
     $rows = db_select($this->table, 't')->fields('t')->execute()->fetchAllAssoc('delta', PDO::FETCH_ASSOC);
     foreach ($values as $delta => $value) {
       if ($delta < $this->field['cardinality']) {
-        $this->assertEqual($rows[$delta][$this->field_name . '_value'], $value['value'], "Update with no field_name entry leaves value $delta untouched");
+        $this->assertEqual($rows[$delta][$this->field_name . '_value'], $value['value'], t("Update with no field_name entry leaves value $delta untouched"));
       }
     }
 
@@ -198,7 +198,7 @@ class FieldSqlStorageTestCase extends DrupalWebTestCase {
     $entity->{$this->field_name} = NULL;
     field_attach_update($entity_type, $entity);
     $rows = db_select($this->table, 't')->fields('t')->execute()->fetchAllAssoc('delta', PDO::FETCH_ASSOC);
-    $this->assertEqual(count($rows), 0, "Update with an empty field_name entry empties the field.");
+    $this->assertEqual(count($rows), 0, t("Update with an empty field_name entry empties the field."));
   }
 
   /**
@@ -313,10 +313,10 @@ class FieldSqlStorageTestCase extends DrupalWebTestCase {
     $field['settings']['scale'] = 3;
     try {
       field_update_field($field);
-      $this->fail('Cannot update field schema with data.');
+      $this->fail(t('Cannot update field schema with data.'));
     }
     catch (FieldException $e) {
-      $this->pass('Cannot update field schema with data.');
+      $this->pass(t('Cannot update field schema with data.'));
     }
   }
 
@@ -335,8 +335,8 @@ class FieldSqlStorageTestCase extends DrupalWebTestCase {
 
     // Verify the indexes we will create do not exist yet.
     foreach ($tables as $table) {
-      $this->assertFalse(Database::getConnection()->schema()->indexExists($table, 'value'), "No index named value exists in $table");
-      $this->assertFalse(Database::getConnection()->schema()->indexExists($table, 'value_format'), "No index named value_format exists in $table");
+      $this->assertFalse(Database::getConnection()->schema()->indexExists($table, 'value'), t("No index named value exists in $table"));
+      $this->assertFalse(Database::getConnection()->schema()->indexExists($table, 'value_format'), t("No index named value_format exists in $table"));
     }
 
     // Add data so the table cannot be dropped.
@@ -348,21 +348,21 @@ class FieldSqlStorageTestCase extends DrupalWebTestCase {
     $field = array('field_name' => $field_name, 'indexes' => array('value' => array('value')));
     field_update_field($field);
     foreach ($tables as $table) {
-      $this->assertTrue(Database::getConnection()->schema()->indexExists($table, "{$field_name}_value"), "Index on value created in $table");
+      $this->assertTrue(Database::getConnection()->schema()->indexExists($table, "{$field_name}_value"), t("Index on value created in $table"));
     }
 
     // Add a different index, removing the existing custom one.
     $field = array('field_name' => $field_name, 'indexes' => array('value_format' => array('value', 'format')));
     field_update_field($field);
     foreach ($tables as $table) {
-      $this->assertTrue(Database::getConnection()->schema()->indexExists($table, "{$field_name}_value_format"), "Index on value_format created in $table");
-      $this->assertFalse(Database::getConnection()->schema()->indexExists($table, "{$field_name}_value"), "Index on value removed in $table");
+      $this->assertTrue(Database::getConnection()->schema()->indexExists($table, "{$field_name}_value_format"), t("Index on value_format created in $table"));
+      $this->assertFalse(Database::getConnection()->schema()->indexExists($table, "{$field_name}_value"), t("Index on value removed in $table"));
     }
 
     // Verify that the tables were not dropped.
     $entity = field_test_create_stub_entity(0, 0, $instance['bundle']);
     field_attach_load('test_entity', array(0 => $entity));
-    $this->assertEqual($entity->{$field_name}[LANGUAGE_NONE][0]['value'], 'field data', "Index changes performed without dropping the tables");
+    $this->assertEqual($entity->{$field_name}[LANGUAGE_NONE][0]['value'], 'field data', t("Index changes performed without dropping the tables"));
   }
 
   /**
@@ -377,19 +377,19 @@ class FieldSqlStorageTestCase extends DrupalWebTestCase {
     $instance = field_info_instance($this->instance['entity_type'], $this->instance['field_name'], $this->instance['bundle']);
 
     // The storage details are indexed by a storage engine type.
-    $this->assertTrue(array_key_exists('sql', $field['storage']['details']), 'The storage type is SQL.');
+    $this->assertTrue(array_key_exists('sql', $field['storage']['details']), t('The storage type is SQL.'));
 
     // The SQL details are indexed by table name.
     $details = $field['storage']['details']['sql'];
-    $this->assertTrue(array_key_exists($current, $details[FIELD_LOAD_CURRENT]), 'Table name is available in the instance array.');
-    $this->assertTrue(array_key_exists($revision, $details[FIELD_LOAD_REVISION]), 'Revision table name is available in the instance array.');
+    $this->assertTrue(array_key_exists($current, $details[FIELD_LOAD_CURRENT]), t('Table name is available in the instance array.'));
+    $this->assertTrue(array_key_exists($revision, $details[FIELD_LOAD_REVISION]), t('Revision table name is available in the instance array.'));
 
     // Test current and revision storage details together because the columns
     // are the same.
     foreach ((array) $this->field['columns'] as $column_name => $attributes) {
       $storage_column_name = _field_sql_storage_columnname($this->field['field_name'], $column_name);
-      $this->assertEqual($details[FIELD_LOAD_CURRENT][$current][$column_name], $storage_column_name, 'Column name ' . $column_name . ' matches the definition in ' . $current . '.');
-      $this->assertEqual($details[FIELD_LOAD_REVISION][$revision][$column_name], $storage_column_name, 'Column name ' . $column_name . ' matches the definition in ' . $revision . '.');
+      $this->assertEqual($details[FIELD_LOAD_CURRENT][$current][$column_name], $storage_column_name, t('Column name %value matches the definition in %bin.', array('%value' => $column_name, '%bin' => $current)));
+      $this->assertEqual($details[FIELD_LOAD_REVISION][$revision][$column_name], $storage_column_name, t('Column name %value matches the definition in %bin.', array('%value' => $column_name, '%bin' => $revision)));
     }
   }
 }

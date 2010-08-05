@@ -1,5 +1,5 @@
 <?php
-// $Id: mail.test,v 1.4 2010/08/05 23:26:35 webchick Exp $
+// $Id: mail.test,v 1.5 2010/08/05 23:53:38 webchick Exp $
 
 /**
  * Test the Drupal mailing system.
@@ -38,7 +38,7 @@ class MailTestCase extends DrupalWebTestCase implements MailSystemInterface {
     $message = drupal_mail('simpletest', 'mail_test', 'testing@drupal.org', $language);
 
     // Assert whether the message was sent through the send function.
-    $this->assertEqual(self::$sent_message['to'], 'testing@drupal.org', 'Pluggable mail system is extendable.');
+    $this->assertEqual(self::$sent_message['to'], 'testing@drupal.org', t('Pluggable mail system is extendable.'));
   }
 
   /**

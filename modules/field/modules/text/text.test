@@ -1,5 +1,5 @@
 <?php
-// $Id: text.test,v 1.25 2010/08/05 23:26:34 webchick Exp $
+// $Id: text.test,v 1.26 2010/08/05 23:53:37 webchick Exp $
 
 class TextFieldTestCase extends DrupalWebTestCase {
   protected $instance;
@@ -106,8 +106,8 @@ class TextFieldTestCase extends DrupalWebTestCase {
 
     // Display creation form.
     $this->drupalGet('test-entity/add/test-bundle');
-    $this->assertFieldByName("{$this->field_name}[$langcode][0][value]", '', 'Widget is displayed');
-    $this->assertNoFieldByName("{$this->field_name}[$langcode][0][format]", '1', 'Format selector is not displayed');
+    $this->assertFieldByName("{$this->field_name}[$langcode][0][value]", '', t('Widget is displayed'));
+    $this->assertNoFieldByName("{$this->field_name}[$langcode][0][format]", '1', t('Format selector is not displayed'));
 
     // Submit with some value.
     $value = $this->randomName();
@@ -117,7 +117,7 @@ class TextFieldTestCase extends DrupalWebTestCase {
     $this->drupalPost(NULL, $edit, t('Save'));
     preg_match('|test-entity/(\d+)/edit|', $this->url, $match);
     $id = $match[1];
-    $this->assertRaw(t('test_entity @id has been created.', array('@id' => $id)), 'Entity was created');
+    $this->assertRaw(t('test_entity @id has been created.', array('@id' => $id)), t('Entity was created'));
 
     // Display the entity.
     $entity = field_test_entity_test_load($id);
@@ -175,8 +175,8 @@ class TextFieldTestCase extends DrupalWebTestCase {
     // Display the creation form. Since the user only has access to one format,
     // no format selector will be displayed.
     $this->drupalGet('test-entity/add/test-bundle');
-    $this->assertFieldByName("{$this->field_name}[$langcode][0][value]", '', 'Widget is displayed');
-    $this->assertNoFieldByName("{$this->field_name}[$langcode][0][format]", '', 'Format selector is not displayed');
+    $this->assertFieldByName("{$this->field_name}[$langcode][0][value]", '', t('Widget is displayed'));
+    $this->assertNoFieldByName("{$this->field_name}[$langcode][0][format]", '', t('Format selector is not displayed'));
 
     // Submit with data that should be filtered.
     $value = '<em>' . $this->randomName() . '</em>';
@@ -186,14 +186,14 @@ class TextFieldTestCase extends DrupalWebTestCase {
     $this->drupalPost(NULL, $edit, t('Save'));
     preg_match('|test-entity/(\d+)/edit|', $this->url, $match);
     $id = $match[1];
-    $this->assertRaw(t('test_entity @id has been created.', array('@id' => $id)), 'Entity was created');
+    $this->assertRaw(t('test_entity @id has been created.', array('@id' => $id)), t('Entity was created'));
 
     // Display the entity.
     $entity = field_test_entity_test_load($id);
     $entity->content = field_attach_view($entity_type, $entity, 'full');
     $this->content = drupal_render($entity->content);
-    $this->assertNoRaw($value, 'HTML tags are not displayed.');
-    $this->assertRaw(check_plain($value), 'Escaped HTML is displayed correctly.');
+    $this->assertNoRaw($value, t('HTML tags are not displayed.'));
+    $this->assertRaw(check_plain($value), t('Escaped HTML is displayed correctly.'));
 
     // Create a new text format that does not escape HTML, and grant the user
     // access to it.
@@ -211,21 +211,21 @@ class TextFieldTestCase extends DrupalWebTestCase {
     // Display edition form.
     // We should now have a 'text format' selector.
     $this->drupalGet('test-entity/' . $id . '/edit');
-    $this->assertFieldByName("{$this->field_name}[$langcode][0][value]", '', 'Widget is displayed');
-    $this->assertFieldByName("{$this->field_name}[$langcode][0][format]", '', 'Format selector is displayed');
+    $this->assertFieldByName("{$this->field_name}[$langcode][0][value]", '', t('Widget is displayed'));
+    $this->assertFieldByName("{$this->field_name}[$langcode][0][format]", '', t('Format selector is displayed'));
 
     // Edit and change the text format to the new one that was created.
     $edit = array(
       "{$this->field_name}[$langcode][0][format]" => $format_id,
     );
     $this->drupalPost(NULL, $edit, t('Save'));
-    $this->assertRaw(t('test_entity @id has been updated.', array('@id' => $id)), 'Entity was updated');
+    $this->assertRaw(t('test_entity @id has been updated.', array('@id' => $id)), t('Entity was updated'));
 
     // Display the entity.
     $entity = field_test_entity_test_load($id);
     $entity->content = field_attach_view($entity_type, $entity, 'full');
     $this->content = drupal_render($entity->content);
-    $this->assertRaw($value, 'Value is displayed unfiltered');
+    $this->assertRaw($value, t('Value is displayed unfiltered'));
   }
 }
 
@@ -359,9 +359,9 @@ class TextSummaryTestCase extends DrupalWebTestCase {
 
     // Test text_summary() for different sizes.
     for ($i = 0; $i <= 37; $i++) {
-      $this->callTextSummary($text, $expected[$i],     NULL, $i);
-      $this->callTextSummary($text, $expected_lb[$i], 1,     $i);
-      $this->callTextSummary($text, $expected_lb[$i], 2,     $i);
+      $this->callTextSummary($text, $expected[$i],    NULL, $i);
+      $this->callTextSummary($text, $expected_lb[$i], 1,    $i);
+      $this->callTextSummary($text, $expected_lb[$i], 2,    $i);
     }
   }
 
@@ -370,7 +370,7 @@ class TextSummaryTestCase extends DrupalWebTestCase {
    */
   function callTextSummary($text, $expected, $format = NULL, $size = NULL) {
     $summary = text_summary($text, $format, $size);
-    $this->assertIdentical($summary, $expected, 'Generated summary "' . $summary . '" matches expected "' . $expected . '".');
+    $this->assertIdentical($summary, $expected, t('Generated summary "@summary" matches expected "@expected".', array('@summary' => $summary, '@expected' => $expected)));
   }
 }
 
@@ -398,7 +398,7 @@ class TextTranslationTestCase extends DrupalWebTestCase {
     // Set "Article" content type to use multilingual support with translation.
     $edit = array('language_content_type' => 2);
     $this->drupalPost('admin/structure/types/manage/article', $edit, t('Save content type'));
-    $this->assertRaw(t('The content type %type has been updated.', array('%type' => 'Article')), 'Article content type has been updated.');
+    $this->assertRaw(t('The content type %type has been updated.', array('%type' => 'Article')), t('Article content type has been updated.'));
   }
 
   /**
@@ -410,7 +410,7 @@ class TextTranslationTestCase extends DrupalWebTestCase {
     $edit = array('field[cardinality]' => -1);
     $this->drupalPost('admin/structure/types/manage/article/fields/body', $edit, t('Save settings'));
     $this->drupalGet('node/add/article');
-    $this->assertFieldByXPath("//input[@name='body_add_more']", t('Add another item'), 'Body field cardinality set to multiple.');
+    $this->assertFieldByXPath("//input[@name='body_add_more']", t('Add another item'), t('Body field cardinality set to multiple.'));
 
     $body = array(
       $this->randomName(),
@@ -434,7 +434,7 @@ class TextTranslationTestCase extends DrupalWebTestCase {
         "body[$langcode][$delta][format]" => $format--,
       );
       $this->drupalPost('node/1/edit', $edit, t('Save'));
-      $this->assertText($body[$delta], 'The body field with delta ' . $delta . ' has been saved.');
+      $this->assertText($body[$delta], t('The body field with delta @delta has been saved.', array('@delta' => $delta)));
     }
 
     // Login as translator.
@@ -444,7 +444,7 @@ class TextTranslationTestCase extends DrupalWebTestCase {
     // Translate the article in french.
     $this->drupalGet('node/1/translate');
     $this->clickLink(t('add translation'));
-    $this->assertNoText($body[0], 'The body field with delta ' . 0 . ' is hidden.');
-    $this->assertText($body[1], 'The body field with delta ' . 1 . ' is shown.');
+    $this->assertNoText($body[0], t('The body field with delta @delta is hidden.', array('@delta' => 0)));
+    $this->assertText($body[1], t('The body field with delta @delta is shown.', array('@delta' => 1)));
   }
 }
