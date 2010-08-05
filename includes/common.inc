@@ -2292,29 +2292,29 @@ function l($text, $path, array $options = array()) {
 }
 
 /**
- * Deliver a page callback result to the browser in the format appropriate.
+ * Delivers a page callback result to the browser in the appropriate format.
  *
  * This function is most commonly called by menu_execute_active_handler(), but
  * can also be called by error conditions such as drupal_not_found(),
  * drupal_access_denied(), and drupal_site_offline().
  *
- * When a user requests a page, index.php calls menu_execute_active_handler()
+ * When a user requests a page, index.php calls menu_execute_active_handler(),
  * which calls the 'page callback' function registered in hook_menu(). The page
  * callback function can return one of:
- * - NULL: to indicate no content
- * - an integer menu status constant: to indicate an error condition
- * - a string of HTML content
- * - a renderable array of content
+ * - NULL: to indicate no content.
+ * - An integer menu status constant: to indicate an error condition.
+ * - A string of HTML content.
+ * - A renderable array of content.
  * Returning a renderable array rather than a string of HTML is preferred,
  * because that provides modules with more flexibility in customizing the final
  * result.
  *
  * When the page callback returns its constructed content to
- * menu_execute_active_handler(), this functions gets called. The purpose of
+ * menu_execute_active_handler(), this function gets called. The purpose of
  * this function is to determine the most appropriate 'delivery callback'
  * function to route the content to. The delivery callback function then
  * sends the content to the browser in the needed format. The default delivery
- * callback is drupal_deliver_html_page() which delivers the content as an HTML
+ * callback is drupal_deliver_html_page(), which delivers the content as an HTML
  * page, complete with blocks in addition to the content. This default can be
  * overridden on a per menu router item basis by setting 'delivery callback' in
  * hook_menu() or hook_menu_alter(), and can also be overridden on a per request
@@ -2329,6 +2329,16 @@ function l($text, $path, array $options = array()) {
  * In order for page callbacks to be reusable in different delivery formats,
  * they should not issue any "print" or "echo" statements, but instead just
  * return content.
+ *
+ * Also note that this function does not perform access checks. The delivery
+ * callback function specified in hook_menu(), hook_menu_alter(), or
+ * hook_page_delivery_callback_alter() will be called even if the router item
+ * access checks fail. This is intentional (it is needed for JSON and other
+ * purposes), but it has security implications. Do not call this function
+ * directly unless you understand the security implications, and be careful in
+ * writing delivery callbacks, so that they do not violate security. See
+ * drupal_deliver_html_page() for an example of a delivery callback that
+ * respects security.
  *
  * @param $page_callback_result
  *   The result of a page callback. Can be one of:
