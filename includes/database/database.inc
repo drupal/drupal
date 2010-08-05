@@ -537,6 +537,8 @@ abstract class DatabaseConnection extends PDO {
    *   query builder and should not be set by a user. If there is an error,
    *   this method will return NULL and may throw an exception if
    *   $options['throw_exception'] is TRUE.
+   *
+   * @throws PDOException
    */
   public function query($query, array $args = array(), $options = array()) {
 
@@ -875,6 +877,8 @@ abstract class DatabaseConnection extends PDO {
    *   The name of the savepoint. The default, 'drupal_transaction', will roll
    *   the entire transaction back.
    *
+   * @throws DatabaseTransactionNoActiveException
+   *
    * @see DatabaseTransaction::rollback()
    */
   public function rollback($savepoint_name = 'drupal_transaction') {
@@ -912,6 +916,8 @@ abstract class DatabaseConnection extends PDO {
    *
    * If no transaction is already active, we begin a new transaction.
    *
+   * @throws DatabaseTransactionNameNonUniqueException
+   *
    * @see DatabaseTransaction
    */
   public function pushTransaction($name) {
@@ -941,6 +947,9 @@ abstract class DatabaseConnection extends PDO {
    *
    * @param $name
    *   The name of the savepoint
+   *
+   * @throws DatabaseTransactionNoActiveException
+   * @throws DatabaseTransactionCommitFailedException
    *
    * @see DatabaseTransaction
    */
@@ -1093,6 +1102,8 @@ abstract class DatabaseConnection extends PDO {
    * by destroying the transaction object or allowing it to go out of scope.
    * A direct commit bypasses all of the safety checks we've built on top of
    * PDO's transaction routines.
+   *
+   * @throws DatabaseTransactionExplicitCommitNotAllowedException
    *
    * @see DatabaseTransaction
    */
@@ -1468,6 +1479,9 @@ abstract class Database {
    *   "default".
    * @param $target
    *   The database target to open.
+   *
+   * @throws DatabaseConnectionNotDefinedException
+   * @throws DatabaseDriverNotSpecifiedException
    */
   final protected static function openConnection($key, $target) {
     if (empty(self::$databaseInfo)) {

@@ -535,6 +535,9 @@ class InsertQuery extends Query {
    *
    * @return
    *   TRUE if the validation was successful, FALSE if not.
+   *
+   * @throws FieldsOverlapException
+   * @throws NoFieldsException
    */
   public function preExecute() {
     // Confirm that the user did not try to specify an identical
@@ -782,6 +785,8 @@ class MergeQuery extends Query {
    *
    * @return
    *   TRUE if the validation was successful, FALSE if not.
+   *
+   * @throws InvalidMergeQueryException
    */
   public function preExecute() {
 
@@ -800,6 +805,8 @@ class MergeQuery extends Query {
    *   A status indicating the executed operation:
    *   - MergeQuery::STATUS_INSERT for an INSERT operation.
    *   - MergeQuery::STATUS_UPDATE for an UPDATE operation.
+   *
+   * @throws InvalidMergeQueryException
    */
   public function execute() {
     // If validation fails, simply return NULL.
