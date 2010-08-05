@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.403 2010/07/19 21:57:49 dries Exp $
+// $Id: menu.inc,v 1.404 2010/08/05 07:56:50 webchick Exp $
 
 /**
  * @file
@@ -865,7 +865,7 @@ function menu_get_object($type = 'node', $position = 1, $path = NULL) {
 }
 
 /**
- * Render a menu tree based on the current path.
+ * Renders a menu tree based on the current path.
  *
  * The tree is expanded based on the current path and dynamic paths are also
  * changed according to the defined to_arg functions (for example the 'My
@@ -875,7 +875,8 @@ function menu_get_object($type = 'node', $position = 1, $path = NULL) {
  *   The name of the menu.
  *
  * @return
- *   The rendered HTML of that menu on the current page.
+ *   A structured array representing the specified menu on the current page, to
+ *   be rendered by drupal_render().
  */
 function menu_tree($menu_name) {
   $menu_output = &drupal_static(__FUNCTION__, array());
