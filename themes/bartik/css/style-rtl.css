@@ -143,6 +143,21 @@ ul.tips {
   clear: right;
 }
 
+/* ----------------- Buttons ------------------ */
+
+input.form-submit,
+a.button {
+  margin-right: 0;
+  margin-left: 1em;
+}
+
+/* --------------- Search Form ---------------- */
+
+#search-block-form input.form-submit,
+#search-form input.form-submit {
+  margin-left: 0;
+}
+
 /* ------------------ Footer ------------------ */
 
 #footer-columns ul {
