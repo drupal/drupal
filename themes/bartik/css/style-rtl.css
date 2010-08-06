@@ -1,4 +1,4 @@
-/* $Id: style-rtl.css,v 1.2 2010/07/11 22:12:26 dries Exp $ */
+/* $Id: style-rtl.css,v 1.3 2010/08/06 01:40:29 webchick Exp $ */
 
 /* ------------------ Reset Styles ------------------ */
 
@@ -141,6 +141,21 @@ ul.tips {
 }
 .form-item-pass-pass2 label {
   clear: right;
+}
+
+/* ----------------- Buttons ------------------ */
+
+input.form-submit,
+a.button {
+  margin-right: 0;
+  margin-left: 1em;
+}
+
+/* --------------- Search Form ---------------- */
+
+#search-block-form input.form-submit,
+#search-form input.form-submit {
+  margin-left: 0;
 }
 
 /* ------------------ Footer ------------------ */

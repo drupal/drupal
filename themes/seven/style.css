@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.61 2010/08/05 06:53:13 webchick Exp $ */
+/* $Id: style.css,v 1.62 2010/08/06 01:40:29 webchick Exp $ */
 
 /**
  * Generic elements.
@@ -676,6 +676,7 @@ a.button {
   cursor: pointer;
   padding: 4px 17px;
   margin-bottom: 1em;
+  margin-right: 1em;
   color: #5a5a5a;
   text-align: center;
   font-weight: normal;
