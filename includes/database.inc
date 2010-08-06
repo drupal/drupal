@@ -389,16 +389,20 @@ function db_rewrite_sql($query, $primary_table = 'n', $primary_field = 'nid',  $
 }
 
 /**
- * Adds the DISTINCT flag to the supplied query if a DISTINCT doesn't already
- * exist in the query. Returns the altered query.
+ * Adds the DISTINCT flag to the supplied query and returns the altered query.
  *
- * This will not, and never did guarantee that you will obtain distinct 
- * values of $table.$field.
+ * The supplied query should not contain a DISTINCT flag. This will not, and
+ * never did guarantee that you will obtain distinct values of $table.$field.
  *
- * @param $table Unused. Kept to remain API compatibility.
- * @param $field Unused. Kept to remain API compatibility.
- * @param $query Query to which the DISTINCT flag should be applied.
- * @return SQL query with the DISTINCT flag set.
+ * @param $table
+ *   Unused. Kept to retain API compatibility.
+ * @param $field
+ *   Unused. Kept to retain API compatibility.
+ * @param $query
+ *   Query to which the DISTINCT flag should be applied.
+ *
+ * @return
+ *   SQL query with the DISTINCT flag set.
  */
 function db_distinct_field($table, $field, $query) {
   $matches = array();
@@ -406,6 +410,7 @@ function db_distinct_field($table, $field, $query) {
     // Only add distinct to the outer SELECT to avoid messing up subqueries.
     $query = preg_replace('/^SELECT/i', 'SELECT DISTINCT', $query);
   }
+
   return $query;
 }
 
