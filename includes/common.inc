@@ -2891,8 +2891,15 @@ function drupal_alter($type, &$data) {
  * Renders HTML given a structured array tree.
  *
  * Recursively iterates over each of the array elements, generating HTML code.
- * This function is usually called from within a another function, like
+ * This function is usually called from within another function, like
  * drupal_get_form() or node_view().
+ * 
+ * drupal_render() flags each element with a '#printed' status to indicate that
+ * the element has been rendered, which allows individual elements of a given
+ * array to be rendered independently. This prevents elements from being
+ * rendered more than once on subsequent calls to drupal_render() if, for example,
+ * they are part of a larger array. If the same array or array element is passed
+ * more than once to drupal_render(), it simply returns a NULL value.
  *
  * @param $elements
  *   The structured array describing the data to be rendered.
