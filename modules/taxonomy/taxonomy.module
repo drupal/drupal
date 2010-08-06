@@ -1330,7 +1330,9 @@ function _taxonomy_get_tid_from_term($term) {
 }
 
 /**
- * Implode a list of tags of a certain vocabulary into a string.
+ * Implodes a list of tags of a certain vocabulary into a string.
+ *
+ * @see drupal_explode_tags()
  */
 function taxonomy_implode_tags($tags, $vid = NULL) {
   $typed_tags = array();
