@@ -2839,9 +2839,11 @@ function drupal_system_listing($mask, $directory, $key = 'name', $min_depth = 1)
 
 
 /**
- * This dispatch function hands off structured Drupal arrays to type-specific
- * *_alter implementations. It ensures a consistent interface for all altering
- * operations.
+ * Hands off alterable variables to type-specific *_alter implementations.
+ *
+ * This dispatch function hands off the passed in variables to type-specific
+ * hook_TYPE_alter() implementations in modules. It ensures a consistent
+ * interface for all altering operations.
  *
  * @param $type
  *   The data type of the structured array. 'form', 'links',
