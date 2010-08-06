@@ -133,6 +133,7 @@ function _batch_progress_page_nojs() {
     // followed by the error message.
     ob_start();
     $fallback = $current_set['error_message'] .'<br/>'. $batch['error_message'];
+    drupal_maintenance_theme();
     $fallback = theme('maintenance_page', $fallback, FALSE, FALSE);
 
     // We strip the end of the page using a marker in the template, so any
