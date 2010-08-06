@@ -629,7 +629,7 @@ function system_schema() {
         'not null' => TRUE,
         'default' => 0),
       'status' => array(
-        'description' => 'A flag indicating whether file is temporary (1) or permanent (0).',
+        'description' => 'A flag indicating whether file is temporary (0) or permanent (1).',
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0),
