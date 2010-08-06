@@ -19,7 +19,7 @@ ul.primary-links, ul.secondary-links,
   display: none;
 }
 
-body.sidebars, body.sideber-left, body.sidebar-right, body {
+body.sidebars, body.sidebar-left, body.sidebar-right, body {
   width: 640px;
 }
 
