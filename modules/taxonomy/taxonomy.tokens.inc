@@ -111,7 +111,8 @@ function taxonomy_tokens($type, $tokens, array $data = array(), array $options =
           break;
 
         case 'url':
-          $replacements[$original] = url('taxonomy/term/' . $term->tid, array('absolute' => TRUE));
+          $uri = entity_uri('taxonomy_term', $term);
+          $replacements[$original] = url($uri['path'], array_merge($uri['options'], array('absolute' => TRUE)));
           break;
 
         case 'node-count':
