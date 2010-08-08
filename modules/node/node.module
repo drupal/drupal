@@ -555,6 +555,9 @@ function node_type_save($info) {
  *   A node type object.
  * @param $label
  *   The label for the body instance.
+ *
+ * @return
+ *   Body field instance.
  */
 function node_add_body_field($type, $label = 'Body') {
    // Add or remove the body field, as needed.
@@ -588,8 +591,9 @@ function node_add_body_field($type, $label = 'Body') {
         ),
       ),
     );
-    field_create_instance($instance);
+    $instance = field_create_instance($instance);
   }
+  return $instance;
 }
 
 /**
