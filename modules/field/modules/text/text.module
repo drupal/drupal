@@ -1,5 +1,5 @@
 <?php
-// $Id: text.module,v 1.59 2010/07/07 13:30:06 dries Exp $
+// $Id: text.module,v 1.60 2010/08/08 13:02:37 dries Exp $
 
 /**
  * @file
@@ -251,6 +251,7 @@ function text_field_formatter_info() {
     'text_trimmed' => array(
       'label' => t('Trimmed'),
       'field types' => array('text', 'text_long', 'text_with_summary'),
+      'settings' => array('trim_length' => 600),
     ),
 
     // The 'summary or trimmed' field formatter for text_with_summary
@@ -260,8 +261,48 @@ function text_field_formatter_info() {
     'text_summary_or_trimmed' => array(
       'label' => t('Summary or trimmed'),
       'field types' => array('text_with_summary'),
+      'settings' => array('trim_length' => 600),
     ),
   );
+}
+
+/**
+ * Implements hook_field_formatter_settings_form().
+ */
+function text_field_formatter_settings_form($field, $instance, $view_mode, $form, &$form_state) {
+  $display = $instance['display'][$view_mode];
+  $settings = $display['settings'];
+
+  $form = array();
+
+  if (strpos($display['type'], '_trimmed') !== FALSE) {
+    $form['trim_length'] = array(
+      '#title' => t('Trim length'),
+      '#type' => 'textfield',
+      '#size' => 10,
+      '#default_value' => $settings['trim_length'],
+      '#element_validate' => array('_element_validate_integer_positive'),
+      '#required' => TRUE,
+    );
+  }
+
+  return $form;
+}
+
+/**
+ * Implements hook_field_formatter_settings_summary().
+ */
+function text_field_formatter_settings_summary($field, $instance, $view_mode) {
+  $display = $instance['display'][$view_mode];
+  $settings = $display['settings'];
+
+  $summary = '';
+
+  if (strpos($display['type'], '_trimmed') !== FALSE) {
+    $summary = t('Trim length') . ': ' . $settings['trim_length'];
+  }
+
+  return $summary;
 }
 
 /**
@@ -276,7 +317,7 @@ function text_field_formatter_view($entity_type, $entity, $field, $instance, $la
       foreach ($items as $delta => $item) {
         $output = _text_sanitize($instance, $langcode, $item, 'value');
         if ($display['type'] == 'text_trimmed') {
-          $output = text_summary($output, $instance['settings']['text_processing'] ? $item['format'] : NULL);
+          $output = text_summary($output, $instance['settings']['text_processing'] ? $item['format'] : NULL, $display['settings']['trim_length']);
         }
         $element[$delta] = array('#markup' => $output);
       }
@@ -289,8 +330,7 @@ function text_field_formatter_view($entity_type, $entity, $field, $instance, $la
         }
         else {
           $output = _text_sanitize($instance, $langcode, $item, 'value');
-          $size = variable_get('teaser_length_' . $instance['bundle'], 600);
-          $output = text_summary($output, $instance['settings']['text_processing'] ? $item['format'] : NULL, $size);
+          $output = text_summary($output, $instance['settings']['text_processing'] ? $item['format'] : NULL, $display['settings']['trim_length']);
         }
         $element[$delta] = array('#markup' => $output);
       }

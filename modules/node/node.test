@@ -1,5 +1,5 @@
 <?php
-// $Id: node.test,v 1.91 2010/08/05 23:53:38 webchick Exp $
+// $Id: node.test,v 1.92 2010/08/08 13:02:37 dries Exp $
 
 /**
  * Test the node_load_multiple() function.
@@ -565,11 +565,11 @@ class SummaryLengthTestCase extends DrupalWebTestCase {
     $expected = 'What is a Drupalism?';
     $this->assertRaw($expected, t('Check that the summary is 600 characters in length'), 'Node');
 
-    // Edit the teaser length for "Basic page" content type
-    $edit = array (
-      'teaser_length' => 200,
-    );
-    $this->drupalPost('admin/structure/types/manage/page', $edit, t('Save content type'));
+    // Change the teaser length for "Basic page" content type.
+    $instance = field_info_instance('node', 'body', $node->type);
+    $instance['display']['teaser']['settings']['trim_length'] = 200;
+    field_update_instance($instance);
+
     // Attempt to access the front page again and check if the summary is now only 200 characters in length.
     $this->drupalGet("node");
     $this->assertNoRaw($expected, t('Check that the summary is not longer than 200 characters'), 'Node');
@@ -1072,7 +1072,7 @@ class NodeTypeTestCase extends DrupalWebTestCase {
 
     $this->drupalGet('node/add/' . str_replace('_', '-', $type->name));
     $this->assertResponse(200, 'The new content type can be accessed at node/add.');
-    
+
     // Create a content type via the user interface.
     $web_user = $this->drupalCreateUser(array('bypass node access', 'administer content types'));
     $this->drupalLogin($web_user);

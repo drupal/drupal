@@ -1,5 +1,5 @@
 <?php
-// $Id: node.install,v 1.51 2010/05/14 04:37:53 webchick Exp $
+// $Id: node.install,v 1.52 2010/08/08 13:02:37 dries Exp $
 
 /**
  * @file
@@ -496,11 +496,29 @@ function node_update_7006(&$sandbox) {
       ->fields('node_type')
       ->execute();
 
+    $default_trim_length = variable_get('teaser_length', 600);
     // Add body field instances for existing node types.
     foreach ($result as $node_type) {
       if ($node_type->has_body) {
-        node_add_body_field($node_type, $node_type->body_label);
+        $instance = node_add_body_field($node_type, $node_type->body_label);
+        // Update newly created instance to convert teaser_length variable
+        // into formatter settings.
+        $trim_length = variable_get('teaser_length_' . $node_type->type, $default_trim_length);
+        $instance_changed = FALSE;
+        foreach ($instance['display'] as $view_mode => $view_mode_info) {
+          if ($view_mode_info['type'] == 'text_trimmed' || $view_mode_info['type'] == 'text_summary_or_trimmed') {
+            if (!isset($view_mode_info['settings']['trim_length'])) {
+              $instance['display'][$view_mode]['settings']['trim_length'] = $trim_length;
+              $instance_changed = TRUE;
+            }
+          }
+        }
+        if ($instance_changed) {
+          field_update_instance($instance);
+        }
+        variable_del('teaser_length_' . $node_type->type);
       }
+      // Leave 'teaser_length' variable for aggregator module upgrade.
 
       $sandbox['node_types_info'][$node_type->type] = array(
         'has_body' => $node_type->has_body,

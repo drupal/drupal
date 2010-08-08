@@ -1,5 +1,5 @@
 <?php
-// $Id: content_types.inc,v 1.115 2010/06/24 22:23:06 webchick Exp $
+// $Id: content_types.inc,v 1.116 2010/08/08 13:02:37 dries Exp $
 
 /**
  * @file
@@ -206,13 +206,6 @@ function node_type_form($form, &$form_state, $type = NULL) {
     '#title' => t('Display author and date information.'),
     '#default_value' => variable_get('node_submitted_' . $type->type, TRUE),
     '#description' => t('Author username and publish date will be displayed.'),
-  );
-  $form['display']['teaser_length'] = array(
-    '#type' => 'select',
-    '#title' => t('Length of trimmed content'),
-    '#default_value' => variable_get('teaser_length_' . $type->type, 600),
-    '#options' => drupal_map_assoc(array(0, 200, 400, 600, 800, 1000, 1200, 1400, 1600, 1800, 2000), '_node_characters'),
-    '#description' => t("The maximum number of characters used in the trimmed version of content.")
   );
   $form['old_type'] = array(
     '#type' => 'value',
@@ -451,7 +444,6 @@ function node_type_delete_confirm($form, &$form_state, $type) {
 function node_type_delete_confirm_submit($form, &$form_state) {
   node_type_delete($form_state['values']['type']);
 
-  variable_del('teaser_length_' . $form_state['values']['type']);
   variable_del('node_preview_' . $form_state['values']['type']);
   $t_args = array('%name' => $form_state['values']['name']);
   drupal_set_message(t('The content type %name has been deleted.', $t_args));
