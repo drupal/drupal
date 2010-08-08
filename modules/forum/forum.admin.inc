@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.admin.inc,v 1.35 2010/07/12 15:09:39 webchick Exp $
+// $Id: forum.admin.inc,v 1.36 2010/08/08 19:21:25 dries Exp $
 
 /**
  * @file
@@ -89,6 +89,7 @@ function forum_form_submit($form, &$form_state) {
         $containers[] = $term->tid;
         variable_set('forum_containers', $containers);
       }
+      $form_state['values']['tid'] = $term->tid;
       drupal_set_message(t('Created new @type %term.', array('%term' => $form_state['values']['name'], '@type' => $type)));
       break;
     case SAVED_UPDATED:
