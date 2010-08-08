@@ -94,6 +94,24 @@ interface SelectQueryInterface extends QueryConditionInterface, QueryAlterableIn
   public function &getOrderBy();
 
   /**
+   * Returns a reference to the group-by array for this query.
+   *
+   * Because this method returns by reference, alter hooks may edit the group-by
+   * array directly to make their changes. If just adding additional grouping
+   * fields, however, the use of groupBy() is preferred.
+   *
+   * Note that this method must be called by reference as well:
+   *
+   * @code
+   * $fields =& $query->getGroupBy();
+   * @endcode
+   *
+   * @return
+   *   A reference to the group-by array structure.
+   */
+  public function &getGroupBy();
+
+  /**
    * Returns a reference to the tables array for this query.
    *
    * Because this method returns by reference, alter hooks may edit the tables
@@ -619,6 +637,10 @@ class SelectQueryExtender implements SelectQueryInterface {
     return $this->query->getOrderBy();
   }
 
+  public function &getGroupBy() {
+    return $this->query->getGroupBy();
+  }
+
   public function &getTables() {
     return $this->query->getTables();
   }
@@ -1026,6 +1048,10 @@ class SelectQuery extends Query implements SelectQueryInterface {
     return $this->order;
   }
 
+  public function &getGroupBy() {
+    return $this->group;
+  }
+
   public function &getTables() {
     return $this->tables;
   }
@@ -1279,13 +1305,24 @@ class SelectQuery extends Query implements SelectQueryInterface {
     // Create our new query object that we will mutate into a count query.
     $count = clone($this);
 
+    $group_by = array_keys($count->getGroupBy());
+
     if (!$count->distinct) {
       // When not executing a distinct query, we can zero-out existing fields
-      // and expressions.
+      // and expressions that are not used by a GROUP BY.  Fields listed in
+      // the GROUP BY clause need to be present in the query.
       $fields =& $count->getFields();
-      $fields = array();
+      foreach (array_keys($fields) as $field) {
+        if (!empty($group_by[$field])) {
+          unset($fields[$field]);
+        }
+      }
       $expressions =& $count->getExpressions();
-      $expressions = array();
+      foreach (array_keys($expressions) as $field) {
+        if (!empty($group_by[$field])) {
+          unset($fields[$field]);
+        }
+      }
 
       // Also remove 'all_fields' statements, which are expanded into tablename.*
       // when the query is executed.
@@ -1294,22 +1331,25 @@ class SelectQuery extends Query implements SelectQueryInterface {
       }
     }
 
+    // If we've just removed all fields from the query, make sure there is at
+    // least one so that the query still runs.
+    $count->addExpression('1');
+
     // Ordering a count query is a waste of cycles, and breaks on some
     // databases anyway.
     $orders = &$count->getOrderBy();
     $orders = array();
 
-    if ($count->distinct) {
-      // If the query is distinct, we need to execute it in a subquery,
-      // because SQL99 does not support counting on distinct multiple fields.
-      $count = db_select($count);
+    if ($count->distinct && !empty($group_by)) {
+      // If the query is distinct and contains a GROUP BY, we need to remove the
+      // distinct because SQL99 does not support counting on distinct multiple fields.
       $count->distinct = FALSE;
     }
 
-    // COUNT() is an expression, so we add that back in.
-    $count->addExpression('COUNT(*)');
+    $query = db_select($count);
+    $query->addExpression('COUNT(*)');
 
-    return $count;
+    return $query;
   }
 
   public function __toString() {

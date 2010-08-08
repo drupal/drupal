@@ -103,7 +103,9 @@ function field_test_field_available_languages_alter(&$languages, $context) {
  * Implements hook_field_language_alter().
  */
 function field_test_field_language_alter(&$display_language, $context) {
-  locale_field_language_fallback($display_language, $context['entity'], $context['language']);
+  if (variable_get('field_test_language_fallback', TRUE)) {
+    locale_field_language_fallback($display_language, $context['entity'], $context['language']);
+  }
 }
 
 /**

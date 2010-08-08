@@ -216,10 +216,11 @@ function field_language($entity_type, $entity, $field_name = NULL, $langcode = N
   if (!isset($display_languages[$entity_type][$id][$langcode])) {
     $display_language = array();
 
-    // By default display language is set to LANGUAGE_NONE. It is up to
-    // translation handlers to implement language fallback rules.
+    // By default display language is set to LANGUAGE_NONE if the field
+    // translation is not available. It is up to translation handlers to
+    // implement language fallback rules.
     foreach (field_info_instances($entity_type, $bundle) as $instance) {
-      $display_language[$instance['field_name']] = LANGUAGE_NONE;
+      $display_language[$instance['field_name']] = isset($entity->{$instance['field_name']}[$langcode]) ? $langcode : LANGUAGE_NONE;
     }
 
     if (field_has_translation_handler($entity_type)) {

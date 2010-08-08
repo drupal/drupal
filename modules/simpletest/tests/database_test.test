@@ -1987,6 +1987,19 @@ class DatabaseSelectComplexTestCase extends DatabaseTestCase {
   }
 
   /**
+   * Test that we can generate a count query from a query with GROUP BY.
+   */
+  function testCountQueryGroupBy() {
+    $query = db_select('test_task');
+    $pid_field = $query->addField('test_task', 'pid');
+    $query->groupBy('pid');
+
+    $count = $query->countQuery()->execute()->fetchField();
+
+    $this->assertEqual($count, 3, t('Counted the correct number of records.'));
+  }
+
+  /**
    * Confirm that we can properly nest conditional clauses.
    */
   function testNestedConditions() {
