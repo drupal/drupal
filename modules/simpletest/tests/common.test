@@ -1,5 +1,5 @@
 <?php
-// $Id: common.test,v 1.119 2010/08/05 23:53:38 webchick Exp $
+// $Id: common.test,v 1.120 2010/08/08 19:35:49 dries Exp $
 
 /**
  * @file
@@ -23,10 +23,10 @@ class DrupalAlterTestCase extends DrupalWebTestCase {
   }
 
   function testDrupalAlter() {
-    // This test depends on Garland, so make sure that it is always the current
+    // This test depends on Bartik, so make sure that it is always the current
     // active theme.
     global $theme, $base_theme_info;
-    $theme = 'garland';
+    $theme = 'bartik';
     $base_theme_info = array();
 
     $array = array('foo' => 'bar');

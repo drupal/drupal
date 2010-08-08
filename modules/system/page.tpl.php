@@ -1,5 +1,5 @@
 <?php
-// $Id: page.tpl.php,v 1.44 2010/07/28 01:40:39 dries Exp $
+// $Id: page.tpl.php,v 1.45 2010/08/08 19:35:49 dries Exp $
 
 /**
  * @file
@@ -11,7 +11,7 @@
  * - $base_path: The base URL path of the Drupal installation. At the very
  *   least, this will always default to /.
  * - $directory: The directory the template is located in, e.g. modules/system
- *   or themes/garland.
+ *   or themes/bartik.
  * - $is_front: TRUE if the current page is the front page.
  * - $logged_in: TRUE if the user is registered and signed in.
  * - $is_admin: TRUE if the user has permission to access administration pages.

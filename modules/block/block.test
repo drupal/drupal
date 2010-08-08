@@ -1,5 +1,5 @@
 <?php
-// $Id: block.test,v 1.56 2010/08/05 23:53:37 webchick Exp $
+// $Id: block.test,v 1.57 2010/08/08 19:35:49 dries Exp $
 
 /**
  * @file
@@ -314,7 +314,7 @@ class NewDefaultThemeBlocks extends DrupalWebTestCase {
   }
 
   /**
-   * Check the enabled Garland blocks are correctly copied over.
+   * Check the enabled Bartik blocks are correctly copied over.
    */
   function testNewDefaultThemeBlocks() {
     // Create administrative user.

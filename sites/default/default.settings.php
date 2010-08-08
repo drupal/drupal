@@ -1,5 +1,5 @@
 <?php
-// $Id: default.settings.php,v 1.49 2010/07/20 21:12:47 dries Exp $
+// $Id: default.settings.php,v 1.50 2010/08/08 19:35:49 dries Exp $
 
 /**
  * @file
@@ -319,7 +319,7 @@ ini_set('session.cookie_lifetime', 2000000);
  * theme. It is located inside 'modules/system/maintenance-page.tpl.php'.
  * Note: This setting does not apply to installation and update pages.
  */
-# $conf['maintenance_theme'] = 'garland';
+# $conf['maintenance_theme'] = 'bartik';
 
 /**
  * Enable this setting to determine the correct IP address of the remote

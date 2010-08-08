@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.test,v 1.33 2010/08/05 23:53:38 webchick Exp $
+// $Id: menu.test,v 1.34 2010/08/08 19:35:49 dries Exp $
 
 /**
  * @file
@@ -20,8 +20,8 @@ class MenuRouterTestCase extends DrupalWebTestCase {
     parent::setUp('menu_test');
     // Make the tests below more robust by explicitly setting the default theme
     // and administrative theme that they expect.
-    theme_enable(array('garland'));
-    variable_set('theme_default', 'garland');
+    theme_enable(array('bartik'));
+    variable_set('theme_default', 'bartik');
     variable_set('admin_theme', 'seven');
   }
 
@@ -81,7 +81,7 @@ class MenuRouterTestCase extends DrupalWebTestCase {
     // For a regular user, the fact that the site is in maintenance mode means
     // we expect the theme callback system to be bypassed entirely.
     $this->drupalGet('menu-test/theme-callback/use-admin-theme');
-    $this->assertRaw('garland/style.css', t("The maintenance theme's CSS appears on the page."));
+    $this->assertRaw('bartik/css/style.css', t("The maintenance theme's CSS appears on the page."));
 
     // An administrator, however, should continue to see the requested theme.
     $admin_user = $this->drupalCreateUser(array('access site in maintenance mode'));
@@ -130,8 +130,8 @@ class MenuRouterTestCase extends DrupalWebTestCase {
   function testThemeCallbackOptionalTheme() {
     // Request a theme that is not enabled.
     $this->drupalGet('menu-test/theme-callback/use-stark-theme');
-    $this->assertText('Custom theme: NONE. Actual theme: garland.', t('The theme callback system falls back on the default theme when a theme that is not enabled is requested.'));
-    $this->assertRaw('garland/style.css', t("The default theme's CSS appears on the page."));
+    $this->assertText('Custom theme: NONE. Actual theme: bartik.', t('The theme callback system falls back on the default theme when a theme that is not enabled is requested.'));
+    $this->assertRaw('bartik/css/style.css', t("The default theme's CSS appears on the page."));
 
     // Now enable the theme and request it again.
     theme_enable(array('stark'));
@@ -145,8 +145,8 @@ class MenuRouterTestCase extends DrupalWebTestCase {
    */
   function testThemeCallbackFakeTheme() {
     $this->drupalGet('menu-test/theme-callback/use-fake-theme');
-    $this->assertText('Custom theme: NONE. Actual theme: garland.', t('The theme callback system falls back on the default theme when a theme that does not exist is requested.'));
-    $this->assertRaw('garland/style.css', t("The default theme's CSS appears on the page."));
+    $this->assertText('Custom theme: NONE. Actual theme: bartik.', t('The theme callback system falls back on the default theme when a theme that does not exist is requested.'));
+    $this->assertRaw('bartik/css/style.css', t("The default theme's CSS appears on the page."));
   }
 
   /**
@@ -154,8 +154,8 @@ class MenuRouterTestCase extends DrupalWebTestCase {
    */
   function testThemeCallbackNoThemeRequested() {
     $this->drupalGet('menu-test/theme-callback/no-theme-requested');
-    $this->assertText('Custom theme: NONE. Actual theme: garland.', t('The theme callback system falls back on the default theme when no theme is requested.'));
-    $this->assertRaw('garland/style.css', t("The default theme's CSS appears on the page."));
+    $this->assertText('Custom theme: NONE. Actual theme: bartik.', t('The theme callback system falls back on the default theme when no theme is requested.'));
+    $this->assertRaw('bartik/css/style.css', t("The default theme's CSS appears on the page."));
   }
 
   /**

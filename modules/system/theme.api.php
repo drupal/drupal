@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.api.php,v 1.3 2010/04/28 20:00:34 dries Exp $
+// $Id: theme.api.php,v 1.4 2010/08/08 19:35:49 dries Exp $
 
 /**
  * @defgroup themeable Default theme implementations
@@ -56,9 +56,9 @@
  * themes utilizing an engine will have their well-named theming functions
  * automatically registered for them. While this can vary based upon the theme
  * engine, the standard set by phptemplate is that theme functions should be
- * named THEMENAME_HOOK. For example, for Drupal's default theme (Garland) to
+ * named THEMENAME_HOOK. For example, for Drupal's default theme (Bartik) to
  * implement the 'table' hook, the phptemplate.engine would find
- * garland_table().
+ * bartik_table().
  *
  * The theme system is described and defined in theme.inc.
  *

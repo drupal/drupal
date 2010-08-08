@@ -1,4 +1,4 @@
-// $Id: MAINTAINERS.txt,v 1.42 2010/06/03 13:50:54 dries Exp $
+// $Id: MAINTAINERS.txt,v 1.43 2010/08/08 19:35:48 dries Exp $
 
 Drupal core is maintained by the community.  To participate, go to
 
@@ -273,6 +273,9 @@ User module
 
 Theme maintainers
 -----------------
+
+Bartik theme
+- Jen Simmons 'jensimmons' <http://drupal.org/user/140882>
 
 Garland theme
 - Stefan Nagtegaal 'steef' <http://drupal.org/user/612>

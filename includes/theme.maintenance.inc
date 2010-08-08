@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.maintenance.inc,v 1.63 2010/07/08 03:41:26 webchick Exp $
+// $Id: theme.maintenance.inc,v 1.64 2010/08/08 19:35:49 dries Exp $
 
 /**
  * @file
@@ -12,7 +12,7 @@
  * Used for site installs, updates and when the site is in maintenance mode.
  * It also applies when the database is unavailable or bootstrap was not
  * complete. Seven is always used for the initial install and update operations.
- * In other cases, Garland is used, but this can be overridden by setting a
+ * In other cases, Bartik is used, but this can be overridden by setting a
  * "maintenance_theme" key in the $conf variable in settings.php.
  */
 function _drupal_maintenance_theme() {
@@ -45,7 +45,7 @@ function _drupal_maintenance_theme() {
     }
 
     // We use the default theme as the maintenance theme. If a default theme
-    // isn't specified in the database or in settings.php, we use Garland.
+    // isn't specified in the database or in settings.php, we use Bartik.
     $custom_theme = variable_get('maintenance_theme', variable_get('theme_default', 'bartik'));
   }
 

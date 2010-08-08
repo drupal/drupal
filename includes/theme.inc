@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.604 2010/07/30 02:47:27 dries Exp $
+// $Id: theme.inc,v 1.605 2010/08/08 19:35:48 dries Exp $
 
 /**
  * @file
@@ -342,7 +342,7 @@ function drupal_theme_rebuild() {
  *   The loaded $theme object as returned from list_themes().
  * @param $path
  *   The directory where $name is. For example, modules/system or
- *   themes/garland.
+ *   themes/bartik.
  *
  * @see theme()
  * @see _theme_process_registry()
@@ -557,7 +557,7 @@ function _theme_build_registry($theme, $base_theme, $theme_engine) {
  *   - 'stylesheets': A two dimensional array, using the first key for the
  *     'media' attribute (e.g. 'all'), the second for the name of the file
  *     (e.g. style.css). The value is a complete filepath
- *     (e.g. themes/garland/style.css).
+ *     (e.g. themes/bartik/style.css).
  *   - 'scripts': An associative array of JavaScripts, using the filename as key
  *     and the complete filepath as value.
  *   - 'engine': The name of the theme engine.

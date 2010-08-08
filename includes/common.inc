@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1201 2010/08/05 08:36:08 webchick Exp $
+// $Id: common.inc,v 1.1202 2010/08/08 19:35:48 dries Exp $
 
 /**
  * @file
@@ -2785,7 +2785,7 @@ function drupal_add_css($data = NULL, $options = NULL) {
  * module styles through CSS selectors.
  *
  * Themes may replace module-defined CSS files by adding a stylesheet with the
- * same filename. For example, themes/garland/system-menus.css would replace
+ * same filename. For example, themes/bartik/system-menus.css would replace
  * modules/system/system-menus.css. This allows themes to override complete
  * CSS files, rather than specific selectors, when necessary.
  *
@@ -6086,7 +6086,7 @@ function drupal_write_record($table, &$record, $primary_keys = array()) {
  * - stylesheets: Theme stylesheets eg: stylesheets[all][] = my-style.css
  * - scripts: Theme scripts eg: scripts[] = my-script.css
  *
- * @see garland.info
+ * @see bartik.info
  *
  * @param $filename
  *   The file we are parsing. Accepts file with relative or absolute path.

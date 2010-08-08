@@ -1,5 +1,5 @@
 <?php
-// $Id: help.api.php,v 1.8 2010/01/30 07:59:25 dries Exp $
+// $Id: help.api.php,v 1.9 2010/08/08 19:35:49 dries Exp $
 
 /**
  * @file
@@ -50,7 +50,7 @@ function hook_help($path, $arg) {
   switch ($path) {
     // Main module help for the block module
     case 'admin/help#block':
-      return '<p>' . t('Blocks are boxes of content rendered into an area, or region, of a web page. The default theme Garland, for example, implements the regions "left sidebar", "right sidebar", "content", "header", and "footer", and a block may appear in any one of these areas. The <a href="@blocks">blocks administration page</a> provides a drag-and-drop interface for assigning a block to a region, and for controlling the order of blocks within regions.', array('@blocks' => url('admin/structure/block'))) . '</p>';
+      return '<p>' . t('Blocks are boxes of content rendered into an area, or region, of a web page. The default theme Bartik, for example, implements the regions "first sidebar", "second sidebar", "featured", "content", "header", "footer", etc., and a block may appear in any one of these areas. The <a href="@blocks">blocks administration page</a> provides a drag-and-drop interface for assigning a block to a region, and for controlling the order of blocks within regions.', array('@blocks' => url('admin/structure/block'))) . '</p>';
 
     // Help for another path in the block module
     case 'admin/structure/block':

@@ -1,5 +1,5 @@
 <?php
-// $Id: common_test.module,v 1.11 2010/05/18 06:59:46 dries Exp $
+// $Id: common_test.module,v 1.12 2010/08/08 19:35:49 dries Exp $
 
 /**
  * @file
@@ -133,12 +133,12 @@ function common_test_drupal_alter_alter(&$data, &$arg2 = NULL, &$arg3 = NULL) {
 }
 
 /**
- * Implements hook_TYPE_alter() on behalf of Garland theme.
+ * Implements hook_TYPE_alter() on behalf of Bartik theme.
  *
  * Same as common_test_drupal_alter_alter(), but here, we verify that themes
  * can also alter and come last.
  */
-function garland_drupal_alter_alter(&$data, &$arg2 = NULL, &$arg3 = NULL) {
+function bartik_drupal_alter_alter(&$data, &$arg2 = NULL, &$arg3 = NULL) {
   // Alter first argument.
   if (is_array($data)) {
     $data['foo'] .= ' theme';
