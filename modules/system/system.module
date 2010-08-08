@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.951 2010/08/03 02:06:42 dries Exp $
+// $Id: system.module,v 1.952 2010/08/08 23:55:30 dries Exp $
 
 /**
  * @file
@@ -709,7 +709,7 @@ function system_menu() {
     'weight' => -10,
     'file' => 'system.admin.inc',
   );
-    $items['admin/config/media/image-toolkit'] = array(
+  $items['admin/config/media/image-toolkit'] = array(
     'title' => 'Image toolkit',
     'description' => 'Choose which image toolkit to use if you have installed optional toolkits.',
     'page callback' => 'drupal_get_form',
