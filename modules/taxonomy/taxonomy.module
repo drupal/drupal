@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.600 2010/08/03 02:17:18 dries Exp $
+// $Id: taxonomy.module,v 1.601 2010/08/08 02:06:56 dries Exp $
 
 /**
  * @file
@@ -581,14 +581,13 @@ function taxonomy_term_delete($tid) {
 
       field_attach_delete('taxonomy_term', $term);
       module_invoke_all('taxonomy_term_delete', $term);
+      taxonomy_terms_static_reset();
     }
 
     $tids = $orphans;
   }
 
   cache_clear_all();
-  taxonomy_terms_static_reset();
-
   return SAVED_DELETED;
 }
 
@@ -679,6 +678,8 @@ function taxonomy_term_is_page($term) {
 function taxonomy_terms_static_reset() {
   drupal_static_reset('taxonomy_term_count_nodes');
   drupal_static_reset('taxonomy_get_tree');
+  drupal_static_reset('taxonomy_get_tree:parents');
+  drupal_static_reset('taxonomy_get_tree:terms');
   drupal_static_reset('taxonomy_get_parents');
   drupal_static_reset('taxonomy_get_parents_all');
   drupal_static_reset('taxonomy_get_children');
@@ -707,35 +708,30 @@ function taxonomy_vocabulary_get_names() {
 }
 
 /**
- * Find all parents of a given term ID.
+ * Finds all parents of a given term ID.
+ *
+ * @param $tid
+ *   A taxonomy term ID.
+ *
+ * @return
+ *   An array of term objects which are the parents of the term $tid.
  */
-function taxonomy_get_parents($tid, $key = 'tid') {
-  if ($tid) {
-    $tids = &drupal_static(__FUNCTION__, array());
-    if (isset($tids[$key][$tid])) {
-      $parents = $tids[$key][$tid];
-    }
-    else {
-      $query = db_select('taxonomy_term_data', 't');
-      $query->join('taxonomy_term_hierarchy', 'h', 'h.parent = t.tid');
-      $result = $query
-        ->addTag('translatable')
-        ->addTag('term_access')
-        ->fields('t')
-        ->condition('h.tid', $tid)
-        ->orderBy('weight')
-        ->orderBy('name')
-        ->execute();
-      $parents = array();
-      foreach ($result as $parent) {
-        $parents[$parent->$key] = $parent;
-      }
-    }
-    return $parents;
+function taxonomy_get_parents($tid) {
+  $parents = &drupal_static(__FUNCTION__, array());
+
+  if ($tid && !isset($parents[$tid])) {
+    $query = db_select('taxonomy_term_data', 't');
+    $query->join('taxonomy_term_hierarchy', 'h', 'h.parent = t.tid');
+    $query->addField('t', 'tid');
+    $query->condition('h.tid', $tid);
+    $query->addTag('term_access');
+    $query->orderBy('t.weight');
+    $query->orderBy('t.name');
+    $tids = $query->execute()->fetchCol();
+    $parents[$tid] = taxonomy_term_load_multiple($tids);
   }
-  else {
-    return array();
-  }
+
+  return isset($parents[$tid]) ? $parents[$tid] : array();
 }
 
 /**
@@ -764,35 +760,35 @@ function taxonomy_get_parents_all($tid) {
 }
 
 /**
- * Find all children of a term ID.
+ * Finds all children of a term ID.
+ *
+ * @param $tid
+ *   A taxonomy term ID.
+ * @param $vid
+ *   An optional vocabulary ID to restrict the child search.
+ *
+ * @return
+ *   An array of term objects which are the children of the term $tid.
  */
-function taxonomy_get_children($tid, $vid = 0, $key = 'tid') {
-  $tids = &drupal_static(__FUNCTION__, array());
-  if (isset($tids[$vid][$tid])) {
-    $children = $tids[$vid][$tid];
-  }
-  else {
+function taxonomy_get_children($tid, $vid = 0) {
+  $children = &drupal_static(__FUNCTION__, array());
+
+  if ($tid && !isset($children[$tid])) {
     $query = db_select('taxonomy_term_data', 't');
     $query->join('taxonomy_term_hierarchy', 'h', 'h.tid = t.tid');
-    $query
-      ->addTag('translatable')
-      ->addTag('term_access')
-      ->fields('t')
-      ->condition('parent', $tid)
-      ->orderBy('weight')
-      ->orderBy('name');
+    $query->addField('t', 'tid');
+    $query->condition('h.parent', $tid);
     if ($vid) {
       $query->condition('t.vid', $vid);
     }
-    $result = $query->execute();
-
-    $children = array();
-    foreach ($result as $term) {
-      $children[$term->$key] = $term;
-    }
-    $tids[$vid][$tid] = $children;
+    $query->addTag('term_access');
+    $query->orderBy('t.weight');
+    $query->orderBy('t.name');
+    $tids = $query->execute()->fetchCol();
+    $children[$tid] = taxonomy_term_load_multiple($tids);
   }
-  return $children;
+
+  return isset($children[$tid]) ? $children[$tid] : array();
 }
 
 /**
@@ -815,8 +811,8 @@ function taxonomy_get_children($tid, $vid = 0, $key = 'tid') {
  */
 function taxonomy_get_tree($vid, $parent = 0, $max_depth = NULL, $depth = -1) {
   $children = &drupal_static(__FUNCTION__, array());
-  $parents = &drupal_static(__FUNCTION__ . 'parents', array());
-  $terms = &drupal_static(__FUNCTION__ . 'terms', array());
+  $parents = &drupal_static(__FUNCTION__ . ':parents', array());
+  $terms = &drupal_static(__FUNCTION__ . ':terms', array());
 
   $depth++;
 
@@ -829,19 +825,18 @@ function taxonomy_get_tree($vid, $parent = 0, $max_depth = NULL, $depth = -1) {
 
     $query = db_select('taxonomy_term_data', 't');
     $query->join('taxonomy_term_hierarchy', 'h', 'h.tid = t.tid');
-    $result = $query
-      ->addTag('translatable')
-      ->addTag('term_access')
-      ->fields('t')
-      ->fields('h', array('parent'))
-      ->condition('t.vid', $vid)
-      ->orderBy('weight')
-      ->orderBy('name')
-      ->execute();
-    foreach ($result as $term) {
-      $children[$vid][$term->parent][] = $term->tid;
-      $parents[$vid][$term->tid][] = $term->parent;
-      $terms[$vid][$term->tid] = $term;
+    $query->addField('t', 'tid');
+    $query->addField('h', 'parent');
+    $query->condition('t.vid', $vid);
+    $query->addTag('term_access');
+    $query->orderBy('t.weight');
+    $query->orderBy('t.name');
+    $tid_parents = $query->execute()->fetchAllKeyed();
+    $terms[$vid] = taxonomy_term_load_multiple(array_keys($tid_parents));
+
+    foreach ($tid_parents as $tid => $parent_tid) {
+      $children[$vid][$parent_tid][] = $tid;
+      $parents[$vid][$tid][] = $parent_tid;
     }
   }
 
@@ -851,8 +846,6 @@ function taxonomy_get_tree($vid, $parent = 0, $max_depth = NULL, $depth = -1) {
     foreach ($children[$vid][$parent] as $child) {
       $term = clone $terms[$vid][$child];
       $term->depth = $depth;
-      // The "parent" attribute is not useful, as it would show one parent only.
-      unset($term->parent);
       $term->parents = $parents[$vid][$child];
       $tree[] = $term;
       if (!empty($children[$vid][$child])) {

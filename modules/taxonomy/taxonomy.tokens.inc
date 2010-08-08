@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.tokens.inc,v 1.8 2010/08/03 02:17:18 dries Exp $
+// $Id: taxonomy.tokens.inc,v 1.9 2010/08/08 02:06:56 dries Exp $
 
 /**
  * @file
@@ -111,7 +111,8 @@ function taxonomy_tokens($type, $tokens, array $data = array(), array $options =
           break;
 
         case 'url':
-          $replacements[$original] = url('taxonomy/term/' . $term->tid, array('absolute' => TRUE));
+          $uri = entity_uri('taxonomy_term', $term);
+          $replacements[$original] = url($uri['path'], array_merge($uri['options'], array('absolute' => TRUE)));
           break;
 
         case 'node-count':

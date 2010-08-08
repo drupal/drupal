@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.test,v 1.87 2010/08/05 23:53:39 webchick Exp $
+// $Id: taxonomy.test,v 1.88 2010/08/08 02:06:56 dries Exp $
 
 /**
  * @file
@@ -1028,6 +1028,8 @@ class TaxonomyTokenReplaceTestCase extends TaxonomyWebTestCase {
     $tests['[term:url]'] = url('taxonomy/term/' . $term2->tid, array('absolute' => TRUE));
     $tests['[term:node-count]'] = 1;
     $tests['[term:parent:name]'] = check_plain($term1->name);
+    $tests['[term:parent:url]'] = url('taxonomy/term/' . $term1->tid, array('absolute' => TRUE));
+    $tests['[term:parent:parent:name]'] = '[term:parent:parent:name]';
     $tests['[term:vocabulary:name]'] = check_plain($this->vocabulary->name);
 
     // Test to make sure that we generated something for each token.
