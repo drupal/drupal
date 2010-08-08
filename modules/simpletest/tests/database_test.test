@@ -1,5 +1,5 @@
 <?php
-// $Id: database_test.test,v 1.97 2010/08/05 23:53:38 webchick Exp $
+// $Id: database_test.test,v 1.98 2010/08/08 02:18:53 dries Exp $
 
 /**
  * Dummy class for fetching into a class.
@@ -1984,6 +1984,19 @@ class DatabaseSelectComplexTestCase extends DatabaseTestCase {
     $count = $query->countQuery()->execute()->fetchField();
 
     $this->assertEqual($count, 6, t('Counted the correct number of records.'));
+  }
+
+  /**
+   * Test that we can generate a count query from a query with GROUP BY.
+   */
+  function testCountQueryGroupBy() {
+    $query = db_select('test_task');
+    $pid_field = $query->addField('test_task', 'pid');
+    $query->groupBy('pid');
+
+    $count = $query->countQuery()->execute()->fetchField();
+
+    $this->assertEqual($count, 3, t('Counted the correct number of records.'));
   }
 
   /**

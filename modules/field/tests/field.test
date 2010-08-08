@@ -1,5 +1,5 @@
 <?php
-// $Id: field.test,v 1.36 2010/08/05 23:53:37 webchick Exp $
+// $Id: field.test,v 1.37 2010/08/08 02:18:53 dries Exp $
 
 /**
  * @file
@@ -2639,8 +2639,7 @@ class FieldTranslationsTestCase extends FieldTestCase {
     field_create_instance($instance);
 
     $entity = field_test_create_stub_entity(1, 1, $this->instance['bundle']);
-    list(, , $bundle) = entity_extract_ids($entity_type, $entity);
-    $instances = field_info_instances($entity_type, $bundle);
+    $instances = field_info_instances($entity_type, $this->instance['bundle']);
 
     $enabled_languages = field_content_languages();
     $languages = array();
@@ -2688,6 +2687,13 @@ class FieldTranslationsTestCase extends FieldTestCase {
     drupal_static_reset('field_language');
     $langcode = field_language($entity_type, $entity, $this->field_name, $requested_language);
     $this->assertTrue(isset($entity->{$this->field_name}[$langcode]) && $langcode != $requested_language, t('The display language for the (single) field %field_name is %language.', array('%field_name' => $field_name, '%language' => $langcode)));
+
+    // Test field_language() basic behavior without language fallback.
+    variable_set('field_test_language_fallback', FALSE);
+    $entity->{$this->field_name}[$requested_language] = mt_rand(1, 127);
+    drupal_static_reset('field_language');
+    $display_language = field_language($entity_type, $entity, $this->field_name, $requested_language);
+    $this->assertEqual($display_language, $requested_language, t('Display language behave correctly when language fallback is disabled'));
   }
 
   /**
