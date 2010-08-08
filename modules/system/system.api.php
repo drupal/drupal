@@ -1746,19 +1746,18 @@ function hook_theme($existing, $type, $theme, $path) {
  *
  * For example:
  * @code
- *  $theme_registry['user_profile'] = array(
- *    'variables' => array(
- *      'account' => NULL,
- *    ),
- *    'template' => 'modules/user/user-profile',
- *    'file' => 'modules/user/user.pages.inc',
- *    'type' => 'module',
- *    'theme path' => 'modules/user',
- *    'preprocess functions' => array(
- *      0 => 'template_preprocess',
- *      1 => 'template_preprocess_user_profile',
- *     ),
- *   )
+ * $theme_registry['user_profile'] = array(
+ *   'variables' => array(
+ *     'account' => NULL,
+ *   ),
+ *   'template' => 'modules/user/user-profile',
+ *   'file' => 'modules/user/user.pages.inc',
+ *   'type' => 'module',
+ *   'theme path' => 'modules/user',
+ *   'preprocess functions' => array(
+ *     0 => 'template_preprocess',
+ *     1 => 'template_preprocess_user_profile',
+ *   ),
  * );
  * @endcode
  *
