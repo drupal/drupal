@@ -89,6 +89,7 @@ function forum_form_submit($form, &$form_state) {
         $containers[] = $term->tid;
         variable_set('forum_containers', $containers);
       }
+      $form_state['values']['tid'] = $term->tid;
       drupal_set_message(t('Created new @type %term.', array('%term' => $form_state['values']['name'], '@type' => $type)));
       break;
     case SAVED_UPDATED:
