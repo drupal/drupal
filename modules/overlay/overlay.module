@@ -166,15 +166,6 @@ function overlay_exit() {
 }
 
 /**
- * Implements hook_element_info_alter().
- */
-function overlay_element_info_alter(&$types) {
-  foreach (array('submit', 'button', 'image_button', 'form') as $type) {
-    $types[$type]['#after_build'][] = 'overlay_form_after_build';
-  }
-}
-
-/**
  * Implements hook_library().
  */
 function overlay_library() {
@@ -370,69 +361,6 @@ function overlay_preprocess_page(&$variables) {
 }
 
 /**
- * Form after_build callback.
- *
- * After all hook_form_alter() implementations have been processed, we look at
- * the list of submit handlers and add our own at the end. The added handler
- * determines whether or not the user is redirected done at the end of form
- * processing, so that it's possible to close the overlay after submitting
- * a form.
- *
- * @see form_execute_handlers()
- * @see form_builder()
- * @see overlay_form_submit()
- *
- * @ingroup forms
- */
-function overlay_form_after_build($form, &$form_state) {
-  if (overlay_get_mode() == 'child') {
-    // If this element has submit handlers, then append our own.
-    if (isset($form['#submit'])) {
-      $form['#submit'][] = 'overlay_form_submit';
-    }
-  }
-  return $form;
-}
-
-/**
- * Generic form submit handler.
- *
- * When we are requested to close an overlay, we don't want Form API to
- * perform any redirection once the submitted form has been processed. Instead,
- * we set $form_state['redirect'] to FALSE so that Form API will simply
- * re-render the current page, and pass the redirect information on to the
- * overlay JavaScript so that the redirection can be performed there.
- *
- * @see overlay_get_mode()
- * @ingroup forms
- */
-function overlay_form_submit($form, &$form_state) {
-  if (isset($form_state['redirect'])) {
-    // A destination set in the URL trumps $form_state['redirect'].
-    if (isset($_GET['destination'])) {
-      $url = $_GET['destination'];
-      $url_settings = array();
-    }
-    elseif (is_array($form_state['redirect'])) {
-      $url = $form_state['redirect'][0];
-      $url_settings = $form_state['redirect'][1];
-    }
-    else {
-      $url = $form_state['redirect'];
-      $url_settings = array();
-    }
-    // Close the overlay if we are redirecting to a non-admin page or if the
-    // overlay module has just been disabled.
-    if (!path_is_admin($url) || !module_exists('overlay')) {
-      overlay_close_dialog($url, $url_settings);
-      // Tell FAPI to stay on the same page after all submit callbacks have
-      // been processed.
-      $form_state['redirect'] = FALSE;
-    }
-  }
-}
-
-/**
  * Callback to request that the overlay display an empty page.
  *
  * This is used to prevent a page request which closes the overlay (for
@@ -478,8 +406,6 @@ function overlay_page_delivery_callback_alter(&$callback) {
  *
  * This function is used to print out a bare minimum empty page which still has
  * the scripts and styles necessary in order to trigger the overlay to close.
- *
- * @see overlay_form_submit()
  */
 function overlay_deliver_empty_page() {
   $empty_page = '<html><head><title></title>' . drupal_get_css() . drupal_get_js() . '</head><body class="overlay"></body></html>';
