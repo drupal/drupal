@@ -274,6 +274,9 @@ User module
 Theme maintainers
 -----------------
 
+Bartik theme
+- Jen Simmons 'jensimmons' <http://drupal.org/user/140882>
+
 Garland theme
 - Stefan Nagtegaal 'steef' <http://drupal.org/user/612>
 

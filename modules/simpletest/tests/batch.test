@@ -274,7 +274,6 @@ class BatchPageTestCase extends DrupalWebTestCase {
   function testBatchProgressPageTheme() {
     // Make sure that the page which starts the batch (an administrative page)
     // is using a different theme than would normally be used by the batch API.
-    variable_set('theme_default', 'garland');
     variable_set('admin_theme', 'seven');
     // Visit an administrative page that runs a test batch, and check that the
     // theme that was used during batch execution (which the batch callback

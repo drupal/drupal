@@ -314,7 +314,7 @@ class NewDefaultThemeBlocks extends DrupalWebTestCase {
   }
 
   /**
-   * Check the enabled Garland blocks are correctly copied over.
+   * Check the enabled Bartik blocks are correctly copied over.
    */
   function testNewDefaultThemeBlocks() {
     // Create administrative user.

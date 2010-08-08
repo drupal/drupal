@@ -56,9 +56,9 @@
  * themes utilizing an engine will have their well-named theming functions
  * automatically registered for them. While this can vary based upon the theme
  * engine, the standard set by phptemplate is that theme functions should be
- * named THEMENAME_HOOK. For example, for Drupal's default theme (Garland) to
+ * named THEMENAME_HOOK. For example, for Drupal's default theme (Bartik) to
  * implement the 'table' hook, the phptemplate.engine would find
- * garland_table().
+ * bartik_table().
  *
  * The theme system is described and defined in theme.inc.
  *

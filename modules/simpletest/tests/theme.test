@@ -170,7 +170,6 @@ class ThemeHookInitUnitTest extends DrupalWebTestCase {
 
   function setUp() {
     parent::setUp('theme_test');
-    variable_set('theme_default', 'garland');
   }
 
   /**
@@ -179,6 +178,6 @@ class ThemeHookInitUnitTest extends DrupalWebTestCase {
   function testThemeInitializationHookInit() {
     $this->drupalGet('theme-test/hook-init');
     $this->assertRaw('Themed output generated in hook_init()', t('Themed output generated in hook_init() correctly appears on the page.'));
-    $this->assertRaw('garland/style.css', t("The default theme's CSS appears on the page when the theme system is initialized in hook_init()."));
+    $this->assertRaw('bartik/css/style.css', t("The default theme's CSS appears on the page when the theme system is initialized in hook_init()."));
   }
 }

@@ -23,10 +23,10 @@ class DrupalAlterTestCase extends DrupalWebTestCase {
   }
 
   function testDrupalAlter() {
-    // This test depends on Garland, so make sure that it is always the current
+    // This test depends on Bartik, so make sure that it is always the current
     // active theme.
     global $theme, $base_theme_info;
-    $theme = 'garland';
+    $theme = 'bartik';
     $base_theme_info = array();
 
     $array = array('foo' => 'bar');
