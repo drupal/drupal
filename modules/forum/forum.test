@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.test,v 1.59 2010/08/05 23:53:38 webchick Exp $
+// $Id: forum.test,v 1.60 2010/08/08 16:09:26 webchick Exp $
 
 class ForumTestCase extends DrupalWebTestCase {
   protected $admin_user;
@@ -71,7 +71,7 @@ class ForumTestCase extends DrupalWebTestCase {
 
     // Verify the topic and post counts on the forum page.
     $this->drupalGet('forum');
-    $this->assertRaw("<td class=\"topics\">\n          6                  </td>");
+    $this->assertRaw("<td class=\"topics\">\n          6                      <br />\n            <a href=\"/forum/3#new\">5 new</a>\n                  </td>");
     $this->assertRaw('<td class="posts">6</td>');
 
     // Test loading multiple forum nodes on the front page.
