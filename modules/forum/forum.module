@@ -852,7 +852,7 @@ function forum_forum_load($tid = NULL) {
 function _forum_topics_unread($term, $uid) {
   $query = db_select('node', 'n');
   $query->join('forum', 'f', 'n.vid = f.vid AND f.tid = :tid', array(':tid' => $term));
-  $query->join('history', 'h', 'n.nid = h.nid AND h.uid = :uid', array(':uid' => $uid));
+  $query->leftJoin('history', 'h', 'n.nid = h.nid AND h.uid = :uid', array(':uid' => $uid));
   $query->addExpression('COUNT(n.nid)', 'count');
   return $query
     ->condition('status', 1)
