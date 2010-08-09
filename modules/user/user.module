@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1190 2010/08/04 06:52:57 webchick Exp $
+// $Id: user.module,v 1.1191 2010/08/09 19:49:40 dries Exp $
 
 /**
  * @file
@@ -2870,6 +2870,8 @@ function user_role_grant_permissions($rid, array $permissions = array()) {
       ->key(array(
         'rid' => $rid,
         'permission' => $name,
+      ))
+      ->fields(array(
         'module' => $modules[$name],
       ))
       ->execute();
