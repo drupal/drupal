@@ -1167,7 +1167,7 @@ Drupal.theme.prototype.tableDragIndentation = function () {
 };
 
 Drupal.theme.prototype.tableDragChangedWarning = function () {
-  return '<div class="warning">' + Drupal.theme('tableDragChangedMarker') + ' ' + Drupal.t('Changes made in this table will not be saved until the form is submitted.') + '</div>';
+  return '<div class="tabledrag-changed-warning messages warning">' + Drupal.theme('tableDragChangedMarker') + ' ' + Drupal.t('Changes made in this table will not be saved until the form is submitted.') + '</div>';
 };
 
 })(jQuery);
