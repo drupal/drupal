@@ -2048,7 +2048,7 @@ function node_block_view($delta = '') {
   switch ($delta) {
     case 'syndicate':
       $block['subject'] = t('Syndicate');
-      $block['content'] = theme('feed_icon', array('url' => url('rss.xml'), 'title' => t('Syndicate')));
+      $block['content'] = theme('feed_icon', array('url' => 'rss.xml', 'title' => t('Syndicate')));
       break;
 
     case 'recent':
