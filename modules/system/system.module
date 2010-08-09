@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.952 2010/08/08 23:55:30 dries Exp $
+// $Id: system.module,v 1.953 2010/08/09 16:54:50 webchick Exp $
 
 /**
  * @file
@@ -1978,6 +1978,16 @@ function system_block_view($delta = '') {
         return $block;
       }
       break;
+  }
+}
+
+/**
+ * Implements hook_preprocess_block().
+ */
+function system_preprocess_block(&$variables) {
+  // System menu blocks should get the same class as menu module blocks.
+  if ($variables['block']->module == 'system' && in_array($variables['block']->delta, array_keys(menu_list_system_menus()))) {
+    $variables['classes_array'][] = 'block-menu';
   }
 }
 

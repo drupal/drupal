@@ -1,5 +1,5 @@
 <?php
-// $Id: template.php,v 1.3 2010/07/30 02:47:28 dries Exp $
+// $Id: template.php,v 1.4 2010/08/09 16:54:50 webchick Exp $
 
 /**
  * Add body classes if certain regions have content.
@@ -105,16 +105,8 @@ function bartik_process_maintenance_page(&$variables) {
 function bartik_preprocess_block(&$variables) {
   // In the header region, visually hide the title of any menu block or of the
   // user login block, but leave it accessible.
-  if ($variables['block']->region == 'header' && ($variables['block']->module == 'menu' || $variables['block']->module == 'user' && $variables['block']->delta == 'login')) {
+  if ($variables['block']->region == 'header' && ($variables['block']->module == 'user' && $variables['block']->delta == 'login' || in_array('block-menu', $variables['classes_array']))) {
     $variables['title_attributes_array']['class'][] = 'element-invisible';
-  }
-  // System menu blocks should get the same class as menu module blocks.
-  if (in_array($variables['block']->delta, array_keys(menu_list_system_menus()))) {
-    $variables['classes_array'][] = 'block-menu';
-    // Also, hide the title if its in the header region.
-    if ($variables['block']->region == 'header') {
-      $variables['title_attributes_array']['class'][] = 'element-invisible';
-    }
   }
   // Set "first" and "last" classes.
   if ($variables['block']->position_first){
