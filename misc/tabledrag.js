@@ -1,4 +1,4 @@
-// $Id: tabledrag.js,v 1.40 2010/07/21 00:26:21 dries Exp $
+// $Id: tabledrag.js,v 1.41 2010/08/09 16:58:15 webchick Exp $
 (function ($) {
 
 /**
@@ -1167,7 +1167,7 @@ Drupal.theme.prototype.tableDragIndentation = function () {
 };
 
 Drupal.theme.prototype.tableDragChangedWarning = function () {
-  return '<div class="warning">' + Drupal.theme('tableDragChangedMarker') + ' ' + Drupal.t('Changes made in this table will not be saved until the form is submitted.') + '</div>';
+  return '<div class="tabledrag-changed-warning messages warning">' + Drupal.theme('tableDragChangedMarker') + ' ' + Drupal.t('Changes made in this table will not be saved until the form is submitted.') + '</div>';
 };
 
 })(jQuery);

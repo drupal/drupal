@@ -1,4 +1,4 @@
-/* $Id: system-behavior.css,v 1.12 2010/07/20 10:17:59 dries Exp $ */
+/* $Id: system-behavior.css,v 1.13 2010/08/09 16:58:15 webchick Exp $ */
 
 /**
  * Autocomplete
@@ -135,6 +135,9 @@ div.tree-child-horizontal {
 }
 .tabledrag-toggle-weight {
   font-size: 0.9em;
+}
+body div.tabledrag-changed-warning {
+  margin-bottom: 0.5em;
 }
 
 /**
