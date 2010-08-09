@@ -2870,6 +2870,8 @@ function user_role_grant_permissions($rid, array $permissions = array()) {
       ->key(array(
         'rid' => $rid,
         'permission' => $name,
+      ))
+      ->fields(array(
         'module' => $modules[$name],
       ))
       ->execute();
