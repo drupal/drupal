@@ -1,5 +1,5 @@
 <?php
-// $Id: path.inc,v 1.70 2010/07/31 04:10:30 dries Exp $
+// $Id: path.inc,v 1.71 2010/08/09 00:13:06 dries Exp $
 
 /**
  * @file
@@ -397,7 +397,7 @@ function path_save(&$path) {
   $path += array('pid' => NULL, 'language' => LANGUAGE_NONE);
 
   // Insert or update the alias.
-  $status = drupal_write_record('url_alias', $path, (!empty($path['pid']) ? 'pid' : NULL));
+  $status = drupal_write_record('url_alias', $path, (!empty($path['pid']) ? 'pid' : array()));
 
   // Verify that a record was written.
   if ($status) {

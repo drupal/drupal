@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1202 2010/08/08 19:35:48 dries Exp $
+// $Id: common.inc,v 1.1203 2010/08/09 00:13:06 dries Exp $
 
 /**
  * @file
@@ -5953,6 +5953,12 @@ function drupal_write_record($table, &$record, $primary_keys = array()) {
       // Track serial field so we can helpfully populate them after the query.
       // NOTE: Each table should come with one serial field only.
       $serial = $field;
+    }
+
+    // Skip field if it is in $primary_keys as it is unnecessary to update a
+    // field to the value it is already set to.
+    if (in_array($field, $primary_keys)) {
+      continue;
     }
 
     if (!property_exists($object, $field)) {
