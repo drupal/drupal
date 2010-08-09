@@ -5955,6 +5955,12 @@ function drupal_write_record($table, &$record, $primary_keys = array()) {
       $serial = $field;
     }
 
+    // Skip field if it is in $primary_keys as it is unnecessary to update a
+    // field to the value it is already set to.
+    if (in_array($field, $primary_keys)) {
+      continue;
+    }
+
     if (!property_exists($object, $field)) {
       // Skip fields that are not provided, default values are already known 
       // by the database.

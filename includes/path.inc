@@ -397,7 +397,7 @@ function path_save(&$path) {
   $path += array('pid' => NULL, 'language' => LANGUAGE_NONE);
 
   // Insert or update the alias.
-  $status = drupal_write_record('url_alias', $path, (!empty($path['pid']) ? 'pid' : NULL));
+  $status = drupal_write_record('url_alias', $path, (!empty($path['pid']) ? 'pid' : array()));
 
   // Verify that a record was written.
   if ($status) {
