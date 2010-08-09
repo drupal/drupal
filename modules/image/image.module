@@ -1,5 +1,5 @@
 <?php
-// $Id: image.module,v 1.44 2010/07/30 01:37:54 dries Exp $
+// $Id: image.module,v 1.45 2010/08/09 19:55:57 dries Exp $
 
 /**
  * @file
@@ -365,14 +365,11 @@ function image_image_style_save($style) {
         $instance_changed = FALSE;
         foreach ($instance['display'] as $view_mode => $display) {
           // Check if the formatter involves an image style.
-          $matches = array();
-          if (preg_match('/__([a-z0-9_]+)/', $display['type'], $matches)) {
+          if ($display['type'] == 'image' && $display['settings']['image_style'] == $style['old_name']) {
             // Update display information for any instance using the image
             // style that was just deleted.
-            if ($style['old_name'] == $matches[1]) {
-              $instance['display'][$view_mode]['type'] = str_replace($style['old_name'], $style['name'], $display['type']);
-              $instance_changed = TRUE;
-            }
+            $instance['display'][$view_mode]['settings']['image_style'] = $style['name'];
+            $instance_changed = TRUE;
           }
         }
         if ($instance['widget']['settings']['preview_image_style'] == $style['old_name']) {

@@ -1,5 +1,5 @@
 <?php
-// $Id: standard.install,v 1.21 2010/07/23 04:39:32 dries Exp $
+// $Id: standard.install,v 1.22 2010/08/09 19:55:57 dries Exp $
 
 /**
  * Implements hook_install().
@@ -384,12 +384,14 @@ function standard_install() {
     'display' => array(
       'default' => array(
         'label' => 'hidden',
-        'type' => 'image__large',
+        'type' => 'image',
+        'settings' => array('image_style' => 'large', 'image_link' => ''),
         'weight' => -1,
       ),
       'teaser' => array(
         'label' => 'hidden',
-        'type' => 'image_link_content__medium',
+        'type' => 'image',
+        'settings' => array('image_style' => 'medium', 'image_link' => 'content'),
         'weight' => -1,
       ),
     ),

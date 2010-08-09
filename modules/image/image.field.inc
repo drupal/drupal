@@ -1,5 +1,5 @@
 <?php
-// $Id: image.field.inc,v 1.22 2010/07/10 01:43:06 dries Exp $
+// $Id: image.field.inc,v 1.23 2010/08/09 19:55:57 dries Exp $
 
 /**
  * @file
@@ -428,33 +428,74 @@ function image_field_formatter_info() {
     'image' => array(
       'label' => t('Image'),
       'field types' => array('image'),
-    ),
-    'image_link_content' => array(
-      'label' => t('Image linked to content'),
-      'field types' => array('image'),
-    ),
-    'image_link_file' => array(
-      'label' => t('Image linked to file'),
-      'field types' => array('image'),
+      'settings' => array('image_style' => '', 'image_link' => ''),
     ),
   );
 
-  foreach (image_styles() as $style) {
-    $formatters['image__' . $style['name']] = array(
-      'label' => t('Image "@style"', array('@style' => $style['name'])),
-      'field types' => array('image'),
-    );
-    $formatters['image_link_content__' . $style['name']] = array(
-      'label' => t('Image "@style" linked to content', array('@style' => $style['name'])),
-      'field types' => array('image'),
-    );
-    $formatters['image_link_file__' . $style['name']] = array(
-      'label' => t('Image "@style" linked to file', array('@style' => $style['name'])),
-      'field types' => array('image'),
-    );
+  return $formatters;
+}
+
+/**
+ * Implements hook_field_formatter_settings_form().
+ */
+function image_field_formatter_settings_form($field, $instance, $view_mode, $form, &$form_state) {
+  $display = $instance['display'][$view_mode];
+  $settings = $display['settings'];
+
+  $image_styles = array('' => t('None (original image)')) + image_style_options(FALSE);
+  $form['image_style'] = array(
+    '#title' => t('Image style'),
+    '#type' => 'select',
+    '#default_value' => $settings['image_style'],
+    '#options' => $image_styles,
+  );
+
+  $link_types = array(
+    '' => t('<none>'),
+    'content' => t('Content'),
+    'file' => t('File'),
+  );
+  $form['image_link'] = array(
+    '#title' => t('Link image to'),
+    '#type' => 'select',
+    '#default_value' => $settings['image_link'],
+    '#options' => $link_types,
+  );
+
+  return $form;
+}
+
+/**
+ * Implements hook_field_formatter_settings_summary().
+ */
+function image_field_formatter_settings_summary($field, $instance, $view_mode) {
+  $display = $instance['display'][$view_mode];
+  $settings = $display['settings'];
+
+  $summary = array();
+
+  $image_styles = image_style_options(FALSE);
+  // Unset possible 'No defined styles' option.
+  unset($image_styles['']);
+  // Styles could be lost because of enabled/disabled modules that defines
+  // their styles in code.
+  if (isset($image_styles[$settings['image_style']])) {
+    $summary[] = t('Image style: @style', array('@style' => $image_styles[$settings['image_style']]));
+  }
+  else {
+    $summary[] = t('Original image');
   }
 
-  return $formatters;
+  $link_types = array(
+    'content' => t('Linked to content'),
+    'file' => t('Linked to file'),
+  );
+  // Display this setting only if image is linked.
+  if (isset($link_types[$settings['image_link']])) {
+    $summary[] = $link_types[$settings['image_link']];
+  }
+
+  return implode('<br />', $summary);
 }
 
 /**
@@ -463,17 +504,11 @@ function image_field_formatter_info() {
 function image_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
   $element = array();
 
-  // Check if the formatter involves a particular image style.
-  $matches = array();
-  if (preg_match('/__([a-z0-9_-]+)/', $display['type'], $matches)) {
-    $image_style = $matches[1];
-  }
-
   // Check if the formatter involves a link.
-  if (strpos($display['type'], 'image_link_content') === 0) {
+  if ($display['settings']['image_link'] == 'content') {
     $uri = entity_uri($entity_type, $entity);
   }
-  elseif (strpos($display['type'], 'image_link_file') === 0) {
+  elseif ($display['settings']['image_link'] == 'file') {
     $link_file = TRUE;
   }
 
@@ -487,7 +522,7 @@ function image_field_formatter_view($entity_type, $entity, $field, $instance, $l
     $element[$delta] = array(
       '#theme' => 'image_formatter',
       '#item' => $item,
-      '#image_style' => isset($image_style) ? $image_style : '',
+      '#image_style' => $display['settings']['image_style'],
       '#path' => isset($uri) ? $uri : '',
     );
   }
