@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.test,v 1.60 2010/08/08 16:09:26 webchick Exp $
+// $Id: forum.test,v 1.61 2010/08/09 01:18:46 webchick Exp $
 
 class ForumTestCase extends DrupalWebTestCase {
   protected $admin_user;
@@ -71,8 +71,25 @@ class ForumTestCase extends DrupalWebTestCase {
 
     // Verify the topic and post counts on the forum page.
     $this->drupalGet('forum');
-    $this->assertRaw("<td class=\"topics\">\n          6                      <br />\n            <a href=\"/forum/3#new\">5 new</a>\n                  </td>");
-    $this->assertRaw('<td class="posts">6</td>');
+
+    // Verify row for testing forum.
+    $forum_arg = array(':forum' => 'forum-list-' . $this->forum['tid']);
+
+    // Topics cell contains number of topics and number of unread topics.
+    $xpath = $this->buildXPathQuery('//tr[@id=:forum]//td[@class="topics"]', $forum_arg);
+    $topics = $this->xpath($xpath);
+    $topics = trim($topics[0]);
+    $this->assertEqual($topics, '6', t('Number of topics found.'));
+
+    // Verify the number of unread topics.
+    $unread_topics = _forum_topics_unread($this->forum['tid'], $this->edit_any_topics_user->uid);
+    $unread_topics = format_plural($unread_topics, '1 new', '@count new');
+    $xpath = $this->buildXPathQuery('//tr[@id=:forum]//td[@class="topics"]//a', $forum_arg);
+    $this->assertFieldByXPath($xpath, $unread_topics, t('Number of unread topics found.'));
+
+    // Verify total number of posts in forum.
+    $xpath = $this->buildXPathQuery('//tr[@id=:forum]//td[@class="posts"]', $forum_arg);
+    $this->assertFieldByXPath($xpath, '6', t('Number of posts found.'));
 
     // Test loading multiple forum nodes on the front page.
     $this->drupalLogin($this->drupalCreateUser(array('administer content types', 'create forum content')));
