@@ -1,5 +1,5 @@
 <?php
-// $Id: common.test,v 1.120 2010/08/08 19:35:49 dries Exp $
+// $Id: common.test,v 1.121 2010/08/10 01:00:42 dries Exp $
 
 /**
  * @file
@@ -266,6 +266,14 @@ class CommonURLUnitTest extends DrupalWebTestCase {
 
       $url = $base . '?q=node/123&foo#bar';
       $result = url('node/123', array('query' => array('foo' => NULL), 'fragment' => 'bar', 'absolute' => $absolute));
+      $this->assertEqual($url, $result, "$url == $result");
+
+      $url = $base . '?q=node/123&foo#0';
+      $result = url('node/123', array('query' => array('foo' => NULL), 'fragment' => '0', 'absolute' => $absolute));
+      $this->assertEqual($url, $result, "$url == $result");
+
+      $url = $base . '?q=node/123&foo';
+      $result = url('node/123', array('query' => array('foo' => NULL), 'fragment' => '', 'absolute' => $absolute));
       $this->assertEqual($url, $result, "$url == $result");
 
       $url = $base;
