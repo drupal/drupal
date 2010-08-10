@@ -607,9 +607,6 @@ function field_ui_field_overview_form_submit($form, &$form_state) {
     if (in_array($key, $form['#fields'])) {
       $instance = field_read_instance($entity_type, $key, $bundle);
       $instance['widget']['weight'] = $values['weight'];
-      foreach($instance['display'] as $view_mode => $display) {
-        $instance['display'][$view_mode]['weight'] = $values['weight'];
-      }
       field_update_instance($instance);
     }
     elseif (in_array($key, $form['#extra'])) {
