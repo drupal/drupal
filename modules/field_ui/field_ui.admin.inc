@@ -1,5 +1,5 @@
 <?php
-// $Id: field_ui.admin.inc,v 1.59 2010/08/03 23:01:14 dries Exp $
+// $Id: field_ui.admin.inc,v 1.60 2010/08/10 17:05:18 webchick Exp $
 
 /**
  * @file
@@ -607,9 +607,6 @@ function field_ui_field_overview_form_submit($form, &$form_state) {
     if (in_array($key, $form['#fields'])) {
       $instance = field_read_instance($entity_type, $key, $bundle);
       $instance['widget']['weight'] = $values['weight'];
-      foreach($instance['display'] as $view_mode => $display) {
-        $instance['display'][$view_mode]['weight'] = $values['weight'];
-      }
       field_update_instance($instance);
     }
     elseif (in_array($key, $form['#extra'])) {
