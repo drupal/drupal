@@ -268,6 +268,14 @@ class CommonURLUnitTest extends DrupalWebTestCase {
       $result = url('node/123', array('query' => array('foo' => NULL), 'fragment' => 'bar', 'absolute' => $absolute));
       $this->assertEqual($url, $result, "$url == $result");
 
+      $url = $base . '?q=node/123&foo#0';
+      $result = url('node/123', array('query' => array('foo' => NULL), 'fragment' => '0', 'absolute' => $absolute));
+      $this->assertEqual($url, $result, "$url == $result");
+
+      $url = $base . '?q=node/123&foo';
+      $result = url('node/123', array('query' => array('foo' => NULL), 'fragment' => '', 'absolute' => $absolute));
+      $this->assertEqual($url, $result, "$url == $result");
+
       $url = $base;
       $result = url('<front>', array('absolute' => $absolute));
       $this->assertEqual($url, $result, "$url == $result");

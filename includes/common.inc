@@ -2049,7 +2049,7 @@ function url($path = NULL, array $options = array()) {
   // Allow other modules to alter the outbound URL and options.
   drupal_alter('url_outbound', $path, $options, $original_path);
 
-  if ($options['fragment']) {
+  if (isset($options['fragment']) && $options['fragment'] !== '') {
     $options['fragment'] = '#' . $options['fragment'];
   }
 
