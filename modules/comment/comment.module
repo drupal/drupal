@@ -172,7 +172,7 @@ function comment_field_extra_fields() {
             'description' => t('Author textfield'),
             'weight' => -2,
           ),
-          'title' => array(
+          'subject' => array(
             'label' => t('Subject'),
             'description' => t('Subject textfield'),
             'weight' => -1,
