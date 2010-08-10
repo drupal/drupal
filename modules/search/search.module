@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.354 2010/08/05 07:11:15 webchick Exp $
+// $Id: search.module,v 1.355 2010/08/10 01:11:36 dries Exp $
 
 /**
  * @file
@@ -1090,8 +1090,11 @@ function search_excerpt($keys, $text) {
   preg_match_all('/ ("([^"]+)"|(?!OR)([^" ]+))/', ' ' . $keys, $matches);
   $keys = array_merge($matches[2], $matches[3]);
 
-  // Prepare text
-  $text = ' ' . strip_tags(str_replace(array('<', '>'), array(' <', '> '), $text)) . ' ';
+  // Prepare text by stripping HTML tags and decoding HTML entities.
+  $text = strip_tags(str_replace(array('<', '>'), array(' <', '> '), $text));
+  $text = decode_entities($text);
+
+  // Slash-escape quotes in the search keyword string.
   array_walk($keys, '_search_excerpt_replace');
   $workkeys = $keys;
 
@@ -1121,9 +1124,12 @@ function search_excerpt($keys, $text) {
       // $q) and behind it (position $s)
       if (preg_match('/' . $boundary . $key . $boundary . '/iu', $text, $match, PREG_OFFSET_CAPTURE, $included[$key])) {
         $p = $match[0][1];
-        if (($q = strpos($text, ' ', max(0, $p - 60))) !== FALSE) {
-          $end = substr($text, $p, 80);
+        if (($q = strpos(' ' . $text, ' ', max(0, $p - 61))) !== FALSE) {
+          $end = substr($text . ' ', $p, 80);
           if (($s = strrpos($end, ' ')) !== FALSE) {
+            // Account for the added spaces.
+            $q = max($q - 1, 0);
+            $s = min($s, drupal_strlen($end) - 1);
             $ranges[$q] = $p + $s;
             $length += $p + $s - $q;
             $included[$key] = $p + 1;
@@ -1142,9 +1148,11 @@ function search_excerpt($keys, $text) {
     }
   }
 
-  // If we didn't find anything, return the beginning.
   if (count($ranges) == 0) {
-    return truncate_utf8($text, 256, TRUE, TRUE);
+    // We didn't find any keyword matches, so just return the first part of the
+    // text. We also need to re-encode any HTML special characters that we
+    // entity-decoded above.
+    return check_plain(truncate_utf8($text, 256, TRUE, TRUE));
   }
 
   // Sort the text ranges by starting position.
@@ -1174,7 +1182,12 @@ function search_excerpt($keys, $text) {
   foreach ($newranges as $from => $to) {
     $out[] = substr($text, $from, $to - $from);
   }
-  $text = (isset($newranges[0]) ? '' : '... ') . implode(' ... ', $out) . ' ...';
+
+  // Let translators have the ... separator text as one chunk.
+  $dots = explode('!excerpt', t('... !excerpt ... !excerpt ...'));
+
+  $text = (isset($newranges[0]) ? '' : $dots[0]) . implode($dots[1], $out) . $dots[2];
+  $text = check_plain($text);
 
   // Highlight keywords. Must be done at once to prevent conflicts ('strong' and '<strong>').
   $text = preg_replace('/' . $boundary . '(' . implode('|', $keys) . ')' . $boundary . '/iu', '<strong>\0</strong>', $text);
@@ -1186,7 +1199,7 @@ function search_excerpt($keys, $text) {
  */
 
 /**
- * Helper function for array_walk in search_except.
+ * Helper function for array_walk() in search_excerpt().
  */
 function _search_excerpt_replace(&$text) {
   $text = preg_quote($text, '/');
