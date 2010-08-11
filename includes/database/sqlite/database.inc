@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.35 2010/07/14 20:25:10 dries Exp $
+// $Id: database.inc,v 1.36 2010/08/11 02:17:39 dries Exp $
 
 /**
  * @file
@@ -176,6 +176,10 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
 
   public function driver() {
     return 'sqlite';
+  }
+
+  public function version() {
+    return $this->query('SELECT sqlite_version()')->fetchField();
   }
 
   public function databaseType() {

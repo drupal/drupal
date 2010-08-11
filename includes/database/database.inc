@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.130 2010/08/05 08:26:35 webchick Exp $
+// $Id: database.inc,v 1.131 2010/08/11 02:17:39 dries Exp $
 
 /**
  * @file
@@ -1047,6 +1047,11 @@ abstract class DatabaseConnection extends PDO {
    * "mysql" for databaseType().
    */
   abstract public function driver();
+
+  /**
+   * Returns the version of the database server.
+   */
+  abstract public function version();
 
   /**
    * Determines if this driver supports transactions.
