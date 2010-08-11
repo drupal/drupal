@@ -1539,7 +1539,7 @@ function node_search_admin() {
 /**
  * Implements hook_search_execute().
  */
-function node_search_execute($keys = NULL) {
+function node_search_execute($keys = NULL, $conditions = NULL) {
   // Build matching conditions
   $query = db_select('search_index', 'i', array('target' => 'slave'))->extend('SearchQuery')->extend('PagerDefault');
   $query->join('node', 'n', 'n.nid = i.sid');

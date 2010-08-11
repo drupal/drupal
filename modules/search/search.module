@@ -208,7 +208,7 @@ function search_menu() {
       $items[$path] = array(
         'title' => $search_info['title'],
         'page callback' => 'search_view',
-        'page arguments' => array($module),
+        'page arguments' => array($module, ''),
         'access callback' => '_search_menu_access',
         'access arguments' => array($module),
         'type' => MENU_LOCAL_TASK,
@@ -218,7 +218,7 @@ function search_menu() {
       $items["$path/%menu_tail"] = array(
         'title' => $search_info['title'],
         'page callback' => 'search_view',
-        'page arguments' => array($module),
+        'page arguments' => array($module, 2),
         'access callback' => '_search_menu_access',
         'access arguments' => array($module),
         // The default local task points to its parent, but this item points to
@@ -869,21 +869,6 @@ function search_expression_insert($keys, $option, $value = '') {
 }
 
 /**
- * Helper function for grabbing search keys.
- */
-function search_get_keys() {
-  $return = &drupal_static(__FUNCTION__);
-  if (!isset($return)) {
-    // Extract keys as remainder of path
-    // Note: support old GET format of searches for existing links.
-    $path = explode('/', $_GET['q'], 3);
-    $keys = empty($_REQUEST['keys']) ? '' : $_REQUEST['keys'];
-    $return = count($path) == 3 ? $path[2] : $keys;
-  }
-  return $return;
-}
-
-/**
  * @defgroup search Search interface
  * @{
  * The Drupal search interface manages a global search mechanism.
@@ -1052,14 +1037,16 @@ function template_preprocess_search_block_form(&$variables) {
  *   Keyword query to search on.
  * @param $module
  *   Search module to search.
+ * @param $conditions
+ *   Optional array of additional search conditions.
  *
  * @return
  *   Formatted search results. No return value if $keys are not supplied or
  *   if the given search module is not active.
  */
-function search_data($keys, $module) {
+function search_data($keys, $module, $conditions = NULL) {
   if (module_hook($module, 'search_execute')) {
-    $results = module_invoke($module, 'search_execute', $keys);
+    $results = module_invoke($module, 'search_execute', $keys, $conditions);
     if (module_hook($module, 'search_page')) {
       return module_invoke($module, 'search_page', $results);
     }

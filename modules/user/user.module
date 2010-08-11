@@ -871,7 +871,7 @@ function user_search_access() {
 /**
  * Implements hook_search_execute().
  */
-function user_search_execute($keys = NULL) {
+function user_search_execute($keys = NULL, $conditions = NULL) {
   $find = array();
   // Replace wildcards with MySQL/PostgreSQL wildcards.
   $keys = preg_replace('!\*+!', '%', $keys);

@@ -11,10 +11,18 @@
  *
  * @param $module
  *   Search module to use for the search.
+ * @param $keys
+ *   Keywords to use for the search.
  */
-function search_view($module = NULL) {
+function search_view($module = NULL, $keys = '') {
   $info = FALSE;
   $redirect = FALSE;
+  $keys = trim($keys);
+  // Also try to pull search keywords out of the $_REQUEST variable to
+  // support old GET format of searches for existing links.
+  if (!$keys && !empty($_REQUEST['keys'])) {
+    $keys = trim($_REQUEST['keys']);
+  }
 
   if (!empty($module)) {
     $active_module_info = search_get_info();
@@ -28,40 +36,40 @@ function search_view($module = NULL) {
     // are no enabled search modules, this function should never be called,
     // since hook_menu() would not have defined any search paths.
     $info = search_get_default_module_info();
-    $redirect = TRUE;
+    // Redirect from bare /search or an invalid path to the default search path.
+    $path = 'search/' . $info['path'];
+    if ($keys) {
+      $path .= '/' . $keys;
+    }
+    drupal_goto($path);
   }
 
-  // Search form submits with POST but redirects to GET. This way we can keep
-  // the search query URL clean as a whistle:
-  // search/type_path/keyword+keyword
-  if (!isset($_POST['form_id'])) {
-    $keys = search_get_keys();
-    if ($redirect) {
-      // Redirect from bare /search or an invalid path to the default search path.
-      $path = 'search/' . $info['path'];
-      if ($keys) {
-        $path .= '/' . $keys;
-      }
-      drupal_goto($path);
+  $results = '';
+  // Process the search form. Note that if there is $_POST data,
+  // search_form_submit() will cause a redirect to search/[module path]/[keys],
+  // which will get us back to this page callback. In other words, the search
+  // form submits with POST but redirects to GET. This way we can keep
+  // the search query URL clean as a whistle.
+  if (empty($_POST['form_id']) || $_POST['form_id'] != 'search_form') {
+    $conditions =  NULL;
+    if (isset($info['conditions_callback']) && function_exists($info['conditions_callback'])) {
+      // Build an optional array of more search conditions.
+      $conditions = call_user_func($info['conditions_callback'], $keys);
     }
-    // Only perform search if there is a non-whitespace search term.
-    $results = '';
-    if (trim($keys)) {
+    // Only search if there are keywords or non-empty conditions.
+    if ($keys || !empty($conditions)) {
       // Log the search keys.
       watchdog('search', 'Searched %type for %keys.', array('%keys' => $keys, '%type' => $info['title']), WATCHDOG_NOTICE, l(t('results'), 'search/' . $info['path'] . '/' . $keys));
 
       // Collect the search results.
-      $results = search_data($keys, $info['module']);
-
-      // Construct the search form.
-      $build['search_form'] = drupal_get_form('search_form', NULL, $keys, $info['module']);
-      $build['search_results'] = array('#markup' => $results);
-
-      return $build;
+      $results = search_data($keys, $info['module'], $conditions);
     }
   }
+  // The form may be altered based on whether the search was run.
+  $build['search_form'] = drupal_get_form('search_form', NULL, $keys, $info['module']);
+  $build['search_results'] = array('#markup' => $results);
 
-  return drupal_get_form('search_form', NULL, empty($keys) ? '' : $keys, $info['module']);
+  return $build;
 }
 
 /**
