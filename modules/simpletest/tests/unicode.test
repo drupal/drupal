@@ -1,5 +1,5 @@
 <?php
-// $Id: unicode.test,v 1.8 2010/08/05 23:53:38 webchick Exp $
+// $Id: unicode.test,v 1.9 2010/08/11 10:58:22 dries Exp $
 
 /**
  * @file
@@ -215,36 +215,6 @@ class UnicodeUnitTest extends DrupalWebTestCase {
     );
     foreach ($testcase as $input => $output) {
       $this->assertEqual(decode_entities($input), $output, t('Make sure the decoded entity of @input is @output', array('@input' => $input, '@output' => $output)));
-    }
-  }
-
-  function testDecodeEntitiesExclusion() {
-    $testcase = array(
-      'Drupal' => 'Drupal',
-      '<script>' => '<script>',
-      '&lt;script&gt;' => '&lt;script>',
-      '&#60;script&#62;' => '&#60;script>',
-      '&amp;lt;script&amp;gt;' => '&amp;lt;script&amp;gt;',
-      '"' => '"',
-      '&#34;' => '&#34;',
-      '&amp;#34;' => '&amp;#34;',
-      '&quot;' => '&quot;',
-      '&amp;quot;' => '&amp;quot;',
-      "'" => "'",
-      '&#39;' => "'",
-      '&amp;#39;' => '&amp;#39;',
-      '©' => '©',
-      '&copy;' => '©',
-      '&#169;' => '©',
-      '→' => '→',
-      '&#8594;' => '→',
-      '➼' => '➼',
-      '&#10172;' => '➼',
-      '&euro;' => '€',
-    );
-    $exclude = array('<', '&', '"');
-    foreach ($testcase as $input => $output) {
-      $this->assertIdentical(decode_entities($input, $exclude), $output, t('Make sure the decoded entity of %input, excluding %excludes, is %output', array('%input' => $input, '%excludes' => implode(',', $exclude), '%output' => $output)));
     }
   }
 
