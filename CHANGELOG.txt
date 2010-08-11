@@ -1,7 +1,14 @@
 // $Id$
 
-Drupal 6.18-dev, xxxx-xx-xx (development release)
+Drupal 6.19, 2010-08-11
 ----------------------
+- Fixed a variety of small bugs, improved code documentation.
+
+Drupal 6.18, 2010-08-11
+----------------------
+- Fixed security issues (OpenID authentication bypass, File download access
+  bypass, Comment unpublishing bypass, Actions cross site scripting),
+  see SA-CORE-2010-002.
 
 Drupal 6.17, 2010-06-02
 ----------------------
@@ -229,6 +236,11 @@ Drupal 6.0, 2008-02-13
   contributed module (http://drupal.org/project/site_network).
 - Removed old system updates. Updates from Drupal versions prior to 5.x will
   require upgrading to 5.x before upgrading to 6.x.
+
+Drupal 5.23, 2010-08-11
+-----------------------
+- Fixed security issues (File download access bypass, Comment unpublishing
+  bypass), see SA-CORE-2010-002.
 
 Drupal 5.22, 2010-03-03
 -----------------------

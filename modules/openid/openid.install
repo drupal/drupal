@@ -66,5 +66,80 @@ function openid_schema() {
     'primary key' => array('assoc_handle'),
   );
 
+  $schema['openid_nonce'] = array(
+    'description' => 'Stores received openid.response_nonce per OpenID endpoint URL to prevent replay attacks.',
+    'fields' => array(
+      'idp_endpoint_uri' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'description' => 'URI of the OpenID Provider endpoint.',
+      ),
+      'nonce' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'description' => 'The value of openid.response_nonce'
+      ),
+      'expires' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'A Unix timestamp indicating when the entry should expire.',
+      ),
+    ),
+    'indexes' => array(
+      'nonce' => array('nonce'),
+      'expires' => array('expires'),
+    ),
+  );
+
   return $schema;
 }
+
+/**
+ * @defgroup updates-6.x-extra Extra openid updates for 6.x
+ * @{
+ */
+
+/**
+ * Add the openid_nonce table.
+ *
+ * Implementation of hook_update_N().
+ */
+function openid_update_6000() {
+  $ret = array();
+
+  $schema['openid_nonce'] = array(
+    'description' => 'Stores received openid.response_nonce per OpenID endpoint URL to prevent replay attacks.',
+    'fields' => array(
+      'idp_endpoint_uri' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'description' => 'URI of the OpenID Provider endpoint.',
+      ),
+      'nonce' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'description' => 'The value of openid.response_nonce'
+      ),
+      'expires' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'A Unix timestamp indicating when the entry should expire.',
+      ),
+    ),
+    'indexes' => array(
+      'nonce' => array('nonce'),
+      'expires' => array('expires'),
+    ),
+  );
+
+  db_create_table($ret, 'openid_nonce', $schema['openid_nonce']);
+
+  return $ret;
+}
+
+/**
+ * @} End of "defgroup updates-6.x-extra"
+ * The next series of updates should start at 7000.
+ */

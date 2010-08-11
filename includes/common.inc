@@ -631,7 +631,7 @@ function drupal_error_handler($errno, $message, $filename, $line, $context) {
     return;
   }
 
-  if ($errno & (E_ALL ^ E_DEPRECATED)) {
+  if ($errno & (E_ALL ^ E_DEPRECATED ^ E_NOTICE)) {
     $types = array(1 => 'error', 2 => 'warning', 4 => 'parse error', 8 => 'notice', 16 => 'core error', 32 => 'core warning', 64 => 'compile error', 128 => 'compile warning', 256 => 'user error', 512 => 'user warning', 1024 => 'user notice', 2048 => 'strict warning', 4096 => 'recoverable fatal error');
 
     // For database errors, we want the line number/file name of the place that
@@ -2891,7 +2891,7 @@ function drupal_alter($type, &$data) {
  * Recursively iterates over each of the array elements, generating HTML code.
  * This function is usually called from within another function, like
  * drupal_get_form() or node_view().
- * 
+ *
  * drupal_render() flags each element with a '#printed' status to indicate that
  * the element has been rendered, which allows individual elements of a given
  * array to be rendered independently. This prevents elements from being
