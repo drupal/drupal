@@ -1,5 +1,5 @@
 <?php
-// $Id: overlay.module,v 1.29 2010/08/08 03:05:26 dries Exp $
+// $Id: overlay.module,v 1.30 2010/08/11 02:08:09 dries Exp $
 
 /**
  * @file
@@ -355,8 +355,7 @@ function overlay_preprocess_page(&$variables) {
     array_shift($overlay_breadcrumb);
     $variables['breadcrumb'] = theme('breadcrumb', array('breadcrumb' => $overlay_breadcrumb));
 
-    $variables['tabs'] = '';
-    $variables['primary_local_tasks'] = '';
+    unset($variables['tabs'][0]);
   }
 }
 
