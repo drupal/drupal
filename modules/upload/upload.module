@@ -259,9 +259,15 @@ function upload_download() {
 }
 
 function upload_file_download($file) {
-  $file = file_create_path($file);
-  $result = db_query("SELECT f.* FROM {files} f WHERE filepath = '%s'", $file);
-  if ($file = db_fetch_object($result)) {
+  $filepath = file_create_path($file);
+  $result = db_query("SELECT f.* FROM {files} f WHERE filepath = '%s'", $filepath);
+  while ($file = db_fetch_object($result)) {
+    if ($filepath !== $file->filepath) {
+      // Since some database servers sometimes use a case-insensitive
+      // comparison by default, double check that the filename is an exact
+      // match.
+      continue;
+    }
     if (user_access('view uploaded files')) {
       $node = node_load($file->nid);
       if (node_access('view', $node)) {
@@ -271,13 +277,8 @@ function upload_file_download($file) {
           'Content-Length: '. $file->filesize,
         );
       }
-      else {
-        return -1;
-      }
     }
-    else {
-      return -1;
-    }
+    return -1;
   }
 }
 

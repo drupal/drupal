@@ -1,7 +1,9 @@
 // $Id$
 
-Drupal 5.23-dev, xxxx-xx-xx
+Drupal 5.23, 2010-08-11
 -----------------------
+- Fixed security issues (File download access bypass, Comment unpublishing
+  bypass), see SA-CORE-2010-002.
 
 Drupal 5.22, 2010-03-03
 -----------------------
