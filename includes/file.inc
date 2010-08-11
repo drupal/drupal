@@ -359,11 +359,23 @@ function file_move(&$source, $dest = 0, $replace = FILE_EXISTS_RENAME) {
 /**
  * Modify a filename as needed for security purposes.
  *
- * Dangerous file names will be altered; for instance, the file name
- * "exploit.php.pps" will become "exploit.php_.pps". All extensions that are
+ * Munging a file name prevents unknown file extensions from masking exploit
+ * files. When web servers such as Apache decide how to process a URL request,
+ * they use the file extension. If the extension is not recognized, Apache
+ * skips that extension and uses the previous file extension. For example, if
+ * the file being requested is exploit.php.pps, and Apache does not recognize
+ * the '.pps' extension, it treats the file as PHP and executes it. To make
+ * this file name safe for Apache and prevent it from executing as PHP, the
+ * .php extension is "munged" into .php_, making the safe file name
+ * exploit.php_.pps.
+ *
+ * Specifically, this function adds an underscore to all extensions that are
  * between 2 and 5 characters in length, internal to the file name, and not
- * included in $extensions will be altered by adding an underscore. If variable
- * 'allow_insecure_uploads' evaluates to TRUE, no alterations will be made.
+ * included in $extensions.
+ *
+ * Function behavior is also controlled by the Drupal variable
+ * 'allow_insecure_uploads'. If 'allow_insecure_uploads' evaluates to TRUE, no
+ * alterations will be made, if it evaluates to FALSE, the filename is 'munged'.
  *
  * @param $filename
  *   File name to modify.
