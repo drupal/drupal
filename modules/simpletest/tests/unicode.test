@@ -218,36 +218,6 @@ class UnicodeUnitTest extends DrupalWebTestCase {
     }
   }
 
-  function testDecodeEntitiesExclusion() {
-    $testcase = array(
-      'Drupal' => 'Drupal',
-      '<script>' => '<script>',
-      '&lt;script&gt;' => '&lt;script>',
-      '&#60;script&#62;' => '&#60;script>',
-      '&amp;lt;script&amp;gt;' => '&amp;lt;script&amp;gt;',
-      '"' => '"',
-      '&#34;' => '&#34;',
-      '&amp;#34;' => '&amp;#34;',
-      '&quot;' => '&quot;',
-      '&amp;quot;' => '&amp;quot;',
-      "'" => "'",
-      '&#39;' => "'",
-      '&amp;#39;' => '&amp;#39;',
-      '©' => '©',
-      '&copy;' => '©',
-      '&#169;' => '©',
-      '→' => '→',
-      '&#8594;' => '→',
-      '➼' => '➼',
-      '&#10172;' => '➼',
-      '&euro;' => '€',
-    );
-    $exclude = array('<', '&', '"');
-    foreach ($testcase as $input => $output) {
-      $this->assertIdentical(decode_entities($input, $exclude), $output, t('Make sure the decoded entity of %input, excluding %excludes, is %output', array('%input' => $input, '%excludes' => implode(',', $exclude), '%output' => $output)));
-    }
-  }
-
   /**
    * Tests truncate_utf8().
    */

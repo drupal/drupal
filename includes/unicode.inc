@@ -422,94 +422,12 @@ function _mime_header_decode($matches) {
  *
  * @param $text
  *   The text to decode entities in.
- * @param $exclude
- *   An array of characters which should not be decoded. For example,
- *   array('<', '&', '"'). This affects both named and numerical entities.
  *
  * @return
  *   The input $text, with all HTML entities decoded once.
  */
-function decode_entities($text, $exclude = array()) {
-  // Flip the exclude list so that we can do quick lookups later.
-  $exclude = array_flip($exclude);
-
-  // Prepare the callback function.
-  _decode_entities(NULL, $exclude);
-
-  // Use a regexp to select all entities in one pass, to avoid decoding
-  // double-escaped entities twice.
-  return preg_replace_callback('/&(#x?)?([A-Za-z0-9]+);/', '_decode_entities', $text);
-}
-
-/**
- * Helper function for decode_entities
- *
- * @param $matches
- *   An array of matches found by preg_replace_callback(). Elements 0, 1, and 2
- *   of $matches must be the original entity, its prefix, and its codepoint.
- * @param $set_exclude
- *   An array of entities that should be excluded from decoding. This should
- *   only be set during a preparatory call before preg_replace_callback().
- *
- * @return
- *   The decoded entity for a given match, or the original encoded entity if
- *   the entity is in the list of excluded entities.
- */
-function _decode_entities($matches = NULL, $set_exclude = NULL) {
-  static $html_entities, $exclude;
-  if (!isset($html_entities)) {
-    include DRUPAL_ROOT . '/includes/unicode.entities.inc';
-  }
-  if (isset($set_exclude)) {
-    // This is a preparatory call.
-    $exclude = $set_exclude;
-    return;
-  }
-  list($original, $prefix, $codepoint) = $matches;
-  // Named entity
-  if (!$prefix) {
-    // A named entity not in the exclude list.
-    if (isset($html_entities[$original]) && !isset($exclude[$html_entities[$original]])) {
-      return $html_entities[$original];
-    }
-    else {
-      return $original;
-    }
-  }
-  // Hexadecimal numerical entity
-  if ($prefix == '#x') {
-    $codepoint = base_convert($codepoint, 16, 10);
-  }
-  // Decimal numerical entity (strip leading zeros to avoid PHP octal notation)
-  else {
-    $codepoint = preg_replace('/^0+/', '', $codepoint);
-  }
-  // Encode codepoint as UTF-8 bytes
-  if ($codepoint < 0x80) {
-    $str = chr($codepoint);
-  }
-  elseif ($codepoint < 0x800) {
-    $str = chr(0xC0 | ($codepoint >> 6))
-         . chr(0x80 | ($codepoint & 0x3F));
-  }
-  elseif ($codepoint < 0x10000) {
-    $str = chr(0xE0 | ( $codepoint >> 12))
-         . chr(0x80 | (($codepoint >> 6) & 0x3F))
-         . chr(0x80 | ( $codepoint       & 0x3F));
-  }
-  elseif ($codepoint < 0x200000) {
-    $str = chr(0xF0 | ( $codepoint >> 18))
-         . chr(0x80 | (($codepoint >> 12) & 0x3F))
-         . chr(0x80 | (($codepoint >> 6)  & 0x3F))
-         . chr(0x80 | ( $codepoint        & 0x3F));
-  }
-  // Check for excluded characters
-  if (isset($exclude[$str])) {
-    return $original;
-  }
-  else {
-    return $str;
-  }
+function decode_entities($text) {
+  return html_entity_decode($text, ENT_QUOTES, 'UTF-8');
 }
 
 /**
