@@ -1,4 +1,4 @@
-// $Id: UPGRADE.txt,v 1.23 2010/08/08 19:35:48 dries Exp $
+// $Id: UPGRADE.txt,v 1.24 2010/08/11 01:06:44 dries Exp $
 
 UPGRADING
 ---------
@@ -45,7 +45,8 @@ Let's begin!
     option is at http://www.example.com/?q=admin/config/development/maintenance
     (replace www.example.com with your installation's domain name and path).
 
-4.  If using a custom or contributed theme, switch to Bartik.
+4.  If using a custom or contributed theme, switch to a core theme such as
+    Bartik or Garland.
 
 5.  Disable all custom and contributed modules. This includes any modules that
     are not listed under 'Core - required' or 'Core - optional' on
