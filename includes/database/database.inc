@@ -1049,6 +1049,11 @@ abstract class DatabaseConnection extends PDO {
   abstract public function driver();
 
   /**
+   * Returns the version of the database server.
+   */
+  abstract public function version();
+
+  /**
    * Determines if this driver supports transactions.
    *
    * @return

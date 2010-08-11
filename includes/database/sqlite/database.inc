@@ -178,6 +178,10 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
     return 'sqlite';
   }
 
+  public function version() {
+    return $this->query('SELECT sqlite_version()')->fetchField();
+  }
+
   public function databaseType() {
     return 'sqlite';
   }
