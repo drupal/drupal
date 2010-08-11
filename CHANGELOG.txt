@@ -1,5 +1,11 @@
 // $Id$
 
+Drupal 6.18, 2010-08-11
+----------------------
+- Fixed security issues (OpenID authentication bypass, File download access
+  bypass, Comment unpublishing bypass, Actions cross site scripting),
+  see SA-CORE-2010-002.
+
 Drupal 6.17, 2010-06-02
 ----------------------
 - Improved PostgreSQL compatibility

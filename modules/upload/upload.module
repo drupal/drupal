@@ -147,7 +147,13 @@ function _upload_file_limits($user) {
 function upload_file_download($filepath) {
   $filepath = file_create_path($filepath);
   $result = db_query("SELECT f.*, u.nid FROM {files} f INNER JOIN {upload} u ON f.fid = u.fid WHERE filepath = '%s'", $filepath);
-  if ($file = db_fetch_object($result)) {
+  while ($file = db_fetch_object($result)) {
+    if ($filepath !== $file->filepath) {
+      // Since some database servers sometimes use a case-insensitive
+      // comparison by default, double check that the filename is an exact
+      // match.
+      continue;
+    }
     if (user_access('view uploaded files') && ($node = node_load($file->nid)) && node_access('view', $node)) {
       return array(
         'Content-Type: ' . $file->filemime,

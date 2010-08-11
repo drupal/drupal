@@ -84,7 +84,7 @@ function trigger_unassign_submit($form, &$form_state) {
     $aid = actions_function_lookup($form_values['aid']);
     db_query("DELETE FROM {trigger_assignments} WHERE hook = '%s' AND op = '%s' AND aid = '%s'", $form_values['hook'], $form_values['operation'], $aid);
     $actions = actions_get_all_actions();
-    watchdog('actions', 'Action %action has been unassigned.',  array('%action' => check_plain($actions[$aid]['description'])));
+    watchdog('actions', 'Action %action has been unassigned.',  array('%action' => $actions[$aid]['description']));
     drupal_set_message(t('Action %action has been unassigned.', array('%action' => $actions[$aid]['description'])));
     $hook = $form_values['hook'] == 'nodeapi' ? 'node' : $form_values['hook'];
     $form_state['redirect'] = 'admin/build/trigger/'. $hook;
@@ -239,7 +239,7 @@ function theme_trigger_display($element) {
     $rows = array();
     foreach ($element['assigned']['#value'] as $aid => $info) {
       $rows[] = array(
-        $info['description'],
+        filter_xss_admin($info['description']),
         $info['link']
       );
     }

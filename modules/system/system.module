@@ -9,7 +9,7 @@
 /**
  * The current system version.
  */
-define('VERSION', '6.17');
+define('VERSION', '6.18');
 
 /**
  * Core API compatibility.
@@ -1388,7 +1388,7 @@ function system_actions_manage() {
   while ($action = db_fetch_object($result)) {
     $row[] = array(
       array('data' => $action->type),
-      array('data' => $action->description),
+      array('data' => filter_xss_admin($action->description)),
       array('data' => $action->parameters ? l(t('configure'), "admin/settings/actions/configure/$action->aid") : ''),
       array('data' => $action->parameters ? l(t('delete'), "admin/settings/actions/delete/$action->aid") : '')
     );
@@ -1594,9 +1594,8 @@ function system_actions_delete_form_submit($form, &$form_state) {
   $aid = $form_state['values']['aid'];
   $action = actions_load($aid);
   actions_delete($aid);
-  $description = check_plain($action->description);
-  watchdog('user', 'Deleted action %aid (%action)', array('%aid' => $aid, '%action' => $description));
-  drupal_set_message(t('Action %action was deleted', array('%action' => $description)));
+  watchdog('user', 'Deleted action %aid (%action)', array('%aid' => $aid, '%action' => $action->description));
+  drupal_set_message(t('Action %action was deleted', array('%action' => $action->description)));
   $form_state['redirect'] = 'admin/settings/actions/manage';
 }
 
@@ -1796,7 +1795,7 @@ function system_mail($key, &$message, $params) {
     );
   }
   $subject = strtr($context['subject'], $variables);
-  $body = strtr($context['message'], $variables);
+  $body = strtr(filter_xss_admin($context['message']), $variables);
   $message['subject'] .= str_replace(array("\r", "\n"), '', $subject);
   $message['body'][] = drupal_html_to_text($body);
 }
@@ -1845,11 +1844,11 @@ function system_message_action(&$object, $context = array()) {
     case 'taxonomy':
       $vocabulary = taxonomy_vocabulary_load($object->vid);
       $variables = array_merge($variables, array(
-        '%term_name' => $object->name,
-        '%term_description' => $object->description,
+        '%term_name' => check_plain($object->name),
+        '%term_description' => filter_xss_admin($object->description),
         '%term_id' => $object->tid,
-        '%vocabulary_name' => $vocabulary->name,
-        '%vocabulary_description' => $vocabulary->description,
+        '%vocabulary_name' => check_plain($vocabulary->name),
+        '%vocabulary_description' => filter_xss_admin($vocabulary->description),
         '%vocabulary_id' => $vocabulary->vid,
         )
       );
@@ -1864,13 +1863,13 @@ function system_message_action(&$object, $context = array()) {
       '%uid' => $node->uid,
       '%node_url' => url('node/'. $node->nid, array('absolute' => TRUE)),
       '%node_type' => check_plain(node_get_types('name', $node)),
-      '%title' => filter_xss($node->title),
-      '%teaser' => filter_xss($node->teaser),
-      '%body' => filter_xss($node->body),
+      '%title' => check_plain($node->title),
+      '%teaser' => check_markup($node->teaser, $node->format, FALSE),
+      '%body' => check_markup($node->body, $node->format, FALSE),
       )
     );
   }
-  $context['message'] = strtr($context['message'], $variables);
+  $context['message'] = strtr(filter_xss_admin($context['message']), $variables);
   drupal_set_message($context['message']);
 }
 
