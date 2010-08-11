@@ -1145,7 +1145,7 @@ function _locale_import_read_po($op, $file, $mode = NULL, $lang = NULL, $group =
       $context = "MSGID_PLURAL";
     }
     elseif (!strncmp("msgid", $line, 5)) {
-      if ($context == "MSGSTR") {   // End current entry, start a new one
+      if (($context == "MSGSTR") || ($context == "MSGSTR_ARR")) { // End current entry, start a new one
         _locale_import_one_string($op, $current, $mode, $lang, $file, $group);
         $current = array();
       }
@@ -1290,7 +1290,7 @@ function _locale_import_one_string($op, $value = NULL, $mode = NULL, $lang = NUL
         $languages = language_list();
         if (($mode != LOCALE_IMPORT_KEEP) || empty($languages[$lang]->plurals)) {
           // Since we only need to parse the header if we ought to update the
-          // plural formula, only run this if we don't need to keep existing 
+          // plural formula, only run this if we don't need to keep existing
           // data untouched or if we don't have an existing plural formula.
           $header = _locale_import_parse_header($value['msgstr']);
 
