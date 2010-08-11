@@ -1,0 +1,70 @@
+<?php
+// $Id: search_embedded_form.module,v 1.1 2010/08/11 14:21:39 dries Exp $
+
+/**
+ * @file
+ * Test module implementing a form that can be embedded in search results.
+ *
+ * Embedded form are important, for example, for ecommerce sites where each
+ * search result may included an embedded form with buttons like "Add to cart"
+ * for each individual product (node) listed in the search results.
+ */
+
+/**
+  * Implements hook_menu().
+  */
+function search_embedded_form_menu() {
+  $items['search_embedded_form'] = array(
+    'title' => 'Search_Embed_Form',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('search_embedded_form_form'),
+    'access arguments' => array('search content'),
+    'type' => MENU_CALLBACK,
+  );
+
+  return $items;
+}
+
+/**
+ * Builds a form for embedding in search results for testing.
+ *
+ * @see search_embedded_form_form_submit().
+ */
+function search_embedded_form_form($form, &$form_state) {
+  $count = variable_get('search_embedded_form_submitted', 0);
+
+  $form['name'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Your name'),
+    '#maxlength' => 255,
+    '#default_value' => '',
+    '#required' => TRUE,
+    '#description' => t('Times form has been submitted: %count', array('%count' => $count)),
+  );
+
+  $form['actions'] = array('#type' => 'actions');
+  $form['actions']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Send away'),
+  );
+
+  $form['#submit'][] = 'search_embedded_form_form_submit';
+
+  return $form;
+}
+
+/**
+ * Submit handler for search_embedded_form_form().
+ */
+function search_embedded_form_form_submit($form, &$form_state) {
+  $count = variable_get('search_embedded_form_submitted', 0) + 1;
+  variable_set('search_embedded_form_submitted', $count);
+  drupal_set_message(t('Test form was submitted'));
+}
+
+/**
+ * Adds the test form to search results.
+ */
+function search_embedded_form_preprocess_search_result(&$variables) {
+  $variables['snippet'] .= drupal_render(drupal_get_form('search_embedded_form_form'));
+}

@@ -1,5 +1,5 @@
 <?php
-// $Id: search_extra_type.module,v 1.1 2010/08/05 07:11:15 webchick Exp $
+// $Id: search_extra_type.module,v 1.2 2010/08/11 14:21:39 dries Exp $
 
 /**
  * @file
@@ -13,22 +13,35 @@ function search_extra_type_search_info() {
   return array(
     'title' => 'Dummy search type',
     'path' => 'dummy_path',
+    'conditions_callback' => 'search_extra_type_conditions',
   );
+}
+
+function search_extra_type_conditions() {
+  $conditions = array();
+
+  if (!empty($_REQUEST['search_conditions'])) {
+    $conditions['search_conditions'] = $_REQUEST['search_conditions'];
+  }
+  return $conditions;
 }
 
 /**
  * Implements hook_search_execute().
  *
  * This is a dummy search, so when search "executes", we just return a dummy
- * result.
+ * result containing the keywords and a list of conditions.
  */
-function search_extra_type_search_execute() {
+function search_extra_type_search_execute($keys = NULL, $conditions = NULL) {
+  if (!$keys) {
+    $keys = '';
+  }
   return array(
     array(
       'link' => url('node'),
       'type' => 'Dummy result type',
       'title' => 'Dummy title',
-      'snippet' => 'Dummy search snippet to display',
+      'snippet' => "Dummy search snippet to display. Keywords: {$keys}\n\nConditions: " . print_r($conditions, TRUE),
     ),
   );
 }

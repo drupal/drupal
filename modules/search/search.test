@@ -1,5 +1,5 @@
 <?php
-// $Id: search.test,v 1.69 2010/08/10 01:11:36 dries Exp $
+// $Id: search.test,v 1.70 2010/08/11 14:21:39 dries Exp $
 
 // The search index can contain different types of content. Typically the type is 'node'.
 // Here we test with _test_ and _test2_ as the type.
@@ -988,6 +988,58 @@ class SearchSimplifyTestCase extends DrupalWebTestCase {
   }
 }
 
+
+/**
+ * Test config page.
+ */
+class SearchKeywordsConditions extends DrupalWebTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Keywords and conditions',
+      'description' => 'Verify the search pulls in keywords and extra conditions.',
+      'group' => 'Search',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('search', 'search_extra_type');
+    // Create searching user.
+    $this->searching_user = $this->drupalCreateUser(array('search content', 'access content', 'access comments', 'post comments without approval'));
+    // Login with sufficient privileges.
+    $this->drupalLogin($this->searching_user);
+    // Test with all search modules enabled.
+    variable_set('search_active_modules', array('node' => 'node', 'user' => 'user', 'search_extra_type' => 'search_extra_type'));
+    menu_rebuild();
+  }
+
+  /**
+   * Verify the kewords are captured and conditions respected.
+   */
+  function testSearchKeyswordsConditions() {
+    // No keys, not conditions - no results.
+    $this->drupalGet('search/dummy_path');
+    $this->assertNoText('Dummy search snippet to display');
+    // With keys - get results.
+    $keys = 'bike shed ' . $this->randomName();
+    $this->drupalGet("search/dummy_path/{$keys}");
+    $this->assertText("Dummy search snippet to display. Keywords: {$keys}");
+    $keys = 'blue drop ' . $this->randomName();
+    $this->drupalGet("search/dummy_path", array('query' => array('keys' => $keys)));
+    $this->assertText("Dummy search snippet to display. Keywords: {$keys}");
+    // Add some conditions and keys.
+    $keys = 'moving drop ' . $this->randomName();
+    $this->drupalGet("search/dummy_path/bike", array('query' => array('search_conditions' => $keys)));
+    $this->assertText("Dummy search snippet to display.");
+    $this->assertRaw(print_r(array('search_conditions' => $keys), TRUE));
+    // Add some conditions and no keys.
+    $keys = 'drop kick ' . $this->randomName();
+    $this->drupalGet("search/dummy_path", array('query' => array('search_conditions' => $keys)));
+    $this->assertText("Dummy search snippet to display.");
+    $this->assertRaw(print_r(array('search_conditions' => $keys), TRUE));
+  }
+}
+
 /**
  * Test config page.
  */
@@ -1333,5 +1385,81 @@ class SearchTokenizerTestCase extends DrupalWebTestCase {
     }
 
     return '';
+  }
+}
+
+/**
+ * Tests that we can embed a form in search results and submit it.
+ */
+class SearchEmbedForm extends DrupalWebTestCase {
+  /**
+   * Node used for testing.
+   */
+  public $node;
+
+  /**
+   * Count of how many times the form has been submitted.
+   */
+  public $submit_count = 0;
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Embedded forms',
+      'description' => 'Verifies that a form embedded in search results works',
+      'group' => 'Search',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('search', 'search_embedded_form');
+
+    // Create a user and a node, and update the search index.
+    $test_user = $this->drupalCreateUser(array('access content', 'search content', 'administer nodes'));
+    $this->drupalLogin($test_user);
+
+    $this->node = $this->drupalCreateNode();
+
+    node_update_index();
+    search_update_totals();
+
+    // Set up a dummy initial count of times the form has been submitted.
+    $this->submit_count = 12;
+    variable_set('search_embedded_form_submitted', $this->submit_count);
+    $this->refreshVariables();
+  }
+
+  /**
+   * Tests that the embedded form appears and can be submitted.
+   */
+  function testEmbeddedForm() {
+    // First verify we can submit the form from the module's page.
+    $this->drupalPost('search_embedded_form',
+      array('name' => 'John'),
+      t('Send away'));
+    $this->assertText(t('Test form was submitted'), 'Form message appears');
+    $count = variable_get('search_embedded_form_submitted', 0);
+    $this->assertEqual($this->submit_count + 1, $count, 'Form submission count is correct');
+    $this->submit_count = $count;
+
+    // Now verify that we can see and submit the form from the search results.
+    $this->drupalGet('search/node/' . $this->node->title);
+    $this->assertText(t('Your name'), 'Form is visible');
+    $this->drupalPost('search/node/' . $this->node->title,
+      array('name' => 'John'),
+      t('Send away'));
+    $this->assertText(t('Test form was submitted'), 'Form message appears');
+    $count = variable_get('search_embedded_form_submitted', 0);
+    $this->assertEqual($this->submit_count + 1, $count, 'Form submission count is correct');
+    $this->submit_count = $count;
+
+    // Now verify that if we submit the search form, it doesn't count as
+    // our form being submitted.
+    $this->drupalPost('search',
+      array('keys' => 'foo'),
+      t('Search'));
+    $this->assertNoText(t('Test form was submitted'), 'Form message does not appear');
+    $count = variable_get('search_embedded_form_submitted', 0);
+    $this->assertEqual($this->submit_count, $count, 'Form submission count is correct');
+    $this->submit_count = $count;
   }
 }
