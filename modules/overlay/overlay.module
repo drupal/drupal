@@ -355,8 +355,7 @@ function overlay_preprocess_page(&$variables) {
     array_shift($overlay_breadcrumb);
     $variables['breadcrumb'] = theme('breadcrumb', array('breadcrumb' => $overlay_breadcrumb));
 
-    $variables['tabs'] = '';
-    $variables['primary_local_tasks'] = '';
+    unset($variables['tabs'][0]);
   }
 }
 
