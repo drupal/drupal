@@ -1,5 +1,5 @@
 <?php
-// $Id: color.inc,v 1.1 2010/07/06 05:25:51 webchick Exp $
+// $Id: color.inc,v 1.2 2010/08/11 23:53:18 dries Exp $
 
 // Put the logo path into JavaScript for the live preview.
 drupal_add_js(array('color' => array('logo' => theme_get_setting('logo', 'bartik'))), 'setting');
@@ -23,31 +23,17 @@ $info = array(
       'title' => t('Blue Lagoon (default)'),
       'colors' => array(
         'bg' => '#ffffff',
-        'link' => '#288CC9',
+        'link' => '#288cc9',
         'top' => '#0779bf',
         'bottom' => '#48a9e4',
         'text' => '#3b3b3b',
         'sidebar' => '#f6f6f2',
         'sidebarborders' => '#f9f9f9',
         'footer' => '#2d1e0f',
-        'titleslogan' => '#fffeff',
+        'titleslogan' => '#ffffff',
       ),
     ),
-    'Slate' => array(
-      'title' => t('Slate'),
-      'colors' => array(
-        'bg' => '#ffffff',
-        'link' => '#0073b6',
-        'top' => '#4a4a4a',
-        'bottom' => '#4e4e4e',
-        'text' => '#3b3b3b',
-        'sidebar' => '#feffff',
-        'sidebarborders' => '#d0d0d0',
-        'footer' => '#161617',
-        'titleslogan' => '#fffeff',
-      ),
-    ),
-    'Firehouse' => array(
+    'firehouse' => array(
       'title' => t('Firehouse'),
       'colors' => array(
         'bg' => '#ffffff',
@@ -61,7 +47,21 @@ $info = array(
         'titleslogan' => '#fffeff',
       ),
     ),
-    'Plum' => array(
+    'ice' => array(
+      'title' => t('Ice'),
+      'colors' => array(
+        'bg' => '#ffffff',
+        'link' => '#019dbf',
+        'top' => '#d0d0d0',
+        'bottom' => '#c2c4c5',
+        'text' => '#4a4a4a',
+        'sidebar' => '#ffffff',
+        'sidebarborders' => '#cccccc',
+        'footer' => '#24272c',
+        'titleslogan' => '#000000',
+      ),
+    ),
+    'plum' => array(
       'title' => t('Plum'),
       'colors' => array(
         'bg' => '#fffdf7',
@@ -71,22 +71,22 @@ $info = array(
         'text' => '#301313',
         'sidebar' => '#f8f3e7',
         'sidebarborders' => '#e4e3d4',
-        'footer' => '#2C2C28',
-        'titleslogan' => '#fffeff',
+        'footer' => '#2c2c28',
+        'titleslogan' => '#ffffff',
       ),
     ),
-    'Ice' => array(
-      'title' => t('Ice'),
+    'slate' => array(
+      'title' => t('Slate'),
       'colors' => array(
         'bg' => '#ffffff',
-        'link' => '#019DBF',
-        'top' => '#d0d0d0',
-        'bottom' => '#c2c4c5',
-        'text' => '#4A4A4A',
-        'sidebar' => '#feffff',
-        'sidebarborders' => '#cccccc',
-        'footer' => '#24272c',
-        'titleslogan' => '#0b0b0b',
+        'link' => '#0073b6',
+        'top' => '#4a4a4a',
+        'bottom' => '#4e4e4e',
+        'text' => '#3b3b3b',
+        'sidebar' => '#ffffff',
+        'sidebarborders' => '#d0d0d0',
+        'footer' => '#161617',
+        'titleslogan' => '#ffffff',
       ),
     ),
   ),
