@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.293 2010/07/28 02:57:36 dries Exp $
+// $Id: system.admin.inc,v 1.294 2010/08/12 00:34:25 dries Exp $
 
 /**
  * @file
@@ -485,6 +485,10 @@ function system_theme_settings($form, &$form_state, $key = '') {
   if (!variable_get('user_pictures', 0)) {
     $disabled['toggle_node_user_picture'] = TRUE;
     $disabled['toggle_comment_user_picture'] = TRUE;
+  }
+  if (!module_exists('comment')) {
+    $disabled['toggle_comment_user_picture'] = TRUE;
+    $disabled['toggle_comment_user_verification'] = TRUE;
   }
 
   $form['theme_settings'] = array(
