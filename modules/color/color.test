@@ -1,5 +1,5 @@
 <?php
-// $Id: color.test,v 1.6 2010/08/08 19:35:49 dries Exp $
+// $Id: color.test,v 1.7 2010/08/12 16:59:04 dries Exp $
 
 /**
  * @file
@@ -31,7 +31,7 @@ class ColorTestCase extends DrupalWebTestCase {
     $this->themes = array(
       'bartik' => array(
         'palette_input' => 'palette[bg]',
-        'scheme' => 'Slate',
+        'scheme' => 'slate',
         'scheme_color' => '#3b3b3b',
       ),
       'garland' => array(
@@ -48,7 +48,6 @@ class ColorTestCase extends DrupalWebTestCase {
    */
   function testColor() {
     foreach ($this->themes as $theme => $test_values) {
-      debug($theme);
       $this->_testColor($theme, $test_values);
     }
   }
