@@ -1,5 +1,5 @@
 <?php
-// $Id: syslog.module,v 1.35 2010/04/21 14:27:03 dries Exp $
+// $Id: syslog.module,v 1.36 2010/08/12 21:32:31 dries Exp $
 
 /**
  * @file
@@ -39,6 +39,12 @@ function syslog_help($path, $arg) {
 function syslog_form_system_logging_settings_alter(&$form, &$form_state) {
   if (defined('LOG_LOCAL0')) {
     $help = module_exists('help') ? ' ' . l(t('More information'), 'admin/help/syslog') . '.' : NULL;
+    $form['syslog_identity'] = array(
+      '#type'          => 'textfield',
+      '#title'         => t('Syslog identity'),
+      '#default_value' => variable_get('syslog_identity', 'drupal'),
+      '#description'   => t('A string that will be prepended to every message logged to Syslog. If you have multiple sites logging to the same Syslog log file, a unique identity per site makes it easy to tell the log entries apart.') . $help,
+     );
     $form['syslog_facility'] = array(
       '#type'          => 'select',
       '#title'         => t('Syslog facility'),
@@ -85,7 +91,7 @@ function syslog_watchdog(array $log_entry) {
   if (!$log_init) {
     $log_init = TRUE;
     $default_facility = defined('LOG_LOCAL0') ? LOG_LOCAL0 : LOG_USER;
-    openlog('drupal', LOG_NDELAY, variable_get('syslog_facility', $default_facility));
+    openlog(variable_get('syslog_identity', 'drupal'), LOG_NDELAY, variable_get('syslog_facility', $default_facility));
   }
 
   $message = strtr(variable_get('syslog_format', '!base_url|!timestamp|!type|!ip|!request_uri|!referer|!uid|!link|!message'), array(
