@@ -1,5 +1,5 @@
 <?php
-// $Id: block.api.php,v 1.12 2010/04/28 12:36:26 dries Exp $
+// $Id: block.api.php,v 1.13 2010/08/13 12:25:14 dries Exp $
 
 /**
  * @file
@@ -14,19 +14,38 @@
 /**
  * Define all blocks provided by the module.
  *
- * Any module can export a block (or blocks) to be displayed by defining
- * the _block hook. This hook is called by theme.inc to display a block,
- * and also by block.module to procure the list of available blocks.
+ * This hook declares to Drupal what blocks are provided by your module and can
+ * optionally specify initial block configuration settings.
+ *
+ * In hook_block_info(), each block your module provides is given a unique
+ * identifier referred to as "delta" (the array key in the return value). Delta
+ * values only need to be unique within your module, and they are used in the
+ * following ways:
+ * - Passed into the other block hooks in your module as an argument to
+ *   identify the block being configured or viewed.
+ * - Used to construct the default HTML ID of "block-MODULE-DELTA" applied to
+ *   each block when it is rendered (which can then be used for CSS styling or
+ *   JavaScript programming).
+ * - Used to define a theming template suggestion of block__MODULE__DELTA, for
+ *   advanced theming possibilities.
+ * - Used by other modules to identify your block in hook_block_info_alter() and
+ *   other alter hooks.
+ * The values of delta can be strings or numbers, but because of the uses above
+ * it is preferable to use descriptive strings whenever possible, and only use a
+ * numeric identifier if you have to (for instance if your module allows users
+ * to create several similar blocks that you identify within your module code
+ * with numeric IDs).
  *
  * @return
- *   An associative array whose keys define the $delta
- *   for each block and whose values contain the block descriptions. Each
- *   block description is itself an associative array, with the following
- *   key-value pairs:
- *   - 'info': (required) The human-readable name of the block.
- *   - 'cache': A bitmask of flags describing how the block should behave with
- *     respect to block caching. The following shortcut bitmasks are provided
- *     as constants in common.inc:
+ *   An associative array whose keys define the delta for each block and whose
+ *   values contain the block descriptions. Each block description is itself an
+ *   associative array, with the following key-value pairs:
+ *   - 'info': (required) The human-readable administrative name of the block.
+ *     This is used to identify the block on administration screens, and
+ *     is not displayed to non-administrative users.
+ *   - 'cache': (optional) A bitmask describing what kind of caching is
+ *     appropriate for the block. Drupal provides the following bitmask
+ *     constants for defining cache granularity:
  *     - DRUPAL_CACHE_PER_ROLE (default): The block can change depending on the
  *       roles the user viewing the page belongs to.
  *     - DRUPAL_CACHE_PER_USER: The block can change depending on the user
@@ -38,32 +57,48 @@
  *     - DRUPAL_CACHE_GLOBAL: The block is the same for every user on every
  *       page where it is visible.
  *     - DRUPAL_NO_CACHE: The block should not get cached.
- *   - 'weight', 'status', 'region', 'visibility', 'pages':
- *     You can give your blocks an explicit weight, enable them, limit them to
- *     given pages, etc. These settings will be registered when the block is first
- *     loaded at admin/block, and from there can be changed manually via block
- *     administration.
- *     Note that if you set a region that isn't available in a given theme, the
- *     block will be registered instead to that theme's default region (the first
- *     item in the _regions array).
- *
- * After completing your blocks, do not forget to enable them in the
- * block admin menu.
+ *   - 'weight': (optional) Initial value for the ordering weight of this block.
+ *     Most modules do not provide an initial value, and any value provided can
+ *     be modified by a user on the block configuration screen.
+ *   - 'status': (optional) Initial value for block enabled status. (1 =
+ *     enabled, 0 = disabled). Most modules do not provide an initial value,
+ *     and any value provided can be modified by a user on the block
+ *     configuration screen.
+ *   - 'region': (optional) Initial value for theme region within which this
+ *     block is set. Most modules do not provide an initial value, and
+ *     any value provided can be modified by a user on the block configuration
+ *     screen. Note: If you set a region that isn't available in the currently
+ *     enabled theme, the block will be disabled.
+ *   - 'visibility': (optional) Initial value for the visibility flag, which
+ *     tells how to interpret the 'pages' value. Possible values are:
+ *     - 0: Show on all pages except listed pages. 'pages' lists the paths where
+ *       the block should not be shown.
+ *     - 1: Show only on listed pages. 'pages' lists the paths where the block
+ *       should be shown.
+ *     - 2: Use custom PHP code to determine visibility. 'pages' gives the PHP
+ *       code to use.
+ *     Most modules do not provide an initial value for 'visibility' or 'pages',
+ *     and any value provided can be modified by a user on the block
+ *     configuration screen.
+ *   - 'pages': (optional) See 'visibility' above.
  *
  * For a detailed usage example, see block_example.module.
+ *
+ * @see hook_block_configure()
+ * @see hook_block_save()
+ * @see hook_block_view()
+ * @see hook_block_info_alter()
  */
 function hook_block_info() {
-  $blocks['exciting'] = array(
-    'info' => t('An exciting block provided by Mymodule.'),
-    'weight' => 0,
-    'status' => 1,
-    'region' => 'sidebar_first',
-    // DRUPAL_CACHE_PER_ROLE will be assumed for block 0.
+  // This example comes from node.module.
+  $blocks['syndicate'] = array(
+    'info' => t('Syndicate'),
+    'cache' => DRUPAL_NO_CACHE
   );
 
-  $blocks['amazing'] = array(
-    'info' => t('An amazing block provided by Mymodule.'),
-    'cache' => DRUPAL_CACHE_PER_ROLE | DRUPAL_CACHE_PER_PAGE,
+  $blocks['recent'] = array(
+    'info' => t('Recent content'),
+    // DRUPAL_CACHE_PER_ROLE will be assumed.
   );
 
   return $blocks;
@@ -73,15 +108,17 @@ function hook_block_info() {
  * Change block definition before saving to the database.
  *
  * @param $blocks
- *   A multidimensional array of blocks keyed by the defining module and delta
- *   the value is a block as seen in hook_block_info(). This hook is fired
+ *   A multidimensional array of blocks keyed by the defining module and delta;
+ *   the values are blocks returned by hook_block_info(). This hook is fired
  *   after the blocks are collected from hook_block_info() and the database,
  *   right before saving back to the database.
  * @param $theme
  *   The theme these blocks belong to.
  * @param $code_blocks
- *   The blocks as defined in hook_block_info before overwritten by the
+ *   The blocks as defined in hook_block_info() before being overwritten by the
  *   database data.
+ *
+ * @see hook_block_info()
  */
 function hook_block_info_alter(&$blocks, $theme, $code_blocks) {
   // Disable the login block.
@@ -89,82 +126,99 @@ function hook_block_info_alter(&$blocks, $theme, $code_blocks) {
 }
 
 /**
- * Configuration form for the block.
+ * Define a configuration form for a block.
  *
  * @param $delta
- *   Which block to return. This is a descriptive string used to identify
- *   blocks within each module and also within the theme system.
- *   The $delta for each block is defined within the array that your module
- *   returns when the hook_block_info() implementation is called.
+ *   Which block is being configured. This is a unique identifier for the block
+ *   within the module, defined in hook_block_info().
+ *
  * @return
- *   Optionally return the configuration form.
+ *   A configuration form, if one is needed for your block beyond the standard
+ *   elements that the block module provides (block title, visibility, etc.).
  *
  * For a detailed usage example, see block_example.module.
+ *
+ * @see hook_block_info()
+ * @see hook_block_save()
  */
 function hook_block_configure($delta = '') {
-  if ($delta == 'exciting') {
-    $form['items'] = array(
+  // This example comes from node.module.
+  $form = array();
+  if ($delta == 'recent') {
+    $form['node_recent_block_count'] = array(
       '#type' => 'select',
-      '#title' => t('Number of items'),
-      '#default_value' => variable_get('mymodule_block_items', 0),
-      '#options' => array('1', '2', '3'),
+      '#title' => t('Number of recent content items to display'),
+      '#default_value' => variable_get('node_recent_block_count', 10),
+      '#options' => drupal_map_assoc(array(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 25, 30)),
     );
-    return $form;
   }
+  return $form;
 }
 
 /**
- * Save the configuration options.
+ * Save the configuration options from hook_block_configure().
+ *
+ * This hook allows you to save the block-specific configuration settings
+ * defined within your hook_block_configure().
  *
  * @param $delta
- *   Which block to save the settings for. This is a descriptive string used
- *   to identify blocks within each module and also within the theme system.
- *   The $delta for each block is defined within the array that your module
- *   returns when the hook_block_info() implementation is called.
+ *   Which block is being configured. This is a unique identifier for the block
+ *   within the module, defined in hook_block_info().
  * @param $edit
  *   The submitted form data from the configuration form.
  *
  * For a detailed usage example, see block_example.module.
+ *
+ * @see hook_block_configure()
+ * @see hook_block_info()
  */
 function hook_block_save($delta = '', $edit = array()) {
-  if ($delta == 'exciting') {
-    variable_set('mymodule_block_items', $edit['items']);
+  // This example comes from node.module.
+  if ($delta == 'recent') {
+    variable_set('node_recent_block_count', $edit['node_recent_block_count']);
   }
 }
 
 /**
- * Process the block when enabled in a region in order to view its contents.
+ * Return a rendered or renderable view of a block.
  *
  * @param $delta
- *   Which block to return. This is a descriptive string used to identify
- *   blocks within each module and also within the theme system.
- *   The $delta for each block is defined within the array that your module
- *   returns when the hook_block_info() implementation is called.
- * @return
- *   An array which must define a 'subject' element and a 'content' element
- *   defining the block indexed by $delta.
+ *   Which block to render. This is a unique identifier for the block
+ *   within the module, defined in hook_block_info().
  *
- * The functions mymodule_display_block_exciting and _amazing, as used in the
- * example, should of course be defined somewhere in your module and return the
- * content you want to display to your users. If the "content" element is empty,
- * no block will be displayed even if "subject" is present.
+ * @return
+ *   An array containing required elements 'subject' (the block's localized
+ *   title) and 'content' (the block's body). The 'content' element may be a
+ *   renderable array (preferable) or rendered HTML content.
  *
  * For a detailed usage example, see block_example.module.
+ *
+ * @see hook_block_info()
+ * @see hook_block_view_alter()
+ * @see hook_block_view_MODULE_DELTA_alter()
  */
 function hook_block_view($delta = '') {
+  // This example comes from node.module. Note that you can also return a
+  // renderable array rather than rendered HTML for 'content'.
+  $block = array();
+
   switch ($delta) {
-    case 'exciting':
-      $block = array(
-        'subject' => t('Default title of the exciting block'),
-        'content' => mymodule_display_block_exciting(),
-      );
+    case 'syndicate':
+      $block['subject'] = t('Syndicate');
+      $block['content'] = theme('feed_icon', array('url' => url('rss.xml'), 'title' => t('Syndicate')));
       break;
 
-    case 'amazing':
-      $block = array(
-        'subject' => t('Default title of the amazing block'),
-        'content' => mymodule_display_block_amazing(),
-      );
+    case 'recent':
+      if (user_access('access content')) {
+        $block['subject'] = t('Recent content');
+        if ($nodes = node_get_recent(variable_get('node_recent_block_count', 10))) {
+          $block['content'] = theme('node_recent_block', array(
+            'nodes' => $nodes,
+          ));
+        } else {
+          $block['content'] = t('No content available.');
+        }
+      }
       break;
   }
   return $block;
@@ -189,8 +243,8 @@ function hook_block_view($delta = '') {
  * @param $block
  *   The block object, as loaded from the database, having the main properties:
  *   - module: The name of the module that defined the block.
- *   - delta: The identifier for the block within that module, as defined within
- *     hook_block_info().
+ *   - delta: The unique identifier for the block within that module, as defined
+ *     in hook_block_info().
  *
  * @see hook_block_view_MODULE_DELTA_alter()
  * @see hook_block_view()
@@ -223,8 +277,8 @@ function hook_block_view_alter(&$data, $block) {
  * @param $block
  *   The block object, as loaded from the database, having the main properties:
  *   - module: The name of the module that defined the block.
- *   - delta: The identifier for the block within that module, as defined within
- *     hook_block_info().
+ *   - delta: The unique identifier for the block within that module, as defined
+ *     in hook_block_info().
  *
  * @see hook_block_view_alter()
  * @see hook_block_view()
@@ -243,20 +297,21 @@ function hook_block_view_MODULE_DELTA_alter(&$data, $block) {
  * Act on blocks prior to rendering.
  *
  * This hook allows you to add, remove or modify blocks in the block list. The
- * block list contains the block definitions not the rendered blocks. The blocks
- * are rendered after the modules have had a chance to manipulate the block
- * list.
- * Alternatively you can set $block->content here, which will override the
- * content of the block and prevent hook_block_view() from running.
+ * block list contains the block definitions, not the rendered blocks. The
+ * blocks are rendered after the modules have had a chance to manipulate the
+ * block list.
+ *
+ * You can also set $block->content here, which will override the content of the
+ * block and prevent hook_block_view() from running.
  *
  * @param $blocks
- *   An array of $blocks, keyed by $bid
- *
- * This example shows how to achieve language specific visibility setting for
- * blocks.
+ *   An array of $blocks, keyed by the block ID.
  */
 function hook_block_list_alter(&$blocks) {
   global $language, $theme_key;
+
+  // This example shows how to achieve language specific visibility setting for
+  // blocks.
 
   $result = db_query('SELECT module, delta, language FROM {my_table}');
   $block_languages = array();
