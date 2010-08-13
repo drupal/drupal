@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.356 2010/08/11 14:21:39 dries Exp $
+// $Id: search.module,v 1.357 2010/08/13 01:05:36 dries Exp $
 
 /**
  * @file
@@ -846,26 +846,59 @@ function search_comment_unpublish($comment) {
 }
 
 /**
- * Extract a module-specific search option from a search query. e.g. 'type:book'
+ * Extracts a module-specific search option from a search expression.
+ *
+ * Search options are added using search_expression_insert(), and retrieved
+ * using search_expression_extract(). They take the form option:value, and
+ * are added to the ordinary keywords in the search expression.
+ *
+ * @param $expression
+ *   The search expression to extract from.
+ * @param $option
+ *   The name of the option to retrieve from the search expression.
+ *
+ * @return
+ *   The value previously stored in the search expression for option $option,
+ *   if any. Trailing spaces in values will not be included.
  */
-function search_expression_extract($keys, $option) {
-  if (preg_match('/(^| )' . $option . ':([^ ]*)( |$)/i', $keys, $matches)) {
+function search_expression_extract($expression, $option) {
+  if (preg_match('/(^| )' . $option . ':([^ ]*)( |$)/i', $expression, $matches)) {
     return $matches[2];
   }
 }
 
 /**
- * Return a query with the given module-specific search option inserted in.
- * e.g. 'type:book'.
+ * Adds a module-specific search option to a search expression.
+ *
+ * Search options are added using search_expression_insert(), and retrieved
+ * using search_expression_extract(). They take the form option:value, and
+ * are added to the ordinary keywords in the search expression.
+ *
+ * @param $expression
+ *   The search expression to add to.
+ * @param $option
+ *   The name of the option to add to the search expression.
+ * @param $value
+ *   The value to add for the option. If present, it will replace any previous
+ *   value added for the option. Cannot contain any spaces or | characters, as
+ *   these are used as delimiters. If you want to add a blank value $option: to
+ *   the search expression, pass in an empty string or a string that is composed
+ *   of only spaces. To clear a previously-stored option without adding a
+ *   replacement, pass in NULL for $value or omit.
+ *
+ * @return
+ *   $expression, with any previous value for this option removed, and a new
+ *   $option:$value pair added if $value was provided.
  */
-function search_expression_insert($keys, $option, $value = '') {
-  if (search_expression_extract($keys, $option)) {
-    $keys = trim(preg_replace('/(^| )' . $option . ':[^ ]*/i', '', $keys));
+function search_expression_insert($expression, $option, $value = NULL) {
+  // Remove any previous values stored with $option.
+  $expression = trim(preg_replace('/(^| )' . $option . ':[^ ]*/i', '', $expression));
+
+  // Set new value, if provided.
+  if (isset($value)) {
+    $expression .= ' ' . $option . ':' . trim($value);
   }
-  if ($value != '') {
-    $keys .= ' ' . $option . ':' . $value;
-  }
-  return $keys;
+  return $expression;
 }
 
 /**
