@@ -1,5 +1,5 @@
 <?php
-// $Id: field.module,v 1.80 2010/08/04 06:55:35 webchick Exp $
+// $Id: field.module,v 1.81 2010/08/14 03:10:04 dries Exp $
 /**
  * @file
  * Attach custom data fields to Drupal entities.
@@ -374,7 +374,7 @@ function _field_sort_items_value_helper($a, $b) {
  *     ),
  *   ),
  * ),
- * @encode
+ * @endcode
  *
  * @param $entity_type
  *   The type of $entity; e.g. 'node' or 'user'.
