@@ -6747,16 +6747,22 @@ function entity_form_submit_build_entity($entity_type, $entity, $form, &$form_st
 /**
  * Performs one or more XML-RPC request(s).
  *
+ * Usage example:
+ * @code
+ * $result = xmlrpc('http://example.com/xmlrpc.php', array(
+ *   'service.methodName' => array($parameter, $second, $third),
+ * ));
+ * @endcode
+ *
  * @param $url
  *   An absolute URL of the XML-RPC endpoint.
- *     Example:
- *     http://www.example.com/xmlrpc.php
- * @param ...
- *   For one request:
- *     The method name followed by a variable number of arguments to the method.
- *   For multiple requests (system.multicall):
- *     An array of call arrays. Each call array follows the pattern of the single
- *     request: method name followed by the arguments to the method.
+ * @param $args
+ *   An associative array whose keys are the methods to call and whose values
+ *   are the arguments to pass to the respective method. If multiple methods
+ *   are specified, a system.multicall is performed.
+ * @param $options
+ *   (optional) An array of options to pass along to drupal_http_request().
+ *
  * @return
  *   For one request:
  *     Either the return value of the method on success, or FALSE.
@@ -6766,10 +6772,9 @@ function entity_form_submit_build_entity($entity_type, $entity, $form, &$form_st
  *     returned by the method called, or an xmlrpc_error object if the call
  *     failed. See xmlrpc_error().
  */
-function xmlrpc($url) {
+function xmlrpc($url, $args, $options = array()) {
   require_once DRUPAL_ROOT . '/includes/xmlrpc.inc';
-  $args = func_get_args();
-  return call_user_func_array('_xmlrpc', $args);
+  return _xmlrpc($url, $args, $options);
 }
 
 /**
