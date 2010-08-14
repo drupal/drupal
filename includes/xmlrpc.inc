@@ -1,5 +1,5 @@
 <?php
-// $Id: xmlrpc.inc,v 1.68 2010/07/22 16:20:15 dries Exp $
+// $Id: xmlrpc.inc,v 1.69 2010/08/14 03:15:01 dries Exp $
 
 /**
  * @file
@@ -528,14 +528,14 @@ function xmlrpc_base64_get_xml($xmlrpc_base64) {
  * Performs one or more XML-RPC requests.
  *
  * @param $url
- *   The absolute URL of the XML-RPC endpoint. Example:
- *   http://www.example.com/xmlrpc.php
- * @param ...
- *   - For one request: The method name followed by a variable number of
- *     arguments to the method.
- *   - For multiple requests (system.multicall): An array of call arrays. Each
- *     call array follows the pattern of the single request: method name
- *     followed by the arguments to the method.
+ *   An absolute URL of the XML-RPC endpoint, e.g.,
+ *   http://example.com/xmlrpc.php
+ * @param $args
+ *   An associative array whose keys are the methods to call and whose values
+ *   are the arguments to pass to the respective method. If multiple methods
+ *   are specified, a system.multicall is performed.
+ * @param $options
+ *   (optional) An array of options to pass along to drupal_http_request().
  *
  * @return
  *   A single response (single request) or an array of responses (multicall
@@ -544,27 +544,25 @@ function xmlrpc_base64_get_xml($xmlrpc_base64) {
  *   is returned, see xmlrpc_errno() and xmlrpc_error_msg() to get more
  *   information.
  */
-function _xmlrpc() {
-  $args = func_get_args();
-  $url = array_shift($args);
+function _xmlrpc($url, $args, $options = array()) {
   xmlrpc_clear_error();
-  if (is_array($args[0])) {
-    $method = 'system.multicall';
+  if (count($args) > 1) {
     $multicall_args = array();
-    foreach ($args[0] as $call) {
-      $multicall_args[] = array('methodName' => array_shift($call), 'params' => $call);
+    foreach ($args as $method => $call) {
+      $multicall_args[] = array('methodName' => $method, 'params' => $call);
     }
+    $method = 'system.multicall';
     $args = array($multicall_args);
   }
   else {
-    $method = array_shift($args);
+    $method = key($args);
+    $args = $args[$method];
   }
   $xmlrpc_request = xmlrpc_request($method, $args);
-  $options = array(
-    'headers' => array('Content-Type' => 'text/xml'),
-    'method' => 'POST',
-    'data' => $xmlrpc_request->xml,
-  );
+  // Required options which will replace any that are passed in.
+  $options['method'] = 'POST';
+  $options['headers']['Content-Type'] = 'text/xml';
+  $options['data'] = $xmlrpc_request->xml;
   $result = drupal_http_request($url, $options);
   if ($result->code != 200) {
     xmlrpc_error($result->code, $result->error);

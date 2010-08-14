@@ -1,5 +1,5 @@
 <?php
-// $Id: xmlrpc.test,v 1.19 2010/08/05 23:53:38 webchick Exp $
+// $Id: xmlrpc.test,v 1.20 2010/08/14 03:15:01 dries Exp $
 
 /**
  * Perform basic XML-RPC tests that do not require addition callbacks.
@@ -29,7 +29,7 @@ class XMLRPCBasicTestCase extends DrupalWebTestCase {
 
     // Invoke XML-RPC call to get list of methods.
     $url = url(NULL, array('absolute' => TRUE)) . 'xmlrpc.php';
-    $methods = xmlrpc($url, 'system.listMethods');
+    $methods = xmlrpc($url, array('system.listMethods' => array()));
 
     // Ensure that the minimum methods were found.
     $count = 0;
@@ -74,8 +74,8 @@ class XMLRPCBasicTestCase extends DrupalWebTestCase {
 class XMLRPCValidator1IncTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name'  => 'XML-RPC validator',
-      'description'  => 'See !validator-link.', array('!validator-link' => l('the xmlrpc validator1 specification', 'http://www.xmlrpc.com/validator1Docs')),
+      'name' => 'XML-RPC validator',
+      'description' => 'See <a href="http://www.xmlrpc.com/validator1Docs">the xmlrpc validator1 specification</a>.',
       'group' => 'XML-RPC',
     );
   }
@@ -92,7 +92,6 @@ class XMLRPCValidator1IncTestCase extends DrupalWebTestCase {
     srand();
     mt_srand();
 
-
     $array_1 = array(array('curly' => mt_rand(-100, 100)),
                   array('curly' => mt_rand(-100, 100)),
                   array('larry' => mt_rand(-100, 100)),
@@ -102,29 +101,26 @@ class XMLRPCValidator1IncTestCase extends DrupalWebTestCase {
                   array('larry' => mt_rand(-100, 100)));
     shuffle($array_1);
     $l_res_1 = xmlrpc_test_arrayOfStructsTest($array_1);
-    $r_res_1 = xmlrpc($xml_url, 'validator1.arrayOfStructsTest', $array_1);
-    $this->assertIdentical($l_res_1, $r_res_1, 'array of structs test: %s');
-
+    $r_res_1 = xmlrpc($xml_url, array('validator1.arrayOfStructsTest' => array($array_1)));
+    $this->assertIdentical($l_res_1, $r_res_1);
 
     $string_2 = 't\'&>>zf"md>yr>xlcev<h<"k&j<og"w&&>">>uai"np&s>>q\'&b<>"&&&';
     $l_res_2 = xmlrpc_test_countTheEntities($string_2);
-    $r_res_2 = xmlrpc($xml_url, 'validator1.countTheEntities', $string_2);
-    $this->assertIdentical($l_res_2, $r_res_2, 'count the entities test: %s');
-
+    $r_res_2 = xmlrpc($xml_url, array('validator1.countTheEntities' => array($string_2)));
+    $this->assertIdentical($l_res_2, $r_res_2);
 
     $struct_3 = array('moe' => mt_rand(-100, 100), 'larry' => mt_rand(-100, 100), 'curly' => mt_rand(-100, 100), 'homer' => mt_rand(-100, 100));
     $l_res_3 = xmlrpc_test_easyStructTest($struct_3);
-    $r_res_3 = xmlrpc($xml_url, 'validator1.easyStructTest', $struct_3);
-    $this->assertIdentical($l_res_3, $r_res_3, 'easy struct test: %s');
-
+    $r_res_3 = xmlrpc($xml_url, array('validator1.easyStructTest' => array($struct_3)));
+    $this->assertIdentical($l_res_3, $r_res_3);
 
     $struct_4 = array('sub1' => array('bar' => 13),
                     'sub2' => 14,
                     'sub3' => array('foo' => 1, 'baz' => 2),
                     'sub4' => array('ss' => array('sss' => array('ssss' => 'sssss'))));
     $l_res_4 = xmlrpc_test_echoStructTest($struct_4);
-    $r_res_4 = xmlrpc($xml_url, 'validator1.echoStructTest', $struct_4);
-    $this->assertIdentical($l_res_4, $r_res_4, 'echo struct test: %s');
+    $r_res_4 = xmlrpc($xml_url, array('validator1.echoStructTest' => array($struct_4)));
+    $this->assertIdentical($l_res_4, $r_res_4);
 
     $int_5     = mt_rand(-100, 100);
     $bool_5    = (($int_5 % 2) == 0);
@@ -133,12 +129,11 @@ class XMLRPCValidator1IncTestCase extends DrupalWebTestCase {
     $time_5    = REQUEST_TIME;
     $base64_5  = $this->randomName(100);
     $l_res_5 = xmlrpc_test_manyTypesTest($int_5, $bool_5, $string_5, $double_5, xmlrpc_date($time_5), $base64_5);
-    $l_res_5[5] = $l_res_5[5]->data; /* override warpping */
-    $r_res_5 = xmlrpc($xml_url, 'validator1.manyTypesTest', $int_5, $bool_5, $string_5, $double_5, xmlrpc_date($time_5), xmlrpc_base64($base64_5));
-    /* Contains objects, objects are not equal */
     // See http://drupal.org/node/37766 why this currently fails
-    $this->assertEqual($l_res_5, $r_res_5, 'many types test: %s');
-
+    $l_res_5[5] = $l_res_5[5]->data;
+    $r_res_5 = xmlrpc($xml_url, array('validator1.manyTypesTest' => array($int_5, $bool_5, $string_5, $double_5, xmlrpc_date($time_5), xmlrpc_base64($base64_5))));
+    // @todo Contains objects, objects are not equal.
+    $this->assertEqual($l_res_5, $r_res_5);
 
     $size = mt_rand(100, 200);
     $array_6 = array();
@@ -147,9 +142,8 @@ class XMLRPCValidator1IncTestCase extends DrupalWebTestCase {
     }
 
     $l_res_6 = xmlrpc_test_moderateSizeArrayCheck($array_6);
-    $r_res_6 = xmlrpc($xml_url, 'validator1.moderateSizeArrayCheck', $array_6);
-    $this->assertIdentical($l_res_6, $r_res_6, 'moderate size array check: %s');
-
+    $r_res_6 = xmlrpc($xml_url, array('validator1.moderateSizeArrayCheck' => array($array_6)));
+    $this->assertIdentical($l_res_6, $r_res_6);
 
     $struct_7 = array();
     for ($y = 2000; $y < 2002; $y++) {
@@ -165,29 +159,29 @@ class XMLRPCValidator1IncTestCase extends DrupalWebTestCase {
       }
     }
     $l_res_7 = xmlrpc_test_nestedStructTest($struct_7);
-    $r_res_7 = xmlrpc($xml_url, 'validator1.nestedStructTest', $struct_7);
-    $this->assertIdentical($l_res_7, $r_res_7, 'nested struct test: %s');
+    $r_res_7 = xmlrpc($xml_url, array('validator1.nestedStructTest' => array($struct_7)));
+    $this->assertIdentical($l_res_7, $r_res_7);
 
 
     $int_8 = mt_rand(-100, 100);
     $l_res_8 = xmlrpc_test_simpleStructReturnTest($int_8);
-    $r_res_8 = xmlrpc($xml_url, 'validator1.simpleStructReturnTest', $int_8);
-    $this->assertIdentical($l_res_8, $r_res_8, 'simple struct test: %s');
+    $r_res_8 = xmlrpc($xml_url, array('validator1.simpleStructReturnTest' => array($int_8)));
+    $this->assertIdentical($l_res_8, $r_res_8);
 
     /* Now test multicall */
     $x = array();
-    $x[] = array('validator1.arrayOfStructsTest',     $array_1);
-    $x[] = array('validator1.countTheEntities',       $string_2);
-    $x[] = array('validator1.easyStructTest',         $struct_3);
-    $x[] = array('validator1.echoStructTest',         $struct_4);
-    $x[] = array('validator1.manyTypesTest',          $int_5, $bool_5, $string_5, $double_5, xmlrpc_date($time_5), xmlrpc_base64($base64_5));
-    $x[] = array('validator1.moderateSizeArrayCheck', $array_6);
-    $x[] = array('validator1.nestedStructTest',       $struct_7);
-    $x[] = array('validator1.simpleStructReturnTest', $int_8);
+    $x['validator1.arrayOfStructsTest'] = array($array_1);
+    $x['validator1.countTheEntities'] = array($string_2);
+    $x['validator1.easyStructTest'] = array($struct_3);
+    $x['validator1.echoStructTest'] = array($struct_4);
+    $x['validator1.manyTypesTest'] = array($int_5, $bool_5, $string_5, $double_5, xmlrpc_date($time_5), xmlrpc_base64($base64_5));
+    $x['validator1.moderateSizeArrayCheck'] = array($array_6);
+    $x['validator1.nestedStructTest'] = array($struct_7);
+    $x['validator1.simpleStructReturnTest'] = array($int_8);
 
     $a_l_res = array($l_res_1, $l_res_2, $l_res_3, $l_res_4, $l_res_5, $l_res_6, $l_res_7, $l_res_8);
     $a_r_res = xmlrpc($xml_url, $x);
-    $this->assertEqual($a_l_res, $a_r_res, 'multicall equals result');
+    $this->assertEqual($a_l_res, $a_r_res);
   }
 }
 
@@ -212,7 +206,7 @@ class XMLRPCMessagesTestCase extends DrupalWebTestCase {
     $sizes = array(8, 80, 160);
     foreach ($sizes as $size) {
       $xml_message_l = xmlrpc_test_message_sized_in_kb($size);
-      $xml_message_r = xmlrpc($xml_url, 'messages.messageSizedInKB', $size);
+      $xml_message_r = xmlrpc($xml_url, array('messages.messageSizedInKB' => array($size)));
 
       $this->assertEqual($xml_message_l, $xml_message_r, t('XML-RPC messages.messageSizedInKB of %s Kb size received', array('%s' => $size)));
     }
