@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.62 2010/08/06 01:40:29 webchick Exp $ */
+/* $Id: style.css,v 1.63 2010/08/14 03:01:11 dries Exp $ */
 
 /**
  * Generic elements.
@@ -6,10 +6,7 @@
 body {
   color: #000;
   background: #fff;
-  font-style: normal;
-  line-height: 20px;
-  font-size: 0.8em;
-  font-family: Lucida Grande, Lucida Sans Unicode, sans-serif;
+  font: 81.3%/1.538em normal Lucida Grande, Lucida Sans Unicode, sans-serif;
 }
 a {
   color: #0074BD;
@@ -38,22 +35,20 @@ h6 {
   margin: 10px 0;
 }
 h1 {
-  font-size: 150%;
+  font-size: 1.538em;
 }
 h2 {
-  font-size: 140%;
+  font-size: 1.385em;
 }
 h3 {
-  font-size: 130%;
+  font-size: 1.231em;
 }
 h4 {
-  font-size: 120%;
+  font-size: 1.154em;
 }
-h5 {
-  font-size: 110%;
-}
+h5,
 h6 {
-  font-size: 105%;
+  font-size: 1.077em;
 }
 p {
   margin: 1em 0;
@@ -142,7 +137,7 @@ code {
 code,
 pre,
 kbd {
-  font-size: 1.25em;
+  font-size: 1.231em;
 }
 
 /**
@@ -175,7 +170,6 @@ kbd {
   -webkit-border-top-right-radius: 0;
   -webkit-border-bottom-left-radius: 10px;
   -webkit-border-bottom-right-radius: 10px;
-
 }
 #skip-link a:hover,
 #skip-link a:active,
@@ -197,7 +191,7 @@ kbd {
   background-color: #e0e0d8;
 }
 #branding div.breadcrumb {
-  font-size: 0.875em;
+  font-size: 0.846em;
   padding-bottom: 5px;
 }
 #branding div.block {
@@ -229,13 +223,12 @@ kbd {
  * Help.
  */
 #help {
-  font-size: 0.9em;
+  font-size: 0.923em;
   margin-top: 1em;
 }
 #help p {
   margin: 0 0 10px;
 }
-
 #help div.more-help-link {
   text-align: right;
 }
@@ -280,7 +273,7 @@ div.status {
   color: #000;
   margin: 0;
   padding-bottom: 10px;
-  font-size: 1.313em;
+  font-size: 1.385em;
   font-weight: normal;
   float: left;
 }
@@ -298,11 +291,9 @@ div.status {
 ul.primary {
   float: right;
   border-bottom: none;
-  margin: 0 0 -10px 0;
-  padding: 3px 0 0 8px;
-  line-height: 30px;
+  padding: 0.769em 0 5px 8px;
   text-transform: uppercase;
-  font-size: 0.96em;
+  font-size: 0.923em;
 }
 ul.primary li {
   display: inline;
@@ -317,7 +308,7 @@ ul.primary li.active a {
   background-color: #a6a7a2;
   color: #000;
   font-weight: bold;
-  padding: 7px 20px 5px 20px;
+  padding: 6px 20px;
   border-width: 1px 1px 0 1px;
   border-style: solid;
   border-color: #a6a7a2;
@@ -342,10 +333,10 @@ ul.primary li.active a:hover {
 ul.secondary {
   float: none;
   clear: both;
-  font-size: 0.75em;
+  font-size: 0.923em;
   text-align: right;
   padding: 4px 10px 10px;
-  line-height: 18px;
+  line-height: 1.385em;
   overflow: hidden;
   background-color: #fff;
 }
@@ -387,8 +378,7 @@ ul.secondary li.active a.active {
   padding: 0 10px 10px 0;
 }
 #secondary-links ul.links li a {
-  font-size: 0.563em;
-  line-height: 10px;
+  font-size: 0.923em;
   background: #777;
   color: #fff;
   text-align: center;
@@ -446,9 +436,8 @@ ul.admin-list.compact li {
 ul.admin-list li:last-child {
   border-bottom: none;
 }
-
 ul.node-type-list .label {
-  font-size: 0.938em;
+  font-size: 1.154em;
 }
 ul.node-type-list li a,
 ul.admin-list li a {
@@ -472,7 +461,7 @@ ul.admin-list li div.description a {
  */
 table {
   width: 100%;
-  font-size: 0.92em;
+  font-size: 0.923em;
   margin: 0 0 10px;
   border: 1px solid #bebfb9;
 }
@@ -500,7 +489,6 @@ tr.drag-previous {
   background: #ffb;
 }
 table th {
-  font-size: 0.75em;
   text-transform: uppercase;
   background: #e1e2dc;
   font-weight: normal;
@@ -628,7 +616,7 @@ div.teaser-checkbox .form-item,
   text-transform: none;
 }
 .form-item label.option {
-  font-size: 0.75em;
+  font-size: 0.923em;
 }
 .form-item label.option input {
   vertical-align: middle;
@@ -653,15 +641,15 @@ div.teaser-checkbox .form-item,
 .filter-wrapper .form-item,
 .filter-wrapper .filter-guidelines,
 .filter-wrapper .filter-help {
-  font-size: 0.75em;
+  font-size: 0.923em;
   padding: 0;
 }
 ul.tips,
 div.description,
 .form-item div.description {
   margin: 5px 0;
-  line-height: 15px;
-  font-size: 0.938em;
+  line-height: 1.231em;
+  font-size: 0.923em;
   color: #666;
 }
 ul.tips li {
@@ -680,7 +668,7 @@ a.button {
   color: #5a5a5a;
   text-align: center;
   font-weight: normal;
-  font-size: 1.1em;
+  font-size: 1.077em;
   font-family: "Lucida Grande", Verdana, sans-serif;
   border: 1px solid #e4e4e4;
   border-bottom: 1px solid #b4b4b4;
@@ -790,7 +778,7 @@ div.admin-panel {
   border: 1px solid #ccc;
 }
 div.admin-panel h3 {
-  font-size: 0.938em;
+  font-size: 0.923em;
   text-transform: uppercase;
   margin: 0;
   padding-bottom: 9px;
@@ -819,7 +807,7 @@ dl.multiselect dd {
 }
 dl.multiselect select,
 dl.multiselect dd select {
-  font-size: 0.75em;
+  font-size: 0.923em;
   background: #fff;
   border: 1px solid #ccc;
 }
@@ -835,7 +823,7 @@ div.admin-options {
 }
 div.admin-options label {
   text-transform: uppercase;
-  font: 0.75em/1.875em Lucida Grande, Lucida Sans Unicode, sans-serif;
+  font: 0.846em/1.875em Lucida Grande, Lucida Sans Unicode, sans-serif;
 }
 div.admin-options label,
 div.admin-options div.form-item {
@@ -926,6 +914,15 @@ ol.task-list li.done {
   float: left;
   position: relative;
   z-index: 10;
+}
+#overlay-tabs {
+  bottom: -2px;
+  font-size: 1.54em;
+  line-height: 1.54em;
+  margin: 0;
+}
+#overlay-tabs li {
+  margin: 0 -2px;
 }
 .overlay ul.secondary {
   background: transparent none;
@@ -1034,4 +1031,15 @@ table tbody tr.update-unsupported {
   color: #840;
   background: #fffce5;
   border-bottom: 1px solid #ed5;
+}
+
+/* Vertical Tabs */
+div.vertical-tabs .vertical-tabs-list {
+  font-size: 1em;
+}
+div.vertical-tabs ul li.vertical-tab-button strong {
+  font-size: 0.923em;
+}
+div.vertical-tabs ul li.vertical-tab-button .summary {
+  font-size: 0.846em;
 }
