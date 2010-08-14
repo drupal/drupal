@@ -53,7 +53,7 @@ function seven_node_add_list($variables) {
 /**
  * Override of theme_admin_block_content().
  *
- * Use unordered list markup in both compact and extended move.
+ * Use unordered list markup in both compact and extended mode.
  */
 function seven_admin_block_content($variables) {
   $content = $variables['content'];
