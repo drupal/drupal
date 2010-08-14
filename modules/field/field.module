@@ -374,7 +374,7 @@ function _field_sort_items_value_helper($a, $b) {
  *     ),
  *   ),
  * ),
- * @encode
+ * @endcode
  *
  * @param $entity_type
  *   The type of $entity; e.g. 'node' or 'user'.
