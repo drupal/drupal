@@ -129,9 +129,7 @@ ul.secondary a.active,
   margin: 0;
   padding: 0;
   border: 0;
-  font-size: 100%;
   vertical-align: baseline;
-  line-height: inherit;
 }
 /* Drupal: system-menus.css */
 ul.links,
@@ -178,11 +176,13 @@ table {
  */
 input,
 select,
-textarea,
-body {
-  font: 0.81em/1.25em "Helvetica Neue", Helvetica, Arial, sans-serif;
+textarea {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
-
+textarea {
+  font-size: 0.923em;
+  line-height: 1.538em;
+}
 /**
  * Markup free clearing.
  *
