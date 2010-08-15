@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.294 2010/08/12 00:34:25 dries Exp $
+// $Id: system.admin.inc,v 1.295 2010/08/15 02:01:50 dries Exp $
 
 /**
  * @file
@@ -2167,7 +2167,7 @@ function system_site_maintenance_mode() {
     '#type' => 'checkbox',
     '#title' => t('Put site into maintenance mode'),
     '#default_value' => variable_get('maintenance_mode', 0),
-    '#description' => t('When enabled, only users with the "Access site in maintenance mode" <a href="@permissions-url">permission</a> are able to access your site to perform maintenance; all other visitors see the maintenance mode message configured below. Authorized users can log in directly via the <a href="@user-login">user login</a> page.', array('@permissions-url' => url('admin/people/permissions'), '@user-login' => url('user'))),
+    '#description' => t('When enabled, only users with the "Use the site in maintenance mode" <a href="@permissions-url">permission</a> are able to access your site to perform maintenance; all other visitors see the maintenance mode message configured below. Authorized users can log in directly via the <a href="@user-login">user login</a> page.', array('@permissions-url' => url('admin/people/permissions'), '@user-login' => url('user'))),
   );
   $form['maintenance_mode_message'] = array(
     '#type' => 'textarea',
