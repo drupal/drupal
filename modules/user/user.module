@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1192 2010/08/11 14:21:39 dries Exp $
+// $Id: user.module,v 1.1193 2010/08/15 01:49:45 dries Exp $
 
 /**
  * @file
@@ -946,7 +946,7 @@ function user_user_view($account) {
  * @see user_account_form_validate()
  * @see user_validate_current_pass()
  * @see user_validate_picture()
- * @see user_validate_email()
+ * @see user_validate_mail()
  */
 function user_account_form(&$form, &$form_state) {
   global $user;
