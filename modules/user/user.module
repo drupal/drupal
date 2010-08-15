@@ -946,7 +946,7 @@ function user_user_view($account) {
  * @see user_account_form_validate()
  * @see user_validate_current_pass()
  * @see user_validate_picture()
- * @see user_validate_email()
+ * @see user_validate_mail()
  */
 function user_account_form(&$form, &$form_state) {
   global $user;
