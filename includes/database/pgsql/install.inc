@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.9 2010/06/21 01:32:21 webchick Exp $
+// $Id: install.inc,v 1.10 2010/08/16 21:01:23 dries Exp $
 
 /**
  * @file
@@ -57,29 +57,18 @@ class DatabaseTasks_pgsql extends DatabaseTasks {
   /**
    * Check PHP version.
    *
-   * There is a bug in PHP versions < 5.2.11 and < 5.3.1 that prevents
-   * PostgreSQL from inserting integer values into numeric columns that exceed
-   * the PHP_INT_MAX value (value varies dependant on 32 or 64 bit CPU).
+   * There are two bugs in PDO_pgsql affecting Drupal:
+   *
+   * - in versions < 5.2.7, PDO_pgsql refuses to insert an empty string into
+   *   a NOT NULL BLOB column. See: http://bugs.php.net/bug.php?id=46249
+   * - in versions < 5.2.11 and < 5.3.1 that prevents inserting integer values
+   *   into numeric columns that exceed the PHP_INT_MAX value.
+   *   See: http://bugs.php.net/bug.php?id=48924
    */
   function checkPHPVersion() {
-    try {
-      $txn = db_transaction();
-      db_query("CREATE TABLE test_php_version ( test_int INT NOT NULL )");
-      // See http://bugs.php.net/bug.php?id=48924 as to why this query may 
-      // fail. The error will throw an Exception so there is no need to test to
-      // see if the row inserted or not.
-      db_query("INSERT INTO test_php_version ( test_int ) VALUES (:big_int)", array(':big_int' => PHP_INT_MAX + 1));
-      db_query("DROP TABLE test_php_version"); 
-      $this->pass(st('PHP is at the correct version to run on PostgreSQL.'));
-    }
-    catch (Exception $e) {
-      // Failing is not fatal but the user should still be warned of the
-      // limitations of running PostgreSQL on the current version of PHP.
-      $text  = 'The version of PHP you are using has known issues with PostgreSQL. You can see more at ';
-      $text .= l('http://drupal.org/node/515310', 'http://drupal.org/node/515310') . '. ';
-      $text .= 'We suggest you upgrade PHP to 5.2.11, 5.3.1 or greater. Failing to do so may result in serious data corruption later.';
-      drupal_set_message(st($text), 'warning');
-    }
+    if (!version_compare(PHP_VERSION, '5.2.11', '>=') || (version_compare(PHP_VERSION, '5.3.0', '>=') && !version_compare(PHP_VERSION, '5.3.1', '>='))) {
+      $this->fail(st('The version of PHP you are using has known issues with PostgreSQL. You need to upgrade PHP to 5.2.11, 5.3.1 or greater.'));
+    };
   }
 
   /**
