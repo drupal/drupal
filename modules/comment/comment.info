@@ -1,9 +1,10 @@
-; $Id: comment.info,v 1.12 2009/11/17 21:24:18 dries Exp $
+; $Id: comment.info,v 1.13 2010/08/16 20:57:22 dries Exp $
 name = Comment
 description = Allows users to comment on and discuss published content.
 package = Core
 version = VERSION
 core = 7.x
+dependencies[] = text
 files[] = comment.module
 files[] = comment.admin.inc
 files[] = comment.pages.inc

@@ -1,9 +1,10 @@
-; $Id: file.info,v 1.1 2009/08/29 12:52:32 dries Exp $
+; $Id: file.info,v 1.2 2010/08/16 20:57:23 dries Exp $
 name = File
 description = Defines a file field type.
 package = Core
 version = VERSION
 core = 7.x
+dependencies[] = field
 files[] = file.module
 files[] = file.field.inc
 files[] = file.install

@@ -1,9 +1,10 @@
-; $Id: list.info,v 1.7 2010/06/21 02:27:47 webchick Exp $
+; $Id: list.info,v 1.8 2010/08/16 20:57:22 dries Exp $
 name = List
 description = Defines list field types. Use with Options to create selection lists.
 package = Core
 version = VERSION
 core = 7.x
-files[]=list.module
-files[]=tests/list.test
+dependencies[] = field
+files[] = list.module
+files[] = tests/list.test
 required = TRUE
