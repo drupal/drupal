@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1288 2010/08/16 12:32:32 dries Exp $
+// $Id: node.module,v 1.1289 2010/08/16 20:59:34 dries Exp $
 
 /**
  * @file
@@ -2461,7 +2461,7 @@ function node_view_multiple($nodes, $view_mode = 'teaser', $weight = 0) {
  */
 function node_page_default() {
   $select = db_select('node', 'n')
-    ->fields('n', array('nid'))
+    ->fields('n', array('nid', 'sticky', 'created'))
     ->condition('promote', 1)
     ->condition('status', 1)
     ->orderBy('sticky', 'DESC')
