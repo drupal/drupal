@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.221 2010/08/08 01:37:34 dries Exp $
+// $Id: file.inc,v 1.222 2010/08/16 21:06:53 dries Exp $
 
 /**
  * @file
@@ -691,7 +691,7 @@ function file_unmanaged_copy($source, $destination = NULL, $replace = FILE_EXIST
   file_ensure_htaccess();
   // Perform the copy operation.
   if (!@copy($source, $destination)) {
-    drupal_set_message(t('The specified file %file could not be copied.', array('%file' => $source)), 'error');
+    watchdog('file', 'The specified file %file could not be copied to %destination.', array('%file' => $source, '%destination' => $destination), WATCHDOG_ERROR);
     return FALSE;
   }
 
