@@ -2577,7 +2577,7 @@ function hook_schema() {
         'not null' => TRUE,
         'default' => ''),
       'title' => array(
-        'description' => 'The title of this node, always treated a non-markup plain text.',
+        'description' => 'The title of this node, always treated as non-markup plain text.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
