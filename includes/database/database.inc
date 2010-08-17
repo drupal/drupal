@@ -2138,8 +2138,16 @@ function db_autoload($class) {
 
     foreach ($driver_files as $file => $classes) {
       if (in_array($base, $classes)) {
-        require_once "{$base_path}/{$driver}/{$file}";
-        return;
+        $filename = "{$base_path}/{$driver}/{$file}";
+        // We might end up looking in a file that doesn't exist, so check that.
+        if (file_exists($filename)) {
+          require_once $filename;
+          // If the class now exists, we're done. Otherwise keep searching in
+          // additional files.
+          if (class_exists($class, FALSE) || interface_exists($class, FALSE)) {
+            return;
+          }
+        }
       }
     }
   }
