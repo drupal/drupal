@@ -1222,7 +1222,7 @@ function node_view($node, $view_mode = 'full') {
   // displayed on its own page. Modules may alter this behavior (for example,
   // to restrict contextual links to certain view modes) by implementing
   // hook_node_view_alter().
-  if (!empty($node->nid) && !node_is_page($node)) {
+  if (!empty($node->nid) && !($view_mode == 'full' && node_is_page($node))) {
     $build['#contextual_links']['node'] = array('node', array($node->nid));
   }
 
@@ -1355,7 +1355,7 @@ function template_preprocess_node(&$variables) {
   $uri = entity_uri('node', $node);
   $variables['node_url']  = url($uri['path'], $uri['options']);
   $variables['title']     = check_plain($node->title);
-  $variables['page']      = node_is_page($node);
+  $variables['page']      = $variables['view_mode'] == 'full' && node_is_page($node);
 
   if (!empty($node->in_preview)) {
     unset($node->content['links']);

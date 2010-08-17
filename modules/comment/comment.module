@@ -698,7 +698,7 @@ function comment_node_view($node, $view_mode) {
     // page. We compare $node and $page_node to ensure that comments are not
     // appended to other nodes shown on the page, for example a node_reference
     // displayed in 'full' view mode within another node.
-    if ($node->comment && node_is_page($node) && empty($node->in_preview) && user_access('access comments')) {
+    if ($node->comment && $view_mode == 'full' && node_is_page($node) && empty($node->in_preview) && user_access('access comments')) {
       $node->content['comments'] = comment_node_page_additions($node);
     }
   }

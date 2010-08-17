@@ -1155,7 +1155,7 @@ function hook_validate($node, &$form) {
  * @ingroup node_api_hooks
  */
 function hook_view($node, $view_mode) {
-  if (node_is_page($node)) {
+  if ($view_mode == 'full' && node_is_page($node)) {
     $breadcrumb = array();
     $breadcrumb[] = l(t('Home'), NULL);
     $breadcrumb[] = l(t('Example'), 'example');
