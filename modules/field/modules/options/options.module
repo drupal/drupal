@@ -1,5 +1,5 @@
 <?php
-// $Id: options.module,v 1.26 2010/04/13 15:23:02 dries Exp $
+// $Id: options.module,v 1.27 2010/08/17 21:48:39 dries Exp $
 
 /**
  * @file
@@ -25,7 +25,7 @@ function options_help($path, $arg) {
 function options_theme() {
   return array(
     'options_none' => array(
-      'variables' => array('instance' => NULL),
+      'variables' => array('instance' => NULL, 'option' => NULL),
     ),
   );
 }
@@ -76,7 +76,8 @@ function options_field_widget_form(&$form, &$form_state, $field, $instance, $lan
   $type = str_replace('options_', '', $instance['widget']['type']);
   $multiple = $field['cardinality'] > 1 || $field['cardinality'] == FIELD_CARDINALITY_UNLIMITED;
   $required = $element['#required'];
-  $properties = _options_properties($type, $multiple, $required);
+  $has_value = isset($items[0][$value_key]);
+  $properties = _options_properties($type, $multiple, $required, $has_value);
 
   // Prepare the list of options.
   $options = _options_get_options($field, $instance, $properties);
@@ -137,6 +138,9 @@ function options_field_widget_form(&$form, &$form_state, $field, $instance, $lan
  * Form element validation handler for options element.
  */
 function options_field_widget_validate($element, &$form_state) {
+  if ($element['#required'] && $element['#value'] == '_none') {
+    form_error($element, t('!name field is required.', array('!name' => $element['#title'])));
+  }
   // Transpose selections from field => delta to delta => field, turning
   // multiple selected options into multiple parent elements.
   $items = _options_form_to_storage($element);
@@ -146,12 +150,12 @@ function options_field_widget_validate($element, &$form_state) {
 /**
  * Describes the preparation steps required by each widget.
  */
-function _options_properties($type, $multiple, $required) {
+function _options_properties($type, $multiple, $required, $has_value) {
   $base = array(
     'zero_placeholder' => FALSE,
     'filter_xss' => FALSE,
     'strip_tags' => FALSE,
-    'empty_value' => FALSE,
+    'empty_option' => FALSE,
     'optgroups' => FALSE,
   );
 
@@ -162,9 +166,25 @@ function _options_properties($type, $multiple, $required) {
       $properties = array(
         // Select boxes do not support any HTML tag.
         'strip_tags' => TRUE,
-        'empty_value' => !$required,
         'optgroups' => TRUE,
       );
+      if ($multiple) {
+        // Multiple select: add a 'none' option for non-required fields.
+        if (!$required) {
+          $properties['empty_option'] = 'option_none';
+        }
+      }
+      else {
+        // Single select: add a 'none' option for non-required fields,
+        // and a 'select a value' option for required fields that do not come
+        // with a value selected.
+        if (!$required) {
+          $properties['empty_option'] = 'option_none';
+        }
+        else if (!$has_value) {
+          $properties['empty_option'] = 'option_select';
+        }
+      }
       break;
 
     case 'buttons':
@@ -173,9 +193,11 @@ function _options_properties($type, $multiple, $required) {
         // Form API 'checkboxes' do not suport 0 as an option, so we replace it with
         // a placeholder within the form workflow.
         'zero_placeholder' => $multiple,
-        // Checkboxes do not need a 'none' choice.
-        'empty_value' => !$required && !$multiple,
       );
+      // Add a 'none' option for non-required radio buttons.
+      if (!$required && !$multiple) {
+        $properties['empty_option'] = 'option_none';
+      }
       break;
 
     case 'onoff':
@@ -202,8 +224,9 @@ function _options_get_options($field, $instance, $properties) {
     $options = options_array_flatten($options);
   }
 
-  if ($properties['empty_value']) {
-    $options = array('_none' => theme('options_none', array('instance' => $instance))) + $options;
+  if ($properties['empty_option']) {
+    $label = theme('options_none', array('instance' => $instance, 'option' => $properties['empty_option']));
+    $options = array('_none' => $label) + $options;
   }
 
   return $options;
@@ -289,7 +312,7 @@ function _options_form_to_storage($element) {
 
   // Filter out the 'none' option. Use a strict comparison, because
   // 0 == 'any string'.
-  if ($properties['empty_value']) {
+  if ($properties['empty_option']) {
     $index = array_search('_none', $values, TRUE);
     if ($index !== FALSE) {
       unset($values[$index]);
@@ -368,7 +391,7 @@ function options_field_widget_error($element, $error, $form, &$form_state) {
 /**
  * Returns HTML for the label for the empty value for options that are not required.
  *
- * The default theme will display N/A for a radio list and blank for a select.
+ * The default theme will display N/A for a radio list and '- None -' for a select.
  *
  * @param $variables
  *   An associative array containing:
@@ -378,12 +401,18 @@ function options_field_widget_error($element, $error, $form, &$form_state) {
  */
 function theme_options_none($variables) {
   $instance = $variables['instance'];
+  $option = $variables['option'];
+
+  $output = '';
   switch ($instance['widget']['type']) {
     case 'options_buttons':
-      return t('N/A');
+      $output = t('N/A');
+      break;
+
     case 'options_select':
-      return t('- None -');
-    default :
-      return '';
+      $output = ($option == 'option_none' ? t('- None -') : t('- Select a value -'));
+      break;
   }
+
+  return $output;
 }
