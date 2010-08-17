@@ -5776,6 +5776,9 @@ function drupal_common_theme() {
     'form_element_label' => array(
       'render element' => 'element',
     ),
+    'form_error_marker' => array(
+      'render element' => 'element',
+    ),
     'vertical_tabs' => array(
       'render element' => 'element',
     ),

@@ -1126,7 +1126,10 @@ function _form_validate(&$elements, &$form_state, $form_id = NULL) {
     // An unchecked checkbox has a #value of integer 0, different than string
     // '0', which could be a valid value.
     if (isset($elements['#needs_validation']) && $elements['#required'] && (!count($elements['#value']) || (is_string($elements['#value']) && strlen(trim($elements['#value'])) == 0) || $elements['#value'] === 0)) {
-      form_error($elements, $t('!name field is required.', array('!name' => $elements['#title'])));
+      form_error($elements, $t('<a href="#!field_id">!name</a> field is required.', array(
+        '!field_id' => $elements['#id'],
+        '!name' => $elements['#title'],
+      )));
     }
 
     // Call user-defined form level validators.
@@ -3452,6 +3455,9 @@ function theme_form_element_label($variables) {
   // If the element is required, a required marker is appended to the label.
   $required = !empty($element['#required']) ? theme('form_required_marker', array('element' => $element)) : '';
 
+  // If the element has an error, append the themeable marker to the label.
+  $error = theme('form_error_marker', array('element' => $element));
+
   $title = filter_xss_admin($element['#title']);
 
   $attributes = array();
@@ -3469,7 +3475,50 @@ function theme_form_element_label($variables) {
   }
 
   // The leading whitespace helps visually separate fields from inline labels.
-  return ' <label' . drupal_attributes($attributes) . '>' . $t('!title !required', array('!title' => $title, '!required' => $required)) . "</label>\n";
+  return ' <label' . drupal_attributes($attributes) . '>' . $t('!title !required !error', array('!title' => $title, '!required' => $required, '!error' => $error)) . "</label>\n";
+}
+
+/**
+ * Theme an invisible error marker for form elements.
+ *
+ * By default this function outputs the error message, if any, in an invisible
+ * span. This allows screen reader users to identify the fields with errors.
+ * Override this function to provide an alternative error marker, such as
+ * visible error text or an indicator with a tooltip to show the full error.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - element: An associative array containing the properties of the element.
+ * @return
+ *   A string with a marker to identify an error, otherwise an empty string.
+ *
+ * @ingroup themeable
+ */
+function theme_form_error_marker($variables) {
+  $element = $variables['element'];
+  // This is also used in the installer, pre-database setup.
+  $t = get_t();
+
+  $output = '';
+  if ($raw_error = form_get_error($element)) {
+    // A simple call to empty() will not cut it here as some fields, like
+    // checkboxes, can return a valid value of '0'. Instead, check the
+    // length if it's a string, and the item count if it's an array.
+    // This is the same logic used when validating #required fields.
+    // @see _form_validate()
+    if ($element['#required'] && (!count($element['#value']) || (is_string($element['#value']) && strlen(trim($element['#value'])) == 0))) {
+      $error = $t('This field is required.');
+    }
+    else {
+      $error = strip_tags($raw_error);
+    }
+    $attributes = array(
+      'class' => array('element-invisible', 'error', 'error-marker'),
+    );
+    $output .= ' <span' . drupal_attributes($attributes) . '>' . $error . '</span>';
+  }
+
+  return $output;
 }
 
 /**

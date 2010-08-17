@@ -256,6 +256,10 @@ div.error {
 div.error p.error {
   color: #333;
 }
+div.error a {
+  color: #fff;
+  text-decoration: underline;
+}
 div.status {
   color: #234600;
   background: #f8fff0;

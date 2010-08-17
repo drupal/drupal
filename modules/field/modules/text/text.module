@@ -639,11 +639,13 @@ function text_field_prepare_translation($entity_type, $entity, $field, $instance
   // If the translating user is not permitted to use the assigned text format,
   // we must not expose the source values.
   $field_name = $field['field_name'];
-  $formats = filter_formats();
-  foreach ($source_entity->{$field_name}[$source_langcode] as $delta => $item) {
-    $format_id = $item['format'];
-    if (!filter_access($formats[$format_id])) {
-      unset($items[$delta]);
+  if (!empty($source_entity->{$field_name}[$source_langcode])) {
+    $formats = filter_formats();
+    foreach ($source_entity->{$field_name}[$source_langcode] as $delta => $item) {
+      $format_id = $item['format'];
+      if (!empty($format_id) && !filter_access($formats[$format_id])) {
+        unset($items[$delta]);
+      }
     }
   }
 }
