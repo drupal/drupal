@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.install,v 1.48 2010/06/24 12:59:22 webchick Exp $
+// $Id: forum.install,v 1.49 2010/08/17 21:44:37 dries Exp $
 
 /**
  * @file
@@ -24,6 +24,10 @@ function forum_install() {
  * Implements hook_enable().
  */
 function forum_enable() {
+  // If we enable forum at the same time as taxonomy we need to call
+  // field_associate_fields() as otherwise the field won't be enabled until
+  // hook modules_enabled is called which takes place after hook_enable events.
+  field_associate_fields('taxonomy');
   // Create the forum vocabulary if it does not exist.
   $vocabulary = taxonomy_vocabulary_load(variable_get('forum_nav_vocabulary', 0));
   if (!$vocabulary) {
@@ -56,28 +60,6 @@ function forum_enable() {
     );
     field_create_field($field);
 
-    $instance = array(
-      'field_name' => 'taxonomy_' . $vocabulary->machine_name,
-      'entity_type' => 'node',
-      'label' => $vocabulary->name,
-      'bundle' => 'forum',
-      'required' => TRUE,
-      'widget' => array(
-        'type' => 'options_select',
-      ),
-      'display' => array(
-        'default' => array(
-          'type' => 'taxonomy_term_reference_link',
-          'weight' => 10,
-        ),
-        'teaser' => array(
-          'type' => 'taxonomy_term_reference_link',
-          'weight' => 10,
-        ),
-      ),
-    );
-    field_create_instance($instance);
-
     variable_set('forum_nav_vocabulary', $vocabulary->vid);
 
     // Create a default forum so forum posts can be created.
@@ -90,6 +72,30 @@ function forum_enable() {
     $term = (object) $edit;
     taxonomy_term_save($term);
   }
+
+  // Create the instance on the bundle.
+  $instance = array(
+    'field_name' => 'taxonomy_' . $vocabulary->machine_name,
+    'entity_type' => 'node',
+    'label' => $vocabulary->name,
+    'bundle' => 'forum',
+    'required' => TRUE,
+    'widget' => array(
+      'type' => 'options_select',
+    ),
+    'display' => array(
+      'default' => array(
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 10,
+      ),
+      'teaser' => array(
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 10,
+      ),
+    ),
+  );
+  field_create_instance($instance);
+
   // Ensure the forum node type is available.
   node_types_rebuild();
   $types = node_type_get_types();
