@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.184 2010/08/08 19:45:37 dries Exp $
+// $Id: system.api.php,v 1.185 2010/08/17 13:52:31 dries Exp $
 
 /**
  * @file
@@ -2577,7 +2577,7 @@ function hook_schema() {
         'not null' => TRUE,
         'default' => ''),
       'title' => array(
-        'description' => 'The title of this node, always treated a non-markup plain text.',
+        'description' => 'The title of this node, always treated as non-markup plain text.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
