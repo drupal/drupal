@@ -210,7 +210,7 @@ class Archive_Tar // extends PEAR
         $this->_close();
         // ----- Look for a local copy to delete
         if ($this->_temp_tarname != '')
-            @unlink($this->_temp_tarname);
+            @drupal_unlink($this->_temp_tarname);
 //        $this->_PEAR();
     }
     // }}}
@@ -777,7 +777,7 @@ class Archive_Tar // extends PEAR
         // ----- Look if a local copy need to be erase
         // Note that it might be interesting to keep the url for a time : ToDo
         if ($this->_temp_tarname != '') {
-            @unlink($this->_temp_tarname);
+            @drupal_unlink($this->_temp_tarname);
             $this->_temp_tarname = '';
         }
 
@@ -793,11 +793,11 @@ class Archive_Tar // extends PEAR
         // ----- Look for a local copy
         if ($this->_temp_tarname != '') {
             // ----- Remove the local copy but not the remote tarname
-            @unlink($this->_temp_tarname);
+            @drupal_unlink($this->_temp_tarname);
             $this->_temp_tarname = '';
         } else {
             // ----- Remove the local tarname file
-            @unlink($this->_tarname);
+            @drupal_unlink($this->_tarname);
         }
         $this->_tarname = '';
 
@@ -1603,7 +1603,7 @@ class Archive_Tar // extends PEAR
             }
           } elseif ($v_header['typeflag'] == "2") {
               if (@file_exists($v_header['filename'])) {
-                  @unlink($v_header['filename']);
+                  @drupal_unlink($v_header['filename']);
               }
               if (!@symlink($v_header['link'], $v_header['filename'])) {
                   $this->_error('Unable to extract symbolic link {'
@@ -1740,7 +1740,7 @@ class Archive_Tar // extends PEAR
                 @bzclose($v_temp_tar);
             }
 
-            if (!@unlink($this->_tarname.".tmp")) {
+            if (!@drupal_unlink($this->_tarname.".tmp")) {
                 $this->_error('Error while deleting temporary file \''
 				              .$this->_tarname.'.tmp\'');
             }

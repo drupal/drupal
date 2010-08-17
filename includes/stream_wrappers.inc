@@ -539,7 +539,7 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
    */
   public function unlink($uri) {
     $this->uri = $uri;
-    return unlink($this->getLocalPath());
+    return drupal_unlink($this->getLocalPath());
   }
 
   /**
@@ -636,10 +636,10 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
   public function rmdir($uri, $options) {
     $this->uri = $uri;
     if ($options & STREAM_REPORT_ERRORS) {
-      return rmdir($this->getLocalPath());
+      return drupal_rmdir($this->getLocalPath());
     }
     else {
-      return @rmdir($this->getLocalPath());
+      return @drupal_rmdir($this->getLocalPath());
     }
   }
 

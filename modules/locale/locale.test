@@ -762,7 +762,7 @@ class LocaleImportFunctionalTest extends DrupalWebTestCase {
     file_put_contents($name, $contents);
     $options['files[file]'] = $name;
     $this->drupalPost('admin/config/regional/translate/import', $options, t('Import'));
-    unlink($name);
+    drupal_unlink($name);
   }
 
   /**
@@ -911,7 +911,7 @@ class LocaleExportFunctionalTest extends DrupalWebTestCase {
       'langcode' => 'fr',
       'files[file]' => $name,
     ), t('Import'));
-    unlink($name);
+    drupal_unlink($name);
 
     // Get the French translations.
     $this->drupalPost('admin/config/regional/translate/export', array(

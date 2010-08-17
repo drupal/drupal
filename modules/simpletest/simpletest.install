@@ -25,7 +25,7 @@ function simpletest_uninstall() {
   foreach ($files as $file) {
     file_unmanaged_delete($file->uri);
   }
-  rmdir($path);
+  drupal_rmdir($path);
 }
 
 /**

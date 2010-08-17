@@ -77,7 +77,7 @@ class FileTransferFTPWrapper extends FileTransferFTP {
         }
       }
       closedir($dh);
-      if (!rmdir($this->connection . $directory)) {
+      if (!drupal_rmdir($this->connection . $directory)) {
         $exception = new FileTransferException('Cannot remove @directory.', NULL, array('@directory' => $directory));
         throw $exception;
       }
@@ -91,7 +91,7 @@ class FileTransferFTPWrapper extends FileTransferFTP {
   }
 
   function removeFileJailed($destination) {
-    if (!@unlink($this->connection . '/' .$destination)) {
+    if (!@drupal_unlink($this->connection . '/' .$destination)) {
       throw new FileTransferException('Cannot remove @destination', NULL, array('@destination' => $destination));
     }
   }

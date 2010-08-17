@@ -943,6 +943,10 @@ function file_create_filename($basename, $directory) {
   // Strip control characters (ASCII value < 32). Though these are allowed in
   // some filesystems, not many applications handle them well.
   $basename = preg_replace('/[\x00-\x1F]/u', '_', $basename);
+  if (substr(PHP_OS, 0, 3) == 'WIN') {
+    // These characters are not allowed in Windows filenames
+    $basename = str_replace(array(':', '*', '?', '"', '<', '>', '|'), '_', $basename);
+  }
 
   // A URI or path may already have a trailing slash or look like "public://".
   if (substr($directory, -1) == '/') {
@@ -1042,7 +1046,7 @@ function file_unmanaged_delete($path) {
     return FALSE;
   }
   if (is_file($path)) {
-    return unlink($path);
+    return drupal_unlink($path);
   }
   // Return TRUE for non-existent file, but log that nothing was actually
   // deleted, as the current state is the intended result.
@@ -1090,7 +1094,8 @@ function file_unmanaged_delete_recursive($path) {
       file_unmanaged_delete_recursive($entry_path);
     }
     $dir->close();
-    return rmdir($path);
+
+    return drupal_rmdir($path);
   }
   return file_unmanaged_delete($path);
 }
@@ -1893,6 +1898,36 @@ function drupal_chmod($uri, $mode = NULL) {
 }
 
 /**
+ * Deletes a file.
+ *
+ * PHP's unlink() is broken on Windows, as it can fail to remove a file
+ * when it has a read-only flag set.
+ *
+ * @param $uri
+ *   A URI or pathname.
+ * @param $context
+ *   Refer to http://php.net/manual/en/ref.stream.php
+ *
+ * @return
+ *   Boolean TRUE on success, or FALSE on failure.
+ *
+ * @see unlink()
+ * @ingroup php_wrappers
+ */
+function drupal_unlink($uri, $context = NULL) {
+  $scheme = file_uri_scheme($uri);
+  if ((!$scheme || !file_stream_wrapper_valid_scheme($scheme)) && (substr(PHP_OS, 0, 3) == 'WIN')) {
+    chmod($uri, 0600);
+  }
+  if ($context) {
+    return unlink($uri, $context);
+  }
+  else {
+    return unlink($uri);
+  }
+}
+
+/**
  * Returns the absolute path of a file or directory
  *
  * PHP's realpath() does not properly support streams, so this function
@@ -1988,7 +2023,6 @@ function drupal_dirname($uri) {
  * @ingroup php_wrappers
  */
 function drupal_mkdir($uri, $mode = NULL, $recursive = FALSE, $context = NULL) {
-
   if (is_null($mode)) {
     $mode = variable_get('file_chmod_directory', 0775);
   }
@@ -1998,6 +2032,36 @@ function drupal_mkdir($uri, $mode = NULL, $recursive = FALSE, $context = NULL) {
   }
   else {
     return mkdir($uri, $mode, $recursive, $context);
+  }
+}
+
+/**
+ * Remove a directory.
+ *
+ * PHP's rmdir() is broken on Windows, as it can fail to remove a directory
+ * when it has a read-only flag set.
+ *
+ * @param $uri
+ *   A URI or pathname.
+ * @param $context
+ *   Refer to http://php.net/manual/en/ref.stream.php
+ *
+ * @return
+ *   Boolean TRUE on success, or FALSE on failure.
+ *
+ * @see rmdir()
+ * @ingroup php_wrappers
+ */
+function drupal_rmdir($uri, $context = NULL) {
+  $scheme = file_uri_scheme($uri);
+  if ((!$scheme || !file_stream_wrapper_valid_scheme($scheme)) && (substr(PHP_OS, 0, 3) == 'WIN')) {
+    chmod($uri, 0700);
+  }
+  if ($context) {
+    return rmdir($uri, $context);
+  }
+  else {
+    return rmdir($uri);
   }
 }
 
