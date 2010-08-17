@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.63 2010/08/14 03:01:11 dries Exp $ */
+/* $Id: style.css,v 1.64 2010/08/17 18:25:31 dries Exp $ */
 
 /**
  * Generic elements.
@@ -255,6 +255,10 @@ div.error {
 }
 div.error p.error {
   color: #333;
+}
+div.error a {
+  color: #fff;
+  text-decoration: underline;
 }
 div.status {
   color: #234600;

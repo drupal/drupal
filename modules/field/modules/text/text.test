@@ -1,5 +1,5 @@
 <?php
-// $Id: text.test,v 1.26 2010/08/05 23:53:37 webchick Exp $
+// $Id: text.test,v 1.27 2010/08/17 18:25:31 dries Exp $
 
 class TextFieldTestCase extends DrupalWebTestCase {
   protected $instance;
@@ -402,10 +402,38 @@ class TextTranslationTestCase extends DrupalWebTestCase {
   }
 
   /**
+   * Test that a plaintext textfield widget is correctly populated.
+   */
+  function testTextField() {
+    // Disable text processing for body.
+    $edit = array('instance[settings][text_processing]' => 0);
+    $this->drupalPost('admin/structure/types/manage/article/fields/body', $edit, t('Save settings'));
+
+    // Login as translator.
+    $this->drupalLogin($this->translator);
+
+    // Create content.
+    $langcode = LANGUAGE_NONE;
+    $body = $this->randomName();
+    $edit = array(
+      "title" => $this->randomName(),
+      "language" => 'en',
+      "body[$langcode][0][value]" => $body,
+    );
+
+    // Translate the article in french.
+    $this->drupalPost('node/add/article', $edit, t('Save'));
+    $node = $this->drupalGetNodeByTitle($edit['title']);
+    $this->drupalGet("node/$node->nid/translate");
+    $this->clickLink(t('add translation'));
+    $this->assertFieldByXPath("//textarea[@name='body[fr][0][value]']", $body, t('The textfield widget is populated.'));
+  }
+
+  /**
    * Check that user that does not have access the field format cannot see the
    * source value when creating a translation.
    */
-  function testMultipleTextField() {
+  function testTextFieldFormatted() {
     // Make node body multiple.
     $edit = array('field[cardinality]' => -1);
     $this->drupalPost('admin/structure/types/manage/article/fields/body', $edit, t('Save settings'));
@@ -419,8 +447,9 @@ class TextTranslationTestCase extends DrupalWebTestCase {
 
     // Create an article with the first body input format set to "Full HTML".
     $langcode = 'en';
+    $title = $this->randomName();
     $edit = array(
-      "title" => $this->randomName(),
+      'title' => $title,
       'language' => $langcode,
     );
     $this->drupalPost('node/add/article', $edit, t('Save'));
@@ -438,11 +467,11 @@ class TextTranslationTestCase extends DrupalWebTestCase {
     }
 
     // Login as translator.
-    $this->drupalLogout();
     $this->drupalLogin($this->translator);
 
     // Translate the article in french.
-    $this->drupalGet('node/1/translate');
+    $node = $this->drupalGetNodeByTitle($title);
+    $this->drupalGet("node/$node->nid/translate");
     $this->clickLink(t('add translation'));
     $this->assertNoText($body[0], t('The body field with delta @delta is hidden.', array('@delta' => 0)));
     $this->assertText($body[1], t('The body field with delta @delta is shown.', array('@delta' => 1)));
