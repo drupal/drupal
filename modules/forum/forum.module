@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.572 2010/08/08 12:47:00 dries Exp $
+// $Id: forum.module,v 1.573 2010/08/17 16:20:07 dries Exp $
 
 /**
  * @file
@@ -277,7 +277,7 @@ function forum_node_view($node, $view_mode) {
   $vid = variable_get('forum_nav_vocabulary', 0);
   $vocabulary = taxonomy_vocabulary_load($vid);
   if (_forum_node_check_node_type($node)) {
-    if (node_is_page($node)) {
+    if ($view_mode == 'full' && node_is_page($node)) {
       // Breadcrumb navigation
       $breadcrumb[] = l(t('Home'), NULL);
       $breadcrumb[] = l($vocabulary->name, 'forum');

@@ -1,5 +1,5 @@
 <?php
-// $Id: node.api.php,v 1.70 2010/06/17 13:44:45 dries Exp $
+// $Id: node.api.php,v 1.71 2010/08/17 16:20:08 dries Exp $
 
 /**
  * @file
@@ -1155,7 +1155,7 @@ function hook_validate($node, &$form) {
  * @ingroup node_api_hooks
  */
 function hook_view($node, $view_mode) {
-  if (node_is_page($node)) {
+  if ($view_mode == 'full' && node_is_page($node)) {
     $breadcrumb = array();
     $breadcrumb[] = l(t('Home'), NULL);
     $breadcrumb[] = l(t('Example'), 'example');

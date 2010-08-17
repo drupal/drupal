@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.601 2010/08/08 02:06:56 dries Exp $
+// $Id: taxonomy.module,v 1.602 2010/08/17 16:20:08 dries Exp $
 
 /**
  * @file
@@ -637,7 +637,7 @@ function template_preprocess_taxonomy_term(&$variables) {
   $uri = entity_uri('taxonomy_term', $term);
   $variables['term_url']  = url($uri['path'], $uri['options']);
   $variables['term_name'] = check_plain($term->name);
-  $variables['page']      = taxonomy_term_is_page($term);
+  $variables['page']      = $variables['view_mode'] == 'full' && taxonomy_term_is_page($term);
 
   // Flatten the term object's member fields.
   $variables = array_merge((array) $term, $variables);
