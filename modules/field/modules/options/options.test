@@ -207,6 +207,7 @@ class OptionsWidgetsTestCase extends FieldTestCase {
       'field_name' => $this->card_1['field_name'],
       'entity_type' => 'test_entity',
       'bundle' => 'test_bundle',
+      'required' => TRUE,
       'widget' => array(
         'type' => 'options_select',
       ),
@@ -220,12 +221,22 @@ class OptionsWidgetsTestCase extends FieldTestCase {
     $entity->is_new = TRUE;
     field_test_entity_save($entity);
 
-    // Display form: with no field data, nothing is selected.
+    // Display form.
     $this->drupalGet('test-entity/' . $entity->ftid .'/edit');
+    // A required field without any value has a "none" option.
+    $this->assertTrue($this->xpath('//select[@id=:id]//option[@value="_none" and text()=:label]', array(':id' => 'edit-card-1-' . $langcode, ':label' => t('- Select a value -'))), t('A required select list has a "Select a value" choice.'));
+
+    // With no field data, nothing is selected.
+    $this->assertNoOptionSelected("edit-card-1-$langcode", '_none');
     $this->assertNoOptionSelected("edit-card-1-$langcode", 0);
     $this->assertNoOptionSelected("edit-card-1-$langcode", 1);
     $this->assertNoOptionSelected("edit-card-1-$langcode", 2);
     $this->assertRaw('Some dangerous &amp; unescaped markup', t('Option text was properly filtered.'));
+
+    // Submit form: select invalid 'none' option.
+    $edit = array("card_1[$langcode]" => '_none');
+    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->assertRaw(t('!title field is required.', array('!title' => $instance['field_name'])), t('Cannot save a required field when selecting "none" from the select list.'));
 
     // Submit form: select first option.
     $edit = array("card_1[$langcode]" => 0);
@@ -234,31 +245,30 @@ class OptionsWidgetsTestCase extends FieldTestCase {
 
     // Display form: check that the right options are selected.
     $this->drupalGet('test-entity/' . $entity->ftid .'/edit');
+    // A required field with a value has no 'none' option.
+    $this->assertFalse($this->xpath('//select[@id=:id]//option[@value="_none"]', array(':id' => 'edit-card-1-' . $langcode)), t('A required select list with an actual value has no "none" choice.'));
     $this->assertOptionSelected("edit-card-1-$langcode", 0);
     $this->assertNoOptionSelected("edit-card-1-$langcode", 1);
     $this->assertNoOptionSelected("edit-card-1-$langcode", 2);
 
+    // Make the field non required.
+    $instance['required'] = FALSE;
+    field_update_instance($instance);
+
+    // Display form.
+    $this->drupalGet('test-entity/' . $entity->ftid .'/edit');
+    // A non-required field has a 'none' option.
+    $this->assertTrue($this->xpath('//select[@id=:id]//option[@value="_none" and text()=:label]', array(':id' => 'edit-card-1-' . $langcode, ':label' => t('- None -'))), t('A non-required select list has a "None" choice.'));
     // Submit form: Unselect the option.
     $edit = array("card_1[$langcode]" => '_none');
     $this->drupalPost('test-entity/' . $entity->ftid .'/edit', $edit, t('Save'));
     $this->assertFieldValues($entity_init, 'card_1', $langcode, array());
-
-    // A required select list does not have an empty key.
-    $instance['required'] = TRUE;
-    field_update_instance($instance);
-    $this->drupalGet('test-entity/' . $entity->ftid .'/edit');
-    $this->assertFalse($this->xpath('//select[@id=:id]//option[@value=""]', array(':id' => 'edit-card-1-' . $langcode)), t('A required select list does not have an empty key.'));
-
-    // We do not have to test that a required select list with one option is
-    // auto-selected because the browser does it for us.
 
     // Test optgroups.
 
     $this->card_1['settings']['allowed_values'] = NULL;
     $this->card_1['settings']['allowed_values_function'] = 'list_test_allowed_values_callback';
     field_update_field($this->card_1);
-    $instance['required'] = FALSE;
-    field_update_instance($instance);
 
     // Display form: with no field data, nothing is selected
     $this->drupalGet('test-entity/' . $entity->ftid .'/edit');
