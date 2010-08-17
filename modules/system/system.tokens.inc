@@ -202,7 +202,7 @@ function system_tokens($type, $tokens, array $data = array(), array $options = a
           break;
 
         case 'raw':
-          $replacements[$original] = filter_xss($date);
+          $replacements[$original] = $sanitize ? check_plain($date) : $date;
           break;
       }
     }
@@ -230,15 +230,15 @@ function system_tokens($type, $tokens, array $data = array(), array $options = a
           break;
 
         case 'description':
-          $replacements[$original] = $sanitize ? filter_xss($file->description) : $file->description;
+          $replacements[$original] = $sanitize ? check_plain($file->description) : $file->description;
           break;
 
         case 'path':
-          $replacements[$original] = $sanitize ? filter_xss($file->uri) : $file->uri;
+          $replacements[$original] = $sanitize ? check_plain($file->uri) : $file->uri;
           break;
 
         case 'mime':
-          $replacements[$original] = $sanitize ? filter_xss($file->filemime) : $file->filemime;
+          $replacements[$original] = $sanitize ? check_plain($file->filemime) : $file->filemime;
           break;
 
         case 'size':
@@ -246,7 +246,7 @@ function system_tokens($type, $tokens, array $data = array(), array $options = a
           break;
 
         case 'url':
-          $replacements[$original] = url(file_create_url($file->uri), $url_options);
+          $replacements[$original] = $sanitize ? check_plain(file_create_url($file->uri)) : file_create_url($file->uri);
           break;
 
         // These tokens are default variations on the chained tokens handled below.
@@ -256,7 +256,7 @@ function system_tokens($type, $tokens, array $data = array(), array $options = a
 
         case 'owner':
           $account = user_load($file->uid);
-          $replacements[$original] = $sanitize ? filter_xss($account->name) : $account->name;
+          $replacements[$original] = $sanitize ? check_plain($account->name) : $account->name;
           break;
       }
     }

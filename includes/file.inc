@@ -331,9 +331,9 @@ function file_stream_wrapper_get_instance_by_scheme($scheme) {
  *
  * @return
  *   A string containing a URL that may be used to access the file.
- *   If the provided string already contains a preceding 'http', nothing is done
- *   and the same string is returned. If a valid stream wrapper could not be
- *   found to generate an external URL, then FALSE will be returned.
+ *   If the provided string already contains a preceding 'http', 'https', or
+ *   '/', nothing is done and the same string is returned. If a stream wrapper
+ *   could not be found to generate an external URL, then FALSE is returned.
  */
 function file_create_url($uri) {
   // Allow the URI to be altered, e.g. to serve a file from a CDN or static
@@ -355,8 +355,8 @@ function file_create_url($uri) {
     }
     else {
       // If this is not a properly formatted stream, then it is a shipped file.
-      // Therefor, return the URI with the base URL prepended.
-      return $GLOBALS['base_url'] . '/' . $uri;
+      // Therefore, return the urlencoded URI with the base URL prepended.
+      return $GLOBALS['base_url'] . '/' . drupal_encode_path($uri);
     }
   }
   elseif ($scheme == 'http' || $scheme == 'https') {
