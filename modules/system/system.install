@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.494 2010/07/31 12:29:31 webchick Exp $
+// $Id: system.install,v 1.495 2010/08/17 22:05:22 dries Exp $
 
 /**
  * @file
@@ -2351,10 +2351,10 @@ function system_update_7046() {
       variable_set('theme_garland_settings', $settings);
       // Remove Garland's color files since they won't match Minnelli's.
       foreach (variable_get('color_garland_files', array()) as $file) {
-        @unlink($file);
+        @drupal_unlink($file);
       }
       if (isset($file) && $file = dirname($file)) {
-        @rmdir($file);
+        @drupal_rmdir($file);
       }
       variable_del('color_garland_palette');
       variable_del('color_garland_stylesheets');

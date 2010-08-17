@@ -1,5 +1,5 @@
 <?php
-// $Id: stream_wrappers.inc,v 1.19 2010/08/17 16:29:16 dries Exp $
+// $Id: stream_wrappers.inc,v 1.20 2010/08/17 22:05:22 dries Exp $
 
 /**
  * @file
@@ -539,7 +539,7 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
    */
   public function unlink($uri) {
     $this->uri = $uri;
-    return unlink($this->getLocalPath());
+    return drupal_unlink($this->getLocalPath());
   }
 
   /**
@@ -636,10 +636,10 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
   public function rmdir($uri, $options) {
     $this->uri = $uri;
     if ($options & STREAM_REPORT_ERRORS) {
-      return rmdir($this->getLocalPath());
+      return drupal_rmdir($this->getLocalPath());
     }
     else {
-      return @rmdir($this->getLocalPath());
+      return @drupal_rmdir($this->getLocalPath());
     }
   }
 

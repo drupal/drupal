@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.install,v 1.35 2010/03/26 17:14:45 dries Exp $
+// $Id: simpletest.install,v 1.36 2010/08/17 22:05:22 dries Exp $
 
 /**
  * @file
@@ -25,7 +25,7 @@ function simpletest_uninstall() {
   foreach ($files as $file) {
     file_unmanaged_delete($file->uri);
   }
-  rmdir($path);
+  drupal_rmdir($path);
 }
 
 /**

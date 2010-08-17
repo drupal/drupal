@@ -1,5 +1,5 @@
 <?php
-// $Id: file.test,v 1.61 2010/08/05 23:53:38 webchick Exp $
+// $Id: file.test,v 1.62 2010/08/17 22:05:22 dries Exp $
 
 /**
  *  @file
@@ -108,7 +108,20 @@ class FileTestCase extends DrupalWebTestCase {
     clearstatcache();
 
     // Mask out all but the last three octets.
-    $actual_mode = fileperms($filepath) & 511;
+    $actual_mode = fileperms($filepath) & 0777;
+
+    // PHP on Windows has limited support for file permissions. Usually each of
+    // "user", "group" and "other" use one octal digit (3 bits) to represent the
+    // read/write/execute bits. On Windows, chmod() ignores the "group" and
+    // "other" bits, and fileperms() returns the "user" bits in all three
+    // positions. $expected_mode is updated to reflect this.
+    if (substr(PHP_OS, 0, 3) == 'WIN') {
+      // Reset the "group" and "other" bits.
+      $expected_mode = $expected_mode & 0700;
+      // Shift the "user" bits to the "group" and "other" positions also.
+      $expected_mode = $expected_mode | $expected_mode >> 3 | $expected_mode >> 6;
+    }
+
     if (!isset($message)) {
       $message = t('Expected file permission to be %expected, actually were %actual.', array('%actual' => decoct($actual_mode), '%expected' => decoct($expected_mode)));
     }
@@ -130,7 +143,20 @@ class FileTestCase extends DrupalWebTestCase {
     clearstatcache();
 
     // Mask out all but the last three octets.
-    $actual_mode = fileperms($directory) & 511;
+    $actual_mode = fileperms($directory) & 0777;
+
+    // PHP on Windows has limited support for file permissions. Usually each of
+    // "user", "group" and "other" use one octal digit (3 bits) to represent the
+    // read/write/execute bits. On Windows, chmod() ignores the "group" and
+    // "other" bits, and fileperms() returns the "user" bits in all three
+    // positions. $expected_mode is updated to reflect this.
+    if (substr(PHP_OS, 0, 3) == 'WIN') {
+      // Reset the "group" and "other" bits.
+      $expected_mode = $expected_mode & 0700;
+      // Shift the "user" bits to the "group" and "other" positions also.
+      $expected_mode = $expected_mode | $expected_mode >> 3 | $expected_mode >> 6;
+    }
+
     if (!isset($message)) {
       $message = t('Expected directory permission to be %expected, actually were %actual.', array('%actual' => decoct($actual_mode), '%expected' => decoct($expected_mode)));
     }
@@ -413,7 +439,7 @@ class FileValidatorTest extends DrupalWebTestCase {
       $this->assertTrue($info['width'] <= 10, t('Image scaled to correct width.'), 'File');
       $this->assertTrue($info['height'] <= 5, t('Image scaled to correct height.'), 'File');
 
-      unlink(drupal_realpath($temp_dir . '/druplicon.png'));
+      drupal_unlink(drupal_realpath($temp_dir . '/druplicon.png'));
     }
     else {
       // TODO: should check that the error is returned if no toolkit is available.
@@ -866,19 +892,26 @@ class FileDirectoryTest extends FileTestCase {
     // Make sure directory actually exists.
     $this->assertTrue(is_dir($directory), t('Directory actually exists.'), 'File');
 
-    // Make directory read only.
-    @chmod($directory, 0444);
-    $this->assertFalse(file_prepare_directory($directory, 0), t('Error reported for a non-writeable directory.'), 'File');
+    if (substr(PHP_OS, 0, 3) != 'WIN') {
+      // PHP on Windows doesn't support any kind of useful read-only mode for
+      // directories. When executing a chmod() on a directory, PHP only sets the
+      // read-only flag, which doesn't prevent files to actually be written
+      // in the directory on any recent version of Windows.
 
-    // Test directory permission modification.
-    $this->assertTrue(file_prepare_directory($directory, FILE_MODIFY_PERMISSIONS), t('No error reported when making directory writeable.'), 'File');
+      // Make directory read only.
+      @drupal_chmod($directory, 0444);
+      $this->assertFalse(file_prepare_directory($directory, 0), t('Error reported for a non-writeable directory.'), 'File');
 
-    // Test directory permission modification actually set correct permissions.
+      // Test directory permission modification.
+      $this->assertTrue(file_prepare_directory($directory, FILE_MODIFY_PERMISSIONS), t('No error reported when making directory writeable.'), 'File');
+    }
+
+    // Test that the directory has the correct permissions.
     $this->assertDirectoryPermissions($directory, variable_get('file_chmod_directory', 0775));
 
     // Remove .htaccess file to then test that it gets re-created.
     $directory = file_directory_path();
-    @unlink($directory . '/.htaccess');
+    @drupal_unlink($directory . '/.htaccess');
     $this->assertFalse(is_file($directory . '/.htaccess'), t('Successfully removed the .htaccess file in the files directory.'), 'File');
     file_ensure_htaccess();
     $this->assertTrue(is_file($directory . '/.htaccess'), t('Successfully re-created the .htaccess file in the files directory.'), 'File');
