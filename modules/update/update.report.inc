@@ -1,5 +1,5 @@
 <?php
-// $Id: update.report.inc,v 1.31 2010/04/13 15:23:03 dries Exp $
+// $Id: update.report.inc,v 1.32 2010/08/17 13:50:52 dries Exp $
 
 /**
  * @file
@@ -168,7 +168,7 @@ function theme_update_report($variables) {
       foreach ($project['extra'] as $key => $value) {
         $row .= '<div class="' . implode(' ', $value['class']) . '">';
         $row .= check_plain($value['label']) . ': ';
-        $row .= drupal_placeholder(array('text' => $value['data']));
+        $row .= drupal_placeholder($value['data']);
         $row .= "</div>\n";
       }
       $row .= "</div>\n";  // extra div.
@@ -203,7 +203,7 @@ function theme_update_report($variables) {
             break;
 
           default:
-            $base_themes[] = drupal_placeholder(array('text' => $base_theme));
+            $base_themes[] = drupal_placeholder($base_theme);
         }
       }
       $row .= t('Depends on: !basethemes', array('!basethemes' => implode(', ', $base_themes)));

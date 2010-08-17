@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.414 2010/07/26 03:05:36 dries Exp $
+// $Id: bootstrap.inc,v 1.415 2010/08/17 13:50:52 dries Exp $
 
 /**
  * @file
@@ -1453,7 +1453,7 @@ function t($string, array $args = array(), array $options = array()) {
         case '%':
         default:
           // Escaped and placeholder.
-          $args[$key] = drupal_placeholder(array('text' => $value));
+          $args[$key] = drupal_placeholder($value);
           break;
 
         case '!':
@@ -2958,15 +2958,14 @@ function drupal_is_cli() {
  * Formats text for emphasized display in a placeholder inside a sentence.
  * Used automatically by t().
  *
- * @param $variables
- *   An associative array containing:
- *   - text: The text to format (plain-text).
+ * @param $text
+ *   The text to format (plain-text).
  *
  * @return
  *   The formatted text (html).
  */
-function drupal_placeholder($variables) {
-  return '<em class="placeholder">' . check_plain($variables['text']) . '</em>';
+function drupal_placeholder($text) {
+  return '<em class="placeholder">' . check_plain($text) . '</em>';
 }
 
 /**

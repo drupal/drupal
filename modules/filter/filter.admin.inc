@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.admin.inc,v 1.63 2010/06/26 01:55:29 dries Exp $
+// $Id: filter.admin.inc,v 1.64 2010/08/17 13:50:52 dries Exp $
 
 /**
  * @file
@@ -23,8 +23,8 @@ function filter_admin_overview($form) {
     // to all roles and cannot be deleted via the admin interface.
     $form['formats'][$id]['#is_fallback'] = ($id == $fallback_format);
     if ($form['formats'][$id]['#is_fallback']) {
-      $form['formats'][$id]['name'] = array('#markup' => drupal_placeholder(array('text' => $format->name)));
-      $roles_markup = drupal_placeholder(array('text' => t('All roles may use this format')));
+      $form['formats'][$id]['name'] = array('#markup' => drupal_placeholder($format->name));
+      $roles_markup = drupal_placeholder(t('All roles may use this format'));
     }
     else {
       $form['formats'][$id]['name'] = array('#markup' => check_plain($format->name));

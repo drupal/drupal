@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.128 2010/07/30 03:06:18 dries Exp $
+// $Id: node.pages.inc,v 1.129 2010/08/17 13:50:52 dries Exp $
 
 /**
  * @file
@@ -508,7 +508,7 @@ function node_revision_overview($node) {
       $row[] = array('data' => t('!date by !username', array('!date' => l(format_date($revision->timestamp, 'short'), "node/$node->nid"), '!username' => theme('username', array('account' => $revision))))
                                . (($revision->log != '') ? '<p class="revision-log">' . filter_xss($revision->log) . '</p>' : ''),
                      'class' => array('revision-current'));
-      $operations[] = array('data' => drupal_placeholder(array('text' => t('current revision'))), 'class' => array('revision-current'), 'colspan' => 2);
+      $operations[] = array('data' => drupal_placeholder(t('current revision')), 'class' => array('revision-current'), 'colspan' => 2);
     }
     else {
       $row[] = t('!date by !username', array('!date' => l(format_date($revision->timestamp, 'short'), "node/$node->nid/revisions/$revision->vid/view"), '!username' => theme('username', array('account' => $revision))))
