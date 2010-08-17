@@ -203,7 +203,7 @@ function file_stream_wrapper_valid_scheme($scheme) {
 }
 
 /**
- * Returns the target of a URI (e.g. a stream).
+ * Returns the part of an URI after the schema.
  *
  * @param $uri
  *   A stream, referenced as "scheme://target".
@@ -216,10 +216,10 @@ function file_stream_wrapper_valid_scheme($scheme) {
  * @see file_uri_scheme()
  */
 function file_uri_target($uri) {
-  if ($scheme = file_uri_scheme($uri)) {
-    return file_stream_wrapper_get_instance_by_scheme($scheme)->getTarget($uri);
-  }
-  return FALSE;
+  $data = explode('://', $uri, 2);
+
+  // Remove erroneous leading or trailing, forward-slashes and backslashes.
+  return count($data) == 2 ? trim($data[1], '\/') : FALSE;
 }
 
 /**
