@@ -1453,7 +1453,7 @@ function t($string, array $args = array(), array $options = array()) {
         case '%':
         default:
           // Escaped and placeholder.
-          $args[$key] = drupal_placeholder(array('text' => $value));
+          $args[$key] = drupal_placeholder($value);
           break;
 
         case '!':
@@ -2958,15 +2958,14 @@ function drupal_is_cli() {
  * Formats text for emphasized display in a placeholder inside a sentence.
  * Used automatically by t().
  *
- * @param $variables
- *   An associative array containing:
- *   - text: The text to format (plain-text).
+ * @param $text
+ *   The text to format (plain-text).
  *
  * @return
  *   The formatted text (html).
  */
-function drupal_placeholder($variables) {
-  return '<em class="placeholder">' . check_plain($variables['text']) . '</em>';
+function drupal_placeholder($text) {
+  return '<em class="placeholder">' . check_plain($text) . '</em>';
 }
 
 /**
