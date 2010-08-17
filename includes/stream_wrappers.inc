@@ -1,5 +1,5 @@
 <?php
-// $Id: stream_wrappers.inc,v 1.18 2010/07/10 01:51:02 dries Exp $
+// $Id: stream_wrappers.inc,v 1.19 2010/08/17 16:29:16 dries Exp $
 
 /**
  * @file
@@ -146,24 +146,6 @@ interface DrupalStreamWrapperInterface extends StreamWrapperInterface {
   public function getExternalUrl();
 
   /**
-   * Returns the local writable target of the resource within the stream.
-   *
-   * This function should be used in place of calls to realpath() or similar
-   * functions when attempting to determine the location of a file. While
-   * functions like realpath() may return the location of a read-only file, this
-   * method may return a URI or path suitable for writing that is completely
-   * separate from the URI used for reading.
-   *
-   * @param $uri
-   *   Optional URI.
-   *
-   * @return
-   *   Returns a string representing a location suitable for writing of a file,
-   *   or FALSE if unable to write to the file such as with read-only streams.
-   */
-  public function getTarget($uri = NULL);
-
-  /**
    * Returns the MIME type of the resource.
    *
    * @param $uri
@@ -286,9 +268,22 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
   }
 
   /**
-   *  Base implementation of getTarget().
+   * Returns the local writable target of the resource within the stream.
+   *
+   * This function should be used in place of calls to realpath() or similar
+   * functions when attempting to determine the location of a file. While
+   * functions like realpath() may return the location of a read-only file, this
+   * method may return a URI or path suitable for writing that is completely
+   * separate from the URI used for reading.
+   *
+   * @param $uri
+   *   Optional URI.
+   *
+   * @return
+   *   Returns a string representing a location suitable for writing of a file,
+   *   or FALSE if unable to write to the file such as with read-only streams.
    */
-  function getTarget($uri = NULL) {
+  protected function getTarget($uri = NULL) {
     if (!isset($uri)) {
       $uri = $this->uri;
     }
