@@ -1,9 +1,9 @@
-/* $Id: colors.css,v 1.1 2010/07/06 05:25:51 webchick Exp $ */
+/* $Id: colors.css,v 1.2 2010/08/18 00:28:08 dries Exp $ */
 
 /* ---------- Color Module Styles ----------- */
 
 body {
-  background-color: #2d1e0f;
+  background-color: #292929;
   color: #ffffff;
 }
 html,
@@ -38,7 +38,7 @@ a:active {
   border-color: #f9f9f9;
 }
 #footer-wrapper {
-  background: #2d1e0f;
+  background: #292929;
 }
 #header #name-and-slogan,
 #header #name-and-slogan a {

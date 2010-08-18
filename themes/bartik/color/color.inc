@@ -1,5 +1,5 @@
 <?php
-// $Id: color.inc,v 1.2 2010/08/11 23:53:18 dries Exp $
+// $Id: color.inc,v 1.3 2010/08/18 00:28:08 dries Exp $
 
 // Put the logo path into JavaScript for the live preview.
 drupal_add_js(array('color' => array('logo' => theme_get_setting('logo', 'bartik'))), 'setting');
@@ -29,7 +29,7 @@ $info = array(
         'text' => '#3b3b3b',
         'sidebar' => '#f6f6f2',
         'sidebarborders' => '#f9f9f9',
-        'footer' => '#2d1e0f',
+        'footer' => '#292929',
         'titleslogan' => '#ffffff',
       ),
     ),
