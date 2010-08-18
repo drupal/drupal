@@ -44,7 +44,8 @@ function search_view($module = NULL, $keys = '') {
     drupal_goto($path);
   }
 
-  $results = '';
+  // Default results output is an empty string.
+  $results = array('#markup' => '');
   // Process the search form. Note that if there is $_POST data,
   // search_form_submit() will cause a redirect to search/[module path]/[keys],
   // which will get us back to this page callback. In other words, the search
@@ -67,7 +68,7 @@ function search_view($module = NULL, $keys = '') {
   }
   // The form may be altered based on whether the search was run.
   $build['search_form'] = drupal_get_form('search_form', NULL, $keys, $info['module']);
-  $build['search_results'] = array('#markup' => $results);
+  $build['search_results'] = $results;
 
   return $build;
 }
@@ -77,17 +78,20 @@ function search_view($module = NULL, $keys = '') {
  *
  * The $variables array contains the following arguments:
  * - $results
- * - $type
+ * - $module
  *
  * @see search-results.tpl.php
  */
 function template_preprocess_search_results(&$variables) {
   $variables['search_results'] = '';
+  if (!empty($variables['module'])) {
+    $variables['module'] = check_plain($variables['module']);
+  }
   foreach ($variables['results'] as $result) {
-    $variables['search_results'] .= theme('search_result', array('result' => $result, 'type' => $variables['type']));
+    $variables['search_results'] .= theme('search_result', array('result' => $result, 'module' => $variables['module']));
   }
   $variables['pager'] = theme('pager', array('tags' => NULL));
-  $variables['theme_hook_suggestions'][] = 'search_results__' . $variables['type'];
+  $variables['theme_hook_suggestions'][] = 'search_results__' . $variables['module'];
 }
 
 /**
@@ -95,7 +99,7 @@ function template_preprocess_search_results(&$variables) {
  *
  * The $variables array contains the following arguments:
  * - $result
- * - $type
+ * - $module
  *
  * @see search-result.tpl.php
  */
@@ -105,8 +109,8 @@ function template_preprocess_search_result(&$variables) {
   $variables['title'] = check_plain($result['title']);
 
   $info = array();
-  if (!empty($result['type'])) {
-    $info['type'] = check_plain($result['type']);
+  if (!empty($result['module'])) {
+    $info['module'] = check_plain($result['module']);
   }
   if (!empty($result['user'])) {
     $info['user'] = $result['user'];
@@ -122,7 +126,7 @@ function template_preprocess_search_result(&$variables) {
   // Provide separated and grouped meta information..
   $variables['info_split'] = $info;
   $variables['info'] = implode(' - ', $info);
-  $variables['theme_hook_suggestions'][] = 'search_result__' . $variables['type'];
+  $variables['theme_hook_suggestions'][] = 'search_result__' . $variables['module'];
 }
 
 /**
