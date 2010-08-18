@@ -1,5 +1,5 @@
 <?php
-// $Id: search_extra_type.module,v 1.2 2010/08/11 14:21:39 dries Exp $
+// $Id: search_extra_type.module,v 1.3 2010/08/18 18:40:50 dries Exp $
 
 /**
  * @file
@@ -17,6 +17,9 @@ function search_extra_type_search_info() {
   );
 }
 
+/**
+ * Test conditions callback for hook_search_info().
+ */
 function search_extra_type_conditions() {
   $conditions = array();
 
@@ -44,4 +47,24 @@ function search_extra_type_search_execute($keys = NULL, $conditions = NULL) {
       'snippet' => "Dummy search snippet to display. Keywords: {$keys}\n\nConditions: " . print_r($conditions, TRUE),
     ),
   );
+}
+
+/**
+ * Implements hook_search_page().
+ *
+ * Adds some text to the search page so we can verify that it runs.
+ */
+function search_extra_type_search_page($results) {
+  $output['prefix']['#markup'] = '<h2>Test page text is here</h2> <ol class="search-results">';
+
+  foreach ($results as $entry) {
+    $output[] = array(
+      '#theme' => 'search_result',
+      '#result' => $entry,
+      '#module' => 'search_extra_type',
+    );
+  }
+  $output['suffix']['#markup'] = '</ol>' . theme('pager');
+
+  return $output;
 }

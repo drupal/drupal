@@ -1,5 +1,5 @@
 <?php
-// $Id: search.api.php,v 1.28 2010/08/11 14:21:39 dries Exp $
+// $Id: search.api.php,v 1.29 2010/08/18 18:40:50 dries Exp $
 
 /**
  * @file
@@ -25,9 +25,11 @@
  * hook_update_index(). If your search type has settings, you can implement
  * hook_search_admin() to add them to the search settings page. You can also
  * alter the display of your module's search results by implementing
- * hook_search_page(). And you can use hook_form_FORM_ID_alter(), with
- * FORM_ID set to 'search', to add fields to the search form. See
- * node_form_search_form_alter() for an example.
+ * hook_search_page(). You can use hook_form_FORM_ID_alter(), with
+ * FORM_ID set to 'search', to add fields to the search form (see
+ * node_form_search_form_alter() for an example). You can use
+ * hook_search_access() to limit access to searching, and hook_search_page() to
+ * override how search results are displayed.
  *
  * @return
  *   Array with optional keys:
@@ -248,7 +250,7 @@ function hook_search_execute($keys = NULL, $conditions = NULL) {
 /**
  * Override the rendering of search results.
  *
- * A module that implements hook_search() to define a type of search
+ * A module that implements hook_search_info() to define a type of search
  * may implement this hook in order to override the default theming of
  * its search results, which is otherwise themed using theme('search_results').
  *
@@ -262,17 +264,20 @@ function hook_search_execute($keys = NULL, $conditions = NULL) {
  *   An array of search results.
  *
  * @return
- *   An HTML string containing the formatted search results, with
+ *   A renderable array, which will render the formatted search results with
  *   a pager included.
  */
 function hook_search_page($results) {
-  $output = '<ol class="search-results">';
+  $output['prefix']['#markup'] = '<ol class="search-results">';
 
   foreach ($results as $entry) {
-    $output .= theme('search_result', $entry, $type);
+    $output[] = array(
+      '#theme' => 'search_result', 
+      '#result' => $entry, 
+      '#module' => 'my_module_name',
+    );
   }
-  $output .= '</ol>';
-  $output .= theme('pager', NULL);
+  $output['suffix']['#markup'] = '</ol>' . theme('pager');
 
   return $output;
 }

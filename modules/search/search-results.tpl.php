@@ -1,5 +1,5 @@
 <?php
-// $Id: search-results.tpl.php,v 1.6 2010/05/28 11:53:57 dries Exp $
+// $Id: search-results.tpl.php,v 1.7 2010/08/18 18:40:50 dries Exp $
 
 /**
  * @file
@@ -15,7 +15,8 @@
  * Available variables:
  * - $search_results: All results as it is rendered through
  *   search-result.tpl.php
- * - $type: The type of search, e.g., "node" or "user".
+ * - $module: The machine-readable name of the module (tab) being searched, such
+ *   as "node" or "user".
  *
  *
  * @see template_preprocess_search_results()
@@ -23,7 +24,7 @@
 ?>
 <?php if ($search_results) : ?>
   <h2><?php print t('Search results');?></h2>
-  <ol class="search-results <?php print $type; ?>-results">
+  <ol class="search-results <?php print $module; ?>-results">
     <?php print $search_results; ?>
   </ol>
   <?php print $pager; ?>

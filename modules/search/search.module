@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.357 2010/08/13 01:05:36 dries Exp $
+// $Id: search.module,v 1.358 2010/08/18 18:40:50 dries Exp $
 
 /**
  * @file
@@ -114,12 +114,12 @@ function search_theme() {
       'template' => 'search-block-form',
     ),
     'search_result' => array(
-      'variables' => array('result' => NULL, 'type' => NULL),
+      'variables' => array('result' => NULL, 'module' => NULL),
       'file' => 'search.pages.inc',
       'template' => 'search-result',
     ),
     'search_results' => array(
-      'variables' => array('results' => NULL, 'type' => NULL),
+      'variables' => array('results' => NULL, 'module' => NULL),
       'file' => 'search.pages.inc',
       'template' => 'search-results',
     ),
@@ -1074,8 +1074,8 @@ function template_preprocess_search_block_form(&$variables) {
  *   Optional array of additional search conditions.
  *
  * @return
- *   Formatted search results. No return value if $keys are not supplied or
- *   if the given search module is not active.
+ *   Renderable array of search results. No return value if $keys are not
+ *   supplied or if the given search module is not active.
  */
 function search_data($keys, $module, $conditions = NULL) {
   if (module_hook($module, 'search_execute')) {
@@ -1084,7 +1084,11 @@ function search_data($keys, $module, $conditions = NULL) {
       return module_invoke($module, 'search_page', $results);
     }
     else {
-      return theme('search_results', array('results' => $results, 'type' => $module));
+      return array(
+        '#theme' => 'search_results',
+        '#results' => $results,
+        '#module' => $module,
+      );
     }
   }
 }

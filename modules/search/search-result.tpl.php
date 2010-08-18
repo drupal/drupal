@@ -1,5 +1,5 @@
 <?php
-// $Id: search-result.tpl.php,v 1.6 2010/05/29 07:50:33 dries Exp $
+// $Id: search-result.tpl.php,v 1.7 2010/08/18 18:40:50 dries Exp $
 
 /**
  * @file
@@ -16,7 +16,8 @@
  * - $info: String of all the meta information ready for print. Does not apply
  *   to user searches.
  * - $info_split: Contains same data as $info, split into a keyed array.
- * - $type: The type of search, e.g., "node" or "user".
+ * - $module: The machine-readable name of the module (tab) being searched, such
+ *   as "node" or "user".
  *
  * Default keys within $info_split:
  * - $info_split['type']: Node type.
