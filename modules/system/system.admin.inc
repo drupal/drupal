@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.295 2010/08/15 02:01:50 dries Exp $
+// $Id: system.admin.inc,v 1.296 2010/08/18 18:41:30 dries Exp $
 
 /**
  * @file
@@ -1511,41 +1511,52 @@ function system_ip_blocking_delete_submit($form, &$form_state) {
  * @see system_settings_form()
  */
 function system_site_information_settings() {
-  $form['site_name'] = array(
+  $form['site_information'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Site details'),
+  );
+  $form['site_information']['site_name'] = array(
     '#type' => 'textfield',
     '#title' => t('Site name'),
     '#default_value' => variable_get('site_name', 'Drupal'),
     '#required' => TRUE
   );
-  $form['site_slogan'] = array(
+  $form['site_information']['site_slogan'] = array(
     '#type' => 'textfield',
     '#title' => t('Slogan'),
     '#default_value' => variable_get('site_slogan', ''),
     '#description' => t("How this is used depends on your site's theme."),
   );
-  $form['site_mail'] = array(
+  $form['site_information']['site_mail'] = array(
     '#type' => 'textfield',
     '#title' => t('E-mail address'),
     '#default_value' => variable_get('site_mail', ini_get('sendmail_from')),
     '#description' => t("The <em>From</em> address in automated e-mails sent during registration and new password requests, and other notifications. (Use an address ending in your site's domain to help prevent this e-mail being flagged as spam.)"),
     '#required' => TRUE,
   );
-  $form['site_frontpage'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Default front page'),
-    '#default_value' => drupal_get_path_alias(variable_get('site_frontpage', 'node')),
-    '#size' => 40,
-    '#description' => t('The home page displays content from this relative URL. If unsure, specify "node".'),
-    '#field_prefix' => url(NULL, array('absolute' => TRUE)) . (variable_get('clean_url', 0) ? '' : '?q='),
-    '#required' => TRUE,
+  $form['front_page'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Front page'),
   );
-  $form['default_nodes_main'] = array(
+  $form['front_page']['default_nodes_main'] = array(
     '#type' => 'select', '#title' => t('Number of posts on front page'),
     '#default_value' => variable_get('default_nodes_main', 10),
     '#options' => drupal_map_assoc(array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30)),
     '#description' => t('The maximum number of posts displayed on overview pages such as the front page.')
   );
-  $form['site_403'] = array(
+  $form['front_page']['site_frontpage'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Default front page'),
+    '#default_value' => (variable_get('site_frontpage')!='node'?drupal_get_path_alias(variable_get('site_frontpage', 'node')):''),
+    '#size' => 40,
+    '#description' => t('Optionally, specify a relative URL to display as the front page.  Leave blank to display the default content feed.'),
+    '#field_prefix' => url(NULL, array('absolute' => TRUE)) . (variable_get('clean_url', 0) ? '' : '?q='),
+  );
+  $form['error_page'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Error pages'),
+  );
+  $form['error_page']['site_403'] = array(
     '#type' => 'textfield',
     '#title' => t('Default 403 (access denied) page'),
     '#default_value' => variable_get('site_403', ''),
@@ -1553,20 +1564,13 @@ function system_site_information_settings() {
     '#description' => t('This page is displayed when the requested document is denied to the current user. Leave blank to display a generic "access denied" page.'),
     '#field_prefix' => url(NULL, array('absolute' => TRUE)) . (variable_get('clean_url', 0) ? '' : '?q=')
   );
-  $form['site_404'] = array(
+  $form['error_page']['site_404'] = array(
     '#type' => 'textfield',
     '#title' => t('Default 404 (not found) page'),
     '#default_value' => variable_get('site_404', ''),
     '#size' => 40,
     '#description' => t('This page is displayed when no other content matches the requested document. Leave blank to display a generic "page not found" page.'),
     '#field_prefix' => url(NULL, array('absolute' => TRUE)) . (variable_get('clean_url', 0) ? '' : '?q=')
-  );
-  $form['cron_safe_threshold'] = array(
-    '#type' => 'select',
-    '#title' => t('Automatically run cron'),
-    '#default_value' => variable_get('cron_safe_threshold', DRUPAL_CRON_DEFAULT_THRESHOLD),
-    '#options' => array(0 => t('Never')) + drupal_map_assoc(array(3600, 10800, 21600, 43200, 86400, 604800), 'format_interval'),
-    '#description' => t('When enabled, the site will check whether cron has been run in the configured interval and automatically run it upon the next page request. For more information visit the <a href="@status-report-url">status report page</a>.', array('@status-report-url' => url('admin/reports/status'))),
   );
 
   $form['#validate'][] = 'system_site_information_settings_validate';
@@ -1575,19 +1579,90 @@ function system_site_information_settings() {
 }
 
 /**
- * Validate the submitted site-information form.
+ * Validates the submitted site-information form.
  */
 function system_site_information_settings_validate($form, &$form_state) {
   // Validate the e-mail address.
   if ($error = user_validate_mail($form_state['values']['site_mail'])) {
     form_set_error('site_mail', $error);
   }
-  // Get the normal path of the front page.
-  form_set_value($form['site_frontpage'], drupal_get_normal_path($form_state['values']['site_frontpage']), $form_state);
+  // Check for empty front page path.
+  if (empty($form_state['values']['site_frontpage'])) {
+    // Set to default "node".
+    form_set_value($form['front_page']['site_frontpage'], 'node', $form_state);
+  }
+  else {
+    // Get the normal path of the front page.
+    form_set_value($form['front_page']['site_frontpage'], drupal_get_normal_path($form_state['values']['site_frontpage']), $form_state);
+  }
   // Validate front page path.
   if (!drupal_valid_path($form_state['values']['site_frontpage'])) {
-    form_set_error('site_frontpage', t("The path '@path' is either invalid or you do not have access to it.", array('@path' => $form_state['values']['site_frontpage'])));
+    form_set_error('site_frontpage', t("The path '%path' is either invalid or you do not have access to it.", array('%path' => $form_state['values']['site_frontpage'])));
   }
+  // Get the normal paths of both error pages.
+  if (!empty($form_state['values']['site_403'])) {
+    form_set_value($form['error_page']['site_403'], drupal_get_normal_path($form_state['values']['site_403']), $form_state);
+  }
+  if (!empty($form_state['values']['site_404'])) {
+    form_set_value($form['error_page']['site_404'], drupal_get_normal_path($form_state['values']['site_404']), $form_state);
+  }
+  // Validate 403 error path.
+  if (!empty($form_state['values']['site_403']) && !drupal_valid_path($form_state['values']['site_403'])) {
+    form_set_error('site_403', t("The path '%path' is either invalid or you do not have access to it.", array('%path' => $form_state['values']['site_403'])));
+  }
+  // Validate 404 error path.
+  if (!empty($form_state['values']['site_404']) && !drupal_valid_path($form_state['values']['site_404'])) {
+    form_set_error('site_404', t("The path '%path' is either invalid or you do not have access to it.", array('%path' => $form_state['values']['site_404'])));
+  }
+}
+
+/**
+ * Form builder; Cron form.
+ *
+ * @see system_settings_form()
+ * @ingroup forms
+ */
+function system_cron_settings() {
+  $form['description'] = array(
+    '#markup' => '<p>'.t('Cron takes care of running periodical tasks like checking for updates and indexing content for search.').'</p>',
+  );
+  $form['run'] = array(
+    '#type' => 'submit',
+    '#value' => t('Run cron'),
+    '#submit' => array('system_run_cron_submit'),
+  );
+  $status = '<p>' . t('Last run: %cron-last ago.', array('%cron-last' => format_interval(REQUEST_TIME - variable_get('cron_last')),)) . '</p>';
+  $form['status'] = array(
+    '#markup' => $status,
+  );
+  $form['cron'] = array(
+    '#type' => 'fieldset',
+  );
+  $form['cron']['cron_safe_threshold'] = array(
+    '#type' => 'select',
+    '#title' => t('Run cron every'),
+    '#default_value' => variable_get('cron_safe_threshold', DRUPAL_CRON_DEFAULT_THRESHOLD),
+    '#options' => array(0 => t('Never')) + drupal_map_assoc(array(3600, 10800, 21600, 43200, 86400, 604800), 'format_interval'),
+  );
+
+  return system_settings_form($form, FALSE);
+}
+
+/**
+ * Submit callback; run cron.
+ *
+ * @ingroup forms
+ */
+function system_run_cron_submit($form, &$form_state) {
+  // Run cron manually from Cron form.
+  if (drupal_cron_run()) {
+    drupal_set_message(t('Cron run successfully.'));
+  }
+  else {
+    drupal_set_message(t('Cron run failed.'), 'error');
+  }
+
+  drupal_goto('admin/config/system/cron');
 }
 
 /**

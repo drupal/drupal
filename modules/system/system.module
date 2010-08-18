@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.953 2010/08/09 16:54:50 webchick Exp $
+// $Id: system.module,v 1.954 2010/08/18 18:41:30 dries Exp $
 
 /**
  * @file
@@ -80,7 +80,7 @@ function system_help($path, $arg) {
       $output .= '<dt>' . t('Managing caching') . '</dt>';
       $output .= '<dd>' . t("The System module allows users with the appropriate permissions to manage caching on the <a href='@cache-settings'>Performance settings page</a>. Drupal has a robust caching system that allows the efficient re-use of previously-constructed web pages and web page components. Pages requested by anonymous users are stored in a compressed format; depending on your site configuration and the amount of your web traffic tied to anonymous visitors, the caching system may significantly increase the speed of your site.", array('@cache-settings' => url('admin/config/development/performance'))) . '</dd>';
       $output .= '<dt>' . t('Performing system maintenance') . '</dt>';
-      $output .= '<dd>' . t('In order for the site and its modules to continue to operate well, a set of routine administrative operations must run on a regular basis. The System module manages this task by making use of a system cron job. You can verify the status of cron tasks by visiting the <a href="@status">Status report page</a>. For more information, see the online handbook entry for <a href="@handbook">configuring cron jobs</a>.', array('@status' => url('admin/reports/status'), '@handbook' => 'http://drupal.org/cron')) . '</dd>';
+      $output .= '<dd>' . t('In order for the site and its modules to continue to operate well, a set of routine administrative operations must run on a regular basis. The System module manages this task by making use of a system cron job. You can verify the status of cron tasks by visiting the <a href="@status">Status report page</a>. For more information, see the online handbook entry for <a href="@handbook">configuring cron jobs</a>. You can set up cron job by visiting <a href="@cron">Cron configuration</a> page', array('@status' => url('admin/reports/status'), '@handbook' => 'http://drupal.org/cron', '@cron' => url('admin/config/system/cron'))) . '</dd>';
       $output .= '<dt>' . t('Configuring basic site settings') . '</dt>';
       $output .= '<dd>' . t('The System module also handles basic configuration options for your site, including <a href="@date-time-settings">Date and time settings</a>, <a href="@file-system">File system settings</a>, <a href="@clean-url">Clean URL support</a>, <a href="@site-info">Site name and other information</a>, and a <a href="@maintenance-mode">Maintenance mode</a> for taking your site temporarily offline.', array('@date-time-settings' => url('admin/config/regional/date-time'), '@file-system' => url('admin/config/media/file-system'), '@clean-url' => url('admin/config/search/clean-urls'), '@site-info' => url('admin/config/system/site-information'), '@maintenance-mode' => url('admin/config/development/maintenance'))) . '</dd>';
       $output .= '<dt>' . t('Configuring actions') . '</dt>';
@@ -957,14 +957,22 @@ function system_menu() {
   );
   $items['admin/config/system/site-information'] = array(
     'title' => 'Site information',
-    'description' => 'Change site name, e-mail address, slogan, default front page, number of posts per page, error pages and cron.',
+    'description' => t('Change site name, e-mail address, slogan, default front page, and number of posts per page, error pages.'),
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_site_information_settings'),
     'access arguments' => array('administer site configuration'),
     'file' => 'system.admin.inc',
     'weight' => -20,
   );
-
+  $items['admin/config/system/cron'] = array(
+    'title' => t('Cron'),
+    'description' => t('Manage automatic site maintenance tasks.'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('system_cron_settings'),
+    'access arguments' => array('administer site configuration'),
+    'file' => 'system.admin.inc',
+    'weight' => 20,
+  );
   // Additional categories
   $items['admin/config/user-interface'] = array(
     'title' => 'User interface',
