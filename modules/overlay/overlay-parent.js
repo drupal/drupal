@@ -1,4 +1,4 @@
-// $Id: overlay-parent.js,v 1.53 2010/07/31 12:54:59 webchick Exp $
+// $Id: overlay-parent.js,v 1.54 2010/08/18 02:25:50 dries Exp $
 
 (function ($) {
 
@@ -509,12 +509,11 @@ Drupal.overlay.eventhandlerOverrideLink = function (event) {
     // which is the default action for a link. We only need to handle them
     // if the overlay is open and the clicked link is inside the overlay iframe.
     else if (this.isOpen && target.ownerDocument === this.iframeWindow.document) {
-      // Open external links in a new window.
+      // Open external links in the immediate parent of the frame, unless the
+      // link already has a different target.
       if (target.hostname != window.location.hostname) {
-        // Add a target attribute to the clicked link. This is being picked up by
-        // the default action handler.
         if (!$target.attr('target')) {
-          $target.attr('target', '_new');
+          $target.attr('target', '_parent');
         }
       }
       else {
