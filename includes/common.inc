@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1208 2010/08/18 00:44:52 dries Exp $
+// $Id: common.inc,v 1.1209 2010/08/20 01:17:51 dries Exp $
 
 /**
  * @file
@@ -3340,7 +3340,7 @@ function drupal_load_stylesheet_content($contents, $optimize = FALSE) {
     // Regexp to match single quoted strings.
     $single_quot = "'[^'\\\\]*(?:\\\\.[^'\\\\]*)*'";
     $contents = preg_replace(
-      "<($double_quot|$single_quot)|$comment>Sus", // Strip all comment blocks
+      "<($double_quot|$single_quot)|$comment>Ss",  // Strip all comment blocks
       "$1",                                        // but keep double/single
       $contents);                                  // quoted strings.
     $contents = preg_replace(
