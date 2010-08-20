@@ -3082,7 +3082,7 @@ function theme_button($variables) {
  */
 function theme_image_button($variables) {
   $element = $variables['element'];
-  $element['#attributes']['type'] = 'submit';
+  $element['#attributes']['type'] = 'image';
   $element['#attributes']['name'] = $element['#name'];
   if (!empty($element['#value'])) {
     $element['#attributes']['value'] = $element['#value'];
