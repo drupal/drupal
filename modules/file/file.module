@@ -125,9 +125,16 @@ function file_file_download($uri, $field_type = 'file') {
   // Get the file record based on the URI. If not in the database just return.
   $files = file_load_multiple(array(), array('uri' => $uri));
   if (count($files)) {
-    $file = reset($files);
+    foreach ($files as $item) {
+      // Since some database servers sometimes use a case-insensitive comparison
+      // by default, double check that the filename is an exact match.
+      if ($item->uri === $uri) {
+        $file = $item;
+        break;
+      }
+    }
   }
-  else {
+  if (!isset($file)) {
     return;
   }
 
