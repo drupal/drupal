@@ -3340,7 +3340,7 @@ function drupal_load_stylesheet_content($contents, $optimize = FALSE) {
     // Regexp to match single quoted strings.
     $single_quot = "'[^'\\\\]*(?:\\\\.[^'\\\\]*)*'";
     $contents = preg_replace(
-      "<($double_quot|$single_quot)|$comment>Sus", // Strip all comment blocks
+      "<($double_quot|$single_quot)|$comment>Ss",  // Strip all comment blocks
       "$1",                                        // but keep double/single
       $contents);                                  // quoted strings.
     $contents = preg_replace(
