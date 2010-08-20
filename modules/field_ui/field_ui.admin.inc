@@ -817,7 +817,8 @@ function field_ui_display_overview_form($form, &$form_state, $entity_type, $bund
       // We are currently editing this field's formatter settings. Display the
       // settings form and submit buttons.
       $table[$name]['settings_edit_form'] = array();
-      $additions = module_invoke($formatter['module'], 'field_formatter_settings_form', $field, $instance, $view_mode, $form, $form_state);
+      $function = $formatter['module'] . '_field_formatter_settings_form';
+      $additions = $function($field, $instance, $view_mode, $form, $form_state);
       if (is_array($additions)) {
         $table[$name]['settings_edit_form'] = array(
           '#type' => 'container',
