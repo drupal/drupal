@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.338 2010/08/17 13:50:52 dries Exp $
+// $Id: filter.module,v 1.339 2010/08/20 01:29:55 dries Exp $
 
 /**
  * @file
@@ -30,7 +30,7 @@ function filter_help($path, $arg) {
 
     case 'admin/config/content/formats':
       $output = '<p>' . t('Text formats define the HTML tags, code, and other formatting that can be used when entering text. <strong>Improper text format configuration is a security risk</strong>. Learn more on the <a href="@filterhelp">Filter module help page</a>.', array('@filterhelp' => url('admin/help/filter'))) . '</p>';
-      $output .= '<p>' . t('Text formats are presented on content editing pages in the order defined on this page.') . '</p>';
+      $output .= '<p>' . t('Text formats are presented on content editing pages in the order defined on this page. The first format available to a user will be selected by default.') . '</p>';
       return $output;
 
     case 'admin/config/content/formats/%':
