@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.483 2010/08/18 00:44:52 dries Exp $
+// $Id: form.inc,v 1.484 2010/08/20 01:08:18 dries Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -3082,7 +3082,7 @@ function theme_button($variables) {
  */
 function theme_image_button($variables) {
   $element = $variables['element'];
-  $element['#attributes']['type'] = 'submit';
+  $element['#attributes']['type'] = 'image';
   $element['#attributes']['name'] = $element['#name'];
   if (!empty($element['#value'])) {
     $element['#attributes']['value'] = $element['#value'];
