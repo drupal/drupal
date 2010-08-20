@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.954 2010/08/18 18:41:30 dries Exp $
+// $Id: system.module,v 1.955 2010/08/20 01:42:52 dries Exp $
 
 /**
  * @file
@@ -543,13 +543,14 @@ function system_menu() {
     'access arguments' => array('access administration pages'),
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'file' => 'system.admin.inc',
+    'weight' => -20,
   );
   $items['admin/by-module'] = array(
     'title' => 'By module',
     'page callback' => 'system_admin_by_module',
     'access arguments' => array('access administration pages'),
     'type' => MENU_LOCAL_TASK,
-    'weight' => 2,
+    'weight' => -18,
     'file' => 'system.admin.inc',
   );
 

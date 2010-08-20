@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.404 2010/08/05 07:56:50 webchick Exp $
+// $Id: menu.inc,v 1.405 2010/08/20 01:42:52 dries Exp $
 
 /**
  * @file
@@ -315,12 +315,16 @@ function menu_get_ancestors($parts) {
     }
     $current = '';
     for ($j = $length; $j >= 0; $j--) {
+      // Check the bit on the $j offset.
       if ($i & (1 << $j)) {
+        // Bit one means the original value.
         $current .= $parts[$length - $j];
       }
       else {
+        // Bit zero means means wildcard.
         $current .= '%';
       }
+      // Unless we are at offset 0, add a slash.
       if ($j) {
         $current .= '/';
       }
@@ -1735,7 +1739,7 @@ function menu_local_tasks($level = 0) {
       return $empty;
     }
 
-    // Get all tabs and the root page.
+    // Get all tabs (also known as local tasks) and the root page.
     $result = db_select('menu_router', NULL, array('fetch' => PDO::FETCH_ASSOC))
       ->fields('menu_router')
       ->condition('tab_root', $router_item['tab_root'])
@@ -1772,12 +1776,19 @@ function menu_local_tasks($level = 0) {
       $tab_count = 0;
       $action_count = 0;
       foreach ($children[$path] as $item) {
+        // Local tasks can be normal items too, so bitmask with
+        // MENU_IS_LOCAL_TASK before checking.
+        if (!($item['type'] & MENU_IS_LOCAL_TASK)) {
+          // This item is not a tab, skip it.
+          continue;
+        }
         if ($item['access']) {
           $link = $item;
-          // The default task is always active.
-          if ($item['type'] == MENU_DEFAULT_LOCAL_TASK) {
+          // The default task is always active. As tabs can be normal items
+          // too, so bitmask with MENU_LINKS_TO_PARENT before checking.
+          if (($item['type'] & MENU_LINKS_TO_PARENT) == MENU_LINKS_TO_PARENT) {
             // Find the first parent which is not a default local task or action.
-            for ($p = $item['tab_parent']; $tasks[$p]['type'] == MENU_DEFAULT_LOCAL_TASK; $p = $tasks[$p]['tab_parent']);
+            for ($p = $item['tab_parent']; ($tasks[$p]['type'] & MENU_LINKS_TO_PARENT) == MENU_LINKS_TO_PARENT; $p = $tasks[$p]['tab_parent']);
             // Use the path of the parent instead.
             $link['href'] = $tasks[$p]['href'];
             $tabs_current[] = array(
@@ -1789,19 +1800,23 @@ function menu_local_tasks($level = 0) {
             $tab_count++;
           }
           else {
-            if ($item['type'] == MENU_LOCAL_TASK) {
-              $tabs_current[] = array(
-                '#theme' => 'menu_local_task',
-                '#link' => $link,
-              );
-              $tab_count++;
-            }
-            else {
+            // Actions can be normal items too, so bitmask with
+            // MENU_IS_LOCAL_ACTION before checking.
+            if (($item['type'] & MENU_IS_LOCAL_ACTION) == MENU_IS_LOCAL_ACTION) {
+              // The item is an action, display it as such.
               $actions_current[] = array(
                 '#theme' => 'menu_local_action',
                 '#link' => $link,
               );
               $action_count++;
+            }
+            else {
+              // Otherwise, it's a normal tab.
+              $tabs_current[] = array(
+                '#theme' => 'menu_local_task',
+                '#link' => $link,
+              );
+              $tab_count++;
             }
           }
         }
@@ -1825,15 +1840,18 @@ function menu_local_tasks($level = 0) {
       $next_parent = '';
       $count = 0;
       foreach ($children[$parent] as $item) {
+        // Skip local actions.
         if ($item['type'] & MENU_IS_LOCAL_ACTION) {
           continue;
         }
         if ($item['access']) {
           $count++;
           $link = $item;
-          if ($item['type'] == MENU_DEFAULT_LOCAL_TASK) {
+          // Local tasks can be normal items too, so bitmask with
+          // MENU_LINKS_TO_PARENT before checking.
+          if (($item['type'] & MENU_LINKS_TO_PARENT) == MENU_LINKS_TO_PARENT) {
             // Find the first parent which is not a default local task.
-            for ($p = $item['tab_parent']; $tasks[$p]['type'] == MENU_DEFAULT_LOCAL_TASK; $p = $tasks[$p]['tab_parent']);
+            for ($p = $item['tab_parent']; ($tasks[$p]['type'] & MENU_LINKS_TO_PARENT) == MENU_LINKS_TO_PARENT; $p = $tasks[$p]['tab_parent']);
             // Use the path of the parent instead.
             $link['href'] = $tasks[$p]['href'];
             if ($item['path'] == $router_item['path']) {
@@ -2215,7 +2233,7 @@ function menu_get_active_breadcrumb() {
     $end = end($active_trail);
 
     // Don't show a link to the current page in the breadcrumb trail.
-    if ($item['href'] == $end['href'] || ($item['type'] == MENU_DEFAULT_LOCAL_TASK && $end['href'] != '<front>')) {
+    if ($item['href'] == $end['href'] || (($item['type'] & MENU_LINKS_TO_PARENT) == MENU_LINKS_TO_PARENT && $end['href'] != '<front>')) {
       array_pop($breadcrumb);
     }
   }
