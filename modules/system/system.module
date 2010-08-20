@@ -543,13 +543,14 @@ function system_menu() {
     'access arguments' => array('access administration pages'),
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'file' => 'system.admin.inc',
+    'weight' => -20,
   );
   $items['admin/by-module'] = array(
     'title' => 'By module',
     'page callback' => 'system_admin_by_module',
     'access arguments' => array('access administration pages'),
     'type' => MENU_LOCAL_TASK,
-    'weight' => 2,
+    'weight' => -18,
     'file' => 'system.admin.inc',
   );
 
