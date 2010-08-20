@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.889 2010/08/17 16:20:07 dries Exp $
+// $Id: comment.module,v 1.890 2010/08/20 01:21:14 dries Exp $
 
 /**
  * @file
@@ -1398,7 +1398,7 @@ function comment_access($op, $comment) {
   global $user;
 
   if ($op == 'edit') {
-    return ($user->uid && $user->uid == $comment->uid && user_access('edit own comments')) || user_access('administer comments');
+    return ($user->uid && $user->uid == $comment->uid && $comment->status == COMMENT_PUBLISHED && user_access('edit own comments')) || user_access('administer comments');
   }
 }
 
