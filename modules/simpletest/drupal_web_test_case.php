@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.225 2010/07/19 21:54:46 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.226 2010/08/22 15:31:18 dries Exp $
 
 /**
  * Global variable that holds information about the tests being run.
@@ -622,6 +622,13 @@ class DrupalUnitTestCase extends DrupalTestCase {
  */
 class DrupalWebTestCase extends DrupalTestCase {
   /**
+   * The profile to install as a basis for testing.
+   *
+   * @var string
+   */
+  protected $profile = 'standard';
+
+  /**
    * The URL currently loaded in the internal browser.
    *
    * @var string
@@ -1193,11 +1200,11 @@ class DrupalWebTestCase extends DrupalTestCase {
     variable_set('file_private_path', $private_files_directory);
     variable_set('file_temporary_path', $temp_files_directory);
 
-    // Include the default profile.
-    variable_set('install_profile', 'standard');
-    $profile_details = install_profile_info('standard', 'en');
+    // Include the testing profile.
+    variable_set('install_profile', $this->profile);
+    $profile_details = install_profile_info($this->profile, 'en');
 
-    // Install the modules specified by the default profile.
+    // Install the modules specified by the testing profile.
     module_enable($profile_details['dependencies'], FALSE);
 
     // Install modules needed for this test. This could have been passed in as
@@ -1212,8 +1219,13 @@ class DrupalWebTestCase extends DrupalTestCase {
       module_enable($modules, TRUE);
     }
 
-    // Run default profile tasks.
-    module_enable(array('standard'), FALSE);
+    // Run the profile tasks.
+    $install_profile_module_exists = db_query("SELECT 1 FROM {system} WHERE type = 'module' AND name = :name", array(
+      ':name' => $this->profile))
+      ->fetchField();
+    if ($install_profile_module_exists) {
+      module_enable(array($this->profile), FALSE);
+    }
 
     // Rebuild caches.
     drupal_static_reset();
@@ -3064,7 +3076,6 @@ class DrupalWebTestCase extends DrupalTestCase {
       $this->error(l(t('Verbose message'), $url, array('attributes' => array('target' => '_blank'))), 'User notice');
     }
   }
-
 }
 
 /**

@@ -1,5 +1,5 @@
 <?php
-// $Id: database_test.test,v 1.98 2010/08/08 02:18:53 dries Exp $
+// $Id: database_test.test,v 1.99 2010/08/22 15:31:18 dries Exp $
 
 /**
  * Dummy class for fetching into a class.
@@ -17,6 +17,7 @@ class FakeRecord { }
  * here.
  */
 class DatabaseTestCase extends DrupalWebTestCase {
+  protected $profile = 'testing';
 
   function setUp() {
     parent::setUp('database_test');

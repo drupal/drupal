@@ -1,0 +1,6 @@
+; $Id: testing.info,v 1.1 2010/08/22 15:31:18 dries Exp $
+name = Testing
+description = Totally stripped back testing profile.
+version = VERSION
+core = 7.x
+hidden = TRUE

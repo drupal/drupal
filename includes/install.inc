@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.141 2010/07/31 12:29:31 webchick Exp $
+// $Id: install.inc,v 1.142 2010/08/22 15:31:18 dries Exp $
 
 /**
  * Indicates that a module has not been installed yet.
@@ -1022,6 +1022,7 @@ function install_profile_info($profile, $locale = 'en') {
       'description' => '',
       'distribution_name' => 'Drupal',
       'version' => NULL,
+      'hidden' => FALSE,
       'php' => DRUPAL_MINIMUM_PHP,
     );
     $info = drupal_parse_info_file("profiles/$profile/$profile.info") + $defaults;
