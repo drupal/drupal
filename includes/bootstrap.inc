@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.415 2010/08/17 13:50:52 dries Exp $
+// $Id: bootstrap.inc,v 1.416 2010/08/22 14:11:47 dries Exp $
 
 /**
  * @file
@@ -2969,26 +2969,25 @@ function drupal_placeholder($text) {
 }
 
 /**
- *
  * Register a function for execution on shutdown.
  *
- * Wrapper for register_shutdown_function() which catches thrown exceptions
- * to avoid "Exception thrown without a stack frame in Unknown".
+ * Wrapper for register_shutdown_function() that catches thrown exceptions to
+ * avoid "Exception thrown without a stack frame in Unknown".
  *
  * @param $callback
  *   The shutdown function to register.
- * @param $parameters
- *   It is possible to pass parameters to the shutdown function by passing
- *   additional parameters.
+ * @param ...
+ *   Additional arguments to pass to the shutdown function.
+ *
  * @return
  *   Array of shutdown functions to be executed.
  *
  * @see register_shutdown_function()
  * @ingroup php_wrappers
  */
-function &drupal_register_shutdown_function($callback = NULL, $parameters = NULL) {
-  // We cannot use drupal_static() here because the static cache is reset
-  // during batch processing, which breaks batch handling.
+function &drupal_register_shutdown_function($callback = NULL) {
+  // We cannot use drupal_static() here because the static cache is reset during
+  // batch processing, which breaks batch handling.
   static $callbacks = array();
 
   if (isset($callback)) {
