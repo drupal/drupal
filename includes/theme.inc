@@ -221,8 +221,8 @@ function _drupal_theme_initialize($theme, $base_theme = array(), $registry_callb
     }
   }
 
-  if (function_exists($registry_callback)) {
-    $registry_callback($theme, $base_theme, $theme_engine);
+  if (isset($registry_callback)) {
+    _theme_registry_callback($registry_callback, array($theme, $base_theme, $theme_engine));
   }
 }
 
@@ -233,26 +233,30 @@ function _drupal_theme_initialize($theme, $base_theme = array(), $registry_callb
  *   The theme registry array if it has been stored in memory, NULL otherwise.
  */
 function theme_get_registry() {
-  return _theme_set_registry();
-}
-
-/**
- * Store the theme registry in memory.
- *
- * @param $registry
- *   A registry array as returned by _theme_build_registry()
- *
- * @return
- *   The theme registry array stored in memory
- */
-function _theme_set_registry($registry = NULL) {
   static $theme_registry = NULL;
 
-  if (isset($registry)) {
-    $theme_registry = $registry;
+  if (!isset($theme_registry)) {
+    list($callback, $arguments) = _theme_registry_callback();
+    $theme_registry = call_user_func_array($callback, $arguments);
   }
 
   return $theme_registry;
+}
+
+/**
+ * Set the callback that will be used by theme_get_registry() to fetch the registry.
+ *
+ * @param $callback
+ *   The name of the callback function.
+ * @param $arguments
+ *   The arguments to pass to the function.
+ */
+function _theme_registry_callback($callback = NULL, array $arguments = array()) {
+  static $stored;
+  if (isset($callback)) {
+    $stored = array($callback, $arguments);
+  }
+  return $stored;
 }
 
 /**
@@ -271,7 +275,6 @@ function _theme_load_registry($theme, $base_theme = NULL, $theme_engine = NULL) 
   $cache = cache_get("theme_registry:$theme->name", 'cache');
   if (isset($cache->data)) {
     $registry = $cache->data;
-    _theme_set_registry($registry);
   }
   else {
     // If not, build one and cache it.
@@ -280,9 +283,9 @@ function _theme_load_registry($theme, $base_theme = NULL, $theme_engine = NULL) 
    // complete set of theme hooks.
     if (module_load_all(NULL)) {
       _theme_save_registry($theme, $registry);
-      _theme_set_registry($registry);
     }
   }
+  return $registry;
 }
 
 /**

@@ -66,6 +66,14 @@ class ThemeUnitTest extends DrupalWebTestCase {
     $_GET['q'] = $q;
     $this->assertTrue(in_array('page__front', $suggestions), t('Front page template was suggested.'));
   }
+
+  /**
+   * Ensures theme hook_*_alter() implementations can run before anything is rendered.
+   */
+  function testAlter() {
+    $this->drupalGet('theme-test/alter');
+    $this->assertText('The altered data is test_theme_theme_test_alter_alter was invoked.', t('The theme was able to implement an alter hook during page building before anything was rendered.'));
+  }
 }
 
 /**
@@ -179,5 +187,32 @@ class ThemeHookInitUnitTest extends DrupalWebTestCase {
     $this->drupalGet('theme-test/hook-init');
     $this->assertRaw('Themed output generated in hook_init()', t('Themed output generated in hook_init() correctly appears on the page.'));
     $this->assertRaw('bartik/css/style.css', t("The default theme's CSS appears on the page when the theme system is initialized in hook_init()."));
+  }
+}
+
+/**
+ * Tests autocompletion not loading registry.
+ */
+class ThemeFastTestCase extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Theme fast initialization',
+      'description' => 'Test that autocompletion does not load the registry.',
+      'group' => 'Theme'
+    );
+  }
+
+  function setUp() {
+    parent::setUp('theme_test');
+    $this->account = $this->drupalCreateUser(array('access user profiles'));
+  }
+
+  /**
+   * Tests access to user autocompletion and verify the correct results.
+   */
+  function testUserAutocomplete() {
+    $this->drupalLogin($this->account);
+    $this->drupalGet('user/autocomplete/' . $this->account->name);
+    $this->assertText('registry not initialized', t('The registry was not initialized'));
   }
 }
