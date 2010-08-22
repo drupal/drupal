@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.test,v 1.30 2010/08/05 23:53:38 webchick Exp $
+// $Id: openid.test,v 1.31 2010/08/22 22:00:16 dries Exp $
 
 /**
  * Base class for OpenID tests.
@@ -264,6 +264,25 @@ class OpenIDFunctionalTestCase extends OpenIDWebTestCase {
     }
     $this->assertRaw(t('Successfully added %identity', array('%identity' => $claimed_id)), t('Identity %identity was added.', array('%identity' => $identity)));
   }
+
+  /**
+   * Tests that openid.signed is verified.
+   */
+  function testSignatureValidation() {
+    // Use a User-supplied Identity that is the URL of an XRDS document.
+    $identity = url('openid-test/yadis/xrds', array('absolute' => TRUE));
+
+    // Do not sign all mandatory fields (e.g. assoc_handle).
+    variable_set('openid_test_response', array('openid.signed' => 'op_endpoint,claimed_id,identity,return_to,response_nonce'));
+    $this->submitLoginForm($identity);
+    $this->assertRaw('OpenID login failed.');
+
+    // Sign all mandatory fields and some custom fields.
+    variable_set('openid_test_response', array('openid.foo' => 'bar', 'openid.signed' => 'op_endpoint,claimed_id,identity,return_to,response_nonce,assoc_handle,foo'));
+    $this->submitLoginForm($identity);
+    $this->assertNoRaw('OpenID login failed.');
+  }
+
 }
 
 /**

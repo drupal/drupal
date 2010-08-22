@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.inc,v 1.35 2010/07/01 19:06:56 dries Exp $
+// $Id: openid.inc,v 1.36 2010/08/22 22:00:16 dries Exp $
 
 /**
  * @file
@@ -359,8 +359,8 @@ function _openid_parse_message($message) {
  * Return a nonce value - formatted per OpenID spec.
  */
 function _openid_nonce() {
-  // YYYY-MM-DDThh:mm:ssTZD UTC, plus some optional extra unique chars
-  return gmstrftime('%Y-%m-%dT%H:%M:%S%Z') .
+  // YYYY-MM-DDThh:mm:ssZ, plus some optional extra unique characters.
+  return gmdate('Y-m-d\TH:i:s\Z') .
     chr(mt_rand(0, 25) + 65) .
     chr(mt_rand(0, 25) + 65) .
     chr(mt_rand(0, 25) + 65) .

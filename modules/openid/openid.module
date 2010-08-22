@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.module,v 1.94 2010/08/03 23:07:01 dries Exp $
+// $Id: openid.module,v 1.95 2010/08/22 22:00:16 dries Exp $
 
 /**
  * @file
@@ -332,7 +332,7 @@ function openid_complete($response = array()) {
         $response['status'] = 'cancel';
       }
       else {
-        if (openid_verify_assertion($service['uri'], $response)) {
+        if (openid_verify_assertion($service, $response)) {
           // OpenID Authentication, section 7.3.2.3 and Appendix A.5:
           // The CanonicalID specified in the XRDS document must be used as the
           // account key. We rely on the XRI proxy resolver to verify that the
@@ -726,15 +726,31 @@ function openid_authentication_request($claimed_id, $identity, $return_to = '', 
 /**
  * Attempt to verify the response received from the OpenID Provider.
  *
- * @param $op_endpoint The OpenID Provider URL.
- * @param $response Array of response values from the provider.
+ * @param $service
+ *   Array describing the OpenID provider.
+ * @param $response
+ *   Array of response values from the provider.
  *
  * @return boolean
  * @see http://openid.net/specs/openid-authentication-2_0.html#rfc.section.11.4
  */
-function openid_verify_assertion($op_endpoint, $response) {
+function openid_verify_assertion($service, $response) {
   module_load_include('inc', 'openid');
 
+  // http://openid.net/specs/openid-authentication-2_0.html#rfc.section.11.3
+  // Check the Nonce to protect against replay attacks.
+  if (!openid_verify_assertion_nonce($service, $response)) {
+    return FALSE;
+  }
+
+  // http://openid.net/specs/openid-authentication-2_0.html#rfc.section.11.1
+  // Verifying the return URL.
+  if (!openid_verify_assertion_return_url($service, $response)) {
+    return FALSE;
+  }
+
+  // http://openid.net/specs/openid-authentication-2_0.html#rfc.section.11.4
+  // Verify the signatures.
   $valid = FALSE;
   $association = FALSE;
 
@@ -746,17 +762,13 @@ function openid_verify_assertion($op_endpoint, $response) {
   }
 
   if ($association && isset($association->session_type)) {
-    $keys_to_sign = explode(',', $response['openid.signed']);
-    $self_sig = _openid_signature($association, $response, $keys_to_sign);
-    if ($self_sig == $response['openid.sig']) {
-      $valid = TRUE;
-    }
-    else {
-      $valid = FALSE;
-    }
+    // http://openid.net/specs/openid-authentication-2_0.html#rfc.section.11.4.2
+    // Verification using an association.
+    $valid = openid_verify_assertion_signature($service, $association, $response);
   }
   else {
-    // See http://openid.net/specs/openid-authentication-2_0.html#rfc.section.11.4.2.1
+    // http://openid.net/specs/openid-authentication-2_0.html#rfc.section.11.4.2
+    // Direct verification.
     // The verification requests contain all the fields from the response,
     // except openid.mode.
     $request = $response;
@@ -767,7 +779,7 @@ function openid_verify_assertion($op_endpoint, $response) {
       'method' => 'POST',
       'data' => _openid_encode_message($message),
     );
-    $result = drupal_http_request($op_endpoint, $options);
+    $result = drupal_http_request($service['uri'], $options);
     if (!isset($result->error)) {
       $response = _openid_parse_message($result->data);
 
@@ -788,4 +800,153 @@ function openid_verify_assertion($op_endpoint, $response) {
     }
   }
   return $valid;
+}
+
+
+/**
+ * Verify the signature of the response received from the OpenID provider.
+ *
+ * @param $service
+ *   Array describing the OpenID provider.
+ * @param $association
+ *   Information on the association with the OpenID provider.
+ * @param $response
+ *   Array of response values from the provider.
+ *
+ * @return
+ *   TRUE if the signature is valid and covers all fields required to be signed.
+ * @see http://openid.net/specs/openid-authentication-2_0.html#rfc.section.11.4
+ */
+function openid_verify_assertion_signature($service, $association, $response) {
+  if ($service['version'] == 2) {
+    // OpenID Authentication 2.0, section 10.1:
+    // These keys must always be signed.
+    $mandatory_keys = array('op_endpoint', 'return_to', 'response_nonce', 'assoc_handle');
+    if (isset($response['openid.claimed_id'])) {
+      // If present, these two keys must also be signed. According to the spec,
+      // they are either both present or both absent.
+      $mandatory_keys[] = 'claimed_id';
+      $mandatory_keys[] = 'identity';
+    }
+  }
+  else {
+    // OpenID Authentication 1.1. section 4.3.3.
+    $mandatory_keys = array('identity', 'return_to');
+  }
+
+  $keys_to_sign = explode(',', $response['openid.signed']);
+
+  if (count(array_diff($mandatory_keys, $keys_to_sign)) > 0) {
+    return FALSE;
+  }
+
+  return _openid_signature($association, $response, $keys_to_sign) === $response['openid.sig'];
+}
+
+/**
+ * Verify that the nonce has not been used in earlier assertions from the same OpenID provider.
+ *
+ * @param $service
+ *   Array describing the OpenID provider.
+ * @param $response
+ *   Array of response values from the provider.
+ *
+ * @return
+ *   TRUE if the nonce has not expired and has not been used earlier.
+ */
+function openid_verify_assertion_nonce($service, $response) {
+  if ($service['version'] != 2) {
+    return TRUE;
+  }
+
+  if (preg_match('/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})Z/', $response['openid.response_nonce'], $matches)) {
+    list(, $year, $month, $day, $hour, $minutes, $seconds) = $matches;
+    $nonce_timestamp = gmmktime($hour, $minutes, $seconds, $month, $day, $year);
+  }
+  else {
+    watchdog('openid', 'Nonce from @endpoint rejected because it is not correctly formatted, nonce: @nonce.', array('@endpoint' => $service['uri'], '@nonce' => $response['openid.response_nonce']), WATCHDOG_WARNING);
+    return FALSE;
+  }
+
+  // A nonce with a timestamp to far in the past or future will already have
+  // been removed and cannot be checked for single use anymore.
+  $time = time();
+  $expiry = 900;
+  if ($nonce_timestamp <= $time - $expiry || $nonce_timestamp >= $time + $expiry) {
+    watchdog('openid', 'Nonce received from @endpoint is out of range (time difference: @intervals). Check possible clock skew.', array('@endpoint' => $service['uri'], '@interval' => $time - $nonce_timestamp), WATCHDOG_WARNING);
+    return FALSE;
+  }
+
+  // Record that this nonce was used.
+  db_insert('openid_nonce')
+    ->fields(array(
+      'idp_endpoint_uri' => $service['uri'],
+      'nonce' => $response['openid.response_nonce'],
+      'expires' => $nonce_timestamp + $expiry,
+    ))
+    ->execute();
+
+  // Count the number of times this nonce was used.
+  $count_used = db_query("SELECT COUNT(*) FROM {openid_nonce} WHERE nonce = :nonce AND idp_endpoint_uri = :idp_endpoint_uri", array(
+    ':nonce' => $response['openid.response_nonce'],
+    ':idp_endpoint_uri' => $service['uri'],
+  ))->fetchField();
+
+  if ($count_used == 1) {
+    return TRUE;
+  }
+  else {
+    watchdog('openid', 'Nonce replay attempt blocked from @ip, nonce: @nonce.', array('@ip' => ip_address(), '@nonce' => $response['openid.response_nonce']), WATCHDOG_CRITICAL);
+    return FALSE;
+  }
+}
+
+
+/**
+ * Verify that openid.return_to matches the current URL.
+ *
+ * See OpenID  Authentication 2.0, section 11.1. While OpenID Authentication
+ * 1.1, section 4.3 does not mandate return_to verification, the received
+ * return_to should still match these constraints.
+ *
+ * @param $service
+ *   Array describing the OpenID provider.
+ * @param $response
+ *   Array of response values from the provider.
+ *
+ * @return
+ *   TRUE if return_to is valid, FALSE otherwise.
+ */
+function openid_verify_assertion_return_url($service, $response) {
+  global $base_url;
+
+  $return_to_parts = parse_url($response['openid.return_to']);
+
+  $base_url_parts = parse_url($base_url);
+  $current_parts = parse_url($base_url_parts['scheme'] .'://'. $base_url_parts['host'] . request_uri());
+
+  if ($return_to_parts['scheme'] != $current_parts['scheme'] || $return_to_parts['host'] != $current_parts['host'] || $return_to_parts['path'] != $current_parts['path']) {
+    return FALSE;
+  }
+  // Verify that all query parameters in the openid.return_to URL have
+  // the same value in the current URL. In addition, the current URL
+  // contains a number of other parameters added by the OpenID Provider.
+  parse_str(isset($return_to_parts['query']) ? $return_to_parts['query'] : '', $return_to_query_parameters);
+  foreach ($return_to_query_parameters as $name => $value) {
+    if (!array_key_exists($name, $_GET) || $_GET[$name] != $value) {
+      return FALSE;
+    }
+  }
+  return TRUE;
+}
+
+/**
+ * Remove expired nonces from the database.
+ *
+ * Implementation of hook_cron().
+ */
+function openid_cron() {
+  db_delete('openid_nonce')
+    ->condition('expires', REQUEST_TIME, '<')
+    ->execute();
 }

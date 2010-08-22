@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.install,v 1.11 2010/02/11 15:48:38 webchick Exp $
+// $Id: openid.install,v 1.12 2010/08/22 22:00:16 dries Exp $
 
 /**
  * @file
@@ -55,6 +55,32 @@ function openid_schema() {
     'primary key' => array('assoc_handle'),
   );
 
+  $schema['openid_nonce'] = array(
+    'description' => 'Stores received openid.response_nonce per OpenID endpoint URL to prevent replay attacks.',
+    'fields' => array(
+      'idp_endpoint_uri' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'description' => 'URI of the OpenID Provider endpoint.',
+      ),
+      'nonce' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'description' => 'The value of openid.response_nonce.',
+      ),
+      'expires' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'A Unix timestamp indicating when the entry should expire.',
+      ),
+    ),
+    'indexes' => array(
+      'nonce' => array('nonce'),
+      'expires' => array('expires'),
+    ),
+  );
+
   return $schema;
 }
 
@@ -84,3 +110,46 @@ function openid_requirements($phase) {
 
   return $requirements;
 }
+
+/**
+ * @defgroup updates-6.x-extra Extra openid updates for 6.x
+ * @{
+ */
+
+/**
+ * Add a table to store nonces.
+ */
+function openid_update_6000() {
+  $schema['openid_nonce'] = array(
+    'description' => 'Stores received openid.response_nonce per OpenID endpoint URL to prevent replay attacks.',
+    'fields' => array(
+      'idp_endpoint_uri' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'description' => 'URI of the OpenID Provider endpoint.',
+      ),
+      'nonce' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'description' => 'The value of openid.response_nonce'
+        ),
+      'expires' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'A Unix timestamp indicating when the entry should expire.',
+        ),
+      ),
+    'indexes' => array(
+      'nonce' => array('nonce'),
+      'expires' => array('expires'),
+    ),
+  );
+
+  db_create_table('openid_nonce', $schema['openid_nonce']);
+}
+
+/**
+ * @} End of "defgroup updates-6.x-extra"
+ * The next series of updates should start at 7000.
+ */
