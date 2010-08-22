@@ -521,6 +521,16 @@ class CommentAnonymous extends CommentHelperCase {
     $anonymous_comment2 = $this->postComment($this->node, $this->randomName(), $this->randomName());
     $this->assertTrue($this->commentExists($anonymous_comment2), t('Anonymous comment with contact info (optional) found.'));
 
+    // Ensure anonymous users cannot post in the name of registered users.
+    $edit = array(
+      'name' => $this->admin_user->name,
+      'mail' => $this->randomName() . '@example.com',
+      'subject' => $this->randomName(),
+      'comment_body[' . LANGUAGE_NONE . '][0][value]' => $this->randomName(),
+    );
+    $this->drupalPost('comment/reply/' . $this->node->nid, $edit, t('Save'));
+    $this->assertText(t('The name you used belongs to a registered user.'));
+
     // Require contact info.
     $this->drupalLogin($this->admin_user);
     $this->setCommentAnonymous('2');
