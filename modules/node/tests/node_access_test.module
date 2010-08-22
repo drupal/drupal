@@ -1,5 +1,5 @@
 <?php
-// $Id: node_access_test.module,v 1.1 2010/02/15 19:00:30 webchick Exp $
+// $Id: node_access_test.module,v 1.2 2010/08/22 16:11:12 dries Exp $
 
 /**
  * @file
@@ -58,6 +58,12 @@ function node_access_test_menu() {
     'access arguments' => array('access content'),
     'type' => MENU_SUGGESTED_ITEM,
   );
+  $items['node_access_entity_test_page'] = array(
+    'title' => 'Node access test',
+    'page callback' => 'node_access_entity_test_page',
+    'access arguments' => array('access content'),
+    'type' => MENU_SUGGESTED_ITEM,
+  );
   return $items;
 }
 
@@ -92,6 +98,40 @@ function node_access_test_page() {
     }
 
     $output .= '<p>' . ((string) $query ) . '</p>';
+  }
+  catch (Exception $e) {
+    $output = '<p>Exception</p>';
+    $output .= '<p>' . $e->getMessage() . '</p>';
+  }
+
+  return $output;
+}
+
+/**
+ * Page callback for node access entity test page.
+ *
+ * Page should say "No nodes" if there are no nodes, and "Yes, # nodes" (with
+ * the number filled in) if there were nodes the user could access. Also, the
+ * database query is shown, and a list of the node IDs, for debugging purposes.
+ * And if there is a query exception, the page says "Exception" and gives the
+ * error.
+ */
+function node_access_entity_test_page() {
+  $output = '';
+  try {
+    $query = new EntityFieldQuery;
+    $result = $query->fieldCondition('body', 'value', 'A', 'STARTS_WITH')->execute();
+    if (!empty($result['node'])) {
+      $output .= '<p>Yes, ' . count($result['node']) . ' nodes</p>';
+      $output .= '<ul>';
+      foreach ($result['node'] as $nid => $v) {
+        $output .= '<li>' . $nid . '</li>';
+      }
+      $output .= '</ul>';
+    }
+    else {
+      $output .= '<p>No nodes</p>';
+    }
   }
   catch (Exception $e) {
     $output = '<p>Exception</p>';

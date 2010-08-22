@@ -1,5 +1,5 @@
 <?php
-// $Id: entity.inc,v 1.12 2010/07/26 02:51:46 dries Exp $
+// $Id: entity.inc,v 1.13 2010/08/22 16:11:12 dries Exp $
 
 /**
  * Interface for entity controller classes.
@@ -405,6 +405,10 @@ class EntityFieldQueryException extends Exception {}
  * specified or if the query has field conditions or sorts that are stored in
  * different field storage engines. However, this logic can be overridden in
  * hook_entity_query().
+ *
+ * Also note that this query does not automatically respect entity access
+ * restrictions. Node access control is performed by the SQL storage engine but
+ * other storage engines might not do this.
  */
 class EntityFieldQuery {
   /**
@@ -514,6 +518,24 @@ class EntityFieldQuery {
    * @see EntityFieldQuery::age()
    */
   public $age = FIELD_LOAD_CURRENT;
+
+  /**
+   * A list of the tags added to this query.
+   *
+   * @var array
+   *
+   * @see EntityFieldQuery::addTag()
+   */
+  public $tags = array();
+
+  /**
+   * A list of metadata added to this query.
+   *
+   * @var array
+   *
+   * @see EntityFieldQuery::addMetaData()
+   */
+  public $metaData = array();
 
   /**
    * The ordered results.
@@ -817,6 +839,52 @@ class EntityFieldQuery {
   }
 
   /**
+   * Adds a tag to the query.
+   *
+   * Tags are strings that mark a query so that hook_query_alter() and
+   * hook_query_TAG_alter() implementations may decide if they wish to alter
+   * the query. A query may have any number of tags, and they must be valid PHP
+   * identifiers (composed of letters, numbers, and underscores). For example,
+   * queries involving nodes that will be displayed for a user need to add the
+   * tag 'node_access', so that the node module can add access restrictions to
+   * the query.
+   *
+   * If an entity field query has tags, it must also have an entity type
+   * specified, because the alter hook will need the entity base table.
+   *
+   * @param string $tag
+   *   The tag to add.
+   *
+   * @return EntityFieldQuery
+   *   The called object.
+   */
+  public function addTag($tag) {
+    $this->tags[$tag] = $tag;
+    return $this;
+  }
+
+  /**
+   * Adds additional metadata to the query.
+   *
+   * Sometimes a query may need to provide additional contextual data for the
+   * alter hook. The alter hook implementations may then use that information
+   * to decide if and how to take action.
+   *
+   * @param $key
+   *   The unique identifier for this piece of metadata. Must be a string that
+   *   follows the same rules as any other PHP identifier.
+   * @param $object
+   *   The additional data to add to the query. May be any valid PHP variable.
+   *
+   * @return EntityFieldQuery
+   *   The called object.
+   */
+  public function addMetaData($key, $object) {
+    $this->metaData[$key] = $object;
+    return $this;
+  }
+
+  /**
    * Executes the query.
    *
    * After executing the query, $this->orderedResults will contain a list of
@@ -971,7 +1039,7 @@ class EntityFieldQuery {
   /**
    * Finishes the query.
    *
-   * Adds the range and returns the requested list.
+   * Adds tags, metaData, range and returns the requested list or count.
    *
    * @param SelectQuery $select_query
    *   A SelectQuery which has entity_type, entity_id, revision_id and bundle
@@ -983,6 +1051,13 @@ class EntityFieldQuery {
    *   See EntityFieldQuery::execute().
    */
   function finishQuery($select_query, $id_key = 'entity_id') {
+    foreach ($this->tags as $tag) {
+      $select_query->addTag($tag);
+    }
+    foreach ($this->metaData as $key => $object) {
+      $select_query->addMetaData($key, $object);
+    }
+    $select_query->addMetaData('entity_field_query', $this);
     if ($this->range) {
       $select_query->range($this->range['start'], $this->range['length']);
     }

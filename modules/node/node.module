@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1290 2010/08/17 16:20:08 dries Exp $
+// $Id: node.module,v 1.1291 2010/08/22 16:11:12 dries Exp $
 
 /**
  * @file
@@ -2767,7 +2767,6 @@ function node_access($op, $node, $account = NULL) {
     $rights[$account->uid][$cid][$op] = TRUE;
     return TRUE;
   }
-
   if (!user_access('access content', $account)) {
     $rights[$account->uid][$cid][$op] = FALSE;
     return FALSE;
@@ -3009,6 +3008,33 @@ function node_access_view_all_nodes() {
  * 'update' and 'delete').
  */
 function node_query_node_access_alter(QueryAlterableInterface $query) {
+  _node_query_node_access_alter($query, 'node', 'node');
+}
+
+/**
+ * Implements hook_query_TAG_alter().
+ *
+ * This function implements the same functionality as
+ * node_query_node_access_alter() for the SQL field storage engine. Node access
+ * conditions are added for field values belonging to nodes only.
+ */
+function node_query_entity_field_access_alter(QueryAlterableInterface $query) {
+  _node_query_node_access_alter($query, $query->getMetaData('base_table'), 'entity');
+}
+
+/**
+ * Helper for node access functions.
+ *
+ * @param $query
+ *   The query to add conditions to.
+ * @param $base_table
+ *   The table holding node ids.
+ * @param $type
+ *   Either 'node' or 'entity' depending on what sort of query it is. See
+ *   node_query_node_access_alter() and node_query_entity_field_access_alter()
+ *   for more.
+ */
+function _node_query_node_access_alter($query, $base_table, $type) {
   global $user;
 
   // Read meta-data from query, if provided.
@@ -3037,30 +3063,81 @@ function node_query_node_access_alter(QueryAlterableInterface $query) {
 
   $tables = $query->getTables();
   $grants = node_access_grants($op, $account);
+  if ($type == 'entity') {
+    // The original query looked something like:
+    // @code
+    //  SELECT nid FROM sometable s
+    //  INNER JOIN node_access na ON na.nid = s.nid
+    //  WHERE ($node_access_conditions)
+    // @endcode
+    //
+    // Our query will look like:
+    // @code
+    //  SELECT entity_type, entity_id
+    //  FROM field_data_something s
+    //  LEFT JOIN node_access na ON s.entity_id = na.nid
+    //  WHERE (entity_type = 'node' AND $node_access_conditions) OR (entity_type <> 'node')
+    // @endcode
+    //
+    // So instead of directly adding to the query object, we need to collect
+    // in a separate db_and() object and then at the end add it to the query.
+    $entity_conditions = db_and();
+  }
   foreach ($tables as $nalias => $tableinfo) {
     $table = $tableinfo['table'];
-    if (!($table instanceof SelectQueryInterface) && $table == 'node') {
+    if (!($table instanceof SelectQueryInterface) && $table == $base_table) {
 
-      // The node_access table has the access grants for any given node.
-      $access_alias = $query->join('node_access', 'na', '%alias.nid = ' . $nalias . '.nid');
-      $or = db_or();
+      // The node_access table has the access grants for any given node so JOIN
+      // it to the table containing the nid which can be either the node
+      // table or a field value table.
+      if ($type == 'node') {
+        $access_alias = $query->join('node_access', 'na', '%alias.nid = ' . $nalias . '.nid');
+      }
+      else {
+        $access_alias = $query->leftJoin('node_access', 'na', '%alias.nid = ' . $nalias . '.entity_id');
+        $base_alias = $nalias;
+      }
+
+      $grant_conditions = db_or();
       // If any grant exists for the specified user, then user has access
       // to the node for the specified operation.
       foreach ($grants as $realm => $gids) {
         foreach ($gids as $gid) {
-          $or->condition(db_and()
+          $grant_conditions->condition(db_and()
             ->condition($access_alias . '.gid', $gid)
             ->condition($access_alias . '.realm', $realm)
           );
         }
       }
 
-      if (count($or->conditions())) {
-        $query->condition($or);
+      $count = count($grant_conditions->conditions());
+      if ($type == 'node') {
+        if ($count) {
+          $query->condition($grant_conditions);
+        }
+        $query->condition($access_alias . '.grant_' . $op, 1, '>=');
       }
-
-      $query->condition($access_alias . '.grant_' . $op, 1, '>=');
+      else {
+        if ($count) {
+          $entity_conditions->condition($grant_conditions);
+        }
+        $entity_conditions->condition($access_alias . '.grant_' . $op, 1, '>=');
+      }
     }
+  }
+
+  if ($type == 'entity' && count($entity_conditions->conditions())) {
+    // All the node access conditions are only for field values belonging to
+    // nodes.
+    $etid = variable_get('field_sql_storage_node_etid');
+    $entity_conditions->condition("$base_alias.etid", $etid);
+    $or = db_or();
+    $or->condition($entity_conditions);
+    // If the field value belongs to a non-node entity type then this function
+    // does not do anything with it.
+    $or->condition("$base_alias.etid", $etid, '<>');
+    // Add the compiled set of rules to the query.
+    $query->condition($or);
   }
 }
 
