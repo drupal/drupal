@@ -219,7 +219,7 @@ function field_modules_disabled($modules) {
     ->condition('storage_module', $modules, 'IN')
     ->execute();
 
-  field_cache_clear(TRUE);
+  field_cache_clear();
 }
 
 /**
