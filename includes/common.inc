@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1209 2010/08/20 01:17:51 dries Exp $
+// $Id: common.inc,v 1.1210 2010/08/22 12:46:21 dries Exp $
 
 /**
  * @file
@@ -4592,13 +4592,19 @@ function _drupal_bootstrap_full() {
 
   // Initialize $_GET['q'] prior to invoking hook_init().
   drupal_path_initialize();
-  // Set a custom theme for the current page, if there is one. We need to run
-  // this before invoking hook_init(), since any modules which initialize the
-  // theme system will prevent a custom theme from being correctly set later.
-  menu_set_custom_theme();
-  // Let all modules take action before menu system handles the request
+
+  // Let all modules take action before the menu system handles the request.
   // We do not want this while running update.php.
   if (!defined('MAINTENANCE_MODE') || MAINTENANCE_MODE != 'update') {
+    // Prior to invoking hook_init(), initialize the theme (potentially a custom
+    // one for this page), so that:
+    // - Modules with hook_init() implementations that call theme() or
+    //   theme_get_registry() don't initialize the incorrect theme.
+    // - The theme can have hook_*_alter() implementations affect page building
+    //   (e.g., hook_form_alter(), hook_node_view_alter(), hook_page_alter()),
+    //   ahead of when rendering starts.
+    menu_set_custom_theme();
+    drupal_theme_initialize();
     module_invoke_all('init');
   }
 }

@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.maintenance.inc,v 1.64 2010/08/08 19:35:49 dries Exp $
+// $Id: theme.maintenance.inc,v 1.65 2010/08/22 12:46:21 dries Exp $
 
 /**
  * @file
@@ -88,8 +88,7 @@ function _drupal_maintenance_theme() {
  * This builds the registry when the site needs to bypass any database calls.
  */
 function _theme_load_offline_registry($theme, $base_theme = NULL, $theme_engine = NULL) {
-  $registry = _theme_build_registry($theme, $base_theme, $theme_engine);
-  _theme_set_registry($registry);
+  return _theme_build_registry($theme, $base_theme, $theme_engine);
 }
 
 /**
