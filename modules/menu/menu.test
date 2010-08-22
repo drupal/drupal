@@ -192,14 +192,28 @@ class MenuTestCase extends DrupalWebTestCase {
     // Add nodes to use as links for menu links.
     $node1 = $this->drupalCreateNode(array('type' => 'article'));
     $node2 = $this->drupalCreateNode(array('type' => 'article'));
+    $node3 = $this->drupalCreateNode(array('type' => 'article'));
+    $node4 = $this->drupalCreateNode(array('type' => 'article'));
+    $node5 = $this->drupalCreateNode(array('type' => 'article'));
 
     // Add menu links.
     $item1 = $this->addMenuLink(0, 'node/' . $node1->nid, $menu_name);
     $item2 = $this->addMenuLink($item1['mlid'], 'node/' . $node2->nid, $menu_name);
+    $item3 = $this->addMenuLink($item2['mlid'], 'node/' . $node3->nid, $menu_name);
+    $this->assertMenuLink($item1['mlid'], array('depth' => 1, 'has_children' => 1, 'p1' => $item1['mlid'], 'p2' => 0));
+    $this->assertMenuLink($item2['mlid'], array('depth' => 2, 'has_children' => 1, 'p1' => $item1['mlid'], 'p2' => $item2['mlid'], 'p3' => 0));
+    $this->assertMenuLink($item3['mlid'], array('depth' => 3, 'has_children' => 0, 'p1' => $item1['mlid'], 'p2' => $item2['mlid'], 'p3' => $item3['mlid'], 'p4' => 0));
 
     // Verify menu links.
     $this->verifyMenuLink($item1, $node1);
     $this->verifyMenuLink($item2, $node2, $item1, $node1);
+    $this->verifyMenuLink($item3, $node3, $item2, $node2);
+
+    // Add more menu links.
+    $item4 = $this->addMenuLink(0, 'node/' . $node4->nid, $menu_name);
+    $item5 = $this->addMenuLink($item4['mlid'], 'node/' . $node5->nid, $menu_name);
+    $this->assertMenuLink($item4['mlid'], array('depth' => 1, 'has_children' => 1, 'p1' => $item4['mlid'], 'p2' => 0));
+    $this->assertMenuLink($item5['mlid'], array('depth' => 2, 'has_children' => 0, 'p1' => $item4['mlid'], 'p2' => $item5['mlid'], 'p3' => 0));
 
     // Modify menu links.
     $this->modifyMenuLink($item1);
@@ -208,6 +222,14 @@ class MenuTestCase extends DrupalWebTestCase {
     // Toggle menu links.
     $this->toggleMenuLink($item1);
     $this->toggleMenuLink($item2);
+
+    // Move link and verify that descendants are updated.
+    $this->moveMenuLink($item2, $item5['mlid'], $menu_name);
+    $this->assertMenuLink($item1['mlid'], array('depth' => 1, 'has_children' => 0, 'p1' => $item1['mlid'], 'p2' => 0));
+    $this->assertMenuLink($item4['mlid'], array('depth' => 1, 'has_children' => 1, 'p1' => $item4['mlid'], 'p2' => 0));
+    $this->assertMenuLink($item5['mlid'], array('depth' => 2, 'has_children' => 1, 'p1' => $item4['mlid'], 'p2' => $item5['mlid'], 'p3' => 0));
+    $this->assertMenuLink($item2['mlid'], array('depth' => 3, 'has_children' => 1, 'p1' => $item4['mlid'], 'p2' => $item5['mlid'], 'p3' => $item2['mlid'], 'p4' => 0));
+    $this->assertMenuLink($item3['mlid'], array('depth' => 4, 'has_children' => 0, 'p1' => $item4['mlid'], 'p2' => $item5['mlid'], 'p3' => $item2['mlid'], 'p4' => $item3['mlid'], 'p5' => 0));
 
     // Enable a link via the overview form.
     $this->disableMenuLink($item1);
@@ -219,8 +241,7 @@ class MenuTestCase extends DrupalWebTestCase {
     $this->drupalPost('admin/structure/menu/manage/' . $item1['menu_name'], $edit, t('Save configuration'));
 
     // Verify in the database.
-    $hidden = db_query("SELECT hidden FROM {menu_links} WHERE mlid = :mlid", array(':mlid' => $item1['mlid']))->fetchField();
-    $this->assertEqual($hidden, 0, t('Link is not hidden in the database table when enabled via the overview form'));
+    $this->assertMenuLink($item1['mlid'], array('hidden' => 0));
 
     // Save menu links for later tests.
     $this->items[] = $item1;
@@ -277,32 +298,9 @@ class MenuTestCase extends DrupalWebTestCase {
     // Unlike most other modules, there is no confirmation message displayed.
     $this->assertText($title, 'Menu link was added');
 
-    // Retrieve menu link.
-    $item = db_query("SELECT * FROM {menu_links} WHERE link_title = :title", array(':title' => $title))->fetchAssoc();
-
-    // Check the structure in the DB of the two menu links.
-    // In general, if $n = $item['depth'] then $item['p'. $n] == $item['mlid'] and $item['p' . ($n - 1)] == $item['plid'] (unless depth == 0).
-    // All $item['p' . $n] for $n > depth must be 0.
-    // We know link1 is at the top level, so $item1['deptj'] == 1 and $item1['plid'] == 0.
-    // We know that the parent of link2 is link1, so $item2['plid'] == $item1['mlid'].
-    // Both menu links were created in the navigation menu.
-    $this->assertEqual($item['menu_name'], $menu_name);
-    $this->assertEqual($item['plid'], $plid);
-    $options = unserialize($item['options']);
-    if (!empty($options['query'])) {
-      $item['link_path'] .= '?' . drupal_http_build_query($options['query']);
-    }
-    if (!empty($options['fragment'])) {
-      $item['link_path'] .= '#' . $options['fragment'];
-    }
-    $this->assertEqual($item['link_path'], $link);
-    $this->assertEqual($item['link_title'], $title);
-    if ($plid == 0) {
-      $this->assertTrue($item['depth'] == 1 && !$item['has_children'] && $item['p1'] == $item['mlid'] && $item['p2'] == 0, 'Menu link has correct data');
-    }
-    else {
-      $this->assertTrue($item['depth'] == 2 && !$item['has_children'] && $item['p1'] == $plid && $item['p2'] == $item['mlid'], 'Menu link has correct data');
-    }
+    $item = db_query('SELECT * FROM {menu_links} WHERE link_title = :title', array(':title' => $title))->fetchAssoc();
+    $this->assertTrue(t('Menu link was found in database.'));
+    $this->assertMenuLink($item['mlid'], array('menu_name' => $menu_name, 'link_path' => $link, 'has_children' => 0, 'plid' => $plid));
 
     return $item;
   }
@@ -356,6 +354,19 @@ class MenuTestCase extends DrupalWebTestCase {
     $this->clickLink($title);
     $title = $item_node->title;
     $this->assertTitle(t("@title | Drupal", array('@title' => $title)), t('Menu link link target was correct'));
+  }
+
+  /**
+   * Change the parent of a menu link using the menu module UI.
+   */
+  function moveMenuLink($item, $plid, $menu_name) {
+    $mlid = $item['mlid'];
+
+    $edit = array(
+      'parent' => $menu_name . ':' . $plid,
+    );
+    $this->drupalPost("admin/structure/menu/item/$mlid/edit", $edit, t('Save'));
+    $this->assertResponse(200);
   }
 
   /**
@@ -453,8 +464,7 @@ class MenuTestCase extends DrupalWebTestCase {
 
     // Unlike most other modules, there is no confirmation message displayed.
     // Verify in the database.
-    $hidden = db_query("SELECT hidden FROM {menu_links} WHERE mlid = :mlid", array(':mlid' => $mlid))->fetchField();
-    $this->assertEqual($hidden, 1, t('Link is hidden in the database table'));
+    $this->assertMenuLink($mlid, array('hidden' => 1));
   }
 
   /**
@@ -469,8 +479,31 @@ class MenuTestCase extends DrupalWebTestCase {
     $this->drupalPost("admin/structure/menu/item/$mlid/edit", $edit, t('Save'));
 
     // Verify in the database.
-    $hidden = db_query("SELECT hidden FROM {menu_links} WHERE mlid = :mlid", array(':mlid' => $mlid))->fetchField();
-    $this->assertEqual($hidden, 0, t('Link is not hidden in the database table'));
+    $this->assertMenuLink($mlid, array('hidden' => 0));
+  }
+
+  /**
+   * Fetch the menu item from the database and compare it to the specified
+   * array.
+   *
+   * @param $mlid
+   *   Menu item id.
+   * @param $item
+   *   Array containing properties to verify.
+   */
+  function assertMenuLink($mlid, array $expected_item) {
+    // Retrieve menu link.
+    $item = db_query('SELECT * FROM {menu_links} WHERE mlid = :mlid', array(':mlid' => $mlid))->fetchAssoc();
+    $options = unserialize($item['options']);
+    if (!empty($options['query'])) {
+      $item['link_path'] .= '?' . drupal_http_build_query($options['query']);
+    }
+    if (!empty($options['fragment'])) {
+      $item['link_path'] .= '#' . $options['fragment'];
+    }
+    foreach ($expected_item as $key => $value) {
+      $this->assertEqual($item[$key], $value, t('Parameter %key had expected value.', array('%key' => $key)));
+    }
   }
 
   /**

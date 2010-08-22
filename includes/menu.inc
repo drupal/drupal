@@ -3022,25 +3022,31 @@ function _menu_link_move_children($item, $existing_item) {
   $query->fields(array('menu_name' => $item['menu_name']));
 
   $p = 'p1';
+  $expressions = array();
   for ($i = 1; $i <= $item['depth']; $p = 'p' . ++$i) {
-    $query->fields(array($p => $item[$p]));
+    $expressions[] = array($p, ":p_$i", array(":p_$i" => $item[$p]));
   }
   $j = $existing_item['depth'] + 1;
   while ($i <= MENU_MAX_DEPTH && $j <= MENU_MAX_DEPTH) {
-    $query->expression('p' . $i++, 'p' . $j++);
+    $expressions[] = array('p' . $i++, 'p' . $j++, array());
   }
   while ($i <= MENU_MAX_DEPTH) {
-    $query->fields(array('p' . $i++ => 0));
+    $expressions[] = array('p' . $i++, 0, array());
   }
 
   $shift = $item['depth'] - $existing_item['depth'];
-  if ($shift < 0) {
-    $query->expression('depth', 'depth - :depth', array(':depth' => -$shift));
+  if ($shift > 0) {
+    // The order of expressions must be reversed so the new values don't
+    // overwrite the old ones before they can be used because "Single-table
+    // UPDATE assignments are generally evaluated from left to right"
+    // see: http://dev.mysql.com/doc/refman/5.0/en/update.html
+    $expressions = array_reverse($expressions);
   }
-  elseif ($shift > 0) {
-    $query->expression('depth', 'depth + :depth', array(':depth' => $shift));
+  foreach ($expressions as $expression) {
+    $query->expression($expression[0], $expression[1], $expression[2]);
   }
 
+  $query->expression('depth', 'depth + :depth', array(':depth' => $shift));
   $query->condition('menu_name', $existing_item['menu_name']);
   $p = 'p1';
   for ($i = 1; $i <= MENU_MAX_DEPTH && $existing_item[$p]; $p = 'p' . ++$i) {
