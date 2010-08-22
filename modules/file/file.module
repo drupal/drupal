@@ -328,14 +328,6 @@ function file_progress_implementation() {
 }
 
 /**
- * Implements hook_file_references().
- */
-function file_file_references($file) {
-  $count = file_get_file_reference_count($file, NULL, 'file');
-  return $count ? array('file' => $count) : NULL;
-}
-
-/**
  * Implements hook_file_delete().
  */
 function file_file_delete($file) {
@@ -527,12 +519,9 @@ function file_managed_file_validate(&$element, &$form_state) {
   if ($clicked_button != 'remove_button' && !empty($element['fid']['#value'])) {
     if ($file = file_load($element['fid']['#value'])) {
       if ($file->status == FILE_STATUS_PERMANENT) {
-        $reference_count = 0;
-        foreach (module_invoke_all('file_references', $file) as $module => $references) {
-          $reference_count += $references;
-        }
-        if ($reference_count == 0) {
-          form_error($element, t('Referencing to the file used in the !name field is not allowed.', array('!name' => $element['#title'])));
+        $references = file_usage_list($file);
+        if (empty($references)) {
+          form_error($element, t('The file used in the !name field may not be referenced.', array('!name' => $element['#title'])));
         }
       }
     }
@@ -942,73 +931,7 @@ function file_icon_map($file) {
  */
 
 /**
- * Count the number of times the file is referenced.
- *
- * @param $file
- *   A file object.
- * @param $field
- *   (optional) A CCK field array or field name as a string. If provided,
- *   limits the reference check to the given field.
- * @param $field_type
- *   (optional) The name of a field type. If provided, limits the reference
- *   check to fields of the given type.
- * @return
- *   An integer value.
- */
-function file_get_file_reference_count($file, $field = NULL, $field_type = NULL) {
-  // Determine the collection of fields to check.
-  if (isset($field)) {
-    // Support $field as 'field name'.
-    if (is_string($field)) {
-      $field = field_info_field($field);
-    }
-    $fields = array($field['field_name'] => $field);
-  }
-  else {
-    $fields = field_info_fields();
-  }
-
-  $types = entity_get_info();
-  $reference_count = 0;
-
-  foreach ($fields as $field) {
-    if (empty($field_type) || $field['type'] == $field_type) {
-      // TODO: Use a more efficient mechanism rather than actually retrieving
-      // all the references themselves, such as using a COUNT() query.
-      $references = file_get_file_references($file, $field, FIELD_LOAD_REVISION, $field_type);
-      foreach ($references as $entity_type => $type_references) {
-        $reference_count += count($type_references);
-      }
-
-      // If a field_name is present in the file object, the file is being deleted
-      // from this field.
-      if (isset($file->file_field_name) && $field['field_name'] == $file->file_field_name) {
-        // If deleting the entire piece of content, decrement references.
-        if (isset($file->file_field_type) && isset($file->file_field_id)) {
-          if ($file->file_field_type == $entity_type) {
-            $info = entity_get_info($entity_type);
-            $id = $types[$entity_type]['entity keys']['id'];
-            foreach ($type_references as $reference) {
-              if ($file->file_field_id == $reference->$id) {
-                $reference_count--;
-              }
-            }
-          }
-        }
-        // Otherwise we're just deleting a single reference in this field.
-        else {
-          $reference_count--;
-        }
-      }
-    }
-  }
-
-  return $reference_count;
-}
-
-
-/**
- * Get a list of references to a file.
+ * Gets a list of references to a file.
  *
  * @param $file
  *   A file object.
@@ -1020,8 +943,9 @@ function file_get_file_reference_count($file, $field = NULL, $field_type = NULL)
  *   FIELD_LOAD_REVISION to retrieve all references within all revisions or
  *   FIELD_LOAD_CURRENT to retrieve references only in the current revisions.
  * @param $field_type
- *   Optional. The name of a field type. If given, limits the reference check to
- *   fields of the given type.
+ *   (optional) The name of a field type. If given, limits the reference check
+ *   to fields of the given type.
+ *
  * @return
  *   An integer value.
  */

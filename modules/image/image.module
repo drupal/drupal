@@ -307,14 +307,6 @@ function image_file_delete($file) {
 }
 
 /**
- * Implements hook_file_references().
- */
-function image_file_references($file) {
-  $count = file_get_file_reference_count($file, NULL, 'image');
-  return $count ? array('image' => $count) : NULL;
-}
-
-/**
  * Implements hook_image_default_styles().
  */
 function image_image_default_styles() {

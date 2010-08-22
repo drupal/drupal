@@ -169,7 +169,7 @@ class FileFieldTestCase extends DrupalWebTestCase {
    * Assert that a file exists in the database.
    */
   function assertFileEntryExists($file, $message = NULL) {
-    drupal_static_reset('file_load_multiple');
+    entity_get_controller('file')->resetCache();
     $db_file = file_load($file->fid);
     $message = isset($message) ? $message : t('File %file exists in database at the correct path.', array('%file' => $file->uri));
     $this->assertEqual($db_file->uri, $file->uri, $message);
@@ -187,7 +187,7 @@ class FileFieldTestCase extends DrupalWebTestCase {
    * Assert that a file does not exist in the database.
    */
   function assertFileEntryNotExists($file, $message) {
-    drupal_static_reset('file_load_multiple');
+    entity_get_controller('file')->resetCache();
     $message = isset($message) ? $message : t('File %file exists in database at the correct path.', array('%file' => $file->uri));
     $this->assertFalse(file_load($file->fid), $message);
   }
@@ -391,7 +391,7 @@ class FileFieldRevisionTestCase extends FileFieldTestCase {
 
     // Attach the second file to a user.
     $user = $this->drupalCreateUser();
-    $edit = array();
+    $edit = (array) $user;
     $edit[$field_name][LANGUAGE_NONE][0] = (array) $node_file_r3;
     user_save($user, $edit);
     $this->drupalGet('user/' . $user->uid . '/edit');

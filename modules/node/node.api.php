@@ -406,13 +406,9 @@ function hook_node_delete($node) {
  * @ingroup node_api_hooks
  */
 function hook_node_revision_delete($node) {
-  db_delete('upload')->condition('vid', $node->vid)->execute();
-  if (!is_array($node->files)) {
-    return;
-  }
-  foreach ($node->files as $file) {
-    file_delete($file);
-  }
+  db_delete('mytable')
+    ->condition('vid', $node->vid)
+    ->execute();
 }
 
 /**

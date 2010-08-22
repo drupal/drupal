@@ -835,6 +835,52 @@ function system_schema() {
     ),
   );
 
+  $schema['file_usage'] = array(
+    'description' => 'Track where a file is used.',
+    'fields' => array(
+      'fid' => array(
+        'description' => 'File ID.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'module' => array(
+        'description' => 'The name of the module that is using the file.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'type' => array(
+        'description' => 'The name of the object type in which the file is used.',
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'id' => array(
+        'description' => 'The primary key of the object using the file.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'count' => array(
+        'description' => 'The number of times this file is used by this object.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('fid', 'type', 'id', 'module'),
+    'indexes' => array(
+      'type_id' => array('type', 'id'),
+      'fid_count' => array('fid', 'count'),
+      'fid_module' => array('fid', 'module'),
+    ),
+  );
+
   $schema['flood'] = array(
     'description' => 'Flood controls the threshold of events, such as the number of contact attempts.',
     'fields' => array(
@@ -2763,6 +2809,10 @@ function system_update_7059(&$sandbox) {
 
       // Update the node field with the file URI.
       $revision['file'][LANGUAGE_NONE][$delta] = $file;
+
+      // Add the usage entry for the file.
+      $file = (object) $file;
+      file_usage_add($file, 'file', 'node', $revision->nid);
     }
 
     // Insert the revision's files into the field_upload table.
@@ -2783,6 +2833,58 @@ function system_update_7059(&$sandbox) {
     // Indicate our current progress to the batch update system.
     $sandbox['#finished'] = $sandbox['progress'] / $sandbox['max'];
   }
+}
+
+/**
+ * Create the file_usage table.
+ */
+function system_update_7060() {
+  $spec = array(
+    'description' => 'Track where a file is used.',
+    'fields' => array(
+      'fid' => array(
+        'description' => 'File ID.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'module' => array(
+        'description' => 'The name of the module that is using the file.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'type' => array(
+        'description' => 'The name of the object type in which the file is used.',
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'id' => array(
+        'description' => 'The primary key of the object using the file.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'count' => array(
+        'description' => 'The number of times this file is used by this object.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('fid', 'type', 'id', 'module'),
+    'indexes' => array(
+      'type_id' => array('type', 'id'),
+      'fid_count' => array('fid', 'count'),
+      'fid_module' => array('fid', 'module'),
+    ),
+  );
+  db_create_table('file_usage', $spec);
 }
 
 /**

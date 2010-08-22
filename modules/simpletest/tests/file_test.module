@@ -143,7 +143,6 @@ function file_test_reset() {
     'load' => array(),
     'validate' => array(),
     'download' => array(),
-    'references' => array(),
     'insert' => array(),
     'update' => array(),
     'copy' => array(),
@@ -156,7 +155,6 @@ function file_test_reset() {
   $return = array(
     'validate' => array(),
     'download' => NULL,
-    'references' => NULL,
   );
   variable_set('file_test_return', $return);
 }
@@ -167,7 +165,7 @@ function file_test_reset() {
  *
  * @param $op
  *   One of the hook_file_* operations: 'load', 'validate', 'download',
- *   'references', 'insert', 'update', 'copy', 'move', 'delete'.
+ *   'insert', 'update', 'copy', 'move', 'delete'.
  *
  * @return
  *   Array of the parameters passed to each call.
@@ -184,9 +182,9 @@ function file_test_get_calls($op) {
  * Get an array with the calls for all hooks.
  *
  * @return
- *   An array keyed by hook name ('load', 'validate', 'download',
- *   'references', 'insert', 'update', 'copy', 'move', 'delete') with values
- *   being arrays of parameters passed to each call.
+ *   An array keyed by hook name ('load', 'validate', 'download', 'insert',
+ *   'update', 'copy', 'move', 'delete') with values being arrays of parameters
+ *   passed to each call.
  */
 function file_test_get_all_calls() {
   return variable_get('file_test_results', array());
@@ -197,7 +195,7 @@ function file_test_get_all_calls() {
  *
  * @param $op
  *   One of the hook_file_* operations: 'load', 'validate', 'download',
- *   'references', 'insert', 'update', 'copy', 'move', 'delete'.
+ *   'insert', 'update', 'copy', 'move', 'delete'.
  * @param $args
  *   Values passed to hook.
  *
@@ -214,7 +212,7 @@ function _file_test_log_call($op, $args) {
  * Load the appropriate return value.
  *
  * @param $op
- *   One of the hook_file_[validate,download,references] operations.
+ *   One of the hook_file_[validate,download] operations.
  *
  * @return
  *   Value set by file_test_set_return().
@@ -231,7 +229,7 @@ function _file_test_get_return($op) {
  * Assign a return value for a given operation.
  *
  * @param $op
- *   One of the hook_file_[validate,download,references] operations.
+ *   One of the hook_file_[validate,download] operations.
  * @param $value
  *   Value for the hook to return.
  *
@@ -270,14 +268,6 @@ function file_test_file_validate($file) {
 function file_test_file_download($uri) {
   _file_test_log_call('download', array($uri));
   return _file_test_get_return('download');
-}
-
-/**
- * Implements hook_file_references().
- */
-function file_test_file_references($file) {
-  _file_test_log_call('references', array($file));
-  return _file_test_get_return('references');
 }
 
 /**

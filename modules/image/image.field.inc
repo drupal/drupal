@@ -233,6 +233,13 @@ function image_field_presave($entity_type, $entity, $field, $instance, $langcode
 }
 
 /**
+ * Implements hook_field_insert().
+ */
+function image_field_insert($entity_type, $entity, $field, $instance, $langcode, &$items) {
+  file_field_insert($entity_type, $entity, $field, $instance, $langcode, $items);
+}
+
+/**
  * Implements hook_field_update().
  */
 function image_field_update($entity_type, $entity, $field, $instance, $langcode, &$items) {
