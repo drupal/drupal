@@ -416,15 +416,6 @@ function system_requirements($phase) {
           );
           continue;
         }
-        // Check for a disabled dependency.
-        if (!$required_file->status) {
-          $requirements["$module-$required_module"] = array(
-            'title' => $t('Unresolved dependency'),
-            'description' => $t('@name requires this module.', array('@name' => $name)),
-            'value' => $t('@required_name (Disabled)', array('@required_name' => $required_name)),
-            'severity' => REQUIREMENT_ERROR,
-          );
-        }
       }
     }
   }

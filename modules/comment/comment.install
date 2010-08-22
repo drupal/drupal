@@ -90,7 +90,7 @@ function comment_update_dependencies() {
   );
 
   // Comment update 7012 creates the comment body field and therefore must run
-  // after all entities have been updated.
+  // after text module has been enabled and entities have been updated.
   $dependencies['comment'][7012] = array(
     'system' => 7021,
   );
