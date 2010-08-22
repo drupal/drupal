@@ -1,4 +1,4 @@
-/* $Id: colors.css,v 1.2 2010/08/18 00:28:08 dries Exp $ */
+/* $Id: colors.css,v 1.3 2010/08/22 13:58:29 dries Exp $ */
 
 /* ---------- Color Module Styles ----------- */
 
@@ -17,6 +17,10 @@ body.overlay {
 }
 .tabs ul.primary li a.active {
   background-color: #ffffff;
+}
+.tabs ul.primary li.active a {
+  background-color: #ffffff;
+  border-bottom: 1px solid #ffffff;
 }
 #header {
   background-color: #48a9e4;

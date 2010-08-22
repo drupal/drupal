@@ -1,4 +1,4 @@
-/* $Id: ie.css,v 1.1 2010/07/06 05:25:51 webchick Exp $ */
+/* $Id: ie.css,v 1.2 2010/08/22 13:58:29 dries Exp $ */
 
 .block {
   zoom: 1;
@@ -15,9 +15,6 @@ fieldset legend {
 }
 .tabs ul.primary {
   height: auto;
-}
-.tabs ul.primary li a.active {
-  padding: 0 7px 0 10px; /* LTR */
 }
 #footer-wrapper #footer .block {
   height: 100%;
