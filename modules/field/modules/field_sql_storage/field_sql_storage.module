@@ -502,6 +502,8 @@ function field_sql_storage_field_storage_query(EntityFieldQuery $query) {
     }
     else {
       $select_query = db_select($tablename, $table_alias);
+      $select_query->addTag('entity_field_access');
+      $select_query->addMetaData('base_table', $tablename);
       $select_query->fields($table_alias, array('entity_id', 'revision_id', 'bundle'));
       // As only a numeric ID is stored instead of the entity type add the
       // field_config_entity_type table to resolve the etid to a more readable
@@ -547,6 +549,7 @@ function field_sql_storage_field_storage_query(EntityFieldQuery $query) {
   if (isset($query->deleted)) {
     $select_query->condition("$field_base_table.deleted", (int) $query->deleted);
   }
+
   if ($query->propertyConditions || $query->propertyOrder) {
     if (empty($query->entityConditions['entity_type']['value'])) {
       throw new EntityFieldQueryException('Property conditions and orders must have an entity type defined.');
