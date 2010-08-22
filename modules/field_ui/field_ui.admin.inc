@@ -402,7 +402,7 @@ function field_ui_field_overview_form($form, &$form_state, $entity_type, $bundle
     $name = '_add_existing_field';
     $table[$name] = array(
       '#parents' => array($name),
-      '#attributes' => array('class' => array('draggable', 'tabledrag-leaf', 'menu-disabled')),
+      '#attributes' => array('class' => array('draggable', 'tabledrag-leaf', 'add-new')),
       'label' => array(
         '#type' => 'textfield',
         '#size' => 15,
