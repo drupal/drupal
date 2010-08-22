@@ -127,6 +127,9 @@ ul.tips {
   margin-right: 40px;
   margin-left: 0;
 }
+#comments ul.links li {
+  padding: 0 0 0.5em;
+}
 
 /* -------------- Password Meter  ------------- */
 
