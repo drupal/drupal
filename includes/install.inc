@@ -1022,6 +1022,7 @@ function install_profile_info($profile, $locale = 'en') {
       'description' => '',
       'distribution_name' => 'Drupal',
       'version' => NULL,
+      'hidden' => FALSE,
       'php' => DRUPAL_MINIMUM_PHP,
     );
     $info = drupal_parse_info_file("profiles/$profile/$profile.info") + $defaults;

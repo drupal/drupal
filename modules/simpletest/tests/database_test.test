@@ -17,6 +17,7 @@ class FakeRecord { }
  * here.
  */
 class DatabaseTestCase extends DrupalWebTestCase {
+  protected $profile = 'testing';
 
   function setUp() {
     parent::setUp('database_test');

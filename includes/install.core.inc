@@ -1111,6 +1111,11 @@ function install_select_profile_form($form, &$form_state, $profile_files) {
     include_once DRUPAL_ROOT . '/' . $profile->uri;
 
     $details = install_profile_info($profile->name);
+    // Don't show hidden profiles. This is used by to hide the testing profile,
+    // which only exists to speed up test runs.
+    if ($details['hidden'] === TRUE) {
+      continue;
+    }
     $profiles[$profile->name] = $details;
 
     // Determine the name of the profile; default to file name if defined name
