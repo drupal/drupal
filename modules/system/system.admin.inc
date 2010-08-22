@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.296 2010/08/18 18:41:30 dries Exp $
+// $Id: system.admin.inc,v 1.297 2010/08/22 11:04:09 dries Exp $
 
 /**
  * @file
@@ -3174,9 +3174,8 @@ function system_actions_delete_form_submit($form, &$form_state) {
   $aid = $form_state['values']['aid'];
   $action = actions_load($aid);
   actions_delete($aid);
-  $label = check_plain($action->label);
-  watchdog('user', 'Deleted action %aid (%action)', array('%aid' => $aid, '%action' => $label));
-  drupal_set_message(t('Action %action was deleted', array('%action' => $label)));
+  watchdog('user', 'Deleted action %aid (%action)', array('%aid' => $aid, '%action' => $action->label));
+  drupal_set_message(t('Action %action was deleted', array('%action' => $action->label)));
   $form_state['redirect'] = 'admin/config/system/actions/manage';
 }
 
