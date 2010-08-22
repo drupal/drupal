@@ -1,5 +1,5 @@
 <?php
-// $Id: image.module,v 1.45 2010/08/09 19:55:57 dries Exp $
+// $Id: image.module,v 1.46 2010/08/22 13:52:58 dries Exp $
 
 /**
  * @file
@@ -304,14 +304,6 @@ function image_file_move($file, $source) {
 function image_file_delete($file) {
   // Delete any image derivatives of this image.
   image_path_flush($file->uri);
-}
-
-/**
- * Implements hook_file_references().
- */
-function image_file_references($file) {
-  $count = file_get_file_reference_count($file, NULL, 'image');
-  return $count ? array('image' => $count) : NULL;
 }
 
 /**

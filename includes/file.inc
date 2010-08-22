@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.225 2010/08/17 22:05:22 dries Exp $
+// $Id: file.inc,v 1.226 2010/08/22 13:52:58 dries Exp $
 
 /**
  * @file
@@ -495,6 +495,7 @@ function file_load_multiple($fids = array(), $conditions = array()) {
  *
  * @param $fid
  *   A file ID.
+ *
  * @return
  *   A file object.
  *
@@ -542,7 +543,130 @@ function file_save(stdClass $file) {
 }
 
 /**
- * Copy a file to a new location and adds a file record to the database.
+ * Determines where a file is used.
+ *
+ * @param $file
+ *   A file object.
+ *
+ * @return
+ *   A nested array with usage data. The first level is keyed by module name,
+ *   the second by object type, the third has 'id' and 'count' keys.
+ *
+ * @see file_usage_add()
+ * @see file_usage_delete()
+ */
+function file_usage_list(stdClass $file) {
+  $result = db_select('file_usage', 'f')
+    ->fields('f', array('module', 'type', 'id', 'count'))
+    ->condition('fid', $file->fid)
+    ->condition('count', 0, '>')
+    ->execute();
+  $references = array();
+  foreach ($result as $usage) {
+    $references[$usage->module][$usage->type] = array('id' => $usage->id, 'count' => $usage->count);
+  }
+  return $references;
+}
+
+/**
+ * Records that a module is using a file.
+ *
+ * This usage information will be queried during file_delete() to ensure that
+ * a file is not in use before it is physically removed from disk.
+ *
+ * Examples:
+ * - A module that associates files with nodes, so $type would be
+ *   'node' and $id would be the node's nid. Files for all revisions are stored
+ *   within a single nid.
+ * - The User module associates an image with a user, so $type would be 'user'
+ *   and the $id would be the user's uid.
+ *
+ * @param $file
+ *   A file object.
+ * @param $module
+ *   The name of the module using the file.
+ * @param $type
+ *   The type of the object that contains the referenced file. 
+ * @param $id
+ *   The unique, numeric ID of the object containing the referenced file. 
+ * @param $count
+ *   (optional) The number of references to add to the object. Defaults to 1.
+ *
+ * @see file_usage_list()
+ * @see file_usage_delete()
+ */
+function file_usage_add(stdClass $file, $module, $type, $id, $count = 1) {
+  db_merge('file_usage')
+    ->key(array(
+      'fid' => $file->fid,
+      'module' => $module,
+      'type' => $type,
+      'id' => $id,
+    ))
+    ->fields(array('count' => $count))
+    ->expression('count', 'count + :count', array(':count' => $count))
+    ->execute();
+}
+
+/**
+ * Removes a record to indicate that a module is no longer using a file.
+ *
+ * The file_delete() function is typically called after removing a file usage
+ * to remove the record from the file_managed table and delete the file itself.
+ *
+ * @param $file
+ *   A file object.
+ * @param $module
+ *   The name of the module using the file.
+ * @param $type
+ *   (optional) The type of the object that contains the referenced file. May
+ *   be omitted if all module references to a file are being deleted.
+ * @param $id
+ *   (optional) The unique, numeric ID of the object containing the referenced
+ *   file. May be omitted if all module references to a file are being deleted.
+ * @param $count
+ *   (optional) The number of references to delete from the object. Defaults to
+ *   1. 0 may be specified to delete all references to the file within a
+ *   specific object.
+ *
+ * @see file_usage_add()
+ * @see file_usage_list()
+ * @see file_delete()
+ */
+function file_usage_delete(stdClass $file, $module, $type = NULL, $id = NULL, $count = 1) {
+  // Delete rows that have a exact or less value to prevent empty rows.
+  $query = db_delete('file_usage')
+    ->condition('module', $module)
+    ->condition('fid', $file->fid);
+  if ($type && $id) {
+    $query
+      ->condition('type', $type)
+      ->condition('id', $id);
+  }
+  if ($count) {
+    $query->condition('count', $count, '<=');
+  }
+  $result = $query->execute();
+
+  // If the row has more than the specified count decrement it by that number.
+  if (!$result) {
+    $query = db_update('file_usage')
+      ->condition('module', $module)
+      ->condition('fid', $file->fid);
+    if ($type && $id) {
+      $query
+        ->condition('type', $type)
+        ->condition('id', $id);
+    }
+    if ($count) {
+      $query->expression('count', 'count - :count', array(':count' => $count));
+    }
+    $query->execute();
+  }
+}
+
+/**
+ * Copies a file to a new location and adds a file record to the database.
  *
  * This function should be used when manipulating files that have records
  * stored in the database. This is a powerful function that in many ways
@@ -609,7 +733,7 @@ function file_copy(stdClass $source, $destination = NULL, $replace = FILE_EXISTS
 }
 
 /**
- * Copy a file to a new location without invoking the file API.
+ * Copies a file to a new location without invoking the file API.
  *
  * This is a powerful function that in many ways performs like an advanced
  * version of copy().
@@ -982,30 +1106,30 @@ function file_create_filename($basename, $directory) {
 /**
  * Delete a file and its database record.
  *
- * If the $force parameter is not TRUE hook_file_references() will be called
- * to determine if the file is being used by any modules. If the file is being
- * used is the delete will be canceled.
+ * If the $force parameter is not TRUE, file_usage_list() will be called to
+ * determine if the file is being used by any modules. If the file is being
+ * used the delete will be canceled.
  *
  * @param $file
  *   A file object.
  * @param $force
- *   Boolean indicating that the file should be deleted even if
- *   hook_file_references() reports that the file is in use.
+ *   Boolean indicating that the file should be deleted even if the file is
+ *   reported as in use by the file_usage table.
  *
  * @return mixed
  *   TRUE for success, FALSE in the event of an error, or an array if the file
- *   is being used by another module. The array keys are the module's name and
- *   the values are the number of references.
+ *   is being used by any modules.
  *
  * @see file_unmanaged_delete()
- * @see hook_file_references()
+ * @see file_usage_list()
+ * @see file_usage_delete()
  * @see hook_file_delete()
  */
 function file_delete(stdClass $file, $force = FALSE) {
-  // If any module returns a value from the reference hook, the file will not
-  // be deleted from Drupal, but file_delete will return a populated array that
-  // tests as TRUE.
-  if (!$force && ($references = module_invoke_all('file_references', $file))) {
+  // If any module still has a usage entry in the file_usage table, the file
+  // will not be deleted, but file_delete() will return a populated array
+  // that tests as TRUE.
+  if (!$force && ($references = file_usage_list($file))) {
     return $references;
   }
 
@@ -1016,6 +1140,7 @@ function file_delete(stdClass $file, $force = FALSE) {
   // database, so UIs can still find the file in the database.
   if (file_unmanaged_delete($file->uri)) {
     db_delete('file_managed')->condition('fid', $file->fid)->execute();
+    db_delete('file_usage')->condition('fid', $file->fid)->execute();
     return TRUE;
   }
   return FALSE;

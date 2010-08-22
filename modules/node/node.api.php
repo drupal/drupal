@@ -1,5 +1,5 @@
 <?php
-// $Id: node.api.php,v 1.71 2010/08/17 16:20:08 dries Exp $
+// $Id: node.api.php,v 1.72 2010/08/22 13:52:58 dries Exp $
 
 /**
  * @file
@@ -406,13 +406,9 @@ function hook_node_delete($node) {
  * @ingroup node_api_hooks
  */
 function hook_node_revision_delete($node) {
-  db_delete('upload')->condition('vid', $node->vid)->execute();
-  if (!is_array($node->files)) {
-    return;
-  }
-  foreach ($node->files as $file) {
-    file_delete($file);
-  }
+  db_delete('mytable')
+    ->condition('vid', $node->vid)
+    ->execute();
 }
 
 /**

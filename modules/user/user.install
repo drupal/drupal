@@ -1,5 +1,5 @@
 <?php
-// $Id: user.install,v 1.56 2010/08/11 01:49:41 dries Exp $
+// $Id: user.install,v 1.57 2010/08/22 13:52:58 dries Exp $
 
 /**
  * @file
@@ -335,6 +335,10 @@ function user_update_dependencies() {
   // TODO: move user_update_7006 down below in the upgrade process.
   $dependencies['user'][7006] = array(
     'filter' => 7002,
+  );
+  // user_update_7013 relies on system_update_7060.
+  $dependencies['user'][7013] = array(
+    'system' => 7060,
   );
 
   return $dependencies;
@@ -719,6 +723,34 @@ function user_update_7012(&$sandbox) {
     db_drop_field('users', 'picture');
     db_change_field('users', 'picture_fid', 'picture', $picture_field);
   }
+}
+
+/**
+ * Add user module file usage entries.
+ */
+function user_update_7013(&$sandbox) {
+  if (!isset($sandbox['progress'])) {
+    // Initialize batch update information.
+    $sandbox['progress'] = 0;
+    $sandbox['last_uid_processed'] = -1;
+    $sandbox['max'] = db_query("SELECT COUNT(*) FROM {users} u WHERE u.picture <> 0")->fetchField();
+  }
+
+  // Add usage entries for the user picture files.
+  $limit = 500;
+  $result = db_query_range('SELECT f.*, u.uid as user_uid FROM {users} u INNER JOIN {file_managed} f ON u.picture = f.fid WHERE u.picture <> 0 AND u.uid > :uid ORDER BY u.uid', 0, $limit, array(':uid' => $sandbox['last_uid_processed']))->fetchAllAssoc('fid', PDO::FETCH_ASSOC);
+  foreach ($result as $row) {
+    $uid = $row['user_uid'];
+    $file = (object) $row;
+    file_usage_add($file, 'user', 'user', $uid);
+
+    // Update our progress information for the batch update.
+    $sandbox['progress']++;
+    $sandbox['last_uid_processed'] = $uid;
+  }
+
+  // Indicate our current progress to the batch update system.
+  $sandbox['#finished'] = empty($sandbox['max']) || ($sandbox['progress'] / $sandbox['max']);
 }
 
 /**

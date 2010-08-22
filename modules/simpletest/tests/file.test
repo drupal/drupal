@@ -1,5 +1,5 @@
 <?php
-// $Id: file.test,v 1.62 2010/08/17 22:05:22 dries Exp $
+// $Id: file.test,v 1.63 2010/08/22 13:52:58 dries Exp $
 
 /**
  *  @file
@@ -256,13 +256,13 @@ class FileHookTestCase extends FileTestCase {
       $this->assertTrue(FALSE, t('Expected hooks %expected to be called but %uncalled was not called.', array('%expected' => implode(', ', $expected), '%uncalled' => implode(', ', $uncalled))));
     }
     else {
-      $this->assertTrue(TRUE, t('All the expected hooks were called: %expected', array('%expected' => implode(', ', $expected))));
+      $this->assertTrue(TRUE, t('All the expected hooks were called: %expected', array('%expected' => empty($expected) ? t('(none)') : implode(', ', $expected))));
     }
 
     // Determine if there were any unexpected calls.
     $unexpected = array_diff($actual, $expected);
     if (count($unexpected)) {
-      $this->assertTrue(FALSE, t('Unexpected hooks were called: %unexpected.', array('%unexpected' => implode(', ', $unexpected))));
+      $this->assertTrue(FALSE, t('Unexpected hooks were called: %unexpected.', array('%unexpected' => empty($unexpected) ? t('(none)') : implode(', ', $unexpected))));
     }
     else {
       $this->assertTrue(TRUE, t('No unexpected hooks were called.'));
@@ -1422,20 +1422,44 @@ class FileDeleteTest extends FileHookTestCase {
   }
 
   /**
-   * Try deleting a normal file (as opposed to a directory, symlink, etc).
+   * Tries deleting a normal file (as opposed to a directory, symlink, etc).
    */
-  function testNormal() {
+  function testUnused() {
     $file = $this->createFile();
 
     // Check that deletion removes the file and database record.
-    $this->assertTrue(is_file($file->uri), t("File exists."));
-    $this->assertIdentical(file_delete($file), TRUE, t("Delete worked."));
-    $this->assertFileHooksCalled(array('references', 'delete'));
-    $this->assertFalse(file_exists($file->uri), t("Test file has actually been deleted."));
+    $this->assertTrue(is_file($file->uri), t('File exists.'));
+    $this->assertIdentical(file_delete($file), TRUE, t('Delete worked.'));
+    $this->assertFileHooksCalled(array('delete'));
+    $this->assertFalse(file_exists($file->uri), t('Test file has actually been deleted.'));
     $this->assertFalse(file_load($file->fid), t('File was removed from the database.'));
+  }
 
-    // TODO: implement hook_file_references() in file_test.module and report a
-    // file in use and test the $force parameter.
+  /**
+   * Tries deleting a file that is in use.
+   */
+  function testInUse() {
+    $file = $this->createFile();
+    file_usage_add($file, 'testing', 'test', 1);
+    file_usage_add($file, 'testing', 'test', 1);
+
+    file_usage_delete($file, 'testing', 'test', 1);
+    file_delete($file);
+    $usage = file_usage_list($file);
+    $this->assertEqual($usage['testing']['test'], array('id' => 1, 'count' => 1), t('Test file is still in use.'));
+    $this->assertTrue(file_exists($file->uri), t('File still exists on the disk.'));
+    $this->assertTrue(file_load($file->fid), t('File still exists in the database.'));
+
+    // Clear out the call to hook_file_load().
+    file_test_reset();
+
+    file_usage_delete($file, 'testing', 'test', 1);
+    file_delete($file);
+    $usage = file_usage_list($file);
+    $this->assertFileHooksCalled(array('delete'));
+    $this->assertTrue(empty($usage), t('File usage data was removed.'));
+    $this->assertFalse(file_exists($file->uri), t('File has been deleted after its last usage was removed.'));
+    $this->assertFalse(file_load($file->fid), t('File was removed from the database.'));
   }
 }
 
@@ -1537,7 +1561,7 @@ class FileMoveTest extends FileHookTestCase {
     $this->assertTrue($result, t('File moved sucessfully.'));
 
     // Check that the correct hooks were called.
-    $this->assertFileHooksCalled(array('move', 'update', 'delete', 'references', 'load'));
+    $this->assertFileHooksCalled(array('move', 'update', 'delete', 'load'));
 
     // Reload the file from the database and check that the changes were
     // actually saved.
@@ -1886,6 +1910,108 @@ class FileSaveTest extends FileHookTestCase {
   }
 }
 
+/**
+ * Tests file usage functions.
+ */
+class FileUsageTest extends FileTestCase {
+  function getInfo() {
+    return array(
+      'name' => 'File usage',
+      'description' => 'Tests the file usage functions.',
+      'group' => 'File',
+    );
+  }
+
+  /**
+   * Tests file_usage_list().
+   */
+  function testGetUsage() {
+    $file = $this->createFile();
+    db_insert('file_usage')
+      ->fields(array(
+        'fid' => $file->fid,
+        'module' => 'testing',
+        'type' => 'foo',
+        'id' => 1,
+        'count' => 1
+      ))
+      ->execute();
+    db_insert('file_usage')
+      ->fields(array(
+        'fid' => $file->fid,
+        'module' => 'testing',
+        'type' => 'bar',
+        'id' => 2,
+        'count' => 2
+      ))
+      ->execute();
+
+    $usage = file_usage_list($file);
+
+    $this->assertEqual(count($usage['testing']), 2, t('Returned the correct number of items.'));
+    $this->assertEqual($usage['testing']['foo']['id'], 1, t('Returned the correct id.'));
+    $this->assertEqual($usage['testing']['bar']['id'], 2, t('Returned the correct id.'));
+    $this->assertEqual($usage['testing']['foo']['count'], 1, t('Returned the correct count.'));
+    $this->assertEqual($usage['testing']['bar']['count'], 2, t('Returned the correct count.'));
+  }
+
+  /**
+   * Tests file_usage_add().
+   */
+  function testAddUsage() {
+    $file = $this->createFile();
+    file_usage_add($file, 'testing', 'foo', 1);
+    // Add the file twice to ensure that the count is incremented rather than
+    // creating additional records.
+    file_usage_add($file, 'testing', 'bar', 2);
+    file_usage_add($file, 'testing', 'bar', 2);
+
+    $usage = db_select('file_usage', 'f')
+      ->fields('f')
+      ->condition('f.fid', $file->fid)
+      ->execute()
+      ->fetchAllAssoc('id');
+    $this->assertEqual(count($usage), 2, t('Created two records'));
+    $this->assertEqual($usage[1]->module, 'testing', t('Correct module'));
+    $this->assertEqual($usage[2]->module, 'testing', t('Correct module'));
+    $this->assertEqual($usage[1]->type, 'foo', t('Correct type'));
+    $this->assertEqual($usage[2]->type, 'bar', t('Correct type'));
+    $this->assertEqual($usage[1]->count, 1, t('Correct count'));
+    $this->assertEqual($usage[2]->count, 2, t('Correct count'));
+  }
+
+  /**
+   * Tests file_usage_delete().
+   */
+  function testRemoveUsage() {
+    $file = $this->createFile();
+    db_insert('file_usage')
+      ->fields(array(
+        'fid' => $file->fid,
+        'module' => 'testing',
+        'type' => 'bar',
+        'id' => 2,
+        'count' => 2
+      ))
+      ->execute();
+
+    file_usage_delete($file, 'testing', 'bar', 2);
+    $count = db_select('file_usage', 'f')
+      ->fields('f', array('count'))
+      ->condition('f.fid', $file->fid)
+      ->execute()
+      ->fetchField();
+    $this->assertEqual(1, $count, t('The count was decremented correctly.'));
+
+    file_usage_delete($file, 'testing', 'bar', 2);
+    $count = db_select('file_usage', 'f')
+      ->fields('f', array('count'))
+      ->condition('f.fid', $file->fid)
+      ->execute()
+      ->fetchField();
+    $this->assertEqual(0, $count, t('The count was decremented correctly.'));
+  }
+}
 
 /**
  * Tests the file_validate() function..

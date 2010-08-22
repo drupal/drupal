@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1193 2010/08/15 01:49:45 dries Exp $
+// $Id: user.module,v 1.1194 2010/08/22 13:52:59 dries Exp $
 
 /**
  * @file
@@ -427,7 +427,7 @@ function user_save($account, $edit = array(), $category = 'account') {
       }
 
       // Process picture uploads.
-      if (!empty($edit['picture']->fid)) {
+      if (!$delete_previous_picture = empty($edit['picture']->fid)) {
         $picture = $edit['picture'];
         // If the picture is a temporary file move it to its final location and
         // make it permanent.
@@ -439,12 +439,22 @@ function user_save($account, $edit = array(), $category = 'account') {
           file_prepare_directory($picture_directory, FILE_CREATE_DIRECTORY);
           $destination = file_stream_wrapper_uri_normalize($picture_directory . '/picture-' . $account->uid . '-' . REQUEST_TIME . '.' . $info['extension']);
 
+          // Move the temporary file into the final location.
           if ($picture = file_move($picture, $destination, FILE_EXISTS_RENAME)) {
+            $delete_previous_picture = TRUE;
             $picture->status = FILE_STATUS_PERMANENT;
             $edit['picture'] = file_save($picture);
+            file_usage_add($picture, 'user', 'user', $account->uid);
           }
         }
       }
+
+      // Delete the previous picture if it was deleted or replaced.
+      if ($delete_previous_picture && !empty($account->picture->fid)) {
+        file_usage_delete($account->picture, 'user', 'user', $account->uid);
+        file_delete($account->picture);
+      }
+
       $edit['picture'] = empty($edit['picture']->fid) ? 0 : $edit['picture']->fid;
 
       // Do not allow 'uid' to be changed.
@@ -455,13 +465,6 @@ function user_save($account, $edit = array(), $category = 'account') {
         // The query failed - better to abort the save than risk further
         // data loss.
         return FALSE;
-      }
-
-      // If the picture changed or was unset, remove the old one. This step needs
-      // to occur after updating the {users} record so that user_file_references()
-      // doesn't report it in use and block the deletion.
-      if (!empty($account->picture->fid) && ($edit['picture'] != $account->picture->fid)) {
-        file_delete($account->picture);
       }
 
       // Reload user roles if provided.
@@ -829,15 +832,18 @@ function user_file_download($uri) {
 }
 
 /**
- * Implements hook_file_references().
+ * Implements hook_file_move().
  */
-function user_file_references($file) {
-  // Determine if the file is used by this module.
-  $file_used = (bool) db_query_range('SELECT 1 FROM {users} WHERE picture = :fid', 0, 1, array(':fid' => $file->fid))->fetchField();
-  if ($file_used) {
-    // Return the name of the module and how many references it has to the file.
-    // If file is still used then 1 is enough to indicate this.
-    return array('user' => 1);
+function user_file_move($file, $source) {
+  // If a user's picture is replaced with a new one, update the record in
+  // the users table.
+  if (isset($file->fid) && isset($source->fid) && $file->fid != $source->fid) {
+    db_update('users')
+      ->fields(array(
+        'picture' => $file->fid,
+      ))
+      ->condition('picture', $source->fid)
+      ->execute();
   }
 }
 

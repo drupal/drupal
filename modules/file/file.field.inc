@@ -1,5 +1,5 @@
 <?php
-// $Id: file.field.inc,v 1.30 2010/08/05 08:56:34 webchick Exp $
+// $Id: file.field.inc,v 1.31 2010/08/22 13:52:58 dries Exp $
 
 /**
  * @file
@@ -266,35 +266,63 @@ function file_field_presave($entity_type, $entity, $field, $instance, $langcode,
 }
 
 /**
+ * Implements hook_field_insert().
+ */
+function file_field_insert($entity_type, $entity, $field, $instance, $langcode, &$items) {
+  list($id, $vid, $bundle) = entity_extract_ids($entity_type, $entity);
+
+  // Add a new usage of each uploaded file.
+  foreach ($items as $item) {
+    $file = (object) $item;
+    file_usage_add($file, 'file', $entity_type, $id);
+  }
+}
+
+/**
  * Implements hook_field_update().
  *
- * Check for files that have been removed from the object.
+ * Checks for files that have been removed from the object.
  */
 function file_field_update($entity_type, $entity, $field, $instance, $langcode, &$items) {
-  // On new revisions, old files are always maintained in the previous revision.
+  list($id, $vid, $bundle) = entity_extract_ids($entity_type, $entity);
+
+  // On new revisions, all files are considered to be a new usage and no
+  // deletion of previous file usages are necessary.
   if (!empty($entity->revision)) {
+    foreach ($items as $item) {
+      $file = (object) $item;
+      file_usage_add($file, 'file', $entity_type, $id);
+    }
     return;
   }
 
   // Build a display of the current FIDs.
-  $fids = array();
+  $current_fids = array();
   foreach ($items as $item) {
-    $fids[] = $item['fid'];
+    $current_fids[] = $item['fid'];
   }
 
-  // Get the current values in the entity, and delete files for removed items.
-  list($id) = entity_extract_ids($entity_type, $entity);
-  $original = clone $entity;
+  // Create a bare-bones entity so that we can load its previous values.
+  $original = entity_create_stub_entity($entity_type, array($id, $vid, $bundle));
   field_attach_load($entity_type, array($id => $original), FIELD_LOAD_CURRENT, array('field_id' => $field['id']));
 
+  // Compare the original field values with the ones that are being saved.
+  $original_fids = array();
   if (!empty($original->{$field['field_name']}[$langcode])) {
     foreach ($original->{$field['field_name']}[$langcode] as $original_item) {
-      if (isset($original_item['fid']) && !in_array($original_item['fid'], $fids)) {
-        // For hook_file_references, remember that this is being deleted.
-        $original_item['file_field_name'] = $field['field_name'];
-        // Delete the file if possible.
-        file_field_delete_file($original_item, $field);
+      $original_fids[] = $original_item['fid'];
+      if (isset($original_item['fid']) && !in_array($original_item['fid'], $current_fids)) {
+        // Decrement the file usage count by 1 and delete the file if possible.
+        file_field_delete_file($original_item, $field, $entity_type, $id);
       }
+    }
+  }
+
+  // Add new usage entries for newly added files.
+  foreach ($items as $item) {
+    if (!in_array($item['fid'], $original_fids)) {
+      $file = (object) $item;
+      file_usage_add($file, 'file', $entity_type, $id);
     }
   }
 }
@@ -304,14 +332,10 @@ function file_field_update($entity_type, $entity, $field, $instance, $langcode, 
  */
 function file_field_delete($entity_type, $entity, $field, $instance, $langcode, &$items) {
   list($id, $vid, $bundle) = entity_extract_ids($entity_type, $entity);
+
+  // Delete all file usages within this entity.
   foreach ($items as $delta => $item) {
-    // For hook_file_references(), remember that this is being deleted.
-    $item['file_field_name'] = $field['field_name'];
-    // Pass in the ID of the object that is being removed so all references can
-    // be counted in hook_file_references().
-    $item['file_field_type'] = $entity_type;
-    $item['file_field_id'] = $id;
-    file_field_delete_file($item, $field);
+    file_field_delete_file($item, $field, $entity_type, $id, 0);
   }
 }
 
@@ -319,32 +343,46 @@ function file_field_delete($entity_type, $entity, $field, $instance, $langcode, 
  * Implements hook_field_delete_revision().
  */
 function file_field_delete_revision($entity_type, $entity, $field, $instance, $langcode, &$items) {
+  list($id, $vid, $bundle) = entity_extract_ids($entity_type, $entity);
   foreach ($items as $delta => $item) {
-    // For hook_file_references, remember that this file is being deleted.
-    $item['file_field_name'] = $field['field_name'];
-    if (file_field_delete_file($item, $field)) {
+    // Decrement the file usage count by 1 and delete the file if possible.
+    if (file_field_delete_file($item, $field, $entity_type, $id)) {
       $items[$delta] = NULL;
     }
   }
 }
 
 /**
- * Check that File controls a file before attempting to delete it.
+ * Decrements a file usage count and attempts to delete it.
+ *
+ * This function only has an effect if the file being deleted is used only by
+ * File module.
+ *
+ * @param $item
+ *   The field item that contains a file array.
+ * @param $field
+ *   The field structure for the operation.
+ * @param $entity_type
+ *   The type of $entity.
+ * @param $id
+ *   The entity ID which contains the file being deleted.
+ * @param $count
+ *   (optional) The number of references to decrement from the object
+ *   containing the file. Defaults to 1.
+ *
+ * @return
+ *   Boolean TRUE if the file was deleted, or an array of remaining references
+ *   if the file is still in use by other modules. Boolean FALSE if an error
+ *   was encountered.
  */
-function file_field_delete_file($item, $field) {
-  // Remove the file_field_name and file_field_id properties so that references
-  // can be counted including the files to be deleted.
-  $field_name = isset($item['file_field_name']) ? $item['file_field_name'] : NULL;
-  $field_id = isset($item['file_field_id']) ? $item['file_field_id'] : NULL;
-  unset($item['file_field_name'], $item['file_field_id']);
-
+function file_field_delete_file($item, $field, $entity_type, $id, $count = 1) {
   // To prevent the file field from deleting files it doesn't know about, check
   // the file reference count. Temporary files can be deleted because they
   // are not yet associated with any content at all.
   $file = (object) $item;
-  if ($file->status == 0 || file_get_file_reference_count($file, $field) > 0) {
-    $file->file_field_name = $field_name;
-    $file->file_field_id = $field_id;
+  $file_usage = file_usage_list($file);
+  if ($file->status == 0 || !empty($file_usage['file'])) {
+    file_usage_delete($file, 'file', $entity_type, $id, $count);
     return file_delete($file);
   }
 

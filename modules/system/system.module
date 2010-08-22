@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.956 2010/08/22 11:04:09 dries Exp $
+// $Id: system.module,v 1.957 2010/08/22 13:52:58 dries Exp $
 
 /**
  * @file
@@ -2819,8 +2819,14 @@ function system_cron() {
   ));
   foreach ($result as $row) {
     if ($file = file_load($row->fid)) {
-      if (!file_delete($file)) {
-        watchdog('file system', 'Could not delete temporary file "%path" during garbage collection', array('%path' => $file->uri), WATCHDOG_ERROR);
+      $references = file_usage_list($file);
+      if (empty($references)) {
+        if (!file_delete($file)) {
+          watchdog('file system', 'Could not delete temporary file "%path" during garbage collection', array('%path' => $file->uri), WATCHDOG_ERROR);
+        }
+      }
+      else {
+        watchdog('file system', 'Did not delete temporary file "%path" during garbage collection, because it is in use by the following modules: %modules.', array('%path' => $file->uri, '%modules' => implode(', ', array_keys($references))), WATCHDOG_INFO);
       }
     }
   }
