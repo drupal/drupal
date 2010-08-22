@@ -45,7 +45,10 @@ function user_schema() {
     ),
     'primary key' => array('aid'),
     'foreign keys' => array(
-      'uid' => array('users' => 'uid'),
+      'user' => array(
+        'table' => 'users',
+        'columns' => array('uid' => 'uid'),
+      ),
     ),
   );
 
@@ -78,7 +81,10 @@ function user_schema() {
       'permission' => array('permission'),
     ),
     'foreign keys' => array(
-      'rid' => array('role' => 'rid'),
+      'role' => array(
+        'table' => 'roles',
+        'columns' => array('rid' => 'rid'),
+      ),
     ),
   );
 
@@ -236,7 +242,10 @@ function user_schema() {
     ),
     'primary key' => array('uid'),
     'foreign keys' => array(
-      'signature_format' => array('filter_format' => 'format'),
+      'signature_format' => array(
+        'table' => 'filter_format',
+        'columns' => array('signature_format' => 'format'),
+      ),
     ),
   );
 
@@ -263,8 +272,14 @@ function user_schema() {
       'rid' => array('rid'),
     ),
     'foreign keys' => array(
-      'uid' => array('users' => 'uid'),
-      'rid' => array('role' => 'rid'),
+      'user' => array(
+        'table' => 'users',
+        'columns' => array('uid' => 'uid'),
+      ),
+      'role' => array(
+        'table' => 'roles',
+        'columns' => array('rid' => 'rid'),
+      ),
     ),
   );
 

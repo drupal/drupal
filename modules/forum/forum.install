@@ -153,8 +153,13 @@ function forum_schema() {
     ),
     'primary key' => array('vid'),
     'foreign keys' => array(
-      'nid' => array('node' => 'nid'),
-      'vid' => array('node' => 'vid'),
+      'forum_node' => array(
+        'table' => 'node',
+        'columns' => array(
+          'nid' => 'nid',
+          'vid' => 'vid',
+        ),
+      ),
     ),
   );
 
@@ -214,8 +219,16 @@ function forum_schema() {
       'forum_topics' => array('tid', 'sticky', 'last_comment_timestamp'),
     ),
     'foreign keys' => array(
-      'node' => 'nid',
-      'taxonomy_term_data' => 'tid',
+      'tracked_node' => array(
+        'table' => 'node',
+        'columns' => array('nid' => 'nid'),
+      ),
+      'term' => array(
+        'table' => 'taxonomy_term_data',
+        'columns' => array(
+          'tid' => 'tid',
+        ),
+      ),
     ),
   );
 
@@ -291,8 +304,16 @@ function forum_update_7001() {
       'forum_topics' => array('tid', 'sticky', 'last_comment_timestamp'),
     ),
     'foreign keys' => array(
-      'node' => 'nid',
-      'taxonomy_term_data' => 'tid',
+      'tracked_node' => array(
+        'table' => 'node',
+        'columns' => array('nid' => 'nid'),
+      ),
+      'term' => array(
+        'table' => 'taxonomy_term_data',
+        'columns' => array(
+          'tid' => 'tid',
+        ),
+      ),
     ),
   );
   db_create_table('forum_index', $forum_index);

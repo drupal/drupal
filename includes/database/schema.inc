@@ -75,10 +75,11 @@
  *  - 'unique keys': An associative array of unique keys ('keyname' =>
  *    specification). Each specification is an array of one or more
  *    key column specifiers (see below) that form a unique key on the table.
- *  - 'foreign keys': An associative array, each key references a column
- *    of the local table, each value is an array with a single key pair as
- *    'tablename' => 'column' where 'column' is the foreign column to
- *    reference.
+ *  - 'foreign keys': An associative array of relations ('my_relation' =>
+ *    specification). Each specification is an array containing the name of
+ *    the referenced table ('table'), and an array of column mappings
+ *    ('columns'). Column mappings are defined by key pairs ('source_column' =>
+ *    'referenced_column').
  *  - 'indexes':  An associative array of indexes ('indexname' =>
  *    specification). Each specification is an array of one or more
  *    key column specifiers (see below) that form an index on the
@@ -131,8 +132,14 @@
  *     'vid' => array('vid'),
  *   ),
  *   'foreign keys' => array(
- *      'vid' => array('node_revision' => 'vid'),
- *      'uid' => array('users' => 'uid'),
+ *     'node_revision' => array(
+ *       'table' => 'node_revision',
+ *       'columns' => array('vid' => 'vid'),
+ *      ),
+ *     'node_author' => array(
+ *       'table' => 'users',
+ *       'columns' => array('uid' => 'uid'),
+ *      ),
  *    ),
  *   'primary key' => array('nid'),
  * );

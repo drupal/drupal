@@ -831,7 +831,10 @@ function system_schema() {
     ),
     'primary key' => array('fid'),
     'foreign keys' => array(
-      'uid' => array('users' => 'uid'),
+      'file_owner' => array(
+        'table' => 'users',
+        'columns' => array('uid' => 'uid'),
+      ),
     ),
   );
 
@@ -1508,7 +1511,10 @@ function system_schema() {
       'ssid' => array('ssid'),
     ),
     'foreign keys' => array(
-      'uid' => array('users' => 'uid'),
+      'session_user' => array(
+        'table' => 'users',
+        'columns' => array('uid' => 'uid'),
+      ),
     ),
   );
 

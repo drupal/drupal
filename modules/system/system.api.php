@@ -2566,6 +2566,16 @@ function hook_schema() {
       'nid_vid' => array('nid', 'vid'),
       'vid'     => array('vid')
       ),
+    'foreign keys' => array(
+      'node_revision' => array(
+        'table' => 'node_revision',
+        'columns' => array('vid' => 'vid'),
+        ),
+      'node_author' => array(
+        'table' => 'users',
+        'columns' => array('uid' => 'uid')
+        ),
+       ),
     'primary key' => array('nid'),
   );
   return $schema;

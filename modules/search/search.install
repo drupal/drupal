@@ -85,8 +85,13 @@ function search_schema() {
       'sid_type' => array('sid', 'type'),
     ),
     'foreign keys' => array(
-      'sid' => array('search_dataset' => 'sid'),
-      'type' => array('search_dataset' => 'type'),
+      'search_dataset' => array(
+        'table' => 'search_dataset',
+        'columns' => array(
+          'sid' => 'sid',
+          'type' => 'type',
+        ),
+      ),
     ),
     'primary key' => array('word', 'sid', 'type'),
   );

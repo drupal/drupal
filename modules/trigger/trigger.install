@@ -36,7 +36,10 @@ function trigger_schema() {
     ),
     'primary key' => array('hook', 'aid'),
     'foreign keys' => array(
-      'aid' => array('actions' => 'aid'),
+      'action' => array(
+        'table' => 'actions',
+        'columns' => array('aid' => 'aid'),
+      ),
     ),
   );
   return $schema;

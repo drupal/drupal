@@ -90,7 +90,10 @@ function statistics_schema() {
     ),
     'primary key' => array('aid'),
     'foreign keys' => array(
-      'uid' => array('users' => 'uid'),
+      'visitor' => array(
+        'table' => 'users',
+        'columns' => array('uid' => 'uid'),
+      ),
     ),
   );
 
