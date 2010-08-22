@@ -3062,7 +3062,7 @@ function system_message_action(&$entity, $context = array()) {
     $context['node'] = $entity;
   }
 
-  $context['message'] = token_replace($context['message'], $context);
+  $context['message'] = token_replace(filter_xss_admin($context['message']), $context);
   drupal_set_message($context['message']);
 }
 

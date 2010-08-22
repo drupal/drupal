@@ -292,7 +292,7 @@ function actions_synchronize($delete_orphans = FALSE) {
             'label' => $array['label'],
             ))
           ->execute();
-        watchdog('actions', "Action '%action' added.", array('%action' => filter_xss_admin($array['label'])));
+        watchdog('actions', "Action '%action' added.", array('%action' => $array['label']));
       }
     }
   }
@@ -305,7 +305,7 @@ function actions_synchronize($delete_orphans = FALSE) {
       $actions = db_query('SELECT aid, label FROM {actions} WHERE callback IN (:orphaned)', array(':orphaned' => $orphaned))->fetchAll();
       foreach ($actions as $action) {
         actions_delete($action->aid);
-        watchdog('actions', "Removed orphaned action '%action' from database.", array('%action' => filter_xss_admin($action->label)));
+        watchdog('actions', "Removed orphaned action '%action' from database.", array('%action' => $action->label));
       }
     }
     else {

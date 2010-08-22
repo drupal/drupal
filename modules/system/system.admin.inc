@@ -3174,9 +3174,8 @@ function system_actions_delete_form_submit($form, &$form_state) {
   $aid = $form_state['values']['aid'];
   $action = actions_load($aid);
   actions_delete($aid);
-  $label = check_plain($action->label);
-  watchdog('user', 'Deleted action %aid (%action)', array('%aid' => $aid, '%action' => $label));
-  drupal_set_message(t('Action %action was deleted', array('%action' => $label)));
+  watchdog('user', 'Deleted action %aid (%action)', array('%aid' => $aid, '%action' => $action->label));
+  drupal_set_message(t('Action %action was deleted', array('%action' => $action->label)));
   $form_state['redirect'] = 'admin/config/system/actions/manage';
 }
 
