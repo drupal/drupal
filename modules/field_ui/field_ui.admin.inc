@@ -1,5 +1,5 @@
 <?php
-// $Id: field_ui.admin.inc,v 1.61 2010/08/20 01:10:42 dries Exp $
+// $Id: field_ui.admin.inc,v 1.62 2010/08/22 14:14:17 dries Exp $
 
 /**
  * @file
@@ -402,7 +402,7 @@ function field_ui_field_overview_form($form, &$form_state, $entity_type, $bundle
     $name = '_add_existing_field';
     $table[$name] = array(
       '#parents' => array($name),
-      '#attributes' => array('class' => array('draggable', 'tabledrag-leaf', 'menu-disabled')),
+      '#attributes' => array('class' => array('draggable', 'tabledrag-leaf', 'add-new')),
       'label' => array(
         '#type' => 'textfield',
         '#size' => 15,
