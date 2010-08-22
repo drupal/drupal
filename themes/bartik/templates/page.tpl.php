@@ -149,9 +149,9 @@
   <?php endif; ?>
 
   <?php if ($page['featured']): ?>
-    <div id="featured" class="region"><div class="section clearfix">
+    <div id="featured" class="section clearfix">
       <?php print render($page['featured']); ?>
-    </div></div> <!-- /.section, /#featured -->
+    </div> <!-- /#featured -->
   <?php endif; ?>
 
   <div id="main-wrapper" class="clearfix"><div id="main" class="clearfix">
@@ -203,25 +203,9 @@
 
   <?php if ($page['triptych_first'] || $page['triptych_middle'] || $page['triptych_last']): ?>
     <div id="triptych-wrapper"><div id="triptych" class="clearfix">
-
-      <?php if ($page['triptych_first']): ?>
-        <div id="triptych-first" class="region triptych"><div class="section">
-          <?php print render($page['triptych_first']); ?>
-        </div></div> <!-- /.section, /#triptych-first -->
-      <?php endif; ?>
-
-      <?php if ($page['triptych_middle']): ?>
-        <div id="triptych-middle" class="region triptych"><div class="section">
-          <?php print render($page['triptych_middle']); ?>
-        </div></div> <!-- /.section, /#triptych-middle -->
-      <?php endif; ?>
-
-      <?php if ($page['triptych_last']): ?>
-        <div id="triptych-last" class="region triptych"><div class="section">
-          <?php print render($page['triptych_last']); ?>
-        </div></div> <!-- /.section, /#triptych-last -->
-      <?php endif; ?>
-
+      <?php print render($page['triptych_first']); ?>
+      <?php print render($page['triptych_middle']); ?>
+      <?php print render($page['triptych_last']); ?>
     </div></div> <!-- /#triptych, /#triptych-wrapper -->
   <?php endif; ?>
 
@@ -229,31 +213,10 @@
 
     <?php if ($page['footer_firstcolumn'] || $page['footer_secondcolumn'] || $page['footer_thirdcolumn'] || $page['footer_fourthcolumn']): ?>
       <div id="footer-columns" class="clearfix">
-
-        <?php if ($page['footer_firstcolumn']): ?>
-          <div id="footer-firstcolumn" class="region sitemap"><div class="section">
-            <?php print render($page['footer_firstcolumn']); ?>
-          </div></div> <!-- /.section, /#footer-firstcolumn -->
-        <?php endif; ?>
-
-        <?php if ($page['footer_secondcolumn']): ?>
-          <div id="footer-secondcolumn" class="region sitemap"><div class="section">
-            <?php print render($page['footer_secondcolumn']); ?>
-          </div></div> <!-- /.section, /#footer-secondcolumn -->
-        <?php endif; ?>
-
-        <?php if ($page['footer_thirdcolumn']): ?>
-          <div id="footer-thirdcolumn" class="region sitemap"><div class="section">
-            <?php print render($page['footer_thirdcolumn']); ?>
-          </div></div> <!-- /.section, /#footer-thirdcolumn -->
-        <?php endif; ?>
-
-        <?php if ($page['footer_fourthcolumn']): ?>
-          <div id="footer-fourthcolumn" class="region sitemap"><div class="section">
-            <?php print render($page['footer_fourthcolumn']); ?>
-          </div></div> <!-- /.section, /#footer-fourthcolumn -->
-        <?php endif; ?>
-
+        <?php print render($page['footer_firstcolumn']); ?>
+        <?php print render($page['footer_secondcolumn']); ?>
+        <?php print render($page['footer_thirdcolumn']); ?>
+        <?php print render($page['footer_fourthcolumn']); ?>
       </div><!-- /#footer-columns -->
     <?php endif; ?>
 

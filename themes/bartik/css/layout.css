@@ -16,13 +16,13 @@
 }
 #content,
 .sidebar,
-#triptych-first,
-#triptych-middle,
-#triptych-last,
-#footer-firstcolumn,
-#footer-secondcolumn,
-#footer-thirdcolumn,
-#footer-fourthcolumn {
+.region-triptych-first,
+.region-triptych-middle,
+.region-triptych-last,
+.region-footer-firstcolumn,
+.region-footer-secondcolumn,
+.region-footer-thirdcolumn,
+.region-footer-fourthcolumn {
   display: inline;
   float: left; /* LTR */
   position: relative;
@@ -51,19 +51,19 @@
 #breadcrumb {
   margin: 0 15px;
 }
-#triptych-first,
-#triptych-middle,
-#triptych-last {
+.region-triptych-first,
+.region-triptych-middle,
+.region-triptych-last {
   margin: 20px 20px 30px;
   width: 280px;
 }
 #footer-wrapper {
   padding: 35px 5px 30px;
 }
-#footer-firstcolumn,
-#footer-secondcolumn,
-#footer-thirdcolumn,
-#footer-fourthcolumn {
+.region-footer-firstcolumn,
+.region-footer-secondcolumn,
+.region-footer-thirdcolumn,
+.region-footer-fourthcolumn {
   padding: 0 10px;
   width: 220px;
 }
