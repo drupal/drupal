@@ -1,5 +1,5 @@
 <?php
-// $Id: text.module,v 1.61 2010/08/17 18:25:31 dries Exp $
+// $Id: text.module,v 1.62 2010/08/22 12:55:04 dries Exp $
 
 /**
  * @file
@@ -648,4 +648,21 @@ function text_field_prepare_translation($entity_type, $entity, $field, $instance
       }
     }
   }
+}
+
+/**
+ * Implements hook_filter_format_update().
+ */
+function text_filter_format_update() {
+  field_cache_clear();
+}
+
+/**
+ * Implements hook_filter_format_delete().
+ *
+ * @todo D8: Properly update filter format references in all fields. See
+ *   http://drupal.org/node/556022 for details.
+ */
+function text_filter_format_delete() {
+  field_cache_clear();
 }

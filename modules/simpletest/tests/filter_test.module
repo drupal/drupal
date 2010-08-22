@@ -1,5 +1,5 @@
 <?php
-// $Id: filter_test.module,v 1.4 2009/12/04 16:49:47 dries Exp $
+// $Id: filter_test.module,v 1.5 2010/08/22 12:55:04 dries Exp $
 
 /**
  * @file
@@ -36,6 +36,28 @@ function filter_test_filter_info() {
     'description' => 'Does nothing, but makes a text format uncacheable.',
     'cache' => FALSE,
   );
+  $filters['filter_test_replace'] = array(
+    'title' => 'Testing filter',
+    'description' => 'Replaces all content with filter and text format information.',
+    'process callback' => 'filter_test_replace',
+  );
   return $filters;
+}
+
+/**
+ * Process handler for filter_test_replace filter.
+ *
+ * Replaces all text with filter and text format information.
+ */
+function filter_test_replace($text, $filter, $format, $langcode, $cache, $cache_id) {
+  $text = array();
+  $text[] = 'Filter: ' . $filter->title . ' (' . $filter->name . ')';
+  $text[] = 'Format: ' . $format->name . ' (' . $format->format . ')';
+  $text[] = 'Language: ' . $langcode;
+  $text[] = 'Cache: ' . ($cache ? 'Enabled' : 'Disabled');
+  if ($cache_id) {
+    $text[] = 'Cache ID: ' . $cache_id;
+  }
+  return implode("<br />\n", $text);
 }
 

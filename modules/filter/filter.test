@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.test,v 1.71 2010/08/05 23:53:38 webchick Exp $
+// $Id: filter.test,v 1.72 2010/08/22 12:55:04 dries Exp $
 
 /**
  * Tests for text format and filter CRUD operations.
@@ -636,6 +636,55 @@ class FilterNoFormatTestCase extends DrupalWebTestCase {
     // Make sure that when this text is run through check_markup() with no text
     // format, it is filtered as though it is in the fallback format.
     $this->assertEqual(check_markup($text), check_markup($text, filter_fallback_format()), t('Text with no format is filtered the same as text in the fallback format.'));
+  }
+}
+
+/**
+ * Security tests for missing/vanished text formats or filters.
+ */
+class FilterSecurityTestCase extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Security',
+      'description' => 'Test the behavior of check_markup() when a filter or text format vanishes.',
+      'group' => 'Filter',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('php', 'filter_test');
+    $this->admin_user = $this->drupalCreateUser(array('administer modules', 'administer filters', 'administer site configuration'));
+    $this->drupalLogin($this->admin_user);
+  }
+
+  /**
+   * Test that filtered content is emptied when an actively used filter module is disabled.
+   */
+  function testDisableFilterModule() {
+    // Create a new node.
+    $node = $this->drupalCreateNode(array('promote' => 1));
+    $body_raw = $node->body[LANGUAGE_NONE][0]['value'];
+    $format_id = $node->body[LANGUAGE_NONE][0]['format'];
+    $this->drupalGet('node/' . $node->nid);
+    $this->assertText($body_raw, t('Node body found.'));
+
+    // Enable the filter_test_replace filter.
+    $edit = array(
+      'filters[filter_test_replace][status]' => 1,
+    );
+    $this->drupalPost('admin/config/content/formats/' . $format_id, $edit, t('Save configuration'));
+
+    // Verify that filter_test_replace filter replaced the content.
+    $this->drupalGet('node/' . $node->nid);
+    $this->assertNoText($body_raw, t('Node body not found.'));
+    $this->assertText('Filter: Testing filter', t('Testing filter output found.'));
+
+    // Delete the text format entirely.
+    $this->drupalPost('admin/config/content/formats/' . $format_id . '/delete', array(), t('Delete'));
+
+    // Verify that the content is empty, because the text format does not exist.
+    $this->drupalGet('node/' . $node->nid);
+    $this->assertNoText($body_raw, t('Node body not found.'));
   }
 }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: field.module,v 1.81 2010/08/14 03:10:04 dries Exp $
+// $Id: field.module,v 1.82 2010/08/22 12:55:04 dries Exp $
 /**
  * @file
  * Attach custom data fields to Drupal entities.
@@ -219,7 +219,7 @@ function field_modules_disabled($modules) {
     ->condition('storage_module', $modules, 'IN')
     ->execute();
 
-  field_cache_clear(TRUE);
+  field_cache_clear();
 }
 
 /**
