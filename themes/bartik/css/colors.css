@@ -18,6 +18,10 @@ body.overlay {
 .tabs ul.primary li a.active {
   background-color: #ffffff;
 }
+.tabs ul.primary li.active a {
+  background-color: #ffffff;
+  border-bottom: 1px solid #ffffff;
+}
 #header {
   background-color: #48a9e4;
   background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#0779bf), to(#48a9e4));

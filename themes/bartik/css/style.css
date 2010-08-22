@@ -773,8 +773,8 @@ h1#page-title,
   vertical-align: bottom;
   margin: 0 5px 0 0; /* LTR */
 }
-.tabs ul.primary li a.active {
-  border-bottom: 1px solid #fff;
+.tabs ul.primary li.active a {
+  border-bottom: 1px solid #ffffff;
 }
 .tabs ul.primary li a {
   color: #000;
@@ -794,6 +794,9 @@ h1#page-title,
   -moz-border-radius-topright: 6px;
   -webkit-border-top-right-radius: 6px;
   border-top-right-radius: 6px;
+}
+.tabs ul.primary li.active a {
+  background-color: #ffffff;
 }
 .tabs ul.secondary {
   border-bottom: none;
