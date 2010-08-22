@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.test,v 1.89 2010/08/22 13:53:37 dries Exp $
+// $Id: taxonomy.test,v 1.90 2010/08/22 15:45:03 dries Exp $
 
 /**
  * @file
@@ -336,6 +336,18 @@ class TaxonomyTermUnitTest extends TaxonomyWebTestCase {
       'description' => 'Unit tests for taxonomy term functions.',
       'group' => 'Taxonomy',
     );
+  }
+
+  function testTermDelete() {
+    $vocabulary = $this->createVocabulary();
+    $valid_term = $this->createTerm($vocabulary);
+    // Delete a valid term.
+    taxonomy_term_delete($valid_term->tid);
+    $terms = taxonomy_term_load_multiple(array(), array('vid' => $vocabulary->vid));
+    $this->assertTrue(empty($terms), 'Vocabulary is empty after deletion');
+
+    // Delete an invalid term. Should not throw any notices.
+    taxonomy_term_delete(42);
   }
 }
 

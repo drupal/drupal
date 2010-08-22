@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.602 2010/08/17 16:20:08 dries Exp $
+// $Id: taxonomy.module,v 1.603 2010/08/22 15:45:03 dries Exp $
 
 /**
  * @file
@@ -570,18 +570,18 @@ function taxonomy_term_delete($tid) {
         }
       }
 
-      $term = taxonomy_term_load($tid);
+      if ($term = taxonomy_term_load($tid)) {
+        db_delete('taxonomy_term_data')
+          ->condition('tid', $tid)
+          ->execute();
+        db_delete('taxonomy_term_hierarchy')
+          ->condition('tid', $tid)
+          ->execute();
 
-      db_delete('taxonomy_term_data')
-        ->condition('tid', $tid)
-        ->execute();
-      db_delete('taxonomy_term_hierarchy')
-        ->condition('tid', $tid)
-        ->execute();
-
-      field_attach_delete('taxonomy_term', $term);
-      module_invoke_all('taxonomy_term_delete', $term);
-      taxonomy_terms_static_reset();
+        field_attach_delete('taxonomy_term', $term);
+        module_invoke_all('taxonomy_term_delete', $term);
+        taxonomy_terms_static_reset();
+      }
     }
 
     $tids = $orphans;
