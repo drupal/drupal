@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.install,v 1.43 2010/05/23 19:10:23 dries Exp $
+// $Id: taxonomy.install,v 1.44 2010/08/22 13:55:53 dries Exp $
 
 /**
  * @file
@@ -66,7 +66,10 @@ function taxonomy_schema() {
     ),
     'primary key' => array('tid'),
     'foreign keys' => array(
-      'vid' => array('taxonomy_vocabulary' => 'vid'),
+      'vocabulary' => array(
+        'table' => 'taxonomy_vocabulary',
+        'columns' => array('vid' => 'vid'),
+      ),
     ),
     'indexes' => array(
       'taxonomy_tree' => array('vid', 'weight', 'name'),
@@ -97,7 +100,10 @@ function taxonomy_schema() {
       'parent' => array('parent'),
     ),
     'foreign keys' => array(
-      'tid' => array('taxonomy_term_data' => 'tid'),
+      'taxonomy_term_data' => array(
+        'table' => 'taxonomy_term_data',
+        'columns' => array('tid' => 'tid'),
+      ),
     ),
     'primary key' => array('tid', 'parent'),
   );
@@ -201,8 +207,14 @@ function taxonomy_schema() {
       'nid' => array('nid'),
     ),
     'foreign keys' => array(
-      'node' => 'nid',
-      'taxonomy_term_data' => 'tid',
+      'tracked_node' => array(
+        'table' => 'node',
+        'columns' => array('nid' => 'nid'),
+      ),
+      'term' => array(
+        'table' => 'taxonomy_term_data',
+        'columns' => array('tid' => 'tid'),
+      ),
     ),
   );
 
@@ -328,8 +340,14 @@ function taxonomy_update_7004() {
       'nid' => array('nid'),
     ),
     'foreign keys' => array(
-      'node' => 'nid',
-      'taxonomy_term_data' => 'tid',
+      'tracked_node' => array(
+        'table' => 'node',
+        'columns' => array('nid' => 'nid'),
+      ),
+      'term' => array(
+        'table' => 'taxonomy_term_data',
+        'columns' => array('tid' => 'tid'),
+      ),
     ),
   );
   db_create_table('taxonomy_index', $taxonomy_index);

@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.install,v 1.32 2010/07/01 15:09:11 webchick Exp $
+// $Id: poll.install,v 1.33 2010/08/22 13:55:53 dries Exp $
 
 /**
  * @file
@@ -36,7 +36,10 @@ function poll_schema() {
     ),
     'primary key' => array('nid'),
     'foreign keys' => array(
-      'nid' => array('node' => 'nid'),
+      'poll_node' => array(
+        'table' => 'node',
+        'columns' => array('nid' => 'nid'),
+      ),
     ),
   );
 
@@ -82,7 +85,10 @@ function poll_schema() {
     ),
     'primary key' => array('chid'),
     'foreign keys' => array(
-      'nid' => array('node' => 'nid'),
+      'choice_node' => array(
+        'table' => 'node',
+        'columns' => array('nid' => 'nid'),
+      ),
     ),
   );
 
@@ -124,8 +130,14 @@ function poll_schema() {
     ),
     'primary key' => array('nid', 'uid', 'hostname'),
     'foreign keys' => array(
-      'nid' => array('node' => 'nid'),
-      'uid' => array('users' => 'uid'),
+      'poll_node' => array(
+        'table' => 'node',
+        'columns' => array('nid' => 'nid'),
+      ),
+      'voter' => array(
+        'table' => 'users',
+        'columns' => array('uid' => 'uid'),
+      ),
     ),
     'indexes' => array(
       'chid'     => array('chid'),

@@ -1,5 +1,5 @@
 <?php
-// $Id: shortcut.install,v 1.5 2010/06/17 13:16:57 dries Exp $
+// $Id: shortcut.install,v 1.6 2010/08/22 13:55:53 dries Exp $
 
 /**
  * @file
@@ -63,7 +63,10 @@ function shortcut_schema() {
     ),
     'primary key' => array('set_name'),
     'foreign keys' => array(
-      'set_name' => array('menu_links' => 'menu_name'),
+      'menu_name' => array(
+        'table' => 'menu_links',
+        'columns' => array('set_name' => 'menu_name'),
+      ),
     ),
   );
 
@@ -90,8 +93,14 @@ function shortcut_schema() {
       'set_name' => array('set_name'),
     ),
     'foreign keys' => array(
-      'uid' => array('users' => 'uid'),
-      'set_name' => array('shortcut_set' => 'set_name'),
+      'set_user' => array(
+        'table' => 'users',
+        'columns' => array('uid' => 'uid'),
+      ),
+      'set_name' => array(
+        'table' => 'shortcut_set',
+        'columns' => array('set_name' => 'set_name'),
+      ),
     ),
   );
 

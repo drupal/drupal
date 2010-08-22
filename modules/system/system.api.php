@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.186 2010/08/22 13:52:58 dries Exp $
+// $Id: system.api.php,v 1.187 2010/08/22 13:55:53 dries Exp $
 
 /**
  * @file
@@ -2566,6 +2566,16 @@ function hook_schema() {
       'nid_vid' => array('nid', 'vid'),
       'vid'     => array('vid')
       ),
+    'foreign keys' => array(
+      'node_revision' => array(
+        'table' => 'node_revision',
+        'columns' => array('vid' => 'vid'),
+        ),
+      'node_author' => array(
+        'table' => 'users',
+        'columns' => array('uid' => 'uid')
+        ),
+       ),
     'primary key' => array('nid'),
   );
   return $schema;

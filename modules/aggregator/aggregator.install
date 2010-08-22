@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.install,v 1.30 2010/05/01 08:12:22 dries Exp $
+// $Id: aggregator.install,v 1.31 2010/08/22 13:55:53 dries Exp $
 
 /**
  * @file
@@ -80,7 +80,10 @@ function aggregator_schema() {
       'fid' => array('fid'),
     ),
     'foreign keys' => array(
-      'cid' => array('aggregator_category' => 'cid'),
+      'aggregator_category' => array(
+        'table' => 'aggregator_category',
+        'columns' => array('cid' => 'cid'),
+      ),
     ),
   );
 
@@ -105,7 +108,10 @@ function aggregator_schema() {
       'iid' => array('iid'),
     ),
     'foreign keys' => array(
-      'cid' => array('aggregator_category' => 'cid'),
+      'aggregator_category' => array(
+        'table' => 'aggregator_category',
+        'columns' => array('cid' => 'cid'),
+      ),
     ),
   );
 
@@ -264,7 +270,10 @@ function aggregator_schema() {
       'fid' => array('fid'),
     ),
     'foreign keys' => array(
-      'fid' => array('aggregator_feed' => 'fid'),
+      'aggregator_feed' => array(
+        'table' => 'aggregator_feed',
+        'columns' => array('fid' => 'fid'),
+      ),
     ),
   );
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: tracker.install,v 1.4 2010/03/20 15:06:51 dries Exp $
+// $Id: tracker.install,v 1.5 2010/08/22 13:55:53 dries Exp $
 
 /**
  * Implements hook_uninstall().
@@ -56,7 +56,10 @@ function tracker_schema() {
     ),
     'primary key' => array('nid'),
     'foreign keys' => array(
-      'node' => 'nid',
+      'tracked_node' => array(
+        'table' => 'node',
+        'columns' => array('nid' => 'nid'),
+      ),
     ),
   );
 
@@ -96,8 +99,14 @@ function tracker_schema() {
     ),
     'primary key' => array('nid', 'uid'),
     'foreign keys' => array(
-      'node' => 'nid',
-      'users' => 'uid',
+      'tracked_node' => array(
+        'table' => 'node',
+        'columns' => array('nid' => 'nid'),
+      ),
+      'tracked_user' => array(
+        'table' => 'users',
+        'columns' => array('uid' => 'uid'),
+      ),
     ),
   );
 
@@ -143,7 +152,10 @@ function tracker_update_7000() {
     ),
     'primary key' => array('nid'),
     'foreign keys' => array(
-      'node' => 'nid',
+      'tracked_node' => array(
+        'table' => 'node',
+        'columns' => array('nid' => 'nid'),
+      ),
     ),
   );
 
@@ -183,8 +195,14 @@ function tracker_update_7000() {
     ),
     'primary key' => array('nid', 'uid'),
     'foreign keys' => array(
-      'node' => 'nid',
-      'users' => 'uid',
+      'tracked_node' => array(
+        'table' => 'node',
+        'columns' => array('nid' => 'nid'),
+      ),
+      'tracked_user' => array(
+        'table' => 'users',
+        'columns' => array('uid' => 'uid'),
+      ),
     ),
   );
 

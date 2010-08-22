@@ -1,5 +1,5 @@
 <?php
-// $Id: image.install,v 1.10 2010/06/25 17:47:22 dries Exp $
+// $Id: image.install,v 1.11 2010/08/22 13:55:53 dries Exp $
 
 /**
  * @file
@@ -98,7 +98,10 @@ function image_schema() {
       'weight' => array('weight'),
     ),
     'foreign keys' => array(
-      'isid' => array('image_styles' => 'isid'),
+      'image_style' => array(
+        'table' => 'image_styles',
+        'columns' => array('isid' => 'isid'),
+      ),
     ),
   );
 
@@ -180,7 +183,10 @@ function image_update_7000() {
         'weight' => array('weight'),
       ),
       'foreign keys' => array(
-        'isid' => array('image_styles' => 'isid'),
+        'image_style' => array(
+          'table' => 'image_styles',
+          'columns' => array('isid' => 'isid'),
+        ),
       ),
     );
 

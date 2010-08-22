@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.496 2010/08/22 13:52:58 dries Exp $
+// $Id: system.install,v 1.497 2010/08/22 13:55:53 dries Exp $
 
 /**
  * @file
@@ -831,7 +831,10 @@ function system_schema() {
     ),
     'primary key' => array('fid'),
     'foreign keys' => array(
-      'uid' => array('users' => 'uid'),
+      'file_owner' => array(
+        'table' => 'users',
+        'columns' => array('uid' => 'uid'),
+      ),
     ),
   );
 
@@ -1508,7 +1511,10 @@ function system_schema() {
       'ssid' => array('ssid'),
     ),
     'foreign keys' => array(
-      'uid' => array('users' => 'uid'),
+      'session_user' => array(
+        'table' => 'users',
+        'columns' => array('uid' => 'uid'),
+      ),
     ),
   );
 

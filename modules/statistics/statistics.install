@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.install,v 1.26 2010/04/28 05:29:55 webchick Exp $
+// $Id: statistics.install,v 1.27 2010/08/22 13:55:53 dries Exp $
 
 /**
  * @file
@@ -90,7 +90,10 @@ function statistics_schema() {
     ),
     'primary key' => array('aid'),
     'foreign keys' => array(
-      'uid' => array('users' => 'uid'),
+      'visitor' => array(
+        'table' => 'users',
+        'columns' => array('uid' => 'uid'),
+      ),
     ),
   );
 

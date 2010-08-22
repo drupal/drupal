@@ -1,5 +1,5 @@
 <?php
-// $Id: search.install,v 1.28 2010/08/11 02:14:23 dries Exp $
+// $Id: search.install,v 1.29 2010/08/22 13:55:53 dries Exp $
 
 /**
  * @file
@@ -85,8 +85,13 @@ function search_schema() {
       'sid_type' => array('sid', 'type'),
     ),
     'foreign keys' => array(
-      'sid' => array('search_dataset' => 'sid'),
-      'type' => array('search_dataset' => 'type'),
+      'search_dataset' => array(
+        'table' => 'search_dataset',
+        'columns' => array(
+          'sid' => 'sid',
+          'type' => 'type',
+        ),
+      ),
     ),
     'primary key' => array('word', 'sid', 'type'),
   );

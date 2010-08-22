@@ -1,5 +1,5 @@
 <?php
-// $Id: node.install,v 1.52 2010/08/08 13:02:37 dries Exp $
+// $Id: node.install,v 1.53 2010/08/22 13:55:53 dries Exp $
 
 /**
  * @file
@@ -118,8 +118,14 @@ function node_schema() {
       'vid' => array('vid'),
     ),
     'foreign keys' => array(
-      'vid' => array('node_revision' => 'vid'),
-      'uid' => array('users' => 'uid'),
+      'node_revision' => array(
+        'table' => 'node_revision',
+        'columns' => array('vid' => 'vid'),
+      ),
+      'node_author' => array(
+        'table' => 'users',
+        'columns' => array('uid' => 'uid'),
+      ),
     ),
     'primary key' => array('nid'),
   );
@@ -174,7 +180,12 @@ function node_schema() {
       ),
     ),
     'primary key' => array('nid', 'gid', 'realm'),
-    'foreign keys' => array('node' => 'nid'),
+    'foreign keys' => array(
+      'affected_node' => array(
+        'table' => 'node',
+        'columns' => array('nid' => 'nid'),
+      ),
+     ),
   );
 
   $schema['node_revision'] = array(
@@ -249,8 +260,14 @@ function node_schema() {
     ),
     'primary key' => array('vid'),
     'foreign keys' => array(
-      'node' => 'nid',
-      'users' => 'uid'
+      'versioned_node' => array(
+        'table' => 'node',
+        'columns' => array('nid' => 'nid'),
+      ),
+      'version_author' => array(
+        'table' => 'users',
+        'columns' => array('uid' => 'uid'),
+      ),
     ),
   );
 

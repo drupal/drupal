@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.install,v 1.25 2010/02/03 18:16:23 webchick Exp $
+// $Id: profile.install,v 1.26 2010/08/22 13:55:53 dries Exp $
 
 /**
  * @file
@@ -138,8 +138,14 @@ function profile_schema() {
       'fid' => array('fid'),
     ),
     'foreign keys' => array(
-      'fid' => array('profile_field' => 'fid'),
-      'uid' => array('users' => 'uid'),
+      'profile_field' => array(
+        'table' => 'profile_field',
+        'columns' => array('fid' => 'fid'),
+      ),
+      'profile_user' => array(
+        'table' => 'users',
+        'columns' => array('uid' => 'uid'),
+      ),
     ),
   );
 

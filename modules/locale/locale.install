@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.install,v 1.63 2010/08/17 22:05:22 dries Exp $
+// $Id: locale.install,v 1.64 2010/08/22 13:55:53 dries Exp $
 
 /**
  * @file
@@ -335,7 +335,10 @@ function locale_schema() {
     ),
     'primary key' => array('language', 'lid', 'plural'),
     'foreign keys' => array(
-      'lid' => array('locales_source' => 'lid'),
+      'locales_source' => array(
+        'table' => 'locales_source',
+        'columns' => array('lid' => 'lid'),
+      ),
     ),
     'indexes' => array(
       'lid'      => array('lid'),

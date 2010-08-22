@@ -1,5 +1,5 @@
 <?php
-// $Id: trigger.install,v 1.16 2009/12/04 16:49:47 dries Exp $
+// $Id: trigger.install,v 1.17 2010/08/22 13:55:53 dries Exp $
 
 /**
  * @file
@@ -36,7 +36,10 @@ function trigger_schema() {
     ),
     'primary key' => array('hook', 'aid'),
     'foreign keys' => array(
-      'aid' => array('actions' => 'aid'),
+      'action' => array(
+        'table' => 'actions',
+        'columns' => array('aid' => 'aid'),
+      ),
     ),
   );
   return $schema;
