@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.498 2010/08/22 14:55:29 dries Exp $
+// $Id: system.install,v 1.499 2010/08/23 14:56:37 webchick Exp $
 
 /**
  * @file
@@ -2043,12 +2043,12 @@ function system_update_7016() {
           $datatype = 'bigint';
           break;
       }
-      db_query('ALTER TABLE ' . $row->table . ' ALTER COLUMN ' . $row->field . ' TYPE ' . $datatype);
-      db_query('ALTER TABLE ' . $row->table . ' ADD CHECK (' . $row->field . ' >= 0)');
+      db_query('ALTER TABLE ' . $row->table . ' ALTER COLUMN "' . $row->field . '" TYPE ' . $datatype);
+      db_query('ALTER TABLE ' . $row->table . ' ADD CHECK ("' . $row->field . '" >= 0)');
     }
-    db_query('DROP DOMAIN smallint_unsigned');
-    db_query('DROP DOMAIN int_unsigned');
-    db_query('DROP DOMAIN bigint_unsigned');
+    db_query('DROP DOMAIN IF EXISTS smallint_unsigned');
+    db_query('DROP DOMAIN IF EXISTS int_unsigned');
+    db_query('DROP DOMAIN IF EXISTS bigint_unsigned');
   }
 }
 
