@@ -1,5 +1,5 @@
 <?php
-// $Id: region.tpl.php,v 1.1 2009/10/05 02:43:01 webchick Exp $
+// $Id: region.tpl.php,v 1.2 2010/08/23 09:09:23 dries Exp $
 
 /**
  * @file
@@ -27,6 +27,8 @@
  * @see template_process()
  */
 ?>
-<div class="<?php print $classes; ?>">
-  <?php print $content; ?>
-</div>
+<?php if($content): ?>
+  <div class="<?php print $classes; ?>">
+    <?php print $content; ?>
+  </div>
+<?php endif; ?>
