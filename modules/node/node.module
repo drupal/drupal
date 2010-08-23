@@ -3763,3 +3763,12 @@ class NodeController extends DrupalDefaultEntityController {
     return $query;
   }
 }
+
+/**
+ * Implements hook_file_download_access().
+ */
+function node_file_download_access($field, $entity_type, $entity) {
+  if ($entity_type == 'node') {
+    return node_access('view', $entity);
+  }
+}

@@ -3684,3 +3684,12 @@ function user_rdf_mapping() {
     ),
   );
 }
+
+/**
+ * Implements hook_file_download_access().
+ */
+function user_file_download_access($field, $entity_type, $entity) {
+  if ($entity_type == 'user') {
+    return user_view_access($entity);
+  }
+}

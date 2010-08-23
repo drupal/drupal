@@ -141,46 +141,69 @@ function file_file_download($uri, $field_type = 'file') {
   // Find out which (if any) file fields contain this file.
   $references = file_get_file_references($file, NULL, FIELD_LOAD_REVISION, $field_type);
 
-  // TODO: Check field-level access if available here.
-
-  $denied = $file->status ? NULL : FALSE;
-  // Check access to content containing the file fields. If access is allowed
-  // to any of this content, allow the download.
+  // Default to allow access.
+  $denied = FALSE;
+  // Loop through all references of this file. If a reference explicitly allows
+  // access to the field to which this file belongs, no further checks are done
+  // and download access is granted. If a reference denies access, eventually
+  // existing additional references are checked. If all references were checked
+  // and no reference denied access, access is granted as well. If at least one
+  // reference denied access, access is denied.
   foreach ($references as $field_name => $field_references) {
     foreach ($field_references as $entity_type => $type_references) {
-      foreach ($type_references as $reference) {
-        // If access is allowed to any object, immediately stop and grant
-        // access. If access is denied, continue through in case another object
-        // grants access.
-        // TODO: Switch this to a universal access check mechanism if available.
-        if ($entity_type == 'node' && ($node = node_load($reference->nid))) {
-          if (node_access('view', $node)) {
-            $denied = FALSE;
-            break 3;
-          }
-          else {
-            $denied = TRUE;
+      foreach ($type_references as $id => $reference) {
+        // Try to load $entity and $field.
+        $entity = reset(entity_load($entity_type, array($id)));
+        $field = NULL;
+        if ($entity) {
+          // Load all fields for that entity.
+          $field_items = field_get_items($entity_type, $entity, $field_name);
+
+          // Find the field item with the matching URI.
+          foreach ($field_items as $field_item) {
+            if ($field_item['uri'] == $uri) {
+              $field = $field_item;
+              break;
+            }
           }
         }
-        if ($entity_type == 'user') {
-          if (user_access('access user profiles') || $user->uid == $reference->uid) {
-            $denied = FALSE;
-            break 3;
-          }
-          else {
-            $denied = TRUE;
-          }
+
+        // Check that $entity and $field were loaded successfully and check if
+        // access to that field is not disallowed. If any of these checks fail,
+        // stop checking access for this reference.
+        if (empty($entity) || empty($field) || !field_access('view', $field, $entity_type, $entity)) {
+          $denied = TRUE;
+          break;
+        }
+
+        // Invoke hook and collect grants/denies for download access.
+        // Default to FALSE and let entities overrule this ruling.
+        $grants = array('system' => FALSE);
+        foreach (module_implements('file_download_access') as $module) {
+          $grants = array_merge($grants, array($module => module_invoke($module, 'file_download_access', $field, $entity_type, $entity)));
+        }
+        // Allow other modules to alter the returned grants/denies.
+        drupal_alter('file_download_access', $grants, $field, $entity_type, $entity);
+
+        if (in_array(TRUE, $grants)) {
+          // If TRUE is returned, access is granted and no further checks are
+          // necessary.
+          $denied = FALSE;
+          break 3;
+        }
+
+        if (in_array(FALSE, $grants)) {
+          // If an implementation returns FALSE, access to this entity is denied
+          // but the file could belong to another entity to which the user might
+          // have access. Continue with these.
+          $denied = TRUE;
         }
       }
     }
   }
 
-  // No access was denied or granted.
-  if (!isset($denied)) {
-    return;
-  }
-  // Access specifically denied and not granted elsewhere.
-  elseif ($denied == TRUE) {
+  // Access specifically denied.
+  if ($denied) {
     return -1;
   }
 
