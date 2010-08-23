@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.install,v 1.25 2010/01/10 17:55:19 webchick Exp $
+// $Id: menu.install,v 1.26 2010/08/23 23:38:06 webchick Exp $
 
 /**
  * @file
@@ -52,7 +52,6 @@ function menu_install() {
     'user-menu' => $t("The <em>User</em> menu contains links related to the user's account, as well as the 'Log out' link."),
     'management' => $t('The <em>Management</em> menu contains links for administrative tasks.'),
     'main-menu' => $t('The <em>Main</em> menu is used on many sites to show the major sections of the site, often in a top navigation bar.'),
-    'secondary-menu' => $t('The <em>Secondary</em> menu is used on many sites for legal notices and contact pages.'),
   );
   foreach ($system_menus as $menu_name => $title) {
     $menu = array(

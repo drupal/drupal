@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.406 2010/08/22 14:57:44 dries Exp $
+// $Id: menu.inc,v 1.407 2010/08/23 23:38:06 webchick Exp $
 
 /**
  * @file
@@ -1617,7 +1617,6 @@ function menu_list_system_menus() {
     'management' => 'Management',
     'user-menu' => 'User menu',
     'main-menu' => 'Main menu',
-    'secondary-menu' => 'Secondary menu',
   );
 }
 
@@ -2077,7 +2076,7 @@ function menu_set_active_menu_names($menu_names = NULL) {
     $active = $menu_names;
   }
   elseif (!isset($active)) {
-    $active = variable_get('menu_default_active_menus', array('management', 'navigation', 'user-menu', 'main-menu'));
+    $active = variable_get('menu_default_active_menus', array_keys(menu_list_system_menus()));
   }
   return $active;
 }
