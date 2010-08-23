@@ -1138,16 +1138,6 @@ function node_delete_multiple($nids) {
   if (!empty($nids)) {
     $nodes = node_load_multiple($nids, array());
 
-    db_delete('node')
-      ->condition('nid', $nids, 'IN')
-      ->execute();
-    db_delete('node_revision')
-      ->condition('nid', $nids, 'IN')
-      ->execute();
-    db_delete('history')
-      ->condition('nid', $nids, 'IN')
-      ->execute();
-
     foreach ($nodes as $nid => $node) {
       // Call the node-specific callback (if any):
       node_invoke($node, 'delete');
@@ -1162,6 +1152,17 @@ function node_delete_multiple($nids) {
         search_reindex($nid, 'node');
       }
     }
+
+    // Delete after calling hooks so that they can query node tables as needed.
+    db_delete('node')
+      ->condition('nid', $nids, 'IN')
+      ->execute();
+    db_delete('node_revision')
+      ->condition('nid', $nids, 'IN')
+      ->execute();
+    db_delete('history')
+      ->condition('nid', $nids, 'IN')
+      ->execute();
 
     // Clear the page and block and node_load_multiple caches.
     cache_clear_all();
