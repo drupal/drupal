@@ -690,7 +690,7 @@ function user_update_7012(&$sandbox) {
     // Initialize batch update information.
     $sandbox['progress'] = 0;
     $sandbox['last_user_processed'] = -1;
-    $sandbox['max'] = db_query("SELECT COUNT(*) FROM {users} WHERE picture <> 0")->fetchField();
+    $sandbox['max'] = db_query("SELECT COUNT(*) FROM {users} WHERE picture <> ''")->fetchField();
   }
 
   // As a batch operation move the photos into the {file_managed} table and
