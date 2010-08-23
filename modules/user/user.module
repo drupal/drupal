@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1194 2010/08/22 13:52:59 dries Exp $
+// $Id: user.module,v 1.1195 2010/08/23 14:53:50 webchick Exp $
 
 /**
  * @file
@@ -3683,4 +3683,13 @@ function user_rdf_mapping() {
       ),
     ),
   );
+}
+
+/**
+ * Implements hook_file_download_access().
+ */
+function user_file_download_access($field, $entity_type, $entity) {
+  if ($entity_type == 'user') {
+    return user_view_access($entity);
+  }
 }

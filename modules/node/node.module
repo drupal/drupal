@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1291 2010/08/22 16:11:12 dries Exp $
+// $Id: node.module,v 1.1292 2010/08/23 14:53:50 webchick Exp $
 
 /**
  * @file
@@ -3761,5 +3761,14 @@ class NodeController extends DrupalDefaultEntityController {
     $fields['uid']['table'] = 'base';
     $query->addField('revision', 'uid', 'revision_uid');
     return $query;
+  }
+}
+
+/**
+ * Implements hook_file_download_access().
+ */
+function node_file_download_access($field, $entity_type, $entity) {
+  if ($entity_type == 'node') {
+    return node_access('view', $entity);
   }
 }

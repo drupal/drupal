@@ -1,5 +1,5 @@
 <?php
-// $Id: file.test,v 1.22 2010/08/22 13:52:58 dries Exp $
+// $Id: file.test,v 1.23 2010/08/23 14:53:50 webchick Exp $
 
 /**
  * @file
@@ -14,7 +14,7 @@ class FileFieldTestCase extends DrupalWebTestCase {
 
   function setUp() {
     parent::setUp('file');
-    $this->admin_user = $this->drupalCreateUser(array('access content', 'access administration pages', 'administer site configuration', 'administer users', 'administer content types', 'administer nodes', 'bypass node access'));
+    $this->admin_user = $this->drupalCreateUser(array('access content', 'access administration pages', 'administer site configuration', 'administer users', 'administer permissions', 'administer content types', 'administer nodes', 'bypass node access'));
     $this->drupalLogin($this->admin_user);
   }
 
@@ -301,6 +301,68 @@ class FileFieldWidgetTestCase extends FileFieldTestCase {
     $this->drupalGet("admin/structure/types/manage/$type_name/fields/$field_name");
     $this->assertFieldByXpath('//input[@id="edit-field-settings-uri-scheme-public" and not(@disabled)]', 'public', t('Upload destination setting enabled.'));
   }
+
+  /**
+   * Tests that download restrictions on private files work on comments.
+   */
+  function testPrivateFileComment() {
+    $user = $this->drupalCreateUser(array('access comments'));
+
+    // Remove access comments permission from anon user.
+    $edit = array(
+      '1[access comments]' => FALSE,
+    );
+    $this->drupalPost('admin/people/permissions', $edit, t('Save permissions'));
+
+    // Create a new field.
+    $edit = array(
+      '_add_new_field[label]' => $label = $this->randomName(),
+      '_add_new_field[field_name]' => $name = strtolower($this->randomName()),
+      '_add_new_field[type]' => 'file',
+      '_add_new_field[widget_type]' => 'file_generic',
+    );
+    $this->drupalPost('admin/structure/types/manage/article/comment/fields', $edit, t('Save'));
+    $edit = array('field[settings][uri_scheme]' => 'private');
+    $this->drupalPost(NULL, $edit, t('Save field settings'));
+    $this->drupalPost(NULL, array(), t('Save settings'));
+
+    // Create node.
+    $text_file = $this->getTestFile('text');
+    $edit = array(
+      'title' => $this->randomName(),
+    );
+    $this->drupalPost('node/add/article', $edit, t('Save'));
+
+    // Add a comment with a file.
+    $text_file = $this->getTestFile('text');
+    $edit = array(
+      'files[field_' . $name . '_' . LANGUAGE_NONE . '_' . 0 . ']' => realpath($text_file->uri),
+      'comment_body[' . LANGUAGE_NONE . '][0][value]' => $comment_body = $this->randomName(),
+    );
+    $this->drupalPost(NULL, $edit, t('Save'));
+
+    // Get the comment ID.
+    preg_match('/comment-([0-9]+)/', $this->getUrl(), $matches);
+    $cid = $matches[1];
+
+    // Log in as normal user.
+    $this->drupalLogin($user);
+   
+    $comment = comment_load($cid);
+    $comment_file = (object) $comment->{'field_' . $name}[LANGUAGE_NONE][0];
+    $this->assertFileExists($comment_file, t('New file saved to disk on node creation.'));
+    // Test authenticated file download.
+    $url = file_create_url($comment_file->uri);
+    $this->assertNotEqual($url, NULL, t('Confirmed that the URL is valid'));
+    $this->drupalGet(file_create_url($comment_file->uri));
+    $this->assertResponse(200, t('Confirmed that the generated URL is correct by downloading the shipped file.'));
+ 
+    // Test anonymous file download.
+    $this->drupalLogout();
+    $this->drupalGet(file_create_url($comment_file->uri));
+    $this->assertResponse(403, t('Confirmed that access is denied for the file without the needed permission.'));
+  }
+
 }
 
 /**
