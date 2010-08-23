@@ -1617,7 +1617,6 @@ function menu_list_system_menus() {
     'management' => 'Management',
     'user-menu' => 'User menu',
     'main-menu' => 'Main menu',
-    'secondary-menu' => 'Secondary menu',
   );
 }
 
@@ -2077,7 +2076,7 @@ function menu_set_active_menu_names($menu_names = NULL) {
     $active = $menu_names;
   }
   elseif (!isset($active)) {
-    $active = variable_get('menu_default_active_menus', array('management', 'navigation', 'user-menu', 'main-menu'));
+    $active = variable_get('menu_default_active_menus', array_keys(menu_list_system_menus()));
   }
   return $active;
 }
