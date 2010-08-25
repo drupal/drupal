@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.install,v 1.70 2010/08/25 08:32:58 webchick Exp $
+// $Id: comment.install,v 1.71 2010/08/25 11:54:40 webchick Exp $
 
 /**
  * @file
@@ -120,17 +120,20 @@ function comment_update_7000() {
  * Change comment status from published being 0 to being 1
  */
 function comment_update_7001() {
+  // Choose a temporary status value different from the existing status values.
+  $tmp_status = db_query('SELECT MAX(status) FROM {comments}')->fetchField() + 1;
+
   $changes = array(
-    3 => 0,
-    0 => 1,
-    1 => 3,
+    0 => $tmp_status,
+    1 => 0,
+    $tmp_status => 1,
   );
 
   foreach ($changes as $old => $new) {
-  db_update('comments')
-    ->fields(array('status' => $new))
-    ->condition('status', $old)
-    ->execute();
+    db_update('comments')
+      ->fields(array('status' => $new))
+      ->condition('status', $old)
+      ->execute();
   }
 }
 
