@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1195 2010/08/23 14:53:50 webchick Exp $
+// $Id: user.module,v 1.1196 2010/08/26 09:14:33 webchick Exp $
 
 /**
  * @file
@@ -2558,7 +2558,7 @@ Your account at [site:name] has been activated.
 
 You may now log in by clicking this link or copying and pasting it into your browser:
 
-[site:login-url]
+[user:one-time-login-url]
 
 This link can only be used once to log in and will lead you to a page where you can set your password.
 
