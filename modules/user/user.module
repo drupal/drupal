@@ -2558,7 +2558,7 @@ Your account at [site:name] has been activated.
 
 You may now log in by clicking this link or copying and pasting it into your browser:
 
-[site:login-url]
+[user:one-time-login-url]
 
 This link can only be used once to log in and will lead you to a page where you can set your password.
 
