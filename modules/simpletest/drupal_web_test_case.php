@@ -1221,8 +1221,8 @@ class DrupalWebTestCase extends DrupalTestCase {
 
     // Run the profile tasks.
     $install_profile_module_exists = db_query("SELECT 1 FROM {system} WHERE type = 'module' AND name = :name", array(
-      ':name' => $this->profile))
-      ->fetchField();
+      ':name' => $this->profile,
+    ))->fetchField();
     if ($install_profile_module_exists) {
       module_enable(array($this->profile), FALSE);
     }
