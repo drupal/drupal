@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.499 2010/08/23 14:56:37 webchick Exp $
+// $Id: system.install,v 1.500 2010/08/27 11:58:04 webchick Exp $
 
 /**
  * @file
@@ -2809,7 +2809,7 @@ function system_update_7059(&$sandbox) {
 
       // Add the usage entry for the file.
       $file = (object) $file;
-      file_usage_add($file, 'file', 'node', $revision->nid);
+      file_usage_add($file, 'file', 'node', $revision['nid']);
     }
 
     // Insert the revision's files into the field_upload table.
