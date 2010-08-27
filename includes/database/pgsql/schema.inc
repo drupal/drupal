@@ -1,5 +1,5 @@
 <?php
-// $Id: schema.inc,v 1.35 2010/07/28 10:52:12 dries Exp $
+// $Id: schema.inc,v 1.36 2010/08/27 15:53:43 webchick Exp $
 
 /**
  * @file
@@ -66,6 +66,7 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
           // return the last insert id. If there is more than 1 sequences the
           // first one (index 0 of the sequences array) will be used.
           $table_information->sequences[] = $matches[1];
+          $table_information->serial_fields[] = $column->column_name;
         }
       }
       $this->tableInformation[$key] = $table_information;
