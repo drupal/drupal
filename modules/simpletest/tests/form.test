@@ -42,7 +42,10 @@ class FormsTestCase extends DrupalWebTestCase {
     $elements['password']['empty_values'] = $empty_strings;
 
     $elements['password_confirm']['element'] = array('#title' => $this->randomName(), '#type' => 'password_confirm');
-    $elements['password_confirm']['empty_values'] = $empty_strings;
+    // Provide empty values for both password fields.
+    foreach ($empty_strings as $key => $value) {
+      $elements['password_confirm']['empty_values'][$key] = array('pass1' => $value, 'pass2' => $value);
+    }
 
     $elements['textarea']['element'] = array('#title' => $this->randomName(), '#type' => 'textarea');
     $elements['textarea']['empty_values'] = $empty_strings;
@@ -77,8 +80,7 @@ class FormsTestCase extends DrupalWebTestCase {
           $element = $data['element']['#title'];
           $form[$element] = $data['element'];
           $form[$element]['#required'] = $required;
-          $form_state['values'][$element] = $empty;
-          $form_state['input'] = $form_state['values'];
+          $form_state['input'][$element] = $empty;
           $form_state['input']['form_id'] = $form_id;
           $form_state['method'] = 'post';
           drupal_prepare_form($form_id, $form, $form_state);
@@ -405,6 +407,10 @@ class FormValidationTestCase extends DrupalWebTestCase {
     $this->assertNoText(t('!name field is required.', array('!name' => 'Title')));
     $this->assertText('Test element is invalid');
 
+    // Ensure not validated values are not available to submit handlers.
+    $this->drupalPost($path, array('title' => '', 'test' => 'valid'), t('Partial validate'));
+    $this->assertText('Only validated values appear in the form values.');
+
     // Now test full form validation and ensure that the #element_validate
     // handler is still triggered.
     $this->drupalPost($path, $edit, t('Full validate'));
@@ -616,11 +622,11 @@ class FormsElementsTableSelectFunctionalTest extends DrupalWebTestCase {
     );
 
     // Test with a valid value.
-    list($processed_form, $form_state, $errors) = $this->formSubmitHelper($form, array('tableselect' => 'row1'));
+    list($processed_form, $form_state, $errors) = $this->formSubmitHelper($form, array('tableselect' => array('row1' => 'row1')));
     $this->assertFalse(isset($errors['tableselect']), t('Option checker allows valid values for checkboxes.'));
 
     // Test with an invalid value.
-    list($processed_form, $form_state, $errors) = $this->formSubmitHelper($form, array('tableselect' => 'non_existing_value'));
+    list($processed_form, $form_state, $errors) = $this->formSubmitHelper($form, array('tableselect' => array('non_existing_value' => 'non_existing_value')));
     $this->assertTrue(isset($errors['tableselect']), t('Option checker disallows invalid values for checkboxes.'));
 
   }

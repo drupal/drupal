@@ -572,10 +572,7 @@ function file_managed_file_submit($form, &$form_state) {
   // and set $element to the managed_file element that contains that button.
   $parents = $form_state['triggering_element']['#array_parents'];
   $button_key = array_pop($parents);
-  $element = $form;
-  foreach ($parents as $parent) {
-    $element = $element[$parent];
-  }
+  list($element) = drupal_array_get_nested_value($form, $parents);
 
   // No action is needed here for the upload button, because all file uploads on
   // the form are processed by file_managed_file_value() regardless of which
@@ -593,13 +590,10 @@ function file_managed_file_submit($form, &$form_state) {
     // run, and for form building functions that run during the rebuild, such as
     // when the managed_file element is part of a field widget.
     // $form_state['input'] must be updated so that file_managed_file_value()
-    // has correct information during the rebuild. The Form API provides no
-    // equivalent of form_set_value() for updating $form_state['input'], so
-    // inline that implementation with the same logic that form_set_value()
-    // uses.
+    // has correct information during the rebuild.
     $values_element = $element['#extended'] ? $element['fid'] : $element;
     form_set_value($values_element, NULL, $form_state);
-    _form_set_value($form_state['input'], $values_element, $values_element['#parents'], NULL);
+    drupal_array_set_nested_value($form_state['input'], $values_element['#parents'], NULL);
   }
 
   // Set the form to rebuild so that $form is correctly updated in response to
