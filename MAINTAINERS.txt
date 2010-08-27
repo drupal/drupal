@@ -1,4 +1,4 @@
-// $Id: MAINTAINERS.txt,v 1.43 2010/08/08 19:35:48 dries Exp $
+// $Id: MAINTAINERS.txt,v 1.44 2010/08/27 15:39:52 webchick Exp $
 
 Drupal core is maintained by the community.  To participate, go to
 
@@ -115,7 +115,7 @@ Update system
 - ?
 
 XML-RPC system
-- ?
+- Frederic G. Marand 'fgm' <http://drupal.org/user/27985>
 
 
 Topic coordinators
