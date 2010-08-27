@@ -115,7 +115,7 @@ Update system
 - ?
 
 XML-RPC system
-- ?
+- Frederic G. Marand 'fgm' <http://drupal.org/user/27985>
 
 
 Topic coordinators
