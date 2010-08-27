@@ -2624,14 +2624,9 @@ function system_update_7058() {
 }
 
 /**
- * Migrate upload.module to file.module.
+ * Create the {file_usage} table.
  */
-function system_update_7059(&$sandbox) {
-  if (!db_table_exists('upload')) {
-    return;
-  }
-
-  // Create the {file_usage} table.
+function system_update_7059() {
   $spec = array(
     'description' => 'Track where a file is used.',
     'fields' => array(
@@ -2678,6 +2673,15 @@ function system_update_7059(&$sandbox) {
     ),
   );
   db_create_table('file_usage', $spec);
+}
+
+/**
+ * Migrate upload.module to file.module.
+ */
+function system_update_7060(&$sandbox) {
+  if (!db_table_exists('upload')) {
+    return;
+  }
 
   if (!isset($sandbox['progress'])) {
     // Initialize batch update information.
