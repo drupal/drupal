@@ -46,6 +46,7 @@ function locale_update_7000() {
  */
 function locale_update_7001() {
   require_once DRUPAL_ROOT . '/includes/language.inc';
+  require_once DRUPAL_ROOT . '/modules/locale/locale.module';
 
   switch (variable_get('language_negotiation', 0)) {
     // LANGUAGE_NEGOTIATION_NONE.
