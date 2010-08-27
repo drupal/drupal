@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.install,v 1.64 2010/08/22 13:55:53 dries Exp $
+// $Id: locale.install,v 1.65 2010/08/27 11:07:36 webchick Exp $
 
 /**
  * @file
@@ -46,6 +46,7 @@ function locale_update_7000() {
  */
 function locale_update_7001() {
   require_once DRUPAL_ROOT . '/includes/language.inc';
+  require_once DRUPAL_ROOT . '/modules/locale/locale.module';
 
   switch (variable_get('language_negotiation', 0)) {
     // LANGUAGE_NEGOTIATION_NONE.
