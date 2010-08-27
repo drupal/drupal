@@ -113,6 +113,10 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
    * SQLite compatibility implementation for the SUBSTRING_INDEX() SQL function.
    */
   public function sqlFunctionSubstringIndex($string, $delimiter, $count) {
+    // If string is empty, simply return an empty string.
+    if (empty($string)) {
+      return '';
+    }
     $end = 0;
     for ($i = 0; $i < $count; $i++) {
       $end = strpos($string, $delimiter, $end + 1);
