@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1210 2010/08/22 12:46:21 dries Exp $
+// $Id: common.inc,v 1.1211 2010/08/27 11:54:32 webchick Exp $
 
 /**
  * @file
@@ -5580,6 +5580,157 @@ function element_get_visible_children(array $elements) {
 
   return array_keys($visible_children);
 }
+
+/**
+ * Sets a value in a nested array with variable depth.
+ *
+ * This helper function should be used when the depth of the array element you
+ * are changing may vary (that is, the number of parent keys is variable). It
+ * is primarily used for form structures and renderable arrays.
+ *
+ * Example:
+ * @code
+ * // Assume you have a 'signature' element somewhere in a form. It might be:
+ * $form['signature_settings']['signature'] = array(
+ *   '#type' => 'text_format',
+ *   '#title' => t('Signature'),
+ * );
+ * // Or, it might be further nested:
+ * $form['signature_settings']['user']['signature'] = array(
+ *   '#type' => 'text_format',
+ *   '#title' => t('Signature'),
+ * );
+ * @endcode
+ *
+ * To deal with the situation, the code needs to figure out the route to the
+ * element, given an array of parents that is either
+ * @code array('signature_settings', 'signature') @endcode in the first case or
+ * @code array('signature_settings', 'user', 'signature') @endcode in the second
+ * case.
+ *
+ * Without this helper function the only way to set the signature element in one
+ * line would be using eval(), which should be avoided:
+ * @code
+ * // Do not do this! Avoid eval().
+ * eval('$form[\'' . implode("']['", $parents) . '\'] = $element;');
+ * @endcode
+ *
+ * Instead, use this helper function:
+ * @code
+ * drupal_array_set_nested_value($form, $parents, $element);
+ * @endcode
+ *
+ * However if the number of array parent keys is static, the value should always
+ * be set directly rather than calling this function. For instance, for the
+ * first example we could just do:
+ * @code
+ * $form['signature_settings']['signature'] = $element;
+ * @endcode
+ *
+ * @param $array
+ *   A reference to the array to modify.
+ * @param $parents
+ *   An array of parent keys, starting with the outermost key.
+ * @param $value
+ *   The value to set.
+ *
+ * @see drupal_array_get_nested_value()
+ */
+function drupal_array_set_nested_value(&$array, $parents, $value) {
+  $ref = &$array;
+  foreach ($parents as $parent) {
+    // Note that PHP is fine with referencing a not existing array key - in this
+    // case it just creates an entry with NULL as value.
+    $ref = &$ref[$parent];
+  }
+  $ref = $value;
+}
+
+/**
+ * Retrieves a value from a nested array with variable depth.
+ *
+ * This helper function should be used when the depth of the array element you
+ * are changing may vary (that is, the number of parent keys is variable). It is
+ * primarily used for form structures and renderable arrays.
+ *
+ * Without this helper function the only way to get a nested array value with
+ * variable depth in one line would be using eval(), which should be avoided:
+ * @code
+ * // Do not do this! Avoid eval().
+ * // May also throw a PHP notice, if the variable array keys do not exist.
+ * eval('$value = $array[\'' . implode("']['", $parents) . "'];");
+ * @endcode
+ *
+ * Instead, use this helper function:
+ * @code
+ * list($value, $value_exists) = drupal_array_get_nested_value($form, $parents);
+ * if ($value_exists) {
+ *   // ... do something with $value ...
+ * }
+ * @endcode
+ *
+ * However if the number of array parent keys is static, the value should always
+ * be get directly rather than calling this function. For instance:
+ * @code
+ * $value = $form['signature_settings']['signature'];
+ * @endcode
+ *
+ * @param $array
+ *   The array from which to get the value.
+ * @param $parents
+ *   An array of parent keys of the value, starting with the outermost key.
+ *
+ * @return
+ *   An indexed array containing:
+ *   - The requested nested value, if it exists, or NULL if it does not.
+ *   - TRUE if all the parent keys exist, FALSE otherwise.
+ *
+ * @see drupal_array_set_nested_value()
+ * @see drupal_array_value_exists()
+ */
+function drupal_array_get_nested_value($array, $parents) {
+  foreach ($parents as $parent) {
+    if (isset($array[$parent])) {
+      $array = $array[$parent];
+    }
+    else {
+      return array(NULL, FALSE);
+    }
+  }
+  return array($array, TRUE);
+}
+
+/**
+ * Determines whether a value in a nested array with variable depth exists.
+ *
+ * This helper function should be used when the depth of the array element to be
+ * checked may vary (that is, the number of parent keys is variable). See
+ * drupal_array_set_nested_value() for details. This helper is primarily used
+ * for form structures and renderable arrays.
+ *
+ * @param $array
+ *   The array with the value to check for.
+ * @param $parents
+ *   An array of parent keys of the value, starting with the outermost key.
+ *
+ * @return
+ *   TRUE if all the parent keys exist, FALSE otherwise.
+ *
+ * @see drupal_array_set_nested_value()
+ * @see drupal_array_get_nested_value()
+ */
+function drupal_array_nested_value_exists($array, $parents) {
+  foreach ($parents as $parent) {
+    if (isset($array[$parent])) {
+      $array = $array[$parent];
+    }
+    else {
+      return FALSE;
+    }
+  }
+  return TRUE;
+}
+
 
 /**
  * Provide theme registration for themes across .inc files.

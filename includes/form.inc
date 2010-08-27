@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.484 2010/08/20 01:08:18 dries Exp $
+// $Id: form.inc,v 1.485 2010/08/27 11:54:32 webchick Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -953,6 +953,24 @@ function drupal_validate_form($form_id, &$form, &$form_state) {
 
   _form_validate($form, $form_state, $form_id);
   $validated_forms[$form_id] = TRUE;
+
+  // If validation errors are limited then remove any non validated form values,
+  // so that only values that passed validation are left for submit callbacks.
+  if (isset($form_state['triggering_element']['#limit_validation_errors']) && $form_state['triggering_element']['#limit_validation_errors'] !== FALSE) {
+    $values = array();
+    foreach ($form_state['triggering_element']['#limit_validation_errors'] as $section) {
+      list($value, $value_exists) = drupal_array_get_nested_value($form_state['values'], $section);
+      if ($value_exists) {
+        drupal_array_set_nested_value($values, $section, $value);
+      }
+    }
+    // For convenience we always make the value of the pressed button available.
+    if (isset($form_state['triggering_element']['#button_type'])) {
+      $values[$form_state['triggering_element']['#name']] = $form_state['triggering_element']['#value'];
+      drupal_array_set_nested_value($values, $form_state['triggering_element']['#parents'], $form_state['triggering_element']['#value']);
+    }
+    $form_state['values'] = $values;
+  }
 }
 
 /**
@@ -1727,11 +1745,9 @@ function _form_builder_handle_input_element($form_id, &$element, &$form_state) {
       // submit explicit NULL values when calling drupal_form_submit(), so we do
       // not modify $form_state['input'] for them.
       if (!$input_exists && !$form_state['rebuild'] && !$form_state['programmed']) {
-        // We leverage the internal logic of form_set_value() to change the
-        // input values by passing $form_state['input'] instead of the usual
-        // $form_state['values']. In effect, this adds the necessary parent keys
-        // to $form_state['input'] and sets the element's input value to NULL.
-        _form_set_value($form_state['input'], $element, $element['#parents'], NULL);
+        // Add the necessary parent keys to $form_state['input'] and sets the
+        // element's input value to NULL.
+        drupal_array_set_nested_value($form_state['input'], $element['#parents'], NULL);
         $input_exists = TRUE;
       }
       // If we have input for the current element, assign it to the #value
@@ -1790,11 +1806,7 @@ function _form_builder_handle_input_element($form_id, &$element, &$form_state) {
 
   // Set the element's value in $form_state['values'], but only, if its key
   // does not exist yet (a #value_callback may have already populated it).
-  $values = $form_state['values'];
-  foreach ($element['#parents'] as $key) {
-    $values = (isset($values[$key]) ? $values[$key] : NULL);
-  }
-  if (!isset($values)) {
+  if (!drupal_array_nested_value_exists($form_state['values'], $element['#parents'])) {
     form_set_value($element, $element['#value'], $form_state);
   }
 }
@@ -2140,26 +2152,7 @@ function form_type_token_value($element, $input = FALSE) {
  *   Form state array where the value change should be recorded.
  */
 function form_set_value($element, $value, &$form_state) {
-  _form_set_value($form_state['values'], $element, $element['#parents'], $value);
-}
-
-/**
- * Helper function for form_set_value() and _form_builder_handle_input_element().
- *
- * We iterate over $parents and create nested arrays for them in $form_values if
- * needed. Then we insert the value into the last parent key.
- */
-function _form_set_value(&$form_values, $element, $parents, $value) {
-  $parent = array_shift($parents);
-  if (empty($parents)) {
-    $form_values[$parent] = $value;
-  }
-  else {
-    if (!isset($form_values[$parent])) {
-      $form_values[$parent] = array();
-    }
-    _form_set_value($form_values[$parent], $element, $parents, $value);
-  }
+  drupal_array_set_nested_value($form_state['values'], $element['#parents'], $value);
 }
 
 /**
