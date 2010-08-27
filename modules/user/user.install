@@ -353,7 +353,7 @@ function user_update_dependencies() {
   );
   // user_update_7013 relies on system_update_7060.
   $dependencies['user'][7013] = array(
-    'system' => 7060,
+    'system' => 7059,
   );
 
   return $dependencies;
