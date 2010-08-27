@@ -1,5 +1,5 @@
 <?php
-// $Id: user.install,v 1.60 2010/08/27 10:42:48 webchick Exp $
+// $Id: user.install,v 1.61 2010/08/27 11:59:51 webchick Exp $
 
 /**
  * @file
@@ -353,7 +353,7 @@ function user_update_dependencies() {
   );
   // user_update_7013 relies on system_update_7060.
   $dependencies['user'][7013] = array(
-    'system' => 7060,
+    'system' => 7059,
   );
 
   return $dependencies;

@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.500 2010/08/27 11:58:04 webchick Exp $
+// $Id: system.install,v 1.501 2010/08/27 11:59:51 webchick Exp $
 
 /**
  * @file
@@ -2631,6 +2631,54 @@ function system_update_7059(&$sandbox) {
     return;
   }
 
+  // Create the {file_usage} table.
+  $spec = array(
+    'description' => 'Track where a file is used.',
+    'fields' => array(
+      'fid' => array(
+        'description' => 'File ID.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'module' => array(
+        'description' => 'The name of the module that is using the file.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'type' => array(
+        'description' => 'The name of the object type in which the file is used.',
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'id' => array(
+        'description' => 'The primary key of the object using the file.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'count' => array(
+        'description' => 'The number of times this file is used by this object.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('fid', 'type', 'id', 'module'),
+    'indexes' => array(
+      'type_id' => array('type', 'id'),
+      'fid_count' => array('fid', 'count'),
+      'fid_module' => array('fid', 'module'),
+    ),
+  );
+  db_create_table('file_usage', $spec);
+
   if (!isset($sandbox['progress'])) {
     // Initialize batch update information.
     $sandbox['progress'] = 0;
@@ -2830,58 +2878,6 @@ function system_update_7059(&$sandbox) {
     // Indicate our current progress to the batch update system.
     $sandbox['#finished'] = $sandbox['progress'] / $sandbox['max'];
   }
-}
-
-/**
- * Create the file_usage table.
- */
-function system_update_7060() {
-  $spec = array(
-    'description' => 'Track where a file is used.',
-    'fields' => array(
-      'fid' => array(
-        'description' => 'File ID.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-      ),
-      'module' => array(
-        'description' => 'The name of the module that is using the file.',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'type' => array(
-        'description' => 'The name of the object type in which the file is used.',
-        'type' => 'varchar',
-        'length' => 64,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'id' => array(
-        'description' => 'The primary key of the object using the file.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'count' => array(
-        'description' => 'The number of times this file is used by this object.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-    ),
-    'primary key' => array('fid', 'type', 'id', 'module'),
-    'indexes' => array(
-      'type_id' => array('type', 'id'),
-      'fid_count' => array('fid', 'count'),
-      'fid_module' => array('fid', 'module'),
-    ),
-  );
-  db_create_table('file_usage', $spec);
 }
 
 /**
