@@ -423,7 +423,7 @@ function update_fix_d7_requirements() {
       ),
       'permission' => array(
         'type' => 'varchar',
-        'length' => 64,
+        'length' => 128,
         'not null' => TRUE,
         'default' => '',
       ),

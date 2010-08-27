@@ -63,7 +63,7 @@ function user_schema() {
       ),
       'permission' => array(
         'type' => 'varchar',
-        'length' => 64,
+        'length' => 128,
         'not null' => TRUE,
         'default' => '',
         'description' => 'A single permission granted to the role identified by rid.',
