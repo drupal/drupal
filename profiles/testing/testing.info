@@ -1,6 +1,6 @@
-; $Id: testing.info,v 1.1 2010/08/22 15:31:18 dries Exp $
+; $Id: testing.info,v 1.2 2010/08/27 12:36:53 webchick Exp $
 name = Testing
-description = Totally stripped back testing profile.
+description = Minimal profile for running tests. Includes absolutely required modules only.
 version = VERSION
 core = 7.x
 hidden = TRUE

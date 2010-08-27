@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.226 2010/08/22 15:31:18 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.227 2010/08/27 12:36:53 webchick Exp $
 
 /**
  * Global variable that holds information about the tests being run.
@@ -1221,8 +1221,8 @@ class DrupalWebTestCase extends DrupalTestCase {
 
     // Run the profile tasks.
     $install_profile_module_exists = db_query("SELECT 1 FROM {system} WHERE type = 'module' AND name = :name", array(
-      ':name' => $this->profile))
-      ->fetchField();
+      ':name' => $this->profile,
+    ))->fetchField();
     if ($install_profile_module_exists) {
       module_enable(array($this->profile), FALSE);
     }

@@ -1,4 +1,5 @@
 <?php
+// $Id: testing.install,v 1.2 2010/08/27 12:36:53 webchick Exp $
 
 /**
  * Implements hook_install().
@@ -6,7 +7,6 @@
  * Perform actions to set up the site for this profile.
  */
 function testing_install() {
-
   // Allow visitor account creation, but with administrative approval.
   variable_set('user_register', USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL);
 
@@ -14,4 +14,3 @@ function testing_install() {
   user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access content'));
   user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array('access content'));
 }
-
