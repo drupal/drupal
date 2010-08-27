@@ -2809,7 +2809,7 @@ function system_update_7059(&$sandbox) {
 
       // Add the usage entry for the file.
       $file = (object) $file;
-      file_usage_add($file, 'file', 'node', $revision->nid);
+      file_usage_add($file, 'file', 'node', $revision['nid']);
     }
 
     // Insert the revision's files into the field_upload table.
