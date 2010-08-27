@@ -1,5 +1,5 @@
 <?php
-// $Id: user.install,v 1.59 2010/08/23 14:56:37 webchick Exp $
+// $Id: user.install,v 1.60 2010/08/27 10:42:48 webchick Exp $
 
 /**
  * @file
@@ -63,7 +63,7 @@ function user_schema() {
       ),
       'permission' => array(
         'type' => 'varchar',
-        'length' => 64,
+        'length' => 128,
         'not null' => TRUE,
         'default' => '',
         'description' => 'A single permission granted to the role identified by rid.',

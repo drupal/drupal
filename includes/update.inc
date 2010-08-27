@@ -1,5 +1,5 @@
 <?php
-// $Id: update.inc,v 1.64 2010/07/17 19:44:06 dries Exp $
+// $Id: update.inc,v 1.65 2010/08/27 10:42:48 webchick Exp $
 
 /**
  * @file
@@ -423,7 +423,7 @@ function update_fix_d7_requirements() {
       ),
       'permission' => array(
         'type' => 'varchar',
-        'length' => 64,
+        'length' => 128,
         'not null' => TRUE,
         'default' => '',
       ),
