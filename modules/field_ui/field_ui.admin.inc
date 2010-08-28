@@ -1,5 +1,5 @@
 <?php
-// $Id: field_ui.admin.inc,v 1.62 2010/08/22 14:14:17 dries Exp $
+// $Id: field_ui.admin.inc,v 1.63 2010/08/28 20:12:42 webchick Exp $
 
 /**
  * @file
@@ -840,8 +840,9 @@ function field_ui_display_overview_form($form, &$form_state, $entity_type, $bund
           '#name' => $name . '_formatter_settings_cancel',
           '#value' => t('Cancel'),
           '#op' => 'cancel',
-          // Do not check errors for the 'Cancel' button.
-          '#limit_validation_errors' => array(),
+          // Do not check errors for the 'Cancel' button. We still need the
+          // value of the 'formatter type' select in $form_state['values'].
+          '#limit_validation_errors' => array(array('settings', $name, 'type'))
         );
         $table[$name]['#settings_editing'] = TRUE;
         // When formatter is changed, cancel the currently edited settings. The
@@ -865,8 +866,9 @@ function field_ui_display_overview_form($form, &$form_state, $entity_type, $bund
           '#src' => 'misc/configure.png',
           '#attributes' => array('class' => array('field-formatter-settings-edit'), 'alt' => t('Edit')),
           '#op' => 'edit',
-          // Do not check errors for the 'Edit' button.
-          '#limit_validation_errors' => array(),
+          // Do not check errors for the 'Edit' button. We still need the value
+          // of the 'formatter type' select in $form_state['values'].
+          '#limit_validation_errors' => array(array('settings', $name, 'type')),
           '#prefix' => '<div class="field-formatter-settings-edit-wrapper">',
           '#suffix' => '</div>',
         );
