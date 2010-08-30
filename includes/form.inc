@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.485 2010/08/27 11:54:32 webchick Exp $
+// $Id: form.inc,v 1.486 2010/08/30 05:52:35 webchick Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -3197,7 +3197,6 @@ function theme_textarea($variables) {
   $element = $variables['element'];
   $element['#attributes']['name'] = $element['#name'];
   $element['#attributes']['id'] = $element['#id'];
-  $element['#attributes']['value'] = $element['#value'];
   $element['#attributes']['cols'] = $element['#cols'];
   $element['#attributes']['rows'] = $element['#rows'];
   _form_set_class($element, array('form-textarea'));
