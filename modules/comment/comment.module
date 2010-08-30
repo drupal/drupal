@@ -688,11 +688,7 @@ function comment_node_view($node, $view_mode) {
       $links['comment_forbidden']['html'] = TRUE;
     }
 
-    $node->content['links']['comment'] = array(
-      '#theme' => 'links__comment_node',
-      '#links' => $links,
-      '#attributes' => array('class' => array('links', 'inline')),
-    );
+    $node->content['links']['#links'] = array_merge($node->content['links']['#links'], $links);
 
     // Only append comments when we are building a node on its own node detail
     // page. We compare $node and $page_node to ensure that comments are not

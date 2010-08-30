@@ -1286,7 +1286,7 @@ function node_build_content($node, $view_mode = 'full') {
       'attributes' => array('rel' => 'tag', 'title' => strip_tags($node->title))
     );
   }
-  $node->content['links']['node'] = array(
+  $node->content['links'] = array(
     '#theme' => 'links__node',
     '#links' => $links,
     '#attributes' => array('class' => array('links', 'inline')),
