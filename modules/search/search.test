@@ -1,5 +1,5 @@
 <?php
-// $Id: search.test,v 1.72 2010/08/18 18:40:50 dries Exp $
+// $Id: search.test,v 1.73 2010/08/30 00:22:03 webchick Exp $
 
 // The search index can contain different types of content. Typically the type is 'node'.
 // Here we test with _test_ and _test2_ as the type.
@@ -559,7 +559,7 @@ class SearchBlockTestCase extends DrupalWebTestCase {
 
     // Set the block to a region to confirm block is availble.
     $edit = array();
-    $edit['search_form[region]'] = 'footer';
+    $edit['blocks[search_form][region]'] = 'footer';
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
     $this->assertText(t('The block settings have been updated.'), t('Block successfully move to footer region.'));
   }
@@ -570,7 +570,7 @@ class SearchBlockTestCase extends DrupalWebTestCase {
   function testBlock() {
     // Enable the block, and place it in the 'content' region so that it isn't
     // hidden on 404 pages.
-    $edit = array('search_form[region]' => 'content');
+    $edit = array('blocks[search_form][region]' => 'content');
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
 
     // Test a normal search via the block form, from the front page.
@@ -1137,7 +1137,7 @@ class SearchConfigSettingsForm extends DrupalWebTestCase {
 
     // Enable the search block.
     $edit = array();
-    $edit['search_form[region]'] = 'content';
+    $edit['blocks[search_form][region]'] = 'content';
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
   }
 

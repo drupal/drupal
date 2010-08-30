@@ -1,5 +1,5 @@
 <?php
-// $Id: book.test,v 1.26 2010/08/05 23:53:37 webchick Exp $
+// $Id: book.test,v 1.27 2010/08/30 00:22:03 webchick Exp $
 
 class BookTestCase extends DrupalWebTestCase {
   protected $book;
@@ -271,7 +271,7 @@ class BookBlockTestCase extends DrupalWebTestCase {
 
     // Set the block to a region to confirm block is availble.
     $edit = array();
-    $edit['book_navigation[region]'] = 'footer';
+    $edit['blocks[book_navigation][region]'] = 'footer';
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
     $this->assertText(t('The block settings have been updated.'), t('Block successfully move to footer region.'));
   }

@@ -1,5 +1,5 @@
 <?php
-// $Id: system.test,v 1.140 2010/08/22 14:55:29 dries Exp $
+// $Id: system.test,v 1.141 2010/08/30 00:22:03 webchick Exp $
 
 /**
  * Helper class for module test cases.
@@ -696,7 +696,7 @@ class AccessDeniedTestCase extends DrupalWebTestCase {
     // Log back in, set the custom 403 page to /user and remove the block
     $this->drupalLogin($this->admin_user);
     variable_set('site_403', 'user');
-    $this->drupalPost('admin/structure/block', array('user_login[region]' => '-1'), t('Save blocks'));
+    $this->drupalPost('admin/structure/block', array('blocks[user_login][region]' => '-1'), t('Save blocks'));
 
     // Check that we can log in from the 403 page.
     $this->drupalLogout();
@@ -1165,7 +1165,7 @@ class SystemBlockTestCase extends DrupalWebTestCase {
 
     // Set the powered-by block to the footer region.
     $edit = array();
-    $edit['system_powered-by[region]'] = 'footer';
+    $edit['blocks[system_powered-by][region]'] = 'footer';
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
     $this->assertText(t('The block settings have been updated.'), t('Block successfully moved to footer region.'));
 
@@ -1175,7 +1175,7 @@ class SystemBlockTestCase extends DrupalWebTestCase {
 
     // Set the block to the disabled region.
     $edit = array();
-    $edit['system_powered-by[region]'] = '-1';
+    $edit['blocks[system_powered-by][region]'] = '-1';
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
 
     // Confirm that the block is hidden.
@@ -1183,7 +1183,7 @@ class SystemBlockTestCase extends DrupalWebTestCase {
 
     // For convenience of developers, set the block to its default settings.
     $edit = array();
-    $edit['system_powered-by[region]'] = 'footer';
+    $edit['blocks[system_powered-by][region]'] = 'footer';
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
     $this->drupalPost('admin/structure/block/manage/system/powered-by/configure', array('title' => ''), t('Save block'));
   }

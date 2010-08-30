@@ -1,5 +1,5 @@
 <?php
-// $Id: node.test,v 1.93 2010/08/22 16:11:12 dries Exp $
+// $Id: node.test,v 1.94 2010/08/30 00:22:03 webchick Exp $
 
 /**
  * Test the node_load_multiple() function.
@@ -634,7 +634,7 @@ class NodeBlockTestCase extends DrupalWebTestCase {
 
     // Set the block to a region to confirm block is available.
     $edit = array();
-    $edit['node_syndicate[region]'] = 'footer';
+    $edit['blocks[node_syndicate][region]'] = 'footer';
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
     $this->assertText(t('The block settings have been updated.'), t('Block successfully move to footer region.'));
   }
@@ -1398,7 +1398,7 @@ class NodeBlockFunctionalTest extends DrupalWebTestCase {
 
     // Set the block to a region to confirm block is available.
     $edit = array(
-      'node_recent[region]' => 'sidebar_first',
+      'blocks[node_recent][region]' => 'sidebar_first',
     );
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
     $this->assertText(t('The block settings have been updated.'), t('Block saved to first sidebar region.'));

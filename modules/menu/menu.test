@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.test,v 1.39 2010/08/22 14:57:45 dries Exp $
+// $Id: menu.test,v 1.40 2010/08/30 00:22:03 webchick Exp $
 
 /**
  * @file
@@ -157,7 +157,7 @@ class MenuTestCase extends DrupalWebTestCase {
     // Enable the custom menu block.
     $menu_name = 'menu-' . $menu_name; // Drupal prepends the name with 'menu-'.
     $edit = array();
-    $edit['menu_' . $menu_name . '[region]'] = 'sidebar_first';
+    $edit['blocks[menu_' . $menu_name . '][region]'] = 'sidebar_first';
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
     $this->assertResponse(200);
     $this->assertText(t('The block settings have been updated.'), t('Custom menu block was enabled'));

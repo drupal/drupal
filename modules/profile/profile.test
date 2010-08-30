@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.test,v 1.29 2010/08/05 23:53:38 webchick Exp $
+// $Id: profile.test,v 1.30 2010/08/30 00:22:03 webchick Exp $
 
 /**
  * A class for common methods for testing profile fields.
@@ -397,7 +397,7 @@ class ProfileBlockTestCase extends ProfileTestCase {
   function testAuthorInformationBlock() {
     // Set the block to a region to confirm the block is availble.
     $edit = array();
-    $edit['profile_author-information[region]'] = 'footer';
+    $edit['blocks[profile_author-information][region]'] = 'footer';
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
     $this->assertText(t('The block settings have been updated.'), t('Block successfully move to footer region.'));
 

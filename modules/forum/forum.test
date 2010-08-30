@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.test,v 1.61 2010/08/09 01:18:46 webchick Exp $
+// $Id: forum.test,v 1.62 2010/08/30 00:22:03 webchick Exp $
 
 class ForumTestCase extends DrupalWebTestCase {
   protected $admin_user;
@@ -145,14 +145,14 @@ class ForumTestCase extends DrupalWebTestCase {
 
     // Enable the active forum block.
     $edit = array();
-    $edit['forum_active[region]'] = 'sidebar_second';
+    $edit['blocks[forum_active][region]'] = 'sidebar_second';
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
     $this->assertResponse(200);
     $this->assertText(t('The block settings have been updated.'), t('Active forum topics forum block was enabled'));
 
     // Enable the new forum block.
     $edit = array();
-    $edit['forum_new[region]'] = 'sidebar_second';
+    $edit['blocks[forum_new][region]'] = 'sidebar_second';
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
     $this->assertResponse(200);
     $this->assertText(t('The block settings have been updated.'), t('[New forum topics] Forum block was enabled'));

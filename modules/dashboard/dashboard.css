@@ -1,4 +1,4 @@
-/* $Id: dashboard.css,v 1.13 2010/04/28 20:08:38 dries Exp $ */
+/* $Id: dashboard.css,v 1.14 2010/08/30 00:22:03 webchick Exp $ */
 
 #dashboard div.dashboard-region {
   float: left;
@@ -44,11 +44,6 @@
 
 #dashboard .canvas-content {
   padding: 10px;
-}
-
-#dashboard .canvas-content a {
-  color: #fff;
-  text-decoration: underline;
 }
 
 #dashboard #disabled-blocks .ui-sortable {

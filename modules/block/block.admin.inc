@@ -1,5 +1,5 @@
 <?php
-// $Id: block.admin.inc,v 1.85 2010/07/30 02:47:27 dries Exp $
+// $Id: block.admin.inc,v 1.86 2010/08/30 00:22:03 webchick Exp $
 
 /**
  * @file
@@ -32,30 +32,61 @@ function block_admin_display($theme = NULL) {
   }
 
   // Fetch and sort blocks.
+  $blocks = block_admin_display_prepare_blocks($theme);
+
+  return drupal_get_form('block_admin_display_form', $blocks, $theme);
+}
+
+/**
+ * Prepares a list of blocks for display on the blocks administration page.
+ *
+ * @param $theme
+ *   The machine-readable name of the theme whose blocks should be returned.
+ *
+ * @return
+ *   An array of blocks, as returned by _block_rehash(), sorted by region in
+ *   preparation for display on the blocks administration page.
+ *
+ * @see block_admin_display_form()
+ */
+function block_admin_display_prepare_blocks($theme) {
   $blocks = _block_rehash($theme);
   $compare_theme = &drupal_static('_block_compare:theme');
   $compare_theme = $theme;
   usort($blocks, '_block_compare');
-
-  return drupal_get_form('block_admin_display_form', $blocks, $theme);
+  return $blocks;
 }
 
 /**
  * Form builder for the main blocks administration form.
  *
  * @param $blocks
- *   An array of all blocks returned by modules in hook_block_info().
+ *   An array of blocks, as returned by block_admin_display_prepare_blocks().
  * @param $theme
  *   A string representing the name of the theme to edit blocks for.
+ * @param $block_regions
+ *   (optional) An array of regions in which the blocks will be allowed to be
+ *   placed. Defaults to all visible regions for the theme whose blocks are
+ *   being configured. In all cases, a dummy region for disabled blocks will
+ *   also be displayed.
  *
- * @see block_admin_display_form_submit()
+ * @return
+ *   An array representing the form definition.
+ *
  * @ingroup forms
+ * @see block_admin_display_form_submit()
  */
-function block_admin_display_form($form, &$form_state, $blocks, $theme) {
+function block_admin_display_form($form, &$form_state, $blocks, $theme, $block_regions = NULL) {
 
   drupal_add_css(drupal_get_path('module', 'block') . '/block.css');
 
-  $block_regions = system_region_list($theme, REGIONS_VISIBLE) + array(BLOCK_REGION_NONE => '<' . t('none') . '>');
+  // Get a list of block regions if one was not provided.
+  if (!isset($block_regions)) {
+    $block_regions = system_region_list($theme, REGIONS_VISIBLE);
+  }
+
+  // We always add a region for disabled blocks.
+  $block_regions += array(BLOCK_REGION_NONE => '<' . t('none') . '>');
 
   // Weights range from -delta to +delta, so delta should be at least half
   // of the amount of blocks present. This makes sure all blocks in the same
@@ -63,46 +94,53 @@ function block_admin_display_form($form, &$form_state, $blocks, $theme) {
   $weight_delta = round(count($blocks) / 2);
 
   // Build the form tree.
-  $form['edited_theme'] = array('#type' => 'value', '#value' => $theme);
-  $form['#action'] = arg(4) ? url('admin/structure/block/list/' . $theme) : url('admin/structure/block');
+  $form['edited_theme'] = array(
+    '#type' => 'value',
+    '#value' => $theme,
+  );
+  $form['block_regions'] = array(
+    '#type' => 'value',
+    '#value' => $block_regions,
+  );
+  $form['blocks'] = array();
   $form['#tree'] = TRUE;
 
   foreach ($blocks as $i => $block) {
     $key = $block['module'] . '_' . $block['delta'];
-    $form[$key]['module'] = array(
+    $form['blocks'][$key]['module'] = array(
       '#type' => 'value',
       '#value' => $block['module'],
     );
-    $form[$key]['delta'] = array(
+    $form['blocks'][$key]['delta'] = array(
       '#type' => 'value',
       '#value' => $block['delta'],
     );
-    $form[$key]['info'] = array(
+    $form['blocks'][$key]['info'] = array(
       '#markup' => check_plain($block['info']),
     );
-    $form[$key]['theme'] = array(
+    $form['blocks'][$key]['theme'] = array(
       '#type' => 'hidden',
       '#value' => $theme,
     );
-    $form[$key]['weight'] = array(
+    $form['blocks'][$key]['weight'] = array(
       '#type' => 'weight',
       '#default_value' => $block['weight'],
       '#delta' => $weight_delta,
       '#title_display' => 'invisible',
       '#title' => t('Weight for @row', array('@row' => $block['info'])),
     );
-    $form[$key]['region'] = array(
+    $form['blocks'][$key]['region'] = array(
       '#type' => 'select',
       '#default_value' => $block['region'],
       '#options' => $block_regions,
     );
-    $form[$key]['configure'] = array(
+    $form['blocks'][$key]['configure'] = array(
       '#type' => 'link',
       '#title' => t('configure'),
       '#href' => 'admin/structure/block/manage/' . $block['module'] . '/' . $block['delta'] . '/configure',
     );
     if ($block['module'] == 'block') {
-      $form[$key]['delete'] = array(
+      $form['blocks'][$key]['delete'] = array(
         '#type' => 'link',
         '#title' => t('delete'),
         '#href' => 'admin/structure/block/manage/' . $block['module'] . '/' . $block['delta'] . '/delete',
@@ -110,7 +148,7 @@ function block_admin_display_form($form, &$form_state, $blocks, $theme) {
     }
   }
   // Do not allow disabling the main system content block.
-  unset($form['system_main']['region']['#options'][BLOCK_REGION_NONE]);
+  unset($form['blocks']['system_main']['region']['#options'][BLOCK_REGION_NONE]);
 
   $form['actions'] = array(
     '#tree' => FALSE,
@@ -132,7 +170,7 @@ function block_admin_display_form($form, &$form_state, $blocks, $theme) {
 function block_admin_display_form_submit($form, &$form_state) {
   $txn = db_transaction();
 
-  foreach ($form_state['values'] as $block) {
+  foreach ($form_state['values']['blocks'] as $block) {
     $block['status'] = (int) ($block['region'] != BLOCK_REGION_NONE);
     $block['region'] = $block['status'] ? $block['region'] : '';
     db_update('block')
@@ -590,7 +628,7 @@ function block_custom_block_delete_submit($form, &$form_state) {
 }
 
 /**
- * Process variables for block-admin-display.tpl.php.
+ * Processes variables for block-admin-display-form.tpl.php.
  *
  * The $variables array contains the following arguments:
  * - $form
@@ -599,11 +637,12 @@ function block_custom_block_delete_submit($form, &$form_state) {
  * @see theme_block_admin_display()
  */
 function template_preprocess_block_admin_display_form(&$variables) {
+  $variables['block_regions'] = $variables['form']['block_regions']['#value'];
+  if (isset($variables['block_regions'][BLOCK_REGION_NONE])) {
+    $variables['block_regions'][BLOCK_REGION_NONE] = t('Disabled');
+  }
 
-  $block_regions = system_region_list($variables['form']['edited_theme']['#value'], REGIONS_VISIBLE);
-  $variables['block_regions'] = $block_regions + array(BLOCK_REGION_NONE => t('Disabled'));
-
-  foreach ($block_regions as $key => $value) {
+  foreach ($variables['block_regions'] as $key => $value) {
     // Initialize an empty array for the region.
     $variables['block_listing'][$key] = array();
   }
@@ -611,33 +650,28 @@ function template_preprocess_block_admin_display_form(&$variables) {
   // Initialize disabled blocks array.
   $variables['block_listing'][BLOCK_REGION_NONE] = array();
 
-  // Set up to track previous region in loop.
-  $last_region = '';
-  foreach (element_children($variables['form']) as $i) {
-    $block = &$variables['form'][$i];
+  // Add each block in the form to the appropriate place in the block listing.
+  foreach (element_children($variables['form']['blocks']) as $i) {
+    $block = &$variables['form']['blocks'][$i];
 
-    // Only take form elements that are blocks.
-    if (isset($block['info'])) {
-      // Fetch region for current block.
-      $region = $block['region']['#default_value'];
+    // Fetch the region for the current block.
+    $region = $block['region']['#default_value'];
 
-      // Set special classes needed for table drag and drop.
-      $variables['form'][$i]['region']['#attributes']['class'] = array('block-region-select', 'block-region-' . $region);
-      $variables['form'][$i]['weight']['#attributes']['class'] = array('block-weight', 'block-weight-' . $region);
+    // Set special classes needed for table drag and drop.
+    $block['region']['#attributes']['class'] = array('block-region-select', 'block-region-' . $region);
+    $block['weight']['#attributes']['class'] = array('block-weight', 'block-weight-' . $region);
 
-      $variables['block_listing'][$region][$i] = new stdClass();
-      $variables['block_listing'][$region][$i]->row_class = !empty($block['#attributes']['class']) ? implode(' ', $block['#attributes']['class']) : '';
-      $variables['block_listing'][$region][$i]->block_modified = !empty($block['#attributes']['class']) && in_array('block-modified', $block['#attributes']['class']);
-      $variables['block_listing'][$region][$i]->block_title =  drupal_render($block['info']);
-      $variables['block_listing'][$region][$i]->region_select = drupal_render($block['region']) . drupal_render($block['theme']);
-      $variables['block_listing'][$region][$i]->weight_select = drupal_render($block['weight']);
-      $variables['block_listing'][$region][$i]->configure_link = drupal_render($block['configure']);
-      $variables['block_listing'][$region][$i]->delete_link = !empty($block['delete']) ? drupal_render($block['delete']) : '';
-      $variables['block_listing'][$region][$i]->printed = FALSE;
-
-      $last_region = $region;
-    }
+    $variables['block_listing'][$region][$i] = new stdClass();
+    $variables['block_listing'][$region][$i]->row_class = !empty($block['#attributes']['class']) ? implode(' ', $block['#attributes']['class']) : '';
+    $variables['block_listing'][$region][$i]->block_modified = !empty($block['#attributes']['class']) && in_array('block-modified', $block['#attributes']['class']);
+    $variables['block_listing'][$region][$i]->block_title = drupal_render($block['info']);
+    $variables['block_listing'][$region][$i]->region_select = drupal_render($block['region']) . drupal_render($block['theme']);
+    $variables['block_listing'][$region][$i]->weight_select = drupal_render($block['weight']);
+    $variables['block_listing'][$region][$i]->configure_link = drupal_render($block['configure']);
+    $variables['block_listing'][$region][$i]->delete_link = !empty($block['delete']) ? drupal_render($block['delete']) : '';
+    $variables['block_listing'][$region][$i]->printed = FALSE;
   }
 
   $variables['form_submit'] = drupal_render_children($variables['form']);
 }
+

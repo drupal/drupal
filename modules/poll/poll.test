@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.test,v 1.37 2010/08/05 23:53:38 webchick Exp $
+// $Id: poll.test,v 1.38 2010/08/30 00:22:03 webchick Exp $
 
 /**
  * @file
@@ -265,7 +265,7 @@ class PollBlockTestCase extends PollTestCase {
 
     // Set the block to a region to confirm block is available.
     $edit = array();
-    $edit['poll_recent[region]'] = 'footer';
+    $edit['blocks[poll_recent][region]'] = 'footer';
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
     $this->assertText(t('The block settings have been updated.'), t('Block successfully move to footer region.'));
 

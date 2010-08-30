@@ -1,5 +1,5 @@
 <?php
-// $Id: block.test,v 1.57 2010/08/08 19:35:49 dries Exp $
+// $Id: block.test,v 1.58 2010/08/30 00:22:03 webchick Exp $
 
 /**
  * @file
@@ -120,7 +120,7 @@ class BlockTestCase extends DrupalWebTestCase {
     // Set the created custom block to a specific region.
     $bid = db_query("SELECT bid FROM {block_custom} WHERE info = :info", array(':info' => $custom_block['info']))->fetchField();
     $edit = array();
-    $edit['block_' . $bid . '[region]'] = $this->regions[1];
+    $edit['blocks[block_' . $bid . '][region]'] = $this->regions[1];
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
 
     // Confirm that the custom block is being displayed using configured text format.
@@ -215,7 +215,7 @@ class BlockTestCase extends DrupalWebTestCase {
 
     // Set the block to the disabled region.
     $edit = array();
-    $edit[$block['module'] . '_' . $block['delta'] . '[region]'] = '-1';
+    $edit['blocks[' . $block['module'] . '_' . $block['delta'] . '][region]'] = '-1';
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
 
     // Confirm that the block was moved to the proper region.
@@ -228,7 +228,7 @@ class BlockTestCase extends DrupalWebTestCase {
 
     // For convenience of developers, put the navigation block back.
     $edit = array();
-    $edit[$block['module'] . '_' . $block['delta'] . '[region]'] = $this->regions[1];
+    $edit['blocks[' . $block['module'] . '_' . $block['delta'] . '][region]'] = $this->regions[1];
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
     $this->assertText(t('The block settings have been updated.'), t('Block successfully move to first sidebar region.'));
 
@@ -239,7 +239,7 @@ class BlockTestCase extends DrupalWebTestCase {
   function moveBlockToRegion($block, $region) {
     // Set the created block to a specific region.
     $edit = array();
-    $edit[$block['module'] . '_' . $block['delta'] . '[region]'] = $region;
+    $edit['blocks[' . $block['module'] . '_' . $block['delta'] . '][region]'] = $region;
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
 
     // Confirm that the block was moved to the proper region.
@@ -418,7 +418,7 @@ class BlockCacheTestCase extends DrupalWebTestCase {
     variable_set('block_cache', TRUE);
 
     // Enable our test block.
-    $edit['block_test_test_cache[region]'] = 'sidebar_first';
+    $edit['blocks[block_test_test_cache][region]'] = 'sidebar_first';
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
   }
 
@@ -594,7 +594,7 @@ class BlockHTMLIdTestCase extends DrupalWebTestCase {
     $this->drupalLogin($this->admin_user);
 
     // Enable our test block.
-    $edit['block_test_test_html_id[region]'] = 'sidebar_first';
+    $edit['blocks[block_test_test_html_id][region]'] = 'sidebar_first';
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
 
     // Make sure the block has some content so it will appear

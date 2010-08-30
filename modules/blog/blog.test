@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.test,v 1.29 2010/08/05 23:53:37 webchick Exp $
+// $Id: blog.test,v 1.30 2010/08/30 00:22:03 webchick Exp $
 
 class BlogTestCase extends DrupalWebTestCase {
   protected $big_user;
@@ -62,7 +62,7 @@ class BlogTestCase extends DrupalWebTestCase {
     $this->drupalLogin($this->big_user);
     // Enable the recent blog block.
     $edit = array();
-    $edit['blog_recent[region]'] = 'sidebar_second';
+    $edit['blocks[blog_recent][region]'] = 'sidebar_second';
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
     $this->assertResponse(200);
     // Verify ability to change number of recent blog posts in block.

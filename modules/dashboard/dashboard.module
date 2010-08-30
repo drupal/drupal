@@ -1,5 +1,5 @@
 <?php
-// $Id: dashboard.module,v 1.33 2010/08/20 01:42:52 dries Exp $
+// $Id: dashboard.module,v 1.34 2010/08/30 00:22:03 webchick Exp $
 
 /**
  * Implements hook_help().
@@ -18,6 +18,12 @@ function dashboard_help($path, $arg) {
       $output .= '<dd>' . t('By enabling blocks such as <em>Recent blog posts</em>, <em>New forum topics</em> and <em>Recent comments</em>, site users can view newly added site content at a glance.') . '</dd>';
       $output .= '</dl>';
       return $output;
+
+    case 'admin/structure/dashboard':
+      // @todo This assumes the current page is being displayed using the same
+      //   theme that the dashboard is displayed in.
+      $output = '<p>' . t('Rearrange blocks for display on the <a href="@dashboard-url">dashboard</a>. Disabling a block makes it available on the main <a href="@blocks-url">blocks administration page</a>.', array('@dashboard-url' => url('admin/dashboard'), '@blocks-url' => url("admin/structure/block/list/{$GLOBALS['theme_key']}"))) . '</p>';
+      return $output;
   }
 }
 
@@ -25,6 +31,12 @@ function dashboard_help($path, $arg) {
  * Implements hook_menu().
  */
 function dashboard_menu() {
+  $items['admin/structure/dashboard'] = array(
+    'title' => 'Dashboard',
+    'description' => "Configure which blocks can be shown on the dashboard.",
+    'page callback' => 'dashboard_admin_blocks',
+    'access arguments' => array('administer blocks'),
+  );
   $items['admin/dashboard'] = array(
     'title' => 'Dashboard',
     'description' => 'View and customize your dashboard',
@@ -59,6 +71,7 @@ function dashboard_menu() {
     'access arguments' => array('administer blocks'),
     'type' => MENU_CALLBACK,
   );
+
   return $items;
 }
 
@@ -192,7 +205,28 @@ function dashboard_theme() {
     'dashboard_disabled_block' => array(
       'variables' => array('block' => NULL),
     ),
+    'dashboard_admin_display_form' => array(
+      // When building the form for configuring dashboard blocks, reuse the
+      // Block module's template for the main block configuration form.
+      'template' => 'block-admin-display-form',
+      'path' => drupal_get_path('module', 'block'),
+      'file' => 'block.admin.inc',
+      'render element' => 'form',
+    ),
   );
+}
+
+/**
+ * Implements hook_forms().
+ */
+function dashboard_forms() {
+  // Reroute the dashboard configuration form to the main blocks administration
+  // form. This allows us to distinguish them by form ID in hook_form_alter().
+  $forms['dashboard_admin_display_form'] = array(
+    'callback' => 'block_admin_display_form',
+  );
+
+  return $forms;
 }
 
 /**
@@ -225,7 +259,7 @@ function dashboard_admin($launch_customize = FALSE) {
   );
   $build = array(
     '#theme' => 'dashboard_admin',
-    '#message' => t('To customize the dashboard page, move blocks to the dashboard regions on the <a href="@blocks">Blocks administration page</a>, or enable JavaScript on this page to use the drag-and-drop interface.', array('@blocks' => url('admin/structure/block'))),
+    '#message' => t('To customize the dashboard page, move blocks to the dashboard regions on the <a href="@dashboard">Dashboard administration page</a>, or enable JavaScript on this page to use the drag-and-drop interface.', array('@dashboard' => url('admin/structure/dashboard'))),
     '#access' => user_access('administer blocks'),
     '#attached' => array(
       'js' => array(
@@ -236,6 +270,113 @@ function dashboard_admin($launch_customize = FALSE) {
     ),
   );
   return $build;
+}
+
+/**
+ * Menu page callback: builds the page for administering dashboard blocks.
+ *
+ * This page reuses the Block module's administration form but limits editing
+ * to blocks that are available to appear on the dashboard.
+ *
+ * @see block_admin_display()
+ * @see block_admin_display_form()
+ * @see dashboard_form_dashboard_admin_display_form_alter()
+ * @see template_preprocess_dashboard_admin_display_form()
+ */
+function dashboard_admin_blocks() {
+  global $theme_key;
+  drupal_theme_initialize();
+  drupal_set_title(t('Configure available dashboard blocks'));
+  module_load_include('inc', 'block', 'block.admin');
+
+  // Prepare the blocks for the current theme, and remove those that are
+  // currently displayed in non-dashboard regions.
+  // @todo This assumes the current page is being displayed using the same
+  //   theme that the dashboard is displayed in.
+  $blocks = block_admin_display_prepare_blocks($theme_key);
+  $dashboard_regions = dashboard_region_descriptions();
+  $regions_to_remove = array_diff_key(system_region_list($theme_key, REGIONS_VISIBLE), $dashboard_regions);
+  foreach ($blocks as $id => $block) {
+    if (isset($regions_to_remove[$block['region']])) {
+      unset($blocks[$id]);
+    }
+  }
+
+  // Pass in the above blocks and dashboard regions to the form, so that only
+  // dashboard-related regions will be displayed.
+  return drupal_get_form('dashboard_admin_display_form', $blocks, $theme_key, $dashboard_regions);
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function dashboard_form_block_admin_display_form_alter(&$form, &$form_state) {
+  // Hide dashboard regions (and any blocks placed within them) from the block
+  // administration form and from the options list on that form.
+  $dashboard_regions = dashboard_region_descriptions();
+  $form['block_regions']['#value'] = array_diff_key($form['block_regions']['#value'], $dashboard_regions);
+  foreach (element_children($form['blocks']) as $i) {
+    $block = &$form['blocks'][$i];
+    if (isset($block['region']['#default_value']) && isset($dashboard_regions[$block['region']['#default_value']])) {
+      $block['#access'] = FALSE;
+    }
+    elseif (isset($block['region']['#options'])) {
+      $block['region']['#options'] = array_diff_key($block['region']['#options'], $dashboard_regions);
+    }
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function dashboard_form_dashboard_admin_display_form_alter(&$form, &$form_state) {
+  // Inherit the submit handler from the main block administration form.
+  $form['#submit'][] = 'block_admin_display_form_submit';
+
+  // Redirect the 'configure' and 'delete' links on each block back to the
+  // dashboard blocks administration page.
+  foreach ($form['blocks'] as &$block) {
+    if (isset($block['configure']['#href'])) {
+      $block['configure']['#options']['query']['destination'] = 'admin/structure/dashboard';
+    }
+    if (isset($block['delete']['#href'])) {
+      $block['delete']['#options']['query']['destination'] = 'admin/structure/dashboard';
+    }
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function dashboard_form_block_admin_configure_alter(&$form, &$form_state) {
+  global $theme_key;
+  drupal_theme_initialize();
+  // Hide the dashboard regions from the region select list on the block
+  // configuration form, for all themes except the current theme (since the
+  // other themes do not display the dashboard).
+  // @todo This assumes the current page is being displayed using the same
+  //   theme that the dashboard is displayed in.
+  $dashboard_regions = dashboard_region_descriptions();
+  foreach (element_children($form['regions']) as $region_name) {
+    $region = &$form['regions'][$region_name];
+    if ($region_name != $theme_key && isset($region['#options'])) {
+      $region['#options'] = array_diff_key($region['#options'], $dashboard_regions);
+    }
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function dashboard_form_block_add_block_form_alter(&$form, &$form_state) {
+  dashboard_form_block_admin_configure_alter($form, $form_state);
+}
+
+/**
+ * Preprocesses variables for block-admin-display-form.tpl.php.
+ */
+function template_preprocess_dashboard_admin_display_form(&$variables) {
+  template_preprocess_block_admin_display_form($variables);
 }
 
 /**
@@ -464,7 +605,7 @@ function theme_dashboard_region($variables) {
  */
 function theme_dashboard_disabled_blocks($variables) {
   extract($variables);
-  $output = '<div class="canvas-content"><p>' . t('Drag and drop these blocks to the columns below. Changes are automatically saved.') . '</p>';
+  $output = '<div class="canvas-content"><p>' . t('Drag and drop these blocks to the columns below. Changes are automatically saved. More options are available on the <a href="@dashboard-url">configuration page</a>.', array('@dashboard-url' => url('admin/structure/dashboard'))) . '</p>';
   $output .= '<div id="disabled-blocks"><div class="region disabled-blocks clearfix">';
   foreach ($blocks as $block) {
     $output .= theme('dashboard_disabled_block', array('block' => $block));

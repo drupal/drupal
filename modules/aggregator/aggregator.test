@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.test,v 1.44 2010/08/05 23:53:37 webchick Exp $
+// $Id: aggregator.test,v 1.45 2010/08/30 00:22:03 webchick Exp $
 
 /**
  * @file
@@ -787,10 +787,10 @@ class AggregatorRenderingTestCase extends AggregatorTestCase {
     );
     $region = 'footer';
     $edit = array();
-    $edit[$block['module'] . '_' . $block['delta'] . '[region]'] = $region;
+    $edit['blocks[' . $block['module'] . '_' . $block['delta'] . '][region]'] = $region;
     // Check the feed block is available in the block list form.
     $this->drupalGet('admin/structure/block');
-    $this->assertFieldByName($block['module'] . '_' . $block['delta'] . '[region]', '', 'Aggregator feed block is available for positioning.');
+    $this->assertFieldByName('blocks[' . $block['module'] . '_' . $block['delta'] . '][region]', '', 'Aggregator feed block is available for positioning.');
     // Position it.
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
     $this->assertText(t('The block settings have been updated.'), t('Block successfully moved to %region_name region.', array( '%region_name' => $region)));
