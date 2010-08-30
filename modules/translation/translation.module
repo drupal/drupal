@@ -1,5 +1,5 @@
 <?php
-// $Id: translation.module,v 1.82 2010/08/05 08:08:43 webchick Exp $
+// $Id: translation.module,v 1.83 2010/08/30 05:58:46 webchick Exp $
 
 /**
  * @file
@@ -188,11 +188,7 @@ function translation_node_view($node, $view_mode) {
       $links = $links->links;
       // Do not show link to the same node.
       unset($links[$node->language]);
-      $node->content['links']['translation'] = array(
-        '#theme' => 'links__translation_node',
-        '#links' => $links,
-        '#attributes' => array('class' => array('links', 'inline')),
-      );
+      $node->content['links']['#links'] = array_merge($node->content['links']['#links'], $links);
     }
   }
 }

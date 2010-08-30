@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1293 2010/08/23 22:15:34 webchick Exp $
+// $Id: node.module,v 1.1294 2010/08/30 05:58:46 webchick Exp $
 
 /**
  * @file
@@ -1286,7 +1286,7 @@ function node_build_content($node, $view_mode = 'full') {
       'attributes' => array('rel' => 'tag', 'title' => strip_tags($node->title))
     );
   }
-  $node->content['links']['node'] = array(
+  $node->content['links'] = array(
     '#theme' => 'links__node',
     '#links' => $links,
     '#attributes' => array('class' => array('links', 'inline')),
