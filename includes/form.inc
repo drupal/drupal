@@ -3197,7 +3197,6 @@ function theme_textarea($variables) {
   $element = $variables['element'];
   $element['#attributes']['name'] = $element['#name'];
   $element['#attributes']['id'] = $element['#id'];
-  $element['#attributes']['value'] = $element['#value'];
   $element['#attributes']['cols'] = $element['#cols'];
   $element['#attributes']['rows'] = $element['#rows'];
   _form_set_class($element, array('form-textarea'));
