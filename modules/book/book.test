@@ -271,7 +271,7 @@ class BookBlockTestCase extends DrupalWebTestCase {
 
     // Set the block to a region to confirm block is availble.
     $edit = array();
-    $edit['book_navigation[region]'] = 'footer';
+    $edit['blocks[book_navigation][region]'] = 'footer';
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
     $this->assertText(t('The block settings have been updated.'), t('Block successfully move to footer region.'));
   }

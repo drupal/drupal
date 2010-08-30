@@ -265,7 +265,7 @@ class PollBlockTestCase extends PollTestCase {
 
     // Set the block to a region to confirm block is available.
     $edit = array();
-    $edit['poll_recent[region]'] = 'footer';
+    $edit['blocks[poll_recent][region]'] = 'footer';
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
     $this->assertText(t('The block settings have been updated.'), t('Block successfully move to footer region.'));
 

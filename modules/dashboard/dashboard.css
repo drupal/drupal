@@ -46,11 +46,6 @@
   padding: 10px;
 }
 
-#dashboard .canvas-content a {
-  color: #fff;
-  text-decoration: underline;
-}
-
 #dashboard #disabled-blocks .ui-sortable {
   padding: 0;
   background-color: #777;
