@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.187 2010/08/22 13:55:53 dries Exp $
+// $Id: system.api.php,v 1.188 2010/08/31 15:02:39 webchick Exp $
 
 /**
  * @file
@@ -88,6 +88,10 @@ function hook_hook_info_alter(&$hooks) {
  *     uri elements of the entity, e.g. 'path' and 'options'. The actual entity
  *     uri can be constructed by passing these elements to url().
  *   - fieldable: Set to TRUE if you want your entity type to be fieldable.
+ *   - translation: An associative array of modules registered as field
+ *     translation handlers. Array keys are the module names, array values
+ *     can be any data structure the module uses to provide field translation.
+ *     Any empty value disallows the module to appear as a translation handler.
  *   - entity keys: An array describing how the Field API can extract the
  *     information it needs from the objects of the type. Elements:
  *     - id: The name of the property that contains the primary id of the
@@ -165,6 +169,9 @@ function hook_entity_info() {
       'revision table' => 'node_revision',
       'uri callback' => 'node_uri',
       'fieldable' => TRUE,
+      'translation' => array(
+        'locale' => TRUE,
+      ),
       'entity keys' => array(
         'id' => 'nid',
         'revision' => 'vid',

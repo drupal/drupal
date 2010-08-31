@@ -1,9 +1,63 @@
 <?php
-// $Id: field.multilingual.inc,v 1.12 2010/08/08 02:18:53 dries Exp $
+// $Id: field.multilingual.inc,v 1.13 2010/08/31 15:02:39 webchick Exp $
 
 /**
  * @file
- * Multilingual field API helper functions.
+ * Functions implementing Field API multilingual support.
+ */
+
+/**
+ * @defgroup field_language Field language API
+ * @{
+ * Handling of multilingual fields.
+ *
+ * Fields natively implement multilingual support, and all fields use the
+ * following structure:
+ * @code
+ * $entity->{$field_name}[$langcode][$delta][$column_name]
+ * @endcode
+ * Every field can hold a single or multiple value for each language belonging
+ * to the available languages set:
+ * - For untranslatable fields this set only contains LANGUAGE_NONE.
+ * - For translatable fields this set can contain any language code. By default
+ *   it is the list returned by field_content_languages(), which contains all
+ *   enabled languages with the addition of LANGUAGE_NONE. This default can be
+ *   altered by modules implementing hook_field_available_languages_alter().
+ *
+ * The available languages for a particular field are returned by
+ * field_available_languages(). Whether a field is translatable is determined by
+ * calling field_is_translatable(), which checks the $field['translatable']
+ * property returned by field_info_field(), and whether there is at least one
+ * translation handler available for the field. A translation handler is a
+ * module registering itself via hook_entity_info() to handle field
+ * translations.
+ *
+ * By default, _field_invoke() and _field_invoke_multiple() are processing a
+ * field in all available languages, unless they are given a language
+ * suggestion. Based on that suggestion, _field_language_suggestion() determines
+ * the languages to act on.
+ *
+ * Most field_attach_*() functions act on all available languages, except for
+ * the following:
+ * - field_attach_form() only takes a single language code, specifying which
+ *   language the field values will be submitted in.
+ * - field_attach_view() requires the language the entity will be displayed in.
+ *   Since it is unknown whether a field translation exists for the requested
+ *   language, the translation handler is responsible for performing one of the
+ *   following actions:
+ *   - Ignore missing translations, i.e. do not show any field values for the
+ *     requested language. For example, see locale_field_language_alter().
+ *   - Provide a value in a different language as fallback. By default, the
+ *     fallback logic is applied separately to each field to ensure that there
+ *     is a value for each field to display.
+ *   The field language fallback logic relies on the global language fallback
+ *   configuration. Therefore, the displayed field values can be in the
+ *   requested language, but may be different if no values for the requested
+ *   language are available. The default language fallback rules inspect all the
+ *   enabled languages ordered by their weight. This behavior can be altered or
+ *   even disabled by modules implementing hook_field_language_alter(), making
+ *   it possible to choose the first approach. The display language for each
+ *   field is returned by field_language().
  */
 
 /**
