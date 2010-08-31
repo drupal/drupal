@@ -1,5 +1,5 @@
 <?php
-// $Id: overlay.module,v 1.30 2010/08/11 02:08:09 dries Exp $
+// $Id: overlay.module,v 1.31 2010/08/31 15:04:09 webchick Exp $
 
 /**
  * @file
@@ -344,17 +344,12 @@ function template_process_overlay(&$variables) {
 /**
  * Implements hook_preprocess_page().
  *
- * Display breadcrumbs correctly inside the overlay.
+ * Hide tabs inside the overlay.
  *
  * @see overlay_get_mode()
  */
 function overlay_preprocess_page(&$variables) {
   if (overlay_get_mode() == 'child') {
-    // Remove 'Home' from the breadcrumbs.
-    $overlay_breadcrumb = drupal_get_breadcrumb();
-    array_shift($overlay_breadcrumb);
-    $variables['breadcrumb'] = theme('breadcrumb', array('breadcrumb' => $overlay_breadcrumb));
-
     unset($variables['tabs'][0]);
   }
 }
