@@ -676,8 +676,10 @@ function system_theme_settings_validate($form, &$form_state) {
     }
   }
 
+  $validators = array('file_validate_extensions' => array('ico png gif jpg jpeg apng svg'));
+
   // Check for a new uploaded favicon.
-  $file = file_save_upload('favicon_upload');
+  $file = file_save_upload('favicon_upload', $validators);
   if (isset($file)) {
     // File upload was attempted.
     if ($file) {
