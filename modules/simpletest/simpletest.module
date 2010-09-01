@@ -131,7 +131,7 @@ function simpletest_run_tests($test_list, $reporter = 'drupal') {
     ->execute();
 
   // Clear out the previous verbose files.
-  file_unmanaged_delete_recursive(file_directory_path() . '/simpletest/verbose');
+  file_unmanaged_delete_recursive('public://simpletest/verbose');
 
   // Get the info for the first test being run.
   $first_test = array_shift($test_list);
@@ -406,7 +406,7 @@ function simpletest_generate_file($filename, $width, $lines, $type = 'binary-tex
   $text = wordwrap($text, $width - 1, "\n", TRUE) . "\n"; // Add \n for symetrical file.
 
   // Create filename.
-  file_put_contents(file_directory_path() . '/' . $filename . '.txt', $text);
+  file_put_contents('public://' . $filename . '.txt', $text);
   return $filename;
 }
 

@@ -20,7 +20,7 @@ function simpletest_uninstall() {
   variable_del('simpletest_verbose');
 
   // Remove generated files.
-  $path = file_directory_path() . '/simpletest';
+  $path = 'public://simpletest';
   $files = file_scan_directory($path, '/.*/');
   foreach ($files as $file) {
     file_unmanaged_delete($file->uri);

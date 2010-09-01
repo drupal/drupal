@@ -341,7 +341,7 @@ function user_admin_settings() {
   );
   // If picture support is enabled, check whether the picture directory exists.
   if (variable_get('user_pictures', 0)) {
-    $picture_path =  variable_get('file_default_scheme', 'public') . '://' . variable_get('user_picture_path', 'pictures');
+    $picture_path =  file_default_scheme() . '://' . variable_get('user_picture_path', 'pictures');
     if (!file_prepare_directory($picture_path, FILE_CREATE_DIRECTORY)) {
       form_set_error('user_picture_path', t('The directory %directory does not exist or is not writable.', array('%directory' => $picture_path)));
       watchdog('file system', 'The directory %directory does not exist or is not writable.', array('%directory' => $picture_path), WATCHDOG_ERROR);
@@ -369,7 +369,7 @@ function user_admin_settings() {
     '#default_value' => variable_get('user_picture_path', 'pictures'),
     '#size' => 30,
     '#maxlength' => 255,
-    '#description' => t('Subdirectory in the directory %dir where pictures will be stored.', array('%dir' => file_directory_path() . '/')),
+    '#description' => t('Subdirectory in the file upload directory where pictures will be stored.'),
   );
   $form['personalization']['pictures']['user_picture_default'] = array(
     '#type' => 'textfield',

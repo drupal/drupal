@@ -433,7 +433,7 @@ function user_save($account, $edit = array(), $category = 'account') {
         // make it permanent.
         if (!$picture->status) {
           $info = image_get_info($picture->uri);
-          $picture_directory =  variable_get('file_default_scheme', 'public') . '://' . variable_get('user_picture_path', 'pictures');
+          $picture_directory =  file_default_scheme() . '://' . variable_get('user_picture_path', 'pictures');
 
           // Prepare the pictures directory.
           file_prepare_directory($picture_directory, FILE_CREATE_DIRECTORY);

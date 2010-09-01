@@ -323,7 +323,7 @@ function system_requirements($phase) {
       }
     }
     else {
-      if (variable_get('file_default_scheme', 'public') == 'public') {
+      if (file_default_scheme() == 'public') {
         $requirements['file system']['value'] = $t('Writable (<em>public</em> download method)');
       }
       else {
@@ -2726,7 +2726,7 @@ function system_update_7060(&$sandbox) {
         'settings' => array(
           'display_field' => 1,
           'display_default' => variable_get('upload_list_default', 1),
-          'uri_scheme' => variable_get('file_default_scheme', 'public'),
+          'uri_scheme' => file_default_scheme(),
           'default_file' => 0,
         ),
       );
@@ -2830,7 +2830,7 @@ function system_update_7060(&$sandbox) {
   }
 
   $basename = variable_get('file_directory_path', conf_path() . '/files');
-  $scheme = variable_get('file_default_scheme', 'public') . '://';
+  $scheme = file_default_scheme() . '://';
   foreach ($node_revisions as $vid => $revision) {
     // We will convert filepaths to uri using the default scheme
     // and stripping off the existing file directory path.

@@ -4587,7 +4587,7 @@ function _drupal_bootstrap_full() {
     // Running inside the simpletest child site, log fatal errors to test
     // specific file directory.
     ini_set('log_errors', 1);
-    ini_set('error_log', file_directory_path() . '/error.log');
+    ini_set('error_log', 'public://error.log');
   }
 
   // Initialize $_GET['q'] prior to invoking hook_init().

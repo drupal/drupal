@@ -58,7 +58,7 @@ abstract class UpgradePathTestCase extends DrupalWebTestCase {
     // Store necessary current values before switching to prefixed database.
     $this->originalLanguage = $language;
     $this->originalLanguageDefault = variable_get('language_default');
-    $this->originalFileDirectory = file_directory_path();
+    $this->originalFileDirectory = variable_get('file_public_path', conf_path() . '/files');
     $this->originalProfile = drupal_get_profile();
     $clean_url_original = variable_get('clean_url', 0);
 

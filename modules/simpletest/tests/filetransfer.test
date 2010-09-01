@@ -36,7 +36,7 @@ class FileTranferTest extends DrupalWebTestCase {
   }
 
   function _buildFakeModule() {
-    $location = file_directory_path('temporary') . '/fake';
+    $location = 'temporary://fake';
     if (is_dir($location)) {
       $ret = 0;
       $output = array();
@@ -80,7 +80,7 @@ class FileTranferTest extends DrupalWebTestCase {
 
     $gotit = TRUE;
     try {
-      $this->testConnection->copyDirectory($source, DRUPAL_ROOT . '/'. file_directory_path());
+      $this->testConnection->copyDirectory($source, DRUPAL_ROOT . '/'. variable_get('file_public_path', conf_path() . '/files'));
     }
     catch (FileTransferException $e) {
       $gotit = FALSE;

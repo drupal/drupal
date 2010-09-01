@@ -334,8 +334,7 @@ class ImageAdminStylesUnitTest extends ImageFieldTestCase {
    * Count the number of images currently create for a style.
    */
   function getImageCount($style) {
-    $directory = file_directory_path() . '/styles/' . $style['name'];
-    return count(file_scan_directory($directory, '/.*/'));
+    return count(file_scan_directory('public://styles/' . $style['name'], '/.*/'));
   }
 
   /**
@@ -482,7 +481,7 @@ class ImageAdminStylesUnitTest extends ImageFieldTestCase {
     $this->drupalPost('admin/config/media/image-styles/delete/' . $style_name, array(), t('Delete'));
 
     // Confirm the style directory has been removed.
-    $directory = file_directory_path() . '/styles/' . $style_name;
+    $directory = file_default_scheme() . '://styles/' . $style_name;
     $this->assertFalse(is_dir($directory), t('Image style %style directory removed on style deletion.', array('%style' => $style['name'])));
 
     drupal_static_reset('image_styles');

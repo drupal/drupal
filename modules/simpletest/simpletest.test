@@ -433,11 +433,13 @@ class SimpleTestFolderTestCase extends DrupalWebTestCase {
     );
   }
 
+  function setUp() {
+    return parent::setUp('image');
+  }
+
   function testFolderSetup() {
-    if (module_exists('image')) {
-      $path = file_directory_path() . '/styles';
-      $this->assertTrue(file_prepare_directory($path, FALSE), "Directory created.");
-    }
+    $directory = file_default_scheme() . '://styles';
+    $this->assertTrue(file_prepare_directory($directory, FALSE), "Directory created.");
   }
 }
 

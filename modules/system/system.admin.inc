@@ -1805,7 +1805,7 @@ function system_file_system_settings() {
   $form['file_public_path'] = array(
     '#type' => 'textfield',
     '#title' => t('Public file system path'),
-    '#default_value' => variable_get('file_public_path', file_directory_path()),
+    '#default_value' => variable_get('file_public_path', conf_path() . '/files'),
     '#maxlength' => 255,
     '#description' => t('A local file system path where public files will be stored. This directory must exist and be writable by Drupal. This directory must be relative to the Drupal installation directory and be accessible over the web.'),
     '#after_build' => array('system_check_directory'),
@@ -1814,7 +1814,7 @@ function system_file_system_settings() {
   $form['file_private_path'] = array(
     '#type' => 'textfield',
     '#title' => t('Private file system path'),
-    '#default_value' => variable_get('file_private_path', file_directory_path('private')),
+    '#default_value' => variable_get('file_private_path', ''),
     '#maxlength' => 255,
     '#description' => t('A local file system path where private files will be stored. This directory must exist and be writable by Drupal. This directory should not be accessible over the web.'),
     '#after_build' => array('system_check_directory'),
@@ -1823,7 +1823,7 @@ function system_file_system_settings() {
   $form['file_temporary_path'] = array(
     '#type' => 'textfield',
     '#title' => t('Temporary directory'),
-    '#default_value' => variable_get('file_temporary_path', file_directory_path('temporary')),
+    '#default_value' => variable_get('file_temporary_path', file_directory_temp()),
     '#maxlength' => 255,
     '#description' => t('A local file system path where temporary files will be stored. This directory should not be accessible over the web.'),
     '#after_build' => array('system_check_directory'),

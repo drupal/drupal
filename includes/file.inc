@@ -223,6 +223,16 @@ function file_uri_target($uri) {
 }
 
 /**
+ * Get the default file stream implementation.
+ *
+ * @return
+ *   'public', 'private' or any other file scheme defined as the default.
+ */
+function file_default_scheme() {
+  return variable_get('file_default_scheme', 'public');
+}
+
+/**
  * Normalizes a URI by making it syntactically correct.
  *
  * A stream is referenced as "scheme://target".
@@ -317,11 +327,9 @@ function file_stream_wrapper_get_instance_by_scheme($scheme) {
  * @see http://drupal.org/node/515192
  *
  * There are two kinds of local files:
- * - "created files", i.e. those in the files directory (which is stored in
- *   the file_directory_path variable and can be retrieved using
- *   file_directory_path()). These are files that have either been uploaded by
- *   users or were generated automatically (for example through CSS
- *   aggregation).
+ * - "managed files", i.e. those stored by a Drupal-compatible stream wrapper.
+ *   These are files that have either been uploaded by users or were generated
+ *   automatically (for example through CSS aggregation).
  * - "shipped files", i.e. those outside of the files directory, which ship as
  *   part of Drupal core or contributed modules or themes.
  *
@@ -829,7 +837,7 @@ function file_unmanaged_copy($source, $destination = NULL, $replace = FILE_EXIST
  * Given a relative path, construct a URI into Drupal's default files location.
  */
 function file_build_uri($path) {
-  $uri = variable_get('file_default_scheme', 'public') . '://' . $path;
+  $uri = file_default_scheme() . '://' . $path;
   return file_stream_wrapper_uri_normalize($uri);
 }
 
@@ -1889,33 +1897,6 @@ function file_scan_directory($dir, $mask, $options = array(), $depth = 0) {
 }
 
 /**
- * Determines the local directory path of a given wrapper.
- *
- * This function will return the directory path of a stream wrapper. A stream
- * is referenced as: "scheme://target".  For example, a scheme of "public"
- * might return "sites/default/files" or "temporary" might return "/tmp".
- *
- * @param $scheme
- *   A string representing the scheme of a stream. The default wrapper is
- *   is assumed if this is not provided.
- *
- * @return
- *   A string containing the directory path of a stream. FALSE is returned if
- *   the scheme is invalid or a wrapper could not be instantiated.
- */
-function file_directory_path($scheme = NULL) {
-  if (empty($scheme)) {
-    $scheme = variable_get('file_default_scheme', 'public');
-  }
-  if ($wrapper = file_stream_wrapper_get_instance_by_scheme($scheme)) {
-    return $wrapper->getDirectoryPath();
-  }
-  else {
-    return FALSE;
-  }
-}
-
-/**
  * Determine the maximum file upload size by querying the PHP settings.
  *
  * @return
@@ -2269,9 +2250,9 @@ function file_directory_temp() {
       }
     }
 
-    // if a directory has been found, use it, otherwise default to 'files/tmp' or 'files\\tmp'.
     if (empty($temporary_directory)) {
-      $temporary_directory = file_directory_path() . $path_delimiter . 'tmp';
+      // If no directory has been found default to 'files/tmp' or 'files\\tmp'.
+      $temporary_directory = variable_get('file_public_path', conf_path() . '/files') . $path_delimiter . 'tmp';
     }
     // Save the path of the discovered directory.
     variable_set('file_directory_temp', $temporary_directory);
