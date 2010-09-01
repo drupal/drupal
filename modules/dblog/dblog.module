@@ -24,13 +24,13 @@ function dblog_help($path, $arg) {
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Monitoring your site') . '</dt>';
-      $output .= '<dd>' . t('The Database logging module allows you to view an event log on the <a href="@dblog">Recent log entries</a> page. The log is a chronological list of recorded events containing usage data, performance data, errors, warnings and operational information. Administrators should check the log on a regular basis to ensure their site is working properly.', array('@dblog' => url('admin/reports/dblog'))) . '</dd>';
+      $output .= '<dd>' . t('The Database logging module allows you to view an event log on the <a href="@dblog">Recent log messages</a> page. The log is a chronological list of recorded events containing usage data, performance data, errors, warnings and operational information. Administrators should check the log on a regular basis to ensure their site is working properly.', array('@dblog' => url('admin/reports/dblog'))) . '</dd>';
       $output .= '<dt>' . t('Debugging site problems') . '</dt>';
-      $output .= '<dd>' . t('In case of errors or problems with the site, the <a href="@dblog">Recent log entries</a> page can be useful for debugging, since it shows the sequence of events. The log entries include usage information, warnings, and errors.', array('@dblog' => url('admin/reports/dblog'))) . '</dd>';
+      $output .= '<dd>' . t('In case of errors or problems with the site, the <a href="@dblog">Recent log messages</a> page can be useful for debugging, since it shows the sequence of events. The log messages include usage information, warnings, and errors.', array('@dblog' => url('admin/reports/dblog'))) . '</dd>';
       $output .= '</dl>';
       return $output;
     case 'admin/reports/dblog':
-      return '<p>' . t('The Database logging module monitors your website, capturing system events in a log (shown here) to be reviewed by an authorized individual at a later time. This log is a list of recorded events containing usage data, performance data, errors, warnings and operational information. It is vital to check the Recent log entries report on a regular basis, as it is often the only way to tell what is going on.') . '</p>';
+      return '<p>' . t('The Database logging module monitors your website, capturing system events in a log (shown here) to be reviewed by an authorized individual at a later time. This log is a list of recorded events containing usage data, performance data, errors, warnings and operational information. It is vital to check the Recent log messages report on a regular basis, as it is often the only way to tell what is going on.') . '</p>';
   }
 }
 
@@ -39,7 +39,7 @@ function dblog_help($path, $arg) {
  */
 function dblog_menu() {
   $items['admin/reports/dblog'] = array(
-    'title' => 'Recent log entries',
+    'title' => 'Recent log messages',
     'description' => 'View events that have recently been logged.',
     'page callback' => 'dblog_overview',
     'access arguments' => array('access site reports'),
@@ -149,10 +149,10 @@ function dblog_watchdog(array $log_entry) {
 function dblog_form_system_logging_settings_alter(&$form, $form_state) {
   $form['dblog_row_limit'] = array(
     '#type' => 'select',
-    '#title' => t('Database log entries to keep'),
+    '#title' => t('Database log messages to keep'),
     '#default_value' => variable_get('dblog_row_limit', 1000),
     '#options' => array(0 => t('All')) + drupal_map_assoc(array(100, 1000, 10000, 100000, 1000000)),
-    '#description' => t('The maximum number of entries to keep in the database log. Requires a <a href="@cron">cron maintenance task</a>.', array('@cron' => url('admin/reports/status')))
+    '#description' => t('The maximum number of messages to keep in the database log. Requires a <a href="@cron">cron maintenance task</a>.', array('@cron' => url('admin/reports/status')))
   );
   $form['actions']['#weight'] = 1;
 }
