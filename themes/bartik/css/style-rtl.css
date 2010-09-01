@@ -1,4 +1,4 @@
-/* $Id: style-rtl.css,v 1.4 2010/08/22 14:03:57 dries Exp $ */
+/* $Id: style-rtl.css,v 1.5 2010/09/01 03:00:21 dries Exp $ */
 
 /* ------------------ Reset Styles ------------------ */
 
@@ -39,26 +39,22 @@ ul.tips {
 }
 /* Menus when in the header region. */
 #header div.block-menu,
-#header div#block-system-main-menu,
-#header div#block-system-secondary-menu {
+#header div#block-system-main-menu {
   float: right;
 }
 #header .block-menu li a,
-#header #block-system-main-menu li a,
-#header #block-system-secondary-menu li a {
+#header #block-system-main-menu li a {
   float: right;
   border-left: 1px solid #555;
   border-right: none;
 }
 #header .block-menu li.first a,
-#header #block-system-main-menu li.first a,
-#header #block-system-secondary-menu li.first a {
+#header #block-system-main-menu li.first a {
   padding-right: 0;
   padding-left: 12px;
 }
 #header .block-menu li.last a,
-#header #block-system-main-menu li.last a,
-#header #block-system-secondary-menu li.last a {
+#header #block-system-main-menu li.last a {
   padding-left: 0;
   padding-right: 12px;
   border-left: none;
