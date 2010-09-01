@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.407 2010/08/23 23:38:06 webchick Exp $
+// $Id: menu.inc,v 1.408 2010/09/01 02:59:04 dries Exp $
 
 /**
  * @file
@@ -961,7 +961,7 @@ function menu_tree_output($tree) {
     $build['#sorted'] = TRUE;
     // Add the theme wrapper for outer markup.
     // Allow menu-specific theme overrides.
-    $build['#theme_wrappers'][] = 'menu_tree__' . $data['link']['menu_name'];
+    $build['#theme_wrappers'][] = 'menu_tree__' . strtr($data['link']['menu_name'], '-', '_');
   }
 
   return $build;
