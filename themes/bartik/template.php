@@ -1,5 +1,5 @@
 <?php
-// $Id: template.php,v 1.4 2010/08/09 16:54:50 webchick Exp $
+// $Id: template.php,v 1.5 2010/09/01 02:13:58 dries Exp $
 
 /**
  * Add body classes if certain regions have content.
@@ -107,39 +107,5 @@ function bartik_preprocess_block(&$variables) {
   // user login block, but leave it accessible.
   if ($variables['block']->region == 'header' && ($variables['block']->module == 'user' && $variables['block']->delta == 'login' || in_array('block-menu', $variables['classes_array']))) {
     $variables['title_attributes_array']['class'][] = 'element-invisible';
-  }
-  // Set "first" and "last" classes.
-  if ($variables['block']->position_first){
-    $variables['classes_array'][] = 'first';
-  }
-  if ($variables['block']->position_last){
-    $variables['classes_array'][] = 'last';
-  }
-  // Set "odd" & "even" classes.
-  $variables['classes_array'][] = $variables['block']->position % 2 == 0 ? 'odd' : 'even';
-}
-
-/**
- * Implements hook_page_alter().
- */
-function bartik_page_alter(&$page) {
-  // Determine the position and count of blocks within regions.
-  foreach ($page as &$region) {
-    // Make sure this is a "region" element.
-    if (is_array($region) && isset($region['#region'])) {
-      $i = 0;
-      foreach ($region as &$block) {
-        // Make sure this is a "block" element.
-        if (is_array($block) && isset($block['#block'])) {
-          $block['#block']->position = $i++;
-          // Set a flag for "first" and "last" blocks.
-          $block['#block']->position_first = ($block['#block']->position == 0);
-          $block['#block']->position_last = FALSE;
-          $last_block =& $block;
-        }
-      }
-      $last_block['#block']->position_last = TRUE;
-      $region['#block_count'] = $i;
-    }
   }
 }
