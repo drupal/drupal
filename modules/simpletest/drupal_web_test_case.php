@@ -1227,19 +1227,8 @@ class DrupalWebTestCase extends DrupalTestCase {
       module_enable(array($this->profile), FALSE);
     }
 
-    // Rebuild caches.
-    drupal_static_reset();
-    drupal_flush_all_caches();
-
-    // Register actions declared by any modules.
-    actions_synchronize();
-
-    // Reload global $conf array and permissions.
-    $this->refreshVariables();
-    $this->checkPermissions(array(), TRUE);
-
-    // Reset statically cached schema for new database prefix.
-    drupal_get_schema(NULL, TRUE);
+    // Reset/rebuild all data structures after enabling the modules.
+    $this->resetAll();
 
     // Run cron once in that environment, as install.php does at the end of
     // the installation process.
@@ -1266,14 +1255,39 @@ class DrupalWebTestCase extends DrupalTestCase {
   }
 
   /**
-   * This method is called by DrupalWebTestCase::setUp, and preloads the
+   * Preload the registry from the testing site.
+   *
+   * This method is called by DrupalWebTestCase::setUp(), and preloads the
    * registry from the testing site to cut down on the time it takes to
-   * setup a clean environment for the current test run.
+   * set up a clean environment for the current test run.
    */
   protected function preloadRegistry() {
     $original_connection = Database::getConnection('default', 'simpletest_original_default');
     db_query('INSERT INTO {registry} SELECT * FROM ' . $original_connection->prefixTables('{registry}'));
     db_query('INSERT INTO {registry_file} SELECT * FROM ' . $original_connection->prefixTables('{registry_file}'));
+  }
+
+  /**
+   * Reset all data structures after having enabled new modules.
+   *
+   * This method is called by DrupalWebTestCase::setUp() after enabling
+   * the requested modules. It must be called again when additional modules
+   * are enabled later.
+   */
+  protected function resetAll() {
+    // Rebuild caches.
+    drupal_static_reset();
+    drupal_flush_all_caches();
+
+    // Register actions declared by any modules.
+    actions_synchronize();
+
+    // Reload global $conf array and permissions.
+    $this->refreshVariables();
+    $this->checkPermissions(array(), TRUE);
+
+    // Reset statically cached schema for new database prefix.
+    drupal_get_schema(NULL, TRUE);
   }
 
   /**
