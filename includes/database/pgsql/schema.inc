@@ -470,17 +470,30 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
     if (in_array($typecast, array('serial', 'bigserial', 'numeric'))) {
       $typecast = 'int';
     }
+    $this->connection->query('ALTER TABLE {' . $table . '} ALTER "' . $field . '" TYPE ' . $typecast . ' USING "' . $field . '"::' . $typecast);
 
-
-    $this->connection->query("ALTER TABLE {" . $table . "} ALTER $field SET $field_new = CAST(" . $field . "_old as " . $typecast . ")");
-
-    $this->addField($table, "$field_new", $spec);
-
-    $this->dropField($table, $field . '_old');
+    // Map type definition to the PostgreSQL type.
+    $pgsql_type = $map[$spec['type'] . ':' . $spec['size']];
+    if (in_array($pgsql_type, array('serial', 'bigserial'))) {
+      // Type "serial" is known to PostgreSQL, but *only* during table creation,
+      // not when altering. Because of that, the sequence needs to be created
+      // and initialized by hand.
+      $seq = "{" . $table . "}_" . $field_new . "_seq";
+      $this->connection->query("CREATE SEQUENCE " . $seq);
+      // Set sequence to maximal field value to not conflict with existing
+      // entries.
+      $this->connection->query("SELECT setval('" . $seq . "', MAX(\"" . $field . '")) FROM {' . $table . "}");
+      $this->connection->query('ALTER TABLE {' . $table . '} ALTER "' . $field . '" SET DEFAULT nextval(\'' . $seq . '\')');
+    }
 
     // Rename the column if necessary.
     if ($field != $field_new) {
-      $this->connection->query('ALTER TABLE {' . $table . '} RENAME "' . $field . '" TO "' . $field_new . '_old"');
+      $this->connection->query('ALTER TABLE {' . $table . '} RENAME "' . $field . '" TO "' . $field_new . '"');
+    }
+
+    // Change description if necessary.
+    if (!empty($spec['description'])) {
+      $this->connection->query('COMMENT ON COLUMN {' . $table . '}."' . $field_new . '" IS ' . $this->prepareComment($spec['description']));
     }
 
     if (isset($new_keys)) {
