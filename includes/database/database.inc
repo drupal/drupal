@@ -824,20 +824,6 @@ abstract class DatabaseConnection extends PDO {
   }
 
   /**
-   * Escapes a alias name string.
-   *
-   * Force all alias names to be strictly alphanumeric-plus-underscore. In
-   * contrast to DatabaseConnection::escapeField() /
-   * DatabaseConnection::escapeTable(), this doesn't allow the point.
-   *
-   * @return
-   *   The sanitized field name string.
-   */
-  public function escapeAlias($field) {
-    return preg_replace('/[^A-Za-z0-9_]+/', '', $field);
-  }
-
-  /**
    * Escapes characters that work as wildcard characters in a LIKE pattern.
    *
    * The wildcard characters "%" and "_" as well as backslash are prefixed with
