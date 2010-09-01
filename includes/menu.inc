@@ -961,7 +961,7 @@ function menu_tree_output($tree) {
     $build['#sorted'] = TRUE;
     // Add the theme wrapper for outer markup.
     // Allow menu-specific theme overrides.
-    $build['#theme_wrappers'][] = 'menu_tree__' . $data['link']['menu_name'];
+    $build['#theme_wrappers'][] = 'menu_tree__' . strtr($data['link']['menu_name'], '-', '_');
   }
 
   return $build;
