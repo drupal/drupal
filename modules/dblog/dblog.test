@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.test,v 1.38 2010/08/05 23:53:37 webchick Exp $
+// $Id: dblog.test,v 1.39 2010/09/01 03:03:05 dries Exp $
 
 class DBLogTestCase extends DrupalWebTestCase {
   protected $big_user;
@@ -132,7 +132,7 @@ class DBLogTestCase extends DrupalWebTestCase {
     $this->drupalGet('admin/reports/dblog');
     $this->assertResponse($response);
     if ($response == 200) {
-      $this->assertText(t('Recent log entries'), t('DBLog report was displayed'));
+      $this->assertText(t('Recent log messages'), t('DBLog report was displayed'));
     }
 
     // View dblog page-not-found report node.
