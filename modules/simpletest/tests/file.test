@@ -1914,7 +1914,7 @@ class FileSaveTest extends FileHookTestCase {
  * Tests file usage functions.
  */
 class FileUsageTest extends FileTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => 'File usage',
       'description' => 'Tests the file usage functions.',
