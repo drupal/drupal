@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.298 2010/08/22 12:55:04 dries Exp $
+// $Id: system.admin.inc,v 1.299 2010/09/01 20:05:14 dries Exp $
 
 /**
  * @file
@@ -676,8 +676,10 @@ function system_theme_settings_validate($form, &$form_state) {
     }
   }
 
+  $validators = array('file_validate_extensions' => array('ico png gif jpg jpeg apng svg'));
+
   // Check for a new uploaded favicon.
-  $file = file_save_upload('favicon_upload');
+  $file = file_save_upload('favicon_upload', $validators);
   if (isset($file)) {
     // File upload was attempted.
     if ($file) {
