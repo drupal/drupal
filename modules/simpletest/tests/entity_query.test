@@ -1,6 +1,6 @@
 <?php
 
-// $Id: entity_query.test,v 1.8 2010/09/01 01:35:19 webchick Exp $
+// $Id: entity_query.test,v 1.9 2010/09/01 01:43:50 webchick Exp $
 
 /**
  * @file
@@ -501,20 +501,16 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
     $query = new EntityFieldQuery();
     $query
       ->entityCondition('entity_type', 'test_entity_bundle_key')
-      ->propertyCondition('fttype', 'und', 'CONTAINS');
+      ->propertyCondition('ftid', 1, 'CONTAINS');
     $this->assertEntityFieldQuery($query, array(
       array('test_entity_bundle_key', 1),
-      array('test_entity_bundle_key', 2),
-      array('test_entity_bundle_key', 3),
-      array('test_entity_bundle_key', 4),
-      array('test_entity_bundle_key', 5),
-      array('test_entity_bundle_key', 6),
     ), t('Test the "contains" operation on a property.'));
 
     $query = new EntityFieldQuery();
-    $query->fieldCondition($this->fields[1], 'shape', 'uar', 'CONTAINS');
+    $query->fieldCondition($this->fields[0], 'value', 3, 'CONTAINS');
     $this->assertEntityFieldQuery($query, array(
-      array('test_entity_bundle', 5),
+      array('test_entity_bundle_key', 3),
+      array('test_entity', 3),
     ), t('Test the "contains" operation on a field.'));
 
     $query = new EntityFieldQuery();

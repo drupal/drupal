@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.133 2010/09/01 01:35:19 webchick Exp $
+// $Id: database.inc,v 1.134 2010/09/01 01:43:50 webchick Exp $
 
 /**
  * @file
@@ -815,20 +815,6 @@ abstract class DatabaseConnection extends PDO {
    * Force all alias names to be strictly alphanumeric-plus-underscore. In
    * contrast to DatabaseConnection::escapeField() /
    * DatabaseConnection::escapeTable(), this doesn't allow the period (".") 
-   *
-   * @return
-   *   The sanitized field name string.
-   */
-  public function escapeAlias($field) {
-    return preg_replace('/[^A-Za-z0-9_]+/', '', $field);
-  }
-
-  /**
-   * Escapes a alias name string.
-   *
-   * Force all alias names to be strictly alphanumeric-plus-underscore. In
-   * contrast to DatabaseConnection::escapeField() /
-   * DatabaseConnection::escapeTable(), this doesn't allow the point.
    *
    * @return
    *   The sanitized field name string.
