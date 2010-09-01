@@ -1,5 +1,5 @@
 <?php
-// $Id: file.test,v 1.63 2010/08/22 13:52:58 dries Exp $
+// $Id: file.test,v 1.64 2010/09/01 19:58:01 dries Exp $
 
 /**
  *  @file
@@ -1914,7 +1914,7 @@ class FileSaveTest extends FileHookTestCase {
  * Tests file usage functions.
  */
 class FileUsageTest extends FileTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => 'File usage',
       'description' => 'Tests the file usage functions.',
