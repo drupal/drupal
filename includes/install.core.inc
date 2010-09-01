@@ -1,5 +1,5 @@
 <?php
-// $Id: install.core.inc,v 1.27 2010/08/22 15:31:18 dries Exp $
+// $Id: install.core.inc,v 1.28 2010/09/01 01:24:05 webchick Exp $
 
 /**
  * @file
@@ -1354,16 +1354,34 @@ function install_profile_modules(&$install_state) {
   $files = system_rebuild_module_data();
   variable_del('install_profile_modules');
 
-  // Install dependencies first.
-  $modules = array_flip($modules);
-  foreach ($modules as $module => $weight) {
-    $modules[$module] = $files[$module]->sort;
+  // Always install required modules first. Respect the dependencies between
+  // the modules.
+  $required = array();
+  $non_required = array();
+  // Although the profile module is marked as required, it needs to go after
+  // every dependency, including non-required ones. So clear its required
+  // flag for now to allow it to install late.
+  $files[$install_state['parameters']['profile']]->info['required'] = FALSE;
+  // Add modules that other modules depend on.
+  foreach ($modules as $module) {
+    if ($files[$module]->requires) {
+      $modules = array_merge($modules, array_keys($files[$module]->requires));
+    }
   }
-  arsort($modules);
-  $modules = array_keys($modules);
+  $modules = array_unique($modules);
+  foreach ($modules as $module) {
+    if (!empty($files[$module]->info['required'])) {
+      $required[$module] = $files[$module]->sort;
+    }
+    else {
+      $non_required[$module] = $files[$module]->sort;
+    }
+  }
+  arsort($required);
+  arsort($non_required);
 
   $operations = array();
-  foreach ($modules as $module) {
+  foreach ($required + $non_required as $module => $weight) {
     $operations[] = array('_install_module_batch', array($module, $files[$module]->info['name']));
   }
   $batch = array(
