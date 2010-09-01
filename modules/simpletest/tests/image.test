@@ -1,5 +1,5 @@
 <?php
-// $Id: image.test,v 1.15 2010/08/05 23:53:38 webchick Exp $
+// $Id: image.test,v 1.16 2010/09/01 20:08:17 dries Exp $
 
 /**
  * @file
@@ -444,7 +444,7 @@ class ImageToolkitGdTestCase extends DrupalWebTestCase {
           $correct_colors = $this->colorsAreEqual($color, $corner);
         }
 
-        $directory = file_directory_path() . '/imagetests';
+        $directory = file_default_scheme() . '://imagetests';
         file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
         image_save($image, $directory . '/' . $op . '.' . $image->info['extension']);
 

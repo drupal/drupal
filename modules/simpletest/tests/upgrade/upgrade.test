@@ -1,5 +1,5 @@
 <?php
-// $Id: upgrade.test,v 1.5 2010/08/05 23:53:38 webchick Exp $
+// $Id: upgrade.test,v 1.6 2010/09/01 20:08:17 dries Exp $
 
 /**
  * Perform end-to-end tests of the upgrade path.
@@ -58,7 +58,7 @@ abstract class UpgradePathTestCase extends DrupalWebTestCase {
     // Store necessary current values before switching to prefixed database.
     $this->originalLanguage = $language;
     $this->originalLanguageDefault = variable_get('language_default');
-    $this->originalFileDirectory = file_directory_path();
+    $this->originalFileDirectory = variable_get('file_public_path', conf_path() . '/files');
     $this->originalProfile = drupal_get_profile();
     $clean_url_original = variable_get('clean_url', 0);
 

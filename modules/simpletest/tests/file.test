@@ -1,5 +1,5 @@
 <?php
-// $Id: file.test,v 1.64 2010/09/01 19:58:01 dries Exp $
+// $Id: file.test,v 1.65 2010/09/01 20:08:17 dries Exp $
 
 /**
  *  @file
@@ -175,7 +175,7 @@ class FileTestCase extends DrupalWebTestCase {
   function createDirectory($path = NULL) {
     // A directory to operate on.
     if (is_null($path)) {
-      $path = file_directory_path() . '/' . $this->randomName();
+      $path = file_default_scheme() . '://' . $this->randomName();
     }
     $this->assertTrue(drupal_mkdir($path) && is_dir($path), t('Directory was created successfully.'));
     return $path;
@@ -428,9 +428,8 @@ class FileValidatorTest extends DrupalWebTestCase {
     // Maximum size.
     if (image_get_toolkit()) {
       // Copy the image so that the original doesn't get resized.
-      $temp_dir = file_directory_path('temporary');
-      copy(drupal_realpath('misc/druplicon.png'), drupal_realpath($temp_dir) . '/druplicon.png');
-      $this->image->uri = $temp_dir . '/druplicon.png';
+      copy(drupal_realpath('misc/druplicon.png'), 'temporary://druplicon.png');
+      $this->image->uri = 'temporary://druplicon.png';
 
       $errors = file_validate_image_resolution($this->image, '10x5');
       $this->assertEqual(count($errors), 0, t('No errors should be reported when an oversized image can be scaled down.'), 'File');
@@ -439,7 +438,7 @@ class FileValidatorTest extends DrupalWebTestCase {
       $this->assertTrue($info['width'] <= 10, t('Image scaled to correct width.'), 'File');
       $this->assertTrue($info['height'] <= 5, t('Image scaled to correct height.'), 'File');
 
-      drupal_unlink(drupal_realpath($temp_dir . '/druplicon.png'));
+      drupal_unlink(drupal_realpath('temporary://druplicon.png'));
     }
     else {
       // TODO: should check that the error is returned if no toolkit is available.
@@ -532,13 +531,12 @@ class FileUnmanagedSaveDataTest extends FileTestCase {
     // No filename.
     $filepath = file_unmanaged_save_data($contents);
     $this->assertTrue($filepath, t('Unnamed file saved correctly.'));
-    $this->assertEqual(file_directory_path('public'), file_directory_path(file_stream_wrapper_valid_scheme($filepath)), t("File was placed in Drupal's files directory."));
+    $this->assertEqual(file_uri_scheme($filepath), file_default_scheme(), t("File was placed in Drupal's files directory."));
     $this->assertEqual($contents, file_get_contents(drupal_realpath($filepath)), t('Contents of the file are correct.'));
 
     // Provide a filename.
     $filepath = file_unmanaged_save_data($contents, 'public://asdf.txt', FILE_EXISTS_REPLACE);
     $this->assertTrue($filepath, t('Unnamed file saved correctly.'));
-    $this->assertEqual(file_directory_path('public'), file_directory_path(file_uri_scheme($filepath)), t("File was placed in Drupal's files directory."));
     $this->assertEqual('asdf.txt', basename($filepath), t('File was named correctly.'));
     $this->assertEqual($contents, file_get_contents(drupal_realpath($filepath)), t('Contents of the file are correct.'));
     $this->assertFilePermissions($filepath, variable_get('file_chmod_file', 0664));
@@ -876,11 +874,11 @@ class FileDirectoryTest extends FileTestCase {
   }
 
   /**
-   * Test the file_directory_path() function.
+   * Test directory handling functions.
    */
-  function testFileCheckDirectory() {
+  function testFileCheckDirectoryHandling() {
     // A directory to operate on.
-    $directory = file_directory_path() . '/' . $this->randomName() . '/' . $this->randomName();
+    $directory = file_stream_wrapper_get_instance_by_scheme(file_default_scheme())->getDirectoryPath() . '/' . $this->randomName() . '/' . $this->randomName();
     $this->assertFalse(is_dir($directory), t('Directory does not exist prior to testing.'));
 
     // Non-existent directory.
@@ -899,6 +897,7 @@ class FileDirectoryTest extends FileTestCase {
       // in the directory on any recent version of Windows.
 
       // Make directory read only.
+      debug($directory);
       @drupal_chmod($directory, 0444);
       $this->assertFalse(file_prepare_directory($directory, 0), t('Error reported for a non-writeable directory.'), 'File');
 
@@ -910,33 +909,13 @@ class FileDirectoryTest extends FileTestCase {
     $this->assertDirectoryPermissions($directory, variable_get('file_chmod_directory', 0775));
 
     // Remove .htaccess file to then test that it gets re-created.
-    $directory = file_directory_path();
-    @drupal_unlink($directory . '/.htaccess');
-    $this->assertFalse(is_file($directory . '/.htaccess'), t('Successfully removed the .htaccess file in the files directory.'), 'File');
+    @drupal_unlink(file_default_scheme() . '://.htaccess');
+    $this->assertFalse(is_file(file_default_scheme() . '://.htaccess'), t('Successfully removed the .htaccess file in the files directory.'), 'File');
     file_ensure_htaccess();
-    $this->assertTrue(is_file($directory . '/.htaccess'), t('Successfully re-created the .htaccess file in the files directory.'), 'File');
+    $this->assertTrue(is_file(file_default_scheme() . '://.htaccess'), t('Successfully re-created the .htaccess file in the files directory.'), 'File');
     // Verify contents of .htaccess file.
-    $file = file_get_contents(file_directory_path() . '/.htaccess');
+    $file = file_get_contents(file_default_scheme() . '://.htaccess');
     $this->assertEqual($file, "SetHandler Drupal_Security_Do_Not_Remove_See_SA_2006_006\nOptions None\nOptions +FollowSymLinks", t('The .htaccess file contains the proper content.'), 'File');
-  }
-
-  /**
-   * Check file_directory_path('public').
-   */
-  function testFileDirectoryPath() {
-    // Directory path.
-    $path = variable_get('file_public_path', '');
-    $this->assertEqual($path, file_directory_path('public'), t('Properly returns the stored file directory path.'), 'File');
-  }
-
-  /**
-   * Check file_directory_path() and file_directory_path('temporary').
-   */
-  function testFileDirectoryTemp() {
-    // Temporary directory handling.
-    variable_set('file_directory_temp', NULL);
-    $temp = file_directory_temp();
-    $this->assertTrue(!is_null($temp), t('Properly set and retrieved temp directory %directory.', array('%directory' => $temp)), 'File');
   }
 
   /**
@@ -1154,7 +1133,7 @@ class FileUnmanagedDeleteTest extends FileTestCase {
    */
   function testMissing() {
     // Try to delete a non-existing file
-    $this->assertTrue(file_unmanaged_delete(file_directory_path() . '/' . $this->randomName()), t('Returns true when deleting a non-existent file.'));
+    $this->assertTrue(file_unmanaged_delete(file_default_scheme() . '/' . $this->randomName()), t('Returns true when deleting a non-existent file.'));
   }
 
   /**
@@ -1188,7 +1167,7 @@ class FileUnmanagedDeleteRecursiveTest extends FileTestCase {
    */
   function testSingleFile() {
     // Create a file for testing
-    $filepath = file_directory_path() . '/' . $this->randomName();
+    $filepath = file_default_scheme() . '://' . $this->randomName();
     file_put_contents($filepath, '');
 
     // Delete the file.
@@ -2073,7 +2052,7 @@ class FileSaveDataTest extends FileHookTestCase {
     $result = file_save_data($contents);
     $this->assertTrue($result, t('Unnamed file saved correctly.'));
 
-    $this->assertEqual(file_directory_path('public'), file_directory_path(file_stream_wrapper_valid_scheme($result->uri)), t("File was placed in Drupal's files directory."));
+    $this->assertEqual(file_default_scheme(), file_uri_scheme($result->uri), t("File was placed in Drupal's files directory."));
     $this->assertEqual($result->filename, basename($result->uri), t("Filename was set to the file's basename."));
     $this->assertEqual($contents, file_get_contents($result->uri), t('Contents of the file are correct.'));
     $this->assertEqual($result->filemime, 'application/octet-stream', t('A MIME type was set.'));
@@ -2095,7 +2074,7 @@ class FileSaveDataTest extends FileHookTestCase {
     $result = file_save_data($contents, 'public://' . 'asdf.txt');
     $this->assertTrue($result, t('Unnamed file saved correctly.'));
 
-    $this->assertEqual(file_directory_path('public'), file_directory_path(file_stream_wrapper_valid_scheme($result->uri)), t("File was placed in Drupal's files directory."));
+    $this->assertEqual('public', file_uri_scheme($result->uri), t("File was placed in Drupal's files directory."));
     $this->assertEqual('asdf.txt', basename($result->uri), t('File was named correctly.'));
     $this->assertEqual($contents, file_get_contents($result->uri), t('Contents of the file are correct.'));
     $this->assertEqual($result->filemime, 'text/plain', t('A MIME type was set.'));
@@ -2119,7 +2098,7 @@ class FileSaveDataTest extends FileHookTestCase {
     $result = file_save_data($contents, $existing->uri, FILE_EXISTS_RENAME);
     $this->assertTrue($result, t("File saved sucessfully."));
 
-    $this->assertEqual(file_directory_path('public'), file_directory_path(file_stream_wrapper_valid_scheme($result->uri)), t("File was placed in Drupal's files directory."));
+    $this->assertEqual('public', file_uri_scheme($result->uri), t("File was placed in Drupal's files directory."));
     $this->assertEqual($result->filename, $existing->filename, t("Filename was set to the basename of the source, rather than that of the renamed file."));
     $this->assertEqual($contents, file_get_contents($result->uri), t("Contents of the file are correct."));
     $this->assertEqual($result->filemime, 'application/octet-stream', t("A MIME type was set."));
@@ -2147,7 +2126,7 @@ class FileSaveDataTest extends FileHookTestCase {
     $result = file_save_data($contents, $existing->uri, FILE_EXISTS_REPLACE);
     $this->assertTrue($result, t('File saved sucessfully.'));
 
-    $this->assertEqual(file_directory_path('public'), file_directory_path(file_stream_wrapper_valid_scheme($result->uri)), t("File was placed in Drupal's files directory."));
+    $this->assertEqual('public', file_uri_scheme($result->uri), t("File was placed in Drupal's files directory."));
     $this->assertEqual($result->filename, $existing->filename, t('Filename was set to the basename of the existing file, rather than preserving the original name.'));
     $this->assertEqual($contents, file_get_contents($result->uri), t('Contents of the file are correct.'));
     $this->assertEqual($result->filemime, 'application/octet-stream', t('A MIME type was set.'));
@@ -2208,7 +2187,7 @@ class FileDownloadTest extends FileTestCase {
     // Test generating an URL to a created file.
     $file = $this->createFile();
     $url = file_create_url($file->uri);
-    $this->assertEqual($GLOBALS['base_url'] . '/' . file_directory_path() . '/' . $file->filename, $url, t('Correctly generated a URL for a created file.'));
+    $this->assertEqual($GLOBALS['base_url'] . '/' . file_stream_wrapper_get_instance_by_scheme('public')->getDirectoryPath() . '/' . $file->filename, $url, t('Correctly generated a URL for a created file.'));
     $this->drupalHead($url);
     $this->assertResponse(200, t('Confirmed that the generated URL is correct by downloading the created file.'));
 
@@ -2265,7 +2244,7 @@ class FileDownloadTest extends FileTestCase {
       '%2523%2525%2526%252B%252F%253F' .
       '%C3%A9%C3%B8%C3%AF%D0%B2%CE%B2%E4%B8%AD%E5%9C%8B%E6%9B%B8%DB%9E';
 
-    $this->checkUrl('public', '', $basename, $base_url . '/' . file_directory_path() . '/' . $basename_encoded);
+    $this->checkUrl('public', '', $basename, $base_url . '/' . file_stream_wrapper_get_instance_by_scheme('public')->getDirectoryPath() . '/' . $basename_encoded);
     $this->checkUrl('private', '', $basename, $base_url . '/system/files/' . $basename_encoded);
     $this->checkUrl('private', '', $basename, $base_url . '/?q=system/files/' . $basename_encoded, '0');
   }
@@ -2378,19 +2357,20 @@ class FileURLRewritingTest extends FileTestCase {
     variable_set('file_test_hook_file_url_alter', 'cdn');
     $file = $this->createFile();
     $url = file_create_url($file->uri);
-    $this->assertEqual(FILE_URL_TEST_CDN_2 . '/' . file_directory_path() . '/' . $file->filename, $url, t('Correctly generated a CDN URL for a created file.'));
+    $public_directory_path = file_stream_wrapper_get_instance_by_scheme('public')->getDirectoryPath();
+    $this->assertEqual(FILE_URL_TEST_CDN_2 . '/' . $public_directory_path . '/' . $file->filename, $url, t('Correctly generated a CDN URL for a created file.'));
 
     // Test alteration of file URLs to use root-relative URLs.
     variable_set('file_test_hook_file_url_alter', 'root-relative');
     $file = $this->createFile();
     $url = file_create_url($file->uri);
-    $this->assertEqual(base_path() . '/' . file_directory_path() . '/' . $file->filename, $url, t('Correctly generated a root-relative URL for a created file.'));
+    $this->assertEqual(base_path() . '/' . $public_directory_path . '/' . $file->filename, $url, t('Correctly generated a root-relative URL for a created file.'));
 
     // Test alteration of file URLs to use a protocol-relative URLs.
     variable_set('file_test_hook_file_url_alter', 'protocol-relative');
     $file = $this->createFile();
     $url = file_create_url($file->uri);
-    $this->assertEqual('/' . base_path() . '/' . file_directory_path() . '/' . $file->filename, $url, t('Correctly generated a protocol-relative URL for a created file.'));
+    $this->assertEqual('/' . base_path() . '/' . $public_directory_path . '/' . $file->filename, $url, t('Correctly generated a protocol-relative URL for a created file.'));
   }
 }
 
@@ -2599,17 +2579,13 @@ class StreamWrapperTest extends DrupalWebTestCase {
     $this->assertEqual(file_uri_target('public://foo/bar.txt'), 'foo/bar.txt', t('Got a valid stream target from public://foo/bar.txt.'));
     $this->assertFalse(file_uri_target('foo/bar.txt'), t('foo/bar.txt is not a valid stream.'));
 
-    // Test file_build_uri() and file_directory_path().
+    // Test file_build_uri() and DrupalLocalStreamWrapper::getDirectoryPath().
     $this->assertEqual(file_build_uri('foo/bar.txt'), 'public://foo/bar.txt', t('Expected scheme was added.'));
-    $this->assertEqual(file_directory_path(), variable_get('file_public_path'), t('Expected default directory path was returned.'));
-    $this->assertEqual(file_directory_path('public'), variable_get('file_public_path'), t('Expected public directory path was returned.'));
-    $this->assertEqual(file_directory_path('temporary'), variable_get('file_temporary_path'), t('Expected temporary directory path was returned.'));
-    $this->assertEqual(file_directory_path($this->scheme), variable_get('stream_public_path', 'sites/default/files'), t('Expected dummy directory path was returned.'));
-    $this->assertFalse(file_directory_path('non-existent'), t('No directory path returned for invalid scheme.'));
+    $this->assertEqual(file_stream_wrapper_get_instance_by_scheme('public')->getDirectoryPath(), variable_get('file_public_path'), t('Expected default directory path was returned.'));
+    $this->assertEqual(file_stream_wrapper_get_instance_by_scheme('temporary')->getDirectoryPath(), variable_get('file_temporary_path'), t('Expected temporary directory path was returned.'));
+
     variable_set('file_default_scheme', 'private');
     $this->assertEqual(file_build_uri('foo/bar.txt'), 'private://foo/bar.txt', t('Got a valid URI from foo/bar.txt.'));
-    $this->assertEqual(file_directory_path(), variable_get('file_private_path'), t('Expected default directory path was returned.'));
-    $this->assertEqual(file_directory_path('private'), variable_get('file_private_path'), t('Expected private directory path was returned.'));
   }
 
   /**

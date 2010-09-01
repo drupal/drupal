@@ -1,5 +1,5 @@
 <?php
-// $Id: file.field.inc,v 1.31 2010/08/22 13:52:58 dries Exp $
+// $Id: file.field.inc,v 1.32 2010/09/01 20:08:17 dries Exp $
 
 /**
  * @file
@@ -193,15 +193,7 @@ function _file_generic_settings_extensions($element, &$form_state) {
 function _file_generic_settings_file_directory_validate($element, &$form_state) {
   // Strip slashes from the beginning and end of $widget['file_directory'].
   $value = trim($element['#value'], '\\/');
-
-  // Do not allow the file path to be the same as the file_directory_path().
-  // This causes all sorts of problems with things like file_create_url().
-  if (strpos($value, file_directory_path()) === 0) {
-    form_error($element, t('The file directory (@file_directory) cannot start with the system files directory (@files_directory), as this may cause conflicts when building file URLs.', array('@file_directory' => $form_state['values']['file_directory'], '@files_directory' => file_directory_path())));
-  }
-  else {
-    form_set_value($element, $value, $form_state);
-  }
+  form_set_value($element, $value, $form_state);
 }
 
 /**

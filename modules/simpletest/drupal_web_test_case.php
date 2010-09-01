@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.228 2010/09/01 02:05:36 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.229 2010/09/01 20:08:17 dries Exp $
 
 /**
  * Global variable that holds information about the tests being run.
@@ -416,7 +416,7 @@ abstract class DrupalTestCase {
    */
   public function run() {
     // Initialize verbose debugging.
-    simpletest_verbose(NULL, file_directory_path(), get_class($this));
+    simpletest_verbose(NULL, variable_get('file_public_path', conf_path() . '/files'), get_class($this));
 
     // HTTP auth settings (<username>:<password>) for the simpletest browser
     // when sending requests to the test site.
@@ -568,7 +568,7 @@ class DrupalUnitTestCase extends DrupalTestCase {
     global $conf;
 
     // Store necessary current values before switching to the test environment.
-    $this->originalFileDirectory = file_directory_path();
+    $this->originalFileDirectory = variable_get('file_public_path', conf_path() . '/files');
 
     spl_autoload_register('db_autoload');
 
@@ -903,9 +903,8 @@ class DrupalWebTestCase extends DrupalTestCase {
       // Copy other test files from simpletest.
       $original = drupal_get_path('module', 'simpletest') . '/files';
       $files = file_scan_directory($original, '/(html|image|javascript|php|sql)-.*/');
-      $destination_path = file_directory_path('public');
       foreach ($files as $file) {
-        file_unmanaged_copy($file->uri, $destination_path);
+        file_unmanaged_copy($file->uri, variable_get('file_public_path', conf_path() . '/files'));
       }
 
       $this->generatedTestFiles = TRUE;
@@ -914,7 +913,7 @@ class DrupalWebTestCase extends DrupalTestCase {
     $files = array();
     // Make sure type is valid.
     if (in_array($type, array('binary', 'html', 'image', 'javascript', 'php', 'sql', 'text'))) {
-      $files = file_scan_directory(file_directory_path('public'), '/' . $type . '\-.*/');
+      $files = file_scan_directory(variable_get('file_public_path', conf_path() . '/files'), '/' . $type . '\-.*/');
 
       // If size is set then remove any files that are not of that size.
       if ($size !== NULL) {
@@ -1152,7 +1151,7 @@ class DrupalWebTestCase extends DrupalTestCase {
     // Store necessary current values before switching to prefixed database.
     $this->originalLanguage = $language;
     $this->originalLanguageDefault = variable_get('language_default');
-    $this->originalFileDirectory = file_directory_path();
+    $this->originalFileDirectory = variable_get('file_public_path', conf_path() . '/files');
     $this->originalProfile = drupal_get_profile();
     $clean_url_original = variable_get('clean_url', 0);
 

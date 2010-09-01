@@ -1,5 +1,5 @@
 <?php
-// $Id: updater.inc,v 1.6 2010/07/21 00:28:14 dries Exp $
+// $Id: updater.inc,v 1.7 2010/09/01 20:08:17 dries Exp $
 
 /**
  * @file
@@ -368,7 +368,7 @@ class Updater {
    * Return the full path to a directory where backups should be written.
    */
   public function getBackupDir() {
-    return file_directory_path('temporary');
+    return file_stream_wrapper_get_instance_by_scheme('temporary')->getDirectoryPath();
   }
 
   /**

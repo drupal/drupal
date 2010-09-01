@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.test,v 1.44 2010/08/01 23:35:01 dries Exp $
+// $Id: simpletest.test,v 1.45 2010/09/01 20:08:17 dries Exp $
 
 class SimpleTestFunctionalTest extends DrupalWebTestCase {
   /**
@@ -433,11 +433,13 @@ class SimpleTestFolderTestCase extends DrupalWebTestCase {
     );
   }
 
+  function setUp() {
+    return parent::setUp('image');
+  }
+
   function testFolderSetup() {
-    if (module_exists('image')) {
-      $path = file_directory_path() . '/styles';
-      $this->assertTrue(file_prepare_directory($path, FALSE), "Directory created.");
-    }
+    $directory = file_default_scheme() . '://styles';
+    $this->assertTrue(file_prepare_directory($directory, FALSE), "Directory created.");
   }
 }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1196 2010/08/26 09:14:33 webchick Exp $
+// $Id: user.module,v 1.1197 2010/09/01 20:08:17 dries Exp $
 
 /**
  * @file
@@ -433,7 +433,7 @@ function user_save($account, $edit = array(), $category = 'account') {
         // make it permanent.
         if (!$picture->status) {
           $info = image_get_info($picture->uri);
-          $picture_directory =  variable_get('file_default_scheme', 'public') . '://' . variable_get('user_picture_path', 'pictures');
+          $picture_directory =  file_default_scheme() . '://' . variable_get('user_picture_path', 'pictures');
 
           // Prepare the pictures directory.
           file_prepare_directory($picture_directory, FILE_CREATE_DIRECTORY);

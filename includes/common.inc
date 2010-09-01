@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1211 2010/08/27 11:54:32 webchick Exp $
+// $Id: common.inc,v 1.1212 2010/09/01 20:08:17 dries Exp $
 
 /**
  * @file
@@ -4587,7 +4587,7 @@ function _drupal_bootstrap_full() {
     // Running inside the simpletest child site, log fatal errors to test
     // specific file directory.
     ini_set('log_errors', 1);
-    ini_set('error_log', file_directory_path() . '/error.log');
+    ini_set('error_log', 'public://error.log');
   }
 
   // Initialize $_GET['q'] prior to invoking hook_init().

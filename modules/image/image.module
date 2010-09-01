@@ -1,5 +1,5 @@
 <?php
-// $Id: image.module,v 1.47 2010/08/22 22:04:18 dries Exp $
+// $Id: image.module,v 1.48 2010/09/01 20:08:17 dries Exp $
 
 /**
  * @file
@@ -75,11 +75,12 @@ function image_menu() {
   // If clean URLs are disabled, image derivatives will always be served 
   // through the menu system.
   // If clean URLs are enabled and the image derivative already exists,
-  // PHP will be bypassed. 
-  $items[file_directory_path('public') . '/styles/%image_style'] = array(
+  // PHP will be bypassed.
+  $directory_path = file_stream_wrapper_get_instance_by_scheme('public')->getDirectoryPath();
+  $items[$directory_path . '/styles/%image_style'] = array(
     'title' => 'Generate image style',
     'page callback' => 'image_style_deliver',
-    'page arguments' => array(count(explode('/', file_directory_path())) + 1),
+    'page arguments' => array(count(explode('/', $directory_path)) + 1),
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
@@ -763,7 +764,7 @@ function image_style_create_derivative($style, $source, $destination) {
  *   An image style array.
  */
 function image_style_flush($style) {
-  $style_directory = drupal_realpath(variable_get('file_default_scheme', 'public') . '://styles/' . $style['name']);
+  $style_directory = drupal_realpath(file_default_scheme() . '://styles/' . $style['name']);
   if (is_dir($style_directory)) {
     file_unmanaged_delete_recursive($style_directory);
   }
@@ -808,7 +809,7 @@ function image_style_url($style_name, $path) {
   }
   else {
     $destination = image_style_path($style_name, $path);
-    $url = url(file_directory_path($scheme) . '/' . file_uri_target($destination), array('absolute' => TRUE));
+    $url = url(file_stream_wrapper_get_instance_by_scheme($scheme)->getDirectoryPath() . '/' . file_uri_target($destination), array('absolute' => TRUE));
   }
   return $url;
 }
@@ -834,7 +835,7 @@ function image_style_path($style_name, $uri) {
   }
   else {
     $path = $uri;
-    $scheme = variable_get('file_default_scheme', 'public');
+    $scheme = file_default_scheme();
   }
   return $scheme . '://styles/' . $style_name . '/' . $scheme . '/' . $path;
 }
