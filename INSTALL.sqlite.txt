@@ -1,4 +1,4 @@
-// $Id: INSTALL.sqlite.txt,v 1.2 2009/11/10 17:27:53 webchick Exp $
+// $Id: INSTALL.sqlite.txt,v 1.3 2010/09/01 02:39:57 dries Exp $
 
 SQLITE REQUIREMENTS
 -------------------
@@ -12,7 +12,9 @@ SQLITE DATABASE CREATION
 
 The Drupal installer will create the SQLite database for you. The only
 requirement is the installer must have write permissions the directory where
-the database file resides.
+the database file resides. This directory (not just the database file) also has
+to remain writeable by the web server going forward for SQLite to continue to be
+able to operate.
 
 On the "Database configuration" form in the "Database name" field, you must
 supply the exact path to where you wish your database file to reside. It is
@@ -31,4 +33,5 @@ file from downloading.
 
 USERNAME, PASSWORD, and ADVANCED OPTIONS
 ----------------------------------------
-No username, password, or advanced options are necessary and should not be used.
+No username, password, or advanced options are necessary, and they should not be
+used.

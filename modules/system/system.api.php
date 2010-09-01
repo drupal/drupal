@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.188 2010/08/31 15:02:39 webchick Exp $
+// $Id: system.api.php,v 1.189 2010/09/01 02:39:58 dries Exp $
 
 /**
  * @file
@@ -980,6 +980,8 @@ function hook_page_build(&$page) {
  *     - MENU_DEFAULT_LOCAL_TASK: Every set of local tasks should provide one
  *       "default" task, which should display the same page as the parent item.
  *     If the "type" element is omitted, MENU_NORMAL_ITEM is assumed.
+ *   - "options": An array of options to be passed to l() when generating a link
+ *     from this menu item.
  *
  * For a detailed usage example, see page_example.module.
  * For comprehensive documentation on the menu system, see
