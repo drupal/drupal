@@ -69,6 +69,9 @@ require_once DRUPAL_ROOT . '/modules/field/field.form.inc';
  * - @link field_purge Field API bulk data deletion @endlink. Cleans
  *   up after bulk deletion operations such as field_delete_field()
  *   and field_delete_instance().
+ *
+ * - @link field_language Field language API @endlink. Provides native
+ *   multilingual support for the Field API.
  */
 
 /**
