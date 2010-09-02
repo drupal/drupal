@@ -412,6 +412,24 @@ abstract class DrupalTestCase {
   }
 
   /**
+   * Logs verbose message in a text file.
+   *
+   * The a link to the vebose message will be placed in the test results via
+   * as a passing assertion with the text '[verbose message]'.
+   *
+   * @param $message
+   *   The verbose message to be stored.
+   *
+   * @see simpletest_verbose()
+   */
+  protected function verbose($message) {
+    if ($id = simpletest_verbose($message)) {
+      $url = file_create_url($this->originalFileDirectory . '/simpletest/verbose/' . get_class($this) . '-' . $id . '.html');
+      $this->error(l(t('Verbose message'), $url, array('attributes' => array('target' => '_blank'))), 'User notice');
+    }
+  }
+
+  /**
    * Run all tests in this class.
    */
   public function run() {
@@ -3069,24 +3087,6 @@ class DrupalWebTestCase extends DrupalTestCase {
     for ($i = sizeof($mails) -1; $i >= sizeof($mails) - $count && $i >= 0; $i--) {
       $mail = $mails[$i];
       $this->verbose(t('Email:') . '<pre>' . print_r($mail, TRUE) . '</pre>');
-    }
-  }
-
-  /**
-   * Logs verbose message in a text file.
-   *
-   * The a link to the vebose message will be placed in the test results via
-   * as a passing assertion with the text '[verbose message]'.
-   *
-   * @param $message
-   *   The verbose message to be stored.
-   *
-   * @see simpletest_verbose()
-   */
-  protected function verbose($message) {
-    if ($id = simpletest_verbose($message)) {
-      $url = file_create_url($this->originalFileDirectory . '/simpletest/verbose/' . get_class($this) . '-' . $id . '.html');
-      $this->error(l(t('Verbose message'), $url, array('attributes' => array('target' => '_blank'))), 'User notice');
     }
   }
 }
