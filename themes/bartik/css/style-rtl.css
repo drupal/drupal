@@ -1,4 +1,4 @@
-/* $Id: style-rtl.css,v 1.5 2010/09/01 03:00:21 dries Exp $ */
+/* $Id: style-rtl.css,v 1.6 2010/09/02 20:43:18 dries Exp $ */
 
 /* ------------------ Reset Styles ------------------ */
 
@@ -152,9 +152,14 @@ a.button {
 
 /* --------------- Search Form ---------------- */
 
+#search-form input#edit-keys,
+#block-search-form .form-item-search-block-form input {
+  float: right;
+}
 #search-block-form input.form-submit,
 #search-form input.form-submit {
   margin-left: 0;
+  margin-right: 5px;
 }
 
 /* ------------------ Footer ------------------ */

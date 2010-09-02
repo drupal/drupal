@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.6 2010/08/31 21:05:33 webchick Exp $ */
+/* $Id: style.css,v 1.7 2010/09/02 20:43:18 dries Exp $ */
 
 /* ---------- Overall Specifications ---------- */
 
@@ -1158,36 +1158,30 @@ div.vertical-tabs .vertical-tabs-panes fieldset.vertical-tabs-pane {
 
 /* --------------- Search Form ---------------- */
 
+#block-search-form {
+  padding-bottom: 7px;
+}
 #block-search-form .content {
   margin-top: 0;
 }
+#search-form input#edit-keys,
 #block-search-form .form-item-search-block-form input {
-  width: 70%;
-}
-.region-content #block-search-form .form-item-search-block-form input,
-.region-footer #block-search-form .form-item-search-block-form input {
-  width: auto;
-}
-#block-search-form #edit-actions {
-  float: right;
-}
-.region-content #block-search-form #edit-actions,
-.region-footer #block-search-form #edit-actions {
-  float: none;
-}
-#block-search-form .form-actions {
-  padding-top: 0;
+  float: left; /* LTR */
 }
 #search-block-form input.form-submit,
 #search-form input.form-submit {
+  margin-left: 5px; /* LTR */
   margin-right: 0; /* LTR */
-  height: 24px;
-  width: 14px;
-  overflow: hidden;
+  height: 25px;
+  width: 34px;
+  padding: 0;
   cursor: pointer;
   text-indent: -9999px;
-  border: none;
-  background: url(../images/search-button.png) no-repeat left center;
+  border: 1px solid #ccc;
+  background: url(../images/search-button.png) no-repeat center center;
+}
+#search-form .form-item-keys label {
+  display: block;
 }
 
 /* -------------- Shortcut Links -------------- */
