@@ -19,3 +19,8 @@ fieldset legend {
 #footer-wrapper #footer .block {
   height: 100%;
 }
+#search-block-form input.form-submit,
+#search-form input.form-submit {
+  text-transform: capitalize; /* Trigger text indent. */
+  height: 26px;
+}

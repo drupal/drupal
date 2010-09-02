@@ -9,3 +9,6 @@
 .tabs ul.primary {
   zoom: 1;
 }
+#block-search-form .form-item-search-block-form input {
+  width: 67%;
+}
