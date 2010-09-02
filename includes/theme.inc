@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.606 2010/08/22 12:46:21 dries Exp $
+// $Id: theme.inc,v 1.607 2010/09/02 15:58:53 dries Exp $
 
 /**
  * @file
@@ -95,8 +95,8 @@ function drupal_theme_initialize() {
   $base_theme = array();
   $ancestor = $theme;
   while ($ancestor && isset($themes[$ancestor]->base_theme)) {
-    $base_theme[] = $new_base_theme = $themes[$themes[$ancestor]->base_theme];
     $ancestor = $themes[$ancestor]->base_theme;
+    $base_theme[] = $themes[$ancestor];
   }
   _drupal_theme_initialize($themes[$theme], array_reverse($base_theme));
 
