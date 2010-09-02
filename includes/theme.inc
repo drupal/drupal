@@ -95,8 +95,8 @@ function drupal_theme_initialize() {
   $base_theme = array();
   $ancestor = $theme;
   while ($ancestor && isset($themes[$ancestor]->base_theme)) {
-    $base_theme[] = $new_base_theme = $themes[$themes[$ancestor]->base_theme];
     $ancestor = $themes[$ancestor]->base_theme;
+    $base_theme[] = $themes[$ancestor];
   }
   _drupal_theme_initialize($themes[$theme], array_reverse($base_theme));
 
