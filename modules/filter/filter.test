@@ -1273,6 +1273,17 @@ www.example.com with a newline in comments -->
         'href="http://www.example.info"' => TRUE,
         'href="mailto:person@example.info"' => TRUE,
       ),
+      '
+<div>www.div.com</div>
+<ul>
+<li>http://listitem.com</li>
+<li class="odd">www.class.listitem.com</li>
+</ul>
+' => array(
+        '<div><a href="http://www.div.com">www.div.com</a></div>' => TRUE,
+        '<li><a href="http://listitem.com">http://listitem.com</a></li>' => TRUE,
+        '<li class="odd"><a href="http://www.class.listitem.com">www.class.listitem.com</a></li>' => TRUE,
+      ),
     );
     $this->assertFilteredString($filter, $tests);
 
