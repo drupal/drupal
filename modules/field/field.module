@@ -1,5 +1,5 @@
 <?php
-// $Id: field.module,v 1.82 2010/08/22 12:55:04 dries Exp $
+// $Id: field.module,v 1.83 2010/09/02 20:59:11 dries Exp $
 /**
  * @file
  * Attach custom data fields to Drupal entities.
@@ -69,6 +69,9 @@ require_once DRUPAL_ROOT . '/modules/field/field.form.inc';
  * - @link field_purge Field API bulk data deletion @endlink. Cleans
  *   up after bulk deletion operations such as field_delete_field()
  *   and field_delete_instance().
+ *
+ * - @link field_language Field language API @endlink. Provides native
+ *   multilingual support for the Field API.
  */
 
 /**
