@@ -1,0 +1,36 @@
+This is just a www.test.com. paragraph with person@test.com. some http://www.test.com. urls thrown in and also <code>using www.test.com the code tag</code>.
+
+<blockquote>
+This is just a www.test.com. paragraph with person@test.com. some http://www.test.com. urls thrown in and also <code>using www.test.com the code tag</code>.
+</blockquote>
+
+<code>Testing code tag http://www.test.com abc</code>
+
+http://www.test.com
+www.test.com
+person@test.com
+<code>www.test.com</code>
+
+What about tags that don't exist <x>like x say www.test.com</x>? And what about tag <pooh>beginning www.test.com with p?</pooh>
+
+Test &lt;br/&gt;: This is just a www.test.com. paragraph <strong>with</strong> some http://www.test.com urls thrown in. *<br/> This is just a www.test.com paragraph *<br/> with some http://www.test.com urls thrown in. *<br/>This is just a www.test.com paragraph person@test.com with some http://www.test.com urls *img*<img/> thrown in. This is just a www.test.com paragraph with some http://www.test.com urls thrown in. This is just a www.test.com paragraph person@test.com with some http://www.test.com urls thrown in.
+
+This is just a www.test.com paragraph <strong>with</strong> some http://www.test.com urls thrown in. <br /> This is just a www.test.com paragraph with some http://www.test.com urls thrown in. This is just a www.test.com paragraph person@test.com with some http://www.test.com urls thrown in. This is just a www.test.com paragraph with some http://www.test.com urls thrown in. This is just a www.test.com paragraph person@test.com with some http://www.test.com urls thrown in.
+
+The old URL filter has problems with <a title="kind of link www.example.com with text" href="http://www.example.com">this kind of link</a> with www address as part of text in title. www.test.com
+
+<!-- This url www.test.com is inside a comment -->
+
+<dl>
+<dt>www.test.com</dt>
+<dd>http://www.test.com</dd>
+<dd>person@test.com</dd>
+<dt>check www.test.com</dt>
+<dd>this with some text around: http://www.test.com not so easy person@test.com now?</dd>
+</dl>
+
+<!-- <p>This url http://www.test.com is
+ inside a comment containing newlines and 
+<em>html</em> tags.</p> -->
+
+This is the end!

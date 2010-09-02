@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.229 2010/09/01 20:08:17 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.230 2010/09/02 15:56:10 dries Exp $
 
 /**
  * Global variable that holds information about the tests being run.
@@ -409,6 +409,24 @@ abstract class DrupalTestCase {
     }
 
     return $this->assert('exception', $message, $group, $caller);
+  }
+
+  /**
+   * Logs verbose message in a text file.
+   *
+   * The a link to the vebose message will be placed in the test results via
+   * as a passing assertion with the text '[verbose message]'.
+   *
+   * @param $message
+   *   The verbose message to be stored.
+   *
+   * @see simpletest_verbose()
+   */
+  protected function verbose($message) {
+    if ($id = simpletest_verbose($message)) {
+      $url = file_create_url($this->originalFileDirectory . '/simpletest/verbose/' . get_class($this) . '-' . $id . '.html');
+      $this->error(l(t('Verbose message'), $url, array('attributes' => array('target' => '_blank'))), 'User notice');
+    }
   }
 
   /**
@@ -3069,24 +3087,6 @@ class DrupalWebTestCase extends DrupalTestCase {
     for ($i = sizeof($mails) -1; $i >= sizeof($mails) - $count && $i >= 0; $i--) {
       $mail = $mails[$i];
       $this->verbose(t('Email:') . '<pre>' . print_r($mail, TRUE) . '</pre>');
-    }
-  }
-
-  /**
-   * Logs verbose message in a text file.
-   *
-   * The a link to the vebose message will be placed in the test results via
-   * as a passing assertion with the text '[verbose message]'.
-   *
-   * @param $message
-   *   The verbose message to be stored.
-   *
-   * @see simpletest_verbose()
-   */
-  protected function verbose($message) {
-    if ($id = simpletest_verbose($message)) {
-      $url = file_create_url($this->originalFileDirectory . '/simpletest/verbose/' . get_class($this) . '-' . $id . '.html');
-      $this->error(l(t('Verbose message'), $url, array('attributes' => array('target' => '_blank'))), 'User notice');
     }
   }
 }
