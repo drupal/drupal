@@ -1,5 +1,5 @@
 <?php
-// $Id: field_ui.test,v 1.20 2010/08/05 23:53:38 webchick Exp $
+// $Id: field_ui.test,v 1.21 2010/09/02 20:44:56 dries Exp $
 
 /**
  * @file
@@ -132,7 +132,7 @@ class FieldUITestCase extends DrupalWebTestCase {
     // Check that the list of options respects entity type restrictions on
     // fields. The 'comment' field is restricted to the 'comment' entity type
     // and should not appear in the list.
-    $this->assertFalse($this->xpath('//select[@id="edit--add-existing-field-field-name"]//option[@value="comment"]'), t('The list of options respects entity type restrictions.'));
+    $this->assertFalse($this->xpath('//select[@id="edit-add-existing-field-field-name"]//option[@value="comment"]'), t('The list of options respects entity type restrictions.'));
 
     // Add a new field based on an existing field.
     $edit = array(
@@ -272,7 +272,7 @@ class FieldUITestCase extends DrupalWebTestCase {
 
     // Check that the field type is not available in the 'add new field' row.
     $this->drupalGet($bundle_path);
-    $this->assertFalse($this->xpath('//select[@id="edit--add-new-field-type"]//option[@value="hidden_test_field"]'), t("The 'add new field' select respects field types 'no_ui' property."));
+    $this->assertFalse($this->xpath('//select[@id="edit-add-new-field-type"]//option[@value="hidden_test_field"]'), t("The 'add new field' select respects field types 'no_ui' property."));
 
     // Create a field and an instance programmatically.
     $field_name = 'hidden_test_field';
@@ -296,7 +296,7 @@ class FieldUITestCase extends DrupalWebTestCase {
     // on other bundles.
     $bundle_path = 'admin/structure/types/manage/article/fields/';
     $this->drupalGet($bundle_path);
-    $this->assertFalse($this->xpath('//select[@id="edit--add-existing-field-field-name"]//option[@value=:field_name]', array(':field_name' => $field_name)), t("The 'add existing field' select respects field types 'no_ui' property."));
+    $this->assertFalse($this->xpath('//select[@id="edit-add-existing-field-field-name"]//option[@value=:field_name]', array(':field_name' => $field_name)), t("The 'add existing field' select respects field types 'no_ui' property."));
   }
 
   /**
