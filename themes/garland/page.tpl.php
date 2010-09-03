@@ -1,5 +1,5 @@
 <?php
-// $Id: page.tpl.php,v 1.43 2010/07/28 01:40:39 dries Exp $
+// $Id: page.tpl.php,v 1.44 2010/09/03 17:55:37 dries Exp $
 ?>
   <?php print render($page['header']); ?>
 
@@ -56,7 +56,7 @@
             <?php print render($page['content']); ?>
           </div>
           <?php print $feed_icons ?>
-          <?php print render($page['footer']) ?>
+          <?php print render($page['footer']); ?>
       </div></div></div></div> <!-- /.left-corner, /.right-corner, /#squeeze, /#center -->
 
       <?php if ($page['sidebar_second']): ?>
