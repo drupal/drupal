@@ -1125,7 +1125,21 @@ class SelectQuery extends Query implements SelectQueryInterface {
       }
       drupal_alter($hooks, $query);
     }
-    return $this->prepared = TRUE;
+
+    $this->prepared = TRUE;
+
+    // Now also prepare any sub-queries.
+    foreach ($this->tables as $table) {
+      if ($table['table'] instanceof SelectQueryInterface) {
+        $table['table']->preExecute();
+      }
+    }
+
+    foreach ($this->union as $union) {
+      $union['query']->preExecute();
+    }
+
+    return $this->prepared;
   }
 
   public function execute() {
@@ -1411,6 +1425,13 @@ class SelectQuery extends Query implements SelectQueryInterface {
 
     // WHERE
     if (count($this->where)) {
+      // The following line will not generate placeholders correctly if there
+      // is a subquery. Fortunately, it is also called from getArguments() first
+      // so it's not a problem in practice... unless you try to call __toString()
+      // before calling getArguments().  That is a problem that we will have to
+      // fix in Drupal 8, because it requires more refactoring than we are
+      // able to do in Drupal 7.
+      // @todo Move away from __toString() For SelectQuery compilation at least.
       $this->where->compile($this->connection, $this);
       // There is an implicit string cast on $this->condition.
       $query .= "\nWHERE " . $this->where;
