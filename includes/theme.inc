@@ -583,7 +583,6 @@ function list_themes($refresh = FALSE) {
       try {
         foreach (system_list('theme') as $theme) {
           if (file_exists($theme->filename)) {
-            $theme->info = unserialize($theme->info);
             $themes[] = $theme;
           }
         }

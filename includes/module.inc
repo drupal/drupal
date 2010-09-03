@@ -72,7 +72,9 @@ function module_list($refresh = FALSE, $bootstrap = FALSE, $sort = FALSE, $fixed
         $list = system_list('bootstrap');
       }
       else {
-        $list = system_list('module_enabled');
+        // Not using drupal_map_assoc() here as that requires common.inc.
+        $list = array_keys(system_list('module_enabled'));
+        $list = (!empty($list) ? array_combine($list, $list) : array());
       }
     }
   }
@@ -96,9 +98,10 @@ function module_list($refresh = FALSE, $bootstrap = FALSE, $sort = FALSE, $fixed
  *   - theme: All themes.
  *
  * @return
- *   An associative array of modules or themes, keyed by name, and having the
- *   respective database row as value. For $type 'module_enabled' and
- *   'bootstrap', the array values equal the keys.
+ *   An associative array of modules or themes, keyed by name. For $type
+ *   'bootstrap', the array values equal the keys. For $type 'module_enabled'
+ *   or 'theme', the array values are objects representing the respective
+ *   database row, with the 'info' property already unserialized.
  *
  * @see module_list()
  * @see list_themes()
@@ -143,11 +146,12 @@ function system_list($type) {
       // Drupal installations, which might have modules installed in different
       // locations in the file system. The ordering here must also be
       // consistent with the one used in module_implements().
-      $result = db_query("SELECT * FROM {system} ORDER BY weight ASC, name ASC");
+      $result = db_query("SELECT * FROM {system} WHERE type = 'theme' OR (type = 'module' AND status = 1) ORDER BY weight ASC, name ASC");
       foreach ($result as $record) {
-        if ($record->type == 'module' && $record->status) {
-          // Build a list of all enabled modules.
-          $lists['module_enabled'][$record->name] = $record->name;
+        $record->info = unserialize($record->info);
+        // Build a list of all enabled modules.
+        if ($record->type == 'module') {
+          $lists['module_enabled'][$record->name] = $record;
         }
         // Build a list of themes.
         if ($record->type == 'theme') {
