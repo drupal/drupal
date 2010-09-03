@@ -139,6 +139,9 @@ function node_type_form($form, &$form_state, $type = NULL) {
 
   $form['additional_settings'] = array(
     '#type' => 'vertical_tabs',
+    '#attached' => array(
+      'js' => array(drupal_get_path('module', 'node') . '/content_types.js'),
+    ),
   );
 
   $form['submission'] = array(
