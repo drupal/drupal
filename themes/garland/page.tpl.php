@@ -56,7 +56,7 @@
             <?php print render($page['content']); ?>
           </div>
           <?php print $feed_icons ?>
-          <?php print render($page['footer']) ?>
+          <?php print render($page['footer']); ?>
       </div></div></div></div> <!-- /.left-corner, /.right-corner, /#squeeze, /#center -->
 
       <?php if ($page['sidebar_second']): ?>
