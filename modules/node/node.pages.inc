@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.130 2010/08/20 01:23:43 dries Exp $
+// $Id: node.pages.inc,v 1.131 2010/09/03 19:56:51 dries Exp $
 
 /**
  * @file
@@ -80,10 +80,7 @@ function node_form_validate($form, &$form_state) {
   // not update it with form values that have not yet been validated, so we
   // create a pseudo-entity to use during validation.
   $node = (object) $form_state['values'];
-  node_validate($node, $form);
-
-  // Field validation. Requires access to $form_state, so this cannot be
-  // done in node_validate() as it currently exists.
+  node_validate($node, $form, $form_state);
   entity_form_field_validate('node', $form, $form_state);
 }
 
@@ -137,8 +134,10 @@ function node_form($form, &$form_state, $node) {
     '#type' => 'hidden',
     '#default_value' => isset($node->changed) ? $node->changed : NULL,
   );
-  // Get the node-specific bits.
-  if ($extra = node_invoke($node, 'form', $form_state)) {
+  // Invoke hook_form() to get the node-specific bits. Can't use node_invoke(),
+  // because hook_form() needs to be able to receive $form_state by reference.
+  $function = node_type_get_base($node) . '_form';
+  if (function_exists($function) && ($extra = $function($node, $form_state))) {
     $form = array_merge_recursive($form, $extra);
   }
   if (!isset($form['title']['#weight'])) {

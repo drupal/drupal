@@ -1,5 +1,5 @@
 <?php
-// $Id: node.api.php,v 1.72 2010/08/22 13:52:58 dries Exp $
+// $Id: node.api.php,v 1.73 2010/09/03 19:56:51 dries Exp $
 
 /**
  * @file
@@ -649,10 +649,12 @@ function hook_node_update_index($node) {
  *   The node being validated.
  * @param $form
  *   The form being used to edit the node.
+ * @param $form_state
+ *   The form state array.
  *
  * @ingroup node_api_hooks
  */
-function hook_node_validate($node, $form) {
+function hook_node_validate($node, $form, &$form_state) {
   if (isset($node->end) && isset($node->start)) {
     if ($node->start > $node->end) {
       form_set_error('time', t('An event may not end before it starts.'));
@@ -973,7 +975,8 @@ function hook_prepare($node) {
  * @param $node
  *   The node being added or edited.
  * @param $form_state
- *   The form state array. Changes made to this variable will have no effect.
+ *   The form state array.
+ *
  * @return
  *   An array containing the form elements to be displayed in the node
  *   edit form.
@@ -987,7 +990,7 @@ function hook_prepare($node) {
  *
  * @ingroup node_api_hooks
  */
-function hook_form($node, $form_state) {
+function hook_form($node, &$form_state) {
   $type = node_type_get_type($node);
 
   $form['field1'] = array(
@@ -1112,10 +1115,12 @@ function hook_update($node) {
  *   The node being validated.
  * @param $form
  *   The form being used to edit the node.
+ * @param $form_state
+ *   The form state array.
  *
  * @ingroup node_api_hooks
  */
-function hook_validate($node, &$form) {
+function hook_validate($node, $form, &$form_state) {
   if (isset($node->end) && isset($node->start)) {
     if ($node->start > $node->end) {
       form_set_error('time', t('An event may not end before it starts.'));
