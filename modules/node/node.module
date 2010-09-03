@@ -926,7 +926,7 @@ function node_object_prepare($node) {
 /**
  * Perform validation checks on the given node.
  */
-function node_validate($node, $form = array()) {
+function node_validate($node, $form, &$form_state) {
   $type = node_type_get_type($node);
 
   if (isset($node->nid) && (node_last_changed($node->nid) > $node->changed)) {
@@ -946,9 +946,18 @@ function node_validate($node, $form = array()) {
     form_set_error('date', t('You have to specify a valid date.'));
   }
 
-  // Do node-type-specific validation checks.
-  node_invoke($node, 'validate', $form);
-  module_invoke_all('node_validate', $node, $form);
+  // Invoke hook_validate() for node type specific validation and
+  // hook_node_validate() for miscellaneous validation needed by modules. Can't
+  // use node_invoke() or module_invoke_all(), because $form_state must be
+  // receivable by reference.
+  $function = node_type_get_base($node) . '_validate';
+  if (function_exists($function)) {
+    $function($node, $form, $form_state);
+  }
+  foreach (module_implements('node_validate') as $module) {
+    $function = $module . '_node_validate';
+    $function($node, $form, $form_state);
+  }
 }
 
 /**
