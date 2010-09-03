@@ -1,5 +1,5 @@
 <?php
-// $Id: content_types.inc,v 1.116 2010/08/08 13:02:37 dries Exp $
+// $Id: content_types.inc,v 1.117 2010/09/03 17:47:20 dries Exp $
 
 /**
  * @file
@@ -139,6 +139,9 @@ function node_type_form($form, &$form_state, $type = NULL) {
 
   $form['additional_settings'] = array(
     '#type' => 'vertical_tabs',
+    '#attached' => array(
+      'js' => array(drupal_get_path('module', 'node') . '/content_types.js'),
+    ),
   );
 
   $form['submission'] = array(
