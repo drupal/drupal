@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.957 2010/08/22 13:52:58 dries Exp $
+// $Id: system.module,v 1.958 2010/09/03 19:49:56 dries Exp $
 
 /**
  * @file
@@ -2217,25 +2217,40 @@ function system_update_files_database(&$files, $type) {
 }
 
 /**
- * Returns an array of information about active modules or themes.
+ * Returns an array of information about enabled modules or themes.
  *
  * This function returns the information from the {system} table corresponding
  * to the cached contents of the .info file for each active module or theme.
  *
  * @param $type
  *   Either 'module' or 'theme'.
+ * @param $name
+ *   (optional) The name of a module or theme whose information shall be
+ *   returned. If omitted, all records for the provided $type will be returned.
+ *   If $name does not exist in the provided $type or is not enabled, an empty
+ *   array will be returned.
  *
  * @return
- *   An associative array of module or theme information keyed by name.
+ *   An associative array of module or theme information keyed by name, or only
+ *   information for $name, if given. If no records are available, an empty
+ *   array is returned.
  *
  * @see system_rebuild_module_data()
  * @see system_rebuild_theme_data()
  */
-function system_get_info($type) {
+function system_get_info($type, $name = NULL) {
   $info = array();
-  $result = db_query('SELECT name, info FROM {system} WHERE type = :type AND status = 1', array(':type' => $type));
-  foreach ($result as $item) {
-    $info[$item->name] = unserialize($item->info);
+  if ($type == 'module') {
+    $type = 'module_enabled';
+  }
+  $list = system_list($type);
+  foreach ($list as $shortname => $item) {
+    if (!empty($item->status)) {
+      $info[$shortname] = $item->info;
+    }
+  }
+  if (isset($name)) {
+    return isset($info[$name]) ? $info[$name] : array();
   }
   return $info;
 }

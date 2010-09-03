@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.607 2010/09/02 15:58:53 dries Exp $
+// $Id: theme.inc,v 1.608 2010/09/03 19:49:55 dries Exp $
 
 /**
  * @file
@@ -583,7 +583,6 @@ function list_themes($refresh = FALSE) {
       try {
         foreach (system_list('theme') as $theme) {
           if (file_exists($theme->filename)) {
-            $theme->info = unserialize($theme->info);
             $themes[] = $theme;
           }
         }
