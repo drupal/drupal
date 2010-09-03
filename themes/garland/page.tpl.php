@@ -1,5 +1,5 @@
 <?php
-// $Id: page.tpl.php,v 1.44 2010/09/03 17:55:37 dries Exp $
+// $Id: page.tpl.php,v 1.45 2010/09/03 19:41:01 dries Exp $
 ?>
   <?php print render($page['header']); ?>
 
@@ -39,7 +39,7 @@
 
       <div id="center"><div id="squeeze"><div class="right-corner"><div class="left-corner">
           <?php print $breadcrumb; ?>
-          <?php if ($page['highlighted']): ?><div id="highlighted"><?php render($page['highlighted']); ?></div><?php endif; ?>
+          <?php if ($page['highlighted']): ?><div id="highlighted"><?php print render($page['highlighted']); ?></div><?php endif; ?>
           <a id="main-content"></a>
           <?php if ($tabs): ?><div id="tabs-wrapper" class="clearfix"><?php endif; ?>
           <?php print render($title_prefix); ?>
