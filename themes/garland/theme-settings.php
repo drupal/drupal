@@ -1,15 +1,21 @@
 <?php
-// $Id: theme-settings.php,v 1.2 2009/12/04 16:49:48 dries Exp $
+// $Id: theme-settings.php,v 1.3 2010/09/04 15:21:09 dries Exp $
 
 /**
- * Implements hook_form_system_theme_settings_alter().
+ * @file
+ * Theme setting callbacks for the garland theme.
+ */
+
+/**
+ * Implements hook_form_FORM_ID_alter().
  *
  * @param $form
  *   The form.
  * @param $form_state
  *   The form state.
  */
-function garland_form_system_theme_settings_alter(&$form, $form_state) {
+function garland_form_system_theme_settings_alter(&$form, &$form_state) {
+
   $form['garland_width'] = array(
     '#type' => 'radios',
     '#title' => t('Content width'),
