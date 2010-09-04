@@ -1,5 +1,5 @@
 <?php
-// $Id: search.test,v 1.73 2010/08/30 00:22:03 webchick Exp $
+// $Id: search.test,v 1.74 2010/09/04 13:33:53 dries Exp $
 
 // The search index can contain different types of content. Typically the type is 'node'.
 // Here we test with _test_ and _test2_ as the type.
@@ -861,7 +861,8 @@ class SearchExpressionInsertExtractTestCase extends DrupalUnitTestCase {
   }
 
   function setUp() {
-    parent::setUp('search');
+    drupal_load('module', 'search');
+    parent::setUp();
   }
 
   /**
@@ -1262,7 +1263,8 @@ class SearchExcerptTestCase extends DrupalUnitTestCase {
   }
 
   function setUp() {
-    parent::setUp('search');
+    drupal_load('module', 'search');
+    parent::setUp();
   }
 
   /**

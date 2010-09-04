@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.230 2010/09/02 15:56:10 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.231 2010/09/04 13:33:53 dries Exp $
 
 /**
  * Global variable that holds information about the tests being run.
@@ -582,6 +582,14 @@ class DrupalUnitTestCase extends DrupalTestCase {
     $this->skipClasses[__CLASS__] = TRUE;
   }
 
+  /**
+   * Sets up unit test environment.
+   *
+   * Unlike DrupalWebTestCase::setUp(), DrupalUnitTestCase::setUp() does not
+   * install modules because tests are performed without accessing the database.
+   * Any required files must be explicitly included by the child class setUp()
+   * method.
+   */
   protected function setUp() {
     global $conf;
 

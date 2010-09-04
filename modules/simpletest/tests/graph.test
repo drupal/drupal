@@ -1,5 +1,5 @@
 <?php
-// $Id: graph.test,v 1.9 2010/08/05 23:53:38 webchick Exp $
+// $Id: graph.test,v 1.10 2010/09/04 13:33:53 dries Exp $
 
 /**
  * @file
@@ -18,13 +18,15 @@ class GraphUnitTest extends DrupalUnitTestCase {
     );
   }
 
+  function setUp() {
+    require_once DRUPAL_ROOT . '/includes/graph.inc';
+    parent::setUp();
+  }
+
   /**
    * Test depth-first-search features.
    */
   function testDepthFirstSearch() {
-    // Provoke the inclusion of graph.inc.
-    require_once DRUPAL_ROOT . '/includes/graph.inc';
-
     // The sample graph used is:
     // 1 --> 2 --> 3     5 ---> 6
     //       |     ^     ^
