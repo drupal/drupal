@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1212 2010/09/01 20:08:17 dries Exp $
+// $Id: common.inc,v 1.1213 2010/09/04 17:55:42 dries Exp $
 
 /**
  * @file
@@ -1355,6 +1355,8 @@ function filter_xss($string, $allowed_tags = array('a', 'em', 'strong', 'cite', 
     (
     <(?=[^a-zA-Z!/])  # a lone <
     |                 # or
+    <!--.*?-->        # a comment
+    |                 # or
     <[^>]*(>|$)       # a string that starts with a <, up until the > or the end of the string
     |                 # or
     >                 # just a >
@@ -1393,7 +1395,7 @@ function _filter_xss_split($m, $store = FALSE) {
     return '&lt;';
   }
 
-  if (!preg_match('%^<\s*(/\s*)?([a-zA-Z0-9]+)([^>]*)>?$%', $string, $matches)) {
+  if (!preg_match('%^<\s*(/\s*)?([a-zA-Z0-9]+)([^>]*)>?|(<!--.*?-->)$%', $string, $matches)) {
     // Seriously malformed
     return '';
   }
@@ -1401,10 +1403,19 @@ function _filter_xss_split($m, $store = FALSE) {
   $slash = trim($matches[1]);
   $elem = &$matches[2];
   $attrlist = &$matches[3];
+  $comment = &$matches[4];
+
+  if ($comment) {
+    $elem = '!--';
+  }
 
   if (!isset($allowed_html[strtolower($elem)])) {
     // Disallowed HTML element
     return '';
+  }
+
+  if ($comment) {
+    return $comment;
   }
 
   if ($slash != '') {

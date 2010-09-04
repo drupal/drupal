@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.test,v 1.74 2010/09/02 21:01:15 dries Exp $
+// $Id: filter.test,v 1.75 2010/09/04 17:55:43 dries Exp $
 
 /**
  * Tests for text format and filter CRUD operations.
@@ -694,8 +694,8 @@ class FilterSecurityTestCase extends DrupalWebTestCase {
 class FilterUnitTestCase extends DrupalUnitTestCase {
   public static function getInfo() {
     return array(
-      'name' => 'Core filters',
-      'description' => 'Filter each filter individually: convert line breaks, correct broken HTML.',
+      'name' => 'Filter module filters',
+      'description' => 'Tests Filter module filters individually.',
       'group' => 'Filter',
     );
   }
@@ -704,34 +704,65 @@ class FilterUnitTestCase extends DrupalUnitTestCase {
    * Test the line break filter.
    */
   function testLineBreakFilter() {
-    // Single line breaks should be changed to <br /> tags, while paragraphs
-    // separated with double line breaks should be enclosed with <p></p> tags.
-    $f = _filter_autop("aaa\nbbb\n\nccc");
-    $this->assertEqual(str_replace("\n", '', $f), "<p>aaa<br />bbb</p><p>ccc</p>", t('Line breaking basic case.'));
+    // Setup dummy filter object.
+    $filter = new stdClass;
+    $filter->callback = '_filter_autop';
 
-    // Text within some contexts should not be processed.
-    $f = _filter_autop("<script>aaa\nbbb\n\nccc</script>");
-    $this->assertEqual($f, "<script>aaa\nbbb\n\nccc</script>", t('Line breaking -- do not break scripts.'));
+    // Since the line break filter naturally needs plenty of newlines in test
+    // strings and expectations, we're using "\n" instead of regular newlines
+    // here.
+    $tests = array(
+      // Single line breaks should be changed to <br /> tags, while paragraphs
+      // separated with double line breaks should be enclosed with <p></p> tags.
+      "aaa\nbbb\n\nccc" => array(
+        "<p>aaa<br />\nbbb</p>\n<p>ccc</p>" => TRUE,
+      ),
+      // Skip contents of certain block tags entirely.
+      "<script>aaa\nbbb\n\nccc</script>
+<style>aaa\nbbb\n\nccc</style>
+<pre>aaa\nbbb\n\nccc</pre>
+<object>aaa\nbbb\n\nccc</object>
+<iframe>aaa\nbbb\n\nccc</iframe>
+" => array(
+        "<script>aaa\nbbb\n\nccc</script>" => TRUE,
+        "<style>aaa\nbbb\n\nccc</style>" => TRUE,
+        "<pre>aaa\nbbb\n\nccc</pre>" => TRUE,
+        "<object>aaa\nbbb\n\nccc</object>" => TRUE,
+        "<iframe>aaa\nbbb\n\nccc</iframe>" => TRUE,
+      ),
+      // Skip comments entirely.
+      "One. <!-- comment --> Two.\n<!--\nThree.\n-->\n" => array(
+        '<!-- comment -->' => TRUE,
+        "<!--\nThree.\n-->" => TRUE,
+      ),
+      // Resulting HTML should produce matching paragraph tags.
+      '<p><div>  </div></p>' => array(
+        "<p>\n<div>  </div>\n</p>" => TRUE,
+      ),
+      '<div><p>  </p></div>' => array(
+        "<div>\n</div>" => TRUE,
+      ),
+      '<blockquote><pre>aaa</pre></blockquote>' => array(
+        "<blockquote><pre>aaa</pre></blockquote>" => TRUE,
+      ),
+    );
+    $this->assertFilteredString($filter, $tests);
 
-    $f = _filter_autop('<p><div>  </div></p>');
-    $this->assertEqual(substr_count($f, '<p>'), substr_count($f, '</p>'), t('Make sure line breaking produces matching paragraph tags.'));
-
-    $f = _filter_autop('<div><p>  </p></div>');
-    $this->assertEqual(substr_count($f, '<p>'), substr_count($f, '</p>'), t('Make sure line breaking produces matching paragraph tags.'));
-
-    $f = _filter_autop('<blockquote><pre>aaa</pre></blockquote>');
-    $this->assertEqual(substr_count($f, '<p>'), substr_count($f, '</p>'), t('Make sure line breaking produces matching paragraph tags.'));
-
+    // Very long string hitting PCRE limits.
     $limit = max(ini_get('pcre.backtrack_limit'), ini_get('pcre.recursion_limit'));
-    $f = _filter_autop($this->randomName($limit));
-    $this->assertNotEqual($f, '', t('Make sure line breaking can process long strings.'));
+    $source = $this->randomName($limit);
+    $result = _filter_autop($source);
+    $success = $this->assertEqual($result, '<p>' . $source . "</p>\n", t('Line break filter can process very long strings.'));
+    if (!$success) {
+      $this->verbose("\n" . $source . "\n<hr />\n" . $result);
+    }
   }
 
   /**
-   * Test limiting allowed tags, XSS prevention and adding 'nofollow' to links.
+   * Tests limiting allowed tags and XSS prevention.
    *
-   * XSS tests assume that script is disallowed on default and src is allowed
-   * on default, but on* and style are disallowed.
+   * XSS tests assume that script is disallowed by default and src is allowed
+   * by default, but on* and style attributes are disallowed.
    *
    * Script injection vectors mostly adopted from http://ha.ckers.org/xss.html.
    *
@@ -739,7 +770,7 @@ class FilterUnitTestCase extends DrupalUnitTestCase {
    * - CVE-2002-1806, ~CVE-2005-0682, ~CVE-2005-2106, CVE-2005-3973,
    *   CVE-2006-1226 (= rev. 1.112?), CVE-2008-0273, CVE-2008-3740.
    */
-  function testHtmlFilter() {
+  function testFilterXSS() {
     // Tag stripping, different ways to work around removal of HTML tags.
     $f = filter_xss('<script>alert(0)</script>');
     $this->assertNoNormalized($f, 'script', t('HTML tag stripping -- simple script without special characters.'));
@@ -924,7 +955,7 @@ class FilterUnitTestCase extends DrupalUnitTestCase {
    * @todo Class, id, name and xmlns should be added to disallowed attributes,
    *   or better a whitelist approach should be used for that too.
    */
-  function testFilter() {
+  function testHtmlFilter() {
     // Setup dummy filter object.
     $filter = new stdClass();
     $filter->settings = array(
@@ -992,9 +1023,6 @@ class FilterUnitTestCase extends DrupalUnitTestCase {
     $f = _filter_html("<\0a\0 href=\"http://www.example.com/\">text</a>", $filter);
     $this->assertNormalized($f, 'rel="nofollow"', t('Spam deterrent evasion -- some nulls.'));
 
-    $f = _filter_html('<!--[if true]><a href="http://www.example.com/">text</a><![endif]-->', $filter);
-    $this->assertNormalized($f, 'rel="nofollow"', t('Spam deterrent evasion -- link within a comment.'));
-
     $f = _filter_html('<a href="http://www.example.com/" rel="follow">text</a>', $filter);
     $this->assertNoNormalized($f, 'rel="follow"', t('Spam deterrent evasion -- with rel set - rel="follow" removed.'));
     $this->assertNormalized($f, 'rel="nofollow"', t('Spam deterrent evasion -- with rel set - rel="nofollow" added.'));
@@ -1003,7 +1031,7 @@ class FilterUnitTestCase extends DrupalUnitTestCase {
   /**
    * Test the loose, admin HTML filter.
    */
-  function testAdminHtmlFilter() {
+  function testFilterXSSAdmin() {
     // DRUPAL-SA-2008-044
     $f = filter_xss_admin('<object />');
     $this->assertNoNormalized($f, 'object', t('Admin HTML filter -- should not allow object tag.'));
@@ -1016,17 +1044,23 @@ class FilterUnitTestCase extends DrupalUnitTestCase {
   }
 
   /**
-   * Test the HTML escaping filter.
+   * Tests the HTML escaping filter.
+   *
+   * check_plain() is not tested here.
    */
-  function testNoHtmlFilter() {
-    $this->_testEscapedHTML('_filter_html_escape');
-  }
+  function testHtmlEscapeFilter() {
+    // Setup dummy filter object.
+    $filter = new stdClass;
+    $filter->callback = '_filter_html_escape';
 
-  /**
-   * Test that the check_plain() function escapes HTML correctly.
-   */
-  function testCheckPlain() {
-    $this->_testEscapedHTML('check_plain');
+    $tests = array(
+      "   One. <!-- \"comment\" --> Two'.\n<p>Three.</p>\n    " => array(
+        "One. &lt;!-- &quot;comment&quot; --&gt; Two&#039;.\n&lt;p&gt;Three.&lt;/p&gt;" => TRUE,
+        '   One.' => FALSE,
+        "</p>\n    " => FALSE,
+      ),
+    );
+    $this->assertFilteredString($filter, $tests);
   }
 
   /**
@@ -1035,6 +1069,7 @@ class FilterUnitTestCase extends DrupalUnitTestCase {
   function testUrlFilter() {
     // Setup dummy filter object.
     $filter = new stdClass;
+    $filter->callback = '_filter_url';
     $filter->settings = array(
       'filter_url_length' => 496,
     );
@@ -1318,22 +1353,30 @@ www.example.com with a newline in comments -->
    * );
    * @endcode
    */
-  protected function assertFilteredString($filter, $tests) {
-    foreach ($tests as $phrase => $tasks) {
-      $string = _filter_url($phrase, $filter);
-      foreach ($tasks as $value => $expected) {
+  function assertFilteredString($filter, $tests) {
+    foreach ($tests as $source => $tasks) {
+      $function = $filter->callback;
+      $result = $function($source, $filter);
+      foreach ($tasks as $value => $is_expected) {
         // Not using assertIdentical, since combination with strpos() is hard to grok.
-        if ($expected) {
-          $this->assertTrue(strpos($string, $value) !== FALSE, t('@string: @value found.', array(
-            '@string' => var_export($phrase, TRUE),
+        if ($is_expected) {
+          $success = $this->assertTrue(strpos($result, $value) !== FALSE, t('@source: @value found.', array(
+            '@source' => var_export($source, TRUE),
             '@value' => var_export($value, TRUE),
           )));
         }
         else {
-          $this->assertTrue(strpos($string, $value) === FALSE, t('@string: @value not found.', array(
-            '@string' => var_export($phrase, TRUE),
+          $success = $this->assertTrue(strpos($result, $value) === FALSE, t('@source: @value not found.', array(
+            '@source' => var_export($source, TRUE),
             '@value' => var_export($value, TRUE),
           )));
+        }
+        if (!$success) {
+          $this->verbose('Source:<pre>' . check_plain(var_export($source, TRUE)) . '</pre>'
+            . '<hr />' . 'Result:<pre>' . check_plain(var_export($result, TRUE)) . '</pre>'
+            . '<hr />' . ($is_expected ? 'Found:' : 'Not found:')
+            . '<pre>' . check_plain(var_export($value, TRUE)) . '</pre>'
+          );
         }
       }
     }
@@ -1534,31 +1577,6 @@ alert("test")
    */
   function assertNoNormalized($haystack, $needle, $message = '', $group = 'Other') {
     return $this->assertTrue(strpos(strtolower(decode_entities($haystack)), $needle) === FALSE, $message, $group);
-  }
-
-  /**
-   * Helper method to test functions that are intended to escape HTML.
-   *
-   * @param $function
-   *   The name of the function to test.
-   */
-  function _testEscapedHTML($function) {
-    // Define string replacements for the assertion messages.
-    $replacements = array('@function' => $function);
-
-    // Test that characters that have special meaning in XML are changed into
-    // entities.
-    $f = $function('<>&"');
-    $this->assertEqual($f, '&lt;&gt;&amp;&quot;', t('The @function() function correctly filters basic HTML entities.', $replacements));
-
-    // A single quote can also be used for evil things in some contexts.
-    $f = $function('\'');
-    $this->assertEqual($f, '&#039;', t('The @function() function correctly filters single quotes.', $replacements));
-
-    // Test that the filter is not fooled by different evasion techniques.
-    // Ignore PHP 5.3+ invalid multibyte sequence warning.
-    $f = @$function("\xc2\"");
-    $this->assertEqual($f, '', t('The @function() function correctly filters invalid UTF-8.', $replacements));
   }
 }
 
