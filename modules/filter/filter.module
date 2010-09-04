@@ -1535,11 +1535,11 @@ function _filter_autop($text) {
   // All block level tags
   $block = '(?:table|thead|tfoot|caption|colgroup|tbody|tr|td|th|div|dl|dd|dt|ul|ol|li|pre|select|form|blockquote|address|p|h[1-6]|hr)';
 
-  // Split at <pre>, <script>, <style> and </pre>, </script>, </style> tags.
+  // Split at opening and closing PRE, SCRIPT, STYLE, OBJECT tags and comments.
   // We don't apply any processing to the contents of these tags to avoid messing
   // up code. We look for matched pairs and allow basic nesting. For example:
   // "processed <pre> ignored <script> ignored </script> ignored </pre> processed"
-  $chunks = preg_split('@(</?(?:pre|script|style|object)[^>]*>)@i', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
+  $chunks = preg_split('@(<!--.*?-->|</?(?:pre|script|style|object|!--)[^>]*>)@i', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
   // Note: PHP ensures the array consists of alternating delimiters and literals
   // and begins and ends with a literal (inserting NULL as required).
   $ignore = FALSE;
@@ -1548,7 +1548,8 @@ function _filter_autop($text) {
   foreach ($chunks as $i => $chunk) {
     if ($i % 2) {
       // Opening or closing tag?
-      $open = ($chunk[1] != '/');
+      $open = ($chunk[1] != '/' || $chunk[1] != '!');
+      $comment = (substr($chunk, 0, 4) == '<!--');
       list($tag) = preg_split('/[ >]/', substr($chunk, 2 - $open), 2);
       if (!$ignore) {
         if ($open) {
@@ -1557,7 +1558,7 @@ function _filter_autop($text) {
         }
       }
       // Only allow a matching tag to close it.
-      elseif (!$open && $ignoretag == $tag) {
+      elseif ((!$open && $ignoretag == $tag) || $comment) {
         $ignore = FALSE;
         $ignoretag = '';
       }

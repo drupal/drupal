@@ -365,6 +365,9 @@ class CommonXssUnitTest extends DrupalUnitTestCase {
      // Ignore PHP 5.3+ invalid multibyte sequence warning.
      $text = @check_plain("Foo\xC0barbaz");
      $this->assertEqual($text, '', 'check_plain() rejects invalid sequence "Foo\xC0barbaz"');
+     // Ignore PHP 5.3+ invalid multibyte sequence warning.
+     $text = @check_plain("\xc2\"");
+     $this->assertEqual($text, '', 'check_plain() rejects invalid sequence "\xc2\""');
      $text = check_plain("Fooÿñ");
      $this->assertEqual($text, "Fooÿñ", 'check_plain() accepts valid sequence "Fooÿñ"');
      $text = filter_xss("Foo\xC0barbaz");
@@ -379,6 +382,8 @@ class CommonXssUnitTest extends DrupalUnitTestCase {
   function testEscaping() {
      $text = check_plain("<script>");
      $this->assertEqual($text, '&lt;script&gt;', 'check_plain() escapes &lt;script&gt;');
+     $text = check_plain('<>&"\'');
+     $this->assertEqual($text, '&lt;&gt;&amp;&quot;&#039;', 'check_plain() escapes reserved HTML characters.');
   }
 
   /**
