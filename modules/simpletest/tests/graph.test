@@ -18,13 +18,15 @@ class GraphUnitTest extends DrupalUnitTestCase {
     );
   }
 
+  function setUp() {
+    require_once DRUPAL_ROOT . '/includes/graph.inc';
+    parent::setUp();
+  }
+
   /**
    * Test depth-first-search features.
    */
   function testDepthFirstSearch() {
-    // Provoke the inclusion of graph.inc.
-    require_once DRUPAL_ROOT . '/includes/graph.inc';
-
     // The sample graph used is:
     // 1 --> 2 --> 3     5 ---> 6
     //       |     ^     ^

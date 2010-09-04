@@ -861,7 +861,8 @@ class SearchExpressionInsertExtractTestCase extends DrupalUnitTestCase {
   }
 
   function setUp() {
-    parent::setUp('search');
+    drupal_load('module', 'search');
+    parent::setUp();
   }
 
   /**
@@ -1262,7 +1263,8 @@ class SearchExcerptTestCase extends DrupalUnitTestCase {
   }
 
   function setUp() {
-    parent::setUp('search');
+    drupal_load('module', 'search');
+    parent::setUp();
   }
 
   /**

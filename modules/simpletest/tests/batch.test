@@ -340,7 +340,7 @@ class BatchPercentagesUnitTestCase extends DrupalUnitTestCase {
       // 19999/20000 should add yet another digit and go to 99.995%.
       '99.995' => array('total' => 20000, 'current' => 19999),
     );
-
+    require_once DRUPAL_ROOT . '/includes/batch.inc';
     parent::setUp();
   }
 
@@ -348,7 +348,6 @@ class BatchPercentagesUnitTestCase extends DrupalUnitTestCase {
    * Test the _batch_api_percentage() function.
    */
   function testBatchPercentages() {
-    require_once DRUPAL_ROOT . '/includes/batch.inc';
     foreach ($this->testCases as $expected_result => $arguments) {
       // PHP sometimes casts numeric strings that are array keys to integers,
       // cast them back here.
