@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.603 2010/08/22 15:45:03 dries Exp $
+// $Id: taxonomy.module,v 1.604 2010/09/04 15:40:52 dries Exp $
 
 /**
  * @file
@@ -1115,24 +1115,6 @@ function taxonomy_field_widget_info_alter(&$info) {
 function taxonomy_options_list($field) {
   $function = !empty($field['settings']['options_list_callback']) ? $field['settings']['options_list_callback'] : 'taxonomy_allowed_values';
   return $function($field);
-}
-
-/**
- * Implements hook_field_schema().
- */
-function taxonomy_field_schema($field) {
-  return array(
-    'columns' => array(
-      'tid' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => FALSE,
-      ),
-    ),
-    'indexes' => array(
-      'tid' => array('tid'),
-    ),
-  );
 }
 
 /**

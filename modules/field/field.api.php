@@ -1,5 +1,5 @@
 <?php
-// $Id: field.api.php,v 1.88 2010/08/03 01:54:24 dries Exp $
+// $Id: field.api.php,v 1.89 2010/09/04 15:40:51 dries Exp $
 
 /**
  * @ingroup field_fieldable_type
@@ -210,6 +210,9 @@ function hook_field_info_alter(&$info) {
 
 /**
  * Define the Field API schema for a field structure.
+ *
+ * This hook MUST be defined in .install for it to be detected during
+ * installation and upgrade.
  *
  * @param $field
  *   A field structure.

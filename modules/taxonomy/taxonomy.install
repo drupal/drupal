@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.install,v 1.44 2010/08/22 13:55:53 dries Exp $
+// $Id: taxonomy.install,v 1.45 2010/09/04 15:40:52 dries Exp $
 
 /**
  * @file
@@ -219,6 +219,24 @@ function taxonomy_schema() {
   );
 
   return $schema;
+}
+
+/**
+ * Implements hook_field_schema().
+ */
+function taxonomy_field_schema($field) {
+  return array(
+    'columns' => array(
+      'tid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+      ),
+    ),
+    'indexes' => array(
+      'tid' => array('tid'),
+    ),
+  );
 }
 
 /**

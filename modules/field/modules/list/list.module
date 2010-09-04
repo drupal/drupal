@@ -1,5 +1,5 @@
 <?php
-// $Id: list.module,v 1.33 2010/06/14 15:41:02 dries Exp $
+// $Id: list.module,v 1.34 2010/09/04 15:40:51 dries Exp $
 
 /**
  * @file
@@ -51,45 +51,6 @@ function list_field_info() {
       'settings' => array('allowed_values' => '', 'allowed_values_function' => ''),
       'default_widget' => 'options_select',
       'default_formatter' => 'list_default',
-    ),
-  );
-}
-
-/**
- * Implements hook_field_schema().
- */
-function list_field_schema($field) {
-  switch ($field['type']) {
-    case 'list_text':
-      $columns = array(
-        'value' => array(
-          'type' => 'varchar',
-          'length' => 255,
-          'not null' => FALSE,
-        ),
-      );
-      break;
-    case 'list_number':
-      $columns = array(
-        'value' => array(
-          'type' => 'float',
-          'not null' => FALSE,
-        ),
-      );
-      break;
-    default:
-      $columns = array(
-        'value' => array(
-          'type' => 'int',
-          'not null' => FALSE,
-        ),
-      );
-      break;
-  }
-  return array(
-    'columns' => $columns,
-    'indexes' => array(
-      'value' => array('value'),
     ),
   );
 }

@@ -1,0 +1,60 @@
+<?php
+// $Id: text.install,v 1.1 2010/09/04 15:40:51 dries Exp $
+
+/**
+ * @file
+ * Install, update and uninstall functions for the text module.
+ */
+
+/**
+ * Implements hook_field_schema().
+ */
+function text_field_schema($field) {
+  switch ($field['type']) {
+    case 'text':
+      $columns = array(
+        'value' => array(
+          'type' => 'varchar',
+          'length' => $field['settings']['max_length'],
+          'not null' => FALSE,
+        ),
+      );
+      break;
+    case 'text_long':
+      $columns = array(
+        'value' => array(
+          'type' => 'text',
+          'size' => 'big',
+          'not null' => FALSE,
+        ),
+      );
+      break;
+    case 'text_with_summary':
+      $columns = array(
+        'value' => array(
+          'type' => 'text',
+          'size' => 'big',
+          'not null' => FALSE,
+        ),
+        'summary' => array(
+          'type' => 'text',
+          'size' => 'big',
+          'not null' => FALSE,
+        ),
+      );
+      break;
+  }
+  $columns += array(
+    'format' => array(
+      'type' => 'int',
+      'unsigned' => TRUE,
+      'not null' => FALSE,
+    ),
+  );
+  return array(
+    'columns' => $columns,
+    'indexes' => array(
+      'format' => array('format'),
+    ),
+  );
+}

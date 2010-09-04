@@ -1,0 +1,46 @@
+<?php
+// $Id: list.install,v 1.1 2010/09/04 15:40:51 dries Exp $
+
+/**
+ * @file
+ * Install, update and uninstall functions for the list module.
+ */
+
+/**
+ * Implements hook_field_schema().
+ */
+function list_field_schema($field) {
+  switch ($field['type']) {
+    case 'list_text':
+      $columns = array(
+        'value' => array(
+          'type' => 'varchar',
+          'length' => 255,
+          'not null' => FALSE,
+        ),
+      );
+      break;
+    case 'list_number':
+      $columns = array(
+        'value' => array(
+          'type' => 'float',
+          'not null' => FALSE,
+        ),
+      );
+      break;
+    default:
+      $columns = array(
+        'value' => array(
+          'type' => 'int',
+          'not null' => FALSE,
+        ),
+      );
+      break;
+  }
+  return array(
+    'columns' => $columns,
+    'indexes' => array(
+      'value' => array('value'),
+    ),
+  );
+}

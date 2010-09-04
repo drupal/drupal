@@ -1,5 +1,5 @@
 <?php
-// $Id: field.crud.inc,v 1.67 2010/08/03 23:01:14 dries Exp $
+// $Id: field.crud.inc,v 1.68 2010/09/04 15:40:51 dries Exp $
 
 /**
  * @file
@@ -317,6 +317,7 @@ function field_create_field($field) {
   $field['storage']['module'] = $storage_type['module'];
   $field['storage']['active'] = 1;
   // Collect storage information.
+  module_load_install($field['module']);
   $schema = (array) module_invoke($field['module'], 'field_schema', $field);
   $schema += array('columns' => array(), 'indexes' => array());
   // 'columns' are hardcoded in the field type.
@@ -426,6 +427,7 @@ function field_update_field($field) {
 
   // Collect the new storage information, since what is in
   // $prior_field may no longer be right.
+  module_load_install($field['module']);
   $schema = (array) module_invoke($field['module'], 'field_schema', $field);
   $schema += array('columns' => array(), 'indexes' => array());
   // 'columns' are hardcoded in the field type.
@@ -552,6 +554,7 @@ function field_read_fields($params = array(), $include_additional = array()) {
     module_invoke_all('field_read_field', $field);
 
     // Populate storage information.
+    module_load_install($field['module']);
     $schema = (array) module_invoke($field['module'], 'field_schema', $field);
     $schema += array('columns' => array(), 'indexes' => array());
     $field['columns'] = $schema['columns'];

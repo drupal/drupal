@@ -1,5 +1,5 @@
 <?php
-// $Id: image.field.inc,v 1.25 2010/08/30 06:19:42 webchick Exp $
+// $Id: image.field.inc,v 1.26 2010/09/04 15:40:51 dries Exp $
 
 /**
  * @file
@@ -29,37 +29,6 @@ function image_field_info() {
       ),
       'default_widget' => 'image_image',
       'default_formatter' => 'image',
-    ),
-  );
-}
-
-/**
- * Implements hook_field_schema().
- */
-function image_field_schema($field) {
-  return array(
-    'columns' => array(
-      'fid' => array(
-        'description' => 'The {files}.fid being referenced in this field.',
-        'type' => 'int',
-        'not null' => FALSE,
-        'unsigned' => TRUE,
-      ),
-      'alt' => array(
-        'description' => "Alternative image text, for the image's 'alt' attribute.",
-        'type' => 'varchar',
-        'length' => 128,
-        'not null' => FALSE,
-      ),
-      'title' => array(
-        'description' => "Image title text, for the image's 'title' attribute.",
-        'type' => 'varchar',
-        'length' => 128,
-        'not null' => FALSE,
-      ),
-    ),
-    'indexes' => array(
-      'fid' => array('fid'),
     ),
   );
 }

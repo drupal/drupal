@@ -1,5 +1,5 @@
 <?php
-// $Id: text.module,v 1.62 2010/08/22 12:55:04 dries Exp $
+// $Id: text.module,v 1.63 2010/09/04 15:40:51 dries Exp $
 
 /**
  * @file
@@ -53,59 +53,6 @@ function text_field_info() {
       'instance_settings' => array('text_processing' => 1, 'display_summary' => 0),
       'default_widget' => 'text_textarea_with_summary',
       'default_formatter' => 'text_summary_or_trimmed',
-    ),
-  );
-}
-
-/**
- * Implements hook_field_schema().
- */
-function text_field_schema($field) {
-  switch ($field['type']) {
-    case 'text':
-      $columns = array(
-        'value' => array(
-          'type' => 'varchar',
-          'length' => $field['settings']['max_length'],
-          'not null' => FALSE,
-        ),
-      );
-      break;
-    case 'text_long':
-      $columns = array(
-        'value' => array(
-          'type' => 'text',
-          'size' => 'big',
-          'not null' => FALSE,
-        ),
-      );
-      break;
-    case 'text_with_summary':
-      $columns = array(
-        'value' => array(
-          'type' => 'text',
-          'size' => 'big',
-          'not null' => FALSE,
-        ),
-        'summary' => array(
-          'type' => 'text',
-          'size' => 'big',
-          'not null' => FALSE,
-        ),
-      );
-      break;
-  }
-  $columns += array(
-    'format' => array(
-      'type' => 'int',
-      'unsigned' => TRUE,
-      'not null' => FALSE,
-    ),
-  );
-  return array(
-    'columns' => $columns,
-    'indexes' => array(
-      'format' => array('format'),
     ),
   );
 }

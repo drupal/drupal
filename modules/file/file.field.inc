@@ -1,5 +1,5 @@
 <?php
-// $Id: file.field.inc,v 1.32 2010/09/01 20:08:17 dries Exp $
+// $Id: file.field.inc,v 1.33 2010/09/04 15:40:51 dries Exp $
 
 /**
  * @file
@@ -27,38 +27,6 @@ function file_field_info() {
       ),
       'default_widget' => 'file_generic',
       'default_formatter' => 'file_default',
-    ),
-  );
-}
-
-/**
- * Implements hook_field_schema().
- */
-function file_field_schema($field) {
-  return array(
-    'columns' => array(
-      'fid' => array(
-        'description' => 'The {files}.fid being referenced in this field.',
-        'type' => 'int',
-        'not null' => FALSE,
-        'unsigned' => TRUE,
-      ),
-      'display' => array(
-        'description' => 'Flag to control whether this file should be displayed when viewing content.',
-        'type' => 'int',
-        'size' => 'tiny',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 1,
-      ),
-      'description' => array(
-        'description' => 'A description of the file.',
-        'type' => 'text',
-        'not null' => FALSE,
-      ),
-    ),
-    'indexes' => array(
-      'fid' => array('fid'),
     ),
   );
 }
