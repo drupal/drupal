@@ -34,37 +34,6 @@ function image_field_info() {
 }
 
 /**
- * Implements hook_field_schema().
- */
-function image_field_schema($field) {
-  return array(
-    'columns' => array(
-      'fid' => array(
-        'description' => 'The {files}.fid being referenced in this field.',
-        'type' => 'int',
-        'not null' => FALSE,
-        'unsigned' => TRUE,
-      ),
-      'alt' => array(
-        'description' => "Alternative image text, for the image's 'alt' attribute.",
-        'type' => 'varchar',
-        'length' => 128,
-        'not null' => FALSE,
-      ),
-      'title' => array(
-        'description' => "Image title text, for the image's 'title' attribute.",
-        'type' => 'varchar',
-        'length' => 128,
-        'not null' => FALSE,
-      ),
-    ),
-    'indexes' => array(
-      'fid' => array('fid'),
-    ),
-  );
-}
-
-/**
  * Implements hook_field_settings_form().
  */
 function image_field_settings_form($field, $instance) {

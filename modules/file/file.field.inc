@@ -32,38 +32,6 @@ function file_field_info() {
 }
 
 /**
- * Implements hook_field_schema().
- */
-function file_field_schema($field) {
-  return array(
-    'columns' => array(
-      'fid' => array(
-        'description' => 'The {files}.fid being referenced in this field.',
-        'type' => 'int',
-        'not null' => FALSE,
-        'unsigned' => TRUE,
-      ),
-      'display' => array(
-        'description' => 'Flag to control whether this file should be displayed when viewing content.',
-        'type' => 'int',
-        'size' => 'tiny',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 1,
-      ),
-      'description' => array(
-        'description' => 'A description of the file.',
-        'type' => 'text',
-        'not null' => FALSE,
-      ),
-    ),
-    'indexes' => array(
-      'fid' => array('fid'),
-    ),
-  );
-}
-
-/**
  * Implements hook_field_settings_form().
  */
 function file_field_settings_form($field, $instance, $has_data) {

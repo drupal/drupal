@@ -1118,24 +1118,6 @@ function taxonomy_options_list($field) {
 }
 
 /**
- * Implements hook_field_schema().
- */
-function taxonomy_field_schema($field) {
-  return array(
-    'columns' => array(
-      'tid' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => FALSE,
-      ),
-    ),
-    'indexes' => array(
-      'tid' => array('tid'),
-    ),
-  );
-}
-
-/**
  * Implements hook_field_validate().
  *
  * Taxonomy field settings allow for either a single vocabulary ID, multiple

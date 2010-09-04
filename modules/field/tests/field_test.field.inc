@@ -47,42 +47,6 @@ function field_test_field_info() {
 }
 
 /**
- * Implements hook_field_schema().
- */
-function field_test_field_schema($field) {
-  if ($field['type'] == 'test_field') {
-    return array(
-      'columns' => array(
-        'value' => array(
-          'type' => 'int',
-          'size' => 'medium',
-          'not null' => FALSE,
-        ),
-      ),
-      'indexes' => array(
-        'value' => array('value'),
-      ),
-    );
-  }
-  else {
-    return array(
-      'columns' => array(
-        'shape' => array(
-          'type' => 'varchar',
-          'length' => 32,
-          'not null' => FALSE,
-        ),
-        'color' => array(
-          'type' => 'varchar',
-          'length' => 32,
-          'not null' => FALSE,
-        ),
-      ),
-    );
-  }
-}
-
-/**
  * Implements hook_field_update_forbid().
  */
 function field_test_field_update_forbid($field, $prior_field, $has_data) {

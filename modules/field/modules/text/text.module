@@ -58,59 +58,6 @@ function text_field_info() {
 }
 
 /**
- * Implements hook_field_schema().
- */
-function text_field_schema($field) {
-  switch ($field['type']) {
-    case 'text':
-      $columns = array(
-        'value' => array(
-          'type' => 'varchar',
-          'length' => $field['settings']['max_length'],
-          'not null' => FALSE,
-        ),
-      );
-      break;
-    case 'text_long':
-      $columns = array(
-        'value' => array(
-          'type' => 'text',
-          'size' => 'big',
-          'not null' => FALSE,
-        ),
-      );
-      break;
-    case 'text_with_summary':
-      $columns = array(
-        'value' => array(
-          'type' => 'text',
-          'size' => 'big',
-          'not null' => FALSE,
-        ),
-        'summary' => array(
-          'type' => 'text',
-          'size' => 'big',
-          'not null' => FALSE,
-        ),
-      );
-      break;
-  }
-  $columns += array(
-    'format' => array(
-      'type' => 'int',
-      'unsigned' => TRUE,
-      'not null' => FALSE,
-    ),
-  );
-  return array(
-    'columns' => $columns,
-    'indexes' => array(
-      'format' => array('format'),
-    ),
-  );
-}
-
-/**
  * Implements hook_field_settings_form().
  */
 function text_field_settings_form($field, $instance, $has_data) {

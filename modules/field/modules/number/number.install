@@ -1,0 +1,46 @@
+<?php
+// $Id$
+
+/**
+ * @file
+ * Install, update and uninstall functions for the number module.
+ */
+
+/**
+ * Implements hook_field_schema().
+ */
+function number_field_schema($field) {
+  switch ($field['type']) {
+    case 'number_integer' :
+      $columns = array(
+        'value' => array(
+          'type' => 'int',
+          'not null' => FALSE
+        ),
+      );
+      break;
+
+    case 'number_float' :
+      $columns = array(
+        'value' => array(
+          'type' => 'float',
+          'not null' => FALSE
+        ),
+      );
+      break;
+
+    case 'number_decimal' :
+      $columns = array(
+        'value' => array(
+          'type' => 'numeric',
+          'precision' => $field['settings']['precision'],
+          'scale' => $field['settings']['scale'],
+          'not null' => FALSE
+        ),
+      );
+      break;
+  }
+  return array(
+    'columns' => $columns,
+  );
+}

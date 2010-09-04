@@ -211,6 +211,9 @@ function hook_field_info_alter(&$info) {
 /**
  * Define the Field API schema for a field structure.
  *
+ * This hook MUST be defined in .install for it to be detected during
+ * installation and upgrade.
+ *
  * @param $field
  *   A field structure.
  *
