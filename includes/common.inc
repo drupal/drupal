@@ -5466,6 +5466,15 @@ function element_sort($a, $b) {
 }
 
 /**
+ * Array sorting callback; sorts elements by title.
+ */
+function element_sort_by_title($a, $b) {
+  $a_title = (is_array($a) && isset($a['#title'])) ? $a['#title'] : '';
+  $b_title = (is_array($b) && isset($b['#title'])) ? $b['#title'] : '';
+  return strnatcasecmp($a_title, $b_title);
+}
+
+/**
  * Retrieve the default properties for the defined element type.
  */
 function element_info($type) {

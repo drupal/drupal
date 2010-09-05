@@ -959,8 +959,13 @@ function system_modules($form, $form_state = array()) {
         t('Description'),
         array('data' => t('Operations'), 'colspan' => 3),
       ),
+      // Ensure that the "Core" package fieldset comes first.
+      '#weight' => $package == 'Core' ? -10 : NULL,
     );
   }
+
+  // Lastly, sort all fieldsets by title.
+  uasort($form['modules'], 'element_sort_by_title');
 
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array(
