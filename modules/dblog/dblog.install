@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.install,v 1.22 2010/06/25 17:47:22 dries Exp $
+// $Id: dblog.install,v 1.23 2010/09/05 19:56:03 dries Exp $
 
 /**
  * @file
@@ -98,37 +98,37 @@ function dblog_schema() {
  */
 
 /**
- * Allow NULL values for links.
+ * Update the {watchdog} table.
  */
 function dblog_update_7001() {
-  db_change_field('watchdog', 'link', 'link', array('type' => 'varchar', 'length' => 255, 'not null' => FALSE, 'default' => ''));
-}
+  // Allow NULL values for links.
+  db_change_field('watchdog', 'link', 'link', array(
+    'type' => 'varchar',
+    'length' => 255,
+    'not null' => FALSE,
+    'default' => '',
+    'description' => 'Link to view the result of the event.',
+  ));
 
-/**
- * Add index on uid.
- */
-function dblog_update_7002() {
+  // Add an index on uid.
   db_add_index('watchdog', 'uid', array('uid'));
-}
 
-/**
- * Allow longer type values.
- */
-function dblog_update_7003() {
-  db_change_field('watchdog', 'type', 'type', array('type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''));
-}
+  // Allow longer type values.
+  db_change_field('watchdog', 'type', 'type', array(
+    'type' => 'varchar',
+    'length' => 64,
+    'not null' => TRUE,
+    'default' => '',
+    'description' => 'Type of log message, for example "user" or "page not found."',
+  ));
 
-/**
- * Converts fields that store serialized variables from text to blob.
- */
-function dblog_update_7004() {
-  $spec = array(
+  // Convert the variables field (that stores serialized variables) from text to blob.
+  db_change_field('watchdog', 'variables', 'variables', array(
     'type' => 'blob',
     'not null' => TRUE,
     'size' => 'big',
     'description' => 'Serialized array of variables that match the message string and that is passed into the t() function.',
-  );
-  db_change_field('watchdog', 'variables', 'variables', $spec);
+  ));
 }
 
 /**
