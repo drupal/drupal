@@ -1,0 +1,145 @@
+<?php
+// $Id$
+
+/**
+ * Test taxonomy upgrades.
+ */
+class UpgradePathTaxonomyTestCase extends UpgradePathTestCase {
+  public static function getInfo() {
+    return array(
+      'name'  => 'Taxonomy upgrade path',
+      'description'  => 'Taxonomy upgrade path tests.',
+      'group' => 'Upgrade path',
+    );
+  }
+
+  public function setUp() {
+    // Path to the database dump.
+    $this->databaseDumpFile = drupal_get_path('module', 'simpletest') . '/tests/upgrade/drupal-6.filled.database.php';
+    parent::setUp();
+  }
+
+  /**
+   * Retrieve an array mapping allowed vocabulary id to field name for
+   * all taxonomy_term_reference fields for which an instance exists
+   * for the specified entity type and bundle.
+   */
+  function instanceVocabularies($entity_type, $bundle) {
+    $instances = array();
+    foreach (field_info_instances($entity_type, $bundle) as $instance) {
+      $field = field_info_field($instance['field_name']);
+      if ($field['type'] == 'taxonomy_term_reference') {
+        foreach ($field['settings']['allowed_values'] as $tree) {
+          // Prefer valid taxonomy term reference fields for a given vocabulary
+          // when they exist.
+          if (empty($instances[$tree['vid']]) || $instances[$tree['vid']] == 'taxonomyextra') {
+            $instances[$tree['vid']] = $field['field_name'];
+          }
+        }
+      }
+    }
+    return $instances;
+  }
+
+  /**
+   * Basic tests for the taxonomy upgrade.
+   */
+  public function testTaxonomyUpgrade() {
+    $this->assertTrue($this->performUpgrade(), t('The upgrade was completed successfully.'));
+
+    // Visit the front page to assert for PHP warning and errors.
+    $this->drupalGet('');
+
+    // Check that taxonomy_vocabulary_node_type and taxonomy_term_node have been
+    // removed.
+    $this->assertFalse(db_table_exists('taxonomy_vocabulary_node_type'), t('taxonomy_vocabulary_node_type has been removed.'));
+    $this->assertFalse(db_table_exists('taxonomy_term_node'), t('taxonomy_term_node has been removed.'));
+
+    // Check that the node type 'page' has been associated to a taxonomy
+    // reference field for each vocabulary.
+    $vocabularies = taxonomy_get_vocabularies();
+    $voc_keys = array_keys($vocabularies);
+    $instances = $this->instanceVocabularies('node', 'page');
+    $inst_keys = array_keys($instances);
+    sort($voc_keys);
+    sort($inst_keys);
+    $this->assertEqual($voc_keys, $inst_keys, t('Node type page has instances for every vocabulary.'));
+
+    // Node type 'story' was not explicitly in $vocabulary->nodes but
+    // each node of type 'story' was associated to one or more terms.
+    // Check that the node type 'story' has been associated only to
+    // the taxonomyextra field. 
+    $instances = $this->instanceVocabularies('node', 'story');
+    $field_names = array_flip($instances);
+    $this->assertEqual(count($field_names), 1, t('Only one taxonomy term field instance exists for story nodes'));
+    $this->assertEqual(key($field_names), 'taxonomyextra', t('Only the excess taxonomy term field is used on story nodes'));
+
+    // Check that the node type 'poll' has been associated to no taxonomy
+    // reference field.
+    $instances = $this->instanceVocabularies('node', 'poll');
+    $this->assertTrue(empty($instances), t('Node type poll has no taxonomy term reference field instances.'));
+
+    // Check that each node of type 'page' and 'story' is associated to all the
+    // terms except terms whose ID is equal to the node ID or is equal to the
+    // node ID subtracted from 49.
+    $nodes = node_load_multiple(array(), array('type' => 'page'));
+    $nodes += node_load_multiple(array(), array('type' => 'story'));
+    $terms = db_select('taxonomy_term_data', 'td')
+      ->fields('td')
+      ->execute()
+      ->fetchAllAssoc('tid');
+    field_attach_prepare_view('node', $nodes, 'full');
+    foreach ($nodes as $nid => $node) {
+      $node->content = field_attach_view('node', $node, 'full');
+      $render = drupal_render($node->content);
+      $this->drupalSetContent($render);
+      debug("Testing node $nid");
+      $this->verbose($render);
+      foreach ($terms as $tid => $term) {
+        $args = array(
+          '%name' => $term->name,
+          '@tid' => $tid,
+          '%nid' => $nid,
+        );
+
+        // Use link rather than term name because migrated term names can be
+        // substrings of other term names. e.g. "term 1 of vocabulary 2" is
+        // found when "term 1 of vocabulary 20" is output.
+        $link = l($term->name, 'taxonomy/term/' . $term->tid);
+        if (($tid == $nid) || ($tid + $nid == 49)) {
+          $this->assertNoRaw($link, t('Term %name (@tid) is not displayed on node %nid', $args));
+        }
+        else {
+          $this->assertRaw($link, t('Term %name (@tid) is displayed on node %nid', $args));
+        }
+      }
+
+      // The first 12 nodes have two revisions. For nodes with
+      // revisions, check that the oldest revision is associated only
+      // to terms whose ID is equal to the node ID or 49 less the node ID.
+      $revisions = node_revision_list($node);
+      if ($node->nid < 13) {
+        $this->assertEqual(count($revisions), 2, t('Node %nid has two revisions.', $args));
+        $last_rev = end($revisions);
+        $args['%old_vid'] = $last_rev->vid;
+
+        $node_old = node_load($node->nid, $last_rev->vid);
+        field_attach_prepare_view('node', array($node_old->nid => $node_old), 'full');
+        $node_old->content = field_attach_view('node', $node_old, 'full');
+        $render = drupal_render($node_old->content);
+        $this->drupalSetContent($render);
+        $this->verbose($render);
+
+        $term = $terms[$node->nid];
+        $link = l($term->name, 'taxonomy/term/' . $term->tid);
+        $this->assertRaw($link, t('Term %name (@tid) is displayed on node %nid vid %old_vid.', $args));
+        $term = $terms[49-$node->nid];
+        $link = l($term->name, 'taxonomy/term/' . $term->tid);
+        $this->assertRaw($link, t('Term %name (@tid) is displayed on node %nid %old_vid.', $args));
+      }
+      else {
+        $this->assertEqual(count($revisions), 1, t('Node %nid has one revision.', $args));
+      }
+    }
+  }
+}

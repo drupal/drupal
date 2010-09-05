@@ -61,9 +61,12 @@ $hierarchy = array(0, 1, 2, 0, 1, 2, 0, 1, 2, 0, 1, 2);
 $multiple  = array(0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1);
 $required  = array(0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1);
 
+$voc_id = 0;
+$term_id = 0;
 for ($i = 0; $i < 24; $i++) {
   $vocabulary = array();
-  $vocabulary['name'] = "vocabulary $i";
+  ++$voc_id;
+  $vocabulary['name'] = "vocabulary $voc_id (i=$i)";
   $vocabulary['description'] = "description of ". $vocabulary['name'];
   $vocabulary['nodes'] = $i > 11 ? array('page' => TRUE) : array();
   $vocabulary['multiple'] = $multiple[$i % 12];
@@ -82,7 +85,8 @@ for ($i = 0; $i < 24; $i++) {
     // For multiple parent vocabularies, omit the t0-t1 relation, otherwise
     // every parent in the vocabulary is a parent.
     $term['parent'] = $vocabulary['hierarchy'] == 2 && i == 1 ? array() : $parents;
-    $term['name'] = "term $j of vocabulary $i";
+    ++$term_id;
+    $term['name'] = "term $term_id of vocabulary $voc_id (j=$j)";
     $term['description'] = 'description of ' . $term['name'];
     $term['weight'] = $i * 3 + $j;
     taxonomy_save_term($term);
@@ -91,6 +95,8 @@ for ($i = 0; $i < 24; $i++) {
   }
 }
 
+$node_id = 0;
+$revision_id = 0;
 module_load_include('inc', 'node', 'node.pages');
 for ($i = 0; $i < 24; $i++) {
   $uid = intval($i / 8) + 3;
@@ -99,7 +105,9 @@ for ($i = 0; $i < 24; $i++) {
   $node->uid = $uid;
   $node->type = $i < 12 ? 'page' : 'story';
   $node->sticky = 0;
-  $node->title = "node title $i";
+  ++$node_id;
+  ++$revision_id;
+  $node->title = "node title $node_id rev $revision_id (i=$i)";
   $type = node_get_types('type', $node->type);
   if ($type->has_body) {
     $node->body = str_repeat("node body ($node->type) - $i", 100);
@@ -113,16 +121,26 @@ for ($i = 0; $i < 24; $i++) {
   $node->promote = $i % 2;
   $node->created = $now + $i * 86400;
   $node->log = "added $i node";
-  $node->taxonomy = $terms;
-  // Just make every term association different a little.
-  unset($node->taxonomy[$i], $node->taxonomy[47 - $i]);
+  // Make every term association different a little. For nodes with revisions,
+  // make the initial revision have a different set of terms than the
+  // newest revision.
+  $node_terms = $terms;
+  unset($node_terms[$i], $node_terms[47 - $i]);
+  if ($node->revision) {
+    $node->taxonomy = array($i => $terms[$i], 47-$i => $terms[47 - $i]);
+  }
+  else {
+    $node->taxonomy = $node_terms;
+  }
   node_save($node);
   path_set_alias("node/$node->nid", "content/$node->created");
   if ($node->revision) {
     $user = user_load($uid + 3);
-    $node->title .= ' revision';
+    ++$revision_id;
+    $node->title .= " rev2 $revision_id";
     $node->body = str_repeat("node revision body ($node->type) - $i", 100);
     $node->log = "added $i revision";
+    $node->taxonomy = $node_terms;
     node_save($node);
   }
 }

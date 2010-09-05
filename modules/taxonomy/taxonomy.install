@@ -430,7 +430,57 @@ function taxonomy_update_7004() {
       field_create_instance($instance);
     }
   }
-  db_drop_table('taxonomy_vocabulary_node_type');
+
+  // Some contrib projects stored term node associations without regard for the
+  // selections in the taxonomy_vocabulary_node_types table, or have more terms
+  // for a single node than the vocabulary allowed. We construct the
+  // taxonomyextra field to store all the extra stuff.
+
+  // Allowed values for this extra vocabs field is every vocabulary.
+  $allowed_values = array();
+  foreach (taxonomy_get_vocabularies() as $vocabulary) {
+    $allowed_values[] = array(
+      'vid' => $vocabulary->vid,
+      'parent' => 0,
+    );
+  }
+
+  $field_name = 'taxonomyextra';
+  $field = array(
+    'field_name' => $field_name,
+    'type' => 'taxonomy_term_reference',
+    'cardinality' => FIELD_CARDINALITY_UNLIMITED,
+    'settings' => array(
+      'required' => FALSE,
+      'allowed_values' => $allowed_values,
+    ),
+  );
+  field_create_field($field);
+
+  foreach (node_type_get_types() as $bundle) {
+    $instance = array(
+      'label' => 'Taxonomy upgrade extras',
+      'field_name' => $field_name,
+      'bundle' => $bundle->type,
+      'entity_type' => 'node',
+      'description' => 'Debris left over after upgrade from Drupal 6',
+      'widget' => array(
+        'type' => 'taxonomy_autocomplete',
+      ),
+      'display' => array(
+        'default' => array(
+          'type' => 'taxonomy_term_reference_link',
+          'weight' => 10,
+        ),
+        'teaser' => array(
+          'type' => 'taxonomy_term_reference_link',
+          'weight' => 10,
+        ),
+      ),
+    );
+    field_create_instance($instance);
+  }
+
   $fields = array('help', 'multiple', 'required', 'tags');
   foreach ($fields as $field) {
     db_drop_field('taxonomy_vocabulary', $field);
@@ -439,16 +489,46 @@ function taxonomy_update_7004() {
 
 /**
  * Migrate {taxonomy_term_node} table to field storage.
+ *
+ * @todo: This function can possibly be made much faster by wrapping a
+ * transaction around all the inserts.
  */
 function taxonomy_update_7005(&$sandbox) {
-  // Since we are upgrading from Drupal 6, we know that only
-  // field_sql_storage.module will be enabled.
-  $field = field_info_field($field['field_name']);
-  $data_table = _field_sql_storage_tablename($field);
-  $revision_table = _field_sql_storage_revision_tablename($field);
-  $etid = _field_sql_storage_etid('node');
-  $value_column = $field['field_name'] . '_value';
-  $columns = array('etid', 'entity_id', 'revision_id', 'bundle', 'delta', $value_column);
+  // $sandbox contents:
+  // - total: The total number of term_node relationships to migrate.
+  // - count: The number of term_node relationships that have been
+  //   migrated so far.
+  // - last: The db_query_range() offset to use when querying
+  //   term_node; this field is incremented in quantities of $batch
+  //   (1000) but at the end of each call to this function, last and
+  //   count are the same.
+  // - vocabularies: An associative array mapping vocabulary id and node
+  //   type to field name. If a voc id/node type pair does not appear
+  //   in this array but a term_node relationship exists mapping a
+  //   term in voc id to node of that type, the relationship is
+  //   assigned to the taxonomymyextra field which allows terms of all
+  //   vocabularies. 
+  // - cursor[values], cursor[deltas]: The contents of $values and
+  //   $deltas at the end of the previous call to this function. These
+  //   need to be preserved across calls because a single batch of
+  //   1000 rows from term_node may end in the middle of the terms for
+  //   a single node revision.
+  //
+  // $values is the array of values about to be/most recently inserted
+  // into the SQL data table for the taxonomy_term_reference
+  // field. Before $values is constructed for each record, the
+  // $values from the previous insert is checked to see if the two
+  // records are for the same node revision id; this enables knowing
+  // when to reset the delta counters which are incremented across all
+  // terms for a single field on a single revision, but reset for each
+  // new field and revision.
+  //
+  // $deltas is an associative array mapping field name to the number
+  // of term references stored so far for the current revision, which
+  // provides the delta value for each term reference data insert. The
+  // deltas are reset for each new revision.
+
+  $field_info = field_info_fields();
 
   // This is a multi-pass update. On the first call we need to initialize some
   // variables.
@@ -458,47 +538,164 @@ function taxonomy_update_7005(&$sandbox) {
 
     $query = db_select('taxonomy_term_node', 't');
     $sandbox['total'] = $query->countQuery()->execute()->fetchField();
-    $found = (bool) $sandbox['total'];
+
+    // Use an inline version of Drupal 6 taxonomy_get_vocabularies() here since
+    // we can no longer rely on $vocabulary->nodes from the API function.
+    $result = db_query('SELECT v.vid, v.machine_name, n.type FROM {taxonomy_vocabulary} v INNER JOIN {taxonomy_vocabulary_node_type} n ON v.vid = n.vid');
+    $vocabularies = array();
+    foreach ($result as $record) {
+
+      // If no node types are associated with a vocabulary, the LEFT JOIN will
+      // return a NULL value for type.
+      if (isset($record->type)) {
+        $vocabularies[$record->vid][$record->type] = 'taxonomy_'. $record->machine_name;
+      }
+    }
+
+    if (!empty($vocabularies)) {
+      $sandbox['vocabularies'] = $vocabularies;
+    }
   }
   else {
-    // We do each pass in batches of 1000, this should result in a
-    // maximum of 2000 insert queries each operation.
-    $batch = 1000 + $sandbox['last'];
+    $etid = _field_sql_storage_etid('node');
 
-    // Query and save data for the current revision.
-    $result = db_query_range('SELECT td.tid, tn.nid, td.weight, tn.vid, n2.type, n2.created, n2.sticky FROM {taxonomy_term_data} td INNER JOIN {taxonomy_term_node} tn ON td.tid = tn.tid INNER JOIN {node} n2 ON tn.nid = n2.nid INNER JOIN {node} n ON tn.vid = n.vid AND td.vid = :vocabulary_id ORDER BY td.weight ASC', array(':vocabulary_id' => $vocabulary->vid), $sandbox['last'], $batch);
-    $deltas = array();
+    // We do each pass in batches of 1000.
+    $batch = 1000;
+
+    // Query selects all revisions at once and processes them in revision and
+    // term weight order. Join types:
+    //
+    // - INNER JOIN term_node ON tn.tid: We are migrating term-node
+    //   relationships. If there are none for a term, we do not need the
+    //   term_data row.
+    // - INNER JOIN {node} n ON n.nid: If a term-node relationship exists for a
+    //   nid that does not exist, we cannot migrate it as we have no node to
+    //   relate it to; thus we do not need that row from term_node.
+    // - LEFT JOIN {node} n2 ON n2.vid: If the current term-node relationship
+    //   is for the current revision of the node, this left join will match and
+    //   is_current will be non-NULL (we also get the current sticky and
+    //   created in this case). This tells us whether to insert into the
+    //   current data tables in addition to the revision data tables.
+    //
+    // This query must return a consistent ordering across multiple calls.  We
+    // need them ordered by node vid (since we use that to decide when to reset
+    // the delta counters) and by term weight so they appear within each node
+    // in weight order. However, tn.vid,td.weight is not guaranteed to be
+    // unique, so we add tn.tid as an additional sort key because tn.tid,tn.vid
+    // is the primary key of the D6 term_node table and so is guaranteed
+    // unique. Unfortunately it also happens to be in the wrong order which is
+    // less efficient, but c'est la vie.
+    $query = 'SELECT td.vid AS vocab_id, td.tid, tn.nid, tn.vid, n.type, n2.created, n2.sticky, n2.nid AS is_current FROM {taxonomy_term_data} td INNER JOIN {taxonomy_term_node} tn ON td.tid = tn.tid INNER JOIN {node} n ON tn.nid = n.nid LEFT JOIN {node} n2 ON tn.vid = n2.vid ORDER BY tn.vid, td.weight ASC, tn.tid';
+    $result = db_query_range($query, $sandbox['last'], $batch);
+    if (isset($sandbox['cursor'])) {
+      $values = $sandbox['cursor']['values'];
+      $deltas = $sandbox['cursor']['deltas'];
+    }
+    else {
+      $deltas = array();
+    }
     foreach ($result as $record) {
-      $found = TRUE;
       $sandbox['count'] += 1;
-      // Start deltas from 0, and increment by one for each
-      // term attached to a node.
-      $deltas[$record->nid] = isset($deltas[$record->nid]) ? ++$deltas[$record->nid] : 0;
-      $values = array($etid, $record->nid, $record->vid, $record->type, $deltas[$record->nid], $record->tid);
-      db_insert($data_table)->fields($columns)->values($values)->execute();
 
-      // Update the {taxonomy_index} table.
-      db_insert('taxonomy_index')
-        ->fields(array('nid', 'tid', 'sticky', 'created',))
-        ->values(array($record->nid, $record->tid, $record->sticky, $record->created))
-        ->execute();
+      // Use the valid field for this vocabulary and node type or use the
+      // overflow vocabulary if there is no valid field.
+      $field_name = isset($sandbox['vocabularies'][$record->vocab_id][$record->type]) ? $sandbox['vocabularies'][$record->vocab_id][$record->type] : 'taxonomyextra';
+      $field = $field_info[$field_name];
+
+      // Start deltas from 0, and increment by one for each term attached to a
+      // node.
+      if (!isset($deltas[$field_name])) {
+        $deltas[$field_name] = 0;
+      }
+
+      if (isset($values)) {
+
+        // If the last inserted revision_id is the same as the current record,
+        // use the previous deltas to calculate the next delta.
+        if ($record->vid == $values[2]) {
+
+          // see field_default_validate().
+          if ($field['cardinality'] != FIELD_CARDINALITY_UNLIMITED && ($deltas[$field_name] + 1) >= $field['cardinality']) {
+
+            // For excess values of a single-term vocabulary, switch over to
+            // the overflow field.
+            $field_name = 'taxonomyextra';
+            $field = $field_info[$field_name];
+            if (!isset($deltas[$field_name])) {
+              $deltas[$field_name] = 0;
+            }
+          }
+        }
+        else {
+
+          // When the record is a new revision, empty the deltas array.
+          $deltas = array($field_name => 0);
+        }
+      }
+
+      // Table and column found in the field's storage details. During upgrades,
+      // it's always SQL.
+      $table = key($field['storage']['details']['sql'][FIELD_LOAD_REVISION]);
+      $value_column = $field['storage']['details']['sql'][FIELD_LOAD_REVISION][$table]['tid'];
+
+      // Column names and values in field storage are the same for current and
+      // revision.
+      $columns = array('etid', 'entity_id', 'revision_id', 'bundle', 'language', 'delta', $value_column);
+      $values = array($etid, $record->nid, $record->vid, $record->type, LANGUAGE_NONE, $deltas[$field_name]++, $record->tid);
+
+      // Insert rows into the revision table.
+      db_insert($table)->fields($columns)->values($values)->execute();
+
+      // is_current column is a node ID if this revision is also current.
+      if ($record->is_current) {
+        $table = key($field['storage']['details']['sql'][FIELD_LOAD_CURRENT]);
+        db_insert($table)->fields($columns)->values($values)->execute();
+
+        // Update the {taxonomy_index} table.
+        db_insert('taxonomy_index')
+          ->fields(array('nid', 'tid', 'sticky', 'created',))
+          ->values(array($record->nid, $record->tid, $record->sticky, $record->created))
+          ->execute();
+      }
     }
 
-    // Query and save data for all revisions.
-    $result = db_query('SELECT td.tid, tn.nid, td.weight, tn.vid, n.type FROM {taxonomy_term_data} td INNER JOIN {taxonomy_term_node} tn ON td.tid = tn.tid AND td.vid = :vocabulary_id INNER JOIN {node} n ON tn.nid = n.nid ORDER BY td.weight ASC', array(':vocabulary_id' => $vocabulary->vid), $sandbox['last'][$batch]);
-    $deltas = array();
-    foreach ($result as $record) {
-      $found = TRUE;
-      $sandbox['count'] += 1;
-      // Start deltas at 0, and increment by one for each term attached to a revision.
-      $deltas[$record->vid] = isset($deltas[$record->vid]) ? ++$deltas[$record->vid] : 0;
-      $values = array($etid, $record->nid, $record->vid, $record->type, $deltas[$record->vid], $record->tid);
-      db_insert($revision_table)->fields($columns)->values($values)->execute();
-    }
-    $sandbox['last'] = $batch;
+    // Store the set of inserted values and the current revision's deltas in the
+    // sandbox.
+    $sandbox['cursor'] = array(
+      'values' => $values,
+      'deltas' => $deltas,
+    );
+    $sandbox['last'] += $batch;
   }
-  if (!$found) {
-   db_drop_table('taxonomy_term_node');
+
+  if ($sandbox['count'] < $sandbox['total']) {
+    $sandbox['#finished'] = FALSE;
+  }
+  else {
+    db_drop_table('taxonomy_vocabulary_node_type');
+    db_drop_table('taxonomy_term_node');
+
+    // If there are no vocabs, we're done.
+    $sandbox['#finished'] = TRUE;
+
+    // Determine necessity of taxonomyextras field.
+    $field = $field_info['taxonomyextra'];
+    $table = key($field['storage']['details']['sql'][FIELD_LOAD_REVISION]);
+    $node_types = db_select($table)->distinct()->fields($table, array('bundle'))
+      ->execute()->fetchCol();
+
+    if (empty($node_types)) {
+      // Delete the overflow field if there are no rows in the revision table.
+      field_delete_field('taxonomyextra');
+    }
+    else {
+      // Remove instances which are not actually used.
+      $bundles = array_diff($field['bundles']['node'], $node_types);
+      foreach ($bundles as $bundle) {
+        $instance = field_info_instance('node', 'taxonomyextra', $bundle);
+        field_delete_instance($instance);
+      }
+    }
   }
 }
 
