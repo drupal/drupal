@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.300 2010/09/01 20:08:17 dries Exp $
+// $Id: system.admin.inc,v 1.301 2010/09/05 15:38:16 webchick Exp $
 
 /**
  * @file
@@ -959,8 +959,13 @@ function system_modules($form, $form_state = array()) {
         t('Description'),
         array('data' => t('Operations'), 'colspan' => 3),
       ),
+      // Ensure that the "Core" package fieldset comes first.
+      '#weight' => $package == 'Core' ? -10 : NULL,
     );
   }
+
+  // Lastly, sort all fieldsets by title.
+  uasort($form['modules'], 'element_sort_by_title');
 
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array(

@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1213 2010/09/04 17:55:42 dries Exp $
+// $Id: common.inc,v 1.1214 2010/09/05 15:38:16 webchick Exp $
 
 /**
  * @file
@@ -5463,6 +5463,15 @@ function element_sort($a, $b) {
     return 0;
   }
   return ($a_weight < $b_weight) ? -1 : 1;
+}
+
+/**
+ * Array sorting callback; sorts elements by title.
+ */
+function element_sort_by_title($a, $b) {
+  $a_title = (is_array($a) && isset($a['#title'])) ? $a['#title'] : '';
+  $b_title = (is_array($b) && isset($b['#title'])) ? $b['#title'] : '';
+  return strnatcasecmp($a_title, $b_title);
 }
 
 /**
