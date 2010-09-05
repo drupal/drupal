@@ -2012,13 +2012,6 @@ function _node_custom_theme() {
   }
 }
 
-/**
- * Implements hook_init().
- */
-function node_init() {
-  drupal_add_css(drupal_get_path('module', 'node') . '/node.css', array('preprocess' => TRUE));
-}
-
 function node_last_changed($nid) {
   return db_query('SELECT changed FROM {node} WHERE nid = :nid', array(':nid' => $nid))->fetch()->changed;
 }

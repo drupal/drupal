@@ -11,3 +11,4 @@ files[] = search.install
 files[] = search.test
 files[] = search.extender.inc
 configure = admin/config/search/settings
+stylesheets[all][] = search.css

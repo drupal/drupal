@@ -28,13 +28,6 @@ function poll_help($path, $arg) {
 }
 
 /**
- * Implements hook_init().
- */
-function poll_init() {
-  drupal_add_css(drupal_get_path('module', 'poll') . '/poll.css', array('preprocess' => TRUE));
-}
-
-/**
  * Implements hook_theme().
  */
 function poll_theme() {

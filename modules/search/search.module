@@ -98,13 +98,6 @@ function search_help($path, $arg) {
 }
 
 /**
- * Implements hook_init().
- */
-function search_init() {
-  drupal_add_css(drupal_get_path('module', 'search') . '/search.css', array('preprocess' => TRUE));
-}
-
-/**
  * Implements hook_theme().
  */
 function search_theme() {

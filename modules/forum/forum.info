@@ -12,3 +12,4 @@ files[] = forum.pages.inc
 files[] = forum.install
 files[] = forum.test
 configure = admin/structure/forum
+stylesheets[all][] = forum.css

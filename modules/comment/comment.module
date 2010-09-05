@@ -290,13 +290,6 @@ function comment_menu() {
 }
 
 /**
- * Implements hook_init().
- */
-function comment_init() {
-  drupal_add_css(drupal_get_path('module', 'comment') . '/comment.css', array('preprocess' => TRUE));
-}
-
-/**
  * Implements hook_menu_alter().
  */
 function comment_menu_alter(&$items) {

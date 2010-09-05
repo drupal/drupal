@@ -1441,9 +1441,10 @@ function hook_boot() {
  * used to set up global parameters which are needed later in the request.
  * when this hook is called, all modules are already loaded in memory.
  *
- * For example, this hook is a typical place for modules to add CSS or JS
- * that should be present on every page. This hook is not run on cached
- * pages - though CSS or JS added this way will be present on a cached page.
+ * This hook is not run on cached pages.
+ *
+ * To add CSS or JS that should be present on all pages, modules should not
+ * implement this hook, but declare these files in their .info file.
  */
 function hook_init() {
   drupal_add_css(drupal_get_path('module', 'book') . '/book.css');
@@ -3955,7 +3956,7 @@ function hook_filetransfer_backends() {
 /**
  * Control site status before menu dispatching.
  *
- * The hook is called after checking whether the site is offline but before 
+ * The hook is called after checking whether the site is offline but before
  * the current router item is retrieved and executed by
  * menu_execute_active_handler(). If the site is in offline mode,
  * $menu_site_status is set to MENU_SITE_OFFLINE.

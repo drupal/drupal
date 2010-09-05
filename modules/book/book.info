@@ -10,3 +10,4 @@ files[] = book.pages.inc
 files[] = book.install
 files[] = book.test
 configure = admin/content/book/settings
+stylesheets[all][] = book.css

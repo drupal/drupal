@@ -12,3 +12,4 @@ files[] = comment.install
 files[] = comment.test
 files[] = comment.tokens.inc
 configure = admin/content/comment
+stylesheets[all][] = comment.css

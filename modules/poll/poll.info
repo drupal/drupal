@@ -9,3 +9,4 @@ files[] = poll.pages.inc
 files[] = poll.install
 files[] = poll.test
 files[] = poll.tokens.inc
+stylesheets[all][] = poll.css

@@ -218,13 +218,6 @@ function forum_menu_local_tasks_alter(&$data, $router_item, $root_path) {
 }
 
 /**
- * Implements hook_init().
- */
-function forum_init() {
-  drupal_add_css(drupal_get_path('module', 'forum') . '/forum.css', array('preprocess' => TRUE));
-}
-
-/**
  * Implements hook_entity_info_alter().
  */
 function forum_entity_info_alter(&$info) {

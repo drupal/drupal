@@ -604,9 +604,7 @@ function list_themes($refresh = FALSE) {
         }
       }
       foreach ($theme->info['scripts'] as $script => $path) {
-        if (file_exists($path)) {
-          $theme->scripts[$script] = $path;
-        }
+        $theme->scripts[$script] = $path;
       }
       if (isset($theme->info['engine'])) {
         $theme->engine = $theme->info['engine'];
@@ -2274,6 +2272,7 @@ function template_preprocess_page(&$variables) {
     $variables['theme_hook_suggestions'] = $suggestions;
   }
 }
+
 /**
  * Process variables for html.tpl.php
  *

@@ -13,3 +13,4 @@ files[] = aggregator.processor.inc
 files[] = aggregator.install
 files[] = aggregator.test
 configure = admin/config/services/aggregator/settings
+stylesheets[all][] = aggregator.css

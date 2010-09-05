@@ -1799,13 +1799,6 @@ function user_admin_paths() {
 }
 
 /**
- * Implements hook_init().
- */
-function user_init() {
-  drupal_add_css(drupal_get_path('module', 'user') . '/user.css', array('preprocess' => TRUE));
-}
-
-/**
  * Load either a specified or the current user account.
  *
  * @param $uid
