@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1295 2010/09/03 19:56:51 dries Exp $
+// $Id: node.module,v 1.1296 2010/09/05 02:21:38 dries Exp $
 
 /**
  * @file
@@ -2010,13 +2010,6 @@ function _node_custom_theme() {
   if (variable_get('node_admin_theme')) {
     return variable_get('admin_theme');
   }
-}
-
-/**
- * Implements hook_init().
- */
-function node_init() {
-  drupal_add_css(drupal_get_path('module', 'node') . '/node.css', array('preprocess' => TRUE));
 }
 
 function node_last_changed($nid) {

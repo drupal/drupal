@@ -1,4 +1,4 @@
-; $Id: field.info,v 1.8 2010/06/21 02:27:47 webchick Exp $
+; $Id: field.info,v 1.9 2010/09/05 02:21:38 dries Exp $
 name = Field
 description = Field API to add fields to entities like nodes and users.
 package = Core
@@ -15,3 +15,4 @@ files[] = field.form.inc
 files[] = tests/field.test
 dependencies[] = field_sql_storage
 required = TRUE
+stylesheets[all][] = theme/field.css

@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.550 2010/08/30 05:58:46 webchick Exp $
+// $Id: book.module,v 1.551 2010/09/05 02:21:38 dries Exp $
 
 /**
  * @file
@@ -212,13 +212,6 @@ function book_admin_paths() {
     'node/*/outline/remove' => TRUE,
   );
   return $paths;
-}
-
-/**
- * Implements hook_init().
- */
-function book_init() {
-  drupal_add_css(drupal_get_path('module', 'book') . '/book.css', array('preprocess' => TRUE));
 }
 
 /**

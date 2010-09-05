@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.958 2010/09/03 19:49:56 dries Exp $
+// $Id: system.module,v 1.959 2010/09/05 02:21:38 dries Exp $
 
 /**
  * @file
@@ -1837,7 +1837,6 @@ function system_init() {
   drupal_add_css($path . '/system-menus.css', array('weight' => CSS_SYSTEM, 'preprocess' => TRUE));
   drupal_add_css($path . '/system-messages.css', array('weight' => CSS_SYSTEM, 'preprocess' => TRUE));
 
-
   // Ignore slave database servers for this request.
   //
   // In Drupal's distributed database structure, new data is written to the master
@@ -1857,6 +1856,29 @@ function system_init() {
     }
     else {
       unset($_SESSION['ignore_slave_server']);
+    }
+  }
+
+  // Add CSS/JS files from module .info files.
+  system_add_module_assets();
+}
+
+/**
+ * Adds CSS and JavaScript files declared in module .info files.
+ */
+function system_add_module_assets() {
+  foreach (system_get_info('module') as $module => $info) {
+    if (!empty($info['stylesheets'])) {
+      foreach ($info['stylesheets'] as $media => $stylesheets) {
+        foreach ($stylesheets as $stylesheet) {
+          drupal_add_css($stylesheet, array('media' => $media, 'preprocess' => TRUE));
+        }
+      }
+    }
+    if (!empty($info['scripts'])) {
+      foreach ($info['scripts'] as $script) {
+        drupal_add_js($script, array('preprocess' => TRUE));
+      }
     }
   }
 }
@@ -2305,6 +2327,15 @@ function _system_rebuild_module_data() {
     // Merge in defaults and save.
     $modules[$key]->info = $module->info + $defaults;
 
+    // Prefix stylesheets and scripts with module path.
+    $path = dirname($module->uri);
+    if (isset($module->info['stylesheets'])) {
+      $module->info['stylesheets'] = _system_info_add_path($module->info['stylesheets'], $path);
+    }
+    if (isset($module->info['scripts'])) {
+      $module->info['scripts'] = _system_info_add_path($module->info['scripts'], $path);
+    }
+
     // Install profiles are hidden by default, unless explicitly specified
     // otherwise in the .info file.
     if ($key == $profile && !isset($modules[$key]->info['hidden'])) {
@@ -2396,6 +2427,8 @@ function _system_rebuild_theme_data() {
     'features' => _system_default_theme_features(),
     'screenshot' => 'screenshot.png',
     'php' => DRUPAL_MINIMUM_PHP,
+    'stylesheets' => array(),
+    'scripts' => array(),
   );
 
   $sub_themes = array();
@@ -2428,28 +2461,14 @@ function _system_rebuild_theme_data() {
       }
     }
 
-    // Give the stylesheets proper path information.
-    $pathed_stylesheets = array();
-    if (isset($themes[$key]->info['stylesheets'])) {
-      foreach ($themes[$key]->info['stylesheets'] as $media => $stylesheets) {
-        foreach ($stylesheets as $stylesheet) {
-          $pathed_stylesheets[$media][$stylesheet] = dirname($themes[$key]->uri) . '/' . $stylesheet;
-        }
-      }
-    }
-    $themes[$key]->info['stylesheets'] = $pathed_stylesheets;
+    // Prefix stylesheets and scripts with module path.
+    $path = dirname($theme->uri);
+    $theme->info['stylesheets'] = _system_info_add_path($theme->info['stylesheets'], $path);
+    $theme->info['scripts'] = _system_info_add_path($theme->info['scripts'], $path);
 
-    // Give the scripts proper path information.
-    $scripts = array();
-    if (isset($themes[$key]->info['scripts'])) {
-      foreach ($themes[$key]->info['scripts'] as $script) {
-        $scripts[$script] = dirname($themes[$key]->uri) . '/' . $script;
-      }
-    }
-    $themes[$key]->info['scripts'] = $scripts;
     // Give the screenshot proper path information.
     if (!empty($themes[$key]->info['screenshot'])) {
-      $themes[$key]->info['screenshot'] = dirname($themes[$key]->uri) . '/' . $themes[$key]->info['screenshot'];
+      $themes[$key]->info['screenshot'] = $path . '/' . $themes[$key]->info['screenshot'];
     }
   }
 
@@ -2494,6 +2513,41 @@ function system_rebuild_theme_data() {
   system_get_files_database($themes, 'theme');
   system_update_files_database($themes, 'theme');
   return $themes;
+}
+
+/**
+ * Prefixes all values in an .info file array with a given path.
+ *
+ * This helper function is mainly used to prefix all array values of an .info
+ * file property with a single given path (to the module or theme); e.g., to
+ * prefix all values of the 'stylesheets' or 'scripts' properties with the file
+ * path to the defining module/theme.
+ *
+ * @param $info
+ *   A nested array of data of an .info file to be processed.
+ * @param $path
+ *   A file path to prepend to each value in $info.
+ *
+ * @return
+ *   The $info array with prefixed values.
+ *
+ * @see _system_rebuild_module_data()
+ * @see _system_rebuild_theme_data()
+ */
+function _system_info_add_path($info, $path) {
+  foreach ($info as $key => $value) {
+    // Recurse into nested values until we reach the deepest level.
+    if (is_array($value)) {
+      $info[$key] = _system_info_add_path($info[$key], $path);
+    }
+    // Unset the original value's key and set the new value with prefix, using
+    // the original value as key, so original values can still be looked up.
+    else {
+      unset($info[$key]);
+      $info[$value] = $path . '/' . $value;
+    }
+  }
+  return $info;
 }
 
 /**

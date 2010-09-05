@@ -1,5 +1,5 @@
 <?php
-// $Id: common.test,v 1.123 2010/09/04 17:55:43 dries Exp $
+// $Id: common.test,v 1.124 2010/09/05 02:21:38 dries Exp $
 
 /**
  * @file
@@ -578,6 +578,27 @@ class CascadingStylesheetsTestCase extends DrupalWebTestCase {
    */
   function testDefault() {
     $this->assertEqual(array(), drupal_add_css(), t('Default CSS is empty.'));
+  }
+
+  /**
+   * Test that stylesheets in module .info files are loaded.
+   */
+  function testModuleInfo() {
+    $this->drupalGet('');
+
+    // Verify common_test.css in a STYLE media="all" tag.
+    $elements = $this->xpath('//style[@media=:media and contains(text(), :filename)]', array(
+      ':media' => 'all',
+      ':filename' => 'tests/common_test.css',
+    ));
+    $this->assertTrue(count($elements), "Stylesheet with media 'all' in module .info file found.");
+
+    // Verify common_test.print.css in a STYLE media="print" tag.
+    $elements = $this->xpath('//style[@media=:media and contains(text(), :filename)]', array(
+      ':media' => 'print',
+      ':filename' => 'tests/common_test.print.css',
+    ));
+    $this->assertTrue(count($elements), "Stylesheet with media 'print' in module .info file found.");
   }
 
   /**

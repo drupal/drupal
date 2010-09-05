@@ -1,4 +1,4 @@
-; $Id: aggregator.info,v 1.13 2009/11/17 21:24:18 dries Exp $
+; $Id: aggregator.info,v 1.14 2010/09/05 02:21:37 dries Exp $
 name = Aggregator
 description = "Aggregates syndicated content (RSS, RDF, and Atom feeds)."
 package = Core
@@ -13,3 +13,4 @@ files[] = aggregator.processor.inc
 files[] = aggregator.install
 files[] = aggregator.test
 configure = admin/config/services/aggregator/settings
+stylesheets[all][] = aggregator.css

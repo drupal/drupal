@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.893 2010/08/30 05:58:46 webchick Exp $
+// $Id: comment.module,v 1.894 2010/09/05 02:21:38 dries Exp $
 
 /**
  * @file
@@ -287,13 +287,6 @@ function comment_menu() {
   );
 
   return $items;
-}
-
-/**
- * Implements hook_init().
- */
-function comment_init() {
-  drupal_add_css(drupal_get_path('module', 'comment') . '/comment.css', array('preprocess' => TRUE));
 }
 
 /**

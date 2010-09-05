@@ -1,4 +1,4 @@
-; $Id: comment.info,v 1.13 2010/08/16 20:57:22 dries Exp $
+; $Id: comment.info,v 1.14 2010/09/05 02:21:38 dries Exp $
 name = Comment
 description = Allows users to comment on and discuss published content.
 package = Core
@@ -12,3 +12,4 @@ files[] = comment.install
 files[] = comment.test
 files[] = comment.tokens.inc
 configure = admin/content/comment
+stylesheets[all][] = comment.css

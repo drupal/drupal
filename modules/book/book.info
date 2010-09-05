@@ -1,4 +1,4 @@
-; $Id: book.info,v 1.13 2009/11/17 21:24:18 dries Exp $
+; $Id: book.info,v 1.14 2010/09/05 02:21:38 dries Exp $
 name = Book
 description = Allows users to create and organize related content in an outline.
 package = Core
@@ -10,3 +10,4 @@ files[] = book.pages.inc
 files[] = book.install
 files[] = book.test
 configure = admin/content/book/settings
+stylesheets[all][] = book.css

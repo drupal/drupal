@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1197 2010/09/01 20:08:17 dries Exp $
+// $Id: user.module,v 1.1198 2010/09/05 02:21:38 dries Exp $
 
 /**
  * @file
@@ -1796,13 +1796,6 @@ function user_admin_paths() {
     'user/*/edit/*' => TRUE,
   );
   return $paths;
-}
-
-/**
- * Implements hook_init().
- */
-function user_init() {
-  drupal_add_css(drupal_get_path('module', 'user') . '/user.css', array('preprocess' => TRUE));
 }
 
 /**

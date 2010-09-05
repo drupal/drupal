@@ -1,8 +1,10 @@
-; $Id: common_test.info,v 1.1 2009/07/02 04:27:23 webchick Exp $
+; $Id: common_test.info,v 1.2 2010/09/05 02:21:38 dries Exp $
 name = "Common Test"
 description = "Support module for Common tests."
 package = Testing
 version = VERSION
 core = 7.x
 files[] = common_test.module
+stylesheets[all][] = common_test.css
+stylesheets[print][] = common_test.print.css
 hidden = TRUE

@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.573 2010/08/17 16:20:07 dries Exp $
+// $Id: forum.module,v 1.574 2010/09/05 02:21:38 dries Exp $
 
 /**
  * @file
@@ -215,13 +215,6 @@ function forum_menu_local_tasks_alter(&$data, $router_item, $root_path) {
       $data['actions']['output'] = array_merge($data['actions']['output'], $links);
     }
   }
-}
-
-/**
- * Implements hook_init().
- */
-function forum_init() {
-  drupal_add_css(drupal_get_path('module', 'forum') . '/forum.css', array('preprocess' => TRUE));
 }
 
 /**
