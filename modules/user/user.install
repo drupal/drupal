@@ -349,7 +349,7 @@ function user_update_dependencies() {
   // user_update_7006 relies on filter_update_7002.
   // TODO: move user_update_7006 down below in the upgrade process.
   $dependencies['user'][7006] = array(
-    'filter' => 7002,
+    'filter' => 7003,
   );
   // user_update_7013 relies on system_update_7060.
   $dependencies['user'][7013] = array(
@@ -357,6 +357,31 @@ function user_update_dependencies() {
   );
 
   return $dependencies;
+}
+
+/**
+ * Utility function: grant a set of permissions to a role during update.
+ *
+ * @param $rid
+ *   The role ID.
+ * @param $permissions
+ *   An array of permissions names.
+ * @param $module
+ *   The name of the module defining the permissions.
+ */
+function _update_user_role_grant_permissions($rid, array $permissions, $module) {
+  // Grant new permissions for the role.
+  foreach ($permissions as $name) {
+    db_merge('role_permission')
+      ->key(array(
+        'rid' => $rid,
+        'permission' => $name,
+      ))
+      ->fields(array(
+        'module' => $module,
+      ))
+      ->execute();
+  }
 }
 
 /**
