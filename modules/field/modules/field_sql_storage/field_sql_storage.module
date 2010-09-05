@@ -1,5 +1,5 @@
 <?php
-// $Id: field_sql_storage.module,v 1.51 2010/08/22 16:11:12 dries Exp $
+// $Id: field_sql_storage.module,v 1.52 2010/09/05 20:00:45 dries Exp $
 
 /**
  * @file
@@ -565,7 +565,7 @@ function field_sql_storage_field_storage_query(EntityFieldQuery $query) {
   }
   foreach ($query->entityOrder as $key => $direction) {
     $sql_field = $key == 'entity_type' ? 'fcet.type' : "$field_base_table.$key";
-    $query->orderBy($sql_field, $direction);
+    $select_query->orderBy($sql_field, $direction);
   }
   return $query->finishQuery($select_query, $id_key);
 }
