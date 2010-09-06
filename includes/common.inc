@@ -3370,9 +3370,11 @@ function drupal_get_schema_unprocessed($module, $table = NULL) {
   if (!is_null($table) && isset($schema[$table])) {
     return $schema[$table];
   }
-  else {
+  elseif (!empty($schema)) {
     return $schema;
   }
+
+  return array();
 }
 
 /**
