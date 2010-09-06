@@ -550,7 +550,7 @@ function _menu_item_localize(&$item, $map, $link_translate = FALSE) {
  *   path from the menu table, for example tabs.
  * @return
  *   Returns the map with objects loaded as defined in the
- *   $item['load_functions. $item['access'] becomes TRUE if the item is
+ *   $item['load_functions']. $item['access'] becomes TRUE if the item is
  *   accessible, FALSE otherwise. $item['href'] is set according to the map.
  *   If an error occurs during calling the load_functions (like trying to load
  *   a non existing node) then this function return FALSE.
