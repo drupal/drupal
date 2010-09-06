@@ -637,15 +637,23 @@ function system_modules($form_state = array()) {
   // Get current list of modules.
   $files = module_rebuild_cache();
 
-  uasort($files, 'system_sort_modules_by_info_name');
+  // Remove hidden modules from display list.
+  $visible_files = $files;
+  foreach ($visible_files as $filename => $file) {
+    if (!empty($file->info['hidden'])) {
+      unset($visible_files[$filename]);
+    }
+  }
+
+  uasort($visible_files, 'system_sort_modules_by_info_name');
 
   if (!empty($form_state['storage'])) {
-    return system_modules_confirm_form($files, $form_state['storage']);
+    return system_modules_confirm_form($visible_files, $form_state['storage']);
   }
   $dependencies = array();
 
   // Store module list for validation callback.
-  $form['validation_modules'] = array('#type' => 'value', '#value' => $files);
+  $form['validation_modules'] = array('#type' => 'value', '#value' => $visible_files);
 
   // Create storage for disabled modules as browser will disable checkboxes.
   $form['disabled_modules'] = array('#type' => 'value', '#value' => array());
@@ -653,7 +661,7 @@ function system_modules($form_state = array()) {
   // Traverse the files, checking for compatibility
   $incompatible_core = array();
   $incompatible_php = array();
-  foreach ($files as $filename => $file) {
+  foreach ($visible_files as $filename => $file) {
     // Ensure this module is compatible with this version of core.
     if (!isset($file->info['core']) || $file->info['core'] != DRUPAL_CORE_COMPATIBILITY) {
       $incompatible_core[$file->name] = $file->name;
@@ -668,7 +676,7 @@ function system_modules($form_state = array()) {
   $disabled = array();
   $throttle = array();
   // Traverse the files retrieved and build the form.
-  foreach ($files as $filename => $file) {
+  foreach ($visible_files as $filename => $file) {
     $form['name'][$filename] = array('#value' => $file->info['name']);
     $form['version'][$filename] = array('#value' => $file->info['version']);
     $form['description'][$filename] = array('#value' => t($file->info['description']));
@@ -690,18 +698,19 @@ function system_modules($form_state = array()) {
     // Check for missing dependencies.
     if (is_array($file->info['dependencies'])) {
       foreach ($file->info['dependencies'] as $dependency) {
-        if (!isset($files[$dependency]) || !$files[$dependency]->status) {
-          if (isset($files[$dependency])) {
-            $dependencies[] = t('@module (<span class="admin-disabled">disabled</span>)', array('@module' => $files[$dependency]->info['name']));
+        if (!isset($files[$dependency])) {
+          $dependencies[] = t('@module (<span class="admin-missing">missing</span>)', array('@module' => drupal_ucfirst($dependency)));
+          $disabled[] = $filename;
+          $form['disabled_modules']['#value'][$filename] = FALSE;
+        }
+        // Only display visible modules.
+        elseif (isset($visible_files[$dependency])) {
+          if ($files[$dependency]->status) {
+            $dependencies[] = t('@module (<span class="admin-enabled">enabled</span>)', array('@module' => $files[$dependency]->info['name']));
           }
           else {
-            $dependencies[] = t('@module (<span class="admin-missing">missing</span>)', array('@module' => drupal_ucfirst($dependency)));
-            $disabled[] = $filename;
-            $form['disabled_modules']['#value'][$filename] = FALSE;
+            $dependencies[] = t('@module (<span class="admin-disabled">disabled</span>)', array('@module' => $files[$dependency]->info['name']));
           }
-        }
-        else {
-          $dependencies[] = t('@module (<span class="admin-enabled">enabled</span>)', array('@module' => $files[$dependency]->info['name']));
         }
       }
 
@@ -718,13 +727,16 @@ function system_modules($form_state = array()) {
     // Mark dependents disabled so user can not remove modules being depended on.
     $dependents = array();
     foreach ($file->info['dependents'] as $dependent) {
-      if ($files[$dependent]->status == 1) {
-        $dependents[] = t('@module (<span class="admin-enabled">enabled</span>)', array('@module' => $files[$dependent]->info['name']));
-        $disabled[] = $filename;
-        $form['disabled_modules']['#value'][$filename] = TRUE;
-      }
-      else {
-        $dependents[] = t('@module (<span class="admin-disabled">disabled</span>)', array('@module' => $files[$dependent]->info['name']));
+      // Hidden modules are unset already.
+      if (isset($visible_files[$dependent])) {
+        if ($files[$dependent]->status == 1) {
+          $dependents[] = t('@module (<span class="admin-enabled">enabled</span>)', array('@module' => $files[$dependent]->info['name']));
+          $disabled[] = $filename;
+          $form['disabled_modules']['#value'][$filename] = TRUE;
+        }
+        else {
+          $dependents[] = t('@module (<span class="admin-disabled">disabled</span>)', array('@module' => $files[$dependent]->info['name']));
+        }
       }
     }
 
