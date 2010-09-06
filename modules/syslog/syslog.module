@@ -38,6 +38,13 @@ function syslog_menu() {
 }
 
 function syslog_admin_settings() {
+  $form['syslog_identity'] = array(
+    '#type'          => 'textfield',
+    '#title'         => t('Syslog identity'),
+    '#default_value' => variable_get('syslog_identity', 'drupal'),
+    '#description'   => t('A string that will be prepended to every message logged to Syslog. If you have multiple sites logging to the same Syslog log file, a unique identity per site makes it easy to tell the log entries apart. For more information on syslog, see <a href="@syslog_help">Syslog help</a>.', array(
+      '@syslog_help' => url('admin/help/syslog'))),
+  );
   $form['syslog_facility'] = array(
     '#type'          => 'select',
     '#title'         => t('Send events to this syslog facility'),
@@ -73,7 +80,7 @@ function syslog_watchdog($entry) {
 
   if (!$log_init) {
     $log_init = TRUE;
-    openlog('drupal', LOG_NDELAY, variable_get('syslog_facility', DEFAULT_SYSLOG_FACILITY));
+    openlog(variable_get('syslog_identity', 'drupal'), LOG_NDELAY, variable_get('syslog_facility', DEFAULT_SYSLOG_FACILITY));
   }
 
   syslog($entry['severity'], theme('syslog_format', $entry));
