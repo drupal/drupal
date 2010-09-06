@@ -503,17 +503,6 @@ function system_theme_settings(&$form_state, $key = '') {
   }
 
   if ($key) {
-    // Include the theme's theme-settings.php file
-    $filename = './'. str_replace("/$key.info", '', $themes[$key]->filename) .'/theme-settings.php';
-    if (!file_exists($filename) and !empty($themes[$key]->info['base theme'])) {
-      // If the theme doesn't have a theme-settings.php file, use the base theme's.
-      $base = $themes[$key]->info['base theme'];
-      $filename = './'. str_replace("/$base.info", '', $themes[$base]->filename) .'/theme-settings.php';
-    }
-    if (file_exists($filename)) {
-      require_once $filename;
-    }
-
     // Call engine-specific settings.
     $function = $themes[$key]->prefix .'_engine_settings';
     if (function_exists($function)) {
@@ -523,16 +512,36 @@ function system_theme_settings(&$form_state, $key = '') {
         $form['engine_specific'] = array_merge($form['engine_specific'], $group);
       }
     }
-    // Call theme-specific settings.
-    $function = $key .'_settings';
-    if (!function_exists($function)) {
-      $function = $themes[$key]->prefix .'_settings';
+
+    // Create a list which includes the current theme and all its base themes.
+    if (isset($themes[$key]->base_themes)) {
+      $theme_keys = array_keys($themes[$key]->base_themes);
+      $theme_keys[] = $key;
     }
-    if (function_exists($function)) {
-      $group = $function($settings);
-      if (!empty($group)) {
-        $form['theme_specific'] = array('#type' => 'fieldset', '#title' => t('Theme-specific settings'), '#description' => t('These settings only exist for the %theme theme and all the styles based on it.', array('%theme' => $themes[$key]->info['name'])));
-        $form['theme_specific'] = array_merge($form['theme_specific'], $group);
+    else {
+      $theme_keys = array($key);
+    }
+
+    // Process the theme and all its base themes.
+    foreach ($theme_keys as $theme) {
+      // Include the theme-settings.php file.
+      $filename = './'. str_replace("/$theme.info", '', $themes[$theme]->filename) .'/theme-settings.php';
+      if (file_exists($filename)) {
+        require_once $filename;
+      }
+
+      $function = $theme .'_settings';
+      if (!function_exists($function)) {
+        $function = $themes[$theme]->prefix .'_settings';
+      }
+      if (function_exists($function)) {
+        $group = $function($settings);
+        if (!empty($group)) {
+          $form['theme_specific']['#type'] = 'fieldset';
+          $form['theme_specific']['#title'] = t('Theme-specific settings');
+          $form['theme_specific']['#description'] = t('These settings only exist for the %theme theme and all the styles based on it.', array('%theme' => $themes[$theme]->info['name']));
+          $form['theme_specific'] = array_merge($form['theme_specific'], $group);
+        }
       }
     }
   }
