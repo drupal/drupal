@@ -17,6 +17,11 @@ a:link,
 a:visited {
   text-decoration: none;
 }
+a:hover,
+a:active,
+a:focus{
+  text-decoration: underline;
+}
 h1,
 h2,
 h3,
