@@ -1,4 +1,4 @@
-/* $Id: colors.css,v 1.3 2010/08/22 13:58:29 dries Exp $ */
+/* $Id: colors.css,v 1.4 2010/09/07 23:13:15 dries Exp $ */
 
 /* ---------- Color Module Styles ----------- */
 
@@ -6,8 +6,8 @@ body {
   background-color: #292929;
   color: #ffffff;
 }
-html,
 #page-wrapper,
+#main,
 body.overlay {
   background-color: #ffffff;
   color: #3b3b3b;
