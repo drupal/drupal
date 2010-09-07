@@ -1,5 +1,5 @@
 <?php
-// $Id: number.module,v 1.42 2010/09/04 15:40:51 dries Exp $
+// $Id: number.module,v 1.43 2010/09/07 17:56:41 webchick Exp $
 
 /**
  * @file
@@ -120,7 +120,7 @@ function number_field_instance_settings_form($field, $instance) {
     '#title' => t('Suffix'),
     '#default_value' => $settings['suffix'],
     '#size' => 60,
-    '#description' => t("Define a string that should suffixed to the value, like ' m', ' kb/s'. Leave blank for none. Separate singular and plural values with a pipe ('pound|pounds')."),
+    '#description' => t("Define a string that should be suffixed to the value, like ' m', ' kb/s'. Leave blank for none. Separate singular and plural values with a pipe ('pound|pounds')."),
   );
 
   return $form;
