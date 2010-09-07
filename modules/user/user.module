@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1198 2010/09/05 02:21:38 dries Exp $
+// $Id: user.module,v 1.1199 2010/09/07 22:38:30 dries Exp $
 
 /**
  * @file
@@ -2291,10 +2291,7 @@ function _user_cancel($edit, $account, $method) {
       if (!empty($edit['user_cancel_notify'])) {
         _user_mail_notify('status_blocked', $account);
       }
-      db_update('users')
-        ->fields(array('status' => 0))
-        ->condition('uid', $account->uid)
-        ->execute();
+      user_save($account, array('status' => 0));
       drupal_set_message(t('%name has been disabled.', array('%name' => $account->name)));
       watchdog('user', 'Blocked user: %name %email.', array('%name' => $account->name, '%email' => '<' . $account->mail . '>'), WATCHDOG_NOTICE);
       break;
@@ -2315,9 +2312,6 @@ function _user_cancel($edit, $account, $method) {
   if ($account->uid == $user->uid) {
     // Destroy the current session, and reset $user to the anonymous user.
     session_destroy();
-  }
-  else {
-    drupal_session_destroy_uid($account->uid);
   }
 
   // Clear the cache for anonymous users.
@@ -2347,6 +2341,7 @@ function user_delete_multiple(array $uids) {
     foreach ($accounts as $uid => $account) {
       module_invoke_all('user_delete', $account);
       field_attach_delete('user', $account);
+      drupal_session_destroy_uid($account->uid);
     }
 
     db_delete('users')
@@ -3454,12 +3449,8 @@ function user_block_user_action(&$entity, $context = array()) {
   else {
     $uid = $GLOBALS['user']->uid;
   }
-  db_update('users')
-    ->fields(array('status' => 0))
-    ->condition('uid', $uid)
-    ->execute();
-  drupal_session_destroy_uid($uid);
   $account = user_load($uid);
+  $account = user_save($account, array('status' => 0));
   watchdog('action', 'Blocked user %name.', array('%name' => $account->name));
 }
 
