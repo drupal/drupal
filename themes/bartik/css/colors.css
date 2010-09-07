@@ -6,8 +6,8 @@ body {
   background-color: #292929;
   color: #ffffff;
 }
-html,
 #page-wrapper,
+#main,
 body.overlay {
   background-color: #ffffff;
   color: #3b3b3b;
