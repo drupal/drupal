@@ -1,5 +1,5 @@
 <?php
-// $Id: standard.install,v 1.22 2010/08/09 19:55:57 dries Exp $
+// $Id: standard.install,v 1.23 2010/09/07 18:01:32 webchick Exp $
 
 /**
  * Implements hook_install().
@@ -359,7 +359,7 @@ function standard_install() {
     'entity_type' => 'node',
     'label' => 'Image',
     'bundle' => 'article',
-    'description' => 'Upload an image to go with this article.',
+    'description' => st('Upload an image to go with this article.'),
     'required' => FALSE,
 
     'settings' => array(
