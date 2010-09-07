@@ -123,6 +123,7 @@ Topic coordinators
 
 Accessibility
 - Everett Zufelt 'Everett Zufelt' <http://drupal.org/user/406552>
+- Brandon Bowersox 'brandonojc' <http://drupal.org/user/186415> 
 
 Documentation
 - Addison Berry 'add1sun' <http://drupal.org/user/65088>
