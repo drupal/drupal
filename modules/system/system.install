@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.504 2010/09/03 19:49:56 dries Exp $
+// $Id: system.install,v 1.505 2010/09/07 21:59:01 dries Exp $
 
 /**
  * @file
@@ -770,14 +770,14 @@ function system_schema() {
         'default' => 0,
       ),
       'filename' => array(
-        'description' => 'Name of the file with no path components. This may differ from the basename of the filepath if the file is renamed to avoid overwriting an existing file.',
+        'description' => 'Name of the file with no path components. This may differ from the basename of the URI if the file is renamed to avoid overwriting an existing file.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
       ),
       'uri' => array(
-        'description' => 'Path of the file relative to Drupal root.',
+        'description' => 'The URI to access the file (either local or remote).',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
