@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.574 2010/09/05 02:21:38 dries Exp $
+// $Id: forum.module,v 1.575 2010/09/07 23:39:08 dries Exp $
 
 /**
  * @file
@@ -41,7 +41,7 @@ function forum_help($path, $arg) {
       return $output;
     case 'admin/structure/forum':
       $output = '<p>' . t('Forums contain forum topics. Use containers to group related forums.') . '</p>';
-      $output .= theme('more_help_link', array('url' => url('admin/help/forum')));
+      $output .= theme('more_help_link', array('url' => 'admin/help/forum'));
       return $output;
     case 'admin/structure/forum/add/container':
       return '<p>' . t('Use containers to group related forums.') . '</p>';
