@@ -814,7 +814,7 @@ class AggregatorRenderingTestCase extends AggregatorTestCase {
  * Tests for feed parsing.
  */
 class FeedParserTestCase extends AggregatorTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => 'Feed parser functionality',
       'description' => 'Test the built-in feed parser with valid feed samples.',
