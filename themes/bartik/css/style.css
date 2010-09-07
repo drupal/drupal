@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.7 2010/09/02 20:43:18 dries Exp $ */
+/* $Id: style.css,v 1.8 2010/09/07 23:07:52 dries Exp $ */
 
 /* ---------- Overall Specifications ---------- */
 
@@ -16,6 +16,11 @@ body,
 a:link,
 a:visited {
   text-decoration: none;
+}
+a:hover,
+a:active,
+a:focus{
+  text-decoration: underline;
 }
 h1,
 h2,
