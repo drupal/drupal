@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.8 2010/09/07 23:07:52 dries Exp $ */
+/* $Id: style.css,v 1.9 2010/09/07 23:35:05 dries Exp $ */
 
 /* ---------- Overall Specifications ---------- */
 
@@ -563,6 +563,7 @@ h1#page-title,
 }
 #comments .comment {
   margin-bottom: 20px;
+  position: relative;
 }
 #comments .attribution {
   float: left; /* LTR */
