@@ -1,4 +1,4 @@
-// $Id: MAINTAINERS.txt,v 1.44 2010/08/27 15:39:52 webchick Exp $
+// $Id: MAINTAINERS.txt,v 1.45 2010/09/07 17:58:25 webchick Exp $
 
 Drupal core is maintained by the community.  To participate, go to
 
@@ -123,6 +123,7 @@ Topic coordinators
 
 Accessibility
 - Everett Zufelt 'Everett Zufelt' <http://drupal.org/user/406552>
+- Brandon Bowersox 'brandonojc' <http://drupal.org/user/186415> 
 
 Documentation
 - Addison Berry 'add1sun' <http://drupal.org/user/65088>
