@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.894 2010/09/05 02:21:38 dries Exp $
+// $Id: comment.module,v 1.895 2010/09/07 23:28:56 dries Exp $
 
 /**
  * @file
@@ -580,7 +580,7 @@ function theme_comment_block() {
   $items = array();
   $number = variable_get('comment_block_count', 10);
   foreach (comment_get_recent($number) as $comment) {
-    $items[] = l($comment->subject, 'comment/' . $comment->cid, array('fragment' => 'comment-' . $comment->cid)) .'<span>'. t('@time ago', array('@time' => format_interval(REQUEST_TIME - $comment->changed))) .'</span>';
+    $items[] = l($comment->subject, 'comment/' . $comment->cid, array('fragment' => 'comment-' . $comment->cid)) .'&nbsp;<span>'. t('@time ago', array('@time' => format_interval(REQUEST_TIME - $comment->changed))) .'</span>';
   }
 
   if ($items) {
