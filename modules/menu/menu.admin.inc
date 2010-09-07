@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.admin.inc,v 1.83 2010/08/01 23:33:18 dries Exp $
+// $Id: menu.admin.inc,v 1.84 2010/09/07 22:12:05 dries Exp $
 
 /**
  * @file
@@ -674,7 +674,7 @@ function menu_reset_item_confirm_submit($form, &$form_state) {
 function menu_configure() {
   $form['intro'] = array(
     '#type' => 'item',
-    '#markup' => t('The menu module allows on-the-fly creation of menu links in the content authoring forms. The following option sets the default menu in which a new link will be added.'),
+    '#markup' => t('The menu module allows on-the-fly creation of menu links in the content authoring forms. To configure these settings for a particular content type, visit the <a href="@content-types">Content types</a> page, click the <em>edit</em> link for the content type, and go to the <em>Menu settings</em> section.', array('@content-types' => url('admin/structure/types'))),
   );
 
   $menu_options = menu_get_menus();
