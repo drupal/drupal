@@ -359,7 +359,7 @@ function standard_install() {
     'entity_type' => 'node',
     'label' => 'Image',
     'bundle' => 'article',
-    'description' => 'Upload an image to go with this article.',
+    'description' => st('Upload an image to go with this article.'),
     'required' => FALSE,
 
     'settings' => array(
