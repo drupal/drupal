@@ -1,5 +1,5 @@
 <?php
-// $Id: field_ui.admin.inc,v 1.63 2010/08/28 20:12:42 webchick Exp $
+// $Id: field_ui.admin.inc,v 1.64 2010/09/07 23:59:51 webchick Exp $
 
 /**
  * @file
@@ -691,6 +691,9 @@ function field_ui_field_overview_form_submit($form, &$form_state) {
     $destinations[] = $destination['destination'];
     unset($_GET['destination']);
     $form_state['redirect'] = field_ui_get_destinations($destinations);
+  }
+  else {
+    drupal_set_message(t('Your settings have been saved.'));
   }
 }
 
