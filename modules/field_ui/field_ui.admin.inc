@@ -692,6 +692,9 @@ function field_ui_field_overview_form_submit($form, &$form_state) {
     unset($_GET['destination']);
     $form_state['redirect'] = field_ui_get_destinations($destinations);
   }
+  else {
+    drupal_set_message(t('Your settings have been saved.'));
+  }
 }
 
 /**
