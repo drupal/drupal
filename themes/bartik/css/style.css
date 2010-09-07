@@ -563,6 +563,7 @@ h1#page-title,
 }
 #comments .comment {
   margin-bottom: 20px;
+  position: relative;
 }
 #comments .attribution {
   float: left; /* LTR */
