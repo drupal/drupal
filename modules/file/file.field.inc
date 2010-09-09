@@ -1,5 +1,5 @@
 <?php
-// $Id: file.field.inc,v 1.33 2010/09/04 15:40:51 dries Exp $
+// $Id: file.field.inc,v 1.34 2010/09/09 23:28:16 webchick Exp $
 
 /**
  * @file
@@ -17,7 +17,7 @@ function file_field_info() {
       'settings' => array(
         'display_field' => 0,
         'display_default' => 0,
-        'uri_scheme' => 'public',
+        'uri_scheme' => variable_get('file_default_scheme', 'public'),
       ),
       'instance_settings' => array(
         'file_extensions' => 'txt',

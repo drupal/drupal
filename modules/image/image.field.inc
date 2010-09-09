@@ -1,5 +1,5 @@
 <?php
-// $Id: image.field.inc,v 1.26 2010/09/04 15:40:51 dries Exp $
+// $Id: image.field.inc,v 1.27 2010/09/09 23:28:16 webchick Exp $
 
 /**
  * @file
@@ -15,7 +15,7 @@ function image_field_info() {
       'label' => t('Image'),
       'description' => t('This field stores the ID of an image file as an integer value.'),
       'settings' => array(
-        'uri_scheme' => 'public',
+        'uri_scheme' => variable_get('file_default_scheme', 'public'),
         'default_image' => 0,
       ),
       'instance_settings' => array(
