@@ -76,6 +76,7 @@ body,
 ul.contextual-links,
 ul.links,
 ul.primary,
+.item-list .pager,
 div.field-type-taxonomy-term-reference,
 div.messages,
 div.meta,
@@ -180,7 +181,8 @@ tr.even {
 .block ul {
   margin: 0;
 }
-ul.contextual-links {
+ul.contextual-links,
+.item-list .pager {
   font-size: 90%;
 }
 ul.menu li {
