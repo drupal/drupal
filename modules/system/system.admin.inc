@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.301 2010/09/05 15:38:16 webchick Exp $
+// $Id: system.admin.inc,v 1.302 2010/09/09 21:01:38 dries Exp $
 
 /**
  * @file
@@ -2875,6 +2875,7 @@ function system_configure_date_formats_form($form, &$form_state, $dfid = 0) {
   $form['date_format'] = array(
     '#type' => 'textfield',
     '#title' => t('Format string'),
+    '#maxlength' => 100,
     '#description' => t('A user-defined date format. See the <a href="@url">PHP manual</a> for available options.', array('@url' => 'http://php.net/manual/function.date.php')),
     '#default_value' => ($dfid ? $format->format : ''),
     '#field_suffix' => ' <small id="edit-date-format-suffix">' . $now . '</small>',
