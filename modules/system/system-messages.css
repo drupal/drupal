@@ -1,36 +1,55 @@
 /* $Id */
 
 div.messages {
-  background-color: #dfd;
-  color: #000;
-  margin-bottom: 0.25em;
-  padding: 0.25em 0.5em;
+  background-position: 8px 8px; /* LTR */
+  background-repeat: no-repeat;
+  border: 1px solid;
+  margin: 6px 0;
+  padding: 10px 10px 10px 50px; /* LTR */
 }
-
+div.status {
+  background-image: url(../../misc/message-24-ok.png);
+  border-color: #be7;
+}
+div.status,
+.ok {
+  color: #234600;
+}
+div.status,
+table tr.ok {
+  background-color: #f8fff0;
+}
+div.warning {
+  background-image: url(../../misc/message-24-warning.png);
+  border-color: #ed5;
+}
+div.warning,
+.warning {
+  color: #840;
+}
+div.warning,
+table tr.warning {
+  background-color: #fffce5;
+}
+div.error {
+  background-image: url(../../misc/message-24-error.png);
+  border-color: #ed541d;
+}
+div.error,
 .error {
-  color: #e55;
+  color: #8c2e0b;
 }
-
 div.error,
 table tr.error {
-  background-color: #fcc;
+  background-color: #fef5f1;
 }
-
-.warning {
-  color: #e09010;
+div.error p.error {
+  color: #333;
 }
-
-div.warning,
-tr.warning {
-  background-color: #fcfca7;
+div.messages ul {
+  margin: 0 0 0 1em; /* LTR */
+  padding: 0;
 }
-
-.ok {
-  color: #008000;
-}
-
-div.ok,
-tr.ok {
-  background-color: #dfd;
-  color: #020;
+div.messages ul li {
+  list-style-image: none;
 }

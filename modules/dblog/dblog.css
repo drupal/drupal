@@ -1,4 +1,4 @@
-/* $Id: dblog.css,v 1.9 2010/04/28 20:08:38 dries Exp $ */
+/* $Id: dblog.css,v 1.10 2010/09/09 15:47:03 webchick Exp $ */
 
 .form-item-type,
 .form-item-severity {
@@ -46,3 +46,14 @@ tr.dblog-error {
 tr.dblog-error .active {
   background: #eeb9b9;
 }
+table#admin-dblog td.icon {
+  background: no-repeat center;
+  width: 16px;
+}
+table#admin-dblog tr.dblog-warning td.icon {
+  background-image: url(../../misc/message-16-warning.png);
+}
+table#admin-dblog tr.dblog-error td.icon {
+  background-image: url(../../misc/message-16-error.png);
+}
+

@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.10 2010/09/09 15:27:08 webchick Exp $ */
+/* $Id: style.css,v 1.11 2010/09/09 15:47:03 webchick Exp $ */
 
 /* ---------- Overall Specifications ---------- */
 
@@ -896,20 +896,7 @@ ul.action-links li a {
   margin: 0 auto;
 }
 div.messages {
-  padding: 1.2em 2em 1em;
   margin: 8px 0;
-}
-div.status, tr.status {
-  background-color: #c7ffc0;
-  border: 1px solid #89d47f;
-}
-div.warning, tr.warning {
-  background-color: #fcfca7;
-  border: 1px solid #e1c46b;
-}
-div.error, tr.error {
-  background-color: #ffcccc;
-  border: 1px solid #fb6b6b;
 }
 
 /* -------------- Breadcrumbs   -------------- */

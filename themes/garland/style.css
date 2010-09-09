@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.84 2010/07/28 01:40:39 dries Exp $ */
+/* $Id: style.css,v 1.85 2010/09/09 15:47:03 webchick Exp $ */
 
 /**
  * Generic elements
@@ -288,20 +288,6 @@ span.form-required {
 .preview {
   margin: .75em 0 .75em;
   padding: .5em 1em;
-}
-
-div.messages {
-  margin: .75em 0 .75em;
-  padding: .1em .5em .15em;
-}
-
-.messages ul {
-  margin: 0;
-}
-
-.messages li {
-  margin: 0;
-  padding: 0 0 0 1.3em; /* LTR */
 }
 
 .form-checkboxes,
@@ -1196,36 +1182,9 @@ tr.taxonomy-term-divider-bottom {
 /**
  * Generic elements.
  */
-div.messages {
-  background-color: #fff;
-  border: 1px solid #b8d3e5;
-}
-
 .preview {
   background-color: #fcfce8;
   border: 1px solid #e5e58f;
-}
-
-div.status {
-  background-color: #fff;
-  border-color: #c7f2c8;
-  color: #33a333;
-}
-
-div.error {
-  border: 1px solid #d77;
-}
-
-div.error,
-tr.error {
-  color: #a30000;
-  background-color: #FFCCCC;
-}
-
-div.warning {
-  background-color: #ffd;
-  border: 1px solid #f0c020;
-  color: #220;
 }
 
 .form-item input.error,

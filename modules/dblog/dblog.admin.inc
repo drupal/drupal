@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.admin.inc,v 1.39 2010/04/24 14:49:13 dries Exp $
+// $Id: dblog.admin.inc,v 1.40 2010/09/09 15:47:03 webchick Exp $
 
 /**
  * @file
@@ -15,16 +15,6 @@
 function dblog_overview() {
   $filter = dblog_build_filter_query();
   $rows = array();
-  $icons = array(
-    WATCHDOG_DEBUG     => '',
-    WATCHDOG_INFO      => '',
-    WATCHDOG_NOTICE    => '',
-    WATCHDOG_WARNING   => theme('image', array('path' => 'misc/watchdog-warning.png', 'alt' => t('warning'), 'title' => t('warning'))),
-    WATCHDOG_ERROR     => theme('image', array('path' => 'misc/watchdog-error.png', 'alt' => t('error'), 'title' => t('error'))),
-    WATCHDOG_CRITICAL  => theme('image', array('path' => 'misc/watchdog-error.png', 'alt' => t('critical'), 'title' => t('critical'))),
-    WATCHDOG_ALERT     => theme('image', array('path' => 'misc/watchdog-error.png', 'alt' => t('alert'), 'title' => t('alert'))),
-    WATCHDOG_EMERGENCY => theme('image', array('path' => 'misc/watchdog-error.png', 'alt' => t('emergency'), 'title' => t('emergency'))),
-  );
   $classes = array(
     WATCHDOG_DEBUG     => 'dblog-debug',
     WATCHDOG_INFO      => 'dblog-info',
@@ -65,7 +55,7 @@ function dblog_overview() {
     $rows[] = array('data' =>
       array(
         // Cells
-        $icons[$dblog->severity],
+        array('class' => 'icon'),
         t($dblog->type),
         format_date($dblog->timestamp, 'short'),
         theme('dblog_message', array('event' => $dblog, 'link' => TRUE)),
