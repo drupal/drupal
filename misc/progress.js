@@ -1,4 +1,4 @@
-// $Id: progress.js,v 1.26 2009/11/20 05:53:40 webchick Exp $
+// $Id: progress.js,v 1.27 2010/09/09 21:05:11 dries Exp $
 (function ($) {
 
 /**
@@ -96,7 +96,7 @@ Drupal.progressBar.prototype.sendPing = function () {
  * Display errors on the page.
  */
 Drupal.progressBar.prototype.displayError = function (string) {
-  var error = $('<div class="error"></div>').html(string);
+  var error = $('<div class="messages error"></div>').html(string);
   $(this.element).before(error).hide();
 
   if (this.errorCallback) {
