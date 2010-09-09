@@ -1,4 +1,4 @@
-/* $Id: maintenance-page.css,v 1.3 2010/07/27 15:50:58 dries Exp $ */
+/* $Id: maintenance-page.css,v 1.4 2010/09/09 15:27:08 webchick Exp $ */
 
 body.maintenance-page {
   background-color: #fff;
@@ -23,7 +23,6 @@ body.maintenance-page {
   width: auto;
 }
 .maintenance-page #header div.section,
-.maintenance-page #navigation div.section,
 .maintenance-page #messages,
 .maintenance-page #main {
   width: 700px;

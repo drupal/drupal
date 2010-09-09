@@ -1,4 +1,4 @@
-/* $Id: print.css,v 1.1 2010/07/06 05:25:51 webchick Exp $ */
+/* $Id: print.css,v 1.2 2010/09/09 15:27:08 webchick Exp $ */
 
 /* ---------- General Layout ---------- */
 
@@ -17,7 +17,7 @@ body {
 }
 #sidebar-first,
 #sidebar-second,
-#navigation,
+.navigation,
 #toolbar,
 #footer-wrapper,
 .tabs,

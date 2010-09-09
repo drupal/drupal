@@ -1,9 +1,8 @@
-/* $Id: layout.css,v 1.2 2010/08/22 13:57:02 dries Exp $ */
+/* $Id: layout.css,v 1.3 2010/09/09 15:27:08 webchick Exp $ */
 
 /* ---------- Basic Layout Styles ----------- */
 
 #header div.section,
-#navigation div.section,
 #featured div.section,
 #messages,
 #main,
@@ -13,6 +12,15 @@
   width: 960px;
   margin-left: auto;
   margin-right: auto;
+}
+#header div.section {
+  position: relative;
+}
+#secondary-menu {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 480px;
 }
 #content,
 .sidebar,
