@@ -240,6 +240,8 @@ function poll_form($node, &$form_state) {
 
   $type = node_type_get_type($node);
 
+  // The submit handlers to add more poll choices require that this form is
+  // cached, regardless of whether AJAX is used.
   $form_state['cache'] = TRUE;
 
   $form['title'] = array(
@@ -359,7 +361,7 @@ function poll_form($node, &$form_state) {
  * return just the changed part of the form.
  */
 function poll_more_choices_submit($form, &$form_state) {
-  // Make the changes we want to the form state.
+  // If this is a AJAX POST, add 1, otherwise add 5 more choices to the form.
   if ($form_state['values']['poll_more']) {
     $n = $_GET['q'] == 'system/ajax' ? 1 : 5;
     $form_state['choice_count'] = count($form_state['values']['choice']) + $n;
@@ -424,10 +426,13 @@ function poll_choice_js($form, $form_state) {
 }
 
 /**
- * Renumber fields and create a teaser when a poll node is submitted.
+ * Form submit handler for node_form().
+ *
+ * Upon preview and final submission, we need to renumber poll choices and
+ * create a teaser output.
  */
 function poll_node_form_submit(&$form, &$form_state) {
-  // Renumber fields
+  // Renumber choices.
   $form_state['values']['choice'] = array_values($form_state['values']['choice']);
   $form_state['values']['teaser'] = poll_teaser((object) $form_state['values']);
 }

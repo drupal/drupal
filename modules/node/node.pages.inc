@@ -114,7 +114,9 @@ function node_form($form, &$form_state, $node) {
   }
 
   // Identify this as a node edit form.
+  // @todo D8: Remove. Modules can implement hook_form_BASE_FORM_ID_alter() now.
   $form['#node_edit_form'] = TRUE;
+
   $form['#attributes']['class'][] = 'node-form';
   if (!empty($node->type)) {
     $form['#attributes']['class'][] = 'node-' . $node->type . '-form';
@@ -136,6 +138,8 @@ function node_form($form, &$form_state, $node) {
   );
   // Invoke hook_form() to get the node-specific bits. Can't use node_invoke(),
   // because hook_form() needs to be able to receive $form_state by reference.
+  // @todo hook_form() implementations are unable to add #validate or #submit
+  //   handlers to the form buttons below. Remove hook_form() entirely.
   $function = node_type_get_base($node) . '_form';
   if (function_exists($function) && ($extra = $function($node, $form_state))) {
     $form = array_merge_recursive($form, $extra);
@@ -143,9 +147,7 @@ function node_form($form, &$form_state, $node) {
   if (!isset($form['title']['#weight'])) {
     $form['title']['#weight'] = -5;
   }
-  // @todo Legacy support. Modules adding form building and processing functions
-  //   to the node form are encouraged to access the node using
-  //   $form_state['node']. Remove in Drupal 8.
+  // @todo D8: Remove. Modules should access the node using $form_state['node'].
   $form['#node'] = $node;
 
   $form['additional_settings'] = array(
@@ -281,7 +283,17 @@ function node_form($form, &$form_state, $node) {
       '#submit' => array('node_form_delete_submit'),
     );
   }
+  // This form uses a button-level #submit handler for the form's main submit
+  // action. node_form_submit() manually invokes all form-level #submit handlers
+  // of the form. Without explicitly setting #submit, Form API would auto-detect
+  // node_form_submit() as submit handler, but that is the button-level #submit
+  // handler for the 'Save' action. To maintain backwards compatibility, a
+  // #submit handler is auto-suggested for custom node type modules.
   $form['#validate'][] = 'node_form_validate';
+  if (!isset($form['#submit']) && function_exists($node->type . '_node_form_submit')) {
+    $form['#submit'][] = $node->type . '_node_form_submit';
+  }
+  $form += array('#submit' => array());
 
   $form['#builder_function'] = 'node_form_submit_build_node';
   field_attach_form('node', $node, $form, $form_state, $node->language);

@@ -377,7 +377,7 @@ function locale_multilingual_node_type($type_name) {
 /**
  * Implements hook_form_alter().
  *
- * Adds language fields to forms.
+ * Adds language fields to user forms.
  */
 function locale_form_alter(&$form, &$form_state, $form_id) {
   // Only alter user forms if there is more than one language.
@@ -388,25 +388,29 @@ function locale_form_alter(&$form, &$form_state, $form_id) {
       locale_language_selector_form($form, $form_state, $form['#user']);
     }
   }
-  if (!empty($form['#node_edit_form'])) {
-    if (isset($form['#node']->type) && locale_multilingual_node_type($form['#node']->type)) {
-      $form['language'] = array(
-        '#type' => 'select',
-        '#title' => t('Language'),
-        '#default_value' => (isset($form['#node']->language) ? $form['#node']->language : ''),
-        '#options' => array(LANGUAGE_NONE => t('Language neutral')) + locale_language_list('name'),
-      );
-    }
-    // Node type without language selector: assign the default for new nodes
-    elseif (!isset($form['#node']->nid)) {
-      $default = language_default();
-      $form['language'] = array(
-        '#type' => 'value',
-        '#value' => $default->language
-      );
-    }
-    $form['#submit'][] = 'locale_field_node_form_submit';
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function locale_form_node_form_alter(&$form, &$form_state) {
+  if (isset($form['#node']->type) && locale_multilingual_node_type($form['#node']->type)) {
+    $form['language'] = array(
+      '#type' => 'select',
+      '#title' => t('Language'),
+      '#default_value' => (isset($form['#node']->language) ? $form['#node']->language : ''),
+      '#options' => array(LANGUAGE_NONE => t('Language neutral')) + locale_language_list('name'),
+    );
   }
+  // Node type without language selector: assign the default for new nodes
+  elseif (!isset($form['#node']->nid)) {
+    $default = language_default();
+    $form['language'] = array(
+      '#type' => 'value',
+      '#value' => $default->language
+    );
+  }
+  $form['#submit'][] = 'locale_field_node_form_submit';
 }
 
 /**
@@ -414,6 +418,10 @@ function locale_form_alter(&$form, &$form_state, $form_id) {
  *
  * Checks if Locale is registered as a translation handler and handle possible
  * node language changes.
+ *
+ * This submit handler needs to run before entity_form_submit_build_entity()
+ * is invoked by node_form_submit_build_node(), because it alters the values of
+ * attached fields. Therefore, it cannot be a hook_node_submit() implementation.
  */
 function locale_field_node_form_submit($form, &$form_state) {
   if (field_has_translation_handler('node', 'locale')) {
@@ -993,7 +1001,7 @@ function locale_url_outbound_alter(&$path, &$options, $original_path) {
   }
 }
 
-/*
+/**
  * Implements hook_form_FORM_ID_alter().
  */
 function locale_form_comment_form_alter(&$form, &$form_state, $form_id) {
