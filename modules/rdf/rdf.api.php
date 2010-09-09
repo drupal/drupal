@@ -1,5 +1,5 @@
 <?php
-// $Id: rdf.api.php,v 1.4 2010/03/06 06:40:35 dries Exp $
+// $Id: rdf.api.php,v 1.5 2010/09/09 20:22:00 dries Exp $
 
 /**
  * @file
@@ -90,18 +90,13 @@ function hook_rdf_mapping() {
  */
 function hook_rdf_namespaces() {
   return array(
-    'admin'    => 'http://webns.net/mvcb/',
     'content'  => 'http://purl.org/rss/1.0/modules/content/',
     'dc'       => 'http://purl.org/dc/terms/',
     'foaf'     => 'http://xmlns.com/foaf/0.1/',
-    'owl'      => 'http://www.w3.org/2002/07/owl#',
-    'rdf'      => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+    'og'       => 'http://ogp.me/ns#',
     'rdfs'     => 'http://www.w3.org/2000/01/rdf-schema#',
-    'rss'      => 'http://purl.org/rss/1.0/',
-    'tags'     => 'http://www.holygoat.co.uk/owl/redwood/0.1/tags/',
     'sioc'     => 'http://rdfs.org/sioc/ns#',
     'sioct'    => 'http://rdfs.org/sioc/types#',
-    'ctag'     => 'http://commontag.org/ns#',
     'skos'     => 'http://www.w3.org/2004/02/skos/core#',
     'xsd'      => 'http://www.w3.org/2001/XMLSchema#',
   );
