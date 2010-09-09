@@ -82,16 +82,16 @@ class PagerDefault extends SelectQueryExtender {
 
   /**
    * Ensure that there is an element associated with this query.
+   * If an element was not specified previously, then the value of the
+   * $maxElement counter is taken, after which the counter is incremented.
    *
-   * After running this query, access $this->element to get the element for this
+   * After running this method, access $this->element to get the element for this
    * query.
    */
   protected function ensureElement() {
-    if (!empty($this->element)) {
-      return;
+    if (!isset($this->element)) {
+      $this->element = self::$maxElement++;
     }
-
-    $this->element = self::$maxElement++;
   }
 
   /**
@@ -149,10 +149,20 @@ class PagerDefault extends SelectQueryExtender {
    * whatever reason you want to explicitly define an element for a given query,
    * you may do so here.
    *
+   * Setting the element here also increments the static $maxElement counter,
+   * which is used for determining the $element when there's none specified.
+   *
+   * Note that no collision detection is done when setting an element ID
+   * explicitly, so it is possible for two pagers to end up using the same ID
+   * if both are set explicitly.
+   * 
    * @param $element
    */
   public function element($element) {
     $this->element = $element;
+    if ($element >= self::$maxElement) {
+      self::$maxElement = $element + 1;
+    }
     return $this;
   }
 }
