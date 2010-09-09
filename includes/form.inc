@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.487 2010/08/30 17:07:49 webchick Exp $
+// $Id: form.inc,v 1.488 2010/09/09 23:01:48 dries Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -387,12 +387,38 @@ function drupal_build_form($form_id, &$form_state) {
     }
   }
 
-  // Don't override #theme if someone already set it.
-  if (!isset($form['#theme'])) {
-    drupal_theme_initialize();
-    $registry = theme_get_registry();
+  // Check theme functions for this form.
+  // theme_form() itself is in #theme_wrappers and not #theme. Therefore, the
+  // #theme function only has to care for rendering the inner form elements,
+  // not the form itself.
+  drupal_theme_initialize();
+  $registry = theme_get_registry();
+  // If #theme has been set, check whether the theme function(s) exist, or
+  // remove the suggestion(s), so drupal_render() renders the children.
+  if (isset($form['#theme'])) {
+    if (is_array($form['#theme'])) {
+      foreach ($form['#theme'] as $key => $suggestion) {
+        if (!isset($registry[$suggestion])) {
+          unset($form['#theme'][$key]);
+        }
+      }
+      if (empty($form['#theme'])) {
+        unset($form['#theme']);
+      }
+    }
+    else {
+      if (!isset($registry[$form['#theme']])) {
+        unset($form['#theme']);
+      }
+    }
+  }
+  // Only try to auto-suggest theme functions, if #theme has not been set.
+  else {
     if (isset($registry[$form_id])) {
       $form['#theme'] = $form_id;
+    }
+    elseif (isset($form_state['build_info']['base_form_id']) && isset($registry[$form_state['build_info']['base_form_id']])) {
+      $form['#theme'] = $form_state['build_info']['base_form_id'];
     }
   }
 
@@ -693,6 +719,7 @@ function drupal_retrieve_form($form_id, &$form_state) {
     }
     if (isset($form_definition['callback'])) {
       $callback = $form_definition['callback'];
+      $form_state['build_info']['base_form_id'] = $callback;
     }
     // In case $form_state['wrapper_callback'] is not defined already, we also
     // allow hook_forms() to define one.
@@ -892,20 +919,37 @@ function drupal_prepare_form($form_id, &$form, &$form_state) {
   $form += array('#tree' => FALSE, '#parents' => array());
 
   if (!isset($form['#validate'])) {
+    // Check for a handler specific to $form_id.
     if (function_exists($form_id . '_validate')) {
-      $form['#validate'] = array($form_id . '_validate');
+      $form['#validate'][] = $form_id . '_validate';
+    }
+    // Otherwise check whether this is a shared form and whether there is a
+    // handler for the shared $form_id.
+    elseif (isset($form_state['build_info']['base_form_id']) && function_exists($form_state['build_info']['base_form_id'] . '_validate')) {
+      $form['#validate'][] = $form_state['build_info']['base_form_id'] . '_validate';
     }
   }
 
   if (!isset($form['#submit'])) {
+    // Check for a handler specific to $form_id.
     if (function_exists($form_id . '_submit')) {
-      // We set submit here so that it can be altered.
-      $form['#submit'] = array($form_id . '_submit');
+      $form['#submit'][] = $form_id . '_submit';
+    }
+    // Otherwise check whether this is a shared form and whether there is a
+    // handler for the shared $form_id.
+    elseif (isset($form_state['build_info']['base_form_id']) && function_exists($form_state['build_info']['base_form_id'] . '_submit')) {
+      $form['#submit'][] = $form_state['build_info']['base_form_id'] . '_submit';
     }
   }
 
-  // Invoke hook_form_alter() and hook_form_FORM_ID_alter() implementations.
-  drupal_alter(array('form', 'form_' . $form_id), $form, $form_state, $form_id);
+  // Invoke hook_form_alter(), hook_form_BASE_FORM_ID_alter(), and
+  // hook_form_FORM_ID_alter() implementations.
+  $hooks = array('form');
+  if (isset($form_state['build_info']['base_form_id'])) {
+    $hooks[] = 'form_' . $form_state['build_info']['base_form_id'];
+  }
+  $hooks[] = 'form_' . $form_id;
+  drupal_alter($hooks, $form, $form_state, $form_id);
 }
 
 

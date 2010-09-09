@@ -1,5 +1,5 @@
 <?php
-// $Id: translation.module,v 1.83 2010/08/30 05:58:46 webchick Exp $
+// $Id: translation.module,v 1.84 2010/09/09 23:01:48 dries Exp $
 
 /**
  * @file
@@ -123,8 +123,8 @@ function translation_form_node_type_form_alter(&$form, &$form_state) {
  * - Alters language fields on node forms when a translation
  *   is about to be created.
  */
-function translation_form_alter(&$form, &$form_state, $form_id) {
-  if (!empty($form['#node_edit_form']) && translation_supported_type($form['#node']->type)) {
+function translation_form_node_form_alter(&$form, &$form_state) {
+  if (translation_supported_type($form['#node']->type)) {
     $node = $form['#node'];
     if (!empty($node->translation_source)) {
       // We are creating a translation. Add values and lock language field.

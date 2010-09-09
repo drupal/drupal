@@ -1,5 +1,5 @@
 <?php
-// $Id: path.module,v 1.183 2010/02/13 21:41:58 dries Exp $
+// $Id: path.module,v 1.184 2010/09/09 23:01:48 dries Exp $
 
 /**
  * @file
@@ -94,55 +94,53 @@ function path_menu() {
 }
 
 /**
- * Implements hook_form_alter().
+ * Implements hook_form_BASE_FORM_ID_alter().
  */
-function path_form_alter(&$form, $form_state, $form_id) {
-  if (!empty($form['#node_edit_form'])) {
-    $path = array();
-    if (!empty($form['#node']->nid)) {
-      $conditions = array('source' => 'node/' . $form['#node']->nid);
-      if ($form['#node']->language != LANGUAGE_NONE) {
-        $conditions['language'] = $form['#node']->language;
-      }
-      $path = path_load($conditions);
-      if ($path === FALSE) {
-        $path = array();
-      }
+function path_form_node_form_alter(&$form, $form_state) {
+  $path = array();
+  if (!empty($form['#node']->nid)) {
+    $conditions = array('source' => 'node/' . $form['#node']->nid);
+    if ($form['#node']->language != LANGUAGE_NONE) {
+      $conditions['language'] = $form['#node']->language;
     }
-    $path += array(
-      'pid' => NULL,
-      'source' => isset($form['#node']->nid) ? 'node/' . $form['#node']->nid : NULL,
-      'alias' => '',
-      'language' => isset($form['#node']->language) ? $form['#node']->language : LANGUAGE_NONE,
-    );
-
-    $form['path'] = array(
-      '#type' => 'fieldset',
-      '#title' => t('URL path settings'),
-      '#collapsible' => TRUE,
-      '#collapsed' => empty($path['alias']),
-      '#group' => 'additional_settings',
-      '#attached' => array(
-        'js' => array(drupal_get_path('module', 'path') . '/path.js'),
-      ),
-      '#access' => user_access('create url aliases') || user_access('administer url aliases'),
-      '#weight' => 30,
-      '#tree' => TRUE,
-      '#element_validate' => array('path_form_element_validate'),
-    );
-    $form['path']['alias'] = array(
-      '#type' => 'textfield',
-      '#title' => t('URL alias'),
-      '#default_value' => $path['alias'],
-      '#maxlength' => 255,
-      '#collapsible' => TRUE,
-      '#collapsed' => TRUE,
-      '#description' => t('Optionally specify an alternative URL by which this node can be accessed. For example, type "about" when writing an about page. Use a relative path and don\'t add a trailing slash or the URL alias won\'t work.'),
-    );
-    $form['path']['pid'] = array('#type' => 'value', '#value' => $path['pid']);
-    $form['path']['source'] = array('#type' => 'value', '#value' => $path['source']);
-    $form['path']['language'] = array('#type' => 'value', '#value' => $path['language']);
+    $path = path_load($conditions);
+    if ($path === FALSE) {
+      $path = array();
+    }
   }
+  $path += array(
+    'pid' => NULL,
+    'source' => isset($form['#node']->nid) ? 'node/' . $form['#node']->nid : NULL,
+    'alias' => '',
+    'language' => isset($form['#node']->language) ? $form['#node']->language : LANGUAGE_NONE,
+  );
+
+  $form['path'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('URL path settings'),
+    '#collapsible' => TRUE,
+    '#collapsed' => empty($path['alias']),
+    '#group' => 'additional_settings',
+    '#attached' => array(
+      'js' => array(drupal_get_path('module', 'path') . '/path.js'),
+    ),
+    '#access' => user_access('create url aliases') || user_access('administer url aliases'),
+    '#weight' => 30,
+    '#tree' => TRUE,
+    '#element_validate' => array('path_form_element_validate'),
+  );
+  $form['path']['alias'] = array(
+    '#type' => 'textfield',
+    '#title' => t('URL alias'),
+    '#default_value' => $path['alias'],
+    '#maxlength' => 255,
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+    '#description' => t('Optionally specify an alternative URL by which this node can be accessed. For example, type "about" when writing an about page. Use a relative path and don\'t add a trailing slash or the URL alias won\'t work.'),
+  );
+  $form['path']['pid'] = array('#type' => 'value', '#value' => $path['pid']);
+  $form['path']['source'] = array('#type' => 'value', '#value' => $path['source']);
+  $form['path']['language'] = array('#type' => 'value', '#value' => $path['language']);
 }
 
 /**

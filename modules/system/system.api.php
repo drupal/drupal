@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.190 2010/09/05 02:21:38 dries Exp $
+// $Id: system.api.php,v 1.191 2010/09/09 23:01:48 dries Exp $
 
 /**
  * @file
@@ -1336,16 +1336,56 @@ function hook_form_alter(&$form, &$form_state, $form_id) {
  *   Nested array of form elements that comprise the form.
  * @param $form_state
  *   A keyed array containing the current state of the form.
+ * @param $form_id
+ *   String representing the name of the form itself. Typically this is the
+ *   name of the function that generated the form.
  *
  * @see hook_form_alter()
  * @see drupal_prepare_form()
  */
-function hook_form_FORM_ID_alter(&$form, &$form_state) {
+function hook_form_FORM_ID_alter(&$form, &$form_state, $form_id) {
   // Modification for the form with the given form ID goes here. For example, if
   // FORM_ID is "user_register_form" this code would run only on the user
   // registration form.
 
   // Add a checkbox to registration form about agreeing to terms of use.
+  $form['terms_of_use'] = array(
+    '#type' => 'checkbox',
+    '#title' => t("I agree with the website's terms and conditions."),
+    '#required' => TRUE,
+  );
+}
+
+/**
+ * Provide a form-specific alteration for shared forms.
+ *
+ * Modules can implement hook_form_BASE_FORM_ID_alter() to modify a specific
+ * form belonging to multiple form_ids, rather than implementing
+ * hook_form_alter() and checking for conditions that would identify the
+ * shared form constructor.
+ *
+ * Examples for such forms are node_form() or comment_form().
+ *
+ * Note that this hook fires after hook_form_FORM_ID_alter() and before
+ * hook_form_alter().
+ *
+ * @param $form
+ *   Nested array of form elements that comprise the form.
+ * @param $form_state
+ *   A keyed array containing the current state of the form.
+ * @param $form_id
+ *   String representing the name of the form itself. Typically this is the
+ *   name of the function that generated the form.
+ *
+ * @see hook_form_FORM_ID_alter()
+ * @see drupal_prepare_form()
+ */
+function hook_form_BASE_FORM_ID_alter(&$form, &$form_state, $form_id) {
+  // Modification for the form with the given BASE_FORM_ID goes here. For
+  // example, if BASE_FORM_ID is "node_form", this code would run on every
+  // node form, regardless of node type.
+
+  // Add a checkbox to the node form about agreeing to terms of use.
   $form['terms_of_use'] = array(
     '#type' => 'checkbox',
     '#title' => t("I agree with the website's terms and conditions."),

@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.895 2010/09/07 23:28:56 dries Exp $
+// $Id: comment.module,v 1.896 2010/09/09 23:01:48 dries Exp $
 
 /**
  * @file
@@ -719,13 +719,13 @@ function comment_node_page_additions($node) {
 
   // Append comment form if needed.
   if (user_access('post comments') && $node->comment == COMMENT_NODE_OPEN && (variable_get('comment_form_location_' . $node->type, COMMENT_FORM_BELOW) == COMMENT_FORM_BELOW)) {
-    $build = drupal_get_form('comment_form', (object) array('nid' => $node->nid));
+    $build = drupal_get_form("comment_node_{$node->type}_form", (object) array('nid' => $node->nid));
     $additions['comment_form'] = $build;
   }
 
   if ($additions) {
     $additions += array(
-      '#theme' => 'comment_wrapper',
+      '#theme' => 'comment_wrapper__node_' . $node->type,
       '#node' => $node,
       'comments' => array(),
       'comment_form' => array(),
@@ -902,7 +902,7 @@ function comment_view($comment, $node, $view_mode = 'full') {
   unset($comment->content);
 
   $build += array(
-    '#theme' => 'comment',
+    '#theme' => 'comment__node_' . $node->type,
     '#comment' => $comment,
     '#node' => $node,
     '#view_mode' => $view_mode,
@@ -1134,69 +1134,67 @@ function comment_form_node_type_form_alter(&$form, $form_state) {
 }
 
 /**
- * Implements hook_form_alter().
+ * Implements hook_form_BASE_FORM_ID_alter().
  */
-function comment_form_alter(&$form, $form_state, $form_id) {
-  if (!empty($form['#node_edit_form'])) {
-    $node = $form['#node'];
-    $form['comment_settings'] = array(
-      '#type' => 'fieldset',
-      '#access' => user_access('administer comments'),
-      '#title' => t('Comment settings'),
-      '#collapsible' => TRUE,
-      '#collapsed' => TRUE,
-      '#group' => 'additional_settings',
-      '#attached' => array(
-        'js' => array(drupal_get_path('module', 'comment') . '/comment-node-form.js'),
-       ),
-      '#weight' => 30,
-    );
-    $comment_count = isset($node->nid) ? db_query('SELECT comment_count FROM {node_comment_statistics} WHERE nid = :nid', array(':nid' => $node->nid))->fetchField() : 0;
-    $comment_settings = ($node->comment == COMMENT_NODE_HIDDEN && empty($comment_count)) ? COMMENT_NODE_CLOSED : $node->comment;
-    $form['comment_settings']['comment'] = array(
-      '#type' => 'radios',
-      '#parents' => array('comment'),
+function comment_form_node_form_alter(&$form, $form_state) {
+  $node = $form['#node'];
+  $form['comment_settings'] = array(
+    '#type' => 'fieldset',
+    '#access' => user_access('administer comments'),
+    '#title' => t('Comment settings'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+    '#group' => 'additional_settings',
+    '#attached' => array(
+      'js' => array(drupal_get_path('module', 'comment') . '/comment-node-form.js'),
+     ),
+    '#weight' => 30,
+  );
+  $comment_count = isset($node->nid) ? db_query('SELECT comment_count FROM {node_comment_statistics} WHERE nid = :nid', array(':nid' => $node->nid))->fetchField() : 0;
+  $comment_settings = ($node->comment == COMMENT_NODE_HIDDEN && empty($comment_count)) ? COMMENT_NODE_CLOSED : $node->comment;
+  $form['comment_settings']['comment'] = array(
+    '#type' => 'radios',
+    '#parents' => array('comment'),
+    '#default_value' => $comment_settings,
+    '#options' => array(
+      COMMENT_NODE_OPEN => t('Open'),
+      COMMENT_NODE_CLOSED => t('Closed'),
+      COMMENT_NODE_HIDDEN => t('Hidden'),
+    ),
+    COMMENT_NODE_OPEN => array(
+      '#type' => 'radio',
+      '#title' => t('Open'),
+      '#description' => t('Users with the "Post comments" permission can post comments.'),
+      '#return_value' => COMMENT_NODE_OPEN,
       '#default_value' => $comment_settings,
-      '#options' => array(
-        COMMENT_NODE_OPEN => t('Open'),
-        COMMENT_NODE_CLOSED => t('Closed'),
-        COMMENT_NODE_HIDDEN => t('Hidden'),
-      ),
-      COMMENT_NODE_OPEN => array(
-        '#type' => 'radio',
-        '#title' => t('Open'),
-        '#description' => t('Users with the "Post comments" permission can post comments.'),
-        '#return_value' => COMMENT_NODE_OPEN,
-        '#default_value' => $comment_settings,
-        '#id' => 'edit-comment-2',
-        '#parents' => array('comment'),
-      ),
-      COMMENT_NODE_CLOSED => array(
-        '#type' => 'radio',
-        '#title' => t('Closed'),
-        '#description' => t('Users cannot post comments, but existing comments will be displayed.'),
-        '#return_value' => COMMENT_NODE_CLOSED,
-        '#default_value' => $comment_settings,
-        '#id' => 'edit-comment-1',
-        '#parents' => array('comment'),
-      ),
-      COMMENT_NODE_HIDDEN => array(
-        '#type' => 'radio',
-        '#title' => t('Hidden'),
-        '#description' => t('Comments are hidden from view.'),
-        '#return_value' => COMMENT_NODE_HIDDEN,
-        '#default_value' => $comment_settings,
-        '#id' => 'edit-comment-0',
-        '#parents' => array('comment'),
-      ),
-    );
-    // If the node doesn't have any comments, the "hidden" option makes no
-    // sense, so don't even bother presenting it to the user.
-    if (empty($comment_count)) {
-      unset($form['comment_settings']['comment']['#options'][COMMENT_NODE_HIDDEN]);
-      unset($form['comment_settings']['comment'][COMMENT_NODE_HIDDEN]);
-      $form['comment_settings']['comment'][COMMENT_NODE_CLOSED]['#description'] = t('Users cannot post comments.');
-    }
+      '#id' => 'edit-comment-2',
+      '#parents' => array('comment'),
+    ),
+    COMMENT_NODE_CLOSED => array(
+      '#type' => 'radio',
+      '#title' => t('Closed'),
+      '#description' => t('Users cannot post comments, but existing comments will be displayed.'),
+      '#return_value' => COMMENT_NODE_CLOSED,
+      '#default_value' => $comment_settings,
+      '#id' => 'edit-comment-1',
+      '#parents' => array('comment'),
+    ),
+    COMMENT_NODE_HIDDEN => array(
+      '#type' => 'radio',
+      '#title' => t('Hidden'),
+      '#description' => t('Comments are hidden from view.'),
+      '#return_value' => COMMENT_NODE_HIDDEN,
+      '#default_value' => $comment_settings,
+      '#id' => 'edit-comment-0',
+      '#parents' => array('comment'),
+    ),
+  );
+  // If the node doesn't have any comments, the "hidden" option makes no
+  // sense, so don't even bother presenting it to the user.
+  if (empty($comment_count)) {
+    unset($form['comment_settings']['comment']['#options'][COMMENT_NODE_HIDDEN]);
+    unset($form['comment_settings']['comment'][COMMENT_NODE_HIDDEN]);
+    $form['comment_settings']['comment'][COMMENT_NODE_CLOSED]['#description'] = t('Users cannot post comments.');
   }
 }
 
@@ -1744,7 +1742,19 @@ function comment_get_display_page($cid, $node_type) {
  */
 function comment_edit_page($comment) {
   drupal_set_title(t('Edit comment %comment', array('%comment' => $comment->subject)), PASS_THROUGH);
-  return drupal_get_form('comment_form', $comment);
+  $node = node_load($comment->nid);
+  return drupal_get_form("comment_node_{$node->type}_form", $comment);
+}
+
+/**
+ * Implements hook_forms().
+ */
+function comment_forms() {
+  $forms = array();
+  foreach (node_type_get_types() as $type) {
+    $forms["comment_node_{$type->type}_form"]['callback'] = 'comment_form';
+  }
+  return $forms;
 }
 
 /**
@@ -1786,6 +1796,11 @@ function comment_form($form, &$form_state, $comment) {
 
   $node = node_load($comment->nid);
   $form['#node'] = $node;
+
+  // Use #comment-form as unique jump target, regardless of node type.
+  $form['#id'] = drupal_html_id('comment_form');
+  $form['#attributes']['class'][] = 'comment-form';
+  $form['#theme'] = array('comment_form__node_' . $node->type, 'comment_form');
 
   $anonymous_contact = variable_get('comment_anonymous_' . $node->type, COMMENT_ANONYMOUS_MAYNOT_CONTACT);
   $is_admin = (!empty($comment->cid) && user_access('administer comments'));
@@ -2194,8 +2209,6 @@ function template_preprocess_comment(&$variables) {
   // Preprocess fields.
   field_attach_preprocess('comment', $comment, $variables['elements'], $variables);
 
-  $variables['theme_hook_suggestions'][] = 'comment__' . $variables['node']->type;
-
   // Helpful $content variable for templates.
   foreach (element_children($variables['elements']) as $key) {
     $variables['content'][$key] = $variables['elements'][$key];
@@ -2285,7 +2298,6 @@ function template_preprocess_comment_wrapper(&$variables) {
   // Provide contextual information.
   $variables['node'] = $variables['content']['#node'];
   $variables['display_mode'] = variable_get('comment_default_mode_' . $variables['node']->type, COMMENT_MODE_THREADED);
-  $variables['theme_hook_suggestions'][] = 'comment_wrapper__' . $variables['node']->type;
 }
 
 /**
