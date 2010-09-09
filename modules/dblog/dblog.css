@@ -46,3 +46,14 @@ tr.dblog-error {
 tr.dblog-error .active {
   background: #eeb9b9;
 }
+table#admin-dblog td.icon {
+  background: no-repeat center;
+  width: 16px;
+}
+table#admin-dblog tr.dblog-warning td.icon {
+  background-image: url(../../misc/message-16-warning.png);
+}
+table#admin-dblog tr.dblog-error td.icon {
+  background-image: url(../../misc/message-16-error.png);
+}
+

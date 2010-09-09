@@ -80,6 +80,7 @@ function _drupal_maintenance_theme() {
   drupal_add_css(drupal_get_path('module', 'system') . '/system.css');
   drupal_add_css(drupal_get_path('module', 'system') . '/system-behavior.css');
   drupal_add_css(drupal_get_path('module', 'system') . '/system-menus.css');
+  drupal_add_css(drupal_get_path('module', 'system') . '/system-messages.css');
   drupal_add_css(drupal_get_path('module', 'system') . '/maintenance.css');
   drupal_add_css(drupal_get_path('module', 'system') . '/admin.css');
 }
