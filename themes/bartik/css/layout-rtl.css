@@ -13,3 +13,7 @@
 .region-footer-fourthcolumn {
   float: right;
 }
+#secondary-menu {
+  left: 0;
+  right: auto;
+}

@@ -250,13 +250,6 @@ ul.tips {
 #preview #preview-header a {
   color: #fff;
 }
-#header a:hover,
-#header a:focus {
-  color: #b5b7b9;
-}
-#header a:active {
-  color: #adb0bf;
-}
 #header #logo,
 #preview #preview-header #preview-logo {
   float: left; /* LTR */
@@ -381,24 +374,24 @@ ul.tips {
   display: none;
 }
 
-/* --------------- Main Navigation ------------ */
+/* --------------- Main Menu ------------ */
 
-#navigation {
+#main-menu {
   padding: 0 15px;
   clear: both;
 }
-#navigation a {
+#main-menu a {
   color: #d9d9d9;
   padding: 0.6em 1em 0.4em;
 }
-#navigation ul {
+#main-menu ul {
   padding: 2px 0;
 }
-#navigation ul.links {
+#main-menu ul.links {
   font-size: 105%;
   padding: 0.6em 0.6em 4px;
 }
-#navigation ul.links li a {
+#main-menu ul.links li a {
   color: #333;
   background: #ccc;
   background: rgba(255, 255, 255, 0.7);
@@ -412,29 +405,40 @@ ul.tips {
   -webkit-border-top-right-radius: 8px;
   border-top-right-radius: 8px;
 }
-#navigation ul.links li a:hover,
-#navigation ul.links li a:focus {
+#main-menu ul.links li a:hover,
+#main-menu ul.links li a:focus {
   background: #fff;
   background: rgba(255, 255, 255, 0.95);
 }
-#navigation ul.links li a:active {
+#main-menu ul.links li a:active {
   background: #b3b3b3;
   background: rgba(255, 255, 255, 1);
 }
-#navigation ul.links li.active-trail a {
+#main-menu ul.links li.active-trail a {
   border-bottom: none;
 }
-.featured #navigation ul.links li.active-trail a {
+.featured #main-menu ul.links li.active-trail a {
   background: #f0f0f0;
   background: rgba(240, 240, 240, 1.0);
 }
-#navigation ul.links li {
+#main-menu ul.links li {
   display: inline;
   list-style-type: none;
   padding: 0.6em 0 0.4em;
 }
-#navigation ul.links li.first {
+#main-menu ul.links li.first {
   padding-left: 2px; /* LTR */
+}
+
+/* --------------- Secondary Menu ------------ */
+
+#secondary-menu-links {
+  float: right; /* LTR */
+  margin: 10px;
+}
+#secondary-menu-links a:hover,
+#secondary-menu-links a:focus {
+  text-decoration: underline;
 }
 
 /* ------------------- Main ------------------- */
@@ -721,9 +725,6 @@ h1#page-title,
 }
 #footer .block h2 {
   margin: 0;
-}
-#footer-wrapper ul#secondary-menu {
-  margin: 1em 0;
 }
 #footer-columns h2 {
   border-bottom: 1px solid #555;

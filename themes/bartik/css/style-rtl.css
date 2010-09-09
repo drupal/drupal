@@ -77,11 +77,17 @@ ul.tips {
   margin-right: 10px;
 }
 
-/* --------------- Main Navigation ------------ */
+/* --------------- Main Menu ------------ */
 
-#navigation ul.links li.first {
+#main-menu ul.links li.first {
   padding-right: 2px;
   padding-left: 0;
+}
+
+/* --------------- Secondary Menu ------------ */
+
+#secondary-menu-links {
+  float: left;
 }
 
 /* ----------------- Content ------------------ */

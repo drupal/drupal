@@ -3,7 +3,6 @@
 /* ---------- Basic Layout Styles ----------- */
 
 #header div.section,
-#navigation div.section,
 #featured div.section,
 #messages,
 #main,
@@ -13,6 +12,15 @@
   width: 960px;
   margin-left: auto;
   margin-right: auto;
+}
+#header div.section {
+  position: relative;
+}
+#secondary-menu {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 480px;
 }
 #content,
 .sidebar,
