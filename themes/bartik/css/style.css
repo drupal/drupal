@@ -220,11 +220,10 @@ ul.tips {
   display: block;
   font-size: 0.94em;
   height: 1px;
-  left: -10000px;
   line-height: 1.7;
   position: absolute;
   text-decoration: none;
-  top: auto;
+  top: -10000px;
   width: 1px;
   -khtml-border-radius: 0 0 10px 10px;
   -moz-border-radius: 0 0 10px 10px;
