@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.12 2010/09/09 21:03:33 dries Exp $ */
+/* $Id: style.css,v 1.13 2010/09/10 17:56:20 webchick Exp $ */
 
 /* ---------- Overall Specifications ---------- */
 
@@ -220,11 +220,10 @@ ul.tips {
   display: block;
   font-size: 0.94em;
   height: 1px;
-  left: -10000px;
   line-height: 1.7;
   position: absolute;
   text-decoration: none;
-  top: auto;
+  top: -10000px;
   width: 1px;
   -khtml-border-radius: 0 0 10px 10px;
   -moz-border-radius: 0 0 10px 10px;
