@@ -572,7 +572,7 @@ function file_managed_file_submit($form, &$form_state) {
   // and set $element to the managed_file element that contains that button.
   $parents = $form_state['triggering_element']['#array_parents'];
   $button_key = array_pop($parents);
-  list($element) = drupal_array_get_nested_value($form, $parents);
+  $element = drupal_array_get_nested_value($form, $parents);
 
   // No action is needed here for the upload button, because all file uploads on
   // the form are processed by file_managed_file_value() regardless of which
