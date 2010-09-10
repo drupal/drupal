@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.488 2010/09/09 23:01:48 dries Exp $
+// $Id: form.inc,v 1.489 2010/09/10 07:58:40 webchick Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -1003,8 +1003,11 @@ function drupal_validate_form($form_id, &$form, &$form_state) {
   if (isset($form_state['triggering_element']['#limit_validation_errors']) && $form_state['triggering_element']['#limit_validation_errors'] !== FALSE) {
     $values = array();
     foreach ($form_state['triggering_element']['#limit_validation_errors'] as $section) {
-      list($value, $value_exists) = drupal_array_get_nested_value($form_state['values'], $section);
-      if ($value_exists) {
+      // If the section exists within $form_state['values'], even if the value
+      // is NULL, copy it to $values.
+      $section_exists = NULL;
+      $value = drupal_array_get_nested_value($form_state['values'], $section, $section_exists);
+      if ($section_exists) {
         drupal_array_set_nested_value($values, $section, $value);
       }
     }
@@ -1767,18 +1770,8 @@ function _form_builder_handle_input_element($form_id, &$element, &$form_state) {
     if ($process_input) {
       // Get the input for the current element. NULL values in the input need to
       // be explicitly distinguished from missing input. (see below)
-      $input = $form_state['input'];
-      $input_exists = TRUE;
-      foreach ($element['#parents'] as $parent) {
-        if (is_array($input) && array_key_exists($parent, $input)) {
-          $input = $input[$parent];
-        }
-        else {
-          $input = NULL;
-          $input_exists = FALSE;
-          break;
-        }
-      }
+      $input_exists = NULL;
+      $input = drupal_array_get_nested_value($form_state['input'], $element['#parents'], $input_exists);
       // For browser-submitted forms, the submitted values do not contain values
       // for certain elements (empty multiple select, unchecked checkbox).
       // During initial form processing, we add explicit NULL values for such
@@ -1850,7 +1843,7 @@ function _form_builder_handle_input_element($form_id, &$element, &$form_state) {
 
   // Set the element's value in $form_state['values'], but only, if its key
   // does not exist yet (a #value_callback may have already populated it).
-  if (!drupal_array_nested_value_exists($form_state['values'], $element['#parents'])) {
+  if (!drupal_array_nested_key_exists($form_state['values'], $element['#parents'])) {
     form_set_value($element, $element['#value'], $form_state);
   }
 }

@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1214 2010/09/05 15:38:16 webchick Exp $
+// $Id: common.inc,v 1.1215 2010/09/10 07:58:40 webchick Exp $
 
 /**
  * @file
@@ -5656,7 +5656,7 @@ function element_get_visible_children(array $elements) {
  *
  * @see drupal_array_get_nested_value()
  */
-function drupal_array_set_nested_value(&$array, $parents, $value) {
+function drupal_array_set_nested_value(array &$array, array $parents, $value) {
   $ref = &$array;
   foreach ($parents as $parent) {
     // Note that PHP is fine with referencing a not existing array key - in this
@@ -5669,8 +5669,8 @@ function drupal_array_set_nested_value(&$array, $parents, $value) {
 /**
  * Retrieves a value from a nested array with variable depth.
  *
- * This helper function should be used when the depth of the array element you
- * are changing may vary (that is, the number of parent keys is variable). It is
+ * This helper function should be used when the depth of the array element being
+ * retrieved may vary (that is, the number of parent keys is variable). It is
  * primarily used for form structures and renderable arrays.
  *
  * Without this helper function the only way to get a nested array value with
@@ -5683,14 +5683,23 @@ function drupal_array_set_nested_value(&$array, $parents, $value) {
  *
  * Instead, use this helper function:
  * @code
- * list($value, $value_exists) = drupal_array_get_nested_value($form, $parents);
- * if ($value_exists) {
+ * $value = drupal_array_get_nested_value($form, $parents);
+ * @endcode
+ *
+ * The return value will be NULL, regardless of whether the actual value is NULL
+ * or whether the requested key does not exist. If it is required to know
+ * whether the nested array key actually exists, pass a third argument that is
+ * altered by reference:
+ * @code
+ * $key_exists = NULL;
+ * $value = drupal_array_get_nested_value($form, $parents, $value_exists);
+ * if ($key_exists) {
  *   // ... do something with $value ...
  * }
  * @endcode
  *
  * However if the number of array parent keys is static, the value should always
- * be get directly rather than calling this function. For instance:
+ * be retrieved directly rather than calling this function. For instance:
  * @code
  * $value = $form['signature_settings']['signature'];
  * @endcode
@@ -5699,34 +5708,54 @@ function drupal_array_set_nested_value(&$array, $parents, $value) {
  *   The array from which to get the value.
  * @param $parents
  *   An array of parent keys of the value, starting with the outermost key.
+ * @param &$key_exists
+ *   (optional) If given, an already defined variable that is altered by
+ *   reference.
  *
  * @return
- *   An indexed array containing:
- *   - The requested nested value, if it exists, or NULL if it does not.
- *   - TRUE if all the parent keys exist, FALSE otherwise.
+ *   The requested nested value. Possibly NULL if the value is NULL or not all
+ *   nested parent keys exist. $key_exists is altered by reference and is a
+ *   Boolean that indicates whether all nested parent keys exist (TRUE) or not
+ *   (FALSE). This allows to distinguish between the two possibilities when NULL
+ *   is returned.
  *
  * @see drupal_array_set_nested_value()
- * @see drupal_array_value_exists()
  */
-function drupal_array_get_nested_value($array, $parents) {
+function drupal_array_get_nested_value(array &$array, array $parents, &$key_exists = NULL) {
+  $ref = &$array;
   foreach ($parents as $parent) {
-    if (isset($array[$parent])) {
-      $array = $array[$parent];
+    // array_key_exists() is slower than isset() and triggers notices if the
+    // second argument is not an array, so only call it when absolutely
+    // necessary.
+    if (isset($ref[$parent]) || (is_array($ref) && array_key_exists($parent, $ref))) {
+      $ref = &$ref[$parent];
     }
     else {
-      return array(NULL, FALSE);
+      $key_exists = FALSE;
+      return NULL;
     }
   }
-  return array($array, TRUE);
+  $key_exists = TRUE;
+  return $ref;
 }
 
 /**
- * Determines whether a value in a nested array with variable depth exists.
+ * Determines whether a nested array with variable depth contains all of the requested keys.
  *
  * This helper function should be used when the depth of the array element to be
  * checked may vary (that is, the number of parent keys is variable). See
- * drupal_array_set_nested_value() for details. This helper is primarily used
- * for form structures and renderable arrays.
+ * drupal_array_set_nested_value() for details. It is primarily used for form
+ * structures and renderable arrays.
+ *
+ * If it is required to also get the value of the checked nested key, use
+ * drupal_array_get_nested_value() instead.
+ *
+ * If the number of array parent keys is static, this helper function is
+ * unnecessary and the following code can be used instead:
+ * @code
+ * $value_exists = isset($form['signature_settings']['signature']);
+ * $key_exists = array_key_exists('signature', $form['signature_settings']);
+ * @endcode
  *
  * @param $array
  *   The array with the value to check for.
@@ -5736,21 +5765,15 @@ function drupal_array_get_nested_value($array, $parents) {
  * @return
  *   TRUE if all the parent keys exist, FALSE otherwise.
  *
- * @see drupal_array_set_nested_value()
  * @see drupal_array_get_nested_value()
  */
-function drupal_array_nested_value_exists($array, $parents) {
-  foreach ($parents as $parent) {
-    if (isset($array[$parent])) {
-      $array = $array[$parent];
-    }
-    else {
-      return FALSE;
-    }
-  }
-  return TRUE;
+function drupal_array_nested_key_exists(array $array, array $parents) {
+  // Although this function is similar to PHP's array_key_exists(), its
+  // arguments should be consistent with drupal_array_get_nested_value().
+  $key_exists = NULL;
+  drupal_array_get_nested_value($array, $parents, $key_exists);
+  return $key_exists;
 }
-
 
 /**
  * Provide theme registration for themes across .inc files.
