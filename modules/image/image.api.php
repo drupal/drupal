@@ -1,5 +1,5 @@
 <?php
-// $Id: image.api.php,v 1.4 2010/02/01 07:07:57 webchick Exp $
+// $Id: image.api.php,v 1.5 2010/09/11 01:54:43 dries Exp $
 
 /**
  * @file
@@ -29,6 +29,8 @@
  *     $form array providing a configuration form for this image effect.
  *   - "summary theme": (optional) The name of a theme function that will output
  *     a summary of this image effect's configuration.
+ *
+ * @see hook_image_effect_info_alter()
  */
 function hook_image_effect_info() {
   $effects = array();
@@ -42,6 +44,20 @@ function hook_image_effect_info() {
   );
 
   return $effects;
+}
+
+/**
+ * Alter the information provided in hook_image_effect_info().
+ *
+ * @param $effects
+ *   The array of image effects, keyed on the machine-readable effect name.
+ *
+ * @see hook_image_effect_info()
+ */
+function hook_image_effect_info_alter(&$effects) {
+  // Override the Image module's crop effect with more options.
+  $effect['image_crop']['effect callback'] = 'mymodule_crop_effect';
+  $effect['image_crop']['form callback'] = 'mymodule_crop_form';
 }
 
 /**
