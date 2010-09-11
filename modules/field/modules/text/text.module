@@ -52,7 +52,7 @@ function text_field_info() {
       'description' => t('This field stores long text in the database along with optional summary text.'),
       'instance_settings' => array('text_processing' => 1, 'display_summary' => 0),
       'default_widget' => 'text_textarea_with_summary',
-      'default_formatter' => 'text_summary_or_trimmed',
+      'default_formatter' => 'text_default',
     ),
   );
 }
