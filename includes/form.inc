@@ -991,7 +991,7 @@ function drupal_validate_form($form_id, &$form, &$form_state) {
   if (isset($form['#token'])) {
     if (!drupal_valid_token($form_state['values']['form_token'], $form['#token'])) {
       // Setting this error will cause the form to fail validation.
-      form_set_error('form_token', t('Validation error, please try again. If this error persists, please contact the site administrator.'));
+      form_set_error('form_token', t('This form is outdated. Reload the page and try again. Contact the site administrator if the problem persists.'));
     }
   }
 
