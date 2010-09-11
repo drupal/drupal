@@ -1,4 +1,4 @@
-// $Id: MAINTAINERS.txt,v 1.45 2010/09/07 17:58:25 webchick Exp $
+// $Id: MAINTAINERS.txt,v 1.46 2010/09/11 14:49:42 dries Exp $
 
 Drupal core is maintained by the community.  To participate, go to
 
@@ -279,7 +279,7 @@ Bartik theme
 - Jen Simmons 'jensimmons' <http://drupal.org/user/140882>
 
 Garland theme
-- Stefan Nagtegaal 'steef' <http://drupal.org/user/612>
+- ?
 
 Seven theme
 - ?
