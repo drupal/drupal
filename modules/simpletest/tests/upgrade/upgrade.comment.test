@@ -1,0 +1,33 @@
+<?php
+// $Id: upgrade.comment.test,v 1.1 2010/09/11 21:52:59 webchick Exp $
+
+/**
+ * Upgrade test for comment.module.
+ */
+class CommentUpgradePathTestCase extends UpgradePathTestCase {
+  public static function getInfo() {
+    return array(
+      'name'  => 'Comment upgrade path',
+      'description'  => 'Comment upgrade path tests.',
+      'group' => 'Upgrade path',
+    );
+  }
+
+  public function setUp() {
+    // Path to the database dump files.
+    $this->databaseDumpFiles = array(
+      drupal_get_path('module', 'simpletest') . '/tests/upgrade/drupal-6.filled.database.php',
+      drupal_get_path('module', 'simpletest') . '/tests/upgrade/drupal-6.comments.database.php',
+    );
+    parent::setUp();
+
+    $this->uninstallModulesExcept(array('comment'));
+  }
+
+  /**
+   * Test a successful upgrade.
+   */
+  public function testCommentUpgrade() {
+    $this->assertTrue($this->performUpgrade(), t('The upgrade was completed successfully.'));
+  }
+}
