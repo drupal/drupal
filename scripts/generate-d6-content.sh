@@ -1,6 +1,6 @@
 #!/usr/bin/env php
 <?php
-// $Id: generate-d6-content.sh,v 1.2 2010/09/05 17:00:04 webchick Exp $
+// $Id: generate-d6-content.sh,v 1.3 2010/09/11 00:39:49 webchick Exp $
 
 /**
  * Generate content for a Drupal 6 database to test the upgrade process.
@@ -185,3 +185,23 @@ for ($i = 0; $i < 12; $i++) {
     drupal_execute('poll_view_voting', $form_state, $node);
   }
 }
+
+$uid = 6;
+$user = user_load($uid);
+$node = new stdClass;
+$node->uid = $uid;
+$node->type = 'broken';
+$node->sticky = 0;
+$node->title = "node title 24";
+$node->body = str_repeat("node body ($node->type) - 37", 100);
+$node->teaser = node_teaser($node->body);
+$node->filter = variable_get('filter_default_format', 1);
+$node->format = FILTER_FORMAT_DEFAULT;
+$node->status = 1;
+$node->language = '';
+$node->revision = 0;
+$node->promote = 0;
+$node->created = 1263769200;
+$node->log = "added $i node";
+node_save($node);
+path_set_alias("node/$node->nid", "content/1263769200");
