@@ -814,7 +814,7 @@ abstract class DatabaseConnection extends PDO {
    *
    * Force all alias names to be strictly alphanumeric-plus-underscore. In
    * contrast to DatabaseConnection::escapeField() /
-   * DatabaseConnection::escapeTable(), this doesn't allow the period (".") 
+   * DatabaseConnection::escapeTable(), this doesn't allow the period (".")
    *
    * @return
    *   The sanitized field name string.

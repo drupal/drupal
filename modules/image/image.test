@@ -94,7 +94,7 @@ class ImageFieldTestCase extends DrupalWebTestCase {
     $edit = array(
       'title' => $this->randomName(),
     );
-    $edit['files[' . $field_name . '_' . LANGUAGE_NONE . '_0]'] = realpath($image->uri);
+    $edit['files[' . $field_name . '_' . LANGUAGE_NONE . '_0]'] = drupal_realpath($image->uri);
     $this->drupalPost('node/add/' . $type, $edit, t('Save'));
 
     // Retrieve ID of the newly created node from the current URL.
@@ -786,7 +786,7 @@ class ImageFieldDisplayTestCase extends ImageFieldTestCase {
     // Add a default image to the imagefield instance.
     $images = $this->drupalGetTestFiles('image');
     $edit = array(
-      'files[field_settings_default_image]' => realpath($images[0]->uri),
+      'files[field_settings_default_image]' => drupal_realpath($images[0]->uri),
     );
     $this->drupalPost('admin/structure/types/manage/article/fields/' . $field_name, $edit, t('Save settings'));
     // Clear field info cache so the new default image is detected.
