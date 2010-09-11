@@ -1,4 +1,4 @@
-/* $Id: toolbar.css,v 1.25 2010/07/21 00:26:21 dries Exp $ */
+/* $Id: toolbar.css,v 1.26 2010/09/11 14:45:23 dries Exp $ */
 
 body.toolbar {
   padding-top: 2.2em;
@@ -104,9 +104,17 @@ body.toolbar-drawer {
   width: 25px;
   height: 25px;
 }
+#toolbar div.toolbar-menu a.toggle:focus,
+#toolbar div.toolbar-menu a.toggle:hover {
+background-position:  -50px -20px;
+}
 
 #toolbar div.toolbar-menu a.toggle-active {
   background-position:  -25px -20px;
+}
+#toolbar div.toolbar-menu a.toggle-active.toggle:focus,
+#toolbar div.toolbar-menu a.toggle-active.toggle:hover {
+background-position:  -75px -20px;
 }
 
 #toolbar div.toolbar-menu ul li a {
