@@ -1719,7 +1719,7 @@ function theme_node_search_admin($variables) {
   foreach (element_children($form['factors']) as $key) {
     $row = array();
     $row[] = $form['factors'][$key]['#title'];
-    unset($form['factors'][$key]['#title']);
+    $form['factors'][$key]['#title_display'] = 'invisible';
     $row[] = drupal_render($form['factors'][$key]);
     $rows[] = $row;
   }
