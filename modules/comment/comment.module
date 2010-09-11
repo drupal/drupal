@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.896 2010/09/09 23:01:48 dries Exp $
+// $Id: comment.module,v 1.897 2010/09/11 06:03:11 webchick Exp $
 
 /**
  * @file
@@ -103,6 +103,7 @@ function comment_entity_info() {
       'entity keys' => array(
         'id' => 'cid',
         'bundle' => 'node_type',
+        'label' => 'subject',
       ),
       'bundles' => array(),
       'view modes' => array(

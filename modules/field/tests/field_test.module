@@ -1,5 +1,5 @@
 <?php
-// $Id: field_test.module,v 1.9 2010/08/08 02:18:53 dries Exp $
+// $Id: field_test.module,v 1.10 2010/09/11 06:03:11 webchick Exp $
 
 /**
  * @file
@@ -213,4 +213,17 @@ function field_test_dummy_field_storage_query(EntityFieldQuery $query) {
       1 => entity_create_stub_entity('user', array(1, NULL, NULL)),
     ),
   );
+}
+
+/**
+ * Entity label callback.
+ *
+ * @param $entity
+ *   The entity object.
+ *
+ * @return
+ *   The label of the entity prefixed with "label callback".
+ */
+function field_test_entity_label_callback($entity) {
+  return 'label callback ' . $entity->ftlabel;
 }

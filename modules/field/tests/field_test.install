@@ -1,5 +1,5 @@
 <?php
-// $Id: field_test.install,v 1.4 2010/09/04 15:40:51 dries Exp $
+// $Id: field_test.install,v 1.5 2010/09/11 06:03:11 webchick Exp $
 
 /**
  * @file
@@ -41,6 +41,13 @@ function field_test_schema() {
         'description' => 'The type of this test_entity.',
         'type' => 'varchar',
         'length' => 32,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'ftlabel' => array(
+        'description' => 'The label of this test_entity.',
+        'type' => 'varchar',
+        'length' => 255,
         'not null' => TRUE,
         'default' => '',
       ),

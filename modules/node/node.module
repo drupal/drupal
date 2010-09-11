@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1297 2010/09/11 03:09:09 dries Exp $
+// $Id: node.module,v 1.1298 2010/09/11 06:03:11 webchick Exp $
 
 /**
  * @file
@@ -181,6 +181,7 @@ function node_entity_info() {
         'id' => 'nid',
         'revision' => 'vid',
         'bundle' => 'type',
+        'label' => 'title',
       ),
       'bundle keys' => array(
         'bundle' => 'type',

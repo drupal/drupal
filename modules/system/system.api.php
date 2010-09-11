@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.191 2010/09/09 23:01:48 dries Exp $
+// $Id: system.api.php,v 1.192 2010/09/11 06:03:12 webchick Exp $
 
 /**
  * @file
@@ -87,6 +87,11 @@ function hook_hook_info_alter(&$hooks) {
  *   - uri callback: A function taking an entity as argument and returning the
  *     uri elements of the entity, e.g. 'path' and 'options'. The actual entity
  *     uri can be constructed by passing these elements to url().
+ *   - label callback: (optional) A function taking an entity as argument and
+ *     returning the label of the entity; e.g., $node->title or
+ *     $comment->subject. A callback should be specified when the label is the
+ *     result of complex logic. Otherwise, the 'label' property of the
+ *     'entity keys' the property should be used.
  *   - fieldable: Set to TRUE if you want your entity type to be fieldable.
  *   - translation: An associative array of modules registered as field
  *     translation handlers. Array keys are the module names, array values
@@ -107,6 +112,11 @@ function hook_hook_info_alter(&$hooks) {
  *       omitted if this entity type exposes a single bundle (all entities have
  *       the same collection of fields). The name of this single bundle will be
  *       the same as the entity type.
+ *     - label: The property name of the entity that contains the label. For
+ *       example, if the entity's label is located in $entity->subject, then
+ *       'subect' should be specified here. In case complex logic is required to
+ *       build the label, a 'label callback' should be implemented instead. See
+ *       entity_label() for details.
  *   - bundle keys: An array describing how the Field API can extract the
  *     information it needs from the bundle objects for this type (e.g
  *     $vocabulary objects for terms; not applicable for nodes). This entry can

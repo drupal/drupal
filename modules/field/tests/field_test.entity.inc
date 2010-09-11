@@ -1,5 +1,5 @@
 <?php
-// $Id: field_test.entity.inc,v 1.12 2010/06/17 13:44:45 dries Exp $
+// $Id: field_test.entity.inc,v 1.13 2010/09/11 06:03:11 webchick Exp $
 
 /**
  * @file
@@ -71,6 +71,48 @@ function field_test_entity_info() {
         'id' => 'ftid',
       ),
       'bundles' => array('test_entity_2' => array('label' => 'Test entity 2')),
+      'view modes' => $test_entity_modes,
+    ),
+    // @see EntityPropertiesTestCase::testEntityLabel()
+    'test_entity_no_label' => array(
+      'name' => t('Test entity without label'),
+      'fieldable' => TRUE,
+      'field cache' => FALSE,
+      'base table' => 'test_entity',
+      'entity keys' => array(
+        'id' => 'ftid',
+        'revision' => 'ftvid',
+        'bundle' => 'fttype',
+      ),
+      'bundles' => $bundles,
+      'view modes' => $test_entity_modes,
+    ),
+    'test_entity_label' => array(
+      'name' => t('Test entity label'),
+      'fieldable' => TRUE,
+      'field cache' => FALSE,
+      'base table' => 'test_entity',
+      'entity keys' => array(
+        'id' => 'ftid',
+        'revision' => 'ftvid',
+        'bundle' => 'fttype',
+        'label' => 'ftlabel',
+      ),
+      'bundles' => $bundles,
+      'view modes' => $test_entity_modes,
+    ),
+    'test_entity_label_callback' => array(
+      'name' => t('Test entity label callback'),
+      'fieldable' => TRUE,
+      'field cache' => FALSE,
+      'base table' => 'test_entity',
+      'label callback' => 'field_test_entity_label_callback',
+      'entity keys' => array(
+        'id' => 'ftid',
+        'revision' => 'ftvid',
+        'bundle' => 'fttype',
+      ),
+      'bundles' => $bundles,
       'view modes' => $test_entity_modes,
     ),
   );
@@ -163,7 +205,7 @@ function field_test_delete_bundle($bundle) {
 /**
  * Creates a basic test_entity entity.
  */
-function field_test_create_stub_entity($id = 1, $vid = 1, $bundle = 'test_bundle') {
+function field_test_create_stub_entity($id = 1, $vid = 1, $bundle = 'test_bundle', $label = '') {
   $entity = new stdClass();
   // Only set id and vid properties if they don't come as NULL (creation form).
   if (isset($id)) {
@@ -173,6 +215,9 @@ function field_test_create_stub_entity($id = 1, $vid = 1, $bundle = 'test_bundle
     $entity->ftvid = $vid;
   }
   $entity->fttype = $bundle;
+
+  $label = !empty($label) ? $label : $bundle . ' label';
+  $entity->ftlabel = $label;
 
   return $entity;
 }

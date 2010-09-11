@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1216 2010/09/11 01:47:14 dries Exp $
+// $Id: common.inc,v 1.1217 2010/09/11 06:03:11 webchick Exp $
 
 /**
  * @file
@@ -6909,6 +6909,30 @@ function entity_uri($entity_type, $entity) {
     }
   }
   return $entity->uri ? $entity->uri : NULL;
+}
+
+/**
+ * Returns the label of an entity.
+ *
+ * @param $entity_type
+ *   The entity type; e.g. 'node' or 'user'.
+ * @param $entity
+ *   The entity for which to generate a path.
+ *
+ * @return
+ *   A string with the entity label (e.g. node title), or FALSE if not found.
+ */
+function entity_label($entity_type, $entity) {
+  $label = FALSE;
+  $info = entity_get_info($entity_type);
+  if (isset($info['label callback']) && function_exists($info['label callback'])) {
+    $label = $info['label callback']($entity);
+  }
+  elseif (!empty($info['entity keys']['label']) && isset($entity->{$info['entity keys']['label']})) {
+    $label = $entity->{$info['entity keys']['label']};
+  }
+
+  return $label;
 }
 
 /**
