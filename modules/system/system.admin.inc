@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.302 2010/09/09 21:01:38 dries Exp $
+// $Id: system.admin.inc,v 1.303 2010/09/11 03:00:26 dries Exp $
 
 /**
  * @file
@@ -2105,7 +2105,8 @@ function theme_system_date_time_settings($variables) {
     $delete_key = $key . '_delete';
     $row = array();
     $row[] = $form['format'][$key]['#title'];
-    unset($form['format'][$key]['#title']);
+    $form['format'][$key]['#title_display'] = 'invisible';
+    $row[] = $form['format'][$key]['#title_display'];
     $row[] = array('data' => drupal_render($form['format'][$key]));
     $row[] = array('data' => drupal_render($form['delete'][$delete_key]));
     $rows[] = $row;
