@@ -1016,8 +1016,11 @@ Drupal.tableDrag.prototype.row.prototype.validIndentInterval = function (prevRow
   minIndent = nextRow ? $('.indentation', nextRow).size() : 0;
 
   // Maximum indentation:
-  if (!prevRow || $(this.element).is('.tabledrag-root')) {
-    // Do not indent the first row in the table or 'root' rows..
+  if (!prevRow || $(prevRow).is(':not(.draggable)') || $(this.element).is('.tabledrag-root')) {
+    // Do not indent:
+    // - the first row in the table,
+    // - rows dragged below a non-draggable row,
+    // - 'root' rows.
     maxIndent = 0;
   }
   else {

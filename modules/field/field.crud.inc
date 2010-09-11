@@ -761,16 +761,8 @@ function _field_write_instance($instance, $update = FALSE) {
   );
   // If no weight specified, make sure the field sinks at the bottom.
   if (!isset($instance['widget']['weight'])) {
-    $weights = array();
-    foreach (field_info_instances($instance['entity_type'], $instance['bundle']) as $existing_instance) {
-      if ($instance['field_name'] != $existing_instance['field_name']) {
-        $weights[] = $existing_instance['widget']['weight'];
-      }
-    }
-    foreach (field_info_extra_fields($instance['entity_type'], $instance['bundle'], 'form') as $extra) {
-      $weights[] = $extra['weight'];
-    }
-    $instance['widget']['weight'] = $weights ? max($weights) + 1 : 0;
+    $max_weight = field_info_max_weight($instance['entity_type'], $instance['bundle'], 'form');
+    $instance['widget']['weight'] = !is_null($max_weight) ? $max_weight + 1 : 0;
   }
   // Check widget module.
   $widget_type = field_info_widget_types($instance['widget']['type']);
@@ -795,16 +787,8 @@ function _field_write_instance($instance, $update = FALSE) {
     }
     // If no weight specified, make sure the field sinks at the bottom.
     if (!isset($display['weight'])) {
-      $weights = array();
-      foreach (field_info_instances($instance['entity_type'], $instance['bundle']) as $existing_instance) {
-        if ($instance['field_name'] != $existing_instance['field_name']) {
-          $weights[] = $existing_instance['display'][$view_mode]['weight'];
-        }
-      }
-      foreach (field_info_extra_fields($instance['entity_type'], $instance['bundle'], 'display') as $extra) {
-        $weights[] = $extra['display'][$view_mode]['weight'];
-      }
-      $display['weight'] = $weights ? max($weights) + 1 : 0;
+      $max_weight = field_info_max_weight($instance['entity_type'], $instance['bundle'], $view_mode);
+      $display['weight'] = !is_null($max_weight) ? $max_weight + 1 : 0;
     }
     $instance['display'][$view_mode] = $display;
   }

@@ -1,7 +1,6 @@
 /* $Id$ */
 
 /* 'Manage fields' overview */
-#field-overview tr.add-new .label-input {
+table.field-ui-overview tr.add-new .label-input {
   float: right;
 }
-

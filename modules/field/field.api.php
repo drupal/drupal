@@ -2066,6 +2066,33 @@ function hook_field_storage_pre_update($entity_type, $entity, &$skip_fields) {
 }
 
 /**
+ * Returns the maximum weight for the entity components handled by the module.
+ *
+ * Field API takes care of fields and 'extra_fields'. This hook is intended for
+ * third-party modules adding other entity components (e.g. field_group).
+ *
+ * @param $entity_type
+ *   The type of entity; e.g. 'node' or 'user'.
+ * @param $bundle
+ *   The bundle name.
+ * @param $context
+ *   The context for which the maximum weight is requested. Either 'form', or
+ *   the name of a view mode.
+ * @return
+ *   The maximum weight of the entity's components, or NULL if no components
+ *   were found.
+ */
+function hook_field_info_max_weight($entity_type, $bundle, $context) {
+  $weights = array();
+
+  foreach (my_module_entity_additions($entity_type, $bundle, $context) as $addition) {
+    $weights[] = $addition['weight'];
+  }
+
+  return $weights ? max($weights) : NULL;
+}
+
+/**
  * Alters the display settings of a field before it gets displayed.
  *
  * Note that instead of hook_field_display_alter(), which is called for all

@@ -316,10 +316,10 @@ class FileFieldWidgetTestCase extends FileFieldTestCase {
 
     // Create a new field.
     $edit = array(
-      '_add_new_field[label]' => $label = $this->randomName(),
-      '_add_new_field[field_name]' => $name = strtolower($this->randomName()),
-      '_add_new_field[type]' => 'file',
-      '_add_new_field[widget_type]' => 'file_generic',
+      'fields[_add_new_field][label]' => $label = $this->randomName(),
+      'fields[_add_new_field][field_name]' => $name = strtolower($this->randomName()),
+      'fields[_add_new_field][type]' => 'file',
+      'fields[_add_new_field][widget_type]' => 'file_generic',
     );
     $this->drupalPost('admin/structure/types/manage/article/comment/fields', $edit, t('Save'));
     $edit = array('field[settings][uri_scheme]' => 'private');
@@ -347,7 +347,7 @@ class FileFieldWidgetTestCase extends FileFieldTestCase {
 
     // Log in as normal user.
     $this->drupalLogin($user);
-   
+
     $comment = comment_load($cid);
     $comment_file = (object) $comment->{'field_' . $name}[LANGUAGE_NONE][0];
     $this->assertFileExists($comment_file, t('New file saved to disk on node creation.'));
@@ -356,7 +356,7 @@ class FileFieldWidgetTestCase extends FileFieldTestCase {
     $this->assertNotEqual($url, NULL, t('Confirmed that the URL is valid'));
     $this->drupalGet(file_create_url($comment_file->uri));
     $this->assertResponse(200, t('Confirmed that the generated URL is correct by downloading the shipped file.'));
- 
+
     // Test anonymous file download.
     $this->drupalLogout();
     $this->drupalGet(file_create_url($comment_file->uri));
