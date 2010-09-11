@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.342 2010/09/04 17:55:43 dries Exp $
+// $Id: filter.module,v 1.343 2010/09/11 03:30:03 dries Exp $
 
 /**
  * @file
@@ -964,7 +964,9 @@ function _filter_tips($format_id, $long = FALSE) {
     foreach ($filters as $name => $filter) {
       if ($filter->status && isset($filter_info[$name]['tips callback']) && function_exists($filter_info[$name]['tips callback'])) {
         $tip = $filter_info[$name]['tips callback']($filter, $format, $long);
-        $tips[$format->name][$name] = array('tip' => $tip, 'id' => $name);
+        if (isset($tip)) {
+          $tips[$format->name][$name] = array('tip' => $tip, 'id' => $name);
+        }
       }
     }
   }
