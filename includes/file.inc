@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.228 2010/09/11 05:07:22 webchick Exp $
+// $Id: file.inc,v 1.229 2010/09/11 21:14:31 webchick Exp $
 
 /**
  * @file
@@ -202,6 +202,7 @@ function file_stream_wrapper_valid_scheme($scheme) {
   }
 }
 
+
 /**
  * Returns the part of an URI after the schema.
  *
@@ -256,6 +257,10 @@ function file_stream_wrapper_uri_normalize($uri) {
     if ($target !== FALSE) {
       $uri = $scheme . '://' . $target;
     }
+  }
+  else {
+    // The default scheme is file://
+    $url = 'file://' . $uri;
   }
   return $uri;
 }
@@ -594,9 +599,9 @@ function file_usage_list(stdClass $file) {
  * @param $module
  *   The name of the module using the file.
  * @param $type
- *   The type of the object that contains the referenced file. 
+ *   The type of the object that contains the referenced file.
  * @param $id
- *   The unique, numeric ID of the object containing the referenced file. 
+ *   The unique, numeric ID of the object containing the referenced file.
  * @param $count
  *   (optional) The number of references to add to the object. Defaults to 1.
  *
@@ -710,6 +715,12 @@ function file_usage_delete(stdClass $file, $module, $type = NULL, $id = NULL, $c
  * @see hook_file_copy()
  */
 function file_copy(stdClass $source, $destination = NULL, $replace = FILE_EXISTS_RENAME) {
+  if (!file_valid_uri($destination)) {
+    watchdog('file', 'File %file (%realpath) could not be copied, because the destination %destination is invalid. This is often caused by improper use of file_copy() or a missing stream wrapper.', array('%file' => $source->uri, '%realpath' => drupal_realpath($source->uri), '%destination' => $destination));
+    drupal_set_message(t('The specified file %file could not be copied, because the destination is invalid. More information is available in the system log.', array('%file' => $source->uri)), 'error');
+    return FALSE;
+  }
+
   if ($uri = file_unmanaged_copy($source->uri, $destination, $replace)) {
     $file = clone $source;
     $file->fid = NULL;
@@ -741,6 +752,28 @@ function file_copy(stdClass $source, $destination = NULL, $replace = FILE_EXISTS
 }
 
 /**
+ * Determine whether the URI has a valid scheme for file API operations.
+ *
+ * There must be a scheme and it must be a Drupal-provided scheme like
+ * 'public', 'private', 'temporary', or an extension provided with
+ * hook_stream_wrappers().
+ *
+ * @param $uri
+ *   The URI to be tested.
+ *
+ * @return
+ *   TRUE if the URI is allowed.
+ */
+function file_valid_uri($uri) {
+  // Assert that the URI has an allowed scheme. Barepaths are not allowed.
+  $uri_scheme = file_uri_scheme($uri);
+  if (empty($uri_scheme) || !file_stream_wrapper_valid_scheme($uri_scheme)) {
+    return FALSE;
+  }
+  return TRUE;
+}
+
+/**
  * Copies a file to a new location without invoking the file API.
  *
  * This is a powerful function that in many ways performs like an advanced
@@ -752,11 +785,12 @@ function file_copy(stdClass $source, $destination = NULL, $replace = FILE_EXISTS
  *   replace the file or rename the file based on the $replace parameter.
  *
  * @param $source
- *   A string specifying the filepath or URI of the original file.
+ *   A string specifying the filepath or URI of the source file.
  * @param $destination
- *   A URI containing the destination that $source should be copied to.
- *   This must be a stream wrapper URI. If this value is omitted, Drupal's
- *   default files scheme will be used, usually "public://".
+ *   A URI containing the destination that $source should be copied to. The
+ *   URI may be a bare filepath (without a scheme) and in that case the default
+ *   scheme (file://) will be used. If this value is omitted, Drupal's default
+ *   files scheme will be used, usually "public://".
  * @param $replace
  *   Replace behavior when the destination file already exists:
  *   - FILE_EXISTS_REPLACE - Replace the existing file.
@@ -778,6 +812,7 @@ function file_unmanaged_copy($source, $destination = NULL, $replace = FILE_EXIST
   if (!file_exists($source)) {
     // @todo Replace drupal_set_message() calls with exceptions instead.
     drupal_set_message(t('The specified file %file could not be copied, because no file by that name exists. Please check that you supplied the correct filename.', array('%file' => $original_source)), 'error');
+    watchdog('file', 'File %file (%realpath) could not be copied because it does not exist.', array('%file' => $original_source, '%realpath' => drupal_realpath($original_source)));
     return FALSE;
   }
 
@@ -786,11 +821,6 @@ function file_unmanaged_copy($source, $destination = NULL, $replace = FILE_EXIST
     $destination = file_build_uri(basename($source));
   }
 
-  // Assert that the destination contains a valid stream.
-  $destination_scheme = file_uri_scheme($destination);
-  if (!$destination_scheme || !file_stream_wrapper_valid_scheme($destination_scheme)) {
-    drupal_set_message(t('The specified file %file could not be copied, because the destination %destination is invalid. This is often caused by improper use of file_unmanaged_copy() or a missing stream wrapper.', array('%file' => $original_source, '%destination' => $destination)), 'error');
-  }
 
   // Prepare the destination directory.
   if (file_prepare_directory($destination)) {
@@ -802,7 +832,8 @@ function file_unmanaged_copy($source, $destination = NULL, $replace = FILE_EXIST
     $dirname = drupal_dirname($destination);
     if (!file_prepare_directory($dirname)) {
       // The destination is not valid.
-      drupal_set_message(t('The specified file %file could not be copied, because the destination %directory is not properly configured. This is often caused by a problem with file or directory permissions.', array('%file' => $original_source, '%directory' => $destination)), 'error');
+      watchdog('file', 'File %file could not be copied, because the destination directory %directory is not configured correctly.', array('%file' => $original_source, '%destination' => drupal_realpath($dirname)));
+      drupal_set_message(t('The specified file %file could not be copied, because the destination directory is not properly configured. This may be caused by a problem with file or directory permissions. More information is available in the system log.', array('%file' => $original_source)), 'error');
       return FALSE;
     }
   }
@@ -810,20 +841,23 @@ function file_unmanaged_copy($source, $destination = NULL, $replace = FILE_EXIST
   // Determine whether we can perform this operation based on overwrite rules.
   $destination = file_destination($destination, $replace);
   if ($destination === FALSE) {
-    drupal_set_message(t('The file %file could not be copied because a file by that name already exists in the destination directory (%directory)', array('%file' => $source, '%directory' => $destination)), 'error');
+    drupal_set_message(t('The file %file could not be copied because a file by that name already exists in the destination directory.', array('%file' => $original_source)), 'error');
+    watchdog('file', 'File %file could not be copied because a file by that name already exists in the destination directory (%directory)', array('%file' => $original_source, '%destination' => drupal_realpath($destination)));
     return FALSE;
   }
 
   // Assert that the source and destination filenames are not the same.
   if (drupal_realpath($source) == drupal_realpath($destination)) {
     drupal_set_message(t('The specified file %file was not copied because it would overwrite itself.', array('%file' => $source)), 'error');
+    watchdog('file', 'File %file could not be copied because it would overwrite itself.', array('%file' => $source));
     return FALSE;
   }
   // Make sure the .htaccess files are present.
   file_ensure_htaccess();
   // Perform the copy operation.
   if (!@copy($source, $destination)) {
-    watchdog('file', 'The specified file %file could not be copied to %destination.', array('%file' => $source, '%destination' => $destination), WATCHDOG_ERROR);
+    drupal_set_message(t('The specified file %file could not be copied.', array('%file' => $source)), 'error');
+    watchdog('file', 'The specified file %file could not be copied to %destination.', array('%file' => $source, '%destination' => drupal_realpath($destination)), WATCHDOG_ERROR);
     return FALSE;
   }
 
@@ -914,6 +948,12 @@ function file_destination($destination, $replace) {
  * @see hook_file_move()
  */
 function file_move(stdClass $source, $destination = NULL, $replace = FILE_EXISTS_RENAME) {
+  if (!file_valid_uri($destination)) {
+    watchdog('file', 'File %file (%realpath) could not be moved, because the destination %destination is invalid. This may be caused by improper use of file_move() or a missing stream wrapper.', array('%file' => $source->uri, '%realpath' => drupal_realpath($source->uri), '%destination' => $destination));
+    drupal_set_message(t('The specified file %file could not be moved, because the destination is invalid. More information is available in the system log.', array('%file' => $source->uri)), 'error');
+    return FALSE;
+  }
+
   if ($uri = file_unmanaged_move($source->uri, $destination, $replace)) {
     $delete_source = FALSE;
 
@@ -1134,6 +1174,12 @@ function file_create_filename($basename, $directory) {
  * @see hook_file_delete()
  */
 function file_delete(stdClass $file, $force = FALSE) {
+  if (!file_valid_uri($file->uri)) {
+    watchdog('file', 'File %file (%realpath) could not be deleted because it is not a valid URI. This may be caused by improper use of file_delete() or a missing stream wrapper.', array('%file' => $file->uri, '%realpath' => drupal_realpath($file->uri)));
+    drupal_set_message(t('The specified file %file could not be deleted, because it is not a valid URI. More information is available in the system log.', array('%file' => $file->uri)), 'error');
+    return FALSE;
+  }
+
   // If any module still has a usage entry in the file_usage table, the file
   // will not be deleted, but file_delete() will return a populated array
   // that tests as TRUE.
@@ -1688,6 +1734,15 @@ function file_validate_image_resolution(stdClass $file, $maximum_dimensions = 0,
  */
 function file_save_data($data, $destination = NULL, $replace = FILE_EXISTS_RENAME) {
   global $user;
+
+  if (empty($destination)) {
+    $destination = file_default_scheme() . '://';
+  }
+  if (!file_valid_uri($destination)) {
+    watchdog('file', 'The data could not be saved because the destination %destination is invalid. This may be caused by improper use of file_save_data() or a missing stream wrapper.', array('%destination' => $destination));
+    drupal_set_message(t('The data could not be saved, because the destination is invalid. More information is available in the system log.'), 'error');
+    return FALSE;
+  }
 
   if ($uri = file_unmanaged_save_data($data, $destination, $replace)) {
     // Create a file object.

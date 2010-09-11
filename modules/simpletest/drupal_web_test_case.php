@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.231 2010/09/04 13:33:53 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.232 2010/09/11 21:14:31 webchick Exp $
 
 /**
  * Global variable that holds information about the tests being run.
@@ -939,7 +939,7 @@ class DrupalWebTestCase extends DrupalTestCase {
     $files = array();
     // Make sure type is valid.
     if (in_array($type, array('binary', 'html', 'image', 'javascript', 'php', 'sql', 'text'))) {
-      $files = file_scan_directory(variable_get('file_public_path', conf_path() . '/files'), '/' . $type . '\-.*/');
+      $files = file_scan_directory('public://', '/' . $type . '\-.*/');
 
       // If size is set then remove any files that are not of that size.
       if ($size !== NULL) {

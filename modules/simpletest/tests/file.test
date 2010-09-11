@@ -1,5 +1,5 @@
 <?php
-// $Id: file.test,v 1.66 2010/09/07 22:40:20 dries Exp $
+// $Id: file.test,v 1.67 2010/09/11 21:14:31 webchick Exp $
 
 /**
  *  @file
@@ -575,7 +575,9 @@ class FileSaveUploadTest extends FileHookTestCase {
     $account = $this->drupalCreateUser(array('access content'));
     $this->drupalLogin($account);
 
-    $this->image = current($this->drupalGetTestFiles('image'));
+    $image_files = $this->drupalGetTestFiles('image');
+    $this->image = current($image_files);
+
     list(, $this->image_extension) = explode('.', $this->image->filename);
     $this->assertTrue(is_file($this->image->uri), t("The image file we're going to upload exists."));
 

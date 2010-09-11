@@ -1,5 +1,5 @@
 <?php
-// $Id: file.test,v 1.24 2010/09/11 00:03:42 webchick Exp $
+// $Id: file.test,v 1.25 2010/09/11 21:14:31 webchick Exp $
 
 /**
  * @file
@@ -116,11 +116,11 @@ class FileFieldTestCase extends DrupalWebTestCase {
     if (is_numeric($nid_or_type)) {
       $node = node_load($nid_or_type);
       $delta = isset($node->$field_name) ? count($node->$field_name) : 0;
-      $edit['files[' . $field_name . '_' . LANGUAGE_NONE . '_' . $delta . ']'] = realpath($file->uri);
+      $edit['files[' . $field_name . '_' . LANGUAGE_NONE . '_' . $delta . ']'] = drupal_realpath($file->uri);
       $this->drupalPost('node/' . $nid_or_type . '/edit', $edit, t('Save'));
     }
     else {
-      $edit['files[' . $field_name . '_' . LANGUAGE_NONE . '_0]'] = realpath($file->uri);
+      $edit['files[' . $field_name . '_' . LANGUAGE_NONE . '_0]'] = drupal_realpath($file->uri);
       $type_name = str_replace('_', '-', $nid_or_type);
       $this->drupalPost('node/add/' . $type_name, $edit, t('Save'));
     }
@@ -149,7 +149,7 @@ class FileFieldTestCase extends DrupalWebTestCase {
    */
   function replaceNodeFile($file, $field_name, $nid, $new_revision = TRUE) {
     $edit = array(
-      'files[' . $field_name . '_' . LANGUAGE_NONE . '_0]' => realpath($file->uri),
+      'files[' . $field_name . '_' . LANGUAGE_NONE . '_0]' => drupal_realpath($file->uri),
       'revision' => (string) (int) $new_revision,
     );
 
@@ -336,7 +336,7 @@ class FileFieldWidgetTestCase extends FileFieldTestCase {
     // Add a comment with a file.
     $text_file = $this->getTestFile('text');
     $edit = array(
-      'files[field_' . $name . '_' . LANGUAGE_NONE . '_' . 0 . ']' => realpath($text_file->uri),
+      'files[field_' . $name . '_' . LANGUAGE_NONE . '_' . 0 . ']' => drupal_realpath($text_file->uri),
       'comment_body[' . LANGUAGE_NONE . '][0][value]' => $comment_body = $this->randomName(),
     );
     $this->drupalPost(NULL, $edit, t('Save'));
@@ -566,6 +566,8 @@ class FileFieldValidateTestCase extends FileFieldTestCase {
 
     // Create a new node with the uploaded file.
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
+    $this->assertTrue($nid !== FALSE, t('uploadNodeFile(@test_file, @field_name, @type_name) succeeded', array('@test_file' => $test_file->uri, '@field_name' => $field_name, '@type_name' => $type_name)));
+
     $node = node_load($nid, NULL, TRUE);
 
     $node_file = (object) $node->{$field_name}[LANGUAGE_NONE][0];
