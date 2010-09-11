@@ -9788,6 +9788,23 @@ db_insert('node')->fields(array(
   'tnid' => '0',
   'translate' => '0',
 ))
+->values(array(
+  'nid' => '37',
+  'vid' => '49',
+  'type' => 'broken',
+  'language' => '',
+  'title' => 'node title 24',
+  'uid' => '6',
+  'status' => '1',
+  'created' => '1263769200',
+  'changed' => '1279310614',
+  'comment' => '0',
+  'promote' => '0',
+  'moderate' => '0',
+  'sticky' => '0',
+  'tnid' => '0',
+  'translate' => '0',
+))
 ->execute();
 
 db_create_table('node_access', array(
@@ -10156,6 +10173,13 @@ db_insert('node_comment_statistics')->fields(array(
   'last_comment_timestamp' => '1282936268',
   'last_comment_name' => NULL,
   'last_comment_uid' => '5',
+  'comment_count' => '0',
+))
+->values(array(
+  'nid' => '37',
+  'last_comment_timestamp' => '1279310615',
+  'last_comment_name' => NULL,
+  'last_comment_uid' => '6',
   'comment_count' => '0',
 ))
 ->execute();
@@ -10796,6 +10820,17 @@ db_insert('node_revisions')->fields(array(
   'teaser' => '',
   'log' => 'added 11 poll',
   'timestamp' => '1282936268',
+  'format' => '0',
+))
+->values(array(
+  'nid' => '37',
+  'vid' => '49',
+  'uid' => '6',
+  'title' => 'node title 24',
+  'body' => 'node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37',
+  'teaser' => 'node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37node body (broken) - 37no',
+  'log' => 'added 12 node',
+  'timestamp' => '1279310614',
   'format' => '0',
 ))
 ->execute();
@@ -19282,6 +19317,12 @@ db_insert('url_alias')->fields(array(
   'pid' => '48',
   'src' => 'node/36/results',
   'dst' => 'content/poll/11/results',
+  'language' => '',
+))
+->values(array(
+  'pid' => '49',
+  'src' => 'node/37',
+  'dst' => 'content/1263769200',
   'language' => '',
 ))
 ->execute();
