@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.416 2010/08/22 14:11:47 dries Exp $
+// $Id: bootstrap.inc,v 1.417 2010/09/11 06:24:55 webchick Exp $
 
 /**
  * @file
@@ -2327,15 +2327,15 @@ function get_t() {
 function drupal_language_initialize() {
   $types = language_types();
 
-  // Ensure the language is correctly returned, even without multilanguage support.
+  // Ensure the language is correctly returned, even without multilanguage
+  // support. Also make sure we have a $language fallback, in case a language
+  // negotiation callback needs to do a full bootstrap.
   // Useful for eg. XML/HTML 'lang' attributes.
-  if (!drupal_multilingual()) {
-    $default = language_default();
-    foreach ($types as $type) {
-      $GLOBALS[$type] = $default;
-    }
+  $default = language_default();
+  foreach ($types as $type) {
+    $GLOBALS[$type] = $default;
   }
-  else {
+  if (drupal_multilingual()) {
     include_once DRUPAL_ROOT . '/includes/language.inc';
     foreach ($types as $type) {
       $GLOBALS[$type] = language_initialize($type);
