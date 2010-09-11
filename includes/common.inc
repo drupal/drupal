@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1215 2010/09/10 07:58:40 webchick Exp $
+// $Id: common.inc,v 1.1216 2010/09/11 01:47:14 dries Exp $
 
 /**
  * @file
@@ -2398,7 +2398,7 @@ function drupal_deliver_page($page_callback_result, $default_delivery_callback =
     // If a delivery callback is specified, but doesn't exist as a function,
     // something is wrong, but don't print anything, since it's not known
     // what format the response needs to be in.
-    watchdog('delivery callback not found', check_plain($delivery_callback) . ': ' . check_plain($_GET['q']), NULL, WATCHDOG_ERROR);
+    watchdog('delivery callback not found', 'callback %callback not found: %q.', array('%callback' => $delivery_callback, '%q' => $_GET['q']), WATCHDOG_ERROR);
   }
 }
 
@@ -2431,7 +2431,7 @@ function drupal_deliver_html_page($page_callback_result) {
         // Print a 404 page.
         drupal_add_http_header('Status', '404 Not Found');
 
-        watchdog('page not found', check_plain($_GET['q']), NULL, WATCHDOG_WARNING);
+        watchdog('page not found', 'page not found: %q.', array('%q' => $_GET['q']), WATCHDOG_WARNING);
 
         // Keep old path for reference, and to allow forms to redirect to it.
         if (!isset($_GET['destination'])) {
@@ -2460,7 +2460,7 @@ function drupal_deliver_html_page($page_callback_result) {
       case MENU_ACCESS_DENIED:
         // Print a 403 page.
         drupal_add_http_header('Status', '403 Forbidden');
-        watchdog('access denied', check_plain($_GET['q']), NULL, WATCHDOG_WARNING);
+        watchdog('access denied', 'access denied: %q', array('%q' => $_GET['q']), WATCHDOG_WARNING);
 
         // Keep old path for reference, and to allow forms to redirect to it.
         if (!isset($_GET['destination'])) {
