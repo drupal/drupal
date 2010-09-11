@@ -6,7 +6,6 @@
  * Adds contextual links to perform actions related to elements on a page.
  */
 
-
 /**
  * Implements hook_help().
  */
@@ -57,9 +56,31 @@ function contextual_library() {
 }
 
 /**
+ * Implements hook_element_info().
+ */
+function contextual_element_info() {
+  $types['contextual_links'] = array(
+    '#pre_render' => array('contextual_pre_render_links'),
+    '#theme' => 'links__contextual',
+    '#links' => array(),
+    '#prefix' => '<div class="contextual-links-wrapper">',
+    '#suffix' => '</div>',
+    '#attributes' => array(
+      'class' => array('contextual-links'),
+    ),
+    '#attached' => array(
+      'library' => array(
+        array('contextual', 'contextual-links'),
+      ),
+    ),
+  );
+  return $types;
+}
+
+/**
  * Template variable preprocessor for contextual links.
  *
- * @see contextual_links_view()
+ * @see contextual_pre_render_links()
  */
 function contextual_preprocess(&$variables, $hook) {
   static $hooks;
@@ -86,10 +107,14 @@ function contextual_preprocess(&$variables, $hook) {
   }
 
   if (isset($element) && is_array($element) && !empty($element['#contextual_links'])) {
-    $variables['title_suffix']['contextual_links'] = contextual_links_view($element);
-    if (!empty($variables['title_suffix']['contextual_links'])) {
-      $variables['classes_array'][] = 'contextual-links-region';
-    }
+    // Initialize the template variable as a renderable array.
+    $variables['title_suffix']['contextual_links'] = array(
+      '#type' => 'contextual_links',
+      '#contextual_links' => $element['#contextual_links'],
+      '#element' => $element,
+    );
+    // Mark this element as potentially having contextual links attached to it.
+    $variables['classes_array'][] = 'contextual-links-region';
   }
 }
 
@@ -113,9 +138,7 @@ function contextual_preprocess(&$variables, $hook) {
  *
  * @see menu_contextual_links()
  */
-function contextual_links_view($element) {
-  static $destination;
-
+function contextual_pre_render_links($element) {
   // Retrieve contextual menu links.
   $items = array();
   foreach ($element['#contextual_links'] as $module => $args) {
@@ -123,10 +146,6 @@ function contextual_links_view($element) {
   }
 
   // Transform contextual links into parameters suitable for theme_link().
-  if (!isset($destination)) {
-    $destination = drupal_get_destination();
-  }
-
   $links = array();
   foreach ($items as $class => $item) {
     $class = drupal_html_class($class);
@@ -134,26 +153,21 @@ function contextual_links_view($element) {
       'title' => $item['title'],
       'href' => $item['href'],
     );
-    // @todo theme_links() should *really* use the same parameters as l()...
-    if (!isset($item['localized_options']['query'])) {
-      $item['localized_options']['query'] = array();
-    }
-    $item['localized_options']['query'] += $destination;
+    // @todo theme_links() should *really* use the same parameters as l().
+    $item['localized_options'] += array('query' => array());
+    $item['localized_options']['query'] += drupal_get_destination();
     $links[$class] += $item['localized_options'];
   }
-  $build = array();
-  if ($links) {
-    $build = array(
-      '#prefix' => '<div class="contextual-links-wrapper">',
-      '#suffix' => '</div>',
-      '#theme' => 'links__contextual',
-      '#links' => $links,
-      '#attributes' => array('class' => array('contextual-links')),
-      '#attached' => array(
-        'library' => array(array('contextual', 'contextual-links')),
-      ),
-    );
+  $element['#links'] = $links;
+
+  // Allow modules to alter the renderable contextual links element.
+  drupal_alter('contextual_links_view', $element, $items);
+
+  // If there are no links, tell drupal_render() to abort rendering.
+  if (empty($element['#links'])) {
+    $element['#printed'] = TRUE;
   }
-  return $build;
+
+  return $element;
 }
 

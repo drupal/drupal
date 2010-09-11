@@ -1223,9 +1223,10 @@ function hook_menu_local_tasks_alter(&$data, $router_item, $root_path) {
  *   This is a normalized path, which means that an originally passed path of
  *   'node/123' became 'node/%'.
  *
+ * @see hook_contextual_links_view_alter()
  * @see menu_contextual_links()
  * @see hook_menu()
- * @see system_preprocess()
+ * @see contextual_preprocess()
  */
 function hook_menu_contextual_links_alter(&$links, $router_item, $root_path) {
   // Add a link to all contextual links for nodes.
