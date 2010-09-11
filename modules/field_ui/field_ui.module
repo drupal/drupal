@@ -1,5 +1,5 @@
 <?php
-// $Id: field_ui.module,v 1.31 2010/06/26 02:06:53 dries Exp $
+// $Id: field_ui.module,v 1.32 2010/09/11 00:03:42 webchick Exp $
 
 /**
  * @file
@@ -275,11 +275,6 @@ function _field_ui_view_mode_menu_access($entity_type, $bundle, $view_mode, $acc
  */
 function field_ui_theme() {
   return array(
-    'field_ui_display_overview_table' => array(
-      'render element' => 'elements',
-      'file' => 'field_ui.admin.inc',
-      'template' => 'field_ui-display-overview-table',
-    ),
     'field_ui_table' => array(
       'render element' => 'elements',
     ),
@@ -291,8 +286,10 @@ function field_ui_theme() {
  */
 function field_ui_element_info() {
   return array(
-    'table' => array(
+    'field_ui_table' => array(
       '#theme' => 'field_ui_table',
+      '#pre_render' => array('field_ui_table_pre_render'),
+      '#regions' => array('' => array()),
     ),
   );
 }

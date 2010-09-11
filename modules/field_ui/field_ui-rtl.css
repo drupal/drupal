@@ -1,7 +1,6 @@
-/* $Id: field_ui-rtl.css,v 1.2 2010/06/26 02:06:53 dries Exp $ */
+/* $Id: field_ui-rtl.css,v 1.3 2010/09/11 00:03:42 webchick Exp $ */
 
 /* 'Manage fields' overview */
-#field-overview tr.add-new .label-input {
+table.field-ui-overview tr.add-new .label-input {
   float: right;
 }
-

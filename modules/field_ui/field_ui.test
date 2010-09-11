@@ -1,5 +1,5 @@
 <?php
-// $Id: field_ui.test,v 1.21 2010/09/02 20:44:56 dries Exp $
+// $Id: field_ui.test,v 1.22 2010/09/11 00:03:42 webchick Exp $
 
 /**
  * @file
@@ -85,8 +85,8 @@ class FieldUITestCase extends DrupalWebTestCase {
   function createField() {
     // Create a test field.
     $edit = array(
-      '_add_new_field[label]' => $this->field_label,
-      '_add_new_field[field_name]' => $this->field_name_input,
+      'fields[_add_new_field][label]' => $this->field_label,
+      'fields[_add_new_field][field_name]' => $this->field_name_input,
     );
     $this->fieldUIAddNewField('admin/structure/types/manage/' . $this->hyphen_type, $edit);
 
@@ -95,7 +95,7 @@ class FieldUITestCase extends DrupalWebTestCase {
     // should also appear in the 'taxonomy term' entity.
     $vocabulary = taxonomy_vocabulary_load(1);
     $this->drupalGet('admin/structure/taxonomy/' . $vocabulary->machine_name . '/fields');
-    $this->assertTrue($this->xpath('//select[@name="_add_existing_field[field_name]"]//option[@value="' . $this->field_name . '"]'), t('Existing field was found in account settings.'));
+    $this->assertTrue($this->xpath('//select[@name="fields[_add_existing_field][field_name]"]//option[@value="' . $this->field_name . '"]'), t('Existing field was found in account settings.'));
   }
 
   /**
@@ -136,8 +136,8 @@ class FieldUITestCase extends DrupalWebTestCase {
 
     // Add a new field based on an existing field.
     $edit = array(
-      '_add_existing_field[label]' => $this->field_label . '_2',
-      '_add_existing_field[field_name]' => $this->field_name,
+      'fields[_add_existing_field][label]' => $this->field_label . '_2',
+      'fields[_add_existing_field][field_name]' => $this->field_name,
     );
     $this->fieldUIAddExistingField("admin/structure/types/manage/page", $edit);
   }
@@ -224,8 +224,8 @@ class FieldUITestCase extends DrupalWebTestCase {
     // Create a new field.
     $bundle_path1 = 'admin/structure/types/manage/' . $this->hyphen_type;
     $edit1 = array(
-      '_add_new_field[label]' => $this->field_label,
-      '_add_new_field[field_name]' => $this->field_name,
+      'fields[_add_new_field][label]' => $this->field_label,
+      'fields[_add_new_field][field_name]' => $this->field_name,
     );
     $this->fieldUIAddNewField($bundle_path1, $edit1);
 
@@ -238,8 +238,8 @@ class FieldUITestCase extends DrupalWebTestCase {
     // Add an instance to the second node type.
     $bundle_path2 = 'admin/structure/types/manage/' . $hyphen_type2;
     $edit2 = array(
-      '_add_existing_field[label]' => $this->field_label,
-      '_add_existing_field[field_name]' => $this->field_name,
+      'fields[_add_existing_field][label]' => $this->field_label,
+      'fields[_add_existing_field][field_name]' => $this->field_name,
     );
     $this->fieldUIAddExistingField($bundle_path2, $edit2);
 
@@ -317,11 +317,11 @@ class FieldUITestCase extends DrupalWebTestCase {
   function fieldUIAddNewField($bundle_path, $initial_edit, $field_edit = array(), $instance_edit = array()) {
     // Use 'test_field' field type by default.
     $initial_edit += array(
-      '_add_new_field[type]' => 'test_field',
-      '_add_new_field[widget_type]' => 'test_field_widget',
+      'fields[_add_new_field][type]' => 'test_field',
+      'fields[_add_new_field][widget_type]' => 'test_field_widget',
     );
-    $label = $initial_edit['_add_new_field[label]'];
-    $field_name = $initial_edit['_add_new_field[field_name]'];
+    $label = $initial_edit['fields[_add_new_field][label]'];
+    $field_name = $initial_edit['fields[_add_new_field][field_name]'];
 
     // First step : 'Add new field' on the 'Manage fields' page.
     $this->drupalPost("$bundle_path/fields",  $initial_edit, t('Save'));
@@ -357,10 +357,10 @@ class FieldUITestCase extends DrupalWebTestCase {
   function fieldUIAddExistingField($bundle_path, $initial_edit, $instance_edit = array()) {
     // Use 'test_field_widget' by default.
     $initial_edit += array(
-      '_add_existing_field[widget_type]' => 'test_field_widget',
+      'fields[_add_existing_field][widget_type]' => 'test_field_widget',
     );
-    $label = $initial_edit['_add_existing_field[label]'];
-    $field_name = $initial_edit['_add_existing_field[field_name]'];
+    $label = $initial_edit['fields[_add_existing_field][label]'];
+    $field_name = $initial_edit['fields[_add_existing_field][field_name]'];
 
     // First step : 'Add existing field' on the 'Manage fields' page.
     $this->drupalPost("$bundle_path/fields", $initial_edit, t('Save'));
