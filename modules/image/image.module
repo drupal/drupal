@@ -912,6 +912,7 @@ function image_effect_definitions() {
         }
       }
       uasort($effects, '_image_effect_definitions_sort');
+      drupal_alter('image_effect_info', $effects);
       cache_set("image_effects:$langcode", $effects);
     }
   }
