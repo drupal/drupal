@@ -288,6 +288,9 @@ function image_file_download($uri) {
     array_shift($args);
     // Get the style name from the second part.
     $style_name = array_shift($args);
+    // Remove the scheme from the path.
+    array_shift($args);
+
     // Then the remaining parts are the path to the image.
     $original_uri = file_uri_scheme($uri) . '://' . implode('/', $args);
 
