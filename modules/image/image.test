@@ -1,5 +1,5 @@
 <?php
-// $Id: image.test,v 1.28 2010/09/01 20:08:17 dries Exp $
+// $Id: image.test,v 1.29 2010/09/11 05:07:22 webchick Exp $
 
 /**
  * @file
@@ -620,12 +620,27 @@ class ImageFieldDisplayTestCase extends ImageFieldTestCase {
   }
 
   /**
+   * Test image formatters on node display for public files.
+   */
+  function testImageFieldFormattersPublic() {
+    $this->_testImageFieldFormatters('public');
+  }
+
+  /**
+   * Test image formatters on node display for private files.
+   */
+  function testImageFieldFormattersPrivate() {
+    // Remove access content permission from anonymous users.
+    user_role_change_permissions(DRUPAL_ANONYMOUS_RID, array('access content' => FALSE));
+    $this->_testImageFieldFormatters('private');
+  }
+
+  /**
    * Test image formatters on node display.
    */
-  function testImageFieldFormatters() {
+  function _testImageFieldFormatters($scheme) {
     $field_name = strtolower($this->randomName());
-    $this->createImageField($field_name, 'article');
-
+    $this->createImageField($field_name, 'article', array('uri_scheme' => $scheme));
     // Create a new node with an image attached.
     $test_image = current($this->drupalGetTestFiles('image'));
     $nid = $this->uploadNodeImage($test_image, $field_name, 'article');
@@ -648,6 +663,23 @@ class ImageFieldDisplayTestCase extends ImageFieldTestCase {
     $default_output = l(theme('image', $image_info), file_create_url($image_uri), array('html' => TRUE));
     $this->drupalGet('node/' . $nid);
     $this->assertRaw($default_output, t('Image linked to file formatter displaying correctly on full node view.'));
+    // Verify that the image can be downloaded.
+    $this->assertEqual(file_get_contents($test_image->uri), $this->drupalGet(file_create_url($image_uri)), t('File was downloaded successfully.'));
+    if ($scheme == 'private') {
+      // Only verify HTTP headers when using private scheme and the headers are
+      // sent by Drupal.
+      $this->assertEqual($this->drupalGetHeader('Content-Type'), 'image/png; name="' . $test_image->filename . '"', t('Content-Type header was sent.'));
+      $this->assertEqual($this->drupalGetHeader('Content-Disposition'), 'inline; filename="' . $test_image->filename . '"', t('Content-Disposition header was sent.'));
+      $this->assertEqual($this->drupalGetHeader('Cache-Control'), 'private', t('Cache-Control header was sent.'));
+
+      // Log out and try to access the file.
+      $this->drupalLogout();
+      $this->drupalGet(file_create_url($image_uri));
+      $this->assertResponse('403', t('Access denied to original image as anonymous user.'));
+
+      // Log in again.
+      $this->drupalLogin($this->admin_user);
+    }
 
     // Test the image linked to content formatter.
     $instance['display']['default']['settings']['image_link'] = 'content';
@@ -660,7 +692,7 @@ class ImageFieldDisplayTestCase extends ImageFieldTestCase {
     $instance['display']['default']['settings']['image_link'] = '';
     $instance['display']['default']['settings']['image_style'] = 'thumbnail';
     field_update_instance($instance);
-    // Ensure the derrivative image is generated so we do not have to deal with
+    // Ensure the derivative image is generated so we do not have to deal with
     // image style callback paths.
     $this->drupalGet(image_style_url('thumbnail', $image_uri));
     $image_info['path'] = image_style_path('thumbnail', $image_uri);
@@ -668,6 +700,13 @@ class ImageFieldDisplayTestCase extends ImageFieldTestCase {
     $default_output = theme('image', $image_info);
     $this->drupalGet('node/' . $nid);
     $this->assertRaw($default_output, t('Image style thumbnail formatter displaying correctly on full node view.'));
+
+    if ($scheme == 'private') {
+      // Log out and try to access the file.
+      $this->drupalLogout();
+      $this->drupalGet(image_style_url('thumbnail', $image_uri));
+      $this->assertResponse('403', t('Access denied to image style thumbnail as anonymous user.'));
+    }
   }
 
   /**

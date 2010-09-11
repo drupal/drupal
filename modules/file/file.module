@@ -1,5 +1,5 @@
 <?php
-// $Id: file.module,v 1.38 2010/09/10 07:58:40 webchick Exp $
+// $Id: file.module,v 1.39 2010/09/11 05:07:22 webchick Exp $
 
 /**
  * @file
@@ -138,8 +138,14 @@ function file_file_download($uri, $field_type = 'file') {
     return;
   }
 
-  // Find out which (if any) file fields contain this file.
+  // Find out which (if any) fields of this type contain the file.
   $references = file_get_file_references($file, NULL, FIELD_LOAD_REVISION, $field_type);
+
+  // If there are no references, stop processing, to avoid returning headers
+  // for files controlled by other modules.
+  if (empty($references)) {
+    return;
+  }
 
   // Default to allow access.
   $denied = FALSE;
