@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.489 2010/09/10 07:58:40 webchick Exp $
+// $Id: form.inc,v 1.490 2010/09/11 14:38:04 dries Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -991,7 +991,7 @@ function drupal_validate_form($form_id, &$form, &$form_state) {
   if (isset($form['#token'])) {
     if (!drupal_valid_token($form_state['values']['form_token'], $form['#token'])) {
       // Setting this error will cause the form to fail validation.
-      form_set_error('form_token', t('Validation error, please try again. If this error persists, please contact the site administrator.'));
+      form_set_error('form_token', t('This form is outdated. Reload the page and try again. Contact the site administrator if the problem persists.'));
     }
   }
 
