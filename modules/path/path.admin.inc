@@ -1,5 +1,5 @@
 <?php
-// $Id: path.admin.inc,v 1.44 2010/05/14 04:57:59 webchick Exp $
+// $Id: path.admin.inc,v 1.45 2010/09/11 03:04:43 dries Exp $
 
 /**
  * @file
@@ -248,7 +248,8 @@ function path_admin_filter_form($form, &$form_state, $keys = '') {
   );
   $form['basic']['filter'] = array(
     '#type' => 'textfield',
-    '#title' => '',
+    '#title' => 'Path alias',
+    '#title_display' => 'invisible',
     '#default_value' => $keys,
     '#maxlength' => 128,
     '#size' => 25,
