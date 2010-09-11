@@ -100,6 +100,7 @@ function taxonomy_entity_info() {
       'entity keys' => array(
         'id' => 'tid',
         'bundle' => 'vocabulary_machine_name',
+        'label' => 'name',
       ),
       'bundle keys' => array(
         'bundle' => 'machine_name',
@@ -131,6 +132,7 @@ function taxonomy_entity_info() {
     'base table' => 'taxonomy_vocabulary',
     'entity keys' => array(
       'id' => 'vid',
+      'label' => 'name',
     ),
     'fieldable' => FALSE,
   );

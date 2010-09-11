@@ -264,6 +264,7 @@ function system_entity_info() {
       'base table' => 'file_managed',
       'entity keys' => array(
         'id' => 'fid',
+        'label' => 'filename',
       ),
       'static cache' => FALSE,
     ),

@@ -146,6 +146,7 @@ function user_entity_info() {
       'controller class' => 'UserController',
       'base table' => 'users',
       'uri callback' => 'user_uri',
+      'label callback' => 'format_username',
       'fieldable' => TRUE,
       'entity keys' => array(
         'id' => 'uid',
