@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.427 2010/07/31 12:54:58 webchick Exp $
+// $Id: block.module,v 1.428 2010/09/12 00:20:36 dries Exp $
 
 /**
  * @file
@@ -336,8 +336,12 @@ function _block_get_renderable_array($list = array()) {
     $build[$key] = $block->content;
     unset($block->content);
 
-    // Add contextual links for this block; skipping the system main block.
-    if ($key != 'system_main') {
+    // Add contextual links for this block; skip the main content block, since
+    // contextual links are basically output as tabs/local tasks already. Also
+    // skip the help block, since we assume that most users do not need or want
+    // to perform contextual actions on the help block, and the links needlessly
+    // draw attention on it.
+    if ($key != 'system_main' && $key != 'system_help') {
       $build[$key]['#contextual_links']['block'] = array('admin/structure/block/manage', array($block->module, $block->delta));
     }
 
