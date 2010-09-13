@@ -23,9 +23,9 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
   function setUp() {
     parent::setUp(array('field_test'));
 
-    field_attach_create_bundle('bundle1', 'test_entity_bundle_key');
-    field_attach_create_bundle('bundle2', 'test_entity_bundle_key');
-    field_attach_create_bundle('test_bundle', 'test_entity');
+    field_attach_create_bundle('test_entity_bundle_key', 'bundle1');
+    field_attach_create_bundle('test_entity_bundle_key', 'bundle2');
+    field_attach_create_bundle('test_entity', 'test_bundles');
     field_attach_create_bundle('test_entity_bundle', 'test_entity_bundle');
 
     $instances = array();
@@ -59,6 +59,8 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
     $instances[0]['bundle'] = 'bundle1';
     $instances[0]['entity_type'] = 'test_entity_bundle_key';
     field_create_instance($instances[0]);
+    $instances[0]['bundle'] = 'bundle2';
+    field_create_instance($instances[0]);
     $instances[0]['bundle'] = $instances[0]['entity_type'] = 'test_entity_bundle';
     field_create_instance($instances[0]);
 
@@ -87,7 +89,7 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
 
     $instances[1] = $instance;
 
-    // Add an instance to that bundle.
+    // Add a field instance to the bundles.
     $instances[1]['bundle'] = 'bundle1';
     $instances[1]['entity_type'] = 'test_entity_bundle_key';
     field_create_instance($instances[1]);
@@ -259,6 +261,8 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
         array('test_entity_bundle_key', 2),
         array('test_entity_bundle_key', 3),
         array('test_entity_bundle_key', 4),
+        array('test_entity_bundle_key', 5),
+        array('test_entity_bundle_key', 6),
         array('test_entity', 1),
         array('test_entity', 2),
         array('test_entity', 3),
@@ -303,6 +307,8 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
       array('test_entity_bundle_key', 2),
       array('test_entity_bundle_key', 3),
       array('test_entity_bundle_key', 4),
+      array('test_entity_bundle_key', 5),
+      array('test_entity_bundle_key', 6),
     ), t('Test sort entity entity_id in ascending order, with a field condition.'), TRUE);
 
     $query = new EntityFieldQuery();
@@ -311,6 +317,8 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
       ->fieldCondition($this->fields[0], 'value', 0, '>')
       ->propertyOrderBy('ftid', 'DESC');
     $this->assertEntityFieldQuery($query, array(
+      array('test_entity_bundle_key', 6),
+      array('test_entity_bundle_key', 5),
       array('test_entity_bundle_key', 4),
       array('test_entity_bundle_key', 3),
       array('test_entity_bundle_key', 2),
@@ -355,6 +363,8 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
       array('test_entity_bundle_key', 2),
       array('test_entity_bundle_key', 3),
       array('test_entity_bundle_key', 4),
+      array('test_entity_bundle_key', 5),
+      array('test_entity_bundle_key', 6),
     ), t('Test sort entity entity_id property in ascending order, with a field condition.'), TRUE);
 
     $query = new EntityFieldQuery();
@@ -363,6 +373,8 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
       ->fieldCondition($this->fields[0], 'value', 0, '>')
       ->propertyOrderBy('ftid', 'DESC');
     $this->assertEntityFieldQuery($query, array(
+      array('test_entity_bundle_key', 6),
+      array('test_entity_bundle_key', 5),
       array('test_entity_bundle_key', 4),
       array('test_entity_bundle_key', 3),
       array('test_entity_bundle_key', 2),
@@ -374,28 +386,28 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
     $query
       ->entityCondition('entity_type', 'test_entity_bundle_key')
       ->entityOrderBy('bundle', 'ASC')
-      ->propertyOrderBy('ftid', 'ASC');
+      ->propertyOrderBy('ftid', 'DESC');
     $this->assertEntityFieldQuery($query, array(
-      array('test_entity_bundle_key', 1),
-      array('test_entity_bundle_key', 2),
-      array('test_entity_bundle_key', 3),
       array('test_entity_bundle_key', 4),
-      array('test_entity_bundle_key', 5),
+      array('test_entity_bundle_key', 3),
+      array('test_entity_bundle_key', 2),
+      array('test_entity_bundle_key', 1),
       array('test_entity_bundle_key', 6),
+      array('test_entity_bundle_key', 5),
     ), t('Test sort entity bundle in ascending order.'), TRUE);
 
     $query = new EntityFieldQuery();
     $query
       ->entityCondition('entity_type', 'test_entity_bundle_key')
       ->entityOrderBy('bundle', 'DESC')
-      ->propertyOrderBy('ftid', 'DESC');
+      ->propertyOrderBy('ftid', 'ASC');
     $this->assertEntityFieldQuery($query, array(
-      array('test_entity_bundle_key', 6),
       array('test_entity_bundle_key', 5),
-      array('test_entity_bundle_key', 4),
-      array('test_entity_bundle_key', 3),
-      array('test_entity_bundle_key', 2),
+      array('test_entity_bundle_key', 6),
       array('test_entity_bundle_key', 1),
+      array('test_entity_bundle_key', 2),
+      array('test_entity_bundle_key', 3),
+      array('test_entity_bundle_key', 4),
     ), t('Test sort entity bundle in descending order.'), TRUE);
     
     // Test entity sort by bundle, with a field condition.
@@ -410,6 +422,8 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
       array('test_entity_bundle_key', 2),
       array('test_entity_bundle_key', 3),
       array('test_entity_bundle_key', 4),
+      array('test_entity_bundle_key', 5),
+      array('test_entity_bundle_key', 6),
     ), t('Test sort entity bundle in ascending order, with a field condition.'), TRUE);
 
     $query = new EntityFieldQuery();
@@ -419,6 +433,8 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
       ->entityOrderBy('bundle', 'DESC')
       ->propertyOrderBy('ftid', 'DESC');
     $this->assertEntityFieldQuery($query, array(
+      array('test_entity_bundle_key', 6),
+      array('test_entity_bundle_key', 5),
       array('test_entity_bundle_key', 4),
       array('test_entity_bundle_key', 3),
       array('test_entity_bundle_key', 2),
@@ -530,6 +546,8 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
       array('test_entity_bundle_key', 2),
       array('test_entity_bundle_key', 3),
       array('test_entity_bundle_key', 4),
+      array('test_entity_bundle_key', 5),
+      array('test_entity_bundle_key', 6),
     ), t('Test sort field in ascending order without field condition.'), TRUE);
 
     $query = new EntityFieldQuery();
@@ -537,6 +555,8 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
       ->entityCondition('entity_type', 'test_entity_bundle_key')
       ->fieldOrderBy($this->fields[0], 'value', 'DESC');
     $this->assertEntityFieldQuery($query, array(
+      array('test_entity_bundle_key', 6),
+      array('test_entity_bundle_key', 5),
       array('test_entity_bundle_key', 4),
       array('test_entity_bundle_key', 3),
       array('test_entity_bundle_key', 2),
@@ -547,20 +567,24 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
     $query
       ->entityCondition('entity_type', 'test_entity_bundle_key')
       ->fieldCondition($this->fields[0], 'value', 0, '>')
-      ->fieldOrderBy($this->fields[0], 'value', 'asc');
+      ->fieldOrderBy($this->fields[0], 'value', 'ASC');
     $this->assertEntityFieldQuery($query, array(
       array('test_entity_bundle_key', 1),
       array('test_entity_bundle_key', 2),
       array('test_entity_bundle_key', 3),
       array('test_entity_bundle_key', 4),
+      array('test_entity_bundle_key', 5),
+      array('test_entity_bundle_key', 6),
     ), t('Test sort field in ascending order.'), TRUE);
 
     $query = new EntityFieldQuery();
     $query
       ->entityCondition('entity_type', 'test_entity_bundle_key')
       ->fieldCondition($this->fields[0], 'value', 0, '>')
-      ->fieldOrderBy($this->fields[0], 'value', 'desc');
+      ->fieldOrderBy($this->fields[0], 'value', 'DESC');
     $this->assertEntityFieldQuery($query, array(
+      array('test_entity_bundle_key', 6),
+      array('test_entity_bundle_key', 5),
       array('test_entity_bundle_key', 4),
       array('test_entity_bundle_key', 3),
       array('test_entity_bundle_key', 2),
@@ -673,6 +697,8 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
       array('test_entity_bundle_key', 1),
       array('test_entity_bundle_key', 2),
       array('test_entity_bundle_key', 4),
+      array('test_entity_bundle_key', 5),
+      array('test_entity_bundle_key', 6),
       array('test_entity', 1),
       array('test_entity', 2),
       array('test_entity', 4),
@@ -725,6 +751,8 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
     $this->assertEntityFieldQuery($query, array(
       array('test_entity_bundle_key', 3),
       array('test_entity_bundle_key', 4),
+      array('test_entity_bundle_key', 5),
+      array('test_entity_bundle_key', 6),
       array('test_entity', 3),
       array('test_entity', 4),
     ), t('Test the "greater than" operation on a field.'));
@@ -744,6 +772,8 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
     $this->assertEntityFieldQuery($query, array(
       array('test_entity_bundle_key', 3),
       array('test_entity_bundle_key', 4),
+      array('test_entity_bundle_key', 5),
+      array('test_entity_bundle_key', 6),
       array('test_entity', 3),
       array('test_entity', 4),
     ), t('Test the "greater than or equal to" operation on a field.'));
@@ -764,6 +794,8 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
     $this->assertEntityFieldQuery($query, array(
       array('test_entity_bundle_key', 1),
       array('test_entity_bundle_key', 2),
+      array('test_entity_bundle_key', 5),
+      array('test_entity_bundle_key', 6),
       array('test_entity', 1),
       array('test_entity', 2),
     ), t('Test the "not in" operation on a field.'));
@@ -865,7 +897,7 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
     $query = new EntityFieldQuery();
     $query
       ->entityCondition('entity_type', 'test_entity_bundle_key')
-      ->propertyOrderBy('ftid', 'asc')
+      ->propertyOrderBy('ftid', 'ASC')
       ->range(0, 2);
     $this->assertEntityFieldQuery($query, array(
       array('test_entity_bundle_key', 1),
@@ -876,7 +908,7 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
     $query
       ->entityCondition('entity_type', 'test_entity_bundle_key')
       ->fieldCondition($this->fields[0], 'value', 0, '>=')
-      ->fieldOrderBy($this->fields[0], 'value', 'asc')
+      ->fieldOrderBy($this->fields[0], 'value', 'ASC')
       ->range(0, 2);
     $this->assertEntityFieldQuery($query, array(
       array('test_entity_bundle_key', 1),
@@ -886,7 +918,7 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
     $query = new EntityFieldQuery();
     $query
       ->entityCondition('entity_type', 'test_entity_bundle_key')
-      ->propertyOrderBy('ftid', 'asc')
+      ->propertyOrderBy('ftid', 'ASC')
       ->range(4, 6);
     $this->assertEntityFieldQuery($query, array(
       array('test_entity_bundle_key', 5),
@@ -897,11 +929,13 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
     $query
       ->entityCondition('entity_type', 'test_entity_bundle_key')
       ->fieldCondition($this->fields[0], 'value', 0, '>')
-      ->fieldOrderBy($this->fields[0], 'value', 'asc')
+      ->fieldOrderBy($this->fields[0], 'value', 'ASC')
       ->range(2, 4);
     $this->assertEntityFieldQuery($query, array(
       array('test_entity_bundle_key', 3),
       array('test_entity_bundle_key', 4),
+      array('test_entity_bundle_key', 5),
+      array('test_entity_bundle_key', 6),
     ), t('Test offset on a field.'), TRUE);
 
     for ($i = 6; $i < 10; $i++) {
@@ -917,6 +951,8 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
     $this->assertEntityFieldQuery($query, array(
       array('test_entity_bundle_key', 3),
       array('test_entity_bundle_key', 4),
+      array('test_entity_bundle_key', 5),
+      array('test_entity_bundle_key', 6),
       array('test_entity', 3),
       array('test_entity', 4),
       array('test_entity_bundle', 8),
