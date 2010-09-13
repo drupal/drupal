@@ -7,9 +7,11 @@
 abstract class UpgradePathTestCase extends DrupalWebTestCase {
 
   /**
-   * The file path to the dumped database to load into the child site.
+   * The file path(s) to the dumped database(s) to load into the child site.
+   *
+   * @var array
    */
-  var $databaseDumpFile = NULL;
+  var $databaseDumpFiles = array();
 
   /**
    * Flag that indicates whether the child site has been upgraded.
@@ -88,7 +90,9 @@ abstract class UpgradePathTestCase extends DrupalWebTestCase {
     $conf = array();
 
     // Load the database from the portable PHP dump.
-    require $this->databaseDumpFile;
+    foreach ($this->databaseDumpFiles as $file) {
+      require $file;
+    }
 
     // Set path variables.
     $this->variable_set('file_public_path', $public_files_directory);
@@ -328,8 +332,10 @@ class BasicUpgradePath extends UpgradePathTestCase {
   }
 
   public function setUp() {
-    // Path to the database dump.
-    $this->databaseDumpFile = drupal_get_path('module', 'simpletest') . '/tests/upgrade/drupal-6.bare.database.php';
+    // Path to the database dump files.
+    $this->databaseDumpFiles = array(
+      drupal_get_path('module', 'simpletest') . '/tests/upgrade/drupal-6.bare.database.php',
+    );
     parent::setUp();
   }
 

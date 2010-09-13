@@ -17,7 +17,9 @@ class NodeBodyUpgradePathTestCase extends UpgradePathTestCase {
 
   public function setUp() {
     // Path to the database dump.
-    $this->databaseDumpFile = drupal_get_path('module', 'simpletest') . '/tests/upgrade/drupal-6.filled.database.php';
+    $this->databaseDumpFiles = array(
+      drupal_get_path('module', 'simpletest') . '/tests/upgrade/drupal-6.filled.database.php',
+    );
     parent::setUp();
   }
 
@@ -51,7 +53,9 @@ class PollUpgradePathTestCase extends UpgradePathTestCase {
 
   public function setUp() {
     // Path to the database dump.
-    $this->databaseDumpFile = drupal_get_path('module', 'simpletest') . '/tests/upgrade/drupal-6.filled.database.php';
+    $this->databaseDumpFiles = array(
+      drupal_get_path('module', 'simpletest') . '/tests/upgrade/drupal-6.filled.database.php',
+    );
     parent::setUp();
 
     $this->uninstallModulesExcept(array('poll'));

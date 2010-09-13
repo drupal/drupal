@@ -15,7 +15,9 @@ class UpgradePathTaxonomyTestCase extends UpgradePathTestCase {
 
   public function setUp() {
     // Path to the database dump.
-    $this->databaseDumpFile = drupal_get_path('module', 'simpletest') . '/tests/upgrade/drupal-6.filled.database.php';
+    $this->databaseDumpFiles = array(
+     drupal_get_path('module', 'simpletest') . '/tests/upgrade/drupal-6.filled.database.php',
+    );
     parent::setUp();
   }
 

@@ -343,7 +343,7 @@ function filter_update_7005() {
     $format_roles = ($format->format == $default_format ? $all_roles : explode(',', $format->roles));
     foreach ($format_roles as $format_role) {
       if (in_array($format_role, $all_roles)) {
-        _update_user_role_grant_permissions($format_role, array('use text format ' . $format->format), 'filter');
+        _update_7000_user_role_grant_permissions($format_role, array('use text format ' . $format->format), 'filter');
       }
     }
   }
@@ -438,7 +438,7 @@ function filter_update_7008() {
   // that they do not or must not.
   if ($roles = user_roles(FALSE, 'administer filters')) {
     foreach ($roles as $rid => $name) {
-      _update_user_role_grant_permissions($rid, $permissions, 'filter');
+      _update_7000_user_role_grant_permissions($rid, $permissions, 'filter');
     }
   }
 }

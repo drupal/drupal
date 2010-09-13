@@ -2142,12 +2142,6 @@ function system_update_7029() {
 }
 
 /**
- * Moved to comment_update_7011().
- */
-function system_update_7030() {
-}
-
-/**
  * Removed in favour of Drupal 6 backport.
  *
  * @see system_update_6052()

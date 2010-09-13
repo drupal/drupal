@@ -1315,3 +1315,16 @@ function update_retrieve_dependencies() {
   return $return;
 }
 
+/**
+ * @defgroup update-api-6.x-to-7.x Update versions of API functions.
+ * @{
+ * Functions similar to normal API function but not firing hooks.
+ *
+ * During update, it is impossible to judge the consequences of firing a hook
+ * as it might hit a module not yet updated. So simplified versions of some
+ * core APIs are provided.
+ */
+
+/**
+ * @} End of "defgroup update-api-6.x-to-7.x"
+ */
