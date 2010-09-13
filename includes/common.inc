@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1217 2010/09/11 06:03:11 webchick Exp $
+// $Id: common.inc,v 1.1218 2010/09/13 06:41:23 webchick Exp $
 
 /**
  * @file
@@ -5548,7 +5548,7 @@ function element_children(&$elements, $sort = FALSE) {
   $children = array();
   $sortable = FALSE;
   foreach ($elements as $key => $value) {
-    if ($key[0] !== '#') {
+    if ($key === '' || $key[0] !== '#') {
       $children[$key] = $value;
       if (is_array($value) && isset($value['#weight'])) {
         $sortable = TRUE;
