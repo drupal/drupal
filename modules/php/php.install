@@ -33,7 +33,7 @@ function php_enable() {
     $php_format = (object) $php_format;
     filter_format_save($php_format);
 
-    drupal_set_message(t('A !php-code text format has been created.', array('!php-code' => l('PHP code', 'admin/config/content/formats/' . $php_format->format))));
+    drupal_set_message(t('A <a href="@php-code">PHP code</a> text format has been created.', array('@php-code' => url('admin/config/content/formats/' . $php_format->format))));
   }
 }
 
