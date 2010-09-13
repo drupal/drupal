@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.490 2010/09/11 14:38:04 dries Exp $
+// $Id: form.inc,v 1.491 2010/09/13 01:09:25 dries Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -275,153 +275,79 @@ function drupal_build_form($form_id, &$form_state) {
   }
 
   if (isset($_SESSION['batch_form_state'])) {
-    // We've been redirected here after a batch processing : the form has
-    // already been processed, so we grab the post-process $form_state value
-    // and move on to form display. See _batch_finished() function.
+    // We've been redirected here after a batch processing. The form has
+    // already been processed, but needs to be rebuilt. See _batch_finished().
     $form_state = $_SESSION['batch_form_state'];
     unset($_SESSION['batch_form_state']);
+    return drupal_rebuild_form($form_id, $form_state);
   }
-  else {
-    // If the incoming input contains a form_build_id, we'll check the
-    // cache for a copy of the form in question. If it's there, we don't
-    // have to rebuild the form to proceed. In addition, if there is stored
-    // form_state data from a previous step, we'll retrieve it so it can
-    // be passed on to the form processing code.
-    $check_cache = isset($form_state['input']['form_id']) && $form_state['input']['form_id'] == $form_id && !empty($form_state['input']['form_build_id']);
+
+  // If the incoming input contains a form_build_id, we'll check the cache for a
+  // copy of the form in question. If it's there, we don't have to rebuild the
+  // form to proceed. In addition, if there is stored form_state data from a
+  // previous step, we'll retrieve it so it can be passed on to the form
+  // processing code.
+  $check_cache = isset($form_state['input']['form_id']) && $form_state['input']['form_id'] == $form_id && !empty($form_state['input']['form_build_id']);
+  if ($check_cache) {
+    $form = form_get_cache($form_state['input']['form_build_id'], $form_state);
+  }
+
+  // If the previous bit of code didn't result in a populated $form object, we
+  // are hitting the form for the first time and we need to build it from
+  // scratch.
+  if (!isset($form)) {
+    // If we attempted to serve the form from cache, uncacheable $form_state
+    // keys need to be removed after retrieving and preparing the form, except
+    // any that were already set prior to retrieving the form.
     if ($check_cache) {
-      $form_build_id = $form_state['input']['form_build_id'];
-      $form = form_get_cache($form_build_id, $form_state);
+      $form_state_before_retrieval = $form_state;
     }
 
-    // If the previous bit of code didn't result in a populated $form
-    // object, we're hitting the form for the first time and we need
-    // to build it from scratch.
-    if (!isset($form)) {
-      // Record the filepath of the include file containing the original form,
-      // so the form builder callbacks can be loaded when the form is being
-      // rebuilt from cache on a different path (such as 'system/ajax'). See
-      // form_get_cache().
-      // $menu_get_item() is not available at installation time.
-      if (!isset($form_state['build_info']['files']['menu']) && !defined('MAINTENANCE_MODE')) {
-        $item = menu_get_item();
-        if (!empty($item['include_file'])) {
-          $form_state['build_info']['files']['menu'] = $item['include_file'];
-        }
-      }
+    $form = drupal_retrieve_form($form_id, $form_state);
+    drupal_prepare_form($form_id, $form, $form_state);
 
-      // If we attempted to serve the form from cache, uncacheable $form_state
-      // keys need to be removed after retrieving and preparing the form, except
-      // any that were already set prior to retrieving the form.
-      if ($check_cache) {
-        $form_state_before_retrieval = $form_state;
-      }
-
-      $form = drupal_retrieve_form($form_id, $form_state);
-      $form_build_id = 'form-' . drupal_hash_base64(uniqid(mt_rand(), TRUE) . mt_rand());
-      $form['#build_id'] = $form_build_id;
-
-      // Fix the form method, if it is 'get' in $form_state, but not in $form.
-      if ($form_state['method'] == 'get' && !isset($form['#method'])) {
-        $form['#method'] = 'get';
-      }
-
-      drupal_prepare_form($form_id, $form, $form_state);
-      // Store a copy of the unprocessed form to cache in case
-      // $form_state['cache'] is set.
-      $original_form = $form;
-
-      // form_set_cache() removes uncacheable $form_state keys defined in
-      // form_state_keys_no_cache() in order for multi-step forms to work
-      // properly. This means that form processing logic for single-step forms
-      // using $form_state['cache'] may depend on data stored in those keys
-      // during drupal_retrieve_form()/drupal_prepare_form(), but form
-      // processing should not depend on whether the form is cached or not, so
-      // $form_state is adjusted to match what it would be after a
-      // form_set_cache()/form_get_cache() sequence. These exceptions are
-      // allowed to survive here:
-      // - always_process: Does not make sense in conjunction with form caching
-      //   in the first place, since passing form_build_id as a GET parameter is
-      //   not desired.
-      // - temporary: Any assigned data is expected to survives within the same
-      //   page request.
-      if ($check_cache) {
-        $form_state = array_diff_key($form_state, array_flip(array_diff(form_state_keys_no_cache(), array('always_process', 'temporary')))) + $form_state_before_retrieval;
-      }
-    }
-
-    // Now that we know we have a form, we'll process it (validating,
-    // submitting, and handling the results returned by its submission
-    // handlers. Submit handlers accumulate data in the form_state by
-    // altering the $form_state variable, which is passed into them by
-    // reference.
-    drupal_process_form($form_id, $form, $form_state);
-  }
-
-  // Most simple, single-step forms will be finished by this point --
-  // drupal_process_form() usually redirects to another page (or to
-  // a 'fresh' copy of the form) once processing is complete. If one
-  // of the form's handlers has set $form_state['redirect'] to FALSE,
-  // the form will simply be re-rendered with the values still in its
-  // fields.
-  //
-  // If $form_state['rebuild'] has been set and input has been processed, we
-  // know that we're in a multi-part process of some sort and the form's
-  // workflow is not complete. We need to construct a fresh copy of the form,
-  // passing in the latest $form_state in addition to any other variables passed
-  // into drupal_get_form().
-  if ($form_state['rebuild'] && $form_state['process_input'] && !form_get_errors()) {
-    $form = drupal_rebuild_form($form_id, $form_state);
-  }
-  // After processing the form, the form builder or a #process callback may
-  // have set $form_state['cache'] to indicate that the original form and the
-  // $form_state shall be cached. But the form may only be cached if the
-  // special 'no_cache' property is not set to TRUE and we are not rebuilding.
-  elseif (isset($form_build_id) && $form_state['cache'] && empty($form_state['no_cache'])) {
-    // Cache the original, unprocessed form upon initial build of the form.
-    if (isset($original_form)) {
-      form_set_cache($form_build_id, $original_form, $form_state);
-    }
-    // After processing a cached form, only update the cached form state.
-    else {
-      form_set_cache($form_build_id, NULL, $form_state);
+    // form_set_cache() removes uncacheable $form_state keys defined in
+    // form_state_keys_no_cache() in order for multi-step forms to work
+    // properly. This means that form processing logic for single-step forms
+    // using $form_state['cache'] may depend on data stored in those keys
+    // during drupal_retrieve_form()/drupal_prepare_form(), but form
+    // processing should not depend on whether the form is cached or not, so
+    // $form_state is adjusted to match what it would be after a
+    // form_set_cache()/form_get_cache() sequence. These exceptions are
+    // allowed to survive here:
+    // - always_process: Does not make sense in conjunction with form caching
+    //   in the first place, since passing form_build_id as a GET parameter is
+    //   not desired.
+    // - temporary: Any assigned data is expected to survives within the same
+    //   page request.
+    if ($check_cache) {
+      $uncacheable_keys = array_flip(array_diff(form_state_keys_no_cache(), array('always_process', 'temporary')));
+      $form_state = array_diff_key($form_state, $uncacheable_keys);
+      $form_state += $form_state_before_retrieval;
     }
   }
 
-  // Check theme functions for this form.
-  // theme_form() itself is in #theme_wrappers and not #theme. Therefore, the
-  // #theme function only has to care for rendering the inner form elements,
-  // not the form itself.
-  drupal_theme_initialize();
-  $registry = theme_get_registry();
-  // If #theme has been set, check whether the theme function(s) exist, or
-  // remove the suggestion(s), so drupal_render() renders the children.
-  if (isset($form['#theme'])) {
-    if (is_array($form['#theme'])) {
-      foreach ($form['#theme'] as $key => $suggestion) {
-        if (!isset($registry[$suggestion])) {
-          unset($form['#theme'][$key]);
-        }
-      }
-      if (empty($form['#theme'])) {
-        unset($form['#theme']);
-      }
-    }
-    else {
-      if (!isset($registry[$form['#theme']])) {
-        unset($form['#theme']);
-      }
-    }
-  }
-  // Only try to auto-suggest theme functions, if #theme has not been set.
-  else {
-    if (isset($registry[$form_id])) {
-      $form['#theme'] = $form_id;
-    }
-    elseif (isset($form_state['build_info']['base_form_id']) && isset($registry[$form_state['build_info']['base_form_id']])) {
-      $form['#theme'] = $form_state['build_info']['base_form_id'];
-    }
-  }
+  // Now that we have a constructed form, process it. This is where:
+  // - Element #process functions get called to further refine $form.
+  // - User input, if any, gets incorporated in the #value property of the
+  //   corresponding elements and into $form_state['values'].
+  // - Validation and submission handlers are called.
+  // - If this submission is part of a multistep workflow, the form is rebuilt
+  //   to contain the information of the next step.
+  // - If necessary, the form and form state are cached or re-cached, so that
+  //   appropriate information persists to the next page request.
+  // All of the handlers in the pipeline receive $form_state by reference and
+  // can use it to know or update information about the state of the form.
+  drupal_process_form($form_id, $form, $form_state);
 
+  // If this was a successful submission of a single-step form or the last step
+  // of a multi-step form, then drupal_process_form() issued a redirect to
+  // another page, or back to this page, but as a new request. Therefore, if
+  // we're here, it means that this is either a form being viewed initially
+  // before any user input, or there was a validation error requiring the form
+  // to be re-displayed, or we're in a multi-step workflow and need to display
+  // the form's next step. In any case, we have what we need in $form, and can
+  // return it for rendering.
   return $form;
 }
 
@@ -431,6 +357,7 @@ function drupal_build_form($form_id, &$form_state) {
 function form_state_defaults() {
   return array(
     'rebuild' => FALSE,
+    'rebuild_info' => array(),
     'redirect' => NULL,
     'build_info' => array('args' => array()),
     'temporary' => array(),
@@ -444,16 +371,19 @@ function form_state_defaults() {
 }
 
 /**
- * Retrieves a form, caches it and processes it again.
+ * Constructs a new $form from the information in $form_state.
  *
- * If your AJAX callback simulates the pressing of a button, then your AJAX
- * callback will need to do the same as what drupal_get_form() would do when the
- * button is pressed: get the form from the cache, run drupal_process_form over
- * it and then if it needs rebuild, run drupal_rebuild_form() over it. Then send
- * back a part of the returned form.
- * $form_state['triggering_element']['#array_parents'] will help you to find
- * which part.
- * @see ajax_form_callback() for an example.
+ * This is the key function for making multi-step forms advance from step to
+ * step. It is called by drupal_process_form() when all user input processing,
+ * including calling validation and submission handlers, for the request is
+ * finished. If a validate or submit handler set $form_state['rebuild'] to TRUE,
+ * and if other conditions don't preempt a rebuild from happening, then this
+ * function is called to generate a new $form, the next step in the form
+ * workflow, to be returned for rendering.
+ *
+ * AJAX form submissions are almost always multi-step workflows, so that is one
+ * common use-case during which form rebuilding occurs. See ajax_form_callback()
+ * for more information about creating AJAX-enabled forms.
  *
  * @param $form_id
  *   The unique string identifying the desired form. If a function
@@ -466,21 +396,20 @@ function form_state_defaults() {
  *   A keyed array containing the current state of the form.
  * @param $old_form
  *   (optional) A previously built $form. Used to retain the #build_id and
- *   #action properties in AJAX callbacks and similar partial form rebuilds.
- *   Should not be passed for regular rebuilds, for which the entire $form
- *   should be rebuilt freshly.
+ *   #action properties in AJAX callbacks and similar partial form rebuilds. The
+ *   only properties copied from $old_form are the ones which both exist in
+ *   $old_form and for which $form_state['rebuild_info']['copy'][PROPERTY] is
+ *   TRUE. If $old_form is not passed, the entire $form is rebuilt freshly.
+ *   'rebuild_info' needs to be a separate top-level property next to
+ *   'build_info', since the contained data must not be cached.
  *
  * @return
  *   The newly built form.
+ *
+ * @see drupal_process_form()
+ * @see ajax_form_callback()
  */
 function drupal_rebuild_form($form_id, &$form_state, $old_form = NULL) {
-  // AJAX and other contexts may call drupal_rebuild_form() even when
-  // $form_state['rebuild'] isn't set, but _form_builder_handle_input_element()
-  // needs to distinguish a rebuild from an initial build in order to process
-  // user input correctly. Form constructors and form processing functions may
-  // also need to handle a rebuild differently than an initial build.
-  $form_state['rebuild'] = TRUE;
-
   $form = drupal_retrieve_form($form_id, $form_state);
 
   // If only parts of the form will be returned to the browser (e.g. AJAX or
@@ -489,20 +418,28 @@ function drupal_rebuild_form($form_id, &$form_state, $old_form = NULL) {
   // Otherwise, a new #build_id is generated, to not clobber the previous
   // build's data in the form cache; also allowing the user to go back to an
   // earlier build, make changes, and re-submit.
-  $form['#build_id'] = isset($old_form['#build_id']) ? $old_form['#build_id'] : 'form-' . drupal_hash_base64(uniqid(mt_rand(), TRUE) . mt_rand());
+  // @see drupal_prepare_form()
+  if (isset($old_form['#build_id']) && !empty($form_state['rebuild_info']['copy']['#build_id'])) {
+    $form['#build_id'] = $old_form['#build_id'];
+  }
+  else {
+    $form['#build_id'] = 'form-' . drupal_hash_base64(uniqid(mt_rand(), TRUE) . mt_rand());
+  }
 
   // #action defaults to request_uri(), but in case of AJAX and other partial
   // rebuilds, the form is submitted to an alternate URL, and the original
   // #action needs to be retained.
-  if (isset($old_form['#action'])) {
+  if (isset($old_form['#action']) && !empty($form_state['rebuild_info']['copy']['#action'])) {
     $form['#action'] = $old_form['#action'];
   }
 
   drupal_prepare_form($form_id, $form, $form_state);
 
+  // Caching is normally done in drupal_process_form(), but what needs to be
+  // cached is the $form structure before it passes through form_builder(),
+  // so we need to do it here.
+  // @todo For Drupal 8, find a way to avoid this code duplication.
   if (empty($form_state['no_cache'])) {
-    // We cache the form structure and the form state so it can be retrieved
-    // later for validation.
     form_set_cache($form['#build_id'], $form, $form_state);
   }
 
@@ -510,10 +447,8 @@ function drupal_rebuild_form($form_id, &$form_state, $old_form = NULL) {
   // re-rendering the form.
   $form_state['groups'] = array();
 
-  // Do not call drupal_process_form(), since it would prevent the rebuilt form
-  // to submit.
-  $form = form_builder($form_id, $form, $form_state);
-  return $form;
+  // Return a fully built form that is ready for rendering.
+  return form_builder($form_id, $form, $form_state);
 }
 
 /**
@@ -577,6 +512,7 @@ function form_state_keys_no_cache() {
     'always_process',
     'must_validate',
     'rebuild',
+    'rebuild_info',
     'redirect',
     'no_redirect',
     'temporary',
@@ -691,6 +627,18 @@ function drupal_form_submit($form_id, &$form_state) {
 function drupal_retrieve_form($form_id, &$form_state) {
   $forms = &drupal_static(__FUNCTION__);
 
+  // Record the filepath of the include file containing the original form, so
+  // the form builder callbacks can be loaded when the form is being rebuilt
+  // from cache on a different path (such as 'system/ajax'). See
+  // form_get_cache().
+  // $menu_get_item() is not available at installation time.
+  if (!isset($form_state['build_info']['files']['menu']) && !defined('MAINTENANCE_MODE')) {
+    $item = menu_get_item();
+    if (!empty($item['include_file'])) {
+      $form_state['build_info']['files']['menu'] = $item['include_file'];
+    }
+  }
+
   // We save two copies of the incoming arguments: one for modules to use
   // when mapping form ids to constructor functions, and another to pass to
   // the constructor function itself.
@@ -758,7 +706,7 @@ function drupal_retrieve_form($form_id, &$form_state) {
  * Processes a form submission.
  *
  * This function is the heart of form API. The form gets built, validated and in
- * appropriate cases, submitted.
+ * appropriate cases, submitted and rebuilt.
  *
  * @param $form_id
  *   The unique string identifying the current form.
@@ -787,7 +735,11 @@ function drupal_process_form($form_id, &$form, &$form_state) {
     }
   }
 
-  // Build the form.
+  // form_builder() finishes building the form by calling element #process
+  // functions and mapping user input, if any, to #value properties, and also
+  // storing the values in $form_state['values']. We need to retain the
+  // unprocessed $form in case it needs to be cached.
+  $unprocessed_form = $form;
   $form = form_builder($form_id, $form, $form_state);
 
   // Only process the input if we have a correct form submission.
@@ -847,6 +799,29 @@ function drupal_process_form($form_id, &$form, &$form_state) {
       // Redirect the form based on values in $form_state.
       drupal_redirect_form($form_state);
     }
+
+    // Don't rebuild or cache form submissions invoked via drupal_form_submit().
+    if (!empty($form_state['programmed'])) {
+      return;
+    }
+  }
+
+  // If $form_state['rebuild'] has been set and input has been processed without
+  // validation errors, we're in a multi-step workflow that is not yet complete.
+  // We need to construct a new $form based on the changes made to $form_state
+  // during this request.
+  if ($form_state['rebuild'] && $form_state['process_input'] && !form_get_errors()) {
+    $form = drupal_rebuild_form($form_id, $form_state, $form);
+  }
+  // After processing the form, the form builder or a #process callback may
+  // have set $form_state['cache'] to indicate that the form and form state
+  // shall be cached. But the form may only be cached if the 'no_cache' property
+  // is not set to TRUE. Only cache $form as it was prior to form_builder(),
+  // because form_builder() must run for each request to accomodate new user
+  // input. We do not cache here for forms that have been rebuilt, because
+  // drupal_rebuild_form() takes care of that.
+  elseif ($form_state['cache'] && empty($form_state['no_cache'])) {
+    form_set_cache($form['#build_id'], $unprocessed_form, $form_state);
   }
 }
 
@@ -870,14 +845,26 @@ function drupal_prepare_form($form_id, &$form, &$form_state) {
   $form['#type'] = 'form';
   $form_state['programmed'] = isset($form_state['programmed']) ? $form_state['programmed'] : FALSE;
 
-  if (isset($form['#build_id'])) {
-    $form['form_build_id'] = array(
-      '#type' => 'hidden',
-      '#value' => $form['#build_id'],
-      '#id' => $form['#build_id'],
-      '#name' => 'form_build_id',
-    );
+  // Fix the form method, if it is 'get' in $form_state, but not in $form.
+  if ($form_state['method'] == 'get' && !isset($form['#method'])) {
+    $form['#method'] = 'get';
   }
+
+  // Generate a new #build_id for this form, if none has been set already. The
+  // form_build_id is used as key to cache a particular build of the form. For
+  // multi-step forms, this allows the user to go back to an earlier build, make
+  // changes, and re-submit.
+  // @see drupal_build_form()
+  // @see drupal_rebuild_form()
+  if (!isset($form['#build_id'])) {
+    $form['#build_id'] = 'form-' . drupal_hash_base64(uniqid(mt_rand(), TRUE) . mt_rand());
+  }
+  $form['form_build_id'] = array(
+    '#type' => 'hidden',
+    '#value' => $form['#build_id'],
+    '#id' => $form['#build_id'],
+    '#name' => 'form_build_id',
+  );
 
   // Add a token, based on either #token or form_id, to any form displayed to
   // authenticated users. This ensures that any submitted form was actually
@@ -939,6 +926,41 @@ function drupal_prepare_form($form_id, &$form, &$form_state) {
     // handler for the shared $form_id.
     elseif (isset($form_state['build_info']['base_form_id']) && function_exists($form_state['build_info']['base_form_id'] . '_submit')) {
       $form['#submit'][] = $form_state['build_info']['base_form_id'] . '_submit';
+    }
+  }
+
+  // Check theme functions for this form.
+  // theme_form() itself is in #theme_wrappers and not #theme. Therefore, the
+  // #theme function only has to care for rendering the inner form elements,
+  // not the form itself.
+  drupal_theme_initialize();
+  $registry = theme_get_registry();
+  // If #theme has been set, check whether the theme function(s) exist, or
+  // remove the suggestion(s), so drupal_render() renders the children.
+  if (isset($form['#theme'])) {
+    if (is_array($form['#theme'])) {
+      foreach ($form['#theme'] as $key => $suggestion) {
+        if (!isset($registry[$suggestion])) {
+          unset($form['#theme'][$key]);
+        }
+      }
+      if (empty($form['#theme'])) {
+        unset($form['#theme']);
+      }
+    }
+    else {
+      if (!isset($registry[$form['#theme']])) {
+        unset($form['#theme']);
+      }
+    }
+  }
+  // Only try to auto-suggest theme functions, if #theme has not been set.
+  else {
+    if (isset($registry[$form_id])) {
+      $form['#theme'] = $form_id;
+    }
+    elseif (isset($form_state['build_info']['base_form_id']) && isset($registry[$form_state['build_info']['base_form_id']])) {
+      $form['#theme'] = $form_state['build_info']['base_form_id'];
     }
   }
 

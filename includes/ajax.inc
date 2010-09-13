@@ -1,5 +1,5 @@
 <?php
-// $Id: ajax.inc,v 1.31 2010/04/30 08:07:54 dries Exp $
+// $Id: ajax.inc,v 1.32 2010/09/13 01:09:25 dries Exp $
 
 /**
  * @file
@@ -239,6 +239,12 @@ function ajax_get_form() {
   // Since some of the submit handlers are run, redirects need to be disabled.
   $form_state['no_redirect'] = TRUE;
 
+  // When a form is rebuilt after AJAX processing, its #build_id and #action
+  // should not change.
+  // @see drupal_rebuild_form()
+  $form_state['rebuild_info']['copy']['#build_id'] = TRUE;
+  $form_state['rebuild_info']['copy']['#action'] = TRUE;
+
   // The form needs to be processed; prepare for that by setting a few internal
   // variables.
   $form_state['input'] = $_POST;
@@ -263,18 +269,15 @@ function ajax_get_form() {
  * enhanced function.
  */
 function ajax_form_callback() {
-  list($form, $form_state, $form_id, $form_build_id) = ajax_get_form();
+  list($form, $form_state) = ajax_get_form();
+  drupal_process_form($form['#form_id'], $form, $form_state);
 
-  // Build, validate and if possible, submit the form.
-  drupal_process_form($form_id, $form, $form_state);
-
-  // This call recreates the form relying solely on the $form_state that
-  // drupal_process_form() set up.
-  $form = drupal_rebuild_form($form_id, $form_state, $form);
-
-  // As part of drupal_process_form(), the element that triggered the form
-  // submission is determined, and in the case of AJAX, it might not be a
-  // button. This lets us route to the appropriate callback.
+  // We need to return the part of the form (or some other content) that needs
+  // to be re-rendered so the browser can update the page with changed content.
+  // Since this is the generic menu callback used by many AJAX elements, it is
+  // up to the #ajax['callback'] function of the element (may or may not be a
+  // button) that triggered the AJAX request to determine what needs to be
+  // rendered.
   if (!empty($form_state['triggering_element'])) {
     $callback = $form_state['triggering_element']['#ajax']['callback'];
   }

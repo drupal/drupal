@@ -1,5 +1,5 @@
 <?php
-// $Id: batch.inc,v 1.50 2010/02/17 22:44:51 webchick Exp $
+// $Id: batch.inc,v 1.51 2010/09/13 01:09:25 dries Exp $
 
 
 /**
@@ -495,9 +495,12 @@ function _batch_finished() {
     // Use drupal_redirect_form() to handle the redirection logic.
     drupal_redirect_form($_batch['form_state']);
 
-    // If no redirection happened, save the final $form_state value to be
-    // retrieved by drupal_get_form() and redirect to the originating page.
-    $_SESSION['batch_form_state'] = $_batch['form_state'];
+    // If no redirection happened, redirect to the originating page. In case the
+    // form needs to be rebuilt, save the final $form_state for
+    // drupal_build_form().
+    if (!empty($_batch['form_state']['rebuild'])) {
+      $_SESSION['batch_form_state'] = $_batch['form_state'];
+    }
     $function = $_batch['redirect_callback'];
     if (function_exists($function)) {
       $function($_batch['source_url'], array('query' => array('op' => 'finish', 'id' => $_batch['id'])));

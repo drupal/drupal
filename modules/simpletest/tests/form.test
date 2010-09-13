@@ -1,5 +1,5 @@
 <?php
-// $Id: form.test,v 1.62 2010/08/27 11:54:32 webchick Exp $
+// $Id: form.test,v 1.63 2010/09/13 01:09:26 dries Exp $
 
 /**
  * @file
@@ -1010,6 +1010,10 @@ class FormsRebuildTestCase extends DrupalWebTestCase {
     // a validation error.
     $this->drupalPost(NULL, array(), t('Save'));
     $this->assertText('Title field is required.', t('Non-AJAX submission correctly triggered a validation error.'));
+
+    // Ensure that the form contains two items in the multi-valued field, so we
+    // know we're testing a form that was correctly retrieved from cache.
+    $this->assert(count($this->xpath('//form[contains(@id, "page-node-form")]//div[contains(@class, "form-item-field-ajax-test")]//input[@type="text"]')) == 2, t('Form retained its state from cache.'));
 
     // Ensure that the form's action is correct.
     $forms = $this->xpath('//form[contains(@class, "node-page-form")]');
