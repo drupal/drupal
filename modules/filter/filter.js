@@ -1,4 +1,4 @@
-// $Id: filter.js,v 1.2 2010/04/30 07:48:07 dries Exp $
+// $Id: filter.js,v 1.3 2010/09/13 00:59:47 dries Exp $
 (function ($) {
 
 /**
@@ -7,7 +7,7 @@
 Drupal.behaviors.filterGuidelines = {
   attach: function (context) {
     $('.filter-guidelines', context).once('filter-guidelines')
-      .find('label').hide()
+      .find(':header').hide()
       .parents('.filter-wrapper').find('select.filter-list')
       .bind('change', function () {
         $(this).parents('.filter-wrapper')
