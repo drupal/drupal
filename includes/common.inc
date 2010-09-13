@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1218 2010/09/13 06:41:23 webchick Exp $
+// $Id: common.inc,v 1.1219 2010/09/13 06:44:58 webchick Exp $
 
 /**
  * @file
@@ -5692,7 +5692,7 @@ function drupal_array_set_nested_value(array &$array, array $parents, $value) {
  * altered by reference:
  * @code
  * $key_exists = NULL;
- * $value = drupal_array_get_nested_value($form, $parents, $value_exists);
+ * $value = drupal_array_get_nested_value($form, $parents, $key_exists);
  * if ($key_exists) {
  *   // ... do something with $value ...
  * }
