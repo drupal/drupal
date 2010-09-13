@@ -1,5 +1,5 @@
 <?php
-// $Id: user.install,v 1.62 2010/09/05 01:05:06 dries Exp $
+// $Id: user.install,v 1.63 2010/09/13 05:50:09 webchick Exp $
 
 /**
  * @file
@@ -362,14 +362,17 @@ function user_update_dependencies() {
 /**
  * Utility function: grant a set of permissions to a role during update.
  *
+ * This function is valid for a database schema version 7000.
+ *
  * @param $rid
  *   The role ID.
  * @param $permissions
  *   An array of permissions names.
  * @param $module
  *   The name of the module defining the permissions.
+ * @ingroup update-api-6.x-to-7.x
  */
-function _update_user_role_grant_permissions($rid, array $permissions, $module) {
+function _update_7000_user_role_grant_permissions($rid, array $permissions, $module) {
   // Grant new permissions for the role.
   foreach ($permissions as $name) {
     db_merge('role_permission')

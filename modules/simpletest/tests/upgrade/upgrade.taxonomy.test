@@ -1,5 +1,5 @@
 <?php
-// $Id: upgrade.taxonomy.test,v 1.1 2010/09/05 17:00:04 webchick Exp $
+// $Id: upgrade.taxonomy.test,v 1.2 2010/09/13 05:50:09 webchick Exp $
 
 /**
  * Test taxonomy upgrades.
@@ -15,7 +15,9 @@ class UpgradePathTaxonomyTestCase extends UpgradePathTestCase {
 
   public function setUp() {
     // Path to the database dump.
-    $this->databaseDumpFile = drupal_get_path('module', 'simpletest') . '/tests/upgrade/drupal-6.filled.database.php';
+    $this->databaseDumpFiles = array(
+     drupal_get_path('module', 'simpletest') . '/tests/upgrade/drupal-6.filled.database.php',
+    );
     parent::setUp();
   }
 

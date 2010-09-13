@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.install,v 1.71 2010/08/25 11:54:40 webchick Exp $
+// $Id: comment.install,v 1.72 2010/09/13 05:50:09 webchick Exp $
 
 /**
  * @file
@@ -81,19 +81,9 @@ function comment_enable() {
  * Implements hook_update_dependencies().
  */
 function comment_update_dependencies() {
-  // Comment update 7005 creates comment Field API bundles and therefore must
-  // run after the Field module has been enabled, but before upgrading field
-  // data.
-  $dependencies['comment'][7005] = array(
-    'system' => 7049,
-  );
-  $dependencies['system'][7050] = array(
-    'comment' => 7005,
-  );
-
-  // Comment update 7012 creates the comment body field and therefore must run
+  // Comment update 7005 creates the comment body field and therefore must run
   // after text module has been enabled and entities have been updated.
-  $dependencies['comment'][7012] = array(
+  $dependencies['comment'][7005] = array(
     'system' => 7021,
   );
 
@@ -106,14 +96,36 @@ function comment_update_dependencies() {
  */
 
 /**
- * Remove comment settings for page ordering.
+ * Rename comment display setting variables.
  */
 function comment_update_7000() {
-  $types = node_type_get_types();
-  foreach ($types as $type => $object) {
+  $types = _update_7000_node_get_types();
+  foreach ($types as $type => $type_object) {
     variable_del('comment_default_order' . $type);
+
+    // Drupal 6 had four display modes:
+    // - COMMENT_MODE_FLAT_COLLAPSED = 1
+    // - COMMENT_MODE_FLAT_EXPANDED = 2
+    // - COMMENT_MODE_THREADED_COLLAPSED = 3
+    // - COMMENT_MODE_THREADED_EXPANDED = 4
+    //
+    // Drupal 7 doesn't support collapsed/expanded modes anymore, so we
+    // migrate all the flat modes to COMMENT_MODE_FLAT (0) and all the threaded
+    // modes to COMMENT_MODE_THREADED (1).
+    $setting = variable_get('comment_default_mode_' . $type, 4);
+    if ($setting == 3 || $setting == 4) {
+      variable_set('comment_default_mode_' . $type, 1);
+    }
+    else {
+      variable_set('comment_default_mode_' . $type, 0);
+    }
+
+    // There were only two comment modes in the past:
+    // - 1 was 'required' previously, convert into DRUPAL_REQUIRED (2).
+    // - 0 was 'optional' previously, convert into DRUPAL_OPTIONAL (1).
+    $preview = variable_get('comment_preview_' . $type, 1) ? 2 : 1;
+    variable_set('comment_preview_' . $type, $preview);
   }
-  return t('Comment order settings removed.');
 }
 
 /**
@@ -138,49 +150,29 @@ function comment_update_7001() {
 }
 
 /**
- * Rename {comments} table to {comment}.
+ * Rename {comments} table to {comment} and upgrade it.
  */
 function comment_update_7002() {
   db_rename_table('comments', 'comment');
-}
 
-/**
- * Rename comment display setting variables.
- */
-function comment_update_7004() {
-  $types = node_type_get_types();
-  foreach ($types as $type => $object) {
-    $setting = variable_get('comment_default_mode_' . $type, 4);
-    if ($setting == 3 || $setting == 4) {
-      variable_set('comment_default_mode_' . $type, 1);
-    }
-    else {
-      variable_set('comment_default_mode_' . $type, 0);
-    }
-  }
-}
-
-/**
- * Create comment Field API bundles.
- */
-function comment_update_7005() {
-  foreach (node_type_get_types() as $info) {
-    field_attach_create_bundle('comment', 'comment_node_' . $info->type);
-  }
-}
-
-/**
- * Create user related indexes.
- */
-function comment_update_7006() {
+  // Add user-related indexes.
   db_add_index('comment', 'comment_uid', array('uid'));
   db_add_index('node_comment_statistics', 'last_comment_uid', array('last_comment_uid'));
+
+  // Create a language column.
+  db_add_field('comment', 'language', array(
+    'type' => 'varchar',
+    'length' => 12,
+    'not null' => TRUE,
+    'default' => '',
+  ));
+  db_add_index('comment', 'comment_nid_language', array('nid', 'language'));
 }
 
 /**
  * Split {comment}.timestamp into 'created' and 'changed', improve indexing on {comment}.
  */
-function comment_update_7007() {
+function comment_update_7003() {
   // Drop the old indexes.
   db_drop_index('comment', 'status');
   db_drop_index('comment', 'pid');
@@ -211,45 +203,9 @@ function comment_update_7007() {
 }
 
 /**
- * Add language column to the {comment} table.
+ * Upgrade the {node_comment_statistics} table.
  */
-function comment_update_7008() {
-  // Create a language column.
-  db_add_field('comment', 'language', array(
-    'type' => 'varchar',
-    'length' => 12,
-    'not null' => TRUE,
-    'default' => '',
-  ));
-
-  // Create the index.
-  db_add_index('comment', 'comment_nid_language', array('nid', 'language'));
-}
-
-/**
- * Update preview setting variable to use new constants
- */
-function comment_update_7009() {
-  foreach (node_type_get_types() as $type => $object) {
-    // There were only two comment modes in the past:
-    // - 1 was 'required' previously, convert into DRUPAL_REQUIRED (2).
-    // - 0 was 'optional' previously, convert into DRUPAL_OPTIONAL (1).
-    $original_preview = variable_get('comment_preview_' . $type, 1);
-    if ($original_preview) {
-      $preview = DRUPAL_REQUIRED;
-    }
-    else {
-      $preview = DRUPAL_OPTIONAL;
-    }
-    variable_set('comment_preview_' . $type, $preview);
-  }
-  return array();
-}
-
-/**
- * Add {node_comment_statistics}.cid column.
- */
-function comment_update_7010() {
+function comment_update_7004() {
   db_add_field('node_comment_statistics', 'cid', array(
     'type' => 'int',
     'not null' => TRUE,
@@ -257,59 +213,75 @@ function comment_update_7010() {
     'description' => 'The {comment}.cid of the last comment.',
   ));
   db_add_index('node_comment_statistics', 'cid', array('cid'));
-}
 
-/**
- * Add an index to node_comment_statistics on comment_count.
- */
-function comment_update_7011() {
+  // Add an index on the comment_count.
   db_add_index('node_comment_statistics', 'comment_count', array('comment_count'));
 }
 
 /**
  * Create the comment_body field.
  */
-function comment_update_7012() {
+function comment_update_7005() {
   // Create comment body field.
   $field = array(
     'field_name' => 'comment_body',
     'type' => 'text_long',
-    'entity_types' => array('comment'),
+    'module' => 'text',
+    'entity_types' => array(
+      'comment',
+    ),
+    'settings' => array(),
+    'cardinality' => 1,
   );
-  field_create_field($field);
+  _update_7000_field_create_field($field);
 
   // Add the field to comments for all existing bundles.
-  $body_instance = array(
-    'field_name' => 'comment_body',
-    'label' => 'Comment',
+  $generic_instance = array(
     'entity_type' => 'comment',
-    'settings' => array('text_processing' => 1),
+    'label' => t('Comment'),
+    'settings' => array(
+      'text_processing' => 1,
+    ),
     'required' => TRUE,
     'display' => array(
       'default' => array(
         'label' => 'hidden',
         'type' => 'text_default',
         'weight' => 0,
+        'settings' => array(),
+        'module' => 'text',
       ),
     ),
+    'widget' => array(
+      'type' => 'text_textarea',
+      'settings' => array(
+        'rows' => 5,
+      ),
+      'weight' => 0,
+      'module' => 'text',
+    ),
+    'description' => '',
   );
-  foreach (node_type_get_types() as $info) {
-    $body_instance['bundle'] = 'comment_node_' . $info->type;
-    field_create_instance($body_instance);
+
+  $types = _update_7000_node_get_types();
+  foreach ($types as $type => $type_object) {
+    $instance = $generic_instance;
+    $instance['bundle'] = 'comment_node_' . $type;
+    _update_7000_field_create_instance($field, $instance);
   }
 }
 
 /**
  * Migrate data from the comment field to field storage.
  */
-function comment_update_7013(&$sandbox) {
+function comment_update_7006(&$sandbox) {
   // This is a multipass update. First set up some comment variables.
   if (empty($sandbox['total'])) {
     $comments = (bool) db_query_range('SELECT 1 FROM {comment}', 0, 1)->fetchField();
     $sandbox['types'] = array();
     if ($comments) {
       $sandbox['etid'] = _field_sql_storage_etid('comment');
-      $sandbox['types'] = node_type_get_types();
+      $sandbox['types'] = array_keys(_update_7000_node_get_types());
     }
     $sandbox['total'] = count($sandbox['types']);
   }
@@ -318,9 +290,9 @@ function comment_update_7013(&$sandbox) {
     $type = array_shift($sandbox['types']);
 
     $query = db_select('comment', 'c');
-    $query->innerJoin('node', 'n', 'c.nid = n.nid AND n.type = :type', array(':type' => $type->type));
+    $query->innerJoin('node', 'n', 'c.nid = n.nid AND n.type = :type', array(':type' => $type));
     $query->addField('c', 'cid', 'entity_id');
-    $query->addExpression("'comment_node_$type->type'", 'bundle');
+    $query->addExpression("'comment_node_$type'", 'bundle');
     $query->addExpression($sandbox['etid'], 'etid');
     $query->addExpression('0', 'deleted');
     $query->addExpression("'" . LANGUAGE_NONE . "'", 'language');
@@ -328,8 +300,7 @@ function comment_update_7013(&$sandbox) {
     $query->addField('c', 'comment', 'comment_body_value');
     $query->addField('c', 'format', 'comment_body_format');
 
-    $comment_body = field_info_field('comment_body');
-    $comment_body_table = _field_sql_storage_tablename($comment_body);
+    $comment_body_table = 'field_data_comment_body';
 
     db_insert($comment_body_table)
       ->from($query)

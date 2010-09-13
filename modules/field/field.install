@@ -1,5 +1,5 @@
 <?php
-// $Id: field.install,v 1.19 2010/06/25 17:47:22 dries Exp $
+// $Id: field.install,v 1.20 2010/09/13 05:50:09 webchick Exp $
 
 /**
  * @file
@@ -167,3 +167,127 @@ function field_schema() {
 
   return $schema;
 }
+
+/**
+ * Utility function: create a field by writing directly to the database.
+ *
+ * This function is valid for a database schema version 7000.
+ *
+ * @ingroup update-api-6.x-to-7.x
+ */
+function _update_7000_field_create_field(&$field) {
+  // Merge in default values.`
+  $field += array(
+    'entity_types' => array(),
+    'cardinality' => 1,
+    'translatable' => FALSE,
+    'locked' => FALSE,
+    'settings' => array(),
+    'indexes' => array(),
+    'deleted' => 0,
+    'active' => 1,
+  );
+
+  // Set storage.
+  $field['storage'] = array(
+    'type' => 'field_sql_storage',
+    'settings' => array(),
+    'module' => 'field_sql_storage',
+    'active' => 1,
+  );
+
+  // The serialized 'data' column contains everything from $field that does not
+  // have its own column and is not automatically populated when the field is
+  // read.
+  $data = $field;
+  unset($data['columns'], $data['field_name'], $data['type'], $data['active'], $data['module'], $data['storage_type'], $data['storage_active'], $data['storage_module'], $data['locked'], $data['cardinality'], $data['deleted']);
+  // Additionally, do not save the 'bundles' property populated by
+  // field_info_field().
+  unset($data['bundles']);
+
+  // Write the field to the database.
+  $record = array(
+    'field_name' => $field['field_name'],
+    'type' => $field['type'],
+    'module' => $field['module'],
+    'active' => (int) $field['active'],
+    'storage_type' => $field['storage']['type'],
+    'storage_module' => $field['storage']['module'],
+    'storage_active' => (int) $field['storage']['active'],
+    'locked' => (int) $field['locked'],
+    'data' => serialize($data),
+    'cardinality' => $field['cardinality'],
+    'translatable' => (int) $field['translatable'],
+    'deleted' => (int) $field['deleted'],
+  );
+  // We don't use drupal_write_record() here because it depends on the schema.
+  $field['id'] = db_insert('field_config')
+    ->fields($record)
+    ->execute();
+
+  // Create storage for this field, the field module is not guaranteed to be
+  // loaded at this point.
+  module_load_install($field['module']);
+  $schema = (array) module_invoke($field['module'], 'field_schema', $field);
+  $schema += array('columns' => array(), 'indexes' => array());
+  // 'columns' are hardcoded in the field type.
+  $field['columns'] = $schema['columns'];
+  // 'indexes' can be both hardcoded in the field type, and specified in the
+  // incoming $field definition.
+  $field['indexes'] += $schema['indexes'];
+
+  field_sql_storage_field_storage_create_field($field);
+}
+
+/**
+ * Utility function: create a field instance directly to the database.
+ *
+ * This function is valid for a database schema version 7000.
+ *
+ * @ingroup update-api-6.x-to-7.x
+ */
+function _update_7000_field_create_instance($field, &$instance) {
+  // Merge in defaults.
+  $instance += array(
+    'field_id' => $field['id'],
+    'field_name' => $field['field_name'],
+    'deleted' => 0,
+  );
+
+  // The serialized 'data' column contains everything from $instance that does
+  // not have its own column and is not automatically populated when the
+  // instance is read.
+  $data = $instance;
+  unset($data['id'], $data['field_id'], $data['field_name'], $data['entity_type'], $data['bundle'], $data['deleted']);
+
+  $record = array(
+    'field_id' => $instance['field_id'],
+    'field_name' => $instance['field_name'],
+    'entity_type' => $instance['entity_type'],
+    'bundle' => $instance['bundle'],
+    'data' => serialize($data),
+    'deleted' => (int) $instance['deleted'],
+  );
+  $instance['id'] = db_insert('field_config_instance')
+    ->fields($record)
+    ->execute();
+}
+
+/**
+ * @defgroup field-updates-6.x-to-7.x Field updates from 6.x to 7.x
+ * @{
+ */
+
+/**
+ * Field update version placeholder.
+ */
+function field_update_7000() {
+  // _update_7000_field_create_field() is supposed to create fields according
+  // to the structure of fields after running field_update_7000(). So this
+  // function needs to exist but as field is a new module in Drupal 7, it
+  // does not need to do anything.
+}
+
+/**
+ * @} End of "defgroup field-updates-6.x-to-7.x"
+ */

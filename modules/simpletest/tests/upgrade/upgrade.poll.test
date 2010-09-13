@@ -1,5 +1,5 @@
 <?php
-// $Id: upgrade.poll.test,v 1.3 2010/08/05 23:53:38 webchick Exp $
+// $Id: upgrade.poll.test,v 1.4 2010/09/13 05:50:09 webchick Exp $
 
 /**
  * Upgrade test for poll.module.
@@ -20,8 +20,10 @@ class PollUpgradePathTestCase extends UpgradePathTestCase {
   }
 
   public function setUp() {
-    // Path to the database dump.
-    $this->databaseDumpFile = drupal_get_path('module', 'simpletest') . '/tests/upgrade/drupal-6.filled.database.php';
+    // Path to the database dump files.
+    $this->databaseDumpFiles = array(
+      drupal_get_path('module', 'simpletest') . '/tests/upgrade/drupal-6.filled.database.php',
+    );
     parent::setUp();
 
     $this->uninstallModulesExcept(array('poll'));

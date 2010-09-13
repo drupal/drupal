@@ -1,5 +1,5 @@
 <?php
-// $Id: upgrade.node.test,v 1.1 2010/09/11 00:39:49 webchick Exp $
+// $Id: upgrade.node.test,v 1.2 2010/09/13 05:50:09 webchick Exp $
 
 /**
  * Upgrade test for node bodies.
@@ -17,7 +17,9 @@ class NodeBodyUpgradePathTestCase extends UpgradePathTestCase {
 
   public function setUp() {
     // Path to the database dump.
-    $this->databaseDumpFile = drupal_get_path('module', 'simpletest') . '/tests/upgrade/drupal-6.filled.database.php';
+    $this->databaseDumpFiles = array(
+      drupal_get_path('module', 'simpletest') . '/tests/upgrade/drupal-6.filled.database.php',
+    );
     parent::setUp();
   }
 
@@ -51,7 +53,9 @@ class PollUpgradePathTestCase extends UpgradePathTestCase {
 
   public function setUp() {
     // Path to the database dump.
-    $this->databaseDumpFile = drupal_get_path('module', 'simpletest') . '/tests/upgrade/drupal-6.filled.database.php';
+    $this->databaseDumpFiles = array(
+      drupal_get_path('module', 'simpletest') . '/tests/upgrade/drupal-6.filled.database.php',
+    );
     parent::setUp();
 
     $this->uninstallModulesExcept(array('poll'));

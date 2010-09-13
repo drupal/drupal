@@ -1,5 +1,5 @@
 <?php
-// $Id: update.inc,v 1.66 2010/09/02 21:07:44 dries Exp $
+// $Id: update.inc,v 1.67 2010/09/13 05:50:08 webchick Exp $
 
 /**
  * @file
@@ -1315,3 +1315,16 @@ function update_retrieve_dependencies() {
   return $return;
 }
 
+/**
+ * @defgroup update-api-6.x-to-7.x Update versions of API functions.
+ * @{
+ * Functions similar to normal API function but not firing hooks.
+ *
+ * During update, it is impossible to judge the consequences of firing a hook
+ * as it might hit a module not yet updated. So simplified versions of some
+ * core APIs are provided.
+ */
+
+/**
+ * @} End of "defgroup update-api-6.x-to-7.x"
+ */

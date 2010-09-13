@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.505 2010/09/07 21:59:01 dries Exp $
+// $Id: system.install,v 1.506 2010/09/13 05:50:09 webchick Exp $
 
 /**
  * @file
@@ -2139,12 +2139,6 @@ function system_update_7029() {
       'permission' => 'view own unpublished content',
     ))
     ->execute();
-}
-
-/**
- * Moved to comment_update_7011().
- */
-function system_update_7030() {
 }
 
 /**
