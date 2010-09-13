@@ -1,5 +1,5 @@
 <?php
-// $Id: php.install,v 1.17 2010/01/09 23:03:21 webchick Exp $
+// $Id: php.install,v 1.18 2010/09/13 01:11:08 dries Exp $
 
 /**
  * @file
@@ -33,7 +33,7 @@ function php_enable() {
     $php_format = (object) $php_format;
     filter_format_save($php_format);
 
-    drupal_set_message(t('A !php-code text format has been created.', array('!php-code' => l('PHP code', 'admin/config/content/formats/' . $php_format->format))));
+    drupal_set_message(t('A <a href="@php-code">PHP code</a> text format has been created.', array('@php-code' => url('admin/config/content/formats/' . $php_format->format))));
   }
 }
 
