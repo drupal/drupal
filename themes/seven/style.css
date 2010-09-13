@@ -606,15 +606,14 @@ div.teaser-checkbox .form-item,
   border-top: 0;
   padding: 10px 2px;
 }
-.filter-wrapper > div {
-  padding-right: 6px;
-  padding-left: 6px;
+.filter-wrapper .fieldset-wrapper {
+  padding: 0 6px;
 }
 .filter-wrapper .form-item,
 .filter-wrapper .filter-guidelines,
 .filter-wrapper .filter-help {
   font-size: 0.923em;
-  padding: 0;
+  padding: 2px 0 0 0;
 }
 ul.tips,
 div.description,
