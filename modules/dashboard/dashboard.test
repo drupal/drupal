@@ -6,11 +6,11 @@
  * Tests for the dashboard module.
  */
 
-class DashboardAccessTestCase extends DrupalWebTestCase {
+class DashboardBlocksTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => 'Dashboard access',
-      'description' => 'Test access control for the dashboard.',
+      'name' => 'Dashboard blocks',
+      'description' => 'Test blocks as used by the dashboard.',
       'group' => 'Dashboard',
     );
   }
@@ -56,5 +56,27 @@ class DashboardAccessTestCase extends DrupalWebTestCase {
     $this->drupalGet('admin/dashboard');
     $this->assertResponse(403, t('Non-admin has no access to the dashboard.'));
     $this->assertNoText($custom_block['title'], t('Non-admin has no access to a dashboard block.'));
+  }
+
+  /**
+   * Test that dashboard regions are displayed or hidden properly.
+   */
+  function testDashboardRegions() {
+    $dashboard_regions = dashboard_region_descriptions();
+
+    // Ensure blocks can be placed in dashboard regions.
+    $this->drupalGet('admin/structure/dashboard');
+    foreach ($dashboard_regions as $region => $description) {
+      $elements = $this->xpath('//option[@value=:region]', array(':region' => $region));
+      $this->assertTrue(!empty($elements), t('%region is an available choice on the dashboard block configuration page.', array('%region' => $region)));
+    }
+
+    // Ensure blocks cannot be placed in dashboard regions on the standard
+    // blocks configuration page.
+    $this->drupalGet('admin/structure/block');
+    foreach ($dashboard_regions as $region => $description) {
+      $elements = $this->xpath('//option[@value=:region]', array(':region' => $region));
+      $this->assertTrue(empty($elements), t('%region is not an available choice on the block configuration page.', array('%region' => $region)));
+    }
   }
 }

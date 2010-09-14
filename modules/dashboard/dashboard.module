@@ -310,18 +310,23 @@ function dashboard_admin_blocks() {
 /**
  * Implements hook_form_FORM_ID_alter().
  */
-function dashboard_form_block_admin_display_form_alter(&$form, &$form_state) {
+function dashboard_form_block_admin_display_form_alter(&$form, &$form_state, $form_id) {
   // Hide dashboard regions (and any blocks placed within them) from the block
-  // administration form and from the options list on that form.
-  $dashboard_regions = dashboard_region_descriptions();
-  $form['block_regions']['#value'] = array_diff_key($form['block_regions']['#value'], $dashboard_regions);
-  foreach (element_children($form['blocks']) as $i) {
-    $block = &$form['blocks'][$i];
-    if (isset($block['region']['#default_value']) && isset($dashboard_regions[$block['region']['#default_value']])) {
-      $block['#access'] = FALSE;
-    }
-    elseif (isset($block['region']['#options'])) {
-      $block['region']['#options'] = array_diff_key($block['region']['#options'], $dashboard_regions);
+  // administration form and from the options list on that form. This
+  // function is called for both the dashboard block configuration form and the
+  // standard block configuration form so that both forms can share the same
+  // constructor. As a result the form_id must be checked.
+  if ($form_id != 'dashboard_admin_display_form') {
+    $dashboard_regions = dashboard_region_descriptions();
+    $form['block_regions']['#value'] = array_diff_key($form['block_regions']['#value'], $dashboard_regions);
+    foreach (element_children($form['blocks']) as $i) {
+      $block = &$form['blocks'][$i];
+      if (isset($block['region']['#default_value']) && isset($dashboard_regions[$block['region']['#default_value']])) {
+        $block['#access'] = FALSE;
+      }
+      elseif (isset($block['region']['#options'])) {
+        $block['region']['#options'] = array_diff_key($block['region']['#options'], $dashboard_regions);
+      }
     }
   }
 }
