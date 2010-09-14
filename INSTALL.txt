@@ -1,4 +1,4 @@
-// $Id: INSTALL.txt,v 1.81 2010/07/30 01:59:14 dries Exp $
+// $Id: INSTALL.txt,v 1.82 2010/09/14 18:46:40 webchick Exp $
 
 CONTENTS OF THIS FILE
 ---------------------
@@ -79,13 +79,15 @@ INSTALLATION
    http://drupal.org/project/translations and download the package. Extract
    the contents to the same directory where you extracted Drupal into.
 
-2. CREATE THE CONFIGURATION FILE AND GRANT WRITE PERMISSIONS
+2. IF NECESSARY, CREATE THE CONFIGURATION FILE AND GRANT WRITE PERMISSIONS
 
    Drupal comes with a default.settings.php file in the sites/default
    directory. The installer uses this file as a template to create your
    settings file using the details you provide through the install process.
    To avoid problems when upgrading, Drupal is not packaged with an actual
-   settings file. You must create a file named settings.php. You may do so
+   settings file. During installation, Drupal will try to create this settings
+   file automatically. If this fails (which it can due to different server
+   setups), you must create a file named settings.php yourself. You may do so
    by making a copy of default.settings.php (or create an empty file with
    this name in the same directory). For example, (from the installation
    directory) make a copy of the default.settings.php file with the command:
