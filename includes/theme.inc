@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.610 2010/09/11 00:03:41 webchick Exp $
+// $Id: theme.inc,v 1.611 2010/09/14 21:42:05 dries Exp $
 
 /**
  * @file
@@ -768,7 +768,11 @@ function theme($hook, $variables = array()) {
       }
     }
     if (!isset($hooks[$hook])) {
-      watchdog('theme', 'Theme key "@key" not found.', array('@key' => $hook), WATCHDOG_WARNING);
+      // Only log a message when not trying theme suggestions ($hook being an
+      // array).
+      if (!isset($candidate)) {
+        watchdog('theme', 'Theme key "@key" not found.', array('@key' => $hook), WATCHDOG_WARNING);
+      }
       return '';
     }
   }

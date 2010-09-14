@@ -1,5 +1,5 @@
 <?php
-// $Id: install.core.inc,v 1.29 2010/09/14 18:46:40 webchick Exp $
+// $Id: install.core.inc,v 1.30 2010/09/14 21:42:05 dries Exp $
 
 /**
  * @file
@@ -275,12 +275,12 @@ function install_begin_request(&$install_state) {
   require_once DRUPAL_ROOT . '/includes/cache-install.inc';
   $conf['cache_default_class'] = 'DrupalFakeCache';
 
-  // Prepare for themed output, if necessary. We need to run this at the
-  // beginning of the page request to avoid a different theme accidentally
-  // getting set.
-  if ($install_state['interactive']) {
-    drupal_maintenance_theme();
-  }
+  // Prepare for themed output. We need to run this at the beginning of the
+  // page request to avoid a different theme accidentally getting set. (We also
+  // need to run it even in the case of command-line installations, to prevent
+  // any code in the installer that happens to initialize the theme system from
+  // accessing the database before it is set up yet.)
+  drupal_maintenance_theme();
 
   // Check existing settings.php.
   $install_state['settings_verified'] = install_verify_settings();

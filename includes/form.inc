@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.491 2010/09/13 01:09:25 dries Exp $
+// $Id: form.inc,v 1.492 2010/09/14 21:42:05 dries Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -929,38 +929,14 @@ function drupal_prepare_form($form_id, &$form, &$form_state) {
     }
   }
 
-  // Check theme functions for this form.
+  // If no #theme has been set, automatically apply theme suggestions.
   // theme_form() itself is in #theme_wrappers and not #theme. Therefore, the
   // #theme function only has to care for rendering the inner form elements,
   // not the form itself.
-  drupal_theme_initialize();
-  $registry = theme_get_registry();
-  // If #theme has been set, check whether the theme function(s) exist, or
-  // remove the suggestion(s), so drupal_render() renders the children.
-  if (isset($form['#theme'])) {
-    if (is_array($form['#theme'])) {
-      foreach ($form['#theme'] as $key => $suggestion) {
-        if (!isset($registry[$suggestion])) {
-          unset($form['#theme'][$key]);
-        }
-      }
-      if (empty($form['#theme'])) {
-        unset($form['#theme']);
-      }
-    }
-    else {
-      if (!isset($registry[$form['#theme']])) {
-        unset($form['#theme']);
-      }
-    }
-  }
-  // Only try to auto-suggest theme functions, if #theme has not been set.
-  else {
-    if (isset($registry[$form_id])) {
-      $form['#theme'] = $form_id;
-    }
-    elseif (isset($form_state['build_info']['base_form_id']) && isset($registry[$form_state['build_info']['base_form_id']])) {
-      $form['#theme'] = $form_state['build_info']['base_form_id'];
+  if (!isset($form['#theme'])) {
+    $form['#theme'] = array($form_id);
+    if (isset($form_state['build_info']['base_form_id'])) {
+      $form['#theme'][] = $form_state['build_info']['base_form_id'];
     }
   }
 
