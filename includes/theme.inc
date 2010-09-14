@@ -768,7 +768,11 @@ function theme($hook, $variables = array()) {
       }
     }
     if (!isset($hooks[$hook])) {
-      watchdog('theme', 'Theme key "@key" not found.', array('@key' => $hook), WATCHDOG_WARNING);
+      // Only log a message when not trying theme suggestions ($hook being an
+      // array).
+      if (!isset($candidate)) {
+        watchdog('theme', 'Theme key "@key" not found.', array('@key' => $hook), WATCHDOG_WARNING);
+      }
       return '';
     }
   }
