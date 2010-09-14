@@ -1568,7 +1568,7 @@ function install_check_requirements($install_state) {
     $exists = FALSE;
     // Verify that the directory exists.
     if (drupal_verify_install_file($conf_path, FILE_EXIST, 'dir')) {
-      // Check to make sure a settings.php already exists.
+      // Check if a settings.php file already exists.
       $file = $settings_file;
       if (drupal_verify_install_file($settings_file, FILE_EXIST)) {
         // If it does, make sure it is writable.
@@ -1586,6 +1586,38 @@ function install_check_requirements($install_state) {
         'severity'    => REQUIREMENT_ERROR,
         'description' => st('The @drupal installer requires that the %default-file file not be modified in any way from the original download.', array('@drupal' => drupal_install_profile_distribution_name(), '%default-file' => $default_settings_file)),
       );
+    }
+    // Otherwise, if settings.php does not exist yet, we can try to copy
+    // default.settings.php to create it.
+    elseif (!$exists) {
+      $copied = drupal_verify_install_file($conf_path, FILE_EXIST|FILE_WRITABLE, 'dir') && @copy($default_settings_file, $settings_file);
+      if ($copied) {
+        // If the new settings file has the same owner as default.settings.php,
+        // this means default.settings.php is owned by the webserver user.
+        // This is an inherent security weakness because it allows a malicious
+        // webserver process to append arbitrary PHP code and then execute it.
+        // However, it is also a common configuration on shared hosting, and
+        // there is nothing Drupal can do to prevent it. In this situation,
+        // having settings.php also owned by the webserver does not introduce
+        // any additional security risk, so we keep the file in place.
+        if (fileowner($default_settings_file) === fileowner($settings_file)) {
+          $writable = drupal_verify_install_file($settings_file, FILE_READABLE|FILE_WRITABLE);
+          $exists = TRUE;
+        }
+        // If settings.php and default.settings.php have different owners, this
+        // probably means the server is set up "securely" (with the webserver
+        // running as its own user, distinct from the user who owns all the
+        // Drupal PHP files), although with either a group or world writable
+        // sites directory. Keeping settings.php owned by the webserver would
+        // therefore introduce a security risk. It would also cause a usability
+        // problem, since site owners who do not have root access to the file
+        // system would be unable to edit their settings file later on. We
+        // therefore must delete the file we just created and force the
+        // administrator to log on to the server and create it manually.
+        else {
+          drupal_unlink($settings_file);
+        }
+      }
     }
 
     // If settings.php does not exist, throw an error.
