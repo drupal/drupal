@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1219 2010/09/13 06:44:58 webchick Exp $
+// $Id: common.inc,v 1.1220 2010/09/15 04:34:26 webchick Exp $
 
 /**
  * @file
@@ -6688,6 +6688,14 @@ function entity_get_info($entity_type = NULL) {
         // the entity type.
         if (empty($entity_info[$name]['entity keys']['bundle']) && empty($entity_info[$name]['bundles'])) {
           $entity_info[$name]['bundles'] = array($name => array('label' => $entity_info[$name]['label']));
+        }
+        // Prepare entity schema fields SQL info for
+        // DrupalEntityControllerInterface::buildQuery().
+        if (isset($entity_info[$name]['base table'])) {
+          $entity_info[$name]['schema_fields_sql']['base table'] = drupal_schema_fields_sql($entity_info[$name]['base table']);
+          if (isset($entity_info[$name]['revision table'])) {
+            $entity_info[$name]['schema_fields_sql']['revision table'] = drupal_schema_fields_sql($entity_info[$name]['revision table']);
+          }
         }
       }
       // Let other modules alter the entity info.

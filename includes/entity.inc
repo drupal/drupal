@@ -1,5 +1,5 @@
 <?php
-// $Id: entity.inc,v 1.13 2010/08/22 16:11:12 dries Exp $
+// $Id: entity.inc,v 1.14 2010/09/15 04:34:26 webchick Exp $
 
 /**
  * Interface for entity controller classes.
@@ -251,11 +251,11 @@ class DrupalDefaultEntityController implements DrupalEntityControllerInterface {
     }
 
     // Add fields from the {entity} table.
-    $entity_fields = drupal_schema_fields_sql($this->entityInfo['base table']);
+    $entity_fields = $this->entityInfo['schema_fields_sql']['base table'];
 
     if ($this->revisionKey) {
       // Add all fields from the {entity_revision} table.
-      $entity_revision_fields = drupal_map_assoc(drupal_schema_fields_sql($this->revisionTable));
+      $entity_revision_fields = drupal_map_assoc($this->entityInfo['schema_fields_sql']['revision table']);
       // The id field is provided by entity, so remove it.
       unset($entity_revision_fields[$this->idKey]);
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: entity_cache_test_dependency.module,v 1.1 2010/04/18 15:01:56 webchick Exp $
+// $Id: entity_cache_test_dependency.module,v 1.2 2010/09/15 04:34:27 webchick Exp $
 
 /**
  * @file
@@ -13,7 +13,6 @@ function entity_cache_test_dependency_entity_info() {
   return array(
     'entity_cache_test' => array(
       'label' => 'Entity Cache Test',
-      'base table' => 'entity_cache_test',
     ),
   );
 }
