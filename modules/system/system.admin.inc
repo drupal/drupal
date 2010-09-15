@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.303 2010/09/11 03:00:26 dries Exp $
+// $Id: system.admin.inc,v 1.304 2010/09/15 04:31:02 webchick Exp $
 
 /**
  * @file
@@ -1250,12 +1250,16 @@ function system_modules_submit($form, &$form_state) {
     drupal_set_message(t('The configuration options have been saved.'));
   }
 
-  // Clear all caches. We need to invoke drupal_flush_all_caches() to ensure
-  // that also dependent caches are flushed, e.g. the filter cache and field
-  // cache, and also registered themes are rebuilt, since modules can also
-  // register themes.
-  drupal_flush_all_caches();
+  // Clear all caches.
+  registry_rebuild();
+  system_rebuild_theme_data();
+  drupal_theme_rebuild();
+  node_types_rebuild();
+  menu_rebuild();
+  cache_clear_all('schema', 'cache');
   entity_info_cache_clear();
+  drupal_clear_css_cache();
+  drupal_clear_js_cache();
 
   $form_state['redirect'] = 'admin/modules';
 
