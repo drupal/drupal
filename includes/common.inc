@@ -6689,6 +6689,14 @@ function entity_get_info($entity_type = NULL) {
         if (empty($entity_info[$name]['entity keys']['bundle']) && empty($entity_info[$name]['bundles'])) {
           $entity_info[$name]['bundles'] = array($name => array('label' => $entity_info[$name]['label']));
         }
+        // Prepare entity schema fields SQL info for
+        // DrupalEntityControllerInterface::buildQuery().
+        if (isset($entity_info[$name]['base table'])) {
+          $entity_info[$name]['schema_fields_sql']['base table'] = drupal_schema_fields_sql($entity_info[$name]['base table']);
+          if (isset($entity_info[$name]['revision table'])) {
+            $entity_info[$name]['schema_fields_sql']['revision table'] = drupal_schema_fields_sql($entity_info[$name]['revision table']);
+          }
+        }
       }
       // Let other modules alter the entity info.
       drupal_alter('entity_info', $entity_info);
