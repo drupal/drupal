@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1220 2010/09/15 04:34:26 webchick Exp $
+// $Id: common.inc,v 1.1221 2010/09/16 20:14:49 dries Exp $
 
 /**
  * @file
@@ -5599,6 +5599,30 @@ function element_get_visible_children(array $elements) {
   }
 
   return array_keys($visible_children);
+}
+
+/**
+ * Sets HTML attributes based on element properties.
+ *
+ * @param $element
+ *   The renderable element to process.
+ * @param $map
+ *   An associative array whose keys are element property names and whose values
+ *   are the HTML attribute names to set for corresponding the property; e.g.,
+ *   array('#propertyname' => 'attributename'). If both names are identical
+ *   except for the leading '#', then an attribute name value is sufficient and
+ *   no property name needs to be specified.
+ */
+function element_set_attributes(array &$element, array $map) {
+  foreach ($map as $property => $attribute) {
+    // If the key is numeric, the attribute name needs to be taken over.
+    if (is_int($property)) {
+      $property = '#' . $attribute;
+    }
+    if (isset($element[$property])) {
+      $element['#attributes'][$attribute] = $element[$property];
+    }
+  }
 }
 
 /**
