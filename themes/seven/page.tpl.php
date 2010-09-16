@@ -9,11 +9,17 @@
       <h1 class="page-title"><?php print $title; ?></h1>
     <?php endif; ?>
     <?php print render($title_suffix); ?>
-    <?php if ($primary_local_tasks): ?><ul class="tabs primary"><?php print render($primary_local_tasks); ?></ul><?php endif; ?>
+    <?php if ($primary_local_tasks): ?>
+      <h2 class="element-invisible"><?php print t('Primary tabs'); ?></h2>
+      <ul class="tabs primary"><?php print render($primary_local_tasks); ?></ul>
+    <?php endif; ?>
   </div>
 
   <div id="page">
-    <?php if ($secondary_local_tasks): ?><ul class="tabs secondary"><?php print render($secondary_local_tasks); ?></ul><?php endif; ?>
+    <?php if ($secondary_local_tasks): ?>
+      <h2 class="element-invisible"><?php print t('Secondary tabs'); ?></h2>
+      <ul class="tabs secondary"><?php print render($secondary_local_tasks); ?></ul>
+    <?php endif; ?>
 
     <div id="content" class="clearfix">
       <?php if ($messages): ?>
