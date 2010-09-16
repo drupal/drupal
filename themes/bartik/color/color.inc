@@ -30,7 +30,7 @@ $info = array(
         'sidebar' => '#f6f6f2',
         'sidebarborders' => '#f9f9f9',
         'footer' => '#292929',
-        'titleslogan' => '#ffffff',
+        'titleslogan' => '#fffeff',
       ),
     ),
     'firehouse' => array(
