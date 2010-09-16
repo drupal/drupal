@@ -3167,6 +3167,7 @@ function _menu_router_build($callbacks) {
       'title' => '',
       'weight' => 0,
       'type' => MENU_NORMAL_ITEM,
+      'module' => '',
       '_number_parts' => $number_parts,
       '_parts' => $parts,
       '_fit' => $fit,
@@ -3296,7 +3297,6 @@ function _menu_router_build($callbacks) {
       'file' => '',
       'file path' => '',
       'include file' => '',
-      'module' => '',
     );
 
     // Calculate out the file to be included for each callback, if any.
