@@ -1,5 +1,5 @@
 <?php
-// $Id: overlay.tpl.php,v 1.3 2010/07/11 22:03:45 dries Exp $
+// $Id: overlay.tpl.php,v 1.4 2010/09/16 19:47:45 dries Exp $
 
 /**
  * @file
@@ -29,7 +29,7 @@
     <div id="overlay-close-wrapper">
       <a id="overlay-close" href="#" class="overlay-close"><span class="element-invisible"><?php print t('Close overlay'); ?></span></a>
     </div>
-    <?php if ($tabs): ?><ul id="overlay-tabs"><?php print render($tabs); ?></ul><?php endif; ?>
+    <?php if ($tabs): ?><h2 class="element-invisible"><?php print t('Primary tabs'); ?></h2><ul id="overlay-tabs"><?php print render($tabs); ?></ul><?php endif; ?>
   </div>
   <div id="overlay-content"<?php print $content_attributes; ?>>
     <?php print $page; ?>

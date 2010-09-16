@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.409 2010/09/16 17:28:24 dries Exp $
+// $Id: menu.inc,v 1.410 2010/09/16 19:47:45 dries Exp $
 
 /**
  * @file
@@ -2053,12 +2053,12 @@ function theme_menu_local_tasks() {
   $output = array();
 
   if ($primary = menu_primary_local_tasks()) {
-    $primary['#prefix'] = '<ul class="tabs primary">';
+    $primary['#prefix'] = '<h2 class="element-invisible">' . t('Primary tabs') . '</h2><ul class="tabs primary">';
     $primary['#suffix'] = '</ul>';
     $output[] = $primary;
   }
   if ($secondary = menu_secondary_local_tasks()) {
-    $secondary['#prefix'] = '<ul class="tabs secondary">';
+    $secondary['#prefix'] = '<h2 class="element-invisible">' . t('Secondary tabs') . '</h2><ul class="tabs secondary">';
     $secondary['#suffix'] = '</ul>';
     $output[] = $secondary;
   }
