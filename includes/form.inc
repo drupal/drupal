@@ -1414,17 +1414,20 @@ function form_get_errors() {
 }
 
 /**
- * Return the error message filed against the form with the specified name.
+ * Returns the error message filed against the given form element.
+ *
+ * Form errors higher up in the form structure override deeper errors as well as
+ * errors on the element itself.
  */
 function form_get_error($element) {
   $form = form_set_error();
-  $key = $element['#parents'][0];
-  if (isset($form[$key])) {
-    return $form[$key];
-  }
-  $key = implode('][', $element['#parents']);
-  if (isset($form[$key])) {
-    return $form[$key];
+  $parents = array();
+  foreach ($element['#parents'] as $parent) {
+    $parents[] = $parent;
+    $key = implode('][', $parents);
+    if (isset($form[$key])) {
+      return $form[$key];
+    }
   }
 }
 
@@ -2251,10 +2254,15 @@ function _form_options_flatten($array) {
  */
 function theme_select($variables) {
   $element = $variables['element'];
-  $size = $element['#size'] ? ' size="' . $element['#size'] . '"' : '';
+  element_set_attributes($element, array('id', 'name', 'size'));
   _form_set_class($element, array('form-select'));
-  $multiple = $element['#multiple'];
-  return '<select name="' . $element['#name'] . '' . ($multiple ? '[]' : '') . '"' . ($multiple ? ' multiple="multiple" ' : '') . drupal_attributes($element['#attributes']) . ' id="' . $element['#id'] . '" ' . $size . '>' . form_select_options($element) . '</select>';
+
+  if (!empty($element['#multiple'])) {
+    $element['#attributes']['multiple'] = 'multiple';
+    $element['#attributes']['name'] .= '[]';
+  }
+
+  return '<select' . drupal_attributes($element['#attributes']) . '>' . form_select_options($element) . '</select>';
 }
 
 /**
@@ -2276,7 +2284,7 @@ function form_select_options($element, $choices = NULL) {
   // array_key_exists() accommodates the rare event where $element['#value'] is NULL.
   // isset() fails in this situation.
   $value_valid = isset($element['#value']) || array_key_exists('#value', $element);
-  $value_is_array = is_array($element['#value']);
+  $value_is_array = $value_valid && is_array($element['#value']);
   $options = '';
   foreach ($choices as $key => $choice) {
     if (is_array($choice)) {
@@ -2364,6 +2372,8 @@ function form_get_options($element, $key) {
  */
 function theme_fieldset($variables) {
   $element = $variables['element'];
+  element_set_attributes($element, array('id'));
+  _form_set_class($element, array('form-wrapper'));
 
   $output = '<fieldset' . drupal_attributes($element['#attributes']) . '>';
   if (!empty($element['#title'])) {
@@ -2397,10 +2407,9 @@ function theme_fieldset($variables) {
 function theme_radio($variables) {
   $element = $variables['element'];
   $element['#attributes']['type'] = 'radio';
-  $element['#attributes']['name'] = $element['#name'];
-  $element['#attributes']['id'] = $element['#id'];
-  $element['#attributes']['value'] = $element['#return_value'];
-  if (check_plain($element['#value']) == $element['#return_value']) {
+  element_set_attributes($element, array('id', 'name', '#return_value' => 'value'));
+
+  if (isset($element['#return_value']) && check_plain($element['#value']) == $element['#return_value']) {
     $element['#attributes']['checked'] = 'checked';
   }
   _form_set_class($element, array('form-radio'));
@@ -2422,7 +2431,7 @@ function theme_radio($variables) {
 function theme_radios($variables) {
   $element = $variables['element'];
   $attributes = array();
-  if (!empty($element['#id'])) {
+  if (isset($element['#id'])) {
     $attributes['id'] = $element['#id'];
   }
   $attributes['class'] = 'form-radios';
@@ -2507,9 +2516,11 @@ function theme_date($variables) {
 function form_process_date($element) {
   // Default to current date
   if (empty($element['#value'])) {
-    $element['#value'] = array('day' => format_date(REQUEST_TIME, 'custom', 'j'),
-                            'month' => format_date(REQUEST_TIME, 'custom', 'n'),
-                            'year' => format_date(REQUEST_TIME, 'custom', 'Y'));
+    $element['#value'] = array(
+      'day' => format_date(REQUEST_TIME, 'custom', 'j'),
+      'month' => format_date(REQUEST_TIME, 'custom', 'n'),
+      'year' => format_date(REQUEST_TIME, 'custom', 'Y'),
+    );
   }
 
   $element['#tree'] = TRUE;
@@ -2529,9 +2540,11 @@ function form_process_date($element) {
       case 'day':
         $options = drupal_map_assoc(range(1, 31));
         break;
+
       case 'month':
         $options = drupal_map_assoc(range(1, 12), 'map_month');
         break;
+
       case 'year':
         $options = drupal_map_assoc(range(1900, 2050));
         break;
@@ -2632,11 +2645,10 @@ function theme_checkbox($variables) {
   $element = $variables['element'];
   $t = get_t();
   $element['#attributes']['type'] = 'checkbox';
-  $element['#attributes']['name'] = $element['#name'];
-  $element['#attributes']['id'] = $element['#id'];
-  $element['#attributes']['value'] = $element['#return_value'];
+  element_set_attributes($element, array('id', 'name', '#return_value' => 'value'));
+
   // Unchecked checkbox has #value of integer 0.
-  if ($element['#value'] !== 0 && $element['#value'] == $element['#return_value']) {
+  if (isset($element['#return_value']) && isset($element['#value']) && $element['#value'] !== 0 && $element['#value'] == $element['#return_value']) {
     $element['#attributes']['checked'] = 'checked';
   }
   _form_set_class($element, array('form-checkbox'));
@@ -2657,12 +2669,12 @@ function theme_checkbox($variables) {
 function theme_checkboxes($variables) {
   $element = $variables['element'];
   $attributes = array();
-  if (!empty($element['#id'])) {
+  if (isset($element['#id'])) {
     $attributes['id'] = $element['#id'];
   }
-  $attributes['class'] = 'form-checkboxes';
+  $attributes['class'][] = 'form-checkboxes';
   if (!empty($element['#attributes']['class'])) {
-    $attributes['class'] .= ' ' . implode(' ', $element['#attributes']['class']);
+    $attributes['class'] = array_merge($attributes['class'], $element['#attributes']['class']);
   }
   return '<div' . drupal_attributes($attributes) . '>' . (!empty($element['#children']) ? $element['#children'] : '') . '</div>';
 }
@@ -2938,7 +2950,6 @@ function form_process_fieldset(&$element, &$form_state) {
   if (!isset($element['#attributes']['class'])) {
     $element['#attributes']['class'] = array();
   }
-  $element['#attributes']['class'][] = 'form-wrapper';
 
   // Collapsible fieldsets
   if (!empty($element['#collapsible'])) {
@@ -2948,7 +2959,6 @@ function form_process_fieldset(&$element, &$form_state) {
       $element['#attributes']['class'][] = 'collapsed';
     }
   }
-  $element['#attributes']['id'] = $element['#id'];
 
   return $element;
 }
@@ -2964,6 +2974,10 @@ function form_process_fieldset(&$element, &$form_state) {
  *   The modified element with all group members.
  */
 function form_pre_render_fieldset($element) {
+  // Fieldsets may be rendered outside of a Form API context.
+  if (!isset($element['#parents']) || !isset($element['#groups'])) {
+    return $element;
+  }
   // Inject group member elements belonging to this group.
   $parents = implode('][', $element['#parents']);
   $children = element_children($element['#groups'][$parents]);
@@ -3073,8 +3087,7 @@ function theme_vertical_tabs($variables) {
  * @ingroup themeable
  */
 function theme_submit($variables) {
-  $element = $variables['element'];
-  return theme('button', $element);
+  return theme('button', $variables['element']);
 }
 
 /**
@@ -3090,11 +3103,8 @@ function theme_submit($variables) {
 function theme_button($variables) {
   $element = $variables['element'];
   $element['#attributes']['type'] = 'submit';
-  if (!empty($element['#name'])) {
-    $element['#attributes']['name'] = $element['#name'];
-  }
-  $element['#attributes']['id'] = $element['#id'];
-  $element['#attributes']['value'] = $element['#value'];
+  element_set_attributes($element, array('id', 'name', 'value'));
+
   $element['#attributes']['class'][] = 'form-' . $element['#button_type'];
   if (!empty($element['#attributes']['disabled'])) {
     $element['#attributes']['class'][] = 'form-button-disabled';
@@ -3116,11 +3126,8 @@ function theme_button($variables) {
 function theme_image_button($variables) {
   $element = $variables['element'];
   $element['#attributes']['type'] = 'image';
-  $element['#attributes']['name'] = $element['#name'];
-  if (!empty($element['#value'])) {
-    $element['#attributes']['value'] = $element['#value'];
-  }
-  $element['#attributes']['id'] = $element['#id'];
+  element_set_attributes($element, array('id', 'name', 'value'));
+
   $element['#attributes']['src'] = file_create_url($element['#src']);
   if (!empty($element['#title'])) {
     $element['#attributes']['alt'] = $element['#title'];
@@ -3148,9 +3155,7 @@ function theme_image_button($variables) {
 function theme_hidden($variables) {
   $element = $variables['element'];
   $element['#attributes']['type'] = 'hidden';
-  $element['#attributes']['name'] = $element['#name'];
-  $element['#attributes']['id'] = $element['#id'];
-  $element['#attributes']['value'] = $element['#value'];
+  element_set_attributes($element, array('id', 'name', 'value'));
   return '<input' . drupal_attributes($element['#attributes']) . " />\n";
 }
 
@@ -3168,15 +3173,7 @@ function theme_hidden($variables) {
 function theme_textfield($variables) {
   $element = $variables['element'];
   $element['#attributes']['type'] = 'text';
-  $element['#attributes']['name'] = $element['#name'];
-  $element['#attributes']['id'] = $element['#id'];
-  $element['#attributes']['value'] = $element['#value'];
-  if (!empty($element['#size'])) {
-    $element['#attributes']['size'] = $element['#size'];
-  }
-  if (!empty($element['#maxlength'])) {
-    $element['#attributes']['maxlength'] = $element['#maxlength'];
-  }
+  element_set_attributes($element, array('id', 'name', 'value', 'size', 'maxlength'));
   _form_set_class($element, array('form-text'));
 
   $extra = '';
@@ -3186,7 +3183,7 @@ function theme_textfield($variables) {
 
     $attributes = array();
     $attributes['type'] = 'hidden';
-    $attributes['id'] = $element['#id'] . '-autocomplete';
+    $attributes['id'] = $element['#attributes']['id'] . '-autocomplete';
     $attributes['value'] = url($element['#autocomplete_path'], array('absolute' => TRUE));
     $attributes['disabled'] = 'disabled';
     $attributes['class'][] = 'autocomplete';
@@ -3210,14 +3207,13 @@ function theme_textfield($variables) {
  */
 function theme_form($variables) {
   $element = $variables['element'];
-  if (!empty($element['#action'])) {
+  if (isset($element['#action'])) {
     $element['#attributes']['action'] = drupal_strip_dangerous_protocols($element['#action']);
   }
-  $element['#attributes']['method'] = $element['#method'];
+  element_set_attributes($element, array('method', 'id'));
   if (empty($element['#attributes']['accept-charset'])) {
     $element['#attributes']['accept-charset'] = "UTF-8";
   }
-  $element['#attributes']['id'] = $element['#id'];
   // Anonymous DIV to satisfy XHTML compliance.
   return '<form' . drupal_attributes($element['#attributes']) . '><div>' . $element['#children'] . '</div></form>';
 }
@@ -3235,10 +3231,7 @@ function theme_form($variables) {
  */
 function theme_textarea($variables) {
   $element = $variables['element'];
-  $element['#attributes']['name'] = $element['#name'];
-  $element['#attributes']['id'] = $element['#id'];
-  $element['#attributes']['cols'] = $element['#cols'];
-  $element['#attributes']['rows'] = $element['#rows'];
+  element_set_attributes($element, array('id', 'name', 'cols', 'rows'));
   _form_set_class($element, array('form-textarea'));
 
   $wrapper_attributes = array(
@@ -3271,15 +3264,7 @@ function theme_textarea($variables) {
 function theme_password($variables) {
   $element = $variables['element'];
   $element['#attributes']['type'] = 'password';
-  $element['#attributes']['name'] = $element['#name'];
-  $element['#attributes']['id'] = $element['#id'];
-  $element['#attributes']['value'] = $element['#value'];
-  if (!empty($element['#size'])) {
-    $element['#attributes']['size'] = $element['#size'];
-  }
-  if (!empty($element['#maxlength'])) {
-    $element['#attributes']['maxlength'] = $element['#maxlength'];
-  }
+  element_set_attributes($element, array('id', 'name', 'value', 'size', 'maxlength'));
   _form_set_class($element, array('form-text'));
 
   return '<input' . drupal_attributes($element['#attributes']) . ' />';
@@ -3316,11 +3301,7 @@ function form_process_weight($element) {
 function theme_file($variables) {
   $element = $variables['element'];
   $element['#attributes']['type'] = 'file';
-  $element['#attributes']['name'] = $element['#name'];
-  $element['#attributes']['id'] = $element['#id'];
-  if (!empty($element['#size'])) {
-    $element['#attributes']['size'] = $element['#size'];
-  }
+  element_set_attributes($element, array('id', 'name', 'size'));
   _form_set_class($element, array('form-file'));
 
   return '<input' . drupal_attributes($element['#attributes']) . ' />';
@@ -3373,9 +3354,15 @@ function theme_file($variables) {
  * @ingroup themeable
  */
 function theme_form_element($variables) {
-  $element = $variables['element'];
+  $element = &$variables['element'];
   // This is also used in the installer, pre-database setup.
   $t = get_t();
+
+  // This function is invoked as theme wrapper, but the rendered form element
+  // may not necessarily have been processed by form_builder().
+  $element += array(
+    '#title_display' => 'before',
+  );
 
   // Add element #id for #type 'item'.
   if (isset($element['#markup']) && !empty($element['#id'])) {
@@ -3422,7 +3409,7 @@ function theme_form_element($variables) {
   }
 
   if (!empty($element['#description'])) {
-    $output .= ' <div class="description">' . $element['#description'] . "</div>\n";
+    $output .= '<div class="description">' . $element['#description'] . "</div>\n";
   }
 
   $output .= "</div>\n";
@@ -3521,10 +3508,13 @@ function _form_set_class(&$element, $class = array()) {
     }
     $element['#attributes']['class'] = array_merge($element['#attributes']['class'], $class);
   }
-  if ($element['#required']) {
+  // This function is invoked from form element theme functions, but the
+  // rendered form element may not necessarily have been processed by
+  // form_builder().
+  if (!empty($element['#required'])) {
     $element['#attributes']['class'][] = 'required';
   }
-  if (form_get_error($element)) {
+  if (isset($element['#parents']) && form_get_error($element)) {
     $element['#attributes']['class'][] = 'error';
   }
 }
