@@ -207,7 +207,7 @@ function toolbar_view() {
     '#theme' => 'links__toolbar_menu',
     '#links' => $links,
     '#attributes' => array('id' => 'toolbar-menu'),
-    '#heading' => array('text' => t($system_menus['management']), 'level' => 'h2', 'class' => 'element-invisible'),
+    '#heading' => array('text' => t('Administrative toolbar'), 'level' => 'h2', 'class' => 'element-invisible'),
   );
 
   // Add logout & user account links or login link.
