@@ -1,5 +1,5 @@
 <?php
-// $Id: color.inc,v 1.4 2010/09/16 18:53:05 dries Exp $
+// $Id: color.inc,v 1.5 2010/09/16 20:52:00 dries Exp $
 
 // Put the logo path into JavaScript for the live preview.
 drupal_add_js(array('color' => array('logo' => theme_get_setting('logo', 'bartik'))), 'setting');
@@ -23,7 +23,7 @@ $info = array(
       'title' => t('Blue Lagoon (default)'),
       'colors' => array(
         'bg' => '#ffffff',
-        'link' => '#288cc9',
+        'link' => '#0071B3',
         'top' => '#0779bf',
         'bottom' => '#48a9e4',
         'text' => '#3b3b3b',

@@ -1,4 +1,4 @@
-/* $Id: colors.css,v 1.5 2010/09/09 15:27:08 webchick Exp $ */
+/* $Id: colors.css,v 1.6 2010/09/16 20:52:01 dries Exp $ */
 
 /* ---------- Color Module Styles ----------- */
 
@@ -28,7 +28,7 @@ body.overlay {
   background-image: -moz-linear-gradient(-90deg, #0779bf, #48a9e4);
 }
 a {
-  color: #288CC9;
+  color: #0071B3;
 }
 a:hover,
 a:focus {
