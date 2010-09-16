@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.304 2010/09/15 04:31:02 webchick Exp $
+// $Id: system.admin.inc,v 1.305 2010/09/16 17:42:56 dries Exp $
 
 /**
  * @file
@@ -1061,7 +1061,7 @@ function _system_modules_build_row($info, $extra) {
   }
   else {
     $form['enable'] = array(
-      '#markup' =>  theme('image', array('path' => 'misc/watchdog-error.png', 'alt' => t('incompatible'), 'title' => $status_short)),
+      '#markup' =>  theme('image', array('path' => 'misc/watchdog-error.png', 'alt' => $status_short, 'title' => $status_short)),
     );
     $form['description']['#markup'] .= theme('system_modules_incompatible', array('message' => $status_long));
   }
