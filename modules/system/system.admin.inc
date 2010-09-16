@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.305 2010/09/16 17:42:56 dries Exp $
+// $Id: system.admin.inc,v 1.306 2010/09/16 18:00:43 dries Exp $
 
 /**
  * @file
@@ -1031,7 +1031,7 @@ function _system_modules_build_row($info, $extra) {
   $status_long = '';
 
   // Check the core compatibility.
-  if (!isset($info['core']) || $info['core'] != DRUPAL_CORE_COMPATIBILITY || empty($info['files'])) {
+  if (!isset($info['core']) || $info['core'] != DRUPAL_CORE_COMPATIBILITY) {
     $compatible = FALSE;
     $status_short .= t('Incompatible with this version of Drupal core. ');
     $status_long .= t('This version is not compatible with Drupal !core_version and should be replaced.', array('!core_version' => DRUPAL_CORE_COMPATIBILITY));

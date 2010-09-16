@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.pages.inc,v 1.10 2010/04/13 15:23:03 dries Exp $
+// $Id: filter.pages.inc,v 1.11 2010/09/16 18:00:43 dries Exp $
 
 /**
  * @file
@@ -55,17 +55,17 @@ function theme_filter_tips($variables) {
 
   $multiple = count($tips) > 1;
   if ($multiple) {
-    $output = t('Text formats') . ':';
+    $output = '<h2>' . t('Text Formats') . '</h2>';
   }
 
   if (count($tips)) {
     if ($multiple) {
-      $output .= '<ul>';
+      $output .= '<div class="compose-tips">';
     }
     foreach ($tips as $name => $tiplist) {
       if ($multiple) {
-        $output .= '<li>';
-        $output .= '<strong>' . $name . '</strong>:<br />';
+        $output .= '<div class="filter-type filter-' . drupal_html_class($name) . '">';
+        $output .= '<h3>' . $name . '</h3>';
       }
 
       if (count($tiplist) > 0) {
@@ -77,11 +77,11 @@ function theme_filter_tips($variables) {
       }
 
       if ($multiple) {
-        $output .= '</li>';
+        $output .= '</div>';
       }
     }
     if ($multiple) {
-      $output .= '</ul>';
+      $output .= '</div>';
     }
   }
 
