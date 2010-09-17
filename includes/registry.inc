@@ -1,5 +1,5 @@
 <?php
-// $Id: registry.inc,v 1.33 2010/07/10 01:57:32 dries Exp $
+// $Id: registry.inc,v 1.34 2010/09/17 14:45:46 dries Exp $
 
 /**
  * @file
@@ -165,7 +165,7 @@ function _registry_parse_files($files) {
  *   (optional) Weight of the module.
  */
 function _registry_parse_file($filename, $contents, $module = '', $weight = 0) {
-  if (preg_match_all('/^\s*(?:abstract)?\s*(class|interface)\s+([a-zA-Z0-9_]+)/m', $contents, $matches)) {
+  if (preg_match_all('/^\s*(?:abstract|final)?\s*(class|interface)\s+([a-zA-Z0-9_]+)/m', $contents, $matches)) {
     $query = db_insert('registry')->fields(array('name', 'type', 'filename', 'module', 'weight'));
     foreach ($matches[2] as $key => $name) {
       $query->values(array(
