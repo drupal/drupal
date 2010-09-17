@@ -311,8 +311,9 @@ function drupal_session_regenerate() {
     }
     $params = session_get_cookie_params();
     $session_id = drupal_hash_base64(uniqid(mt_rand(), TRUE) . drupal_random_bytes(55));
-    // If the session cookie lifetime is set, the session will expire $params['lifetime'] seconds from the current request.
-    // If it is not set, it will expire when the browser is closed.
+    // If a session cookie lifetime is set, the session will expire
+    // $params['lifetime'] seconds from the current request. If it is not set,
+    // it will expire when the browser is closed.
     $expire = $params['lifetime'] ? REQUEST_TIME + $params['lifetime'] : 0;
     setcookie($insecure_session_name, $session_id, $expire, $params['path'], $params['domain'], FALSE, $params['httponly']);
     $_COOKIE[$insecure_session_name] = $session_id;
