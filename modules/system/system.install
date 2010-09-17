@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.506 2010/09/13 05:50:09 webchick Exp $
+// $Id: system.install,v 1.507 2010/09/17 02:28:37 dries Exp $
 
 /**
  * @file
@@ -1866,9 +1866,10 @@ function system_update_7005() {
 /**
  * Registry tables and drop the file key of the menu router, since it is no
  * longer needed.
+ *
+ * Moved to update_fix_d7_requirements().
  */
 function system_update_7006() {
-  // Update moved to update_fix_d7_requirements().
 }
 
 /**
@@ -1900,9 +1901,10 @@ function system_update_7007() {
 /**
  * Use the poll_choice primary key to record votes in poll_votes rather than
  * the choice order. Rename chorder to weight.
+ *
+ * Moved to poll_update_7001().
  */
 function system_update_7008() {
-  // Moved to poll_update_7001().
 }
 
 /**
@@ -1920,7 +1922,6 @@ function system_update_7009() {
  * Moved to system_update_6048().
  */
 function system_update_7010() {
-  return '';
 }
 
 /**
@@ -1944,7 +1945,11 @@ function system_update_7011() {
   $insert->execute();
 }
 
-// system_update_7012() moved to block_update_7002().
+/**
+ * Moved to block_update_7002().
+ */
+function system_update_7012() {
+}
 
 /**
  * Convert default time zone offset to default time zone name.
@@ -2126,7 +2131,11 @@ function system_update_7027() {
   module_enable($module_list, FALSE);
 }
 
-// system_update_7028() moved to taxonomy_update_7001().
+/**
+ * Moved to taxonomy_update_7001().
+ */
+function system_update_7028() {
+}
 
 /**
  * Add new 'view own unpublished content' permission for authenticated users.
@@ -2301,24 +2310,27 @@ function system_update_7037() {
 /**
  * Adds fields to the {menu_router} table to allow custom themes to be set per
  * page.
+ *
+ * Moved to update_fix_d7_requirements().
  */
 function system_update_7039() {
-  // Moved to update_fix_d7_requirements().
 }
 
 /**
  * Create new date format tables.
+ *
+ * Moved to update_fix_d7_requirements().
  */
 function system_update_7040() {
-  // Moved to update_fix_d7_requirements().
 }
 
 /**
  * Adds 'delivery_callback' field to the {menu_router} table to allow a custom
  * function to be used for final page rendering and sending to browser.
+ *
+ * Moved to update_fix_d7_requirements().
  */
 function system_update_7041() {
-  // Moved to update_fix_d7_requirements().
 }
 
 /**

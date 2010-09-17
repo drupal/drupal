@@ -1,5 +1,5 @@
 <?php
-// $Id: user.install,v 1.63 2010/09/13 05:50:09 webchick Exp $
+// $Id: user.install,v 1.64 2010/09/17 02:28:37 dries Exp $
 
 /**
  * @file
@@ -551,7 +551,6 @@ function user_update_7003() {
  * Moved to user_update_7012().
  */
 function user_update_7004() {
-  // This doesn't affect any subsequent user updates.
 }
 
 /**
