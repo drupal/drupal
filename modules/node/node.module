@@ -132,10 +132,6 @@ function node_theme() {
     'node_search_admin' => array(
       'render element' => 'form',
     ),
-    'node_filters' => array(
-      'render element' => 'form',
-      'file' => 'node.admin.inc',
-    ),
     'node_add_list' => array(
       'variables' => array('content' => NULL),
       'file' => 'node.pages.inc',

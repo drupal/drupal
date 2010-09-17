@@ -5958,6 +5958,9 @@ function drupal_common_theme() {
     'date' => array(
       'render element' => 'element',
     ),
+    'exposed_filters' => array(
+      'render element' => 'form',
+    ),
     'checkbox' => array(
       'render element' => 'element',
     ),

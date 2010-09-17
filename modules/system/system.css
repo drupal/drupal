@@ -82,7 +82,6 @@ thead th {
 .item-list ul li {
   margin: 0 0 0.25em 1.5em; /* LTR */
   padding: 0;
-  list-style: disc;
 }
 .form-item {
   margin-top: 1em;

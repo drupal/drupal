@@ -1224,7 +1224,9 @@ class NodeAdminTestCase extends DrupalWebTestCase {
       'status' => 'status-1',
     );
     $this->drupalPost(NULL, $edit, t('Filter'));
-    $this->assertRaw(t('<strong>%type</strong> is <strong>%value</strong>', array('%type' => t('status'), '%value' => t('published'))), t('Content list is filtered by status.'));
+
+    $this->assertRaw(t('where %property is %value', array('%property' => t('status'), '%value' => 'published')), t('Content list is filtered by status.'));
+
     $this->assertLinkByHref('node/' . $nodes['published_page']->nid . '/edit');
     $this->assertLinkByHref('node/' . $nodes['published_article']->nid . '/edit');
     $this->assertNoLinkByHref('node/' . $nodes['unpublished_page_1']->nid . '/edit');
@@ -1234,8 +1236,10 @@ class NodeAdminTestCase extends DrupalWebTestCase {
       'type' => 'page',
     );
     $this->drupalPost(NULL, $edit, t('Refine'));
-    $this->assertRaw(t('<strong>%type</strong> is <strong>%value</strong>', array('%type' => t('status'), '%value' => t('published'))), t('Content list is filtered by status.'));
-    $this->assertRaw(t('<strong>%type</strong> is <strong>%value</strong>', array('%type' => t('type'), '%value' => 'Basic page')), t('Content list is filtered by content type.'));
+
+    $this->assertRaw(t('where %property is %value', array('%property' => t('status'), '%value' => 'published')), t('Content list is filtered by status.'));
+    $this->assertRaw(t('and where %property is %value', array('%property' => t('type'), '%value' => 'Basic page')), t('Content list is filtered by content type.'));
+
     $this->assertLinkByHref('node/' . $nodes['published_page']->nid . '/edit');
     $this->assertNoLinkByHref('node/' . $nodes['published_article']->nid . '/edit');
 

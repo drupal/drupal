@@ -48,3 +48,20 @@ table.screenshot {
   margin-right: 15px;
 }
 
+/**
+ * Exposed filters
+ */
+.exposed-filters .filters {
+  float: right;
+  margin-left: 1em;
+  margin-right: 0;
+}
+.exposed-filters .form-item label {
+  float: right;
+}
+/* Current filters */
+.exposed-filters .additional-filters {
+  float: right;
+  margin-left: 1em;
+  margin-right: 0;
+}

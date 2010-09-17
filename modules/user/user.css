@@ -10,22 +10,6 @@
 #permissions tr.even .form-item {
   white-space: normal;
 }
-/* Override the default multiselect layout in system-behavior.css. */
-#user-filter-form dl.multiselect dd,
-dl.multiselect dd .form-item {
-  width: 20em; /* 6em label + 14em select */
-}
-#user-filter-form dl.multiselect dd .form-item label {
-  display: block;
-  float: left; /* LTR */
-  width: 6em;
-  font-weight: normal;
-}
-#user-admin-buttons {
-  float: left; /* LTR */
-  margin-left: 0.5em; /* LTR */
-  clear: right; /* LTR */
-}
 #user-admin-settings fieldset .fieldset-description {
   font-size: 0.85em;
   padding-bottom: .5em;
