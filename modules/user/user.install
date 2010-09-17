@@ -551,7 +551,6 @@ function user_update_7003() {
  * Moved to user_update_7012().
  */
 function user_update_7004() {
-  // This doesn't affect any subsequent user updates.
 }
 
 /**

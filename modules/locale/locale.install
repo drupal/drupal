@@ -105,9 +105,10 @@ function locale_update_7001() {
 
 /**
  * Allow longer javascript file names.
+ *
+ * Moved to update_fix_d7_requirements().
  */
 function locale_update_7002() {
-  // Update moved to update_fix_d7_requirements().
 }
 
 /**
