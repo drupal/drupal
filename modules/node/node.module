@@ -1879,7 +1879,7 @@ function node_menu() {
       'title' => $type->name,
       'title callback' => 'check_plain',
       'page callback' => 'node_add',
-      'page arguments' => array(2),
+      'page arguments' => array($type->type),
       'access callback' => 'node_access',
       'access arguments' => array('create', $type->type),
       'description' => $type->description,
