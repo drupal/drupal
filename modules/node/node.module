@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1298 2010/09/11 06:03:11 webchick Exp $
+// $Id: node.module,v 1.1299 2010/09/17 14:53:21 dries Exp $
 
 /**
  * @file
@@ -131,10 +131,6 @@ function node_theme() {
     ),
     'node_search_admin' => array(
       'render element' => 'form',
-    ),
-    'node_filters' => array(
-      'render element' => 'form',
-      'file' => 'node.admin.inc',
     ),
     'node_add_list' => array(
       'variables' => array('content' => NULL),

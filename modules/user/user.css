@@ -1,4 +1,4 @@
-/* $Id: user.css,v 1.21 2010/04/28 20:08:39 dries Exp $ */
+/* $Id: user.css,v 1.22 2010/09/17 14:53:22 dries Exp $ */
 
 #permissions td.module {
   font-weight: bold;
@@ -9,22 +9,6 @@
 #permissions tr.odd .form-item,
 #permissions tr.even .form-item {
   white-space: normal;
-}
-/* Override the default multiselect layout in system-behavior.css. */
-#user-filter-form dl.multiselect dd,
-dl.multiselect dd .form-item {
-  width: 20em; /* 6em label + 14em select */
-}
-#user-filter-form dl.multiselect dd .form-item label {
-  display: block;
-  float: left; /* LTR */
-  width: 6em;
-  font-weight: normal;
-}
-#user-admin-buttons {
-  float: left; /* LTR */
-  margin-left: 0.5em; /* LTR */
-  clear: right; /* LTR */
 }
 #user-admin-settings fieldset .fieldset-description {
   font-size: 0.85em;

@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1200 2010/09/11 06:03:12 webchick Exp $
+// $Id: user.module,v 1.1201 2010/09/17 14:53:22 dries Exp $
 
 /**
  * @file
@@ -119,10 +119,6 @@ function user_theme() {
       'file' => 'user.admin.inc',
     ),
     'user_admin_roles' => array(
-      'render element' => 'form',
-      'file' => 'user.admin.inc',
-    ),
-    'user_filters' => array(
       'render element' => 'form',
       'file' => 'user.admin.inc',
     ),

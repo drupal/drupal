@@ -1,4 +1,4 @@
-/* $Id: admin.css,v 1.22 2010/04/28 20:08:39 dries Exp $ */
+/* $Id: admin.css,v 1.23 2010/09/17 14:53:21 dries Exp $ */
 
 /*
 ** Formatting for administration page
@@ -137,4 +137,37 @@ table.screenshot {
 }
 html.js .custom-container label {
   visibility: hidden;
+}
+
+/**
+ * Exposed filters
+ */
+.exposed-filters .filters {
+  float: left; /* LTR */
+  margin-right: 1em; /* LTR */
+  width: 25em; /* IE6 */
+}
+.exposed-filters .form-item {
+  margin: 0 0 0.1em 0;
+  padding: 0;
+}
+.exposed-filters .form-item label {
+  float: left; /* LTR */
+  font-weight: normal;
+  width: 10em;
+}
+.exposed-filters .form-select {
+  width: 14em;
+}
+/* Current filters */
+.exposed-filters .current-filters {
+  margin-bottom: 1em;
+}
+.exposed-filters .current-filters .placeholder {
+  font-style: normal;
+  font-weight: bold;
+}
+.exposed-filters .additional-filters {
+  float: left; /* LTR */
+  margin-right: 1em; /* LTR */
 }

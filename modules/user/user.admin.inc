@@ -1,5 +1,5 @@
 <?php
-// $Id: user.admin.inc,v 1.117 2010/09/01 20:08:17 dries Exp $
+// $Id: user.admin.inc,v 1.118 2010/09/17 14:53:22 dries Exp $
 
 /**
  * @file
@@ -40,7 +40,7 @@ function user_filter_form() {
   $form['filters'] = array(
     '#type' => 'fieldset',
     '#title' => t('Show only users where'),
-    '#theme' => 'user_filters',
+    '#theme' => 'exposed_filters__user',
   );
   foreach ($session as $filter) {
     list($type, $value) = $filter;
@@ -53,18 +53,26 @@ function user_filter_form() {
     else {
       $value = $filters[$type]['options'][$value];
     }
-    $params = array('%property' => $filters[$type]['title'] , '%value' => $value);
+    $t_args = array('%property' => $filters[$type]['title'], '%value' => $value);
     if ($i++) {
-      $form['filters']['current'][] = array('#markup' => t('<em>and</em> where <strong>%property</strong> is <strong>%value</strong>', $params));
+      $form['filters']['current'][] = array('#markup' => t('and where %property is %value', $t_args));
     }
     else {
-      $form['filters']['current'][] = array('#markup' => t('<strong>%property</strong> is <strong>%value</strong>', $params));
+      $form['filters']['current'][] = array('#markup' => t('%property is %value', $t_args));
     }
   }
 
+  $form['filters']['status'] = array(
+    '#type' => 'container',
+    '#attributes' => array('class' => array('clearfix')),
+    '#prefix' => ($i ? '<div class="additional-filters">' . t('and where') . '</div>' : ''),
+  );
+  $form['filters']['status']['filters'] = array(
+    '#type' => 'container',
+    '#attributes' => array('class' => array('filters')),
+  );
   foreach ($filters as $key => $filter) {
-    $names[$key] = $filter['title'];
-    $form['filters']['status'][$key] = array(
+    $form['filters']['status']['filters'][$key] = array(
       '#type' => 'select',
       '#options' => $filter['options'],
       '#title' => $filter['title'],
@@ -72,21 +80,20 @@ function user_filter_form() {
     );
   }
 
-  $form['filters']['actions'] = array(
+  $form['filters']['status']['actions'] = array(
     '#type' => 'actions',
-    '#id' => 'user-admin-buttons',
     '#attributes' => array('class' => array('container-inline')),
   );
-  $form['filters']['actions']['submit'] = array(
+  $form['filters']['status']['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => (count($session) ? t('Refine') : t('Filter')),
   );
   if (count($session)) {
-    $form['filters']['actions']['undo'] = array(
+    $form['filters']['status']['actions']['undo'] = array(
       '#type' => 'submit',
       '#value' => t('Undo'),
     );
-    $form['filters']['actions']['reset'] = array(
+    $form['filters']['status']['actions']['reset'] = array(
       '#type' => 'submit',
       '#value' => t('Reset'),
     );
@@ -1017,41 +1024,3 @@ function user_admin_role_delete_confirm_submit($form, &$form_state) {
   $form_state['redirect'] = 'admin/people/permissions/roles';
 }
 
-/**
- * Returns HTML for the user administration filter selector.
- *
- * @param $variables
- *   An associative array containing:
- *   - form: A render element representing the form.
- *
- * @ingroup themeable
- */
-function theme_user_filters($variables) {
-  $form = $variables['form'];
-
-  $output = '<ul class="clearfix">';
-  if (!empty($form['current'])) {
-    foreach (element_children($form['current']) as $key) {
-      $output .= '<li>' . drupal_render($form['current'][$key]) . '</li>';
-    }
-  }
-  $output .= '</ul>';
-
-  $output .= '<div class="clearfix">';
-
-  $output .= '<dl class="multiselect">' . (!empty($form['current']) ? '<dt><em>' . t('and') . '</em> ' . t('where') . '</dt>' : '');
-
-  $output .= '<dd>';
-
-  foreach (element_children($form['status']) as $key) {
-    $output .= drupal_render($form['status'][$key]);
-  }
-  $output .= '</dd>';
-
-  $output .= '</dl>';
-  $output .= drupal_render($form['actions']);
-
-  $output .= '</div>';
-
-  return $output;
-}

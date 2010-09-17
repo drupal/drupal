@@ -1,4 +1,4 @@
-/* $Id: system-behavior.css,v 1.13 2010/08/09 16:58:15 webchick Exp $ */
+/* $Id: system-behavior.css,v 1.14 2010/09/17 14:53:21 dries Exp $ */
 
 /**
  * Autocomplete
@@ -180,28 +180,6 @@ tr .ajax-progress .throbber {
 }
 .ajax-progress-bar {
   width: 16em;
-}
-
-/**
- * Multiselect form
- */
-dl.multiselect dd,
-dl.multiselect dd .form-item,
-dl.multiselect dd select {
-  font-family: inherit;
-  font-size: inherit;
-  width: 14em;
-}
-dl.multiselect dt,
-dl.multiselect dd {
-  float: left; /* LTR */
-  line-height: 1.75em;
-  padding: 0;
-  margin: 0 1em 0 0; /* LTR */
-}
-dl.multiselect .form-item {
-  height: 1.75em;
-  margin: 0;
 }
 
 /**

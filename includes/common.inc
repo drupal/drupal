@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1221 2010/09/16 20:14:49 dries Exp $
+// $Id: common.inc,v 1.1222 2010/09/17 14:53:21 dries Exp $
 
 /**
  * @file
@@ -5957,6 +5957,9 @@ function drupal_common_theme() {
     ),
     'date' => array(
       'render element' => 'element',
+    ),
+    'exposed_filters' => array(
+      'render element' => 'form',
     ),
     'checkbox' => array(
       'render element' => 'element',
