@@ -2184,9 +2184,12 @@ function db_autoload($class) {
 /**
  * Executes an arbitrary query string against the active database.
  *
+ * Use this function for SELECT queries if it is just a simple query string.
+ * If the caller or other modules need to change the query, use db_select()
+ * instead.
+ *
  * Do not use this function for INSERT, UPDATE, or DELETE queries. Those should
- * be handled via the appropriate query builder factory. Use this function for
- * SELECT queries that do not require a query builder.
+ * be handled via db_insert(), db_update() and db_delete() respectively.
  *
  * @param $query
  *   The prepared statement query to run. Although it will accept both named and
