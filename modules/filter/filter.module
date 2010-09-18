@@ -122,11 +122,11 @@ function filter_menu() {
     'access arguments' => array('administer filters'),
     'file' => 'filter.admin.inc',
   );
-  $items['admin/config/content/formats/%filter_format/delete'] = array(
-    'title' => 'Delete text format',
+  $items['admin/config/content/formats/%filter_format/disable'] = array(
+    'title' => 'Disable text format',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('filter_admin_delete', 4),
-    'access callback' => '_filter_delete_format_access',
+    'page arguments' => array('filter_admin_disable', 4),
+    'access callback' => '_filter_disable_format_access',
     'access arguments' => array(4),
     'type' => MENU_CALLBACK,
     'file' => 'filter.admin.inc',
@@ -140,11 +140,11 @@ function filter_menu() {
  * @param $format
  *   A text format object.
  * @return
- *   TRUE if the text format can be deleted by the current user, FALSE
+ *   TRUE if the text format can be disabled by the current user, FALSE
  *   otherwise.
  */
-function _filter_delete_format_access($format) {
-  // The fallback format can never be deleted.
+function _filter_disable_format_access($format) {
+  // The fallback format can never be disabled.
   return user_access('administer filters') && ($format->format != filter_fallback_format());
 }
 
@@ -187,6 +187,7 @@ function filter_format_load($format_id) {
 function filter_format_save(&$format) {
   $format->name = trim($format->name);
   $format->cache = _filter_format_is_cacheable($format);
+  $format->status = 1;
   // Programmatic saves may not contain any filters.
   if (!isset($format->filters)) {
     $format->filters = array();
@@ -256,31 +257,26 @@ function filter_format_save(&$format) {
 }
 
 /**
- * Delete a text format.
+ * Disable a text format.
+ *
+ * There is no core facility to re-enable a disabled format. It is not deleted
+ * to keep information for contrib and to make sure the format auto increment
+ * id is never reused. As there might be content using the disabled format,
+ * this would lead to data corruption.
  *
  * @param $format
- *   The text format object to be deleted.
- * @param $fallback_id
- *   (optional) The ID of the text format to use to reassign content that is
- *   currently using $format. If omitted, the currently stored
- *   filter_fallback_format() is used.
+ *   The text format object to be disabled.
  */
-function filter_format_delete($format, $fallback_id = NULL) {
-  db_delete('filter_format')
-    ->condition('format', $format->format)
-    ->execute();
-  db_delete('filter')
+function filter_format_disable($format) {
+  db_update('filter_format')
+    ->fields(array('status' => 0))
     ->condition('format', $format->format)
     ->execute();
 
   // Allow modules to react on text format deletion.
-  if (empty($fallback_id)) {
-    $fallback_id = filter_fallback_format();
-  }
-  $fallback = filter_format_load($fallback_id);
-  module_invoke_all('filter_format_delete', $format, $fallback);
+  module_invoke_all('filter_format_disable', $format);
 
-  // Clear the filter cache whenever a text format is deleted.
+  // Clear the filter cache whenever a text format is disabled.
   filter_formats_reset();
   cache_clear_all($format->format . ':', 'cache_filter', TRUE);
 }
@@ -381,6 +377,7 @@ function filter_formats($account = NULL) {
     $formats['all'] = db_select('filter_format', 'ff')
       ->addTag('translatable')
       ->fields('ff')
+      ->condition('status', 1)
       ->orderBy('weight')
       ->execute()
       ->fetchAllAssoc('format');
@@ -488,7 +485,7 @@ function filter_default_format($account = NULL) {
  *
  * The fallback text format is a regular text format in every respect, except
  * it does not participate in the filter permission system and cannot be
- * deleted. It needs to exist because any user who has permission to create
+ * disabled. It needs to exist because any user who has permission to create
  * formatted content must always have at least one text format they can use.
  *
  * Because the fallback format is available to all users, it should always be
@@ -503,15 +500,19 @@ function filter_default_format($account = NULL) {
  * the fallback format's weight determines its placement with respect to the
  * user's other formats.
  *
- * @see hook_filter_format_delete()
+ * Any modules implementing a format deletion functionality must not delete
+ * this format.
+ *
+ * @see hook_filter_format_disable()
  * @see filter_default_format()
  */
 function filter_fallback_format() {
   // This variable is automatically set in the database for all installations
-  // of Drupal. In the event that it gets deleted somehow, there is no safe
-  // default to return, since we do not want to risk making an existing (and
-  // potentially unsafe) text format on the site automatically available to all
-  // users. Returning NULL at least guarantees that this cannot happen.
+  // of Drupal. In the event that it gets disabled or deleted somehow, there
+  // is no safe default to return, since we do not want to risk making an 
+  // existing (and potentially unsafe) text format on the site automatically
+  // available to all users. Returning NULL at least guarantees that this
+  // cannot happen.
   return variable_get('filter_fallback_format');
 }
 

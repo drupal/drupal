@@ -600,16 +600,13 @@ function text_field_prepare_translation($entity_type, $entity, $field, $instance
 /**
  * Implements hook_filter_format_update().
  */
-function text_filter_format_update() {
+function text_filter_format_update($format) {
   field_cache_clear();
 }
 
 /**
- * Implements hook_filter_format_delete().
- *
- * @todo D8: Properly update filter format references in all fields. See
- *   http://drupal.org/node/556022 for details.
+ * Implements hook_filter_format_disable().
  */
-function text_filter_format_delete() {
+function text_filter_format_disable($format) {
   field_cache_clear();
 }

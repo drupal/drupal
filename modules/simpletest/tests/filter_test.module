@@ -21,10 +21,10 @@ function filter_test_filter_format_update($format) {
 }
 
 /**
- * Implements hook_filter_format_delete().
+ * Implements hook_filter_format_disable().
  */
-function filter_test_filter_format_delete($format, $default) {
-  drupal_set_message('hook_filter_format_delete invoked.');
+function filter_test_filter_format_disable($format) {
+  drupal_set_message('hook_filter_format_disable invoked.');
 }
 
 /**

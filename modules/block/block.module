@@ -955,16 +955,6 @@ function block_user_role_delete($role) {
 }
 
 /**
- * Implements hook_filter_format_delete().
- */
-function block_filter_format_delete($format, $fallback) {
-  db_update('block_custom')
-    ->fields(array('format' => $fallback->format))
-    ->condition('format', $format->format)
-    ->execute();
-}
-
-/**
  * Implements hook_menu_delete().
  */
 function block_menu_delete($menu) {

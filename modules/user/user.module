@@ -3598,16 +3598,6 @@ function user_modules_uninstalled($modules) {
 }
 
 /**
- * Implements hook_filter_format_delete().
- */
-function user_filter_format_delete($format, $fallback) {
-  db_update('users')
-    ->fields(array('signature_format' => $fallback->format))
-    ->condition('signature_format', $format->format)
-    ->execute();
-}
-
-/**
  * Helper function to rewrite the destination to avoid redirecting to login page after login.
  *
  * Third-party authentication modules may use this function to determine the
