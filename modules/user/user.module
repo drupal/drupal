@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1201 2010/09/17 14:53:22 dries Exp $
+// $Id: user.module,v 1.1202 2010/09/18 02:18:35 dries Exp $
 
 /**
  * @file
@@ -3595,16 +3595,6 @@ function user_modules_uninstalled($modules) {
    db_delete('role_permission')
      ->condition('module', $modules, 'IN')
      ->execute();
-}
-
-/**
- * Implements hook_filter_format_delete().
- */
-function user_filter_format_delete($format, $fallback) {
-  db_update('users')
-    ->fields(array('signature_format' => $fallback->format))
-    ->condition('signature_format', $format->format)
-    ->execute();
 }
 
 /**

@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.install,v 1.44 2010/09/13 05:50:09 webchick Exp $
+// $Id: filter.install,v 1.45 2010/09/18 02:18:35 dries Exp $
 
 /**
  * @file
@@ -81,19 +81,27 @@ function filter_schema() {
         'size' => 'tiny',
         'description' => 'Flag to indicate whether format is cacheable. (1 = cacheable, 0 = not cacheable)',
       ),
+      'status' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 1,
+        'size' => 'tiny',
+        'description' => 'The status of the text format. (1 = enabled, 0 = disabled)',
+      ),
       'weight' => array(
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
         'description' => 'Weight of text format to use when listing.',
-      )
+      ),
     ),
     'primary key' => array('format'),
     'unique keys' => array(
       'name' => array('name'),
     ),
     'indexes' => array(
-      'weight' => array('weight'),
+      'status_weight' => array('status', 'weight'),
     ),
   );
 
@@ -162,7 +170,15 @@ function filter_update_dependencies() {
 function filter_update_7000() {
   db_rename_table('filter_formats', 'filter_format');
 
-  // Add a new filter_format.weight column.
+  // Add the new {filter_format}.status and {filter_format}.weight column.
+  db_add_field('filter_format', 'status', array(
+    'type' => 'int',
+    'unsigned' => TRUE,
+    'not null' => TRUE,
+    'default' => 1,
+    'size' => 'tiny',
+    'description' => 'The status of the text format. (1 = enabled, 0 = disabled)',
+  ));
   db_add_field('filter_format', 'weight', array(
     'type' => 'int',
     'not null' => TRUE,
@@ -170,7 +186,7 @@ function filter_update_7000() {
     'description' => 'Weight of text format to use when listing.',
   ), array(
     'indexes' => array(
-      'weight' => array('weight'),
+      'status_weight' => array('status', 'weight'),
     ),
   ));
 }
@@ -367,6 +383,7 @@ function filter_update_7005() {
       'name' => $format_name,
       'cache' => 1,
       'weight' => 1,
+      'status' => 1,
     ))
     ->execute();
 

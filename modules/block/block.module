@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.428 2010/09/12 00:20:36 dries Exp $
+// $Id: block.module,v 1.429 2010/09/18 02:18:35 dries Exp $
 
 /**
  * @file
@@ -951,16 +951,6 @@ function template_preprocess_block(&$variables) {
 function block_user_role_delete($role) {
   db_delete('block_role')
     ->condition('rid', $role->rid)
-    ->execute();
-}
-
-/**
- * Implements hook_filter_format_delete().
- */
-function block_filter_format_delete($format, $fallback) {
-  db_update('block_custom')
-    ->fields(array('format' => $fallback->format))
-    ->condition('format', $format->format)
     ->execute();
 }
 

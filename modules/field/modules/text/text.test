@@ -1,5 +1,5 @@
 <?php
-// $Id: text.test,v 1.27 2010/08/17 18:25:31 dries Exp $
+// $Id: text.test,v 1.28 2010/09/18 02:18:35 dries Exp $
 
 class TextFieldTestCase extends DrupalWebTestCase {
   protected $instance;
@@ -163,11 +163,11 @@ class TextFieldTestCase extends DrupalWebTestCase {
     field_create_instance($this->instance);
     $langcode = LANGUAGE_NONE;
 
-    // Delete all text formats besides the plain text fallback format.
+    // Disable all text formats besides the plain text fallback format.
     $this->drupalLogin($this->admin_user);
     foreach (filter_formats() as $format) {
       if ($format->format != filter_fallback_format()) {
-        $this->drupalPost('admin/config/content/formats/' . $format->format . '/delete', array(), t('Delete'));
+        $this->drupalPost('admin/config/content/formats/' . $format->format . '/disable', array(), t('Disable'));
       }
     }
     $this->drupalLogin($this->web_user);

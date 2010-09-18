@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.api.php,v 1.20 2010/06/26 01:55:29 dries Exp $
+// $Id: filter.api.php,v 1.21 2010/09/18 02:18:35 dries Exp $
 
 /**
  * @file
@@ -209,7 +209,7 @@ function hook_filter_info_alter(&$info) {
  *   The format object of the format being updated.
  *
  * @see hook_filter_format_update()
- * @see hook_filter_format_delete()
+ * @see hook_filter_format_disable()
  */
 function hook_filter_format_insert($format) {
   mymodule_cache_rebuild();
@@ -226,34 +226,23 @@ function hook_filter_format_insert($format) {
  *   The format object of the format being updated.
  *
  * @see hook_filter_format_insert()
- * @see hook_filter_format_delete()
+ * @see hook_filter_format_disable()
  */
 function hook_filter_format_update($format) {
   mymodule_cache_rebuild();
 }
 
 /**
- * Perform actions when a text format has been deleted.
- *
- * All modules storing references to text formats have to implement this hook.
- *
- * When a text format is deleted, all content that previously had that format
- * assigned needs to be switched to the passed fallback format.
+ * Perform actions when a text format has been disabled.
  *
  * @param $format
- *   The format object of the format being deleted.
- * @param $fallback
- *   The format object of the format to use as replacement.
+ *   The format object of the format being disabled.
  *
  * @see hook_filter_format_insert()
  * @see hook_filter_format_update()
  */
-function hook_filter_format_delete($format, $fallback) {
-  // Replace the deleted format with the fallback format.
-  db_update('my_module_table')
-    ->fields(array('format' => $fallback->format))
-    ->condition('format', $format->format)
-    ->execute();
+function hook_filter_format_disable($format) {
+  mymodule_cache_rebuild();
 }
 
 /**

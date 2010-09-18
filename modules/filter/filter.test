@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.test,v 1.75 2010/09/04 17:55:43 dries Exp $
+// $Id: filter.test,v 1.76 2010/09/18 02:18:35 dries Exp $
 
 /**
  * Tests for text format and filter CRUD operations.
@@ -57,14 +57,13 @@ class FilterCRUDTestCase extends DrupalWebTestCase {
     $this->verifyTextFormat($format);
     $this->verifyFilters($format);
 
-    // Delete the text format.
-    filter_format_delete($format);
+    // Disable the text format.
+    filter_format_disable($format);
+
     $db_format = db_query("SELECT * FROM {filter_format} WHERE format = :format", array(':format' => $format->format))->fetchObject();
-    $this->assertFalse($db_format, t('Database: Deleted text format no longer exists.'));
-    $db_filters = db_query("SELECT * FROM {filter} WHERE format = :format", array(':format' => $format->format))->fetchObject();
-    $this->assertFalse($db_filters, t('Database: Filters for deleted text format no longer exist.'));
+    $this->assertFalse($db_format->status, t('Database: Disabled text format is marked as disabled.'));
     $formats = filter_formats();
-    $this->assertTrue(!isset($formats[$format->format]), t('filter_formats: Deleted text format no longer exists.'));
+    $this->assertTrue(!isset($formats[$format->format]), t('filter_formats: Disabled text format no longer exists.'));
   }
 
   /**
@@ -196,15 +195,15 @@ class FilterAdminTestCase extends DrupalWebTestCase {
     $this->drupalGet('admin/config/content/formats/' . $format->format);
     $this->drupalPost(NULL, array(), t('Save configuration'));
 
-    // Delete text format.
+    // Disable text format.
     $this->drupalGet('admin/config/content/formats');
-    $this->assertRaw('admin/config/content/formats/' . $format->format . '/delete');
-    $this->drupalGet('admin/config/content/formats/' . $format->format . '/delete');
-    $this->drupalPost(NULL, array(), t('Delete'));
+    $this->assertRaw('admin/config/content/formats/' . $format->format . '/disable');
+    $this->drupalGet('admin/config/content/formats/' . $format->format . '/disable');
+    $this->drupalPost(NULL, array(), t('Disable'));
 
-    // Verify that deleted text format no longer exists.
+    // Verify that disabled text format no longer exists.
     $this->drupalGet('admin/config/content/formats/' . $format->format);
-    $this->assertResponse(404, t('Deleted text format no longer exists.'));
+    $this->assertResponse(404, t('Disabled text format no longer exists.'));
   }
 
   /**
@@ -218,12 +217,12 @@ class FilterAdminTestCase extends DrupalWebTestCase {
 
     list($filtered, $full, $plain) = $this->checkFilterFormats();
 
-    // Check that the fallback format exists and cannot be deleted.
+    // Check that the fallback format exists and cannot be disabled.
     $this->assertTrue(!empty($plain) && $plain == filter_fallback_format(), t('The fallback format is set to plain text.'));
     $this->drupalGet('admin/config/content/formats');
-    $this->assertNoRaw('admin/config/content/formats/' . $plain . '/delete', t('Delete link for the fallback format not found.'));
-    $this->drupalGet('admin/config/content/formats/' . $plain . '/delete');
-    $this->assertResponse(403, t('The fallback format cannot be deleted.'));
+    $this->assertNoRaw('admin/config/content/formats/' . $plain . '/disable', t('Disable link for the fallback format not found.'));
+    $this->drupalGet('admin/config/content/formats/' . $plain . '/disable');
+    $this->assertResponse(403, t('The fallback format cannot be disabled.'));
 
     // Verify access permissions to Full HTML format.
     $this->assertTrue(filter_access(filter_format_load($full), $this->admin_user), t('Admin user may use Full HTML.'));
@@ -283,9 +282,9 @@ class FilterAdminTestCase extends DrupalWebTestCase {
     $this->assertFieldByName('filters[' . $second_filter . '][status]', '', t('Line break filter found.'));
     $this->assertFieldByName('filters[' . $first_filter . '][status]', '', t('Url filter found.'));
 
-    // Delete new filter.
-    $this->drupalPost('admin/config/content/formats/' . $format->format . '/delete', array(), t('Delete'));
-    $this->assertRaw(t('Deleted text format %format.', array('%format' => $edit['name'])), t('Format successfully deleted.'));
+    // Disable new filter.
+    $this->drupalPost('admin/config/content/formats/' . $format->format . '/disable', array(), t('Disable'));
+    $this->assertRaw(t('Disabled text format %format.', array('%format' => $edit['name'])), t('Format successfully disabled.'));
 
     // Allow authenticated users on full HTML.
     $format = filter_format_load($full);
@@ -530,8 +529,8 @@ class FilterFormatAccessTestCase extends DrupalWebTestCase {
     $this->assertText($new_edit['title'], t('New title found.'));
     $this->assertText($edit[$body_value_key], t('Old body found.'));
 
-    // Delete the Full HTML text format.
-    filter_format_delete($this->full_html_format);
+    // Disable the Full HTML text format.
+    filter_format_disable($this->full_html_format);
     $this->resetFilterCaches();
 
     // Verify that body field can be edited and a new format can be selected.
@@ -679,8 +678,8 @@ class FilterSecurityTestCase extends DrupalWebTestCase {
     $this->assertNoText($body_raw, t('Node body not found.'));
     $this->assertText('Filter: Testing filter', t('Testing filter output found.'));
 
-    // Delete the text format entirely.
-    $this->drupalPost('admin/config/content/formats/' . $format_id . '/delete', array(), t('Delete'));
+    // Disable the text format entirely.
+    $this->drupalPost('admin/config/content/formats/' . $format_id . '/disable', array(), t('Disable'));
 
     // Verify that the content is empty, because the text format does not exist.
     $this->drupalGet('node/' . $node->nid);
@@ -1587,7 +1586,7 @@ class FilterHooksTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Filter format hooks',
-      'description' => 'Test hooks for text formats insert/update/delete.',
+      'description' => 'Test hooks for text formats insert/update/disable.',
       'group' => 'Filter',
     );
   }
@@ -1634,18 +1633,10 @@ class FilterHooksTestCase extends DrupalWebTestCase {
     $bid = db_query("SELECT bid FROM {block_custom} WHERE info = :info", array(':info' => $custom_block['info']))->fetchField();
     $this->assertNotNull($bid, t('New block found in database'));
 
-    // Delete the text format.
-    $this->drupalPost('admin/config/content/formats/' . $format_id . '/delete', array(), t('Delete'));
-    $this->assertRaw(t('Deleted text format %format.', array('%format' => $name)), t('Format successfully deleted.'));
-    $this->assertText('hook_filter_format_delete invoked.', t('hook_filter_format_delete() was invoked.'));
-
-    // Verify that the deleted format was replaced with the fallback format.
-    $current_format = db_select('block_custom', 'b')
-      ->fields('b', array('format'))
-      ->condition('bid', $bid)
-      ->execute()
-      ->fetchField();
-    $this->assertEqual($current_format, filter_fallback_format(), t('Deleted text format replaced with the fallback format.'));
+    // Disable the text format.
+    $this->drupalPost('admin/config/content/formats/' . $format_id . '/disable', array(), t('Disable'));
+    $this->assertRaw(t('Disabled text format %format.', array('%format' => $name)), t('Format successfully disabled.'));
+    $this->assertText('hook_filter_format_disable invoked.', t('hook_filter_format_disable() was invoked.'));
   }
 }
 
