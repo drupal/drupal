@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1300 2010/09/17 14:54:51 dries Exp $
+// $Id: node.module,v 1.1301 2010/09/18 01:39:33 dries Exp $
 
 /**
  * @file
@@ -3582,7 +3582,7 @@ function node_save_action($node) {
 function node_assign_owner_action($node, $context) {
   $node->uid = $context['owner_uid'];
   $owner_name = db_query("SELECT name FROM {users} WHERE uid = :uid", array(':uid' => $context['owner_uid']))->fetchField();
-  watchdog('action', 'Changed owner of @type %title to uid %name.', array('@type' =>  node_type_get_type($node), '%title' => $node->title, '%name' => $owner_name));
+  watchdog('action', 'Changed owner of @type %title to uid %name.', array('@type' =>  node_type_get_name($node), '%title' => $node->title, '%name' => $owner_name));
 }
 
 /**
