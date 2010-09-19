@@ -1,7 +1,14 @@
-/* $Id: system-behavior.css,v 1.14 2010/09/17 14:53:21 dries Exp $ */
+/* $Id: system.base.css,v 1.1 2010/09/19 18:35:42 dries Exp $ */
 
 /**
- * Autocomplete
+ * @file
+ * Generic theme-independent base styles.
+ */
+
+/**
+ * Autocomplete.
+ *
+ * @see autocomplete.js
  */
 /* Suggestion list */
 #autocomplete {
@@ -22,10 +29,6 @@
   white-space: pre;
   cursor: default;
 }
-#autocomplete li.selected {
-  background: #0072b9;
-  color: #fff;
-}
 /* Animated throbber */
 html.js input.form-autocomplete {
   background-image: url(../../misc/throbber.gif);
@@ -37,7 +40,9 @@ html.js input.throbbing {
 }
 
 /**
- * Collapsing fieldsets
+ * Collapsible fieldsets.
+ *
+ * @see collapse.js
  */
 html.js fieldset.collapsed {
   border-bottom-width: 0;
@@ -54,22 +59,11 @@ fieldset.collapsible {
 fieldset.collapsible .fieldset-legend {
   display: block;
 }
-html.js fieldset.collapsible .fieldset-legend {
-  padding-left: 15px; /* LTR */
-  background: url(../../misc/menu-expanded.png) 5px 65% no-repeat; /* LTR */
-}
-html.js fieldset.collapsed .fieldset-legend {
-  background-image: url(../../misc/menu-collapsed.png); /* LTR */
-  background-position: 5px 50%; /* LTR */
-}
-.fieldset-legend span.summary {
-  font-size: 0.9em;
-  color: #999;
-  margin-left: 0.5em;
-}
 
 /**
- * Resizable textareas
+ * Resizable textareas.
+ *
+ * @see textarea.js
  */
 .form-textarea-wrapper textarea {
   margin: 0;
@@ -89,7 +83,9 @@ html.js fieldset.collapsed .fieldset-legend {
 }
 
 /**
- * Table drag and drop
+ * TableDrag behavior.
+ *
+ * @see tabledrag.js
  */
 body.drag {
   cursor: move;
@@ -133,29 +129,29 @@ div.tree-child-horizontal {
 .tabledrag-toggle-weight-wrapper {
   text-align: right; /* LTR */
 }
-.tabledrag-toggle-weight {
-  font-size: 0.9em;
-}
-body div.tabledrag-changed-warning {
-  margin-bottom: 0.5em;
+
+/**
+ * TableHeader behavior.
+ *
+ * @see tableheader.js
+ */
+table.sticky-header {
+  background-color: #fff;
+  margin-top: 0;
 }
 
 /**
- * Progress bar
+ * Progress behavior.
+ *
+ * @see progress.js
  */
-.progress {
-  font-weight: bold;
-}
+/* Bar */
 .progress .bar {
-  border-radius: 3px;
-  -moz-border-radius: 3px;
-  -webkit-border-radius: 3px;
-  background: #ccc;
-  border: 1px solid #666;
-  margin: 0 0.2em;
+  background-color: #fff;
+  border: 1px solid;
 }
 .progress .filled {
-  background: #0072b9 url(../../misc/progress.gif);
+  background-color: #000;
   height: 1.5em;
   width: 5px;
 }
@@ -165,6 +161,7 @@ body div.tabledrag-changed-warning {
 .progress-disabled {
   float: left; /* LTR */
 }
+/* Throbber */
 .ajax-progress {
   float: left; /* LTR */
 }
@@ -183,65 +180,7 @@ tr .ajax-progress .throbber {
 }
 
 /**
- * Password strength indicator
- */
-.password-strength {
-  width: 17em;
-  float: right;  /* LTR */
-  margin-top: 1.4em;
-}
-.password-strength-title {
-  display: inline;
-}
-.password-strength-text {
-  float: right; /* LTR */
-  font-weight: bold;
-}
-.password-indicator {
-  background-color: #C4C4C4;
-  height: 0.3em;
-  width: 100%;
-}
-.password-indicator div {
-  height: 100%;
-  width: 0%;
-  background-color: #47C965;
-}
-input.password-confirm,
-input.password-field {
-  width: 16em;
-  margin-bottom: 0.4em;
-}
-div.password-confirm {
-  display: inline;
-  padding-left: 1em;
-}
-div.form-item div.password-suggestions {
-  padding: 0.2em 0.5em;
-  margin: 0.7em 0;
-  width: 38.5em;
-  border: 1px solid #B4B4B4;
-}
-div.password-suggestions ul {
-  margin-bottom: 0;
-}
-.password-parent {
-  margin: 0;
-  width: 34.3em;
-}
-
-/**
- * Password confirmation checker
- */
-.confirm-parent {
-  margin: 0;
-}
-div.password-confirm {
-  visibility: hidden;
-}
-
-/**
- * Inline items (need to override above)
+ * Inline items.
  */
 .container-inline div,
 .container-inline label {
@@ -252,6 +191,9 @@ div.password-confirm {
   display: block;
 }
 
+/**
+ * Prevent text wrapping.
+ */
 .nowrap {
   white-space: nowrap;
 }
@@ -291,3 +233,25 @@ html.js .js-hide {
   clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
   clip: rect(1px, 1px, 1px, 1px);
 }
+
+/**
+ * Markup free clearing.
+ *
+ * @see http://perishablepress.com/press/2009/12/06/new-clearfix-hack
+ */
+.clearfix:after {
+  content: ".";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden;
+}
+/* IE6 */
+* html .clearfix {
+  height: 1%;
+}
+/* IE7 */
+*:first-child + html .clearfix {
+  min-height: 1%;
+}
+

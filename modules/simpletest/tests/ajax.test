@@ -1,5 +1,5 @@
 <?php
-// $Id: ajax.test,v 1.14 2010/08/05 23:53:38 webchick Exp $
+// $Id: ajax.test,v 1.15 2010/09/19 18:38:32 dries Exp $
 
 class AJAXTestCase extends DrupalWebTestCase {
   function setUp() {
@@ -269,24 +269,17 @@ class AJAXMultiFormTestCase extends AJAXTestCase {
     // of field items and "add more" button for the multi-valued field within
     // each form.
     $this->drupalGet('form-test/two-instances-of-same-form');
-    foreach ($field_xpaths as $form_id => $field_xpath) {
+    foreach ($field_xpaths as $form_html_id => $field_xpath) {
       $this->assert(count($this->xpath($field_xpath . $field_items_xpath_suffix)) == 1, t('Found the correct number of field items on the initial page.'));
       $this->assertFieldByXPath($field_xpath . $button_xpath_suffix, NULL, t('Found the "add more" button on the initial page.'));
     }
     $this->assertNoDuplicateIds(t('Initial page contains unique IDs'), 'Other');
 
     // Submit the "add more" button of each form twice. After each corresponding
-    // page update, ensure the same as above. To successfully implement
-    // consecutive AJAX submissions, we need to manage $settings as ajax.js
-    // does for Drupal.settings.
-    preg_match('/jQuery\.extend\(Drupal\.settings, (.*?)\);/', $this->content, $matches);
-    $settings = drupal_json_decode($matches[1]);
-    foreach ($field_xpaths as $form_id => $field_xpath) {
+    // page update, ensure the same as above.
+    foreach ($field_xpaths as $form_html_id => $field_xpath) {
       for ($i=0; $i<2; $i++) {
-        $button = $this->xpath($field_xpath . $button_xpath_suffix);
-        $button_id = (string) $button[0]['id'];
-        $commands = $this->drupalPostAJAX(NULL, array(), array($button_name => $button_value), 'system/ajax', array(), array(), $form_id, $settings['ajax'][$button_id]);
-        $settings = array_merge_recursive($settings, $commands[0]['settings']);
+        $this->drupalPostAJAX(NULL, array(), array($button_name => $button_value), 'system/ajax', array(), array(), $form_html_id);
         $this->assert(count($this->xpath($field_xpath . $field_items_xpath_suffix)) == $i+2, t('Found the correct number of field items after an AJAX submission.'));
         $this->assertFieldByXPath($field_xpath . $button_xpath_suffix, NULL, t('Found the "add more" button after an AJAX submission.'));
         $this->assertNoDuplicateIds(t('Updated page contains unique IDs'), 'Other');

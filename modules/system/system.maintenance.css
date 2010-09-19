@@ -1,6 +1,8 @@
-/* $Id: maintenance.css,v 1.3 2010/01/07 07:41:46 webchick Exp $ */
+/* $Id: system.maintenance.css,v 1.1 2010/09/19 18:35:42 dries Exp $ */
 
-/* Update styles */
+/**
+ * Update styles
+ */
 #update-results {
   margin-top: 3em;
   padding: 0.25em;
@@ -22,7 +24,9 @@
   color: #b63300;
 }
 
-/* authorize.php styles */
+/**
+ * Authorize.php styles
+ */
 .connection-settings-update-filetransfer-default-wrapper {
   float: left;
 }

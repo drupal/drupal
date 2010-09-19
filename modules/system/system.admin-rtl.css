@@ -1,9 +1,16 @@
-/* $Id: admin-rtl.css,v 1.8 2010/09/17 14:53:21 dries Exp $ */
+/* $Id: system.admin-rtl.css,v 1.1 2010/09/19 18:35:42 dries Exp $ */
 
+/**
+ * @file
+ * RTL styles for administration pages.
+ */
+
+/**
+ * Administration blocks.
+ */
 div.admin-panel .body {
   padding: 0 8px 2px 4px;
 }
-
 div.admin .left {
   float: right;
   margin-left: 0;
@@ -14,7 +21,6 @@ div.admin .right {
   margin-left: 1em;
   margin-right: 0;
 }
-
 div.admin .expert-link {
   text-align: left;
   margin-right: 0;
@@ -23,19 +29,48 @@ div.admin .expert-link {
   padding-left: 4px;
 }
 
+/**
+ * Status report.
+ */
 table.system-status-report th,
 table.system-status-report tr.merge-up td {
   padding-right: 30px;
 }
-
 table.system-status-report th {
   background-position: 95% 50%;
 }
 
+/**
+ * Appearance page.
+ */
 table.screenshot {
   margin-left: 1em;
 }
+.system-themes-list-enabled .theme-selector .screenshot,
+.system-themes-list-enabled .theme-selector .no-screenshot {
+  float: right;
+  margin: 0 0 0 20px;
+}
+.system-themes-list-disabled .theme-selector {
+  float: right;
+  padding: 20px 0 20px 20px;
+}
+.theme-selector .operations li {
+  float: right;
+  border-right: none;
+  border-left: 1px solid #cdcdcd;
+}
+.theme-selector .operations li.last {
+  padding: 0 0.7em 0 0;
+  border-left: none;
+}
+.theme-selector .operations li.first {
+  padding: 0 0 0 0.7em;
+}
 
+/**
+ * Date and time settings page.
+ */
 .date-container {
   clear: right;
 }
@@ -49,7 +84,7 @@ table.screenshot {
 }
 
 /**
- * Exposed filters
+ * Exposed filters.
  */
 .exposed-filters .filters {
   float: right;

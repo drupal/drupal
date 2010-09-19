@@ -1,4 +1,9 @@
-/* $Id */
+/* $Id: system.messages.css,v 1.1 2010/09/19 18:35:42 dries Exp $ */
+
+/**
+ * @file
+ * Styles for system messages.
+ */
 
 div.messages {
   background-position: 8px 8px; /* LTR */
@@ -7,6 +12,7 @@ div.messages {
   margin: 6px 0;
   padding: 10px 10px 10px 50px; /* LTR */
 }
+
 div.status {
   background-image: url(../../misc/message-24-ok.png);
   border-color: #be7;
@@ -19,6 +25,7 @@ div.status,
 table tr.ok {
   background-color: #f8fff0;
 }
+
 div.warning {
   background-image: url(../../misc/message-24-warning.png);
   border-color: #ed5;
@@ -31,6 +38,7 @@ div.warning,
 table tr.warning {
   background-color: #fffce5;
 }
+
 div.error {
   background-image: url(../../misc/message-24-error.png);
   border-color: #ed541d;
@@ -46,6 +54,7 @@ table tr.error {
 div.error p.error {
   color: #333;
 }
+
 div.messages ul {
   margin: 0 0 0 1em; /* LTR */
   padding: 0;
