@@ -2091,7 +2091,6 @@ class DatabaseSelectComplexTestCase2 extends DatabaseTestCase {
     $str = (string) $query;
 
     // Verify that the string only has one copy of condition placeholder 0.
-    debug($str);
     $pos = strpos($str, 'db_condition_placeholder_0', 0);
     $pos2 = strpos($str, 'db_condition_placeholder_0', $pos + 1);
     $this->assertFalse($pos2, "Condition placeholder is not repeated");
@@ -2216,13 +2215,13 @@ class DatabaseSelectPagerDefaultTestCase extends DatabaseTestCase {
       ->fetchCol();
     $this->assertEqual($ages, array('George', 'Ringo'), t('Pager query with having expression returned the correct ages.'));
   }
-  
+
   /**
   * Confirm that every pager gets a valid non-overlaping element ID.
   */
   function testElementNumbers() {
     $_GET['page'] = '3, 2, 1, 0';
-    
+
     $name = db_select('test', 't')->extend('PagerDefault')
       ->element(2)
       ->fields('t', array('name'))
@@ -2231,7 +2230,7 @@ class DatabaseSelectPagerDefaultTestCase extends DatabaseTestCase {
       ->execute()
       ->fetchField();
     $this->assertEqual($name, 'Paul', t('Pager query #1 with a specified element ID returned the correct results.'));
-    
+
     // Setting an element smaller than the previous one
     // should not overwrite the pager $maxElement with a smaller value.
     $name = db_select('test', 't')->extend('PagerDefault')
@@ -2242,7 +2241,7 @@ class DatabaseSelectPagerDefaultTestCase extends DatabaseTestCase {
       ->execute()
       ->fetchField();
     $this->assertEqual($name, 'George', t('Pager query #2 with a specified element ID returned the correct results.'));
-  
+
     $name = db_select('test', 't')->extend('PagerDefault')
       ->fields('t', array('name'))
       ->orderBy('age')
@@ -2250,7 +2249,7 @@ class DatabaseSelectPagerDefaultTestCase extends DatabaseTestCase {
       ->execute()
       ->fetchField();
     $this->assertEqual($name, 'John', t('Pager query #3 with a generated element ID returned the correct results.'));
-    
+
     unset($_GET['page']);
   }
 }

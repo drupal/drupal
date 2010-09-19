@@ -899,7 +899,6 @@ class FileDirectoryTest extends FileTestCase {
       // in the directory on any recent version of Windows.
 
       // Make directory read only.
-      debug($directory);
       @drupal_chmod($directory, 0444);
       $this->assertFalse(file_prepare_directory($directory, 0), t('Error reported for a non-writeable directory.'), 'File');
 

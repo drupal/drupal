@@ -70,7 +70,7 @@ class UpgradePathTaxonomyTestCase extends UpgradePathTestCase {
     // Node type 'story' was not explicitly in $vocabulary->nodes but
     // each node of type 'story' was associated to one or more terms.
     // Check that the node type 'story' has been associated only to
-    // the taxonomyextra field. 
+    // the taxonomyextra field.
     $instances = $this->instanceVocabularies('node', 'story');
     $field_names = array_flip($instances);
     $this->assertEqual(count($field_names), 1, t('Only one taxonomy term field instance exists for story nodes'));
@@ -95,7 +95,6 @@ class UpgradePathTaxonomyTestCase extends UpgradePathTestCase {
       $node->content = field_attach_view('node', $node, 'full');
       $render = drupal_render($node->content);
       $this->drupalSetContent($render);
-      debug("Testing node $nid");
       $this->verbose($render);
       foreach ($terms as $tid => $term) {
         $args = array(
