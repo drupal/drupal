@@ -426,6 +426,9 @@ ul.admin-list li div.description a {
   padding: 0px;
   min-height: inherit;
 }
+div.submitted {
+  color: #898989;
+}
 
 /**
  * Tables.
