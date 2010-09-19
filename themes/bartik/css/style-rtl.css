@@ -1,4 +1,4 @@
-/* $Id: style-rtl.css,v 1.7 2010/09/09 15:27:08 webchick Exp $ */
+/* $Id: style-rtl.css,v 1.8 2010/09/19 18:10:42 dries Exp $ */
 
 /* ------------------ Reset Styles ------------------ */
 
@@ -29,6 +29,9 @@ blockquote:after {
 }
 ul.tips {
   padding: 0 1.25em 0 0;
+}
+.block ul {
+  padding: 0 1em 0.25em 0;
 }
 
 /* ------------------ Header ------------------ */

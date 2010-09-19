@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.maintenance.inc,v 1.66 2010/09/09 15:47:03 webchick Exp $
+// $Id: theme.maintenance.inc,v 1.67 2010/09/19 18:10:41 dries Exp $
 
 /**
  * @file
@@ -77,12 +77,13 @@ function _drupal_maintenance_theme() {
 
   // These are usually added from system_init() -except maintenance.css.
   // When the database is inactive it's not called so we add it here.
-  drupal_add_css(drupal_get_path('module', 'system') . '/system.css');
-  drupal_add_css(drupal_get_path('module', 'system') . '/system-behavior.css');
-  drupal_add_css(drupal_get_path('module', 'system') . '/system-menus.css');
-  drupal_add_css(drupal_get_path('module', 'system') . '/system-messages.css');
-  drupal_add_css(drupal_get_path('module', 'system') . '/maintenance.css');
-  drupal_add_css(drupal_get_path('module', 'system') . '/admin.css');
+  $path = drupal_get_path('module', 'system');
+  drupal_add_css($path . '/system.base.css');
+  drupal_add_css($path . '/system.admin.css');
+  drupal_add_css($path . '/system.menus.css');
+  drupal_add_css($path . '/system.messages.css');
+  drupal_add_css($path . '/system.theme.css');
+  drupal_add_css($path . '/system.maintenance.css');
 }
 
 /**

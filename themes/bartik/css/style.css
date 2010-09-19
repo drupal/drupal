@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.13 2010/09/10 17:56:20 webchick Exp $ */
+/* $Id: style.css,v 1.14 2010/09/19 18:10:42 dries Exp $ */
 
 /* ---------- Overall Specifications ---------- */
 
@@ -180,6 +180,7 @@ tr.even {
 
 .block ul {
   margin: 0;
+  padding: 0 0 0.25em 1em; /* LTR */
 }
 ul.contextual-links,
 .item-list .pager {

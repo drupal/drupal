@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.961 2010/09/17 14:53:21 dries Exp $
+// $Id: system.module,v 1.962 2010/09/19 18:10:42 dries Exp $
 
 /**
  * @file
@@ -1830,13 +1830,13 @@ function _system_filetransfer_backend_form_common() {
 function system_init() {
   $path = drupal_get_path('module', 'system');
   // Add the CSS for this module.
+  drupal_add_css($path . '/system.base.css', array('weight' => CSS_SYSTEM, 'preprocess' => TRUE));
   if (arg(0) == 'admin' || (variable_get('node_admin_theme', '0') && arg(0) == 'node' && (arg(1) == 'add' || arg(2) == 'edit' || arg(2) == 'delete'))) {
-    drupal_add_css($path . '/admin.css', array('weight' => CSS_SYSTEM));
+    drupal_add_css($path . '/system.admin.css', array('weight' => CSS_SYSTEM));
   }
-  drupal_add_css($path . '/system.css', array('weight' => CSS_SYSTEM, 'preprocess' => TRUE));
-  drupal_add_css($path . '/system-behavior.css', array('weight' => CSS_SYSTEM, 'preprocess' => TRUE));
-  drupal_add_css($path . '/system-menus.css', array('weight' => CSS_SYSTEM, 'preprocess' => TRUE));
-  drupal_add_css($path . '/system-messages.css', array('weight' => CSS_SYSTEM, 'preprocess' => TRUE));
+  drupal_add_css($path . '/system.menus.css', array('weight' => CSS_SYSTEM, 'preprocess' => TRUE));
+  drupal_add_css($path . '/system.messages.css', array('weight' => CSS_SYSTEM, 'preprocess' => TRUE));
+  drupal_add_css($path . '/system.theme.css', array('weight' => CSS_SYSTEM, 'preprocess' => TRUE));
 
   // Ignore slave database servers for this request.
   //
