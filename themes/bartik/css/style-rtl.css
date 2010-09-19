@@ -30,6 +30,9 @@ blockquote:after {
 ul.tips {
   padding: 0 1.25em 0 0;
 }
+.block ul {
+  padding: 0 1em 0.25em 0;
+}
 
 /* ------------------ Header ------------------ */
 

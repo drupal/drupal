@@ -44,3 +44,11 @@
 input#edit-filters-filter-html-settings-allowed-html {
   width: 100%;
 }
+
+.tips {
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  font-size: 0.9em;
+}
