@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.14 2010/09/19 18:10:42 dries Exp $ */
+/* $Id: style.css,v 1.15 2010/09/20 02:46:52 dries Exp $ */
 
 /* ---------- Overall Specifications ---------- */
 
@@ -1175,6 +1175,7 @@ div.vertical-tabs .vertical-tabs-panes fieldset.vertical-tabs-pane {
   text-indent: -9999px;
   border: 1px solid #ccc;
   background: url(../images/search-button.png) no-repeat center center;
+  overflow: hidden;
 }
 #search-form .form-item-keys label {
   display: block;
