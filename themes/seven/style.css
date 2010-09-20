@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.70 2010/09/19 18:25:43 dries Exp $ */
+/* $Id: style.css,v 1.71 2010/09/20 02:48:53 dries Exp $ */
 
 /**
  * Generic elements.
@@ -6,7 +6,7 @@
 body {
   color: #000;
   background: #fff;
-  font: 81.3%/1.538em normal Lucida Grande, Lucida Sans Unicode, sans-serif;
+  font: normal 81.3%/1.538em "Lucida Grande", "Lucida Sans Unicode", sans-serif;
 }
 a {
   color: #0074BD;
