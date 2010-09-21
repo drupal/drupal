@@ -1,5 +1,5 @@
 <?php
-// $Id: field_ui.admin.inc,v 1.66 2010/09/16 20:14:49 dries Exp $
+// $Id: field_ui.admin.inc,v 1.67 2010/09/21 21:38:08 webchick Exp $
 
 /**
  * @file
@@ -1114,7 +1114,7 @@ function field_ui_display_overview_form($form, &$form_state, $entity_type, $bund
     '#op' => 'refresh_table',
     // Do not check errors, but make sure we get the values of the
     // 'refresh_rows' input.
-    '#limit_validation_errors' => array('refresh_rows'),
+    '#limit_validation_errors' => array(array('refresh_rows')),
     '#submit' => array('field_ui_display_overview_multistep_submit'),
     '#ajax' => array(
       'callback' => 'field_ui_display_overview_multistep_js',
