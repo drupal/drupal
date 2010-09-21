@@ -1,5 +1,5 @@
 <?php
-// $Id: image.gd.inc,v 1.16 2010/07/19 22:20:49 dries Exp $
+// $Id: image.gd.inc,v 1.17 2010/09/21 15:28:11 dries Exp $
 
 /**
  * @file
@@ -244,18 +244,24 @@ function image_gd_load(stdClass $image) {
  * @param $image
  *   An image object.
  * @param $destination
- *   A string file path where the image should be saved.
- * @param $extension
- *   A string containing one of the following extensions: gif, jpg, jpeg, png.
+ *   A string file URI or path where the image should be saved.
  * @return
  *   TRUE or FALSE, based on success.
  *
  * @see image_save()
  */
 function image_gd_save(stdClass $image, $destination) {
-  // Convert URI to a normal path because PHP apparently has some gaps in stream wrapper support.
-  if ($wrapper = file_stream_wrapper_get_instance_by_uri($destination)) {
-    $destination = $wrapper->realpath();
+  $scheme = file_uri_scheme($destination);
+  // Work around lack of stream wrapper support in imagejpeg() and imagepng().
+  if ($scheme && file_stream_wrapper_valid_scheme($scheme)) {
+    // If destination is not local, save image to temporary local file.
+    $local_wrappers = file_get_stream_wrappers(STREAM_WRAPPERS_LOCAL);
+    if (!isset($local_wrappers[$scheme])) {
+      $permanent_destination = $destination;
+      $destination = drupal_tempnam('temporary://', 'gd_');
+    }
+    // Convert stream wrapper URI to normal path.
+    $destination = drupal_realpath($destination);
   }
 
   $extension = str_replace('jpg', 'jpeg', $image->info['extension']);
@@ -264,7 +270,7 @@ function image_gd_save(stdClass $image, $destination) {
     return FALSE;
   }
   if ($extension == 'jpeg') {
-    return $function($image->resource, $destination, variable_get('image_jpeg_quality', 75));
+    $success = $function($image->resource, $destination, variable_get('image_jpeg_quality', 75));
   }
   else {
     // Always save PNG images with full transparency.
@@ -272,8 +278,13 @@ function image_gd_save(stdClass $image, $destination) {
       imagealphablending($image->resource, FALSE);
       imagesavealpha($image->resource, TRUE);
     }
-    return $function($image->resource, $destination);
+    $success = $function($image->resource, $destination);
   }
+  // Move temporary local file to remote destination.
+  if (isset($permanent_destination) && $success) {
+    return (bool) file_unmanaged_move($destination, $permanent_destination, FILE_EXISTS_REPLACE);
+  }
+  return $success;
 }
 
 /**
