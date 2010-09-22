@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1202 2010/09/18 02:18:35 dries Exp $
+// $Id: user.module,v 1.1203 2010/09/22 03:24:09 dries Exp $
 
 /**
  * @file
@@ -1410,10 +1410,10 @@ function template_preprocess_user_picture(&$variables) {
     if (isset($filepath)) {
       $alt = t("@user's picture", array('@user' => format_username($account)));
       if (module_exists('image') && $style = variable_get('user_picture_style', '')) {
-        $variables['user_picture'] = theme('image_style', array('style_name' => $style, 'path' => $filepath, 'alt' => $alt, 'title' => $alt, 'attributes' => array(), 'getsize' => FALSE));
+        $variables['user_picture'] = theme('image_style', array('style_name' => $style, 'path' => $filepath, 'alt' => $alt, 'title' => $alt));
       }
       else {
-        $variables['user_picture'] = theme('image', array('path' => $filepath, 'alt' => $alt, 'title' => $alt, 'attributes' => array(), 'getsize' => FALSE));
+        $variables['user_picture'] = theme('image', array('path' => $filepath, 'alt' => $alt, 'title' => $alt));
       }
       if (!empty($account->uid) && user_access('access user profiles')) {
         $attributes = array('attributes' => array('title' => t('View user profile.')), 'html' => TRUE);

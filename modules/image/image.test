@@ -1,5 +1,5 @@
 <?php
-// $Id: image.test,v 1.30 2010/09/11 21:14:31 webchick Exp $
+// $Id: image.test,v 1.31 2010/09/22 03:24:09 dries Exp $
 
 /**
  * @file
@@ -650,7 +650,6 @@ class ImageFieldDisplayTestCase extends ImageFieldTestCase {
     $image_uri = $node->{$field_name}[LANGUAGE_NONE][0]['uri'];
     $image_info = array(
       'path' => $image_uri,
-      'getsize' => TRUE,
     );
     $default_output = theme('image', $image_info);
     $this->assertRaw($default_output, t('Default formatter displaying correctly on full node view.'));
@@ -746,7 +745,6 @@ class ImageFieldDisplayTestCase extends ImageFieldTestCase {
     $node = node_load($nid, NULL, TRUE);
     $image_info = array(
       'path' => image_style_url('medium', $node->{$field_name}[LANGUAGE_NONE][0]['uri']),
-      'getsize' => FALSE,
     );
     $default_output = theme('image', $image_info);
     $this->assertRaw($default_output, t("Preview image is displayed using 'medium' style."));
@@ -756,7 +754,6 @@ class ImageFieldDisplayTestCase extends ImageFieldTestCase {
       'path' => $node->{$field_name}[LANGUAGE_NONE][0]['uri'],
       'alt' => $this->randomName(),
       'title' => $this->randomName(),
-      'getsize' => TRUE,
     );
     $edit = array(
       $field_name . '[' . LANGUAGE_NONE . '][0][alt]' => $image_info['alt'],
@@ -793,7 +790,7 @@ class ImageFieldDisplayTestCase extends ImageFieldTestCase {
     field_info_cache_clear();
     $field = field_info_field($field_name);
     $image = file_load($field['settings']['default_image']);
-    $default_output = theme('image', array('path' => $image->uri, 'getsize' => TRUE));
+    $default_output = theme('image', array('path' => $image->uri));
     $this->drupalGet('node/' . $node->nid);
     $this->assertRaw($default_output, t('Default image displayed when no user supplied image is present.'));
 
@@ -803,7 +800,6 @@ class ImageFieldDisplayTestCase extends ImageFieldTestCase {
     $node = node_load($nid, NULL, TRUE);
     $image_info = array(
       'path' => $node->{$field_name}[LANGUAGE_NONE][0]['uri'],
-      'getsize' => TRUE,
     );
     $image_output = theme('image', $image_info);
     $this->drupalGet('node/' . $nid);

@@ -1,5 +1,5 @@
 <?php
-// $Id: image.module,v 1.50 2010/09/11 05:07:22 webchick Exp $
+// $Id: image.module,v 1.51 2010/09/22 03:24:09 dries Exp $
 
 /**
  * @file
@@ -1105,7 +1105,6 @@ function theme_image_style($variables) {
     $style_path = image_style_url($style_name, $path);
   }
   $variables['path'] = $style_path;
-  $variables['getsize'] = FALSE;
   return theme('image', $variables);
 }
 
