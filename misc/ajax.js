@@ -55,7 +55,13 @@ Drupal.behaviors.AJAX = {
       // AJAX submits specified in this manner automatically submit to the
       // normal form action.
       element_settings.url = $(this.form).attr('action');
-      element_settings.set_click = TRUE;
+      // Form submit button clicks need to tell the form what was clicked so
+      // it gets passed in the POST request.
+      element_settings.setClick = true;
+      // Form buttons use the 'click' event rather than mousedown.
+      element_settings.event = 'click';
+      // Clicked form buttons look better with the throbber than the progress bar.
+      element_settings.progress = { 'type': 'throbber' };
 
       var base = $(this).attr('id');
       Drupal.ajax[base] = new Drupal.ajax(base, this, element_settings);
@@ -98,7 +104,9 @@ Drupal.ajax = function (base, element, element_settings) {
       type: 'bar',
       message: 'Please wait...'
     },
-    submit: {}
+    submit: {
+      'js': true
+    }
   };
 
   $.extend(this, defaults, element_settings);
@@ -126,6 +134,7 @@ Drupal.ajax = function (base, element, element_settings) {
       return ajax.beforeSerialize(element_settings, options);
     },
     beforeSubmit: function (form_values, element_settings, options) {
+      ajax.ajaxing = true;
       return ajax.beforeSubmit(form_values, element_settings, options);
     },
     success: function (response, status) {
@@ -137,6 +146,7 @@ Drupal.ajax = function (base, element, element_settings) {
       return ajax.success(response, status);
     },
     complete: function (response, status) {
+      ajax.ajaxing = false;
       if (status == 'error' || status == 'parsererror') {
         return ajax.error(response, ajax.url);
       }
@@ -147,21 +157,30 @@ Drupal.ajax = function (base, element, element_settings) {
 
   // Bind the ajaxSubmit function to the element event.
   $(this.element).bind(element_settings.event, function () {
-    if (ajax.form) {
-      // If setClick is set, we must set this to ensure that the button's
-      // value is passed.
-      if (ajax.setClick) {
-        // Mark the clicked button. 'form.clk' is a special variable for
-        // ajaxSubmit that tells the system which element got clicked to
-        // trigger the submit. Without it there would be no 'op' or
-        // equivalent.
-        ajax.form.clk = this.element;
-      }
-
-      ajax.form.ajaxSubmit(options);
+    if (ajax.ajaxing) {
+      return false;
     }
-    else {
-      $.ajax(options);
+
+    try {
+      if (ajax.form) {
+        // If setClick is set, we must set this to ensure that the button's
+        // value is passed.
+        if (ajax.setClick) {
+          // Mark the clicked button. 'form.clk' is a special variable for
+          // ajaxSubmit that tells the system which element got clicked to
+          // trigger the submit. Without it there would be no 'op' or
+          // equivalent.
+          ajax.form.clk = this.element;
+        }
+
+        ajax.form.ajaxSubmit(options);     
+      }
+      else {
+        $.ajax(options);
+      }
+    }
+    catch (e) {
+      alert("An error occurred while attempting to process " + options.url + ": " + e.message);
     }
 
     return false;
