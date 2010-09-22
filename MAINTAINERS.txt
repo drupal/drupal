@@ -32,6 +32,9 @@ Base system
 Batch system
 - Yves Chedemois 'yched' <http://drupal.org/user/39567>
 
+Cache system
+- Damien Tournoud 'DamZ' <http://drupal.org/user/22211>
+
 Cron system
 - Károly Négyesi 'chx' <http://drupal.org/user/9446>
 - Derek Wright 'dww' <http://drupal.org/user/46549>
