@@ -1622,7 +1622,18 @@ function install_check_requirements($install_state) {
         // therefore must delete the file we just created and force the
         // administrator to log on to the server and create it manually.
         else {
-          drupal_unlink($settings_file);
+          $deleted = @drupal_unlink($settings_file);
+          // We expect deleting the file to be successful (since we just
+          // created it ourselves above), but if it fails somehow, we set a
+          // variable so we can display a one-time error message to the
+          // administrator at the bottom of the requirements list. We also try
+          // to make the file writable, to eliminate any conflicting error
+          // messages in the requirements list.
+          $exists = !$deleted;
+          if ($exists) {
+            $settings_file_ownership_error = TRUE;
+            $writable = drupal_verify_install_file($settings_file, FILE_READABLE|FILE_WRITABLE);
+          }
         }
       }
     }
@@ -1653,7 +1664,15 @@ function install_check_requirements($install_state) {
       else {
         $requirements['settings file'] = array(
           'title'       => st('Settings file'),
-          'value'       => st('Settings file is writable.'),
+          'value'       => st('The settings file is writable.'),
+        );
+      }
+      if (!empty($settings_file_ownership_error)) {
+        $requirements['settings file ownership'] = array(
+          'title'       => st('Settings file'),
+          'value'       => st('The settings file is owned by the web server.'),
+          'severity'    => REQUIREMENT_ERROR,
+          'description' => st('The @drupal installer failed to create a settings file with proper file ownership. Log on to your web server, remove the existing %file file, and create a new one by copying the %default_file file to %file. More details about installing Drupal are available in <a href="@install_txt">INSTALL.txt</a>. If you have problems with the file permissions on your server, consult the <a href="@handbook_url">online handbook</a>.', array('@drupal' => drupal_install_profile_distribution_name(), '%file' => $file, '%default_file' => $default_settings_file, '@install_txt' => base_path() . 'INSTALL.txt', '@handbook_url' => 'http://drupal.org/server-permissions')),
         );
       }
     }
