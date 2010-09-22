@@ -793,7 +793,7 @@ function theme_image_style_preview($variables) {
   $output .= '<div class="preview-image-wrapper">';
   $output .= t('original') . ' (' . l(t('view actual size'), $original_path) . ')';
   $output .= '<div class="preview-image original-image" style="' . $original_attributes['style'] . '">';
-  $output .= '<a href="' . url($original_path) . '?' . time() . '">' . theme('image', array('path' => $original_path . '?' . time(), 'alt' => t('Sample original image'), 'title' => '', 'attributes' => $original_attributes, 'getsize' => FALSE)) . '</a>';
+  $output .= '<a href="' . url($original_path) . '?' . time() . '">' . theme('image', array('path' => $original_path . '?' . time(), 'alt' => t('Sample original image'), 'title' => '', 'attributes' => $original_attributes)) . '</a>';
   $output .= '<div class="height" style="height: ' . $original_height . 'px"><span>' . $original_image['height'] . 'px</span></div>';
   $output .= '<div class="width" style="width: ' . $original_width . 'px"><span>' . $original_image['width'] . 'px</span></div>';
   $output .= '</div>'; // End preview-image.
@@ -803,7 +803,7 @@ function theme_image_style_preview($variables) {
   $output .= '<div class="preview-image-wrapper">';
   $output .= check_plain($style['name']) . ' (' . l(t('view actual size'), file_create_url($preview_file) . '?' . time()) . ')';
   $output .= '<div class="preview-image modified-image" style="' . $preview_attributes['style'] . '">';
-  $output .= '<a href="' . file_create_url($preview_file) . '?' . time() . '">' . theme('image', array('path' => file_create_url($preview_file) . '?' . time(), 'alt' => t('Sample modified image'), 'title' => '', 'attributes' => $preview_attributes, 'getsize' => FALSE)) . '</a>';
+  $output .= '<a href="' . file_create_url($preview_file) . '?' . time() . '">' . theme('image', array('path' => file_create_url($preview_file) . '?' . time(), 'alt' => t('Sample modified image'), 'title' => '', 'attributes' => $preview_attributes)) . '</a>';
   $output .= '<div class="height" style="height: ' . $preview_height . 'px"><span>' . $preview_image['height'] . 'px</span></div>';
   $output .= '<div class="width" style="width: ' . $preview_width . 'px"><span>' . $preview_image['width'] . 'px</span></div>';
   $output .= '</div>'; // End preview-image.

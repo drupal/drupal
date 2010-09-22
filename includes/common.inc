@@ -5842,7 +5842,7 @@ function drupal_common_theme() {
       // - http://dev.w3.org/html5/spec/Overview.html#alt
       // The title attribute is optional in all cases, so it is omitted by
       // default.
-      'variables' => array('path' => NULL, 'alt' => '', 'title' => NULL, 'attributes' => array(), 'getsize' => TRUE),
+      'variables' => array('path' => NULL, 'width' => NULL, 'height' => NULL, 'alt' => '', 'title' => NULL, 'attributes' => array()),
     ),
     'breadcrumb' => array(
       'variables' => array('breadcrumb' => NULL),

@@ -1479,6 +1479,8 @@ function theme_links($variables) {
  *   An associative array containing:
  *   - path: Either the path of the image file (relative to base_path()) or a
  *     full URL.
+ *   - width: The width of the image (if known).
+ *   - height: The height of the image (if known).
  *   - alt: The alternative text for text-based browsers. HTML 4 and XHTML 1.0
  *     always require an alt attribute. The HTML 5 draft allows the alt
  *     attribute to be omitted in some cases. Therefore, this variable defaults
@@ -1492,38 +1494,19 @@ function theme_links($variables) {
  *   - title: The title text is displayed when the image is hovered in some
  *     popular browsers.
  *   - attributes: Associative array of attributes to be placed in the img tag.
- *   - getsize: If set to TRUE, the image's dimension are fetched and added as
- *     width/height attributes.
  */
 function theme_image($variables) {
-  $path = $variables['path'];
-  $alt = $variables['alt'];
-  $title = $variables['title'];
   $attributes = $variables['attributes'];
-  $getsize = $variables['getsize'];
+  $attributes['src'] = file_create_url($variables['path']);
 
-  if (!$getsize || (is_file($path) && (list($width, $height) = @getimagesize($path)))) {
-    // The src attribute can be omitted, by passing NULL for $path and FALSE for
-    // $getsize.
-    if (isset($path)) {
-      $attributes['src'] = file_create_url($path);
+  foreach (array('width', 'height', 'alt', 'title') as $key) {
+
+    if (isset($variables[$key])) {
+      $attributes[$key] = $variables[$key];
     }
-    // The alt attribute defaults to an empty string. By passing NULL as value,
-    // it can be omitted.
-    if (isset($alt)) {
-      $attributes['alt'] = $alt;
-    }
-    if (isset($title)) {
-      $attributes['title'] = $title;
-    }
-    if (!isset($attributes['width']) && !empty($width)) {
-      $attributes['width'] = $width;
-    }
-    if (!isset($attributes['height']) && !empty($height)) {
-      $attributes['height'] = $height;
-    }
-    return '<img' . drupal_attributes($attributes) . ' />';
   }
+
+  return '<img' . drupal_attributes($attributes) . ' />';
 }
 
 /**

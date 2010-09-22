@@ -338,7 +338,7 @@ function image_field_widget_process($element, &$form_state, $form) {
   if ($element['#file'] && $widget_settings['preview_image_style']) {
     $element['preview'] = array(
       '#type' => 'markup',
-      '#markup' => theme('image_style', array('style_name' => $widget_settings['preview_image_style'], 'path' => $element['#file']->uri, 'getsize' => FALSE)),
+      '#markup' => theme('image_style', array('style_name' => $widget_settings['preview_image_style'], 'path' => $element['#file']->uri)),
     );
   }
 
