@@ -3155,7 +3155,7 @@ function theme_image_button($variables) {
 function theme_hidden($variables) {
   $element = $variables['element'];
   $element['#attributes']['type'] = 'hidden';
-  element_set_attributes($element, array('id', 'name', 'value'));
+  element_set_attributes($element, array('name', 'value'));
   return '<input' . drupal_attributes($element['#attributes']) . " />\n";
 }
 
