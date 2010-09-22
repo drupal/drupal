@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.41 2010/08/11 02:17:39 dries Exp $
+// $Id: database.inc,v 1.42 2010/09/22 03:22:20 dries Exp $
 
 /**
  * @file
@@ -135,13 +135,18 @@ class DatabaseConnection_pgsql extends DatabaseConnection {
   }
 
   public function mapConditionOperator($operator) {
-    static $specials = array(
-      // In PostgreSQL, 'LIKE' is case-sensitive. For case-insensitive LIKE
-      // statements, we need to use ILIKE instead. Use backslash for escaping
-      // wildcard characters.
-      'LIKE' => array('operator' => 'ILIKE', 'postfix' => " ESCAPE '\\\\'"),
-      'NOT LIKE' => array('operator' => 'NOT ILIKE', 'postfix' => " ESCAPE '\\\\'"),
-    );
+    static $specials;
+
+    // Function calls not allowed in static declarations, thus this method.
+    if (!isset($specials)) {
+      $specials = array(
+        // In PostgreSQL, 'LIKE' is case-sensitive. For case-insensitive LIKE
+        // statements, we need to use ILIKE instead. Use backslash for escaping
+        // wildcard characters.
+        'LIKE' => array('operator' => 'ILIKE', 'postfix' => ' ESCAPE ' . $this->quote("\\")),
+        'NOT LIKE' => array('operator' => 'NOT ILIKE', 'postfix' => ' ESCAPE ' . $this->quote("\\")),
+      );
+    }
 
     return isset($specials[$operator]) ? $specials[$operator] : NULL;
   }
