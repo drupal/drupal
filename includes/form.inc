@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.493 2010/09/16 20:14:49 dries Exp $
+// $Id: form.inc,v 1.494 2010/09/22 03:34:57 dries Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -3155,7 +3155,7 @@ function theme_image_button($variables) {
 function theme_hidden($variables) {
   $element = $variables['element'];
   $element['#attributes']['type'] = 'hidden';
-  element_set_attributes($element, array('id', 'name', 'value'));
+  element_set_attributes($element, array('name', 'value'));
   return '<input' . drupal_attributes($element['#attributes']) . " />\n";
 }
 
