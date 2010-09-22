@@ -1,4 +1,4 @@
-// $Id: INSTALL.txt,v 1.82 2010/09/14 18:46:40 webchick Exp $
+// $Id: INSTALL.txt,v 1.83 2010/09/22 01:49:17 webchick Exp $
 
 CONTENTS OF THIS FILE
 ---------------------
@@ -72,12 +72,24 @@ INSTALLATION
 
      mv drupal-x.x/* drupal-x.x/.htaccess /var/www/html
 
-   If you would like to have the default English interface translated to a
-   different language, we have good news. You can install and use Drupal in
-   other languages from the start. Check whether a released package of the
-   language desired is available for this Drupal version at
-   http://drupal.org/project/translations and download the package. Extract
-   the contents to the same directory where you extracted Drupal into.
+   By default, Drupal is installed in English, and further languages may be
+   installed later. Follow these steps to translate Drupal into your language
+   during installation:
+
+   - Download a translation file for this Drupal version from the translation
+     server:
+     http://localize.drupal.org/download
+
+   - Rename the downloaded file to your language's ISO code (e.g., de.po or
+     fr.po) and place it into the directory /translations right below
+     the installation profile's directory that you want to use for your
+     installation (usually "standard"):
+
+       /profiles/standard/translations/
+
+   - Reload the language selection page after adding translations.
+
+   For detailed instructions, visit http://drupal.org/localize.
 
 2. IF NECESSARY, CREATE THE CONFIGURATION FILE AND GRANT WRITE PERMISSIONS
 
