@@ -81,7 +81,7 @@ function xmlrpc_test_message_sized_in_kb($size) {
     $line['word_' . $i] = $word;
   }
 
-  for($i = 0; $i < $size; $i++) {
+  for ($i = 0; $i < $size; $i++) {
     $message['line_' . $i] = $line;
   }
 
