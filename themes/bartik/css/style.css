@@ -572,6 +572,7 @@ h1#page-title,
   position: relative;
 }
 #comments .attribution {
+  padding-top: 20px;
   float: left; /* LTR */
   width: 110px;
 }
@@ -587,6 +588,10 @@ h1#page-title,
 #comments .submitted .comment-time {
   font-size: 70%;
   color: #68696b;
+}
+#comments .permalink {
+  font-size: 80%;
+  text-transform: lowercase;
 }
 #comments .content {
   font-size: 90%;
