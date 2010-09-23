@@ -1012,14 +1012,3 @@ table tbody tr.update-unsupported {
   background: #fffce5;
   border-bottom: 1px solid #ed5;
 }
-
-/* Vertical Tabs */
-div.vertical-tabs .vertical-tabs-list {
-  font-size: 1em;
-}
-div.vertical-tabs ul li.vertical-tab-button strong {
-  font-size: 0.923em;
-}
-div.vertical-tabs ul li.vertical-tab-button .summary {
-  font-size: 0.846em;
-}
