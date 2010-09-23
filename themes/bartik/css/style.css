@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.15 2010/09/20 02:46:52 dries Exp $ */
+/* $Id: style.css,v 1.16 2010/09/23 19:47:31 dries Exp $ */
 
 /* ---------- Overall Specifications ---------- */
 
@@ -572,6 +572,7 @@ h1#page-title,
   position: relative;
 }
 #comments .attribution {
+  padding-top: 20px;
   float: left; /* LTR */
   width: 110px;
 }
@@ -587,6 +588,10 @@ h1#page-title,
 #comments .submitted .comment-time {
   font-size: 70%;
   color: #68696b;
+}
+#comments .permalink {
+  font-size: 80%;
+  text-transform: lowercase;
 }
 #comments .content {
   font-size: 90%;
