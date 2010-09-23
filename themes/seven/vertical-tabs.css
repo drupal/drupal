@@ -1,69 +1,71 @@
-/* $Id: vertical-tabs.css,v 1.6 2010/07/18 01:36:06 dries Exp $ */
+/* $Id: vertical-tabs.css,v 1.7 2010/09/23 02:11:19 dries Exp $ */
 
 /**
  * Override of misc/vertical-tabs.css.
  */
 div.vertical-tabs {
-  margin: 10px 0;
-  padding: 9px;
+  background: #fff url(images/fc.png) repeat-y 0 0;
   border: 1px solid #ccc;
-  background: #f8f8f8;
+  margin: 10px 0;
 }
-
 div.vertical-tabs fieldset {
   border: 0;
-  padding: 0 0 0 20px;
+  padding: 0;
+  margin: 0;
 }
-
 div.vertical-tabs .vertical-tabs-list {
-  line-height: 10px;
-  font-size: 0.875em;
-  width: 25%;
+  border-bottom: 1px solid #ccc;
   float: left;
-  list-style-type: none;
-  margin: 0;
+  font-size: 1em;
+  line-height: 1;
+  margin: 0 -100% -1px 0;
+  padding: 0;
+  width: 240px;
 }
-
 div.vertical-tabs ul li.vertical-tab-button {
-  list-style-type: none;
+  list-style: none;
+  list-style-image: none;
   margin: 0;
 }
-
 div.vertical-tabs ul li.vertical-tab-button a {
+  border-top: 1px solid #ccc;
   display: block;
-  border-right: 1px solid #ccc;
-  padding: 10px 9px 10px 10px;
-  border-top-left-radius: 5px;
-  border-bottom-left-radius: 5px;
-  -moz-border-radius-topleft: 5px;
-  -moz-border-radius-bottomleft: 5px;
-  -webkit-border-top-left-radius: 5px;
-  -webkit-border-bottom-left-radius: 5px;
+  padding: 10px;
 }
-
+div.vertical-tabs ul li.first a {
+  border-top: 0;
+}
+div.vertical-tabs ul li.vertical-tab-button strong {
+  font-size: 0.923em;
+}
 div.vertical-tabs ul li.vertical-tab-button .summary {
-  display: block;
-  font-size: 0.75em;
   color: #666;
+  display: block;
+  font-size: 0.846em;
   padding-top: 0.4em;
 }
-
-div.vertical-tabs ul li.vertical-tab-button a:hover {
-  background: #fff;
+div.vertical-tabs ul li.vertical-tab-button a:hover,
+div.vertical-tabs ul li.vertical-tab-button a:focus {
+  background: #d5d5d5;
   text-decoration: none;
 }
-
 div.vertical-tabs ul li.selected a,
-div.vertical-tabs ul li.selected a:hover {
-  background: #ddd;
+div.vertical-tabs ul li.selected a:hover,
+div.vertical-tabs ul li.selected a:focus,
+div.vertical-tabs ul li.selected a:active {
+  background: #fff;
+  border-right-color: #fff;
+  border-top: 1px solid #ccc;
+  outline: 0;
 }
-
+div.vertical-tabs ul li.first.selected a,
+div.vertical-tabs ul li.first.selected a:hover {
+  border-top: 0;
+}
 div.vertical-tabs .vertical-tabs-panes {
-  width: 72%;
-  padding: 0 1em 0 0;
-  float: right;
+  margin: 0 0 0 265px;
+  padding: 10px 15px 10px 0;
 }
-
 div.vertical-tabs .vertical-tabs-panes legend {
   display: none;
 }

@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.72 2010/09/22 01:49:17 webchick Exp $ */
+/* $Id: style.css,v 1.73 2010/09/23 02:11:19 dries Exp $ */
 
 /**
  * Generic elements.
@@ -1011,15 +1011,4 @@ table tbody tr.update-unsupported {
   color: #840;
   background: #fffce5;
   border-bottom: 1px solid #ed5;
-}
-
-/* Vertical Tabs */
-div.vertical-tabs .vertical-tabs-list {
-  font-size: 1em;
-}
-div.vertical-tabs ul li.vertical-tab-button strong {
-  font-size: 0.923em;
-}
-div.vertical-tabs ul li.vertical-tab-button .summary {
-  font-size: 0.846em;
 }
