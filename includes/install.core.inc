@@ -1209,7 +1209,15 @@ function install_select_locale(&$install_state) {
           $output = '<p>Follow these steps to translate Drupal into your language:</p>';
           $output .= '<ol>';
           $output .= '<li>Download a translation from the <a href="http://localize.drupal.org/download" target="_blank">translation server</a>.</li>';
-          $output .= '<li>Rename the downloaded file to your language\'s <a href="http://www.gnu.org/software/gettext/manual/html_chapter/gettext_16.html#Language-Codes" target="_blank">ISO code</a> (e.g., <code>de.po</code> or <code>fr.po</code>) and place it into the following directory:
+          $output .= '<li>Rename the downloaded file retaining only the language code at the end of the file name and its extension. For example, if the file name is
+<pre>
+drupal-7.0.pt-br.po
+</pre>
+rename it to
+<pre>
+pt-br.po
+</pre></li>';
+          $output .= '<li>Place it into the following directory:
 <pre>
 /profiles/' . $profilename . '/translations/
 </pre></li>';
