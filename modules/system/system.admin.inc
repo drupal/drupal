@@ -1745,7 +1745,7 @@ function system_performance_settings() {
   $is_writable = is_dir($directory) && is_writable($directory);
   $disabled = !$is_writable;
   $disabled_message = '';
-  if(!$is_writable) {
+  if (!$is_writable) {
     $disabled_message = ' ' . t('<strong class="error">Set up the <a href="!file-system">public files directory</a> to make these optimizations available.</strong>', array('!file-system' => url('admin/config/media/file-system')));
   }
 
