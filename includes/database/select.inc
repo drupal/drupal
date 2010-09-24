@@ -366,6 +366,13 @@ interface SelectQueryInterface extends QueryConditionInterface, QueryAlterableIn
    * If called multiple times, the query will order by each specified field in the
    * order this method is called.
    *
+   * If the query uses DISTINCT or GROUP BY conditions, fields or expressions
+   * that are used for the order must be selected to be compatible with some
+   * databases like PostgreSQL. The PostgreSQL driver can handle simple cases
+   * automatically but it is suggested to explicitly specify them. Additionally,
+   * when ordering on an alias, the alias must be added before orderBy() is
+   * called.
+   *
    * @param $field
    *   The field on which to order.
    * @param $direction
@@ -1419,10 +1426,10 @@ class SelectQuery extends Query implements SelectQueryInterface {
     foreach ($this->fields as $alias => $field) {
       // Always use the AS keyword for field aliases, as some
       // databases require it (e.g., PostgreSQL).
-      $fields[] = (isset($field['table']) ? $this->connection->escapeTable($field['table']) . '.' : '') . $this->connection->escapeField($field['field']) . ' AS ' . $this->connection->escapeField($field['alias']);
+      $fields[] = (isset($field['table']) ? $this->connection->escapeTable($field['table']) . '.' : '') . $this->connection->escapeField($field['field']) . ' AS ' . $this->connection->escapeAlias($field['alias']);
     }
     foreach ($this->expressions as $alias => $expression) {
-      $fields[] = $expression['expression'] . ' AS ' . $expression['alias'];
+      $fields[] = $expression['expression'] . ' AS ' . $this->connection->escapeAlias($expression['alias']);
     }
     $query .= implode(', ', $fields);
 
