@@ -162,7 +162,7 @@ define('DRUPAL_CACHE_GLOBAL', 0x0008);
 function drupal_add_region_content($region = NULL, $data = NULL) {
   static $content = array();
 
-  if (!is_null($region) && !is_null($data)) {
+  if (isset($region) && isset($data)) {
     $content[$region][] = $data;
   }
   return $content;
@@ -6090,7 +6090,7 @@ function drupal_get_schema_unprocessed($module, $table = NULL) {
   module_load_install($module);
   $schema = module_invoke($module, 'schema');
 
-  if (!is_null($table) && isset($schema[$table])) {
+  if (isset($table) && isset($schema[$table])) {
     return $schema[$table];
   }
   elseif (!empty($schema)) {
@@ -6223,7 +6223,7 @@ function drupal_write_record($table, &$record, $primary_keys = array()) {
     // MySQL PDO silently casts e.g. FALSE and '' to 0 when inserting the value
     // into an integer column, but PostgreSQL PDO does not. Also type cast NULL
     // when the column does not allow this.
-    if (!is_null($object->$field) || !empty($info['not null'])) {
+    if (isset($object->$field) || !empty($info['not null'])) {
       if ($info['type'] == 'int' || $info['type'] == 'serial') {
         $fields[$field] = (int) $fields[$field];
       }
@@ -6793,10 +6793,10 @@ function entity_create_stub_entity($entity_type, $ids) {
   $entity = new stdClass();
   $info = entity_get_info($entity_type);
   $entity->{$info['entity keys']['id']} = $ids[0];
-  if (!empty($info['entity keys']['revision']) && !is_null($ids[1])) {
+  if (!empty($info['entity keys']['revision']) && isset($ids[1])) {
     $entity->{$info['entity keys']['revision']} = $ids[1];
   }
-  if (!empty($info['entity keys']['bundle']) && !is_null($ids[2])) {
+  if (!empty($info['entity keys']['bundle']) && isset($ids[2])) {
     $entity->{$info['entity keys']['bundle']} = $ids[2];
   }
   return $entity;
