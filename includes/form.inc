@@ -1142,6 +1142,26 @@ function _form_validate(&$elements, &$form_state, $form_id = NULL) {
             }
           }
         }
+        // Non-multiple select fields always have a value in HTML. If the user
+        // does not change the form, it will be the value of the first option.
+        // Because of this, form validation for the field will almost always
+        // pass, even if the user did not select anything. To work around this
+        // browser behavior, select fields without a #default_value get an
+        // additional, first empty option by default. In case the submitted
+        // value is identical to the empty option's value, we reset the
+        // element's value to NULL to trigger the regular #required handling
+        // below.
+        // @see form_process_select()
+        elseif ($elements['#type'] == 'select' && !$elements['#multiple'] && !isset($elements['#default_value']) && $elements['#value'] === (string) $elements['#empty_value']) {
+          if ($elements['#required']) {
+            $elements['#value'] = NULL;
+            form_set_value($elements, NULL, $form_state);
+          }
+          else {
+            $elements['#value'] = $elements['#empty_value'];
+            form_set_value($elements, $elements['#empty_value'], $form_state);
+          }
+        }
         elseif (!isset($options[$elements['#value']])) {
           form_error($elements, $t('An illegal choice has been detected. Please contact the site administrator.'));
           watchdog('form', 'Illegal choice %choice in %name element.', array('%choice' => $elements['#value'], '%name' => empty($elements['#title']) ? $elements['#parents'][0] : $elements['#title']), WATCHDOG_ERROR);
@@ -1183,13 +1203,27 @@ function _form_validate(&$elements, &$form_state, $form_id = NULL) {
     }
 
     // Make sure a value is passed when the field is required.
-    // A simple call to empty() will not cut it here as some fields, like
-    // checkboxes, can return a valid value of '0'. Instead, check the
-    // length if it's a string, and the item count if it's an array.
-    // An unchecked checkbox has a #value of integer 0, different than string
-    // '0', which could be a valid value.
-    if (isset($elements['#needs_validation']) && $elements['#required'] && (!count($elements['#value']) || (is_string($elements['#value']) && strlen(trim($elements['#value'])) == 0) || $elements['#value'] === 0)) {
-      form_error($elements, $t('!name field is required.', array('!name' => $elements['#title'])));
+    if (isset($elements['#needs_validation']) && $elements['#required']) {
+      // A simple call to empty() will not cut it here as some fields, like
+      // checkboxes, can return a valid value of '0'. Instead, check the
+      // length if it's a string, and the item count if it's an array.
+      // An unchecked checkbox has a #value of integer 0, different than string
+      // '0', which could be a valid value.
+      $is_empty_multiple = (!count($elements['#value']));
+      $is_empty_string = (is_string($elements['#value']) && drupal_strlen(trim($elements['#value'])) == 0);
+      $is_empty_value = ($elements['#value'] === 0);
+      if ($is_empty_multiple || $is_empty_string || $is_empty_value) {
+        // Although discouraged, a #title is not mandatory for form elements. In
+        // case there is no #title, we cannot set a form error message.
+        // Instead of setting no #title, form constructors are encouraged to set
+        // #title_display to 'invisible' to improve accessibility.
+        if (isset($elements['#title'])) {
+          form_error($elements, $t('!name field is required.', array('!name' => $elements['#title'])));
+        }
+        else {
+          form_error($elements);
+        }
+      }
     }
 
     // Call user-defined form level validators.
@@ -2238,6 +2272,99 @@ function _form_options_flatten($array) {
 }
 
 /**
+ * Processes a select list form element.
+ *
+ * This process callback is mandatory for select fields, since all user agents
+ * automatically preselect the first available option of single (non-multiple)
+ * select lists.
+ *
+ * @param $element
+ *   The form element to process. Properties used:
+ *   - #multiple: (optional) Indicates whether one or more options can be
+ *     selected. Defaults to FALSE.
+ *   - #default_value: Must be NULL or not set in case there is no value for the
+ *     element yet, in which case a first default option is inserted by default.
+ *     Whether this first option is a valid option depends on whether the field
+ *     is #required or not.
+ *   - #required: (optional) Whether the user needs to select an option (TRUE)
+ *     or not (FALSE). Defaults to TRUE.
+ *   - #empty_option: (optional) The label to show for the first default option.
+ *     By default, the label is automatically set to "- Please select -" for a
+ *     required field and "- None -" for an optional field.
+ *   - #empty_value: (optional) The value for the first default option, which is
+ *     used to determine whether the user submitted a value or not. Defaults to
+ *     '' (an empty string). To be used in case the field is optional and the
+ *     empty default value should have a special value (e.g., a constant).
+ *
+ * @see _form_validate()
+ */
+function form_process_select($element) {
+  // #multiple select fields need a special #name.
+  if ($element['#multiple']) {
+    $element['#attributes']['multiple'] = 'multiple';
+    $element['#attributes']['name'] = $element['#name'] . '[]';
+    // If not explicitly set, #required has to default to FALSE (see below).
+    if (!isset($element['#required'])) {
+      $element['#required'] = FALSE;
+    }
+  }
+  // A non-#multiple select needs special handling to prevent user agents from
+  // preselecting the first option without intention. #multiple select lists do
+  // not get an empty option, as it would not make sense, user interface-wise.
+  else {
+    $add_empty_option = FALSE;
+    // Select elements always have a value in HTML, so the expectation is that
+    // the user has to choose an option. Therefore, a select element is set to
+    // #required TRUE, unless it has been explicitly set to FALSE. This differs
+    // from every other element which gets a default of #required FALSE via
+    // form_builder(). To avoid this default, system_element_info() sets
+    // #required to NULL.
+    // If #required has been explicitly set to FALSE, the user may optionally
+    // choose an option, which can be "None".
+    if (isset($element['#required']) && !$element['#required']) {
+      $element['#required'] = FALSE;
+      $element += array(
+        '#empty_value' => '',
+        '#empty_option' => t('- None -'),
+      );
+      $add_empty_option = TRUE;
+    }
+    // Otherwise, if #required is TRUE (or not set) and there is no
+    // #default_value, then the user has to choose an option, which makes this
+    // element #required.
+    elseif (!isset($element['#default_value'])) {
+      // By only conditionally setting #required to TRUE, we additionally ensure
+      // that the select element does not get a required marker if it already
+      // has a value.
+      $element['#required'] = TRUE;
+      $element += array(
+        '#empty_value' => '',
+        '#empty_option' => t('- Select -'),
+      );
+      $add_empty_option = TRUE;
+    }
+    // If there is a #default_value and #required is not explicitly FALSE, then
+    // there is no point in adding an empty option which is never valid, and we
+    // just retain API compatibility.
+    if (!isset($element['#required'])) {
+      $element['#required'] = FALSE;
+    }
+    // If one of the above conditions is met, add a first empty default option,
+    // which is always invalid for #required select lists that do not specify a
+    // #default_value.
+    // @see _form_validate()
+    if ($add_empty_option) {
+      // The empty option is prepended to #options and purposively not merged
+      // to prevent another option in #options mistakenly using the same value
+      // as #empty_value.
+      $empty_option = array($element['#empty_value'] => $element['#empty_option']);
+      $element['#options'] = $empty_option + $element['#options'];
+    }
+  }
+  return $element;
+}
+
+/**
  * Returns HTML for a select form element.
  *
  * It is possible to group options together; to do this, change the format of
@@ -2256,11 +2383,6 @@ function theme_select($variables) {
   $element = $variables['element'];
   element_set_attributes($element, array('id', 'name', 'size'));
   _form_set_class($element, array('form-select'));
-
-  if (!empty($element['#multiple'])) {
-    $element['#attributes']['multiple'] = 'multiple';
-    $element['#attributes']['name'] .= '[]';
-  }
 
   return '<select' . drupal_attributes($element['#attributes']) . '>' . form_select_options($element) . '</select>';
 }

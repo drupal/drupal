@@ -85,9 +85,6 @@ function block_admin_display_form($form, &$form_state, $blocks, $theme, $block_r
     $block_regions = system_region_list($theme, REGIONS_VISIBLE);
   }
 
-  // We always add a region for disabled blocks.
-  $block_regions += array(BLOCK_REGION_NONE => '<' . t('none') . '>');
-
   // Weights range from -delta to +delta, so delta should be at least half
   // of the amount of blocks present. This makes sure all blocks in the same
   // region get an unique weight.
@@ -100,7 +97,8 @@ function block_admin_display_form($form, &$form_state, $blocks, $theme, $block_r
   );
   $form['block_regions'] = array(
     '#type' => 'value',
-    '#value' => $block_regions,
+    // Add a last region for disabled blocks.
+    '#value' => $block_regions + array(BLOCK_REGION_NONE => BLOCK_REGION_NONE),
   );
   $form['blocks'] = array();
   $form['#tree'] = TRUE;
@@ -127,13 +125,15 @@ function block_admin_display_form($form, &$form_state, $blocks, $theme, $block_r
       '#default_value' => $block['weight'],
       '#delta' => $weight_delta,
       '#title_display' => 'invisible',
-      '#title' => t('Weight for @block block', array('%block' => $block['info'])),
+      '#title' => t('Weight for @block block', array('@block' => $block['info'])),
     );
     $form['blocks'][$key]['region'] = array(
       '#type' => 'select',
-      '#default_value' => $block['region'],
+      '#required' => FALSE,
+      '#default_value' => $block['region'] != BLOCK_REGION_NONE ? $block['region'] : NULL,
+      '#empty_value' => BLOCK_REGION_NONE,
       '#title_display' => 'invisible',
-      '#title' => t('Region for @block block', array('%block' => $block['info'])),
+      '#title' => t('Region for @block block', array('@block' => $block['info'])),
       '#options' => $block_regions,
     );
     $form['blocks'][$key]['configure'] = array(
@@ -150,7 +150,7 @@ function block_admin_display_form($form, &$form_state, $blocks, $theme, $block_r
     }
   }
   // Do not allow disabling the main system content block.
-  unset($form['blocks']['system_main']['region']['#options'][BLOCK_REGION_NONE]);
+  $form['blocks']['system_main']['region']['#required'] = TRUE;
 
   $form['actions'] = array(
     '#tree' => FALSE,
@@ -302,9 +302,10 @@ function block_admin_configure($form, &$form_state, $module, $delta) {
       $form['regions'][$key] = array(
         '#type' => 'select',
         '#title' => $theme->info['name'],
-        '#default_value' => (!empty($region) ? $region : BLOCK_REGION_NONE),
-        '#options' => array(BLOCK_REGION_NONE => t('<none>')) + system_region_list($key, REGIONS_VISIBLE),
-        '#expandable' => ($key !== $theme_default),
+        '#required' => FALSE,
+        '#default_value' => !empty($region) && $region != -1 ? $region : NULL,
+        '#empty_value' => BLOCK_REGION_NONE,
+        '#options' => system_region_list($key, REGIONS_VISIBLE),
         '#weight' => ($key == $theme_default ? 9 : 10),
       );
     }
@@ -657,7 +658,7 @@ function template_preprocess_block_admin_display_form(&$variables) {
     $block = &$variables['form']['blocks'][$i];
 
     // Fetch the region for the current block.
-    $region = $block['region']['#default_value'];
+    $region = (isset($block['region']['#default_value']) ? $block['region']['#default_value'] : BLOCK_REGION_NONE);
 
     // Set special classes needed for table drag and drop.
     $block['region']['#attributes']['class'] = array('block-region-select', 'block-region-' . $region);

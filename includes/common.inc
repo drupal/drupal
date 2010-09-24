@@ -5619,7 +5619,8 @@ function element_set_attributes(array &$element, array $map) {
     if (is_int($property)) {
       $property = '#' . $attribute;
     }
-    if (isset($element[$property])) {
+    // Do not overwrite already existing attributes.
+    if (isset($element[$property]) && !isset($element['#attributes'][$attribute])) {
       $element['#attributes'][$attribute] = $element[$property];
     }
   }

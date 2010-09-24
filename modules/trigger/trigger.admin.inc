@@ -177,7 +177,6 @@ function trigger_assign_form($form, $form_state, $module, $hook, $label) {
   );
   // List possible actions that may be assigned.
   if (count($options) != 0) {
-    array_unshift($options, t('Choose an action'));
     $form[$hook]['parent']['aid'] = array(
       '#type' => 'select',
       '#options' => $options,

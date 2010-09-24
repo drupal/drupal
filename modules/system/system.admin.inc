@@ -2941,7 +2941,7 @@ function system_actions_manage() {
   actions_synchronize();
   $actions = actions_list();
   $actions_map = actions_actions_map($actions);
-  $options = array(t('Choose an advanced action'));
+  $options = array();
   $unconfigurable = array();
 
   foreach ($actions_map as $key => $array) {
@@ -3013,9 +3013,7 @@ function system_actions_manage_form($form, &$form_state, $options = array()) {
   );
   $form['parent']['action'] = array(
     '#type' => 'select',
-    '#default_value' => '',
     '#options' => $options,
-    '#description' => '',
   );
   $form['parent']['actions'] = array('#type' => 'actions');
   $form['parent']['actions']['submit'] = array(
