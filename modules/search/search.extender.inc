@@ -1,5 +1,5 @@
 <?php
-// $Id: search.extender.inc,v 1.7 2010/09/01 01:43:50 webchick Exp $
+// $Id: search.extender.inc,v 1.8 2010/09/24 21:24:14 webchick Exp $
 
 /**
  * @file
@@ -415,10 +415,6 @@ class SearchQuery extends SelectQueryExtender {
       // Add default score.
       $this->addScore('i.relevance');
     }
-    if (count($this->getOrderBy()) == 0) {
-      // Add default order.
-      $this->orderBy('calculated_score', 'DESC');
-    }
 
     if (count($this->multiply)) {
       // Add the total multiplicator as many times as requested to maintain
@@ -435,6 +431,11 @@ class SearchQuery extends SelectQueryExtender {
     $this->scores = str_replace('i.relevance', '(' . (1.0 / $this->normalize) . ' * i.score * t.count)', $this->scores);
     // Convert scores to an expression.
     $this->addExpression('SUM(' . implode(' + ', $this->scores) . ')', 'calculated_score', $this->scoresArguments);
+
+    if (count($this->getOrderBy()) == 0) {
+      // Add default order after adding the expression.
+      $this->orderBy('calculated_score', 'DESC');
+    }
 
     // Add tag and useful metadata.
     $this
