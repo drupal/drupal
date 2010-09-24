@@ -1,5 +1,5 @@
 <?php
-// $Id: field_ui.module,v 1.32 2010/09/11 00:03:42 webchick Exp $
+// $Id: field_ui.module,v 1.33 2010/09/24 00:37:42 dries Exp $
 
 /**
  * @file
@@ -114,7 +114,6 @@ function field_ui_menu() {
             'title arguments' => array($field_position),
             'page callback' => 'drupal_get_form',
             'page arguments' => array('field_ui_field_edit_form', $field_position),
-            'type' => MENU_LOCAL_TASK,
             'file' => 'field_ui.admin.inc',
           ) + $access;
           $items["$path/fields/%field_ui_menu/edit"] = array(

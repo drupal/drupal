@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.test,v 1.90 2010/08/22 15:45:03 dries Exp $
+// $Id: taxonomy.test,v 1.91 2010/09/24 00:37:44 dries Exp $
 
 /**
  * @file
@@ -557,7 +557,7 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
     // the first edit link found on the listing page is to our term.
     $this->clickLink(t('edit'));
 
-    $this->assertText($edit['name'], t('The randomly generated term name is present.'));
+    $this->assertRaw($edit['name'], t('The randomly generated term name is present.'));
     $this->assertText($edit['description[value]'], t('The randomly generated term description is present.'));
 
     $edit = array(
@@ -939,7 +939,7 @@ class TaxonomyTermFieldTestCase extends TaxonomyWebTestCase {
       "{$this->field_name}[$langcode]" => array($term->tid),
     );
     $this->drupalPost(NULL, $edit, t('Save'));
-    preg_match('|test-entity/(\d+)/edit|', $this->url, $match);
+    preg_match('|test-entity/manage/(\d+)/edit|', $this->url, $match);
     $id = $match[1];
     $this->assertRaw(t('test_entity @id has been created.', array('@id' => $id)), t('Entity was created'));
 

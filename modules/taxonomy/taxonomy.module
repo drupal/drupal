@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.605 2010/09/11 06:03:12 webchick Exp $
+// $Id: taxonomy.module,v 1.606 2010/09/24 00:37:44 dries Exp $
 
 /**
  * @file
@@ -287,7 +287,6 @@ function taxonomy_menu() {
     'page callback' => 'taxonomy_term_page',
     'page arguments' => array(2),
     'access arguments' => array('access content'),
-    'type' => MENU_CALLBACK,
     'file' => 'taxonomy.pages.inc',
   );
   $items['taxonomy/term/%taxonomy_term/view'] = array(

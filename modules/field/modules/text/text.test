@@ -1,5 +1,5 @@
 <?php
-// $Id: text.test,v 1.28 2010/09/18 02:18:35 dries Exp $
+// $Id: text.test,v 1.29 2010/09/24 00:37:42 dries Exp $
 
 class TextFieldTestCase extends DrupalWebTestCase {
   protected $instance;
@@ -115,7 +115,7 @@ class TextFieldTestCase extends DrupalWebTestCase {
       "{$this->field_name}[$langcode][0][value]" => $value,
     );
     $this->drupalPost(NULL, $edit, t('Save'));
-    preg_match('|test-entity/(\d+)/edit|', $this->url, $match);
+    preg_match('|test-entity/manage/(\d+)/edit|', $this->url, $match);
     $id = $match[1];
     $this->assertRaw(t('test_entity @id has been created.', array('@id' => $id)), t('Entity was created'));
 
@@ -184,7 +184,7 @@ class TextFieldTestCase extends DrupalWebTestCase {
       "{$this->field_name}[$langcode][0][value]" => $value,
     );
     $this->drupalPost(NULL, $edit, t('Save'));
-    preg_match('|test-entity/(\d+)/edit|', $this->url, $match);
+    preg_match('|test-entity/manage/(\d+)/edit|', $this->url, $match);
     $id = $match[1];
     $this->assertRaw(t('test_entity @id has been created.', array('@id' => $id)), t('Entity was created'));
 
@@ -210,7 +210,7 @@ class TextFieldTestCase extends DrupalWebTestCase {
 
     // Display edition form.
     // We should now have a 'text format' selector.
-    $this->drupalGet('test-entity/' . $id . '/edit');
+    $this->drupalGet('test-entity/manage/' . $id . '/edit');
     $this->assertFieldByName("{$this->field_name}[$langcode][0][value]", '', t('Widget is displayed'));
     $this->assertFieldByName("{$this->field_name}[$langcode][0][format]", '', t('Format selector is displayed'));
 

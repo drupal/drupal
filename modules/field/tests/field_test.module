@@ -1,5 +1,5 @@
 <?php
-// $Id: field_test.module,v 1.10 2010/09/11 06:03:11 webchick Exp $
+// $Id: field_test.module,v 1.11 2010/09/24 00:37:42 dries Exp $
 
 /**
  * @file
@@ -52,10 +52,10 @@ function field_test_menu() {
       'type' => MENU_NORMAL_ITEM,
     );
   }
-  $items['test-entity/%field_test_entity_test/edit'] = array(
+  $items['test-entity/manage/%field_test_entity_test/edit'] = array(
     'title' => 'Edit test entity',
     'page callback' => 'field_test_entity_edit',
-    'page arguments' => array(1),
+    'page arguments' => array(2),
     'access arguments' => array('administer field_test content'),
     'type' => MENU_NORMAL_ITEM,
   );

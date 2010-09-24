@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.552 2010/09/09 23:01:48 dries Exp $
+// $Id: book.module,v 1.553 2010/09/24 00:37:42 dries Exp $
 
 /**
  * @file
@@ -182,7 +182,6 @@ function book_menu() {
     'access callback' => '_book_outline_remove_access',
     'access arguments' => array(1),
     'theme callback' => '_node_custom_theme',
-    'type' => MENU_CALLBACK,
     'file' => 'book.pages.inc',
   );
 

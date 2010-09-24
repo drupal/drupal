@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.359 2010/09/05 02:21:38 dries Exp $
+// $Id: search.module,v 1.360 2010/09/24 00:37:44 dries Exp $
 
 /**
  * @file
@@ -182,7 +182,6 @@ function search_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('search_reindex_confirm'),
     'access arguments' => array('administer search'),
-    'type' => MENU_CALLBACK,
     'file' => 'search.admin.inc',
   );
 

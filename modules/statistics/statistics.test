@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.test,v 1.22 2010/08/05 23:53:39 webchick Exp $
+// $Id: statistics.test,v 1.23 2010/09/24 00:37:44 dries Exp $
 
 /**
  * Sets up a base class for the Statistics module.
@@ -10,7 +10,15 @@ class StatisticsTestCase extends DrupalWebTestCase {
     parent::setUp('statistics');
 
     // Create user.
-    $this->blocking_user = $this->drupalCreateUser(array('block IP addresses', 'access statistics', 'administer blocks', 'administer statistics', 'administer users'));
+    $this->blocking_user = $this->drupalCreateUser(array(
+      'access administration pages',
+      'access site reports',
+      'access statistics',
+      'block IP addresses',
+      'administer blocks',
+      'administer statistics',
+      'administer users',
+    ));
     $this->drupalLogin($this->blocking_user);
 
     // Enable access logging.

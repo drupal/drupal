@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.module,v 1.93 2010/09/01 20:08:17 dries Exp $
+// $Id: simpletest.module,v 1.94 2010/09/24 00:37:44 dries Exp $
 
 /**
  * @file
@@ -56,7 +56,6 @@ function simpletest_menu() {
     'page arguments' => array('simpletest_result_form', 5),
     'description' => 'View result of tests.',
     'access arguments' => array('administer unit tests'),
-    'type' => MENU_CALLBACK,
     'file' => 'simpletest.pages.inc',
   );
   return $items;

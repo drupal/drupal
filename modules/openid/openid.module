@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.module,v 1.95 2010/08/22 22:00:16 dries Exp $
+// $Id: openid.module,v 1.96 2010/09/24 00:37:43 dries Exp $
 
 /**
  * @file
@@ -32,7 +32,6 @@ function openid_menu() {
     'page arguments' => array('openid_user_delete_form', 1),
     'access callback' => 'user_edit_access',
     'access arguments' => array(1),
-    'type' => MENU_CALLBACK,
     'file' => 'openid.pages.inc',
   );
   return $items;

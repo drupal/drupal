@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.147 2010/04/13 15:13:41 dries Exp $
+// $Id: contact.module,v 1.148 2010/09/24 00:37:42 dries Exp $
 
 /**
  * @file
@@ -77,7 +77,6 @@ function contact_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('contact_category_edit_form', 4),
     'access arguments' => array('administer contact forms'),
-    'type' => MENU_CALLBACK,
     'file' => 'contact.admin.inc',
   );
   $items['admin/structure/contact/delete/%contact'] = array(
@@ -85,7 +84,6 @@ function contact_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('contact_category_delete_form', 4),
     'access arguments' => array('administer contact forms'),
-    'type' => MENU_CALLBACK,
     'file' => 'contact.admin.inc',
   );
   $items['contact'] = array(

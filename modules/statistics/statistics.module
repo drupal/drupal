@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.338 2010/08/30 05:58:46 webchick Exp $
+// $Id: statistics.module,v 1.339 2010/09/24 00:37:44 dries Exp $
 
 /**
  * @file
@@ -163,7 +163,6 @@ function statistics_menu() {
     'page callback' => 'statistics_access_log',
     'page arguments' => array(3),
     'access arguments' => array('access statistics'),
-    'type' => MENU_CALLBACK,
     'file' => 'statistics.admin.inc',
   );
   $items['admin/config/system/statistics'] = array(

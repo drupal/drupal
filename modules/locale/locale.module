@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.298 2010/09/09 23:01:48 dries Exp $
+// $Id: locale.module,v 1.299 2010/09/24 00:37:43 dries Exp $
 
 /**
  * @file
@@ -150,7 +150,6 @@ function locale_menu() {
     'page arguments' => array('locale_languages_edit_form', 5),
     'access arguments' => array('administer languages'),
     'file' => 'locale.admin.inc',
-    'type' => MENU_CALLBACK,
   );
   $items['admin/config/regional/language/delete/%'] = array(
     'title' => 'Confirm',
@@ -158,7 +157,6 @@ function locale_menu() {
     'page arguments' => array('locale_languages_delete_form', 5),
     'access arguments' => array('administer languages'),
     'file' => 'locale.admin.inc',
-    'type' => MENU_CALLBACK,
   );
 
   // Translation functionality
@@ -205,7 +203,6 @@ function locale_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('locale_translate_edit_form', 5),
     'access arguments' => array('translate interface'),
-    'type' => MENU_CALLBACK,
     'file' => 'locale.admin.inc',
   );
   $items['admin/config/regional/translate/delete/%'] = array(
@@ -213,7 +210,6 @@ function locale_menu() {
     'page callback' => 'locale_translate_delete_page',
     'page arguments' => array(5),
     'access arguments' => array('translate interface'),
-    'type' => MENU_CALLBACK,
     'file' => 'locale.admin.inc',
   );
 
@@ -233,7 +229,6 @@ function locale_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('locale_date_format_form', 5),
     'access arguments' => array('administer site configuration'),
-    'type' => MENU_CALLBACK,
     'file' => 'locale.admin.inc',
   );
   $items['admin/config/regional/date-time/locale/%/reset'] = array(
@@ -242,7 +237,6 @@ function locale_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('locale_date_format_reset_form', 5),
     'access arguments' => array('administer site configuration'),
-    'type' => MENU_CALLBACK,
     'file' => 'locale.admin.inc',
   );
 

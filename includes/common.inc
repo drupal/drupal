@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1223 2010/09/22 03:24:09 dries Exp $
+// $Id: common.inc,v 1.1224 2010/09/24 00:37:41 dries Exp $
 
 /**
  * @file
@@ -230,7 +230,7 @@ function drupal_get_profile() {
 function drupal_set_breadcrumb($breadcrumb = NULL) {
   $stored_breadcrumb = &drupal_static(__FUNCTION__);
 
-  if (!is_null($breadcrumb)) {
+  if (isset($breadcrumb)) {
     $stored_breadcrumb = $breadcrumb;
   }
   return $stored_breadcrumb;
@@ -242,7 +242,7 @@ function drupal_set_breadcrumb($breadcrumb = NULL) {
 function drupal_get_breadcrumb() {
   $breadcrumb = drupal_set_breadcrumb();
 
-  if (is_null($breadcrumb)) {
+  if (!isset($breadcrumb)) {
     $breadcrumb = menu_get_active_breadcrumb();
   }
 
@@ -2267,9 +2267,9 @@ function l($text, $path, array $options = array()) {
 
   // Merge in defaults.
   $options += array(
-      'attributes' => array(),
-      'html' => FALSE,
-    );
+    'attributes' => array(),
+    'html' => FALSE,
+  );
 
   // Append active class.
   if (($path == $_GET['q'] || ($path == '<front>' && drupal_is_front_page())) &&
@@ -6204,7 +6204,7 @@ function drupal_write_record($table, &$record, $primary_keys = array()) {
     }
 
     if (!property_exists($object, $field)) {
-      // Skip fields that are not provided, default values are already known 
+      // Skip fields that are not provided, default values are already known
       // by the database.
       continue;
     }

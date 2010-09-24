@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.test,v 1.40 2010/08/30 00:22:03 webchick Exp $
+// $Id: menu.test,v 1.41 2010/09/24 00:37:43 dries Exp $
 
 /**
  * @file
@@ -112,14 +112,14 @@ class MenuTestCase extends DrupalWebTestCase {
 
     // Assert the new menu.
     $this->drupalGet('admin/structure/menu/manage/' . $menu_name . '/edit');
-    $this->assertText($title, t('Custom menu was added.'));
+    $this->assertRaw($title, t('Custom menu was added.'));
 
     // Edit the menu.
     $new_title = $this->randomName(16);
     $menu['title'] = $new_title;
     menu_save($menu);
     $this->drupalGet('admin/structure/menu/manage/' . $menu_name . '/edit');
-    $this->assertText($new_title, t('Custom menu was edited.'));
+    $this->assertRaw($new_title, t('Custom menu was edited.'));
   }
 
   /**

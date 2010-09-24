@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.443 2010/09/05 02:21:38 dries Exp $
+// $Id: aggregator.module,v 1.444 2010/09/24 00:37:41 dries Exp $
 
 /**
  * @file
@@ -134,7 +134,6 @@ function aggregator_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('aggregator_admin_remove_feed', 5),
     'access arguments' => array('administer news feeds'),
-    'type' => MENU_CALLBACK,
     'file' => 'aggregator.admin.inc',
   );
   $items['admin/config/services/aggregator/update/%aggregator_feed'] = array(
@@ -142,7 +141,6 @@ function aggregator_menu() {
     'page callback' => 'aggregator_admin_refresh_feed',
     'page arguments' => array(5),
     'access arguments' => array('administer news feeds'),
-    'type' => MENU_CALLBACK,
     'file' => 'aggregator.admin.inc',
   );
   $items['admin/config/services/aggregator/list'] = array(
@@ -227,7 +225,6 @@ function aggregator_menu() {
     'page callback' => 'aggregator_page_source',
     'page arguments' => array(2),
     'access arguments' => array('access news feeds'),
-    'type' => MENU_CALLBACK,
     'file' => 'aggregator.pages.inc',
   );
   $items['aggregator/sources/%aggregator_feed/view'] = array(
@@ -257,7 +254,6 @@ function aggregator_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('aggregator_form_feed', 6),
     'access arguments' => array('administer news feeds'),
-    'type' => MENU_CALLBACK,
     'file' => 'aggregator.admin.inc',
   );
   $items['admin/config/services/aggregator/edit/category/%aggregator_category'] = array(
@@ -265,7 +261,6 @@ function aggregator_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('aggregator_form_category', 6),
     'access arguments' => array('administer news feeds'),
-    'type' => MENU_CALLBACK,
     'file' => 'aggregator.admin.inc',
   );
 

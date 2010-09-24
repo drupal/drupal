@@ -1,5 +1,5 @@
 <?php
-// $Id: help.module,v 1.96 2010/01/12 23:04:47 webchick Exp $
+// $Id: help.module,v 1.97 2010/09/24 00:37:43 dries Exp $
 
 /**
  * @file
@@ -25,7 +25,6 @@ function help_menu() {
       'page callback' => 'help_page',
       'page arguments' => array(2),
       'access arguments' => array('access administration pages'),
-      'type' => MENU_CALLBACK,
       'file' => 'help.admin.inc',
     );
   }

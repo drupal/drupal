@@ -1,5 +1,5 @@
 <?php
-// $Id: field.test,v 1.40 2010/09/11 06:03:11 webchick Exp $
+// $Id: field.test,v 1.41 2010/09/24 00:37:42 dries Exp $
 
 /**
  * @file
@@ -1259,14 +1259,14 @@ class FieldFormTestCase extends FieldTestCase {
     $value = mt_rand(1, 127);
     $edit = array("{$this->field_name}[$langcode][0][value]" => $value);
     $this->drupalPost(NULL, $edit, t('Save'));
-    preg_match('|test-entity/(\d+)/edit|', $this->url, $match);
+    preg_match('|test-entity/manage/(\d+)/edit|', $this->url, $match);
     $id = $match[1];
     $this->assertRaw(t('test_entity @id has been created.', array('@id' => $id)), 'Entity was created');
     $entity = field_test_entity_test_load($id);
     $this->assertEqual($entity->{$this->field_name}[$langcode][0]['value'], $value, 'Field value was saved');
 
     // Display edit form.
-    $this->drupalGet('test-entity/' . $id . '/edit');
+    $this->drupalGet('test-entity/manage/' . $id . '/edit');
     $this->assertFieldByName("{$this->field_name}[$langcode][0][value]", $value, 'Widget is displayed with the correct default value');
     $this->assertNoField("{$this->field_name}[$langcode][1][value]", 'No extraneous widget is displayed');
 
@@ -1281,7 +1281,7 @@ class FieldFormTestCase extends FieldTestCase {
     // Empty the field.
     $value = '';
     $edit = array("{$this->field_name}[$langcode][0][value]" => $value);
-    $this->drupalPost('test-entity/' . $id . '/edit', $edit, t('Save'));
+    $this->drupalPost('test-entity/manage/' . $id . '/edit', $edit, t('Save'));
     $this->assertRaw(t('test_entity @id has been updated.', array('@id' => $id)), 'Entity was updated');
     $entity = field_test_entity_test_load($id);
     $this->assertIdentical($entity->{$this->field_name}, array(), 'Field was emptied');
@@ -1306,7 +1306,7 @@ class FieldFormTestCase extends FieldTestCase {
     $value = mt_rand(1, 127);
     $edit = array("{$this->field_name}[$langcode][0][value]" => $value);
     $this->drupalPost(NULL, $edit, t('Save'));
-    preg_match('|test-entity/(\d+)/edit|', $this->url, $match);
+    preg_match('|test-entity/manage/(\d+)/edit|', $this->url, $match);
     $id = $match[1];
     $this->assertRaw(t('test_entity @id has been created.', array('@id' => $id)), 'Entity was created');
     $entity = field_test_entity_test_load($id);
@@ -1315,7 +1315,7 @@ class FieldFormTestCase extends FieldTestCase {
     // Edit with missing required value.
     $value = '';
     $edit = array("{$this->field_name}[$langcode][0][value]" => $value);
-    $this->drupalPost('test-entity/' . $id . '/edit', $edit, t('Save'));
+    $this->drupalPost('test-entity/manage/' . $id . '/edit', $edit, t('Save'));
     $this->assertRaw(t('!name field is required.', array('!name' => $this->instance['label'])), 'Required field with no value fails validation');
   }
 
@@ -1384,7 +1384,7 @@ class FieldFormTestCase extends FieldTestCase {
 
     // Submit the form and create the entity.
     $this->drupalPost(NULL, $edit, t('Save'));
-    preg_match('|test-entity/(\d+)/edit|', $this->url, $match);
+    preg_match('|test-entity/manage/(\d+)/edit|', $this->url, $match);
     $id = $match[1];
     $this->assertRaw(t('test_entity @id has been created.', array('@id' => $id)), 'Entity was created');
     $entity = field_test_entity_test_load($id);
@@ -1474,7 +1474,7 @@ class FieldFormTestCase extends FieldTestCase {
     // Create entity with three values.
     $edit = array("{$this->field_name}[$langcode]" => '1, 2, 3');
     $this->drupalPost(NULL, $edit, t('Save'));
-    preg_match('|test-entity/(\d+)/edit|', $this->url, $match);
+    preg_match('|test-entity/manage/(\d+)/edit|', $this->url, $match);
     $id = $match[1];
 
     // Check that the values were saved.
@@ -1482,7 +1482,7 @@ class FieldFormTestCase extends FieldTestCase {
     $this->assertFieldValues($entity_init, $this->field_name, $langcode, array(1, 2, 3));
 
     // Display the form, check that the values are correctly filled in.
-    $this->drupalGet('test-entity/' . $id . '/edit');
+    $this->drupalGet('test-entity/manage/' . $id . '/edit');
     $this->assertFieldByName("{$this->field_name}[$langcode]", '1, 2, 3', t('Widget is displayed.'));
 
     // Submit the form with more values than the field accepts.
@@ -1529,7 +1529,7 @@ class FieldFormTestCase extends FieldTestCase {
     // Create entity.
     $edit = array("{$field_name}[$langcode][0][value]" => 1);
     $this->drupalPost(NULL, $edit, t('Save'));
-    preg_match('|test-entity/(\d+)/edit|', $this->url, $match);
+    preg_match('|test-entity/manage/(\d+)/edit|', $this->url, $match);
     $id = $match[1];
 
     // Check that the default value was saved.
@@ -1539,7 +1539,7 @@ class FieldFormTestCase extends FieldTestCase {
 
     // Create a new revision.
     $edit = array("{$field_name}[$langcode][0][value]" => 2, 'revision' => TRUE);
-    $this->drupalPost('test-entity/' . $id . '/edit', $edit, t('Save'));
+    $this->drupalPost('test-entity/manage/' . $id . '/edit', $edit, t('Save'));
 
     // Check that the new revision has the expected values.
     $entity = field_test_entity_test_load($id);
@@ -2721,7 +2721,7 @@ class FieldTranslationsTestCase extends FieldTestCase {
     // Create a new revision.
     $langcode = field_valid_language(NULL);
     $edit = array("{$field_name}[$langcode][0][value]" => $entity->{$field_name}[$langcode][0]['value'], 'revision' => TRUE);
-    $this->drupalPost('test-entity/' . $eid . '/edit', $edit, t('Save'));
+    $this->drupalPost('test-entity/manage/' . $eid . '/edit', $edit, t('Save'));
 
     // Check translation revisions.
     $this->checkTranslationRevisions($eid, $eid, $available_languages);

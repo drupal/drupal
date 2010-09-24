@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.612 2010/09/22 03:24:09 dries Exp $
+// $Id: theme.inc,v 1.613 2010/09/24 00:37:41 dries Exp $
 
 /**
  * @file
@@ -2240,7 +2240,6 @@ function template_preprocess_page(&$variables) {
 
   $variables['base_path']         = base_path();
   $variables['front_page']        = url();
-  $variables['breadcrumb']        = theme('breadcrumb', array('breadcrumb' => drupal_get_breadcrumb()));
   $variables['feed_icons']        = drupal_get_feeds();
   $variables['language']          = $GLOBALS['language'];
   $variables['language']->dir     = $GLOBALS['language']->direction ? 'rtl' : 'ltr';
@@ -2252,7 +2251,6 @@ function template_preprocess_page(&$variables) {
   $variables['site_name']         = (theme_get_setting('toggle_name') ? filter_xss_admin(variable_get('site_name', 'Drupal')) : '');
   $variables['site_slogan']       = (theme_get_setting('toggle_slogan') ? filter_xss_admin(variable_get('site_slogan', '')) : '');
   $variables['tabs']              = theme('menu_local_tasks');
-  $variables['title']             = drupal_get_title();
 
   if ($node = menu_get_object()) {
     $variables['node'] = $node;
@@ -2261,6 +2259,28 @@ function template_preprocess_page(&$variables) {
   // Populate the page template suggestions.
   if ($suggestions = theme_get_suggestions(arg(), 'page')) {
     $variables['theme_hook_suggestions'] = $suggestions;
+  }
+}
+
+/**
+ * Process variables for page.tpl.php
+ *
+ * Perform final addition of variables before passing them into the template.
+ * To customize these variables, simply set them in an earlier step.
+ *
+ * @see template_preprocess_page()
+ * @see page.tpl.php
+ */
+function template_process_page(&$variables) {
+  if (!isset($variables['breadcrumb'])) {
+    // Build the breadcrumb last, so as to increase the chance of being able to
+    // re-use the cache of an already rendered menu containing the active link
+    // for the current page.
+    // @see menu_tree_page_data()
+    $variables['breadcrumb'] = theme('breadcrumb', array('breadcrumb' => drupal_get_breadcrumb()));
+  }
+  if (!isset($variables['title'])) {
+    $variables['title'] = drupal_get_title();
   }
 }
 

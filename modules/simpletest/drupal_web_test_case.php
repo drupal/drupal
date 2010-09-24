@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.235 2010/09/19 18:39:18 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.236 2010/09/24 00:37:44 dries Exp $
 
 /**
  * Global variable that holds information about the tests being run.
@@ -2738,7 +2738,14 @@ class DrupalWebTestCase extends DrupalTestCase {
    *   TRUE on pass, FALSE on fail.
    */
   protected function assertTitle($title, $message = '', $group = 'Other') {
-    return $this->assertEqual(current($this->xpath('//title')), $title, $message, $group);
+    $actual = (string) current($this->xpath('//title'));
+    if (!$message) {
+      $message = t('Page title @actual is equal to @expected.', array(
+        '@actual' => var_export($actual, TRUE),
+        '@expected' => var_export($title, TRUE),
+      ));
+    }
+    return $this->assertEqual($actual, $title, $message, $group);
   }
 
   /**
@@ -2754,7 +2761,14 @@ class DrupalWebTestCase extends DrupalTestCase {
    *   TRUE on pass, FALSE on fail.
    */
   protected function assertNoTitle($title, $message = '', $group = 'Other') {
-    return $this->assertNotEqual(current($this->xpath('//title')), $title, $message, $group);
+    $actual = (string) current($this->xpath('//title'));
+    if (!$message) {
+      $message = t('Page title @actual is not equal to @unexpected.', array(
+        '@actual' => var_export($actual, TRUE),
+        '@unexpected' => var_export($title, TRUE),
+      ));
+    }
+    return $this->assertNotEqual($actual, $title, $message, $group);
   }
 
   /**
@@ -3089,6 +3103,24 @@ class DrupalWebTestCase extends DrupalTestCase {
     $curl_code = curl_getinfo($this->curlHandle, CURLINFO_HTTP_CODE);
     $match = is_array($code) ? in_array($curl_code, $code) : $curl_code == $code;
     return $this->assertTrue($match, $message ? $message : t('HTTP response expected !code, actual !curl_code', array('!code' => $code, '!curl_code' => $curl_code)), t('Browser'));
+  }
+
+  /**
+   * Assert the page did not return the specified response code.
+   *
+   * @param $code
+   *   Response code. For example 200 is a successful page request. For a list
+   *   of all codes see http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html.
+   * @param $message
+   *   Message to display.
+   *
+   * @return
+   *   Assertion result.
+   */
+  protected function assertNoResponse($code, $message = '') {
+    $curl_code = curl_getinfo($this->curlHandle, CURLINFO_HTTP_CODE);
+    $match = is_array($code) ? in_array($curl_code, $code) : $curl_code == $code;
+    return $this->assertFalse($match, $message ? $message : t('HTTP response not expected !code, actual !curl_code', array('!code' => $code, '!curl_code' => $curl_code)), t('Browser'));
   }
 
   /**

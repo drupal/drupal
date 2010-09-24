@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.232 2010/09/09 23:01:48 dries Exp $
+// $Id: menu.module,v 1.233 2010/09/24 00:37:43 dries Exp $
 
 /**
  * @file
@@ -95,7 +95,6 @@ function menu_menu() {
     'title callback' => 'menu_overview_title',
     'title arguments' => array(4),
     'access arguments' => array('administer menu'),
-    'type' => MENU_CALLBACK,
     'file' => 'menu.admin.inc',
   );
   $items['admin/structure/menu/manage/%menu/list'] = array(
@@ -126,7 +125,6 @@ function menu_menu() {
     'page callback' => 'menu_delete_menu_page',
     'page arguments' => array(4),
     'access arguments' => array('administer menu'),
-    'type' => MENU_CALLBACK,
     'file' => 'menu.admin.inc',
   );
   $items['admin/structure/menu/item/%menu_link/edit'] = array(
@@ -134,7 +132,6 @@ function menu_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('menu_edit_item', 'edit', 4, NULL),
     'access arguments' => array('administer menu'),
-    'type' => MENU_CALLBACK,
     'file' => 'menu.admin.inc',
   );
   $items['admin/structure/menu/item/%menu_link/reset'] = array(
@@ -142,7 +139,6 @@ function menu_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('menu_reset_item_confirm', 4),
     'access arguments' => array('administer menu'),
-    'type' => MENU_CALLBACK,
     'file' => 'menu.admin.inc',
   );
   $items['admin/structure/menu/item/%menu_link/delete'] = array(
@@ -150,7 +146,6 @@ function menu_menu() {
     'page callback' => 'menu_item_delete_page',
     'page arguments' => array(4),
     'access arguments' => array('administer menu'),
-    'type' => MENU_CALLBACK,
     'file' => 'menu.admin.inc',
   );
   return $items;
@@ -707,7 +702,7 @@ function menu_form_node_type_form_alter(&$form, $form_state) {
   $form['menu']['menu_options'] = array(
     '#type' => 'checkboxes',
     '#title' => t('Available menus'),
-    '#default_value' => variable_get('menu_options_' . $type->type, array('main-menu' => 'main-menu')),
+    '#default_value' => variable_get('menu_options_' . $type->type, array('main-menu')),
     '#options' => $menu_options,
     '#description' => t('The menus available to place links in for this content type.'),
   );

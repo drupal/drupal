@@ -1,5 +1,5 @@
 <?php
-// $Id: trigger.module,v 1.64 2010/07/10 01:44:28 dries Exp $
+// $Id: trigger.module,v 1.65 2010/09/24 00:37:44 dries Exp $
 
 /**
  * @file
@@ -80,7 +80,6 @@ function trigger_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('trigger_unassign'),
     'access arguments' => array('administer actions'),
-    'type' => MENU_CALLBACK,
     'file' => 'trigger.admin.inc',
   );
 

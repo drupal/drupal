@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.962 2010/09/19 18:10:42 dries Exp $
+// $Id: system.module,v 1.963 2010/09/24 00:37:44 dries Exp $
 
 /**
  * @file
@@ -648,7 +648,6 @@ function system_menu() {
   $items['admin/modules/list/confirm'] = array(
     'title' => 'List',
     'access arguments' => array('administer modules'),
-    'type' => MENU_CALLBACK,
   );
   $items['admin/modules/uninstall'] = array(
     'title' => 'Uninstall',
@@ -661,7 +660,6 @@ function system_menu() {
   $items['admin/modules/uninstall/confirm'] = array(
     'title' => 'Uninstall',
     'access arguments' => array('administer modules'),
-    'type' => MENU_CALLBACK,
     'file' => 'system.admin.inc',
   );
 
@@ -688,7 +686,6 @@ function system_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_ip_blocking_delete', 5),
     'access arguments' => array('block IP addresses'),
-    'type' => MENU_CALLBACK,
     'file' => 'system.admin.inc',
   );
 
@@ -829,7 +826,6 @@ function system_menu() {
   $items['admin/config/regional/date-time/types/%/delete'] = array(
     'title' => 'Delete date type',
     'description' => 'Allow users to delete a configured date type.',
-    'type' => MENU_CALLBACK,
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_delete_date_format_type_form', 5),
     'access arguments' => array('administer site configuration'),
@@ -857,7 +853,6 @@ function system_menu() {
   $items['admin/config/regional/date-time/formats/%/edit'] = array(
     'title' => 'Edit date format',
     'description' => 'Allow users to edit a configured date format.',
-    'type' => MENU_CALLBACK,
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_configure_date_formats_form', 5),
     'access arguments' => array('administer site configuration'),
@@ -866,7 +861,6 @@ function system_menu() {
   $items['admin/config/regional/date-time/formats/%/delete'] = array(
     'title' => 'Delete date format',
     'description' => 'Allow users to delete a configured date format.',
-    'type' => MENU_CALLBACK,
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_date_delete_format_form', 5),
     'access arguments' => array('administer site configuration'),
@@ -874,7 +868,6 @@ function system_menu() {
   );
   $items['admin/config/regional/date-time/formats/lookup'] = array(
     'title' => 'Date and time lookup',
-    'type' => MENU_CALLBACK,
     'page callback' => 'system_date_time_lookup',
     'access arguments' => array('administer site configuration'),
     'file' => 'system.admin.inc',
@@ -938,7 +931,6 @@ function system_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_actions_configure'),
     'access arguments' => array('administer actions'),
-    'type' => MENU_CALLBACK,
     'file' => 'system.admin.inc',
   );
   $items['admin/config/system/actions/delete/%actions'] = array(
@@ -947,7 +939,6 @@ function system_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_actions_delete_form', 5),
     'access arguments' => array('administer actions'),
-    'type' => MENU_CALLBACK,
     'file' => 'system.admin.inc',
   );
   $items['admin/config/system/actions/orphan'] = array(

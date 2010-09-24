@@ -1,5 +1,5 @@
 <?php
-// $Id: field_test.entity.inc,v 1.13 2010/09/11 06:03:11 webchick Exp $
+// $Id: field_test.entity.inc,v 1.14 2010/09/24 00:37:42 dries Exp $
 
 /**
  * @file
@@ -392,7 +392,7 @@ function field_test_entity_form_submit($form, &$form_state) {
   drupal_set_message($message);
 
   if ($entity->ftid) {
-    $form_state['redirect'] = 'test-entity/' . $entity->ftid . '/edit';
+    $form_state['redirect'] = 'test-entity/manage/' . $entity->ftid . '/edit';
   }
   else {
     // Error on save.
