@@ -1,5 +1,5 @@
 <?php
-// $Id: field_ui.admin.inc,v 1.67 2010/09/21 21:38:08 webchick Exp $
+// $Id: field_ui.admin.inc,v 1.68 2010/09/24 21:36:22 dries Exp $
 
 /**
  * @file
@@ -304,7 +304,7 @@ function field_ui_field_overview_form($form, &$form_state, $entity_type, $bundle
       t('Widget'),
       array('data' => t('Operations'), 'colspan' => 2),
     ),
-    '#parent_options' => array('' => t('<none>')),
+    '#parent_options' => array(),
     '#regions' => array(
       'main' => array(),
       'add_new' => array('title' => '&nbsp;'),
@@ -335,6 +335,7 @@ function field_ui_field_overview_form($form, &$form_state, $entity_type, $bundle
       'parent_wrapper' => array(
         'parent' => array(
           '#type' => 'select',
+          '#required' => FALSE,
           '#options' => $table['#parent_options'],
           '#attributes' => array('class' => array('field-parent')),
           '#parents' => array('fields', $name, 'parent'),
@@ -401,6 +402,7 @@ function field_ui_field_overview_form($form, &$form_state, $entity_type, $bundle
       'parent_wrapper' => array(
         'parent' => array(
           '#type' => 'select',
+          '#required' => FALSE,
           '#options' => $table['#parent_options'],
           '#attributes' => array('class' => array('field-parent')),
           '#parents' => array('fields', $name, 'parent'),
@@ -432,8 +434,6 @@ function field_ui_field_overview_form($form, &$form_state, $entity_type, $bundle
   $field_type_options = field_ui_field_type_options();
   $widget_type_options = field_ui_widget_type_options(NULL, TRUE);
   if ($field_type_options && $widget_type_options) {
-    array_unshift($field_type_options, t('- Select a field type -'));
-    array_unshift($widget_type_options, t('- Select a widget -'));
     $name = '_add_new_field';
     $table[$name] = array(
       '#attributes' => array('class' => array('draggable', 'tabledrag-leaf', 'add-new')),
@@ -458,6 +458,7 @@ function field_ui_field_overview_form($form, &$form_state, $entity_type, $bundle
       'parent_wrapper' => array(
         'parent' => array(
           '#type' => 'select',
+          '#required' => FALSE,
           '#options' => $table['#parent_options'],
           '#attributes' => array('class' => array('field-parent')),
           '#prefix' => '<div class="add-new-placeholder">&nbsp;</div>',
@@ -481,14 +482,18 @@ function field_ui_field_overview_form($form, &$form_state, $entity_type, $bundle
       ),
       'type' => array(
         '#type' => 'select',
+        '#required' => FALSE,
         '#options' => $field_type_options,
+        '#empty_option' => t('- Select a field type -'),
         '#description' => t('Type of data to store.'),
         '#attributes' => array('class' => array('field-type-select')),
         '#prefix' => '<div class="add-new-placeholder">&nbsp;</div>',
       ),
       'widget_type' => array(
         '#type' => 'select',
+        '#required' => FALSE,
         '#options' => $widget_type_options,
+        '#empty_option' => t('- Select a widget -'),
         '#description' => t('Form element to edit the data.'),
         '#attributes' => array('class' => array('widget-type-select')),
         '#cell_attributes' => array('colspan' => 3),
@@ -500,7 +505,6 @@ function field_ui_field_overview_form($form, &$form_state, $entity_type, $bundle
   // Additional row: add existing field.
   $existing_field_options = field_ui_existing_field_options($entity_type, $bundle);
   if ($existing_field_options && $widget_type_options) {
-    array_unshift($existing_field_options, t('- Select an existing field -'));
     $name = '_add_existing_field';
     $table[$name] = array(
       '#attributes' => array('class' => array('draggable', 'tabledrag-leaf', 'add-new')),
@@ -526,6 +530,7 @@ function field_ui_field_overview_form($form, &$form_state, $entity_type, $bundle
       'parent_wrapper' => array(
         'parent' => array(
           '#type' => 'select',
+          '#required' => FALSE,
           '#options' => $table['#parent_options'],
           '#attributes' => array('class' => array('field-parent')),
           '#prefix' => '<div class="add-new-placeholder">&nbsp;</div>',
@@ -539,7 +544,9 @@ function field_ui_field_overview_form($form, &$form_state, $entity_type, $bundle
       ),
       'field_name' => array(
         '#type' => 'select',
+        '#required' => FALSE,
         '#options' => $existing_field_options,
+        '#empty_option' => t('- Select an existing field -'),
         '#description' => t('Field to share'),
         '#attributes' => array('class' => array('field-select')),
         '#cell_attributes' => array('colspan' => 2),
@@ -547,7 +554,9 @@ function field_ui_field_overview_form($form, &$form_state, $entity_type, $bundle
       ),
       'widget_type' => array(
         '#type' => 'select',
+        '#required' => FALSE,
         '#options' => $widget_type_options,
+        '#empty_option' => t('- Select a widget -'),
         '#description' => t('Form element to edit the data.'),
         '#attributes' => array('class' => array('widget-type-select')),
         '#cell_attributes' => array('colspan' => 3),
@@ -844,7 +853,7 @@ function field_ui_display_overview_form($form, &$form_state, $entity_type, $bund
       'visible' => array('message' => t('No field is displayed.')),
       'hidden' => array('title' => t('Hidden'), 'message' => t('No field is hidden.')),
     ),
-    '#parent_options' => array('' => t('<none>')),
+    '#parent_options' => array(),
     '#attributes' => array(
       'class' => array('field-ui-overview'),
       'id' => 'field-display-overview',
@@ -888,8 +897,8 @@ function field_ui_display_overview_form($form, &$form_state, $entity_type, $bund
       'parent_wrapper' => array(
         'parent' => array(
           '#type' => 'select',
+          '#required' => FALSE,
           '#options' => $table['#parent_options'],
-          '#default_value' => '',
           '#attributes' => array('class' => array('field-parent')),
           '#parents' => array('fields', $name, 'parent'),
         ),
@@ -1042,8 +1051,8 @@ function field_ui_display_overview_form($form, &$form_state, $entity_type, $bund
       'parent_wrapper' => array(
         'parent' => array(
           '#type' => 'select',
+          '#required' => FALSE,
           '#options' => $table['#parent_options'],
-          '#default_value' => '',
           '#attributes' => array('class' => array('field-parent')),
           '#parents' => array('fields', $name, 'parent'),
         ),

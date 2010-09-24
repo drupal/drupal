@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.admin.inc,v 1.84 2010/09/07 22:12:05 dries Exp $
+// $Id: menu.admin.inc,v 1.85 2010/09/24 21:36:22 dries Exp $
 
 /**
  * @file
@@ -680,22 +680,24 @@ function menu_configure() {
   $menu_options = menu_get_menus();
 
   $main = variable_get('menu_main_links_source', 'main-menu');
-  $main_options = array_merge($menu_options, array('' => t('No Main links')));
   $form['menu_main_links_source'] = array(
     '#type' => 'select',
     '#title' => t('Source for the Main links'),
+    '#required' => FALSE,
     '#default_value' => variable_get('menu_main_links_source', 'main-menu'),
-    '#options' => $main_options,
+    '#empty_option' => t('No Main links'),
+    '#options' => $menu_options,
     '#tree' => FALSE,
     '#description' => t('Select what should be displayed as the Main links (typically at the top of the page).'),
   );
 
-  $secondary_options = array_merge($menu_options, array('' => t('No Secondary links')));
   $form['menu_secondary_links_source'] = array(
     '#type' => 'select',
     '#title' => t('Source for the Secondary links'),
+    '#required' => FALSE,
     '#default_value' => variable_get('menu_secondary_links_source', 'user-menu'),
-    '#options' => $secondary_options,
+    '#empty_option' => t('No Secondary links'),
+    '#options' => $menu_options,
     '#tree' => FALSE,
     '#description' => t("Select the source for the Secondary links. An advanced option allows you to use the same source for both Main links (currently %main) and Secondary links: if your source menu has two levels of hierarchy, the top level menu links will appear in the Main links, and the children of the active link will appear in the Secondary links." , array('%main' => $main_options[$main])),
   );

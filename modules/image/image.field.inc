@@ -1,5 +1,5 @@
 <?php
-// $Id: image.field.inc,v 1.28 2010/09/22 03:24:09 dries Exp $
+// $Id: image.field.inc,v 1.29 2010/09/24 21:36:22 dries Exp $
 
 /**
  * @file
@@ -269,7 +269,8 @@ function image_field_widget_settings_form($field, $instance) {
   $form['preview_image_style'] = array(
     '#title' => t('Preview image style'),
     '#type' => 'select',
-    '#options' => array('' => '<' . t('no preview') . '>') + image_style_options(FALSE),
+    '#required' => FALSE,
+    '#options' => image_style_options(FALSE),
     '#default_value' => $settings['preview_image_style'],
     '#description' => t('The preview image will be shown while editing the content.'),
     '#weight' => 15,
@@ -418,22 +419,24 @@ function image_field_formatter_settings_form($field, $instance, $view_mode, $for
   $display = $instance['display'][$view_mode];
   $settings = $display['settings'];
 
-  $image_styles = array('' => t('None (original image)')) + image_style_options(FALSE);
+  $image_styles = image_style_options(FALSE);
   $form['image_style'] = array(
     '#title' => t('Image style'),
     '#type' => 'select',
+    '#required' => FALSE,
     '#default_value' => $settings['image_style'],
+    '#empty_option' => t('None (original image)'),
     '#options' => $image_styles,
   );
 
   $link_types = array(
-    '' => t('<none>'),
     'content' => t('Content'),
     'file' => t('File'),
   );
   $form['image_link'] = array(
     '#title' => t('Link image to'),
     '#type' => 'select',
+    '#required' => FALSE,
     '#default_value' => $settings['image_link'],
     '#options' => $link_types,
   );

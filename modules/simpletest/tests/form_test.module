@@ -1,5 +1,5 @@
 <?php
-// $Id: form_test.module,v 1.48 2010/08/27 11:54:32 webchick Exp $
+// $Id: form_test.module,v 1.49 2010/09/24 21:36:22 dries Exp $
 
 /**
  * @file
@@ -91,6 +91,12 @@ function form_test_menu() {
     'page arguments' => array('_form_test_checkbox'),
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
+  );
+  $items['form-test/select'] = array(
+    'title' => t('Select'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('form_test_select'),
+    'access callback' => TRUE,
   );
 
   $items['form-test/disabled-elements'] = array(
@@ -781,6 +787,94 @@ function _form_test_checkbox($form, &$form_state) {
  * Return the form values via JSON.
  */
 function _form_test_checkbox_submit($form, &$form_state) {
+  drupal_json_output($form_state['values']);
+  exit();
+}
+
+/**
+ * Builds a form to test #type 'select' validation.
+ */
+function form_test_select($form, &$form_state) {
+  $base = array(
+    '#type' => 'select',
+    '#options' => drupal_map_assoc(array('one', 'two', 'three')),
+  );
+
+  $form['select'] = $base + array(
+    '#title' => '#default_value one',
+    '#default_value' => 'one',
+  );
+  $form['empty_value'] = $base + array(
+    '#title' => '#default_value one, #empty_value 0',
+    '#default_value' => 'one',
+    '#empty_value' => 0,
+  );
+  $form['empty_value_one'] = $base + array(
+    '#title' => '#default_value = #empty_value',
+    '#default_value' => 'one',
+    '#empty_value' => 'one',
+  );
+
+  $form['no_default'] = $base + array(
+    '#title' => 'No #default_value',
+  );
+  $form['no_default_optional'] = $base + array(
+    '#title' => 'No #default_value, not #required',
+    '#required' => FALSE,
+    '#description' => 'Should result in an empty string (default of #empty_value), because it is optional.',
+  );
+
+  $form['no_default_empty_option'] = $base + array(
+    '#title' => 'No #default_value, #empty_option',
+    '#empty_option' => '- Choose -',
+  );
+  $form['no_default_empty_option_optional'] = $base + array(
+    '#title' => 'No #default_value, not #required, #empty_option',
+    '#required' => FALSE,
+    '#empty_option' => '- Dismiss -',
+    '#description' => 'Should result in an empty string (default of #empty_value), because it is optional.',
+  );
+
+  $form['no_default_empty_value'] = $base + array(
+    '#title' => 'No #default_value, #empty_value 0',
+    '#empty_value' => 0,
+    '#description' => 'Should never result in 0.',
+  );
+  $form['no_default_empty_value_one'] = $base + array(
+    '#title' => 'No #default_value, #empty_value one',
+    '#empty_value' => 'one',
+    '#description' => 'A mistakenly assigned #empty_value contained in #options should not be valid.',
+  );
+  $form['no_default_empty_value_optional'] = $base + array(
+    '#title' => 'No #default_value, not #required, #empty_value 0',
+    '#required' => FALSE,
+    '#empty_value' => 0,
+    '#description' => 'Should result in 0, because it is optional.',
+  );
+
+  $form['multiple'] = $base + array(
+    '#title' => '#multiple, #default_value two',
+    '#default_value' => array('two'),
+    '#multiple' => TRUE,
+  );
+  $form['multiple_no_default'] = $base + array(
+    '#title' => '#multiple, no #default_value',
+    '#multiple' => TRUE,
+  );
+  $form['multiple_no_default_required'] = $base + array(
+    '#title' => '#multiple, #required, no #default_value',
+    '#required' => TRUE,
+    '#multiple' => TRUE,
+  );
+
+  $form['submit'] = array('#type' => 'submit', '#value' => 'Submit');
+  return $form;
+}
+
+/**
+ * Form submit handler for form_test_select().
+ */
+function form_test_select_submit($form, &$form_state) {
   drupal_json_output($form_state['values']);
   exit();
 }

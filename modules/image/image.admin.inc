@@ -1,5 +1,5 @@
 <?php
-// $Id: image.admin.inc,v 1.22 2010/09/22 03:24:09 dries Exp $
+// $Id: image.admin.inc,v 1.23 2010/09/24 21:36:22 dries Exp $
 
 /**
  * @file
@@ -116,7 +116,7 @@ function image_style_form($form, &$form_state, $style) {
   }
 
   // Build the new image effect addition form and add it to the effect list.
-  $new_effect_options = array('' => t('Select a new effect'));
+  $new_effect_options = array();
   foreach (image_effect_definitions() as $effect => $definition) {
     $new_effect_options[$effect] = check_plain($definition['label']);
   }
@@ -127,7 +127,9 @@ function image_style_form($form, &$form_state, $style) {
   );
   $form['effects']['new']['new'] = array(
     '#type' => 'select',
+    '#required' => FALSE,
     '#options' => $new_effect_options,
+    '#empty_option' => t('Select a new effect'),
   );
   $form['effects']['new']['weight'] = array(
     '#type' => 'weight',
@@ -291,11 +293,12 @@ function image_style_delete_form($form, $form_state, $style) {
   $form_state['image_style'] = $style;
 
   $replacement_styles = array_diff_key(image_style_options(), array($style['name'] => ''));
-  $replacement_styles[''] = t('No replacement, just delete');
   $form['replacement'] = array(
     '#title' => t('Replacement style'),
     '#type' => 'select',
+    '#required' => FALSE,
     '#options' => $replacement_styles,
+    '#empty_option' => t('No replacement, just delete'),
   );
 
   return confirm_form(

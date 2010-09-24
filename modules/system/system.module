@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.963 2010/09/24 00:37:44 dries Exp $
+// $Id: system.module,v 1.964 2010/09/24 21:36:22 dries Exp $
 
 /**
  * @file
@@ -399,9 +399,13 @@ function system_element_info() {
   );
   $types['select'] = array(
     '#input' => TRUE,
-    '#size' => 0,
+    // In order to be able to determine whether a select list needs an empty
+    // default option, #required has to be NULL by default, as form_builder()
+    // preemptively sets #required to FALSE for all elements.
+    // @see form_process_select()
+    '#required' => NULL,
     '#multiple' => FALSE,
-    '#process' => array('ajax_process_form'),
+    '#process' => array('form_process_select', 'ajax_process_form'),
     '#theme' => 'select',
     '#theme_wrappers' => array('form_element'),
   );

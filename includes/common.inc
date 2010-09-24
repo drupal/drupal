@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1225 2010/09/24 02:48:35 dries Exp $
+// $Id: common.inc,v 1.1226 2010/09/24 21:36:22 dries Exp $
 
 /**
  * @file
@@ -5619,7 +5619,8 @@ function element_set_attributes(array &$element, array $map) {
     if (is_int($property)) {
       $property = '#' . $attribute;
     }
-    if (isset($element[$property])) {
+    // Do not overwrite already existing attributes.
+    if (isset($element[$property]) && !isset($element['#attributes'][$attribute])) {
       $element['#attributes'][$attribute] = $element[$property];
     }
   }
