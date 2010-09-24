@@ -2060,13 +2060,15 @@ function system_update_7016() {
  * Change the theme setting 'toggle_node_info' into a per content type variable.
  */
 function system_update_7017() {
-  $types = node_type_get_types();
-  if (count($types)) {
-    foreach ($types as $type) {
-      $node_info = theme_get_setting('toggle_node_info_' . $type->type);
-      if ($node_info !== NULL) {
-        variable_set('node_submitted_' . $type->type, $node_info);
-      }
+  // Get the global theme settings.
+  $settings = variable_get('theme_settings', array());
+  // Get the settings of the default theme.
+  $settings = array_merge($settings, variable_get('theme_' . variable_get('theme_default', 'garland') . '_settings', array()));
+
+  $types = _update_7000_node_get_types();
+  foreach ($types as $type) {
+    if (isset($settings['toggle_node_info_' . $type->type])) {
+      variable_set('node_submitted_' . $type->type, $settings['toggle_node_info_' . $type->type]);
     }
   }
 
