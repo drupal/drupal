@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.tpl.php,v 1.2 2010/09/23 19:47:31 dries Exp $
+// $Id: comment.tpl.php,v 1.3 2010/09/24 01:36:30 webchick Exp $
 
 /**
  * @file
@@ -69,7 +69,9 @@
       <p class="comment-time">
         <?php print $created; ?>
       </p>
-      <?php print $permalink; ?>
+      <p class="comment-permalink">
+        <?php print $permalink; ?>
+      </p>
     </div>
   </div>
 
