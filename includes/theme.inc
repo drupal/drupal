@@ -870,6 +870,7 @@ function theme($hook, $variables = array()) {
   }
 
   // Generate the output using either a function or a template.
+  $output = '';
   if (isset($info['function'])) {
     if (function_exists($info['function'])) {
       $output = $info['function']($variables);
