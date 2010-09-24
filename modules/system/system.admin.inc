@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.307 2010/09/23 17:53:09 dries Exp $
+// $Id: system.admin.inc,v 1.308 2010/09/24 02:10:06 dries Exp $
 
 /**
  * @file
@@ -639,7 +639,7 @@ function system_theme_settings($form, &$form_state, $key = '') {
     }
 
     // Restore the original current theme.
-    if (!is_null($default_theme)) {
+    if (isset($default_theme)) {
       $GLOBALS['theme_key'] = $default_theme;
     }
     else {
