@@ -113,11 +113,6 @@ function block_menu() {
     'access arguments' => array('administer blocks'),
     'file' => 'block.admin.inc',
   );
-  $items['admin/structure/block/list'] = array(
-    'title' => 'List',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-    'weight' => -10,
-  );
   $items['admin/structure/block/manage/%/%'] = array(
     'title' => 'Configure block',
     'page callback' => 'drupal_get_form',
@@ -297,7 +292,7 @@ function block_page_build(&$page) {
       $page['page_top']['backlink'] = array(
         '#type' => 'link',
         '#title' => t('Exit block region demonstration'),
-        '#href' => 'admin/structure/block/list' . (variable_get('theme_default', 'garland') == $theme ? '' : '/' . $theme),
+        '#href' => 'admin/structure/block' . (variable_get('theme_default', 'bartik') == $theme ? '' : '/list/' . $theme),
         // Add the "overlay-restore" class to indicate this link should restore
         // the context in which the region demonstration page was opened.
         '#options' => array('attributes' => array('class' => array('block-demo-backlink', 'overlay-restore'))),
