@@ -762,7 +762,7 @@ function _field_write_instance($instance, $update = FALSE) {
   // If no weight specified, make sure the field sinks at the bottom.
   if (!isset($instance['widget']['weight'])) {
     $max_weight = field_info_max_weight($instance['entity_type'], $instance['bundle'], 'form');
-    $instance['widget']['weight'] = !is_null($max_weight) ? $max_weight + 1 : 0;
+    $instance['widget']['weight'] = isset($max_weight) ? $max_weight + 1 : 0;
   }
   // Check widget module.
   $widget_type = field_info_widget_types($instance['widget']['type']);
@@ -788,7 +788,7 @@ function _field_write_instance($instance, $update = FALSE) {
     // If no weight specified, make sure the field sinks at the bottom.
     if (!isset($display['weight'])) {
       $max_weight = field_info_max_weight($instance['entity_type'], $instance['bundle'], $view_mode);
-      $display['weight'] = !is_null($max_weight) ? $max_weight + 1 : 0;
+      $display['weight'] = isset($max_weight) ? $max_weight + 1 : 0;
     }
     $instance['display'][$view_mode] = $display;
   }

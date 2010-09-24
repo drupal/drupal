@@ -639,7 +639,7 @@ function system_theme_settings($form, &$form_state, $key = '') {
     }
 
     // Restore the original current theme.
-    if (!is_null($default_theme)) {
+    if (isset($default_theme)) {
       $GLOBALS['theme_key'] = $default_theme;
     }
     else {

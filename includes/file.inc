@@ -1296,7 +1296,7 @@ function file_space_used($uid = NULL, $status = FILE_STATUS_PERMANENT) {
   $query = db_select('file_managed', 'f');
   $query->condition('f.status', $status);
   $query->addExpression('SUM(f.filesize)', 'filesize');
-  if (!is_null($uid)) {
+  if (isset($uid)) {
     $query->condition('f.uid', $uid);
   }
   return $query->execute()->fetchField();
