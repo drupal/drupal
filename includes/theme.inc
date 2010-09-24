@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.613 2010/09/24 00:37:41 dries Exp $
+// $Id: theme.inc,v 1.614 2010/09/24 21:20:08 dries Exp $
 
 /**
  * @file
@@ -870,6 +870,7 @@ function theme($hook, $variables = array()) {
   }
 
   // Generate the output using either a function or a template.
+  $output = '';
   if (isset($info['function'])) {
     if (function_exists($info['function'])) {
       $output = $info['function']($variables);
