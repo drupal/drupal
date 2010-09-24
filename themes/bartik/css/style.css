@@ -589,7 +589,7 @@ h1#page-title,
   font-size: 70%;
   color: #68696b;
 }
-#comments .permalink {
+#comments .submitted .comment-permalink {
   font-size: 80%;
   text-transform: lowercase;
 }

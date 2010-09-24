@@ -69,7 +69,9 @@
       <p class="comment-time">
         <?php print $created; ?>
       </p>
-      <?php print $permalink; ?>
+      <p class="comment-permalink">
+        <?php print $permalink; ?>
+      </p>
     </div>
   </div>
 
