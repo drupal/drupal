@@ -52,10 +52,10 @@ function field_test_menu() {
       'type' => MENU_NORMAL_ITEM,
     );
   }
-  $items['test-entity/%field_test_entity_test/edit'] = array(
+  $items['test-entity/manage/%field_test_entity_test/edit'] = array(
     'title' => 'Edit test entity',
     'page callback' => 'field_test_entity_edit',
-    'page arguments' => array(1),
+    'page arguments' => array(2),
     'access arguments' => array('administer field_test content'),
     'type' => MENU_NORMAL_ITEM,
   );

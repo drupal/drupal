@@ -77,7 +77,7 @@ function menu_test_menu() {
     'access arguments' => array('access content'),
   );
   $items['menu-test/hidden'] = array(
-    'title' => 'Menu test parent',
+    'title' => 'Hidden test root',
     'page callback' => 'node_page_default',
     'access arguments' => array('access content'),
   );
@@ -110,7 +110,6 @@ function menu_test_menu() {
     'title' => 'Customize menu',
     'page callback' => 'node_page_default',
     'access arguments' => array('access content'),
-    'type' => MENU_CALLBACK,
   );
   $items['menu-test/hidden/menu/manage/%menu/list'] = array(
     'title' => 'List links',
@@ -135,7 +134,6 @@ function menu_test_menu() {
     'title' => 'Delete menu',
     'page callback' => 'node_page_default',
     'access arguments' => array('access content'),
-    'type' => MENU_CALLBACK,
   );
 
   // Hidden tests; two dynamic arguments.
@@ -172,6 +170,41 @@ function menu_test_menu() {
     'type' => MENU_LOCAL_TASK,
     'context' => MENU_CONTEXT_NONE,
   );
+
+  // Breadcrumbs tests.
+  // @see MenuBreadcrumbTestCase
+  $base = array(
+    'page callback' => 'menu_test_callback',
+    'access callback' => TRUE,
+  );
+  // Local tasks: Second level below default local task.
+  $items['menu-test/breadcrumb/tasks'] = array(
+    'title' => 'Breadcrumbs test: Local tasks',
+  ) + $base;
+  $items['menu-test/breadcrumb/tasks/first'] = array(
+    'title' => 'First',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+  ) + $base;
+  $items['menu-test/breadcrumb/tasks/second'] = array(
+    'title' => 'Second',
+    'type' => MENU_LOCAL_TASK,
+  ) + $base;
+  $items['menu-test/breadcrumb/tasks/first/first'] = array(
+    'title' => 'First first',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+  ) + $base;
+  $items['menu-test/breadcrumb/tasks/first/second'] = array(
+    'title' => 'First second',
+    'type' => MENU_LOCAL_TASK,
+  ) + $base;
+  $items['menu-test/breadcrumb/tasks/second/first'] = array(
+    'title' => 'Second first',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+  ) + $base;
+  $items['menu-test/breadcrumb/tasks/second/second'] = array(
+    'title' => 'Second second',
+    'type' => MENU_LOCAL_TASK,
+  ) + $base;
 
   // File inheritance tests. This menu item should inherit the page callback
   // system_admin_menu_block_page() and therefore render its children as links

@@ -53,7 +53,6 @@ function dashboard_menu() {
     'page callback' => 'dashboard_admin',
     'page arguments' => array(TRUE),
     'access arguments' => array('access dashboard'),
-    'type' => MENU_CALLBACK,
   );
   $items['admin/dashboard/drawer'] = array(
     'page callback' => 'dashboard_show_disabled',

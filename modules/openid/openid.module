@@ -32,7 +32,6 @@ function openid_menu() {
     'page arguments' => array('openid_user_delete_form', 1),
     'access callback' => 'user_edit_access',
     'access arguments' => array(1),
-    'type' => MENU_CALLBACK,
     'file' => 'openid.pages.inc',
   );
   return $items;

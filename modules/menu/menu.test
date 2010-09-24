@@ -112,14 +112,14 @@ class MenuTestCase extends DrupalWebTestCase {
 
     // Assert the new menu.
     $this->drupalGet('admin/structure/menu/manage/' . $menu_name . '/edit');
-    $this->assertText($title, t('Custom menu was added.'));
+    $this->assertRaw($title, t('Custom menu was added.'));
 
     // Edit the menu.
     $new_title = $this->randomName(16);
     $menu['title'] = $new_title;
     menu_save($menu);
     $this->drupalGet('admin/structure/menu/manage/' . $menu_name . '/edit');
-    $this->assertText($new_title, t('Custom menu was edited.'));
+    $this->assertRaw($new_title, t('Custom menu was edited.'));
   }
 
   /**

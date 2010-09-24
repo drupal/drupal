@@ -1522,7 +1522,12 @@ function user_menu() {
     'title' => 'User account',
     'page callback' => 'user_page',
     'access callback' => TRUE,
-    'type' => MENU_CALLBACK,
+    // Edge-case: No menu links should be auto-generated for this and below
+    // items, which makes it a MENU_CALLBACK. However, this item's title is
+    // expected to appear on user login, register, and password pages, so we
+    // need to use MENU_VISIBLE_IN_BREADCRUMB to make
+    // menu_get_active_breadcrumb() account for it.
+    'type' => MENU_VISIBLE_IN_BREADCRUMB,
     'file' => 'user.pages.inc',
   );
 
@@ -1617,7 +1622,6 @@ function user_menu() {
     'page arguments' => array('user_admin_role', 5),
     'access callback' => 'user_role_edit_access',
     'access arguments' => array(5),
-    'type' => MENU_CALLBACK,
   );
   $items['admin/people/permissions/roles/delete/%user_role'] = array(
     'title' => 'Delete role',
@@ -1625,7 +1629,6 @@ function user_menu() {
     'page arguments' => array('user_admin_role_delete_confirm', 5),
     'access callback' => 'user_role_edit_access',
     'access arguments' => array(5),
-    'type' => MENU_CALLBACK,
     'file' => 'user.admin.inc',
   );
 
@@ -1688,7 +1691,6 @@ function user_menu() {
     'page arguments' => array('user_cancel_confirm_form', 1),
     'access callback' => 'user_cancel_access',
     'access arguments' => array(1),
-    'type' => MENU_CALLBACK,
     'file' => 'user.pages.inc',
   );
 
@@ -1698,7 +1700,6 @@ function user_menu() {
     'page arguments' => array(1, 4, 5),
     'access callback' => 'user_cancel_access',
     'access arguments' => array(1),
-    'type' => MENU_CALLBACK,
     'file' => 'user.pages.inc',
   );
 

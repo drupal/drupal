@@ -80,7 +80,6 @@ function trigger_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('trigger_unassign'),
     'access arguments' => array('administer actions'),
-    'type' => MENU_CALLBACK,
     'file' => 'trigger.admin.inc',
   );
 

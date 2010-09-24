@@ -56,7 +56,6 @@ function simpletest_menu() {
     'page arguments' => array('simpletest_result_form', 5),
     'description' => 'View result of tests.',
     'access arguments' => array('administer unit tests'),
-    'type' => MENU_CALLBACK,
     'file' => 'simpletest.pages.inc',
   );
   return $items;

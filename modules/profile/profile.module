@@ -99,7 +99,6 @@ function profile_menu() {
     'page arguments' => array('profile_field_form'),
     'access arguments' => array('administer users'),
     'file' => 'profile.admin.inc',
-    'type' => MENU_CALLBACK,
   );
   $items['admin/config/people/profile/autocomplete'] = array(
     'title' => 'Profile category autocomplete',
@@ -114,7 +113,6 @@ function profile_menu() {
     'page arguments' => array('profile_field_form'),
     'access arguments' => array('administer users'),
     'file' => 'profile.admin.inc',
-    'type' => MENU_CALLBACK,
   );
   $items['admin/config/people/profile/delete'] = array(
     'title' => 'Delete field',
@@ -122,7 +120,6 @@ function profile_menu() {
     'page arguments' => array('profile_field_delete'),
     'access arguments' => array('administer users'),
     'file' => 'profile.admin.inc',
-    'type' => MENU_CALLBACK,
   );
   $items['profile/autocomplete'] = array(
     'title' => 'Profile autocomplete',

@@ -114,7 +114,6 @@ function filter_menu() {
     'file' => 'filter.admin.inc',
   );
   $items['admin/config/content/formats/%filter_format'] = array(
-    'type' => MENU_CALLBACK,
     'title callback' => 'filter_admin_format_title',
     'title arguments' => array(4),
     'page callback' => 'filter_admin_format_page',
@@ -128,7 +127,6 @@ function filter_menu() {
     'page arguments' => array('filter_admin_disable', 4),
     'access callback' => '_filter_disable_format_access',
     'access arguments' => array(4),
-    'type' => MENU_CALLBACK,
     'file' => 'filter.admin.inc',
   );
   return $items;

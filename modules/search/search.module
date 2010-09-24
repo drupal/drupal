@@ -182,7 +182,6 @@ function search_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('search_reindex_confirm'),
     'access arguments' => array('administer search'),
-    'type' => MENU_CALLBACK,
     'file' => 'search.admin.inc',
   );
 

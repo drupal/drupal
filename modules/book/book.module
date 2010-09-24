@@ -182,7 +182,6 @@ function book_menu() {
     'access callback' => '_book_outline_remove_access',
     'access arguments' => array(1),
     'theme callback' => '_node_custom_theme',
-    'type' => MENU_CALLBACK,
     'file' => 'book.pages.inc',
   );
 

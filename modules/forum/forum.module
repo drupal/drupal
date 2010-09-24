@@ -147,7 +147,6 @@ function forum_menu() {
     'page callback' => 'forum_form_main',
     'page arguments' => array('container', 5),
     'access arguments' => array('administer forums'),
-    'type' => MENU_CALLBACK,
     'file' => 'forum.admin.inc',
   );
   $items['admin/structure/forum/edit/forum/%taxonomy_term'] = array(
@@ -155,7 +154,6 @@ function forum_menu() {
     'page callback' => 'forum_form_main',
     'page arguments' => array('forum', 5),
     'access arguments' => array('administer forums'),
-    'type' => MENU_CALLBACK,
     'file' => 'forum.admin.inc',
   );
   return $items;

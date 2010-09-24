@@ -91,7 +91,6 @@ function shortcut_menu() {
     'title arguments' => array(4),
     'access callback' => 'shortcut_set_edit_access',
     'access arguments' => array(4),
-    'type' => MENU_CALLBACK,
     'file' => 'shortcut.admin.inc',
   );
   $items['admin/config/user-interface/shortcut/%shortcut_set/links'] = array(
@@ -114,7 +113,6 @@ function shortcut_menu() {
     'page arguments' => array('shortcut_set_delete_form', 4),
     'access callback' => 'shortcut_set_delete_access',
     'access arguments' => array(4),
-    'type' => MENU_CALLBACK,
     'file' => 'shortcut.admin.inc',
   );
   $items['admin/config/user-interface/shortcut/%shortcut_set/add-link'] = array(
@@ -141,7 +139,6 @@ function shortcut_menu() {
     'page arguments' => array('shortcut_link_edit', 5),
     'access callback' => 'shortcut_link_access',
     'access arguments' => array(5),
-    'type' => MENU_CALLBACK,
     'file' => 'shortcut.admin.inc',
   );
   $items['admin/config/user-interface/shortcut/link/%menu_link/delete'] = array(
@@ -150,7 +147,6 @@ function shortcut_menu() {
     'page arguments' => array('shortcut_link_delete', 5),
     'access callback' => 'shortcut_link_access',
     'access arguments' => array(5),
-    'type' => MENU_CALLBACK,
     'file' => 'shortcut.admin.inc',
   );
   $items['user/%user/shortcuts'] = array(

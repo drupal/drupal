@@ -287,7 +287,6 @@ function taxonomy_menu() {
     'page callback' => 'taxonomy_term_page',
     'page arguments' => array(2),
     'access arguments' => array('access content'),
-    'type' => MENU_CALLBACK,
     'file' => 'taxonomy.pages.inc',
   );
   $items['taxonomy/term/%taxonomy_term/view'] = array(

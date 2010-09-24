@@ -236,13 +236,16 @@ class SearchMatchTestCase extends DrupalWebTestCase {
   }
 }
 
-class SearchBikeShed extends DrupalWebTestCase {
+/**
+ * Tests the bike shed text on no results page, and text on the search page.
+ */
+class SearchPageText extends DrupalWebTestCase {
   protected $searching_user;
 
   public static function getInfo() {
     return array(
-      'name' => 'Bike shed',
-      'description' => 'Tests the bike shed text on the no results page.',
+      'name' => 'Search page text',
+      'description' => 'Tests the bike shed text on the no results page, and various other text on search pages.',
       'group' => 'Search'
     );
   }
@@ -251,18 +254,31 @@ class SearchBikeShed extends DrupalWebTestCase {
     parent::setUp('search');
 
     // Create user.
-    $this->searching_user = $this->drupalCreateUser(array('search content'));
+    $this->searching_user = $this->drupalCreateUser(array('search content', 'access user profiles'));
   }
 
-  function testFailedSearch() {
+  /**
+   * Tests the failed search text, and various other text on the search page.
+   */
+  function testSearchText() {
     $this->drupalLogin($this->searching_user);
     $this->drupalGet('search/node');
     $this->assertText(t('Enter your keywords'));
+    $this->assertText(t('Search'));
+    $title = t('Search') . ' | Drupal';
+    $this->assertTitle($title, 'Search page title is correct');
 
     $edit = array();
     $edit['keys'] = 'bike shed ' . $this->randomName();
     $this->drupalPost('search/node', $edit, t('Search'));
     $this->assertText(t('Consider loosening your query with OR. bike OR shed will often show more results than bike shed.'), t('Help text is displayed when search returns no results.'));
+    $this->assertText(t('Search'));
+    $this->assertTitle($title, 'Search page title is correct');
+
+    $edit['keys'] = $this->searching_user->name;
+    $this->drupalPost('search/user', $edit, t('Search'));
+    $this->assertText(t('Search'));
+    $this->assertTitle($title, 'Search page title is correct');
   }
 }
 

@@ -1844,12 +1844,10 @@ function node_menu() {
     'title' => 'Delete',
     'page arguments' => array('node_type_delete_confirm', 4),
     'access arguments' => array('administer content types'),
-    'type' => MENU_CALLBACK,
     'file' => 'content_types.inc',
   );
 
   $items['node'] = array(
-    'title' => 'Content',
     'page callback' => 'node_page_default',
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
@@ -1895,7 +1893,6 @@ function node_menu() {
     'page arguments' => array(1),
     'access callback' => 'node_access',
     'access arguments' => array('view', 1),
-    'type' => MENU_CALLBACK,
   );
   $items['node/%node/view'] = array(
     'title' => 'View',
@@ -1943,7 +1940,6 @@ function node_menu() {
     'page arguments' => array(1, TRUE),
     'access callback' => '_node_revision_access',
     'access arguments' => array(1),
-    'type' => MENU_CALLBACK,
   );
   $items['node/%node/revisions/%/revert'] = array(
     'title' => 'Revert to earlier revision',
@@ -1952,7 +1948,6 @@ function node_menu() {
     'page arguments' => array('node_revision_revert_confirm', 1),
     'access callback' => '_node_revision_access',
     'access arguments' => array(1, 'update'),
-    'type' => MENU_CALLBACK,
     'file' => 'node.pages.inc',
   );
   $items['node/%node/revisions/%/delete'] = array(
@@ -1962,7 +1957,6 @@ function node_menu() {
     'page arguments' => array('node_revision_delete_confirm', 1),
     'access callback' => '_node_revision_access',
     'access arguments' => array(1, 'delete'),
-    'type' => MENU_CALLBACK,
     'file' => 'node.pages.inc',
   );
   return $items;

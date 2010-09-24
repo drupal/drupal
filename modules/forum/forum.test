@@ -25,9 +25,25 @@ class ForumTestCase extends DrupalWebTestCase {
   function setUp() {
     parent::setUp('taxonomy', 'comment', 'forum');
     // Create users.
-    $this->admin_user = $this->drupalCreateUser(array('administer blocks', 'administer forums', 'administer menu', 'administer taxonomy', 'create forum content')); // 'access administration pages'));
-    $this->edit_any_topics_user = $this->drupalCreateUser(array('create forum content', 'edit any forum content', 'delete any forum content', 'access administration pages'));
-    $this->edit_own_topics_user = $this->drupalCreateUser(array('create forum content', 'edit own forum content', 'delete own forum content'));
+    $this->admin_user = $this->drupalCreateUser(array(
+      'access administration pages',
+      'administer blocks',
+      'administer forums',
+      'administer menu',
+      'administer taxonomy',
+      'create forum content',
+    ));
+    $this->edit_any_topics_user = $this->drupalCreateUser(array(
+      'access administration pages',
+      'create forum content',
+      'edit any forum content',
+      'delete any forum content',
+    ));
+    $this->edit_own_topics_user = $this->drupalCreateUser(array(
+      'create forum content',
+      'edit own forum content',
+      'delete own forum content',
+    ));
     $this->web_user = $this->drupalCreateUser(array());
   }
 

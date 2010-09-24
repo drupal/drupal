@@ -163,7 +163,6 @@ function statistics_menu() {
     'page callback' => 'statistics_access_log',
     'page arguments' => array(3),
     'access arguments' => array('access statistics'),
-    'type' => MENU_CALLBACK,
     'file' => 'statistics.admin.inc',
   );
   $items['admin/config/system/statistics'] = array(

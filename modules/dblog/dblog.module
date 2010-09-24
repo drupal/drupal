@@ -67,7 +67,6 @@ function dblog_menu() {
     'page callback' => 'dblog_event',
     'page arguments' => array(3),
     'access arguments' => array('access site reports'),
-    'type' => MENU_CALLBACK,
     'file' => 'dblog.admin.inc',
   );
 

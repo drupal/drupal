@@ -392,7 +392,7 @@ function field_test_entity_form_submit($form, &$form_state) {
   drupal_set_message($message);
 
   if ($entity->ftid) {
-    $form_state['redirect'] = 'test-entity/' . $entity->ftid . '/edit';
+    $form_state['redirect'] = 'test-entity/manage/' . $entity->ftid . '/edit';
   }
   else {
     // Error on save.
