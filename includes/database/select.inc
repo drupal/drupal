@@ -503,6 +503,22 @@ interface SelectQueryInterface extends QueryConditionInterface, QueryAlterableIn
    * duplicate the connection itself.
    */
   public function __clone();
+
+  /**
+   * Add FOR UPDATE to the query.
+   *
+   * FOR UPDATE prevents the rows retrieved by the SELECT statement from being
+   * modified or deleted by other transactions until the current transaction
+   * ends. Other transactions that attempt UPDATE, DELETE, or SELECT FOR UPDATE
+   * of these rows will be blocked until the current transaction ends.
+   *
+   * @param $set
+   *   IF TRUE, FOR UPDATE will be added to the query, if FALSE then it won't.
+   *
+   * @return QueryConditionInterface
+   *   The called object.
+   */
+  public function forUpdate($set = TRUE);
 }
 
 /**
@@ -740,6 +756,11 @@ class SelectQueryExtender implements SelectQueryInterface {
     return $this;
   }
 
+  public function forUpdate($set = TRUE) {
+    $this->query->forUpdate($set);
+    return $this;
+  }
+
   public function countQuery() {
     // Create our new query object that we will mutate into a count query.
     $count = clone($this);
@@ -919,6 +940,11 @@ class SelectQuery extends Query implements SelectQueryInterface {
    */
   protected $prepared = FALSE;
 
+  /**
+   * The FOR UPDATE status
+   */
+  protected $forUpdate = FALSE;
+
   public function __construct($table, $alias = NULL, DatabaseConnection $connection, $options = array()) {
     $options['return'] = Database::RETURN_STATEMENT;
     parent::__construct($connection, $options);
@@ -1033,6 +1059,12 @@ class SelectQuery extends Query implements SelectQueryInterface {
     return $this;
   }
 
+  public function forUpdate($set = TRUE) {
+    if (isset($set)) {
+      $this->forUpdate = $set;
+    }
+    return $this;
+  }
 
   /* Alter accessors to expose the query data to alter hooks. */
 
@@ -1474,6 +1506,10 @@ class SelectQuery extends Query implements SelectQueryInterface {
       foreach ($this->union as $union) {
         $query .= ' ' . $union['type'] . ' ' . (string) $union['query'];
       }
+    }
+
+    if ($this->forUpdate) {
+      $query .= ' FOR UPDATE';
     }
 
     return $query;

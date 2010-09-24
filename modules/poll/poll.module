@@ -568,12 +568,11 @@ function poll_update($node) {
       db_merge('poll_choice')
         ->key(array('chid' => $choice['chid']))
         ->fields(array(
-          'nid' => $node->nid,
           'chtext' => $choice['chtext'],
           'chvotes' => (int) $choice['chvotes'],
           'weight' => $choice['weight'],
         ))
-        ->updateExcept('nid')
+        ->insertFields(array('nid' => $node->nid))
         ->execute();
     }
     else {

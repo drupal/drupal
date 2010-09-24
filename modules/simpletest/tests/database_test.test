@@ -1093,18 +1093,15 @@ class DatabaseMergeTestCase extends DatabaseTestCase {
   }
 
   /**
-   * Confirm that we can merge-update a record successfully, with exclusion.
+   * Confirm that we can merge-update a record successfully, with different insert and update.
    */
   function testMergeUpdateExcept() {
     $num_records_before = db_query('SELECT COUNT(*) FROM {test_people}')->fetchField();
 
     db_merge('test_people')
       ->key(array('job' => 'Speaker'))
-      ->fields(array(
-        'age' => 31,
-        'name' => 'Tiffany',
-      ))
-      ->updateExcept('age')
+      ->insertFields(array('age' => 31))
+      ->updateFields(array('name' => 'Tiffany'))
       ->execute();
 
     $num_records_after = db_query('SELECT COUNT(*) FROM {test_people}')->fetchField();
@@ -1124,11 +1121,13 @@ class DatabaseMergeTestCase extends DatabaseTestCase {
 
     db_merge('test_people')
       ->key(array('job' => 'Speaker'))
-      ->fields(array(
+      ->insertFields(array(
         'age' => 31,
         'name' => 'Tiffany',
       ))
-      ->update(array('name' => 'Joe'))
+      ->updateFields(array(
+        'name' => 'Joe',
+      ))
       ->execute();
 
     $num_records_after = db_query('SELECT COUNT(*) FROM {test_people}')->fetchField();
@@ -1155,10 +1154,8 @@ class DatabaseMergeTestCase extends DatabaseTestCase {
     // which is what is supposed to happen.
     db_merge('test_people')
       ->key(array('job' => 'Speaker'))
-      ->fields(array(
-        'age' => 31,
-        'name' => 'Tiffany',
-      ))
+      ->fields(array('name' => 'Tiffany'))
+      ->insertFields(array('age' => 31))
       ->expression('age', 'age + :age', array(':age' => 4))
       ->execute();
 
@@ -1210,8 +1207,7 @@ class DatabaseMergeTestCase extends DatabaseTestCase {
 
     db_merge('test_people')
       ->key(array('job' => 'Speaker'))
-      ->fields(array('age' => 31))
-      ->updateExcept(array('age'))
+      ->insertFields(array('age' => 31))
       ->execute();
 
     $num_records_after = db_query('SELECT COUNT(*) FROM {test_people}')->fetchField();

@@ -571,332 +571,6 @@ class InsertQuery extends Query {
 }
 
 /**
- * General class for an abstracted MERGE operation.
- */
-class MergeQuery extends Query {
-  /**
-   * Returned by execute() if an INSERT query has been executed.
-   */
-  const STATUS_INSERT = 1;
-
-  /**
-   * Returned by execute() if an UPDATE query has been executed.
-   */
-  const STATUS_UPDATE = 2;
-
-  /**
-   * The table on which to insert.
-   *
-   * @var string
-   */
-  protected $table;
-
-  /**
-   * An array of fields on which to insert.
-   *
-   * @var array
-   */
-  protected $insertFields = array();
-
-  /**
-   * An array of fields to update instead of the values specified in
-   * $insertFields;
-   *
-   * @var array
-   */
-  protected $updateFields = array();
-
-  /**
-   * An array of key fields for this query.
-   *
-   * @var array
-   */
-  protected $keyFields = array();
-
-  /**
-   * An array of fields to not update in case of a duplicate record.
-   *
-   * @var array
-   */
-  protected $excludeFields = array();
-
-  /**
-   * An array of fields to update to an expression in case of a duplicate record.
-   *
-   * This variable is a nested array in the following format:
-   * <some field> => array(
-   *  'condition' => <condition to execute, as a string>
-   *  'arguments' => <array of arguments for condition, or NULL for none>
-   * );
-   *
-   * @var array
-   */
-  protected $expressionFields = array();
-
-  public function __construct($connection, $table, array $options = array()) {
-    $options['return'] = Database::RETURN_AFFECTED;
-    parent::__construct($connection, $options);
-    $this->table = $table;
-  }
-
-  /**
-   * Set the field->value pairs to be merged into the table.
-   *
-   * This method should only be called once. It may be called either
-   * with a single associative array or two indexed arrays. If called
-   * with an associative array, the keys are taken to be the fields
-   * and the values are taken to be the corresponding values to set.
-   * If called with two arrays, the first array is taken as the fields
-   * and the second array is taken as the corresponding values.
-   *
-   * @param $fields
-   *   An array of fields to set.
-   * @param $values
-   *   An array of fields to set into the database. The values must be
-   *   specified in the same order as the $fields array.
-   * @return MergeQuery
-   *   The called object.
-   */
-  public function fields(array $fields, array $values = array()) {
-    if (count($values) > 0) {
-      $fields = array_combine($fields, $values);
-    }
-    $this->insertFields = $fields;
-
-    return $this;
-  }
-
-  /**
-   * Set the key field(s) to be used to insert or update into the table.
-   *
-   * This method should only be called once. It may be called either
-   * with a single associative array or two indexed arrays. If called
-   * with an associative array, the keys are taken to be the fields
-   * and the values are taken to be the corresponding values to set.
-   * If called with two arrays, the first array is taken as the fields
-   * and the second array is taken as the corresponding values.
-   *
-   * These fields are the "pivot" fields of the query. Typically they
-   * will be the fields of the primary key. If the record does not
-   * yet exist, they will be inserted into the table along with the
-   * values set in the fields() method. If the record does exist,
-   * these fields will be used in the WHERE clause to select the
-   * record to update.
-   *
-   * @param $fields
-   *   An array of fields to set.
-   * @param $values
-   *   An array of fields to set into the database. The values must be
-   *   specified in the same order as the $fields array.
-   * @return MergeQuery
-   *   The called object.
-   */
-  public function key(array $fields, array $values = array()) {
-    if ($values) {
-      $fields = array_combine($fields, $values);
-    }
-    $this->keyFields = $fields;
-
-    return $this;
-  }
-
-  /**
-   * Specify fields to update in case of a duplicate record.
-   *
-   * If a record with the values in keys() already exists, the fields and values
-   * specified here will be updated in that record. If this method is not called,
-   * it defaults to the same values as were passed to the fields() method.
-   *
-   * @param $fields
-   *   An array of fields to set.
-   * @param $values
-   *   An array of fields to set into the database. The values must be
-   *   specified in the same order as the $fields array.
-   * @return MergeQuery
-   *   The called object.
-   */
-  public function update(array $fields, array $values = array()) {
-    if ($values) {
-      $fields = array_combine($fields, $values);
-    }
-    $this->updateFields = $fields;
-
-    return $this;
-  }
-
-  /**
-   * Specify fields that should not be updated in case of a duplicate record.
-   *
-   * If this method is called and a record with the values in keys() already
-   * exists, Drupal will instead update the record with the values passed
-   * in the fields() method except for the fields specified in this method. That
-   * is, calling this method is equivalent to calling update() with identical
-   * parameters as fields() minus the keys specified here.
-   *
-   * The update() method takes precedent over this method. If update() is called,
-   * this method has no effect.
-   *
-   * @param $exclude_fields
-   *   An array of fields in the query that should not be updated to match those
-   *   specified by the fields() method.
-   *   Alternatively, the fields may be specified as a variable number of string
-   *   parameters.
-   * @return MergeQuery
-   *   The called object.
-   */
-  public function updateExcept($exclude_fields) {
-    if (!is_array($exclude_fields)) {
-      $exclude_fields = func_get_args();
-    }
-    $this->excludeFields = $exclude_fields;
-
-    return $this;
-  }
-
-  /**
-   * Specify fields to be updated as an expression.
-   *
-   * Expression fields are cases such as counter=counter+1. This method only
-   * applies if a duplicate key is detected. This method takes precedent over
-   * both update() and updateExcept().
-   *
-   * @param $field
-   *   The field to set.
-   * @param $expression
-   *   The field will be set to the value of this expression. This parameter
-   *   may include named placeholders.
-   * @param $arguments
-   *   If specified, this is an array of key/value pairs for named placeholders
-   *   corresponding to the expression.
-   * @return MergeQuery
-   *   The called object.
-   */
-  public function expression($field, $expression, array $arguments = NULL) {
-    $this->expressionFields[$field] = array(
-      'expression' => $expression,
-      'arguments' => $arguments,
-    );
-
-    return $this;
-  }
-
-  /**
-   * Generic preparation and validation for a MERGE query.
-   *
-   * @return
-   *   TRUE if the validation was successful, FALSE if not.
-   *
-   * @throws InvalidMergeQueryException
-   */
-  public function preExecute() {
-
-    // A merge query without any key field is invalid.
-    if (count($this->keyFields) == 0) {
-      throw new InvalidMergeQueryException("You need to specify key fields before executing a merge query");
-    }
-
-    return TRUE;
-  }
-
-  /**
-   * Run the MERGE query against the database.
-   *
-   * @return
-   *   A status indicating the executed operation:
-   *   - MergeQuery::STATUS_INSERT for an INSERT operation.
-   *   - MergeQuery::STATUS_UPDATE for an UPDATE operation.
-   *
-   * @throws InvalidMergeQueryException
-   */
-  public function execute() {
-    // If validation fails, simply return NULL.
-    // Note that validation routines in preExecute() may throw exceptions instead.
-    if (!$this->preExecute()) {
-      return NULL;
-    }
-
-    // In the degenerate case of this query type, we have to run multiple
-    // queries as there is no universal single-query mechanism that will work.
-
-    // Wrap multiple queries in a transaction, if the database supports it.
-    $transaction = $this->connection->startTransaction();
-
-    try {
-      // Manually check if the record already exists.
-      // We build a 'SELECT 1 FROM table WHERE conditions FOR UPDATE' query,
-      // that will lock the rows that matches our set of conditions as well as
-      // return the information that there are such rows.
-      $select = $this->connection->select($this->table);
-      $select->addExpression('1');
-      foreach ($this->keyFields as $field => $value) {
-        $select->condition($field, $value);
-      }
-
-      // Using SELECT FOR UPDATE syntax will lock the rows we want to attempt to update.
-      $sql = ((string) $select) . ' FOR UPDATE';
-      $arguments = $select->getArguments();
-
-      // If there are no existing records, run an insert query.
-      if (!$this->connection->query($sql, $arguments)->fetchField()) {
-        // If there is no existing record, run an insert query.
-        $insert_fields = $this->insertFields + $this->keyFields;
-        try {
-          $this->connection->insert($this->table, $this->queryOptions)->fields($insert_fields)->execute();
-          return MergeQuery::STATUS_INSERT;
-        }
-        catch (Exception $e) {
-          // The insert query failed, maybe it's because a racing insert query
-          // beat us in inserting the same row. Retry the select query, if it
-          // returns a row, ignore the error and continue with the update
-          // query below.
-          if (!$this->connection->query($sql, $arguments)->fetchField()) {
-            throw $e;
-          }
-        }
-      }
-
-      // Proceed with an update query if a row was found.
-      if ($this->updateFields) {
-        $update_fields = $this->updateFields;
-      }
-      else {
-        $update_fields = $this->insertFields;
-        // If there are no exclude fields, this is a no-op.
-        foreach ($this->excludeFields as $exclude_field) {
-          unset($update_fields[$exclude_field]);
-        }
-      }
-      if ($update_fields || $this->expressionFields) {
-        // Only run the update if there are fields or expressions to update.
-        $update = $this->connection->update($this->table, $this->queryOptions)->fields($update_fields);
-        foreach ($this->keyFields as $field => $value) {
-          $update->condition($field, $value);
-        }
-        foreach ($this->expressionFields as $field => $expression) {
-          $update->expression($field, $expression['expression'], $expression['arguments']);
-        }
-        $update->execute();
-        return MergeQuery::STATUS_UPDATE;
-      }
-    }
-    catch (Exception $e) {
-      // Something really wrong happened here, bubble up the exception to the
-      // caller.
-      $transaction->rollback();
-      throw $e;
-    }
-    // Transaction commits here where $transaction looses scope.
-  }
-
-  public function __toString() {
-    // In the degenerate case, there is no string-able query as this operation
-    // is potentially two queries.
-    return '';
-  }
-}
-
-
-/**
  * General class for an abstracted DELETE operation.
  */
 class DeleteQuery extends Query implements QueryConditionInterface {
@@ -1203,6 +877,386 @@ class UpdateQuery extends Query implements QueryConditionInterface {
     return $query;
   }
 
+}
+
+/**
+ * General class for an abstracted MERGE operation.
+ *
+ * An ANSI SQL:2003 compatible database would run the following query:
+ *
+ * @code
+ * MERGE INTO table_name_1 USING table_name_2 ON (condition)
+ *   WHEN MATCHED THEN
+ *   UPDATE SET column1 = value1 [, column2 = value2 ...]
+ *   WHEN NOT MATCHED THEN
+ *   INSERT (column1 [, column2 ...]) VALUES (value1 [, value2 ...
+ * @endcode
+ *
+ * Other databases (most notably MySQL, PostgreSQL and SQLite) will emulate
+ * this statement by running a SELECT and then INSERT or UPDATE.
+ *
+ * By default, the two table names are identical and they are passed into the
+ * the constructor. table_name_2 can be specified by the
+ * MergeQuery::conditionTable() method. It can be either a string or a
+ * subquery.
+ *
+ * The condition is built exactly like SelectQuery or UpdateQuery conditions,
+ * the UPDATE query part is built similarly like an UpdateQuery and finally the
+ * INSERT query part is built similarly like an InsertQuery. However, both
+ * UpdateQuery and InsertQuery has a fields method so
+ * MergeQuery::updateFields() and MergeQuery::insertFields() needs to be called
+ * instead. MergeQuery::fields() can also be called which calls both of these
+ * methods as the common case is to use the same column-value pairs for both
+ * INSERT and UPDATE. However, this is not mandatory. Another convinient
+ * wrapper is MergeQuery::key() which adds the same column-value pairs to all
+ * three parts: the condition, the INSERT query part and the UPDATE query part.
+ *
+ * Several methods (key(), fields(), insertFields()) can be called to set a
+ * key-value pair for the INSERT query part. Subsequent calls for the same
+ * fields override the earlier ones. The same is true for UPDATE and key(),
+ * fields() and updateFields().
+ */
+class MergeQuery extends Query implements QueryConditionInterface {
+  /**
+   * Returned by execute() if an INSERT query has been executed.
+   */
+  const STATUS_INSERT = 1;
+
+  /**
+   * Returned by execute() if an UPDATE query has been executed.
+   */
+  const STATUS_UPDATE = 2;
+
+  /**
+   * The table to be used for INSERT and UPDATE.
+   *
+   * @var string
+   */
+  protected $table;
+
+  /**
+   * The table or subquery to be used for the condition.
+   */
+  protected $conditionTable;
+
+  /**
+   * An array of fields on which to insert.
+   *
+   * @var array
+   */
+  protected $insertFields = array();
+
+  /**
+   * An array of fields which should be set to their database-defined defaults.
+   *
+   * Used on INSERT.
+   *
+   * @var array
+   */
+  protected $defaultFields = array();
+
+  /**
+   * An array of values to be inserted.
+   *
+   * @var string
+   */
+  protected $insertValues = array();
+
+  /**
+   * An array of fields that will be updated.
+   *
+   * @var array
+   */
+  protected $updateFields = array();
+
+  /**
+   * An array of fields to update to an expression in case of a duplicate record.
+   *
+   * This variable is a nested array in the following format:
+   * <some field> => array(
+   *  'condition' => <condition to execute, as a string>
+   *  'arguments' => <array of arguments for condition, or NULL for none>
+   * );
+   *
+   * @var array
+   */
+  protected $expressionFields = array();
+
+  /**
+   * Flag indicated whether an UPDATE is necessary.
+   *
+   * @var boolean
+   */
+  protected $needsUpdate = FALSE;
+
+  public function __construct(DatabaseConnection $connection, $table, array $options = array()) {
+    $options['return'] = Database::RETURN_AFFECTED;
+    parent::__construct($connection, $options);
+    $this->table = $table;
+    $this->conditionTable = $table;
+    $this->condition = new DatabaseCondition('AND');
+  }
+
+  /**
+   * Set the table or subquery to be used for the condition.
+   *
+   * @param $table
+   *   The table name or the subquery to be used. Use a SelectQuery object to
+   *   pass in a subquery.
+   *
+   * @return MergeQuery
+   *   The called object.
+   */
+  protected function conditionTable($table) {
+    $this->conditionTable = $table;
+    return $this;
+  }
+
+  /**
+   * Adds a set of field->value pairs to be updated.
+   *
+   * @param $fields
+   *   An associative array of fields to write into the database. The array keys
+   *   are the field names while the values are the values to which to set them.
+   *
+   * @return MergeQuery
+   *   The called object.
+   */
+  public function updateFields(array $fields) {
+    $this->updateFields = $fields;
+    $this->needsUpdate = TRUE;
+    return $this;
+  }
+
+  /**
+   * Specify fields to be updated as an expression.
+   *
+   * Expression fields are cases such as counter = counter + 1. This method
+   * takes precedence over MergeQuery::updateFields() and it's wrappers,
+   * MergeQuery::key() and MergeQuery::fields().
+   *
+   * @param $field
+   *   The field to set.
+   * @param $expression
+   *   The field will be set to the value of this expression. This parameter
+   *   may include named placeholders.
+   * @param $arguments
+   *   If specified, this is an array of key/value pairs for named placeholders
+   *   corresponding to the expression.
+   * @return MergeQuery
+   *   The called object.
+   */
+  public function expression($field, $expression, array $arguments = NULL) {
+    $this->expressionFields[$field] = array(
+      'expression' => $expression,
+      'arguments' => $arguments,
+    );
+    $this->needsUpdate = TRUE;
+    return $this;
+  }
+
+  /**
+   * Adds a set of field->value pairs to be inserted.
+   *
+   * @param $fields
+   *   An array of fields on which to insert. This array may be indexed or
+   *   associative. If indexed, the array is taken to be the list of fields.
+   *   If associative, the keys of the array are taken to be the fields and
+   *   the values are taken to be corresponding values to insert. If a
+   *   $values argument is provided, $fields must be indexed.
+   * @param $values
+   *   An array of fields to insert into the database. The values must be
+   *   specified in the same order as the $fields array.
+   *
+   * @return MergeQuery
+   *   The called object.
+   */
+  public function insertFields(array $fields, array $values = array()) {
+    if ($values) {
+      $fields = array_combine($fields, $values);
+    }
+    $this->insertFields = $fields;
+    return $this;
+  }
+
+  /**
+   * Specifies fields for which the database-defaults should be used.
+   *
+   * If you want to force a given field to use the database-defined default,
+   * not NULL or undefined, use this method to instruct the database to use
+   * default values explicitly. In most cases this will not be necessary
+   * unless you are inserting a row that is all default values, as you cannot
+   * specify no values in an INSERT query.
+   *
+   * Specifying a field both in fields() and in useDefaults() is an error
+   * and will not execute.
+   *
+   * @param $fields
+   *   An array of values for which to use the default values
+   *   specified in the table definition.
+   *
+   * @return MergeQuery
+   *   The called object.
+   */
+  public function useDefaults(array $fields) {
+    $this->defaultFields = $fields;
+    return $this;
+  }
+
+  /**
+   * Set common field-value pairs in the INSERT and UPDATE query parts.
+   *
+   * This method should only be called once. It may be called either
+   * with a single associative array or two indexed arrays. If called
+   * with an associative array, the keys are taken to be the fields
+   * and the values are taken to be the corresponding values to set.
+   * If called with two arrays, the first array is taken as the fields
+   * and the second array is taken as the corresponding values.
+   *
+   * @param $fields
+   *   An associative array of fields on which to insert. The keys of the
+   *   array are taken to be the fields and the values are taken to be
+   *   corresponding values to insert.
+   * @param $values
+   *   An array of fields to set into the database. The values must be
+   *   specified in the same order as the $fields array.
+   *
+   * @return MergeQuery
+   *   The called object.
+   */
+  public function fields(array $fields, array $values = array()) {
+    if ($values) {
+      $fields = array_combine($fields, $values);
+    }
+    foreach ($fields as $key => $value) {
+      $this->insertFields[$key] = $value;
+      $this->updateFields[$key] = $value;
+    }
+    $this->needsUpdate = TRUE;
+    return $this;
+  }
+
+  /**
+   * Set the key field(s) to be used everywhere.
+   *
+   * This method should only be called once. It may be called either
+   * with a single associative array or two indexed arrays. If called
+   * with an associative array, the keys are taken to be the fields
+   * and the values are taken to be the corresponding values to set.
+   * If called with two arrays, the first array is taken as the fields
+   * and the second array is taken as the corresponding values.
+   *
+   * The fields are copied to all three parts of the query: the condition,
+   * the UPDATE part and the INSERT part. If no other method is called, the
+   * UPDATE will become a no-op.
+   *
+   * @param $fields
+   *   An array of fields to set.
+   * @param $values
+   *   An array of fields to set into the database. The values must be
+   *   specified in the same order as the $fields array.
+   * @return MergeQuery
+   *   The called object.
+   */
+  public function key(array $fields, array $values = array()) {
+    if ($values) {
+      $fields = array_combine($fields, $values);
+    }
+    foreach ($fields as $key => $value) {
+      $this->insertFields[$key] = $value;
+      $this->updateFields[$key] = $value;
+      $this->condition($key, $value);
+    }
+    return $this;
+  }
+
+  public function condition($field, $value = NULL, $operator = NULL) {
+    $this->condition->condition($field, $value, $operator);
+    return $this;
+  }
+
+  public function isNull($field) {
+    $this->condition->isNull($field);
+    return $this;
+  }
+
+  public function isNotNull($field) {
+    $this->condition->isNotNull($field);
+    return $this;
+  }
+
+  public function &conditions() {
+    return $this->condition->conditions();
+  }
+
+  public function arguments() {
+    return $this->condition->arguments();
+  }
+
+  public function where($snippet, $args = array()) {
+    $this->condition->where($snippet, $args);
+    return $this;
+  }
+
+  public function compile(DatabaseConnection $connection, QueryPlaceholderInterface $queryPlaceholder = NULL) {
+    return $this->condition->compile($connection, isset($queryPlaceholder) ? $queryPlaceholder : $this);
+  }
+
+  public function __toString() {
+  }
+
+  public function execute() {
+    // Wrap multiple queries in a transaction, if the database supports it.
+    $transaction = $this->connection->startTransaction();
+    try {
+      if (!count($this->condition)) {
+        throw new InvalidMergeQueryException(t('Invalid merge query: no conditions'));
+      }
+      $select = $this->connection->select($this->conditionTable)
+        ->condition($this->condition)
+        ->forUpdate();
+      $select->addExpression('1');
+      if (!$select->execute()->fetchField()) {
+        try {
+          $insert = $this->connection->insert($this->table)->fields($this->insertFields);
+          if ($this->defaultFields) {
+            $insert->useDefaults($this->defaultFields);
+          }
+          $insert->execute();
+          return MergeQuery::STATUS_INSERT;
+        }
+        catch (Exception $e) {
+          echo $e->getMessage();
+          // The insert query failed, maybe it's because a racing insert query
+          // beat us in inserting the same row. Retry the select query, if it
+          // returns a row, ignore the error and continue with the update
+          // query below.
+          if (!$select->execute()->fetchField()) {
+            throw $e;
+          }
+        }
+      }
+      if ($this->needsUpdate) {
+        $update = $this->connection->update($this->table)
+          ->fields($this->updateFields)
+          ->condition($this->condition);
+        if ($this->expressionFields) {
+          foreach ($this->expressionFields as $field => $data) {
+            $update->expression($field, $data['expression'], $data['arguments']);
+          }
+        }
+        $update->execute();
+        return MergeQuery::STATUS_UPDATE;
+      }
+    }
+    catch (Exception $e) {
+      // Something really wrong happened here, bubble up the exception to the
+      // caller.
+      $transaction->rollback();
+      throw $e;
+    }
+    // Transaction commits here where $transaction looses scope.
+  }
 }
 
 /**

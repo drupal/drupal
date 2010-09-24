@@ -12,6 +12,16 @@
  */
 
 /**
+ * SQLite specific query builder for SELECT statements.
+ */
+class SelectQuery_sqlite extends SelectQuery {
+  public function forUpdate($set = TRUE) {
+    // SQLite does not support FOR UPDATE so nothing to do.
+    return $this;
+  }
+}
+
+/**
  * SQLite specific implementation of InsertQuery.
  *
  * We ignore all the default fields and use the clever SQLite syntax:
@@ -116,65 +126,6 @@ class UpdateQuery_sqlite extends UpdateQuery {
     return parent::execute();
   }
 
-}
-
-/**
- * SQLite specific implementation of MergeQuery.
- *
- * SQLite doesn't support row-level locking, but acquire locks on the whole
- * database file. We implement MergeQuery using a different strategy:
- *   - UPDATE xxx WHERE <key condition>
- *   - if the previous query hasn't matched, INSERT
- *
- * The first UPDATE query will acquire a RESERVED lock on the database.
- */
-class MergeQuery_sqlite extends MergeQuery {
-  public function execute() {
-    // If validation fails, simply return NULL.
-    // Note that validation routines in preExecute() may throw exceptions instead.
-    if (!$this->preExecute()) {
-      return NULL;
-    }
-
-    // Wrap multiple queries in a transaction.
-    $transaction = $this->connection->startTransaction();
-
-    if ($this->updateFields) {
-      $update_fields = $this->updateFields;
-    }
-    else {
-      $update_fields = $this->insertFields;
-      // If there are no exclude fields, this is a no-op.
-      foreach ($this->excludeFields as $exclude_field) {
-        unset($update_fields[$exclude_field]);
-      }
-    }
-
-    // The update fields are empty, fill them with dummy data.
-    if (!$update_fields && !$this->expressionFields) {
-      $update_fields = array_slice($this->keyFields, 0, 1);
-    }
-
-    // Start with an update query, this acquires a RESERVED lock on the database.
-    // Use the SQLite-specific 'sqlite_return_matched_rows' query option to
-    // return the number of rows matched by that query, not modified by it.
-    $update = $this->connection->update($this->table, array('sqlite_return_matched_rows' => TRUE) + $this->queryOptions)->fields($update_fields);
-
-    foreach ($this->keyFields as $field => $value) {
-      $update->condition($field, $value);
-    }
-    foreach ($this->expressionFields as $field => $expression) {
-      $update->expression($field, $expression['expression'], $expression['arguments']);
-    }
-    if ($update->execute()) {
-      return MergeQuery::STATUS_UPDATE;
-    }
-
-    // The UPDATE query failed to match rows, proceed with an INSERT.
-    $insert_fields = $this->insertFields + $this->keyFields;
-    $this->connection->insert($this->table, $this->queryOptions)->fields($insert_fields)->execute();
-    return MergeQuery::STATUS_INSERT;
-  }
 }
 
 /**
