@@ -1,4 +1,4 @@
-/* $Id: system.menus-rtl.css,v 1.1 2010/09/19 18:35:42 dries Exp $ */
+/* $Id: system.menus-rtl.css,v 1.2 2010/09/25 02:28:14 dries Exp $ */
 
 /**
  * @file
@@ -31,8 +31,8 @@ ul.primary li a {
   margin-left: 0.5em;
 }
 ul.secondary li {
+  border-left: 1px solid #ccc;
+  border-right: none;
   display: inline;
   padding: 0 1em;
-  border-right: none;
-  border-left: 1px solid #ccc;
 }

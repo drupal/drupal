@@ -1,4 +1,4 @@
-/* $Id: system.theme-rtl.css,v 1.1 2010/09/19 18:35:42 dries Exp $ */
+/* $Id: system.theme-rtl.css,v 1.2 2010/09/25 02:28:14 dries Exp $ */
 
 /**
  * @file
@@ -10,13 +10,8 @@
  */
 th {
   text-align: right;
+  padding-left: 1em;
   padding-right: 0;
-  padding-left: 1em;
-}
-thead th {
-  text-align: right;
-  padding-left: 1em;
-  padding-right: 0.5em;
 }
 
 /**
@@ -40,17 +35,17 @@ thead th {
   text-align: left;
 }
 .more-help-link a {
-  padding: 1px 20px 1px 0;
   background-position: 100% 50%;
+  padding: 1px 20px 1px 0;
 }
 
 /**
  * Collapsible fieldsets.
  */
 html.js fieldset.collapsible .fieldset-legend {
+  background-position: 98% 75%;
   padding-left: 0;
   padding-right: 15px;
-  background-position: 98% 75%;
 }
 html.js fieldset.collapsed .fieldset-legend {
   background-image: url(../../misc/menu-collapsed-rtl.png);

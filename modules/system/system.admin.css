@@ -1,4 +1,4 @@
-/* $Id: system.admin.css,v 1.1 2010/09/19 18:35:42 dries Exp $ */
+/* $Id: system.admin.css,v 1.2 2010/09/25 02:28:14 dries Exp $ */
 
 /**
  * @file
@@ -50,15 +50,6 @@ div.admin .expert-link {
  */
 #system-modules div.incompatible {
   font-weight: bold;
-}
-table.package {
-  width: 100%;
-}
-table.package .description {
-  width: 100%;
-}
-table.package .version {
-  direction: ltr;
 }
 div.admin-requirements,
 div.admin-required {
@@ -237,28 +228,6 @@ table.screenshot {
 }
 #system-themes-admin-form {
   clear: left;
-}
-
-/**
- * Date and time settings page.
- */
-.date-container {
-  overflow: auto;
-  clear: left; /* LTR */
-}
-.date-container .form-item {
-  margin-top: 0;
-}
-.date-container .select-container,
-.date-container .custom-container {
-  float: left; /* LTR */
-}
-.date-container .custom-container {
-  margin-left: 15px; /* LTR */
-  width: 50%;
-}
-html.js .custom-container label {
-  visibility: hidden;
 }
 
 /**
