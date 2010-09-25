@@ -682,7 +682,7 @@ class SelectQueryExtender implements SelectQueryInterface {
 
   public function preExecute(SelectQueryInterface $query = NULL) {
     // If no query object is passed in, use $this.
-    if (is_null($query)) {
+    if (!isset($query)) {
       $query = $this;
     }
 
@@ -1147,7 +1147,7 @@ class SelectQuery extends Query implements SelectQueryInterface {
    */
   public function preExecute(SelectQueryInterface $query = NULL) {
     // If no query object is passed in, use $this.
-    if (is_null($query)) {
+    if (!isset($query)) {
       $query = $this;
     }
 

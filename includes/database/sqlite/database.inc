@@ -82,7 +82,7 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
   public function sqlFunctionGreatest() {
     $args = func_get_args();
     foreach ($args as $k => $v) {
-      if (is_null($v)) {
+      if (!isset($v)) {
         unset($args);
       }
     }

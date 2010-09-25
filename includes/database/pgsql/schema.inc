@@ -353,7 +353,7 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
       throw new DatabaseSchemaObjectDoesNotExistException(t("Cannot set default value of field %table.%field: field doesn't exist.", array('%table' => $table, '%field' => $field)));
     }
 
-    if (is_null($default)) {
+    if (!isset($default)) {
       $default = 'NULL';
     }
     else {
