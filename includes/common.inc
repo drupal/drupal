@@ -6030,7 +6030,7 @@ function drupal_common_theme() {
  */
 function drupal_install_schema($module) {
   $schema = drupal_get_schema_unprocessed($module);
-  _drupal_schema_initialize($module, $schema);
+  _drupal_schema_initialize($schema, $module, FALSE);
 
   foreach ($schema as $name => $table) {
     db_create_table($name, $table);
@@ -6053,7 +6053,7 @@ function drupal_install_schema($module) {
  */
 function drupal_uninstall_schema($module) {
   $schema = drupal_get_schema_unprocessed($module);
-  _drupal_schema_initialize($module, $schema);
+  _drupal_schema_initialize($schema, $module, FALSE);
 
   foreach ($schema as $table) {
     if (db_table_exists($table['name'])) {
@@ -6103,20 +6103,30 @@ function drupal_get_schema_unprocessed($module, $table = NULL) {
 /**
  * Fill in required default values for table definitions returned by hook_schema().
  *
- * @param $module
- *   The module for which hook_schema() was invoked.
  * @param $schema
  *   The schema definition array as it was returned by the module's
  *   hook_schema().
+ * @param $module
+ *   The module for which hook_schema() was invoked.
+ * @param $remove_descriptions
+ *   (optional) Whether to additionally remove 'description' keys of all tables
+ *   and fields to improve performance of serialize() and unserialize().
+ *   Defaults to TRUE.
  */
-function _drupal_schema_initialize($module, &$schema) {
+function _drupal_schema_initialize(&$schema, $module, $remove_descriptions = TRUE) {
   // Set the name and module key for all tables.
-  foreach ($schema as $name => $table) {
+  foreach ($schema as $name => &$table) {
     if (empty($table['module'])) {
-      $schema[$name]['module'] = $module;
+      $table['module'] = $module;
     }
     if (!isset($table['name'])) {
-      $schema[$name]['name'] = $name;
+      $table['name'] = $name;
+    }
+    if ($remove_descriptions) {
+      unset($table['description']);
+      foreach ($table['fields'] as &$field) {
+        unset($field['description']);
+      }
     }
   }
 }
