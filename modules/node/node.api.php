@@ -190,10 +190,6 @@ function hook_node_grants($account, $op) {
  * @ingroup node_access
  */
 function hook_node_access_records($node) {
-  if (node_access_example_disabling()) {
-    return;
-  }
-
   // We only care about the node if it has been marked private. If not, it is
   // treated just like any other node and we completely ignore it.
   if ($node->private) {
