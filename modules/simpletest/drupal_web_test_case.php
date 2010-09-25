@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.236 2010/09/24 00:37:44 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.237 2010/09/25 01:50:07 dries Exp $
 
 /**
  * Global variable that holds information about the tests being run.
@@ -603,7 +603,11 @@ class DrupalUnitTestCase extends DrupalTestCase {
 
     // Generate temporary prefixed database to ensure that tests have a clean starting point.
     $this->databasePrefix = Database::getConnection()->prefixTables('{simpletest' . mt_rand(1000, 1000000) . '}');
-    $conf['file_public_path'] = $this->originalFileDirectory . '/' . $this->databasePrefix;
+
+    // Create test directory.
+    $public_files_directory = $this->originalFileDirectory . '/simpletest/' . substr($this->databasePrefix, 10);
+    file_prepare_directory($public_files_directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
+    $conf['file_public_path'] = $public_files_directory;
 
     // Clone the current connection and replace the current prefix.
     $connection_info = Database::getConnectionInfo('default');
