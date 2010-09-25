@@ -51,15 +51,6 @@ div.admin .expert-link {
 #system-modules div.incompatible {
   font-weight: bold;
 }
-table.package {
-  width: 100%;
-}
-table.package .description {
-  width: 100%;
-}
-table.package .version {
-  direction: ltr;
-}
 div.admin-requirements,
 div.admin-required {
   font-size: 0.9em;
@@ -237,28 +228,6 @@ table.screenshot {
 }
 #system-themes-admin-form {
   clear: left;
-}
-
-/**
- * Date and time settings page.
- */
-.date-container {
-  overflow: auto;
-  clear: left; /* LTR */
-}
-.date-container .form-item {
-  margin-top: 0;
-}
-.date-container .select-container,
-.date-container .custom-container {
-  float: left; /* LTR */
-}
-.date-container .custom-container {
-  margin-left: 15px; /* LTR */
-  width: 50%;
-}
-html.js .custom-container label {
-  visibility: hidden;
 }
 
 /**

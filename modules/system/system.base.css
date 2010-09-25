@@ -12,28 +12,28 @@
  */
 /* Suggestion list */
 #autocomplete {
-  position: absolute;
   border: 1px solid;
   overflow: hidden;
+  position: absolute;
   z-index: 100;
 }
 #autocomplete ul {
-  margin: 0;
-  padding: 0;
   list-style: none;
   list-style-image: none;
+  margin: 0;
+  padding: 0;
 }
 #autocomplete li {
   background: #fff;
   color: #000;
-  white-space: pre;
   cursor: default;
+  white-space: pre;
 }
 /* Animated throbber */
 html.js input.form-autocomplete {
   background-image: url(../../misc/throbber.gif);
-  background-repeat: no-repeat;
   background-position: 100% 2px; /* LTR */
+  background-repeat: no-repeat;
 }
 html.js input.throbbing {
   background-position: 100% -18px; /* LTR */
@@ -66,20 +66,20 @@ fieldset.collapsible .fieldset-legend {
  * @see textarea.js
  */
 .form-textarea-wrapper textarea {
+  display: block;
   margin: 0;
   width: 100%;
-  display: block;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
 .resizable-textarea .grippie {
-  height: 9px;
-  overflow: hidden;
   background: #eee url(../../misc/grippie.png) no-repeat center 2px;
   border: 1px solid #ddd;
   border-top-width: 0;
   cursor: s-resize;
+  height: 9px;
+  overflow: hidden;
 }
 
 /**
@@ -102,20 +102,20 @@ a.tabledrag-handle:hover {
   text-decoration: none;
 }
 a.tabledrag-handle .handle {
-  margin-top: 4px;
-  height: 13px;
-  width: 13px;
   background: url(../../misc/draggable.png) no-repeat 0 0;
+  height: 13px;
+  margin-top: 4px;
+  width: 13px;
 }
 a.tabledrag-handle-hover .handle {
   background-position: 0 -20px;
 }
 div.indentation {
-  width: 20px;
+  float: left; /* LTR */
   height: 1.7em;
   margin: -0.4em 0.2em -0.4em -0.4em; /* LTR */
   padding: 0.42em 0 0.42em 0.6em; /* LTR */
-  float: left; /* LTR */
+  width: 20px;
 }
 div.tree-child {
   background: url(../../misc/tree.png) no-repeat 11px center; /* LTR */
@@ -166,11 +166,11 @@ table.sticky-header {
   float: left; /* LTR */
 }
 .ajax-progress .throbber {
-  width: 15px;
-  height: 15px;
-  margin: 2px;
   background: transparent url(../../misc/throbber.gif) no-repeat 0px -18px;
   float: left; /* LTR */
+  height: 15px;
+  margin: 2px;
+  width: 15px;
 }
 tr .ajax-progress .throbber {
   margin: 0 2px;

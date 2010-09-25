@@ -31,8 +31,8 @@ ul.primary li a {
   margin-left: 0.5em;
 }
 ul.secondary li {
+  border-left: 1px solid #ccc;
+  border-right: none;
   display: inline;
   padding: 0 1em;
-  border-right: none;
-  border-left: 1px solid #ccc;
 }

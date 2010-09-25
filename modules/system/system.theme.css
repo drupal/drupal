@@ -10,15 +10,15 @@
  */
 fieldset {
   margin-bottom: 1em;
-  padding: .5em;
+  padding: 0.5em;
 }
 form {
   margin: 0;
   padding: 0;
 }
 hr {
-  height: 1px;
   border: 1px solid gray;
+  height: 1px;
 }
 img {
   border: 0;
@@ -27,14 +27,9 @@ table {
   border-collapse: collapse;
 }
 th {
-  text-align: left; /* LTR */
-  padding-right: 1em; /* LTR */
   border-bottom: 3px solid #ccc;
-}
-thead th {
-  text-align: left; /* LTR */
   padding-right: 1em; /* LTR */
-  border-bottom: 3px solid #ccc;
+  text-align: left; /* LTR */
 }
 tbody {
   border-top: 1px solid #ccc;
@@ -148,13 +143,13 @@ input.form-radio {
   text-align: center;
 }
 .item-list .pager li {
-  background-image:none;
-  display:inline;
-  list-style-type:none;
+  background-image: none;
+  display: inline;
+  list-style-type: none;
   padding: 0.5em;
 }
 .pager-current {
-  font-weight:bold;
+  font-weight: bold;
 }
 
 /**
@@ -174,16 +169,16 @@ input.form-radio {
  * @see collapse.js
  */
 html.js fieldset.collapsible .fieldset-legend {
-  padding-left: 15px; /* LTR */
   background: url(../../misc/menu-expanded.png) 5px 65% no-repeat; /* LTR */
+  padding-left: 15px; /* LTR */
 }
 html.js fieldset.collapsed .fieldset-legend {
   background-image: url(../../misc/menu-collapsed.png); /* LTR */
   background-position: 5px 50%; /* LTR */
 }
 .fieldset-legend span.summary {
-  font-size: 0.9em;
   color: #999;
+  font-size: 0.9em;
   margin-left: 0.5em;
 }
 

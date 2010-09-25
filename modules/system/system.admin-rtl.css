@@ -22,11 +22,11 @@ div.admin .right {
   margin-right: 0;
 }
 div.admin .expert-link {
-  text-align: left;
   margin-right: 0;
   margin-left: 1em;
   padding-right: 0;
   padding-left: 4px;
+  text-align: left;
 }
 
 /**
@@ -56,31 +56,16 @@ table.screenshot {
   padding: 20px 0 20px 20px;
 }
 .theme-selector .operations li {
-  float: right;
   border-right: none;
   border-left: 1px solid #cdcdcd;
+  float: right;
 }
 .theme-selector .operations li.last {
-  padding: 0 0.7em 0 0;
   border-left: none;
+  padding: 0 0.7em 0 0;
 }
 .theme-selector .operations li.first {
   padding: 0 0 0 0.7em;
-}
-
-/**
- * Date and time settings page.
- */
-.date-container {
-  clear: right;
-}
-.date-container .select-container,
-.date-container .custom-container {
-  float: right;
-}
-.date-container .custom-container {
-  margin-left: 0;
-  margin-right: 15px;
 }
 
 /**
