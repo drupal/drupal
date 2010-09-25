@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.230 2010/09/24 02:10:06 dries Exp $
+// $Id: file.inc,v 1.231 2010/09/25 18:02:39 dries Exp $
 
 /**
  * @file
@@ -523,8 +523,7 @@ function file_load($fid) {
 /**
  * Save a file object to the database.
  *
- * If the $file->fid is not set a new record will be added. Re-saving an
- * existing file will not change its status.
+ * If the $file->fid is not set a new record will be added.
  *
  * @param $file
  *   A file object returned by file_load().
