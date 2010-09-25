@@ -1,5 +1,5 @@
 <?php
-// $Id: query.inc,v 1.12 2010/09/24 02:05:55 dries Exp $
+// $Id: query.inc,v 1.13 2010/09/25 01:41:26 dries Exp $
 
 /**
  * @file
@@ -110,7 +110,7 @@ class UpdateQuery_sqlite extends UpdateQuery {
         $condition->condition($field, $data['expression'], '<>');
         $condition->isNull($field);
       }
-      elseif (is_null($data)) {
+      elseif (!isset($data)) {
         // The field will be set to NULL.
         $condition->isNull($field);
       }

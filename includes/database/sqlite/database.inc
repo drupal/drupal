@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.37 2010/08/27 15:45:46 webchick Exp $
+// $Id: database.inc,v 1.38 2010/09/25 01:41:26 dries Exp $
 
 /**
  * @file
@@ -82,7 +82,7 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
   public function sqlFunctionGreatest() {
     $args = func_get_args();
     foreach ($args as $k => $v) {
-      if (is_null($v)) {
+      if (!isset($v)) {
         unset($args);
       }
     }

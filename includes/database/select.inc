@@ -1,5 +1,5 @@
 <?php
-// $Id: select.inc,v 1.50 2010/09/24 21:24:13 webchick Exp $
+// $Id: select.inc,v 1.51 2010/09/25 01:41:26 dries Exp $
 
 /**
  * @ingroup database
@@ -682,7 +682,7 @@ class SelectQueryExtender implements SelectQueryInterface {
 
   public function preExecute(SelectQueryInterface $query = NULL) {
     // If no query object is passed in, use $this.
-    if (is_null($query)) {
+    if (!isset($query)) {
       $query = $this;
     }
 
@@ -1147,7 +1147,7 @@ class SelectQuery extends Query implements SelectQueryInterface {
    */
   public function preExecute(SelectQueryInterface $query = NULL) {
     // If no query object is passed in, use $this.
-    if (is_null($query)) {
+    if (!isset($query)) {
       $query = $this;
     }
 

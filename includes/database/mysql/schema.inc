@@ -1,5 +1,5 @@
 <?php
-// $Id: schema.inc,v 1.41 2010/08/02 18:55:17 webchick Exp $
+// $Id: schema.inc,v 1.42 2010/09/25 01:41:26 dries Exp $
 
 /**
  * @file
@@ -156,7 +156,7 @@ class DatabaseSchema_mysql extends DatabaseSchema {
       if (is_string($spec['default'])) {
         $spec['default'] = "'" . $spec['default'] . "'";
       }
-      elseif (is_null($spec['default'])) {
+      elseif (!isset($spec['default'])) {
         $spec['default'] = 'NULL';
       }
       $sql .= ' DEFAULT ' . $spec['default'];
@@ -351,7 +351,7 @@ class DatabaseSchema_mysql extends DatabaseSchema {
       throw new DatabaseSchemaObjectDoesNotExistException(t("Cannot set default value of field %table.%field: field doesn't exist.", array('%table' => $table, '%field' => $field)));
     }
 
-    if (is_null($default)) {
+    if (!isset($default)) {
       $default = 'NULL';
     }
     else {
