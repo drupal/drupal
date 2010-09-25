@@ -548,12 +548,6 @@ function user_update_7003() {
 }
 
 /**
- * Moved to user_update_7012().
- */
-function user_update_7004() {
-}
-
-/**
  * Changes the users table to allow longer e-mail addresses.
  */
 function user_update_7005(&$sandbox) {
