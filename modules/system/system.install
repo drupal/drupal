@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.508 2010/09/24 21:20:31 webchick Exp $
+// $Id: system.install,v 1.509 2010/09/25 18:10:53 dries Exp $
 
 /**
  * @file
@@ -1864,15 +1864,6 @@ function system_update_7005() {
 }
 
 /**
- * Registry tables and drop the file key of the menu router, since it is no
- * longer needed.
- *
- * Moved to update_fix_d7_requirements().
- */
-function system_update_7006() {
-}
-
-/**
  * Convert to new method of storing permissions.
  *
  * This update is in system.install rather than user.install so that
@@ -1899,15 +1890,6 @@ function system_update_7007() {
 }
 
 /**
- * Use the poll_choice primary key to record votes in poll_votes rather than
- * the choice order. Rename chorder to weight.
- *
- * Moved to poll_update_7001().
- */
-function system_update_7008() {
-}
-
-/**
  * Rename the variable for primary links.
  */
 function system_update_7009() {
@@ -1916,12 +1898,6 @@ function system_update_7009() {
     variable_set('menu_main_links_source', $current_primary);
     variable_del('menu_primary_links_source');
   }
-}
-
-/**
- * Moved to system_update_6048().
- */
-function system_update_7010() {
 }
 
 /**
@@ -1943,12 +1919,6 @@ function system_update_7011() {
     ));
   }
   $insert->execute();
-}
-
-/**
- * Moved to block_update_7002().
- */
-function system_update_7012() {
 }
 
 /**
@@ -2001,12 +1971,6 @@ function system_update_7013() {
   drupal_set_message('The default time zone has been set to <em>' . check_plain($timezone) . '</em>. Check the ' . l('date and time configuration page', 'admin/config/regional/settings') . ' to configure it correctly.', 'warning');
   // Remove temporary override.
   variable_del('date_temporary_timezone');
-}
-
-/**
- * Drop the bootstrap column from the {system} table. This was reverted.
- */
-function system_update_7014() {
 }
 
 /**
@@ -2134,12 +2098,6 @@ function system_update_7027() {
 }
 
 /**
- * Moved to taxonomy_update_7001().
- */
-function system_update_7028() {
-}
-
-/**
  * Add new 'view own unpublished content' permission for authenticated users.
  * Preserves legacy behavior from Drupal 6.x.
  */
@@ -2150,14 +2108,6 @@ function system_update_7029() {
       'permission' => 'view own unpublished content',
     ))
     ->execute();
-}
-
-/**
- * Removed in favour of Drupal 6 backport.
- *
- * @see system_update_6052()
- */
-function system_update_7031() {
 }
 
 /**
@@ -2272,13 +2222,6 @@ function system_update_7034() {
 }
 
 /**
- * Migrate upload module files to the new {file_managed} table.
- */
-function system_update_7035() {
-  // Update merged into system_update_7059().
-}
-
-/**
  * Split the 'access site in maintenance mode' permission from 'administer site configuration'.
  */
 function system_update_7036() {
@@ -2310,32 +2253,6 @@ function system_update_7037() {
 }
 
 /**
- * Adds fields to the {menu_router} table to allow custom themes to be set per
- * page.
- *
- * Moved to update_fix_d7_requirements().
- */
-function system_update_7039() {
-}
-
-/**
- * Create new date format tables.
- *
- * Moved to update_fix_d7_requirements().
- */
-function system_update_7040() {
-}
-
-/**
- * Adds 'delivery_callback' field to the {menu_router} table to allow a custom
- * function to be used for final page rendering and sending to browser.
- *
- * Moved to update_fix_d7_requirements().
- */
-function system_update_7041() {
-}
-
-/**
  * Upgrade the {url_alias} table and create a cache bin for path aliases.
  */
 function system_update_7042() {
@@ -2355,13 +2272,6 @@ function system_update_7042() {
   // provided any meaningful unique constraint ('pid' is a primary key).
   db_add_index('url_alias', 'source_language_pid', array('source', 'language', 'pid'));
   db_add_index('url_alias', 'alias_language_pid', array('alias', 'language', 'pid'));
-}
-
-/**
- * Add a 'context' field to {menu_router} to control contextual placement of local tasks.
- */
-function system_update_7043() {
-  // Moved to update_fix_d7_requirements().
 }
 
 /**

@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.install,v 1.66 2010/09/17 02:28:37 dries Exp $
+// $Id: locale.install,v 1.67 2010/09/25 18:10:53 dries Exp $
 
 /**
  * @file
@@ -101,14 +101,6 @@ function locale_update_7001() {
   variable_del('language_negotiation');
 
   return array();
-}
-
-/**
- * Allow longer javascript file names.
- *
- * Moved to update_fix_d7_requirements().
- */
-function locale_update_7002() {
 }
 
 /**

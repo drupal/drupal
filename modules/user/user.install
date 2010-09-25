@@ -1,5 +1,5 @@
 <?php
-// $Id: user.install,v 1.64 2010/09/17 02:28:37 dries Exp $
+// $Id: user.install,v 1.65 2010/09/25 18:10:53 dries Exp $
 
 /**
  * @file
@@ -545,12 +545,6 @@ function user_update_7003() {
     variable_set('user_mail_status_canceled_body', $setting);
     variable_del('user_mail_status_deleted_body');
   }
-}
-
-/**
- * Moved to user_update_7012().
- */
-function user_update_7004() {
 }
 
 /**

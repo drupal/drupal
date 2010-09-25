@@ -1,5 +1,5 @@
 <?php
-// $Id: update.inc,v 1.68 2010/09/17 02:28:37 dries Exp $
+// $Id: update.inc,v 1.69 2010/09/25 18:10:53 dries Exp $
 
 /**
  * @file
@@ -992,27 +992,15 @@ function update_get_update_list() {
         continue;
       }
 
-      $last_file_name = NULL;
       $updates = drupal_map_assoc($updates);
       foreach (array_keys($updates) as $update) {
         if ($update > $schema_version) {
-          // Omit stub functions that just carry doxygen for developers.
+          // The description for an update comes from its Doxygen.
           $func = new ReflectionFunction($module . '_update_' . $update);
-          // Only read file contents once per .install file.
-          $current_file_name = $func->getFileName();
-          if ($current_file_name != $last_file_name) {
-            $file = file($current_file_name);
-            $last_file_name = $current_file_name;
-          }
-          // Slice out just the body of the function.
-          $body = array_slice($file, $func->getStartLine(), ($func->getEndLine() - $func->getStartLine()-1));
-          if (trim(implode('', $body))) {
-            // The description for an update comes from its Doxygen.
-            $description = str_replace(array("\n", '*', '/'), '', $func->getDocComment());
-            $ret[$module]['pending'][$update] = "$update - $description";
-            if (!isset($ret[$module]['start'])) {
-              $ret[$module]['start'] = $update;
-            }
+          $description = str_replace(array("\n", '*', '/'), '', $func->getDocComment());
+          $ret[$module]['pending'][$update] = "$update - $description";
+          if (!isset($ret[$module]['start'])) {
+            $ret[$module]['start'] = $update;
           }
         }
       }
