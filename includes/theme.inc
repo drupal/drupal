@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.614 2010/09/24 21:20:08 dries Exp $
+// $Id: theme.inc,v 1.615 2010/09/26 23:31:35 dries Exp $
 
 /**
  * @file
@@ -1119,7 +1119,7 @@ function theme_get_setting($setting_name, $theme = NULL) {
   $cache = &drupal_static(__FUNCTION__, array());
 
   // If no key is given, use the current theme if we can determine it.
-  if (is_null($theme)) {
+  if (!isset($theme)) {
     $theme = !empty($GLOBALS['theme_key']) ? $GLOBALS['theme_key'] : '';
   }
 

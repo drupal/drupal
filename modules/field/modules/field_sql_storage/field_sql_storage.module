@@ -1,5 +1,5 @@
 <?php
-// $Id: field_sql_storage.module,v 1.52 2010/09/05 20:00:45 dries Exp $
+// $Id: field_sql_storage.module,v 1.53 2010/09/26 23:31:35 dries Exp $
 
 /**
  * @file
@@ -106,7 +106,7 @@ function _field_sql_storage_indexname($name, $index) {
  */
 function _field_sql_storage_etid($entity_type) {
   $etid = variable_get('field_sql_storage_' . $entity_type . '_etid', NULL);
-  if (is_null($etid)) {
+  if (!isset($etid)) {
     $etid = db_insert('field_config_entity_type')->fields(array('type' => $entity_type))->execute();
     variable_set('field_sql_storage_' . $entity_type . '_etid', $etid);
   }

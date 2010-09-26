@@ -1,5 +1,5 @@
 <?php
-// $Id: field_test.storage.inc,v 1.6 2010/03/27 05:52:49 webchick Exp $
+// $Id: field_test.storage.inc,v 1.7 2010/09/26 23:31:35 dries Exp $
 
 /**
  * @file
@@ -70,7 +70,7 @@ function field_test_field_storage_details_alter(&$details, $field) {
  * Helper function: stores or retrieves data from the 'storage backend'.
  */
 function _field_test_storage_data($data = NULL) {
-  if (is_null($data)) {
+  if (!isset($data)) {
     return variable_get('field_test_storage_data', array());
   }
   else {
@@ -318,7 +318,7 @@ function field_test_field_storage_query($field_id, $conditions, $count, &$cursor
       }
 
       if ($match) {
-        if (is_null($skip) || $skipped >= $skip) {
+        if (!isset($skip) || $skipped >= $skip) {
           $cursor++;
           // If querying all revisions and the entity type has revisions, we need
           // to key the results by revision_ids.

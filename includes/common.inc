@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1227 2010/09/25 02:00:06 dries Exp $
+// $Id: common.inc,v 1.1228 2010/09/26 23:31:35 dries Exp $
 
 /**
  * @file
@@ -1616,7 +1616,7 @@ function format_rss_item($title, $link, $description, $args = array()) {
  * Format XML elements.
  *
  * @param $array
- *   An array where each item represent an element and is either a:
+ *   An array where each item represents an element and is either a:
  *   - (key => value) pair (<key>value</key>)
  *   - Associative array with fields:
  *     - 'key': element name

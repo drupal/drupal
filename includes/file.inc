@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.231 2010/09/25 18:02:39 dries Exp $
+// $Id: file.inc,v 1.232 2010/09/26 23:31:35 dries Exp $
 
 /**
  * @file
@@ -2193,11 +2193,11 @@ function drupal_dirname($uri) {
  * @ingroup php_wrappers
  */
 function drupal_mkdir($uri, $mode = NULL, $recursive = FALSE, $context = NULL) {
-  if (is_null($mode)) {
+  if (!isset($mode)) {
     $mode = variable_get('file_chmod_directory', 0775);
   }
 
-  if (is_null($context)) {
+  if (!isset($context)) {
     return mkdir($uri, $mode, $recursive);
   }
   else {
@@ -2282,7 +2282,7 @@ function drupal_tempnam($directory, $prefix) {
 function file_directory_temp() {
   $temporary_directory = variable_get('file_directory_temp', NULL);
 
-  if (is_null($temporary_directory)) {
+  if (!isset($temporary_directory)) {
     $directories = array();
 
     // Has PHP been set with an upload_tmp_dir?

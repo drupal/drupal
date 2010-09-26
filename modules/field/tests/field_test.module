@@ -1,5 +1,5 @@
 <?php
-// $Id: field_test.module,v 1.11 2010/09/24 00:37:42 dries Exp $
+// $Id: field_test.module,v 1.12 2010/09/26 23:31:35 dries Exp $
 
 /**
  * @file
@@ -152,7 +152,7 @@ function field_test_field_language_alter(&$display_language, $context) {
 function field_test_memorize($key = NULL, $value = NULL) {
   $memorize = &drupal_static(__FUNCTION__, NULL);
 
-  if (is_null($key)) {
+  if (!isset($key)) {
     $return = $memorize;
     $memorize = array();
     return $return;

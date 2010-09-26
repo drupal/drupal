@@ -1,5 +1,5 @@
 <?php
-// $Id: run-tests.sh,v 1.40 2010/01/15 10:51:02 dries Exp $
+// $Id: run-tests.sh,v 1.41 2010/09/26 23:31:36 dries Exp $
 /**
  * @file
  * This script runs Drupal tests from command line.
@@ -302,7 +302,7 @@ function simpletest_script_init($server_software) {
 function simpletest_script_execute_batch() {
   global $args;
 
-  if (is_null($args['test-id'])) {
+  if (!isset($args['test-id'])) {
     simpletest_script_print_error("--execute-batch should not be called interactively.");
     exit;
   }

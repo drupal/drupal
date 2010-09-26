@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.360 2010/09/24 00:37:44 dries Exp $
+// $Id: search.module,v 1.361 2010/09/26 23:31:36 dries Exp $
 
 /**
  * @file
@@ -959,7 +959,7 @@ function search_form($form, &$form_state, $action = '', $keys = '', $type = NULL
   if (!$action) {
     $action = 'search/' . $module_info['path'];
   }
-  if (is_null($prompt)) {
+  if (!isset($prompt)) {
     $prompt = t('Enter your keywords');
   }
 

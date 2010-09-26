@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.495 2010/09/24 21:36:22 dries Exp $
+// $Id: form.inc,v 1.496 2010/09/26 23:31:35 dries Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -2096,7 +2096,7 @@ function form_type_checkboxes_value($element, $input = FALSE) {
     // checkboxes to the server at all). This will not affect non-programmatic
     // form submissions, since a checkbox can never legitimately be NULL.
     foreach ($input as $key => $value) {
-      if (is_null($value)) {
+      if (!isset($value)) {
         unset($input[$key]);
       }
     }
@@ -4009,7 +4009,7 @@ function _batch_queue($batch_set) {
 
   // The class autoloader is not available when running update.php, so make
   // sure the files are manually included.
-  if (is_null($queues)) {
+  if (!isset($queues)) {
     $queues = array();
     require_once DRUPAL_ROOT . '/modules/system/system.queue.inc';
     require_once DRUPAL_ROOT . '/includes/batch.queue.inc';

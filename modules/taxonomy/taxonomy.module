@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.606 2010/09/24 00:37:44 dries Exp $
+// $Id: taxonomy.module,v 1.607 2010/09/26 23:31:36 dries Exp $
 
 /**
  * @file
@@ -841,7 +841,7 @@ function taxonomy_get_tree($vid, $parent = 0, $max_depth = NULL, $depth = -1) {
     }
   }
 
-  $max_depth = (is_null($max_depth)) ? count($children[$vid]) : $max_depth;
+  $max_depth = (!isset($max_depth)) ? count($children[$vid]) : $max_depth;
   $tree = array();
   if ($max_depth > $depth && !empty($children[$vid][$parent])) {
     foreach ($children[$vid][$parent] as $child) {
@@ -1038,7 +1038,7 @@ function taxonomy_implode_tags($tags, $vid = NULL) {
   $typed_tags = array();
   foreach ($tags as $tag) {
     // Extract terms belonging to the vocabulary in question.
-    if (is_null($vid) || $tag->vid == $vid) {
+    if (!isset($vid) || $tag->vid == $vid) {
       // Make sure we have a completed loaded taxonomy term.
       if (isset($tag->name)) {
         // Commas and quotes in tag names are special cases, so encode 'em.

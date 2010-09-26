@@ -1,5 +1,5 @@
 <?php
-// $Id: syslog.module,v 1.37 2010/08/18 01:54:36 dries Exp $
+// $Id: syslog.module,v 1.38 2010/09/26 23:31:36 dries Exp $
 
 /**
  * @file
@@ -103,7 +103,7 @@ function syslog_watchdog(array $log_entry) {
     '!referer'     => $log_entry['referer'],
     '!uid'         => $log_entry['user']->uid,
     '!link'        => strip_tags($log_entry['link']),
-    '!message'     => strip_tags(is_null($log_entry['variables']) ? $log_entry['message'] : strtr($log_entry['message'], $log_entry['variables'])),
+    '!message'     => strip_tags(!isset($log_entry['variables']) ? $log_entry['message'] : strtr($log_entry['message'], $log_entry['variables'])),
   ));
 
   syslog($log_entry['severity'], $message);

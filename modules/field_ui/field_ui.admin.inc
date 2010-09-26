@@ -1,5 +1,5 @@
 <?php
-// $Id: field_ui.admin.inc,v 1.68 2010/09/24 21:36:22 dries Exp $
+// $Id: field_ui.admin.inc,v 1.69 2010/09/26 23:31:35 dries Exp $
 
 /**
  * @file
@@ -68,7 +68,7 @@ function field_ui_inactive_message($entity_type, $bundle) {
  * This is intended as a callback for array_reduce().
  */
 function _field_ui_reduce_order($array, $a) {
-  $array = is_null($array) ? array() : $array;
+  $array = !isset($array) ? array() : $array;
   if ($a['name']) {
     $array[] = $a['name'];
   }
