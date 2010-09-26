@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.admin.inc,v 1.107 2010/07/31 13:01:50 webchick Exp $
+// $Id: taxonomy.admin.inc,v 1.108 2010/09/26 23:24:53 dries Exp $
 
 /**
  * @file
@@ -627,7 +627,7 @@ function theme_taxonomy_overview_terms($variables) {
   }
 
   if (empty($rows)) {
-    $rows[] = array(array('data' => $form['#empty_text'], 'colspan' => '2'));
+    $rows[] = array(array('data' => $form['#empty_text'], 'colspan' => '3'));
   }
 
   $header = array(t('Name'), t('Weight'), t('Operations'));
