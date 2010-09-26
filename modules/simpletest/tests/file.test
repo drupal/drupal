@@ -174,7 +174,7 @@ class FileTestCase extends DrupalWebTestCase {
    */
   function createDirectory($path = NULL) {
     // A directory to operate on.
-    if (is_null($path)) {
+    if (!isset($path)) {
       $path = file_default_scheme() . '://' . $this->randomName();
     }
     $this->assertTrue(drupal_mkdir($path) && is_dir($path), t('Directory was created successfully.'));
@@ -198,12 +198,12 @@ class FileTestCase extends DrupalWebTestCase {
    *   File object.
    */
   function createFile($filepath = NULL, $contents = NULL, $scheme = 'public') {
-    if (is_null($filepath)) {
+    if (!isset($filepath)) {
       $filepath = $this->randomName();
     }
     $filepath = $scheme . '://' . $filepath;
 
-    if (is_null($contents)) {
+    if (!isset($contents)) {
       $contents = "file_put_contents() doesn't seem to appreciate empty strings so let's put in some data.";
     }
 
@@ -282,7 +282,7 @@ class FileHookTestCase extends FileTestCase {
   function assertFileHookCalled($hook, $expected_count = 1, $message = NULL) {
     $actual_count = count(file_test_get_calls($hook));
 
-    if (is_null($message)) {
+    if (!isset($message)) {
       if ($actual_count == $expected_count) {
         $message = t('hook_file_@name was called correctly.', array('@name' => $hook));
       }

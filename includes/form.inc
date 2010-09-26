@@ -2096,7 +2096,7 @@ function form_type_checkboxes_value($element, $input = FALSE) {
     // checkboxes to the server at all). This will not affect non-programmatic
     // form submissions, since a checkbox can never legitimately be NULL.
     foreach ($input as $key => $value) {
-      if (is_null($value)) {
+      if (!isset($value)) {
         unset($input[$key]);
       }
     }
@@ -4009,7 +4009,7 @@ function _batch_queue($batch_set) {
 
   // The class autoloader is not available when running update.php, so make
   // sure the files are manually included.
-  if (is_null($queues)) {
+  if (!isset($queues)) {
     $queues = array();
     require_once DRUPAL_ROOT . '/modules/system/system.queue.inc';
     require_once DRUPAL_ROOT . '/includes/batch.queue.inc';

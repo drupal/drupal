@@ -302,7 +302,7 @@ function simpletest_script_init($server_software) {
 function simpletest_script_execute_batch() {
   global $args;
 
-  if (is_null($args['test-id'])) {
+  if (!isset($args['test-id'])) {
     simpletest_script_print_error("--execute-batch should not be called interactively.");
     exit;
   }

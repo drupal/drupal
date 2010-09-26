@@ -1119,7 +1119,7 @@ function theme_get_setting($setting_name, $theme = NULL) {
   $cache = &drupal_static(__FUNCTION__, array());
 
   // If no key is given, use the current theme if we can determine it.
-  if (is_null($theme)) {
+  if (!isset($theme)) {
     $theme = !empty($GLOBALS['theme_key']) ? $GLOBALS['theme_key'] : '';
   }
 

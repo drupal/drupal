@@ -1616,7 +1616,7 @@ function format_rss_item($title, $link, $description, $args = array()) {
  * Format XML elements.
  *
  * @param $array
- *   An array where each item represent an element and is either a:
+ *   An array where each item represents an element and is either a:
  *   - (key => value) pair (<key>value</key>)
  *   - Associative array with fields:
  *     - 'key': element name

@@ -106,7 +106,7 @@ function _field_sql_storage_indexname($name, $index) {
  */
 function _field_sql_storage_etid($entity_type) {
   $etid = variable_get('field_sql_storage_' . $entity_type . '_etid', NULL);
-  if (is_null($etid)) {
+  if (!isset($etid)) {
     $etid = db_insert('field_config_entity_type')->fields(array('type' => $entity_type))->execute();
     variable_set('field_sql_storage_' . $entity_type . '_etid', $etid);
   }

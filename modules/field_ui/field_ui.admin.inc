@@ -68,7 +68,7 @@ function field_ui_inactive_message($entity_type, $bundle) {
  * This is intended as a callback for array_reduce().
  */
 function _field_ui_reduce_order($array, $a) {
-  $array = is_null($array) ? array() : $array;
+  $array = !isset($array) ? array() : $array;
   if ($a['name']) {
     $array[] = $a['name'];
   }

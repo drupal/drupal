@@ -466,7 +466,7 @@ function batch_test_stack($data = NULL, $reset = FALSE) {
   if ($reset) {
     variable_del('batch_test_stack');
   }
-  if (is_null($data)) {
+  if (!isset($data)) {
     return variable_get('batch_test_stack', array());
   }
   $stack = variable_get('batch_test_stack', array());
