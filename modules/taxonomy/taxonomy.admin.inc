@@ -627,7 +627,7 @@ function theme_taxonomy_overview_terms($variables) {
   }
 
   if (empty($rows)) {
-    $rows[] = array(array('data' => $form['#empty_text'], 'colspan' => '2'));
+    $rows[] = array(array('data' => $form['#empty_text'], 'colspan' => '3'));
   }
 
   $header = array(t('Name'), t('Weight'), t('Operations'));
