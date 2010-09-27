@@ -124,7 +124,7 @@ function search_admin_settings($form) {
   $form['active']['search_default_module'] = array(
     '#title' => t('Default search module'),
     '#type' => 'radios',
-    '#default_value' => 'node',
+    '#default_value' => variable_get('search_default_module', 'node'),
     '#options' => _search_get_module_names(),
     '#description' => t('Choose which search module is the default.')
   );
