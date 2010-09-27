@@ -1,4 +1,4 @@
-/* $Id: system.base-rtl.css,v 1.2 2010/09/25 02:28:14 dries Exp $ */
+/* $Id: system.base-rtl.css,v 1.3 2010/09/27 03:56:14 webchick Exp $ */
 
 /**
  * @file
@@ -50,6 +50,6 @@ div.tree-child-last {
   background-position: -65px center;
 }
 .tabledrag-toggle-weight-wrapper {
-  text-align: left; /* RTL */
+  text-align: left;
 }
 

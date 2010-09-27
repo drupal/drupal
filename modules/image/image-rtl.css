@@ -1,12 +1,12 @@
-/* $Id: image-rtl.css,v 1.1 2009/10/12 05:22:57 webchick Exp $ */
+/* $Id: image-rtl.css,v 1.2 2010/09/27 03:56:14 webchick Exp $ */
 
 /**
  * Image upload widget.
  */
 div.image-preview {
-  float: right; /* RTL */
-  padding: 0 0 10px 10px; /* RTL */
+  float: right;
+  padding: 0 0 10px 10px;
 }
 div.image-widget-data {
-  float: right; /* RTL */
+  float: right;
 }
