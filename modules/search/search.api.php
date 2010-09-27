@@ -1,5 +1,5 @@
 <?php
-// $Id: search.api.php,v 1.29 2010/08/18 18:40:50 dries Exp $
+// $Id: search.api.php,v 1.30 2010/09/27 01:08:40 dries Exp $
 
 /**
  * @file
@@ -168,7 +168,7 @@ function hook_search_admin() {
  * search_expression_insert() may also be helpful for adding custom search
  * parameters to the search expression.
  *
- * See node_execute_search() for an example of a module that uses the search
+ * See node_search_execute() for an example of a module that uses the search
  * index, and user_execute_search() for an example that doesn't ues the search
  * index.
  *
