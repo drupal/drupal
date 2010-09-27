@@ -1,5 +1,5 @@
 <?php
-// $Id: dashboard.module,v 1.36 2010/09/24 00:37:42 dries Exp $
+// $Id: dashboard.module,v 1.37 2010/09/27 00:56:54 dries Exp $
 
 /**
  * Implements hook_help().
@@ -334,9 +334,6 @@ function dashboard_form_block_admin_display_form_alter(&$form, &$form_state, $fo
  * Implements hook_form_FORM_ID_alter().
  */
 function dashboard_form_dashboard_admin_display_form_alter(&$form, &$form_state) {
-  // Inherit the submit handler from the main block administration form.
-  $form['#submit'][] = 'block_admin_display_form_submit';
-
   // Redirect the 'configure' and 'delete' links on each block back to the
   // dashboard blocks administration page.
   foreach ($form['blocks'] as &$block) {
