@@ -64,6 +64,10 @@ class ForumTestCase extends DrupalWebTestCase {
     // Login an unprivileged user to view the forum topics and generate an
     // active forum topics list.
     $this->drupalLogin($this->web_user);
+    // Verify that this user is shown a message that they may not post content.
+    $this->drupalGet('forum/' . $this->forum['tid']);
+    $this->assertText(t('You are not allowed to post new content in the forum'), "Authenticated user without permission to post forum content is shown message in local tasks to that effect.");
+
     $this->viewForumTopics($this->nids);
 
     // Log in, and do basic tests for a user with permission to edit any forum
@@ -79,6 +83,12 @@ class ForumTestCase extends DrupalWebTestCase {
     $own_topics_user_node = $this->createForumTopic($this->forum, FALSE);
     // Verify that this user cannot edit forum content authored by another user.
     $this->verifyForums($this->edit_any_topics_user, $any_topics_user_node, FALSE, 403);
+
+    // Verify that this user is shown a local task to add new forum content.
+    $this->drupalGet('forum');
+    $this->assertLink(t('Add new Forum topic'));
+    $this->drupalGet('forum/' . $this->forum['tid']);
+    $this->assertLink(t('Add new Forum topic'));
 
     // Login a user with permission to edit any forum content.
     $this->drupalLogin($this->edit_any_topics_user);

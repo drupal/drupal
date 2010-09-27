@@ -165,9 +165,9 @@ function forum_menu() {
 function forum_menu_local_tasks_alter(&$data, $router_item, $root_path) {
   global $user;
 
-  // Add action link to 'node/add/forum' on 'forum' page.
-  if ($root_path == 'forum') {
-    $tid = (isset($router_item['page_arguments'][0]) ? $router_item['page_arguments'][0] : 0);
+  // Add action link to 'node/add/forum' on 'forum' sub-pages.
+  if ($root_path == 'forum' || $root_path == 'forum/%') {
+    $tid = (isset($router_item['page_arguments'][0]) ? $router_item['page_arguments'][0]->tid : 0);
     $forum_term = forum_forum_load($tid);
     if ($forum_term) {
       $vid = variable_get('forum_nav_vocabulary', 0);
@@ -601,7 +601,7 @@ function forum_form_alter(&$form, $form_state, $form_id) {
       $form['advanced']['parent']['#access'] = FALSE;
     }
   }
-  if ($form_id == 'forum_node_form') {
+  if (!empty($form['#node_edit_form']) && isset($form['taxonomy_forums'])) {
     $langcode = $form['taxonomy_forums']['#language'];
     // Make the vocabulary required for 'real' forum-nodes.
     $form['taxonomy_forums'][$langcode]['#required'] = TRUE;
