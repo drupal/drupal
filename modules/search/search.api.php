@@ -168,7 +168,7 @@ function hook_search_admin() {
  * search_expression_insert() may also be helpful for adding custom search
  * parameters to the search expression.
  *
- * See node_execute_search() for an example of a module that uses the search
+ * See node_search_execute() for an example of a module that uses the search
  * index, and user_execute_search() for an example that doesn't ues the search
  * index.
  *
