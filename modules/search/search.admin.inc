@@ -1,5 +1,5 @@
 <?php
-// $Id: search.admin.inc,v 1.16 2010/08/05 07:11:15 webchick Exp $
+// $Id: search.admin.inc,v 1.17 2010/09/27 02:38:25 webchick Exp $
 
 /**
  * @file
@@ -124,7 +124,7 @@ function search_admin_settings($form) {
   $form['active']['search_default_module'] = array(
     '#title' => t('Default search module'),
     '#type' => 'radios',
-    '#default_value' => 'node',
+    '#default_value' => variable_get('search_default_module', 'node'),
     '#options' => _search_get_module_names(),
     '#description' => t('Choose which search module is the default.')
   );
