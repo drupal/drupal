@@ -1,5 +1,5 @@
 <?php
-// $Id: image.admin.inc,v 1.23 2010/09/24 21:36:22 dries Exp $
+// $Id: image.admin.inc,v 1.24 2010/09/27 00:53:56 dries Exp $
 
 /**
  * @file
@@ -166,7 +166,6 @@ function image_style_form($form, &$form_state, $style) {
 function image_style_form_add_validate($form, &$form_state) {
   if (!$form_state['values']['new']) {
     form_error($form['effects']['new']['new'], t('Select an effect to add.'));
-    $form_state['rebuild'] = TRUE;
   }
 }
 

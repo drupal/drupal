@@ -1,5 +1,5 @@
 <?php
-// $Id: book.admin.inc,v 1.36 2010/06/26 21:32:20 dries Exp $
+// $Id: book.admin.inc,v 1.37 2010/09/27 00:53:56 dries Exp $
 
 /**
  * @file
@@ -91,7 +91,6 @@ function book_admin_edit($form, $form_state, $node) {
 function book_admin_edit_validate($form, &$form_state) {
   if ($form_state['values']['tree_hash'] != $form_state['values']['tree_current_hash']) {
     form_set_error('', t('This book has been modified by another user, the changes could not be saved.'));
-    $form_state['rebuild'] = TRUE;
   }
 }
 

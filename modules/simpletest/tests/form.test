@@ -1,5 +1,5 @@
 <?php
-// $Id: form.test,v 1.68 2010/09/24 21:36:22 dries Exp $
+// $Id: form.test,v 1.69 2010/09/27 00:53:56 dries Exp $
 
 /**
  * @file
@@ -788,24 +788,21 @@ class FormsFormStorageTestCase extends DrupalWebTestCase {
     $this->assertText('Form constructions: 1');
 
     $edit = array('title' => 'new', 'value' => 'value_is_set');
-    // Reload the form, but don't rebuild.
-    $this->drupalPost(NULL, $edit, 'Reload');
-    $this->assertText('Form constructions: 2');
 
-    // Now use form rebuilding triggered by a submit button.
+    // Use form rebuilding triggered by a submit button.
     $this->drupalPost(NULL, $edit, 'Continue submit');
+    $this->assertText('Form constructions: 2');
     $this->assertText('Form constructions: 3');
-    $this->assertText('Form constructions: 4');
 
     // Reset the form to the values of the storage, using a form rebuild
     // triggered by button of type button.
     $this->drupalPost(NULL, array('title' => 'changed'), 'Reset');
     $this->assertFieldByName('title', 'new', 'Values have been resetted.');
     // After rebuilding, the form has been cached.
-    $this->assertText('Form constructions: 5');
+    $this->assertText('Form constructions: 4');
 
     $this->drupalPost(NULL, $edit, 'Save');
-    $this->assertText('Form constructions: 5');
+    $this->assertText('Form constructions: 4');
     $this->assertText('Title: new', t('The form storage has stored the values.'));
   }
 
@@ -817,11 +814,8 @@ class FormsFormStorageTestCase extends DrupalWebTestCase {
     $this->assertText('Form constructions: 1');
 
     $edit = array('title' => 'new', 'value' => 'value_is_set');
-    // Reload the form, but don't rebuild.
-    $this->drupalPost(NULL, $edit, 'Reload');
-    $this->assertNoText('Form constructions');
 
-    // Now use form rebuilding triggered by a submit button.
+    // Use form rebuilding triggered by a submit button.
     $this->drupalPost(NULL, $edit, 'Continue submit');
     $this->assertText('Form constructions: 2');
 

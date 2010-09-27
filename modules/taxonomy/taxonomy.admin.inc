@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.admin.inc,v 1.108 2010/09/26 23:24:53 dries Exp $
+// $Id: taxonomy.admin.inc,v 1.109 2010/09/27 00:53:56 dries Exp $
 
 /**
  * @file
@@ -868,8 +868,6 @@ function taxonomy_form_term_submit($form, &$form_state) {
 
   $form_state['values']['tid'] = $term->tid;
   $form_state['tid'] = $term->tid;
-  // Do not rebuild here. The term is saved by now and the form should clear.
-  $form_state['rebuild'] = FALSE;
 }
 
 /**

@@ -1,5 +1,5 @@
 <?php
-// $Id: form_test.module,v 1.49 2010/09/24 21:36:22 dries Exp $
+// $Id: form_test.module,v 1.50 2010/09/27 00:53:56 dries Exp $
 
 /**
  * @file
@@ -522,16 +522,10 @@ function form_test_storage_form($form, &$form_state) {
     '#default_value' => $form_state['storage']['thing']['value'],
     '#element_validate' => array('form_test_storage_element_validate_value_cached'),
   );
-  $form['button'] = array(
-    '#type' => 'button',
-    '#value' => 'Reload',
-    // Reload the form (don't rebuild), thus we start at the initial step again.
-  );
   $form['continue_button'] = array(
     '#type' => 'button',
     '#value' => 'Reset',
     // Rebuilds the form without keeping the values.
-    '#validate' => array('form_storage_test_form_continue_validate'),
   );
   $form['continue_submit'] = array(
     '#type' => 'submit',
@@ -573,15 +567,6 @@ function form_test_storage_element_validate_value_cached($element, &$form_state)
 function form_storage_test_form_continue_submit($form, &$form_state) {
   $form_state['storage']['thing']['title'] = $form_state['values']['title'];
   $form_state['storage']['thing']['value'] = $form_state['values']['value'];
-  $form_state['rebuild'] = TRUE;
-}
-
-/**
- * Form validation handler, which doesn't preserve the values but rebuilds the
- * form. We cannot use a submit handler here, as buttons of type button don't
- * submit the form.
- */
-function form_storage_test_form_continue_validate($form, &$form_state) {
   $form_state['rebuild'] = TRUE;
 }
 
