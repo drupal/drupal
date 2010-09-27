@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.411 2010/09/24 00:37:41 dries Exp $
+// $Id: menu.inc,v 1.412 2010/09/27 22:11:38 webchick Exp $
 
 /**
  * @file
@@ -2330,16 +2330,6 @@ function menu_link_get_preferred($path = NULL) {
     $query->fields('m', array_diff(drupal_schema_fields_sql('menu_router'), array('weight')));
     $query->condition('ml.menu_name', $menu_names, 'IN');
     $query->condition('ml.link_path', $path_candidates, 'IN');
-    // Include links
-    // - appearing in trees (MENU_VISIBLE_IN_TREE).
-    // - appearing in breadcrumbs (MENU_VISIBLE_IN_BREADCRUMB), since
-    //   breadcrumbs are based on regular menu link trees.
-    // - not mapping to any router path (NULL).
-    $query->condition(db_or()
-      ->condition('m.type', MENU_VISIBLE_IN_TREE, '&')
-      ->condition('m.type', MENU_VISIBLE_IN_BREADCRUMB, '&')
-      ->isNull('m.type')
-    );
 
     // Sort candidates by link path and menu name.
     $candidates = array();
