@@ -166,7 +166,6 @@ function image_style_form($form, &$form_state, $style) {
 function image_style_form_add_validate($form, &$form_state) {
   if (!$form_state['values']['new']) {
     form_error($form['effects']['new']['new'], t('Select an effect to add.'));
-    $form_state['rebuild'] = TRUE;
   }
 }
 

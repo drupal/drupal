@@ -26,14 +26,34 @@
  * also return a richer set of @link ajax_commands AJAX framework commands @endlink.
  *
  * Standard form handling is as follows:
- *   - A form element has a #ajax member.
+ *   - A form element has a #ajax property that includes #ajax['callback'] and
+ *     omits #ajax['path']. See below about using #ajax['path'] to implement
+ *     advanced use-cases that require something other than standard form
+ *     handling.
  *   - On the specified element, AJAX processing is triggered by a change to
  *     that element.
- *   - The form is submitted and rebuilt.
- *   - The function named by #ajax['callback'] is called, which returns content
- *     or an array of AJAX framework commands.
- *   - The content returned by the callback replaces the div on the page
- *     referenced by #ajax['wrapper'].
+ *   - The browser submits an HTTP POST request to the 'system/ajax' Drupal
+ *     path.
+ *   - The menu page callback for 'system/ajax', ajax_form_callback(), calls
+ *     drupal_process_form() to process the form submission and rebuild the
+ *     form if necessary. The form is processed in much the same way as if it
+ *     were submitted without AJAX, with the same #process functions and
+ *     validation and submission handlers called in either case, making it easy
+ *     to create AJAX-enabled forms that degrade gracefully when JavaScript is
+ *     disabled.
+ *   - After form processing is complete, ajax_form_callback() calls the
+ *     function named by #ajax['callback'], which returns the form element that
+ *     has been updated and needs to be returned to the browser, or
+ *     alternatively, an array of custom AJAX commands.
+ *   - The page delivery callback for 'system/ajax', ajax_deliver(), renders the
+ *     element returned by #ajax['callback'], and returns the JSON string
+ *     created by ajax_render() to the browser.
+ *   - The browser unserializes the returned JSON string into an array of
+ *     command objects and executes each command, resulting in the old page
+ *     content within and including the HTML element specified by
+ *     #ajax['wrapper'] being replaced by the new content returned by
+ *     #ajax['callback'], using a JavaScript animation effect specified by
+ *     #ajax['effect'].
  *
  * A simple example of basic AJAX use from the
  * @link http://drupal.org/project/examples Examples module @endlink follows:

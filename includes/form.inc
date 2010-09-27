@@ -219,11 +219,13 @@ function drupal_get_form($form_id) {
  *     request (so a browser refresh does not re-submit the form). However, if
  *     'rebuild' has been set to TRUE, then a new copy of the form is
  *     immediately built and sent to the browser; instead of a redirect. This is
- *     used for multi-step forms, such as wizards and confirmation forms. Also,
- *     if a form validation handler has set 'rebuild' to TRUE and a validation
- *     error occurred, then the form is rebuilt prior to being returned,
- *     enabling form elements to be altered, as appropriate to the particular
- *     validation error.
+ *     used for multi-step forms, such as wizards and confirmation forms.
+ *     Normally, $form_state['rebuild'] is set by a submit handler, since it is
+ *     usually logic within a submit handler that determines whether a form is
+ *     done or requires another step. However, a validation handler may already
+ *     set $form_state['rebuild'] to cause the form processing to bypass submit
+ *     handlers and rebuild the form instead, even if there are no validation
+ *     errors.
  *   - input: An array of input that corresponds to $_POST or $_GET, depending
  *     on the 'method' chosen (see below).
  *   - method: The HTTP form method to use for finding the input for this form.
@@ -362,6 +364,7 @@ function form_state_defaults() {
     'build_info' => array('args' => array()),
     'temporary' => array(),
     'submitted' => FALSE,
+    'executed' => FALSE,
     'programmed' => FALSE,
     'cache'=> FALSE,
     'method' => 'post',
@@ -526,6 +529,7 @@ function form_state_keys_no_cache() {
     'method',
     'submit_handlers',
     'submitted',
+    'executed',
     'validate_handlers',
     'values',
   );
@@ -804,23 +808,39 @@ function drupal_process_form($form_id, &$form, &$form_state) {
     if (!empty($form_state['programmed'])) {
       return;
     }
+
+    // If $form_state['rebuild'] has been set and input has been processed
+    // without validation errors, we are in a multi-step workflow that is not
+    // yet complete. A new $form needs to be constructed based on the changes
+    // made to $form_state during this request. Normally, a submit handler sets
+    // $form_state['rebuild'] if a fully executed form requires another step.
+    // However, for forms that have not been fully executed (e.g., AJAX
+    // submissions triggered by non-buttons), there is no submit handler to set
+    // $form_state['rebuild']. It would not make sense to redisplay the
+    // identical form without an error for the user to correct, so we also
+    // rebuild error-free non-executed forms, regardless of
+    // $form_state['rebuild'].
+    // @todo D8: Simplify this logic; considering AJAX and non-HTML front-ends,
+    //   along with element-level #submit properties, it makes no sense to have
+    //   divergent form execution based on whether the triggering element has
+    //   #executes_submit_callback set to TRUE.
+    if (($form_state['rebuild'] || !$form_state['executed']) && !form_get_errors()) {
+      // Form building functions (e.g., _form_builder_handle_input_element())
+      // may use $form_state['rebuild'] to determine if they are running in the
+      // context of a rebuild, so ensure it is set.
+      $form_state['rebuild'] = TRUE;
+      $form = drupal_rebuild_form($form_id, $form_state, $form);
+    }
   }
 
-  // If $form_state['rebuild'] has been set and input has been processed without
-  // validation errors, we're in a multi-step workflow that is not yet complete.
-  // We need to construct a new $form based on the changes made to $form_state
-  // during this request.
-  if ($form_state['rebuild'] && $form_state['process_input'] && !form_get_errors()) {
-    $form = drupal_rebuild_form($form_id, $form_state, $form);
-  }
   // After processing the form, the form builder or a #process callback may
   // have set $form_state['cache'] to indicate that the form and form state
   // shall be cached. But the form may only be cached if the 'no_cache' property
   // is not set to TRUE. Only cache $form as it was prior to form_builder(),
   // because form_builder() must run for each request to accomodate new user
-  // input. We do not cache here for forms that have been rebuilt, because
-  // drupal_rebuild_form() takes care of that.
-  elseif ($form_state['cache'] && empty($form_state['no_cache'])) {
+  // input. Rebuilt forms are not cached here, because drupal_rebuild_form()
+  // already takes care of that.
+  if (!$form_state['rebuild'] && $form_state['cache'] && empty($form_state['no_cache'])) {
     form_set_cache($form['#build_id'], $unprocessed_form, $form_state);
   }
 }
