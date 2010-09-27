@@ -1,4 +1,4 @@
-/* $Id: style-rtl.css,v 1.22 2010/05/05 16:28:06 dries Exp $ */
+/* $Id: style-rtl.css,v 1.23 2010/09/27 01:12:45 dries Exp $ */
 
 html {
   direction: rtl;
@@ -77,7 +77,7 @@ dl dd {
 
 .form-button,
 .form-submit {
-  margin: 2em 0 1em 0.5em;
+  margin: 0 0 0 0.5em;
 }
 
 .region-header h2 {
