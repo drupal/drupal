@@ -334,9 +334,6 @@ function dashboard_form_block_admin_display_form_alter(&$form, &$form_state, $fo
  * Implements hook_form_FORM_ID_alter().
  */
 function dashboard_form_dashboard_admin_display_form_alter(&$form, &$form_state) {
-  // Inherit the submit handler from the main block administration form.
-  $form['#submit'][] = 'block_admin_display_form_submit';
-
   // Redirect the 'configure' and 'delete' links on each block back to the
   // dashboard blocks administration page.
   foreach ($form['blocks'] as &$block) {
