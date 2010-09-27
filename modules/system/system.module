@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.964 2010/09/24 21:36:22 dries Exp $
+// $Id: system.module,v 1.965 2010/09/27 01:11:17 dries Exp $
 
 /**
  * @file
@@ -2777,7 +2777,6 @@ function confirm_form($form, $question, $path, $description = NULL, $yes = NULL,
   else {
     $options = array('path' => $path);
   }
-  $cancel = l($no ? $no : t('Cancel'), $options['path'], $options);
 
   drupal_set_title($question, PASS_THROUGH);
 
@@ -2785,12 +2784,17 @@ function confirm_form($form, $question, $path, $description = NULL, $yes = NULL,
   $form['description'] = array('#markup' => $description);
   $form[$name] = array('#type' => 'hidden', '#value' => 1);
 
-  $form['actions'] = array(
-    '#type' => 'actions',
-    '#attributes' => array('class' => array('container-inline')),
+  $form['actions'] = array('#type' => 'actions');
+  $form['actions']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => $yes ? $yes : t('Confirm'),
   );
-  $form['actions']['submit'] = array('#type' => 'submit', '#value' => $yes ? $yes : t('Confirm'));
-  $form['actions']['cancel'] = array('#markup' => $cancel);
+  $form['actions']['cancel'] = array(
+    '#type' => 'link',
+    '#title' => $no ? $no : t('Cancel'),
+    '#href' => $options['path'],
+    '#options' => $options,
+  );
   // By default, render the form using theme_confirm_form().
   if (!isset($form['#theme'])) {
     $form['#theme'] = 'confirm_form';
