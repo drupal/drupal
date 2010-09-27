@@ -4,11 +4,11 @@
  * Image upload widget.
  */
 div.image-preview {
-  float: left; /* RTL */
-  padding: 0 10px 10px 0; /* RTL */
+  float: left; /* LTR */
+  padding: 0 10px 10px 0; /* LTR */
 }
 div.image-widget-data {
-  float: left; /* RTL */
+  float: left; /* LTR */
 }
 div.image-widget-data input.text-field {
   width: auto;

@@ -50,6 +50,6 @@ div.tree-child-last {
   background-position: -65px center;
 }
 .tabledrag-toggle-weight-wrapper {
-  text-align: left; /* RTL */
+  text-align: left;
 }
 
