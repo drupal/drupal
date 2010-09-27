@@ -690,7 +690,7 @@ function drupal_get_filename($type, $name, $filename = NULL) {
     try {
       if (function_exists('db_query')) {
         $file = db_query("SELECT filename FROM {system} WHERE name = :name AND type = :type", array(':name' => $name, ':type' => $type))->fetchField();
-        if (file_exists($file)) {
+        if (file_exists(DRUPAL_ROOT . '/' . $file)) {
           $files[$type][$name] = $file;
         }
       }
