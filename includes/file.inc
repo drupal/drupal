@@ -661,7 +661,7 @@ function file_usage_delete(stdClass $file, $module, $type = NULL, $id = NULL, $c
   $result = $query->execute();
 
   // If the row has more than the specified count decrement it by that number.
-  if (!$result) {
+  if (!$result && $count > 0) {
     $query = db_update('file_usage')
       ->condition('module', $module)
       ->condition('fid', $file->fid);
@@ -670,9 +670,7 @@ function file_usage_delete(stdClass $file, $module, $type = NULL, $id = NULL, $c
         ->condition('type', $type)
         ->condition('id', $id);
     }
-    if ($count) {
-      $query->expression('count', 'count - :count', array(':count' => $count));
-    }
+    $query->expression('count', 'count - :count', array(':count' => $count));
     $query->execute();
   }
 }
