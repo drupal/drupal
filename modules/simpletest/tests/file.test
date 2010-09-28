@@ -1,5 +1,5 @@
 <?php
-// $Id: file.test,v 1.69 2010/09/26 23:31:36 dries Exp $
+// $Id: file.test,v 1.70 2010/09/28 02:34:42 dries Exp $
 
 /**
  *  @file
@@ -1971,25 +1971,36 @@ class FileUsageTest extends FileTestCase {
         'module' => 'testing',
         'type' => 'bar',
         'id' => 2,
-        'count' => 2
+        'count' => 3,
       ))
       ->execute();
 
+    // Normal decrement.
     file_usage_delete($file, 'testing', 'bar', 2);
     $count = db_select('file_usage', 'f')
       ->fields('f', array('count'))
       ->condition('f.fid', $file->fid)
       ->execute()
       ->fetchField();
-    $this->assertEqual(1, $count, t('The count was decremented correctly.'));
+    $this->assertEqual(2, $count, t('The count was decremented correctly.'));
 
+    // Multiple decrement and removal.
+    file_usage_delete($file, 'testing', 'bar', 2, 2);
+    $count = db_select('file_usage', 'f')
+      ->fields('f', array('count'))
+      ->condition('f.fid', $file->fid)
+      ->execute()
+      ->fetchField();
+    $this->assertIdentical(FALSE, $count, t('The count was removed entirely when empty.'));
+
+    // Non-existent decrement.
     file_usage_delete($file, 'testing', 'bar', 2);
     $count = db_select('file_usage', 'f')
       ->fields('f', array('count'))
       ->condition('f.fid', $file->fid)
       ->execute()
       ->fetchField();
-    $this->assertEqual(0, $count, t('The count was decremented correctly.'));
+    $this->assertIdentical(FALSE, $count, t('Decrementing non-exist record complete.'));
   }
 }
 
