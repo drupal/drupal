@@ -1,5 +1,5 @@
 <?php
-// $Id: field.install,v 1.20 2010/09/13 05:50:09 webchick Exp $
+// $Id: field.install,v 1.21 2010/09/28 02:58:13 dries Exp $
 
 /**
  * @file
@@ -237,6 +237,98 @@ function _update_7000_field_create_field(&$field) {
   $field['indexes'] += $schema['indexes'];
 
   field_sql_storage_field_storage_create_field($field);
+}
+
+/**
+ * Utility function: delete a field stored in SQL Storage directly from the database.
+ *
+ * To protect user data, this function can only be used to delete fields once
+ * all information it stored is gone. Delete all data from the
+ * field_data_$field_name table before calling by either manually issuing
+ * delete queries against it or using _update_7000_field_delete_instance().
+ *
+ * This function is valid for a database schema version 7000.
+ *
+ * @param $field_name
+ *   The field name to delete.
+ *
+ * @ingroup update-api-6.x-to-7.x
+ */
+function _update_7000_field_delete_field($field_name) {
+  $table_name = 'field_data_' . $field_name;
+  if (db_select($table_name)->range(0, 1)->countQuery()->execute()->fetchField()) {
+    $t = get_t();
+    throw new Exception($t('This function can only be used to delete fields without data'));
+  }
+  // Delete all instances.
+  db_delete('field_config_instance')
+    ->condition('field_name', $field_name)
+    ->execute();
+
+  // Nuke field data and revision tables.
+  db_drop_table($table_name);
+  db_drop_table('field_revision_' . $field_name);
+
+  // Delete the field.
+  db_delete('field_config')
+    ->condition('field_name', $field_name)
+    ->execute();
+}
+
+
+/**
+ * Utility function: delete an instance and all its data of a field stored in SQL Storage.
+ *
+ * BEWARE: this function deletes user data from the field storage tables.
+ *
+ * This function is valid for a database schema version 7000.
+ *
+ * @ingroup update-api-6.x-to-7.x
+ */
+function _update_7000_field_delete_instance($field_name, $entity_type, $bundle) {
+  // Delete field instance configuration data.
+  db_delete('field_config_instance')
+    ->condition('field_name', $field_name)
+    ->condition('entity_type', $entity_type)
+    ->condition('bundle', $bundle)
+    ->execute();
+
+  // Nuke data.
+  $etid = _field_sql_storage_etid($entity_type);
+  db_delete('field_data_' . $field_name)
+    ->condition('etid', $etid)
+    ->condition('bundle', $bundle)
+    ->execute();
+  db_delete('field_revision_' . $field_name)
+    ->condition('etid', $etid)
+    ->condition('bundle', $bundle)
+    ->execute();
+}
+
+/**
+ * Utility function: fetch all the field definitions from the database.
+ */
+function _update_7000_field_read_fields() {
+  $fields = array();
+  $results = db_query('SELECT * FROM {field_config} WHERE deleted = 0', array(), array('fetch' => PDO::FETCH_ASSOC));
+  foreach ($results as $record) {
+    $field = unserialize($record['data']);
+    $field['id'] = $record['id'];
+    $field['field_name'] = $record['field_name'];
+    $field['type'] = $record['type'];
+    $field['module'] = $record['module'];
+    $field['active'] = $record['active'];
+    $field['storage']['type'] = $record['storage_type'];
+    $field['storage']['module'] = $record['storage_module'];
+    $field['storage']['active'] = $record['storage_active'];
+    $field['locked'] = $record['locked'];
+    $field['cardinality'] = $record['cardinality'];
+    $field['translatable'] = $record['translatable'];
+    $field['deleted'] = $record['deleted'];
+
+    $fields[$field['field_name']] = $field;
+  }
+  return $fields;
 }
 
 /**
