@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.965 2010/09/27 01:11:17 dries Exp $
+// $Id: system.module,v 1.966 2010/09/28 02:30:32 dries Exp $
 
 /**
  * @file
@@ -2209,7 +2209,7 @@ function system_update_files_database(&$files, $type) {
 
   // All remaining files are not in the system table, so we need to add them.
   $query = db_insert('system')->fields(array('filename', 'name', 'type', 'owner', 'info'));
-  foreach($files as &$file) {
+  foreach ($files as &$file) {
     if (isset($file->exists)) {
       unset($file->exists);
     }

@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.309 2010/09/24 21:36:22 dries Exp $
+// $Id: system.admin.inc,v 1.310 2010/09/28 02:30:32 dries Exp $
 
 /**
  * @file
@@ -1839,7 +1839,7 @@ function system_file_system_settings() {
   );
   // Any visible, writeable wrapper can potentially be used for the files
   // directory, including a remote file system that integrates with a CDN.
-  foreach(file_get_stream_wrappers(STREAM_WRAPPERS_WRITE_VISIBLE) as $scheme => $info) {
+  foreach (file_get_stream_wrappers(STREAM_WRAPPERS_WRITE_VISIBLE) as $scheme => $info) {
     $options[$scheme] = check_plain($info['description']);
   }
 
@@ -2719,7 +2719,7 @@ function theme_system_themes_page($variables) {
     // Start new theme group.
     $output .= '<div class="system-themes-list system-themes-list-'. $state .' clearfix"><h2>'. $title .'</h2>';
 
-    foreach($theme_groups[$state] as $theme) {
+    foreach ($theme_groups[$state] as $theme) {
 
       // Theme the screenshot.
       $screenshot = $theme->screenshot ? theme('image', $theme->screenshot) : '<div class="no-screenshot">' . t('no screenshot') . '</div>';

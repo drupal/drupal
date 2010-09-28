@@ -1,5 +1,5 @@
 <?php
-// $Id: schema.test,v 1.21 2010/08/05 23:53:38 webchick Exp $
+// $Id: schema.test,v 1.22 2010/09/28 02:30:32 dries Exp $
 
 /**
  * @file
@@ -169,7 +169,7 @@ class SchemaTestCase extends DrupalWebTestCase {
     }
 
     // Finally, check each column and try to insert invalid values into them.
-    foreach($table_spec['fields'] as $column_name => $column_spec) {
+    foreach ($table_spec['fields'] as $column_name => $column_spec) {
       $this->assertTrue(db_field_exists($table_name, $column_name), t('Unsigned @type column was created.', array('@type' => $column_spec['type'])));
       $this->assertFalse($this->tryUnsignedInsert($table_name, $column_name), t('Unsigned @type column rejected a negative value.', array('@type' => $column_spec['type'])));
     }

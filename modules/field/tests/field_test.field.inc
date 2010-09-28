@@ -1,5 +1,5 @@
 <?php
-// $Id: field_test.field.inc,v 1.12 2010/09/04 15:40:51 dries Exp $
+// $Id: field_test.field.inc,v 1.13 2010/09/28 02:30:31 dries Exp $
 
 /**
  * @file
@@ -184,7 +184,7 @@ function field_test_field_widget_form(&$form, &$form_state, $field, $instance, $
 function field_test_widget_multiple_validate($element, &$form_state) {
   $values = array_map('trim', explode(',', $element['#value']));
   $items = array();
-  foreach($values as $value) {
+  foreach ($values as $value) {
     $items[] = array('value' => $value);
   }
   form_set_value($element, $items, $form_state);

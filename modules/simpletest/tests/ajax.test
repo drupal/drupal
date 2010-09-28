@@ -1,5 +1,5 @@
 <?php
-// $Id: ajax.test,v 1.17 2010/09/19 18:39:18 dries Exp $
+// $Id: ajax.test,v 1.18 2010/09/28 02:30:32 dries Exp $
 
 class AJAXTestCase extends DrupalWebTestCase {
   function setUp() {
@@ -192,7 +192,7 @@ class AJAXFormValuesTestCase extends AJAXTestCase {
    */
   function testSimpleAJAXFormValue() {
     // Verify form values of a select element.
-    foreach(array('red', 'green', 'blue') as $item) {
+    foreach (array('red', 'green', 'blue') as $item) {
       $edit = array(
         'select' => $item,
       );
@@ -202,7 +202,7 @@ class AJAXFormValuesTestCase extends AJAXTestCase {
     }
 
     // Verify form values of a checkbox element.
-    foreach(array(FALSE, TRUE) as $item) {
+    foreach (array(FALSE, TRUE) as $item) {
       $edit = array(
         'checkbox' => $item,
       );

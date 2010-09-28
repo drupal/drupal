@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.361 2010/09/26 23:31:36 dries Exp $
+// $Id: search.module,v 1.362 2010/09/28 02:30:31 dries Exp $
 
 /**
  * @file
@@ -353,7 +353,7 @@ function search_cron() {
   // to date.
   drupal_register_shutdown_function('search_update_totals');
 
-  foreach(variable_get('search_active_modules', array('node', 'user')) as $module) {
+  foreach (variable_get('search_active_modules', array('node', 'user')) as $module) {
     // Update word index
     module_invoke($module, 'update_index');
   }

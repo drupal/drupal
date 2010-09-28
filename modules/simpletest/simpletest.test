@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.test,v 1.45 2010/09/01 20:08:17 dries Exp $
+// $Id: simpletest.test,v 1.46 2010/09/28 02:30:32 dries Exp $
 
 class SimpleTestFunctionalTest extends DrupalWebTestCase {
   /**
@@ -385,7 +385,7 @@ class SimpleTestMailCaptureTestCase extends DrupalWebTestCase {
 
     // Assert that the e-mail was sent by iterating over the message properties
     // and ensuring that they are captured intact.
-    foreach($message as $field => $value) {
+    foreach ($message as $field => $value) {
       $this->assertMail($field, $value, t('The e-mail was sent and the value for property @field is intact.', array('@field' => $field)), t('E-mail'));
     }
 

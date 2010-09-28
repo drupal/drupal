@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.345 2010/09/24 00:37:42 dries Exp $
+// $Id: filter.module,v 1.346 2010/09/28 02:30:31 dries Exp $
 
 /**
  * @file
@@ -1013,11 +1013,11 @@ function filter_dom_serialize($dom_document) {
   $body_node = $dom_document->getElementsByTagName('body')->item(0);
   $body_content = '';
 
-  foreach($body_node->getElementsByTagName('script') as $node) {
+  foreach ($body_node->getElementsByTagName('script') as $node) {
     filter_dom_serialize_escape_cdata_element($dom_document, $node);
   }
 
-  foreach($body_node->getElementsByTagName('style') as $node) {
+  foreach ($body_node->getElementsByTagName('style') as $node) {
     filter_dom_serialize_escape_cdata_element($dom_document, $node, '/*', '*/');
   }
 
@@ -1173,7 +1173,7 @@ function _filter_html($text, $filter) {
   if ($filter->settings['filter_html_nofollow']) {
     $html_dom = filter_dom_load($text);
     $links = $html_dom->getElementsByTagName('a');
-    foreach($links as $link) {
+    foreach ($links as $link) {
       $link->setAttribute('rel', 'nofollow');
     }
     $text = filter_dom_serialize($html_dom);

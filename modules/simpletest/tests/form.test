@@ -1,5 +1,5 @@
 <?php
-// $Id: form.test,v 1.69 2010/09/27 00:53:56 dries Exp $
+// $Id: form.test,v 1.70 2010/09/28 02:30:32 dries Exp $
 
 /**
  * @file
@@ -885,7 +885,7 @@ class FormsFormStorageTestCase extends DrupalWebTestCase {
       array(),
       array('query' => array('cache' => 1)),
     );
-    foreach($run_options as $options) {
+    foreach ($run_options as $options) {
       $this->drupalPost('form-test/state-persist', array(), t('Submit'), $options);
       // The submit handler outputs the value in $form_state, assert it's there.
       $this->assertText('State persisted.');
