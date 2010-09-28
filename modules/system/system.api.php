@@ -3294,7 +3294,7 @@ function hook_drupal_goto_alter(&$path, &$options, &$http_response_code) {
  *   array will be the most likely target for changes.
  */
 function hook_html_head_alter(&$head_elements) {
-  foreach($head_elements as $key => $element) {
+  foreach ($head_elements as $key => $element) {
     if (isset($element['#attributes']['rel']) && $element['#attributes']['rel'] == 'canonical') {
       // I want a custom canonical url.
       $head_elements[$key]['#attributes']['href'] = mymodule_canonical_url();
@@ -3662,7 +3662,7 @@ function hook_page_delivery_callback_alter(&$callback) {
  */
 function hook_system_themes_page_alter(&$theme_groups) {
   foreach ($theme_groups as $state => &$group) {
-    foreach($theme_groups[$state] as &$theme) {
+    foreach ($theme_groups[$state] as &$theme) {
       // Add a foo link to each list of theme operations.
       $theme->operations[] = l(t('Foo'), 'admin/appearance/foo', array('query' => array('theme' => $theme->name)));
     }

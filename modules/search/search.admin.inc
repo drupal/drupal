@@ -60,7 +60,7 @@ function search_admin_settings($form) {
   // Collect some stats
   $remaining = 0;
   $total = 0;
-  foreach(variable_get('search_active_modules', array('node', 'user')) as $module) {
+  foreach (variable_get('search_active_modules', array('node', 'user')) as $module) {
     if ($status = module_invoke($module, 'search_status')) {
       $remaining += $status['remaining'];
       $total += $status['total'];
@@ -132,7 +132,7 @@ function search_admin_settings($form) {
   $form['#submit'][] = 'search_admin_settings_submit';
 
   // Per module settings
-  foreach(variable_get('search_active_modules', array('node', 'user')) as $module) {
+  foreach (variable_get('search_active_modules', array('node', 'user')) as $module) {
     $added_form = module_invoke($module, 'search_admin');
     if (is_array($added_form)) {
       $form = array_merge($form, $added_form);

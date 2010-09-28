@@ -184,7 +184,7 @@ function field_test_field_widget_form(&$form, &$form_state, $field, $instance, $
 function field_test_widget_multiple_validate($element, &$form_state) {
   $values = array_map('trim', explode(',', $element['#value']));
   $items = array();
-  foreach($values as $value) {
+  foreach ($values as $value) {
     $items[] = array('value' => $value);
   }
   form_set_value($element, $items, $form_state);

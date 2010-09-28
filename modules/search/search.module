@@ -353,7 +353,7 @@ function search_cron() {
   // to date.
   drupal_register_shutdown_function('search_update_totals');
 
-  foreach(variable_get('search_active_modules', array('node', 'user')) as $module) {
+  foreach (variable_get('search_active_modules', array('node', 'user')) as $module) {
     // Update word index
     module_invoke($module, 'update_index');
   }

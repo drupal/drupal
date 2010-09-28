@@ -497,7 +497,7 @@ function node_update_7004() {
  * Add status/comment/promote and sticky columns to the {node_revision} table.
  */
 function node_update_7005() {
-  foreach(array('status', 'comment', 'promote', 'sticky') as $column) {
+  foreach (array('status', 'comment', 'promote', 'sticky') as $column) {
     db_add_field('node_revision', $column, array(
       'type' => 'int',
       'not null' => TRUE,

@@ -41,7 +41,7 @@ if ($args['clean']) {
 
   // Get the status messages and print them.
   $messages = array_pop(drupal_get_messages('status'));
-  foreach($messages as $text) {
+  foreach ($messages as $text) {
     echo " - " . $text . "\n";
   }
   exit;
@@ -431,7 +431,7 @@ function simpletest_script_get_test_list() {
       // Check for valid group names and get all valid classes in group.
       foreach ($args['test_names'] as $group_name) {
         if (isset($groups[$group_name])) {
-          foreach($groups[$group_name] as $class_name => $info) {
+          foreach ($groups[$group_name] as $class_name => $info) {
             $test_list[] = $class_name;
           }
         }

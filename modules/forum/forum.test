@@ -145,7 +145,7 @@ class ForumTestCase extends DrupalWebTestCase {
     // Must remove forum topics to test creating orphan topics.
     $vid = variable_get('forum_nav_vocabulary');
     $tree = taxonomy_get_tree($vid);
-    foreach($tree as $term) {
+    foreach ($tree as $term) {
       taxonomy_term_delete($term->tid);
     }
 

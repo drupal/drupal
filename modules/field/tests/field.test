@@ -1616,7 +1616,7 @@ class FieldDisplayAPITestCase extends FieldTestCase {
     $settings = field_info_formatter_settings('field_test_default');
     $setting = $settings['test_formatter_setting'];
     $this->assertText($this->label, t('Label was displayed.'));
-    foreach($this->values as $delta => $value) {
+    foreach ($this->values as $delta => $value) {
       $this->assertText($setting . '|' . $value['value'], t('Value @delta was displayed with expected setting.', array('@delta' => $delta)));
     }
 
@@ -1633,7 +1633,7 @@ class FieldDisplayAPITestCase extends FieldTestCase {
     $setting = $display['settings']['test_formatter_setting_multiple'];
     $this->assertNoText($this->label, t('Label was not displayed.'));
     $array = array();
-    foreach($this->values as $delta => $value) {
+    foreach ($this->values as $delta => $value) {
       $array[] = $delta . ':' . $value['value'];
     }
     $this->assertText($setting . '|' . implode('|', $array), t('Values were displayed with expected setting.'));
@@ -1661,7 +1661,7 @@ class FieldDisplayAPITestCase extends FieldTestCase {
     $this->drupalSetContent(drupal_render($output));
     $setting = $this->instance['display']['teaser']['settings']['test_formatter_setting'];
     $this->assertText($this->label, t('Label was displayed.'));
-    foreach($this->values as $delta => $value) {
+    foreach ($this->values as $delta => $value) {
       $this->assertText($setting . '|' . $value['value'], t('Value @delta was displayed with expected setting.', array('@delta' => $delta)));
     }
 
@@ -1671,7 +1671,7 @@ class FieldDisplayAPITestCase extends FieldTestCase {
     $this->drupalSetContent(drupal_render($output));
     $setting = $this->instance['display']['default']['settings']['test_formatter_setting'];
     $this->assertText($this->label, t('Label was displayed.'));
-    foreach($this->values as $delta => $value) {
+    foreach ($this->values as $delta => $value) {
       $this->assertText($setting . '|' . $value['value'], t('Value @delta was displayed with expected setting.', array('@delta' => $delta)));
     }
   }
