@@ -1,5 +1,5 @@
 <?php
-// $Id: color.inc,v 1.5 2010/09/16 20:52:00 dries Exp $
+// $Id: color.inc,v 1.6 2010/09/28 02:29:27 dries Exp $
 
 // Put the logo path into JavaScript for the live preview.
 drupal_add_js(array('color' => array('logo' => theme_get_setting('logo', 'bartik'))), 'setting');
@@ -124,7 +124,6 @@ $info = array(
   'blend_target' => '#ffffff',
 
   // Preview files.
-  'preview_image' => 'color/preview.png',
   'preview_css' => 'color/preview.css',
   'preview_js' => 'color/preview.js',
   'preview_html' => 'color/preview.html',
