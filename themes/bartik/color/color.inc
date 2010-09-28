@@ -124,7 +124,6 @@ $info = array(
   'blend_target' => '#ffffff',
 
   // Preview files.
-  'preview_image' => 'color/preview.png',
   'preview_css' => 'color/preview.css',
   'preview_js' => 'color/preview.js',
   'preview_html' => 'color/preview.html',
