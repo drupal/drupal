@@ -435,7 +435,7 @@ function filter_update_7005() {
     ->execute();
 
   // We do not delete the 'filter_default_format' variable, since other modules
-  // may need it in their update functions.
+  // need it in their update functions; for an example, see user_update_7010().
   // @todo This variable can be deleted in Drupal 8.
 }
 

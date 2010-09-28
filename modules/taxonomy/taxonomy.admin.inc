@@ -656,7 +656,7 @@ function taxonomy_form_term($form, &$form_state, $edit = array(), $vocabulary = 
     $defaults = array(
       'name' => '',
       'description' => '',
-      'format' => filter_default_format(),
+      'format' => NULL,
       'vocabulary_machine_name' => isset($vocabulary) ? $vocabulary->machine_name : NULL,
       'tid' => NULL,
       'weight' => 0,

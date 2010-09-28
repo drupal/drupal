@@ -219,9 +219,11 @@ function block_block_info() {
  * Implements hook_block_configure().
  */
 function block_block_configure($delta = 0) {
-  $custom_block = array('format' => filter_default_format());
   if ($delta) {
     $custom_block = block_custom_block_get($delta);
+  }
+  else {
+    $custom_block = array();
   }
   return block_custom_block_form($custom_block);
 }
