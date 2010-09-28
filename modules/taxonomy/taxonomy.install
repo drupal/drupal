@@ -264,6 +264,17 @@ function taxonomy_update_dependencies() {
 }
 
 /**
+ * Utility function: get the list of vocabularies directly from the database.
+ *
+ * This function is valid for a database schema version 7002.
+ *
+ * @ingroup update-api-6.x-to-7.x
+ */
+function _update_7002_taxonomy_get_vocabularies() {
+  return db_query('SELECT v.* FROM {taxonomy_vocabulary} v ORDER BY v.weight, v.name')->fetchAllAssoc('vid', PDO::FETCH_OBJ);
+}
+
+/**
  * Rename taxonomy tables.
  */
 function taxonomy_update_7001() {
@@ -299,7 +310,6 @@ function taxonomy_update_7002() {
       ->fields(array('machine_name' => $machine_name))
       ->condition('vid', $vid)
       ->execute();
-    field_attach_create_bundle('taxonomy_term', $machine_name);
   }
 
   // The machine_name unique key can only be added after we ensure the
@@ -392,6 +402,7 @@ function taxonomy_update_7004() {
     $field_name = 'taxonomy_' . $vocabulary->machine_name;
     $field = array(
       'field_name' => $field_name,
+      'module' => 'taxonomy',
       'type' => 'taxonomy_term_reference',
       'cardinality' => $vocabulary->multiple || $vocabulary->tags ? FIELD_CARDINALITY_UNLIMITED : 1,
       'settings' => array(
@@ -404,7 +415,7 @@ function taxonomy_update_7004() {
         ),
       ),
     );
-    field_create_field($field);
+    _update_7000_field_create_field($field);
 
     foreach ($vocabulary->nodes as $bundle) {
       $instance = array(
@@ -412,10 +423,9 @@ function taxonomy_update_7004() {
         'field_name' => $field_name,
         'bundle' => $bundle,
         'entity_type' => 'node',
+        'settings' => array(),
         'description' => $vocabulary->help,
-        'widget' => array(
-          'type' => $vocabulary->tags ? 'taxonomy_autocomplete' : 'select',
-        ),
+        'widget' => array(),
         'display' => array(
           'default' => array(
             'type' => 'taxonomy_term_reference_link',
@@ -427,7 +437,24 @@ function taxonomy_update_7004() {
           ),
         ),
       );
-      field_create_instance($instance);
+      if ($vocabulary->tags) {
+        $instance['widget'] = array(
+          'type' => 'taxonomy_autocomplete',
+          'module' => 'taxonomy',
+          'settings' => array(
+            'size' => 60,
+            'autocomplete_path' => 'taxonomy/autocomplete',
+          ),
+        );
+      }
+      else {
+        $instance['widget'] = array(
+          'type' => 'select',
+          'module' => 'options',
+          'settings' => array(),
+        );
+      }
+      _update_7000_field_create_instance($field, $instance);
     }
   }
 
@@ -438,7 +465,7 @@ function taxonomy_update_7004() {
 
   // Allowed values for this extra vocabs field is every vocabulary.
   $allowed_values = array();
-  foreach (taxonomy_get_vocabularies() as $vocabulary) {
+  foreach (_update_7002_taxonomy_get_vocabularies() as $vocabulary) {
     $allowed_values[] = array(
       'vid' => $vocabulary->vid,
       'parent' => 0,
@@ -448,6 +475,7 @@ function taxonomy_update_7004() {
   $field_name = 'taxonomyextra';
   $field = array(
     'field_name' => $field_name,
+    'module' => 'taxonomy',
     'type' => 'taxonomy_term_reference',
     'cardinality' => FIELD_CARDINALITY_UNLIMITED,
     'settings' => array(
@@ -455,17 +483,20 @@ function taxonomy_update_7004() {
       'allowed_values' => $allowed_values,
     ),
   );
-  field_create_field($field);
+  _update_7000_field_create_field($field);
 
-  foreach (node_type_get_types() as $bundle) {
+  foreach (_update_7000_node_get_types() as $bundle) {
     $instance = array(
       'label' => 'Taxonomy upgrade extras',
       'field_name' => $field_name,
-      'bundle' => $bundle->type,
       'entity_type' => 'node',
+      'bundle' => $bundle->type,
+      'settings' => array(),
       'description' => 'Debris left over after upgrade from Drupal 6',
       'widget' => array(
         'type' => 'taxonomy_autocomplete',
+        'module' => 'taxonomy',
+        'settings' => array(),
       ),
       'display' => array(
         'default' => array(
@@ -478,7 +509,7 @@ function taxonomy_update_7004() {
         ),
       ),
     );
-    field_create_instance($instance);
+    _update_7000_field_create_instance($field, $instance);
   }
 
   $fields = array('help', 'multiple', 'required', 'tags');
@@ -528,7 +559,7 @@ function taxonomy_update_7005(&$sandbox) {
   // provides the delta value for each term reference data insert. The
   // deltas are reset for each new revision.
 
-  $field_info = field_info_fields();
+  $field_info = _update_7000_field_read_fields();
 
   // This is a multi-pass update. On the first call we need to initialize some
   // variables.
@@ -635,8 +666,9 @@ function taxonomy_update_7005(&$sandbox) {
 
       // Table and column found in the field's storage details. During upgrades,
       // it's always SQL.
-      $table = key($field['storage']['details']['sql'][FIELD_LOAD_REVISION]);
-      $value_column = $field['storage']['details']['sql'][FIELD_LOAD_REVISION][$table]['tid'];
+      $table_name = "field_data_{$field_name}";
+      $revision_name = "field_revision_{$field_name}";
+      $value_column = $field_name . '_tid';
 
       // Column names and values in field storage are the same for current and
       // revision.
@@ -644,12 +676,11 @@ function taxonomy_update_7005(&$sandbox) {
       $values = array($etid, $record->nid, $record->vid, $record->type, LANGUAGE_NONE, $deltas[$field_name]++, $record->tid);
 
       // Insert rows into the revision table.
-      db_insert($table)->fields($columns)->values($values)->execute();
+      db_insert($revision_name)->fields($columns)->values($values)->execute();
 
       // is_current column is a node ID if this revision is also current.
       if ($record->is_current) {
-        $table = key($field['storage']['details']['sql'][FIELD_LOAD_CURRENT]);
-        db_insert($table)->fields($columns)->values($values)->execute();
+        db_insert($table_name)->fields($columns)->values($values)->execute();
 
         // Update the {taxonomy_index} table.
         db_insert('taxonomy_index')
@@ -680,20 +711,20 @@ function taxonomy_update_7005(&$sandbox) {
 
     // Determine necessity of taxonomyextras field.
     $field = $field_info['taxonomyextra'];
-    $table = key($field['storage']['details']['sql'][FIELD_LOAD_REVISION]);
-    $node_types = db_select($table)->distinct()->fields($table, array('bundle'))
+    $revision_name = 'field_revision_' . $field['field_name'];
+    $node_types = db_select($revision_name)->distinct()->fields($revision_name, array('bundle'))
       ->execute()->fetchCol();
 
     if (empty($node_types)) {
       // Delete the overflow field if there are no rows in the revision table.
-      field_delete_field('taxonomyextra');
+      _update_7000_field_delete_field('taxonomyextra');
     }
     else {
       // Remove instances which are not actually used.
-      $bundles = array_diff($field['bundles']['node'], $node_types);
+      $bundles = db_query('SELECT bundle FROM {field_config_instance} WHERE field_name = :field_name', array(':field_name' => 'taxonomyextra'))->fetchCol();
+      $bundles = array_diff($bundles, $node_types);
       foreach ($bundles as $bundle) {
-        $instance = field_info_instance('node', 'taxonomyextra', $bundle);
-        field_delete_instance($instance);
+        _update_7000_field_delete_instance('taxonomyextra', 'node', $bundle);
       }
     }
   }
