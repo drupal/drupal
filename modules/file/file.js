@@ -1,4 +1,4 @@
-// $Id: file.js,v 1.4 2010/07/10 00:03:37 webchick Exp $
+// $Id: file.js,v 1.5 2010/09/28 02:31:52 dries Exp $
 
 /**
  * @file
@@ -65,7 +65,7 @@ Drupal.file = Drupal.file || {
     if (accept.length > 1 && this.value.length > 0) {
       var acceptableMatch = new RegExp('\\.(' + accept + ')$', 'gi');
       if (!acceptableMatch.test(this.value)) {
-        var error = Drupal.t("The selected file %filename cannot not be uploaded. Only files with the following extensions are allowed: %extensions.", {
+        var error = Drupal.t("The selected file %filename cannot be uploaded. Only files with the following extensions are allowed: %extensions.", {
           '%filename': this.value,
           '%extensions': accept.replace(/\|/g, ', ')
         });
