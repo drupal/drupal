@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.430 2010/09/24 02:01:56 dries Exp $
+// $Id: block.module,v 1.431 2010/09/28 03:30:37 webchick Exp $
 
 /**
  * @file
@@ -219,9 +219,11 @@ function block_block_info() {
  * Implements hook_block_configure().
  */
 function block_block_configure($delta = 0) {
-  $custom_block = array('format' => filter_default_format());
   if ($delta) {
     $custom_block = block_custom_block_get($delta);
+  }
+  else {
+    $custom_block = array();
   }
   return block_custom_block_form($custom_block);
 }

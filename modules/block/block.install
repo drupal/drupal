@@ -1,5 +1,5 @@
 <?php
-// $Id: block.install,v 1.45 2010/07/28 01:40:39 dries Exp $
+// $Id: block.install,v 1.46 2010/09/28 03:30:37 webchick Exp $
 
 /**
  * @file
@@ -156,9 +156,8 @@ function block_schema() {
       ),
       'format' => array(
         'type' => 'int',
-        'size' => 'small',
-        'not null' => TRUE,
-        'default' => 0,
+        'unsigned' => TRUE,
+        'not null' => FALSE,
         'description' => 'The {filter_format}.format of the block body.',
       ),
     ),
@@ -186,6 +185,19 @@ function block_install() {
     ->fields(array('weight' => -5))
     ->condition('name', 'block')
     ->execute();
+}
+
+/**
+ * Implements hook_update_dependencies().
+ */
+function block_update_dependencies() {
+  // Block update 7005 needs to query the list of existing text formats and
+  // therefore must run after filter_update_7000().
+  $dependencies['block'][7005] = array(
+    'filter' => 7000,
+  );
+
+  return $dependencies;
 }
 
 /**
@@ -397,13 +409,25 @@ function block_update_7004() {
  * Update the {block_custom}.format column.
  */
 function block_update_7005() {
-  // It was previously possible for a value of "0" to be stored in database
-  // tables to indicate that a particular piece of text should be filtered
-  // using the default text format.
+  // For an explanation of these updates, see the code comments in
+  // user_update_7010().
+  db_change_field('block_custom', 'format', 'format', array(
+    'type' => 'int',
+    'unsigned' => TRUE,
+    'not null' => FALSE,
+    'description' => 'The {filter_format}.format of the block body.',
+  ));
+  db_update('block_custom')
+    ->fields(array('format' => NULL))
+    ->condition('body', '')
+    ->condition('format', 0)
+    ->execute();
+  $existing_formats = db_query("SELECT format FROM {filter_format}")->fetchCol();
   $default_format = variable_get('filter_default_format', 1);
   db_update('block_custom')
     ->fields(array('format' => $default_format))
-    ->condition('format', 0)
+    ->isNotNull('format')
+    ->condition('format', $existing_formats, 'NOT IN')
     ->execute();
 }
 

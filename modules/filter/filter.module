@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.346 2010/09/28 02:30:31 dries Exp $
+// $Id: filter.module,v 1.347 2010/09/28 03:30:37 webchick Exp $
 
 /**
  * @file
@@ -751,8 +751,8 @@ function check_markup($text, $format_id = NULL, $langcode = '', $cache = FALSE) 
  *   The form element to process. Properties used:
  *   - #base_type: The form element #type to use for the 'value' element.
  *     'textarea' by default.
- *   - #format: (optional) The text format id to preselect. If 0, NULL, or not
- *     set, the default format for the current user will be used.
+ *   - #format: (optional) The text format id to preselect. If NULL or not set,
+ *     the default format for the current user will be used.
  *
  * @return
  *   The expanded element.
@@ -820,9 +820,10 @@ function filter_process_format($element) {
   }
 
   // Use the default format for this user if none was selected.
-  if (empty($element['#format'])) {
+  if (!isset($element['#format'])) {
     $element['#format'] = filter_default_format($user);
   }
+
   $element['format']['format'] = array(
     '#type' => 'select',
     '#title' => t('Text format'),
@@ -841,20 +842,30 @@ function filter_process_format($element) {
     '#weight' => 0,
   );
 
-  // Lastly, disallow editing of this field if the user is not allowed to use
-  // the stored and preselected text format. But only, if that format actually
-  // exists.
   $all_formats = filter_formats();
-  if (!isset($formats[$element['#format']]) && isset($all_formats[$element['#format']])) {
+  $format_exists = isset($all_formats[$element['#format']]);
+  $user_has_access = isset($formats[$element['#format']]);
+  $user_is_admin = user_access('administer filters');
+
+  // If the stored format does not exist, administrators have to assign a new
+  // format.
+  if (!$format_exists && $user_is_admin) {
+    $element['format']['format']['#default_value'] = NULL;
+    // Force access to the format selector (it may have been denied above if
+    // the user only has access to a single format).
+    $element['format']['format']['#access'] = TRUE;
+  }
+  // Disable this widget, if the user is not allowed to use the stored format,
+  // or if the stored format does not exist. The 'administer filters' permission
+  // only grants access to the filter administration, not to all formats.
+  elseif (!$user_has_access || !$format_exists) {
     // Overload default values into #value to make them unalterable.
     $element['value']['#value'] = $element['value']['#default_value'];
     $element['format']['format']['#value'] = $element['format']['format']['#default_value'];
 
     // Prepend #pre_render callback to replace field value with user notice
     // prior to rendering.
-    if (!isset($element['value']['#pre_render'])) {
-      $element['value']['#pre_render'] = array();
-    }
+    $element['value'] += array('#pre_render' => array());
     array_unshift($element['value']['#pre_render'], 'filter_form_access_denied');
 
     // Cosmetic adjustments.

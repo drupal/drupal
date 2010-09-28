@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.test,v 1.91 2010/09/24 00:37:44 dries Exp $
+// $Id: taxonomy.test,v 1.92 2010/09/28 03:30:37 webchick Exp $
 
 /**
  * @file
@@ -34,6 +34,8 @@ class TaxonomyWebTestCase extends DrupalWebTestCase {
     $term = new stdClass();
     $term->name = $this->randomName();
     $term->description = $this->randomName();
+    // Use the first available text format.
+    $term->format = db_query_range('SELECT format FROM {filter_format}', 0, 1)->fetchField();
     $term->vid = $vocabulary->vid;
     taxonomy_term_save($term);
     return $term;

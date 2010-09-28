@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.237 2010/09/25 01:50:07 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.238 2010/09/28 03:30:37 webchick Exp $
 
 /**
  * Global variable that holds information about the tests being run.
@@ -2515,6 +2515,31 @@ class DrupalWebTestCase extends DrupalTestCase {
    */
   protected function drupalSetSettings($settings) {
     $this->drupalSettings = $settings;
+  }
+
+  /**
+   * Pass if the internal browser's URL matches the given path.
+   *
+   * @param $path
+   *   The expected system path.
+   * @param $options
+   *   (optional) Any additional options to pass for $path to url().
+   * @param $message
+   *   Message to display.
+   * @param $group
+   *   The group this message belongs to, defaults to 'Other'.
+   *
+   * @return
+   *   TRUE on pass, FALSE on fail.
+   */
+  protected function assertUrl($path, array $options = array(), $message = '', $group = 'Other') {
+    if (!$message) {
+      $message = t('Current URL is @url.', array(
+        '@url' => var_export(url($path, $options), TRUE),
+      ));
+    }
+    $options['absolute'] = TRUE;
+    return $this->assertEqual($this->getUrl(), url($path, $options), $message, $group);
   }
 
   /**

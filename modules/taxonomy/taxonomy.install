@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.install,v 1.47 2010/09/28 02:58:13 dries Exp $
+// $Id: taxonomy.install,v 1.48 2010/09/28 03:30:37 webchick Exp $
 
 /**
  * @file
@@ -52,9 +52,8 @@ function taxonomy_schema() {
       ),
       'format' => array(
         'type' => 'int',
-        'size' => 'small',
-        'not null' => TRUE,
-        'default' => 0,
+        'unsigned' => TRUE,
+        'not null' => FALSE,
         'description' => 'The {filter_format}.format of the description.',
       ),
       'weight' => array(
@@ -736,9 +735,8 @@ function taxonomy_update_7005(&$sandbox) {
 function taxonomy_update_7006() {
   db_add_field('taxonomy_term_data', 'format', array(
     'type' => 'int',
-    'size' => 'small',
-    'not null' => TRUE,
-    'default' => 0,
+    'unsigned' => TRUE,
+    'not null' => FALSE,
     'description' => 'The {filter_format}.format of the description.',
   ));
 }

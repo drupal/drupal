@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.install,v 1.45 2010/09/18 02:18:35 dries Exp $
+// $Id: filter.install,v 1.46 2010/09/28 03:30:37 webchick Exp $
 
 /**
  * @file
@@ -435,7 +435,7 @@ function filter_update_7005() {
     ->execute();
 
   // We do not delete the 'filter_default_format' variable, since other modules
-  // may need it in their update functions.
+  // need it in their update functions; for an example, see user_update_7010().
   // @todo This variable can be deleted in Drupal 8.
 }
 

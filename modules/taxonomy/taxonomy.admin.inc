@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.admin.inc,v 1.109 2010/09/27 00:53:56 dries Exp $
+// $Id: taxonomy.admin.inc,v 1.110 2010/09/28 03:30:37 webchick Exp $
 
 /**
  * @file
@@ -656,7 +656,7 @@ function taxonomy_form_term($form, &$form_state, $edit = array(), $vocabulary = 
     $defaults = array(
       'name' => '',
       'description' => '',
-      'format' => filter_default_format(),
+      'format' => NULL,
       'vocabulary_machine_name' => isset($vocabulary) ? $vocabulary->machine_name : NULL,
       'tid' => NULL,
       'weight' => 0,

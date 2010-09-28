@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.install,v 1.72 2010/09/13 05:50:09 webchick Exp $
+// $Id: comment.install,v 1.73 2010/09/28 03:30:37 webchick Exp $
 
 /**
  * @file
@@ -85,6 +85,12 @@ function comment_update_dependencies() {
   // after text module has been enabled and entities have been updated.
   $dependencies['comment'][7005] = array(
     'system' => 7021,
+  );
+
+  // Comment update 7006 needs to query the list of existing text formats and
+  // therefore must run after filter_update_7000().
+  $dependencies['comment'][7006] = array(
+    'filter' => 7000,
   );
 
   return $dependencies;
@@ -300,17 +306,8 @@ function comment_update_7006(&$sandbox) {
     $query->addField('c', 'comment', 'comment_body_value');
     $query->addField('c', 'format', 'comment_body_format');
 
-    $comment_body_table = 'field_data_comment_body';
-
-    db_insert($comment_body_table)
+    db_insert('field_data_comment_body')
       ->from($query)
-      ->execute();
-    // Update the comment body format in a similar manner as is done for other
-    // modules in filter_update_7005(), but we do this one here since we are
-    // already migrating the data.
-    db_update($comment_body_table)
-      ->fields(array('comment_body_format' => variable_get('filter_default_format', 1)))
-      ->condition('comment_body_format', 0)
       ->execute();
 
     $sandbox['#finished'] = 1 - count($sandbox['types']) / $sandbox['total'];
@@ -318,6 +315,22 @@ function comment_update_7006(&$sandbox) {
 
   // On the last pass of the update, $sandbox['types'] will be empty.
   if (empty($sandbox['types'])) {
+    // Update the comment body text formats. For an explanation of these
+    // updates, see the code comments in user_update_7010().
+    db_update('field_data_comment_body')
+      ->fields(array('comment_body_format' => NULL))
+      ->condition('comment_body_value', '')
+      ->condition('comment_body_format', 0)
+      ->execute();
+    $existing_formats = db_query("SELECT format FROM {filter_format}")->fetchCol();
+    $default_format = variable_get('filter_default_format', 1);
+    db_update('field_data_comment_body')
+      ->fields(array('comment_body_format' => $default_format))
+      ->isNotNull('comment_body_format')
+      ->condition('comment_body_format', $existing_formats, 'NOT IN')
+      ->execute();
+
+    // Finally, remove the old comment data.
     db_drop_field('comment', 'comment');
     db_drop_field('comment', 'format');
   }
