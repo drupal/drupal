@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.348 2010/09/29 01:55:19 dries Exp $
+// $Id: filter.module,v 1.349 2010/09/29 14:58:24 webchick Exp $
 
 /**
  * @file
@@ -368,17 +368,25 @@ function filter_modules_disabled($modules) {
  * @see filter_formats_reset()
  */
 function filter_formats($account = NULL) {
+  global $language;
   $formats = &drupal_static(__FUNCTION__, array());
 
-  // Statically cache all existing formats upfront.
+  // All available formats are cached for performance.
   if (!isset($formats['all'])) {
-    $formats['all'] = db_select('filter_format', 'ff')
-      ->addTag('translatable')
-      ->fields('ff')
-      ->condition('status', 1)
-      ->orderBy('weight')
-      ->execute()
-      ->fetchAllAssoc('format');
+    if ($cache = cache_get("filter_formats:{$language->language}")) {
+      $formats['all'] = $cache->data;
+    }
+    else {
+      $formats['all'] = db_select('filter_format', 'ff')
+        ->addTag('translatable')
+        ->fields('ff')
+        ->condition('status', 1)
+        ->orderBy('weight')
+        ->execute()
+        ->fetchAllAssoc('format');
+
+      cache_set("filter_formats:{$language->language}", $formats['all']);
+    }
   }
 
   // Build a list of user-specific formats.
@@ -395,11 +403,13 @@ function filter_formats($account = NULL) {
 }
 
 /**
- * Resets the static cache of all text formats.
+ * Resets text format caches.
  *
  * @see filter_formats()
  */
 function filter_formats_reset() {
+  cache_clear_all('filter_formats', 'cache', TRUE);
+  cache_clear_all('filter_list_format', 'cache', TRUE);
   drupal_static_reset('filter_list_format');
   drupal_static_reset('filter_formats');
 }
@@ -625,9 +635,15 @@ function filter_list_format($format_id) {
   $filter_info = filter_get_filters();
 
   if (!isset($filters['all'])) {
-    $result = db_query('SELECT * FROM {filter} ORDER BY weight, module, name');
-    foreach ($result as $record) {
-      $filters['all'][$record->format][$record->name] = $record;
+    if ($cache = cache_get('filter_list_format')) {
+      $filters['all'] = $cache->data;
+    }
+    else {
+      $result = db_query('SELECT * FROM {filter} ORDER BY weight, module, name');
+      foreach ($result as $record) {
+        $filters['all'][$record->format][$record->name] = $record;
+      }
+      cache_set('filter_list_format', $filters['all']);
     }
   }
 
