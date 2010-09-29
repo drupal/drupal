@@ -1,5 +1,5 @@
 <?php
-// $Id: field_sql_storage.install,v 1.9 2010/02/15 18:43:00 dries Exp $
+// $Id: field_sql_storage.install,v 1.10 2010/09/29 19:46:40 dries Exp $
 
 /**
  * @file
@@ -44,3 +44,83 @@ function field_sql_storage_schema() {
   }
   return $schema;
 }
+
+/**
+ * Utility function: write field data directly to SQL storage.
+ *
+ * This function can be used for databases whose schema is at field module
+ * version 7000 or higher.
+ *
+ * @ingroup update-api-6.x-to-7.x
+ */
+function _update_7000_field_sql_storage_write($entity_type, $bundle, $entity_id, $revision_id, $field_name, $data) {
+  $etid = _field_sql_storage_etid($entity_type);
+  $table_name = "field_data_{$field_name}";
+  $revision_name = "field_revision_{$field_name}";
+
+  db_delete($table_name)
+    ->condition('etid', $etid)
+    ->condition('entity_id', $entity_id)
+    ->execute();
+  db_delete($revision_name)
+    ->condition('etid', $etid)
+    ->condition('entity_id', $entity_id)
+    ->condition('revision_id', $revision_id)
+    ->execute();
+
+  $columns = array();
+  foreach ($data as $langcode => $items) {
+    foreach ($items as $delta => $item) {
+      $record = array(
+        'etid' => $etid,
+        'entity_id' => $entity_id,
+        'revision_id' => $revision_id,
+        'bundle' => $bundle,
+        'delta' => $delta,
+        'language' => $langcode,
+      );
+      foreach ($item as $column => $value) {
+        $record[_field_sql_storage_columnname($field_name, $column)] = $value;
+      }
+
+      $records[] = $record;
+      // Record the columns used.
+      $columns += $record;
+    }
+  }
+
+  if ($columns) {
+    $query = db_insert($table_name)->fields(array_keys($columns));
+    $revision_query = db_insert($revision_name)->fields(array_keys($columns));
+    foreach ($records as $record) {
+      $query->values($record);
+      if ($revision_id) {
+        $revision_query->values($record);
+      }
+    }
+    $query->execute();
+    $revision_query->execute();
+  }
+}
+
+/**
+ * @defgroup field-sql-storage-updates-6.x-to-7.x Field SQL storage updates from 6.x to 7.x
+ * @{
+ */
+
+/**
+ * Field SQL storage update version placeholder.
+ */
+function field_sql_storage_update_7000() {
+  // Some update helper functions (such as
+  // _update_7000_field_sql_storage_write()) modify the database directly. They
+  // can be used safely only if the database schema matches the field module
+  // schema established for Drupal 7.0 (i.e. version 7000). This function exists
+  // solely to set the schema version to 7000, so that update functions calling
+  // those helpers can do so safely by declaring a dependency on
+  // field_sql_storage_update_7000().
+}
+
+/**
+ * @} End of "defgroup field-updates-6.x-to-7.x"
+ */

@@ -1,5 +1,5 @@
 <?php
-// $Id: field.install,v 1.21 2010/09/28 02:58:13 dries Exp $
+// $Id: field.install,v 1.22 2010/09/29 19:46:40 dries Exp $
 
 /**
  * @file
@@ -171,7 +171,8 @@ function field_schema() {
 /**
  * Utility function: create a field by writing directly to the database.
  *
- * This function is valid for a database schema version 7000.
+ * This function can be used for databases whose schema is at field module
+ * version 7000 or higher.
  *
  * @ingroup update-api-6.x-to-7.x
  */
@@ -240,14 +241,15 @@ function _update_7000_field_create_field(&$field) {
 }
 
 /**
- * Utility function: delete a field stored in SQL Storage directly from the database.
+ * Utility function: delete a field stored in SQL storage directly from the database.
  *
  * To protect user data, this function can only be used to delete fields once
  * all information it stored is gone. Delete all data from the
  * field_data_$field_name table before calling by either manually issuing
  * delete queries against it or using _update_7000_field_delete_instance().
  *
- * This function is valid for a database schema version 7000.
+ * This function can be used for databases whose schema is at field module
+ * version 7000 or higher.
  *
  * @param $field_name
  *   The field name to delete.
@@ -332,9 +334,10 @@ function _update_7000_field_read_fields() {
 }
 
 /**
- * Utility function: create a field instance directly to the database.
+ * Utility function: write a field instance directly to the database.
  *
- * This function is valid for a database schema version 7000.
+ * This function can be used for databases whose schema is at field module
+ * version 7000 or higher.
  *
  * @ingroup update-api-6.x-to-7.x
  */
@@ -374,10 +377,12 @@ function _update_7000_field_create_instance($field, &$instance) {
  * Field update version placeholder.
  */
 function field_update_7000() {
-  // _update_7000_field_create_field() is supposed to create fields according
-  // to the structure of fields after running field_update_7000(). So this
-  // function needs to exist but as field is a new module in Drupal 7, it
-  // does not need to do anything.
+  // Some update helper functions (such as _update_7000_field_create_field())
+  // modify the database directly. They can be used safely only if the database
+  // schema matches the field module schema established for Drupal 7.0 (i.e.
+  // version 7000). This function exists solely to set the schema version to
+  // 7000, so that update functions calling those helpers can do so safely
+  // by declaring a dependency on field_update_7000().
 }
 
 /**
