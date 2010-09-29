@@ -1069,9 +1069,8 @@ function system_library() {
     'website' => 'http://jquery.com',
     'version' => '1.4.2',
     'js' => array(
-      'misc/jquery.js' => array('weight' => JS_LIBRARY - 20),
+      'misc/jquery.js' => array('weight' => JS_LIBRARY - 20, 'preprocess' => TRUE),
     ),
-    'preprocess' => TRUE,
   );
 
   // jQuery Once.
@@ -1080,9 +1079,8 @@ function system_library() {
     'website' => 'http://plugins.jquery.com/project/once',
     'version' => '1.2',
     'js' => array(
-      'misc/jquery.once.js' => array('weight' => JS_LIBRARY - 19),
+      'misc/jquery.once.js' => array('weight' => JS_LIBRARY - 19, 'preprocess' => TRUE),
     ),
-    'preprocess' => TRUE,
   );
 
   // jQuery Form Plugin.
