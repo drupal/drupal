@@ -325,7 +325,7 @@ function filter_admin_disable($form, &$form_state, $format) {
   return confirm_form($form,
     t('Are you sure you want to disable the text format %format?', array('%format' => $format->name)),
     'admin/config/content/formats',
-    t('This action cannot be undone.'),
+    t('Disabled text formats are completely removed from the administrative interface, and any content stored with that format will not be displayed. This action cannot be undone.'),
     t('Disable')
   );
 }
