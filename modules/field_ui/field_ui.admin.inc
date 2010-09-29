@@ -1,5 +1,5 @@
 <?php
-// $Id: field_ui.admin.inc,v 1.69 2010/09/26 23:31:35 dries Exp $
+// $Id: field_ui.admin.inc,v 1.70 2010/09/29 02:01:34 dries Exp $
 
 /**
  * @file
@@ -756,7 +756,7 @@ function field_ui_field_overview_form_submit($form, &$form_state) {
       field_create_instance($instance);
 
       $destinations[] = $admin_path . '/fields/' . $field['field_name'] . '/field-settings';
-      $destinations[] = $admin_path . '/fields/' . $field['field_name'] . '/edit';
+      $destinations[] = $admin_path . '/fields/' . $field['field_name'];
 
       // Store new field information for any additional submit handlers.
       $form_state['fields_added']['_add_new_field'] = $field['field_name'];
