@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.138 2010/09/28 02:30:31 dries Exp $
+// $Id: database.inc,v 1.139 2010/09/29 19:55:43 webchick Exp $
 
 /**
  * @file
@@ -167,6 +167,8 @@
  *   }
  * }
  * @endcode
+ *
+ * @link http://drupal.org/developing/api/database
  */
 
 
