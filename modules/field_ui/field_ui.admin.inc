@@ -756,7 +756,7 @@ function field_ui_field_overview_form_submit($form, &$form_state) {
       field_create_instance($instance);
 
       $destinations[] = $admin_path . '/fields/' . $field['field_name'] . '/field-settings';
-      $destinations[] = $admin_path . '/fields/' . $field['field_name'] . '/edit';
+      $destinations[] = $admin_path . '/fields/' . $field['field_name'];
 
       // Store new field information for any additional submit handlers.
       $form_state['fields_added']['_add_new_field'] = $field['field_name'];
