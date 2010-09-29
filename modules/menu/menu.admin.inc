@@ -259,6 +259,7 @@ function menu_edit_item($form, &$form_state, $type, $item, $menu) {
     // This is an add form, initialize the menu link.
     $item = array('link_title' => '', 'mlid' => 0, 'plid' => 0, 'menu_name' => $menu['menu_name'], 'weight' => 0, 'link_path' => '', 'options' => array(), 'module' => 'menu', 'expanded' => 0, 'hidden' => 0, 'has_children' => 0);
   }
+  $form['actions'] = array('#type' => 'actions');
   $form['link_title'] = array(
     '#type' => 'textfield',
     '#title' => t('Menu link title'),
@@ -288,7 +289,7 @@ function menu_edit_item($form, &$form_state, $type, $item, $menu) {
       '#description' => t('The path for this menu link. This can be an internal Drupal path such as %add-node or an external URL such as %drupal. Enter %front to link to the front page.', array('%front' => '<front>', '%add-node' => 'node/add', '%drupal' => 'http://drupal.org')),
       '#required' => TRUE,
     );
-    $form['delete'] = array(
+    $form['actions']['delete'] = array(
       '#type' => 'submit',
       '#value' => t('Delete'),
       '#access' => $item['mlid'],
@@ -344,7 +345,6 @@ function menu_edit_item($form, &$form_state, $type, $item, $menu) {
     '#default_value' => $item['weight'],
     '#description' => t('Optional. In the menu, the heavier links will sink and the lighter links will be positioned nearer the top.'),
   );
-  $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save'));
 
   return $form;
