@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.347 2010/09/28 03:30:37 webchick Exp $
+// $Id: filter.module,v 1.348 2010/09/29 01:55:19 dries Exp $
 
 /**
  * @file
@@ -678,7 +678,7 @@ function filter_list_format($format_id) {
  * @ingroup sanitization
  */
 function check_markup($text, $format_id = NULL, $langcode = '', $cache = FALSE) {
-  if (empty($format_id)) {
+  if (!isset($format_id)) {
     $format_id = filter_fallback_format();
   }
   // If the requested text format does not exist, the text cannot be filtered.
