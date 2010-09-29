@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1302 2010/09/24 00:37:43 dries Exp $
+// $Id: node.module,v 1.1303 2010/09/29 14:08:54 dries Exp $
 
 /**
  * @file
@@ -3156,8 +3156,8 @@ function node_access_acquire_grants($node, $delete = TRUE) {
   $grants = module_invoke_all('node_access_records', $node);
   // Let modules alter the grants.
   drupal_alter('node_access_records', $grants, $node);
-  // If no grants are set, then use the default grant.
-  if (empty($grants)) {
+  // If no grants are set and the node is published, then use the default grant.
+  if (empty($grants) && !empty($node->status)) {
     $grants[] = array('realm' => 'all', 'gid' => 0, 'grant_view' => 1, 'grant_update' => 0, 'grant_delete' => 0);
   }
   else {
@@ -3206,7 +3206,7 @@ function node_access_write_grants($node, $grants, $realm = NULL, $delete = TRUE)
   }
 
   // Only perform work when node_access modules are active.
-  if (count(module_implements('node_grants'))) {
+  if (!empty($grants) && count(module_implements('node_grants'))) {
     $query = db_insert('node_access')->fields(array('nid', 'realm', 'gid', 'grant_view', 'grant_update', 'grant_delete'));
     foreach ($grants as $grant) {
       if ($realm && $realm != $grant['realm']) {

@@ -1,5 +1,5 @@
 <?php
-// $Id: node.api.php,v 1.74 2010/09/25 18:01:28 dries Exp $
+// $Id: node.api.php,v 1.75 2010/09/29 14:08:54 dries Exp $
 
 /**
  * @file
@@ -138,7 +138,10 @@
  * an array of the list IDs that this user is a member of.
  *
  * A node access module may implement as many realms as necessary to
- * properly define the access privileges for the nodes.
+ * properly define the access privileges for the nodes. Note that the system
+ * makes no distinction between published and unpublished nodes. It is the
+ * module's responsibility to provide appropriate realms to limit access to
+ * unpublished content.
  *
  * @param $account
  *   The user object whose grants are requested.
@@ -169,6 +172,12 @@ function hook_node_grants($account, $op) {
  * interested, it must respond with an array of permissions arrays for that
  * node.
  *
+ * Node access grants apply regardless of the published or unpublished status
+ * of the node. Implementations must make sure not to grant access to
+ * unpublished nodes if they don't want to change the standard access control
+ * behavior. Your module may need to create a separate access realm to handle
+ * access to unpublished nodes.
+ *
  * Note that the grant values in the return value from your hook must be
  * integers and not boolean TRUE and FALSE.
  *
@@ -177,7 +186,9 @@ function hook_node_grants($account, $op) {
  *   hook_node_grants().
  * - 'gid': A 'grant ID' from hook_node_grants().
  * - 'grant_view': If set to 1 a user that has been identified as a member
- *   of this gid within this realm can view this node.
+ *   of this gid within this realm can view this node. This should usually be
+ *   set to $node->status. Failure to do so may expose unpublished content
+ *   to some users.
  * - 'grant_update': If set to 1 a user that has been identified as a member
  *   of this gid within this realm can edit this node.
  * - 'grant_delete': If set to 1 a user that has been identified as a member
@@ -187,6 +198,35 @@ function hook_node_grants($account, $op) {
  *   priority will not be written. If there is any doubt, it is best to
  *   leave this 0.
  *
+ *
+ * When an implementation is interested in a node but want to deny access to
+ * everyone, it may return a "deny all" grant:
+ *
+ * @code
+ * $grants[] = array(
+ *   'realm' => 'all',
+ *   'gid' => 0,
+ *   'grant_view' => 0,
+ *   'grant_update' => 0,
+ *   'grant_delete' => 0,
+ *   'priority' => 1,
+ * );
+ * @endcode
+ *
+ * Setting the priority should cancel out other grants. In the case of a
+ * conflict between modules, it is safer to use hook_node_access_records_alter()
+ * to return only the deny grant.
+ *
+ * Note: a deny all grant is not written to the database; denies are implicit.
+ *
+ * @see node_access_write_grants()
+ *
+ * @param $node
+ *   The node that has just been saved.
+ *
+ * @return
+ *   An array of grants as defined above.
+ *
  * @ingroup node_access
  */
 function hook_node_access_records($node) {
@@ -194,17 +234,22 @@ function hook_node_access_records($node) {
   // treated just like any other node and we completely ignore it.
   if ($node->private) {
     $grants = array();
-    $grants[] = array(
-      'realm' => 'example',
-      'gid' => 1,
-      'grant_view' => 1,
-      'grant_update' => 0,
-      'grant_delete' => 0,
-      'priority' => 0,
-    );
-
+    // Only published nodes should be viewable to all users. If we allow access
+    // blindly here, then all users could view an unpublished node.
+    if ($node->status) {
+      $grants[] = array(
+        'realm' => 'example',
+        'gid' => 1,
+        'grant_view' => 1,
+        'grant_update' => 0,
+        'grant_delete' => 0,
+        'priority' => 0,
+      );
+    }
     // For the example_author array, the GID is equivalent to a UID, which
-    // means there are many many groups of just 1 user.
+    // means there are many groups of just 1 user.
+    // Note that an author can always view his or her nodes, even if they
+    // have status unpublished.
     $grants[] = array(
       'realm' => 'example_author',
       'gid' => $node->uid,
@@ -213,6 +258,7 @@ function hook_node_access_records($node) {
       'grant_delete' => 1,
       'priority' => 0,
     );
+
     return $grants;
   }
 }
@@ -233,6 +279,8 @@ function hook_node_access_records($node) {
  * permissions array that is compared against the stored access records. The
  * user must have one or more matching permissions in order to complete the
  * requested operation.
+ *
+ * A module may deny all access to a node by setting $grants to an empty array.
  *
  * @see hook_node_grants()
  * @see hook_node_grants_alter()
@@ -276,6 +324,8 @@ function hook_node_access_records_alter(&$grants, $node) {
  *
  * The resulting grants are then checked against the records stored in the
  * {node_access} table to determine if the operation may be completed.
+ *
+ * A module may deny all access to a user by setting $grants to an empty array.
  *
  * @see hook_node_access_records()
  * @see hook_node_access_records_alter()

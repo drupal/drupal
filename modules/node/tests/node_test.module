@@ -1,5 +1,5 @@
 <?php
-// $Id: node_test.module,v 1.11 2010/04/20 09:30:21 webchick Exp $
+// $Id: node_test.module,v 1.12 2010/09/29 14:08:54 dries Exp $
 
 /**
  * @file
@@ -52,6 +52,10 @@ function node_test_node_grants($account, $op) {
  * Implements hook_node_access_records().
  */
 function node_test_node_access_records($node) {
+  // Return nothing when testing for empty responses.
+  if (!empty($node->disable_node_access)) {
+    return;
+  }
   $grants = array();
   if ($node->type == 'article') {
     // Create grant in arbitrary article_realm for article nodes.
