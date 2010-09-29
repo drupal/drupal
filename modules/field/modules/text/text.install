@@ -20,6 +20,7 @@ function text_field_schema($field) {
         ),
       );
       break;
+
     case 'text_long':
       $columns = array(
         'value' => array(
@@ -29,6 +30,7 @@ function text_field_schema($field) {
         ),
       );
       break;
+
     case 'text_with_summary':
       $columns = array(
         'value' => array(
@@ -55,6 +57,12 @@ function text_field_schema($field) {
     'columns' => $columns,
     'indexes' => array(
       'format' => array('format'),
+    ),
+    'foreign keys' => array(
+      'format' => array(
+        'table' => 'filter_format',
+        'columns' => array('format' => 'format'),
+      ),
     ),
   );
 }

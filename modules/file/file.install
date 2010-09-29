@@ -35,6 +35,12 @@ function file_field_schema($field) {
     'indexes' => array(
       'fid' => array('fid'),
     ),
+    'foreign keys' => array(
+      'fid' => array(
+        'table' => 'file',
+        'columns' => array('fid' => 'fid'),
+      ),
+    ),
   );
 }
 

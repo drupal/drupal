@@ -2633,9 +2633,11 @@ function hook_requirements($phase) {
  * details on schema definition structures.
  *
  * @return
- * A schema definition structure array. For each element of the
- * array, the key is a table name and the value is a table structure
- * definition.
+ *   A schema definition structure array. For each element of the
+ *   array, the key is a table name and the value is a table structure
+ *   definition.
+ *
+ * @ingroup schemaapi
  */
 function hook_schema() {
   $schema['node'] = array(

@@ -188,17 +188,28 @@ function _field_sql_storage_schema($field) {
     ),
   );
 
+  $field += array('columns' => array(), 'indexes' => array(), 'foreign keys' => array());
   // Add field columns.
-  foreach ((array) $field['columns'] as $column_name => $attributes) {
+  foreach ($field['columns'] as $column_name => $attributes) {
     $real_name = _field_sql_storage_columnname($field['field_name'], $column_name);
     $current['fields'][$real_name] = $attributes;
   }
 
   // Add indexes.
-  foreach ((array) $field['indexes'] as $index_name => $columns) {
+  foreach ($field['indexes'] as $index_name => $columns) {
     $real_name = _field_sql_storage_indexname($field['field_name'], $index_name);
     foreach ($columns as $column_name) {
       $current['indexes'][$real_name][] = _field_sql_storage_columnname($field['field_name'], $column_name);
+    }
+  }
+
+  // Add foreign keys.
+  foreach ($field['foreign keys'] as $specifier => $specification) {
+    $real_name = _field_sql_storage_indexname($field['field_name'], $specifier);
+    $current['foreign keys'][$real_name]['table'] = $specification['table'];
+    foreach ($specification['columns'] as $column => $referenced) {
+      $sql_storage_column = _field_sql_storage_columnname($field['field_name'], $column_name);
+      $current['foreign keys'][$real_name]['columns'][$sql_storage_column] = $referenced;
     }
   }
 

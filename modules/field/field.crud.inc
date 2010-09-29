@@ -79,6 +79,11 @@
  *     'columns' setting are allowed. Note that field types can specify
  *     default indexes, which can be modified or added to when
  *     creating a field.
+ * - foreign keys: (optional) An associative array of relations, using the same
+ *   structure as the 'foreign keys' definition of hook_schema(). Note, however,
+ *   that the field data is not necessarily stored in SQL. Also, the possible
+ *   usage is limited, as you cannot specify another field as related, only
+ *   existing SQL tables, such as filter formats.
  * - settings (array)
  *     A sub-array of key/value pairs of field-type-specific settings. Each
  *     field type module defines and documents its own field settings.
@@ -319,9 +324,11 @@ function field_create_field($field) {
   // Collect storage information.
   module_load_install($field['module']);
   $schema = (array) module_invoke($field['module'], 'field_schema', $field);
-  $schema += array('columns' => array(), 'indexes' => array());
+  $schema += array('columns' => array(), 'indexes' => array(), 'foreign keys' => array());
   // 'columns' are hardcoded in the field type.
   $field['columns'] = $schema['columns'];
+  // 'foreign keys' are hardcoded in the field type.
+  $field['foreign keys'] = $schema['foreign keys'];
   // 'indexes' can be both hardcoded in the field type, and specified in the
   // incoming $field definition.
   $field += array(
