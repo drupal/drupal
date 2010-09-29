@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.admin.inc,v 1.65 2010/09/18 02:18:35 dries Exp $
+// $Id: filter.admin.inc,v 1.66 2010/09/29 19:52:12 dries Exp $
 
 /**
  * @file
@@ -325,7 +325,7 @@ function filter_admin_disable($form, &$form_state, $format) {
   return confirm_form($form,
     t('Are you sure you want to disable the text format %format?', array('%format' => $format->name)),
     'admin/config/content/formats',
-    t('This action cannot be undone.'),
+    t('Disabled text formats are completely removed from the administrative interface, and any content stored with that format will not be displayed. This action cannot be undone.'),
     t('Disable')
   );
 }
