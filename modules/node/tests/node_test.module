@@ -52,6 +52,10 @@ function node_test_node_grants($account, $op) {
  * Implements hook_node_access_records().
  */
 function node_test_node_access_records($node) {
+  // Return nothing when testing for empty responses.
+  if (!empty($node->disable_node_access)) {
+    return;
+  }
   $grants = array();
   if ($node->type == 'article') {
     // Create grant in arbitrary article_realm for article nodes.
