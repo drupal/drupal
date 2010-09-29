@@ -1,4 +1,4 @@
-// $Id: overlay-parent.js,v 1.54 2010/08/18 02:25:50 dries Exp $
+// $Id: overlay-parent.js,v 1.55 2010/09/29 00:50:46 dries Exp $
 
 (function ($) {
 
@@ -816,14 +816,14 @@ Drupal.overlay.getDisplacement = function (region) {
  * Theme function to create the overlay iframe element.
  */
 Drupal.theme.prototype.overlayContainer = function () {
-  return '<div id="overlay-container" role="dialog"><div class="overlay-modal-background"></div></div>';
+  return '<div id="overlay-container"><div class="overlay-modal-background"></div></div>';
 };
 
 /**
  * Theme function to create an overlay iframe element.
  */
 Drupal.theme.prototype.overlayElement = function (url) {
-  return '<iframe class="overlay-element" frameborder="0" scrolling="auto" allowtransparency="true" role="document"></iframe>';
+  return '<iframe class="overlay-element" frameborder="0" scrolling="auto" allowtransparency="true"></iframe>';
 };
 
 })(jQuery);
