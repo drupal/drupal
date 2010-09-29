@@ -1,5 +1,5 @@
 <?php
-// $Id: field_sql_storage.test,v 1.21 2010/08/05 23:53:37 webchick Exp $
+// $Id: field_sql_storage.test,v 1.22 2010/09/29 01:37:02 dries Exp $
 
 /**
  * @file
@@ -391,5 +391,27 @@ class FieldSqlStorageTestCase extends DrupalWebTestCase {
       $this->assertEqual($details[FIELD_LOAD_CURRENT][$current][$column_name], $storage_column_name, t('Column name %value matches the definition in %bin.', array('%value' => $column_name, '%bin' => $current)));
       $this->assertEqual($details[FIELD_LOAD_REVISION][$revision][$column_name], $storage_column_name, t('Column name %value matches the definition in %bin.', array('%value' => $column_name, '%bin' => $revision)));
     }
+  }
+
+  /**
+   * Test foreign key support.
+   */
+  function testFieldSqlStorageForeignKeys() {
+    // Create a decimal field.
+    $field_name = 'testfield';
+    $field = array('field_name' => $field_name, 'type' => 'text');
+    $field = field_create_field($field);
+    // Retrieve the field and instance with field_info and verify the foreign
+    // keys are in place.
+    $field = field_info_field($field_name);
+    $this->assertEqual($field['foreign keys']['format']['table'], 'filter_format', t('Foreign key table name preserved through CRUD'));
+    $this->assertEqual($field['foreign keys']['format']['columns']['format'], 'format', t('Foreign key column name preserved through CRUD'));
+    // Now grab the SQL schema and verify that too.
+    $schema = drupal_get_schema(_field_sql_storage_tablename($field));
+    $this->assertEqual(count($schema['foreign keys']), 1, t("There is 1 foreign key in the schema"));
+    $foreign_key = reset($schema['foreign keys']);
+    $filter_column = _field_sql_storage_columnname($field['field_name'], 'format');
+    $this->assertEqual($foreign_key['table'], 'filter_format', t('Foreign key table name preserved in the schema'));
+    $this->assertEqual($foreign_key['columns'][$filter_column], 'format', t('Foreign key column name preserved in the schema'));
   }
 }

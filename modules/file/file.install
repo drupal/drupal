@@ -1,5 +1,5 @@
 <?php
-// $Id: file.install,v 1.3 2010/09/04 15:40:51 dries Exp $
+// $Id: file.install,v 1.4 2010/09/29 01:37:03 dries Exp $
 
 /**
  * @file
@@ -34,6 +34,12 @@ function file_field_schema($field) {
     ),
     'indexes' => array(
       'fid' => array('fid'),
+    ),
+    'foreign keys' => array(
+      'fid' => array(
+        'table' => 'file',
+        'columns' => array('fid' => 'fid'),
+      ),
     ),
   );
 }
