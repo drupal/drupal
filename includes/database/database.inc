@@ -167,6 +167,8 @@
  *   }
  * }
  * @endcode
+ *
+ * @link http://drupal.org/developing/api/database
  */
 
 
