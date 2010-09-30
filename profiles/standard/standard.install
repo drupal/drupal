@@ -1,5 +1,5 @@
 <?php
-// $Id: standard.install,v 1.23 2010/09/07 18:01:32 webchick Exp $
+// $Id: standard.install,v 1.24 2010/09/30 01:06:09 dries Exp $
 
 /**
  * Implements hook_install().
@@ -313,7 +313,7 @@ function standard_install() {
     'description' => $vocabulary->help,
     'widget' => array(
       'type' => 'taxonomy_autocomplete',
-      'weight' => 4,
+      'weight' => -4,
     ),
     'display' => array(
       'default' => array(
