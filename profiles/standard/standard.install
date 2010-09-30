@@ -313,7 +313,7 @@ function standard_install() {
     'description' => $vocabulary->help,
     'widget' => array(
       'type' => 'taxonomy_autocomplete',
-      'weight' => 4,
+      'weight' => -4,
     ),
     'display' => array(
       'default' => array(
