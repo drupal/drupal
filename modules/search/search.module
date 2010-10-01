@@ -173,7 +173,6 @@ function search_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('search_admin_settings'),
     'access arguments' => array('administer search'),
-    'type' => MENU_NORMAL_ITEM,
     'weight' => -10,
     'file' => 'search.admin.inc',
   );
@@ -182,6 +181,7 @@ function search_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('search_reindex_confirm'),
     'access arguments' => array('administer search'),
+    'type' => MENU_VISIBLE_IN_BREADCRUMB,
     'file' => 'search.admin.inc',
   );
 

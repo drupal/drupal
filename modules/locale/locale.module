@@ -136,6 +136,7 @@ function locale_menu() {
     'page arguments' => array('locale_language_providers_url_form'),
     'access arguments' => array('administer languages'),
     'file' => 'locale.admin.inc',
+    'type' => MENU_VISIBLE_IN_BREADCRUMB,
   );
   $items['admin/config/regional/language/configure/session'] = array(
     'title' => 'Session language detection configuration',
@@ -143,6 +144,7 @@ function locale_menu() {
     'page arguments' => array('locale_language_providers_session_form'),
     'access arguments' => array('administer languages'),
     'file' => 'locale.admin.inc',
+    'type' => MENU_VISIBLE_IN_BREADCRUMB,
   );
   $items['admin/config/regional/language/edit/%'] = array(
     'title' => 'Edit language',

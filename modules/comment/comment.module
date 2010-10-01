@@ -220,7 +220,7 @@ function comment_menu() {
     'description' => 'List and edit site comments and the comment approval queue.',
     'page callback' => 'comment_admin',
     'access arguments' => array('administer comments'),
-    'type' => MENU_LOCAL_TASK,
+    'type' => MENU_LOCAL_TASK | MENU_NORMAL_ITEM,
     'file' => 'comment.admin.inc',
   );
   // Tabs begin here.

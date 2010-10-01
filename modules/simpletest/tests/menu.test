@@ -551,7 +551,7 @@ class MenuBreadcrumbTestCase extends DrupalWebTestCase {
   function testBreadCrumbs() {
     // Prepare common base breadcrumb elements.
     $home = array('<front>' => 'Home');
-    $admin = $home + array('admin' => t('Administer'));
+    $admin = $home + array('admin' => t('Administration'));
     $config = $admin + array('admin/config' => t('Configuration'));
     $type = 'article';
     $langcode = LANGUAGE_NONE;

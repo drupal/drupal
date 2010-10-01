@@ -219,7 +219,6 @@ function menu_test_menu() {
     'description' => 'File inheritance test description',
     'page callback' => 'menu_test_callback',
     'access arguments' => array('access content'),
-    'type' => MENU_LOCAL_TASK,
   );
 
   $items['menu_login_callback'] = array(

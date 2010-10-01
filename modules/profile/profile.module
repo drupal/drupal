@@ -98,6 +98,7 @@ function profile_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('profile_field_form'),
     'access arguments' => array('administer users'),
+    'type' => MENU_VISIBLE_IN_BREADCRUMB,
     'file' => 'profile.admin.inc',
   );
   $items['admin/config/people/profile/autocomplete'] = array(
@@ -112,6 +113,7 @@ function profile_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('profile_field_form'),
     'access arguments' => array('administer users'),
+    'type' => MENU_VISIBLE_IN_BREADCRUMB,
     'file' => 'profile.admin.inc',
   );
   $items['admin/config/people/profile/delete'] = array(
@@ -119,6 +121,7 @@ function profile_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('profile_field_delete'),
     'access arguments' => array('administer users'),
+    'type' => MENU_VISIBLE_IN_BREADCRUMB,
     'file' => 'profile.admin.inc',
   );
   $items['profile/autocomplete'] = array(
