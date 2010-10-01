@@ -1,5 +1,5 @@
 <?php
-// $Id: upgrade.node.test,v 1.2 2010/09/13 05:50:09 webchick Exp $
+// $Id: upgrade.node.test,v 1.3 2010/10/01 22:03:29 webchick Exp $
 
 /**
  * Upgrade test for node bodies.
@@ -26,10 +26,19 @@ class NodeBodyUpgradePathTestCase extends UpgradePathTestCase {
   /**
    * Test a successful upgrade.
    */
-  public function testNodyBodyUpgrade() {
+  public function testNodeBodyUpgrade() {
     $this->assertTrue($this->performUpgrade(), t('The upgrade was completed successfully.'));
     $this->drupalGet("content/1263769200");
     $this->assertText('node body (broken) - 37');
+
+    // Find a published node revision and make sure it still has a body.
+    $revision = db_query_range("SELECT r.nid, r.vid FROM {node_revision} r JOIN {node} n ON n.nid = r.nid WHERE n.status = 1 AND n.type <> 'poll' AND n.vid <> r.vid", 0, 1)->fetch();
+    $revision = node_load($revision->nid, $revision->vid);
+    $this->assertTrue(!empty($revision->body), 'Non-current node revisions still have a node body.');
+    // Find an unpublished node revision and make sure it still has a body.
+    $revision = db_query_range("SELECT r.nid, r.vid FROM {node_revision} r JOIN {node} n ON n.nid = r.nid WHERE n.status = 0 AND n.type <> 'poll' AND n.vid <> r.vid", 0, 1)->fetch();
+    $revision = node_load($revision->nid, $revision->vid);
+    $this->assertTrue(!empty($revision->body), 'Unpublished non-current node revisions still have a node body.');
   }
 }
 
