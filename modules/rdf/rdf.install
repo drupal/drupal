@@ -1,5 +1,5 @@
 <?php
-// $Id: rdf.install,v 1.4 2010/06/25 17:47:22 dries Exp $
+// $Id: rdf.install,v 1.5 2010/10/01 01:44:39 webchick Exp $
 
 /**
  * @file
@@ -48,4 +48,3 @@ function rdf_install() {
   $modules = module_implements('rdf_mapping');
   rdf_modules_installed($modules);
 }
-

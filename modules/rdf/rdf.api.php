@@ -1,5 +1,5 @@
 <?php
-// $Id: rdf.api.php,v 1.5 2010/09/09 20:22:00 dries Exp $
+// $Id: rdf.api.php,v 1.6 2010/10/01 01:44:39 webchick Exp $
 
 /**
  * @file
@@ -20,19 +20,19 @@
  *
  * @return
  *   A list of mapping structures, where each mapping is an associative array:
- *   - type: The name of an entity type, e.g. 'node' or 'comment'.
- *   - bundle: The name of the bundle, e.g. 'blog', or RDF_DEFAULT_BUNDLE for
- *     default mappings.
+ *   - type: The name of an entity type (e.g., 'node', 'comment', and so on.)
+ *   - bundle: The name of the bundle (e.g., 'page', 'blog', or
+ *     RDF_DEFAULT_BUNDLE for default mappings.)
  *   - mapping: The mapping structure which applies to the entity type and
  *     bundle. A mapping structure is an array with keys corresponding to
  *     existing field instances in the bundle. Each field is then described in
- *     terms of RDF mapping:
+ *     terms of the RDF mapping:
  *     - predicates: An array of RDF predicates which describe the relation
  *       between the bundle (RDF subject) and the value of the field (RDF
- *       object). This value is either some text, another bundle or a URL in
+ *       object). This value is either some text, another bundle, or a URI in
  *       general.
  *     - datatype: Is used along with 'callback' to format data so that it is
- *       readable by machine. A typical example is a date which can be written
+ *       readable by machines. A typical example is a date which can be written
  *       in many different formats but should be translated into a uniform
  *       format for machine consumption.
  *     - callback: A function name to invoke for 'datatype'.
