@@ -297,7 +297,7 @@ function standard_install() {
     'settings' => array(
       'allowed_values' => array(
         array(
-          'vid' => $vocabulary->vid,
+          'vocabulary' => $vocabulary->machine_name,
           'parent' => 0,
         ),
       ),

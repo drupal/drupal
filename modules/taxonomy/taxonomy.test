@@ -379,7 +379,7 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
       'settings' => array(
         'allowed_values' => array(
           array(
-            'vid' => $this->vocabulary->vid,
+            'vocabulary' => $this->vocabulary->machine_name,
             'parent' => 0,
           ),
         ),
@@ -845,7 +845,7 @@ class TaxonomyTermFieldTestCase extends TaxonomyWebTestCase {
       'settings' => array(
         'allowed_values' => array(
           array(
-            'vid' => $this->vocabulary->vid,
+            'vocabulary' => $this->vocabulary->machine_name,
             'parent' => '0',
           ),
         ),
@@ -905,7 +905,7 @@ class TaxonomyTermFieldTestCase extends TaxonomyWebTestCase {
       'settings' => array(
         'allowed_values' => array(
           array(
-            'vid' => $this->vocabulary->vid,
+            'vocabulary' => $this->vocabulary->machine_name,
             'parent' => '0',
           ),
         ),
@@ -981,7 +981,7 @@ class TaxonomyTokenReplaceTestCase extends TaxonomyWebTestCase {
       'settings' => array(
         'allowed_values' => array(
           array(
-            'vid' => $this->vocabulary->vid,
+            'vocabulary' => $this->vocabulary->machine_name,
             'parent' => 0,
           ),
         ),

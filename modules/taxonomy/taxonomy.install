@@ -408,7 +408,7 @@ function taxonomy_update_7004() {
         'required' => $vocabulary->required ? TRUE : FALSE,
         'allowed_values' => array(
           array(
-            'vid' => $vocabulary->vid,
+            'vocabulary' => $vocabulary->machine_name,
             'parent' => 0,
           ),
         ),
@@ -466,7 +466,7 @@ function taxonomy_update_7004() {
   $allowed_values = array();
   foreach (_update_7002_taxonomy_get_vocabularies() as $vocabulary) {
     $allowed_values[] = array(
-      'vid' => $vocabulary->vid,
+      'vocabulary' => $vocabulary->machine_name,
       'parent' => 0,
     );
   }
