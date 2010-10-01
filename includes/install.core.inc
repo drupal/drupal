@@ -1772,7 +1772,7 @@ function _install_configure_form($form, &$form_state, &$install_state) {
   $form['server_settings']['clean_url'] = array(
     '#type' => 'hidden',
     '#default_value' => 0,
-    '#attributes' => array('class' => array('install')),
+    '#attributes' => array('id' => 'edit-clean-url', 'class' => array('install')),
   );
 
   $form['update_notifications'] = array(
