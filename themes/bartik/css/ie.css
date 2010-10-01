@@ -1,10 +1,7 @@
-/* $Id: ie.css,v 1.3 2010/09/02 20:43:18 dries Exp $ */
+/* $Id: ie.css,v 1.4 2010/10/01 07:05:22 webchick Exp $ */
 
 .block {
   zoom: 1;
-}
-input.form-text {
-  font-family: sans-serif;
 }
 #password-strength-text {
   margin-top: 0;
@@ -13,9 +10,6 @@ fieldset legend {
   left: -8px;
   padding: 0;
 }
-.tabs ul.primary {
-  height: auto;
-}
 #footer-wrapper #footer .block {
   height: 100%;
 }
@@ -23,4 +17,7 @@ fieldset legend {
 #search-form input.form-submit {
   text-transform: capitalize; /* Trigger text indent. */
   height: 26px;
+}
+.meta {
+  margin-bottom: 10px;
 }

@@ -1,12 +1,12 @@
-/* $Id: style.css,v 1.17 2010/09/24 01:36:30 webchick Exp $ */
+/* $Id: style.css,v 1.18 2010/10/01 07:05:22 webchick Exp $ */
 
 /* ---------- Overall Specifications ---------- */
 
 body,
 #preview {
   background-color: #fff;
-  line-height: 1.4em;
-  font-size: 0.8em;
+  line-height: 1.5;
+  font-size: 87.5%;
   word-wrap: break-word;
   margin: 0;
   padding: 0;
@@ -39,12 +39,12 @@ h6,
 }
 h1,
 #preview h1 {
-  font-size: 140%;
+  font-size: 1.357em;
   color: #000;
 }
 h2,
-#preview h1 {
-  font-size: 120%;
+#preview h2 {
+  font-size: 1.143em;
 }
 p,
 #preview p {
@@ -132,9 +132,12 @@ a.feed-icon {
 
 table {
   border-spacing: 0;
-  font-size: 0.85em;
   width: 100%;
   margin: 10px 0;
+  font-size: 0.857em;
+}
+table table {
+  font-size: 1em;
 }
 #footer-wrapper table {
   font-size: 1em;
@@ -167,12 +170,13 @@ tr,
 tr.even {
   background-color: #efefef;
 }
-#block-system-main table ul.links {
-  font-size: 1em;
+table ul.links {
   margin: 0;
   padding: 0;
+  font-size: 1em;
 }
-#block-system-main table ul.links li {
+}
+table ul.links li {
   padding: 0 1em 0 0;
 }
 
@@ -182,9 +186,17 @@ tr.even {
   margin: 0;
   padding: 0 0 0.25em 1em; /* LTR */
 }
-ul.contextual-links,
+.contextual-links-wrapper {
+  font-size: small !important;
+}
+ul.contextual-links {
+  font-size: 0.923em;
+}
+.contextual-links-wrapper a {
+  text-shadow: 0 0 0 !important;
+}
 .item-list .pager {
-  font-size: 90%;
+  font-size: 0.929em;
 }
 ul.menu li {
   margin: 0;
@@ -203,7 +215,6 @@ ul.tips {
 }
 
 /* ------------------ Header ------------------ */
-
 #skip-link {
   left: 50%;
   margin-left: -5.25em;
@@ -252,33 +263,34 @@ ul.tips {
 #preview #preview-header a {
   color: #fff;
 }
-#header #logo,
+#logo,
 #preview #preview-header #preview-logo {
   float: left; /* LTR */
   padding: 15px 30px 15px 0; /* LTR */
 }
-#header #name-and-slogan,
+#name-and-slogan,
 #preview #preview-header #preview-name-and-slogan {
-  padding-top: 38px;
+  padding-top: 34px;
   margin-bottom: 30px;
   margin-left: 15px;
 }
-#header #site-name,
+#site-name,
 #preview #preview-header #preview-site-name {
-  font-size: 200%;
+  font-size: 1.821em;
   color: #686868;
+  line-height: 1;
 }
-#header h1#site-name,
+h1#site-name,
 #preview #preview-header h1#preview-site-name {
   margin: 0;
 }
-#header #site-name a,
+#site-name a,
 #preview-header #preview-site-name a {
   font-weight: normal;
 }
-#header #site-slogan {
+#site-slogan {
+  font-size: 0.929em;
   margin-top: 7px;
-  font-size: 100%;
   word-spacing: 0.1em;
   font-style: italic;
 }
@@ -286,7 +298,6 @@ ul.tips {
 #header .block-menu {
   height: 1.1em;
   margin: 10px 0;
-  font-size: 120%;
   float: left; /* LTR */
   width: 75%;
 }
@@ -322,14 +333,13 @@ ul.tips {
   background: #464748;
   color: #fff;
   float: right; /* LTR */
-  font-size: 13px;
   padding: 4px 10px 5px;
   text-transform: uppercase;
-  font-size: 80%;
+  font-size: 0.857em;
 }
 #header #block-user-login a {
   color: #fff;
-  font-size: 90%;
+  font-size: 0.929em;
 }
 #header #block-user-login .form-item label {
   display: inline;
@@ -356,7 +366,7 @@ ul.tips {
 #header #block-user-login div.item-list {
   margin-top: 5px;
   font-style: italic;
-  font-size: 130%;
+  font-size: 1.3em;
   text-transform: none;
 }
 #header #block-user-login .userbox {
@@ -382,18 +392,16 @@ ul.tips {
   padding: 0 15px;
   clear: both;
 }
-#main-menu a {
+#main-menu-links a {
   color: #d9d9d9;
   padding: 0.6em 1em 0.4em;
 }
-#main-menu ul {
+#main-menu-links {
+  font-size: 0.929em;
   padding: 2px 0;
+  padding: 0.6em 0.6em 3px;
 }
-#main-menu ul.links {
-  font-size: 105%;
-  padding: 0.6em 0.6em 4px;
-}
-#main-menu ul.links li a {
+#main-menu-links a {
   color: #333;
   background: #ccc;
   background: rgba(255, 255, 255, 0.7);
@@ -407,28 +415,24 @@ ul.tips {
   -webkit-border-top-right-radius: 8px;
   border-top-right-radius: 8px;
 }
-#main-menu ul.links li a:hover,
-#main-menu ul.links li a:focus {
+#main-menu-links a:hover,
+#main-menu-links a:focus {
   background: #fff;
   background: rgba(255, 255, 255, 0.95);
 }
-#main-menu ul.links li a:active {
+#main-menu-links a:active {
   background: #b3b3b3;
   background: rgba(255, 255, 255, 1);
 }
-#main-menu ul.links li.active-trail a {
+#main-menu-links li.active-trail a {
   border-bottom: none;
 }
-.featured #main-menu ul.links li.active-trail a {
-  background: #f0f0f0;
-  background: rgba(240, 240, 240, 1.0);
-}
-#main-menu ul.links li {
+#main-menu-links li {
   display: inline;
   list-style-type: none;
   padding: 0.6em 0 0.4em;
 }
-#main-menu ul.links li.first {
+#main-menu-links li.first {
   padding-left: 2px; /* LTR */
 }
 
@@ -436,6 +440,7 @@ ul.tips {
 
 #secondary-menu-links {
   float: right; /* LTR */
+  font-size: 0.929em;
   margin: 10px;
 }
 #secondary-menu-links a:hover,
@@ -455,14 +460,18 @@ ul.tips {
 
 #featured {
   text-align: center;
-  font-size: 180%;
+  font-size: 1.643em;
   font-weight: normal;
-  line-height: 1.4em;
+  line-height: 1.4;
   padding: 50px 0 45px;
   margin: 0;
   background: #f0f0f0;
   border-bottom: 1px solid #e7e7e7;
   text-shadow: 1px 1px #fff;
+}
+#featured h2 {
+  font-size: 1.174em;
+  line-height: 1;
 }
 #featured p {
   margin: 0;
@@ -474,129 +483,120 @@ ul.tips {
 .content {
   margin-top: 1em;
 }
-#block-system-main,
 #preview #preview-block-system-main {
-  font-size: 115%;
-  line-height: 1.5em;
-}
-body.page-admin-appearance-settings-bartik #block-system-main {
-  font-size: 100%;
+  line-height: 1.5;
 }
 h1#page-title,
 #preview h1#preview-page-title {
-  font-size: 220%;
-  line-height: 1.2em;
+  font-size: 2em;
+  line-height: 1;
 }
-#block-system-main h2,
+#content h2,
 #preview #preview-block-system-main h2 {
   margin-bottom: 2px;
-  font-size: 137%;
-  line-height: 1.4em;
+  font-size: 1.429em;
+  line-height: 1.4;
 }
-#block-system-main .node-teaser h2 a {
+.node .content {
+  font-size: 1.071em;
+}
+.node-teaser .content {
+  font-size: 1em;
+}
+.node-teaser h2 a {
   color: #181818;
 }
-#block-system-main .node-teaser {
+.node-teaser {
   border-bottom: 1px solid #d3d7d9;
   margin-bottom: 30px;
   padding-bottom: 15px;
 }
-#block-system-main .node-teaser .content {
-  font-size: 92%;
-  line-height: 1.65em;
+.node-teaser .content {
   color: #3b3b3b;
   clear: none;
+  line-height: 1.6;
 }
-#block-system-main .meta {
-  font-size: 80%;
+.meta {
+  font-size: 0.857em;
   color: #68696b;
   margin-bottom: -5px;
 }
-* html #block-system-main .meta {
-  margin-bottom: 10px;
-}
-*:first-child+html #block-system-main .meta {
-  margin-bottom: 10px;
-}
-#block-system-main .submitted .user-picture img {
+.submitted .user-picture img {
   float: left; /* LTR */
   height: 20px;
   margin: 1px 5px 0 0; /* LTR */
 }
-#block-system-main div.field-type-taxonomy-term-reference div.field-label,
-#block-system-main div.field-type-taxonomy-term-reference div.field-items,
-#block-system-main div.field-type-taxonomy-term-reference div.field-item {
+.field-type-taxonomy-term-reference .field-label,
+.field-type-taxonomy-term-reference .field-items,
+.field-type-taxonomy-term-reference .field-item {
   display: inline;
   float: left; /* LTR */
   padding-right: 10px; /* LTR */
   font-weight: normal;
 }
-#block-system-main div.field-name-field-tags div.field-label {
-  font-size: 86%;
+.field-type-taxonomy-term-reference div.field-label {
+  font-size: 0.857em;
   color: #68696b;
 }
-#block-system-main div.field-name-field-tags div.field-items,
-#block-system-main div.field-name-field-tags div.field-item {
-  font-size: 95%;
+.field-type-taxonomy-term-reference .field-items,
+.field-type-taxonomy-term-reference .field-item {
+  font-size: 0.929em;
 }
-#block-system-main div.field-name-field-tags a:hover,
-#block-system-main div.field-name-field-tags a:focus {
+.field-type-taxonomy-term-reference a:hover,
+.field-type-taxonomy-term-reference a:focus {
   text-decoration: underline;
 }
-#block-system-main .link-wrapper {
+.link-wrapper {
   text-align: right;
 }
-#block-system-main ul.links {
-  color: #68696b;
-  font-size: 80%;
-}
-#block-system-main .field-type-image img,
-#block-system-main .user-picture img {
+.field-type-image img,
+.user-picture img {
   margin: 0 0 1em;
+}
+ul.links {
+  color: #68696b;
+  font-size: 0.821em;
 }
 
 /* ----------------- Comments ----------------- */
 
-#comment-wrapper {
-  border-top: 1px solid #d3d7d9;
-  padding-top: 15px;
-}
-#comments h2.title {
+.comment h2.title {
   margin-bottom: 1em;
 }
-#comments div.user-picture img {
+.comment div.user-picture img {
   margin-left: 0; /* LTR */
 }
-#comments .comment {
+.comment {
   margin-bottom: 20px;
   position: relative;
 }
-#comments .attribution {
+.comment .attribution {
   padding-top: 20px;
   float: left; /* LTR */
   width: 110px;
 }
-#comments .attribution img {
+.comment .attribution img {
   margin: 0;
   border: 1px solid #d3d7d9;
 }
-#comments .submitted p {
+.comment .submitted p {
   margin: 4px 0;
-  font-size: 110%;
-  line-height: 1.2em;
+  font-size: 1.071em;
+  line-height: 1.2;
 }
-#comments .submitted .comment-time {
-  font-size: 70%;
+.comment .submitted .comment-time {
+  font-size: 0.786em;
   color: #68696b;
 }
-#comments .submitted .comment-permalink {
-  font-size: 80%;
+.comment .submitted .comment-permalink {
+  font-size: 0.786em;
   text-transform: lowercase;
 }
-#comments .content {
-  font-size: 90%;
+.comment .content {
+  font-size: 0.929em;
+  line-height: 1.6;
 }
-#comments .comment-arrow {
+.comment .comment-arrow {
   background: url(../images/comment-arrow.png); /* LTR */
   height: 40px;
   width: 20px;
@@ -604,18 +604,18 @@ h1#page-title,
   margin-top: 10px;
   position: absolute;
 }
-#comments .comment-text {
+.comment .comment-text {
   margin-left: 140px; /* LTR */
   padding: 10px 25px;
   border: 1px solid #d3d7d9;
 }
-#comments .indented {
+.comment .indented {
   margin-left: 40px; /* LTR */
 }
-#comments ul.links {
+.comment ul.links {
   padding: 0 0 0.25em 0;
 }
-#comments ul.links li {
+.comment ul.links li {
   padding: 0 0.5em 0 0; /* LTR */
 }
 
@@ -632,6 +632,12 @@ h1#page-title,
   border-bottom: 1px solid #d6d6d6;
   padding-bottom: 5px;
   text-shadow: 0 1px 0 #fff;
+  font-size: 1.071em;
+  line-height: 1.2;
+}
+.sidebar .block .content {
+  font-size: 0.914em;
+  line-height: 1.4;
 }
 .sidebar tbody {
   border: none;
@@ -650,16 +656,17 @@ h1#page-title,
 }
 #triptych h2 {
   color: #000;
-  font-size: 194%;
-  margin-bottom: .8em;
+  font-size: 1.714em;
+  margin-bottom: 0.8em;
   text-shadow: 0px 1px 0 #fff;
   text-align: center;
-  line-height: 1.2em;
+  line-height: 1;
 }
 #triptych .block {
   margin-bottom: 2em;
   padding-bottom: 2em;
   border-bottom: 1px solid #dfdfdf;
+  line-height: 1.3;
 }
 #triptych .block.last {
   border-bottom: none;
@@ -701,7 +708,7 @@ h1#page-title,
 #footer-wrapper {
   color: #c0c0c0;
   color: rgba(255,255,255,0.65);  
-  font-size: 90%;
+  font-size: 0.857em;
 }
 #footer-wrapper a {
   color: #fcfcfc;
@@ -736,7 +743,7 @@ h1#page-title,
 #footer-columns h2 {
   border-bottom: 1px solid #555;
   border-color: rgba(255,255,255,0.15);  
-  font-size: 104%;
+  font-size: 1em;
   margin-bottom: 0;
   padding-bottom: 3px;
   text-transform: uppercase;
@@ -761,7 +768,7 @@ h1#page-title,
   display: block;
   border-bottom: 1px solid #555;
   border-color: rgba(255,255,255,0.15);  
-  line-height: 1.2em;
+  line-height: 1.2;
   padding: 0.8em 2px 0.8em 20px; /* LTR */
   text-indent: -15px;
 }
@@ -772,7 +779,6 @@ h1#page-title,
   text-decoration: none;
 }
 #footer {
-  font-size: 92%;
   letter-spacing: 0.2px;
   margin-top: 30px;
   border-top: 1px solid #555;
@@ -838,8 +844,9 @@ h1#page-title,
   color: #000;
   background-color: #ededed;
   height: 1.8em;
-  line-height: 1.8em;
+  line-height: 1.9;
   display: block;
+  font-size: 0.929em;
   float: left; /* not LTR */
   padding: 0 10px 3px;
   margin: 0;
@@ -909,7 +916,7 @@ div.messages {
 /* -------------- Breadcrumbs   -------------- */
 
 .breadcrumb {
-  font-size:92%;
+  font-size: 0.929em;
 }
 
 /* -------------- User Profile   -------------- */
@@ -951,7 +958,7 @@ a.button {
   border-right-color: #d2d2d2;
   color: #3a3a3a;
   cursor: pointer;
-  font-size: 90%;
+  font-size: 0.929em;
   font-weight: normal;
   text-align: center;
   margin-bottom: 1em;
@@ -1017,7 +1024,7 @@ fieldset legend {
   height: 2em;
   left: -1px; /* LTR */
   font-family: "Lucida Grande", "Lucida Sans Unicode", Verdana, sans-serif;
-  line-height: 2em;
+  line-height: 2;
   padding: 0;
   position: absolute;
   text-indent: 10px;
@@ -1054,6 +1061,13 @@ input {
   margin: 2px 0;
   padding: 4px;
 }
+input,
+textarea {
+  font-size: 0.929em;
+}
+textarea {
+  line-height: 1.5;
+}
 textarea.form-textarea,
 select.form-select {
   padding: 4px;
@@ -1075,16 +1089,21 @@ input.form-submit:focus {
   margin-top: 2px;
 }
 .form-item label {
-  font-size: 90%;
-}
-.form-radio {
-  margin-right: 4px;
+  font-size: 0.929em;
 }
 fieldset .description {
   margin-top: 5px;
-  line-height: 1.4em;
+  line-height: 1.4;
   color: #3c3c3c;
   font-style: italic;
+}
+.form-type-radio label,
+.form-type-checkbox label {
+  margin-left: 4px;
+}
+.form-type-radio .description,
+.form-type-checkbox .description {
+  margin-left: 2px;
 }
 .form-actions {
   padding-top: 10px;
@@ -1099,16 +1118,16 @@ html.js input.throbbing {
 }
 
 /* Comment form */
-#comment-form .form-item {
+.comment-form .form-item {
   overflow: hidden;
   margin-bottom: .8em;
 }
-#comment-form .form-type-textfield label,
-#comment-form .form-type-item label {
+.comment-form .form-type-textfield label,
+.comment-form .form-type-item label {
   float: left; /* LTR */
 }
-#comment-form .form-type-textfield input,
-#comment-form .form-item .username {
+.comment-form .form-type-textfield input,
+.comment-form .form-item .username {
   float: right; /* LTR */
   width: 75%;
   -khtml-border-radius: 4px;
@@ -1116,13 +1135,13 @@ html.js input.throbbing {
   -webkit-border-radius: 4px;
   border-radius: 4px;
 }
-#comment-form .form-item .description {
-  font-size: .75em;
-  line-height: 1em;
+.comment-form .form-item .description {
+  font-size: 0.786em;
+  line-height: 1;
   float: right; /* LTR */
   width: 76%;
 }
-#comment-form .form-textarea {
+.comment-form .form-textarea {
   -khtml-border-radius-topleft: 4px;
   -khtml-border-radius-topright: 4px;
   -webkit-border-top-left-radius: 4px;
@@ -1132,13 +1151,13 @@ html.js input.throbbing {
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
 }
-#comment-form fieldset.filter-wrapper .fieldset-wrapper,
-#comment-form .text-format-wrapper .form-item {
+.comment-form fieldset.filter-wrapper .fieldset-wrapper,
+.comment-form .text-format-wrapper .form-item {
   margin-top: 0;
   margin-bottom: 0;
 }
-#comment-form fieldset.filter-wrapper .tips {
-  font-size: .75em;
+.comment-form fieldset.filter-wrapper .tips {
+  font-size: 0.786em;
 }
 
 /* -------------- Other Overrides ------------- */
@@ -1155,6 +1174,12 @@ div.vertical-tabs .vertical-tabs-panes fieldset.vertical-tabs-pane {
 }
 #forum tr td.forum {
   padding-left: 35px;
+}
+#forum .name {
+  font-size: 1.083em;
+}
+#forum .description {
+  font-size: 1em;
 }
 
 /* --------------- Search Form ---------------- */
@@ -1204,7 +1229,7 @@ div.add-or-remove-shortcuts {
 
 /* ---------- Admin-specific Theming ---------- */
 
-.page-admin #block-system-main img {
+.page-admin #content img {
   margin-right: 15px; /* LTR */
 }
 .page-admin-structure-block-demo .block-region {
@@ -1289,7 +1314,7 @@ div.admin-panel .description {
   margin: 0;
 }
 .poll .percent {
-  font-size: 86%;
+  font-size: 0.857em;
   font-style: italic;
   margin-bottom: 3em;
   margin-top: -3.2em;
@@ -1300,13 +1325,10 @@ div.admin-panel .description {
   clear: right;
 }
 .poll .total {
-  font-size: 95%;
+  font-size: 0.929em;
   font-style: italic;
   text-align: right; /* LTR */
   clear: both;
-}
-.poll .form-item label {
-  font-size: 100%;
 }
 .node .poll {
   margin: 1.8em 0 0;
@@ -1362,7 +1384,7 @@ div.admin-panel .description {
   left: -20px; /* LTR */
 }
 .color-form #preview {
-  font-size: .85em;
+  font-size: 0.857em;
 }
 .overlay #preview #footer-wrapper {
   display: block;
