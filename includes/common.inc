@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1228 2010/09/26 23:31:35 dries Exp $
+// $Id: common.inc,v 1.1229 2010/10/01 18:37:22 webchick Exp $
 
 /**
  * @file
@@ -6543,6 +6543,9 @@ function drupal_flush_all_caches() {
 
   menu_rebuild();
   node_types_rebuild();
+
+  // Synchronize to catch any actions that were added or removed.
+  actions_synchronize();
 
   // Don't clear cache_form - in-progress form submissions may break.
   // Ordered so clearing the page cache will always be the last action.

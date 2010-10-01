@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.509 2010/09/25 18:10:53 dries Exp $
+// $Id: system.install,v 1.510 2010/10/01 18:37:23 webchick Exp $
 
 /**
  * @file
@@ -2243,13 +2243,6 @@ function system_update_7036() {
   // Remove obsolete variable 'site_offline_message'. See
   // update_fix_d7_requirements().
   variable_del('site_offline_message');
-}
-
-/**
- * Rename action description to label.
- */
-function system_update_7037() {
-  db_change_field('actions', 'description', 'label', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => '0'));
 }
 
 /**

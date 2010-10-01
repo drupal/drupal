@@ -1,5 +1,5 @@
 <?php
-// $Id: update.inc,v 1.69 2010/09/25 18:10:53 dries Exp $
+// $Id: update.inc,v 1.70 2010/10/01 18:37:22 webchick Exp $
 
 /**
  * @file
@@ -636,6 +636,9 @@ function update_fix_d7_requirements() {
     if (db_table_exists('languages')) {
       db_change_field('languages', 'javascript', 'javascript', array('type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''));
     }
+
+    // Rename action description to label.
+    db_change_field('actions', 'description', 'label', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => '0'));
 
     variable_set('update_d7_requirements', TRUE);
   }

@@ -1,5 +1,5 @@
 <?php
-// $Id: upgrade.test,v 1.7 2010/09/13 05:50:09 webchick Exp $
+// $Id: upgrade.test,v 1.8 2010/10/01 18:37:22 webchick Exp $
 
 /**
  * Perform end-to-end tests of the upgrade path.
@@ -282,9 +282,6 @@ abstract class UpgradePathTestCase extends DrupalWebTestCase {
     // Rebuild caches.
     drupal_static_reset();
     drupal_flush_all_caches();
-
-    // Register actions declared by any modules.
-    actions_synchronize();
 
     // Reload global $conf array and permissions.
     $this->refreshVariables();

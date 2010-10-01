@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.238 2010/09/28 03:30:37 webchick Exp $
+// $Id: drupal_web_test_case.php,v 1.239 2010/10/01 18:37:22 webchick Exp $
 
 /**
  * Global variable that holds information about the tests being run.
@@ -1314,9 +1314,6 @@ class DrupalWebTestCase extends DrupalTestCase {
     // Rebuild caches.
     drupal_static_reset();
     drupal_flush_all_caches();
-
-    // Register actions declared by any modules.
-    actions_synchronize();
 
     // Reload global $conf array and permissions.
     $this->refreshVariables();

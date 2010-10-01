@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.198 2010/09/03 19:49:55 dries Exp $
+// $Id: module.inc,v 1.199 2010/10/01 18:37:22 webchick Exp $
 
 /**
  * @file
@@ -67,7 +67,7 @@ function module_list($refresh = FALSE, $bootstrap = FALSE, $sort = FALSE, $fixed
     else {
       // As this is the $refresh case, make sure that system_list() returns
       // fresh data.
-      drupal_static_reset('system_list');
+      system_list_reset();
       if ($bootstrap) {
         $list = system_list('bootstrap');
       }
@@ -391,7 +391,6 @@ function module_enable($module_list, $enable_dependencies = TRUE) {
         ->condition('name', $module)
         ->execute();
       // Refresh the module list to include it.
-      system_list_reset();
       module_list(TRUE);
       module_implements('', FALSE, TRUE);
       _system_update_bootstrap_status();
@@ -498,7 +497,6 @@ function module_disable($module_list, $disable_dependents = TRUE) {
 
   if (!empty($invoke_modules)) {
     // Refresh the module list to exclude the disabled modules.
-    system_list_reset();
     module_list(TRUE);
     module_implements('', FALSE, TRUE);
     // Invoke hook_modules_disabled before disabling modules,

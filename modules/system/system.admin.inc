@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.311 2010/10/01 15:24:18 webchick Exp $
+// $Id: system.admin.inc,v 1.312 2010/10/01 18:37:23 webchick Exp $
 
 /**
  * @file
@@ -1168,6 +1168,7 @@ function system_modules_submit($form, &$form_state) {
     if ($module['enabled']) {
       if (drupal_get_installed_schema_version($name) == SCHEMA_UNINSTALLED) {
         $actions['install'][] = $name;
+        $actions['enable'][] = $name;
       }
       elseif (!module_exists($name)) {
         $actions['enable'][] = $name;
@@ -1183,27 +1184,20 @@ function system_modules_submit($form, &$form_state) {
   $pre_install_list = module_list();
   unset($form_state['storage']);
 
-  // Installs, enables, and disables modules.
-  module_enable($actions['enable']);
-  module_disable($actions['disable']);
-  module_enable($actions['install']);
+  // Reverse the 'enable' list, to order dependencies before dependents.
+  rsort($actions['enable']);
 
-  // Gets module list after install process, displays message if there are changes.
+  // Installs, enables, and disables modules.
+  module_enable($actions['enable'], FALSE);
+  module_disable($actions['disable'], FALSE);
+
+  // Gets module list after install process, flushes caches and displays a
+  // message if there are changes.
   $post_install_list = module_list(TRUE);
   if ($pre_install_list != $post_install_list) {
+    drupal_flush_all_caches();
     drupal_set_message(t('The configuration options have been saved.'));
   }
-
-  // Clear all caches.
-  registry_rebuild();
-  system_rebuild_theme_data();
-  drupal_theme_rebuild();
-  node_types_rebuild();
-  menu_rebuild();
-  cache_clear_all('schema', 'cache');
-  entity_info_cache_clear();
-  drupal_clear_css_cache();
-  drupal_clear_js_cache();
 
   $form_state['redirect'] = 'admin/modules';
 
@@ -1211,9 +1205,6 @@ function system_modules_submit($form, &$form_state) {
   // imported. This might start a batch, and only return to the redirect
   // path after that.
   module_invoke('locale', 'system_update', $actions['install']);
-
-  // Synchronize to catch any actions that were added or removed.
-  actions_synchronize();
 }
 
 /**
