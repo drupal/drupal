@@ -441,7 +441,6 @@ function file_field_widget_settings_form($field, $instance) {
  * Implements hook_field_widget_form().
  */
 function file_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
-  $form['#attributes'] = array('enctype' => 'multipart/form-data');
 
   $defaults = array(
     'fid' => 0,
