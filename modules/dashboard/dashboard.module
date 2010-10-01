@@ -1,5 +1,5 @@
 <?php
-// $Id: dashboard.module,v 1.37 2010/09/27 00:56:54 dries Exp $
+// $Id: dashboard.module,v 1.38 2010/10/01 15:24:18 webchick Exp $
 
 /**
  * Implements hook_help().
@@ -33,26 +33,26 @@ function dashboard_help($path, $arg) {
 function dashboard_menu() {
   $items['admin/structure/dashboard'] = array(
     'title' => 'Dashboard',
-    'description' => "Configure which blocks can be shown on the dashboard.",
+    'description' => 'Configure which blocks can be shown on the dashboard.',
     'page callback' => 'dashboard_admin_blocks',
     'access arguments' => array('administer blocks'),
   );
   $items['admin/dashboard'] = array(
     'title' => 'Dashboard',
-    'description' => 'View and customize your dashboard',
+    'description' => 'View and customize your dashboard.',
     'page callback' => 'dashboard_admin',
     'access arguments' => array('access dashboard'),
-    'type' => MENU_LOCAL_TASK | MENU_NORMAL_ITEM,
     // Make this appear first, so for example, in admin menus, it shows up on
-    // the top corner of the window as a convinient "home link".
+    // the top corner of the window as a convenient "home link".
     'weight' => -15,
   );
   $items['admin/dashboard/customize'] = array(
-    'title' => 'Dashboard',
-    'description' => 'View and customize your dashboard',
+    'title' => 'Customize dashboard',
+    'description' => 'Customize your dashboard.',
     'page callback' => 'dashboard_admin',
     'page arguments' => array(TRUE),
     'access arguments' => array('access dashboard'),
+    'type' => MENU_VISIBLE_IN_BREADCRUMB,
   );
   $items['admin/dashboard/drawer'] = array(
     'page callback' => 'dashboard_show_disabled',
@@ -235,14 +235,6 @@ function dashboard_forms() {
  *   Whether to launch in customization mode right away. TRUE or FALSE.
  */
 function dashboard_admin($launch_customize = FALSE) {
-  // Only continue if provided arguments are expected. This function serves
-  // as the callback for the top-level admin/ page, so any unexpected arguments
-  // are likely the result of someone typing in the URL of an administrative
-  // page that doesn't actually exist; for example, admin/some/random/page.
-  if (!is_bool($launch_customize)) {
-    return MENU_NOT_FOUND;
-  }
-
   $js_settings = array(
     'dashboard' => array(
       'drawer' => url('admin/dashboard/drawer'),

@@ -1,74 +1,10 @@
 <?php
-// $Id: system.admin.inc,v 1.310 2010/09/28 02:30:32 dries Exp $
+// $Id: system.admin.inc,v 1.311 2010/10/01 15:24:18 webchick Exp $
 
 /**
  * @file
  * Admin page callbacks for the system module.
  */
-
-/**
- * Menu callback; Provide the administration overview page.
- */
-function system_main_admin_page($arg = NULL) {
-  // Only continue if provided arguments are expected. This function serves
-  // as the callback for the top-level admin/ page, so any unexpected arguments
-  // are likely the result of someone typing in the URL of an administrative
-  // page that doesn't actually exist; for example, admin/some/random/page.
-  if (isset($arg) && substr($arg, 0, 3) != 'by-') {
-    return MENU_NOT_FOUND;
-  }
-
-  // Check for status report errors.
-  if (system_status(TRUE) && user_access('administer site configuration')) {
-    drupal_set_message(t('One or more problems were detected with your Drupal installation. Check the <a href="@status">status report</a> for more information.', array('@status' => url('admin/reports/status'))), 'error');
-  }
-  $blocks = array();
-  if ($admin = db_query("SELECT menu_name, mlid FROM {menu_links} WHERE link_path = 'admin' AND module = 'system'")->fetchAssoc()) {
-    $result = db_query("
-      SELECT m.*, ml.*
-      FROM {menu_links} ml
-      INNER JOIN {menu_router} m ON ml.router_path = m.path
-      WHERE ml.link_path != 'admin/help' AND menu_name = :menu_name AND ml.plid = :mlid AND hidden = 0", $admin, array('fetch' => PDO::FETCH_ASSOC));
-    foreach ($result as $item) {
-      _menu_link_translate($item);
-      if (!$item['access']) {
-        continue;
-      }
-      // The link 'description' either derived from the hook_menu 'description'
-      // or entered by the user via menu module is saved as the title attribute.
-      if (!empty($item['localized_options']['attributes']['title'])) {
-        $item['description'] = $item['localized_options']['attributes']['title'];
-      }
-      $block = $item;
-      $block['content'] = '';
-      $block['show'] = FALSE;
-      if ($item['block_callback'] && function_exists($item['block_callback'])) {
-        $function = $item['block_callback'];
-        $block['content'] .= $function();
-      }
-      $content = system_admin_menu_block($item);
-      if ((isset($item['page_callback']) && !in_array($item['page_callback'], array('system_admin_menu_block_page', 'system_admin_config_page', 'system_settings_overview'))) || count($content)) {
-        // Only show blocks for items which are not containers, or those which
-        // are containers and do have items we can show.
-        $block['show'] = TRUE;
-        $block['title'] = l($item['title'], $item['href'], $item['localized_options']);
-        if (!empty($content)) {
-          $block['content'] .= theme('admin_block_content', array('content' => $content));
-        }
-      }
-      // Prepare for sorting as in function _menu_tree_check_access().
-      // The weight is offset so it is always positive, with a uniform 5-digits.
-      $blocks[(50000 + $item['weight']) . ' ' . $item['title'] . ' ' . $item['mlid']] = $block;
-    }
-  }
-  if ($blocks) {
-    ksort($blocks);
-    return theme('admin_page', array('blocks' => $blocks));
-  }
-  else {
-    return t('You do not have any administrative items.');
-  }
-}
 
 /**
  * Menu callback; Provide the administration overview page.
@@ -90,10 +26,11 @@ function system_admin_config_page() {
       if (!$item['access']) {
         continue;
       }
-      // The link 'description' either derived from the hook_menu 'description'
-      // or entered by the user via menu module is saved as the title attribute.
+      // The link description, either derived from 'description' in hook_menu()
+      // or customized via menu module is used as title attribute.
       if (!empty($item['localized_options']['attributes']['title'])) {
         $item['description'] = $item['localized_options']['attributes']['title'];
+        unset($item['localized_options']['attributes']['title']);
       }
       $block = $item;
       $block['content'] = '';
@@ -142,9 +79,9 @@ function system_admin_menu_block_page() {
 }
 
 /**
- * Menu callback; prints a listing of admin tasks for each installed module.
+ * Menu callback; prints a listing of admin tasks, organized by module.
  */
-function system_admin_by_module() {
+function system_admin_index() {
   $module_info = system_get_info('module');
   foreach ($module_info as $module => $info) {
     $module_info[$module] = new stdClass();
@@ -152,30 +89,24 @@ function system_admin_by_module() {
   }
   uasort($module_info, 'system_sort_modules_by_info_name');
   $menu_items = array();
-  $help_arg = module_exists('help') ? drupal_help_arg() : FALSE;
 
   foreach ($module_info as $module => $info) {
-    if ($module == 'help') {
-      continue;
-    }
-
-    $admin_tasks = system_get_module_admin_tasks($module);
-
     // Only display a section if there are any available tasks.
-    if (count($admin_tasks)) {
-
-      // Check for help links.
-      if ($help_arg && module_invoke($module, 'help', "admin/help#$module", $help_arg)) {
-        $admin_tasks[100] = l(t('Get help'), "admin/help/$module");
+    if ($admin_tasks = system_get_module_admin_tasks($module, $info->info)) {
+      // Sort links by title.
+      uasort($admin_tasks, 'system_sort_by_title');
+      // Move 'Configure permissions' links to the bottom of each section.
+      $permission_key = "admin/people/permissions#module-$module";
+      if (isset($admin_tasks[$permission_key])) {
+        $permission_task = $admin_tasks[$permission_key];
+        unset($admin_tasks[$permission_key]);
+        $admin_tasks[$permission_key] = $permission_task;
       }
-
-      // Sort.
-      ksort($admin_tasks);
 
       $menu_items[$info->info['name']] = array($info->info['description'], $admin_tasks);
     }
   }
-  return theme('system_admin_by_module', array('menu_items' => $menu_items));
+  return theme('system_admin_index', array('menu_items' => $menu_items));
 }
 
 /**
@@ -975,6 +906,19 @@ function system_modules($form, $form_state = array()) {
   $form['#action'] = url('admin/modules/list/confirm');
 
   return $form;
+}
+
+/**
+ * Array sorting callback; sorts elements by 'title' key.
+ */
+function system_sort_by_title($a, $b) {
+  if (!isset($b['title'])) {
+    return -1;
+  }
+  if (!isset($a['title'])) {
+    return 1;
+  }
+  return strcasecmp($a['title'], $b['title']);
 }
 
 /**
@@ -2387,43 +2331,36 @@ function system_batch_page() {
  *
  * @param $variables
  *   An associative array containing:
- *   - block: An array containing information about the block. It should include
- *     a 'title', a 'description' and a formatted 'content'.
+ *   - block: An array containing information about the block:
+ *     - show: A Boolean whether to output the block. Defaults to FALSE.
+ *     - title: The block's title.
+ *     - content: (optional) Formatted content for the block.
+ *     - description: (optional) Description of the block. Only output if
+ *       'content' is not set.
  *
  * @ingroup themeable
  */
 function theme_admin_block($variables) {
   $block = $variables['block'];
+  $output = '';
 
   // Don't display the block if it has no content to display.
   if (empty($block['show'])) {
-    return '';
+    return $output;
   }
 
-  if (empty($block['content'])) {
-    $output = <<< EOT
-    <div class="admin-panel">
-      <h3>
-        $block[title]
-      </h3>
-      <div class="description">
-        $block[description]
-      </div>
-    </div>
-EOT;
+  $output .= '<div class="admin-panel">';
+  if (!empty($block['title'])) {
+    $output .= '<h3>' . $block['title'] . '</h3>';
+  }
+  if (!empty($block['content'])) {
+    $output .= '<div class="body">' . $block['content'] . '</div>';
   }
   else {
-    $output = <<< EOT
-    <div class="admin-panel">
-      <h3>
-        $block[title]
-      </h3>
-     <div class="body">
-       $block[content]
-      </div>
-    </div>
-EOT;
+    $output .= '<div class="description">' . $block['description'] . '</div>';
   }
+  $output .= '</div>';
+
   return $output;
 }
 
@@ -2432,30 +2369,28 @@ EOT;
  *
  * @param $variables
  *   An associative array containing:
- *   - content: An array containing information about the block. It should
- *     include a 'title', a 'description' and a formatted 'content'.
+ *   - content: An array containing information about the block. Each element
+ *     of the array represents an administrative menu item, and must at least
+ *     contain the keys 'title', 'href', and 'localized_options', which are
+ *     passed to l(). A 'description' key may also be provided.
  *
  * @ingroup themeable
  */
 function theme_admin_block_content($variables) {
   $content = $variables['content'];
+  $output = '';
 
-  if (!$content) {
-    return '';
-  }
-
-  if (system_admin_compact_mode()) {
-    $output = '<ul class="menu">';
-    foreach ($content as $item) {
-      $output .= '<li class="leaf">' . l($item['title'], $item['href'], $item['localized_options']) . '</li>';
+  if (!empty($content)) {
+    $class = 'admin-list';
+    if ($compact = system_admin_compact_mode()) {
+      $class .= ' compact';
     }
-    $output .= '</ul>';
-  }
-  else {
-    $output = '<dl class="admin-list">';
+    $output .= '<dl class="' . $class . '">';
     foreach ($content as $item) {
       $output .= '<dt>' . l($item['title'], $item['href'], $item['localized_options']) . '</dt>';
-      $output .= '<dd>' . filter_xss_admin($item['description']) . '</dd>';
+      if (!$compact && isset($item['description'])) {
+        $output .= '<dd>' . filter_xss_admin($item['description']) . '</dd>';
+      }
     }
     $output .= '</dl>';
   }
@@ -2514,11 +2449,10 @@ function theme_admin_page($variables) {
  *
  * @ingroup themeable
  */
-function theme_system_admin_by_module($variables) {
+function theme_system_admin_index($variables) {
   $menu_items = $variables['menu_items'];
 
   $stripe = 0;
-  $output = '';
   $container = array('left' => '', 'right' => '');
   $flip = array('left' => 'right', 'right' => 'left');
   $position = 'left';
@@ -2531,7 +2465,7 @@ function theme_system_admin_by_module($variables) {
     if (count($items)) {
       $block = array();
       $block['title'] = $module;
-      $block['content'] = theme('item_list', array('items' => $items));
+      $block['content'] = theme('admin_block_content', array('content' => $items));
       $block['description'] = t($description);
       $block['show'] = TRUE;
 
@@ -2547,6 +2481,7 @@ function theme_system_admin_by_module($variables) {
   }
 
   $output = '<div class="admin clearfix">';
+  $output .= theme('system_compact_link');
   foreach ($container as $id => $data) {
     $output .= '<div class="' . $id . ' clearfix">';
     $output .= $data;

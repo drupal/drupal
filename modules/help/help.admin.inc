@@ -1,5 +1,5 @@
 <?php
-// $Id: help.admin.inc,v 1.12 2010/07/30 02:47:28 dries Exp $
+// $Id: help.admin.inc,v 1.13 2010/10/01 15:24:18 webchick Exp $
 
 /**
  * @file
@@ -22,12 +22,12 @@ function help_main() {
 function help_page($name) {
   $output = '';
   if (module_hook($name, 'help')) {
-    $module = drupal_parse_info_file(drupal_get_path('module', $name) . '/' . $name . '.info');
-    drupal_set_title($module['name']);
+    $info = system_get_info('module');
+    drupal_set_title($info[$name]['name']);
 
     $temp = module_invoke($name, 'help', "admin/help#$name", drupal_help_arg());
     if (empty($temp)) {
-      $output .= t("No help is available for module %module.", array('%module' => $module['name']));
+      $output .= t("No help is available for module %module.", array('%module' => $info[$name]['name']));
     }
     else {
       $output .= $temp;
@@ -35,12 +35,14 @@ function help_page($name) {
 
     // Only print list of administration pages if the module in question has
     // any such pages associated to it.
-    $admin_tasks = system_get_module_admin_tasks($name);
+    $admin_tasks = system_get_module_admin_tasks($name, $info[$name]);
     if (!empty($admin_tasks)) {
-      ksort($admin_tasks);
-      $output .= theme('item_list', array('items' => $admin_tasks, 'title' => t('@module administration pages', array('@module' => $module['name']))));
+      $links = array();
+      foreach ($admin_tasks as $task) {
+        $links[] = l($task['title'], $task['link_path'], $task['localized_options']);
+      }
+      $output .= theme('item_list', array('items' => $links, 'title' => t('@module administration pages', array('@module' => $info[$name]['name']))));
     }
-
   }
   return $output;
 }

@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.test,v 1.35 2010/09/24 00:37:44 dries Exp $
+// $Id: menu.test,v 1.36 2010/10/01 15:24:18 webchick Exp $
 
 /**
  * @file
@@ -551,7 +551,7 @@ class MenuBreadcrumbTestCase extends DrupalWebTestCase {
   function testBreadCrumbs() {
     // Prepare common base breadcrumb elements.
     $home = array('<front>' => 'Home');
-    $admin = $home + array('admin' => t('Administer'));
+    $admin = $home + array('admin' => t('Administration'));
     $config = $admin + array('admin/config' => t('Configuration'));
     $type = 'article';
     $langcode = LANGUAGE_NONE;

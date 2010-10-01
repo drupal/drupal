@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.293 2010/09/24 00:37:44 dries Exp $
+// $Id: profile.module,v 1.294 2010/10/01 15:24:18 webchick Exp $
 
 /**
  * @file
@@ -98,6 +98,7 @@ function profile_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('profile_field_form'),
     'access arguments' => array('administer users'),
+    'type' => MENU_VISIBLE_IN_BREADCRUMB,
     'file' => 'profile.admin.inc',
   );
   $items['admin/config/people/profile/autocomplete'] = array(
@@ -112,6 +113,7 @@ function profile_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('profile_field_form'),
     'access arguments' => array('administer users'),
+    'type' => MENU_VISIBLE_IN_BREADCRUMB,
     'file' => 'profile.admin.inc',
   );
   $items['admin/config/people/profile/delete'] = array(
@@ -119,6 +121,7 @@ function profile_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('profile_field_delete'),
     'access arguments' => array('administer users'),
+    'type' => MENU_VISIBLE_IN_BREADCRUMB,
     'file' => 'profile.admin.inc',
   );
   $items['profile/autocomplete'] = array(
