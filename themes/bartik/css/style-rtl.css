@@ -36,7 +36,7 @@ ul.tips {
 
 /* ------------------ Header ------------------ */
 
-#header #logo {
+#logo {
   float: right;
   padding: 15px 0 15px 30px;
 }
@@ -82,7 +82,7 @@ ul.tips {
 
 /* --------------- Main Menu ------------ */
 
-#main-menu ul.links li.first {
+#main-menu-links li.first {
   padding-right: 2px;
   padding-left: 0;
 }
@@ -95,44 +95,44 @@ ul.tips {
 
 /* ----------------- Content ------------------ */
 
-#block-system-main .submitted .user-picture img {
+.submitted .user-picture img {
   float: right;
   margin-left: 5px;
   margin-right: 0;
 }
-#block-system-main div.field-name-taxonomy-tags div.field-label,
-#block-system-main div.field-name-taxonomy-tags div.field-items,
-#block-system-main div.field-name-taxonomy-tags div.field-item {
+.field-type-taxonomy-term-reference .field-label,
+.field-type-taxonomy-term-reference .field-items,
+.field-type-taxonomy-term-reference .field-item {
   float: right;
   padding-left: 10px;
   padding-right: 0;
 }
-#block-system-main .link-wrapper {
+.link-wrapper {
   margin-right: 236px;
   margin-left: 0;
 }
 
 /* ----------------- Comments ----------------- */
 
-#comment-wrapper div.user-picture img {
+.comment .user-picture img {
   margin-right: 0;
 }
-#comments .attribution {
+.comment .attribution {
   float: right;
 }
-#comments .comment-arrow {
+.comment .comment-arrow {
   background: url(../images/comment-arrow-rtl.png);
   margin-right: -45px;
 }
-#comments .comment-text {
+.comment .comment-text {
   margin-right: 140px;
   margin-left: 0;
 }
-#comments .indented {
+.comment .indented {
   margin-right: 40px;
   margin-left: 0;
 }
-#comments ul.links li {
+.comment ul.links li {
   padding: 0 0 0.5em;
 }
 
@@ -239,15 +239,15 @@ html.js input.throbbing {
 }
 
 /* Comment form */
-#comment-form .form-type-textfield label,
-#comment-form .form-type-item label {
+.comment-form .form-type-textfield label,
+.comment-form .form-type-item label {
   float: right;
 }
-#comment-form .form-type-textfield input,
-#comment-form .form-item .username {
+.comment-form .form-type-textfield input,
+.comment-form .form-item .username {
   float: left;
 }
-#comment-form .form-item .description {
+.comment-form .form-item .description {
   float: left;
 }
 
