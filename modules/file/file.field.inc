@@ -1,5 +1,5 @@
 <?php
-// $Id: file.field.inc,v 1.34 2010/09/09 23:28:16 webchick Exp $
+// $Id: file.field.inc,v 1.35 2010/10/01 01:32:59 webchick Exp $
 
 /**
  * @file
@@ -441,7 +441,6 @@ function file_field_widget_settings_form($field, $instance) {
  * Implements hook_field_widget_form().
  */
 function file_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
-  $form['#attributes'] = array('enctype' => 'multipart/form-data');
 
   $defaults = array(
     'fid' => 0,

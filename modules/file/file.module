@@ -1,5 +1,5 @@
 <?php
-// $Id: file.module,v 1.40 2010/09/13 01:09:25 dries Exp $
+// $Id: file.module,v 1.41 2010/10/01 01:32:59 webchick Exp $
 
 /**
  * @file
@@ -390,7 +390,6 @@ function file_managed_file_process($element, &$form_state, $form) {
     '#value' => t('Upload'),
     '#validate' => array(),
     '#submit' => array('file_managed_file_submit'),
-    '#limit_validation_errors' => array($element['#parents']),
     '#ajax' => $ajax_settings,
     '#weight' => -5,
   );
@@ -404,10 +403,15 @@ function file_managed_file_process($element, &$form_state, $form) {
     '#value' => t('Remove'),
     '#validate' => array(),
     '#submit' => array('file_managed_file_submit'),
-    '#limit_validation_errors' => array($element['#parents']),
     '#ajax' => $ajax_settings,
     '#weight' => -5,
   );
+
+  // Limit validation errors to the file field only. The entire field is needed later
+  // by file_field_widget_form(), so the last element is sliced off the #parents array
+  // to avoid removing too much from $form_state['values'].
+  $element['upload_button']['#limit_validation_errors'] = array(array_slice($element['#parents'], 0, -1));
+  $element['remove_button']['#limit_validation_errors'] = array(array_slice($element['#parents'], 0, -1));
 
   $element['fid'] = array(
     '#type' => 'hidden',

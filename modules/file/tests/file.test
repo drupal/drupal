@@ -1,5 +1,5 @@
 <?php
-// $Id: file.test,v 1.25 2010/09/11 21:14:31 webchick Exp $
+// $Id: file.test,v 1.26 2010/10/01 01:32:59 webchick Exp $
 
 /**
  * @file
@@ -114,8 +114,8 @@ class FileFieldTestCase extends DrupalWebTestCase {
     );
 
     if (is_numeric($nid_or_type)) {
-      $node = node_load($nid_or_type);
-      $delta = isset($node->$field_name) ? count($node->$field_name) : 0;
+      $node = node_load($nid_or_type, NULL, TRUE);
+      $delta = isset($node->{$field_name}[LANGUAGE_NONE]) ? count($node->{$field_name}[LANGUAGE_NONE]) : 0;
       $edit['files[' . $field_name . '_' . LANGUAGE_NONE . '_' . $delta . ']'] = drupal_realpath($file->uri);
       $this->drupalPost('node/' . $nid_or_type . '/edit', $edit, t('Save'));
     }
@@ -279,6 +279,17 @@ class FileFieldWidgetTestCase extends FileFieldTestCase {
       $node = node_load($nid, NULL, TRUE);
       $this->assertTrue(empty($node->{$field_name}[LANGUAGE_NONE][0]['fid']), t('File was successfully removed from the node.'));
     }
+
+    // Test partial form submissions using the Upload button on a multivalue field.
+    field_delete_field($field_name);
+    $this->createFileField($field_name, $type_name, array('cardinality' => 3));
+
+    $this->drupalGet("node/add/$type_name");
+    for ($delta = 0; $delta < 3; $delta++) {
+      $edit = array('files[' . $field_name . '_' . LANGUAGE_NONE . '_' . $delta . ']' => drupal_realpath($test_file->uri));
+      $this->drupalPost(NULL, $edit, t('Upload'));
+    }
+    $this->assertNoFieldByXpath('//input[@type="submit"]', t('Upload'), t('After uploading 3 files, the "Upload" button is no longer displayed.'));
 
     // Test private download method.
     $edit = array('field[settings][uri_scheme]' => 'private');
