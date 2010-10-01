@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.199 2010/10/01 18:37:22 webchick Exp $
+// $Id: module.inc,v 1.200 2010/10/01 19:52:28 webchick Exp $
 
 /**
  * @file
@@ -404,8 +404,19 @@ function module_enable($module_list, $enable_dependencies = TRUE) {
       // Now install the module if necessary.
       if (drupal_get_installed_schema_version($module, TRUE) == SCHEMA_UNINSTALLED) {
         drupal_install_schema($module);
+
+        // Set the schema version to the number of the last update provided
+        // by the module.
         $versions = drupal_get_schema_versions($module);
-        drupal_set_installed_schema_version($module, $versions ? max($versions) : SCHEMA_INSTALLED);
+        $version = $versions ? max($versions) : SCHEMA_INSTALLED;
+
+        // If the module has no current updates, but has some that were
+        // previously removed, set the version to the value of
+        // hook_update_last_removed().
+        if ($last_removed = module_invoke($module, 'update_last_removed')) {
+          $version = max($version, $last_removed);
+        }
+        drupal_set_installed_schema_version($module, $version);
         // Allow the module to perform install tasks.
         module_invoke($module, 'install');
         // Record the fact that it was installed.
