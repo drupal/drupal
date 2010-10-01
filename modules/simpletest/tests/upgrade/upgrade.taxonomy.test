@@ -1,5 +1,5 @@
 <?php
-// $Id: upgrade.taxonomy.test,v 1.3 2010/09/19 18:45:51 dries Exp $
+// $Id: upgrade.taxonomy.test,v 1.4 2010/10/01 01:37:13 webchick Exp $
 
 /**
  * Test taxonomy upgrades.
@@ -34,8 +34,8 @@ class UpgradePathTaxonomyTestCase extends UpgradePathTestCase {
         foreach ($field['settings']['allowed_values'] as $tree) {
           // Prefer valid taxonomy term reference fields for a given vocabulary
           // when they exist.
-          if (empty($instances[$tree['vid']]) || $instances[$tree['vid']] == 'taxonomyextra') {
-            $instances[$tree['vid']] = $field['field_name'];
+          if (empty($instances[$tree['vocabulary']]) || $instances[$tree['vocabulary']] == 'taxonomyextra') {
+            $instances[$tree['vocabulary']] = $field['field_name'];
           }
         }
       }
@@ -59,8 +59,10 @@ class UpgradePathTaxonomyTestCase extends UpgradePathTestCase {
 
     // Check that the node type 'page' has been associated to a taxonomy
     // reference field for each vocabulary.
-    $vocabularies = taxonomy_get_vocabularies();
-    $voc_keys = array_keys($vocabularies);
+    $voc_keys = array();
+    foreach (taxonomy_get_vocabularies() as $vocab) {
+      $voc_keys[] = $vocab->machine_name;
+    }
     $instances = $this->instanceVocabularies('node', 'page');
     $inst_keys = array_keys($instances);
     sort($voc_keys);

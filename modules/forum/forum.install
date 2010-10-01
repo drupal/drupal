@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.install,v 1.50 2010/08/22 13:55:53 dries Exp $
+// $Id: forum.install,v 1.51 2010/10/01 01:37:13 webchick Exp $
 
 /**
  * @file
@@ -52,7 +52,7 @@ function forum_enable() {
       'settings' => array(
         'allowed_values' => array(
           array(
-            'vid' => $vocabulary->vid,
+            'vocabulary' => $vocabulary->machine_name,
             'parent' => 0,
           ),
         ),
