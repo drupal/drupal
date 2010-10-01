@@ -1,5 +1,5 @@
 <?php
-// $Id: install.core.inc,v 1.34 2010/09/24 21:36:22 dries Exp $
+// $Id: install.core.inc,v 1.35 2010/10/01 01:29:42 webchick Exp $
 
 /**
  * @file
@@ -1772,7 +1772,7 @@ function _install_configure_form($form, &$form_state, &$install_state) {
   $form['server_settings']['clean_url'] = array(
     '#type' => 'hidden',
     '#default_value' => 0,
-    '#attributes' => array('class' => array('install')),
+    '#attributes' => array('id' => 'edit-clean-url', 'class' => array('install')),
   );
 
   $form['update_notifications'] = array(
