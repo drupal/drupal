@@ -48,4 +48,3 @@ function rdf_install() {
   $modules = module_implements('rdf_mapping');
   rdf_modules_installed($modules);
 }
-
