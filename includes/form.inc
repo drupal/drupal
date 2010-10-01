@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.497 2010/09/27 00:53:55 dries Exp $
+// $Id: form.inc,v 1.498 2010/10/01 22:28:55 webchick Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -3533,11 +3533,11 @@ function theme_form_element($variables) {
 
   switch ($element['#title_display']) {
     case 'before':
+    case 'invisible':
       $output .= ' ' . theme('form_element_label', $variables);
       $output .= ' ' . $prefix . $element['#children'] . $suffix . "\n";
       break;
 
-    case 'invisible':
     case 'after':
       $output .= ' ' . $prefix . $element['#children'] . $suffix;
       $output .= ' ' . theme('form_element_label', $variables) . "\n";
