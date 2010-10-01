@@ -6544,6 +6544,9 @@ function drupal_flush_all_caches() {
   menu_rebuild();
   node_types_rebuild();
 
+  // Synchronize to catch any actions that were added or removed.
+  actions_synchronize();
+
   // Don't clear cache_form - in-progress form submissions may break.
   // Ordered so clearing the page cache will always be the last action.
   $core = array('cache', 'cache_filter', 'cache_bootstrap', 'cache_page');

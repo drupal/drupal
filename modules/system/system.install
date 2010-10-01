@@ -2246,13 +2246,6 @@ function system_update_7036() {
 }
 
 /**
- * Rename action description to label.
- */
-function system_update_7037() {
-  db_change_field('actions', 'description', 'label', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => '0'));
-}
-
-/**
  * Upgrade the {url_alias} table and create a cache bin for path aliases.
  */
 function system_update_7042() {

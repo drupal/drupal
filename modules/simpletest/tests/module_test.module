@@ -36,6 +36,9 @@ function module_test_system_info_alter(&$info, $file, $type) {
       $info['dependencies'][] = 'php';
     }
   }
+  if ($file->name == 'seven' && $type == 'theme') {
+    $info['regions']['test_region'] = t('Test region');
+  }
 }
 
 /**

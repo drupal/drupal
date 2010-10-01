@@ -637,6 +637,9 @@ function update_fix_d7_requirements() {
       db_change_field('languages', 'javascript', 'javascript', array('type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''));
     }
 
+    // Rename action description to label.
+    db_change_field('actions', 'description', 'label', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => '0'));
+
     variable_set('update_d7_requirements', TRUE);
   }
 

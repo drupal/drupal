@@ -2601,23 +2601,21 @@ function system_find_base_themes($themes, $key, $used_keys = array()) {
  *   An array of regions in the form $region['name'] = 'description'.
  */
 function system_region_list($theme_key, $show = REGIONS_ALL) {
-  $list = &drupal_static(__FUNCTION__, array());
+  $themes = list_themes();
+  if (!isset($themes[$theme_key])) {
+    return array();
+  }
 
-  if (empty($list[$theme_key][$show])) {
-    $themes = list_themes();
-    if (!isset($themes[$theme_key])) {
-      $list[$theme_key][$show] = array();
-      return $list[$theme_key][$show];
-    }
-    $info = $themes[$theme_key]->info;
-    // If requested, suppress hidden regions. See block_admin_display_form().
-    foreach ($info['regions'] as $name => $label) {
-      if ($show == REGIONS_ALL || !isset($info['regions_hidden']) || !in_array($name, $info['regions_hidden'])) {
-        $list[$theme_key][$show][$name] = $label;
-      }
+  $list = array();
+  $info = $themes[$theme_key]->info;
+  // If requested, suppress hidden regions. See block_admin_display_form().
+  foreach ($info['regions'] as $name => $label) {
+    if ($show == REGIONS_ALL || !isset($info['regions_hidden']) || !in_array($name, $info['regions_hidden'])) {
+      $list[$name] = $label;
     }
   }
-  return $list[$theme_key][$show];
+
+  return $list;
 }
 
 /**

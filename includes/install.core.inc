@@ -1403,6 +1403,7 @@ function install_profile_modules(&$install_state) {
     'operations' => $operations,
     'title' => st('Installing @drupal', array('@drupal' => drupal_install_profile_distribution_name())),
     'error_message' => st('The installation has encountered an error.'),
+    'finished' => '_install_profile_modules_finished',
   );
   return $batch;
 }
@@ -1527,9 +1528,6 @@ function install_finished(&$install_state) {
   // registered by the install profile are registered correctly.
   drupal_flush_all_caches();
 
-  // Register actions declared by any modules.
-  actions_synchronize();
-
   // Remember the profile which was used.
   variable_set('install_profile', drupal_get_profile());
 
@@ -1562,6 +1560,15 @@ function _install_module_batch($module, $module_name, &$context) {
   module_enable(array($module), FALSE);
   $context['results'][] = $module;
   $context['message'] = st('Installed %module module.', array('%module' => $module_name));
+}
+
+/**
+ * 'Finished' callback for module installation batch.
+ */
+function _install_profile_modules_finished($success, $results, $operations) {
+  // Flush all caches to complete the module installation process. Subsequent
+  // installation tasks will now have full access to the profile's modules.
+  drupal_flush_all_caches();
 }
 
 /**

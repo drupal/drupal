@@ -1315,9 +1315,6 @@ class DrupalWebTestCase extends DrupalTestCase {
     drupal_static_reset();
     drupal_flush_all_caches();
 
-    // Register actions declared by any modules.
-    actions_synchronize();
-
     // Reload global $conf array and permissions.
     $this->refreshVariables();
     $this->checkPermissions(array(), TRUE);
