@@ -598,7 +598,7 @@ function node_update_7006(&$sandbox) {
     $sandbox['count'] = 0;
 
     $query = db_select('node', 'n');
-    $query->join('node_revision', 'nr', 'n.vid = nr.vid');
+    $query->join('node_revision', 'nr', 'n.nid = nr.nid');
     $sandbox['total'] = $query->countQuery()->execute()->fetchField();
 
     $sandbox['body_field_id'] = $body_field['id'];
@@ -611,7 +611,7 @@ function node_update_7006(&$sandbox) {
       // Operate on every revision of every node (whee!), in batches.
       $batch_size = 200;
       $query = db_select('node_revision', 'nr');
-      $query->innerJoin('node', 'n', 'n.vid = nr.vid');
+      $query->innerJoin('node', 'n', 'n.nid = nr.nid');
       $query
         ->fields('nr', array('nid', 'vid', 'body', 'teaser', 'format'))
         ->fields('n', array('type', 'status', 'comment', 'promote', 'sticky', 'language'))
@@ -620,7 +620,7 @@ function node_update_7006(&$sandbox) {
         ->range(0, $batch_size);
       $revisions = $query->execute();
 
-      // Load each reversion of each node, set up 'body'
+      // Load each revision of each node, set up 'body'
       // appropriately, and save the node's field data.  Note that
       // node_load() will not return the body or teaser values from
       // {node_revision} because those columns have been removed from the
