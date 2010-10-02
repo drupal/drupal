@@ -16,6 +16,4 @@ drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
 include_once DRUPAL_ROOT . '/includes/xmlrpc.inc';
 include_once DRUPAL_ROOT . '/includes/xmlrpcs.inc';
 
-$services = module_invoke_all('xmlrpc');
-drupal_alter('xmlrpc', $services);
-xmlrpc_server($services);
+xmlrpc_server(module_invoke_all('xmlrpc'));

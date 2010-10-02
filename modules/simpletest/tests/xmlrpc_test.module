@@ -64,6 +64,29 @@ function xmlrpc_test_xmlrpc() {
 }
 
 /**
+ * Implements hook_xmlrpc_alter().
+ *
+ * Hide (or not) the system.methodSignature() service depending on a variable.
+ */
+function xmlrpc_test_xmlrpc_alter(&$services) {
+  if (variable_get('xmlrpc_test_xmlrpc_alter', FALSE)) {
+    $remove = NULL;
+    foreach ($services as $key => $value) {
+      if (!is_array($value)) {
+        continue;
+      }
+      if ($value[0] == 'system.methodSignature') {
+        $remove = $key;
+        break;
+      }
+    }
+    if (isset($remove)) {
+      unset($services[$remove]);
+    }
+  }
+}
+
+/**
  * Created a message of the desired size in KB.
  *
  * @param $size
