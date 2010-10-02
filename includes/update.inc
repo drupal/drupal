@@ -793,16 +793,9 @@ function update_do_one($module, $number, $dependency_map, &$context) {
     return;
   }
 
-  if (!isset($context['log'])) {
-    $context['log'] = variable_get('update_log_queries', 0);
-  }
-
   $ret = array();
   if (function_exists($function)) {
     try {
-      if ($context['log']) {
-        Database::startLog($function);
-      }
       $ret['results']['query'] = $function($context['sandbox']);
       $ret['results']['success'] = TRUE;
     }
@@ -815,10 +808,6 @@ function update_do_one($module, $number, $dependency_map, &$context) {
       require_once DRUPAL_ROOT . '/includes/errors.inc';
       $variables = _drupal_decode_exception($e);
       $ret['#abort'] = array('success' => FALSE, 'query' => t('%type: %message in %function (line %line of %file).', $variables));
-    }
-
-    if ($context['log']) {
-      $ret['queries'] = Database::getLog($function);
     }
   }
 
