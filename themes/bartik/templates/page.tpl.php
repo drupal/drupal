@@ -166,9 +166,9 @@
   <?php endif; ?>
 
   <?php if ($page['featured']): ?>
-    <div id="featured" class="section clearfix">
+    <div id="featured"><div class="section clearfix">
       <?php print render($page['featured']); ?>
-    </div> <!-- /#featured -->
+    </div></div> <!-- /.section, /#featured -->
   <?php endif; ?>
 
   <div id="main-wrapper" class="clearfix"><div id="main" class="clearfix">
