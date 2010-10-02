@@ -12,3 +12,11 @@
 #block-search-form .form-item-search-block-form input {
   width: 67%;
 }
+.node-sticky {
+  background: transparent;
+  border: none;
+  padding: 0 0 15px;
+}
+.node-teaser {
+  border-bottom: 1px solid #d3d7d9;
+}
