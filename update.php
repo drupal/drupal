@@ -28,6 +28,16 @@ define('DRUPAL_ROOT', getcwd());
  */
 define('MAINTENANCE_MODE', 'update');
 
+/**
+ * Minimum schema version of Drupal 6 required for upgrade to Drupal 7.
+ *
+ * Upgrades from Drupal 6 to Drupal 7 require that Drupal 6 be running
+ * the most recent version, or the upgrade could fail. We can't easily
+ * check the Drupal 6 version once the update process has begun, so instead
+ * we check the schema version of system.module in the system table.
+ */
+define('REQUIRED_D6_SCHEMA_VERSION', '6055');
+
 function update_selection_page() {
   drupal_set_title('Drupal database update');
   $elements = drupal_get_form('update_script_selection_form');

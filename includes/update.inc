@@ -120,6 +120,21 @@ function update_prepare_d7_bootstrap() {
   // created yet.
   drupal_bootstrap(DRUPAL_BOOTSTRAP_DATABASE);
 
+  // Check to make sure that the user is running an up to date version of
+  // Drupal 6 before proceeding. Note this has to happen AFTER the database
+  // bootstraps because of drupal_get_installed_schema_version().
+  $system_schema = drupal_get_installed_schema_version('system');
+  $has_required_schema = $system_schema >= REQUIRED_D6_SCHEMA_VERSION;
+  $requirements = array(
+    'drupal 6 version' => array(
+      'title' => 'Drupal 6 version',
+      'value' => $has_required_schema ? 'You are running a current version of Drupal 6.' : 'You are not running a current version of Drupal 6',
+      'severity' => $has_required_schema ? REQUIREMENT_OK : REQUIREMENT_ERROR,
+      'description' => $has_required_schema ? '' : 'Please update your Drupal 6 installation to the most recent version before attempting to upgrade to Drupal 7',
+    ),
+  );
+  update_extra_requirements($requirements);
+
   // Create the registry tables.
   if (!db_table_exists('registry')) {
     $schema['registry'] = array(
@@ -146,6 +161,43 @@ function update_prepare_d7_bootstrap() {
       'primary key' => array('filename'),
     );
     db_create_table('registry_file', $schema['registry_file']);
+  }
+
+ // Older versions of Drupal 6 do not include the semaphore table, which is 
+ // required to bootstrap, so we add it now so that we can bootstrap and provide
+ // a reasonable error message.
+  if (!db_table_exists('semaphore')) {
+    $semaphore = array(
+      'description' => 'Table for holding semaphores, locks, flags, etc. that cannot be stored as Drupal variables since they must not be cached.',
+      'fields' => array(
+        'name' => array(
+          'description' => 'Primary Key: Unique name.',
+          'type' => 'varchar',
+          'length' => 255,
+          'not null' => TRUE,
+          'default' => ''
+        ),
+        'value' => array(
+          'description' => 'A value for the semaphore.',
+          'type' => 'varchar',
+          'length' => 255,
+          'not null' => TRUE,
+          'default' => ''
+        ),
+        'expire' => array(
+          'description' => 'A Unix timestamp with microseconds indicating when the semaphore should expire.',
+          'type' => 'float',
+          'size' => 'big',
+          'not null' => TRUE
+        ),
+      ),
+      'indexes' => array(
+        'value' => array('value'),
+        'expire' => array('expire'),
+      ),
+      'primary key' => array('name'),
+    );
+    db_create_table('semaphore', $semaphore);
   }
 
   // The new cache_bootstrap bin is required to bootstrap to
@@ -436,7 +488,7 @@ function update_fix_d7_requirements() {
     db_create_table('role_permission', $schema['role_permission']);
 
     // Drops and recreates semaphore value index.
-    db_drop_index('semaphore', 'expire');
+    db_drop_index('semaphore', 'value');
     db_add_index('semaphore', 'value', array('value'));
 
     $schema['date_format_type'] = array(
