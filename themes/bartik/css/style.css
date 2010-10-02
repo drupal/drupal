@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.18 2010/10/01 07:05:22 webchick Exp $ */
+/* $Id: style.css,v 1.19 2010/10/02 01:42:53 webchick Exp $ */
 
 /* ---------- Overall Specifications ---------- */
 
@@ -481,7 +481,7 @@ h1#site-name,
 /* ----------------- Content ------------------ */
 
 .content {
-  margin-top: 1em;
+  margin-top: 10px;
 }
 #preview #preview-block-system-main {
   line-height: 1.5;
@@ -510,6 +510,12 @@ h1#page-title,
   border-bottom: 1px solid #d3d7d9;
   margin-bottom: 30px;
   padding-bottom: 15px;
+}
+.node-teaser.node-sticky {
+  background: #f9f9f9;
+  background: rgba(0, 0, 0, 0.024);
+  border: 1px solid #d3d7d9;
+  padding: 0 15px 15px;
 }
 .node-teaser .content {
   color: #3b3b3b;
@@ -620,11 +626,13 @@ ul.links {
 }
 
 /* ------------------ Sidebar ----------------- */
-
+.sidebar .section {
+  padding-top: 10px;
+}
 .sidebar .block {
   border: 1px solid;
   padding: 15px 20px;
-  margin: 20px 0;
+  margin: 0 0 20px;
 }
 .sidebar h2,
 #preview .sidebar h2 {

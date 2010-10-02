@@ -1,4 +1,4 @@
-/* $Id: ie6.css,v 1.2 2010/09/02 20:43:18 dries Exp $ */
+/* $Id: ie6.css,v 1.3 2010/10/02 01:42:53 webchick Exp $ */
 
 #content {
   overflow: hidden;
@@ -11,4 +11,12 @@
 }
 #block-search-form .form-item-search-block-form input {
   width: 67%;
+}
+.node-sticky {
+  background: transparent;
+  border: none;
+  padding: 0 0 15px;
+}
+.node-teaser {
+  border-bottom: 1px solid #d3d7d9;
 }
