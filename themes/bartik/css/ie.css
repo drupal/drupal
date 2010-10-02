@@ -21,3 +21,9 @@ fieldset legend {
 .meta {
   margin-bottom: 10px;
 }
+#search-block-form input.form-submit:hover,
+#search-block-form input.form-submit:focus,
+#search-form input.form-submit:hover,
+#search-form input.form-submit:focus {
+  background-position: center -25px;
+}
