@@ -1,5 +1,5 @@
 <?php
-// $Id: page.tpl.php,v 1.5 2010/09/09 15:27:08 webchick Exp $
+// $Id: page.tpl.php,v 1.6 2010/10/02 23:42:47 dries Exp $
 
 /**
  * @file
@@ -166,9 +166,9 @@
   <?php endif; ?>
 
   <?php if ($page['featured']): ?>
-    <div id="featured" class="section clearfix">
+    <div id="featured"><div class="section clearfix">
       <?php print render($page['featured']); ?>
-    </div> <!-- /#featured -->
+    </div></div> <!-- /.section, /#featured -->
   <?php endif; ?>
 
   <div id="main-wrapper" class="clearfix"><div id="main" class="clearfix">
