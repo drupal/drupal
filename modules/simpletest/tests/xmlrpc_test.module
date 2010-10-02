@@ -1,5 +1,5 @@
 <?php
-// $Id: xmlrpc_test.module,v 1.6 2010/09/23 17:59:24 dries Exp $
+// $Id: xmlrpc_test.module,v 1.7 2010/10/02 01:22:41 dries Exp $
 
 function xmlrpc_test_arrayOfStructsTest($array) {
   $sum = 0;
@@ -61,6 +61,29 @@ function xmlrpc_test_xmlrpc() {
     'validator1.simpleStructReturnTest' => 'xmlrpc_test_simpleStructReturnTest',
     'messages.messageSizedInKB' => 'xmlrpc_test_message_sized_in_kb',
   );
+}
+
+/**
+ * Implements hook_xmlrpc_alter().
+ *
+ * Hide (or not) the system.methodSignature() service depending on a variable.
+ */
+function xmlrpc_test_xmlrpc_alter(&$services) {
+  if (variable_get('xmlrpc_test_xmlrpc_alter', FALSE)) {
+    $remove = NULL;
+    foreach ($services as $key => $value) {
+      if (!is_array($value)) {
+        continue;
+      }
+      if ($value[0] == 'system.methodSignature') {
+        $remove = $key;
+        break;
+      }
+    }
+    if (isset($remove)) {
+      unset($services[$remove]);
+    }
+  }
 }
 
 /**

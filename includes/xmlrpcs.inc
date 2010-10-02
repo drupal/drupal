@@ -1,5 +1,5 @@
 <?php
-// $Id: xmlrpcs.inc,v 1.41 2010/07/31 04:17:34 dries Exp $
+// $Id: xmlrpcs.inc,v 1.42 2010/10/02 01:22:41 dries Exp $
 
 /**
  * @file
@@ -45,7 +45,9 @@ function xmlrpc_server($callbacks) {
   // We build an array of all method names by combining the built-ins
   // with those defined by modules implementing the _xmlrpc hook.
   // Built-in methods are overridable.
-  foreach (array_merge($defaults, (array) $callbacks) as $key => $callback) {
+  $callbacks = array_merge($defaults, (array) $callbacks);
+  drupal_alter('xmlrpc', $callbacks);
+  foreach ($callbacks as $key => $callback) {
     // we could check for is_array($callback)
     if (is_int($key)) {
       $method = $callback[0];
