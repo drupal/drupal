@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.20 2010/10/02 23:42:47 dries Exp $ */
+/* $Id: style.css,v 1.21 2010/10/02 23:56:29 dries Exp $ */
 
 /* ---------- Overall Specifications ---------- */
 
@@ -1201,19 +1201,29 @@ div.vertical-tabs .vertical-tabs-panes fieldset.vertical-tabs-pane {
 #search-form input#edit-keys,
 #block-search-form .form-item-search-block-form input {
   float: left; /* LTR */
+  font-size: 1em;
+  height: 1.143em;
+  margin-right: 5px;
+  width: 9em;
 }
 #search-block-form input.form-submit,
 #search-form input.form-submit {
-  margin-left: 5px; /* LTR */
-  margin-right: 0; /* LTR */
+  margin-left: 0;
+  margin-right: 0;
   height: 25px;
   width: 34px;
   padding: 0;
   cursor: pointer;
   text-indent: -9999px;
-  border: 1px solid #ccc;
-  background: url(../images/search-button.png) no-repeat center center;
+  border-color: #e4e4e4 #d2d2d2 #b4b4b4;
+  background: url(../images/search-button.png) no-repeat center top;
   overflow: hidden;
+}
+#search-block-form input.form-submit:hover,
+#search-block-form input.form-submit:focus,
+#search-form input.form-submit:hover,
+#search-form input.form-submit:focus {
+  background-position: center bottom;
 }
 #search-form .form-item-keys label {
   display: block;
