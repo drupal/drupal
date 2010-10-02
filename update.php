@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.323 2010/05/18 18:11:12 dries Exp $
+// $Id: update.php,v 1.324 2010/10/02 02:56:18 webchick Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -27,6 +27,16 @@ define('DRUPAL_ROOT', getcwd());
  * hook_init() and hook_exit(), css/js preprocessing, and translation.
  */
 define('MAINTENANCE_MODE', 'update');
+
+/**
+ * Minimum schema version of Drupal 6 required for upgrade to Drupal 7.
+ *
+ * Upgrades from Drupal 6 to Drupal 7 require that Drupal 6 be running
+ * the most recent version, or the upgrade could fail. We can't easily
+ * check the Drupal 6 version once the update process has begun, so instead
+ * we check the schema version of system.module in the system table.
+ */
+define('REQUIRED_D6_SCHEMA_VERSION', '6055');
 
 function update_selection_page() {
   drupal_set_title('Drupal database update');
