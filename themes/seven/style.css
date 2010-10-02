@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.73 2010/09/23 02:11:19 dries Exp $ */
+/* $Id: style.css,v 1.74 2010/10/02 01:27:52 dries Exp $ */
 
 /**
  * Generic elements.
@@ -398,15 +398,15 @@ ul.admin-list {
 }
 .admin-panel .item-list ul,
 ul.admin-list.compact {
-  margin-bottom: 8px;
+  margin: 8px 0;
 }
 .admin-panel .item-list li,
 ul.admin-list.compact li {
   border: none;
   background: none;
-  margin: 0.25em 0 0.25em 1.5em;
+  margin: 0 0 0.75em;
+  line-height: 1;
   padding: 0;
-  list-style-type: disc;
 }
 ul.admin-list li:last-child {
   border-bottom: none;
