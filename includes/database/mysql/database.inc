@@ -79,11 +79,6 @@ class DatabaseConnection_mysql extends DatabaseConnection {
     return 'mysql';
   }
 
-  public function version() {
-    $data = $this->query('SHOW variables LIKE :name', array(':name' => 'version'))->fetchAssoc();
-    return $data['value'];
-  }
-
   public function databaseType() {
     return 'mysql';
   }

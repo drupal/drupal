@@ -126,10 +126,6 @@ class DatabaseConnection_pgsql extends DatabaseConnection {
     return 'pgsql';
   }
 
-  public function version() {
-    return $this->query('SHOW SERVER_VERSION')->fetchField();
-  }
-
   public function databaseType() {
     return 'pgsql';
   }
