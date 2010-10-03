@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.412 2010/09/27 22:11:38 webchick Exp $
+// $Id: menu.inc,v 1.413 2010/10/03 23:29:09 dries Exp $
 
 /**
  * @file
@@ -1592,7 +1592,6 @@ function menu_get_active_help() {
   }
 
   $arg = drupal_help_arg(arg(NULL));
-  $empty_arg = drupal_help_arg();
 
   foreach (module_implements('help') as $module) {
     $function = $module . '_help';
