@@ -1,4 +1,4 @@
-/* $Id: vertical-tabs.css,v 1.7 2010/09/23 02:11:19 dries Exp $ */
+/* $Id: vertical-tabs.css,v 1.8 2010/10/03 00:29:01 dries Exp $ */
 
 /**
  * Override of misc/vertical-tabs.css.
@@ -68,4 +68,7 @@ div.vertical-tabs .vertical-tabs-panes {
 }
 div.vertical-tabs .vertical-tabs-panes legend {
   display: none;
+}
+.vertical-tabs-pane .fieldset-wrapper > div:first-child {
+  padding-top: 5px;
 }
