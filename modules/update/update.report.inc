@@ -1,5 +1,5 @@
 <?php
-// $Id: update.report.inc,v 1.32 2010/08/17 13:50:52 dries Exp $
+// $Id: update.report.inc,v 1.33 2010/10/03 22:43:16 dries Exp $
 
 /**
  * @file
@@ -23,7 +23,7 @@ function update_status() {
 /**
  * Returns HTML for the project status report.
  *
- * @param $variables
+ * @param array $variables
  *   An associative array containing:
  *   - data: An array of data about each project's status.
  *
@@ -104,8 +104,9 @@ function theme_update_report($variables) {
     }
     $row .= "</div>\n";
 
-    $row .= "<div class=\"versions\">\n";
-
+    $versions_inner = '';
+    $security_class = array();
+    $version_class = array();
     if (isset($project['recommended'])) {
       if ($project['status'] != UPDATE_CURRENT || $project['existing_version'] !== $project['recommended']) {
 
@@ -114,10 +115,10 @@ function theme_update_report($variables) {
         // recommending, give it the same CSS class as if it was recommended,
         // but don't print out a separate "Recommended" line for this project.
         if (!empty($project['security updates']) && count($project['security updates']) == 1 && $project['security updates'][0]['version'] === $project['recommended']) {
-          $security_class = ' version-recommended version-recommended-strong';
+          $security_class[] = 'version-recommended';
+          $security_class[] = 'version-recommended-strong';
         }
         else {
-          $security_class = array();
           $version_class[] = 'version-recommended';
           // Apply an extra class if we're displaying both a recommended
           // version and anything else for an extra visual hint.
@@ -132,36 +133,38 @@ function theme_update_report($variables) {
               ) {
             $version_class[] = 'version-recommended-strong';
           }
-          $row .= theme('update_version', array('version' => $project['releases'][$project['recommended']], 'tag' => t('Recommended version:'), 'class' => $version_class));
+          $versions_inner .= theme('update_version', array('version' => $project['releases'][$project['recommended']], 'tag' => t('Recommended version:'), 'class' => $version_class));
         }
 
         // Now, print any security updates.
         if (!empty($project['security updates'])) {
+          $security_class[] = 'version-security';
           foreach ($project['security updates'] as $security_update) {
-            $row .= theme('update_version', array('version' => $security_update, 'tag' => t('Security update:'), 'class' => 'version-security' . $security_class));
+            $versions_inner .= theme('update_version', array('version' => $security_update, 'tag' => t('Security update:'), 'class' => $security_class));
           }
         }
       }
 
       if ($project['recommended'] !== $project['latest_version']) {
-        $row .= theme('update_version', array('version' => $project['releases'][$project['latest_version']], 'tag' => t('Latest version:'), 'class' => array('version-latest')));
+        $versions_inner .= theme('update_version', array('version' => $project['releases'][$project['latest_version']], 'tag' => t('Latest version:'), 'class' => array('version-latest')));
       }
       if ($project['install_type'] == 'dev'
           && $project['status'] != UPDATE_CURRENT
           && isset($project['dev_version'])
           && $project['recommended'] !== $project['dev_version']) {
-        $row .= theme('update_version', array('version' => $project['releases'][$project['dev_version']], 'tag' => t('Development version:'), 'class' => array('version-latest')));
+        $versions_inner .= theme('update_version', array('version' => $project['releases'][$project['dev_version']], 'tag' => t('Development version:'), 'class' => array('version-latest')));
       }
     }
 
     if (isset($project['also'])) {
       foreach ($project['also'] as $also) {
-        $row .= theme('update_version', array('version' => $project['releases'][$also], 'tag' => t('Also available:'), 'class' => array('version-also-available')));
+        $versions_inner .= theme('update_version', array('version' => $project['releases'][$also], 'tag' => t('Also available:'), 'class' => array('version-also-available')));
       }
     }
 
-    $row .= "</div>\n"; // versions div.
-
+    if (!empty($versions_inner)) {
+      $row .= "<div class=\"versions\">\n" . $versions_inner . "</div>\n";
+    }
     $row .= "<div class=\"info\">\n";
     if (!empty($project['extra'])) {
       $row .= '<div class="extra">' . "\n";
@@ -250,7 +253,7 @@ function theme_update_report($variables) {
 /**
  * Returns HTML for a label to display for a project's update status.
  *
- * @param $variables
+ * @param array $variables
  *   An associative array containing:
  *   - status: The integer code for a project's current update status.
  *
@@ -279,7 +282,7 @@ function theme_update_status_label($variables) {
 /**
  * Returns HTML for the version display of a project.
  *
- * @param $variables
+ * @param array $variables
  *   An associative array containing:
  *   - version: An array of data about the latest released version, containing:
  *     - version: The version number.
@@ -294,7 +297,7 @@ function theme_update_status_label($variables) {
 function theme_update_version($variables) {
   $version = $variables['version'];
   $tag = $variables['tag'];
-  $class = $variables['class'];
+  $class = implode(' ', $variables['class']);
 
   $output = '';
   $output .= '<table class="version ' . $class . '">';
