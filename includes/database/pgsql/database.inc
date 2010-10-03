@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.42 2010/09/22 03:22:20 dries Exp $
+// $Id: database.inc,v 1.43 2010/10/03 01:29:41 dries Exp $
 
 /**
  * @file
@@ -124,10 +124,6 @@ class DatabaseConnection_pgsql extends DatabaseConnection {
 
   public function driver() {
     return 'pgsql';
-  }
-
-  public function version() {
-    return $this->query('SHOW SERVER_VERSION')->fetchField();
   }
 
   public function databaseType() {

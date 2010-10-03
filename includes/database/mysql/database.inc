@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.33 2010/08/11 02:17:39 dries Exp $
+// $Id: database.inc,v 1.34 2010/10/03 01:29:41 dries Exp $
 
 /**
  * @file
@@ -77,11 +77,6 @@ class DatabaseConnection_mysql extends DatabaseConnection {
 
   public function driver() {
     return 'mysql';
-  }
-
-  public function version() {
-    $data = $this->query('SHOW variables LIKE :name', array(':name' => 'version'))->fetchAssoc();
-    return $data['value'];
   }
 
   public function databaseType() {
