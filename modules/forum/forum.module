@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.577 2010/09/27 02:59:31 webchick Exp $
+// $Id: forum.module,v 1.578 2010/10/03 00:41:14 dries Exp $
 
 /**
  * @file
@@ -1135,18 +1135,22 @@ function template_preprocess_forum_topic_list(&$variables) {
 function template_preprocess_forum_icon(&$variables) {
   $variables['hot_threshold'] = variable_get('forum_hot_topic', 15);
   if ($variables['num_posts'] > $variables['hot_threshold']) {
-    $variables['icon'] = $variables['new_posts'] ? 'hot-new' : 'hot';
+    $variables['icon_class'] = $variables['new_posts'] ? 'hot-new' : 'hot';
+    $variables['icon_title'] = $variables['new_posts'] ? t('Hot topic, new comments') : t('Hot topic');
   }
   else {
-    $variables['icon'] = $variables['new_posts'] ? 'new' : 'default';
+    $variables['icon_class'] = $variables['new_posts'] ? 'new' : 'default';
+    $variables['icon_title'] = $variables['new_posts'] ? t('New comments') : t('Normal topic');
   }
 
   if ($variables['comment_mode'] == COMMENT_NODE_CLOSED || $variables['comment_mode'] == COMMENT_NODE_HIDDEN) {
-    $variables['icon'] = 'closed';
+    $variables['icon_class'] = 'closed';
+    $variables['icon_title'] = t('Closed topic');
   }
 
   if ($variables['sticky'] == 1) {
-    $variables['icon'] = 'sticky';
+    $variables['icon_class'] = 'sticky';
+    $variables['icon_title'] = t('Sticky topic');
   }
 }
 

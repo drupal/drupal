@@ -1,4 +1,4 @@
-/* $Id: forum.css,v 1.8 2010/04/28 20:08:38 dries Exp $ */
+/* $Id: forum.css,v 1.9 2010/10/03 00:41:14 dries Exp $ */
 
 #forum .description {
   font-size: 0.9em;
@@ -24,4 +24,24 @@
 #forum div.indent {
   margin-left: 20px;
 }
-
+#forum .icon div {
+  background-image: url(../../misc/forum-icons.png);
+  background-repeat: no-repeat;
+  width: 24px;
+  height: 24px;
+}
+#forum .icon .topic-status-new {
+  background-position: -24px 0;
+}
+#forum .icon .topic-status-hot {
+  background-position: -48px 0;
+}
+#forum .icon .topic-status-hot-new {
+  background-position: -72px 0;
+}
+#forum .icon .topic-status-sticky {
+  background-position: -96px 0;
+}
+#forum .icon .topic-status-closed {
+  background-position: -120px 0;
+}
