@@ -3116,12 +3116,24 @@ function drupal_pre_render_styles($elements) {
         elseif ($group['preprocess']) {
           $import = array();
           foreach ($group['items'] as $item) {
-            // The dummy query string needs to be added to the URL to control
-            // browser-caching. IE7 does not support a media type on the @import
-            // statement, so we instead specify the media for the group on the
-            // STYLE tag.
-            $query_string_separator = (strpos($item['data'], '?') !== FALSE) ? '&' : '?';
-            $import[] = '@import url("' . check_plain(file_create_url($item['data']) . $query_string_separator . $query_string) . '");';
+            // A theme's .info file may have an entry for a file that doesn't
+            // exist as a way of overriding a module or base theme CSS file from
+            // being added to the page. Normally, file_exists() calls that need
+            // to run for every page request should be minimized, but this one
+            // is okay, because it only runs when CSS aggregation is disabled.
+            // On a server under heavy enough load that file_exists() calls need
+            // to be minimized, CSS aggregation should be enabled, in which case
+            // this code is not run. When aggregation is enabled,
+            // drupal_load_stylesheet() checks file_exists(), but only when
+            // building the aggregate file, which is then reused for many page
+            // requests.
+            if (file_exists($item['data'])) {
+              // The dummy query string needs to be added to the URL to control
+              // browser-caching. IE7 does not support a media type on the
+              // @import statement, so we instead specify the media for the
+              // group on the STYLE tag.
+              $import[] = '@import url("' . check_plain(file_create_url($item['data']) . '?' . $query_string) . '");';
+            }
           }
           // In addition to IE's limit of 31 total CSS inclusion tags, it also
           // has a limit of 31 @import statements per STYLE tag.
@@ -3140,6 +3152,14 @@ function drupal_pre_render_styles($elements) {
         else {
           foreach ($group['items'] as $item) {
             $element = $link_element_defaults;
+            // We do not check file_exists() here, because this code runs for
+            // files whose 'preprocess' is set to FALSE, and therefore, even
+            // when aggregation is enabled, and we want to avoid needlessly
+            // taxing a server that may be under heavy load. The file_exists()
+            // performed above for files whose 'preprocess' is TRUE is done for
+            // the benefit of theme .info files, but code that deals with files
+            // whose 'preprocess' is FALSE is responsible for ensuring the file
+            // exists.
             // The dummy query string needs to be added to the URL to control
             // browser-caching.
             $query_string_separator = (strpos($item['data'], '?') !== FALSE) ? '&' : '?';
