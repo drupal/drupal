@@ -47,6 +47,9 @@ function seven_node_add_list($variables) {
     }
     $output .= '</ul>';
   }
+  else {
+    $output = '<p>' . t('You have not created any content types yet. Go to the <a href="@create-content">content type creation page</a> to add a new content type.', array('@create-content' => url('admin/structure/types/add'))) . '</p>';
+  }
   return $output;
 }
 
