@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.312 2010/10/01 18:37:23 webchick Exp $
+// $Id: system.admin.inc,v 1.313 2010/10/03 00:47:51 dries Exp $
 
 /**
  * @file
@@ -985,6 +985,7 @@ function _system_modules_build_row($info, $extra) {
   if (version_compare(phpversion(), $info['php']) < 0) {
     $compatible = FALSE;
     $status_short .= t('Incompatible with this version of PHP');
+    $php_required = $info['php'];
     if (substr_count($info['php'], '.') < 2) {
       $php_required .= '.*';
     }
