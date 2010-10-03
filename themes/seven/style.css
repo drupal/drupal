@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.74 2010/10/02 01:27:52 dries Exp $ */
+/* $Id: style.css,v 1.75 2010/10/03 02:46:12 dries Exp $ */
 
 /**
  * Generic elements.
@@ -379,7 +379,6 @@ ul.inline li {
 #secondary-links ul.links li a.active {
   background: #333;
 }
-ul.node-type-list li,
 ul.admin-list li {
   position: relative;
   padding-left: 30px;
@@ -411,10 +410,6 @@ ul.admin-list.compact li {
 ul.admin-list li:last-child {
   border-bottom: none;
 }
-ul.node-type-list .label {
-  font-size: 1.154em;
-}
-ul.node-type-list li a,
 ul.admin-list li a {
   margin-left: -30px;
   padding: 0px 0 4px 30px;
@@ -424,7 +419,6 @@ ul.admin-list.compact li a {
   margin-left: 0;
   padding: 0;
 }
-ul.node-type-list li div.description a,
 ul.admin-list li div.description a {
   margin-left: 0px;
   padding: 0px;

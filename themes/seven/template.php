@@ -1,5 +1,5 @@
 <?php
-// $Id: template.php,v 1.22 2010/10/03 00:09:28 dries Exp $
+// $Id: template.php,v 1.23 2010/10/03 02:46:12 dries Exp $
 
 /**
  * Override or insert variables into the maintenance page template.
@@ -38,7 +38,7 @@ function seven_node_add_list($variables) {
   $content = $variables['content'];
   $output = '';
   if ($content) {
-    $output = '<ul class="node-type-list">';
+    $output = '<ul class="admin-list">';
     foreach ($content as $item) {
       $output .= '<li class="clearfix">';
       $output .= '<span class="label">' . l($item['title'], $item['href'], $item['localized_options']) . '</span>';
