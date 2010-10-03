@@ -1,5 +1,5 @@
 <?php
-// $Id: field.api.php,v 1.90 2010/09/11 00:03:41 webchick Exp $
+// $Id: field.api.php,v 1.91 2010/10/03 01:15:33 dries Exp $
 
 /**
  * @ingroup field_fieldable_type
@@ -1236,6 +1236,7 @@ function hook_field_attach_purge($entity_type, $entity, $field, $instance) {
  *   - entity_type: The type of $entity; for example, 'node' or 'user'.
  *   - entity: The entity with fields to render.
  *   - view_mode: View mode, for example, 'full' or 'teaser'.
+ *   - language: The language code used for rendering.
  */
 function hook_field_attach_view_alter(&$output, $context) {
   // Append RDF term mappings on displayed taxonomy links.

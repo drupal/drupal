@@ -1,5 +1,5 @@
 <?php
-// $Id: field.attach.inc,v 1.95 2010/08/01 19:49:35 dries Exp $
+// $Id: field.attach.inc,v 1.96 2010/10/03 01:15:33 dries Exp $
 
 /**
  * @file
@@ -1146,6 +1146,7 @@ function field_attach_view($entity_type, $entity, $view_mode, $langcode = NULL) 
     'entity_type' => $entity_type,
     'entity' => $entity,
     'view_mode' => $view_mode,
+    'language' => $langcode,
   );
   drupal_alter('field_attach_view', $output, $context);
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.api.php,v 1.16 2010/02/09 22:30:30 dries Exp $
+// $Id: comment.api.php,v 1.17 2010/10/03 01:15:33 dries Exp $
 
 /**
  * @file
@@ -64,10 +64,12 @@ function hook_comment_load($comments) {
  *
  * @param $comment
  *   Passes in the comment the action is being performed on.
- * @return
- *   Nothing.
+ * @param $view_mode
+ *   View mode, e.g. 'full', 'teaser'...
+ * @param $langcode
+ *   The language code used for rendering.
  */
-function hook_comment_view($comment) {
+function hook_comment_view($comment, $view_mode, $langcode) {
   // how old is the comment
   $comment->time_ago = time() - $comment->changed;
 }
