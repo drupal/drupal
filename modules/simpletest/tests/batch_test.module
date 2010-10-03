@@ -12,20 +12,20 @@
 function batch_test_menu() {
   $items = array();
 
-  $items['batch_test'] = array(
+  $items['batch-test'] = array(
     'title' => 'Batch test',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('batch_test_simple_form'),
     'access callback' => TRUE,
   );
   // Simple form: one submit handler, setting a batch.
-  $items['batch_test/simple'] = array(
+  $items['batch-test/simple'] = array(
     'title' => 'Simple',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => 0,
   );
   // Multistep form: two steps, each setting a batch.
-  $items['batch_test/multistep'] = array(
+  $items['batch-test/multistep'] = array(
     'title' => 'Multistep',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('batch_test_multistep_form'),
@@ -34,7 +34,7 @@ function batch_test_menu() {
     'weight' => 1,
   );
   // Chained form: four submit handlers, several of which set a batch.
-  $items['batch_test/chained'] = array(
+  $items['batch-test/chained'] = array(
     'title' => 'Chained',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('batch_test_chained_form'),
@@ -44,7 +44,7 @@ function batch_test_menu() {
   );
   // Programmatic form: the page submits the 'Chained' form through
   // drupal_form_submit().
-  $items['batch_test/programmatic'] = array(
+  $items['batch-test/programmatic'] = array(
     'title' => 'Programmatic',
     'page callback' => 'batch_test_programmatic',
     'access callback' => TRUE,
@@ -52,32 +52,39 @@ function batch_test_menu() {
     'weight' => 3,
   );
   // No form: fire a batch simply by accessing a page.
-  $items['batch_test/no_form'] = array(
+  $items['batch-test/no-form'] = array(
     'title' => 'Simple page',
     'page callback' => 'batch_test_no_form',
     'access callback' => TRUE,
     'type' => MENU_LOCAL_TASK,
     'weight' => 4,
   );
-  // Tests programmatic form submission within a batch operation.
-  $items['batch_test/nested_programmatic'] = array(
-    'title' => 'Nested programmatic',
-    'page callback' => 'batch_test_nested_drupal_form_submit',
+  // No form: fire a batch; return > 100% complete
+  $items['batch-test/large-percentage'] = array(
+    'title' => 'Simple page with batch over 100% complete',
+    'page callback' => 'batch_test_large_percentage',
     'access callback' => TRUE,
     'type' => MENU_LOCAL_TASK,
     'weight' => 5,
   );
-  // Landing page to test redirects.
-  $items['batch_test/redirect'] = array(
-    'title' => 'Redirect',
-    'page callback' => 'batch_test_redirect_page',
+  // Tests programmatic form submission within a batch operation.
+  $items['batch-test/nested-programmatic'] = array(
+    'title' => 'Nested programmatic',
+    'page callback' => 'batch_test_nested_drupal_form_submit',
     'access callback' => TRUE,
     'type' => MENU_LOCAL_TASK,
     'weight' => 6,
   );
-  //
+  // Landing page to test redirects.
+  $items['batch-test/redirect'] = array(
+    'title' => 'Redirect',
+    'page callback' => 'batch_test_redirect_page',
+    'access callback' => TRUE,
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 7,
+  );
   // This item lives under 'admin' so that the page uses the admin theme.
-  $items['admin/batch_test/test_theme'] = array(
+  $items['admin/batch-test/test-theme'] = array(
     'page callback' => 'batch_test_theme_batch',
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
@@ -118,7 +125,7 @@ function batch_test_simple_form_submit($form, &$form_state) {
   $function = '_batch_test_' . $form_state['values']['batch'];
   batch_set($function());
 
-  $form_state['redirect'] = 'batch_test/redirect';
+  $form_state['redirect'] = 'batch-test/redirect';
 }
 
 
@@ -162,7 +169,7 @@ function batch_test_multistep_form_submit($form, &$form_state) {
   }
 
   // This will only be effective on the last step.
-  $form_state['redirect'] = 'batch_test/redirect';
+  $form_state['redirect'] = 'batch-test/redirect';
 }
 
 /**
@@ -244,7 +251,7 @@ function batch_test_chained_form_submit_4($form, &$form_state) {
   batch_set(_batch_test_batch_3());
 
   // This is the redirect that should prevail.
-  $form_state['redirect'] = 'batch_test/redirect';
+  $form_state['redirect'] = 'batch-test/redirect';
 }
 
 /**
@@ -267,7 +274,7 @@ function batch_test_nested_drupal_form_submit($value = 1) {
     array('_batch_test_nested_drupal_form_submit_callback', array($value)),
   );
   batch_set($batch);
-  batch_process('batch_test/redirect');
+  batch_process('batch-test/redirect');
 }
 
 /**
@@ -307,7 +314,17 @@ function batch_test_no_form() {
   batch_test_stack(NULL, TRUE);
 
   batch_set(_batch_test_batch_1());
-  batch_process('batch_test/redirect');
+  batch_process('batch-test/redirect');
+}
+
+/**
+ * Menu callback: fire a batch process without a form submission.
+ */
+function batch_test_large_percentage() {
+  batch_test_stack(NULL, TRUE);
+
+  batch_set(_batch_test_batch_5());
+  batch_process('batch-test/redirect');
 }
 
 /**
@@ -433,6 +450,28 @@ function _batch_test_batch_4() {
 }
 
 /**
+ * Batch 5: repeats a simple operation.
+ *
+ * Operations: op 1 from 1 to 10.
+ */
+function _batch_test_batch_5() {
+  // Ensure the batch takes at least two iterations.
+  $total = 10;
+  $sleep = (1000000 / $total) * 2;
+
+  $operations = array();
+  for ($i = 1; $i <= $total; $i++) {
+    $operations[] = array('_batch_test_callback_5', array($i, $sleep));
+  }
+  $batch = array(
+    'operations' => $operations,
+    'finished' => '_batch_test_finished_5',
+    'file' => drupal_get_path('module', 'batch_test'). '/batch_test.callbacks.inc',
+  );
+  return $batch;
+}
+
+/**
  * Menu callback: run a batch for testing theme used on the progress page.
  */
 function batch_test_theme_batch() {
@@ -443,7 +482,7 @@ function batch_test_theme_batch() {
     ),
   );
   batch_set($batch);
-  batch_process('batch_test/redirect');
+  batch_process('batch-test/redirect');
 }
 
 /**
