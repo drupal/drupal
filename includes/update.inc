@@ -10,6 +10,16 @@
  */
 
 /**
+ * Minimum schema version of Drupal 6 required for upgrade to Drupal 7.
+ *
+ * Upgrades from Drupal 6 to Drupal 7 require that Drupal 6 be running
+ * the most recent version, or the upgrade could fail. We can't easily
+ * check the Drupal 6 version once the update process has begun, so instead
+ * we check the schema version of system.module in the system table.
+ */
+define('REQUIRED_D6_SCHEMA_VERSION', '6055');
+
+/**
  * Disable any items in the {system} table that are not core compatible.
  */
 function update_fix_compatibility() {
@@ -120,20 +130,23 @@ function update_prepare_d7_bootstrap() {
   // created yet.
   drupal_bootstrap(DRUPAL_BOOTSTRAP_DATABASE);
 
-  // Check to make sure that the user is running an up to date version of
-  // Drupal 6 before proceeding. Note this has to happen AFTER the database
-  // bootstraps because of drupal_get_installed_schema_version().
+  // If the site has not updated to Drupal 7 yet, check to make sure that it is
+  // running an up-to-date version of Drupal 6 before proceeding. Note this has
+  // to happen AFTER the database bootstraps because of
+  // drupal_get_installed_schema_version().
   $system_schema = drupal_get_installed_schema_version('system');
-  $has_required_schema = $system_schema >= REQUIRED_D6_SCHEMA_VERSION;
-  $requirements = array(
-    'drupal 6 version' => array(
-      'title' => 'Drupal 6 version',
-      'value' => $has_required_schema ? 'You are running a current version of Drupal 6.' : 'You are not running a current version of Drupal 6',
-      'severity' => $has_required_schema ? REQUIREMENT_OK : REQUIREMENT_ERROR,
-      'description' => $has_required_schema ? '' : 'Please update your Drupal 6 installation to the most recent version before attempting to upgrade to Drupal 7',
-    ),
-  );
-  update_extra_requirements($requirements);
+  if ($system_schema < 7000) {
+    $has_required_schema = $system_schema >= REQUIRED_D6_SCHEMA_VERSION;
+    $requirements = array(
+      'drupal 6 version' => array(
+        'title' => 'Drupal 6 version',
+        'value' => $has_required_schema ? 'You are running a current version of Drupal 6.' : 'You are not running a current version of Drupal 6',
+        'severity' => $has_required_schema ? REQUIREMENT_OK : REQUIREMENT_ERROR,
+        'description' => $has_required_schema ? '' : 'Please update your Drupal 6 installation to the most recent version before attempting to upgrade to Drupal 7',
+      ),
+    );
+    update_extra_requirements($requirements);
+  }
 
   // Create the registry tables.
   if (!db_table_exists('registry')) {
