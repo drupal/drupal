@@ -1,5 +1,5 @@
 <?php
-// $Id: field_sql_storage.module,v 1.54 2010/09/29 01:37:02 dries Exp $
+// $Id: field_sql_storage.module,v 1.55 2010/10/03 02:43:47 dries Exp $
 
 /**
  * @file
@@ -218,8 +218,9 @@ function _field_sql_storage_schema($field) {
   // use the IN operator.
   $revision = $current;
   $revision['description'] = "Revision archive storage for {$deleted}field {$field['id']} ({$field['field_name']})";
-  $revision['revision_id']['description'] = 'The entity revision id this data is attached to';
   $revision['primary key'] = array('etid', 'revision_id', 'deleted', 'delta', 'language');
+  $revision['fields']['revision_id']['not null'] = TRUE;
+  $revision['fields']['revision_id']['description'] = 'The entity revision id this data is attached to';
 
   return array(
     _field_sql_storage_tablename($field) => $current,
