@@ -985,6 +985,7 @@ function _system_modules_build_row($info, $extra) {
   if (version_compare(phpversion(), $info['php']) < 0) {
     $compatible = FALSE;
     $status_short .= t('Incompatible with this version of PHP');
+    $php_required = $info['php'];
     if (substr_count($info['php'], '.') < 2) {
       $php_required .= '.*';
     }
