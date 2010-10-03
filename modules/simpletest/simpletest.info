@@ -1,4 +1,4 @@
-; $Id: simpletest.info,v 1.22 2010/09/13 05:50:09 webchick Exp $
+; $Id: simpletest.info,v 1.23 2010/10/03 23:19:52 webchick Exp $
 name = Testing
 description = Provides a framework for unit and functional testing.
 package = Core
@@ -42,3 +42,4 @@ files[] = tests/upgrade/upgrade.test
 files[] = tests/upgrade/upgrade.comment.test
 files[] = tests/upgrade/upgrade.node.test
 files[] = tests/upgrade/upgrade.taxonomy.test
+files[] = tests/upgrade/upgrade.upload.test

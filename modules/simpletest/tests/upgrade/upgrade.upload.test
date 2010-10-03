@@ -1,0 +1,66 @@
+<?php
+// $Id: upgrade.upload.test,v 1.1 2010/10/03 23:19:52 webchick Exp $
+
+/**
+ * Upgrade test for comment.module.
+ */
+class UploadUpgradePathTestCase extends UpgradePathTestCase {
+  public static function getInfo() {
+    return array(
+      'name'  => 'Upload upgrade path',
+      'description'  => 'Upload upgrade path tests.',
+      'group' => 'Upgrade path',
+    );
+  }
+
+  public function setUp() {
+    // Path to the database dump files.
+    $this->databaseDumpFiles = array(
+      drupal_get_path('module', 'simpletest') . '/tests/upgrade/drupal-6.filled.database.php',
+      drupal_get_path('module', 'simpletest') . '/tests/upgrade/drupal-6.upload.database.php',
+    );
+    parent::setUp();
+
+    $this->uninstallModulesExcept(array('upload'));
+  }
+
+  /**
+   * Test a successful upgrade.
+   */
+  public function testUploadUpgrade() {
+    $this->assertTrue($this->performUpgrade(), t('The upgrade was completed successfully.'));
+    $query = new EntityFieldQuery();
+    $query->entityCondition('entity_type', 'node');
+    $query->entityCondition('bundle', 'page');
+    $query->age(FIELD_LOAD_REVISION);
+    $query->fieldCondition('upload');
+    $entities = $query->execute();
+    $revisions = $entities['node'];
+    // Node revisions 50-52 should have uploaded files.
+    $this->assertTrue((isset($revisions[50]) && isset($revisions[51]) && isset($revisions[52])), 'Nodes with uploaded files now contain filefield data.');
+    // The test database lists uploaded filenames in the body of each node with
+    // uploaded files attached. Make sure all files are there in the same order.
+    foreach ($revisions as $vid => $revision) {
+      $node = node_load($revision->nid, $vid);
+
+      // Assemble a list of the filenames as recorded in the node body before
+      // the upgrade.
+      $recorded_filenames = preg_split('/\s+/', $node->body[LANGUAGE_NONE][0]['value']);
+      // The first line of the node body should be "Attachments:"
+      if (strstr($recorded_filenames[0], "Attachments:")) {
+        unset($recorded_filenames[0]);
+      }
+      $recorded_filenames = array_values($recorded_filenames);
+
+      $files = $node->upload[LANGUAGE_NONE];
+      // Assemble a list of the filenames as they exist after the upgrade.
+      $filenames = array();
+      foreach ($files as $file) {
+        $filenames[] = $file['filename'];
+      }
+
+      $diff = array_diff($filenames, $recorded_filenames);
+      $this->assertTrue(empty($diff), 'The uploaded files are present in the same order after the upgrade.');
+    }
+  }
+}
