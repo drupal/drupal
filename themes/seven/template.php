@@ -38,7 +38,7 @@ function seven_node_add_list($variables) {
   $content = $variables['content'];
   $output = '';
   if ($content) {
-    $output = '<ul class="node-type-list">';
+    $output = '<ul class="admin-list">';
     foreach ($content as $item) {
       $output .= '<li class="clearfix">';
       $output .= '<span class="label">' . l($item['title'], $item['href'], $item['localized_options']) . '</span>';
