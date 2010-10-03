@@ -547,7 +547,7 @@ function dashboard_update() {
 function theme_dashboard($variables) {
   extract($variables);
   drupal_add_css(drupal_get_path('module', 'dashboard') . '/dashboard.css');
-  return '<div id="dashboard">' . $element['#children'] . '</div>';
+  return '<div id="dashboard" class="clearfix">' . $element['#children'] . '</div>';
 }
 
 /**
