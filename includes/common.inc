@@ -2431,7 +2431,7 @@ function drupal_deliver_html_page($page_callback_result) {
         // Print a 404 page.
         drupal_add_http_header('Status', '404 Not Found');
 
-        watchdog('page not found', 'page not found: %q.', array('%q' => $_GET['q']), WATCHDOG_WARNING);
+        watchdog('page not found', check_plain($_GET['q']), NULL, WATCHDOG_WARNING);
 
         // Keep old path for reference, and to allow forms to redirect to it.
         if (!isset($_GET['destination'])) {
@@ -2460,7 +2460,7 @@ function drupal_deliver_html_page($page_callback_result) {
       case MENU_ACCESS_DENIED:
         // Print a 403 page.
         drupal_add_http_header('Status', '403 Forbidden');
-        watchdog('access denied', 'access denied: %q', array('%q' => $_GET['q']), WATCHDOG_WARNING);
+        watchdog('access denied', check_plain($_GET['q']), NULL, WATCHDOG_WARNING);
 
         // Keep old path for reference, and to allow forms to redirect to it.
         if (!isset($_GET['destination'])) {
