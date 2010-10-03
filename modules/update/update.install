@@ -1,5 +1,5 @@
 <?php
-// $Id: update.install,v 1.19 2010/06/25 17:47:22 dries Exp $
+// $Id: update.install,v 1.20 2010/10/03 22:44:48 dries Exp $
 
 /**
  * @file
@@ -71,7 +71,7 @@ function update_schema() {
  * Implements hook_install().
  */
 function update_install() {
-  $queue = DrupalQueue::get('update_fetch_tasks');
+  $queue = DrupalQueue::get('update_fetch_tasks', TRUE);
   $queue->createQueue();
 }
 
