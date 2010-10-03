@@ -72,7 +72,7 @@ function image_menu() {
   $items = array();
 
   // Generate image derivatives of publicly available files.
-  // If clean URLs are disabled, image derivatives will always be served 
+  // If clean URLs are disabled, image derivatives will always be served
   // through the menu system.
   // If clean URLs are enabled and the image derivative already exists,
   // PHP will be bypassed.
@@ -641,7 +641,7 @@ function image_style_options($include_empty = TRUE) {
  * Menu callback; Given a style and image path, generate a derivative.
  *
  * After generating an image, transfer it to the requesting agent.
- * 
+ *
  * @param $style
  *   The image style
  */
@@ -650,7 +650,7 @@ function image_style_deliver($style, $scheme) {
   if (!$style || !file_stream_wrapper_valid_scheme($scheme)) {
     drupal_exit();
   }
-  
+
   $args = func_get_args();
   array_shift($args);
   array_shift($args);
@@ -658,8 +658,8 @@ function image_style_deliver($style, $scheme) {
 
   $image_uri = $scheme . '://' . $target;
   $derivative_uri = image_style_path($style['name'], $image_uri);
-  
-  // If using the private scheme, let other modules provide headers and 
+
+  // If using the private scheme, let other modules provide headers and
   // control access to the file.
   if ($scheme == 'private') {
     if (file_exists($derivative_uri)) {
@@ -1100,16 +1100,6 @@ function theme_image_style($variables) {
   }
   $variables['path'] = $style_path;
   return theme('image', $variables);
-}
-
-/**
- * Accept a percentage and return it in pixels.
- */
-function image_filter_percent($value, $current_pixels) {
-  if (strpos($value, '%') !== FALSE) {
-    $value = str_replace('%', '', $value) * 0.01 * $current_pixels;
-  }
-  return $value;
 }
 
 /**
