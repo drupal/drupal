@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.module,v 1.56 2010/09/24 00:37:42 dries Exp $
+// $Id: dblog.module,v 1.57 2010/10/03 02:14:23 dries Exp $
 
 /**
  * @file
@@ -100,12 +100,25 @@ function dblog_init() {
  * Remove expired log messages and flood control events.
  */
 function dblog_cron() {
-  // Cleanup the watchdog table
-  if (variable_get('dblog_row_limit', 1000) > 0) {
-    $max = Database::getConnection('default', 'default')->query('SELECT MAX(wid) FROM {watchdog}')->fetchField();
-    Database::getConnection('default', 'default')->delete('watchdog')
-      ->condition('wid', $max - variable_get('dblog_row_limit', 1000), '<=')
-      ->execute();
+  // Cleanup the watchdog table.
+  $row_limit = variable_get('dblog_row_limit', 1000);
+
+  // For row limit n, get the wid of the nth row in descending wid order.
+  // Counting the most recent n rows avoids issues with wid number sequences,
+  // e.g. auto_increment value > 1 or rows deleted directly from the table.
+  if ($row_limit > 0) {
+    $min_row = db_select('watchdog', 'w')
+      ->fields('w', array('wid'))
+      ->orderBy('wid', 'DESC')
+      ->range($row_limit - 1, 1)
+      ->execute()->fetchField();
+
+    // Delete all table entries older than the nth row, if nth row was found.
+    if ($min_row) {
+      db_delete('watchdog')
+        ->condition('wid', $min_row, '<')
+        ->execute();
+    }
   }
 }
 
