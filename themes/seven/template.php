@@ -1,5 +1,5 @@
 <?php
-// $Id: template.php,v 1.21 2010/10/01 15:24:18 webchick Exp $
+// $Id: template.php,v 1.22 2010/10/03 00:09:28 dries Exp $
 
 /**
  * Override or insert variables into the maintenance page template.
@@ -46,6 +46,9 @@ function seven_node_add_list($variables) {
       $output .= '</li>';
     }
     $output .= '</ul>';
+  }
+  else {
+    $output = '<p>' . t('You have not created any content types yet. Go to the <a href="@create-content">content type creation page</a> to add a new content type.', array('@create-content' => url('admin/structure/types/add'))) . '</p>';
   }
   return $output;
 }
