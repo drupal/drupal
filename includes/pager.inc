@@ -117,7 +117,7 @@ class PagerDefault extends SelectQueryExtender {
    * @return SelectQueryInterface
    *   A count query object.
    */
-  protected function getCountQuery() {
+  public function getCountQuery() {
     if ($this->customCountQuery) {
       return $this->customCountQuery;
     }
