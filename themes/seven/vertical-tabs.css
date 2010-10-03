@@ -69,3 +69,6 @@ div.vertical-tabs .vertical-tabs-panes {
 div.vertical-tabs .vertical-tabs-panes legend {
   display: none;
 }
+.vertical-tabs-pane .fieldset-wrapper > div:first-child {
+  padding-top: 5px;
+}
