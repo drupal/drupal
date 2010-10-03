@@ -1,6 +1,6 @@
 <?php
 
-// $Id: batch_test.callbacks.inc,v 1.1 2010/01/08 06:36:34 webchick Exp $
+// $Id: batch_test.callbacks.inc,v 1.2 2010/10/03 02:42:25 dries Exp $
 
 /**
  * @file
@@ -12,6 +12,7 @@
  */
 function _batch_test_callback_1($id, $sleep, &$context) {
   // No-op, but ensure the batch take a couple iterations.
+  // Batch needs time to run for the test, so sleep a bit.
   usleep($sleep);
   // Track execution, and store some result for post-processing in the
   // 'finished' callback.
@@ -33,6 +34,7 @@ function _batch_test_callback_2($start, $total, $sleep, &$context) {
   $limit = 5;
   for ($i = 0; $i < $limit && $context['sandbox']['count'] < $total; $i++) {
     // No-op, but ensure the batch take a couple iterations.
+    // Batch needs time to run for the test, so sleep a bit.
     usleep($sleep);
     // Track execution, and store some result for post-processing in the
     // 'finished' callback.
@@ -49,6 +51,21 @@ function _batch_test_callback_2($start, $total, $sleep, &$context) {
   if ($context['sandbox']['count'] != $total) {
     $context['finished'] = $context['sandbox']['count'] / $total;
   }
+}
+
+/**
+ * Simple batch operation.
+ */
+function _batch_test_callback_5($id, $sleep, &$context) {
+  // No-op, but ensure the batch take a couple iterations.
+  // Batch needs time to run for the test, so sleep a bit.
+  usleep($sleep);
+  // Track execution, and store some result for post-processing in the
+  // 'finished' callback.
+  batch_test_stack("op 5 id $id");
+  $context['results'][5][] = $id;
+  // This test is to test finished > 1
+  $context['finished'] = 3.14;
 }
 
 /**
@@ -115,4 +132,11 @@ function _batch_test_finished_3($success, $results, $operations) {
  */
 function _batch_test_finished_4($success, $results, $operations) {
   _batch_test_finished_helper(4, $success, $results, $operations);
+}
+
+/**
+ * 'finished' callback for batch 5.
+ */
+function _batch_test_finished_5($success, $results, $operations) {
+  _batch_test_finished_helper(5, $success, $results, $operations);
 }
