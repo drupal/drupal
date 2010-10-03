@@ -14,12 +14,14 @@
  * @see theme_forum_icon()
  */
 ?>
+<div class="topic-status-<?php print $icon_class ?>" title="<?php print $icon_title ?>">
 <?php if ($new_posts): ?>
   <a id="new">
 <?php endif; ?>
 
-<?php print theme('image', array('path' => "misc/forum-$icon.png")) ?>
+  <span class="element-invisible"><?php print $icon_title ?></span>
 
 <?php if ($new_posts): ?>
   </a>
 <?php endif; ?>
+</div>
