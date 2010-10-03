@@ -599,11 +599,18 @@ function taxonomy_term_delete($tid) {
  *   A term object.
  * @param $view_mode
  *   View mode, e.g. 'full', 'teaser'...
+ * @param $langcode
+ *   (optional) A language code to use for rendering. Defaults to the global
+ *   content language of the current request.
  *
  * @return
  *   An array as expected by drupal_render().
  */
-function taxonomy_term_view($term, $view_mode = 'full') {
+function taxonomy_term_view($term, $view_mode = 'full', $langcode = NULL) {
+  if (!isset($langcode)) {
+    $langcode = $GLOBALS['language_content']->language;
+  }
+
   field_attach_prepare_view('taxonomy_term', array($term->tid => $term), $view_mode);
   entity_prepare_view('taxonomy_term', array($term->tid => $term));
 
@@ -611,9 +618,10 @@ function taxonomy_term_view($term, $view_mode = 'full') {
     '#theme' => 'taxonomy_term',
     '#term' => $term,
     '#view_mode' => $view_mode,
+    '#language' => $langcode,
   );
 
-  $build += field_attach_view('taxonomy_term', $term, $view_mode);
+  $build += field_attach_view('taxonomy_term', $term, $view_mode, $langcode);
 
   $build['description'] = array(
     '#markup' => check_markup($term->description, $term->format, '', TRUE),

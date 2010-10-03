@@ -314,8 +314,10 @@ function hook_user_logout($account) {
  *   The user object on which the operation is being performed.
  * @param $view_mode
  *   View mode, e.g. 'full'.
+ * @param $langcode
+ *   The language code used for rendering.
  */
-function hook_user_view($account, $view_mode) {
+function hook_user_view($account, $view_mode, $langcode) {
   if (user_access('create blog content', $account)) {
     $account->content['summary']['blog'] =  array(
       '#type' => 'user_profile_item',

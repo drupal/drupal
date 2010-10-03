@@ -756,10 +756,12 @@ function hook_node_submit($node, $form, &$form_state) {
  *   The node that is being assembled for rendering.
  * @param $view_mode
  *   The $view_mode parameter from node_view().
+ * @param $langcode
+ *   The language code used for rendering.
  *
  * @ingroup node_api_hooks
  */
-function hook_node_view($node, $view_mode) {
+function hook_node_view($node, $view_mode, $langcode) {
   $node->content['my_additional_field'] = array(
     '#markup' => $additional_field,
     '#weight' => 10,

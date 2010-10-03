@@ -64,10 +64,12 @@ function hook_comment_load($comments) {
  *
  * @param $comment
  *   Passes in the comment the action is being performed on.
- * @return
- *   Nothing.
+ * @param $view_mode
+ *   View mode, e.g. 'full', 'teaser'...
+ * @param $langcode
+ *   The language code used for rendering.
  */
-function hook_comment_view($comment) {
+function hook_comment_view($comment, $view_mode, $langcode) {
   // how old is the comment
   $comment->time_ago = time() - $comment->changed;
 }

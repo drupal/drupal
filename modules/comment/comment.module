@@ -887,13 +887,20 @@ function comment_prepare_thread(&$comments) {
  *   The node the comment is attached to.
  * @param $view_mode
  *   View mode, e.g. 'full', 'teaser'...
+ * @param $langcode
+ *   (optional) A language code to use for rendering. Defaults to the global
+ *   content language of the current request.
  *
  * @return
  *   An array as expected by drupal_render().
  */
-function comment_view($comment, $node, $view_mode = 'full') {
+function comment_view($comment, $node, $view_mode = 'full', $langcode = NULL) {
+  if (!isset($langcode)) {
+    $langcode = $GLOBALS['language_content']->language;
+  }
+
   // Populate $comment->content with a render() array.
-  comment_build_content($comment, $node, $view_mode);
+  comment_build_content($comment, $node, $view_mode, $langcode);
 
   $build = $comment->content;
   // We don't need duplicate rendering info in comment->content.
@@ -904,6 +911,7 @@ function comment_view($comment, $node, $view_mode = 'full') {
     '#comment' => $comment,
     '#node' => $node,
     '#view_mode' => $view_mode,
+    '#language' => $langcode,
   );
 
   if (empty($comment->in_preview)) {
@@ -948,15 +956,22 @@ function comment_view($comment, $node, $view_mode = 'full') {
  *   The node the comment is attached to.
  * @param $view_mode
  *   View mode, e.g. 'full', 'teaser'...
+ * @param $langcode
+ *   (optional) A language code to use for rendering. Defaults to the global
+ *   content language of the current request.
  */
-function comment_build_content($comment, $node, $view_mode = 'full') {
+function comment_build_content($comment, $node, $view_mode = 'full', $langcode = NULL) {
+  if (!isset($langcode)) {
+    $langcode = $GLOBALS['language_content']->language;
+  }
+
   // Remove previously built content, if exists.
   $comment->content = array();
 
   // Build fields content.
   field_attach_prepare_view('comment', array($comment->cid => $comment), $view_mode);
   entity_prepare_view('comment', array($comment->cid => $comment));
-  $comment->content += field_attach_view('comment', $comment, $view_mode);
+  $comment->content += field_attach_view('comment', $comment, $view_mode, $langcode);
 
   if (empty($comment->in_preview)) {
     $comment->content['links']['comment'] = array(
@@ -967,7 +982,7 @@ function comment_build_content($comment, $node, $view_mode = 'full') {
   }
 
   // Allow modules to make their own additions to the comment.
-  module_invoke_all('comment_view', $comment, $view_mode);
+  module_invoke_all('comment_view', $comment, $view_mode, $langcode);
 }
 
 /**
@@ -1043,10 +1058,14 @@ function comment_links($comment, $node) {
  *   View mode, e.g. 'full', 'teaser'...
  * @param $weight
  *   An integer representing the weight of the first comment in the list.
+ * @param $langcode
+ *   A string indicating the language field values are to be shown in. If no
+ *   language is provided the current content language is used.
+ *
  * @return
  *   An array in the format expected by drupal_render().
  */
-function comment_view_multiple($comments, $node, $view_mode = 'full', $weight = 0) {
+function comment_view_multiple($comments, $node, $view_mode = 'full', $weight = 0, $langcode = NULL) {
   field_attach_prepare_view('comment', $comments, $view_mode);
   entity_prepare_view('comment', $comments);
 
@@ -1054,7 +1073,7 @@ function comment_view_multiple($comments, $node, $view_mode = 'full', $weight = 
     '#sorted' => TRUE,
   );
   foreach ($comments as $comment) {
-    $build[$comment->cid] = comment_view($comment, $node, $view_mode);
+    $build[$comment->cid] = comment_view($comment, $node, $view_mode, $langcode);
     $build[$comment->cid]['#weight'] = $weight;
     $weight++;
   }
