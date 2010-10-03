@@ -71,7 +71,7 @@ function update_schema() {
  * Implements hook_install().
  */
 function update_install() {
-  $queue = DrupalQueue::get('update_fetch_tasks');
+  $queue = DrupalQueue::get('update_fetch_tasks', TRUE);
   $queue->createQueue();
 }
 
