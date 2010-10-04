@@ -1,5 +1,5 @@
 <?php
-// $Id: ajax.test,v 1.18 2010/09/28 02:30:32 dries Exp $
+// $Id: ajax.test,v 1.19 2010/10/04 17:46:01 dries Exp $
 
 class AJAXTestCase extends DrupalWebTestCase {
   function setUp() {
@@ -11,18 +11,47 @@ class AJAXTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Returns the passed-in commands array without the initial settings command.
+   * Assert that a command with the required properties exists within the array of AJAX commands returned by the server.
    *
-   * Depending on factors that may be irrelevant to a particular test,
-   * ajax_render() may prepend a settings command. This function allows the test
-   * to only have to concern itself with the commands that were passed to
-   * ajax_render().
+   * The AJAX framework, via the ajax_deliver() and ajax_render() functions,
+   * returns an array of commands. This array sometimes includes commands
+   * automatically provided by the framework in addition to commands returned by
+   * a particular page callback. During testing, we're usually interested that a
+   * particular command is present, and don't care whether other commands
+   * precede or follow the one we're interested in. Additionally, the command
+   * we're interested in may include additional data that we're not interested
+   * in. Therefore, this function simply asserts that one of the commands in
+   * $haystack contains all of the keys and values in $needle. Furthermore, if
+   * $needle contains a 'settings' key with an array value, we simply assert
+   * that all keys and values within that array are present in the command we're
+   * checking, and do not consider it a failure if the actual command contains
+   * additional settings that aren't part of $needle.
+   *
+   * @param $haystack
+   *   An array of AJAX commands returned by the server.
+   * @param $needle
+   *   Array of info we're expecting in one of those commands.
+   * @param $message
+   *   An assertion message.
    */
-  protected function discardSettings($commands) {
-    if ($commands[0]['command'] == 'settings') {
-      array_shift($commands);
+  protected function assertCommand($haystack, $needle, $message) {
+    $found = FALSE;
+    foreach ($haystack as $command) {
+      // If the command has additional settings that we're not testing for, do
+      // not consider that a failure.
+      if (isset($command['settings']) && is_array($command['settings']) && isset($needle['settings']) && is_array($needle['settings'])) {
+        $command['settings'] = array_intersect_key($command['settings'], $needle['settings']);
+      }
+      // If the command has additional data that we're not testing for, do not
+      // consider that a failure. Also, == instead of ===, because we don't
+      // require the key/value pairs to be in any particular order
+      // (http://www.php.net/manual/en/language.operators.array.php).
+      if (array_intersect_key($command, $needle) == $needle) {
+        $found = TRUE;
+        break;
+      }
     }
-    return $commands;
+    $this->assertTrue($found, $message);
   }
 }
 
@@ -39,30 +68,46 @@ class AJAXFrameworkTestCase extends AJAXTestCase {
   }
 
   /**
-   * Test proper passing of JavaScript settings via ajax_render().
+   * Test that ajax_render() returns JavaScript settings generated during the page request.
+   *
+   * @todo Add tests to ensure that ajax_render() returns commands for new CSS
+   *   and JavaScript files to be loaded by the page. See
+   *   http://drupal.org/node/561858.
    */
   function testAJAXRender() {
-    $result = $this->drupalGetAJAX('ajax-test/render');
-    // Verify that JavaScript settings are contained (always first).
-    $this->assertIdentical($result[0]['command'], 'settings', t('drupal_add_js() settings are contained first.'));
-    // Verify that basePath is contained in JavaScript settings.
-    $this->assertEqual($result[0]['settings']['basePath'], base_path(), t('Base path is contained in JavaScript settings.'));
+    $commands = $this->drupalGetAJAX('ajax-test/render');
+
+    // Verify that there is a command to load settings added with
+    // drupal_add_js().
+    $expected = array(
+      'command' => 'settings',
+      'settings' => array('basePath' => base_path(), 'ajax' => 'test'),
+    );
+    $this->assertCommand($commands, $expected, t('ajax_render() loads settings added with drupal_add_js().'));
   }
 
   /**
    * Test behavior of ajax_render_error().
    */
   function testAJAXRenderError() {
-    $result = $this->discardSettings($this->drupalGetAJAX('ajax-test/render-error'));
     // Verify default error message.
-    $this->assertEqual($result[0]['command'], 'alert', t('ajax_render_error() invokes alert command.'));
-    $this->assertEqual($result[0]['text'], t('An error occurred while handling the request: The server received invalid input.'), t('Default error message is output.'));
+    $commands = $this->drupalGetAJAX('ajax-test/render-error');
+    $expected = array(
+      'command' => 'alert',
+      'text' => t('An error occurred while handling the request: The server received invalid input.'),
+    );
+    $this->assertCommand($commands, $expected, t('ajax_render_error() invokes alert command.'));
+
     // Verify custom error message.
     $edit = array(
       'message' => 'Custom error message.',
     );
-    $result = $this->discardSettings($this->drupalGetAJAX('ajax-test/render-error', array('query' => $edit)));
-    $this->assertEqual($result[0]['text'], $edit['message'], t('Custom error message is output.'));
+    $commands = $this->drupalGetAJAX('ajax-test/render-error', array('query' => $edit));
+    $expected = array(
+      'command' => 'alert',
+      'text' => $edit['message'],
+    );
+     $this->assertCommand($commands, $expected, t('Custom error message is output.'));
   }
 }
 
@@ -79,19 +124,6 @@ class AJAXCommandsTestCase extends AJAXTestCase {
   }
 
   /**
-   * Test ajax_command_settings().
-   */
-  function testAJAXRender() {
-    $commands = array();
-    $commands[] = ajax_command_settings(array('foo' => 42));
-    $result = $this->drupalGetAJAX('ajax-test/render', array('query' => array('commands' => $commands)));
-    // Verify that JavaScript settings are contained (always first).
-    $this->assertIdentical($result[0]['command'], 'settings', t('drupal_add_js() settings are contained first.'));
-    // Verify that the custom setting is contained.
-    $this->assertEqual($result[1]['settings']['foo'], 42, t('Custom setting is output.'));
-  }
-
-  /**
    * Test the various AJAX Commands.
    */
   function testAJAXCommands() {
@@ -102,69 +134,124 @@ class AJAXCommandsTestCase extends AJAXTestCase {
     $edit = array();
 
     // Tests the 'after' command.
-    $commands = $this->discardSettings($this->drupalPostAJAX($form_path, $edit, array('op' => t("AJAX 'After': Click to put something after the div"))));
-    $command = $commands[0];
-    $this->assertTrue($command['command'] == 'insert' && $command['method'] == 'after' && $command['data'] == 'This will be placed after', "'after' AJAX command issued with correct data");
+    $commands = $this->drupalPostAJAX($form_path, $edit, array('op' => t("AJAX 'After': Click to put something after the div")));
+    $expected = array(
+      'command' => 'insert',
+      'method' => 'after',
+      'data' => 'This will be placed after',
+    );
+    $this->assertCommand($commands, $expected, "'after' AJAX command issued with correct data");
 
     // Tests the 'alert' command.
-    $commands = $this->discardSettings($this->drupalPostAJAX($form_path, $edit, array('op' => t("AJAX 'Alert': Click to alert"))));
-    $command = $commands[0];
-    $this->assertTrue($command['command'] == 'alert' && $command['text'] == 'Alert', "'alert' AJAX Command issued with correct text");
+    $commands = $this->drupalPostAJAX($form_path, $edit, array('op' => t("AJAX 'Alert': Click to alert")));
+    $expected = array(
+      'command' => 'alert',
+      'text' => 'Alert',
+    );
+    $this->assertCommand($commands, $expected, "'alert' AJAX Command issued with correct text");
 
     // Tests the 'append' command.
-    $commands = $this->discardSettings($this->drupalPostAJAX($form_path, $edit, array('op' => t("AJAX 'Append': Click to append something"))));
-    $command = $commands[0];
-    $this->assertTrue($command['command'] == 'insert' && $command['method'] == 'append' && $command['data'] == 'Appended text', "'append' AJAX command issued with correct data");
+    $commands = $this->drupalPostAJAX($form_path, $edit, array('op' => t("AJAX 'Append': Click to append something")));
+    $expected = array(
+      'command' => 'insert',
+      'method' => 'append',
+      'data' => 'Appended text',
+    );
+    $this->assertCommand($commands, $expected, "'append' AJAX command issued with correct data");
 
     // Tests the 'before' command.
-    $commands = $this->discardSettings($this->drupalPostAJAX($form_path, $edit, array('op' => t("AJAX 'before': Click to put something before the div"))));
-    $command = $commands[0];
-    $this->assertTrue($command['command'] == 'insert' && $command['method'] == 'before' && $command['data'] == 'Before text', "'before' AJAX command issued with correct data");
+    $commands = $this->drupalPostAJAX($form_path, $edit, array('op' => t("AJAX 'before': Click to put something before the div")));
+    $expected = array(
+      'command' => 'insert',
+      'method' => 'before',
+      'data' => 'Before text',
+    );
+    $this->assertCommand($commands, $expected, "'before' AJAX command issued with correct data");
 
     // Tests the 'changed' command.
-    $commands = $this->discardSettings($this->drupalPostAJAX($form_path, $edit, array('op' => t("AJAX changed: Click to mark div changed."))));
-    $command = $commands[0];
-    $this->assertTrue($command['command'] == 'changed' && $command['selector'] == '#changed_div', "'changed' AJAX command issued with correct selector");
+    $commands = $this->drupalPostAJAX($form_path, $edit, array('op' => t("AJAX changed: Click to mark div changed.")));
+    $expected = array(
+      'command' => 'changed',
+      'selector' => '#changed_div',
+    );
+    $this->assertCommand($commands, $expected, "'changed' AJAX command issued with correct selector");
 
     // Tests the 'changed' command using the second argument.
-    $commands = $this->discardSettings($this->drupalPostAJAX($form_path, $edit, array('op' => t("AJAX changed: Click to mark div changed with asterisk."))));
-    $command = $commands[0];
-    $this->assertTrue($command['command'] == 'changed' && $command['selector'] == '#changed_div' && $command['asterisk'] == '#changed_div_mark_this', "'changed' AJAX command (with asterisk) issued with correct selector");
+    $commands = $this->drupalPostAJAX($form_path, $edit, array('op' => t("AJAX changed: Click to mark div changed with asterisk.")));
+    $expected = array(
+      'command' => 'changed',
+      'selector' => '#changed_div',
+      'asterisk' => '#changed_div_mark_this',
+    );
+    $this->assertCommand($commands, $expected, "'changed' AJAX command (with asterisk) issued with correct selector");
 
     // Tests the 'css' command.
-    $commands = $this->discardSettings($this->drupalPostAJAX($form_path, $edit, array('op' => t("Set the the '#box' div to be blue."))));
-    $command = $commands[0];
-    $this->assertTrue($command['command'] == 'css' && $command['selector'] == '#css_div' && $command['argument']['background-color'] == 'blue', "'css' AJAX command issued with correct selector");
+    $commands = $this->drupalPostAJAX($form_path, $edit, array('op' => t("Set the the '#box' div to be blue.")));
+    $expected = array(
+      'command' => 'css',
+      'selector' => '#css_div',
+      'argument' => array('background-color' => 'blue'),
+    );
+    $this->assertCommand($commands, $expected, "'css' AJAX command issued with correct selector");
 
     // Tests the 'data' command.
-    $commands = $this->discardSettings($this->drupalPostAJAX($form_path, $edit, array('op' => t("AJAX data command: Issue command."))));
-    $command = $commands[0];
-    $this->assertTrue($command['command'] == 'data' && $command['name'] == 'testkey' && $command['value'] == 'testvalue', "'data' AJAX command issued with correct key and value");
+    $commands = $this->drupalPostAJAX($form_path, $edit, array('op' => t("AJAX data command: Issue command.")));
+    $expected = array(
+      'command' => 'data',
+      'name' => 'testkey',
+      'value' => 'testvalue',
+    );
+    $this->assertCommand($commands, $expected, "'data' AJAX command issued with correct key and value");
 
     // Tests the 'html' command.
-    $commands = $this->discardSettings($this->drupalPostAJAX($form_path, $edit, array('op' => t("AJAX html: Replace the HTML in a selector."))));
-    $command = $commands[0];
-    $this->assertTrue($command['command'] == 'insert' && $command['method'] == 'html' && $command['data'] == 'replacement text', "'html' AJAX command issued with correct data");
+    $commands = $this->drupalPostAJAX($form_path, $edit, array('op' => t("AJAX html: Replace the HTML in a selector.")));
+    $expected = array(
+      'command' => 'insert',
+      'method' => 'html',
+      'data' => 'replacement text',
+    );
+    $this->assertCommand($commands, $expected, "'html' AJAX command issued with correct data");
 
     // Tests the 'insert' command.
-    $commands = $this->discardSettings($this->drupalPostAJAX($form_path, $edit, array('op' => t("AJAX insert: Let client insert based on #ajax['method']."))));
-    $command = $commands[0];
-    $this->assertTrue($command['command'] == 'insert' && $command['method'] == NULL && $command['data'] == 'insert replacement text', "'insert' AJAX command issued with correct data");
+    $commands = $this->drupalPostAJAX($form_path, $edit, array('op' => t("AJAX insert: Let client insert based on #ajax['method'].")));
+    $expected = array(
+      'command' => 'insert',
+      'data' => 'insert replacement text',
+    );
+    $this->assertCommand($commands, $expected, "'insert' AJAX command issued with correct data");
 
     // Tests the 'prepend' command.
-    $commands = $this->discardSettings($this->drupalPostAJAX($form_path, $edit, array('op' => t("AJAX 'prepend': Click to prepend something"))));
-    $command = $commands[0];
-    $this->assertTrue($command['command'] == 'insert' && $command['method'] == 'prepend' && $command['data'] == 'prepended text', "'prepend' AJAX command issued with correct data");
+    $commands = $this->drupalPostAJAX($form_path, $edit, array('op' => t("AJAX 'prepend': Click to prepend something")));
+    $expected = array(
+      'command' => 'insert',
+      'method' => 'prepend',
+      'data' => 'prepended text',
+    );
+    $this->assertCommand($commands, $expected, "'prepend' AJAX command issued with correct data");
 
     // Tests the 'remove' command.
-    $commands = $this->discardSettings($this->drupalPostAJAX($form_path, $edit, array('op' => t("AJAX 'remove': Click to remove text"))));
-    $command = $commands[0];
-    $this->assertTrue($command['command'] == 'remove' && $command['selector'] == '#remove_text', "'remove' AJAX command issued with correct command and selector");
+    $commands = $this->drupalPostAJAX($form_path, $edit, array('op' => t("AJAX 'remove': Click to remove text")));
+    $expected = array(
+      'command' => 'remove',
+      'selector' => '#remove_text',
+    );
+    $this->assertCommand($commands, $expected, "'remove' AJAX command issued with correct command and selector");
 
     // Tests the 'restripe' command.
-    $commands = $this->discardSettings($this->drupalPostAJAX($form_path, $edit, array('op' => t("AJAX 'restripe' command"))));
-    $command = $commands[0];
-    $this->assertTrue($command['command'] == 'restripe' && $command['selector'] == '#restripe_table', "'restripe' AJAX command issued with correct selector");
+    $commands = $this->drupalPostAJAX($form_path, $edit, array('op' => t("AJAX 'restripe' command")));
+    $expected = array(
+      'command' => 'restripe',
+      'selector' => '#restripe_table',
+    );
+    $this->assertCommand($commands, $expected, "'restripe' AJAX command issued with correct selector");
+
+    // Tests the 'settings' command.
+    $commands = $this->drupalPostAJAX($form_path, $edit, array('op' => t("AJAX 'settings' command")));
+    $expected = array(
+      'command' => 'settings',
+      'settings' => array('ajax_forms_test' => array('foo' => 42)),
+    );
+    $this->assertCommand($commands, $expected, "'settings' AJAX command issued with correct data");
   }
 }
 
@@ -196,9 +283,12 @@ class AJAXFormValuesTestCase extends AJAXTestCase {
       $edit = array(
         'select' => $item,
       );
-      $commands = $this->discardSettings($this->drupalPostAJAX('ajax_forms_test_get_form', $edit, 'select'));
-      $data_command = $commands[1];
-      $this->assertEqual($data_command['value'], $item);
+      $commands = $this->drupalPostAJAX('ajax_forms_test_get_form', $edit, 'select');
+      $expected = array(
+        'command' => 'data',
+        'value' => $item,
+      );
+      $this->assertCommand($commands, $expected, "verification of AJAX form values from a selectbox issued with a correct value");
     }
 
     // Verify form values of a checkbox element.
@@ -206,9 +296,12 @@ class AJAXFormValuesTestCase extends AJAXTestCase {
       $edit = array(
         'checkbox' => $item,
       );
-      $commands = $this->discardSettings($this->drupalPostAJAX('ajax_forms_test_get_form', $edit, 'checkbox'));
-      $data_command = $commands[1];
-      $this->assertEqual((int) $data_command['value'], (int) $item);
+      $commands = $this->drupalPostAJAX('ajax_forms_test_get_form', $edit, 'checkbox');
+      $expected = array(
+        'command' => 'data',
+        'value' => (int) $item,
+      );
+      $this->assertCommand($commands, $expected, "verification of AJAX form values from a checkbox issued with a correct value");
     }
   }
 }
@@ -278,7 +371,7 @@ class AJAXMultiFormTestCase extends AJAXTestCase {
     // Submit the "add more" button of each form twice. After each corresponding
     // page update, ensure the same as above.
     foreach ($field_xpaths as $form_html_id => $field_xpath) {
-      for ($i=0; $i<2; $i++) {
+      for ($i = 0; $i < 2; $i++) {
         $this->drupalPostAJAX(NULL, array(), array($button_name => $button_value), 'system/ajax', array(), array(), $form_html_id);
         $this->assert(count($this->xpath($field_xpath . $field_items_xpath_suffix)) == $i+2, t('Found the correct number of field items after an AJAX submission.'));
         $this->assertFieldByXPath($field_xpath . $button_xpath_suffix, NULL, t('Found the "add more" button after an AJAX submission.'));
@@ -319,4 +412,3 @@ class AJAXElementValidation extends AJAXTestCase {
     $this->assertText('ajax_forms_test_validation_form_callback invoked', t('The correct callback was invoked'));
   }
 }
-

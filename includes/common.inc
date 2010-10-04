@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1231 2010/10/03 23:32:55 dries Exp $
+// $Id: common.inc,v 1.1232 2010/10/04 17:46:00 dries Exp $
 
 /**
  * @file
@@ -2822,16 +2822,22 @@ function drupal_add_css($data = NULL, $options = NULL) {
  * @param $css
  *   (optional) An array of CSS files. If no array is provided, the default
  *   stylesheets array is used instead.
+ * @param $skip_alter
+ *   (optional) If set to TRUE, this function skips calling drupal_alter() on
+ *   $css, useful when the calling function passes a $css array that has already
+ *   been altered.
  * @return
  *   A string of XHTML CSS tags.
  */
-function drupal_get_css($css = NULL) {
+function drupal_get_css($css = NULL, $skip_alter = FALSE) {
   if (!isset($css)) {
     $css = drupal_add_css();
   }
 
   // Allow modules and themes to alter the CSS items.
-  drupal_alter('css', $css);
+  if (!$skip_alter) {
+    drupal_alter('css', $css);
+  }
 
   // Sort CSS items according to their weights.
   uasort($css, 'drupal_sort_weight');
@@ -2855,6 +2861,12 @@ function drupal_get_css($css = NULL) {
     '#type' => 'styles',
     '#items' => $css,
   );
+
+  // Provide the page with information about the individual CSS files used,
+  // information not otherwise available when CSS aggregation is enabled.
+  $setting['ajaxPageState']['css'] = array_fill_keys(array_keys($css), 1);
+  $styles['#attached']['js'][] = array('type' => 'setting', 'data' => $setting);
+
   return drupal_render($styles);
 }
 
@@ -3811,13 +3823,17 @@ function drupal_js_defaults($data = NULL) {
  * @param $javascript
  *   (optional) An array with all JavaScript code. Defaults to the default
  *   JavaScript array for the given scope.
+ * @param $skip_alter
+ *   (optional) If set to TRUE, this function skips calling drupal_alter() on
+ *   $javascript, useful when the calling function passes a $javascript array
+ *   that has already been altered.
  * @return
  *   All JavaScript code segments and includes for the scope as HTML tags.
  * @see drupal_add_js()
  * @see locale_js_alter()
  * @see drupal_js_defaults()
  */
-function drupal_get_js($scope = 'header', $javascript = NULL) {
+function drupal_get_js($scope = 'header', $javascript = NULL, $skip_alter = FALSE) {
   if (!isset($javascript)) {
     $javascript = drupal_add_js();
   }
@@ -3826,13 +3842,15 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
   }
 
   // Allow modules to alter the JavaScript.
-  drupal_alter('js', $javascript);
+  if (!$skip_alter) {
+    drupal_alter('js', $javascript);
+  }
 
   // Filter out elements of the given scope.
   $items = array();
-  foreach ($javascript as $item) {
+  foreach ($javascript as $key => $item) {
     if ($item['scope'] == $scope) {
-      $items[] = $item;
+      $items[$key] = $item;
     }
   }
 
@@ -3864,6 +3882,22 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
 
   // Sort the JavaScript by weight so that it appears in the correct order.
   uasort($items, 'drupal_sort_weight');
+
+  // Provide the page with information about the individual JavaScript files
+  // used, information not otherwise available when aggregation is enabled.
+  $setting['ajaxPageState']['js'] = array_fill_keys(array_keys($items), 1);
+  unset($setting['ajaxPageState']['js']['settings']);
+  drupal_add_js($setting, 'setting');
+
+  // If we're outputting the header scope, then this might be the final time
+  // that drupal_get_js() is running, so add the setting to this output as well
+  // as to the drupal_add_js() cache. If $items['settings'] doesn't exist, it's
+  // because drupal_get_js() was intentionally passed a $javascript argument
+  // stripped off settings, potentially in order to override how settings get
+  // output, so in this case, do not add the setting to this output.
+  if ($scope == 'header' && isset($items['settings'])) {
+    $items['settings']['data'][] = $setting;
+  }
 
   // Loop through the JavaScript to construct the rendered output.
   $element = array(

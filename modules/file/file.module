@@ -1,5 +1,5 @@
 <?php
-// $Id: file.module,v 1.41 2010/10/01 01:32:59 webchick Exp $
+// $Id: file.module,v 1.42 2010/10/04 17:46:01 dries Exp $
 
 /**
  * @file
@@ -41,12 +41,14 @@ function file_menu() {
     'page callback' => 'file_ajax_upload',
     'delivery callback' => 'ajax_deliver',
     'access arguments' => array('access content'),
+    'theme callback' => 'ajax_base_page_theme',
     'type' => MENU_CALLBACK,
   );
   $items['file/progress'] = array(
     'page callback' => 'file_ajax_progress',
     'delivery callback' => 'ajax_deliver',
     'access arguments' => array('access content'),
+    'theme callback' => 'ajax_base_page_theme',
     'type' => MENU_CALLBACK,
   );
 

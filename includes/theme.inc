@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.616 2010/10/02 02:50:02 dries Exp $
+// $Id: theme.inc,v 1.617 2010/10/04 17:46:00 dries Exp $
 
 /**
  * @file
@@ -102,6 +102,15 @@ function drupal_theme_initialize() {
 
   // Themes can have alter functions, so reset the drupal_alter() cache.
   drupal_static_reset('drupal_alter');
+
+  // Provide the page with information about the theme that's used, so that a
+  // later AJAX request can be rendered using the same theme.
+  // @see ajax_base_page_theme()
+  $setting['ajaxPageState'] = array(
+    'theme' => $theme_key,
+    'themeToken' => drupal_get_token($theme_key),
+  );
+  drupal_add_js($setting, 'setting');
 }
 
 /**

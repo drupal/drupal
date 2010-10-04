@@ -1,4 +1,4 @@
-// $Id: ajax.js,v 1.19 2010/09/22 21:01:39 dries Exp $
+// $Id: ajax.js,v 1.20 2010/10/04 17:46:01 dries Exp $
 (function ($) {
 
 /**
@@ -230,6 +230,17 @@ Drupal.ajax.prototype.beforeSubmit = function (form_values, element, options) {
   $('[id]').each(function () {
     form_values.push({ name: 'ajax_html_ids[]', value: this.id });
   });
+
+  // Allow Drupal to return new JavaScript and CSS files to load without
+  // returning the ones already loaded.
+  form_values.push({ name: 'ajax_page_state[theme]', value: Drupal.settings.ajaxPageState.theme });
+  form_values.push({ name: 'ajax_page_state[theme_token]', value: Drupal.settings.ajaxPageState.themeToken });
+  for (var key in Drupal.settings.ajaxPageState.css) {
+    form_values.push({ name: 'ajax_page_state[css][' + key + ']', value: 1 });
+  }
+  for (var key in Drupal.settings.ajaxPageState.js) {
+    form_values.push({ name: 'ajax_page_state[js][' + key + ']', value: 1 });
+  }
 
   // Insert progressbar or throbber.
   if (this.progress.type == 'bar') {

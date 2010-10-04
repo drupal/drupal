@@ -1,5 +1,5 @@
 <?php
-// $Id: ajax_forms_test.module,v 1.7 2010/05/06 05:59:31 webchick Exp $
+// $Id: ajax_forms_test.module,v 1.8 2010/10/04 17:46:01 dries Exp $
 
 /**
  * @file
@@ -217,7 +217,7 @@ function ajax_forms_test_ajax_commands_form($form, &$form_state) {
     '#suffix' => '<div id="remove_div"><div id="remove_text">text to be removed</div></div>',
   );
 
-  // Show off the AJAX 'restripe' command.
+  // Shows the AJAX 'restripe' command.
   $form['restripe_command_example'] = array(
     '#type' => 'submit',
     '#value' => t("AJAX 'restripe' command"),
@@ -230,8 +230,17 @@ function ajax_forms_test_ajax_commands_form($form, &$form_state) {
                   <tr ><td>second row</td></tr>
                   </table>
                   </div>',
+  );
 
-
+  // Demonstrates the AJAX 'settings' command. The 'settings' command has
+  // nothing visual to "show", but it can be tested via SimpleTest and via
+  // Firebug.
+  $form['settings_command_example'] = array(
+    '#type' => 'submit',
+    '#value' => t("AJAX 'settings' command"),
+    '#ajax' => array(
+      'callback' => 'ajax_forms_test_advanced_commands_settings_callback',
+    ),
   );
 
   $form['submit'] = array(
@@ -367,7 +376,15 @@ function ajax_forms_test_advanced_commands_restripe_callback($form, $form_state)
   return array('#type' => 'ajax', '#commands' => $commands);
 }
 
-
+/**
+ * AJAX callback for 'settings'.
+ */
+function ajax_forms_test_advanced_commands_settings_callback($form, $form_state) {
+  $commands = array();
+  $setting['ajax_forms_test']['foo'] = 42;
+  $commands[] = ajax_command_settings($setting);
+  return array('#type' => 'ajax', '#commands' => $commands);
+}
 
 /**
  * This form and its related submit and callback functions demonstrate
