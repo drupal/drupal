@@ -1,5 +1,5 @@
 <?php
-// $Id: upgrade.taxonomy.test,v 1.4 2010/10/01 01:37:13 webchick Exp $
+// $Id: upgrade.taxonomy.test,v 1.5 2010/10/04 14:51:16 webchick Exp $
 
 /**
  * Test taxonomy upgrades.
@@ -115,6 +115,13 @@ class UpgradePathTaxonomyTestCase extends UpgradePathTestCase {
         else {
           $this->assertRaw($link, t('Term %name (@tid) is displayed on node %nid', $args));
         }
+      }
+
+      // nid 1, revision 1 had a bogus record in {term_node} pointing to term
+      // ID 0. Make sure we ignored this instead of generating a bogus term.
+      if ($node->nid == 1) {
+        $link = l($term->name, 'taxonomy/term/0');
+        $this->assertNoRaw($link, t('Bogus term (tid 0) is not displayed on node 1 vid %old_vid.', $args));
       }
 
       // The first 12 nodes have two revisions. For nodes with

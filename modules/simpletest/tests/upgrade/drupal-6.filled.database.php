@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal-6.filled.database.php,v 1.3 2010/09/11 00:39:49 webchick Exp $
+// $Id: drupal-6.filled.database.php,v 1.4 2010/10/04 14:51:16 webchick Exp $
 
 /**
  * @file
@@ -13264,6 +13264,11 @@ db_insert('term_node')->fields(array(
   'nid',
   'vid',
   'tid',
+))
+->values(array(
+  'nid' => '1',
+  'vid' => '1',
+  'tid' => '0',
 ))
 ->values(array(
   'nid' => '1',
