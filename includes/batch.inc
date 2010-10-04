@@ -1,5 +1,5 @@
 <?php
-// $Id: batch.inc,v 1.52 2010/10/03 02:42:25 dries Exp $
+// $Id: batch.inc,v 1.53 2010/10/04 07:34:26 webchick Exp $
 
 
 /**
@@ -343,7 +343,7 @@ function _batch_process() {
 
     $current    = $total - $remaining + $finished;
     $percentage = _batch_api_percentage($total, $current);
-    $elapsed    = $current_set['elapsed'];
+    $elapsed    = isset($current_set['elapsed']) ? $current_set['elapsed'] : 0;
     $values     = array(
       '@remaining'  => $remaining,
       '@total'      => $total,
