@@ -41,12 +41,14 @@ function file_menu() {
     'page callback' => 'file_ajax_upload',
     'delivery callback' => 'ajax_deliver',
     'access arguments' => array('access content'),
+    'theme callback' => 'ajax_base_page_theme',
     'type' => MENU_CALLBACK,
   );
   $items['file/progress'] = array(
     'page callback' => 'file_ajax_progress',
     'delivery callback' => 'ajax_deliver',
     'access arguments' => array('access content'),
+    'theme callback' => 'ajax_base_page_theme',
     'type' => MENU_CALLBACK,
   );
 

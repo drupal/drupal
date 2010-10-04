@@ -514,6 +514,7 @@ function system_menu() {
     'page callback' => 'ajax_form_callback',
     'delivery callback' => 'ajax_deliver',
     'access callback' => TRUE,
+    'theme callback' => 'ajax_base_page_theme',
     'type' => MENU_CALLBACK,
     'file path' => 'includes',
     'file' => 'form.inc',
