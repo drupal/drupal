@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.969 2010/10/01 18:37:23 webchick Exp $
+// $Id: system.module,v 1.970 2010/10/04 14:54:10 webchick Exp $
 
 /**
  * @file
@@ -569,7 +569,7 @@ function system_menu() {
   // Appearance.
   $items['admin/appearance'] = array(
     'title' => 'Appearance',
-    'description' => 'Select and configure your themes',
+    'description' => 'Select and configure your themes.',
     'page callback' => 'system_themes_page',
     'access arguments' => array('administer themes'),
     'position' => 'left',
@@ -635,7 +635,7 @@ function system_menu() {
   // Modules.
   $items['admin/modules'] = array(
     'title' => 'Modules',
-    'description' => 'Enable or disable modules',
+    'description' => 'Enable or disable modules.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_modules'),
     'access arguments' => array('administer modules'),
@@ -669,7 +669,7 @@ function system_menu() {
   // Configuration.
   $items['admin/config'] = array(
     'title' => 'Configuration',
-    'description' => 'Administer settings',
+    'description' => 'Administer settings.',
     'page callback' => 'system_admin_config_page',
     'access arguments' => array('access administration pages'),
     'file' => 'system.admin.inc',
@@ -1003,7 +1003,7 @@ function system_menu() {
   // Reports.
   $items['admin/reports'] = array(
     'title' => 'Reports',
-    'description' => 'View reports, updates, and errors',
+    'description' => 'View reports, updates, and errors.',
     'page callback' => 'system_admin_menu_block_page',
     'access arguments' => array('access site reports'),
     'weight' => 5,

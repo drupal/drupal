@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.902 2010/10/03 01:15:33 dries Exp $
+// $Id: comment.module,v 1.903 2010/10/04 14:54:10 webchick Exp $
 
 /**
  * @file
@@ -292,7 +292,7 @@ function comment_menu() {
  */
 function comment_menu_alter(&$items) {
   // Add comments to the description for admin/content.
-  $items['admin/content']['description'] = "Administer content and comments";
+  $items['admin/content']['description'] = 'Administer content and comments.';
 
   // Adjust the Field UI tabs on admin/structure/types/manage/[node-type].
   // See comment_entity_info().
