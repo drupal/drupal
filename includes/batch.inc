@@ -343,7 +343,7 @@ function _batch_process() {
 
     $current    = $total - $remaining + $finished;
     $percentage = _batch_api_percentage($total, $current);
-    $elapsed    = $current_set['elapsed'];
+    $elapsed    = isset($current_set['elapsed']) ? $current_set['elapsed'] : 0;
     $values     = array(
       '@remaining'  => $remaining,
       '@total'      => $total,
