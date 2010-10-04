@@ -1,4 +1,4 @@
-// $Id: UPGRADE.txt,v 1.24 2010/08/11 01:06:44 dries Exp $
+// $Id: UPGRADE.txt,v 1.25 2010/10/04 07:20:38 webchick Exp $
 
 UPGRADING
 ---------
@@ -11,6 +11,9 @@ Prior to upgrading, you should ensure that:
  * Custom and contributed modules have been checked for compatibility (#11).
  * Custom and contributed themes have been checked for compatibility (#11).
  * You have read through this entire document.
+
+If you are upgrading from one major version to another (i.e., 6.x to 7.x),
+you must first upgrade to the latest version of your current release.
 
 Let's begin!
 
@@ -70,7 +73,7 @@ Let's begin!
 
     Note: if you are unable to access update.php do the following:
 
-      - Open your settings.php with a text editor.
+      - Open your settings.php file with a text editor.
 
       - There is a line that says $update_free_access = FALSE;
         Change it to $update_free_access = TRUE;
@@ -80,7 +83,7 @@ Let's begin!
 
 11. Ensure that the versions of all custom and contributed modules match the
     new Drupal version to which you have updated. For a major update, such as
-    from 5.x to 6.x, modules from previous versions will not be compatible
+    from 6.x to 7.x, modules from previous versions will not be compatible
     and updated versions will be required.
 
       - For contributed modules, check http://drupal.org/project/modules
@@ -107,5 +110,5 @@ Let's begin!
     screens at http://www.example.com/?q=admin/config/development/maintenance
     (replace www.example.com with your installation's domain name and path).
 
-For more information on upgrading visit
+For more information on upgrading, visit
 the Drupal handbook at http://drupal.org/upgrade
