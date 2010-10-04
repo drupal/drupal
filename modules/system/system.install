@@ -2593,6 +2593,16 @@ function system_update_7060() {
     return;
   }
 
+  if (!db_query_range('SELECT 1 FROM {upload}', 0, 1)->fetchField()) {
+    // There is nothing to migrate. Delete variables and the empty table. There
+    // is no need to create fields that are not going to be used.
+    foreach (_update_7000_node_get_types() as $node_type) {
+      variable_del('upload_' . $node_type->type);
+    }
+    db_drop_table('upload');
+    return;
+  }
+
   // Check which node types have upload.module attachments enabled.
   $context['types'] = array();
   foreach (_update_7000_node_get_types() as $node_type) {
