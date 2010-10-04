@@ -850,6 +850,7 @@ function filter_process_format($element) {
   // If the stored format does not exist, administrators have to assign a new
   // format.
   if (!$format_exists && $user_is_admin) {
+    $element['format']['format']['#required'] = TRUE;
     $element['format']['format']['#default_value'] = NULL;
     // Force access to the format selector (it may have been denied above if
     // the user only has access to a single format).

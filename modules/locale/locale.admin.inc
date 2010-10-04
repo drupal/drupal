@@ -854,7 +854,6 @@ function locale_translation_filter_form() {
       $form['filters']['status'][$key] = array(
         '#title' => $filter['title'],
         '#type' => 'select',
-        '#required' => FALSE,
         '#empty_value' => 'all',
         '#empty_option' => $filter['options']['all'],
         '#size' => 0,

@@ -91,7 +91,6 @@ function aggregator_form_aggregator_admin_form_alter(&$form, $form_state) {
     $form['modules']['aggregator']['aggregator_summary_items'] = array(
       '#type' => 'select',
       '#title' => t('Number of items shown in listing pages'),
-      '#required' => FALSE,
       '#default_value' => variable_get('aggregator_summary_items', 3),
       '#empty_value' => 0,
       '#options' => $items,

@@ -683,7 +683,6 @@ function menu_configure() {
   $form['menu_main_links_source'] = array(
     '#type' => 'select',
     '#title' => t('Source for the Main links'),
-    '#required' => FALSE,
     '#default_value' => variable_get('menu_main_links_source', 'main-menu'),
     '#empty_option' => t('No Main links'),
     '#options' => $menu_options,
@@ -694,7 +693,6 @@ function menu_configure() {
   $form['menu_secondary_links_source'] = array(
     '#type' => 'select',
     '#title' => t('Source for the Secondary links'),
-    '#required' => FALSE,
     '#default_value' => variable_get('menu_secondary_links_source', 'user-menu'),
     '#empty_option' => t('No Secondary links'),
     '#options' => $menu_options,
