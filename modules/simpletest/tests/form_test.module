@@ -1,5 +1,5 @@
 <?php
-// $Id: form_test.module,v 1.50 2010/09/27 00:53:56 dries Exp $
+// $Id: form_test.module,v 1.51 2010/10/04 18:00:46 dries Exp $
 
 /**
  * @file
@@ -789,44 +789,65 @@ function form_test_select($form, &$form_state) {
     '#title' => '#default_value one',
     '#default_value' => 'one',
   );
+  $form['select_required'] = $base + array(
+    '#title' => '#default_value one, #required',
+    '#required' => TRUE,
+    '#default_value' => 'one',
+  );
+  $form['select_optional'] = $base + array(
+    '#title' => '#default_value one, not #required',
+    '#required' => FALSE,
+    '#default_value' => 'one',
+  );
   $form['empty_value'] = $base + array(
-    '#title' => '#default_value one, #empty_value 0',
+    '#title' => '#default_value one, #required, #empty_value 0',
+    '#required' => TRUE,
     '#default_value' => 'one',
     '#empty_value' => 0,
   );
   $form['empty_value_one'] = $base + array(
-    '#title' => '#default_value = #empty_value',
+    '#title' => '#default_value = #empty_value, #required',
+    '#required' => TRUE,
     '#default_value' => 'one',
     '#empty_value' => 'one',
   );
 
   $form['no_default'] = $base + array(
-    '#title' => 'No #default_value',
+    '#title' => 'No #default_value, #required',
+    '#required' => TRUE,
   );
   $form['no_default_optional'] = $base + array(
     '#title' => 'No #default_value, not #required',
     '#required' => FALSE,
-    '#description' => 'Should result in an empty string (default of #empty_value), because it is optional.',
+    '#description' => 'Should result in "one", because it is not required and there is no #empty_value requested, so default browser behavior of preselecting first option is in effect.',
+  );
+  $form['no_default_optional_empty_value'] = $base + array(
+    '#title' => 'No #default_value, not #required, #empty_value empty string',
+    '#empty_value' => '',
+    '#required' => FALSE,
+    '#description' => 'Should result in an empty string (due to #empty_value), because it is optional.',
   );
 
   $form['no_default_empty_option'] = $base + array(
-    '#title' => 'No #default_value, #empty_option',
+    '#title' => 'No #default_value, #required, #empty_option',
+    '#required' => TRUE,
     '#empty_option' => '- Choose -',
   );
   $form['no_default_empty_option_optional'] = $base + array(
     '#title' => 'No #default_value, not #required, #empty_option',
-    '#required' => FALSE,
     '#empty_option' => '- Dismiss -',
     '#description' => 'Should result in an empty string (default of #empty_value), because it is optional.',
   );
 
   $form['no_default_empty_value'] = $base + array(
-    '#title' => 'No #default_value, #empty_value 0',
+    '#title' => 'No #default_value, #required, #empty_value 0',
+    '#required' => TRUE,
     '#empty_value' => 0,
     '#description' => 'Should never result in 0.',
   );
   $form['no_default_empty_value_one'] = $base + array(
-    '#title' => 'No #default_value, #empty_value one',
+    '#title' => 'No #default_value, #required, #empty_value one',
+    '#required' => TRUE,
     '#empty_value' => 'one',
     '#description' => 'A mistakenly assigned #empty_value contained in #options should not be valid.',
   );

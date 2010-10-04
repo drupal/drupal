@@ -1,5 +1,5 @@
 <?php
-// $Id: image.admin.inc,v 1.24 2010/09/27 00:53:56 dries Exp $
+// $Id: image.admin.inc,v 1.25 2010/10/04 18:00:45 dries Exp $
 
 /**
  * @file
@@ -127,7 +127,6 @@ function image_style_form($form, &$form_state, $style) {
   );
   $form['effects']['new']['new'] = array(
     '#type' => 'select',
-    '#required' => FALSE,
     '#options' => $new_effect_options,
     '#empty_option' => t('Select a new effect'),
   );
@@ -295,7 +294,6 @@ function image_style_delete_form($form, $form_state, $style) {
   $form['replacement'] = array(
     '#title' => t('Replacement style'),
     '#type' => 'select',
-    '#required' => FALSE,
     '#options' => $replacement_styles,
     '#empty_option' => t('No replacement, just delete'),
   );

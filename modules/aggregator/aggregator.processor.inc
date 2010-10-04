@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.processor.inc,v 1.13 2010/09/24 21:36:22 dries Exp $
+// $Id: aggregator.processor.inc,v 1.14 2010/10/04 18:00:45 dries Exp $
 
 /**
  * @file
@@ -91,7 +91,6 @@ function aggregator_form_aggregator_admin_form_alter(&$form, $form_state) {
     $form['modules']['aggregator']['aggregator_summary_items'] = array(
       '#type' => 'select',
       '#title' => t('Number of items shown in listing pages'),
-      '#required' => FALSE,
       '#default_value' => variable_get('aggregator_summary_items', 3),
       '#empty_value' => 0,
       '#options' => $items,

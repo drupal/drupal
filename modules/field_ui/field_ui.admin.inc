@@ -1,5 +1,5 @@
 <?php
-// $Id: field_ui.admin.inc,v 1.70 2010/09/29 02:01:34 dries Exp $
+// $Id: field_ui.admin.inc,v 1.71 2010/10/04 18:00:45 dries Exp $
 
 /**
  * @file
@@ -335,7 +335,6 @@ function field_ui_field_overview_form($form, &$form_state, $entity_type, $bundle
       'parent_wrapper' => array(
         'parent' => array(
           '#type' => 'select',
-          '#required' => FALSE,
           '#options' => $table['#parent_options'],
           '#attributes' => array('class' => array('field-parent')),
           '#parents' => array('fields', $name, 'parent'),
@@ -402,7 +401,6 @@ function field_ui_field_overview_form($form, &$form_state, $entity_type, $bundle
       'parent_wrapper' => array(
         'parent' => array(
           '#type' => 'select',
-          '#required' => FALSE,
           '#options' => $table['#parent_options'],
           '#attributes' => array('class' => array('field-parent')),
           '#parents' => array('fields', $name, 'parent'),
@@ -458,7 +456,6 @@ function field_ui_field_overview_form($form, &$form_state, $entity_type, $bundle
       'parent_wrapper' => array(
         'parent' => array(
           '#type' => 'select',
-          '#required' => FALSE,
           '#options' => $table['#parent_options'],
           '#attributes' => array('class' => array('field-parent')),
           '#prefix' => '<div class="add-new-placeholder">&nbsp;</div>',
@@ -482,7 +479,6 @@ function field_ui_field_overview_form($form, &$form_state, $entity_type, $bundle
       ),
       'type' => array(
         '#type' => 'select',
-        '#required' => FALSE,
         '#options' => $field_type_options,
         '#empty_option' => t('- Select a field type -'),
         '#description' => t('Type of data to store.'),
@@ -491,7 +487,6 @@ function field_ui_field_overview_form($form, &$form_state, $entity_type, $bundle
       ),
       'widget_type' => array(
         '#type' => 'select',
-        '#required' => FALSE,
         '#options' => $widget_type_options,
         '#empty_option' => t('- Select a widget -'),
         '#description' => t('Form element to edit the data.'),
@@ -530,7 +525,6 @@ function field_ui_field_overview_form($form, &$form_state, $entity_type, $bundle
       'parent_wrapper' => array(
         'parent' => array(
           '#type' => 'select',
-          '#required' => FALSE,
           '#options' => $table['#parent_options'],
           '#attributes' => array('class' => array('field-parent')),
           '#prefix' => '<div class="add-new-placeholder">&nbsp;</div>',
@@ -544,7 +538,6 @@ function field_ui_field_overview_form($form, &$form_state, $entity_type, $bundle
       ),
       'field_name' => array(
         '#type' => 'select',
-        '#required' => FALSE,
         '#options' => $existing_field_options,
         '#empty_option' => t('- Select an existing field -'),
         '#description' => t('Field to share'),
@@ -554,7 +547,6 @@ function field_ui_field_overview_form($form, &$form_state, $entity_type, $bundle
       ),
       'widget_type' => array(
         '#type' => 'select',
-        '#required' => FALSE,
         '#options' => $widget_type_options,
         '#empty_option' => t('- Select a widget -'),
         '#description' => t('Form element to edit the data.'),
@@ -897,7 +889,6 @@ function field_ui_display_overview_form($form, &$form_state, $entity_type, $bund
       'parent_wrapper' => array(
         'parent' => array(
           '#type' => 'select',
-          '#required' => FALSE,
           '#options' => $table['#parent_options'],
           '#attributes' => array('class' => array('field-parent')),
           '#parents' => array('fields', $name, 'parent'),
@@ -1051,7 +1042,6 @@ function field_ui_display_overview_form($form, &$form_state, $entity_type, $bund
       'parent_wrapper' => array(
         'parent' => array(
           '#type' => 'select',
-          '#required' => FALSE,
           '#options' => $table['#parent_options'],
           '#attributes' => array('class' => array('field-parent')),
           '#parents' => array('fields', $name, 'parent'),
@@ -1713,7 +1703,6 @@ function field_ui_field_edit_form($form, &$form_state, $instance) {
     '#default_value' => !empty($instance['description']) ? $instance['description'] : '',
     '#rows' => 5,
     '#description' => t('Instructions to present to the user below this field on the editing form.<br />Allowed HTML tags: @tags', array('@tags' => _field_filter_xss_display_allowed_tags())),
-    '#required' => FALSE,
     '#weight' => 0,
   );
 

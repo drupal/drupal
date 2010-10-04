@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.350 2010/09/29 20:12:51 webchick Exp $
+// $Id: filter.module,v 1.351 2010/10/04 18:00:45 dries Exp $
 
 /**
  * @file
@@ -850,6 +850,7 @@ function filter_process_format($element) {
   // If the stored format does not exist, administrators have to assign a new
   // format.
   if (!$format_exists && $user_is_admin) {
+    $element['format']['format']['#required'] = TRUE;
     $element['format']['format']['#default_value'] = NULL;
     // Force access to the format selector (it may have been denied above if
     // the user only has access to a single format).

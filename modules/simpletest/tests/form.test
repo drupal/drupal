@@ -1,5 +1,5 @@
 <?php
-// $Id: form.test,v 1.71 2010/10/01 22:28:55 webchick Exp $
+// $Id: form.test,v 1.72 2010/10/04 18:00:46 dries Exp $
 
 /**
  * @file
@@ -164,6 +164,8 @@ class FormsTestCase extends DrupalWebTestCase {
     // Posting without any values should throw validation errors.
     $this->drupalPost(NULL, array(), 'Submit');
     $this->assertNoText(t($error, array('!name' => $form['select']['#title'])));
+    $this->assertNoText(t($error, array('!name' => $form['select_required']['#title'])));
+    $this->assertNoText(t($error, array('!name' => $form['select_optional']['#title'])));
     $this->assertNoText(t($error, array('!name' => $form['empty_value']['#title'])));
     $this->assertNoText(t($error, array('!name' => $form['empty_value_one']['#title'])));
     $this->assertText(t($error, array('!name' => $form['no_default']['#title'])));
@@ -194,7 +196,8 @@ class FormsTestCase extends DrupalWebTestCase {
       'empty_value' => 'one',
       'empty_value_one' => 'one',
       'no_default' => 'three',
-      'no_default_optional' => '',
+      'no_default_optional' => 'one',
+      'no_default_optional_empty_value' => '',
       'no_default_empty_option' => 'three',
       'no_default_empty_option_optional' => '',
       'no_default_empty_value' => 'three',

@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.admin.inc,v 1.18 2010/09/24 21:36:22 dries Exp $
+// $Id: locale.admin.inc,v 1.19 2010/10/04 18:00:46 dries Exp $
 
 /**
  * @file
@@ -854,7 +854,6 @@ function locale_translation_filter_form() {
       $form['filters']['status'][$key] = array(
         '#title' => $filter['title'],
         '#type' => 'select',
-        '#required' => FALSE,
         '#empty_value' => 'all',
         '#empty_option' => $filter['options']['all'],
         '#size' => 0,

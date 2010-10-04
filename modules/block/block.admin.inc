@@ -1,5 +1,5 @@
 <?php
-// $Id: block.admin.inc,v 1.88 2010/09/24 21:36:22 dries Exp $
+// $Id: block.admin.inc,v 1.89 2010/10/04 18:00:45 dries Exp $
 
 /**
  * @file
@@ -129,7 +129,6 @@ function block_admin_display_form($form, &$form_state, $blocks, $theme, $block_r
     );
     $form['blocks'][$key]['region'] = array(
       '#type' => 'select',
-      '#required' => FALSE,
       '#default_value' => $block['region'] != BLOCK_REGION_NONE ? $block['region'] : NULL,
       '#empty_value' => BLOCK_REGION_NONE,
       '#title_display' => 'invisible',
@@ -302,7 +301,6 @@ function block_admin_configure($form, &$form_state, $module, $delta) {
       $form['regions'][$key] = array(
         '#type' => 'select',
         '#title' => $theme->info['name'],
-        '#required' => FALSE,
         '#default_value' => !empty($region) && $region != -1 ? $region : NULL,
         '#empty_value' => BLOCK_REGION_NONE,
         '#options' => system_region_list($key, REGIONS_VISIBLE),
