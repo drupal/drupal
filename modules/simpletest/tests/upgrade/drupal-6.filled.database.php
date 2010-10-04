@@ -13268,6 +13268,11 @@ db_insert('term_node')->fields(array(
 ->values(array(
   'nid' => '1',
   'vid' => '1',
+  'tid' => '0',
+))
+->values(array(
+  'nid' => '1',
+  'vid' => '1',
   'tid' => '1',
 ))
 ->values(array(

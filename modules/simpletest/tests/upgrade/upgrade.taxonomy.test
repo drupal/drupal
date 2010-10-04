@@ -117,6 +117,13 @@ class UpgradePathTaxonomyTestCase extends UpgradePathTestCase {
         }
       }
 
+      // nid 1, revision 1 had a bogus record in {term_node} pointing to term
+      // ID 0. Make sure we ignored this instead of generating a bogus term.
+      if ($node->nid == 1) {
+        $link = l($term->name, 'taxonomy/term/0');
+        $this->assertNoRaw($link, t('Bogus term (tid 0) is not displayed on node 1 vid %old_vid.', $args));
+      }
+
       // The first 12 nodes have two revisions. For nodes with
       // revisions, check that the oldest revision is associated only
       // to terms whose ID is equal to the node ID or 49 less the node ID.

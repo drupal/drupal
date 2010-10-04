@@ -566,8 +566,11 @@ function taxonomy_update_7005(&$sandbox) {
     $sandbox['last'] = 0;
     $sandbox['count'] = 0;
 
-    $query = db_select('taxonomy_term_node', 't');
-    $sandbox['total'] = $query->countQuery()->execute()->fetchField();
+    // Run the same joins as the query that is used later to retrieve the
+    // term_node data, this ensures that bad records in that table - for
+    // tids which aren't in taxonomy_term_data or nids which aren't in {node}
+    // are not included in the count.
+    $sandbox['total'] = db_query('SELECT COUNT(*) FROM {taxonomy_term_data} td INNER JOIN {taxonomy_term_node} tn ON td.tid = tn.tid INNER JOIN {node} n ON tn.nid = n.nid LEFT JOIN {node} n2 ON tn.vid = n2.vid')->fetchField();
 
     // Use an inline version of Drupal 6 taxonomy_get_vocabularies() here since
     // we can no longer rely on $vocabulary->nodes from the API function.
