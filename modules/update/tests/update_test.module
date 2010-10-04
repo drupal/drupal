@@ -1,5 +1,5 @@
 <?php
-// $Id: update_test.module,v 1.4 2009/12/04 16:49:47 dries Exp $
+// $Id: update_test.module,v 1.5 2010/10/04 07:26:25 webchick Exp $
 
 /**
  * Implements hook_menu().
@@ -34,6 +34,32 @@ function update_test_system_info_alter(&$info, $file) {
     if (!empty($setting[$id])) {
       foreach ($setting[$id] as $key => $value) {
         $info[$key] = $value;
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_update_status_alter().
+ *
+ * This checks the 'update_test_update_status' variable and sees if we need to
+ * alter the update status for the given project based on the setting. The
+ * setting is expected to be a nested associative array. If the key '#all' is
+ * defined, its subarray will include .info keys and values for all modules
+ * and themes on the system. Otherwise, the settings array is keyed by the
+ * module or theme short name and the subarrays contain settings just for that
+ * module or theme.
+ */
+function update_test_update_status_alter(&$projects) {
+  $setting = variable_get('update_test_update_status', array());
+  if (!empty($setting)) {
+    foreach ($projects as $project_name => &$project) {
+      foreach (array('#all', $project_name) as $id) {
+        if (!empty($setting[$id])) {
+          foreach ($setting[$id] as $key => $value) {
+            $project[$key] = $value;
+          }
+        }
       }
     }
   }
