@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.975 2010/10/05 06:23:18 webchick Exp $
+// $Id: system.module,v 1.976 2010/10/05 19:59:10 dries Exp $
 
 /**
  * @file
@@ -1066,7 +1066,7 @@ function system_library() {
     'website' => 'http://jquery.com',
     'version' => '1.4.2',
     'js' => array(
-      'misc/jquery.js' => array('weight' => JS_LIBRARY - 20, 'preprocess' => TRUE),
+      'misc/jquery.js' => array('group' => JS_LIBRARY, 'weight' => -20),
     ),
   );
 
@@ -1076,7 +1076,7 @@ function system_library() {
     'website' => 'http://plugins.jquery.com/project/once',
     'version' => '1.2',
     'js' => array(
-      'misc/jquery.once.js' => array('weight' => JS_LIBRARY - 19, 'preprocess' => TRUE),
+      'misc/jquery.once.js' => array('group' => JS_LIBRARY, 'weight' => -19),
     ),
   );
 
@@ -1142,7 +1142,7 @@ function system_library() {
     'website' => 'http://jqueryui.com',
     'version' => '1.8',
     'js' => array(
-      'misc/ui/jquery.ui.core.min.js' => array('weight' => JS_LIBRARY - 11),
+      'misc/ui/jquery.ui.core.min.js' => array('group' => JS_LIBRARY, 'weight' => -11),
     ),
     'css' => array(
       'misc/ui/jquery.ui.core.css' => array(),
@@ -1359,7 +1359,7 @@ function system_library() {
     'website' => 'http://docs.jquery.com/UI/Widget',
     'version' => '1.8',
     'js' => array(
-      'misc/ui/jquery.ui.widget.min.js' => array('weight' => JS_LIBRARY - 10),
+      'misc/ui/jquery.ui.widget.min.js' => array('group' => JS_LIBRARY, 'weight' => -10),
     ),
     'dependencies' => array(
       array('system', 'ui'),
@@ -1370,7 +1370,7 @@ function system_library() {
     'website' => 'http://jqueryui.com/demos/effect/',
     'version' => '1.8',
     'js' => array(
-      'misc/ui/jquery.effects.core.min.js' => array('weight' => JS_LIBRARY - 9),
+      'misc/ui/jquery.effects.core.min.js' => array('group' => JS_LIBRARY, 'weight' => -9),
     ),
   );
   $libraries['effects.blind'] = array(
@@ -1819,14 +1819,15 @@ function _system_filetransfer_backend_form_common() {
  */
 function system_init() {
   $path = drupal_get_path('module', 'system');
-  // Add the CSS for this module.
-  drupal_add_css($path . '/system.base.css', array('weight' => CSS_SYSTEM, 'preprocess' => TRUE));
+  // Add the CSS for this module. These aren't in system.info, because they
+  // need to be in the CSS_SYSTEM group rather than the CSS_DEFAULT group.
+  drupal_add_css($path . '/system.base.css', array('group' => CSS_SYSTEM, 'every_page' => TRUE));
   if (arg(0) == 'admin' || (variable_get('node_admin_theme', '0') && arg(0) == 'node' && (arg(1) == 'add' || arg(2) == 'edit' || arg(2) == 'delete'))) {
-    drupal_add_css($path . '/system.admin.css', array('weight' => CSS_SYSTEM));
+    drupal_add_css($path . '/system.admin.css', array('group' => CSS_SYSTEM));
   }
-  drupal_add_css($path . '/system.menus.css', array('weight' => CSS_SYSTEM, 'preprocess' => TRUE));
-  drupal_add_css($path . '/system.messages.css', array('weight' => CSS_SYSTEM, 'preprocess' => TRUE));
-  drupal_add_css($path . '/system.theme.css', array('weight' => CSS_SYSTEM, 'preprocess' => TRUE));
+  drupal_add_css($path . '/system.menus.css', array('group' => CSS_SYSTEM, 'every_page' => TRUE));
+  drupal_add_css($path . '/system.messages.css', array('group' => CSS_SYSTEM, 'every_page' => TRUE));
+  drupal_add_css($path . '/system.theme.css', array('group' => CSS_SYSTEM, 'every_page' => TRUE));
 
   // Ignore slave database servers for this request.
   //
@@ -1862,13 +1863,13 @@ function system_add_module_assets() {
     if (!empty($info['stylesheets'])) {
       foreach ($info['stylesheets'] as $media => $stylesheets) {
         foreach ($stylesheets as $stylesheet) {
-          drupal_add_css($stylesheet, array('media' => $media, 'preprocess' => TRUE));
+          drupal_add_css($stylesheet, array('every_page' => TRUE, 'media' => $media));
         }
       }
     }
     if (!empty($info['scripts'])) {
       foreach ($info['scripts'] as $script) {
-        drupal_add_js($script, array('preprocess' => TRUE));
+        drupal_add_js($script, array('every_page' => TRUE));
       }
     }
   }

@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.301 2010/10/05 17:57:09 webchick Exp $
+// $Id: locale.module,v 1.302 2010/10/05 19:59:10 dries Exp $
 
 /**
  * @file
@@ -880,7 +880,7 @@ function locale_library_alter(&$libraries, $module) {
   global $language;
   if ($module == 'system' && isset($libraries['system']['ui.datepicker'])) {
     $datepicker = drupal_get_path('module', 'locale') . '/locale.datepicker.js';
-    $libraries['system']['ui.datepicker']['js'][$datepicker] = array('weight' => JS_THEME);
+    $libraries['system']['ui.datepicker']['js'][$datepicker] = array('group' => JS_THEME);
     $libraries['system']['ui.datepicker']['js'][] = array(
       'data' => array(
         'jqueryuidatepicker' => array(

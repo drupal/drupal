@@ -1,5 +1,5 @@
 <?php
-// $Id: common.test,v 1.128 2010/10/05 15:17:14 webchick Exp $
+// $Id: common.test,v 1.129 2010/10/05 19:59:10 dries Exp $
 
 /**
  * @file
@@ -655,7 +655,7 @@ class CascadingStylesheetsTestCase extends DrupalWebTestCase {
   function testRenderInlinePreprocess() {
     $css = 'body { padding: 0px; }';
     $css_preprocessed = '<style type="text/css" media="all">' . drupal_load_stylesheet_content($css, TRUE) . '</style>';
-    drupal_add_css($css, array('type' => 'inline', 'preprocess' => TRUE));
+    drupal_add_css($css, array('type' => 'inline'));
     $styles = drupal_get_css();
     $this->assertEqual(trim($styles), $css_preprocessed, t('Rendering preprocessed inline CSS adds it to the page.'));
   }
@@ -665,7 +665,7 @@ class CascadingStylesheetsTestCase extends DrupalWebTestCase {
    */
   function testRenderInlineNoPreprocess() {
     $css = 'body { padding: 0px; }';
-    drupal_add_css($css, array('type' => 'inline'));
+    drupal_add_css($css, array('type' => 'inline', 'preprocess' => FALSE));
     $styles = drupal_get_css();
     $this->assertTrue(strpos($styles, $css) > 0, t('Rendering non-preprocessed inline CSS adds it to the page.'));
   }
@@ -675,7 +675,9 @@ class CascadingStylesheetsTestCase extends DrupalWebTestCase {
    */
   function testRenderInlineFullPage() {
     $css = 'body { font-size: 254px; }';
-    $expected = $css;
+    // Inline CSS is minified unless 'preprocess' => FALSE is passed as a
+    // drupal_add_css() option.
+    $expected = 'body{font-size:254px;}';
 
     // Create a node, using the PHP filter that tests drupal_add_css().
     $php_format_id = db_query_range('SELECT format FROM {filter_format} WHERE name = :name', 0, 1, array(':name' => 'PHP code'))->fetchField();
@@ -706,9 +708,9 @@ class CascadingStylesheetsTestCase extends DrupalWebTestCase {
     drupal_add_css(drupal_get_path('module', 'simpletest') . '/simpletest.css');
     // A few system CSS files, ordered in a strange way.
     $system_path = drupal_get_path('module', 'system');
-    drupal_add_css($system_path . '/system.menus.css', array('weight' => CSS_SYSTEM));
-    drupal_add_css($system_path . '/system.base.css', array('weight' => CSS_SYSTEM - 10));
-    drupal_add_css($system_path . '/system.theme.css', array('weight' => CSS_SYSTEM));
+    drupal_add_css($system_path . '/system.menus.css', array('group' => CSS_SYSTEM));
+    drupal_add_css($system_path . '/system.base.css', array('group' => CSS_SYSTEM, 'weight' => -10));
+    drupal_add_css($system_path . '/system.theme.css', array('group' => CSS_SYSTEM));
 
     $expected = array(
       $system_path . '/system.base.css',
@@ -1242,11 +1244,19 @@ class JavaScriptTestCase extends DrupalWebTestCase {
   }
 
   /**
+   * Test adding a JavaScript file with a different group.
+   */
+  function testDifferentGroup() {
+    $javascript = drupal_add_js('misc/collapse.js', array('group' => JS_THEME));
+    $this->assertEqual($javascript['misc/collapse.js']['group'], JS_THEME, t('Adding a JavaScript file with a different group caches the given group.'));
+  }
+
+  /**
    * Test adding a JavaScript file with a different weight.
    */
   function testDifferentWeight() {
-    $javascript = drupal_add_js('misc/collapse.js', array('weight' => JS_THEME));
-    $this->assertEqual($javascript['misc/collapse.js']['weight'], JS_THEME, t('Adding a JavaScript file with a different weight caches the given weight.'));
+    $javascript = drupal_add_js('misc/collapse.js', array('weight' => 2));
+    $this->assertEqual($javascript['misc/collapse.js']['weight'], 2, t('Adding a JavaScript file with a different weight caches the given weight.'));
   }
 
   /**
@@ -1295,7 +1305,10 @@ class JavaScriptTestCase extends DrupalWebTestCase {
    * Test rendering the JavaScript with a file's weight above jQuery's.
    */
   function testRenderDifferentWeight() {
-    drupal_add_js('misc/collapse.js', array('weight' => JS_LIBRARY - 21));
+    // JavaScript files are sorted first by group, then by the 'every_page'
+    // flag, then by weight (see drupal_sort_css_js()), so to test the effect of
+    // weight, we need the other two options to be the same.
+    drupal_add_js('misc/collapse.js', array('group' => JS_LIBRARY, 'every_page' => TRUE, 'weight' => -21));
     $javascript = drupal_get_js();
     $this->assertTrue(strpos($javascript, 'misc/collapse.js') < strpos($javascript, 'misc/jquery.js'), t('Rendering a JavaScript file above jQuery.'));
   }
@@ -1308,7 +1321,7 @@ class JavaScriptTestCase extends DrupalWebTestCase {
   function testAlter() {
     // Add both tableselect.js and simpletest.js, with a larger weight on SimpleTest.
     drupal_add_js('misc/tableselect.js');
-    drupal_add_js(drupal_get_path('module', 'simpletest') . '/simpletest.js', array('weight' => JS_THEME));
+    drupal_add_js(drupal_get_path('module', 'simpletest') . '/simpletest.js', array('weight' => 9999));
 
     // Render the JavaScript, testing if simpletest.js was altered to be before
     // tableselect.js. See simpletest_js_alter() to see where this alteration

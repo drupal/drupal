@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1232 2010/10/04 17:46:00 dries Exp $
+// $Id: common.inc,v 1.1233 2010/10/05 19:59:10 dries Exp $
 
 /**
  * @file
@@ -56,33 +56,33 @@ define('SAVED_UPDATED', 2);
 define('SAVED_DELETED', 3);
 
 /**
- * The default weight of system CSS files added to the page.
+ * The default group for system CSS files added to the page.
  */
 define('CSS_SYSTEM', -100);
 
 /**
- * The default weight of CSS files added to the page.
+ * The default group for module CSS files added to the page.
  */
 define('CSS_DEFAULT', 0);
 
 /**
- * The default weight of theme CSS files added to the page.
+ * The default group for theme CSS files added to the page.
  */
 define('CSS_THEME', 100);
 
 /**
- * The weight of JavaScript libraries, settings or jQuery plugins being
- * added to the page.
+ * The default group for JavaScript libraries, settings or jQuery plugins added
+ * to the page.
  */
 define('JS_LIBRARY', -100);
 
 /**
- * The default weight of JavaScript being added to the page.
+ * The default group for module JavaScript code added to the page.
  */
 define('JS_DEFAULT', 0);
 
 /**
- * The weight of theme JavaScript code being added to the page.
+ * The default group for theme JavaScript code added to the page.
  */
 define('JS_THEME', 100);
 
@@ -2734,19 +2734,50 @@ function drupal_add_html_head_link($attributes, $header = FALSE) {
  *     'modules/node/node.css' is 'node.css'. If the external library "node.js"
  *     ships with a 'node.css', then a different, unique basename would be
  *     'node.js.css'.
- *   - 'weight': The weight of the stylesheet specifies the order in which the
- *     CSS will appear when presented on the page. Available constants are:
+ *   - 'group': A number identifying the group in which to add the stylesheet.
+ *     Available constants are:
  *     - CSS_SYSTEM: Any system-layer CSS.
  *     - CSS_DEFAULT: Any module-layer CSS.
  *     - CSS_THEME: Any theme-layer CSS.
- *     If you need to embed a CSS file before any other module's stylesheets,
- *     for example, you would use CSS_DEFAULT - 1. Note that inline CSS is
- *     simply appended to the end of the specified scope (region), so they
- *     always come last.
+ *     The group number serves as a weight: the markup for loading a stylesheet
+ *     within a lower weight group is output to the page before the markup for
+ *     loading a stylesheet within a higher weight group, so CSS within higher
+ *     weight groups take precendence over CSS within lower weight groups.
+ *   - 'every_page': For optimal front-end performance when aggregation is
+ *     enabled, this should be set to TRUE if the stylesheet is present on every
+ *     page of the website for users for whom it is present at all. This
+ *     defaults to FALSE. It is set to TRUE for stylesheets added via module and
+ *     theme .info files. Modules that add stylesheets within hook_init()
+ *     implementations, or from other code that ensures that the stylesheet is
+ *     added to all website pages, should also set this flag to TRUE. All
+ *     stylesheets within the same group that have the 'every_page' flag set to
+ *     TRUE and do not have 'preprocess' set to FALSE are aggregated together
+ *     into a single aggregate file, and that aggregate file can be reused
+ *     across a user's entire site visit, leading to faster navigation between
+ *     pages. However, stylesheets that are only needed on pages less frequently
+ *     visited, can be added by code that only runs for those particular pages,
+ *     and that code should not set the 'every_page' flag. This minimizes the
+ *     size of the aggregate file that the user needs to download when first
+ *     visiting the website. Stylesheets without the 'every_page' flag are
+ *     aggregated into a separate aggregate file. This other aggregate file is
+ *     likely to change from page to page, and each new aggregate file needs to
+ *     be downloaded when first encountered, so it should be kept relatively
+ *     small by ensuring that most commonly needed stylesheets are added to
+ *     every page.
+ *   - 'weight': The weight of the stylesheet specifies the order in which the
+ *     CSS will appear relative to other stylesheets with the same group and
+ *     'every_page' flag. The exact ordering of stylesheets is as follows:
+ *     - First by group.
+ *     - Then by the 'every_page' flag, with TRUE coming before FALSE.
+ *     - Then by weight.
+ *     - Then by the order in which the CSS was added. For example, all else
+ *       being the same, a stylesheet added by a call to drupal_add_css() that
+ *       happened later in the page request gets added to the page after one for
+ *       which drupal_add_css() happened earlier in the page request.
  *   - 'media': The media type for the stylesheet, e.g., all, print, screen.
  *     Defaults to 'all'.
  *   - 'preprocess': If TRUE and CSS aggregation/compression is enabled, the
- *     styles will be aggregated and compressed. Defaults to FALSE.
+ *     styles will be aggregated and compressed. Defaults to TRUE.
  *   - 'browsers': An array containing information specifying which browsers
  *     should load the CSS item. See drupal_pre_render_conditional_comments()
  *     for details.
@@ -2772,9 +2803,11 @@ function drupal_add_css($data = NULL, $options = NULL) {
   if (isset($data)) {
     $options += array(
       'type' => 'file',
-      'weight' => CSS_DEFAULT,
+      'group' => CSS_DEFAULT,
+      'weight' => 0,
+      'every_page' => FALSE,
       'media' => 'all',
-      'preprocess' => FALSE,
+      'preprocess' => TRUE,
       'data' => $data,
       'browsers' => array(),
     );
@@ -2782,6 +2815,11 @@ function drupal_add_css($data = NULL, $options = NULL) {
       'IE' => TRUE,
       '!IE' => TRUE,
     );
+
+    // Files with a query string cannot be preprocessed.
+    if ($options['type'] === 'file' && $options['preprocess'] && strpos($options['data'], '?') !== FALSE) {
+      $options['preprocess'] = FALSE;
+    }
 
     // Always add a tiny value to the weight, to conserve the insertion order.
     $options['weight'] += count($css) / 1000;
@@ -2839,8 +2877,8 @@ function drupal_get_css($css = NULL, $skip_alter = FALSE) {
     drupal_alter('css', $css);
   }
 
-  // Sort CSS items according to their weights.
-  uasort($css, 'drupal_sort_weight');
+  // Sort CSS items, so that they appear in the correct order.
+  uasort($css, 'drupal_sort_css_js');
 
   // Remove the overridden CSS files. Later CSS files override former ones.
   $previous_item = array();
@@ -2868,6 +2906,46 @@ function drupal_get_css($css = NULL, $skip_alter = FALSE) {
   $styles['#attached']['js'][] = array('type' => 'setting', 'data' => $setting);
 
   return drupal_render($styles);
+}
+
+/**
+ * Function used by uasort to sort the array structures returned by drupal_add_css() and drupal_add_js().
+ *
+ * This sort order helps optimize front-end performance while providing modules
+ * and themes with the necessary control for ordering the CSS and JavaScript
+ * appearing on a page.
+ */
+function drupal_sort_css_js($a, $b) {
+  // First order by group, so that, for example, all items in the CSS_SYSTEM
+  // group appear before items in the CSS_DEFAULT_GROUP, which appear before
+  // all items in the CSS_THEME group. Modules may create additional groups by
+  // defining their own constants.
+  if ($a['group'] < $b['group']) {
+    return -1;
+  }
+  elseif ($a['group'] > $b['group']) {
+    return 1;
+  }
+  // Within a group, order all infrequently needed, page-specific files after
+  // common files needed throughout the website. Separating this way allows for
+  // the aggregate file generated for all of the common files to be reused
+  // across a site visit without being cut by a page using a less common file.
+  elseif ($a['every_page'] && !$b['every_page']) {
+    return -1;
+  }
+  elseif (!$a['every_page'] && $b['every_page']) {
+    return 1;
+  }
+  // Finally, order by weight.
+  elseif ($a['weight'] < $b['weight']) {
+    return -1;
+  }
+  elseif ($a['weight'] > $b['weight']) {
+    return 1;
+  }
+  else {
+    return 0;
+  }
 }
 
 /**
@@ -2933,7 +3011,10 @@ function drupal_group_css($css) {
     switch ($item['type']) {
       case 'file':
         // Group file items if their 'preprocess' flag is TRUE.
-        $group_keys = $item['preprocess'] ? array($item['type'], $item['media'], $item['browsers']) : FALSE;
+        // Help ensure maximum reuse of aggregate files by only grouping
+        // together items that share the same 'group' value and 'every_page'
+        // flag. See drupal_add_css() for details about that.
+        $group_keys = $item['preprocess'] ? array($item['type'], $item['group'], $item['every_page'], $item['media'], $item['browsers']) : FALSE;
         break;
       case 'inline':
         // Always group inline items.
@@ -3683,27 +3764,63 @@ function drupal_region_class($region) {
  *   - scope: The location in which you want to place the script. Possible
  *     values are 'header' or 'footer'. If your theme implements different
  *     regions, you can also use these. Defaults to 'header'.
- *   - weight: A number defining the order in which the JavaScript is added to
- *     the page. In some cases, the order in which the JavaScript is presented
- *     on the page is very important. jQuery, for example, must be added to
- *     the page before any jQuery code is run, so jquery.js uses a weight of
- *     JS_LIBRARY - 20, jquery.once.js (a library drupal.js depends on) uses
- *     a weight of JS_LIBRARY - 19, drupal.js uses a weight of JS_LIBRARY - 1,
- *     and all following scripts depending on jQuery and Drupal behaviors are
- *     simply added using the default weight of JS_DEFAULT. Available constants
- *     are:
+ *   - 'group': A number identifying the group in which to add the JavaScript.
+ *     Available constants are:
  *     - JS_LIBRARY: Any libraries, settings, or jQuery plugins.
  *     - JS_DEFAULT: Any module-layer JavaScript.
  *     - JS_THEME: Any theme-layer JavaScript.
- *     If you need to invoke a JavaScript file before any other module's
- *     JavaScript, for example, you would use JS_DEFAULT - 1.
+ *     The group number serves as a weight: JavaScript within a lower weight
+ *     group is presented on the page before JavaScript within a higher weight
+ *     group.
+ *  - 'every_page': For optimal front-end performance when aggregation is
+ *     enabled, this should be set to TRUE if the JavaScript is present on every
+ *     page of the website for users for whom it is present at all. This
+ *     defaults to FALSE. It is set to TRUE for JavaScript files that are added
+ *     via module and theme .info files. Modules that add JavaScript within
+ *     hook_init() implementations, or from other code that ensures that the
+ *     JavaScript is added to all website pages, should also set this flag to
+ *     TRUE. All JavaScript files within the same group and that have the
+ *     'every_page' flag set to TRUE and do not have 'preprocess' set to FALSE
+ *     are aggregated together into a single aggregate file, and that aggregate
+ *     file can be reused across a user's entire site visit, leading to faster
+ *     navigation between pages. However, JavaScript that is only needed on
+ *     pages less frequently visited, can be added by code that only runs for
+ *     those particular pages, and that code should not set the 'every_page'
+ *     flag. This minimizes the size of the aggregate file that the user needs
+ *     to download when first visiting the website. JavaScript without the
+ *     'every_page' flag is aggregated into a separate aggregate file. This
+ *     other aggregate file is likely to change from page to page, and each new
+ *     aggregate file needs to be downloaded when first encountered, so it
+ *     should be kept relatively small by ensuring that most commonly needed
+ *     JavaScript is added to every page.
+ *   - weight: A number defining the order in which the JavaScript is added to
+ *     the page relative to other JavaScript with the same 'scope', 'group',
+ *     and 'every_page' value. In some cases, the order in which the JavaScript
+ *     is presented on the page is very important. jQuery, for example, must be
+ *     added to the page before any jQuery code is run, so jquery.js uses the
+ *     JS_LIBRARY group and a weight of -20, jquery.once.js (a library drupal.js
+ *     depends on) uses the JS_LIBRARY group and a weight of -19, drupal.js uses
+ *     the JS_LIBRARY group and a weight of -1, other libraries use the
+ *     JS_LIBRARY group and a weight of 0 or higher, and all other scripts use
+ *     one of the other group constants. The exact ordering of JavaScript is as
+ *     follows:
+ *     - First by scope, with 'header' first, 'footer' last, and any other
+ *       scopes provided by a custom theme coming in between, as determined by
+ *       the theme.
+ *     - Then by group.
+ *     - Then by the 'every_page' flag, with TRUE coming before FALSE.
+ *     - Then by weight.
+ *     - Then by the order in which the JavaScript was added. For example, all
+ *       else being the same, JavaScript added by a call to drupal_add_js() that
+ *       happened later in the page request gets added to the page after one for
+ *       which drupal_add_js() happened earlier in the page request.
  *   - defer: If set to TRUE, the defer attribute is set on the &lt;script&gt;
  *     tag.  Defaults to FALSE.
  *   - cache: If set to FALSE, the JavaScript file is loaded anew on every page
  *     call; in other words, it is not cached. Used only when 'type' references
  *     a JavaScript file. Defaults to TRUE.
  *   - preprocess: If TRUE and JavaScript aggregation is enabled, the script
- *     file will be aggregated. Defaults to FALSE.
+ *     file will be aggregated. Defaults to TRUE.
  *
  * @return
  *   The current array of JavaScript files, settings, and in-line code,
@@ -3744,21 +3861,25 @@ function drupal_add_js($data = NULL, $options = NULL) {
           ),
           'type' => 'setting',
           'scope' => 'header',
-          'weight' => JS_LIBRARY,
+          'group' => JS_LIBRARY,
+          'every_page' => TRUE,
+          'weight' => 0,
         ),
         'misc/drupal.js' => array(
           'data' => 'misc/drupal.js',
           'type' => 'file',
           'scope' => 'header',
-          'weight' => JS_LIBRARY - 1,
+          'group' => JS_LIBRARY,
+          'every_page' => TRUE,
+          'weight' => -1,
+          'preprocess' => TRUE,
           'cache' => TRUE,
           'defer' => FALSE,
-          'preprocess' => TRUE,
         ),
       );
       // Register all required libraries.
-      drupal_add_library('system', 'jquery');
-      drupal_add_library('system', 'once');
+      drupal_add_library('system', 'jquery', TRUE);
+      drupal_add_library('system', 'once', TRUE);
     }
 
     switch ($options['type']) {
@@ -3792,11 +3913,13 @@ function drupal_add_js($data = NULL, $options = NULL) {
 function drupal_js_defaults($data = NULL) {
   return array(
     'type' => 'file',
-    'weight' => JS_DEFAULT,
+    'group' => JS_DEFAULT,
+    'every_page' => FALSE,
+    'weight' => 0,
     'scope' => 'header',
     'cache' => TRUE,
     'defer' => FALSE,
-    'preprocess' => FALSE,
+    'preprocess' => TRUE,
     'version' => NULL,
     'data' => $data,
   );
@@ -3880,8 +4003,8 @@ function drupal_get_js($scope = 'header', $javascript = NULL, $skip_alter = FALS
   // third-party code might require the use of a different query string.
   $js_version_string = variable_get('drupal_js_version_query_string', 'v=');
 
-  // Sort the JavaScript by weight so that it appears in the correct order.
-  uasort($items, 'drupal_sort_weight');
+  // Sort the JavaScript so that it appears in the correct order.
+  uasort($items, 'drupal_sort_css_js');
 
   // Provide the page with information about the individual JavaScript files
   // used, information not otherwise available when aggregation is enabled.
@@ -3942,8 +4065,13 @@ function drupal_get_js($scope = 'header', $javascript = NULL, $skip_alter = FALS
         }
         else {
           // By increasing the index for each aggregated file, we maintain
-          // the relative ordering of JS by weight.
-          $key = 'aggregate' . $index;
+          // the relative ordering of JS by weight. We also set the key such
+          // that groups are split by items sharing the same 'group' value and
+          // 'every_page' flag. While this potentially results in more aggregate
+          // files, it helps make each one more reusable across a site visit,
+          // leading to better front-end performance of a website as a whole.
+          // See drupal_add_js() for details.
+          $key = 'aggregate_' . $item['group'] . '_' . $item['every_page'] . '_' . $index;
           $processed[$key] = '';
           $files[$key][$item['data']] = $item;
         }
@@ -4007,9 +4135,9 @@ function drupal_get_js($scope = 'header', $javascript = NULL, $skip_alter = FALS
  *
  * @param $elements
  *   The structured array describing the data being rendered.
- * @param $weight
- *   The default weight of JavaScript and CSS being added. This is only applied
- *   to the stylesheets and JavaScript items that don't have an explicit weight
+ * @param $group
+ *   The default group of JavaScript and CSS being added. This is only applied
+ *   to the stylesheets and JavaScript items that don't have an explicit group
  *   assigned to them.
  * @param $dependency_check
  *   When TRUE, will exit if a given library's dependencies are missing. When
@@ -4025,7 +4153,7 @@ function drupal_get_js($scope = 'header', $javascript = NULL, $skip_alter = FALS
  * @see drupal_add_css()
  * @see drupal_render()
  */
-function drupal_process_attached($elements, $weight = JS_DEFAULT, $dependency_check = FALSE) {
+function drupal_process_attached($elements, $group = JS_DEFAULT, $dependency_check = FALSE, $every_page = NULL) {
   // Add defaults to the special attached structures that should be processed differently.
   $elements['#attached'] += array(
     'library' => array(),
@@ -4036,7 +4164,7 @@ function drupal_process_attached($elements, $weight = JS_DEFAULT, $dependency_ch
   // Add the libraries first.
   $success = TRUE;
   foreach ($elements['#attached']['library'] as $library) {
-    if (drupal_add_library($library[0], $library[1]) === FALSE) {
+    if (drupal_add_library($library[0], $library[1], $every_page) === FALSE) {
       $success = FALSE;
       // Exit if the dependency is missing.
       if ($dependency_check) {
@@ -4063,9 +4191,13 @@ function drupal_process_attached($elements, $weight = JS_DEFAULT, $dependency_ch
         $data = $options['data'];
         unset($options['data']);
       }
-      // Apply the default weight if the weight isn't explicitly given.
-      if (!isset($options['weight'])) {
-        $options['weight'] = $weight;
+      // Apply the default group if it isn't explicitly given.
+      if (!isset($options['group'])) {
+        $options['group'] = $group;
+      }
+      // Set the every_page flag if one was passed.
+      if (isset($every_page)) {
+        $options['every_page'] = $every_page;
       }
       call_user_func('drupal_add_' . $type, $data, $options);
     }
@@ -4212,7 +4344,7 @@ function drupal_process_attached($elements, $weight = JS_DEFAULT, $dependency_ch
  * @see form_example_states_form()
  */
 function drupal_process_states(&$elements) {
-  $elements['#attached']['js']['misc/states.js'] = array('weight' => JS_LIBRARY + 1);
+  $elements['#attached']['js']['misc/states.js'] = array('group' => JS_LIBRARY, 'weight' => 1);
   $elements['#attached']['js'][] = array(
     'type' => 'setting',
     'data' => array('states' => array('#' . $elements['#id'] => $elements['#states'])),
@@ -4241,7 +4373,7 @@ function drupal_process_states(&$elements) {
  * @see hook_library()
  * @see hook_library_alter()
  */
-function drupal_add_library($module, $name) {
+function drupal_add_library($module, $name, $every_page = NULL) {
   $added = &drupal_static(__FUNCTION__, array());
 
   // Only process the library if it exists and it was not added already.
@@ -4253,7 +4385,7 @@ function drupal_add_library($module, $name) {
         'js' => $library['js'],
         'css' => $library['css'],
       );
-      $added[$module][$name] = drupal_process_attached($elements, JS_LIBRARY, TRUE);
+      $added[$module][$name] = drupal_process_attached($elements, JS_LIBRARY, TRUE, $every_page);
     }
     else {
       // Requested library does not exist.
@@ -4434,8 +4566,8 @@ function drupal_add_tabledrag($table_id, $action, $relationship, $group, $subgro
     // Add the table drag JavaScript to the page before the module JavaScript
     // to ensure that table drag behaviors are registered before any module
     // uses it.
-    drupal_add_js('misc/jquery.cookie.js', array('weight' => JS_DEFAULT - 2));
-    drupal_add_js('misc/tabledrag.js', array('weight' => JS_DEFAULT - 1));
+    drupal_add_js('misc/jquery.cookie.js', array('weight' => -2));
+    drupal_add_js('misc/tabledrag.js', array('weight' => -1));
     $js_added = TRUE;
   }
 
