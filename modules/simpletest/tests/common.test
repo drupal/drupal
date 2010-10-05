@@ -1,5 +1,5 @@
 <?php
-// $Id: common.test,v 1.127 2010/09/19 18:10:41 dries Exp $
+// $Id: common.test,v 1.128 2010/10/05 15:17:14 webchick Exp $
 
 /**
  * @file
@@ -1889,14 +1889,34 @@ class DrupalErrorCollectionUnitTest extends DrupalWebTestCase {
     }
   }
 
+  /**
+   * Error handler that collects errors in an array.
+   *
+   * This test class is trying to verify that simpletest correctly sees errors
+   * and warnings. However, it can't generate errors and warnings that
+   * propagate up to the testing framework itself, or these tests would always
+   * fail. So, this special copy of error() doesn't propagate the errors up
+   * the class hierarchy. It just stuffs them into a protected collectedErrors
+   * array for various assertions to inspect.
+   */
   protected function error($message = '', $group = 'Other', array $caller = NULL) {
-    // This function overiddes DrupalWebTestCase::error(). We collect an error...
-    $this->collectedErrors[] = array(
-      'message' => $message,
-      'group' => $group,
-      'caller' => $caller
-    );
-    // ... and ignore it.
+    // Due to a WTF elsewhere, simpletest treats debug() and verbose()
+    // messages as if they were an 'error'. But, we don't want to collect
+    // those here. This function just wants to collect the real errors (PHP
+    // notices, PHP fatal errors, etc.), and let all the 'errors' from the
+    // 'User notice' group bubble up to the parent classes to be handled (and
+    // eventually displayed) as normal.
+    if ($group == 'User notice') {
+      parent::error($message, $group, $caller);
+    }
+    // Everything else should be collected but not propagated.
+    else {
+      $this->collectedErrors[] = array(
+        'message' => $message,
+        'group' => $group,
+        'caller' => $caller
+      );
+    }
   }
 
   /**
