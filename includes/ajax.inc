@@ -565,7 +565,7 @@ function ajax_process_form($element, &$form_state) {
   // Attach JavaScript settings to the element.
   if (isset($element['#ajax']['event'])) {
     $element['#attached']['library'][] = array('system', 'form');
-    $element['#attached']['js']['misc/ajax.js'] = array('weight' => JS_LIBRARY + 2);
+    $element['#attached']['js']['misc/ajax.js'] = array('group' => JS_LIBRARY, 'weight' => 2);
 
     $settings = $element['#ajax'];
 

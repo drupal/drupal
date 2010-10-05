@@ -247,7 +247,7 @@ function theme_color_scheme_form($variables) {
   
   $preview_js_path = isset($info['preview_js']) ? $path . $info['preview_js'] : drupal_get_path('module', 'color') . '/' . 'preview.js';
   // Add the JS at a weight below color.js.
-  drupal_add_js($preview_js_path, array('weight' => JS_DEFAULT - 1));
+  drupal_add_js($preview_js_path, array('weight' => -1));
     
   $output  = '';
   $output .= '<div class="color-form clearfix">';

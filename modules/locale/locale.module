@@ -880,7 +880,7 @@ function locale_library_alter(&$libraries, $module) {
   global $language;
   if ($module == 'system' && isset($libraries['system']['ui.datepicker'])) {
     $datepicker = drupal_get_path('module', 'locale') . '/locale.datepicker.js';
-    $libraries['system']['ui.datepicker']['js'][$datepicker] = array('weight' => JS_THEME);
+    $libraries['system']['ui.datepicker']['js'][$datepicker] = array('group' => JS_THEME);
     $libraries['system']['ui.datepicker']['js'][] = array(
       'data' => array(
         'jqueryuidatepicker' => array(
