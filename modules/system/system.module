@@ -1720,7 +1720,7 @@ function system_filetransfer_backends() {
   $backends = array();
 
   // This is the default, will be available on most systems.
-  if (function_exists('ftp_connect') || ini_get('allow_url_fopen')) {
+  if (function_exists('ftp_connect')) {
     $backends['ftp'] = array(
       'title' => t('FTP'),
       'class' => 'FileTransferFTP',
