@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.test,v 1.79 2010/09/01 20:08:17 dries Exp $
+// $Id: locale.test,v 1.80 2010/10/05 17:57:09 webchick Exp $
 
 /**
  * @file
@@ -1170,10 +1170,9 @@ class LocaleLanguageSwitchingFunctionalTest extends DrupalWebTestCase {
     );
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
 
-    // Set language negotiation.
-    drupal_load('module', 'locale');
-    include_once DRUPAL_ROOT . '/includes/language.inc';
-    language_negotiation_set($language_type, locale_language_negotiation_info());
+    // Enable URL language detection and selection.
+    $edit = array('language[enabled][locale-url]' => '1');
+    $this->drupalPost('admin/config/regional/language/configure', $edit, t('Save settings'));
 
     // Assert that the language switching block is displayed on the frontpage.
     $this->drupalGet('');
@@ -1451,6 +1450,12 @@ class LocalePathFunctionalTest extends DrupalWebTestCase {
       'direction' => '0',
     );
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add custom language'));
+
+    // Check that the "xx" front page is not available when path prefixes are
+    // not enabled yet.
+    $this->drupalPost('admin/config/regional/language/configure', array(), t('Save settings'));
+    $this->drupalGet($prefix);
+    $this->assertResponse(404, t('The "xx" front page is not available yet.'));
 
     // Enable URL language detection and selection.
     $edit = array('language[enabled][locale-url]' => 1);
@@ -1834,6 +1839,10 @@ class LocaleMultilingualFieldsFunctionalTest extends DrupalWebTestCase {
     // Add a new language.
     require_once DRUPAL_ROOT . '/includes/locale.inc';
     locale_add_language('it', 'Italian', 'Italiano', LANGUAGE_LTR, '', '', TRUE, FALSE);
+
+    // Enable URL language detection and selection.
+    $edit = array('language[enabled][locale-url]' => '1');
+    $this->drupalPost('admin/config/regional/language/configure', $edit, t('Save settings'));
 
     // Set "Basic page" content type to use multilingual support.
     $edit = array(
