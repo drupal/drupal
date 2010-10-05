@@ -564,7 +564,7 @@ class UpdateTestUploadCase extends UpdateTestHelper {
   }
 
   public function setUp() {
-    parent::setUp('update');
+    parent::setUp('update', 'update_test');
     variable_set('allow_authorize_operations', TRUE);
     $admin_user = $this->drupalCreateUser(array('administer software updates', 'administer site configuration'));
     $this->drupalLogin($admin_user);
@@ -593,5 +593,15 @@ class UpdateTestUploadCase extends UpdateTestHelper {
     $this->drupalPost('admin/modules/install', $edit, t('Install'));
     $this->assertText(t('@module_name is already installed.', array('@module_name' => 'AAA Update test')), 'Existing module was extracted and not reinstalled.');
   }
-}
 
+  /**
+   * Ensure that archiver extensions are properly merged in the UI.
+   */
+  function testFileNameExtensionMerging() {
+    $this->drupalGet('admin/modules/install');    
+    // Make sure the bogus extension supported by update_test.module is there.
+    $this->assertPattern('/archive extensions are supported:.*update-test-extension/', t("Found 'update-test-extension' extension"));
+    // Make sure it didn't clobber the first option from core.
+    $this->assertPattern('/archive extensions are supported:.*zip/', t("Found 'zip' extension"));
+  }
+}
