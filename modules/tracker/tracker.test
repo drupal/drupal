@@ -17,7 +17,7 @@ class TrackerTest extends DrupalWebTestCase {
   function setUp() {
     parent::setUp('comment', 'tracker');
 
-    $permissions = array('access comments', 'create page content', 'post comments', 'post comments without approval');
+    $permissions = array('access comments', 'create page content', 'post comments', 'skip comment approval');
     $this->user = $this->drupalCreateUser($permissions);
     $this->other_user = $this->drupalCreateUser($permissions);
 

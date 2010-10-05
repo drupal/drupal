@@ -411,7 +411,7 @@ class RdfCommentAttributesTestCase extends CommentHelperCase {
     user_role_change_permissions(DRUPAL_ANONYMOUS_RID, array(
       'access comments' => TRUE,
       'post comments' => TRUE,
-      'post comments without approval' => TRUE,
+      'skip comment approval' => TRUE,
     ));
     // Allows anonymous to leave their contact information.
     $this->setCommentAnonymous(COMMENT_ANONYMOUS_MAY_CONTACT);
@@ -569,7 +569,7 @@ class RdfTrackerAttributesTestCase extends DrupalWebTestCase {
       'create article content' => TRUE,
       'access comments' => TRUE,
       'post comments' => TRUE,
-      'post comments without approval' => TRUE,
+      'skip comment approval' => TRUE,
     ));
   }
 
