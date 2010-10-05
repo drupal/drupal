@@ -1,5 +1,5 @@
 <?php
-// $Id: select.inc,v 1.51 2010/09/25 01:41:26 dries Exp $
+// $Id: select.inc,v 1.52 2010/10/05 01:42:24 dries Exp $
 
 /**
  * @ingroup database
@@ -1399,7 +1399,7 @@ class SelectQuery extends Query implements SelectQueryInterface {
       $count->distinct = FALSE;
     }
 
-    $query = db_select($count);
+    $query = $this->connection->select($count);
     $query->addExpression('COUNT(*)');
 
     return $query;
