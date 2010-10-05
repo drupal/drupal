@@ -1,4 +1,4 @@
-/* $Id: ie6.css,v 1.3 2010/10/02 01:42:53 webchick Exp $ */
+/* $Id: ie6.css,v 1.4 2010/10/05 01:48:11 dries Exp $ */
 
 #content {
   overflow: hidden;
@@ -6,7 +6,8 @@
 .form-item-search-block-form {
   width: 50%;
 }
-.tabs ul.primary {
+.tabs ul.primary,
+.region-header .block-menu li a {
   zoom: 1;
 }
 #block-search-form .form-item-search-block-form input {

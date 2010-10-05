@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.21 2010/10/02 23:56:29 dries Exp $ */
+/* $Id: style.css,v 1.22 2010/10/05 01:48:11 dries Exp $ */
 
 /* ---------- Overall Specifications ---------- */
 
@@ -255,24 +255,18 @@ ul.tips {
   position: static;
   width: auto;
 }
-#header,
-#preview #preview-header {
-  color: #fff;
-}
-#header a,
-#preview #preview-header a {
-  color: #fff;
-}
 #logo,
 #preview #preview-header #preview-logo {
   float: left; /* LTR */
-  padding: 15px 30px 15px 0; /* LTR */
+  padding: 15px 30px 15px 10px; /* LTR */
+}
+#name-and-slogan {
+  float: left; /* LTR */
 }
 #name-and-slogan,
 #preview #preview-header #preview-name-and-slogan {
   padding-top: 34px;
   margin-bottom: 30px;
-  margin-left: 15px;
 }
 #site-name,
 #preview #preview-header #preview-site-name {
@@ -294,102 +288,146 @@ h1#site-name,
   word-spacing: 0.1em;
   font-style: italic;
 }
-/* Menus when in the header region. */
-#header .block-menu {
-  height: 1.1em;
-  margin: 10px 0;
+/* Region header blocks. */
+.region-header .block {
+  font-size: 0.857em;
   float: left; /* LTR */
-  width: 75%;
+  margin: 0 10px;
+  padding: 0;
 }
-#header .block ul, /* Any menu block in the header region. */
-#header .block li {
-  list-style: none;
+.region-header .block .content {
   margin: 0;
   padding: 0;
 }
-#header .block-menu li a {
-  float: left; /* LTR */
-  padding: 0 12px;
-  display: block;
-  border-right: 1px solid #555; /* LTR */
+.region-header .block ul {
+  margin: 0;
+  padding: 0;
 }
-#header .block-menu li.first a {
+.region-header .block li {
+  list-style: none;
+  list-style-image: none;
+  padding: 0;
+}
+.region-header .form-text {
+  background: #fefefe;
+  background: rgba(255, 255, 255, 0.7);
+  border-color: #ccc;
+  border-color: rgba(255, 255, 255, 0.3);
+  margin-right: 2px; /* LTR */
+  width: 120px;
+}
+.region-header .form-text:hover,
+.region-header .form-text:focus,
+.region-header .form-text:active {
+  background: #fff;
+  background: rgba(255, 255, 255, 0.8);
+}
+.region-header .form-required {
+  color: #eee;
+  color: rgba(255, 255, 255, 0.7);
+}
+/* Region header block menus. */
+.region-header .block-menu {
+  border: 1px solid;
+  border-color: #eee;
+  border-color: rgba(255, 255, 255, 0.2);
+  padding: 0;
+  width: 208px;
+}
+.region-header .block-menu li a {
+  display: block;
+  border-bottom: 1px solid;
+  border-bottom-color: #eee;
+  border-bottom-color: rgba(255, 255, 255, 0.2);
+  padding: 3px 7px;
+}
+.region-header .block-menu li a:hover,
+.region-header .block-menu li a:focus,
+.region-header .block-menu li a:active {
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.15)
+}
+.region-header .block-menu li.last a {
+  border-bottom: 0;
+}
+/* User Login block in the header region */
+.region-header #block-user-login {
+  width: auto;
+}
+.region-header #block-user-login .content {
+  margin-top: 2px;
+}
+.region-header #block-user-login .form-item {
+  float: left; /* LTR */
+  margin: 0;
+  padding: 0;
+}
+.region-header #block-user-login div.item-list,
+.region-header #block-user-login div.description {
+  font-size: 0.916em;
+  margin: 0;
+}
+.region-header #block-user-login div.item-list {
+  clear: both;
+}
+.region-header #block-user-login div.description {
+  display: inline;
+}
+.region-header #block-user-login .item-list ul {
+  padding: 0;
+  line-height: 1;
+}
+.region-header #block-user-login .item-list li {
+  list-style: none;
+  float: left; /* LTR */
+  padding: 3px 0 1px;
+}
+.region-header #block-user-login .item-list li.last {
+  padding-left: 0.5em; /* LTR */
+}
+.region-header #block-user-login ul.openid-links li.last {
   padding-left: 0; /* LTR */
 }
-#header .block-menu li.last a {
-  padding-right: 0; /* LTR */
-  border-right: none; /* LTR */
+.region-header #user-login-form li.openid-link a,
+.region-header #user-login li.openid-link a {
+  padding-left: 20px; /* LTR */
 }
-#header #block-search-form { /* Search block in the Header region. */
-  float: right; /* LTR */
-  width: 24%;
-  margin: 8px 0;
+.region-header #block-user-login .form-actions {
+  margin: 4px 0 0;
+  padding: 0;
+  clear: both
 }
-#header #block-user-login { /* Login block in the Header region. */
-  display: block;
-  position: absolute;
-  top: 0;
-  right: 2%; /* LTR */
-  background: #464748;
-  color: #fff;
-  float: right; /* LTR */
-  padding: 4px 10px 5px;
-  text-transform: uppercase;
-  font-size: 0.857em;
+.region-header #block-user-login input.form-submit {
+  border: 1px solid;
+  border-color: #ccc;
+  border-color: rgba(255, 255, 255, 0.5);
+  background: #eee;
+  background: rgba(255, 255, 255, 0.7);
+  margin: 4px 0;
+  padding: 3px 8px;
 }
-#header #block-user-login a {
-  color: #fff;
-  font-size: 0.929em;
+.region-header #block-user-login input.form-submit:hover,
+.region-header #block-user-login input.form-submit:focus {
+  background: #fff;
+  background: rgba(255, 255, 255, 0.9);
 }
-#header #block-user-login .form-item label {
+/* Search block in region header. */
+.region-header #block-search-form {
+  width: 208px;
+}
+.region-header #block-search-form .form-text {
+  width: 154px;
+}
+/* Language switcher block in region header. */
+#block-locale-language ul li {
   display: inline;
-  font-weight: normal;
-}
-#header #block-user-login .form-item {
-  display: inline;
-  font-weight: normal;
-}
-#header #block-user-login .form-text {
-  margin-right: 5px; /* LTR */
-}
-#header #block-user-login .form-item label .form-required {
-  display: none;
-}
-#header #block-user-login div.item-list,
-#header #block-user-login .item-list ul {
-  display: inline;
-}
-#header #block-user-login .item-list ul li {
-  display: inline;
-  margin: 0 5px 0 15px; /* LTR */
-}
-#header #block-user-login div.item-list {
-  margin-top: 5px;
-  font-style: italic;
-  font-size: 1.3em;
-  text-transform: none;
-}
-#header #block-user-login .userbox {
-  margin-left: 10px; /* LTR */
-}
-#header #block-user-login input.form-submit {
-  color: #fff;
-  background: #929599;
-  border: 1px solid #73767c;
-  padding: 1px;
-  text-transform: uppercase;
-  margin-top: 1px;
-  position: relative;
-  display: inline;
-}
-#header #block-user-login #user-login-form div.item-list { /* Hide create new account + email replacement password links. */
-  display: none;
+  padding: 0 0.5em;
 }
 
 /* --------------- Main Menu ------------ */
 
 #main-menu {
-  padding: 0 15px;
+  padding: 0 15px 3px;
   clear: both;
 }
 #main-menu-links a {
@@ -399,7 +437,7 @@ h1#site-name,
 #main-menu-links {
   font-size: 0.929em;
   padding: 2px 0;
-  padding: 0.6em 0.6em 3px;
+  padding: 0;
 }
 #main-menu-links a {
   color: #333;
@@ -424,16 +462,18 @@ h1#site-name,
   background: #b3b3b3;
   background: rgba(255, 255, 255, 1);
 }
-#main-menu-links li.active-trail a {
+#main-menu-links li a.active {
   border-bottom: none;
+}
+.featured #main-menu-links li a.active,
+.featured #main-menu-links li.active-trail a {
+  background: #f0f0f0;
+  background: rgba(240, 240, 240, 1.0);
 }
 #main-menu-links li {
   display: inline;
   list-style-type: none;
   padding: 0.6em 0 0.4em;
-}
-#main-menu-links li.first {
-  padding-left: 2px; /* LTR */
 }
 
 /* --------------- Secondary Menu ------------ */
@@ -441,7 +481,7 @@ h1#site-name,
 #secondary-menu-links {
   float: right; /* LTR */
   font-size: 0.929em;
-  margin: 10px;
+  margin: 10px 10px 0;
 }
 #secondary-menu-links a:hover,
 #secondary-menu-links a:focus {

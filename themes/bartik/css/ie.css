@@ -1,4 +1,4 @@
-/* $Id: ie.css,v 1.5 2010/10/02 23:56:29 dries Exp $ */
+/* $Id: ie.css,v 1.6 2010/10/05 01:48:11 dries Exp $ */
 
 .block {
   zoom: 1;
@@ -20,6 +20,9 @@ fieldset legend {
 }
 .meta {
   margin-bottom: 10px;
+}
+.region-header .form-required {
+  color: #eee;
 }
 #search-block-form input.form-submit:hover,
 #search-block-form input.form-submit:focus,

@@ -1,4 +1,4 @@
-/* $Id: layout-rtl.css,v 1.3 2010/09/09 15:27:08 webchick Exp $ */
+/* $Id: layout-rtl.css,v 1.4 2010/10/05 01:48:11 dries Exp $ */
 
 /* ---------- Basic Layout RTL Styles ----------- */
 
@@ -12,6 +12,9 @@
 .region-footer-thirdcolumn,
 .region-footer-fourthcolumn {
   float: right;
+}
+.region-header {
+  float: left;
 }
 #secondary-menu {
   left: 0;
