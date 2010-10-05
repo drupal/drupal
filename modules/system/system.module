@@ -2277,7 +2277,6 @@ function _system_rebuild_module_data() {
   // Set defaults for module info.
   $defaults = array(
     'dependencies' => array(),
-    'dependents' => array(),
     'description' => '',
     'package' => 'Other',
     'version' => NULL,

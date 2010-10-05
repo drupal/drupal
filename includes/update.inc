@@ -740,7 +740,6 @@ function update_fix_d7_install_profile() {
     // Merge in defaults.
     $info = $info + array(
       'dependencies' => array(),
-      'dependents' => array(),
       'description' => '',
       'package' => 'Other',
       'version' => NULL,

@@ -857,8 +857,6 @@ function system_modules($form, $form_state = array()) {
       }
     }
 
-    // Mark dependents disabled so the user cannot remove required modules.
-    $dependents = array();
     // If this module is required by other modules, list those, and then make it
     // impossible to disable this one.
     foreach ($module->required_by as $required_by => $v) {
