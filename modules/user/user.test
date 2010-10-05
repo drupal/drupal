@@ -1,5 +1,5 @@
 <?php
-// $Id: user.test,v 1.101 2010/08/27 11:28:45 webchick Exp $
+// $Id: user.test,v 1.102 2010/10/05 06:17:29 webchick Exp $
 
 class UserRegistrationTestCase extends DrupalWebTestCase {
   public static function getInfo() {
@@ -571,7 +571,7 @@ class UserCancelTestCase extends DrupalWebTestCase {
     variable_set('user_cancel_method', 'user_cancel_delete');
 
     // Create a user.
-    $account = $this->drupalCreateUser(array('cancel account', 'post comments', 'post comments without approval'));
+    $account = $this->drupalCreateUser(array('cancel account', 'post comments', 'skip comment approval'));
     $this->drupalLogin($account);
     // Load real user object.
     $account = user_load($account->uid, TRUE);

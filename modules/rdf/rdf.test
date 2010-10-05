@@ -1,5 +1,5 @@
 <?php
-// $Id: rdf.test,v 1.27 2010/09/09 20:22:00 dries Exp $
+// $Id: rdf.test,v 1.28 2010/10/05 06:17:28 webchick Exp $
 
 /**
  * @file
@@ -411,7 +411,7 @@ class RdfCommentAttributesTestCase extends CommentHelperCase {
     user_role_change_permissions(DRUPAL_ANONYMOUS_RID, array(
       'access comments' => TRUE,
       'post comments' => TRUE,
-      'post comments without approval' => TRUE,
+      'skip comment approval' => TRUE,
     ));
     // Allows anonymous to leave their contact information.
     $this->setCommentAnonymous(COMMENT_ANONYMOUS_MAY_CONTACT);
@@ -569,7 +569,7 @@ class RdfTrackerAttributesTestCase extends DrupalWebTestCase {
       'create article content' => TRUE,
       'access comments' => TRUE,
       'post comments' => TRUE,
-      'post comments without approval' => TRUE,
+      'skip comment approval' => TRUE,
     ));
   }
 

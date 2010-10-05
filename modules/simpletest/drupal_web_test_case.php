@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.239 2010/10/01 18:37:22 webchick Exp $
+// $Id: drupal_web_test_case.php,v 1.240 2010/10/05 06:17:29 webchick Exp $
 
 /**
  * Global variable that holds information about the tests being run.
@@ -991,7 +991,7 @@ class DrupalWebTestCase extends DrupalTestCase {
    *   A fully loaded user object with pass_raw property, or FALSE if account
    *   creation fails.
    */
-  protected function drupalCreateUser($permissions = array('access comments', 'access content', 'post comments', 'post comments without approval')) {
+  protected function drupalCreateUser($permissions = array('access comments', 'access content', 'post comments', 'skip comment approval')) {
     // Create a role with the given permission set.
     if (!($rid = $this->drupalCreateRole($permissions))) {
       return FALSE;

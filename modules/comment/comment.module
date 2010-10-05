@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.903 2010/10/04 14:54:10 webchick Exp $
+// $Id: comment.module,v 1.904 2010/10/05 06:17:28 webchick Exp $
 
 /**
  * @file
@@ -82,8 +82,8 @@ function comment_help($path, $arg) {
       $output .= '<dl>';
       $output .= '<dt>' . t('Default and custom settings') . '</dt>';
       $output .= '<dd>' . t("Each <a href='@content-type'>content type</a> can have its own default comment settings configured as: <em>Open</em> to allow new comments, <em>Hidden</em> to hide existing comments and prevent new comments, or <em>Closed</em> to view existing comments, but prevent new comments. These defaults will apply to all new content created (changes to the settings on existing content must be done manually). Other comment settings can also be customized per content type, and can be overridden for any given item of content. When a comment has no replies, it remains editable by its author, as long as the author has a user account and is logged in.", array('@content-type' => url('admin/structure/types'))) . '</dd>';
-      $output .= '<dt>' . t('Comment moderation') . '</dt>';
-      $output .= '<dd>' . t("Comments from users who do not have the <em>Post comments without approval</em> permission are placed in the <a href='@comment-approval'>Unapproved comments</a> queue, until a user who has permission to <em>Administer comments</em> moderates them as either published or deleted. Published comments can be bulk managed on the <a href='@admin-comment'>Published comments</a> administration page.", array('@comment-approval' => url('admin/content/comment/approval'), '@admin-comment' => url('admin/content/comment'))) . '</dd>';
+      $output .= '<dt>' . t('Comment approval') . '</dt>';
+      $output .= '<dd>' . t("Comments from users who have the <em>Skip comment approval</em> permission are published immediately. All other comments are placed in the <a href='@comment-approval'>Unapproved comments</a> queue, until a user who has permission to <em>Administer comments</em> publishes or deletes them. Published comments can be bulk managed on the <a href='@admin-comment'>Published comments</a> administration page.", array('@comment-approval' => url('admin/content/comment/approval'), '@admin-comment' => url('admin/content/comment'))) . '</dd>';
       $output .= '</dl>';
       return $output;
   }
@@ -386,10 +386,10 @@ function comment_permission() {
       'title' => t('View comments'),
     ),
     'post comments' => array(
-      'title' => t('Post comments with approval'),
+      'title' => t('Post comments'),
     ),
-    'post comments without approval' => array(
-      'title' => t('Post comments without approval'),
+    'skip comment approval' => array(
+      'title' => t('Skip comment approval'),
     ),
     'edit own comments' => array(
       'title' => t('Edit own comments'),
@@ -1421,7 +1421,7 @@ function comment_save($comment) {
       'mail' => '',
       'homepage' => '',
       'name' => '',
-      'status' => user_access('post comments without approval') ? COMMENT_PUBLISHED : COMMENT_NOT_PUBLISHED,
+      'status' => user_access('skip comment approval') ? COMMENT_PUBLISHED : COMMENT_NOT_PUBLISHED,
     );
     foreach ($defaults as $key => $default) {
       if (!isset($comment->$key)) {
@@ -1867,7 +1867,7 @@ function comment_form($form, &$form_state, $comment) {
     else {
       $author = ($comment->name ? $comment->name : variable_get('anonymous', t('Anonymous')));
     }
-    $status = (user_access('post comments without approval') ? COMMENT_PUBLISHED : COMMENT_NOT_PUBLISHED);
+    $status = (user_access('skip comment approval') ? COMMENT_PUBLISHED : COMMENT_NOT_PUBLISHED);
     $date = '';
   }
 
@@ -2282,7 +2282,7 @@ function theme_comment_post_forbidden($variables) {
     if (!isset($authenticated_post_comments)) {
       // We only output a link if we are certain that users will get permission
       // to post comments by logging in.
-      $authenticated_post_comments = array_key_exists(DRUPAL_AUTHENTICATED_RID, user_roles(TRUE, 'post comments') + user_roles(TRUE, 'post comments without approval'));
+      $authenticated_post_comments = array_key_exists(DRUPAL_AUTHENTICATED_RID, user_roles(TRUE, 'post comments') + user_roles(TRUE, 'skip comment approval'));
     }
 
     if ($authenticated_post_comments) {

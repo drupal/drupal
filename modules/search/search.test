@@ -1,5 +1,5 @@
 <?php
-// $Id: search.test,v 1.75 2010/09/24 00:37:44 dries Exp $
+// $Id: search.test,v 1.76 2010/10/05 06:17:29 webchick Exp $
 
 // The search index can contain different types of content. Typically the type is 'node'.
 // Here we test with _test_ and _test2_ as the type.
@@ -363,7 +363,7 @@ class SearchRankingTestCase extends DrupalWebTestCase {
 
   function testRankings() {
     // Login with sufficient privileges.
-    $this->drupalLogin($this->drupalCreateUser(array('post comments without approval', 'create page content')));
+    $this->drupalLogin($this->drupalCreateUser(array('skip comment approval', 'create page content')));
 
     // Build a list of the rankings to test.
     $node_ranks = array('sticky', 'promote', 'relevance', 'recent', 'comments', 'views');
@@ -518,7 +518,7 @@ class SearchRankingTestCase extends DrupalWebTestCase {
    */
   function testDoubleRankings() {
     // Login with sufficient privileges.
-    $this->drupalLogin($this->drupalCreateUser(array('post comments without approval', 'create page content')));
+    $this->drupalLogin($this->drupalCreateUser(array('skip comment approval', 'create page content')));
 
     // See testRankings() above - build a node that will rank high for sticky.
     $settings = array(
@@ -695,7 +695,7 @@ class SearchCommentTestCase extends DrupalWebTestCase {
       filter_permission_name($full_html_format),
       'administer permissions',
       'create page content',
-      'post comments without approval',
+      'skip comment approval',
       'access comments',
     );
     $this->admin_user = $this->drupalCreateUser($permissions);
@@ -949,7 +949,7 @@ class SearchCommentCountToggleTestCase extends DrupalWebTestCase {
     parent::setUp('search');
 
     // Create searching user.
-    $this->searching_user = $this->drupalCreateUser(array('search content', 'access content', 'access comments', 'post comments without approval'));
+    $this->searching_user = $this->drupalCreateUser(array('search content', 'access content', 'access comments', 'skip comment approval'));
 
     // Create initial nodes.
     $node_params = array('type' => 'article', 'body' => array(LANGUAGE_NONE => array(array('value' => 'SearchCommentToggleTestCase'))));
@@ -1082,7 +1082,7 @@ class SearchKeywordsConditions extends DrupalWebTestCase {
   function setUp() {
     parent::setUp('search', 'search_extra_type');
     // Create searching user.
-    $this->searching_user = $this->drupalCreateUser(array('search content', 'access content', 'access comments', 'post comments without approval'));
+    $this->searching_user = $this->drupalCreateUser(array('search content', 'access content', 'access comments', 'skip comment approval'));
     // Login with sufficient privileges.
     $this->drupalLogin($this->searching_user);
     // Test with all search modules enabled.

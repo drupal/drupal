@@ -1,5 +1,5 @@
 <?php
-// $Id: user.install,v 1.66 2010/09/28 03:30:37 webchick Exp $
+// $Id: user.install,v 1.67 2010/10/05 06:17:29 webchick Exp $
 
 /**
  * @file
@@ -821,6 +821,20 @@ function user_update_7013(&$sandbox) {
 
   // Indicate our current progress to the batch update system.
   $sandbox['#finished'] = empty($sandbox['max']) || ($sandbox['progress'] / $sandbox['max']);
+}
+
+/**
+ * Rename the 'post comments without approval' permission.
+ *
+ * In Drupal 7, this permission has been renamed to 'skip comment approval'.
+ */
+function user_update_7014() {
+  db_update('role_permission')
+        ->fields(array('permission' => 'skip comment approval'))
+        ->condition('permission', 'post comments without approval')
+        ->execute();
+
+  return t("Renamed the 'post comments without approval' permission to 'skip comment approval'.");
 }
 
 /**

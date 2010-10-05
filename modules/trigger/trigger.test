@@ -1,5 +1,5 @@
 <?php
-// $Id: trigger.test,v 1.36 2010/08/05 23:53:39 webchick Exp $
+// $Id: trigger.test,v 1.37 2010/10/05 06:17:29 webchick Exp $
 
 /**
  * Provides common helper methods.
@@ -495,7 +495,7 @@ class TriggerUserActionTestCase extends TriggerActionTestCase {
    * Tests user action assignment and execution.
    */
   function testUserActionAssignmentExecution() {
-    $test_user = $this->drupalCreateUser(array('administer actions', 'create article content', 'access comments', 'administer comments', 'post comments without approval', 'edit own comments'));
+    $test_user = $this->drupalCreateUser(array('administer actions', 'create article content', 'access comments', 'administer comments', 'skip comment approval', 'edit own comments'));
     $this->drupalLogin($test_user);
 
     $triggers = array('comment_presave', 'comment_insert', 'comment_update');
@@ -517,7 +517,7 @@ class TriggerUserActionTestCase extends TriggerActionTestCase {
     // the comment is updated.
     user_save($account, array('status' => TRUE));
 
-    $test_user = $this->drupalCreateUser(array('administer actions', 'create article content', 'access comments', 'administer comments', 'post comments without approval', 'edit own comments'));
+    $test_user = $this->drupalCreateUser(array('administer actions', 'create article content', 'access comments', 'administer comments', 'skip comment approval', 'edit own comments'));
     $this->drupalLogin($test_user);
 
     // Our original comment will have been comment 1.
@@ -526,7 +526,7 @@ class TriggerUserActionTestCase extends TriggerActionTestCase {
     $this->assertTrue($comment_author_account->status == 0, t('Comment author account (uid=@uid) is blocked after update to comment', array('@uid' => $comment_author_uid)));
 
     // Verify that the comment was updated.
-    $test_user = $this->drupalCreateUser(array('administer actions', 'create article content', 'access comments', 'administer comments', 'post comments without approval', 'edit own comments'));
+    $test_user = $this->drupalCreateUser(array('administer actions', 'create article content', 'access comments', 'administer comments', 'skip comment approval', 'edit own comments'));
     $this->drupalLogin($test_user);
 
     $this->drupalGet("node/$node->nid");
@@ -627,7 +627,7 @@ class TriggerOtherTestCase extends TriggerWebTestCase {
     variable_set($action_id, FALSE);
 
     // Create a node and add a comment to it.
-    $web_user = $this->drupalCreateUser(array('create article content', 'access content', 'post comments without approval', 'post comments'));
+    $web_user = $this->drupalCreateUser(array('create article content', 'access content', 'skip comment approval', 'post comments'));
     $this->drupalLogin($web_user);
     $node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1));
     $edit = array();

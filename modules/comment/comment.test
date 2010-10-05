@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.test,v 1.89 2010/08/30 00:22:03 webchick Exp $
+// $Id: comment.test,v 1.90 2010/10/05 06:17:28 webchick Exp $
 
 class CommentHelperCase extends DrupalWebTestCase {
   protected $admin_user;
@@ -440,7 +440,7 @@ class CommentPreviewTest extends CommentHelperCase {
    */
   function testCommentEditPreview() {
     $langcode = LANGUAGE_NONE;
-    $web_user = $this->drupalCreateUser(array('access comments', 'post comments', 'post comments without approval'));
+    $web_user = $this->drupalCreateUser(array('access comments', 'post comments', 'skip comment approval'));
     $this->drupalLogin($this->admin_user);
     $this->setCommentPreview(DRUPAL_OPTIONAL);
     $this->setCommentForm(TRUE);
@@ -495,7 +495,7 @@ class CommentAnonymous extends CommentHelperCase {
     user_role_change_permissions(DRUPAL_ANONYMOUS_RID, array(
       'access comments' => TRUE,
       'post comments' => TRUE,
-      'post comments without approval' => TRUE,
+      'skip comment approval' => TRUE,
     ));
     $this->setCommentAnonymous('0'); // Ensure that doesn't require contact info.
     $this->drupalLogout();
@@ -579,7 +579,7 @@ class CommentAnonymous extends CommentHelperCase {
     user_role_change_permissions(DRUPAL_ANONYMOUS_RID, array(
       'access comments' => FALSE,
       'post comments' => FALSE,
-      'post comments without approval' => FALSE,
+      'skip comment approval' => FALSE,
     ));
 
     // Attempt to view comments while disallowed.
@@ -598,7 +598,7 @@ class CommentAnonymous extends CommentHelperCase {
     user_role_change_permissions(DRUPAL_ANONYMOUS_RID, array(
       'access comments' => TRUE,
       'post comments' => FALSE,
-      'post comments without approval' => FALSE,
+      'skip comment approval' => FALSE,
     ));
     $this->drupalGet('node/' . $this->node->nid);
     $this->assertPattern('/<div ([^>]*?)id="comments"([^>]*?)>/', t('Comments were displayed.'));
@@ -890,7 +890,7 @@ class CommentApprovalTest extends CommentHelperCase {
     user_role_change_permissions(DRUPAL_ANONYMOUS_RID, array(
       'access comments' => TRUE,
       'post comments' => TRUE,
-      'post comments without approval' => FALSE,
+      'skip comment approval' => FALSE,
     ));
     $this->drupalLogin($this->admin_user);
     $this->setCommentAnonymous('0'); // Ensure that doesn't require contact info.
@@ -959,7 +959,7 @@ class CommentApprovalTest extends CommentHelperCase {
     user_role_change_permissions(DRUPAL_ANONYMOUS_RID, array(
       'access comments' => TRUE,
       'post comments' => TRUE,
-      'post comments without approval' => FALSE,
+      'skip comment approval' => FALSE,
     ));
     $this->drupalLogin($this->admin_user);
     $this->setCommentAnonymous('0'); // Ensure that doesn't require contact info.

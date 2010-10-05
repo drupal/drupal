@@ -1,5 +1,5 @@
 <?php
-// $Id: tracker.test,v 1.20 2010/08/05 23:53:39 webchick Exp $
+// $Id: tracker.test,v 1.21 2010/10/05 06:17:29 webchick Exp $
 
 class TrackerTest extends DrupalWebTestCase {
   protected $user;
@@ -17,7 +17,7 @@ class TrackerTest extends DrupalWebTestCase {
   function setUp() {
     parent::setUp('comment', 'tracker');
 
-    $permissions = array('access comments', 'create page content', 'post comments', 'post comments without approval');
+    $permissions = array('access comments', 'create page content', 'post comments', 'skip comment approval');
     $this->user = $this->drupalCreateUser($permissions);
     $this->other_user = $this->drupalCreateUser($permissions);
 
