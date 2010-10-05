@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.313 2010/10/03 00:47:51 dries Exp $
+// $Id: system.admin.inc,v 1.314 2010/10/05 00:22:24 webchick Exp $
 
 /**
  * @file
@@ -1186,7 +1186,7 @@ function system_modules_submit($form, &$form_state) {
   unset($form_state['storage']);
 
   // Reverse the 'enable' list, to order dependencies before dependents.
-  rsort($actions['enable']);
+  krsort($actions['enable']);
 
   // Installs, enables, and disables modules.
   module_enable($actions['enable'], FALSE);

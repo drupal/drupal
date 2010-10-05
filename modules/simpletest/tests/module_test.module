@@ -1,5 +1,5 @@
 <?php
-// $Id: module_test.module,v 1.7 2010/10/01 18:37:22 webchick Exp $
+// $Id: module_test.module,v 1.8 2010/10/05 00:22:24 webchick Exp $
 
 /**
  * Implements hook_permission().
@@ -49,4 +49,11 @@ function module_test_hook_info() {
     'group' => 'file',
   );
   return $hooks;
+}
+
+/**
+ * Implements hook_modules_enabled().
+ */
+function module_test_modules_enabled($modules) {
+  variable_set('test_module_enable_order', $modules);
 }
