@@ -1,5 +1,5 @@
 <?php
-// $Id: node.api.php,v 1.76 2010/10/03 01:15:33 dries Exp $
+// $Id: node.api.php,v 1.77 2010/10/05 02:21:26 dries Exp $
 
 /**
  * @file
@@ -748,8 +748,8 @@ function hook_node_submit($node, $form, &$form_state) {
  * the RSS item generated for this node.
  * For details on how this is used, see node_feed().
  *
- * @see taxonomy_node_view()
- * @see upload_node_view()
+ * @see blog_node_view()
+ * @see forum_node_view()
  * @see comment_node_view()
  *
  * @param $node
