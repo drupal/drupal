@@ -1,7 +1,6 @@
 <?php
-// $Id: page.tpl.php,v 1.13 2010/09/16 19:47:45 dries Exp $
+// $Id: page.tpl.php,v 1.14 2010/10/05 00:29:14 dries Exp $
 ?>
-  <div class="element-invisible"><a id="main-content"></a></div>
   <div id="branding" class="clearfix">
     <?php print $breadcrumb; ?>
     <?php print render($title_prefix); ?>
@@ -22,6 +21,7 @@
     <?php endif; ?>
 
     <div id="content" class="clearfix">
+      <div class="element-invisible"><a id="main-content"></a></div>
       <?php if ($messages): ?>
         <div id="console" class="clearfix"><?php print $messages; ?></div>
       <?php endif; ?>
