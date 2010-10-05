@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.install,v 1.67 2010/09/25 18:10:53 dries Exp $
+// $Id: locale.install,v 1.68 2010/10/05 20:04:18 webchick Exp $
 
 /**
  * @file
@@ -46,6 +46,7 @@ function locale_update_7000() {
  */
 function locale_update_7001() {
   require_once DRUPAL_ROOT . '/includes/language.inc';
+  require_once DRUPAL_ROOT . '/includes/locale.inc';
   require_once DRUPAL_ROOT . '/modules/locale/locale.module';
 
   switch (variable_get('language_negotiation', 0)) {
@@ -62,9 +63,12 @@ function locale_update_7001() {
       // Drupal 7 path prefixes are always shown if not empty. Hence we need to
       // ensure that the default language has an empty prefix to avoid breaking
       // the site URLs with a prefix that previously was missing.
+      $default = language_default();
+      $default->prefix = '';
+      variable_set('language_default', $default);
       db_update('languages')
-        ->fields(array('prefix' => ''))
-        ->condition('language', language_default()->language)
+        ->fields(array('prefix' => $default->prefix))
+        ->condition('language', $default->language)
         ->execute();
       break;
 
@@ -89,13 +93,6 @@ function locale_update_7001() {
   $type = LANGUAGE_TYPE_INTERFACE;
   $provider_weights = array_flip(array_keys(locale_language_negotiation_info()));
   variable_set("locale_language_providers_weight_$type", $provider_weights);
-
-  // Update language switcher block delta.
-  db_update('block')
-    ->fields(array('delta' => $type))
-    ->condition('module', 'locale')
-    ->condition('delta', 0)
-    ->execute();
 
   // Unset the old language negotiation system variable.
   variable_del('language_negotiation');

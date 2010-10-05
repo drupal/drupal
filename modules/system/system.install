@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.513 2010/10/05 00:31:19 dries Exp $
+// $Id: system.install,v 1.514 2010/10/05 20:04:19 webchick Exp $
 
 /**
  * @file
@@ -1813,7 +1813,7 @@ function system_update_7004(&$sandbox) {
       '0' => 'active',
       '1' => 'new',
     ),
-    'locale' => array('0' => 'language-switcher'),
+    'locale' => array('0' => LANGUAGE_TYPE_INTERFACE),
     'node' => array('0' => 'syndicate'),
     'poll' => array('0' => 'recent'),
     'profile' => array('0' => 'author-information'),
