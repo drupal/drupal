@@ -50,3 +50,10 @@ function module_test_hook_info() {
   );
   return $hooks;
 }
+
+/**
+ * Implements hook_modules_enabled().
+ */
+function module_test_modules_enabled($modules) {
+  variable_set('test_module_enable_order', $modules);
+}

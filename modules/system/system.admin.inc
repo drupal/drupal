@@ -1186,7 +1186,7 @@ function system_modules_submit($form, &$form_state) {
   unset($form_state['storage']);
 
   // Reverse the 'enable' list, to order dependencies before dependents.
-  rsort($actions['enable']);
+  krsort($actions['enable']);
 
   // Installs, enables, and disables modules.
   module_enable($actions['enable'], FALSE);
