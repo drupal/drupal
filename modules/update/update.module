@@ -222,9 +222,10 @@ function update_menu() {
     );
   }
   // Customize the titles of the action links depending on where they appear.
-  $items['admin/reports/updates/install']['title'] = 'Install new module or theme';
-  $items['admin/modules/install']['title'] = 'Install new module';
-  $items['admin/appearance/install']['title'] = 'Install new theme';
+  // We use += array() to let the translation extractor find these menu titles.
+  $items['admin/reports/updates/install'] += array('title' => 'Install new module or theme');
+  $items['admin/modules/install'] += array('title' => 'Install new module');
+  $items['admin/appearance/install'] += array('title' => 'Install new theme');
 
   // Menu callback used for the confirmation page after all the releases
   // have been downloaded, asking you to backup before installing updates.
