@@ -1,5 +1,5 @@
 <?php
-// $Id: ftp.inc,v 1.13 2010/08/17 22:05:22 dries Exp $
+// $Id: ftp.inc,v 1.14 2010/10/05 02:08:53 dries Exp $
 
 /**
  * Base class for FTP implementations.
@@ -21,8 +21,7 @@ abstract class FileTransferFTP extends FileTransfer {
    * @param array $settings
    * @return FileTransferFTP
    *   The appropriate FileTransferFTP subclass based on the available
-   *   options.  If the FTP PHP extension is available, use it.  Otherwise, we
-   *   try to use the FTP file stream support.
+   *   options. If the FTP PHP extension is available, use it.
    */
   static function factory($jail, $settings) {
     $settings['hostname'] = empty($settings['hostname']) ? 'localhost' : $settings['hostname'];
@@ -31,78 +30,11 @@ abstract class FileTransferFTP extends FileTransfer {
     if (function_exists('ftp_connect')) {
       $class = 'FileTransferFTPExtension';
     }
-    elseif (ini_get('allow_url_fopen')) {
-      $class = 'FileTransferFTPWrapper';
-    }
     else {
       throw new FileTransferException('No FTP backend available.');
     }
 
     return new $class($jail, $settings['username'], $settings['password'], $settings['hostname'], $settings['port']);
-  }
-}
-
-/**
- * Connection class using the FTP URL wrapper.
- */
-class FileTransferFTPWrapper extends FileTransferFTP {
-
-  function connect() {
-    $this->connection = 'ftp://' . urlencode($this->username) . ':' . urlencode($this->password) . '@' . $this->hostname . ':' . $this->port . '/';
-    if (!is_dir($this->connection)) {
-      throw new FileTransferException('FTP Connection failed.');
-    }
-  }
-
-  function createDirectoryJailed($directory) {
-    if (!@drupal_mkdir($this->connection . $directory)) {
-      $exception = new FileTransferException('Cannot create directory @directory.', NULL, array('@directory' => $directory));
-      throw $exception;
-    }
-  }
-
-  function removeDirectoryJailed($directory) {
-    if (is_dir($this->connection . $directory)) {
-      $dh = opendir($this->connection . $directory);
-      while (($resource = readdir($dh)) !== FALSE) {
-        if ($resource == '.' || $resource == '..') {
-          continue;
-        }
-        $full_path = $directory . DIRECTORY_SEPARATOR . $resource;
-        if (is_file($this->connection . $full_path)) {
-          $this->removeFile($full_path);
-        }
-        elseif (is_dir($this->connection . $full_path)) {
-          $this->removeDirectory($full_path . '/');
-        }
-      }
-      closedir($dh);
-      if (!drupal_rmdir($this->connection . $directory)) {
-        $exception = new FileTransferException('Cannot remove @directory.', NULL, array('@directory' => $directory));
-        throw $exception;
-      }
-    }
-  }
-
-  function copyFileJailed($source, $destination) {
-    if (!@copy($source, $this->connection . '/' . $destination)) {
-      throw new FileTransferException('Cannot copy @source_file to @destination_file.', NULL, array('@source' => $source, '@destination' => $destination));
-    }
-  }
-
-  function removeFileJailed($destination) {
-    if (!@drupal_unlink($this->connection . '/' .$destination)) {
-      throw new FileTransferException('Cannot remove @destination', NULL, array('@destination' => $destination));
-    }
-  }
-
-  function isDirectory($path) {
-    return is_dir($this->connection . '/' . $path);
-  }
-
-  public function isFile($path) {
-    // This is stupid, but is_file and file_exists don't work! always return true.
-    return @fopen($this->connection . '/' . $path,'r');
   }
 }
 
