@@ -6,7 +6,8 @@
 .form-item-search-block-form {
   width: 50%;
 }
-.tabs ul.primary {
+.tabs ul.primary,
+.region-header .block-menu li a {
   zoom: 1;
 }
 #block-search-form .form-item-search-block-form input {

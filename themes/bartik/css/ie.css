@@ -21,6 +21,9 @@ fieldset legend {
 .meta {
   margin-bottom: 10px;
 }
+.region-header .form-required {
+  color: #eee;
+}
 #search-block-form input.form-submit:hover,
 #search-block-form input.form-submit:focus,
 #search-form input.form-submit:hover,

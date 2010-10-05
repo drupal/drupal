@@ -13,6 +13,9 @@
 .region-footer-fourthcolumn {
   float: right;
 }
+.region-header {
+  float: left;
+}
 #secondary-menu {
   left: 0;
   right: auto;

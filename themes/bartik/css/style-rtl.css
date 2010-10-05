@@ -37,54 +37,31 @@ ul.tips {
 /* ------------------ Header ------------------ */
 
 #logo {
-  float: right;
-  padding: 15px 0 15px 30px;
+  padding: 15px 10px 15px 30px;
 }
-/* Menus when in the header region. */
-#header div.block-menu,
-#header div#block-system-main-menu {
+#logo,
+#name-and-slogan,
+.region-header .block,
+.region-header #block-user-login .form-item,
+.region-header #block-user-login .item-list li {
   float: right;
 }
-#header .block-menu li a,
-#header #block-system-main-menu li a {
-  float: right;
-  border-left: 1px solid #555;
-  border-right: none;
+.region-header .form-text {
+  margin-left: 2px;
+  margin-right: 0;
 }
-#header .block-menu li.first a,
-#header #block-system-main-menu li.first a {
+.region-header #block-user-login .item-list li.last {
+  padding-left: 0;
+  padding-right: 0.5em;
+}
+.region-header #block-user-login ul.openid-links li.last {
   padding-right: 0;
-  padding-left: 12px;
 }
-#header .block-menu li.last a,
-#header #block-system-main-menu li.last a {
+.region-header #user-login-form li.openid-link a,
+.region-header #user-login li.openid-link a {
+  background-position: right -3px;
   padding-left: 0;
-  padding-right: 12px;
-  border-left: none;
-}
-#header #block-search-form {
-  float: left;
-}
-#header #block-user-login {
-  left: 2%;
-  right: auto;
-  float: left;
-}
-#header #block-user-login .form-text {
-  margin-left: 5px;
-}
-#header #block-user-login .item-list ul li {
-  margin: 0 15px 0 5px;
-}
-#header #block-user-login .userbox {
-  margin-right: 10px;
-}
-
-/* --------------- Main Menu ------------ */
-
-#main-menu-links li.first {
-  padding-right: 2px;
-  padding-left: 0;
+  padding-right: 20px;
 }
 
 /* --------------- Secondary Menu ------------ */

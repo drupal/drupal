@@ -103,9 +103,8 @@ function bartik_process_maintenance_page(&$variables) {
  * Override or insert variables into the block template.
  */
 function bartik_preprocess_block(&$variables) {
-  // In the header region, visually hide the title of any menu block or of the
-  // user login block, but leave it accessible.
-  if ($variables['block']->region == 'header' && ($variables['block']->module == 'user' && $variables['block']->delta == 'login' || in_array('block-menu', $variables['classes_array']))) {
+  // In the header region visually hide block titles.
+  if ($variables['block']->region == 'header') {
     $variables['title_attributes_array']['class'][] = 'element-invisible';
   }
 }
