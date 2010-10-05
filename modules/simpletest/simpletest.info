@@ -43,3 +43,4 @@ files[] = tests/upgrade/upgrade.comment.test
 files[] = tests/upgrade/upgrade.node.test
 files[] = tests/upgrade/upgrade.taxonomy.test
 files[] = tests/upgrade/upgrade.upload.test
+files[] = tests/upgrade/upgrade.locale.test
