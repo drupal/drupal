@@ -1399,7 +1399,7 @@ class SelectQuery extends Query implements SelectQueryInterface {
       $count->distinct = FALSE;
     }
 
-    $query = db_select($count);
+    $query = $this->connection->select($count);
     $query->addExpression('COUNT(*)');
 
     return $query;
