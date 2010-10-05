@@ -1,5 +1,5 @@
 <?php
-// $Id: update.inc,v 1.74 2010/10/03 23:33:15 webchick Exp $
+// $Id: update.inc,v 1.75 2010/10/05 00:31:18 dries Exp $
 
 /**
  * @file
@@ -740,7 +740,6 @@ function update_fix_d7_install_profile() {
     // Merge in defaults.
     $info = $info + array(
       'dependencies' => array(),
-      'dependents' => array(),
       'description' => '',
       'package' => 'Other',
       'version' => NULL,

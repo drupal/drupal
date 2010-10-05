@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.972 2010/10/04 18:00:46 dries Exp $
+// $Id: system.module,v 1.973 2010/10/05 00:31:19 dries Exp $
 
 /**
  * @file
@@ -2277,7 +2277,6 @@ function _system_rebuild_module_data() {
   // Set defaults for module info.
   $defaults = array(
     'dependencies' => array(),
-    'dependents' => array(),
     'description' => '',
     'package' => 'Other',
     'version' => NULL,

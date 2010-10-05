@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.512 2010/10/04 21:58:45 webchick Exp $
+// $Id: system.install,v 1.513 2010/10/05 00:31:19 dries Exp $
 
 /**
  * @file
@@ -1566,7 +1566,7 @@ function system_schema() {
         'default' => 0,
       ),
       'info' => array(
-        'description' => "A serialized array containing information from the module's .info file; keys can include name, description, package, version, core, dependencies, dependents, and php.",
+        'description' => "A serialized array containing information from the module's .info file; keys can include name, description, package, version, core, dependencies, and php.",
         'type' => 'blob',
         'not null' => FALSE,
       ),
@@ -2505,7 +2505,7 @@ function system_update_7055() {
   db_change_field('sessions', 'session', 'session', $spec);
 
   $spec = array(
-    'description' => "A serialized array containing information from the module's .info file; keys can include name, description, package, version, core, dependencies, dependents, and php.",
+    'description' => "A serialized array containing information from the module's .info file; keys can include name, description, package, version, core, dependencies, and php.",
     'type' => 'blob',
     'not null' => FALSE,
   );
