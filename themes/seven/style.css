@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.75 2010/10/03 02:46:12 dries Exp $ */
+/* $Id: style.css,v 1.76 2010/10/05 21:03:17 webchick Exp $ */
 
 /**
  * Generic elements.
@@ -31,7 +31,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-weight: bold;
+  font-weight: normal;
   margin: 10px 0;
 }
 h1 {
