@@ -1,5 +1,5 @@
 <?php
-// $Id: file.test,v 1.70 2010/09/28 02:34:42 dries Exp $
+// $Id: file.test,v 1.71 2010/10/05 06:23:18 webchick Exp $
 
 /**
  *  @file
@@ -972,8 +972,19 @@ class FileDirectoryTest extends FileTestCase {
     $path = file_destination($destination, FILE_EXISTS_ERROR);
     $this->assertEqual($path, FALSE, t('An error is returned when filepath destination already exists with FILE_EXISTS_ERROR.'), 'File');
   }
-}
 
+  /**
+   * Ensure that the file_directory_temp() function always returns a value.
+   */
+  function testFileDirectoryTemp() {
+    // Start with an empty variable to ensure we have a clean slate.
+    variable_set('file_temporary_path', '');
+    $tmp_directory = file_directory_temp();
+    $this->assertEqual(empty($tmp_directory), FALSE, t('file_directory_temp() returned a non-empty value.'));
+    $setting = variable_get('file_temporary_path', '');
+    $this->assertEqual($setting, $tmp_directory, t("The 'file_temporary_path' variable has the same value that file_directory_temp() returned."));
+  }
+}
 
 /**
  * Tests the file_scan_directory() function.

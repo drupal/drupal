@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.974 2010/10/05 02:08:53 dries Exp $
+// $Id: system.module,v 1.975 2010/10/05 06:23:18 webchick Exp $
 
 /**
  * @file
@@ -2069,9 +2069,10 @@ function system_admin_menu_block($item) {
 }
 
 /**
- * Checks the existence of the directory specified in $form_element. This
- * function is called from the system_settings form to check both core file
- * directories (file_public_path, file_private_path, file_temporary_path).
+ * Checks the existence of the directory specified in $form_element.
+ *
+ * This function is called from the system_settings form to check all core
+ * file directories (file_public_path, file_private_path, file_temporary_path).
  *
  * @param $form_element
  *   The form element containing the name of the directory to check.

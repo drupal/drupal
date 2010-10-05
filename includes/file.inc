@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.234 2010/10/01 06:37:39 webchick Exp $
+// $Id: file.inc,v 1.235 2010/10/05 06:23:18 webchick Exp $
 
 /**
  * @file
@@ -2277,9 +2277,9 @@ function drupal_tempnam($directory, $prefix) {
  * Get the path of system-appropriate temporary directory.
  */
 function file_directory_temp() {
-  $temporary_directory = variable_get('file_directory_temp', NULL);
+  $temporary_directory = variable_get('file_temporary_path', NULL);
 
-  if (!isset($temporary_directory)) {
+  if (empty($temporary_directory)) {
     $directories = array();
 
     // Has PHP been set with an upload_tmp_dir?
@@ -2316,7 +2316,7 @@ function file_directory_temp() {
       $temporary_directory = variable_get('file_public_path', conf_path() . '/files') . $path_delimiter . 'tmp';
     }
     // Save the path of the discovered directory.
-    variable_set('file_directory_temp', $temporary_directory);
+    variable_set('file_temporary_path', $temporary_directory);
   }
 
   return $temporary_directory;
