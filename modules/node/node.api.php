@@ -748,8 +748,8 @@ function hook_node_submit($node, $form, &$form_state) {
  * the RSS item generated for this node.
  * For details on how this is used, see node_feed().
  *
- * @see taxonomy_node_view()
- * @see upload_node_view()
+ * @see blog_node_view()
+ * @see forum_node_view()
  * @see comment_node_view()
  *
  * @param $node
