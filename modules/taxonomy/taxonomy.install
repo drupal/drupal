@@ -647,8 +647,11 @@ function taxonomy_update_7005(&$sandbox) {
         // use the previous deltas to calculate the next delta.
         if ($record->vid == $values[2]) {
 
-          // see field_default_validate().
-          if ($field['cardinality'] != FIELD_CARDINALITY_UNLIMITED && ($deltas[$field_name] + 1) >= $field['cardinality']) {
+          // For limited cardinality fields, the delta must not be allowed to
+          // exceed the cardinality during the update. So ensure that the
+          // delta about to be inserted is within this limit.
+          // @see field_default_validate().
+          if ($field['cardinality'] != FIELD_CARDINALITY_UNLIMITED && ($deltas[$field_name] + 1) > $field['cardinality']) {
 
             // For excess values of a single-term vocabulary, switch over to
             // the overflow field.
