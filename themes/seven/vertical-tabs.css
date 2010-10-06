@@ -1,4 +1,4 @@
-/* $Id: vertical-tabs.css,v 1.8 2010/10/03 00:29:01 dries Exp $ */
+/* $Id: vertical-tabs.css,v 1.9 2010/10/06 13:42:18 dries Exp $ */
 
 /**
  * Override of misc/vertical-tabs.css.
@@ -7,6 +7,7 @@ div.vertical-tabs {
   background: #fff url(images/fc.png) repeat-y 0 0;
   border: 1px solid #ccc;
   margin: 10px 0;
+  position: relative;
 }
 div.vertical-tabs fieldset {
   border: 0;
