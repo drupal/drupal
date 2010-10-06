@@ -170,7 +170,7 @@ Drupal.ajax = function (base, element, element_settings) {
           // ajaxSubmit that tells the system which element got clicked to
           // trigger the submit. Without it there would be no 'op' or
           // equivalent.
-          ajax.form.clk = this.element;
+          this.form.clk = this;
         }
 
         ajax.form.ajaxSubmit(ajax.options);
