@@ -295,7 +295,7 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
       array('test_entity_bundle_key', 2),
       array('test_entity_bundle_key', 1),
     ), t('Test sort entity entity_id in descending order.'), TRUE);
-    
+
     // Test entity sort by entity_id, with a field condition.
     $query = new EntityFieldQuery();
     $query
@@ -351,7 +351,7 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
       array('test_entity_bundle_key', 2),
       array('test_entity_bundle_key', 1),
     ), t('Test sort entity entity_id property in descending order.'), TRUE);
-    
+
     // Test property sort by entity id, with a field condition.
     $query = new EntityFieldQuery();
     $query
@@ -394,7 +394,7 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
       array('test_entity_bundle_key', 1),
       array('test_entity_bundle_key', 6),
       array('test_entity_bundle_key', 5),
-    ), t('Test sort entity bundle in ascending order.'), TRUE);
+    ), t('Test sort entity bundle in ascending order, property in descending order.'), TRUE);
 
     $query = new EntityFieldQuery();
     $query
@@ -408,38 +408,67 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
       array('test_entity_bundle_key', 2),
       array('test_entity_bundle_key', 3),
       array('test_entity_bundle_key', 4),
-    ), t('Test sort entity bundle in descending order.'), TRUE);
-    
+    ), t('Test sort entity bundle in descending order, property in ascending order.'), TRUE);
+
     // Test entity sort by bundle, with a field condition.
     $query = new EntityFieldQuery();
     $query
       ->entityCondition('entity_type', 'test_entity_bundle_key')
       ->fieldCondition($this->fields[0], 'value', 0, '>')
       ->entityOrderBy('bundle', 'ASC')
-      ->propertyOrderBy('ftid', 'ASC');
+      ->propertyOrderBy('ftid', 'DESC');
     $this->assertEntityFieldQuery($query, array(
-      array('test_entity_bundle_key', 1),
-      array('test_entity_bundle_key', 2),
-      array('test_entity_bundle_key', 3),
       array('test_entity_bundle_key', 4),
-      array('test_entity_bundle_key', 5),
+      array('test_entity_bundle_key', 3),
+      array('test_entity_bundle_key', 2),
+      array('test_entity_bundle_key', 1),
       array('test_entity_bundle_key', 6),
-    ), t('Test sort entity bundle in ascending order, with a field condition.'), TRUE);
+      array('test_entity_bundle_key', 5),
+    ), t('Test sort entity bundle in ascending order, property in descending order, with a field condition.'), TRUE);
 
     $query = new EntityFieldQuery();
     $query
       ->entityCondition('entity_type', 'test_entity_bundle_key')
       ->fieldCondition($this->fields[0], 'value', 0, '>')
       ->entityOrderBy('bundle', 'DESC')
-      ->propertyOrderBy('ftid', 'DESC');
+      ->propertyOrderBy('ftid', 'ASC');
     $this->assertEntityFieldQuery($query, array(
-      array('test_entity_bundle_key', 6),
       array('test_entity_bundle_key', 5),
+      array('test_entity_bundle_key', 6),
+      array('test_entity_bundle_key', 1),
+      array('test_entity_bundle_key', 2),
+      array('test_entity_bundle_key', 3),
+      array('test_entity_bundle_key', 4),
+    ), t('Test sort entity bundle in descending order, property in ascending order, with a field condition.'), TRUE);
+
+    // Test entity sort by bundle, field.
+    $query = new EntityFieldQuery();
+    $query
+      ->entityCondition('entity_type', 'test_entity_bundle_key')
+      ->entityOrderBy('bundle', 'ASC')
+      ->fieldOrderBy($this->fields[0], 'value', 'DESC');
+    $this->assertEntityFieldQuery($query, array(
       array('test_entity_bundle_key', 4),
       array('test_entity_bundle_key', 3),
       array('test_entity_bundle_key', 2),
       array('test_entity_bundle_key', 1),
-    ), t('Test sort entity bundle in descending order, with a field condition.'), TRUE);
+      array('test_entity_bundle_key', 6),
+      array('test_entity_bundle_key', 5),
+    ), t('Test sort entity bundle in ascending order, field in descending order.'), TRUE);
+
+    $query = new EntityFieldQuery();
+    $query
+      ->entityCondition('entity_type', 'test_entity_bundle_key')
+      ->entityOrderBy('bundle', 'DESC')
+      ->fieldOrderBy($this->fields[0], 'value', 'ASC');
+    $this->assertEntityFieldQuery($query, array(
+      array('test_entity_bundle_key', 5),
+      array('test_entity_bundle_key', 6),
+      array('test_entity_bundle_key', 1),
+      array('test_entity_bundle_key', 2),
+      array('test_entity_bundle_key', 3),
+      array('test_entity_bundle_key', 4),
+    ), t('Test sort entity bundle in descending order, field in ascending order.'), TRUE);
 
     // Test entity sort by revision_id.
     $query = new EntityFieldQuery();
@@ -463,7 +492,7 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
       array('test_entity', 2),
       array('test_entity', 1),
     ), t('Test sort entity revision_id in descending order.'), TRUE);
-    
+
     // Test entity sort by revision_id, with a field condition.
     $query = new EntityFieldQuery();
     $query
