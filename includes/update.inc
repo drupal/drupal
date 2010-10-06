@@ -360,6 +360,7 @@ function update_fix_d7_block_deltas(&$sandbox, $renamed_deltas, $moved_deltas) {
   $result = db_select('users', 'u')
     ->fields('u', array('uid', 'data'))
     ->condition('uid', $sandbox['last_user_processed'], '>')
+    ->orderBy('uid', 'ASC')
     ->where('data IS NOT NULL')
     ->range(0, $limit)
     ->execute();
