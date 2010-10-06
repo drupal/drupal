@@ -1,5 +1,5 @@
 <?php
-// $Id: help.api.php,v 1.10 2010/08/11 01:06:44 dries Exp $
+// $Id: help.api.php,v 1.11 2010/10/06 03:43:01 webchick Exp $
 
 /**
  * @file
@@ -14,30 +14,30 @@
 /**
  * Provide online user help.
  *
- * By implementing hook_help(), a module can make documentation
- * available to the user for the module as a whole, or for specific paths.
- * Help for developers should usually be provided via function
- * header comments in the code, or in special API example files.
+ * By implementing hook_help(), a module can make documentation available to
+ * the user for the module as a whole, or for specific paths.  Help for
+ * developers should usually be provided via function header comments in the
+ * code, or in special API example files.
  *
  * For a detailed usage example, see page_example.module.
  *
  * @param $path
- *   The router menu path, as defined in hook_menu(), for the help that
- *   is being requested; e.g., 'admin/node' or 'user/edit'. If the router path
- *   includes a % wildcard, then this will appear in $path; for example,
- *   node pages would have $path equal to 'node/%' or 'node/%/view'. Your hook
- *   implementation may also be called with special descriptors after a
- *   "#" sign. Some examples:
- *   - admin/help#modulename
- *     The main module help text, displayed on the admin/help/modulename
- *     page and linked to from the admin/help page.
- *   - user/help#modulename
- *     The help for a distributed authorization module (if applicable).
+ *   The router menu path, as defined in hook_menu(), for the help that is
+ *   being requested; e.g., 'admin/people' or 'user/register'.  If the router
+ *   path includes a wildcard, then this will appear in $path as %, even if it
+ *   is a named %autoloader wildcard in the hook_menu() implementation; for
+ *   example, node pages would have $path equal to 'node/%' or 'node/%/view'.
+ *   To provide a help page for a whole module with a listing on admin/help,
+ *   your hook implementation should match a path with a special descriptor
+ *   after a "#" sign:
+ *     'admin/help#modulename'
+ *       The main module help text, displayed on the admin/help/modulename
+ *       page and linked to from the admin/help page.
  * @param $arg
  *   An array that corresponds to the return value of the arg() function, for
  *   modules that want to provide help that is specific to certain values
  *   of wildcards in $path. For example, you could provide help for the path
- *   'user/1' by looking for the path 'user/%' and $arg[1] == '1'. This
+ *   'user/1' by looking for the path 'user/%' and $arg[1] == '1'. This given
  *   array should always be used rather than directly invoking arg(), because
  *   your hook implementation may be called for other purposes besides building
  *   the current page's help. Note that depending on which module is invoking
