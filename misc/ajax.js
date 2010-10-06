@@ -1,4 +1,4 @@
-// $Id: ajax.js,v 1.20 2010/10/04 17:46:01 dries Exp $
+// $Id: ajax.js,v 1.21 2010/10/06 13:58:44 dries Exp $
 (function ($) {
 
 /**
@@ -365,9 +365,27 @@ Drupal.ajax.prototype.commands = {
     var method = response.method || ajax.method;
     var effect = ajax.getEffect(response);
 
-    // Manually insert HTML into the jQuery object, using $() directly crashes
-    // Safari with long string lengths. http://dev.jquery.com/ticket/3178
-    var new_content = $('<div></div>').html(response.data);
+    // We don't know what response.data contains: it might be a string of text
+    // without HTML, so don't rely on jQuery correctly iterpreting
+    // $(response.data) as new HTML rather than a CSS selector. Also, if
+    // response.data contains top-level text nodes, they get lost with either
+    // $(response.data) or $('<div></div>').replaceWith(response.data).
+    var new_content_wrapped = $('<div></div>').html(response.data);
+    var new_content = new_content_wrapped.contents();
+
+    // For legacy reasons, the effects processing code assumes that new_content
+    // consists of a single top-level element. Also, it has not been
+    // sufficiently tested whether attachBehaviors() can be successfully called
+    // with a context object that includes top-level text nodes. However, to
+    // give developers full control of the HTML appearing in the page, and to
+    // enable AJAX content to be inserted in places where DIV elements are not
+    // allowed (e.g., within TABLE, TR, and SPAN parents), we check if the new
+    // content satisfies the requirement of a single top-level element, and
+    // only use the container DIV created above when it doesn't. For more
+    // information, please see http://drupal.org/node/736066.
+    if (new_content.length != 1 || new_content.get(0).nodeType != 1) {
+      new_content = new_content_wrapped;
+    }
 
     // If removing content from the wrapper, detach behaviors first.
     switch (method) {
