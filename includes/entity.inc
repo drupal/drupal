@@ -1,5 +1,5 @@
 <?php
-// $Id: entity.inc,v 1.14 2010/09/15 04:34:26 webchick Exp $
+// $Id: entity.inc,v 1.15 2010/10/06 13:57:47 dries Exp $
 
 /**
  * Interface for entity controller classes.
@@ -446,31 +446,11 @@ class EntityFieldQuery {
   public $propertyConditions = array();
 
   /**
-   * List of order clauses for entity-generic metadata.
+   * List of order clauses.
    *
    * @var array
-   *
-   * @see EntityFieldQuery::entityOrderBy()
    */
-  public $entityOrder = array();
-
-  /**
-   * List of order clauses for fields.
-   *
-   * @var array
-   *
-   * @see EntityFieldQuery::fieldOrderBy()
-   */
-  public $fieldOrder = array();
-
-  /**
-   * List of order clauses for entities.
-   *
-   * @var array
-   *
-   * @see EntityFieldQuery::entityOrderBy()
-   */
-  public $propertyOrder = array();
+  public $order = array();
 
   /**
    * The query range.
@@ -709,7 +689,11 @@ class EntityFieldQuery {
    *   The called object.
    */
   public function entityOrderBy($name, $direction) {
-    $this->entityOrder[$name] = $direction;
+    $this->order[] = array(
+      'type' => 'entity',
+      'specifier' => $name,
+      'direction' => $direction,
+    );
     return $this;
   }
 
@@ -734,12 +718,16 @@ class EntityFieldQuery {
     if (is_scalar($field)) {
       $field = field_info_field($field);
     }
-    // Ensure the same index is used for fieldOrder as for fields.
+    // Save the index used for the new field, for later use in field storage.
     $index = count($this->fields);
     $this->fields[$index] = $field;
-    $this->fieldOrder[$index] = array(
-      'field' => $field,
-      'column' => $column,
+    $this->order[] = array(
+      'type' => 'field',
+      'specifier' => array(
+        'field' => $field,
+        'index' => $index,
+        'column' => $column,
+      ),
       'direction' => $direction,
     );
     return $this;
@@ -764,8 +752,9 @@ class EntityFieldQuery {
    *   The called object.
    */
   public function propertyOrderBy($column, $direction) {
-    $this->propertyOrder[] = array(
-      'column' => $column,
+    $this->order[] = array(
+      'type' => 'property',
+      'specifier' => $column,
       'direction' => $direction,
     );
     return $this;
@@ -919,13 +908,6 @@ class EntityFieldQuery {
     // Execute the query using the correct callback.
     $result = call_user_func($this->queryCallback(), $this);
 
-    // Sanity checks.
-    if (!empty($this->propertyConditions)) {
-      throw new EntityFieldQueryException(t('Property query conditions were not handled in !function.', array('!function' => $function)));
-    }
-    if (!empty($this->propertyOrderBy)) {
-      throw new EntityFieldQueryException(t('Property query order by was not handled in !function.', array('!function' => $function)));
-    }
     return $result;
   }
 
@@ -985,6 +967,10 @@ class EntityFieldQuery {
     $base_table = $entity_info['base table'];
     $select_query = db_select($base_table);
     $select_query->addExpression(':entity_type', 'entity_type', array(':entity_type' => $entity_type));
+    // Process the property conditions.
+    foreach ($this->propertyConditions as $property_condition) {
+      $this->addCondition($select_query, "$base_table." . $property_condition['column'], $property_condition);
+    }
     // Process the four possible entity condition.
     // The id field is always present in entity keys.
     $sql_field = $entity_info['entity keys']['id'];
@@ -1024,15 +1010,20 @@ class EntityFieldQuery {
       $this->addCondition($select_query, $sql_field, $this->entityConditions['bundle'], $having);
     }
 
-    foreach ($this->entityOrder as $key => $direction) {
-      if (isset($id_map[$key])) {
-        $select_query->orderBy($id_map[$key], $direction);
+    // Order the query.
+    foreach ($this->order as $order) {
+      if ($order['type'] == 'entity') {
+        $key = $order['specifier'];
+        if (!isset($id_map[$key])) {
+          throw new EntityFieldQueryException(t('Do not know how to order on @key for @entity_type', array('@key' => $key, '@entity_type' => $entity_type)));
+        }
+        $select_query->orderBy($id_map[$key], $order['direction']);
       }
-      else {
-        throw new EntityFieldQueryException(t('Do not know how to order on @key for @entity_type', array('@key' => $key, '@entity_type' => $entity_type)));
+      elseif ($order['type'] == 'property') {
+        $select_query->orderBy("$base_table." . $order['specifier'], $order['direction']);
       }
     }
-    $this->processProperty($select_query, $base_table);
+
     return $this->finishQuery($select_query);
   }
 
@@ -1071,27 +1062,6 @@ class EntityFieldQuery {
       $this->ordered_results[] = $partial_entity;
     }
     return $return;
-  }
-
-  /**
-   * Processes the property condition and orders.
-   *
-   * This is a helper for hook_entity_query() and hook_field_storage_query().
-   *
-   * @param SelectQuery $select_query
-   *   A SelectQuery object.
-   * @param $entity_base_table
-   *   The name of the entity base table. This already should be in
-   *   $select_query.
-   */
-  public function processProperty(SelectQuery $select_query, $entity_base_table) {
-    foreach ($this->propertyConditions as $entity_condition) {
-      $this->addCondition($select_query, "$entity_base_table." . $entity_condition['column'], $entity_condition);
-    }
-    foreach ($this->propertyOrder as $order) {
-      $select_query->orderBy("$entity_base_table." . $order['column'], $order['direction']);
-    }
-    unset($this->propertyConditions, $this->propertyOrder);
   }
 
   /**
