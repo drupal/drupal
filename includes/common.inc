@@ -7010,15 +7010,16 @@ function entity_create_stub_entity($entity_type, $ids) {
  * database access if loaded again during the same page request.
  *
  * The actual loading is done through a class that has to implement the
- * DrupalEntityController interface. By default, DrupalDefaultEntityController
- * is used. Entity types can specify that a different class should be used by
- * setting the 'controller class' key in hook_entity_info(). These classes can
- * either implement the DrupalEntityController interface, or, most commonly,
- * extend the DrupalDefaultEntityController class. See node_entity_info() and
- * the NodeController in node.module as an example.
+ * DrupalEntityControllerInterface interface. By default,
+ * DrupalDefaultEntityController is used. Entity types can specify that a
+ * different class should be used by setting the 'controller class' key in
+ * hook_entity_info(). These classes can either implement the
+ * DrupalEntityControllerInterface interface, or, most commonly, extend the
+ * DrupalDefaultEntityController class. See node_entity_info() and the
+ * NodeController in node.module as an example.
  *
  * @see hook_entity_info()
- * @see DrupalEntityController
+ * @see DrupalEntityControllerInterface
  * @see DrupalDefaultEntityController
  *
  * @param $entity_type
