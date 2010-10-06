@@ -1,5 +1,5 @@
 <?php
-// $Id: update.module,v 1.69 2010/10/05 02:11:00 dries Exp $
+// $Id: update.module,v 1.70 2010/10/06 13:36:30 dries Exp $
 
 /**
  * @file
@@ -79,18 +79,6 @@ function update_help($path, $arg) {
     case 'admin/reports/updates':
       return '<p>' . t('Here you can find information about available updates for your installed modules and themes. Note that each module or theme is part of a "project", which may or may not have the same name, and might include multiple modules or themes within it.') . '</p>';
 
-    case 'admin/appearance/update':
-    case 'admin/appearance/install':
-    case 'admin/modules/update':
-    case 'admin/modules/install':
-    case 'admin/reports/updates/update':
-    case 'admin/reports/updates/install':
-    case 'admin/reports/updates/settings':
-    case 'admin/reports/status':
-    case 'admin/update/ready':
-      // These pages don't need additional nagging.
-      break;
-
     case 'admin/help#update':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
@@ -120,14 +108,33 @@ function update_help($path, $arg) {
  */
 function update_init() {
   if (arg(0) == 'admin' && user_access('administer site configuration')) {
+    switch ($_GET['q']) {
+      // These pages don't need additional nagging.
+      case 'admin/appearance/update':
+      case 'admin/appearance/install':
+      case 'admin/modules/update':
+      case 'admin/modules/install':
+      case 'admin/reports/updates':
+      case 'admin/reports/updates/update':
+      case 'admin/reports/updates/install':
+      case 'admin/reports/updates/settings':
+      case 'admin/reports/status':
+      case 'admin/update/ready':
+        return;
+
+      // If we are on the appearance or modules list, display a detailed report
+      // of the update status.
+      case 'admin/appearance':
+      case 'admin/modules':
+        $verbose = TRUE;
+        break;
+
+    }
     module_load_install('update');
     $status = update_requirements('runtime');
-
-    // If we are on the appearance or modules list, display a detailed report
-    // of the update status.
-    if (arg(1) == 'appearance' || arg(1) == 'modules') {
-      foreach (array('core', 'contrib') as $report_type) {
-        $type = 'update_' . $report_type;
+    foreach (array('core', 'contrib') as $report_type) {
+      $type = 'update_' . $report_type;
+      if (!empty($verbose)) {
         if (isset($status[$type]['severity'])) {
           if ($status[$type]['severity'] == REQUIREMENT_ERROR) {
             drupal_set_message($status[$type]['description'], 'error');
@@ -137,12 +144,9 @@ function update_init() {
           }
         }
       }
-    }
-    else {
       // Otherwise, if we're on *any* admin page and there's a security
       // update missing, print an error message about it.
-      foreach (array('core', 'contrib') as $report_type) {
-        $type = 'update_' . $report_type;
+      else {
         if (isset($status[$type])
             && isset($status[$type]['reason'])
             && $status[$type]['reason'] === UPDATE_NOT_SECURE) {

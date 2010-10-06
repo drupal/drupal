@@ -1,5 +1,5 @@
 <?php
-// $Id: update.test,v 1.18 2010/10/05 02:17:44 dries Exp $
+// $Id: update.test,v 1.19 2010/10/06 13:36:30 dries Exp $
 
 /**
  * @file
@@ -181,6 +181,24 @@ class UpdateCoreTestCase extends UpdateTestHelper {
     $this->assertText(t('Checked available update data for one project.'));
     $this->assertNoText(t('There are updates available for your version of Drupal.'));
     $this->assertText(t('There is a security update available for your version of Drupal.'));
+
+    // Make sure admin/appearance warns you you're missing a security update.
+    $this->drupalGet('admin/appearance');
+    $this->assertNoText(t('There are updates available for your version of Drupal.'));
+    $this->assertText(t('There is a security update available for your version of Drupal.'));
+
+    // Make sure duplicate messages don't appear on Update status pages.
+    $this->drupalGet('admin/reports/status');
+    // We're expecting "There is a security update..." inside the status report
+    // itself, but the drupal_set_message() appears as an li so we can prefix
+    // with that and search for the raw HTML.
+    $this->assertNoRaw('<li>' . t('There is a security update available for your version of Drupal.'));
+
+    $this->drupalGet('admin/reports/updates');
+    $this->assertNoText(t('There is a security update available for your version of Drupal.'));
+
+    $this->drupalGet('admin/reports/updates/settings');
+    $this->assertNoText(t('There is a security update available for your version of Drupal.'));
   }
 
   protected function setSystemInfo7_0() {
@@ -604,4 +622,45 @@ class UpdateTestUploadCase extends UpdateTestHelper {
     // Make sure it didn't clobber the first option from core.
     $this->assertPattern('/archive extensions are supported:.*zip/', t("Found 'zip' extension"));
   }
+
+  /**
+   * Check the messages on Update manager pages when missing a security update.
+   */
+  function testUpdateManagerCoreSecurityUpdateMessages() {
+    $setting = array(
+      '#all' => array(
+        'version' => '7.0',
+      ),
+    );
+    variable_set('update_test_system_info', $setting);
+    variable_set('update_fetch_url', url('update-test', array('absolute' => TRUE)));
+    variable_set('update_test_xml_map', array('drupal' => '2-sec'));
+    // Initialize the update status.
+    $this->drupalGet('admin/reports/updates');
+
+    // Now, make sure none of the Update manager pages have duplicate messages
+    // about core missing a security update.
+
+    $this->drupalGet('admin/modules/install');
+    $this->assertNoText(t('There is a security update available for your version of Drupal.'));
+
+    $this->drupalGet('admin/modules/update');
+    $this->assertNoText(t('There is a security update available for your version of Drupal.'));
+
+    $this->drupalGet('admin/appearance/install');
+    $this->assertNoText(t('There is a security update available for your version of Drupal.'));
+
+    $this->drupalGet('admin/appearance/update');
+    $this->assertNoText(t('There is a security update available for your version of Drupal.'));
+
+    $this->drupalGet('admin/reports/updates/install');
+    $this->assertNoText(t('There is a security update available for your version of Drupal.'));
+
+    $this->drupalGet('admin/reports/updates/update');
+    $this->assertNoText(t('There is a security update available for your version of Drupal.'));
+
+    $this->drupalGet('admin/update/ready');
+    $this->assertNoText(t('There is a security update available for your version of Drupal.'));
+  }
+
 }
