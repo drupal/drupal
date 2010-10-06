@@ -1,0 +1,144 @@
+<?php
+// $Id$
+
+/**
+ * Upgrade test for locale.module.
+ */
+class LocaleUpgradePathTestCase extends UpgradePathTestCase {
+  public static function getInfo() {
+    return array(
+      'name'  => 'Locale upgrade path',
+      'description'  => 'Upgrade path tests for the Locale module.',
+      'group' => 'Upgrade path',
+    );
+  }
+
+  public function setUp() {
+    // Path to the database dump files.
+    $this->databaseDumpFiles = array(
+      drupal_get_path('module', 'simpletest') . '/tests/upgrade/drupal-6.filled.database.php',
+      drupal_get_path('module', 'simpletest') . '/tests/upgrade/drupal-6.locale.database.php',
+    );
+    parent::setUp();
+
+    $this->uninstallModulesExcept(array('locale', 'comment'));
+  }
+
+  /**
+   * Test a successful upgrade (no negotiation).
+   */
+  public function testLocaleUpgrade() {
+    $this->assertTrue($this->performUpgrade(), t('The upgrade was completed successfully.'));
+
+    // The home page should be in French.
+    $this->assertPageInLanguage('', 'fr');
+
+    // No prefixed page should exist.
+    $this->drupalGet('en');
+    $this->assertResponse(404);
+    $this->drupalGet('fr');
+    $this->assertResponse(404);
+  }
+
+  /**
+   * Test an upgrade with path-based negotiation.
+   */
+  public function testLocaleUpgradePathDefault() {
+    // LANGUAGE_NEGOTIATION_PATH_DEFAULT.
+    $this->variable_set('language_negotiation', 1);
+
+    $this->assertTrue($this->performUpgrade(), t('The upgrade was completed successfully.'));
+
+    // The home page should be in French.
+    $this->assertPageInLanguage('', 'fr');
+
+    // The language switcher block should be displayed.
+    $this->assertRaw('block-locale-language', t('The language switcher block is displayed.'));
+
+    // The French prefix should not be active because French is the default language.
+    $this->drupalGet('fr');
+    $this->assertResponse(404);
+
+    // The English prefix should be active.
+    $this->assertPageInLanguage('en', 'en');
+  }
+
+  /**
+   * Test an upgrade with path-based (with fallback) negotiation.
+   */
+  public function testLocaleUpgradePathFallback() {
+    // LANGUAGE_NEGOTIATION_PATH.
+    $this->variable_set('language_negotiation', 2);
+
+    // Set the language of the admin user to English.
+    db_update('users')
+      ->fields(array('language' => 'en'))
+      ->condition('uid', 1)
+      ->execute();
+
+    $this->assertTrue($this->performUpgrade(), t('The upgrade was completed successfully.'));
+
+    // Both prefixes should be active.
+    $this->assertPageInLanguage('fr', 'fr');
+    $this->assertPageInLanguage('en', 'en');
+
+    // The home page should be in the admin user language.
+    $this->assertPageInLanguage('', 'en');
+
+    // The language switcher block should be displayed.
+    $this->assertRaw('block-locale-language', t('The language switcher block is displayed.'));
+  }
+
+  /**
+   * Test an upgrade with domain-based negotiation.
+   */
+  public function testLocaleUpgradeDomain() {
+    // LANGUAGE_NEGOTIATION_DOMAIN.
+    $this->variable_set('language_negotiation', 3);
+
+    $this->assertTrue($this->performUpgrade(), t('The upgrade was completed successfully.'));
+
+    // The home page should be in French.
+    $this->assertPageInLanguage('', 'fr');
+
+    // The language switcher block should be displayed.
+    $this->assertRaw('block-locale-language', t('The language switcher block is displayed.'));
+
+    // The language switcher block should point to http://en.example.com.
+    $language_links = $this->xpath('//ul[contains(@class, :class)]/li/a', array(':class' => 'language-switcher-locale-url'));
+    $found_english_link = FALSE;
+    foreach ($language_links as $link) {
+      if ((string) $link['href'] == 'http://en.example.com/') {
+        $found_english_link = TRUE;
+      }
+    }
+    $this->assertTrue($found_english_link, t('The English link points to the correct domain.'));
+
+    // Both prefixes should be inactive.
+    $this->drupalGet('en');
+    $this->assertResponse(404);
+    $this->drupalGet('fr');
+    $this->assertResponse(404);
+
+  }
+
+  /**
+   * Asserts that a page exists and is in the specified language.
+   */
+  public function assertPageInLanguage($path = NULL, $langcode) {
+    if (isset($path)) {
+      $this->drupalGet($path);
+    }
+
+    if (!$this->assertResponse(200)) {
+      return FALSE;
+    }
+
+    if ($this->parse()) {
+      return $this->assertIdentical($langcode, (string) $this->elements['xml:lang']);
+    }
+    else {
+      return FALSE;
+    }
+  }
+}
