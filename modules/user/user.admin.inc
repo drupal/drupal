@@ -1,5 +1,5 @@
 <?php
-// $Id: user.admin.inc,v 1.118 2010/09/17 14:53:22 dries Exp $
+// $Id: user.admin.inc,v 1.119 2010/10/06 13:38:40 dries Exp $
 
 /**
  * @file
@@ -221,7 +221,7 @@ function user_admin_account() {
     '#options' => $options,
     '#empty' => t('No people available.'),
   );
-  $form['pager'] = array('#markup' => theme('pager', array('tags' => NULL)));
+  $form['pager'] = array('#markup' => theme('pager'));
 
   return $form;
 }

@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.259 2010/10/05 17:57:09 webchick Exp $
+// $Id: locale.inc,v 1.260 2010/10/06 13:38:39 dries Exp $
 
 /**
  * @file
@@ -1615,7 +1615,7 @@ function _locale_translate_seek() {
   }
 
   $output .= theme('table', array('header' => $header, 'rows' => $rows, 'empty' => t('No strings available.')));
-  $output .= theme('pager', array('tags' => NULL));
+  $output .= theme('pager');
 
   return $output;
 }

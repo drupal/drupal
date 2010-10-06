@@ -1,5 +1,5 @@
 <?php
-// $Id: node.admin.inc,v 1.99 2010/09/17 14:53:21 dries Exp $
+// $Id: node.admin.inc,v 1.100 2010/10/06 13:38:40 dries Exp $
 
 /**
  * @file
@@ -517,7 +517,7 @@ function node_admin_nodes() {
     );
   }
 
-  $form['pager'] = array('#markup' => theme('pager', array('tags' => NULL)));
+  $form['pager'] = array('#markup' => theme('pager'));
   return $form;
 }
 

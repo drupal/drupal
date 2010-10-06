@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.315 2010/10/05 00:31:18 dries Exp $
+// $Id: system.admin.inc,v 1.316 2010/10/06 13:38:40 dries Exp $
 
 /**
  * @file
@@ -2902,7 +2902,7 @@ function system_actions_manage() {
   }
 
   if ($row) {
-    $pager = theme('pager', array('tags' => NULL));
+    $pager = theme('pager');
     if (!empty($pager)) {
       $row[] = array(array('data' => $pager, 'colspan' => '3'));
     }

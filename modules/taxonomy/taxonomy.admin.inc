@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.admin.inc,v 1.110 2010/09/28 03:30:37 webchick Exp $
+// $Id: taxonomy.admin.inc,v 1.111 2010/10/06 13:38:40 dries Exp $
 
 /**
  * @file
@@ -633,7 +633,7 @@ function theme_taxonomy_overview_terms($variables) {
   $header = array(t('Name'), t('Weight'), t('Operations'));
   $output = theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('id' => 'taxonomy')));
   $output .= drupal_render_children($form);
-  $output .= theme('pager', array('tags' => NULL));
+  $output .= theme('pager');
 
   return $output;
 }

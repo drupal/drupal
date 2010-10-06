@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.test,v 1.21 2010/10/03 05:11:16 webchick Exp $
+// $Id: theme.test,v 1.22 2010/10/06 13:38:40 dries Exp $
 
 /**
  * @file
@@ -182,7 +182,7 @@ class ThemeItemListUnitTest extends DrupalWebTestCase {
 </ul></div></li>
 <li class="last">e</li>
 </ul></div>';
-    $output = theme('item_list', array('items' => $items, 'type' => 'ul', 'title' => NULL, 'attributes' => array()));
+    $output = theme('item_list', array('items' => $items));
     $this->assertIdentical($expected, $output, 'Nested list is rendered correctly.');
   }
 }

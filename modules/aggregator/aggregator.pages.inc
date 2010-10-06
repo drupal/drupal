@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.pages.inc,v 1.43 2010/08/03 02:02:01 dries Exp $
+// $Id: aggregator.pages.inc,v 1.44 2010/10/06 13:38:39 dries Exp $
 
 /**
  * @file
@@ -268,7 +268,7 @@ function theme_aggregator_categorize_items($variables) {
  * @see aggregator-wrapper.tpl.php
  */
 function template_preprocess_aggregator_wrapper(&$variables) {
-  $variables['pager'] = theme('pager', array('tags' => NULL));
+  $variables['pager'] = theme('pager');
 }
 
 /**

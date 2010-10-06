@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.578 2010/10/03 00:41:14 dries Exp $
+// $Id: forum.module,v 1.579 2010/10/06 13:38:40 dries Exp $
 
 /**
  * @file
@@ -1117,7 +1117,7 @@ function template_preprocess_forum_topic_list(&$variables) {
   $variables['topic_id'] = $variables['tid'];
   unset($variables['tid']);
 
-  $variables['pager'] = theme('pager', array('tags' => NULL));
+  $variables['pager'] = theme('pager');
 }
 
 /**

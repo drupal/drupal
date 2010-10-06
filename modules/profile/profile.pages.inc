@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.pages.inc,v 1.26 2010/08/17 13:50:52 dries Exp $
+// $Id: profile.pages.inc,v 1.27 2010/10/06 13:38:40 dries Exp $
 
 /**
  * @file
@@ -74,7 +74,7 @@ function profile_browse() {
       $content .= theme('profile_listing', array('account' => $account, 'fields' => $profile));
     }
     $output = theme('profile_wrapper', array('content' => $content));
-    $output .= theme('pager', array('tags' => NULL));
+    $output .= theme('pager');
 
     if ($field->type == 'selection' || $field->type == 'list' || $field->type == 'textfield') {
       $title = strtr(check_plain($field->page), array('%value' => drupal_placeholder($value)));
@@ -111,7 +111,7 @@ function profile_browse() {
       $content .= theme('profile_listing', array('account' => $account, 'fields' => $profile));
     }
     $output = theme('profile_wrapper', array('content' => $content));
-    $output .= theme('pager', array('tags' => NULL));
+    $output .= theme('pager');
 
     drupal_set_title(t('User list'));
     return $output;

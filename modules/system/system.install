@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.514 2010/10/05 20:04:19 webchick Exp $
+// $Id: system.install,v 1.515 2010/10/06 13:38:40 dries Exp $
 
 /**
  * @file
@@ -128,10 +128,7 @@ function system_requirements($phase) {
       '@system_requirements' => 'http://drupal.org/requirements',
     ));
 
-    $description .= theme('item_list',  array(
-      'type' => 'ul',
-      'items' => $missing_extensions,
-    ));
+    $description .= theme('item_list', array('items' => $missing_extensions));
 
     $requirements['php_extensions']['value'] = $t('Disabled');
     $requirements['php_extensions']['severity'] = REQUIREMENT_ERROR;

@@ -1,5 +1,5 @@
 <?php
-// $Id: pager.inc,v 1.83 2010/10/03 02:47:30 dries Exp $
+// $Id: pager.inc,v 1.84 2010/10/06 13:38:39 dries Exp $
 
 /**
  * @file
@@ -420,7 +420,10 @@ function theme_pager($variables) {
         'data' => $li_last,
       );
     }
-    return '<h2 class="element-invisible">' . t('Pages') . '</h2>' . theme('item_list', array('items' => $items, 'title' => NULL, 'type' => 'ul', 'attributes' => array('class' => array('pager'))));
+    return '<h2 class="element-invisible">' . t('Pages') . '</h2>' . theme('item_list', array(
+      'items' => $items,
+      'attributes' => array('class' => array('pager')),
+    ));
   }
 }
 
