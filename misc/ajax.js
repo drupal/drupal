@@ -127,7 +127,7 @@ Drupal.ajax = function (base, element, element_settings) {
   // Set the options for the ajaxSubmit function.
   // The 'this' variable will not persist inside of the options object.
   var ajax = this;
-  var options = {
+  ajax.options = {
     url: ajax.url,
     data: ajax.submit,
     beforeSerialize: function (element_settings, options) {
@@ -173,14 +173,14 @@ Drupal.ajax = function (base, element, element_settings) {
           ajax.form.clk = this.element;
         }
 
-        ajax.form.ajaxSubmit(options);     
+        ajax.form.ajaxSubmit(ajax.options);
       }
       else {
-        $.ajax(options);
+        $.ajax(ajax.options);
       }
     }
     catch (e) {
-      alert("An error occurred while attempting to process " + options.url + ": " + e.message);
+      alert("An error occurred while attempting to process " + ajax.options.url + ": " + e.message);
     }
 
     return false;
