@@ -203,7 +203,7 @@ Drupal.fieldUIOverview = {
   },
 
   /**
-   * Triigers AJAX refresh of selected rows.
+   * Triggers AJAX refresh of selected rows.
    *
    * The 'format type' selects can trigger a series of changes in child rows.
    * The #ajax behavior is therefore not attached directly to the selects, but
@@ -297,7 +297,6 @@ Drupal.fieldUIDisplayOverview.field.prototype = {
    *   Drupal.displayOverview.AJAXRefreshRows().
    */
   regionChange: function (region) {
-    $.debug(this.region + ' --> ' + region, this.name);
 
     // When triggered by a row drag, the 'format' select needs to be adjusted
     // to the new region.
