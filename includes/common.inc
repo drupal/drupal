@@ -7034,7 +7034,7 @@ function entity_create_stub_entity($entity_type, $ids) {
  * @return
  *   An array of entity objects indexed by their ids.
  */
-function entity_load($entity_type, $ids = array(), $conditions = array(), $reset = FALSE) {
+function entity_load($entity_type, $ids = FALSE, $conditions = array(), $reset = FALSE) {
   if ($reset) {
     entity_get_controller($entity_type)->resetCache();
   }
