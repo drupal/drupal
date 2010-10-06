@@ -246,6 +246,16 @@ function ajax_render($commands = array()) {
     }
   }
 
+  // Settings are handled separately, later in this function, so that changes to
+  // the ajaxPageState setting that occur during drupal_get_css() and
+  // drupal_get_js() get included, and because the jQuery.extend() code produced
+  // by drupal_get_js() for adding settings isn't appropriate during an AJAX
+  // response, because it does not pass TRUE for the "deep" parameter, and
+  // therefore, can clobber existing settings on the page.
+  if (isset($items['js']['settings'])) {
+    unset($items['js']['settings']);
+  }
+
   // Render the HTML to load these files, and add AJAX commands to insert this
   // HTML in the page. We pass TRUE as the $skip_alter argument to prevent the
   // data from being altered again, as we already altered it above.
