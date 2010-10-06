@@ -268,7 +268,7 @@ function theme_aggregator_categorize_items($variables) {
  * @see aggregator-wrapper.tpl.php
  */
 function template_preprocess_aggregator_wrapper(&$variables) {
-  $variables['pager'] = theme('pager', array('tags' => NULL));
+  $variables['pager'] = theme('pager');
 }
 
 /**

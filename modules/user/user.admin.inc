@@ -221,7 +221,7 @@ function user_admin_account() {
     '#options' => $options,
     '#empty' => t('No people available.'),
   );
-  $form['pager'] = array('#markup' => theme('pager', array('tags' => NULL)));
+  $form['pager'] = array('#markup' => theme('pager'));
 
   return $form;
 }

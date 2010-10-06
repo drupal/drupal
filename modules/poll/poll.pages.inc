@@ -42,7 +42,7 @@ function poll_page() {
     $output .= '<li>' . l($node->title, "node/$node->nid") . ' - ' . format_plural($node->votes, '1 vote', '@count votes') . ' - ' . ($node->active ? t('open') : t('closed')) . '</li>';
   }
   $output .= '</ul>';
-  $output .= theme("pager", array('tags' => NULL));
+  $output .= theme('pager');
   return $output;
 }
 

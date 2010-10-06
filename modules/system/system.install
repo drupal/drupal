@@ -128,10 +128,7 @@ function system_requirements($phase) {
       '@system_requirements' => 'http://drupal.org/requirements',
     ));
 
-    $description .= theme('item_list',  array(
-      'type' => 'ul',
-      'items' => $missing_extensions,
-    ));
+    $description .= theme('item_list', array('items' => $missing_extensions));
 
     $requirements['php_extensions']['value'] = $t('Disabled');
     $requirements['php_extensions']['severity'] = REQUIREMENT_ERROR;

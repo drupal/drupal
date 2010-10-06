@@ -517,7 +517,7 @@ function node_admin_nodes() {
     );
   }
 
-  $form['pager'] = array('#markup' => theme('pager', array('tags' => NULL)));
+  $form['pager'] = array('#markup' => theme('pager'));
   return $form;
 }
 

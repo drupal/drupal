@@ -2902,7 +2902,7 @@ function system_actions_manage() {
   }
 
   if ($row) {
-    $pager = theme('pager', array('tags' => NULL));
+    $pager = theme('pager');
     if (!empty($pager)) {
       $row[] = array(array('data' => $pager, 'colspan' => '3'));
     }
