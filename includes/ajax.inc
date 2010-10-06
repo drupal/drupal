@@ -1,5 +1,5 @@
 <?php
-// $Id: ajax.inc,v 1.35 2010/10/05 19:59:10 dries Exp $
+// $Id: ajax.inc,v 1.36 2010/10/06 23:03:39 webchick Exp $
 
 /**
  * @file
@@ -244,6 +244,16 @@ function ajax_render($commands = array()) {
       // Ensure that the page doesn't reload what it already has.
       $items[$type] = array_diff_key($items[$type], $_POST['ajax_page_state'][$type]);
     }
+  }
+
+  // Settings are handled separately, later in this function, so that changes to
+  // the ajaxPageState setting that occur during drupal_get_css() and
+  // drupal_get_js() get included, and because the jQuery.extend() code produced
+  // by drupal_get_js() for adding settings isn't appropriate during an AJAX
+  // response, because it does not pass TRUE for the "deep" parameter, and
+  // therefore, can clobber existing settings on the page.
+  if (isset($items['js']['settings'])) {
+    unset($items['js']['settings']);
   }
 
   // Render the HTML to load these files, and add AJAX commands to insert this
