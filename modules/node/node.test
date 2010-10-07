@@ -1279,6 +1279,30 @@ class NodeAdminTestCase extends DrupalWebTestCase {
   }
 
   /**
+   * Tests that the table sorting works on the content admin pages.
+   */
+  function testContentAdminSort() {
+    $this->drupalLogin($this->admin_user);
+    foreach (array('dd', 'aa', 'DD', 'bb', 'cc', 'CC', 'AA', 'BB') as $prefix) {
+      $this->drupalCreateNode(array('title' => $prefix . $this->randomName(6)));
+    }
+
+    // Compare the rendered HTML node list to a query for the nodes ordered by
+    // title to account for possible database-dependent sort order.
+    $nodes_query = db_select('node', 'n')
+      ->fields('n', array('nid'))
+      ->orderBy('title')
+      ->execute()
+      ->fetchCol();
+
+    $this->drupalGet('admin/content', array('query' => array('sort' => 'asc', 'order' => 'Title')));
+    foreach ($this->xpath('//table/tbody/tr/td/div/input/@value') as $input) {
+      $nodes_form[] = $input;
+    }
+    $this->assertEqual($nodes_query, $nodes_form, 'Nodes are sorted in the form the same as they are in the query.');
+  }
+
+  /**
    * Tests content overview with different user permissions.
    *
    * Taxonomy filters are tested separately.
