@@ -1870,8 +1870,6 @@ function system_rss_feeds_settings() {
 function system_regional_settings() {
   include_once DRUPAL_ROOT . '/includes/locale.inc';
   $countries = country_get_list();
-  // Add a 'No default country' option to the start of the list.
-  $countries = array_merge(array('' => t('No default country')), $countries);
 
   // Date settings:
   $zones = system_time_zones();
@@ -1884,6 +1882,7 @@ function system_regional_settings() {
   $form['locale']['site_default_country'] = array(
     '#type' => 'select',
     '#title' => t('Default country'),
+    '#empty_value' => '',
     '#default_value' => variable_get('site_default_country', ''),
     '#options' => $countries,
     '#attributes' => array('class' => array('country-detect')),
