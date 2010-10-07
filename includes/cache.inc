@@ -1,5 +1,5 @@
 <?php
-// $Id: cache.inc,v 1.48 2010/05/18 18:26:30 dries Exp $
+// $Id: cache.inc,v 1.49 2010/10/07 17:44:53 dries Exp $
 
 /**
  * Get the cache object for a cache bin.
@@ -155,7 +155,7 @@ function cache_set($cid, $data, $bin = 'cache', $expire = CACHE_PERMANENT) {
  * @param $wildcard
  *   If $wildcard is TRUE, cache IDs starting with $cid are deleted in
  *   addition to the exact cache ID specified by $cid.  If $wildcard is
- *   TRUE and $cid is '*' then the entire table $table is emptied.
+ *   TRUE and $cid is '*' then the entire bin $bin is emptied.
  */
 function cache_clear_all($cid = NULL, $bin = NULL, $wildcard = FALSE) {
   if (!isset($cid) && !isset($bin)) {
