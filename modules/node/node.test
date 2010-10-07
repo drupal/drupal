@@ -1,5 +1,5 @@
 <?php
-// $Id: node.test,v 1.97 2010/10/07 00:28:20 webchick Exp $
+// $Id: node.test,v 1.98 2010/10/07 17:31:39 webchick Exp $
 
 /**
  * Test the node_load_multiple() function.
@@ -1276,6 +1276,30 @@ class NodeAdminTestCase extends DrupalWebTestCase {
     $this->base_user_1 = $this->drupalCreateUser(array('access content overview'));
     $this->base_user_2 = $this->drupalCreateUser(array('access content overview', 'view own unpublished content'));
     $this->base_user_3 = $this->drupalCreateUser(array('access content overview', 'bypass node access'));
+  }
+
+  /**
+   * Tests that the table sorting works on the content admin pages.
+   */
+  function testContentAdminSort() {
+    $this->drupalLogin($this->admin_user);
+    foreach (array('dd', 'aa', 'DD', 'bb', 'cc', 'CC', 'AA', 'BB') as $prefix) {
+      $this->drupalCreateNode(array('title' => $prefix . $this->randomName(6)));
+    }
+
+    // Compare the rendered HTML node list to a query for the nodes ordered by
+    // title to account for possible database-dependent sort order.
+    $nodes_query = db_select('node', 'n')
+      ->fields('n', array('nid'))
+      ->orderBy('title')
+      ->execute()
+      ->fetchCol();
+
+    $this->drupalGet('admin/content', array('query' => array('sort' => 'asc', 'order' => 'Title')));
+    foreach ($this->xpath('//table/tbody/tr/td/div/input/@value') as $input) {
+      $nodes_form[] = $input;
+    }
+    $this->assertEqual($nodes_query, $nodes_form, 'Nodes are sorted in the form the same as they are in the query.');
   }
 
   /**

@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.501 2010/10/05 19:59:10 dries Exp $
+// $Id: form.inc,v 1.502 2010/10/07 17:31:39 webchick Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -2932,12 +2932,12 @@ function theme_tableselect($variables) {
   $header = $element['#header'];
   if (!empty($element['#options'])) {
     // Generate a table row for each selectable item in #options.
-    foreach ($element['#options'] as $key => $value) {
+    foreach (element_children($element) as $key) {
       $row = array();
 
       $row['data'] = array();
-      if (isset($value['#attributes'])) {
-        $row += $value['#attributes'];
+      if (isset($element['#options'][$key]['#attributes'])) {
+        $row += $element['#options'][$key]['#attributes'];
       }
       // Render the checkbox / radio element.
       $row['data'][] = drupal_render($element[$key]);
@@ -2991,8 +2991,6 @@ function form_process_tableselect($element) {
       $element['#default_value'] = array();
     }
 
-    // Sort the options by their #weight if they have a #weight.
-    uasort($element['#options'], 'element_sort');
     // Create a checkbox or radio for each item in #options in such a way that
     // the value of the tableselect element behaves as if it had been of type
     // checkboxes or radios.
@@ -3022,6 +3020,9 @@ function form_process_tableselect($element) {
             '#id' => drupal_html_id('edit-' . implode('-', $parents_for_id)),
             '#ajax' => isset($element['#ajax']) ? $element['#ajax'] : NULL,
           );
+        }
+        if (isset($element['#options'][$key]['#weight'])) {
+          $element[$key]['#weight'] = $element['#options'][$key]['#weight'];
         }
       }
     }
