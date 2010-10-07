@@ -1,15 +1,15 @@
-/* $Id: vertical-tabs-rtl.css,v 1.2 2009/05/19 06:03:25 dries Exp $ */
+/* $Id: vertical-tabs-rtl.css,v 1.3 2010/10/07 15:54:13 webchick Exp $ */
 
-.vertical-tabs {
+div.vertical-tabs {
   margin-left: 0;
   margin-right: 15em;
 }
-.vertical-tabs-list {
+.vertical-tabs ul.vertical-tabs-list {
+  margin-left: 0;
   margin-right: -15em;
-  right: 0;
   float: right;
 }
-.vertical-tabs-list li.selected {
+.vertical-tabs ul.vertical-tabs-list li.selected {
   border-left-width: 0;
   border-right-width: 1px;
 }
