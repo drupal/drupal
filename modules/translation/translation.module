@@ -1,5 +1,5 @@
 <?php
-// $Id: translation.module,v 1.84 2010/09/09 23:01:48 dries Exp $
+// $Id: translation.module,v 1.85 2010/10/07 17:54:35 dries Exp $
 
 /**
  * @file
@@ -384,7 +384,7 @@ function translation_node_get_translations($tnid) {
     if (!isset($translations[$tnid])) {
       $translations[$tnid] = array();
       $result = db_select('node', 'n')
-        ->fields('n', array('nid', 'title', 'language'))
+        ->fields('n', array('nid', 'type', 'uid', 'status', 'title', 'language'))
         ->condition('n.tnid', $tnid)
         ->addTag('node_access')
         ->execute();
@@ -435,8 +435,11 @@ function translation_path_get_translations($path) {
  */
 function translation_language_switch_links_alter(array &$links, $type, $path) {
   if ($type == LANGUAGE_TYPE_INTERFACE && $paths = translation_path_get_translations($path)) {
+    $path = explode('/', $path);
+    $node = node_load($path[1]);
+    $translations = translation_node_get_translations($node->tnid);
     foreach ($links as $langcode => $link) {
-      if (isset($paths[$langcode])) {
+      if (isset($paths[$langcode]) && $translations[$langcode]->status) {
         // Translation in a different node.
         $links[$langcode]['href'] = $paths[$langcode];
       }
