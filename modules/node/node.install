@@ -1,5 +1,5 @@
 <?php
-// $Id: node.install,v 1.59 2010/10/01 22:03:29 webchick Exp $
+// $Id: node.install,v 1.60 2010/10/07 00:28:20 webchick Exp $
 
 /**
  * @file
@@ -294,6 +294,12 @@ function node_schema() {
         'length' => 255,
         'not null' => TRUE,
       ),
+      'module' => array(
+        'description' => 'The module defining this node type.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+      ),
       'description' => array(
         'description' => 'A brief description of this type.',
         'type' => 'text',
@@ -343,6 +349,13 @@ function node_schema() {
         'not null' => TRUE,
         'default' => 0,
         'size' => 'tiny',
+      ),
+      'disabled' => array(
+        'description' => 'A boolean indicating whether the node type is disabled.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'tiny'
       ),
       'orig_type' => array(
         'description' => 'The original machine-readable name of this node type. This may be different from the current type name if the locked field is 0.',
@@ -438,16 +451,40 @@ function _update_7000_node_get_types() {
  */
 
 /**
- * Fix node type 'module' attribute to avoid name-space conflicts.
+ * Upgrade the node type table and fix node type 'module' attribute to avoid name-space conflicts.
  */
 function node_update_7000() {
-  db_update('node_type')
-    ->fields(array('module' => 'node_content'))
-    ->condition('module', 'node')
-    ->execute();
-
   // Rename the module column to base.
   db_change_field('node_type', 'module', 'base', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE));
+
+  db_add_field('node_type', 'module', array(
+    'description' => 'The module defining this node type.',
+    'type' => 'varchar',
+    'default' => '',
+    'length' => 255,
+    'not null' => TRUE,
+  ));
+
+  db_add_field('node_type', 'disabled', array(
+    'description' => 'A boolean indicating whether the node type is disabled.',
+    'type' => 'int',
+    'not null' => TRUE,
+    'default' => 0,
+    'size' => 'tiny'
+  ));
+
+  $modules = db_select('system', 's')
+    ->fields('s', array('name'))
+    ->condition('type', 'module');
+  db_update('node_type')
+    ->expression('module', 'base')
+    ->condition('base', $modules, 'IN')
+    ->execute();
+
+  db_update('node_type')
+    ->fields(array('base' => 'node_content'))
+    ->condition('base', 'node')
+    ->execute();
 }
 
 /**

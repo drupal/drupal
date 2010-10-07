@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1235 2010/10/06 13:45:56 dries Exp $
+// $Id: common.inc,v 1.1236 2010/10/07 00:28:19 webchick Exp $
 
 /**
  * @file
@@ -6727,8 +6727,10 @@ function drupal_flush_all_caches() {
   system_rebuild_theme_data();
   drupal_theme_rebuild();
 
-  menu_rebuild();
   node_types_rebuild();
+  // node_menu() defines menu items based on node types so it needs to come
+  // after node types are rebuilt.
+  menu_rebuild();
 
   // Synchronize to catch any actions that were added or removed.
   actions_synchronize();

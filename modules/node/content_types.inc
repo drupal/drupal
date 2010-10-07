@@ -1,5 +1,5 @@
 <?php
-// $Id: content_types.inc,v 1.117 2010/09/03 17:47:20 dries Exp $
+// $Id: content_types.inc,v 1.118 2010/10/07 00:28:20 webchick Exp $
 
 /**
  * @file
@@ -320,6 +320,9 @@ function node_type_form_submit($form, &$form_state) {
   $type->custom = $form_state['values']['custom'];
   $type->modified = TRUE;
   $type->locked = $form_state['values']['locked'];
+  if (isset($form['#node_type']->module)) {
+    $type->module = $form['#node_type']->module;
+  }
 
   if ($op == t('Delete content type')) {
     $form_state['redirect'] = 'admin/structure/types/manage/' . str_replace('_', '-', $type->old_type) . '/delete';
