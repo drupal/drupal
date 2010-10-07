@@ -2841,6 +2841,7 @@ function system_get_module_admin_tasks($module, $info) {
   }
 
   $admin_tasks = array();
+  $titles = array();
   if ($menu = module_invoke($module, 'menu')) {
     foreach ($menu as $path => $item) {
       if (isset($links[$path])) {
@@ -2851,6 +2852,25 @@ function system_get_module_admin_tasks($module, $info) {
           $task['description'] = $task['localized_options']['attributes']['title'];
           unset($task['localized_options']['attributes']['title']);
         }
+
+        // Check the admin tasks for duplicate names. If one is found,
+        // append the parent menu item's title to differentiate.
+        $duplicate_path = array_search($task['title'], $titles);
+        if ($duplicate_path !== FALSE) {
+          if ($parent = menu_link_load($task['plid'])) {
+            // Append the parent item's title to this task's title.
+            $task['title'] = t('@original_title (@parent_title)', array('@original_title' => $task['title'], '@parent_title' => $parent['title']));
+          }
+          if ($parent = menu_link_load($admin_tasks[$duplicate_path]['plid'])) {
+            // Append the parent item's title to the duplicated task's title.
+            // We use $links[$duplicate_path] in case there are triplicates. 
+            $admin_tasks[$duplicate_path]['title'] = t('@original_title (@parent_title)', array('@original_title' => $links[$duplicate_path]['title'], '@parent_title' => $parent['title']));
+          }
+        }
+        else {
+          $titles[$path] = $task['title'];
+        }
+
         $admin_tasks[$path] = $task;
       }
     }
