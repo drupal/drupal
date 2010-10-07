@@ -108,12 +108,15 @@ function theme_simpletest_test_table($variables) {
 
     // Expand/collapse image and group title.
     $row[] = array(
-      'data' =>  '<div class="simpletest-image" id="simpletest-test-group-' . $test_class . '"></div>&nbsp;' .
-                 '<label for="' . $test_class . '-select-all" class="simpletest-group-label">' . $key . '</label>',
-      'style' => 'font-weight: bold;'
+      'data' => '<div class="simpletest-image" id="simpletest-test-group-' . $test_class . '"></div>' .
+        '<label for="' . $test_class . '-select-all" class="simpletest-group-label">' . $key . '</label>',
+      'class' => array('simpletest-group-label'),
     );
 
-    $row[] = '&nbsp;';
+    $row[] = array(
+      'data' => '&nbsp;',
+      'class' => array('simpletest-group-description'),
+    );
 
     $rows[] = array('data' => $row, 'class' => array('simpletest-group'));
 
@@ -145,9 +148,18 @@ function theme_simpletest_test_table($variables) {
       // Test name is used to determine what tests to run.
       $test['#name'] = $test_name;
 
-      $row[] = drupal_render($test);
-      $row[] = theme('indentation', array('size' => 1)) . '<label for="' . $test['#id'] . '">' . $title . '</label>';
-      $row[] = '<div class="description">' . $description . '</div>';
+      $row[] = array(
+        'data' => drupal_render($test),
+        'class' => array('simpletest-test-select'),
+      );
+      $row[] = array(
+        'data' => '<label for="' . $test['#id'] . '">' . $title . '</label>',
+        'class' => array('simpletest-test-label'),
+      );
+      $row[] = array(
+        'data' => '<div class="description">' . $description . '</div>',
+        'class' => array('simpletest-test-description'),
+      );
 
       $rows[] = array('data' => $row, 'class' => array($test_class . '-test', ($collapsed ? 'js-hide' : '')));
     }

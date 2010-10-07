@@ -1,24 +1,33 @@
 /* $Id$ */
 
-/* Addon for the simpletest module */
-#simpletest {
-}
-
 /* Test Table */
 #simpletest-form-table th.select-all {
-  width: 25px;
+  width: 1em;
 }
-
 th.simpletest_test {
-  width: 160px;
+  width: 16em;
 }
 
-table#simpletest-form-table tr td {
+.simpletest-image {
+  display: inline-block;
+  cursor: pointer;
+  width: 1em;
+}
+.simpletest-group-label label {
+  display: inline;
+  font-weight: bold;
+}
+.simpletest-test-label label {
+  margin-left: 1em; /* LTR */
+}
+.simpletest-test-description .description {
+  margin: 0;
+}
+#simpletest-form-table tr td {
   background-color: white;
   color: #494949;
 }
-
-table#simpletest-form-table tr.simpletest-group td {
+#simpletest-form-table tr.simpletest-group td {
   background-color: #EDF5FA;
   color: #494949;
 }
@@ -30,46 +39,33 @@ div.message > div.item-list {
 div.simpletest-pass {
   color: #33a333;
 }
-
 .simpletest-fail {
   color: #981010;
 }
 
 tr.simpletest-pass.odd {
-  background: #b6ffb6;
+  background-color: #b6ffb6;
 }
-
 tr.simpletest-pass.even {
-  background: #9bff9b;
+  background-color: #9bff9b;
 }
-
 tr.simpletest-fail.odd {
-  background: #ffc9c9;
+  background-color: #ffc9c9;
 }
-
 tr.simpletest-fail.even {
-  background: #ffacac;
+  background-color: #ffacac;
 }
-
 tr.simpletest-exception.odd {
-  background: #f4ea71;
+  background-color: #f4ea71;
 }
-
 tr.simpletest-exception.even {
-  background: #f5e742;
+  background-color: #f5e742;
 }
-
 tr.simpletest-debug.odd {
-  background: #eeeeee;
+  background-color: #eee;
 }
-
 tr.simpletest-debug.even {
-  background: #ffffff;
-}
-
-div.simpletest-image {
-  display: inline;
-  cursor: pointer;
+  background-color: #fff;
 }
 
 a.simpletest-collapse {
@@ -77,9 +73,7 @@ a.simpletest-collapse {
   width: 0;
   top: -99em;
   position: absolute;
-
 }
-
 a.simpletest-collapse:focus,
 a.simpletest-collapse:hover {
   font-size: 80%;

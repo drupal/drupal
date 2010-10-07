@@ -1290,6 +1290,9 @@ div.add-or-remove-shortcuts {
 .page-admin #content img {
   margin-right: 15px; /* LTR */
 }
+.page-admin #content .simpletest-image img {
+  margin: 0;
+}
 .page-admin-structure-block-demo .block-region {
  color: #000000;
 }
