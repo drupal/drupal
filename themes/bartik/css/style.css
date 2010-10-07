@@ -427,7 +427,6 @@ h1#site-name,
 /* --------------- Main Menu ------------ */
 
 #main-menu {
-  padding: 0 15px 3px;
   clear: both;
 }
 #main-menu-links a {
@@ -436,26 +435,35 @@ h1#site-name,
 }
 #main-menu-links {
   font-size: 0.929em;
-  padding: 2px 0;
-  padding: 0;
+  padding: 0 15px;
+}
+#main-menu-links li {
+  float: left; /* LTR */
+  padding: 0 1px;
+  margin: 0 1px;
 }
 #main-menu-links a {
   color: #333;
   background: #ccc;
   background: rgba(255, 255, 255, 0.7);
+  float: left; /* LTR */
+  height: 2.4em;
+  line-height: 2.4em;
+  padding: 0 0.8em;
+  text-decoration: none;
   text-shadow: 0 1px #eee;
   -khtml-border-radius-topleft: 8px;
-  -moz-border-radius-topleft: 8px;
-  -webkit-border-top-left-radius: 8px;
-  border-top-left-radius: 8px;
   -khtml-border-radius-topright: 8px;
+  -moz-border-radius-topleft: 8px;
   -moz-border-radius-topright: 8px;
+  -webkit-border-top-left-radius: 8px;
   -webkit-border-top-right-radius: 8px;
+  border-top-left-radius: 8px;
   border-top-right-radius: 8px;
 }
 #main-menu-links a:hover,
 #main-menu-links a:focus {
-  background: #fff;
+  background: #f6f6f2;
   background: rgba(255, 255, 255, 0.95);
 }
 #main-menu-links a:active {
@@ -465,15 +473,10 @@ h1#site-name,
 #main-menu-links li a.active {
   border-bottom: none;
 }
-.featured #main-menu-links li a.active,
-.featured #main-menu-links li.active-trail a {
+.featured #main-menu-links li a:active,
+.featured #main-menu-links li a.active {
   background: #f0f0f0;
   background: rgba(240, 240, 240, 1.0);
-}
-#main-menu-links li {
-  display: inline;
-  list-style-type: none;
-  padding: 0.6em 0 0.4em;
 }
 
 /* --------------- Secondary Menu ------------ */

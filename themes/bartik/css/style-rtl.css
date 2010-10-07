@@ -64,6 +64,13 @@ ul.tips {
   padding-right: 20px;
 }
 
+/* --------------- Main Menu ------------ */
+
+#main-menu ul.links li,
+#main-menu ul.links li a {
+  float: right;
+}
+
 /* --------------- Secondary Menu ------------ */
 
 #secondary-menu-links {

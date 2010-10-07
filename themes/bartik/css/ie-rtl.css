@@ -26,3 +26,13 @@ ul.action-links li a,
   padding-right: 20px;
   zoom: 1;
 }
+#main-menu ul.links li {
+  margin: 0;
+}
+#main-menu ul.links li,
+#main-menu ul.links li a {
+  display: inline;
+  float: none;
+  margin: 0;
+  zoom: 1;
+}
