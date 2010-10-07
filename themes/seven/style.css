@@ -890,7 +890,7 @@ ol.task-list li.done {
   z-index: 10;
 }
 #overlay-tabs {
-  bottom: -2px;
+  bottom: -1px;
   font-size: 1.54em;
   line-height: 1.54em;
   margin: 0;
