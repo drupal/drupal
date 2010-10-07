@@ -461,16 +461,7 @@ function node_type_get_name($node) {
  * and obsolete types.
  */
 function node_types_rebuild() {
-  // Reset and load updated node types.
-  drupal_static_reset('_node_types_build');
-  foreach (node_type_get_types() as $type => $info) {
-    if (!empty($info->is_new)) {
-      node_type_save($info);
-    }
-    if (!empty($info->disabled)) {
-      node_type_delete($info->type);
-    }
-  }
+  _node_types_build(TRUE);
 }
 
 /**
@@ -513,6 +504,8 @@ function node_type_save($info) {
     'custom' => (int) $type->custom,
     'modified' => (int) $type->modified,
     'locked' => (int) $type->locked,
+    'disabled' => (int) $type->disabled,
+    'module' => $type->module,
   );
 
   if ($is_existing) {
@@ -660,6 +653,8 @@ function node_type_update_nodes($old_type, $type) {
  * These two information sources are not synchronized during module installation
  * until node_types_rebuild() is called.
  *
+ * @param $rebuild
+ *  TRUE to rebuild node types. Equivalent to calling node_types_rebuild().
  * @return
  *   Associative array with two components:
  *   - names: Associative array of the names of node types, keyed by the type.
@@ -673,40 +668,64 @@ function node_type_update_nodes($old_type, $type) {
  *   implementations, but are still in the database. These are indicated in the
  *   type object by $type->disabled being set to TRUE.
  */
-function _node_types_build() {
-  $_node_types = &drupal_static(__FUNCTION__);
-  if (is_object($_node_types)) {
-    return $_node_types;
+function _node_types_build($rebuild = FALSE) {
+  if (!$rebuild) {
+    $_node_types = &drupal_static(__FUNCTION__);
+    if (is_object($_node_types)) {
+      return $_node_types;
+    }
   }
+
   $_node_types = (object)array('types' => array(), 'names' => array());
 
-  $info_array = module_invoke_all('node_info');
-  foreach ($info_array as $type => $info) {
-    $info['type'] = $type;
-    $_node_types->types[$type] = node_type_set_defaults($info);
-    $_node_types->names[$type] = $info['name'];
+  foreach (module_implements('node_info') as $module) {
+    $info_array = module_invoke($module, 'node_info');
+    foreach ($info_array as $type => $info) {
+      $info['type'] = $type;
+      $_node_types->types[$type] = node_type_set_defaults($info);
+      $_node_types->types[$type]->module = $module;
+      $_node_types->names[$type] = $info['name'];
+    }
   }
-  $type_result = db_select('node_type', 'nt')
+  $query = db_select('node_type', 'nt')
     ->addTag('translatable')
     ->addTag('node_type_access')
     ->fields('nt')
-    ->orderBy('nt.type', 'ASC')
-    ->execute();
-  foreach ($type_result as $type_object) {
+    ->orderBy('nt.type', 'ASC');
+  if (!$rebuild) {
+    $query->condition('disabled', 0);
+  }
+  foreach ($query->execute() as $type_object) {
+    $type_db = $type_object->type;
+    // Original disabled value.
+    $disabled = $type_object->disabled;
     // Check for node types from disabled modules and mark their types for removal.
     // Types defined by the node module in the database (rather than by a separate
     // module using hook_node_info) have a base value of 'node_content'. The isset()
     // check prevents errors on old (pre-Drupal 7) databases.
-    if (isset($type_object->base) && $type_object->base != 'node_content' && empty($info_array[$type_object->type])) {
+    if (isset($type_object->base) && $type_object->base != 'node_content' && empty($info_array[$type_db])) {
       $type_object->disabled = TRUE;
     }
-    if (!isset($_node_types->types[$type_object->type]) || $type_object->modified) {
-      $_node_types->types[$type_object->type] = $type_object;
-      $_node_types->names[$type_object->type] = $type_object->name;
+    if (isset($info_array[$type_db])) {
+      $type_object->disabled = FALSE;
+    }
+    if (!isset($_node_types->types[$type_db]) || $type_object->modified) {
+      $_node_types->types[$type_db] = $type_object;
+      $_node_types->names[$type_db] = $type_object->name;
 
-      if ($type_object->type != $type_object->orig_type) {
+      if ($type_db != $type_object->orig_type) {
         unset($_node_types->types[$type_object->orig_type]);
         unset($_node_types->names[$type_object->orig_type]);
+      }
+    }
+    $_node_types->types[$type_db]->disabled = $type_object->disabled;
+    $_node_types->types[$type_db]->disabled_changed = $disabled != $type_object->disabled;
+  }
+
+  if ($rebuild) {
+    foreach ($_node_types->types as $type => $type_object) {
+      if (!empty($type_object->is_new) || !empty($type_object->disabled_changed)) {
+        node_type_save($type_object);
       }
     }
   }
@@ -742,6 +761,7 @@ function node_type_set_defaults($info = array()) {
     $type->custom = 0;
     $type->modified = 0;
     $type->locked = 1;
+    $type->disabled = 0;
     $type->is_new = 1;
 
     $type->has_title = 1;
@@ -756,6 +776,9 @@ function node_type_set_defaults($info = array()) {
   // If the type has no title, set an empty label.
   if (!$new_type->has_title) {
     $new_type->title_label = '';
+  }
+  if (empty($new_type->module)) {
+    $new_type->module = $new_type->base == 'node_content' ? 'node' : '';
   }
   $new_type->orig_type = isset($info['type']) ? $info['type'] : '';
 

@@ -6727,8 +6727,10 @@ function drupal_flush_all_caches() {
   system_rebuild_theme_data();
   drupal_theme_rebuild();
 
-  menu_rebuild();
   node_types_rebuild();
+  // node_menu() defines menu items based on node types so it needs to come
+  // after node types are rebuilt.
+  menu_rebuild();
 
   // Synchronize to catch any actions that were added or removed.
   actions_synchronize();
