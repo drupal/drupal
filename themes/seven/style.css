@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.76 2010/10/05 21:03:17 webchick Exp $ */
+/* $Id: style.css,v 1.77 2010/10/07 17:38:34 dries Exp $ */
 
 /**
  * Generic elements.
@@ -890,7 +890,7 @@ ol.task-list li.done {
   z-index: 10;
 }
 #overlay-tabs {
-  bottom: -2px;
+  bottom: -1px;
   font-size: 1.54em;
   line-height: 1.54em;
   margin: 0;
