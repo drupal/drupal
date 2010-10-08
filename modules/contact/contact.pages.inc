@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.pages.inc,v 1.43 2010/04/24 14:49:13 dries Exp $
+// $Id: contact.pages.inc,v 1.44 2010/10/08 03:36:03 webchick Exp $
 
 /**
  * @file
@@ -61,6 +61,7 @@ function contact_site_form($form, &$form_state) {
     $form['#attributes']['class'][] = 'user-info-from-cookie';
   }
 
+  $form['#attributes']['class'][] = 'contact-form';
   $form['name'] = array(
     '#type' => 'textfield',
     '#title' => t('Your name'),
@@ -190,6 +191,7 @@ function contact_personal_form($form, &$form_state, $recipient) {
     $form['#attributes']['class'][] = 'user-info-from-cookie';
   }
 
+  $form['#attributes']['class'][] = 'contact-form';
   $form['recipient'] = array(
     '#type' => 'value',
     '#value' => $recipient,

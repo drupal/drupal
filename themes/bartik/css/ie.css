@@ -1,4 +1,4 @@
-/* $Id: ie.css,v 1.6 2010/10/05 01:48:11 dries Exp $ */
+/* $Id: ie.css,v 1.7 2010/10/08 03:36:03 webchick Exp $ */
 
 .block {
   zoom: 1;
@@ -29,4 +29,10 @@ fieldset legend {
 #search-form input.form-submit:hover,
 #search-form input.form-submit:focus {
   background-position: center -25px;
+}
+.contact-form #edit-message {
+  width: 75%;
+}
+.contact-form .resizable-textarea .grippie {
+  width: 76.3%;
 }
