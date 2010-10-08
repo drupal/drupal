@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.test,v 1.36 2010/10/01 15:24:18 webchick Exp $
+// $Id: menu.test,v 1.37 2010/10/08 05:28:30 webchick Exp $
 
 /**
  * @file
@@ -872,19 +872,50 @@ class MenuBreadcrumbTestCase extends DrupalWebTestCase {
     // Verify breadcrumb on front page.
     $this->assertBreadcrumb('<front>', array());
 
+    // Verify breadcrumb on user pages (without menu link) for anonymous user.
     $trail = $home;
     $this->assertBreadcrumb('user', $trail, t('User account'));
     $this->assertBreadcrumb('user/' . $this->admin_user->uid, $trail, $this->admin_user->name);
 
+    // Verify breadcrumb on user pages (without menu link) for registered users.
     $this->drupalLogin($this->admin_user);
+    $trail = $home;
+    $this->assertBreadcrumb('user', $trail, $this->admin_user->name);
+    $this->assertBreadcrumb('user/' . $this->admin_user->uid, $trail, $this->admin_user->name);
     $trail += array(
       'user/' . $this->admin_user->uid => $this->admin_user->name,
     );
     $this->assertBreadcrumb('user/' . $this->admin_user->uid . '/edit', $trail, $this->admin_user->name);
 
+    // Create a second user to verify breadcrumb on user pages again.
+    $this->web_user = $this->drupalCreateUser(array(
+      'administer users',
+      'access user profiles',
+    ));
+    $this->drupalLogin($this->web_user);
+
+    // Verify correct breadcrumb and page title on another user's account pages
+    // (without menu link).
+    $trail = $home;
+    $this->assertBreadcrumb('user/' . $this->admin_user->uid, $trail, $this->admin_user->name);
+    $trail += array(
+      'user/' . $this->admin_user->uid => $this->admin_user->name,
+    );
+    $this->assertBreadcrumb('user/' . $this->admin_user->uid . '/edit', $trail, $this->admin_user->name);
+
+    // Verify correct breadcrumb and page title when viewing own user account
+    // pages (without menu link).
+    $trail = $home;
+    $this->assertBreadcrumb('user/' . $this->web_user->uid, $trail, $this->web_user->name);
+    $trail += array(
+      'user/' . $this->web_user->uid => $this->web_user->name,
+    );
+    $this->assertBreadcrumb('user/' . $this->web_user->uid . '/edit', $trail, $this->web_user->name);
+
     // Add a Navigation menu links for 'user' and $this->admin_user.
     // Although it may be faster to manage these links via low-level API
     // functions, there's a lot that can go wrong in doing so.
+    $this->drupalLogin($this->admin_user);
     $edit = array(
       'link_title' => 'User',
       'link_path' => 'user',

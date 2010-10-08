@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1206 2010/10/04 14:54:10 webchick Exp $
+// $Id: user.module,v 1.1207 2010/10/08 05:28:30 webchick Exp $
 
 /**
  * @file
@@ -1520,15 +1520,12 @@ function user_menu() {
   // Registration and login pages.
   $items['user'] = array(
     'title' => 'User account',
+    'title callback' => 'user_menu_title',
     'page callback' => 'user_page',
     'access callback' => TRUE,
-    // Edge-case: No menu links should be auto-generated for this and below
-    // items, which makes it a MENU_CALLBACK. However, this item's title is
-    // expected to appear on user login, register, and password pages, so we
-    // need to use MENU_VISIBLE_IN_BREADCRUMB to make
-    // menu_get_active_breadcrumb() account for it.
-    'type' => MENU_VISIBLE_IN_BREADCRUMB,
     'file' => 'user.pages.inc',
+    'weight' => -10,
+    'menu_name' => 'user-menu',
   );
 
   $items['user/login'] = array(
@@ -1665,9 +1662,7 @@ function user_menu() {
     'weight' => -10,
   );
 
-  // Use %user_uid_only_optional here to avoid loading the full user for
-  // basic access checks.
-  $items['user/%user_uid_only_optional'] = array(
+  $items['user/%user'] = array(
     'title' => 'My account',
     'title callback' => 'user_page_title',
     'title arguments' => array(1),
@@ -1675,8 +1670,12 @@ function user_menu() {
     'page arguments' => array(1),
     'access callback' => 'user_view_access',
     'access arguments' => array(1),
-    'weight' => -10,
-    'menu_name' => 'user-menu',
+    // By assigning a different menu name, this item (and all registered child
+    // paths) are no longer considered as children of 'user'. When accessing the
+    // user account pages, the preferred menu link that is used to build the
+    // active trail (breadcrumb) will be found in this menu (unless there is
+    // more specific link), so the link to 'user' will not be in the breadcrumb.
+    'menu_name' => 'navigation',
   );
 
   $items['user/%user/view'] = array(
@@ -1785,6 +1784,17 @@ function user_menu_site_status_alter(&$menu_site_status, $path) {
 }
 
 /**
+ * Implements hook_menu_link_alter().
+ */
+function user_menu_link_alter(&$link) {
+  // Force the Logout link to appear on the top-level of 'user-menu' menu by
+  // default (i.e., unless it has been customized).
+  if ($link['link_path'] == 'user/logout' && $link['module'] == 'system' && empty($link['customized'])) {
+    $link['plid'] = 0;
+  }
+}
+
+/**
  * Implements hook_admin_paths().
  */
 function user_admin_paths() {
@@ -1867,24 +1877,19 @@ function user_uid_optional_to_arg($arg) {
 }
 
 /**
- * Returns $arg or the user ID of the current user if $arg is '%' or empty.
+ * Menu item title callback for the 'user' path.
  *
- * @todo rethink the naming of this in Drupal 8.
+ * Anonymous users should see "User account", but authenticated users are
+ * expected to see "My account".
  */
-function user_uid_only_optional_to_arg($arg) {
-  return user_uid_optional_to_arg($arg);
+function user_menu_title() {
+  return user_is_logged_in() ? t('My account') : t('User account');
 }
 
 /**
  * Menu item title callback - use the user name.
  */
-function user_page_title($uid) {
-  if ($GLOBALS['user']->uid == $uid) {
-    $account = $GLOBALS['user'];
-  }
-  else {
-    $account = user_load($uid);
-  }
+function user_page_title($account) {
   return is_object($account) ? format_username($account) : '';
 }
 
@@ -2359,10 +2364,9 @@ function user_delete_multiple(array $uids) {
 /**
  * Page callback wrapper for user_view().
  */
-function user_view_page($uid) {
+function user_view_page($account) {
   // An administrator may try to view a non-existent account,
   // so we give them a 404 (versus a 403 for non-admins).
-  $account = user_load($uid);
   return is_object($account) ? user_view($account) : MENU_NOT_FOUND;
 }
 
