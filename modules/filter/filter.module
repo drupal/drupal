@@ -1102,7 +1102,7 @@ function theme_filter_guidelines($variables) {
 }
 
 /**
- * @name Standard filters
+ * @defgroup standard_filters Standard filters
  * @{
  * Filters implemented by the filter.module.
  */

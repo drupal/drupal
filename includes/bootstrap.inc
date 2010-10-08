@@ -231,12 +231,6 @@ define('LANGUAGE_RTL', 1);
 define('REQUEST_TIME', $_SERVER['REQUEST_TIME']);
 
 /**
- * @name Title text filtering flags
- * @{
- * Flags for use in drupal_set_title().
- */
-
-/**
  * Flag for drupal_set_title(); text is not sanitized, so run check_plain().
  */
 define('CHECK_PLAIN', 0);
@@ -245,10 +239,6 @@ define('CHECK_PLAIN', 0);
  * Flag for drupal_set_title(); text has already been sanitized.
  */
 define('PASS_THROUGH', -1);
-
-/**
- * @} End of "Title text filtering flags".
- */
 
 /**
  * Signals that the registry lookup cache should be reset.
