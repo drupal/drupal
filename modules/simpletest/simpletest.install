@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.install,v 1.37 2010/09/01 20:08:17 dries Exp $
+// $Id: simpletest.install,v 1.38 2010/10/08 00:22:17 dries Exp $
 
 /**
  * @file
@@ -37,7 +37,7 @@ function simpletest_requirements($phase) {
 
   $has_curl = function_exists('curl_init');
   $has_hash = function_exists('hash_hmac');
-  $has_domdocument = class_exists('DOMDocument');
+  $has_domdocument = method_exists('DOMDocument', 'loadHTML');
   $open_basedir = ini_get('open_basedir');
 
   $requirements['curl'] = array(
