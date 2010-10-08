@@ -1978,10 +1978,22 @@ function system_update_7015() {
     ->fields(array('link_path' => 'user/logout'))
     ->condition('link_path', 'logout')
     ->execute();
-
- db_update('menu_links')
+  db_update('menu_links')
     ->fields(array('router_path' => 'user/logout'))
     ->condition('router_path', 'logout')
+    ->execute();
+
+  db_update('menu_links')
+    ->fields(array(
+      'menu_name' => 'user-menu',
+      'plid' => 0,
+    ))
+    ->condition(db_or()
+      ->condition('link_path', 'user/logout')
+      ->condition('router_path', 'user/logout')
+    )
+    ->condition('module', 'system')
+    ->condition('customized', 0)
     ->execute();
 }
 
