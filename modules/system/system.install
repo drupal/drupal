@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.516 2010/10/08 05:28:30 webchick Exp $
+// $Id: system.install,v 1.517 2010/10/08 18:19:11 webchick Exp $
 
 /**
  * @file
@@ -2860,6 +2860,19 @@ function system_update_7062() {
   db_drop_index('system', 'bootstrap');
   db_drop_index('system', 'system_list');
   db_add_index('system', 'system_list', array('status', 'bootstrap', 'type', 'weight', 'name'));
+}
+
+/**
+ * Delete {menu_links} records for 'type' => MENU_CALLBACK which would not appear in a fresh install.
+ */
+function system_update_7063() {
+  // For router items where 'type' => MENU_CALLBACK, {menu_router}.type is
+  // stored as 4 in Drupal 6, and 0 in Drupal 7. Fortunately Drupal 7 doesn't
+  // store any types as 4, so delete both.
+  $result = db_query('SELECT ml.mlid FROM {menu_links} ml INNER JOIN {menu_router} mr ON ml.router_path = mr.path WHERE ml.module = :system AND ml.customized = 0 AND mr.type IN(:callbacks)', array(':callbacks' => array(0, 4), ':system' => 'system'));
+  foreach ($result as $record) {
+    db_delete('menu_links')->condition('mlid', $record->mlid)->execute();
+  }
 }
 
 /**
