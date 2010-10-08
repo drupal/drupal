@@ -1,4 +1,4 @@
-/* $Id: locale.css,v 1.7 2010/04/28 20:08:38 dries Exp $ */
+/* $Id: locale.css,v 1.8 2010/10/08 03:30:40 webchick Exp $ */
 
 .locale-untranslated {
   font-style: normal;
@@ -26,10 +26,10 @@
   padding: 3ex 0 0 1em;
 }
 
-.language-switcher-locale-session .active a.active {
+.language-switcher-locale-session a.active {
   color: #0062A0;
 }
 
-.language-switcher-locale-session .active a.session-active {
+.language-switcher-locale-session a.session-active {
   color: #000000;
 }
