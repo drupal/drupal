@@ -30,3 +30,9 @@ fieldset legend {
 #search-form input.form-submit:focus {
   background-position: center -25px;
 }
+.contact-form #edit-message {
+  width: 75%;
+}
+.contact-form .resizable-textarea .grippie {
+  width: 76.3%;
+}

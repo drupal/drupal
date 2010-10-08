@@ -61,6 +61,7 @@ function contact_site_form($form, &$form_state) {
     $form['#attributes']['class'][] = 'user-info-from-cookie';
   }
 
+  $form['#attributes']['class'][] = 'contact-form';
   $form['name'] = array(
     '#type' => 'textfield',
     '#title' => t('Your name'),
@@ -190,6 +191,7 @@ function contact_personal_form($form, &$form_state, $recipient) {
     $form['#attributes']['class'][] = 'user-info-from-cookie';
   }
 
+  $form['#attributes']['class'][] = 'contact-form';
   $form['recipient'] = array(
     '#type' => 'value',
     '#value' => $recipient,
