@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.618 2010/10/05 19:59:10 dries Exp $
+// $Id: theme.inc,v 1.619 2010/10/08 05:07:53 webchick Exp $
 
 /**
  * @file
@@ -10,7 +10,7 @@
  */
 
 /**
- * @name Content markers
+ * @defgroup content_flags Content markers
  * @{
  * Markers used by theme_mark() and node_mark() to designate content.
  * @see theme_mark(), node_mark()

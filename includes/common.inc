@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1236 2010/10/07 00:28:19 webchick Exp $
+// $Id: common.inc,v 1.1237 2010/10/08 05:07:53 webchick Exp $
 
 /**
  * @file
@@ -378,7 +378,7 @@ function drupal_get_feeds($delimiter = "\n") {
 }
 
 /**
- * @name HTTP handling
+ * @defgroup http_handling HTTP handling
  * @{
  * Functions to properly handle HTTP responses.
  */

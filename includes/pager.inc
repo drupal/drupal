@@ -1,5 +1,5 @@
 <?php
-// $Id: pager.inc,v 1.84 2010/10/06 13:38:39 dries Exp $
+// $Id: pager.inc,v 1.85 2010/10/08 05:07:53 webchick Exp $
 
 /**
  * @file
@@ -429,7 +429,7 @@ function theme_pager($variables) {
 
 
 /**
- * @name Pager pieces
+ * @defgroup pagerpieces Pager pieces
  * @{
  * Use these pieces to construct your own custom pagers in your theme. Note that
  * you should NOT modify this file to customize your pager.
