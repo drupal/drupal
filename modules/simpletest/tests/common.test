@@ -1,5 +1,5 @@
 <?php
-// $Id: common.test,v 1.129 2010/10/05 19:59:10 dries Exp $
+// $Id: common.test,v 1.130 2010/10/08 15:36:12 dries Exp $
 
 /**
  * @file
@@ -862,11 +862,10 @@ class CascadingStylesheetsUnitTest extends DrupalUnitTestCase {
   /**
    * Tests basic CSS loading with and without optimization via drupal_load_stylesheet().
    *
-   * This can be enhanced by adding additional CSS files with variant test cases.
-   * Currently, this is specifically testing to make sure that whitespace
-   * is treated with adequate respect (see http://drupal.org/node/472820) and
-   * that image paths in imported files are preserved (see
-   * http://drupal.org/node/265719).
+   * Known tests:
+   * - Retain white-space in selectors. (http://drupal.org/node/472820)
+   * - Proper URLs in imported files. (http://drupal.org/node/265719)
+   * - Retain pseudo-selectors. (http://drupal.org/node/460448)
    */
   function testLoadCssBasic() {
     // Array of files to test living in 'simpletest/files/css_test_files/'.
@@ -882,10 +881,16 @@ class CascadingStylesheetsUnitTest extends DrupalUnitTestCase {
     foreach ($testfiles as $file) {
       $expected = file_get_contents("$path/$file.unoptimized.css");
       $unoptimized_output = drupal_load_stylesheet("$path/$file.unoptimized.css", FALSE);
+      $this->verbose('Expected:<pre>' . $expected . '</pre>'
+        . 'Actual:<pre>' . $unoptimized_output . '</pre>'
+      );
       $this->assertEqual($unoptimized_output, $expected, t('Unoptimized CSS file has expected contents (@file)', array('@file' => $file)));
 
       $expected = file_get_contents("$path/$file.optimized.css");
       $optimized_output = drupal_load_stylesheet("$path/$file", TRUE);
+      $this->verbose('Expected:<pre>' . $expected . '</pre>'
+        . 'Actual:<pre>' . $optimized_output . '</pre>'
+      );
       $this->assertEqual($optimized_output, $expected, t('Optimized CSS file has expected contents (@file)', array('@file' => $file)));
     }
   }

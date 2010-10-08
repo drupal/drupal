@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1237 2010/10/08 05:07:53 webchick Exp $
+// $Id: common.inc,v 1.1238 2010/10/08 15:36:12 dries Exp $
 
 /**
  * @file
@@ -3463,13 +3463,34 @@ function drupal_load_stylesheet_content($contents, $optimize = FALSE) {
     $double_quot = '"[^"\\\\]*(?:\\\\.[^"\\\\]*)*"';
     // Regexp to match single quoted strings.
     $single_quot = "'[^'\\\\]*(?:\\\\.[^'\\\\]*)*'";
+    // Strip all comment blocks, but keep double/single quoted strings.
     $contents = preg_replace(
-      "<($double_quot|$single_quot)|$comment>Ss",  // Strip all comment blocks
-      "$1",                                        // but keep double/single
-      $contents);                                  // quoted strings.
-    $contents = preg_replace(
-      '<\s*([@{}:;,]|\)\s|\s\()\s*>S',             // Remove whitespace around separators,
-      '\1', $contents);                            // but keep space around parentheses.
+      "<($double_quot|$single_quot)|$comment>Ss",
+      "$1",
+      $contents
+    );
+    // Remove certain whitespace.
+    // There are different conditions for removing leading and trailing
+    // whitespace. To be able to use a single backreference in the replacement
+    // string, the outer pattern uses the ?| modifier, which makes all contained
+    // subpatterns appear in \1.
+    // @see http://php.net/manual/en/regexp.reference.subpatterns.php
+    $contents = preg_replace('<
+      (?|
+      # Strip leading and trailing whitespace.
+        \s*([@{};,])\s*
+      # Strip only leading whitespace from:
+      # - Closing parenthesis: Retain "@media (bar) and foo".
+      | \s+([\)])
+      # Strip only trailing whitespace from:
+      # - Opening parenthesis: Retain "@media (bar) and foo".
+      # - Colon: Retain :pseudo-selectors.
+      | ([\(:])\s+
+      )
+    >xS',
+      '\1',
+      $contents
+    );
     // End the file with a new line.
     $contents .= "\n";
   }

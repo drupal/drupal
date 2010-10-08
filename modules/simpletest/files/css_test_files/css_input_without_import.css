@@ -1,4 +1,4 @@
-/* $Id: css_input_without_import.css,v 1.2 2009/11/10 17:27:53 webchick Exp $ */
+/* $Id: css_input_without_import.css,v 1.3 2010/10/08 15:36:12 dries Exp $ */
 
 /**
  * @file Basic css that does not use import
@@ -19,16 +19,48 @@ body {
 }
 
 /**
- * CSS spec says that all whitespace is valid whitespace, so this selector should be just as
- * good as the one above.
+ * CSS spec says that all whitespace is valid whitespace, so this selector
+ * should be just as good as the one above.
  */
-
 .this
 .is
 .a
 .test {
 font: 1em/100% Verdana, sans-serif;
 color: #494949;
+}
+
+some :pseudo .thing {
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+  filter: progid:DXImageTransform.Microsoft.Shadow(color=#000000, direction='180', strength='10');
+  -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(color=#000000, direction='180', strength='10')";
+}
+
+::-moz-selection {
+  background: #000;
+  color:#fff;
+
+}
+::selection {
+  background: #000;
+  color: #fff;
+}
+
+@media print {
+  * {
+    background: #000 !important;
+    color: #fff !important;
+  }
+  @page {
+    margin: 0.5cm;
+  }
+}
+
+@media screen and (max-device-width: 480px) {
+  background: #000;
+  color: #fff;
 }
 
 textarea, select {
