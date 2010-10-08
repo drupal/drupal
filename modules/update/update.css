@@ -1,4 +1,4 @@
-/* $Id: update.css,v 1.7 2010/04/28 20:08:39 dries Exp $ */
+/* $Id: update.css,v 1.8 2010/10/08 00:24:09 dries Exp $ */
 
 .update .project {
   font-weight: bold;
@@ -25,6 +25,11 @@
 .update .info {
   margin: 0;
   padding: 1em 1em .25em 1em;
+}
+
+.update tr.even,
+.update tr.odd {
+  border: none;
 }
 
 .update tr td {
@@ -65,6 +70,7 @@ table.update,
 .update table.version {
   width: 100%;
   margin-top: .5em;
+  border: none;
 }
 
 .update table.version tbody {
@@ -77,6 +83,7 @@ table.update,
   padding: 0;
   margin: 0;
   border: none;
+  background: none;
 }
 
 .update table.version .version-title {
