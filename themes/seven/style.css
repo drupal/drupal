@@ -973,36 +973,3 @@ div.add-or-remove-shortcuts {
 #user-login-form .openid-links .user-link {
   margin-left: 1.5em; /* LTR */
 }
-
-
-/* Available Updates */
-.update tr.ok {
-  color: #255b1e;
-  background: #e5ffe2;
-  border-bottom: 1px solid #89D47F;
-}
-.update tr.warning {
-  color: #840;
-  background: #fffce5;
-  border-bottom: 1px solid #ed5;
-}
-.update tr.warning .version-recommended {
-  background: #ffe;
-}
-.update tr.unknown {
-  background: #ddd;
-}
-.update tr.error {
-  color: #840;
-  background: #fffce5;
-  border-bottom: 1px solid #ed5;
-}
-.update tr.error .version-recommended {
-  background: #fdd;
-}
-table tbody tr.update-security,
-table tbody tr.update-unsupported {
-  color: #840;
-  background: #fffce5;
-  border-bottom: 1px solid #ed5;
-}

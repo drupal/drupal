@@ -27,6 +27,11 @@
   padding: 1em 1em .25em 1em;
 }
 
+.update tr.even,
+.update tr.odd {
+  border: none;
+}
+
 .update tr td {
   border-top: 1px solid #ccc;
   border-bottom: 1px solid #ccc;
@@ -65,6 +70,7 @@ table.update,
 .update table.version {
   width: 100%;
   margin-top: .5em;
+  border: none;
 }
 
 .update table.version tbody {
@@ -77,6 +83,7 @@ table.update,
   padding: 0;
   margin: 0;
   border: none;
+  background: none;
 }
 
 .update table.version .version-title {
