@@ -2863,6 +2863,19 @@ function system_update_7062() {
 }
 
 /**
+ * Delete {menu_links} records for 'type' => MENU_CALLBACK which would not appear in a fresh install.
+ */
+function system_update_7063() {
+  // For router items where 'type' => MENU_CALLBACK, {menu_router}.type is
+  // stored as 4 in Drupal 6, and 0 in Drupal 7. Fortunately Drupal 7 doesn't
+  // store any types as 4, so delete both.
+  $result = db_query('SELECT ml.mlid FROM {menu_links} ml INNER JOIN {menu_router} mr ON ml.router_path = mr.path WHERE ml.module = :system AND ml.customized = 0 AND mr.type IN(:callbacks)', array(':callbacks' => array(0, 4), ':system' => 'system'));
+  foreach ($result as $record) {
+    db_delete('menu_links')->condition('mlid', $record->mlid)->execute();
+  }
+}
+
+/**
  * @} End of "defgroup updates-6.x-to-7.x"
  * The next series of updates should start at 8000.
  */
