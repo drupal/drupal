@@ -2376,6 +2376,12 @@ function language_list($field = 'language') {
   if (!isset($languages)) {
     if (drupal_multilingual() || module_exists('locale')) {
       $languages['language'] = db_query('SELECT * FROM {languages} ORDER BY weight ASC, name ASC')->fetchAllAssoc('language');
+      // Users cannot uninstall the native English language. However, we allow
+      // it to be hidden from the installed languages. Therefore, at least one
+      // other language must be enabled then.
+      if (!$languages['language']['en']->enabled && !variable_get('language_native_enabled', TRUE)) {
+        unset($languages['language']['en']);
+      }
     }
     else {
       // No locale module, so use the default language only.

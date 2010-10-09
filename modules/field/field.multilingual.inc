@@ -153,8 +153,7 @@ function _field_language_suggestion($available_languages, $language_suggestion, 
  *   An array of language codes.
  */
 function field_content_languages() {
-  $languages = language_list('enabled');
-  return array_keys($languages[1] + array(LANGUAGE_NONE => NULL));
+  return array_keys(language_list() + array(LANGUAGE_NONE => NULL));
 }
 
 /**
