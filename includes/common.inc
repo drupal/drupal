@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1238 2010/10/08 15:36:12 dries Exp $
+// $Id: common.inc,v 1.1239 2010/10/09 08:05:15 webchick Exp $
 
 /**
  * @file
@@ -4983,7 +4983,8 @@ function drupal_cron_cleanup() {
  * the file name ($key = 'filename'), the file name without the extension ($key
  * = 'name'), or the full file stream URI ($key = 'uri'). If you use a key of
  * 'filename' or 'name', files found later in the search will take precedence
- * over files found earlier; if you choose a key of 'uri', you will get all
+ * over files found earlier (unless they belong to a module or theme not
+ * compatible with Drupal core); if you choose a key of 'uri', you will get all
  * files found.
  *
  * @param string $mask
@@ -5037,7 +5038,31 @@ function drupal_system_listing($mask, $directory, $key = 'name', $min_depth = 1)
     require_once DRUPAL_ROOT . '/includes/file.inc';
   }
   foreach ($searchdir as $dir) {
-    $files = array_merge($files, file_scan_directory($dir, $mask, array('key' => $key, 'min_depth' => $min_depth)));
+    $files_to_add = file_scan_directory($dir, $mask, array('key' => $key, 'min_depth' => $min_depth));
+
+    // Duplicate files found in later search directories take precedence over
+    // earlier ones, so we want them to overwrite keys in our resulting
+    // $files array.
+    // The exception to this is if the later file is from a module or theme not
+    // compatible with Drupal core. This may occur during upgrades of Drupal
+    // core when new modules exist in core while older contrib modules with the
+    // same name exist in a directory such as sites/all/modules/.
+    foreach (array_intersect_key($files_to_add, $files) as $key => $file) {
+      // If it has no info file, then we just behave liberally and accept the
+      // new resource on the list for merging.
+      if (file_exists($info_file = dirname($file->uri) . '/' . $file->name . '.info')) {
+        // Get the .info file for the module or theme this file belongs to.
+        $info = drupal_parse_info_file($info_file);
+
+        // If the module or theme is incompatible with Drupal core, remove it
+        // from the array for the current search directory, so it is not
+        // overwritten when merged with the $files array.
+        if (isset($info['core']) && $info['core'] != DRUPAL_CORE_COMPATIBILITY) {
+          unset($files_to_add[$key]);
+        }
+      }
+    }
+    $files = array_merge($files, $files_to_add);
   }
 
   return $files;
