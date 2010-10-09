@@ -1,0 +1,14 @@
+<?php
+// $Id: translation_test.module,v 1.1 2010/10/09 03:22:30 webchick Exp $
+
+/**
+ * @file
+ * Mock module for content translation tests.
+ */
+
+/**
+ * Implements hook_node_insert().
+ */
+function translation_test_node_insert($node) {
+  drupal_write_record('node', $node, 'nid');
+}

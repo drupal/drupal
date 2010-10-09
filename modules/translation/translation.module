@@ -1,5 +1,5 @@
 <?php
-// $Id: translation.module,v 1.85 2010/10/07 17:54:35 dries Exp $
+// $Id: translation.module,v 1.86 2010/10/09 03:22:30 webchick Exp $
 
 /**
  * @file
@@ -272,6 +272,8 @@ function translation_node_insert($node) {
         ))
         ->condition('nid', $node->nid)
         ->execute();
+      // Save tnid to avoid loss in case of resave.
+      $node->tnid = $tnid;
     }
   }
 }
