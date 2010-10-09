@@ -1,5 +1,5 @@
 <?php
-// $Id: translation.test,v 1.30 2010/10/09 03:22:30 webchick Exp $
+// $Id: translation.test,v 1.31 2010/10/09 03:43:31 webchick Exp $
 
 class TranslationTestCase extends DrupalWebTestCase {
   protected $book;
@@ -83,6 +83,23 @@ class TranslationTestCase extends DrupalWebTestCase {
     $edit['translation[status]'] = FALSE;
     $this->drupalPost('node/' . $node_translation->nid . '/edit', $edit, t('Save'));
     $this->assertRaw(t('Basic page %title has been updated.', array('%title' => $node_translation_title)), t('Translated node updated.'));
+
+    $this->drupalLogin($admin_user);
+
+    // Disable Spanish and confirm that links to the Spanish translations do
+    // not appear on the English node.
+    $edit = array();
+    $edit['enabled[es]'] = FALSE;
+    $this->drupalPost('admin/config/regional/language', $edit, t('Save configuration'));
+    $this->drupalGet('node/' . $node->nid);
+    $languages = language_list();
+    $this->assertNoText($languages['es']->native);
+
+    $this->drupalLogin($translator);
+
+    // Confirm that Spanish is still an option for translators when creating nodes.
+    $this->drupalGet('node/add/page');
+    $this->assertRaw('value="' . 'es' .'"', t('Spanish is available in language selection'));
   }
 
   /**

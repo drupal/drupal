@@ -1,5 +1,5 @@
 <?php
-// $Id: field.multilingual.inc,v 1.13 2010/08/31 15:02:39 webchick Exp $
+// $Id: field.multilingual.inc,v 1.14 2010/10/09 03:43:31 webchick Exp $
 
 /**
  * @file
@@ -153,8 +153,7 @@ function _field_language_suggestion($available_languages, $language_suggestion, 
  *   An array of language codes.
  */
 function field_content_languages() {
-  $languages = language_list('enabled');
-  return array_keys($languages[1] + array(LANGUAGE_NONE => NULL));
+  return array_keys(language_list() + array(LANGUAGE_NONE => NULL));
 }
 
 /**
