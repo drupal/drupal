@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.78 2010/10/08 00:24:09 dries Exp $ */
+/* $Id: style.css,v 1.79 2010/10/09 02:32:30 webchick Exp $ */
 
 /**
  * Generic elements.
@@ -31,7 +31,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-weight: normal;
+  font-weight: bold;
   margin: 10px 0;
 }
 h1 {
@@ -904,6 +904,9 @@ ol.task-list li.done {
 }
 .overlay #content {
   padding: 0;
+}
+h1#overlay-title {
+  font-weight: normal;
 }
 
 /* Shortcut theming */
