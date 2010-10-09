@@ -1,5 +1,5 @@
 <?php
-// $Id: translation.test,v 1.31 2010/10/09 03:43:31 webchick Exp $
+// $Id: translation.test,v 1.32 2010/10/09 17:38:41 webchick Exp $
 
 class TranslationTestCase extends DrupalWebTestCase {
   protected $book;
@@ -14,17 +14,12 @@ class TranslationTestCase extends DrupalWebTestCase {
 
   function setUp() {
     parent::setUp('locale', 'translation', 'translation_test');
-  }
 
-  /**
-   * Create a basic page with translation, modify the basic page outdating translation, and update translation.
-   */
-  function testContentTranslation() {
     // Setup users.
-    $admin_user = $this->drupalCreateUser(array('administer languages', 'administer content types', 'access administration pages'));
-    $translator = $this->drupalCreateUser(array('create page content', 'edit own page content', 'translate content'));
+    $this->admin_user = $this->drupalCreateUser(array('administer languages', 'administer content types', 'access administration pages'));
+    $this->translator = $this->drupalCreateUser(array('create page content', 'edit own page content', 'translate content'));
 
-    $this->drupalLogin($admin_user);
+    $this->drupalLogin($this->admin_user);
 
     // Add languages.
     $this->addLanguage('en');
@@ -37,9 +32,14 @@ class TranslationTestCase extends DrupalWebTestCase {
     $this->drupalPost('admin/structure/types/manage/page', $edit, t('Save content type'));
     $this->assertRaw(t('The content type %type has been updated.', array('%type' => 'Basic page')), t('Basic page content type has been updated.'));
 
-    $this->drupalLogout();
-    $this->drupalLogin($translator);
+    $this->drupalLogin($this->translator);
+  }
 
+  /**
+   * Create a basic page with translation, modify the basic page outdating
+   * translation, and update translation.
+   */
+  function testContentTranslation() {
     // Create Basic page in English.
     $node_title = $this->randomName();
     $node_body =  $this->randomName();
@@ -84,7 +84,7 @@ class TranslationTestCase extends DrupalWebTestCase {
     $this->drupalPost('node/' . $node_translation->nid . '/edit', $edit, t('Save'));
     $this->assertRaw(t('Basic page %title has been updated.', array('%title' => $node_translation_title)), t('Translated node updated.'));
 
-    $this->drupalLogin($admin_user);
+    $this->drupalLogin($this->admin_user);
 
     // Disable Spanish and confirm that links to the Spanish translations do
     // not appear on the English node.
@@ -95,11 +95,37 @@ class TranslationTestCase extends DrupalWebTestCase {
     $languages = language_list();
     $this->assertNoText($languages['es']->native);
 
-    $this->drupalLogin($translator);
+    $this->drupalLogin($this->translator);
 
     // Confirm that Spanish is still an option for translators when creating nodes.
     $this->drupalGet('node/add/page');
     $this->assertRaw('value="' . 'es' .'"', t('Spanish is available in language selection'));
+  }
+
+  /**
+   * Check that content translation links behave properly.
+   */
+  function testContentTranslationLinks() {
+    // Create Basic page in English.
+    $node_title = $this->randomName();
+    $node_body = $this->randomName();
+    $node = $this->createPage($node_title, $node_body, 'en');
+
+    // Submit translation in Spanish.
+    $node_translation_title = $this->randomName();
+    $node_translation_body = $this->randomName();
+    $node_translation = $this->createTranslation($node, $node_translation_title, $node_translation_body, 'es');
+
+    // Check that content translation links are shown even when no language
+    // negotiation is configured.
+    $languages = language_list();
+    $this->drupalGet("node/$node->nid");
+    $url = url("node/$node_translation->nid");
+    $this->assertContentByXPath('//a[@href=:url]', array(':url' => $url), $languages['es']->native, t('Spanish translation link found.'));
+
+    $this->drupalGet("node/$node_translation->nid");
+    $url = url("node/$node->nid");
+    $this->assertContentByXPath('//a[@href=:url]', array(':url' => $url), $languages['en']->native, t('English translation link found.'));
   }
 
   /**
@@ -160,6 +186,42 @@ class TranslationTestCase extends DrupalWebTestCase {
     $this->assertTrue($node, t('Node found in database.'));
 
     return $node;
+  }
+
+  /**
+   * Assert that an element identified by the given XPath has the given content.
+   *
+   * @param $xpath
+   *   XPath used to find the element.
+   * @param array $arguments
+   *   An array of arguments with keys in the form ':name' matching the
+   *   placeholders in the query. The values may be either strings or numeric
+   *   values.
+   * @param $value
+   *   The text content of the matched element to assert.
+   * @param $message
+   *   Message to display.
+   * @param $group
+   *   The group this message belongs to.
+   *
+   * @return
+   *   TRUE on pass, FALSE on fail.
+   */
+  function assertContentByXPath($xpath, array $arguments = array(), $value = NULL, $message = '', $group = 'Other') {
+    $elements = $this->xpath($xpath, $arguments);
+
+    $found = TRUE;
+    if ($value && $elements) {
+      $found = FALSE;
+      foreach ($elements as $element) {
+        if ((string) $element == $value) {
+          $found = TRUE;
+          break;
+        }
+      }
+    }
+
+    return $this->assertTrue($elements && $found, $message, $group);
   }
 
   /**

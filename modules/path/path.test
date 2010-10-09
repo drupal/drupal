@@ -1,5 +1,5 @@
 <?php
-// $Id: path.test,v 1.40 2010/08/05 23:53:38 webchick Exp $
+// $Id: path.test,v 1.41 2010/10/09 17:38:41 webchick Exp $
 
 /**
  * @file
@@ -299,6 +299,7 @@ class PathLanguageTestCase extends DrupalWebTestCase {
 
     // Confirm that the alias is returned by url().
     drupal_static_reset('language_list');
+    drupal_static_reset('locale_url_outbound_alter');
     $languages = language_list();
     $url = url('node/' . $french_node->nid, array('language' => $languages[$french_node->language]));
     $this->assertTrue(strpos($url, $edit['path[alias]']), t('URL contains the path alias.'));
