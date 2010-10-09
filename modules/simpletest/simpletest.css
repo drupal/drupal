@@ -32,6 +32,10 @@ th.simpletest_test {
   color: #494949;
 }
 
+table#simpletest-form-table tr.simpletest-group label {
+  display: inline;
+}
+
 div.message > div.item-list {
   font-weight: normal;
 }
