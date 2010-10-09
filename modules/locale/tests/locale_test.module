@@ -1,5 +1,5 @@
 <?php
-// $Id: locale_test.module,v 1.5 2009/12/04 16:49:46 dries Exp $
+// $Id: locale_test.module,v 1.6 2010/10/09 13:46:09 dries Exp $
 
 /**
  * @file
@@ -17,11 +17,25 @@ function locale_test_locale($op = 'groups') {
 }
 
 /**
+ * Implements hook_boot().
+ *
  * For testing domain language negotiation, we fake it by setting
  * the HTTP_HOST here
  */
 function locale_test_boot() {
   if (variable_get('locale_test_domain')) {
     $_SERVER['HTTP_HOST'] = variable_get('locale_test_domain');
+  }
+}
+
+/**
+ * Implements hook_language_types_info_alter().
+ */
+function locale_test_language_types_info_alter(array &$language_types) {
+  if (variable_get('locale_test_content_language_type', FALSE)) {
+    $language_types[LANGUAGE_TYPE_CONTENT] = array(
+      'name' => t('Content'),
+      'description' => t('Order of language detection methods for content. If a version of content is available in the detected language, it will be displayed.'),
+    );
   }
 }

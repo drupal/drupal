@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.test,v 1.80 2010/10/05 17:57:09 webchick Exp $
+// $Id: locale.test,v 1.81 2010/10/09 13:46:08 dries Exp $
 
 /**
  * @file
@@ -17,6 +17,7 @@
  *  - a functional test for configuring a different path alias per language;
  *  - a functional test for multilingual support by content type and on nodes.
  *  - a functional test for multilingual fields.
+ *  - a functional test for comment language.
  */
 
 
@@ -1930,6 +1931,95 @@ class LocaleMultilingualFieldsFunctionalTest extends DrupalWebTestCase {
   }
 }
 
+/**
+ * Functional tests for comment language.
+ */
+class LocaleCommentLanguageFunctionalTest extends DrupalWebTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Comment language',
+      'description' => 'Tests for comment language.',
+      'group' => 'Locale',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('locale', 'locale_test');
+
+    // Create and login user.
+    $admin_user = $this->drupalCreateUser(array('administer site configuration', 'administer languages', 'access administration pages', 'administer content types', 'create article content'));
+    $this->drupalLogin($admin_user);
+
+    // Add language.
+    $edit = array('langcode' => 'fr');
+    $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
+
+    // Set "Article" content type to use multilingual support.
+    $edit = array('language_content_type' => 1);
+    $this->drupalPost('admin/structure/types/manage/article', $edit, t('Save content type'));
+
+    // Enable content language negotiation UI.
+    variable_set('locale_test_content_language_type', TRUE);
+
+    // Set interface language detection to user and content language detection
+    // to URL.
+    $edit = array(
+      'language[enabled][locale-user]' => TRUE,
+      'language_content[enabled][locale-url]' => TRUE
+    );
+    $this->drupalPost('admin/config/regional/language/configure', $edit, t('Save settings'));
+
+    // Change user language preference, this way interface language is always
+    // French no matter what path prefix the URLs have.
+    $edit = array('language' => 'fr');
+    $this->drupalPost("user/{$admin_user->uid}/edit", $edit, t('Save'));
+  }
+
+  /**
+   * Test that comment language is properly set.
+   */
+  function testCommentLanguage() {
+    drupal_static_reset('language_list');
+
+    // Create two nodes, one for english and one for french, and comment each
+    // node using both english and french as content language by changing URL
+    // language prefixes. Meanwhile interface language is always French, which
+    // is the user language preference. This way we can ensure that node
+    // language and interface language do not influence comment language, as
+    // only content language has to.
+    foreach (language_list() as $node_langcode => $node_language) {
+      $language_none = LANGUAGE_NONE;
+
+      // Create "Article" content.
+      $title = $this->randomName();
+      $edit = array(
+        "title" => $title,
+        "body[$language_none][0][value]" => $this->randomName(),
+        "language" => $node_langcode,
+      );
+      $this->drupalPost("node/add/article", $edit, t('Save'));
+      $node = $this->drupalGetNodeByTitle($title);
+
+      foreach (language_list() as $langcode => $language) {
+        // Post a comment with content language $langcode.
+        $prefix = empty($language->prefix) ? '' : $language->prefix . '/';
+        $edit = array("comment_body[$language_none][0][value]" => $this->randomName());
+        $this->drupalPost("{$prefix}node/{$node->nid}", $edit, t('Save'));
+
+        // Check that comment language matches the current content language.
+        $comment = db_select('comment', 'c')
+          ->fields('c')
+          ->condition('nid', $node->nid)
+          ->orderBy('cid', 'DESC')
+          ->execute()
+          ->fetchObject();
+        $args = array('%node_language' => $node_langcode, '%comment_language' => $comment->language, '%langcode' => $langcode);
+        $this->assertEqual($comment->language, $langcode, t('The comment posted with content language %langcode and belonging to the node with language %node_language has language %comment_language', $args));
+      }
+    }
+  }
+}
 /**
  * Functional tests for localizing date formats.
  */
