@@ -1,5 +1,5 @@
 <?php
-// $Id: entity.inc,v 1.15 2010/10/06 13:57:47 dries Exp $
+// $Id: entity.inc,v 1.16 2010/10/09 02:36:46 webchick Exp $
 
 /**
  * Interface for entity controller classes.
@@ -688,7 +688,7 @@ class EntityFieldQuery {
    * @return EntityFieldQuery
    *   The called object.
    */
-  public function entityOrderBy($name, $direction) {
+  public function entityOrderBy($name, $direction = 'ASC') {
     $this->order[] = array(
       'type' => 'entity',
       'specifier' => $name,
@@ -714,7 +714,7 @@ class EntityFieldQuery {
    * @return EntityFieldQuery
    *   The called object.
    */
-  public function fieldOrderBy($field, $column, $direction) {
+  public function fieldOrderBy($field, $column, $direction = 'ASC') {
     if (is_scalar($field)) {
       $field = field_info_field($field);
     }
@@ -751,7 +751,7 @@ class EntityFieldQuery {
    * @return EntityFieldQuery
    *   The called object.
    */
-  public function propertyOrderBy($column, $direction) {
+  public function propertyOrderBy($column, $direction = 'ASC') {
     $this->order[] = array(
       'type' => 'property',
       'specifier' => $column,
