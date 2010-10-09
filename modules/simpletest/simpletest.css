@@ -1,4 +1,4 @@
-/* $Id: simpletest.css,v 1.9 2010/10/07 04:49:23 webchick Exp $ */
+/* $Id: simpletest.css,v 1.10 2010/10/09 18:09:48 webchick Exp $ */
 
 /* Test Table */
 #simpletest-form-table th.select-all {
@@ -30,6 +30,10 @@ th.simpletest_test {
 #simpletest-form-table tr.simpletest-group td {
   background-color: #EDF5FA;
   color: #494949;
+}
+
+table#simpletest-form-table tr.simpletest-group label {
+  display: inline;
 }
 
 div.message > div.item-list {
