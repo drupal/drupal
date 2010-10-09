@@ -1,4 +1,4 @@
-/* $Id: system.admin-rtl.css,v 1.2 2010/09/25 02:28:14 dries Exp $ */
+/* $Id: system.admin-rtl.css,v 1.3 2010/10/09 05:18:53 webchick Exp $ */
 
 /**
  * @file
@@ -32,12 +32,12 @@ div.admin .expert-link {
 /**
  * Status report.
  */
-table.system-status-report th,
-table.system-status-report tr.merge-up td {
-  padding-right: 30px;
+table.system-status-report td.status-icon {
+  padding-left: 0;
+  padding-right: 6px;
 }
-table.system-status-report th {
-  background-position: 95% 50%;
+table.system-status-report tr.merge-up td {
+  padding: 0 28px 8px 6px;
 }
 
 /**
