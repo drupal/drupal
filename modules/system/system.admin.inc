@@ -2492,28 +2492,38 @@ function theme_system_admin_index($variables) {
  */
 function theme_status_report($variables) {
   $requirements = $variables['requirements'];
-
-  $i = 0;
+  $severities = array(
+    REQUIREMENT_INFO => array(
+      'title' => t('Info'),
+      'class' => 'info',
+    ),
+    REQUIREMENT_OK => array(
+      'title' => t('OK'),
+      'class' => 'ok',
+    ),
+    REQUIREMENT_WARNING => array(
+      'title' => t('Warning'),
+      'class' => 'warning',
+    ),
+    REQUIREMENT_ERROR => array(
+      'title' => t('Error'),
+      'class' => 'error',
+    ),
+  );
   $output = '<table class="system-status-report">';
+
   foreach ($requirements as $requirement) {
     if (empty($requirement['#type'])) {
-      $class = ++$i % 2 == 0 ? 'even' : 'odd';
-
-      $classes = array(
-        REQUIREMENT_INFO => 'info',
-        REQUIREMENT_OK => 'ok',
-        REQUIREMENT_WARNING => 'warning',
-        REQUIREMENT_ERROR => 'error',
-      );
-      $class = $classes[isset($requirement['severity']) ? (int) $requirement['severity'] : 0] . ' ' . $class;
+      $severity = $severities[isset($requirement['severity']) ? (int) $requirement['severity'] : 0];
+      $severity['icon'] = '<div title="' . $severity['title'] . '"><span class="element-invisible">' . $severity['title'] . '</span></div>';
 
       // Output table row(s)
       if (!empty($requirement['description'])) {
-        $output .= '<tr class="' . $class . ' merge-down"><td>' . $requirement['title'] . '</td><td>' . $requirement['value'] . '</td></tr>';
-        $output .= '<tr class="' . $class . ' merge-up"><td colspan="2">' . $requirement['description'] . '</td></tr>';
+        $output .= '<tr class="' . $severity['class'] . ' merge-down"><td class="status-icon">' . $severity['icon'] . '</td><td class="status-title">' . $requirement['title'] . '</td><td class="status-value">' . $requirement['value'] . '</td></tr>';
+        $output .= '<tr class="' . $severity['class'] . ' merge-up"><td colspan="3" class="status-description">' . $requirement['description'] . '</td></tr>';
       }
       else {
-        $output .= '<tr class="' . $class . '"><td>' . $requirement['title'] . '</td><td>' . $requirement['value'] . '</td></tr>';
+        $output .= '<tr class="' . $severity['class'] . '"><td class="status-icon">' . $severity['icon'] . '</td><td class="status-title">' . $requirement['title'] . '</td><td class="status-value">' . $requirement['value'] . '</td></tr>';
       }
     }
   }

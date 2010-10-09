@@ -87,36 +87,34 @@ a.module-link-configure {
 /**
  * Status report.
  */
-table.system-status-report th {
-  border-bottom: 1px solid #ccc;
+table.system-status-report td {
+  padding: 6px;
+  vertical-align: middle;
 }
-table.system-status-report th,
 table.system-status-report tr.merge-up td {
-  padding-left: 30px; /* LTR */
+  padding: 0 6px 8px 28px; /* LTR */
 }
-table.system-status-report th {
+table.system-status-report td.status-icon {
+  width: 16px;
+  padding-right: 0; /* LTR */
+}
+table.system-status-report td.status-icon div {
   background-repeat: no-repeat;
-  background-position: 5px 50%; /* LTR */
-  padding-top: 6px;
-  padding-bottom: 6px;
+  height: 16px;
+  width: 16px;
 }
-table.system-status-report tr.error th {
-  background-image: url(../../misc/watchdog-error.png);
+table.system-status-report tr.error td.status-icon div {
+  background-image: url(../../misc/message-16-error.png);
 }
-table.system-status-report tr.warning th {
-  background-image: url(../../misc/watchdog-warning.png);
-}
-table.system-status-report tr.ok th {
-  background-image: url(../../misc/watchdog-ok.png);
+table.system-status-report tr.warning td.status-icon div {
+  background-image: url(../../misc/message-16-warning.png);
 }
 tr.merge-down,
-tr.merge-down td,
-tr.merge-down th {
+tr.merge-down td {
   border-bottom-width: 0 !important;
 }
 tr.merge-up,
-tr.merge-up td,
-tr.merge-up th {
+tr.merge-up td {
   border-top-width: 0 !important;
 }
 
