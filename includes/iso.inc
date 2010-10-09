@@ -1,5 +1,5 @@
 <?php
-// $Id: iso.inc,v 1.11 2010/06/23 19:06:10 dries Exp $
+// $Id: iso.inc,v 1.12 2010/10/09 18:20:43 webchick Exp $
 
 /**
  * @file
@@ -298,6 +298,7 @@ function _locale_get_predefined_list() {
     'am' => array('Amharic', 'አማርኛ'),
     'ar' => array('Arabic', /* Left-to-right marker "‭" */ 'العربية', LANGUAGE_RTL),
     'as' => array('Assamese'),
+    'ast' => array('Asturian'),
     'av' => array('Avar'),
     'ay' => array('Aymara'),
     'az' => array('Azerbaijani', 'azərbaycan'),
@@ -327,6 +328,7 @@ function _locale_get_predefined_list() {
     'ee' => array('Ewe', 'Ɛʋɛ'),
     'el' => array('Greek', 'Ελληνικά'),
     'en' => array('English'),
+    'en-gb' => array('English, British'),
     'eo' => array('Esperanto'),
     'es' => array('Spanish', 'Español'),
     'et' => array('Estonian', 'Eesti'),
@@ -334,6 +336,7 @@ function _locale_get_predefined_list() {
     'fa' => array('Persian', /* Left-to-right marker "‭" */ 'فارسی', LANGUAGE_RTL),
     'ff' => array('Fulah', 'Fulfulde'),
     'fi' => array('Finnish', 'Suomi'),
+    'fil' => array('Filipino'),
     'fj' => array('Fiji'),
     'fo' => array('Faeroese'),
     'fr' => array('French', 'Français'),
@@ -342,6 +345,7 @@ function _locale_get_predefined_list() {
     'gd' => array('Scots Gaelic'),
     'gl' => array('Galician', 'Galego'),
     'gn' => array('Guarani'),
+    'gsw-berne' => array('Swiss German'),
     'gu' => array('Gujarati'),
     'gv' => array('Manx'),
     'ha' => array('Hausa'),
@@ -349,6 +353,7 @@ function _locale_get_predefined_list() {
     'hi' => array('Hindi', 'हिन्दी'),
     'ho' => array('Hiri Motu'),
     'hr' => array('Croatian', 'Hrvatski'),
+    'ht' => array('Haitian Creole'),
     'hu' => array('Hungarian', 'Magyar'),
     'hy' => array('Armenian', 'Հայերեն'),
     'hz' => array('Herero'),
@@ -413,6 +418,7 @@ function _locale_get_predefined_list() {
     'pi' => array('Pali'),
     'pl' => array('Polish', 'Polski'),
     'ps' => array('Pashto', /* Left-to-right marker "‭" */ 'پښتو', LANGUAGE_RTL),
+    'pt' => array('Portuguese, International'),
     'pt-pt' => array('Portuguese, Portugal', 'Português'),
     'pt-br' => array('Portuguese, Brazil', 'Português'),
     'qu' => array('Quechua'),
@@ -423,6 +429,7 @@ function _locale_get_predefined_list() {
     'rw' => array('Kinyarwanda'),
     'sa' => array('Sanskrit'),
     'sc' => array('Sardinian'),
+    'sco' => array('Scots'),
     'sd' => array('Sindhi'),
     'se' => array('Northern Sami'),
     'sg' => array('Sango'),
@@ -462,6 +469,7 @@ function _locale_get_predefined_list() {
     'vi' => array('Vietnamese', 'Tiếng Việt'),
     'wo' => array('Wolof'),
     'xh' => array('Xhosa', 'isiXhosa'),
+    'xx-lolspeak' => array('Lolspeak'),
     'yi' => array('Yiddish'),
     'yo' => array('Yoruba', 'Yorùbá'),
     'za' => array('Zhuang'),
