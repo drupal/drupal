@@ -272,6 +272,8 @@ function translation_node_insert($node) {
         ))
         ->condition('nid', $node->nid)
         ->execute();
+      // Save tnid to avoid loss in case of resave.
+      $node->tnid = $tnid;
     }
   }
 }

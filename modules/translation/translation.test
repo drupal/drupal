@@ -13,7 +13,7 @@ class TranslationTestCase extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('locale', 'translation');
+    parent::setUp('locale', 'translation', 'translation_test');
   }
 
   /**
@@ -148,7 +148,7 @@ class TranslationTestCase extends DrupalWebTestCase {
   /**
    * Create a translation for the specified basic page in the specified language.
    *
-   * @param integer $nid Node id of basic page to create translation for.
+   * @param object $node The basic page to create translation for.
    * @param string $title Title of basic page in specified language.
    * @param string $body Body of basic page in specified language.
    * @param string $language Language code.
@@ -167,9 +167,10 @@ class TranslationTestCase extends DrupalWebTestCase {
     $this->assertRaw(t('Basic page %title has been created.', array('%title' => $title)), t('Translation created.'));
 
     // Check to make sure that translation was successful.
-    $node = $this->drupalGetNodeByTitle($title);
-    $this->assertTrue($node, t('Node found in database.'));
+    $translation = $this->drupalGetNodeByTitle($title);
+    $this->assertTrue($translation, t('Node found in database.'));
+    $this->assertTrue($translation->tnid == $node->nid, t('Translation set id correctly stored.'));
 
-    return $node;
+    return $translation;
   }
 }
