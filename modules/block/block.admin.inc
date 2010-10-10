@@ -1,5 +1,5 @@
 <?php
-// $Id: block.admin.inc,v 1.89 2010/10/04 18:00:45 dries Exp $
+// $Id: block.admin.inc,v 1.90 2010/10/10 20:11:21 dries Exp $
 
 /**
  * @file
@@ -148,8 +148,10 @@ function block_admin_display_form($form, &$form_state, $blocks, $theme, $block_r
      );
     }
   }
-  // Do not allow disabling the main system content block.
-  $form['blocks']['system_main']['region']['#required'] = TRUE;
+  // Do not allow disabling the main system content block when it is present.
+  if (isset($form['blocks']['system_main']['region'])) {
+    $form['blocks']['system_main']['region']['#required'] = TRUE;
+  }
 
   $form['actions'] = array(
     '#tree' => FALSE,
