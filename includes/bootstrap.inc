@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.425 2010/10/09 03:43:31 webchick Exp $
+// $Id: bootstrap.inc,v 1.426 2010/10/10 15:53:54 webchick Exp $
 
 /**
  * @file
@@ -24,7 +24,7 @@ define('DRUPAL_MINIMUM_PHP',    '5.2.0');
 /**
  * Minimum recommended value of PHP memory_limit.
  */
-define('DRUPAL_MINIMUM_PHP_MEMORY_LIMIT',    '40M');
+define('DRUPAL_MINIMUM_PHP_MEMORY_LIMIT',    '32M');
 
 /**
  * Minimum supported version of MySQL, if it is used.
