@@ -148,8 +148,10 @@ function block_admin_display_form($form, &$form_state, $blocks, $theme, $block_r
      );
     }
   }
-  // Do not allow disabling the main system content block.
-  $form['blocks']['system_main']['region']['#required'] = TRUE;
+  // Do not allow disabling the main system content block when it is present.
+  if (isset($form['blocks']['system_main']['region'])) {
+    $form['blocks']['system_main']['region']['#required'] = TRUE;
+  }
 
   $form['actions'] = array(
     '#tree' => FALSE,
