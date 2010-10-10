@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.module,v 1.94 2010/09/24 00:37:44 dries Exp $
+// $Id: simpletest.module,v 1.95 2010/10/10 11:34:22 dries Exp $
 
 /**
  * @file
@@ -124,7 +124,6 @@ function _simpletest_format_summary_line($summary) {
  *   drupal being the default.
  */
 function simpletest_run_tests($test_list, $reporter = 'drupal') {
-  cache_clear_all();
   $test_id = db_insert('simpletest_test_id')
     ->useDefaults(array('test_id'))
     ->execute();
