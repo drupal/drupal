@@ -1,5 +1,5 @@
 <?php
-// $Id: list.test,v 1.7 2010/08/05 23:53:37 webchick Exp $
+// $Id: list.test,v 1.8 2010/10/11 19:57:00 dries Exp $
 
 /**
  * @file
@@ -134,26 +134,46 @@ class ListFieldUITestCase extends FieldTestCase {
   function testAllowedValues() {
     $element_name = "field[settings][allowed_values]";
 
-    //Test 'List' field type.
+    // Test 'List' field type.
     $admin_path = $this->createListFieldAndEdit('list');
-    //Check that non-integer keys are rejected.
+    // Check that non-integer keys are rejected.
     $edit = array($element_name => "1.1|one\n");
     $this->drupalPost($admin_path, $edit, t('Save settings'));
     $this->assertText("keys must be integers", t('Form validation failed.'));
 
     // Test 'List (number)' field type.
     $admin_path = $this->createListFieldAndEdit('list_number');
-    //Check that non-numeric keys are rejected.
+    // Check that non-numeric keys are rejected.
     $edit = array($element_name => "1|one\nB|two");
     $this->drupalPost($admin_path, $edit, t('Save settings'));
     $this->assertText("each key must be a valid integer or decimal", t('Form validation failed.'));
 
-    //Test 'List (text)' field type.
+    // Test 'List (text)' field type.
     $admin_path = $this->createListFieldAndEdit('list_text');
-    //Check that over long keys are rejected.
+    // Check that overly long keys are rejected.
     $edit = array($element_name => "1|one\n" . $this->randomName(256) . "|two");
     $this->drupalPost($admin_path, $edit, t('Save settings'));
     $this->assertText("each key must be a string at most 255 characters long", t('Form validation failed.'));
+
+    // Test 'Boolean' field type.
+    $admin_path = $this->createListFieldAndEdit('list_boolean');
+    // Check that the seperate 'On' and 'Off' form fields work.
+    $on = $this->randomName();
+    $off = $this->randomName();
+    $edit = array(
+      'on' => $on,
+      'off' => $off,
+    );
+    $this->drupalPost($admin_path, $edit, t('Save settings'));
+    $this->assertText("Saved test_list_boolean configuration.", t("The 'On' and 'Off' form fields work for boolean fields."));
+    // Test the allowed_values on the field settings form.
+    $this->drupalGet($admin_path);
+    $this->assertFieldByName('on', $on, t("The 'On' value is stored correctly."));
+    $this->assertFieldByName('off', $off, t("The 'Off' value is stored correctly."));
+    $field = field_info_field($this->field['field_name']);
+    $this->assertEqual($field['settings']['allowed_values'], "0|$off\n1|$on", t('The allowed value is correct'));
+    $this->assertFalse(isset($field['settings']['on']), t('The on value is not saved into settings'));
+    $this->assertFalse(isset($field['settings']['off']), t('The off value is not saved into settings'));
   }
 
   /**
@@ -162,7 +182,7 @@ class ListFieldUITestCase extends FieldTestCase {
    * @param string $type
    *   'list', 'list_boolean', 'list_number', or 'list_text'
    */
-  private function createListFieldAndEdit($type) {
+  protected function createListFieldAndEdit($type) {
     // Create a test field and instance.
     $field_name = 'test_' . $type;
     $field = array(
@@ -170,6 +190,7 @@ class ListFieldUITestCase extends FieldTestCase {
       'type' => $type,
     );
     field_create_field($field);
+    $this->field = $field;
     $instance = array(
       'field_name' => $field_name,
       'entity_type' => 'node',
@@ -182,4 +203,3 @@ class ListFieldUITestCase extends FieldTestCase {
   }
 
 }
-

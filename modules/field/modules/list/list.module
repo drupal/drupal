@@ -1,5 +1,5 @@
 <?php
-// $Id: list.module,v 1.34 2010/09/04 15:40:51 dries Exp $
+// $Id: list.module,v 1.35 2010/10/11 19:57:00 dries Exp $
 
 /**
  * @file
@@ -84,9 +84,8 @@ function list_field_settings_form($field, $instance, $has_data) {
     $off_value = array_shift($values);
     $on_value = array_shift($values);
     $form['allowed_values'] = array(
-      '#type' => 'markup',
+      '#type' => 'value',
       '#description' => '',
-      '#input' => TRUE,
       '#value_callback' => 'list_boolean_allowed_values_callback',
       '#access' => empty($settings['allowed_values_function']),
     );
@@ -96,6 +95,9 @@ function list_field_settings_form($field, $instance, $has_data) {
       '#default_value' => $on_value,
       '#required' => FALSE,
       '#description' => t('If left empty, "1" will be used.'),
+      // Change #parents to make sure the element is not saved into field
+      // settings.
+      '#parents' => array('on'),
     );
     $form['allowed_values']['off'] = array(
       '#type' => 'textfield',
@@ -103,7 +105,14 @@ function list_field_settings_form($field, $instance, $has_data) {
       '#default_value' => $off_value,
       '#required' => FALSE,
       '#description' => t('If left empty, "0" will be used.'),
+      // Change #parents to make sure the element is not saved into field
+      // settings.
+      '#parents' => array('off'),
     );
+    // Link the allowed value to the on / off elements to prepare for the rare
+    // case of an alter changing #parents.
+    $form['allowed_values']['#on_parents'] = &$form['allowed_values']['on']['#parents'];
+    $form['allowed_values']['#off_parents'] = &$form['allowed_values']['off']['#parents'];
   }
 
   // Alter the description for allowed values depending on the widget type.
@@ -156,13 +165,10 @@ function list_allowed_values_setting_validate($element, &$form_state) {
 /**
 * Form element #value_callback: assembles the allowed values for 'boolean' fields.
 */
-function list_boolean_allowed_values_callback($element, $edit = FALSE) {
-  if ($edit !== FALSE) {
-    $on = $edit['on'];
-    $off = $edit['off'];
-    $edit = "0|$off\n1|$on";
-    return $edit;
-  }
+function list_boolean_allowed_values_callback($element, $input, $form_state) {
+  $on = drupal_array_get_nested_value($form_state['input'], $element['#on_parents']);
+  $off = drupal_array_get_nested_value($form_state['input'], $element['#off_parents']);
+  return "0|$off\n1|$on";
 }
 
 /**
