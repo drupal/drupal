@@ -916,6 +916,26 @@ class UserPictureTestCase extends DrupalWebTestCase {
     }
   }
 
+  /**
+   * Test HTTP schema working with user pictures.
+   */
+  function testExternalPicture() {
+    $this->drupalLogin($this->user);
+    // Set the default picture to an URI with a HTTP schema.
+    $images = $this->drupalGetTestFiles('image');
+    $image = $images[0];
+    $pic_path = file_create_url($image->uri);
+    variable_set('user_picture_default', $pic_path);
+
+    // Check if image is displayed in user's profile page.
+    $this->drupalGet('user');
+
+    // Get the user picture image via xpath.
+    $elements = $this->xpath('//div[@class="user-picture"]/img');
+    $this->assertEqual(count($elements), 1, t("There is exactly one user picture on the user's profile page"));
+    $this->assertEqual($pic_path, (string) $elements[0]['src'], t("User picture source is correct."));
+  }
+
   function saveUserPicture($image) {
     $edit = array('files[picture_upload]' => drupal_realpath($image->uri));
     $this->drupalPost('user/' . $this->user->uid . '/edit', $edit, t('Save'));
