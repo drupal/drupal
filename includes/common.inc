@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1239 2010/10/09 08:05:15 webchick Exp $
+// $Id: common.inc,v 1.1240 2010/10/11 23:49:48 dries Exp $
 
 /**
  * @file
@@ -3366,6 +3366,15 @@ function drupal_build_css_cache($css) {
     if (!file_exists($uri) && !file_unmanaged_save_data($data, $uri, FILE_EXISTS_REPLACE)) {
       return FALSE;
     }
+    // If CSS gzip compression is enabled, clean URLs are enabled (which means
+    // that rewrite rules are working) and the zlib extension is available then
+    // create a gzipped version of this file. This file is served conditionally
+    // to browsers that accept gzip using .htaccess rules.
+    if (variable_get('css_gzip_compression', TRUE) && variable_get('clean_url', 0) && extension_loaded('zlib')) {
+      if (!file_exists($uri . '.gz') && !file_unmanaged_save_data(gzencode($data, 9, FORCE_GZIP), $uri . '.gz', FILE_EXISTS_REPLACE)) {
+        return FALSE;
+      }
+    }
     // Save the updated map.
     $map[$key] = $uri;
     variable_set('drupal_css_cache_files', $map);
@@ -4655,8 +4664,17 @@ function drupal_build_js_cache($files) {
     $uri = $jspath . '/' . $filename;
     // Create the JS file.
     file_prepare_directory($jspath, FILE_CREATE_DIRECTORY);
-    if (!file_unmanaged_save_data($contents, $uri, FILE_EXISTS_REPLACE)) {
+    if (!file_exists($uri) && !file_unmanaged_save_data($contents, $uri, FILE_EXISTS_REPLACE)) {
       return FALSE;
+    }
+    // If JS gzip compression is enabled, clean URLs are enabled (which means
+    // that rewrite rules are working) and the zlib extension is available then
+    // create a gzipped version of this file. This file is served conditionally
+    // to browsers that accept gzip using .htaccess rules.
+    if (variable_get('js_gzip_compression', TRUE) && variable_get('clean_url', 0) && extension_loaded('zlib')) {
+      if (!file_exists($uri . '.gz') && !file_unmanaged_save_data(gzencode($contents, 9, FORCE_GZIP), $uri . '.gz', FILE_EXISTS_REPLACE)) {
+        return FALSE;
+      }
     }
     $map[$key] = $uri;
     variable_set('drupal_js_cache_files', $map);

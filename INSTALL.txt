@@ -1,4 +1,4 @@
-// $Id: INSTALL.txt,v 1.83 2010/09/22 01:49:17 webchick Exp $
+// $Id: INSTALL.txt,v 1.84 2010/10/11 23:49:48 dries Exp $
 
 CONTENTS OF THIS FILE
 ---------------------
@@ -43,6 +43,9 @@ OPTIONAL TASKS
   the mod_rewrite module and the ability to use local .htaccess files. For
   Clean URLs support on IIS, see "Using Clean URLs with IIS"
   (http://drupal.org/node/3854) in the Drupal handbook.
+
+- To serve gzip compressed CSS and JS files on an Apache web server, you will
+  need the mod_headers module and the ability to use local .htaccess files.
 
 - Various Drupal features require that the web server process (for
   example, httpd) be able to initiate outbound connections. This is usually

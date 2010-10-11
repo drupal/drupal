@@ -1,5 +1,5 @@
 <?php
-// $Id: default.settings.php,v 1.50 2010/08/08 19:35:49 dries Exp $
+// $Id: default.settings.php,v 1.51 2010/10/11 23:49:48 dries Exp $
 
 /**
  * @file
@@ -376,6 +376,21 @@ ini_set('session.cookie_lifetime', 2000000);
  * getting cached pages from the proxy.
  */
 # $conf['omit_vary_cookie'] = TRUE;
+
+/**
+ * CSS/JS aggregated file gzip compression:
+ *
+ * By default, when CSS or JS aggregation and clean URLs are enabled Drupal will
+ * store a gzip compressed (.gz) copy of the aggregated files. If this file is
+ * available then rewrite rules in the default .htaccess file will serve these
+ * files to browsers that accept gzip encoded content. This allows pages to load
+ * faster for these users and has minimal impact on server load. If you are
+ * using a webserver other than Apache httpd, or a caching reverse proxy that is
+ * configured to cache and compress these files itself you may want to uncomment
+ * one or both of the below lines, which will prevent gzip files being stored.
+ */
+# $conf['css_gzip_compression'] = FALSE;
+# $conf['js_gzip_compression'] = FALSE;
 
 /**
  * String overrides:
