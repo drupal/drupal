@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.977 2010/10/07 04:58:45 webchick Exp $
+// $Id: system.module,v 1.978 2010/10/12 03:03:41 dries Exp $
 
 /**
  * @file
@@ -2184,9 +2184,11 @@ function system_update_files_database(&$files, $type) {
   }
 
   if (count($delete) > 0) {
-    // Delete all missing files from the system table
+    // Delete all missing files from the system table, but only if the plugin
+    // has never been installed.
     db_delete('system')
       ->condition($delete)
+      ->condition('schema_version', -1)
       ->execute();
   }
 
