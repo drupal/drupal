@@ -122,7 +122,12 @@ function file_get_stream_wrappers($filter = STREAM_WRAPPERS_ALL) {
         else {
           $wrappers[$scheme]['override'] = FALSE;
         }
-        stream_wrapper_register($scheme, $info['class']);
+        if (($info['type'] & STREAM_WRAPPERS_REMOTE) == STREAM_WRAPPERS_REMOTE) {
+          stream_wrapper_register($scheme, $info['class'], STREAM_IS_URL);
+        }
+        else {
+          stream_wrapper_register($scheme, $info['class']);
+        }
       }
       // Pre-populate the static cache with the filters most typically used.
       $wrappers_storage[STREAM_WRAPPERS_ALL][$scheme] = $wrappers[$scheme];
