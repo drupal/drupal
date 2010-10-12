@@ -819,7 +819,12 @@ function install_verify_settings() {
  * Verify PDO library.
  */
 function install_verify_pdo() {
-  return extension_loaded('pdo');
+  // PDO was moved to PHP core in 5.2.0, but the old extension (targeting 5.0
+  // and 5.1) is still available from PECL, and can still be built without
+  // errors. To verify that the correct version is in use, we check the
+  // PDO::ATTR_DEFAULT_FETCH_MODE constant, which is not available in the
+  // PECL extension.
+  return extension_loaded('pdo') && defined('PDO::ATTR_DEFAULT_FETCH_MODE');
 }
 
 /**

@@ -113,16 +113,23 @@ function update_prepare_d7_bootstrap() {
   // loaded. Bootstrapping to DRUPAL_BOOTSTRAP_DATABASE will result in a fatal
   // error otherwise.
   $message = '';
+  $pdo_link = 'http://drupal.org/requirements/pdo';
   // Check that PDO is loaded.
   if (!extension_loaded('pdo')) {
     $message = '<h2>PDO is required!</h2><p>Drupal 7 requires PHP ' . DRUPAL_MINIMUM_PHP . ' or higher with the PHP Data Objects (PDO) extension enabled.</p>';
   }
+  // The PDO::ATTR_DEFAULT_FETCH_MODE constant is not available in the PECL
+  // version of PDO.
+  elseif (!defined('PDO::ATTR_DEFAULT_FETCH_MODE')) {
+    $message = '<h2>The wrong version of PDO is installed!</h2><p>Drupal 7 requires the PHP Data Objects (PDO) extension from PHP core to be enabled. This system has the older PECL version installed.';
+    $pdo_link = 'http://drupal.org/requirements/pdo#pecl';
+  }
   // Check that the correct driver is loaded for the database being updated.
   elseif (!in_array($databases['default']['default']['driver'], PDO::getAvailableDrivers())) {
-      $message = '<h2>A PDO database driver is required!</h2><p>You need to enable the PDO_' . strtoupper($databases['default']['default']['driver']) . ' database driver for PHP ' . DRUPAL_MINIMUM_PHP . ' or higher so that Drupal 7 can access the database.</p>';
+    $message = '<h2>A PDO database driver is required!</h2><p>You need to enable the PDO_' . strtoupper($databases['default']['default']['driver']) . ' database driver for PHP ' . DRUPAL_MINIMUM_PHP . ' or higher so that Drupal 7 can access the database.</p>';
   }
   if ($message) {
-    print $message . '<p>See the <a href="http://drupal.org/requirements">system requirements page</a> for more information.</p>';
+    print $message . '<p>See the <a href="' . $pdo_link . '">system requirements page</a> for more information.</p>';
     exit();
   }
 

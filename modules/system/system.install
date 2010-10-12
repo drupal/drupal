@@ -144,19 +144,36 @@ function system_requirements($phase) {
       'title' => $t('Database support'),
     );
 
-    // Test for at least one suitable PDO extension, if PDO is available.
+    // Make sure PDO is available.
     $database_ok = extension_loaded('pdo');
-    if ($database_ok) {
+    if (!$database_ok) {
+      $pdo_message = $t('Your web server does not appear to support PDO (PHP Data Objects). Ask your hosting provider if they support the native PDO extension. See the <a href="@link">system requirements</a> page for more information.', array(
+        '@link' => 'http://drupal.org/requirements/pdo',
+      ));
+    }
+    else {
+      // Make sure at least one supported database driver exists.
       $drivers = drupal_detect_database_types();
-      $database_ok = !empty($drivers);
+      if (empty($drivers)) {
+        $database_ok = FALSE;
+        $pdo_message = $t('Your web server does not appear to support any common PDO database extensions. Check with your hosting provider to see if they support PDO (PHP Data Objects) and offer any databases that <a href="@drupal-databases">Drupal supports</a>.', array(
+          '@drupal-databases' => 'http://drupal.org/node/270#database',
+        ));
+      }
+      // Make sure the native PDO extension is available, not the older PEAR
+      // version. (See install_verify_pdo() for details.)
+      if (!defined('PDO::ATTR_DEFAULT_FETCH_MODE')) {
+        $database_ok = FALSE;
+        $pdo_message = $t('Your web server seems to have the wrong version of PDO installed. Drupal 7 requires the PDO extension from PHP core. This system has the older PECL version. See the <a href="@link">system requirements</a> page for more information.', array(
+          '@link' => 'http://drupal.org/requirements/pdo#pecl',
+        ));
+      }
     }
 
     if (!$database_ok) {
       $requirements['database_extensions']['value'] = $t('Disabled');
       $requirements['database_extensions']['severity'] = REQUIREMENT_ERROR;
-      $requirements['database_extensions']['description'] = $t('Your web server does not appear to support any common PDO database extensions. Check with your hosting provider to see if they support PDO (PHP Data Objects) and offer any databases that <a href="@drupal-databases">Drupal supports</a>.', array(
-        '@drupal-databases' => 'http://drupal.org/node/270#database',
-      ));
+      $requirements['database_extensions']['description'] = $pdo_message;
     }
     else {
       $requirements['database_extensions']['value'] = $t('Enabled');
