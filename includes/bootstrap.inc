@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.426 2010/10/10 15:53:54 webchick Exp $
+// $Id: bootstrap.inc,v 1.427 2010/10/12 03:10:03 dries Exp $
 
 /**
  * @file
@@ -19,7 +19,7 @@ define('DRUPAL_CORE_COMPATIBILITY', '7.x');
 /**
  * Minimum supported version of PHP.
  */
-define('DRUPAL_MINIMUM_PHP',    '5.2.0');
+define('DRUPAL_MINIMUM_PHP',    '5.2.5');
 
 /**
  * Minimum recommended value of PHP memory_limit.
@@ -1471,25 +1471,7 @@ function t($string, array $args = array(), array $options = array()) {
  * @ingroup sanitization
  */
 function check_plain($text) {
-  // We do not want to use drupal_static() since PHP version will never change
-  // during a request.
-  static $php525;
-
-  if (!isset($php525)) {
-    $php525 = version_compare(PHP_VERSION, '5.2.5', '>=');
-  }
-  // We duplicate the preg_match() to validate strings as UTF-8 from
-  // drupal_validate_utf8() here. This avoids the overhead of an additional
-  // function call, since check_plain() may be called hundreds of times during
-  // a request. For PHP 5.2.5+, this check for valid UTF-8 should be handled
-  // internally by PHP in htmlspecialchars().
-  // See http://www.php.net/releases/5_2_5.php.
-  // @todo remove this when support for either IE6 or PHP < 5.2.5 is dropped.
-
-  if ($php525) {
-    return htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
-  }
-  return (preg_match('/^./us', $text) == 1) ? htmlspecialchars($text, ENT_QUOTES, 'UTF-8') : '';
+  return htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
 }
 
 /**
