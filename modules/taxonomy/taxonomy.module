@@ -374,10 +374,13 @@ function taxonomy_admin_vocabulary_title_callback($vocabulary) {
  * Save a vocabulary given a vocabulary object.
  */
 function taxonomy_vocabulary_save($vocabulary) {
-
+  // Prevent leading and trailing spaces in vocabulary names.
   if (!empty($vocabulary->name)) {
-    // Prevent leading and trailing spaces in vocabulary names.
     $vocabulary->name = trim($vocabulary->name);
+  }
+  // For existing vocabularies, make sure we can detect machine name changes.
+  if (!empty($vocabulary->vid) && !isset($vocabulary->old_machine_name)) {
+    $vocabulary->old_machine_name = db_query("SELECT machine_name FROM {taxonomy_vocabulary} WHERE vid = :vid", array(':vid' => $vocabulary->vid))->fetchField();
   }
 
   if (!isset($vocabulary->module)) {
@@ -388,6 +391,9 @@ function taxonomy_vocabulary_save($vocabulary) {
 
   if (!empty($vocabulary->vid) && !empty($vocabulary->name)) {
     $status = drupal_write_record('taxonomy_vocabulary', $vocabulary, 'vid');
+    if ($vocabulary->old_machine_name != $vocabulary->machine_name) {
+      field_attach_rename_bundle('taxonomy_term', $vocabulary->old_machine_name, $vocabulary->machine_name);
+    }
     module_invoke_all('taxonomy_vocabulary_update', $vocabulary);
     module_invoke_all('entity_update', $vocabulary, 'taxonomy_vocabulary');
   }
@@ -431,6 +437,31 @@ function taxonomy_vocabulary_delete($vid) {
   entity_get_controller('taxonomy_vocabulary')->resetCache();
 
   return SAVED_DELETED;
+}
+
+/**
+ * Implements hook_field_attach_rename_bundle().
+ */
+function taxonomy_field_attach_rename_bundle($entity_type, $bundle_old, $bundle_new) {
+  if ($entity_type == 'taxonomy_term') {
+    // Reflect machine name changes in the definitions of existing 'taxonomy'
+    // fields.
+    $fields = field_read_fields();
+    foreach ($fields as $field_name => $field) {
+      $update = FALSE;
+      if ($field['type'] == 'taxonomy_term_reference') {
+        foreach ($field['settings']['allowed_values'] as $key => &$value) {
+          if ($value['vocabulary'] == $bundle_old) {
+            $value['vocabulary'] = $bundle_new;
+            $update = TRUE;
+          }
+        }
+        if ($update) {
+          field_update_field($field);
+        }
+      }
+    }
+  }
 }
 
 /**

@@ -163,6 +163,10 @@ function taxonomy_form_vocabulary($form, &$form_state, $edit = array()) {
       'js' => array(drupal_get_path('module', 'system') . '/system.js', $js_settings),
     ),
   );
+  $form['old_machine_name'] = array(
+    '#type' => 'value',
+    '#value' => $vocabulary->machine_name,
+  );
   $form['description'] = array(
     '#type' => 'textfield',
     '#title' => t('Description'),
@@ -223,12 +227,10 @@ function taxonomy_form_vocabulary_submit($form, &$form_state) {
     $form_state['confirm_delete'] = TRUE;
     return;
   }
-  $old_machine_name = $form_state['vocabulary']->machine_name;
+
   $vocabulary = $form_state['vocabulary'];
   entity_form_submit_build_entity('taxonomy_vocabulary', $vocabulary, $form, $form_state);
-  if ($vocabulary->machine_name != $old_machine_name) {
-    field_attach_rename_bundle('taxonomy_term', $old_machine_name, $vocabulary->machine_name);
-  }
+
   switch (taxonomy_vocabulary_save($vocabulary)) {
     case SAVED_NEW:
       drupal_set_message(t('Created new vocabulary %name.', array('%name' => $vocabulary->name)));
