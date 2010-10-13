@@ -46,6 +46,16 @@ div.admin .expert-link {
 }
 
 /**
+ * Quick inline admin links.
+ */
+small .admin-link:before {
+  content: '[';
+}
+small .admin-link:after {
+  content: ']';
+}
+
+/**
  * Modules page.
  */
 #system-modules div.incompatible {
