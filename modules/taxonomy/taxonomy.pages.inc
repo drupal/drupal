@@ -91,8 +91,9 @@ function taxonomy_autocomplete($field_name, $tags_typed = '') {
 
     // Part of the criteria for the query come from the field's own settings.
     $vids = array();
+    $vocabularies = taxonomy_vocabulary_get_names();
     foreach ($field['settings']['allowed_values'] as $tree) {
-      $vids[] = $tree['vid'];
+      $vids[] = $vocabularies[$tree['vocabulary']]->vid;
     }
 
     $query = db_select('taxonomy_term_data', 't');
