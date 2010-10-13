@@ -1,4 +1,4 @@
-// $Id: system.js,v 1.40 2010/01/30 00:29:10 webchick Exp $
+// $Id: system.js,v 1.41 2010/10/13 13:43:21 dries Exp $
 (function ($) {
 
 /**
@@ -145,80 +145,6 @@ Drupal.behaviors.pageCache = {
       $('#page-compression-wrapper').show();
       $('#cache-error').show();
     });
-  }
-};
-
-/**
- * Attach the auto machine readable name behavior.
- *
- * Settings are expected to be an object of elements to process, where the key
- * defines the source element in the form and the value is an object defining
- * the following properties:
- * - text: The label to display before the auto-generated value.
- * - target: The target form element name.
- * - searchPattern: A regular expression (without modifiers) matching disallowed
- *   characters in the machine readable name, f.e. '[^a-z0-9]+'.
- * - replaceToken: A replacement string to replace disallowed characters, f.e.
- *   '-' or '_'.
- *
- * @see menu_edit_menu()
- */
-Drupal.behaviors.machineReadableValue = {
-  attach: function () {
-    var self = this;
-
-    for (var value in Drupal.settings.machineReadableValue) {
-      var settings = Drupal.settings.machineReadableValue[value];
-
-      // Build selector for the source name entered by a user.
-      var source = '#edit-' + value;
-      var suffix = source + '-suffix';
-      // Build selector for the machine readable name.
-      var target = '#edit-' + settings.target;
-      // Build selector for the wrapper element around the target field.
-      var wrapper = '.form-item-' + settings.target;
-
-      // Do not process the element if we got an error or the given name and the
-      // machine readable name are identical or the machine readable name is
-      // empty.
-      if (!$(target).hasClass('error') && ($(target).val() == '' || $(target).val() == self.transliterate($(source).val(), settings))) {
-        // Hide wrapper element.
-        $(wrapper).hide();
-        // Bind keyup event to source element.
-        $(source).keyup(function () {
-          var machine = self.transliterate($(this).val(), settings);
-          if (machine != '_' && machine != '') {
-            // Set machine readable name to the user entered value.
-            $(target).val(machine);
-            // Append the machine readable name and a link to edit it to the source field.
-            $(suffix).empty().append(' ' + settings.text + ': ' + machine + ' [').append($('<a href="#">' + Drupal.t('Edit') + '</a>').click(function () {
-              $(wrapper).show();
-              $(target).focus();
-              $(suffix).hide();
-              $(source).unbind('keyup');
-              return false;
-            })).append(']');
-          }
-          else {
-            $(target).val(machine);
-            $(suffix).text('');
-          }
-        });
-        // Call keyup event on source element.
-        $(source).keyup();
-      }
-    }
-  },
-
-  /**
-   * Transliterate a human-readable name to a machine name.
-   *
-   * The result should not contain any character matching settings.searchPattern,
-   * invalid characters are typically replaced with settings.replaceToken.
-   */
-  transliterate: function (source, settings) {
-    var searchPattern = new RegExp(settings.searchPattern, 'g');
-    return source.toLowerCase().replace(searchPattern, settings.replaceToken);
   }
 };
 

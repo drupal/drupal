@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.test,v 1.95 2010/10/13 05:19:26 webchick Exp $
+// $Id: taxonomy.test,v 1.96 2010/10/13 13:43:21 dries Exp $
 
 /**
  * @file
@@ -92,7 +92,7 @@ class TaxonomyVocabularyFunctionalTest extends TaxonomyWebTestCase {
     // Try to submit a vocabulary with a duplicate machine name.
     $edit['machine_name'] = $machine_name;
     $this->drupalPost('admin/structure/taxonomy/add', $edit, t('Save'));
-    $this->assertText(t('This machine-readable name is already in use by another vocabulary and must be unique.'), t('Duplicate machine name validation was successful'));
+    $this->assertText(t('The machine-readable name is already in use. It must be unique.'));
 
     // Try to submit an invalid machine name.
     $edit['machine_name'] = '!&^%';

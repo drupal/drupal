@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.test,v 1.41 2010/09/24 00:37:43 dries Exp $
+// $Id: menu.test,v 1.42 2010/10/13 13:43:21 dries Exp $
 
 /**
  * @file
@@ -140,7 +140,11 @@ class MenuTestCase extends DrupalWebTestCase {
     $this->drupalPost('admin/structure/menu/add', $edit, t('Save'));
 
     // Verify that using a menu_name that is too long results in a validation message.
-    $this->assertText(format_plural(MENU_MAX_MENU_NAME_LENGTH_UI, "The menu name can't be longer than 1 character.", "The menu name can't be longer than @count characters."), t('Validation failed when menu name is too long.'));
+    $this->assertRaw(t('!name cannot be longer than %max characters but is currently %length characters long.', array(
+      '!name' => t('Menu name'),
+      '%max' => MENU_MAX_MENU_NAME_LENGTH_UI,
+      '%length' => drupal_strlen($menu_name),
+    )));
 
     // Change the menu_name so it no longer exceeds the maximum length.
     $menu_name = substr(hash('sha256', $this->randomName(16)), 0, MENU_MAX_MENU_NAME_LENGTH_UI);
@@ -148,7 +152,11 @@ class MenuTestCase extends DrupalWebTestCase {
     $this->drupalPost('admin/structure/menu/add', $edit, t('Save'));
 
     // Verify that no validation error is given for menu_name length.
-    $this->assertNoText(format_plural(MENU_MAX_MENU_NAME_LENGTH_UI, "The menu name can't be longer than 1 character.", "The menu name can't be longer than @count characters."), t('Validation failed when menu name is too long.'));
+    $this->assertNoRaw(t('!name cannot be longer than %max characters but is currently %length characters long.', array(
+      '!name' => t('Menu name'),
+      '%max' => MENU_MAX_MENU_NAME_LENGTH_UI,
+      '%length' => drupal_strlen($menu_name),
+    )));
     // Unlike most other modules, there is no confirmation message displayed.
 
     $this->drupalGet('admin/structure/menu');

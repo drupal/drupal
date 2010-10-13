@@ -1,5 +1,5 @@
 <?php
-// $Id: content_types.inc,v 1.118 2010/10/07 00:28:20 webchick Exp $
+// $Id: content_types.inc,v 1.119 2010/10/13 13:43:21 dries Exp $
 
 /**
  * @file
@@ -94,41 +94,20 @@ function node_type_form($form, &$form_state, $type = NULL) {
     '#description' => t('The human-readable name of this content type. This text will be displayed as part of the list on the <em>Add new content</em> page. It is recommended that this name begin with a capital letter and contain only letters, numbers, and spaces. This name must be unique.'),
     '#required' => TRUE,
     '#size' => 30,
-    '#field_suffix' => ' <small id="edit-name-suffix">' . ($type->locked ? t('Machine name: @name', array('@name' => $type->type)) : '&nbsp;') . '</small>',
   );
 
-  if (!$type->locked) {
-    $js_settings = array(
-      'type' => 'setting',
-      'data' => array(
-        'machineReadableValue' => array(
-          'name' => array(
-            'text' => t('Machine name'),
-            'target' => 'type',
-            'searchPattern' => '[^a-z0-9]+',
-            'replaceToken' => '_',
-          ),
-        ),
-      ),
-    );
-    $form['type'] = array(
-      '#title' => t('Machine name'),
-      '#type' => 'textfield',
-      '#default_value' => $type->type,
-      '#maxlength' => 32,
-      '#required' => TRUE,
-      '#description' => t('The machine-readable name of this content type. This text will be used for constructing the URL of the <em>add new content</em> page for this content type. This name must contain only lowercase letters, numbers, and underscores. Underscores will be converted into hyphens when constructing the URL of the <em>add new content</em> page. This name must be unique.'),
-      '#attached' => array(
-        'js' => array(drupal_get_path('module', 'system') . '/system.js', $js_settings),
-      ),
-    );
-  }
-  else {
-    $form['type'] = array(
-      '#type' => 'value',
-      '#value' => $type->type,
-    );
-  }
+  $form['type'] = array(
+    '#type' => 'machine_name',
+    '#default_value' => $type->type,
+    '#maxlength' => 32,
+    '#disabled' => $type->locked,
+    '#machine_name' => array(
+      'exists' => 'node_type_load',
+    ),
+    '#description' => t('A unique machine-readable name for this content type. It must only contain lowercase letters, numbers, and underscores. This name will be used for constructing the URL of the %node-add page, in which underscores will be converted into hyphens.', array(
+      '%node-add' => t('Add new content'),
+    )),
+  );
 
   $form['description'] = array(
     '#title' => t('Description'),
@@ -276,12 +255,6 @@ function node_type_form_validate($form, &$form_state) {
   $types = node_type_get_names();
 
   if (!$form_state['values']['locked']) {
-    if (isset($types[$type->type]) && $type->type != $old_type) {
-      form_set_error('type', t('The machine-readable name %type is already taken.', array('%type' => $type->type)));
-    }
-    if (!preg_match('!^[a-z0-9_]+$!', $type->type)) {
-      form_set_error('type', t('The machine-readable name must contain only lowercase letters, numbers, and underscores.'));
-    }
     // 'theme' conflicts with theme_node_form().
     // '0' is invalid, since elsewhere we check it using empty().
     if (in_array($type->type, array('0', 'theme'))) {

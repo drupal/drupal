@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.502 2010/10/07 17:31:39 webchick Exp $
+// $Id: form.inc,v 1.503 2010/10/13 13:43:21 dries Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -1575,7 +1575,7 @@ function form_error(&$element, $message = '') {
  *   was clicked when the form was submitted, as well as the sanitized
  *   $_POST data.
  */
-function form_builder($form_id, $element, &$form_state) {
+function form_builder($form_id, &$element, &$form_state) {
   // Initialize as unprocessed.
   $element['#processed'] = FALSE;
 
@@ -1602,8 +1602,11 @@ function form_builder($form_id, $element, &$form_state) {
       $element['#action'] = str_replace('http://', 'https://', $base_root) . $element['#action'];
     }
 
-    // Store a complete copy of the form in form_state prior to building the form.
-    $form_state['complete form'] = $element;
+    // Store a reference to the complete form in $form_state prior to building
+    // the form. This allows advanced #process and #after_build callbacks to
+    // perform changes elsewhere in the form.
+    $form_state['complete form'] = &$element;
+
     // Set a flag if we have a correct form submission. This is always TRUE for
     // programmed forms coming from drupal_form_submit(), or if the form_id coming
     // from the POST data is set and matches the current form_id.
@@ -1749,9 +1752,6 @@ function form_builder($form_id, $element, &$form_state) {
       // @todo Legacy support. Remove in Drupal 8.
       $form_state['clicked_button'] = $form_state['triggering_element'];
     }
-
-    // Update the copy of the complete form for usage in validation handlers.
-    $form_state['complete form'] = $element;
   }
   return $element;
 }
@@ -3031,6 +3031,130 @@ function form_process_tableselect($element) {
     $element['#value'] = array();
   }
   return $element;
+}
+
+/**
+ * Processes a machine-readable name form element.
+ *
+ * @param $element
+ *   The form element to process. Properties used:
+ *   - #machine_name: An associative array containing:
+ *     - exists: A function name to invoke for checking whether a submitted
+ *       machine name value already exists. The submitted value is passed as
+ *       argument. In most cases, an existing API or menu argument loader
+ *       function can be re-used. The callback is only invoked, if the submitted
+ *       value differs from the element's #default_value.
+ *     - source: (optional) The #array_parents of the form element containing
+ *       the human-readable name (i.e., as contained in the $form structure) to
+ *       use as source for the machine name. Defaults to array('name').
+ *     - label: (optional) A text to display as label for the machine name value
+ *       after the human-readable name form element. Defaults to "Machine name".
+ *     - replace_pattern: (optional) A regular expression (without delimiters)
+ *       matching disallowed characters in the machine name. Defaults to
+ *       '[^a-z0-9_]+'.
+ *     - replace: (optional) A character to replace disallowed characters in the
+ *       machine name via JavaScript. Defaults to '_' (underscore). When using a
+ *       different character, 'replace_pattern' needs to be set accordingly.
+ *     - error: (optional) A custom form error message string to show, if the
+ *       machine name contains disallowed characters.
+ *   - #maxlength: (optional) Should be set to the maximum allowed length of the
+ *     machine name. Defaults to 64.
+ *   - #disabled: (optional) Should be set to TRUE in case an existing machine
+ *     name must not be changed after initial creation.
+ */
+function form_process_machine_name($element, &$form_state) {
+  // Apply default form element properties.
+  $element += array(
+    '#title' => t('Machine-readable name'),
+    '#description' => t('A unique machine-readable name. Can only contain lowercase letters, numbers, and underscores.'),
+    '#machine_name' => array(),
+  );
+  // A form element that only wants to set one #machine_name property (usually
+  // 'source' only) would leave all other properties undefined, if the defaults
+  // were defined in hook_element_info(). Therefore, we apply the defaults here.
+  $element['#machine_name'] += array(
+    'source' => array('name'),
+    'target' => '#' . $element['#id'],
+    'label' => t('Machine name'),
+    'replace_pattern' => '[^a-z0-9_]+',
+    'replace' => '_',
+  );
+
+  // The source element defaults to array('name'), but may have been overidden.
+  if (empty($element['#machine_name']['source'])) {
+    return $element;
+  }
+
+  // Retrieve the form element containing the human-readable name from the
+  // complete form in $form_state. By reference, because we need to append
+  // a #field_suffix that will hold the live preview.
+  $key_exists = NULL;
+  $source = drupal_array_get_nested_value($form_state['complete form'], $element['#machine_name']['source'], $key_exists);
+  if (!$key_exists) {
+    return $element;
+  }
+
+  // Append a field suffix to the source form element, which will contain
+  // the live preview of the machine name.
+  $suffix_id = $source['#id'] . '-machine-name-suffix';
+  $source += array('#field_suffix' => '');
+  $source['#field_suffix'] .= ' <small id="' . $suffix_id . '">&nbsp;</small>';
+
+  $parents = array_merge($element['#machine_name']['source'], array('#field_suffix'));
+  drupal_array_set_nested_value($form_state['complete form'], $parents, $source['#field_suffix']);
+
+  $element['#machine_name']['suffix'] = '#' . $suffix_id;
+
+  $js_settings = array(
+    'type' => 'setting',
+    'data' => array(
+      'machineName' => array(
+        '#' . $source['#id'] => $element['#machine_name'],
+      ),
+    ),
+  );
+  $element['#attached']['js'][] = 'misc/machine-name.js';
+  $element['#attached']['js'][] = $js_settings;
+
+  return $element;
+}
+
+/**
+ * Form element validation handler for #type 'machine_name'.
+ *
+ * Note that #maxlength is validated by _form_validate() already.
+ */
+function form_validate_machine_name(&$element, &$form_state) {
+  // Verify that the machine name not only consists of replacement tokens.
+  if (preg_match('@^' . $element['#machine_name']['replace'] . '+$@', $element['#value'])) {
+    form_error($element, t('The machine-readable name must contain unique characters.'));
+  }
+
+  // Verify that the machine name contains no disallowed characters.
+  if (preg_match('@' . $element['#machine_name']['replace_pattern'] . '@', $element['#value'])) {
+    if (!isset($element['#machine_name']['error'])) {
+      // Since a hyphen is the most common alternative replacement character,
+      // a corresponding validation error message is supported here.
+      if ($element['#machine_name']['replace'] == '-') {
+        form_error($element, t('The machine-readable name must contain only lowercase letters, numbers, and hyphens.'));
+      }
+      // Otherwise, we assume the default (underscore).
+      else {
+        form_error($element, t('The machine-readable name must contain only lowercase letters, numbers, and underscores.'));
+      }
+    }
+    else {
+      form_error($element, $element['#machine_name']['error']);
+    }
+  }
+
+  // Verify that the machine name is unique.
+  if ($element['#default_value'] !== $element['#value']) {
+    $function = $element['#machine_name']['exists'];
+    if ($function($element['#value'])) {
+      form_error($element, t('The machine-readable name is already in use. It must be unique.'));
+    }
+  }
 }
 
 /**

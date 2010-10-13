@@ -1,5 +1,5 @@
 <?php
-// $Id: system.test,v 1.146 2010/10/05 00:22:24 webchick Exp $
+// $Id: system.test,v 1.147 2010/10/13 13:43:21 dries Exp $
 
 /**
  * Helper class for module test cases.
@@ -948,7 +948,7 @@ class DateTimeFunctionalTest extends DrupalWebTestCase {
 
     // Add custom date type.
     $this->clickLink(t('Add date type'));
-    $date_type = $this->randomName(8);
+    $date_type = strtolower($this->randomName(8));
     $machine_name = 'machine_' . $date_type;
     $date_format = 'd.m.Y - H:i';
     $edit = array(

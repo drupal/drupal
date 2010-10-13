@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.admin.inc,v 1.112 2010/10/13 05:19:26 webchick Exp $
+// $Id: taxonomy.admin.inc,v 1.113 2010/10/13 13:43:21 dries Exp $
 
 /**
  * @file
@@ -137,30 +137,13 @@ function taxonomy_form_vocabulary($form, &$form_state, $edit = array()) {
     '#default_value' => $vocabulary->name,
     '#maxlength' => 255,
     '#required' => TRUE,
-    '#field_suffix' => ' <small id="edit-name-suffix">&nbsp;</small>',
-  );
-  $js_settings = array(
-    'type' => 'setting',
-    'data' => array(
-      'machineReadableValue' => array(
-        'name' => array(
-          'text' => t('Machine name'),
-          'target' => 'machine-name',
-          'searchPattern' => '[^a-z0-9]+',
-          'replaceToken' => '_',
-        ),
-      ),
-    ),
   );
   $form['machine_name'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Machine-readable name'),
+    '#type' => 'machine_name',
     '#default_value' => $vocabulary->machine_name,
-    '#maxlength' => 255,
-    '#description' => t('The unique machine-readable name for this vocabulary, used for theme templates. Can only contain lowercase letters, numbers, and underscores.'),
-    '#required' => TRUE,
-    '#attached' => array(
-      'js' => array(drupal_get_path('module', 'system') . '/system.js', $js_settings),
+    '#maxlength' => 21,
+    '#machine_name' => array(
+      'exists' => 'taxonomy_vocabulary_machine_name_load',
     ),
   );
   $form['old_machine_name'] = array(
@@ -189,34 +172,6 @@ function taxonomy_form_vocabulary($form, &$form_state, $edit = array()) {
   return $form;
 }
 
-/**
- * Validation handler for the vocabulary form.
- *
- * @see taxonomy_form_vocabulary()
- */
-function taxonomy_form_vocabulary_validate($form, &$form_state) {
-  if ($form_state['clicked_button']['#value'] != t('Delete') && isset($form_state['values']['machine_name'])) {
-
-    // Restrict machine names to appropriate characters.
-    $machine_name = $form_state['values']['machine_name'];
-    if (!preg_match('!^[a-z0-9_]+$!', $form_state['values']['machine_name'])) {
-      form_set_error('machine_name', t('The machine-readable name must contain only lowercase letters, numbers, and underscores.'));
-    }
-    // Restrict machine names to 21 characters to avoid exceeding the limit
-    // for field names.
-    if (drupal_strlen($machine_name) > 21) {
-      form_set_error('machine_name', t('The machine-readable name must not exceed 21 characters.'));
-    }
-
-    // Do not allow duplicate machine names.
-    $vocabularies = taxonomy_get_vocabularies();
-    foreach ($vocabularies as $vocabulary) {
-      if ($machine_name == $vocabulary->machine_name && (!isset($form_state['values']['vid']) || $vocabulary->vid != $form_state['values']['vid'])) {
-        form_set_error('machine_name', t('This machine-readable name is already in use by another vocabulary and must be unique.'));
-      }
-    }
-  }
-}
 /**
  * Accept the form submission for a vocabulary and save the results.
  */

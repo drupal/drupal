@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.318 2010/10/09 05:18:53 webchick Exp $
+// $Id: system.admin.inc,v 1.319 2010/10/13 13:43:21 dries Exp $
 
 /**
  * @file
@@ -2068,28 +2068,12 @@ function system_add_date_format_type_form($form, &$form_state) {
     '#title' => t('Date type'),
     '#type' => 'textfield',
     '#required' => TRUE,
-    '#field_suffix' => ' <small id="edit-date-type-suffix">&nbsp;</small>',
-  );
-  $js_settings = array(
-    'type' => 'setting',
-    'data' => array(
-      'machineReadableValue' => array(
-        'date-type' => array(
-          'text' => t('Machine name'),
-          'target' => 'machine-name',
-          'searchPattern' => '[^a-z0-9]+',
-          'replaceToken' => '_',
-        ),
-      ),
-    ),
   );
   $form['machine_name'] = array(
-    '#title' => t('Machine readable name'),
-    '#description' => t('The unique machine readable name for this date type, can only contain lowercase letters, numbers and underscores.'),
-    '#type' => 'textfield',
-    '#required' => TRUE,
-    '#attached' => array(
-      'js' => array(drupal_get_path('module', 'system') . '/system.js', $js_settings),
+    '#type' => 'machine_name',
+    '#machine_name' => array(
+      'exists' => 'system_get_date_types',
+      'source' => array('date_type'),
     ),
   );
 
