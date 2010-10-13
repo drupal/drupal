@@ -2871,7 +2871,7 @@ function hook_install() {
  * to provide feedback regarding completion level.
  *
  * See the batch operations page for more information on how to use the batch API:
- * @link http://drupal.org/node/146843 http://drupal.org/node/146843 @endlink
+ * @link http://drupal.org/node/180528 http://drupal.org/node/180528 @endlink
  *
  * @throws DrupalUpdateException, PDOException
  *   In case of error, update hooks should throw an instance of DrupalUpdateException
