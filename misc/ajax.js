@@ -1,4 +1,4 @@
-// $Id: ajax.js,v 1.23 2010/10/06 18:27:09 webchick Exp $
+// $Id: ajax.js,v 1.24 2010/10/13 13:46:50 dries Exp $
 (function ($) {
 
 /**
@@ -298,7 +298,7 @@ Drupal.ajax.prototype.success = function (response, status) {
 
   // Remove any response-specific settings so they don't get used on the next
   // call by mistake.
-  this.settings = {};
+  this.settings = null;
 };
 
 /**
