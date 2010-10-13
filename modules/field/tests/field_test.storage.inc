@@ -1,5 +1,5 @@
 <?php
-// $Id: field_test.storage.inc,v 1.7 2010/09/26 23:31:35 dries Exp $
+// $Id: field_test.storage.inc,v 1.8 2010/10/13 05:19:26 webchick Exp $
 
 /**
  * @file
@@ -453,10 +453,9 @@ function field_test_field_attach_rename_bundle($bundle_old, $bundle_new) {
 /**
  * Implements hook_field_attach_delete_bundle().
  */
-function field_test_field_attach_delete_bundle($bundle, $instances) {
+function field_test_field_attach_delete_bundle($entity_type, $bundle, $instances) {
   $data = _field_test_storage_data();
 
-  $instances = field_info_instances($bundle);
   foreach ($instances as $field_name => $instance) {
     $field = field_info_field($field_name);
     if ($field['storage']['type'] == 'field_test_storage') {
