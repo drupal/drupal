@@ -298,7 +298,7 @@ Drupal.ajax.prototype.success = function (response, status) {
 
   // Remove any response-specific settings so they don't get used on the next
   // call by mistake.
-  this.settings = {};
+  this.settings = null;
 };
 
 /**
