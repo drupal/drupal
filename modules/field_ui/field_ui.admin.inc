@@ -1438,7 +1438,7 @@ function field_ui_field_settings_form($form, &$form_state, $instance) {
   // If so, prevent changes to the field settings.
   $has_data = field_has_data($field);
   if ($has_data) {
-    $form['field']['#description'] = '<div class="messages error">' . t('There is data for this field in the database. The field settings can no longer be changed.' . '</div>') . $form['field']['#description'];
+    $form['field']['#description'] = '<div class="messages error">' . t('There is data for this field in the database. The field settings can no longer be changed.') . '</div>' . $form['field']['#description'];
   }
 
   // Build the non-configurable field values.
