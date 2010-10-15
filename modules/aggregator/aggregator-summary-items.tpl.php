@@ -14,7 +14,7 @@
  * - $source_url: URL to the local source or category.
  *
  * @see template_preprocess()
- * @see template_preprocess_aggregator_summary-items()
+ * @see template_preprocess_aggregator_summary_items()
  */
 ?>
 <h3><?php print $title; ?></h3>
