@@ -431,6 +431,39 @@ class MenuRouterTestCase extends DrupalWebTestCase {
     $this->assertRaw('title="Test title attribute"', t('Title attribute of a menu link renders.'));
     $this->assertRaw('testparam=testvalue', t('Query parameter added to menu link.'));
   }
+
+  /**
+   * Tests the possible ways to set the title for menu items.
+   * Also tests that menu item titles work with string overrides.
+   */
+  function testMenuItemTitlesCases() {
+
+    // Build array with string overrides.
+    $test_data = array(
+      1 => array('Example title - Case 1' => 'Alternative example title - Case 1'),
+      2 => array('Example @sub1 - Case @op2' => 'Alternative example @sub1 - Case @op2'),
+      3 => array('Example title' => 'Alternative example title'),
+      4 => array('Example title' => 'Alternative example title'),
+    );
+
+    foreach ($test_data as $case_no => $override) {
+      $this->menuItemTitlesCasesHelper($case_no);
+      variable_set('locale_custom_strings_en', array('' => $override));
+      $this->menuItemTitlesCasesHelper($case_no, TRUE);
+      variable_set('locale_custom_strings_en', array());
+    }
+  }
+
+  /**
+   * Get a url and assert the title given a case number. If override is true,
+   * the title is asserted to begin with "Alternative".
+   */
+  private function menuItemTitlesCasesHelper($case_no, $override = FALSE) {
+    $this->drupalGet('menu-title-test/case' . $case_no);
+    $this->assertResponse(200);
+    $asserted_title = $override ? 'Alternative example title - Case ' . $case_no : 'Example title - Case ' . $case_no;
+    $this->assertTitle($asserted_title . ' | Drupal', t('Menu title is') . ': ' . $asserted_title, 'Menu');
+  }
 }
 
 /**
