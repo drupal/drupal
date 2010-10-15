@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.pages.inc,v 1.44 2010/10/06 13:38:39 dries Exp $
+// $Id: aggregator.pages.inc,v 1.45 2010/10/15 23:37:55 webchick Exp $
 
 /**
  * @file
@@ -471,7 +471,7 @@ function theme_aggregator_page_opml($variables) {
 /**
  * Process variables for aggregator-summary-items.tpl.php.
  *
- * @see aggregator-summary-item.tpl.php
+ * @see aggregator-summary-items.tpl.php
  */
 function template_preprocess_aggregator_summary_items(&$variables) {
   $variables['title'] = check_plain($variables['source']->title);

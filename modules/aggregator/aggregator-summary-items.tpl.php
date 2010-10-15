@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator-summary-items.tpl.php,v 1.3 2008/08/03 16:10:50 dries Exp $
+// $Id: aggregator-summary-items.tpl.php,v 1.4 2010/10/15 23:37:55 webchick Exp $
 
 /**
  * @file
@@ -14,7 +14,7 @@
  * - $source_url: URL to the local source or category.
  *
  * @see template_preprocess()
- * @see template_preprocess_aggregator_summary-items()
+ * @see template_preprocess_aggregator_summary_items()
  */
 ?>
 <h3><?php print $title; ?></h3>
