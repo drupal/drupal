@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.79 2010/10/09 02:32:30 webchick Exp $ */
+/* $Id: style.css,v 1.80 2010/10/15 04:37:15 webchick Exp $ */
 
 /**
  * Generic elements.
@@ -475,6 +475,9 @@ table th.active {
 table th a {
   display: block;
   position: relative;
+}
+table th.active a {
+  padding: 0 25px 0 0; /* LTR */
 }
 table th.active img {
   position: absolute;
