@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.140 2010/10/03 01:29:40 dries Exp $
+// $Id: database.inc,v 1.141 2010/10/15 18:03:43 webchick Exp $
 
 /**
  * @file
@@ -1292,6 +1292,9 @@ abstract class Database {
 
   /**
    * Gets the connection object for the specified database key and target.
+   *
+   * Note: do not use the setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE) on the
+   * returned object because of http://bugs.php.net/bug.php?id=43139.
    *
    * @param $target
    *   The database target name.
