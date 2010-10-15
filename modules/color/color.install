@@ -1,11 +1,14 @@
 <?php
-/* $Id: color.install,v 1.7 2010/04/04 13:18:18 dries Exp $ */
+/* $Id: color.install,v 1.8 2010/10/15 23:41:53 webchick Exp $ */
 
 /**
  * @file
  * Install, update and uninstall functions for the color module.
  */
 
+/**
+ * Implements hook_requirements().
+ */
 function color_requirements($phase) {
   $requirements = array();
 
