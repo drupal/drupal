@@ -459,6 +459,9 @@ function _shortcut_link_form_elements($shortcut_link = NULL) {
       'link_path' => ''
     );
   }
+  else {
+    $shortcut_link['link_path'] = drupal_get_path_alias($shortcut_link['link_path']);
+  }
 
   $form['shortcut_link']['#tree'] = TRUE;
   $form['shortcut_link']['link_title'] = array(
@@ -504,7 +507,11 @@ function shortcut_link_edit_validate($form, &$form_state) {
  * Submit handler for shortcut_link_edit().
  */
 function shortcut_link_edit_submit($form, &$form_state) {
+  // Normalize the path in case it is an alias.
+  $form_state['values']['shortcut_link']['link_path'] = drupal_get_normal_path($form_state['values']['shortcut_link']['link_path']);
+
   $shortcut_link = array_merge($form_state['values']['original_shortcut_link'], $form_state['values']['shortcut_link']);
+
   menu_link_save($shortcut_link);
   $form_state['redirect'] = 'admin/config/user-interface/shortcut/' . $shortcut_link['menu_name'];
   drupal_set_message(t('The shortcut %link has been updated.', array('%link' => $shortcut_link['link_title'])));
@@ -555,6 +562,9 @@ function shortcut_admin_add_link($shortcut_link, &$shortcut_set, $limit = NULL) 
       }
     }
   }
+
+  // Normalize the path in case it is an alias.
+  $shortcut_link['link_path'] = drupal_get_normal_path($shortcut_link['link_path']);
 
   // Add the link to the end of the list.
   $shortcut_set->links[] = $shortcut_link;
