@@ -1,4 +1,4 @@
-/* $Id: system.admin.css,v 1.5 2010/10/13 17:09:00 webchick Exp $ */
+/* $Id: system.admin.css,v 1.6 2010/10/15 04:40:41 webchick Exp $ */
 
 /**
  * @file
@@ -43,16 +43,6 @@ div.admin .expert-link {
  */
 .compact-link {
   margin: 0 0 0.5em 0;
-}
-
-/**
- * Quick inline admin links.
- */
-small .admin-link:before {
-  content: '[';
-}
-small .admin-link:after {
-  content: ']';
 }
 
 /**

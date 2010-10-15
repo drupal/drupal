@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.980 2010/10/13 17:09:00 webchick Exp $
+// $Id: system.module,v 1.981 2010/10/15 04:40:41 webchick Exp $
 
 /**
  * @file
@@ -344,18 +344,6 @@ function system_element_info() {
     '#maxlength' => 128,
     '#autocomplete_path' => FALSE,
     '#process' => array('ajax_process_form'),
-    '#theme' => 'textfield',
-    '#theme_wrappers' => array('form_element'),
-  );
-  $types['machine_name'] = array(
-    '#input' => TRUE,
-    '#default_value' => NULL,
-    '#required' => TRUE,
-    '#maxlength' => 64,
-    '#size' => 60,
-    '#autocomplete_path' => FALSE,
-    '#process' => array('form_process_machine_name', 'ajax_process_form'),
-    '#element_validate' => array('form_validate_machine_name'),
     '#theme' => 'textfield',
     '#theme_wrappers' => array('form_element'),
   );
