@@ -476,6 +476,9 @@ table th a {
   display: block;
   position: relative;
 }
+table th.active a {
+  padding: 0 25px 0 0; /* LTR */
+}
 table th.active img {
   position: absolute;
   top: 3px;
