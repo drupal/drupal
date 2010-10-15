@@ -29,6 +29,8 @@ function simpletest_uninstall() {
 }
 
 /**
+ * Implements hook_requirements().
+ *
  * Check that the cURL extension exists for PHP.
  */
 function simpletest_requirements($phase) {
@@ -81,6 +83,9 @@ function simpletest_requirements($phase) {
   return $requirements;
 }
 
+/**
+ * Implements hook_schema().
+ */
 function simpletest_schema() {
   $schema['simpletest'] = array(
     'description' => 'Stores simpletest messages',
