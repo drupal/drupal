@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.install,v 1.38 2010/10/08 00:22:17 dries Exp $
+// $Id: simpletest.install,v 1.39 2010/10/15 23:40:21 webchick Exp $
 
 /**
  * @file
@@ -29,6 +29,8 @@ function simpletest_uninstall() {
 }
 
 /**
+ * Implements hook_requirements().
+ *
  * Check that the cURL extension exists for PHP.
  */
 function simpletest_requirements($phase) {
@@ -81,6 +83,9 @@ function simpletest_requirements($phase) {
   return $requirements;
 }
 
+/**
+ * Implements hook_schema().
+ */
 function simpletest_schema() {
   $schema['simpletest'] = array(
     'description' => 'Stores simpletest messages',
