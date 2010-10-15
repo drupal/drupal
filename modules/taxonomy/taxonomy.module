@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.610 2010/10/13 05:19:26 webchick Exp $
+// $Id: taxonomy.module,v 1.611 2010/10/15 03:14:29 webchick Exp $
 
 /**
  * @file
@@ -841,20 +841,22 @@ function taxonomy_get_children($tid, $vid = 0) {
  *   for the entire vocabulary.
  * @param $max_depth
  *   The number of levels of the tree to return. Leave NULL to return all levels.
- * @param $depth
- *   Internal use only.
+ * @param $load_entities
+ *   If TRUE, a full entity load will occur on the term objects. Otherwise they
+ *   are partial objects queried directly from the {taxonomy_term_data} table to
+ *   save execution time and memory consumption when listing large numbers of
+ *   terms. Defaults to FALSE.
  *
  * @return
  *   An array of all term objects in the tree. Each term object is extended
  *   to have "depth" and "parents" attributes in addition to its normal ones.
- *   Results are statically cached.
+ *   Results are statically cached. Term objects will be partial or complete
+ *   depending on the $load_entities parameter.
  */
-function taxonomy_get_tree($vid, $parent = 0, $max_depth = NULL, $depth = -1) {
+function taxonomy_get_tree($vid, $parent = 0, $max_depth = NULL, $load_entities = FALSE) {
   $children = &drupal_static(__FUNCTION__, array());
   $parents = &drupal_static(__FUNCTION__ . ':parents', array());
   $terms = &drupal_static(__FUNCTION__ . ':terms', array());
-
-  $depth++;
 
   // We cache trees, so it's not CPU-intensive to call get_tree() on a term
   // and its children, too.
@@ -865,31 +867,81 @@ function taxonomy_get_tree($vid, $parent = 0, $max_depth = NULL, $depth = -1) {
 
     $query = db_select('taxonomy_term_data', 't');
     $query->join('taxonomy_term_hierarchy', 'h', 'h.tid = t.tid');
-    $query->addField('t', 'tid');
-    $query->addField('h', 'parent');
-    $query->condition('t.vid', $vid);
-    $query->addTag('term_access');
-    $query->orderBy('t.weight');
-    $query->orderBy('t.name');
-    $tid_parents = $query->execute()->fetchAllKeyed();
-    $terms[$vid] = taxonomy_term_load_multiple(array_keys($tid_parents));
+    $result = $query
+      ->addTag('translatable')
+      ->addTag('term_access')
+      ->fields('t')
+      ->fields('h', array('parent'))
+      ->condition('t.vid', $vid)
+      ->orderBy('t.weight')
+      ->orderBy('t.name')
+      ->execute();
 
-    foreach ($tid_parents as $tid => $parent_tid) {
-      $children[$vid][$parent_tid][] = $tid;
-      $parents[$vid][$tid][] = $parent_tid;
+    foreach ($result as $term) {
+      $children[$vid][$term->parent][] = $term->tid;
+      $parents[$vid][$term->tid][] = $term->parent;
+      $terms[$vid][$term->tid] = $term;
     }
+  }
+
+  // Load full entities, if necessary. The entity controller statically
+  // caches the results.
+  if ($load_entities) {
+    $term_entities = taxonomy_term_load_multiple(array_keys($terms[$vid]));
   }
 
   $max_depth = (!isset($max_depth)) ? count($children[$vid]) : $max_depth;
   $tree = array();
-  if ($max_depth > $depth && !empty($children[$vid][$parent])) {
-    foreach ($children[$vid][$parent] as $child) {
-      $term = clone $terms[$vid][$child];
-      $term->depth = $depth;
-      $term->parents = $parents[$vid][$child];
-      $tree[] = $term;
-      if (!empty($children[$vid][$child])) {
-        $tree = array_merge($tree, taxonomy_get_tree($vid, $child, $max_depth, $depth));
+
+  // Keeps track of the parents we have to process, the last entry is used
+  // for the next processing step.
+  $process_parents = array();
+  $process_parents[] = $parent;
+
+  // Loops over the parent terms and adds its children to the tree array.
+  // Uses a loop instead of a recursion, because it's more efficient.
+  while (count($process_parents)) {
+    $parent = array_pop($process_parents);
+    // The number of parents determines the current depth.
+    $depth = count($process_parents);
+    if ($max_depth > $depth && !empty($children[$vid][$parent])) {
+      $has_children = FALSE;
+      $child = current($children[$vid][$parent]);
+      do {
+        if (empty($child)) {
+          break;
+        }
+        $term = $load_entities ? $term_entities[$child] : $terms[$vid][$child];
+        if (count($parents[$vid][$term->tid]) > 1) {
+          // We have a term with multi parents here. Clone the term,
+          // so that the depth attribute remains correct.
+          $term = clone $term;
+        }
+        $term->depth = $depth;
+        unset($term->parent);
+        $term->parents = $parents[$vid][$term->tid];
+        $tree[] = $term;
+        if (!empty($children[$vid][$term->tid])) {
+          $has_children = TRUE;
+
+          // We have to continue with this parent later.
+          $process_parents[] = $parent;
+          // Use the current term as parent for the next iteration.
+          $process_parents[] = $term->tid;
+
+          // Reset pointers for child lists because we step in there more often
+          // with multi parents.
+          reset($children[$vid][$term->tid]);
+          // Move pointer so that we get the correct term the next time.
+          next($children[$vid][$parent]);
+          break;
+        }
+      } while ($child = next($children[$vid][$parent]));
+
+      if (!$has_children) {
+        // We processed all terms in this hierarchy-level, reset pointer
+        // so that this function works the next time it gets called.
+        reset($children[$vid][$parent]);
       }
     }
   }
