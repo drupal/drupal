@@ -1171,6 +1171,7 @@ function node_delete_multiple($nids) {
       // Call the node-specific callback (if any):
       node_invoke($node, 'delete');
       module_invoke_all('node_delete', $node);
+      module_invoke_all('entity_delete', $node, 'node');
       field_attach_delete('node', $node);
 
       // Remove this node from the search index if needed.

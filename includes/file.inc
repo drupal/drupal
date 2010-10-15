@@ -1190,6 +1190,7 @@ function file_delete(stdClass $file, $force = FALSE) {
 
   // Let other modules clean up any references to the deleted file.
   module_invoke_all('file_delete', $file);
+  module_invoke_all('entity_delete', $file, 'file');
 
   // Make sure the file is deleted before removing its row from the
   // database, so UIs can still find the file in the database.

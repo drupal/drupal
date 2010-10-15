@@ -19,6 +19,7 @@ files[] = tests/bootstrap.test
 files[] = tests/cache.test
 files[] = tests/common.test
 files[] = tests/database_test.test
+files[] = tests/entity_crud_hook_test.test
 files[] = tests/entity_query.test
 files[] = tests/error.test
 files[] = tests/file.test

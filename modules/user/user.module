@@ -2345,6 +2345,7 @@ function user_delete_multiple(array $uids) {
 
     foreach ($accounts as $uid => $account) {
       module_invoke_all('user_delete', $account);
+      module_invoke_all('entity_delete', $account, 'user');
       field_attach_delete('user', $account);
       drupal_session_destroy_uid($account->uid);
     }

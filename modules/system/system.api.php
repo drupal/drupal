@@ -284,6 +284,17 @@ function hook_entity_load($entities, $type) {
  *   The type of entity being inserted (i.e. node, user, comment).
  */
 function hook_entity_insert($entity, $type) {
+  // Insert the new entity into a fictional table of all entities.
+  $info = entity_get_info($type);
+  $id = reset(entity_extract_ids($type, $entity));
+  db_insert('example_entity')
+    ->fields(array(
+      'type' => $type,
+      'id' => $id,
+      'created' => REQUEST_TIME,
+      'updated' => REQUEST_TIME,
+    ))
+    ->execute();
 }
 
 /**
@@ -295,6 +306,34 @@ function hook_entity_insert($entity, $type) {
  *   The type of entity being updated (i.e. node, user, comment).
  */
 function hook_entity_update($entity, $type) {
+  // Update the entity's entry in a fictional table of all entities.
+  $info = entity_get_info($type);
+  $id = reset(entity_extract_ids($type, $entity));
+  db_update('example_entity')
+    ->fields(array(
+      'updated' => REQUEST_TIME,
+    ))
+    ->condition('type', $type)
+    ->condition('id', $id)
+    ->execute();
+}
+
+/**
+ * Act on entities when deleted.
+ *
+ * @param $entity
+ *   The entity object.
+ * @param $type
+ *   The type of entity being deleted (i.e. node, user, comment).
+ */
+function hook_entity_delete($entity, $type) {
+  // Delete the entity's entry from a fictional table of all entities.
+  $info = entity_get_info($type);
+  $id = reset(entity_extract_ids($type, $entity));
+  db_delete('example_entity')
+    ->condition('type', $type)
+    ->condition('id', $id)
+    ->execute();
 }
 
 /**

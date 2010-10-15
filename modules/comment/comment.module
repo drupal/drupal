@@ -1592,6 +1592,7 @@ function comment_delete_multiple($cids) {
     foreach ($comments as $comment) {
       field_attach_delete('comment', $comment);
       module_invoke_all('comment_delete', $comment);
+      module_invoke_all('entity_delete', $comment, 'comment');
 
       // Delete the comment's replies.
       $child_cids = db_query('SELECT cid FROM {comment} WHERE pid = :cid', array(':cid' => $comment->cid))->fetchCol();
