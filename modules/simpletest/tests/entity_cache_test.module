@@ -1,5 +1,5 @@
 <?php
-// $Id: entity_cache_test.module,v 1.1 2010/04/18 15:01:56 webchick Exp $
+// $Id: entity_cache_test.module,v 1.2 2010/10/15 04:44:08 webchick Exp $
 
 /**
  * @file
@@ -9,14 +9,20 @@
 /**
  * Implements hook_watchdog().
  *
- * This function is called during module_enable() and tries to access entity
- * information provided by the module this one depends on. The information is
- * stored in a temporary system variable and is later analyzed in the test
- * case.
+ * This hook is called during module_enable() and since this hook
+ * implementation is invoked, we have to expect that this module and dependent
+ * modules have been properly installed already. So we expect to be able to
+ * retrieve the entity information that has been registered by the required
+ * dependency module.
  *
  * @see EnableDisableTestCase::testEntityCache()
+ * @see entity_cache_test_dependency_entity_info()
  */
-function entity_cache_test_watchdog() {
-  $info = entity_get_info('entity_cache_test');
-  variable_set('entity_cache_test', $info);
+function entity_cache_test_watchdog($log_entry) {
+  if ($log_entry['type'] == 'system' && $log_entry['message'] == '%module module installed.') {
+    $info = entity_get_info('entity_cache_test');
+    // Store the information in a system variable to analyze it later in the
+    // test case.
+    variable_set('entity_cache_test', $info);
+  }
 }

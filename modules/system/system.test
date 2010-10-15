@@ -1,5 +1,5 @@
 <?php
-// $Id: system.test,v 1.147 2010/10/13 13:43:21 dries Exp $
+// $Id: system.test,v 1.148 2010/10/15 04:44:08 webchick Exp $
 
 /**
  * Helper class for module test cases.
@@ -161,11 +161,14 @@ class EnableDisableTestCase extends ModuleTestCase {
   /**
    * Tests entity cache after enabling a module with a dependency on an enitity
    * providing module.
+   *
+   * @see entity_cache_test_watchdog()
    */
   function testEntityCache() {
     module_enable(array('entity_cache_test'));
     $info = variable_get('entity_cache_test');
-    $this->assertNotNull($info, t('Entity information must not be NULL'));
+    $this->assertEqual($info['label'], 'Entity Cache Test', 'Entity info label is correct.');
+    $this->assertEqual($info['controller class'], 'DrupalDefaultEntityController', 'Entity controller class info is correct.');
   }
 }
 
