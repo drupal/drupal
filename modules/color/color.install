@@ -6,6 +6,9 @@
  * Install, update and uninstall functions for the color module.
  */
 
+/**
+ * Implements hook_requirements().
+ */
 function color_requirements($phase) {
   $requirements = array();
 
