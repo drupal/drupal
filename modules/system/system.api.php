@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.199 2010/10/15 03:36:21 webchick Exp $
+// $Id: system.api.php,v 1.200 2010/10/15 23:39:13 webchick Exp $
 
 /**
  * @file
@@ -526,7 +526,7 @@ function hook_cron_queue_info_alter(&$queues) {
  * a matching theme function, e.g. theme_elementtype(), which should be
  * registered with hook_theme() as normal.
  *
- * Form more information about custom element types see the explanation at
+ * For more information about custom element types see the explanation at
  * http://drupal.org/node/169815.
  *
  * @return
