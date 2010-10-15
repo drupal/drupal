@@ -854,6 +854,7 @@ function template_preprocess_field(&$variables, $hook) {
 
   // Add specific suggestions that can override the default implementation.
   $variables['theme_hook_suggestions'] = array(
+    'field__' . $element['#field_type'],
     'field__' . $element['#field_name'],
     'field__' . $element['#bundle'],
     'field__' . $element['#field_name'] . '__' . $element['#bundle'],
