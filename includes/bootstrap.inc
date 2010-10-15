@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.427 2010/10/12 03:10:03 dries Exp $
+// $Id: bootstrap.inc,v 1.428 2010/10/15 04:15:41 webchick Exp $
 
 /**
  * @file
@@ -1883,13 +1883,12 @@ function drupal_hash_base64($data) {
  *
  * @return Object - the user object.
  */
-function drupal_anonymous_user($session = '') {
+function drupal_anonymous_user() {
   $user = new stdClass();
   $user->uid = 0;
   $user->hostname = ip_address();
   $user->roles = array();
   $user->roles[DRUPAL_ANONYMOUS_RID] = 'anonymous user';
-  $user->session = $session;
   $user->cache = 0;
   return $user;
 }

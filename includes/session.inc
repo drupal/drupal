@@ -1,5 +1,5 @@
 <?php
-// $Id: session.inc,v 1.89 2010/09/17 14:56:27 dries Exp $
+// $Id: session.inc,v 1.90 2010/10/15 04:15:41 webchick Exp $
 
 /**
  * @file
@@ -112,12 +112,26 @@ function _drupal_session_read($sid) {
     $user->roles[DRUPAL_AUTHENTICATED_RID] = 'authenticated user';
     $user->roles += db_query("SELECT r.rid, r.name FROM {role} r INNER JOIN {users_roles} ur ON ur.rid = r.rid WHERE ur.uid = :uid", array(':uid' => $user->uid))->fetchAllKeyed(0, 1);
   }
-  // We didn't find the client's record (session has expired), or they are
-  // blocked, or they are an anonymous user.
-  else {
-    $session = isset($user->session) ? $user->session : '';
-    $user = drupal_anonymous_user($session);
+  elseif ($user) {
+    // The user is anonymous or blocked. Only preserve two fields from the
+    // {sessions} table.
+    $account = drupal_anonymous_user();
+    $account->session = $user->session;
+    $account->timestamp = $user->timestamp;
+    $user = $account;
   }
+  else {
+    // The session has expired.
+    $user = drupal_anonymous_user();
+    $user->session = '';
+  }
+
+  // Store the session that was read for comparison in _drupal_session_write().
+  $last_read = &drupal_static('drupal_session_last_read');
+  $last_read = array(
+    'sid' => $sid,
+    'value' => $user->session,
+  );
 
   return $user->session;
 }
@@ -142,44 +156,53 @@ function _drupal_session_read($sid) {
 function _drupal_session_write($sid, $value) {
   global $user, $is_https;
 
-  // The exception handler is not active at this point, so we need to do it manually.
+  // The exception handler is not active at this point, so we need to do it
+  // manually.
   try {
     if (!drupal_save_session()) {
       // We don't have anything to do if we are not allowed to save the session.
       return;
     }
 
-    // Either ssid or sid or both will be added from $key below.
-    $fields = array(
-      'uid' => $user->uid,
-      'cache' => isset($user->cache) ? $user->cache : 0,
-      'hostname' => ip_address(),
-      'session' => $value,
-      'timestamp' => REQUEST_TIME,
-    );
+    // Check whether $_SESSION has been changed in this request.
+    $last_read = &drupal_static('drupal_session_last_read');
+    $is_changed = !isset($last_read) || $last_read['sid'] != $sid || $last_read['value'] !== $value;
 
-    // The "secure pages" setting allows a site to simultaneously use both secure
-    // and insecure session cookies. If enabled and both cookies are presented
-    // then use both keys. If not enabled but on HTTPS then use the PHP session
-    // id as 'ssid'. If on HTTP then use the PHP session id as 'sid'.
-    if ($is_https) {
-      $key['ssid'] = $sid;
-      $insecure_session_name = substr(session_name(), 1);
-      if (variable_get('https', FALSE) && isset($_COOKIE[$insecure_session_name])) {
-        $key['sid'] = $_COOKIE[$insecure_session_name];
+    // For performance reasons, do not update the sessions table, unless
+    // $_SESSION has changed or more than 180 has passed since the last update.
+    if ($is_changed || REQUEST_TIME - $user->timestamp > variable_get('session_write_interval', 180)) {
+      // Either ssid or sid or both will be added from $key below.
+      $fields = array(
+        'uid' => $user->uid,
+        'cache' => isset($user->cache) ? $user->cache : 0,
+        'hostname' => ip_address(),
+        'session' => $value,
+        'timestamp' => REQUEST_TIME,
+      );
+
+      // The "secure pages" setting allows a site to simultaneously use both
+      // secure and insecure session cookies. If enabled and both cookies are
+      // presented then use both keys. If not enabled but on HTTPS then use the
+      // PHP session id as 'ssid'. If on HTTP then use the PHP session id as
+      // 'sid'.
+      if ($is_https) {
+        $key['ssid'] = $sid;
+        $insecure_session_name = substr(session_name(), 1);
+        if (variable_get('https', FALSE) && isset($_COOKIE[$insecure_session_name])) {
+          $key['sid'] = $_COOKIE[$insecure_session_name];
+        }
       }
-    }
-    else {
-      $key['sid'] = $sid;
+      else {
+        $key['sid'] = $sid;
+      }
+
+      db_merge('sessions')
+        ->key($key)
+        ->fields($fields)
+        ->execute();
     }
 
-    db_merge('sessions')
-      ->key($key)
-      ->fields($fields)
-      ->execute();
-
-    // Last access time is updated no more frequently than once every 180 seconds.
-    // This reduces contention in the users table.
+    // Likewise, do not update access time more than once per 180 seconds.
     if ($user->uid && REQUEST_TIME - $user->access > variable_get('session_write_interval', 180)) {
       db_update('users')
         ->fields(array(
@@ -193,7 +216,8 @@ function _drupal_session_write($sid, $value) {
   }
   catch (Exception $exception) {
     require_once DRUPAL_ROOT . '/includes/errors.inc';
-    // If we are displaying errors, then do so with no possibility of a further uncaught exception being thrown.
+    // If we are displaying errors, then do so with no possibility of a further
+    // uncaught exception being thrown.
     if (error_displayable()) {
       print '<h1>Uncaught exception thrown in session handler.</h1>';
       print '<p>' . _drupal_render_exception_safe($exception) . '</p><hr />';
@@ -203,7 +227,7 @@ function _drupal_session_write($sid, $value) {
 }
 
 /**
- * Initialize the session handler, starting a session if needed.
+ * Initializes the session handler, starting a session if needed.
  */
 function drupal_session_initialize() {
   global $user, $is_https;
@@ -235,7 +259,7 @@ function drupal_session_initialize() {
 }
 
 /**
- * Forcefully start a session, preserving already set session data.
+ * Forcefully starts a session, preserving already set session data.
  *
  * @ingroup php_wrappers
  */
@@ -256,7 +280,7 @@ function drupal_session_start() {
 }
 
 /**
- * Commit the current session, if necessary.
+ * Commits the current session, if necessary.
  *
  * If an anonymous user already have an empty session, destroy it.
  */
@@ -287,7 +311,7 @@ function drupal_session_commit() {
 }
 
 /**
- * Return whether a session has been started.
+ * Returns whether a session has been started.
  */
 function drupal_session_started($set = NULL) {
   static $session_started = FALSE;
@@ -365,7 +389,7 @@ function drupal_session_regenerate() {
 /**
  * Session handler assigned by session_set_save_handler().
  *
- * Cleanup a specific session.
+ * Cleans up a specific session.
  *
  * @param $sid
  *   Session ID.
@@ -407,7 +431,7 @@ function _drupal_session_delete_cookie($name, $force_insecure = FALSE) {
 }
 
 /**
- * End a specific user's session(s).
+ * Ends a specific user's session(s).
  *
  * @param $uid
  *   User ID.
@@ -421,7 +445,7 @@ function drupal_session_destroy_uid($uid) {
 /**
  * Session handler assigned by session_set_save_handler().
  *
- * Cleanup stalled sessions.
+ * Cleans up stalled sessions.
  *
  * @param $lifetime
  *   The value of session.gc_maxlifetime, passed by PHP.
@@ -440,7 +464,7 @@ function _drupal_session_garbage_collection($lifetime) {
 }
 
 /**
- * Determine whether to save session data of the current request.
+ * Determines whether to save session data of the current request.
  *
  * This function allows the caller to temporarily disable writing of
  * session data, should the request end while performing potentially

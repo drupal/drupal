@@ -1,5 +1,5 @@
 <?php
-// $Id: session.test,v 1.32 2010/09/01 20:08:17 dries Exp $
+// $Id: session.test,v 1.33 2010/10/15 04:15:41 webchick Exp $
 
 /**
  * @file
@@ -178,6 +178,48 @@ class SessionTestCase extends DrupalWebTestCase {
     $this->assertSessionCookie(FALSE);
     $this->assertSessionEmpty(TRUE);
     $this->assertNoText(t('This is a dummy message.'), t('The message was not saved.'));
+  }
+
+  /**
+   * Test that sessions are only saved when necessary.
+   */
+  function testSessionWrite() {
+    $user = $this->drupalCreateUser(array('access content'));
+    $this->drupalLogin($user);
+
+    $sql = 'SELECT u.access, s.timestamp FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE u.uid = :uid';
+    $times1 = db_query($sql, array(':uid' => $user->uid))->fetchObject();
+
+    // Before every request we sleep one second to make sure that if the session
+    // is saved, its timestamp will change.
+
+    // Modify the session.
+    sleep(1);
+    $this->drupalGet('session-test/set/foo');
+    $times2 = db_query($sql, array(':uid' => $user->uid))->fetchObject();
+    $this->assertEqual($times2->access, $times1->access, t('Users table was not updated.'));
+    $this->assertNotEqual($times2->timestamp, $times1->timestamp, t('Sessions table was updated.'));
+
+    // Write the same value again, i.e. do not modify the session.
+    sleep(1);
+    $this->drupalGet('session-test/set/foo');
+    $times3 = db_query($sql, array(':uid' => $user->uid))->fetchObject();
+    $this->assertEqual($times3->access, $times1->access, t('Users table was not updated.'));
+    $this->assertEqual($times3->timestamp, $times2->timestamp, t('Sessions table was not updated.'));
+
+    // Do not change the session.
+    sleep(1);
+    $this->drupalGet('');
+    $times4 = db_query($sql, array(':uid' => $user->uid))->fetchObject();
+    $this->assertEqual($times4->access, $times3->access, t('Users table was not updated.'));
+    $this->assertEqual($times4->timestamp, $times3->timestamp, t('Sessions table was not updated.'));
+
+    // Force updating of users and sessions table once per second.
+    variable_set('session_write_interval', 0);
+    $this->drupalGet('');
+    $times5 = db_query($sql, array(':uid' => $user->uid))->fetchObject();
+    $this->assertNotEqual($times5->access, $times4->access, t('Users table was updated.'));
+    $this->assertNotEqual($times5->timestamp, $times4->timestamp, t('Sessions table was updated.'));
   }
 
   /**
