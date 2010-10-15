@@ -1,5 +1,5 @@
 <?php
-// $Id: shortcut.test,v 1.5 2010/08/05 23:53:38 webchick Exp $
+// $Id: shortcut.test,v 1.6 2010/10/15 04:21:02 webchick Exp $
 
 /**
  * @file
@@ -36,8 +36,10 @@ class ShortcutTestCase extends DrupalWebTestCase {
     // Create users.
     $this->admin_user = $this->drupalCreateUser(array('access toolbar', 'administer shortcuts', 'create article content', 'create page content', 'access content overview'));
     $this->shortcut_user = $this->drupalCreateUser(array('customize shortcut links', 'switch shortcut sets'));
+
     // Create a node.
     $this->node = $this->drupalCreateNode(array('type' => 'article'));
+
     // Log in as admin and grab the default shortcut set.
     $this->drupalLogin($this->admin_user);
     $this->set = shortcut_set_load(SHORTCUT_DEFAULT_SET_NAME);
@@ -114,10 +116,19 @@ class ShortcutLinksTestCase extends ShortcutTestCase {
   function testShortcutLinkAdd() {
     $set = $this->set;
 
+    // Create an alias for the node so we can test aliases.
+    $path = array(
+      'source' => 'node/' . $this->node->nid,
+      'alias' => $this->randomName(8),
+    );
+    path_save($path);
+
+    // Create some paths to test.
     $test_cases = array(
       array('path' => 'admin'),
       array('path' => 'admin/config/system/site-information'),
       array('path' => "node/{$this->node->nid}/edit"),
+      array('path' => $path['alias']),
     );
 
     // Check that each new shortcut links where it should.
@@ -131,7 +142,7 @@ class ShortcutLinksTestCase extends ShortcutTestCase {
       $this->assertResponse(200);
       $saved_set = shortcut_set_load($set->set_name);
       $paths = $this->getShortcutInformation($saved_set, 'link_path');
-      $this->assertTrue(in_array($test['path'], $paths), 'Shortcut created: '. $test['path']);
+      $this->assertTrue(in_array(drupal_get_normal_path($test['path']), $paths), 'Shortcut created: '. $test['path']);
       $this->assertLink($title, 0, 'Shortcut link found on the page.');
     }
   }
