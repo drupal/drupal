@@ -1,5 +1,5 @@
 <?php
-// $Id: menu_test.module,v 1.17 2010/10/01 15:24:18 webchick Exp $
+// $Id: menu_test.module,v 1.18 2010/10/15 04:46:59 webchick Exp $
 
 /**
  * @file
@@ -227,6 +227,34 @@ function menu_test_menu() {
     'access callback' => TRUE,
   );
 
+  $items['menu-title-test/case1'] = array(
+   'title' => 'Example title - Case 1',
+   'access callback' => TRUE,
+   'page callback' => 'menu_test_callback',
+  );
+  $items['menu-title-test/case2'] = array(
+   'title' => 'Example @sub1 - Case @op2',
+   // If '2' is not in quotes, the argument becomes arg(2).
+   'title arguments' => array('@sub1' => 'title', '@op2' => '2'),
+   'access callback' => TRUE,
+   'page callback' => 'menu_test_callback',
+  );
+  $items['menu-title-test/case3'] = array(
+   'title' => 'Example title',
+   'title callback' => 'menu_test_title_callback',
+   'access callback' => TRUE,
+   'page callback' => 'menu_test_callback',
+  );
+  $items['menu-title-test/case4'] = array(
+   // Title gets completely ignored. Good thing, too.
+   'title' => 'Bike sheds full of blue smurfs',
+   'title callback' => 'menu_test_title_callback',
+   // If '4' is not in quotes, the argument becomes arg(4).
+   'title arguments' => array('Example title', '4'),
+   'access callback' => TRUE,
+   'page callback' => 'menu_test_callback',
+  );
+
   return $items;
 }
 
@@ -383,4 +411,16 @@ function menu_test_menu_site_status_alter(&$menu_site_status, $path) {
  */
 function menu_login_callback() {
   return 'This is menu_login_callback().';
+}
+
+/**
+ * Concatenates a string, by using the t() function and a case number.
+ *
+ * @param $title
+ *   Title string.
+ * @param $case_number
+ *   The current case number which is tests (defaults to 3).
+ */
+function menu_test_title_callback($title, $case_no = 3) {
+  return t($title) . ' - Case ' . $case_no;
 }
