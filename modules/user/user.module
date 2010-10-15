@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1208 2010/10/11 19:43:23 dries Exp $
+// $Id: user.module,v 1.1209 2010/10/15 03:36:21 webchick Exp $
 
 /**
  * @file
@@ -2345,6 +2345,7 @@ function user_delete_multiple(array $uids) {
 
     foreach ($accounts as $uid => $account) {
       module_invoke_all('user_delete', $account);
+      module_invoke_all('entity_delete', $account, 'user');
       field_attach_delete('user', $account);
       drupal_session_destroy_uid($account->uid);
     }

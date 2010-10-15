@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.904 2010/10/05 06:17:28 webchick Exp $
+// $Id: comment.module,v 1.905 2010/10/15 03:36:21 webchick Exp $
 
 /**
  * @file
@@ -1592,6 +1592,7 @@ function comment_delete_multiple($cids) {
     foreach ($comments as $comment) {
       field_attach_delete('comment', $comment);
       module_invoke_all('comment_delete', $comment);
+      module_invoke_all('entity_delete', $comment, 'comment');
 
       // Delete the comment's replies.
       $child_cids = db_query('SELECT cid FROM {comment} WHERE pid = :cid', array(':cid' => $comment->cid))->fetchCol();

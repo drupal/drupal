@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.611 2010/10/15 03:14:29 webchick Exp $
+// $Id: taxonomy.module,v 1.612 2010/10/15 03:36:21 webchick Exp $
 
 /**
  * @file
@@ -431,7 +431,8 @@ function taxonomy_vocabulary_delete($vid) {
     ->execute();
 
   field_attach_delete_bundle('taxonomy_term', $vocabulary['machine_name']);
-  module_invoke_all('taxonomy', 'delete', 'vocabulary', $vocabulary);
+  module_invoke_all('taxonomy_vocabulary_delete', $vocabulary);
+  module_invoke_all('entity_delete', $vocabulary, 'taxonomy_vocabulary');
 
   cache_clear_all();
   entity_get_controller('taxonomy_vocabulary')->resetCache();
@@ -612,6 +613,7 @@ function taxonomy_term_delete($tid) {
 
         field_attach_delete('taxonomy_term', $term);
         module_invoke_all('taxonomy_term_delete', $term);
+        module_invoke_all('entity_delete', $term, 'taxonomy_term');
         taxonomy_terms_static_reset();
       }
     }

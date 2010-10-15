@@ -1,0 +1,214 @@
+<?php
+// $Id: entity_crud_hook_test.module,v 1.1 2010/10/15 03:36:21 webchick Exp $
+
+//
+// Insert hooks
+//
+
+/**
+ * Implements hook_entity_insert().
+ */
+function entity_crud_hook_test_entity_insert($entity, $type) {
+  $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called for type ' . $type);
+}
+
+/**
+ * Implements hook_comment_insert().
+ */
+function entity_crud_hook_test_comment_insert() {
+  $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_file_insert().
+ */
+function entity_crud_hook_test_file_insert() {
+  $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_node_insert().
+ */
+function entity_crud_hook_test_node_insert() {
+  $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_taxonomy_term_insert().
+ */
+function entity_crud_hook_test_taxonomy_term_insert() {
+  $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_taxonomy_vocabulary_insert().
+ */
+function entity_crud_hook_test_taxonomy_vocabulary_insert() {
+  $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_user_insert().
+ */
+function entity_crud_hook_test_user_insert() {
+  $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+//
+// Load hooks
+//
+
+/**
+ * Implements hook_entity_load().
+ */
+function entity_crud_hook_test_entity_load(array $entities, $type) {
+  $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called for type ' . $type);
+}
+
+/**
+ * Implements hook_comment_load().
+ */
+function entity_crud_hook_test_comment_load() {
+  $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_file_load().
+ */
+function entity_crud_hook_test_file_load() {
+  $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_node_load().
+ */
+function entity_crud_hook_test_node_load() {
+  $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_taxonomy_term_load().
+ */
+function entity_crud_hook_test_taxonomy_term_load() {
+  $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_taxonomy_vocabulary_load().
+ */
+function entity_crud_hook_test_taxonomy_vocabulary_load() {
+  $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_user_load().
+ */
+function entity_crud_hook_test_user_load() {
+  $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+//
+// Update hooks
+//
+
+/**
+ * Implements hook_entity_update().
+ */
+function entity_crud_hook_test_entity_update($entity, $type) {
+  $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called for type ' . $type);
+}
+
+/**
+ * Implements hook_comment_update().
+ */
+function entity_crud_hook_test_comment_update() {
+  $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_file_update().
+ */
+function entity_crud_hook_test_file_update() {
+  $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_node_update().
+ */
+function entity_crud_hook_test_node_update() {
+  $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_taxonomy_term_update().
+ */
+function entity_crud_hook_test_taxonomy_term_update() {
+  $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_taxonomy_vocabulary_update().
+ */
+function entity_crud_hook_test_taxonomy_vocabulary_update() {
+  $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_user_update().
+ */
+function entity_crud_hook_test_user_update() {
+  $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+//
+// Delete hooks
+//
+
+/**
+ * Implements hook_entity_delete().
+ */
+function entity_crud_hook_test_entity_delete($entity, $type) {
+  $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called for type ' . $type);
+}
+
+/**
+ * Implements hook_comment_delete().
+ */
+function entity_crud_hook_test_comment_delete() {
+  $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_file_delete().
+ */
+function entity_crud_hook_test_file_delete() {
+  $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_node_delete().
+ */
+function entity_crud_hook_test_node_delete() {
+  $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_taxonomy_term_delete().
+ */
+function entity_crud_hook_test_taxonomy_term_delete() {
+  $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_taxonomy_vocabulary_delete().
+ */
+function entity_crud_hook_test_taxonomy_vocabulary_delete() {
+  $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_user_delete().
+ */
+function entity_crud_hook_test_user_delete() {
+  $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
