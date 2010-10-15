@@ -359,18 +359,6 @@ function system_element_info() {
     '#theme' => 'textfield',
     '#theme_wrappers' => array('form_element'),
   );
-  $types['machine_name'] = array(
-    '#input' => TRUE,
-    '#default_value' => NULL,
-    '#required' => TRUE,
-    '#maxlength' => 64,
-    '#size' => 60,
-    '#autocomplete_path' => FALSE,
-    '#process' => array('form_process_machine_name', 'ajax_process_form'),
-    '#element_validate' => array('form_validate_machine_name'),
-    '#theme' => 'textfield',
-    '#theme_wrappers' => array('form_element'),
-  );
   $types['password'] = array(
     '#input' => TRUE,
     '#size' => 60,
