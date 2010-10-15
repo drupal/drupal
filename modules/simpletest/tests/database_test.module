@@ -1,5 +1,5 @@
 <?php
-// $Id: database_test.module,v 1.14 2010/06/25 19:33:47 dries Exp $
+// $Id: database_test.module,v 1.15 2010/10/15 04:34:15 webchick Exp $
 
 /**
  * Implements hook_query_alter().
@@ -66,7 +66,11 @@ function database_test_menu() {
     'access callback' => TRUE,
     'page callback' => 'database_test_tablesort_first',
   );
-
+  $items['database_test/tablesort_default_sort'] = array(
+    'access callback' => TRUE,
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('database_test_theme_tablesort'),
+  );
   return $items;
 }
 
@@ -190,4 +194,49 @@ function database_test_tablesort_first() {
     'tasks' => $tasks,
   ));
   exit;
+}
+
+/**
+ * Output a form without setting a header sort.
+ */
+function database_test_theme_tablesort($form, &$form_state) {
+  $header = array(
+    'username' => array('data' => t('Username'), 'field' => 'u.name'),
+    'status' => array('data' => t('Status'), 'field' => 'u.status'),
+  );
+
+  $query = db_select('users', 'u');
+  $query->condition('u.uid', 0, '<>');
+  user_build_filter_query($query);
+
+  $count_query = clone $query;
+  $count_query->addExpression('COUNT(u.uid)');
+
+  $query = $query->extend('PagerDefault')->extend('TableSort');
+  $query
+    ->fields('u', array('uid', 'name', 'status', 'created', 'access'))
+    ->limit(50)
+    ->orderByHeader($header)
+    ->setCountQuery($count_query);
+  $result = $query->execute();
+
+  $options = array();
+
+  $status = array(t('blocked'), t('active'));
+  $accounts = array();
+  foreach ($result as $account) {
+    $options[$account->uid] = array(
+      'username' => check_plain($account->name),
+      'status' =>  $status[$account->status],
+    );
+  }
+
+  $form['accounts'] = array(
+    '#type' => 'tableselect',
+    '#header' => $header,
+    '#options' => $options,
+    '#empty' => t('No people available.'),
+  );
+
+  return $form;
 }

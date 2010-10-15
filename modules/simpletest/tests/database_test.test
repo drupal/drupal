@@ -1,5 +1,5 @@
 <?php
-// $Id: database_test.test,v 1.103 2010/09/24 02:05:55 dries Exp $
+// $Id: database_test.test,v 1.104 2010/10/15 04:34:15 webchick Exp $
 
 /**
  * Dummy class for fetching into a class.
@@ -2313,6 +2313,15 @@ class DatabaseSelectTableSortDefaultTestCase extends DatabaseTestCase {
       $this->assertEqual($first->task, $sort['first'], t('Items appear in the correct order sorting by @field @sort.', array('@field' => $sort['field'], '@sort' => $sort['sort'])));
       $this->assertEqual($last->task, $sort['last'], t('Items appear in the correct order sorting by @field @sort.', array('@field' => $sort['field'], '@sort' => $sort['sort'])));
     }
+  }
+
+  /**
+   * Confirm that if a sort is not set in a tableselect form there is no error thrown when using the default.
+   */
+  function testTableSortDefaultSort() {
+    $this->drupalGet('database_test/tablesort_default_sort');
+    // Any PHP errors or notices thrown would trigger a simpletest exception, so
+    // no additional assertions are needed.
   }
 }
 

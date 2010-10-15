@@ -1,5 +1,5 @@
 <?php
-// $Id: tablesort.inc,v 1.58 2009/12/05 20:17:02 dries Exp $
+// $Id: tablesort.inc,v 1.59 2010/10/15 04:34:15 webchick Exp $
 
 /**
  * @file
@@ -128,12 +128,14 @@ class TableSort extends SelectQueryExtender {
     }
     else {
       // The first column specified is initial 'order by' field unless otherwise specified
-      if (is_array($this->header[0])) {
-        $this->header[0] += array('data' => NULL, 'field' => NULL);
-        return array('name' => $this->header[0]['data'], 'sql' => $this->header[0]['field']);
+      $headers = array_values($this->header);
+      $header = $headers[0];
+      if (is_array($header)) {
+        $header += array('data' => NULL, 'field' => NULL);
+        return array('name' => $header['data'], 'sql' => $header['field']);
       }
       else {
-        return array('name' => $this->header[0]);
+        return array('name' => $header);
       }
     }
   }
