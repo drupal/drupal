@@ -1346,7 +1346,6 @@ function system_modules_uninstall_submit($form, &$form_state) {
  *   use as the default value of the IP address form field.
  */
 function system_ip_blocking($default_ip = '') {
-  $output = '';
   $rows = array();
   $header = array(t('Blocked IP addresses'), t('Operations'));
   $result = db_query('SELECT * FROM {blocked_ips}');
