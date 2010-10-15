@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.612 2010/10/15 03:36:21 webchick Exp $
+// $Id: taxonomy.module,v 1.613 2010/10/15 05:25:32 webchick Exp $
 
 /**
  * @file
@@ -441,19 +441,19 @@ function taxonomy_vocabulary_delete($vid) {
 }
 
 /**
- * Implements hook_field_attach_rename_bundle().
+ * Implements hook_taxonomy_vocabulary_update().
  */
-function taxonomy_field_attach_rename_bundle($entity_type, $bundle_old, $bundle_new) {
-  if ($entity_type == 'taxonomy_term') {
-    // Reflect machine name changes in the definitions of existing 'taxonomy'
-    // fields.
+function taxonomy_taxonomy_vocabulary_update($vocabulary) {
+  // Reflect machine name changes in the definitions of existing 'taxonomy'
+  // fields.
+  if (!empty($vocabulary->old_machine_name) && $vocabulary->old_machine_name != $vocabulary->machine_name) {
     $fields = field_read_fields();
     foreach ($fields as $field_name => $field) {
       $update = FALSE;
       if ($field['type'] == 'taxonomy_term_reference') {
         foreach ($field['settings']['allowed_values'] as $key => &$value) {
-          if ($value['vocabulary'] == $bundle_old) {
-            $value['vocabulary'] = $bundle_new;
+          if ($value['vocabulary'] == $vocabulary->old_machine_name) {
+            $value['vocabulary'] = $vocabulary->machine_name;
             $update = TRUE;
           }
         }
