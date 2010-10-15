@@ -526,7 +526,7 @@ function hook_cron_queue_info_alter(&$queues) {
  * a matching theme function, e.g. theme_elementtype(), which should be
  * registered with hook_theme() as normal.
  *
- * Form more information about custom element types see the explanation at
+ * For more information about custom element types see the explanation at
  * http://drupal.org/node/169815.
  *
  * @return
