@@ -1293,6 +1293,9 @@ abstract class Database {
   /**
    * Gets the connection object for the specified database key and target.
    *
+   * Note: do not use the setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE) on the
+   * returned object because of http://bugs.php.net/bug.php?id=43139.
+   *
    * @param $target
    *   The database target name.
    * @param $key
