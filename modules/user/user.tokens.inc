@@ -1,5 +1,5 @@
 <?php
-// $Id: user.tokens.inc,v 1.7 2010/06/29 18:24:10 dries Exp $
+// $Id: user.tokens.inc,v 1.8 2010/10/16 20:09:17 webchick Exp $
 
 /**
  * @file
@@ -39,7 +39,7 @@ function user_token_info() {
   );
   $user['edit-url'] = array(
     'name' => t("Edit URL"),
-    'description' => t("The url of the account edit page."),
+    'description' => t("The URL of the account edit page."),
   );
 
   $user['last-login'] = array(
