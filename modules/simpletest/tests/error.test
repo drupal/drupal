@@ -1,5 +1,5 @@
 <?php
-// $Id: error.test,v 1.8 2010/08/05 23:53:38 webchick Exp $
+// $Id: error.test,v 1.9 2010/10/16 00:00:16 webchick Exp $
 
 /**
  * Tests Drupal error and exception handlers.
@@ -23,21 +23,21 @@ class DrupalErrorHandlerUnitTest extends DrupalWebTestCase {
   function testErrorHandler() {
     $error_notice = array(
       '%type' => 'Notice',
-      '%message' => 'Undefined variable: bananas',
+      '!message' => 'Undefined variable: bananas',
       '%function' => 'error_test_generate_warnings()',
       '%line' => 44,
       '%file' => drupal_realpath('modules/simpletest/tests/error_test.module'),
     );
     $error_warning = array(
       '%type' => 'Warning',
-      '%message' => 'Division by zero',
+      '!message' => 'Division by zero',
       '%function' => 'error_test_generate_warnings()',
       '%line' => 46,
       '%file' => drupal_realpath('modules/simpletest/tests/error_test.module'),
     );
     $error_user_notice = array(
       '%type' => 'User warning',
-      '%message' => 'Drupal is awesome',
+      '!message' => 'Drupal is awesome',
       '%function' => 'error_test_generate_warnings()',
       '%line' => 48,
       '%file' => drupal_realpath('modules/simpletest/tests/error_test.module'),
@@ -74,14 +74,14 @@ class DrupalErrorHandlerUnitTest extends DrupalWebTestCase {
   function testExceptionHandler() {
     $error_exception = array(
       '%type' => 'Exception',
-      '%message' => 'Drupal is awesome',
+      '!message' => 'Drupal is awesome',
       '%function' => 'error_test_trigger_exception()',
       '%line' => 57,
       '%file' => drupal_realpath('modules/simpletest/tests/error_test.module'),
     );
     $error_pdo_exception = array(
       '%type' => 'PDOException',
-      '%message' => 'SELECT * FROM bananas_are_awesome',
+      '!message' => 'SELECT * FROM bananas_are_awesome',
       '%function' => 'error_test_trigger_pdo_exception()',
       '%line' => 65,
       '%file' => drupal_realpath('modules/simpletest/tests/error_test.module'),
@@ -96,7 +96,7 @@ class DrupalErrorHandlerUnitTest extends DrupalWebTestCase {
     // We cannot use assertErrorMessage() since the extact error reported
     // varies from database to database. Check that the SQL string is displayed.
     $this->assertText($error_pdo_exception['%type'], t('Found %type in error page.', $error_pdo_exception));
-    $this->assertText($error_pdo_exception['%message'], t('Found %message in error page.', $error_pdo_exception));
+    $this->assertText($error_pdo_exception['!message'], t('Found !message in error page.', $error_pdo_exception));
     $error_details = t('in %function (line %line of %file)', $error_pdo_exception);
     $this->assertRaw($error_details, t("Found '!message' in error page.", array('!message' => $error_details)));
   }
@@ -105,7 +105,7 @@ class DrupalErrorHandlerUnitTest extends DrupalWebTestCase {
    * Helper function: assert that the error message is found.
    */
   function assertErrorMessage(array $error) {
-    $message = t('%type: %message in %function (line %line of %file).', $error);
+    $message = t('%type: !message in %function (line %line of %file).', $error);
     $this->assertRaw($message, t('Error !message found.', array('!message' => $message)));
   }
 
@@ -113,7 +113,7 @@ class DrupalErrorHandlerUnitTest extends DrupalWebTestCase {
    * Helper function: assert that the error message is not found.
    */
   function assertNoErrorMessage(array $error) {
-    $message = t('%type: %message in %function (line %line of %file).', $error);
+    $message = t('%type: !message in %function (line %line of %file).', $error);
     $this->assertNoRaw($message, t('Error !message not found.', array('!message' => $message)));
   }
 }
