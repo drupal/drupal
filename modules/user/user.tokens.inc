@@ -39,7 +39,7 @@ function user_token_info() {
   );
   $user['edit-url'] = array(
     'name' => t("Edit URL"),
-    'description' => t("The url of the account edit page."),
+    'description' => t("The URL of the account edit page."),
   );
 
   $user['last-login'] = array(
