@@ -6841,7 +6841,11 @@ function _drupal_flush_css_js() {
  */
 function debug($data, $label = NULL, $print_r = FALSE) {
   // Print $data contents to string.
-  $string = $print_r ? print_r($data, TRUE) : var_export($data, TRUE);
+  $string = check_plain($print_r ? print_r($data, TRUE) : var_export($data, TRUE));
+
+  // Display values with pre-formatting to increase readability.
+  $string = '<pre>' . $string . '</pre>';
+
   trigger_error(trim($label ? "$label: $string" : $string));
 }
 
