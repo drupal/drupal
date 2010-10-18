@@ -3807,6 +3807,8 @@ function hook_username_alter(&$name, $account) {
  *   An associative array of replacement values, keyed by the original 'raw'
  *   tokens that were found in the source text. For example:
  *   $results['[node:title]'] = 'My new node';
+ *
+ * @see hook_tokens_alter()
  */
 function hook_tokens($type, $tokens, array $data = array(), array $options = array()) {
   $url_options = array('absolute' => TRUE);
@@ -3865,6 +3867,46 @@ function hook_tokens($type, $tokens, array $data = array(), array $options = arr
 }
 
 /**
+ * Alter replacement values for placeholder tokens.
+ *
+ * @param $replacements
+ *   An associative array of replacements returned by hook_tokens().
+ * @param $context
+ *   The context in which hook_tokens() was called. An associative array with
+ *   the following keys, which have the same meaning as the corresponding
+ *   parameters of hook_tokens():
+ *   - 'type'
+ *   - 'tokens'
+ *   - 'data'
+ *   - 'options'
+ *
+ * @see hook_tokens()
+ */
+function hook_tokens_alter(array &$replacements, array $context) {
+  $options = $context['options'];
+
+  if (isset($options['language'])) {
+    $url_options['language'] = $options['language'];
+    $language_code = $options['language']->language;
+  }
+  else {
+    $language_code = NULL;
+  }
+  $sanitize = !empty($options['sanitize']);
+
+  if ($context['type'] == 'node' && !empty($context['data']['node'])) {
+    $node = $context['data']['node'];
+
+    // Alter the [node:title] token, and replace it with the rendered content
+    // of a field (field_title).
+    if (isset($context['tokens']['title'])) {
+      $title = field_view_field('node', $node, 'field_title', 'default', $language_code);
+      $replacements[$context['tokens']['title']] = drupal_render($title);
+    }
+  }
+}
+
+/**
  * Provide metadata about available placeholder tokens and token types.
  *
  * @return
@@ -3914,34 +3956,6 @@ function hook_token_info() {
 }
 
 /**
- * Alter batch information before a batch is processed.
- *
- * Called by batch_process() to allow modules to alter a batch before it is
- * processed.
- *
- * @param $batch
- *   The associative array of batch information. See batch_set() for details on
- *   what this could contain.
- *
- * @see batch_set()
- * @see batch_process()
- *
- * @ingroup batch
- */
-function hook_batch_alter(&$batch) {
-  // If the current page request is inside the overlay, add ?render=overlay to
-  // the success callback URL, so that it appears correctly within the overlay.
-  if (overlay_get_mode() == 'child') {
-    if (isset($batch['url_options']['query'])) {
-      $batch['url_options']['query']['render'] = 'overlay';
-    }
-    else {
-      $batch['url_options']['query'] = array('render' => 'overlay');
-    }
-  }
-}
-
-/**
  * Alter the metadata about available placeholder tokens and token types.
  *
  * @param $data
@@ -3968,6 +3982,33 @@ function hook_token_info_alter(&$data) {
   );
 }
 
+/**
+ * Alter batch information before a batch is processed.
+ *
+ * Called by batch_process() to allow modules to alter a batch before it is
+ * processed.
+ *
+ * @param $batch
+ *   The associative array of batch information. See batch_set() for details on
+ *   what this could contain.
+ *
+ * @see batch_set()
+ * @see batch_process()
+ *
+ * @ingroup batch
+ */
+function hook_batch_alter(&$batch) {
+  // If the current page request is inside the overlay, add ?render=overlay to
+  // the success callback URL, so that it appears correctly within the overlay.
+  if (overlay_get_mode() == 'child') {
+    if (isset($batch['url_options']['query'])) {
+      $batch['url_options']['query']['render'] = 'overlay';
+    }
+    else {
+      $batch['url_options']['query'] = array('render' => 'overlay');
+    }
+  }
+}
 
 /**
  * Provide information on Updaters (classes that can update Drupal).
