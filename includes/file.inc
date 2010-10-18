@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.237 2010/10/15 03:36:21 webchick Exp $
+// $Id: file.inc,v 1.238 2010/10/18 01:00:39 dries Exp $
 
 /**
  * @file
@@ -2326,6 +2326,35 @@ function file_directory_temp() {
   }
 
   return $temporary_directory;
+}
+
+/**
+ * Examines a file object and returns appropriate content headers for download.
+ *
+ * @param $file
+ *   A file object.
+ * @return
+ *   An associative array of headers, as expected by file_transfer().
+ */
+function file_get_content_headers($file) {
+  $name = mime_header_encode($file->filename);
+  $type = mime_header_encode($file->filemime);
+  // Serve images, text, and flash content for display rather than download.
+  $inline_types = variable_get('file_inline_types', array('^text/', '^image/', 'flash$'));
+  $disposition = 'attachment';
+  foreach ($inline_types as $inline_type) {
+    // Exclamation marks are used as delimiters to avoid escaping slashes.
+    if (preg_match('!' . $inline_type . '!', $file->filemime)) {
+      $disposition = 'inline';
+    }
+  }
+
+  return array(
+    'Content-Type' => $type . '; name="' . $name . '"',
+    'Content-Length' => $file->filesize,
+    'Content-Disposition' => $disposition . '; filename="' . $name . '"',
+    'Cache-Control' => 'private',
+  );
 }
 
 /**
