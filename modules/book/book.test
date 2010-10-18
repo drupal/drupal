@@ -1,14 +1,16 @@
 <?php
-// $Id: book.test,v 1.27 2010/08/30 00:22:03 webchick Exp $
+// $Id: book.test,v 1.28 2010/10/18 05:53:34 webchick Exp $
 
 class BookTestCase extends DrupalWebTestCase {
   protected $book;
-  // $book_author is a user with permission to author a book.
+  // $book_author is a user with permission to create and edit books.
   protected $book_author;
-  // $web_user is a user with permission to view a book 
+  // $web_user is a user with permission to view a book
   // and access the printer-friendly version.
   protected $web_user;
-  
+  // $admin_user is a user with permission to create and edit books and to administer blocks.
+  protected $admin_user;
+
   public static function getInfo() {
     return array(
       'name' => 'Book functionality',
@@ -19,12 +21,13 @@ class BookTestCase extends DrupalWebTestCase {
 
   function setUp() {
     parent::setUp('book');
-    
+
     // Create users.
     $this->book_author = $this->drupalCreateUser(array('create new books', 'create book content', 'edit own book content', 'add content to books'));
     $this->web_user = $this->drupalCreateUser(array('access printer-friendly version'));
+    $this->admin_user = $this->drupalCreateUser(array('create new books', 'create book content', 'edit own book content', 'add content to books', 'administer blocks'));
   }
-  
+
   /**
    * Create a new book with a page hierarchy.
    */
@@ -52,7 +55,7 @@ class BookTestCase extends DrupalWebTestCase {
     $nodes[] = $this->createBookNode($book->nid); // Node 4.
 
     $this->drupalLogout();
-    
+
     return $nodes;
   }
 
@@ -63,7 +66,7 @@ class BookTestCase extends DrupalWebTestCase {
     // Create new book.
     $nodes = $this->createBook();
     $book = $this->book;
-    
+
     $this->drupalLogin($this->web_user);
 
     // Check that book pages display along with the correct outlines and
@@ -211,68 +214,63 @@ class BookTestCase extends DrupalWebTestCase {
 
     return $node;
   }
-  
+
   /**
    * Tests book export ("printer-friendly version") functionality.
    */
   function testBookExport() {
     // Create a book.
     $nodes = $this->createBook();
-    
+
     // Login as web user and view printer-friendly version.
     $this->drupalLogin($this->web_user);
     $this->drupalGet('node/' . $this->book->nid);
     $this->clickLink(t('Printer-friendly version'));
-    
+
     // Make sure each part of the book is there.
     foreach ($nodes as $node) {
       $this->assertText($node->title, t('Node title found in printer friendly version.'));
       $this->assertRaw(check_markup($node->body[LANGUAGE_NONE][0]['value'], $node->body[LANGUAGE_NONE][0]['format']), t('Node body found in printer friendly version.'));
     }
-    
+
     // Make sure we can't export an unsupported format.
     $this->drupalGet('book/export/foobar/' . $this->book->nid);
-    $this->assertResponse('404', t('Unsupported export format returned "not found".'));    
-    
+    $this->assertResponse('404', t('Unsupported export format returned "not found".'));
+
     // Make sure an anonymous user cannot view printer-friendly version.
     $this->drupalLogout();
-    
+
     // Load the book and verify there is no printer-friendly version link.
     $this->drupalGet('node/' . $this->book->nid);
     $this->assertNoLink(t('Printer-friendly version'), t('Anonymous user is not shown link to printer-friendly version.'));
-    
+
     // Try getting the URL directly, and verify it fails.
     $this->drupalGet('book/export/html/' . $this->book->nid);
     $this->assertResponse('403', t('Anonymous user properly forbidden.'));
   }
-}
 
-class BookBlockTestCase extends DrupalWebTestCase {
-  public static function getInfo() {
-    return array(
-      'name' => 'Block availability',
-      'description' => 'Check if the book navigation block is available.',
-      'group' => 'Book',
-    );
-  }
-
-  function setUp() {
-    parent::setUp('book');
-
-    // Create and login user
-    $admin_user = $this->drupalCreateUser(array('administer blocks'));
-    $this->drupalLogin($admin_user);
-  }
-
+  /**
+   * Tests the functionality of the book navigation block.
+   */
   function testBookNavigationBlock() {
-    // Set block title to confirm that the interface is availble.
-    $this->drupalPost('admin/structure/block/manage/book/navigation/configure', array('title' => $this->randomName(8)), t('Save block'));
+    $this->drupalLogin($this->admin_user);
+
+    // Set block title to confirm that the interface is available.
+    $block_title = $this->randomName(16);
+    $this->drupalPost('admin/structure/block/manage/book/navigation/configure', array('title' => $block_title), t('Save block'));
     $this->assertText(t('The block configuration has been saved.'), t('Block configuration set.'));
 
-    // Set the block to a region to confirm block is availble.
+    // Set the block to a region to confirm block is available.
     $edit = array();
     $edit['blocks[book_navigation][region]'] = 'footer';
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
     $this->assertText(t('The block settings have been updated.'), t('Block successfully move to footer region.'));
+
+    // Test correct display of the block.
+    $nodes = $this->createBook();
+    $this->drupalGet('<front>');
+    $this->assertText($block_title, t('Book navigation block is displayed.'));
+    $this->assertText($this->book->title, t('Link to book root (@title) is displayed.', array('@title' => $nodes[0]->title)));
+    $this->assertNoText($nodes[0]->title, t('No links to individual book pages are displayed.'));
   }
 }

@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.553 2010/09/24 00:37:42 dries Exp $
+// $Id: book.module,v 1.554 2010/10/18 05:53:34 webchick Exp $
 
 /**
  * @file
@@ -264,6 +264,9 @@ function book_block_view($delta = '') {
         // Since we know we will only display a link to the top node, there
         // is no reason to run an additional menu tree query for each book.
         $book['in_active_trail'] = FALSE;
+        // Check whether user can access the book link.
+        $book_node = node_load($book['nid']);
+        $book['access'] = node_access('view', $book_node);
         $pseudo_tree[0]['link'] = $book;
         $book_menus[$book_id] = menu_tree_output($pseudo_tree);
       }
