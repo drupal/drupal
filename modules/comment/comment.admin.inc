@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.admin.inc,v 1.49 2010/09/11 01:47:14 dries Exp $
+// $Id: comment.admin.inc,v 1.50 2010/10/18 15:17:45 webchick Exp $
 
 /**
  * @file
@@ -64,7 +64,7 @@ function comment_admin_overview($form, &$form_state, $arg) {
     'subject' => array('data' => t('Subject'), 'field' => 'subject'),
     'author' => array('data' => t('Author'), 'field' => 'name'),
     'posted_in' => array('data' => t('Posted in'), 'field' => 'node_title'),
-    'changed' => array('data' => t('Updated'), 'field' => 'changed', 'sort' => 'desc'),
+    'changed' => array('data' => t('Updated'), 'field' => 'c.changed', 'sort' => 'desc'),
     'operations' => array('data' => t('Operations')),
   );
 
