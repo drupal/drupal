@@ -64,7 +64,7 @@ function comment_admin_overview($form, &$form_state, $arg) {
     'subject' => array('data' => t('Subject'), 'field' => 'subject'),
     'author' => array('data' => t('Author'), 'field' => 'name'),
     'posted_in' => array('data' => t('Posted in'), 'field' => 'node_title'),
-    'changed' => array('data' => t('Updated'), 'field' => 'changed', 'sort' => 'desc'),
+    'changed' => array('data' => t('Updated'), 'field' => 'c.changed', 'sort' => 'desc'),
     'operations' => array('data' => t('Operations')),
   );
 
