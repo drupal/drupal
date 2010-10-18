@@ -2798,7 +2798,7 @@ class DrupalWebTestCase extends DrupalTestCase {
   }
 
   /**
-   * Assert that a field exists in the current page by the given XPath.
+   * Asserts that a field exists in the current page by the given XPath.
    *
    * @param $xpath
    *   XPath used to find the field.
@@ -2870,7 +2870,7 @@ class DrupalWebTestCase extends DrupalTestCase {
   }
 
   /**
-   * Assert that a field does not exist in the current page by the given XPath.
+   * Asserts that a field does not exist in the current page by the given XPath.
    *
    * @param $xpath
    *   XPath used to find the field.
@@ -2902,7 +2902,7 @@ class DrupalWebTestCase extends DrupalTestCase {
   }
 
   /**
-   * Assert that a field exists in the current page with the given name and value.
+   * Asserts that a field exists in the current page with the given name and value.
    *
    * @param $name
    *   Name of field to assert.
@@ -2920,7 +2920,7 @@ class DrupalWebTestCase extends DrupalTestCase {
   }
 
   /**
-   * Assert that a field does not exist with the given name and value.
+   * Asserts that a field does not exist with the given name and value.
    *
    * @param $name
    *   Name of field to assert.
@@ -2938,7 +2938,7 @@ class DrupalWebTestCase extends DrupalTestCase {
   }
 
   /**
-   * Assert that a field exists in the current page with the given id and value.
+   * Asserts that a field exists in the current page with the given id and value.
    *
    * @param $id
    *   Id of field to assert.
@@ -2956,7 +2956,7 @@ class DrupalWebTestCase extends DrupalTestCase {
   }
 
   /**
-   * Assert that a field does not exist with the given id and value.
+   * Asserts that a field does not exist with the given id and value.
    *
    * @param $id
    *   Id of field to assert.
@@ -2974,7 +2974,7 @@ class DrupalWebTestCase extends DrupalTestCase {
   }
 
   /**
-   * Assert that a checkbox field in the current page is checked.
+   * Asserts that a checkbox field in the current page is checked.
    *
    * @param $id
    *   Id of field to assert.
@@ -2989,7 +2989,7 @@ class DrupalWebTestCase extends DrupalTestCase {
   }
 
   /**
-   * Assert that a checkbox field in the current page is not checked.
+   * Asserts that a checkbox field in the current page is not checked.
    *
    * @param $id
    *   Id of field to assert.
@@ -3004,7 +3004,7 @@ class DrupalWebTestCase extends DrupalTestCase {
   }
 
   /**
-   * Assert that a select option in the current page is not checked.
+   * Asserts that a select option in the current page is checked.
    *
    * @param $id
    *   Id of select field to assert.
@@ -3021,7 +3021,7 @@ class DrupalWebTestCase extends DrupalTestCase {
   }
 
   /**
-   * Assert that a select option in the current page is not checked.
+   * Asserts that a select option in the current page is not checked.
    *
    * @param $id
    *   Id of select field to assert.
@@ -3038,7 +3038,7 @@ class DrupalWebTestCase extends DrupalTestCase {
   }
 
   /**
-   * Assert that a field exists with the given name or id.
+   * Asserts that a field exists with the given name or id.
    *
    * @param $field
    *   Name or id of field to assert.
@@ -3054,7 +3054,7 @@ class DrupalWebTestCase extends DrupalTestCase {
   }
 
   /**
-   * Assert that a field does not exist with the given name or id.
+   * Asserts that a field does not exist with the given name or id.
    *
    * @param $field
    *   Name or id of field to assert.
@@ -3070,7 +3070,7 @@ class DrupalWebTestCase extends DrupalTestCase {
   }
 
   /**
-   * Assert that each HTML ID is used for just a single element.
+   * Asserts that each HTML ID is used for just a single element.
    *
    * @param $message
    *   Message to display.
@@ -3115,7 +3115,7 @@ class DrupalWebTestCase extends DrupalTestCase {
   }
 
   /**
-   * Assert the page responds with the specified response code.
+   * Asserts the page responds with the specified response code.
    *
    * @param $code
    *   Response code. For example 200 is a successful page request. For a list
@@ -3132,7 +3132,7 @@ class DrupalWebTestCase extends DrupalTestCase {
   }
 
   /**
-   * Assert the page did not return the specified response code.
+   * Asserts the page did not return the specified response code.
    *
    * @param $code
    *   Response code. For example 200 is a successful page request. For a list
