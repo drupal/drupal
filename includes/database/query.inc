@@ -1,5 +1,5 @@
 <?php
-// $Id: query.inc,v 1.56 2010/09/24 02:05:55 dries Exp $
+// $Id: query.inc,v 1.57 2010/10/18 00:50:36 dries Exp $
 
 /**
  * @ingroup database
@@ -908,8 +908,8 @@ class UpdateQuery extends Query implements QueryConditionInterface {
  * instead. MergeQuery::fields() can also be called which calls both of these
  * methods as the common case is to use the same column-value pairs for both
  * INSERT and UPDATE. However, this is not mandatory. Another convinient
- * wrapper is MergeQuery::key() which adds the same column-value pairs to all
- * three parts: the condition, the INSERT query part and the UPDATE query part.
+ * wrapper is MergeQuery::key() which adds the same column-value pairs to the
+ * condition and the INSERT query part.
  *
  * Several methods (key(), fields(), insertFields()) can be called to set a
  * key-value pair for the INSERT query part. Subsequent calls for the same
@@ -1137,7 +1137,7 @@ class MergeQuery extends Query implements QueryConditionInterface {
   }
 
   /**
-   * Set the key field(s) to be used everywhere.
+   * Set the key field(s) to be used as conditions for this query.
    *
    * This method should only be called once. It may be called either
    * with a single associative array or two indexed arrays. If called
@@ -1146,9 +1146,8 @@ class MergeQuery extends Query implements QueryConditionInterface {
    * If called with two arrays, the first array is taken as the fields
    * and the second array is taken as the corresponding values.
    *
-   * The fields are copied to all three parts of the query: the condition,
-   * the UPDATE part and the INSERT part. If no other method is called, the
-   * UPDATE will become a no-op.
+   * The fields are copied to the condition of the query and the INSERT part.
+   * If no other method is called, the UPDATE will become a no-op.
    *
    * @param $fields
    *   An array of fields to set.
@@ -1164,7 +1163,6 @@ class MergeQuery extends Query implements QueryConditionInterface {
     }
     foreach ($fields as $key => $value) {
       $this->insertFields[$key] = $value;
-      $this->updateFields[$key] = $value;
       $this->condition($key, $value);
     }
     return $this;
@@ -1226,7 +1224,6 @@ class MergeQuery extends Query implements QueryConditionInterface {
           return MergeQuery::STATUS_INSERT;
         }
         catch (Exception $e) {
-          echo $e->getMessage();
           // The insert query failed, maybe it's because a racing insert query
           // beat us in inserting the same row. Retry the select query, if it
           // returns a row, ignore the error and continue with the update
