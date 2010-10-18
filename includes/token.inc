@@ -1,5 +1,5 @@
 <?php
-// $Id: token.inc,v 1.9 2010/03/12 14:33:02 dries Exp $
+// $Id: token.inc,v 1.10 2010/10/18 01:13:07 dries Exp $
 
 /**
  * @file
@@ -152,17 +152,24 @@ function token_scan($text) {
  *   An associative array of replacement values, keyed by the original 'raw'
  *   tokens that were found in the source text. For example:
  *   $results['[node:title]'] = 'My new node';
+ *
+ * @see hook_tokens()
+ * @see hook_tokens_alter()
  */
 function token_generate($type, array $tokens, array $data = array(), array $options = array()) {
-  $results = array();
   $options += array('sanitize' => TRUE);
+  $replacements = module_invoke_all('tokens', $type, $tokens, $data, $options);
 
-  $result = module_invoke_all('tokens', $type, $tokens, $data, $options);
-  foreach ($result as $original => $replacement) {
-    $results[$original] = $replacement;
-  }
+  // Allow other modules to alter the replacements.
+  $context = array(
+    'type' => $type,
+    'tokens' => $tokens,
+    'data' => $data,
+    'options' => $options,
+  );
+  drupal_alter('tokens', $replacements, $context);
 
-  return $results;
+  return $replacements;
 }
 
 /**
