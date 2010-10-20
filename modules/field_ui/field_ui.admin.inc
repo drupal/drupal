@@ -1,5 +1,5 @@
 <?php
-// $Id: field_ui.admin.inc,v 1.73 2010/10/14 18:50:27 webchick Exp $
+// $Id: field_ui.admin.inc,v 1.74 2010/10/20 00:13:33 dries Exp $
 
 /**
  * @file
@@ -175,12 +175,10 @@ function field_ui_table_pre_render($elements) {
     $elements['#regions'][$region_name]['rows_order'] = array_reduce($trees[$region_name], '_field_ui_reduce_order');
   }
 
-  drupal_add_js(array('fieldUIRowsData' => $js_settings), 'setting');
-  // @todo : use #attached instead when http://drupal.org/node/561858 is fixed.
-//  $elements['#attached']['js'][] = array(
-//    'type' => 'setting',
-//    'data' => array('fieldRowsData' => $js_settings),
-//  );
+  $elements['#attached']['js'][] = array(
+    'type' => 'setting',
+    'data' => array('fieldUIRowsData' => $js_settings),
+  );
 
   return $elements;
 }
@@ -956,7 +954,7 @@ function field_ui_display_overview_form($form, &$form_state, $entity_type, $bund
     if ($form_state['formatter_settings_edit'] == $name) {
       // We are currently editing this field's formatter settings. Display the
       // settings form and submit buttons.
-      $table[$name]['settings_edit_form'] = array();
+      $table[$name]['format']['settings_edit_form'] = array();
 
       $settings_form = array();
       $function = $formatter['module'] . '_field_formatter_settings_form';
@@ -1111,9 +1109,6 @@ function field_ui_display_overview_form($form, &$form_state, $entity_type, $bund
     '#type' => 'submit',
     '#value' => t('Refresh'),
     '#op' => 'refresh_table',
-    // Do not check errors, but make sure we get the values of the
-    // 'refresh_rows' input.
-    '#limit_validation_errors' => array(array('refresh_rows')),
     '#submit' => array('field_ui_display_overview_multistep_submit'),
     '#ajax' => array(
       'callback' => 'field_ui_display_overview_multistep_js',
@@ -1132,11 +1127,8 @@ function field_ui_display_overview_form($form, &$form_state, $entity_type, $bund
   $form['#attached']['css'][] = drupal_get_path('module', 'field_ui') . '/field_ui.css';
 
   // Add tabledrag behavior.
-  drupal_add_tabledrag('field-display-overview', 'order', 'sibling', 'field-weight');
-  drupal_add_tabledrag('field-display-overview', 'match', 'parent', 'field-parent', 'field-parent', 'field-name');
-// @todo : use #attached instead when http://drupal.org/node/561858 is fixed.
-//  $form['#attached']['drupal_add_tabledrag'][] = array('field-display-overview', 'order', 'sibling', 'field-weight');
-//  $form['#attached']['drupal_add_tabledrag'][] = array('field-display-overview', 'match', 'parent', 'field-parent', 'field-parent', 'field-name');
+  $form['#attached']['drupal_add_tabledrag'][] = array('field-display-overview', 'order', 'sibling', 'field-weight');
+  $form['#attached']['drupal_add_tabledrag'][] = array('field-display-overview', 'match', 'parent', 'field-parent', 'field-parent', 'field-name');
 
   return $form;
 }

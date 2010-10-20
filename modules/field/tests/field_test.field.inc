@@ -1,5 +1,5 @@
 <?php
-// $Id: field_test.field.inc,v 1.13 2010/09/28 02:30:31 dries Exp $
+// $Id: field_test.field.inc,v 1.14 2010/10/20 00:13:33 dries Exp $
 
 /**
  * @file
@@ -255,6 +255,61 @@ function field_test_field_formatter_info() {
       ),
     ),
   );
+}
+
+/**
+ * Implements hook_field_formatter_settings_form().
+ */
+function field_test_field_formatter_settings_form($field, $instance, $view_mode, $form, &$form_state) {
+  $display = $instance['display'][$view_mode];
+  $settings = $display['settings'];
+
+  $element = array();
+
+  // The name of the setting depends on the formatter type.
+  $map = array(
+    'field_test_default' => 'test_formatter_setting',
+    'field_test_multiple' => 'test_formatter_setting_multiple',
+    'field_test_with_prepare_view' => 'test_formatter_setting_additional',
+  );
+
+  if (isset($map[$display['type']])) {
+    $name = $map[$display['type']];
+
+    $element[$name] = array(
+      '#title' => t('Setting'),
+      '#type' => 'textfield',
+      '#size' => 20,
+      '#default_value' => $settings[$name],
+      '#required' => TRUE,
+    );
+  }
+
+  return $element;
+}
+
+/**
+ * Implements hook_field_formatter_settings_summary().
+ */
+function field_test_field_formatter_settings_summary($field, $instance, $view_mode) {
+  $display = $instance['display'][$view_mode];
+  $settings = $display['settings'];
+
+  $summary = '';
+
+  // The name of the setting depends on the formatter type.
+  $map = array(
+    'field_test_default' => 'test_formatter_setting',
+    'field_test_multiple' => 'test_formatter_setting_multiple',
+    'field_test_with_prepare_view' => 'test_formatter_setting_additional',
+  );
+
+  if (isset($map[$display['type']])) {
+    $name = $map[$display['type']];
+    $summary = t('@setting: @value', array('@setting' => $name, '@value' => $settings[$name]));
+  }
+
+  return $summary;
 }
 
 /**
