@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.981 2010/10/15 04:40:41 webchick Exp $
+// $Id: system.module,v 1.982 2010/10/20 16:44:45 webchick Exp $
 
 /**
  * @file
@@ -251,6 +251,10 @@ function system_hook_info() {
   $hooks['tokens'] = array(
     'group' => 'tokens',
   );
+  $hooks['tokens_alter'] = array(
+    'group' => 'tokens',
+  );
+
   return $hooks;
 }
 
