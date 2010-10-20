@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.install,v 1.68 2010/10/05 20:04:18 webchick Exp $
+// $Id: locale.install,v 1.69 2010/10/20 00:37:20 dries Exp $
 
 /**
  * @file
@@ -38,7 +38,19 @@ function locale_install() {
 function locale_update_7000() {
   db_drop_index('locales_source', 'source');
   db_add_index('locales_source', 'source_context', array(array('source', 30), 'context'));
-  db_change_field('locales_source', 'location', 'location', array('type' => 'text', 'size' => 'big', 'not null' => FALSE));
+
+  // Also drop the 'textgroup_location' index added by the i18nstrings module
+  // of the i18n project, which prevents the below schema update from running.
+  if (db_index_exists('locales_source', 'textgroup_location')) {
+    db_drop_index('locales_source', 'textgroup_location');
+  }
+
+  db_change_field('locales_source', 'location', 'location', array(
+    'type' => 'text',
+    'not null' => FALSE,
+    'size' => 'big',
+    'description' => 'Drupal path in case of online discovered translations or file path in case of imported strings.',
+  ));
 }
 
 /**
