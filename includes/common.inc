@@ -3794,7 +3794,7 @@ function drupal_region_class($region) {
  *   - scope: The location in which you want to place the script. Possible
  *     values are 'header' or 'footer'. If your theme implements different
  *     regions, you can also use these. Defaults to 'header'.
- *   - 'group': A number identifying the group in which to add the JavaScript.
+ *   - group: A number identifying the group in which to add the JavaScript.
  *     Available constants are:
  *     - JS_LIBRARY: Any libraries, settings, or jQuery plugins.
  *     - JS_DEFAULT: Any module-layer JavaScript.
@@ -3802,7 +3802,7 @@ function drupal_region_class($region) {
  *     The group number serves as a weight: JavaScript within a lower weight
  *     group is presented on the page before JavaScript within a higher weight
  *     group.
- *  - 'every_page': For optimal front-end performance when aggregation is
+ *   - every_page: For optimal front-end performance when aggregation is
  *     enabled, this should be set to TRUE if the JavaScript is present on every
  *     page of the website for users for whom it is present at all. This
  *     defaults to FALSE. It is set to TRUE for JavaScript files that are added
