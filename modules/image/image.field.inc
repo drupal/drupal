@@ -1,5 +1,5 @@
 <?php
-// $Id: image.field.inc,v 1.31 2010/10/20 01:31:07 dries Exp $
+// $Id: image.field.inc,v 1.32 2010/10/20 16:19:24 webchick Exp $
 
 /**
  * @file
@@ -278,6 +278,7 @@ function image_field_widget_settings_form($field, $instance) {
     '#title' => t('Preview image style'),
     '#type' => 'select',
     '#options' => image_style_options(FALSE),
+    '#empty_option' => '<' . t('no preview') . '>',
     '#default_value' => $settings['preview_image_style'],
     '#description' => t('The preview image will be shown while editing the content.'),
     '#weight' => 15,
@@ -443,6 +444,7 @@ function image_field_formatter_settings_form($field, $instance, $view_mode, $for
     '#title' => t('Link image to'),
     '#type' => 'select',
     '#default_value' => $settings['image_link'],
+    '#empty_option' => t('Nothing'),
     '#options' => $link_types,
   );
 

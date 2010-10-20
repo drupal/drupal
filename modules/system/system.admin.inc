@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.322 2010/10/20 01:31:07 dries Exp $
+// $Id: system.admin.inc,v 1.323 2010/10/20 16:19:24 webchick Exp $
 
 /**
  * @file
@@ -2931,6 +2931,7 @@ function system_actions_manage_form($form, &$form_state, $options = array()) {
     '#title' => t('Action'),
     '#title_display' => 'invisible',
     '#options' => $options,
+    '#empty_option' => t('Choose an advanced action'),
   );
   $form['parent']['actions'] = array('#type' => 'actions');
   $form['parent']['actions']['submit'] = array(

@@ -1,5 +1,5 @@
 <?php
-// $Id: field_ui.admin.inc,v 1.75 2010/10/20 01:31:06 dries Exp $
+// $Id: field_ui.admin.inc,v 1.76 2010/10/20 16:19:24 webchick Exp $
 
 /**
  * @file
@@ -338,6 +338,7 @@ function field_ui_field_overview_form($form, &$form_state, $entity_type, $bundle
           '#title' => t('Parent for @title', array('@title' => $instance['label'])),
           '#title_display' => 'invisible',
           '#options' => $table['#parent_options'],
+          '#empty_value' => '',
           '#attributes' => array('class' => array('field-parent')),
           '#parents' => array('fields', $name, 'parent'),
         ),
@@ -406,6 +407,7 @@ function field_ui_field_overview_form($form, &$form_state, $entity_type, $bundle
           '#title' => t('Parent for @title', array('@title' => $extra_field['label'])),
           '#title_display' => 'invisible',
           '#options' => $table['#parent_options'],
+          '#empty_value' => '',
           '#attributes' => array('class' => array('field-parent')),
           '#parents' => array('fields', $name, 'parent'),
         ),
@@ -465,6 +467,7 @@ function field_ui_field_overview_form($form, &$form_state, $entity_type, $bundle
           '#title' => t('Parent for new field'),
           '#title_display' => 'invisible',
           '#options' => $table['#parent_options'],
+          '#empty_value' => '',
           '#attributes' => array('class' => array('field-parent')),
           '#prefix' => '<div class="add-new-placeholder">&nbsp;</div>',
           '#parents' => array('fields', $name, 'parent'),
@@ -544,6 +547,7 @@ function field_ui_field_overview_form($form, &$form_state, $entity_type, $bundle
           '#title' => t('Parent for existing field'),
           '#title_display' => 'invisible',
           '#options' => $table['#parent_options'],
+          '#empty_value' => '',
           '#attributes' => array('class' => array('field-parent')),
           '#prefix' => '<div class="add-new-placeholder">&nbsp;</div>',
           '#parents' => array('fields', $name, 'parent'),
@@ -916,6 +920,7 @@ function field_ui_display_overview_form($form, &$form_state, $entity_type, $bund
           '#title' => t('Label display for @title', array('@title' => $instance['label'])),
           '#title_display' => 'invisible',
           '#options' => $table['#parent_options'],
+          '#empty_value' => '',
           '#attributes' => array('class' => array('field-parent')),
           '#parents' => array('fields', $name, 'parent'),
         ),
@@ -1077,6 +1082,7 @@ function field_ui_display_overview_form($form, &$form_state, $entity_type, $bund
           '#title' => t('Parents for @title', array('@title' => $extra_field['label'])),
           '#title_display' => 'invisible',
           '#options' => $table['#parent_options'],
+          '#empty_value' => '',
           '#attributes' => array('class' => array('field-parent')),
           '#parents' => array('fields', $name, 'parent'),
         ),
