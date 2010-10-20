@@ -1404,7 +1404,9 @@ function hook_page_alter(&$page) {
  * @param $form
  *   Nested array of form elements that comprise the form.
  * @param $form_state
- *   A keyed array containing the current state of the form.
+ *   A keyed array containing the current state of the form. The arguments
+ *   that drupal_get_form() was originally called with are available in the
+ *   array $form_state['build_info']['args'].
  * @param $form_id
  *   String representing the name of the form itself. Typically this is the
  *   name of the function that generated the form.
@@ -1432,7 +1434,9 @@ function hook_form_alter(&$form, &$form_state, $form_id) {
  * @param $form
  *   Nested array of form elements that comprise the form.
  * @param $form_state
- *   A keyed array containing the current state of the form.
+ *   A keyed array containing the current state of the form. The arguments
+ *   that drupal_get_form() was originally called with are available in the
+ *   array $form_state['build_info']['args'].
  * @param $form_id
  *   String representing the name of the form itself. Typically this is the
  *   name of the function that generated the form.
