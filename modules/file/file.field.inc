@@ -649,7 +649,8 @@ function file_field_widget_process($element, &$form_state, $form) {
   // file, the entire group of file fields is updated together.
   if ($field['cardinality'] != 1) {
     $new_path = preg_replace('/\/\d+\//', '/', $element['remove_button']['#ajax']['path'], 1);
-    $new_wrapper = preg_replace('/-\d+-/', '-', $element['remove_button']['#ajax']['wrapper'], 1);
+    $field_element = drupal_array_get_nested_value($form, array_slice($element['#array_parents'], 0, -1));
+    $new_wrapper = $field_element['#id'] . '-ajax-wrapper';
     foreach (element_children($element) as $key) {
       if (isset($element[$key]['#ajax'])) {
         $element[$key]['#ajax']['path'] = $new_path;
@@ -657,6 +658,15 @@ function file_field_widget_process($element, &$form_state, $form) {
       }
     }
     unset($element['#prefix'], $element['#suffix']);
+  }
+
+  // Add another submit handler to the upload and remove buttons, to implement
+  // functionality needed by the field widget. This submit handler, along with
+  // the rebuild logic in file_field_widget_form() requires the entire field,
+  // not just the individual item, to be valid.
+  foreach (array('upload_button', 'remove_button') as $key) {
+    $element[$key]['#submit'][] = 'file_field_widget_submit';
+    $element[$key]['#limit_validation_errors'] = array(array_slice($element['#parents'], 0, -1));
   }
 
   return $element;
@@ -720,6 +730,25 @@ function _file_field_get_description_from_element($element) {
   }
   // This is probably a newly uploaded file; no description is available.
   return FALSE;
+}
+
+/**
+ * Submit handler for upload and remove buttons of file_generic fields.
+ *
+ * This runs in addition to and after file_managed_file_submit().
+ *
+ * @see file_managed_file_submit()
+ * @see file_field_widget_form()
+ * @see file_field_widget_process()
+ */
+function file_field_widget_submit($form, &$form_state) {
+  // During the form rebuild, file_field_widget_form() will create field item
+  // widget elements using re-indexed deltas, so clear out $form_state['input']
+  // to avoid a mismatch between old and new deltas. The rebuilt elements will
+  // have #default_value set appropriately for the current state of the field,
+  // so nothing is lost in doing this.
+  list($field_name, $langcode) = $form_state['triggering_element']['#parents'];
+  unset($form_state['input'][$field_name][$langcode]);
 }
 
 /**
