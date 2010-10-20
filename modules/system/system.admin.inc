@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.321 2010/10/20 00:47:44 dries Exp $
+// $Id: system.admin.inc,v 1.322 2010/10/20 01:31:07 dries Exp $
 
 /**
  * @file
@@ -1246,6 +1246,8 @@ function system_modules_uninstall($form, $form_state = NULL) {
   if (!empty($options)) {
     $form['uninstall'] = array(
       '#type' => 'checkboxes',
+      '#title' => t('Modules'),
+      '#title_display' => 'invisible',
       '#options' => $options,
     );
     $form['actions'] = array('#type' => 'actions');
@@ -2926,6 +2928,8 @@ function system_actions_manage_form($form, &$form_state, $options = array()) {
   );
   $form['parent']['action'] = array(
     '#type' => 'select',
+    '#title' => t('Action'),
+    '#title_display' => 'invisible',
     '#options' => $options,
   );
   $form['parent']['actions'] = array('#type' => 'actions');

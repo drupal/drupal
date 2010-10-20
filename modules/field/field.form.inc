@@ -1,5 +1,5 @@
 <?php
-// $Id: field.form.inc,v 1.50 2010/06/17 13:44:45 dries Exp $
+// $Id: field.form.inc,v 1.51 2010/10/20 01:31:06 dries Exp $
 
 /**
  * @file
@@ -172,6 +172,8 @@ function field_multiple_value_form($field, $instance, $langcode, $items, &$form,
           // defined by widget.
           $element['_weight'] = array(
             '#type' => 'weight',
+            '#title' => t('Weight for row @number', array('@number' => $delta + 1)),
+            '#title_display' => 'invisible',
              // Note: this 'delta' is the FAPI 'weight' element's property.
             '#delta' => $max,
             '#default_value' => isset($items[$delta]['_weight']) ? $items[$delta]['_weight'] : $delta,

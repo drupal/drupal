@@ -1,5 +1,5 @@
 <?php
-// $Id: shortcut.admin.inc,v 1.15 2010/10/15 04:21:02 webchick Exp $
+// $Id: shortcut.admin.inc,v 1.16 2010/10/20 01:31:07 dries Exp $
 
 /**
  * @file
@@ -72,6 +72,8 @@ function shortcut_set_switch($form, &$form_state, $account = NULL) {
 
     $form['new'] = array(
       '#type' => 'textfield',
+      '#title' => t('Name'),
+      '#title_display' => 'invisible',
       '#description' => t('The new set is created by copying items from your default shortcut set.'),
       '#access' => $add_access,
     );

@@ -1,5 +1,5 @@
 <?php
-// $Id: search.admin.inc,v 1.18 2010/09/28 02:30:31 dries Exp $
+// $Id: search.admin.inc,v 1.19 2010/10/20 01:31:07 dries Exp $
 
 /**
  * @file
@@ -117,6 +117,8 @@ function search_admin_settings($form) {
   );
   $form['active']['search_active_modules'] = array(
     '#type' => 'checkboxes',
+    '#title' => t('Active modules'),
+    '#title_display' => 'invisible',
     '#default_value' => variable_get('search_active_modules', array('node', 'user')),
     '#options' => _search_get_module_names(),
     '#description' => t('Choose which search modules are active from the available modules.')

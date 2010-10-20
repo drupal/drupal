@@ -1,5 +1,5 @@
 <?php
-// $Id: file.module,v 1.43 2010/10/18 01:00:39 dries Exp $
+// $Id: file.module,v 1.44 2010/10/20 01:31:06 dries Exp $
 
 /**
  * @file
@@ -431,6 +431,8 @@ function file_managed_file_process($element, &$form_state, $form) {
   $element['upload'] = array(
     '#name' => 'files[' . implode('_', $element['#parents']) . ']',
     '#type' => 'file',
+    '#title' => t('Choose a file'),
+    '#title_display' => 'invisible',
     '#size' => 22,
     '#theme_wrappers' => array(),
     '#weight' => -10,

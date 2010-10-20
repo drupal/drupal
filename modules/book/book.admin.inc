@@ -1,5 +1,5 @@
 <?php
-// $Id: book.admin.inc,v 1.37 2010/09/27 00:53:56 dries Exp $
+// $Id: book.admin.inc,v 1.38 2010/10/20 01:31:06 dries Exp $
 
 /**
  * @file
@@ -191,11 +191,12 @@ function _book_admin_table_tree($tree, &$form) {
         '#type' => 'weight',
         '#default_value' => $data['link']['weight'],
         '#delta' => 15,
+        '#title' => t('Weight for @title', array('@title' => $data['link']['title'])),
+        '#title_display' => 'invisible',
       ),
       'plid' => array(
-        '#type' => 'textfield',
+        '#type' => 'hidden',
         '#default_value' => $data['link']['plid'],
-        '#size' => 6,
       ),
       'mlid' => array(
         '#type' => 'hidden',

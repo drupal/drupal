@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.pages.inc,v 1.32 2010/10/07 04:49:23 webchick Exp $
+// $Id: simpletest.pages.inc,v 1.33 2010/10/20 01:31:07 dries Exp $
 
 /**
  * @file
@@ -142,7 +142,7 @@ function theme_simpletest_test_table($variables) {
       $title = $test['#title'];
       $description = $test['#description'];
 
-      unset($test['#title']);
+      $test['#title_display'] = 'invisible';
       unset($test['#description']);
 
       // Test name is used to determine what tests to run.

@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.364 2010/10/09 03:24:46 webchick Exp $
+// $Id: search.module,v 1.365 2010/10/20 01:31:07 dries Exp $
 
 /**
  * @file
@@ -995,6 +995,8 @@ function search_form($form, &$form_state, $action = '', $keys = '', $type = NULL
 function search_box($form, &$form_state, $form_id) {
   $form[$form_id] = array(
     '#type' => 'textfield',
+    '#title' => t('Search'),
+    '#title_display' => 'invisible',
     '#size' => 15,
     '#default_value' => '',
     '#attributes' => array('title' => t('Enter the terms you wish to search for.')),

@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.504 2010/10/20 00:53:27 dries Exp $
+// $Id: form.inc,v 1.505 2010/10/20 01:31:06 dries Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -2658,19 +2658,24 @@ function form_process_date($element) {
     switch ($type) {
       case 'day':
         $options = drupal_map_assoc(range(1, 31));
+        $title = t('Day');
         break;
 
       case 'month':
         $options = drupal_map_assoc(range(1, 12), 'map_month');
+        $title = t('Month');
         break;
 
       case 'year':
         $options = drupal_map_assoc(range(1900, 2050));
+        $title = t('Year');
         break;
     }
 
     $element[$type] = array(
       '#type' => 'select',
+      '#title' => $title,
+      '#title_display' => 'invisible',
       '#value' => $element['#value'][$type],
       '#attributes' => $element['#attributes'],
       '#options' => $options,
@@ -3000,9 +3005,16 @@ function form_process_tableselect($element) {
       // Do not overwrite manually created children.
       if (!isset($element[$key])) {
         if ($element['#multiple']) {
+          $title = '';
+          if (!empty($element['#options'][$key]['title']['data']['#title'])) {
+            $title = t('Update @title', array(
+              '@title' => $element['#options'][$key]['title']['data']['#title'],
+            ));
+          }
           $element[$key] = array(
             '#type' => 'checkbox',
-            '#title' => '',
+            '#title' => $title,
+            '#title_display' => 'invisible',
             '#return_value' => $key,
             '#default_value' => isset($value[$key]) ? $key : NULL,
             '#attributes' => $element['#attributes'],

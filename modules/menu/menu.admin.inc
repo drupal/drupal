@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.admin.inc,v 1.88 2010/10/13 13:43:21 dries Exp $
+// $Id: menu.admin.inc,v 1.89 2010/10/20 01:31:07 dries Exp $
 
 /**
  * @file
@@ -103,6 +103,8 @@ function _menu_overview_tree_form($tree) {
       $form[$mlid]['title']['#markup'] = l($item['title'], $item['href'], $item['localized_options']) . ($item['hidden'] ? ' (' . t('disabled') . ')' : '');
       $form[$mlid]['hidden'] = array(
         '#type' => 'checkbox',
+        '#title' => t('Enable @title menu link', array('@title' => $item['title'])),
+        '#title_display' => 'invisible',
         '#default_value' => !$item['hidden'],
       );
       $form[$mlid]['weight'] = array(
@@ -110,7 +112,7 @@ function _menu_overview_tree_form($tree) {
         '#delta' => 50,
         '#default_value' => $item['weight'],
         '#title_display' => 'invisible',
-        '#title' => t('Weight for @row', array('@row' => $item['title'])),
+        '#title' => t('Weight for @title', array('@title' => $item['title'])),
       );
       $form[$mlid]['mlid'] = array(
         '#type' => 'hidden',

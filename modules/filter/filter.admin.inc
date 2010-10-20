@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.admin.inc,v 1.67 2010/10/20 01:15:58 dries Exp $
+// $Id: filter.admin.inc,v 1.68 2010/10/20 01:31:07 dries Exp $
 
 /**
  * @file
@@ -34,7 +34,12 @@ function filter_admin_overview($form) {
     $form['formats'][$id]['roles'] = array('#markup' => $roles_markup);
     $form['formats'][$id]['configure'] = array('#type' => 'link', '#title' => t('configure'), '#href' => 'admin/config/content/formats/' . $id);
     $form['formats'][$id]['disable'] = array('#type' => 'link', '#title' => t('disable'), '#href' => 'admin/config/content/formats/' . $id . '/disable', '#access' => !$form['formats'][$id]['#is_fallback']);
-    $form['formats'][$id]['weight'] = array('#type' => 'weight', '#default_value' => $format->weight);
+    $form['formats'][$id]['weight'] = array(
+      '#type' => 'weight',
+      '#title' => t('Weight for @title', array('@title' => $format->name)),
+      '#title_display' => 'invisible',
+      '#default_value' => $format->weight,
+    );
   }
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save changes'));
@@ -204,6 +209,8 @@ function filter_admin_format_form($form, &$form_state, $format) {
     );
     $form['filters']['order'][$name]['weight'] = array(
       '#type' => 'weight',
+      '#title' => t('Weight for @title', array('@title' => $filter['title'])),
+      '#title_display' => 'invisible',
       '#delta' => 50,
       '#default_value' => $filters[$name]->weight,
       '#parents' => array('filters', $name, 'weight'),

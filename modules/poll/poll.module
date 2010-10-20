@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.357 2010/09/24 02:05:55 dries Exp $
+// $Id: poll.module,v 1.358 2010/10/20 01:31:07 dries Exp $
 
 /**
  * @file
@@ -390,12 +390,16 @@ function _poll_choice_form($key, $chid = NULL, $value = '', $votes = 0, $weight 
 
   $form['chtext'] = array(
     '#type' => 'textfield',
+    '#title' => $value !== '' ? t('Choice label') : t('New choice label'),
+    '#title_display' => 'invisible',
     '#default_value' => $value,
     '#parents' => array('choice', $key, 'chtext'),
   );
 
   $form['chvotes'] = array(
     '#type' => 'textfield',
+    '#title' => $value !== '' ? t('Vote count for choice @label', array('@label' => $value)) : t('Vote count for new choice'),
+    '#title_display' => 'invisible',
     '#default_value' => $votes,
     '#size' => 5,
     '#maxlength' => 7,
@@ -405,6 +409,8 @@ function _poll_choice_form($key, $chid = NULL, $value = '', $votes = 0, $weight 
 
   $form['weight'] = array(
     '#type' => 'weight',
+    '#title' => $value !== '' ? t('Weight for choice @label', array('@label' => $value)) : t('Weight for new choice'),
+    '#title_display' => 'invisible',
     '#default_value' => $weight,
     '#delta' => $size,
     '#parents' => array('choice', $key, 'weight'),
@@ -688,6 +694,8 @@ function poll_view_voting($form, &$form_state, $node, $block = FALSE) {
     }
     $form['choice'] = array(
       '#type' => 'radios',
+      '#title' => t('Choices'),
+      '#title_display' => 'invisible',
       '#default_value' => -1,
       '#options' => $list,
     );

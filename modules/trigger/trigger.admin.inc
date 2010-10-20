@@ -1,5 +1,5 @@
 <?php
-// $Id: trigger.admin.inc,v 1.28 2010/09/24 21:36:22 dries Exp $
+// $Id: trigger.admin.inc,v 1.29 2010/10/20 01:31:07 dries Exp $
 
 /**
  * @file
@@ -179,6 +179,8 @@ function trigger_assign_form($form, $form_state, $module, $hook, $label) {
   if (count($options) != 0) {
     $form[$hook]['parent']['aid'] = array(
       '#type' => 'select',
+      '#title' => t('List of trigger actions when !description', array('!description' => $label)),
+      '#title_display' => 'invisible',
       '#options' => $options,
     );
     $form[$hook]['parent']['submit'] = array(

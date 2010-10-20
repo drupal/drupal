@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.905 2010/10/15 03:36:21 webchick Exp $
+// $Id: comment.module,v 1.906 2010/10/20 01:31:06 dries Exp $
 
 /**
  * @file
@@ -1171,6 +1171,8 @@ function comment_form_node_form_alter(&$form, $form_state) {
   $comment_settings = ($node->comment == COMMENT_NODE_HIDDEN && empty($comment_count)) ? COMMENT_NODE_CLOSED : $node->comment;
   $form['comment_settings']['comment'] = array(
     '#type' => 'radios',
+    '#title' => t('Comments'),
+    '#title_display' => 'invisible',
     '#parents' => array('comment'),
     '#default_value' => $comment_settings,
     '#options' => array(

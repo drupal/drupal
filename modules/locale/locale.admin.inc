@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.admin.inc,v 1.19 2010/10/04 18:00:46 dries Exp $
+// $Id: locale.admin.inc,v 1.20 2010/10/20 01:31:07 dries Exp $
 
 /**
  * @file
@@ -28,6 +28,8 @@ function locale_languages_overview_form() {
     }
     $form['weight'][$langcode] = array(
       '#type' => 'weight',
+      '#title' => t('Weight for @title', array('@title' => $language->name)),
+      '#title_display' => 'invisible',
       '#default_value' => $language->weight,
       '#attributes' => array('class' => array('language-order-weight')),
     );
@@ -35,11 +37,17 @@ function locale_languages_overview_form() {
     $form['native'][$langcode] = array('#markup' => check_plain($language->native));
     $form['direction'][$langcode] = array('#markup' => ($language->direction == LANGUAGE_RTL ? t('Right to left') : t('Left to right')));
   }
-  $form['enabled'] = array('#type' => 'checkboxes',
+  $form['enabled'] = array(
+    '#type' => 'checkboxes',
+    '#title' => t('Enabled languages'),
+    '#title_display' => 'invisible',
     '#options' => $options,
     '#default_value' => $enabled,
   );
-  $form['site_default'] = array('#type' => 'radios',
+  $form['site_default'] = array(
+    '#type' => 'radios',
+    '#title' => t('Default language'),
+    '#title_display' => 'invisible',
     '#options' => $options,
     '#default_value' => language_default('language'),
   );
@@ -545,13 +553,20 @@ function _locale_languages_configure_form_language_table(&$form, $type) {
 
       $table_form['weight'][$id] = array(
         '#type' => 'weight',
+        '#title' => t('Weight for @title', array('@title' => $provider['name'])),
+        '#title_display' => 'invisible',
         '#default_value' => $weight,
         '#attributes' => array('class' => array("language-provider-weight-$type")),
       );
 
       $table_form['title'][$id] = array('#markup' => check_plain($provider['name']));
 
-      $table_form['enabled'][$id] = array('#type' => 'checkbox', '#default_value' => $enabled);
+      $table_form['enabled'][$id] = array(
+        '#type' => 'checkbox',
+        '#title' => t('@title language provider', array('@title' => $provider['name'])),
+        '#title_display' => 'invisible',
+        '#default_value' => $enabled,
+      );
       if ($id === LANGUAGE_NEGOTIATION_DEFAULT) {
         $table_form['enabled'][$id]['#default_value'] = TRUE;
         $table_form['enabled'][$id]['#attributes'] = array('disabled' => 'disabled');
