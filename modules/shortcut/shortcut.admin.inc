@@ -72,6 +72,8 @@ function shortcut_set_switch($form, &$form_state, $account = NULL) {
 
     $form['new'] = array(
       '#type' => 'textfield',
+      '#title' => t('Name'),
+      '#title_display' => 'invisible',
       '#description' => t('The new set is created by copying items from your default shortcut set.'),
       '#access' => $add_access,
     );

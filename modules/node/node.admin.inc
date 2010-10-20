@@ -374,6 +374,8 @@ function node_admin_nodes() {
   }
   $form['options']['operation'] = array(
     '#type' => 'select',
+    '#title' => t('Operation'),
+    '#title_display' => 'invisible',
     '#options' => $options,
     '#default_value' => 'approve',
   );

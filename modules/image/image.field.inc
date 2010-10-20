@@ -86,6 +86,8 @@ function image_field_instance_settings_form($field, $instance) {
   );
   $form['max_resolution']['x'] = array(
     '#type' => 'textfield',
+    '#title' => t('Maximum width'),
+    '#title_display' => 'invisible',
     '#default_value' => $max_resolution[0],
     '#size' => 5,
     '#maxlength' => 5,
@@ -93,6 +95,8 @@ function image_field_instance_settings_form($field, $instance) {
   );
   $form['max_resolution']['y'] = array(
     '#type' => 'textfield',
+    '#title' => t('Maximum height'),
+    '#title_display' => 'invisible',
     '#default_value' => $max_resolution[1],
     '#size' => 5,
     '#maxlength' => 5,
@@ -111,6 +115,8 @@ function image_field_instance_settings_form($field, $instance) {
   );
   $form['min_resolution']['x'] = array(
     '#type' => 'textfield',
+    '#title' => t('Minimum width'),
+    '#title_display' => 'invisible',
     '#default_value' => $min_resolution[0],
     '#size' => 5,
     '#maxlength' => 5,
@@ -118,6 +124,8 @@ function image_field_instance_settings_form($field, $instance) {
   );
   $form['min_resolution']['y'] = array(
     '#type' => 'textfield',
+    '#title' => t('Minimum height'),
+    '#title_display' => 'invisible',
     '#default_value' => $min_resolution[1],
     '#size' => 5,
     '#maxlength' => 5,

@@ -674,8 +674,11 @@ function file_field_widget_process_multiple($element, &$form_state, $form) {
 
   foreach ($element_children as $delta => $key) {
     if ($key != $element['#file_upload_delta']) {
+      $description = _file_field_get_description_from_element($element[$key]);
       $element[$key]['_weight'] = array(
         '#type' => 'weight',
+        '#title' => $description ? t('Weight for @title', array('@title' => $description)) : t('Weight for new file'),
+        '#title_display' => 'invisible',
         '#delta' => $count,
         '#default_value' => $delta,
       );
@@ -696,6 +699,27 @@ function file_field_widget_process_multiple($element, &$form_state, $form) {
   $element['#suffix'] = '</div>';
 
   return $element;
+}
+
+/**
+ * Helper function for file_field_widget_process_multiple().
+ *
+ * @param $element
+ *   The element being processed.
+ * @return
+ *   A description of the file suitable for use in the administrative interface.
+ */
+function _file_field_get_description_from_element($element) {
+  // Use the actual file description, if it's available.
+  if (!empty($element['#default_value']['description'])) {
+    return $element['#default_value']['description'];
+  }
+  // Otherwise, fall back to the filename.
+  if (!empty($element['#default_value']['filename'])) {
+    return $element['#default_value']['filename'];
+  }
+  // This is probably a newly uploaded file; no description is available.
+  return FALSE;
 }
 
 /**

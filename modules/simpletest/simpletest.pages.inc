@@ -142,7 +142,7 @@ function theme_simpletest_test_table($variables) {
       $title = $test['#title'];
       $description = $test['#description'];
 
-      unset($test['#title']);
+      $test['#title_display'] = 'invisible';
       unset($test['#description']);
 
       // Test name is used to determine what tests to run.

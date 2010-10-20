@@ -93,6 +93,8 @@ function image_style_form($form, &$form_state, $style) {
     );
     $form['effects'][$key]['weight'] = array(
       '#type' => 'weight',
+      '#title' => t('Weight for @title', array('@title' => $effect['label'])),
+      '#title_display' => 'invisible',
       '#default_value' => $effect['weight'],
       '#access' => $editable,
     );
@@ -127,11 +129,15 @@ function image_style_form($form, &$form_state, $style) {
   );
   $form['effects']['new']['new'] = array(
     '#type' => 'select',
+    '#title' => t('Effect'),
+    '#title_display' => 'invisible',
     '#options' => $new_effect_options,
     '#empty_option' => t('Select a new effect'),
   );
   $form['effects']['new']['weight'] = array(
     '#type' => 'weight',
+    '#title' => t('Weight for new effect'),
+    '#title_display' => 'invisible',
     '#default_value' => count($form['effects']) - 1,
   );
   $form['effects']['new']['add'] = array(

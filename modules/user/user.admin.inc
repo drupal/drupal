@@ -183,6 +183,8 @@ function user_admin_account() {
   }
   $form['options']['operation'] = array(
     '#type' => 'select',
+    '#title' => t('Operation'),
+    '#title_display' => 'invisible',
     '#options' => $options,
     '#default_value' => 'unblock',
   );
@@ -835,6 +837,8 @@ function user_admin_roles($form, $form_state) {
     $form['roles'][$rid]['#weight'] = $order;
     $form['roles'][$rid]['weight'] = array(
       '#type' => 'textfield',
+      '#title' => t('Weight for @title', array('@title' => $name['label'])),
+      '#title_display' => 'invisible',
       '#size' => 4,
       '#default_value' => $order,
       '#attributes' => array('class' => array('role-weight')),
@@ -844,6 +848,8 @@ function user_admin_roles($form, $form_state) {
 
   $form['name'] = array(
     '#type' => 'textfield',
+    '#title' => t('Name'),
+    '#title_display' => 'invisible',
     '#size' => 32,
     '#maxlength' => 64,
   );

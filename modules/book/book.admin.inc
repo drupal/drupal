@@ -191,11 +191,12 @@ function _book_admin_table_tree($tree, &$form) {
         '#type' => 'weight',
         '#default_value' => $data['link']['weight'],
         '#delta' => 15,
+        '#title' => t('Weight for @title', array('@title' => $data['link']['title'])),
+        '#title_display' => 'invisible',
       ),
       'plid' => array(
-        '#type' => 'textfield',
+        '#type' => 'hidden',
         '#default_value' => $data['link']['plid'],
-        '#size' => 6,
       ),
       'mlid' => array(
         '#type' => 'hidden',

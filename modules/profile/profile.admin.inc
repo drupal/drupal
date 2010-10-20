@@ -24,8 +24,19 @@ function profile_admin_overview($form) {
     $form[$field->fid]['name'] = array('#markup' => check_plain($field->name));
     $form[$field->fid]['title'] = array('#markup' => check_plain($field->title));
     $form[$field->fid]['type'] = array('#markup' => $field->type);
-    $form[$field->fid]['category'] = array('#type' => 'select', '#default_value' => $field->category, '#options' => array());
-    $form[$field->fid]['weight'] = array('#type' => 'weight', '#default_value' => $field->weight);
+    $form[$field->fid]['category'] = array(
+      '#type' => 'select',
+      '#title' => t('Category for @title', array('@title' => $field->title)),
+      '#title_display' => 'invisible',
+      '#default_value' => $field->category,
+      '#options' => array(),
+    );
+    $form[$field->fid]['weight'] = array(
+      '#type' => 'weight',
+      '#title' => t('Weight for @title', array('@title' => $field->title)),
+      '#title_display' => 'invisible',
+      '#default_value' => $field->weight,
+    );
     $form[$field->fid]['edit'] = array('#type' => 'link', '#title' => t('edit'), '#href' => "admin/config/people/profile/edit/$field->fid");
     $form[$field->fid]['delete'] = array('#type' => 'link', '#title' => t('delete'), '#href' => "admin/config/people/profile/delete/$field->fid");
   }
