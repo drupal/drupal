@@ -1193,6 +1193,9 @@ function node_delete_multiple($nids) {
     db_delete('history')
       ->condition('nid', $nids, 'IN')
       ->execute();
+    db_delete('node_access')
+      ->condition('nid', $nids, 'IN')
+      ->execute();
 
     // Clear the page and block and node_load_multiple caches.
     cache_clear_all();
