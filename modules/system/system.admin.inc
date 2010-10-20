@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.320 2010/10/15 04:23:18 webchick Exp $
+// $Id: system.admin.inc,v 1.321 2010/10/20 00:47:44 dries Exp $
 
 /**
  * @file
@@ -34,10 +34,6 @@ function system_admin_config_page() {
       }
       $block = $item;
       $block['content'] = '';
-      if ($item['block_callback'] && function_exists($item['block_callback'])) {
-        $function = $item['block_callback'];
-        $block['content'] .= $function();
-      }
       $block['content'] .= theme('admin_block_content', array('content' => system_admin_menu_block($item)));
       if (!empty($block['content'])) {
         $block['show'] = TRUE;

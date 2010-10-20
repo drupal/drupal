@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.414 2010/10/08 05:07:53 webchick Exp $
+// $Id: menu.inc,v 1.415 2010/10/20 00:47:43 dries Exp $
 
 /**
  * @file
@@ -3523,7 +3523,6 @@ function _menu_router_save($menu, $masks) {
       'theme_callback',
       'theme_arguments',
       'type',
-      'block_callback',
       'description',
       'position',
       'weight',
@@ -3554,7 +3553,6 @@ function _menu_router_save($menu, $masks) {
       'theme_callback' => $item['theme callback'],
       'theme_arguments' => serialize($item['theme arguments']),
       'type' => $item['type'],
-      'block_callback' => $item['block callback'],
       'description' => $item['description'],
       'position' => $item['position'],
       'weight' => $item['weight'],
