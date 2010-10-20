@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.test,v 1.77 2010/09/28 03:30:37 webchick Exp $
+// $Id: filter.test,v 1.78 2010/10/20 01:15:58 dries Exp $
 
 /**
  * Tests for text format and filter CRUD operations.
@@ -23,6 +23,7 @@ class FilterCRUDTestCase extends DrupalWebTestCase {
   function testTextFormatCRUD() {
     // Add a text format with minimum data only.
     $format = new stdClass();
+    $format->format = 'empty_format';
     $format->name = 'Empty format';
     filter_format_save($format);
     $this->verifyTextFormat($format);
@@ -30,6 +31,7 @@ class FilterCRUDTestCase extends DrupalWebTestCase {
 
     // Add another text format specifying all possible properties.
     $format = new stdClass();
+    $format->format = 'custom_format';
     $format->name = 'Custom format';
     $format->filters = array(
       'filter_url' => array(
@@ -184,6 +186,7 @@ class FilterAdminTestCase extends DrupalWebTestCase {
     $this->drupalGet('admin/config/content/formats');
     $this->clickLink('Add text format');
     $edit = array(
+      'format' => drupal_strtolower($this->randomName()),
       'name' => $this->randomName(),
     );
     $this->drupalPost(NULL, $edit, t('Save configuration'));
@@ -268,6 +271,7 @@ class FilterAdminTestCase extends DrupalWebTestCase {
 
     // Add format.
     $edit = array();
+    $edit['format'] = drupal_strtolower($this->randomName());
     $edit['name'] = $this->randomName();
     $edit['roles[2]'] = 1;
     $edit['filters[' . $second_filter . '][status]'] = TRUE;
@@ -424,7 +428,10 @@ class FilterFormatAccessTestCase extends DrupalWebTestCase {
     $this->drupalLogin($this->filter_admin_user);
     $formats = array();
     for ($i = 0; $i < 2; $i++) {
-      $edit = array('name' => $this->randomName());
+      $edit = array(
+        'format' => drupal_strtolower($this->randomName()),
+        'name' => $this->randomName(),
+      );
       $this->drupalPost('admin/config/content/formats/add', $edit, t('Save configuration'));
       $this->resetFilterCaches();
       $format_id = db_query("SELECT format FROM {filter_format} WHERE name = :name", array(':name' => $edit['name']))->fetchField();
@@ -656,7 +663,10 @@ class FilterDefaultFormatTestCase extends DrupalWebTestCase {
     $this->drupalLogin($admin_user);
     $formats = array();
     for ($i = 0; $i < 2; $i++) {
-      $edit = array('name' => $this->randomName());
+      $edit = array(
+        'format' => drupal_strtolower($this->randomName()),
+        'name' => $this->randomName(),
+      );
       $this->drupalPost('admin/config/content/formats/add', $edit, t('Save configuration'));
       $this->resetFilterCaches();
       $format_id = db_query("SELECT format FROM {filter_format} WHERE name = :name", array(':name' => $edit['name']))->fetchField();
@@ -1684,6 +1694,7 @@ class FilterHooksTestCase extends DrupalWebTestCase {
     // Add a text format.
     $name = $this->randomName();
     $edit = array();
+    $edit['format'] = drupal_strtolower($this->randomName());
     $edit['name'] = $name;
     $edit['roles[1]'] = 1;
     $this->drupalPost('admin/config/content/formats/add', $edit, t('Save configuration'));

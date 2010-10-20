@@ -1,5 +1,5 @@
 <?php
-// $Id: php.install,v 1.18 2010/09/13 01:11:08 dries Exp $
+// $Id: php.install,v 1.19 2010/10/20 01:15:58 dries Exp $
 
 /**
  * @file
@@ -17,6 +17,7 @@ function php_enable() {
   // subsequent clean installs.
   if (!$format_exists) {
     $php_format = array(
+      'format' => 'php_code',
       'name' => 'PHP code',
       // 'Plain text' format is installed with a weight of 10 by default. Use a
       // higher weight here to ensure that this format will not be the default

@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.install,v 1.46 2010/09/28 03:30:37 webchick Exp $
+// $Id: filter.install,v 1.47 2010/10/20 01:15:58 dries Exp $
 
 /**
  * @file
@@ -14,9 +14,9 @@ function filter_schema() {
     'description' => 'Table that maps filters (HTML corrector) to text formats (Filtered HTML).',
     'fields' => array(
       'format' => array(
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
         'description' => 'Foreign key: The {filter_format}.format to which this filter is assigned.',
       ),
       'module' => array(
@@ -62,9 +62,10 @@ function filter_schema() {
     'description' => 'Stores text formats: custom groupings of filters, such as Filtered HTML.',
     'fields' => array(
       'format' => array(
-        'type' => 'serial',
+        'type' => 'varchar',
+        'length' => 255,
         'not null' => TRUE,
-        'description' => 'Primary Key: Unique ID for format.',
+        'description' => 'Primary Key: Unique machine name of the format.',
       ),
       'name' => array(
         'type' => 'varchar',
@@ -120,6 +121,7 @@ function filter_install() {
   // plain text format with very basic formatting, but it can be modified by
   // installation profiles to have other properties.
   $plain_text_format = array(
+    'format' => 'plain_text',
     'name' => 'Plain text',
     'weight' => 10,
     'filters' => array(
@@ -467,6 +469,28 @@ function filter_update_7009() {
   $schema = system_schema_cache_7054();
   db_drop_table('cache_filter');
   db_create_table('cache_filter', $schema);
+}
+
+/**
+ * Change {filter_format}.format and {filter}.format into varchar.
+ */
+function filter_update_7010() {
+  // Remove the unique index for 'name'. Text formats have sufficient uniqueness
+  // through machine names.
+  db_drop_unique_key('filter_format', 'name');
+
+  db_change_field('filter_format', 'format', 'format', array(
+    'type' => 'varchar',
+    'length' => 255,
+    'not null' => TRUE,
+    'description' => 'Primary Key: Unique machine name of the format.',
+  ));
+  db_change_field('filter', 'format', 'format', array(
+    'type' => 'varchar',
+    'length' => 255,
+    'not null' => FALSE,
+    'description' => 'Foreign key: The {filter_format}.format to which this filter is assigned.',
+  ));
 }
 
 /**

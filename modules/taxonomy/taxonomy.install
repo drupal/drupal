@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.install,v 1.51 2010/10/06 21:53:41 webchick Exp $
+// $Id: taxonomy.install,v 1.52 2010/10/20 01:15:58 dries Exp $
 
 /**
  * @file
@@ -51,8 +51,8 @@ function taxonomy_schema() {
         'translatable' => TRUE,
       ),
       'format' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
+        'type' => 'varchar',
+        'length' => 255,
         'not null' => FALSE,
         'description' => 'The {filter_format}.format of the description.',
       ),

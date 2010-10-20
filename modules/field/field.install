@@ -1,5 +1,5 @@
 <?php
-// $Id: field.install,v 1.22 2010/09/29 19:46:40 dries Exp $
+// $Id: field.install,v 1.23 2010/10/20 01:15:58 dries Exp $
 
 /**
  * @file
@@ -309,11 +309,21 @@ function _update_7000_field_delete_instance($field_name, $entity_type, $bundle) 
 
 /**
  * Utility function: fetch all the field definitions from the database.
+ *
+ * @param $conditions
+ *   An array of conditions to limit the select query to.
  */
-function _update_7000_field_read_fields() {
+function _update_7000_field_read_fields(array $conditions = array()) {
   $fields = array();
-  $results = db_query('SELECT * FROM {field_config} WHERE deleted = 0', array(), array('fetch' => PDO::FETCH_ASSOC));
-  foreach ($results as $record) {
+  $query = db_select('field_config', 'fc', array('fetch' => PDO::FETCH_ASSOC))
+    ->fields('fc')
+    ->condition('deleted', 0);
+  if (!empty($conditions)) {
+    foreach ($conditions as $column => $value) {
+      $query->condition($column, $value);
+    }
+  }
+  foreach ($query->execute() as $record) {
     $field = unserialize($record['data']);
     $field['id'] = $record['id'];
     $field['field_name'] = $record['field_name'];

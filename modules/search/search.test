@@ -1,5 +1,5 @@
 <?php
-// $Id: search.test,v 1.76 2010/10/05 06:17:29 webchick Exp $
+// $Id: search.test,v 1.77 2010/10/20 01:15:58 dries Exp $
 
 // The search index can contain different types of content. Typically the type is 'node'.
 // Here we test with _test_ and _test2_ as the type.
@@ -370,7 +370,11 @@ class SearchRankingTestCase extends DrupalWebTestCase {
 
     // Create nodes for testing.
     foreach ($node_ranks as $node_rank) {
-      $settings = array('type' => 'page', 'title' => array(LANGUAGE_NONE => array(array('value' => 'Drupal rocks'))), 'body' => array(LANGUAGE_NONE => array(array('value' => "Drupal's search rocks"))));
+      $settings = array(
+        'type' => 'page',
+        'title' => 'Drupal rocks',
+        'body' => array(LANGUAGE_NONE => array(array('value' => "Drupal's search rocks"))),
+      );
       foreach (array(0, 1) as $num) {
         if ($num == 1) {
           switch ($node_rank) {
@@ -444,18 +448,18 @@ class SearchRankingTestCase extends DrupalWebTestCase {
     shuffle($shuffled_tags);
     $settings = array(
       'type' => 'page',
-      'title' => array(LANGUAGE_NONE => array(array('value' => 'Simple node'))),
+      'title' => 'Simple node',
     );
     foreach ($shuffled_tags as $tag) {
       switch ($tag) {
         case 'a':
-          $settings['body'] = array(LANGUAGE_NONE => array(array('value' => l('Drupal Rocks', 'node'), 'format' => 3)));
+          $settings['body'] = array(LANGUAGE_NONE => array(array('value' => l('Drupal Rocks', 'node'), 'format' => 'full_html')));
           break;
         case 'notag':
           $settings['body'] = array(LANGUAGE_NONE => array(array('value' => 'Drupal Rocks')));
           break;
         default:
-          $settings['body'] = array(LANGUAGE_NONE => array(array('value' => "<$tag>Drupal Rocks</$tag>", 'format' => 3)));
+          $settings['body'] = array(LANGUAGE_NONE => array(array('value' => "<$tag>Drupal Rocks</$tag>", 'format' => 'full_html')));
           break;
       }
       $nodes[$tag] = $this->drupalCreateNode($settings);
@@ -488,7 +492,7 @@ class SearchRankingTestCase extends DrupalWebTestCase {
     // Test tags with the same weight against the sorted tags.
     $unsorted_tags = array('u', 'b', 'i', 'strong', 'em');
     foreach ($unsorted_tags as $tag) {
-      $settings['body'] = array(LANGUAGE_NONE => array(array('value' => "<$tag>Drupal Rocks</$tag>", 'format' => 3)));
+      $settings['body'] = array(LANGUAGE_NONE => array(array('value' => "<$tag>Drupal Rocks</$tag>", 'format' => 'full_html')));
       $node = $this->drupalCreateNode($settings);
 
       // Update the search index.
@@ -523,7 +527,7 @@ class SearchRankingTestCase extends DrupalWebTestCase {
     // See testRankings() above - build a node that will rank high for sticky.
     $settings = array(
       'type' => 'page', 
-      'title' => array(LANGUAGE_NONE => array(array('value' => 'Drupal rocks'))), 
+      'title' => 'Drupal rocks',
       'body' => array(LANGUAGE_NONE => array(array('value' => "Drupal's search rocks"))),
       'sticky' => 1,
     );
@@ -712,9 +716,9 @@ class SearchCommentTestCase extends DrupalWebTestCase {
     // Enable check_plain() for 'Filtered HTML' text format.
     $filtered_html_format_id = db_query_range('SELECT format FROM {filter_format} WHERE name = :name', 0, 1, array(':name' => 'Filtered HTML'))->fetchField();
     $edit = array(
-      'filters[filter_html_escape][status]' => $filtered_html_format_id,
+      'filters[filter_html_escape][status]' => TRUE,
     );
-    $this->drupalPost('admin/config/content/formats/1', $edit, t('Save configuration'));
+    $this->drupalPost('admin/config/content/formats/' . $filtered_html_format_id, $edit, t('Save configuration'));
     // Allow anonymous users to search content.
     $edit = array(
       DRUPAL_ANONYMOUS_RID . '[search content]' => 1,

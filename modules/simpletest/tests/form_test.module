@@ -1,5 +1,5 @@
 <?php
-// $Id: form_test.module,v 1.51 2010/10/04 18:00:46 dries Exp $
+// $Id: form_test.module,v 1.52 2010/10/20 01:15:58 dries Exp $
 
 /**
  * @file
@@ -999,14 +999,14 @@ function _form_test_disabled_elements($form, &$form_state) {
     '#title' => 'Text format',
     '#disabled' => TRUE,
     '#default_value' => 'Text value',
-    '#format' => 1,
+    '#format' => 'plain_text',
     '#expected_value' => array(
       'value' => 'Text value',
-      'format' => 1,
+      'format' => 'plain_text',
     ),
     '#test_hijack_value' => array(
       'value' => 'HIJACK',
-      'format' => 2,
+      'format' => 'filtered_html',
     ),
   );
 

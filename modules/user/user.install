@@ -1,5 +1,5 @@
 <?php
-// $Id: user.install,v 1.67 2010/10/05 06:17:29 webchick Exp $
+// $Id: user.install,v 1.68 2010/10/20 01:15:58 dries Exp $
 
 /**
  * @file
@@ -167,8 +167,8 @@ function user_schema() {
         'description' => "User's signature.",
       ),
       'signature_format' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
+        'type' => 'varchar',
+        'length' => 255,
         'not null' => FALSE,
         'description' => 'The {filter_format}.format of the signature.',
       ),
@@ -354,6 +354,11 @@ function user_update_dependencies() {
   // user_update_7013 relies on system_update_7060.
   $dependencies['user'][7013] = array(
     'system' => 7059,
+  );
+  // Ensure that format columns are only changed after Filter module has changed
+  // the primary records.
+  $dependencies['user'][7015] = array(
+    'filter' => 7010,
   );
 
   return $dependencies;
@@ -835,6 +840,18 @@ function user_update_7014() {
         ->execute();
 
   return t("Renamed the 'post comments without approval' permission to 'skip comment approval'.");
+}
+
+/**
+ * Change {users}.signature_format into varchar.
+ */
+function user_update_7015() {
+  db_change_field('users', 'signature_format', 'signature_format', array(
+    'type' => 'varchar',
+    'length' => 255,
+    'not null' => FALSE,
+    'description' => 'The {filter_format}.format of the signature.',
+  ));
 }
 
 /**

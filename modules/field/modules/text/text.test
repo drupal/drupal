@@ -1,5 +1,5 @@
 <?php
-// $Id: text.test,v 1.29 2010/09/24 00:37:42 dries Exp $
+// $Id: text.test,v 1.30 2010/10/20 01:15:58 dries Exp $
 
 class TextFieldTestCase extends DrupalWebTestCase {
   protected $instance;
@@ -198,12 +198,16 @@ class TextFieldTestCase extends DrupalWebTestCase {
     // Create a new text format that does not escape HTML, and grant the user
     // access to it.
     $this->drupalLogin($this->admin_user);
-    $edit = array('name' => $this->randomName());
+    $edit = array(
+      'format' => drupal_strtolower($this->randomName()),
+      'name' => $this->randomName(),
+    );
     $this->drupalPost('admin/config/content/formats/add', $edit, t('Save configuration'));
     filter_formats_reset();
     $this->checkPermissions(array(), TRUE);
-    $format_id = db_query("SELECT format FROM {filter_format} WHERE name = :name", array(':name' => $edit['name']))->fetchField();
-    $permission = filter_permission_name(filter_format_load($format_id));
+    $format = filter_format_load($edit['format']);
+    $format_id = $format->format;
+    $permission = filter_permission_name($format);
     $rid = max(array_keys($this->web_user->roles));
     user_role_grant_permissions($rid, array($permission));
     $this->drupalLogin($this->web_user);
@@ -360,8 +364,8 @@ class TextSummaryTestCase extends DrupalWebTestCase {
     // Test text_summary() for different sizes.
     for ($i = 0; $i <= 37; $i++) {
       $this->callTextSummary($text, $expected[$i],    NULL, $i);
-      $this->callTextSummary($text, $expected_lb[$i], 1,    $i);
-      $this->callTextSummary($text, $expected_lb[$i], 2,    $i);
+      $this->callTextSummary($text, $expected_lb[$i], 'plain_text', $i);
+      $this->callTextSummary($text, $expected_lb[$i], 'filtered_html', $i);
     }
   }
 
@@ -386,8 +390,15 @@ class TextTranslationTestCase extends DrupalWebTestCase {
   function setUp() {
     parent::setUp('locale', 'translation');
 
-    $this->format = 3;
-    $this->admin = $this->drupalCreateUser(array('administer languages', 'administer content types', 'access administration pages', 'bypass node access', "use text format $this->format"));
+    $full_html_format = filter_format_load('full_html');
+    $this->format = $full_html_format->format;
+    $this->admin = $this->drupalCreateUser(array(
+      'administer languages',
+      'administer content types',
+      'access administration pages',
+      'bypass node access',
+      filter_permission_name($full_html_format),
+    ));
     $this->translator = $this->drupalCreateUser(array('create article content', 'edit own article content', 'translate content'));
 
     // Enable an additional language.
@@ -456,11 +467,11 @@ class TextTranslationTestCase extends DrupalWebTestCase {
 
     // Populate the body field: the first item gets the "Full HTML" input
     // format, the second one "Filtered HTML".
-    $format = $this->format;
+    $formats = array('full_html', 'filtered_html');
     foreach ($body as $delta => $value) {
       $edit = array(
         "body[$langcode][$delta][value]" => $value,
-        "body[$langcode][$delta][format]" => $format--,
+        "body[$langcode][$delta][format]" => array_shift($formats),
       );
       $this->drupalPost('node/1/edit', $edit, t('Save'));
       $this->assertText($body[$delta], t('The body field with delta @delta has been saved.', array('@delta' => $delta)));

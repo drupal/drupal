@@ -1,5 +1,5 @@
 <?php
-// $Id: block.install,v 1.46 2010/09/28 03:30:37 webchick Exp $
+// $Id: block.install,v 1.47 2010/10/20 01:15:58 dries Exp $
 
 /**
  * @file
@@ -155,8 +155,8 @@ function block_schema() {
         'description' => 'Block description.',
       ),
       'format' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
+        'type' => 'varchar',
+        'length' => 255,
         'not null' => FALSE,
         'description' => 'The {filter_format}.format of the block body.',
       ),
@@ -195,6 +195,11 @@ function block_update_dependencies() {
   // therefore must run after filter_update_7000().
   $dependencies['block'][7005] = array(
     'filter' => 7000,
+  );
+  // Ensure that format columns are only changed after Filter module has changed
+  // the primary records.
+  $dependencies['block'][7007] = array(
+    'filter' => 7010,
   );
 
   return $dependencies;
@@ -442,6 +447,18 @@ function block_update_7006() {
 
   db_drop_table('cache_block');
   db_create_table('cache_block', $schema);
+}
+
+/**
+ * Change {block_custom}.format into varchar.
+ */
+function block_update_7007() {
+  db_change_field('block_custom', 'format', 'format', array(
+    'type' => 'varchar',
+    'length' => 255,
+    'not null' => FALSE,
+    'description' => 'The {filter_format}.format of the block body.',
+  ));
 }
 
 /**
