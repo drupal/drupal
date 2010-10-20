@@ -51,8 +51,8 @@ function taxonomy_schema() {
         'translatable' => TRUE,
       ),
       'format' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
+        'type' => 'varchar',
+        'length' => 255,
         'not null' => FALSE,
         'description' => 'The {filter_format}.format of the description.',
       ),

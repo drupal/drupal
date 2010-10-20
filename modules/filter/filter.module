@@ -182,23 +182,31 @@ function filter_format_load($format_id) {
  *     - 'settings': (optional) An array of configured settings for the filter.
  *       See hook_filter_info() for details.
  */
-function filter_format_save(&$format) {
+function filter_format_save($format) {
   $format->name = trim($format->name);
   $format->cache = _filter_format_is_cacheable($format);
-  $format->status = 1;
+  if (!isset($format->status)) {
+    $format->status = 1;
+  }
+  if (!isset($format->weight)) {
+    $format->weight = 0;
+  }
+
+  // Insert or update the text format.
+  $return = db_merge('filter_format')
+    ->key(array('format' => $format->format))
+    ->fields(array(
+      'name' => $format->name,
+      'cache' => (int) $format->cache,
+      'status' => (int) $format->status,
+      'weight' => (int) $format->weight,
+    ))
+    ->execute();
+
   // Programmatic saves may not contain any filters.
   if (!isset($format->filters)) {
     $format->filters = array();
   }
-
-  // Add a new text format.
-  if (empty($format->format)) {
-    $return = drupal_write_record('filter_format', $format);
-  }
-  else {
-    $return = drupal_write_record('filter_format', $format, 'format');
-  }
-
   $filter_info = filter_get_filters();
   foreach ($filter_info as $name => $filter) {
     // Add new filters without weight to the bottom.
@@ -241,8 +249,8 @@ function filter_format_save(&$format) {
     module_invoke_all('filter_format_update', $format);
     // Explicitly indicate that the format was updated. We need to do this
     // since if the filters were updated but the format object itself was not,
-    // the call to drupal_write_record() above would not return an indication
-    // that anything had changed.
+    // the merge query above would not return an indication that anything had
+    // changed.
     $return = SAVED_UPDATED;
 
     // Clear the filter cache whenever a text format is updated.

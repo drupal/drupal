@@ -9,6 +9,7 @@
 function standard_install() {
   // Add text formats.
   $filtered_html_format = array(
+    'format' => 'filtered_html',
     'name' => 'Filtered HTML',
     'weight' => 0,
     'filters' => array(
@@ -38,6 +39,7 @@ function standard_install() {
   filter_format_save($filtered_html_format);
 
   $full_html_format = array(
+    'format' => 'full_html',
     'name' => 'Full HTML',
     'weight' => 1,
     'filters' => array(

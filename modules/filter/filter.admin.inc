@@ -96,7 +96,10 @@ function theme_filter_admin_overview($variables) {
 function filter_admin_format_page($format = NULL) {
   if (!isset($format->name)) {
     drupal_set_title(t('Add text format'));
-    $format = (object) array('name' => '', 'format' => 0);
+    $format = (object) array(
+      'format' => NULL,
+      'name' => '',
+    );
   }
   return drupal_get_form('filter_admin_format_form', $format);
 }
@@ -121,6 +124,16 @@ function filter_admin_format_form($form, &$form_state, $format) {
     '#title' => t('Name'),
     '#default_value' => $format->name,
     '#required' => TRUE,
+  );
+  $form['format'] = array(
+    '#type' => 'machine_name',
+    '#required' => TRUE,
+    '#default_value' => $format->format,
+    '#maxlength' => 255,
+    '#machine_name' => array(
+      'exists' => 'filter_format_load',
+    ),
+    '#disabled' => !empty($format->format),
   );
 
   // Add user role access selection.
@@ -227,9 +240,6 @@ function filter_admin_format_form($form, &$form_state, $format) {
     }
   }
 
-  if (!empty($format->format)) {
-    $form['format'] = array('#type' => 'value', '#value' => $format->format);
-  }
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save configuration'));
 

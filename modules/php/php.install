@@ -17,6 +17,7 @@ function php_enable() {
   // subsequent clean installs.
   if (!$format_exists) {
     $php_format = array(
+      'format' => 'php_code',
       'name' => 'PHP code',
       // 'Plain text' format is installed with a weight of 10 by default. Use a
       // higher weight here to ensure that this format will not be the default
