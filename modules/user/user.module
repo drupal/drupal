@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1209 2010/10/15 03:36:21 webchick Exp $
+// $Id: user.module,v 1.1210 2010/10/20 00:42:42 dries Exp $
 
 /**
  * @file
@@ -2832,19 +2832,23 @@ function user_permission_get_modules() {
  *
  * This function may be used to grant and revoke multiple permissions at once.
  * For example, when a form exposes checkboxes to configure permissions for a
- * role, the submitted values may be directly passed on in a form submit
- * handler.
+ * role, the form submit handler may directly pass the submitted values for the
+ * checkboxes form element to this function.
  *
  * @param $rid
  *   The ID of a user role to alter.
  * @param $permissions
- *   An array of permissions, where the key holds the permission name and the
- *   value is an integer or boolean that determines whether to grant or revoke
- *   the permission:
+ *   An associative array, where the key holds the permission name and the value
+ *   determines whether to grant or revoke that permission. Any value that
+ *   evaluates to TRUE will cause the permission to be granted. Any value that
+ *   evaluates to FALSE will cause the permission to be revoked.
  *   @code
  *     array(
- *       'administer nodes' => 0,
- *       'access user profiles' => 1,
+ *       'administer nodes' => 0,                // Revoke 'administer nodes'
+ *       'administer blocks' => FALSE,           // Revoke 'administer blocks'
+ *       'access user profiles' => 1,            // Grant 'access user profiles'
+ *       'access content' => TRUE,               // Grant 'access content'
+ *       'access comments' => 'access comments', // Grant 'access comments'
  *     )
  *   @endcode
  *   Existing permissions are not changed, unless specified in $permissions.
