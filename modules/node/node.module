@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1308 2010/10/20 00:27:51 dries Exp $
+// $Id: node.module,v 1.1309 2010/10/20 08:15:33 webchick Exp $
 
 /**
  * @file
@@ -1893,14 +1893,15 @@ function node_menu() {
   $items['node'] = array(
     'page callback' => 'node_page_default',
     'access arguments' => array('access content'),
+    // Required to make 'node/add' appear on the top-level of 'navigation' menu.
+    'menu_name' => '',
     'type' => MENU_CALLBACK,
   );
   $items['node/add'] = array(
-    'title' => 'Add new content',
+    'title' => 'Add content',
     'page callback' => 'node_add_page',
     'access callback' => '_node_add_access',
-    'weight' => 1,
-    'menu_name' => 'management',
+    'menu_name' => 'navigation',
     'theme callback' => '_node_custom_theme',
     'file' => 'node.pages.inc',
   );
