@@ -3,12 +3,13 @@ div#toolbar a#edit-shortcuts {
   float: right;
   padding: 5px 10px 5px 5px;
   line-height: 24px;
-  color: #bbb;
+  color: #fefefe;
 }
 div#toolbar a#edit-shortcuts:focus,
 div#toolbar a#edit-shortcuts:hover,
 div#toolbar a#edit-shortcuts.active {
   color: #fff;
+  text-decoration: underline;
 }
 
 div#toolbar div.toolbar-shortcuts ul {
