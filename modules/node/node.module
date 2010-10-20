@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1307 2010/10/15 03:36:21 webchick Exp $
+// $Id: node.module,v 1.1308 2010/10/20 00:27:51 dries Exp $
 
 /**
  * @file
@@ -1191,6 +1191,9 @@ function node_delete_multiple($nids) {
       ->condition('nid', $nids, 'IN')
       ->execute();
     db_delete('history')
+      ->condition('nid', $nids, 'IN')
+      ->execute();
+    db_delete('node_access')
       ->condition('nid', $nids, 'IN')
       ->execute();
 
