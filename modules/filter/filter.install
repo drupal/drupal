@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.install,v 1.47 2010/10/20 01:15:58 dries Exp $
+// $Id: filter.install,v 1.48 2010/10/20 06:32:32 webchick Exp $
 
 /**
  * @file
@@ -475,10 +475,6 @@ function filter_update_7009() {
  * Change {filter_format}.format and {filter}.format into varchar.
  */
 function filter_update_7010() {
-  // Remove the unique index for 'name'. Text formats have sufficient uniqueness
-  // through machine names.
-  db_drop_unique_key('filter_format', 'name');
-
   db_change_field('filter_format', 'format', 'format', array(
     'type' => 'varchar',
     'length' => 255,
