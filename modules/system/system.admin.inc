@@ -2931,6 +2931,7 @@ function system_actions_manage_form($form, &$form_state, $options = array()) {
     '#title' => t('Action'),
     '#title_display' => 'invisible',
     '#options' => $options,
+    '#empty_option' => t('Choose an advanced action'),
   );
   $form['parent']['actions'] = array('#type' => 'actions');
   $form['parent']['actions']['submit'] = array(

@@ -278,6 +278,7 @@ function image_field_widget_settings_form($field, $instance) {
     '#title' => t('Preview image style'),
     '#type' => 'select',
     '#options' => image_style_options(FALSE),
+    '#empty_option' => '<' . t('no preview') . '>',
     '#default_value' => $settings['preview_image_style'],
     '#description' => t('The preview image will be shown while editing the content.'),
     '#weight' => 15,
@@ -443,6 +444,7 @@ function image_field_formatter_settings_form($field, $instance, $view_mode, $for
     '#title' => t('Link image to'),
     '#type' => 'select',
     '#default_value' => $settings['image_link'],
+    '#empty_option' => t('Nothing'),
     '#options' => $link_types,
   );
 
