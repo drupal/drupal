@@ -258,6 +258,11 @@ function taxonomy_update_dependencies() {
   $dependencies['node'][7006] = array(
     'taxonomy' => 7002,
   );
+  // Ensure that format columns are only changed after Filter module has changed
+  // the primary records.
+  $dependencies['taxonomy'][7009] = array(
+    'filter' => 7010,
+  );
 
   return $dependencies;
 }
@@ -782,3 +787,16 @@ function taxonomy_update_7008() {
     ),
   ));
 }
+
+/**
+ * Change {taxonomy_term_data}.format into varchar.
+ */
+function taxonomy_update_7009() {
+  db_change_field('taxonomy_term_data', 'format', 'format', array(
+    'type' => 'varchar',
+    'length' => 255,
+    'not null' => FALSE,
+    'description' => 'The {filter_format}.format of the description.',
+  ));
+}
+

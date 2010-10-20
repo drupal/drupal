@@ -89,12 +89,21 @@ function text_update_7000() {
     'length' => 255,
     'not null' => FALSE,
   );
-  $fields = _update_7000_field_read_fields(array('module' => 'text', 'storage_type' => 'field_sql_storage'));
+  $fields = _update_7000_field_read_fields(array(
+    'module' => 'text',
+    'storage_type' => 'field_sql_storage',
+  ));
   foreach ($fields as $field_name => $field) {
-    $table = _field_sql_storage_tablename($prior_field);
-    $revision_table = _field_sql_storage_revision_tablename($prior_field);
-    $field_name = _field_sql_storage_columnname($field['field_name'], 'format');
-    db_change_field($table, $field_name, $field_name, $spec);
-    db_change_field($revision_table, $field_name, $field_name, $spec);
+    if ($field['deleted']) {
+      $table = "field_deleted_data_{$field['id']}";
+      $revision_table = "field_deleted_revision_{$field['id']}";
+    }
+    else {
+      $table = "field_data_{$field['field_name']}";
+      $revision_table = "field_revision_{$field['field_name']}";
+    }
+    $column = $field['field_name'] . '_' . 'format';
+    db_change_field($table, $column, $column, $spec);
+    db_change_field($revision_table, $column, $column, $spec);
   }
 }
