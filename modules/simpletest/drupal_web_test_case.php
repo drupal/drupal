@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.241 2010/10/18 01:16:29 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.242 2010/10/20 15:22:53 dries Exp $
 
 /**
  * Global variable that holds information about the tests being run.
@@ -1801,7 +1801,7 @@ class DrupalWebTestCase extends DrupalTestCase {
    *
    * @see ajax.js
    */
-  protected function drupalPostAJAX($path, $edit, $triggering_element, $ajax_path = 'system/ajax', array $options = array(), array $headers = array(), $form_html_id = NULL, $ajax_settings = NULL) {
+  protected function drupalPostAJAX($path, $edit, $triggering_element, $ajax_path = NULL, array $options = array(), array $headers = array(), $form_html_id = NULL, $ajax_settings = NULL) {
     // Get the content of the initial page prior to calling drupalPost(), since
     // drupalPost() replaces $this->content.
     if (isset($path)) {
@@ -1836,6 +1836,12 @@ class DrupalWebTestCase extends DrupalTestCase {
     foreach ($this->xpath('//*[@id]') as $element) {
       $id = (string) $element['id'];
       $extra_post .= '&' . urlencode('ajax_html_ids[]') . '=' . urlencode($id);
+    }
+
+    // Unless a particular path is specified, use the one specified by the
+    // AJAX settings, or else 'system/ajax'.
+    if (!isset($ajax_path)) {
+      $ajax_path = isset($ajax_settings['url']) ? $ajax_settings['url'] : 'system/ajax';
     }
 
     // Submit the POST request.
