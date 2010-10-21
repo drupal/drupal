@@ -1,5 +1,5 @@
 <?php
-// $Id: ajax.inc,v 1.36 2010/10/06 23:03:39 webchick Exp $
+// $Id: ajax.inc,v 1.37 2010/10/21 19:31:39 dries Exp $
 
 /**
  * @file
@@ -515,7 +515,26 @@ function ajax_footer() {
 }
 
 /**
- * Add AJAX information about a form element to the page to communicate with JavaScript.
+ * Form element process callback to handle #ajax.
+ *
+ * @param $element
+ *   An associative array containing the properties of the element.
+ *
+ * @return
+ *   The processed element.
+ *
+ * @see ajax_pre_render_element()
+ */
+function ajax_process_form($element, &$form_state) {
+  $element = ajax_pre_render_element($element);
+  if (!empty($element['#ajax_processed'])) {
+    $form_state['cache'] = TRUE;
+  }
+  return $element;
+}
+
+/**
+ * Add AJAX information about an element to the page to communicate with JavaScript.
  *
  * If #ajax['path'] is set on an element, this additional JavaScript is added
  * to the page header to attach the AJAX behaviors. See ajax.js for more
@@ -526,15 +545,22 @@ function ajax_footer() {
  *   Properties used:
  *   - #ajax['event']
  *   - #ajax['path']
+ *   - #ajax['options']
  *   - #ajax['wrapper']
  *   - #ajax['parameters']
  *   - #ajax['effect']
  *
  * @return
- *   None. Additional code is added to the header of the page using
- *   drupal_add_js().
+ *   The processed element with the necessary JavaScript attached to it.
  */
-function ajax_process_form($element, &$form_state) {
+function ajax_pre_render_element($element) {
+  // Skip already processed elements.
+  if (isset($element['#ajax_processed'])) {
+    return $element;
+  }
+  // Initialize #ajax_processed, so we do not process this element again.
+  $element['#ajax_processed'] = FALSE;
+
   // Nothing to do if there is neither a callback nor a path.
   if (!(isset($element['#ajax']['callback']) || isset($element['#ajax']['path']))) {
     return $element;
@@ -567,6 +593,10 @@ function ajax_process_form($element, &$form_state) {
         $element['#ajax']['event'] = 'change';
         break;
 
+      case 'link':
+        $element['#ajax']['event'] = 'click';
+        break;
+
       default:
         return $element;
     }
@@ -581,6 +611,8 @@ function ajax_process_form($element, &$form_state) {
 
     // Assign default settings.
     $settings += array(
+      'path' => 'system/ajax',
+      'options' => array(),
       'selector' => '#' . $element['#id'],
       'effect' => 'none',
       'speed' => 'none',
@@ -593,9 +625,9 @@ function ajax_process_form($element, &$form_state) {
       $settings['method'] = 'replaceWith';
     }
 
-    // Change path to url.
-    $settings['url'] = isset($settings['path']) ? url($settings['path']) : url('system/ajax');
-    unset($settings['path']);
+    // Change path to URL.
+    $settings['url'] = url($settings['path'], $settings['options']);
+    unset($settings['path'], $settings['options']);
 
     // Add special data to $settings['submit'] so that when this element
     // triggers an AJAX submission, Drupal's form processing can determine which
@@ -614,7 +646,7 @@ function ajax_process_form($element, &$form_state) {
       }
       unset($settings['trigger_as']);
     }
-    else {
+    elseif (isset($element['#name'])) {
       // Most of the time, elements can submit as themselves, in which case the
       // 'trigger_as' key isn't needed, and the element's name is used.
       $settings['submit']['_triggering_element_name'] = $element['#name'];
@@ -645,7 +677,8 @@ function ajax_process_form($element, &$form_state) {
       'data' => array('ajax' => array($element['#id'] => $settings)),
     );
 
-    $form_state['cache'] = TRUE;
+    // Indicate that AJAX processing was successful.
+    $element['#ajax_processed'] = TRUE;
   }
   return $element;
 }

@@ -1,5 +1,5 @@
 <?php
-// $Id: ajax_test.module,v 1.4 2010/10/04 17:46:01 dries Exp $
+// $Id: ajax_test.module,v 1.5 2010/10/21 19:31:39 dries Exp $
 
 /**
  * @file
@@ -23,6 +23,11 @@ function ajax_test_menu() {
     'delivery callback' => 'ajax_deliver',
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
+  );
+  $items['ajax-test/link'] = array(
+    'title' => 'AJAX Link',
+    'page callback' => 'ajax_test_link',
+    'access callback' => TRUE,
   );
   return $items;
 }
@@ -49,3 +54,19 @@ function ajax_test_error() {
   }
   return array('#type' => 'ajax', '#error' => $message);
 }
+
+/**
+ * Menu callback; Renders a #type link with #ajax.
+ */
+function ajax_test_link() {
+  $build['link'] = array(
+    '#type' => 'link',
+    '#title' => 'Show help',
+    '#href' => 'filter/tips',
+    '#ajax' => array(
+      'wrapper' => 'block-system-main',
+    ),
+  );
+  return $build;
+}
+

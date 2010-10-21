@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.619 2010/10/08 05:07:53 webchick Exp $
+// $Id: theme.inc,v 1.620 2010/10/21 19:31:39 dries Exp $
 
 /**
  * @file
@@ -108,7 +108,7 @@ function drupal_theme_initialize() {
   // @see ajax_base_page_theme()
   $setting['ajaxPageState'] = array(
     'theme' => $theme_key,
-    'themeToken' => drupal_get_token($theme_key),
+    'theme_token' => drupal_get_token($theme_key),
   );
   drupal_add_js($setting, 'setting');
 }

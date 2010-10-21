@@ -1,5 +1,5 @@
 <?php
-// $Id: block.test,v 1.58 2010/08/30 00:22:03 webchick Exp $
+// $Id: block.test,v 1.59 2010/10/21 19:31:39 dries Exp $
 
 /**
  * @file
@@ -87,8 +87,8 @@ class BlockTestCase extends DrupalWebTestCase {
 
     // Verify presence of configure and delete links for custom block.
     $this->drupalGet('admin/structure/block');
-    $this->assertRaw(l(t('configure'), 'admin/structure/block/manage/block/' . $bid . '/configure'), t('Custom block configure link found.'));
-    $this->assertRaw(l(t('delete'), 'admin/structure/block/manage/block/' . $bid . '/delete'), t('Custom block delete link found.'));
+    $this->assertLinkByHref('admin/structure/block/manage/block/' . $bid . '/configure', 0, t('Custom block configure link found.'));
+    $this->assertLinkByHref('admin/structure/block/manage/block/' . $bid . '/delete', 0, t('Custom block delete link found.'));
 
     // Set visibility only for authenticated users, to verify delete functionality.
     $edit = array();

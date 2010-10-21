@@ -1,5 +1,5 @@
 <?php
-// $Id: ajax.test,v 1.19 2010/10/04 17:46:01 dries Exp $
+// $Id: ajax.test,v 1.20 2010/10/21 19:31:39 dries Exp $
 
 class AJAXTestCase extends DrupalWebTestCase {
   function setUp() {
@@ -59,6 +59,8 @@ class AJAXTestCase extends DrupalWebTestCase {
  * Tests primary AJAX framework functions.
  */
 class AJAXFrameworkTestCase extends AJAXTestCase {
+  protected $profile = 'testing';
+
   public static function getInfo() {
     return array(
       'name' => 'AJAX framework',
@@ -84,6 +86,12 @@ class AJAXFrameworkTestCase extends AJAXTestCase {
       'settings' => array('basePath' => base_path(), 'ajax' => 'test'),
     );
     $this->assertCommand($commands, $expected, t('ajax_render() loads settings added with drupal_add_js().'));
+
+    // Verify that AJAX settings are loaded for #type 'link'.
+    $this->drupalGet('ajax-test/link');
+    $settings = $this->drupalGetSettings();
+    $this->assertEqual($settings['ajax']['ajax-link']['url'], url('filter/tips'));
+    $this->assertEqual($settings['ajax']['ajax-link']['wrapper'], 'block-system-main');
   }
 
   /**
