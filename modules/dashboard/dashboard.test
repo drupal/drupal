@@ -1,5 +1,5 @@
 <?php
-// $Id: dashboard.test,v 1.5 2010/09/14 21:51:01 webchick Exp $
+// $Id: dashboard.test,v 1.6 2010/10/21 11:55:09 dries Exp $
 
 /**
  * @file
@@ -65,7 +65,7 @@ class DashboardBlocksTestCase extends DrupalWebTestCase {
     $dashboard_regions = dashboard_region_descriptions();
 
     // Ensure blocks can be placed in dashboard regions.
-    $this->drupalGet('admin/structure/dashboard');
+    $this->drupalGet('admin/dashboard/configure');
     foreach ($dashboard_regions as $region => $description) {
       $elements = $this->xpath('//option[@value=:region]', array(':region' => $region));
       $this->assertTrue(!empty($elements), t('%region is an available choice on the dashboard block configuration page.', array('%region' => $region)));

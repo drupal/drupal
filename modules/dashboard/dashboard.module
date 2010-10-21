@@ -1,5 +1,5 @@
 <?php
-// $Id: dashboard.module,v 1.39 2010/10/03 00:14:57 dries Exp $
+// $Id: dashboard.module,v 1.40 2010/10/21 11:55:08 dries Exp $
 
 /**
  * Implements hook_help().
@@ -19,7 +19,7 @@ function dashboard_help($path, $arg) {
       $output .= '</dl>';
       return $output;
 
-    case 'admin/structure/dashboard':
+    case 'admin/dashboard/configure':
       // @todo This assumes the current page is being displayed using the same
       //   theme that the dashboard is displayed in.
       $output = '<p>' . t('Rearrange blocks for display on the <a href="@dashboard-url">dashboard</a>. Disabling a block makes it available on the main <a href="@blocks-url">blocks administration page</a>.', array('@dashboard-url' => url('admin/dashboard'), '@blocks-url' => url("admin/structure/block/list/{$GLOBALS['theme_key']}"))) . '</p>';
@@ -31,12 +31,6 @@ function dashboard_help($path, $arg) {
  * Implements hook_menu().
  */
 function dashboard_menu() {
-  $items['admin/structure/dashboard'] = array(
-    'title' => 'Dashboard',
-    'description' => 'Configure which blocks can be shown on the dashboard.',
-    'page callback' => 'dashboard_admin_blocks',
-    'access arguments' => array('administer blocks'),
-  );
   $items['admin/dashboard'] = array(
     'title' => 'Dashboard',
     'description' => 'View and customize your dashboard.',
@@ -45,6 +39,13 @@ function dashboard_menu() {
     // Make this appear first, so for example, in admin menus, it shows up on
     // the top corner of the window as a convenient "home link".
     'weight' => -15,
+  );
+  $items['admin/dashboard/configure'] = array(
+    'title' => 'Configure available dashboard blocks',
+    'description' => 'Configure which blocks can be shown on the dashboard.',
+    'page callback' => 'dashboard_admin_blocks',
+    'access arguments' => array('administer blocks'),
+    'type' => MENU_VISIBLE_IN_BREADCRUMB,
   );
   $items['admin/dashboard/customize'] = array(
     'title' => 'Customize dashboard',
@@ -250,7 +251,7 @@ function dashboard_admin($launch_customize = FALSE) {
   );
   $build = array(
     '#theme' => 'dashboard_admin',
-    '#message' => t('To customize the dashboard page, move blocks to the dashboard regions on the <a href="@dashboard">Dashboard administration page</a>, or enable JavaScript on this page to use the drag-and-drop interface.', array('@dashboard' => url('admin/structure/dashboard'))),
+    '#message' => t('To customize the dashboard page, move blocks to the dashboard regions on the <a href="@dashboard">Dashboard administration page</a>, or enable JavaScript on this page to use the drag-and-drop interface.', array('@dashboard' => url('admin/dashboard/configure'))),
     '#access' => user_access('administer blocks'),
     '#attached' => array(
       'js' => array(
@@ -277,7 +278,6 @@ function dashboard_admin($launch_customize = FALSE) {
 function dashboard_admin_blocks() {
   global $theme_key;
   drupal_theme_initialize();
-  drupal_set_title(t('Configure available dashboard blocks'));
   module_load_include('inc', 'block', 'block.admin');
 
   // Prepare the blocks for the current theme, and remove those that are
@@ -330,10 +330,10 @@ function dashboard_form_dashboard_admin_display_form_alter(&$form, &$form_state)
   // dashboard blocks administration page.
   foreach ($form['blocks'] as &$block) {
     if (isset($block['configure']['#href'])) {
-      $block['configure']['#options']['query']['destination'] = 'admin/structure/dashboard';
+      $block['configure']['#options']['query']['destination'] = 'admin/dashboard/configure';
     }
     if (isset($block['delete']['#href'])) {
-      $block['delete']['#options']['query']['destination'] = 'admin/structure/dashboard';
+      $block['delete']['#options']['query']['destination'] = 'admin/dashboard/configure';
     }
   }
 }
@@ -598,7 +598,7 @@ function theme_dashboard_region($variables) {
  */
 function theme_dashboard_disabled_blocks($variables) {
   extract($variables);
-  $output = '<div class="canvas-content"><p>' . t('Drag and drop these blocks to the columns below. Changes are automatically saved. More options are available on the <a href="@dashboard-url">configuration page</a>.', array('@dashboard-url' => url('admin/structure/dashboard'))) . '</p>';
+  $output = '<div class="canvas-content"><p>' . t('Drag and drop these blocks to the columns below. Changes are automatically saved. More options are available on the <a href="@dashboard-url">configuration page</a>.', array('@dashboard-url' => url('admin/dashboard/configure'))) . '</p>';
   $output .= '<div id="disabled-blocks"><div class="region disabled-blocks clearfix">';
   foreach ($blocks as $block) {
     $output .= theme('dashboard_disabled_block', array('block' => $block));
