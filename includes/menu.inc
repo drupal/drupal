@@ -3464,7 +3464,6 @@ function _menu_router_build($callbacks) {
       'page arguments' => array(),
       'page callback' => '',
       'delivery callback' => '',
-      'block callback' => '',
       'title arguments' => array(),
       'title callback' => 't',
       'theme arguments' => array(),

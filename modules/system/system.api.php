@@ -1008,9 +1008,6 @@ function hook_page_build(&$page) {
  *     default parent for 'admin/people/create' is 'admin/people').
  *   - "tab_root": For local task menu items, the path of the closest non-tab
  *     item; same default as "tab_parent".
- *   - "block callback": Name of a function used to render the block on the
- *     system administration page for this item (called with no arguments).
- *     If not provided, system_admin_menu_block() is used to generate it.
  *   - "position": Position of the block ('left' or 'right') on the system
  *     administration page for this item.
  *   - "type": A bitmask of flags describing properties of the menu item.
