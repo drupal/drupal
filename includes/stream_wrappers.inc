@@ -1,5 +1,5 @@
 <?php
-// $Id: stream_wrappers.inc,v 1.20 2010/08/17 22:05:22 dries Exp $
+// $Id: stream_wrappers.inc,v 1.21 2010/10/21 12:09:41 dries Exp $
 
 /**
  * @file
@@ -22,6 +22,9 @@
 
 /**
  * Stream wrapper bit flags that are the basis for composite types.
+ *
+ * Note that 0x0002 is skipped, because it was the value of a constant that has
+ * since been removed.
  */
 
 /**
@@ -33,11 +36,6 @@ define('STREAM_WRAPPERS_ALL', 0x0000);
  * Stream wrapper bit flag -- refers to a local file system location.
  */
 define('STREAM_WRAPPERS_LOCAL', 0x0001);
-
-/**
- * Stream wrapper bit flag -- refers to a remote filesystem location.
- */
-define('STREAM_WRAPPERS_REMOTE', 0x0002);
 
 /**
  * Stream wrapper bit flag -- wrapper is readable (almost always true).
@@ -65,6 +63,11 @@ define('STREAM_WRAPPERS_VISIBLE', 0x0010);
 define('STREAM_WRAPPERS_HIDDEN', STREAM_WRAPPERS_READ | STREAM_WRAPPERS_WRITE);
 
 /**
+ * Stream wrapper type flag -- hidden, readable and writeable using local files.
+ */
+define('STREAM_WRAPPERS_LOCAL_HIDDEN', STREAM_WRAPPERS_LOCAL | STREAM_WRAPPERS_HIDDEN);
+
+/**
  * Stream wrapper type flag -- visible, readable and writeable.
  */
 define('STREAM_WRAPPERS_WRITE_VISIBLE', STREAM_WRAPPERS_READ | STREAM_WRAPPERS_WRITE | STREAM_WRAPPERS_VISIBLE);
@@ -75,9 +78,18 @@ define('STREAM_WRAPPERS_WRITE_VISIBLE', STREAM_WRAPPERS_READ | STREAM_WRAPPERS_W
 define('STREAM_WRAPPERS_READ_VISIBLE', STREAM_WRAPPERS_READ | STREAM_WRAPPERS_VISIBLE);
 
 /**
+ * Stream wrapper type flag -- the default when 'type' is omitted from
+ * hook_stream_wrappers(). This does not include STREAM_WRAPPERS_LOCAL,
+ * because PHP grants a greater trust level to local files (for example, they
+ * can be used in an "include" statement, regardless of the "allow_url_include"
+ * setting), so stream wrappers need to explicitly opt-in to this.
+ */
+define('STREAM_WRAPPERS_NORMAL', STREAM_WRAPPERS_WRITE_VISIBLE);
+
+/**
  * Stream wrapper type flag -- visible, readable and writeable using local files.
  */
-define('STREAM_WRAPPERS_NORMAL', STREAM_WRAPPERS_LOCAL | STREAM_WRAPPERS_WRITE_VISIBLE);
+define('STREAM_WRAPPERS_LOCAL_NORMAL', STREAM_WRAPPERS_LOCAL | STREAM_WRAPPERS_NORMAL);
 
 /**
  * Generic PHP stream wrapper interface.
