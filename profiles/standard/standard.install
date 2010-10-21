@@ -1,5 +1,5 @@
 <?php
-// $Id: standard.install,v 1.27 2010/10/20 01:15:58 dries Exp $
+// $Id: standard.install,v 1.28 2010/10/21 04:22:34 webchick Exp $
 
 /**
  * Implements hook_install().
@@ -113,16 +113,6 @@ function standard_install() {
       'theme' => $default_theme,
       'status' => 1,
       'weight' => 0,
-      'region' => 'sidebar_first',
-      'pages' => '',
-      'cache' => -1,
-    ),
-    array(
-      'module' => 'system',
-      'delta' => 'management',
-      'theme' => $default_theme,
-      'status' => 1,
-      'weight' => 1,
       'region' => 'sidebar_first',
       'pages' => '',
       'cache' => -1,
