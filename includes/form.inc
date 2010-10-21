@@ -1156,7 +1156,7 @@ function _form_validate(&$elements, &$form_state, $form_id = NULL) {
           $options = $elements['#options'];
         }
         if (is_array($elements['#value'])) {
-          $value = $elements['#type'] == 'checkboxes' ? array_keys($elements['#value']) : $elements['#value'];
+          $value = in_array($elements['#type'], array('checkboxes', 'tableselect')) ? array_keys($elements['#value']) : $elements['#value'];
           foreach ($value as $v) {
             if (!isset($options[$v])) {
               form_error($elements, $t('An illegal choice has been detected. Please contact the site administrator.'));
@@ -2119,6 +2119,41 @@ function form_type_checkboxes_value($element, $input = FALSE) {
   }
   else {
     return array();
+  }
+}
+
+/**
+ * Helper function to determine the value for a tableselect form element.
+ *
+ * @param $element
+ *   The form element whose value is being populated.
+ * @param $input
+ *   The incoming input to populate the form element. If this is FALSE,
+ *   the element's default value should be returned.
+ * @return
+ *   The data that will appear in the $element_state['values'] collection
+ *   for this element. Return nothing to use the default.
+ */
+function form_type_tableselect_value($element, $input = FALSE) {
+  // If $element['#multiple'] == FALSE, then radio buttons are displayed and
+  // the default value handling is used.
+  if (isset($element['#multiple']) && $element['#multiple']) {
+    // Checkboxes are being displayed with the default value coming from the
+    // keys of the #default_value property. This differs from the checkboxes
+    // element which uses the array values.
+    if ($input === FALSE) {
+      $value = array();
+      $element += array('#default_value' => array());
+      foreach ($element['#default_value'] as $key => $flag) {
+        if ($flag) {
+          $value[$key] = $key;
+        }
+      }
+      return $value;
+    }
+    else {
+      return is_array($input) ? drupal_map_assoc($input) : array();
+    }
   }
 }
 
