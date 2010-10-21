@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1242 2010/10/20 00:45:39 dries Exp $
+// $Id: common.inc,v 1.1243 2010/10/21 11:58:19 dries Exp $
 
 /**
  * @file
@@ -1241,7 +1241,7 @@ function drupal_strip_dangerous_protocols($uri) {
   static $allowed_protocols;
 
   if (!isset($allowed_protocols)) {
-    $allowed_protocols = array_flip(variable_get('filter_allowed_protocols', array('ftp', 'http', 'https', 'irc', 'mailto', 'news', 'nntp', 'rtsp', 'sftp', 'ssh', 'telnet', 'webcal')));
+    $allowed_protocols = array_flip(variable_get('filter_allowed_protocols', array('ftp', 'http', 'https', 'irc', 'mailto', 'news', 'nntp', 'rtsp', 'sftp', 'ssh', 'tel', 'telnet', 'webcal')));
   }
 
   // Iteratively remove any invalid protocol found.
