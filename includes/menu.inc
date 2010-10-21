@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.415 2010/10/20 00:47:43 dries Exp $
+// $Id: menu.inc,v 1.416 2010/10/21 11:56:17 dries Exp $
 
 /**
  * @file
@@ -3464,7 +3464,6 @@ function _menu_router_build($callbacks) {
       'page arguments' => array(),
       'page callback' => '',
       'delivery callback' => '',
-      'block callback' => '',
       'title arguments' => array(),
       'title callback' => 't',
       'theme arguments' => array(),
