@@ -1545,12 +1545,13 @@ function system_stream_wrappers() {
       'name' => t('Public files'),
       'class' => 'DrupalPublicStreamWrapper',
       'description' => t('Public local files served by the webserver.'),
+      'type' => STREAM_WRAPPERS_LOCAL_NORMAL,
     ),
     'temporary' => array(
       'name' => t('Temporary files'),
       'class' => 'DrupalTemporaryStreamWrapper',
       'description' => t('Temporary local files for upload and previews.'),
-      'type' => STREAM_WRAPPERS_HIDDEN,
+      'type' => STREAM_WRAPPERS_LOCAL_HIDDEN,
     ),
   );
 
@@ -1560,6 +1561,7 @@ function system_stream_wrappers() {
       'name' => t('Private files'),
       'class' => 'DrupalPrivateStreamWrapper',
       'description' => t('Private local files served by Drupal.'),
+      'type' => STREAM_WRAPPERS_LOCAL_NORMAL,
     );
   }
 
