@@ -176,6 +176,7 @@ Drupal.ajax = function (base, element, element_settings) {
         ajax.form.ajaxSubmit(ajax.options);
       }
       else {
+        ajax.beforeSerialize(ajax.element, ajax.options);
         $.ajax(ajax.options);
       }
     }
@@ -216,6 +217,27 @@ Drupal.ajax.prototype.beforeSerialize = function (element, options) {
     var settings = this.settings || Drupal.settings;
     Drupal.detachBehaviors(this.form, settings, 'serialize');
   }
+
+  // Prevent duplicate HTML ids in the returned markup.
+  // @see drupal_html_id()
+  options.data['ajax_html_ids[]'] = [];
+  $('[id]').each(function () {
+    options.data['ajax_html_ids[]'].push(this.id);
+  });
+
+  // Allow Drupal to return new JavaScript and CSS files to load without
+  // returning the ones already loaded.
+  // @see ajax_base_page_theme()
+  // @see drupal_get_css()
+  // @see drupal_get_js()
+  options.data['ajax_page_state[theme]'] = Drupal.settings.ajaxPageState.theme;
+  options.data['ajax_page_state[theme_token]'] = Drupal.settings.ajaxPageState.theme_token;
+  for (var key in Drupal.settings.ajaxPageState.css) {
+    options.data['ajax_page_state[css][' + key + ']'] = 1;
+  }
+  for (var key in Drupal.settings.ajaxPageState.js) {
+    options.data['ajax_page_state[js][' + key + ']'] = 1;
+  }
 };
 
 /**
@@ -224,23 +246,6 @@ Drupal.ajax.prototype.beforeSerialize = function (element, options) {
 Drupal.ajax.prototype.beforeSubmit = function (form_values, element, options) {
   // Disable the element that received the change.
   $(this.element).addClass('progress-disabled').attr('disabled', true);
-
-  // Prevent duplicate HTML ids in the returned markup.
-  // @see drupal_html_id()
-  $('[id]').each(function () {
-    form_values.push({ name: 'ajax_html_ids[]', value: this.id });
-  });
-
-  // Allow Drupal to return new JavaScript and CSS files to load without
-  // returning the ones already loaded.
-  form_values.push({ name: 'ajax_page_state[theme]', value: Drupal.settings.ajaxPageState.theme });
-  form_values.push({ name: 'ajax_page_state[theme_token]', value: Drupal.settings.ajaxPageState.themeToken });
-  for (var key in Drupal.settings.ajaxPageState.css) {
-    form_values.push({ name: 'ajax_page_state[css][' + key + ']', value: 1 });
-  }
-  for (var key in Drupal.settings.ajaxPageState.js) {
-    form_values.push({ name: 'ajax_page_state[js][' + key + ']', value: 1 });
-  }
 
   // Insert progressbar or throbber.
   if (this.progress.type == 'bar') {
@@ -279,7 +284,7 @@ Drupal.ajax.prototype.success = function (response, status) {
 
   Drupal.freezeHeight();
 
-  for (i in response) {
+  for (var i in response) {
     if (response[i]['command'] && this.commands[response[i]['command']]) {
       this.commands[response[i]['command']](this, response[i], status);
     }

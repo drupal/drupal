@@ -108,7 +108,7 @@ function drupal_theme_initialize() {
   // @see ajax_base_page_theme()
   $setting['ajaxPageState'] = array(
     'theme' => $theme_key,
-    'themeToken' => drupal_get_token($theme_key),
+    'theme_token' => drupal_get_token($theme_key),
   );
   drupal_add_js($setting, 'setting');
 }

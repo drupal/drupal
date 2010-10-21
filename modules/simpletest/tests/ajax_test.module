@@ -24,6 +24,11 @@ function ajax_test_menu() {
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
+  $items['ajax-test/link'] = array(
+    'title' => 'AJAX Link',
+    'page callback' => 'ajax_test_link',
+    'access callback' => TRUE,
+  );
   return $items;
 }
 
@@ -49,3 +54,19 @@ function ajax_test_error() {
   }
   return array('#type' => 'ajax', '#error' => $message);
 }
+
+/**
+ * Menu callback; Renders a #type link with #ajax.
+ */
+function ajax_test_link() {
+  $build['link'] = array(
+    '#type' => 'link',
+    '#title' => 'Show help',
+    '#href' => 'filter/tips',
+    '#ajax' => array(
+      'wrapper' => 'block-system-main',
+    ),
+  );
+  return $build;
+}
+
