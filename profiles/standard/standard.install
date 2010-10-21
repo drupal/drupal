@@ -119,16 +119,6 @@ function standard_install() {
     ),
     array(
       'module' => 'system',
-      'delta' => 'management',
-      'theme' => $default_theme,
-      'status' => 1,
-      'weight' => 1,
-      'region' => 'sidebar_first',
-      'pages' => '',
-      'cache' => -1,
-    ),
-    array(
-      'module' => 'system',
       'delta' => 'powered-by',
       'theme' => $default_theme,
       'status' => 1,
