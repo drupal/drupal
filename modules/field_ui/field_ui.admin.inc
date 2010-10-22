@@ -1,5 +1,5 @@
 <?php
-// $Id: field_ui.admin.inc,v 1.76 2010/10/20 16:19:24 webchick Exp $
+// $Id: field_ui.admin.inc,v 1.77 2010/10/22 00:44:47 dries Exp $
 
 /**
  * @file
@@ -1945,34 +1945,4 @@ function field_ui_next_destination($entity_type, $bundle) {
   }
   $admin_path = _field_ui_bundle_admin_path($entity_type, $bundle);
   return $admin_path . '/fields';
-}
-
-/**
- * Helper form element validator: integer.
- */
-function _element_validate_integer($element, &$form_state) {
-  $value = $element['#value'];
-  if ($value !== '' && (!is_numeric($value) || intval($value) != $value)) {
-    form_error($element, t('%name must be an integer.', array('%name' => $element['#title'])));
-  }
-}
-
-/**
- * Helper form element validator: integer > 0.
- */
-function _element_validate_integer_positive($element, &$form_state) {
-  $value = $element['#value'];
-  if ($value !== '' && (!is_numeric($value) || intval($value) != $value || $value <= 0)) {
-    form_error($element, t('%name must be a positive integer.', array('%name' => $element['#title'])));
-  }
-}
-
-/**
- * Helper form element validator: number.
- */
-function _element_validate_number($element, &$form_state) {
-  $value = $element['#value'];
-  if ($value != '' && !is_numeric($value)) {
-    form_error($element, t('%name must be a number.', array('%name' => $element['#title'])));
-  }
 }

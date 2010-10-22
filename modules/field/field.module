@@ -1,5 +1,5 @@
 <?php
-// $Id: field.module,v 1.85 2010/10/15 03:48:32 webchick Exp $
+// $Id: field.module,v 1.86 2010/10/22 00:44:47 dries Exp $
 /**
  * @file
  * Attach custom data fields to Drupal entities.
@@ -965,4 +965,34 @@ function theme_field($variables) {
   $output = '<div class="' . $variables['classes'] . '"' . $variables['attributes'] . '>' . $output . '</div>';
 
   return $output;
+}
+
+/**
+ * Helper form element validator: integer.
+ */
+function _element_validate_integer($element, &$form_state) {
+  $value = $element['#value'];
+  if ($value !== '' && (!is_numeric($value) || intval($value) != $value)) {
+    form_error($element, t('%name must be an integer.', array('%name' => $element['#title'])));
+  }
+}
+
+/**
+ * Helper form element validator: integer > 0.
+ */
+function _element_validate_integer_positive($element, &$form_state) {
+  $value = $element['#value'];
+  if ($value !== '' && (!is_numeric($value) || intval($value) != $value || $value <= 0)) {
+    form_error($element, t('%name must be a positive integer.', array('%name' => $element['#title'])));
+  }
+}
+
+/**
+ * Helper form element validator: number.
+ */
+function _element_validate_number($element, &$form_state) {
+  $value = $element['#value'];
+  if ($value != '' && !is_numeric($value)) {
+    form_error($element, t('%name must be a number.', array('%name' => $element['#title'])));
+  }
 }
