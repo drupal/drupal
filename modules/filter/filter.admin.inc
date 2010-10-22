@@ -136,7 +136,7 @@ function filter_admin_format_form($form, &$form_state, $format) {
     '#default_value' => $format->format,
     '#maxlength' => 255,
     '#machine_name' => array(
-      'exists' => 'filter_format_load',
+      'exists' => 'filter_format_exists',
     ),
     '#disabled' => !empty($format->format),
   );
@@ -288,13 +288,16 @@ function theme_filter_admin_format_filter_order($variables) {
  * Validate text format form submissions.
  */
 function filter_admin_format_form_validate($form, &$form_state) {
-  if (!isset($form_state['values']['format'])) {
-    $format_name = trim($form_state['values']['name']);
-    form_set_value($form['name'], $format_name, $form_state);
-    $result = db_query("SELECT format FROM {filter_format} WHERE name = :name", array(':name' => $format_name))->fetchField();
-    if ($result) {
-      form_set_error('name', t('Text format names must be unique. A format named %name already exists.', array('%name' => $format_name)));
-    }
+  $format_format = trim($form_state['values']['format']);
+  $format_name = trim($form_state['values']['name']);
+
+  // Ensure that the values to be saved later are exactly the ones validated.
+  form_set_value($form['format'], $format_format, $form_state);
+  form_set_value($form['name'], $format_name, $form_state);
+
+  $result = db_query("SELECT format FROM {filter_format} WHERE name = :name AND format <> :format", array(':name' => $format_name, ':format' => $format_format))->fetchField();
+  if ($result) {
+    form_set_error('name', t('Text format names must be unique. A format named %name already exists.', array('%name' => $format_name)));
   }
 }
 
@@ -307,9 +310,6 @@ function filter_admin_format_form_submit($form, &$form_state) {
 
   // Save text format.
   $format = (object) $form_state['values'];
-  if (!isset($form_state['values']['format'])) {
-    $format->format = NULL;
-  }
   $status = filter_format_save($format);
 
   // Save user permissions.
