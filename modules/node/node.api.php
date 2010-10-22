@@ -1,5 +1,5 @@
 <?php
-// $Id: node.api.php,v 1.77 2010/10/05 02:21:26 dries Exp $
+// $Id: node.api.php,v 1.78 2010/10/22 00:35:35 dries Exp $
 
 /**
  * @file
@@ -1017,8 +1017,16 @@ function hook_prepare($node) {
  * Display a node editing form.
  *
  * This hook, implemented by node modules, is called to retrieve the form
- * that is displayed when one attempts to "create/edit" an item. This form is
- * displayed at the URI http://www.example.com/?q=node/<add|edit>/nodetype.
+ * that is displayed to create or edit a node. This form is displayed at path
+ * node/add/[node type] or node/[node ID]/edit.
+ *
+ * The submit and preview buttons, administrative and display controls, and
+ * sections added by other modules (such as path settings, menu settings,
+ * comment settings, and fields managed by the Field UI module) are
+ * displayed automatically by the node module. This hook just needs to
+ * return the node title and form editing fields specific to the node type.
+ *
+ * For a detailed usage example, see node_example.module.
  *
  * @param $node
  *   The node being added or edited.
@@ -1026,20 +1034,20 @@ function hook_prepare($node) {
  *   The form state array.
  *
  * @return
- *   An array containing the form elements to be displayed in the node
- *   edit form.
- *
- * The submit and preview buttons, taxonomy controls, and administrative
- * accoutrements are displayed automatically by node.module. This hook
- * needs to return the node title, the body text area, and fields
- * specific to the node type.
- *
- * For a detailed usage example, see node_example.module.
+ *   An array containing the title and any custom form elements to be displayed
+ *   in the node editing form.
  *
  * @ingroup node_api_hooks
  */
 function hook_form($node, &$form_state) {
   $type = node_type_get_type($node);
+
+  $form['title'] = array(
+    '#type' => 'textfield',
+    '#title' => check_plain($type->title_label),
+    '#default_value' => !empty($node->title) ? $node->title : '',
+    '#required' => TRUE, '#weight' => -5
+  );
 
   $form['field1'] = array(
     '#type' => 'textfield',
