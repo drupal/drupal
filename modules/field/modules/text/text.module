@@ -1,5 +1,5 @@
 <?php
-// $Id: text.module,v 1.65 2010/09/18 02:18:35 dries Exp $
+// $Id: text.module,v 1.66 2010/10/22 00:42:42 dries Exp $
 
 /**
  * @file
@@ -220,10 +220,10 @@ function text_field_formatter_settings_form($field, $instance, $view_mode, $form
   $display = $instance['display'][$view_mode];
   $settings = $display['settings'];
 
-  $form = array();
+  $element = array();
 
   if (strpos($display['type'], '_trimmed') !== FALSE) {
-    $form['trim_length'] = array(
+    $element['trim_length'] = array(
       '#title' => t('Trim length'),
       '#type' => 'textfield',
       '#size' => 10,
@@ -233,7 +233,7 @@ function text_field_formatter_settings_form($field, $instance, $view_mode, $form
     );
   }
 
-  return $form;
+  return $element;
 }
 
 /**

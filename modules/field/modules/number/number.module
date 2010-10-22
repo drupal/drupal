@@ -1,5 +1,5 @@
 <?php
-// $Id: number.module,v 1.43 2010/09/07 17:56:41 webchick Exp $
+// $Id: number.module,v 1.44 2010/10/22 00:42:42 dries Exp $
 
 /**
  * @file
@@ -222,7 +222,7 @@ function number_field_formatter_settings_form($field, $instance, $view_mode, $fo
     ',' => t('Comma'),
     ' ' => t('Space'),
   );
-  $form['thousand_separator'] = array(
+  $element['thousand_separator'] = array(
     '#type' => 'select',
     '#title' => t('Thousand marker'),
     '#options' => $options,
@@ -230,13 +230,13 @@ function number_field_formatter_settings_form($field, $instance, $view_mode, $fo
   );
 
   if ($display['type'] == 'number_decimal' || $display['type'] == 'number_float') {
-    $form['decimal_separator'] = array(
+    $element['decimal_separator'] = array(
       '#type' => 'select',
       '#title' => t('Decimal marker'),
       '#options' => array('.' => t('Decimal point'), ',' => t('Comma')),
       '#default_value' => $settings['decimal_separator'],
     );
-    $form['scale'] = array(
+    $element['scale'] = array(
       '#type' => 'select',
       '#title' => t('Scale'),
       '#options' => drupal_map_assoc(range(0, 10)),
@@ -245,13 +245,13 @@ function number_field_formatter_settings_form($field, $instance, $view_mode, $fo
     );
   }
 
-  $form['prefix_suffix'] = array(
+  $element['prefix_suffix'] = array(
     '#type' => 'checkbox',
     '#title' => t('Display prefix and suffix.'),
     '#default_value' => $settings['prefix_suffix'],
   );
 
-  return $form;
+  return $element;
 }
 
 /**
