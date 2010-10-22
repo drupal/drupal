@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.test,v 1.78 2010/10/20 01:15:58 dries Exp $
+// $Id: filter.test,v 1.79 2010/10/22 16:36:14 webchick Exp $
 
 /**
  * Tests for text format and filter CRUD operations.
@@ -207,6 +207,24 @@ class FilterAdminTestCase extends DrupalWebTestCase {
     // Verify that disabled text format no longer exists.
     $this->drupalGet('admin/config/content/formats/' . $format->format);
     $this->assertResponse(404, t('Disabled text format no longer exists.'));
+
+    // Attempt to create a format of the same machine name as the disabled
+    // format but with a different human readable name.
+    $edit = array(
+      'format' => $format->format,
+      'name' => 'New format',
+    );
+    $this->drupalPost('admin/config/content/formats/add', $edit, t('Save configuration'));
+    $this->assertText('The machine-readable name is already in use. It must be unique.');
+
+    // Attempt to create a format of the same human readable name as the
+    // disabled format but with a different machine name.
+    $edit = array(
+      'format' => 'new_format',
+      'name' => $format->name,
+    );
+    $this->drupalPost('admin/config/content/formats/add', $edit, t('Save configuration'));
+    $this->assertText('Text format names must be unique. A format named ' . check_plain($format->name) . ' already exists.');
   }
 
   /**
@@ -1082,7 +1100,7 @@ class FilterUnitTestCase extends DrupalUnitTestCase {
     $f = _filter_html('<p onerror="alert(0);" />', $filter);
     $this->assertNoNormalized($f, 'onerror', t('HTML filter should remove on* attributes on default.'));
 
-    $f = _filter_html('<code onerror>&nbsp;</code>', $filter);    
+    $f = _filter_html('<code onerror>&nbsp;</code>', $filter);
     $this->assertNoNormalized($f, 'onerror', t('HTML filter should remove empty on* attributes on default.'));
   }
 

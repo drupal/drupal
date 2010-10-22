@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.354 2010/10/20 01:15:58 dries Exp $
+// $Id: filter.module,v 1.355 2010/10/22 16:36:14 webchick Exp $
 
 /**
  * @file
@@ -153,7 +153,11 @@ function _filter_disable_format_access($format) {
  *   The format ID.
  *
  * @return
- *   A fully-populated text format object.
+ *   A fully-populated text format object, if the requested format exists and
+ *   is enabled. If the format does not exist, or exists in the database but
+ *   has been marked as disabled, FALSE is returned.
+ *
+ * @see filter_format_exists()
  */
 function filter_format_load($format_id) {
   $formats = filter_formats();
@@ -165,9 +169,10 @@ function filter_format_load($format_id) {
  *
  * @param $format
  *   A format object using the properties:
+ *   - 'format': A machine-readable name representing the ID of the text format
+ *     to save. If this corresponds to an existing text format, that format
+ *     will be updated; otherwise, a new format will be created.
  *   - 'name': The title of the text format.
- *   - 'format': (optional) The internal ID of the text format. If omitted, a
- *     new text format is created.
  *   - 'weight': (optional) The weight of the text format, which controls its
  *     placement in text format lists. If omitted, the weight is set to 0.
  *   - 'filters': (optional) An associative, multi-dimensional array of filters
@@ -266,9 +271,9 @@ function filter_format_save($format) {
  * Disable a text format.
  *
  * There is no core facility to re-enable a disabled format. It is not deleted
- * to keep information for contrib and to make sure the format auto increment
- * id is never reused. As there might be content using the disabled format,
- * this would lead to data corruption.
+ * to keep information for contrib and to make sure the format ID is never
+ * reused. As there might be content using the disabled format, this would lead
+ * to data corruption.
  *
  * @param $format
  *   The text format object to be disabled.
@@ -285,6 +290,23 @@ function filter_format_disable($format) {
   // Clear the filter cache whenever a text format is disabled.
   filter_formats_reset();
   cache_clear_all($format->format . ':', 'cache_filter', TRUE);
+}
+
+/**
+ * Determines if a text format exists.
+ *
+ * @param $format_id
+ *   The ID of the text format to check.
+ *
+ * @return
+ *   TRUE if the text format exists, FALSE otherwise. Note that for disabled
+ *   formats filter_format_exists() will return TRUE while filter_format_load()
+ *   will return FALSE.
+ *
+ * @see filter_format_load()
+ */
+function filter_format_exists($format_id) {
+  return (bool) db_query_range('SELECT 1 FROM {filter_format} WHERE format = :format', 0, 1, array(':format' => $format_id))->fetchField();
 }
 
 /**
@@ -525,7 +547,7 @@ function filter_default_format($account = NULL) {
 function filter_fallback_format() {
   // This variable is automatically set in the database for all installations
   // of Drupal. In the event that it gets disabled or deleted somehow, there
-  // is no safe default to return, since we do not want to risk making an 
+  // is no safe default to return, since we do not want to risk making an
   // existing (and potentially unsafe) text format on the site automatically
   // available to all users. Returning NULL at least guarantees that this
   // cannot happen.
