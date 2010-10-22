@@ -74,7 +74,7 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
 
     // Add the SQL statement for each field.
     foreach ($schema['fields'] as $name => $field) {
-      if ($field['type'] == 'serial') {
+      if (isset($field['type']) && $field['type'] == 'serial') {
         if (isset($schema['primary key']) && ($key = array_search($name, $schema['primary key'])) !== FALSE) {
           unset($schema['primary key'][$key]);
         }
@@ -116,13 +116,18 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
     if (!isset($field['size'])) {
       $field['size'] = 'normal';
     }
+
     // Set the correct database-engine specific datatype.
-    if (!isset($field['sqlite_type'])) {
+    // In case one is already provided, force it to uppercase.
+    if (isset($field['sqlite_type'])) {
+      $field['sqlite_type'] = drupal_strtoupper($field['sqlite_type']);
+    }
+    else {
       $map = $this->getFieldTypeMap();
       $field['sqlite_type'] = $map[$field['type'] . ':' . $field['size']];
     }
 
-    if ($field['type'] == 'serial') {
+    if (isset($field['type']) && $field['type'] == 'serial') {
       $field['auto_increment'] = TRUE;
     }
 
@@ -150,12 +155,17 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
     else {
       $sql = $name . ' ' . $spec['sqlite_type'];
 
-      if (in_array($spec['type'], array('varchar', 'char', 'text')) && isset($spec['length'])) {
+      if (in_array($spec['sqlite_type'], array('VARCHAR', 'TEXT')) && isset($spec['length'])) {
         $sql .= '(' . $spec['length'] . ')';
       }
 
-      if (!empty($spec['not null'])) {
-        $sql .= ' NOT NULL';
+      if (isset($spec['not null'])) {
+        if ($spec['not null']) {
+          $sql .= ' NOT NULL';
+        }
+        else {
+          $sql .= ' NULL';
+        }
       }
 
       if (!empty($spec['unsigned'])) {
