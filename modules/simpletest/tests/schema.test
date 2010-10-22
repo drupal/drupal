@@ -1,5 +1,5 @@
 <?php
-// $Id: schema.test,v 1.22 2010/09/28 02:30:32 dries Exp $
+// $Id: schema.test,v 1.23 2010/10/22 15:18:56 webchick Exp $
 
 /**
  * @file
@@ -112,6 +112,25 @@ class SchemaTestCase extends DrupalWebTestCase {
 
     $count = db_query('SELECT COUNT(*) FROM {test_table}')->fetchField();
     $this->assertEqual($count, 2, t('There were two rows.'));
+
+    // Use database specific data type and ensure that table is created.
+    $table_specification = array(
+      'description' => 'Schema table description.',
+      'fields' => array(
+        'timestamp'  => array(
+          'mysql_type' => 'timestamp',
+          'pgsql_type' => 'timestamp',
+          'sqlite_type' => 'datetime',
+          'not null' => FALSE,
+          'default' => NULL,
+        ),
+      ),
+    );
+    try {
+      db_create_table('test_timestamp', $table_specification);
+    }
+    catch (Exception $e) {}
+    $this->assertTrue(db_table_exists('test_timestamp'), t('Table with database specific datatype was created.'));
   }
 
   function tryInsert($table = 'test_table') {
