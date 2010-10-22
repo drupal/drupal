@@ -428,7 +428,7 @@ function image_field_formatter_settings_form($field, $instance, $view_mode, $for
   $settings = $display['settings'];
 
   $image_styles = image_style_options(FALSE);
-  $form['image_style'] = array(
+  $element['image_style'] = array(
     '#title' => t('Image style'),
     '#type' => 'select',
     '#default_value' => $settings['image_style'],
@@ -440,7 +440,7 @@ function image_field_formatter_settings_form($field, $instance, $view_mode, $for
     'content' => t('Content'),
     'file' => t('File'),
   );
-  $form['image_link'] = array(
+  $element['image_link'] = array(
     '#title' => t('Link image to'),
     '#type' => 'select',
     '#default_value' => $settings['image_link'],
@@ -448,7 +448,7 @@ function image_field_formatter_settings_form($field, $instance, $view_mode, $for
     '#options' => $link_types,
   );
 
-  return $form;
+  return $element;
 }
 
 /**
