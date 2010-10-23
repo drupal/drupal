@@ -1,5 +1,5 @@
 <?php
-// $Id: field.info.inc,v 1.54 2010/10/23 00:54:39 webchick Exp $
+// $Id: field.info.inc,v 1.55 2010/10/23 01:34:02 webchick Exp $
 
 /**
  * @file
@@ -24,8 +24,6 @@
  * are affected.
  */
 function field_info_cache_clear() {
-  drupal_static_reset('field_view_mode_settings');
-
   // @todo: Remove this when field_attach_*_bundle() bundle management
   // functions are moved to the entity API.
   entity_info_cache_clear();
@@ -275,7 +273,7 @@ function _field_info_prepare_field($field) {
  * Prepares an instance definition for the current run-time context.
  *
  * Since the instance was last saved or updated, a number of things might have
- * changed: widgets or formatters disabled, new settings expected, new view
+ * changed: widgets or formatters disabled, new settings expected, new build
  * modes added...
  *
  * @param $instance
@@ -303,21 +301,16 @@ function _field_info_prepare_instance($instance, $field) {
     $instance['display'][$view_mode] = _field_info_prepare_instance_display($field, $display);
   }
 
-  // Fallback to 'hidden' for view modes configured to use custom display
-  // settings, and for which the instance has no explicit settings.
+  // Fallback to 'hidden' for unspecified view modes.
   $entity_info = entity_get_info($instance['entity_type']);
-  $view_modes = array_merge(array('default'), array_keys($entity_info['view modes']));
-  $view_mode_settings = field_view_mode_settings($instance['entity_type'], $instance['bundle']);
-  foreach ($view_modes as $view_mode) {
-    if ($view_mode == 'default' || !empty($view_mode_settings[$view_mode]['custom_settings'])) {
-      if (!isset($instance['display'][$view_mode])) {
-        $instance['display'][$view_mode] = array(
-          'type' => 'hidden',
-          'label' => 'above',
-          'settings' => array(),
-          'weight' => 0,
-        );
-      }
+  foreach ($entity_info['view modes'] as $view_mode => $info) {
+    if (!isset($instance['display'][$view_mode])) {
+      $instance['display'][$view_mode] = array(
+        'type' => 'hidden',
+        'label' => 'above',
+        'settings' => array(),
+        'weight' => 0,
+      );
     }
   }
 
