@@ -1,4 +1,4 @@
-// $Id: ajax.js,v 1.25 2010/10/21 19:31:39 dries Exp $
+// $Id: ajax.js,v 1.26 2010/10/23 15:46:43 webchick Exp $
 (function ($) {
 
 /**
@@ -192,8 +192,8 @@ Drupal.ajax = function (base, element, element_settings) {
   // action.
   if (element_settings.keypress) {
     $(element_settings.element).keypress(function (event) {
-      // Detect enter key.
-      if (event.keyCode == 13) {
+      // Detect enter key and space bar.
+      if (event.which == 13 || event.which == 32) {
         $(element_settings.element).trigger(element_settings.event);
         return false;
       }
