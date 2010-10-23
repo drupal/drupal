@@ -9,6 +9,7 @@
 }
 .contextual-links-region-active {
   outline: #999 dashed 1px;
+  overflow: visible !important;
 }
 
 /**
