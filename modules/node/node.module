@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1311 2010/10/23 15:30:34 webchick Exp $
+// $Id: node.module,v 1.1312 2010/10/23 18:25:05 webchick Exp $
 
 /**
  * @file
@@ -1462,6 +1462,11 @@ function template_preprocess_node(&$variables) {
  */
 function node_permission() {
   $perms = array(
+    'bypass node access' => array(
+      'title' => t('Bypass content access control'),
+      'description' => t('View, edit and delete all content regardless of permission restrictions.'),
+      'restrict access' => TRUE,
+    ),
     'administer content types' => array(
       'title' => t('Administer content types'),
       'restrict access' => TRUE,
@@ -1470,16 +1475,14 @@ function node_permission() {
       'title' => t('Administer content'),
       'restrict access' => TRUE,
     ),
-    'access content' => array(
-      'title' => t('View published content'),
-    ),
     'access content overview' => array(
       'title' => t('Access the content overview page'),
     ),
-    'bypass node access' => array(
-      'title' => t('Bypass content access control'),
-      'description' => t('View, edit and delete all content regardless of permission restrictions.'),
-      'restrict access' => TRUE,
+    'access content' => array(
+      'title' => t('View published content'),
+    ),
+    'view own unpublished content' => array(
+      'title' => t('View own unpublished content'),
     ),
     'view revisions' => array(
       'title' => t('View content revisions'),
@@ -1489,9 +1492,6 @@ function node_permission() {
     ),
     'delete revisions' => array(
       'title' => t('Delete content revisions'),
-    ),
-    'view own unpublished content' => array(
-      'title' => t('View own unpublished content'),
     ),
   );
 
@@ -2925,19 +2925,19 @@ function node_list_permissions($type) {
   // Build standard list of node permissions for this type.
   $perms = array(
     "create $type content" => array(
-      'title' => t('Create new %type_name content', array('%type_name' => $info->name)),
+      'title' => t('%type_name: Create new content', array('%type_name' => $info->name)),
     ),
     "edit own $type content" => array(
-      'title' => t('Edit own %type_name content', array('%type_name' => $info->name)),
+      'title' => t('%type_name: Edit own content', array('%type_name' => $info->name)),
     ),
     "edit any $type content" => array(
-      'title' => t('Edit any %type_name content', array('%type_name' => $info->name)),
+      'title' => t('%type_name: Edit any content', array('%type_name' => $info->name)),
     ),
     "delete own $type content" => array(
-      'title' => t('Delete own %type_name content', array('%type_name' => $info->name)),
+      'title' => t('%type_name: Delete own content', array('%type_name' => $info->name)),
     ),
     "delete any $type content" => array(
-      'title' => t('Delete any %type_name content', array('%type_name' => $info->name)),
+      'title' => t('%type_name: Delete any content', array('%type_name' => $info->name)),
     ),
   );
 
