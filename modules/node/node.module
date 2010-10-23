@@ -376,7 +376,7 @@ function _node_extract_type($node) {
  * See _node_types_build() for details.
  *
  * @return
- *   An array of node types, keyed by the type.
+ *   An array of node types, as objects, keyed by the type.
  *
  * @see node_type_get_type()
  */
