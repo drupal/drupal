@@ -1,5 +1,5 @@
 <?php
-// $Id: field.form.inc,v 1.51 2010/10/20 01:31:06 dries Exp $
+// $Id: field.form.inc,v 1.52 2010/10/23 18:23:24 webchick Exp $
 
 /**
  * @file
@@ -24,6 +24,15 @@ function field_default_form($entity_type, $entity, $field, $instance, $langcode,
   if (empty($items) && empty($id)) {
     $items = field_get_default_value($entity_type, $entity, $field, $instance, $langcode);
   }
+
+  // Let modules alter the widget properties.
+  $context = array(
+    'entity_type' => $entity_type,
+    'entity' => $entity,
+    'field' => $field,
+    'instance' => $instance,
+  );
+  drupal_alter(array('field_widget_properties', 'field_widget_properties_' . $entity_type), $instance['widget'], $context);
 
   // Collect widget elements.
   $elements = array();
