@@ -2467,7 +2467,8 @@ function request_path() {
  *
  * @return
  *   The component specified by $index, or NULL if the specified component was
- *   not found.
+ *   not found. If called without arguments, it returns an array containing all
+ *   the components of the current path.
  */
 function arg($index = NULL, $path = NULL) {
   // Even though $arguments doesn't need to be resettable for any functional
