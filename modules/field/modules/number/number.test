@@ -1,0 +1,75 @@
+<?php
+// $Id: number.test,v 1.1 2010/10/23 21:03:22 webchick Exp $
+
+/**
+ * @file
+ * Tests for number field types.
+ */
+
+/**
+ * Tests for number field types.
+ */
+class NumberFieldTestCase extends DrupalWebTestCase {
+  protected $field;
+  protected $instance;
+  protected $web_user;
+
+  public static function getInfo() {
+    return array(
+      'name'  => 'Number field',
+      'description'  => 'Test the creation of number fields.',
+      'group' => 'Field types'
+    );
+  }
+
+  function setUp() {
+    parent::setUp('field_test');
+    $this->web_user = $this->drupalCreateUser(array('access field_test content', 'administer field_test content'));
+    $this->drupalLogin($this->web_user);
+  }
+
+  /**
+   * Test number_decimal field.
+   */
+  function testNumberDecimalField() {
+    // Create a field with settings to validate.
+    $this->field = array(
+      'field_name' => drupal_strtolower($this->randomName()),
+      'type' => 'number_decimal',
+      'settings' => array(
+        'precision' => 8, 'scale' => 4, 'decimal_separator' => '.',
+      )
+    );
+    field_create_field($this->field);
+    $this->instance = array(
+      'field_name' => $this->field['field_name'],
+      'entity_type' => 'test_entity',
+      'bundle' => 'test_bundle',
+      'widget' => array(
+        'type' => 'number',
+      ),
+      'display' => array(
+        'default' => array(
+          'type' => 'number_decimal',
+        ),
+      ),
+    );
+    field_create_instance($this->instance);
+
+    // Display creation form.
+    $this->drupalGet('test-entity/add/test-bundle');
+    $langcode = LANGUAGE_NONE;
+    $this->assertFieldByName("{$this->field['field_name']}[$langcode][0][value]", '', t('Widget is displayed'));
+
+    // Submit a signed decimal value within the allowed precision and scale.
+    $value = '-1234.5678';
+    $edit = array(
+      "{$this->field['field_name']}[$langcode][0][value]" => $value,
+    );
+    $this->drupalPost(NULL, $edit, t('Save'));
+    preg_match('|test-entity/manage/(\d+)/edit|', $this->url, $match);
+    $id = $match[1];
+    $this->assertRaw(t('test_entity @id has been created.', array('@id' => $id)), t('Entity was created'));
+    $this->assertRaw(round($value, 2), t('Value is displayed.'));
+  }
+}

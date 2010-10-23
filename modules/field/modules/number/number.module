@@ -1,5 +1,5 @@
 <?php
-// $Id: number.module,v 1.44 2010/10/22 00:42:42 dries Exp $
+// $Id: number.module,v 1.45 2010/10/23 21:03:22 webchick Exp $
 
 /**
  * @file
@@ -330,8 +330,9 @@ function number_field_widget_form(&$form, &$form_state, $field, $instance, $lang
     '#default_value' => $value,
     // Allow a slightly larger size that the field length to allow for some
     // configurations where all characters won't fit in input field.
-    '#size' => $field['type'] == 'number_decimal' ? $field['settings']['precision'] + 2 : 12,
-    '#maxlength' => $field['type'] == 'number_decimal' ? $field['settings']['precision'] : 10,
+    '#size' => $field['type'] == 'number_decimal' ? $field['settings']['precision'] + 4 : 12,
+    // Allow two extra characters for signed values and decimal separator.
+    '#maxlength' => $field['type'] == 'number_decimal' ? $field['settings']['precision'] + 2 : 10,
     // Extract the number type from the field type name for easier validation.
     '#number_type' => str_replace('number_', '', $field['type']),
   );
