@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1211 2010/10/20 05:32:31 webchick Exp $
+// $Id: user.module,v 1.1212 2010/10/23 03:20:40 webchick Exp $
 
 /**
  * @file
@@ -1789,10 +1789,28 @@ function user_menu_site_status_alter(&$menu_site_status, $path) {
  * Implements hook_menu_link_alter().
  */
 function user_menu_link_alter(&$link) {
+  // The path 'user' must be accessible for anonymous users, but only visible
+  // for authenticated users. Authenticated users should see "My account", but
+  // anonymous users should not see it at all. Therefore, invoke
+  // user_translated_menu_link_alter() to conditionally hide the link.
+  if ($link['link_path'] == 'user' && $link['module'] == 'system') {
+    $link['options']['alter'] = TRUE;
+  }
+
   // Force the Logout link to appear on the top-level of 'user-menu' menu by
   // default (i.e., unless it has been customized).
   if ($link['link_path'] == 'user/logout' && $link['module'] == 'system' && empty($link['customized'])) {
     $link['plid'] = 0;
+  }
+}
+
+/**
+ * Implements hook_translated_menu_link_alter().
+ */
+function user_translated_menu_link_alter(&$link) {
+  // Hide the "User account" link for anonymous users.
+  if ($link['link_path'] == 'user' && $link['module'] == 'system' && user_is_anonymous()) {
+    $link['hidden'] = 1;
   }
 }
 
@@ -1806,6 +1824,17 @@ function user_admin_paths() {
     'user/*/edit/*' => TRUE,
   );
   return $paths;
+}
+
+/**
+ * Returns $arg or the user ID of the current user if $arg is '%' or empty.
+ *
+ * Deprecated. Use %user_uid_optional instead.
+ *
+ * @todo D8: Remove.
+ */
+function user_uid_only_optional_to_arg($arg) {
+  return user_uid_optional_to_arg($arg);
 }
 
 /**

@@ -1,5 +1,5 @@
 <?php
-// $Id: user.test,v 1.103 2010/10/11 19:43:23 dries Exp $
+// $Id: user.test,v 1.104 2010/10/23 03:20:40 webchick Exp $
 
 class UserRegistrationTestCase extends DrupalWebTestCase {
   public static function getInfo() {
@@ -1224,6 +1224,56 @@ class UserAutocompleteTestCase extends DrupalWebTestCase {
 
     // Using first letter of the user's name, make sure the user's full name is in the results.
     $this->assertRaw($this->unprivileged_user->name, t('User name found in autocompletion results.'));
+  }
+}
+
+
+/**
+ * Test user-links in secondary menu.
+ */
+class UserAccountLinksUnitTests extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'User account links',
+      'description' => 'Test user-account links.',
+      'group' => 'User'
+    );
+  }
+
+  /**
+   * Test the user login block.
+   */
+  function testSecondaryMenu() {
+    // Create a regular user.
+    $user = $this->drupalCreateUser(array());
+
+    // Log in and get the homepage.
+    $this->drupalLogin($user);
+    $this->drupalGet('<front>');
+
+    // For a logged-in user, expect the secondary menu to have links for "My
+    // account" and "Log out".
+    $link = $this->xpath('//ul[@id=:menu_id]/li/a[contains(@href, :href) and text()=:text]', array(
+      ':menu_id' => 'secondary-menu-links',
+      ':href' => 'user',
+      ':text' => 'My account',
+    ));
+    $this->assertEqual(count($link), 1, 'My account link is in secondary menu.');
+
+    $link = $this->xpath('//ul[@id=:menu_id]/li/a[contains(@href, :href) and text()=:text]', array(
+      ':menu_id' => 'secondary-menu-links',
+      ':href' => 'user/logout',
+      ':text' => 'Log out',
+    ));
+    $this->assertEqual(count($link), 1, 'Log out link is in secondary menu.');
+
+    // Log out and get the homepage.
+    $this->drupalLogout();
+    $this->drupalGet('<front>');
+
+    // For a logged-out user, expect no secondary links.
+    $element = $this->xpath('//ul[@id=:menu_id]', array(':menu_id' => 'secondary-menu-links'));
+    $this->assertEqual(count($element), 0, 'No secondary-menu for logged-out users.');
   }
 }
 
