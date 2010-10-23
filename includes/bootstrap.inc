@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.431 2010/10/23 05:32:22 webchick Exp $
+// $Id: bootstrap.inc,v 1.432 2010/10/23 12:56:40 dries Exp $
 
 /**
  * @file
@@ -2467,7 +2467,8 @@ function request_path() {
  *
  * @return
  *   The component specified by $index, or NULL if the specified component was
- *   not found.
+ *   not found. If called without arguments, it returns an array containing all
+ *   the components of the current path.
  */
 function arg($index = NULL, $path = NULL) {
   // Even though $arguments doesn't need to be resettable for any functional
