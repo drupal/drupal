@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.906 2010/10/20 01:31:06 dries Exp $
+// $Id: comment.module,v 1.907 2010/10/23 15:30:34 webchick Exp $
 
 /**
  * @file
@@ -939,7 +939,8 @@ function comment_view($comment, $node, $view_mode = 'full', $langcode = NULL) {
   }
 
   // Allow modules to modify the structured comment.
-  drupal_alter('comment_view', $build);
+  $type = 'comment';
+  drupal_alter(array('comment_view', 'entity_view'), $build, $type);
 
   return $build;
 }
@@ -983,6 +984,7 @@ function comment_build_content($comment, $node, $view_mode = 'full', $langcode =
 
   // Allow modules to make their own additions to the comment.
   module_invoke_all('comment_view', $comment, $view_mode, $langcode);
+  module_invoke_all('entity_view', $comment, 'comment', $view_mode, $langcode);
 }
 
 /**

@@ -1,5 +1,5 @@
 <?php
-// $Id: node.api.php,v 1.78 2010/10/22 00:35:35 dries Exp $
+// $Id: node.api.php,v 1.79 2010/10/23 15:30:34 webchick Exp $
 
 /**
  * @file
@@ -759,6 +759,8 @@ function hook_node_submit($node, $form, &$form_state) {
  * @param $langcode
  *   The language code used for rendering.
  *
+ * @see hook_entity_view()
+ *
  * @ingroup node_api_hooks
  */
 function hook_node_view($node, $view_mode, $langcode) {
@@ -785,6 +787,7 @@ function hook_node_view($node, $view_mode, $langcode) {
  *   A renderable array representing the node content.
  *
  * @see node_view()
+ * @see hook_entity_view_alter()
  *
  * @ingroup node_api_hooks
  */

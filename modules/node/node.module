@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1310 2010/10/23 12:58:37 dries Exp $
+// $Id: node.module,v 1.1311 2010/10/23 15:30:34 webchick Exp $
 
 /**
  * @file
@@ -1270,7 +1270,8 @@ function node_view($node, $view_mode = 'full', $langcode = NULL) {
   }
 
   // Allow modules to modify the structured node.
-  drupal_alter('node_view', $build);
+  $type = 'node';
+  drupal_alter(array('node_view', 'entity_view'), $build, $type);
 
   return $build;
 }
@@ -1343,6 +1344,7 @@ function node_build_content($node, $view_mode = 'full', $langcode = NULL) {
 
   // Allow modules to make their own additions to the node.
   module_invoke_all('node_view', $node, $view_mode, $langcode);
+  module_invoke_all('entity_view', $node, 'node', $view_mode, $langcode);
 }
 
 /**

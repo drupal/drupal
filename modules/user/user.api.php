@@ -1,5 +1,5 @@
 <?php
-// $Id: user.api.php,v 1.24 2010/10/03 01:15:34 dries Exp $
+// $Id: user.api.php,v 1.25 2010/10/23 15:30:34 webchick Exp $
 
 /**
  * @file
@@ -316,6 +316,9 @@ function hook_user_logout($account) {
  *   View mode, e.g. 'full'.
  * @param $langcode
  *   The language code used for rendering.
+ *
+ * @see hook_user_view_alter()
+ * @see hook_entity_view()
  */
 function hook_user_view($account, $view_mode, $langcode) {
   if (user_access('create blog content', $account)) {
@@ -344,6 +347,7 @@ function hook_user_view($account, $view_mode, $langcode) {
  *   A renderable array representing the user.
  *
  * @see user_view()
+ * @see hook_entity_view_alter()
  */
 function hook_user_view_alter(&$build) {
   // Check for the existence of a field added by another module.
