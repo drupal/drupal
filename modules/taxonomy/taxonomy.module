@@ -665,6 +665,10 @@ function taxonomy_term_view($term, $view_mode = 'full', $langcode = NULL) {
 
   $build['#attached']['css'][] = drupal_get_path('module', 'taxonomy') . '/taxonomy.css';
 
+  // Allow modules to modify the structured term.
+  $type = 'taxonomy_term';
+  drupal_alter(array('taxonomy_term_view', 'entity_view'), $build, $type);
+
   return $build;
 }
 

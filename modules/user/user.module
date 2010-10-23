@@ -2452,7 +2452,8 @@ function user_view($account, $view_mode = 'full', $langcode = NULL) {
   );
 
   // Allow modules to modify the structured user.
-  drupal_alter('user_view', $build);
+  $type = 'user';
+  drupal_alter(array('user_view', 'entity_view'), $build, $type);
 
   return $build;
 }
@@ -2483,6 +2484,7 @@ function user_build_content($account, $view_mode = 'full', $langcode = NULL) {
 
   // Populate $account->content with a render() array.
   module_invoke_all('user_view', $account, $view_mode, $langcode);
+  module_invoke_all('entity_view', $account, 'user', $view_mode, $langcode);
 }
 
 /**

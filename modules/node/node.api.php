@@ -759,6 +759,8 @@ function hook_node_submit($node, $form, &$form_state) {
  * @param $langcode
  *   The language code used for rendering.
  *
+ * @see hook_entity_view()
+ *
  * @ingroup node_api_hooks
  */
 function hook_node_view($node, $view_mode, $langcode) {
@@ -785,6 +787,7 @@ function hook_node_view($node, $view_mode, $langcode) {
  *   A renderable array representing the node content.
  *
  * @see node_view()
+ * @see hook_entity_view_alter()
  *
  * @ingroup node_api_hooks
  */

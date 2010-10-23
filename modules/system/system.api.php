@@ -356,6 +356,68 @@ function hook_entity_query_alter($query) {
 }
 
 /**
+ * Act on entities being assembled before rendering.
+ *
+ * @param $entity
+ *   The entity object.
+ * @param $type
+ *   The type of entity being rendered (i.e. node, user, comment).
+ * @param $view_mode
+ *   The view mode the entity is rendered in.
+ * @param $langcode
+ *   The language code used for rendering.
+ *
+ * The module may add elements to $entity->content prior to rendering. The
+ * structure of $entity->content is a renderable array as expected by
+ * drupal_render().
+ *
+ * @see hook_entity_view_alter()
+ * @see hook_comment_view()
+ * @see hook_node_view()
+ * @see hook_user_view()
+ */
+function hook_entity_view($entity, $type, $view_mode, $langcode) {
+  $entity->content['my_additional_field'] = array(
+    '#markup' => $additional_field,
+    '#weight' => 10,
+    '#theme' => 'mymodule_my_additional_field',
+  );
+}
+
+/**
+ * Alter the results of ENTITY_view().
+ *
+ * This hook is called after the content has been assembled in a structured
+ * array and may be used for doing processing which requires that the complete
+ * entity content structure has been built.
+ *
+ * If a module wishes to act on the rendered HTML of the entity rather than the
+ * structured content array, it may use this hook to add a #post_render
+ * callback. Alternatively, it could also implement hook_preprocess_ENTITY().
+ * See drupal_render() and theme() for details.
+ *
+ * @param $build
+ *   A renderable array representing the entity content.
+ * @param $type
+ *   The type of entity being rendered (i.e. node, user, comment).
+ *
+ * @see hook_entity_view()
+ * @see hook_comment_view_alter()
+ * @see hook_node_view_alter()
+ * @see hook_taxonomy_term_view_alter()
+ * @see hook_user_view_alter()
+ */
+function hook_entity_view_alter(&$build, $type) {
+  if ($build['#view_mode'] == 'full' && isset($build['an_additional_field'])) {
+    // Change its weight.
+    $build['an_additional_field']['#weight'] = -10;
+
+    // Add a #post_render callback to act on the rendered HTML of the entity.
+    $build['#post_render'][] = 'my_module_node_post_render';
+  }
+}
+
+/**
  * Define administrative paths.
  *
  * Modules may specify whether or not the paths they define in hook_menu() are
