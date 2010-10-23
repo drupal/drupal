@@ -419,7 +419,7 @@ h1#site-name,
   width: 154px;
 }
 /* Language switcher block in region header. */
-#block-locale-language ul li {
+.region-header .block-locale ul li {
   display: inline;
   padding: 0 0.5em;
 }
