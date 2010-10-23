@@ -11,7 +11,7 @@
  * - $language: Language code. e.g. "en" for english.
  * - $language_rtl: TRUE or FALSE depending on right to left language scripts.
  * - $base_url: URL to home page.
- * - $content: Nodes within the current outline rendered through
+ * - $contents: Nodes within the current outline rendered through
  *   book-node-export-html.tpl.php.
  *
  * @see template_preprocess_book_export_html()
