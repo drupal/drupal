@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.install,v 1.48 2010/10/20 06:32:32 webchick Exp $
+// $Id: filter.install,v 1.49 2010/10/23 00:43:48 webchick Exp $
 
 /**
  * @file
@@ -16,7 +16,7 @@ function filter_schema() {
       'format' => array(
         'type' => 'varchar',
         'length' => 255,
-        'not null' => FALSE,
+        'not null' => TRUE,
         'description' => 'Foreign key: The {filter_format}.format to which this filter is assigned.',
       ),
       'module' => array(
@@ -484,7 +484,7 @@ function filter_update_7010() {
   db_change_field('filter', 'format', 'format', array(
     'type' => 'varchar',
     'length' => 255,
-    'not null' => FALSE,
+    'not null' => TRUE,
     'description' => 'Foreign key: The {filter_format}.format to which this filter is assigned.',
   ));
 }
