@@ -1,5 +1,5 @@
 <?php
-// $Id: book-export-html.tpl.php,v 1.2 2008/05/15 21:19:24 dries Exp $
+// $Id: book-export-html.tpl.php,v 1.3 2010/10/23 15:35:35 webchick Exp $
 
 /**
  * @file
@@ -11,7 +11,7 @@
  * - $language: Language code. e.g. "en" for english.
  * - $language_rtl: TRUE or FALSE depending on right to left language scripts.
  * - $base_url: URL to home page.
- * - $content: Nodes within the current outline rendered through
+ * - $contents: Nodes within the current outline rendered through
  *   book-node-export-html.tpl.php.
  *
  * @see template_preprocess_book_export_html()
