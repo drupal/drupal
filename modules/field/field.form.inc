@@ -25,6 +25,15 @@ function field_default_form($entity_type, $entity, $field, $instance, $langcode,
     $items = field_get_default_value($entity_type, $entity, $field, $instance, $langcode);
   }
 
+  // Let modules alter the widget properties.
+  $context = array(
+    'entity_type' => $entity_type,
+    'entity' => $entity,
+    'field' => $field,
+    'instance' => $instance,
+  );
+  drupal_alter(array('field_widget_properties', 'field_widget_properties_' . $entity_type), $instance['widget'], $context);
+
   // Collect widget elements.
   $elements = array();
   if (field_access('edit', $field, $entity_type, $entity)) {
