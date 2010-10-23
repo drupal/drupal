@@ -844,8 +844,6 @@ function hook_node_view_alter(&$build) {
  * 'locked') can be edited by a site administrator. This includes the
  * machine-readable name of a node type, if 'locked' is set to FALSE.
  *
- * For a detailed usage example, see node_example.module.
- *
  * @ingroup node_api_hooks
  */
 function hook_node_info() {
