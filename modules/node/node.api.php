@@ -1,5 +1,5 @@
 <?php
-// $Id: node.api.php,v 1.79 2010/10/23 15:30:34 webchick Exp $
+// $Id: node.api.php,v 1.80 2010/10/23 15:42:53 webchick Exp $
 
 /**
  * @file
@@ -843,8 +843,6 @@ function hook_node_view_alter(&$build) {
  * All attributes of a node type that are defined through this hook (except for
  * 'locked') can be edited by a site administrator. This includes the
  * machine-readable name of a node type, if 'locked' is set to FALSE.
- *
- * For a detailed usage example, see node_example.module.
  *
  * @ingroup node_api_hooks
  */
