@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.242 2010/10/20 15:22:53 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.243 2010/10/23 02:26:11 webchick Exp $
 
 /**
  * Global variable that holds information about the tests being run.
@@ -3020,6 +3020,8 @@ class DrupalWebTestCase extends DrupalTestCase {
    *   Message to display.
    * @return
    *   TRUE on pass, FALSE on fail.
+   *
+   * @todo $id is unusable. Replace with $name.
    */
   protected function assertOptionSelected($id, $option, $message = '') {
     $elements = $this->xpath('//select[@id=:id]//option[@value=:option]', array(':id' => $id, ':option' => $option));
