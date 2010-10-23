@@ -620,7 +620,7 @@ class UpdateTestUploadCase extends UpdateTestHelper {
     // Make sure the bogus extension supported by update_test.module is there.
     $this->assertPattern('/archive extensions are supported:.*update-test-extension/', t("Found 'update-test-extension' extension"));
     // Make sure it didn't clobber the first option from core.
-    $this->assertPattern('/archive extensions are supported:.*zip/', t("Found 'zip' extension"));
+    $this->assertPattern('/archive extensions are supported:.*tar/', t("Found 'tar' extension"));
   }
 
   /**
