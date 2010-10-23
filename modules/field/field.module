@@ -369,7 +369,7 @@ function _field_sort_items_value_helper($a, $b) {
  *       'extra_field_2' => ...
  *     ),
  *   ),
- * );
+ * ),
  * @endcode
  *
  * @param $entity_type
@@ -387,8 +387,8 @@ function field_bundle_settings($entity_type, $bundle, $settings = NULL) {
 
   if (isset($settings)) {
     $stored_settings[$entity_type][$bundle] = $settings;
-
     variable_set('field_bundle_settings', $stored_settings);
+    drupal_static_reset('field_view_mode_settings');
     field_info_cache_clear();
   }
   else {
@@ -396,10 +396,6 @@ function field_bundle_settings($entity_type, $bundle, $settings = NULL) {
     $settings += array(
       'view_modes' => array(),
       'extra_fields' => array(),
-    );
-    $settings['extra_fields'] += array(
-      'form' => array(),
-      'display' => array(),
     );
 
     return $settings;

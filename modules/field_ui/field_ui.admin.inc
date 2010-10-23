@@ -1267,22 +1267,18 @@ function field_ui_display_overview_form_submit($form, &$form_state) {
 
   // Save data for 'regular' fields.
   foreach ($form['#fields'] as $field_name) {
-    // Retrieve the stored instance settings to merge with the incoming values.
-    $instance = field_read_instance($entity_type, $field_name, $bundle);
+    $instance = field_info_instance($entity_type, $field_name, $bundle);
     $values = $form_values['fields'][$field_name];
     // Get formatter settings. They lie either directly in submitted form
     // values (if the whole form was submitted while some formatter
     // settings were being edited), or have been persisted in
     // $form_state.
-    $settings = array();
+    $settings = $instance['display'][$view_mode]['settings'];
     if (isset($values['settings_edit_form']['settings'])) {
       $settings = $values['settings_edit_form']['settings'];
     }
     elseif (isset($form_state['formatter_settings'][$field_name])) {
       $settings = $form_state['formatter_settings'][$field_name];
-    }
-    elseif (isset($instance['display'][$view_mode]['settings'])) {
-      $settings = $instance['display'][$view_mode]['settings'];
     }
 
     // Only save settings actually used by the selected formatter.
@@ -1315,14 +1311,10 @@ function field_ui_display_overview_form_submit($form, &$form_state) {
     foreach ($form_values['view_modes_custom'] as $view_mode_name => $value) {
       // Display a message for each view mode newly configured to use custom
       // settings.
-      $view_mode_settings = field_view_mode_settings($entity_type, $bundle);
-      if (!empty($value) && empty($view_mode_settings[$view_mode_name]['custom_settings'])) {
+      if (!empty($value) && empty($bundle_settings['view_modes'][$view_mode_name]['custom_settings'])) {
         $view_mode_label = $entity_info['view modes'][$view_mode_name]['label'];
         $path = _field_ui_bundle_admin_path($entity_type, $bundle) . "/display/$view_mode_name";
         drupal_set_message(t('The %view_mode mode now uses custom display settings. You might want to <a href="@url">configure them</a>.', array('%view_mode' => $view_mode_label, '@url' => url($path))));
-        // Initialize the newly customized view mode with the display settings
-        // from the default view mode.
-        _field_ui_add_default_view_mode_settings($entity_type, $bundle, $view_mode_name, $bundle_settings);
       }
       $bundle_settings['view_modes'][$view_mode_name]['custom_settings'] = !empty($value);
     }
@@ -1332,50 +1324,6 @@ function field_ui_display_overview_form_submit($form, &$form_state) {
   field_bundle_settings($entity_type, $bundle, $bundle_settings);
 
   drupal_set_message(t('Your settings have been saved.'));
-}
-
-/**
- * Helper function for field_ui_display_overview_form_submit().
- *
- * When an administrator decides to use custom display settings for a view mode,
- * that view mode needs to be initialized with the display settings for the
- * 'default' view mode, which it was previously using. This helper function
- * adds the new custom display settings to this bundle's instances, and saves
- * them. It also modifies the passed-in $settings array, which the caller can
- * then save using field_bundle_settings().
- *
- * @see field_bundle_settings()
- *
- * @param $entity_type
- *   The bundle's entity type.
- * @param $bundle
- *   The bundle whose view mode is being customized.
- * @param $view_mode
- *   The view mode that the administrator has set to use custom settings.
- * @param $settings
- *   An associative array of bundle settings, as expected by
- *   field_bundle_settings().
- */
-function _field_ui_add_default_view_mode_settings($entity_type, $bundle, $view_mode, &$settings) {
-  // Update display settings for field instances.
-  $instances = field_read_instances(array('entity_type' => $entity_type, 'bundle' => $bundle));
-  foreach ($instances as $instance) {
-    // If this field instance has display settings defined for this view mode,
-    // respect those settings.
-    if (!isset($instance['display'][$view_mode])) {
-      // The instance doesn't specify anything for this view mode, so use the
-      // default display settings.
-      $instance['display'][$view_mode] = $instance['display']['default'];
-      field_update_instance($instance);
-    }
-  }
-
-  // Update display settings for 'extra fields'.
-  foreach (array_keys($settings['extra_fields']['display']) as $name) {
-    if (!isset($settings['extra_fields']['display'][$name][$view_mode])) {
-      $settings['extra_fields']['display'][$name][$view_mode] = $settings['extra_fields']['display'][$name]['default'];
-    }
-  }
 }
 
 /**
@@ -1589,23 +1537,16 @@ function field_ui_field_settings_form_submit($form, &$form_state) {
  * Menu callback; select a widget for the field.
  */
 function field_ui_widget_type_form($form, &$form_state, $instance) {
-  drupal_set_title($instance['label']);
-
   $bundle = $instance['bundle'];
   $entity_type = $instance['entity_type'];
-  $field_name = $instance['field_name'];
+  $field = field_info_field($instance['field_name']);
 
-  $field = field_info_field($field_name);
+  drupal_set_title($instance['label']);
+
   $field_type = field_info_field_types($field['type']);
   $widget_type = field_info_widget_types($instance['widget']['type']);
   $bundles = field_info_bundles();
   $bundle_label = $bundles[$entity_type][$bundle]['label'];
-
-  $form = array(
-    '#bundle' => $bundle,
-    '#entity_type' => $entity_type,
-    '#field_name' => $field_name,
-  );
 
   $form['basic'] = array(
     '#type' => 'fieldset',
@@ -1620,6 +1561,7 @@ function field_ui_widget_type_form($form, &$form_state, $instance) {
     '#description' => t('The type of form element you would like to present to the user when creating this field in the %type type.', array('%type' => $bundle_label)),
   );
 
+  $form['#instance'] = $instance;
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Continue'));
 
@@ -1634,12 +1576,9 @@ function field_ui_widget_type_form($form, &$form_state, $instance) {
  */
 function field_ui_widget_type_form_submit($form, &$form_state) {
   $form_values = $form_state['values'];
-  $bundle = $form['#bundle'];
-  $entity_type = $form['#entity_type'];
-  $field_name = $form['#field_name'];
-
-  // Retrieve the stored instance settings to merge with the incoming values.
-  $instance = field_read_instance($entity_type, $field_name, $bundle);
+  $instance = $form['#instance'];
+  $bundle = $instance['bundle'];
+  $entity_type = $instance['entity_type'];
 
   // Set the right module information.
   $widget_type = field_info_widget_types($form_values['widget_type']);
@@ -1647,7 +1586,6 @@ function field_ui_widget_type_form_submit($form, &$form_state) {
 
   $instance['widget']['type'] = $form_values['widget_type'];
   $instance['widget']['module'] = $widget_module;
-
   try {
     field_update_instance($instance);
     drupal_set_message(t('Changed the widget for field %label.', array('%label' => $instance['label'])));
@@ -1974,8 +1912,8 @@ function field_ui_field_edit_form_submit($form, &$form_state) {
   field_default_submit(NULL, NULL, $field, $instance, LANGUAGE_NONE, $items, $form, $form_state);
   $instance['default_value'] = $items ? $items : NULL;
 
-  // Retrieve the stored instance settings to merge with the incoming values.
-  $instance_source = field_read_instance($instance['entity_type'], $instance['field_name'], $instance['bundle']);
+  // Update the instance settings.
+  $instance_source = field_info_instance($instance['entity_type'], $instance['field_name'], $instance['bundle']);
   $instance = array_merge($instance_source, $instance);
   field_update_instance($instance);
 
