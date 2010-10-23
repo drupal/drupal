@@ -497,9 +497,18 @@ class FilterFormatAccessTestCase extends DrupalWebTestCase {
     // the disallowed format does not.
     $this->drupalLogin($this->web_user);
     $this->drupalGet('node/add/page');
-    $this->assertRaw($this->formatSelectorHTML($this->allowed_format), t('The allowed text format appears as an option when adding a new node.'));
-    $this->assertNoRaw($this->formatSelectorHTML($this->disallowed_format), t('The disallowed text format does not appear as an option when adding a new node.'));
-    $this->assertRaw($this->formatSelectorHTML(filter_format_load(filter_fallback_format())), t('The fallback format appears as an option when adding a new node.'));
+    $langcode = LANGUAGE_NONE;
+    $elements = $this->xpath('//select[@name=:name]/option', array(
+      ':name' => "body[$langcode][0][format]",
+      ':option' => $this->allowed_format->format,
+    ));
+    $options = array();
+    foreach ($elements as $element) {
+      $options[(string) $element['value']] = $element;
+    }
+    $this->assertTrue(isset($options[$this->allowed_format->format]), t('The allowed text format appears as an option when adding a new node.'));
+    $this->assertFalse(isset($options[$this->disallowed_format->format]), t('The disallowed text format does not appear as an option when adding a new node.'));
+    $this->assertTrue(isset($options[filter_fallback_format()]), t('The fallback format appears as an option when adding a new node.'));
   }
 
   function testFormatRoles() {
@@ -642,18 +651,6 @@ class FilterFormatAccessTestCase extends DrupalWebTestCase {
     $this->assertUrl('node/' . $node->nid);
     $this->assertText($new_title, t('New title found.'));
     $this->assertNoText($old_title, t('Old title not found.'));
-  }
-
-  /**
-   * Returns the expected HTML for a particular text format selector.
-   *
-   * @param $format
-   *   An object representing the text format for which to return HTML.
-   * @return
-   *   The expected HTML for that text format's selector.
-   */
-  function formatSelectorHTML($format) {
-    return '<option value="' . $format->format . '">' . $format->name . '</option>';
   }
 
   /**

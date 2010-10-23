@@ -3020,6 +3020,8 @@ class DrupalWebTestCase extends DrupalTestCase {
    *   Message to display.
    * @return
    *   TRUE on pass, FALSE on fail.
+   *
+   * @todo $id is unusable. Replace with $name.
    */
   protected function assertOptionSelected($id, $option, $message = '') {
     $elements = $this->xpath('//select[@id=:id]//option[@value=:option]', array(':id' => $id, ':option' => $option));
