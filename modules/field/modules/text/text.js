@@ -38,7 +38,7 @@ Drupal.behaviors.textSummary = {
         ).appendTo($summaryLabel);
 
         // If no summary is set, hide the summary field.
-        if ($(this).val() == '') {
+        if ($(this).find('.text-summary').val() == '') {
           $link.click();
         }
         return;
