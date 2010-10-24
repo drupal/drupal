@@ -1,4 +1,4 @@
-// $Id: text.js,v 1.4 2010/06/12 08:18:59 webchick Exp $
+// $Id: text.js,v 1.5 2010/10/24 04:18:10 webchick Exp $
 
 (function ($) {
 
@@ -38,7 +38,7 @@ Drupal.behaviors.textSummary = {
         ).appendTo($summaryLabel);
 
         // If no summary is set, hide the summary field.
-        if ($(this).val() == '') {
+        if ($(this).find('.text-summary').val() == '') {
           $link.click();
         }
         return;

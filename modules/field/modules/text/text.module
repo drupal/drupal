@@ -1,5 +1,5 @@
 <?php
-// $Id: text.module,v 1.66 2010/10/22 00:42:42 dries Exp $
+// $Id: text.module,v 1.67 2010/10/24 04:18:10 webchick Exp $
 
 /**
  * @file
@@ -171,7 +171,12 @@ function text_field_load($entity_type, $entities, $field, $instances, $langcode,
  */
 function text_field_is_empty($item, $field) {
   if (empty($item['value']) && (string) $item['value'] !== '0') {
-    return TRUE;
+    if ($field['type'] == 'text_with_summary') {
+      return (empty($item['summary']) && (string)$item['summary'] !== '0');
+    }
+    else {
+      return TRUE;
+    }
   }
   return FALSE;
 }
