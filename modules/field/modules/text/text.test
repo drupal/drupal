@@ -215,8 +215,8 @@ class TextFieldTestCase extends DrupalWebTestCase {
     // Display edition form.
     // We should now have a 'text format' selector.
     $this->drupalGet('test-entity/manage/' . $id . '/edit');
-    $this->assertFieldByName("{$this->field_name}[$langcode][0][value]", '', t('Widget is displayed'));
-    $this->assertFieldByName("{$this->field_name}[$langcode][0][format]", '', t('Format selector is displayed'));
+    $this->assertFieldByName("{$this->field_name}[$langcode][0][value]", NULL, t('Widget is displayed'));
+    $this->assertFieldByName("{$this->field_name}[$langcode][0][format]", NULL, t('Format selector is displayed'));
 
     // Edit and change the text format to the new one that was created.
     $edit = array(

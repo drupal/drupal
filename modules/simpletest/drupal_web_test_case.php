@@ -2810,20 +2810,21 @@ class DrupalWebTestCase extends DrupalTestCase {
    * @param $xpath
    *   XPath used to find the field.
    * @param $value
-   *   Value of the field to assert.
+   *   (optional) Value of the field to assert.
    * @param $message
-   *   Message to display.
+   *   (optional) Message to display.
    * @param $group
-   *   The group this message belongs to.
+   *   (optional) The group this message belongs to.
+   *
    * @return
    *   TRUE on pass, FALSE on fail.
    */
-  protected function assertFieldByXPath($xpath, $value, $message = '', $group = 'Other') {
+  protected function assertFieldByXPath($xpath, $value = NULL, $message = '', $group = 'Other') {
     $fields = $this->xpath($xpath);
 
     // If value specified then check array for match.
     $found = TRUE;
-    if ($value) {
+    if (isset($value)) {
       $found = FALSE;
       if ($fields) {
         foreach ($fields as $field) {
@@ -2882,20 +2883,21 @@ class DrupalWebTestCase extends DrupalTestCase {
    * @param $xpath
    *   XPath used to find the field.
    * @param $value
-   *   Value of the field to assert.
+   *   (optional) Value of the field to assert.
    * @param $message
-   *   Message to display.
+   *   (optional) Message to display.
    * @param $group
-   *   The group this message belongs to.
+   *   (optional) The group this message belongs to.
+   *
    * @return
    *   TRUE on pass, FALSE on fail.
    */
-  protected function assertNoFieldByXPath($xpath, $value, $message = '', $group = 'Other') {
+  protected function assertNoFieldByXPath($xpath, $value = NULL, $message = '', $group = 'Other') {
     $fields = $this->xpath($xpath);
 
     // If value specified then check array for match.
     $found = TRUE;
-    if ($value) {
+    if (isset($value)) {
       $found = FALSE;
       if ($fields) {
         foreach ($fields as $field) {
@@ -3059,7 +3061,7 @@ class DrupalWebTestCase extends DrupalTestCase {
    *   TRUE on pass, FALSE on fail.
    */
   protected function assertField($field, $message = '', $group = 'Other') {
-    return $this->assertFieldByXPath($this->constructFieldXpath('name', $field) . '|' . $this->constructFieldXpath('id', $field), '', $message, $group);
+    return $this->assertFieldByXPath($this->constructFieldXpath('name', $field) . '|' . $this->constructFieldXpath('id', $field), NULL, $message, $group);
   }
 
   /**
@@ -3075,7 +3077,7 @@ class DrupalWebTestCase extends DrupalTestCase {
    *   TRUE on pass, FALSE on fail.
    */
   protected function assertNoField($field, $message = '', $group = 'Other') {
-    return $this->assertNoFieldByXPath($this->constructFieldXpath('name', $field) . '|' . $this->constructFieldXpath('id', $field), '', $message, $group);
+    return $this->assertNoFieldByXPath($this->constructFieldXpath('name', $field) . '|' . $this->constructFieldXpath('id', $field), NULL, $message, $group);
   }
 
   /**

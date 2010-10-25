@@ -279,16 +279,16 @@ function poll_form($node, &$form_state) {
   $weight = 0;
   if (isset($node->choice)) {
     $delta = count($node->choice);
-    $weight = -$delta;
     foreach ($node->choice as $chid => $choice) {
       $key = 'chid:' . $chid;
       $form['choice_wrapper']['choice'][$key] = _poll_choice_form($key, $choice['chid'], $choice['chtext'], $choice['chvotes'], $choice['weight'], $choice_count);
-      $weight = ($choice['weight'] > $weight) ? $choice['weight'] : $weight;
+      $weight = max($choice['weight'], $weight);
     }
   }
 
   // Add initial or additional choices.
   $existing_delta = $delta;
+  $weight++;
   for ($delta; $delta < $choice_count; $delta++) {
     $key = 'new:' . ($delta - $existing_delta);
     $form['choice_wrapper']['choice'][$key] = _poll_choice_form($key, NULL, '', 0, $weight, $choice_count);
@@ -378,6 +378,7 @@ function poll_more_choices_submit($form, &$form_state) {
 function _poll_choice_form($key, $chid = NULL, $value = '', $votes = 0, $weight = 0, $size = 10) {
   $form = array(
     '#tree' => TRUE,
+    '#weight' => $weight,
   );
 
   // We'll manually set the #parents property of these fields so that
@@ -790,6 +791,9 @@ function template_preprocess_poll_vote(&$variables) {
  * Generates a graphical representation of the results of a poll.
  */
 function poll_view_results($node, $view_mode, $block = FALSE) {
+  // Make sure that choices are ordered by their weight.
+  uasort($node->choice, 'drupal_sort_weight');
+
   // Count the votes and find the maximum
   $total_votes = 0;
   $max_votes = 0;
@@ -826,14 +830,14 @@ function theme_poll_choices($variables) {
 
   drupal_add_tabledrag('poll-choice-table', 'order', 'sibling', 'poll-weight');
 
+  $is_admin= user_access('administer nodes');
   $delta = 0;
   $rows = array();
-  $headers = array(
-    '',
-    t('Choice'),
-    t('Vote count'),
-    t('Weight'),
-  );
+  $headers = array('', t('Choice'));
+  if ($is_admin) {
+    $headers[] = t('Vote count');
+  }
+  $headers[] = t('Weight');
 
   foreach (element_children($form) as $key) {
     $delta++;
@@ -845,11 +849,13 @@ function theme_poll_choices($variables) {
       'data' => array(
         array('class' => array('choice-flag')),
         drupal_render($form[$key]['chtext']),
-        drupal_render($form[$key]['chvotes']),
-        drupal_render($form[$key]['weight']),
       ),
       'class' => array('draggable'),
     );
+    if ($is_admin) {
+      $row['data'][] = drupal_render($form[$key]['chvotes']);
+    }
+    $row['data'][] = drupal_render($form[$key]['weight']);
 
     // Add any additional classes set on the row.
     if (!empty($form[$key]['#attributes']['class'])) {
