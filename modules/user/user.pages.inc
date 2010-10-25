@@ -260,10 +260,9 @@ function user_profile_form($form, &$form_state, $account, $category = 'account')
 
   if ($category == 'account') {
     user_account_form($form, $form_state);
+    // Attach field widgets.
+    field_attach_form('user', $account, $form, $form_state);
   }
-
-  // Attach field widgets.
-  field_attach_form('user', $account, $form, $form_state);
 
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array(
