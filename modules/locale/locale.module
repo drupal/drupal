@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.303 2010/10/09 17:38:41 webchick Exp $
+// $Id: locale.module,v 1.304 2010/10/25 15:14:33 webchick Exp $
 
 /**
  * @file
@@ -923,7 +923,8 @@ function locale_block_view($type) {
     $path = drupal_is_front_page() ? '<front>' : $_GET['q'];
     $links = language_negotiation_get_switch_links($type, $path);
 
-    if (isset($links->links) && count($links->links > 1)) {
+    if (isset($links->links)) {
+      drupal_add_css(drupal_get_path('module', 'locale') . '/locale.css');
       $class = "language-switcher-{$links->provider}";
       $variables = array('links' => $links->links, 'attributes' => array('class' => array($class)));
       $block['content'] = theme('links__locale_block', $variables);
