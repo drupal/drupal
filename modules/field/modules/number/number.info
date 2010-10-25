@@ -7,4 +7,3 @@ core = 7.x
 dependencies[] = field
 files[] = number.module
 files[] = number.test
-required = TRUE

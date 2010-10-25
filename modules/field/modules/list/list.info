@@ -5,6 +5,6 @@ package = Core
 version = VERSION
 core = 7.x
 dependencies[] = field
+dependencies[] = options
 files[] = list.module
 files[] = tests/list.test
-required = TRUE
