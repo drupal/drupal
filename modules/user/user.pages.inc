@@ -1,5 +1,5 @@
 <?php
-// $Id: user.pages.inc,v 1.75 2010/08/27 11:28:45 webchick Exp $
+// $Id: user.pages.inc,v 1.76 2010/10/25 00:15:11 dries Exp $
 
 /**
  * @file
@@ -260,10 +260,9 @@ function user_profile_form($form, &$form_state, $account, $category = 'account')
 
   if ($category == 'account') {
     user_account_form($form, $form_state);
+    // Attach field widgets.
+    field_attach_form('user', $account, $form, $form_state);
   }
-
-  // Attach field widgets.
-  field_attach_form('user', $account, $form, $form_state);
 
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array(
