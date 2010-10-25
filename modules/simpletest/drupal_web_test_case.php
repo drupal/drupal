@@ -517,7 +517,8 @@ abstract class DrupalTestCase {
       'file' => $exception->getFile(),
     ));
     require_once DRUPAL_ROOT . '/includes/errors.inc';
-    $this->error(t('%type: %message in %function (line %line of %file).', _drupal_decode_exception($exception)), 'Uncaught exception', _drupal_get_last_caller($backtrace));
+    // The exception message is run through check_plain() by _drupal_decode_exception().
+    $this->error(t('%type: !message in %function (line %line of %file).', _drupal_decode_exception($exception)), 'Uncaught exception', _drupal_get_last_caller($backtrace));
   }
 
   /**

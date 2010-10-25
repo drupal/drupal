@@ -1561,7 +1561,8 @@ function watchdog_exception($type, Exception $exception, $message = NULL, $varia
 
    // Use a default value if $message is not set.
    if (empty($message)) {
-     $message = '%type: %message in %function (line %line of %file).';
+     // The exception message is run through check_plain() by _drupal_decode_exception().
+     $message = '%type: !message in %function (line %line of %file).';
    }
    // $variables must be an array so that we can add the exception information.
    if (!is_array($variables)) {
