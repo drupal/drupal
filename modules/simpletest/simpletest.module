@@ -226,7 +226,7 @@ function _simpletest_batch_finished($success, $results, $operations, $elapsed) {
   module_invoke_all('test_group_finished');
 }
 
-/*
+/**
  * Get information about the last test that ran given a test ID.
  *
  * @param $test_id
