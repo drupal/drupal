@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.243 2010/10/23 02:26:11 webchick Exp $
+// $Id: drupal_web_test_case.php,v 1.244 2010/10/25 00:06:19 dries Exp $
 
 /**
  * Global variable that holds information about the tests being run.
@@ -517,7 +517,8 @@ abstract class DrupalTestCase {
       'file' => $exception->getFile(),
     ));
     require_once DRUPAL_ROOT . '/includes/errors.inc';
-    $this->error(t('%type: %message in %function (line %line of %file).', _drupal_decode_exception($exception)), 'Uncaught exception', _drupal_get_last_caller($backtrace));
+    // The exception message is run through check_plain() by _drupal_decode_exception().
+    $this->error(t('%type: !message in %function (line %line of %file).', _drupal_decode_exception($exception)), 'Uncaught exception', _drupal_get_last_caller($backtrace));
   }
 
   /**
