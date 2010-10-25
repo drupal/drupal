@@ -484,7 +484,7 @@ function translation_supported_type($type) {
 function translation_path_get_translations($path) {
   $paths = array();
   // Check for a node related path, and for its translations.
-  if ((preg_match("!^node/([0-9]+)(/.+|)$!", $path, $matches)) && ($node = node_load((int)$matches[1])) && !empty($node->tnid)) {
+  if ((preg_match("!^node/(\d+)(/.+|)$!", $path, $matches)) && ($node = node_load((int) $matches[1])) && !empty($node->tnid)) {
     foreach (translation_node_get_translations($node->tnid) as $language => $translation_node) {
       $paths[$language] = 'node/' . $translation_node->nid . $matches[2];
     }
@@ -499,18 +499,18 @@ function translation_path_get_translations($path) {
  */
 function translation_language_switch_links_alter(array &$links, $type, $path) {
   $language_type = variable_get('translation_language_type', LANGUAGE_TYPE_INTERFACE);
-  if ($type == $language_type && $paths = translation_path_get_translations($path)) {
-    $path = explode('/', $path);
-    $node = node_load($path[1]);
-    $translations = translation_node_get_translations($node->tnid);
+  if ($type == $language_type && preg_match("!^node/(\d+)(/.+|)!", $path, $matches) && ($node = node_load((int) $matches[1]))) {
+    $translations = $node->tnid ? translation_node_get_translations($node->tnid) : array($node->language => $node);
+
     foreach ($links as $langcode => $link) {
-      if (isset($paths[$langcode]) && $translations[$langcode]->status) {
+      if (isset($translations[$langcode]) && $translations[$langcode]->status) {
         // Translation in a different node.
-        $links[$langcode]['href'] = $paths[$langcode];
+        $links[$langcode]['href'] = 'node/' . $translations[$langcode]->nid . $matches[2];
       }
       else {
         // No translation in this language, or no permission to view.
-        unset($links[$langcode]);
+        unset($links[$langcode]['href']);
+        $links[$langcode]['attributes']['class'] = 'locale-untranslated';
       }
     }
   }
