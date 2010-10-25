@@ -1,5 +1,5 @@
 <?php
-// $Id: field.crud.inc,v 1.71 2010/09/29 01:37:02 dries Exp $
+// $Id: field.crud.inc,v 1.72 2010/10/25 00:09:12 dries Exp $
 
 /**
  * @file
@@ -700,13 +700,16 @@ function field_create_instance($instance) {
  * @param $instance
  *   An associative array representing an instance structure. The required
  *   keys and values are:
- *     field_name: The name of an existing field.
- *     bundle: The bundle this field belongs to.
+ *   - entity_type: The type of the entity the field is attached to.
+ *   - bundle: The bundle this field belongs to.
+ *   - field_name: The name of an existing field.
  *   Read-only_id properties are assigned automatically. Any other
  *   properties specified in $instance overwrite the existing values for
  *   the instance.
+ *
  * @throw
  *   FieldException
+ *
  * @see field_create_instance()
  */
 function field_update_instance($instance) {
