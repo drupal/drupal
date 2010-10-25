@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.test,v 1.46 2010/09/07 23:17:47 dries Exp $
+// $Id: aggregator.test,v 1.47 2010/10/25 15:51:21 webchick Exp $
 
 /**
  * @file
@@ -603,11 +603,11 @@ class ImportOPMLTestCase extends AggregatorTestCase {
       ->execute();
 
     $this->drupalGet('admin/config/services/aggregator/add/opml');
-    $this->assertText('A single OPML document may contain a collection of many feeds.', t('Looking for help text.'));
-    $this->assertFieldByName('files[upload]', '', t('Looking for file upload field.'));
-    $this->assertFieldByName('remote', '', t('Looking for remote URL field.'));
-    $this->assertFieldByName('refresh', '', t('Looking for refresh field.'));
-    $this->assertFieldByName("category[$cid]", $cid, t('Looking for category field.'));
+    $this->assertText('A single OPML document may contain a collection of many feeds.', t('Found OPML help text.'));
+    $this->assertField('files[upload]', t('Found file upload field.'));
+    $this->assertField('remote', t('Found Remote URL field.'));
+    $this->assertField('refresh', '', t('Found Refresh field.'));
+    $this->assertFieldByName("category[$cid]", $cid, t('Found category field.'));
   }
 
   /**

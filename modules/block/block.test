@@ -1,5 +1,5 @@
 <?php
-// $Id: block.test,v 1.59 2010/10/21 19:31:39 dries Exp $
+// $Id: block.test,v 1.60 2010/10/25 15:51:21 webchick Exp $
 
 /**
  * @file
@@ -254,7 +254,7 @@ class BlockTestCase extends DrupalWebTestCase {
       ':region-class' => 'region region-' . str_replace('_', '-', $region),
       ':block-id' => 'block-' . $block['module'] . '-' . $block['delta'],
     ));
-    $this->assertFieldByXPath($xpath, FALSE, t('Custom block found in %region_name region.', array('%region_name' => $region)));
+    $this->assertFieldByXPath($xpath, NULL, t('Custom block found in %region_name region.', array('%region_name' => $region)));
   }
 
   /**

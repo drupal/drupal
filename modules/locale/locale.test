@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.test,v 1.81 2010/10/09 13:46:08 dries Exp $
+// $Id: locale.test,v 1.82 2010/10/25 15:51:21 webchick Exp $
 
 /**
  * @file
@@ -1581,12 +1581,12 @@ class LocaleContentFunctionalTest extends DrupalWebTestCase {
     $this->drupalLogin($web_user);
     $this->drupalGet('node/add/article');
     // Verify language select list is not present.
-    $this->assertNoFieldByName('language', '', t('Language select not present on add article form.'));
+    $this->assertNoFieldByName('language', NULL, t('Language select not present on add article form.'));
 
     // Verify language selection appears on add "Basic page" form.
     $this->drupalGet('node/add/page');
     // Verify language select list is present.
-    $this->assertFieldByName('language', '', t('Language select present on add Basic page form.'));
+    $this->assertFieldByName('language', NULL, t('Language select present on add Basic page form.'));
     // Ensure enabled language appears.
     $this->assertText($name, t('Enabled language present.'));
     // Ensure disabled language doesn't appear.
