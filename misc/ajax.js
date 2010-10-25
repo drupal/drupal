@@ -1,4 +1,4 @@
-// $Id: ajax.js,v 1.26 2010/10/23 15:46:43 webchick Exp $
+// $Id: ajax.js,v 1.27 2010/10/25 00:23:47 dries Exp $
 (function ($) {
 
 /**
@@ -280,7 +280,7 @@ Drupal.ajax.prototype.success = function (response, status) {
   if (this.progress.object) {
     this.progress.object.stopMonitoring();
   }
-  $(this.element).removeClass('progress-disabled').attr('disabled', false);
+  $(this.element).removeClass('progress-disabled').removeAttr('disabled');
 
   Drupal.freezeHeight();
 
@@ -348,7 +348,7 @@ Drupal.ajax.prototype.error = function (response, uri) {
   // Undo hide.
   $(this.wrapper).show();
   // Re-enable the element.
-  $(this.element).removeClass('progress-disabled').attr('disabled', false);
+  $(this.element).removeClass('progress-disabled').removeAttr('disabled');
   // Reattach behaviors, if they were detached in beforeSerialize().
   if (this.form) {
     var settings = response.settings || this.settings || Drupal.settings;
