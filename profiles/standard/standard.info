@@ -1,4 +1,4 @@
-; $Id: standard.info,v 1.1 2010/01/04 23:08:34 webchick Exp $
+; $Id: standard.info,v 1.2 2010/10/25 15:48:41 webchick Exp $
 name = Standard
 description = Install with commonly used features pre-configured.
 version = VERSION
@@ -10,7 +10,10 @@ dependencies[] = contextual
 dependencies[] = dashboard
 dependencies[] = help
 dependencies[] = image
+dependencies[] = list
 dependencies[] = menu
+dependencies[] = number
+dependencies[] = options
 dependencies[] = path
 dependencies[] = taxonomy
 dependencies[] = dblog
