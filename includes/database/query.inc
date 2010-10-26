@@ -17,56 +17,60 @@
 interface QueryConditionInterface {
 
   /**
-   * Helper function to build most common conditional clauses.
+   * Helper function: builds the most common conditional clauses.
    *
    * This method can take a variable number of parameters. If called with two
-   * parameters, they are taken as $field and $value with $operator having a value
-   * of IN if $value is an array and = otherwise.
+   * parameters, they are taken as $field and $value with $operator having a
+   * value of IN if $value is an array and = otherwise.
    *
    * @param $field
    *   The name of the field to check. If you would like to add a more complex
    *   condition involving operators or functions, use where().
    * @param $value
-   *   The value to test the field against. In most cases, this is a scalar. For more
-   *   complex options, it is an array. The meaning of each element in the array is
-   *   dependent on the $operator.
+   *   The value to test the field against. In most cases, this is a scalar.
+   *   For more complex options, it is an array. The meaning of each element in
+   *   the array is dependent on the $operator.
    * @param $operator
-   *   The comparison operator, such as =, <, or >=. It also accepts more complex
-   *   options such as IN, LIKE, or BETWEEN. Defaults to IN if $value is an array
-   *   = otherwise.
+   *   The comparison operator, such as =, <, or >=. It also accepts more
+   *   complex options such as IN, LIKE, or BETWEEN. Defaults to IN if $value is
+   *   an array, and = otherwise.
+   *
    * @return QueryConditionInterface
    *   The called object.
    */
   public function condition($field, $value = NULL, $operator = NULL);
 
   /**
-   * Add an arbitrary WHERE clause to the query.
+   * Adds an arbitrary WHERE clause to the query.
    *
    * @param $snippet
-   *   A portion of a WHERE clause as a prepared statement. It must use named placeholders,
-   *   not ? placeholders.
+   *   A portion of a WHERE clause as a prepared statement. It must use named
+   *   placeholders, not ? placeholders.
    * @param $args
    *   An associative array of arguments.
+   *
    * @return QueryConditionInterface
    *   The called object.
    */
   public function where($snippet, $args = array());
 
   /**
-   * Set a condition that the specified field be NULL.
+   * Sets a condition that the specified field be NULL.
    *
    * @param $field
    *   The name of the field to check.
+   *
    * @return QueryConditionInterface
    *   The called object.
    */
   public function isNull($field);
 
   /**
-   * Set a condition that the specified field be NOT NULL.
+   * Sets a condition that the specified field be NOT NULL.
    *
    * @param $field
    *   The name of the field to check.
+   *
    * @return QueryConditionInterface
    *   The called object.
    */
@@ -80,12 +84,13 @@ interface QueryConditionInterface {
    *
    * The data structure that is returned is an indexed array of entries, where
    * each entry looks like the following:
-   *
+   * @code
    * array(
    *   'field' => $field,
    *   'value' => $value,
    *   'operator' => $operator,
    * );
+   * @endcode
    *
    * In the special case that $operator is NULL, the $field is taken as a raw
    * SQL snippet (possibly containing a function) and $value is an associative
@@ -112,7 +117,7 @@ interface QueryConditionInterface {
    *
    * @param $connection
    *   The database connection for which to compile the conditionals.
-   * @param $query
+   * @param $queryPlaceholder
    *   The query this condition belongs to. If not given, the current query is
    *   used.
    */
@@ -130,12 +135,13 @@ interface QueryAlterableInterface {
    *
    * Tags are strings that identify a query. A query may have any number of
    * tags. Tags are used to mark a query so that alter hooks may decide if they
-   * wish to take action. Tags should be all lower-case and contain only letters,
-   * numbers, and underscore, and start with a letter. That is, they should
-   * follow the same rules as PHP identifiers in general.
+   * wish to take action. Tags should be all lower-case and contain only
+   * letters, numbers, and underscore, and start with a letter. That is, they
+   * should follow the same rules as PHP identifiers in general.
    *
    * @param $tag
    *   The tag to add.
+   *
    * @return QueryAlterableInterface
    *   The called object.
    */
@@ -146,6 +152,7 @@ interface QueryAlterableInterface {
    *
    * @param $tag
    *   The tag to check.
+   *
    * @return
    *   TRUE if this query has been marked with this tag, FALSE otherwise.
    */
@@ -156,8 +163,10 @@ interface QueryAlterableInterface {
    *
    * @param $tags
    *   A variable number of arguments, one for each tag to check.
+   *
    * @return
-   *   TRUE if this query has been marked with all specified tags, FALSE otherwise.
+   *   TRUE if this query has been marked with all specified tags, FALSE
+   *   otherwise.
    */
   public function hasAllTags();
 
@@ -166,6 +175,7 @@ interface QueryAlterableInterface {
    *
    * @param $tags
    *   A variable number of arguments, one for each tag to check.
+   *
    * @return
    *   TRUE if this query has been marked with at least one of the specified
    *   tags, FALSE otherwise.
@@ -184,6 +194,7 @@ interface QueryAlterableInterface {
    *   follows the same rules as any other PHP identifier.
    * @param $object
    *   The additional data to add to the query. May be any valid PHP variable.
+   *
    * @return QueryAlterableInterface
    *   The called object.
    */
@@ -194,6 +205,7 @@ interface QueryAlterableInterface {
    *
    * @param $key
    *   The unique identifier for the piece of metadata to retrieve.
+   *
    * @return
    *   The previously attached metadata object, or NULL if one doesn't exist.
    */
@@ -215,9 +227,10 @@ interface QueryPlaceholderInterface {
 }
 
 /**
- * Base class for the query builders.
+ * Base class for query builders.
  *
- * All query builders inherit from a common base class.
+ * Note that query builders use PHP's magic __toString() method to compile the
+ * query object into a prepared statement.
  */
 abstract class Query implements QueryPlaceholderInterface {
 
@@ -247,26 +260,41 @@ abstract class Query implements QueryPlaceholderInterface {
    */
   protected $comments = array();
 
+  /**
+   * Constructs a Query object.
+   *
+   * @param DatabaseConnection $connection
+   *   Database connection object.
+   * @param array $options
+   *   Array of query options.
+   */
   public function __construct(DatabaseConnection $connection, $options) {
     $this->connection = $connection;
     $this->queryOptions = $options;
   }
 
   /**
-   * Run the query against the database.
+   * Runs the query against the database.
    */
   abstract protected function execute();
 
   /**
-   * __toString() magic method.
+   * Implements PHP magic __toString method to convert the query to a string.
    *
-   * The toString operation is how we compile a query object to a prepared statement.
+   * The toString operation is how we compile a query object to a prepared
+   * statement.
    *
    * @return
    *   A prepared statement query string for this object.
    */
   abstract public function __toString();
 
+  /**
+   * Gets the next placeholder value for this query object.
+   *
+   * @return int
+   *   Next placeholder value.
+   */
   public function nextPlaceholder() {
     return $this->nextPlaceholder++;
   }
@@ -275,12 +303,13 @@ abstract class Query implements QueryPlaceholderInterface {
    * Adds a comment to the query.
    *
    * By adding a comment to a query, you can more easily find it in your
-   * query log or the list of active queries on an sql server. This allows
+   * query log or the list of active queries on an SQL server. This allows
    * for easier debugging and allows you to more easily find where a query
    * with a performance problem is being generated.
    *
    * @param $comment
    *   The comment string to be inserted into the query.
+   *
    * @return Query
    *   The called object.
    */
@@ -297,7 +326,6 @@ abstract class Query implements QueryPlaceholderInterface {
    * use of comment() is preferred.
    *
    * Note that this method must be called by reference as well:
-   *
    * @code
    * $comments =& $query->getComments();
    * @endcode
@@ -311,7 +339,7 @@ abstract class Query implements QueryPlaceholderInterface {
 }
 
 /**
- * General class for an abstracted INSERT operation.
+ * General class for an abstracted INSERT query.
  */
 class InsertQuery extends Query {
 
@@ -330,7 +358,7 @@ class InsertQuery extends Query {
   protected $insertFields = array();
 
   /**
-   * An array of fields which should be set to their database-defined defaults.
+   * An array of fields that should be set to their database-defined defaults.
    *
    * @var array
    */
@@ -339,13 +367,17 @@ class InsertQuery extends Query {
   /**
    * A nested array of values to insert.
    *
-   * $insertValues itself is an array of arrays. Each sub-array is an array of
-   * field names to values to insert. Whether multiple insert sets
-   * will be run in a single query or multiple queries is left to individual drivers
-   * to implement in whatever manner is most efficient. The order of values in each
-   * sub-array must match the order of fields in $insertFields.
+   * $insertValues is an array of arrays. Each sub-array is either an
+   * associative array whose keys are field names and whose values are field
+   * values to insert, or a non-associative array of values in the same order
+   * as $insertFields.
    *
-   * @var string
+   * Whether multiple insert sets will be run in a single query or multiple
+   * queries is left to individual drivers to implement in whatever manner is
+   * most appropriate. The order of values in each sub-array must match the
+   * order of fields in $insertFields.
+   *
+   * @var array
    */
   protected $insertValues = array();
 
@@ -356,6 +388,16 @@ class InsertQuery extends Query {
    */
   protected $fromQuery;
 
+  /**
+   * Constructs an InsertQuery object.
+   *
+   * @param DatabaseConnection $connection
+   *   A DatabaseConnection object.
+   * @param string $table
+   *   Name of the table to associate with this query.
+   * @param array $options
+   *   Array of database options.
+   */
   public function __construct($connection, $table, array $options = array()) {
     if (!isset($options['return'])) {
       $options['return'] = Database::RETURN_INSERT_ID;
@@ -365,7 +407,7 @@ class InsertQuery extends Query {
   }
 
   /**
-   * Add a set of field->value pairs to be inserted.
+   * Adds a set of field->value pairs to be inserted.
    *
    * This method may only be called once. Calling it a second time will be
    * ignored. To queue up multiple sets of values to be inserted at once,
@@ -380,6 +422,7 @@ class InsertQuery extends Query {
    * @param $values
    *   An array of fields to insert into the database. The values must be
    *   specified in the same order as the $fields array.
+   *
    * @return InsertQuery
    *   The called object.
    */
@@ -401,15 +444,16 @@ class InsertQuery extends Query {
   }
 
   /**
-   * Add another set of values to the query to be inserted.
+   * Adds another set of values to the query to be inserted.
    *
-   * If $values is a numeric array, it will be assumed to be in the same
+   * If $values is a numeric-keyed array, it will be assumed to be in the same
    * order as the original fields() call. If it is associative, it may be
    * in any order as long as the keys of the array match the names of the
    * fields.
    *
    * @param $values
    *   An array of values to add to the query.
+   *
    * @return InsertQuery
    *   The called object.
    */
@@ -429,7 +473,7 @@ class InsertQuery extends Query {
   }
 
   /**
-   * Specify fields for which the database-defaults should be used.
+   * Specifies fields for which the database defaults should be used.
    *
    * If you want to force a given field to use the database-defined default,
    * not NULL or undefined, use this method to instruct the database to use
@@ -443,6 +487,7 @@ class InsertQuery extends Query {
    * @param $fields
    *   An array of values for which to use the default values
    *   specified in the table definition.
+   *
    * @return InsertQuery
    *   The called object.
    */
@@ -451,6 +496,15 @@ class InsertQuery extends Query {
     return $this;
   }
 
+  /**
+   * Sets the fromQuery on this InsertQuery object.
+   *
+   * @param SelectQueryInterface $query
+   *   The query to fetch the rows that should be inserted.
+   *
+   * @return InsertQuery
+   *   The called object.
+   */
   public function from(SelectQueryInterface $query) {
     $this->fromQuery = $query;
     return $this;
@@ -466,8 +520,8 @@ class InsertQuery extends Query {
    *   return NULL. That makes it safe to use in multi-insert loops.
    */
   public function execute() {
-    // If validation fails, simply return NULL.
-    // Note that validation routines in preExecute() may throw exceptions instead.
+    // If validation fails, simply return NULL. Note that validation routines
+    // in preExecute() may throw exceptions instead.
     if (!$this->preExecute()) {
       return NULL;
     }
@@ -508,6 +562,12 @@ class InsertQuery extends Query {
     return $last_insert_id;
   }
 
+  /**
+   * Implements PHP magic __toString method to convert the query to a string.
+   *
+   * @return string
+   *   The prepared statement.
+   */
   public function __toString() {
 
     // Create a comments string to prepend to the query.
@@ -531,7 +591,7 @@ class InsertQuery extends Query {
   }
 
   /**
-   * Generic preparation and validation for an INSERT query.
+   * Preprocesses and validates the query.
    *
    * @return
    *   TRUE if the validation was successful, FALSE if not.
@@ -583,13 +643,24 @@ class DeleteQuery extends Query implements QueryConditionInterface {
   protected $table;
 
   /**
-   * The condition object for this query. Condition handling is handled via
-   * composition.
+   * The condition object for this query.
+   *
+   * Condition handling is handled via composition.
    *
    * @var DatabaseCondition
    */
   protected $condition;
 
+  /**
+   * Constructs a DeleteQuery object.
+   *
+   * @param DatabaseConnection $connection
+   *   A DatabaseConnection object.
+   * @param string $table
+   *   Name of the table to associate with this query.
+   * @param array $options
+   *   Array of database options.
+   */
   public function __construct(DatabaseConnection $connection, $table, array $options = array()) {
     $options['return'] = Database::RETURN_AFFECTED;
     parent::__construct($connection, $options);
@@ -598,38 +669,65 @@ class DeleteQuery extends Query implements QueryConditionInterface {
     $this->condition = new DatabaseCondition('AND');
   }
 
+  /**
+   * Implements QueryConditionInterface::condition().
+   */
   public function condition($field, $value = NULL, $operator = NULL) {
     $this->condition->condition($field, $value, $operator);
     return $this;
   }
 
+  /**
+   * Implements QueryConditionInterface::isNull().
+   */
   public function isNull($field) {
     $this->condition->isNull($field);
     return $this;
   }
 
+  /**
+   * Implements QueryConditionInterface::isNotNull().
+   */
   public function isNotNull($field) {
     $this->condition->isNotNull($field);
     return $this;
   }
 
+  /**
+   * Implements QueryConditionInterface::conditions().
+   */
   public function &conditions() {
     return $this->condition->conditions();
   }
 
+  /**
+   * Implements QueryConditionInterface::arguments().
+   */
   public function arguments() {
     return $this->condition->arguments();
   }
 
+  /**
+   * Implements QueryConditionInterface::where().
+   */
   public function where($snippet, $args = array()) {
     $this->condition->where($snippet, $args);
     return $this;
   }
 
+  /**
+   * Implements QueryConditionInterface::compile().
+   */
   public function compile(DatabaseConnection $connection, QueryPlaceholderInterface $queryPlaceholder = NULL) {
     return $this->condition->compile($connection, isset($queryPlaceholder) ? $queryPlaceholder : $this);
   }
 
+  /**
+   * Executes the DELETE query.
+   *
+   * @return
+   *   The return value is dependant on the database connection.
+   */
   public function execute() {
     $values = array();
     if (count($this->condition)) {
@@ -640,6 +738,12 @@ class DeleteQuery extends Query implements QueryConditionInterface {
     return $this->connection->query((string) $this, $values, $this->queryOptions);
   }
 
+  /**
+   * Implements PHP magic __toString method to convert the query to a string.
+   *
+   * @return string
+   *   The prepared statement.
+   */
   public function __toString() {
 
     // Create a comments string to prepend to the query.
@@ -664,26 +768,51 @@ class DeleteQuery extends Query implements QueryConditionInterface {
 class TruncateQuery extends Query {
 
   /**
-   * The table from which to delete.
+   * The table to truncate.
    *
    * @var string
    */
   protected $table;
 
+  /**
+   * Constructs a TruncateQuery object.
+   *
+   * @param DatabaseConnection $connection
+   *   A DatabaseConnection object.
+   * @param string $table
+   *   Name of the table to associate with this query.
+   * @param array $options
+   *   Array of database options.
+   */
   public function __construct(DatabaseConnection $connection, $table, array $options = array()) {
     $options['return'] = Database::RETURN_AFFECTED;
     parent::__construct($connection, $options);
     $this->table = $table;
   }
 
+  /**
+   * Implements QueryConditionInterface::compile().
+   */
   public function compile(DatabaseConnection $connection, QueryPlaceholderInterface $queryPlaceholder = NULL) {
     return $this->condition->compile($connection, isset($queryPlaceholder) ? $queryPlaceholder : $this);
   }
 
+  /**
+   * Executes the TRUNCATE query.
+   *
+   * @return
+   *   Return value is dependent on the database type.
+   */
   public function execute() {
     return $this->connection->query((string) $this, array(), $this->queryOptions);
   }
 
+  /**
+   * Implements PHP magic __toString method to convert the query to a string.
+   *
+   * @return string
+   *   The prepared statement.
+   */
   public function __toString() {
     // Create a comments string to prepend to the query.
     $comments = (!empty($this->comments)) ? '/* ' . implode('; ', $this->comments) . ' */ ' : '';
@@ -719,26 +848,39 @@ class UpdateQuery extends Query implements QueryConditionInterface {
   protected $arguments = array();
 
   /**
-   * The condition object for this query. Condition handling is handled via
-   * composition.
+   * The condition object for this query.
+   *
+   * Condition handling is handled via composition.
    *
    * @var DatabaseCondition
    */
   protected $condition;
 
   /**
-   * An array of fields to update to an expression in case of a duplicate record.
+   * Array of fields to update to an expression in case of a duplicate record.
    *
    * This variable is a nested array in the following format:
+   * @code
    * <some field> => array(
-   *  'condition' => <condition to execute, as a string>
-   *  'arguments' => <array of arguments for condition, or NULL for none>
+   *  'condition' => <condition to execute, as a string>,
+   *  'arguments' => <array of arguments for condition, or NULL for none>,
    * );
+   * @endcode
    *
    * @var array
    */
   protected $expressionFields = array();
 
+  /**
+   * Constructs an UpdateQuery object.
+   *
+   * @param DatabaseConnection $connection
+   *   A DatabaseConnection object.
+   * @param string $table
+   *   Name of the table to associate with this query.
+   * @param array $options
+   *   Array of database options.
+   */
   public function __construct(DatabaseConnection $connection, $table, array $options = array()) {
     $options['return'] = Database::RETURN_AFFECTED;
     parent::__construct($connection, $options);
@@ -747,44 +889,66 @@ class UpdateQuery extends Query implements QueryConditionInterface {
     $this->condition = new DatabaseCondition('AND');
   }
 
+  /**
+   * Implements QueryConditionInterface::condition().
+   */
   public function condition($field, $value = NULL, $operator = NULL) {
     $this->condition->condition($field, $value, $operator);
     return $this;
   }
 
+  /**
+   * Implements QueryConditionInterface::isNull().
+   */
   public function isNull($field) {
     $this->condition->isNull($field);
     return $this;
   }
 
+  /**
+   * Implements QueryConditionInterface::isNotNull().
+   */
   public function isNotNull($field) {
     $this->condition->isNotNull($field);
     return $this;
   }
 
+  /**
+   * Implements QueryConditionInterface::conditions().
+   */
   public function &conditions() {
     return $this->condition->conditions();
   }
 
+  /**
+   * Implements QueryConditionInterface::arguments().
+   */
   public function arguments() {
     return $this->condition->arguments();
   }
 
+  /**
+   * Implements QueryConditionInterface::where().
+   */
   public function where($snippet, $args = array()) {
     $this->condition->where($snippet, $args);
     return $this;
   }
 
+  /**
+   * Implements QueryConditionInterface::compile().
+   */
   public function compile(DatabaseConnection $connection, QueryPlaceholderInterface $queryPlaceholder = NULL) {
     return $this->condition->compile($connection, isset($queryPlaceholder) ? $queryPlaceholder : $this);
   }
 
   /**
-   * Add a set of field->value pairs to be updated.
+   * Adds a set of field->value pairs to be updated.
    *
    * @param $fields
    *   An associative array of fields to write into the database. The array keys
-   *   are the field names while the values are the values to which to set them.
+   *   are the field names and the values are the values to which to set them.
+   *
    * @return UpdateQuery
    *   The called object.
    */
@@ -794,7 +958,7 @@ class UpdateQuery extends Query implements QueryConditionInterface {
   }
 
   /**
-   * Specify fields to be updated as an expression.
+   * Specifies fields to be updated as an expression.
    *
    * Expression fields are cases such as counter=counter+1. This method takes
    * precedence over fields().
@@ -807,6 +971,7 @@ class UpdateQuery extends Query implements QueryConditionInterface {
    * @param $arguments
    *   If specified, this is an array of key/value pairs for named placeholders
    *   corresponding to the expression.
+   *
    * @return UpdateQuery
    *   The called object.
    */
@@ -819,6 +984,12 @@ class UpdateQuery extends Query implements QueryConditionInterface {
     return $this;
   }
 
+  /**
+   * Executes the UPDATE query.
+   *
+   * @return
+   *   The number of rows affected by the update.
+   */
   public function execute() {
 
     // Expressions take priority over literal fields, so we process those first
@@ -847,6 +1018,12 @@ class UpdateQuery extends Query implements QueryConditionInterface {
     return $this->connection->query((string) $this, $update_values, $this->queryOptions);
   }
 
+  /**
+   * Implements PHP magic __toString method to convert the query to a string.
+   *
+   * @return string
+   *   The prepared statement.
+   */
   public function __toString() {
 
     // Create a comments string to prepend to the query.
@@ -880,7 +1057,7 @@ class UpdateQuery extends Query implements QueryConditionInterface {
 }
 
 /**
- * General class for an abstracted MERGE operation.
+ * General class for an abstracted MERGE query operation.
  *
  * An ANSI SQL:2003 compatible database would run the following query:
  *
@@ -970,25 +1147,37 @@ class MergeQuery extends Query implements QueryConditionInterface {
   protected $updateFields = array();
 
   /**
-   * An array of fields to update to an expression in case of a duplicate record.
+   * Array of fields to update to an expression in case of a duplicate record.
    *
    * This variable is a nested array in the following format:
+   * @code
    * <some field> => array(
-   *  'condition' => <condition to execute, as a string>
-   *  'arguments' => <array of arguments for condition, or NULL for none>
+   *  'condition' => <condition to execute, as a string>,
+   *  'arguments' => <array of arguments for condition, or NULL for none>,
    * );
+   * @endcode
    *
    * @var array
    */
   protected $expressionFields = array();
 
   /**
-   * Flag indicated whether an UPDATE is necessary.
+   * Flag indicating whether an UPDATE is necessary.
    *
    * @var boolean
    */
   protected $needsUpdate = FALSE;
 
+  /**
+  * Constructs a MergeQuery object.
+  *
+  * @param DatabaseConnection $connection
+  *   A DatabaseConnection object.
+  * @param string $table
+  *   Name of the table to associate with this query.
+  * @param array $options
+  *   Array of database options.
+  */
   public function __construct(DatabaseConnection $connection, $table, array $options = array()) {
     $options['return'] = Database::RETURN_AFFECTED;
     parent::__construct($connection, $options);
@@ -998,7 +1187,7 @@ class MergeQuery extends Query implements QueryConditionInterface {
   }
 
   /**
-   * Set the table or subquery to be used for the condition.
+   * Sets the table or subquery to be used for the condition.
    *
    * @param $table
    *   The table name or the subquery to be used. Use a SelectQuery object to
@@ -1017,7 +1206,7 @@ class MergeQuery extends Query implements QueryConditionInterface {
    *
    * @param $fields
    *   An associative array of fields to write into the database. The array keys
-   *   are the field names while the values are the values to which to set them.
+   *   are the field names and the values are the values to which to set them.
    *
    * @return MergeQuery
    *   The called object.
@@ -1029,7 +1218,7 @@ class MergeQuery extends Query implements QueryConditionInterface {
   }
 
   /**
-   * Specify fields to be updated as an expression.
+   * Specifies fields to be updated as an expression.
    *
    * Expression fields are cases such as counter = counter + 1. This method
    * takes precedence over MergeQuery::updateFields() and it's wrappers,
@@ -1043,6 +1232,7 @@ class MergeQuery extends Query implements QueryConditionInterface {
    * @param $arguments
    *   If specified, this is an array of key/value pairs for named placeholders
    *   corresponding to the expression.
+   *
    * @return MergeQuery
    *   The called object.
    */
@@ -1104,7 +1294,7 @@ class MergeQuery extends Query implements QueryConditionInterface {
   }
 
   /**
-   * Set common field-value pairs in the INSERT and UPDATE query parts.
+   * Sets common field-value pairs in the INSERT and UPDATE query parts.
    *
    * This method should only be called once. It may be called either
    * with a single associative array or two indexed arrays. If called
@@ -1114,11 +1304,11 @@ class MergeQuery extends Query implements QueryConditionInterface {
    * and the second array is taken as the corresponding values.
    *
    * @param $fields
-   *   An associative array of fields on which to insert. The keys of the
-   *   array are taken to be the fields and the values are taken to be
-   *   corresponding values to insert.
+   *   An array of fields to insert, or an associative array of fields and
+   *   values. The keys of the array are taken to be the fields and the values
+   *   are taken to be corresponding values to insert.
    * @param $values
-   *   An array of fields to set into the database. The values must be
+   *   An array of values to set into the database. The values must be
    *   specified in the same order as the $fields array.
    *
    * @return MergeQuery
@@ -1137,7 +1327,7 @@ class MergeQuery extends Query implements QueryConditionInterface {
   }
 
   /**
-   * Set the key field(s) to be used as conditions for this query.
+   * Sets the key field(s) to be used as conditions for this query.
    *
    * This method should only be called once. It may be called either
    * with a single associative array or two indexed arrays. If called
@@ -1150,10 +1340,11 @@ class MergeQuery extends Query implements QueryConditionInterface {
    * If no other method is called, the UPDATE will become a no-op.
    *
    * @param $fields
-   *   An array of fields to set.
+   *   An array of fields to set, or an associative array of fields and values.
    * @param $values
-   *   An array of fields to set into the database. The values must be
+   *   An array of values to set into the database. The values must be
    *   specified in the same order as the $fields array.
+   *
    * @return MergeQuery
    *   The called object.
    */
@@ -1168,38 +1359,68 @@ class MergeQuery extends Query implements QueryConditionInterface {
     return $this;
   }
 
+  /**
+   * Implements QueryConditionInterface::condition().
+   */
   public function condition($field, $value = NULL, $operator = NULL) {
     $this->condition->condition($field, $value, $operator);
     return $this;
   }
 
+  /**
+   * Implements QueryConditionInterface::isNull().
+   */
   public function isNull($field) {
     $this->condition->isNull($field);
     return $this;
   }
 
+  /**
+   * Implements QueryConditionInterface::isNotNull().
+   */
   public function isNotNull($field) {
     $this->condition->isNotNull($field);
     return $this;
   }
 
+  /**
+   * Implements QueryConditionInterface::conditions().
+   */
   public function &conditions() {
     return $this->condition->conditions();
   }
 
+  /**
+   * Implements QueryConditionInterface::arguments().
+   */
   public function arguments() {
     return $this->condition->arguments();
   }
 
+  /**
+   * Implements QueryConditionInterface::where().
+   */
   public function where($snippet, $args = array()) {
     $this->condition->where($snippet, $args);
     return $this;
   }
 
+  /**
+   * Implements QueryConditionInterface::compile().
+   */
   public function compile(DatabaseConnection $connection, QueryPlaceholderInterface $queryPlaceholder = NULL) {
     return $this->condition->compile($connection, isset($queryPlaceholder) ? $queryPlaceholder : $this);
   }
 
+  /**
+   * Implements PHP magic __toString method to convert the query to a string.
+   *
+   * In the degenerate case, there is no string-able query as this operation
+   * is potentially two queries.
+   *
+   * @return string
+   *   The prepared query statement.
+   */
   public function __toString() {
   }
 
@@ -1261,25 +1482,54 @@ class MergeQuery extends Query implements QueryConditionInterface {
  */
 class DatabaseCondition implements QueryConditionInterface, Countable {
 
+  /**
+   * Array of conditions.
+   *
+   * @var array
+   */
   protected $conditions = array();
+
+  /**
+   * Array of arguments.
+   *
+   * @var array
+   */
   protected $arguments = array();
 
+  /**
+   * Whether the conditions have been changed.
+   *
+   * TRUE if the condition has been changed since the last compile.
+   * FALSE if the condition has been compiled and not changed.
+   *
+   * @var bool
+   */
   protected $changed = TRUE;
 
+  /**
+   * Constructs a DataBaseCondition object.
+   *
+   * @param string $conjunction
+   *   The operator to use to combine conditions: 'AND' or 'OR'.
+   */
   public function __construct($conjunction) {
     $this->conditions['#conjunction'] = $conjunction;
   }
 
   /**
-   * Return the size of this conditional. This is part of the Countable interface.
+   * Implements Countable::count().
    *
-   * The size of the conditional is the size of its conditional array minus
-   * one, because one element is the the conjunction.
+   * Returns the size of this conditional. The size of the conditional is the
+   * size of its conditional array minus one, because one element is the the
+   * conjunction.
    */
   public function count() {
     return count($this->conditions) - 1;
   }
 
+  /**
+   * Implements QueryConditionInterface::condition().
+   */
   public function condition($field, $value = NULL, $operator = NULL) {
     if (!isset($operator)) {
       if (is_array($value)) {
@@ -1303,6 +1553,9 @@ class DatabaseCondition implements QueryConditionInterface, Countable {
     return $this;
   }
 
+  /**
+   * Implements QueryConditionInterface::where().
+   */
   public function where($snippet, $args = array()) {
     $this->conditions[] = array(
       'field' => $snippet,
@@ -1314,18 +1567,30 @@ class DatabaseCondition implements QueryConditionInterface, Countable {
     return $this;
   }
 
+  /**
+   * Implements QueryConditionInterface::isNull().
+   */
   public function isNull($field) {
     return $this->condition($field);
   }
 
+  /**
+   * Implements QueryConditionInterface::isNotNull().
+   */
   public function isNotNull($field) {
     return $this->condition($field, NULL, 'IS NOT NULL');
   }
 
+  /**
+   * Implements QueryConditionInterface::conditions().
+   */
   public function &conditions() {
     return $this->conditions;
   }
 
+  /**
+   * Implements QueryConditionInterface::arguments().
+   */
   public function arguments() {
     // If the caller forgot to call compile() first, refuse to run.
     if ($this->changed) {
@@ -1334,6 +1599,9 @@ class DatabaseCondition implements QueryConditionInterface, Countable {
     return $this->arguments;
   }
 
+  /**
+   * Implements QueryConditionInterface::compile().
+   */
   public function compile(DatabaseConnection $connection, QueryPlaceholderInterface $queryPlaceholder = NULL) {
     if ($this->changed) {
       $condition_fragments = array();
@@ -1407,6 +1675,12 @@ class DatabaseCondition implements QueryConditionInterface, Countable {
     }
   }
 
+  /**
+   * Implements PHP magic __toString method to convert the conditions to string.
+   *
+   * @return string
+   *   A string version of the conditions.
+   */
   public function __toString() {
     // If the caller forgot to call compile() first, refuse to run.
     if ($this->changed) {
@@ -1415,6 +1689,12 @@ class DatabaseCondition implements QueryConditionInterface, Countable {
     return $this->stringVersion;
   }
 
+  /**
+   * PHP magic __clone() method.
+   *
+   * Only copies fields that implement QueryConditionInterface. Also sets
+   * $this->changed to TRUE.
+   */
   function __clone() {
     $this->changed = TRUE;
     foreach ($this->conditions as $key => $condition) {
@@ -1433,6 +1713,7 @@ class DatabaseCondition implements QueryConditionInterface, Countable {
    *
    * @param $operator
    *   The condition operator, such as "IN", "BETWEEN", etc. Case-sensitive.
+   *
    * @return
    *   The extra handling directives for the specified operator, or NULL.
    */
