@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.260 2010/10/06 13:38:39 dries Exp $
+// $Id: locale.inc,v 1.261 2010/10/26 15:24:50 dries Exp $
 
 /**
  * @file
@@ -650,8 +650,8 @@ function _locale_import_read_po($op, $file, $mode = NULL, $lang = NULL, $group =
     }
   }
 
-  // End of PO file, flush last entry
-  if (!empty($current) && !empty($current['msgstr'])) {
+  // End of PO file, flush last entry.
+  if (($context == "MSGSTR") || ($context == "MSGSTR_ARR")) {
     _locale_import_one_string($op, $current, $mode, $lang, $file, $group);
   }
   elseif ($context != "COMMENT") {
