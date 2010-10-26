@@ -114,13 +114,14 @@ Drupal 7.0, xxxx-xx-xx (development version)
       on as contributed themes (http://drupal.org/project/bluemarine,
       http://drupal.org/project/chameleon and http://drupal.org/project/pushbutton).
     * Added Stark theme to make analyzing Drupal's default HTML and CSS easier.
-    * Added Seven theme as the default administration interface theme.
+    * Added Seven as the default administration theme.
     * Variable preprocessing of theme hooks prior to template rendering now goes
       through two phases: a 'preprocess' phase and a new 'process' phase. See
       http://api.drupal.org/api/function/theme/7 for details.
     * Theme hooks implemented as functions (rather than as templates) can now
       also have preprocess (and process) functions. See
       http://api.drupal.org/api/function/theme/7 for details.
+    * Added Bartik as the default theme.
 - File handling:
     * Files are now first class Drupal objects with file_load(), file_save(),
       and file_validate() functions and corresponding hooks.
