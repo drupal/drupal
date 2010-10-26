@@ -726,46 +726,35 @@ function drupal_access_denied() {
  *
  * @param $url
  *   A string containing a fully qualified URI.
- * @param $options
- *   (optional) An array which can have one or more of following keys:
- *   - headers
- *       An array containing request headers to send as name/value pairs.
- *   - method
- *       A string containing the request method. Defaults to 'GET'.
- *   - data
- *       A string containing the request body. Defaults to NULL.
- *   - max_redirects
- *       An integer representing how many times a redirect may be followed.
- *       Defaults to 3.
- *   - timeout
- *       A float representing the maximum number of seconds the function call
- *       may take. The default is 30 seconds. If a timeout occurs, the error
- *       code is set to the HTTP_REQUEST_TIMEOUT constant.
- *   - context
- *       A context resource created with stream_context_create().
- * @return
- *   An object which can have one or more of the following parameters:
- *   - request
- *       A string containing the request body that was sent.
- *   - code
- *       An integer containing the response status code, or the error code if
- *       an error occurred.
- *   - protocol
- *       The response protocol (e.g. HTTP/1.1 or HTTP/1.0).
- *   - status_message
- *       The status message from the response, if a response was received.
- *   - redirect_code
- *       If redirected, an integer containing the initial response status code.
- *   - redirect_url
- *       If redirected, a string containing the redirection location.
- *   - error
- *       If an error occurred, the error message. Otherwise not set.
- *   - headers
- *       An array containing the response headers as name/value pairs. HTTP
- *       header names are case-insensitive (RFC 2616, section 4.2), so for easy
- *       access the array keys are returned in lower case.
- *   - data
- *       A string containing the response body that was received.
+ * @param array $options
+ *   (optional) An array that can have one or more of the following elements:
+ *   - headers: An array containing request headers to send as name/value pairs.
+ *   - method: A string containing the request method. Defaults to 'GET'.
+ *   - data: A string containing the request body, formatted as
+ *     'param=value&param=value&...'. Defaults to NULL.
+ *   - max_redirects: An integer representing how many times a redirect
+ *     may be followed. Defaults to 3.
+ *   - timeout: A float representing the maximum number of seconds the function
+ *     call may take. The default is 30 seconds. If a timeout occurs, the error
+ *     code is set to the HTTP_REQUEST_TIMEOUT constant.
+ *   - context: A context resource created with stream_context_create().
+ * 
+ * @return object
+ *   An object that can have one or more of the following components:
+ *   - request: A string containing the request body that was sent.
+ *   - code: An integer containing the response status code, or the error code
+ *     if an error occurred.
+ *   - protocol: The response protocol (e.g. HTTP/1.1 or HTTP/1.0).
+ *   - status_message: The status message from the response, if a response was
+ *     received.
+ *   - redirect_code: If redirected, an integer containing the initial response
+ *     status code.
+ *   - redirect_url: If redirected, a string containing the redirection location.
+ *   - error: If an error occurred, the error message. Otherwise not set.
+ *   - headers: An array containing the response headers as name/value pairs.
+ *     HTTP header names are case-insensitive (RFC 2616, section 4.2), so for
+ *     easy access the array keys are returned in lower case.
+ *   - data: A string containing the response body that was received.
  */
 function drupal_http_request($url, array $options = array()) {
   $result = new stdClass();
