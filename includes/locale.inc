@@ -650,8 +650,8 @@ function _locale_import_read_po($op, $file, $mode = NULL, $lang = NULL, $group =
     }
   }
 
-  // End of PO file, flush last entry
-  if (!empty($current) && !empty($current['msgstr'])) {
+  // End of PO file, flush last entry.
+  if (($context == "MSGSTR") || ($context == "MSGSTR_ARR")) {
     _locale_import_one_string($op, $current, $mode, $lang, $file, $group);
   }
   elseif ($context != "COMMENT") {

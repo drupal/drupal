@@ -582,7 +582,7 @@ class LocaleImportFunctionalTest extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Translation import',
-      'description' => 'Tests the importation of locale files.',
+      'description' => 'Tests the import of locale files.',
       'group' => 'Locale',
     );
   }
@@ -600,7 +600,7 @@ class LocaleImportFunctionalTest extends DrupalWebTestCase {
   }
 
   /**
-   * Test importation of standalone .po files.
+   * Test import of standalone .po files.
    */
   function testStandalonePoFile() {
     // Try importing a .po file.
@@ -698,8 +698,8 @@ class LocaleImportFunctionalTest extends DrupalWebTestCase {
   }
 
   /**
-   * Test automatic importation of a module's translation files when a language
-   * is enabled.
+   * Test automatic import of a module's translation files when a language is
+   * enabled.
    */
   function testAutomaticModuleTranslationImportLanguageEnable() {
     // Code for the language - manually set to match the test translation file.
@@ -737,8 +737,7 @@ class LocaleImportFunctionalTest extends DrupalWebTestCase {
   }
 
   /**
-   * Test automatic importation of a module's translation files when a language
-   * is enabled.
+   * Test msgctxt context support.
    */
   function testLanguageContext() {
     // Try importing a .po file.
@@ -748,6 +747,43 @@ class LocaleImportFunctionalTest extends DrupalWebTestCase {
 
     $this->assertIdentical(t('May', array(), array('langcode' => 'hr', 'context' => 'Long month name')), 'Svibanj', t('Long month name context is working.'));
     $this->assertIdentical(t('May', array(), array('langcode' => 'hr')), 'Svi.', t('Default context is working.'));
+  }
+
+  /**
+   * Test empty msgstr at end of .po file see #611786.
+   */
+  function testEmptyMsgstr() {
+    $langcode = 'hu';
+
+    // Try importing a .po file.
+    $this->importPoFile($this->getPoFileWithMsgstr(), array(
+      'langcode' => $langcode,
+    ));
+
+    $this->assertRaw(t('The translation was successfully imported. There are %number newly created translated strings, %update strings were updated and %delete strings were removed.', array('%number' => 1, '%update' => 0, '%delete' => 0)), t('The translation file was successfully imported.'));
+    $this->assertIdentical(t('Operations', array(), array('langcode' => $langcode)), 'Műveletek', t('String imported and translated.'));
+
+    // Try importing a .po file.
+    $this->importPoFile($this->getPoFileWithEmptyMsgstr(), array(
+      'langcode' => $langcode,
+      'mode' => 0,
+    ));
+    $this->assertRaw(t('The translation was successfully imported. There are %number newly created translated strings, %update strings were updated and %delete strings were removed.', array('%number' => 0, '%update' => 0, '%delete' => 1)), t('The translation file was successfully imported.'));
+    // This is the language indicator on the translation search screen for
+    // untranslated strings. Copied straight from locale.inc.
+    $language_indicator = "<em class=\"locale-untranslated\">$langcode</em> ";
+    $str = "Operations";
+    $search = array(
+      'string' => $str,
+      'language' => 'all',
+      'translation' => 'all',
+      'group' => 'all',
+    );
+    $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
+    // assertText() seems to remove the input field where $str always could be
+    // found, so this is not a false assert.
+    $this->assertText($str, t('Search found the string.'));
+    $this->assertRaw($language_indicator, t('String is untranslated again.'));
   }
 
   /**
@@ -773,7 +809,7 @@ class LocaleImportFunctionalTest extends DrupalWebTestCase {
     return <<< EOF
 msgid ""
 msgstr ""
-"Project-Id-Version: Drupal 6\\n"
+"Project-Id-Version: Drupal 7\\n"
 "MIME-Version: 1.0\\n"
 "Content-Type: text/plain; charset=UTF-8\\n"
 "Content-Transfer-Encoding: 8bit\\n"
@@ -809,7 +845,7 @@ EOF;
     return <<< EOF
 msgid ""
 msgstr ""
-"Project-Id-Version: Drupal 6\\n"
+"Project-Id-Version: Drupal 7\\n"
 "MIME-Version: 1.0\\n"
 "Content-Type: text/plain; charset=UTF-8\\n"
 "Content-Transfer-Encoding: 8bit\\n"
@@ -835,7 +871,7 @@ EOF;
     return <<< EOF
 msgid ""
 msgstr ""
-"Project-Id-Version: Drupal 6\\n"
+"Project-Id-Version: Drupal 7\\n"
 "MIME-Version: 1.0\\n"
 "Content-Type: text/plain; charset=UTF-8\\n"
 "Content-Transfer-Encoding: 8bit\\n"
@@ -858,7 +894,7 @@ EOF;
     return <<< EOF
 msgid ""
 msgstr ""
-"Project-Id-Version: Drupal 6\\n"
+"Project-Id-Version: Drupal 7\\n"
 "MIME-Version: 1.0\\n"
 "Content-Type: text/plain; charset=UTF-8\\n"
 "Content-Transfer-Encoding: 8bit\\n"
@@ -873,6 +909,45 @@ msgstr "Svi."
 EOF;
   }
 
+  /**
+   * Helper function that returns a .po file with an empty last item.
+   */
+  function getPoFileWithEmptyMsgstr() {
+    return <<< EOF
+msgid ""
+msgstr ""
+"Project-Id-Version: Drupal 7\\n"
+"MIME-Version: 1.0\\n"
+"Content-Type: text/plain; charset=UTF-8\\n"
+"Content-Transfer-Encoding: 8bit\\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\\n"
+
+msgid "Operations"
+msgstr ""
+
+EOF;
+  }
+  /**
+   * Helper function that returns a .po file with an empty last item.
+   */
+  function getPoFileWithMsgstr() {
+    return <<< EOF
+msgid ""
+msgstr ""
+"Project-Id-Version: Drupal 7\\n"
+"MIME-Version: 1.0\\n"
+"Content-Type: text/plain; charset=UTF-8\\n"
+"Content-Transfer-Encoding: 8bit\\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\\n"
+
+msgid "Operations"
+msgstr "Műveletek"
+
+msgid "Will not appear in Drupal core, so we can ensure the test passes"
+msgstr ""
+
+EOF;
+  }
 
 }
 
