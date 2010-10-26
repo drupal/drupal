@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.206 2010/10/23 15:30:34 webchick Exp $
+// $Id: system.api.php,v 1.207 2010/10/26 15:15:22 dries Exp $
 
 /**
  * @file
@@ -2169,31 +2169,28 @@ function hook_watchdog(array $log_entry) {
 /**
  * Prepare a message based on parameters; called from drupal_mail().
  *
+ * Note that hook_mail(), unlike hook_mail_alter(), is only called on the
+ * $module argument to drupal_mail(), not all modules.
+ *
  * @param $key
  *   An identifier of the mail.
  * @param $message
- *  An array to be filled in. Keys in this array include:
- *  - 'id':
- *     An id to identify the mail sent. Look at module source code
+ *   An array to be filled in. Elements in this array include:
+ *   - id: An ID to identify the mail sent. Look at module source code
  *     or drupal_mail() for possible id values.
- *  - 'to':
- *     The address or addresses the message will be sent to. The
+ *   - to: The address or addresses the message will be sent to. The
  *     formatting of this string must comply with RFC 2822.
- *  - 'subject':
- *     Subject of the e-mail to be sent. This must not contain any newline
- *     characters, or the mail may not be sent properly. drupal_mail() sets
- *     this to an empty string when the hook is invoked.
- *  - 'body':
- *     An array of lines containing the message to be sent. Drupal will format
- *     the correct line endings for you. drupal_mail() sets this to an empty
- *     array when the hook is invoked.
- *  - 'from':
- *     The address the message will be marked as being from, which is
+ *   - subject: Subject of the e-mail to be sent. This must not contain any
+ *     newline characters, or the mail may not be sent properly. drupal_mail()
+ *     sets this to an empty string when the hook is invoked.
+ *   - body: An array of lines containing the message to be sent. Drupal will
+ *     format the correct line endings for you. drupal_mail() sets this to an
+ *     empty array when the hook is invoked.
+ *   - from: The address the message will be marked as being from, which is
  *     set by drupal_mail() to either a custom address or the site-wide
  *     default email address when the hook is invoked.
- *  - 'headers':
- *     Associative array containing mail headers, such as From, Sender,
- *     MIME-Version, Content-Type, etc. drupal_mail() pre-fills
+ *   - headers: Associative array containing mail headers, such as From,
+ *     Sender, MIME-Version, Content-Type, etc. drupal_mail() pre-fills
  *     several headers in this array.
  * @param $params
  *   An array of parameters supplied by the caller of drupal_mail().
