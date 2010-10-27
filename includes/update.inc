@@ -62,8 +62,7 @@ function update_check_incompatibility($name, $type = 'module') {
   if (!isset($file)
       || !isset($file->info['core'])
       || $file->info['core'] != DRUPAL_CORE_COMPATIBILITY
-      || version_compare(phpversion(), $file->info['php']) < 0
-      || ($type == 'module' && empty($file->info['files']))) {
+      || version_compare(phpversion(), $file->info['php']) < 0) {
     return TRUE;
   }
   return FALSE;
