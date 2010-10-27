@@ -3012,6 +3012,9 @@ function hook_install() {
  * See the batch operations page for more information on how to use the batch API:
  * @link http://drupal.org/node/180528 http://drupal.org/node/180528 @endlink
  *
+ * @param $sandbox
+ *   Stores information for multipass updates. See above for more information.
+ *
  * @throws DrupalUpdateException, PDOException
  *   In case of error, update hooks should throw an instance of DrupalUpdateException
  *   with a meaningful message for the user. If a database query fails for whatever
