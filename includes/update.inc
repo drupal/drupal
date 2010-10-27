@@ -1,5 +1,5 @@
 <?php
-// $Id: update.inc,v 1.79 2010/10/25 00:06:19 dries Exp $
+// $Id: update.inc,v 1.80 2010/10/27 19:31:53 dries Exp $
 
 /**
  * @file
@@ -62,8 +62,7 @@ function update_check_incompatibility($name, $type = 'module') {
   if (!isset($file)
       || !isset($file->info['core'])
       || $file->info['core'] != DRUPAL_CORE_COMPATIBILITY
-      || version_compare(phpversion(), $file->info['php']) < 0
-      || ($type == 'module' && empty($file->info['files']))) {
+      || version_compare(phpversion(), $file->info['php']) < 0) {
     return TRUE;
   }
   return FALSE;
