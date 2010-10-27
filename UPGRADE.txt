@@ -1,11 +1,11 @@
-// $Id: UPGRADE.txt,v 1.26 2010/10/22 00:31:59 dries Exp $
+// $Id: UPGRADE.txt,v 1.27 2010/10/27 18:32:54 dries Exp $
 
 INTRODUCTION
 ------------
 This document describes how to:
 
   * Update your Drupal site from one minor 7.x version to another minor 7.x
-    version; for example, from 7.9 to 7.10.
+    version; for example, from 7.8 to 7.9, or from 7.6 to 7.10.
 
   * Upgrade your Drupal site's major version from 6.x to 7.x.
 
@@ -15,15 +15,16 @@ First steps and definitions:
     version number, and y is known as the minor version number. The download
     file will be named drupal-x.y.tar.gz.
 
-  * The "Don't hack core" principle is respected. If you modified core files
-    outside of the 'sites' directory, see http://drupal.org/node/144376.
-
-  * All directories mentioned in this document are always relative to the
-    directory of your Drupal installation.
+  * All directories mentioned in this document are relative to the directory of
+    your Drupal installation.
 
   * Make a full backup of all files, directories, and your database(s) before
-    starting. Instructions may be found at
-    http://drupal.org/upgrade/backing-up-the-db
+    starting, and save it outside your Drupal installation directory.
+    Instructions may be found at http://drupal.org/upgrade/backing-up-the-db
+
+  * It is wise to try an update or upgrade on a test copy of your site before
+    applying it to your live site. Even minor updates can cause your site's
+    behavior to change.
 
 
 UPGRADE PROBLEMS
@@ -36,28 +37,33 @@ If you encounter errors during this process,
     you created before you started the upgrade process. Do not attempt to do
     further upgrades on a site that had update problems.
 
-  * Consult one of the support options listed on http://drupal.org/support.
+  * Consult one of the support options listed on http://drupal.org/support
 
 More in-depth information on upgrading can be found at http://drupal.org/upgrade
 
 
 MINOR VERSION UPDATES
 ---------------------
-To update from one minor 7.x version of Drupal to another 7.x version, after
+To update from one minor 7.x version of Drupal to any later 7.x version, after
 following the instructions in the INTRODUCTION section at the top of this file:
 
 1. Log in as a user with the permission "Administer software updates".
-   IMPORTANT! Do not close your browser until the final step is complete.
 
-2. Go to Administer » Configuration » Development » Maintenance mode.
+2. Go to Administration > Configuration > Development > Maintenance mode.
    Enable the "Put site into maintenance mode" checkbox and save the
    configuration.
 
-3. Remove all old core files and directories, EXCEPT for the 'sites' directory
+3. Remove all old core files and directories, except for the 'sites' directory
    and any custom files you added elsewhere.
 
    If you made modifications to files like .htaccess or robots.txt, you will
    need to re-apply them from your backup, after the new files are in place.
+
+   Sometimes an update includes changes to settings.php (this will be noted in
+   the release announcement). If that's the case, replace your old settings.php
+   with the new one, and copy the site-specific entries (especially the lines
+   giving the database name, user, and password) from the old settings.php to
+   the new settings.php.
 
 4. Download the latest Drupal 7.x release from http://drupal.org to a
    directory outside of your web root. Extract the archive and copy the files
@@ -88,7 +94,7 @@ following the instructions in the INTRODUCTION section at the top of this file:
 
    - Open settings.php with a text editor.
 
-   - There is a line that says:
+   - Find the line that says:
      $update_free_access = FALSE;
 
    - Change it into:
@@ -96,12 +102,12 @@ following the instructions in the INTRODUCTION section at the top of this file:
 
    - Once the upgrade is done, $update_free_access must be reverted to FALSE.
 
-7. Go to Administration » Reports » Status report. Verify that everything is
-   is working as expected.
+7. Go to Administration > Reports > Status report. Verify that everything is
+   working as expected.
 
 8. Ensure that $update_free_access is FALSE in settings.php.
 
-9. Go to Administration » Configuration » Development » Maintenance mode.
+9. Go to Administration > Configuration > Development > Maintenance mode.
    Disable the "Put site into maintenance mode" checkbox and save the
    configuration.
 
@@ -111,38 +117,44 @@ MAJOR VERSION UPGRADE
 To upgrade from a previous major version of Drupal to Drupal 7.x, after
 following the instructions in the INTRODUCTION section at the top of this file:
 
-1. Update to the latest available version of Drupal 6.x.
+1. Check on the Drupal 7 status of your contributed and custom modules and
+   themes. See http://drupal.org/node/948216 for information on upgrading
+   contributed modules and themes. See http://drupal.org/node/895314 for a list
+   of modules that have been moved into core for Drupal 7, and instructions on
+   how to update them. See http://drupal.org/update/modules for information on
+   how to update your custom modules, and http://drupal.org/update/theme for
+   custom themes.
 
-   If your current version is Drupal 5.x, you have to upgrade to 6.x first.
-   Download Drupal 6.x and follow the instructions in UPGRADE.txt instead.
-   This document only applies for upgrades from 6.x to 7.x.
+   You may decide at this point that you cannot upgrade your site, because
+   needed modules or themes are not ready for Drupal 7.
 
-2. Check the availability of your modules and themes for Drupal 7.x. See
-   http://drupal.org/node/948216
+2. Update to the latest available version of Drupal 6.x (if your current version
+   is Drupal 5.x, you have to upgrade to 6.x first). If you need to update,
+   download Drupal 6.x and follow the instructions in its UPGRADE.txt. This
+   document only applies for upgrades from 6.x to 7.x.
 
 3. Log in as user ID 1 (the site maintenance user).
 
-4. Go to Administer » Site configuration » Site maintenance. Select "Off-line"
-   and save the configuration.
+4. Go to Administer > Site configuration > Site maintenance. Select
+   "Off-line" and save the configuration.
 
-5. Go to Administer » Site building » Themes. Enable "Garland" and select it as
-   default theme.
+5. Go to Administer > Site building > Themes. Enable "Garland" and select it as
+   the default theme.
 
-6. Go to Administer » Site building » Modules. Disable all modules that are not
+6. Go to Administer > Site building > Modules. Disable all modules that are not
    listed under "Core - required" or "Core - optional". It is possible that some
    modules cannot be disabled, because others depend on them. Repeat this step
    until all non-core modules are disabled.
 
-   In case you already know that you will not re-enable some modules for Drupal
-   7.x and you no longer need their data, then you can uninstall them under the
-   Uninstall tab afterwards. See http://drupal.org/node/895314 for a list of
-   modules whose functionality has been moved into core for Drupal 7.x.
+   If you know that you will not re-enable some modules for Drupal 7.x and you
+   no longer need their data, then you can uninstall them under the Uninstall
+   tab after disabling them.
 
 7. On the command line or in your FTP client, remove the file
 
      sites/default/default.settings.php
 
-8. Remove all old core files and directories, EXCEPT for the 'sites' directory
+8. Remove all old core files and directories, except for the 'sites' directory
    and any custom files you added elsewhere.
 
    If you made modifications to files like .htaccess or robots.txt, you will
@@ -186,7 +198,7 @@ following the instructions in the INTRODUCTION section at the top of this file:
 
    - Open settings.php with a text editor.
 
-   - There is a line that says:
+   - Find the line that says:
      $update_free_access = FALSE;
 
    - Change it into:
@@ -196,25 +208,15 @@ following the instructions in the INTRODUCTION section at the top of this file:
 
 14. Backup your database after the core upgrade has run.
 
-15. Replace your non-core modules, following this procedure:
+15. Replace and update your non-core modules and themes, following the
+   procedures at http://drupal.org/node/948216
 
-   - Check your notes for any special upgrade instructions.
-   - Entirely delete the old module directory in sites/all/modules/.
-   - Download, extract, and move the new module directory to sites/all/modules/.
+16. Go to Administration > Reports > Status report. Verify that everything is
+   working as expected.
 
-16. Go to Administration » Modules. Re-enable your non-core modules.
+17. Ensure that $update_free_access is FALSE in settings.php.
 
-17. Re-run update.php.
-
-18. If applicable, return the site to its original theme following the same
-   procedure as in 15., but putting the theme in sites/all/themes/.
-
-19. Go to Administration » Reports » Status report. Verify that everything is
-   is working as expected.
-
-20. Ensure that $update_free_access is FALSE in settings.php.
-
-21. Go to Administration » Configuration » Development » Maintenance mode.
+18. Go to Administration > Configuration > Development > Maintenance mode.
    Disable the "Put site into maintenance mode" checkbox and save the
    configuration.
 
