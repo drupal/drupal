@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.209 2010/10/27 19:10:09 dries Exp $
+// $Id: system.api.php,v 1.210 2010/10/27 19:11:53 dries Exp $
 
 /**
  * @file
@@ -1002,12 +1002,14 @@ function hook_page_build(&$page) {
  *     item. Note that this function is called even if the access checks fail,
  *     so any custom delivery callback function should take that into account.
  *     See drupal_deliver_html_page() for an example.
- *   - "access callback": A function returning a boolean value that determines
- *     whether the user has access rights to this menu item. Defaults to
- *     user_access() unless a value is inherited from a parent menu item.
+ *   - "access callback": A function returning TRUE if the user has access
+ *     rights to this menu item, and FALSE if not. It can also be a boolean
+ *     constant instead of a function, and you can also use numeric values
+ *     (will be cast to boolean). Defaults to user_access() unless a value is
+ *     inherited from a parent menu item.
  *   - "access arguments": An array of arguments to pass to the access callback
  *     function, with path component substitution as described above.
- *   - "theme callback": Optional. A function returning the machine-readable
+ *   - "theme callback": (optional) A function returning the machine-readable
  *     name of the default theme that will be used to render the page. If this
  *     function is provided, it is expected to return a currently-active theme
  *     on the site (otherwise, the main site theme will be used instead). If no
