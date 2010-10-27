@@ -1836,7 +1836,6 @@ function node_menu() {
   );
   $items['admin/content/node'] = array(
     'title' => 'Content',
-    'description' => "Administer content",
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -10,
   );
