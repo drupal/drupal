@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.208 2010/10/27 18:57:57 dries Exp $
+// $Id: system.api.php,v 1.209 2010/10/27 19:10:09 dries Exp $
 
 /**
  * @file
@@ -3011,6 +3011,9 @@ function hook_install() {
  *
  * See the batch operations page for more information on how to use the batch API:
  * @link http://drupal.org/node/180528 http://drupal.org/node/180528 @endlink
+ *
+ * @param $sandbox
+ *   Stores information for multipass updates. See above for more information.
  *
  * @throws DrupalUpdateException, PDOException
  *   In case of error, update hooks should throw an instance of DrupalUpdateException
