@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.207 2010/10/26 15:15:22 dries Exp $
+// $Id: system.api.php,v 1.208 2010/10/27 18:57:57 dries Exp $
 
 /**
  * @file
@@ -1133,30 +1133,49 @@ function hook_menu_alter(&$items) {
  *
  * @param $item
  *   Associative array defining a menu link as passed into menu_link_save().
+ *
+ * @see hook_translated_menu_link_alter()
  */
 function hook_menu_link_alter(&$item) {
-  // Example 1 - make all new admin links hidden (a.k.a disabled).
+  // Make all new admin links hidden (a.k.a disabled).
   if (strpos($item['link_path'], 'admin') === 0 && empty($item['mlid'])) {
     $item['hidden'] = 1;
   }
-  // Example 2  - flag a link to be altered by hook_translated_menu_link_alter()
+  // Flag a link to be altered by hook_translated_menu_link_alter().
   if ($item['link_path'] == 'devel/cache/clear') {
+    $item['options']['alter'] = TRUE;
+  }
+  // Flag a link to be altered by hook_translated_menu_link_alter(), but only
+  // if it is derived from a menu router item; i.e., do not alter a custom
+  // menu link pointing to the same path that has been created by a user.
+  if ($item['link_path'] == 'user' && $item['module'] == 'system') {
     $item['options']['alter'] = TRUE;
   }
 }
 
 /**
- * Alter a menu link after it's translated, but before it's rendered.
+ * Alter a menu link after it has been translated and before it is rendered.
  *
- * This hook may be used, for example, to add a page-specific query string.
- * For performance reasons, only links that have $item['options']['alter'] == TRUE
- * will be passed into this hook. The $item['options']['alter'] flag should
- * generally be set using hook_menu_link_alter().
+ * This hook is invoked from _menu_link_translate() after a menu link has been
+ * translated; i.e., after dynamic path argument placeholders (%) have been
+ * replaced with actual values, the user access to the link's target page has
+ * been checked, and the link has been localized. It is only invoked if
+ * $item['options']['alter'] has been set to a non-empty value (e.g., TRUE).
+ * This flag should be set using hook_menu_link_alter().
+ *
+ * Implementations of this hook are able to alter any property of the menu link.
+ * For example, this hook may be used to add a page-specific query string to all
+ * menu links, or hide a certain link by setting:
+ * @code
+ *   'hidden' => 1,
+ * @endcode
  *
  * @param $item
  *   Associative array defining a menu link after _menu_link_translate()
  * @param $map
  *   Associative array containing the menu $map (path parts and/or objects).
+ *
+ * @see hook_menu_link_alter()
  */
 function hook_translated_menu_link_alter(&$item, $map) {
   if ($item['href'] == 'devel/cache/clear') {
