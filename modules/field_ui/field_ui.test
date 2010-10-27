@@ -1,5 +1,5 @@
 <?php
-// $Id: field_ui.test,v 1.26 2010/10/23 15:55:04 webchick Exp $
+// $Id: field_ui.test,v 1.27 2010/10/27 18:29:17 dries Exp $
 
 /**
  * @file
@@ -481,7 +481,10 @@ class FieldUIManageDisplayTestCase extends FieldUITestCase {
       'fields[_add_new_field][field_name]' => 'field_test',
     );
     $this->fieldUIAddNewField('admin/structure/types/manage/' . $this->hyphen_type, $edit);
-    $value = rand(1, 100);
+    // For this test, use a formatter setting value that is an integer unlikely
+    // to appear in a rendered node other than as part of the field being tested
+    // (for example, unlikely to be part of the "Submitted by ... on ..." line).
+    $value = 12345;
     $settings = array(
       'type' => $this->type,
       'field_test' => array(LANGUAGE_NONE => array(array('value' => $value))),
