@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1313 2010/10/27 18:41:03 dries Exp $
+// $Id: node.module,v 1.1314 2010/10/27 18:45:55 dries Exp $
 
 /**
  * @file
@@ -1836,7 +1836,6 @@ function node_menu() {
   );
   $items['admin/content/node'] = array(
     'title' => 'Content',
-    'description' => "Administer content",
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -10,
   );
