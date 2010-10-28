@@ -6279,7 +6279,7 @@ function drupal_common_theme() {
       'render element' => 'element',
     ),
     'form_required_marker' => array(
-      'arguments' => array('element' => NULL),
+      'render element' => 'element',
     ),
     'form_element_label' => array(
       'render element' => 'element',
