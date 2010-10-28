@@ -1,5 +1,5 @@
 <?php
-// $Id: options.test,v 1.17 2010/09/24 00:37:42 dries Exp $
+// $Id: options.test,v 1.18 2010/10/28 02:20:14 dries Exp $
 
 class OptionsWidgetsTestCase extends FieldTestCase {
   public static function getInfo() {
@@ -112,9 +112,6 @@ class OptionsWidgetsTestCase extends FieldTestCase {
    * Tests the 'options_buttons' widget (multiple select).
    */
   function testCheckBoxes() {
-    // Checkboxes do not support '0' as an option, the widget internally
-    // replaces it with '_0'.
-
     // Create an instance of the 'multiple values' field.
     $instance = array(
       'field_name' => $this->card_2['field_name'],
@@ -142,7 +139,7 @@ class OptionsWidgetsTestCase extends FieldTestCase {
 
     // Submit form: select first and third options.
     $edit = array(
-      "card_2[$langcode][_0]" => TRUE,
+      "card_2[$langcode][0]" => TRUE,
       "card_2[$langcode][1]" => FALSE,
       "card_2[$langcode][2]" => TRUE,
     );
@@ -157,7 +154,7 @@ class OptionsWidgetsTestCase extends FieldTestCase {
 
     // Submit form: select only first option.
     $edit = array(
-      "card_2[$langcode][_0]" => TRUE,
+      "card_2[$langcode][0]" => TRUE,
       "card_2[$langcode][1]" => FALSE,
       "card_2[$langcode][2]" => FALSE,
     );
@@ -172,7 +169,7 @@ class OptionsWidgetsTestCase extends FieldTestCase {
 
     // Submit form: select the three options while the field accepts only 2.
     $edit = array(
-      "card_2[$langcode][_0]" => TRUE,
+      "card_2[$langcode][0]" => TRUE,
       "card_2[$langcode][1]" => TRUE,
       "card_2[$langcode][2]" => TRUE,
     );
@@ -181,7 +178,7 @@ class OptionsWidgetsTestCase extends FieldTestCase {
 
     // Submit form: uncheck all options.
     $edit = array(
-      "card_2[$langcode][_0]" => FALSE,
+      "card_2[$langcode][0]" => FALSE,
       "card_2[$langcode][1]" => FALSE,
       "card_2[$langcode][2]" => FALSE,
     );

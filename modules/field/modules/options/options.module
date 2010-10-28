@@ -1,5 +1,5 @@
 <?php
-// $Id: options.module,v 1.27 2010/08/17 21:48:39 dries Exp $
+// $Id: options.module,v 1.28 2010/10/28 02:20:14 dries Exp $
 
 /**
  * @file
@@ -152,7 +152,6 @@ function options_field_widget_validate($element, &$form_state) {
  */
 function _options_properties($type, $multiple, $required, $has_value) {
   $base = array(
-    'zero_placeholder' => FALSE,
     'filter_xss' => FALSE,
     'strip_tags' => FALSE,
     'empty_option' => FALSE,
@@ -190,9 +189,6 @@ function _options_properties($type, $multiple, $required, $has_value) {
     case 'buttons':
       $properties = array(
         'filter_xss' => TRUE,
-        // Form API 'checkboxes' do not suport 0 as an option, so we replace it with
-        // a placeholder within the form workflow.
-        'zero_placeholder' => $multiple,
       );
       // Add a 'none' option for non-required radio buttons.
       if (!$required && !$multiple) {
@@ -238,18 +234,6 @@ function _options_get_options($field, $instance, $properties) {
  * The function is recursive to support optgroups.
  */
 function _options_prepare_options(&$options, $properties) {
-  // Substitute the '_0' placeholder.
-  if ($properties['zero_placeholder']) {
-    $values = array_keys($options);
-    $labels = array_values($options);
-    // Use a strict comparison, because 0 == 'any string'.
-    $index = array_search(0, $values, TRUE);
-    if ($index !== FALSE && !is_array($options[$index])) {
-      $values[$index] = '_0';
-      $options = array_combine($values, $labels);
-    }
-  }
-
   foreach ($options as $value => $label) {
     // Recurse for optgroups.
     if (is_array($label)) {
@@ -273,14 +257,6 @@ function _options_storage_to_form($items, $options, $column, $properties) {
   $items_transposed = options_array_transpose($items);
   $values = (isset($items_transposed[$column]) && is_array($items_transposed[$column])) ? $items_transposed[$column] : array();
 
-  // Substitute the '_0' placeholder.
-  if ($properties['zero_placeholder']) {
-    $index = array_search('0', $values);
-    if ($index !== FALSE) {
-      $values[$index] = '_0';
-    }
-  }
-
   // Discard values that are not in the current list of options. Flatten the
   // array if needed.
   if ($properties['optgroups']) {
@@ -300,14 +276,6 @@ function _options_form_to_storage($element) {
   // On/off checkbox: transform '0 / 1' into the 'on / off' values.
   if ($element['#type'] == 'checkbox') {
     $values = array($values[0] ? $element['#on_value'] : $element['#off_value']);
-  }
-
-  // Substitute the '_0' placeholder.
-  if ($properties['zero_placeholder']) {
-    $index = array_search('_0', $values);
-    if ($index !== FALSE) {
-      $values[$index] = 0;
-    }
   }
 
   // Filter out the 'none' option. Use a strict comparison, because
