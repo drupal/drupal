@@ -1,5 +1,5 @@
 <?php
-// $Id: tablesort.inc,v 1.59 2010/10/15 04:34:15 webchick Exp $
+// $Id: tablesort.inc,v 1.60 2010/10/28 02:27:08 dries Exp $
 
 /**
  * @file
@@ -80,7 +80,7 @@ class TableSort extends SelectQueryExtender {
     // User has not specified a sort. Use default if specified; otherwise use "asc".
     else {
       foreach ($this->header as $header) {
-        if (is_array($header) && array_key_exists('sort', $header)) {
+        if (isset($header['sort'])) {
           return $header['sort'];
         }
       }
@@ -279,7 +279,7 @@ function tablesort_get_sort($headers) {
   // User has not specified a sort. Use default if specified; otherwise use "asc".
   else {
     foreach ($headers as $header) {
-      if (is_array($header) && array_key_exists('sort', $header)) {
+      if (isset($header['sort'])) {
         return $header['sort'];
       }
     }

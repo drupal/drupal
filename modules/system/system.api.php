@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.210 2010/10/27 19:11:53 dries Exp $
+// $Id: system.api.php,v 1.211 2010/10/28 02:27:09 dries Exp $
 
 /**
  * @file
@@ -2645,7 +2645,7 @@ function hook_file_url_alter(&$uri) {
     // Serve files with one of the CDN extensions from CDN 1, all others from
     // CDN 2.
     $pathinfo = pathinfo($path);
-    if (array_key_exists('extension', $pathinfo) && in_array($pathinfo['extension'], $cdn_extensions)) {
+    if (isset($pathinfo['extension']) && in_array($pathinfo['extension'], $cdn_extensions)) {
       $uri = $cdn1 . '/' . $path;
     }
     else {

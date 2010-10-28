@@ -1,5 +1,5 @@
 <?php
-// $Id: actions.inc,v 1.39 2010/08/22 11:04:09 dries Exp $
+// $Id: actions.inc,v 1.40 2010/10/28 02:27:08 dries Exp $
 
 /**
  * @file
@@ -278,7 +278,7 @@ function actions_synchronize($delete_orphans = FALSE) {
     // user adds the action.
     if (!$array['configurable']) {
       // If we already have an action ID for this action, no need to assign aid.
-      if (array_key_exists($callback, $actions_in_db)) {
+      if (isset($actions_in_db[$callback])) {
         unset($actions_in_db[$callback]);
       }
       else {

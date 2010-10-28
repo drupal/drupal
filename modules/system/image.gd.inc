@@ -1,5 +1,5 @@
 <?php
-// $Id: image.gd.inc,v 1.17 2010/09/21 15:28:11 dries Exp $
+// $Id: image.gd.inc,v 1.18 2010/10/28 02:27:09 dries Exp $
 
 /**
  * @file
@@ -351,7 +351,7 @@ function image_gd_get_info(stdClass $image) {
 
   if (isset($data) && is_array($data)) {
     $extensions = array('1' => 'gif', '2' => 'jpg', '3' => 'png');
-    $extension = array_key_exists($data[2], $extensions) ?  $extensions[$data[2]] : '';
+    $extension = isset($extensions[$data[2]]) ?  $extensions[$data[2]] : '';
     $details = array(
       'width'     => $data[0],
       'height'    => $data[1],

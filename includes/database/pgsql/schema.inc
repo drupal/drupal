@@ -1,5 +1,5 @@
 <?php
-// $Id: schema.inc,v 1.39 2010/10/22 15:18:56 webchick Exp $
+// $Id: schema.inc,v 1.40 2010/10/28 02:27:08 dries Exp $
 
 /**
  * @file
@@ -469,9 +469,7 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
       throw new DatabaseSchemaObjectExistsException(t("Cannot rename field %table.%name to %name_new: target field already exists.", array('%table' => $table, '%name' => $field, '%name_new' => $field_new)));
     }
 
-    if (!array_key_exists('size', $spec)) {
-      $spec['size'] = 'normal';
-    }
+    $spec += array('size' => 'normal');
 
     // Map type definition to the PostgreSQL type.
     if (!isset($spec['pgsql_type'])) {

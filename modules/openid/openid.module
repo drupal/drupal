@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.module,v 1.96 2010/09/24 00:37:43 dries Exp $
+// $Id: openid.module,v 1.97 2010/10/28 02:27:09 dries Exp $
 
 /**
  * @file
@@ -932,7 +932,7 @@ function openid_verify_assertion_return_url($service, $response) {
   // contains a number of other parameters added by the OpenID Provider.
   parse_str(isset($return_to_parts['query']) ? $return_to_parts['query'] : '', $return_to_query_parameters);
   foreach ($return_to_query_parameters as $name => $value) {
-    if (!array_key_exists($name, $_GET) || $_GET[$name] != $value) {
+    if (!isset($_GET[$name]) || $_GET[$name] != $value) {
       return FALSE;
     }
   }

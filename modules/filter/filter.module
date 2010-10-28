@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.355 2010/10/22 16:36:14 webchick Exp $
+// $Id: filter.module,v 1.356 2010/10/28 02:27:09 dries Exp $
 
 /**
  * @file
@@ -1301,14 +1301,12 @@ function _filter_html_tips($filter, $format, $long = FALSE) {
   $header = array(t('Tag Description'), t('You Type'), t('You Get'));
   preg_match_all('/<([a-z0-9]+)[^a-z0-9]/i', $allowed_html, $out);
   foreach ($out[1] as $tag) {
-    if (array_key_exists($tag, $tips)) {
-      if ($tips[$tag]) {
-        $rows[] = array(
-          array('data' => $tips[$tag][0], 'class' => array('description')),
-          array('data' => '<code>' . check_plain($tips[$tag][1]) . '</code>', 'class' => array('type')),
-          array('data' => $tips[$tag][1], 'class' => array('get'))
-        );
-      }
+    if (!empty($tips[$tag])) {
+      $rows[] = array(
+        array('data' => $tips[$tag][0], 'class' => array('description')),
+        array('data' => '<code>' . check_plain($tips[$tag][1]) . '</code>', 'class' => array('type')),
+        array('data' => $tips[$tag][1], 'class' => array('get'))
+      );
     }
     else {
       $rows[] = array(

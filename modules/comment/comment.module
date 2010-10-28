@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.907 2010/10/23 15:30:34 webchick Exp $
+// $Id: comment.module,v 1.908 2010/10/28 02:27:08 dries Exp $
 
 /**
  * @file
@@ -2287,7 +2287,8 @@ function theme_comment_post_forbidden($variables) {
     if (!isset($authenticated_post_comments)) {
       // We only output a link if we are certain that users will get permission
       // to post comments by logging in.
-      $authenticated_post_comments = array_key_exists(DRUPAL_AUTHENTICATED_RID, user_roles(TRUE, 'post comments') + user_roles(TRUE, 'skip comment approval'));
+      $comment_roles = user_roles(TRUE, 'post comments') + user_roles(TRUE, 'skip comment approval');
+      $authenticated_post_comments = isset($comment_roles[DRUPAL_AUTHENTICATED_RID]);
     }
 
     if ($authenticated_post_comments) {

@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.inc,v 1.36 2010/08/22 22:00:16 dries Exp $
+// $Id: openid.inc,v 1.37 2010/10/28 02:27:09 dries Exp $
 
 /**
  * @file
@@ -501,7 +501,7 @@ function _openid_dh_rand($stop) {
   // Used as the key for the duplicate cache
   $rbytes = _openid_dh_long_to_binary($stop);
 
-  if (array_key_exists($rbytes, $duplicate_cache)) {
+  if (isset($duplicate_cache[$rbytes])) {
     list($duplicate, $nbytes) = $duplicate_cache[$rbytes];
   }
   else {

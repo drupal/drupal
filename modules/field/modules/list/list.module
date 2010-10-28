@@ -1,5 +1,5 @@
 <?php
-// $Id: list.module,v 1.35 2010/10/11 19:57:00 dries Exp $
+// $Id: list.module,v 1.36 2010/10/28 02:27:08 dries Exp $
 
 /**
  * @file
@@ -261,7 +261,7 @@ function list_field_validate($entity_type, $entity, $field, $instance, $langcode
   $allowed_values = list_allowed_values($field);
   foreach ($items as $delta => $item) {
     if (!empty($item['value'])) {
-      if (count($allowed_values) && !array_key_exists($item['value'], $allowed_values)) {
+      if (!empty($allowed_values) && !isset($allowed_values[$item['value']])) {
         $errors[$field['field_name']][$langcode][$delta][] = array(
           'error' => 'list_illegal_value',
           'message' => t('%name: illegal value.', array('%name' => t($instance['label']))),

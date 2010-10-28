@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.admin.inc,v 1.43 2010/10/20 01:31:07 dries Exp $
+// $Id: profile.admin.inc,v 1.44 2010/10/28 02:27:09 dries Exp $
 
 /**
  * @file
@@ -126,7 +126,7 @@ function theme_profile_admin_overview($variables) {
   $category_number = 0;
   foreach (element_children($form) as $key) {
     // Don't take form control structures.
-    if (array_key_exists('category', $form[$key])) {
+    if (isset($form[$key]['category'])) {
       $field = &$form[$key];
       $category = $field['category']['#default_value'];
 
