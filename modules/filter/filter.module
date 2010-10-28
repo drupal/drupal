@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.356 2010/10/28 02:27:09 dries Exp $
+// $Id: filter.module,v 1.357 2010/10/28 12:01:51 dries Exp $
 
 /**
  * @file
@@ -356,15 +356,6 @@ function filter_permission_name($format) {
     return 'use text format ' . $format->format;
   }
   return FALSE;
-}
-
-/**
- * Implements hook_cron().
- *
- * Expire outdated filter cache entries
- */
-function filter_cron() {
-  cache_clear_all(NULL, 'cache_filter');
 }
 
 /**
