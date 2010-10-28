@@ -4129,12 +4129,12 @@ function drupal_get_js($scope = 'header', $javascript = NULL, $skip_alter = FALS
 }
 
 /**
- * Add to the page all structures attached to a render() structure.
+ * Adds attachments to a render() structure.
  *
  * Libraries, JavaScript, CSS and other types of custom structures are attached
- * to elements using the #attached property. The #attached property contains an
- * associative array, where the keys are the the types of the structure, and
- * the value the attached data. For example:
+ * to elements using the #attached property. The #attached property is an
+ * associative array, where the keys are the the attachment types and the values
+ * are the attached data. For example:
  * @code
  * $build['#attached'] = array(
  *   'js' => array(drupal_get_path('module', 'taxonomy') . '/taxonomy.js'),
@@ -4145,7 +4145,6 @@ function drupal_get_js($scope = 'header', $javascript = NULL, $skip_alter = FALS
  * 'js', 'css', and 'library' are types that get special handling.  For any
  * other kind of attached data, the array key must be the full name of the
  * callback function and each value an array of arguments. For example:
- *
  * @code
  * $build['#attached']['drupal_add_http_header'] = array(
  *   array('Content-Type', 'application/rss+xml; charset=utf-8'),
@@ -4160,12 +4159,16 @@ function drupal_get_js($scope = 'header', $javascript = NULL, $skip_alter = FALS
  *   assigned to them.
  * @param $dependency_check
  *   When TRUE, will exit if a given library's dependencies are missing. When
- *   set to FALSE, will continue to add the libraries, even though one of the
+ *   set to FALSE, will continue to add the libraries, even though one or more
  *   dependencies are missing. Defaults to FALSE.
+ * @param $every_page
+ *   Set to TRUE to indicate that the attachments are added to every page on the
+ *   site. Only attachments with the every_page flag set to TRUE can participate
+ *   in JavaScript/CSS aggregation.
  *
  * @return
- *   Will return FALSE if there were any missing library dependencies. TRUE will
- *   be returned if all library dependencies were met.
+ *   FALSE if there were any missing library dependencies; TRUE if all library
+ *   dependencies were met.
  *
  * @see drupal_add_library()
  * @see drupal_add_js()
@@ -4377,16 +4380,20 @@ function drupal_process_states(&$elements) {
  * settings, and optionally requiring another library. For example, a library
  * can be a jQuery plugin, a JavaScript framework, or a CSS framework. This
  * function allows modules to load a library defined/shipped by itself or a
- * depending module; without having to add all files of the library separately.
+ * depending module, without having to add all files of the library separately.
  * Each library is only loaded once.
  *
  * @param $module
  *   The name of the module that registered the library.
  * @param $name
  *   The name of the library to add.
+ * @param $every_page
+ *   Set to TRUE if this library is added to every page on the site. Only items
+ *   with the every_page flag set to TRUE can participate in aggregation.
+ *
  * @return
- *   TRUE when the library was successfully added or FALSE if the library or one
- *   of its dependencies could not be added.
+ *   TRUE if the library was successfully added; FALSE if the library or one of
+ *   its dependencies could not be added.
  *
  * @see drupal_get_library()
  * @see hook_library()
