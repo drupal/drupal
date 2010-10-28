@@ -1578,7 +1578,7 @@ class TokenReplaceTestCase extends DrupalWebTestCase {
     $tests['[site:slogan]'] = check_plain(variable_get('site_slogan', ''));
     $tests['[site:mail]'] = 'simpletest@example.com';
     $tests['[site:url]'] = url('<front>', $url_options);
-    $tests['[site:url-brief]'] = preg_replace('!^https?://!', '', url('<front>', $url_options));
+    $tests['[site:url-brief]'] = preg_replace(array('!^https?://!', '!/$!'), '', url('<front>', $url_options));
     $tests['[site:login-url]'] = url('user', $url_options);
 
     // Test to make sure that we generated something for each token.
