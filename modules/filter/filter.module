@@ -359,15 +359,6 @@ function filter_permission_name($format) {
 }
 
 /**
- * Implements hook_cron().
- *
- * Expire outdated filter cache entries
- */
-function filter_cron() {
-  cache_clear_all(NULL, 'cache_filter');
-}
-
-/**
  * Implements hook_modules_enabled().
  */
 function filter_modules_enabled($modules) {
