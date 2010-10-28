@@ -607,7 +607,7 @@ function block_theme_initialize($theme) {
     $result = db_query("SELECT * FROM {block} WHERE theme = :theme", array(':theme' => $default_theme), array('fetch' => PDO::FETCH_ASSOC));
     foreach ($result as $block) {
       // If the region isn't supported by the theme, assign the block to the theme's default region.
-      if ($block['status'] && !array_key_exists($block['region'], $regions)) {
+      if ($block['status'] && !isset($regions[$block['region']])) {
         $block['region'] = system_default_region($theme);
       }
       $block['theme'] = $theme;

@@ -501,7 +501,7 @@ function _openid_dh_rand($stop) {
   // Used as the key for the duplicate cache
   $rbytes = _openid_dh_long_to_binary($stop);
 
-  if (array_key_exists($rbytes, $duplicate_cache)) {
+  if (isset($duplicate_cache[$rbytes])) {
     list($duplicate, $nbytes) = $duplicate_cache[$rbytes];
   }
   else {

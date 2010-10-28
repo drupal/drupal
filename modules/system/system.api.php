@@ -2645,7 +2645,7 @@ function hook_file_url_alter(&$uri) {
     // Serve files with one of the CDN extensions from CDN 1, all others from
     // CDN 2.
     $pathinfo = pathinfo($path);
-    if (array_key_exists('extension', $pathinfo) && in_array($pathinfo['extension'], $cdn_extensions)) {
+    if (isset($pathinfo['extension']) && in_array($pathinfo['extension'], $cdn_extensions)) {
       $uri = $cdn1 . '/' . $path;
     }
     else {

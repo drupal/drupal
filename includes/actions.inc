@@ -278,7 +278,7 @@ function actions_synchronize($delete_orphans = FALSE) {
     // user adds the action.
     if (!$array['configurable']) {
       // If we already have an action ID for this action, no need to assign aid.
-      if (array_key_exists($callback, $actions_in_db)) {
+      if (isset($actions_in_db[$callback])) {
         unset($actions_in_db[$callback]);
       }
       else {

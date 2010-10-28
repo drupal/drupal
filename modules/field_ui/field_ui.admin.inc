@@ -54,7 +54,7 @@ function field_ui_inactive_message($entity_type, $bundle) {
       $list[] = t('%field (@field_name) field requires the %widget_type widget provided by %widget_module module', array(
       '%field' => $instance['label'],
       '@field_name' => $instance['field_name'],
-      '%widget_type' => array_key_exists($instance['widget']['type'], $widget_types) ? $widget_types[$instance['widget']['type']]['label'] : $instance['widget']['type'],
+      '%widget_type' => isset($widget_types[$instance['widget']['type']]) ? $widget_types[$instance['widget']['type']]['label'] : $instance['widget']['type'],
       '%widget_module' => $instance['widget']['module'],
       ));
     }

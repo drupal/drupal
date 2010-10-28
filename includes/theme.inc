@@ -402,7 +402,7 @@ function _theme_process_registry(&$cache, $name, $type, $theme, $path) {
       // that themes don't need to specify this information, since the module
       // that registered the theme hook already has.
       foreach (array('variables', 'render element', 'pattern', 'base hook') as $key) {
-        if (!array_key_exists($key, $info) && isset($cache[$hook][$key])) {
+        if (!isset($info[$key]) && isset($cache[$hook][$key])) {
           $result[$hook][$key] = $cache[$hook][$key];
         }
       }
