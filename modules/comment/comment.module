@@ -620,7 +620,7 @@ function comment_node_view($node, $view_mode) {
           );
 
           $new = comment_num_new($node->nid);
-          if (!$new) {
+          if ($new) {
             $links['comment-new-comments'] = array(
               'title' => format_plural($new, '1 new comment', '@count new comments'),
               'href' => "node/$node->nid",
