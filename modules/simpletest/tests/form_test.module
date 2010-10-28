@@ -175,6 +175,13 @@ function form_test_menu() {
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
+  $items['form-test/checkboxes-zero'] = array(
+    'title' => 'FAPI test involving checkboxes and zero',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('form_test_checkboxes_zero'),
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
 
   return $items;
 }
@@ -1394,4 +1401,45 @@ function form_test_load_include_custom($form, &$form_state) {
   $form_state['build_info']['files'][] = array('module' => 'form_test', 'name' => 'form_test.file');
   $form_state['cache'] = TRUE;
   return $form;
+}
+
+function form_test_checkbox_type_juggling($form, $form_state, $default_value, $return_value) {
+  $form['checkbox'] = array(
+    '#type' => 'checkbox',
+    '#return_value' => $return_value,
+    '#default_value' => $default_value,
+  );
+  return $form;
+}
+
+function form_test_checkboxes_zero($form, &$form_state, $json = TRUE) {
+  $form['checkbox_off'] = array(
+    '#type' => 'checkboxes',
+    '#options' => array('foo', 'bar', 'baz'),
+  );
+  $form['checkbox_zero_default'] = array(
+    '#type' => 'checkboxes',
+    '#options' => array('foo', 'bar', 'baz'),
+    '#default_value' => array(0),
+  );
+  $form['checkbox_string_zero_default'] = array(
+    '#type' => 'checkboxes',
+    '#options' => array('foo', 'bar', 'baz'),
+    '#default_value' => array('0'),
+  );
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => 'Save',
+  );
+  if ($json) {
+    $form['#submit'][] = '_form_test_checkbox_submit';
+  }
+  else {
+    $form['#submit'][] = '_form_test_checkboxes_zero_no_redirect';
+  }
+  return $form;
+}
+
+function _form_test_checkboxes_zero_no_redirect($form, &$form_state) {
+  $form_state['redirect'] = FALSE;
 }
