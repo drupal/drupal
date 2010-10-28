@@ -1,5 +1,5 @@
 <?php
-// $Id: system.tokens.inc,v 1.12 2010/08/17 21:31:13 dries Exp $
+// $Id: system.tokens.inc,v 1.13 2010/10/28 01:33:41 dries Exp $
 
 /**
  * @file
@@ -165,7 +165,7 @@ function system_tokens($type, $tokens, array $data = array(), array $options = a
           break;
 
         case 'url-brief':
-          $replacements[$original] = preg_replace('!^https?://!', '', url('<front>', $url_options));
+          $replacements[$original] = preg_replace(array('!^https?://!', '!/$!'), '', url('<front>', $url_options));
           break;
 
         case 'login-url':
