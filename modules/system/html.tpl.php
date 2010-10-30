@@ -1,5 +1,5 @@
 <?php
-// $Id: html.tpl.php,v 1.4 2010/05/26 10:47:20 dries Exp $
+// $Id: html.tpl.php,v 1.5 2010/10/30 03:52:14 dries Exp $
 
 /**
  * @file
@@ -45,7 +45,7 @@
 </head>
 <body class="<?php print $classes; ?>" <?php print $attributes;?>>
   <div id="skip-link">
-    <a href="#main-content"><?php print t('Skip to main content'); ?></a>
+    <a href="#main-content" class="element-invisible element-focusable"><?php print t('Skip to main content'); ?></a>
   </div>
   <?php print $page_top; ?>
   <?php print $page; ?>
