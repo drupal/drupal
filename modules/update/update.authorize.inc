@@ -131,7 +131,7 @@ function update_authorize_batch_copy_project($project, $updater_name, $local_url
   unset($filetransfer->connection);
 
   if (!empty($context['results']['log'][$project]['#abort'])) {
-    $context['#finished'] = 1;
+    $context['finished'] = 1;
     return;
   }
 
