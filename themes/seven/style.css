@@ -158,15 +158,11 @@ pre {
 #skip-link a,
 #skip-link a:link,
 #skip-link a:visited {
-  position: absolute;
   display: block;
-  top: auto;
-  left: -10000px;
-  width: 1px;
-  height: 1px;
   background: #444;
   color: #fff;
   font-size: 0.94em;
+  padding: 1px 10px 2px 10px;
   text-decoration: none;
   border-radius:0 0 10px 10px;
   -moz-border-radius: 0 0 10px 10px;
@@ -176,13 +172,9 @@ pre {
   -webkit-border-bottom-right-radius: 10px;
 }
 #skip-link a:hover,
-#skip-link a:active,
-#skip-link a:focus {
-  position: static;
-  width: auto;
-  height: auto;
-  overflow: visible;
-  padding: 1px 10px 2px 10px;
+#skip-link a:focus,
+#skip-link a:active {
+  outline: 0;
 }
 
 /**
