@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.416 2010/10/21 11:56:17 dries Exp $
+// $Id: menu.inc,v 1.417 2010/10/30 04:13:38 dries Exp $
 
 /**
  * @file
@@ -2196,10 +2196,10 @@ function menu_set_active_item($path) {
  *   Path to menu root of the current page, as an array of menu link items,
  *   starting with the site's home page. Each link item is an associative array
  *   with the following components:
- *   - 'title': Title of the item.
- *   - 'href': Drupal path of the item.
- *   - 'localized_options': Options for passing into the l() function.
- *   - 'type': A menu type constant, such as MENU_DEFAULT_LOCAL_TASK, or 0 to
+ *   - title: Title of the item.
+ *   - href: Drupal path of the item.
+ *   - localized_options: Options for passing into the l() function.
+ *   - type: A menu type constant, such as MENU_DEFAULT_LOCAL_TASK, or 0 to
  *     indicate it's not really in the menu (used for the home page item).
  *   If $new_trail is supplied, the value is saved in a static variable and
  *   returned. If $new_trail is not supplied, and there is a saved value from
