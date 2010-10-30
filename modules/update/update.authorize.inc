@@ -1,5 +1,5 @@
 <?php
-// $Id: update.authorize.inc,v 1.4 2010/04/10 09:49:49 dries Exp $
+// $Id: update.authorize.inc,v 1.5 2010/10/30 04:06:45 dries Exp $
 
 /**
  * @file
@@ -131,7 +131,7 @@ function update_authorize_batch_copy_project($project, $updater_name, $local_url
   unset($filetransfer->connection);
 
   if (!empty($context['results']['log'][$project]['#abort'])) {
-    $context['#finished'] = 1;
+    $context['finished'] = 1;
     return;
   }
 
