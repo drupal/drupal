@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.621 2010/10/28 02:27:08 dries Exp $
+// $Id: theme.inc,v 1.622 2010/10/30 03:57:20 dries Exp $
 
 /**
  * @file
@@ -1375,32 +1375,34 @@ function theme_link($variables) {
  *
  * @param $variables
  *   An associative array containing:
- *   - links: A keyed array of links to be themed. The key for each link is used
- *     as its css class. Each link should be itself an array, with the following
- *     keys:
- *     - title: the link text
- *     - href: the link URL. If omitted, the 'title' is shown as a plain text
+ *   - links: An associative array of links to be themed. The key for each link
+ *     is used as its css class. Each link should be itself an array, with the
+ *     following elements:
+ *     - title: The link text.
+ *     - href: The link URL. If omitted, the 'title' is shown as a plain text
  *       item in the links list.
- *     - html: (optional) set this to TRUE if 'title' is HTML so it will be
- *       escaped.
- *     Array items are passed on to the l() function's $options parameter when
- *     creating the link.
- *   - attributes: A keyed array of attributes.
- *   - heading: An optional keyed array or a string for a heading to precede the
- *     links. When using an array the following keys can be used:
- *     - text: the heading text
- *     - level: the heading level (e.g. 'h2', 'h3')
- *     - class: (optional) an array of the CSS classes for the heading
+ *     - html: (optional) Whether or not 'title' is HTML. If set, the title
+ *       will not be passed through check_plain().
+ *     - attributes: (optional) Attributes for the anchor, or for the <span> tag
+ *       used in its place if no 'href' is supplied.
+ *     If the 'href' element is supplied, the entire link array is passed to l()
+ *     as its $options parameter.
+ *   - attributes: A keyed array of attributes for the UL containing the
+ *     list of links.
+ *   - heading: (optional) A heading to precede the links. May be an associative
+ *     array or a string. If it's an array, it can have the following elements:
+ *     - text: The heading text.
+ *     - level: The heading level (e.g. 'h2', 'h3').
+ *     - class: (optional) An array of the CSS classes for the heading.
  *     When using a string it will be used as the text of the heading and the
- *     level will default to 'h2'.
- *
- *     Headings should be used on navigation menus and any list of links that
- *     consistently appears on multiple pages. To make the heading invisible
- *     use the 'element-invisible' CSS class. Do not use 'display:none', which
- *     removes it from screen-readers and assistive technology. Headings allow
- *     screen-reader and keyboard only users to navigate to or skip the links.
- *     See http://juicystudio.com/article/screen-readers-display-none.php
- *     and http://www.w3.org/TR/WCAG-TECHS/H42.html for more information.
+ *     level will default to 'h2'. Headings should be used on navigation menus
+ *     and any list of links that consistently appears on multiple pages. To
+ *     make the heading invisible use the 'element-invisible' CSS class. Do not
+ *     use 'display:none', which removes it from screen-readers and assistive
+ *     technology. Headings allow screen-reader and keyboard only users to
+ *     navigate to or skip the links. See
+ *     http://juicystudio.com/article/screen-readers-display-none.php and
+ *     http://www.w3.org/TR/WCAG-TECHS/H42.html for more information.
  */
 function theme_links($variables) {
   $links = $variables['links'];
