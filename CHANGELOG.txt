@@ -190,7 +190,7 @@ Drupal 7.0, xxxx-xx-xx (development version)
     * The translation system now supports message context (msgctxt).
     * Added support for translatable fields to Field API.
 - JavaScript changes
-    * Upgraded the core JavaScript library to jQuery version 1.4.2.
+    * Upgraded the core JavaScript library to jQuery version 1.4.3.
     * Upgraded the jQuery Forms library to 2.36.
     * Added jQuery UI 1.8, which allows improvements to Drupal's user
       experience.

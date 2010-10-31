@@ -1080,7 +1080,7 @@ function system_library() {
   $libraries['jquery'] = array(
     'title' => 'jQuery',
     'website' => 'http://jquery.com',
-    'version' => '1.4.2',
+    'version' => '1.4.3',
     'js' => array(
       'misc/jquery.js' => array('group' => JS_LIBRARY, 'weight' => -20),
     ),
@@ -2883,7 +2883,7 @@ function system_get_module_admin_tasks($module, $info) {
           }
           if ($parent = menu_link_load($admin_tasks[$duplicate_path]['plid'])) {
             // Append the parent item's title to the duplicated task's title.
-            // We use $links[$duplicate_path] in case there are triplicates. 
+            // We use $links[$duplicate_path] in case there are triplicates.
             $admin_tasks[$duplicate_path]['title'] = t('@original_title (@parent_title)', array('@original_title' => $links[$duplicate_path]['title'], '@parent_title' => $parent['title']));
           }
         }
