@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1314 2010/10/27 18:45:55 dries Exp $
+// $Id: node.module,v 1.1315 2010/10/31 12:45:27 dries Exp $
 
 /**
  * @file
@@ -2659,6 +2659,7 @@ function node_form_search_form_alter(&$form, $form_state) {
       '#value' => t('Advanced search'),
       '#prefix' => '<div class="action">',
       '#suffix' => '</div>',
+      '#weight' => 100,
     );
 
     // Languages:
