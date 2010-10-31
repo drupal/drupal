@@ -1,5 +1,5 @@
 <?php
-// $Id: dashboard.test,v 1.6 2010/10/21 11:55:09 dries Exp $
+// $Id: dashboard.test,v 1.7 2010/10/31 21:36:24 webchick Exp $
 
 /**
  * @file
@@ -19,7 +19,7 @@ class DashboardBlocksTestCase extends DrupalWebTestCase {
     parent::setUp();
 
     // Create and log in an administrative user having access to the dashboard.
-    $admin_user = $this->drupalCreateUser(array('access dashboard', 'administer blocks'));
+    $admin_user = $this->drupalCreateUser(array('access dashboard', 'administer blocks', 'access administration pages', 'administer modules'));
     $this->drupalLogin($admin_user);
 
     // Make sure that the dashboard is using the same theme as the rest of the
@@ -78,5 +78,38 @@ class DashboardBlocksTestCase extends DrupalWebTestCase {
       $elements = $this->xpath('//option[@value=:region]', array(':region' => $region));
       $this->assertTrue(empty($elements), t('%region is not an available choice on the block configuration page.', array('%region' => $region)));
     }
+  }
+
+  /**
+   * Test that the dashboard module can be disabled and enabled again,
+   * retaining its blocks.
+   */
+  function testDisableEnable() {
+    // Add a new custom block to a dashboard region.
+    $custom_block = array();
+    $custom_block['info'] = $this->randomName(8);
+    $custom_block['title'] = $this->randomName(8);
+    $custom_block['body[value]'] = $this->randomName(32);
+    $custom_block['regions[stark]'] = 'dashboard_main';
+    $this->drupalPost('admin/structure/block/add', $custom_block, t('Save block'));
+    $this->drupalGet('admin/dashboard');
+    $this->assertRaw($custom_block['title'], t('Block appears on the dashboard.'));
+
+    $edit = array();
+    $edit['modules[Core][dashboard][enable]'] = FALSE;
+    $this->drupalPost('admin/modules', $edit, t('Save configuration'));
+    $this->assertText(t('The configuration options have been saved.'), t('Modules status has been updated.'));
+    $this->assertNoRaw('assigned to the invalid region', t('Dashboard blocks gracefully disabled.'));
+    module_list(TRUE);
+    $this->assertFalse(module_exists('dashboard'), t('Dashboard disabled.'));
+
+    $edit['modules[Core][dashboard][enable]'] = 'dashboard';
+    $this->drupalPost('admin/modules', $edit, t('Save configuration'));
+    $this->assertText(t('The configuration options have been saved.'), t('Modules status has been updated.'));
+    module_list(TRUE);
+    $this->assertTrue(module_exists('dashboard'), t('Dashboard enabled.'));
+
+    $this->drupalGet('admin/dashboard');
+    $this->assertRaw($custom_block['title'], t('Block still appears on the dashboard.'));
   }
 }
