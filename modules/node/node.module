@@ -2659,6 +2659,7 @@ function node_form_search_form_alter(&$form, $form_state) {
       '#value' => t('Advanced search'),
       '#prefix' => '<div class="action">',
       '#suffix' => '</div>',
+      '#weight' => 100,
     );
 
     // Languages:
