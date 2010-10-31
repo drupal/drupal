@@ -1,7 +1,0 @@
-; $Id$
-name = AAA Update test
-description = Support module for update module testing.
-package = Testing
-core = 7.x
-files[] = aaa_update_test.module
-hidden = TRUE

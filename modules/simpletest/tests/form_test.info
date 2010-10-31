@@ -1,9 +1,0 @@
-; $Id$
-name = "FormAPI Test"
-description = "Support module for Form API tests."
-package = Testing
-version = VERSION
-core = 7.x
-files[] = form_test.module
-files[] = form_test.file.inc
-hidden = TRUE

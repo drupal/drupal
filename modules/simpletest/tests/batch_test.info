@@ -1,9 +1,0 @@
-; $Id$
-name = "Batch API test"
-description = "Support module for Batch API tests."
-package = Testing
-version = VERSION
-core = 7.x
-files[] = batch_test.module
-files[] = batch_test.callbacks.inc
-hidden = TRUE

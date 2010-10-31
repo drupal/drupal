@@ -1,6 +1,0 @@
-; $Id$
-name = Testing
-description = Totally stripped back testing profile.
-version = VERSION
-core = 7.x
-hidden = TRUE

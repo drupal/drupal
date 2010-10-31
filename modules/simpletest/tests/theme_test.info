@@ -1,8 +1,0 @@
-; $Id$
-name = "Theme test"
-description = "Support module for theme system testing."
-package = Testing
-version = VERSION
-core = 7.x
-files[] = theme_test.module
-hidden = TRUE

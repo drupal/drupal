@@ -1,8 +1,0 @@
-; $Id$
-name = "Hook menu tests"
-description = "Support module for menu hook testing."
-package = Testing
-version = VERSION
-core = 7.x
-files[] = menu_test.module
-hidden = TRUE

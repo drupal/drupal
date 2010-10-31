@@ -1,8 +1,0 @@
-; $Id$
-name = "Test search type"
-description = "Support module for search module testing."
-package = Testing
-version = VERSION
-core = 7.x
-files[] = search_extra_type.module
-hidden = TRUE

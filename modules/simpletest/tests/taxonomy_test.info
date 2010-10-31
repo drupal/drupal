@@ -1,9 +1,0 @@
-; $Id$
-name = "Taxonomy test module"
-description = "Tests functions and hooks not used in core".
-package = Testing
-version = VERSION
-core = 7.x
-files[] = taxonomy_test.module
-hidden = TRUE
-dependencies[] = taxonomy

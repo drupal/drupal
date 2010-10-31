@@ -1,6 +1,0 @@
-; $Id$
-name = Test theme
-description = Theme for testing the theme system
-core = 7.x
-engine = phptemplate
-hidden = TRUE

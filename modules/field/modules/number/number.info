@@ -1,9 +1,0 @@
-; $Id$
-name = Number
-description = Defines numeric field types.
-package = Core
-version = VERSION
-core = 7.x
-dependencies[] = field
-files[] = number.module
-required = TRUE

@@ -1,9 +1,0 @@
-; $Id$
-name = Url_alter tests
-description = A support modules for url_alter hook testing.
-core = 7.x
-package = Testing
-version = VERSION
-files[] = url_alter_test.module
-files[] = url_alter_test.install
-hidden = TRUE

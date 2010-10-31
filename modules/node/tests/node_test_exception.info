@@ -1,8 +1,0 @@
-; $Id$
-name = "Node module exception tests"
-description = "Support module for node related exception testing."
-package = Testing
-version = VERSION
-core = 7.x
-files[] = node_test_exception.module
-hidden = TRUE

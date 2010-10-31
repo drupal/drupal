@@ -1,8 +1,0 @@
-; $Id$
-name = "Image test"
-description = "Support module for image toolkit tests."
-package = Testing
-version = VERSION
-core = 7.x
-files[] = image_test.module
-hidden = TRUE

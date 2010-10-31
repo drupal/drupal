@@ -1,8 +1,0 @@
-; $Id$
-name = Block test
-description = Provides test blocks.
-package = Testing
-version = VERSION
-core = 7.x
-files[] = block_test.module
-hidden = TRUE

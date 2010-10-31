@@ -1,8 +1,0 @@
-; $Id$
-name = "Common Test"
-description = "Support module for Common tests."
-package = Testing
-version = VERSION
-core = 7.x
-files[] = common_test.module
-hidden = TRUE

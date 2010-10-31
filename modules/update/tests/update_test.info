@@ -1,8 +1,0 @@
-; $Id$
-name = Update test
-description = Support module for update module testing.
-package = Testing
-version = VERSION
-core = 7.x
-files[] = update_test.module
-hidden = TRUE

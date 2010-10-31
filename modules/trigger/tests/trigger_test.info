@@ -1,7 +1,0 @@
-; $Id$
-name = "Trigger Test"
-description = "Support module for Trigger tests."
-package = Testing
-core = 7.x
-files[] = trigger_test.module
-hidden = TRUE

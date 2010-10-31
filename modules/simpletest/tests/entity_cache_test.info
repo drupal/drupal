@@ -1,9 +1,0 @@
-; $Id$
-name = "Entity cache test"
-description = "Support module for testing entity cache."
-package = Testing
-version = VERSION
-core = 7.x
-files[] = entity_cache_test.module
-dependencies[] = entity_cache_test_dependency
-hidden = TRUE

@@ -1,8 +1,0 @@
-<?php
-// $Id$
-
-/**
- * @file
- * Tests that a module is not installed when the one it depends on fails
- * hook_requirements('install').
- */
