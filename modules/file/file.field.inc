@@ -1,5 +1,5 @@
 <?php
-// $Id: file.field.inc,v 1.37 2010/10/20 15:22:53 dries Exp $
+// $Id: file.field.inc,v 1.38 2010/10/31 12:12:00 dries Exp $
 
 /**
  * @file
@@ -583,7 +583,7 @@ function file_field_widget_value($element, $input = FALSE, $form_state) {
   if ($input) {
     // Checkboxes lose their value when empty.
     // If the display field is present make sure its unchecked value is saved.
-    $field = $form_state['field'][$element['#field_name']][$element['#language']]['field'];
+    $field = field_widget_field($element, $form_state);
     if (empty($input['display'])) {
       $input['display'] = $field['settings']['display_field'] ? 0 : 1;
     }
@@ -611,8 +611,8 @@ function file_field_widget_process($element, &$form_state, $form) {
   $item = $element['#value'];
   $item['fid'] = $element['fid']['#value'];
 
-  $field = $form_state['field'][$element['#field_name']][$element['#language']]['field'];
-  $instance = $form_state['field'][$element['#field_name']][$element['#language']]['instance'];
+  $field = field_widget_field($element, $form_state);
+  $instance = field_widget_instance($element, $form_state);
   $settings = $instance['widget']['settings'];
 
   $element['#theme'] = 'file_widget';
