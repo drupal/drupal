@@ -95,7 +95,7 @@ function contextual_preprocess(&$variables, $hook) {
   }
 
   // Determine the primary theme function argument.
-  if (isset($hooks[$hook]['variables'])) {
+  if (!empty($hooks[$hook]['variables'])) {
     $keys = array_keys($hooks[$hook]['variables']);
     $key = $keys[0];
   }
