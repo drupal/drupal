@@ -1457,7 +1457,7 @@ function taxonomy_autocomplete_validate($element, &$form_state) {
   $value = array();
   if ($tags = $element['#value']) {
     // Collect candidate vocabularies.
-    $field = $form_state['field'][$element['#field_name']][$element['#language']]['field'];
+    $field = field_widget_field($element, $form_state);
     $vocabularies = array();
     foreach ($field['settings']['allowed_values'] as $tree) {
       if ($vocabulary = taxonomy_vocabulary_machine_name_load($tree['vocabulary'])) {

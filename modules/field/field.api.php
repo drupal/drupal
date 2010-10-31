@@ -759,15 +759,25 @@ function hook_field_widget_info_alter(&$info) {
  * invoke this hook as many times as needed.
  *
  * Note that, depending on the context in which the widget is being included
- * (regular entity edit form, 'default value' input in the field settings form,
- * etc.), the passed in values for $field and $instance might be different
- * from the official definitions returned by field_info_field() and
- * field_info_instance(). If the widget uses Form API callbacks (like
- * #element_validate, #value_callback...) that need to access the $field or
- * $instance definitions, they should not use the field_info_*() functions, but
- * fetch the information present in $form_state['field']:
- * - $form_state['field'][$field_name][$langcode]['field']
- * - $form_state['field'][$field_name][$langcode]['instance']
+ * (regular entity form, field configuration form, advanced search form...),
+ * the values for $field and $instance might be different from the "official"
+ * definitions returned by field_info_field() and field_info_instance().
+ * Examples: mono-value widget even if the field is multi-valued, non-required
+ * widget even if the field is 'required'...
+
+ * Therefore, the FAPI element callbacks (such as #process, #element_validate,
+ * #value_callback...) used by the widget cannot use the field_info_field()
+ * or field_info_instance() functions to retrieve the $field or $instance
+ * definitions they should operate on. The field_widget_field() and
+ * field_widget_instance() functions should be used instead to fetch the
+ * current working definitions from $form_state, where Field API stores them.
+ *
+ * Alternatively, hook_field_widget_form() can extract the needed specific
+ * properties from $field and $instance and set them as ad-hoc
+ * $element['#custom'] properties, for later use by its element callbacks.
+ *
+ * @see field_widget_field()
+ * @see field_widget_instance()
  *
  * @param $form
  *   The entire form array.

@@ -335,7 +335,7 @@ function image_field_widget_process($element, &$form_state, $form) {
   $item = $element['#value'];
   $item['fid'] = $element['fid']['#value'];
 
-  $instance = $form_state['field'][$element['#field_name']][$element['#language']]['instance'];
+  $instance = field_widget_instance($element, $form_state);
 
   $settings = $instance['settings'];
   $widget_settings = $instance['widget']['settings'];

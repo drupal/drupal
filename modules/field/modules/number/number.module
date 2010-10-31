@@ -356,8 +356,8 @@ function number_field_widget_form(&$form, &$form_state, $field, $instance, $lang
  * FAPI validation of an individual number element.
  */
 function number_field_widget_validate($element, &$form_state) {
-  $field = $form_state['field'][$element['#field_name']][$element['#language']]['field'];
-  $instance = $form_state['field'][$element['#field_name']][$element['#language']]['instance'];
+  $field = field_widget_field($element, $form_state);
+  $instance = field_widget_instance($element, $form_state);
 
   $type = $element['#number_type'];
   $value = $element['#value'];
