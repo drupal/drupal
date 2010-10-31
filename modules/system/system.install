@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.520 2010/10/20 00:47:44 dries Exp $
+// $Id: system.install,v 1.521 2010/10/31 03:44:09 dries Exp $
 
 /**
  * @file
@@ -2085,10 +2085,10 @@ function system_update_7018() {
 }
 
 /**
- * Enable field module.
+ * Enable field and field_ui modules.
  */
 function system_update_7020() {
-  $module_list = array('field_sql_storage', 'field');
+  $module_list = array('field_sql_storage', 'field', 'field_ui');
   module_enable($module_list, FALSE);
 }
 
