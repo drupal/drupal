@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.377 2010/10/26 15:16:03 dries Exp $
+// $Id: CHANGELOG.txt,v 1.378 2010/10/31 21:41:40 webchick Exp $
 
 Drupal 7.0, xxxx-xx-xx (development version)
 ----------------------
@@ -190,7 +190,7 @@ Drupal 7.0, xxxx-xx-xx (development version)
     * The translation system now supports message context (msgctxt).
     * Added support for translatable fields to Field API.
 - JavaScript changes
-    * Upgraded the core JavaScript library to jQuery version 1.4.2.
+    * Upgraded the core JavaScript library to jQuery version 1.4.3.
     * Upgraded the jQuery Forms library to 2.36.
     * Added jQuery UI 1.8, which allows improvements to Drupal's user
       experience.
