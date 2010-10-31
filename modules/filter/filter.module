@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.357 2010/10/28 12:01:51 dries Exp $
+// $Id: filter.module,v 1.358 2010/10/31 13:08:29 dries Exp $
 
 /**
  * @file
@@ -1037,8 +1037,9 @@ function _filter_tips($format_id, $long = FALSE) {
  *   A DOMDocument that represents the loaded (X)HTML snippet.
  */
 function filter_dom_load($text) {
+  $dom_document = new DOMDocument();
   // Ignore warnings during HTML soup loading.
-  $dom_document = @DOMDocument::loadHTML('<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /></head><body>' . $text . '</body></html>');
+  @$dom_document->loadHTML('<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /></head><body>' . $text . '</body></html>');
 
   return $dom_document;
 }

@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.245 2010/10/25 15:51:21 webchick Exp $
+// $Id: drupal_web_test_case.php,v 1.246 2010/10/31 13:08:29 dries Exp $
 
 /**
  * Global variable that holds information about the tests being run.
@@ -1585,7 +1585,8 @@ class DrupalWebTestCase extends DrupalTestCase {
     if (!$this->elements) {
       // DOM can load HTML soup. But, HTML soup can throw warnings, suppress
       // them.
-      @$htmlDom = DOMDocument::loadHTML($this->drupalGetContent());
+      $htmlDom = new DOMDocument();
+      @$htmlDom->loadHTML($this->drupalGetContent());
       if ($htmlDom) {
         $this->pass(t('Valid HTML found on "@path"', array('@path' => $this->getUrl())), t('Browser'));
         // It's much easier to work with simplexml than DOM, luckily enough
@@ -1857,7 +1858,8 @@ class DrupalWebTestCase extends DrupalTestCase {
       );
       // DOM can load HTML soup. But, HTML soup can throw warnings, suppress
       // them.
-      @$dom = DOMDocument::loadHTML($content);
+      $dom = new DOMDocument();
+      @$dom->loadHTML($content);
       foreach ($return as $command) {
         switch ($command['command']) {
           case 'settings':
