@@ -1585,7 +1585,8 @@ class DrupalWebTestCase extends DrupalTestCase {
     if (!$this->elements) {
       // DOM can load HTML soup. But, HTML soup can throw warnings, suppress
       // them.
-      @$htmlDom = DOMDocument::loadHTML($this->drupalGetContent());
+      $htmlDom = new DOMDocument();
+      @$htmlDom->loadHTML($this->drupalGetContent());
       if ($htmlDom) {
         $this->pass(t('Valid HTML found on "@path"', array('@path' => $this->getUrl())), t('Browser'));
         // It's much easier to work with simplexml than DOM, luckily enough
@@ -1857,7 +1858,8 @@ class DrupalWebTestCase extends DrupalTestCase {
       );
       // DOM can load HTML soup. But, HTML soup can throw warnings, suppress
       // them.
-      @$dom = DOMDocument::loadHTML($content);
+      $dom = new DOMDocument();
+      @$dom->loadHTML($content);
       foreach ($return as $command) {
         switch ($command['command']) {
           case 'settings':
