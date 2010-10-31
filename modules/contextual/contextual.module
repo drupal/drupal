@@ -1,5 +1,5 @@
 <?php
-// $Id: contextual.module,v 1.8 2010/09/11 14:35:13 dries Exp $
+// $Id: contextual.module,v 1.9 2010/10/31 03:56:46 dries Exp $
 
 /**
  * @file
@@ -95,7 +95,7 @@ function contextual_preprocess(&$variables, $hook) {
   }
 
   // Determine the primary theme function argument.
-  if (isset($hooks[$hook]['variables'])) {
+  if (!empty($hooks[$hook]['variables'])) {
     $keys = array_keys($hooks[$hook]['variables']);
     $key = $keys[0];
   }
