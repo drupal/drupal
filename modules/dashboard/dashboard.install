@@ -1,0 +1,79 @@
+<?php
+// $Id$
+
+/**
+ * @file
+ * Install, update and uninstall functions for the dashboard module.
+ */
+
+/**
+ * Implements hook_disable().
+ *
+ * Stash a list of blocks enabled on the dashboard, so they can be re-enabled
+ * if the dashboard is re-enabled. Then disable those blocks, since the
+ * dashboard regions will no longer be defined.
+ */
+function dashboard_disable() {
+  // Stash a list of currently enabled blocks.
+  $stashed_blocks = array();
+
+  $result = db_select('block', 'b')
+    ->fields('b', array('module', 'delta', 'region'))
+    ->condition('b.region', dashboard_regions(), 'IN')
+    ->execute();
+
+  foreach ($result as $block) {
+    $stashed_blocks[] = array(
+      'module' => $block->module,
+      'delta' => $block->delta,
+      'region' => $block->region,
+    );
+  }
+  variable_set('dashboard_stashed_blocks', $stashed_blocks);
+
+  // Disable the dashboard blocks.
+  db_update('block')
+    ->fields(array(
+      'status' => 0,
+      'region' => BLOCK_REGION_NONE,
+    ))
+    ->condition('region', dashboard_regions(), 'IN')
+    ->execute();
+}
+
+/**
+ * Implements hook_enable().
+ *
+ * Restores blocks to the dashboard that were there when the dashboard module
+ * was disabled.
+ */
+function dashboard_enable() {
+  global $theme_key;
+  if (!$stashed_blocks = variable_get('dashboard_stashed_blocks')) {
+    return;
+  }
+  if (!$admin_theme = variable_get('admin_theme')) {
+    drupal_theme_initialize();
+    $admin_theme = $theme_key;
+  }
+  foreach ($stashed_blocks as $block) {
+    db_update('block')
+      ->fields(array(
+        'status' => 1,
+        'region' => $block['region']
+      ))
+      ->condition('module', $block['module'])
+      ->condition('delta', $block['delta'])
+      ->condition('theme', $admin_theme)
+      ->condition('status', 0)
+      ->execute();
+  }
+  variable_del('dashboard_stashed_blocks');
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function dashboard_uninstall() {
+  variable_del('dashboard_stashed_blocks');
+}
