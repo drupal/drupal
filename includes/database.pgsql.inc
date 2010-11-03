@@ -643,7 +643,7 @@ function db_drop_table(&$ret, $table) {
  *   created field will be set to the value of the key in all rows.
  *   This is most useful for creating NOT NULL columns with no default
  *   value in existing tables.
- * @param $keys_new
+ * @param $new_keys
  *   Optional keys and indexes specification to be created on the
  *   table along with adding the field. The format is the same as a
  *   table specification but without the 'fields' element.  If you are
