@@ -1244,6 +1244,7 @@ function theme_links($links, $attributes = array('class' => 'links')) {
  *
  * @param $path
  *   Either the path of the image file (relative to base_path()) or a full URL.
+ *   If this is a full URL, $getsize must be set to FALSE or nothing will be returned.
  * @param $alt
  *   The alternative text for text-based browsers.
  * @param $title
@@ -1252,6 +1253,8 @@ function theme_links($links, $attributes = array('class' => 'links')) {
  *   Associative array of attributes to be placed in the img tag.
  * @param $getsize
  *   If set to TRUE, the image's dimension are fetched and added as width/height attributes.
+ *   Defaults to TRUE. Must be set to FALSE if $path is a full URL.
+ * 
  * @return
  *   A string containing the image tag.
  */
