@@ -488,7 +488,7 @@ function conf_init() {
  * the above, depending on where the module is located.
  *
  * @param $type
- *   The type of the item (i.e. theme, theme_engine, module).
+ *   The type of the item (i.e. theme, theme_engine, module, profile).
  * @param $name
  *   The name of the item for which the filename is requested.
  * @param $filename
@@ -687,7 +687,7 @@ function bootstrap_invoke_all($hook) {
  * including a theme, engine, module, etc., more than once.
  *
  * @param $type
- *   The type of item to load (i.e. theme, theme_engine, module).
+ *   The type of item to load (i.e. theme, theme_engine, module, profile).
  * @param $name
  *   The name of the item to load.
  *
