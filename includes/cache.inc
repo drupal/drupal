@@ -39,7 +39,7 @@ function cache_get($cid, $table = 'cache') {
     // cache timer. The cache variable is loaded into the $user object by
     // sess_read() in session.inc.
     else {
-      if ($user->cache > $cache->created) {
+      if (isset($user->cache) && $user->cache > $cache->created) {
         // This cache data is too old and thus not valid for us, ignore it.
         return 0;
       }
