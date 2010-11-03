@@ -157,7 +157,8 @@ function drupal_get_normal_path($path, $path_language = '') {
  *
  * @return
  *   The component specified by $index, or NULL if the specified component was
- *   not found.
+ *   not found. If called without arguments, it returns an array containing all
+ *   the components of the current path.
  */
 function arg($index = NULL, $path = NULL) {
   static $arguments;
