@@ -2672,27 +2672,31 @@ function system_update_6053() {
 function system_update_6054() {
   $ret = array();
 
-  $schema['semaphore'] = array(
-    'fields' => array(
-      'name' => array(
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => ''),
-      'value' => array(
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => ''),
-      'expire' => array(
-        'type' => 'float',
-        'size' => 'big',
-        'not null' => TRUE),
-      ),
-    'indexes' => array('expire' => array('expire')),
-    'primary key' => array('name'),
-  );
-  db_create_table($ret, 'semaphore', $schema['semaphore']);
+  // The table may have already been added by update_fix_d6_requirements(), so
+  // check for its existence before creating.
+  if (!db_table_exists('semaphore')) {
+    $schema['semaphore'] = array(
+      'fields' => array(
+        'name' => array(
+          'type' => 'varchar',
+          'length' => 255,
+          'not null' => TRUE,
+          'default' => ''),
+        'value' => array(
+          'type' => 'varchar',
+          'length' => 255,
+          'not null' => TRUE,
+          'default' => ''),
+        'expire' => array(
+          'type' => 'float',
+          'size' => 'big',
+          'not null' => TRUE),
+        ),
+      'indexes' => array('expire' => array('expire')),
+      'primary key' => array('name'),
+    );
+    db_create_table($ret, 'semaphore', $schema['semaphore']);
+  }
 
   return $ret;
 }
