@@ -953,14 +953,15 @@ function t($string, $args = array(), $langcode = NULL) {
  */
 
 /**
- * Verify the syntax of the given e-mail address.
+ * Verifies the syntax of the given e-mail address.
  *
- * Empty e-mail addresses are allowed. See RFC 2822 for details.
+ * See RFC 2822 for details.
  *
  * @param $mail
  *   A string containing an e-mail address.
  * @return
- *   TRUE if the address is in a valid format.
+ *   1 if the email address is valid, 0 if it is invalid or empty, and FALSE if
+ *   there is an input error (such as passing in an array instead of a string).
  */
 function valid_email_address($mail) {
   $user = '[a-zA-Z0-9_\-\.\+\^!#\$%&*+\/\=\?\`\|\{\}~\']+';
