@@ -1887,13 +1887,14 @@ function _menu_delete_item($item, $force = FALSE) {
  * @param $item
  *   An array representing a menu link item. The only mandatory keys are
  *   link_path and link_title. Possible keys are:
- *   - menu_name   default is navigation
- *   - weight      default is 0
- *   - expanded    whether the item is expanded.
- *   - options     An array of options, @see l for more.
- *   - mlid        Set to an existing value, or 0 or NULL to insert a new link.
- *   - plid        The mlid of the parent.
- *   - router_path The path of the relevant router item.
+ *   - menu_name: Default is navigation.
+ *   - weight: Default is 0.
+ *   - expanded: Whether the item is expanded.
+ *   - options: An array of options, see l() for more.
+ *   - mlid: Set to an existing value, or 0 or NULL to insert a new link.
+ *   - plid: The mlid of the parent.
+ *   - router_path: The path of the relevant router item.
+ *
  * @return
  *   The mlid of the saved menu link, or FALSE if the menu link could not be 
  *   saved.
