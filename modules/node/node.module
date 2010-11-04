@@ -816,7 +816,13 @@ function node_validate($node, $form = array()) {
 }
 
 /**
- * Prepare node for save and allow modules to make changes.
+ * Prepares a node for saving by populating teaser, author, and creation date.
+ *
+ * @param object|array $node
+ *   A node object or array.
+ *
+ * @return
+ *   A validated node object with a populated teaser, author, and creation date.
  */
 function node_submit($node) {
   global $user;
