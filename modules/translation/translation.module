@@ -163,7 +163,7 @@ function translation_link($type, $node = NULL, $teaser = FALSE) {
     unset($translations[$node->language]);
     $languages = language_list();
     foreach ($languages as $langcode => $language) {
-      if (isset($translations[$langcode])) {
+      if (isset($translations[$langcode]) && $translations[$langcode]->status) {
         $links["node_translation_$langcode"] = array(
           'title' => $language->native,
           'href' => 'node/'. $translations[$langcode]->nid,
@@ -289,7 +289,7 @@ function translation_node_get_translations($tnid) {
   if (is_numeric($tnid) && $tnid) {
     if (!isset($translations[$tnid])) {
       $translations[$tnid] = array();
-      $result = db_query(db_rewrite_sql('SELECT n.nid, n.title, n.language FROM {node} n WHERE n.tnid = %d'), $tnid);
+      $result = db_query(db_rewrite_sql('SELECT n.nid, n.type, n.uid, n.status, n.title, n.language FROM {node} n WHERE n.tnid = %d'), $tnid);
       while ($node = db_fetch_object($result)) {
         $translations[$tnid][$node->language] = $node;
       }
@@ -336,8 +336,12 @@ function translation_path_get_translations($path) {
  */
 function translation_translation_link_alter(&$links, $path) {
   if ($paths = translation_path_get_translations($path)) {
+    // Path can only start with "node/$nid" or "node/$nid/" here.
+    $path = explode('/', $path);
+    $node = node_load($path[1]);
+    $translations = translation_node_get_translations($node->tnid);  
     foreach ($links as $langcode => $link) {
-      if (isset($paths[$langcode])) {
+      if (isset($paths[$langcode]) && $translations[$langcode]->status) {
         // Translation in a different node.
         $links[$langcode]['href'] = $paths[$langcode];
       }
