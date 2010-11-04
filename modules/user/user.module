@@ -130,27 +130,29 @@ function user_external_login($account, $edit = array()) {
 /**
  * Fetch a user object.
  *
- * @param $array
- *   An associative array of attributes to search for in selecting the
- *   user, such as user name or e-mail address.
+ * @param $user_info
+ *   Information about the user to load, consisting of one of the following:
+ *   - An associative array whose keys are fields in the {users} table (such as
+ *     uid, name, pass, mail, status) and whose values are the field's value.
+ *   - A numeric user ID.
  *
  * @return
  *   A fully-loaded $user object upon successful user load or FALSE if user
  *   cannot be loaded.
  */
-function user_load($array = array()) {
+function user_load($user_info = array()) {
   // Dynamically compose a SQL query:
   $query = array();
   $params = array();
 
-  if (is_numeric($array)) {
-    $array = array('uid' => $array);
+  if (is_numeric($user_info)) {
+    $user_info = array('uid' => $user_info);
   }
-  elseif (!is_array($array)) {
+  elseif (!is_array($user_info)) {
     return FALSE;
   }
 
-  foreach ($array as $key => $value) {
+  foreach ($user_info as $key => $value) {
     if ($key == 'uid' || $key == 'status') {
       $query[] = "$key = %d";
       $params[] = $value;
@@ -180,7 +182,7 @@ function user_load($array = array()) {
     while ($role = db_fetch_object($result)) {
       $user->roles[$role->rid] = $role->name;
     }
-    user_module_invoke('load', $array, $user);
+    user_module_invoke('load', $user_info, $user);
   }
   else {
     $user = FALSE;
