@@ -74,7 +74,7 @@ function drupal_lookup_path($action, $path = '', $path_language = '') {
     // isn't a path that has this alias
     elseif ($action == 'source' && !isset($no_src[$path_language][$path])) {
       // Look for the value $path within the cached $map
-      $src = '';
+      $src = FALSE;
       if (!isset($map[$path_language]) || !($src = array_search($path, $map[$path_language]))) {
         // Get the most fitting result falling back with alias without language
         if ($src = db_result(db_query("SELECT src FROM {url_alias} WHERE dst = '%s' AND language IN('%s', '') ORDER BY language DESC, pid DESC", $path, $path_language))) {
