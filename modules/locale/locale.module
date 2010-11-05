@@ -844,7 +844,7 @@ function locale_js_alter(&$javascript) {
   }
 }
 
-/*
+/**
  * Implements hook_css_alter().
  *
  * This function checks all CSS files currently added via drupal_add_css() and
