@@ -113,7 +113,7 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
 
     $entity = new stdClass();
     $entity->ftid = 5;
-    $entity->fttype = 'bundle2';
+    $entity->fttype = 'test_entity_bundle';
     $entity->{$this->field_names[1]}[LANGUAGE_NONE][0]['shape'] = 'square';
     $entity->{$this->field_names[1]}[LANGUAGE_NONE][0]['color'] = 'red';
     $entity->{$this->field_names[1]}[LANGUAGE_NONE][1]['shape'] = 'circle';
@@ -164,6 +164,14 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
    * Tests EntityFieldQuery.
    */
   function testEntityFieldQuery() {
+    $query = new EntityFieldQuery();
+    $query
+      ->entityCondition('entity_type', 'test_entity_bundle')
+      ->entityCondition('entity_id', '5');
+    $this->assertEntityFieldQuery($query, array(
+      array('test_entity_bundle', 5),
+    ), t('Test query on an entity type with a generated bundle.'));
+
     // Test entity_type condition.
     $query = new EntityFieldQuery();
     $query->entityCondition('entity_type', 'test_entity_bundle_key');
@@ -974,6 +982,7 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
     for ($i = 6; $i < 10; $i++) {
       $entity = new stdClass();
       $entity->ftid = $i;
+      $entity->fttype = 'test_entity_bundle';
       $entity->{$this->field_names[0]}[LANGUAGE_NONE][0]['value'] = $i - 5;
       drupal_write_record('test_entity_bundle', $entity);
       field_attach_insert('test_entity_bundle', $entity);
@@ -1112,15 +1121,20 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
    */
   function assertEntityFieldQuery($query, $intended_results, $message, $ordered = FALSE) {
     $results = array();
-    foreach ($query->execute() as $entity_type => $entity_ids) {
-      foreach ($entity_ids as $entity_id => $stub_entity) {
-        $results[] = array($entity_type, $entity_id);
+    try {
+      foreach ($query->execute() as $entity_type => $entity_ids) {
+        foreach ($entity_ids as $entity_id => $stub_entity) {
+          $results[] = array($entity_type, $entity_id);
+        }
       }
+      if (!isset($ordered) || !$ordered) {
+        sort($results);
+        sort($intended_results);
+      }
+      $this->assertEqual($results, $intended_results, $message);
     }
-    if (!isset($ordered) || !$ordered) {
-      sort($results);
-      sort($intended_results);
+    catch (Exception $e) {
+      $this->fail('Exception thrown: '. $e->getMessage());
     }
-    $this->assertEqual($results, $intended_results, $message);
   }
 }

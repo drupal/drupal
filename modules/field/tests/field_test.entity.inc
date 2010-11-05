@@ -62,13 +62,16 @@ function field_test_entity_info() {
       'bundles' => array('bundle1' => array('label' => 'Bundle1'), 'bundle2' => array('label' => 'Bundle2')),
       'view modes' => $test_entity_modes,
     ),
+    // In this case, the bundle key is not stored in the database.
     'test_entity_bundle' => array(
       'name' => t('Test Entity with a specified bundle.'),
       'base table' => 'test_entity_bundle',
       'fieldable' => TRUE,
+      'controller class' => 'TestEntityBundleController',
       'field cache' => FALSE,
       'entity keys' => array(
         'id' => 'ftid',
+        'bundle' => 'fttype',
       ),
       'bundles' => array('test_entity_2' => array('label' => 'Test entity 2')),
       'view modes' => $test_entity_modes,
@@ -408,4 +411,22 @@ function field_test_entity_form_submit_builder($form, &$form_state) {
   $entity = $form_state['test_entity'];
   entity_form_submit_build_entity('test_entity', $entity, $form, $form_state);
   return $entity;
+}
+
+/**
+ * Controller class for the test_entity_bundle entity type.
+ *
+ * This extends the DrupalDefaultEntityController class, adding required
+ * special handling for bundles (since they are not stored in the database).
+ */
+class TestEntityBundleController extends DrupalDefaultEntityController {
+
+  protected function attachLoad(&$entities, $revision_id = FALSE) {
+    // Add bundle information.
+    foreach ($entities as $key => $entity) {
+      $entity->fttype = 'test_entity_bundle';
+      $entities[$key] = $entity;
+    }
+    parent::attachLoad($entities, $revision_id);
+  }
 }

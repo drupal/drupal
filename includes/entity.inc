@@ -549,6 +549,10 @@ class EntityFieldQuery {
    *
    * 'bundle', 'revision_id' and 'entity_id' have no such restrictions.
    *
+   * Note: The "comment" and "taxonomy_term" entity types don't support bundle
+   * conditions. For "taxonomy_term", propertyCondition('vid') can be used
+   * instead.
+   *
    * @param $name
    *   'entity_type', 'bundle', 'revision_id' or 'entity_id'.
    * @param $value
@@ -679,6 +683,9 @@ class EntityFieldQuery {
    *
    * If called multiple times, the query will order by each specified column in
    * the order this method is called.
+   *
+   * Note: The "comment" and "taxonomy_term" entity types don't support ordering
+   * by bundle. For "taxonomy_term", propertyOrderBy('vid') can be used instead.
    *
    * @param $name
    *   'entity_type', 'bundle', 'revision_id' or 'entity_id'.
@@ -965,6 +972,7 @@ class EntityFieldQuery {
       throw new EntityFieldQueryException(t('Entity %entity has no base table.', array('%entity' => $entity_type)));
     }
     $base_table = $entity_info['base table'];
+    $base_table_schema = drupal_get_schema($base_table);
     $select_query = db_select($base_table);
     $select_query->addExpression(':entity_type', 'entity_type', array(':entity_type' => $entity_type));
     // Process the property conditions.
@@ -997,8 +1005,11 @@ class EntityFieldQuery {
     // Handle bundles.
     if (!empty($entity_info['entity keys']['bundle'])) {
       $sql_field = $entity_info['entity keys']['bundle'];
-      $select_query->addField($base_table, $sql_field, 'bundle');
       $having = FALSE;
+
+      if (!empty($base_table_schema['fields'][$sql_field])) {
+        $select_query->addField($base_table, $sql_field, 'bundle');
+      }
     }
     else {
       $sql_field = 'bundle';
@@ -1057,7 +1068,8 @@ class EntityFieldQuery {
     }
     $return = array();
     foreach ($select_query->execute() as $partial_entity) {
-      $entity = entity_create_stub_entity($partial_entity->entity_type, array($partial_entity->entity_id, $partial_entity->revision_id, $partial_entity->bundle));
+      $bundle = isset($partial_entity->bundle) ? $partial_entity->bundle : NULL;
+      $entity = entity_create_stub_entity($partial_entity->entity_type, array($partial_entity->entity_id, $partial_entity->revision_id, $bundle));
       $return[$partial_entity->entity_type][$partial_entity->$id_key] = $entity;
       $this->ordered_results[] = $partial_entity;
     }
