@@ -1222,7 +1222,7 @@ function hook_view($node, $view_mode) {
   }
 
   $node->content['myfield'] = array(
-    '#value' => theme('mymodule_myfield', $node->myfield),
+    '#markup' => theme('mymodule_myfield', $node->myfield),
     '#weight' => 1,
   );
 
