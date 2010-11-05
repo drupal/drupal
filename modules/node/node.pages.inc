@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.133 2010/10/23 16:30:48 webchick Exp $
+// $Id: node.pages.inc,v 1.134 2010/11/05 19:47:20 dries Exp $
 
 /**
  * @file
@@ -166,6 +166,9 @@ function node_form($form, &$form_state, $node) {
     // Collapsed by default when "Create new revision" is unchecked
     '#collapsed' => !$node->revision,
     '#group' => 'additional_settings',
+    '#attributes' => array(
+      'class' => array('node-form-revision-information'),
+    ),
     '#attached' => array(
       'js' => array(drupal_get_path('module', 'node') . '/node.js'),
     ),
@@ -204,6 +207,9 @@ function node_form($form, &$form_state, $node) {
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
     '#group' => 'additional_settings',
+    '#attributes' => array(
+      'class' => array('node-form-author'),
+    ),
     '#attached' => array(
       'js' => array(
         drupal_get_path('module', 'node') . '/node.js',
@@ -240,6 +246,9 @@ function node_form($form, &$form_state, $node) {
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
     '#group' => 'additional_settings',
+    '#attributes' => array(
+      'class' => array('node-form-options'),
+    ),
     '#attached' => array(
       'js' => array(drupal_get_path('module', 'node') . '/node.js'),
     ),

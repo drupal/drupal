@@ -1,5 +1,5 @@
 <?php
-// $Id: path.module,v 1.185 2010/09/24 00:37:44 dries Exp $
+// $Id: path.module,v 1.186 2010/11/05 19:47:20 dries Exp $
 
 /**
  * @file
@@ -119,6 +119,9 @@ function path_form_node_form_alter(&$form, $form_state) {
     '#collapsible' => TRUE,
     '#collapsed' => empty($path['alias']),
     '#group' => 'additional_settings',
+    '#attributes' => array(
+      'class' => array('path-form'),
+    ),
     '#attached' => array(
       'js' => array(drupal_get_path('module', 'path') . '/path.js'),
     ),

@@ -1,11 +1,11 @@
-// $Id: book.js,v 1.7 2010/04/16 13:55:06 dries Exp $
+// $Id: book.js,v 1.8 2010/11/05 19:47:20 dries Exp $
 
 (function ($) {
 
 Drupal.behaviors.bookFieldsetSummaries = {
   attach: function (context) {
-    $('fieldset#edit-book', context).drupalSetSummary(function (context) {
-      var val = $('#edit-book-bid').val();
+    $('fieldset.book-form', context).drupalSetSummary(function (context) {
+      var val = $('.form-item-book-bid select').val();
 
       if (val === '0') {
         return Drupal.t('Not in book');
@@ -14,7 +14,7 @@ Drupal.behaviors.bookFieldsetSummaries = {
         return Drupal.t('New book');
       }
       else {
-        return Drupal.checkPlain($('#edit-book-bid :selected').text());
+        return Drupal.checkPlain($('.form-item-book-bid select :selected').text());
       }
     });
   }

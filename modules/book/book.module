@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.554 2010/10/18 05:53:34 webchick Exp $
+// $Id: book.module,v 1.555 2010/11/05 19:47:20 dries Exp $
 
 /**
  * @file
@@ -488,6 +488,9 @@ function _book_add_form_elements(&$form, &$form_state, $node) {
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
     '#group' => 'additional_settings',
+    '#attributes' => array(
+      'class' => array('book-form'),
+    ),
     '#attached' => array(
       'js' => array(drupal_get_path('module', 'book') . '/book.js'),
     ),
