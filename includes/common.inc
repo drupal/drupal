@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1247 2010/10/28 02:00:27 dries Exp $
+// $Id: common.inc,v 1.1248 2010/11/05 01:29:20 dries Exp $
 
 /**
  * @file
@@ -2210,9 +2210,7 @@ function drupal_http_header_attributes(array $attributes = array()) {
  */
 function drupal_attributes(array $attributes = array()) {
   foreach ($attributes as $attribute => &$data) {
-    if (is_array($data)) {
-      $data = implode(' ', $data);
-    }
+    $data = implode(' ', (array) $data);
     $data = $attribute . '="' . check_plain($data) . '"';
   }
   return $attributes ? ' ' . implode(' ', $attributes) : '';
