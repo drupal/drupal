@@ -1,5 +1,5 @@
 <?php
-// $Id: template.php,v 1.42 2010/10/05 19:59:10 dries Exp $
+// $Id: template.php,v 1.43 2010/11/05 01:25:33 dries Exp $
 
 /**
  * Return a themed breadcrumb trail.
@@ -64,7 +64,7 @@ function garland_preprocess_page(&$vars) {
     $vars['primary_nav'] = theme('links__system_main_menu', array(
       'links' => $vars['main_menu'],
       'attributes' => array(
-        'class' => array('links', 'main-menu'),
+        'class' => array('links', 'inline', 'main-menu'),
       ),
       'heading' => array(
         'text' => t('Main menu'),
@@ -80,7 +80,7 @@ function garland_preprocess_page(&$vars) {
     $vars['secondary_nav'] = theme('links__system_secondary_menu', array(
       'links' => $vars['secondary_menu'],
       'attributes' => array(
-        'class' => array('links', 'secondary-menu'),
+        'class' => array('links', 'inline', 'secondary-menu'),
       ),
       'heading' => array(
         'text' => t('Secondary menu'),
