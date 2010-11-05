@@ -503,8 +503,8 @@ function locale_entity_info_alter(&$entity_info) {
  *   language negotiated value. It is used by the Field API to determine the
  *   display language for fields if no explicit value is specified.
  * - URL language is by default non-configurable and is determined through the
- *   URL language provider. It is used by l() as the default language if none is
- *   specified.
+ *   URL language provider or the URL fallback provider if no language can be
+ *   detected. It is used by l() as the default language if none is specified.
  */
 function locale_language_types_info() {
   require_once DRUPAL_ROOT . '/includes/locale.inc';
@@ -517,7 +517,7 @@ function locale_language_types_info() {
       'fixed' => array(LOCALE_LANGUAGE_NEGOTIATION_INTERFACE),
     ),
     LANGUAGE_TYPE_URL => array(
-      'fixed' => array(LOCALE_LANGUAGE_NEGOTIATION_URL),
+      'fixed' => array(LOCALE_LANGUAGE_NEGOTIATION_URL, LOCALE_LANGUAGE_NEGOTIATION_URL_FALLBACK),
     ),
   );
 }
@@ -580,6 +580,15 @@ function locale_language_negotiation_info() {
     'weight' => 8,
     'name' => t('Interface'),
     'description' => t('Use the detected interface language.'),
+  );
+
+  $providers[LOCALE_LANGUAGE_NEGOTIATION_URL_FALLBACK] = array(
+    'types' => array(LANGUAGE_TYPE_URL),
+    'callbacks' => array('language' => 'locale_language_url_fallback'),
+    'file' => $file,
+    'weight' => 8,
+    'name' => t('URL fallback'),
+    'description' => t('Use an already detected language for URLs if none is found.'),
   );
 
   return $providers;
