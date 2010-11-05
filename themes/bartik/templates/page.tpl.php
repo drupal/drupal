@@ -129,7 +129,7 @@
           'links' => $main_menu,
           'attributes' => array(
             'id' => 'main-menu-links',
-            'class' => array('links', 'clearfix'),
+            'class' => array('links', 'inline', 'clearfix'),
           ),
           'heading' => array(
             'text' => t('Main menu'),
@@ -146,7 +146,7 @@
           'links' => $secondary_menu,
           'attributes' => array(
             'id' => 'secondary-menu-links',
-            'class' => array('links', 'clearfix'),
+            'class' => array('links', 'inline', 'clearfix'),
           ),
           'heading' => array(
             'text' => t('Secondary menu'),

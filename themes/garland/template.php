@@ -64,7 +64,7 @@ function garland_preprocess_page(&$vars) {
     $vars['primary_nav'] = theme('links__system_main_menu', array(
       'links' => $vars['main_menu'],
       'attributes' => array(
-        'class' => array('links', 'main-menu'),
+        'class' => array('links', 'inline', 'main-menu'),
       ),
       'heading' => array(
         'text' => t('Main menu'),
@@ -80,7 +80,7 @@ function garland_preprocess_page(&$vars) {
     $vars['secondary_nav'] = theme('links__system_secondary_menu', array(
       'links' => $vars['secondary_menu'],
       'attributes' => array(
-        'class' => array('links', 'secondary-menu'),
+        'class' => array('links', 'inline', 'secondary-menu'),
       ),
       'heading' => array(
         'text' => t('Secondary menu'),
