@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.27 2010/10/30 03:52:14 dries Exp $ */
+/* $Id: style.css,v 1.28 2010/11/05 20:07:50 dries Exp $ */
 
 /* ---------- Overall Specifications ---------- */
 
@@ -553,7 +553,6 @@ h1#page-title,
   padding: 0 15px 15px;
 }
 .node-teaser .content {
-  color: #3b3b3b;
   clear: none;
   line-height: 1.6;
 }
