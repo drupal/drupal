@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.install,v 1.69 2010/10/20 00:37:20 dries Exp $
+// $Id: locale.install,v 1.70 2010/11/05 20:33:56 dries Exp $
 
 /**
  * @file
@@ -110,6 +110,17 @@ function locale_update_7001() {
   variable_del('language_negotiation');
 
   return array();
+}
+
+/**
+ * Updates URL language negotiation by adding the URL fallback detection method.
+ */
+function locale_update_7002() {
+  $language_types_info = language_types_info();
+  $info = $language_types_info[LANGUAGE_TYPE_URL];
+  if (isset($info['fixed'])) {
+    language_negotiation_set(LANGUAGE_TYPE_URL, array_flip($info['fixed']));
+  }
 }
 
 /**
