@@ -1,19 +1,20 @@
 <?php
-// $Id: https.php,v 1.3 2010/11/05 19:05:02 dries Exp $
+// $Id: http.php,v 1.1 2010/11/05 19:05:02 dries Exp $
 
 /**
  * @file
- * Fake an https request, for use during testing.
+ * Fake an HTTP request, for use during testing.
  */
 
-// Set a global variable to indicate a mock HTTPS request.
-$is_https_mock = empty($_SERVER['HTTPS']);
+// Set a global variable to indicate a mock HTTP request.
+$is_http_mock = !empty($_SERVER['HTTPS']);
 
-// Change to https.
-$_SERVER['HTTPS'] = 'on';
+// Change to HTTP.
+$_SERVER['HTTPS'] = NULL;
+ini_set('session.cookie_secure', FALSE);
 foreach ($_SERVER as $key => $value) {
-  $_SERVER[$key] = str_replace('modules/simpletest/tests/https.php', 'index.php', $value);
-  $_SERVER[$key] = str_replace('http://', 'https://', $_SERVER[$key]);
+  $_SERVER[$key] = str_replace('modules/simpletest/tests/http.php', 'index.php', $value);
+  $_SERVER[$key] = str_replace('https://', 'http://', $_SERVER[$key]);
 }
 
 // Change current directory to the Drupal root.

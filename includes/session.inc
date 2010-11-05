@@ -1,5 +1,5 @@
 <?php
-// $Id: session.inc,v 1.90 2010/10/15 04:15:41 webchick Exp $
+// $Id: session.inc,v 1.91 2010/11/05 19:05:02 dries Exp $
 
 /**
  * @file
@@ -88,7 +88,10 @@ function _drupal_session_read($sid) {
   // a HTTPS session or we are about to log in so we check the sessions table
   // for an anonymous session with the non-HTTPS-only cookie.
   if ($is_https) {
-    $user = db_query("SELECT u.*, s.* FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.ssid = :ssid", array(':ssid' => $sid))->fetchObject();
+    // Ensure that an empty secure session ID cannot be selected.
+    if ($sid) {
+      $user = db_query("SELECT u.*, s.* FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.ssid = :ssid", array(':ssid' => $sid))->fetchObject();
+    }
     if (!$user) {
       if (isset($_COOKIE[$insecure_session_name])) {
         $user = db_query("SELECT u.*, s.* FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.sid = :sid AND s.uid = 0", array(
@@ -180,20 +183,22 @@ function _drupal_session_write($sid, $value) {
         'timestamp' => REQUEST_TIME,
       );
 
-      // The "secure pages" setting allows a site to simultaneously use both
-      // secure and insecure session cookies. If enabled and both cookies are
-      // presented then use both keys. If not enabled but on HTTPS then use the
-      // PHP session id as 'ssid'. If on HTTP then use the PHP session id as
-      // 'sid'.
+      // Use the session ID as 'sid' and an empty string as 'ssid' by default.
+      // _drupal_session_read() does not allow empty strings so that's a safe
+      // default.
+      $key = array('sid' => $sid, 'ssid' => '');
+      // On HTTPS connections, use the session ID as both 'sid' and 'ssid'.
       if ($is_https) {
         $key['ssid'] = $sid;
-        $insecure_session_name = substr(session_name(), 1);
-        if (variable_get('https', FALSE) && isset($_COOKIE[$insecure_session_name])) {
-          $key['sid'] = $_COOKIE[$insecure_session_name];
+        // The "secure pages" setting allows a site to simultaneously use both
+        // secure and insecure session cookies. If enabled and both cookies are
+        // presented then use both keys.
+        if (variable_get('https', FALSE)) {
+          $insecure_session_name = substr(session_name(), 1);
+          if (isset($_COOKIE[$insecure_session_name])) {
+            $key['sid'] = $_COOKIE[$insecure_session_name];
+          }
         }
-      }
-      else {
-        $key['sid'] = $sid;
       }
 
       db_merge('sessions')
