@@ -2210,9 +2210,7 @@ function drupal_http_header_attributes(array $attributes = array()) {
  */
 function drupal_attributes(array $attributes = array()) {
   foreach ($attributes as $attribute => &$data) {
-    if (is_array($data)) {
-      $data = implode(' ', $data);
-    }
+    $data = implode(' ', (array) $data);
     $data = $attribute . '="' . check_plain($data) . '"';
   }
   return $attributes ? ' ' . implode(' ', $attributes) : '';
