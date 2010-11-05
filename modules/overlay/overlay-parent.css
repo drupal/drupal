@@ -11,7 +11,7 @@ html.overlay-open body {
 .overlay-element {
   height: 100%;
   left: 0;
-  position: fixed;
+  position: absolute;
   top: 0;
   width: 100%;
   z-index: 500;
@@ -34,15 +34,4 @@ html.overlay-open body {
 html.overlay-open .displace-top,
 html.overlay-open .displace-bottom {
   z-index: 600;
-}
-
-/**
- * IE6 shows elements with position:fixed as position:static so replace
- * it with position:absolute;
- */
-* html #overlay-container,
-* html .overlay-modal-background,
-* html .overlay-element
-{
-  position: absolute;
 }
