@@ -488,6 +488,9 @@ function _book_add_form_elements(&$form, &$form_state, $node) {
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
     '#group' => 'additional_settings',
+    '#attributes' => array(
+      'class' => array('book-form'),
+    ),
     '#attached' => array(
       'js' => array(drupal_get_path('module', 'book') . '/book.js'),
     ),

@@ -1093,6 +1093,9 @@ function comment_form_node_type_form_alter(&$form, $form_state) {
       '#collapsible' => TRUE,
       '#collapsed' => TRUE,
       '#group' => 'additional_settings',
+      '#attributes' => array(
+        'class' => array('comment-node-type-settings-form'),
+      ),
       '#attached' => array(
         'js' => array(drupal_get_path('module', 'comment') . '/comment-node-form.js'),
       ),
@@ -1164,6 +1167,9 @@ function comment_form_node_form_alter(&$form, $form_state) {
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
     '#group' => 'additional_settings',
+    '#attributes' => array(
+      'class' => array('comment-node-settings-form'),
+    ),
     '#attached' => array(
       'js' => array(drupal_get_path('module', 'comment') . '/comment-node-form.js'),
      ),
@@ -1188,7 +1194,6 @@ function comment_form_node_form_alter(&$form, $form_state) {
       '#description' => t('Users with the "Post comments" permission can post comments.'),
       '#return_value' => COMMENT_NODE_OPEN,
       '#default_value' => $comment_settings,
-      '#id' => 'edit-comment-2',
       '#parents' => array('comment'),
     ),
     COMMENT_NODE_CLOSED => array(
@@ -1197,7 +1202,6 @@ function comment_form_node_form_alter(&$form, $form_state) {
       '#description' => t('Users cannot post comments, but existing comments will be displayed.'),
       '#return_value' => COMMENT_NODE_CLOSED,
       '#default_value' => $comment_settings,
-      '#id' => 'edit-comment-1',
       '#parents' => array('comment'),
     ),
     COMMENT_NODE_HIDDEN => array(
@@ -1206,7 +1210,6 @@ function comment_form_node_form_alter(&$form, $form_state) {
       '#description' => t('Comments are hidden from view.'),
       '#return_value' => COMMENT_NODE_HIDDEN,
       '#default_value' => $comment_settings,
-      '#id' => 'edit-comment-0',
       '#parents' => array('comment'),
     ),
   );

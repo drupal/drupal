@@ -119,6 +119,9 @@ function path_form_node_form_alter(&$form, $form_state) {
     '#collapsible' => TRUE,
     '#collapsed' => empty($path['alias']),
     '#group' => 'additional_settings',
+    '#attributes' => array(
+      'class' => array('path-form'),
+    ),
     '#attached' => array(
       'js' => array(drupal_get_path('module', 'path') . '/path.js'),
     ),

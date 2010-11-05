@@ -4,8 +4,8 @@
 
 Drupal.behaviors.pathFieldsetSummaries = {
   attach: function (context) {
-    $('fieldset#edit-path', context).drupalSetSummary(function (context) {
-      var path = $('#edit-path-alias').val();
+    $('fieldset.path-form', context).drupalSetSummary(function (context) {
+      var path = $('.form-item-path-alias input').val();
 
       return path ?
         Drupal.t('Alias: @alias', { '@alias': path }) :
