@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.304 2010/10/25 15:14:33 webchick Exp $
+// $Id: locale.module,v 1.305 2010/11/05 10:57:10 dries Exp $
 
 /**
  * @file
@@ -844,7 +844,7 @@ function locale_js_alter(&$javascript) {
   }
 }
 
-/*
+/**
  * Implements hook_css_alter().
  *
  * This function checks all CSS files currently added via drupal_add_css() and
