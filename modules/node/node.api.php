@@ -1,5 +1,5 @@
 <?php
-// $Id: node.api.php,v 1.80 2010/10/23 15:42:53 webchick Exp $
+// $Id: node.api.php,v 1.81 2010/11/05 19:58:14 dries Exp $
 
 /**
  * @file
@@ -1222,7 +1222,7 @@ function hook_view($node, $view_mode) {
   }
 
   $node->content['myfield'] = array(
-    '#value' => theme('mymodule_myfield', $node->myfield),
+    '#markup' => theme('mymodule_myfield', $node->myfield),
     '#weight' => 1,
   );
 
