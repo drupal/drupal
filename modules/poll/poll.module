@@ -133,6 +133,7 @@ function _poll_menu_access($node, $perm, $inspect_allowvotes) {
  */
 function poll_block_info() {
   $blocks['recent']['info'] = t('Most recent poll');
+  $blocks['recent']['properties']['administrative'] = TRUE;
   return $blocks;
 }
 

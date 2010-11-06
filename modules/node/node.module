@@ -2075,6 +2075,7 @@ function node_block_info() {
   $blocks['syndicate']['cache'] = DRUPAL_NO_CACHE;
 
   $blocks['recent']['info'] = t('Recent content');
+  $blocks['recent']['properties']['administrative'] = TRUE;
 
   return $blocks;
 }

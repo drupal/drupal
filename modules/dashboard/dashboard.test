@@ -112,4 +112,30 @@ class DashboardBlocksTestCase extends DrupalWebTestCase {
     $this->drupalGet('admin/dashboard');
     $this->assertRaw($custom_block['title'], t('Block still appears on the dashboard.'));
   }
+
+  /**
+   * Test that defining a block with ['properties']['administrative'] = TRUE
+   * adds it as an available block for the dashboard.
+   */
+  function testBlockAvailability() {
+    // Test "Recent comments", which should be available (defined as
+    // "administrative") but not enabled.
+    $this->drupalGet('admin/dashboard');
+    $this->assertNoText(t('Recent comments'), t('"Recent comments" not on dashboard.'));
+    $this->drupalGet('admin/dashboard/drawer');
+    $this->assertText(t('Recent comments'), t('Drawer of disabled blocks includes a block defined as "administrative".'));
+    $this->assertNoText(t('Syndicate'), t('Drawer of disabled blocks excludes a block not defined as "administrative".'));
+    $this->drupalGet('admin/dashboard/configure');
+    $elements = $this->xpath('//select[@id=:id]//option[@selected="selected"]', array(':id' => 'edit-blocks-comment-recent-region'));
+    $this->assertTrue($elements[0]['value'] == 'dashboard_inactive', t('A block defined as "administrative" defaults to dashboard_inactive.'));
+
+    // Now enable the block on the dashboard.
+    $values = array();
+    $values['blocks[comment_recent][region]'] = 'dashboard_main';
+    $this->drupalPost('admin/dashboard/configure', $values, t('Save blocks'));
+    $this->drupalGet('admin/dashboard');
+    $this->assertText(t('Recent comments'), t('"Recent comments" was placed on dashboard.'));
+    $this->drupalGet('admin/dashboard/drawer');
+    $this->assertNoText(t('Recent comments'), t('Drawer of disabled blocks excludes enabled blocks.'));
+  }
 }

@@ -190,6 +190,7 @@ function _blog_post_exists($account) {
  */
 function blog_block_info() {
   $block['recent']['info'] = t('Recent blog posts');
+  $block['recent']['properties']['administrative'] = TRUE;
   return $block;
 }
 

@@ -1273,10 +1273,13 @@ function user_block_info() {
   $blocks['login']['cache'] = DRUPAL_NO_CACHE;
 
   $blocks['new']['info'] = t('Who\'s new');
+  $blocks['new']['properties']['administrative'] = TRUE;
 
   // Too dynamic to cache.
   $blocks['online']['info'] = t('Who\'s online');
   $blocks['online']['cache'] = DRUPAL_NO_CACHE;
+  $blocks['online']['properties']['administrative'] = TRUE;
+
   return $blocks;
 }
 

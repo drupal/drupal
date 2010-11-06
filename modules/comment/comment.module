@@ -402,6 +402,7 @@ function comment_permission() {
  */
 function comment_block_info() {
   $blocks['recent']['info'] = t('Recent comments');
+  $blocks['recent']['properties']['administrative'] = TRUE;
 
   return $blocks;
 }
