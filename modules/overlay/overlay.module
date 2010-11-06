@@ -30,7 +30,26 @@ function overlay_menu() {
     'access arguments' => array('access overlay'),
     'type' => MENU_CALLBACK,
   );
+  $items['overlay/dismiss-message'] = array(
+    'title' => '',
+    'page callback' => 'overlay_user_dismiss_message',
+    'access arguments' => array('access overlay'),
+    'type' => MENU_CALLBACK,
+  );
   return $items;
+}
+
+/**
+ * Implements hook_admin_paths().
+ */
+function overlay_admin_paths() {
+  $paths = array(
+    // This is marked as an administrative path so that if it is visited from
+    // within the overlay, the user will stay within the overlay while the
+    // callback is being processed.
+    'overlay/dismiss-message' => TRUE,
+  );
+  return $paths;
 }
 
 /**
@@ -53,6 +72,9 @@ function overlay_theme() {
     'overlay' => array(
       'render element' => 'page',
       'template' => 'overlay',
+    ),
+    'overlay_disable_message' => array(
+      'render element' => 'element',
     ),
   );
 }
@@ -254,10 +276,127 @@ function overlay_page_alter(&$page) {
     }
   }
 
-  if (overlay_get_mode() == 'child') {
+  $mode = overlay_get_mode();
+  if ($mode == 'child') {
     // Add the overlay wrapper before the html wrapper.
     array_unshift($page['#theme_wrappers'], 'overlay');
   }
+  elseif ($mode == 'parent' && ($message = overlay_disable_message())) {
+    $page['page_top']['disable_overlay'] = $message;
+  }
+}
+
+/**
+ * Menu callback; dismisses the overlay accessibility message for this user.
+ */
+function overlay_user_dismiss_message() {
+  global $user;
+  // It's unlikely, but possible that "access overlay" permission is granted to
+  // the anonymous role. In this case, we do not display the message to disable
+  // the overlay, so there is nothing to dismiss. Also, protect against
+  // cross-site request forgeries by validating a token.
+  if (empty($user->uid) || !isset($_GET['token']) || !drupal_valid_token($_GET['token'], 'overlay')) {
+    return MENU_ACCESS_DENIED;
+  }
+  else {
+    user_save(user_load($user->uid), array('data' => array('overlay_message_dismissed' => 1)));
+    drupal_set_message(t('The message has been dismissed. You can change your overlay settings at any time by visiting your profile page.'));
+    // Destination is normally given. Go to the user profile as a fallback.
+    drupal_goto('user/' . $user->uid . '/edit');
+  }
+}
+
+/**
+ * Returns a renderable array representing a message for disabling the overlay.
+ *
+ * If the current user can access the overlay and has not previously indicated
+ * that this message should be dismissed, this function returns a message
+ * containing a link to disable the overlay. Nothing is returned for anonymous
+ * users, because the links control per-user settings. Therefore, because some
+ * screen readers are unable to properly read overlay contents, site builders
+ * are discouraged from granting the "access overlay" permission to the
+ * anonymous role. See http://drupal.org/node/890284.
+ */
+function overlay_disable_message() {
+  global $user;
+
+  if (!empty($user->uid) && empty($user->data['overlay_message_dismissed']) && (!isset($user->data['overlay']) || $user->data['overlay']) && user_access('access overlay')) {
+    $build = array(
+      '#theme' => 'overlay_disable_message',
+      '#weight' => -99,
+      // Link to the user's profile page, where the overlay can be disabled.
+      'profile_link' => array(
+        '#type' => 'link',
+        '#title' => t('If you have problems accessing administrative pages on this site, disable the overlay on your profile page.'),
+        '#href' => 'user/' . $user->uid . '/edit',
+        '#options' => array(
+          'query' => drupal_get_destination(),
+          'fragment' => 'edit-overlay-control',
+          'attributes' => array(
+            'id' => 'overlay-profile-link',
+            // Prevent the target page from being opened in the overlay.
+            'class' => array('overlay-exclude'),
+          ),
+        ),
+      ),
+      // Link to a menu callback that allows this message to be permanently
+      // dismissed for the current user.
+      'dismiss_message_link' => array(
+        '#type' => 'link',
+        '#title' => t('Dismiss this message.'),
+        '#href' => 'overlay/dismiss-message',
+        '#options' => array(
+          'query' => drupal_get_destination() + array(
+            // Add a token to protect against cross-site request forgeries.
+            'token' => drupal_get_token('overlay'),
+          ),
+          'attributes' => array(
+            'id' => 'overlay-dismiss-message',
+            // If this message is being displayed outside the overlay, prevent
+            // this link from opening the overlay.
+            'class' => (overlay_get_mode() == 'parent') ? array('overlay-exclude') : array(),
+          ),
+        ),
+      )
+    );
+  }
+  else {
+    $build = array();
+  }
+
+  return $build;
+}
+
+/**
+ * Returns the HTML for the message about how to disable the overlay.
+ *
+ * @see overlay_disable_message()
+ */
+function theme_overlay_disable_message($variables) {
+  $element = $variables['element'];
+
+  // Add CSS classes to hide the links from most sighted users, while keeping
+  // them accessible to screen-reader users and keyboard-only users. To assist
+  // screen-reader users, this message appears in both the parent and child
+  // documents, but only the one in the child document is part of the tab order.
+  foreach (array('profile_link', 'dismiss_message_link') as $key) {
+    $element[$key]['#options']['attributes']['class'][] = 'element-invisible';
+    if (overlay_get_mode() == 'child') {
+      $element[$key]['#options']['attributes']['class'][] = 'element-focusable';
+    }
+  }
+
+  // Render the links.
+  $output = drupal_render($element['profile_link']) . ' ' . drupal_render($element['dismiss_message_link']);
+
+  // Add a heading for screen-reader users. The heading doesn't need to be seen
+  // by sighted users.
+  $output = '<h3 class="element-invisible">' . t('Options for the administrative overlay') . '</h3>' . $output;
+
+  // Wrap in a container for styling.
+  $output = '<div id="overlay-disable-message" class="clearfix">' . $output . '</div>';
+
+  return $output;
 }
 
 /**
@@ -324,9 +463,9 @@ function overlay_preprocess_maintenance_page(&$variables) {
  * @see overlay.tpl.php
  */
 function template_preprocess_overlay(&$variables) {
-  $variables['tabs']              = menu_primary_local_tasks();
-  $variables['title']             = drupal_get_title();
-
+  $variables['tabs'] = menu_primary_local_tasks();
+  $variables['title'] = drupal_get_title();
+  $variables['disable_overlay'] = overlay_disable_message();
   $variables['content_attributes_array']['class'][] = 'clearfix';
 }
 

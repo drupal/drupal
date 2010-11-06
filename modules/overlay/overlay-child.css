@@ -6,6 +6,8 @@ html.js {
 }
 html.js body {
   background: transparent !important;
+  margin-left: 0;
+  margin-right: 0;
   padding: 20px 0;
 }
 
@@ -137,4 +139,27 @@ html.js body {
 * html #overlay-close,
 * html #overlay-close:hover {
   position: absolute;
+}
+
+/**
+ * Disable message.
+ */
+#overlay-disable-message {
+  background-color: #fff;
+  margin: -20px auto 20px;
+  width: 80%;
+  -moz-border-radius: 0 0 8px 8px;
+  -webkit-border-bottom-left-radius: 8px;
+  -webkit-border-bottom-right-radius: 8px;
+  border-radius: 0 0 8px 8px;
+}
+.overlay-disable-message-focused {
+  padding: 0.5em;
+}
+.overlay-disable-message-focused a {
+  display: block;
+  float: left;
+}
+.overlay-disable-message-focused #overlay-dismiss-message {
+  float: right;
 }

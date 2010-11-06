@@ -971,3 +971,27 @@ div.add-or-remove-shortcuts {
 #user-login-form .openid-links .user-link {
   margin-left: 1.5em; /* LTR */
 }
+
+/* Disable overlay message */
+#overlay-disable-message {
+  background-color: #addafc;
+}
+#overlay-disable-message a,
+#overlay-disable-message a:visited {
+  color: #000;
+}
+#overlay-disable-message a:focus,
+#overlay-disable-message a:active {
+  outline: none;
+  text-decoration: underline;
+}
+.overlay-disable-message-focused a {
+  padding: 0.4em 0.6em;
+}
+.overlay-disable-message-focused #overlay-dismiss-message {
+  background-color: #59A0D8;
+  color: #fff;
+  -moz-border-radius: 8px;
+  -webkit-border-radius: 8px;
+  border-radius: 8px;
+}

@@ -35,3 +35,17 @@ html.overlay-open .displace-top,
 html.overlay-open .displace-bottom {
   z-index: 600;
 }
+
+/**
+ * Within the overlay parent, the message about disabling the overlay is for
+ * screen-reader users only. It is always kept invisible with the
+ * element-invisible class, and removed from the tab order. Overlay-child.css
+ * contains styling for the same message appearing within the overlay, and
+ * intended for sighted users.
+ */
+#overlay-disable-message {
+  display: none;
+}
+html.overlay-open #overlay-disable-message {
+  display: block;
+}

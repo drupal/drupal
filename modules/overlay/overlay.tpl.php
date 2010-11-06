@@ -21,6 +21,7 @@
  */
 ?>
 
+<?php print render($disable_overlay); ?>
 <div id="overlay" <?php print $attributes; ?>>
   <div id="overlay-titlebar" class="clearfix">
     <div id="overlay-title-wrapper" class="clearfix">
