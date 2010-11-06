@@ -1239,17 +1239,19 @@ function comment_node_load($nodes, $types) {
       $node->cid = 0;
       $node->last_comment_timestamp = $node->created;
       $node->last_comment_name = '';
+      $node->last_comment_uid = $node->uid;
       $node->comment_count = 0;
     }
   }
 
   // For nodes with comments enabled, fetch information from the database.
   if (!empty($comments_enabled)) {
-    $result = db_query('SELECT nid, cid, last_comment_timestamp, last_comment_name, comment_count FROM {node_comment_statistics} WHERE nid IN (:comments_enabled)', array(':comments_enabled' => $comments_enabled));
+    $result = db_query('SELECT nid, cid, last_comment_timestamp, last_comment_name, last_comment_uid, comment_count FROM {node_comment_statistics} WHERE nid IN (:comments_enabled)', array(':comments_enabled' => $comments_enabled));
     foreach ($result as $record) {
       $nodes[$record->nid]->cid = $record->cid;
       $nodes[$record->nid]->last_comment_timestamp = $record->last_comment_timestamp;
       $nodes[$record->nid]->last_comment_name = $record->last_comment_name;
+      $nodes[$record->nid]->last_comment_uid = $record->last_comment_uid;
       $nodes[$record->nid]->comment_count = $record->comment_count;
     }
   }

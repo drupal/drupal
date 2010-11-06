@@ -390,6 +390,92 @@ class CommentInterfaceTest extends CommentHelperCase {
     $this->drupalLogin($this->admin_user);
     $this->setCommentForm(FALSE);
   }
+
+  /**
+   * Tests the node comment statistics.
+   */
+  function testCommentNodeCommentStatistics() {
+    $langcode = LANGUAGE_NONE;
+    // Set comments to have subject and preview disabled.
+    $this->drupalLogin($this->admin_user);
+    $this->setCommentPreview(DRUPAL_DISABLED);
+    $this->setCommentForm(TRUE);
+    $this->setCommentSubject(FALSE);
+    $this->setCommentSettings('comment_default_mode', COMMENT_MODE_THREADED, t('Comment paging changed.'));
+    $this->drupalLogout();
+
+    // Creates a second user to post comments.
+    $this->web_user2 = $this->drupalCreateUser(array('access comments', 'post comments', 'create article content', 'edit own comments'));
+
+    // Checks the initial values of node comment statistics with no comment.
+    $node = node_load($this->node->nid);
+    $this->assertEqual($node->last_comment_timestamp, $this->node->created, t('The initial value of node last_comment_timestamp is the node created date.'));
+    $this->assertEqual($node->last_comment_name, NULL, t('The initial value of node last_comment_name is NULL.'));
+    $this->assertEqual($node->last_comment_uid, $this->web_user->uid, t('The initial value of node last_comment_uid is the node uid.'));
+    $this->assertEqual($node->comment_count, 0, t('The initial value of node comment_count is zero.'));
+
+    // Post comment #1 as web_user2.
+    $this->drupalLogin($this->web_user2);
+    $comment_text = $this->randomName();
+    $comment = $this->postComment($this->node, $comment_text);
+    $comment_loaded = comment_load($comment->id);
+
+    // Checks the new values of node comment statistics with comment #1.
+    // The node needs to be reloaded with a node_load_multiple cache reset.
+    $node = node_load($this->node->nid, NULL, TRUE);
+    $this->assertEqual($node->last_comment_timestamp, $comment_loaded->created, t('The value of node last_comment_timestamp is the comment #1 created date.'));
+    $this->assertEqual($node->last_comment_name, NULL, t('The value of node last_comment_name is NULL.'));
+    $this->assertEqual($node->last_comment_uid, $this->web_user2->uid, t('The value of node last_comment_uid is the comment #1 uid.'));
+    $this->assertEqual($node->comment_count, 1, t('The value of node comment_count is 1.'));
+
+    // Prepare for anonymous comment submission (comment approval enabled).
+    variable_set('user_register', USER_REGISTER_VISITORS);
+    $this->drupalLogin($this->admin_user);
+    user_role_change_permissions(DRUPAL_ANONYMOUS_RID, array(
+      'access comments' => TRUE,
+      'post comments' => TRUE,
+      'skip comment approval' => FALSE,
+    ));
+    // Ensure that the poster can leave some contact info.
+    $this->setCommentAnonymous('1');
+    $this->drupalLogout();
+
+    // Post comment #2 as anonymous (comment approval enabled).
+    $this->drupalGet('comment/reply/' . $this->node->nid);
+    $anonymous_comment = $this->postComment($this->node, $this->randomName(), '', TRUE);
+    $comment_unpublished_loaded = comment_load($anonymous_comment->id);
+
+    // Checks the new values of node comment statistics with comment #2 and
+    // ensure they haven't changed since the comment has not been moderated.
+    // The node needs to be reloaded with a node_load_multiple cache reset.
+    $node = node_load($this->node->nid, NULL, TRUE);
+    $this->assertEqual($node->last_comment_timestamp, $comment_loaded->created, t('The value of node last_comment_timestamp is still the comment #1 created date.'));
+    $this->assertEqual($node->last_comment_name, NULL, t('The value of node last_comment_name is still NULL.'));
+    $this->assertEqual($node->last_comment_uid, $this->web_user2->uid, t('The value of node last_comment_uid is still the comment #1 uid.'));
+    $this->assertEqual($node->comment_count, 1, t('The value of node comment_count is still 1.'));
+
+    // Prepare for anonymous comment submission (no approval required).
+    $this->drupalLogin($this->admin_user);
+    user_role_change_permissions(DRUPAL_ANONYMOUS_RID, array(
+      'access comments' => TRUE,
+      'post comments' => TRUE,
+      'skip comment approval' => TRUE,
+    ));
+    $this->drupalLogout();
+
+    // Post comment #3 as anonymous.
+    $this->drupalGet('comment/reply/' . $this->node->nid);
+    $anonymous_comment = $this->postComment($this->node, $this->randomName(), '', array('name' => $this->randomName()));
+    $comment_loaded = comment_load($anonymous_comment->id);
+
+    // Checks the new values of node comment statistics with comment #3.
+    // The node needs to be reloaded with a node_load_multiple cache reset.
+    $node = node_load($this->node->nid, NULL, TRUE);
+    $this->assertEqual($node->last_comment_timestamp, $comment_loaded->created, t('The value of node last_comment_timestamp is the comment #3 created date.'));
+    $this->assertEqual($node->last_comment_name, $comment_loaded->name, t('The value of node last_comment_name is the name of the anonymous user.'));
+    $this->assertEqual($node->last_comment_uid, 0, t('The value of node last_comment_uid is zero.'));
+    $this->assertEqual($node->comment_count, 2, t('The value of node comment_count is 2.'));
+  }
 }
 
 /**
