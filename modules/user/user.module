@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1213 2010/10/23 15:30:34 webchick Exp $
+// $Id: user.module,v 1.1214 2010/11/06 23:24:33 webchick Exp $
 
 /**
  * @file
@@ -1273,10 +1273,13 @@ function user_block_info() {
   $blocks['login']['cache'] = DRUPAL_NO_CACHE;
 
   $blocks['new']['info'] = t('Who\'s new');
+  $blocks['new']['properties']['administrative'] = TRUE;
 
   // Too dynamic to cache.
   $blocks['online']['info'] = t('Who\'s online');
   $blocks['online']['cache'] = DRUPAL_NO_CACHE;
+  $blocks['online']['properties']['administrative'] = TRUE;
+
   return $blocks;
 }
 

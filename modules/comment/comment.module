@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.911 2010/11/06 11:15:09 dries Exp $
+// $Id: comment.module,v 1.912 2010/11/06 23:24:33 webchick Exp $
 
 /**
  * @file
@@ -402,6 +402,7 @@ function comment_permission() {
  */
 function comment_block_info() {
   $blocks['recent']['info'] = t('Recent comments');
+  $blocks['recent']['properties']['administrative'] = TRUE;
 
   return $blocks;
 }

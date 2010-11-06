@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.579 2010/10/06 13:38:40 dries Exp $
+// $Id: forum.module,v 1.580 2010/11/06 23:24:33 webchick Exp $
 
 /**
  * @file
@@ -623,10 +623,12 @@ function forum_block_info() {
   $blocks['active'] = array(
     'info' => t('Active forum topics'),
     'cache' => DRUPAL_CACHE_CUSTOM,
+    'properties' => array('administrative' => TRUE),
   );
   $blocks['new'] = array(
     'info' => t('New forum topics'),
     'cache' => DRUPAL_CACHE_CUSTOM,
+    'properties' => array('administrative' => TRUE),
   );
   return $blocks;
 }

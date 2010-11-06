@@ -1,5 +1,5 @@
 <?php
-// $Id: dashboard.module,v 1.40 2010/10/21 11:55:08 dries Exp $
+// $Id: dashboard.module,v 1.41 2010/11/06 23:24:33 webchick Exp $
 
 /**
  * Implements hook_help().
@@ -9,7 +9,7 @@ function dashboard_help($path, $arg) {
     case 'admin/help#dashboard':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Dashboard module provides a <a href="@dashboard">Dashboard page</a> in the administrative interface for organizing administrative tasks and navigation, and tracking information within your site. The Dashboard page contains blocks, which you can add to and arrange using the drag and drop interface that appears when you click on the <em>Customize dashboard</em> link. For more information, see the online handbook entry for <a href="@handbook">Dashboard module</a>.', array('@handbook' => 'http://drupal.org/handbook/modules/dashboard', '@dashboard' => url('admin/dashboard'))) . '</p>';
+      $output .= '<p>' . t('The Dashboard module provides a <a href="@dashboard">Dashboard page</a> in the administrative interface for organizing administrative tasks and navigation, and tracking information within your site. The Dashboard page contains blocks, which you can add to and arrange using the drag-and-drop interface that appears when you click on the <em>Customize dashboard</em> link. Within this interface, blocks that are not primarily used for site administration do not appear by default, but can be added via the <em>Add other blocks</em> link. For more information, see the online handbook entry for <a href="@handbook">Dashboard module</a>.', array('@handbook' => 'http://drupal.org/handbook/modules/dashboard', '@dashboard' => url('admin/dashboard'))) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Tracking user activity') . '</dt>';
@@ -22,7 +22,7 @@ function dashboard_help($path, $arg) {
     case 'admin/dashboard/configure':
       // @todo This assumes the current page is being displayed using the same
       //   theme that the dashboard is displayed in.
-      $output = '<p>' . t('Rearrange blocks for display on the <a href="@dashboard-url">dashboard</a>. Disabling a block makes it available on the main <a href="@blocks-url">blocks administration page</a>.', array('@dashboard-url' => url('admin/dashboard'), '@blocks-url' => url("admin/structure/block/list/{$GLOBALS['theme_key']}"))) . '</p>';
+      $output = '<p>' . t('Rearrange blocks for display on the <a href="@dashboard-url">Dashboard page</a>. Blocks placed in the <em>Dashboard (inactive)</em> region are not displayed when viewing the Dashboard page, but are available within its <em>Customize dashboard</em> interface. Removing a block from active dashboard display makes it available on the main <a href="@blocks-url">blocks administration page</a>.', array('@dashboard-url' => url('admin/dashboard'), '@blocks-url' => url("admin/structure/block/list/{$GLOBALS['theme_key']}"))) . '</p>';
       return $output;
   }
 }
@@ -90,6 +90,25 @@ function dashboard_permission() {
 }
 
 /**
+ * Implements hook_block_info_alter().
+ */
+function dashboard_block_info_alter(&$blocks, $theme, $code_blocks) {
+  $admin_theme = variable_get('admin_theme');
+  if (($admin_theme && $theme == $admin_theme) || (!$admin_theme && $theme == variable_get('theme_default', 'bartik'))) {
+    foreach ($blocks as $module => &$module_blocks) {
+      foreach ($module_blocks as $delta => &$block) {
+        // Make administrative blocks that are not already in use elsewhere
+        // available for the dashboard.
+        if (empty($block['status']) && (empty($block['region']) || $block['region'] == BLOCK_REGION_NONE) && !empty($code_blocks[$module][$delta]['properties']['administrative'])) {
+          $block['status'] = 1;
+          $block['region'] = 'dashboard_inactive';
+        }
+      }
+    }
+  }
+}
+
+/**
  * Implements hook_block_list_alter().
  *
  * Skip rendering dashboard blocks when not on the dashboard page itself. This
@@ -121,6 +140,10 @@ function dashboard_page_build(&$page) {
     // region into it.
     $page['content']['dashboard'] = array('#theme_wrappers' => array('dashboard'));
     foreach (dashboard_regions() as $region) {
+      // Do not show dashboard blocks that are disabled.
+      if ($region == 'dashboard_inactive') {
+        continue;
+      }
       // Insert regions even when they are empty, so that they will be
       // displayed when the dashboard is being configured.
       $page['content']['dashboard'][$region] = !empty($page[$region]) ? $page[$region] : array();
@@ -177,7 +200,15 @@ function dashboard_page_build(&$page) {
  */
 function dashboard_system_info_alter(&$info, $file, $type) {
   if ($type == 'theme') {
-    $info['regions'] += dashboard_region_descriptions();
+    // Add the dashboard regions (the "inactive" region should always appear
+    // last in the list, for usability reasons).
+    $dashboard_regions = dashboard_region_descriptions();
+    if (isset($dashboard_regions['dashboard_inactive'])) {
+      $inactive_region = $dashboard_regions['dashboard_inactive'];
+      unset($dashboard_regions['dashboard_inactive']);
+      $dashboard_regions['dashboard_inactive'] = $inactive_region;
+    }
+    $info['regions'] += $dashboard_regions;
     // Indicate that these regions are intended to be displayed whenever the
     // dashboard is displayed in an overlay. This information is provided for
     // any module that might need to use it, not just the core Overlay module.
@@ -312,11 +343,22 @@ function dashboard_form_block_admin_display_form_alter(&$form, &$form_state, $fo
     $form['block_regions']['#value'] = array_diff_key($form['block_regions']['#value'], $dashboard_regions);
     foreach (element_children($form['blocks']) as $i) {
       $block = &$form['blocks'][$i];
-      if (isset($block['region']['#default_value']) && isset($dashboard_regions[$block['region']['#default_value']])) {
+      if (isset($block['region']['#default_value']) && isset($dashboard_regions[$block['region']['#default_value']]) && $block['region']['#default_value'] != 'dashboard_inactive') {
         $block['#access'] = FALSE;
       }
       elseif (isset($block['region']['#options'])) {
         $block['region']['#options'] = array_diff_key($block['region']['#options'], $dashboard_regions);
+      }
+      // Show inactive dashboard blocks as disabled on the main block
+      // administration form, so that they are available to place in other
+      // regions of the theme. Note that when the form is submitted, any such
+      // blocks which still remain disabled will immediately be put back in the
+      // 'dashboard_inactive' region, because dashboard_block_info_alter() is
+      // called when the blocks are rehashed. Fortunately, this is the exact
+      // behavior we want.
+      if ($block['region']['#default_value'] == 'dashboard_inactive') {
+        // @todo These do not wind up in correct alphabetical order.
+        $block['region']['#default_value'] = NULL;
       }
     }
   }
@@ -370,6 +412,9 @@ function dashboard_form_block_add_block_form_alter(&$form, &$form_state) {
  */
 function template_preprocess_dashboard_admin_display_form(&$variables) {
   template_preprocess_block_admin_display_form($variables);
+  if (isset($variables['block_regions'][BLOCK_REGION_NONE])) {
+    $variables['block_regions'][BLOCK_REGION_NONE] = t('Other blocks');
+  }
 }
 
 /**
@@ -431,8 +476,9 @@ function dashboard_regions() {
  */
 function dashboard_dashboard_regions() {
   return array(
-    'dashboard_main' => 'Dashboard main',
-    'dashboard_sidebar' => 'Dashboard sidebar',
+    'dashboard_main' => 'Dashboard (main)',
+    'dashboard_sidebar' => 'Dashboard (sidebar)',
+    'dashboard_inactive' => 'Dashboard (inactive)',
   );
 }
 
@@ -445,9 +491,9 @@ function dashboard_show_disabled() {
   // Blocks are not necessarily initialized at this point.
   $blocks = _block_rehash();
 
-  // Limit the list to disabled blocks for the current theme.
+  // Limit the list to blocks that are marked as disabled for the dashboard.
   foreach ($blocks as $key => $block) {
-    if ($block['theme'] != $theme_key || (!empty($block['status']) && !empty($block['region']))) {
+    if ($block['theme'] != $theme_key || $block['region'] != 'dashboard_inactive') {
       unset($blocks[$key]);
     }
   }
@@ -496,7 +542,7 @@ function dashboard_update() {
     parse_str($_REQUEST['regions'], $regions);
     foreach ($regions as $region_name => $blocks) {
       if ($region_name == 'disabled_blocks') {
-        $region_name = '';
+        $region_name = 'dashboard_inactive';
       }
       foreach ($blocks as $weight => $block_string) {
         // Parse the query string to determine the block's module and delta.
@@ -507,12 +553,7 @@ function dashboard_update() {
 
         $block->region = $region_name;
         $block->weight = $weight;
-        if (empty($region_name)) {
-          $block->status = 0;
-        }
-        else {
-          $block->status = 1;
-        }
+        $block->status = 1;
 
         db_merge('block')
           ->key(array(
@@ -603,6 +644,8 @@ function theme_dashboard_disabled_blocks($variables) {
   foreach ($blocks as $block) {
     $output .= theme('dashboard_disabled_block', array('block' => $block));
   }
+  $output .= '<div class="clearfix"></div>';
+  $output .= '<p class="dashboard-add-other-blocks">' . l(t('Add other blocks'), 'admin/dashboard/configure') . '</p>';
   $output .= '</div></div></div>';
   return $output;
 }

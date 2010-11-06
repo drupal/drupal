@@ -1,5 +1,5 @@
 <?php
-// $Id: block.api.php,v 1.13 2010/08/13 12:25:14 dries Exp $
+// $Id: block.api.php,v 1.14 2010/11/06 23:24:33 webchick Exp $
 
 /**
  * @file
@@ -57,6 +57,12 @@
  *     - DRUPAL_CACHE_GLOBAL: The block is the same for every user on every
  *       page where it is visible.
  *     - DRUPAL_NO_CACHE: The block should not get cached.
+ *   - 'properties': (optional) Array of additional metadata to add to the
+ *     block. Common properties include:
+ *     - 'administrative': Boolean which categorizes this block as usable in
+ *       an administrative context. This might include blocks which help an
+ *       administrator approve/deny comments, or view recently created
+ *       user accounts.
  *   - 'weight': (optional) Initial value for the ordering weight of this block.
  *     Most modules do not provide an initial value, and any value provided can
  *     be modified by a user on the block configuration screen.

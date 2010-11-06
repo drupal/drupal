@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.359 2010/10/25 15:51:21 webchick Exp $
+// $Id: poll.module,v 1.360 2010/11/06 23:24:33 webchick Exp $
 
 /**
  * @file
@@ -133,6 +133,7 @@ function _poll_menu_access($node, $perm, $inspect_allowvotes) {
  */
 function poll_block_info() {
   $blocks['recent']['info'] = t('Most recent poll');
+  $blocks['recent']['properties']['administrative'] = TRUE;
   return $blocks;
 }
 

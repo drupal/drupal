@@ -1,5 +1,5 @@
 <?php
-// $Id: block.admin.inc,v 1.90 2010/10/10 20:11:21 dries Exp $
+// $Id: block.admin.inc,v 1.91 2010/11/06 23:24:33 webchick Exp $
 
 /**
  * @file
@@ -291,6 +291,7 @@ function block_admin_configure($form, &$form_state, $module, $delta) {
   );
 
   $theme_default = variable_get('theme_default', 'bartik');
+  $admin_theme = variable_get('admin_theme');
   foreach (list_themes() as $key => $theme) {
     // Only display enabled themes
     if ($theme->status) {
@@ -300,9 +301,18 @@ function block_admin_configure($form, &$form_state, $module, $delta) {
         ':theme' => $key,
       ))->fetchField();
 
+      // Use a meaningful title for the main site theme and administrative
+      // theme.
+      $theme_title = $theme->info['name'];
+      if ($key == $theme_default) {
+        $theme_title = t('!theme (default theme)', array('!theme' => $theme_title));
+      }
+      elseif ($admin_theme && $key == $admin_theme) {
+        $theme_title = t('!theme (administration theme)', array('!theme' => $theme_title));
+      }
       $form['regions'][$key] = array(
         '#type' => 'select',
-        '#title' => $theme->info['name'],
+        '#title' => $theme_title,
         '#default_value' => !empty($region) && $region != -1 ? $region : NULL,
         '#empty_value' => BLOCK_REGION_NONE,
         '#options' => system_region_list($key, REGIONS_VISIBLE),
