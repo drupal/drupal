@@ -1,5 +1,5 @@
 <?php
-// $Id: overlay.tpl.php,v 1.4 2010/09/16 19:47:45 dries Exp $
+// $Id: overlay.tpl.php,v 1.5 2010/11/06 00:18:24 dries Exp $
 
 /**
  * @file
@@ -21,6 +21,7 @@
  */
 ?>
 
+<?php print render($disable_overlay); ?>
 <div id="overlay" <?php print $attributes; ?>>
   <div id="overlay-titlebar" class="clearfix">
     <div id="overlay-title-wrapper" class="clearfix">

@@ -1,4 +1,4 @@
-// $Id: overlay-parent.js,v 1.56 2010/10/30 03:44:37 dries Exp $
+// $Id: overlay-parent.js,v 1.57 2010/11/06 00:18:24 dries Exp $
 
 (function ($) {
 
@@ -825,9 +825,15 @@ Drupal.overlay.getDisplacement = function (region) {
  *   the entire page.
  */
 Drupal.overlay.makeDocumentUntabbable = function (context) {
-  // Manipulating tabindexes is unacceptably slow in IE6 and IE7, so in those
-  // browsers, the underlying page will still be reachable via the tab key.
+  // Manipulating tabindexes for the entire document is unacceptably slow in IE6
+  // and IE7, so in those browsers, the underlying page will still be reachable
+  // via the tab key. However, we still make the links within the Disable
+  // message unreachable, because the same message also exists within the
+  // child document. The duplicate copy in the underlying document is only for
+  // assisting screen-reader users navigating the document with reading commands
+  // that follow markup order rather than tab order.
   if (jQuery.browser.msie && parseInt(jQuery.browser.version, 10) < 8) {
+    $('#overlay-disable-message a', context).attr('tabindex', -1);
     return;
   }
 
