@@ -227,11 +227,14 @@ function hook_field_info_alter(&$info) {
  *     settings when possible. No assumptions should be made on how storage
  *     engines internally use the original column name to structure their
  *     storage.
- *   - indexes: An array of Schema API indexes definitions. Only columns that
- *     appear in the 'columns' array are allowed. Those indexes will be used as
- *     default indexes. Callers of field_create_field() can specify additional
- *     indexes, or, at their own risk, modify the default indexes specified by
- *     the field-type module. Some storage engines might not support indexes.
+ *   - indexes: (optional) An array of Schema API indexes definitions. Only
+ *     columns that appear in the 'columns' array are allowed. Those indexes
+ *     will be used as default indexes. Callers of field_create_field() can
+ *     specify additional indexes, or, at their own risk, modify the default
+ *     indexes specified by the field-type module. Some storage engines might
+ *     not support indexes.
+ *   - foreign keys: (optional) An array of Schema API foreign keys
+ *     definitions.
  */
 function hook_field_schema($field) {
   if ($field['type'] == 'text_long') {
@@ -263,6 +266,12 @@ function hook_field_schema($field) {
     'columns' => $columns,
     'indexes' => array(
       'format' => array('format'),
+    ),
+    'foreign keys' => array(
+      'format' => array(
+        'table' => 'filter_format',
+        'columns' => array('format' => 'format'),
+      ),
     ),
   );
 }
