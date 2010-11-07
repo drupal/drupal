@@ -1190,28 +1190,13 @@ function comment_form_node_form_alter(&$form, $form_state) {
       COMMENT_NODE_HIDDEN => t('Hidden'),
     ),
     COMMENT_NODE_OPEN => array(
-      '#type' => 'radio',
-      '#title' => t('Open'),
       '#description' => t('Users with the "Post comments" permission can post comments.'),
-      '#return_value' => COMMENT_NODE_OPEN,
-      '#default_value' => $comment_settings,
-      '#parents' => array('comment'),
     ),
     COMMENT_NODE_CLOSED => array(
-      '#type' => 'radio',
-      '#title' => t('Closed'),
       '#description' => t('Users cannot post comments, but existing comments will be displayed.'),
-      '#return_value' => COMMENT_NODE_CLOSED,
-      '#default_value' => $comment_settings,
-      '#parents' => array('comment'),
     ),
     COMMENT_NODE_HIDDEN => array(
-      '#type' => 'radio',
-      '#title' => t('Hidden'),
       '#description' => t('Comments are hidden from view.'),
-      '#return_value' => COMMENT_NODE_HIDDEN,
-      '#default_value' => $comment_settings,
-      '#parents' => array('comment'),
     ),
   );
   // If the node doesn't have any comments, the "hidden" option makes no
