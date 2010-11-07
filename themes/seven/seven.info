@@ -4,7 +4,6 @@ description = A simple one-column, tableless, fluid width administration theme.
 package = Core
 version = VERSION
 core = 7.x
-engine = phptemplate
 stylesheets[screen][] = reset.css
 stylesheets[screen][] = style.css
 settings[shortcut_module_link] = 1

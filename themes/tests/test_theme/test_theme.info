@@ -2,7 +2,6 @@
 name = Test theme
 description = Theme for testing the theme system
 core = 7.x
-engine = phptemplate
 hidden = TRUE
 
 ; Normally, themes may list CSS files like this, and if they exist in the theme

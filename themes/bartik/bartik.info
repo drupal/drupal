@@ -5,7 +5,6 @@ description = A flexible, recolorable theme with many regions.
 package = Core
 version = VERSION
 core = 7.x
-engine = phptemplate
 
 stylesheets[all][] = css/layout.css
 stylesheets[all][] = css/style.css

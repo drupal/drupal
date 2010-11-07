@@ -6616,7 +6616,7 @@ function drupal_write_record($table, &$record, $primary_keys = array()) {
  * - name: The real name of the theme for display purposes
  * - description: Brief description
  * - screenshot: Path to screenshot relative to the theme's .info file.
- * - engine: Theme engine, typically: engine = phptemplate
+ * - engine: Theme engine; typically phptemplate.
  * - base: Name of a base theme, if applicable, eg: base = zen
  * - regions: Listed regions eg: region[left] = Left sidebar
  * - features: Features available eg: features[] = logo

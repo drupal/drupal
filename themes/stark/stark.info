@@ -4,5 +4,4 @@ description = This theme demonstrates Drupal's default HTML markup and CSS style
 package = Core
 version = VERSION
 core = 7.x
-engine = phptemplate
 stylesheets[all][] = layout.css
