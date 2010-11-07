@@ -1,5 +1,5 @@
 <?php
-// $Id: form_test.module,v 1.53 2010/10/28 02:20:14 dries Exp $
+// $Id: form_test.module,v 1.54 2010/11/07 21:46:09 dries Exp $
 
 /**
  * @file
@@ -98,6 +98,12 @@ function form_test_menu() {
     'page arguments' => array('form_test_select'),
     'access callback' => TRUE,
   );
+  $items['form-test/checkboxes-radios'] = array(
+    'title' => t('Checkboxes, Radios'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('form_test_checkboxes_radios'),
+    'access callback' => TRUE,
+  );
 
   $items['form-test/disabled-elements'] = array(
     'title' => t('Form test'),
@@ -184,6 +190,14 @@ function form_test_menu() {
   );
 
   return $items;
+}
+
+/**
+ * Form submit handler to return form values as JSON.
+ */
+function _form_test_submit_values_json($form, &$form_state) {
+  drupal_json_output($form_state['values']);
+  drupal_exit();
 }
 
 /**
@@ -890,6 +904,63 @@ function form_test_select($form, &$form_state) {
 function form_test_select_submit($form, &$form_state) {
   drupal_json_output($form_state['values']);
   exit();
+}
+
+/**
+ * Form constructor to test expansion of #type checkboxes and radios.
+ */
+function form_test_checkboxes_radios($form, &$form_state, $customize = FALSE) {
+  $form['#submit'] = array('_form_test_submit_values_json');
+
+  // Expand #type checkboxes, setting custom element properties for some but not
+  // all options.
+  $form['checkboxes'] = array(
+    '#type' => 'checkboxes',
+    '#title' => 'Checkboxes',
+    '#options' => array(
+      0 => 'Zero',
+      'foo' => 'Foo',
+      1 => 'One',
+      'bar' => 'Bar',
+    ),
+  );
+  if ($customize) {
+    $form['checkboxes'] += array(
+      'foo' => array(
+        '#description' => 'Enable to foo.',
+      ),
+      1 => array(
+        '#weight' => 10,
+      ),
+    );
+  }
+
+  // Expand #type radios, setting custom element properties for some but not
+  // all options.
+  $form['radios'] = array(
+    '#type' => 'radios',
+    '#title' => 'Radios',
+    '#options' => array(
+      0 => 'Zero',
+      'foo' => 'Foo',
+      1 => 'One',
+      'bar' => 'Bar',
+    ),
+  );
+  if ($customize) {
+    $form['radios'] += array(
+      'foo' => array(
+        '#description' => 'Enable to foo.',
+      ),
+      1 => array(
+        '#weight' => 10,
+      ),
+    );
+  }
+
+  $form['submit'] = array('#type' => 'submit', '#value' => 'Submit');
+
+  return $form;
 }
 
 /**

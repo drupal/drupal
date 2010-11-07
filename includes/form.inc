@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.507 2010/10/28 02:20:14 dries Exp $
+// $Id: form.inc,v 1.508 2010/11/07 21:46:09 dries Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -2786,22 +2786,28 @@ function weight_value(&$form) {
  */
 function form_process_radios($element) {
   if (count($element['#options']) > 0) {
+    $weight = 0;
     foreach ($element['#options'] as $key => $choice) {
-      if (!isset($element[$key])) {
-        // Generate the parents as the autogenerator does, so we will have a
-        // unique id for each radio button.
-        $parents_for_id = array_merge($element['#parents'], array($key));
-        $element[$key] = array(
-          '#type' => 'radio',
-          '#title' => $choice,
-          '#return_value' => check_plain($key),
-          '#default_value' => isset($element['#default_value']) ? $element['#default_value'] : NULL,
-          '#attributes' => $element['#attributes'],
-          '#parents' => $element['#parents'],
-          '#id' => drupal_html_id('edit-' . implode('-', $parents_for_id)),
-          '#ajax' => isset($element['#ajax']) ? $element['#ajax'] : NULL,
-        );
-      }
+      // Maintain order of options as defined in #options, in case the element
+      // defines custom option sub-elements, but does not define all option
+      // sub-elements.
+      $weight += 0.001;
+
+      $element += array($key => array());
+      // Generate the parents as the autogenerator does, so we will have a
+      // unique id for each radio button.
+      $parents_for_id = array_merge($element['#parents'], array($key));
+      $element[$key] += array(
+        '#type' => 'radio',
+        '#title' => $choice,
+        '#return_value' => check_plain($key),
+        '#default_value' => isset($element['#default_value']) ? $element['#default_value'] : NULL,
+        '#attributes' => $element['#attributes'],
+        '#parents' => $element['#parents'],
+        '#id' => drupal_html_id('edit-' . implode('-', $parents_for_id)),
+        '#ajax' => isset($element['#ajax']) ? $element['#ajax'] : NULL,
+        '#weight' => $weight,
+      );
     }
   }
   return $element;
@@ -2911,25 +2917,30 @@ function form_process_checkboxes($element) {
     if (!isset($element['#default_value']) || $element['#default_value'] == 0) {
       $element['#default_value'] = array();
     }
+    $weight = 0;
     foreach ($element['#options'] as $key => $choice) {
-      if (!isset($element[$key])) {
-        // Integer 0 is not a valid #return_value, so use '0' instead.
-        // @see form_type_checkbox_value().
-        // @todo For Drupal 8, cast all integer keys to strings for consistency
-        //   with form_process_radios().
-        if ($key === 0) {
-          $key = '0';
-        }
-        $element[$key] = array(
-          '#type' => 'checkbox',
-          '#processed' => TRUE,
-          '#title' => $choice,
-          '#return_value' => $key,
-          '#default_value' => isset($value[$key]) ? $key : NULL,
-          '#attributes' => $element['#attributes'],
-          '#ajax' => isset($element['#ajax']) ? $element['#ajax'] : NULL,
-        );
+      // Integer 0 is not a valid #return_value, so use '0' instead.
+      // @see form_type_checkbox_value().
+      // @todo For Drupal 8, cast all integer keys to strings for consistency
+      //   with form_process_radios().
+      if ($key === 0) {
+        $key = '0';
       }
+      // Maintain order of options as defined in #options, in case the element
+      // defines custom option sub-elements, but does not define all option
+      // sub-elements.
+      $weight += 0.001;
+
+      $element += array($key => array());
+      $element[$key] += array(
+        '#type' => 'checkbox',
+        '#title' => $choice,
+        '#return_value' => $key,
+        '#default_value' => isset($value[$key]) ? $key : NULL,
+        '#attributes' => $element['#attributes'],
+        '#ajax' => isset($element['#ajax']) ? $element['#ajax'] : NULL,
+        '#weight' => $weight,
+      );
     }
   }
   return $element;
