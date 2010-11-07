@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.323 2010/10/20 16:19:24 webchick Exp $
+// $Id: system.admin.inc,v 1.324 2010/11/07 18:33:53 dries Exp $
 
 /**
  * @file
@@ -90,7 +90,7 @@ function system_admin_index() {
     // Only display a section if there are any available tasks.
     if ($admin_tasks = system_get_module_admin_tasks($module, $info->info)) {
       // Sort links by title.
-      uasort($admin_tasks, 'system_sort_by_title');
+      uasort($admin_tasks, 'drupal_sort_title');
       // Move 'Configure permissions' links to the bottom of each section.
       $permission_key = "admin/people/permissions#module-$module";
       if (isset($admin_tasks[$permission_key])) {
@@ -900,19 +900,6 @@ function system_modules($form, $form_state = array()) {
   $form['#action'] = url('admin/modules/list/confirm');
 
   return $form;
-}
-
-/**
- * Array sorting callback; sorts elements by 'title' key.
- */
-function system_sort_by_title($a, $b) {
-  if (!isset($b['title'])) {
-    return -1;
-  }
-  if (!isset($a['title'])) {
-    return 1;
-  }
-  return strcasecmp($a['title'], $b['title']);
 }
 
 /**

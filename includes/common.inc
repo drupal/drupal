@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1249 2010/11/07 00:27:20 dries Exp $
+// $Id: common.inc,v 1.1250 2010/11/07 18:33:52 dries Exp $
 
 /**
  * @file
@@ -5785,6 +5785,19 @@ function drupal_sort_weight($a, $b) {
     return 0;
   }
   return ($a_weight < $b_weight) ? -1 : 1;
+}
+
+/**
+ * Array sorting callback; sorts elements by 'title' key.
+ */
+function drupal_sort_title($a, $b) {
+  if (!isset($b['title'])) {
+    return -1;
+  }
+  if (!isset($a['title'])) {
+    return 1;
+  }
+  return strcasecmp($a['title'], $b['title']);
 }
 
 /**
