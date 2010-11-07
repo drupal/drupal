@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.986 2010/10/31 22:02:20 webchick Exp $
+// $Id: system.module,v 1.987 2010/11/07 00:27:20 dries Exp $
 
 /**
  * @file
@@ -2410,6 +2410,7 @@ function _system_rebuild_theme_data() {
 
   // Set defaults for theme info.
   $defaults = array(
+    'engine' => 'phptemplate',
     'regions' => array(
       'sidebar_first' => 'Left sidebar',
       'sidebar_second' => 'Right sidebar',
@@ -2443,7 +2444,7 @@ function _system_rebuild_theme_data() {
     if (!empty($themes[$key]->info['base theme'])) {
       $sub_themes[] = $key;
     }
-    if (empty($themes[$key]->info['engine'])) {
+    if ($themes[$key]->info['engine'] == 'theme') {
       $filename = dirname($themes[$key]->uri) . '/' . $themes[$key]->name . '.theme';
       if (file_exists($filename)) {
         $themes[$key]->owner = $filename;

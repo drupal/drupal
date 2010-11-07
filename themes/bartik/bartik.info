@@ -1,11 +1,10 @@
-; $Id: bartik.info,v 1.4 2010/09/05 02:21:38 dries Exp $
+; $Id: bartik.info,v 1.5 2010/11/07 00:27:20 dries Exp $
 
 name = Bartik
 description = A flexible, recolorable theme with many regions.
 package = Core
 version = VERSION
 core = 7.x
-engine = phptemplate
 
 stylesheets[all][] = css/layout.css
 stylesheets[all][] = css/style.css

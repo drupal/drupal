@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1248 2010/11/05 01:29:20 dries Exp $
+// $Id: common.inc,v 1.1249 2010/11/07 00:27:20 dries Exp $
 
 /**
  * @file
@@ -6616,7 +6616,7 @@ function drupal_write_record($table, &$record, $primary_keys = array()) {
  * - name: The real name of the theme for display purposes
  * - description: Brief description
  * - screenshot: Path to screenshot relative to the theme's .info file.
- * - engine: Theme engine, typically: engine = phptemplate
+ * - engine: Theme engine; typically phptemplate.
  * - base: Name of a base theme, if applicable, eg: base = zen
  * - regions: Listed regions eg: region[left] = Left sidebar
  * - features: Features available eg: features[] = logo

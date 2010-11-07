@@ -1,6 +1,5 @@
-; $Id: update_test_basetheme.info,v 1.1 2009/10/08 15:40:34 dries Exp $
+; $Id: update_test_basetheme.info,v 1.2 2010/11/07 00:27:20 dries Exp $
 name = Update test base theme
 description = Test theme which acts as a base theme for other test subthemes.
 core = 7.x
-engine = phptemplate
 hidden = TRUE

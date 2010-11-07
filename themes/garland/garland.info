@@ -1,10 +1,9 @@
-; $Id: garland.info,v 1.9 2009/12/01 15:57:40 webchick Exp $
+; $Id: garland.info,v 1.10 2010/11/07 00:27:20 dries Exp $
 name = Garland
 description = A multi-column theme which can be configured to modify colors and switch between fixed and fluid width layouts.
 package = Core
 version = VERSION
 core = 7.x
-engine = phptemplate
 stylesheets[all][] = style.css
 stylesheets[print][] = print.css
 settings[garland_width] = fluid

@@ -1,10 +1,9 @@
-; $Id: seven.info,v 1.5 2010/01/14 06:47:54 webchick Exp $
+; $Id: seven.info,v 1.6 2010/11/07 00:27:20 dries Exp $
 name = Seven
 description = A simple one-column, tableless, fluid width administration theme.
 package = Core
 version = VERSION
 core = 7.x
-engine = phptemplate
 stylesheets[screen][] = reset.css
 stylesheets[screen][] = style.css
 settings[shortcut_module_link] = 1
