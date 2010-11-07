@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.417 2010/10/30 04:13:38 dries Exp $
+// $Id: menu.inc,v 1.418 2010/11/07 21:51:40 dries Exp $
 
 /**
  * @file
@@ -413,8 +413,6 @@ function menu_get_item($path = NULL, $router_item = NULL) {
   }
   if (!isset($router_items[$path])) {
     $original_map = arg(NULL, $path);
-    $parts = array_slice($original_map, 0, MENU_MAX_PARTS);
-    $ancestors = menu_get_ancestors($parts);
 
     // Since there is no limit to the length of $path, use a hash to keep it
     // short yet unique.
@@ -423,6 +421,8 @@ function menu_get_item($path = NULL, $router_item = NULL) {
       $router_item = $cached->data;
     }
     else {
+      $parts = array_slice($original_map, 0, MENU_MAX_PARTS);
+      $ancestors = menu_get_ancestors($parts);
       $router_item = db_query_range('SELECT * FROM {menu_router} WHERE path IN (:ancestors) ORDER BY fit DESC', 0, 1, array(':ancestors' => $ancestors))->fetchAssoc();
       cache_set($cid, $router_item, 'cache_menu');
     }
