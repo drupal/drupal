@@ -172,6 +172,8 @@ Drupal.jsAC.prototype.hidePopup = function (keycode) {
  * Positions the suggestions popup and starts a search.
  */
 Drupal.jsAC.prototype.populatePopup = function () {
+  var $input = $(this.input);
+  var position = $input.position();
   // Show popup.
   if (this.popup) {
     $(this.popup).remove();
@@ -180,11 +182,12 @@ Drupal.jsAC.prototype.populatePopup = function () {
   this.popup = $('<div id="autocomplete"></div>')[0];
   this.popup.owner = this;
   $(this.popup).css({
-    marginTop: this.input.offsetHeight + 'px',
-    width: (this.input.offsetWidth - 4) + 'px',
+    top: parseInt(position.top + this.input.offsetHeight, 10) + 'px',
+    left: parseInt(position.left, 10) + 'px',
+    width: $input.innerWidth() + 'px',
     display: 'none'
   });
-  $(this.input).before(this.popup);
+  $input.before(this.popup);
 
   // Do search.
   this.db.owner = this;
