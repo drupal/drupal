@@ -5788,6 +5788,19 @@ function drupal_sort_weight($a, $b) {
 }
 
 /**
+ * Array sorting callback; sorts elements by 'title' key.
+ */
+function drupal_sort_title($a, $b) {
+  if (!isset($b['title'])) {
+    return -1;
+  }
+  if (!isset($a['title'])) {
+    return 1;
+  }
+  return strcasecmp($a['title'], $b['title']);
+}
+
+/**
  * Check if the key is a property.
  */
 function element_property($key) {
