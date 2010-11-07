@@ -427,10 +427,12 @@ h1#site-name,
 }
 #main-menu-links {
   font-size: 0.929em;
+  margin: 0;
   padding: 0 15px;
 }
 #main-menu-links li {
   float: left; /* LTR */
+  list-style: none;
   padding: 0 1px;
   margin: 0 1px;
 }

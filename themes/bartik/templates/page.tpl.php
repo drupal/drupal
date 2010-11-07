@@ -129,7 +129,7 @@
           'links' => $main_menu,
           'attributes' => array(
             'id' => 'main-menu-links',
-            'class' => array('links', 'inline', 'clearfix'),
+            'class' => array('links', 'clearfix'),
           ),
           'heading' => array(
             'text' => t('Main menu'),
