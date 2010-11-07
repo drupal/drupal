@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.28 2010/11/05 20:07:50 dries Exp $ */
+/* $Id: style.css,v 1.29 2010/11/07 21:48:55 dries Exp $ */
 
 /* ---------- Overall Specifications ---------- */
 
@@ -427,10 +427,12 @@ h1#site-name,
 }
 #main-menu-links {
   font-size: 0.929em;
+  margin: 0;
   padding: 0 15px;
 }
 #main-menu-links li {
   float: left; /* LTR */
+  list-style: none;
   padding: 0 1px;
   margin: 0 1px;
 }
