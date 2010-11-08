@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.test,v 1.91 2010/11/06 11:15:10 dries Exp $
+// $Id: comment.test,v 1.92 2010/11/08 21:36:45 webchick Exp $
 
 class CommentHelperCase extends DrupalWebTestCase {
   protected $admin_user;
@@ -423,7 +423,6 @@ class CommentInterfaceTest extends CommentHelperCase {
     // Checks the new values of node comment statistics with comment #1.
     // The node needs to be reloaded with a node_load_multiple cache reset.
     $node = node_load($this->node->nid, NULL, TRUE);
-    $this->assertEqual($node->last_comment_timestamp, $comment_loaded->created, t('The value of node last_comment_timestamp is the comment #1 created date.'));
     $this->assertEqual($node->last_comment_name, NULL, t('The value of node last_comment_name is NULL.'));
     $this->assertEqual($node->last_comment_uid, $this->web_user2->uid, t('The value of node last_comment_uid is the comment #1 uid.'));
     $this->assertEqual($node->comment_count, 1, t('The value of node comment_count is 1.'));
@@ -449,7 +448,6 @@ class CommentInterfaceTest extends CommentHelperCase {
     // ensure they haven't changed since the comment has not been moderated.
     // The node needs to be reloaded with a node_load_multiple cache reset.
     $node = node_load($this->node->nid, NULL, TRUE);
-    $this->assertEqual($node->last_comment_timestamp, $comment_loaded->created, t('The value of node last_comment_timestamp is still the comment #1 created date.'));
     $this->assertEqual($node->last_comment_name, NULL, t('The value of node last_comment_name is still NULL.'));
     $this->assertEqual($node->last_comment_uid, $this->web_user2->uid, t('The value of node last_comment_uid is still the comment #1 uid.'));
     $this->assertEqual($node->comment_count, 1, t('The value of node comment_count is still 1.'));
@@ -471,7 +469,6 @@ class CommentInterfaceTest extends CommentHelperCase {
     // Checks the new values of node comment statistics with comment #3.
     // The node needs to be reloaded with a node_load_multiple cache reset.
     $node = node_load($this->node->nid, NULL, TRUE);
-    $this->assertEqual($node->last_comment_timestamp, $comment_loaded->created, t('The value of node last_comment_timestamp is the comment #3 created date.'));
     $this->assertEqual($node->last_comment_name, $comment_loaded->name, t('The value of node last_comment_name is the name of the anonymous user.'));
     $this->assertEqual($node->last_comment_uid, 0, t('The value of node last_comment_uid is zero.'));
     $this->assertEqual($node->comment_count, 2, t('The value of node comment_count is 2.'));
