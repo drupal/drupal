@@ -3005,13 +3005,30 @@ function node_access_grants($op, $account = NULL) {
 }
 
 /**
- * Determine whether the user has a global viewing grant for all nodes.
+ * Determines whether the user has a global viewing grant for all nodes.
+ *
+ * Checks to see whether any module grants 'view' for nid = 0. The node module
+ * provides this record if no node access modules are enabled. Other modules
+ * can replicate this behavior by providing their own conditional grant for
+ * nid = 0. For example, hook_node_grants() can return the following array to
+ * give the 'view' privilege to all nodes:
+ * @code
+ * if ($op == 'view') {
+ *   $grants['example_realm'] = array(0);
+ * }
+ * @endcode
+ *
+ * @return
+ *   TRUE if 'view' access to all nodes is granted, FALSE otherwise.
+ *
+ * @see hook_node_grants()
+ * @see _node_query_node_access_alter()
  */
 function node_access_view_all_nodes() {
   $access = &drupal_static(__FUNCTION__);
 
   if (!isset($access)) {
-    // If no modules implement the node access system, access is always true.
+    // If no modules implement the node access system, access is always TRUE.
     if (!module_implements('node_grants')) {
       $access = TRUE;
     }
@@ -3097,6 +3114,10 @@ function _node_query_node_access_alter($query, $base_table, $type) {
     return;
   }
   if (!count(module_implements('node_grants'))) {
+    return;
+  }
+  // If viewing nodes, make sure access rules should be enforced.
+  if ($op == 'view' && node_access_view_all_nodes()) {
     return;
   }
 
