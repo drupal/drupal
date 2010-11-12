@@ -872,7 +872,7 @@ class NodeAccessRecordsUnitTest extends DrupalWebTestCase {
 
     // Create an unpromoted "Basic page" node.
     $node2 = $this->drupalCreateNode(array('type' => 'page', 'promote' => 0));
-    $this->assertTrue(node_load($node1->nid), t('Unpromoted basic page node created.'));
+    $this->assertTrue(node_load($node2->nid), t('Unpromoted basic page node created.'));
 
     // Check to see if grants added by node_test_node_access_records made it in.
     $records = db_query('SELECT realm, gid FROM {node_access} WHERE nid = :nid', array(':nid' => $node2->nid))->fetchAll();
