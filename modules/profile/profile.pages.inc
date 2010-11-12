@@ -38,7 +38,6 @@ function profile_browse() {
     $query
       ->fields('u', array('uid', 'access'))
       ->condition('v.fid', $field->fid)
-      ->condition('u.access', 0, '<>')
       ->condition('u.status', 0, '<>')
       ->orderBy('u.access', 'DESC');
 
@@ -99,7 +98,6 @@ function profile_browse() {
       ->fields('u', array('uid', 'access'))
       ->condition('u.uid', 0, '>')
       ->condition('u.status', 0, '>')
-      ->condition('u.access', 0, '>')
       ->orderBy('u.access', 'DESC')
       ->limit(20)
       ->execute()

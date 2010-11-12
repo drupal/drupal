@@ -417,12 +417,6 @@ function user_save($account, $edit = array(), $category = 'account') {
     user_module_invoke('presave', $edit, $account, $category);
 
     if (is_object($account) && !$account->is_new) {
-      // Consider users edited by an administrator as logged in, if they haven't
-      // already, so anonymous users can view the profile (if allowed).
-      if (empty($edit['access']) && empty($account->access) && user_access('administer users')) {
-        $edit['access'] = REQUEST_TIME;
-      }
-
       // Process picture uploads.
       if (!$delete_previous_picture = empty($edit['picture']->fid)) {
         $picture = $edit['picture'];
@@ -523,12 +517,6 @@ function user_save($account, $edit = array(), $category = 'account') {
       if (!isset($edit['created'])) {
         $edit['created'] = REQUEST_TIME;
       }
-      // Consider users created by an administrator as already logged in, so
-      // anonymous users can view the profile (if allowed).
-      if (empty($edit['access']) && user_access('administer users')) {
-        $edit['access'] = REQUEST_TIME;
-      }
-
       $edit['mail'] = trim($edit['mail']);
       $success = drupal_write_record('users', $edit);
       if ($success === FALSE) {
@@ -1464,7 +1452,6 @@ function user_register_access() {
   return user_is_anonymous() && variable_get('user_register', USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL);
 }
 
-
 /**
  * User view access callback.
  *
@@ -1472,7 +1459,6 @@ function user_register_access() {
  *   Can either be a full user object or a $uid.
  */
 function user_view_access($account) {
-
   $uid = is_object($account) ? $account->uid : (int) $account;
 
   // Never allow access to view the anonymous user account.
@@ -1486,7 +1472,7 @@ function user_view_access($account) {
       if (!is_object($account)) {
         $account = user_load($uid);
       }
-      return (is_object($account) && $account->access && $account->status);
+      return (is_object($account) && $account->status);
     }
   }
   return FALSE;
