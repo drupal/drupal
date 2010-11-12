@@ -1745,13 +1745,7 @@ function field_ui_field_edit_form($form, &$form_state, $instance) {
   $bundles = field_info_bundles();
 
   // Create a form structure for the instance values.
-  // @todo Fieldset element info needs to be merged in order to not skip the
-  //   default element definition for #pre_render. While the current default
-  //   value could simply be hard-coded, we'd possibly forget this location
-  //   when system_element_info() is updated. See also form_builder(). This
-  //   particular #pre_render, field_ui_field_edit_instance_pre_render(), might
-  //   as well be entirely needless though.
-  $form['instance'] = array_merge(element_info('fieldset'), array(
+  $form['instance'] = array(
     '#tree' => TRUE,
     '#type' => 'fieldset',
     '#title' => t('%type settings', array('%type' => $bundles[$entity_type][$bundle]['label'])),
@@ -1759,8 +1753,10 @@ function field_ui_field_edit_form($form, &$form_state, $instance) {
       '%field' => $instance['label'],
       '%type' => $bundles[$entity_type][$bundle]['label'],
     )),
-    '#pre_render' => array('field_ui_field_edit_instance_pre_render'),
-  ));
+    // Ensure field_ui_field_edit_instance_pre_render() gets called in addition
+    // to, not instead of, the #pre_render function(s) needed by all fieldsets.
+    '#pre_render' => array_merge(array('field_ui_field_edit_instance_pre_render'), element_info_property('fieldset', '#pre_render', array())),
+  );
 
   // Build the non-configurable instance values.
   $form['instance']['field_name'] = array(
