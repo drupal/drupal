@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.987 2010/11/07 00:27:20 dries Exp $
+// $Id: system.module,v 1.988 2010/11/12 01:36:08 webchick Exp $
 
 /**
  * @file
@@ -1080,7 +1080,7 @@ function system_library() {
   $libraries['jquery'] = array(
     'title' => 'jQuery',
     'website' => 'http://jquery.com',
-    'version' => '1.4.3',
+    'version' => '1.4.4',
     'js' => array(
       'misc/jquery.js' => array('group' => JS_LIBRARY, 'weight' => -20),
     ),
