@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.module,v 1.96 2010/10/25 00:19:24 dries Exp $
+// $Id: simpletest.module,v 1.97 2010/11/12 03:06:52 dries Exp $
 
 /**
  * @file
@@ -219,7 +219,6 @@ function _simpletest_batch_finished($success, $results, $operations, $elapsed) {
     list($last_prefix, $last_test_class) = simpletest_last_test_get($test_id);
     simpletest_log_read($test_id, $last_prefix, $last_test_class);
 
-
     drupal_set_message(t('The test run did not successfully finish.'), 'error');
     drupal_set_message(t('Use the <em>Clean environment</em> button to clean-up temporary files and tables.'), 'warning');
   }
@@ -318,13 +317,12 @@ function simpletest_test_get_all() {
     }
     else {
       // Select all clases in files ending with .test.
-      $classes = db_query("SELECT name FROM {registry} WHERE type = :type AND filename LIKE :name", array(':type' => 'class', ':name' => '%.test'));
+      $classes = db_query("SELECT name FROM {registry} WHERE type = :type AND filename LIKE :name", array(':type' => 'class', ':name' => '%.test'))->fetchCol();
 
       // Check that each class has a getInfo() method and store the information
       // in an array keyed with the group specified in the test information.
       $groups = array();
       foreach ($classes as $class) {
-        $class = $class->name;
         // Test classes need to implement getInfo() to be valid.
         if (class_exists($class) && method_exists($class, 'getInfo')) {
           $info = call_user_func(array($class, 'getInfo'));

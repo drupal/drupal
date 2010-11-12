@@ -1,32 +1,10 @@
 <?php
-// $Id: simpletest.install,v 1.39 2010/10/15 23:40:21 webchick Exp $
+// $Id: simpletest.install,v 1.40 2010/11/12 03:06:52 dries Exp $
 
 /**
  * @file
  * Install, update and uninstall functions for the simpletest module.
  */
-
-/**
- * Implements hook_uninstall().
- */
-function simpletest_uninstall() {
-  simpletest_clean_environment();
-
-  // Remove settings variables.
-  variable_del('simpletest_httpauth_method');
-  variable_del('simpletest_httpauth_username');
-  variable_del('simpletest_httpauth_password');
-  variable_del('simpletest_clear_results');
-  variable_del('simpletest_verbose');
-
-  // Remove generated files.
-  $path = 'public://simpletest';
-  $files = file_scan_directory($path, '/.*/');
-  foreach ($files as $file) {
-    file_unmanaged_delete($file->uri);
-  }
-  drupal_rmdir($path);
-}
 
 /**
  * Implements hook_requirements().
@@ -173,4 +151,21 @@ function simpletest_schema() {
     'primary key' => array('test_id'),
   );
   return $schema;
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function simpletest_uninstall() {
+  simpletest_clean_environment();
+
+  // Remove settings variables.
+  variable_del('simpletest_httpauth_method');
+  variable_del('simpletest_httpauth_username');
+  variable_del('simpletest_httpauth_password');
+  variable_del('simpletest_clear_results');
+  variable_del('simpletest_verbose');
+
+  // Remove generated files.
+  file_unmanaged_delete_recursive('public://simpletest');
 }

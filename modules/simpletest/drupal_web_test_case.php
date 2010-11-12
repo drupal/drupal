@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.246 2010/10/31 13:08:29 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.247 2010/11/12 03:06:52 dries Exp $
 
 /**
  * Global variable that holds information about the tests being run.
@@ -1364,7 +1364,6 @@ class DrupalWebTestCase extends DrupalTestCase {
 
     // Remove all prefixed tables (all the tables in the schema).
     $schema = drupal_get_schema(NULL, TRUE);
-    $ret = array();
     foreach ($schema as $name => $table) {
       db_drop_table($name);
     }
