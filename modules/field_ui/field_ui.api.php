@@ -173,7 +173,7 @@ function hook_field_formatter_settings_form($field, $instance, $view_mode, $form
 /**
  * Returns a short summary for the current formatter settings of an instance.
  *
- * If an empty result is returned, the formatter is asuumed to have no
+ * If an empty result is returned, the formatter is assumed to have no
  * configurable settings, and no UI will be provided to display a settings
  * form.
  *
