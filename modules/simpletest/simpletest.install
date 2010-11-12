@@ -7,28 +7,6 @@
  */
 
 /**
- * Implements hook_uninstall().
- */
-function simpletest_uninstall() {
-  simpletest_clean_environment();
-
-  // Remove settings variables.
-  variable_del('simpletest_httpauth_method');
-  variable_del('simpletest_httpauth_username');
-  variable_del('simpletest_httpauth_password');
-  variable_del('simpletest_clear_results');
-  variable_del('simpletest_verbose');
-
-  // Remove generated files.
-  $path = 'public://simpletest';
-  $files = file_scan_directory($path, '/.*/');
-  foreach ($files as $file) {
-    file_unmanaged_delete($file->uri);
-  }
-  drupal_rmdir($path);
-}
-
-/**
  * Implements hook_requirements().
  *
  * Check that the cURL extension exists for PHP.
@@ -173,4 +151,21 @@ function simpletest_schema() {
     'primary key' => array('test_id'),
   );
   return $schema;
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function simpletest_uninstall() {
+  simpletest_clean_environment();
+
+  // Remove settings variables.
+  variable_del('simpletest_httpauth_method');
+  variable_del('simpletest_httpauth_username');
+  variable_del('simpletest_httpauth_password');
+  variable_del('simpletest_clear_results');
+  variable_del('simpletest_verbose');
+
+  // Remove generated files.
+  file_unmanaged_delete_recursive('public://simpletest');
 }

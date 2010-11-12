@@ -1364,7 +1364,6 @@ class DrupalWebTestCase extends DrupalTestCase {
 
     // Remove all prefixed tables (all the tables in the schema).
     $schema = drupal_get_schema(NULL, TRUE);
-    $ret = array();
     foreach ($schema as $name => $table) {
       db_drop_table($name);
     }
