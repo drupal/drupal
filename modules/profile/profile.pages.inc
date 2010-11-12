@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.pages.inc,v 1.27 2010/10/06 13:38:40 dries Exp $
+// $Id: profile.pages.inc,v 1.28 2010/11/12 02:57:15 dries Exp $
 
 /**
  * @file
@@ -38,7 +38,6 @@ function profile_browse() {
     $query
       ->fields('u', array('uid', 'access'))
       ->condition('v.fid', $field->fid)
-      ->condition('u.access', 0, '<>')
       ->condition('u.status', 0, '<>')
       ->orderBy('u.access', 'DESC');
 
@@ -99,7 +98,6 @@ function profile_browse() {
       ->fields('u', array('uid', 'access'))
       ->condition('u.uid', 0, '>')
       ->condition('u.status', 0, '>')
-      ->condition('u.access', 0, '>')
       ->orderBy('u.access', 'DESC')
       ->limit(20)
       ->execute()
