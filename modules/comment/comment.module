@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.913 2010/11/07 21:46:09 dries Exp $
+// $Id: comment.module,v 1.914 2010/11/12 03:18:13 dries Exp $
 
 /**
  * @file
@@ -1451,6 +1451,10 @@ function comment_save($comment) {
         ->condition('cid', $comment->cid)
         ->execute();
 
+      // Ignore slave server temporarily to give time for the
+      // saved comment to be propagated to the slave.
+      db_ignore_slave();
+
       // Update the {node_comment_statistics} table prior to executing hooks.
        _comment_update_node_statistics($comment->nid);
 
@@ -1536,7 +1540,7 @@ function comment_save($comment) {
         ->execute();
 
       // Ignore slave server temporarily to give time for the
-      // saved node to be propagated to the slave.
+      // created comment to be propagated to the slave.
       db_ignore_slave();
 
       // Update the {node_comment_statistics} table prior to executing hooks.
