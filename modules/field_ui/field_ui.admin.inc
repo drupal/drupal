@@ -1,5 +1,5 @@
 <?php
-// $Id: field_ui.admin.inc,v 1.82 2010/11/12 02:59:30 dries Exp $
+// $Id: field_ui.admin.inc,v 1.83 2010/11/13 02:02:02 dries Exp $
 
 /**
  * @file
@@ -852,7 +852,7 @@ function field_ui_display_overview_form($form, &$form_state, $entity_type, $bund
     '#extra' => array_keys($extra_fields),
   );
 
-  if (empty($instances)) {
+  if (empty($instances) && empty($extra_fields)) {
     drupal_set_message(t('There are no fields yet added. You can add new fields on the <a href="@link">Manage fields</a> page.', array('@link' => url($admin_path . '/fields'))), 'warning');
     return $form;
   }
