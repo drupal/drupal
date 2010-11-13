@@ -277,6 +277,10 @@ abstract class DatabaseTasks {
    */
   protected $tasks = array(
     array(
+      'function'    => 'checkEngineVersion',
+      'arguments'   => array(),
+    ),
+    array(
       'arguments'   => array(
         'CREATE TABLE drupal_install_test (id int NULL)',
         'Drupal can use CREATE TABLE database commands.',
@@ -348,8 +352,21 @@ abstract class DatabaseTasks {
     return $this->hasPdoDriver() && empty($this->error);
   }
 
+  /**
+   * Return the human-readable name of the driver.
+   */
   abstract public function name();
-  abstract protected function minimumVersion();
+
+  /**
+   * Return the minimum required version of the engine.
+   *
+   * @return
+   *   A version string. If not NULL, it will be checked against the version
+   *   reported by the Database engine using version_compare().
+   */
+  public function minimumVersion() {
+    return NULL;
+  }
 
   /**
    * Run database tasks and tests to see if Drupal can run on the database.
@@ -357,9 +374,6 @@ abstract class DatabaseTasks {
   public function runTasks() {
     // We need to establish a connection before we can run tests.
     if ($this->connect()) {
-      if (version_compare(Database::getConnection()->version(), $this->minimumVersion()) < 0) {
-        throw new DatabaseTaskException(st("The database version %version is less than the minimum required version %minimum_version.", array('%version' => Database::getConnection()->version(), '%minimum_version' => $this->minimumVersion())));
-      }
       foreach ($this->tasks as $task) {
         if (!isset($task['function'])) {
           $task['function'] = 'runTestQuery';
@@ -417,6 +431,15 @@ abstract class DatabaseTasks {
     catch (Exception $e) {
       $this->fail(st($fail, array('%query' => $query, '%error' => $e->getMessage(), '%name' => $this->name())));
       return !$fatal;
+    }
+  }
+
+  /**
+   * Check the engine version.
+   */
+  protected function checkEngineVersion() {
+    if ($this->minimumVersion() && version_compare(Database::getConnection()->version(), $this->minimumVersion(), '<')) {
+      $this->fail(st("The database version %version is less than the minimum required version %minimum_version.", array('%version' => Database::getConnection()->version(), '%minimum_version' => $this->minimumVersion())));
     }
   }
 }

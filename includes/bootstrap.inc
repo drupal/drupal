@@ -27,21 +27,6 @@ define('DRUPAL_MINIMUM_PHP',    '5.2.4');
 define('DRUPAL_MINIMUM_PHP_MEMORY_LIMIT',    '32M');
 
 /**
- * Minimum supported version of MySQL, if it is used.
- */
-define('DRUPAL_MINIMUM_MYSQL',  '5.0.15');
-
-/**
- * Minimum supported version of PostgreSQL, if it is used.
- */
-define('DRUPAL_MINIMUM_PGSQL',  '8.3');
-
-/**
- * Minimum supported version of SQLite, if it is used.
- */
-define('DRUPAL_MINIMUM_SQLITE',  '3.3.7');
-
-/**
  * Indicates that the item should never be removed unless explicitly selected.
  *
  * The item may be removed using cache_clear_all() with a cache ID.

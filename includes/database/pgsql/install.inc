@@ -31,8 +31,8 @@ class DatabaseTasks_pgsql extends DatabaseTasks {
     return 'PostgreSQL';
   }
 
-  protected function minimumVersion() {
-    return DRUPAL_MINIMUM_PGSQL;
+  public function minimumVersion() {
+    return '8.3';
   }
 
   /**
