@@ -1,5 +1,5 @@
 <?php
-// $Id: upgrade.upload.test,v 1.1 2010/10/03 23:19:52 webchick Exp $
+// $Id: upgrade.upload.test,v 1.2 2010/11/13 01:48:14 dries Exp $
 
 /**
  * Upgrade test for comment.module.
@@ -20,6 +20,8 @@ class UploadUpgradePathTestCase extends UpgradePathTestCase {
       drupal_get_path('module', 'simpletest') . '/tests/upgrade/drupal-6.upload.database.php',
     );
     parent::setUp();
+    // Set a small batch size to test multiple iterations of the batch.
+    $this->variable_set('upload_update_batch_size', 2);
 
     $this->uninstallModulesExcept(array('upload'));
   }
@@ -36,8 +38,11 @@ class UploadUpgradePathTestCase extends UpgradePathTestCase {
     $query->fieldCondition('upload');
     $entities = $query->execute();
     $revisions = $entities['node'];
-    // Node revisions 50-52 should have uploaded files.
-    $this->assertTrue((isset($revisions[50]) && isset($revisions[51]) && isset($revisions[52])), 'Nodes with uploaded files now contain filefield data.');
+    // Node revision 50 should not have uploaded files, as the entry in {files}
+    // is corrupted.
+    $this->assertFalse((isset($revisions[50])), 'Nodes with missing files do not contain filefield data.');
+    // Node revisions 51-53 should have uploaded files.
+    $this->assertTrue((isset($revisions[51]) && isset($revisions[52]) && isset($revisions[53])), 'Nodes with uploaded files now contain filefield data.');
     // The test database lists uploaded filenames in the body of each node with
     // uploaded files attached. Make sure all files are there in the same order.
     foreach ($revisions as $vid => $revision) {
@@ -58,9 +63,7 @@ class UploadUpgradePathTestCase extends UpgradePathTestCase {
       foreach ($files as $file) {
         $filenames[] = $file['filename'];
       }
-
-      $diff = array_diff($filenames, $recorded_filenames);
-      $this->assertTrue(empty($diff), 'The uploaded files are present in the same order after the upgrade.');
+      $this->assertIdentical($filenames, $recorded_filenames, 'The uploaded files are present in the same order after the upgrade.');
     }
   }
 }

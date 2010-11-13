@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal-6.upload.database.php,v 1.1 2010/10/03 23:19:52 webchick Exp $
+// $Id: drupal-6.upload.database.php,v 1.2 2010/11/13 01:48:14 dries Exp $
 
 db_insert('files')->fields(array(
   'fid',
@@ -11,6 +11,10 @@ db_insert('files')->fields(array(
   'status',
   'timestamp',
 ))
+/*
+ * This entry is deliberately omitted to test the upgrade routine when facing
+ * possible data corruption.
+ *
 ->values(array(
   'fid' => '1',
   'uid' => '1',
@@ -20,7 +24,7 @@ db_insert('files')->fields(array(
   'filesize' => '1011',
   'status' => '1',
   'timestamp' => '1285700240',
-))
+)) */
 ->values(array(
   'fid' => '2',
   'uid' => '1',
@@ -132,14 +136,14 @@ db_insert('node')->fields(array(
 ))
 ->values(array(
   'nid' => '38',
-  'vid' => '51',
+  'vid' => '50',
   'type' => 'page',
   'language' => '',
-  'title' => 'node title 38 revision 51',
+  'title' => 'node title 38 revision 50',
   'uid' => '1',
   'status' => '1',
-  'created' => '1285700317',
-  'changed' => '1285700600',
+  'created' => '1285603317',
+  'changed' => '1285603317',
   'comment' => '0',
   'promote' => '0',
   'moderate' => '0',
@@ -152,7 +156,24 @@ db_insert('node')->fields(array(
   'vid' => '52',
   'type' => 'page',
   'language' => '',
-  'title' => 'node title 39 revision 53',
+  'title' => 'node title 39 revision 52',
+  'uid' => '1',
+  'status' => '1',
+  'created' => '1285700317',
+  'changed' => '1285700600',
+  'comment' => '0',
+  'promote' => '0',
+  'moderate' => '0',
+  'sticky' => '0',
+  'tnid' => '0',
+  'translate' => '0',
+))
+->values(array(
+  'nid' => '40',
+  'vid' => '53',
+  'type' => 'page',
+  'language' => '',
+  'title' => 'node title 40 revision 53',
   'uid' => '1',
   'status' => '1',
   'created' => '1285709012',
@@ -182,6 +203,17 @@ db_insert('node_revisions')->fields(array(
   'vid' => '50',
   'uid' => '1',
   'title' => 'node title 38 revision 50',
+  'body' => "Attachments:\r\npowered-blue-80x15.png",
+  'teaser' => "Attachments:\r\npowered-blue-80x15.png",
+  'log' => '',
+  'timestamp' => '1285603317',
+  'format' => '1',
+))
+->values(array(
+  'nid' => '39',
+  'vid' => '51',
+  'uid' => '1',
+  'title' => 'node title 39 revision 51',
   'body' => "Attachments:\r\npowered-blue-80x15.png\r\npowered-blue-88x31.png\r\npowered-blue-135x42.png",
   'teaser' => "Attachments:\r\npowered-blue-80x15.png\r\npowered-blue-88x31.png\r\npowered-blue-135x42.png",
   'log' => '',
@@ -189,10 +221,10 @@ db_insert('node_revisions')->fields(array(
   'format' => '1',
 ))
 ->values(array(
-  'nid' => '38',
-  'vid' => '51',
+  'nid' => '39',
+  'vid' => '52',
   'uid' => '1',
-  'title' => 'node title 38 revision 51',
+  'title' => 'node title 39 revision 52',
   'body' => "Attachments:\r\npowered-blue-88x31.png\r\npowered-black-80x15.png\r\npowered-black-135x42.png",
   'teaser' => "Attachments:\r\npowered-blue-88x31.png\r\npowered-black-80x15.png\r\npowered-black-135x42.png",
   'log' => '',
@@ -200,10 +232,10 @@ db_insert('node_revisions')->fields(array(
   'format' => '1',
 ))
 ->values(array(
-  'nid' => '39',
-  'vid' => '52',
+  'nid' => '40',
+  'vid' => '53',
   'uid' => '1',
-  'title' => 'node title 39 revision 53',
+  'title' => 'node title 40 revision 53',
   'body' => "Attachments:\r\nforum-hot-new.png\r\nforum-hot.png\r\nforum-sticky.png\r\nforum-new.png",
   'teaser' => "Attachments:\r\nforum-hot-new.png\r\nforum-hot.png\r\nforum-sticky.png\r\nforum-new.png",
   'log' => '',
@@ -276,7 +308,7 @@ db_insert('upload')->fields(array(
   'weight',
 ))
 ->values(array(
-  'fid' => '2',
+  'fid' => '1',
   'nid' => '38',
   'vid' => '50',
   'description' => 'powered-blue-80x15.png',
@@ -284,73 +316,81 @@ db_insert('upload')->fields(array(
   'weight' => '0',
 ))
 ->values(array(
+  'fid' => '2',
+  'nid' => '39',
+  'vid' => '51',
+  'description' => 'powered-blue-80x15.png',
+  'list' => '1',
+  'weight' => '0',
+))
+->values(array(
   'fid' => '3',
-  'nid' => '38',
-  'vid' => '50',
+  'nid' => '39',
+  'vid' => '51',
   'description' => 'powered-blue-88x31.png',
   'list' => '1',
   'weight' => '0',
 ))
 ->values(array(
   'fid' => '4',
-  'nid' => '38',
-  'vid' => '50',
+  'nid' => '39',
+  'vid' => '51',
   'description' => 'powered-blue-135x42.png',
   'list' => '1',
   'weight' => '0',
 ))
 ->values(array(
   'fid' => '3',
-  'nid' => '38',
-  'vid' => '51',
+  'nid' => '39',
+  'vid' => '52',
   'description' => 'powered-blue-88x31.png',
   'list' => '1',
   'weight' => '0',
 ))
 ->values(array(
   'fid' => '5',
-  'nid' => '38',
-  'vid' => '51',
+  'nid' => '39',
+  'vid' => '52',
   'description' => 'powered-black-80x15.png',
   'list' => '1',
   'weight' => '0',
 ))
 ->values(array(
   'fid' => '6',
-  'nid' => '38',
-  'vid' => '51',
+  'nid' => '39',
+  'vid' => '52',
   'description' => 'powered-black-135x42.png',
   'list' => '1',
   'weight' => '0',
 ))
 ->values(array(
   'fid' => '7',
-  'nid' => '39',
-  'vid' => '52',
+  'nid' => '40',
+  'vid' => '53',
   'description' => 'forum-hot-new.png',
   'list' => '1',
   'weight' => '-4',
 ))
 ->values(array(
   'fid' => '8',
-  'nid' => '39',
-  'vid' => '52',
+  'nid' => '40',
+  'vid' => '53',
   'description' => 'forum-hot.png',
   'list' => '1',
   'weight' => '-3',
 ))
 ->values(array(
   'fid' => '10',
-  'nid' => '39',
-  'vid' => '52',
+  'nid' => '40',
+  'vid' => '53',
   'description' => 'forum-sticky.png',
   'list' => '1',
   'weight' => '-2',
 ))
 ->values(array(
   'fid' => '9',
-  'nid' => '39',
-  'vid' => '52',
+  'nid' => '40',
+  'vid' => '53',
   'description' => 'forum-new.png',
   'list' => '1',
   'weight' => '-1',
