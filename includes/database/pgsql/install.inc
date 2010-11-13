@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.11 2010/11/13 14:08:47 dries Exp $
+// $Id: install.inc,v 1.12 2010/11/13 23:07:16 webchick Exp $
 
 /**
  * @file
@@ -31,8 +31,8 @@ class DatabaseTasks_pgsql extends DatabaseTasks {
     return 'PostgreSQL';
   }
 
-  protected function minimumVersion() {
-    return DRUPAL_MINIMUM_PGSQL;
+  public function minimumVersion() {
+    return '8.3';
   }
 
   /**

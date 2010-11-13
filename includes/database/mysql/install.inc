@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.5 2010/11/13 14:08:47 dries Exp $
+// $Id: install.inc,v 1.6 2010/11/13 23:07:16 webchick Exp $
 
 /**
  * @file
@@ -10,7 +10,6 @@
  * Specifies installation tasks for MySQL and equivalent databases.
  */
 class DatabaseTasks_mysql extends DatabaseTasks {
-
   /**
    * The PDO driver name for MySQL and equivalent databases.
    *
@@ -26,10 +25,10 @@ class DatabaseTasks_mysql extends DatabaseTasks {
   }
 
   /**
-   * Returns the minimum version for mysql.
+   * Returns the minimum version for MySQL.
    */
-  protected function minimumVersion() {
-    return DRUPAL_MINIMUM_MYSQL;
+  public function minimumVersion() {
+    return '5.0.15';
   }
 }
 

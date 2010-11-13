@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.435 2010/11/13 14:08:47 dries Exp $
+// $Id: bootstrap.inc,v 1.436 2010/11/13 23:07:15 webchick Exp $
 
 /**
  * @file
@@ -25,21 +25,6 @@ define('DRUPAL_MINIMUM_PHP',    '5.2.4');
  * Minimum recommended value of PHP memory_limit.
  */
 define('DRUPAL_MINIMUM_PHP_MEMORY_LIMIT',    '32M');
-
-/**
- * Minimum supported version of MySQL, if it is used.
- */
-define('DRUPAL_MINIMUM_MYSQL',  '5.0.15');
-
-/**
- * Minimum supported version of PostgreSQL, if it is used.
- */
-define('DRUPAL_MINIMUM_PGSQL',  '8.3');
-
-/**
- * Minimum supported version of SQLite, if it is used.
- */
-define('DRUPAL_MINIMUM_SQLITE',  '3.3.7');
 
 /**
  * Indicates that the item should never be removed unless explicitly selected.
