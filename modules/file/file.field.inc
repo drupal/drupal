@@ -648,8 +648,9 @@ function file_field_widget_process($element, &$form_state, $form) {
   // Adjust the AJAX settings so that on upload and remove of any individual
   // file, the entire group of file fields is updated together.
   if ($field['cardinality'] != 1) {
-    $new_path = preg_replace('/\/\d+\//', '/', $element['remove_button']['#ajax']['path'], 1);
-    $field_element = drupal_array_get_nested_value($form, array_slice($element['#array_parents'], 0, -1));
+    $parents = array_slice($element['#array_parents'], 0, -1);
+    $new_path = 'file/ajax/' . implode('/', $parents) . '/' . $form['form_build_id']['#value'];
+    $field_element = drupal_array_get_nested_value($form, $parents);
     $new_wrapper = $field_element['#id'] . '-ajax-wrapper';
     foreach (element_children($element) as $key) {
       if (isset($element[$key]['#ajax'])) {
