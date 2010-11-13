@@ -170,13 +170,8 @@ function text_field_load($entity_type, $entities, $field, $instances, $langcode,
  * Implements hook_field_is_empty().
  */
 function text_field_is_empty($item, $field) {
-  if (empty($item['value']) && (string) $item['value'] !== '0') {
-    if ($field['type'] == 'text_with_summary') {
-      return (empty($item['summary']) && (string)$item['summary'] !== '0');
-    }
-    else {
-      return TRUE;
-    }
+  if (!isset($item['value']) || $item['value'] === '') {
+    return !isset($item['summary']) || $item['summary'] === '';
   }
   return FALSE;
 }
