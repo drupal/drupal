@@ -223,6 +223,30 @@ class SessionTestCase extends DrupalWebTestCase {
   }
 
   /**
+   * Test that empty session IDs are not allowed.
+   */
+  function testEmptySessionID() {
+    $user = $this->drupalCreateUser(array('access content'));
+    $this->drupalLogin($user);
+    $this->drupalGet('session-test/is-logged-in');
+    $this->assertResponse(200, t('User is logged in.'));
+
+    // Reset the sid in {sessions} to a blank string. This may exist in the
+    // wild in some cases, although we normally prevent it from happening.
+    db_query("UPDATE {sessions} SET sid = '' WHERE uid = :uid", array(':uid' => $user->uid));
+    // Send a blank sid in the session cookie, and the session should no longer
+    // be valid. Closing the curl handler will stop the previous session ID
+    // from persisting.
+    $this->curlClose();
+    $this->additionalCurlOptions[CURLOPT_COOKIE] = rawurlencode($this->session_name) . '=;';
+    $this->drupalGet('session-test/id-from-cookie');
+    $this->assertRaw("session_id:\n", t('Session ID is blank as sent from cookie header.'));
+    // Assert that we have an anonymous session now.
+    $this->drupalGet('session-test/is-logged-in');
+    $this->assertResponse(403, t('An empty session ID is not allowed.'));
+  }
+
+  /**
    * Reset the cookie file so that it refers to the specified user.
    *
    * @param $uid User id to set as the active session.

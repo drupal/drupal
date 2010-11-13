@@ -2911,7 +2911,10 @@ function system_update_7065() {
     'length' => 128,
     'not null' => TRUE,
   );
-  db_change_field('sessions', 'sid', 'sid', $spec);
+  db_drop_primary_key('sessions');
+  db_change_field('sessions', 'sid', 'sid', $spec, array('primary key' => array('sid', 'ssid')));
+  // Delete any sessions with empty session ID.
+  db_delete('sessions')->condition('sid', '')->execute();
 }
 
 /**

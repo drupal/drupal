@@ -88,10 +88,7 @@ function _drupal_session_read($sid) {
   // a HTTPS session or we are about to log in so we check the sessions table
   // for an anonymous session with the non-HTTPS-only cookie.
   if ($is_https) {
-    // Ensure that an empty secure session ID cannot be selected.
-    if ($sid) {
-      $user = db_query("SELECT u.*, s.* FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.ssid = :ssid", array(':ssid' => $sid))->fetchObject();
-    }
+    $user = db_query("SELECT u.*, s.* FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.ssid = :ssid", array(':ssid' => $sid))->fetchObject();
     if (!$user) {
       if (isset($_COOKIE[$insecure_session_name])) {
         $user = db_query("SELECT u.*, s.* FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.sid = :sid AND s.uid = 0", array(
@@ -239,7 +236,9 @@ function drupal_session_initialize() {
 
   session_set_save_handler('_drupal_session_open', '_drupal_session_close', '_drupal_session_read', '_drupal_session_write', '_drupal_session_destroy', '_drupal_session_garbage_collection');
 
-  if (isset($_COOKIE[session_name()]) || ($is_https && variable_get('https', FALSE) && isset($_COOKIE[substr(session_name(), 1)]))) {
+  // We use !empty() in the following check to ensure that blank session IDs
+  // are not valid.
+  if (!empty($_COOKIE[session_name()]) || ($is_https && variable_get('https', FALSE) && !empty($_COOKIE[substr(session_name(), 1)]))) {
     // If a session cookie exists, initialize the session. Otherwise the
     // session is only started on demand in drupal_session_commit(), making
     // anonymous users not use a session cookie unless something is stored in
