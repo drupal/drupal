@@ -286,7 +286,7 @@ function hook_entity_load($entities, $type) {
 function hook_entity_insert($entity, $type) {
   // Insert the new entity into a fictional table of all entities.
   $info = entity_get_info($type);
-  $id = reset(entity_extract_ids($type, $entity));
+  list($id) = entity_extract_ids($type, $entity);
   db_insert('example_entity')
     ->fields(array(
       'type' => $type,
@@ -308,7 +308,7 @@ function hook_entity_insert($entity, $type) {
 function hook_entity_update($entity, $type) {
   // Update the entity's entry in a fictional table of all entities.
   $info = entity_get_info($type);
-  $id = reset(entity_extract_ids($type, $entity));
+  list($id) = entity_extract_ids($type, $entity);
   db_update('example_entity')
     ->fields(array(
       'updated' => REQUEST_TIME,
@@ -329,7 +329,7 @@ function hook_entity_update($entity, $type) {
 function hook_entity_delete($entity, $type) {
   // Delete the entity's entry from a fictional table of all entities.
   $info = entity_get_info($type);
-  $id = reset(entity_extract_ids($type, $entity));
+  list($id) = entity_extract_ids($type, $entity);
   db_delete('example_entity')
     ->condition('type', $type)
     ->condition('id', $id)
