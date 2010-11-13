@@ -31,6 +31,10 @@ class DatabaseTasks_pgsql extends DatabaseTasks {
     return 'PostgreSQL';
   }
 
+  protected function minimumVersion() {
+    return DRUPAL_MINIMUM_PGSQL;
+  }
+
   /**
    * Check encoding is UTF8.
    */

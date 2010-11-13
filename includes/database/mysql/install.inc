@@ -24,5 +24,12 @@ class DatabaseTasks_mysql extends DatabaseTasks {
   public function name() {
     return 'MySQL, MariaDB, or equivalent';
   }
+
+  /**
+   * Returns the minimum version for mysql.
+   */
+  protected function minimumVersion() {
+    return DRUPAL_MINIMUM_MYSQL;
+  }
 }
 

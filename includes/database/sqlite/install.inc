@@ -11,5 +11,8 @@ class DatabaseTasks_sqlite extends DatabaseTasks {
   public function name() {
     return 'SQLite';
   }
+  protected function minimumVersion() {
+    return DRUPAL_MINIMUM_SQLITE;
+  }
 }
 
