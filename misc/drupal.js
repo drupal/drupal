@@ -114,11 +114,14 @@ Drupal.detachBehaviors = function (context, settings, trigger) {
  * Encode special characters in a plain-text string for display as HTML.
  */
 Drupal.checkPlain = function (str) {
+  var character, regex,
+      replace = { '&': '&amp;', '"': '&quot;', '<': '&lt;', '>': '&gt;' };
   str = String(str);
-  var replace = { '&': '&amp;', '"': '&quot;', '<': '&lt;', '>': '&gt;' };
-  for (var character in replace) {
-    var regex = new RegExp(character, 'g');
-    str = str.replace(regex, replace[character]);
+  for (character in replace) {
+    if (replace.hasOwnProperty(character)) {
+      regex = new RegExp(character, 'g');
+      str = str.replace(regex, replace[character]);
+    }
   }
   return str;
 };
@@ -240,9 +243,7 @@ Drupal.formatPlural = function (count, singular, plural, args) {
  *   but also a complex object.
  */
 Drupal.theme = function (func) {
-  for (var i = 1, args = []; i < arguments.length; i++) {
-    args.push(arguments[i]);
-  }
+  var args = Array.prototype.slice.apply(arguments, [1]);
 
   return (Drupal.theme[func] || Drupal.theme.prototype[func]).apply(this, args);
 };
