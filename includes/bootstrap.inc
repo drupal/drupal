@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.434 2010/11/05 19:05:01 dries Exp $
+// $Id: bootstrap.inc,v 1.435 2010/11/13 14:08:47 dries Exp $
 
 /**
  * @file
@@ -35,6 +35,11 @@ define('DRUPAL_MINIMUM_MYSQL',  '5.0.15');
  * Minimum supported version of PostgreSQL, if it is used.
  */
 define('DRUPAL_MINIMUM_PGSQL',  '8.3');
+
+/**
+ * Minimum supported version of SQLite, if it is used.
+ */
+define('DRUPAL_MINIMUM_SQLITE',  '3.3.7');
 
 /**
  * Indicates that the item should never be removed unless explicitly selected.

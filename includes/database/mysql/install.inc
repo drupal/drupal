@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.4 2010/07/30 01:59:14 dries Exp $
+// $Id: install.inc,v 1.5 2010/11/13 14:08:47 dries Exp $
 
 /**
  * @file
@@ -23,6 +23,13 @@ class DatabaseTasks_mysql extends DatabaseTasks {
    */
   public function name() {
     return 'MySQL, MariaDB, or equivalent';
+  }
+
+  /**
+   * Returns the minimum version for mysql.
+   */
+  protected function minimumVersion() {
+    return DRUPAL_MINIMUM_MYSQL;
   }
 }
 

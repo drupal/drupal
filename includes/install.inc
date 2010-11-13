@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.142 2010/08/22 15:31:18 dries Exp $
+// $Id: install.inc,v 1.143 2010/11/13 14:08:47 dries Exp $
 
 /**
  * Indicates that a module has not been installed yet.
@@ -349,6 +349,7 @@ abstract class DatabaseTasks {
   }
 
   abstract public function name();
+  abstract protected function minimumVersion();
 
   /**
    * Run database tasks and tests to see if Drupal can run on the database.
@@ -356,6 +357,9 @@ abstract class DatabaseTasks {
   public function runTasks() {
     // We need to establish a connection before we can run tests.
     if ($this->connect()) {
+      if (version_compare(Database::getConnection()->version(), $this->minimumVersion()) < 0) {
+        throw new DatabaseTaskException(st("The database version %version is less than the minimum required version %minimum_version.", array('%version' => Database::getConnection()->version(), '%minimum_version' => $this->minimumVersion())));
+      }
       foreach ($this->tasks as $task) {
         if (!isset($task['function'])) {
           $task['function'] = 'runTestQuery';
