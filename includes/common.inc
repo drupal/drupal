@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1252 2010/11/13 14:04:08 dries Exp $
+// $Id: common.inc,v 1.1253 2010/11/13 14:06:43 dries Exp $
 
 /**
  * @file
@@ -3327,10 +3327,19 @@ function drupal_build_css_cache($css) {
       // Only 'file' stylesheets can be aggregated.
       if ($stylesheet['type'] == 'file') {
         $contents = drupal_load_stylesheet($stylesheet['data'], TRUE);
-        // Return the path to where this CSS file originated from.
-        $base = base_path() . dirname($stylesheet['data']) . '/';
-        _drupal_build_css_path(NULL, $base);
-        // Prefix all paths within this CSS file, ignoring external and absolute paths.
+
+        // Build the base URL of this CSS file: start with the full URL.
+        $css_base_url = file_create_url($stylesheet['data']);
+        // Move to the parent.
+        $css_base_url = substr($css_base_url, 0, strrpos($css_base_url, '/'));
+        // Simplify to a relative URL if the stylesheet URL starts with the
+        // base URL of the website.
+        if (substr($css_base_url, 0, strlen($GLOBALS['base_root'])) == $GLOBALS['base_root']) {
+          $css_base_url = substr($css_base_url, strlen($GLOBALS['base_root']));
+        }
+
+        _drupal_build_css_path(NULL, $css_base_url . '/');
+        // Anchor all paths in the CSS with its base URL, ignoring external and absolute paths.
         $data .= preg_replace_callback('/url\(\s*[\'"]?(?![a-z]+:|\/+)([^\'")]+)[\'"]?\s*\)/i', '_drupal_build_css_path', $contents);
       }
     }
@@ -3406,34 +3415,40 @@ function _drupal_build_css_path($matches, $base = NULL) {
  *   Name of the stylesheet to be processed.
  * @param $optimize
  *   Defines if CSS contents should be compressed or not.
+ * @param $reset_basepath
+ *   Used internally to facilitate recursive resolution of @import commands.
+ *
  * @return
  *   Contents of the stylesheet, including any resolved @import commands.
  */
-function drupal_load_stylesheet($file, $optimize = NULL) {
-  // $_optimize does not use drupal_static as it is set by $optimize.
-  static $_optimize;
-  // Store optimization parameter for preg_replace_callback with nested @import loops.
+function drupal_load_stylesheet($file, $optimize = NULL, $reset_basepath = TRUE) {
+  // These statics are not cache variables, so we don't use drupal_static().
+  static $_optimize, $basepath;
+  if ($reset_basepath) {
+    $basepath = '';
+  }
+  // Store the value of $optimize for preg_replace_callback with nested
+  // @import loops.
   if (isset($optimize)) {
     $_optimize = $optimize;
   }
 
-  $contents = '';
-  if (file_exists($file)) {
-    // Load the local CSS stylesheet.
-    $contents = file_get_contents($file);
+  // Stylesheets are relative one to each other. Start by adding a base path
+  // prefix provided by the parent stylesheet (if necessary).
+  if ($basepath && !file_uri_scheme($file)) {
+    $file = $basepath . '/' . $file;
+  }
+  $basepath = dirname($file);
 
-    // Change to the current stylesheet's directory.
-    $cwd = getcwd();
-    chdir(dirname($file));
-
-    // Process the stylesheet.
-    $contents = drupal_load_stylesheet_content($contents, $_optimize);
-
-    // Change back directory.
-    chdir($cwd);
+  // Load the CSS stylesheet. We suppress errors because themes may specify
+  // stylesheets in their .info file that don't exist in the theme's path,
+  // but are merely there to disable certain module CSS files.
+  if ($contents = @file_get_contents($file)) {
+    // Return the processed stylesheet.
+    return drupal_load_stylesheet_content($contents, $_optimize);
   }
 
-  return $contents;
+  return '';
 }
 
 /**
@@ -3506,7 +3521,7 @@ function drupal_load_stylesheet_content($contents, $optimize = FALSE) {
 function _drupal_load_stylesheet($matches) {
   $filename = $matches[1];
   // Load the imported stylesheet and replace @import commands in there as well.
-  $file = drupal_load_stylesheet($filename);
+  $file = drupal_load_stylesheet($filename, NULL, FALSE);
 
   // Determine the file's directory.
   $directory = dirname($filename);

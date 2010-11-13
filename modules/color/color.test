@@ -1,5 +1,5 @@
 <?php
-// $Id: color.test,v 1.7 2010/08/12 16:59:04 dries Exp $
+// $Id: color.test,v 1.8 2010/11/13 14:06:43 dries Exp $
 
 /**
  * @file
@@ -71,8 +71,7 @@ class ColorTestCase extends DrupalWebTestCase {
     $this->assertPattern('|' . file_create_url($stylesheets[0]) . '|', 'Make sure the color stylesheet is included in the content. (' . $theme . ')');
 
     $stylesheet_content = join("\n", file($stylesheets[0]));
-    $matched = preg_match('/(.*color: #123456.*)/i', $stylesheet_content, $matches);
-    $this->assertTrue($matched == 1, 'Make sure the color we changed is in the color stylesheet. (' . $theme . ')');
+    $this->assertTrue(strpos($stylesheet_content, 'color: #123456') !== FALSE, 'Make sure the color we changed is in the color stylesheet. (' . $theme . ')');
 
     $this->drupalGet($settings_path);
     $this->assertResponse(200);
@@ -82,7 +81,17 @@ class ColorTestCase extends DrupalWebTestCase {
     $this->drupalGet('<front>');
     $stylesheets = variable_get('color_' . $theme . '_stylesheets', array());
     $stylesheet_content = join("\n", file($stylesheets[0]));
-    $matched = preg_match('/(.*color: ' . $test_values['scheme_color'] . '.*)/i', $stylesheet_content, $matches);
-    $this->assertTrue($matched == 1, 'Make sure the color we changed is in the color stylesheet. (' . $theme . ')');
+    $this->assertTrue(strpos($stylesheet_content, 'color: ' . $test_values['scheme_color']) !== FALSE, 'Make sure the color we changed is in the color stylesheet. (' . $theme . ')');
+
+    // Test with aggregated CSS turned on.
+    variable_set('preprocess_css', 1);
+    $this->drupalGet('<front>');
+    $stylesheets = variable_get('drupal_css_cache_files', array());
+    $stylesheet_content = '';
+    foreach ($stylesheets as $key => $uri) {
+      $stylesheet_content .= join("\n", file(drupal_realpath($uri)));
+    }
+    $this->assertTrue(strpos($stylesheet_content, 'public://') === FALSE, 'Make sure the color paths have been translated to local paths. (' . $theme . ')');
+    variable_set('preprocess_css', 0);
   }
 }
