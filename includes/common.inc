@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1251 2010/11/12 02:59:30 dries Exp $
+// $Id: common.inc,v 1.1252 2010/11/13 14:04:08 dries Exp $
 
 /**
  * @file
@@ -5987,14 +5987,22 @@ function element_set_attributes(array &$element, array $map) {
  *   An array of parent keys, starting with the outermost key.
  * @param $value
  *   The value to set.
+ * @param $force
+ *   (Optional) If TRUE, the value is forced into the structure even if it
+ *   requires the deletion of an already existing non-array parent value. If
+ *   FALSE, PHP throws an error if trying to add into a value that is not an
+ *   array. Defaults to FALSE.
  *
  * @see drupal_array_get_nested_value()
  */
-function drupal_array_set_nested_value(array &$array, array $parents, $value) {
+function drupal_array_set_nested_value(array &$array, array $parents, $value, $force = FALSE) {
   $ref = &$array;
   foreach ($parents as $parent) {
-    // Note that PHP is fine with referencing a not existing array key - in this
-    // case it just creates an entry with NULL as value.
+    // PHP auto-creates container arrays and NULL entries without error if $ref
+    // is NULL, but throws an error if $ref is set, but not an array.
+    if ($force && isset($ref) && !is_array($ref)) {
+      $ref = array();
+    }
     $ref = &$ref[$parent];
   }
   $ref = $value;
@@ -6058,10 +6066,7 @@ function drupal_array_set_nested_value(array &$array, array $parents, $value) {
 function drupal_array_get_nested_value(array &$array, array $parents, &$key_exists = NULL) {
   $ref = &$array;
   foreach ($parents as $parent) {
-    // array_key_exists() is slower than isset() and triggers notices if the
-    // second argument is not an array, so only call it when absolutely
-    // necessary.
-    if (isset($ref[$parent]) || (is_array($ref) && array_key_exists($parent, $ref))) {
+    if (is_array($ref) && array_key_exists($parent, $ref)) {
       $ref = &$ref[$parent];
     }
     else {

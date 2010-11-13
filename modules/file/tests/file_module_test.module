@@ -1,5 +1,5 @@
 <?php
-// $Id: file_module_test.module,v 1.3 2009/12/04 16:49:46 dries Exp $
+// $Id: file_module_test.module,v 1.4 2010/11/13 14:04:08 dries Exp $
 
 /**
  * @file
@@ -22,15 +22,22 @@ function file_module_test_menu() {
   return $items;
 }
 
-function file_module_test_form($form, $form_state) {
-  $form['#tree'] = TRUE;
+/**
+ * Form builder for testing a 'managed_file' element.
+ */
+function file_module_test_form($form, &$form_state, $tree = TRUE, $extended = FALSE, $default_fid = NULL) {
+  $form['#tree'] = (bool) $tree;
 
-  $form['file'] = array(
+  $form['nested']['file'] = array(
     '#type' => 'managed_file',
     '#title' => t('Managed file'),
     '#upload_location' => 'public://test',
     '#progress_message' => t('Please wait...'),
+    '#extended' => (bool) $extended,
   );
+  if ($default_fid) {
+    $form['nested']['file']['#default_value'] = $extended ? array('fid' => $default_fid) : $default_fid;
+  }
 
   $form['textfield'] = array(
     '#type' => 'textfield',
@@ -43,4 +50,17 @@ function file_module_test_form($form, $form_state) {
   );
 
   return $form;
+}
+
+/**
+ * Form submission handler for file_module_test_form().
+ */
+function file_module_test_form_submit($form, &$form_state) {
+  if ($form['#tree']) {
+    $fid = $form['nested']['file']['#extended'] ? $form_state['values']['nested']['file']['fid'] : $form_state['values']['nested']['file'];
+  }
+  else {
+    $fid = $form['nested']['file']['#extended'] ? $form_state['values']['file']['fid'] : $form_state['values']['file'];
+  }
+  drupal_set_message(t('The file id is %fid.', array('%fid' => $fid)));
 }

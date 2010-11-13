@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.508 2010/11/07 21:46:09 dries Exp $
+// $Id: form.inc,v 1.509 2010/11/13 14:04:08 dries Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -1031,10 +1031,29 @@ function drupal_validate_form($form_id, &$form, &$form_state) {
         drupal_array_set_nested_value($values, $section, $value);
       }
     }
-    // For convenience we always make the value of the pressed button available.
+    // A button's #value does not require validation, so for convenience we
+    // allow the value of the clicked button to be retained in its normal
+    // $form_state['values'] locations, even if these locations are not included
+    // in #limit_validation_errors.
     if (isset($form_state['triggering_element']['#button_type'])) {
-      $values[$form_state['triggering_element']['#name']] = $form_state['triggering_element']['#value'];
-      drupal_array_set_nested_value($values, $form_state['triggering_element']['#parents'], $form_state['triggering_element']['#value']);
+      $button_value = $form_state['triggering_element']['#value'];
+
+      // Like all input controls, the button value may be in the location
+      // dictated by #parents. If it is, copy it to $values, but do not override
+      // what may already be in $values.
+      $parents = $form_state['triggering_element']['#parents'];
+      if (!drupal_array_nested_key_exists($values, $parents) && drupal_array_get_nested_value($form_state['values'], $parents) === $button_value) {
+        drupal_array_set_nested_value($values, $parents, $button_value);
+      }
+
+      // Additionally, form_builder() places the button value in
+      // $form_state['values'][BUTTON_NAME]. If it's still there, after
+      // validation handlers have run, copy it to $values, but do not override
+      // what may already be in $values.
+      $name = $form_state['triggering_element']['#name'];
+      if (!isset($values[$name]) && isset($form_state['values'][$name]) && $form_state['values'][$name] === $button_value) {
+        $values[$name] = $button_value;
+      }
     }
     $form_state['values'] = $values;
   }
@@ -2301,7 +2320,7 @@ function form_type_token_value($element, $input = FALSE) {
  *   Form state array where the value change should be recorded.
  */
 function form_set_value($element, $value, &$form_state) {
-  drupal_array_set_nested_value($form_state['values'], $element['#parents'], $value);
+  drupal_array_set_nested_value($form_state['values'], $element['#parents'], $value, TRUE);
 }
 
 /**

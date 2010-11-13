@@ -1,5 +1,5 @@
 <?php
-// $Id: file.module,v 1.45 2010/10/20 15:22:53 dries Exp $
+// $Id: file.module,v 1.46 2010/11/13 14:04:08 dries Exp $
 
 /**
  * @file
@@ -360,7 +360,7 @@ function file_managed_file_process($element, &$form_state, $form) {
   $element['#tree'] = TRUE;
 
   $ajax_settings = array(
-    'path' => 'file/ajax/' . implode('/', $element['#parents']) . '/' . $form['form_build_id']['#value'],
+    'path' => 'file/ajax/' . implode('/', $element['#array_parents']) . '/' . $form['form_build_id']['#value'],
     'wrapper' => $element['#id'] . '-ajax-wrapper',
     'effect' => 'fade',
     'progress' => array(
