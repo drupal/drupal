@@ -1,5 +1,5 @@
 <?php
-// $Id: session.test,v 1.34 2010/11/05 19:05:02 dries Exp $
+// $Id: session.test,v 1.35 2010/11/13 17:40:09 webchick Exp $
 
 /**
  * @file
@@ -220,6 +220,30 @@ class SessionTestCase extends DrupalWebTestCase {
     $times5 = db_query($sql, array(':uid' => $user->uid))->fetchObject();
     $this->assertNotEqual($times5->access, $times4->access, t('Users table was updated.'));
     $this->assertNotEqual($times5->timestamp, $times4->timestamp, t('Sessions table was updated.'));
+  }
+
+  /**
+   * Test that empty session IDs are not allowed.
+   */
+  function testEmptySessionID() {
+    $user = $this->drupalCreateUser(array('access content'));
+    $this->drupalLogin($user);
+    $this->drupalGet('session-test/is-logged-in');
+    $this->assertResponse(200, t('User is logged in.'));
+
+    // Reset the sid in {sessions} to a blank string. This may exist in the
+    // wild in some cases, although we normally prevent it from happening.
+    db_query("UPDATE {sessions} SET sid = '' WHERE uid = :uid", array(':uid' => $user->uid));
+    // Send a blank sid in the session cookie, and the session should no longer
+    // be valid. Closing the curl handler will stop the previous session ID
+    // from persisting.
+    $this->curlClose();
+    $this->additionalCurlOptions[CURLOPT_COOKIE] = rawurlencode($this->session_name) . '=;';
+    $this->drupalGet('session-test/id-from-cookie');
+    $this->assertRaw("session_id:\n", t('Session ID is blank as sent from cookie header.'));
+    // Assert that we have an anonymous session now.
+    $this->drupalGet('session-test/is-logged-in');
+    $this->assertResponse(403, t('An empty session ID is not allowed.'));
   }
 
   /**
