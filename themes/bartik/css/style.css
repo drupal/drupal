@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.31 2010/11/14 19:41:03 webchick Exp $ */
+/* $Id: style.css,v 1.32 2010/11/14 20:48:38 webchick Exp $ */
 
 /* ---------- Overall Specifications ---------- */
 
@@ -1439,6 +1439,7 @@ div.admin-panel .description {
 }
 .poll .text {
   clear: right;
+  margin-right: 2.25em;
 }
 .poll .total {
   font-size: 0.929em;
@@ -1448,6 +1449,9 @@ div.admin-panel .description {
 }
 .node .poll {
   margin: 1.8em 0 0;
+}
+.node .poll .text {
+  margin-right: 6.75em;
 }
 .node .poll #edit-choice {
   margin: 0 0 1.2em;
