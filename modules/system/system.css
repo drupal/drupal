@@ -189,7 +189,7 @@ dl.multiselect dd.b, dl.multiselect dd.b .form-item, dl.multiselect dd.b select 
   width: 14em;
 }
 dl.multiselect dd.a, dl.multiselect dd.a .form-item {
-  width: 8em;
+  width: 10em;
 }
 dl.multiselect dt, dl.multiselect dd {
   float: left; /* LTR */
