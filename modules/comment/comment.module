@@ -1583,20 +1583,27 @@ function comment_delete($cid) {
 function comment_delete_multiple($cids) {
   $comments = comment_load_multiple($cids);
   if ($comments) {
+    $transaction = db_transaction();
+    try {
+      // Delete the comments.
+      db_delete('comment')
+        ->condition('cid', array_keys($comments), 'IN')
+        ->execute();
+      foreach ($comments as $comment) {
+        field_attach_delete('comment', $comment);
+        module_invoke_all('comment_delete', $comment);
+        module_invoke_all('entity_delete', $comment, 'comment');
 
-    // Delete the comments.
-    db_delete('comment')
-      ->condition('cid', array_keys($comments), 'IN')
-      ->execute();
-    foreach ($comments as $comment) {
-      field_attach_delete('comment', $comment);
-      module_invoke_all('comment_delete', $comment);
-      module_invoke_all('entity_delete', $comment, 'comment');
-
-      // Delete the comment's replies.
-      $child_cids = db_query('SELECT cid FROM {comment} WHERE pid = :cid', array(':cid' => $comment->cid))->fetchCol();
-      comment_delete_multiple($child_cids);
-      _comment_update_node_statistics($comment->nid);
+        // Delete the comment's replies.
+        $child_cids = db_query('SELECT cid FROM {comment} WHERE pid = :cid', array(':cid' => $comment->cid))->fetchCol();
+        comment_delete_multiple($child_cids);
+        _comment_update_node_statistics($comment->nid);
+      }
+    }
+    catch (Exception $e) {
+      $transaction->rollback();
+      watchdog_exception('comment', $e);
+      throw $e;
     }
   }
 }

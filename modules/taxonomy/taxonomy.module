@@ -421,23 +421,31 @@ function taxonomy_vocabulary_save($vocabulary) {
 function taxonomy_vocabulary_delete($vid) {
   $vocabulary = taxonomy_vocabulary_load($vid);
 
-  // Only load terms without a parent, child terms will get deleted too.
-  $result = db_query('SELECT t.tid FROM {taxonomy_term_data} t INNER JOIN {taxonomy_term_hierarchy} th ON th.tid = t.tid WHERE t.vid = :vid AND th.parent = 0', array(':vid' => $vid))->fetchCol();
-  foreach ($result as $tid) {
-    taxonomy_term_delete($tid);
+  $transaction = db_transaction();
+  try {
+    // Only load terms without a parent, child terms will get deleted too.
+    $result = db_query('SELECT t.tid FROM {taxonomy_term_data} t INNER JOIN {taxonomy_term_hierarchy} th ON th.tid = t.tid WHERE t.vid = :vid AND th.parent = 0', array(':vid' => $vid))->fetchCol();
+    foreach ($result as $tid) {
+      taxonomy_term_delete($tid);
+    }
+    db_delete('taxonomy_vocabulary')
+      ->condition('vid', $vid)
+      ->execute();
+  
+    field_attach_delete_bundle('taxonomy_term', $vocabulary->machine_name);
+    module_invoke_all('taxonomy_vocabulary_delete', $vocabulary);
+    module_invoke_all('entity_delete', $vocabulary, 'taxonomy_vocabulary');
+  
+    cache_clear_all();
+    entity_get_controller('taxonomy_vocabulary')->resetCache();
+  
+    return SAVED_DELETED;
   }
-  db_delete('taxonomy_vocabulary')
-    ->condition('vid', $vid)
-    ->execute();
-
-  field_attach_delete_bundle('taxonomy_term', $vocabulary->machine_name);
-  module_invoke_all('taxonomy_vocabulary_delete', $vocabulary);
-  module_invoke_all('entity_delete', $vocabulary, 'taxonomy_vocabulary');
-
-  cache_clear_all();
-  entity_get_controller('taxonomy_vocabulary')->resetCache();
-
-  return SAVED_DELETED;
+  catch (Exception $e) {
+    $transaction->rollback();
+    watchdog_exception('taxonomy', $e);
+    throw $e;
+  }
 }
 
 /**
@@ -588,41 +596,47 @@ function taxonomy_term_save($term) {
  *   Status constant indicating deletion.
  */
 function taxonomy_term_delete($tid) {
-  $tids = array($tid);
-  while ($tids) {
-    $children_tids = $orphans = array();
-    foreach ($tids as $tid) {
-      // See if any of the term's children are about to be become orphans:
-      if ($children = taxonomy_get_children($tid)) {
-        foreach ($children as $child) {
-          // If the term has multiple parents, we don't delete it.
-          $parents = taxonomy_get_parents($child->tid);
-          if (count($parents) == 1) {
-            $orphans[] = $child->tid;
+  $transaction = db_transaction();
+  try {
+    $tids = array($tid);
+    while ($tids) {
+      $children_tids = $orphans = array();
+      foreach ($tids as $tid) {
+        // See if any of the term's children are about to be become orphans:
+        if ($children = taxonomy_get_children($tid)) {
+          foreach ($children as $child) {
+            // If the term has multiple parents, we don't delete it.
+            $parents = taxonomy_get_parents($child->tid);
+            if (count($parents) == 1) {
+              $orphans[] = $child->tid;
+            }
           }
+        }
+
+        if ($term = taxonomy_term_load($tid)) {
+          db_delete('taxonomy_term_data')
+            ->condition('tid', $tid)
+            ->execute();
+          db_delete('taxonomy_term_hierarchy')
+            ->condition('tid', $tid)
+            ->execute();
+
+          field_attach_delete('taxonomy_term', $term);
+          module_invoke_all('taxonomy_term_delete', $term);
+          module_invoke_all('entity_delete', $term, 'taxonomy_term');
+          taxonomy_terms_static_reset();
         }
       }
 
-      if ($term = taxonomy_term_load($tid)) {
-        db_delete('taxonomy_term_data')
-          ->condition('tid', $tid)
-          ->execute();
-        db_delete('taxonomy_term_hierarchy')
-          ->condition('tid', $tid)
-          ->execute();
-
-        field_attach_delete('taxonomy_term', $term);
-        module_invoke_all('taxonomy_term_delete', $term);
-        module_invoke_all('entity_delete', $term, 'taxonomy_term');
-        taxonomy_terms_static_reset();
-      }
+      $tids = $orphans;
     }
-
-    $tids = $orphans;
+    return SAVED_DELETED;
   }
-
-  cache_clear_all();
-  return SAVED_DELETED;
+  catch (Exception $e) {
+    $transaction->rollback();
+    watchdog_exception('taxonomy', $e);
+    throw $e;
+  }
 }
 
 /**
