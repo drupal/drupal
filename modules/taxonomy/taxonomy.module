@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.616 2010/11/09 17:52:57 webchick Exp $
+// $Id: taxonomy.module,v 1.617 2010/11/14 20:31:45 webchick Exp $
 
 /**
  * @file
@@ -1442,6 +1442,7 @@ function taxonomy_field_widget_form(&$form, &$form_state, $field, $instance, $la
     '#default_value' => taxonomy_implode_tags($tags),
     '#autocomplete_path' => $instance['widget']['settings']['autocomplete_path'] . '/' . $field['field_name'],
     '#size' => $instance['widget']['settings']['size'],
+    '#maxlength' => 1024,
     '#element_validate' => array('taxonomy_autocomplete_validate'),
   );
 
