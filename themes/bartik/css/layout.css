@@ -2,6 +2,9 @@
 
 /* ---------- Basic Layout Styles ----------- */
 
+#page-wrapper {
+  min-width: 960px;
+}
 #header div.section,
 #featured div.section,
 #messages,
@@ -59,7 +62,7 @@
   width: 240px;
 }
 #main-wrapper {
-  min-height: 500px;
+  min-height: 300px;
 }
 #messages div.section,
 #content .section,
