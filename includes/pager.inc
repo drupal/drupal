@@ -1,5 +1,5 @@
 <?php
-// $Id: pager.inc,v 1.85 2010/10/08 05:07:53 webchick Exp $
+// $Id: pager.inc,v 1.86 2010/11/14 22:07:57 webchick Exp $
 
 /**
  * @file
@@ -20,7 +20,7 @@ class PagerDefault extends SelectQueryExtender {
    *
    * @var int
    */
-  static protected $maxElement = 0;
+  static $maxElement = 0;
 
   /**
    * The number of elements per page to allow.

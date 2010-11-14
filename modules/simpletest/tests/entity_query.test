@@ -1,6 +1,6 @@
 <?php
 
-// $Id: entity_query.test,v 1.14 2010/11/05 19:57:28 dries Exp $
+// $Id: entity_query.test,v 1.15 2010/11/14 22:07:57 webchick Exp $
 
 /**
  * @file
@@ -1102,6 +1102,238 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
       $pass = ($exception->getMessage() == t("Can't handle more than one field storage engine"));
     }
     $this->assertTrue($pass, t('Cannot query across field storage engines.'));
+  }
+
+  /**
+   * Tests the pager integration of EntityFieldQuery.
+   */
+  function testEntityFieldQueryPager() {
+    // Test pager in propertyQuery
+    $_GET['page'] = '0,1';
+    $query = new EntityFieldQuery();
+    $query
+      ->entityCondition('entity_type', 'test_entity_bundle_key')
+      ->propertyOrderBy('ftid', 'ASC')
+      ->pager(3, 0);
+    $this->assertEntityFieldQuery($query, array(
+      array('test_entity_bundle_key', 1),
+      array('test_entity_bundle_key', 2),
+      array('test_entity_bundle_key', 3),
+    ), t('Test pager integration in propertyQuery: page 1.'), TRUE);
+
+    $query = new EntityFieldQuery();
+    $query
+      ->entityCondition('entity_type', 'test_entity_bundle_key')
+      ->propertyOrderBy('ftid', 'ASC')
+      ->pager(3, 1);
+    $this->assertEntityFieldQuery($query, array(
+      array('test_entity_bundle_key', 4),
+      array('test_entity_bundle_key', 5),
+      array('test_entity_bundle_key', 6),
+    ), t('Test pager integration in propertyQuery: page 2.'), TRUE);
+
+    // Test pager in field storage
+    $_GET['page'] = '0,1';
+    $query = new EntityFieldQuery();
+    $query
+      ->entityCondition('entity_type', 'test_entity_bundle_key')
+      ->fieldCondition($this->fields[0], 'value', 0, '>')
+      ->propertyOrderBy('ftid', 'ASC')
+      ->pager(2, 0);
+    $this->assertEntityFieldQuery($query, array(
+      array('test_entity_bundle_key', 1),
+      array('test_entity_bundle_key', 2),
+    ), t('Test pager integration in field storage: page 1.'), TRUE);
+
+    $query = new EntityFieldQuery();
+    $query
+      ->entityCondition('entity_type', 'test_entity_bundle_key')
+      ->fieldCondition($this->fields[0], 'value', 0, '>')
+      ->propertyOrderBy('ftid', 'ASC')
+      ->pager(2, 1);
+    $this->assertEntityFieldQuery($query, array(
+      array('test_entity_bundle_key', 3),
+      array('test_entity_bundle_key', 4),
+    ), t('Test pager integration in field storage: page 2.'), TRUE);
+
+    unset($_GET['page']);
+  }
+
+  /**
+   * Tests the TableSort integration of EntityFieldQuery.
+   */
+  function testEntityFieldQueryTableSort() {
+    // Test TableSort in propertyQuery
+    $_GET['sort'] = 'asc';
+    $_GET['order'] = 'Id';
+    $header = array(
+      'id' => array('data' => 'Id', 'type' => 'property',  'specifier' => 'ftid'),
+      'type' => array('data' => 'Type', 'type' => 'entity', 'specifier' => 'bundle'),
+    );
+    $query = new EntityFieldQuery();
+    $query
+      ->entityCondition('entity_type', 'test_entity_bundle_key')
+      ->tableSort($header);
+    $this->assertEntityFieldQuery($query, array(
+      array('test_entity_bundle_key', 1),
+      array('test_entity_bundle_key', 2),
+      array('test_entity_bundle_key', 3),
+      array('test_entity_bundle_key', 4),
+      array('test_entity_bundle_key', 5),
+      array('test_entity_bundle_key', 6),
+    ), t('Test TableSort by property: ftid ASC in propertyQuery.'), TRUE);
+
+    $_GET['sort'] = 'desc';
+    $_GET['order'] = 'Id';
+    $query = new EntityFieldQuery();
+    $query
+      ->entityCondition('entity_type', 'test_entity_bundle_key')
+      ->tableSort($header);
+    $this->assertEntityFieldQuery($query, array(
+      array('test_entity_bundle_key', 6),
+      array('test_entity_bundle_key', 5),
+      array('test_entity_bundle_key', 4),
+      array('test_entity_bundle_key', 3),
+      array('test_entity_bundle_key', 2),
+      array('test_entity_bundle_key', 1),
+    ), t('Test TableSort by property: ftid DESC in propertyQuery.'), TRUE);
+
+    $_GET['sort'] = 'asc';
+    $_GET['order'] = 'Type';
+    $query = new EntityFieldQuery();
+    $query
+      ->entityCondition('entity_type', 'test_entity_bundle_key')
+      ->tableSort($header);
+    $this->assertEntityFieldQuery($query, array(
+      array('test_entity_bundle_key', 1),
+      array('test_entity_bundle_key', 2),
+      array('test_entity_bundle_key', 3),
+      array('test_entity_bundle_key', 4),
+      array('test_entity_bundle_key', 5),
+      array('test_entity_bundle_key', 6),
+    ), t('Test TableSort by entity: bundle ASC in propertyQuery.'), TRUE);
+
+    $_GET['sort'] = 'desc';
+    $_GET['order'] = 'Type';
+    $query = new EntityFieldQuery();
+    $query
+      ->entityCondition('entity_type', 'test_entity_bundle_key')
+      ->tableSort($header);
+    $this->assertEntityFieldQuery($query, array(
+      array('test_entity_bundle_key', 5),
+      array('test_entity_bundle_key', 6),
+      array('test_entity_bundle_key', 1),
+      array('test_entity_bundle_key', 2),
+      array('test_entity_bundle_key', 3),
+      array('test_entity_bundle_key', 4),
+    ), t('Test TableSort by entity: bundle DESC in propertyQuery.'), TRUE);
+
+    // Test TableSort in field storage
+    $_GET['sort'] = 'asc';
+    $_GET['order'] = 'Id';
+    $header = array(
+      'id' => array('data' => 'Id', 'type' => 'property',  'specifier' => 'ftid'),
+      'type' => array('data' => 'Type', 'type' => 'entity', 'specifier' => 'bundle'),
+      'field' => array('data' => 'Field', 'type' => 'field', 'specifier' => array('field' => $this->field_names[0], 'column' => 'value')),
+    );
+    $query = new EntityFieldQuery();
+    $query
+      ->entityCondition('entity_type', 'test_entity_bundle_key')
+      ->fieldCondition($this->fields[0], 'value', 0, '>')
+      ->tableSort($header);
+    $this->assertEntityFieldQuery($query, array(
+      array('test_entity_bundle_key', 1),
+      array('test_entity_bundle_key', 2),
+      array('test_entity_bundle_key', 3),
+      array('test_entity_bundle_key', 4),
+      array('test_entity_bundle_key', 5),
+      array('test_entity_bundle_key', 6),
+    ), t('Test TableSort by property: ftid ASC in field storage.'), TRUE);
+
+    $_GET['sort'] = 'desc';
+    $_GET['order'] = 'Id';
+    $query = new EntityFieldQuery();
+    $query
+      ->entityCondition('entity_type', 'test_entity_bundle_key')
+      ->fieldCondition($this->fields[0], 'value', 0, '>')
+      ->tableSort($header);
+    $this->assertEntityFieldQuery($query, array(
+      array('test_entity_bundle_key', 6),
+      array('test_entity_bundle_key', 5),
+      array('test_entity_bundle_key', 4),
+      array('test_entity_bundle_key', 3),
+      array('test_entity_bundle_key', 2),
+      array('test_entity_bundle_key', 1),
+    ), t('Test TableSort by property: ftid DESC in field storage.'), TRUE);
+
+    $_GET['sort'] = 'asc';
+    $_GET['order'] = 'Type';
+    $query = new EntityFieldQuery();
+    $query
+      ->entityCondition('entity_type', 'test_entity_bundle_key')
+      ->fieldCondition($this->fields[0], 'value', 0, '>')
+      ->tableSort($header)
+      ->entityOrderBy('entity_id', 'DESC');
+    $this->assertEntityFieldQuery($query, array(
+      array('test_entity_bundle_key', 4),
+      array('test_entity_bundle_key', 3),
+      array('test_entity_bundle_key', 2),
+      array('test_entity_bundle_key', 1),
+      array('test_entity_bundle_key', 6),
+      array('test_entity_bundle_key', 5),
+    ), t('Test TableSort by entity: bundle ASC in field storage.'), TRUE);
+
+    $_GET['sort'] = 'desc';
+    $_GET['order'] = 'Type';
+    $query = new EntityFieldQuery();
+    $query
+      ->entityCondition('entity_type', 'test_entity_bundle_key')
+      ->fieldCondition($this->fields[0], 'value', 0, '>')
+      ->tableSort($header)
+      ->entityOrderBy('entity_id', 'ASC');
+    $this->assertEntityFieldQuery($query, array(
+      array('test_entity_bundle_key', 5),
+      array('test_entity_bundle_key', 6),
+      array('test_entity_bundle_key', 1),
+      array('test_entity_bundle_key', 2),
+      array('test_entity_bundle_key', 3),
+      array('test_entity_bundle_key', 4),
+    ), t('Test TableSort by entity: bundle DESC in field storage.'), TRUE);
+
+    $_GET['sort'] = 'asc';
+    $_GET['order'] = 'Field';
+    $query = new EntityFieldQuery();
+    $query
+      ->entityCondition('entity_type', 'test_entity_bundle_key')
+      ->fieldCondition($this->fields[0], 'value', 0, '>')
+      ->tableSort($header);
+    $this->assertEntityFieldQuery($query, array(
+      array('test_entity_bundle_key', 1),
+      array('test_entity_bundle_key', 2),
+      array('test_entity_bundle_key', 3),
+      array('test_entity_bundle_key', 4),
+      array('test_entity_bundle_key', 5),
+      array('test_entity_bundle_key', 6),
+    ), t('Test TableSort by field ASC.'), TRUE);
+
+    $_GET['sort'] = 'desc';
+    $_GET['order'] = 'Field';
+    $query = new EntityFieldQuery();
+    $query
+      ->entityCondition('entity_type', 'test_entity_bundle_key')
+      ->fieldCondition($this->fields[0], 'value', 0, '>')
+      ->tableSort($header);
+    $this->assertEntityFieldQuery($query, array(
+      array('test_entity_bundle_key', 6),
+      array('test_entity_bundle_key', 5),
+      array('test_entity_bundle_key', 4),
+      array('test_entity_bundle_key', 3),
+      array('test_entity_bundle_key', 2),
+      array('test_entity_bundle_key', 1),
+    ), t('Test TableSort by field DESC.'), TRUE);
+
+    unset($_GET['sort']);
+    unset($_GET['order']);
   }
 
   /**
