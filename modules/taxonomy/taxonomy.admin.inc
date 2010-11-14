@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.admin.inc,v 1.114 2010/10/20 01:31:07 dries Exp $
+// $Id: taxonomy.admin.inc,v 1.115 2010/11/14 20:42:45 webchick Exp $
 
 /**
  * @file
@@ -902,6 +902,7 @@ function taxonomy_term_confirm_delete_submit($form, &$form_state) {
   drupal_set_message(t('Deleted term %name.', array('%name' => $form_state['values']['name'])));
   watchdog('taxonomy', 'Deleted term %name.', array('%name' => $form_state['values']['name']), WATCHDOG_NOTICE);
   $form_state['redirect'] = 'admin/structure/taxonomy';
+  cache_clear_all();
   return;
 }
 
@@ -941,6 +942,7 @@ function taxonomy_vocabulary_confirm_delete_submit($form, &$form_state) {
   drupal_set_message(t('Deleted vocabulary %name.', array('%name' => $form_state['values']['name'])));
   watchdog('taxonomy', 'Deleted vocabulary %name.', array('%name' => $form_state['values']['name']), WATCHDOG_NOTICE);
   $form_state['redirect'] = 'admin/structure/taxonomy';
+  cache_clear_all();
   return;
 }
 
