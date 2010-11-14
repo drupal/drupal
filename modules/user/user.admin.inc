@@ -1,5 +1,5 @@
 <?php
-// $Id: user.admin.inc,v 1.120 2010/10/20 01:31:07 dries Exp $
+// $Id: user.admin.inc,v 1.121 2010/11/14 21:22:46 webchick Exp $
 
 /**
  * @file
@@ -678,11 +678,11 @@ function user_admin_permissions($form, $form_state, $rid = NULL) {
   // display name.
   $modules = array();
   foreach (module_implements('permission') as $module) {
-    $modules[$module_info[$module]['name']] = $module;
+    $modules[$module] = $module_info[$module]['name'];
   }
-  ksort($modules);
+  asort($modules);
 
-  foreach ($modules as $display_name => $module) {
+  foreach ($modules as $module => $display_name) {
     if ($permissions = module_invoke($module, 'permission')) {
       $form['permission'][] = array(
         '#markup' => $module_info[$module]['name'],
