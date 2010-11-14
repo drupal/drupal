@@ -1442,6 +1442,7 @@ function taxonomy_field_widget_form(&$form, &$form_state, $field, $instance, $la
     '#default_value' => taxonomy_implode_tags($tags),
     '#autocomplete_path' => $instance['widget']['settings']['autocomplete_path'] . '/' . $field['field_name'],
     '#size' => $instance['widget']['settings']['size'],
+    '#maxlength' => 1024,
     '#element_validate' => array('taxonomy_autocomplete_validate'),
   );
 
