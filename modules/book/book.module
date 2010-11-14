@@ -112,7 +112,11 @@ function book_node_view_link($node, $view_mode) {
   }
 
   if (!empty($links)) {
-    $node->content['links']['#links'] = array_merge($node->content['links']['#links'], $links);
+    $node->content['links']['book'] = array(
+      '#theme' => 'links__node__book',
+      '#links' => $links,
+      '#attributes' => array('class' => array('links', 'inline')),
+    );
   }
 }
 

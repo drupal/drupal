@@ -251,7 +251,11 @@ function translation_node_view($node, $view_mode) {
       }
     }
 
-    $node->content['links']['#links'] += $links;
+    $node->content['links']['translation'] = array(
+      '#theme' => 'links__node__translation',
+      '#links' => $links,
+      '#attributes' => array('class' => array('links', 'inline')),
+    );
   }
 }
 
