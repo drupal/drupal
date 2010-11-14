@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1216 2010/11/14 20:42:45 webchick Exp $
+// $Id: user.module,v 1.1217 2010/11/14 22:15:39 webchick Exp $
 
 /**
  * @file
@@ -2649,7 +2649,9 @@ Your account on [site:name] has been canceled.
   }
 
   if ($replace) {
-    return token_replace($text, $variables, array('language' => $language, 'callback' => 'user_mail_tokens'));
+    // We do not sanitize the token replacement, since the output of this
+    // replacement is intended for an e-mail message, not a web browser.
+    return token_replace($text, $variables, array('language' => $language, 'callback' => 'user_mail_tokens', 'sanitize' => FALSE));
   }
 
   return $text;
