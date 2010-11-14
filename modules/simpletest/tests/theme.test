@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.test,v 1.22 2010/10/06 13:38:40 dries Exp $
+// $Id: theme.test,v 1.23 2010/11/14 21:04:45 webchick Exp $
 
 /**
  * @file
@@ -184,6 +184,117 @@ class ThemeItemListUnitTest extends DrupalWebTestCase {
 </ul></div>';
     $output = theme('item_list', array('items' => $items));
     $this->assertIdentical($expected, $output, 'Nested list is rendered correctly.');
+  }
+}
+
+/**
+ * Unit tests for theme_links().
+ */
+class ThemeLinksUnitTest extends DrupalUnitTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Links',
+      'description' => 'Test the theme_links() function and rendering groups of links.',
+      'group' => 'Theme',
+    );
+  }
+
+  /**
+   * Test the use of drupal_pre_render_links() on a nested array of links.
+   */
+  function testDrupalPreRenderLinks() {
+    // Define the base array to be rendered, containing a variety of different
+    // kinds of links.
+    $base_array = array(
+      '#theme' => 'links',
+      '#pre_render' => array('drupal_pre_render_links'),
+      '#links' => array(
+        'parent_link' => array(
+          'title' => 'Parent link original',
+          'href' => 'parent-link-original',
+        ),
+      ),
+      'first_child' => array(
+        '#theme' => 'links',
+        '#links' => array(
+          // This should be rendered if 'first_child' is rendered separately,
+          // but ignored if the parent is being rendered (since it duplicates
+          // one of the parent's links).
+          'parent_link' => array(
+            'title' => 'Parent link copy',
+            'href' => 'parent-link-copy',
+          ),
+          // This should always be rendered.
+          'first_child_link' => array(
+            'title' => 'First child link',
+            'href' => 'first-child-link',
+          ),
+        ),
+      ),
+      // This should always be rendered as part of the parent.
+      'second_child' => array(
+        '#theme' => 'links',
+        '#links' => array(
+          'second_child_link' => array(
+            'title' => 'Second child link',
+            'href' => 'second-child-link',
+          ),
+        ),
+      ),
+      // This should never be rendered, since the user does not have access to
+      // it.
+      'third_child' => array(
+        '#theme' => 'links',
+        '#links' => array(
+          'third_child_link' => array(
+            'title' => 'Third child link',
+            'href' => 'third-child-link',
+          ),
+        ),
+        '#access' => FALSE,
+      ),
+    );
+
+    // Start with a fresh copy of the base array, and try rendering the entire
+    // thing. We expect a single <ul> with appropriate links contained within
+    // it.
+    $render_array = $base_array;
+    $html = drupal_render($render_array);
+    $dom = new DOMDocument();
+    $dom->loadHTML($html);
+    $this->assertEqual($dom->getElementsByTagName('ul')->length, 1, t('One "ul" tag found in the rendered HTML.'));
+    $list_elements = $dom->getElementsByTagName('li');
+    $this->assertEqual($list_elements->length, 3, t('Three "li" tags found in the rendered HTML.'));
+    $this->assertEqual($list_elements->item(0)->nodeValue, 'Parent link original', t('First expected link found.'));
+    $this->assertEqual($list_elements->item(1)->nodeValue, 'First child link', t('Second expected link found.'));
+    $this->assertEqual($list_elements->item(2)->nodeValue, 'Second child link', t('Third expected link found.'));
+    $this->assertIdentical(strpos($html, 'Parent link copy'), FALSE, t('"Parent link copy" link not found.'));
+    $this->assertIdentical(strpos($html, 'Third child link'), FALSE, t('"Third child link" link not found.'));
+
+    // Now render 'first_child', followed by the rest of the links, and make
+    // sure we get two separate <ul>'s with the appropriate links contained
+    // within each.
+    $render_array = $base_array;
+    $child_html = drupal_render($render_array['first_child']);
+    $parent_html = drupal_render($render_array);
+    // First check the child HTML.
+    $dom = new DOMDocument();
+    $dom->loadHTML($child_html);
+    $this->assertEqual($dom->getElementsByTagName('ul')->length, 1, t('One "ul" tag found in the rendered child HTML.'));
+    $list_elements = $dom->getElementsByTagName('li');
+    $this->assertEqual($list_elements->length, 2, t('Two "li" tags found in the rendered child HTML.'));
+    $this->assertEqual($list_elements->item(0)->nodeValue, 'Parent link copy', t('First expected link found.'));
+    $this->assertEqual($list_elements->item(1)->nodeValue, 'First child link', t('Second expected link found.'));
+    // Then check the parent HTML.
+    $dom = new DOMDocument();
+    $dom->loadHTML($parent_html);
+    $this->assertEqual($dom->getElementsByTagName('ul')->length, 1, t('One "ul" tag found in the rendered parent HTML.'));
+    $list_elements = $dom->getElementsByTagName('li');
+    $this->assertEqual($list_elements->length, 2, t('Two "li" tags found in the rendered parent HTML.'));
+    $this->assertEqual($list_elements->item(0)->nodeValue, 'Parent link original', t('First expected link found.'));
+    $this->assertEqual($list_elements->item(1)->nodeValue, 'Second child link', t('Second expected link found.'));
+    $this->assertIdentical(strpos($parent_html, 'First child link'), FALSE, t('"First child link" link not found.'));
+    $this->assertIdentical(strpos($parent_html, 'Third child link'), FALSE, t('"Third child link" link not found.'));
   }
 }
 

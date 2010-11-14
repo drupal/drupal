@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.915 2010/11/14 20:42:45 webchick Exp $
+// $Id: comment.module,v 1.916 2010/11/14 21:04:45 webchick Exp $
 
 /**
  * @file
@@ -680,7 +680,11 @@ function comment_node_view($node, $view_mode) {
       $links['comment_forbidden']['html'] = TRUE;
     }
 
-    $node->content['links']['#links'] = array_merge($node->content['links']['#links'], $links);
+    $node->content['links']['comment'] = array(
+      '#theme' => 'links__node__comment',
+      '#links' => $links,
+      '#attributes' => array('class' => array('links', 'inline')),
+    );
 
     // Only append comments when we are building a node on its own node detail
     // page. We compare $node and $page_node to ensure that comments are not
@@ -975,9 +979,14 @@ function comment_build_content($comment, $node, $view_mode = 'full', $langcode =
   entity_prepare_view('comment', array($comment->cid => $comment));
   $comment->content += field_attach_view('comment', $comment, $view_mode, $langcode);
 
+  $comment->content['links'] = array(
+    '#theme' => 'links__comment',
+    '#pre_render' => array('drupal_pre_render_links'),
+    '#attributes' => array('class' => array('links', 'inline')),
+  );
   if (empty($comment->in_preview)) {
     $comment->content['links']['comment'] = array(
-      '#theme' => 'links__comment',
+      '#theme' => 'links__comment__comment',
       '#links' => comment_links($comment, $node),
       '#attributes' => array('class' => array('links', 'inline')),
     );

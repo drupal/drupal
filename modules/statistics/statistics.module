@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.339 2010/09/24 00:37:44 dries Exp $
+// $Id: statistics.module,v 1.340 2010/11/14 21:04:45 webchick Exp $
 
 /**
  * @file
@@ -117,7 +117,12 @@ function statistics_node_view($node, $view_mode) {
     if (user_access('view post access counter')) {
       $statistics = statistics_get($node->nid);
       if ($statistics) {
-        $node->content['links']['#links']['statistics_counter']['title'] = format_plural($statistics['totalcount'], '1 read', '@count reads');
+        $links['statistics_counter']['title'] = format_plural($statistics['totalcount'], '1 read', '@count reads');
+        $node->content['links']['statistics'] = array(
+          '#theme' => 'links__node__statistics',
+          '#links' => $links,
+          '#attributes' => array('class' => array('links', 'inline')),
+        );
       }
     }
   }

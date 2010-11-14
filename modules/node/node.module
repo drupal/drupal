@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1318 2010/11/14 20:42:45 webchick Exp $
+// $Id: node.module,v 1.1319 2010/11/14 21:04:45 webchick Exp $
 
 /**
  * @file
@@ -1336,6 +1336,11 @@ function node_build_content($node, $view_mode = 'full', $langcode = NULL) {
   // Always display a read more link on teasers because we have no way
   // to know when a teaser view is different than a full view.
   $links = array();
+  $node->content['links'] = array(
+    '#theme' => 'links__node',
+    '#pre_render' => array('drupal_pre_render_links'),
+    '#attributes' => array('class' => array('links', 'inline')),
+  );
   if ($view_mode == 'teaser') {
     $links['node-readmore'] = array(
       'title' => t('Read more'),
@@ -1343,8 +1348,8 @@ function node_build_content($node, $view_mode = 'full', $langcode = NULL) {
       'attributes' => array('rel' => 'tag', 'title' => strip_tags($node->title))
     );
   }
-  $node->content['links'] = array(
-    '#theme' => 'links__node',
+  $node->content['links']['node'] = array(
+    '#theme' => 'links__node__node',
     '#links' => $links,
     '#attributes' => array('class' => array('links', 'inline')),
   );
