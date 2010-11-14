@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.30 2010/11/14 06:37:31 webchick Exp $ */
+/* $Id: style.css,v 1.31 2010/11/14 19:41:03 webchick Exp $ */
 
 /* ---------- Overall Specifications ---------- */
 
@@ -1336,7 +1336,20 @@ div.add-or-remove-shortcuts {
   margin: 0;
 }
 .page-admin-structure-block-demo .block-region {
- color: #000000;
+  background: #ffff66;
+  border: 1px dotted #9f9e00;
+  color: #000;
+  font: 90% "Lucida Grande", "Lucida Sans Unicode", sans-serif;
+  margin: 5px;
+  padding: 5px;
+  text-align: center;
+  text-shadow: none;
+}
+.page-admin-structure-block-demo #featured .block-region {
+  font-size: .55em;
+}
+.page-admin-structure-block-demo #header .block-region {
+  width: 500px;
 }
 .page-admin #admin-dblog img {
   margin: 0 5px;
