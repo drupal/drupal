@@ -61,7 +61,7 @@ function taxonomy_token_info() {
     'description' => t("The number of nodes tagged with terms belonging to the taxonomy vocabulary."),
   );
   $vocabulary['term-count'] = array(
-    'name' => t("Node count"),
+    'name' => t("Term count"),
     'description' => t("The number of terms belonging to the taxonomy vocabulary."),
   );
 
