@@ -143,7 +143,8 @@ table table {
   font-size: 1em;
 }
 table tr th {
-  background-color: #757575;
+  background: #757575;
+  background: rgba(0, 0, 0, 0.51);
   border-bottom-style: none;
 }
 table thead tr th,
@@ -164,11 +165,13 @@ tr th {
   border-color: rgba(255,255,255,0.18);  
 }
 tr.odd {
-  background-color: #e4e4e4;
+  background: #e4e4e4;
+  background: rgba(0, 0, 0, 0.105)
 }
 tr,
 tr.even {
-  background-color: #efefef;
+  background: #efefef;
+  background: rgba(0, 0, 0, 0.063);
 }
 table ul.links {
   margin: 0;
