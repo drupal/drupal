@@ -20,7 +20,7 @@ class PagerDefault extends SelectQueryExtender {
    *
    * @var int
    */
-  static protected $maxElement = 0;
+  static $maxElement = 0;
 
   /**
    * The number of elements per page to allow.

@@ -350,6 +350,13 @@ function hook_entity_delete($entity, $type) {
  *   engines. Also, the default implementation presumes entities are stored in
  *   SQL, but the execute callback could instead query any other entity storage,
  *   local or remote.
+ *
+ *   Note the $query->altered attribute which is TRUE in case the query has
+ *   already been altered once. This happens with cloned queries.
+ *   If there is a pager, then such a cloned query will be executed to count
+ *   all elements. This query can be detected by checking for
+ *   ($query->pager && $query->count), allowing the driver to return 0 from
+ *   the count query and disable the pager.
  */
 function hook_entity_query_alter($query) {
   $query->executeCallback = 'my_module_query_callback';

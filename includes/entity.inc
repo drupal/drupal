@@ -419,6 +419,16 @@ class EntityFieldQuery {
   const RETURN_ALL = NULL;
 
   /**
+   * TRUE if the query has already been altered, FALSE if it hasn't.
+   *
+   * Used in alter hooks to check for cloned queries that have already been
+   * altered prior to the clone (for example, the pager count query).
+   *
+   * @var boolean
+   */
+  public $altered = FALSE;
+
+  /**
    * Associative array of entity-generic metadata conditions.
    *
    * @var array
@@ -460,6 +470,15 @@ class EntityFieldQuery {
    * @see EntityFieldQuery::range()
    */
   public $range = array();
+
+  /**
+   * The query pager data.
+   *
+   * @var array
+   *
+   * @see EntityFieldQuery::pager()
+   */
+  public $pager = array();
 
   /**
    * Query behavior for deleted data.
@@ -799,6 +818,68 @@ class EntityFieldQuery {
   }
 
   /**
+   * Enable a pager for the query.
+   *
+   * @param $limit
+   *   An integer specifying the number of elements per page.  If passed a false
+   *   value (FALSE, 0, NULL), the pager is disabled.
+   * @param $element
+   *   An optional integer to distinguish between multiple pagers on one page.
+   *   If not provided, one is automatically calculated.
+   *
+   * @return EntityFieldQuery
+   *   The called object.
+   */
+  public function pager($limit = 10, $element = NULL) {
+    if (!isset($element)) {
+      $element = PagerDefault::$maxElement++;
+    }
+    elseif ($element >= PagerDefault::$maxElement) {
+      PagerDefault::$maxElement = $element + 1;
+    }
+
+    $this->pager = array(
+      'limit' => $limit,
+      'element' => $element,
+    );
+    return $this;
+  }
+
+  /**
+   * Enable sortable tables for this query.
+   *
+   * @param $headers
+   *   An EFQ Header array based on which the order clause is added to the query.
+   *
+   * @return EntityFieldQuery
+   *   The called object.
+   */
+  public function tableSort(&$headers) {
+    // If 'field' is not initialized, the header columns aren't clickable
+    foreach ($headers as $key =>$header) {
+      if (is_array($header) && isset($header['specifier'])) {
+        $headers[$key]['field'] = '';
+      }
+    }
+
+    $order = tablesort_get_order($headers);
+    $direction = tablesort_get_sort($headers);
+    foreach ($headers as $header) {
+      if (is_array($header) && ($header['data'] == $order['name'])) {
+        if ($header['type'] == 'field') {
+          $this->fieldOrderBy($header['specifier']['field'], $header['specifier']['column'], $direction);
+        }
+        else {
+          $header['direction'] = $direction;
+          $this->order[] = $header;
+        }
+      }
+    }
+
+    return $this;
+  }
+
+  /**
    * Filters on the data being deleted.
    *
    * @param $deleted
@@ -911,6 +992,10 @@ class EntityFieldQuery {
   public function execute() {
     // Give a chance to other modules to alter the query.
     drupal_alter('entity_query', $this);
+    $this->altered = TRUE;
+
+    // Initialize the pager.
+    $this->initializePager();
 
     // Execute the query using the correct callback.
     $result = call_user_func($this->queryCallback(), $this);
@@ -966,7 +1051,6 @@ class EntityFieldQuery {
       throw new EntityFieldQueryException(t('For this query an entity type must be specified.'));
     }
     $entity_type = $this->entityConditions['entity_type']['value'];
-    unset($this->entityConditions['entity_type']);
     $entity_info = entity_get_info($entity_type);
     if (empty($entity_info['base table'])) {
       throw new EntityFieldQueryException(t('Entity %entity has no base table.', array('%entity' => $entity_type)));
@@ -1036,6 +1120,24 @@ class EntityFieldQuery {
     }
 
     return $this->finishQuery($select_query);
+  }
+
+  /**
+   * Get the total number of results and initialize a pager for the query.
+   *
+   * This query can be detected by checking for ($this->pager && $this->count),
+   * which allows a driver to return 0 from the count query and disable
+   * the pager.
+   */
+  function initializePager() {
+    if ($this->pager && !$this->count) {
+      $page = pager_find_page($this->pager['element']);
+      $count_query = clone $this;
+      $this->pager['total'] = $count_query->count()->execute();
+      $this->pager['start'] = $page * $this->pager['limit'];
+      pager_default_initialize($this->pager['total'], $this->pager['limit'], $this->pager['element']);
+      $this->range($this->pager['start'], $this->pager['limit']);
+    }
   }
 
   /**
