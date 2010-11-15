@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.213 2010/11/14 22:07:57 webchick Exp $
+// $Id: system.api.php,v 1.214 2010/11/15 08:29:03 webchick Exp $
 
 /**
  * @file
@@ -846,6 +846,38 @@ function hook_page_build(&$page) {
       '#markup' => t('Acme, Inc. is not responsible for the contents of this sample code.'),
       '#weight' => 25,
     );
+  }
+}
+
+/**
+ * Alter a menu router item right after it has been retrieved from the database or cache.
+ *
+ * This hook is invoked by menu_get_item() and allows for run-time alteration of router
+ * information (page_callback, title, and so on) before it is translated and checked for
+ * access. The passed in $router_item is statically cached for the current request, so this
+ * hook is only invoked once for any router item that is retrieved via menu_get_item().
+ *
+ * Usually, modules will only want to inspect the router item and conditionally
+ * perform other actions (such as preparing a state for the current request).
+ * Note that this hook is invoked for any router item that is retrieved by
+ * menu_get_item(), which may or may not be called on the path itself, so implementations
+ * should check the $path parameter if the alteration should fire for the current request
+ * only.
+ *
+ * @param $router_item
+ *   The menu router item for $path.
+ * @param $path
+ *   The originally passed path, for which $router_item is responsible.
+ * @param $original_map
+ *   The path argument map, as contained in $path.
+ *
+ * @see menu_get_item()
+ */
+function hook_menu_get_item_alter(&$router_item, $path, $original_map) {
+  // When retrieving the router item for the current path...
+  if ($path == $_GET['q']) {
+    // ...call a function that prepares something for this request.
+    mymodule_prepare_something();
   }
 }
 

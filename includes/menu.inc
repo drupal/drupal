@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.418 2010/11/07 21:51:40 dries Exp $
+// $Id: menu.inc,v 1.419 2010/11/15 08:29:03 webchick Exp $
 
 /**
  * @file
@@ -427,6 +427,10 @@ function menu_get_item($path = NULL, $router_item = NULL) {
       cache_set($cid, $router_item, 'cache_menu');
     }
     if ($router_item) {
+      // Allow modules to alter the router item before it is translated and
+      // checked for access.
+      drupal_alter('menu_get_item', $router_item, $path, $original_map);
+
       $map = _menu_translate($router_item, $original_map);
       $router_item['original_map'] = $original_map;
       if ($map === FALSE) {
