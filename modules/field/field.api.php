@@ -1,5 +1,5 @@
 <?php
-// $Id: field.api.php,v 1.94 2010/11/07 22:06:16 dries Exp $
+// $Id: field.api.php,v 1.95 2010/11/15 00:40:19 webchick Exp $
 
 /**
  * @ingroup field_fieldable_type
@@ -773,7 +773,7 @@ function hook_field_widget_info_alter(&$info) {
  * definitions returned by field_info_field() and field_info_instance().
  * Examples: mono-value widget even if the field is multi-valued, non-required
  * widget even if the field is 'required'...
-
+ *
  * Therefore, the FAPI element callbacks (such as #process, #element_validate,
  * #value_callback...) used by the widget cannot use the field_info_field()
  * or field_info_instance() functions to retrieve the $field or $instance
