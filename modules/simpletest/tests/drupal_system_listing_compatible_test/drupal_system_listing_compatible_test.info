@@ -1,0 +1,8 @@
+; $Id: drupal_system_listing_compatible_test.info,v 1.1 2010/11/15 00:37:08 webchick Exp $
+name = "Drupal system listing compatible test"
+description = "Support module for testing the drupal_system_listing function."
+package = Testing
+version = VERSION
+core = 7.x
+files[] = drupal_system_listing_compatible_test.module
+hidden = TRUE

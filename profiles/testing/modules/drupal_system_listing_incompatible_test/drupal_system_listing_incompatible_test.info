@@ -1,0 +1,11 @@
+; $Id: drupal_system_listing_incompatible_test.info,v 1.1 2010/11/15 00:37:08 webchick Exp $
+name = "Drupal system listing incompatible test"
+description = "Support module for testing the drupal_system_listing function."
+package = Testing
+version = VERSION
+; This deliberately has the wrong core version, to test that it does not take
+; precedence over the version of the same module that is in the
+; modules/simpletest/tests directory.
+core = 6.x
+files[] = drupal_system_listing_incompatible_test.module
+hidden = TRUE
