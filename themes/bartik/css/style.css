@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.33 2010/11/15 01:20:21 webchick Exp $ */
+/* $Id: style.css,v 1.34 2010/11/15 09:10:46 webchick Exp $ */
 
 /* ---------- Overall Specifications ---------- */
 
@@ -1284,6 +1284,24 @@ div.vertical-tabs .vertical-tabs-panes fieldset.vertical-tabs-pane {
 }
 #search-form .form-item-keys label {
   display: block;
+}
+
+/* --------------- Search Results ---------------- */
+ol.search-results {
+  padding-left: 0;
+}
+.search-results li {
+  border-bottom: 1px solid #d3d7d9;
+  padding-bottom: 0.4285em;
+  margin-bottom: 0.5em;
+}
+.search-results li:last-child {
+  border-bottom: none;
+  padding-bottom: none;
+  margin-bottom: 1em;
+}
+.search-results .search-snippet-info {
+  padding-left: 0;
 }
 
 /* -------------- Shortcut Links -------------- */
