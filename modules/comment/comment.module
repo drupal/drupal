@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.916 2010/11/14 21:04:45 webchick Exp $
+// $Id: comment.module,v 1.917 2010/11/15 00:49:46 webchick Exp $
 
 /**
  * @file
@@ -2334,6 +2334,8 @@ function template_preprocess_comment_wrapper(&$variables) {
   // Provide contextual information.
   $variables['node'] = $variables['content']['#node'];
   $variables['display_mode'] = variable_get('comment_default_mode_' . $variables['node']->type, COMMENT_MODE_THREADED);
+  // The comment form is optional and may not exist.
+  $variables['content'] += array('comment_form' => array());
 }
 
 /**
