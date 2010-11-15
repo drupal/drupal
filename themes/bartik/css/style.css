@@ -1,9 +1,8 @@
-/* $Id: style.css,v 1.32 2010/11/14 20:48:38 webchick Exp $ */
+/* $Id: style.css,v 1.33 2010/11/15 01:20:21 webchick Exp $ */
 
 /* ---------- Overall Specifications ---------- */
 
-body,
-#preview {
+body {
   background-color: #fff;
   line-height: 1.5;
   font-size: 87.5%;
@@ -27,27 +26,18 @@ h2,
 h3,
 h4,
 h5,
-h6,
-#preview h1,
-#preview h2,
-#preview h3,
-#preview h4,
-#preview h5,
-#preview h6 {
+h6 {
   margin: 1.0em 0 0.5em;
   font-weight: inherit;
 }
-h1,
-#preview h1 {
+h1 {
   font-size: 1.357em;
   color: #000;
 }
-h2,
-#preview h2 {
+h2 {
   font-size: 1.143em;
 }
-p,
-#preview p {
+p {
   margin: 0 0 1.2em;
 }
 del {
@@ -56,22 +46,19 @@ del {
 tr.odd {
   background-color: #dddddd;
 }
-img,
-#preview img {
+img {
   outline: 0;
 }
 
 /* ------------------ Fonts ------------------ */
 
 body,
-#preview,
-#header #site-slogan,
+#site-slogan,
 .ui-widget {
   font-family: Georgia, "Times New Roman", Times, serif;
 }
 #header,
 #footer-wrapper,
-#preview #preview-header,
 #skip-link,
 ul.contextual-links,
 ul.links,
@@ -250,31 +237,26 @@ ul.tips {
 #skip-link a:focus {
   outline: 0;
 }
-#logo,
-#preview #preview-header #preview-logo {
+#logo {
   float: left; /* LTR */
   padding: 15px 30px 15px 10px; /* LTR */
 }
 #name-and-slogan {
   float: left; /* LTR */
 }
-#name-and-slogan,
-#preview #preview-header #preview-name-and-slogan {
+#name-and-slogan {
   padding-top: 34px;
   margin-bottom: 30px;
 }
-#site-name,
-#preview #preview-header #preview-site-name {
+#site-name {
   font-size: 1.821em;
   color: #686868;
   line-height: 1;
 }
-h1#site-name,
-#preview #preview-header h1#preview-site-name {
+h1#site-name {
   margin: 0;
 }
-#site-name a,
-#preview-header #preview-site-name a {
+#site-name a {
   font-weight: normal;
 }
 #site-slogan {
@@ -490,8 +472,7 @@ h1#site-name,
 
 /* ------------------- Main ------------------- */
 
-#main,
-#preview #preview-main {
+#main {
   margin-top: 20px;
   margin-bottom: 40px;
 }
@@ -523,16 +504,11 @@ h1#site-name,
 .content {
   margin-top: 10px;
 }
-#preview #preview-block-system-main {
-  line-height: 1.5;
-}
-h1#page-title,
-#preview h1#preview-page-title {
+h1#page-title {
   font-size: 2em;
   line-height: 1;
 }
-#content h2,
-#preview #preview-block-system-main h2 {
+#content h2 {
   margin-bottom: 2px;
   font-size: 1.429em;
   line-height: 1.4;
@@ -673,8 +649,7 @@ ul.links {
   padding: 15px 20px;
   margin: 0 0 20px;
 }
-.sidebar h2,
-#preview .sidebar h2 {
+.sidebar h2 {
   margin: 0 0 0.5em;
   border-bottom: 1px solid #d6d6d6;
   padding-bottom: 5px;
@@ -1464,48 +1439,4 @@ div.admin-panel .description {
 }
 #footer-wrapper .poll .bar .foreground {
   background-color: #ddd;
-}
-
-/* ---------- Color Form ----------- */
-
-.color-form #placeholder {
-  position: static;
-  width: 195px;
-}
-.overlay .color-form #placeholder {
-  position: absolute;
-}
-.color-form #palette {
-  margin-left: 20px; /* LTR */
-}
-.color-form .form-item {
-  border: 1px solid #fbfbfb;
-  margin: 0;
-  padding: .5em;
-  position: relative;
-  max-width: 350px;
-  -khtml-border-radius: 5px;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-  border-radius: 5px;
-}
-.color-form .form-item label {
-  float: left; /* LTR */
-  font-size: 1em;
-  width: 150px;
-}
-.color-form .form-item.item-selected {
-  background-color: #eeeeee;
-  border: 1px solid #cfcfcf;
-}
-.color-form #palette .lock {
-  position: absolute;
-  top: 5px;
-  left: -20px; /* LTR */
-}
-.color-form #preview {
-  font-size: 0.857em;
-}
-.overlay #preview #footer-wrapper {
-  display: block;
 }
