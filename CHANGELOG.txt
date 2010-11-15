@@ -191,7 +191,7 @@ Drupal 7.0, xxxx-xx-xx (development version)
     * Added support for translatable fields to Field API.
 - JavaScript changes
     * Upgraded the core JavaScript library to jQuery version 1.4.4.
-    * Upgraded the jQuery Forms library to 2.36.
+    * Upgraded the jQuery Forms library to 2.49.
     * Added jQuery UI 1.8.6, which allows improvements to Drupal's user
       experience.
 - Better module version support
