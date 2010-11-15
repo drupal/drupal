@@ -878,6 +878,7 @@ function user_admin_roles_order_submit($form, &$form_state) {
     $role->weight = $role_values['weight'];
     user_role_save($role);
   }
+  drupal_set_message(t('The role settings have been updated.'));
 }
 
 /**
