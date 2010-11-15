@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.988 2010/11/12 01:36:08 webchick Exp $
+// $Id: system.module,v 1.989 2010/11/15 17:47:50 webchick Exp $
 
 /**
  * @file
@@ -1100,7 +1100,7 @@ function system_library() {
   $libraries['form'] = array(
     'title' => 'jQuery Form Plugin',
     'website' => 'http://malsup.com/jquery/form/',
-    'version' => '2.36',
+    'version' => '2.49',
     'js' => array(
       'misc/jquery.form.js' => array(),
     ),
