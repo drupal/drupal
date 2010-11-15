@@ -1,5 +1,5 @@
 <?php
-// $Id: user.admin.inc,v 1.121 2010/11/14 21:22:46 webchick Exp $
+// $Id: user.admin.inc,v 1.122 2010/11/15 09:04:47 webchick Exp $
 
 /**
  * @file
@@ -878,6 +878,7 @@ function user_admin_roles_order_submit($form, &$form_state) {
     $role->weight = $role_values['weight'];
     user_role_save($role);
   }
+  drupal_set_message(t('The role settings have been updated.'));
 }
 
 /**

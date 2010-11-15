@@ -1,5 +1,5 @@
 <?php
-// $Id: user.test,v 1.104 2010/10/23 03:20:40 webchick Exp $
+// $Id: user.test,v 1.105 2010/11/15 09:04:47 webchick Exp $
 
 class UserRegistrationTestCase extends DrupalWebTestCase {
   public static function getInfo() {
@@ -1416,7 +1416,7 @@ class UserCreateTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'User create',
-      'description' => 'Test the creat user administration page.',
+      'description' => 'Test the create user administration page.',
       'group' => 'User',
     );
   }
@@ -1658,7 +1658,7 @@ class UserRoleAdminTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'User role administration',
-      'description' => 'Test adding, editing and deleting user roles.',
+      'description' => 'Test adding, editing and deleting user roles and changing role weights.',
       'group' => 'User',
     );
   }
@@ -1710,6 +1710,28 @@ class UserRoleAdminTestCase extends DrupalWebTestCase {
     $this->assertResponse(403, t('Access denied when trying to edit the built-in anonymous role.'));
     $this->drupalGet('admin/people/permissions/roles/edit/' . DRUPAL_AUTHENTICATED_RID);
     $this->assertResponse(403, t('Access denied when trying to edit the built-in authenticated role.'));
+  }
+
+  /**
+   * Test user role weight change operation.
+   */
+  function testRoleWeightChange() {
+    $this->drupalLogin($this->admin_user);
+
+    // Pick up a random role and get its weight.
+    $rid = array_rand(user_roles());
+    $role = user_role_load($rid);
+    $old_weight = $role->weight;
+
+    // Change the role weight and submit the form.
+    $edit = array('roles['. $rid .'][weight]' => $old_weight + 1);
+    $this->drupalPost('admin/people/permissions/roles', $edit, t('Save order'));
+    $this->assertText(t('The role settings have been updated.'), t('The role settings form submitted successfully.'));
+
+    // Retrieve the saved role and compare its weight.
+    $role = user_role_load($rid);
+    $new_weight = $role->weight;
+    $this->assertTrue(($old_weight + 1) == $new_weight, t('Role weight updated successfully.'));
   }
 }
 
