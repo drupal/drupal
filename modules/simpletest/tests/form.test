@@ -521,15 +521,32 @@ class FormValidationTestCase extends DrupalWebTestCase {
    * Tests partial form validation through #limit_validation_errors.
    */
   function testValidateLimitErrors() {
-    $edit = array('test' => 'invalid');
+    $edit = array(
+      'test' => 'invalid', 
+      'test_numeric_index[0]' => 'invalid',
+      'test_substring[foo]' => 'invalid',
+    );
     $path = 'form-test/limit-validation-errors';
 
-    // Submit the form by pressing the button with #limit_validation_errors and
-    // ensure that the title field is not validated, but the #element_validate
-    // handler for the 'test' field is triggered.
+    // Submit the form by pressing the 'Partial validate' button (uses
+    // #limit_validation_errors) and ensure that the title field is not
+    // validated, but the #element_validate handler for the 'test' field
+    // is triggered.
     $this->drupalPost($path, $edit, t('Partial validate'));
     $this->assertNoText(t('!name field is required.', array('!name' => 'Title')));
     $this->assertText('Test element is invalid');
+
+    // Edge case of #limit_validation_errors containing numeric indexes: same
+    // thing with the 'Partial validate (numeric index)' button and the
+    // 'test_numeric_index' field.
+    $this->drupalPost($path, $edit, t('Partial validate (numeric index)'));
+    $this->assertNoText(t('!name field is required.', array('!name' => 'Title')));
+    $this->assertText('Test (numeric index) element is invalid');
+
+    // Ensure something like 'foobar' isn't considered "inside" 'foo'.
+    $this->drupalPost($path, $edit, t('Partial validate (substring)'));
+    $this->assertNoText(t('!name field is required.', array('!name' => 'Title')));
+    $this->assertText('Test (substring) foo element is invalid');
 
     // Ensure not validated values are not available to submit handlers.
     $this->drupalPost($path, array('title' => '', 'test' => 'valid'), t('Partial validate'));

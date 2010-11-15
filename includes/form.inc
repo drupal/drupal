@@ -1446,8 +1446,10 @@ function form_set_error($name = NULL, $message = '', $limit_validation_errors = 
         // reconstructed #parents begin with the same keys as the specified
         // section, then the element's values are within the part of
         // $form_state['values'] that the clicked button requires to be valid,
-        // so errors for this element must be recorded.
-        if (array_slice(explode('][', $name), 0, count($section)) === $section) {
+        // so errors for this element must be recorded. As the exploded array
+        // will all be strings, we need to cast every value of the section
+        // array to string.
+        if (explode('][', $name, count($section)) === array_map('strval', $section)) {
           $record = TRUE;
           break;
         }
