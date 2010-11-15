@@ -773,7 +773,7 @@ function hook_field_widget_info_alter(&$info) {
  * definitions returned by field_info_field() and field_info_instance().
  * Examples: mono-value widget even if the field is multi-valued, non-required
  * widget even if the field is 'required'...
-
+ *
  * Therefore, the FAPI element callbacks (such as #process, #element_validate,
  * #value_callback...) used by the widget cannot use the field_info_field()
  * or field_info_instance() functions to retrieve the $field or $instance
