@@ -172,6 +172,7 @@ table ul.links li {
 
 /* ------------------ List Styles ------------------ */
 
+.block ol,
 .block ul {
   margin: 0;
   padding: 0 0 0.25em 1em; /* LTR */
