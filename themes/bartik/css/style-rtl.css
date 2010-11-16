@@ -1,4 +1,4 @@
-/* $Id: style-rtl.css,v 1.12 2010/10/07 17:59:01 webchick Exp $ */
+/* $Id: style-rtl.css,v 1.13 2010/11/16 18:54:23 dries Exp $ */
 
 /* ------------------ Reset Styles ------------------ */
 
@@ -30,6 +30,7 @@ blockquote:after {
 ul.tips {
   padding: 0 1.25em 0 0;
 }
+.block ol,
 .block ul {
   padding: 0 1em 0.25em 0;
 }
