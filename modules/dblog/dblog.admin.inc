@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.admin.inc,v 1.40 2010/09/09 15:47:03 webchick Exp $
+// $Id: dblog.admin.inc,v 1.41 2010/11/16 18:50:12 dries Exp $
 
 /**
  * @file
@@ -220,7 +220,7 @@ function dblog_filters() {
   $filters = array();
 
   foreach (_dblog_get_message_types() as $type) {
-    $types[$type] = $type;
+    $types[$type] = t($type);
   }
 
   if (!empty($types)) {
