@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.510 2010/11/15 10:06:32 webchick Exp $
+// $Id: form.inc,v 1.511 2010/11/17 04:10:51 dries Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -1449,7 +1449,7 @@ function form_set_error($name = NULL, $message = '', $limit_validation_errors = 
         // so errors for this element must be recorded. As the exploded array
         // will all be strings, we need to cast every value of the section
         // array to string.
-        if (explode('][', $name, count($section)) === array_map('strval', $section)) {
+        if (array_slice(explode('][', $name), 0, count($section)) === array_map('strval', $section)) {
           $record = TRUE;
           break;
         }

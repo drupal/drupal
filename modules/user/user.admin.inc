@@ -1,5 +1,5 @@
 <?php
-// $Id: user.admin.inc,v 1.122 2010/11/15 09:04:47 webchick Exp $
+// $Id: user.admin.inc,v 1.123 2010/11/17 04:10:52 dries Exp $
 
 /**
  * @file
@@ -767,7 +767,7 @@ function theme_user_admin_permissions($variables) {
         'class' => array('permission'),
       );
       foreach (element_children($form['checkboxes']) as $rid) {
-        $form['checkboxes'][$rid][$key]['#title'] = $roles[$rid] . ': ' . t($key);
+        $form['checkboxes'][$rid][$key]['#title'] = $roles[$rid] . ': ' . $form['permission'][$key]['#markup'];
         $form['checkboxes'][$rid][$key]['#title_display'] = 'invisible';
         $row[] = array('data' => drupal_render($form['checkboxes'][$rid][$key]), 'class' => array('checkbox'));
       }
