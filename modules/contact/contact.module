@@ -239,7 +239,7 @@ function contact_user_presave(&$edit, $account, $category) {
 }
 
 /**
- * Implement of hook_form_FORM_ID_alter().
+ * Implements hook_form_FORM_ID_alter().
  *
  * Add the default personal contact setting on the user settings page.
  */
@@ -253,6 +253,6 @@ function contact_form_user_admin_settings_alter(&$form, &$form_state) {
     '#type' => 'checkbox',
     '#title' => t('Enable the personal contact form by default for new users.'),
     '#description' => t('Changing this setting will not affect existing users.'),
-    '#default_value' => 1,
+    '#default_value' => variable_get('contact_default_status', 1),
   );
 }
