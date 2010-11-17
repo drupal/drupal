@@ -3503,6 +3503,7 @@ function drupal_load_stylesheet_content($contents, $optimize = FALSE) {
       $contents
     );
     // End the file with a new line.
+    $contents = trim($contents);
     $contents .= "\n";
   }
 
