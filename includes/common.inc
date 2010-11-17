@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1254 2010/11/14 21:04:45 webchick Exp $
+// $Id: common.inc,v 1.1255 2010/11/17 04:15:37 dries Exp $
 
 /**
  * @file
@@ -3503,6 +3503,7 @@ function drupal_load_stylesheet_content($contents, $optimize = FALSE) {
       $contents
     );
     // End the file with a new line.
+    $contents = trim($contents);
     $contents .= "\n";
   }
 
