@@ -1,5 +1,5 @@
 <?php
-// $Id: field.api.php,v 1.95 2010/11/15 00:40:19 webchick Exp $
+// $Id: field.api.php,v 1.96 2010/11/18 05:37:47 dries Exp $
 
 /**
  * @ingroup field_fieldable_type
@@ -2248,7 +2248,7 @@ function hook_field_widget_properties_alter(&$widget, $context) {
  *   An associative array containing:
  *   - entity_type: The entity type; e.g. 'node' or 'user'.
  *   - entity: The entity object.
-     - field: The field that the widget belongs to.
+ *   - field: The field that the widget belongs to.
  *   - instance: The instance of the field.
  *
  * @see hook_field_widget_properties_alter()
