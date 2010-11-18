@@ -357,7 +357,7 @@ function update_manager_update_ready_form($form, &$form_state) {
     '#suffix' => '</strong>',
   );
 
-  $form['site_offline'] = array(
+  $form['maintenance_mode'] = array(
     '#title' => t('Perform updates with site in maintenance mode (strongly recommended)'),
     '#type' => 'checkbox',
     '#default_value' => TRUE,
@@ -386,8 +386,8 @@ function update_manager_update_ready_form($form, &$form_state) {
  * @see system_authorized_get_url()
  */
 function update_manager_update_ready_form_submit($form, &$form_state) {
-  if ($form_state['values']['site_offline'] == TRUE) {
-    variable_set('site_offline', TRUE);
+  if ($form_state['values']['maintenance_mode'] == TRUE) {
+    variable_set('maintenance_mode', TRUE);
   }
 
   if (!empty($_SESSION['update_manager_update_projects'])) {
