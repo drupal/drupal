@@ -1,5 +1,5 @@
 <?php
-// $Id: update.authorize.inc,v 1.5 2010/10/30 04:06:45 dries Exp $
+// $Id: update.authorize.inc,v 1.6 2010/11/18 05:35:39 dries Exp $
 
 /**
  * @file
@@ -176,14 +176,14 @@ function update_authorize_update_batch_finished($success, $results) {
       $success = FALSE;
     }
   }
-  $offline = variable_get('site_offline', FALSE);
+  $offline = variable_get('maintenance_mode', FALSE);
   if ($success) {
     // Now that the update completed, we need to clear the cache of available
     // update data and recompute our status, so prevent show bogus results.
     _update_authorize_clear_update_status();
 
     if ($offline) {
-      variable_set('site_offline', FALSE);
+      variable_set('maintenance_mode', FALSE);
       $page_message = array(
         'message' => t('Update was completed successfully. Your site has been taken out of maintenance mode.'),
         'type' => 'status',
@@ -233,9 +233,9 @@ function update_authorize_install_batch_finished($success, $results) {
       $success = FALSE;
     }
   }
-  $offline = variable_get('site_offline', FALSE);
+  $offline = variable_get('maintenance_mode', FALSE);
   if ($success && $offline) {
-    variable_set('site_offline', FALSE);
+    variable_set('maintenance_mode', FALSE);
     $page_message = array(
       'message' => t('Installation was completed successfully. Your site has been taken out of maintenance mode.'),
       'type' => 'status',
