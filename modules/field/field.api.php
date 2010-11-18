@@ -2248,7 +2248,7 @@ function hook_field_widget_properties_alter(&$widget, $context) {
  *   An associative array containing:
  *   - entity_type: The entity type; e.g. 'node' or 'user'.
  *   - entity: The entity object.
-     - field: The field that the widget belongs to.
+ *   - field: The field that the widget belongs to.
  *   - instance: The instance of the field.
  *
  * @see hook_field_widget_properties_alter()
