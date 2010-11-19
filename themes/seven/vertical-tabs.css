@@ -1,4 +1,4 @@
-/* $Id: vertical-tabs.css,v 1.9 2010/10/06 13:42:18 dries Exp $ */
+/* $Id: vertical-tabs.css,v 1.10 2010/11/19 20:45:04 dries Exp $ */
 
 /**
  * Override of misc/vertical-tabs.css.
@@ -49,6 +49,7 @@ div.vertical-tabs ul li.vertical-tab-button a:hover,
 div.vertical-tabs ul li.vertical-tab-button a:focus {
   background: #d5d5d5;
   text-decoration: none;
+  outline: 0;
 }
 div.vertical-tabs ul li.selected a,
 div.vertical-tabs ul li.selected a:hover,
@@ -57,11 +58,13 @@ div.vertical-tabs ul li.selected a:active {
   background: #fff;
   border-right-color: #fff;
   border-top: 1px solid #ccc;
-  outline: 0;
 }
 div.vertical-tabs ul li.first.selected a,
 div.vertical-tabs ul li.first.selected a:hover {
   border-top: 0;
+}
+div.vertical-tabs ul li.selected a:focus strong {
+  text-decoration: underline;
 }
 div.vertical-tabs .vertical-tabs-panes {
   margin: 0 0 0 265px;
