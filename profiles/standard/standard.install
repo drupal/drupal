@@ -1,5 +1,5 @@
 <?php
-// $Id: standard.install,v 1.28 2010/10/21 04:22:34 webchick Exp $
+// $Id: standard.install,v 1.29 2010/11/19 03:49:25 dries Exp $
 
 /**
  * Implements hook_install().
@@ -237,7 +237,6 @@ function standard_install() {
       'type' => 'node',
       'bundle' => 'article',
       'mapping' => array(
-        'rdftype' => array('sioc:Item', 'foaf:Document'),
         'field_image' => array(
           'predicates' => array('og:image', 'rdfs:seeAlso'),
           'type' => 'rel',
