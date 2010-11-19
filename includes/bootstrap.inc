@@ -241,6 +241,13 @@ define('REGISTRY_RESET_LOOKUP_CACHE', 1);
 define('REGISTRY_WRITE_LOOKUP_CACHE', 2);
 
 /**
+ * Regular expression to match PHP function names.
+ *
+ * @see http://php.net/manual/en/language.functions.php
+ */
+define('DRUPAL_PHP_FUNCTION_PATTERN', '[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*');
+
+/**
  * Start the timer with the specified name. If you start and stop the same
  * timer multiple times, the measured intervals will be accumulated.
  *
@@ -703,7 +710,7 @@ function drupal_get_filename($type, $name, $filename = NULL) {
       // extension, not just the file we are currently looking for. This
       // prevents unnecessary scans from being repeated when this function is
       // called more than once in the same page request.
-      $matches = drupal_system_listing("/\.$extension$/", $dir, 'name', 0);
+      $matches = drupal_system_listing("/^" . DRUPAL_PHP_FUNCTION_PATTERN . "\.$extension$/", $dir, 'name', 0);
       foreach ($matches as $matched_name => $file) {
         $files[$type][$matched_name] = $file->uri;
       }

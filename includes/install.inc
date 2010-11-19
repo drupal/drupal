@@ -551,7 +551,7 @@ function drupal_verify_profile($install_state) {
 
   // Get a list of modules that exist in Drupal's assorted subdirectories.
   $present_modules = array();
-  foreach (drupal_system_listing('/\.module$/', 'modules', 'name', 0) as $present_module) {
+  foreach (drupal_system_listing('/^' . DRUPAL_PHP_FUNCTION_PATTERN . '\.module$/', 'modules', 'name', 0) as $present_module) {
     $present_modules[] = $present_module->name;
   }
 
