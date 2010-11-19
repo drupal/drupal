@@ -129,7 +129,7 @@ Accessibility
 - Brandon Bowersox 'brandonojc' <http://drupal.org/user/186415> 
 
 Documentation
-- Addison Berry 'add1sun' <http://drupal.org/user/65088>
+- Ariane Khachatourians 'arianek' <http://drupal.org/user/158886>
 - Jennifer Hodgdon 'jhodgdon' <http://drupal.org/user/155601>
 
 Security
