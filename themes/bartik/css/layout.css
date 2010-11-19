@@ -36,7 +36,8 @@
   width: 480px;
 }
 #content,
-.sidebar,
+#sidebar-first,
+#sidebar-second,
 .region-triptych-first,
 .region-triptych-middle,
 .region-triptych-last,
@@ -58,7 +59,8 @@
   width: 960px;
   float: none;
 }
-.sidebar {
+#sidebar-first,
+#sidebar-second {
   width: 240px;
 }
 #main-wrapper {
