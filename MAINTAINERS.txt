@@ -110,6 +110,7 @@ Theme system
 - Earl Miles 'merlinofchaos' <http://drupal.org/user/26979>
 - Alex Bronstein 'effulgentsia' <http://drupal.org/user/78040>
 - Joon Park 'dvessel' <http://drupal.org/user/56782>
+- John Albin Wilkins 'JohnAlbin' <http://drupal.org/user/32095>
 
 Token system
 - Dave Reid 'davereid' <http://drupal.org/user/53892>
@@ -150,7 +151,7 @@ Aggregator module
 - ?
 
 Block module
-- ?
+- John Albin Wilkins 'JohnAlbin' <http://drupal.org/user/32095>
 
 Blog module
 - ?
@@ -283,11 +284,10 @@ Bartik theme
 - Jeff Burns 'Jeff Burnz' <http://drupal.org/user/61393>
 
 Garland theme
-- ?
+- John Albin Wilkins 'JohnAlbin' <http://drupal.org/user/32095>
 
 Seven theme
 - Jeff Burns 'Jeff Burnz' <http://drupal.org/user/61393>
 
 Stark theme
-- John Wilkins 'JohnAlbin' <http://drupal.org/user/32095>
-
+- John Albin Wilkins 'JohnAlbin' <http://drupal.org/user/32095>
