@@ -1,5 +1,5 @@
 <?php
-/* $Id: color.install,v 1.8 2010/10/15 23:41:53 webchick Exp $ */
+// $Id: color.install,v 1.9 2010/11/19 20:37:17 dries Exp $
 
 /**
  * @file
