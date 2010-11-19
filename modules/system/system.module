@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.989 2010/11/15 17:47:50 webchick Exp $
+// $Id: system.module,v 1.990 2010/11/19 20:35:31 dries Exp $
 
 /**
  * @file
@@ -2284,7 +2284,7 @@ function system_get_info($type, $name = NULL) {
  */
 function _system_rebuild_module_data() {
   // Find modules
-  $modules = drupal_system_listing('/\.module$/', 'modules', 'name', 0);
+  $modules = drupal_system_listing('/^' . DRUPAL_PHP_FUNCTION_PATTERN . '\.module$/', 'modules', 'name', 0);
 
   // Include the install profile in modules that are loaded.
   $profile = drupal_get_profile();
@@ -2404,9 +2404,9 @@ function _system_update_bootstrap_status() {
  */
 function _system_rebuild_theme_data() {
   // Find themes
-  $themes = drupal_system_listing('/\.info$/', 'themes');
+  $themes = drupal_system_listing('/^' . DRUPAL_PHP_FUNCTION_PATTERN . '\.info$/', 'themes');
   // Find theme engines
-  $engines = drupal_system_listing('/\.engine$/', 'themes/engines');
+  $engines = drupal_system_listing('/^' . DRUPAL_PHP_FUNCTION_PATTERN . '\.engine$/', 'themes/engines');
 
   // Set defaults for theme info.
   $defaults = array(

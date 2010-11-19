@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.202 2010/10/03 02:04:55 dries Exp $
+// $Id: module.inc,v 1.203 2010/11/19 20:35:31 dries Exp $
 
 /**
  * @file
@@ -786,7 +786,7 @@ function module_invoke_all() {
  * Array of modules required by core.
  */
 function drupal_required_modules() {
-  $files = drupal_system_listing('/\.info$/', 'modules', 'name', 0);
+  $files = drupal_system_listing('/^' . DRUPAL_PHP_FUNCTION_PATTERN . '\.info$/', 'modules', 'name', 0);
   $required = array();
 
   // An install profile is required and one must always be loaded.
