@@ -61,6 +61,7 @@ function options_field_widget_info() {
       'behaviors' => array(
         'multiple values' => FIELD_BEHAVIOR_CUSTOM,
       ),
+      'settings' => array('display_label' => 0),
     ),
   );
 }
@@ -122,6 +123,10 @@ function options_field_widget_form(&$form, &$form_state, $field, $instance, $lan
       );
       // Override the title from the incoming $element.
       $element['#title'] = isset($options[$on_value]) ? $options[$on_value] : '';
+
+      if ($instance['widget']['settings']['display_label']) {
+        $element['#title'] = $instance['label'];
+      }
       break;
   }
 
@@ -132,6 +137,22 @@ function options_field_widget_form(&$form, &$form_state, $field, $instance, $lan
   );
 
   return $element;
+}
+
+/**
+ * Implements hook_field_widget_settings_form().
+ */
+function options_field_widget_settings_form($field, $instance) {
+  $form = array();
+  if ($instance['widget']['type'] == 'options_onoff') {
+    $form['display_label'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Use field label instead the "On value" as label'),
+      '#default_value' => $instance['widget']['settings']['display_label'],
+      '#weight' => -1,
+    );
+  }
+  return $form;
 }
 
 /**
