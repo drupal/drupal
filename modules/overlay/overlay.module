@@ -1,5 +1,5 @@
 <?php
-// $Id: overlay.module,v 1.32 2010/11/06 00:18:24 dries Exp $
+// $Id: overlay.module,v 1.33 2010/11/20 04:03:51 webchick Exp $
 
 /**
  * @file
@@ -489,7 +489,7 @@ function template_process_overlay(&$variables) {
  */
 function overlay_preprocess_page(&$variables) {
   if (overlay_get_mode() == 'child') {
-    unset($variables['tabs'][0]);
+    unset($variables['tabs']['#primary']);
   }
 }
 

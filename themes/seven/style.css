@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.82 2010/11/06 00:18:24 dries Exp $ */
+/* $Id: style.css,v 1.83 2010/11/20 04:03:51 webchick Exp $ */
 
 /**
  * Generic elements.
@@ -869,7 +869,6 @@ ol.task-list li.done {
   background-color: #fff;
   padding-top: 15px;
 }
-.overlay .primary,
 .overlay #branding h1.page-title,
 .overlay #left,
 .overlay #footer {

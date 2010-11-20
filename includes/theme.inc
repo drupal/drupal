@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.622 2010/10/30 03:57:20 dries Exp $
+// $Id: theme.inc,v 1.623 2010/11/20 04:03:51 webchick Exp $
 
 /**
  * @file
@@ -2258,7 +2258,7 @@ function template_preprocess_page(&$variables) {
   $variables['action_links']      = menu_local_actions();
   $variables['site_name']         = (theme_get_setting('toggle_name') ? filter_xss_admin(variable_get('site_name', 'Drupal')) : '');
   $variables['site_slogan']       = (theme_get_setting('toggle_slogan') ? filter_xss_admin(variable_get('site_slogan', '')) : '');
-  $variables['tabs']              = theme('menu_local_tasks');
+  $variables['tabs']              = menu_local_tabs();
 
   if ($node = menu_get_object()) {
     $variables['node'] = $node;

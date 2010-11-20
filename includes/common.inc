@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1255 2010/11/17 04:15:37 dries Exp $
+// $Id: common.inc,v 1.1256 2010/11/20 04:03:51 webchick Exp $
 
 /**
  * @file
@@ -6362,7 +6362,7 @@ function drupal_common_theme() {
       'render element' => 'element',
     ),
     'menu_local_tasks' => array(
-      'variables' => array(),
+      'variables' => array('primary' => array(), 'secondary' => array()),
     ),
     // from form.inc
     'select' => array(
