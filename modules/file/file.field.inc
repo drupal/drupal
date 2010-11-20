@@ -450,9 +450,14 @@ function file_field_widget_form(&$form, &$form_state, $field, $instance, $langco
 
   // Retrieve any values set in $form_state, as will be the case during AJAX
   // rebuilds of this form.
-  if (isset($form_state['values'][$field['field_name']][$langcode])) {
-    $items = $form_state['values'][$field['field_name']][$langcode];
-    unset($form_state['values'][$field['field_name']][$langcode]);
+  if (isset($form_state['values'])) {
+    $path = array_merge($element['#field_parents'], array($field['field_name'], $langcode));
+    $path_exists = FALSE;
+    $values = drupal_array_get_nested_value($form_state['values'], $path, $path_exists);
+    if ($path_exists) {
+      $items = $values;
+      drupal_array_set_nested_value($form_state['values'], $path, NULL);
+    }
   }
 
   foreach ($items as $delta => $item) {
@@ -748,8 +753,8 @@ function file_field_widget_submit($form, &$form_state) {
   // to avoid a mismatch between old and new deltas. The rebuilt elements will
   // have #default_value set appropriately for the current state of the field,
   // so nothing is lost in doing this.
-  list($field_name, $langcode) = $form_state['triggering_element']['#parents'];
-  unset($form_state['input'][$field_name][$langcode]);
+  $parents = array_slice($form_state['triggering_element']['#parents'], 0, -2);
+  drupal_array_set_nested_value($form_state['input'], $parents, NULL);
 }
 
 /**

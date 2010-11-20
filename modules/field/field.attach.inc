@@ -442,9 +442,26 @@ function _field_invoke_get_instances($entity_type, $bundle, $options) {
 /**
  * Add form elements for all fields for an entity to a form structure.
  *
- * Sample structure for $form:
+ * The form elements for the entity's fields are added by reference as direct
+ * children in the $form parameter. This parameter can be a full form structure
+ * (most common case for entity edit forms), or a sub-element of a larger form.
+ *
+ * By default, submitted field values appear at the top-level of
+ * $form_state['values']. A different location within $form_state['values'] can
+ * be specified by setting the '#parents' property on the incoming $form
+ * parameter. Because of name clashes, two instances of the same field cannot
+ * appear within the same $form element, or within the same '#parents' space.
+ *
+ * For each call to field_attach_form(), field values are processed by calling
+ * field_attach_form_validate() and field_attach_submit() on the same $form
+ * element.
+ *
+ * Sample resulting structure in $form:
  * @code
- *   // One sub-array per field appearing in the form, keyed by field name.
+ *   '#parents' => The location of field values in $form_state['values'],
+ *   '#entity_type' => The name of the entity type,
+ *   '#bundle' => The name of the bundle,
+ *   // One sub-array per field appearing in the entity, keyed by field name.
  *   // The structure of the array differs slightly depending on whether the
  *   // widget is 'single-value' (provides the input for one field value,
  *   // most common case), and will therefore be repeated as many times as
@@ -456,29 +473,36 @@ function _field_invoke_get_instances($entity_type, $bundle, $options) {
  *   // to access the field sub-array when $langcode is unknown.
  *   'field_foo' => array(
  *     '#tree' => TRUE,
- *     '#field_name' => the name of the field,
+ *     '#field_name' => The name of the field,
  *     '#language' => $langcode,
  *     $langcode => array(
- *       '#field_name' => the name of the field,
- *       '#tree' => TRUE,
- *       '#required' => whether or not the field is required,
- *       '#title' => the label of the field instance,
- *       '#description' => the description text for the field instance,
+ *       '#field_name' => The name of the field,
+ *       '#language' => $langcode,
+ *       '#field_parents' => The 'parents' space for the field in the form,
+ *          equal to the #parents property of the $form parameter received by
+ *          field_attach_form(),
+ *       '#required' => Whether or not the field is required,
+ *       '#title' => The label of the field instance,
+ *       '#description' => The description text for the field instance,
  *
  *       // Only for 'single' widgets:
  *       '#theme' => 'field_multiple_value_form',
- *       '#cardinality' => the field cardinality,
+ *       '#cardinality' => The field cardinality,
  *       // One sub-array per copy of the widget, keyed by delta.
  *       0 => array(
- *         '#title' => the title to be displayed by the widget,
- *         '#default_value' => the field value for delta 0,
- *         '#required' => whether the widget should be marked required,
+ *         '#entity_type' => The name of the entity type,
+ *         '#bundle' => The name of the bundle,
+ *         '#field_name' => The name of the field,
+ *         '#field_parents' => The 'parents' space for the field in the form,
+ *            equal to the #parents property of the $form parameter received by
+ *            field_attach_form(),
+ *         '#title' => The title to be displayed by the widget,
+ *         '#default_value' => The field value for delta 0,
+ *         '#required' => Whether the widget should be marked required,
  *         '#delta' => 0,
- *         '#field_name' => the name of the field,
- *         '#bundle' => the name of the bundle,
- *         '#columns' => the array of field columns,
+ *         '#columns' => The array of field columns,
  *         // The remaining elements in the sub-array depend on the widget.
- *         '#type' => the type of the widget,
+ *         '#type' => The type of the widget,
  *         ...
  *       ),
  *       1 => array(
@@ -486,10 +510,11 @@ function _field_invoke_get_instances($entity_type, $bundle, $options) {
  *       ),
  *
  *       // Only for multiple widgets:
+ *       '#entity_type' => The name of the entity type,
  *       '#bundle' => $instance['bundle'],
  *       '#columns'  => array_keys($field['columns']),
  *       // The remaining elements in the sub-array depend on the widget.
- *       '#type' => the type of the widget,
+ *       '#type' => The type of the widget,
  *       ...
  *     ),
  *     ...
@@ -497,27 +522,8 @@ function _field_invoke_get_instances($entity_type, $bundle, $options) {
  * )
  * @endcode
  *
- * Sample structure for $form_state['field']:
- * @code
- * array(
- *   // One sub-array per field appearing in the form, keyed by field name.
- *   'field_foo' => array(
- *     $langcode => array(
- *       'field' => the field definition array,
- *       'instance' => the field instance definition array,
- *       'array_parents' => an array of keys indicating the path to the field
- *         element within the full $form structure. This entry is populated at
- *         form build time.
- *       'errors' => the array of field validation errors reported on the
- *         field. This entry is populated at form validation time.
- *     ),
- *   ),
- * ),
- * @endcode
- *
- * field_attach_load() is automatically called by the default entity controller
- * class, and thus, in most cases, doesn't need to be explicitly called by the
- * entity type module.
+ * Additionally, some processing data is placed in $form_state, and can be
+ * accessed by field_form_get_state() and field_form_set_state().
  *
  * @param $entity_type
  *   The type of $entity; e.g. 'node' or 'user'.
@@ -525,18 +531,24 @@ function _field_invoke_get_instances($entity_type, $bundle, $options) {
  *   The entity for which to load form elements, used to initialize
  *   default form values.
  * @param $form
- *   The form structure to fill in.
+ *   The form structure to fill in. This can be a full form structure, or a
+ *   sub-element of a larger form. The #parents property can be set to control
+ *   the location of submitted field values within $form_state['values']. If
+ *   not specified, $form['#parents'] is set to an empty array, placing field
+ *   values at the top-level of $form_state['values'].
  * @param $form_state
  *   An associative array containing the current state of the form.
  * @param $langcode
  *   The language the field values are going to be entered, if no language
  *   is provided the default site language will be used.
- * @return
- *   The form elements are added by reference at the top level of the $form
- *   parameter. Processing information is added by reference in
- *   $form_state['field'].
+ *
+ * @see field_form_get_state()
+ * @see field_form_set_state()
  */
 function field_attach_form($entity_type, $entity, &$form, &$form_state, $langcode = NULL) {
+  // Set #parents to 'top-level' by default.
+  $form += array('#parents' => array());
+
   // If no language is provided use the default site language.
   $options = array('language' => field_valid_language($langcode));
   $form += (array) _field_invoke_default('form', $entity_type, $entity, $form, $form_state, $options);
@@ -560,6 +572,10 @@ function field_attach_form($entity_type, $entity, &$form, &$form_state, $langcod
  *
  * Loads all fields for each entity object in a group of a single entity type.
  * The loaded field values are added directly to the entity objects.
+ *
+ * field_attach_load() is automatically called by the default entity controller
+ * class, and thus, in most cases, doesn't need to be explicitly called by the
+ * entity type module.
  *
  * @param $entity_type
  *   The type of $entity; e.g., 'node' or 'user'.
@@ -782,7 +798,8 @@ function field_attach_validate($entity_type, $entity) {
  *   'revision' keys should be present. The actual field values will be read
  *   from $form_state['values'].
  * @param $form
- *   The form structure.
+ *   The form structure where field elements are attached to. This might be a
+ *   full form structure, or a sub-element of a larger form.
  * @param $form_state
  *   An associative array containing the current state of the form.
  */
@@ -798,8 +815,10 @@ function field_attach_form_validate($entity_type, $entity, $form, &$form_state) 
     // Pass field-level validation errors back to widgets for accurate error
     // flagging.
     foreach ($e->errors as $field_name => $field_errors) {
-      foreach ($field_errors as $langcode => $language_errors) {
-        $form_state['field'][$field_name][$langcode]['errors'] = $language_errors;
+      foreach ($field_errors as $langcode => $errors) {
+        $field_state = field_form_get_state($form['#parents'], $field_name, $langcode, $form_state);
+        $field_state['errors'] = $errors;
+        field_form_set_state($form['#parents'], $field_name, $langcode, $form_state, $field_state);
       }
     }
     _field_invoke_default('form_errors', $entity_type, $entity, $form, $form_state);
@@ -819,7 +838,8 @@ function field_attach_form_validate($entity_type, $entity, $form, &$form_state) 
  *   'revision' keys should be present. The actual field values will be read
  *   from $form_state['values'].
  * @param $form
- *   The form structure to fill in.
+ *   The form structure where field elements are attached to. This might be a
+ *   full form structure, or a sub-element of a larger form.
  * @param $form_state
  *   An associative array containing the current state of the form.
  */

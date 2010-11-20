@@ -60,6 +60,14 @@ function field_test_menu() {
     'type' => MENU_NORMAL_ITEM,
   );
 
+  $items['test-entity/nested/%field_test_entity_test/%field_test_entity_test'] = array(
+    'title' => 'Nested entity form',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('field_test_entity_nested_form', 2, 3),
+    'access arguments' => array('administer field_test content'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+
   return $items;
 }
 
