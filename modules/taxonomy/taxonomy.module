@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.619 2010/11/20 09:31:08 webchick Exp $
+// $Id: taxonomy.module,v 1.620 2010/11/20 09:43:43 webchick Exp $
 
 /**
  * @file
@@ -1064,14 +1064,21 @@ class TaxonomyVocabularyController extends DrupalDefaultEntityController {
  * database access if loaded again during the same page request.
  *
  * @see entity_load()
+ * @see EntityFieldQuery
  *
  * @param $tids
- *  An array of taxonomy term IDs.
+ *   An array of taxonomy term IDs.
  * @param $conditions
- *  An array of conditions to add to the query.
+ *   (deprecated) An associative array of conditions on the {taxonomy_term}
+ *   table, where the keys are the database fields and the values are the
+ *   values those fields must have. Instead, it is preferable to use
+ *   EntityFieldQuery to retrieve a list of entity IDs loadable by
+ *   this function.
  *
  * @return
- *  An array of term objects, indexed by tid.
+ *   An array of term objects, indexed by tid.
+ *
+ * @todo Remove $conditions in Drupal 8.
  */
 function taxonomy_term_load_multiple($tids = array(), $conditions = array()) {
   return entity_load('taxonomy_term', $tids, $conditions);

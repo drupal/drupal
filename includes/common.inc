@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1259 2010/11/20 08:27:52 webchick Exp $
+// $Id: common.inc,v 1.1260 2010/11/20 09:43:43 webchick Exp $
 
 /**
  * @file
@@ -7271,18 +7271,24 @@ function entity_create_stub_entity($entity_type, $ids) {
  * @see hook_entity_info()
  * @see DrupalEntityControllerInterface
  * @see DrupalDefaultEntityController
+ * @see EntityFieldQuery
  *
  * @param $entity_type
  *   The entity type to load, e.g. node or user.
  * @param $ids
  *   An array of entity IDs, or FALSE to load all entities.
  * @param $conditions
- *   An array of conditions in the form 'field' => $value.
+ *   (deprecated) An associative array of conditions on the base table, where
+ *   the keys are the database fields and the values are the values those
+ *   fields must have. Instead, it is preferable to use EntityFieldQuery to
+ *   retrieve a list of entity IDs loadable by this function.
  * @param $reset
  *   Whether to reset the internal cache for the requested entity type.
  *
  * @return
  *   An array of entity objects indexed by their ids.
+ *
+ * @todo Remove $conditions in Drupal 8.
  */
 function entity_load($entity_type, $ids = FALSE, $conditions = array(), $reset = FALSE) {
   if ($reset) {

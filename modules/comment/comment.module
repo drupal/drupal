@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.918 2010/11/20 06:49:46 webchick Exp $
+// $Id: comment.module,v 1.919 2010/11/20 09:43:43 webchick Exp $
 
 /**
  * @file
@@ -1623,10 +1623,19 @@ function comment_delete_multiple($cids) {
  * @param $cids
  *   An array of comment IDs.
  * @param $conditions
- *   An array of conditions to match against the {comments} table. These
- *   should be supplied in the form array('field_name' => 'field_value').
+ *   (deprecated) An associative array of conditions on the {comments}
+ *   table, where the keys are the database fields and the values are the
+ *   values those fields must have. Instead, it is preferable to use
+ *   EntityFieldQuery to retrieve a list of entity IDs loadable by
+ *   this function.
+ *
  * @return
- *  An array of comment objects, indexed by comment ID.
+ *   An array of comment objects, indexed by comment ID.
+ *
+ * @see entity_load()
+ * @see EntityFieldQuery
+ *
+ * @todo Remove $conditions in Drupal 8.
  */
 function comment_load_multiple($cids = array(), $conditions = array()) {
   return entity_load('comment', $cids, $conditions);
