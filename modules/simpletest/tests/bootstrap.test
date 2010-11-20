@@ -426,3 +426,28 @@ class BootstrapResettableStaticTestCase extends DrupalUnitTestCase {
     $this->assertEqual($var, 'foo', t('Variable was reset after second invocation of global reset.'));
   }
 }
+
+/**
+ * Test miscellaneous functions in bootstrap.inc.
+ */
+class BootstrapMiscTestCase extends DrupalUnitTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Miscellaneous bootstrap unit tests',
+      'description' => 'Test miscellaneous functions in bootstrap.inc.',
+      'group' => 'Bootstrap',
+    );
+  }
+
+  /**
+   * Test miscellaneous functions in bootstrap.inc.
+   */
+  function testMisc() {
+    // Test drupal_array_merge_deep().
+    $link_options_1 = array('fragment' => 'x', 'attributes' => array('title' => 'X', 'class' => array('a', 'b')), 'language' => 'en');
+    $link_options_2 = array('fragment' => 'y', 'attributes' => array('title' => 'Y', 'class' => array('c', 'd')), 'html' => TRUE);
+    $expected = array('fragment' => 'y', 'attributes' => array('title' => 'Y', 'class' => array('a', 'b', 'c', 'd')), 'language' => 'en', 'html' => TRUE);
+    $this->assertIdentical(drupal_array_merge_deep($link_options_1, $link_options_2), $expected, t('drupal_array_merge_deep() returned a properly merged array.'));
+  }
+}

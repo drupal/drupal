@@ -1877,6 +1877,79 @@ function drupal_hash_base64($data) {
 }
 
 /**
+ * Merges multiple arrays, recursively, and returns the merged array.
+ *
+ * This function is similar to PHP's array_merge_recursive() function, but it
+ * handles non-array values differently. When merging values that are not both
+ * arrays, the latter value replaces the former rather than merging with it.
+ *
+ * Example:
+ * @code
+ * $link_options_1 = array('fragment' => 'x', 'attributes' => array('title' => t('X'), 'class' => array('a', 'b')));
+ * $link_options_2 = array('fragment' => 'y', 'attributes' => array('title' => t('Y'), 'class' => array('c', 'd')));
+ *
+ * // This results in array('fragment' => array('x', 'y'), 'attributes' => array('title' => array(t('X'), t('Y')), 'class' => array('a', 'b', 'c', 'd'))).
+ * $incorrect = array_merge_recursive($link_options_1, $link_options_2);
+ *
+ * // This results in array('fragment' => 'y', 'attributes' => array('title' => t('Y'), 'class' => array('a', 'b', 'c', 'd'))).
+ * $correct = drupal_array_merge_deep($link_options_1, $link_options_2);
+ * @endcode
+ *
+ * @param ...
+ *   Arrays to merge.
+ *
+ * @return
+ *   The merged array.
+ *
+ * @see drupal_array_merge_deep_array()
+ */
+function drupal_array_merge_deep() {
+  return drupal_array_merge_deep_array(func_get_args());
+}
+
+/**
+ * Merges multiple arrays, recursively, and returns the merged array.
+ *
+ * This function is equivalent to drupal_array_merge_deep(), except the
+ * input arrays are passed as a single array parameter rather than a variable
+ * parameter list.
+ *
+ * The following are equivalent:
+ * - drupal_array_merge_deep($a, $b);
+ * - drupal_array_merge_deep_array(array($a, $b));
+ *
+ * The following are also equivalent:
+ * - call_user_func_array('drupal_array_merge_deep', $arrays_to_merge);
+ * - drupal_array_merge_deep_array($arrays_to_merge);
+ *
+ * @see drupal_array_merge_deep()
+ */
+function drupal_array_merge_deep_array($arrays) {
+  $result = array();
+
+  foreach ($arrays as $array) {
+    foreach ($array as $key => $value) {
+      // Renumber integer keys as array_merge_recursive() does. Note that PHP
+      // automatically converts array keys that are integer strings (e.g., '1')
+      // to integers.
+      if (is_integer($key)) {
+        $result[] = $value;
+      }
+      // Recurse when both values are arrays.
+      elseif (isset($result[$key]) && is_array($result[$key]) && is_array($value)) {
+        $result[$key] = drupal_array_merge_deep_array(array($result[$key], $value));
+      }
+      // Otherwise, use the latter value, overriding any previous value.
+      else {
+        $result[$key] = $value;
+      }
+    }
+  }
+
+  return $result;
+}
+
+/**
  * Generates a default anonymous $user object.
  *
  * @return Object - the user object.
