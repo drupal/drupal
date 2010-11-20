@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1258 2010/11/20 06:49:46 webchick Exp $
+// $Id: common.inc,v 1.1259 2010/11/20 08:27:52 webchick Exp $
 
 /**
  * @file
@@ -738,7 +738,7 @@ function drupal_access_denied() {
  *     call may take. The default is 30 seconds. If a timeout occurs, the error
  *     code is set to the HTTP_REQUEST_TIMEOUT constant.
  *   - context: A context resource created with stream_context_create().
- * 
+ *
  * @return object
  *   An object that can have one or more of the following components:
  *   - request: A string containing the request body that was sent.
@@ -3482,12 +3482,9 @@ function drupal_load_stylesheet_content($contents, $optimize = FALSE) {
     );
     // Remove certain whitespace.
     // There are different conditions for removing leading and trailing
-    // whitespace. To be able to use a single backreference in the replacement
-    // string, the outer pattern uses the ?| modifier, which makes all contained
-    // subpatterns appear in \1.
+    // whitespace.
     // @see http://php.net/manual/en/regexp.reference.subpatterns.php
-    $contents = preg_replace('<
-      (?|
+    $contents = preg_replace_callback('<
       # Strip leading and trailing whitespace.
         \s*([@{};,])\s*
       # Strip only leading whitespace from:
@@ -3497,9 +3494,8 @@ function drupal_load_stylesheet_content($contents, $optimize = FALSE) {
       # - Opening parenthesis: Retain "@media (bar) and foo".
       # - Colon: Retain :pseudo-selectors.
       | ([\(:])\s+
-      )
     >xS',
-      '\1',
+      '_drupal_load_stylesheet_content',
       $contents
     );
     // End the file with a new line.
@@ -3511,6 +3507,16 @@ function drupal_load_stylesheet_content($contents, $optimize = FALSE) {
   // This happens recursively but omits external files.
   $contents = preg_replace_callback('/@import\s*(?:url\(\s*)?[\'"]?(?![a-z]+:)([^\'"\()]+)[\'"]?\s*\)?\s*;/', '_drupal_load_stylesheet', $contents);
   return $contents;
+}
+
+/**
+ * Helper for drupal_load_stylesheet_content().
+ */
+function _drupal_load_stylesheet_content($matches) {
+  // Discard the full match.
+  unset($matches[0]);
+  // Use the non-empty match.
+  return current(array_filter($matches));
 }
 
 /**
