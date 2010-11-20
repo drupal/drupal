@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.145 2010/11/19 20:35:31 dries Exp $
+// $Id: install.inc,v 1.146 2010/11/20 03:34:30 webchick Exp $
 
 /**
  * Indicates that a module has not been installed yet.
@@ -175,6 +175,9 @@ function drupal_set_installed_schema_version($module, $version) {
     ->fields(array('schema_version' => $version))
     ->condition('name', $module)
     ->execute();
+
+  // Reset the static cache of module schema versions.
+  drupal_get_installed_schema_version(NULL, TRUE);
 }
 
 /**
@@ -608,12 +611,53 @@ function drupal_install_system() {
 }
 
 /**
- * Calls the uninstall function and updates the system table for a given module.
+ * Uninstalls a given list of modules.
  *
  * @param $module_list
  *   The modules to uninstall.
+ * @param $uninstall_dependents
+ *   If TRUE, the function will check that all modules which depend on the
+ *   passed-in module list either are already uninstalled or contained in the
+ *   list, and it will ensure that the modules are uninstalled in the correct
+ *   order. This incurs a significant performance cost, so use FALSE if you
+ *   know $module_list is already complete and in the correct order.
+ *
+ * @return
+ *   FALSE if one or more dependent modules are missing from the list, TRUE
+ *   otherwise.
  */
-function drupal_uninstall_modules($module_list = array()) {
+function drupal_uninstall_modules($module_list = array(), $uninstall_dependents = TRUE) {
+  if ($uninstall_dependents) {
+    // Get all module data so we can find dependents and sort.
+    $module_data = system_rebuild_module_data();
+    // Create an associative array with weights as values.
+    $module_list = array_flip(array_values($module_list));
+
+    $profile = drupal_get_profile();
+    while (list($module) = each($module_list)) {
+      if (!isset($module_data[$module]) || drupal_get_installed_schema_version($module) == SCHEMA_UNINSTALLED) {
+        // This module doesn't exist or is already uninstalled, skip it.
+        unset($module_list[$module]);
+        continue;
+      }
+      $module_list[$module] = $module_data[$module]->sort;
+
+      // If the module has any dependents which are not already uninstalled and
+      // not included in the passed-in list, abort. It is not safe to uninstall
+      // them automatically because uninstalling a module is a destructive
+      // operation.
+      foreach (array_keys($module_data[$module]->required_by) as $dependent) {
+        if (!isset($module_list[$dependent]) && drupal_get_installed_schema_version($dependent) != SCHEMA_UNINSTALLED && $dependent != $profile) {
+          return FALSE;
+        }
+      }
+    }
+
+    // Sort the module list by pre-calculated weights.
+    asort($module_list);
+    $module_list = array_keys($module_list);
+  }
+
   foreach ($module_list as $module) {
     // First, retrieve all the module's menu paths from db.
     drupal_load('module', $module);
@@ -660,6 +704,8 @@ function drupal_uninstall_modules($module_list = array()) {
     // Call hook_module_uninstall to let other modules act
     module_invoke_all('modules_uninstalled', $module_list);
   }
+
+  return TRUE;
 }
 
 /**

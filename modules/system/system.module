@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.990 2010/11/19 20:35:31 dries Exp $
+// $Id: system.module,v 1.991 2010/11/20 03:34:30 webchick Exp $
 
 /**
  * @file
@@ -113,7 +113,7 @@ function system_help($path, $arg) {
       }
       return $output;
     case 'admin/modules/uninstall':
-      return '<p>' . t('The uninstall process removes all data related to a module. To uninstall a module, you must first disable it on the main <a href="@modules">Modules page</a>. Not all modules support this feature.', array('@modules' => url('admin/modules'))) . '</p>';
+      return '<p>' . t('The uninstall process removes all data related to a module. To uninstall a module, you must first disable it on the main <a href="@modules">Modules page</a>.', array('@modules' => url('admin/modules'))) . '</p>';
     case 'admin/structure/block/manage':
       if ($arg[4] == 'system' && $arg[5] == 'powered-by') {
         return '<p>' . t('The <em>Powered by Drupal</em> block is an optional link to the home page of the Drupal project. While there is absolutely no requirement that sites feature this link, it may be used to show support for Drupal.') . '</p>';

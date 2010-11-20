@@ -1,5 +1,5 @@
 <?php
-// $Id: module_test.module,v 1.8 2010/10/05 00:22:24 webchick Exp $
+// $Id: module_test.module,v 1.9 2010/11/20 03:34:30 webchick Exp $
 
 /**
  * Implements hook_permission().
@@ -55,5 +55,25 @@ function module_test_hook_info() {
  * Implements hook_modules_enabled().
  */
 function module_test_modules_enabled($modules) {
+  // Record the ordered list of modules that were passed in to this hook so we
+  // can check that the modules were enabled in the correct sequence.
   variable_set('test_module_enable_order', $modules);
+}
+
+/**
+ * Implements hook_modules_disabled().
+ */
+function module_test_modules_disabled($modules) {
+  // Record the ordered list of modules that were passed in to this hook so we
+  // can check that the modules were disabled in the correct sequence.
+  variable_set('test_module_disable_order', $modules);
+}
+
+/**
+ * Implements hook_modules_uninstalled().
+ */
+function module_test_modules_uninstalled($modules) {
+  // Record the ordered list of modules that were passed in to this hook so we
+  // can check that the modules were uninstalled in the correct sequence.
+  variable_set('test_module_uninstall_order', $modules);
 }
