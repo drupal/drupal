@@ -1,5 +1,5 @@
 <?php
-// $Id: node.test,v 1.100 2010/11/12 03:02:02 webchick Exp $
+// $Id: node.test,v 1.101 2010/11/20 04:33:56 webchick Exp $
 
 /**
  * Test the node_load_multiple() function.
@@ -1712,6 +1712,7 @@ class NodeQueryAlter extends DrupalWebTestCase {
     // permission is implemented and granted by the node_access_test module.
     $this->accessUser = $this->drupalCreateUser(array('access content', 'node test view'));
     $this->noAccessUser = $this->drupalCreateUser(array('access content'));
+    $this->noAccessUser2 = $this->drupalCreateUser(array('access content'));
   }
 
   /**
@@ -1840,8 +1841,12 @@ class NodeQueryAlter extends DrupalWebTestCase {
     }
 
     // Have node_test_node_grants return a node_access_all privilege,
-    // to grant the noAccessUser 'view' access.
-    variable_set('node_test_node_access_all', 1);
+    // to grant the noAccessUser 'view' access.  To verify that
+    // node_access_view_all_nodes is properly checking the specified
+    // $account instead of the global $user, we will log in as
+    // noAccessUser2.
+    $this->drupalLogin($this->noAccessUser2);
+    variable_set('node_test_node_access_all_uid', $this->noAccessUser->uid);
     drupal_static_reset('node_access_view_all_nodes');
     try {
       $query = db_select('node', 'mytab')
@@ -1856,7 +1861,7 @@ class NodeQueryAlter extends DrupalWebTestCase {
     catch (Exception $e) {
       $this->fail(t('Altered query is malformed'));
     }
-    variable_del('node_test_node_access_all');
+    variable_del('node_test_node_access_all_uid');
   }
 }
 

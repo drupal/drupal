@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1319 2010/11/14 21:04:45 webchick Exp $
+// $Id: node.module,v 1.1320 2010/11/20 04:33:56 webchick Exp $
 
 /**
  * @file
@@ -3019,16 +3019,18 @@ function node_access_grants($op, $account = NULL) {
 /**
  * Determines whether the user has a global viewing grant for all nodes.
  *
- * Checks to see whether any module grants 'view' for nid = 0. The node module
- * provides this record if no node access modules are enabled. Other modules
- * can replicate this behavior by providing their own conditional grant for
- * nid = 0. For example, hook_node_grants() can return the following array to
- * give the 'view' privilege to all nodes:
- * @code
- * if ($op == 'view') {
- *   $grants['example_realm'] = array(0);
- * }
- * @endcode
+ * Checks to see whether any module grants global 'view' access to a user
+ * account; global 'view' access is encoded in the {node_access} table as a
+ * grant with nid=0. If no node access modules are enabled, node.module defines
+ * such a global 'view' access grant.
+ *
+ * This function is called when a node listing query is tagged with
+ * 'node_access'; when this function returns TRUE, no node access joins are
+ * added to the query.
+ *
+ * @param $account
+ *   The user object for the user whose access is being checked. If omitted,
+ *   the current user is used.
  *
  * @return
  *   TRUE if 'view' access to all nodes is granted, FALSE otherwise.
@@ -3036,40 +3038,47 @@ function node_access_grants($op, $account = NULL) {
  * @see hook_node_grants()
  * @see _node_query_node_access_alter()
  */
-function node_access_view_all_nodes() {
-  $access = &drupal_static(__FUNCTION__);
-
-  if (!isset($access)) {
-    // If no modules implement the node access system, access is always TRUE.
-    if (!module_implements('node_grants')) {
-      $access = TRUE;
-    }
-    else {
-      $query = db_select('node_access');
-      $query->addExpression('COUNT(*)');
-      $query
-        ->condition('nid', 0)
-        ->condition('grant_view', 1, '>=');
-
-      $grants = db_or();
-      foreach (node_access_grants('view') as $realm => $gids) {
-        foreach ($gids as $gid) {
-          $grants->condition(db_and()
-            ->condition('gid', $gid)
-            ->condition('realm', $realm)
-          );
-        }
-      }
-      if (count($grants) > 0 ) {
-        $query->condition($grants);
-      }
-      $access = $query
-        ->execute()
-        ->fetchField();
-      }
+function node_access_view_all_nodes($account = NULL) {
+  global $user;
+  if (!$account) {
+    $account = $user;
   }
 
-  return $access;
+  // Statically cache results in an array keyed by $account->uid.
+  $access = &drupal_static(__FUNCTION__);
+  if (isset($access[$account->uid])) {
+    return $access[$account->uid];
+  }
+
+  // If no modules implement the node access system, access is always TRUE.
+  if (!module_implements('node_grants')) {
+    $access[$account->uid] = TRUE;
+  }
+  else {
+    $query = db_select('node_access');
+    $query->addExpression('COUNT(*)');
+    $query
+      ->condition('nid', 0)
+      ->condition('grant_view', 1, '>=');
+
+    $grants = db_or();
+    foreach (node_access_grants('view', $account) as $realm => $gids) {
+      foreach ($gids as $gid) {
+        $grants->condition(db_and()
+          ->condition('gid', $gid)
+          ->condition('realm', $realm)
+        );
+      }
+    }
+    if (count($grants) > 0 ) {
+      $query->condition($grants);
+    }
+    $access[$account->uid] = $query
+      ->execute()
+      ->fetchField();
+  }
+
+  return $access[$account->uid];
 }
 
 
@@ -3120,16 +3129,16 @@ function _node_query_node_access_alter($query, $base_table, $type) {
     $op = 'view';
   }
 
-  // If $account can bypass node access, or there are no node access
-  // modules, we don't need to alter the query.
+  // If $account can bypass node access, or there are no node access modules,
+  // or the operation is 'view' and the $acount has a global view grant (i.e.,
+  // a view grant for node ID 0), we don't need to alter the query.
   if (user_access('bypass node access', $account)) {
     return;
   }
   if (!count(module_implements('node_grants'))) {
     return;
   }
-  // If viewing nodes, make sure access rules should be enforced.
-  if ($op == 'view' && node_access_view_all_nodes()) {
+  if ($op == 'view' && node_access_view_all_nodes($account)) {
     return;
   }
 
