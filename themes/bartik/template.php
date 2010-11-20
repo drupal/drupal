@@ -108,3 +108,10 @@ function bartik_preprocess_block(&$variables) {
     $variables['title_attributes_array']['class'][] = 'element-invisible';
   }
 }
+
+/**
+ * Implements theme_menu_tree().
+ */
+function bartik_menu_tree($variables) {
+  return '<ul class="menu clearfix">' . $variables['tree'] . '</ul>';
+}
