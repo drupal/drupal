@@ -489,7 +489,7 @@ function template_process_overlay(&$variables) {
  */
 function overlay_preprocess_page(&$variables) {
   if (overlay_get_mode() == 'child') {
-    unset($variables['tabs'][0]);
+    unset($variables['tabs']['#primary']);
   }
 }
 

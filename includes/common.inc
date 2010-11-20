@@ -6362,7 +6362,7 @@ function drupal_common_theme() {
       'render element' => 'element',
     ),
     'menu_local_tasks' => array(
-      'variables' => array(),
+      'variables' => array('primary' => array(), 'secondary' => array()),
     ),
     // from form.inc
     'select' => array(

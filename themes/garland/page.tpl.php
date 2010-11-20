@@ -47,8 +47,8 @@
             <h1<?php print $tabs ? ' class="with-tabs"' : '' ?>><?php print $title ?></h1>
           <?php endif; ?>
           <?php print render($title_suffix); ?>
-          <?php if ($tabs): ?><h2 class="element-invisible"><?php print t('Primary tabs'); ?></h2><ul class="tabs primary"><?php print render($tabs) ?></ul></div><?php endif; ?>
-          <?php if ($tabs2): ?><h2 class="element-invisible"><?php print t('Secondary tabs'); ?></h2><ul class="tabs secondary"><?php print render($tabs2) ?></ul><?php endif; ?>
+          <?php if ($tabs): ?><?php print render($tabs); ?></div><?php endif; ?>
+          <?php print render($tabs2); ?>
           <?php print $messages; ?>
           <?php print render($page['help']); ?>
           <?php if ($action_links): ?><ul class="action-links"><?php print render($action_links); ?></ul><?php endif; ?>

@@ -59,7 +59,13 @@ function garland_process_html(&$vars) {
  * Override or insert variables into the page template.
  */
 function garland_preprocess_page(&$vars) {
-  $vars['tabs2'] = menu_secondary_local_tasks();
+  // Move secondary tabs into a separate variable.
+  $vars['tabs2'] = array(
+    '#theme' => 'menu_local_tasks',
+    '#secondary' => $vars['tabs']['#secondary'],
+  );
+  unset($vars['tabs']['#secondary']);
+
   if (isset($vars['main_menu'])) {
     $vars['primary_nav'] = theme('links__system_main_menu', array(
       'links' => $vars['main_menu'],
@@ -138,12 +144,4 @@ function garland_preprocess_region(&$vars) {
   if ($vars['region'] == 'header') {
     $vars['classes_array'][] = 'clearfix';
   }
-}
-
-/**
- * Returns the rendered local tasks. The default implementation renders
- * them as tabs. Overridden to split the secondary tasks.
- */
-function garland_menu_local_tasks() {
-  return menu_primary_local_tasks();
 }

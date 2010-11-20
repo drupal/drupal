@@ -27,8 +27,12 @@ function seven_preprocess_html(&$vars) {
  * Override or insert variables into the page template.
  */
 function seven_preprocess_page(&$vars) {
-  $vars['primary_local_tasks'] = menu_primary_local_tasks();
-  $vars['secondary_local_tasks'] = menu_secondary_local_tasks();
+  $vars['primary_local_tasks'] = $vars['tabs'];
+  unset($vars['primary_local_tasks']['#secondary']);
+  $vars['secondary_local_tasks'] = array(
+    '#theme' => 'menu_local_tasks',
+    '#secondary' => $vars['tabs']['#secondary'],
+  );
 }
 
 /**

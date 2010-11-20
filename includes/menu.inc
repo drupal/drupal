@@ -2132,22 +2132,35 @@ function menu_tab_root_path() {
 }
 
 /**
- * Returns renderable local tasks.
+ * Returns a renderable element for the primary and secondary tabs.
+ */
+function menu_local_tabs() {
+  return array(
+    '#theme' => 'menu_local_tasks',
+    '#primary' => menu_primary_local_tasks(),
+    '#secondary' => menu_secondary_local_tasks(),
+  );
+}
+
+/**
+ * Returns HTML for primary and secondary local tasks.
  *
  * @ingroup themeable
  */
-function theme_menu_local_tasks() {
-  $output = array();
+function theme_menu_local_tasks(&$variables) {
+  $output = '';
 
-  if ($primary = menu_primary_local_tasks()) {
-    $primary['#prefix'] = '<h2 class="element-invisible">' . t('Primary tabs') . '</h2><ul class="tabs primary">';
-    $primary['#suffix'] = '</ul>';
-    $output[] = $primary;
+  if (!empty($variables['primary'])) {
+    $variables['primary']['#prefix'] = '<h2 class="element-invisible">' . t('Primary tabs') . '</h2>';
+    $variables['primary']['#prefix'] .= '<ul class="tabs primary">';
+    $variables['primary']['#suffix'] = '</ul>';
+    $output .= drupal_render($variables['primary']);
   }
-  if ($secondary = menu_secondary_local_tasks()) {
-    $secondary['#prefix'] = '<h2 class="element-invisible">' . t('Secondary tabs') . '</h2><ul class="tabs secondary">';
-    $secondary['#suffix'] = '</ul>';
-    $output[] = $secondary;
+  if (!empty($variables['secondary'])) {
+    $variables['secondary']['#prefix'] = '<h2 class="element-invisible">' . t('Secondary tabs') . '</h2>';
+    $variables['secondary']['#prefix'] .= '<ul class="tabs secondary">';
+    $variables['secondary']['#suffix'] = '</ul>';
+    $output .= drupal_render($variables['secondary']);
   }
 
   return $output;
