@@ -1,5 +1,5 @@
 <?php
-// $Id: template.php,v 1.7 2010/10/05 19:59:10 dries Exp $
+// $Id: template.php,v 1.8 2010/11/20 10:02:55 webchick Exp $
 
 /**
  * Add body classes if certain regions have content.
@@ -107,4 +107,11 @@ function bartik_preprocess_block(&$variables) {
   if ($variables['block']->region == 'header') {
     $variables['title_attributes_array']['class'][] = 'element-invisible';
   }
+}
+
+/**
+ * Implements theme_menu_tree().
+ */
+function bartik_menu_tree($variables) {
+  return '<ul class="menu clearfix">' . $variables['tree'] . '</ul>';
 }

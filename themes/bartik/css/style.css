@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.35 2010/11/16 18:54:23 dries Exp $ */
+/* $Id: style.css,v 1.36 2010/11/20 10:02:55 webchick Exp $ */
 
 /* ---------- Overall Specifications ---------- */
 
@@ -755,10 +755,12 @@ ul.links {
   padding: 0;
   border: none;
 }
-#footer .block,
-#footer .block .content {
-  overflow: hidden;
+#footer .block {
   margin: .5em 0;
+}
+#footer .block .content {
+  padding: .5em 0;
+  margin-top: 0;
 }
 #footer .block h2 {
   margin: 0;

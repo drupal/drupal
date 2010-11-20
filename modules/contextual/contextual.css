@@ -1,4 +1,4 @@
-/* $Id: contextual.css,v 1.7 2010/10/23 15:37:38 webchick Exp $ */
+/* $Id: contextual.css,v 1.8 2010/11/20 10:02:55 webchick Exp $ */
 
 /**
  * Contextual links regions.
@@ -9,7 +9,6 @@
 }
 .contextual-links-region-active {
   outline: #999 dashed 1px;
-  overflow: visible !important;
 }
 
 /**
