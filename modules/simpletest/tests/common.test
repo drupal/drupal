@@ -1,5 +1,5 @@
 <?php
-// $Id: common.test,v 1.132 2010/11/15 00:37:08 webchick Exp $
+// $Id: common.test,v 1.133 2010/11/20 05:02:46 webchick Exp $
 
 /**
  * @file
@@ -1195,11 +1195,34 @@ class JavaScriptTestCase extends DrupalWebTestCase {
    * Test drupal_get_js() for JavaScript settings.
    */
   function testHeaderSetting() {
-    drupal_add_js(array('testSetting' => 'testValue'), 'setting');
+    // Only the second of these two entries should appear in Drupal.settings.
+    drupal_add_js(array('commonTest' => 'commonTestShouldNotAppear'), 'setting');
+    drupal_add_js(array('commonTest' => 'commonTestShouldAppear'), 'setting');
+    // All three of these entries should appear in Drupal.settings.
+    drupal_add_js(array('commonTestArray' => array('commonTestValue0')), 'setting');
+    drupal_add_js(array('commonTestArray' => array('commonTestValue1')), 'setting');
+    drupal_add_js(array('commonTestArray' => array('commonTestValue2')), 'setting');
+    // Only the second of these two entries should appear in Drupal.settings.
+    drupal_add_js(array('commonTestArray' => array('key' => 'commonTestOldValue')), 'setting');
+    drupal_add_js(array('commonTestArray' => array('key' => 'commonTestNewValue')), 'setting');
+
     $javascript = drupal_get_js('header');
     $this->assertTrue(strpos($javascript, 'basePath') > 0, t('Rendered JavaScript header returns basePath setting.'));
-    $this->assertTrue(strpos($javascript, 'testSetting') > 0, t('Rendered JavaScript header returns custom setting.'));
     $this->assertTrue(strpos($javascript, 'misc/jquery.js') > 0, t('Rendered JavaScript header includes jQuery.'));
+
+    // Test whether drupal_add_js can be used to override a previous setting.
+    $this->assertTrue(strpos($javascript, 'commonTestShouldAppear') > 0, t('Rendered JavaScript header returns custom setting.'));
+    $this->assertTrue(strpos($javascript, 'commonTestShouldNotAppear') === FALSE, t('drupal_add_js() correctly overrides a custom setting.'));
+
+    // Test whether drupal_add_js can be used to add numerically indexed values
+    // to an array.
+    $array_values_appear = strpos($javascript, 'commonTestValue0') > 0 && strpos($javascript, 'commonTestValue1') > 0 && strpos($javascript, 'commonTestValue2') > 0;
+    $this->assertTrue($array_values_appear, t('drupal_add_js() correctly adds settings to the end of an indexed array.'));
+
+    // Test whether drupal_add_js can be used to override the entry for an
+    // existing key in an associative array.
+    $associative_array_override = strpos($javascript, 'commonTestNewValue') > 0 && strpos($javascript, 'commonTestOldValue') === FALSE;
+    $this->assertTrue($associative_array_override, t('drupal_add_js() correctly overrides settings within an associative array.'));
   }
 
   /**

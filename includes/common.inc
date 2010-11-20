@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1256 2010/11/20 04:03:51 webchick Exp $
+// $Id: common.inc,v 1.1257 2010/11/20 05:02:46 webchick Exp $
 
 /**
  * @file
@@ -3751,6 +3751,7 @@ function drupal_region_class($region) {
  *     array('type' => 'inline', 'scope' => 'footer', 'weight' => 5)
  *   );
  *   drupal_add_js('http://example.com/example.js', 'external');
+ *   drupal_add_js(array('myModule', array('key' => 'value')), 'setting');
  * @endcode
  *
  * Calling drupal_static_reset('drupal_add_js') will clear all JavaScript added
@@ -3783,9 +3784,11 @@ function drupal_region_class($region) {
  *     hosted on the local server. These files will not be aggregated if
  *     JavaScript aggregation is enabled.
  *   - 'setting': An associative array with configuration options. The array is
- *     directly placed in Drupal.settings. All modules should wrap their actual
- *     configuration settings in another variable to prevent conflicts in the
- *     Drupal.settings namespace.
+ *     merged directly into Drupal.settings. All modules should wrap their
+ *     actual configuration settings in another variable to prevent conflicts in
+ *     the Drupal.settings namespace. Items added with a string key will replace
+ *     existing settings with that key; items with numeric array keys will be
+ *     added to the existing settings array.
  * @param $options
  *   (optional) A string defining the type of JavaScript that is being added in
  *   the $data parameter ('file'/'setting'/'inline'/'external'), or an
@@ -4070,7 +4073,7 @@ function drupal_get_js($scope = 'header', $javascript = NULL, $skip_alter = FALS
       case 'setting':
         $js_element = $element;
         $js_element['#value_prefix'] = $embed_prefix;
-        $js_element['#value'] = 'jQuery.extend(Drupal.settings, ' . drupal_json_encode(call_user_func_array('array_merge_recursive', $item['data'])) . ");";
+        $js_element['#value'] = 'jQuery.extend(Drupal.settings, ' . drupal_json_encode(drupal_array_merge_deep_array($item['data'])) . ");";
         $js_element['#value_suffix'] = $embed_suffix;
         $output .= theme('html_tag', array('element' => $js_element));
         break;
