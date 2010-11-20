@@ -1,5 +1,5 @@
 <?php
-// $Id: field.form.inc,v 1.53 2010/10/31 12:11:59 dries Exp $
+// $Id: field.form.inc,v 1.54 2010/11/20 19:57:01 webchick Exp $
 
 /**
  * @file
@@ -15,6 +15,8 @@ function field_default_form($entity_type, $entity, $field, $instance, $langcode,
   if ($entity) {
     list($id, , ) = entity_extract_ids($entity_type, $entity);
   }
+
+  $parents = $form['#parents'];
 
   $addition = array();
   $field_name = $field['field_name'];
@@ -37,6 +39,18 @@ function field_default_form($entity_type, $entity, $field, $instance, $langcode,
   // Collect widget elements.
   $elements = array();
   if (field_access('edit', $field, $entity_type, $entity)) {
+    // Store field information in $form_state.
+    if (!field_form_get_state($parents, $field_name, $langcode, $form_state)) {
+      $field_state = array(
+        'field' => $field,
+        'instance' => $instance,
+        'items_count' => count($items),
+        'array_parents' => array(),
+        'errors' => array(),
+      );
+      field_form_set_state($parents, $field_name, $langcode, $form_state, $field_state);
+    }
+
     // If field module handles multiple values for this form element, and we
     // are displaying an individual element, process the multiple value form.
     if (!isset($get_delta) && field_behaviors_widget('multiple values', $instance) == FIELD_BEHAVIOR_DEFAULT) {
@@ -54,6 +68,7 @@ function field_default_form($entity_type, $entity, $field, $instance, $langcode,
           '#bundle' => $instance['bundle'],
           '#field_name' => $field_name,
           '#language' => $langcode,
+          '#field_parents' => $parents,
           '#columns' => array_keys($field['columns']),
           '#title' => check_plain(t($instance['label'])),
           '#description' => field_filter_xss($instance['description']),
@@ -79,16 +94,6 @@ function field_default_form($entity_type, $entity, $field, $instance, $langcode,
   }
 
   if ($elements) {
-    // Store field information in $form_state.
-    $form_state['field'][$field_name][$langcode] = array(
-      'field' => $field,
-      'instance' => $instance,
-      // This entry will be populated at form build time.
-      'array_parents' => array(),
-      // This entry will be populated at form validation time.
-      'errors' => array(),
-    );
-
     // Also aid in theming of field widgets by rendering a classified
     // container.
     $addition[$field_name] = array(
@@ -110,6 +115,7 @@ function field_default_form($entity_type, $entity, $field, $instance, $langcode,
   $elements['#after_build'][] = 'field_form_element_after_build';
   $elements['#field_name'] = $field_name;
   $elements['#language'] = $langcode;
+  $elements['#field_parents'] = $parents;
 
   $addition[$field_name] += array(
     '#tree' => TRUE,
@@ -132,20 +138,15 @@ function field_default_form($entity_type, $entity, $field, $instance, $langcode,
  */
 function field_multiple_value_form($field, $instance, $langcode, $items, &$form, &$form_state) {
   $field_name = $field['field_name'];
+  $parents = $form['#parents'];
 
   // Determine the number of widgets to display.
   switch ($field['cardinality']) {
     case FIELD_CARDINALITY_UNLIMITED:
-      $filled_items = _field_filter_items($field, $items);
-      $current_item_count = isset($form_state['field_item_count'][$field_name])
-                            ? $form_state['field_item_count'][$field_name]
-                            : count($items);
-      // We always want at least one empty icon for the user to fill in.
-      $max = ($current_item_count > count($filled_items))
-              ? $current_item_count - 1
-              : $current_item_count;
-
+      $field_state = field_form_get_state($parents, $field_name, $langcode, $form_state);
+      $max = $field_state['items_count'];
       break;
+
     default:
       $max = $field['cardinality'] - 1;
       break;
@@ -153,7 +154,10 @@ function field_multiple_value_form($field, $instance, $langcode, $items, &$form,
 
   $title = check_plain(t($instance['label']));
   $description = field_filter_xss(t($instance['description']));
-  $wrapper_id = drupal_html_id($field_name . '-add-more-wrapper');
+
+  $id_prefix = implode('-', array_merge($parents, array($field_name)));
+  $wrapper_id = drupal_html_id($id_prefix . '-add-more-wrapper');
+
   $field_elements = array();
 
   $function = $instance['widget']['module'] . '_field_widget_form';
@@ -165,6 +169,7 @@ function field_multiple_value_form($field, $instance, $langcode, $items, &$form,
         '#bundle' => $instance['bundle'],
         '#field_name' => $field_name,
         '#language' => $langcode,
+        '#field_parents' => $parents,
         '#columns' => array_keys($field['columns']),
         // For multiple fields, title and description are handled by the wrapping table.
         '#title' => $multiple ? '' : $title,
@@ -209,20 +214,16 @@ function field_multiple_value_form($field, $instance, $langcode, $items, &$form,
       if ($field['cardinality'] == FIELD_CARDINALITY_UNLIMITED && empty($form_state['programmed'])) {
         $field_elements['add_more'] = array(
           '#type' => 'submit',
-          '#name' => $field_name . '_add_more',
+          '#name' => strtr($id_prefix, '-', '_') . '_add_more',
           '#value' => t('Add another item'),
           '#attributes' => array('class' => array('field-add-more-submit')),
-          '#limit_validation_errors' => array(array($field_name, $langcode)),
+          '#limit_validation_errors' => array(array_merge($parents, array($field_name, $langcode))),
           '#submit' => array('field_add_more_submit'),
           '#ajax' => array(
             'callback' => 'field_add_more_js',
             'wrapper' => $wrapper_id,
             'effect' => 'fade',
           ),
-          // The field_add_more_submit() and field_add_more_js() handlers will
-          // find the relevant field using those entries.
-          '#field_name' => $field_name,
-          '#language' => $langcode,
         );
       }
     }
@@ -308,18 +309,22 @@ function theme_field_multiple_value_form($variables) {
 }
 
 /**
- * Stores information about the built form structure in the form storage.
+ * #after_build callback for field elements in a form.
  *
- * The 'array_parents' array is used to assign validation errors to actual form
- * elements, and to identify the form element to return in the AJAX 'add more'
- * button handler.
+ * This stores the final location of the field within the form structure so
+ * that field_default_form_errors() can assign validation errors to the right
+ * form element.
+ *
  * @see field_default_form_errors()
- * @see field_add_more_js()
  */
 function field_form_element_after_build($element, &$form_state) {
+  $parents = $element['#field_parents'];
   $field_name = $element['#field_name'];
   $langcode = $element['#language'];
-  $form_state['field'][$field_name][$langcode]['array_parents'] = $element['#array_parents'];
+
+  $field_state = field_form_get_state($parents, $field_name, $langcode, $form_state);
+  $field_state['array_parents'] = $element['#array_parents'];
+  field_form_set_state($parents, $field_name, $langcode, $form_state, $field_state);
 
   return $element;
 }
@@ -328,21 +333,17 @@ function field_form_element_after_build($element, &$form_state) {
  * Transfer field-level validation errors to widgets.
  */
 function field_default_form_errors($entity_type, $entity, $field, $instance, $langcode, $items, $form, &$form_state) {
-  $field_name = $field['field_name'];
-  $field_info = $form_state['field'][$field_name][$langcode];
+  $field_state = field_form_get_state($form['#parents'], $field['field_name'], $langcode, $form_state);
 
-  if (!empty($field_info['errors'])) {
+  if (!empty($field_state['errors'])) {
     $function = $instance['widget']['module'] . '_field_widget_error';
     $function_exists = function_exists($function);
 
-    // Walk the form down to where the widget lives.
-    $element = $form;
-    foreach ($field_info['array_parents'] as $key) {
-      $element = $element[$key];
-    }
+    // Locate the correct element in the the form.
+    $element = drupal_array_get_nested_value($form_state['complete form'], $field_state['array_parents']);
 
     $multiple_widget = field_behaviors_widget('multiple values', $instance) != FIELD_BEHAVIOR_DEFAULT;
-    foreach ($field_info['errors'] as $delta => $delta_errors) {
+    foreach ($field_state['errors'] as $delta => $delta_errors) {
       // For multiple single-value widgets, pass errors by delta.
       // For a multiple-value widget, all errors are passed to the main widget.
       $error_element = $multiple_widget ? $element : $element[$delta];
@@ -353,10 +354,13 @@ function field_default_form_errors($entity_type, $entity, $field, $instance, $la
         else {
           // Make sure that errors are reported (even incorrectly flagged) if
           // the widget module fails to implement hook_field_widget_error().
-          form_error($error_element, $error['error'], $form, $form_state);
+          form_error($error_element, $error['error']);
         }
       }
     }
+    // Reinitialize the errors list for the next submit.
+    $field_state['errors'] = array();
+    field_form_set_state($form['#parents'], $field['field_name'], $langcode, $form_state, $field_state);
   }
 }
 
@@ -370,11 +374,19 @@ function field_default_form_errors($entity_type, $entity, $field, $instance, $la
  * to return just the changed part of the form.
  */
 function field_add_more_submit($form, &$form_state) {
-  $field_name = $form_state['clicked_button']['#field_name'];
-  $langcode = $form_state['clicked_button']['#language'];
-  if ($form_state['values'][$field_name . '_add_more']) {
-    $form_state['field_item_count'][$field_name] = count($form_state['values'][$field_name][$langcode]);
-  }
+  $button = $form_state['clicked_button'];
+
+  // Go one level up in the form, to the widgets container.
+  $element = drupal_array_get_nested_value($form, array_slice($button['#array_parents'], 0, -1));
+  $field_name = $element['#field_name'];
+  $langcode = $element['#language'];
+  $parents = $element['#field_parents'];
+
+  // Increment the items count.
+  $field_state = field_form_get_state($parents, $field_name, $langcode, $form_state);
+  $field_state['items_count']++;
+  field_form_set_state($parents, $field_name, $langcode, $form_state, $field_state);
+
   $form_state['rebuild'] = TRUE;
 }
 
@@ -387,29 +399,102 @@ function field_add_more_submit($form, &$form_state) {
  * @see field_add_more_submit()
  */
 function field_add_more_js($form, $form_state) {
-  // Retrieve field information.
-  $field_name = $form_state['clicked_button']['#field_name'];
-  $langcode = $form_state['clicked_button']['#language'];
-  $field_info = $form_state['field'][$field_name][$langcode];
-  $field = $field_info['field'];
+  $button = $form_state['clicked_button'];
 
+  // Go one level up in the form, to the widgets container.
+  $element = drupal_array_get_nested_value($form, array_slice($button['#array_parents'], 0, -1));
+  $field_name = $element['#field_name'];
+  $langcode = $element['#language'];
+  $parents = $element['#field_parents'];
+
+  $field_state = field_form_get_state($parents, $field_name, $langcode, $form_state);
+
+  $field = $field_state['field'];
   if ($field['cardinality'] != FIELD_CARDINALITY_UNLIMITED) {
     return;
   }
 
-  // Navigate to the right element in the the form.
-  $element = $form;
-
-  foreach ($field_info['array_parents'] as $key) {
-    $element = $element[$key];
-  }
-
-  // Add a DIV around the new field to receive the AJAX effect.
+  // Add a DIV around the delta receiving the AJAX effect.
   $delta = $element['#max_delta'];
   $element[$delta]['#prefix'] = '<div class="ajax-new-content">' . (isset($element[$delta]['#prefix']) ? $element[$delta]['#prefix'] : '');
   $element[$delta]['#suffix'] = (isset($element[$delta]['#suffix']) ? $element[$delta]['#suffix'] : '') . '</div>';
 
   return $element;
+}
+
+/**
+ * Retrieves processing information about a field from $form_state.
+ *
+ * @param $parents
+ *   The array of #parents where the field lives in the form.
+ * @param $field_name
+ *   The field name.
+ * @param $langcode
+ *   The language in which the field values are entered.
+ * @param $form_state
+ *   The form state.
+ *
+ * @return
+ *   An array with the following key/data pairs:
+ *   - field: the field definition array,
+ *   - instance: the field instance definition array,
+ *   - items_count: the number of widgets to display for the field,
+ *   - array_parents: the location of the field's widgets within the $form
+ *     structure. This entry is populated at '#after_build' time.
+ *   - errors: the array of field validation errors reported on the field. This
+ *     entry is populated at field_attach_form_validate() time.
+ *
+ * @see field_form_set_state()
+ */
+function field_form_get_state($parents, $field_name, $langcode, &$form_state) {
+  $form_state_parents = _field_form_state_parents($parents, $field_name, $langcode);
+  return drupal_array_get_nested_value($form_state, $form_state_parents);
+}
+
+/**
+ * Stores processing information about a field in $form_state.
+ *
+ * @param $parents
+ *   The array of #parents where the field lives in the form.
+ * @param $field_name
+ *   The field name.
+ * @param $langcode
+ *   The language in which the field values are entered.
+ * @param $form_state
+ *   The form state.
+ * @param $field_state
+ *   The array of data to store. See field_form_get_state() for the structure
+ *   and content of the array.
+ *
+ * @see field_form_get_state()
+ */
+function field_form_set_state($parents, $field_name, $langcode, &$form_state, $field_state) {
+  $form_state_parents = _field_form_state_parents($parents, $field_name, $langcode);
+  drupal_array_set_nested_value($form_state, $form_state_parents, $field_state);
+}
+
+/**
+ * Returns the location of processing information within $form_state.
+ */
+function _field_form_state_parents($parents, $field_name, $langcode) {
+  // To ensure backwards compatibility on regular entity forms for widgets that
+  // still access $form_state['field'][$field_name] directly,
+  // - top-level fields (empty $parents) are placed directly under
+  //   $form_state['fields'][$field_name].
+  // - Other fields are placed under
+  //   $form_state['field']['#parents'][...$parents...]['#fields'][$field_name]
+  //   to avoid clashes between field names and $parents parts.
+  // @todo Remove backwards compatibility in Drupal 8, and use a unique
+  // $form_state['field'][...$parents...]['#fields'][$field_name] structure.
+  if (!empty($parents)) {
+    $form_state_parents = array_merge(array('#parents'), $parents, array('#fields'));
+  }
+  else {
+    $form_state_parents = array();
+  }
+  $form_state_parents = array_merge(array('field'), $form_state_parents, array($field_name, $langcode));
+
+  return $form_state_parents;
 }
 
 /**
@@ -421,23 +506,24 @@ function field_add_more_js($form, $form_state) {
  * field_info_instance() when they need to access field or instance properties.
  * See hook_field_widget_form() for more details.
  *
- * @see field_widget_instance()
- * @see hook_field_widget_form()
- *
  * @param $element
  *   The structured array for the widget.
  * @param $form_state
  *   The form state.
+ *
  * @return
  *   The $field definition array for the current widget.
+ *
+ * @see field_widget_instance()
+ * @see hook_field_widget_form()
  */
 function field_widget_field($element, $form_state) {
-  $info = $form_state['field'][$element['#field_name']][$element['#language']];
-  return $info['field'];
+  $field_state = field_form_get_state($element['#field_parents'], $element['#field_name'], $element['#language'], $form_state);
+  return $field_state['field'];
 }
 
 /**
- * Provides the instance definition array for a widget's helper callbacks.
+ * Retrieves the instance definition array for a widget's helper callbacks.
  *
  * Widgets helper element callbacks (such as #process, #element_validate,
  * #value_callback, ...) should use field_widget_field() and
@@ -445,17 +531,18 @@ function field_widget_field($element, $form_state) {
  * field_info_instance() when they need to access field or instance properties.
  * See hook_field_widget_form() for more details.
  *
- * @see field_widget_field()
- * @see hook_field_widget_form()
- *
  * @param $element
  *   The structured array for the widget.
  * @param $form_state
  *   The form state.
+ *
  * @return
  *   The $instance definition array for the current widget.
+ *
+ * @see field_widget_field()
+ * @see hook_field_widget_form()
  */
 function field_widget_instance($element, $form_state) {
-  $info = $form_state['field'][$element['#field_name']][$element['#language']];
-  return $info['instance'];
+  $field_state = field_form_get_state($element['#field_parents'], $element['#field_name'], $element['#language'], $form_state);
+  return $field_state['instance'];
 }

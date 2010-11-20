@@ -1,5 +1,5 @@
 <?php
-// $Id: field_test.module,v 1.12 2010/09/26 23:31:35 dries Exp $
+// $Id: field_test.module,v 1.13 2010/11/20 19:57:01 webchick Exp $
 
 /**
  * @file
@@ -56,6 +56,14 @@ function field_test_menu() {
     'title' => 'Edit test entity',
     'page callback' => 'field_test_entity_edit',
     'page arguments' => array(2),
+    'access arguments' => array('administer field_test content'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  $items['test-entity/nested/%field_test_entity_test/%field_test_entity_test'] = array(
+    'title' => 'Nested entity form',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('field_test_entity_nested_form', 2, 3),
     'access arguments' => array('administer field_test content'),
     'type' => MENU_NORMAL_ITEM,
   );
