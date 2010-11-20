@@ -37,6 +37,8 @@ Drupal.behaviors.AJAX = {
     // Bind AJAX behaviors to all items showing the class.
     $('.use-ajax:not(.ajax-processed)').addClass('ajax-processed').each(function () {
       var element_settings = {};
+      // Clicked links look better with the throbber than the progress bar.
+      element_settings.progress = { 'type': 'throbber' };
 
       // For anchor tags, these will go to the target of the anchor rather
       // than the usual location.
@@ -146,6 +148,10 @@ Drupal.ajax = function (base, element, element_settings) {
       ajax.ajaxing = true;
       return ajax.beforeSubmit(form_values, element_settings, options);
     },
+    beforeSend: function (xmlhttprequest) {
+      ajax.ajaxing = true;
+      return ajax.beforeSend(xmlhttprequest, ajax.options);
+    },
     success: function (response, status) {
       // Sanity check for browser support (object expected).
       // When using iFrame uploads, responses must be returned as a string.
@@ -213,7 +219,7 @@ Drupal.ajax = function (base, element, element_settings) {
 /**
  * Handler for the form serialization.
  *
- * Runs before the beforeSubmit() handler (see below), and unlike that one, runs
+ * Runs before the beforeSend() handler (see below), and unlike that one, runs
  * before field data is collected.
  */
 Drupal.ajax.prototype.beforeSerialize = function (element, options) {
@@ -250,9 +256,17 @@ Drupal.ajax.prototype.beforeSerialize = function (element, options) {
 };
 
 /**
- * Handler for the form redirection submission.
+ * Modify form values prior to form submission.
  */
 Drupal.ajax.prototype.beforeSubmit = function (form_values, element, options) {
+  // This function is left empty to make it simple to override for modules
+  // that wish to add functionality here.
+}
+
+/**
+ * Prepare the AJAX request before it is sent.
+ */
+Drupal.ajax.prototype.beforeSend = function (xmlhttprequest, options) {
   // Disable the element that received the change.
   $(this.element).addClass('progress-disabled').attr('disabled', true);
 
