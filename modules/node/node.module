@@ -875,16 +875,23 @@ function node_invoke($node, $hook, $a2 = NULL, $a3 = NULL, $a4 = NULL) {
  * database access if loaded again during the same page request.
  *
  * @see entity_load()
+ * @see EntityFieldQuery
  *
  * @param $nids
  *   An array of node IDs.
  * @param $conditions
- *   An array of conditions on the {node} table in the form 'field' => $value.
+ *   (deprecated) An associative array of conditions on the {node}
+ *   table, where the keys are the database fields and the values are the
+ *   values those fields must have. Instead, it is preferable to use
+ *   EntityFieldQuery to retrieve a list of entity IDs loadable by
+ *   this function.
  * @param $reset
  *   Whether to reset the internal node_load cache.
  *
  * @return
  *   An array of node objects indexed by nid.
+ *
+ * @todo Remove $conditions in Drupal 8.
  */
 function node_load_multiple($nids = array(), $conditions = array(), $reset = FALSE) {
   return entity_load('node', $nids, $conditions, $reset);

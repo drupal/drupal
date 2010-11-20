@@ -235,11 +235,15 @@ function user_external_load($authname) {
  * @param $uids
  *   An array of user IDs.
  * @param $conditions
- *   An array of conditions to match against the {users} table. These
- *   should be supplied in the form array('field_name' => 'field_value').
+ *   (deprecated) An associative array of conditions on the {users}
+ *   table, where the keys are the database fields and the values are the
+ *   values those fields must have. Instead, it is preferable to use
+ *   EntityFieldQuery to retrieve a list of entity IDs loadable by
+ *   this function.
  * @param $reset
  *   A boolean indicating that the internal cache should be reset. Use this if
  *   loading a user object which has been altered during the page request.
+ *
  * @return
  *   An array of user objects, indexed by uid.
  *
@@ -247,6 +251,9 @@ function user_external_load($authname) {
  * @see user_load()
  * @see user_load_by_mail()
  * @see user_load_by_name()
+ * @see EntityFieldQuery
+ *
+ * @todo Remove $conditions in Drupal 8.
  */
 function user_load_multiple($uids = array(), $conditions = array(), $reset = FALSE) {
   return entity_load('user', $uids, $conditions, $reset);
