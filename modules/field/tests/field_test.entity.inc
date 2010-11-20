@@ -355,7 +355,6 @@ function field_test_entity_form($form, &$form_state, $entity, $add = FALSE) {
   }
 
   // Add field widgets.
-  $form['#builder_function'] = 'field_test_entity_form_submit_builder';
   field_attach_form('test_entity', $entity, $form, $form_state);
 
   if (!$add) {
@@ -387,7 +386,7 @@ function field_test_entity_form_validate($form, &$form_state) {
  * Submit handler for field_test_entity_form().
  */
 function field_test_entity_form_submit($form, &$form_state) {
-  $entity = $form['#builder_function']($form, $form_state);
+  $entity = field_test_entity_form_submit_build_test_entity($form, $form_state);
   $insert = empty($entity->ftid);
   field_test_entity_save($entity);
 
@@ -407,7 +406,7 @@ function field_test_entity_form_submit($form, &$form_state) {
 /**
  * Updates the form state's entity by processing this submission's values.
  */
-function field_test_entity_form_submit_builder($form, &$form_state) {
+function field_test_entity_form_submit_build_test_entity($form, &$form_state) {
   $entity = $form_state['test_entity'];
   entity_form_submit_build_entity('test_entity', $entity, $form, $form_state);
   return $entity;

@@ -642,7 +642,6 @@ function taxonomy_form_term($form, &$form_state, $edit = array(), $vocabulary = 
   $form['#term'] = (array) $term;
   $form['#term']['parent'] = $parent;
   $form['#vocabulary'] = $vocabulary;
-  $form['#builder_function'] = 'taxonomy_form_term_submit_builder';
 
   // Check for confirmation forms.
   if (isset($form_state['confirm_delete'])) {
@@ -792,7 +791,7 @@ function taxonomy_form_term_submit($form, &$form_state) {
     return;
   }
 
-  $term = $form['#builder_function']($form, $form_state);
+  $term = taxonomy_form_term_submit_build_taxonomy_term($form, $form_state);
 
   $status = taxonomy_term_save($term);
   switch ($status) {
@@ -835,7 +834,7 @@ function taxonomy_form_term_submit($form, &$form_state) {
 /**
  * Updates the form state's term entity by processing this submission's values.
  */
-function taxonomy_form_term_submit_builder($form, &$form_state) {
+function taxonomy_form_term_submit_build_taxonomy_term($form, &$form_state) {
   $term = $form_state['term'];
   entity_form_submit_build_entity('taxonomy_term', $term, $form, $form_state);
 
