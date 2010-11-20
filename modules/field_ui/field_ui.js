@@ -114,12 +114,14 @@ Drupal.fieldUIOverview = {
     $('tr.draggable', table).each(function () {
       // Extract server-side data for the row.
       var row = this;
-      var data = rowsData[row.id];
-      data.tableDrag = tableDrag;
+      if (row.id in rowsData) {
+        var data = rowsData[row.id];
+        data.tableDrag = tableDrag;
 
-      // Create the row handler, make it accessible from the DOM row element.
-      var rowHandler = eval('new rowHandlers.' + data.rowHandler + '(row, data);');
-      $(row).data('fieldUIRowHandler', rowHandler);
+        // Create the row handler, make it accessible from the DOM row element.
+        var rowHandler = eval('new rowHandlers.' + data.rowHandler + '(row, data);');
+        $(row).data('fieldUIRowHandler', rowHandler);
+      }
     });
   },
 
@@ -156,17 +158,18 @@ Drupal.fieldUIOverview = {
     var dragObject = this;
     var row = dragObject.rowObject.element;
     var rowHandler = $(row).data('fieldUIRowHandler');
+    if (rowHandler !== undefined) {
+      var regionRow = $(row).prevAll('tr.region-message').get(0);
+      var region = regionRow.className.replace(/([^ ]+[ ]+)*region-([^ ]+)-message([ ]+[^ ]+)*/, '$2');
 
-    var regionRow = $(row).prevAll('tr.region-message').get(0);
-    var region = regionRow.className.replace(/([^ ]+[ ]+)*region-([^ ]+)-message([ ]+[^ ]+)*/, '$2');
-
-    if (region != rowHandler.region) {
-      // Let the row handler deal with the region change.
-      refreshRows = rowHandler.regionChange(region);
-      // Update the row region.
-      rowHandler.region = region;
-      // AJAX-update the rows.
-      Drupal.fieldUIOverview.AJAXRefreshRows(refreshRows);
+      if (region != rowHandler.region) {
+        // Let the row handler deal with the region change.
+        refreshRows = rowHandler.regionChange(region);
+        // Update the row region.
+        rowHandler.region = region;
+        // AJAX-update the rows.
+        Drupal.fieldUIOverview.AJAXRefreshRows(refreshRows);
+      }
     }
   },
 

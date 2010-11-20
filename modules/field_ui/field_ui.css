@@ -14,20 +14,20 @@ table.field-ui-overview tr.add-new .add-new-placeholder {
   font-weight: bold;
   padding-bottom: .5em;
 }
+table.field-ui-overview tr.region-title td {
+  font-weight: bold;
+}
+table.field-ui-overview tr.region-message td {
+  font-style: italic;
+}
+table.field-ui-overview tr.region-populated {
+  display: none;
+}
 table.field-ui-overview tr.region-add-new-title {
   display: none;
 }
 
 /* 'Manage display' overview */
-#field-display-overview tr.region-title td {
-  font-weight: bold;
-}
-#field-display-overview tr.region-message td {
-  font-style: italic;
-}
-#field-display-overview tr.region-populated {
-  display: none;
-}
 #field-display-overview .field-formatter-summary-cell {
   line-height: 1em;
 }
