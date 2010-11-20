@@ -639,6 +639,11 @@ function poll_block_latest_poll_view($node) {
 
   if (!empty($node->allowvotes)) {
     $node->content['poll_view_voting'] = drupal_get_form('poll_view_voting', $node, TRUE);
+    $node->content['links'] = array(
+      '#theme' => 'links',
+      '#links' => $node->links,
+      '#weight' => 5,
+    );
   }
   else {
     $node->content['poll_view_results'] = array('#markup' => poll_view_results($node, TRUE, TRUE));
