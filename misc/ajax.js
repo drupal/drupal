@@ -114,6 +114,7 @@ Drupal.ajax = function (base, element, element_settings) {
   $.extend(this, defaults, element_settings);
 
   this.element = element;
+  this.element_settings = element_settings;
 
   // Replacing 'nojs' with 'ajax' in the URL allows for an easy method to let
   // the server detect when it needs to degrade gracefully.
@@ -171,35 +172,8 @@ Drupal.ajax = function (base, element, element_settings) {
   };
 
   // Bind the ajaxSubmit function to the element event.
-  $(this.element).bind(element_settings.event, function () {
-    if (ajax.ajaxing) {
-      return false;
-    }
-
-    try {
-      if (ajax.form) {
-        // If setClick is set, we must set this to ensure that the button's
-        // value is passed.
-        if (ajax.setClick) {
-          // Mark the clicked button. 'form.clk' is a special variable for
-          // ajaxSubmit that tells the system which element got clicked to
-          // trigger the submit. Without it there would be no 'op' or
-          // equivalent.
-          this.form.clk = this;
-        }
-
-        ajax.form.ajaxSubmit(ajax.options);
-      }
-      else {
-        ajax.beforeSerialize(ajax.element, ajax.options);
-        $.ajax(ajax.options);
-      }
-    }
-    catch (e) {
-      alert("An error occurred while attempting to process " + ajax.options.url + ": " + e.message);
-    }
-
-    return false;
+  $(ajax.element).bind(element_settings.event, function (event) {
+    return ajax.eventResponse(this, event);
   });
 
   // If necessary, enable keyboard submission so that AJAX behaviors
@@ -207,13 +181,73 @@ Drupal.ajax = function (base, element, element_settings) {
   // action.
   if (element_settings.keypress) {
     $(element_settings.element).keypress(function (event) {
-      // Detect enter key and space bar.
-      if (event.which == 13 || event.which == 32) {
-        $(element_settings.element).trigger(element_settings.event);
-        return false;
-      }
+      return ajax.keypressResponse(this, event);
     });
   }
+};
+
+/**
+ * Handle a key press.
+ *
+ * The AJAX object will, if instructed, bind to a key press response. This
+ * will test to see if the key press is valid to trigger this event and
+ * if it is, trigger it for us and prevent other keypresses from triggering.
+ */
+Drupal.ajax.prototype.keypressResponse = function (element, event) {
+  // Create a synonym for this to reduce code confusion.
+  var ajax = this;
+
+  // Detect enter key and space bar.
+  if (event.which == 13 || event.which == 32) {
+    $(ajax.element_settings.element).trigger(ajax.element_settings.event);
+    return false;
+  }
+};
+
+/**
+ * Handle an event that triggers an AJAX response.
+ *
+ * When an event that triggers an AJAX response happens, this method will
+ * perform the actual AJAX call. It is bound to the event using
+ * bind() in the constructor, and it uses the options specified on the
+ * ajax object.
+ */
+Drupal.ajax.prototype.eventResponse = function (element, event) {
+  // Create a synonym for this to reduce code confusion.
+  var ajax = this;
+
+  // Do not perform another ajax command if one is already in progress.
+  if (ajax.ajaxing) {
+    return false;
+  }
+
+  try {
+    if (ajax.form) {
+      // If setClick is set, we must set this to ensure that the button's
+      // value is passed.
+      if (ajax.setClick) {
+        // Mark the clicked button. 'form.clk' is a special variable for
+        // ajaxSubmit that tells the system which element got clicked to
+        // trigger the submit. Without it there would be no 'op' or
+        // equivalent.
+        element.form.clk = element;
+      }
+
+      ajax.form.ajaxSubmit(ajax.options);
+    }
+    else {
+      ajax.beforeSerialize(ajax.element, ajax.options);
+      $.ajax(ajax.options);
+    }
+  }
+  catch (e) {
+    // Unset the ajax.ajaxing flag here because it won't be unset during
+    // the complete response.
+    ajax.ajaxing = false;
+    alert("An error occurred while attempting to process " + ajax.options.url + ": " + e.message);
+  }
+
+  return false;
 };
 
 /**
