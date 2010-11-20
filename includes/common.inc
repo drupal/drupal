@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1260 2010/11/20 09:43:43 webchick Exp $
+// $Id: common.inc,v 1.1261 2010/11/20 09:46:22 webchick Exp $
 
 /**
  * @file
@@ -4171,6 +4171,15 @@ function drupal_get_js($scope = 'header', $javascript = NULL, $skip_alter = FALS
  * @code
  * $build['#attached']['drupal_add_http_header'] = array(
  *   array('Content-Type', 'application/rss+xml; charset=utf-8'),
+ * );
+ * @endcode
+ *
+ * External 'js' and 'css' files can also be loaded. For example:
+ * @code
+ * $build['#attached']['js'] = array(
+ *   'http://code.jquery.com/jquery-1.4.2.min.js' => array(
+ *     'type' => 'external',
+ *   ),
  * );
  * @endcode
  *
