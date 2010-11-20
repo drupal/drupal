@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.618 2010/11/14 20:42:45 webchick Exp $
+// $Id: taxonomy.module,v 1.619 2010/11/20 09:31:08 webchick Exp $
 
 /**
  * @file
@@ -299,6 +299,8 @@ function taxonomy_menu() {
     'page arguments' => array('taxonomy_form_term', 2),
     'access callback' => 'taxonomy_term_edit_access',
     'access arguments' => array(2),
+    'theme callback' => 'variable_get',
+    'theme arguments' => array('admin_theme'),
     'type' => MENU_LOCAL_TASK,
     'weight' => 10,
     'file' => 'taxonomy.admin.inc',
@@ -354,6 +356,16 @@ function taxonomy_menu() {
   );
 
   return $items;
+}
+
+/**
+ * Implements hook_admin_paths().
+ */
+function taxonomy_admin_paths() {
+  $paths = array(
+    'taxonomy/term/*/edit' => TRUE,
+  );
+  return $paths;
 }
 
 /**
