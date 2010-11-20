@@ -1,5 +1,5 @@
 <?php
-// $Id: field_ui.admin.inc,v 1.83 2010/11/13 02:02:02 dries Exp $
+// $Id: field_ui.admin.inc,v 1.84 2010/11/20 09:06:32 webchick Exp $
 
 /**
  * @file
@@ -158,15 +158,14 @@ function field_ui_table_pre_render($elements) {
         // Add row id and associate JS settings.
         $id = drupal_html_class($name);
         $row['#attributes']['id'] = $id;
-        $row += array(
-          '#js_settings' => array(),
-        );
-        $row['#js_settings'] += array(
-          'rowHandler' => $row['#row_type'],
-          'name' => $name,
-          'region' => $region_name,
-        );
-        $js_settings[$id] = $row['#js_settings'];
+        if (isset($row['#js_settings'])) {
+          $row['#js_settings'] += array(
+            'rowHandler' => $row['#row_type'],
+            'name' => $name,
+            'region' => $region_name,
+          );
+          $js_settings[$id] = $row['#js_settings'];
+        }
       }
     }
   }
@@ -304,7 +303,7 @@ function field_ui_field_overview_form($form, &$form_state, $entity_type, $bundle
     ),
     '#parent_options' => array(),
     '#regions' => array(
-      'main' => array(),
+      'main' => array('message' => t('No fields are present yet.')),
       'add_new' => array('title' => '&nbsp;'),
     ),
     '#attributes' => array(

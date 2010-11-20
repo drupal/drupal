@@ -1,4 +1,4 @@
-/* $Id: field_ui.css,v 1.5 2010/09/11 00:03:42 webchick Exp $ */
+/* $Id: field_ui.css,v 1.6 2010/11/20 09:06:32 webchick Exp $ */
 
 /* 'Manage fields' and 'Manage display' overviews */
 table.field-ui-overview tr.add-new .label-input {
@@ -14,20 +14,20 @@ table.field-ui-overview tr.add-new .add-new-placeholder {
   font-weight: bold;
   padding-bottom: .5em;
 }
+table.field-ui-overview tr.region-title td {
+  font-weight: bold;
+}
+table.field-ui-overview tr.region-message td {
+  font-style: italic;
+}
+table.field-ui-overview tr.region-populated {
+  display: none;
+}
 table.field-ui-overview tr.region-add-new-title {
   display: none;
 }
 
 /* 'Manage display' overview */
-#field-display-overview tr.region-title td {
-  font-weight: bold;
-}
-#field-display-overview tr.region-message td {
-  font-style: italic;
-}
-#field-display-overview tr.region-populated {
-  display: none;
-}
 #field-display-overview .field-formatter-summary-cell {
   line-height: 1em;
 }
