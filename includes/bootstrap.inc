@@ -894,7 +894,12 @@ function drupal_page_is_cacheable($allow_caching = NULL) {
  */
 function bootstrap_invoke_all($hook) {
   // Bootstrap modules should have been loaded when this function is called, so
-  // we don't need to tell module_list() to reset its bootstrap list.
+  // we don't need to tell module_list() to reset its internal list (and we
+  // therefore leave the first parameter at its default value of FALSE). We
+  // still pass in TRUE for the second parameter, though; in case this is the
+  // first time during the bootstrap that module_list() is called, we want to
+  // make sure that its internal cache is primed with the bootstrap modules
+  // only.
   foreach (module_list(FALSE, TRUE) as $module) {
     drupal_load('module', $module);
     module_invoke($module, $hook);
@@ -2651,15 +2656,11 @@ function drupal_get_schema($table = NULL, $rebuild = FALSE) {
       // On some databases this function may be called before bootstrap has
       // been completed, so we force the functions we need to load just in case.
       if (function_exists('module_load_all_includes')) {
-        // There is currently a bug in module_list() where it caches what it
-        // was last called with, which is not always what you want.
-        // module_load_all_includes() calls module_list(), but if this function
-        // is called very early in the bootstrap process then it will be
-        // uninitialized and therefore return no modules. Instead, we have to
-        // "prime" module_list() here to to values we want, specifically
-        // "yes rebuild the list and don't limit to bootstrap".
-        // @todo Remove this call after http://drupal.org/node/222109 is fixed.
-        module_list(TRUE, FALSE);
+        // This function can be called very early in the bootstrap process, so
+        // we force the module_list() cache to be refreshed to ensure that it
+        // contains the complete list of modules before we go on to call
+        // module_load_all_includes().
+        module_list(TRUE);
         module_load_all_includes('install');
       }
 

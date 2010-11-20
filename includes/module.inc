@@ -32,27 +32,39 @@ function module_load_all($bootstrap = FALSE) {
 
 
 /**
- * Collect a list of all loaded modules. During the bootstrap, return only
- * vital modules. See bootstrap.inc
+ * Returns a list of currently active modules.
+ *
+ * Usually, this returns a list of all enabled modules. When called early on in
+ * the bootstrap, it will return a list of vital modules only (those needed to
+ * generate cached pages).
+ *
+ * All parameters to this function are optional and should generally not be
+ * changed from their defaults.
  *
  * @param $refresh
- *   Whether to force the module list to be regenerated (such as after the
- *   administrator has changed the system settings).
- * @param $bootstrap
- *   Whether to return the reduced set of modules loaded in "bootstrap mode"
- *   for cached pages. See bootstrap.inc.
+ *   (optional) Whether to force the module list to be regenerated (such as
+ *   after the administrator has changed the system settings). Defaults to
+ *   FALSE.
+ * @param $bootstrap_refresh
+ *   (optional) When $refresh is TRUE, setting $bootstrap_refresh to TRUE forces
+ *   the module list to be regenerated using the reduced set of modules loaded
+ *   in "bootstrap mode" for cached pages. Otherwise, setting $refresh to TRUE
+ *   generates the complete list of enabled modules.
  * @param $sort
- *   By default, modules are ordered by weight and module name. Set this option
- *   to TRUE to return a module list ordered only by module name.
+ *   (optional) By default, modules are ordered by weight and module name. Set
+ *   this option to TRUE to return a module list ordered only by module name.
  * @param $fixed_list
- *   (Optional) Override the module list with the given modules. Stays until the
- *   next call with $refresh = TRUE.
+ *   (optional) If an array of module names is provided, this will override the
+ *   module list with the given set of modules. This will persist until the next
+ *   call with $refresh set to TRUE or with a new $fixed_list passed in. This
+ *   parameter is primarily intended for internal use (e.g., in install.php and
+ *   update.php).
  *
  * @return
- *   An associative array whose keys and values are the names of all loaded
- *   modules.
+ *   An associative array whose keys and values are the names of the modules in
+ *   the list.
  */
-function module_list($refresh = FALSE, $bootstrap = FALSE, $sort = FALSE, $fixed_list = NULL) {
+function module_list($refresh = FALSE, $bootstrap_refresh = FALSE, $sort = FALSE, $fixed_list = NULL) {
   static $list = array(), $sorted_list;
 
   if (empty($list) || $refresh || $fixed_list) {
@@ -70,7 +82,7 @@ function module_list($refresh = FALSE, $bootstrap = FALSE, $sort = FALSE, $fixed
         // data.
         drupal_static_reset('system_list');
       }
-      if ($bootstrap) {
+      if ($bootstrap_refresh) {
         $list = system_list('bootstrap');
       }
       else {
