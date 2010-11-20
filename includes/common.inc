@@ -4174,6 +4174,15 @@ function drupal_get_js($scope = 'header', $javascript = NULL, $skip_alter = FALS
  * );
  * @endcode
  *
+ * External 'js' and 'css' files can also be loaded. For example:
+ * @code
+ * $build['#attached']['js'] = array(
+ *   'http://code.jquery.com/jquery-1.4.2.min.js' => array(
+ *     'type' => 'external',
+ *   ),
+ * );
+ * @endcode
+ *
  * @param $elements
  *   The structured array describing the data being rendered.
  * @param $group
