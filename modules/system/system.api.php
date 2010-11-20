@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.214 2010/11/15 08:29:03 webchick Exp $
+// $Id: system.api.php,v 1.215 2010/11/20 08:39:40 webchick Exp $
 
 /**
  * @file
@@ -1478,13 +1478,13 @@ function hook_menu_contextual_links_alter(&$links, $router_item, $root_path) {
  *
  * @code
  *   // Node body.
- *   $page['content']['nodes'][$nid]['body']
+ *   $page['content']['system_main']['nodes'][$nid]['body']
  *   // Array of links attached to the node (add comments, read more).
- *   $page['content']['nodes'][$nid]['links']
+ *   $page['content']['system_main']['nodes'][$nid]['links']
  *   // The node object itself.
- *   $page['content']['nodes'][$nid]['#node']
+ *   $page['content']['system_main']['nodes'][$nid]['#node']
  *   // The results pager.
- *   $page['content']['pager']
+ *   $page['content']['system_main']['pager']
  * @endcode
  *
  * Blocks may be referenced by their module/delta pair within a region:
