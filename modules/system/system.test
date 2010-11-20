@@ -350,6 +350,40 @@ class ModuleDependencyTestCase extends ModuleTestCase {
     // Check the actual order which is saved by module_test_modules_enabled().
     $this->assertIdentical(variable_get('test_module_enable_order', FALSE), $expected_order, t('Modules enabled in the correct order.'));
   }
+
+  /**
+   * Tests attempting to uninstall a module that has installed dependents.
+   */
+  function testUninstallDependents() {
+    // Enable the forum module.
+    $edit = array('modules[Core][forum][enable]' => 'forum');
+    $this->drupalPost('admin/modules', $edit, t('Save configuration'));
+    $this->assertModules(array('forum'), TRUE);
+
+    // Disable forum and taxonomy. Both should now be installed but disabled.
+    $edit = array('modules[Core][forum][enable]' => FALSE);
+    $this->drupalPost('admin/modules', $edit, t('Save configuration'));
+    $this->assertModules(array('forum'), FALSE);
+    $edit = array('modules[Core][taxonomy][enable]' => FALSE);
+    $this->drupalPost('admin/modules', $edit, t('Save configuration'));
+    $this->assertModules(array('taxonomy'), FALSE);
+
+    // Check that the taxonomy module cannot be uninstalled.
+    $this->drupalGet('admin/modules/uninstall');
+    $checkbox = $this->xpath('//input[@type="checkbox" and @disabled="disabled" and @name="uninstall[taxonomy]"]');
+    $this->assert(count($checkbox) == 1, t('Checkbox for uninstalling the taxonomy module is disabled.'));
+
+    // Uninstall the forum module, and check that taxonomy now can also be
+    // uninstalled.
+    $edit = array('uninstall[forum]' => 'forum');
+    $this->drupalPost('admin/modules/uninstall', $edit, t('Uninstall'));
+    $this->drupalPost(NULL, NULL, t('Uninstall'));
+    $this->assertText(t('The selected modules have been uninstalled.'), t('Modules status has been updated.'));
+    $edit = array('uninstall[taxonomy]' => 'taxonomy');
+    $this->drupalPost('admin/modules/uninstall', $edit, t('Uninstall'));
+    $this->drupalPost(NULL, NULL, t('Uninstall'));
+    $this->assertText(t('The selected modules have been uninstalled.'), t('Modules status has been updated.'));
+  }
 }
 
 /**
