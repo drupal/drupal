@@ -1,5 +1,5 @@
 <?php
-// $Id: update.manager.inc,v 1.25 2010/11/18 05:35:39 dries Exp $
+// $Id: update.manager.inc,v 1.26 2010/11/20 09:40:34 webchick Exp $
 
 /**
  * @file
@@ -112,7 +112,7 @@ function update_manager_update_form($form, $form_state = array(), $context) {
     }
 
     $recommended_release = $project['releases'][$project['recommended']];
-    $recommended_version = $recommended_release['version'] . ' ' . l(t('(Release notes)'), $recommended_release['release_link'], array('attributes' => array('title' => t('Release notes for @project_name', array('@project_name' => $project_name)))));
+    $recommended_version = $recommended_release['version'] . ' ' . l(t('(Release notes)'), $recommended_release['release_link'], array('attributes' => array('title' => t('Release notes for @project_title', array('@project_title' => $project['title'])))));
     if ($recommended_release['version_major'] != $project['existing_major']) {
       $recommended_version .= '<div title="Major upgrade warning" class="update-major-version-warning">' . t('This update is a major version update which means that it may not be backwards compatible with your currently running version.  It is recommended that you read the release notes and proceed at your own risk.') . '</div>';
     }
