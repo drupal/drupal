@@ -181,7 +181,7 @@ function hook_search_admin() {
  *   An array of search results. To use the default search result
  *   display, each item should have the following keys':
  *   - 'link': Required. The URL of the found item.
- *   - 'type': The type of item.
+ *   - 'type': The type of item (such as the content type).
  *   - 'title': Required. The name of the item.
  *   - 'user': The author of the item.
  *   - 'date': A timestamp when the item was last modified.
@@ -272,8 +272,8 @@ function hook_search_page($results) {
 
   foreach ($results as $entry) {
     $output[] = array(
-      '#theme' => 'search_result', 
-      '#result' => $entry, 
+      '#theme' => 'search_result',
+      '#result' => $entry,
       '#module' => 'my_module_name',
     );
   }

@@ -77,8 +77,9 @@ function search_view($module = NULL, $keys = '') {
  * Process variables for search-results.tpl.php.
  *
  * The $variables array contains the following arguments:
- * - $results
- * - $module
+ * - $results: Search results array.
+ * - $module: Module the search results came from (module implementing
+ *   hook_search_info()).
  *
  * @see search-results.tpl.php
  */

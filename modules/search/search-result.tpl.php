@@ -20,7 +20,7 @@
  *   as "node" or "user".
  *
  * Default keys within $info_split:
- * - $info_split['type']: Node type.
+ * - $info_split['type']: Node type (or item type string supplied by module).
  * - $info_split['user']: Author of the node linked to users profile. Depends
  *   on permission.
  * - $info_split['date']: Last update of the node. Short formatted.

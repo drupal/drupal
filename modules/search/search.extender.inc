@@ -22,8 +22,8 @@
  * The second portion of the query further refines this set by verifying
  * advanced text conditions (such as negative or phrase matches).
  *
- * The used query object has the tag 'search_$type' and can be further extended
- * with hook_query_alter().
+ * The used query object has the tag 'search_$module' and can be further
+ * extended with hook_query_alter().
  */
 class SearchQuery extends SelectQueryExtender {
   /**
@@ -34,9 +34,11 @@ class SearchQuery extends SelectQueryExtender {
   protected $searchExpression;
 
   /**
-   * Type of search.
+   * Type of search (search module).
    *
-   * This maps to the value of the type column in search_index.
+   * This maps to the value of the type column in search_index, and is equal
+   * to the machine-readable name of the module that implements
+   * hook_search_info().
    *
    * @var string
    */
@@ -50,7 +52,7 @@ class SearchQuery extends SelectQueryExtender {
   protected $keys = array('positive' => array(), 'negative' => array());
 
   /**
-   * Indicates if the first pass query requires complex conditions (LIKE).
+   * Indicates whether the first pass query requires complex conditions (LIKE).
    *
    * @var boolean.
    */
@@ -94,7 +96,7 @@ class SearchQuery extends SelectQueryExtender {
   protected $normalize;
 
   /**
-   * Indicates if the first pass query has been executed.
+   * Indicates whether the first pass query has been executed.
    *
    * @var boolean
    */
@@ -122,33 +124,35 @@ class SearchQuery extends SelectQueryExtender {
   protected $multiply = array();
 
   /**
-   * Search items for the given search query string and type.
+   * Sets up the search query expression.
    *
    * @param $query
-   *   A search query string, that can contain options.
-   * @param $type
-   *   The type of search, this maps to {search_index}.type.
+   *   A search query string, which can contain options.
+   * @param $module
+   *   The search module. This maps to {search_index}.type in the database.
+   *
    * @return
    *   The SearchQuery object.
    */
-  public function searchExpression($expression, $type) {
+  public function searchExpression($expression, $module) {
     $this->searchExpression = $expression;
-    $this->type = $type;
+    $this->type = $module;
 
     return $this;
   }
 
   /**
-   * Apply a search option and remove it from the search query string.
+   * Applies a search option and removes it from the search query string.
    *
    * These options are in the form option:value,value2,value3.
    *
    * @param $option
    *   Name of the option.
    * @param $column
-   *   Name of the db column to which the value should be applied.
+   *   Name of the database column to which the value should be applied.
+   *
    * @return
-   *   TRUE if at least a value for that option has been found, FALSE if not.
+   *   TRUE if a value for that option was found, FALSE if not.
    */
   public function setOption($option, $column) {
     if ($values = search_expression_extract($this->searchExpression, $option)) {
@@ -164,9 +168,9 @@ class SearchQuery extends SelectQueryExtender {
   }
 
   /**
-   * Parse a search query into SQL conditions.
+   * Parses the search query into SQL conditions.
    *
-   * We build two queries that matches the dataset bodies.
+   * We build two queries that match the dataset bodies.
    */
   protected function parseSearchExpression() {
     // Matchs words optionally prefixed by a dash. A word in this case is
@@ -303,10 +307,10 @@ class SearchQuery extends SelectQueryExtender {
   }
 
   /**
-   * Execute the first pass query.
+   * Executes the first pass query.
    *
    * This can either be done explicitly, so that additional scores and
-   * conditions can be applied to the second pass query or implicitly by
+   * conditions can be applied to the second pass query, or implicitly by
    * addScore() or execute().
    *
    * @return
@@ -362,7 +366,7 @@ class SearchQuery extends SelectQueryExtender {
   /**
    * Adds a custom score expression to the search query.
    *
-   * Each score expression can optionally use a multiplicator and multiple
+   * Each score expression can optionally use a multiplier, and multiple
    * expressions are combined.
    *
    * @param $score
@@ -388,15 +392,15 @@ class SearchQuery extends SelectQueryExtender {
   }
 
   /**
-   * Execute the search.
+   * Executes the search.
    *
-   * If not already done, this executes the first pass query, then the complex
+   * If not already done, this executes the first pass query. Then the complex
    * conditions are applied to the query including score expressions and
    * ordering.
    *
    * @return
-   *   FALSE if the first pass query returned no results and a database result
-   *   set if not.
+   *   FALSE if the first pass query returned no results, and a database result
+   *   set if there were results.
    */
   public function execute()
   {
@@ -447,10 +451,10 @@ class SearchQuery extends SelectQueryExtender {
   }
 
   /**
-   * Build the default count query for SearchQuery.
+   * Builds the default count query for SearchQuery.
    *
-   * Since SearchQuery always uses GROUP BY, we can default to a subquery. Also
-   * adding the same conditions as execute() because countQuery() is called
+   * Since SearchQuery always uses GROUP BY, we can default to a subquery. We
+   * also add the same conditions as execute() because countQuery() is called
    * first.
    */
   public function countQuery() {
