@@ -1,5 +1,5 @@
 <?php
-// $Id: file.install,v 1.4 2010/09/29 01:37:03 dries Exp $
+// $Id: file.install,v 1.5 2010/11/21 09:24:41 webchick Exp $
 
 /**
  * @file
@@ -13,7 +13,7 @@ function file_field_schema($field) {
   return array(
     'columns' => array(
       'fid' => array(
-        'description' => 'The {files}.fid being referenced in this field.',
+        'description' => 'The {file_managed}.fid being referenced in this field.',
         'type' => 'int',
         'not null' => FALSE,
         'unsigned' => TRUE,
@@ -37,7 +37,7 @@ function file_field_schema($field) {
     ),
     'foreign keys' => array(
       'fid' => array(
-        'table' => 'file',
+        'table' => 'file_managed',
         'columns' => array('fid' => 'fid'),
       ),
     ),
