@@ -60,7 +60,7 @@ Drupal.fieldUIFieldOverview = {
       // and label when field type comes pre-selected (on failed validation).
       $(this).trigger('change', false);
     });
-  },
+  }
 };
 
 /**
@@ -242,7 +242,7 @@ Drupal.fieldUIOverview = {
       // elements disabled only after firing the request.
       $(ajaxElements).attr('disabled', true);
     }
-  },
+  }
 };
 
 
@@ -325,7 +325,7 @@ Drupal.fieldUIDisplayOverview.field.prototype = {
     refreshRows[this.name] = this.$formatSelect.get(0);
 
     return refreshRows;
-  },
+  }
 };
 
 })(jQuery);
