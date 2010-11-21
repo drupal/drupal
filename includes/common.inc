@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1261 2010/11/20 09:46:22 webchick Exp $
+// $Id: common.inc,v 1.1262 2010/11/21 10:05:27 webchick Exp $
 
 /**
  * @file
@@ -2235,7 +2235,9 @@ function drupal_attributes(array $attributes = array()) {
  * @param array $options
  *   An associative array of additional options, with the following elements:
  *   - 'attributes': An associative array of HTML attributes to apply to the
- *     anchor tag.
+ *     anchor tag. If element 'class' is included, it must be an array; 'title'
+ *     must be a string; other elements are more flexible, as they just need
+ *     to work in a call to drupal_attributes($options['attributes']).
  *   - 'html' (default FALSE): Whether $text is HTML or just plain-text. For
  *     example, to make an image tag into a link, this must be set to TRUE, or
  *     you will see the escaped HTML image tag.
