@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.test,v 1.86 2010/11/21 09:01:30 webchick Exp $
+// $Id: locale.test,v 1.87 2010/11/21 09:53:05 webchick Exp $
 
 /**
  * @file
@@ -89,6 +89,11 @@ class LocaleConfigurationTest extends DrupalWebTestCase {
     $this->drupalPost(NULL, $edit, t('Save configuration'));
     $this->assertNoFieldChecked('edit-site-default-en', t('Default language updated.'));
     $this->assertEqual($this->getUrl(), url('admin/config/regional/language', array('absolute' => TRUE)), t('Correct page redirection.'));
+
+    // Check if a valid language prefix is added after changing the default
+    // language.
+    $this->drupalGet('admin/config/regional/language/edit/en');
+    $this->assertFieldByXPath('//input[@name="prefix"]', 'en', t('A valid path prefix has been added to the previous default language.'));
 
     // Ensure we can't delete the default language.
     $this->drupalGet('admin/config/regional/language/delete/' . $langcode);
