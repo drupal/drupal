@@ -142,7 +142,7 @@ function field_default_prepare_view($entity_type, $entities, $field, $instances,
   foreach ($instances as $id => $instance) {
     if (is_string($display)) {
       $view_mode = $display;
-      $display = field_get_display($instance, $view_mode);
+      $display = field_get_display($instance, $view_mode, $entities[$id]);
     }
     if ($display['type'] !== 'hidden') {
       $module = $display['module'];
@@ -194,7 +194,7 @@ function field_default_view($entity_type, $entity, $field, $instance, $langcode,
   // Prepare incoming display specifications.
   if (is_string($display)) {
     $view_mode = $display;
-    $display = field_get_display($instance, $view_mode);
+    $display = field_get_display($instance, $view_mode, $entity);
   }
   else {
     $view_mode = '_custom_display';

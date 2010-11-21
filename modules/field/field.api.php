@@ -2165,6 +2165,7 @@ function hook_field_info_max_weight($entity_type, $bundle, $context) {
  *   - entity_type: The entity type; e.g. 'node' or 'user'.
  *   - field: The field being rendered.
  *   - instance: The instance being rendered.
+ *   - entity: The entity being rendered.
  *   - view_mode: The view mode, e.g. 'full', 'teaser'...
  *
  * @see hook_field_display_ENTITY_TYPE_alter()
@@ -2199,6 +2200,7 @@ function hook_field_display_alter(&$display, $context) {
  *   - entity_type: The entity type; e.g. 'node' or 'user'.
  *   - field: The field being rendered.
  *   - instance: The instance being rendered.
+ *   - entity: The entity being rendered.
  *   - view_mode: The view mode, e.g. 'full', 'teaser'...
  *
  * @see hook_field_display_alter()
