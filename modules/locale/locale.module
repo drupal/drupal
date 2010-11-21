@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.306 2010/11/05 20:33:56 dries Exp $
+// $Id: locale.module,v 1.307 2010/11/21 07:02:46 webchick Exp $
 
 /**
  * @file
@@ -30,7 +30,7 @@ function locale_help($path, $arg) {
       $output .= '<dd>' . t('Translations of text in the Drupal interface may be provided by:');
       $output .= '<ul>';
       $output .= '<li>' . t("Translating within your site, using the Locale module's integrated <a href='@translate'>translation interface</a>.", array('@translate' => url('admin/config/regional/translate'))) . '</li>';
-      $output .= '<li>' . t('Importing files from a set of existing translations, known as a translation package. A translation package enables the display of a specific version of Drupal in a specific language, and contains files in the Gettext Portable Object (<em>.po</em>) format. Although not all languages are available for every version of Drupal, translation packages for many languages are available for download from the <a href="@translations">Drupal translations page</a>.', array('@translations' => 'http://drupal.org/project/translations')) . '</li>';
+      $output .= '<li>' . t('Importing files from a set of existing translations, known as a translation package. A translation package enables the display of a specific version of Drupal in a specific language, and contains files in the Gettext Portable Object (<em>.po</em>) format. Although not all languages are available for every version of Drupal, translation packages for many languages are available for download from the <a href="@translations">Drupal translations page</a>.', array('@translations' => 'http://localize.drupal.org')) . '</li>';
       $output .= '<li>' . t("If an existing translation package does not meet your needs, the Gettext Portable Object (<em>.po</em>) files within a package may be modified, or new <em>.po</em> files may be created, using a desktop Gettext editor. The Locale module's <a href='@import'>import</a> feature allows the translated strings from a new or modified <em>.po</em> file to be added to your site. The Locale module's <a href='@export'>export</a> feature generates files from your site's translated strings, that can either be shared with others or edited offline by a Gettext translation editor.", array('@import' => url('admin/config/regional/translate/import'), '@export' => url('admin/config/regional/translate/export'))) . '</li>';
       $output .= '</ul></dd>';
       $output .= '<dt>' . t('Configuring a multilingual site') . '</dt>';
@@ -38,7 +38,7 @@ function locale_help($path, $arg) {
       $output .= '</dl>';
       return $output;
     case 'admin/config/regional/language':
-      $output = '<p>' . t('With multiple languages enabled, interface text can be translated, registered users may select their preferred language, and authors can assign a specific language to content. <a href="@translations">Download contributed translations</a> from Drupal.org.', array('@translations' => 'http://drupal.org/project/translations')) . '</p>';
+      $output = '<p>' . t('With multiple languages enabled, interface text can be translated, registered users may select their preferred language, and authors can assign a specific language to content. <a href="@translations">Download contributed translations</a> from Drupal.org.', array('@translations' => 'http://localize.drupal.org')) . '</p>';
       return $output;
     case 'admin/config/regional/language/add':
       return '<p>' . t('Add a language to be supported by your site. If your desired language is not available in the <em>Language name</em> drop-down, click <em>Custom language</em> and provide a language code and other details manually. When providing a language code manually, be sure to enter a standardized language code, since this code may be used by browsers to determine an appropriate display language.') . '</p>';
@@ -54,7 +54,7 @@ function locale_help($path, $arg) {
       return $output;
     case 'admin/config/regional/translate/import':
       $output = '<p>' . t('This page imports the translated strings contained in an individual Gettext Portable Object (<em>.po</em>) file. Normally distributed as part of a translation package (each translation package may contain several <em>.po</em> files), a <em>.po</em> file may need to be imported after offline editing in a Gettext translation editor. Importing an individual <em>.po</em> file may be a lengthy process.') . '</p>';
-      $output .= '<p>' . t('Note that the <em>.po</em> files within a translation package are imported automatically (if available) when new modules or themes are enabled, or as new languages are added. Since this page only allows the import of one <em>.po</em> file at a time, it may be simpler to download and extract a translation package into your Drupal installation directory and <a href="@language-add">add the language</a> (which automatically imports all <em>.po</em> files within the package). Translation packages are available for download on the <a href="@translations">Drupal translation page</a>.', array('@language-add' => url('admin/config/regional/language/add'), '@translations' => 'http://drupal.org/project/translations')) . '</p>';
+      $output .= '<p>' . t('Note that the <em>.po</em> files within a translation package are imported automatically (if available) when new modules or themes are enabled, or as new languages are added. Since this page only allows the import of one <em>.po</em> file at a time, it may be simpler to download and extract a translation package into your Drupal installation directory and <a href="@language-add">add the language</a> (which automatically imports all <em>.po</em> files within the package). Translation packages are available for download on the <a href="@translations">Drupal translation page</a>.', array('@language-add' => url('admin/config/regional/language/add'), '@translations' => 'http://localize.drupal.org')) . '</p>';
       return $output;
     case 'admin/config/regional/translate/export':
       return '<p>' . t('This page exports the translated strings used by your site. An export file may be in Gettext Portable Object (<em>.po</em>) form, which includes both the original string and the translation (used to share translations with others), or in Gettext Portable Object Template (<em>.pot</em>) form, which includes the original strings only (used to create new translations with a Gettext translation editor).') . '</p>';
