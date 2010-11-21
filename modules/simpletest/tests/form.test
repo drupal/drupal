@@ -418,8 +418,8 @@ class FormElementTestCase extends DrupalWebTestCase {
     }
     // Verify that custom #description properties are output.
     foreach (array('checkboxes', 'radios') as $type) {
-      $elements = $this->xpath('//input[@name=:name]/following-sibling::div[@class=:class]', array(
-        ':name' => $type . '[foo]',
+      $elements = $this->xpath('//input[@id=:id]/following-sibling::div[@class=:class]', array(
+        ':id' => 'edit-' . $type . '-foo',
         ':class' => 'description',
       ));
       $this->assertTrue(count($elements), t('Custom %type option description found.', array(
