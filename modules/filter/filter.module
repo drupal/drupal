@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.358 2010/10/31 13:08:29 dries Exp $
+// $Id: filter.module,v 1.359 2010/11/21 09:16:54 webchick Exp $
 
 /**
  * @file
@@ -1257,7 +1257,7 @@ function _filter_html_tips($filter, $format, $long = FALSE) {
     'a' => array(t('Anchors are used to make links to other pages.'), '<a href="' . $base_url . '">' . check_plain(variable_get('site_name', 'Drupal')) . '</a>'),
     'br' => array(t('By default line break tags are automatically added, so use this tag to add additional ones. Use of this tag is different because it is not used with an open/close pair like all the others. Use the extra " /" inside the tag to maintain XHTML 1.0 compatibility'), t('Text with <br />line break')),
     'p' => array(t('By default paragraph tags are automatically added, so use this tag to add additional ones.'), '<p>' . t('Paragraph one.') . '</p> <p>' . t('Paragraph two.') . '</p>'),
-    'strong' => array(t('Strong'), '<strong>' . t('Strong') . '</strong>'),
+    'strong' => array(t('Strong', array(), array('context' => 'Font weight')), '<strong>' . t('Strong', array(), array('context' => 'Font weight')) . '</strong>'),
     'em' => array(t('Emphasized'), '<em>' . t('Emphasized') . '</em>'),
     'cite' => array(t('Cited'), '<cite>' . t('Cited') . '</cite>'),
     'code' => array(t('Coded text used to show programming source code'), '<code>' . t('Coded') . '</code>'),
