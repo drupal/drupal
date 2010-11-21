@@ -1,4 +1,4 @@
-// $Id: field_ui.js,v 1.7 2010/11/20 09:06:32 webchick Exp $
+// $Id: field_ui.js,v 1.8 2010/11/21 08:50:49 webchick Exp $
 
 (function($) {
 
@@ -60,7 +60,7 @@ Drupal.fieldUIFieldOverview = {
       // and label when field type comes pre-selected (on failed validation).
       $(this).trigger('change', false);
     });
-  },
+  }
 };
 
 /**
@@ -242,7 +242,7 @@ Drupal.fieldUIOverview = {
       // elements disabled only after firing the request.
       $(ajaxElements).attr('disabled', true);
     }
-  },
+  }
 };
 
 
@@ -325,7 +325,7 @@ Drupal.fieldUIDisplayOverview.field.prototype = {
     refreshRows[this.name] = this.$formatSelect.get(0);
 
     return refreshRows;
-  },
+  }
 };
 
 })(jQuery);
