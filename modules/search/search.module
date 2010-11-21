@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.366 2010/11/06 23:24:33 webchick Exp $
+// $Id: search.module,v 1.367 2010/11/21 18:42:25 dries Exp $
 
 /**
  * @file
@@ -297,41 +297,44 @@ function _search_menu_access($name) {
 }
 
 /**
- * Wipes a part of or the entire search index.
+ * Clears a part of or the entire search index.
  *
  * @param $sid
- *  (optional) The SID of the item to wipe. If specified, $type must be passed
- *  too.
- * @param $type
- *  (optional) The type of item to wipe.
+ *   (optional) The ID of the item to remove from the search index. If
+ *   specified, $module must also be given. Omit both $sid and $module to clear
+ *   the entire search index.
+ * @param $module
+ *   (optional) The machine-readable name of the module for the item to remove
+ *   from the search index.
  */
-function search_reindex($sid = NULL, $type = NULL, $reindex = FALSE) {
-  if ($type == NULL && $sid == NULL) {
+function search_reindex($sid = NULL, $module = NULL, $reindex = FALSE) {
+  if ($module == NULL && $sid == NULL) {
     module_invoke_all('search_reset');
   }
   else {
     db_delete('search_dataset')
       ->condition('sid', $sid)
-      ->condition('type', $type)
+      ->condition('type', $module)
       ->execute();
     db_delete('search_index')
       ->condition('sid', $sid)
-      ->condition('type', $type)
+      ->condition('type', $module)
       ->execute();
     // Don't remove links if re-indexing.
     if (!$reindex) {
       db_delete('search_node_links')
         ->condition('sid', $sid)
-        ->condition('type', $type)
+        ->condition('type', $module)
         ->execute();
     }
   }
 }
 
 /**
- * Marks a word as dirty (or retrieves the list of dirty words). This is used
- * during indexing (cron). Words which are dirty have outdated total counts in
- * the search_total table, and need to be recounted.
+ * Marks a word as "dirty" (changed), or retrieves the list of dirty words.
+ *
+ * This is used during indexing (cron). Words that are dirty have outdated
+ * total counts in the search_total table, and need to be recounted.
  */
 function search_dirty($word = NULL) {
   $dirty = &drupal_static(__FUNCTION__, array());
@@ -346,8 +349,9 @@ function search_dirty($word = NULL) {
 /**
  * Implements hook_cron().
  *
- * Fires hook_update_index() in all modules and cleans up dirty words (see
- * search_dirty).
+ * Fires hook_update_index() in all modules and cleans up dirty words.
+ *
+ * @see search_dirty()
  */
 function search_cron() {
   // We register a shutdown function to ensure that search_total is always up
@@ -361,7 +365,9 @@ function search_cron() {
 }
 
 /**
- * This function is called on shutdown to ensure that search_total is always
+ * Updates the {search_total} database table.
+ *
+ * This function is called on shutdown to ensure that {search_total} is always
  * up to date (even if cron times out or otherwise fails).
  */
 function search_update_totals() {
@@ -521,17 +527,16 @@ function search_invoke_preprocess(&$text) {
  * Update the full-text search index for a particular item.
  *
  * @param $sid
- *   A number identifying this particular item (e.g. node id).
- *
- * @param $type
- *   A string defining this type of item (e.g. 'node')
- *
+ *   An ID number identifying this particular item (e.g., node ID).
+ * @param $module
+ *   The machine-readable name of the module that this item comes from (a module
+ *   that implements hook_search_info()).
  * @param $text
- *   The content of this item. Must be a piece of HTML text.
+ *   The content of this item. Must be a piece of HTML or plain text.
  *
  * @ingroup search
  */
-function search_index($sid, $type, $text) {
+function search_index($sid, $module, $text) {
   $minimum_word_size = variable_get('minimum_word_size', 3);
 
   // Link matching
@@ -678,13 +683,13 @@ function search_index($sid, $type, $text) {
     $tag = !$tag;
   }
 
-  search_reindex($sid, $type, TRUE);
+  search_reindex($sid, $module, TRUE);
 
   // Insert cleaned up data into dataset
   db_insert('search_dataset')
     ->fields(array(
       'sid' => $sid,
-      'type' => $type,
+      'type' => $module,
       'data' => $accum,
       'reindex' => 0,
     ))
@@ -699,7 +704,7 @@ function search_index($sid, $type, $text) {
       ->key(array(
         'word' => $word,
         'sid' => $sid,
-        'type' => $type,
+        'type' => $module,
       ))
       ->fields(array('score' => $score))
       ->expression('score', 'score + :score', array(':score' => $score))
@@ -711,7 +716,7 @@ function search_index($sid, $type, $text) {
   // Get all previous links from this item.
   $result = db_query("SELECT nid, caption FROM {search_node_links} WHERE sid = :sid AND type = :type", array(
     ':sid' => $sid,
-    ':type' => $type
+    ':type' => $module
   ), array('target' => 'slave'));
   $links = array();
   foreach ($result as $link) {
@@ -727,7 +732,7 @@ function search_index($sid, $type, $text) {
         db_update('search_node_links')
           ->fields(array('caption' => $caption))
           ->condition('sid', $sid)
-          ->condition('type', $type)
+          ->condition('type', $module)
           ->condition('nid', $nid)
           ->execute();
         search_touch_node($nid);
@@ -735,14 +740,14 @@ function search_index($sid, $type, $text) {
       // Unset the link to mark it as processed.
       unset($links[$nid]);
     }
-    elseif ($sid != $nid || $type != 'node') {
+    elseif ($sid != $nid || $module != 'node') {
       // Insert the existing link and mark the node for reindexing, but don't
       // reindex if this is a link in a node pointing to itself.
       db_insert('search_node_links')
         ->fields(array(
           'caption' => $caption,
           'sid' => $sid,
-          'type' => $type,
+          'type' => $module,
           'nid' => $nid,
         ))
         ->execute();
@@ -753,7 +758,7 @@ function search_index($sid, $type, $text) {
   foreach ($links as $nid => $caption) {
     db_delete('search_node_links')
       ->condition('sid', $sid)
-      ->condition('type', $type)
+      ->condition('type', $module)
       ->condition('nid', $nid)
       ->execute();
     search_touch_node($nid);
@@ -761,10 +766,10 @@ function search_index($sid, $type, $text) {
 }
 
 /**
- * Change a node's changed timestamp to 'now' to force reindexing.
+ * Changes a node's changed timestamp to 'now' to force reindexing.
  *
  * @param $nid
- *   The nid of the node that needs reindexing.
+ *   The node ID of the node that needs reindexing.
  */
 function search_touch_node($nid) {
   db_update('search_dataset')
@@ -904,15 +909,15 @@ function search_expression_insert($expression, $option, $value = NULL) {
  * for all of the search features to work.
  *
  * There are three ways to interact with the search system:
- * - Specifically for searching nodes, you can implement hook_node_update_index()
- *   and hook_node_search_result(). However, note that the search system already
- *   indexes all visible output of a node, i.e. everything displayed normally
- *   by hook_view() and hook_node_view(). This is usually sufficient. You should
- *   only use this mechanism if you want additional, non-visible data to be
- *   indexed.
- * - Implement hook_search_info(). This will create a search tab for your module on
- *   the /search page with a simple keyword search form. You will also need to
- *   implement hook_search_execute() to perform the search.
+ * - Specifically for searching nodes, you can implement
+ *   hook_node_update_index() and hook_node_search_result(). However, note that
+ *   the search system already indexes all visible output of a node; i.e.,
+ *   everything displayed normally by hook_view() and hook_node_view(). This is
+ *   usually sufficient. You should only use this mechanism if you want
+ *   additional, non-visible data to be indexed.
+ * - Implement hook_search_info(). This will create a search tab for your module
+ *   on the /search page with a simple keyword search form. You will also need
+ *   to implement hook_search_execute() to perform the search.
  * - Implement hook_update_index(). This allows your module to use Drupal's
  *   HTML indexing mechanism for searching full text efficiently.
  *
@@ -927,11 +932,11 @@ function search_expression_insert($expression, $option, $value = NULL) {
  *
  * @param $action
  *   Form action. Defaults to "search/$path", where $path is the search path
- *   associated with the $type module in its hook_search_info(). This will be
+ *   associated with the module in its hook_search_info(). This will be
  *   run through url().
  * @param $keys
  *   The search string entered by the user, containing keywords for the search.
- * @param $type
+ * @param $module
  *   The search module to render the form for: a module that implements
  *   hook_search_info(). If not supplied, the default search module is used.
  * @param $prompt
@@ -941,14 +946,14 @@ function search_expression_insert($expression, $option, $value = NULL) {
  * @return
  *   A Form API array for the search form.
  */
-function search_form($form, &$form_state, $action = '', $keys = '', $type = NULL, $prompt = NULL) {
+function search_form($form, &$form_state, $action = '', $keys = '', $module = NULL, $prompt = NULL) {
   $module_info = FALSE;
-  if (!$type) {
+  if (!$module) {
     $module_info = search_get_default_module_info();
   }
   else {
     $info = search_get_info();
-    $module_info = isset($info[$type]) ? $info[$type] : FALSE;
+    $module_info = isset($info[$module]) ? $info[$module] : FALSE;
   }
 
   // Sanity check.
@@ -968,7 +973,7 @@ function search_form($form, &$form_state, $action = '', $keys = '', $type = NULL
   // Record the $action for later use in redirecting.
   $form_state['action'] = $action;
   $form['#attributes']['class'][] = 'search-form';
-  $form['module'] = array('#type' => 'value', '#value' => $type);
+  $form['module'] = array('#type' => 'value', '#value' => $module);
   $form['basic'] = array('#type' => 'container', '#attributes' => array('class' => array('container-inline')));
   $form['basic']['keys'] = array(
     '#type' => 'textfield',

@@ -1,5 +1,5 @@
 <?php
-// $Id: search.pages.inc,v 1.23 2010/08/18 18:40:50 dries Exp $
+// $Id: search.pages.inc,v 1.24 2010/11/21 18:42:25 dries Exp $
 
 /**
  * @file
@@ -77,8 +77,9 @@ function search_view($module = NULL, $keys = '') {
  * Process variables for search-results.tpl.php.
  *
  * The $variables array contains the following arguments:
- * - $results
- * - $module
+ * - $results: Search results array.
+ * - $module: Module the search results came from (module implementing
+ *   hook_search_info()).
  *
  * @see search-results.tpl.php
  */

@@ -1,5 +1,5 @@
 <?php
-// $Id: search.test,v 1.77 2010/10/20 01:15:58 dries Exp $
+// $Id: search.test,v 1.78 2010/11/21 18:42:25 dries Exp $
 
 // The search index can contain different types of content. Typically the type is 'node'.
 // Here we test with _test_ and _test2_ as the type.
@@ -1184,7 +1184,7 @@ class SearchConfigSettingsForm extends DrupalWebTestCase {
    * Verify that you can disable individual search modules.
    */
   function testSearchModuleDisabling() {
-    // Array of search types to test: 'path' is the search path, 'title' is
+    // Array of search modules to test: 'path' is the search path, 'title' is
     // the tab title, 'keys' are the keywords to search for, and 'text' is
     // the text to assert is on the results page.
     $module_info = array(

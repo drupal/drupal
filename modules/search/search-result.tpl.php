@@ -1,5 +1,5 @@
 <?php
-// $Id: search-result.tpl.php,v 1.7 2010/08/18 18:40:50 dries Exp $
+// $Id: search-result.tpl.php,v 1.8 2010/11/21 18:42:25 dries Exp $
 
 /**
  * @file
@@ -20,7 +20,7 @@
  *   as "node" or "user".
  *
  * Default keys within $info_split:
- * - $info_split['type']: Node type.
+ * - $info_split['type']: Node type (or item type string supplied by module).
  * - $info_split['user']: Author of the node linked to users profile. Depends
  *   on permission.
  * - $info_split['date']: Last update of the node. Short formatted.
