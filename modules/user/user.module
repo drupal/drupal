@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1218 2010/11/20 09:43:43 webchick Exp $
+// $Id: user.module,v 1.1219 2010/11/21 08:02:30 webchick Exp $
 
 /**
  * @file
@@ -1929,7 +1929,7 @@ function user_page_title($account) {
  *   An associative array with module as key and username as value.
  */
 function user_get_authmaps($authname = NULL) {
-  $authmaps = db_query("SELECT authname, module FROM {authmap} WHERE authname = :authname", array(':authname' => $authname))->fetchAllKeyed();
+  $authmaps = db_query("SELECT module, authname FROM {authmap} WHERE authname = :authname", array(':authname' => $authname))->fetchAllKeyed();
   return count($authmaps) ? $authmaps : 0;
 }
 
