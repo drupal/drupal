@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.263 2010/11/14 19:53:20 webchick Exp $
+// $Id: locale.inc,v 1.264 2010/11/21 09:01:30 webchick Exp $
 
 /**
  * @file
@@ -321,10 +321,26 @@ function locale_language_switcher_session($type, $path) {
  * Rewrite URLs for the URL language provider.
  */
 function locale_language_url_rewrite_url(&$path, &$options) {
+  static $drupal_static_fast;
+  if (!isset($drupal_static_fast)) {
+    $drupal_static_fast['languages'] = &drupal_static(__FUNCTION__);
+  }
+  $languages = &$drupal_static_fast['languages'];
+
+  if (!isset($languages)) {
+    $languages = language_list('enabled');
+    $languages = array_flip(array_keys($languages[1]));
+  }
+
   // Language can be passed as an option, or we go for current URL language.
   if (!isset($options['language'])) {
     global $language_url;
     $options['language'] = $language_url;
+  }
+  // We allow only enabled languages here.
+  elseif (!isset($languages[$options['language']->language])) {
+    unset($options['language']);
+    return;
   }
 
   if (isset($options['language'])) {
