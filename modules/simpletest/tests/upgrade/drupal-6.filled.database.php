@@ -19735,7 +19735,15 @@ db_insert('variable')->fields(array(
 ))
 ->values(array(
   'name' => 'file_directory_temp',
-  'value' => 's:26:"/Applications/MAMP/tmp/php";',
+  'value' => 's:29:"/drupal-6/file/directory/temp";',
+))
+->values(array(
+  'name' => 'file_directory_path',
+  'value' => 's:29:"/drupal-6/file/directory/path";',
+))
+->values(array(
+  'name' => 'file_downloads',
+  'value' => 'i:2;',
 ))
 ->values(array(
   'name' => 'filter_html_1',

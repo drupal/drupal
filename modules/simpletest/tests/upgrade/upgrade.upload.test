@@ -65,5 +65,14 @@ class UploadUpgradePathTestCase extends UpgradePathTestCase {
       }
       $this->assertIdentical($filenames, $recorded_filenames, 'The uploaded files are present in the same order after the upgrade.');
     }
+    // Make sure the file settings were properly migrated.
+    $d6_file_directory_temp = '/drupal-6/file/directory/temp';
+    $d6_file_directory_path = '/drupal-6/file/directory/path';
+    $d6_file_downloads = 2; // FILE_DOWNLOADS_PRIVATE
+
+    $this->assertNull(variable_get('file_directory_temp', NULL), "The 'file_directory_temp' variable was properly removed.");
+    $this->assertEqual(variable_get('file_temporary_path', 'drupal-7-bogus'), $d6_file_directory_temp, "The 'file_temporary_path' setting was properly migrated.");
+    $this->assertEqual(variable_get('file_default_scheme', 'drupal-7-bogus'), 'private', "The 'file_default_scheme' setting was properly migrated.");
+    $this->assertEqual(variable_get('file_private_path', 'drupal-7-bogus'), $d6_file_directory_path, "The 'file_private_path' setting was properly migrated.");
   }
 }

@@ -2157,7 +2157,7 @@ function system_update_7033() {
 }
 
 /**
- * Migrate the file_downloads setting and create the new {file_managed} table.
+ * Migrate the file path settings and create the new {file_managed} table.
  */
 function system_update_7034() {
   $files_directory = variable_get('file_directory_path', NULL);
@@ -2915,6 +2915,15 @@ function system_update_7065() {
   db_change_field('sessions', 'sid', 'sid', $spec, array('primary key' => array('sid', 'ssid')));
   // Delete any sessions with empty session ID.
   db_delete('sessions')->condition('sid', '')->execute();
+}
+
+/**
+ * Migrate the 'file_directory_temp' variable.
+ */
+function system_update_7066() {
+  $d6_file_directory_temp = variable_get('file_directory_temp', file_directory_temp());
+  variable_set('file_temporary_path', $d6_file_directory_temp);
+  variable_del('file_directory_temp');
 }
 
 /**
