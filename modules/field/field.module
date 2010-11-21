@@ -1,5 +1,5 @@
 <?php
-// $Id: field.module,v 1.89 2010/10/23 15:55:04 webchick Exp $
+// $Id: field.module,v 1.90 2010/11/21 19:09:18 dries Exp $
 /**
  * @file
  * Attach custom data fields to Drupal entities.
@@ -448,11 +448,13 @@ function field_view_mode_settings($entity_type, $bundle) {
  *   The field instance being displayed.
  * @param $view_mode
  *   The view mode.
+ * @param $entity
+ *   The entity being displayed.
  *
  * @return
  *   The display settings to be used when displaying the field values.
  */
-function field_get_display($instance, $view_mode) {
+function field_get_display($instance, $view_mode, $entity) {
   // Check whether the view mode uses custom display settings or the 'default'
   // mode.
   $view_mode_settings = field_view_mode_settings($instance['entity_type'], $instance['bundle']);
@@ -464,6 +466,7 @@ function field_get_display($instance, $view_mode) {
     'entity_type' => $instance['entity_type'],
     'field' => field_info_field($instance['field_name']),
     'instance' => $instance,
+    'entity' => $entity,
     'view_mode' => $view_mode,
   );
   drupal_alter(array('field_display', 'field_display_' . $instance['entity_type']), $display, $context);
