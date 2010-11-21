@@ -1661,6 +1661,7 @@ function node_search_execute($keys = NULL, $conditions = NULL) {
       'extra' => $extra,
       'score' => $item->calculated_score,
       'snippet' => search_excerpt($keys, $node->rendered),
+      'language' => $node->language,
     );
   }
   return $results;

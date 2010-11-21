@@ -188,6 +188,7 @@ function hook_search_admin() {
  *   - 'extra': An array of optional extra information items.
  *   - 'snippet': An excerpt or preview to show with the result (can be
  *     generated with search_excerpt()).
+ *   - 'language': Language code for the item (usually two characters).
  *
  * @ingroup search
  */
