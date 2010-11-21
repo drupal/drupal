@@ -247,12 +247,18 @@ function module_exists($module) {
 
 /**
  * Load a module's installation hooks.
+ *
+ * @param $module
+ *   The name of the module (without the .module extension).
+ *
+ * @return
+ *   The name of the module's install file, if successful; FALSE otherwise.
  */
 function module_load_install($module) {
   // Make sure the installation API is available
   include_once DRUPAL_ROOT . '/includes/install.inc';
 
-  module_load_include('install', $module);
+  return module_load_include('install', $module);
 }
 
 /**
@@ -278,6 +284,9 @@ function module_load_install($module) {
  * @param $name
  *   Optionally, specify the base file name (without the $type extension).
  *   If not set, $module is used.
+ *
+ * @return
+ *   The name of the included file, if successful; FALSE otherwise.
  */
 function module_load_include($type, $module, $name = NULL) {
   if (empty($name)) {
