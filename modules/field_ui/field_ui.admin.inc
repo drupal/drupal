@@ -21,8 +21,8 @@ function field_ui_fields_list() {
         $field = field_info_field($field_name);
         $admin_path = _field_ui_bundle_admin_path($entity_type, $bundle);
         $rows[$field_name]['data'][0] = $field['locked'] ? t('@field_name (Locked)', array('@field_name' => $field_name)) : $field_name;
-        $rows[$field_name]['data'][1] = t($field_types[$field['type']]['label']);
-        $rows[$field_name]['data'][2][] = l($bundles[$entity_type][$bundle]['label'], $admin_path . '/fields');
+        $rows[$field_name]['data'][1] = $field_types[$field['type']]['label'];
+        $rows[$field_name]['data'][2][] = $admin_path ? l($bundles[$entity_type][$bundle]['label'], $admin_path . '/fields') : $bundles[$entity_type][$bundle]['label'];
         $rows[$field_name]['class'] = $field['locked'] ? array('menu-disabled') : array('');
       }
     }
