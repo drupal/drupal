@@ -235,6 +235,12 @@ function taxonomy_field_schema($field) {
     'indexes' => array(
       'tid' => array('tid'),
     ),
+    'foreign keys' => array(
+      'tid' => array(
+        'table' => 'taxonomy_term_data',
+        'columns' => array('tid' => 'tid'),
+      ),
+    ),
   );
 }
 
