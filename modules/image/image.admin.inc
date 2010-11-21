@@ -700,10 +700,10 @@ function theme_image_style_effects($variables) {
   $rows = array();
 
   foreach (element_children($form) as $key) {
+    $row = array();
+    $form[$key]['weight']['#attributes']['class'] = array('image-effect-order-weight');
     if (is_numeric($key)) {
-      $form[$key]['weight']['#attributes']['class'] = array('image-effect-order-weight');
       $summary = drupal_render($form[$key]['summary']);
-      $row = array();
       $row[] = drupal_render($form[$key]['label']) . (empty($summary) ? '' : ' ' . $summary);
       $row[] = drupal_render($form[$key]['weight']);
       $row[] = drupal_render($form[$key]['configure']);
@@ -711,8 +711,6 @@ function theme_image_style_effects($variables) {
     }
     else {
       // Add the row for adding a new image effect.
-      $form['new']['weight']['#attributes']['class'] = array('image-effect-order-weight');
-      $row = array();
       $row[] = '<div class="image-style-new">' . drupal_render($form['new']['new']) . drupal_render($form['new']['add']) . '</div>';
       $row[] = drupal_render($form['new']['weight']);
       $row[] = array('data' => '', 'colspan' => 2);
@@ -721,7 +719,7 @@ function theme_image_style_effects($variables) {
     if (!isset($form[$key]['#access']) || $form[$key]['#access']) {
       $rows[] = array(
         'data' => $row,
-        'class' => !empty($form[$key]['weight']['#access']) ? array('draggable') : array(),
+        'class' => !empty($form[$key]['weight']['#access']) || $key == 'new' ? array('draggable') : array(),
       );
     }
   }
