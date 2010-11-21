@@ -90,6 +90,11 @@ class LocaleConfigurationTest extends DrupalWebTestCase {
     $this->assertNoFieldChecked('edit-site-default-en', t('Default language updated.'));
     $this->assertEqual($this->getUrl(), url('admin/config/regional/language', array('absolute' => TRUE)), t('Correct page redirection.'));
 
+    // Check if a valid language prefix is added after changing the default
+    // language.
+    $this->drupalGet('admin/config/regional/language/edit/en');
+    $this->assertFieldByXPath('//input[@name="prefix"]', 'en', t('A valid path prefix has been added to the previous default language.'));
+
     // Ensure we can't delete the default language.
     $this->drupalGet('admin/config/regional/language/delete/' . $langcode);
     $this->assertEqual($this->getUrl(), url('admin/config/regional/language', array('absolute' => TRUE)), t('Correct page redirection.'));
