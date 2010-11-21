@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.247 2010/11/12 03:06:52 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.248 2010/11/21 10:17:33 webchick Exp $
 
 /**
  * Global variable that holds information about the tests being run.
@@ -2188,7 +2188,11 @@ class DrupalWebTestCase extends DrupalTestCase {
   protected function xpath($xpath, array $arguments = array()) {
     if ($this->parse()) {
       $xpath = $this->buildXPathQuery($xpath, $arguments);
-      return $this->elements->xpath($xpath);
+      $result = $this->elements->xpath($xpath);
+      // Some combinations of PHP / libxml versions return an empty array
+      // instead of the documented FALSE. Forcefully convert any falsish values
+      // to an empty array to allow foreach(...) constructions.
+      return $result ? $result : array();
     }
     else {
       return FALSE;
