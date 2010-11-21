@@ -255,7 +255,58 @@ function menu_test_menu() {
    'page callback' => 'menu_test_callback',
   );
 
+  // Load arguments inheritance test.
+  $items['menu-test/arguments/%menu_test_argument/%'] = array(
+    'title' => 'Load arguments inheritance test',
+    'load arguments' => array(3),
+    'page callback' => 'menu_test_arguments',
+    'page arguments' => array(2),
+    'access callback' => TRUE,
+  );
+  $items['menu-test/arguments/%menu_test_argument/%/default'] = array(
+    'title' => 'Default local task',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+  );
+  $items['menu-test/arguments/%menu_test_argument/%/task'] = array(
+    'title' => 'Local task',
+    'page callback' => 'menu_test_arguments',
+    'page arguments' => array(2),
+    'access callback' => TRUE,
+    'type' => MENU_LOCAL_TASK,
+  );
+
   return $items;
+}
+
+/**
+ * Menu argument loader for the 'load arguments' inheritance test.
+ *
+ * @param $arg1
+ *   The path argument defined as %menu_test_argument.
+ * @param $arg2
+ *   The additional path argument that should be passed due to 'load arguments'.
+ *
+ * @return
+ *   An array containing $arg1 and $arg2.
+ */
+function menu_test_argument_load($arg1, $arg2) {
+  return array('%menu_test_argument' => $arg1, '%' => $arg2);
+}
+
+/**
+ * Page callback for the 'load arguments' inheritance test.
+ *
+ * @param $joined_args
+ *   An associative array containing the values for both path arguments, as
+ *   intercepted and processed by menu_test_argument_load():
+ *   - %menu_test_argument: The primary path argument string.
+ *   - %: The additional argument string.
+ *
+ * @return
+ *   A dump of the loaded %menu_test_argument argument.
+ */
+function menu_test_arguments($joined_args) {
+  return print_r($joined_args, TRUE);
 }
 
 /**

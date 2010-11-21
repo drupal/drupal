@@ -521,8 +521,8 @@ function menu_execute_active_handler($path = NULL, $deliver = TRUE) {
 function _menu_load_objects(&$item, &$map) {
   if ($load_functions = $item['load_functions']) {
     // If someone calls this function twice, then unserialize will fail.
-    if ($load_functions_unserialized = unserialize($load_functions)) {
-      $load_functions = $load_functions_unserialized;
+    if (!is_array($load_functions)) {
+      $load_functions = unserialize($load_functions);
     }
     $path_map = $map;
     foreach ($load_functions as $index => $function) {
@@ -3396,7 +3396,7 @@ function _menu_router_build($callbacks) {
       $fit = (1 << $number_parts) - 1;
     }
     $masks[$fit] = 1;
-    $item['load_functions'] = empty($load_functions) ? '' : serialize($load_functions);
+    $item['_load_functions'] = $load_functions;
     $item['to_arg_functions'] = empty($to_arg_functions) ? '' : serialize($to_arg_functions);
     $item += array(
       'title' => '',
@@ -3499,6 +3499,10 @@ function _menu_router_build($callbacks) {
             $item['theme arguments'] = $parent['theme arguments'];
           }
         }
+        // Same for load arguments, if the parent path defines any.
+        if (!isset($item['load arguments']) && !empty($parent['load arguments'])) {
+          $item['_load_functions'] = $parent['_load_functions'];
+        }
       }
     }
     if (!isset($item['access callback']) && isset($item['access arguments'])) {
@@ -3512,6 +3516,7 @@ function _menu_router_build($callbacks) {
       $item['access callback'] = intval($item['access callback']);
     }
 
+    $item['load_functions'] = empty($item['_load_functions']) ? '' : serialize($item['_load_functions']);
     $item += array(
       'access arguments' => array(),
       'access callback' => '',

@@ -464,6 +464,22 @@ class MenuRouterTestCase extends DrupalWebTestCase {
     $asserted_title = $override ? 'Alternative example title - Case ' . $case_no : 'Example title - Case ' . $case_no;
     $this->assertTitle($asserted_title . ' | Drupal', t('Menu title is') . ': ' . $asserted_title, 'Menu');
   }
+
+  /**
+   * Tests inheritance of 'load arguments'.
+   */
+  function testMenuLoadArgumentsInheritance() {
+    $arg1 = $this->randomName();
+    $arg2 = $this->randomName();
+    $expected = print_r(array('%menu_test_argument' => $arg1, '%' => $arg2), TRUE);
+
+    $this->drupalGet("menu-test/arguments/$arg1/$arg2");
+    $this->assertRaw($expected, t('Inherited load arguments found.'));
+    $this->drupalGet("menu-test/arguments/$arg1/$arg2/default");
+    $this->assertRaw($expected, t('Inherited load arguments found.'));
+    $this->drupalGet("menu-test/arguments/$arg1/$arg2/task");
+    $this->assertRaw($expected, t('Inherited load arguments found.'));
+  }
 }
 
 /**
