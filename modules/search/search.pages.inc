@@ -1,5 +1,5 @@
 <?php
-// $Id: search.pages.inc,v 1.24 2010/11/21 18:42:25 dries Exp $
+// $Id: search.pages.inc,v 1.25 2010/11/21 20:36:36 dries Exp $
 
 /**
  * @file
@@ -105,9 +105,15 @@ function template_preprocess_search_results(&$variables) {
  * @see search-result.tpl.php
  */
 function template_preprocess_search_result(&$variables) {
+  global $language;
+
   $result = $variables['result'];
   $variables['url'] = check_url($result['link']);
   $variables['title'] = check_plain($result['title']);
+  if (isset($result['language']) && $result['language'] != $language->language && $result['language'] != LANGUAGE_NONE) {
+    $variables['title_attributes_array']['xml:lang'] = $result['language'];
+    $variables['content_attributes_array']['xml:lang'] = $result['language'];
+  }
 
   $info = array();
   if (!empty($result['module'])) {

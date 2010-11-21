@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1321 2010/11/20 09:43:43 webchick Exp $
+// $Id: node.module,v 1.1322 2010/11/21 20:36:36 dries Exp $
 
 /**
  * @file
@@ -1661,6 +1661,7 @@ function node_search_execute($keys = NULL, $conditions = NULL) {
       'extra' => $extra,
       'score' => $item->calculated_score,
       'snippet' => search_excerpt($keys, $node->rendered),
+      'language' => $node->language,
     );
   }
   return $results;

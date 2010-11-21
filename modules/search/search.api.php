@@ -1,5 +1,5 @@
 <?php
-// $Id: search.api.php,v 1.32 2010/11/21 18:42:25 dries Exp $
+// $Id: search.api.php,v 1.33 2010/11/21 20:36:36 dries Exp $
 
 /**
  * @file
@@ -188,6 +188,7 @@ function hook_search_admin() {
  *   - 'extra': An array of optional extra information items.
  *   - 'snippet': An excerpt or preview to show with the result (can be
  *     generated with search_excerpt()).
+ *   - 'language': Language code for the item (usually two characters).
  *
  * @ingroup search
  */
