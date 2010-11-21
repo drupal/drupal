@@ -2188,7 +2188,11 @@ class DrupalWebTestCase extends DrupalTestCase {
   protected function xpath($xpath, array $arguments = array()) {
     if ($this->parse()) {
       $xpath = $this->buildXPathQuery($xpath, $arguments);
-      return $this->elements->xpath($xpath);
+      $result = $this->elements->xpath($xpath);
+      // Some combinations of PHP / libxml versions return an empty array
+      // instead of the documented FALSE. Forcefully convert any falsish values
+      // to an empty array to allow foreach(...) constructions.
+      return $result ? $result : array();
     }
     else {
       return FALSE;
