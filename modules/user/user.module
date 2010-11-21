@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1219 2010/11/21 08:02:30 webchick Exp $
+// $Id: user.module,v 1.1220 2010/11/21 18:52:05 dries Exp $
 
 /**
  * @file
@@ -874,7 +874,7 @@ function user_search_execute($keys = NULL, $conditions = NULL) {
   // Replace wildcards with MySQL/PostgreSQL wildcards.
   $keys = preg_replace('!\*+!', '%', $keys);
   $query = db_select('users')->extend('PagerDefault');
-  $query->fields('users', array('name', 'uid'));
+  $query->fields('users', array('uid'));
   if (user_access('administer users')) {
     // Administrators can also search in the otherwise private email field.
     $query->fields('users', array('mail'));
@@ -885,20 +885,25 @@ function user_search_execute($keys = NULL, $conditions = NULL) {
   else {
     $query->condition('name', '%' . db_like($keys) . '%', 'LIKE');
   }
-  $result = $query
+  $uids = $query
     ->limit(15)
-    ->execute();
-  if (user_access('administer users')) {
-    foreach ($result as $account) {
-      $find[] = array('title' => $account->name . ' (' . $account->mail . ')', 'link' => url('user/' . $account->uid, array('absolute' => TRUE)));
+    ->execute()
+    ->fetchCol();
+  $accounts = user_load_multiple($uids);
+
+  $results = array();
+  foreach ($accounts as $account) {
+    $result = array(
+      'title' => format_username($account),
+      'link' => url('user/' . $account->uid, array('absolute' => TRUE)),
+    );
+    if (user_access('administer users')) {
+      $result['title'] .= ' (' . $account->mail . ')';
     }
+    $results[] = $result;
   }
-  else {
-    foreach ($result as $account) {
-      $find[] = array('title' => $account->name, 'link' => url('user/' . $account->uid, array('absolute' => TRUE)));
-    }
-  }
-  return $find;
+
+  return $results;
 }
 
 /**
