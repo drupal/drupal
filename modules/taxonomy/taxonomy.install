@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.install,v 1.53 2010/10/20 15:57:42 webchick Exp $
+// $Id: taxonomy.install,v 1.54 2010/11/21 09:21:38 webchick Exp $
 
 /**
  * @file
@@ -234,6 +234,12 @@ function taxonomy_field_schema($field) {
     ),
     'indexes' => array(
       'tid' => array('tid'),
+    ),
+    'foreign keys' => array(
+      'tid' => array(
+        'table' => 'taxonomy_term_data',
+        'columns' => array('tid' => 'tid'),
+      ),
     ),
   );
 }
