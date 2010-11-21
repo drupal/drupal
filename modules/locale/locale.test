@@ -1943,6 +1943,88 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
 }
 
 /**
+ * Test that URL rewriting works as expected.
+ */
+class LocaleUrlRewritingTest extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'URL rewriting',
+      'description' => 'Test that URL rewriting works as expected.',
+      'group' => 'Locale',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('locale');
+
+    // Create and login user.
+    $this->web_user = $this->drupalCreateUser(array('administer languages', 'access administration pages'));
+    $this->drupalLogin($this->web_user);
+
+    // Install French language.
+    $edit = array();
+    $edit['langcode'] = 'fr';
+    $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
+
+    // Install Italian language.
+    $edit = array();
+    $edit['langcode'] = 'it';
+    $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
+
+    // Disable Italian language.
+    $edit = array('enabled[it]' => FALSE);
+    $this->drupalPost('admin/config/regional/language', $edit, t('Save configuration'));
+
+    // Enable URL language detection and selection.
+    $edit = array('language[enabled][locale-url]' => 1);
+    $this->drupalPost('admin/config/regional/language/configure', $edit, t('Save settings'));
+
+    // Reset static caching.
+    drupal_static_reset('language_list');
+    drupal_static_reset('locale_url_outbound_alter');
+    drupal_static_reset('locale_language_url_rewrite_url');
+  }
+
+  /**
+   * Check that disabled or non-installed languages are not considered.
+   */
+  function testUrlRewritingEdgeCases() {
+    // Check URL rewriting with a disabled language.
+    $languages = language_list();
+    $this->checkUrl($languages['it'], t('Path language is ignored if language is disabled.'), t('URL language negotiation does not work with disabled languages'));
+
+    // Check URL rewriting with a non-installed language.
+    $non_existing = language_default();
+    $non_existing->language = $this->randomName();
+    $non_existing->prefix = $this->randomName();
+    $this->checkUrl($non_existing, t('Path language is ignored if language is not installed.'), t('URL language negotiation does not work with non-installed languages'));
+  }
+
+  /**
+   * Check URL rewriting for the given language.
+   *
+   * The test is performed with a fixed URL (the default front page) to simply
+   * check that language prefixes are not added to it and that the prefixed URL
+   * is actually not working.
+   */
+  private function checkUrl($language, $message1, $message2) {
+    $options = array('language' => $language);
+    $base_path = trim(base_path(), '/');
+    $rewritten_path = trim(str_replace(array('?q=', $base_path), '', url('node', $options)), '/');
+    $segments = explode('/', $rewritten_path, 2);
+    $prefix = $segments[0];
+    $path = isset($segments[1]) ? $segments[1] : $prefix;
+    // If the rewritten URL has not a language prefix we pick the right one from
+    // the language object so we can always check the prefixed URL.
+    if ($this->assertNotEqual($language->prefix, $prefix, $message1)) {
+      $prefix = $language->prefix;
+    }
+    $this->drupalGet("$prefix/$path");
+    $this->assertResponse(404, $message2);
+  }
+}
+
+/**
  * Functional test for multilingual fields.
  */
 class LocaleMultilingualFieldsFunctionalTest extends DrupalWebTestCase {
