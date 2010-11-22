@@ -1,5 +1,5 @@
 <?php
-// $Id: common.test,v 1.133 2010/11/20 05:02:46 webchick Exp $
+// $Id: common.test,v 1.134 2010/11/22 05:22:43 webchick Exp $
 
 /**
  * @file
@@ -654,7 +654,7 @@ class CascadingStylesheetsTestCase extends DrupalWebTestCase {
    */
   function testRenderInlinePreprocess() {
     $css = 'body { padding: 0px; }';
-    $css_preprocessed = '<style type="text/css" media="all">' . drupal_load_stylesheet_content($css, TRUE) . '</style>';
+    $css_preprocessed = '<style type="text/css" media="all">' . "\n<!--/*--><![CDATA[/*><!--*/\n" . drupal_load_stylesheet_content($css, TRUE) . "\n/*]]>*/-->\n" . '</style>';
     drupal_add_css($css, array('type' => 'inline'));
     $styles = drupal_get_css();
     $this->assertEqual(trim($styles), $css_preprocessed, t('Rendering preprocessed inline CSS adds it to the page.'));

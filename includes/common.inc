@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1263 2010/11/22 04:33:02 webchick Exp $
+// $Id: common.inc,v 1.1264 2010/11/22 05:22:43 webchick Exp $
 
 /**
  * @file
@@ -3152,6 +3152,12 @@ function drupal_pre_render_styles($elements) {
   // URL changed.
   $query_string = variable_get('css_js_query_string', '0');
 
+  // For inline CSS to validate as XHTML, all CSS containing XHTML needs to be
+  // wrapped in CDATA. To make that backwards compatible with HTML 4, we need to
+  // comment out the CDATA-tag.
+  $embed_prefix = "\n<!--/*--><![CDATA[/*><!--*/\n";
+  $embed_suffix = "\n/*]]>*/-->\n";
+
   // Defaults for LINK and STYLE elements.
   $link_element_defaults = array(
     '#type' => 'html_tag',
@@ -3259,6 +3265,8 @@ function drupal_pre_render_styles($elements) {
         if (isset($group['data'])) {
           $element = $style_element_defaults;
           $element['#value'] = $group['data'];
+          $element['#value_prefix'] = $embed_prefix;
+          $element['#value_suffix'] = $embed_suffix;
           $element['#attributes']['media'] = $group['media'];
           $element['#browsers'] = $group['browsers'];
           $elements[] = $element;
@@ -3267,6 +3275,8 @@ function drupal_pre_render_styles($elements) {
           foreach ($group['items'] as $item) {
             $element = $style_element_defaults;
             $element['#value'] = $item['data'];
+            $element['#value_prefix'] = $embed_prefix;
+            $element['#value_suffix'] = $embed_suffix;
             $element['#attributes']['media'] = $item['media'];
             $element['#browsers'] = $group['browsers'];
             $elements[] = $element;
