@@ -1,4 +1,4 @@
-// $Id: machine-name.js,v 1.1 2010/10/13 17:09:00 webchick Exp $
+// $Id: machine-name.js,v 1.2 2010/11/22 00:05:58 dries Exp $
 (function ($) {
 
 /**
@@ -38,34 +38,41 @@ Drupal.behaviors.machineName = {
       }
       // Hide the form item container of the machine name form element.
       $wrapper.hide();
-      // Append the machine name preview to the source field.
-      if ($target.is(':disabled')) {
+      // Determine the initial machine name value. Unless the machine name form
+      // element is disabled or not empty, the initial default value is based on
+      // the human-readable form element value.
+      if ($target.is(':disabled') || $target.val() != '') {
         var machine = $target.val();
       }
       else {
         var machine = self.transliterate($source.val(), options);
       }
+      // Append the machine name preview to the source field.
       var $preview = $('<span class="machine-name-value">' + machine + '</span>');
       $suffix.empty()
         .append(' ').append('<span class="machine-name-label">' + options.label + ':</span>')
         .append(' ').append($preview);
 
-      // Append a link to edit the machine name, if it is editable, and only if
-      // one of the following conditions is met:
-      // - the machine name is empty.
-      // - the human-readable name is equal to the existing machine name.
-      if (!$target.is(':disabled') && ($target.val() == '' || $target.val() == machine)) {
-        var $link = $('<span class="admin-link"><a href="#">' + Drupal.t('Edit') + '</a></span>')
-          .click(function () {
-            $wrapper.show();
-            $target.focus();
-            $suffix.hide();
-            $source.unbind('keyup.machineName');
-            return false;
-          });
-        $suffix.append(' ').append($link);
+      // If the machine name cannot be edited, stop further processing.
+      if ($target.is(':disabled')) {
+        return;
+      }
 
-        // Preview machine name in realtime when the human-readable name changes.
+      // If it is editable, append an edit link.
+      var $link = $('<span class="admin-link"><a href="#">' + Drupal.t('Edit') + '</a></span>')
+        .click(function () {
+          $wrapper.show();
+          $target.focus();
+          $suffix.hide();
+          $source.unbind('.machineName');
+          return false;
+        });
+      $suffix.append(' ').append($link);
+
+      // Preview the machine name in realtime when the human-readable name
+      // changes, but only if there is no machine name yet; i.e., only upon
+      // initial creation, not when editing.
+      if ($target.val() == '') {
         $source.bind('keyup.machineName change.machineName', function () {
           machine = self.transliterate($(this).val(), options);
           // Set the machine name to the transliterated value.
