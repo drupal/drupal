@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1322 2010/11/21 20:36:36 dries Exp $
+// $Id: node.module,v 1.1323 2010/11/22 08:01:24 webchick Exp $
 
 /**
  * @file
@@ -1349,10 +1349,12 @@ function node_build_content($node, $view_mode = 'full', $langcode = NULL) {
     '#attributes' => array('class' => array('links', 'inline')),
   );
   if ($view_mode == 'teaser') {
+    $node_title_stripped = strip_tags($node->title);
     $links['node-readmore'] = array(
-      'title' => t('Read more'),
+      'title' => t('Read more<span class="element-invisible"> about @title</span>', array('@title' => $node_title_stripped)),
       'href' => 'node/' . $node->nid,
-      'attributes' => array('rel' => 'tag', 'title' => strip_tags($node->title))
+      'html' => TRUE,
+      'attributes' => array('rel' => 'tag', 'title' => $node_title_stripped),
     );
   }
   $node->content['links']['node'] = array(
