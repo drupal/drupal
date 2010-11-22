@@ -1,5 +1,5 @@
 <?php
-// $Id: search.test,v 1.78 2010/11/21 18:42:25 dries Exp $
+// $Id: search.test,v 1.79 2010/11/22 07:32:12 webchick Exp $
 
 // The search index can contain different types of content. Typically the type is 'node'.
 // Here we test with _test_ and _test2_ as the type.
@@ -526,7 +526,7 @@ class SearchRankingTestCase extends DrupalWebTestCase {
 
     // See testRankings() above - build a node that will rank high for sticky.
     $settings = array(
-      'type' => 'page', 
+      'type' => 'page',
       'title' => 'Drupal rocks',
       'body' => array(LANGUAGE_NONE => array(array('value' => "Drupal's search rocks"))),
       'sticky' => 1,
@@ -929,9 +929,9 @@ class SearchExpressionInsertExtractTestCase extends DrupalUnitTestCase {
 
 /**
  * Tests that comment count display toggles properly on comment status of node
- * 
+ *
  * Issue 537278
- * 
+ *
  * - Nodes with comment status set to Open should always how comment counts
  * - Nodes with comment status set to Closed should show comment counts
  *     only when there are comments
@@ -940,7 +940,7 @@ class SearchExpressionInsertExtractTestCase extends DrupalUnitTestCase {
 class SearchCommentCountToggleTestCase extends DrupalWebTestCase {
   protected $searching_user;
   protected $searchable_nodes;
-  
+
   public static function getInfo() {
     return array(
       'name' => 'Comment count toggle',
@@ -957,23 +957,23 @@ class SearchCommentCountToggleTestCase extends DrupalWebTestCase {
 
     // Create initial nodes.
     $node_params = array('type' => 'article', 'body' => array(LANGUAGE_NONE => array(array('value' => 'SearchCommentToggleTestCase'))));
-    
+
     $this->searchable_nodes['1 comment'] = $this->drupalCreateNode($node_params);
     $this->searchable_nodes['0 comments'] = $this->drupalCreateNode($node_params);
-    
+
     // Login with sufficient privileges.
     $this->drupalLogin($this->searching_user);
-    
+
     // Create a comment array
     $edit_comment = array();
     $edit_comment['subject'] = $this->randomName();
     $edit_comment['comment_body[' . LANGUAGE_NONE . '][0][value]'] = $this->randomName();
     $filtered_html_format_id = db_query_range('SELECT format FROM {filter_format} WHERE name = :name', 0, 1, array(':name' => 'Filtered HTML'))->fetchField();
     $edit_comment['comment_body[' . LANGUAGE_NONE . '][0][format]'] = $filtered_html_format_id;
-    
+
     // Post comment to the test node with comment
     $this->drupalPost('comment/reply/' . $this->searchable_nodes['1 comment']->nid, $edit_comment, t('Save'));
-    
+
     // First update the index. This does the initial processing.
     node_update_index();
 
@@ -996,13 +996,13 @@ class SearchCommentCountToggleTestCase extends DrupalWebTestCase {
     $this->drupalPost('', $edit, t('Search'));
     $this->assertText(t('0 comments'), t('Empty comment count displays for nodes with comment status set to Open'));
     $this->assertText(t('1 comment'), t('Non-empty comment count displays for nodes with comment status set to Open'));
-    
+
     // Test comment count display for nodes with comment status set to Closed
     $this->searchable_nodes['0 comments']->comment = COMMENT_NODE_CLOSED;
     node_save($this->searchable_nodes['0 comments']);
     $this->searchable_nodes['1 comment']->comment = COMMENT_NODE_CLOSED;
     node_save($this->searchable_nodes['1 comment']);
-    
+
     $this->drupalPost('', $edit, t('Search'));
     $this->assertNoText(t('0 comments'), t('Empty comment count does not display for nodes with comment status set to Closed'));
     $this->assertText(t('1 comment'), t('Non-empty comment count displays for nodes with comment status set to Closed'));
@@ -1011,8 +1011,8 @@ class SearchCommentCountToggleTestCase extends DrupalWebTestCase {
     $this->searchable_nodes['0 comments']->comment = COMMENT_NODE_HIDDEN;
     node_save($this->searchable_nodes['0 comments']);
     $this->searchable_nodes['1 comment']->comment = COMMENT_NODE_HIDDEN;
-    node_save($this->searchable_nodes['1 comment']);    
-    
+    node_save($this->searchable_nodes['1 comment']);
+
     $this->drupalPost('', $edit, t('Search'));
     $this->assertNoText(t('0 comments'), t('Empty comment count does not display for nodes with comment status set to Hidden'));
     $this->assertNoText(t('1 comment'), t('Non-empty comment count does not display for nodes with comment status set to Hidden'));
@@ -1031,23 +1031,55 @@ class SearchSimplifyTestCase extends DrupalWebTestCase {
     );
   }
 
+  /**
+   * Tests that all Unicode characters simplify correctly.
+   */
   function testSearchSimplifyUnicode() {
+    // This test uses a file that was constructed so that the even lines are
+    // boundary characters, and the odd lines are valid word characters. (It
+    // was generated as a sequence of all the Unicode characters, and then the
+    // boundary chararacters (punctuation, spaces, etc.) were split off into
+    // their own lines).  So the even-numbered lines should simplify to nothing,
+    // and the odd-numbered lines we need to split into shorter chunks and
+    // verify that simplification doesn't lose any characters.
     $input = file_get_contents(DRUPAL_ROOT . '/modules/search/tests/UnicodeTest.txt');
-    $strings = explode(chr(10), $input);
-    foreach ($strings as $key => $string) {
-      $simplified = search_simplify($string);
-      if ($key % 2) {
+    $basestrings = explode(chr(10), $input);
+    $strings = array();
+    foreach ($basestrings as $key => $string) {
+      if ($key %2) {
+        // Even line - should simplify down to a space.
+        $simplified = search_simplify($string);
         $this->assertIdentical($simplified, ' ', "Line $key is excluded from the index");
       }
       else {
-        $this->assertTrue(drupal_strlen($simplified) >= drupal_strlen($string), "Nothing is removed on line $key.");
+        // Odd line, should be word characters.
+        // Split this into 30-character chunks, so we don't run into limits
+        // of truncation in search_simplify().
+        $start = 0;
+        while ($start < drupal_strlen($string)) {
+          $newstr = drupal_substr($string, $start, 30);
+          // Special case: leading zeros are removed from numeric strings,
+          // and there's one string in this file that is numbers starting with
+          // zero, so prepend a 1 on that string.
+          if (preg_match('/^[0-9]+$/', $newstr)) {
+            $newstr = '1' . $newstr;
+          }
+          $strings[] = $newstr;
+          $start += 30;
+        }
       }
     }
+    foreach ($strings as $key => $string) {
+      $simplified = search_simplify($string);
+      $this->assertTrue(drupal_strlen($simplified) >= drupal_strlen($string), "Nothing is removed from string $key.");
+    }
+
+    // Test the low-numbered ASCII control characters separately. They are not
+    // in the text file because they are problematic for diff, especially \0.
     $string = '';
     for ($i = 0; $i < 32; $i++) {
       $string .= chr($i);
     }
-    // Diff really does not like files starting with \0 so test it separately.
     $this->assertIdentical(' ', search_simplify($string), t('Search simplify works for ASCII control characters.'));
   }
 
@@ -1118,6 +1150,177 @@ class SearchKeywordsConditions extends DrupalWebTestCase {
     $this->drupalGet("search/dummy_path", array('query' => array('search_conditions' => $keys)));
     $this->assertText("Dummy search snippet to display.");
     $this->assertRaw(print_r(array('search_conditions' => $keys), TRUE));
+  }
+}
+
+/**
+ * Tests that numbers can be searched.
+ */
+class SearchNumbersTestCase extends DrupalWebTestCase {
+  protected $test_user;
+  protected $numbers;
+  protected $nodes;
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Search numbers',
+      'description' => 'Check that numbers can be searched',
+      'group' => 'Search',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('search');
+
+    $this->test_user = $this->drupalCreateUser(array('search content', 'access content', 'administer nodes', 'access site reports'));
+    $this->drupalLogin($this->test_user);
+
+    // Create content with various numbers in it.
+    // Note: 50 characters is the current limit of the search index's word
+    // field.
+    $this->numbers = array(
+      'ISBN' => '978-0446365383',
+      'UPC' => '036000 291452',
+      'EAN bar code' => '5901234123457',
+      'negative' => '-123456.7890',
+      'quoted negative' => '"-123456.7890"',
+      'leading zero' => '0777777777',
+      'tiny' => '111',
+      'small' => '22222222222222',
+      'medium' => '333333333333333333333333333',
+      'large' => '444444444444444444444444444444444444444',
+      'gigantic' => '5555555555555555555555555555555555555555555555555',
+      'over fifty characters' => '666666666666666666666666666666666666666666666666666666666666',
+      //'date', '01/02/2009',
+      'commas', '987,654,321',
+    );
+
+    foreach ($this->numbers as $doc => $num) {
+      $info = array(
+        'body' => array(LANGUAGE_NONE => array(array('value' => $num))),
+        'type' => 'page',
+        'language' => LANGUAGE_NONE,
+        'title' => $doc . ' number',
+      );
+      $this->nodes[$doc] = $this->drupalCreateNode($info);
+    }
+
+    // Run cron to ensure the content is indexed.
+    $this->cronRun();
+    $this->drupalGet('admin/reports/dblog');
+    $this->assertText(t('Cron run completed'), 'Log shows cron run completed');
+  }
+
+  /**
+   * Tests that all the numbers can be searched.
+   */
+  function testNumberSearching() {
+    $types = array_keys($this->numbers);
+
+    foreach ($types as $type) {
+      $number = $this->numbers[$type];
+      // If the number is negative, remove the - sign, because - indicates
+      // "not keyword" when searching.
+      $number = ltrim($number, '-');
+      $node = $this->nodes[$type];
+
+      // Verify that the node title does not appear on the search page
+      // with a dummy search.
+      $this->drupalPost('search/node',
+        array('keys' => 'foo'),
+        t('Search'));
+      $this->assertNoText($node->title, $type . ': node title not shown in dummy search');
+
+      // Verify that the node title does appear as a link on the search page
+      // when searching for the number.
+      $this->drupalPost('search/node',
+        array('keys' => $number),
+        t('Search'));
+      $this->assertText($node->title, $type . ': node title shown (search found the node) in search for number ' . $number);
+    }
+  }
+}
+
+/**
+ * Tests that numbers can be searched, with more complex matching.
+ */
+class SearchNumberMatchingTestCase extends DrupalWebTestCase {
+  protected $test_user;
+  protected $numbers;
+  protected $nodes;
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Search number matching',
+      'description' => 'Check that numbers can be searched with more complex matching',
+      'group' => 'Search',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('search');
+
+    $this->test_user = $this->drupalCreateUser(array('search content', 'access content', 'administer nodes', 'access site reports'));
+    $this->drupalLogin($this->test_user);
+
+    // Define a group of numbers that should all match each other --
+    // numbers with internal punctuation should match each other, as well
+    // as numbers with and without leading zeros and leading/trailing
+    // . and -.
+    $this->numbers = array(
+      '123456789',
+      //'12/34/56789',
+      '12.3456789',
+      '12-34-56789',
+      '123,456,789',
+      '-123456789',
+      '0123456789',
+    );
+
+    foreach ($this->numbers as $num) {
+      $info = array(
+        'body' => array(LANGUAGE_NONE => array(array('value' => $num))),
+        'type' => 'page',
+        'language' => LANGUAGE_NONE,
+      );
+      $this->nodes[] = $this->drupalCreateNode($info);
+    }
+
+    // Run cron to ensure the content is indexed.
+    $this->cronRun();
+    $this->drupalGet('admin/reports/dblog');
+    $this->assertText(t('Cron run completed'), 'Log shows cron run completed');
+  }
+
+  /**
+   * Tests that all the numbers can be searched.
+   */
+  function testNumberSearching() {
+    for ($i = 0; $i < count($this->numbers); $i++) {
+      $node = $this->nodes[$i];
+
+      // Verify that the node title does not appear on the search page
+      // with a dummy search.
+      $this->drupalPost('search/node',
+        array('keys' => 'foo'),
+        t('Search'));
+      $this->assertNoText($node->title, $i . ': node title not shown in dummy search');
+
+      // Now verify that we can find node i by searching for any of the
+      // numbers.
+      for ($j = 0; $j < count($this->numbers); $j++) {
+        $number = $this->numbers[$j];
+        // If the number is negative, remove the - sign, because - indicates
+        // "not keyword" when searching.
+        $number = ltrim($number, '-');
+
+        $this->drupalPost('search/node',
+          array('keys' => $number),
+          t('Search'));
+        $this->assertText($node->title, $i . ': node title shown (search found the node) in search for number ' . $number);
+      }
+    }
+
   }
 }
 

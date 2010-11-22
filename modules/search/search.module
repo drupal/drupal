@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.367 2010/11/21 18:42:25 dries Exp $
+// $Id: search.module,v 1.368 2010/11/22 07:32:12 webchick Exp $
 
 /**
  * @file
@@ -399,6 +399,14 @@ function search_update_totals() {
 
 /**
  * Simplifies a string according to indexing rules.
+ *
+ * @param $text
+ *   Text to simplify.
+ *
+ * @return
+ *   Simplified text.
+ *
+ * @see hook_search_preprocess()
  */
 function search_simplify($text) {
   // Decode entities to UTF-8
@@ -435,6 +443,11 @@ function search_simplify($text) {
   // With the exception of the rules above, we consider all punctuation,
   // marks, spacers, etc, to be a word boundary.
   $text = preg_replace('/[' . PREG_CLASS_UNICODE_WORD_BOUNDARY . ']+/u', ' ', $text);
+
+  // Truncate everything to 50 characters.
+  $words = explode(' ', $text);
+  array_walk($words, '_search_index_truncate');
+  $text = implode(' ', $words);
 
   return $text;
 }
@@ -486,7 +499,7 @@ function search_expand_cjk($matches) {
 }
 
 /**
- * Splits a string into tokens for indexing.
+ * Simplifies and splits a string into tokens for indexing.
  */
 function search_index_split($text) {
   $last = &drupal_static(__FUNCTION__);
@@ -498,7 +511,6 @@ function search_index_split($text) {
   // Process words
   $text = search_simplify($text);
   $words = explode(' ', $text);
-  array_walk($words, '_search_index_truncate');
 
   // Save last keyword result
   $last = $text;
@@ -511,6 +523,9 @@ function search_index_split($text) {
  * Helper function for array_walk in search_index_split.
  */
 function _search_index_truncate(&$text) {
+  if (is_numeric($text)) {
+    $text = ltrim($text, '0');
+  }
   $text = truncate_utf8($text, 50);
 }
 
@@ -644,14 +659,8 @@ function search_index($sid, $module, $text) {
         foreach ($words as $word) {
           // Add word to accumulator
           $accum .= $word . ' ';
-          $num = is_numeric($word);
           // Check wordlength
-          if ($num || drupal_strlen($word) >= $minimum_word_size) {
-            // Normalize numbers
-            if ($num) {
-              $word = (int)ltrim($word, '-0');
-            }
-
+          if (is_numeric($word) || drupal_strlen($word) >= $minimum_word_size) {
             // Links score mainly for the target.
             if ($link) {
               if (!isset($results[$linknid])) {

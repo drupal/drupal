@@ -1,5 +1,5 @@
 <?php
-// $Id: search.extender.inc,v 1.9 2010/11/21 18:42:25 dries Exp $
+// $Id: search.extender.inc,v 1.10 2010/11/22 07:32:12 webchick Exp $
 
 /**
  * @file
@@ -192,7 +192,9 @@ class SearchQuery extends SelectQueryExtender {
         $phrase = TRUE;
         $this->simple = FALSE;
       }
-      // Simplify keyword according to indexing rules and external preprocessors.
+      // Simplify keyword according to indexing rules and external
+      // preprocessors. Use same process as during search indexing, so it
+      // will match search index.
       $words = search_simplify($match[2]);
       // Re-explode in case simplification added more words, except when
       // matching a phrase.
@@ -294,7 +296,6 @@ class SearchQuery extends SelectQueryExtender {
     foreach ($split as $s) {
       $num = is_numeric($s);
       if ($num || drupal_strlen($s) >= variable_get('minimum_word_size', 3)) {
-        $s = $num ? ((int)ltrim($s, '-0')) : $s;
         if (!isset($this->words[$s])) {
           $this->words[$s] = $s;
           $num_new_scores++;
