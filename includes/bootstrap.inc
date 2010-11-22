@@ -1254,7 +1254,7 @@ function drupal_unpack($obj, $field = 'data') {
  *     drupal_set_title($title = t("@name's blog", array('@name' => format_username($account))), PASS_THROUGH);
  *   @endcode
  * - %variable: Indicates that the string should be HTML-escaped and highlighted
- *   with theme_placeholder(), which shows up by default as <em>emphasized</em>.
+ *   with drupal_placeholder(), which shows up as <em>emphasized</em>.
  *   @code
  *     $message = t('%name-from sent %name-to an e-mail.', array('%name-from' => format_username($user), '%name-to' => format_username($account)));
  *   @endcode
@@ -1390,7 +1390,7 @@ function drupal_unpack($obj, $field = 'data') {
  *    - !variable: inserted as is
  *    - @variable: escape plain text to HTML (using check_plain())
  *    - %variable: escape text and theme as a placeholder for user-submitted
- *      content (using check_plain() + theme_placeholder())
+ *      content (using check_plain() + drupal_placeholder())
  * @param $options
  *   An associative array of additional options, with the following keys:
  *     - 'langcode' (defaults to the current language) The language code to
