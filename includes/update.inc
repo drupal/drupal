@@ -466,6 +466,9 @@ function update_fix_d7_requirements() {
     db_add_index('system', 'system_list', array('weight', 'name'));
 
     // Add the cache_path table.
+    if (db_table_exists('cache_path')) {
+      db_drop_table('cache_path');
+    }
     require_once('./modules/system/system.install');
     $schema['cache_path'] = system_schema_cache_7054();
     $schema['cache_path']['description'] = 'Cache table used for path alias lookups.';
