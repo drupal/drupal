@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.580 2010/11/06 23:24:33 webchick Exp $
+// $Id: forum.module,v 1.581 2010/11/22 08:07:57 webchick Exp $
 
 /**
  * @file
@@ -71,7 +71,7 @@ function forum_theme() {
     ),
     'forum_icon' => array(
       'template' => 'forum-icon',
-      'variables' => array('new_posts' => NULL, 'num_posts' => 0, 'comment_mode' => 0, 'sticky' => 0),
+      'variables' => array('new_posts' => NULL, 'num_posts' => 0, 'comment_mode' => 0, 'sticky' => 0, 'first_new' => FALSE),
     ),
     'forum_submitted' => array(
       'template' => 'forum-submitted',
@@ -902,6 +902,7 @@ function forum_get_topics($tid, $sortby, $forum_per_page) {
   }
 
   $topics = array();
+  $first_new_found = FALSE;
   foreach ($result as $topic) {
     if ($user->uid) {
       // folder is new if topic is new or there are new comments since last visit
@@ -918,6 +919,13 @@ function forum_get_topics($tid, $sortby, $forum_per_page) {
       // Do not track "new replies" status for topics if the user is anonymous.
       $topic->new_replies = 0;
       $topic->new = 0;
+    }
+
+    // Make sure only one topic is indicated as the first new topic.
+    $topic->first_new = FALSE;
+    if ($topic->new != 0 && !$first_new_found) {
+      $topic->first_new = TRUE;
+      $first_new_found = TRUE;
     }
 
     if ($topic->comment_count > 0) {
@@ -1081,7 +1089,7 @@ function template_preprocess_forum_topic_list(&$variables) {
   if (!empty($variables['topics'])) {
     $row = 0;
     foreach ($variables['topics'] as $id => $topic) {
-      $variables['topics'][$id]->icon = theme('forum_icon', array('new_posts' => $topic->new, 'num_posts' => $topic->comment_count, 'comment_mode' => $topic->comment_mode, 'sticky' => $topic->sticky));
+      $variables['topics'][$id]->icon = theme('forum_icon', array('new_posts' => $topic->new, 'num_posts' => $topic->comment_count, 'comment_mode' => $topic->comment_mode, 'sticky' => $topic->sticky, 'first_new' => $topic->first_new));
       $variables['topics'][$id]->zebra = $row % 2 == 0 ? 'odd' : 'even';
       $row++;
 
@@ -1130,6 +1138,7 @@ function template_preprocess_forum_topic_list(&$variables) {
  * - $num_posts = 0
  * - $comment_mode = 0
  * - $sticky = 0
+ * - $first_new
  *
  * @see forum-icon.tpl.php
  * @see theme_forum_icon()
