@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1262 2010/11/21 10:05:27 webchick Exp $
+// $Id: common.inc,v 1.1263 2010/11/22 04:33:02 webchick Exp $
 
 /**
  * @file
@@ -1677,7 +1677,7 @@ function format_xml_elements($array) {
  *    - !variable: inserted as is
  *    - @variable: escape plain text to HTML (check_plain)
  *    - %variable: escape text and theme as a placeholder for user-submitted
- *      content (check_plain + theme_placeholder)
+ *      content (check_plain + drupal_placeholder)
  *   Note that you do not need to include @count in this array.
  *   This replacement is done automatically for the plural case.
  * @param $options
@@ -6247,9 +6247,6 @@ function drupal_array_nested_key_exists(array $array, array $parents) {
 function drupal_common_theme() {
   return array(
     // theme.inc
-    'placeholder' => array(
-      'variables' => array('text' => NULL)
-    ),
     'html' => array(
       'render element' => 'page',
       'template' => 'html',
