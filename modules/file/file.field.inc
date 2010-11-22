@@ -1,5 +1,5 @@
 <?php
-// $Id: file.field.inc,v 1.40 2010/11/20 19:57:01 webchick Exp $
+// $Id: file.field.inc,v 1.41 2010/11/22 04:42:09 webchick Exp $
 
 /**
  * @file
@@ -794,13 +794,6 @@ function theme_file_widget($variables) {
 function theme_file_widget_multiple($variables) {
   $element = $variables['element'];
 
-  // Get our list of widgets in order.
-  $widgets = array();
-  foreach (element_children($element) as $key) {
-    $widgets[$key] = $element[$key];
-  }
-  usort($widgets, '_field_sort_items_value_helper');
-
   // Special ID and classes for draggable tables.
   $weight_class = $element['#id'] . '-weight';
   $table_id = $element['#id'] . '-table';
@@ -817,35 +810,43 @@ function theme_file_widget_multiple($variables) {
   $headers[] = t('Weight');
   $headers[] = t('Operations');
 
+  // Get our list of widgets in order (needed when the form comes back after
+  // preview or failed validation).
+  $widgets = array();
+  foreach (element_children($element) as $key) {
+    $widgets[] = &$element[$key];
+  }
+  usort($widgets, '_field_sort_items_value_helper');
+
   $rows = array();
-  foreach ($widgets as $key => $widget) {
+  foreach ($widgets as $key => &$widget) {
     // Save the uploading row for last.
-    if ($element[$key]['#file'] == FALSE) {
-      $element[$key]['#title'] = $element['#file_upload_title'];
-      $element[$key]['#description'] = $element['#file_upload_description'];
+    if ($widget['#file'] == FALSE) {
+      $widget['#title'] = $element['#file_upload_title'];
+      $widget['#description'] = $element['#file_upload_description'];
       continue;
     }
 
     // Delay rendering of the buttons, so that they can be rendered later in the
     // "operations" column.
     $operations_elements = array();
-    foreach (element_children($element[$key]) as $sub_key) {
-      if (isset($element[$key][$sub_key]['#type']) && $element[$key][$sub_key]['#type'] == 'submit') {
-        hide($element[$key][$sub_key]);
-        $operations_elements[] = &$element[$key][$sub_key];
+    foreach (element_children($widget) as $sub_key) {
+      if (isset($widget[$sub_key]['#type']) && $widget[$sub_key]['#type'] == 'submit') {
+        hide($widget[$sub_key]);
+        $operations_elements[] = &$widget[$sub_key];
       }
     }
 
     // Delay rendering of the "Display" option and the weight selector, so that
     // each can be rendered later in its own column.
     if ($element['#display_field']) {
-      hide($element[$key]['display']);
+      hide($widget['display']);
     }
-    hide($element[$key]['_weight']);
+    hide($widget['_weight']);
 
     // Render everything else together in a column, without the normal wrappers.
-    $element[$key]['#theme_wrappers'] = array();
-    $information = drupal_render($element[$key]);
+    $widget['#theme_wrappers'] = array();
+    $information = drupal_render($widget);
 
     // Render the previously hidden elements, using render() instead of
     // drupal_render(), to undo the earlier hide().
@@ -855,14 +856,14 @@ function theme_file_widget_multiple($variables) {
     }
     $display = '';
     if ($element['#display_field']) {
-      unset($element[$key]['display']['#title']);
+      unset($widget['display']['#title']);
       $display = array(
-        'data' => render($element[$key]['display']),
+        'data' => render($widget['display']),
         'class' => array('checkbox'),
       );
     }
-    $element[$key]['_weight']['#attributes']['class'] = array($weight_class);
-    $weight = render($element[$key]['_weight']);
+    $widget['_weight']['#attributes']['class'] = array($weight_class);
+    $weight = render($widget['_weight']);
 
     // Arrange the row with all of the rendered columns.
     $row = array();
@@ -874,7 +875,7 @@ function theme_file_widget_multiple($variables) {
     $row[] = $operations;
     $rows[] = array(
       'data' => $row,
-      'class' => isset($element[$key]['#attributes']['class']) ? array_merge($element[$key]['#attributes']['class'], array('draggable')) : array('draggable'),
+      'class' => isset($widget['#attributes']['class']) ? array_merge($widget['#attributes']['class'], array('draggable')) : array('draggable'),
     );
   }
 
@@ -885,6 +886,7 @@ function theme_file_widget_multiple($variables) {
   $output .= drupal_render_children($element);
   return $output;
 }
+
 
 /**
  * Returns HTML for help text based on file upload validators.
