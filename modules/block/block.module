@@ -559,7 +559,7 @@ function block_form_user_profile_form_alter(&$form, &$form_state) {
         $blocks[$block->module][$block->delta] = array(
           '#type' => 'checkbox',
           '#title' => check_plain($data[$block->delta]['info']),
-          '#default_value' => isset($account->block[$block->module][$block->delta]) ? $account->block[$block->module][$block->delta] : ($block->custom == 1),
+          '#default_value' => isset($account->data['block'][$block->module][$block->delta]) ? $account->data['block'][$block->module][$block->delta] : ($block->custom == 1),
         );
       }
     }
@@ -575,6 +575,15 @@ function block_form_user_profile_form_alter(&$form, &$form_state) {
       );
       $form['block'] += $blocks;
     }
+  }
+}
+
+/**
+ * Implements hook_user_presave().
+ */
+function block_user_presave(&$edit, $account, $category) {
+  if (isset($edit['block'])) {
+    $edit['data']['block'] = $edit['block'];
   }
 }
 
@@ -741,8 +750,8 @@ function block_block_list_alter(&$blocks) {
 
     // Use the user's block visibility setting, if necessary.
     if ($block->custom != BLOCK_CUSTOM_FIXED) {
-      if ($user->uid && isset($user->block[$block->module][$block->delta])) {
-        $enabled = $user->block[$block->module][$block->delta];
+      if ($user->uid && isset($user->data['block'][$block->module][$block->delta])) {
+        $enabled = $user->data['block'][$block->module][$block->delta];
       }
       else {
         $enabled = ($block->custom == BLOCK_CUSTOM_ENABLED);
