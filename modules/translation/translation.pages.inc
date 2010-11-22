@@ -24,18 +24,24 @@ function translation_node_overview($node) {
     $translations = array($node->language => $node);
   }
 
+  $type = variable_get('translation_language_type', LANGUAGE_TYPE_INTERFACE);
   $header = array(t('Language'), t('Title'), t('Status'), t('Operations'));
 
-  foreach (language_list() as $language) {
+  foreach (language_list() as $langcode => $language) {
     $options = array();
     $language_name = $language->name;
-    if (isset($translations[$language->language])) {
+    if (isset($translations[$langcode])) {
       // Existing translation in the translation set: display status.
       // We load the full node to check whether the user can edit it.
-      $translation_node = node_load($translations[$language->language]->nid);
-      $title = l($translation_node->title, 'node/' . $translation_node->nid);
+      $translation_node = node_load($translations[$langcode]->nid);
+      $path = 'node/' . $translation_node->nid;
+      $links = language_negotiation_get_switch_links($type, $path);
+      $title = empty($links->links[$langcode]) ? l($translation_node->title, $path) : l($translation_node->title, $links->links[$langcode]['href'], $links->links[$langcode]);
       if (node_access('update', $translation_node)) {
-        $options[] = l(t('edit'), "node/$translation_node->nid/edit");
+        $text = t('edit');
+        $path = 'node/' . $translation_node->nid . '/edit';
+        $links = language_negotiation_get_switch_links($type, $path);
+        $options[] = empty($links->links[$langcode]) ? l($text, $path) : l($text, $links->links[$langcode]['href'], $links->links[$langcode]);
       }
       $status = $translation_node->status ? t('Published') : t('Not published');
       $status .= $translation_node->translate ? ' - <span class="marker">' . t('outdated') . '</span>' : '';
@@ -47,7 +53,11 @@ function translation_node_overview($node) {
       // No such translation in the set yet: help user to create it.
       $title = t('n/a');
       if (node_access('create', $node)) {
-        $options[] = l(t('add translation'), 'node/add/' . str_replace('_', '-', $node->type), array('query' => array('translation' => $node->nid, 'target' => $language->language)));
+        $text = t('add translation');
+        $path = 'node/add/' . str_replace('_', '-', $node->type);
+        $links = language_negotiation_get_switch_links($type, $path);
+        $query = array('query' => array('translation' => $node->nid, 'target' => $langcode));
+        $options[] = empty($links->links[$langcode]) ? l($text, $path, $query) : l($text, $links->links[$langcode]['href'], array_merge_recursive($links->links[$langcode], $query));
       }
       $status = t('Not translated');
     }
