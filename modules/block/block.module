@@ -240,9 +240,28 @@ function block_block_save($delta = 0, $edit = array()) {
  *
  * Generates the administrator-defined blocks for display.
  */
-function block_block_view($delta = 0, $edit = array()) {
-  $block = db_query('SELECT body, format FROM {block_custom} WHERE bid = :bid', array(':bid' => $delta))->fetchObject();
-  $data['content'] = check_markup($block->body, $block->format, '', TRUE);
+function block_block_view($delta = '') {
+  $query = db_select('block_custom', 'bc');
+  $query->join('block', 'b', 'bc.bid = b.delta');
+  $block = $query
+    ->addTag('translatable')
+    ->addTag('block_load')
+    ->fields('b', array('title'))
+    ->fields('bc', array('body', 'format'))
+    ->condition('bc.bid', $delta)
+    ->range(0, 1)
+    ->execute()
+    ->fetchObject();
+
+  $data = array(
+    // Only module-generated block titles are allowed to output any HTML markup.
+    // Custom block titles are always user input and therefore always escaped.
+    // @see _block_render_blocks()
+    'subject' => $block->title == '<none>' ? '' : check_plain($block->title),
+    'content' => array(
+      '#markup' => check_markup($block->body, $block->format),
+    ),
+  );
   return $data;
 }
 

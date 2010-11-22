@@ -75,8 +75,14 @@ class BlockTestCase extends DrupalWebTestCase {
     $this->assertText(t('The block has been created.'), t('Custom block successfully created.'));
     $bid = db_query("SELECT bid FROM {block_custom} WHERE info = :info", array(':info' => $custom_block['info']))->fetchField();
 
-    // Check to see if the custom block was created by checking that it's in the database..
+    // Check to see if the custom block was created by checking that it's in the database.
     $this->assertNotNull($bid, t('Custom block found in database'));
+
+    // Check that block_block_view() returns the correct title and content.
+    $data = block_block_view($bid);
+    $format = db_query("SELECT format FROM {block_custom} WHERE bid = :bid", array(':bid' => $bid))->fetchField();
+    $this->assertEqual($custom_block['title'], $data['subject'], t('block_block_view() provides correct block title.'));
+    $this->assertEqual(check_markup($custom_block['body[value]'], $format), $data['content']['#markup'], t('block_block_view() provides correct block content.'));
 
     // Check if the block can be moved to all availble regions.
     $custom_block['module'] = 'block';
