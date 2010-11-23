@@ -81,8 +81,8 @@ class BlockTestCase extends DrupalWebTestCase {
     // Check that block_block_view() returns the correct title and content.
     $data = block_block_view($bid);
     $format = db_query("SELECT format FROM {block_custom} WHERE bid = :bid", array(':bid' => $bid))->fetchField();
-    $this->assertEqual($custom_block['title'], $data['subject'], t('block_block_view() provides correct block title.'));
-    $this->assertEqual(check_markup($custom_block['body[value]'], $format), $data['content']['#markup'], t('block_block_view() provides correct block content.'));
+    $this->assertTrue(array_key_exists('subject', $data) && empty($data['subject']), t('block_block_view() provides an empty block subject, since custom blocks do not have default titles.'));
+    $this->assertEqual(check_markup($custom_block['body[value]'], $format), $data['content'], t('block_block_view() provides correct block content.'));
 
     // Check if the block can be moved to all availble regions.
     $custom_block['module'] = 'block';
