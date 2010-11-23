@@ -1,5 +1,5 @@
 <?php
-// $Id: translation.test,v 1.33 2010/11/22 06:14:55 webchick Exp $
+// $Id: translation.test,v 1.34 2010/11/23 05:53:49 webchick Exp $
 
 class TranslationTestCase extends DrupalWebTestCase {
   protected $book;
@@ -16,7 +16,7 @@ class TranslationTestCase extends DrupalWebTestCase {
     parent::setUp('locale', 'translation', 'translation_test');
 
     // Setup users.
-    $this->admin_user = $this->drupalCreateUser(array('administer languages', 'administer content types', 'access administration pages'));
+    $this->admin_user = $this->drupalCreateUser(array('bypass node access', 'administer nodes', 'administer languages', 'administer content types', 'administer blocks', 'access administration pages'));
     $this->translator = $this->drupalCreateUser(array('create page content', 'edit own page content', 'translate content'));
 
     $this->drupalLogin($this->admin_user);
@@ -24,20 +24,31 @@ class TranslationTestCase extends DrupalWebTestCase {
     // Add languages.
     $this->addLanguage('en');
     $this->addLanguage('es');
+    $this->addLanguage('it');
 
-    // Enable language negotiation using path-prefix
-    $this->drupalGet('admin/config/regional/language/configure');
-    $edit = array();
-    $edit['language[enabled][locale-url]'] = 1;
-    $this->drupalPost('admin/config/regional/language/configure', $edit, t('Save settings'));
-    $this->assertRaw(t('Language negotiation configuration saved.'), t('URL language detection enabled.'));
+    // Disable Italian to test the translation behavior with disabled languages.
+    $edit = array('enabled[it]' => FALSE);
+    $this->drupalPost('admin/config/regional/language', $edit, t('Save configuration'));
 
-    // Set "Basic page" content type to use multilingual support with translation.
+    // Set "Basic page" content type to use multilingual support with
+    // translation.
     $this->drupalGet('admin/structure/types/manage/page');
     $edit = array();
     $edit['language_content_type'] = 2;
     $this->drupalPost('admin/structure/types/manage/page', $edit, t('Save content type'));
     $this->assertRaw(t('The content type %type has been updated.', array('%type' => 'Basic page')), t('Basic page content type has been updated.'));
+
+    // Enable the language switcher block.
+    $language_type = LANGUAGE_TYPE_INTERFACE;
+    $edit = array("blocks[locale_$language_type][region]" => 'sidebar_first');
+    $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
+
+    // Enable URL language detection and selection to make the language switcher
+    // block appear.
+    $edit = array('language[enabled][locale-url]' => TRUE);
+    $this->drupalPost('admin/config/regional/language/configure', $edit, t('Save settings'));
+    $this->assertRaw(t('Language negotiation configuration saved.'), t('URL language detection enabled.'));
+    $this->resetCaches();
 
     $this->drupalLogin($this->translator);
   }
@@ -52,7 +63,7 @@ class TranslationTestCase extends DrupalWebTestCase {
     $node_body =  $this->randomName();
     $node = $this->createPage($node_title, $node_body, 'en');
 
-    // Check that the "add translation" link uses a localized path
+    // Check that the "add translation" link uses a localized path.
     $languages = language_list();
     $this->drupalGet('node/' . $node->nid . '/translate');
     $this->assertLinkByHref($languages['es']->prefix . '/node/add/' . str_replace('_', '-', $node->type), 0, t('The "add translation" link for %language points to the localized path of the target language.', array('%language' => $languages['es']->name)));
@@ -62,7 +73,8 @@ class TranslationTestCase extends DrupalWebTestCase {
     $node_translation_body = $this->randomName();
     $node_translation = $this->createTranslation($node, $node_translation_title, $node_translation_body, 'es');
 
-    // Check that the "edit translation" and "view node" links use localized paths.
+    // Check that the "edit translation" and "view node" links use localized
+    // paths.
     $this->drupalGet('node/' . $node->nid . '/translate');
     $this->assertLinkByHref($languages['es']->prefix . '/node/' . $node_translation->nid . '/edit', 0, t('The "edit" link for the translation in %language points to the localized path of the translation language.', array('%language' => $languages['es']->name)));
     $this->assertLinkByHref($languages['es']->prefix . '/node/' . $node_translation->nid, 0, t('The "view" link for the translation in %language points to the localized path of the translation language.', array('%language' => $languages['es']->name)));
@@ -83,13 +95,15 @@ class TranslationTestCase extends DrupalWebTestCase {
     $this->assertEqual($duplicate->tnid, 0, t('The node does not have a tnid.'));
 
     // Update original and mark translation as outdated.
+    $node_body = $this->randomName();
+    $node->body[$node->language][0]['value'] = $node_body;
     $edit = array();
-    $edit["body[$node->language][0][value]"] = $this->randomName();
+    $edit["body[$node->language][0][value]"] = $node_body;
     $edit['translation[retranslate]'] = TRUE;
     $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
     $this->assertRaw(t('Basic page %title has been updated.', array('%title' => $node_title)), t('Original node updated.'));
 
-    // Check to make sure that interface shows translation as outdated
+    // Check to make sure that interface shows translation as outdated.
     $this->drupalGet('node/' . $node->nid . '/translate');
     $this->assertRaw('<span class="marker">' . t('outdated') . '</span>', t('Translation marked as outdated.'));
 
@@ -100,59 +114,105 @@ class TranslationTestCase extends DrupalWebTestCase {
     $this->drupalPost('node/' . $node_translation->nid . '/edit', $edit, t('Save'));
     $this->assertRaw(t('Basic page %title has been updated.', array('%title' => $node_translation_title)), t('Translated node updated.'));
 
-    $this->drupalLogin($this->admin_user);
-
-    // Disable Spanish and confirm that links to the Spanish translations do
-    // not appear on the English node.
-    $edit = array();
-    $edit['enabled[es]'] = FALSE;
-    $this->drupalPost('admin/config/regional/language', $edit, t('Save configuration'));
-    $this->drupalGet('node/' . $node->nid);
-    $languages = language_list();
-    $this->assertNoText($languages['es']->native);
-
-    $this->drupalLogin($this->translator);
-
-    // Confirm that Spanish is still an option for translators when creating nodes.
+    // Confirm that disabled languages are an option for translators when
+    // creating nodes.
     $this->drupalGet('node/add/page');
-    $this->assertRaw('value="' . 'es' .'"', t('Spanish is available in language selection'));
+    $this->assertFieldByXPath('//select[@name="language"]//option', 'it', t('Italian (disabled) is available in language selection.'));
+    $translation_it = $this->createTranslation($node, $this->randomName(), $this->randomName(), 'it');
+    $this->assertRaw($translation_it->body['it'][0]['value'], t('Content created in Italian (disabled).'));
   }
 
   /**
-   * Check that content translation links behave properly.
+   * Check that language switch links behave properly.
    */
-  function testContentTranslationLinks() {
-    // Create Basic page in English.
-    $node_title = $this->randomName();
-    $node_body = $this->randomName();
-    $node = $this->createPage($node_title, $node_body, 'en');
+  function testLanguageSwitchLinks() {
+    // Create a Basic page in English and its translations in Spanish and
+    // Italian.
+    $node = $this->createPage($this->randomName(), $this->randomName(), 'en');
+    $translation_es = $this->createTranslation($node, $this->randomName(), $this->randomName(), 'es');
+    $translation_it = $this->createTranslation($node, $this->randomName(), $this->randomName(), 'it');
 
-    // Submit translation in Spanish.
-    $node_translation_title = $this->randomName();
-    $node_translation_body = $this->randomName();
-    $node_translation = $this->createTranslation($node, $node_translation_title, $node_translation_body, 'es');
+    // Check that language switch links are correctly shown only for enabled
+    // languages.
+    $this->assertLanguageSwitchLinks($node, $translation_es);
+    $this->assertLanguageSwitchLinks($translation_es, $node);
+    $this->assertLanguageSwitchLinks($node, $translation_it, FALSE);
+
+    // Check that links to the displayed translation appear only in the language
+    // switcher block.
+    $this->assertLanguageSwitchLinks($node, $node, FALSE, 'node');
+    $this->assertLanguageSwitchLinks($node, $node, TRUE, 'block-locale');
+
+    // Unpublish the Spanish translation to check that the related language
+    // switch link is not shown.
+    $this->drupalLogin($this->admin_user);
+    $edit = array('status' => FALSE);
+    $this->drupalPost("node/$translation_es->nid/edit", $edit, t('Save'));
+    $this->drupalLogin($this->translator);
+    $this->assertLanguageSwitchLinks($node, $translation_es, FALSE);
 
     // Check that content translation links are shown even when no language
     // negotiation is configured.
     $this->drupalLogin($this->admin_user);
     $edit = array('language[enabled][locale-url]' => FALSE);
     $this->drupalPost('admin/config/regional/language/configure', $edit, t('Save settings'));
+    $this->resetCaches();
+    $edit = array('status' => TRUE);
+    $this->drupalPost("node/$translation_es->nid/edit", $edit, t('Save'));
     $this->drupalLogin($this->translator);
-    $languages = language_list();
-    $this->drupalGet("node/$node->nid");
-    $url = url("node/$node_translation->nid");
-    $this->assertContentByXPath('//a[@href=:url]', array(':url' => $url), $languages['es']->native, t('Spanish translation link found.'));
+    $this->assertLanguageSwitchLinks($node, $translation_es, TRUE, 'node');
+  }
 
-    $this->drupalGet("node/$node_translation->nid");
-    $url = url("node/$node->nid");
-    $this->assertContentByXPath('//a[@href=:url]', array(':url' => $url), $languages['en']->native, t('English translation link found.'));
+  /**
+   * Test that the language switcher block alterations work as intended.
+   */
+  function testLanguageSwitcherBlockIntegration() {
+    // Enable Italian to have three items in the language switcher block.
+    $this->drupalLogin($this->admin_user);
+    $edit = array('enabled[it]' => TRUE);
+    $this->drupalPost('admin/config/regional/language', $edit, t('Save configuration'));
+    $this->drupalLogin($this->translator);
+
+    // Create a Basic page in English.
+    $type = 'block-locale';
+    $node = $this->createPage($this->randomName(), $this->randomName(), 'en');
+    $this->assertLanguageSwitchLinks($node, $node, TRUE, $type);
+    $this->assertLanguageSwitchLinks($node, $this->emptyNode('es'), TRUE, $type);
+    $this->assertLanguageSwitchLinks($node, $this->emptyNode('it'), TRUE, $type);
+
+    // Create the Spanish translation.
+    $translation_es = $this->createTranslation($node, $this->randomName(), $this->randomName(), 'es');
+    $this->assertLanguageSwitchLinks($node, $node, TRUE, $type);
+    $this->assertLanguageSwitchLinks($node, $translation_es, TRUE, $type);
+    $this->assertLanguageSwitchLinks($node, $this->emptyNode('it'), TRUE, $type);
+
+    // Create the Italian translation.
+    $translation_it = $this->createTranslation($node, $this->randomName(), $this->randomName(), 'it');
+    $this->assertLanguageSwitchLinks($node, $node, TRUE, $type);
+    $this->assertLanguageSwitchLinks($node, $translation_es, TRUE, $type);
+    $this->assertLanguageSwitchLinks($node, $translation_it, TRUE, $type);
+  }
+
+  /**
+   * Reset static caches to make the test code match the client site behavior.
+   */
+  function resetCaches() {
+    drupal_static_reset('locale_url_outbound_alter');
+  }
+
+  /**
+   * Return an empty node data structure.
+   */
+  function emptyNode($langcode) {
+    return (object) array('nid' => NULL, 'language' => $langcode);
   }
 
   /**
    * Install a the specified language if it has not been already. Otherwise make sure that
    * the language is enabled.
    *
-   * @param string $language_code The language code the check.
+   * @param $language_code
+   *   The language code the check.
    */
   function addLanguage($language_code) {
     // Check to make sure that language has not already been installed.
@@ -164,7 +224,7 @@ class TranslationTestCase extends DrupalWebTestCase {
       $edit['langcode'] = $language_code;
       $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
 
-      // Make sure we're not using a stale list.
+      // Make sure we are not using a stale list.
       drupal_static_reset('language_list');
       $languages = language_list('language');
       $this->assertTrue(array_key_exists($language_code, $languages), t('Language was installed successfully.'));
@@ -188,9 +248,12 @@ class TranslationTestCase extends DrupalWebTestCase {
   /**
    * Create a "Basic page" in the specified language.
    *
-   * @param string $title Title of basic page in specified language.
-   * @param string $body Body of basic page in specified language.
-   * @param string $language Language code.
+   * @param $title
+   *   Title of basic page in specified language.
+   * @param $body
+   *   Body of basic page in specified language.
+   * @param
+   *   $language Language code.
    */
   function createPage($title, $body, $language) {
     $edit = array();
@@ -206,6 +269,40 @@ class TranslationTestCase extends DrupalWebTestCase {
     $this->assertTrue($node, t('Node found in database.'));
 
     return $node;
+  }
+
+  /**
+   * Create a translation for the specified basic page in the specified
+   * language.
+   *
+   * @param $node
+   *   The basic page to create translation for.
+   * @param $title
+   *   Title of basic page in specified language.
+   * @param $body
+   *   Body of basic page in specified language.
+   * @param $language
+   *   Language code.
+   */
+  function createTranslation($node, $title, $body, $language) {
+    $this->drupalGet('node/add/page', array('query' => array('translation' => $node->nid, 'target' => $language)));
+
+    $body_key = "body[$language][0][value]";
+    $this->assertFieldByXPath('//input[@id="edit-title"]', $node->title, "Original title value correctly populated.");
+    $this->assertFieldByXPath("//textarea[@name='$body_key']", $node->body[$node->language][0]['value'], "Original body value correctly populated.");
+
+    $edit = array();
+    $edit["title"] = $title;
+    $edit[$body_key] = $body;
+    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->assertRaw(t('Basic page %title has been created.', array('%title' => $title)), t('Translation created.'));
+
+    // Check to make sure that translation was successful.
+    $translation = $this->drupalGetNodeByTitle($title);
+    $this->assertTrue($translation, t('Node found in database.'));
+    $this->assertTrue($translation->tnid == $node->nid, t('Translation set id correctly stored.'));
+
+    return $translation;
   }
 
   /**
@@ -228,6 +325,68 @@ class TranslationTestCase extends DrupalWebTestCase {
    *   TRUE on pass, FALSE on fail.
    */
   function assertContentByXPath($xpath, array $arguments = array(), $value = NULL, $message = '', $group = 'Other') {
+    $found = $this->findContentByXPath($xpath, $arguments, $value);
+    return $this->assertTrue($found, $message, $group);
+  }
+
+  /**
+   * Check that the specified language switch links are found/not found.
+   *
+   * @param $node
+   *   The node to display.
+   * @param $translation
+   *   The translation whose link has to be checked.
+   * @param $find
+   *   TRUE if the link must be present in the node page.
+   * @param $types
+   *   The page areas to be checked.
+   *
+   * @return
+   *   TRUE if the language switch links are found/not found.
+   */
+  function assertLanguageSwitchLinks($node, $translation, $find = TRUE, $types = NULL) {
+    if (empty($types)) {
+      $types = array('node', 'block-locale');
+    }
+    elseif (is_string($types)) {
+      $types = array($types);
+    }
+
+    $result = TRUE;
+    $languages = language_list();
+    $page_language = $languages[$node->language];
+    $translation_language = $languages[$translation->language];
+    $url = url("node/$translation->nid", array('language' => $translation_language));
+
+    $this->drupalGet("node/$node->nid", array('language' => $page_language));
+
+    foreach ($types as $type) {
+      $args = array('%translation_language' => $translation_language->native, '%page_language' => $page_language->native, '%type' => $type);
+      if ($find) {
+        $message = t('[%page_language] Language switch item found for %translation_language language in the %type page area.', $args);
+      }
+      else {
+        $message = t('[%page_language] Language switch item not found for %translation_language language in the %type page area.', $args);
+      }
+
+      if (!empty($translation->nid)) {
+        $xpath = '//div[contains(@class, :type)]//a[@href=:url]';
+      }
+      else {
+        $xpath = '//div[contains(@class, :type)]//span[@class="locale-untranslated"]';
+      }
+
+      $found = $this->findContentByXPath($xpath, array(':type' => $type, ':url' => $url), $translation_language->native);
+      $result = $this->assertTrue($found == $find, $message) && $result;
+    }
+
+    return $result;
+  }
+
+  /**
+   * Search for elements matching the given xpath and value.
+   */
+  function findContentByXPath($xpath, array $arguments = array(), $value = NULL) {
     $elements = $this->xpath($xpath, $arguments);
 
     $found = TRUE;
@@ -241,35 +400,6 @@ class TranslationTestCase extends DrupalWebTestCase {
       }
     }
 
-    return $this->assertTrue($elements && $found, $message, $group);
-  }
-
-  /**
-   * Create a translation for the specified basic page in the specified language.
-   *
-   * @param object $node The basic page to create translation for.
-   * @param string $title Title of basic page in specified language.
-   * @param string $body Body of basic page in specified language.
-   * @param string $language Language code.
-   */
-  function createTranslation($node, $title, $body, $language) {
-    $this->drupalGet('node/add/page', array('query' => array('translation' => $node->nid, 'target' => $language)));
-
-    $body_key = "body[$language][0][value]";
-    $this->assertFieldByXPath('//input[@id="edit-title"]', $node->title, "Original title value correctly populated.");
-    $this->assertFieldByXPath("//textarea[@name='$body_key']", $node->body[$node->language][0]['value'], "Original body value correctly populated.");
-
-    $edit = array();
-    $edit["title"] = $title;
-    $edit[$body_key] = $body;
-    $this->drupalPost(NULL, $edit, t('Save'));
-    $this->assertRaw(t('Basic page %title has been created.', array('%title' => $title)), t('Translation created.'));
-
-    // Check to make sure that translation was successful.
-    $translation = $this->drupalGetNodeByTitle($title);
-    $this->assertTrue($translation, t('Node found in database.'));
-    $this->assertTrue($translation->tnid == $node->nid, t('Translation set id correctly stored.'));
-
-    return $translation;
+    return $elements && $found;
   }
 }
