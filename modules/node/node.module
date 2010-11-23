@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1323 2010/11/22 08:01:24 webchick Exp $
+// $Id: node.module,v 1.1324 2010/11/23 06:03:38 webchick Exp $
 
 /**
  * @file
@@ -533,7 +533,7 @@ function node_type_save($info) {
   }
 
   // Clear the node type cache.
-  drupal_static_reset('_node_types_build');
+  node_type_cache_reset();
 
   return $status;
 }
@@ -624,7 +624,7 @@ function node_type_delete($type) {
   module_invoke_all('node_type_delete', $info);
 
   // Clear the node type cache.
-  drupal_static_reset('_node_types_build');
+  node_type_cache_reset();
 }
 
 /**
@@ -669,14 +669,20 @@ function node_type_update_nodes($old_type, $type) {
  *   type object by $type->disabled being set to TRUE.
  */
 function _node_types_build($rebuild = FALSE) {
+  $cid = 'node_types:' . $GLOBALS['language']->language;
+
   if (!$rebuild) {
     $_node_types = &drupal_static(__FUNCTION__);
-    if (is_object($_node_types)) {
+    if (isset($_node_types)) {
+      return $_node_types;
+    }
+    if ($cache = cache_get($cid)) {
+      $_node_types = $cache->data;
       return $_node_types;
     }
   }
 
-  $_node_types = (object)array('types' => array(), 'names' => array());
+  $_node_types = (object) array('types' => array(), 'names' => array());
 
   foreach (module_implements('node_info') as $module) {
     $info_array = module_invoke($module, 'node_info');
@@ -732,7 +738,17 @@ function _node_types_build($rebuild = FALSE) {
 
   asort($_node_types->names);
 
+  cache_set($cid, $_node_types);
+
   return $_node_types;
+}
+
+/**
+ * Clears the node type cache.
+ */
+function node_type_cache_reset() {
+  cache_clear_all('node_types:', 'cache', TRUE);
+  drupal_static_reset('_node_types_build');
 }
 
 /**
@@ -746,33 +762,26 @@ function _node_types_build($rebuild = FALSE) {
  *   An object or array containing values to override the defaults.
  *
  * @return
- *  A node type object.
+ *   A node type object.
  */
 function node_type_set_defaults($info = array()) {
-  $type = &drupal_static(__FUNCTION__);
-
-  if (!isset($type)) {
-    $type = new stdClass();
-    $type->type = '';
-    $type->name = '';
-    $type->base = '';
-    $type->description = '';
-    $type->help = '';
-    $type->custom = 0;
-    $type->modified = 0;
-    $type->locked = 1;
-    $type->disabled = 0;
-    $type->is_new = 1;
-
-    $type->has_title = 1;
-    $type->title_label = 'Title';
-  }
-
-  $new_type = clone $type;
   $info = (array) $info;
-  foreach ($info as $key => $data) {
-    $new_type->$key = $data;
-  }
+  $new_type = $info + array(
+    'type' => '',
+    'name' => '',
+    'base' => '',
+    'description' => '',
+    'help' => '',
+    'custom' => 0,
+    'modified' => 0,
+    'locked' => 1,
+    'disabled' => 0,
+    'is_new' => 1,
+    'has_title' => 1,
+    'title_label' => 'Title',
+  );
+  $new_type = (object) $new_type;
+
   // If the type has no title, set an empty label.
   if (!$new_type->has_title) {
     $new_type->title_label = '';
@@ -1935,7 +1944,7 @@ function node_menu() {
   // @todo Remove this loop when we have a 'description callback' property.
   // Reset internal static cache of _node_types_build(), forces to rebuild the
   // node type information.
-  drupal_static_reset('_node_types_build');
+  node_type_cache_reset();
   foreach (node_type_get_types() as $type) {
     $type_url_str = str_replace('_', '-', $type->type);
     $items['node/add/' . $type_url_str] = array(
