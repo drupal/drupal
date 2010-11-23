@@ -521,7 +521,7 @@ function node_update_7004() {
 
   // Map old preview setting to new values order.
   $original_preview ? $original_preview = 2 : $original_preview = 1;
-  drupal_static_reset('_node_types_build');
+  node_type_cache_reset();
 
   // Apply original settings to all types.
   foreach (_update_7000_node_get_types() as $type => $type_object) {
@@ -552,7 +552,7 @@ function node_update_7006(&$sandbox) {
   $sandbox['#finished'] = 0;
 
   // Get node type info for every invocation.
-  drupal_static_reset('_node_types_build');
+  node_type_cache_reset();
 
   if (!isset($sandbox['total'])) {
     // Initial invocation.
