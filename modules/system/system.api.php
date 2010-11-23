@@ -2692,7 +2692,8 @@ function hook_file_url_alter(&$uri) {
     }
   }
 }
-                                                                                                      /**
+
+/**
  * Check installation requirements and do status reporting.
  *
  * This hook has two closely related uses, determined by the $phase argument:
@@ -2726,24 +2727,25 @@ function hook_file_url_alter(&$uri) {
  * result in a notice on the the administration overview page.
  *
  * @param $phase
- *   The phase in which hook_requirements is run:
- *   - 'install': the module is being installed.
- *   - 'runtime': the runtime requirements are being checked and shown on the
- *              status report page.
+ *   The phase in which requirements are checked:
+ *   - install: The module is being installed.
+ *   - update: The module is enabled and update.php is run.
+ *   - runtime: The runtime requirements are being checked and shown on the
+ *     status report page.
  *
  * @return
  *   A keyed array of requirements. Each requirement is itself an array with
  *   the following items:
- *     - 'title': the name of the requirement.
- *     - 'value': the current value (e.g. version, time, level, ...). During
- *       install phase, this should only be used for version numbers, do not set
- *       it if not applicable.
- *     - 'description': description of the requirement/status.
- *     - 'severity': the requirement's result/severity level, one of:
- *         - REQUIREMENT_INFO:    For info only.
- *         - REQUIREMENT_OK:      The requirement is satisfied.
- *         - REQUIREMENT_WARNING: The requirement failed with a warning.
- *         - REQUIREMENT_ERROR:   The requirement failed with an error.
+ *   - title: The name of the requirement.
+ *   - value: The current value (e.g., version, time, level, etc). During
+ *     install phase, this should only be used for version numbers, do not set
+ *     it if not applicable.
+ *   - description: The description of the requirement/status.
+ *   - severity: The requirement's result/severity level, one of:
+ *     - REQUIREMENT_INFO: For info only.
+ *     - REQUIREMENT_OK: The requirement is satisfied.
+ *     - REQUIREMENT_WARNING: The requirement failed with a warning.
+ *     - REQUIREMENT_ERROR: The requirement failed with an error.
  */
 function hook_requirements($phase) {
   $requirements = array();
