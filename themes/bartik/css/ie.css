@@ -36,3 +36,16 @@ fieldset legend {
 .contact-form .resizable-textarea .grippie {
   width: 76.3%;
 }
+#footer li {
+  float: left; /* LTR */
+}
+#footer-wrapper {
+  color: #c0c0c0;
+}
+#footer-wrapper a {
+  color: #fcfcfc;
+ }
+#footer-wrapper a:hover,
+#footer-wrapper a:focus {
+  color: #fefefe;
+}
