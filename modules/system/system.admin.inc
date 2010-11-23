@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.325 2010/11/20 03:34:30 webchick Exp $
+// $Id: system.admin.inc,v 1.326 2010/11/23 02:54:13 dries Exp $
 
 /**
  * @file
@@ -1695,13 +1695,13 @@ function system_performance_settings() {
   );
   $form['bandwidth_optimization']['preprocess_css'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Aggregate and compress CSS files into one file.'),
+    '#title' => t('Aggregate and compress CSS files.'),
     '#default_value' => intval(variable_get('preprocess_css', 0) && $is_writable),
     '#disabled' => $disabled,
   );
   $form['bandwidth_optimization']['preprocess_js'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Aggregate JavaScript files into one file.'),
+    '#title' => t('Aggregate JavaScript files.'),
     '#default_value' => intval(variable_get('preprocess_js', 0) && $is_writable),
     '#disabled' => $disabled,
   );
