@@ -443,21 +443,23 @@ function conf_path($require_settings = TRUE, $reset = FALSE) {
  * @see ip_address()
  */
 function drupal_override_server_variables($variables = array()) {
-  // Set defaults based on the provided URL.
+  // Allow the provided URL to override any existing values in $_SERVER.
   if (isset($variables['url'])) {
     $url = parse_url($variables['url']);
+    if (isset($url['host'])) {
+      $_SERVER['HTTP_HOST'] = $url['host'];
+    }
+    if (isset($url['path'])) {
+      $_SERVER['SCRIPT_NAME'] = $url['path'];
+    }
     unset($variables['url']);
   }
-  else {
-    $url = array();
-  }
-  $url += array(
-    'path' => '',
-    'host' => 'localhost',
-  );
+  // Define default values for $_SERVER keys. These will be used if $_SERVER
+  // does not already define them and no other values are passed in to this
+  // function.
   $defaults = array(
-    'HTTP_HOST' => $url['host'],
-    'SCRIPT_NAME' => $url['path'],
+    'HTTP_HOST' => 'localhost',
+    'SCRIPT_NAME' => NULL,
     'REMOTE_ADDR' => '127.0.0.1',
     'REQUEST_METHOD' => 'GET',
     'SERVER_NAME' => NULL,
