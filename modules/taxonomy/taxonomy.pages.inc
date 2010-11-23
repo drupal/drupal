@@ -45,7 +45,7 @@ function taxonomy_term_page($term) {
     $nodes = node_load_multiple($nids);
     $build += node_view_multiple($nodes);
     $build['pager'] = array(
-      '#markup' => theme('pager'),
+      '#theme' => 'pager',
       '#weight' => 5,
      );
   }
