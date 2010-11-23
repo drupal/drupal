@@ -210,6 +210,7 @@ function search_menu() {
       );
       $items["$path/%menu_tail"] = array(
         'title' => $search_info['title'],
+        'load arguments' => array('%map', '%index'),
         'page callback' => 'search_view',
         'page arguments' => array($module, 2),
         'access callback' => '_search_menu_access',
