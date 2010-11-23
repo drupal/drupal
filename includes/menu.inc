@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.423 2010/11/21 08:53:18 webchick Exp $
+// $Id: menu.inc,v 1.424 2010/11/23 06:00:27 webchick Exp $
 
 /**
  * @file
@@ -787,8 +787,28 @@ function _menu_link_map_translate(&$map, $to_arg_functions) {
   }
 }
 
+/**
+ * Returns path as one string from the argument we are currently at.
+ */
 function menu_tail_to_arg($arg, $map, $index) {
   return implode('/', array_slice($map, $index));
+}
+
+/**
+ * Loads path as one string from the argument we are currently at.
+ *
+ * To use this load function, you must specify the load arguments
+ * in the router item as:
+ * @code
+ * $item['load arguments'] = array('%map', '%index');
+ * @endcode
+ *
+ * @see search_menu().
+ */
+function menu_tail_load($arg, &$map, $index) {
+  $arg = implode('/', array_slice($map, $index));
+  $map = array_slice($map, 0, $index);
+  return $arg;
 }
 
 /**

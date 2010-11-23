@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.368 2010/11/22 07:32:12 webchick Exp $
+// $Id: search.module,v 1.369 2010/11/23 06:00:27 webchick Exp $
 
 /**
  * @file
@@ -210,6 +210,7 @@ function search_menu() {
       );
       $items["$path/%menu_tail"] = array(
         'title' => $search_info['title'],
+        'load arguments' => array('%map', '%index'),
         'page callback' => 'search_view',
         'page arguments' => array($module, 2),
         'access callback' => '_search_menu_access',

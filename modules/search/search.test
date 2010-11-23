@@ -1,5 +1,5 @@
 <?php
-// $Id: search.test,v 1.79 2010/11/22 07:32:12 webchick Exp $
+// $Id: search.test,v 1.80 2010/11/23 06:00:27 webchick Exp $
 
 // The search index can contain different types of content. Typically the type is 'node'.
 // Here we test with _test_ and _test2_ as the type.
@@ -279,6 +279,13 @@ class SearchPageText extends DrupalWebTestCase {
     $this->drupalPost('search/user', $edit, t('Search'));
     $this->assertText(t('Search'));
     $this->assertTitle($title, 'Search page title is correct');
+
+    // Test that search keywords containing slashes are correctly loaded
+    // from the path and displayed in the search form.
+    $arg = $this->randomName() . '/' . $this->randomName();
+    $this->drupalGet('search/node/' . $arg);
+    $input = $this->xpath("//input[@id='edit-keys' and @value='{$arg}']");
+    $this->assertFalse(empty($input), 'Search keys with a / are correctly set as the default value in the search box.');
   }
 }
 
