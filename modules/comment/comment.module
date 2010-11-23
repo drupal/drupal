@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.919 2010/11/20 09:43:43 webchick Exp $
+// $Id: comment.module,v 1.920 2010/11/23 06:02:06 webchick Exp $
 
 /**
  * @file
@@ -1110,11 +1110,18 @@ function comment_form_node_type_form_alter(&$form, $form_state) {
         'js' => array(drupal_get_path('module', 'comment') . '/comment-node-form.js'),
       ),
     );
+    // Unlike coment_form_node_form_alter(), all of these settings are applied
+    // as defaults to all new nodes. Therefore, it would be wrong to use #states
+    // to hide the other settings based on the primary comment setting.
     $form['comment']['comment'] = array(
       '#type' => 'select',
       '#title' => t('Default comment setting for new content'),
       '#default_value' => variable_get('comment_' . $form['#node_type']->type, COMMENT_NODE_OPEN),
-      '#options' => array(t('Hidden'), t('Closed'), t('Open')),
+      '#options' => array(
+        COMMENT_NODE_OPEN => t('Open'),
+        COMMENT_NODE_CLOSED => t('Closed'),
+        COMMENT_NODE_HIDDEN => t('Hidden'),
+      ),
     );
     $form['comment']['comment_default_mode'] = array(
       '#type' => 'checkbox',
@@ -1135,13 +1142,10 @@ function comment_form_node_type_form_alter(&$form, $form_state) {
       '#options' => array(
         COMMENT_ANONYMOUS_MAYNOT_CONTACT => t('Anonymous posters may not enter their contact information'),
         COMMENT_ANONYMOUS_MAY_CONTACT => t('Anonymous posters may leave their contact information'),
-        COMMENT_ANONYMOUS_MUST_CONTACT => t('Anonymous posters must leave their contact information'))
+        COMMENT_ANONYMOUS_MUST_CONTACT => t('Anonymous posters must leave their contact information'),
+      ),
+      '#access' => user_access('post comments', drupal_anonymous_user()),
     );
-
-    if (!user_access('post comments', drupal_anonymous_user())) {
-      $form['comment']['comment_anonymous']['#access'] = FALSE;
-    }
-
     $form['comment']['comment_subject_field'] = array(
       '#type' => 'checkbox',
       '#title' => t('Allow comment title'),
