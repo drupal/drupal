@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.325 2010/10/03 23:33:15 webchick Exp $
+// $Id: update.php,v 1.326 2010/11/23 03:20:17 dries Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -308,8 +308,8 @@ function update_extra_requirements($requirements = NULL) {
  * Check update requirements and report any errors.
  */
 function update_check_requirements() {
-  // Check the system module and update.php requirements only.
-  $requirements = module_invoke('system', 'requirements', 'update');
+  // Check requirements of all loaded modules.
+  $requirements = module_invoke_all('requirements', 'update');
   $requirements += update_extra_requirements();
   $severity = drupal_requirements_severity($requirements);
 
@@ -397,6 +397,9 @@ if (update_access_allowed()) {
   drupal_load_updates();
 
   update_fix_compatibility();
+
+  // Check the update requirements for all modules.
+  update_check_requirements();
 
   $op = isset($_REQUEST['op']) ? $_REQUEST['op'] : '';
   switch ($op) {
