@@ -13,6 +13,9 @@ Options -Indexes
 # Follow symbolic links in this directory.
 Options +FollowSymLinks
 
+# Multiviews creates problems with aliased URLs and is not needed for Drupal.
+Options -Multiviews
+
 # Make Drupal handle any 404 errors.
 ErrorDocument 404 /index.php
 
