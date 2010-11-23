@@ -1,5 +1,5 @@
 <?php
-// $Id: file.module,v 1.46 2010/11/13 14:04:08 dries Exp $
+// $Id: file.module,v 1.47 2010/11/23 05:51:16 webchick Exp $
 
 /**
  * @file
@@ -442,10 +442,15 @@ function file_managed_file_process($element, &$form_state, $form) {
     );
   }
 
-  // The "accept" attribute is valid XHTML, but not enforced in browsers.
-  // We use it for our own purposes in our JavaScript validation.
+  // Add the extension list to the page as JavaScript settings.
   if (isset($element['#upload_validators']['file_validate_extensions'][0])) {
-    $element['upload']['#attributes']['accept'] = implode(',', array_filter(explode(' ', $element['#upload_validators']['file_validate_extensions'][0])));
+    $extension_list = implode(',', array_filter(explode(' ', $element['#upload_validators']['file_validate_extensions'][0])));
+    $element['upload']['#attached']['js'] = array(
+      array(
+        'type' => 'setting',
+        'data' => array('file' => array('elements' => array('#' . $element['#id'] . '-upload' => $extension_list)))
+      )
+    );
   }
 
   // Prefix and suffix used for AJAX replacement.

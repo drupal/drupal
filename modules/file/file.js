@@ -1,4 +1,4 @@
-// $Id: file.js,v 1.5 2010/09/28 02:31:52 dries Exp $
+// $Id: file.js,v 1.6 2010/11/23 05:51:16 webchick Exp $
 
 /**
  * @file
@@ -15,11 +15,20 @@
  * Attach behaviors to managed file element upload fields.
  */
 Drupal.behaviors.fileValidateAutoAttach = {
-  attach: function (context) {
-    $('div.form-managed-file input.form-file[accept]', context).bind('change', Drupal.file.validateExtension);
+  attach: function (context, settings) {
+    if (settings.file && settings.file.elements) {
+      $.each(settings.file.elements, function(selector) {
+        var extensions = settings.file.elements[selector];
+        $(selector, context).bind('change', {extensions: extensions}, Drupal.file.validateExtension);
+      });
+    }
   },
-  detach: function (context) {
-    $('div.form-managed-file input.form-file[accept]', context).unbind('change', Drupal.file.validateExtension);
+  detach: function (context, settings) {
+    if (settings.file && settings.file.elements) {
+      $.each(settings.file.elements, function(selector) {
+        $(selector, context).unbind('change', Drupal.file.validateExtension);
+      });
+    }
   }
 };
 
@@ -54,20 +63,20 @@ Drupal.behaviors.filePreviewLinks = {
  */
 Drupal.file = Drupal.file || {
   /**
-   * Client-side file input validation based on the HTML "accept" attribute.
+   * Client-side file input validation of file extensions.
    */
   validateExtension: function (event) {
     // Remove any previous errors.
     $('.file-upload-js-error').remove();
 
-    // Add client side validation for the input[type=file] accept attribute.
-    var accept = this.accept.replace(/,\s*/g, '|');
-    if (accept.length > 1 && this.value.length > 0) {
-      var acceptableMatch = new RegExp('\\.(' + accept + ')$', 'gi');
+    // Add client side validation for the input[type=file].
+    var extensionPattern = event.data.extensions.replace(/,\s*/g, '|');
+    if (extensionPattern.length > 1 && this.value.length > 0) {
+      var acceptableMatch = new RegExp('\\.(' + extensionPattern + ')$', 'gi');
       if (!acceptableMatch.test(this.value)) {
         var error = Drupal.t("The selected file %filename cannot be uploaded. Only files with the following extensions are allowed: %extensions.", {
           '%filename': this.value,
-          '%extensions': accept.replace(/\|/g, ', ')
+          '%extensions': extensionPattern.replace(/\|/g, ', ')
         });
         $(this).parents('div.form-managed-file').prepend('<div class="messages error file-upload-js-error">' + error + '</div>');
         this.value = '';
