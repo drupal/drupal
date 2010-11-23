@@ -1,4 +1,4 @@
-/* $Id: ie.css,v 1.7 2010/10/08 03:36:03 webchick Exp $ */
+/* $Id: ie.css,v 1.8 2010/11/23 05:55:46 webchick Exp $ */
 
 .block {
   zoom: 1;
@@ -35,4 +35,17 @@ fieldset legend {
 }
 .contact-form .resizable-textarea .grippie {
   width: 76.3%;
+}
+#footer li {
+  float: left; /* LTR */
+}
+#footer-wrapper {
+  color: #c0c0c0;
+}
+#footer-wrapper a {
+  color: #fcfcfc;
+ }
+#footer-wrapper a:hover,
+#footer-wrapper a:focus {
+  color: #fefefe;
 }
