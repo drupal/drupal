@@ -1198,7 +1198,7 @@ class SearchNumbersTestCase extends DrupalWebTestCase {
       'large' => '444444444444444444444444444444444444444',
       'gigantic' => '5555555555555555555555555555555555555555555555555',
       'over fifty characters' => '666666666666666666666666666666666666666666666666666666666666',
-      //'date', '01/02/2009',
+      'date', '01/02/2009',
       'commas', '987,654,321',
     );
 
@@ -1276,7 +1276,7 @@ class SearchNumberMatchingTestCase extends DrupalWebTestCase {
     // . and -.
     $this->numbers = array(
       '123456789',
-      //'12/34/56789',
+      '12/34/56789',
       '12.3456789',
       '12-34-56789',
       '123,456,789',
