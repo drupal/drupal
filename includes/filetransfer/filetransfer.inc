@@ -1,5 +1,5 @@
 <?php
-// $Id: filetransfer.inc,v 1.10 2010/11/19 03:26:14 dries Exp $
+// $Id: filetransfer.inc,v 1.11 2010/11/24 18:19:17 webchick Exp $
 
 /*
  * Base FileTransfer class.
@@ -208,7 +208,7 @@ abstract class FileTransfer {
       $destination = $destination . '/' . basename($source);
     }
     $this->createDirectory($destination);
-    foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($source, FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::SELF_FIRST) as $filename => $file) {
+    foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($source), RecursiveIteratorIterator::SELF_FIRST) as $filename => $file) {
       $relative_path = substr($filename, strlen($source));
       if ($file->isDir()) {
         $this->createDirectory($destination . $relative_path);
