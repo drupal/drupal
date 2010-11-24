@@ -3854,7 +3854,10 @@ class NodeController extends DrupalDefaultEntityController {
         $function($nodes_of_type);
       }
     }
-    $this->hookLoadArguments[] = array_keys($typed_nodes);
+    // Besides the list of nodes, pass one additional argument to
+    // hook_node_load(), containing a list of node types that were loaded.
+    $argument = array_keys($typed_nodes);
+    $this->hookLoadArguments = array($argument);
     parent::attachLoad($nodes, $revision_id);
   }
 
