@@ -176,13 +176,14 @@ function theme_authorize_report($variables) {
   if (!empty($messages)) {
     $output .= '<div id="authorize-results">';
     foreach ($messages as $heading => $logs) {
-      $output .= '<h3>' . check_plain($heading) . '</h3>';
+      $items = array();
       foreach ($logs as $number => $log_message) {
         if ($number === '#abort') {
           continue;
         }
-        $output .= theme('authorize_message', array('message' => $log_message['message'], 'success' => $log_message['success']));
+        $items[] = theme('authorize_message', array('message' => $log_message['message'], 'success' => $log_message['success']));
       }
+      $output .= theme('item_list',  array('items' => $items, 'title' => $heading));
     }
     $output .= '</div>';
   }
@@ -200,14 +201,13 @@ function theme_authorize_report($variables) {
  * @ingroup themeable
  */
 function theme_authorize_message($variables) {
-  $output = '';
   $message = $variables['message'];
   $success = $variables['success'];
   if ($success) {
-    $output .= '<li class="success">' . $message . '</li>';
+    $item = array('data' => $message, 'class' => array('success'));
   }
   else {
-    $output .= '<li class="failure"><strong>' . t('Failed') . ':</strong> ' . $message . '</li>';
+    $item = array('data' => '<strong>' . $message . '</strong>', 'class' => array('failure'));
   }
-  return $output;
+  return $item;
 }

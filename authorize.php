@@ -146,7 +146,7 @@ if (authorize_access_allowed()) {
       l(t('Front page'), '<front>'),
     ));
 
-    $output .= theme('item_list', array('items' => $links));
+    $output .= theme('item_list', array('items' => $links, 'title' => t('Next steps')));
   }
   // If a batch is running, let it run.
   elseif (isset($_GET['batch'])) {
