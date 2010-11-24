@@ -1,5 +1,5 @@
 <?php
-// $Id: update.authorize.inc,v 1.6 2010/11/18 05:35:39 dries Exp $
+// $Id: update.authorize.inc,v 1.7 2010/11/24 18:14:25 webchick Exp $
 
 /**
  * @file
@@ -265,6 +265,7 @@ function update_authorize_install_batch_finished($success, $results) {
   $_SESSION['authorize_results']['page_message'] = $page_message;
   $_SESSION['authorize_results']['messages'] = $results['log'];
   $_SESSION['authorize_results']['tasks'] = $results['tasks'];
+  $_SESSION['authorize_operation']['page_title'] = t('Drupal Update Manager');
 }
 
 /**

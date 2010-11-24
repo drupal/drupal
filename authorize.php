@@ -1,5 +1,5 @@
 <?php
-// $Id: authorize.php,v 1.8 2010/04/22 10:16:24 webchick Exp $
+// $Id: authorize.php,v 1.9 2010/11/24 18:14:25 webchick Exp $
 
 /**
  * @file
@@ -146,7 +146,7 @@ if (authorize_access_allowed()) {
       l(t('Front page'), '<front>'),
     ));
 
-    $output .= theme('item_list', array('items' => $links));
+    $output .= theme('item_list', array('items' => $links, 'title' => t('Next steps')));
   }
   // If a batch is running, let it run.
   elseif (isset($_GET['batch'])) {
