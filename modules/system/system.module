@@ -2361,12 +2361,19 @@ function _system_rebuild_module_data() {
  *   Array of all available modules and their data.
  */
 function system_rebuild_module_data() {
-  $modules = _system_rebuild_module_data();
-  ksort($modules);
-  system_get_files_database($modules, 'module');
-  system_update_files_database($modules, 'module');
-  $modules = _module_build_dependencies($modules);
-  return $modules;
+  $modules_cache = &drupal_static(__FUNCTION__);
+  // Only rebuild once per request. $modules and $modules_cache cannot be
+  // combined into one variable, because the $modules_cache variable is reset by
+  // reference from system_list_reset() during the rebuild.
+  if (!isset($modules_cache)) {
+    $modules = _system_rebuild_module_data();
+    ksort($modules);
+    system_get_files_database($modules, 'module');
+    system_update_files_database($modules, 'module');
+    $modules = _module_build_dependencies($modules);
+    $modules_cache = $modules;
+  }
+  return $modules_cache;
 }
 
 /**

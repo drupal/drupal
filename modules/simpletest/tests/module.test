@@ -127,6 +127,7 @@ class ModuleUnitTest extends DrupalWebTestCase {
     // First, create a fake missing dependency. Forum depends on poll, which
     // depends on a made-up module, foo. Nothing should be installed.
     variable_set('dependency_test', 'missing dependency');
+    drupal_static_reset('system_rebuild_module_data');
     $result = module_enable(array('forum'));
     $this->assertFalse($result, t('module_enable() returns FALSE if dependencies are missing.'));
     $this->assertFalse(module_exists('forum'), t('module_enable() aborts if dependencies are missing.'));
@@ -134,6 +135,7 @@ class ModuleUnitTest extends DrupalWebTestCase {
     // Now, fix the missing dependency. Forum module depends on poll, but poll
     // depends on the PHP module. module_enable() should work.
     variable_set('dependency_test', 'dependency');
+    drupal_static_reset('system_rebuild_module_data');
     $result = module_enable(array('forum'));
     $this->assertTrue($result, t('module_enable() returns the correct value.'));
     // Verify that the fake dependency chain was installed.
