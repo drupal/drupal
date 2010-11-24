@@ -1,11 +1,27 @@
 <?php
-// $Id: node_test.module,v 1.12 2010/09/29 14:08:54 dries Exp $
+// $Id: node_test.module,v 1.13 2010/11/24 16:25:39 dries Exp $
 
 /**
  * @file
  * Dummy module implementing node related hooks to test API interaction with
  * the Node module.
  */
+
+/**
+ * Implements hook_node_load().
+ */
+function node_test_node_load($nodes, $types) {
+  // Add properties to each loaded node which record the parameters that were
+  // passed in to this function, so the tests can check that (a) this hook was
+  // called, and (b) the parameters were what we expected them to be.
+  $nids = array_keys($nodes);
+  ksort($nids);
+  sort($types);
+  foreach ($nodes as $node) {
+    $node->node_test_loaded_nids = $nids;
+    $node->node_test_loaded_types = $types;
+  }
+}
 
 /**
  * Implements hook_node_view().
