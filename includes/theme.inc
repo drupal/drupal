@@ -2194,14 +2194,18 @@ function template_preprocess_html(&$variables) {
 
   // Construct page title.
   if (drupal_get_title()) {
-    $head_title = array(strip_tags(drupal_get_title()), check_plain(variable_get('site_name', 'Drupal')));
+    $head_title = array(
+      'title' => strip_tags(drupal_get_title()),
+      'name' => check_plain(variable_get('site_name', 'Drupal')),
+    );
   }
   else {
-    $head_title = array(check_plain(variable_get('site_name', 'Drupal')));
+    $head_title = array('name' => check_plain(variable_get('site_name', 'Drupal')));
     if (variable_get('site_slogan', '')) {
-      $head_title[] = filter_xss_admin(variable_get('site_slogan', ''));
+      $head_title['slogan'] = filter_xss_admin(variable_get('site_slogan', ''));
     }
   }
+  $variables['head_title_array'] = $head_title;
   $variables['head_title'] = implode(' | ', $head_title);
 
   // Populate the page template suggestions.
@@ -2419,18 +2423,22 @@ function template_preprocess_maintenance_page(&$variables) {
 
   // Construct page title
   if (drupal_get_title()) {
-    $head_title = array(strip_tags(drupal_get_title()), variable_get('site_name', 'Drupal'));
+    $head_title = array(
+      'title' => strip_tags(drupal_get_title()),
+      'name' => variable_get('site_name', 'Drupal'),
+    );
   }
   else {
-    $head_title = array(variable_get('site_name', 'Drupal'));
+    $head_title = array('name' => variable_get('site_name', 'Drupal'));
     if (variable_get('site_slogan', '')) {
-      $head_title[] = variable_get('site_slogan', '');
+      $head_title['slogan'] = variable_get('site_slogan', '');
     }
   }
 
   // set the default language if necessary
   $language = isset($GLOBALS['language']) ? $GLOBALS['language'] : language_default();
 
+  $variables['head_title_array']  = $head_title;
   $variables['head_title']        = implode(' | ', $head_title);
   $variables['base_path']         = base_path();
   $variables['front_page']        = url();
