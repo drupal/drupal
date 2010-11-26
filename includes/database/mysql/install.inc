@@ -21,7 +21,7 @@ class DatabaseTasks_mysql extends DatabaseTasks {
    * Returns a human-readable name string for MySQL and equivalent databases.
    */
   public function name() {
-    return 'MySQL, MariaDB, or equivalent';
+    return st('MySQL, MariaDB, or equivalent');
   }
 
   /**

@@ -28,7 +28,7 @@ class DatabaseTasks_pgsql extends DatabaseTasks {
   }
 
   public function name() {
-    return 'PostgreSQL';
+    return st('PostgreSQL');
   }
 
   public function minimumVersion() {

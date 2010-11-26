@@ -10,7 +10,7 @@ class DatabaseTasks_sqlite extends DatabaseTasks {
   protected $pdoDriver = 'sqlite';
 
   public function name() {
-    return 'SQLite';
+    return st('SQLite');
   }
 
   /**
