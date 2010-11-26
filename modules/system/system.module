@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.992 2010/11/24 16:47:44 dries Exp $
+// $Id: system.module,v 1.993 2010/11/26 10:55:55 webchick Exp $
 
 /**
  * @file
@@ -124,6 +124,7 @@ function system_help($path, $arg) {
       if ($user->uid == 1) {
         return '<p>' . t('If you are upgrading to a newer version of Drupal or upgrading contributed modules or themes, you may need to run the <a href="@update-php">update script</a>.', array('@update-php' => $base_url . '/update.php')) . '</p>';
       }
+      break;
     case 'admin/config/system/actions':
     case 'admin/config/system/actions/manage':
       $output = '';
