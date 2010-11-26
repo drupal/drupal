@@ -48,8 +48,8 @@ a:active {
 .region-header,
 .region-header a,
 .region-header li a.active,
-#header #name-and-slogan,
-#header #name-and-slogan a,
+#name-and-slogan,
+#name-and-slogan a,
 #secondary-menu-links li a {
   color: #fffeff;
 }
