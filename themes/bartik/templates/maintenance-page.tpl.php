@@ -1,5 +1,5 @@
 <?php
-// $Id: maintenance-page.tpl.php,v 1.2 2010/07/28 01:40:39 dries Exp $
+// $Id: maintenance-page.tpl.php,v 1.3 2010/11/26 11:00:37 webchick Exp $
 
 /**
  * @file
@@ -25,7 +25,7 @@
 </head>
 <body class="<?php print $classes; ?>" <?php print $attributes;?>>
   <div id="skip-link">
-    <a href="#main-content"><?php print t('Skip to main content'); ?></a>
+    <a href="#main-content" class="element-invisible element-focusable"><?php print t('Skip to main content'); ?></a>
   </div>
   <?php print $page_top; ?>
 
@@ -66,7 +66,6 @@
   <div id="main-wrapper"><div id="main" class="clearfix">
 
     <div id="content" class="column"><div class="section">
-      <?php if ($highlighted): ?><div id="highlighted"><?php print $highlighted; ?></div><?php endif; ?>
       <a id="main-content"></a>
       <?php if ($title): ?>
         <h1 class="title" id="page-title">

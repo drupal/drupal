@@ -1,4 +1,4 @@
-/* $Id: maintenance-page.css,v 1.5 2010/10/01 07:05:22 webchick Exp $ */
+/* $Id: maintenance-page.css,v 1.6 2010/11/26 11:00:37 webchick Exp $ */
 
 body.maintenance-page {
   background-color: #fff;
@@ -7,8 +7,9 @@ body.maintenance-page {
 .maintenance-page #page-wrapper {
   margin-left: auto;
   margin-right: auto;
+  min-width: 0;
   width: 800px;
-  border: 1px solid #cbcbcb;
+  border: 1px solid #ddd;
   margin-top: 40px;
 }
 .maintenance-page #page {

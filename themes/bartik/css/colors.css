@@ -1,4 +1,4 @@
-/* $Id: colors.css,v 1.7 2010/10/05 01:48:11 dries Exp $ */
+/* $Id: colors.css,v 1.8 2010/11/26 11:00:37 webchick Exp $ */
 
 /* ---------- Color Module Styles ----------- */
 
@@ -48,8 +48,8 @@ a:active {
 .region-header,
 .region-header a,
 .region-header li a.active,
-#header #name-and-slogan,
-#header #name-and-slogan a,
+#name-and-slogan,
+#name-and-slogan a,
 #secondary-menu-links li a {
   color: #fffeff;
 }

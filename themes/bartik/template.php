@@ -1,5 +1,5 @@
 <?php
-// $Id: template.php,v 1.8 2010/11/20 10:02:55 webchick Exp $
+// $Id: template.php,v 1.9 2010/11/26 11:00:37 webchick Exp $
 
 /**
  * Add body classes if certain regions have content.
@@ -78,6 +78,9 @@ function bartik_process_page(&$variables) {
  * Implements hook_preprocess_maintenance_page().
  */
 function bartik_preprocess_maintenance_page(&$variables) {
+  if (!$variables['db_is_active']) {
+    unset($variables['site_name']);
+  }
   drupal_add_css(drupal_get_path('theme', 'bartik') . '/css/maintenance-page.css');
 }
 
