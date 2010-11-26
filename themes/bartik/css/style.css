@@ -118,10 +118,11 @@ a.feed-icon {
 /* ------------------ Table Styles ------------------ */
 
 table {
+  border: 0;
   border-spacing: 0;
-  width: 100%;
-  margin: 10px 0;
   font-size: 0.857em;
+  margin: 10px 0;
+  width: 100%;
 }
 table table {
   font-size: 1em;
@@ -134,11 +135,14 @@ table tr th {
   background: rgba(0, 0, 0, 0.51);
   border-bottom-style: none;
 }
-table thead tr th,
-table thead tr th a,
-table thead tr th a:hover {
+table tr th,
+table tr th a,
+table tr th a:hover {
   color: #FFF;
   font-weight: bold;
+}
+table tbody tr th {
+  vertical-align: top;
 }
 tr td,
 tr th {
