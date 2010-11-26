@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.248 2010/11/21 10:17:33 webchick Exp $
+// $Id: drupal_web_test_case.php,v 1.249 2010/11/26 19:26:57 dries Exp $
 
 /**
  * Global variable that holds information about the tests being run.
@@ -431,8 +431,17 @@ abstract class DrupalTestCase {
 
   /**
    * Run all tests in this class.
+   *
+   * Regardless of whether $methods are passed or not, only method names
+   * starting with "test" are executed.
+   *
+   * @param $methods
+   *   (optional) A list of method names in the test case class to run; e.g.,
+   *   array('testFoo', 'testBar'). By default, all methods of the class are
+   *   taken into account, but it can be useful to only run a few selected test
+   *   methods during debugging.
    */
-  public function run() {
+  public function run(array $methods = array()) {
     // Initialize verbose debugging.
     simpletest_verbose(NULL, variable_get('file_public_path', conf_path() . '/files'), get_class($this));
 
@@ -447,8 +456,13 @@ abstract class DrupalTestCase {
 
     set_error_handler(array($this, 'errorHandler'));
     $class = get_class($this);
-    // Iterate through all the methods in this class.
-    foreach (get_class_methods($class) as $method) {
+    // Iterate through all the methods in this class, unless a specific list of
+    // methods to run was passed.
+    $class_methods = get_class_methods($class);
+    if ($methods) {
+      $class_methods = array_intersect($class_methods, $methods);
+    }
+    foreach ($class_methods as $method) {
       // If the current method starts with "test", run it - it's a test.
       if (strtolower(substr($method, 0, 4)) == 'test') {
         // Insert a fail record. This will be deleted on completion to ensure
