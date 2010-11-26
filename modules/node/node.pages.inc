@@ -56,21 +56,15 @@ function theme_node_add_list($variables) {
 
 
 /**
- * Present a node submission form or a set of links to such forms.
+ * Returns a node submission form.
  */
 function node_add($type) {
   global $user;
 
   $types = node_type_get_types();
-  $type = isset($type) ? str_replace('-', '_', $type) : NULL;
-  // If a node type has been specified, validate its existence.
-  if (isset($types[$type])) {
-    // Initialize settings:
-    $node = (object) array('uid' => $user->uid, 'name' => (isset($user->name) ? $user->name : ''), 'type' => $type, 'language' => LANGUAGE_NONE);
-
-    drupal_set_title(t('Create @name', array('@name' => $types[$type]->name)), PASS_THROUGH);
-    $output = drupal_get_form($type . '_node_form', $node);
-  }
+  $node = (object) array('uid' => $user->uid, 'name' => (isset($user->name) ? $user->name : ''), 'type' => $type, 'language' => LANGUAGE_NONE);
+  drupal_set_title(t('Create @name', array('@name' => $types[$type]->name)), PASS_THROUGH);
+  $output = drupal_get_form($type . '_node_form', $node);
 
   return $output;
 }
