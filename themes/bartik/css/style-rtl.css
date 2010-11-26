@@ -1,4 +1,4 @@
-/* $Id: style-rtl.css,v 1.13 2010/11/16 18:54:23 dries Exp $ */
+/* $Id: style-rtl.css,v 1.14 2010/11/26 19:02:23 dries Exp $ */
 
 /* ------------------ Reset Styles ------------------ */
 
@@ -38,7 +38,7 @@ ul.tips {
 /* ------------------ Header ------------------ */
 
 #logo {
-  padding: 15px 10px 15px 30px;
+  padding: 15px 10px 15px 15px;
 }
 #logo,
 #name-and-slogan,
@@ -46,6 +46,9 @@ ul.tips {
 .region-header #block-user-login .form-item,
 .region-header #block-user-login .item-list li {
   float: right;
+}
+#name-and-slogan {
+  margin: 0 15px 30px 0;
 }
 .region-header .form-text {
   margin-left: 2px;

@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.36 2010/11/20 10:02:55 webchick Exp $ */
+/* $Id: style.css,v 1.37 2010/11/26 19:02:23 dries Exp $ */
 
 /* ---------- Overall Specifications ---------- */
 
@@ -240,14 +240,12 @@ ul.tips {
 }
 #logo {
   float: left; /* LTR */
-  padding: 15px 30px 15px 10px; /* LTR */
+  padding: 15px 15px 15px 10px; /* LTR */
 }
 #name-and-slogan {
   float: left; /* LTR */
-}
-#name-and-slogan {
   padding-top: 34px;
-  margin-bottom: 30px;
+  margin: 0 0 30px 15px; /* LTR */
 }
 #site-name {
   font-size: 1.821em;
