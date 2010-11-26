@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.4 2010/11/13 23:07:16 webchick Exp $
+// $Id: install.inc,v 1.5 2010/11/26 21:36:43 webchick Exp $
 
 /**
  * @file
@@ -10,7 +10,7 @@ class DatabaseTasks_sqlite extends DatabaseTasks {
   protected $pdoDriver = 'sqlite';
 
   public function name() {
-    return 'SQLite';
+    return st('SQLite');
   }
 
   /**
