@@ -3746,13 +3746,13 @@ function user_file_download_access($field, $entity_type, $entity) {
  *
  * To prevent new Drupal 7 sites from installing Profile module, and
  * unwittingly ending up with two completely different and incompatible methods
- * of extending users, remove it from the available modules by setting it to
- * hidden if the profile_* tables are not already present.
+ * of extending users, only make the Profile module available if the profile_*
+ * tables are present.
  *
  * @todo: Remove in D8, pending upgrade path.
  */
 function user_system_info_alter(&$info, $file, $type) {
-  if ($type == 'module' && $file->name == 'profile' && !db_table_exists('profile_field')) {
-    $info['hidden'] = TRUE;
+  if ($type == 'module' && $file->name == 'profile' && db_table_exists('profile_field')) {
+    $info['hidden'] = FALSE;
   }
 }
