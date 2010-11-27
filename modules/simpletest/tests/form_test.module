@@ -1,5 +1,5 @@
 <?php
-// $Id: form_test.module,v 1.55 2010/11/15 10:06:32 webchick Exp $
+// $Id: form_test.module,v 1.56 2010/11/27 19:12:56 dries Exp $
 
 /**
  * @file
@@ -1506,7 +1506,8 @@ function form_test_load_include_custom($form, &$form_state) {
   // Specify the include file and enable form caching. That way the form is
   // cached when it is submitted, but needs to find the specified submit handler
   // in the include.
-  $form_state['build_info']['files'][] = array('module' => 'form_test', 'name' => 'form_test.file');
+  // Filename is a bit weird here: modules/simpletest/tests/form_test.file.inc
+  form_load_include($form_state, 'inc', 'form_test', 'form_test.file');
   $form_state['cache'] = TRUE;
   return $form;
 }
