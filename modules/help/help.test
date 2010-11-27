@@ -1,5 +1,5 @@
 <?php
-// $Id: help.test,v 1.21 2010/08/05 23:53:38 webchick Exp $
+// $Id: help.test,v 1.22 2010/11/27 20:25:44 dries Exp $
 
 class HelpTestCase extends DrupalWebTestCase {
   protected $big_user;
@@ -22,7 +22,7 @@ class HelpTestCase extends DrupalWebTestCase {
     $this->getModuleList();
 
     // Create users.
-    $this->big_user = $this->drupalCreateUser(array('access administration pages', 'administer permissions'));
+    $this->big_user = $this->drupalCreateUser(array('access administration pages', 'view the administration theme', 'administer permissions'));
     $this->any_user = $this->drupalCreateUser(array());
   }
 

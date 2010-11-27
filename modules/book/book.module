@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.556 2010/11/14 21:04:45 webchick Exp $
+// $Id: book.module,v 1.557 2010/11/27 20:25:44 dries Exp $
 
 /**
  * @file
@@ -174,7 +174,6 @@ function book_menu() {
     'page arguments' => array(1),
     'access callback' => '_book_outline_access',
     'access arguments' => array(1),
-    'theme callback' => '_node_custom_theme',
     'type' => MENU_LOCAL_TASK,
     'weight' => 2,
     'file' => 'book.pages.inc',
@@ -185,7 +184,6 @@ function book_menu() {
     'page arguments' => array('book_remove_form', 1),
     'access callback' => '_book_outline_remove_access',
     'access arguments' => array(1),
-    'theme callback' => '_node_custom_theme',
     'file' => 'book.pages.inc',
   );
 
@@ -210,11 +208,13 @@ function _book_outline_remove_access($node) {
  * Implements hook_admin_paths().
  */
 function book_admin_paths() {
-  $paths = array(
-    'node/*/outline' => TRUE,
-    'node/*/outline/remove' => TRUE,
-  );
-  return $paths;
+  if (variable_get('node_admin_theme')) {
+    $paths = array(
+      'node/*/outline' => TRUE,
+      'node/*/outline/remove' => TRUE,
+    );
+    return $paths;
+  }
 }
 
 /**

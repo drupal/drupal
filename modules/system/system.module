@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.993 2010/11/26 10:55:55 webchick Exp $
+// $Id: system.module,v 1.994 2010/11/27 20:25:44 dries Exp $
 
 /**
  * @file
@@ -229,6 +229,10 @@ function system_permission() {
     ),
     'access site in maintenance mode' => array(
       'title' => t('Use the site in maintenance mode'),
+    ),
+    'view the administration theme' => array(
+      'title' => t('View the administration theme'),
+      'description' => variable_get('admin_theme') ? '' : t('This is only used when the site is configured to use a separate administration theme on the <a href="@appearance-url">Appearance</a> page.', array('@appearance-url' => url('admin/appearance'))),
     ),
     'access site reports' => array(
       'title' => t('View site reports'),
@@ -544,8 +548,6 @@ function system_menu() {
     'page callback' => 'system_admin_menu_block_page',
     'weight' => 9,
     'menu_name' => 'management',
-    'theme callback' => 'variable_get',
-    'theme arguments' => array('admin_theme'),
     'file' => 'system.admin.inc',
   );
   $items['admin/compact'] = array(
@@ -1841,7 +1843,7 @@ function system_init() {
   // Add the CSS for this module. These aren't in system.info, because they
   // need to be in the CSS_SYSTEM group rather than the CSS_DEFAULT group.
   drupal_add_css($path . '/system.base.css', array('group' => CSS_SYSTEM, 'every_page' => TRUE));
-  if (arg(0) == 'admin' || (variable_get('node_admin_theme', '0') && arg(0) == 'node' && (arg(1) == 'add' || arg(2) == 'edit' || arg(2) == 'delete'))) {
+  if (path_is_admin(current_path())) {
     drupal_add_css($path . '/system.admin.css', array('group' => CSS_SYSTEM));
   }
   drupal_add_css($path . '/system.menus.css', array('group' => CSS_SYSTEM, 'every_page' => TRUE));
@@ -1891,6 +1893,15 @@ function system_add_module_assets() {
         drupal_add_js($script, array('every_page' => TRUE));
       }
     }
+  }
+}
+
+/**
+ * Implements hook_custom_theme().
+ */
+function system_custom_theme() {
+  if (user_access('view the administration theme') && path_is_admin(current_path())) {
+    return variable_get('admin_theme');
   }
 }
 

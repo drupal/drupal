@@ -1,5 +1,5 @@
 <?php
-// $Id: batch.test,v 1.15 2010/10/03 02:42:25 dries Exp $
+// $Id: batch.test,v 1.16 2010/11/27 20:25:44 dries Exp $
 
 /**
  * @file
@@ -299,12 +299,16 @@ class BatchPageTestCase extends DrupalWebTestCase {
     // is using a different theme than would normally be used by the batch API.
     variable_set('theme_default', 'bartik');
     variable_set('admin_theme', 'seven');
+    // Log in as an administrator who can see the administrative theme.
+    $admin_user = $this->drupalCreateUser(array('view the administration theme'));
+    $this->drupalLogin($admin_user);
     // Visit an administrative page that runs a test batch, and check that the
     // theme that was used during batch execution (which the batch callback
     // function saved as a variable) matches the theme used on the
     // administrative page.
     $this->drupalGet('admin/batch-test/test-theme');
-    // The stack should contain the name of the the used on the progress page.
+    // The stack should contain the name of the theme used on the progress
+    // page.
     $this->assertEqual(batch_test_stack(), array('seven'), t('A progressive batch correctly uses the theme of the page that started the batch.'));
   }
 }

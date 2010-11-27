@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1325 2010/11/24 16:25:39 dries Exp $
+// $Id: node.module,v 1.1326 2010/11/27 20:25:44 dries Exp $
 
 /**
  * @file
@@ -255,16 +255,18 @@ function node_uri($node) {
  * Implements hook_admin_paths().
  */
 function node_admin_paths() {
-  $paths = array(
-    'node/*/edit' => TRUE,
-    'node/*/delete' => TRUE,
-    'node/*/revisions' => TRUE,
-    'node/*/revisions/*/revert' => TRUE,
-    'node/*/revisions/*/delete' => TRUE,
-    'node/add' => TRUE,
-    'node/add/*' => TRUE,
-  );
-  return $paths;
+  if (variable_get('node_admin_theme')) {
+    $paths = array(
+      'node/*/edit' => TRUE,
+      'node/*/delete' => TRUE,
+      'node/*/revisions' => TRUE,
+      'node/*/revisions/*/revert' => TRUE,
+      'node/*/revisions/*/delete' => TRUE,
+      'node/add' => TRUE,
+      'node/add/*' => TRUE,
+    );
+    return $paths;
+  }
 }
 
 /**
@@ -1932,7 +1934,6 @@ function node_menu() {
     'title' => 'Add content',
     'page callback' => 'node_add_page',
     'access callback' => '_node_add_access',
-    'theme callback' => '_node_custom_theme',
     'file' => 'node.pages.inc',
   );
   $items['rss.xml'] = array(
@@ -1979,7 +1980,6 @@ function node_menu() {
     'page arguments' => array(1),
     'access callback' => 'node_access',
     'access arguments' => array('update', 1),
-    'theme callback' => '_node_custom_theme',
     'weight' => 0,
     'type' => MENU_LOCAL_TASK,
     'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
@@ -1991,7 +1991,6 @@ function node_menu() {
     'page arguments' => array('node_delete_confirm', 1),
     'access callback' => 'node_access',
     'access arguments' => array('delete', 1),
-    'theme callback' => '_node_custom_theme',
     'weight' => 1,
     'type' => MENU_LOCAL_TASK,
     'context' => MENU_CONTEXT_INLINE,
@@ -2003,7 +2002,6 @@ function node_menu() {
     'page arguments' => array(1),
     'access callback' => '_node_revision_access',
     'access arguments' => array(1),
-    'theme callback' => '_node_custom_theme',
     'weight' => 2,
     'type' => MENU_LOCAL_TASK,
     'file' => 'node.pages.inc',
@@ -2023,7 +2021,6 @@ function node_menu() {
     'page arguments' => array('node_revision_revert_confirm', 1),
     'access callback' => '_node_revision_access',
     'access arguments' => array(1, 'update'),
-    'theme callback' => '_node_custom_theme',
     'file' => 'node.pages.inc',
   );
   $items['node/%node/revisions/%/delete'] = array(
@@ -2033,7 +2030,6 @@ function node_menu() {
     'page arguments' => array('node_revision_delete_confirm', 1),
     'access callback' => '_node_revision_access',
     'access arguments' => array(1, 'delete'),
-    'theme callback' => '_node_custom_theme',
     'file' => 'node.pages.inc',
   );
   return $items;
@@ -2067,17 +2063,6 @@ function node_type_page_title($type) {
  */
 function node_page_title($node) {
   return $node->title;
-}
-
-/**
- * Theme callback for creating and editing nodes.
- */
-function _node_custom_theme() {
-  // Use the administration theme if the site is configured to use it for
-  // nodes.
-  if (variable_get('node_admin_theme')) {
-    return variable_get('admin_theme');
-  }
 }
 
 function node_last_changed($nid) {

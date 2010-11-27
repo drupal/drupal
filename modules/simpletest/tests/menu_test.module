@@ -1,5 +1,5 @@
 <?php
-// $Id: menu_test.module,v 1.19 2010/11/21 08:53:18 webchick Exp $
+// $Id: menu_test.module,v 1.20 2010/11/27 20:25:44 dries Exp $
 
 /**
  * @file
@@ -56,6 +56,11 @@ function menu_test_menu() {
     'title' => 'Page that tests theme callback inheritance.',
     'page callback' => 'menu_test_theme_page_callback',
     'page arguments' => array(TRUE),
+    'access arguments' => array('access content'),
+  );
+  $items['menu-test/no-theme-callback'] = array(
+    'title' => 'Page that displays different themes without using a theme callback.',
+    'page callback' => 'menu_test_theme_page_callback',
     'access arguments' => array('access content'),
   );
   // Path containing "exotic" characters.

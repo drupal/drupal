@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.test,v 1.40 2010/11/21 08:53:18 webchick Exp $
+// $Id: menu.test,v 1.41 2010/11/27 20:25:44 dries Exp $
 
 /**
  * @file
@@ -159,26 +159,35 @@ class MenuRouterTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Test that the result of hook_custom_theme() overrides the theme callback.
+   * Test that hook_custom_theme() can control the theme of a page.
    */
   function testHookCustomTheme() {
     // Trigger hook_custom_theme() to dynamically request the Stark theme for
     // the requested page.
     variable_set('menu_test_hook_custom_theme_name', 'stark');
-
-    // Request a page whose theme callback returns the Seven theme. Since Stark
-    // is not a currently enabled theme, our above request should be ignored,
-    // and Seven should still be used.
-    $this->drupalGet('menu-test/theme-callback/use-admin-theme');
-    $this->assertText('Custom theme: seven. Actual theme: seven.', t('The result of hook_custom_theme() does not override a theme callback when it returns a theme that is not enabled.'));
-    $this->assertRaw('seven/style.css', t("The Seven theme's CSS appears on the page."));
-
-    // Now enable the Stark theme and request the same page as above. This
-    // time, we expect hook_custom_theme() to prevail.
     theme_enable(array('stark'));
-    $this->drupalGet('menu-test/theme-callback/use-admin-theme');
-    $this->assertText('Custom theme: stark. Actual theme: stark.', t('The result of hook_custom_theme() overrides what was set in a theme callback.'));
+
+    // Visit a page that does not implement a theme callback. The above request
+    // should be honored.
+    $this->drupalGet('menu-test/no-theme-callback');
+    $this->assertText('Custom theme: stark. Actual theme: stark.', t('The result of hook_custom_theme() is used as the theme for the current page.'));
     $this->assertRaw('stark/layout.css', t("The Stark theme's CSS appears on the page."));
+  }
+
+  /**
+   * Test that the theme callback wins out over hook_custom_theme().
+   */
+  function testThemeCallbackHookCustomTheme() {
+    // Trigger hook_custom_theme() to dynamically request the Stark theme for
+    // the requested page.
+    variable_set('menu_test_hook_custom_theme_name', 'stark');
+    theme_enable(array('stark'));
+
+    // The menu "theme callback" should take precedence over a value set in
+    // hook_custom_theme().
+    $this->drupalGet('menu-test/theme-callback/use-admin-theme');
+    $this->assertText('Custom theme: seven. Actual theme: seven.', t('The result of hook_custom_theme() does not override what was set in a theme callback.'));
+    $this->assertRaw('seven/style.css', t("The Seven theme's CSS appears on the page."));
   }
 
   /**
@@ -811,6 +820,19 @@ class MenuBreadcrumbTestCase extends DrupalWebTestCase {
     $perms = array_keys(module_invoke_all('permission'));
     $this->admin_user = $this->drupalCreateUser($perms);
     $this->drupalLogin($this->admin_user);
+
+    // This test puts menu links in the Navigation menu and then tests for
+    // their presence on the page, so we need to ensure that the Navigation
+    // block will be displayed in all active themes.
+    db_update('block')
+      ->fields(array(
+        // Use a region that is valid for all themes.
+        'region' => 'content',
+        'status' => 1,
+      ))
+      ->condition('module', 'system')
+      ->condition('delta', 'navigation')
+      ->execute();
   }
 
   /**

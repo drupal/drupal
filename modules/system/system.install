@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.525 2010/11/21 20:35:10 webchick Exp $
+// $Id: system.install,v 1.526 2010/11/27 20:25:44 dries Exp $
 
 /**
  * @file
@@ -2924,6 +2924,17 @@ function system_update_7066() {
   $d6_file_directory_temp = variable_get('file_directory_temp', file_directory_temp());
   variable_set('file_temporary_path', $d6_file_directory_temp);
   variable_del('file_directory_temp');
+}
+
+/**
+ * Allow all users to view the administration theme.
+ */
+function system_update_7067() {
+  // Preserve the site's current behavior of automatically allowing all users
+  // to view the administration theme whenever they have access to an
+  // administrative page.
+  user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('view the administration theme'));
+  user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array('view the administration theme'));
 }
 
 /**

@@ -1,5 +1,5 @@
 <?php
-// $Id: shortcut.test,v 1.6 2010/10/15 04:21:02 webchick Exp $
+// $Id: shortcut.test,v 1.7 2010/11/27 20:25:44 dries Exp $
 
 /**
  * @file
@@ -34,7 +34,7 @@ class ShortcutTestCase extends DrupalWebTestCase {
   function setUp() {
     parent::setUp('toolbar', 'shortcut');
     // Create users.
-    $this->admin_user = $this->drupalCreateUser(array('access toolbar', 'administer shortcuts', 'create article content', 'create page content', 'access content overview'));
+    $this->admin_user = $this->drupalCreateUser(array('access toolbar', 'administer shortcuts', 'view the administration theme', 'create article content', 'create page content', 'access content overview'));
     $this->shortcut_user = $this->drupalCreateUser(array('customize shortcut links', 'switch shortcut sets'));
 
     // Create a node.
