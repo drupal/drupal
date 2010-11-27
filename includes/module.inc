@@ -283,14 +283,14 @@ function module_load_install($module) {
  * @param $module
  *   The module to which the include file belongs.
  * @param $name
- *   Optionally, specify the base file name (without the $type extension).
- *   If not set, $module is used.
+ *   (optional) The base file name (without the $type extension). If omitted,
+ *   $module is used; i.e., resulting in "$module.$type" by default.
  *
  * @return
  *   The name of the included file, if successful; FALSE otherwise.
  */
 function module_load_include($type, $module, $name = NULL) {
-  if (empty($name)) {
+  if (!isset($name)) {
     $name = $module;
   }
 
