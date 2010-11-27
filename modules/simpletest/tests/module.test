@@ -112,6 +112,26 @@ class ModuleUnitTest extends DrupalWebTestCase {
   }
 
   /**
+   * Test that module_invoke() can load a hook defined in hook_hook_info().
+   */
+  function testModuleInvoke() {
+    module_enable(array('module_test'), FALSE);
+    $this->resetAll();
+    $this->drupalGet('module-test/hook-dynamic-loading-invoke');
+    $this->assertText('success!', t('module_invoke() dynamically loads a hook defined in hook_hook_info().'));
+  }
+
+  /**
+   * Test that module_invoke_all() can load a hook defined in hook_hook_info().
+   */
+  function testModuleInvokeAll() {
+    module_enable(array('module_test'), FALSE);
+    $this->resetAll();
+    $this->drupalGet('module-test/hook-dynamic-loading-invoke-all');
+    $this->assertText('success!', t('module_invoke_all() dynamically loads a hook defined in hook_hook_info().'));
+  }
+
+  /**
    * Test dependency resolution.
    */
   function testDependencyResolution() {
