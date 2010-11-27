@@ -1,5 +1,5 @@
 <?php
-// $Id: module.test,v 1.25 2010/11/24 16:47:44 dries Exp $
+// $Id: module.test,v 1.26 2010/11/27 20:41:38 dries Exp $
 
 /**
  * @file
@@ -109,6 +109,26 @@ class ModuleUnitTest extends DrupalWebTestCase {
     $static = drupal_static('module_implements');
     $this->assertTrue(in_array('module_test', $modules), 'Hook found.');
     $this->assertEqual($static['test_hook']['module_test'], 'file', 'Include file detected.');
+  }
+
+  /**
+   * Test that module_invoke() can load a hook defined in hook_hook_info().
+   */
+  function testModuleInvoke() {
+    module_enable(array('module_test'), FALSE);
+    $this->resetAll();
+    $this->drupalGet('module-test/hook-dynamic-loading-invoke');
+    $this->assertText('success!', t('module_invoke() dynamically loads a hook defined in hook_hook_info().'));
+  }
+
+  /**
+   * Test that module_invoke_all() can load a hook defined in hook_hook_info().
+   */
+  function testModuleInvokeAll() {
+    module_enable(array('module_test'), FALSE);
+    $this->resetAll();
+    $this->drupalGet('module-test/hook-dynamic-loading-invoke-all');
+    $this->assertText('success!', t('module_invoke_all() dynamically loads a hook defined in hook_hook_info().'));
   }
 
   /**

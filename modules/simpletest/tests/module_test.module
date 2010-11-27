@@ -1,5 +1,5 @@
 <?php
-// $Id: module_test.module,v 1.9 2010/11/20 03:34:30 webchick Exp $
+// $Id: module_test.module,v 1.10 2010/11/27 20:41:38 dries Exp $
 
 /**
  * Implements hook_permission().
@@ -49,6 +49,45 @@ function module_test_hook_info() {
     'group' => 'file',
   );
   return $hooks;
+}
+
+/**
+ * Implements hook_menu().
+ */
+function module_test_menu() {
+  $items['module-test/hook-dynamic-loading-invoke'] = array(
+    'title' => 'Test hook dynamic loading (invoke)',
+    'page callback' => 'module_test_hook_dynamic_loading_invoke',
+    'access arguments' => array('access content'),
+  );
+  $items['module-test/hook-dynamic-loading-invoke-all'] = array(
+    'title' => 'Test hook dynamic loading (invoke_all)',
+    'page callback' => 'module_test_hook_dynamic_loading_invoke_all',
+    'access arguments' => array('access content'),
+  );
+  return $items;
+}
+
+/**
+ * Page callback for 'hook dynamic loading' test.
+ *
+ * If the hook is dynamically loaded correctly, the menu callback should
+ * return 'success!'.
+ */
+function module_test_hook_dynamic_loading_invoke() {
+  $result = module_invoke('module_test', 'test_hook');
+  return $result['module_test'];
+}
+
+/**
+ * Page callback for 'hook dynamic loading' test.
+ *
+ * If the hook is dynamically loaded correctly, the menu callback should
+ * return 'success!'.
+ */
+function module_test_hook_dynamic_loading_invoke_all() {
+  $result = module_invoke_all('test_hook');
+  return $result['module_test'];
 }
 
 /**

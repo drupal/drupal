@@ -1,5 +1,5 @@
 <?php
-// $Id: module_test.file.inc,v 1.2 2010/05/26 19:51:01 dries Exp $
+// $Id: module_test.file.inc,v 1.3 2010/11/27 20:41:38 dries Exp $
 
 /**
  * @file
@@ -10,5 +10,5 @@
  * Implements hook_test_hook().
  */
 function module_test_test_hook() {
-
+  return array('module_test' => 'success!');
 }

@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.208 2010/11/27 19:12:56 dries Exp $
+// $Id: module.inc,v 1.209 2010/11/27 20:41:38 dries Exp $
 
 /**
  * @file
@@ -592,7 +592,20 @@ function module_disable($module_list, $disable_dependents = TRUE) {
  *   implemented in that module.
  */
 function module_hook($module, $hook) {
-  return function_exists($module . '_' . $hook);
+  $function = $module . '_' . $hook;
+  if (function_exists($function)) {
+    return TRUE;
+  }
+  // If the hook implementation does not exist, check whether it may live in an
+  // optional include file registered via hook_hook_info().
+  $hook_info = module_hook_info();
+  if (isset($hook_info[$hook]['group'])) {
+    module_load_include('inc', $module, $module . '.' . $hook_info[$hook]['group']);
+    if (function_exists($function)) {
+      return TRUE;
+    }
+  }
+  return FALSE;
 }
 
 /**
@@ -660,7 +673,9 @@ function module_implements($hook, $sort = FALSE, $reset = FALSE) {
     $list = module_list(FALSE, FALSE, $sort);
     foreach ($list as $module) {
       $include_file = isset($hook_info[$hook]['group']) && module_load_include('inc', $module, $module . '.' . $hook_info[$hook]['group']);
-      if (module_hook($module, $hook)) {
+      // Since module_hook() may needlessly try to load the include file again,
+      // function_exists() is used directly here.
+      if (function_exists($module . '_' . $hook)) {
         $implementations[$hook][$module] = $include_file ? $hook_info[$hook]['group'] : FALSE;
       }
     }
@@ -678,9 +693,11 @@ function module_implements($hook, $sort = FALSE, $reset = FALSE) {
         module_load_include('inc', $module, "$module.$group");
       }
       // It is possible that a module removed a hook implementation without the
-      // implementations cache being rebuilt yet, so we check module_hook() on
-      // each request to avoid undefined function errors.
-      if (!module_hook($module, $hook)) {
+      // implementations cache being rebuilt yet, so we check whether the
+      // function exists on each request to avoid undefined function errors.
+      // Since module_hook() may needlessly try to load the include file again,
+      // function_exists() is used directly here.
+      if (!function_exists($module . '_' . $hook)) {
         // Clear out the stale implementation from the cache and force a cache
         // refresh to forget about no longer existing hook implementations.
         unset($implementations[$hook][$module]);
@@ -696,9 +713,17 @@ function module_implements($hook, $sort = FALSE, $reset = FALSE) {
  * Retrieve a list of what hooks are explicitly declared.
  */
 function module_hook_info() {
-  $hook_info = &drupal_static(__FUNCTION__, array());
+  // This function is indirectly invoked from bootstrap_invoke_all(), in which
+  // case common.inc, subsystems, and modules are not loaded yet, so it does not
+  // make sense to support hook groups resp. lazy-loaded include files prior to
+  // full bootstrap.
+  if (drupal_bootstrap(NULL, FALSE) != DRUPAL_BOOTSTRAP_FULL) {
+    return array();
+  }
+  $hook_info = &drupal_static(__FUNCTION__);
 
-  if (empty($hook_info)) {
+  if (!isset($hook_info)) {
+    $hook_info = array();
     $cache = cache_get('hook_info', 'cache_bootstrap');
     if ($cache === FALSE) {
       // Rebuild the cache and save it.
@@ -768,6 +793,7 @@ function module_invoke() {
     return call_user_func_array($module . '_' . $hook, $args);
   }
 }
+
 /**
  * Invoke a hook in all enabled modules that implement it.
  *
