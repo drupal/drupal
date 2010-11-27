@@ -6,6 +6,8 @@
  * @{
  */
 
+require_once dirname(__FILE__) . '/query.inc';
+
 /**
  * Interface for extendable query objects.
  *
@@ -642,7 +644,9 @@ class SelectQueryExtender implements SelectQueryInterface {
   /* Implementations of QueryExtendableInterface. */
 
   public function extend($extender_name) {
-    $class = $this->connection->getDriverClass($extender_name);
+    // The extender can be anywhere so this needs to go to the registry, which
+    // is surely loaded by now.
+    $class = $this->connection->getDriverClass($extender_name, array(), TRUE);
     return new $class($this, $this->connection);
   }
 
