@@ -1651,15 +1651,14 @@ function menu_get_custom_theme($initialize = FALSE) {
     if (!empty($custom_themes)) {
       $custom_theme = array_pop($custom_themes);
     }
-    // Otherwise, execute the theme callback function for the current page, if
-    // there is one, in order to determine the custom theme to set.
-    if (!isset($custom_theme)) {
-      $router_item = menu_get_item();
-      if (!empty($router_item['access']) && !empty($router_item['theme_callback']) && function_exists($router_item['theme_callback'])) {
-        $theme_name = call_user_func_array($router_item['theme_callback'], $router_item['theme_arguments']);
-        if (drupal_theme_access($theme_name)) {
-          $custom_theme = $theme_name;
-        }
+    // If there is a theme callback function for the current page, execute it.
+    // If this returns a valid theme, it will override any theme that was set
+    // by a hook_custom_theme() implementation above.
+    $router_item = menu_get_item();
+    if (!empty($router_item['access']) && !empty($router_item['theme_callback']) && function_exists($router_item['theme_callback'])) {
+      $theme_name = call_user_func_array($router_item['theme_callback'], $router_item['theme_arguments']);
+      if (drupal_theme_access($theme_name)) {
+        $custom_theme = $theme_name;
       }
     }
   }

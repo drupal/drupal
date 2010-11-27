@@ -58,6 +58,11 @@ function menu_test_menu() {
     'page arguments' => array(TRUE),
     'access arguments' => array('access content'),
   );
+  $items['menu-test/no-theme-callback'] = array(
+    'title' => 'Page that displays different themes without using a theme callback.',
+    'page callback' => 'menu_test_theme_page_callback',
+    'access arguments' => array('access content'),
+  );
   // Path containing "exotic" characters.
   $path = "menu-test/ -._~!$'\"()*@[]?&+%#,;=:" . // "Special" ASCII characters.
     "%23%25%26%2B%2F%3F" . // Characters that look like a percent-escaped string.

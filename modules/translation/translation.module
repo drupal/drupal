@@ -65,7 +65,6 @@ function translation_menu() {
     'access arguments' => array(1),
     'type' => MENU_LOCAL_TASK,
     'weight' => 2,
-    'theme callback' => '_node_custom_theme',
     'file' => 'translation.pages.inc',
   );
   return $items;
@@ -89,10 +88,12 @@ function _translation_tab_access($node) {
  * Implements hook_admin_paths().
  */
 function translation_admin_paths() {
-  $paths = array(
-    'node/*/translate' => TRUE,
-  );
-  return $paths;
+  if (variable_get('node_admin_theme')) {
+    $paths = array(
+      'node/*/translate' => TRUE,
+    );
+    return $paths;
+  }
 }
 
 /**

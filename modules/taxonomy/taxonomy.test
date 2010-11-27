@@ -1153,8 +1153,8 @@ class TaxonomyThemeTestCase extends TaxonomyWebTestCase {
     variable_set('admin_theme', 'seven');
 
     // Create and log in as a user who has permission to add and edit taxonomy
-    // terms.
-    $admin_user = $this->drupalCreateUser(array('administer taxonomy'));
+    // terms and view the administrative theme.
+    $admin_user = $this->drupalCreateUser(array('administer taxonomy', 'view the administration theme'));
     $this->drupalLogin($admin_user);
   }
 

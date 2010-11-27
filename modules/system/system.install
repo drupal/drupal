@@ -2927,6 +2927,17 @@ function system_update_7066() {
 }
 
 /**
+ * Allow all users to view the administration theme.
+ */
+function system_update_7067() {
+  // Preserve the site's current behavior of automatically allowing all users
+  // to view the administration theme whenever they have access to an
+  // administrative page.
+  user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('view the administration theme'));
+  user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array('view the administration theme'));
+}
+
+/**
  * @} End of "defgroup updates-6.x-to-7.x"
  * The next series of updates should start at 8000.
  */

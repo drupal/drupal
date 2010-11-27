@@ -1355,7 +1355,7 @@ class SystemThemeFunctionalTest extends DrupalWebTestCase {
   function setUp() {
     parent::setUp();
 
-    $this->admin_user = $this->drupalCreateUser(array('access administration pages', 'administer themes', 'bypass node access'));
+    $this->admin_user = $this->drupalCreateUser(array('access administration pages', 'view the administration theme', 'administer themes', 'bypass node access'));
     $this->drupalLogin($this->admin_user);
     $this->node = $this->drupalCreateNode();
   }

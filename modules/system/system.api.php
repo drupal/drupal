@@ -1049,13 +1049,18 @@ function hook_menu_get_item_alter(&$router_item, $path, $original_map) {
  *   - "access arguments": An array of arguments to pass to the access callback
  *     function, with path component substitution as described above.
  *   - "theme callback": (optional) A function returning the machine-readable
- *     name of the default theme that will be used to render the page. If this
- *     function is provided, it is expected to return a currently-active theme
- *     on the site (otherwise, the main site theme will be used instead). If no
- *     function is provided, the main site theme will also be used, unless a
- *     value is inherited from a parent menu item. In all cases, the results of
- *     this function can be dynamically overridden for a particular page
- *     request by modules which implement hook_custom_theme().
+ *     name of the theme that will be used to render the page. If not provided,
+ *     the value will be inherited from a parent menu item. If there is no
+ *     theme callback, or if the function does not return the name of a current
+ *     active theme on the site, the theme for this page will be determined by
+ *     either hook_custom_theme() or the default theme instead. As a general
+ *     rule, the use of theme callback functions should be limited to pages
+ *     whose functionality is very closely tied to a particular theme, since
+ *     they can only be overridden by modules which specifically target those
+ *     pages in hook_menu_alter(). Modules implementing more generic theme
+ *     switching functionality (for example, a module which allows the theme to
+ *     be set dynamically based on the current user's role) should use
+ *     hook_custom_theme() instead.
  *   - "theme arguments": An array of arguments to pass to the theme callback
  *     function, with path component substitution as described above.
  *   - "file": A file that will be included before the page callback is called;
@@ -2050,10 +2055,12 @@ function hook_theme_registry_alter(&$theme_registry) {
  * Return the machine-readable name of the theme to use for the current page.
  *
  * This hook can be used to dynamically set the theme for the current page
- * request. It overrides the default theme as well as any per-page or
- * per-section theme set by the theme callback function in hook_menu(). This
- * should be used by modules which need to override the theme based on dynamic
- * conditions.
+ * request. It should be used by modules which need to override the theme
+ * based on dynamic conditions (for example, a module which allows the theme to
+ * be set based on the current user's role). The return value of this hook will
+ * be used on all pages except those which have a valid per-page or per-section
+ * theme set via a theme callback function in hook_menu(); the themes on those
+ * pages can only be overridden using hook_menu_alter().
  *
  * Since only one theme can be used at a time, the last (i.e., highest
  * weighted) module which returns a valid theme name from this hook will
