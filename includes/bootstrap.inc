@@ -2244,6 +2244,7 @@ function _drupal_bootstrap_database() {
   // The database autoload routine comes first so that we can load the database
   // system without hitting the database. That is especially important during
   // the install or upgrade process.
+  spl_autoload_register('db_autoload');
   spl_autoload_register('drupal_autoload_class');
   spl_autoload_register('drupal_autoload_interface');
 }

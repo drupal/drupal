@@ -41,6 +41,7 @@ function _drupal_maintenance_theme() {
     // to work. See _drupal_log_error().
     if (!class_exists('Database', FALSE)) {
       require_once DRUPAL_ROOT . '/includes/database/database.inc';
+      spl_autoload_register('db_autoload');
     }
 
     // We use the default theme as the maintenance theme. If a default theme

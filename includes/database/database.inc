@@ -648,20 +648,13 @@ abstract class DatabaseConnection extends PDO {
    *
    * @param string $class
    *   The class for which we want the potentially driver-specific class.
-   * @param array $files
-   *   The name of the files in which the driver-specific class can be.
-   * @param $use_autoload
-   *   If TRUE, attempt to load classes using PHP's autoload capability
-   *   as well as the manual approach here.
    * @return string
    *   The name of the class that should be used for this driver.
    */
-  public function getDriverClass($class, array $files = array(), $use_autoload = FALSE) {
+  public function getDriverClass($class) {
     if (empty($this->driverClasses[$class])) {
-      $driver = $this->driver();
-      $this->driverClasses[$class] = $class . '_' . $driver;
-      Database::loadDriverFile($driver, $files);
-      if (!class_exists($this->driverClasses[$class], $use_autoload)) {
+      $this->driverClasses[$class] = $class . '_' . $this->driver();
+      if (!class_exists($this->driverClasses[$class])) {
         $this->driverClasses[$class] = $class;
       }
     }
@@ -688,7 +681,7 @@ abstract class DatabaseConnection extends PDO {
    * @see SelectQuery
    */
   public function select($table, $alias = NULL, array $options = array()) {
-    $class = $this->getDriverClass('SelectQuery', array('query.inc', 'select.inc'));
+    $class = $this->getDriverClass('SelectQuery');
     return new $class($table, $alias, $this, $options);
   }
 
@@ -704,7 +697,7 @@ abstract class DatabaseConnection extends PDO {
    * @see InsertQuery
    */
   public function insert($table, array $options = array()) {
-    $class = $this->getDriverClass('InsertQuery', array('query.inc'));
+    $class = $this->getDriverClass('InsertQuery');
     return new $class($this, $table, $options);
   }
 
@@ -720,7 +713,7 @@ abstract class DatabaseConnection extends PDO {
    * @see MergeQuery
    */
   public function merge($table, array $options = array()) {
-    $class = $this->getDriverClass('MergeQuery', array('query.inc'));
+    $class = $this->getDriverClass('MergeQuery');
     return new $class($this, $table, $options);
   }
 
@@ -737,7 +730,7 @@ abstract class DatabaseConnection extends PDO {
    * @see UpdateQuery
    */
   public function update($table, array $options = array()) {
-    $class = $this->getDriverClass('UpdateQuery', array('query.inc'));
+    $class = $this->getDriverClass('UpdateQuery');
     return new $class($this, $table, $options);
   }
 
@@ -753,7 +746,7 @@ abstract class DatabaseConnection extends PDO {
    * @see DeleteQuery
    */
   public function delete($table, array $options = array()) {
-    $class = $this->getDriverClass('DeleteQuery', array('query.inc'));
+    $class = $this->getDriverClass('DeleteQuery');
     return new $class($this, $table, $options);
   }
 
@@ -769,7 +762,7 @@ abstract class DatabaseConnection extends PDO {
    * @see TruncateQuery
    */
   public function truncate($table, array $options = array()) {
-    $class = $this->getDriverClass('TruncateQuery', array('query.inc'));
+    $class = $this->getDriverClass('TruncateQuery');
     return new $class($this, $table, $options);
   }
 
@@ -783,7 +776,7 @@ abstract class DatabaseConnection extends PDO {
    */
   public function schema() {
     if (empty($this->schema)) {
-      $class = $this->getDriverClass('DatabaseSchema', array('schema.inc'));
+      $class = $this->getDriverClass('DatabaseSchema');
       if (class_exists($class)) {
         $this->schema = new $class($this);
       }
@@ -1588,34 +1581,6 @@ abstract class Database {
     self::$ignoreTargets[$key][$target] = TRUE;
   }
 
-  /**
-   * Load a file for the database that might hold a class.
-   *
-   * @param $driver
-   *   The name of the driver.
-   * @param array $files
-   *   The name of the files the driver specific class can be.
-   */
-  public static function loadDriverFile($driver, array $files = array()) {
-    static $base_path;
-
-    if (empty($base_path)) {
-      $base_path = dirname(realpath(__FILE__));
-    }
-
-    $driver_base_path = "$base_path/$driver";
-    foreach ($files as $file) {
-      // Load the base file first so that classes extending base classes will
-      // have the base class loaded.
-      foreach (array("$base_path/$file", "$driver_base_path/$file") as $filename) {
-        // The OS caches file_exists() and PHP caches require_once(), so
-        // we'll let both of those take care of performance here.
-        if (file_exists($filename)) {
-          require_once $filename;
-        }
-      }
-    }
-  }
 }
 
 /**
@@ -2140,6 +2105,82 @@ class DatabaseStatementEmpty implements Iterator, DatabaseStatementInterface {
 
   public function valid() {
     return FALSE;
+  }
+}
+
+/**
+ * Autoload callback for the database system.
+ */
+function db_autoload($class) {
+  static $base_path = '';
+  static $checked = array();
+
+  static $files = array(
+    'query.inc' => array(
+      'QueryPlaceholderInterface',
+      'QueryConditionInterface', 'DatabaseCondition',
+      'Query', 'DeleteQuery', 'InsertQuery', 'UpdateQuery', 'MergeQuery', 'TruncateQuery',
+      'QueryAlterableInterface',
+    ),
+    'select.inc' => array('QueryAlterableInterface', 'SelectQueryInterface', 'SelectQuery', 'SelectQueryExtender'),
+    'database.inc' => array('DatabaseConnection'),
+    'log.inc' => array('DatabaseLog'),
+    'prefetch.inc' => array('DatabaseStatementPrefetch'),
+    'schema.inc' => array('DatabaseSchema'),
+  );
+
+  // If a class doesn't exist, it may get checked a second time
+  // by class_exists().  If so, just bail out now.
+  if (isset($checked[$class])) {
+    return;
+  }
+  $checked[$class] = TRUE;
+
+  if (empty($base_path)) {
+    $base_path = dirname(realpath(__FILE__));
+  }
+
+  // If there is an underscore in the class name, we know it's a
+  // driver-specific file so check for those.  If not, it's a generic.
+  // Note that we use require_once here instead of require because of a
+  // quirk in class_exists().  By default, class_exists() will try to
+  // autoload a class if it's not found.  However, we cannot tell
+  // at this point whether or not the class is going to exist, only
+  // the file that it would be in if it does exist.  That means we may
+  // try to include a file that was already included by another
+  // autoload call, which would break.  Using require_once() neatly
+  // avoids that issue.
+  if (strpos($class, '_') !== FALSE) {
+    list($base, $driver) = explode('_', $class);
+
+    // Drivers have an extra file, and may put their SelectQuery implementation
+    // in the main query file since it's so small.
+    $driver_files = $files;
+    $driver_files['query.inc'][] = 'SelectQuery';
+    $driver_files['install.inc'] = array('DatabaseTasks');
+
+    foreach ($driver_files as $file => $classes) {
+      if (in_array($base, $classes)) {
+        $filename = "{$base_path}/{$driver}/{$file}";
+        // We might end up looking in a file that doesn't exist, so check that.
+        if (file_exists($filename)) {
+          require_once $filename;
+          // If the class now exists, we're done. Otherwise keep searching in
+          // additional files.
+          if (class_exists($class, FALSE) || interface_exists($class, FALSE)) {
+            return;
+          }
+        }
+      }
+    }
+  }
+  else {
+    foreach ($files as $file => $classes) {
+      if (in_array($class, $classes)) {
+        require_once $base_path . '/' . $file;
+        return;
+      }
+    }
   }
 }
 
@@ -2874,3 +2915,4 @@ function db_ignore_slave() {
     $_SESSION['ignore_slave_server'] = REQUEST_TIME + $duration;
   }
 }
+

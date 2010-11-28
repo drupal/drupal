@@ -6,8 +6,6 @@
  * Generic Database schema code.
  */
 
-require_once dirname(__FILE__) . '/query.inc';
-
 /**
  * @defgroup schemaapi Schema API
  * @{
