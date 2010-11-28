@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.147 2010/11/27 20:37:34 dries Exp $
+// $Id: install.inc,v 1.148 2010/11/28 07:32:39 webchick Exp $
 
 /**
  * Indicates that a module has not been installed yet.
@@ -238,6 +238,7 @@ function drupal_detect_database_types() {
   // Because we have no registry yet, we need to also include the install.inc
   // file for the driver explicitly.
   require_once DRUPAL_ROOT . '/includes/database/database.inc';
+  spl_autoload_register('db_autoload');
   foreach (file_scan_directory(DRUPAL_ROOT . '/includes/database', '/^[a-z]*$/i', array('recurse' => FALSE)) as $file) {
     if (file_exists($file->uri . '/database.inc') && file_exists($file->uri . '/install.inc')) {
       $drivers[$file->filename] = $file->uri;
@@ -245,7 +246,8 @@ function drupal_detect_database_types() {
   }
 
   foreach ($drivers as $driver => $file) {
-    $installer = db_installer_object($driver);
+    $class = 'DatabaseTasks_' . $driver;
+    $installer = new $class();
     if ($installer->installable()) {
       $databases[$driver] = $installer->name();
     }
@@ -1121,18 +1123,8 @@ function install_profile_info($profile, $locale = 'en') {
  * encoding.
  */
 function db_run_tasks($driver) {
-  db_installer_object($driver)->runTasks();
-  return TRUE;
-}
-
-/**
- * Returns a database installer object.
- *
- * @param $driver
- *   The name of the driver.
- */
-function db_installer_object($driver) {
-  Database::loadDriverFile($driver, array('install.inc'));
   $task_class = 'DatabaseTasks_' . $driver;
-  return new $task_class();
+  $DatabaseTasks = new $task_class();
+  $DatabaseTasks->runTasks();
+  return TRUE;
 }

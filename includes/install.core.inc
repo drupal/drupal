@@ -1,5 +1,5 @@
 <?php
-// $Id: install.core.inc,v 1.42 2010/11/27 20:37:34 dries Exp $
+// $Id: install.core.inc,v 1.43 2010/11/28 07:32:39 webchick Exp $
 
 /**
  * @file
@@ -289,6 +289,7 @@ function install_begin_request(&$install_state) {
     // Initialize the database system. Note that the connection
     // won't be initialized until it is actually requested.
     require_once DRUPAL_ROOT . '/includes/database/database.inc';
+    spl_autoload_register('db_autoload');
 
     // Verify the last completed task in the database, if there is one.
     $task = install_verify_completed_task();

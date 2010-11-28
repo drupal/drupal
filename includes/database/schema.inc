@@ -1,12 +1,10 @@
 <?php
-// $Id: schema.inc,v 1.40 2010/11/27 20:37:34 dries Exp $
+// $Id: schema.inc,v 1.41 2010/11/28 07:32:39 webchick Exp $
 
 /**
  * @file
  * Generic Database schema code.
  */
-
-require_once dirname(__FILE__) . '/query.inc';
 
 /**
  * @defgroup schemaapi Schema API

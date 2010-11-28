@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.250 2010/11/27 20:37:34 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.251 2010/11/28 07:32:39 webchick Exp $
 
 /**
  * Global variable that holds information about the tests being run.
@@ -610,6 +610,8 @@ class DrupalUnitTestCase extends DrupalTestCase {
 
     // Store necessary current values before switching to the test environment.
     $this->originalFileDirectory = variable_get('file_public_path', conf_path() . '/files');
+
+    spl_autoload_register('db_autoload');
 
     // Reset all statics so that test is performed with a clean environment.
     drupal_static_reset();
