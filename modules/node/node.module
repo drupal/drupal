@@ -2537,8 +2537,8 @@ function node_page_default() {
     $nodes = node_load_multiple($nids);
     $build = node_view_multiple($nodes);
 
-    $feed_url = url('rss.xml', array('absolute' => TRUE));
-    drupal_add_feed($feed_url, variable_get('site_name', 'Drupal') . ' ' . t('RSS'));
+    // 'rss.xml' is a path, not a file, registered in node_menu().
+    drupal_add_feed('rss.xml', variable_get('site_name', 'Drupal') . ' ' . t('RSS'));
     $build['pager'] = array(
       '#theme' => 'pager',
       '#weight' => 5,
