@@ -188,6 +188,19 @@ function system_requirements($phase) {
       $requirements['database_extensions']['value'] = $t('Enabled');
     }
   }
+  else {
+    // Database information.
+    $class = 'DatabaseTasks_' . Database::getConnection()->driver();
+    $tasks = new $class();
+    $requirements['database_system'] = array(
+      'title' => $t('Database system'),
+      'value' => $tasks->name(),
+    );
+    $requirements['database_system_version'] = array(
+      'title' => $t('Database system version'),
+      'value' => Database::getConnection()->version(),
+    );
+  }
 
   // Test PHP memory_limit
   $memory_limit = ini_get('memory_limit');
