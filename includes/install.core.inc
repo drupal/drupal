@@ -1,5 +1,5 @@
 <?php
-// $Id: install.core.inc,v 1.43 2010/11/28 07:32:39 webchick Exp $
+// $Id: install.core.inc,v 1.44 2010/11/29 02:55:57 webchick Exp $
 
 /**
  * @file
@@ -850,14 +850,13 @@ function install_settings_form($form, &$form_state, &$install_state) {
 
   drupal_set_title(st('Database configuration'));
 
-  $drivers = drupal_detect_database_types();
+  $drivers = drupal_get_database_types();
   $drivers_keys = array_keys($drivers);
 
   $form['driver'] = array(
     '#type' => 'radios',
     '#title' => st('Database type'),
     '#required' => TRUE,
-    '#options' => $drivers,
     '#default_value' => !empty($database['driver']) ? $database['driver'] : current($drivers_keys),
     '#description' => st('The type of database your @drupal data will be stored in.', array('@drupal' => drupal_install_profile_distribution_name())),
   );
@@ -866,82 +865,35 @@ function install_settings_form($form, &$form_state, &$install_state) {
     $form['driver']['#description'] .= ' ' . st('Your PHP configuration only supports a single database type, so it has been automatically selected.');
   }
 
-  // Database name.
-  $form['database'] = array(
-    '#type' => 'textfield',
-    '#title' => st('Database name'),
-    '#default_value' => empty($database['database']) ? '' : $database['database'],
-    '#size' => 45,
-    '#required' => TRUE,
-    '#description' => st('The name of the database your @drupal data will be stored in. It must exist on your server before @drupal can be installed.', array('@drupal' => drupal_install_profile_distribution_name())),
-  );
+  // Add driver specific configuration options.
+  foreach ($drivers as $key => $driver) {
+    $form['driver']['#options'][$key] = $driver->name();
 
-  // Database username.
-  $form['username'] = array(
-    '#type' => 'textfield',
-    '#title' => st('Database username'),
-    '#default_value' => empty($database['username']) ? '' : $database['username'],
-    '#size' => 45,
-  );
-
-  // Database password.
-  $form['password'] = array(
-    '#type' => 'password',
-    '#title' => st('Database password'),
-    '#default_value' => empty($database['password']) ? '' : $database['password'],
-    '#size' => 45,
-  );
-
-  $form['advanced_options'] = array(
-    '#type' => 'fieldset',
-    '#title' => st('Advanced options'),
-    '#collapsible' => TRUE,
-    '#collapsed' => TRUE,
-    '#description' => st("These options are only necessary for some sites. If you're not sure what you should enter here, leave the default settings or check with your hosting provider.")
-  );
-
-  // Database host.
-  $form['advanced_options']['host'] = array(
-    '#type' => 'textfield',
-    '#title' => st('Database host'),
-    '#default_value' => empty($database['host']) ? 'localhost' : $database['host'],
-    '#size' => 45,
-    // Hostnames can be 255 characters long.
-    '#maxlength' => 255,
-    '#required' => TRUE,
-    '#description' => st('If your database is located on a different server, change this.'),
-  );
-
-  // Database port.
-  $form['advanced_options']['port'] = array(
-    '#type' => 'textfield',
-    '#title' => st('Database port'),
-    '#default_value' => empty($database['port']) ? '' : $database['port'],
-    '#size' => 45,
-    // The maximum port number is 65536, 5 digits.
-    '#maxlength' => 5,
-    '#description' => st('If your database server is listening to a non-standard port, enter its number.'),
-  );
-
-  // Table prefix.
-  $db_prefix = ($profile == 'standard') ? 'drupal_' : $profile . '_';
-  $form['advanced_options']['db_prefix'] = array(
-    '#type' => 'textfield',
-    '#title' => st('Table prefix'),
-    '#default_value' => '',
-    '#size' => 45,
-    '#description' => st('If more than one application will be sharing this database, enter a table prefix such as %prefix for your @drupal site here.', array('@drupal' => drupal_install_profile_distribution_name(), '%prefix' => $db_prefix)),
-  );
+    $form['settings'][$key] = $driver->getFormOptions($database);
+    $form['settings'][$key]['#prefix'] = '<h2 class="js-hide">' . st('@driver_name settings', array('@driver_name' => $driver->name())) . '</h2>';
+    $form['settings'][$key]['#type'] = 'container';
+    $form['settings'][$key]['#tree'] = TRUE;
+    $form['settings'][$key]['advanced_options']['#parents'] = array($key);
+    $form['settings'][$key]['#states'] = array(
+      'visible' => array(
+        ':input[name=driver]' => array('value' => $key),
+      )
+    );
+  }
 
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['save'] = array(
     '#type' => 'submit',
     '#value' => st('Save and continue'),
+    '#limit_validation_errors' => array(
+      array('driver'),
+      array(isset($form_state['input']['driver']) ? $form_state['input']['driver'] : current($drivers_keys)),
+    ),
+    '#submit' => array('install_settings_form_submit'),
   );
 
   $form['errors'] = array();
   $form['settings_file'] = array('#type' => 'value', '#value' => $settings_file);
-  $form['_database'] = array('#type' => 'value');
 
   return $form;
 }
@@ -950,12 +902,17 @@ function install_settings_form($form, &$form_state, &$install_state) {
  * Form API validate for install_settings form.
  */
 function install_settings_form_validate($form, &$form_state) {
+  $driver = $form_state['values']['driver'];
+  $database = $form_state['values'][$driver];
+  $database['driver'] = $driver;
+
   // TODO: remove when PIFR will be updated to use 'db_prefix' instead of
   // 'prefix' in the database settings form.
-  $form_state['values']['prefix'] = $form_state['values']['db_prefix'];
+  $database['prefix'] = $database['db_prefix'];
+  unset($database['db_prefix']);
 
-  form_set_value($form['_database'], $form_state['values'], $form_state);
-  $errors = install_database_errors($form_state['values'], $form_state['values']['settings_file']);
+  $form_state['storage']['database'] = $database;
+  $errors = install_database_errors($database, $form_state['values']['settings_file']);
   foreach ($errors as $name => $message) {
     form_set_error($name, $message);
   }
@@ -967,22 +924,17 @@ function install_settings_form_validate($form, &$form_state) {
 function install_database_errors($database, $settings_file) {
   global $databases;
   $errors = array();
-  // Verify the table prefix.
-  if (!empty($database['prefix']) && is_string($database['prefix']) && !preg_match('/^[A-Za-z0-9_.]+$/', $database['prefix'])) {
-    $errors['prefix'] = st('The database table prefix you have entered, %prefix, is invalid. The table prefix can only contain alphanumeric characters, periods, or underscores.', array('%prefix' => $database['prefix']));
-  }
-
-  if (!empty($database['port']) && !is_numeric($database['port'])) {
-    $errors['db_port'] = st('Database port must be a number.');
-  }
 
   // Check database type.
-  $database_types = drupal_detect_database_types();
+  $database_types = drupal_get_database_types();
   $driver = $database['driver'];
   if (!isset($database_types[$driver])) {
-    $errors['driver'] = st("In your %settings_file file you have configured @drupal to use a %driver server, however your PHP installation currently does not support this database type.", array('%settings_file' => $settings_file, '@drupal' => drupal_install_profile_distribution_name(), '%driver' => $database['driver']));
+    $errors['driver'] = st("In your %settings_file file you have configured @drupal to use a %driver server, however your PHP installation currently does not support this database type.", array('%settings_file' => $settings_file, '@drupal' => drupal_install_profile_distribution_name(), '%driver' => $driver));
   }
   else {
+    // Run driver specific validation
+    $errors += $database_types[$driver]->validateDatabaseSettings($database);
+
     // Run tasks associated with the database type. Any errors are caught in the
     // calling function.
     $databases['default']['default'] = $database;
@@ -991,13 +943,13 @@ function install_database_errors($database, $settings_file) {
     Database::parseConnectionInfo();
 
     try {
-      db_run_tasks($database['driver']);
+      db_run_tasks($driver);
     }
     catch (DatabaseTaskException $e) {
       // These are generic errors, so we do not have any specific key of the
       // database connection array to attach them to; therefore, we just put
       // them in the error array with standard numeric keys.
-      $errors[] = $e->getMessage();
+      $errors[$driver . '][0'] = $e->getMessage();
     }
   }
   return $errors;
@@ -1009,10 +961,9 @@ function install_database_errors($database, $settings_file) {
 function install_settings_form_submit($form, &$form_state) {
   global $install_state;
 
-  $database = array_intersect_key($form_state['values']['_database'], array_flip(array('driver', 'database', 'username', 'password', 'host', 'port', 'prefix')));
   // Update global settings array and save.
   $settings['databases'] = array(
-    'value'    => array('default' => array('default' => $database)),
+    'value'    => array('default' => array('default' => $form_state['storage']['database'])),
     'required' => TRUE,
   );
   $settings['drupal_hash_salt'] = array(
