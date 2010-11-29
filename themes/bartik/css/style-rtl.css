@@ -1,4 +1,4 @@
-/* $Id: style-rtl.css,v 1.14 2010/11/26 19:02:23 dries Exp $ */
+/* $Id: style-rtl.css,v 1.15 2010/11/29 05:01:37 webchick Exp $ */
 
 /* ------------------ Reset Styles ------------------ */
 
@@ -107,14 +107,12 @@ ul.tips {
 }
 .comment .attribution {
   float: right;
+  padding: 0 0 0 30px;
 }
 .comment .comment-arrow {
   background: url(../images/comment-arrow-rtl.png);
-  margin-right: -45px;
-}
-.comment .comment-text {
-  margin-right: 140px;
   margin-left: 0;
+  margin-right: -45px;
 }
 .comment .indented {
   margin-right: 40px;

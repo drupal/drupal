@@ -1,4 +1,4 @@
-/* $Id: ie.css,v 1.8 2010/11/23 05:55:46 webchick Exp $ */
+/* $Id: ie.css,v 1.9 2010/11/29 05:01:37 webchick Exp $ */
 
 .block {
   zoom: 1;
@@ -12,6 +12,17 @@ fieldset legend {
 }
 #footer-wrapper #footer .block {
   height: 100%;
+}
+.comment .attribution {
+  display: inline;
+  float: left; /* LTR */
+  overflow: hidden;
+  padding: 0;
+}
+.comment-text {
+  display: inline;
+  float: left; /* LTR */
+  margin-left: 25px; /* LTR */
 }
 #search-block-form input.form-submit,
 #search-form input.form-submit {

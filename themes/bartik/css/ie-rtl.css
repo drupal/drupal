@@ -1,4 +1,4 @@
-/* $Id: ie-rtl.css,v 1.5 2010/11/23 05:55:46 webchick Exp $ */
+/* $Id: ie-rtl.css,v 1.6 2010/11/29 05:01:37 webchick Exp $ */
 
 fieldset legend {
   left: 6px;
@@ -7,6 +7,18 @@ ul.action-links li a,
 #user-login-form li.openid-link a,
 #user-login li.openid-link a {
   zoom: 1;
+}
+.comment .attribution {
+  float: right;
+}
+.comment-text {
+  float: right;
+  margin-left: 0;
+  margin-right: 25px;
+}
+.comment .comment-arrow {
+  position: absolute;
+  right: 25px;
 }
 .region-header .block,
 .region-header #block-user-login .form-item {
