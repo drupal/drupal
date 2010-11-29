@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1264 2010/11/22 05:22:43 webchick Exp $
+// $Id: common.inc,v 1.1265 2010/11/29 04:53:32 webchick Exp $
 
 /**
  * @file
@@ -348,7 +348,7 @@ function drupal_get_html_head() {
  * This function can be called as long the HTML header hasn't been sent.
  *
  * @param $url
- *   A url for the feed.
+ *   An internal system path or a fully qualified external URL of the feed.
  * @param $title
  *   The title of the feed.
  */
@@ -358,10 +358,14 @@ function drupal_add_feed($url = NULL, $title = '') {
   if (isset($url)) {
     $stored_feed_links[$url] = theme('feed_icon', array('url' => $url, 'title' => $title));
 
-    drupal_add_html_head_link(array('rel' => 'alternate',
-                          'type' => 'application/rss+xml',
-                          'title' => $title,
-                          'href' => $url));
+    drupal_add_html_head_link(array(
+      'rel' => 'alternate',
+      'type' => 'application/rss+xml',
+      'title' => $title,
+      // Force the URL to be absolute, for consistency with other <link> tags
+      // output by Drupal.
+      'href' => url($url, array('absolute' => TRUE)),
+    ));
   }
   return $stored_feed_links;
 }

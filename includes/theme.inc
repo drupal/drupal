@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.624 2010/11/24 03:30:59 webchick Exp $
+// $Id: theme.inc,v 1.625 2010/11/29 04:53:32 webchick Exp $
 
 /**
  * @file
@@ -1866,7 +1866,8 @@ function theme_more_help_link($variables) {
  *
  * @param $variables
  *   An associative array containing:
- *   - url: The url of the feed.
+ *   - url: An internal system path or a fully qualified external URL of the
+ *     feed.
  *   - title: A descriptive title of the feed.
  */
 function theme_feed_icon($variables) {

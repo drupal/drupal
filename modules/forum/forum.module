@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.581 2010/11/22 08:07:57 webchick Exp $
+// $Id: forum.module,v 1.582 2010/11/29 04:53:32 webchick Exp $
 
 /**
  * @file
@@ -990,7 +990,7 @@ function template_preprocess_forums(&$variables) {
 
     if ($variables['tid'] && !in_array($variables['tid'], variable_get('forum_containers', array()))) {
       $variables['topics'] = theme('forum_topic_list', $variables);
-      drupal_add_feed('taxonomy/term/' . $variables['tid'] . '/0/feed', 'RSS - ' . $title);
+      drupal_add_feed('taxonomy/term/' . $variables['tid'] . '/feed', 'RSS - ' . $title);
     }
     else {
       $variables['topics'] = '';
