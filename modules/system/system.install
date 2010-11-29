@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.526 2010/11/27 20:25:44 dries Exp $
+// $Id: system.install,v 1.527 2010/11/29 06:42:53 webchick Exp $
 
 /**
  * @file
@@ -187,6 +187,19 @@ function system_requirements($phase) {
     else {
       $requirements['database_extensions']['value'] = $t('Enabled');
     }
+  }
+  else {
+    // Database information.
+    $class = 'DatabaseTasks_' . Database::getConnection()->driver();
+    $tasks = new $class();
+    $requirements['database_system'] = array(
+      'title' => $t('Database system'),
+      'value' => $tasks->name(),
+    );
+    $requirements['database_system_version'] = array(
+      'title' => $t('Database system version'),
+      'value' => Database::getConnection()->version(),
+    );
   }
 
   // Test PHP memory_limit
