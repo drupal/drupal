@@ -1,5 +1,5 @@
 <?php
-// $Id: php.test,v 1.26 2010/08/05 23:53:38 webchick Exp $
+// $Id: php.test,v 1.27 2010/11/29 06:38:51 webchick Exp $
 
 /**
  * Base PHP test case class.
@@ -15,9 +15,9 @@ class PHPTestCase extends DrupalWebTestCase {
     $this->drupalLogin($admin_user);
 
     // Verify that the PHP code text format was inserted.
-    $php_format_id = db_query_range('SELECT format FROM {filter_format} WHERE name = :name', 0, 1, array(':name' => 'PHP code'))->fetchField();
-    $php_format = filter_format_load($php_format_id);
-    $this->assertEqual($php_format->name, 'PHP code', t('PHP code text format was created.'));
+    $php_format_id = 'php_code';
+    $this->php_code_format = filter_format_load($php_format_id);
+    $this->assertEqual($this->php_code_format->name, 'PHP code', t('PHP code text format was created.'));
 
     // Verify that the format has the PHP code filter enabled.
     $filters = filter_list_format($php_format_id);
@@ -31,9 +31,6 @@ class PHPTestCase extends DrupalWebTestCase {
     $this->drupalGet('admin/config/content/formats/' . $php_format_id);
     $this->assertFieldByName('roles[1]', FALSE, t('Anonymous users do not have access to PHP code format.'));
     $this->assertFieldByName('roles[2]', FALSE, t('Authenticated users do not have access to PHP code format.'));
-
-    // Store the format ID of the PHP code text format for later use.
-    $this->php_code_format = $php_format_id;
   }
 
   /**
@@ -63,7 +60,7 @@ class PHPFilterTestCase extends PHPTestCase {
    */
   function testPHPFilter() {
     // Log in as a user with permission to use the PHP code text format.
-    $php_code_permission = filter_permission_name(filter_format_load($this->php_code_format));
+    $php_code_permission = filter_permission_name(filter_format_load('php_code'));
     $web_user = $this->drupalCreateUser(array('access content', 'create page content', 'edit own page content', $php_code_permission));
     $this->drupalLogin($web_user);
 
@@ -77,7 +74,7 @@ class PHPFilterTestCase extends PHPTestCase {
     // Change filter to PHP filter and see that PHP code is evaluated.
     $edit = array();
     $langcode = LANGUAGE_NONE;
-    $edit["body[$langcode][0][format]"] = $this->php_code_format;
+    $edit["body[$langcode][0][format]"] = $this->php_code_format->format;
     $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
     $this->assertRaw(t('Basic page %title has been updated.', array('%title' => $node->title)), t('PHP code filter turned on.'));
 
@@ -114,6 +111,6 @@ class PHPAccessTestCase extends PHPTestCase {
 
     // Make sure that user doesn't have access to filter.
     $this->drupalGet('node/' . $node->nid . '/edit');
-    $this->assertNoRaw('<option value="' . $this->php_code_format . '">', t('PHP code format not available.'));
+    $this->assertNoRaw('<option value="' . $this->php_code_format->format . '">', t('PHP code format not available.'));
   }
 }

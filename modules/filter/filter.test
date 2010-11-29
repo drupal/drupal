@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.test,v 1.80 2010/10/23 02:26:11 webchick Exp $
+// $Id: filter.test,v 1.81 2010/11/29 06:38:51 webchick Exp $
 
 /**
  * Tests for text format and filter CRUD operations.
@@ -169,8 +169,8 @@ class FilterAdminTestCase extends DrupalWebTestCase {
     parent::setUp();
 
     // Create users.
-    $filtered_html_format = db_query_range('SELECT * FROM {filter_format} WHERE name = :name', 0, 1, array(':name' => 'Filtered HTML'))->fetchObject();
-    $full_html_format = db_query_range('SELECT * FROM {filter_format} WHERE name = :name', 0, 1, array(':name' => 'Full HTML'))->fetchObject();
+    $filtered_html_format = filter_format_load('filtered_html');
+    $full_html_format = filter_format_load('full_html');
     $this->admin_user = $this->drupalCreateUser(array(
       'administer filters',
       filter_permission_name($filtered_html_format),
@@ -192,26 +192,27 @@ class FilterAdminTestCase extends DrupalWebTestCase {
     $this->drupalPost(NULL, $edit, t('Save configuration'));
 
     // Edit text format.
-    $format = $this->getFormat($edit['name']);
+    $format_id = $edit['format'];
+    $name = $edit['name'];
     $this->drupalGet('admin/config/content/formats');
-    $this->assertRaw('admin/config/content/formats/' . $format->format);
-    $this->drupalGet('admin/config/content/formats/' . $format->format);
+    $this->assertLinkByHref('admin/config/content/formats/' . $format_id);
+    $this->drupalGet('admin/config/content/formats/' . $format_id);
     $this->drupalPost(NULL, array(), t('Save configuration'));
 
     // Disable text format.
     $this->drupalGet('admin/config/content/formats');
-    $this->assertRaw('admin/config/content/formats/' . $format->format . '/disable');
-    $this->drupalGet('admin/config/content/formats/' . $format->format . '/disable');
+    $this->assertLinkByHref('admin/config/content/formats/' . $format_id . '/disable');
+    $this->drupalGet('admin/config/content/formats/' . $format_id . '/disable');
     $this->drupalPost(NULL, array(), t('Disable'));
 
     // Verify that disabled text format no longer exists.
-    $this->drupalGet('admin/config/content/formats/' . $format->format);
+    $this->drupalGet('admin/config/content/formats/' . $format_id);
     $this->assertResponse(404, t('Disabled text format no longer exists.'));
 
     // Attempt to create a format of the same machine name as the disabled
     // format but with a different human readable name.
     $edit = array(
-      'format' => $format->format,
+      'format' => $format_id,
       'name' => 'New format',
     );
     $this->drupalPost('admin/config/content/formats/add', $edit, t('Save configuration'));
@@ -221,10 +222,12 @@ class FilterAdminTestCase extends DrupalWebTestCase {
     // disabled format but with a different machine name.
     $edit = array(
       'format' => 'new_format',
-      'name' => $format->name,
+      'name' => $name,
     );
     $this->drupalPost('admin/config/content/formats/add', $edit, t('Save configuration'));
-    $this->assertText('Text format names must be unique. A format named ' . check_plain($format->name) . ' already exists.');
+    $this->assertRaw(t('Text format names must be unique. A format named %name already exists.', array(
+      '%name' => $name,
+    )));
   }
 
   /**
@@ -236,10 +239,12 @@ class FilterAdminTestCase extends DrupalWebTestCase {
     // Line filter.
     $second_filter = 'filter_autop';
 
-    list($filtered, $full, $plain) = $this->checkFilterFormats();
+    $filtered = 'filtered_html';
+    $full = 'full_html';
+    $plain = 'plain_text';
 
     // Check that the fallback format exists and cannot be disabled.
-    $this->assertTrue(!empty($plain) && $plain == filter_fallback_format(), t('The fallback format is set to plain text.'));
+    $this->assertTrue($plain == filter_fallback_format(), t('The fallback format is set to plain text.'));
     $this->drupalGet('admin/config/content/formats');
     $this->assertNoRaw('admin/config/content/formats/' . $plain . '/disable', t('Disable link for the fallback format not found.'));
     $this->drupalGet('admin/config/content/formats/' . $plain . '/disable');
@@ -297,7 +302,8 @@ class FilterAdminTestCase extends DrupalWebTestCase {
     $this->drupalPost('admin/config/content/formats/add', $edit, t('Save configuration'));
     $this->assertRaw(t('Added text format %format.', array('%format' => $edit['name'])), t('New filter created.'));
 
-    $format = $this->getFormat($edit['name']);
+    drupal_static_reset('filter_formats');
+    $format = filter_format_load($edit['format']);
     $this->assertNotNull($format, t('Format found in database.'));
 
     $this->assertFieldByName('roles[2]', '', t('Role found.'));
@@ -375,45 +381,6 @@ class FilterAdminTestCase extends DrupalWebTestCase {
     $this->assertFieldByName('filters[' . $second_filter . '][weight]', $edit['filters[' . $second_filter . '][weight]'], t('Changes reverted.'));
     $this->assertFieldByName('filters[' . $first_filter . '][weight]', $edit['filters[' . $first_filter . '][weight]'], t('Changes reverted.'));
   }
-
-  /**
-   * Query the database to get the three basic formats.
-   *
-   * @return
-   *   An array containing filtered, full, and plain text format ids.
-   */
-  function checkFilterFormats() {
-    $result = db_query('SELECT format, name FROM {filter_format}');
-
-    $filtered = -1;
-    $full = -1;
-    $plain = -1;
-    foreach ($result as $format) {
-      if ($format->name == 'Filtered HTML') {
-        $filtered = $format->format;
-      }
-      elseif ($format->name == 'Full HTML') {
-        $full = $format->format;
-      }
-      elseif ($format->name == 'Plain text') {
-        $plain = $format->format;
-      }
-    }
-
-    return array($filtered, $full, $plain);
-  }
-
-  /**
-   * Retrieve a text format object by name.
-   *
-   * @param $name
-   *   The name of a text format.
-   * @return
-   *   A text format object.
-   */
-  function getFormat($name) {
-    return db_query("SELECT * FROM {filter_format} WHERE name = :name", array(':name' => $name))->fetchObject();
-  }
 }
 
 class FilterFormatAccessTestCase extends DrupalWebTestCase {
@@ -452,8 +419,7 @@ class FilterFormatAccessTestCase extends DrupalWebTestCase {
       );
       $this->drupalPost('admin/config/content/formats/add', $edit, t('Save configuration'));
       $this->resetFilterCaches();
-      $format_id = db_query("SELECT format FROM {filter_format} WHERE name = :name", array(':name' => $edit['name']))->fetchField();
-      $formats[] = filter_format_load($format_id);
+      $formats[] = filter_format_load($edit['format']);
     }
     list($this->allowed_format, $this->disallowed_format) = $formats;
     $this->drupalLogout();
@@ -684,8 +650,7 @@ class FilterDefaultFormatTestCase extends DrupalWebTestCase {
       );
       $this->drupalPost('admin/config/content/formats/add', $edit, t('Save configuration'));
       $this->resetFilterCaches();
-      $format_id = db_query("SELECT format FROM {filter_format} WHERE name = :name", array(':name' => $edit['name']))->fetchField();
-      $formats[] = filter_format_load($format_id);
+      $formats[] = filter_format_load($edit['format']);
     }
     list($first_format, $second_format) = $formats;
     $first_user = $this->drupalCreateUser(array(filter_permission_name($first_format), filter_permission_name($second_format)));
@@ -1716,7 +1681,7 @@ class FilterHooksTestCase extends DrupalWebTestCase {
     $this->assertRaw(t('Added text format %format.', array('%format' => $name)), t('New format created.'));
     $this->assertText('hook_filter_format_insert invoked.', t('hook_filter_format_insert was invoked.'));
 
-    $format_id = db_query("SELECT format FROM {filter_format} WHERE name = :name", array(':name' => $name))->fetchField();
+    $format_id = $edit['format'];
 
     // Update text format.
     $edit = array();

@@ -1,5 +1,5 @@
 <?php
-// $Id: common.test,v 1.135 2010/11/29 04:53:32 webchick Exp $
+// $Id: common.test,v 1.136 2010/11/29 06:38:51 webchick Exp $
 
 /**
  * @file
@@ -680,7 +680,7 @@ class CascadingStylesheetsTestCase extends DrupalWebTestCase {
     $expected = 'body{font-size:254px;}';
 
     // Create a node, using the PHP filter that tests drupal_add_css().
-    $php_format_id = db_query_range('SELECT format FROM {filter_format} WHERE name = :name', 0, 1, array(':name' => 'PHP code'))->fetchField();
+    $php_format_id = 'php_code';
     $settings = array(
       'type' => 'page',
       'body' => array(

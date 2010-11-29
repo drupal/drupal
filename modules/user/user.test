@@ -1,5 +1,5 @@
 <?php
-// $Id: user.test,v 1.106 2010/11/21 08:02:30 webchick Exp $
+// $Id: user.test,v 1.107 2010/11/29 06:38:52 webchick Exp $
 
 class UserRegistrationTestCase extends DrupalWebTestCase {
   public static function getInfo() {
@@ -1549,8 +1549,8 @@ class UserSignatureTestCase extends DrupalWebTestCase {
     variable_set('user_signatures', 1);
 
     // Prefetch text formats.
-    $this->full_html_format = db_query_range('SELECT * FROM {filter_format} WHERE name = :name', 0, 1, array(':name' => 'Full HTML'))->fetchObject();
-    $this->plain_text_format = db_query_range('SELECT * FROM {filter_format} WHERE name = :name', 0, 1, array(':name' => 'Plain text'))->fetchObject();
+    $this->full_html_format = filter_format_load('full_html');
+    $this->plain_text_format = filter_format_load('plain_text');
 
     // Create regular and administrative users.
     $this->web_user = $this->drupalCreateUser(array());

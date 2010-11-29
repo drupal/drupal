@@ -1,5 +1,5 @@
 <?php
-// $Id: block.test,v 1.63 2010/11/23 16:12:15 webchick Exp $
+// $Id: block.test,v 1.64 2010/11/29 06:38:51 webchick Exp $
 
 /**
  * @file
@@ -23,7 +23,7 @@ class BlockTestCase extends DrupalWebTestCase {
 
     // Create and log in an administrative user having access to the Full HTML
     // text format.
-    $full_html_format = db_query_range('SELECT * FROM {filter_format} WHERE name = :name', 0, 1, array(':name' => 'Full HTML'))->fetchObject();
+    $full_html_format = filter_format_load('full_html');
     $this->admin_user = $this->drupalCreateUser(array(
       'administer blocks',
       filter_permission_name($full_html_format),
@@ -119,8 +119,8 @@ class BlockTestCase extends DrupalWebTestCase {
     $custom_block['info'] = $this->randomName(8);
     $custom_block['title'] = $this->randomName(8);
     $custom_block['body[value]'] = '<h1>Full HTML</h1>';
-    $full_html_format_id = db_query_range('SELECT format FROM {filter_format} WHERE name = :name', 0, 1, array(':name' => 'Full HTML'))->fetchField();
-    $custom_block['body[format]'] = $full_html_format_id;
+    $full_html_format = filter_format_load('full_html');
+    $custom_block['body[format]'] = $full_html_format->format;
     $this->drupalPost('admin/structure/block/add', $custom_block, t('Save block'));
 
     // Set the created custom block to a specific region.
