@@ -13,6 +13,17 @@ fieldset legend {
 #footer-wrapper #footer .block {
   height: 100%;
 }
+.comment .attribution {
+  display: inline;
+  float: left; /* LTR */
+  overflow: hidden;
+  padding: 0;
+}
+.comment-text {
+  display: inline;
+  float: left; /* LTR */
+  margin-left: 25px; /* LTR */
+}
 #search-block-form input.form-submit,
 #search-form input.form-submit {
   text-transform: capitalize; /* Trigger text indent. */

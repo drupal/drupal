@@ -591,12 +591,14 @@ ul.links {
 }
 .comment {
   margin-bottom: 20px;
-  position: relative;
+  display: table;
+  vertical-align: top;
 }
 .comment .attribution {
-  padding-top: 20px;
-  float: left; /* LTR */
-  width: 110px;
+  display: table-cell;
+  padding: 0 30px 0 0; /* LTR */
+  vertical-align: top;
+  overflow: hidden;
 }
 .comment .attribution img {
   margin: 0;
@@ -628,9 +630,11 @@ ul.links {
   position: absolute;
 }
 .comment .comment-text {
-  margin-left: 140px; /* LTR */
   padding: 10px 25px;
   border: 1px solid #d3d7d9;
+  display: table-cell;
+  vertical-align: top;
+  position: relative;
 }
 .comment .indented {
   margin-left: 40px; /* LTR */

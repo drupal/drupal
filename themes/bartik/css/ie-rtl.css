@@ -8,6 +8,18 @@ ul.action-links li a,
 #user-login li.openid-link a {
   zoom: 1;
 }
+.comment .attribution {
+  float: right;
+}
+.comment-text {
+  float: right;
+  margin-left: 0;
+  margin-right: 25px;
+}
+.comment .comment-arrow {
+  position: absolute;
+  right: 25px;
+}
 .region-header .block,
 .region-header #block-user-login .form-item {
   float: none;
