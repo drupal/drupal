@@ -12,16 +12,6 @@
  */
 
 /**
- * SQLite specific query builder for SELECT statements.
- */
-class SelectQuery_sqlite extends SelectQuery {
-  public function forUpdate($set = TRUE) {
-    // SQLite does not support FOR UPDATE so nothing to do.
-    return $this;
-  }
-}
-
-/**
  * SQLite specific implementation of InsertQuery.
  *
  * We ignore all the default fields and use the clever SQLite syntax:
