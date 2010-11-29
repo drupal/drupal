@@ -1,5 +1,5 @@
 <?php
-// $Id: query.inc,v 1.13 2010/09/25 01:41:26 dries Exp $
+// $Id: query.inc,v 1.14 2010/11/29 04:45:11 webchick Exp $
 
 /**
  * @file
@@ -10,16 +10,6 @@
  * @ingroup database
  * @{
  */
-
-/**
- * SQLite specific query builder for SELECT statements.
- */
-class SelectQuery_sqlite extends SelectQuery {
-  public function forUpdate($set = TRUE) {
-    // SQLite does not support FOR UPDATE so nothing to do.
-    return $this;
-  }
-}
 
 /**
  * SQLite specific implementation of InsertQuery.

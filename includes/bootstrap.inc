@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.447 2010/11/28 07:32:39 webchick Exp $
+// $Id: bootstrap.inc,v 1.448 2010/11/29 04:45:10 webchick Exp $
 
 /**
  * @file
@@ -2244,7 +2244,6 @@ function _drupal_bootstrap_database() {
   // The database autoload routine comes first so that we can load the database
   // system without hitting the database. That is especially important during
   // the install or upgrade process.
-  spl_autoload_register('db_autoload');
   spl_autoload_register('drupal_autoload_class');
   spl_autoload_register('drupal_autoload_interface');
 }
