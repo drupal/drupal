@@ -544,6 +544,14 @@ Drupal.ajax.prototype.commands = {
   },
 
   /**
+   * Command to apply a jQuery method.
+   */
+  invoke: function (ajax, response, status) {
+    var $element = $(response.selector);
+    $element[response.method].apply($element, response.arguments);
+  },
+
+  /**
    * Command to restripe a table.
    */
   restripe: function (ajax, response, status) {
