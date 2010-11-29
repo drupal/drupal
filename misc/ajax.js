@@ -1,4 +1,4 @@
-// $Id: ajax.js,v 1.30 2010/11/20 08:26:21 webchick Exp $
+// $Id: ajax.js,v 1.31 2010/11/29 03:00:49 webchick Exp $
 (function ($) {
 
 /**
@@ -541,6 +541,14 @@ Drupal.ajax.prototype.commands = {
    */
   data: function (ajax, response, status) {
     $(response.selector).data(response.name, response.value);
+  },
+
+  /**
+   * Command to apply a jQuery method.
+   */
+  invoke: function (ajax, response, status) {
+    var $element = $(response.selector);
+    $element[response.method].apply($element, response.arguments);
   },
 
   /**

@@ -1,5 +1,5 @@
 <?php
-// $Id: ajax.test,v 1.20 2010/10/21 19:31:39 dries Exp $
+// $Id: ajax.test,v 1.21 2010/11/29 03:00:50 webchick Exp $
 
 class AJAXTestCase extends DrupalWebTestCase {
   function setUp() {
@@ -210,6 +210,15 @@ class AJAXCommandsTestCase extends AJAXTestCase {
       'value' => 'testvalue',
     );
     $this->assertCommand($commands, $expected, "'data' AJAX command issued with correct key and value");
+
+    // Tests the 'invoke' command.
+    $commands = $this->drupalPostAJAX($form_path, $edit, array('op' => t("AJAX invoke command: Invoke addClass() method.")));
+    $expected = array(
+      'command' => 'invoke',
+      'method' => 'addClass',
+      'arguments' => array('error'),
+    );
+    $this->assertCommand($commands, $expected, "'invoke' AJAX command issued with correct method and argument");
 
     // Tests the 'html' command.
     $commands = $this->drupalPostAJAX($form_path, $edit, array('op' => t("AJAX html: Replace the HTML in a selector.")));

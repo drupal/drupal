@@ -1,5 +1,5 @@
 <?php
-// $Id: ajax_forms_test.module,v 1.8 2010/10/04 17:46:01 dries Exp $
+// $Id: ajax_forms_test.module,v 1.9 2010/11/29 03:00:50 webchick Exp $
 
 /**
  * @file
@@ -176,6 +176,16 @@ function ajax_forms_test_ajax_commands_form($form, &$form_state) {
     '#suffix' => '<div id="data_div">Data attached to this div.</div>',
   );
 
+  // Shows the AJAX 'invoke' command.
+  $form['invoke_command_example'] = array(
+    '#value' => t("AJAX invoke command: Invoke addClass() method."),
+    '#type' => 'submit',
+    '#ajax' => array(
+      'callback' => 'ajax_forms_test_advanced_commands_invoke_callback',
+    ),
+    '#suffix' => '<div id="invoke_div">Original contents</div>',
+  );
+
   // Shows the AJAX 'html' command.
   $form['html_command_example'] = array(
     '#value' => t("AJAX html: Replace the HTML in a selector."),
@@ -328,6 +338,15 @@ function ajax_forms_test_advanced_commands_data_callback($form, $form_state) {
 
   $commands = array();
   $commands[] = ajax_command_data($selector, 'testkey', 'testvalue');
+  return array('#type' => 'ajax', '#commands' => $commands);
+}
+
+/**
+ * AJAX callback for 'invoke'.
+ */
+function ajax_forms_test_advanced_commands_invoke_callback($form, $form_state) {
+  $commands = array();
+  $commands[] = ajax_command_invoke('#invoke_div', 'addClass', array('error'));
   return array('#type' => 'ajax', '#commands' => $commands);
 }
 
