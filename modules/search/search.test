@@ -700,7 +700,7 @@ class SearchCommentTestCase extends DrupalWebTestCase {
 
     // Create and log in an administrative user having access to the Full HTML
     // text format.
-    $full_html_format = db_query_range('SELECT * FROM {filter_format} WHERE name = :name', 0, 1, array(':name' => 'Full HTML'))->fetchObject();
+    $full_html_format = filter_format_load('full_html');
     $permissions = array(
       'administer filters',
       filter_permission_name($full_html_format),
@@ -721,7 +721,7 @@ class SearchCommentTestCase extends DrupalWebTestCase {
 
     variable_set('comment_preview_article', DRUPAL_OPTIONAL);
     // Enable check_plain() for 'Filtered HTML' text format.
-    $filtered_html_format_id = db_query_range('SELECT format FROM {filter_format} WHERE name = :name', 0, 1, array(':name' => 'Filtered HTML'))->fetchField();
+    $filtered_html_format_id = 'filtered_html';
     $edit = array(
       'filters[filter_html_escape][status]' => TRUE,
     );
@@ -740,7 +740,7 @@ class SearchCommentTestCase extends DrupalWebTestCase {
     $edit_comment = array();
     $edit_comment['subject'] = 'Test comment subject';
     $edit_comment['comment_body[' . LANGUAGE_NONE . '][0][value]'] = '<h1>' . $comment_body . '</h1>';
-    $full_html_format_id = db_query_range('SELECT format FROM {filter_format} WHERE name = :name', 0, 1, array(':name' => 'Full HTML'))->fetchField();
+    $full_html_format_id = 'full_html';
     $edit_comment['comment_body[' . LANGUAGE_NONE . '][0][format]'] = $full_html_format_id;
     $this->drupalPost('comment/reply/' . $node->nid, $edit_comment, t('Save'));
 
@@ -975,7 +975,7 @@ class SearchCommentCountToggleTestCase extends DrupalWebTestCase {
     $edit_comment = array();
     $edit_comment['subject'] = $this->randomName();
     $edit_comment['comment_body[' . LANGUAGE_NONE . '][0][value]'] = $this->randomName();
-    $filtered_html_format_id = db_query_range('SELECT format FROM {filter_format} WHERE name = :name', 0, 1, array(':name' => 'Filtered HTML'))->fetchField();
+    $filtered_html_format_id = 'filtered_html';
     $edit_comment['comment_body[' . LANGUAGE_NONE . '][0][format]'] = $filtered_html_format_id;
 
     // Post comment to the test node with comment
