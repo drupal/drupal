@@ -24,31 +24,24 @@ function list_help($path, $arg) {
  */
 function list_field_info() {
   return array(
-    'list' => array(
-      'label' => t('List'),
-      'description' => t('This field stores numeric keys from key/value lists of allowed values where the key is a simple alias for the position of the value, i.e. 0|First option, 1|Second option, 2|Third option.'),
-      'settings' => array('allowed_values' => '', 'allowed_values_function' => ''),
-      'default_widget' => 'options_select',
-      'default_formatter' => 'list_default',
-    ),
     'list_boolean' => array(
       'label' => t('Boolean'),
       'description' => t('This field stores simple on/off or yes/no options.'),
-      'settings' => array('allowed_values' => '', 'allowed_values_function' => ''),
+      'settings' => array('allowed_values' => array(), 'allowed_values_function' => ''),
       'default_widget' => 'options_buttons',
       'default_formatter' => 'list_default',
     ),
     'list_number' => array(
       'label' => t('List (numeric)'),
-      'description' => t('This field stores keys from key/value lists of allowed numbers where the stored numeric key has significance and must be preserved, i.e. \'Lifetime in days\': 1|1 day, 7|1 week, 31|1 month.'),
-      'settings' => array('allowed_values' => '', 'allowed_values_function' => ''),
+      'description' => t("This field stores numeric values from a list of allowed 'value => label' pairs, i.e. 'Lifetime in days': 1 => 1 day, 7 => 1 week, 31 => 1 month."),
+      'settings' => array('allowed_values' => array(), 'allowed_values_function' => ''),
       'default_widget' => 'options_select',
       'default_formatter' => 'list_default',
     ),
     'list_text' => array(
       'label' => t('List (text)'),
-      'description' => t('This field stores keys from key/value lists of allowed values where the stored key has significance and must be a varchar, i.e. \'US States\': IL|Illinois, IA|Iowa, IN|Indiana'),
-      'settings' => array('allowed_values' => '', 'allowed_values_function' => ''),
+      'description' => t("This field stores text values from a list of allowed 'value => label' pairs, i.e. 'US States': IL => Illinois, IA => Iowa, IN => Indiana"),
+      'settings' => array('allowed_values' => array(), 'allowed_values_function' => ''),
       'default_widget' => 'options_select',
       'default_formatter' => 'list_default',
     ),
@@ -57,62 +50,78 @@ function list_field_info() {
 
 /**
  * Implements hook_field_settings_form().
- *
- * @todo: If $has_data, add a form validate function to verify that the
- * new allowed values do not exclude any keys for which data already
- * exists in the field storage (use EntityFieldQuery to find out).
- * Implement the validate function via hook_field_update_forbid() so
- * list.module does not depend on form submission.
  */
 function list_field_settings_form($field, $instance, $has_data) {
   $settings = $field['settings'];
 
-  $form['allowed_values'] = array(
-    '#type' => 'textarea',
-    '#title' => t('Allowed values list'),
-    '#default_value' => $settings['allowed_values'],
-    '#required' => FALSE,
-    '#rows' => 10,
-    '#description' => '<p>' . t('The possible values this field can contain. Enter one value per line, in the format key|label. The key is the value that will be stored in the database, and must be a %type value. The label is optional, and the key will be used as the label if no label is specified.', array('%type' => $field['type'] == 'list_text' ? t('text') : t('numeric'))) . '</p>',
-    '#element_validate' => array('list_allowed_values_setting_validate'),
-    '#list_field_type' => $field['type'],
-    '#access' => empty($settings['allowed_values_function']),
-  );
+  switch ($field['type']) {
+    case 'list_number':
+    case 'list_text':
+      $form['allowed_values'] = array(
+        '#type' => 'textarea',
+        '#title' => t('Allowed values list'),
+        '#default_value' => list_allowed_values_string($settings['allowed_values']),
+        '#rows' => 10,
+        '#element_validate' => array('list_allowed_values_setting_validate'),
+        '#field_has_data' => $has_data,
+        '#field' => $field,
+        '#field_type' => $field['type'],
+        '#access' => empty($settings['allowed_values_function']),
+      );
 
-  if ($field['type'] == 'list_boolean') {
-    $values = list_extract_allowed_values($settings['allowed_values']);
-    $off_value = array_shift($values);
-    $on_value = array_shift($values);
-    $form['allowed_values'] = array(
-      '#type' => 'value',
-      '#description' => '',
-      '#value_callback' => 'list_boolean_allowed_values_callback',
-      '#access' => empty($settings['allowed_values_function']),
-    );
-    $form['allowed_values']['on'] = array(
-      '#type' => 'textfield',
-      '#title' => t('On value'),
-      '#default_value' => $on_value,
-      '#required' => FALSE,
-      '#description' => t('If left empty, "1" will be used.'),
-      // Change #parents to make sure the element is not saved into field
-      // settings.
-      '#parents' => array('on'),
-    );
-    $form['allowed_values']['off'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Off value'),
-      '#default_value' => $off_value,
-      '#required' => FALSE,
-      '#description' => t('If left empty, "0" will be used.'),
-      // Change #parents to make sure the element is not saved into field
-      // settings.
-      '#parents' => array('off'),
-    );
-    // Link the allowed value to the on / off elements to prepare for the rare
-    // case of an alter changing #parents.
-    $form['allowed_values']['#on_parents'] = &$form['allowed_values']['on']['#parents'];
-    $form['allowed_values']['#off_parents'] = &$form['allowed_values']['off']['#parents'];
+      $description = '<p>' . t('The possible values this field can contain. Enter one value per line, in the format key|label.');
+      if ($field['type'] == 'list_number') {
+        $description .= '<br/>' . t('The key is the stored value, and must be numeric. The label will be used in displayed values and edit forms.');
+        $description .= '<br/>' . t('The label is optional: if a line contains a single number, it will be used as key and label.');
+        $description .= '<br/>' . t('Lists of labels are also accepted (one label per line), only if the field does not hold any values yet. Numeric keys will be automatically generated from the positions in the list.');
+      }
+      else {
+        $description .= '<br/>' . t('The key is the stored value. The label will be used in displayed values and edit forms.');
+        $description .= '<br/>' . t('The label is optional: if a line contains a single string, it will be used as key and label.');
+      }
+      $description .= '</p>';
+      $form['allowed_values']['#description'] = $description;
+
+      break;
+
+    case 'list_boolean':
+      $values = $settings['allowed_values'];
+      $off_value = array_shift($values);
+      $on_value = array_shift($values);
+
+      $form['allowed_values'] = array(
+        '#type' => 'value',
+        '#description' => '',
+        '#value_callback' => 'list_boolean_allowed_values_callback',
+        '#access' => empty($settings['allowed_values_function']),
+      );
+      $form['allowed_values']['on'] = array(
+        '#type' => 'textfield',
+        '#title' => t('On value'),
+        '#default_value' => $on_value,
+        '#required' => FALSE,
+        '#description' => t('If left empty, "1" will be used.'),
+        // Change #parents to make sure the element is not saved into field
+        // settings.
+        '#parents' => array('on'),
+      );
+      $form['allowed_values']['off'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Off value'),
+        '#default_value' => $off_value,
+        '#required' => FALSE,
+        '#description' => t('If left empty, "0" will be used.'),
+        // Change #parents to make sure the element is not saved into field
+        // settings.
+        '#parents' => array('off'),
+      );
+
+      // Link the allowed value to the on / off elements to prepare for the rare
+      // case of an alter changing #parents.
+      $form['allowed_values']['#on_parents'] = &$form['allowed_values']['on']['#parents'];
+      $form['allowed_values']['#off_parents'] = &$form['allowed_values']['off']['#parents'];
+
+      break;
   }
 
   // Alter the description for allowed values depending on the widget type.
@@ -122,7 +131,7 @@ function list_field_settings_form($field, $instance, $has_data) {
   elseif ($instance['widget']['type'] == 'options_buttons') {
     $form['allowed_values']['#description'] .= '<p>' . t("The 'checkboxes/radio buttons' widget will display checkboxes if the <em>Number of values</em> option is greater than 1 for this field, otherwise radios will be displayed.") . '</p>';
   }
-  $form['allowed_values']['#description'] .= t('Allowed HTML tags in labels: @tags', array('@tags' => _field_filter_xss_display_allowed_tags()));
+  $form['allowed_values']['#description'] .= '<p>' . t('Allowed HTML tags in labels: @tags', array('@tags' => _field_filter_xss_display_allowed_tags())) . '</p>';
 
   $form['allowed_values_function'] = array(
     '#type' => 'value',
@@ -142,23 +151,37 @@ function list_field_settings_form($field, $instance, $has_data) {
  * Element validate callback; check that the entered values are valid.
  */
 function list_allowed_values_setting_validate($element, &$form_state) {
-  $values = list_extract_allowed_values($element['#value'], $element['#list_field_type'] == 'list');
-  $field_type = $element['#list_field_type'];
+  $field = $element['#field'];
+  $has_data = $element['#field_has_data'];
+  $generate_keys = ($field['type'] == 'list_number') && !$has_data;
 
-  // Check that keys are valid for the field type.
-  foreach ($values as $key => $value) {
-    if ($field_type == 'list_number' && !is_numeric($key)) {
-      form_error($element, t('Allowed values list: each key must be a valid integer or decimal.'));
-      break;
+  $values = list_extract_allowed_values($element['#value'], $field['type'], $generate_keys);
+
+  if (!is_array($values)) {
+    form_error($element, t('Invalid input for the allowed values list.'));
+  }
+  else {
+    // Check that keys are valid for the field type.
+    foreach ($values as $key => $value) {
+      if ($field['type'] == 'list_number' && !is_numeric($key)) {
+        form_error($element, t('Allowed values list: each key must be a valid integer or decimal.'));
+        break;
+      }
+      elseif ($field['type'] == 'list_text' && drupal_strlen($key) > 255) {
+        form_error($element, t('Allowed values list: each key must be a string at most 255 characters long.'));
+        break;
+      }
     }
-    elseif ($field_type == 'list_text' && drupal_strlen($key) > 255) {
-      form_error($element, t('Allowed values list: each key must be a string at most 255 characters long.'));
-      break;
+
+    // Prevent removing values currently in use.
+    if ($has_data) {
+      $lost_keys = array_diff(array_keys($field['settings']['allowed_values']), array_keys($values));
+      if (_list_values_in_use($field, $lost_keys)) {
+        form_error($element, t('Some allowed values are being removed while currently in use.'));
+      }
     }
-    elseif ($field_type == 'list' && !preg_match('/^-?\d+$/', $key)) {
-      form_error($element, t('Allowed values list: keys must be integers.'));
-      break;
-    }
+
+    form_set_value($element, $values, $form_state);
   }
 }
 
@@ -168,7 +191,7 @@ function list_allowed_values_setting_validate($element, &$form_state) {
 function list_boolean_allowed_values_callback($element, $input, $form_state) {
   $on = drupal_array_get_nested_value($form_state['input'], $element['#on_parents']);
   $off = drupal_array_get_nested_value($form_state['input'], $element['#off_parents']);
-  return "0|$off\n1|$on";
+  return array($off, $on);
 }
 
 /**
@@ -179,7 +202,7 @@ function list_field_update_field($field, $prior_field, $has_data) {
 }
 
 /**
- * Returns the set of allowed values for a list field.
+ * Returns the array of allowed values for a list field.
  *
  * The strings are not safe for output. Keys and values of the array should be
  * sanitized through field_filter_xss() before being displayed.
@@ -189,21 +212,18 @@ function list_field_update_field($field, $prior_field, $has_data) {
  *
  * @return
  *   The array of allowed values. Keys of the array are the raw stored values
- *   (integer or text), values of the array are the display aliases.
+ *   (number or text), values of the array are the display labels.
  */
 function list_allowed_values($field) {
   $allowed_values = &drupal_static(__FUNCTION__, array());
 
   if (!isset($allowed_values[$field['id']])) {
-    $values = array();
-
     $function = $field['settings']['allowed_values_function'];
     if (!empty($function) && function_exists($function)) {
       $values = $function($field);
     }
-    elseif (!empty($field['settings']['allowed_values'])) {
-      $position_keys = $field['type'] == 'list';
-      $values = list_extract_allowed_values($field['settings']['allowed_values'], $position_keys);
+    else {
+      $values = $field['settings']['allowed_values'];
     }
 
     $allowed_values[$field['id']] = $values;
@@ -213,42 +233,116 @@ function list_allowed_values($field) {
 }
 
 /**
- * Generates an array of values from a string.
+ * Parses a string of 'allowed values' into an array.
  *
- * Explode a string with keys and labels separated with '|' and with each new
- * value on its own line.
- *
- * @param $string_values
- *   The list of choices as a string, in the format expected by the
- *   'allowed_values' setting:
- *    - Values are separated by a carriage return.
- *    - Each value is in the format "value|label" or "value".
+ * @param $string
+ *   The list of allowed values in string format descibed in
+ *   list_allowed_values_string().
+ * @param $field_type
+ *   The field type. Either 'list_number' or 'list_text'.
  * @param $position_keys
  *   Boolean value indicating whether to generate keys based on the position of
- *   the value if a key is not manually specified, effectively generating
- *   integer-based keys. This should only be TRUE for fields that have a type of
- *   "list". Otherwise the value will be used as the key if not specified.
+ *   the value if a key is not manually specified, and if the value cannot be
+ *   used as a key. This should only be TRUE for fields of type 'list_number'.
+ *
+ * @return
+ *   The array of extracted key/value pairs, or NULL if the string is invalid.
+ *
+ * @see list_allowed_values_string()
  */
-function list_extract_allowed_values($string_values, $position_keys = FALSE) {
+function list_extract_allowed_values($string, $field_type, $position_keys) {
   $values = array();
 
-  $list = explode("\n", $string_values);
+  $list = explode("\n", $string);
   $list = array_map('trim', $list);
   $list = array_filter($list, 'strlen');
-  foreach ($list as $key => $value) {
-    // Check for a manually specified key.
-    if (strpos($value, '|') !== FALSE) {
-      list($key, $value) = explode('|', $value);
+
+  $generated_keys = $explicit_keys = FALSE;
+  foreach ($list as $position => $text) {
+    $value = $key = FALSE;
+
+    // Check for an explicit key.
+    $matches = array();
+    if (preg_match('/(.*)\|(.*)/', $text, $matches)) {
+      $key = $matches[1];
+      $value = $matches[2];
+      $explicit_keys = TRUE;
     }
-    // Otherwise see if we need to use the value as the key. The "list" type
-    // will automatically convert non-keyed lines to integers.
-    elseif (!$position_keys) {
-      $key = $value;
+    // Otherwise see if we can use the value as the key.
+    elseif ($field_type == 'list_text' || ($field_type == 'list_number' && is_numeric($text))) {
+      $key = $value = $text;
+      $explicit_keys = TRUE;
     }
-    $values[$key] = (isset($value) && $value !== '') ? $value : $key;
+    // Otherwise see if we can generate a key from the position.
+    elseif ($position_keys) {
+      $key = $position;
+      $value = $text;
+      $generated_keys = TRUE;
+    }
+    else {
+      return;
+    }
+
+    $values[$key] = $value;
+  }
+
+  // We generate keys only if the list contains no explicit key at all.
+  if ($explicit_keys && $generated_keys) {
+    return;
   }
 
   return $values;
+}
+
+/**
+ * Generates a string representation of an array of 'allowed values'.
+ *
+ * This string format is suitable for edition in a textarea.
+ *
+ * @param $values
+ *   An array of values, where array keys are values and array values are
+ *   labels.
+ *
+ * @return
+ *   The string representation of the $values array:
+ *    - Values are separated by a carriage return.
+ *    - Each value is in the format "value|label" or "value".
+ */
+function list_allowed_values_string($values) {
+  $lines = array();
+  foreach ($values as $key => $value) {
+    $lines[] = "$key|$value";
+  }
+  return implode("\n", $lines);
+}
+
+/**
+ * Implements hook_field_update_forbid().
+ */
+function list_field_update_forbid($field, $prior_field, $has_data) {
+  if ($field['module'] == 'list' && $has_data) {
+    // Forbid any update that removes allowed values with actual data.
+    $lost_keys = array_diff(array_keys($field['settings']['allowed_values']), array_keys($prior_field['settings']['allowed_values']));
+    if (_list_values_in_use($field, $lost_keys)) {
+      throw new FieldUpdateForbiddenException(t('Cannot update a list field to not include keys with existing data.'));
+    }
+  }
+}
+
+/**
+ * Checks if a list of values are being used in actual field values.
+ */
+function _list_values_in_use($field, $values) {
+  if ($values) {
+    $query = new EntityFieldQuery();
+    $found = $query
+      ->fieldCondition($prior_field['field_name'], 'value', $lost_keys)
+      ->range(0, 1)
+      ->execute();
+    return !empty($found);
+  }
+
+  return FALSE;
 }
 
 /**
@@ -291,8 +385,8 @@ function list_field_is_empty($item, $field) {
  */
 function list_field_widget_info_alter(&$info) {
   $widgets = array(
-    'options_select' => array('list', 'list_text', 'list_number'),
-    'options_buttons' => array('list', 'list_text', 'list_number', 'list_boolean'),
+    'options_select' => array('list_text', 'list_number'),
+    'options_buttons' => array('list_text', 'list_number', 'list_boolean'),
     'options_onoff' => array('list_boolean'),
   );
 
@@ -315,11 +409,11 @@ function list_field_formatter_info() {
   return array(
     'list_default' => array(
       'label' => t('Default'),
-      'field types' => array('list', 'list_boolean', 'list_text', 'list_number'),
+      'field types' => array('list_boolean', 'list_text', 'list_number'),
     ),
     'list_key' => array(
       'label' => t('Key'),
-      'field types' => array('list', 'list_boolean', 'list_text', 'list_number'),
+      'field types' => array('list_boolean', 'list_text', 'list_number'),
     ),
   );
 }
