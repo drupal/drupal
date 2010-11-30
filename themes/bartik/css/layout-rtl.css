@@ -1,9 +1,10 @@
-/* $Id: layout-rtl.css,v 1.4 2010/10/05 01:48:11 dries Exp $ */
+/* $Id: layout-rtl.css,v 1.5 2010/11/30 17:43:52 dries Exp $ */
 
 /* ---------- Basic Layout RTL Styles ----------- */
 
 #content,
-.sidebar,
+#sidebar-first,
+#sidebar-second,
 .region-triptych-first,
 .region-triptych-middle,
 .region-triptych-last,
