@@ -1731,6 +1731,7 @@ function field_ui_field_edit_form($form, &$form_state, $instance) {
   drupal_set_title($instance['label']);
 
   $form['#field'] = $field;
+  $form['#instance'] = $instance;
 
   if (!empty($field['locked'])) {
     $form['locked'] = array(

@@ -173,4 +173,25 @@ Drupal.evaluatePasswordStrength = function (password, translate) {
 
 };
 
+/**
+ * Field instance settings screen: force the 'Display on registration form'
+ * checkbox checked whenever 'Required' is checked.
+ */
+Drupal.behaviors.fieldUserRegistration = {
+  attach: function (context, settings) {
+    var $checkbox = $('form#field-ui-field-edit-form input#edit-instance-settings-user-register-form');
+
+    if ($checkbox.size()) {
+      $('input#edit-instance-required', context).once('user-register-form-checkbox', function () {
+        $(this).bind('change', function (e) {
+          if ($(this).attr('checked')) {
+            $checkbox.attr('checked', true);
+          }
+        });
+      });
+
+    }
+  }
+};
+
 })(jQuery);
