@@ -1,5 +1,5 @@
 <?php
-// $Id: node.admin.inc,v 1.101 2010/10/20 01:31:07 dries Exp $
+// $Id: node.admin.inc,v 1.102 2010/11/30 19:31:46 dries Exp $
 
 /**
  * @file
@@ -288,6 +288,8 @@ function node_mass_update($nodes, $updates) {
  */
 function _node_mass_update_helper($nid, $updates) {
   $node = node_load($nid, NULL, TRUE);
+  // For efficiency manually save the original node before applying any changes.
+  $node->original = clone $node;
   foreach ($updates as $name => $value) {
     $node->$name = $value;
   }

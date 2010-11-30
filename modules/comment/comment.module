@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.921 2010/11/30 17:16:37 dries Exp $
+// $Id: comment.module,v 1.922 2010/11/30 19:31:46 dries Exp $
 
 /**
  * @file
@@ -1442,6 +1442,11 @@ function comment_save($comment) {
       $comment->node_type = 'comment_node_' . $node->type;
     }
 
+    // Load the stored entity, if any.
+    if (!empty($comment->cid) && !isset($comment->original)) {
+      $comment->original = entity_load_unchanged('comment', $comment->cid);
+    }
+
     field_attach_presave('comment', $comment);
 
     // Allow modules to alter the comment before saving.
@@ -1568,6 +1573,7 @@ function comment_save($comment) {
     if ($comment->status == COMMENT_PUBLISHED) {
       module_invoke_all('comment_publish', $comment);
     }
+    unset($comment->original);
   }
   catch (Exception $e) {
     $transaction->rollback('comment');

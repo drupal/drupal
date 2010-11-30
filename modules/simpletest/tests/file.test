@@ -1,5 +1,5 @@
 <?php
-// $Id: file.test,v 1.71 2010/10/05 06:23:18 webchick Exp $
+// $Id: file.test,v 1.72 2010/11/30 19:31:46 dries Exp $
 
 /**
  *  @file
@@ -1485,7 +1485,7 @@ class FileMoveTest extends FileHookTestCase {
     $this->assertEqual($contents, file_get_contents($result->uri), t('Contents of file correctly written.'));
 
     // Check that the correct hooks were called.
-    $this->assertFileHooksCalled(array('move', 'update'));
+    $this->assertFileHooksCalled(array('move', 'load', 'update'));
 
     // Make sure we got the same file back.
     $this->assertEqual($source->fid, $result->fid, t("Source file id's' %fid is unchanged after move.", array('%fid' => $source->fid)));
@@ -1517,7 +1517,7 @@ class FileMoveTest extends FileHookTestCase {
     $this->assertEqual($contents, file_get_contents($result->uri), t('Contents of file correctly written.'));
 
     // Check that the correct hooks were called.
-    $this->assertFileHooksCalled(array('move', 'update'));
+    $this->assertFileHooksCalled(array('move', 'load', 'update'));
 
     // Compare the returned value to what made it into the database.
     $this->assertFileUnchanged($result, file_load($result->fid, TRUE));
@@ -1891,7 +1891,7 @@ class FileSaveTest extends FileHookTestCase {
     $resaved_file = file_save($saved_file);
 
     // Check that the correct hooks were called.
-    $this->assertFileHooksCalled(array('update'));
+    $this->assertFileHooksCalled(array('load', 'update'));
 
     $this->assertEqual($resaved_file->fid, $saved_file->fid, t("The file ID of an existing file is not changed when updating the database."), 'File');
     $this->assertTrue($resaved_file->timestamp >= $saved_file->timestamp, t("Timestamp didn't go backwards."), 'File');

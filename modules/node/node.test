@@ -1,5 +1,5 @@
 <?php
-// $Id: node.test,v 1.102 2010/11/24 16:25:39 dries Exp $
+// $Id: node.test,v 1.103 2010/11/30 19:31:46 dries Exp $
 
 /**
  * Test the node_load_multiple() function.
@@ -1041,14 +1041,14 @@ class NodeSaveTestCase extends DrupalWebTestCase {
     $changed = $node->changed;
 
     node_save($node);
-    $node = $this->drupalGetNodeByTitle($edit['title']);
+    $node = $this->drupalGetNodeByTitle($edit['title'], TRUE);
     $this->assertEqual($node->created, $created, t('Updating a node preserves "created" timestamp.'));
 
     // Programmatically set the timestamps using hook_node_presave.
     $node->title = 'testing_node_presave';
 
     node_save($node);
-    $node = $this->drupalGetNodeByTitle('testing_node_presave');
+    $node = $this->drupalGetNodeByTitle('testing_node_presave', TRUE);
     $this->assertEqual($node->created, 280299600, t('Saving a node uses "created" timestamp set in presave hook.'));
     $this->assertEqual($node->changed, 979534800, t('Saving a node uses "changed" timestamp set in presave hook.'));
 
@@ -1071,9 +1071,39 @@ class NodeSaveTestCase extends DrupalWebTestCase {
     $node->changed = 280299600;
 
     node_save($node);
-    $node = $this->drupalGetNodeByTitle($edit['title']);
+    $node = $this->drupalGetNodeByTitle($edit['title'], TRUE);
     $this->assertEqual($node->created, 979534800, t('Updating a node uses user-set "created" timestamp.'));
     $this->assertNotEqual($node->changed, 280299600, t('Updating a node doesn\'t use user-set "changed" timestamp.'));
+  }
+
+  /**
+   * Tests determing changes in hook_node_presave() and verifies the static node
+   * load cache is cleared upon save.
+   */
+  function testDeterminingChanges() {
+    // Initial creation.
+    $node = (object) array(
+      'uid' => $this->web_user->uid,
+      'type' => 'article',
+      'title' => 'test_changes',
+    );
+    node_save($node);
+
+    // Update the node without applying changes.
+    node_save($node);
+    $this->assertEqual($node->title, 'test_changes', 'No changes have been determined.');
+
+    // Apply changes.
+    $node->title = 'updated';
+    node_save($node);
+
+    // The hook implementations node_test_node_presave() and
+    // node_test_node_update() determine changes and change the title.
+    $this->assertEqual($node->title, 'updated_presave_update', 'Changes have been determined.');
+
+    // Test the static node load cache to be cleared.
+    $node = node_load($node->nid);
+    $this->assertEqual($node->title, 'updated_presave', 'Static cache has been cleared.');
   }
 }
 

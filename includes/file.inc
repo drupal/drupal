@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.241 2010/11/20 09:43:43 webchick Exp $
+// $Id: file.inc,v 1.242 2010/11/30 19:31:46 dries Exp $
 
 /**
  * @file
@@ -574,6 +574,11 @@ function file_save(stdClass $file) {
   $file->timestamp = REQUEST_TIME;
   $file->filesize = filesize($file->uri);
 
+  // Load the stored entity, if any.
+  if (!empty($file->fid) && !isset($file->original)) {
+    $file->original = entity_load_unchanged('file', $file->fid);
+  }
+
   if (empty($file->fid)) {
     drupal_write_record('file_managed', $file);
     // Inform modules about the newly added file.
@@ -587,6 +592,7 @@ function file_save(stdClass $file) {
     module_invoke_all('entity_update', $file, 'file');
   }
 
+  unset($file->original);
   return $file;
 }
 

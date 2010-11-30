@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.621 2010/11/27 20:25:44 dries Exp $
+// $Id: taxonomy.module,v 1.622 2010/11/30 19:31:46 dries Exp $
 
 /**
  * @file
@@ -388,9 +388,15 @@ function taxonomy_vocabulary_save($vocabulary) {
   if (!empty($vocabulary->name)) {
     $vocabulary->name = trim($vocabulary->name);
   }
-  // For existing vocabularies, make sure we can detect machine name changes.
-  if (!empty($vocabulary->vid) && !isset($vocabulary->old_machine_name)) {
-    $vocabulary->old_machine_name = db_query("SELECT machine_name FROM {taxonomy_vocabulary} WHERE vid = :vid", array(':vid' => $vocabulary->vid))->fetchField();
+  // Load the stored entity, if any.
+  if (!empty($vocabulary->vid)) {
+    if (!isset($vocabulary->original)) {
+      $vocabulary->original = entity_load_unchanged('taxonomy_vocabulary', $vocabulary->vid);
+    }
+    // Make sure machine name changes are easily detected.
+    // @todo: Remove in Drupal 8, as it is deprecated by directly reading from
+    // $vocabulary->original.
+    $vocabulary->old_machine_name = $vocabulary->original->machine_name;
   }
 
   if (!isset($vocabulary->module)) {
@@ -414,8 +420,9 @@ function taxonomy_vocabulary_save($vocabulary) {
     module_invoke_all('entity_insert', $vocabulary, 'taxonomy_vocabulary');
   }
 
+  unset($vocabulary->original);
   cache_clear_all();
-  entity_get_controller('taxonomy_vocabulary')->resetCache();
+  entity_get_controller('taxonomy_vocabulary')->resetCache(array($vocabulary->vid));
 
   return $status;
 }
@@ -441,14 +448,14 @@ function taxonomy_vocabulary_delete($vid) {
     db_delete('taxonomy_vocabulary')
       ->condition('vid', $vid)
       ->execute();
-  
+
     field_attach_delete_bundle('taxonomy_term', $vocabulary->machine_name);
     module_invoke_all('taxonomy_vocabulary_delete', $vocabulary);
     module_invoke_all('entity_delete', $vocabulary, 'taxonomy_vocabulary');
-  
+
     cache_clear_all();
     entity_get_controller('taxonomy_vocabulary')->resetCache();
-  
+
     return SAVED_DELETED;
   }
   catch (Exception $e) {
@@ -540,6 +547,11 @@ function taxonomy_term_save($term) {
     $term->vocabulary_machine_name = $vocabulary->machine_name;
   }
 
+  // Load the stored entity, if any.
+  if (!empty($term->tid) && !isset($term->original)) {
+    $term->original = entity_load_unchanged('taxonomy_term', $term->tid);
+  }
+
   field_attach_presave('taxonomy_term', $term);
   module_invoke_all('taxonomy_term_presave', $term);
 
@@ -593,6 +605,7 @@ function taxonomy_term_save($term) {
   // Invoke the taxonomy hooks.
   module_invoke_all("taxonomy_term_$op", $term);
   module_invoke_all("entity_$op", $term, 'taxonomy_term');
+  unset($term->original);
 
   return $status;
 }

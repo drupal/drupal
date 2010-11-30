@@ -1,5 +1,5 @@
 <?php
-// $Id: entity.inc,v 1.18 2010/11/14 22:07:57 webchick Exp $
+// $Id: entity.inc,v 1.19 2010/11/30 19:31:46 dries Exp $
 
 /**
  * Interface for entity controller classes.
@@ -24,8 +24,12 @@ interface DrupalEntityControllerInterface {
 
   /**
    * Resets the internal, static entity cache.
+   *
+   * @param $ids
+   *   (optional) If specified, the cache is reset for the entities with the
+   *   given ids only.
    */
-  public function resetCache();
+  public function resetCache(array $ids = NULL);
 
   /**
    * Loads one or more entities.
@@ -139,8 +143,15 @@ class DrupalDefaultEntityController implements DrupalEntityControllerInterface {
   /**
    * Implements DrupalEntityControllerInterface::resetCache().
    */
-  public function resetCache() {
-    $this->entityCache = array();
+  public function resetCache(array $ids = NULL) {
+    if (isset($ids)) {
+      foreach ($ids as $id) {
+        unset($this->entityCache[$id]);
+      }
+    }
+    else {
+      $this->entityCache = array();
+    }
   }
 
   /**
