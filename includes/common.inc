@@ -7334,6 +7334,28 @@ function entity_load($entity_type, $ids = FALSE, $conditions = array(), $reset =
 }
 
 /**
+ * Loads the unchanged, i.e. not modified, entity from the database.
+ *
+ * Unlike entity_load() this function ensures the entity is directly loaded from
+ * the database, thus bypassing any static cache. In particular, this function
+ * is useful to determine changes by comparing the entity being saved to the
+ * stored entity.
+ *
+ * @param $entity_type
+ *   The entity type to load, e.g. node or user.
+ * @param $id
+ *   The id of the entity to load.
+ *
+ * @return
+ *   The unchanged entity, or FALSE if the entity cannot be loaded.
+ */
+function entity_load_unchanged($entity_type, $id) {
+  entity_get_controller($entity_type)->resetCache(array($id));
+  $result = entity_get_controller($entity_type)->load(array($id));
+  return reset($result);
+}
+
+/**
  * Get the entity controller class for an entity type.
  */
 function entity_get_controller($entity_type) {

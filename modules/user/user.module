@@ -405,6 +405,11 @@ function user_save($account, $edit = array(), $category = 'account') {
       unset($edit['pass']);
     }
 
+    // Load the stored entity, if any.
+    if (!empty($account->uid) && !isset($account->original)) {
+      $account->original = entity_load_unchanged('user', $account->uid);
+    }
+
     // Presave field allowing changing of $edit.
     $edit = (object) $edit;
     field_attach_presave('user', $edit);
@@ -503,6 +508,10 @@ function user_save($account, $edit = array(), $category = 'account') {
 
       // Refresh user object.
       $user = user_load($account->uid, TRUE);
+      // Make the original, unchanged user account available to update hooks.
+      if (isset($account->original)) {
+        $user->original = $account->original;
+      }
 
       // Send emails after we have the new user object.
       if (isset($edit['status']) && $edit['status'] != $account->status) {
@@ -513,6 +522,7 @@ function user_save($account, $edit = array(), $category = 'account') {
 
       user_module_invoke('update', $edit, $user, $category);
       module_invoke_all('entity_update', $user, 'user');
+      unset($user->original);
     }
     else {
       // Allow 'uid' to be set by the caller. There is no danger of writing an
@@ -3054,6 +3064,9 @@ function user_user_operations_block($accounts) {
   foreach ($accounts as $account) {
     // Skip blocking user if they are already blocked.
     if ($account !== FALSE && $account->status == 1) {
+      // For efficiency manually save the original account before applying any
+      // changes.
+      $account->original = clone $account;
       user_save($account, array('status' => 0));
     }
   }
@@ -3074,6 +3087,9 @@ function user_multiple_role_edit($accounts, $operation, $rid) {
         // Skip adding the role to the user if they already have it.
         if ($account !== FALSE && !isset($account->roles[$rid])) {
           $roles = $account->roles + array($rid => $role_name);
+          // For efficiency manually save the original account before applying
+          // any changes.
+          $account->original = clone $account;
           user_save($account, array('roles' => $roles));
         }
       }
@@ -3084,6 +3100,9 @@ function user_multiple_role_edit($accounts, $operation, $rid) {
         // Skip removing the role from the user if they already don't have it.
         if ($account !== FALSE && isset($account->roles[$rid])) {
           $roles = array_diff($account->roles, array($rid => $role_name));
+          // For efficiency manually save the original account before applying
+          // any changes.
+          $account->original = clone $account;
           user_save($account, array('roles' => $roles));
         }
       }

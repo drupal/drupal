@@ -131,4 +131,22 @@ function node_test_node_presave($node) {
     // Drupal 1.0 release.
     $node->changed = 979534800;
   }
+  // Determine changes.
+  if (!empty($node->original) && $node->original->title == 'test_changes') {
+    if ($node->original->title != $node->title) {
+      $node->title .= '_presave';
+    }
+  }
+}
+
+/**
+ * Implements hook_node_update().
+ */
+function node_test_node_update($node) {
+  // Determine changes on update.
+  if (!empty($node->original) && $node->original->title == 'test_changes') {
+    if ($node->original->title != $node->title) {
+      $node->title .= '_update';
+    }
+  }
 }
