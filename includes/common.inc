@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1266 2010/11/30 06:30:21 webchick Exp $
+// $Id: common.inc,v 1.1267 2010/11/30 17:16:37 dries Exp $
 
 /**
  * @file
@@ -3951,7 +3951,7 @@ function drupal_add_js($data = NULL, $options = NULL) {
       );
       // Register all required libraries.
       drupal_add_library('system', 'jquery', TRUE);
-      drupal_add_library('system', 'once', TRUE);
+      drupal_add_library('system', 'jquery.once', TRUE);
     }
 
     switch ($options['type']) {
@@ -4428,7 +4428,7 @@ function drupal_process_attached($elements, $group = JS_DEFAULT, $dependency_che
  * @see form_example_states_form()
  */
 function drupal_process_states(&$elements) {
-  $elements['#attached']['js']['misc/states.js'] = array('group' => JS_LIBRARY, 'weight' => 1);
+  $elements['#attached']['library'][] = array('system', 'drupal.states');
   $elements['#attached']['js'][] = array(
     'type' => 'setting',
     'data' => array('states' => array('#' . $elements['#id'] => $elements['#states'])),
@@ -4654,7 +4654,7 @@ function drupal_add_tabledrag($table_id, $action, $relationship, $group, $subgro
     // Add the table drag JavaScript to the page before the module JavaScript
     // to ensure that table drag behaviors are registered before any module
     // uses it.
-    drupal_add_js('misc/jquery.cookie.js', array('weight' => -2));
+    drupal_add_library('system', 'jquery.cookie');
     drupal_add_js('misc/tabledrag.js', array('weight' => -1));
     $js_added = TRUE;
   }

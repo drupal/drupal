@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.920 2010/11/23 06:02:06 webchick Exp $
+// $Id: comment.module,v 1.921 2010/11/30 17:16:37 dries Exp $
 
 /**
  * @file
@@ -1852,7 +1852,7 @@ function comment_form($form, &$form_state, $comment) {
   $is_admin = (!empty($comment->cid) && user_access('administer comments'));
 
   if (!$user->uid && $anonymous_contact != COMMENT_ANONYMOUS_MAYNOT_CONTACT) {
-    $form['#attached']['library'][] = array('system', 'cookie');
+    $form['#attached']['library'][] = array('system', 'jquery.cookie');
     $form['#attributes']['class'][] = 'user-info-from-cookie';
   }
 

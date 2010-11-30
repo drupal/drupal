@@ -1,5 +1,5 @@
 <?php
-// $Id: batch.inc,v 1.53 2010/10/04 07:34:26 webchick Exp $
+// $Id: batch.inc,v 1.54 2010/11/30 17:16:37 dries Exp $
 
 
 /**
@@ -139,8 +139,7 @@ function _batch_progress_page_js() {
     ),
   );
   drupal_add_js($js_setting, 'setting');
-  drupal_add_js('misc/progress.js', array('cache' => FALSE));
-  drupal_add_js('misc/batch.js', array('cache' => FALSE));
+  drupal_add_library('system', 'drupal.batch');
 
   return '<div id="progress"></div>';
 }

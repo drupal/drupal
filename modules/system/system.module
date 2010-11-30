@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.994 2010/11/27 20:25:44 dries Exp $
+// $Id: system.module,v 1.995 2010/11/30 17:16:37 dries Exp $
 
 /**
  * @file
@@ -1079,6 +1079,89 @@ function _system_batch_theme() {
  * Implements hook_library().
  */
 function system_library() {
+  // Drupal's AJAX framework.
+  $libraries['drupal.ajax'] = array(
+    'title' => 'Drupal AJAX',
+    'website' => 'http://api.drupal.org/api/drupal/includes--ajax.inc/group/ajax/7',
+    'version' => VERSION,
+    'js' => array(
+      'misc/ajax.js' => array('group' => JS_LIBRARY, 'weight' => 2),
+    ),
+    'dependencies' => array(
+      array('system', 'drupal.progress'),
+    ),
+  );
+
+  // Drupal's batch API.
+  $libraries['drupal.batch'] = array(
+    'title' => 'Drupal batch API',
+    'version' => VERSION,
+    'js' => array(
+      'misc/batch.js' => array('cache' => FALSE),
+    ),
+    'dependencies' => array(
+      array('system', 'drupal.progress'),
+    ),
+  );
+
+  // Drupal's progress indicator.
+  $libraries['drupal.progress'] = array(
+    'title' => 'Drupal progress indicator',
+    'version' => VERSION,
+    'js' => array(
+      'misc/progress.js' => array('cache' => FALSE),
+    ),
+  );
+
+  // Drupal's form library.
+  $libraries['drupal.form'] = array(
+    'title' => 'Drupal form library',
+    'version' => VERSION,
+    'js' => array(
+      'misc/form.js' => array('group' => JS_LIBRARY, 'weight' => 1),
+    ),
+  );
+
+  // Drupal's states library.
+  $libraries['drupal.states'] = array(
+    'title' => 'Drupal states',
+    'version' => VERSION,
+    'js' => array(
+      'misc/states.js' => array('group' => JS_LIBRARY, 'weight' => 1),
+    ),
+  );
+
+  // Drupal's collapsible fieldset.
+  $libraries['drupal.collapse'] = array(
+    'title' => 'Drupal collapsible fieldset',
+    'version' => VERSION,
+    'js' => array(
+      'misc/collapse.js' => array(),
+    ),
+    'dependencies' => array(
+      // collapse.js relies on drupalGetSummary in form.js
+      array('system', 'drupal.form'),
+    ),
+  );
+
+  // Drupal's resizable textarea.
+  $libraries['drupal.textarea'] = array(
+    'title' => 'Drupal resizable textarea',
+    'version' => VERSION,
+    'js' => array(
+      'misc/textarea.js' => array(),
+    ),
+  );
+
+  // Drupal's autocomplete widget.
+  $libraries['drupal.autocomplete'] = array(
+    'title' => 'Drupal autocomplete',
+    'version' => VERSION,
+    'js' => array(
+      'misc/autocomplete.js' => array(),
+    ),
+  );
+
   // jQuery.
   $libraries['jquery'] = array(
     'title' => 'jQuery',
@@ -1090,7 +1173,7 @@ function system_library() {
   );
 
   // jQuery Once.
-  $libraries['once'] = array(
+  $libraries['jquery.once'] = array(
     'title' => 'jQuery Once',
     'website' => 'http://plugins.jquery.com/project/once',
     'version' => '1.2',
@@ -1100,7 +1183,7 @@ function system_library() {
   );
 
   // jQuery Form Plugin.
-  $libraries['form'] = array(
+  $libraries['jquery.form'] = array(
     'title' => 'jQuery Form Plugin',
     'website' => 'http://malsup.com/jquery/form/',
     'version' => '2.49',
@@ -1110,7 +1193,7 @@ function system_library() {
   );
 
   // jQuery BBQ plugin.
-  $libraries['jquery-bbq'] = array(
+  $libraries['jquery.bbq'] = array(
     'title' => 'jQuery BBQ',
     'website' => 'http://benalman.com/projects/jquery-bbq-plugin/',
     'version' => '1.2.1',
@@ -1120,7 +1203,7 @@ function system_library() {
   );
 
   // Vertical Tabs.
-  $libraries['vertical-tabs'] = array(
+  $libraries['drupal.vertical-tabs'] = array(
     'title' => 'Vertical Tabs',
     'website' => 'http://drupal.org/node/323112',
     'version' => '1.0',
@@ -1129,6 +1212,10 @@ function system_library() {
     ),
     'css' => array(
       'misc/vertical-tabs.css' => array(),
+    ),
+    'dependencies' => array(
+      // Vertical tabs relies on drupalGetSummary in form.js
+      array('system', 'drupal.form'),
     ),
   );
 
@@ -1146,7 +1233,7 @@ function system_library() {
   );
 
   // Cookie.
-  $libraries['cookie'] = array(
+  $libraries['jquery.cookie'] = array(
     'title' => 'Cookie',
     'website' => 'http://plugins.jquery.com/project/cookie',
     'version' => '1.0',
@@ -1535,6 +1622,15 @@ function system_library() {
       array('system', 'effects'),
     ),
   );
+
+  // These library names are deprecated. Earlier versions of Drupal 7 didn't
+  // consistently namespace their libraries, so these names are included for
+  // backwards compatibility with those versions.
+  $libraries['once'] = &$libraries['jquery.once'];
+  $libraries['form'] = &$libraries['jquery.form'];
+  $libraries['jquery-bbq'] = &$libraries['jquery.bbq'];
+  $libraries['vertical-tabs'] = &$libraries['drupal.vertical-tabs'];
+  $libraries['cookie'] = &$libraries['jquery.cookie'];
 
   return $libraries;
 }
