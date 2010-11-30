@@ -1,5 +1,5 @@
 <?php
-// $Id: common.test,v 1.136 2010/11/29 06:38:51 webchick Exp $
+// $Id: common.test,v 1.137 2010/11/30 06:30:21 webchick Exp $
 
 /**
  * @file
@@ -2088,6 +2088,32 @@ class FormatDateUnitTest extends DrupalWebTestCase {
       'Long month name' => array('March' => 'marzo'),
     ));
     $this->refreshVariables();
+  }
+
+  /**
+   * Test admin-defined formats in format_date().
+   */
+  function testAdminDefinedFormatDate() {
+    // Create an admin user.
+    $this->admin_user = $this->drupalCreateUser(array('administer site configuration'));
+    $this->drupalLogin($this->admin_user);
+
+    // Add new date format.
+    $admin_date_format = 'j M y';
+    $edit = array('date_format' => $admin_date_format);
+    $this->drupalPost('admin/config/regional/date-time/formats/add', $edit, t('Add format'));
+
+    // Add new date type.
+    $edit = array(
+      'date_type' => 'Example Style',
+      'machine_name' => 'example_style',
+      'date_format' => $admin_date_format,
+    );
+    $this->drupalPost('admin/config/regional/date-time/types/add', $edit, t('Add date type'));
+
+    $timestamp = strtotime('2007-03-10T00:00:00+00:00');
+    $this->assertIdentical(format_date($timestamp, 'example_style', '', 'America/Los_Angeles'), '9 Mar 07', t('Test format_date() using an admin-defined date type.'));
+    $this->assertIdentical(format_date($timestamp, 'undefined_style'), format_date($timestamp, 'medium'), t('Test format_date() defaulting to medium when $type not found.'));
   }
 
   /**

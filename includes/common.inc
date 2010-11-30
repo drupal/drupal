@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1265 2010/11/29 04:53:32 webchick Exp $
+// $Id: common.inc,v 1.1266 2010/11/30 06:30:21 webchick Exp $
 
 /**
  * @file
@@ -1819,26 +1819,29 @@ function format_interval($timestamp, $granularity = 2, $langcode = NULL) {
 }
 
 /**
- * Format a date with the given configured format or a custom format string.
- *
- * Drupal allows administrators to select formatting strings for 'short',
- * 'medium' and 'long' date formats. This function can handle these formats,
- * as well as any custom format.
+ * Formats a date, using a date type or a custom date format string.
  *
  * @param $timestamp
- *   The exact date to format, as a UNIX timestamp.
+ *   A UNIX timestamp to format.
  * @param $type
- *   The format to use. Can be "short", "medium" or "long" for the preconfigured
- *   date formats. If "custom" is specified, then $format is required as well.
+ *   (optional) The format to use, one of:
+ *   - 'short', 'medium', or 'long' (the corresponding built-in date formats).
+ *   - The name of a date type defined by a module in hook_date_format_types().
+ *   - The machine name of an administrator-defined date format.
+ *   - 'custom', to use $format.
+ *   Defaults to 'medium'.
  * @param $format
- *   A PHP date format string as required by date(). A backslash should be used
- *   before a character to avoid interpreting the character as part of a date
- *   format.
+ *   (optional) If $type is 'custom', a PHP date format string suitable for
+ *   input to date(). Use a backslash to escape ordinary text, so it does not
+ *   get interpreted as date format characters.
  * @param $timezone
- *   Time zone identifier; if omitted, the user's time zone is used.
+ *   (optional) Time zone identifier, as described at
+ *   http://php.net/manual/en/timezones.php Defaults to the time zone used to
+ *   display the page.
  * @param $langcode
- *   Optional language code to translate to a language other than what is used
- *   to display the page.
+ *   (optional) Language code to translate to. Defaults to the language used to
+ *   display the page.
+ *
  * @return
  *   A translated date string in the requested format.
  */
@@ -1869,15 +1872,26 @@ function format_date($timestamp, $type = 'medium', $format = '', $timezone = NUL
     case 'short':
       $format = variable_get('date_format_short', 'm/d/Y - H:i');
       break;
+
     case 'long':
       $format = variable_get('date_format_long', 'l, F j, Y - H:i');
       break;
+
     case 'custom':
       // No change to format.
       break;
+
     case 'medium':
     default:
-      $format = variable_get('date_format_medium', 'D, m/d/Y - H:i');
+      // Retrieve the format of the custom $type passed.
+      if ($type != 'medium') {
+        $format = variable_get('date_format_' . $type, '');
+      }
+      // Fall back to 'medium'.
+      if ($format === '') {
+        $format = variable_get('date_format_medium', 'D, m/d/Y - H:i');
+      }
+      break;
   }
 
   // Create a DateTime object from the timestamp.
