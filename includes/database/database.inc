@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.144 2010/11/29 04:45:10 webchick Exp $
+// $Id: database.inc,v 1.145 2010/11/30 07:16:24 webchick Exp $
 
 /**
  * @file
@@ -669,7 +669,7 @@ abstract class DatabaseConnection extends PDO {
   }
 
   /**
-   * Prepares and returns a SELECT query object with the specified ID.
+   * Prepares and returns a SELECT query object.
    *
    * @param $table
    *   The base table for this query, that is, the first table in the FROM
@@ -693,7 +693,7 @@ abstract class DatabaseConnection extends PDO {
   }
 
   /**
-   * Prepares and returns an INSERT query object with the specified ID.
+   * Prepares and returns an INSERT query object.
    *
    * @param $options
    *   An array of options on the query.
@@ -709,7 +709,7 @@ abstract class DatabaseConnection extends PDO {
   }
 
   /**
-   * Prepares and returns a MERGE query object with the specified ID.
+   * Prepares and returns a MERGE query object.
    *
    * @param $options
    *   An array of options on the query.
@@ -726,7 +726,7 @@ abstract class DatabaseConnection extends PDO {
 
 
   /**
-   * Prepares and returns an UPDATE query object with the specified ID.
+   * Prepares and returns an UPDATE query object.
    *
    * @param $options
    *   An array of options on the query.
@@ -742,7 +742,7 @@ abstract class DatabaseConnection extends PDO {
   }
 
   /**
-   * Prepares and returns a DELETE query object with the specified ID.
+   * Prepares and returns a DELETE query object.
    *
    * @param $options
    *   An array of options on the query.
