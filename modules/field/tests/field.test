@@ -1,5 +1,5 @@
 <?php
-// $Id: field.test,v 1.43 2010/11/20 19:57:01 webchick Exp $
+// $Id: field.test,v 1.44 2010/11/30 23:55:11 webchick Exp $
 
 /**
  * @file
@@ -988,11 +988,12 @@ class FieldInfoTestCase extends FieldTestCase {
    */
   function testFieldInfo() {
     // Test that field_test module's fields, widgets, and formatters show up.
-    $field_test_info = field_test_field_info();
-    $formatter_info = field_test_field_formatter_info();
-    $widget_info = field_test_field_widget_info();
-    $storage_info = field_test_field_storage_info();
 
+    $field_test_info = field_test_field_info();
+    // We need to account for the existence of user_field_info_alter().
+    foreach (array_keys($field_test_info) as $name) {
+      $field_test_info[$name]['instance_settings']['user_register_form'] = FALSE;
+    }
     $info = field_info_field_types();
     foreach ($field_test_info as $t_key => $field_type) {
       foreach ($field_type as $key => $val) {
@@ -1001,6 +1002,7 @@ class FieldInfoTestCase extends FieldTestCase {
       $this->assertEqual($info[$t_key]['module'], 'field_test',  t("Field type field_test module appears"));
     }
 
+    $formatter_info = field_test_field_formatter_info();
     $info = field_info_formatter_types();
     foreach ($formatter_info as $f_key => $formatter) {
       foreach ($formatter as $key => $val) {
@@ -1009,6 +1011,7 @@ class FieldInfoTestCase extends FieldTestCase {
       $this->assertEqual($info[$f_key]['module'], 'field_test',  t("Formatter type field_test module appears"));
     }
 
+    $widget_info = field_test_field_widget_info();
     $info = field_info_widget_types();
     foreach ($widget_info as $w_key => $widget) {
       foreach ($widget as $key => $val) {
@@ -1017,6 +1020,7 @@ class FieldInfoTestCase extends FieldTestCase {
       $this->assertEqual($info[$w_key]['module'], 'field_test',  t("Widget type field_test module appears"));
     }
 
+    $storage_info = field_test_field_storage_info();
     $info = field_info_storage_types();
     foreach ($storage_info as $s_key => $storage) {
       foreach ($storage as $key => $val) {
@@ -1180,6 +1184,10 @@ class FieldInfoTestCase extends FieldTestCase {
    */
   function testSettingsInfo() {
     $info = field_test_field_info();
+    // We need to account for the existence of user_field_info_alter().
+    foreach (array_keys($info) as $name) {
+      $info[$name]['instance_settings']['user_register_form'] = FALSE;
+    }
     foreach ($info as $type => $data) {
       $this->assertIdentical(field_info_field_settings($type), $data['settings'], "field_info_field_settings returns {$type}'s field settings");
       $this->assertIdentical(field_info_instance_settings($type), $data['instance_settings'], "field_info_field_settings returns {$type}'s field instance settings");

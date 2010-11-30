@@ -1,5 +1,5 @@
 <?php
-// $Id: user.test,v 1.107 2010/11/29 06:38:52 webchick Exp $
+// $Id: user.test,v 1.108 2010/11/30 23:55:11 webchick Exp $
 
 class UserRegistrationTestCase extends DrupalWebTestCase {
   public static function getInfo() {
@@ -8,6 +8,10 @@ class UserRegistrationTestCase extends DrupalWebTestCase {
       'description' => 'Test registration of user under different configurations.',
       'group' => 'User'
     );
+  }
+
+  function setUp() {
+    parent::setUp('field_test');
   }
 
   function testRegistrationWithEmailVerification() {
@@ -136,6 +140,91 @@ class UserRegistrationTestCase extends DrupalWebTestCase {
     $this->assertEqual($new_user->language, '', t('Correct language field.'));
     $this->assertEqual($new_user->picture, '', t('Correct picture field.'));
     $this->assertEqual($new_user->init, $mail, t('Correct init field.'));
+  }
+
+  /**
+   * Tests Field API fields on user registration forms.
+   */
+  function testRegistrationWithUserFields() {
+    // Create a field, and an instance on 'user' entity type.
+    $field = array(
+      'type' => 'test_field',
+      'field_name' => 'test_user_field',
+      'cardinality' => 1,
+    );
+    field_create_field($field);
+    $instance = array(
+      'field_name' => 'test_user_field',
+      'entity_type' => 'user',
+      'label' => 'Some user field',
+      'bundle' => 'user',
+      'required' => TRUE,
+      'settings' => array('user_register_form' => FALSE),
+    );
+    field_create_instance($instance);
+
+    // Check that the field does not appear on the registration form.
+    $this->drupalGet('user/register');
+    $this->assertNoText($instance['label'], t('The field does not appear on user registration form'));
+
+    // Have the field appear on the registration form.
+    $instance['settings']['user_register_form'] = TRUE;
+    field_update_instance($instance);
+    $this->drupalGet('user/register');
+    $this->assertText($instance['label'], t('The field appears on user registration form'));
+
+    // Check that validation errors are correctly reported.
+    $edit = array();
+    $edit['name'] = $name = $this->randomName();
+    $edit['mail'] = $mail = $edit['name'] . '@example.com';
+    // Missing input in required field.
+    $edit['test_user_field[und][0][value]'] = '';
+    $this->drupalPost(NULL, $edit, t('Create new account'));
+    $this->assertRaw(t('@name field is required.', array('@name' => $instance['label'])), t('Field validation error was correctly reported.'));
+    // Invalid input.
+    $edit['test_user_field[und][0][value]'] = '-1';
+    $this->drupalPost(NULL, $edit, t('Create new account'));
+    $this->assertRaw(t('%name does not accept the value -1.', array('%name' => $instance['label'])), t('Field validation error was correctly reported.'));
+
+    // Submit with valid data.
+    $value = rand(1, 255);
+    $edit['test_user_field[und][0][value]'] = $value;
+    $this->drupalPost(NULL, $edit, t('Create new account'));
+    // Check user fields.
+    $accounts = user_load_multiple(array(), array('name' => $name, 'mail' => $mail));
+    $new_user = reset($accounts);
+    $this->assertEqual($new_user->test_user_field[LANGUAGE_NONE][0]['value'], $value, t('The field value was correclty saved.'));
+
+    // Check that the 'add more' button works.
+    $field['cardinality'] = FIELD_CARDINALITY_UNLIMITED;
+    field_update_field($field);
+    foreach (array('js', 'nojs') as $js) {
+      $this->drupalGet('user/register');
+      // Add two inputs.
+      $value = rand(1, 255);
+      $edit = array();
+      $edit['test_user_field[und][0][value]'] = $value;
+      if ($js == 'js') {
+        $this->drupalPostAJAX(NULL, $edit, 'test_user_field_add_more');
+        $this->drupalPostAJAX(NULL, $edit, 'test_user_field_add_more');
+      }
+      else {
+        $this->drupalPost(NULL, $edit, t('Add another item'));
+        $this->drupalPost(NULL, $edit, t('Add another item'));
+      }
+      // Submit with three values.
+      $edit['test_user_field[und][1][value]'] = $value + 1;
+      $edit['test_user_field[und][2][value]'] = $value + 2;
+      $edit['name'] = $name = $this->randomName();
+      $edit['mail'] = $mail = $edit['name'] . '@example.com';
+      $this->drupalPost(NULL, $edit, t('Create new account'));
+      // Check user fields.
+      $accounts = user_load_multiple(array(), array('name' => $name, 'mail' => $mail));
+      $new_user = reset($accounts);
+      $this->assertEqual($new_user->test_user_field[LANGUAGE_NONE][0]['value'], $value, t('@js : The field value was correclty saved.', array('@js' => $js)));
+      $this->assertEqual($new_user->test_user_field[LANGUAGE_NONE][1]['value'], $value + 1, t('@js : The field value was correclty saved.', array('@js' => $js)));
+      $this->assertEqual($new_user->test_user_field[LANGUAGE_NONE][2]['value'], $value + 2, t('@js : The field value was correclty saved.', array('@js' => $js)));
+    }
   }
 }
 

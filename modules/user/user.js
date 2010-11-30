@@ -1,4 +1,4 @@
-// $Id: user.js,v 1.24 2010/07/20 10:17:59 dries Exp $
+// $Id: user.js,v 1.25 2010/11/30 23:55:11 webchick Exp $
 (function ($) {
 
 /**
@@ -171,6 +171,27 @@ Drupal.evaluatePasswordStrength = function (password, translate) {
   msg = translate.hasWeaknesses + '<ul><li>' + msg.join('</li><li>') + '</li></ul>';
   return { strength: strength, message: msg, indicatorText: indicatorText }
 
+};
+
+/**
+ * Field instance settings screen: force the 'Display on registration form'
+ * checkbox checked whenever 'Required' is checked.
+ */
+Drupal.behaviors.fieldUserRegistration = {
+  attach: function (context, settings) {
+    var $checkbox = $('form#field-ui-field-edit-form input#edit-instance-settings-user-register-form');
+
+    if ($checkbox.size()) {
+      $('input#edit-instance-required', context).once('user-register-form-checkbox', function () {
+        $(this).bind('change', function (e) {
+          if ($(this).attr('checked')) {
+            $checkbox.attr('checked', true);
+          }
+        });
+      });
+
+    }
+  }
 };
 
 })(jQuery);

@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1223 2010/11/30 19:31:47 dries Exp $
+// $Id: user.module,v 1.1224 2010/11/30 23:55:11 webchick Exp $
 
 /**
  * @file
@@ -174,6 +174,18 @@ function user_uri($user) {
   return array(
     'path' => 'user/' . $user->uid,
   );
+}
+
+/**
+ * Implements hook_field_info_alter().
+ */
+function user_field_info_alter(&$info) {
+  // Add the 'user_register_form' instance setting to all field types.
+  foreach ($info as $field_type => $field_type_info) {
+    $info[$field_type]['instance_settings'] += array(
+      'user_register_form' => FALSE,
+    );
+  }
 }
 
 /**
@@ -3539,6 +3551,55 @@ function user_block_user_action(&$entity, $context = array()) {
 }
 
 /**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * Add a checkbox for the 'user_register_form' instance settings on the 'Edit
+ * field instance' form.
+ */
+function user_form_field_ui_field_edit_form_alter(&$form, &$form_state, $form_id) {
+  $instance = $form['#instance'];
+
+  if ($instance['entity_type'] == 'user') {
+    $form['instance']['settings']['user_register_form'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Display on user registration form.'),
+      '#description' => t("This is compulsory for 'required' fields."),
+      // Field instances created in D7 beta releases before the setting was
+      // introduced might be set as 'required' and 'not shown on user_register
+      // form'. We make sure the checkbox comes as 'checked' for those.
+      '#default_value' => $instance['settings']['user_register_form'] || $instance['required'],
+      // Display just below the 'required' checkbox.
+      '#weight' => $form['instance']['required']['#weight'] + .1,
+      // Disabled when the 'required' checkbox is checked.
+      '#states' => array(
+        'enabled' => array('input[name="instance[required]"]' => array('checked' => FALSE)),
+      ),
+      // Checked when the 'required' checkbox is checked. This is done through
+      // a custom behavior, since the #states system would also synchronize on
+      // uncheck.
+      '#attached' => array(
+        'js' => array(drupal_get_path('module', 'user') . '/user.js'),
+      ),
+    );
+
+    array_unshift($form['#submit'], 'user_form_field_ui_field_edit_form_submit');
+  }
+}
+
+/**
+ * Additional submit handler for the 'Edit field instance' form.
+ *
+ * Make sure the 'user_register_form' setting is set for required fields.
+ */
+function user_form_field_ui_field_edit_form_submit($form, &$form_state) {
+  $instance = $form_state['values']['instance'];
+
+  if (!empty($instance['required'])) {
+    form_set_value($form['instance']['settings']['user_register_form'], 1, $form_state);
+  }
+}
+
+/**
  * Form builder; the user registration form.
  *
  * @ingroup forms
@@ -3565,6 +3626,15 @@ function user_register_form($form, &$form_state) {
   // Start with the default user account fields.
   user_account_form($form, $form_state);
 
+  // Attach field widgets, and hide the ones where the 'user_register_form'
+  // setting is not on.
+  field_attach_form('user', $form['#user'], $form, $form_state);
+  foreach (field_info_instances('user', 'user') as $field_name => $instance) {
+    if (empty($instance['settings']['user_register_form'])) {
+      $form[$field_name]['#access'] = FALSE;
+    }
+  }
+
   if ($admin) {
     // Redirect back to page which initiated the create request;
     // usually admin/people/create.
@@ -3577,10 +3647,18 @@ function user_register_form($form, &$form_state) {
     '#value' => t('Create new account'),
   );
 
+  $form['#validate'][] = 'user_register_validate';
   // Add the final user registration form submit handler.
   $form['#submit'][] = 'user_register_submit';
 
   return $form;
+}
+
+/**
+ * Validation function for the user registration form.
+ */
+function user_register_validate($form, &$form_state) {
+  entity_form_field_validate('user', $form, $form_state);
 }
 
 /**
@@ -3602,13 +3680,21 @@ function user_register_submit($form, &$form_state) {
   }
   $notify = !empty($form_state['values']['notify']);
 
+  // Remove unneeded values.
   form_state_values_clean($form_state);
 
   $form_state['values']['pass'] = $pass;
   $form_state['values']['init'] = $form_state['values']['mail'];
 
   $account = $form['#user'];
-  $account = user_save($account, $form_state['values']);
+
+  entity_form_submit_build_entity('user', $account, $form, $form_state);
+
+  // Populate $edit with the properties of $account, which have been edited on
+  // this form by taking over all values, which appear in the form values too.
+  $edit = array_intersect_key((array) $account, $form_state['values']);
+  $account = user_save($account, $edit);
+
   // Terminate if an error occurred during user_save().
   if (!$account) {
     drupal_set_message(t("Error saving user account."), 'error');

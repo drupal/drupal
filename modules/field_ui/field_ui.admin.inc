@@ -1,5 +1,5 @@
 <?php
-// $Id: field_ui.admin.inc,v 1.86 2010/11/21 07:28:39 webchick Exp $
+// $Id: field_ui.admin.inc,v 1.87 2010/11/30 23:55:11 webchick Exp $
 
 /**
  * @file
@@ -1731,6 +1731,7 @@ function field_ui_field_edit_form($form, &$form_state, $instance) {
   drupal_set_title($instance['label']);
 
   $form['#field'] = $field;
+  $form['#instance'] = $instance;
 
   if (!empty($field['locked'])) {
     $form['locked'] = array(
