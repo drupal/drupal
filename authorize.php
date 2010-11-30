@@ -140,12 +140,13 @@ if (authorize_access_allowed()) {
     if (is_array($results['tasks'])) {
       $links += $results['tasks'];
     }
-
-    $links = array_merge($links, array(
-      l(t('Administration pages'), 'admin'),
-      l(t('Front page'), '<front>'),
-    ));
-
+    else {
+      $links = array_merge($links, array(
+        l(t('Administration pages'), 'admin'),
+        l(t('Front page'), '<front>'),
+      ));
+    }
+	
     $output .= theme('item_list', array('items' => $links, 'title' => t('Next steps')));
   }
   // If a batch is running, let it run.

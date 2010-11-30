@@ -77,6 +77,7 @@ class ModuleUpdater extends Updater implements DrupalUpdaterInterface {
   public function postInstallTasks() {
     return array(
       l(t('Enable newly added modules'), 'admin/modules'),
+      l(t('Administration pages'), 'admin'),
     );
   }
 
@@ -146,6 +147,7 @@ class ThemeUpdater extends Updater implements DrupalUpdaterInterface {
   public function postInstallTasks() {
     return array(
       l(t('Set the !project theme as default', array('!project' => $this->title)), 'admin/appearance'),
+      l(t('Administration pages'), 'admin'),
     );
   }
 }
