@@ -206,7 +206,7 @@ function overlay_library() {
     ),
     'dependencies' => array(
       array('system', 'ui'),
-      array('system', 'jquery-bbq'),
+      array('system', 'jquery.bbq'),
     ),
   );
   // Overlay child.

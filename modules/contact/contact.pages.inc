@@ -57,7 +57,7 @@ function contact_site_form($form, &$form_state) {
   }
 
   if (!$user->uid) {
-    $form['#attached']['library'][] = array('system', 'cookie');
+    $form['#attached']['library'][] = array('system', 'jquery.cookie');
     $form['#attributes']['class'][] = 'user-info-from-cookie';
   }
 
@@ -187,7 +187,7 @@ function contact_personal_form($form, &$form_state, $recipient) {
   drupal_set_title(t('Contact @username', array('@username' => format_username($recipient))), PASS_THROUGH);
 
   if (!$user->uid) {
-    $form['#attached']['library'][] = array('system', 'cookie');
+    $form['#attached']['library'][] = array('system', 'jquery.cookie');
     $form['#attributes']['class'][] = 'user-info-from-cookie';
   }
 

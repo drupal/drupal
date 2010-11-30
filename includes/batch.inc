@@ -139,8 +139,7 @@ function _batch_progress_page_js() {
     ),
   );
   drupal_add_js($js_setting, 'setting');
-  drupal_add_js('misc/progress.js', array('cache' => FALSE));
-  drupal_add_js('misc/batch.js', array('cache' => FALSE));
+  drupal_add_library('system', 'drupal.batch');
 
   return '<div id="progress"></div>';
 }

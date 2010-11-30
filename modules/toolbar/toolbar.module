@@ -188,7 +188,6 @@ function toolbar_view() {
     '#attached'=> array(
       'js' => array(
         $module_path . '/toolbar.js',
-        array('data' => 'misc/jquery.cookie.js', 'group' => JS_LIBRARY, 'weight' => 2),
         array(
           'data' => array('tableHeaderOffset' => 'Drupal.toolbar.height'),
           'type' => 'setting'
@@ -197,6 +196,7 @@ function toolbar_view() {
       'css' => array(
         $module_path . '/toolbar.css',
       ),
+      'library' => array(array('system', 'jquery.cookie')),
     ),
   );
 

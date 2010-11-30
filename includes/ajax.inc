@@ -604,8 +604,8 @@ function ajax_pre_render_element($element) {
 
   // Attach JavaScript settings to the element.
   if (isset($element['#ajax']['event'])) {
-    $element['#attached']['library'][] = array('system', 'form');
-    $element['#attached']['js']['misc/ajax.js'] = array('group' => JS_LIBRARY, 'weight' => 2);
+    $element['#attached']['library'][] = array('system', 'jquery.form');
+    $element['#attached']['library'][] = array('system', 'drupal.ajax');
 
     $settings = $element['#ajax'];
 
@@ -666,10 +666,6 @@ function ajax_pre_render_element($element) {
     if (isset($settings['progress']['path'])) {
       $settings['progress']['url'] = url($settings['progress']['path']);
       unset($settings['progress']['path']);
-    }
-    // Add progress.js if we're doing a bar display.
-    if ($settings['progress']['type'] == 'bar') {
-      $element['#attached']['js']['misc/progress.js'] = array('cache' => FALSE);
     }
 
     $element['#attached']['js'][] = array(

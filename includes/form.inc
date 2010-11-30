@@ -3380,7 +3380,7 @@ function form_process_fieldset(&$element, &$form_state) {
   }
 
   // Contains form element summary functionalities.
-  $element['#attached']['js']['misc/form.js'] = array('group' => JS_LIBRARY, 'weight' => 1);
+  $element['#attached']['library'][] = array('system', 'drupal.form');
 
   // The .form-wrapper class is required for #states to treat fieldsets like
   // containers.
@@ -3390,7 +3390,7 @@ function form_process_fieldset(&$element, &$form_state) {
 
   // Collapsible fieldsets
   if (!empty($element['#collapsible'])) {
-    $element['#attached']['js'][] = 'misc/collapse.js';
+    $element['#attached']['library'][] = array('system', 'drupal.collapse');
     $element['#attributes']['class'][] = 'collapsible';
     if (!empty($element['#collapsed'])) {
       $element['#attributes']['class'][] = 'collapsed';
@@ -3506,7 +3506,7 @@ function form_process_vertical_tabs($element, &$form_state) {
 function theme_vertical_tabs($variables) {
   $element = $variables['element'];
   // Add required JavaScript and Stylesheet.
-  drupal_add_library('system', 'vertical-tabs');
+  drupal_add_library('system', 'drupal.vertical-tabs');
 
   $output = '<h2 class="element-invisible">' . t('Vertical Tabs') . '</h2>';
   $output .= '<div class="vertical-tabs-panes">' . $element['#children'] . '</div>';
@@ -3615,7 +3615,7 @@ function theme_textfield($variables) {
 
   $extra = '';
   if ($element['#autocomplete_path'] && drupal_valid_path($element['#autocomplete_path'])) {
-    drupal_add_js('misc/autocomplete.js');
+    drupal_add_library('system', 'drupal.autocomplete');
     $element['#attributes']['class'][] = 'form-autocomplete';
 
     $attributes = array();
@@ -3677,7 +3677,7 @@ function theme_textarea($variables) {
 
   // Add resizable behavior.
   if (!empty($element['#resizable'])) {
-    drupal_add_js('misc/textarea.js');
+    drupal_add_library('system', 'drupal.textarea');
     $wrapper_attributes['class'][] = 'resizable';
   }
 
