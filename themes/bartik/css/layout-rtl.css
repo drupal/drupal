@@ -3,7 +3,8 @@
 /* ---------- Basic Layout RTL Styles ----------- */
 
 #content,
-.sidebar,
+#sidebar-first,
+#sidebar-second,
 .region-triptych-first,
 .region-triptych-middle,
 .region-triptych-last,
