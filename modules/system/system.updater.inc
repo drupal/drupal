@@ -1,5 +1,5 @@
 <?php
-// $Id: system.updater.inc,v 1.10 2010/11/30 06:19:47 webchick Exp $
+// $Id: system.updater.inc,v 1.11 2010/11/30 17:58:44 dries Exp $
 
 /**
  * @file
@@ -136,17 +136,11 @@ class ThemeUpdater extends Updater implements DrupalUpdaterInterface {
     clearstatcache();
     system_rebuild_theme_data();
 
-    // Active the theme
-    db_update('system')
-      ->fields(array('status' => 1))
-      ->condition('type', 'theme')
-      ->condition('name', $this->name)
-      ->execute();
   }
 
   public function postInstallTasks() {
     return array(
-      l(t('Set the !project theme as default', array('!project' => $this->title)), 'admin/appearance'),
+      l(t('Enable newly added themes'), 'admin/appearance'),
       l(t('Administration pages'), 'admin'),
     );
   }
