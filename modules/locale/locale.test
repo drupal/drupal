@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.test,v 1.87 2010/11/21 09:53:05 webchick Exp $
+// $Id: locale.test,v 1.88 2010/11/30 01:05:24 dries Exp $
 
 /**
  * @file
@@ -1577,7 +1577,58 @@ class LocalePathFunctionalTest extends DrupalWebTestCase {
     $this->drupalGet($prefix . '/' . $custom_language_path);
     $this->assertText($node->title, t('Custom language alias works.'));
 
-    $this->drupalLogout();
+    // Create a custom path.
+    $custom_path = $this->randomName(8);
+
+    // Check priority of language for alias by source path.
+    $edit = array(
+      'source'   => 'node/' . $node->nid,
+      'alias'    => $custom_path,
+      'language' => LANGUAGE_NONE,
+    );
+    path_save($edit);
+    $lookup_path = drupal_lookup_path('alias', 'node/' . $node->nid, 'en');
+    $this->assertEqual($english_path, $lookup_path, t('English language alias has priority.'));
+    // Same check for language 'xx'.
+    $lookup_path = drupal_lookup_path('alias', 'node/' . $node->nid, $prefix);
+    $this->assertEqual($custom_language_path, $lookup_path, t('Custom language alias has priority.'));
+    path_delete($edit);
+
+    // Create language nodes to check priority of aliases.
+    $first_node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1));
+    $second_node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1));
+
+    // Assign a custom path alias to the first node with the English language.
+    $edit = array(
+      'source'   => 'node/' . $first_node->nid,
+      'alias'    => $custom_path,
+      'language' => 'en',
+    );
+    path_save($edit);
+
+    // Assign a custom path alias to second node with LANGUAGE_NONE.
+    $edit = array(
+      'source'   => 'node/' . $second_node->nid,
+      'alias'    => $custom_path,
+      'language' => LANGUAGE_NONE,
+    );
+    path_save($edit);
+
+    // Test that both node titles link to our path alias.
+    $this->drupalGet('<front>');
+    $custom_path_url = base_path() . (variable_get('clean_url', 0) ? $custom_path : '?q=' . $custom_path);
+    $elements = $this->xpath('//a[@href=:href and .=:title]', array(':href' => $custom_path_url, ':title' => $first_node->title));
+    $this->assertTrue(!empty($elements), t('First node links to the path alias.'));
+    $elements = $this->xpath('//a[@href=:href and .=:title]', array(':href' => $custom_path_url, ':title' => $second_node->title));
+    $this->assertTrue(!empty($elements), t('Second node links to the path alias.'));
+
+    // Confirm that the custom path leads to the first node.
+    $this->drupalGet($custom_path);
+    $this->assertText($first_node->title, t('Custom alias returns first node.'));
+
+    // Confirm that the custom path with prefix leads to the second node.
+    $this->drupalGet($prefix . '/' . $custom_path);
+    $this->assertText($second_node->title, t('Custom alias with prefix returns second node.'));
   }
 }
 

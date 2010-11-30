@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.527 2010/11/29 06:42:53 webchick Exp $
+// $Id: system.install,v 1.528 2010/11/30 01:05:24 dries Exp $
 
 /**
  * @file
@@ -1630,7 +1630,7 @@ function system_schema() {
         'default' => '',
       ),
       'language' => array(
-        'description' => 'The language this alias is for; if blank, the alias will be used for unknown languages. Each Drupal path can have an alias for each supported language.',
+        'description' => "The language this alias is for; if 'und', the alias will be used for unknown languages. Each Drupal path can have an alias for each supported language.",
         'type' => 'varchar',
         'length' => 12,
         'not null' => TRUE,
@@ -2948,6 +2948,20 @@ function system_update_7067() {
   // administrative page.
   user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('view the administration theme'));
   user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array('view the administration theme'));
+}
+
+/**
+ * Update {url_alias}.language description.
+ */
+function system_update_7068() {
+  $spec = array(
+    'description' => "The language this alias is for; if 'und', the alias will be used for unknown languages. Each Drupal path can have an alias for each supported language.",
+    'type' => 'varchar',
+    'length' => 12,
+    'not null' => TRUE,
+    'default' => '',
+  );
+  db_change_field('url_alias', 'language', 'language', $spec);
 }
 
 /**

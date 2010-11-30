@@ -1,5 +1,5 @@
 <?php
-// $Id: path.inc,v 1.71 2010/08/09 00:13:06 dries Exp $
+// $Id: path.inc,v 1.72 2010/11/30 01:05:24 dries Exp $
 
 /**
  * @file
@@ -94,13 +94,30 @@ function drupal_lookup_path($action, $path = '', $path_language = NULL) {
         if ($cached = cache_get($cid, 'cache_path')) {
           $cache['system_paths'] = $cached->data;
           // Now fetch the aliases corresponding to these system paths.
-          // We order by ASC and overwrite array keys to ensure the correct
-          // alias is used when there are multiple aliases per path.
-          $cache['map'][$path_language] = db_query("SELECT source, alias FROM {url_alias} WHERE source IN (:system) AND language IN (:language, :language_none) ORDER BY language ASC, pid ASC", array(
+          $args = array(
             ':system' => $cache['system_paths'],
             ':language' => $path_language,
             ':language_none' => LANGUAGE_NONE,
-          ))->fetchAllKeyed();
+          );
+          // Always get the language-specific alias before the language-neutral
+          // one. For example 'de' is less than 'und' so the order needs to be
+          // ASC, while 'xx-lolspeak' is more than 'und' so the order needs to
+          // be DESC. We also order by pid ASC so that fetchAllKeyed() returns
+          // the most recently created alias for each source. Subsequent queries
+          // using fetchField() must use pid DESC to have the same effect.
+          // For performance reasons, the query builder is not used here.
+          if ($path_language == LANGUAGE_NONE) {
+            // Prevent PDO from complaining about a token the query doesn't use.
+            unset($args[':language']);
+            $result = db_query('SELECT source, alias FROM {url_alias} WHERE source IN (:system) AND language = :language_none ORDER BY pid ASC', $args);
+          }
+          elseif ($path_language < LANGUAGE_NONE) {
+            $result = db_query('SELECT source, alias FROM {url_alias} WHERE source IN (:system) AND language IN (:language, :language_none) ORDER BY language ASC, pid ASC', $args);
+          }
+          else {
+            $result = db_query('SELECT source, alias FROM {url_alias} WHERE source IN (:system) AND language IN (:language, :language_none) ORDER BY language DESC, pid ASC', $args);
+          }
+          $cache['map'][$path_language] = $result->fetchAllKeyed();
           // Keep a record of paths with no alias to avoid querying twice.
           $cache['no_aliases'][$path_language] = array_flip(array_diff_key($cache['system_paths'], array_keys($cache['map'][$path_language])));
         }
@@ -117,12 +134,22 @@ function drupal_lookup_path($action, $path = '', $path_language = NULL) {
       }
       // For system paths which were not cached, query aliases individually.
       elseif (!isset($cache['no_aliases'][$path_language][$path])) {
-        // Get the most fitting result falling back with alias without language
-        $alias = db_query("SELECT alias FROM {url_alias} WHERE source = :source AND language IN (:language, :language_none) ORDER BY language DESC, pid DESC", array(
+        $args = array(
           ':source' => $path,
           ':language' => $path_language,
           ':language_none' => LANGUAGE_NONE,
-        ))->fetchField();
+        );
+        // See the queries above.
+        if ($path_language == LANGUAGE_NONE) {
+          unset($args[':language']);
+          $alias = db_query("SELECT alias FROM {url_alias} WHERE source = :source AND language = :language_none ORDER BY pid DESC", $args)->fetchField();
+        }
+        elseif ($path_language > LANGUAGE_NONE) {
+          $alias = db_query("SELECT alias FROM {url_alias} WHERE source = :source AND language IN (:language, :language_none) ORDER BY language DESC, pid DESC", $args)->fetchField();
+        }
+        else {
+          $alias = db_query("SELECT alias FROM {url_alias} WHERE source = :source AND language IN (:language, :language_none) ORDER BY language ASC, pid DESC", $args)->fetchField();
+        }
         $cache['map'][$path_language][$path] = $alias;
         return $alias;
       }
@@ -133,12 +160,23 @@ function drupal_lookup_path($action, $path = '', $path_language = NULL) {
       // Look for the value $path within the cached $map
       $source = FALSE;
       if (!isset($cache['map'][$path_language]) || !($source = array_search($path, $cache['map'][$path_language]))) {
-        // Get the most fitting result falling back with alias without language
-        if ($source = db_query("SELECT source FROM {url_alias} WHERE alias = :alias AND language IN (:language, :language_none) ORDER BY language DESC, pid DESC", array(
-                     ':alias' => $path,
-                     ':language' => $path_language,
-                     ':language_none' => LANGUAGE_NONE))
-            ->fetchField()) {
+        $args = array(
+          ':alias' => $path,
+          ':language' => $path_language,
+          ':language_none' => LANGUAGE_NONE,
+        );
+        // See the queries above.
+        if ($path_language == LANGUAGE_NONE) {
+          unset($args[':language']);
+          $result = db_query("SELECT source FROM {url_alias} WHERE alias = :alias AND language = :language_none ORDER BY pid DESC", $args);
+        }
+        elseif ($path_language > LANGUAGE_NONE) {
+          $result = db_query("SELECT source FROM {url_alias} WHERE alias = :alias AND language IN (:language, :language_none) ORDER BY language DESC, pid DESC", $args);
+        }
+        else {
+          $result = db_query("SELECT source FROM {url_alias} WHERE alias = :alias AND language IN (:language, :language_none) ORDER BY language ASC, pid DESC", $args);
+        }
+        if ($source = $result->fetchField()) {
           $cache['map'][$path_language][$source] = $path;
         }
         else {
