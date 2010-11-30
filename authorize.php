@@ -1,5 +1,5 @@
 <?php
-// $Id: authorize.php,v 1.9 2010/11/24 18:14:25 webchick Exp $
+// $Id: authorize.php,v 1.10 2010/11/30 06:19:47 webchick Exp $
 
 /**
  * @file
@@ -140,12 +140,13 @@ if (authorize_access_allowed()) {
     if (is_array($results['tasks'])) {
       $links += $results['tasks'];
     }
-
-    $links = array_merge($links, array(
-      l(t('Administration pages'), 'admin'),
-      l(t('Front page'), '<front>'),
-    ));
-
+    else {
+      $links = array_merge($links, array(
+        l(t('Administration pages'), 'admin'),
+        l(t('Front page'), '<front>'),
+      ));
+    }
+	
     $output .= theme('item_list', array('items' => $links, 'title' => t('Next steps')));
   }
   // If a batch is running, let it run.
