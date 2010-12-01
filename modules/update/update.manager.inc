@@ -1,5 +1,5 @@
 <?php
-// $Id: update.manager.inc,v 1.26 2010/11/20 09:40:34 webchick Exp $
+// $Id: update.manager.inc,v 1.27 2010/12/01 00:23:36 webchick Exp $
 
 /**
  * @file
@@ -654,6 +654,18 @@ function update_manager_archive_extract($file, $directory) {
   if (!$archiver) {
     throw new Exception(t('Cannot extract %file, not a valid archive.', array ('%file' => $file)));
   }
+
+  // Remove the directory if it exists, otherwise it might contain a mixture of
+  // old files mixed with the new files (e.g. in cases where files were removed
+  // from a later release).
+  $files = $archiver->listContents();
+  // Unfortunately, we can only use the directory name for this. :(
+  $project = drupal_substr($files[0], 0, -1);
+  $extract_location = $directory . '/' . $project;
+  if (file_exists($extract_location)) {
+    file_unmanaged_delete_recursive($extract_location);
+  }
+
   $archiver->extract($directory);
   return $archiver;
 }

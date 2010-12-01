@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1268 2010/11/30 19:31:46 dries Exp $
+// $Id: common.inc,v 1.1269 2010/12/01 00:23:36 webchick Exp $
 
 /**
  * @file
@@ -7678,4 +7678,40 @@ function drupal_get_updaters() {
     uasort($updaters, 'drupal_sort_weight');
   }
   return $updaters;
+}
+
+/**
+ * Drupal FileTransfer registry.
+ *
+ * @return
+ *   Returns the Drupal FileTransfer class registry.
+ *
+ * @see FileTransfer
+ * @see hook_filetransfer_info()
+ * @see hook_filetransfer_info_alter()
+ */
+function drupal_get_filetransfer_info() {
+  $info = &drupal_static(__FUNCTION__);
+  if (!isset($info)) {
+    // Since we have to manually set the 'file path' default for each
+    // module separately, we can't use module_invoke_all().
+    $info = array();
+    foreach (module_implements('filetransfer_info') as $module) {
+      $function = $module . '_filetransfer_info';
+      if (function_exists($function)) {
+        $result = $function();
+        if (isset($result) && is_array($result)) {
+          foreach ($result as &$values) {
+            if (empty($values['file path'])) {
+              $values['file path'] = drupal_get_path('module', $module);
+            }
+          }
+          $info = array_merge_recursive($info, $result);
+        }
+      }
+    }
+    drupal_alter('filetransfer_info', $info);
+    uasort($info, 'drupal_sort_weight');
+  }
+  return $info;
 }

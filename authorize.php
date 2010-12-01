@@ -1,5 +1,5 @@
 <?php
-// $Id: authorize.php,v 1.10 2010/11/30 06:19:47 webchick Exp $
+// $Id: authorize.php,v 1.11 2010/12/01 00:23:36 webchick Exp $
 
 /**
  * @file
@@ -125,7 +125,7 @@ if (authorize_access_allowed()) {
     // Clear the session out.
     unset($_SESSION['authorize_results']);
     unset($_SESSION['authorize_operation']);
-    unset($_SESSION['authorize_filetransfer_backends']);
+    unset($_SESSION['authorize_filetransfer_info']);
 
     if (!empty($results['page_title'])) {
       drupal_set_title(check_plain($results['page_title']));
@@ -154,7 +154,7 @@ if (authorize_access_allowed()) {
     $output = _batch_page();
   }
   else {
-    if (empty($_SESSION['authorize_operation']) || empty($_SESSION['authorize_filetransfer_backends'])) {
+    if (empty($_SESSION['authorize_operation']) || empty($_SESSION['authorize_filetransfer_info'])) {
       $output = t('It appears you have reached this page in error.');
     }
     elseif (!$batch = batch_get()) {

@@ -1,5 +1,5 @@
 <?php
-// $Id: ssh.inc,v 1.5 2010/01/30 07:59:24 dries Exp $
+// $Id: ssh.inc,v 1.6 2010/12/01 00:23:36 webchick Exp $
 
 /**
  * The SSH connection class for the update module.
@@ -25,6 +25,8 @@ class FileTransferSSH extends FileTransfer implements FileTransferChmodInterface
   }
 
   static function factory($jail, $settings) {
+    $settings['username'] = empty($settings['hostname']) ? '' : $settings['username'];
+    $settings['password'] = empty($settings['password']) ? '' : $settings['password'];
     $settings['hostname'] = empty($settings['hostname']) ? 'localhost' : $settings['hostname'];
     $settings['port'] = empty($settings['port']) ? 22 : $settings['port'];
     return new FileTransferSSH($jail, $settings['username'], $settings['password'], $settings['hostname'], $settings['port']);
@@ -94,5 +96,14 @@ class FileTransferSSH extends FileTransfer implements FileTransferChmodInterface
     if (@!ssh2_exec($this->connection, $cmd)) {
       throw new FileTransferException('Cannot change permissions of @path.', NULL, array('@path' => $path));
     }
+  }
+
+  /**
+   * Returns the form to configure the FileTransfer class for SSH.
+   */
+  public function getSettingsForm() {
+    $form = parent::getSettingsForm();
+    $form['advanced']['port']['#default_value'] = 22;
+    return $form;
   }
 }
