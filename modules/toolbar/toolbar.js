@@ -1,4 +1,4 @@
-// $Id: toolbar.js,v 1.19 2010/06/08 05:16:29 webchick Exp $
+// $Id: toolbar.js,v 1.20 2010/12/01 07:05:26 webchick Exp $
 (function ($) {
 
 Drupal.toolbar = Drupal.toolbar || {};
@@ -42,7 +42,7 @@ Drupal.toolbar.init = function() {
  * Collapse the toolbar.
  */
 Drupal.toolbar.collapse = function() {
-  var toggle_text = Drupal.t('Open the drawer');
+  var toggle_text = Drupal.t('Show shortcuts');
   $('#toolbar div.toolbar-drawer').addClass('collapsed');
   $('#toolbar a.toggle')
     .removeClass('toggle-active')
@@ -64,7 +64,7 @@ Drupal.toolbar.collapse = function() {
  * Expand the toolbar.
  */
 Drupal.toolbar.expand = function() {
-  var toggle_text = Drupal.t('Close the drawer');
+  var toggle_text = Drupal.t('Hide shortcuts');
   $('#toolbar div.toolbar-drawer').removeClass('collapsed');
   $('#toolbar a.toggle')
     .addClass('toggle-active')
