@@ -1,5 +1,5 @@
 <?php
-// $Id: trigger.module,v 1.65 2010/09/24 00:37:44 dries Exp $
+// $Id: trigger.module,v 1.66 2010/12/01 07:41:03 webchick Exp $
 
 /**
  * @file
@@ -11,29 +11,30 @@
  * Implements hook_help().
  */
 function trigger_help($path, $arg) {
-  $explanation = '<p>' . t('Triggers are events on your site, such as new content being added or a user logging in. The Trigger module associates these triggers with actions (functional tasks), such as unpublishing content containing certain keywords or e-mailing an administrator. The <a href="@url">Actions settings page</a> contains a list of existing actions and provides the ability to create and configure advanced actions (actions requiring configuration, such as an e-mail address or a list of banned words).', array('@url' => url('admin/config/system/actions'))) . '</p>';
-  switch ($path) {
-    case 'admin/structure/trigger/comment':
-      return $explanation . '<p>' . t('Below you can assign actions to run when certain comment-related triggers happen. For example, you could promote a post to the front page when a comment is added.') . '</p>';
-    case 'admin/structure/trigger/node':
-      return $explanation . '<p>' . t('Below you can assign actions to run when certain content-related triggers happen. For example, you could send an e-mail to an administrator when content is created or updated.') . '</p>';
-    case 'admin/structure/trigger/system':
-      return $explanation . '<p>' . t('Below you can assign actions to run during each pass of a <a href="@cron">cron maintenance task</a>.', array('@cron' => url('admin/reports/status'))) . '</p>';
-    case 'admin/structure/trigger/taxonomy':
-      return $explanation . '<p>' . t('Below you can assign actions to run when certain taxonomy-related triggers happen. For example, you could send an e-mail to an administrator when a term is deleted.') . '</p>';
-    case 'admin/structure/trigger/user':
-      return $explanation . '<p>' . t("Below you can assign actions to run when certain user-related triggers happen. For example, you could send an e-mail to an administrator when a user account is deleted.") . '</p>';
+  // Generate help text for admin/structure/trigger/(module) tabs.
+  $matches = array();
+  if (preg_match('|^admin/structure/trigger/(.*)$|', $path, $matches)) {
+    $explanation = '<p>' . t('Triggers are events on your site, such as new content being added or a user logging in. The Trigger module associates these triggers with actions (functional tasks), such as unpublishing content containing certain keywords or e-mailing an administrator. The <a href="@url">Actions settings page</a> contains a list of existing actions and provides the ability to create and configure advanced actions (actions requiring configuration, such as an e-mail address or a list of banned words).', array('@url' => url('admin/config/system/actions'))) . '</p>';
 
-    case 'admin/help#trigger':
-      $output = '';
-      $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Trigger module provides the ability to cause <em>actions</em> to run when certain <em>triggers</em> take place on your site. Triggers are events, such as new content being added to your site or a user logging in, and actions are tasks, such as unpublishing content or e-mailing an administrator. For more information, see the online handbook entry for <a href="@trigger">Trigger module</a>.', array('@trigger' => 'http://drupal.org/handbook/modules/trigger/')) . '</p>';
-      $output .= '<h3>' . t('Uses') . '</h3>';
-      $output .= '<dl>';
-      $output .= '<dt>' . t('Configuring triggers and actions') . '</dt>';
-      $output .= '<dd>' . t('The combination of actions and triggers can perform many useful tasks, such as e-mailing an administrator if a user account is deleted, or automatically unpublishing comments that contain certain words. To set up a trigger/action combination, first visit the <a href="@actions-page">Actions configuration page</a>, where you can either verify that the action you want is already listed, or create a new <em>advanced</em> action. You will need to set up an advanced action if there are configuration options in your trigger/action combination, such as specifying an e-mail address or a list of banned words. After configuring or verifying your action, visit the <a href="@triggers-page">Triggers configuration page</a> and choose the appropriate tab (Comment, Taxonomy, etc.), where you can assign the action to run when the trigger event occurs.', array('@triggers-page' => url('admin/structure/trigger'), '@actions-page' => url('admin/config/system/actions'))) . '</dd>';
-      $output .= '</dl>';
-      return $output;
+    $module = $matches[1];
+    $trigger_info = _trigger_tab_information();
+    if (!empty($trigger_info[$module])) {
+      $explanation .= '<p>' . t('There is a tab on this page for each module that defines triggers. On this tab you can assign actions to run when triggers from the <a href="@module-help">@module-name module</a> happen.', array('@module-help' => url('admin/help/' . $module), '@module-name' => $trigger_info[$module])) . '</p>';
+    }
+
+    return $explanation;
+  }
+
+  if ($path == 'admin/help#trigger') {
+    $output = '';
+    $output .= '<h3>' . t('About') . '</h3>';
+    $output .= '<p>' . t('The Trigger module provides the ability to cause <em>actions</em> to run when certain <em>triggers</em> take place on your site. Triggers are events, such as new content being added to your site or a user logging in, and actions are tasks, such as unpublishing content or e-mailing an administrator. For more information, see the online handbook entry for <a href="@trigger">Trigger module</a>.', array('@trigger' => 'http://drupal.org/handbook/modules/trigger/')) . '</p>';
+    $output .= '<h3>' . t('Uses') . '</h3>';
+    $output .= '<dl>';
+    $output .= '<dt>' . t('Configuring triggers and actions') . '</dt>';
+    $output .= '<dd>' . t('The combination of actions and triggers can perform many useful tasks, such as e-mailing an administrator if a user account is deleted, or automatically unpublishing comments that contain certain words. To set up a trigger/action combination, first visit the <a href="@actions-page">Actions configuration page</a>, where you can either verify that the action you want is already listed, or create a new <em>advanced</em> action. You will need to set up an advanced action if there are configuration options in your trigger/action combination, such as specifying an e-mail address or a list of banned words. After configuring or verifying your action, visit the <a href="@triggers-page">Triggers configuration page</a> and choose the appropriate tab (Comment, Taxonomy, etc.), where you can assign the action to run when the trigger event occurs.', array('@triggers-page' => url('admin/structure/trigger'), '@actions-page' => url('admin/config/system/actions'))) . '</dd>';
+    $output .= '</dl>';
+    return $output;
   }
 }
 
@@ -49,31 +50,18 @@ function trigger_menu() {
     'file' => 'trigger.admin.inc',
   );
 
-  // We want contributed modules to be able to describe
-  // their hooks and have actions assignable to them.
-  $trigger_info = module_invoke_all('trigger_info');
-  drupal_alter('trigger_info', $trigger_info);
-
-  foreach ($trigger_info as $module => $hooks) {
-    $info = db_select('system')
-      ->fields('system', array('info'))
-      ->condition('name', $module)
-      ->condition('status', 1)
-      ->execute()
-      ->fetchField();
-    if ($info) {
-      $info = unserialize($info);
-      $nice_name = $info['name'];
-      $items["admin/structure/trigger/$module"] = array(
-        'title' => $nice_name,
-        'page callback' => 'trigger_assign',
-        'page arguments' => array($module),
-        'access arguments' => array('administer actions'),
-        'type' => MENU_LOCAL_TASK,
-        'file' => 'trigger.admin.inc',
-      );
-    }
+  $trigger_info = _trigger_tab_information();
+  foreach ($trigger_info as $module => $module_name) {
+    $items["admin/structure/trigger/$module"] = array(
+      'title' => $module_name,
+      'page callback' => 'trigger_assign',
+      'page arguments' => array($module),
+      'access arguments' => array('administer actions'),
+      'type' => MENU_LOCAL_TASK,
+      'file' => 'trigger.admin.inc',
+    );
   }
+
   $items['admin/structure/trigger/unassign'] = array(
     'title' => 'Unassign',
     'description' => 'Unassign an action from a trigger.',
@@ -619,4 +607,26 @@ function _trigger_get_all_info() {
   }
 
   return $triggers;
+}
+
+/**
+ * Gathers information about tabs on the triggers administration screen.
+ *
+ * @return
+ *   Array of modules that have triggers, with the keys being the
+ *   machine-readable name of the module, and the values being the
+ *   human-readable name of the module.
+ */
+function _trigger_tab_information() {
+  // Gather information about all triggers and modules.
+  $trigger_info = _trigger_get_all_info();
+  $modules = system_get_info('module');
+  $modules = array_intersect_key($modules, $trigger_info);
+
+  $return_info = array();
+  foreach ($modules as $name => $info) {
+    $return_info[$name] = $info['name'];
+  }
+
+  return $return_info;
 }
