@@ -19,6 +19,8 @@
  *   desired parameters on the $comment->changed variable.
  * - $new: New comment marker.
  * - $permalink: Comment permalink.
+ * - $submitted: Submission information created from $author and $created during
+ *   template_preprocess_comment().
  * - $picture: Authors picture.
  * - $signature: Authors signature.
  * - $status: Comment status. Possible values are:
@@ -69,10 +71,7 @@
 
   <div class="submitted">
     <?php print $permalink; ?>
-    <?php
-      print t('Submitted by !username on !datetime.',
-        array('!username' => $author, '!datetime' => $created));
-    ?>
+    <?php print $submitted; ?>
   </div>
 
   <div class="content"<?php print $content_attributes; ?>>

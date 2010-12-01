@@ -12,7 +12,7 @@
   <?php print render($title_suffix); ?>
 
   <?php if ($display_submitted): ?>
-    <span class="submitted"><?php print $date; ?> — <?php print $name; ?></span>
+    <span class="submitted"><?php print $submitted ?></span>
   <?php endif; ?>
 
   <div class="content clearfix"<?php print $content_attributes; ?>>

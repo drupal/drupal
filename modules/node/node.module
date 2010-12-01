@@ -1467,10 +1467,12 @@ function template_preprocess_node(&$variables) {
   // Display post information only on certain node types.
   if (variable_get('node_submitted_' . $node->type, TRUE)) {
     $variables['display_submitted'] = TRUE;
+    $variables['submitted'] = t('Submitted by !username on !datetime', array('!username' => $variables['name'], '!datetime' => $variables['date']));
     $variables['user_picture'] = theme_get_setting('toggle_node_user_picture') ? theme('user_picture', array('account' => $node)) : '';
   }
   else {
     $variables['display_submitted'] = FALSE;
+    $variables['submitted'] = '';
     $variables['user_picture'] = '';
   }
 

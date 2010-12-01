@@ -499,10 +499,16 @@ function rdf_preprocess_node(&$variables) {
   if (!empty($variables['rdf_mapping']['created'])) {
     $date_attributes_array = rdf_rdfa_attributes($variables['rdf_mapping']['created'], $variables['created']);
     $variables['rdf_template_variable_attributes_array']['date'] = $date_attributes_array;
+    if ($variables['submitted']) {
+      $variables['rdf_template_variable_attributes_array']['submitted'] = $date_attributes_array;
+    }
   }
   // Adds RDFa markup for the relation between the node and its author.
   if (!empty($variables['rdf_mapping']['uid'])) {
     $variables['rdf_template_variable_attributes_array']['name']['rel'] = $variables['rdf_mapping']['uid']['predicates'];
+    if ($variables['submitted']) {
+      $variables['rdf_template_variable_attributes_array']['submitted']['rel'] = $variables['rdf_mapping']['uid']['predicates'];
+    }
   }
 
   // Adds RDFa markup annotating the number of comments a node has.
@@ -679,10 +685,12 @@ function rdf_preprocess_comment(&$variables) {
     // cached as part of the entity.
     $date_attributes_array = $comment->rdf_data['date'];
     $variables['rdf_template_variable_attributes_array']['created'] = $date_attributes_array;
+    $variables['rdf_template_variable_attributes_array']['submitted'] = $date_attributes_array;
   }
   // Adds RDFa markup for the relation between the comment and its author.
   if (!empty($comment->rdf_mapping['uid'])) {
     $variables['rdf_template_variable_attributes_array']['author']['rel'] = $comment->rdf_mapping['uid']['predicates'];
+    $variables['rdf_template_variable_attributes_array']['submitted']['rel'] = $comment->rdf_mapping['uid']['predicates'];
   }
   if (!empty($comment->rdf_mapping['title'])) {
     // Adds RDFa markup to the subject of the comment. Because the RDFa markup

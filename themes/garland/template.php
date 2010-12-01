@@ -120,6 +120,20 @@ function garland_preprocess_page(&$vars) {
 }
 
 /**
+ * Override or insert variables into the node template.
+ */
+function garland_preprocess_node(&$vars) {
+  $vars['submitted'] = $vars['date'] . ' — ' . $vars['name'];
+}
+
+/**
+ * Override or insert variables into the comment template.
+ */
+function garland_preprocess_comment(&$vars) {
+  $vars['submitted'] = $vars['created'] . ' — ' . $vars['author'];
+}
+
+/**
  * Override or insert variables into the block template.
  */
 function garland_preprocess_block(&$vars) {
