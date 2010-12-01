@@ -173,6 +173,8 @@ function filter_format_load($format_id) {
  *     to save. If this corresponds to an existing text format, that format
  *     will be updated; otherwise, a new format will be created.
  *   - 'name': The title of the text format.
+ *   - 'status': (optional) An integer indicating whether the text format is
+ *     enabled (1) or not (0). Defaults to 1.
  *   - 'weight': (optional) The weight of the text format, which controls its
  *     placement in text format lists. If omitted, the weight is set to 0.
  *   - 'filters': (optional) An associative, multi-dimensional array of filters
