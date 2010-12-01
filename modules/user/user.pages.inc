@@ -453,7 +453,7 @@ function user_cancel_confirm_form_submit($form, &$form_state) {
 /**
  * Helper function to return available account cancellation methods.
  *
- * Please refer to the documentation of hook_user_cancel_methods_alter().
+ * See documentation of hook_user_cancel_methods_alter().
  *
  * @return
  *   An array containing all account cancellation methods as form elements.

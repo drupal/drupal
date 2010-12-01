@@ -38,6 +38,9 @@ function hook_user_load($users) {
  * removed from the user tables in the database, and before
  * field_attach_delete() is called.
  *
+ * Modules should additionally implement hook_user_cancel() to process stored
+ * user data for other account cancellation methods.
+ *
  * @param $account
  *   The account that is being deleted.
  *
@@ -52,11 +55,17 @@ function hook_user_delete($account) {
 /**
  * Act on user account cancellations.
  *
- * The user account is being canceled. Depending on the account cancellation
- * method, the module should either do nothing, unpublish content, or anonymize
- * content.
+ * This hook is invoked from user_cancel() before a user account is canceled.
+ * Depending on the account cancellation method, the module should either do
+ * nothing, unpublish content, or anonymize content. See user_cancel_methods()
+ * for the list of default account cancellation methods provided by User module.
+ * Modules may add further methods via hook_user_cancel_methods_alter().
  *
- * Expensive operations should be added to the global batch with batch_set().
+ * This hook is NOT invoked for the 'user_cancel_delete' account cancellation
+ * method. To react on this method, implement hook_user_delete() instead.
+ *
+ * Expensive operations should be added to the global account cancellation batch
+ * by using batch_set().
  *
  * @param $edit
  *   The array of form values submitted by the user.
@@ -67,7 +76,6 @@ function hook_user_delete($account) {
  *
  * @see user_cancel_methods()
  * @see hook_user_cancel_methods_alter()
- * @see user_cancel()
  */
 function hook_user_cancel($edit, $account, $method) {
   switch ($method) {
