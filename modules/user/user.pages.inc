@@ -1,5 +1,5 @@
 <?php
-// $Id: user.pages.inc,v 1.77 2010/11/24 03:21:36 webchick Exp $
+// $Id: user.pages.inc,v 1.78 2010/12/01 00:29:41 webchick Exp $
 
 /**
  * @file
@@ -453,7 +453,7 @@ function user_cancel_confirm_form_submit($form, &$form_state) {
 /**
  * Helper function to return available account cancellation methods.
  *
- * Please refer to the documentation of hook_user_cancel_methods_alter().
+ * See documentation of hook_user_cancel_methods_alter().
  *
  * @return
  *   An array containing all account cancellation methods as form elements.
