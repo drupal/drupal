@@ -1,5 +1,5 @@
 <?php
-// $Id: cache.inc,v 1.50 2010/11/05 19:50:11 dries Exp $
+// $Id: cache.inc,v 1.51 2010/12/01 00:26:03 webchick Exp $
 
 /**
  * Get the cache object for a cache bin.
@@ -316,17 +316,9 @@ class DrupalDatabaseCache implements DrupalCacheInterface {
   }
 
   function get($cid) {
-    try {
-      // Garbage collection necessary when enforcing a minimum cache lifetime.
-      $this->garbageCollection($this->bin);
-      $cache = db_query("SELECT data, created, expire, serialized FROM {" . $this->bin . "} WHERE cid = :cid", array(':cid' => $cid))->fetchObject();
-      return $this->prepareItem($cache);
-    }
-    catch (Exception $e) {
-      // If the database is never going to be available, cache requests should
-      // return FALSE in order to allow exception handling to occur.
-      return FALSE;
-    }
+    $cids = array($cid);
+    $cache = $this->getMultiple($cids);
+    return reset($cache);
   }
 
   function getMultiple(&$cids) {
