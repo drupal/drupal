@@ -1,5 +1,5 @@
 <?php
-// $Id: template.php,v 1.44 2010/11/20 04:03:51 webchick Exp $
+// $Id: template.php,v 1.45 2010/12/01 00:18:15 webchick Exp $
 
 /**
  * Return a themed breadcrumb trail.
@@ -117,6 +117,20 @@ function garland_preprocess_page(&$vars) {
   $slogan_text = $vars['site_slogan'];
   $site_name_text = $vars['site_name'];
   $vars['site_name_and_slogan'] = $site_name_text . ' ' . $slogan_text;
+}
+
+/**
+ * Override or insert variables into the node template.
+ */
+function garland_preprocess_node(&$vars) {
+  $vars['submitted'] = $vars['date'] . ' — ' . $vars['name'];
+}
+
+/**
+ * Override or insert variables into the comment template.
+ */
+function garland_preprocess_comment(&$vars) {
+  $vars['submitted'] = $vars['created'] . ' — ' . $vars['author'];
 }
 
 /**

@@ -1,5 +1,5 @@
 <?php
-// $Id: node.tpl.php,v 1.23 2010/04/08 18:26:42 dries Exp $
+// $Id: node.tpl.php,v 1.24 2010/12/01 00:18:15 webchick Exp $
 ?>
 <div id="node-<?php print $node->nid; ?>" class="<?php print $classes; ?>"<?php print $attributes; ?>>
 
@@ -12,7 +12,7 @@
   <?php print render($title_suffix); ?>
 
   <?php if ($display_submitted): ?>
-    <span class="submitted"><?php print $date; ?> — <?php print $name; ?></span>
+    <span class="submitted"><?php print $submitted ?></span>
   <?php endif; ?>
 
   <div class="content clearfix"<?php print $content_attributes; ?>>

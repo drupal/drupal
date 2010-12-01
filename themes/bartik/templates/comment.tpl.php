@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.tpl.php,v 1.3 2010/09/24 01:36:30 webchick Exp $
+// $Id: comment.tpl.php,v 1.4 2010/12/01 00:18:15 webchick Exp $
 
 /**
  * @file
@@ -19,6 +19,8 @@
  *   desired parameters on the $comment->changed variable.
  * - $new: New comment marker.
  * - $permalink: Comment permalink.
+ * - $submitted: Submission information created from $author and $created during
+ *   template_preprocess_comment().
  * - $picture: Authors picture.
  * - $signature: Authors signature.
  * - $status: Comment status. Possible values are:

@@ -1,5 +1,5 @@
 <?php
-// $Id: template.php,v 1.9 2010/11/26 11:00:37 webchick Exp $
+// $Id: template.php,v 1.10 2010/12/01 00:18:15 webchick Exp $
 
 /**
  * Add body classes if certain regions have content.
@@ -100,6 +100,13 @@ function bartik_process_maintenance_page(&$variables) {
     // If toggle_site_slogan is FALSE, the site_slogan will be empty, so we rebuild it.
     $variables['site_slogan'] = filter_xss_admin(variable_get('site_slogan', ''));
   }
+}
+
+/**
+ * Override or insert variables into the node template.
+ */
+function bartik_preprocess_node(&$variables) {
+  $variables['submitted'] = t('published by !username on !datetime', array('!username' => $variables['name'], '!datetime' => $variables['date']));
 }
 
 /**

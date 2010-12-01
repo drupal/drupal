@@ -1,5 +1,5 @@
 <?php
-// $Id: node.tpl.php,v 1.1 2010/07/06 05:25:51 webchick Exp $
+// $Id: node.tpl.php,v 1.2 2010/12/01 00:18:15 webchick Exp $
 
 /**
  * @file
@@ -16,7 +16,9 @@
  *   calling format_date() with the desired parameters on the $created variable.
  * - $name: Themed username of node author output from theme_username().
  * - $node_url: Direct url of the current node.
- * - $display_submitted: whether submission information should be displayed.
+ * - $display_submitted: Whether submission information should be displayed.
+ * - $submitted: Submission information created from $name and $date during
+ *   template_preprocess_node().
  * - $classes: String of classes that can be used to style contextually through
  *   CSS. It can be manipulated through the variable $classes_array from
  *   preprocess functions. The default values can be one or more of the
@@ -90,10 +92,7 @@
   <?php if ($display_submitted): ?>
     <div class="meta submitted">
       <?php print $user_picture; ?>
-      <?php
-        print t('published by !username on !datetime',
-          array('!username' => $name, '!datetime' => $date));
-      ?>
+      <?php print $submitted; ?>
     </div>
   <?php endif; ?>
 
