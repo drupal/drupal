@@ -218,6 +218,7 @@ function update_authorize_update_batch_finished($success, $results) {
   $_SESSION['authorize_results']['page_message'] = $page_message;
   $_SESSION['authorize_results']['messages'] = $results['log'];
   $_SESSION['authorize_results']['tasks'] = $results['tasks'];
+  $_SESSION['authorize_operation']['page_title'] = t('Update manager');
 }
 
 /**
@@ -265,7 +266,7 @@ function update_authorize_install_batch_finished($success, $results) {
   $_SESSION['authorize_results']['page_message'] = $page_message;
   $_SESSION['authorize_results']['messages'] = $results['log'];
   $_SESSION['authorize_results']['tasks'] = $results['tasks'];
-  $_SESSION['authorize_operation']['page_title'] = t('Drupal Update Manager');
+  $_SESSION['authorize_operation']['page_title'] = t('Update manager');
 }
 
 /**
