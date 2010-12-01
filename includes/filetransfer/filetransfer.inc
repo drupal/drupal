@@ -1,5 +1,5 @@
 <?php
-// $Id: filetransfer.inc,v 1.11 2010/11/24 18:19:17 webchick Exp $
+// $Id: filetransfer.inc,v 1.12 2010/12/01 00:13:47 webchick Exp $
 
 /*
  * Base FileTransfer class.
@@ -208,7 +208,7 @@ abstract class FileTransfer {
       $destination = $destination . '/' . basename($source);
     }
     $this->createDirectory($destination);
-    foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($source), RecursiveIteratorIterator::SELF_FIRST) as $filename => $file) {
+    foreach (new RecursiveIteratorIterator(new SkipDotsRecursiveDirectoryIterator($source), RecursiveIteratorIterator::SELF_FIRST) as $filename => $file) {
       $relative_path = substr($filename, strlen($source));
       if ($file->isDir()) {
         $this->createDirectory($destination . $relative_path);
@@ -344,4 +344,32 @@ interface FileTransferChmodInterface {
    *   Pass TRUE to recursively chmod the entire directory specified in $path.
    */
   function chmodJailed($path, $mode, $recursive);
+}
+
+/**
+ * Provides an interface for iterating recursively over filesystem directories.
+ *
+ * Manually skips '.' and '..' directories, since no existing method is
+ * available in PHP 5.2.
+ *
+ * @todo Depreciate in favor of RecursiveDirectoryIterator::SKIP_DOTS once PHP
+ *   5.3 or later is required.
+ */
+class SkipDotsRecursiveDirectoryIterator extends RecursiveDirectoryIterator {
+  /**
+   * Constructs a SkipDotsRecursiveDirectoryIterator
+   *
+   * @param $path
+   *   The path of the directory to be iterated over.
+   */
+  function __construct($path) {
+    parent::__construct($path);
+  }
+
+  function next() {
+    parent::next();
+    while ($this->isDot()) {
+      parent::next();
+    }
+  }
 }
