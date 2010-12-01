@@ -831,7 +831,8 @@ function comment_get_thread($node, $mode, $comments_per_page) {
     // See comment above. Analysis reveals that this doesn't cost too
     // much. It scales much much better than having the whole comment
     // structure.
-    $query->orderBy('SUBSTRING(c.thread, 1, (LENGTH(c.thread) - 1))', 'ASC');
+    $query->addExpression('SUBSTRING(c.thread, 1, (LENGTH(c.thread) - 1))', 'torder');
+    $query->orderBy('torder', 'ASC');
   }
 
   $query->setCountQuery($count_query);
