@@ -21,7 +21,7 @@
 class BatchQueue extends SystemQueue {
 
   public function claimItem($lease_time = 0) {
-    $item = db_query('SELECT data, item_id FROM {queue} q WHERE name = :name ORDER BY item_id ASC', array(':name' => $this->name))->fetchObject();
+    $item = db_query_range('SELECT data, item_id FROM {queue} q WHERE name = :name ORDER BY item_id ASC', 0, 1, array(':name' => $this->name))->fetchObject();
     if ($item) {
       $item->data = unserialize($item->data);
       return $item;
