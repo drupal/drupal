@@ -1,5 +1,5 @@
 <?php
-// $Id: php.module,v 1.28 2010/03/21 21:20:43 dries Exp $
+// $Id: php.module,v 1.29 2010/12/01 00:31:38 webchick Exp $
 
 /**
  * @file
@@ -14,7 +14,7 @@ function php_help($path, $arg) {
     case 'admin/help#php':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The PHP filter module adds a PHP filter to your site, for use with <a href="@filter">text formats</a>. This filter adds the ability to execute PHP code in any text field that uses a text format (such as the body of a node or the text of a comment). <a href="@php-net">PHP</a> is a general-purpose scripting language widely-used for web development, and is the language with which Drupal has been developed. For more information, see the online handbook entry for the <a href="@php">PHP filter module</a>.', array('@filter' => url('admin/help/filter'), '@php-net' => 'http://www.php.net', '@php' => 'http://drupal.org/handbook/modules/php/')) . '</p>';
+      $output .= '<p>' . t('The PHP filter module adds a PHP filter to your site, for use with <a href="@filter">text formats</a>. This filter adds the ability to execute PHP code in any text field that uses a text format (such as the body of a content item or the text of a comment). <a href="@php-net">PHP</a> is a general-purpose scripting language widely-used for web development, and is the language with which Drupal has been developed. For more information, see the online handbook entry for the <a href="@php">PHP filter module</a>.', array('@filter' => url('admin/help/filter'), '@php-net' => 'http://www.php.net', '@php' => 'http://drupal.org/handbook/modules/php/')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Enabling execution of PHP in text fields') . '</dt>';
