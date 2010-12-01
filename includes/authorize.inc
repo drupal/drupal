@@ -21,12 +21,11 @@ function authorize_filetransfer_form($form_state) {
   $form['#attached']['js'][] = $base_url . '/misc/authorize.js';
 
   // Get all the available ways to transfer files.
-  if (empty($_SESSION['authorize_filetransfer_backends'])) {
+  if (empty($_SESSION['authorize_filetransfer_info'])) {
     drupal_set_message(t('Unable to continue, no available methods of file transfer'), 'error');
     return array();
   }
-  $available_backends = $_SESSION['authorize_filetransfer_backends'];
-  uasort($available_backends, 'drupal_sort_weight');
+  $available_backends = $_SESSION['authorize_filetransfer_info'];
 
   if (!$is_https) {
     drupal_set_message(t('WARNING: You are not using an encrypted connection, so your password will be sent in plain text. <a href="@https-link">Learn more</a>.', array('@https-link' => 'http://drupal.org/https-information')), 'error');
@@ -87,8 +86,7 @@ function authorize_filetransfer_form($form_state) {
       '#title' => t('@backend connection settings', array('@backend' => $backend['title'])),
     );
 
-    $current_settings = variable_get('authorize_filetransfer_connection_settings_' . $name, array());
-    $form['connection_settings'][$name] += system_get_filetransfer_settings_form($name, $current_settings);
+    $form['connection_settings'][$name] += _authorize_filetransfer_connection_settings($name);
 
     // Start non-JS code.
     if (isset($form_state['values']['connection_settings']['authorize_filetransfer_default']) && $form_state['values']['connection_settings']['authorize_filetransfer_default'] == $name) {
@@ -119,6 +117,65 @@ function authorize_filetransfer_form($form_state) {
     // End non-JS code.
   }
   return $form;
+}
+
+/**
+ * Generate the Form API array for the settings for a given connection backend.
+ *
+ * @param $backend
+ *   The name of the backend (e.g. 'ftp', 'ssh', etc).
+ * @return
+ *   Form API array of connection settings for the given backend.
+ *
+ * @see hook_filetransfer_backends()
+ */
+function _authorize_filetransfer_connection_settings($backend) {
+  $defaults = variable_get('authorize_filetransfer_connection_settings_' . $backend, array());
+  $form = array();
+
+  // Create an instance of the file transfer class to get its settings form.
+  $filetransfer = authorize_get_filetransfer($backend);
+  if ($filetransfer) {
+    $form = $filetransfer->getSettingsForm();
+  }
+  // Fill in the defaults based on the saved settings, if any.
+  _authorize_filetransfer_connection_settings_set_defaults($form, NULL, $defaults);
+  return $form;
+}
+
+/**
+ * Recursively fill in the default settings on a file transfer connection form.
+ *
+ * The default settings for the file transfer connection forms are saved in
+ * the database. The settings are stored as a nested array in the case of a
+ * settings form that has fieldsets or otherwise uses a nested structure.
+ * Therefore, to properly add defaults, we need to walk through all the
+ * children form elements and process those defaults recursively.
+ *
+ * @param &$element
+ *   Reference to the Form API form element we're operating on.
+ * @param $key
+ *   The key for our current form element, if any.
+ * @param array $defaults
+ *   The default settings for the file transfer backend we're operating on.
+ * @return
+ *   Nothing, this function just sets $element['#default_value'] if needed.
+ */
+function _authorize_filetransfer_connection_settings_set_defaults(&$element, $key, array $defaults) {
+  // If we're operating on a form element which isn't a fieldset, and we have
+  // a default setting saved, stash it in #default_value.
+  if (!empty($key) && isset($defaults[$key]) && isset($element['#type']) && $element['#type'] != 'fieldset') {
+    $element['#default_value'] = $defaults[$key];
+  }
+  // Now, we walk through all the child elements, and recursively invoke
+  // ourself on each one. Since the $defaults settings array can be nested
+  // (because of #tree, any values inside fieldsets will be nested), if
+  // there's a subarray of settings for the form key we're currently
+  // processing, pass in that subarray to the recursive call. Otherwise, just
+  // pass on the whole $defaults array.
+  foreach (element_children($element) as $child_key) {
+    _authorize_filetransfer_connection_settings_set_defaults($element[$child_key], $child_key, ((isset($defaults[$key]) && is_array($defaults[$key])) ? $defaults[$key] : $defaults));
+  }
 }
 
 /**
@@ -235,9 +292,17 @@ function authorize_run_operation($filetransfer) {
  */
 function authorize_get_filetransfer($backend, $settings = array()) {
   $filetransfer = FALSE;
-  if (!empty($_SESSION['authorize_filetransfer_backends'][$backend])) {
-    $filetransfer = call_user_func_array(array($_SESSION['authorize_filetransfer_backends'][$backend]['class'], 'factory'), array(DRUPAL_ROOT, $settings));
+  if (!empty($_SESSION['authorize_filetransfer_info'][$backend])) {
+    $backend_info = $_SESSION['authorize_filetransfer_info'][$backend];
+    if (!empty($backend_info['file'])) {
+      $file = $backend_info['file path'] . '/' . $backend_info['file'];
+      require_once $file;
+    }
+    if (class_exists($backend_info['class'])) {
+      // PHP 5.2 doesn't support $class::factory() syntax, so we have to
+      // use call_user_func_array() until we can require PHP 5.3.
+      $filetransfer = call_user_func_array(array($backend_info['class'], 'factory'), array(DRUPAL_ROOT, $settings));
+    }
   }
   return $filetransfer;
 }
-

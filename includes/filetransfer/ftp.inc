@@ -24,6 +24,8 @@ abstract class FileTransferFTP extends FileTransfer {
    *   options. If the FTP PHP extension is available, use it.
    */
   static function factory($jail, $settings) {
+    $settings['username'] = empty($settings['username']) ? '' : $settings['username'];
+    $settings['password'] = empty($settings['password']) ? '' : $settings['password'];
     $settings['hostname'] = empty($settings['hostname']) ? 'localhost' : $settings['hostname'];
     $settings['port'] = empty($settings['port']) ? 21 : $settings['port'];
 
@@ -35,6 +37,15 @@ abstract class FileTransferFTP extends FileTransfer {
     }
 
     return new $class($jail, $settings['username'], $settings['password'], $settings['hostname'], $settings['port']);
+  }
+
+  /**
+   * Returns the form to configure the FileTransfer class for FTP.
+   */
+  public function getSettingsForm() {
+    $form = parent::getSettingsForm();
+    $form['advanced']['port']['#default_value'] = 21;
+    return $form;
   }
 }
 

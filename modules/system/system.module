@@ -1725,7 +1725,7 @@ function _system_themes_access($theme) {
  *
  * @see authorize.php
  * @see FileTransfer
- * @see hook_filetransfer_backends()
+ * @see hook_filetransfer_info()
  */
 
 /**
@@ -1756,7 +1756,7 @@ function system_authorized_init($callback, $file, $arguments = array(), $page_ti
   // First, figure out what file transfer backends the site supports, and put
   // all of those in the SESSION so that authorize.php has access to all of
   // them via the class autoloader, even without a full bootstrap.
-  $_SESSION['authorize_filetransfer_backends'] = module_invoke_all('filetransfer_backends');
+  $_SESSION['authorize_filetransfer_info'] = drupal_get_filetransfer_info();
 
   // Now, define the callback to invoke.
   $_SESSION['authorize_operation'] = array(
@@ -1831,9 +1831,9 @@ function system_updater_info() {
 }
 
 /**
- * Implements hook_filetransfer_backends().
+ * Implements hook_filetransfer_info().
  */
-function system_filetransfer_backends() {
+function system_filetransfer_info() {
   $backends = array();
 
   // This is the default, will be available on most systems.
@@ -1841,7 +1841,8 @@ function system_filetransfer_backends() {
     $backends['ftp'] = array(
       'title' => t('FTP'),
       'class' => 'FileTransferFTP',
-      'settings_form' => 'system_filetransfer_backend_form_ftp',
+      'file' => 'ftp.inc',
+      'file path' => 'includes/filetransfer',
       'weight' => 0,
     );
   }
@@ -1852,83 +1853,12 @@ function system_filetransfer_backends() {
     $backends['ssh'] = array(
       'title' => t('SSH'),
       'class' => 'FileTransferSSH',
-      'settings_form' => 'system_filetransfer_backend_form_ssh',
+      'file' => 'ssh.inc',
+      'file path' => 'includes/filetransfer',
       'weight' => 20,
     );
   }
   return $backends;
-}
-
-/**
- *  Helper function to return a form for configuring a filetransfer backend.
- *
- * @param string $filetransfer_backend_name
- *   The name of the backend to return a form for.
- *
- * @param string $defaults
- *   An associative array of settings to pre-populate the form with.
- */
-function system_get_filetransfer_settings_form($filetransfer_backend_name, $defaults) {
-  $available_backends = module_invoke_all('filetransfer_backends');
-  $form = call_user_func($available_backends[$filetransfer_backend_name]['settings_form']);
-
-  foreach ($form as $name => &$element) {
-    if (isset($defaults[$name])) {
-      $element['#default_value'] = $defaults[$name];
-    }
-  }
-  return $form;
-}
-
-/**
- * Returns the form to configure the filetransfer class for FTP
- */
-function system_filetransfer_backend_form_ftp() {
-  $form = _system_filetransfer_backend_form_common();
-  $form['advanced']['port']['#default_value'] = 21;
-  return $form;
-}
-
-/**
- * Returns the form to configure the filetransfer class for SSH
- */
-function system_filetransfer_backend_form_ssh() {
-  $form = _system_filetransfer_backend_form_common();
-  $form['advanced']['port']['#default_value'] = 22;
-  return $form;
-}
-
-/**
- * Helper function because SSH and FTP backends share the same elements
- */
-function _system_filetransfer_backend_form_common() {
-  $form['username'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Username'),
-  );
-  $form['password'] = array(
-    '#type' => 'password',
-    '#title' => t('Password'),
-    '#description' => t('Your password is not saved in the database and is only used to establish a connection.'),
-  );
-  $form['advanced'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Advanced settings'),
-    '#collapsible' => TRUE,
-    '#collapsed' => TRUE,
-  );
-  $form['advanced']['hostname'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Host'),
-    '#default_value' => 'localhost',
-    '#description' => t('The connection will be created between your web server and the machine hosting the web server files. In the vast majority of cases, this will be the same machine, and "localhost" is correct.'),
-  );
-  $form['advanced']['port'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Port'),
-    '#default_value' => NULL,
-  );
-  return $form;
 }
 
 /**
