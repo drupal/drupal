@@ -16,11 +16,11 @@ class OptionsWidgetsTestCase extends FieldTestCase {
     // Field with cardinality 1.
     $this->card_1 = array(
       'field_name' => 'card_1',
-      'type' => 'list_number',
+      'type' => 'list',
       'cardinality' => 1,
       'settings' => array(
         // Make sure that 0 works as an option.
-        'allowed_values' => array(0 => 'Zero', 1 => 'One', 2 => 'Some <script>dangerous</script> & unescaped <strong>markup</strong>'),
+        'allowed_values' => "0|Zero\n1|One\n2|Some <script>dangerous</script> & unescaped <strong>markup</strong>\n",
       ),
     );
     $this->card_1 = field_create_field($this->card_1);
@@ -28,11 +28,11 @@ class OptionsWidgetsTestCase extends FieldTestCase {
     // Field with cardinality 2.
     $this->card_2 = array(
       'field_name' => 'card_2',
-      'type' => 'list_number',
+      'type' => 'list',
       'cardinality' => 2,
       'settings' => array(
         // Make sure that 0 works as an option.
-        'allowed_values' => array(0 => 'Zero', 1 => 'One', 2 => 'Some <script>dangerous</script> & unescaped <strong>markup</strong>'),
+        'allowed_values' => "0|Zero\n1|One\n2|Some <script>dangerous</script> & unescaped <strong>markup</strong>\n",
       ),
     );
     $this->card_2 = field_create_field($this->card_2);
@@ -44,7 +44,7 @@ class OptionsWidgetsTestCase extends FieldTestCase {
       'cardinality' => 1,
       'settings' => array(
         // Make sure that 0 works as a 'on' value'.
-        'allowed_values' => array(1 => 'Zero', 0 => 'Some <script>dangerous</script> & unescaped <strong>markup</strong>'),
+        'allowed_values' => "1|No\n0|Some <script>dangerous</script> & unescaped <strong>markup</strong>\n",
       ),
     );
     $this->bool = field_create_field($this->bool);
@@ -100,7 +100,7 @@ class OptionsWidgetsTestCase extends FieldTestCase {
     $this->assertFieldValues($entity_init, 'card_1', $langcode, array());
 
     // Check that required radios with one option is auto-selected.
-    $this->card_1['settings']['allowed_values'] = array(99 => 'Only allowed value');
+    $this->card_1['settings']['allowed_values'] = '99|Only allowed value';
     field_update_field($this->card_1);
     $instance['required'] = TRUE;
     field_update_instance($instance);
@@ -187,7 +187,7 @@ class OptionsWidgetsTestCase extends FieldTestCase {
     $this->assertFieldValues($entity_init, 'card_2', $langcode, array());
 
     // Required checkbox with one option is auto-selected.
-    $this->card_2['settings']['allowed_values'] = array(99 => 'Only allowed value');
+    $this->card_2['settings']['allowed_values'] = '99|Only allowed value';
     field_update_field($this->card_2);
     $instance['required'] = TRUE;
     field_update_instance($instance);
@@ -263,7 +263,7 @@ class OptionsWidgetsTestCase extends FieldTestCase {
 
     // Test optgroups.
 
-    $this->card_1['settings']['allowed_values'] = array();
+    $this->card_1['settings']['allowed_values'] = NULL;
     $this->card_1['settings']['allowed_values_function'] = 'list_test_allowed_values_callback';
     field_update_field($this->card_1);
 
@@ -378,7 +378,7 @@ class OptionsWidgetsTestCase extends FieldTestCase {
     // Test optgroups.
 
     // Use a callback function defining optgroups.
-    $this->card_2['settings']['allowed_values'] = array();
+    $this->card_2['settings']['allowed_values'] = NULL;
     $this->card_2['settings']['allowed_values_function'] = 'list_test_allowed_values_callback';
     field_update_field($this->card_2);
     $instance['required'] = FALSE;
@@ -460,7 +460,7 @@ class OptionsWidgetsTestCase extends FieldTestCase {
 
     // Create a test field instance.
     $fieldUpdate = $this->bool;
-    $fieldUpdate['settings']['allowed_values'] = array(0 => 0, 1 => 'MyOnValue');
+    $fieldUpdate['settings']['allowed_values'] = "0|0\n1|MyOnValue";
     field_update_field($fieldUpdate);
     $instance = array(
       'field_name' => $this->bool['field_name'],

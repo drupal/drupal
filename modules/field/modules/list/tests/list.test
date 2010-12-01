@@ -24,10 +24,10 @@ class ListFieldTestCase extends FieldTestCase {
     $this->field_name = 'test_list';
     $this->field = array(
       'field_name' => $this->field_name,
-      'type' => 'list_number',
+      'type' => 'list',
       'cardinality' => 1,
       'settings' => array(
-        'allowed_values' => array(1 => 'One', 2 => 'Two', 3 => 'Three'),
+        'allowed_values' => "1|One\n2|Two\n3|Three\n",
       ),
     );
     $this->field = field_create_field($this->field);
@@ -57,7 +57,7 @@ class ListFieldTestCase extends FieldTestCase {
     $this->assertTrue(!empty($form[$this->field_name][$langcode][3]), t('Option 3 exists'));
 
     // Removed options do not appear.
-    $this->field['settings']['allowed_values'] = array(2 => 'Two');
+    $this->field['settings']['allowed_values'] = "2|Two";
     field_update_field($this->field);
     $entity = field_test_create_stub_entity();
     $form = drupal_get_form('field_test_entity_form', $entity);
@@ -66,7 +66,7 @@ class ListFieldTestCase extends FieldTestCase {
     $this->assertTrue(empty($form[$this->field_name][$langcode][3]), t('Option 3 does not exist'));
 
     // Completely new options appear.
-    $this->field['settings']['allowed_values'] = array(10 => 'Update', 20 => 'Twenty');
+    $this->field['settings']['allowed_values'] = "10|Update\n20|Twenty";
     field_update_field($this->field);
     $form = drupal_get_form('field_test_entity_form', $entity);
     $this->assertTrue(empty($form[$this->field_name][$langcode][1]), t('Option 1 does not exist'));
@@ -78,7 +78,7 @@ class ListFieldTestCase extends FieldTestCase {
     // Options are reset when a new field with the same name is created.
     field_delete_field($this->field_name);
     unset($this->field['id']);
-    $this->field['settings']['allowed_values'] = array(1 => 'One', 2 => 'Two', 3 => 'Three');
+    $this->field['settings']['allowed_values'] = "1|One\n2|Two\n3|Three\n";
     $this->field = field_create_field($this->field);
     $this->instance = array(
       'field_name' => $this->field_name,
@@ -134,6 +134,13 @@ class ListFieldUITestCase extends FieldTestCase {
   function testAllowedValues() {
     $element_name = "field[settings][allowed_values]";
 
+    // Test 'List' field type.
+    $admin_path = $this->createListFieldAndEdit('list');
+    // Check that non-integer keys are rejected.
+    $edit = array($element_name => "1.1|one\n");
+    $this->drupalPost($admin_path, $edit, t('Save settings'));
+    $this->assertText("keys must be integers", t('Form validation failed.'));
+
     // Test 'List (number)' field type.
     $admin_path = $this->createListFieldAndEdit('list_number');
     // Check that non-numeric keys are rejected.
@@ -153,7 +160,6 @@ class ListFieldUITestCase extends FieldTestCase {
     // Check that the seperate 'On' and 'Off' form fields work.
     $on = $this->randomName();
     $off = $this->randomName();
-    $allowed_values = array(1 => $on, 0 => $off);
     $edit = array(
       'on' => $on,
       'off' => $off,
@@ -165,7 +171,7 @@ class ListFieldUITestCase extends FieldTestCase {
     $this->assertFieldByName('on', $on, t("The 'On' value is stored correctly."));
     $this->assertFieldByName('off', $off, t("The 'Off' value is stored correctly."));
     $field = field_info_field($this->field['field_name']);
-    $this->assertEqual($field['settings']['allowed_values'], $allowed_values, t('The allowed value is correct'));
+    $this->assertEqual($field['settings']['allowed_values'], "0|$off\n1|$on", t('The allowed value is correct'));
     $this->assertFalse(isset($field['settings']['on']), t('The on value is not saved into settings'));
     $this->assertFalse(isset($field['settings']['off']), t('The off value is not saved into settings'));
   }
@@ -174,7 +180,7 @@ class ListFieldUITestCase extends FieldTestCase {
    * Helper function to create list field of a given type and get the edit page.
    *
    * @param string $type
-   *   'list_boolean', 'list_number', or 'list_text'
+   *   'list', 'list_boolean', 'list_number', or 'list_text'
    */
   protected function createListFieldAndEdit($type) {
     // Create a test field and instance.
