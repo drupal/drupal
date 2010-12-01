@@ -1,5 +1,5 @@
 <?php
-// $Id: list.install,v 1.2 2010/11/30 23:46:30 webchick Exp $
+// $Id: list.install,v 1.3 2010/12/01 07:11:37 webchick Exp $
 
 /**
  * @file
@@ -28,7 +28,7 @@ function list_field_schema($field) {
         ),
       );
       break;
-    case 'list_boolean':
+    default:
       $columns = array(
         'value' => array(
           'type' => 'int',
@@ -43,62 +43,4 @@ function list_field_schema($field) {
       'value' => array('value'),
     ),
   );
-}
-
-/**
- * Helper function for list_update_7000: extract allowed values from a string.
- *
- * This reproduces the parsing logic in use before D7 RC1.
- */
-function _list_update_7000_extract_allowed_values($string, $position_keys) {
-  $values = array();
-
-  $list = explode("\n", $string);
-  $list = array_map('trim', $list);
-  $list = array_filter($list, 'strlen');
-
-  foreach ($list as $key => $value) {
-    // Check for a manually specified key.
-    if (strpos($value, '|') !== FALSE) {
-      list($key, $value) = explode('|', $value);
-    }
-    // Otherwise see if we need to use the value as the key. The "list" type
-    // will automatically convert non-keyed lines to integers.
-    elseif (!$position_keys) {
-      $key = $value;
-    }
-    $values[$key] = (isset($value) && $value !== '') ? $value : $key;
-  }
-
-  return $values;
-}
-
-/**
- * Remove the 'list' field type and change 'allowed_values' format.
- */
-function list_update_7000() {
-  $fields = _update_7000_field_read_fields(array('module' => 'list'));
-  foreach ($fields as $field_name => $field) {
-    // Translate the old string format into the new array format.
-    $string = $field['settings']['allowed_values'];
-    $position_keys = ($field['type'] == 'list');
-    $array = _list_update_7000_extract_allowed_values($string, $position_keys);
-
-    // Place the new setting in the existing serialized 'data' column.
-    $data = db_query("SELECT data FROM {field_config} WHERE id = :id", array(':id' => $field['id']))->fetchField();
-    $data = unserialize($data);
-    $data['settings']['allowed_values'] = $array;
-
-    // Save the new data.
-    $update_fields = array('data' => serialize($data));
-    // Additionally, move 'list' fields over to 'list_number' field type.
-    if ($field['type'] == 'list') {
-      $update_fields['type'] = 'list_number';
-    }
-
-    $query = db_update('field_config')
-      ->condition('id', $field['id'])
-      ->fields($update_fields)
-      ->execute();
-  }
 }
