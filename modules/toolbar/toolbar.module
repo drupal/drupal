@@ -17,7 +17,7 @@ function toolbar_help($path, $arg) {
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Displaying administrative links') . '</dt>';
-      $output .= '<dd>' . t('The Toolbar module displays a bar containing top-level administrative links across the top of the screen. Below that, the Toolbar module has a <em>drawer</em> section where it displays links provided by other modules, such as the core <a href="@shortcuts-help">Shortcut module</a>. The drawer can be hidden/shown by using the close/open drawer link at the end of the toolbar.', array('@shortcuts-help' => url('admin/help/shortcut'))) . '</dd>';
+      $output .= '<dd>' . t('The Toolbar module displays a bar containing top-level administrative links across the top of the screen. Below that, the Toolbar module has a <em>drawer</em> section where it displays links provided by other modules, such as the core <a href="@shortcuts-help">Shortcut module</a>. The drawer can be hidden/shown by using the show/hide shortcuts link at the end of the toolbar.', array('@shortcuts-help' => url('admin/help/shortcut'))) . '</dd>';
       $output .= '</dl>';
       return $output;
   }
@@ -90,11 +90,11 @@ function toolbar_toggle_page() {
  */
 function theme_toolbar_toggle($variables) {
   if ($variables['collapsed']) {
-    $toggle_text = t('Open the drawer');
+    $toggle_text = t('Show shortcuts');
     return '<a href="' . url('toolbar/toggle', array('query' => drupal_get_destination())) . '" title="' . $toggle_text . '"' .  drupal_attributes($variables['attributes']) . '>' . $toggle_text . '</a>';
   }
   else {
-    $toggle_text = t('Close the drawer');
+    $toggle_text = t('Hide shortcuts');
     $variables['attributes']['class'][] = 'toggle-active';
     return '<a href="' . url('toolbar/toggle', array('query' => drupal_get_destination())) . '" title="' . $toggle_text . '"' .  drupal_attributes($variables['attributes']) . '>' . $toggle_text . '</a>';
   }
