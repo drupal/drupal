@@ -12,7 +12,7 @@
 function poll_token_info() {
   $node['poll-votes'] = array(
     'name' => t("Poll votes"),
-    'description' => t("The number of votes that have been cast on a poll node."),
+    'description' => t("The number of votes that have been cast on a poll."),
   );
   $node['poll-winner'] = array(
     'name' => t("Poll winner"),
@@ -28,7 +28,7 @@ function poll_token_info() {
   );
   $node['poll-duration'] = array(
     'name' => t("Poll duration"),
-    'description' => t("The length of time the poll node is set to run."),
+    'description' => t("The length of time the poll is set to run."),
   );
 
   return array(

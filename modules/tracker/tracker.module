@@ -139,7 +139,7 @@ function tracker_cron() {
       // Prepare a starting point for the next run.
       variable_set('tracker_index_nid', $last_nid - 1);
 
-      watchdog('tracker', t('Indexed %count nodes for tracking.', array('%count' => $count)));
+      watchdog('tracker', t('Indexed %count content items for tracking.', array('%count' => $count)));
     }
     else {
       // If all nodes have been indexed, set to zero to skip future cron runs.
