@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.test,v 1.81 2010/11/29 06:38:51 webchick Exp $
+// $Id: filter.test,v 1.82 2010/12/01 00:00:21 webchick Exp $
 
 /**
  * Tests for text format and filter CRUD operations.
@@ -185,22 +185,36 @@ class FilterAdminTestCase extends DrupalWebTestCase {
     // Add text format.
     $this->drupalGet('admin/config/content/formats');
     $this->clickLink('Add text format');
+    $format_id = drupal_strtolower($this->randomName());
+    $name = $this->randomName();
     $edit = array(
-      'format' => drupal_strtolower($this->randomName()),
-      'name' => $this->randomName(),
+      'format' => $format_id,
+      'name' => $name,
     );
     $this->drupalPost(NULL, $edit, t('Save configuration'));
 
+    // Verify default weight of the text format.
+    $this->drupalGet('admin/config/content/formats');
+    $this->assertFieldByName("formats[$format_id][weight]", 0, t('Text format weight was saved.'));
+
+    // Change the weight of the text format.
+    $edit = array(
+      "formats[$format_id][weight]" => 5,
+    );
+    $this->drupalPost('admin/config/content/formats', $edit, t('Save changes'));
+    $this->assertFieldByName("formats[$format_id][weight]", 5, t('Text format weight was saved.'));
+
     // Edit text format.
-    $format_id = $edit['format'];
-    $name = $edit['name'];
     $this->drupalGet('admin/config/content/formats');
     $this->assertLinkByHref('admin/config/content/formats/' . $format_id);
     $this->drupalGet('admin/config/content/formats/' . $format_id);
     $this->drupalPost(NULL, array(), t('Save configuration'));
 
-    // Disable text format.
+    // Verify that the custom weight of the text format has been retained.
     $this->drupalGet('admin/config/content/formats');
+    $this->assertFieldByName("formats[$format_id][weight]", 5, t('Text format weight was retained.'));
+
+    // Disable text format.
     $this->assertLinkByHref('admin/config/content/formats/' . $format_id . '/disable');
     $this->drupalGet('admin/config/content/formats/' . $format_id . '/disable');
     $this->drupalPost(NULL, array(), t('Disable'));

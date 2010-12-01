@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.admin.inc,v 1.69 2010/10/22 16:36:14 webchick Exp $
+// $Id: filter.admin.inc,v 1.70 2010/12/01 00:00:21 webchick Exp $
 
 /**
  * @file
@@ -308,8 +308,11 @@ function filter_admin_format_form_submit($form, &$form_state) {
   // Remove unnecessary values.
   form_state_values_clean($form_state);
 
-  // Save text format.
-  $format = (object) $form_state['values'];
+  // Add the submitted form values to the text format, and save it.
+  $format = $form['#format'];
+  foreach ($form_state['values'] as $key => $value) {
+    $format->$key = $value;
+  }
   $status = filter_format_save($format);
 
   // Save user permissions.
