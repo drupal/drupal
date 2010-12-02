@@ -1,4 +1,4 @@
-/* $Id: ie.css,v 1.9 2010/11/29 05:01:37 webchick Exp $ */
+/* $Id: ie.css,v 1.10 2010/12/02 23:54:56 dries Exp $ */
 
 .block {
   zoom: 1;
@@ -59,4 +59,7 @@ fieldset legend {
 #footer-wrapper a:hover,
 #footer-wrapper a:focus {
   color: #fefefe;
+}
+.node-teaser {
+  margin-top: 10px;
 }

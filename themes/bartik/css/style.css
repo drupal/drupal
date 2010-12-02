@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.40 2010/11/29 05:01:37 webchick Exp $ */
+/* $Id: style.css,v 1.41 2010/12/02 23:54:56 dries Exp $ */
 
 /* ---------- Overall Specifications ---------- */
 
@@ -521,6 +521,10 @@ h1#page-title {
 .node-teaser .content {
   font-size: 1em;
 }
+.node-teaser h2 {
+  margin-top: 0;
+  padding-top: 0.5em;
+}
 .node-teaser h2 a {
   color: #181818;
 }
@@ -529,11 +533,16 @@ h1#page-title {
   margin-bottom: 30px;
   padding-bottom: 15px;
 }
-.node-teaser.node-sticky {
+.node-sticky {
   background: #f9f9f9;
   background: rgba(0, 0, 0, 0.024);
   border: 1px solid #d3d7d9;
   padding: 0 15px 15px;
+}
+.node-full {
+  background: none;
+  border: none;
+  padding: 0;
 }
 .node-teaser .content {
   clear: none;

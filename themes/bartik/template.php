@@ -1,5 +1,5 @@
 <?php
-// $Id: template.php,v 1.10 2010/12/01 00:18:15 webchick Exp $
+// $Id: template.php,v 1.11 2010/12/02 23:54:56 dries Exp $
 
 /**
  * Add body classes if certain regions have content.
@@ -107,6 +107,9 @@ function bartik_process_maintenance_page(&$variables) {
  */
 function bartik_preprocess_node(&$variables) {
   $variables['submitted'] = t('published by !username on !datetime', array('!username' => $variables['name'], '!datetime' => $variables['date']));
+  if ($variables['view_mode'] == 'full' && node_is_page($variables['node'])) {
+    $variables['classes_array'][] = 'node-full';
+  }
 }
 
 /**

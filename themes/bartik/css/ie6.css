@@ -1,4 +1,4 @@
-/* $Id: ie6.css,v 1.4 2010/10/05 01:48:11 dries Exp $ */
+/* $Id: ie6.css,v 1.5 2010/12/02 23:54:56 dries Exp $ */
 
 #content {
   overflow: hidden;
@@ -7,16 +7,12 @@
   width: 50%;
 }
 .tabs ul.primary,
-.region-header .block-menu li a {
+.region-header .block-menu li a,
+.comment-form .form-item {
   zoom: 1;
 }
 #block-search-form .form-item-search-block-form input {
   width: 67%;
-}
-.node-sticky {
-  background: transparent;
-  border: none;
-  padding: 0 0 15px;
 }
 .node-teaser {
   border-bottom: 1px solid #d3d7d9;
