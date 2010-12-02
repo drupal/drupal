@@ -1,8 +1,0 @@
-; $Id$
-name = "Node module presave tests"
-description = "Support module for hook_node_presave testing."
-package = Testing
-version = VERSION
-core = 7.x
-files[] = node_presave_test.module
-hidden = TRUE
