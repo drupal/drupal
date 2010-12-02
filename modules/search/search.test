@@ -1,5 +1,5 @@
 <?php
-// $Id: search.test,v 1.82 2010/11/29 06:38:51 webchick Exp $
+// $Id: search.test,v 1.83 2010/12/02 23:58:21 dries Exp $
 
 // The search index can contain different types of content. Typically the type is 'node'.
 // Here we test with _test_ and _test2_ as the type.
@@ -1787,5 +1787,70 @@ class SearchPageOverride extends DrupalWebTestCase {
     $this->drupalGet("search/dummy_path/{$keys}");
     $this->assertText('Dummy search snippet', 'Dummy search snippet is shown');
     $this->assertText('Test page text is here', 'Page override is working');
+  }
+}
+
+/**
+ * Test node search with multiple languages.
+ */
+class SearchLanguageTestCase extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Search language selection',
+      'description' => 'Tests advanced search with different languages enabled.',
+      'group' => 'Search',
+    );
+  }
+
+  /**
+   * Implementation setUp().
+   */
+  function setUp() {
+    parent::setUp('search', 'locale');
+
+    // Create and login user.
+    $test_user = $this->drupalCreateUser(array('access content', 'search content', 'use advanced search', 'administer nodes', 'administer languages', 'access administration pages'));
+    $this->drupalLogin($test_user);
+  }
+
+  function testLanguages() {
+    // Check that there are initially no languages displayed.
+    $this->drupalGet('search/node');
+    $this->assertNoText(t('Languages'), t('No languages to choose from.'));
+
+    // Add predefined language.
+    $edit = array('langcode' => 'fr');
+    $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
+    $this->assertText('fr', t('Language added successfully.'));
+
+    // Now we should have languages displayed.
+    $this->drupalGet('search/node');
+    $this->assertText(t('Languages'), t('Languages displayed to choose from.'));
+    $this->assertText(t('English'), t('English is a possible choice.'));
+    $this->assertText(t('French'), t('French is a possible choice.'));
+
+    // Ensure selecting no language does not make the query different.
+    $this->drupalPost('search/node', array(), t('Advanced search'));
+    $this->assertEqual($this->getUrl(), url('search/node/', array('absolute' => TRUE)), t('Correct page redirection, no language filtering.'));
+
+    // Pick French and ensure it is selected.
+    $edit = array('language[fr]' => TRUE);
+    $this->drupalPost('search/node', $edit, t('Advanced search'));
+    $this->assertFieldByXPath('//input[@name="keys"]', 'language:fr', t('Language filter added to query.'));
+
+    // Change the default language and disable English.
+    $path = 'admin/config/regional/language';
+    $this->drupalGet($path);
+    $this->assertFieldChecked('edit-site-default-en', t('English is the default language.'));
+    $edit = array('site_default' => 'fr');
+    $this->drupalPost(NULL, $edit, t('Save configuration'));
+    $this->assertNoFieldChecked('edit-site-default-en', t('Default language updated.'));
+    $edit = array('enabled[en]' => FALSE);
+    $this->drupalPost('admin/config/regional/language', $edit, t('Save configuration'));
+    $this->assertNoFieldChecked('edit-enabled-en', t('Language disabled.'));
+
+    // Check that there are again no languages displayed.
+    $this->drupalGet('search/node');
+    $this->assertNoText(t('Languages'), t('No languages to choose from.'));
   }
 }
