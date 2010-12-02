@@ -1,5 +1,5 @@
 <?php
-// $Id: menu_test.module,v 1.20 2010/11/27 20:25:44 dries Exp $
+// $Id: menu_test.module,v 1.21 2010/12/02 17:34:24 webchick Exp $
 
 /**
  * @file
@@ -264,8 +264,7 @@ function menu_test_menu() {
   $items['menu-test/arguments/%menu_test_argument/%'] = array(
     'title' => 'Load arguments inheritance test',
     'load arguments' => array(3),
-    'page callback' => 'menu_test_arguments',
-    'page arguments' => array(2),
+    'page callback' => 'menu_test_callback',
     'access callback' => TRUE,
   );
   $items['menu-test/arguments/%menu_test_argument/%/default'] = array(
@@ -274,44 +273,59 @@ function menu_test_menu() {
   );
   $items['menu-test/arguments/%menu_test_argument/%/task'] = array(
     'title' => 'Local task',
-    'page callback' => 'menu_test_arguments',
-    'page arguments' => array(2),
+    'page callback' => 'menu_test_callback',
     'access callback' => TRUE,
     'type' => MENU_LOCAL_TASK,
+  );
+  // For this path, load arguments should be inherited for the first loader only.
+  $items['menu-test/arguments/%menu_test_argument/%menu_test_other_argument/common-loader'] = array(
+    'title' => 'Local task',
+    'page callback' => 'menu_test_callback',
+    'access callback' => TRUE,
+    'type' => MENU_LOCAL_TASK,
+  );
+  // For these paths, no load arguments should be inherited.
+  // Not on the same position.
+  $items['menu-test/arguments/%/%menu_test_argument/different-loaders-1'] = array(
+    'title' => 'An item not sharing the same loader',
+    'page callback' => 'menu_test_callback',
+    'access callback' => TRUE,
+  );
+  // Not the same loader.
+  $items['menu-test/arguments/%menu_test_other_argument/%/different-loaders-2'] = array(
+    'title' => 'An item not sharing the same loader',
+    'page callback' => 'menu_test_callback',
+    'access callback' => TRUE,
+  );
+  // Not the same loader.
+  $items['menu-test/arguments/%/%/different-loaders-3'] = array(
+    'title' => 'An item not sharing the same loader',
+    'page callback' => 'menu_test_callback',
+    'access callback' => TRUE,
+  );
+  // Explict load arguments should not be overriden (even if empty).
+  $items['menu-test/arguments/%menu_test_argument/%/explicit-arguments'] = array(
+    'title' => 'An item defining explicit load arguments',
+    'load arguments' => array(),
+    'page callback' => 'menu_test_callback',
+    'access callback' => TRUE,
   );
 
   return $items;
 }
 
 /**
- * Menu argument loader for the 'load arguments' inheritance test.
- *
- * @param $arg1
- *   The path argument defined as %menu_test_argument.
- * @param $arg2
- *   The additional path argument that should be passed due to 'load arguments'.
- *
- * @return
- *   An array containing $arg1 and $arg2.
+ * Dummy argument loader for hook_menu() to point to.
  */
-function menu_test_argument_load($arg1, $arg2) {
-  return array('%menu_test_argument' => $arg1, '%' => $arg2);
+function menu_test_argument_load($arg1) {
+  return FALSE;
 }
 
 /**
- * Page callback for the 'load arguments' inheritance test.
- *
- * @param $joined_args
- *   An associative array containing the values for both path arguments, as
- *   intercepted and processed by menu_test_argument_load():
- *   - %menu_test_argument: The primary path argument string.
- *   - %: The additional argument string.
- *
- * @return
- *   A dump of the loaded %menu_test_argument argument.
+ * Dummy argument loader for hook_menu() to point to.
  */
-function menu_test_arguments($joined_args) {
-  return print_r($joined_args, TRUE);
+function menu_test_other_argument_load($arg1) {
+  return FALSE;
 }
 
 /**

@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.425 2010/11/27 20:25:44 dries Exp $
+// $Id: menu.inc,v 1.426 2010/12/02 17:34:24 webchick Exp $
 
 /**
  * @file
@@ -3518,9 +3518,20 @@ function _menu_router_build($callbacks) {
             $item['theme arguments'] = $parent['theme arguments'];
           }
         }
-        // Same for load arguments, if the parent path defines any.
-        if (!isset($item['load arguments']) && !empty($parent['load arguments'])) {
-          $item['_load_functions'] = $parent['_load_functions'];
+        // Same for load arguments: if a loader doesn't have any explict
+        // arguments, try to find arguments in the parent.
+        if (!isset($item['load arguments'])) {
+          foreach ($item['_load_functions'] as $k => $function) {
+            // This loader doesn't have any explict arguments...
+            if (!is_array($function)) {
+              // ... check the parent for a loader at the same position
+              // using the same function name and defining arguments...
+              if (isset($parent['_load_functions'][$k]) && is_array($parent['_load_functions'][$k]) && key($parent['_load_functions'][$k]) == $function) {
+                // ... and inherit the arguments on the child.
+                $item['_load_functions'][$k] = array($function => reset($parent['_load_functions'][$k]));
+              }
+            }
+          }
         }
       }
     }
