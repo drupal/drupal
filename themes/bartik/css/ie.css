@@ -60,3 +60,6 @@ fieldset legend {
 #footer-wrapper a:focus {
   color: #fefefe;
 }
+.node-teaser {
+  margin-top: 10px;
+}

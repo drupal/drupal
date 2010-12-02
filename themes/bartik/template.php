@@ -107,6 +107,9 @@ function bartik_process_maintenance_page(&$variables) {
  */
 function bartik_preprocess_node(&$variables) {
   $variables['submitted'] = t('published by !username on !datetime', array('!username' => $variables['name'], '!datetime' => $variables['date']));
+  if ($variables['view_mode'] == 'full' && node_is_page($variables['node'])) {
+    $variables['classes_array'][] = 'node-full';
+  }
 }
 
 /**
