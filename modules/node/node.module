@@ -2692,7 +2692,9 @@ function node_form_search_form_alter(&$form, $form_state) {
     // Languages:
     $language_options = array();
     foreach (language_list('language') as $key => $entity) {
-      $language_options[$key] = $entity->name;
+      if ($entity->enabled) {
+        $language_options[$key] = $entity->name;
+      }
     }
     if (count($language_options) > 1) {
       $form['advanced']['language'] = array(
@@ -2728,8 +2730,11 @@ function node_search_validate($form, &$form_state) {
   if (isset($form_state['values']['term']) && is_array($form_state['values']['term']) && count($form_state['values']['term'])) {
     $keys = search_expression_insert($keys, 'term', implode(',', $form_state['values']['term']));
   }
-  if (isset($form_state['values']['language']) && is_array($form_state['values']['language']) && count($form_state['values']['language'])) {
-    $keys = search_expression_insert($keys, 'language', implode(',', array_filter($form_state['values']['language'])));
+  if (isset($form_state['values']['language']) && is_array($form_state['values']['language'])) {
+    $languages = array_filter($form_state['values']['language']);
+    if (count($languages)) {
+      $keys = search_expression_insert($keys, 'language', implode(',', $languages));
+    }
   }
   if ($form_state['values']['or'] != '') {
     if (preg_match_all('/ ("[^"]+"|[^" ]+)/i', ' ' . $form_state['values']['or'], $matches)) {
