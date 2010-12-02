@@ -392,19 +392,18 @@ function hook_field_prepare_view($entity_type, $entities, $field, $instances, $l
  * @param $items
  *   $entity->{$field['field_name']}[$langcode], or an empty array if unset.
  * @param $errors
- *   The array of errors, keyed by field name and by value delta, that have
- *   already been reported for the entity. The function should add its errors
- *   to this array. Each error is an associative array, with the following
+ *   The array of errors (keyed by field name, language code, and delta) that
+ *   have already been reported for the entity. The function should add its
+ *   errors to this array. Each error is an associative array with the following
  *   keys and values:
- *   - error: An error code (should be a string, prefixed with the module
- *     name).
+ *   - error: An error code (should be a string prefixed with the module name).
  *   - message: The human readable message to be displayed.
  */
 function hook_field_validate($entity_type, $entity, $field, $instance, $langcode, $items, &$errors) {
   foreach ($items as $delta => $item) {
     if (!empty($item['value'])) {
       if (!empty($field['settings']['max_length']) && drupal_strlen($item['value']) > $field['settings']['max_length']) {
-        $errors[$field['field_name']][$delta][] = array(
+        $errors[$field['field_name']][$langcode][$delta][] = array(
           'error' => 'text_max_length',
           'message' => t('%name: the value may not be longer than %max characters.', array('%name' => $instance['label'], '%max' => $field['settings']['max_length'])),
         );
