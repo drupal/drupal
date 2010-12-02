@@ -3526,9 +3526,9 @@ function _menu_router_build($callbacks) {
             if (!is_array($function)) {
               // ... check the parent for a loader at the same position
               // using the same function name and defining arguments...
-              if (isset($parent['_load_functions'][$k]) && is_array($parent['_load_functions'][$k]) && key($parent['_load_functions'][$k]) == $function) {
+              if (isset($parent['_load_functions'][$k]) && is_array($parent['_load_functions'][$k]) && key($parent['_load_functions'][$k]) === $function) {
                 // ... and inherit the arguments on the child.
-                $item['_load_functions'][$k] = array($function => reset($parent['_load_functions'][$k]));
+                $item['_load_functions'][$k] = $parent['_load_functions'][$k];
               }
             }
           }
