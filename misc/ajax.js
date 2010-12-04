@@ -247,7 +247,15 @@ Drupal.ajax.prototype.eventResponse = function (element, event) {
     alert("An error occurred while attempting to process " + ajax.options.url + ": " + e.message);
   }
 
-  return false;
+  // For radio/checkbox, allow the default event. On IE, this means letting
+  // it actually check the box.
+  if (typeof element.type != 'undefined' && (element.type == 'checkbox' || element.type == 'radio')) {
+    return true;
+  }
+  else {
+    return false;
+  }
+
 };
 
 /**
