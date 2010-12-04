@@ -650,11 +650,11 @@ function comment_node_view($node, $view_mode) {
         }
       }
     }
-    elseif ($view_mode != 'search_index') {
+    elseif ($view_mode != 'search_index' && $view_mode != 'search_result') {
       // Node in other view modes: add a "post comment" link if the user is
       // allowed to post comments and if this node is allowing new comments.
       // But we don't want this link if we're building the node for search
-      // indexing.
+      // indexing or constructing a search result excerpt.
       if ($node->comment == COMMENT_NODE_OPEN) {
         if (user_access('post comments')) {
           $links['comment-add'] = array(

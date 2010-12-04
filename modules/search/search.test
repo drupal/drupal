@@ -871,6 +871,42 @@ class SearchCommentTestCase extends DrupalWebTestCase {
     $this->{$method}($this->comment_subject, "Comment subject $verb in search results: " . $message);
   }
 
+  /**
+   * Verify that 'add new comment' does not appear in search results or index.
+   */
+  function testAddNewComment() {
+    // Create a node with a short body.
+    $settings = array(
+      'type' => 'article',
+      'title' => 'short title',
+      'body' => array(LANGUAGE_NONE => array(array('value' => 'short body text'))),
+    );
+
+    $user = $this->drupalCreateUser(array('search content', 'create article content', 'access content'));
+    $this->drupalLogin($user);
+
+    $node = $this->drupalCreateNode($settings);
+    // Verify that if you view the node on its own page, 'add new comment'
+    // is there.
+    $this->drupalGet('node/' . $node->nid);
+    $this->assertText(t('Add new comment'), t('Add new comment appears on node page'));
+
+    // Run cron to index this page.
+    $this->drupalLogout();
+    $this->cronRun();
+
+    // Search for 'comment'. Should be no results.
+    $this->drupalLogin($user);
+    $this->drupalPost('search/node', array('keys' => 'comment'), t('Search'));
+    $this->assertText(t('Your search yielded no results'), t('No results searching for the word comment'));
+
+    // Search for the node title. Should be found, and 'Add new comment' should
+    // not be part of the search snippet.
+    $this->drupalPost('search/node', array('keys' => 'short'), t('Search'));
+    $this->assertText($node->title, t('Search for keyword worked'));
+    $this->assertNoText(t('Add new comment'), t('Add new comment does not appear on search results page'));
+  }
+
 }
 
 /**
