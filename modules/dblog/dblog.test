@@ -467,6 +467,10 @@ class DBLogTestCase extends DrupalWebTestCase {
       $count = $this->getTypeCount($types);
       $this->assertEqual(array_sum($count), $type['count'], 'Count matched');
     }
+    
+    // Clear all logs and make sure the confirmation message is found.
+    $this->drupalPost('admin/reports/dblog', array(), t('Clear log messages'));
+    $this->assertText(t('Database log cleared.'), t('Confirmation message found'));
   }
 
   /**
