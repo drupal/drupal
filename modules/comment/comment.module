@@ -2508,13 +2508,13 @@ function comment_action_info() {
  * @ingroup actions
  */
 function comment_publish_action($comment, $context = array()) {
-  if (isset($comment->comment)) {
+  if (isset($comment->subject)) {
     $subject = $comment->subject;
     $comment->status = COMMENT_PUBLISHED;
   }
   else {
     $cid = $context['cid'];
-    $subject = db_query('SELECT subject FROM {comment} WHERE cid = :cid', array(':cid', $cid))->fetchField();
+    $subject = db_query('SELECT subject FROM {comment} WHERE cid = :cid', array(':cid' => $cid))->fetchField();
     db_update('comment')
       ->fields(array('status' => COMMENT_PUBLISHED))
       ->condition('cid', $cid)
@@ -2535,13 +2535,13 @@ function comment_publish_action($comment, $context = array()) {
  * @ingroup actions
  */
 function comment_unpublish_action($comment, $context = array()) {
-  if (isset($comment->comment)) {
+  if (isset($comment->subject)) {
     $subject = $comment->subject;
     $comment->status = COMMENT_NOT_PUBLISHED;
   }
   else {
     $cid = $context['cid'];
-    $subject = db_query('SELECT subject FROM {comment} WHERE cid = :cid', array(':cid', $cid))->fetchField();
+    $subject = db_query('SELECT subject FROM {comment} WHERE cid = :cid', array(':cid' => $cid))->fetchField();
     db_update('comment')
       ->fields(array('status' => COMMENT_NOT_PUBLISHED))
       ->condition('cid', $cid)
