@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.admin.inc,v 1.41 2010/11/16 18:50:12 dries Exp $
+// $Id: dblog.admin.inc,v 1.42 2010/12/04 01:52:15 webchick Exp $
 
 /**
  * @file
@@ -376,6 +376,7 @@ function dblog_clear_log_form($form) {
  * Submit callback: clear database with log messages.
  */
 function dblog_clear_log_submit() {
+  $_SESSION['dblog_overview_filter'] = array();
   db_delete('watchdog')->execute();
   drupal_set_message(t('Database log cleared.'));
 }

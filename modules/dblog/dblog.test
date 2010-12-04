@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.test,v 1.39 2010/09/01 03:03:05 dries Exp $
+// $Id: dblog.test,v 1.40 2010/12/04 01:52:15 webchick Exp $
 
 class DBLogTestCase extends DrupalWebTestCase {
   protected $big_user;
@@ -467,6 +467,10 @@ class DBLogTestCase extends DrupalWebTestCase {
       $count = $this->getTypeCount($types);
       $this->assertEqual(array_sum($count), $type['count'], 'Count matched');
     }
+    
+    // Clear all logs and make sure the confirmation message is found.
+    $this->drupalPost('admin/reports/dblog', array(), t('Clear log messages'));
+    $this->assertText(t('Database log cleared.'), t('Confirmation message found'));
   }
 
   /**
