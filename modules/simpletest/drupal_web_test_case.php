@@ -1748,7 +1748,7 @@ class DrupalWebTestCase extends DrupalTestCase {
         $post = array();
         $upload = array();
         $submit_matches = $this->handleForm($post, $edit, $upload, $ajax ? NULL : $submit, $form);
-        $action = isset($form['action']) ? $this->getAbsoluteUrl($form['action']) : $this->getUrl();
+        $action = isset($form['action']) ? $this->getAbsoluteUrl((string) $form['action']) : $this->getUrl();
         if ($ajax) {
           $action = $this->getAbsoluteUrl(!empty($submit['path']) ? $submit['path'] : 'system/ajax');
           // AJAX callbacks verify the triggering element if necessary, so while
