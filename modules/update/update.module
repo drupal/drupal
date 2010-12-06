@@ -641,6 +641,81 @@ function theme_update_last_check($variables) {
 }
 
 /**
+ * Implements hook_verify_update_archive().
+ *
+ * First, we ensure that the archive isn't a copy of Drupal core, which the
+ * Update manager does not yet support. @see http://drupal.org/node/606592
+ *
+ * Then, we make sure that every module included in the archive has an info
+ * file.
+ *
+ * Finally, we check that all the .info files claim the code is compatible
+ * with the current version of Drupal core.
+ *
+ * @see drupal_system_listing()
+ * @see _system_rebuild_module_data()
+ */
+function update_verify_update_archive($project, $archive_file, $directory) {
+  $errors = array();
+
+  // Make sure this isn't a tarball of Drupal core.
+  if (
+    file_exists("$directory/$project/index.php")
+    && file_exists("$directory/$project/update.php")
+    && file_exists("$directory/$project/includes/bootstrap.inc")
+    && file_exists("$directory/$project/modules/node/node.module")
+    && file_exists("$directory/$project/modules/system/system.module")
+  ) {
+    return array(
+      'no-core' => t('Automatic updating of Drupal core is not supported. See the <a href="@upgrade-guide">upgrade guide</a> for information on how to update Drupal core manually.', array('@upgrade-guide' => 'http://drupal.org/upgrade')),
+    );
+  }
+
+  // Look for any .module file that doesn't have a corresponding .info file.
+  $missing_info = array();
+  $files = file_scan_directory("$directory/$project", '/^' . DRUPAL_PHP_FUNCTION_PATTERN . '\.module$/', array('key' => 'name', 'min_depth' => 0));
+  foreach ($files as $key => $file) {
+    // If it has no info file, set an error.
+    $info_file = dirname($file->uri) . '/' . $file->name . '.info';
+    if (!file_exists($info_file)) {
+      $missing_info[] = $file->filename;
+    }
+  }
+  if (!empty($missing_info)) {
+    $errors[] = format_plural(
+      count($missing_info),
+      '%archive_file contains %names which is missing an info file.',
+      '%archive_file contains the following modules which are missing info files: %names',
+      array('%archive_file' => basename($archive_file), '%names' => implode(', ', $missing_info))
+    );
+  }
+
+  // Parse all the .info files and make sure they're compatible with this
+  // version of Drupal core.
+  $incompatible = array();
+  $files = file_scan_directory("$directory/$project", '/^' . DRUPAL_PHP_FUNCTION_PATTERN . '\.info/', array('key' => 'name', 'min_depth' => 0));
+  foreach ($files as $key => $file) {
+    // Get the .info file for the module or theme this file belongs to.
+    $info = drupal_parse_info_file($file->uri);
+
+    // If the module or theme is incompatible with Drupal core, set an error.
+    if (empty($info['core']) || $info['core'] != DRUPAL_CORE_COMPATIBILITY) {
+      $incompatible[] = $info['name'];
+    }
+  }
+  if (!empty($incompatible)) {
+    $errors[] = format_plural(
+      count($incompatible),
+      '%archive_file contains a version of %names that is not compatible with Drupal !version.',
+      '%archive_file contains versions of modules or themes that are not compatible with Drupal !version: %names',
+      array('!version' => DRUPAL_CORE_COMPATIBILITY, '%archive_file' => basename($archive_file), '%names' => implode(', ', $incompatible))
+    );
+  }
+
+  return $errors;
+}
+
+/**
  * @defgroup update_status_cache Private update status cache system
  * @{
  *
