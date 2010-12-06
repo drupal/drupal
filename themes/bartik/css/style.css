@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.41 2010/12/02 23:54:56 dries Exp $ */
+/* $Id: style.css,v 1.42 2010/12/06 16:18:59 webchick Exp $ */
 
 /* ---------- Overall Specifications ---------- */
 
@@ -1191,6 +1191,27 @@ fieldset .description {
   border-bottom-left-radius: 4px;
   border-bottom-right-radius: 4px;
 }
+
+/* Disabled form elements */
+input.form-button-disabled,
+input.form-button-disabled:hover,
+input.form-button-disabled:focus,
+input.form-button-disabled:active,
+.form-disabled input,
+.form-disabled select,
+.form-disabled textarea {
+  background: #ededed;
+  border-color: #bbb;
+  color: #717171;
+}
+.form-disabled .grippie {
+  background-color: #ededed;
+  border-color: #bbb;
+}
+.form-disabled label {
+  color: #717171;
+}
+
 /* Animated throbber */
 html.js input.form-autocomplete {
   background-position: 100% 4px; /* LTR */
