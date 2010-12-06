@@ -617,6 +617,25 @@ class SearchBlockTestCase extends DrupalWebTestCase {
     $this->drupalPost('admin/structure/block/manage/search/form/configure', $edit, t('Save block'));
     $this->drupalPost('node', $terms, t('Search'));
     $this->assertText('Your search yielded no results');
+
+    // Confirm that the user is redirected to the search page.
+    $this->assertEqual(
+      $this->getUrl(),
+      url('search/node/' . $terms['search_block_form'], array('absolute' => TRUE)),
+      t('Redirected to correct url.')
+    );
+
+    // Test an empty search via the block form, from the front page.
+    $terms = array('search_block_form' => '');
+    $this->drupalPost('node', $terms, t('Search'));
+    $this->assertText('Please enter some keywords');
+
+    // Confirm that the user is redirected to the search page, when form is submitted empty.
+    $this->assertEqual(
+      $this->getUrl(),
+      url('search/node/', array('absolute' => TRUE)),
+      t('Redirected to correct url.')
+    );
   }
 }
 
