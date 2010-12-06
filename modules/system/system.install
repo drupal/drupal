@@ -2965,6 +2965,15 @@ function system_update_7068() {
 }
 
 /**
+ * Remove the obsolete 'site_offline' variable.
+ *
+ * @see update_fix_d7_requirements()
+ */
+function system_update_7069() {
+  variable_del('site_offline');
+}
+
+/**
  * @} End of "defgroup updates-6.x-to-7.x"
  * The next series of updates should start at 8000.
  */
