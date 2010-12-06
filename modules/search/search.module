@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.369 2010/11/23 06:00:27 webchick Exp $
+// $Id: search.module,v 1.370 2010/12/06 07:00:30 webchick Exp $
 
 /**
  * @file
@@ -1034,6 +1034,16 @@ function search_box_form_submit($form, &$form_state) {
   // (see http://drupal.org/node/292565).
   if (isset($_GET['destination'])) {
     unset($_GET['destination']);
+  }
+
+  // Check to see if the form was submitted empty.
+  // If it is empty, display an error message.
+  // (This method is used instead of setting #required to TRUE for this field
+  // because that results in a confusing error message.  It would say a plain
+  // "field is required" because the search keywords field has no title.
+  // The error message would also complain about a missing #title field.)
+  if ($form_state['values']['search_block_form'] == '') {
+    form_set_error('keys', t('Please enter some keywords.'));
   }
 
   $form_id = $form['form_id']['#value'];
