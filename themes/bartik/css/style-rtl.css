@@ -1,4 +1,4 @@
-/* $Id: style-rtl.css,v 1.15 2010/11/29 05:01:37 webchick Exp $ */
+/* $Id: style-rtl.css,v 1.16 2010/12/06 19:34:33 webchick Exp $ */
 
 /* ------------------ Reset Styles ------------------ */
 
@@ -88,12 +88,13 @@ ul.tips {
   margin-left: 5px;
   margin-right: 0;
 }
-.field-type-taxonomy-term-reference .field-label,
-.field-type-taxonomy-term-reference .field-items,
-.field-type-taxonomy-term-reference .field-item {
-  float: right;
-  padding-left: 10px;
+.field-type-taxonomy-term-reference .field-label {
+  padding-left: 5px;
   padding-right: 0;
+}
+.field-type-taxonomy-term-reference ul.links li {
+  padding: 0 0 0 1em;
+  float: right;
 }
 .link-wrapper {
   margin-right: 236px;
