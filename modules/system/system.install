@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.528 2010/11/30 01:05:24 dries Exp $
+// $Id: system.install,v 1.529 2010/12/06 06:57:40 webchick Exp $
 
 /**
  * @file
@@ -2962,6 +2962,15 @@ function system_update_7068() {
     'default' => '',
   );
   db_change_field('url_alias', 'language', 'language', $spec);
+}
+
+/**
+ * Remove the obsolete 'site_offline' variable.
+ *
+ * @see update_fix_d7_requirements()
+ */
+function system_update_7069() {
+  variable_del('site_offline');
 }
 
 /**

@@ -1,5 +1,5 @@
 <?php
-// $Id: update.inc,v 1.82 2010/11/22 07:02:58 webchick Exp $
+// $Id: update.inc,v 1.83 2010/12/06 06:57:40 webchick Exp $
 
 /**
  * @file
@@ -696,11 +696,18 @@ function update_fix_d7_requirements() {
       db_add_field('locales_source', 'context', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => '', 'description' => 'The context this string applies to.'));
     }
 
-    // Rename 'site_offline_message' variable to 'maintenance_mode_message'.
+    // Rename 'site_offline_message' variable to 'maintenance_mode_message'
+    // and 'site_offline' variable to 'maintenance_mode'.
     // Old variable is removed in update for system.module, see
     // system_update_7036().
     if ($message = variable_get('site_offline_message', NULL)) {
       variable_set('maintenance_mode_message', $message);
+    }
+    // Old variable is removed in update for system.module, see
+    // system_update_7069().
+    $site_offline = variable_get('site_offline', -1);
+    if ($site_offline != -1) {
+      variable_set('maintenance_mode', $site_offline);
     }
 
     // Add ssid column and index.
