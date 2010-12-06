@@ -1,5 +1,5 @@
 <?php
-// $Id: options.test,v 1.21 2010/12/01 07:11:38 webchick Exp $
+// $Id: options.test,v 1.22 2010/12/06 20:41:33 webchick Exp $
 
 class OptionsWidgetsTestCase extends FieldTestCase {
   public static function getInfo() {
@@ -478,7 +478,7 @@ class OptionsWidgetsTestCase extends FieldTestCase {
     $this->drupalGet($fieldEditUrl);
 
     $this->assertText(
-      'Use field label instead the "On value" as label ',
+      'Use field label instead of the "On value" as label ',
       t('Display setting checkbox available.')
     );
 
@@ -497,7 +497,7 @@ class OptionsWidgetsTestCase extends FieldTestCase {
     // is stored and has the expected effect
     $this->drupalGet($fieldEditUrl);
     $this->assertText(
-      'Use field label instead the "On value" as label ',
+      'Use field label instead of the "On value" as label ',
       t('Display setting checkbox is available')
     );
     $this->assertFieldChecked(
