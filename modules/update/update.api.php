@@ -1,5 +1,5 @@
 <?php
-// $Id: update.api.php,v 1.5 2010/04/30 16:27:02 webchick Exp $
+// $Id: update.api.php,v 1.6 2010/12/06 06:50:08 webchick Exp $
 
 /**
  * @file
@@ -115,16 +115,18 @@ function hook_update_status_alter(&$projects) {
  *   The directory that the archive was extracted into.
  *
  * @return
- *   If there is a problem, return any non-null value. If there is no problem,
- *   don't return anything (null).
+ *   If there are any problems, return an array of error messages. If there are
+ *   no problems, return an empty array.
  *
  * @see update_manager_archive_verify()
  */
 function hook_verify_update_archive($project, $archive_file, $directory) {
+  $errors = array();
   if (!file_exists($directory)) {
-    return TRUE;
+    $errors[] = t('The %directory does not exist.', array('%directory' => $directory));
   }
   // Add other checks on the archive integrity here.
+  return $errors;
 }
 
 /**
