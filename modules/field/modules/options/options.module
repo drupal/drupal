@@ -147,7 +147,7 @@ function options_field_widget_settings_form($field, $instance) {
   if ($instance['widget']['type'] == 'options_onoff') {
     $form['display_label'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Use field label instead the "On value" as label'),
+      '#title' => t('Use field label instead of the "On value" as label'),
       '#default_value' => $instance['widget']['settings']['display_label'],
       '#weight' => -1,
     );
