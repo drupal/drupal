@@ -71,7 +71,7 @@ INSTALLATION
    different language, we have good news. You can install and use Drupal in
    other languages from the start. Check whether a released package of the
    language desired is available for this Drupal version at
-   http://drupal.org/project/translations and download the package. Extract
+   http://localize.drupal.org and download the package. Extract
    the contents to the same directory where you extracted Drupal into.
 
 2. CREATE THE CONFIGURATION FILE AND GRANT WRITE PERMISSIONS
