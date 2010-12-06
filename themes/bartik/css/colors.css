@@ -12,6 +12,9 @@ body.overlay {
   background-color: #ffffff;
   color: #3b3b3b;
 }
+.comment .comment-arrow {
+  border-color: #ffffff;
+}
 #main-menu-links li a.active,
 #main-menu-links li.active-trail a {
   background: #ffffff;

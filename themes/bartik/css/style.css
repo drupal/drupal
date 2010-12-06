@@ -595,6 +595,14 @@ ul.links {
   color: #68696b;
   font-size: 0.821em;
 }
+.node-unpublished {
+  margin: -20px -15px 0;
+  padding: 20px 15px 0;
+}
+.node-unpublished .comment-text .comment-arrow {
+  border-left: 1px solid #fff4f4;
+  border-right: 1px solid #fff4f4;
+}
 
 /* ----------------- Comments ----------------- */
 
@@ -637,12 +645,14 @@ ul.links {
   line-height: 1.6;
 }
 .comment .comment-arrow {
-  background: url(../images/comment-arrow.png); /* LTR */
+  background: url(../images/comment-arrow.gif) no-repeat 0 center transparent; /* LTR */
+  border-left: 1px solid;
+  border-right: 1px solid;
   height: 40px;
-  width: 20px;
-  margin-left: -45px; /* LTR */
+  margin-left: -47px; /* LTR */
   margin-top: 10px;
   position: absolute;
+  width: 20px;
 }
 .comment .comment-text {
   padding: 10px 25px;
@@ -659,6 +669,14 @@ ul.links {
 }
 .comment ul.links li {
   padding: 0 0.5em 0 0; /* LTR */
+}
+.comment-unpublished {
+  margin-right: 5px; /* LTR */
+  padding: 5px 2px 5px 5px; /* LTR */
+}
+.comment-unpublished .comment-text .comment-arrow {
+  border-left: 1px solid #fff4f4;
+  border-right: 1px solid #fff4f4;
 }
 
 /* ------------------ Sidebar ----------------- */
