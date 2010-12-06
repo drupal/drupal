@@ -558,25 +558,31 @@ h1#page-title {
   height: 20px;
   margin: 1px 5px 0 0; /* LTR */
 }
-.field-type-taxonomy-term-reference .field-label,
-.field-type-taxonomy-term-reference .field-items,
-.field-type-taxonomy-term-reference .field-item {
-  display: inline;
-  float: left; /* LTR */
-  padding-right: 10px; /* LTR */
+.field-type-taxonomy-term-reference {
+  margin: 0 0 1.2em;
+}
+.field-type-taxonomy-term-reference .field-label {
   font-weight: normal;
+  margin: 0;
+  padding-right: 5px; /* LTR */
 }
-.field-type-taxonomy-term-reference div.field-label {
-  font-size: 0.857em;
-  color: #68696b;
+.field-type-taxonomy-term-reference .field-label,
+.field-type-taxonomy-term-reference ul.links {
+  font-size: 0.8em;
 }
-.field-type-taxonomy-term-reference .field-items,
-.field-type-taxonomy-term-reference .field-item {
-  font-size: 0.929em;
+.node-teaser .field-type-taxonomy-term-reference .field-label,
+.node-teaser .field-type-taxonomy-term-reference ul.links {
+  font-size: 0.821em;
 }
-.field-type-taxonomy-term-reference a:hover,
-.field-type-taxonomy-term-reference a:focus {
-  text-decoration: underline;
+.field-type-taxonomy-term-reference ul.links {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+.field-type-taxonomy-term-reference ul.links li {
+  float: left; /* LTR */
+  padding: 0 1em 0 0; /* LTR */
+  white-space: nowrap;
 }
 .link-wrapper {
   text-align: right;
