@@ -1,4 +1,4 @@
-/* $Id: colors.css,v 1.8 2010/11/26 11:00:37 webchick Exp $ */
+/* $Id: colors.css,v 1.9 2010/12/06 19:55:44 webchick Exp $ */
 
 /* ---------- Color Module Styles ----------- */
 
@@ -11,6 +11,9 @@ body {
 body.overlay {
   background-color: #ffffff;
   color: #3b3b3b;
+}
+.comment .comment-arrow {
+  border-color: #ffffff;
 }
 #main-menu-links li a.active,
 #main-menu-links li.active-trail a {

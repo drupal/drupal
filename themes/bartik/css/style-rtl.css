@@ -1,4 +1,4 @@
-/* $Id: style-rtl.css,v 1.16 2010/12/06 19:34:33 webchick Exp $ */
+/* $Id: style-rtl.css,v 1.17 2010/12/06 19:55:44 webchick Exp $ */
 
 /* ------------------ Reset Styles ------------------ */
 
@@ -111,9 +111,9 @@ ul.tips {
   padding: 0 0 0 30px;
 }
 .comment .comment-arrow {
-  background: url(../images/comment-arrow-rtl.png);
+  background-image: url(../images/comment-arrow-rtl.gif);
   margin-left: 0;
-  margin-right: -45px;
+  margin-right: -47px;
 }
 .comment .indented {
   margin-right: 40px;
@@ -121,6 +121,11 @@ ul.tips {
 }
 .comment ul.links li {
   padding: 0 0 0.5em;
+}
+.comment-unpublished {
+  margin-left: 5px;
+  margin-right: 0;
+  padding: 5px 5px 5px 2px;
 }
 
 /* -------------- Password Meter  ------------- */
