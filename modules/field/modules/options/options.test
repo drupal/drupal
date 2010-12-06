@@ -478,7 +478,7 @@ class OptionsWidgetsTestCase extends FieldTestCase {
     $this->drupalGet($fieldEditUrl);
 
     $this->assertText(
-      'Use field label instead the "On value" as label ',
+      'Use field label instead of the "On value" as label ',
       t('Display setting checkbox available.')
     );
 
@@ -497,7 +497,7 @@ class OptionsWidgetsTestCase extends FieldTestCase {
     // is stored and has the expected effect
     $this->drupalGet($fieldEditUrl);
     $this->assertText(
-      'Use field label instead the "On value" as label ',
+      'Use field label instead of the "On value" as label ',
       t('Display setting checkbox is available')
     );
     $this->assertFieldChecked(
