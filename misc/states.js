@@ -1,4 +1,4 @@
-// $Id: states.js,v 1.4 2010/04/30 19:30:44 webchick Exp $
+// $Id: states.js,v 1.5 2010/12/06 16:10:29 webchick Exp $
 (function ($) {
 
 /**
@@ -354,7 +354,7 @@ states.State.prototype = {
       $(e.target)
         .attr('disabled', e.value)
         .filter('.form-element')
-          .closest('.form-item, .form-wrapper')[e.value ? 'addClass' : 'removeClass']('form-disabled');
+          .closest('.form-item, .form-submit, .form-wrapper')[e.value ? 'addClass' : 'removeClass']('form-disabled');
 
       // Note: WebKit nightlies don't reflect that change correctly.
       // See https://bugs.webkit.org/show_bug.cgi?id=23789
@@ -363,13 +363,13 @@ states.State.prototype = {
 
   $(document).bind('state:required', function(e) {
     if (e.trigger) {
-      $(e.target).closest('.form-item, .form-wrapper')[e.value ? 'addClass' : 'removeClass']('form-required');
+      $(e.target).closest('.form-item, .form-submit, .form-wrapper')[e.value ? 'addClass' : 'removeClass']('form-required');
     }
   });
 
   $(document).bind('state:visible', function(e) {
     if (e.trigger) {
-      $(e.target).closest('.form-item, .form-wrapper')[e.value ? 'show' : 'hide']();
+      $(e.target).closest('.form-item, .form-submit, .form-wrapper')[e.value ? 'show' : 'hide']();
     }
   });
 
