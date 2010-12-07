@@ -1,4 +1,4 @@
-// $Id: preview.js,v 1.3 2010/11/19 20:37:17 dries Exp $
+// $Id: preview.js,v 1.4 2010/12/07 04:45:24 webchick Exp $
 
 (function ($) {
   Drupal.color = {
@@ -22,7 +22,7 @@
       $('#preview #preview-sidebar #preview-block', form).css('border-color', $('#palette input[name="palette[sidebarborders]"]', form).val());
 
       // Footer wrapper background.
-      $('#preview #footer-wrapper', form).css('background-color', $('#palette input[name="palette[footer]"]', form).val());
+      $('#preview #preview-footer-wrapper', form).css('background-color', $('#palette input[name="palette[footer]"]', form).val());
 
       // CSS3 Gradients.
       var gradient_start = $('#palette input[name="palette[top]"]', form).val();
