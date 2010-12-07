@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.install,v 1.54 2010/11/21 09:21:38 webchick Exp $
+// $Id: taxonomy.install,v 1.55 2010/12/07 05:20:08 webchick Exp $
 
 /**
  * @file
@@ -196,7 +196,6 @@ function taxonomy_schema() {
       'created' => array(
         'description' => 'The Unix timestamp when the node was created.',
         'type' => 'int',
-        'unsigned' => TRUE,
         'not null' => TRUE,
         'default'=> 0,
       ),
@@ -548,7 +547,7 @@ function taxonomy_update_7005(&$sandbox) {
   //   in this array but a term_node relationship exists mapping a
   //   term in voc id to node of that type, the relationship is
   //   assigned to the taxonomymyextra field which allows terms of all
-  //   vocabularies. 
+  //   vocabularies.
   // - cursor[values], cursor[deltas]: The contents of $values and
   //   $deltas at the end of the previous call to this function. These
   //   need to be preserved across calls because a single batch of
@@ -803,6 +802,19 @@ function taxonomy_update_7009() {
     'length' => 255,
     'not null' => FALSE,
     'description' => 'The {filter_format}.format of the description.',
+  ));
+}
+
+/**
+ * Change {taxonomy_index}.created to support signed int.
+*/
+function taxonomy_update_7010() {
+  db_change_field('taxonomy_index', 'created', 'created', array(
+    'description' => 'The Unix timestamp when the node was created.',
+    'type' => 'int',
+    'unsigned' => FALSE,
+    'not null' => TRUE,
+    'default'=> 0,
   ));
 }
 
