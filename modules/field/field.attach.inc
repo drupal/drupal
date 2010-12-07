@@ -1166,6 +1166,7 @@ function field_attach_view($entity_type, $entity, $view_mode, $langcode = NULL) 
     'entity_type' => $entity_type,
     'entity' => $entity,
     'view_mode' => $view_mode,
+    'display' => $view_mode,
     'language' => $langcode,
   );
   drupal_alter('field_attach_view', $output, $context);

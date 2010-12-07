@@ -1743,12 +1743,14 @@ class FieldDisplayAPITestCase extends FieldTestCase {
       'type' => 'field_test_multiple',
       'settings' => array(
         'test_formatter_setting_multiple' => $this->randomName(),
+        'alter' => TRUE,
       ),
     );
     $output = field_view_field('test_entity', $this->entity, $this->field_name, $display);
     $this->drupalSetContent(drupal_render($output));
     $setting = $display['settings']['test_formatter_setting_multiple'];
     $this->assertNoText($this->label, t('Label was not displayed.'));
+    $this->assertText('field_test_field_attach_view_alter', t('Alter fired, display passed.'));
     $array = array();
     foreach ($this->values as $delta => $value) {
       $array[] = $delta . ':' . $value['value'];
@@ -1768,6 +1770,7 @@ class FieldDisplayAPITestCase extends FieldTestCase {
     $this->drupalSetContent($view);
     $setting = $display['settings']['test_formatter_setting_additional'];
     $this->assertNoText($this->label, t('Label was not displayed.'));
+    $this->assertNoText('field_test_field_attach_view_alter', t('Alter not fired.'));
     foreach ($this->values as $delta => $value) {
       $this->assertText($setting . '|' . $value['value'] . '|' . ($value['value'] + 1), t('Value @delta was displayed with expected setting.', array('@delta' => $delta)));
     }

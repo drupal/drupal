@@ -235,3 +235,12 @@ function field_test_dummy_field_storage_query(EntityFieldQuery $query) {
 function field_test_entity_label_callback($entity) {
   return 'label callback ' . $entity->ftlabel;
 }
+
+/**
+ * Implements hook_field_attach_view_alter().
+ */
+function field_test_field_attach_view_alter(&$output, $context) {
+  if (!empty($context['display']['settings']['alter'])) {
+    $output['test_field'][] = array('#markup' => 'field_test_field_attach_view_alter');
+  }
+}
