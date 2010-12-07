@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.44 2010/12/06 19:55:44 webchick Exp $ */
+/* $Id: style.css,v 1.45 2010/12/07 05:06:34 webchick Exp $ */
 
 /* ---------- Overall Specifications ---------- */
 
@@ -499,6 +499,21 @@ h1#site-name {
 #featured p {
   margin: 0;
   padding: 0;
+}
+
+/* --------------- Highlighted ---------------- */
+
+#highlighted {
+  border-bottom: 1px solid #d3d7d9;
+  font-size: 120%;
+}
+
+/* ------------------- Help ------------------- */
+
+.region-help {
+  border: 1px solid #d3d7d9;
+  padding: 0 1.5em;
+  margin-bottom: 30px;
 }
 
 /* ----------------- Content ------------------ */
