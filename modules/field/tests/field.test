@@ -1,5 +1,5 @@
 <?php
-// $Id: field.test,v 1.45 2010/12/07 05:09:58 webchick Exp $
+// $Id: field.test,v 1.46 2010/12/07 06:12:44 webchick Exp $
 
 /**
  * @file
@@ -1363,11 +1363,13 @@ class FieldFormTestCase extends FieldTestCase {
     $delta_range = $count - 1;
     $values = $weights = $pattern = $expected_values = $edit = array();
     for ($delta = 0; $delta <= $delta_range; $delta++) {
-      // Assign unique random weights.
+      // Assign unique random values and weights.
+      do {
+        $value = mt_rand(1, 127);
+      } while (in_array($value, $values));
       do {
         $weight = mt_rand(-$delta_range, $delta_range);
       } while (in_array($weight, $weights));
-      $value = mt_rand(1, 127);
       $edit["$this->field_name[$langcode][$delta][value]"] = $value;
       $edit["$this->field_name[$langcode][$delta][_weight]"] = $weight;
       // We'll need three slightly different formats to check the values.
@@ -1431,11 +1433,13 @@ class FieldFormTestCase extends FieldTestCase {
     $delta_range = $count - 1;
     $values = $weights = $pattern = $expected_values = $edit = array();
     for ($delta = 0; $delta <= $delta_range; $delta++) {
-      // Assign unique random weights.
+      // Assign unique random values and weights.
+      do {
+        $value = mt_rand(1, 127);
+      } while (in_array($value, $values));
       do {
         $weight = mt_rand(-$delta_range, $delta_range);
       } while (in_array($weight, $weights));
-      $value = mt_rand(1, 127);
       $edit["$this->field_name[$langcode][$delta][value]"] = $value;
       $edit["$this->field_name[$langcode][$delta][_weight]"] = $weight;
       // We'll need three slightly different formats to check the values.
