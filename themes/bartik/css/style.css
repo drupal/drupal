@@ -987,8 +987,11 @@ ul.action-links li a {
   padding: 20px 0 5px;
   margin: 0 auto;
 }
+.featured #messages {
+  background: #f0f0f0;
+}
 div.messages {
-  margin: 8px 0;
+  margin: 8px 15px;
 }
 
 /* -------------- Breadcrumbs   -------------- */
