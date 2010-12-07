@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.45 2010/12/07 05:06:34 webchick Exp $ */
+/* $Id: style.css,v 1.46 2010/12/07 05:15:49 webchick Exp $ */
 
 /* ---------- Overall Specifications ---------- */
 
@@ -987,8 +987,11 @@ ul.action-links li a {
   padding: 20px 0 5px;
   margin: 0 auto;
 }
+.featured #messages {
+  background: #f0f0f0;
+}
 div.messages {
-  margin: 8px 0;
+  margin: 8px 15px;
 }
 
 /* -------------- Breadcrumbs   -------------- */
