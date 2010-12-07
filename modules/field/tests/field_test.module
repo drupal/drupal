@@ -1,5 +1,5 @@
 <?php
-// $Id: field_test.module,v 1.13 2010/11/20 19:57:01 webchick Exp $
+// $Id: field_test.module,v 1.14 2010/12/07 05:09:58 webchick Exp $
 
 /**
  * @file
@@ -234,4 +234,13 @@ function field_test_dummy_field_storage_query(EntityFieldQuery $query) {
  */
 function field_test_entity_label_callback($entity) {
   return 'label callback ' . $entity->ftlabel;
+}
+
+/**
+ * Implements hook_field_attach_view_alter().
+ */
+function field_test_field_attach_view_alter(&$output, $context) {
+  if (!empty($context['display']['settings']['alter'])) {
+    $output['test_field'][] = array('#markup' => 'field_test_field_attach_view_alter');
+  }
 }

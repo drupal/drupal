@@ -1,5 +1,5 @@
 <?php
-// $Id: field.module,v 1.91 2010/12/01 00:31:38 webchick Exp $
+// $Id: field.module,v 1.92 2010/12/07 05:09:58 webchick Exp $
 /**
  * @file
  * Attach custom data fields to Drupal entities.
@@ -705,6 +705,7 @@ function field_view_field($entity_type, $entity, $field_name, $display = array()
       'entity_type' => $entity_type,
       'entity' => $entity,
       'view_mode' => '_custom',
+      'display' => $display,
     );
     drupal_alter('field_attach_view', $result, $context);
 

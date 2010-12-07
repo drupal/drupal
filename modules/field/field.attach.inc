@@ -1,5 +1,5 @@
 <?php
-// $Id: field.attach.inc,v 1.97 2010/11/20 19:57:01 webchick Exp $
+// $Id: field.attach.inc,v 1.98 2010/12/07 05:09:58 webchick Exp $
 
 /**
  * @file
@@ -1166,6 +1166,7 @@ function field_attach_view($entity_type, $entity, $view_mode, $langcode = NULL) 
     'entity_type' => $entity_type,
     'entity' => $entity,
     'view_mode' => $view_mode,
+    'display' => $view_mode,
     'language' => $langcode,
   );
   drupal_alter('field_attach_view', $output, $context);
