@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.install,v 1.27 2010/08/22 13:55:53 dries Exp $
+// $Id: statistics.install,v 1.28 2010/12/08 06:43:07 webchick Exp $
 
 /**
  * @file
@@ -34,7 +34,7 @@ function statistics_schema() {
       ),
       'sid' => array(
         'type' => 'varchar',
-        'length' => 64,
+        'length' => 128,
         'not null' => TRUE,
         'default' => '',
         'description' => 'Browser session ID of user that visited page.',
@@ -140,6 +140,19 @@ function statistics_schema() {
  * @defgroup updates-6.x-to-7.x statistics updates from 6.x to 7.x
  * @{
  */
+
+/**
+ * Update the {accesslog}.sid column to match the length of {sessions}.sid
+ */
+function statistics_update_7000() {
+  db_change_field('accesslog', 'sid', 'sid', array(
+    'type' => 'varchar',
+    'length' => 128,
+    'not null' => TRUE,
+    'default' => '',
+    'description' => 'Browser session ID of user that visited page.',
+  ));
+}
 
 /**
  * @} End of "defgroup updates-6.x-to-7.x"

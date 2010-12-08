@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.test,v 1.23 2010/09/24 00:37:44 dries Exp $
+// $Id: statistics.test,v 1.24 2010/12/08 06:43:07 webchick Exp $
 
 /**
  * Sets up a base class for the Statistics module.
@@ -61,6 +61,7 @@ class StatisticsLoggingTestCase extends DrupalWebTestCase {
 
     // Ensure we have a node page to access.
     $this->node = $this->drupalCreateNode();
+    $this->auth_user = $this->drupalCreateUser();
 
     // Enable page caching.
     variable_set('cache', TRUE);
@@ -101,6 +102,16 @@ class StatisticsLoggingTestCase extends DrupalWebTestCase {
     $this->assertEqual(array_intersect_key($log[1], $expected), $expected);
     $node_counter = statistics_get($this->node->nid);
     $this->assertIdentical($node_counter['totalcount'], '2');
+
+    // Test logging from authenticated users
+    $this->drupalLogin($this->auth_user);
+    $this->drupalGet($path);
+    $log = db_query('SELECT * FROM {accesslog}')->fetchAll(PDO::FETCH_ASSOC);
+    // Check the 6th item since login and account pages are also logged
+    $this->assertTrue(is_array($log) && count($log) == 6, t('Page request was logged.'));
+    $this->assertEqual(array_intersect_key($log[5], $expected), $expected);
+    $node_counter = statistics_get($this->node->nid);
+    $this->assertIdentical($node_counter['totalcount'], '3');
   }
 }
 
