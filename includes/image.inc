@@ -1,5 +1,5 @@
 <?php
-// $Id: image.inc,v 1.40 2010/07/16 02:39:38 dries Exp $
+// $Id: image.inc,v 1.41 2010/12/08 07:11:39 webchick Exp $
 
 /**
  * @file
@@ -122,7 +122,7 @@ function image_toolkit_invoke($method, stdClass $image, array $params = array())
  */
 function image_get_info($filepath, $toolkit = FALSE) {
   $details = FALSE;
-  if (!is_file($filepath)) {
+  if (!is_file($filepath) && !is_uploaded_file($filepath)) {
     return $details;
   }
 
