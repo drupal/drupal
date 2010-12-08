@@ -1700,6 +1700,9 @@ function form_builder($form_id, &$element, &$form_state) {
     else {
       $form_state['process_input'] = FALSE;
     }
+
+    // All form elements should have an #array_parents property.
+    $element['#array_parents'] = array();
   }
 
   if (!isset($element['#id'])) {
@@ -1756,7 +1759,7 @@ function form_builder($form_id, &$element, &$form_state) {
       $element[$key]['#parents'] = $element[$key]['#tree'] && $element['#tree'] ? array_merge($element['#parents'], array($key)) : array($key);
     }
     // Ensure #array_parents follows the actual form structure.
-    $array_parents = isset($element['#array_parents']) ? $element['#array_parents'] : array();
+    $array_parents = $element['#array_parents'];
     $array_parents[] = $key;
     $element[$key]['#array_parents'] = $array_parents;
 
@@ -3065,7 +3068,11 @@ function form_process_container($element, &$form_state) {
 }
 
 /**
- * Returns HTML for a container for grouped form items.
+ * Returns HTML to wrap child elements in a container.
+ *
+ * Used for grouped form items. Can also be used as a #theme_wrapper for any
+ * renderable element, to surround it with a <div> and add attributes such as
+ * classes or an HTML id.
  *
  * @param $variables
  *   An associative array containing:
@@ -3076,11 +3083,17 @@ function form_process_container($element, &$form_state) {
  */
 function theme_container($variables) {
   $element = $variables['element'];
-  if (!isset($element['#attributes']['id'])) {
-    $element['#attributes']['id'] = $element['#id'];
+
+  // Special handling for form elements.
+  if (isset($element['#array_parents'])) {
+    // Assign an html ID.
+    if (!isset($element['#attributes']['id'])) {
+      $element['#attributes']['id'] = $element['#id'];
+    }
+    // Add the 'form-wrapper' class.
+    $element['#attributes']['class'][] = 'form-wrapper';
   }
-  // Force the 'form-wrapper' class.
-  $element['#attributes']['class'][] = 'form-wrapper';
+
   return '<div' . drupal_attributes($element['#attributes']) . '>' . $element['#children'] . '</div>';
 }
 
