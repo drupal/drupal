@@ -1002,21 +1002,22 @@ function hook_menu_get_item_alter(&$router_item, $path, $original_map) {
  * $items['admin/config/foo'] = array(
  *   'title' => 'Foo settings',
  *   'type' => MENU_NORMAL_ITEM,
- *   // page callback, etc. need to be added here
+ *   // Page callback, etc. need to be added here.
  * );
  * // Make "Global settings" the main tab on the "Foo settings" page
  * $items['admin/config/foo/global'] = array(
  *   'title' => 'Global settings',
  *   'type' => MENU_DEFAULT_LOCAL_TASK,
- *   // access callback, page callback, and theme callback will be inherited
- *   // from 'admin/config/foo', if not specified here to override
+ *   // Access callback, page callback, and theme callback will be inherited
+ *   // from 'admin/config/foo', if not specified here to override.
  * );
  * // Make an additional tab called "Node settings" on "Foo settings"
  * $items['admin/config/foo/node'] = array(
  *   'title' => 'Node settings',
  *   'type' => MENU_LOCAL_TASK,
- *   // access callback, page callback, and theme callback will be inherited
- *   // from 'admin/config/foo', if not specified here to override
+ *   // Page callback and theme callback will be inherited from
+ *   // 'admin/config/foo', if not specified here to override.
+ *   // Need to add access callback or access arguments.
  * );
  * @endcode
  *
@@ -1045,9 +1046,14 @@ function hook_menu_get_item_alter(&$router_item, $path, $original_map) {
  *     rights to this menu item, and FALSE if not. It can also be a boolean
  *     constant instead of a function, and you can also use numeric values
  *     (will be cast to boolean). Defaults to user_access() unless a value is
- *     inherited from a parent menu item.
+ *     inherited from the parent menu item; only MENU_DEFAULT_LOCAL_TASK items
+ *     can inherit access callbacks. To use the user_access() default callback,
+ *     you must specify the permission to check as 'access arguments' (see
+ *     below).
  *   - "access arguments": An array of arguments to pass to the access callback
- *     function, with path component substitution as described above.
+ *     function, with path component substitution as described above. If the
+ *     access callback is inherited (see above), the access arguments will be
+ *     inherited with it, unless overridden in the child menu item.
  *   - "theme callback": (optional) A function returning the machine-readable
  *     name of the theme that will be used to render the page. If not provided,
  *     the value will be inherited from a parent menu item. If there is no
