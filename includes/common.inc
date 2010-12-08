@@ -7464,13 +7464,16 @@ function entity_uri($entity_type, $entity) {
 /**
  * Returns the label of an entity.
  *
+ * See the 'label callback' component of the hook_entity_info() return value
+ * for more information.
+ *
  * @param $entity_type
- *   The entity type; e.g. 'node' or 'user'.
+ *   The entity type; e.g., 'node' or 'user'.
  * @param $entity
- *   The entity for which to generate a path.
+ *   The entity for which to generate the label.
  *
  * @return
- *   A string with the entity label (e.g. node title), or FALSE if not found.
+ *   The entity label, or FALSE if not found.
  */
 function entity_label($entity_type, $entity) {
   $label = FALSE;
