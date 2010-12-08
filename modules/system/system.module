@@ -3894,6 +3894,9 @@ function system_admin_paths() {
     'admin' => TRUE,
     'admin/*' => TRUE,
     'batch' => TRUE,
+    // This page should not be treated as administrative since it outputs its
+    // own content (outside of any administration theme).
+    'admin/reports/status/php' => FALSE,
   );
   return $paths;
 }
