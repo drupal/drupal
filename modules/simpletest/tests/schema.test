@@ -1,5 +1,5 @@
 <?php
-// $Id: schema.test,v 1.23 2010/10/22 15:18:56 webchick Exp $
+// $Id: schema.test,v 1.24 2010/12/08 06:38:59 webchick Exp $
 
 /**
  * @file
@@ -10,6 +10,11 @@
  * Unit tests for the Schema API.
  */
 class SchemaTestCase extends DrupalWebTestCase {
+  /**
+   * A global counter for table and field creation.
+   */
+  var $counter;
+
   public static function getInfo() {
     return array(
       'name' => 'Schema API',
@@ -214,5 +219,167 @@ class SchemaTestCase extends DrupalWebTestCase {
     catch (Exception $e) {
       return FALSE;
     }
+  }
+
+  /**
+   * Test adding columns to an existing table.
+   */
+  function testSchemaAddField() {
+    // Test varchar types.
+    foreach (array(1, 32, 128, 256, 512) as $length) {
+      $base_field_spec = array(
+        'type' => 'varchar',
+        'length' => $length,
+      );
+      $variations = array(
+        array('not null' => FALSE),
+        array('not null' => FALSE, 'default' => '7'),
+        array('not null' => TRUE, 'initial' => 'd'),
+        array('not null' => TRUE, 'initial' => 'd', 'default' => '7'),
+      );
+
+      foreach ($variations as $variation) {
+        $field_spec = $variation + $base_field_spec;
+        $this->assertFieldAdditionRemoval($field_spec);
+      }
+    }
+
+    // Test int and float types.
+    foreach (array('int', 'float') as $type) {
+      foreach (array('tiny', 'small', 'medium', 'normal', 'big') as $size) {
+        $base_field_spec = array(
+          'type' => $type,
+          'size' => $size,
+        );
+        $variations = array(
+          array('not null' => FALSE),
+          array('not null' => FALSE, 'default' => 7),
+          array('not null' => TRUE, 'initial' => 1),
+          array('not null' => TRUE, 'initial' => 1, 'default' => 7),
+        );
+
+        foreach ($variations as $variation) {
+          $field_spec = $variation + $base_field_spec;
+          $this->assertFieldAdditionRemoval($field_spec);
+        }
+      }
+    }
+
+    // Test numeric types.
+    foreach (array(1, 5, 10, 40, 65) as $precision) {
+      foreach (array(0, 2, 10, 30) as $scale) {
+        if ($precision <= $scale) {
+          // Precision must be smaller then scale.
+          continue;
+        }
+
+        $base_field_spec = array(
+          'type' => 'numeric',
+          'scale' => $scale,
+          'precision' => $precision,
+        );
+        $variations = array(
+          array('not null' => FALSE),
+          array('not null' => FALSE, 'default' => 7),
+          array('not null' => TRUE, 'initial' => 1),
+          array('not null' => TRUE, 'initial' => 1, 'default' => 7),
+        );
+
+        foreach ($variations as $variation) {
+          $field_spec = $variation + $base_field_spec;
+          $this->assertFieldAdditionRemoval($field_spec);
+        }
+      }
+    }
+  }
+
+  /**
+   * Assert that a given field can be added and removed from a table.
+   *
+   * The addition test covers both defining a field of a given specification
+   * when initially creating at table and extending an existing table.
+   *
+   * @param $field_spec
+   *   The schema specification of the field.
+   */
+  protected function assertFieldAdditionRemoval($field_spec) {
+    // Try creating the field on a new table.
+    $table_name = 'test_table_' . ($this->counter++);
+    $table_spec = array(
+      'fields' => array(
+        'serial_column' => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE),
+        'test_field' => $field_spec,
+      ),
+      'primary key' => array('serial_column'),
+    );
+    db_create_table($table_name, $table_spec);
+    $this->pass(t('Table %table created.', array('%table' => $table_name)));
+
+    // Check the characteristics of the field.
+    $this->assertFieldCharacteristics($table_name, 'test_field', $field_spec);
+
+    // Clean-up.
+    db_drop_table($table_name);
+
+    // Try adding a field to an existing table.
+    $table_name = 'test_table_' . ($this->counter++);
+    $table_spec = array(
+      'fields' => array(
+        'serial_column' => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE),
+      ),
+      'primary key' => array('serial_column'),
+    );
+    db_create_table($table_name, $table_spec);
+    $this->pass(t('Table %table created.', array('%table' => $table_name)));
+
+    // Insert some rows to the table to test the handling of initial values.
+    for ($i = 0; $i < 3; $i++) {
+      db_insert($table_name)
+        ->useDefaults(array('serial_column'))
+        ->execute();
+    }
+
+    db_add_field($table_name, 'test_field', $field_spec);
+    $this->pass(t('Column %column created.', array('%column' => 'test_field')));
+
+    // Check the characteristics of the field.
+    $this->assertFieldCharacteristics($table_name, 'test_field', $field_spec);
+
+    // Clean-up.
+    db_drop_field($table_name, 'test_field');
+    db_drop_table($table_name);
+  }
+
+  /**
+   * Assert that a newly added field has the correct characteristics.
+   */
+  protected function assertFieldCharacteristics($table_name, $field_name, $field_spec) {
+    // Check that the initial value has been registered.
+    if (isset($field_spec['initial'])) {
+      // There should be no row with a value different then $field_spec['initial'].
+      $count = db_select($table_name)
+        ->fields($table_name, array('serial_column'))
+        ->condition($field_name, $field_spec['initial'], '<>')
+        ->countQuery()
+        ->execute()
+        ->fetchField();
+      $this->assertEqual($count, 0, t('Initial values filled out.'));
+    }
+
+    // Check that the default value has been registered.
+    if (isset($field_spec['default'])) {
+      // Try inserting a row, and check the resulting value of the new column.
+      $id = db_insert($table_name)
+        ->useDefaults(array('serial_column'))
+        ->execute();
+      $field_value = db_select($table_name)
+        ->fields($table_name, array($field_name))
+        ->condition('serial_column', $id)
+        ->execute()
+        ->fetchField();
+      $this->assertEqual($field_value, $field_spec['default'], t('Default value registered.'));
+    }
+
+    db_drop_field($table_name, $field_name);
   }
 }

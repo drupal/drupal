@@ -1,5 +1,5 @@
 <?php
-// $Id: schema.inc,v 1.43 2010/10/22 15:18:56 webchick Exp $
+// $Id: schema.inc,v 1.44 2010/12/08 06:38:59 webchick Exp $
 
 /**
  * @file
@@ -337,7 +337,7 @@ class DatabaseSchema_mysql extends DatabaseSchema {
     $this->connection->query($query);
     if (isset($spec['initial'])) {
       $this->connection->update($table)
-        ->fields(array($field, $spec['initial']))
+        ->fields(array($field => $spec['initial']))
         ->execute();
     }
     if ($fixnull) {
