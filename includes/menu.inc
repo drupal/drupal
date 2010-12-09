@@ -2432,6 +2432,7 @@ function _menu_router_build($callbacks) {
       'file' => '',
       'file path' => '',
       'include file' => '',
+      'module' => '',
     );
 
     // Calculate out the file to be included for each callback, if any.
