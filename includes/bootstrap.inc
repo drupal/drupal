@@ -1429,7 +1429,7 @@ function t($string, array $args = array(), array $options = array()) {
     $string = $custom_strings[$options['langcode']][$options['context']][$string];
   }
   // Translate with locale module if enabled.
-  elseif (function_exists('locale') && $options['langcode'] != 'en') {
+  elseif ($options['langcode'] != 'en' && function_exists('locale')) {
     $string = locale($string, $options['context'], $options['langcode']);
   }
   if (empty($args)) {
