@@ -1195,22 +1195,24 @@ function filter_filter_info() {
  * Settings callback for the HTML filter.
  */
 function _filter_html_settings($form, &$form_state, $filter, $format, $defaults) {
+  $filter->settings += $defaults;
+
   $settings['allowed_html'] = array(
     '#type' => 'textfield',
     '#title' => t('Allowed HTML tags'),
-    '#default_value' => isset($filter->settings['allowed_html']) ? $filter->settings['allowed_html'] : $defaults['allowed_html'],
+    '#default_value' => $filter->settings['allowed_html'],
     '#maxlength' => 1024,
     '#description' => t('A list of HTML tags that can be used. JavaScript event attributes, JavaScript URLs, and CSS are always stripped.'),
   );
   $settings['filter_html_help'] = array(
     '#type' => 'checkbox',
     '#title' => t('Display basic HTML help in long filter tips'),
-    '#default_value' => isset($filter->settings['filter_html_help']) ? $filter->settings['filter_html_help'] : $defaults['filter_html_help'],
+    '#default_value' => $filter->settings['filter_html_help'],
   );
   $settings['filter_html_nofollow'] = array(
     '#type' => 'checkbox',
     '#title' => t('Add rel="nofollow" to all links'),
-    '#default_value' => isset($filter->settings['filter_html_nofollow']) ? $filter->settings['filter_html_nofollow'] : $defaults['filter_html_nofollow'],
+    '#default_value' => $filter->settings['filter_html_nofollow'],
   );
   return $settings;
 }
@@ -1336,10 +1338,12 @@ function _filter_html_tips($filter, $format, $long = FALSE) {
  * Settings callback for URL filter.
  */
 function _filter_url_settings($form, &$form_state, $filter, $format, $defaults) {
+  $filter->settings += $defaults;
+
   $settings['filter_url_length'] = array(
     '#type' => 'textfield',
     '#title' => t('Maximum link text length'),
-    '#default_value' => isset($filter->settings['filter_url_length']) ? $filter->settings['filter_url_length'] : $defaults['filter_url_length'],
+    '#default_value' => $filter->settings['filter_url_length'],
     '#size' => 5,
     '#maxlength' => 4,
     '#field_suffix' => t('characters'),
