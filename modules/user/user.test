@@ -1,5 +1,5 @@
 <?php
-// $Id: user.test,v 1.108 2010/11/30 23:55:11 webchick Exp $
+// $Id: user.test,v 1.109 2010/12/09 08:01:56 webchick Exp $
 
 class UserRegistrationTestCase extends DrupalWebTestCase {
   public static function getInfo() {
@@ -1854,12 +1854,12 @@ class UserTokenReplaceTestCase extends DrupalWebTestCase {
     $this->drupalLogin($user2);
 
     $account = user_load($user1->uid);
-    global $user;
+    $global_account = user_load($GLOBALS['user']->uid);
 
     // Generate and test sanitized tokens.
     $tests = array();
     $tests['[user:uid]'] = $account->uid;
-    $tests['[user:name]'] = filter_xss($account->name);
+    $tests['[user:name]'] = check_plain(format_username($account));
     $tests['[user:mail]'] = check_plain($account->mail);
     $tests['[user:url]'] = url("user/$account->uid", $url_options);
     $tests['[user:edit-url]'] = url("user/$account->uid/edit", $url_options);
@@ -1867,7 +1867,7 @@ class UserTokenReplaceTestCase extends DrupalWebTestCase {
     $tests['[user:last-login:short]'] = format_date($account->login, 'short', '', NULL, $language->language);
     $tests['[user:created]'] = format_date($account->created, 'medium', '', NULL, $language->language);
     $tests['[user:created:short]'] = format_date($account->created, 'short', '', NULL, $language->language);
-    $tests['[current-user:name]'] = check_plain($user->name);
+    $tests['[current-user:name]'] = check_plain(format_username($global_account));
 
     // Test to make sure that we generated something for each token.
     $this->assertFalse(in_array(0, array_map('strlen', $tests)), t('No empty tokens generated.'));
@@ -1878,9 +1878,9 @@ class UserTokenReplaceTestCase extends DrupalWebTestCase {
     }
 
     // Generate and test unsanitized tokens.
-    $tests['[user:name]'] = $account->name;
+    $tests['[user:name]'] = format_username($account);
     $tests['[user:mail]'] = $account->mail;
-    $tests['[current-user:name]'] = $user->name;
+    $tests['[current-user:name]'] = format_username($global_account);
 
     foreach ($tests as $input => $expected) {
       $output = token_replace($input, array('user' => $account), array('language' => $language, 'sanitize' => FALSE));

@@ -1,5 +1,5 @@
 <?php
-// $Id: user.tokens.inc,v 1.8 2010/10/16 20:09:17 webchick Exp $
+// $Id: user.tokens.inc,v 1.9 2010/12/09 08:01:56 webchick Exp $
 
 /**
  * @file
@@ -87,7 +87,7 @@ function user_tokens($type, $tokens, array $data = array(), array $options = arr
 
         case 'name':
           $name = format_username($account);
-          $replacements[$original] = $sanitize ? filter_xss($name) : $name;
+          $replacements[$original] = $sanitize ? check_plain($name) : $name;
           break;
 
         case 'mail':
@@ -122,9 +122,10 @@ function user_tokens($type, $tokens, array $data = array(), array $options = arr
       $replacements += token_generate('date', $registered_tokens, array('date' => $account->created), $options);
     }
   }
+
   if ($type == 'current-user') {
-    global $user;
-    $replacements += token_generate('user', $tokens, array('user' => $user), $options);
+    $account = user_load($GLOBALS['user']->uid);
+    $replacements += token_generate('user', $tokens, array('user' => $account), $options);
   }
 
   return $replacements;
