@@ -2054,7 +2054,7 @@ class NodeTokenReplaceTestCase extends DrupalWebTestCase {
     $tests['[node:url]'] = url('node/' . $node->nid, $url_options);
     $tests['[node:edit-url]'] = url('node/' . $node->nid . '/edit', $url_options);
     $tests['[node:author:uid]'] = $node->uid;
-    $tests['[node:author:name]'] = check_plain($account->name);
+    $tests['[node:author:name]'] = check_plain(format_username($account));
     $tests['[node:created:since]'] = format_interval(REQUEST_TIME - $node->created, 2, $language->language);
     $tests['[node:changed:since]'] = format_interval(REQUEST_TIME - $node->changed, 2, $language->language);
 
@@ -2071,7 +2071,7 @@ class NodeTokenReplaceTestCase extends DrupalWebTestCase {
     $tests['[node:body]'] = $node->body[$node->language][0]['value'];
     $tests['[node:summary]'] = $node->body[$node->language][0]['summary'];
     $tests['[node:language]'] = $node->language;
-    $tests['[node:author:name]'] = $account->name;
+    $tests['[node:author:name]'] = format_username($account);
 
     foreach ($tests as $input => $expected) {
       $output = token_replace($input, array('node' => $node), array('language' => $language, 'sanitize' => FALSE));
