@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.46 2010/12/07 05:15:49 webchick Exp $ */
+/* $Id: style.css,v 1.47 2010/12/09 07:48:35 webchick Exp $ */
 
 /* ---------- Overall Specifications ---------- */
 
@@ -49,6 +49,58 @@ tr.odd {
 img {
   outline: 0;
 }
+code,
+pre,
+kbd,
+samp,
+var {
+  padding: 0 0.4em;
+  font-size: 0.77em;
+  font-family: Menlo, Consolas, "Andale Mono", "Lucida Console", "Nimbus Mono L", "DejaVu Sans Mono", monospace, "Courier New";
+}
+code {
+  background-color: #f2f2f2;
+  background-color: rgba(40, 40, 0, 0.06);
+}
+pre code,
+pre kbd,
+pre samp,
+pre var,
+kbd kbd,
+kbd samp,
+code var {
+  font-size: 100%;
+  background-color: transparent;
+}
+pre code,
+pre samp,
+pre var {
+  padding: 0;
+}
+.description code {
+  font-size: 1em;
+}
+kbd {
+  background-color: #f2f2f2;
+  border: 1px outset #575757;
+  margin: 0 3px;
+  color: #666;
+  display: inline-block;
+  padding: 0 6px;
+  -khtml-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+}
+pre {
+  background-color: #f2f2f2;
+  background-color: rgba(40, 40, 0, 0.06);
+  margin: 10px 0px;
+  overflow: hidden;
+  padding: 15px;
+  white-space: pre-wrap;
+}
+
 
 /* ------------------ Fonts ------------------ */
 
