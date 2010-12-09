@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.admin.inc,v 1.51 2010/10/20 01:31:06 dries Exp $
+// $Id: comment.admin.inc,v 1.52 2010/12/09 02:16:21 dries Exp $
 
 /**
  * @file
@@ -232,7 +232,7 @@ function comment_multiple_delete_confirm_submit($form, &$form_state) {
     cache_clear_all();
     $count = count($form_state['values']['comments']);
     watchdog('content', 'Deleted @count comments.', array('@count' => $count));
-    drupal_set_message(t('Deleted @count comments.', array('@count' => $count)));
+    drupal_set_message(format_plural($count, 'Deleted 1 comment.', 'Deleted @count comments.'));
   }
   $form_state['redirect'] = 'admin/content/comment';
 }
