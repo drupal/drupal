@@ -1901,7 +1901,7 @@ function comment_form($form, &$form_state, $comment) {
       $author = $user->name;
     }
     else {
-      $author = ($comment->name ? $comment->name : variable_get('anonymous', t('Anonymous')));
+      $author = ($comment->name ? $comment->name : '');
     }
     $status = (user_access('skip comment approval') ? COMMENT_PUBLISHED : COMMENT_NOT_PUBLISHED);
     $date = '';
@@ -2146,12 +2146,18 @@ function comment_submit($comment) {
   if (empty($comment->date)) {
     $comment->date = 'now';
   }
-
   $comment->created = strtotime($comment->date);
   $comment->changed = REQUEST_TIME;
 
+  // If the comment was posted by a registered user, assign the author's ID.
+  // @todo Too fragile. Should be prepared and stored in comment_form() already.
   if (!$comment->is_anonymous && !empty($comment->name) && ($account = user_load_by_name($comment->name))) {
     $comment->uid = $account->uid;
+  }
+  // If the comment was posted by an anonymous user and no author name was
+  // required, use "Anonymous" by default.
+  if ($comment->is_anonymous && (!isset($comment->name) || $comment->name === '')) {
+    $comment->name = variable_get('anonymous', t('Anonymous'));
   }
 
   // Validate the comment's subject. If not specified, extract from comment body.
