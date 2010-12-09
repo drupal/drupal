@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.997 2010/12/08 06:44:52 webchick Exp $
+// $Id: system.module,v 1.998 2010/12/09 01:51:16 dries Exp $
 
 /**
  * @file
@@ -3459,22 +3459,34 @@ function system_run_automated_cron() {
 }
 
 /**
- * Get the list of available date types and attributes.
+ * Gets the list of available date types and attributes.
  *
  * @param $type
- *   The date type, e.g. 'short', 'medium', 'long', 'custom'. If empty, then
- *   all attributes for that type will be returned.
+ *   (optional) The date type name.
+ *
  * @return
- *   Array of date types.
+ *   An associative array of date type information keyed by the date type name.
+ *   Each date type information array has the following elements:
+ *   - type: The machine-readable name of the date type.
+ *   - title: The human-readable name of the date type.
+ *   - locked: A boolean indicating whether or not this date type should be
+ *     configurable from the user interface.
+ *   - module: The name of the module that defined this date type in its
+ *     hook_date_format_types(). An empty string if the date type was
+ *     user-defined.
+ *   - is_new: A boolean indicating whether or not this date type is as of yet
+ *     unsaved in the database.
+ *   If $type was defined, only a single associative array with the above
+ *   elements is returned.
  */
 function system_get_date_types($type = NULL) {
-  $date_format_types = &drupal_static(__FUNCTION__);
+  $types = &drupal_static(__FUNCTION__);
 
-  if (!isset($date_format_types)) {
-    $date_format_types = _system_date_format_types_build();
+  if (!isset($types)) {
+    $types = _system_date_format_types_build();
   }
 
-  return $type ? (isset($date_format_types[$type]) ? $date_format_types[$type] : FALSE) : $date_format_types;
+  return $type ? (isset($types[$type]) ? $types[$type] : FALSE) : $types;
 }
 
 /**
@@ -3490,12 +3502,6 @@ function system_date_format_types() {
 
 /**
  * Implements hook_date_formats().
- *
- * @return
- *   An array of date formats with attributes 'type' (short, medium or long),
- *   'format' (the format string) and 'locales'. The 'locales' attribute is an
- *   array of locales, which can include both 2 character language codes like
- *   'en', 'fr', but also 5 character language codes like 'en-gb' and 'en-us'.
  */
 function system_date_formats() {
   include_once DRUPAL_ROOT . '/includes/date.inc';
@@ -3503,13 +3509,29 @@ function system_date_formats() {
 }
 
 /**
- * Get the list of date formats for a particular format length.
+ * Gets the list of defined date formats and attributes.
  *
  * @param $type
- *   The date type: 'short', 'medium', 'long', 'custom'. If empty, then all
- *   available types will be returned.
+ *   (optional) The date type name.
+ *
  * @return
- *   Array of date formats.
+ *   An associative array of date formats. The top-level keys are the names of
+ *   the date types that the date formats belong to. The values are in turn
+ *   associative arrays keyed by the format string, with the following keys:
+ *   - dfid: The date format ID.
+ *   - format: The format string.
+ *   - type: The machine-readable name of the date type.
+ *   - locales: An array of language codes. This can include both 2 character
+ *     language codes like 'en and 'fr' and 5 character language codes like
+ *     'en-gb' and 'en-us'.
+ *   - locked: A boolean indicating whether or not this date type should be
+ *     configurable from the user interface.
+ *   - module: The name of the module that defined this date format in its
+ *     hook_date_formats(). An empty string if the format was user-defined.
+ *   - is_new: A boolean indicating whether or not this date type is as of yet
+ *     unsaved in the database.
+ *   If $type was defined, only the date formats associated with the given date
+ *   type are returned, in a single associative array keyed by format string.
  */
 function system_get_date_formats($type = NULL) {
   $date_formats = &drupal_static(__FUNCTION__);
@@ -3522,25 +3544,30 @@ function system_get_date_formats($type = NULL) {
 }
 
 /**
- * Get the format details for a particular id.
+ * Gets the format details for a particular format ID.
  *
  * @param $dfid
- *   Identifier of a date format string.
+ *   A date format ID.
+ *
  * @return
- *   Array of date format details.
+ *   A date format object with the following properties:
+ *   - dfid: The date format ID.
+ *   - format: The date format string.
+ *   - type: The name of the date type.
+ *   - locked: Whether the date format can be changed or not.
  */
 function system_get_date_format($dfid) {
   return db_query('SELECT df.dfid, df.format, df.type, df.locked FROM {date_formats} df WHERE df.dfid = :dfid', array(':dfid' => $dfid))->fetch();
 }
 
 /**
- * Resets the database cache of date formats and saves all new formats.
+ * Resets the database cache of date formats and saves all new date formats.
  */
 function system_date_formats_rebuild() {
   drupal_static_reset('system_get_date_formats');
   $date_formats = system_get_date_formats(NULL);
 
-  foreach ($date_formats as $format_type => $formats) {
+  foreach ($date_formats as $type => $formats) {
     foreach ($formats as $format => $info) {
       system_date_format_save($info);
     }
@@ -3554,15 +3581,20 @@ function system_date_formats_rebuild() {
 }
 
 /**
- * Get the appropriate date format for a type and locale.
+ * Gets the appropriate date format string for a date type and locale.
  *
  * @param $langcode
- *   Language code for the current locale. This can be a 2 character language
- *   code like 'en', 'fr', or a longer 5 character code like 'en-gb'.
+ *   (optional) Language code for the current locale. This can be a 2 character
+ *   language code like 'en' and 'fr' or a 5 character language code like
+ *   'en-gb' and 'en-us'.
  * @param $type
- *   Date type: short, medium, long, custom.
+ *   (optional) The date type name.
+ *
  * @return
- *   The format string, or NULL if no matching format found.
+ *   If $type and $langcode are specified, returns the corresponding date format
+ *   string. If only $langcode is specified, returns an array of all date
+ *   format strings for that locale, keyed by the date type. If neither is
+ *   specified, or if no matching formats are found, returns FALSE.
  */
 function system_date_format_locale($langcode = NULL, $type = NULL) {
   $formats = &drupal_static(__FUNCTION__);
@@ -3589,10 +3621,19 @@ function system_date_format_locale($langcode = NULL, $type = NULL) {
 }
 
 /**
- * Builds and returns the list of available date types.
+ * Builds and returns information about available date types.
  *
  * @return
- *   Array of date types.
+ *   An associative array of date type information keyed by name. Each date type
+ *   information array has the following elements:
+ *   - type: The machine-readable name of the date type.
+ *   - title: The human-readable name of the date type.
+ *   - locked: A boolean indicating whether or not this date type should be
+ *     configurable from the user interface.
+ *   - module: The name of the module that defined this format in its
+ *     hook_date_format_types(). An empty string if the format was user-defined.
+ *   - is_new: A boolean indicating whether or not this date type is as of yet
+ *     unsaved in the database.
  */
 function _system_date_format_types_build() {
   $types = array();
@@ -3608,7 +3649,8 @@ function _system_date_format_types_build() {
       $type['type'] = $module_type;
       $type['title'] = $type_title;
       $type['locked'] = 1;
-      $type['is_new'] = TRUE; // Will be over-ridden later if in the db.
+      // Will be over-ridden later if in the db.
+      $type['is_new'] = TRUE;
       $types[$module_type] = $type;
     }
   }
@@ -3639,10 +3681,24 @@ function _system_date_format_types_build() {
 }
 
 /**
- * Builds and returns the list of available date formats.
+ * Builds and returns information about available date formats.
  *
  * @return
- *   Array of date formats.
+ *   An associative array of date formats. The top-level keys are the names of
+ *   the date types that the date formats belong to. The values are in turn
+ *   associative arrays keyed by format with the following keys:
+ *   - dfid: The date format ID.
+ *   - format: The PHP date format string.
+ *   - type: The machine-readable name of the date type the format belongs to.
+ *   - locales: An array of language codes. This can include both 2 character
+ *     language codes like 'en and 'fr' and 5 character language codes like
+ *     'en-gb' and 'en-us'.
+ *   - locked: A boolean indicating whether or not this date type should be
+ *     configurable from the user interface.
+ *   - module: The name of the module that defined this format in its
+ *     hook_date_formats(). An empty string if the format was user-defined.
+ *   - is_new: A boolean indicating whether or not this date type is as of yet
+ *     unsaved in the database.
  */
 function _system_date_formats_build() {
   $date_formats = array();
@@ -3657,7 +3713,8 @@ function _system_date_formats_build() {
   $module_formats = module_invoke_all('date_formats');
 
   foreach ($module_formats as $module_format) {
-    $module_format['locked'] = 1; // System types are locked.
+    // System types are locked.
+    $module_format['locked'] = 1;
     // If no date type is specified, assign 'custom'.
     if (!isset($module_format['type'])) {
       $module_format['type'] = 'custom';
@@ -3671,7 +3728,7 @@ function _system_date_formats_build() {
 
     // If another module already set this format, merge in the new settings.
     if (isset($date_formats[$module_format['type']][$module_format['format']])) {
-      $date_formats[$module_format['type']][$module_format['format']] = array_merge_recursive($date_formats[$module_format['type']][$module_format['format']], $format);
+      $date_formats[$module_format['type']][$module_format['format']] = array_merge_recursive($date_formats[$module_format['type']][$module_format['format']], $module_format);
     }
     else {
       // This setting will be overridden later if it already exists in the db.
@@ -3711,67 +3768,80 @@ function _system_date_formats_build() {
 }
 
 /**
- * Save a date type to the database.
+ * Saves a date type to the database.
  *
- * @param $date_format_type
- *   An array of attributes for a date type.
+ * @param $type
+ *   A date type array containing the following keys:
+ *   - type: The machine-readable name of the date type.
+ *   - title: The human-readable name of the date type.
+ *   - locked: A boolean indicating whether or not this date type should be
+ *     configurable from the user interface.
+ *   - is_new: A boolean indicating whether or not this date type is as of yet
+ *     unsaved in the database.
  */
-function system_date_format_type_save($date_format_type) {
-  $type = array();
-  $type['type'] = $date_format_type['type'];
-  $type['title'] = $date_format_type['title'];
-  $type['locked'] = $date_format_type['locked'];
+function system_date_format_type_save($type) {
+  $info = array();
+  $info['type'] = $type['type'];
+  $info['title'] = $type['title'];
+  $info['locked'] = $type['locked'];
 
   // Update date_format table.
-  if (!empty($date_format_type['is_new'])) {
-    drupal_write_record('date_format_type', $type);
+  if (!empty($type['is_new'])) {
+    drupal_write_record('date_format_type', $info);
   }
   else {
-    drupal_write_record('date_format_type', $type, 'type');
+    drupal_write_record('date_format_type', $info, 'type');
   }
 }
 
 /**
- * Delete a date type from the database.
+ * Deletes a date type from the database.
  *
- * @param $date_format_type
- *   The date type name.
+ * @param $type
+ *   The machine-readable name of the date type.
  */
-function system_date_format_type_delete($date_format_type) {
+function system_date_format_type_delete($type) {
   db_delete('date_formats')
-    ->condition('type', $date_format_type)
+    ->condition('type', $type)
     ->execute();
   db_delete('date_format_type')
-    ->condition('type', $date_format_type)
+    ->condition('type', $type)
     ->execute();
   db_delete('date_format_locale')
-    ->condition('type', $date_format_type)
+    ->condition('type', $type)
     ->execute();
 }
 
 /**
- * Save a date format to the database.
+ * Saves a date format to the database.
  *
  * @param $date_format
- *   An array of attributes for a date format.
+ *   A date format array containing the following keys:
+ *   - type: The name of the date type this format is associated with.
+ *   - format: The PHP date format string.
+ *   - locked: A boolean indicating whether or not this format should be
+ *     configurable from the user interface.
  * @param $dfid
- *   If set, replace an existing date format with a new string using this
- *   identifier.
+ *   If set, replace the existing date format having this ID with the
+ *   information specified in $date_format.
+ *
+ * @see system_get_date_types()
+ * @see http://php.net/date
  */
 function system_date_format_save($date_format, $dfid = 0) {
-  $format = array();
-  $format['dfid'] = $dfid;
-  $format['type'] = $date_format['type'];
-  $format['format'] = $date_format['format'];
-  $format['locked'] = $date_format['locked'];
+  $info = array();
+  $info['dfid'] = $dfid;
+  $info['type'] = $date_format['type'];
+  $info['format'] = $date_format['format'];
+  $info['locked'] = $date_format['locked'];
 
   // Update date_format table.
   if (!empty($date_format['is_new'])) {
-    drupal_write_record('date_formats', $format);
+    drupal_write_record('date_formats', $info);
   }
   else {
     $keys = ($dfid ? array('dfid') : array('format', 'type'));
-    drupal_write_record('date_formats', $format, $keys);
+    drupal_write_record('date_formats', $info, $keys);
   }
 
   $languages = language_list('enabled');
@@ -3797,10 +3867,10 @@ function system_date_format_save($date_format, $dfid = 0) {
 }
 
 /**
- * Delete a date format from the database.
+ * Deletes a date format from the database.
  *
- * @param $date_format_id
- *   The date format string identifier.
+ * @param $dfid
+ *   The date format ID.
  */
 function system_date_format_delete($dfid) {
   db_delete('date_formats')

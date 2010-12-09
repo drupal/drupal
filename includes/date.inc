@@ -1,5 +1,5 @@
 <?php
-// $Id: date.inc,v 1.1 2009/10/13 21:34:14 dries Exp $
+// $Id: date.inc,v 1.2 2010/12/09 01:51:15 dries Exp $
 
 /**
  * @file
@@ -7,7 +7,7 @@
  */
 
 /**
- * Implements hook_date_formats().
+ * Provides a default system list of date formats for system_date_formats().
  */
 function system_default_date_formats() {
   $formats = array();

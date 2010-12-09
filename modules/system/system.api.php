@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.220 2010/12/08 07:06:27 webchick Exp $
+// $Id: system.api.php,v 1.221 2010/12/09 01:51:16 dries Exp $
 
 /**
  * @file
@@ -3681,7 +3681,7 @@ function hook_archiver_info_alter(&$info) {
 }
 
 /**
- * Defines additional date types.
+ * Define additional date types.
  *
  * Next to the 'long', 'medium' and 'short' date types defined in core, any
  * module can define additional types that can be used when displaying dates. A
@@ -3693,7 +3693,8 @@ function hook_archiver_info_alter(&$info) {
  * can consist of letters, numbers and underscores.
  *
  * @return
- *   A list of date types in 'key' => 'label' format.
+ *   An array of date types where the keys are the machine-readable names and
+ *   the values are the human-readable labels.
  *
  * @see hook_date_formats()
  * @see format_date()
@@ -3707,72 +3708,65 @@ function hook_date_format_types() {
 }
 
 /**
- * Modify existing date format types.
+ * Modify existing date types.
  *
- * Allows other modules to modify existing date types like 'long'. Called
- * by _system_date_format_types_build(). For instance, A module may use this
- * hook to apply settings across all date format types, such as locking all
- * date format types so they appear to be provided by the system.
+ * Allows other modules to modify existing date types like 'long'. Called by
+ * _system_date_format_types_build(). For instance, A module may use this hook
+ * to apply settings across all date types, such as locking all date types so
+ * they appear to be provided by the system.
  *
  * @param $types
- *   An associative array of date format types containing:
- *   - types:  An array of date format types including configuration settings
- *     for each type:
- *     - is_new: Set to FALSE to override previous settings.
- *     - module: The name of the module that created the date format type.
- *     - type: The date type name.
- *     - title: The title of the date type.
- *     - locked: Specifies that the date type is system-provided.
+ *   A list of date types. Each date type is keyed by name and the values are
+ *   associative arrays containing:
+ *   - is_new: Set to FALSE to override previous settings.
+ *   - module: The name of the module that created the date format type.
+ *   - type: The date type name.
+ *   - title: The title of the date type.
+ *   - locked: Specifies that the date type is system-provided.
  */
 function hook_date_format_types_alter(&$types) {
-  foreach ($types as $type_name => $type) {
-    $types[$type_name]['locked'] = 1;
+  foreach ($types as $name => $type) {
+    $types[$name]['locked'] = 1;
   }
 }
 
 /**
- * Defines additional date formats.
+ * Define additional date formats.
  *
- * Next to the 'long', 'medium' and 'short' date types defined in core, any
- * module can define additional types that can be used when displaying dates. A
- * date type is a key which can be passed to format_date() to return a date in
- * the configured displayed format. A date format is a string defining the date
- * and time elements to use. For example, a date type could be
- * 'mymodule_extra_long', while a date format is like 'Y-m-d'.
+ * This hook is used to define the date format strings that are used to format
+ * date types for different locales. Next to the 'long', 'medium' and 'short'
+ * date types defined in core, any module can define additional date types in
+ * hook_date_format_types(). For example, a date type could be
+ * 'mymodule_extra_long' (defined in mymodule_date_format_types()), while a date
+ * format string is like 'Y-m-d' and can be defined with this hook.
  *
- * New date types must first be declared using hook_date_format_types(). It is
- * then possible to define one or more date formats for each.
+ * A module may use this hook to provide date format strings for its own date
+ * types provided in hook_date_format_types() or add date format strings to a
+ * date type provided by another module or to the 'long', 'medium' and 'short'
+ * date types provided by core.
  *
- * A module may also extend the list date formats defined for a date type
- * provided by another module.
- *
- * There may be more than one format for the same locale. For example d/m/Y and
- * Y/m/d work equally well in some locales. It may also be necessary to define
- * multiple versions of the same date format, for example, one using AM, one
- * with PM and one without the time at all.
- *
- * However at the same time you may wish to define some additional date formats
- * that aren't specific to any one locale, for example, "Y m". For these cases
- * the locales field should be omitted.
+ * Since date formats can be locale-specific, you can specify the locales that
+ * each date format string applies to. There may be more than one locale for a
+ * format. There may also be more than one format for the same locale. For
+ * example d/m/Y and Y/m/d work equally well in some locales. You may wish to
+ * define some additional date formats that aren't specific to any one locale,
+ * for example, "Y m". For these cases the locales component should be omitted.
  *
  * @return
- *   A list of date formats. Each date format is a keyed array
- *   consisting of three elements:
- *   - 'type': the date type is a key used to identify which date format to
- *     display. It consists of letters, numbers and underscores, e.g. 'long',
- *     'short', 'mymodule_extra_long'. It must first be declared in
- *     hook_date_format_types() unless extending a type provided by another
- *     module.
- *   - 'format': a string defining the date and time elements to use. It
+ *   A list of date formats. Each date format is a keyed array consisting of
+ *   three elements:
+ *   - 'type': The date type name, as declared in an implementation of
+ *     hook_date_format_types().
+ *   - 'format': A PHP date format string to use when formatting dates. It
  *     can contain any of the formatting options described at
  *     http://php.net/manual/en/function.date.php
- *   - 'locales': (optional) an array of 2 and 5 character language codes, for
+ *   - 'locales': (optional) An array of 2 and 5 character locale codes; for
  *     example, 'en', 'en-us'. The language codes are used to determine which
- *     date format to display for the user's current language. If more than one
+ *     date format to display for the user's current locale. If more than one
  *     date format is suggested for the same date type and locale, then the
- *     first one will be used unless overridden via
+ *     first one will be used unless overridden via the administrative UI at
  *     admin/config/regional/date-time/locale. If your date format is not
- *     language specific, leave this field empty.
+ *     language-specific, leave this array empty.
  *
  * @see hook_date_format_types()
  */
@@ -3797,7 +3791,7 @@ function hook_date_formats() {
 }
 
 /**
- * Alters date types and formats declared by another module.
+ * Alter date formats declared by another module.
  *
  * Called by _system_date_format_types_build() to allow modules to alter the
  * return values from implementations of hook_date_formats().
