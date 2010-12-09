@@ -7,7 +7,7 @@
  */
 
 /**
- * Implements hook_date_formats().
+ * Provides a default system list of date formats for system_date_formats().
  */
 function system_default_date_formats() {
   $formats = array();
