@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1270 2010/12/08 07:06:27 webchick Exp $
+// $Id: common.inc,v 1.1271 2010/12/10 16:44:53 webchick Exp $
 
 /**
  * @file
@@ -3787,7 +3787,7 @@ function drupal_region_class($region) {
  *     array('type' => 'inline', 'scope' => 'footer', 'weight' => 5)
  *   );
  *   drupal_add_js('http://example.com/example.js', 'external');
- *   drupal_add_js(array('myModule', array('key' => 'value')), 'setting');
+ *   drupal_add_js(array('myModule' => array('key' => 'value')), 'setting');
  * @endcode
  *
  * Calling drupal_static_reset('drupal_add_js') will clear all JavaScript added
