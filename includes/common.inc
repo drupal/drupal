@@ -3787,7 +3787,7 @@ function drupal_region_class($region) {
  *     array('type' => 'inline', 'scope' => 'footer', 'weight' => 5)
  *   );
  *   drupal_add_js('http://example.com/example.js', 'external');
- *   drupal_add_js(array('myModule', array('key' => 'value')), 'setting');
+ *   drupal_add_js(array('myModule' => array('key' => 'value')), 'setting');
  * @endcode
  *
  * Calling drupal_static_reset('drupal_add_js') will clear all JavaScript added
