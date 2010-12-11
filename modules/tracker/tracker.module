@@ -1,5 +1,5 @@
 <?php
-// $Id: tracker.module,v 1.172 2010/12/01 00:31:38 webchick Exp $
+// $Id: tracker.module,v 1.173 2010/12/11 02:09:00 dries Exp $
 
 /**
  * @file
@@ -139,7 +139,7 @@ function tracker_cron() {
       // Prepare a starting point for the next run.
       variable_set('tracker_index_nid', $last_nid - 1);
 
-      watchdog('tracker', t('Indexed %count content items for tracking.', array('%count' => $count)));
+      watchdog('tracker', 'Indexed %count content items for tracking.', array('%count' => $count));
     }
     else {
       // If all nodes have been indexed, set to zero to skip future cron runs.
