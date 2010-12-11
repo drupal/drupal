@@ -1,5 +1,5 @@
 <?php
-// $Id: user.api.php,v 1.26 2010/12/01 00:29:41 webchick Exp $
+// $Id: user.api.php,v 1.27 2010/12/11 19:16:42 webchick Exp $
 
 /**
  * @file
@@ -292,8 +292,8 @@ function hook_user_update(&$edit, $account, $category) {
  */
 function hook_user_login(&$edit, $account) {
   // If the user has a NULL time zone, notify them to set a time zone.
-  if (!$user->timezone && variable_get('configurable_timezones', 1) && variable_get('empty_timezone_message', 0)) {
-    drupal_set_message(t('Configure your <a href="@user-edit">account time zone setting</a>.', array('@user-edit' => url("user/$user->uid/edit", array('query' => drupal_get_destination(), 'fragment' => 'edit-timezone')))));
+  if (!$account->timezone && variable_get('configurable_timezones', 1) && variable_get('empty_timezone_message', 0)) {
+    drupal_set_message(t('Configure your <a href="@user-edit">account time zone setting</a>.', array('@user-edit' => url("user/$account->uid/edit", array('query' => drupal_get_destination(), 'fragment' => 'edit-timezone')))));
   }
 }
 
