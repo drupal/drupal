@@ -121,20 +121,23 @@ class FileFieldTestCase extends DrupalWebTestCase {
     );
 
     if (is_numeric($nid_or_type)) {
-      $node = node_load($nid_or_type, NULL, TRUE);
-      $delta = isset($node->{$field_name}[LANGUAGE_NONE]) ? count($node->{$field_name}[LANGUAGE_NONE]) : 0;
-      $edit['files[' . $field_name . '_' . LANGUAGE_NONE . '_' . $delta . ']'] = drupal_realpath($file->uri);
-      $this->drupalPost('node/' . $nid_or_type . '/edit', $edit, t('Save'));
+      $nid = $nid_or_type;
     }
     else {
-      $edit['files[' . $field_name . '_' . LANGUAGE_NONE . '_0]'] = drupal_realpath($file->uri);
-      $type_name = str_replace('_', '-', $nid_or_type);
-      $this->drupalPost('node/add/' . $type_name, $edit, t('Save'));
+      // Add a new node.
+      $node = $this->drupalCreateNode(array('type' => $nid_or_type));
+      $nid = $node->nid;
+      // Save at least one revision to better simulate a real site.
+      $this->drupalCreateNode(get_object_vars($node));
+      $node = node_load($nid, NULL, TRUE);
+      $this->assertNotEqual($nid, $node->vid, t('Node revision exists.'));
     }
 
-    $matches = array();
-    preg_match('/node\/([0-9]+)/', $this->getUrl(), $matches);
-    return isset($matches[1]) ? $matches[1] : FALSE;
+    // Attach a file to the node.
+    $edit['files[' . $field_name . '_' . $langcode . '_0]'] = drupal_realpath($file->uri);
+    $this->drupalPost("node/$nid/edit", $edit, t('Save'));
+
+    return $nid;
   }
 
   /**
@@ -1001,7 +1004,7 @@ class FileTokenReplaceTestCase extends FileFieldTestCase {
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
 
     // Load the node and the file.
-    $node = node_load($nid);
+    $node = node_load($nid, NULL, TRUE);
     $file = (object) $node->{$field_name}[LANGUAGE_NONE][0];
     $file->description = 'File description.';
 

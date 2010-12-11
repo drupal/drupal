@@ -141,7 +141,7 @@ function file_file_download($uri, $field_type = 'file') {
   }
 
   // Find out which (if any) fields of this type contain the file.
-  $references = file_get_file_references($file, NULL, FIELD_LOAD_REVISION, $field_type);
+  $references = file_get_file_references($file, NULL, FIELD_LOAD_CURRENT, $field_type);
 
   // If there are no references, stop processing, to avoid returning headers
   // for files controlled by other modules.
