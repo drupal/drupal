@@ -1,5 +1,5 @@
 <?php
-// $Id: rdf.module,v 1.48 2010/12/01 00:18:15 webchick Exp $
+// $Id: rdf.module,v 1.49 2010/12/11 02:38:24 dries Exp $
 
 /**
  * @file
@@ -223,7 +223,7 @@ function _rdf_mapping_load($type, $bundle) {
  * @return
  *   Status flag indicating the outcome of the operation.
  */
-function rdf_mapping_save(&$mapping) {
+function rdf_mapping_save($mapping) {
   // In the case where a field has a mapping defined in the default entity
   // mapping, but a mapping is not specified in the bundle-specific mapping,
   // then use the default mapping for that field.
