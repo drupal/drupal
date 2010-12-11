@@ -1,0 +1,8 @@
+; $Id$
+name = "User module form tests"
+description = "Support module for user form testing."
+package = Testing
+version = VERSION
+core = 7.x
+files[] = user_form_test.module
+hidden = TRUE
