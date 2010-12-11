@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1224 2010/11/30 23:55:11 webchick Exp $
+// $Id: user.module,v 1.1225 2010/12/11 02:13:56 dries Exp $
 
 /**
  * @file
@@ -1149,8 +1149,6 @@ function user_account_form(&$form, &$form_state) {
  * @see user_account_form()
  */
 function user_validate_current_pass(&$form, &$form_state) {
-  global $user;
-
   $account = $form['#user'];
   foreach ($form_state['values']['current_pass_required_values'] as $key => $name) {
     // This validation only works for required textfields (like mail) or
@@ -1158,7 +1156,7 @@ function user_validate_current_pass(&$form, &$form_state) {
     // that prevent them from being empty if they are changed.
     if ((strlen(trim($form_state['values'][$key])) > 0) && ($form_state['values'][$key] != $account->$key)) {
       require_once DRUPAL_ROOT . '/' . variable_get('password_inc', 'includes/password.inc');
-      $current_pass_failed = empty($form_state['values']['current_pass']) || !user_check_password($form_state['values']['current_pass'], $user);
+      $current_pass_failed = empty($form_state['values']['current_pass']) || !user_check_password($form_state['values']['current_pass'], $account);
       if ($current_pass_failed) {
         form_set_error('current_pass', t("Your current password is missing or incorrect; it's required to change the %name.", array('%name' => $name)));
         form_set_error($key);
