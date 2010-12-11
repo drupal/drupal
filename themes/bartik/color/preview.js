@@ -1,4 +1,4 @@
-// $Id: preview.js,v 1.4 2010/12/07 04:45:24 webchick Exp $
+// $Id: preview.js,v 1.5 2010/12/11 21:37:41 webchick Exp $
 
 (function ($) {
   Drupal.color = {
@@ -8,6 +8,10 @@
       if (!this.logoChanged) {
         $('#preview #preview-logo img').attr('src', Drupal.settings.color.logo);
         this.logoChanged = true;
+      }
+      // Remove the logo if the setting is toggled off. 
+      if (Drupal.settings.color.logo == null) {
+        $('div').remove('#preview-logo');
       }
 
       // Solid background.
