@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1271 2010/12/10 16:44:53 webchick Exp $
+// $Id: common.inc,v 1.1272 2010/12/11 02:22:37 dries Exp $
 
 /**
  * @file
@@ -6388,10 +6388,6 @@ function drupal_common_theme() {
     ),
     'pager_link' => array(
       'variables' => array('text' => NULL, 'page_new' => NULL, 'element' => NULL, 'parameters' => array(), 'attributes' => array()),
-    ),
-    // from locale.inc
-    'locale_admin_manage_screen' => array(
-      'render element' => 'form',
     ),
     // from menu.inc
     'menu_link' => array(
