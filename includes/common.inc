@@ -3264,7 +3264,10 @@ function drupal_get_schema($table = NULL, $rebuild = FALSE) {
 
       // Invoke hook_schema for all modules.
       foreach (module_implements('schema') as $module) {
-        $current = module_invoke($module, 'schema');
+        // Cast the result of hook_schema() to an array, as a NULL return value
+        // would cause array_merge() to set the $schema variable to NULL as well.
+        // That would break modules which use $schema further down the line.
+        $current = (array) module_invoke($module, 'schema');
         _drupal_initialize_schema($module, $current);
         $schema = array_merge($schema, $current);
       }
