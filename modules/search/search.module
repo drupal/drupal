@@ -911,7 +911,7 @@ function _search_parse_query(&$word, &$scores, $not = FALSE) {
  *              Default: 'ORDER BY score DESC'
  *
  * @return
- *   An array of SIDs for the search results.
+ *   An array of objects for the search results.
  *
  * @ingroup search
  */
