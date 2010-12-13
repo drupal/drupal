@@ -2843,13 +2843,21 @@ function drupal_system_listing($mask, $directory, $key = 'name', $min_depth = 1)
  * interface for all altering operations.
  *
  * @param $type
- *   The data type of the structured array. 'form', 'links',
- *   'node_content', and so on are several examples.
+ *   A string describing the type of the alterable $data (e.g. 'form',
+ *   'profile').
  * @param $data
- *   The structured array to be altered.
+ *   The variable that will be passed to hook_TYPE_alter() implementations to
+ *   be altered. The type of this variable depends on $type. For example, when
+ *   altering a 'form', $data will be a structured array. When altering a
+ *   'profile', $data will be an object. If you need to pass additional
+ *   parameters by reference to the hook_TYPE_alter() functions, include them
+ *   as an array in $data['__drupal_alter_by_ref']. They will be unpacked and
+ *   passed to the hook_TYPE_alter() functions, before the additional
+ *   ... parameters (see below).
  * @param ...
- *   Any additional params will be passed on to the called
- *   hook_$type_alter functions.
+ *   Any additional parameters will be passed on to the hook_TYPE_alter()
+ *   functions (not by reference), after any by-reference parameters included
+ *   in $data (see above)
  */
 function drupal_alter($type, &$data) {
   // PHP's func_get_args() always returns copies of params, not references, so
