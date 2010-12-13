@@ -3149,10 +3149,6 @@ function drupal_common_theme() {
     'pager_link' => array(
       'arguments' => array('text' => NULL, 'page_new' => NULL, 'element' => NULL, 'parameters' => array(), 'attributes' => array()),
     ),
-    // from locale.inc
-    'locale_admin_manage_screen' => array(
-      'arguments' => array('form' => NULL),
-    ),
     // from menu.inc
     'menu_item_link' => array(
       'arguments' => array('item' => NULL),
