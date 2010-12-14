@@ -1,4 +1,4 @@
-/* $Id: style-rtl.css,v 1.17 2010/12/06 19:55:44 webchick Exp $ */
+/* $Id: style-rtl.css,v 1.18 2010/12/14 02:50:24 dries Exp $ */
 
 /* ------------------ Reset Styles ------------------ */
 
@@ -7,7 +7,7 @@ th,
 td {
   text-align: right;
 }
-blockquote{
+blockquote {
   border-left: none;
   border-right: 4px solid #afafaf;
 }
@@ -171,7 +171,7 @@ a.button {
 #footer li a {
   float: right;
   border-left: 1px solid #555;
-  border-color: rgba(255,255,255,0.15);  
+  border-color: rgba(255, 255, 255, 0.15);
   border-right: none;
 }
 #footer li.first a {

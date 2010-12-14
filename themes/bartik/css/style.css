@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.47 2010/12/09 07:48:35 webchick Exp $ */
+/* $Id: style.css,v 1.48 2010/12/14 02:50:24 dries Exp $ */
 
 /* ---------- Overall Specifications ---------- */
 
@@ -18,7 +18,7 @@ a:visited {
 }
 a:hover,
 a:active,
-a:focus{
+a:focus {
   text-decoration: underline;
 }
 h1,
@@ -95,7 +95,7 @@ kbd {
 pre {
   background-color: #f2f2f2;
   background-color: rgba(40, 40, 0, 0.06);
-  margin: 10px 0px;
+  margin: 10px 0;
   overflow: hidden;
   padding: 15px;
   white-space: pre-wrap;
@@ -142,21 +142,21 @@ blockquote {
   border-left: 1px solid #bbb;
   font-style: italic;
   margin: 1.5em 10px;
-  padding: .5em 10px;
+  padding: 0.5em 10px;
 }
 blockquote:before {
   color: #bbb;
   content: "\201C";
   font-size: 3em;
-  line-height: .1em;
-  margin-right: .2em;
+  line-height: 0.1em;
+  margin-right: 0.2em;
   vertical-align: -.4em;
 }
 blockquote:after {
   color: #bbb;
   content: "\201D";
   font-size: 3em;
-  line-height: .1em;
+  line-height: 0.1em;
   vertical-align: -.45em;
 }
 blockquote :first-child {
@@ -205,11 +205,11 @@ tr th {
 #footer-wrapper tr td,
 #footer-wrapper tr th {
   border-color: #555;
-  border-color: rgba(255,255,255,0.18);  
+  border-color: rgba(255, 255, 255, 0.18);
 }
 tr.odd {
   background: #e4e4e4;
-  background: rgba(0, 0, 0, 0.105)
+  background: rgba(0, 0, 0, 0.105);
 }
 tr,
 tr.even {
@@ -376,7 +376,7 @@ h1#site-name {
 .region-header .block-menu li a:focus,
 .region-header .block-menu li a:active {
   text-decoration: none;
-  background: rgba(255, 255, 255, 0.15)
+  background: rgba(255, 255, 255, 0.15);
 }
 .region-header .block-menu li.last a {
   border-bottom: 0;
@@ -426,7 +426,7 @@ h1#site-name {
 .region-header #block-user-login .form-actions {
   margin: 4px 0 0;
   padding: 0;
-  clear: both
+  clear: both;
 }
 .region-header #block-user-login input.form-submit {
   border: 1px solid;
@@ -780,13 +780,13 @@ ul.links {
 
 #triptych-wrapper {
   background-color: #fafafa;
-  background: rgba(40,40,0,0.08);
+  background: rgba(40, 40, 0, 0.08);
 }
 #triptych h2 {
   color: #000;
   font-size: 1.714em;
   margin-bottom: 0.8em;
-  text-shadow: 0px 1px 0 #fff;
+  text-shadow: 0 1px 0 #fff;
   text-align: center;
   line-height: 1;
 }
@@ -835,23 +835,23 @@ ul.links {
 
 #footer-wrapper {
   color: #c0c0c0;
-  color: rgba(255,255,255,0.65);  
+  color: rgba(255, 255, 255, 0.65);
   font-size: 0.857em;
 }
 #footer-wrapper a {
   color: #fcfcfc;
-  color: rgba(255,255,255,0.8);
+  color: rgba(255, 255, 255, 0.8);
 }
 #footer-wrapper a:hover,
 #footer-wrapper a:focus {
   color: #fefefe;
-  color: rgba(255,255,255,0.95);  
+  color: rgba(255, 255, 255, 0.95);
   text-decoration: underline;
 }
 #footer-wrapper .block {
   margin: 20px 0;
   border: 1px solid #444;
-  border-color: rgba(255,255,255,0.1);  
+  border-color: rgba(255, 255, 255, 0.1);
   padding: 10px;
 }
 #footer-columns .block-menu,
@@ -861,10 +861,10 @@ ul.links {
   border: none;
 }
 #footer .block {
-  margin: .5em 0;
+  margin: 0.5em 0;
 }
 #footer .block .content {
-  padding: .5em 0;
+  padding: 0.5em 0;
   margin-top: 0;
 }
 #footer .block h2 {
@@ -872,7 +872,7 @@ ul.links {
 }
 #footer-columns h2 {
   border-bottom: 1px solid #555;
-  border-color: rgba(255,255,255,0.15);  
+  border-color: rgba(255, 255, 255, 0.15);
   font-size: 1em;
   margin-bottom: 0;
   padding-bottom: 3px;
@@ -887,7 +887,7 @@ ul.links {
 #footer-columns .content ul {
   list-style: none;
   padding-left: 0; /* LTR */
-  margin-left: 0
+  margin-left: 0;
 }
 #footer-columns .content li {
   list-style: none;
@@ -897,7 +897,7 @@ ul.links {
 #footer-columns .content li a {
   display: block;
   border-bottom: 1px solid #555;
-  border-color: rgba(255,255,255,0.15);  
+  border-color: rgba(255, 255, 255, 0.15);
   line-height: 1.2;
   padding: 0.8em 2px 0.8em 20px; /* LTR */
   text-indent: -15px;
@@ -905,14 +905,14 @@ ul.links {
 #footer-columns .content li a:hover,
 #footer-columns .content li a:focus {
   background-color: #1f1f21;
-  background-color: rgba(255,255,255,.05);
+  background-color: rgba(255, 255, 255, 0.05);
   text-decoration: none;
 }
 #footer {
   letter-spacing: 0.2px;
   margin-top: 30px;
   border-top: 1px solid #555;
-  border-color: rgba(255,255,255,0.15);  
+  border-color: rgba(255, 255, 255, 0.15);
 }
 #footer .region {
   margin-top: 20px;
@@ -931,7 +931,7 @@ ul.links {
   padding: 0 12px;
   display: block;
   border-right: 1px solid #555; /* LTR */
-  border-color: rgba(255,255,255,0.15);  
+  border-color: rgba(255, 255, 255, 0.15);
 }
 #footer li.first a {
   padding-left: 0; /* LTR */
@@ -945,7 +945,7 @@ ul.links {
 }
 #footer-wrapper tr.even {
   background-color: #2c2c2c;
-  background-color: rgba(0,0,0,0.15)
+  background-color: rgba(0, 0, 0, 0.15);
 }
 
 /* --------------- System Tabs  --------------- */
@@ -1008,7 +1008,7 @@ ul.links {
   padding-left: 0; /* LTR */
 }
 .tabs ul.secondary li a {
-  padding: .25em .5em;
+  padding: 0.25em 0.5em;
 }
 .tabs ul.secondary li a.active {
   background: #f2f2f2;
@@ -1021,7 +1021,7 @@ ul.links {
 ul.action-links {
   list-style: none;
   margin: 5px;
-  padding: .5em 1em;
+  padding: 0.5em 1em;
 }
 ul.action-links li {
   display: inline-block;
@@ -1317,7 +1317,7 @@ html.js input.throbbing {
 /* Comment form */
 .comment-form .form-item {
   overflow: hidden;
-  margin-bottom: .8em;
+  margin-bottom: 0.8em;
 }
 .comment-form .form-type-textfield label,
 .comment-form .form-type-item label {
@@ -1471,7 +1471,7 @@ div.add-or-remove-shortcuts {
   text-shadow: none;
 }
 .page-admin-structure-block-demo #featured .block-region {
-  font-size: .55em;
+  font-size: 0.55em;
 }
 .page-admin-structure-block-demo #header .block-region {
   width: 500px;
@@ -1496,7 +1496,7 @@ div.admin-panel {
   background: #fbfbfb;
   border: 1px solid #ccc;
   margin: 10px 0;
-  padding: 0px 5px 5px;
+  padding: 0 5px 5px;
 }
 div.admin-panel h3 {
   margin: 16px 7px;
@@ -1533,8 +1533,8 @@ div.admin-panel .description {
   display: none;
 }
 .overlay-processed .field-type-image {
- display: block;
- float: none;
+  display: block;
+  float: none;
 }
 .overlay #messages {
   width: auto;
