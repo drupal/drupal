@@ -1,5 +1,5 @@
 <?php
-// $Id: field_sql_storage.test,v 1.22 2010/09/29 01:37:02 dries Exp $
+// $Id: field_sql_storage.test,v 1.23 2010/12/14 19:50:05 dries Exp $
 
 /**
  * @file
@@ -37,19 +37,6 @@ class FieldSqlStorageTestCase extends DrupalWebTestCase {
 
   }
 
-  function testEntityTypeId() {
-    $t1 = _field_sql_storage_etid('t1');
-    $t2 = _field_sql_storage_etid('t2');
-
-    $this->assertEqual($t1+1, $t2, 'Entity type ids are sequential');
-    $this->assertIdentical(variable_get('field_sql_storage_t1_etid', NULL), $t1, 'First entity type variable is correct');
-    $this->assertIdentical(variable_get('field_sql_storage_t2_etid', NULL), $t2, 'Second entity type variable is correct');
-    $this->assertEqual(db_query("SELECT etid FROM {field_config_entity_type} WHERE type='t1'")->fetchField(), $t1, 'First entity type in database is correct');
-    $this->assertEqual(db_query("SELECT etid FROM {field_config_entity_type} WHERE type='t2'")->fetchField(), $t2, 'Second entity type in database is correct');
-    $this->assertEqual($t1, _field_sql_storage_etid('t1'), '_field_sql_storage_etid returns the same value for the first entity type');
-    $this->assertEqual($t2, _field_sql_storage_etid('t2'), '_field_sql_storage_etid returns the same value for the second entity type');
-  }
-
   /**
    * Uses the mysql tables and records to verify
    * field_load_revision works correctly.
@@ -59,8 +46,7 @@ class FieldSqlStorageTestCase extends DrupalWebTestCase {
     $eid = 0;
     $langcode = LANGUAGE_NONE;
 
-    $etid = _field_sql_storage_etid($entity_type);
-    $columns = array('etid', 'entity_id', 'revision_id', 'delta', 'language', $this->field_name . '_value');
+    $columns = array('entity_type', 'entity_id', 'revision_id', 'delta', 'language', $this->field_name . '_value');
 
     // Insert data for four revisions to the field revisions table
     $query = db_insert($this->revision_table)->fields($columns);
@@ -70,7 +56,7 @@ class FieldSqlStorageTestCase extends DrupalWebTestCase {
       for ($delta = 0; $delta <= $this->field['cardinality']; $delta++) {
         $value = mt_rand(1, 127);
         $values[$evid][] = $value;
-        $query->values(array($etid, $eid, $evid, $delta, $langcode, $value));
+        $query->values(array($entity_type, $eid, $evid, $delta, $langcode, $value));
       }
     }
     $query->execute();
@@ -78,7 +64,7 @@ class FieldSqlStorageTestCase extends DrupalWebTestCase {
     // Insert data for the "most current revision" into the field table
     $query = db_insert($this->table)->fields($columns);
     foreach ($values[0] as $delta => $value) {
-      $query->values(array($etid, $eid, 0, $delta, $langcode, $value));
+      $query->values(array($entity_type, $eid, 0, $delta, $langcode, $value));
     }
     $query->execute();
 
@@ -112,7 +98,7 @@ class FieldSqlStorageTestCase extends DrupalWebTestCase {
     $eid = $evid = 1;
     $unavailable_language = 'xx';
     $entity = field_test_create_stub_entity($eid, $evid, $this->instance['bundle']);
-    $values = array($etid, $eid, $evid, 0, $unavailable_language, mt_rand(1, 127));
+    $values = array($entity_type, $eid, $evid, 0, $unavailable_language, mt_rand(1, 127));
     db_insert($this->table)->fields($columns)->values($values)->execute();
     db_insert($this->revision_table)->fields($columns)->values($values)->execute();
     field_attach_load($entity_type, array($eid => $entity));
@@ -256,8 +242,8 @@ class FieldSqlStorageTestCase extends DrupalWebTestCase {
     // Add a translation in an unavailable language.
     $unavailable_language = 'xx';
     db_insert($this->table)
-      ->fields(array('etid', 'bundle', 'deleted', 'entity_id', 'revision_id', 'delta', 'language'))
-      ->values(array(_field_sql_storage_etid($entity_type), $this->instance['bundle'], 0, 0, 0, 0, $unavailable_language))
+      ->fields(array('entity_type', 'bundle', 'deleted', 'entity_id', 'revision_id', 'delta', 'language'))
+      ->values(array($entity_type, $this->instance['bundle'], 0, 0, 0, 0, $unavailable_language))
       ->execute();
     $count = db_select($this->table)
       ->countQuery()

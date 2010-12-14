@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1330 2010/12/02 23:58:21 dries Exp $
+// $Id: node.module,v 1.1331 2010/12/14 19:50:05 dries Exp $
 
 /**
  * @file
@@ -3236,13 +3236,12 @@ function _node_query_node_access_alter($query, $base_table, $type) {
   if ($type == 'entity' && count($entity_conditions->conditions())) {
     // All the node access conditions are only for field values belonging to
     // nodes.
-    $etid = variable_get('field_sql_storage_node_etid');
-    $entity_conditions->condition("$base_alias.etid", $etid);
+    $entity_conditions->condition("$base_alias.entity_type", 'node');
     $or = db_or();
     $or->condition($entity_conditions);
     // If the field value belongs to a non-node entity type then this function
     // does not do anything with it.
-    $or->condition("$base_alias.etid", $etid, '<>');
+    $or->condition("$base_alias.entity_type", 'node', '<>');
     // Add the compiled set of rules to the query.
     $query->condition($or);
   }

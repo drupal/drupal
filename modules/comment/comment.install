@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.install,v 1.73 2010/09/28 03:30:37 webchick Exp $
+// $Id: comment.install,v 1.74 2010/12/14 19:50:05 dries Exp $
 
 /**
  * @file
@@ -286,7 +286,6 @@ function comment_update_7006(&$sandbox) {
     $comments = (bool) db_query_range('SELECT 1 FROM {comment}', 0, 1)->fetchField();
     $sandbox['types'] = array();
     if ($comments) {
-      $sandbox['etid'] = _field_sql_storage_etid('comment');
       $sandbox['types'] = array_keys(_update_7000_node_get_types());
     }
     $sandbox['total'] = count($sandbox['types']);
@@ -299,7 +298,7 @@ function comment_update_7006(&$sandbox) {
     $query->innerJoin('node', 'n', 'c.nid = n.nid AND n.type = :type', array(':type' => $type));
     $query->addField('c', 'cid', 'entity_id');
     $query->addExpression("'comment_node_$type'", 'bundle');
-    $query->addExpression($sandbox['etid'], 'etid');
+    $query->addExpression("'comment'", 'entity_type');
     $query->addExpression('0', 'deleted');
     $query->addExpression("'" . LANGUAGE_NONE . "'", 'language');
     $query->addExpression('0', 'delta');

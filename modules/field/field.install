@@ -1,5 +1,5 @@
 <?php
-// $Id: field.install,v 1.23 2010/10/20 01:15:58 dries Exp $
+// $Id: field.install,v 1.24 2010/12/14 19:50:05 dries Exp $
 
 /**
  * @file
@@ -296,13 +296,12 @@ function _update_7000_field_delete_instance($field_name, $entity_type, $bundle) 
     ->execute();
 
   // Nuke data.
-  $etid = _field_sql_storage_etid($entity_type);
   db_delete('field_data_' . $field_name)
-    ->condition('etid', $etid)
+    ->condition('entity_type', $entity_type)
     ->condition('bundle', $bundle)
     ->execute();
   db_delete('field_revision_' . $field_name)
-    ->condition('etid', $etid)
+    ->condition('entity_type', $entity_type)
     ->condition('bundle', $bundle)
     ->execute();
 }

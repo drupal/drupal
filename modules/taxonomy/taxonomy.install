@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.install,v 1.55 2010/12/07 05:20:08 webchick Exp $
+// $Id: taxonomy.install,v 1.56 2010/12/14 19:50:05 dries Exp $
 
 /**
  * @file
@@ -600,8 +600,6 @@ function taxonomy_update_7005(&$sandbox) {
     }
   }
   else {
-    $etid = _field_sql_storage_etid('node');
-
     // We do each pass in batches of 1000.
     $batch = 1000;
 
@@ -687,8 +685,8 @@ function taxonomy_update_7005(&$sandbox) {
 
       // Column names and values in field storage are the same for current and
       // revision.
-      $columns = array('etid', 'entity_id', 'revision_id', 'bundle', 'language', 'delta', $value_column);
-      $values = array($etid, $record->nid, $record->vid, $record->type, LANGUAGE_NONE, $deltas[$field_name]++, $record->tid);
+      $columns = array('entity_type', 'entity_id', 'revision_id', 'bundle', 'language', 'delta', $value_column);
+      $values = array('node', $record->nid, $record->vid, $record->type, LANGUAGE_NONE, $deltas[$field_name]++, $record->tid);
 
       // Insert rows into the revision table.
       db_insert($revision_name)->fields($columns)->values($values)->execute();
