@@ -541,6 +541,7 @@ h1#site-name {
   padding: 20px 0 45px;
   margin: 0;
   background: #f0f0f0;
+  background: rgba(30, 50, 10, 0.08);
   border-bottom: 1px solid #e7e7e7;
   text-shadow: 1px 1px #fff;
 }
@@ -779,8 +780,9 @@ ul.links {
 /* ----------------- Triptych ----------------- */
 
 #triptych-wrapper {
-  background-color: #fafafa;
-  background: rgba(40, 40, 0, 0.08);
+  background-color: #f0f0f0;
+  background: rgba(30, 50, 10, 0.08);
+  border-top: 1px solid #e7e7e7;
 }
 #triptych h2 {
   color: #000;
@@ -1041,6 +1043,7 @@ ul.action-links li a {
 }
 .featured #messages {
   background: #f0f0f0;
+  background: rgba(30, 50, 10, 0.08);
 }
 div.messages {
   margin: 8px 15px;
