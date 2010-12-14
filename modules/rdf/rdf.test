@@ -187,6 +187,25 @@ class RdfRdfaMarkupTestCase extends DrupalWebTestCase {
     ));
 
     $this->assertTrue(!empty($image_rel), t('Attribute \'rel\' set on image field. Attribute \'resource\' is also set.'));
+
+    // Edits the node to add tags.
+    $tag1 = $this->randomName(8);
+    $tag2 = $this->randomName(8);
+    $edit = array();
+    $edit['field_tags[' . LANGUAGE_NONE . ']'] = "$tag1, $tag2";
+    $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
+    // Ensures the RDFa markup for the relationship between the node and its
+    // tags is correct.
+    $term_rdfa_meta = $this->xpath('//div[@about=:node-url and contains(@typeof, "sioc:Item") and contains(@typeof, "foaf:Document")]//ul[@class="links"]/li[@rel="dc:subject"]/a[@typeof="skos:Concept" and text()=:term-name]', array(
+      ':node-url' => url('node/' . $node->nid),
+      ':term-name' => $tag1,
+    ));
+    $this->assertTrue(!empty($term_rdfa_meta), t('Property dc:subject is present for the tag1 field item.'));
+    $term_rdfa_meta = $this->xpath('//div[@about=:node-url and contains(@typeof, "sioc:Item") and contains(@typeof, "foaf:Document")]//ul[@class="links"]/li[@rel="dc:subject"]/a[@typeof="skos:Concept" and text()=:term-name]', array(
+      ':node-url' => url('node/' . $node->nid),
+      ':term-name' => $tag2,
+    ));
+    $this->assertTrue(!empty($term_rdfa_meta), t('Property dc:subject is present for the tag2 field item.'));
   }
 }
 
