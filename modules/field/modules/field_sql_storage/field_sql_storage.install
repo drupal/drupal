@@ -12,26 +12,6 @@
 function field_sql_storage_schema() {
   $schema = array();
 
-  // Static (meta-data) tables.
-  $schema['field_config_entity_type'] = array(
-    'fields' => array(
-      'etid' => array(
-        'type' => 'serial',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'description' => 'The unique id for this entity type',
-      ),
-      'type' => array(
-        'type' => 'varchar',
-        'length' => 128,
-        'not null' => TRUE,
-        'description' => 'An entity type',
-      ),
-    ),
-    'primary key' => array('etid'),
-    'unique keys' => array('type' => array('type')),
-  );
-
   // Dynamic (data) tables.
   if (db_table_exists('field_config')) {
     $fields = field_read_fields(array(), array('include_deleted' => TRUE, 'include_inactive' => TRUE));
@@ -54,16 +34,15 @@ function field_sql_storage_schema() {
  * @ingroup update-api-6.x-to-7.x
  */
 function _update_7000_field_sql_storage_write($entity_type, $bundle, $entity_id, $revision_id, $field_name, $data) {
-  $etid = _field_sql_storage_etid($entity_type);
   $table_name = "field_data_{$field_name}";
   $revision_name = "field_revision_{$field_name}";
 
   db_delete($table_name)
-    ->condition('etid', $etid)
+    ->condition('entity_type', $entity_type)
     ->condition('entity_id', $entity_id)
     ->execute();
   db_delete($revision_name)
-    ->condition('etid', $etid)
+    ->condition('entity_type', $entity_type)
     ->condition('entity_id', $entity_id)
     ->condition('revision_id', $revision_id)
     ->execute();
@@ -72,7 +51,7 @@ function _update_7000_field_sql_storage_write($entity_type, $bundle, $entity_id,
   foreach ($data as $langcode => $items) {
     foreach ($items as $delta => $item) {
       $record = array(
-        'etid' => $etid,
+        'entity_type' => $entity_type,
         'entity_id' => $entity_id,
         'revision_id' => $revision_id,
         'bundle' => $bundle,
@@ -119,6 +98,84 @@ function field_sql_storage_update_7000() {
   // solely to set the schema version to 7000, so that update functions calling
   // those helpers can do so safely by declaring a dependency on
   // field_sql_storage_update_7000().
+}
+
+/**
+ * Remove the field_config_entity_type table and store 'entity_type' strings.
+ */
+function field_sql_storage_update_7001(&$sandbox) {
+  if (!isset($sandbox['progress'])) {
+    // Collect current etids.
+    $sandbox['etids'] = db_query('SELECT etid, type FROM {field_config_entity_type}')->fetchAllKeyed();
+
+    // Collect affected tables: field data, field revision data, 'deleted'
+    // tables.
+    $sandbox['tables'] = array();
+    $results = db_select('field_config', 'fc', array('fetch' => PDO::FETCH_ASSOC))
+      ->fields('fc')
+      ->execute();
+    foreach ($results as $field) {
+      if ($field['deleted']) {
+        $sandbox['tables'][] = "field_deleted_data_{$field['id']}";
+        $sandbox['tables'][] = "field_deleted_revision_{$field['id']}";
+      }
+      else {
+        $sandbox['tables'][] = "field_data_{$field['field_name']}";
+        $sandbox['tables'][] = "field_revision_{$field['field_name']}";
+      }
+    }
+
+    $sandbox['total'] = count($sandbox['tables']);
+    $sandbox['progress'] = 0;
+  }
+
+  if ($sandbox['tables']) {
+    $table = array_pop($sandbox['tables']);
+
+    if (db_table_exists($table)) {
+      // Add the 'entity_type' column.
+      $column = array(
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The entity type this data is attached to.',
+      );
+      db_add_field($table, 'entity_type', $column);
+
+      // Populate the 'entity_type' column based on the 'etid' column.
+      foreach ($sandbox['etids'] as $etid => $entity_type) {
+        db_update($table)
+          ->fields(array('entity_type' => $entity_type))
+          ->condition('etid', $etid)
+          ->execute();
+      }
+
+      // Add indexes for the 'entity_type' column.
+      db_drop_primary_key($table);
+      db_add_primary_key($table, array('entity_type', 'entity_id', 'deleted', 'delta', 'language'));
+      db_add_index($table, 'entity_type', array('entity_type'));
+
+      // Drop the 'etid' column.
+      db_drop_field($table, 'etid');
+    }
+
+    // Report progress.
+    $sandbox['progress']++;
+    $sandbox['#finished'] = min(0.99, $sandbox['progress'] / $sandbox['total']);
+  }
+  else {
+    // No more tables left: drop the field_config_entity_type table.
+    db_drop_table('field_config_entity_type');
+
+    // Drop the previous 'field_sql_storage_ENTITYTYPE_etid' system variables.
+    foreach ($sandbox['etids'] as $etid => $entity_type) {
+      variable_del('field_sql_storage_' . $entity_type . '_etid');
+    }
+
+    // We're done.
+    $sandbox['#finished'] = 1;
+  }
 }
 
 /**
