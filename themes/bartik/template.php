@@ -1,5 +1,5 @@
 <?php
-// $Id: template.php,v 1.12 2010/12/06 19:34:33 webchick Exp $
+// $Id: template.php,v 1.13 2010/12/14 01:04:27 dries Exp $
 
 /**
  * Add body classes if certain regions have content.
@@ -143,7 +143,7 @@ function bartik_field__taxonomy_term_reference($variables) {
   // Render the items.
   $output .= ($variables['element']['#label_display'] == 'inline') ? '<ul class="links inline">' : '<ul class="links">';
   foreach ($variables['items'] as $delta => $item) {
-    $output .= '<li class="taxonomy-term-reference-' . $delta . '">' . drupal_render($item) . '</li>';
+    $output .= '<li class="taxonomy-term-reference-' . $delta . '"' . $variables['item_attributes'][$delta] . '>' . drupal_render($item) . '</li>';
   }
   $output .= '</ul>';
 
