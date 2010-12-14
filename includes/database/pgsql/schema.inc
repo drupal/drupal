@@ -1,5 +1,5 @@
 <?php
-// $Id: schema.inc,v 1.40 2010/10/28 02:27:08 dries Exp $
+// $Id: schema.inc,v 1.41 2010/12/14 19:33:22 dries Exp $
 
 /**
  * @file
@@ -488,6 +488,16 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
     }
 
     $this->connection->query('ALTER TABLE {' . $table . '} ALTER "' . $field . '" TYPE ' . $typecast . ' USING "' . $field . '"::' . $typecast);
+
+    if (isset($spec['not null'])) {
+      if ($spec['not null']) {
+        $nullaction = 'SET NOT NULL';
+      }
+      else {
+        $nullaction = 'DROP NOT NULL';
+      }
+      $this->connection->query('ALTER TABLE {' . $table . '} ALTER "' . $field . '" ' . $nullaction);
+    }
 
     if (in_array($spec['pgsql_type'], array('serial', 'bigserial'))) {
       // Type "serial" is known to PostgreSQL, but *only* during table creation,
