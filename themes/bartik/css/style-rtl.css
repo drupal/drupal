@@ -7,7 +7,7 @@ th,
 td {
   text-align: right;
 }
-blockquote{
+blockquote {
   border-left: none;
   border-right: 4px solid #afafaf;
 }
@@ -171,7 +171,7 @@ a.button {
 #footer li a {
   float: right;
   border-left: 1px solid #555;
-  border-color: rgba(255,255,255,0.15);  
+  border-color: rgba(255, 255, 255, 0.15);
   border-right: none;
 }
 #footer li.first a {
