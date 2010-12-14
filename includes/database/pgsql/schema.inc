@@ -489,6 +489,16 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
 
     $this->connection->query('ALTER TABLE {' . $table . '} ALTER "' . $field . '" TYPE ' . $typecast . ' USING "' . $field . '"::' . $typecast);
 
+    if (isset($spec['not null'])) {
+      if ($spec['not null']) {
+        $nullaction = 'SET NOT NULL';
+      }
+      else {
+        $nullaction = 'DROP NOT NULL';
+      }
+      $this->connection->query('ALTER TABLE {' . $table . '} ALTER "' . $field . '" ' . $nullaction);
+    }
+
     if (in_array($spec['pgsql_type'], array('serial', 'bigserial'))) {
       // Type "serial" is known to PostgreSQL, but *only* during table creation,
       // not when altering. Because of that, the sequence needs to be created
