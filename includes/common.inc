@@ -2215,16 +2215,40 @@ function drupal_http_header_attributes(array $attributes = array()) {
 }
 
 /**
- * Format an attribute string to insert in a tag.
+ * Converts an associative array to an attribute string for use in XML/HTML tags.
  *
- * Each array key and its value will be formatted into an HTML attribute string.
- * If a value is itself an array, then each array element is concatenated with a
- * space between each value (e.g. a multi-value class attribute).
+ * Each array key and its value will be formatted into an attribute string.
+ * If a value is itself an array, then its elements are concatenated to a single
+ * space-delimited string (for example, a class attribute with multiple values).
+ *
+ * Attribute values are sanitized by running them through check_plain().
+ * Attribute names are not automatically sanitized. When using user-supplied
+ * attribute names, it is strongly recommended to allow only white-listed names,
+ * since certain attributes carry security risks and can be abused.
+ *
+ * Examples of security aspects when using drupal_attributes:
+ * @code
+ *   // By running the value in the following statement through check_plain,
+ *   // the malicious script is neutralized.
+ *   drupal_attributes(array('title' => t('<script>steal_cookie();</script>')));
+ *
+ *   // The statement below demonstrates dangerous use of drupal_attributes, and
+ *   // will return an onmouseout attribute with javascript code that, when used
+ *   // as attribute in a tag, will cause users to be redirected to another site.
+ *   //
+ *   // In this case, the 'onmouseout' attribute should not be whitelisted --
+ *   // you don't want users to have the ability to add this attribute or others
+ *   // that take JavaScript commands.
+ *   drupal_attributes(array('onmouseout' => 'window.location="http://malicious.com/";')));
+ * @endcode
  *
  * @param $attributes
- *   An associative array of HTML attributes.
+ *   An associative array of key-value pairs to be converted to attributes.
+ *
  * @return
- *   An HTML string ready for insertion in a tag.
+ *   A string ready for insertion in a tag.
+ *
+ * @ingroup sanitization
  */
 function drupal_attributes(array $attributes = array()) {
   foreach ($attributes as $attribute => &$data) {
