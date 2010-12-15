@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.998 2010/12/09 01:51:16 dries Exp $
+// $Id: system.module,v 1.999 2010/12/15 02:59:01 webchick Exp $
 
 /**
  * @file
@@ -1189,6 +1189,9 @@ function system_library() {
     'version' => '2.49',
     'js' => array(
       'misc/jquery.form.js' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery.cookie'),
     ),
   );
 
