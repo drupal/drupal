@@ -1,5 +1,58 @@
 <?php
-// $Id: entity_crud_hook_test.module,v 1.1 2010/10/15 03:36:21 webchick Exp $
+// $Id: entity_crud_hook_test.module,v 1.2 2010/12/15 03:39:42 webchick Exp $
+
+//
+// Presave hooks
+//
+
+/**
+ * Implements hook_entity_presave().
+ */
+function entity_crud_hook_test_entity_presave($entity, $type) {
+  $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called for type ' . $type);
+}
+
+/**
+ * Implements hook_comment_presave().
+ */
+function entity_crud_hook_test_comment_presave() {
+  $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_file_presave().
+ */
+function entity_crud_hook_test_file_presave() {
+  $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_node_presave().
+ */
+function entity_crud_hook_test_node_presave() {
+  $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_taxonomy_term_presave().
+ */
+function entity_crud_hook_test_taxonomy_term_presave() {
+  $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_taxonomy_vocabulary_presave().
+ */
+function entity_crud_hook_test_taxonomy_vocabulary_presave() {
+  $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_user_presave().
+ */
+function entity_crud_hook_test_user_presave() {
+  $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
 
 //
 // Insert hooks

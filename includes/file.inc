@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.242 2010/11/30 19:31:46 dries Exp $
+// $Id: file.inc,v 1.243 2010/12/15 03:39:41 webchick Exp $
 
 /**
  * @file
@@ -578,6 +578,9 @@ function file_save(stdClass $file) {
   if (!empty($file->fid) && !isset($file->original)) {
     $file->original = entity_load_unchanged('file', $file->fid);
   }
+
+  module_invoke_all('file_presave', $file);
+  module_invoke_all('entity_presave', $file, 'file');
 
   if (empty($file->fid)) {
     drupal_write_record('file_managed', $file);

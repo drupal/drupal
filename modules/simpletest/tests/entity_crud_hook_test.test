@@ -1,5 +1,5 @@
 <?php
-// $Id: entity_crud_hook_test.test,v 1.1 2010/10/15 03:36:21 webchick Exp $
+// $Id: entity_crud_hook_test.test,v 1.2 2010/12/15 03:39:42 webchick Exp $
 
 /**
  * Test invocation of hooks when inserting, loading, updating or deleting an
@@ -81,6 +81,8 @@ class EntityCrudHookTestCase extends DrupalWebTestCase {
     $_SESSION['entity_crud_hook_test'] = array();
     comment_save($comment);
 
+    $this->assertHookMessage('entity_crud_hook_test_entity_presave called for type comment');
+    $this->assertHookMessage('entity_crud_hook_test_comment_presave called');
     $this->assertHookMessage('entity_crud_hook_test_entity_insert called for type comment');
     $this->assertHookMessage('entity_crud_hook_test_comment_insert called');
 
@@ -94,6 +96,8 @@ class EntityCrudHookTestCase extends DrupalWebTestCase {
     $comment->subject = 'New subject';
     comment_save($comment);
 
+    $this->assertHookMessage('entity_crud_hook_test_entity_presave called for type comment');
+    $this->assertHookMessage('entity_crud_hook_test_comment_presave called');
     $this->assertHookMessage('entity_crud_hook_test_entity_update called for type comment');
     $this->assertHookMessage('entity_crud_hook_test_comment_update called');
 
@@ -123,6 +127,8 @@ class EntityCrudHookTestCase extends DrupalWebTestCase {
     $_SESSION['entity_crud_hook_test'] = array();
     file_save($file);
 
+    $this->assertHookMessage('entity_crud_hook_test_entity_presave called for type file');
+    $this->assertHookMessage('entity_crud_hook_test_file_presave called');
     $this->assertHookMessage('entity_crud_hook_test_entity_insert called for type file');
     $this->assertHookMessage('entity_crud_hook_test_file_insert called');
 
@@ -136,6 +142,8 @@ class EntityCrudHookTestCase extends DrupalWebTestCase {
     $file->filename = 'new.entity_crud_hook_test.file';
     file_save($file);
 
+    $this->assertHookMessage('entity_crud_hook_test_entity_presave called for type file');
+    $this->assertHookMessage('entity_crud_hook_test_file_presave called');
     $this->assertHookMessage('entity_crud_hook_test_entity_update called for type file');
     $this->assertHookMessage('entity_crud_hook_test_file_update called');
 
@@ -165,6 +173,8 @@ class EntityCrudHookTestCase extends DrupalWebTestCase {
     $_SESSION['entity_crud_hook_test'] = array();
     node_save($node);
 
+    $this->assertHookMessage('entity_crud_hook_test_entity_presave called for type node');
+    $this->assertHookMessage('entity_crud_hook_test_node_presave called');
     $this->assertHookMessage('entity_crud_hook_test_entity_insert called for type node');
     $this->assertHookMessage('entity_crud_hook_test_node_insert called');
 
@@ -178,6 +188,8 @@ class EntityCrudHookTestCase extends DrupalWebTestCase {
     $node->title = 'New title';
     node_save($node);
 
+    $this->assertHookMessage('entity_crud_hook_test_entity_presave called for type node');
+    $this->assertHookMessage('entity_crud_hook_test_node_presave called');
     $this->assertHookMessage('entity_crud_hook_test_entity_update called for type node');
     $this->assertHookMessage('entity_crud_hook_test_node_update called');
 
@@ -209,6 +221,8 @@ class EntityCrudHookTestCase extends DrupalWebTestCase {
     $_SESSION['entity_crud_hook_test'] = array();
     taxonomy_term_save($term);
 
+    $this->assertHookMessage('entity_crud_hook_test_entity_presave called for type taxonomy_term');
+    $this->assertHookMessage('entity_crud_hook_test_taxonomy_term_presave called');
     $this->assertHookMessage('entity_crud_hook_test_entity_insert called for type taxonomy_term');
     $this->assertHookMessage('entity_crud_hook_test_taxonomy_term_insert called');
 
@@ -222,6 +236,8 @@ class EntityCrudHookTestCase extends DrupalWebTestCase {
     $term->name = 'New name';
     taxonomy_term_save($term);
 
+    $this->assertHookMessage('entity_crud_hook_test_entity_presave called for type taxonomy_term');
+    $this->assertHookMessage('entity_crud_hook_test_taxonomy_term_presave called');
     $this->assertHookMessage('entity_crud_hook_test_entity_update called for type taxonomy_term');
     $this->assertHookMessage('entity_crud_hook_test_taxonomy_term_update called');
 
@@ -245,6 +261,8 @@ class EntityCrudHookTestCase extends DrupalWebTestCase {
     $_SESSION['entity_crud_hook_test'] = array();
     taxonomy_vocabulary_save($vocabulary);
 
+    $this->assertHookMessage('entity_crud_hook_test_entity_presave called for type taxonomy_vocabulary');
+    $this->assertHookMessage('entity_crud_hook_test_taxonomy_vocabulary_presave called');
     $this->assertHookMessage('entity_crud_hook_test_entity_insert called for type taxonomy_vocabulary');
     $this->assertHookMessage('entity_crud_hook_test_taxonomy_vocabulary_insert called');
 
@@ -258,6 +276,8 @@ class EntityCrudHookTestCase extends DrupalWebTestCase {
     $vocabulary->name = 'New name';
     taxonomy_vocabulary_save($vocabulary);
 
+    $this->assertHookMessage('entity_crud_hook_test_entity_presave called for type taxonomy_vocabulary');
+    $this->assertHookMessage('entity_crud_hook_test_taxonomy_vocabulary_presave called');
     $this->assertHookMessage('entity_crud_hook_test_entity_update called for type taxonomy_vocabulary');
     $this->assertHookMessage('entity_crud_hook_test_taxonomy_vocabulary_update called');
 
@@ -283,6 +303,8 @@ class EntityCrudHookTestCase extends DrupalWebTestCase {
     $_SESSION['entity_crud_hook_test'] = array();
     $account = user_save($account, $edit);
 
+    $this->assertHookMessage('entity_crud_hook_test_entity_presave called for type user');
+    $this->assertHookMessage('entity_crud_hook_test_user_presave called');
     $this->assertHookMessage('entity_crud_hook_test_entity_insert called for type user');
     $this->assertHookMessage('entity_crud_hook_test_user_insert called');
 
@@ -296,6 +318,8 @@ class EntityCrudHookTestCase extends DrupalWebTestCase {
     $edit['name'] = 'New name';
     $account = user_save($account, $edit);
 
+    $this->assertHookMessage('entity_crud_hook_test_entity_presave called for type user');
+    $this->assertHookMessage('entity_crud_hook_test_user_presave called');
     $this->assertHookMessage('entity_crud_hook_test_entity_update called for type user');
     $this->assertHookMessage('entity_crud_hook_test_user_update called');
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.927 2010/12/09 01:57:56 dries Exp $
+// $Id: comment.module,v 1.928 2010/12/15 03:39:41 webchick Exp $
 
 /**
  * @file
@@ -1452,6 +1452,7 @@ function comment_save($comment) {
 
     // Allow modules to alter the comment before saving.
     module_invoke_all('comment_presave', $comment);
+    module_invoke_all('entity_presave', $comment, 'comment');
 
     if ($comment->cid) {
       // Update the comment in the database.

@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1331 2010/12/14 19:50:05 dries Exp $
+// $Id: node.module,v 1.1332 2010/12/15 03:39:41 webchick Exp $
 
 /**
  * @file
@@ -1058,6 +1058,7 @@ function node_save($node) {
 
     // Let modules modify the node before it is saved to the database.
     module_invoke_all('node_presave', $node);
+    module_invoke_all('entity_presave', $node, 'node');
 
     if ($node->is_new || !empty($node->revision)) {
       // When inserting either a new node or a new node revision, $node->log

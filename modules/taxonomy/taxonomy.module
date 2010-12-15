@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.622 2010/11/30 19:31:46 dries Exp $
+// $Id: taxonomy.module,v 1.623 2010/12/15 03:39:42 webchick Exp $
 
 /**
  * @file
@@ -404,6 +404,7 @@ function taxonomy_vocabulary_save($vocabulary) {
   }
 
   module_invoke_all('taxonomy_vocabulary_presave', $vocabulary);
+  module_invoke_all('entity_presave', $vocabulary, 'taxonomy_vocabulary');
 
   if (!empty($vocabulary->vid) && !empty($vocabulary->name)) {
     $status = drupal_write_record('taxonomy_vocabulary', $vocabulary, 'vid');
@@ -554,6 +555,7 @@ function taxonomy_term_save($term) {
 
   field_attach_presave('taxonomy_term', $term);
   module_invoke_all('taxonomy_term_presave', $term);
+  module_invoke_all('entity_presave', $term, 'taxonomy_term');
 
   if (empty($term->tid)) {
     $op = 'insert';
