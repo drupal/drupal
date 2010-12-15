@@ -397,6 +397,8 @@ function user_load_by_name($name) {
  *
  * @return
  *   A fully-loaded $user object upon successful save or FALSE if the save failed.
+ *
+ * @todo D8: Drop $edit and fix user_save() to be consistent with others.
  */
 function user_save($account, $edit = array(), $category = 'account') {
   $transaction = db_transaction();
@@ -422,11 +424,6 @@ function user_save($account, $edit = array(), $category = 'account') {
       $account->original = entity_load_unchanged('user', $account->uid);
     }
 
-    // Presave field allowing changing of $edit.
-    $edit = (object) $edit;
-    field_attach_presave('user', $edit);
-    $edit = (array) $edit;
-
     if (empty($account)) {
       $account = new stdClass();
     }
@@ -438,7 +435,27 @@ function user_save($account, $edit = array(), $category = 'account') {
     if (!empty($account->data)) {
       $edit['data'] = !empty($edit['data']) ? array_merge($account->data, $edit['data']) : $account->data;
     }
+
+    // Invoke hook_user_presave() for all modules.
     user_module_invoke('presave', $edit, $account, $category);
+
+    // Invoke presave operations of Field Attach API and Entity API. Those APIs
+    // require a fully-fledged (and updated) entity object, so $edit is not
+    // necessarily sufficient, as it technically contains submitted form values
+    // only. Therefore, we need to clone $account into a new object and copy any
+    // new property values of $edit into it.
+    $account_updated = clone $account;
+    foreach ($edit as $key => $value) {
+      $account_updated->$key = $value;
+    }
+    field_attach_presave('user', $account_updated);
+    module_invoke_all('entity_presave', $account_updated, 'user');
+    // Update $edit with any changes modules might have applied to the account.
+    foreach ($account_updated as $key => $value) {
+      if (!property_exists($account, $key) || $value !== $account->$key) {
+        $edit[$key] = $value;
+      }
+    }
 
     if (is_object($account) && !$account->is_new) {
       // Process picture uploads.

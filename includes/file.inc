@@ -579,6 +579,9 @@ function file_save(stdClass $file) {
     $file->original = entity_load_unchanged('file', $file->fid);
   }
 
+  module_invoke_all('file_presave', $file);
+  module_invoke_all('entity_presave', $file, 'file');
+
   if (empty($file->fid)) {
     drupal_write_record('file_managed', $file);
     // Inform modules about the newly added file.

@@ -1452,6 +1452,7 @@ function comment_save($comment) {
 
     // Allow modules to alter the comment before saving.
     module_invoke_all('comment_presave', $comment);
+    module_invoke_all('entity_presave', $comment, 'comment');
 
     if ($comment->cid) {
       // Update the comment in the database.

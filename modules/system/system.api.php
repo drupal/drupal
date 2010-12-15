@@ -281,6 +281,18 @@ function hook_entity_load($entities, $type) {
 }
 
 /**
+ * Act on an entity before it is about to be created or updated.
+ *
+ * @param $entity
+ *   The entity object.
+ * @param $type
+ *   The type of entity being saved (i.e. node, user, comment).
+ */
+function hook_entity_presave($entity, $type) {
+  $entity->changed = REQUEST_TIME;
+}
+
+/**
  * Act on entities when inserted.
  *
  * @param $entity
@@ -2545,7 +2557,7 @@ function hook_file_validate(&$file) {
 }
 
 /**
- * Respond to a file being added.
+ * Act on a file being inserted or updated.
  *
  * This hook is called when a file has been added to the database. The hook
  * doesn't distinguish between files created as a result of a copy or those
@@ -2553,6 +2565,23 @@ function hook_file_validate(&$file) {
  *
  * @param $file
  *   The file that has just been created.
+ *
+ * @see file_save()
+ */
+function hook_file_presave($file) {
+  // Change the file timestamp to an hour prior.
+  $file->timestamp -= 3600;
+}
+
+/**
+ * Respond to a file being added.
+ *
+ * This hook is called before a file has been added to the database. The hook
+ * doesn't distinguish between files created as a result of a copy or those
+ * created by an upload.
+ *
+ * @param $file
+ *   The file that is about to be saved.
  *
  * @see file_save()
  */
