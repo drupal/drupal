@@ -1,5 +1,5 @@
 <?php
-// $Id: field.module,v 1.92 2010/12/07 05:09:58 webchick Exp $
+// $Id: field.module,v 1.93 2010/12/15 02:55:21 webchick Exp $
 /**
  * @file
  * Attach custom data fields to Drupal entities.
@@ -75,21 +75,33 @@ require_once DRUPAL_ROOT . '/modules/field/field.form.inc';
  */
 
 /**
- * Value for $field['cardinality'] property to indicate it can hold an
- * unlimited number of values.
+ * Value for field API indicating a field accepts an unlimited number of values.
  */
 define('FIELD_CARDINALITY_UNLIMITED', -1);
 
 /**
- * TODO
+ * Value for field API indicating a widget doesn't accept default values.
+ *
+ * @see hook_field_widget_info()
  */
 define('FIELD_BEHAVIOR_NONE', 0x0001);
+
 /**
- * TODO
+ * Value for field API concerning widget default and multiple value settings.
+ *
+ * @see hook_field_widget_info()
+ *
+ * When used in a widget default context, indicates the widget accepts default
+ * values. When used in a multiple value context for a widget that allows the
+ * input of one single field value, indicates that the widget will be repeated
+ * for each value input.
  */
 define('FIELD_BEHAVIOR_DEFAULT', 0x0002);
+
 /**
- * TODO
+ * Value for field API indicating a widget can receive several field values.
+ *
+ * @see hook_field_widget_info()
  */
 define('FIELD_BEHAVIOR_CUSTOM', 0x0004);
 
@@ -98,6 +110,7 @@ define('FIELD_BEHAVIOR_CUSTOM', 0x0004);
  * field data with field_attach_load().
  */
 define('FIELD_LOAD_CURRENT', 'FIELD_LOAD_CURRENT');
+
 /**
  * Age argument for loading the version of an entity's field data
  * specified in the entity with field_attach_load().
