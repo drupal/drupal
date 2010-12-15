@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1273 2010/12/14 19:25:45 dries Exp $
+// $Id: common.inc,v 1.1274 2010/12/15 03:00:40 webchick Exp $
 
 /**
  * @file
@@ -37,7 +37,7 @@
  *   $my_substring = drupal_substr($original_string, 0, 5);
  * @endcode
  *
- * @} End of "defgroup php_wrappers".
+ * @}
  */
 
 /**
