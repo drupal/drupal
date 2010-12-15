@@ -37,7 +37,7 @@
  *   $my_substring = drupal_substr($original_string, 0, 5);
  * @endcode
  *
- * @} End of "defgroup php_wrappers".
+ * @}
  */
 
 /**
