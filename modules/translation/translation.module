@@ -227,6 +227,7 @@ function translation_nodeapi(&$node, $op, $teaser, $page) {
           db_query("UPDATE {node} SET tnid = %d, translate = %d WHERE nid = %d", $tnid, 0, $node->translation_source->nid);
         }
         db_query("UPDATE {node} SET tnid = %d, translate = %d WHERE nid = %d", $tnid, 0, $node->nid);
+        $node->tnid = $tnid;
       }
       break;
 
