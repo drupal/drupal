@@ -383,6 +383,12 @@ function db_unlock_tables() {
 
 /**
  * Check if a table exists.
+ *
+ * @param $table
+ *   The name of the table.
+ *
+ * @return
+ *   TRUE if the table exists, and FALSE if the table does not exist.
  */
 function db_table_exists($table) {
   return (bool) db_result(db_query("SELECT COUNT(*) FROM pg_class WHERE relname = '{". db_escape_table($table) ."}'"));
@@ -390,6 +396,14 @@ function db_table_exists($table) {
 
 /**
  * Check if a column exists in the given table.
+ *
+ * @param $table
+ *   The name of the table.
+ * @param $column
+ *   The name of the column.
+ *
+ * @return
+ *   TRUE if the column exists, and FALSE if the column does not exist.
  */
 function db_column_exists($table, $column) {
   return (bool) db_result(db_query("SELECT COUNT(pg_attribute.attname) FROM pg_class, pg_attribute WHERE pg_attribute.attrelid = pg_class.oid AND pg_class.relname = '{". db_escape_table($table) ."}' AND attname = '". db_escape_table($column) ."'"));
