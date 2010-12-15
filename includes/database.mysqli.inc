@@ -79,8 +79,15 @@ function db_connect($url) {
     _db_error_page(mysqli_connect_error());
   }
 
-  // Force UTF-8.
-  mysqli_query($connection, 'SET NAMES "utf8"');
+  // Force MySQL to use the UTF-8 character set. Also set the collation, if a
+  // certain one has been set; otherwise, MySQL defaults to 'utf8_general_ci'
+  // for UTF-8.
+  if (!empty($GLOBALS['db_collation'])) {
+    mysqli_query($connection, 'SET NAMES utf8 COLLATE ' . $GLOBALS['db_collation']);
+  }
+  else {
+    mysqli_query($connection, 'SET NAMES utf8');
+  }
 
   return $connection;
 }

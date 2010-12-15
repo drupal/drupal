@@ -376,7 +376,7 @@ function conf_init() {
   global $base_url, $base_path, $base_root;
 
   // Export the following settings.php variables to the global namespace
-  global $db_url, $db_prefix, $cookie_domain, $conf, $installed_profile, $update_free_access;
+  global $db_url, $db_prefix, $db_collation, $cookie_domain, $conf, $installed_profile, $update_free_access;
   $conf = array();
 
   if (isset($_SERVER['HTTP_HOST'])) {
