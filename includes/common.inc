@@ -5153,7 +5153,7 @@ function drupal_system_listing($mask, $directory, $key = 'name', $min_depth = 1)
     // compatible with Drupal core. This may occur during upgrades of Drupal
     // core when new modules exist in core while older contrib modules with the
     // same name exist in a directory such as sites/all/modules/.
-    foreach (array_intersect_key($files_to_add, $files) as $key => $file) {
+    foreach (array_intersect_key($files_to_add, $files) as $file_key => $file) {
       // If it has no info file, then we just behave liberally and accept the
       // new resource on the list for merging.
       if (file_exists($info_file = dirname($file->uri) . '/' . $file->name . '.info')) {
@@ -5164,7 +5164,7 @@ function drupal_system_listing($mask, $directory, $key = 'name', $min_depth = 1)
         // from the array for the current search directory, so it is not
         // overwritten when merged with the $files array.
         if (isset($info['core']) && $info['core'] != DRUPAL_CORE_COMPATIBILITY) {
-          unset($files_to_add[$key]);
+          unset($files_to_add[$file_key]);
         }
       }
     }
