@@ -1,5 +1,5 @@
 <?php
-// $Id: toolbar.module,v 1.48 2010/12/01 07:05:26 webchick Exp $
+// $Id: toolbar.module,v 1.49 2010/12/15 03:04:38 webchick Exp $
 
 /**
  * @file
@@ -91,13 +91,12 @@ function toolbar_toggle_page() {
 function theme_toolbar_toggle($variables) {
   if ($variables['collapsed']) {
     $toggle_text = t('Show shortcuts');
-    return '<a href="' . url('toolbar/toggle', array('query' => drupal_get_destination())) . '" title="' . $toggle_text . '"' .  drupal_attributes($variables['attributes']) . '>' . $toggle_text . '</a>';
   }
   else {
     $toggle_text = t('Hide shortcuts');
     $variables['attributes']['class'][] = 'toggle-active';
-    return '<a href="' . url('toolbar/toggle', array('query' => drupal_get_destination())) . '" title="' . $toggle_text . '"' .  drupal_attributes($variables['attributes']) . '>' . $toggle_text . '</a>';
   }
+  return '<a href="' . url('toolbar/toggle', array('query' => drupal_get_destination())) . '" title="' . $toggle_text . '"' .  drupal_attributes($variables['attributes']) . '>' . $toggle_text . '</a>';
 }
 
 /**
