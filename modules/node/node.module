@@ -711,10 +711,10 @@ function _node_types_build($rebuild = FALSE) {
     // Types defined by the node module in the database (rather than by a separate
     // module using hook_node_info) have a base value of 'node_content'. The isset()
     // check prevents errors on old (pre-Drupal 7) databases.
-    if (isset($type_object->base) && $type_object->base != 'node_content' && empty($info_array[$type_db])) {
+    if (isset($type_object->base) && $type_object->base != 'node_content' && empty($_node_types->types[$type_db])) {
       $type_object->disabled = TRUE;
     }
-    if (isset($info_array[$type_db])) {
+    if (isset($_node_types->types[$type_db])) {
       $type_object->disabled = FALSE;
     }
     if (!isset($_node_types->types[$type_db]) || $type_object->modified) {
