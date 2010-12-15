@@ -1,5 +1,8 @@
 // $Id$
 
+Drupal 6.21-dev, xxxx-xx-xx (development release)
+----------------------
+
 Drupal 6.20, 2010-12-15
 ----------------------
 - Fixed a variety of small bugs, improved code documentation.
