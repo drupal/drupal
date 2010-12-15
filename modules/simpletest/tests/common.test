@@ -1424,6 +1424,26 @@ class JavaScriptTestCase extends DrupalWebTestCase {
   }
 
   /**
+   * Tests retrieval of libraries via drupal_get_library().
+   */
+  function testGetLibrary() {
+    // Retrieve all libraries registered by a module.
+    $libraries = drupal_get_library('common_test');
+    $this->assertTrue(isset($libraries['farbtastic']), t('Retrieved all module libraries.'));
+    // Retrieve all libraries for a module not implementing hook_library().
+    // Note: This test installs Locale module.
+    $libraries = drupal_get_library('locale');
+    $this->assertEqual($libraries, array(), t('Retrieving libraries from a module not implementing hook_library() returns an emtpy array.'));
+
+    // Retrieve a specific library by module and name.
+    $farbtastic = drupal_get_library('common_test', 'farbtastic');
+    $this->assertEqual($farbtastic['version'], '5.3', t('Retrieved a single library.'));
+    // Retrieve a non-existing library by module and name.
+    $farbtastic = drupal_get_library('common_test', 'foo');
+    $this->assertIdentical($farbtastic, FALSE, t('Retrieving a non-existing library returns FALSE.'));
+  }
+
+  /**
    * Tests that the query string remains intact when adding JavaScript files
    *  that have query string parameters.
    */
