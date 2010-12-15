@@ -1190,6 +1190,9 @@ function system_library() {
     'js' => array(
       'misc/jquery.form.js' => array(),
     ),
+    'dependencies' => array(
+      array('system', 'jquery.cookie'),
+    ),
   );
 
   // jQuery BBQ plugin.
