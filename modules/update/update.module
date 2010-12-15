@@ -301,6 +301,9 @@ function update_cron() {
     // missing data, and if so, try to fetch the data.
     update_get_available(TRUE);
   }
+
+  // Clear garbage from disk.
+  update_clear_update_disk_cache();
 }
 
 /**
@@ -861,3 +864,46 @@ function update_flush_caches() {
 /**
  * @} End of "defgroup update_status_cache".
  */
+
+/**
+ * Clear the temporary files and directories based on file age from disk.
+ */
+function update_clear_update_disk_cache() {
+  // List of update module cache directories.
+  $directories = array(
+    'temporary://update-cache',
+    'temporary://update-extraction',
+  );
+
+  // Search for files and directories in base folder only without recursion.
+  foreach ($directories as $directory) {
+    file_scan_directory($directory, '/.*/', array('callback' => 'update_delete_file_if_stale', 'recurse' => FALSE));
+  }
+}
+
+/**
+ * Delete stale files and directories from the Update manager disk cache.
+ *
+ * Files and directories older than 6 hours and development snapshots older
+ * than 5 minutes are considered stale. We only cache development snapshots
+ * for 5 minutes since otherwise updated snapshots might not be downloaded as
+ * expected.
+ *
+ * When checking file ages, we need to use the ctime, not the mtime
+ * (modification time) since many (all?) tar implementations go out of their
+ * way to set the mtime on the files they create to the timestamps recorded
+ * in the tarball. We want to see the last time the file was changed on disk,
+ * which is left alone by tar and correctly set to the time the archive file
+ * was unpacked.
+ *
+ * @param $path
+ *   A string containing a file path or (streamwrapper) URI.
+ */
+function update_delete_file_if_stale($path) {
+  if (file_exists($path)) {
+    $filectime = filectime($path);
+    if (REQUEST_TIME - $filectime > DRUPAL_MAXIMUM_TEMP_FILE_AGE || (preg_match('/.*-dev\.(tar\.gz|zip)/i', $path) && REQUEST_TIME - $filectime > 300)) {
+      file_unmanaged_delete_recursive($path);
+    }
+  }
+}

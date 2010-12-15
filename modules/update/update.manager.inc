@@ -723,8 +723,8 @@ function update_manager_file_get($url) {
     mkdir($cache_directory);
   }
 
-  if (!file_exists($local)) {
-    return system_retrieve_file($url, $local);
+  if (!file_exists($local) || update_delete_file_if_stale($local)) {
+    return system_retrieve_file($url, $local, FALSE, FILE_EXISTS_REPLACE);
   }
   else {
     return $local;
