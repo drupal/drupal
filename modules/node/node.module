@@ -1239,9 +1239,9 @@ function node_search($op = 'search', $keys = NULL) {
       if ($weight = (int)variable_get('node_rank_recent', 5)) {
         // Exponential decay with half-life of 6 months, starting at last indexed node
         // c.last_comment_timestamp may be NULL. Since both MAX(anynumber, NULL) and
-        // GREATEST(anynumber, NULL) return NULL, we OR MAX(c.last_comment_timestamp) with 1
+        // GREATEST(anynumber, NULL) return NULL, we use COALESCE(MAX(c.last_comment_timestamp), 0)
         // to prevent it from being NULL.
-        $ranking[] = '%d * POW(2, (GREATEST(MAX(n.created), MAX(n.changed), MAX(c.last_comment_timestamp) || 1) - %d) * 6.43e-8)';
+        $ranking[] = '%d * POW(2, (GREATEST(MAX(n.created), MAX(n.changed), COALESCE(MAX(c.last_comment_timestamp), 0)) - %d) * 6.43e-8)';
         $arguments2[] = $weight;
         $arguments2[] = (int)variable_get('node_cron_last', 0);
         $join2 .= ' LEFT JOIN {node_comment_statistics} c ON c.nid = i.sid';
