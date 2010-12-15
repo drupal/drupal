@@ -1,5 +1,5 @@
 <?php
-// $Id: common.test,v 1.137 2010/11/30 06:30:21 webchick Exp $
+// $Id: common.test,v 1.138 2010/12/15 04:21:39 webchick Exp $
 
 /**
  * @file
@@ -1421,6 +1421,26 @@ class JavaScriptTestCase extends DrupalWebTestCase {
     drupal_render($element);
     $scripts = drupal_get_js();
     $this->assertTrue(strpos($scripts, 'misc/farbtastic/farbtastic.js'), t('The attached_library property adds the additional libraries.'));
+  }
+
+  /**
+   * Tests retrieval of libraries via drupal_get_library().
+   */
+  function testGetLibrary() {
+    // Retrieve all libraries registered by a module.
+    $libraries = drupal_get_library('common_test');
+    $this->assertTrue(isset($libraries['farbtastic']), t('Retrieved all module libraries.'));
+    // Retrieve all libraries for a module not implementing hook_library().
+    // Note: This test installs Locale module.
+    $libraries = drupal_get_library('locale');
+    $this->assertEqual($libraries, array(), t('Retrieving libraries from a module not implementing hook_library() returns an emtpy array.'));
+
+    // Retrieve a specific library by module and name.
+    $farbtastic = drupal_get_library('common_test', 'farbtastic');
+    $this->assertEqual($farbtastic['version'], '5.3', t('Retrieved a single library.'));
+    // Retrieve a non-existing library by module and name.
+    $farbtastic = drupal_get_library('common_test', 'foo');
+    $this->assertIdentical($farbtastic, FALSE, t('Retrieving a non-existing library returns FALSE.'));
   }
 
   /**

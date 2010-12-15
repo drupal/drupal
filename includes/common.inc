@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1274 2010/12/15 03:00:40 webchick Exp $
+// $Id: common.inc,v 1.1275 2010/12/15 04:21:39 webchick Exp $
 
 /**
  * @file
@@ -4523,10 +4523,14 @@ function drupal_add_library($module, $name, $every_page = NULL) {
  *
  * @param $module
  *   The name of a module that registered a library.
- * @param $library
- *   The name of a registered library.
+ * @param $name
+ *   (optional) The name of a registered library to retrieve. By default, all
+ *   libraries registered by $module are returned.
+ *
  * @return
- *   The definition of the requested library, if existent, or FALSE.
+ *   The definition of the requested library, if $name was passed and it exists,
+ *   or FALSE if it does not exist. If no $name was passed, an associative array
+ *   of libraries registered by $module is returned (which may be empty).
  *
  * @see drupal_add_library()
  * @see hook_library()
@@ -4535,7 +4539,7 @@ function drupal_add_library($module, $name, $every_page = NULL) {
  * @todo The purpose of drupal_get_*() is completely different to other page
  *   requisite API functions; find and use a different name.
  */
-function drupal_get_library($module, $name) {
+function drupal_get_library($module, $name = NULL) {
   $libraries = &drupal_static(__FUNCTION__, array());
 
   if (!isset($libraries[$module])) {
@@ -4558,11 +4562,13 @@ function drupal_get_library($module, $name) {
     }
     $libraries[$module] = $module_libraries;
   }
-  if (empty($libraries[$module][$name])) {
-    $libraries[$module][$name] = FALSE;
+  if (isset($name)) {
+    if (!isset($libraries[$module][$name])) {
+      $libraries[$module][$name] = FALSE;
+    }
+    return $libraries[$module][$name];
   }
-
-  return $libraries[$module][$name];
+  return $libraries[$module];
 }
 
 /**
