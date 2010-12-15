@@ -2025,12 +2025,12 @@ function drupal_load_stylesheet($file, $optimize = NULL) {
       // Regexp to match single quoted strings.
       $single_quot = "'[^'\\\\]*(?:\\\\.[^'\\\\]*)*'";
       $contents = preg_replace_callback(
-        "<$double_quot|$single_quot|$comment>Sus",  // Match all comment blocks along
-        "_process_comment",                         // with double/single quoted strings
-        $contents);                                 // and feed them to _process_comment().
+        "<$double_quot|$single_quot|$comment>Ss",  // Match all comment blocks along
+        "_process_comment",                        // with double/single quoted strings
+        $contents);                                // and feed them to _process_comment().
       $contents = preg_replace(
-        '<\s*([@{}:;,]|\)\s|\s\()\s*>S',            // Remove whitespace around separators,
-        '\1', $contents);                           // but keep space around parentheses.
+        '<\s*([@{}:;,]|\)\s|\s\()\s*>S',           // Remove whitespace around separators,
+        '\1', $contents);                          // but keep space around parentheses.
       // End the file with a new line.
       $contents .= "\n";
     }
