@@ -242,6 +242,20 @@ abstract class Query implements QueryPlaceholderInterface {
   protected $connection;
 
   /**
+   * The target of the connection object.
+   * 
+   * @var string
+   */
+  protected $connectionTarget;
+
+  /**
+   * The key of the connection object.
+   * 
+   * @var string
+   */
+  protected $connectionKey;
+
+  /**
    * The query options to pass on to the connection object.
    *
    * @var array
@@ -270,7 +284,26 @@ abstract class Query implements QueryPlaceholderInterface {
    */
   public function __construct(DatabaseConnection $connection, $options) {
     $this->connection = $connection;
+    $this->connectionKey = $this->connection->getKey();
+    $this->connectionTarget = $this->connection->getTarget();
+
     $this->queryOptions = $options;
+  }
+
+  /**
+   * Implements the magic __sleep function to disconnect from the database.
+   */
+  public function __sleep() {
+    $keys = get_object_vars($this);
+    unset($keys['connection']);
+    return array_keys($keys);
+  }
+
+  /**
+  * Implements the magic __wakeup function to reconnect to the database.
+   */
+  public function __wakeup() {
+    $this->connection = Database::getConnection($this->connectionTarget, $this->connectionKey);
   }
 
   /**
