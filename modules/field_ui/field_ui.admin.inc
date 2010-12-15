@@ -1,5 +1,5 @@
 <?php
-// $Id: field_ui.admin.inc,v 1.87 2010/11/30 23:55:11 webchick Exp $
+// $Id: field_ui.admin.inc,v 1.88 2010/12/15 04:13:48 webchick Exp $
 
 /**
  * @file
@@ -1706,10 +1706,6 @@ function field_ui_field_delete_form_submit($form, &$form_state) {
 
   if (!empty($bundle) && $field && !$field['locked'] && $form_values['confirm']) {
     field_delete_instance($instance);
-    // Delete the field if that was the last instance.
-    if (count($field['bundles']) == 1 && count(current($field['bundles'])) == 1) {
-      field_delete_field($field['field_name']);
-    }
     drupal_set_message(t('The field %field has been deleted from the %type content type.', array('%field' => $instance['label'], '%type' => $bundle_label)));
   }
   else {

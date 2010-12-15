@@ -1,5 +1,5 @@
 <?php
-// $Id: field.crud.inc,v 1.72 2010/10/25 00:09:12 dries Exp $
+// $Id: field.crud.inc,v 1.73 2010/12/15 04:13:48 webchick Exp $
 
 /**
  * @file
@@ -588,7 +588,7 @@ function field_delete_field($field_name) {
     foreach ($field['bundles'] as $entity_type => $bundles) {
       foreach ($bundles as $bundle) {
         $instance = field_info_instance($entity_type, $field_name, $bundle);
-        field_delete_instance($instance);
+        field_delete_instance($instance, FALSE);
       }
     }
   }
@@ -923,8 +923,12 @@ function field_read_instances($params = array(), $include_additional = array()) 
  *
  * @param $instance
  *   An instance structure.
+ * @param $field_cleanup
+ *   If TRUE, the field will be deleted as well if its last instance is being
+ *   deleted. If FALSE, it is the caller's responsability to handle the case of
+ *   fields left without instances. Defaults to TRUE.
  */
-function field_delete_instance($instance) {
+function field_delete_instance($instance, $field_cleanup = TRUE) {
   // Mark the field instance for deletion.
   db_update('field_config_instance')
     ->fields(array('deleted' => 1))
@@ -933,14 +937,20 @@ function field_delete_instance($instance) {
     ->condition('bundle', $instance['bundle'])
     ->execute();
 
+  // Clear the cache.
+  field_cache_clear();
+
   // Mark instance data for deletion.
   $field = field_info_field($instance['field_name']);
   module_invoke($field['storage']['module'], 'field_storage_delete_instance', $instance);
 
-  // Clear the cache.
-  field_cache_clear();
-
+  // Let modules react to the deletion of the instance.
   module_invoke_all('field_delete_instance', $instance);
+
+  // Delete the field itself if we just deleted its last instance.
+  if ($field_cleanup && count($field['bundles']) == 0) {
+    field_delete_field($field['field_name']);
+  }
 }
 
 /**
@@ -1058,12 +1068,11 @@ function field_purge_batch($batch_size) {
     }
   }
 
-  // Retrieve all deleted fields. Any that have no bundles can be purged.
+  // Retrieve all deleted fields. Any that have no instances can be purged.
   $fields = field_read_fields(array('deleted' => 1), array('include_deleted' => 1));
   foreach ($fields as $field) {
-    // field_read_fields() does not return $field['bundles'] which we need.
-    $field = field_info_field_by_id($field['id']);
-    if (!isset($field['bundles']) || count($field['bundles']) == 0) {
+    $instances = field_read_instances(array('field_id' => $field['id']), array('include_deleted' => 1));
+    if (empty($instances)) {
       field_purge_field($field);
     }
   }

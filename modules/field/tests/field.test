@@ -1,5 +1,5 @@
 <?php
-// $Id: field.test,v 1.46 2010/12/07 06:12:44 webchick Exp $
+// $Id: field.test,v 1.47 2010/12/15 04:13:48 webchick Exp $
 
 /**
  * @file
@@ -2545,6 +2545,11 @@ class FieldInstanceCrudTestCase extends FieldTestCase {
     // Make sure the other field instance is not deleted.
     $another_instance = field_read_instance('test_entity', $this->another_instance_definition['field_name'], $this->another_instance_definition['bundle']);
     $this->assertTrue(!empty($another_instance) && empty($another_instance['deleted']), t('A non-deleted field instance is not marked for deletion.'));
+
+    // Make sure the field is deleted when its last instance is deleted.
+    field_delete_instance($another_instance);
+    $field = field_read_field($another_instance['field_name'], array('include_deleted' => TRUE));
+    $this->assertTrue(!empty($field['deleted']), t('A deleted field is marked for deletion after all its instances have been marked for deletion.'));
   }
 }
 
@@ -3081,30 +3086,32 @@ class FieldBulkDeleteTestCase extends FieldTestCase {
   function testPurgeField() {
     $field = reset($this->fields);
 
-    foreach ($this->bundles as $bundle) {
-      // Delete the instance.
-      $instance = field_info_instance($this->entity_type, $field['field_name'], $bundle);
-      field_delete_instance($instance);
+    // Delete the first instance.
+    $instance = field_info_instance($this->entity_type, $field['field_name'], 'bb_1');
+    field_delete_instance($instance);
 
-      // Purge the data.
-      field_purge_batch(10);
+    // Purge the data.
+    field_purge_batch(10);
 
-      // Purge again to purge the instance.
-      field_purge_batch(0);
+    // Purge again to purge the instance.
+    field_purge_batch(0);
 
-      // The field still exists, not deleted, because it was never deleted.
-      $fields = field_read_fields(array('id' => $field['id']), array('include_deleted' => 1, 'include_inactive' => 1));
-      $this->assertTrue(isset($fields[$field['id']]), 'The field exists and is not deleted');
-    }
+    // The field still exists, not deleted.
+    $fields = field_read_fields(array('id' => $field['id']), array('include_deleted' => 1));
+    $this->assertTrue(isset($fields[$field['id']]) && !$fields[$field['id']]['deleted'], 'The field exists and is not deleted');
 
-    // Delete the field.
-    field_delete_field($field['field_name']);
+    // Delete the second instance.
+    $instance = field_info_instance($this->entity_type, $field['field_name'], 'bb_2');
+    field_delete_instance($instance);
+
+    // Purge the data.
+    field_purge_batch(10);
 
     // The field still exists, deleted.
-    $fields = field_read_fields(array('id' => $field['id']), array('include_deleted' => 1, 'include_inactive' => 1));
-    $this->assertEqual($fields[$field['id']]['deleted'], 1, 'The field exists and is deleted');
+    $fields = field_read_fields(array('id' => $field['id']), array('include_deleted' => 1));
+    $this->assertTrue(isset($fields[$field['id']]) && $fields[$field['id']]['deleted'], 'The field exists and is deleted');
 
-    // Purge the field.
+    // Purge again to purge the instance and the field.
     field_purge_batch(0);
 
     // The field is gone.
