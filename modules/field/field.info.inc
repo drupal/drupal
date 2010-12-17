@@ -1,5 +1,5 @@
 <?php
-// $Id: field.info.inc,v 1.57 2010/12/17 00:49:56 dries Exp $
+// $Id: field.info.inc,v 1.58 2010/12/17 01:36:04 dries Exp $
 
 /**
  * @file
@@ -605,7 +605,8 @@ function field_info_fields() {
  *
  * @param $field_name
  *   The name of the field to retrieve. $field_name can only refer to a
- *   non-deleted field.
+ *   non-deleted, active field. Use field_read_fields() to retrieve information
+ *   on deleted or inactive fields.
  *
  * @return
  *   The field array, as returned by field_read_fields(), with an
