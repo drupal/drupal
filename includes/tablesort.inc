@@ -80,7 +80,7 @@ class TableSort extends SelectQueryExtender {
     // User has not specified a sort. Use default if specified; otherwise use "asc".
     else {
       foreach ($this->header as $header) {
-        if (isset($header['sort'])) {
+        if (is_array($header) && isset($header['sort'])) {
           return $header['sort'];
         }
       }

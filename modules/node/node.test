@@ -1409,6 +1409,20 @@ class NodeAdminTestCase extends DrupalWebTestCase {
       $this->drupalCreateNode(array('title' => $prefix . $this->randomName(6)));
     }
 
+    // Test that the default sort by node.changed DESC actually fires properly.
+    $nodes_query = db_select('node', 'n')
+      ->fields('n', array('nid'))
+      ->orderBy('changed', 'DESC')
+      ->execute()
+      ->fetchCol();
+
+    $nodes_form = array();
+    $this->drupalGet('admin/content');
+    foreach ($this->xpath('//table/tbody/tr/td/div/input/@value') as $input) {
+      $nodes_form[] = $input;
+    }
+    $this->assertEqual($nodes_query, $nodes_form, 'Nodes are sorted in the form according to the default query.');
+
     // Compare the rendered HTML node list to a query for the nodes ordered by
     // title to account for possible database-dependent sort order.
     $nodes_query = db_select('node', 'n')
@@ -1417,6 +1431,7 @@ class NodeAdminTestCase extends DrupalWebTestCase {
       ->execute()
       ->fetchCol();
 
+    $nodes_form = array();
     $this->drupalGet('admin/content', array('query' => array('sort' => 'asc', 'order' => 'Title')));
     foreach ($this->xpath('//table/tbody/tr/td/div/input/@value') as $input) {
       $nodes_form[] = $input;
