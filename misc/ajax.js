@@ -25,6 +25,9 @@ Drupal.behaviors.AJAX = {
       if (!$('#' + base + '.ajax-processed').length) {
         var element_settings = settings.ajax[base];
 
+        if (typeof element_settings.selector == 'undefined') {
+          element_settings.selector = '#' + base;
+        }
         $(element_settings.selector).each(function () {
           element_settings.element = this;
           Drupal.ajax[base] = new Drupal.ajax(base, this, element_settings);
@@ -100,11 +103,11 @@ Drupal.ajax = function (base, element, element_settings) {
     keypress: true,
     selector: '#' + base,
     effect: 'none',
-    speed: 'slow',
+    speed: 'none',
     method: 'replaceWith',
     progress: {
-      type: 'bar',
-      message: 'Please wait...'
+      type: 'throbber',
+      message: Drupal.t('Please wait...')
     },
     submit: {
       'js': true
