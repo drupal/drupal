@@ -1,5 +1,5 @@
 <?php
-// $Id: ajax.inc,v 1.39 2010/11/30 17:16:37 dries Exp $
+// $Id: ajax.inc,v 1.40 2010/12/17 01:03:58 dries Exp $
 
 /**
  * @file
@@ -613,15 +613,10 @@ function ajax_pre_render_element($element) {
     $settings += array(
       'path' => 'system/ajax',
       'options' => array(),
-      'selector' => '#' . $element['#id'],
-      'effect' => 'none',
-      'speed' => 'none',
-      'method' => 'replaceWith',
-      'progress' => array('type' => 'throbber'),
     );
 
     // @todo Legacy support. Remove in Drupal 8.
-    if ($settings['method'] == 'replace') {
+    if (isset($settings['method']) && $settings['method'] == 'replace') {
       $settings['method'] = 'replaceWith';
     }
 
@@ -659,7 +654,7 @@ function ajax_pre_render_element($element) {
     }
 
     // Convert a simple #ajax['progress'] string into an array.
-    if (is_string($settings['progress'])) {
+    if (isset($settings['progress']) && is_string($settings['progress'])) {
       $settings['progress'] = array('type' => $settings['progress']);
     }
     // Change progress path to a full URL.
