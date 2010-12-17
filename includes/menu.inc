@@ -336,25 +336,39 @@ function menu_get_ancestors($parts) {
 }
 
 /**
- * The menu system uses serialized arrays stored in the database for
- * arguments. However, often these need to change according to the
- * current path. This function unserializes such an array and does the
- * necessary change.
+ * Unserializes menu data, using a map to replace path elements.
  *
- * Integer values are mapped according to the $map parameter. For
- * example, if unserialize($data) is array('view', 1) and $map is
- * array('node', '12345') then 'view' will not be changed because
- * it is not an integer, but 1 will as it is an integer. As $map[1]
- * is '12345', 1 will be replaced with '12345'. So the result will
- * be array('node_load', '12345').
+ * The menu system stores various path-related information (such as the 'page
+ * arguments' and 'access arguments' components of a menu item) in the database
+ * using serialized arrays, where integer values in the arrays represent
+ * arguments to be replaced by values from the path. This function first
+ * unserializes such menu information arrays, and then does the path
+ * replacement.
  *
- * @param @data
- *   A serialized array.
- * @param @map
- *   An array of potential replacements.
+ * The path replacement acts on each integer-valued element of the unserialized
+ * menu data array ($data) using a map array ($map, which is typically an array
+ * of path arguments) as a list of replacements. For instance, if there is an
+ * element of $data whose value is the number 2, then it is replaced in $data
+ * with $map[2]; non-integer values in $data are left alone.
+ *
+ * As an example, an unserialized $data array with elements ('node_load', 1)
+ * represents instructions for calling the node_load() function. Specifically,
+ * this instruction says to use the path component at index 1 as the input
+ * parameter to node_load(). If the path is 'node/123', then $map will be the
+ * array ('node', 123), and the returned array from this function will have
+ * elements ('node_load', 123), since $map[1] is 123. This return value will
+ * indicate specifically that node_load(123) is to be called to load the node
+ * whose ID is 123 for this menu item.
+ *
+ * @param $data
+ *   A serialized array of menu data, as read from the database.
+ * @param $map
+ *   A path argument array, used to replace integer values in $data; an integer
+ *   value N in $data will be replaced by value $map[N]. Typically, the $map
+ *   array is generated from a call to the arg() function.
  *
  * @return
- *   The $data array unserialized and mapped.
+ *   The unserialized $data array, with path arguments replaced.
  */
 function menu_unserialize($data, $map) {
   if ($data = unserialize($data)) {
