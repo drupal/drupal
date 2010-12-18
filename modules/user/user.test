@@ -367,6 +367,31 @@ class UserLoginTestCase extends DrupalWebTestCase {
   }
 
   /**
+   * Test that user password is re-hashed upon login after changing $count_log2.
+   */
+  function testPasswordRehashOnLogin() {
+    // Load password hashing API.
+    require_once DRUPAL_ROOT . '/' . variable_get('password_inc', 'includes/password.inc');
+    // Set initial $count_log2 to the default, DRUPAL_HASH_COUNT.
+    variable_set('password_count_log2', DRUPAL_HASH_COUNT);
+    // Create a new user and authenticate.
+    $account = $this->drupalCreateUser(array());
+    $password = $account->pass_raw;
+    $this->drupalLogin($account);
+    $this->drupalLogout();
+    // Load the stored user. The password hash should reflect $count_log2.
+    $account = user_load($account->uid);
+    $this->assertIdentical(_password_get_count_log2($account->pass), DRUPAL_HASH_COUNT);
+    // Change $count_log2 and log in again.
+    variable_set('password_count_log2', DRUPAL_HASH_COUNT + 1);
+    $account->pass_raw = $password;
+    $this->drupalLogin($account);
+    // Load the stored user, which should have a different password hash now.
+    $account = user_load($account->uid, TRUE);
+    $this->assertIdentical(_password_get_count_log2($account->pass), DRUPAL_HASH_COUNT + 1);
+  }
+
+  /**
    * Make an unsuccessful login attempt.
    *
    * @param $account
