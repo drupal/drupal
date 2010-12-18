@@ -314,12 +314,15 @@ function comment_count_unpublished() {
 
 /**
  * Implements hook_node_type_insert().
+ *
+ * Creates a comment body field for a node type created while the comment module
+ * is enabled. For node types created before the comment module is enabled,
+ * hook_modules_enabled() serves to create the body fields.
+ *
+ * @see comment_modules_enabled()
  */
 function comment_node_type_insert($info) {
-  field_attach_create_bundle('comment', 'comment_node_' . $info->type);
-  // @todo Create a comment_field_attach_create_bundle() function, and have that
-  //   function create the comment body field instance.
-  _comment_body_field_instance_create($info);
+  _comment_body_field_create($info);
 }
 
 /**
@@ -351,27 +354,39 @@ function comment_node_type_delete($info) {
 }
 
  /**
- * Helper function which creates a comment body field instance for a given node
- * type.
+ * Creates a comment_body field instance for a given node type.
  */
-function _comment_body_field_instance_create($info) {
-  // Attaches the body field by default.
-  $instance = array(
-    'field_name' => 'comment_body',
-    'label' => 'Comment',
-    'entity_type' => 'comment',
-    'bundle' => 'comment_node_' . $info->type,
-    'settings' => array('text_processing' => 1),
-    'required' => TRUE,
-    'display' => array(
-      'default' => array(
-        'label' => 'hidden',
-        'type' => 'text_default',
-        'weight' => 0,
+function _comment_body_field_create($info) {
+  // Create the field if needed.
+  if (!field_read_field('comment_body', array('include_inactive' => TRUE))) {
+    $field = array(
+      'field_name' => 'comment_body',
+      'type' => 'text_long',
+      'entity_types' => array('comment'),
+    );
+    field_create_field($field);
+  }
+  // Create the instance if needed.
+  if (!field_read_instance('comment', 'comment_body', 'comment_node_' . $info->type, array('include_inactive' => TRUE))) {
+    field_attach_create_bundle('comment', 'comment_node_' . $info->type);
+    // Attaches the body field by default.
+    $instance = array(
+      'field_name' => 'comment_body',
+      'label' => 'Comment',
+      'entity_type' => 'comment',
+      'bundle' => 'comment_node_' . $info->type,
+      'settings' => array('text_processing' => 1),
+      'required' => TRUE,
+      'display' => array(
+        'default' => array(
+          'label' => 'hidden',
+          'type' => 'text_default',
+          'weight' => 0,
+        ),
       ),
-    ),
-  );
-  field_create_instance($instance);
+    );
+    field_create_instance($instance);
+  }
 }
 
 /**
