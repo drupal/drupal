@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.514 2010/12/08 06:55:01 webchick Exp $
+// $Id: form.inc,v 1.515 2010/12/18 06:29:46 webchick Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -1641,7 +1641,7 @@ function form_error(&$element, $message = '') {
  *   This is most commonly implemented with a submit handler setting persistent
  *   data within $form_state based on *validated* values in
  *   $form_state['values'] and setting $form_state['rebuild']. The form building
- *   functions must then be implmented to use the $form_state data to rebuild
+ *   functions must then be implemented to use the $form_state data to rebuild
  *   the form with the structure appropriate for the new state.
  * - Where user input must affect the rendering of the form without affecting
  *   its structure, the necessary conditional rendering logic should reside
