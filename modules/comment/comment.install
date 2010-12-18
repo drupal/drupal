@@ -1,39 +1,10 @@
 <?php
-// $Id: comment.install,v 1.74 2010/12/14 19:50:05 dries Exp $
+// $Id: comment.install,v 1.75 2010/12/18 01:50:15 dries Exp $
 
 /**
  * @file
  * Install, update and uninstall functions for the comment module.
  */
-
-/**
- * Implements hook_install().
- */
-function comment_install() {
-  // Create comment body field.
-  if (!field_info_field('comment_body')) {
-    $field = array(
-      'field_name' => 'comment_body',
-      'type' => 'text_long',
-      'entity_types' => array('comment'),
-    );
-    field_create_field($field);
-  }
-
-  // There is a separate comment bundle for each node type to allow for
-  // per-node-type customization of comment fields. Each one of these bundles
-  // needs a comment body field instance. A comment bundle is needed even for
-  // node types whose comments are disabled by default, because individual nodes
-  // may override that default.
-  // @todo This should be changed to call field_attach_create_bundle() instead,
-  //   and a comment_field_attach_create_bundle() function should be added to
-  //   handle the creation of the comment body field instance.
-  foreach (node_type_get_types() as $type => $info) {
-    if (!isset($info->is_new) && !isset($info->disabled) && !field_info_instance('comment', 'comment_body', 'comment_node_' . $info->type)) {
-      _comment_body_field_instance_create($info);
-    }
-  }
-}
 
 /**
  * Implements hook_uninstall().
@@ -75,6 +46,37 @@ function comment_enable() {
   db_insert('node_comment_statistics')
     ->from($query)
     ->execute();
+}
+
+/**
+ * Implements hook_modules_enabled().
+ *
+ * Creates comment body fields for node types existing before the comment module
+ * is enabled. We use hook_modules_enabled() rather than hook_enable() so we can
+ * react to node types of existing modules, and those of modules being enabled
+ * both before and after comment module in the loop of module_enable().
+ *
+ * There is a separate comment bundle for each node type to allow for
+ * per-node-type customization of comment fields. Each one of these bundles
+ * needs a comment body field instance. A comment bundle is needed even for
+ * node types whose comments are disabled by default, because individual nodes
+ * may override that default.
+ *
+ * @see comment_node_type_insert()
+ */
+function comment_modules_enabled($modules) {
+  // Only react if comment module is one of the modules being enabled.
+  // hook_node_type_insert() is used to create body fields while the comment
+  // module is enabled.
+  if (in_array('comment', $modules)) {
+    // Ensure that the list of node types reflects newly enabled modules.
+    node_types_rebuild();
+
+    // Create comment body fields for each node type, if needed.
+    foreach (node_type_get_types() as $type => $info) {
+      _comment_body_field_create($info);
+    }
+  }
 }
 
 /**

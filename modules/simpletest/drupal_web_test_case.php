@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.254 2010/12/05 18:40:17 webchick Exp $
+// $Id: drupal_web_test_case.php,v 1.255 2010/12/18 01:50:16 dries Exp $
 
 /**
  * Global variable that holds information about the tests being run.
@@ -1326,16 +1326,22 @@ class DrupalWebTestCase extends DrupalTestCase {
    * are enabled later.
    */
   protected function resetAll() {
-    // Rebuild caches.
+    // Reset all static variables.
     drupal_static_reset();
+    // Reset the list of enabled modules.
+    module_list(TRUE);
+
+    // Reset cached schema for new database prefix. This must be done before
+    // drupal_flush_all_caches() so rebuilds can make use of the schema of
+    // modules enabled on the cURL side.
+    drupal_get_schema(NULL, TRUE);
+
+    // Perform rebuilds and flush remaining caches.
     drupal_flush_all_caches();
 
     // Reload global $conf array and permissions.
     $this->refreshVariables();
     $this->checkPermissions(array(), TRUE);
-
-    // Reset statically cached schema for new database prefix.
-    drupal_get_schema(NULL, TRUE);
   }
 
   /**
