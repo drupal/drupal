@@ -512,8 +512,6 @@ function drupal_environment_initialize() {
   // sites/default/default.settings.php contains more runtime settings.
   // The .htaccess file contains settings that cannot be changed at runtime.
 
-  // Prevent PHP from generating HTML error messages.
-  ini_set('html_errors', 0);
   // Don't escape quotes when reading files from the database, disk, etc.
   ini_set('magic_quotes_runtime', '0');
   // Use session cookies, not transparent sessions that puts the session id in
