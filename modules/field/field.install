@@ -197,6 +197,17 @@ function _update_7000_field_create_field(&$field) {
     'active' => 1,
   );
 
+  // Fetch the field schema to initialize columns and indexes. The field module
+  // is not guaranteed to be loaded at this point.
+  module_load_install($field['module']);
+  $schema = (array) module_invoke($field['module'], 'field_schema', $field);
+  $schema += array('columns' => array(), 'indexes' => array());
+  // 'columns' are hardcoded in the field type.
+  $field['columns'] = $schema['columns'];
+  // 'indexes' can be both hardcoded in the field type, and specified in the
+  // incoming $field definition.
+  $field['indexes'] += $schema['indexes'];
+
   // The serialized 'data' column contains everything from $field that does not
   // have its own column and is not automatically populated when the field is
   // read.
@@ -226,17 +237,7 @@ function _update_7000_field_create_field(&$field) {
     ->fields($record)
     ->execute();
 
-  // Create storage for this field, the field module is not guaranteed to be
-  // loaded at this point.
-  module_load_install($field['module']);
-  $schema = (array) module_invoke($field['module'], 'field_schema', $field);
-  $schema += array('columns' => array(), 'indexes' => array());
-  // 'columns' are hardcoded in the field type.
-  $field['columns'] = $schema['columns'];
-  // 'indexes' can be both hardcoded in the field type, and specified in the
-  // incoming $field definition.
-  $field['indexes'] += $schema['indexes'];
-
+  // Create storage for the field.
   field_sql_storage_field_storage_create_field($field);
 }
 
@@ -392,6 +393,37 @@ function field_update_7000() {
   // version 7000). This function exists solely to set the schema version to
   // 7000, so that update functions calling those helpers can do so safely
   // by declaring a dependency on field_update_7000().
+}
+
+/**
+ * Fix fields definitions created during the d6 to d7 upgarde path.
+ */
+function field_update_7001() {
+  $fields = _update_7000_field_read_fields();
+  foreach ($fields as $field) {
+    // _update_7000_field_create_field() was broken in d7 RC2, and the fields
+    // created during a d6 to d7 upgrade do not correcly store the 'index'
+    // entry. See http://drupal.org/node/996160.
+
+    module_load_install($field['module']);
+    $schema = (array) module_invoke($field['module'], 'field_schema', $field);
+    $schema += array('indexes' => array());
+    // 'indexes' can be both hardcoded in the field type, and specified in the
+    // incoming $field definition.
+    $field['indexes'] += $schema['indexes'];
+
+    // Place the updated entries in the existing serialized 'data' column.
+    $data = db_query("SELECT data FROM {field_config} WHERE id = :id", array(':id' => $field['id']))->fetchField();
+    $data = unserialize($data);
+    $data['columns'] = $field['columns'];
+    $data['indexes'] = $field['indexes'];
+
+    // Save the new data.
+    $query = db_update('field_config')
+      ->condition('id', $field['id'])
+      ->fields(array('data' => serialize($data)))
+      ->execute();
+  }
 }
 
 /**
