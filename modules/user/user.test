@@ -1,5 +1,5 @@
 <?php
-// $Id: user.test,v 1.110 2010/12/11 02:13:56 dries Exp $
+// $Id: user.test,v 1.111 2010/12/18 00:56:18 dries Exp $
 
 class UserRegistrationTestCase extends DrupalWebTestCase {
   public static function getInfo() {
@@ -364,6 +364,31 @@ class UserLoginTestCase extends DrupalWebTestCase {
     // Try one more attempt for user 1, it should be rejected, even if the
     // correct password has been used.
     $this->assertFailedLogin($user1, 'user');
+  }
+
+  /**
+   * Test that user password is re-hashed upon login after changing $count_log2.
+   */
+  function testPasswordRehashOnLogin() {
+    // Load password hashing API.
+    require_once DRUPAL_ROOT . '/' . variable_get('password_inc', 'includes/password.inc');
+    // Set initial $count_log2 to the default, DRUPAL_HASH_COUNT.
+    variable_set('password_count_log2', DRUPAL_HASH_COUNT);
+    // Create a new user and authenticate.
+    $account = $this->drupalCreateUser(array());
+    $password = $account->pass_raw;
+    $this->drupalLogin($account);
+    $this->drupalLogout();
+    // Load the stored user. The password hash should reflect $count_log2.
+    $account = user_load($account->uid);
+    $this->assertIdentical(_password_get_count_log2($account->pass), DRUPAL_HASH_COUNT);
+    // Change $count_log2 and log in again.
+    variable_set('password_count_log2', DRUPAL_HASH_COUNT + 1);
+    $account->pass_raw = $password;
+    $this->drupalLogin($account);
+    // Load the stored user, which should have a different password hash now.
+    $account = user_load($account->uid, TRUE);
+    $this->assertIdentical(_password_get_count_log2($account->pass), DRUPAL_HASH_COUNT + 1);
   }
 
   /**

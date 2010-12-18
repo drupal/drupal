@@ -1,5 +1,5 @@
 <?php
-// $Id: password.inc,v 1.8 2010/05/04 15:47:03 dries Exp $
+// $Id: password.inc,v 1.9 2010/12/18 00:56:18 dries Exp $
 
 /**
  * @file
@@ -99,15 +99,35 @@ function _password_base64_encode($input, $count) {
  */
 function _password_generate_salt($count_log2) {
   $output = '$S$';
-  // Minimum log2 iterations is DRUPAL_MIN_HASH_COUNT.
-  $count_log2 = max($count_log2, DRUPAL_MIN_HASH_COUNT);
-  // Maximum log2 iterations is DRUPAL_MAX_HASH_COUNT.
+  // Ensure that $count_log2 is within set bounds.
+  $count_log2 = _password_enforce_log2_boundaries($count_log2);
   // We encode the final log2 iteration count in base 64.
   $itoa64 = _password_itoa64();
-  $output .= $itoa64[min($count_log2, DRUPAL_MAX_HASH_COUNT)];
+  $output .= $itoa64[$count_log2];
   // 6 bytes is the standard salt for a portable phpass hash.
   $output .= _password_base64_encode(drupal_random_bytes(6), 6);
   return $output;
+}
+
+/**
+ * Ensures that $count_log2 is within set bounds.
+ *
+ * @param $count_log2
+ *   Integer that determines the number of iterations used in the hashing
+ *   process. A larger value is more secure, but takes more time to complete.
+ *
+ * @return
+ *   Integer within set bounds that is closest to $count_log2.
+ */
+function _password_enforce_log2_boundaries($count_log2) {
+  if ($count_log2 < DRUPAL_MIN_HASH_COUNT) {
+    return DRUPAL_MIN_HASH_COUNT;
+  }
+  elseif ($count_log2 > DRUPAL_MAX_HASH_COUNT) {
+    return DRUPAL_MAX_HASH_COUNT;
+  }
+
+  return (int) $count_log2;
 }
 
 /**
@@ -261,7 +281,9 @@ function user_needs_new_hash($account) {
   if ((substr($account->pass, 0, 3) != '$S$') || (strlen($account->pass) != DRUPAL_HASH_LENGTH)) {
     return TRUE;
   }
+  // Ensure that $count_log2 is within set bounds.
+  $count_log2 = _password_enforce_log2_boundaries(variable_get('password_count_log2', DRUPAL_HASH_COUNT));
   // Check whether the iteration count used differs from the standard number.
-  return (_password_get_count_log2($account->pass) != variable_get('password_count_log2', DRUPAL_HASH_COUNT));
+  return (_password_get_count_log2($account->pass) !== $count_log2);
 }
 

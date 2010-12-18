@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1226 2010/12/15 03:39:42 webchick Exp $
+// $Id: user.module,v 1.1227 2010/12/18 00:56:18 dries Exp $
 
 /**
  * @file
@@ -2169,7 +2169,7 @@ function user_login_final_validate($form, &$form_state) {
 function user_authenticate($name, $password) {
   $uid = FALSE;
   if (!empty($name) && !empty($password)) {
-    $account = db_query("SELECT * FROM {users} WHERE name = :name AND status = 1", array(':name' => $name))->fetchObject();
+    $account = user_load_by_name($name);
     if ($account) {
       // Allow alternate password hashing schemes.
       require_once DRUPAL_ROOT . '/' . variable_get('password_inc', 'includes/password.inc');
@@ -2181,10 +2181,7 @@ function user_authenticate($name, $password) {
         if (user_needs_new_hash($account)) {
           $new_hash = user_hash_password($password);
           if ($new_hash) {
-            db_update('users')
-              ->fields(array('pass' => $new_hash))
-              ->condition('uid', $account->uid)
-              ->execute();
+            user_save($account, array('pass' => $new_hash));
           }
         }
       }
