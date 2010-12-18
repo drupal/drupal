@@ -1,5 +1,5 @@
 <?php
-// $Id: upgrade.node.test,v 1.3 2010/10/01 22:03:29 webchick Exp $
+// $Id: upgrade.node.test,v 1.4 2010/12/18 02:04:36 dries Exp $
 
 /**
  * Upgrade test for node bodies.
@@ -39,6 +39,10 @@ class NodeBodyUpgradePathTestCase extends UpgradePathTestCase {
     $revision = db_query_range("SELECT r.nid, r.vid FROM {node_revision} r JOIN {node} n ON n.nid = r.nid WHERE n.status = 0 AND n.type <> 'poll' AND n.vid <> r.vid", 0, 1)->fetch();
     $revision = node_load($revision->nid, $revision->vid);
     $this->assertTrue(!empty($revision->body), 'Unpublished non-current node revisions still have a node body.');
+
+    // Check that fields created during the upgrade can be edited and resaved
+    // in the UI.
+    $this->drupalPost('admin/structure/types/manage/story/fields/body', array(), t('Save settings'));
   }
 }
 
