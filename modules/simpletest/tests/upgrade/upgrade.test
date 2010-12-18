@@ -1,5 +1,5 @@
 <?php
-// $Id: upgrade.test,v 1.10 2010/11/05 19:05:02 dries Exp $
+// $Id: upgrade.test,v 1.11 2010/12/18 06:36:00 webchick Exp $
 
 /**
  * Perform end-to-end tests of the upgrade path.
@@ -33,6 +33,9 @@ abstract class UpgradePathTestCase extends DrupalWebTestCase {
    */
   protected function setUp() {
     global $user, $language, $conf;
+
+    // Load the Update API.
+    require_once DRUPAL_ROOT . '/includes/update.inc';
 
     // Reset flags.
     $this->upgradedSite = FALSE;
@@ -106,10 +109,11 @@ abstract class UpgradePathTestCase extends DrupalWebTestCase {
     drupal_save_session(FALSE);
     $user = db_query('SELECT * FROM {users} WHERE uid = :uid', array(':uid' => 1))->fetchObject();
 
-    // Generate and set a session cookie.
+    // Generate and set a D6-compatible session cookie.
     $this->curlInitialize();
     $sid = drupal_hash_base64(uniqid(mt_rand(), TRUE) . drupal_random_bytes(55));
-    curl_setopt($this->curlHandle, CURLOPT_COOKIE, rawurlencode($this->session_name) . '=' . rawurlencode($sid));
+    $session_name = update_get_d6_session_name();
+    curl_setopt($this->curlHandle, CURLOPT_COOKIE, rawurlencode($session_name) . '=' . rawurlencode($sid));
 
     // Force our way into the session of the child site.
     drupal_save_session(TRUE);
