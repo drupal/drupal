@@ -2940,14 +2940,27 @@ function system_update_7066() {
 }
 
 /**
- * Allow all users to view the administration theme.
+ * Grant administrators permission to view the administration theme.
  */
 function system_update_7067() {
-  // Preserve the site's current behavior of automatically allowing all users
-  // to view the administration theme whenever they have access to an
-  // administrative page.
-  user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('view the administration theme'));
-  user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array('view the administration theme'));
+  // Users with access to administration pages already see the administration
+  // theme in some places (if one is enabled on the site), so we want them to
+  // continue seeing it.
+  $admin_roles = user_roles(FALSE, 'access administration pages');
+  foreach (array_keys($admin_roles) as $rid) {
+    _update_7000_user_role_grant_permissions($rid, array('view the administration theme'), 'system');
+  }
+  // The above check is not guaranteed to reach all administrative users of the
+  // site, so if the site is currently using an administration theme, display a
+  // message also.
+  if (variable_get('admin_theme')) {
+    if (empty($admin_roles)) {
+      drupal_set_message('The new "View the administration theme" permission is required in order to view your site\'s administration theme. You can grant this permission to your site\'s administrators on the <a href="' . url('admin/people/permissions', array('fragment' => 'module-system')) . '">permissions page</a>.');
+    }
+    else {
+      drupal_set_message('The new "View the administration theme" permission is required in order to view your site\'s administration theme. This permission has been automatically granted to the following roles: <em>' . check_plain(implode(', ', $admin_roles)) . '</em>. You can grant this permission to other roles on the <a href="' . url('admin/people/permissions', array('fragment' => 'module-system')) . '">permissions page</a>.');
+    }
+  }
 }
 
 /**
