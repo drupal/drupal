@@ -1717,7 +1717,7 @@ function _install_configure_form($form, &$form_state, &$install_state) {
   $countries = country_get_list();
   $form['server_settings']['site_default_country'] = array(
     '#type' => 'select',
-    '#title' => t('Default country'),
+    '#title' => st('Default country'),
     '#empty_value' => '',
     '#default_value' => variable_get('site_default_country', NULL),
     '#options' => $countries,
