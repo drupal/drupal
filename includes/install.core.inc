@@ -1,5 +1,5 @@
 <?php
-// $Id: install.core.inc,v 1.46 2010/12/04 01:54:37 webchick Exp $
+// $Id: install.core.inc,v 1.47 2010/12/19 19:26:21 webchick Exp $
 
 /**
  * @file
@@ -1717,7 +1717,7 @@ function _install_configure_form($form, &$form_state, &$install_state) {
   $countries = country_get_list();
   $form['server_settings']['site_default_country'] = array(
     '#type' => 'select',
-    '#title' => t('Default country'),
+    '#title' => st('Default country'),
     '#empty_value' => '',
     '#default_value' => variable_get('site_default_country', NULL),
     '#options' => $countries,
