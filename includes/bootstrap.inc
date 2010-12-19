@@ -19,12 +19,12 @@ define('DRUPAL_CORE_COMPATIBILITY', '7.x');
 /**
  * Minimum supported version of PHP.
  */
-define('DRUPAL_MINIMUM_PHP',    '5.2.4');
+define('DRUPAL_MINIMUM_PHP', '5.2.4');
 
 /**
  * Minimum recommended value of PHP memory_limit.
  */
-define('DRUPAL_MINIMUM_PHP_MEMORY_LIMIT',    '32M');
+define('DRUPAL_MINIMUM_PHP_MEMORY_LIMIT', '32M');
 
 /**
  * Indicates that the item should never be removed unless explicitly selected.
