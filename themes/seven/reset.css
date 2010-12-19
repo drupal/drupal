@@ -1,4 +1,4 @@
-/* $Id: reset.css,v 1.12 2010/08/14 03:01:11 dries Exp $ */
+/* $Id: reset.css,v 1.13 2010/12/19 04:58:13 webchick Exp $ */
 
 /**
  * Reset CSS styles.
@@ -180,7 +180,7 @@ textarea {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 textarea {
-  font-size: 0.923em;
+  font-size: 1em;
   line-height: 1.538em;
 }
 /**
