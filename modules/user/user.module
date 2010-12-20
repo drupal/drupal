@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1227 2010/12/18 00:56:18 dries Exp $
+// $Id: user.module,v 1.1228 2010/12/20 16:27:35 webchick Exp $
 
 /**
  * @file
@@ -181,8 +181,9 @@ function user_uri($user) {
  */
 function user_field_info_alter(&$info) {
   // Add the 'user_register_form' instance setting to all field types.
-  foreach ($info as $field_type => $field_type_info) {
-    $info[$field_type]['instance_settings'] += array(
+  foreach ($info as $field_type => &$field_type_info) {
+    $field_type_info += array('instance_settings' => array());
+    $field_type_info['instance_settings'] += array(
       'user_register_form' => FALSE,
     );
   }
