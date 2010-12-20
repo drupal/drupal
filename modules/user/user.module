@@ -181,8 +181,9 @@ function user_uri($user) {
  */
 function user_field_info_alter(&$info) {
   // Add the 'user_register_form' instance setting to all field types.
-  foreach ($info as $field_type => $field_type_info) {
-    $info[$field_type]['instance_settings'] += array(
+  foreach ($info as $field_type => &$field_type_info) {
+    $field_type_info += array('instance_settings' => array());
+    $field_type_info['instance_settings'] += array(
       'user_register_form' => FALSE,
     );
   }
