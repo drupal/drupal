@@ -5,7 +5,5 @@ package = Core
 version = VERSION
 core = 7.x
 dependencies[] = field
-files[] = field_sql_storage.module
-files[] = field_sql_storage.install
 files[] = field_sql_storage.test
 required = TRUE

@@ -4,5 +4,4 @@ description = "Support module for node permission testing."
 package = Testing
 version = VERSION
 core = 7.x
-files[] = node_access_test.module
 hidden = TRUE

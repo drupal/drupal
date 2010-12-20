@@ -4,6 +4,4 @@ description = "Support module for module system testing."
 package = Testing
 version = VERSION
 core = 7.x
-files[] = module_test.module
-files[] = module_test.file.inc
 hidden = TRUE

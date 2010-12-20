@@ -3,6 +3,5 @@ name = "Content Translation Test"
 description = "Support module for the content translation tests."
 core = 7.x
 package = Testing
-files[] = translation_test.module
 version = VERSION
 hidden = TRUE

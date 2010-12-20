@@ -4,5 +4,4 @@ description = Provides hooks for testing File module functionality.
 package = Core
 version = VERSION
 core = 7.x
-files[] = file_module_test.module
 hidden = TRUE

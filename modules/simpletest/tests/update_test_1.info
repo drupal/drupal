@@ -4,6 +4,4 @@ description = "Support module for update testing."
 package = Testing
 version = VERSION
 core = 7.x
-files[] = update_test_1.module
-files[] = update_test_1.install
 hidden = TRUE

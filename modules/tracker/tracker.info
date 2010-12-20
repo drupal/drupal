@@ -5,6 +5,4 @@ dependencies[] = comment
 package = Core
 version = VERSION
 core = 7.x
-files[] = tracker.module
-files[] = tracker.pages.inc
 files[] = tracker.test

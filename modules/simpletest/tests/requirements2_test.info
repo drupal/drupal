@@ -6,5 +6,4 @@ dependencies[] = comment
 package = Core
 version = VERSION
 core = 7.x
-files[] = requirements2_test.module
 hidden = TRUE

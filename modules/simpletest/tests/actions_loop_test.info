@@ -4,5 +4,4 @@ description = Support module for action loop testing.
 package = Testing
 version = VERSION
 core = 7.x
-files[] = actions_loop_test.module
 hidden = TRUE

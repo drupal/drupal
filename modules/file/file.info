@@ -5,7 +5,4 @@ package = Core
 version = VERSION
 core = 7.x
 dependencies[] = field
-files[] = file.module
-files[] = file.field.inc
-files[] = file.install
 files[] = tests/file.test

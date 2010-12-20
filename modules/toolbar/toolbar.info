@@ -4,4 +4,3 @@ description = Provides a toolbar that shows the top-level administration menu it
 core = 7.x
 package = Core
 version = VERSION
-files[] = toolbar.module

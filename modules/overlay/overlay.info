@@ -4,5 +4,3 @@ description = Displays the Drupal administration interface in an overlay.
 package = Core
 version = VERSION
 core = 7.x
-files[] = overlay.module
-files[] = overlay.install

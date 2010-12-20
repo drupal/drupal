@@ -4,5 +4,4 @@ description = "Support module for error and exception testing."
 package = Testing
 version = VERSION
 core = 7.x
-files[] = error_test.module
 hidden = TRUE

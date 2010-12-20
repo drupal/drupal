@@ -4,6 +4,4 @@ description = "Tests that a module is not installed when it fails hook_requireme
 package = Core
 version = VERSION
 core = 7.x
-files[] = requirements1_test.install
-files[] = requirements1_test.module
 hidden = TRUE

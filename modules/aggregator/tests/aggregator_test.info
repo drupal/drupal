@@ -4,5 +4,4 @@ description = "Support module for aggregator related testing."
 package = Testing
 version = VERSION
 core = 7.x
-files[] = aggregator_test.module
 hidden = TRUE

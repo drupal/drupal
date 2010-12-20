@@ -4,6 +4,4 @@ description = "Support module for RDF module testing."
 package = Testing
 version = VERSION
 core = 7.x
-files[] = rdf_test.install
-files[] = rdf_test.module
 hidden = TRUE

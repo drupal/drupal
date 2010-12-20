@@ -3,6 +3,5 @@ name = "Locale Test"
 description = "Support module for the locale layer tests."
 core = 7.x
 package = Testing
-files[] = locale_test.module
 version = VERSION
 hidden = TRUE

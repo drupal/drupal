@@ -4,5 +4,4 @@ description = Support module for AJAX framework tests.
 package = Testing
 version = VERSION
 core = 7.x
-files[] = ajax_test.module
 hidden = TRUE

@@ -4,7 +4,6 @@ description = "Support module for Common tests."
 package = Testing
 version = VERSION
 core = 7.x
-files[] = common_test.module
 stylesheets[all][] = common_test.css
 stylesheets[print][] = common_test.print.css
 hidden = TRUE

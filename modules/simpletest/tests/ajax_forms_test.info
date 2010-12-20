@@ -3,6 +3,5 @@ name = "AJAX form test mock module"
 description = "Test for AJAX form calls."
 core = 7.x
 package = Testing
-files[] = ajax_forms_test.module
 version = VERSION
 hidden = TRUE

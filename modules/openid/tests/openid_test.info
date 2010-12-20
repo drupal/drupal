@@ -4,7 +4,5 @@ description = "OpenID provider used for testing."
 package = Testing
 version = VERSION
 core = 7.x
-files[] = openid_test.install
-files[] = openid_test.module
 dependencies[] = openid
 hidden = TRUE

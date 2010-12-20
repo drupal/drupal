@@ -4,6 +4,4 @@ description = Allows embedded PHP code/snippets to be evaluated.
 package = Core
 version = VERSION
 core = 7.x
-files[] = php.module
-files[] = php.install
 files[] = php.test

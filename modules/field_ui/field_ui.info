@@ -5,6 +5,4 @@ package = Core
 version = VERSION
 core = 7.x
 dependencies[] = field
-files[] = field_ui.module
-files[] = field_ui.admin.inc
 files[] = field_ui.test

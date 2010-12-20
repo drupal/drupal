@@ -4,4 +4,3 @@ description = Provides contextual links to perform actions related to elements o
 package = Core
 version = VERSION
 core = 7.x
-files[] = contextual.module

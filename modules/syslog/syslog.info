@@ -4,5 +4,4 @@ description = Logs and records system events to syslog.
 package = Core
 version = VERSION
 core = 7.x
-files[] = syslog.module
 files[] = syslog.test

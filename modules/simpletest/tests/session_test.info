@@ -4,5 +4,4 @@ description = "Support module for session data testing."
 package = Testing
 version = VERSION
 core = 7.x
-files[] = session_test.module
 hidden = TRUE
