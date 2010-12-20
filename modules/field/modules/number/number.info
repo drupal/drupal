@@ -1,9 +1,8 @@
-; $Id: number.info,v 1.8 2010/10/25 15:48:41 webchick Exp $
+; $Id: number.info,v 1.9 2010/12/20 19:59:41 webchick Exp $
 name = Number
 description = Defines numeric field types.
 package = Core
 version = VERSION
 core = 7.x
 dependencies[] = field
-files[] = number.module
 files[] = number.test

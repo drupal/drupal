@@ -1,7 +1,6 @@
-; $Id: ccc_update_test.info,v 1.1 2009/10/01 19:23:21 dries Exp $
+; $Id: ccc_update_test.info,v 1.2 2010/12/20 19:59:44 webchick Exp $
 name = CCC Update test
 description = Support module for update module testing.
 package = Testing
 core = 7.x
-files[] = ccc_update_test.module
 hidden = TRUE

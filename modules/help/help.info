@@ -1,9 +1,7 @@
-; $Id: help.info,v 1.8 2009/06/08 09:23:52 dries Exp $
+; $Id: help.info,v 1.9 2010/12/20 19:59:42 webchick Exp $
 name = Help
 description = Manages the display of online help.
 package = Core
 version = VERSION
 core = 7.x
-files[] = help.module
-files[] = help.admin.inc
 files[] = help.test

@@ -1,10 +1,8 @@
-; $Id: field_ui.info,v 1.4 2010/08/16 20:57:23 dries Exp $
+; $Id: field_ui.info,v 1.5 2010/12/20 19:59:41 webchick Exp $
 name = Field UI
 description = User interface for the Field API.
 package = Core
 version = VERSION
 core = 7.x
 dependencies[] = field
-files[] = field_ui.module
-files[] = field_ui.admin.inc
 files[] = field_ui.test

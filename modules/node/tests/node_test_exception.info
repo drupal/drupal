@@ -1,8 +1,7 @@
-; $Id: node_test_exception.info,v 1.1 2009/11/19 04:00:47 webchick Exp $
+; $Id: node_test_exception.info,v 1.2 2010/12/20 19:59:42 webchick Exp $
 name = "Node module exception tests"
 description = "Support module for node related exception testing."
 package = Testing
 version = VERSION
 core = 7.x
-files[] = node_test_exception.module
 hidden = TRUE

@@ -1,8 +1,7 @@
-; $Id: node_access_test.info,v 1.1 2010/02/15 19:00:30 webchick Exp $
+; $Id: node_access_test.info,v 1.2 2010/12/20 19:59:42 webchick Exp $
 name = "Node module access tests"
 description = "Support module for node permission testing."
 package = Testing
 version = VERSION
 core = 7.x
-files[] = node_access_test.module
 hidden = TRUE

@@ -1,19 +1,14 @@
-; $Id: system.info,v 1.20 2009/12/15 08:37:18 dries Exp $
+; $Id: system.info,v 1.21 2010/12/20 19:59:43 webchick Exp $
 name = System
 description = Handles general site configuration for administrators.
 package = Core
 version = VERSION
 core = 7.x
-files[] = system.module
-files[] = system.admin.inc
 files[] = system.archiver.inc
-files[] = system.queue.inc
-files[] = image.gd.inc
-files[] = system.install
-files[] = system.test
-files[] = system.tar.inc
-files[] = system.tokens.inc
-files[] = system.updater.inc
 files[] = system.mail.inc
+files[] = system.queue.inc
+files[] = system.tar.inc
+files[] = system.updater.inc
+files[] = system.test
 required = TRUE
 configure = admin/config/system

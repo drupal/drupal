@@ -1,9 +1,7 @@
-; $Id: php.info,v 1.7 2009/06/08 09:23:53 dries Exp $
+; $Id: php.info,v 1.8 2010/12/20 19:59:42 webchick Exp $
 name = PHP filter
 description = Allows embedded PHP code/snippets to be evaluated.
 package = Core
 version = VERSION
 core = 7.x
-files[] = php.module
-files[] = php.install
 files[] = php.test

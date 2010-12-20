@@ -1,8 +1,7 @@
-;$Id: list_test.info,v 1.1 2009/12/14 20:18:55 dries Exp $
+;$Id: list_test.info,v 1.2 2010/12/20 19:59:41 webchick Exp $
 name = "List test"
 description = "Support module for the List module tests."
 core = 7.x
 package = Testing
-files[] = list_test.module
 version = VERSION
 hidden = TRUE

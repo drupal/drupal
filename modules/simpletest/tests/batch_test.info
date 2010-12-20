@@ -1,9 +1,7 @@
-; $Id: batch_test.info,v 1.1 2010/01/08 06:36:34 webchick Exp $
+; $Id: batch_test.info,v 1.2 2010/12/20 19:59:43 webchick Exp $
 name = "Batch API test"
 description = "Support module for Batch API tests."
 package = Testing
 version = VERSION
 core = 7.x
-files[] = batch_test.module
-files[] = batch_test.callbacks.inc
 hidden = TRUE

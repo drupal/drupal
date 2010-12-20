@@ -1,9 +1,7 @@
-; $Id: url_alter_test.info,v 1.1 2009/10/24 05:13:44 webchick Exp $
+; $Id: url_alter_test.info,v 1.2 2010/12/20 19:59:43 webchick Exp $
 name = Url_alter tests
 description = A support modules for url_alter hook testing.
 core = 7.x
 package = Testing
 version = VERSION
-files[] = url_alter_test.module
-files[] = url_alter_test.install
 hidden = TRUE

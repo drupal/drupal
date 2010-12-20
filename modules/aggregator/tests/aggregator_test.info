@@ -1,8 +1,7 @@
-; $Id: aggregator_test.info,v 1.1 2009/04/02 20:50:37 dries Exp $
+; $Id: aggregator_test.info,v 1.2 2010/12/20 19:59:40 webchick Exp $
 name = "Aggregator module tests"
 description = "Support module for aggregator related testing."
 package = Testing
 version = VERSION
 core = 7.x
-files[] = aggregator_test.module
 hidden = TRUE

@@ -1,9 +1,7 @@
-; $Id: entity_crud_hook_test.info,v 1.1 2010/10/15 03:36:21 webchick Exp $
-
+; $Id: entity_crud_hook_test.info,v 1.2 2010/12/20 19:59:43 webchick Exp $
 name = "Entity CRUD Hooks Test"
 description = "Support module for CRUD hook tests."
 core = 7.x
 package = Testing
-files[] = entity_crud_hook_test.module
 version = VERSION
 hidden = TRUE

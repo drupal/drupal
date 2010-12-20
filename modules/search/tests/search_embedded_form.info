@@ -1,8 +1,7 @@
-; $Id: search_embedded_form.info,v 1.1 2010/08/11 14:21:39 dries Exp $
+; $Id: search_embedded_form.info,v 1.2 2010/12/20 19:59:43 webchick Exp $
 name = "Search embedded form"
 description = "Support module for search module testing of embedded forms."
 package = Testing
 version = VERSION
 core = 7.x
-files[] = search_embedded_form.module
 hidden = TRUE

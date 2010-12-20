@@ -1,11 +1,8 @@
-; $Id: trigger.info,v 1.7 2009/11/17 21:24:18 dries Exp $
+; $Id: trigger.info,v 1.8 2010/12/20 19:59:43 webchick Exp $
 name = Trigger
 description = Enables actions to be fired on certain system events, such as when new content is created.
 package = Core
 version = VERSION
 core = 7.x
-files[] = trigger.module
-files[] = trigger.admin.inc
-files[] = trigger.install
 files[] = trigger.test
 configure = admin/structure/trigger

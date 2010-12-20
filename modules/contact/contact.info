@@ -1,12 +1,8 @@
-; $Id: contact.info,v 1.10 2009/11/17 21:24:18 dries Exp $
+; $Id: contact.info,v 1.11 2010/12/20 19:59:41 webchick Exp $
 name = Contact
 description = Enables the use of both personal and site-wide contact forms.
 package = Core
 version = VERSION
 core = 7.x
-files[] = contact.module
-files[] = contact.admin.inc
-files[] = contact.pages.inc
-files[] = contact.install
 files[] = contact.test
 configure = admin/structure/contact

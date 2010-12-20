@@ -1,8 +1,7 @@
-; $Id: entity_cache_test_dependency.info,v 1.1 2010/04/18 15:01:56 webchick Exp $
+; $Id: entity_cache_test_dependency.info,v 1.2 2010/12/20 19:59:43 webchick Exp $
 name = "Entity cache test dependency"
 description = "Support dependency module for testing entity cache."
 package = Testing
 version = VERSION
 core = 7.x
-files[] = entity_cache_test_dependency.module
 hidden = TRUE

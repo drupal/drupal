@@ -1,9 +1,7 @@
-; $Id: requirements1_test.info,v 1.1 2010/05/26 07:31:46 dries Exp $
+; $Id: requirements1_test.info,v 1.2 2010/12/20 19:59:43 webchick Exp $
 name = Requirements 1 Test
 description = "Tests that a module is not installed when it fails hook_requirements('install')."
 package = Core
 version = VERSION
 core = 7.x
-files[] = requirements1_test.install
-files[] = requirements1_test.module
 hidden = TRUE

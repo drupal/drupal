@@ -1,16 +1,8 @@
-; $Id: update.info,v 1.9 2009/11/17 21:24:18 dries Exp $
+; $Id: update.info,v 1.10 2010/12/20 19:59:43 webchick Exp $
 name = Update manager
 description = Checks for available updates, and can securely install or update modules and themes via a web interface.
 version = VERSION
 package = Core
 core = 7.x
-files[] = update.install
-files[] = update.module
-files[] = update.authorize.inc
-files[] = update.compare.inc
-files[] = update.fetch.inc
-files[] = update.manager.inc
-files[] = update.report.inc
-files[] = update.settings.inc
 files[] = update.test
 configure = admin/reports/updates/settings

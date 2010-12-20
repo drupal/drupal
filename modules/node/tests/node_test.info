@@ -1,8 +1,7 @@
-; $Id: node_test.info,v 1.1 2009/04/02 20:47:54 dries Exp $
+; $Id: node_test.info,v 1.2 2010/12/20 19:59:42 webchick Exp $
 name = "Node module tests"
 description = "Support module for node related testing."
 package = Testing
 version = VERSION
 core = 7.x
-files[] = node_test.module
 hidden = TRUE

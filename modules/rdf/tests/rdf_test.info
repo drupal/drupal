@@ -1,9 +1,7 @@
-; $Id: rdf_test.info,v 1.1 2009/10/19 18:28:15 dries Exp $
+; $Id: rdf_test.info,v 1.2 2010/12/20 19:59:42 webchick Exp $
 name = "RDF module tests"
 description = "Support module for RDF module testing."
 package = Testing
 version = VERSION
 core = 7.x
-files[] = rdf_test.install
-files[] = rdf_test.module
 hidden = TRUE

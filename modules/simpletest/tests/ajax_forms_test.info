@@ -1,8 +1,7 @@
-; $Id: ajax_forms_test.info,v 1.1 2009/11/18 04:56:18 webchick Exp $
+; $Id: ajax_forms_test.info,v 1.2 2010/12/20 19:59:43 webchick Exp $
 name = "AJAX form test mock module"
 description = "Test for AJAX form calls."
 core = 7.x
 package = Testing
-files[] = ajax_forms_test.module
 version = VERSION
 hidden = TRUE

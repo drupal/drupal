@@ -1,4 +1,4 @@
-; $Id: taxonomy.info,v 1.12 2010/10/25 15:48:41 webchick Exp $
+; $Id: taxonomy.info,v 1.13 2010/12/20 19:59:43 webchick Exp $
 name = Taxonomy
 description = Enables the categorization of content.
 package = Core
@@ -6,9 +6,5 @@ version = VERSION
 core = 7.x
 dependencies[] = options
 files[] = taxonomy.module
-files[] = taxonomy.admin.inc
-files[] = taxonomy.pages.inc
-files[] = taxonomy.install
 files[] = taxonomy.test
-files[] = taxonomy.tokens.inc
 configure = admin/structure/taxonomy

@@ -1,16 +1,11 @@
-; $Id: node.info,v 1.14 2010/09/05 02:21:38 dries Exp $
+; $Id: node.info,v 1.15 2010/12/20 19:59:42 webchick Exp $
 name = Node
 description = Allows content to be submitted to the site and displayed on pages.
 package = Core
 version = VERSION
 core = 7.x
 files[] = node.module
-files[] = content_types.inc
-files[] = node.admin.inc
-files[] = node.pages.inc
-files[] = node.install
 files[] = node.test
-files[] = node.tokens.inc
 required = TRUE
 configure = admin/structure/types
 stylesheets[all][] = node.css

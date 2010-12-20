@@ -1,10 +1,7 @@
-; $Id: color.info,v 1.10 2009/09/01 20:39:55 webchick Exp $
-
+; $Id: color.info,v 1.11 2010/12/20 19:59:41 webchick Exp $
 name = Color
 description = Allows administrators to change the color scheme of compatible themes.
 package = Core
 version = VERSION
 core = 7.x
-files[] = color.module
-files[] = color.install
 files[] = color.test

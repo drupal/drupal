@@ -1,8 +1,7 @@
-; $Id: image_test.info,v 1.1 2009/03/09 11:44:54 dries Exp $
+; $Id: image_test.info,v 1.2 2010/12/20 19:59:43 webchick Exp $
 name = "Image test"
 description = "Support module for image toolkit tests."
 package = Testing
 version = VERSION
 core = 7.x
-files[] = image_test.module
 hidden = TRUE

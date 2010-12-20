@@ -1,8 +1,7 @@
-; $Id: filter_test.info,v 1.1 2009/08/26 10:29:26 dries Exp $
+; $Id: filter_test.info,v 1.2 2010/12/20 19:59:43 webchick Exp $
 name = Filter test module
 description = Tests filter hooks and functions.
 package = Testing
 version = VERSION
 core = 7.x
-files[] = filter_test.module
 hidden = TRUE

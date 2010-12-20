@@ -1,8 +1,7 @@
-; $Id: session_test.info,v 1.1 2008/08/16 21:11:02 dries Exp $
+; $Id: session_test.info,v 1.2 2010/12/20 19:59:43 webchick Exp $
 name = "Session test"
 description = "Support module for session data testing."
 package = Testing
 version = VERSION
 core = 7.x
-files[] = session_test.module
 hidden = TRUE

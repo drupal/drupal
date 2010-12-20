@@ -1,10 +1,7 @@
-; $Id: dblog.info,v 1.7 2009/06/08 09:23:51 dries Exp $
+; $Id: dblog.info,v 1.8 2010/12/20 19:59:41 webchick Exp $
 name = Database logging
 description = Logs and records system events to the database.
 package = Core
 version = VERSION
 core = 7.x
-files[] = dblog.module
-files[] = dblog.admin.inc
-files[] = dblog.install
 files[] = dblog.test

@@ -1,10 +1,8 @@
-; $Id: openid_test.info,v 1.1 2009/05/08 21:44:48 dries Exp $
+; $Id: openid_test.info,v 1.2 2010/12/20 19:59:42 webchick Exp $
 name = OpenID dummy provider
 description = "OpenID provider used for testing."
 package = Testing
 version = VERSION
 core = 7.x
-files[] = openid_test.install
-files[] = openid_test.module
 dependencies[] = openid
 hidden = TRUE

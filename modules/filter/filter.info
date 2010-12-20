@@ -1,13 +1,9 @@
-; $Id: filter.info,v 1.13 2009/11/17 21:24:18 dries Exp $
+; $Id: filter.info,v 1.14 2010/12/20 19:59:42 webchick Exp $
 name = Filter
 description = Filters content in preparation for display.
 package = Core
 version = VERSION
 core = 7.x
-files[] = filter.module
-files[] = filter.admin.inc
-files[] = filter.pages.inc
-files[] = filter.install
 files[] = filter.test
 required = TRUE
 configure = admin/config/content/formats

@@ -1,9 +1,8 @@
-; $Id: system_dependencies_test.info,v 1.1 2009/12/08 06:39:34 webchick Exp $
+; $Id: system_dependencies_test.info,v 1.2 2010/12/20 19:59:43 webchick Exp $
 name = "System dependency test"
 description = "Support module for testing system dependencies."
 package = Testing
 version = VERSION
 core = 7.x
-files[] = system_dependencies_test.module
 hidden = TRUE
 dependencies[] = _missing_dependency

@@ -1,8 +1,7 @@
-; $Id: file_module_test.info,v 1.1 2009/08/29 12:52:32 dries Exp $
+; $Id: file_module_test.info,v 1.2 2010/12/20 19:59:41 webchick Exp $
 name = File test
 description = Provides hooks for testing File module functionality.
 package = Core
 version = VERSION
 core = 7.x
-files[] = file_module_test.module
 hidden = TRUE

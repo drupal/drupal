@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.149 2010/11/17 03:58:30 dries Exp $
+// $Id: contact.module,v 1.150 2010/12/20 19:59:41 webchick Exp $
 
 /**
  * @file
@@ -116,7 +116,7 @@ function contact_menu() {
  *   TRUE if the current user has access to the requested user's contact form,
  *   or FALSE otherwise.
  */
-function _contact_personal_tab_access(stdClass $account) {
+function _contact_personal_tab_access($account) {
   global $user;
 
   // Anonymous users cannot have contact forms.

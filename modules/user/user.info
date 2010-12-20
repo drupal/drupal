@@ -1,15 +1,11 @@
-; $Id: user.info,v 1.14 2010/09/05 02:21:38 dries Exp $
+; $Id: user.info,v 1.15 2010/12/20 19:59:44 webchick Exp $
 name = User
 description = Manages the user registration and login system.
 package = Core
 version = VERSION
 core = 7.x
 files[] = user.module
-files[] = user.admin.inc
-files[] = user.pages.inc
-files[] = user.install
 files[] = user.test
-files[] = user.tokens.inc
 required = TRUE
 configure = admin/config/people
 stylesheets[all][] = user.css

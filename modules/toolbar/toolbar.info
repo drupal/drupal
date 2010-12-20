@@ -1,7 +1,6 @@
-; $Id: toolbar.info,v 1.4 2009/12/04 16:02:42 dries Exp $
+; $Id: toolbar.info,v 1.5 2010/12/20 19:59:43 webchick Exp $
 name = Toolbar
 description = Provides a toolbar that shows the top-level administration menu items and links from other modules.
 core = 7.x
 package = Core
 version = VERSION
-files[] = toolbar.module

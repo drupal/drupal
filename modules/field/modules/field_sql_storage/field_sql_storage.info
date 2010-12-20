@@ -1,11 +1,9 @@
-; $Id: field_sql_storage.info,v 1.5 2010/08/16 20:57:22 dries Exp $
+; $Id: field_sql_storage.info,v 1.6 2010/12/20 19:59:41 webchick Exp $
 name = Field SQL storage
 description = Stores field data in an SQL database.
 package = Core
 version = VERSION
 core = 7.x
 dependencies[] = field
-files[] = field_sql_storage.module
-files[] = field_sql_storage.install
 files[] = field_sql_storage.test
 required = TRUE

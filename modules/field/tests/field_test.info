@@ -1,12 +1,8 @@
-;$Id: field_test.info,v 1.1 2009/11/20 23:29:28 webchick Exp $
+;$Id: field_test.info,v 1.2 2010/12/20 19:59:41 webchick Exp $
 name = "Field API Test"
 description = "Support module for the Field API tests."
 core = 7.x
 package = Testing
-files[] = field_test.module
 files[] = field_test.entity.inc
-files[] = field_test.field.inc
-files[] = field_test.storage.inc
-files[] = field_test.install
 version = VERSION
 hidden = TRUE
