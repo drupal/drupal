@@ -1,4 +1,4 @@
-// $Id: ajax.js,v 1.33 2010/12/17 01:03:58 dries Exp $
+// $Id: ajax.js,v 1.34 2010/12/21 04:21:16 webchick Exp $
 (function ($) {
 
 /**
@@ -195,13 +195,19 @@ Drupal.ajax = function (base, element, element_settings) {
  * The AJAX object will, if instructed, bind to a key press response. This
  * will test to see if the key press is valid to trigger this event and
  * if it is, trigger it for us and prevent other keypresses from triggering.
+ * In this case we're handling RETURN and SPACEBAR keypresses (event codes 13
+ * and 32. RETURN is often used to submit a form when in a textfield, and 
+ * SPACE is often used to activate an element without submitting. 
  */
 Drupal.ajax.prototype.keypressResponse = function (element, event) {
   // Create a synonym for this to reduce code confusion.
   var ajax = this;
 
-  // Detect enter key and space bar.
-  if (event.which == 13 || event.which == 32) {
+  // Detect enter key and space bar and allow the standard response for them,
+  // except for form elements of type 'text' and 'textarea', where the 
+  // spacebar activation causes inappropriate activation if #ajax['keypress'] is 
+  // TRUE. On a text-type widget a space should always be a space.
+  if (event.which == 13 || (event.which == 32 && element.type != 'text' && element.type != 'textarea')) {
     $(ajax.element_settings.element).trigger(ajax.element_settings.event);
     return false;
   }
