@@ -1,8 +1,7 @@
-; $Id: user_form_test.info,v 1.1 2010/12/11 06:22:33 webchick Exp $
+; $Id: user_form_test.info,v 1.2 2010/12/21 16:31:47 webchick Exp $
 name = "User module form tests"
 description = "Support module for user form testing."
 package = Testing
 version = VERSION
 core = 7.x
-files[] = user_form_test.module
 hidden = TRUE
