@@ -159,7 +159,6 @@ function _field_sql_storage_schema($field) {
         'description' => 'The sequence number for this data item, used for multi-value fields',
       ),
     ),
-    // @todo Is the primary key needed at all ?
     'primary key' => array('entity_type', 'entity_id', 'deleted', 'delta', 'language'),
     'indexes' => array(
       'entity_type' => array('entity_type'),
@@ -196,12 +195,10 @@ function _field_sql_storage_schema($field) {
     }
   }
 
-  // Construct the revision table. The primary key includes
-  // revision_id but not entity_id so that multiple revision loads can
-  // use the IN operator.
+  // Construct the revision table.
   $revision = $current;
   $revision['description'] = "Revision archive storage for {$deleted}field {$field['id']} ({$field['field_name']})";
-  $revision['primary key'] = array('entity_type', 'revision_id', 'deleted', 'delta', 'language');
+  $revision['primary key'] = array('entity_type', 'entity_id', 'revision_id', 'deleted', 'delta', 'language');
   $revision['fields']['revision_id']['not null'] = TRUE;
   $revision['fields']['revision_id']['description'] = 'The entity revision id this data is attached to';
 

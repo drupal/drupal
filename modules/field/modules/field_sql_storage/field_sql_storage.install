@@ -113,27 +113,31 @@ function field_sql_storage_update_7001(&$sandbox) {
     $sandbox['tables'] = array();
     $results = db_select('field_config', 'fc', array('fetch' => PDO::FETCH_ASSOC))
       ->fields('fc')
+      ->condition('storage_module', 'field_sql_storage')
       ->execute();
     foreach ($results as $field) {
       if ($field['deleted']) {
-        $sandbox['tables'][] = "field_deleted_data_{$field['id']}";
-        $sandbox['tables'][] = "field_deleted_revision_{$field['id']}";
+        $sandbox['tables']["field_deleted_data_{$field['id']}"] = 'data';
+        $sandbox['tables']["field_deleted_revision_{$field['id']}"] = 'revision';
       }
       else {
-        $sandbox['tables'][] = "field_data_{$field['field_name']}";
-        $sandbox['tables'][] = "field_revision_{$field['field_name']}";
+        $sandbox['tables']["field_data_{$field['field_name']}"] = 'data';
+        $sandbox['tables']["field_revision_{$field['field_name']}"] = 'revision';
       }
     }
+    reset($sandbox['tables']);
 
     $sandbox['total'] = count($sandbox['tables']);
     $sandbox['progress'] = 0;
   }
 
   if ($sandbox['tables']) {
-    $table = array_pop($sandbox['tables']);
+    // Grab the next table to process.
+    $table = key($sandbox['tables']);
+    $type = array_shift($sandbox['tables']);
 
-    if (db_table_exists($table)) {
-      // Add the 'entity_type' column.
+    // Add the 'entity_type' column.
+    if (!db_field_exists($table, 'entity_type')) {
       $column = array(
         'type' => 'varchar',
         'length' => 128,
@@ -151,12 +155,20 @@ function field_sql_storage_update_7001(&$sandbox) {
           ->execute();
       }
 
-      // Add indexes for the 'entity_type' column.
-      db_drop_primary_key($table);
-      db_add_primary_key($table, array('entity_type', 'entity_id', 'deleted', 'delta', 'language'));
+      // Index the new column.
       db_add_index($table, 'entity_type', array('entity_type'));
+    }
 
-      // Drop the 'etid' column.
+    // Use the 'entity_type' column in the primary key.
+    db_drop_primary_key($table);
+    $primary_keys = array(
+      'data' => array('entity_type', 'entity_id', 'deleted', 'delta', 'language'),
+      'revision' => array('entity_type', 'entity_id', 'revision_id', 'deleted', 'delta', 'language'),
+    );
+    db_add_primary_key($table, $primary_keys[$type]);
+
+    // Drop the 'etid' column.
+    if (db_field_exists($table, 'etid')) {
       db_drop_field($table, 'etid');
     }
 
@@ -175,6 +187,25 @@ function field_sql_storage_update_7001(&$sandbox) {
 
     // We're done.
     $sandbox['#finished'] = 1;
+  }
+}
+
+/**
+ * Fix primary keys in field revision data tables.
+ */
+function field_sql_storage_update_7002() {
+  $results = db_select('field_config', 'fc', array('fetch' => PDO::FETCH_ASSOC))
+    ->fields('fc')
+    ->condition('storage_module', 'field_sql_storage')
+    ->execute();
+  foreach ($results as $field) {
+    // Revision tables of deleted fields do not need to be fixed, since no new
+    // data is written to them.
+    if (!$field['deleted']) {
+      $table = "field_revision_{$field['field_name']}";
+      db_drop_primary_key($table);
+      db_add_primary_key($table, array('entity_type', 'entity_id', 'revision_id', 'deleted', 'delta', 'language'));
+    }
   }
 }
 
