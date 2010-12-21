@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.515 2010/12/18 06:29:46 webchick Exp $
+// $Id: form.inc,v 1.516 2010/12/21 21:05:22 webchick Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -661,9 +661,14 @@ function drupal_form_submit($form_id, &$form_state) {
   // Merge in default values.
   $form_state += form_state_defaults();
 
-  $form = drupal_retrieve_form($form_id, $form_state);
+  // Populate $form_state['input'] with the submitted values before retrieving
+  // the form, to be consistent with what drupal_build_form() does for
+  // non-programmatic submissions (form builder functions may expect it to be
+  // there).
   $form_state['input'] = $form_state['values'];
+
   $form_state['programmed'] = TRUE;
+  $form = drupal_retrieve_form($form_id, $form_state);
   // Programmed forms are always submitted.
   $form_state['submitted'] = TRUE;
 
