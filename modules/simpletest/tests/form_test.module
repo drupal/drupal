@@ -1,5 +1,5 @@
 <?php
-// $Id: form_test.module,v 1.56 2010/11/27 19:12:56 dries Exp $
+// $Id: form_test.module,v 1.57 2010/12/21 21:00:17 webchick Exp $
 
 /**
  * @file
@@ -57,6 +57,14 @@ function form_test_menu() {
     'title' => 'Tableselect js_select tests',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('_form_test_tableselect_js_select_form'),
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+
+  $items['form_test/vertical-tabs'] = array(
+    'title' => 'Vertical tabs tests',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('_form_test_vertical_tabs_form'),
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
@@ -535,6 +543,36 @@ function _form_test_tableselect_js_select_form($form, $form_state, $action) {
   }
 
   return _form_test_tableselect_form_builder($form, $form_state, $options);
+}
+
+/**
+ * Tests functionality of vertical tabs.
+ */
+function _form_test_vertical_tabs_form($form, &$form_state) {
+  $form['vertical_tabs'] = array(
+    '#type' => 'vertical_tabs',
+  );
+  $form['tab1'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Tab 1'),
+    '#collapsible' => TRUE,
+    '#group' => 'vertical_tabs',
+  );
+  $form['tab1']['field1'] = array(
+    '#title' => t('Field 1'),
+    '#type' => 'textfield',
+  );
+  $form['tab2'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Tab 2'),
+    '#collapsible' => TRUE,
+    '#group' => 'vertical_tabs',
+  );
+  $form['tab2']['field2'] = array(
+    '#title' => t('Field 2'),
+    '#type' => 'textfield',
+  );
+  return $form;
 }
 
 /**
