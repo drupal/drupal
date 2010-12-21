@@ -2948,7 +2948,7 @@ function drupal_get_css($css = NULL, $skip_alter = FALSE) {
  */
 function drupal_sort_css_js($a, $b) {
   // First order by group, so that, for example, all items in the CSS_SYSTEM
-  // group appear before items in the CSS_DEFAULT_GROUP, which appear before
+  // group appear before items in the CSS_DEFAULT group, which appear before
   // all items in the CSS_THEME group. Modules may create additional groups by
   // defining their own constants.
   if ($a['group'] < $b['group']) {
