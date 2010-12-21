@@ -396,7 +396,7 @@ function field_update_7000() {
 }
 
 /**
- * Fix fields definitions created during the d6 to d7 upgarde path.
+ * Fix fields definitions created during the d6 to d7 upgrade path.
  */
 function field_update_7001() {
   $fields = _update_7000_field_read_fields();
