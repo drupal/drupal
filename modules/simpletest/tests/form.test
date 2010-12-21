@@ -1222,6 +1222,15 @@ class FormsProgrammaticTestCase extends DrupalWebTestCase {
     $this->submitForm(array('textfield' => 'dummy value', 'checkboxes' => array(1 => NULL, 2 => 2)), TRUE);
     $this->submitForm(array('textfield' => 'dummy value', 'checkboxes' => array(1 => NULL, 2 => NULL)), TRUE);
 
+    // Test that a programmatic form submission can correctly click a button
+    // that limits validation errors based on user input. Since we do not
+    // submit any values for "textfield" here and the textfield is required, we
+    // only expect form validation to pass when validation is limited to a
+    // different field.
+    $this->submitForm(array('op' => 'Submit with limited validation', 'field_to_validate' => 'all'), FALSE);
+    $this->submitForm(array('op' => 'Submit with limited validation', 'field_to_validate' => 'textfield'), FALSE);
+    $this->submitForm(array('op' => 'Submit with limited validation', 'field_to_validate' => 'field_to_validate'), TRUE);
+
     // Restore the current batch status.
     $batch = $current_batch;
   }

@@ -1377,6 +1377,7 @@ function form_test_programmatic_form($form, &$form_state) {
     '#title' => 'Textfield',
     '#type' => 'textfield',
   );
+
   $form['checkboxes'] = array(
     '#type' => 'checkboxes',
     '#options' => array(
@@ -1387,6 +1388,39 @@ function form_test_programmatic_form($form, &$form_state) {
     // of programmatic form submissions to uncheck them.
     '#default_value' => array(1, 2),
   );
+
+  $form['field_to_validate'] = array(
+    '#type' => 'radios',
+    '#title' => 'Field to validate (in the case of limited validation)',
+    '#description' => 'If the form is submitted by clicking the "Submit with limited validation" button, then validation can be limited based on the value of this radio button.',
+    '#options' => array(
+      'all' => 'Validate all fields',
+      'textfield' => 'Validate the "Textfield" field',
+      'field_to_validate' => 'Validate the "Field to validate" field',
+    ),
+    '#default_value' => 'all',
+  );
+
+  // The main submit button for the form.
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => 'Submit',
+  );
+  // A secondary submit button that allows validation to be limited based on
+  // the value of the above radio selector.
+  $form['submit_limit_validation'] = array(
+    '#type' => 'submit',
+    '#value' => 'Submit with limited validation',
+    // Use the same submit handler for this button as for the form itself.
+    // (This must be set explicitly or otherwise the form API will ignore the
+    // #limit_validation_errors property.)
+    '#submit' => array('form_test_programmatic_form_submit'),
+  );
+  if (!empty($form_state['input']['field_to_validate']) && $form_state['input']['field_to_validate'] != 'all') {
+    $form['submit_limit_validation']['#limit_validation_errors'] = array(
+      array($form_state['input']['field_to_validate']),
+    );
+  }
 
   return $form;
 }
