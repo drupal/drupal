@@ -1,5 +1,5 @@
 <?php
-// $Id: field.install,v 1.25 2010/12/18 02:04:36 dries Exp $
+// $Id: field.install,v 1.26 2010/12/21 21:01:49 webchick Exp $
 
 /**
  * @file
@@ -396,7 +396,7 @@ function field_update_7000() {
 }
 
 /**
- * Fix fields definitions created during the d6 to d7 upgarde path.
+ * Fix fields definitions created during the d6 to d7 upgrade path.
  */
 function field_update_7001() {
   $fields = _update_7000_field_read_fields();
