@@ -1097,7 +1097,7 @@ function system_library() {
     'title' => 'Drupal batch API',
     'version' => VERSION,
     'js' => array(
-      'misc/batch.js' => array('cache' => FALSE),
+      'misc/batch.js' => array('group' => JS_DEFAULT, 'cache' => FALSE),
     ),
     'dependencies' => array(
       array('system', 'drupal.progress'),
@@ -1109,7 +1109,7 @@ function system_library() {
     'title' => 'Drupal progress indicator',
     'version' => VERSION,
     'js' => array(
-      'misc/progress.js' => array('cache' => FALSE),
+      'misc/progress.js' => array('group' => JS_DEFAULT, 'cache' => FALSE),
     ),
   );
 
@@ -1136,7 +1136,7 @@ function system_library() {
     'title' => 'Drupal collapsible fieldset',
     'version' => VERSION,
     'js' => array(
-      'misc/collapse.js' => array(),
+      'misc/collapse.js' => array('group' => JS_DEFAULT),
     ),
     'dependencies' => array(
       // collapse.js relies on drupalGetSummary in form.js
@@ -1149,7 +1149,7 @@ function system_library() {
     'title' => 'Drupal resizable textarea',
     'version' => VERSION,
     'js' => array(
-      'misc/textarea.js' => array(),
+      'misc/textarea.js' => array('group' => JS_DEFAULT),
     ),
   );
 
@@ -1158,7 +1158,7 @@ function system_library() {
     'title' => 'Drupal autocomplete',
     'version' => VERSION,
     'js' => array(
-      'misc/autocomplete.js' => array(),
+      'misc/autocomplete.js' => array('group' => JS_DEFAULT),
     ),
   );
 
