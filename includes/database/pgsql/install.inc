@@ -22,6 +22,10 @@ class DatabaseTasks_pgsql extends DatabaseTasks {
       'arguments' => array(),
     );
     $this->tasks[] = array(
+      'function' => 'checkBinaryOutput',
+      'arguments' => array(),
+    );
+    $this->tasks[] = array(
       'function' => 'initializeDatabase',
       'arguments' => array(),
     );
@@ -53,7 +57,8 @@ class DatabaseTasks_pgsql extends DatabaseTasks {
         $text .= 'Recreate the database with %encoding encoding. See !link for more details.';
         $this->fail(st($text, $replacements));
       }
-    } catch (Exception $e) {
+    }
+    catch (Exception $e) {
       $this->fail(st('Drupal could not determine the encoding of the database was set to UTF-8'));
     }
   }
@@ -73,6 +78,60 @@ class DatabaseTasks_pgsql extends DatabaseTasks {
     if (!version_compare(PHP_VERSION, '5.2.11', '>=') || (version_compare(PHP_VERSION, '5.3.0', '>=') && !version_compare(PHP_VERSION, '5.3.1', '>='))) {
       $this->fail(st('The version of PHP you are using has known issues with PostgreSQL. You need to upgrade PHP to 5.2.11, 5.3.1 or greater.'));
     };
+  }
+
+  /**
+   * Check Binary Output.
+   *
+   * Unserializing does not work on Postgresql 9 when bytea_output is 'hex'.
+   */
+  function checkBinaryOutput() {
+    // PostgreSQL < 9 doesn't support bytea_output, so verify we are running
+    // at least PostgreSQL 9.
+    $database_connection = Database::getConnection();
+    if (version_compare($database_connection->version(), '9') >= 0) {
+      if (!$this->checkBinaryOutputSuccess()) {
+        // First try to alter the database. If it fails, raise an error telling
+        // the user to do it themselves.
+        $connection_options = $database_connection->getConnectionOptions();
+        // It is safe to include the database name directly here, because this
+        // code is only called when a connection to the database is already
+        // established, thus the database name is guaranteed to be a correct
+        // value.
+        $query = "ALTER DATABASE \"" . $connection_options['database'] . "\" SET bytea_output = 'escape';";
+        try {
+          db_query($query);
+        }
+        catch (Exception $e) {
+          // Ignore possible errors when the user doesn't have the necessary
+          // privileges to ALTER the database.
+        }
+
+        // Close the database connection so that the configuration parameter
+        // is applied to the current connection.
+        db_close();
+
+        // Recheck, if it fails, finally just rely on the end user to do the
+        // right thing.
+        if (!$this->checkBinaryOutputSuccess()) {
+          $replacements = array(
+            '%setting' => 'bytea_output',
+            '%current_value' => 'hex',
+            '%needed_value' => 'escape',
+            '!query' => "<code>" . $query . "</code>",
+          );
+          $this->fail(st("The %setting setting is currently set to '%current_value', but needs to be '%needed_value'. Change this by running the following query: !query", $replacements));
+        }
+      }
+    }
+  }
+
+  /**
+   * Verify that a binary data roundtrip returns the original string.
+   */
+  protected function checkBinaryOutputSuccess() {
+    $bytea_output = db_query("SELECT 'encoding'::bytea AS output")->fetchField();
+    return ($bytea_output == 'encoding');
   }
 
   /**
