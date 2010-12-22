@@ -164,21 +164,21 @@ function _tracker_user_access($account) {
 }
 
 /**
- * Implements hook_nodeapi_insert().
+ * Implements hook_node_insert().
  */
 function tracker_node_insert($node, $arg = 0) {
   _tracker_add($node->nid, $node->uid, $node->changed);
 }
 
 /**
- * Implements hook_nodeapi_update().
+ * Implements hook_node_update().
  */
 function tracker_node_update($node, $arg = 0) {
   _tracker_add($node->nid, $node->uid, $node->changed);
 }
 
 /**
- * Implements hook_nodeapi_delete().
+ * Implements hook_node_delete().
  */
 function tracker_node_delete($node, $arg = 0) {
   _tracker_remove($node->nid, $node->uid, $node->changed);
