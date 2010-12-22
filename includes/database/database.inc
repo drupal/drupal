@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.146 2010/12/15 06:52:54 webchick Exp $
+// $Id: database.inc,v 1.147 2010/12/22 07:48:56 webchick Exp $
 
 /**
  * @file
@@ -1137,7 +1137,7 @@ abstract class DatabaseConnection extends PDO {
   }
 
   /**
-   * Returns the type of the database being accessed.
+   * Returns the name of the PDO driver for this connection.
    */
   abstract public function databaseType();
 
