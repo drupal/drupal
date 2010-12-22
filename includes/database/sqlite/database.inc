@@ -24,7 +24,7 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
    * Version of sqlite lower then 3.6.8 can't use savepoints.
    * See http://www.sqlite.org/releaselog/3_6_8.html
    *
-   * @var bool
+   * @var boolean
    */
   protected $savepointSupport = FALSE;
 
@@ -34,6 +34,26 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
    * @var boolean
    */
   protected $willRollback;
+
+  /**
+   * All databases attached to the current database. This is used to allow
+   * prefixes to be safely handled without locking the table
+   * 
+   * @var array
+   */
+  protected $attachedDatabases = array();
+
+  /**
+   * Whether or not a table has been dropped this request: the destructor will
+   * only try to get rid of unnecessary databases if there is potential of them
+   * being empty.
+   * 
+   * This variable is set to public because DatabaseSchema_sqlite needs to
+   * access it. However, it should not be manually set.
+   * 
+   * @var boolean
+   */
+  var $tableDropped = FALSE;
 
   public function __construct(array $connection_options = array()) {
     // We don't need a specific PDOStatement class here, we simulate it below.
@@ -51,6 +71,27 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
       PDO::ATTR_STRINGIFY_FETCHES => TRUE,
     ));
 
+    // Attach one database for each registered prefix.
+    $prefixes = &$this->prefixes;
+    if (!empty($this->defaultPrefix)) {
+      // Add in the default prefix, which is also attached.
+      $prefixes[] = &$this->defaultPrefix;
+    }
+    foreach ($this->prefixes as $table => &$prefix) {
+      // Empty prefix means query the main database -- no need to attach anything.
+      if (!empty($prefix)) {
+        // Only attach the database once.
+        if (!isset($this->attachedDatabases[$prefix])) {
+          $this->attachedDatabases[$prefix] = $prefix;
+          $this->query('ATTACH DATABASE :database AS :prefix', array(':database' => $connection_options['database'] . '-' . $prefix, ':prefix' => $prefix));
+        }
+
+        // Add a ., so queries become prefix.table, which is proper syntax for
+        // querying an attached database.
+        $prefix .= '.';
+      }
+    }
+
     $this->exec('PRAGMA encoding="UTF-8"');
 
     // Detect support for SAVEPOINT.
@@ -67,6 +108,36 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
     $this->sqliteCreateFunction('substring', array($this, 'sqlFunctionSubstring'), 3);
     $this->sqliteCreateFunction('substring_index', array($this, 'sqlFunctionSubstringIndex'), 3);
     $this->sqliteCreateFunction('rand', array($this, 'sqlFunctionRand'));
+  }
+
+  /**
+   * Destructor for the SQLite connection.
+   *
+   * We prune empty databases on destruct, but only if tables have been
+   * dropped. This is especially needed when running the test suite, which
+   * creates and destroy databases several times in a row.
+   */
+  public function __destruct() {
+    if ($this->tableDropped && !empty($this->attachedDatabases)) {
+      foreach ($this->attachedDatabases as $prefix) {
+        // Check if the database is now empty, ignore the internal SQLite tables.
+        try {
+          $count = $this->query('SELECT COUNT(*) FROM ' . $prefix . '.sqlite_master WHERE type = :type AND name NOT LIKE :pattern', array(':type' => 'table', ':pattern' => 'sqlite_%'))->fetchField();
+
+          // We can prune the database file if it doens't have any tables.
+          if ($count == 0) {
+            // Detach the database.
+            $this->query('DETACH DATABASE :schema', array(':schema' => $prefix));
+            // Destroy the database file.
+            unlink($this->connectionOptions['database'] . '-' . $prefix);
+          }
+        }
+        catch (Exception $e) {
+          // Ignore the exception and continue. There is nothing we can do here
+          // to report the error or fail safe.
+        }
+      }
+    }
   }
 
   /**
