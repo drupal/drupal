@@ -682,12 +682,6 @@ input.form-button-disabled:active {
   text-shadow: none;
   color: #999;
 }
-form input#edit-delete {
-  background: #eee;
-  border-color: #fff #ddd #ccc;
-  text-shadow: none;
-  color: #999;
-}
 input.form-autocomplete,
 input.form-text,
 input.form-file,
