@@ -1,5 +1,5 @@
 <?php
-// $Id: database_test.test,v 1.106 2010/12/22 01:16:43 webchick Exp $
+// $Id: database_test.test,v 1.107 2010/12/22 08:13:58 webchick Exp $
 
 /**
  * Dummy class for fetching into a class.
@@ -1987,6 +1987,25 @@ class DatabaseSelectComplexTestCase extends DatabaseTestCase {
     $count = $count->execute()->fetchField();
 
     $this->assertEqual($count, 4, t('Counted the correct number of records.'));
+  }
+
+
+  /**
+   * Test that countQuery properly removes fields and expressions.
+   */
+  function testCountQueryFieldRemovals() {
+    // countQuery should remove all fields and expressions, so this can be
+    // tested by adding a non-existant field and expression: if it ends
+    // up in the query, an error will be thrown. If not, it will return the
+    // number of records, which in this case happens to be 4 (there are four
+    // records in the {test} table).
+    $query = db_select('test');
+    $query->fields('test', array('fail'));
+    $this->assertEqual(4, $query->countQuery()->execute()->fetchField(), t('Count Query removed fields'));
+
+    $query = db_select('test');
+    $query->addExpression('fail');
+    $this->assertEqual(4, $query->countQuery()->execute()->fetchField(), t('Count Query removed expressions'));
   }
 
   /**
