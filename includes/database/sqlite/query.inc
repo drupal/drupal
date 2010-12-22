@@ -97,7 +97,7 @@ class UpdateQuery_sqlite extends UpdateQuery {
     foreach ($fields as $field => $data) {
       if (is_array($data)) {
         // The field is an expression.
-        $condition->condition($field, $data['expression'], '<>');
+        $condition->where($field . ' <> ' . $data['expression']);
         $condition->isNull($field);
       }
       elseif (!isset($data)) {
