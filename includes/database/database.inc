@@ -1137,7 +1137,7 @@ abstract class DatabaseConnection extends PDO {
   }
 
   /**
-   * Returns the type of the database being accessed.
+   * Returns the name of the PDO driver for this connection.
    */
   abstract public function databaseType();
 
