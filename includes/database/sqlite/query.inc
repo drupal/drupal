@@ -1,5 +1,5 @@
 <?php
-// $Id: query.inc,v 1.14 2010/11/29 04:45:11 webchick Exp $
+// $Id: query.inc,v 1.15 2010/12/22 01:16:43 webchick Exp $
 
 /**
  * @file
@@ -97,7 +97,7 @@ class UpdateQuery_sqlite extends UpdateQuery {
     foreach ($fields as $field => $data) {
       if (is_array($data)) {
         // The field is an expression.
-        $condition->condition($field, $data['expression'], '<>');
+        $condition->where($field . ' <> ' . $data['expression']);
         $condition->isNull($field);
       }
       elseif (!isset($data)) {

@@ -1,5 +1,5 @@
 <?php
-// $Id: database_test.test,v 1.105 2010/12/15 06:52:54 webchick Exp $
+// $Id: database_test.test,v 1.106 2010/12/22 01:16:43 webchick Exp $
 
 /**
  * Dummy class for fetching into a class.
@@ -776,6 +776,25 @@ class DatabaseUpdateTestCase extends DatabaseTestCase {
     $this->assertIdentical($num_matches, '1', t('Updated fields successfully.'));
   }
 
+  /**
+   * Test updating with expressions.
+   */
+  function testExpressionUpdate() {
+    // Set age = 1 for a single row for this test to work.
+    db_update('test')
+      ->condition('id', 1)
+      ->fields(array('age' => 1))
+      ->execute();
+
+    // Ensure that expressions are handled properly.  This should set every
+    // record's age to a square of itself, which will change only three of the
+    // four records in the table since 1*1 = 1. That means only three records
+    // are modified, so we should get back 3, not 4, from execute().
+    $num_rows = db_update('test')
+      ->expression('age', 'age * age')
+      ->execute();
+    $this->assertIdentical($num_rows, 3, t('Number of affected rows are returned.'));
+  }
 }
 
 /**
