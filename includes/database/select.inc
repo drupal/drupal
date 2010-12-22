@@ -1370,14 +1370,14 @@ class SelectQuery extends Query implements SelectQueryInterface {
       // the GROUP BY clause need to be present in the query.
       $fields =& $count->getFields();
       foreach (array_keys($fields) as $field) {
-        if (!empty($group_by[$field])) {
+        if (empty($group_by[$field])) {
           unset($fields[$field]);
         }
       }
       $expressions =& $count->getExpressions();
       foreach (array_keys($expressions) as $field) {
-        if (!empty($group_by[$field])) {
-          unset($fields[$field]);
+        if (empty($group_by[$field])) {
+          unset($expressions[$field]);
         }
       }
 

@@ -1989,6 +1989,25 @@ class DatabaseSelectComplexTestCase extends DatabaseTestCase {
     $this->assertEqual($count, 4, t('Counted the correct number of records.'));
   }
 
+
+  /**
+   * Test that countQuery properly removes fields and expressions.
+   */
+  function testCountQueryFieldRemovals() {
+    // countQuery should remove all fields and expressions, so this can be
+    // tested by adding a non-existant field and expression: if it ends
+    // up in the query, an error will be thrown. If not, it will return the
+    // number of records, which in this case happens to be 4 (there are four
+    // records in the {test} table).
+    $query = db_select('test');
+    $query->fields('test', array('fail'));
+    $this->assertEqual(4, $query->countQuery()->execute()->fetchField(), t('Count Query removed fields'));
+
+    $query = db_select('test');
+    $query->addExpression('fail');
+    $this->assertEqual(4, $query->countQuery()->execute()->fetchField(), t('Count Query removed expressions'));
+  }
+
   /**
    * Test that we can generate a count query from a query with distinct.
    */
