@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.84 2010/11/23 01:58:21 webchick Exp $ */
+/* $Id: style.css,v 1.85 2010/12/22 07:46:03 webchick Exp $ */
 
 /**
  * Generic elements.
@@ -679,12 +679,6 @@ input.form-button-disabled,
 input.form-button-disabled:active {
   background: #eee none;
   border-color: #eee;
-  text-shadow: none;
-  color: #999;
-}
-form input#edit-delete {
-  background: #eee;
-  border-color: #fff #ddd #ccc;
   text-shadow: none;
   color: #999;
 }
