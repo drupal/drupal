@@ -1,5 +1,5 @@
 <?php
-// $Id: schema.inc,v 1.20 2010/10/22 15:18:56 webchick Exp $
+// $Id: schema.inc,v 1.21 2010/12/22 21:34:13 webchick Exp $
 
 /**
  * @file
@@ -271,7 +271,7 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
     if (!$this->tableExists($table)) {
       return FALSE;
     }
-
+    $this->connection->tableDropped = TRUE;
     $this->connection->query('DROP TABLE {' . $table . '}');
     return TRUE;
   }
@@ -622,9 +622,16 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
   }
 
   public function findTables($table_expression) {
-    // Don't use {} around sqlite_master table.
-    $result = db_query("SELECT name FROM sqlite_master WHERE name LIKE :table_name", array(
-      ':table_name' => $table_expression,
+    // Don't use getPrefixInfo -- $table_expression includes the prefix.
+    list($prefix, $table) = explode('.', $table_expression);
+    if (empty($table)) {
+      $table = $prefix;
+      $prefix = NULL;
+    }
+    // Can't use query placeholders because the query would have to be
+    // :prefixsqlite_master, which does not work.
+    $result = db_query("SELECT name FROM " . ($prefix ? $prefix . '.' : '') . "sqlite_master WHERE name LIKE :table_name", array(
+      ':table_name' => $table,
     ));
     return $result->fetchAllKeyed(0, 0);
   }
