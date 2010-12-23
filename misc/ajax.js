@@ -152,9 +152,9 @@ Drupal.ajax = function (base, element, element_settings) {
       ajax.ajaxing = true;
       return ajax.beforeSubmit(form_values, element_settings, options);
     },
-    beforeSend: function (xmlhttprequest) {
+    beforeSend: function (xmlhttprequest, options) {
       ajax.ajaxing = true;
-      return ajax.beforeSend(xmlhttprequest, ajax.options);
+      return ajax.beforeSend(xmlhttprequest, options);
     },
     success: function (response, status) {
       // Sanity check for browser support (object expected).
@@ -318,7 +318,20 @@ Drupal.ajax.prototype.beforeSubmit = function (form_values, element, options) {
  * Prepare the AJAX request before it is sent.
  */
 Drupal.ajax.prototype.beforeSend = function (xmlhttprequest, options) {
-  // Disable the element that received the change.
+  // Disable the element that received the change to prevent user interface
+  // interaction while the AJAX request is in progress. ajax.ajaxing prevents
+  // the element from triggering a new request, but does not prevent the user
+  // from changing its value.
+  // Forms without file inputs are already serialized before this function is
+  // called. Forms with file inputs use an IFRAME to perform a POST request
+  // similar to a browser, so disabled elements are not contained in the
+  // submitted values. Therefore, we manually add the element's value to
+  // options.extraData.
+  var v = $.fieldValue(this.element);
+  if (v !== null) {
+    options.extraData = options.extraData || {};
+    options.extraData[this.element.name] = v;
+  }
   $(this.element).addClass('progress-disabled').attr('disabled', true);
 
   // Insert progressbar or throbber.

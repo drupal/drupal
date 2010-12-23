@@ -237,7 +237,7 @@ function file_ajax_upload() {
     drupal_set_message(t('An unrecoverable error occurred. The uploaded file likely exceeded the maximum file size (@size) that this server supports.', array('@size' => format_size(file_upload_max_size()))), 'error');
     $commands = array();
     $commands[] = ajax_command_replace(NULL, theme('status_messages'));
-    return array('#type' => 'ajax', '#commands' => $commands, '#header' => FALSE);
+    return array('#type' => 'ajax', '#commands' => $commands);
   }
 
   list($form, $form_state) = ajax_get_form();
@@ -247,7 +247,7 @@ function file_ajax_upload() {
     drupal_set_message(t('An unrecoverable error occurred. Use of this form has expired. Try reloading the page and submitting again.'), 'error');
     $commands = array();
     $commands[] = ajax_command_replace(NULL, theme('status_messages'));
-    return array('#type' => 'ajax', '#commands' => $commands, '#header' => FALSE);
+    return array('#type' => 'ajax', '#commands' => $commands);
   }
 
   // Get the current element and count the number of files.
@@ -280,7 +280,7 @@ function file_ajax_upload() {
 
   $commands = array();
   $commands[] = ajax_command_replace(NULL, $output, $settings);
-  return array('#type' => 'ajax', '#commands' => $commands, '#header' => FALSE);
+  return array('#type' => 'ajax', '#commands' => $commands);
 }
 
 /**
