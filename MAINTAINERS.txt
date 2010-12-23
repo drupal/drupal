@@ -54,6 +54,9 @@ Database system
     - Damien Tournoud 'DamZ' <http://drupal.org/user/22211>
     - Károly Négyesi 'chx' <http://drupal.org/user/9446>
 
+Database update system
+- ?
+
 Entity system
 - Nathaniel Catchpole 'catch' <http://drupal.org/user/35733>
 - Franz Heinzmann 'Frando' <http://drupal.org/user/21850>
@@ -114,9 +117,6 @@ Theme system
 
 Token system
 - Dave Reid 'davereid' <http://drupal.org/user/53892>
-
-Update system
-- ?
 
 XML-RPC system
 - Frederic G. Marand 'fgm' <http://drupal.org/user/27985>
