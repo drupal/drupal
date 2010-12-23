@@ -2032,6 +2032,15 @@ class DatabaseSelectComplexTestCase extends DatabaseTestCase {
     $count = $query->countQuery()->execute()->fetchField();
 
     $this->assertEqual($count, 3, t('Counted the correct number of records.'));
+
+    // Test wth an alias.
+    $query = db_select('test_task');
+    $pid_field = $query->addField('test_task', 'pid', 'pid_alias');
+    $query->groupBy('pid_alias');
+
+    $count = $query->countQuery()->execute()->fetchField();
+
+    $this->assertEqual($count, 3, t('Counted the correct number of records.'));
   }
 
   /**
