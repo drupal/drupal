@@ -1,5 +1,5 @@
 <?php
-// $Id: database_test.test,v 1.107 2010/12/22 08:13:58 webchick Exp $
+// $Id: database_test.test,v 1.108 2010/12/23 09:31:56 webchick Exp $
 
 /**
  * Dummy class for fetching into a class.
@@ -2028,6 +2028,15 @@ class DatabaseSelectComplexTestCase extends DatabaseTestCase {
     $query = db_select('test_task');
     $pid_field = $query->addField('test_task', 'pid');
     $query->groupBy('pid');
+
+    $count = $query->countQuery()->execute()->fetchField();
+
+    $this->assertEqual($count, 3, t('Counted the correct number of records.'));
+
+    // Test wth an alias.
+    $query = db_select('test_task');
+    $pid_field = $query->addField('test_task', 'pid', 'pid_alias');
+    $query->groupBy('pid_alias');
 
     $count = $query->countQuery()->execute()->fetchField();
 
