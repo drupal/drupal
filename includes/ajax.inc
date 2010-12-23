@@ -1,5 +1,5 @@
 <?php
-// $Id: ajax.inc,v 1.40 2010/12/17 01:03:58 dries Exp $
+// $Id: ajax.inc,v 1.41 2010/12/23 04:26:31 webchick Exp $
 
 /**
  * @file
@@ -407,19 +407,49 @@ function ajax_base_page_theme() {
 /**
  * Package and send the result of a page callback to the browser as an AJAX response.
  *
+ * This function is the equivalent of drupal_deliver_html_page(), but for AJAX
+ * requests. Like that function, it:
+ * - Adds needed HTTP headers.
+ * - Prints rendered output.
+ * - Performs end-of-request tasks.
+ *
  * @param $page_callback_result
  *   The result of a page callback. Can be one of:
  *   - NULL: to indicate no content.
  *   - An integer menu status constant: to indicate an error condition.
  *   - A string of HTML content.
  *   - A renderable array of content.
+ *
+ * @see drupal_deliver_html_page()
  */
 function ajax_deliver($page_callback_result) {
-  $commands = array();
-  $header = TRUE;
+  // Emit a Content-Type HTTP header if none has been added by the page callback
+  // or by a wrapping delivery callback.
+  if (is_null(drupal_get_http_header('Content-Type'))) {
+    // The standard header for JSON is application/json.
+    // @see http://www.ietf.org/rfc/rfc4627.txt?number=4627
+    // However, browsers do not allow JavaScript to read the contents of a
+    // user's local files. To work around that, jQuery submits forms containing
+    // a file input element to an IFRAME, instead of using XHR.
+    // @see http://malsup.com/jquery/form/#file-upload
+    // When Internet Explorer receives application/json content in an IFRAME, it
+    // treats it as a file download and prompts the user to save it. To prevent
+    // that, we return the content as text/plain. But only for POST requests,
+    // since jQuery should always use XHR for GET requests and the incorrect
+    // mime type should not end up in page or proxy server caches.
+    // @see http://drupal.org/node/995854
+    $iframe_upload = !isset($_SERVER['HTTP_X_REQUESTED_WITH']) || $_SERVER['HTTP_X_REQUESTED_WITH'] != 'XMLHttpRequest';
+    if ($iframe_upload && $_SERVER['REQUEST_METHOD'] == 'POST') {
+      drupal_add_http_header('Content-Type', 'text/plain; charset=utf-8');
+    }
+    else {
+      drupal_add_http_header('Content-Type', 'application/json; charset=utf-8');
+    }
+  }
 
   // Normalize whatever was returned by the page callback to an AJAX commands
   // array.
+  $commands = array();
   if (!isset($page_callback_result)) {
     // Simply delivering an empty commands array is sufficient. This results
     // in the AJAX request being completed, but nothing being done to the page.
@@ -444,7 +474,6 @@ function ajax_deliver($page_callback_result) {
     // Complex AJAX callbacks can return a result that contains an error message
     // or a specific set of commands to send to the browser.
     $page_callback_result += element_info('ajax');
-    $header = $page_callback_result['#header'];
     $error = $page_callback_result['#error'];
     if (isset($error) && $error !== FALSE) {
       if ((empty($error) || $error === TRUE)) {
@@ -470,24 +499,10 @@ function ajax_deliver($page_callback_result) {
     $commands[] = ajax_command_prepend(NULL, theme('status_messages'));
   }
 
-  // This function needs to do the same thing that drupal_deliver_html_page()
-  // does: add any needed http headers, print rendered output, and perform
-  // end-of-request tasks. By default, $header=TRUE, and we add a
-  // 'text/javascript' header. The page callback can override $header by
-  // returning an 'ajax' element with a #header property. This can be set to
-  // FALSE to prevent the 'text/javascript' header from being output, necessary
-  // when outputting to an IFRAME. This can also be set to 'multipart', in which
-  // case, we don't output JSON, but JSON content wrapped in a textarea, making
-  // a 'text/javascript' header incorrect.
-  if ($header && $header !== 'multipart') {
-    drupal_add_http_header('Content-Type', 'text/javascript; charset=utf-8');
-  }
-  $output = ajax_render($commands);
-  if ($header === 'multipart') {
-    // jQuery file uploads: http://malsup.com/jquery/form/#code-samples
-    $output = '<textarea>' . $output . '</textarea>';
-  }
-  print $output;
+  // Unlike the recommendation in http://malsup.com/jquery/form/#file-upload,
+  // we do not have to wrap the JSON string in a TEXTAREA, because
+  // drupal_json_encode() returns an HTML-safe JSON string.
+  print ajax_render($commands);
   ajax_footer();
 }
 
