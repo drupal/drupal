@@ -1,4 +1,4 @@
-// $Id: MAINTAINERS.txt,v 1.50 2010/11/19 03:28:20 dries Exp $
+// $Id: MAINTAINERS.txt,v 1.51 2010/12/23 08:03:27 webchick Exp $
 
 Drupal core is maintained by the community.  To participate, go to
 
@@ -90,7 +90,7 @@ Mail system
 - ?
 
 Markup
-- Jacine Rodriguez 'Jacine' <http://drupal.org/user/88931>
+- Jacine Luisi 'Jacine' <http://drupal.org/user/88931>
 - Daniel F. Kudwien 'sun' <http://drupal.org/user/54136>
 
 Menu system
