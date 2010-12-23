@@ -92,8 +92,6 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
       }
     }
 
-    $this->exec('PRAGMA encoding="UTF-8"');
-
     // Detect support for SAVEPOINT.
     $version = $this->query('SELECT sqlite_version()')->fetchField();
     $this->savepointSupport = (version_compare($version, '3.6.8') >= 0);
