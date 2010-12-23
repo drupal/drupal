@@ -1,4 +1,4 @@
-// $Id: MAINTAINERS.txt,v 1.51 2010/12/23 08:03:27 webchick Exp $
+// $Id: MAINTAINERS.txt,v 1.52 2010/12/23 20:06:40 webchick Exp $
 
 Drupal core is maintained by the community.  To participate, go to
 
@@ -53,6 +53,9 @@ Database system
   - Sqlite driver
     - Damien Tournoud 'DamZ' <http://drupal.org/user/22211>
     - Károly Négyesi 'chx' <http://drupal.org/user/9446>
+
+Database update system
+- ?
 
 Entity system
 - Nathaniel Catchpole 'catch' <http://drupal.org/user/35733>
@@ -114,9 +117,6 @@ Theme system
 
 Token system
 - Dave Reid 'davereid' <http://drupal.org/user/53892>
-
-Update system
-- ?
 
 XML-RPC system
 - Frederic G. Marand 'fgm' <http://drupal.org/user/27985>
