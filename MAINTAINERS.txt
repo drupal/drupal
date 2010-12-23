@@ -90,7 +90,7 @@ Mail system
 - ?
 
 Markup
-- Jacine Rodriguez 'Jacine' <http://drupal.org/user/88931>
+- Jacine Luisi 'Jacine' <http://drupal.org/user/88931>
 - Daniel F. Kudwien 'sun' <http://drupal.org/user/54136>
 
 Menu system
