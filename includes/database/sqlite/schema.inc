@@ -276,7 +276,7 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
     return TRUE;
   }
 
-  public function addField($table, $field, $spec, $keys_new = array()) {
+  public function addField($table, $field, $specification, $keys_new = array()) {
     if (!$this->tableExists($table)) {
       throw new DatabaseSchemaObjectDoesNotExistException(t("Cannot add field %table.%field: table doesn't exist.", array('%field' => $field, '%table' => $table)));
     }
@@ -284,10 +284,50 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
       throw new DatabaseSchemaObjectExistsException(t("Cannot add field %table.%field: field already exists.", array('%field' => $field, '%table' => $table)));
     }
 
-    // TODO: $keys_new is not supported yet.
-    $query = 'ALTER TABLE {' . $table . '} ADD ';
-    $query .= $this->createFieldSql($field, $this->processField($spec));
-    $this->connection->query($query);
+    // SQLite doesn't have a full-featured ALTER TABLE statement. It only
+    // supports adding new fields to a table, in some simple cases. In most
+    // cases, we have to create a new table and copy the data over.
+    if (empty($keys_new) && (empty($specification['not null']) || isset($specification['default']))) {
+      // When we don't have to create new keys and we are not creating a
+      // NOT NULL column without a default value, we can use the quicker version.
+      $query = 'ALTER TABLE {' . $table . '} ADD ' . $this->createFieldSql($field, $this->processField($specification));
+      $this->connection->query($query);
+
+      // Apply the initial value if set.
+      if (isset($specification['initial'])) {
+        $this->connection->update($table)
+          ->fields(array($field => $specification['initial']))
+          ->execute();
+      }
+    }
+    else {
+      // We cannot add the field directly. Use the slower table alteration
+      // method, starting from the old schema.
+      $old_schema = $this->introspectSchema($table);
+      $new_schema = $old_schema;
+
+      // Add the new field.
+      $new_schema['fields'][$field] = $specification;
+
+      // Build the mapping between the old fields and the new fields.
+      $mapping = array();
+      if (isset($specification['initial'])) {
+        // If we have a initial value, copy it over.
+        $mapping[$field] = array(
+          'expression' => ':newfieldinitial',
+          'arguments' => array(':newfieldinitial' => $specification['initial']),
+        );
+      }
+      else {
+        // Else use the default of the field.
+        $mapping[$field] = NULL;
+      }
+
+      // Add the new indexes.
+      $new_schema += $keys_new;
+
+      $this->alterTable($table, $old_schema, $new_schema, $mapping);
+    }
   }
 
   /**
@@ -303,7 +343,13 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
    * @param $new_schema
    *   The new schema array for the table.
    * @param $mapping
-   *   An optional mapping between old fields => new fields.
+   *   An optional mapping between the fields of the old specification and the
+   *   fields of the new specification. An associative array, whose keys are
+   *   the fields of the new table, and values can take two possible forms:
+   *     - a simple string, which is interpreted as the name of a field of the
+   *       old table,
+   *     - an associative array with two keys 'expression' and 'arguments',
+   *       that will be used as an expression field.
    */
   protected function alterTable($table, $old_schema, $new_schema, array $mapping = array()) {
     $i = 0;
@@ -313,22 +359,25 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
 
     $this->createTable($new_table, $new_schema);
 
-    // Complete the mapping.
-    $old_keys = array_keys($old_schema['fields']);
-    $mapping += array_combine($old_keys, $old_keys);
-
+    // Build a SQL query to migrate the data from the old table to the new.
     $select = $this->connection->select($table);
-    $fields = &$select->getFields();
 
-    // Map the fields.
-    foreach ($old_keys as $key) {
-      if (isset($mapping[$key])) {
-        // Don't use ->addField() here because it messes-up with the aliases.
-        $fields[$mapping[$key]] = array(
-          'field' => $key,
-          'table' => $table,
-          'alias' => $mapping[$key],
-        );
+    // Complete the mapping.
+    $possible_keys = array_keys($new_schema['fields']);
+    $mapping += array_combine($possible_keys, $possible_keys);
+
+    // Now add the fields.
+    foreach ($mapping as $field_alias => $field_source) {
+      // Just ignore this field (ie. use it's default value).
+      if (!isset($field_source)) {
+        continue;
+      }
+
+      if (is_array($field_source)) {
+        $select->addExpression($field_source['expression'], $field_alias, $field_source['arguments']);
+      }
+      else {
+        $select->addField($table, $field_source, $field_alias);
       }
     }
 
@@ -427,8 +476,6 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
     $old_schema = $this->introspectSchema($table);
     $new_schema = $old_schema;
 
-    $mapping = array($field => NULL);
-
     unset($new_schema['fields'][$field]);
     foreach ($new_schema['indexes'] as $index => $fields) {
       foreach ($fields as $key => $field_name) {
@@ -441,7 +488,7 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
         unset($new_schema['indexes'][$index]);
       }
     }
-    $this->alterTable($table, $old_schema, $new_schema, $mapping);
+    $this->alterTable($table, $old_schema, $new_schema);
     return TRUE;
   }
 
@@ -458,7 +505,7 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
 
     // Map the old field to the new field.
     if ($field != $field_new) {
-      $mapping[$field] = $field_new;
+      $mapping[$field_new] = $field;
     }
     else {
       $mapping = array();
