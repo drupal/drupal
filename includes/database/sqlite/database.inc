@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.40 2010/12/22 21:34:13 webchick Exp $
+// $Id: database.inc,v 1.41 2010/12/23 05:29:27 webchick Exp $
 
 /**
  * @file
@@ -91,8 +91,6 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
         $prefix .= '.';
       }
     }
-
-    $this->exec('PRAGMA encoding="UTF-8"');
 
     // Detect support for SAVEPOINT.
     $version = $this->query('SELECT sqlite_version()')->fetchField();
