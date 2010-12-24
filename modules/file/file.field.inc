@@ -1,5 +1,5 @@
 <?php
-// $Id: file.field.inc,v 1.41 2010/11/22 04:42:09 webchick Exp $
+// $Id: file.field.inc,v 1.42 2010/12/24 15:25:28 webchick Exp $
 
 /**
  * @file
@@ -79,7 +79,7 @@ function file_field_instance_settings_form($field, $instance) {
     '#type' => 'textfield',
     '#title' => t('File directory'),
     '#default_value' => $settings['file_directory'],
-    '#description' => t('Optional subdirectory within the upload destination where files will be stored. Do not include preceding or trailing slashes.', array('%directory' => variable_get('file_directory_path', 'files') . '/')),
+    '#description' => t('Optional subdirectory within the upload destination where files will be stored. Do not include preceding or trailing slashes.'),
     '#element_validate' => array('_file_generic_settings_file_directory_validate'),
     '#weight' => 3,
   );
