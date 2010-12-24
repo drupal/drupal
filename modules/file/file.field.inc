@@ -79,7 +79,7 @@ function file_field_instance_settings_form($field, $instance) {
     '#type' => 'textfield',
     '#title' => t('File directory'),
     '#default_value' => $settings['file_directory'],
-    '#description' => t('Optional subdirectory within the upload destination where files will be stored. Do not include preceding or trailing slashes.', array('%directory' => variable_get('file_directory_path', 'files') . '/')),
+    '#description' => t('Optional subdirectory within the upload destination where files will be stored. Do not include preceding or trailing slashes.'),
     '#element_validate' => array('_file_generic_settings_file_directory_validate'),
     '#weight' => 3,
   );
