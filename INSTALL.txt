@@ -91,8 +91,7 @@ INSTALLATION
    - Download a translation file for the correct Drupal version and language
      from the translation server: http://localize.drupal.org/download
 
-   - Rename the downloaded file to your language's ISO code (e.g., de.po or
-     fr.po) and place it into your installation profile's translations
+   - Place the file into your installation profile's translations
      directory. For instance, if you are using the Standard install profile,
      move the .po file into the directory:
 

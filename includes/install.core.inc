@@ -1120,6 +1120,10 @@ function install_select_profile_form($form, &$form_state, $profile_files) {
 function install_find_locales($profilename) {
   $locales = file_scan_directory('./profiles/' . $profilename . '/translations', '/\.po$/', array('recurse' => FALSE));
   array_unshift($locales, (object) array('name' => 'en'));
+  foreach ($locales as $key => $locale) {
+    // The locale (file name) might be drupal-7.2.cs.po instead of cs.po.
+    $locales[$key]->langcode = preg_replace('!^(.+\.)?([^\.]+)$!', '\2', $locale->name);
+  }
   return $locales;
 }
 
@@ -1145,8 +1149,8 @@ function install_select_locale(&$install_state) {
 
   if (!empty($_POST['locale'])) {
     foreach ($locales as $locale) {
-      if ($_POST['locale'] == $locale->name) {
-        $install_state['parameters']['locale'] = $locale->name;
+      if ($_POST['locale'] == $locale->langcode) {
+        $install_state['parameters']['locale'] = $locale->langcode;
         return;
       }
     }
@@ -1164,14 +1168,6 @@ function install_select_locale(&$install_state) {
           $output = '<p>Follow these steps to translate Drupal into your language:</p>';
           $output .= '<ol>';
           $output .= '<li>Download a translation from the <a href="http://localize.drupal.org/download" target="_blank">translation server</a>.</li>';
-          $output .= '<li>Rename the downloaded file retaining only the language code at the end of the file name and its extension. For example, if the file name is
-<pre>
-drupal-7.0.pt-br.po
-</pre>
-rename it to
-<pre>
-pt-br.po
-</pre></li>';
           $output .= '<li>Place it into the following directory:
 <pre>
 /profiles/' . $profilename . '/translations/
@@ -1237,16 +1233,15 @@ function install_select_locale_form($form, &$form_state, $locales, $profilename)
   include_once DRUPAL_ROOT . '/includes/iso.inc';
   $languages = _locale_get_predefined_list();
   foreach ($locales as $locale) {
-    // Try to use verbose locale name.
-    $name = $locale->name;
+    $name = $locale->langcode;
     if (isset($languages[$name])) {
       $name = $languages[$name][0] . (isset($languages[$name][1]) ? ' ' . st('(@language)', array('@language' => $languages[$name][1])) : '');
     }
-    $form['locale'][$locale->name] = array(
+    $form['locale'][$locale->langcode] = array(
       '#type' => 'radio',
-      '#return_value' => $locale->name,
-      '#default_value' => $locale->name == 'en' ? 'en' : '',
-      '#title' => $name . ($locale->name == 'en' ? ' ' . st('(built-in)') : ''),
+      '#return_value' => $locale->langcode,
+      '#default_value' => $locale->langcode == 'en' ? 'en' : '',
+      '#title' => $name . ($locale->langcode == 'en' ? ' ' . st('(built-in)') : ''),
       '#parents' => array('locale')
     );
   }
