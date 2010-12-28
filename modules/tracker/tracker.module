@@ -181,7 +181,12 @@ function tracker_node_update($node, $arg = 0) {
  * Implements hook_node_delete().
  */
 function tracker_node_delete($node, $arg = 0) {
-  _tracker_remove($node->nid, $node->uid, $node->changed);
+  db_delete('tracker_node')
+    ->condition('nid', $node->nid)
+    ->execute();
+  db_delete('tracker_user')
+    ->condition('nid', $node->nid)
+    ->execute();
 }
 
 /**
