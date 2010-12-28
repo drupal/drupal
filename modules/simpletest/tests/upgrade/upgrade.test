@@ -378,6 +378,15 @@ class BasicUpgradePath extends UpgradePathTestCase {
       'pass_raw' => 'admin',
     ));
 
+    // The previous login should've triggered a password rehash, so login one
+    // more time to make sure the new hash is readable.
+    $this->drupalLogout();
+    $this->drupalLogin((object) array(
+      'uid' => 1,
+      'name' => 'admin',
+      'pass_raw' => 'admin',
+    ));
+
     // Test that the site name is correctly displayed.
     $this->assertText('Drupal 6', t('The site name is correctly displayed.'));
 

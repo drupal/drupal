@@ -2180,10 +2180,7 @@ function user_authenticate($name, $password) {
 
         // Update user to new password scheme if needed.
         if (user_needs_new_hash($account)) {
-          $new_hash = user_hash_password($password);
-          if ($new_hash) {
-            user_save($account, array('pass' => $new_hash));
-          }
+          user_save($account, array('pass' => $password));
         }
       }
     }
