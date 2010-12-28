@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.457 2010/12/23 10:13:53 webchick Exp $
+// $Id: bootstrap.inc,v 1.458 2010/12/28 19:14:48 webchick Exp $
 
 /**
  * @file
@@ -3057,7 +3057,7 @@ function &drupal_register_shutdown_function($callback = NULL) {
     $args = func_get_args();
     array_shift($args);
     // Save callback and arguments
-    $callbacks[] = array('callback' => $callback, 'arguments' => $args, 'cwd' => getcwd());
+    $callbacks[] = array('callback' => $callback, 'arguments' => $args, 'cwd' => DRUPAL_ROOT);
   }
   return $callbacks;
 }
