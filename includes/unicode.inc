@@ -1,5 +1,5 @@
 <?php
-// $Id: unicode.inc,v 1.47 2010/08/11 10:58:22 dries Exp $
+// $Id: unicode.inc,v 1.48 2010/12/28 18:21:58 webchick Exp $
 
 /**
  * Indicates an error during check for PHP unicode support.
@@ -288,12 +288,12 @@ function drupal_truncate_bytes($string, $len) {
  *   If TRUE, attempt to truncate on a word boundary. Word boundaries are
  *   spaces, punctuation, and Unicode characters used as word boundaries in
  *   non-Latin languages; see PREG_CLASS_UNICODE_WORD_BOUNDARY for more
- *   information.  If a word boundary cannot be found that would make the length
+ *   information. If a word boundary cannot be found that would make the length
  *   of the returned string fall within length guidelines (see parameters
- *   $max_return_length and $min_wordsafe_length), word boundaries are ignored.
+ *   $max_length and $min_wordsafe_length), word boundaries are ignored.
  * @param $add_ellipsis
  *   If TRUE, add t('...') to the end of the truncated string (defaults to
- *   FALSE). The string length will still fall within $max_return_length.
+ *   FALSE). The string length will still fall within $max_length.
  * @param $min_wordsafe_length
  *   If $wordsafe is TRUE, the minimum acceptable length for truncation (before
  *   adding an ellipsis, if $add_ellipsis is TRUE). Has no effect if $wordsafe
