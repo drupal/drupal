@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.326 2010/11/23 03:20:17 dries Exp $
+// $Id: update.php,v 1.327 2010/12/28 18:31:16 webchick Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -204,7 +204,6 @@ function update_results_page() {
             $output .= '<ul>' . implode("\n", $messages) . "</ul>\n";
           }
         }
-        $output .= '</ul>';
       }
     }
     $output .= '</div>';
