@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1228 2010/12/20 16:27:35 webchick Exp $
+// $Id: user.module,v 1.1229 2010/12/28 21:46:23 webchick Exp $
 
 /**
  * @file
@@ -2180,10 +2180,7 @@ function user_authenticate($name, $password) {
 
         // Update user to new password scheme if needed.
         if (user_needs_new_hash($account)) {
-          $new_hash = user_hash_password($password);
-          if ($new_hash) {
-            user_save($account, array('pass' => $new_hash));
-          }
+          user_save($account, array('pass' => $password));
         }
       }
     }
