@@ -1,5 +1,5 @@
 <?php
-// $Id: tracker.test,v 1.21 2010/10/05 06:17:29 webchick Exp $
+// $Id: tracker.test,v 1.22 2010/12/28 18:39:23 webchick Exp $
 
 class TrackerTest extends DrupalWebTestCase {
   protected $user;
@@ -9,7 +9,7 @@ class TrackerTest extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Tracker',
-      'description' => 'Create nodes and check for their display in the tracker listings.',
+      'description' => 'Create and delete nodes and check for their display in the tracker listings.',
       'group' => 'Tracker'
     );
   }
@@ -44,6 +44,11 @@ class TrackerTest extends DrupalWebTestCase {
     $this->assertNoText($unpublished->title, t('Unpublished node do not show up in the tracker listing.'));
     $this->assertText($published->title, t('Published node show up in the tracker listing.'));
     $this->assertLink(t('My recent content'), 0, t('User tab shows up on the global tracker page.'));
+
+    // Delete a node and ensure it no longer appears on the tracker.
+    node_delete($published->nid);
+    $this->drupalGet('tracker');
+    $this->assertNoText($published->title, t('Deleted node do not show up in the tracker listing.'));
   }
 
   /**
