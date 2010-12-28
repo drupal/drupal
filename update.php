@@ -204,7 +204,6 @@ function update_results_page() {
             $output .= '<ul>' . implode("\n", $messages) . "</ul>\n";
           }
         }
-        $output .= '</ul>';
       }
     }
     $output .= '</div>';
