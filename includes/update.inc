@@ -1,5 +1,5 @@
 <?php
-// $Id: update.inc,v 1.84 2010/12/18 06:36:00 webchick Exp $
+// $Id: update.inc,v 1.85 2010/12/29 03:46:39 webchick Exp $
 
 /**
  * @file
@@ -155,6 +155,20 @@ function update_prepare_d7_bootstrap() {
         'description' => $has_required_schema ? '' : 'Please update your Drupal 6 installation to the most recent version before attempting to upgrade to Drupal 7',
       ),
     );
+
+    // Make sure that the database environment is properly set up.
+    try {
+      db_run_tasks(db_driver());
+    }
+    catch (DatabaseTaskException $e) {
+      $requirements['database tasks'] = array(
+        'title' => 'Database environment',
+        'value' => 'There is a problem with your database environment',
+        'severity' => REQUIREMENT_ERROR,
+        'description' => $e->getMessage(),
+      );
+    }
+
     update_extra_requirements($requirements);
 
     // Allow a D6 session to work, since the upgrade has not been performed yet.
