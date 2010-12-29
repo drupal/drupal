@@ -1,5 +1,5 @@
 <?php
-// $Id: schema.inc,v 1.42 2010/12/29 03:50:58 webchick Exp $
+// $Id: schema.inc,v 1.43 2010/12/29 04:03:42 webchick Exp $
 
 /**
  * @file
@@ -368,7 +368,7 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
     $this->connection->query($query);
     if (isset($spec['initial'])) {
       $this->connection->update($table)
-        ->fields(array($field, $spec['initial']))
+        ->fields(array($field => $spec['initial']))
         ->execute();
     }
     if ($fixnull) {
