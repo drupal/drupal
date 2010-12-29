@@ -368,7 +368,7 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
     $this->connection->query($query);
     if (isset($spec['initial'])) {
       $this->connection->update($table)
-        ->fields(array($field, $spec['initial']))
+        ->fields(array($field => $spec['initial']))
         ->execute();
     }
     if ($fixnull) {
