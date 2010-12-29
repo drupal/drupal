@@ -2115,21 +2115,6 @@ function system_update_7021() {
 }
 
 /**
- * Add the substr_index() function to PostgreSQL.
- *
- * Note: this should go into the driver itself, but we have no support
- * for driver-specific updates yet.
- */
-function system_update_7024() {
-  if (db_driver() == 'pgsql') {
-    db_query('CREATE OR REPLACE FUNCTION "substring_index"(text, text, integer) RETURNS text AS
-      \'SELECT array_to_string((string_to_array($1, $2)) [1:$3], $2);\'
-      LANGUAGE \'sql\''
-    );
-  }
-}
-
-/**
  * Enable field type modules.
  */
 function system_update_7027() {
