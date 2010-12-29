@@ -75,6 +75,39 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
   }
 
   /**
+   * Fetch the list of CHECK constraints used on a field.
+   *
+   * We introspect the database to collect the information required by field
+   * alteration.
+   *
+   * @param $table
+   *   The non-prefixed name of the table.
+   * @param $field
+   *   The name of the field.
+   * @return
+   *   An array of all the checks for the field.
+   */
+  public function queryFieldInformation($table, $field) {
+    $prefixInfo = $this->getPrefixInfo($table, TRUE);
+
+    // Split the key into schema and table for querying.
+    $schema = $prefixInfo['schema'];
+    $table_name = $prefixInfo['table'];
+
+    $field_information = (object) array(
+        'checks' => array(),
+    );
+    $checks = $this->connection->query("SELECT conname FROM pg_class cl INNER JOIN pg_constraint co ON co.conrelid = cl.oid INNER JOIN pg_attribute attr ON attr.attrelid = cl.oid AND attr.attnum = ANY (co.conkey) INNER JOIN pg_namespace ns ON cl.relnamespace = ns.oid WHERE co.contype = 'c' AND ns.nspname = :schema AND cl.relname = :table AND attr.attname = :column", array(
+      ':schema' => $schema,
+      ':table' => $table_name,
+      ':column' => $field,
+    ));
+    $field_information = $checks->fetchCol();
+
+    return $field_information;
+  }
+
+  /**
    * Generate SQL to create a new table from a Drupal schema definition.
    *
    * @param $name
@@ -469,13 +502,7 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
       throw new DatabaseSchemaObjectExistsException(t("Cannot rename field %table.%name to %name_new: target field already exists.", array('%table' => $table, '%name' => $field, '%name_new' => $field_new)));
     }
 
-    $spec += array('size' => 'normal');
-
-    // Map type definition to the PostgreSQL type.
-    if (!isset($spec['pgsql_type'])) {
-      $map = $this->getFieldTypeMap();
-      $spec['pgsql_type'] = $map[$spec['type'] . ':' . $spec['size']];
-    }
+    $spec = $this->processField($spec);
 
     // We need to typecast the new column to best be able to transfer the data
     // Schema_pgsql::getFieldTypeMap() will return possibilities that are not
@@ -485,6 +512,20 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
     }
     else {
       $typecast = $spec['pgsql_type'];
+    }
+
+    if (in_array($spec['pgsql_type'], array('varchar', 'character', 'text')) && isset($spec['length'])) {
+      $typecast .= '(' . $spec['length'] . ')';
+    }
+    elseif (isset($spec['precision']) && isset($spec['scale'])) {
+      $typecast .= '(' . $spec['precision'] . ', ' . $spec['scale'] . ')';
+    }
+
+    // Remove old check constraints.
+    $field_info = $this->queryFieldInformation($table, $field);
+
+    foreach ($field_info as $check) {
+      $this->connection->query('ALTER TABLE {' . $table . '} DROP CONSTRAINT "' . $check . '"');
     }
 
     $this->connection->query('ALTER TABLE {' . $table . '} ALTER "' . $field . '" TYPE ' . $typecast . ' USING "' . $field . '"::' . $typecast);
@@ -514,6 +555,11 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
     // Rename the column if necessary.
     if ($field != $field_new) {
       $this->connection->query('ALTER TABLE {' . $table . '} RENAME "' . $field . '" TO "' . $field_new . '"');
+    }
+
+    // Add unsigned check if necessary.
+    if (!empty($spec['unsigned'])) {
+      $this->connection->query('ALTER TABLE {' . $table . '} ADD CHECK ("' . $field_new . '" >= 0)');
     }
 
     // Change description if necessary.
