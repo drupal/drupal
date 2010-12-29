@@ -494,7 +494,7 @@ function file_managed_file_value(&$element, $input = FALSE, $form_state = NULL) 
       // functionality to allow File fields to be extended through FAPI.
       if (isset($element['#file_value_callbacks'])) {
         foreach ($element['#file_value_callbacks'] as $callback) {
-          $callback($element, $input);
+          $callback($element, $input, $form_state);
         }
       }
       // Load file if the FID has changed to confirm it exists.
