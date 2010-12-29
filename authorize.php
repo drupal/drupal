@@ -1,5 +1,5 @@
 <?php
-// $Id: authorize.php,v 1.11 2010/12/01 00:23:36 webchick Exp $
+// $Id: authorize.php,v 1.12 2010/12/29 04:07:52 webchick Exp $
 
 /**
  * @file
@@ -113,7 +113,7 @@ if (authorize_access_allowed()) {
   }
 
   if (isset($_SESSION['authorize_operation']['page_title'])) {
-    drupal_set_title(check_plain($_SESSION['authorize_operation']['page_title']));
+    drupal_set_title($_SESSION['authorize_operation']['page_title']);
   }
   else {
     drupal_set_title(t('Authorize file system changes'));
@@ -128,7 +128,7 @@ if (authorize_access_allowed()) {
     unset($_SESSION['authorize_filetransfer_info']);
 
     if (!empty($results['page_title'])) {
-      drupal_set_title(check_plain($results['page_title']));
+      drupal_set_title($results['page_title']);
     }
     if (!empty($results['page_message'])) {
       drupal_set_message($results['page_message']['message'], $results['page_message']['type']);

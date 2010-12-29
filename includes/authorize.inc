@@ -1,5 +1,5 @@
 <?php
-// $Id: authorize.inc,v 1.12 2010/12/01 00:23:36 webchick Exp $
+// $Id: authorize.inc,v 1.13 2010/12/29 04:07:52 webchick Exp $
 
 /**
  * @file
@@ -272,7 +272,7 @@ function authorize_run_operation($filetransfer) {
   unset($_SESSION['authorize_operation']);
 
   if (!empty($operation['page_title'])) {
-    drupal_set_title(check_plain($operation['page_title']));
+    drupal_set_title($operation['page_title']);
   }
 
   require_once DRUPAL_ROOT . '/' . $operation['file'];
