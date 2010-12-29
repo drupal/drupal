@@ -28,7 +28,7 @@ class ArchiverTar implements ArchiverInterface {
     return $this;
   }
 
-  public function remove($path) {
+  public function remove($file_path) {
     // @todo Archive_Tar doesn't have a remove operation
     // so we'll have to simulate it somehow, probably by
     // creating a new archive with everything but the removed
@@ -99,7 +99,7 @@ class ArchiverZip implements ArchiverInterface {
     return $this;
   }
 
-  public function remove($path) {
+  public function remove($file_path) {
     $this->zip->deleteName($file_path);
 
     return $this;
