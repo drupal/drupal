@@ -272,7 +272,7 @@ function authorize_run_operation($filetransfer) {
   unset($_SESSION['authorize_operation']);
 
   if (!empty($operation['page_title'])) {
-    drupal_set_title(check_plain($operation['page_title']));
+    drupal_set_title($operation['page_title']);
   }
 
   require_once DRUPAL_ROOT . '/' . $operation['file'];
