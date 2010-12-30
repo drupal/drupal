@@ -106,7 +106,12 @@ class ArchiverZip implements ArchiverInterface {
   }
 
   public function extract($path, Array $files = array()) {
-    $this->zip->extractTo($path, $files);
+    if ($files) {
+      $this->zip->extractTo($path, $files);
+    }
+    else {
+      $this->zip->extractTo($path);
+    }
 
     return $this;
   }

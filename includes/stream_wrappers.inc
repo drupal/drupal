@@ -671,11 +671,14 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
    */
   public function url_stat($uri, $flags) {
     $this->uri = $uri;
-    if ($flags & STREAM_URL_STAT_QUIET) {
-      return @stat($this->getLocalPath());
+    $path = $this->getLocalPath();
+    // Suppress warnings if requested or if the file or directory does not
+    // exist. This is consistent with PHP's plain filesystem stream wrapper.
+    if ($flags & STREAM_URL_STAT_QUIET || !file_exists($path)) {
+      return @stat($path);
     }
     else {
-      return stat($this->getLocalPath());
+      return stat($path);
     }
   }
 
