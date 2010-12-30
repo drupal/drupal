@@ -1,5 +1,5 @@
 <?php
-// $Id: form_test.module,v 1.58 2010/12/21 21:05:22 webchick Exp $
+// $Id: form_test.module,v 1.59 2010/12/30 22:52:24 webchick Exp $
 
 /**
  * @file
@@ -355,7 +355,7 @@ function form_test_limit_validation_errors_form($form, &$form_state) {
     '#type' => 'textfield',
     '#element_validate' => array('form_test_limit_validation_errors_element_validate_test'),
   );
-  
+
   $form['test_substring'] = array(
     '#tree' => TRUE,
   );
@@ -369,7 +369,7 @@ function form_test_limit_validation_errors_form($form, &$form_state) {
     '#type' => 'textfield',
     '#element_validate' => array('form_test_limit_validation_errors_element_validate_test'),
   );
-  
+
   $form['actions']['partial'] = array(
     '#type' => 'submit',
     '#limit_validation_errors' => array(array('test')),
@@ -997,6 +997,7 @@ function form_test_checkboxes_radios($form, &$form_state, $customize = FALSE) {
       'foo' => 'Foo',
       1 => 'One',
       'bar' => 'Bar',
+      '>' => 'Special Char',
     ),
   );
   if ($customize) {
@@ -1020,6 +1021,7 @@ function form_test_checkboxes_radios($form, &$form_state, $customize = FALSE) {
       'foo' => 'Foo',
       1 => 'One',
       'bar' => 'Bar',
+      '>' => 'Special Char',
     ),
   );
   if ($customize) {
