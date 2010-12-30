@@ -1159,8 +1159,7 @@ function node_save($node) {
 /**
  * Helper function to save a revision with the uid of the current user.
  *
- * Node is taken by reference, because drupal_write_record() updates the
- * $node with the revision id, and we need to pass that back to the caller.
+ * The resulting revision ID is available afterward in $node->vid.
  */
 function _node_save_revision($node, $uid, $update = NULL) {
   $temp_uid = $node->uid;
@@ -1171,6 +1170,7 @@ function _node_save_revision($node, $uid, $update = NULL) {
   else {
     drupal_write_record('node_revision', $node);
   }
+  // Have node object still show node owner's uid, not revision author's.
   $node->uid = $temp_uid;
 }
 
