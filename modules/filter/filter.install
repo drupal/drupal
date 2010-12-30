@@ -205,7 +205,7 @@ function filter_update_7001() {
     if (variable_get('filter_html_' . $format_id, 1) == 2) {
       $insert->values(array(
         'format' => $format_id,
-        'filter' => 'filter',
+        'module' => 'filter',
         'delta' => 4,
         'weight' => 0,
       ));

@@ -1034,6 +1034,12 @@ db_insert('filter_formats')->fields(array(
   'roles' => '',
   'cache' => '1',
 ))
+->values(array(
+  'format' => '3',
+  'name' => 'Escape HTML Filter',
+  'roles' => '',
+  'cache' => '1',
+))
 ->execute();
 
 db_create_table('filters', array(
@@ -19748,6 +19754,12 @@ db_insert('variable')->fields(array(
 ->values(array(
   'name' => 'filter_html_1',
   'value' => 'i:1;',
+))
+// Add the Escape HTML filter to the custom input format 'Escape HTML Filter'
+// to test that the filter may be upgraded to its Drupal 7 equivalent.
+->values(array(
+  'name' => 'filter_html_3',
+  'value' => 'i:2;',
 ))
 ->values(array(
   'name' => 'install_profile',
