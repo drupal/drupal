@@ -1,6 +1,6 @@
 // $Id$
 
-Drupal 7.0, xxxx-xx-xx (development version)
+Drupal 7.0-rc4, 2020-12-29
 ----------------------
 - Database:
     * Fully rewritten database layer utilizing PHP 5's PDO abstraction layer.
