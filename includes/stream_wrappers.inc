@@ -1,5 +1,5 @@
 <?php
-// $Id: stream_wrappers.inc,v 1.21 2010/10/21 12:09:41 dries Exp $
+// $Id: stream_wrappers.inc,v 1.22 2010/12/30 22:33:03 webchick Exp $
 
 /**
  * @file
@@ -671,11 +671,14 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
    */
   public function url_stat($uri, $flags) {
     $this->uri = $uri;
-    if ($flags & STREAM_URL_STAT_QUIET) {
-      return @stat($this->getLocalPath());
+    $path = $this->getLocalPath();
+    // Suppress warnings if requested or if the file or directory does not
+    // exist. This is consistent with PHP's plain filesystem stream wrapper.
+    if ($flags & STREAM_URL_STAT_QUIET || !file_exists($path)) {
+      return @stat($path);
     }
     else {
-      return stat($this->getLocalPath());
+      return stat($path);
     }
   }
 

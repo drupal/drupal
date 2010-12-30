@@ -1,5 +1,5 @@
 <?php
-// $Id: system.archiver.inc,v 1.5 2010/12/29 04:01:40 webchick Exp $
+// $Id: system.archiver.inc,v 1.6 2010/12/30 22:33:04 webchick Exp $
 
 /**
  * @file
@@ -106,7 +106,12 @@ class ArchiverZip implements ArchiverInterface {
   }
 
   public function extract($path, Array $files = array()) {
-    $this->zip->extractTo($path, $files);
+    if ($files) {
+      $this->zip->extractTo($path, $files);
+    }
+    else {
+      $this->zip->extractTo($path);
+    }
 
     return $this;
   }
