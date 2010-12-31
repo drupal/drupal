@@ -810,6 +810,16 @@ class SelectQueryExtender implements SelectQueryInterface {
     return $this;
   }
 
+  public function exists(SelectQueryInterface $select) {
+    $this->query->exists($select);
+    return $this;
+  }
+
+  public function notExists(SelectQueryInterface $select) {
+    $this->query->notExists($select);
+    return $this;
+  }
+  
   public function __toString() {
     return (string) $this->query;
   }
@@ -1022,6 +1032,16 @@ class SelectQuery extends Query implements SelectQueryInterface {
     return $this;
   }
 
+  public function exists(SelectQueryInterface $select) {
+    $this->where->exists($select);
+    return $this;
+  }
+
+  public function notExists(SelectQueryInterface $select) {
+    $this->where->notExists($select);
+    return $this;
+  }
+  
   public function compile(DatabaseConnection $connection, QueryPlaceholderInterface $queryPlaceholder = NULL) {
     return $this->where->compile($connection, isset($queryPlaceholder) ? $queryPlaceholder : $this);
   }
@@ -1069,7 +1089,17 @@ class SelectQuery extends Query implements SelectQueryInterface {
     $this->having->isNotNull($field);
     return $this;
   }
-
+  
+  public function havingExists(SelectQueryInterface $select) {
+    $this->having->exists($select);
+    return $this;
+  }
+  
+  public function havingNotExists(SelectQueryInterface $select) {
+    $this->having->notExists($select);
+    return $this;
+  }
+  
   public function forUpdate($set = TRUE) {
     if (isset($set)) {
       $this->forUpdate = $set;

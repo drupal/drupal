@@ -77,6 +77,28 @@ interface QueryConditionInterface {
   public function isNotNull($field);
 
   /**
+   * Sets a condition that the specified subquery returns values.
+   * 
+   * @param SelectQueryInterface $select
+   *   The subquery that must contain results.
+   *
+   * @return QueryConditionInterface
+   *   The called object.
+   */
+  public function exists(SelectQueryInterface $select);
+  
+  /**
+   * Sets a condition that the specified subquery returns no values.
+   * 
+   * @param SelectQueryInterface $select
+   *   The subquery that must not contain results.
+   *
+   * @return QueryConditionInterface
+   *   The called object.
+   */
+  public function notExists(SelectQueryInterface $select);
+  
+  /**
    * Gets a complete list of all conditions in this conditional clause.
    *
    * This method returns by reference. That allows alter hooks to access the
@@ -727,6 +749,22 @@ class DeleteQuery extends Query implements QueryConditionInterface {
   }
 
   /**
+   * Implements QueryConditionInterface::exists().
+   */
+  public function exists(SelectQueryInterface $select) {
+    $this->condition->exists($select);
+    return $this;
+  }
+
+  /**
+   * Implements QueryConditionInterface::notExists().
+   */
+  public function notExists(SelectQueryInterface $select) {
+    $this->condition->notExists($select);
+    return $this;
+  }
+  
+  /**
    * Implements QueryConditionInterface::conditions().
    */
   public function &conditions() {
@@ -946,6 +984,22 @@ class UpdateQuery extends Query implements QueryConditionInterface {
     return $this;
   }
 
+  /**
+   * Implements QueryConditionInterface::exists().
+   */
+  public function exists(SelectQueryInterface $select) {
+    $this->condition->exists($select);
+    return $this;
+  }
+
+  /**
+   * Implements QueryConditionInterface::notExists().
+   */
+  public function notExists(SelectQueryInterface $select) {
+    $this->condition->notExists($select);
+    return $this;
+  }
+  
   /**
    * Implements QueryConditionInterface::conditions().
    */
@@ -1417,6 +1471,22 @@ class MergeQuery extends Query implements QueryConditionInterface {
   }
 
   /**
+   * Implements QueryConditionInterface::exists().
+   */
+  public function exists(SelectQueryInterface $select) {
+    $this->condition->exists($select);
+    return $this;
+  }
+
+  /**
+   * Implements QueryConditionInterface::notExists().
+   */
+  public function notExists(SelectQueryInterface $select) {
+    $this->condition->notExists($select);
+    return $this;
+  }
+  
+  /**
    * Implements QueryConditionInterface::conditions().
    */
   public function &conditions() {
@@ -1615,6 +1685,20 @@ class DatabaseCondition implements QueryConditionInterface, Countable {
   }
 
   /**
+   * Implements QueryConditionInterface::exists().
+   */
+  public function exists(SelectQueryInterface $select) {
+    return $this->condition('', $select, 'EXISTS');
+  }
+  
+  /**
+   * Implements QueryConditionInterface::notExists().
+   */
+  public function notExists(SelectQueryInterface $select) {
+    return $this->condition('', $select, 'NOT EXISTS');
+  }
+  
+  /**
    * Implements QueryConditionInterface::conditions().
    */
   public function &conditions() {
@@ -1756,6 +1840,8 @@ class DatabaseCondition implements QueryConditionInterface, Countable {
       'BETWEEN' => array('delimiter' => ' AND '),
       'IN' => array('delimiter' => ', ', 'prefix' => ' (', 'postfix' => ')'),
       'NOT IN' => array('delimiter' => ', ', 'prefix' => ' (', 'postfix' => ')'),
+      'EXISTS' => array('prefix' => ' (', 'postfix' => ')'),
+      'NOT EXISTS' => array('prefix' => ' (', 'postfix' => ')'),
       'IS NULL' => array('use_value' => FALSE),
       'IS NOT NULL' => array('use_value' => FALSE),
       // Use backslash for escaping wildcard characters.
