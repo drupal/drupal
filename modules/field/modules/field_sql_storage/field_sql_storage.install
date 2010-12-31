@@ -136,40 +136,42 @@ function field_sql_storage_update_7001(&$sandbox) {
     $table = key($sandbox['tables']);
     $type = array_shift($sandbox['tables']);
 
-    // Add the 'entity_type' column.
-    if (!db_field_exists($table, 'entity_type')) {
-      $column = array(
-        'type' => 'varchar',
-        'length' => 128,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'The entity type this data is attached to.',
-      );
-      db_add_field($table, 'entity_type', $column);
+    if (db_table_exists($table)) {
+      // Add the 'entity_type' column.
+      if (!db_field_exists($table, 'entity_type')) {
+        $column = array(
+          'type' => 'varchar',
+          'length' => 128,
+          'not null' => TRUE,
+          'default' => '',
+          'description' => 'The entity type this data is attached to.',
+        );
+        db_add_field($table, 'entity_type', $column);
 
-      // Populate the 'entity_type' column based on the 'etid' column.
-      foreach ($sandbox['etids'] as $etid => $entity_type) {
-        db_update($table)
-          ->fields(array('entity_type' => $entity_type))
-          ->condition('etid', $etid)
-          ->execute();
+        // Populate the 'entity_type' column based on the 'etid' column.
+        foreach ($sandbox['etids'] as $etid => $entity_type) {
+          db_update($table)
+            ->fields(array('entity_type' => $entity_type))
+            ->condition('etid', $etid)
+            ->execute();
+        }
+
+        // Index the new column.
+        db_add_index($table, 'entity_type', array('entity_type'));
       }
 
-      // Index the new column.
-      db_add_index($table, 'entity_type', array('entity_type'));
-    }
+      // Use the 'entity_type' column in the primary key.
+      db_drop_primary_key($table);
+      $primary_keys = array(
+        'data' => array('entity_type', 'entity_id', 'deleted', 'delta', 'language'),
+        'revision' => array('entity_type', 'entity_id', 'revision_id', 'deleted', 'delta', 'language'),
+      );
+      db_add_primary_key($table, $primary_keys[$type]);
 
-    // Use the 'entity_type' column in the primary key.
-    db_drop_primary_key($table);
-    $primary_keys = array(
-      'data' => array('entity_type', 'entity_id', 'deleted', 'delta', 'language'),
-      'revision' => array('entity_type', 'entity_id', 'revision_id', 'deleted', 'delta', 'language'),
-    );
-    db_add_primary_key($table, $primary_keys[$type]);
-
-    // Drop the 'etid' column.
-    if (db_field_exists($table, 'etid')) {
-      db_drop_field($table, 'etid');
+      // Drop the 'etid' column.
+      if (db_field_exists($table, 'etid')) {
+        db_drop_field($table, 'etid');
+      }
     }
 
     // Report progress.
