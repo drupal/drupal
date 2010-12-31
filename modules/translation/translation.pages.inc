@@ -1,5 +1,5 @@
 <?php
-// $Id: translation.pages.inc,v 1.17 2010/11/22 06:14:55 webchick Exp $
+// $Id: translation.pages.inc,v 1.18 2010/12/31 20:45:25 webchick Exp $
 
 /**
  * @file
@@ -13,6 +13,8 @@
  *   Node object.
  */
 function translation_node_overview($node) {
+  include_once DRUPAL_ROOT . '/includes/language.inc';
+
   if ($node->tnid) {
     // Already part of a set, grab that set.
     $tnid = $node->tnid;

@@ -1,5 +1,5 @@
 <?php
-// $Id: translation.test,v 1.34 2010/11/23 05:53:49 webchick Exp $
+// $Id: translation.test,v 1.35 2010/12/31 20:45:25 webchick Exp $
 
 class TranslationTestCase extends DrupalWebTestCase {
   protected $book;
@@ -120,6 +120,15 @@ class TranslationTestCase extends DrupalWebTestCase {
     $this->assertFieldByXPath('//select[@name="language"]//option', 'it', t('Italian (disabled) is available in language selection.'));
     $translation_it = $this->createTranslation($node, $this->randomName(), $this->randomName(), 'it');
     $this->assertRaw($translation_it->body['it'][0]['value'], t('Content created in Italian (disabled).'));
+
+    // Leave just one language enabled and check that the translation overview
+    // page is still accessible.
+    $this->drupalLogin($this->admin_user);
+    $edit = array('enabled[es]' => FALSE);
+    $this->drupalPost('admin/config/regional/language', $edit, t('Save configuration'));
+    $this->drupalLogin($this->translator);
+    $this->drupalGet('node/' . $node->nid . '/translate');
+    $this->assertRaw(t('Translations of %title', array('%title' => $node->title)), t('Translation overview page available with only one language enabled.'));
   }
 
   /**
