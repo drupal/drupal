@@ -1,5 +1,5 @@
 <?php
-// $Id: database_test.test,v 1.109 2010/12/28 18:49:51 webchick Exp $
+// $Id: database_test.test,v 1.110 2010/12/31 20:43:43 webchick Exp $
 
 /**
  * Dummy class for fetching into a class.
@@ -1683,6 +1683,61 @@ class DatabaseSelectSubqueryTestCase extends DatabaseTestCase {
     $people = $select->execute()->fetchCol();
 
     $this->assertEqual(count($people), 2, t('Returned the correct number of rows.'));
+  }
+
+  /**
+   * Test EXISTS subquery conditionals on SELECT statements.
+   */
+  function testExistsSubquerySelect() {
+    // Put George into {test_people}.
+    db_insert('test_people')
+      ->fields(array(
+        'name' => 'George',
+        'age' => 27,
+        'job' => 'Singer',
+      ))
+      ->execute();
+    // Base query to {test}.
+    $query = db_select('test', 't')
+      ->fields('t', array('name'));
+    // Subquery to {test_people}.
+    $subquery = db_select('test_people', 'tp')
+      ->fields('tp', array('name'))
+      ->condition('name', 'George');
+    $query->exists($subquery);
+    $result = $query->execute();
+
+    // Ensure that we got the right record.
+    $record = $result->fetch();
+    $this->assertEqual($record->name, 'George', t('Fetched name is correct using EXISTS query.'));
+  }
+
+  /**
+   * Test NOT EXISTS subquery conditionals on SELECT statements.
+   */
+  function testNotExistsSubquerySelect() {
+    // Put George into {test_people}.
+    db_insert('test_people')
+      ->fields(array(
+        'name' => 'George',
+        'age' => 27,
+        'job' => 'Singer',
+      ))
+      ->execute();
+
+    // Base query to {test}.
+    $query = db_select('test', 't')
+      ->fields('t', array('name'));
+    // Subquery to {test_people}.
+    $subquery = db_select('test_people', 'tp')
+      ->fields('tp', array('name'))
+      ->condition('name', 'George');
+    $query->notExists($subquery);
+    $result = $query->execute();
+
+    // Ensure that we got the right record.
+    $record = $result->fetch();
+    $this->assertFalse($record, t('NOT EXISTS query returned no results.'));
   }
 }
 
