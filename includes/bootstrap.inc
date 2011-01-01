@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.460 2010/12/30 04:36:53 webchick Exp $
+// $Id: bootstrap.inc,v 1.461 2011/01/01 22:46:02 webchick Exp $
 
 /**
  * @file
@@ -3057,7 +3057,7 @@ function &drupal_register_shutdown_function($callback = NULL) {
     $args = func_get_args();
     array_shift($args);
     // Save callback and arguments
-    $callbacks[] = array('callback' => $callback, 'arguments' => $args, 'cwd' => DRUPAL_ROOT);
+    $callbacks[] = array('callback' => $callback, 'arguments' => $args);
   }
   return $callbacks;
 }
@@ -3068,9 +3068,12 @@ function &drupal_register_shutdown_function($callback = NULL) {
 function _drupal_shutdown_function() {
   $callbacks = &drupal_register_shutdown_function();
 
+  // Set the CWD to DRUPAL_ROOT as it is not guaranteed to be the same as it
+  // was in the normal context of execution.
+  chdir(DRUPAL_ROOT);
+
   try {
     while (list($key, $callback) = each($callbacks)) {
-      chdir($callback['cwd']);
       call_user_func_array($callback['callback'], $callback['arguments']);
     }
   }
