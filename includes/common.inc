@@ -1549,6 +1549,10 @@ function filter_xss_bad_protocol($string, $decode = TRUE) {
   // @todo Remove the $decode parameter in Drupal 8, and always assume an HTML
   //   string that needs decoding.
   if ($decode) {
+    if (!function_exists('decode_entities')) {
+      require_once DRUPAL_ROOT . '/includes/unicode.inc';
+    }
+
     $string = decode_entities($string);
   }
   return check_plain(drupal_strip_dangerous_protocols($string));
