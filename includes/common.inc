@@ -3831,7 +3831,7 @@ function drupal_region_class($region) {
  * all typical visitors and most pages of a site. It is critical that all
  * preprocessed files are added unconditionally on every page, even if the
  * files are not needed on a page. This is normally done by calling
- * drupal_add_css() in a hook_init() implementation.
+ * drupal_add_js() in a hook_init() implementation.
  *
  * Non-preprocessed files should only be added to the page when they are
  * actually needed.
