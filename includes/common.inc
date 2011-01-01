@@ -5844,9 +5844,6 @@ function drupal_render_cache_by_query($query, $function, $expire = CACHE_TEMPORA
 }
 
 /**
-
-
-/**
  * Helper function for building cache ids.
  *
  * @param $granularity
