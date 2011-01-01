@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.1280 2011/01/01 03:25:01 webchick Exp $
+// $Id: common.inc,v 1.1281 2011/01/01 04:03:14 webchick Exp $
 
 /**
  * @file
@@ -5842,9 +5842,6 @@ function drupal_render_cache_by_query($query, $function, $expire = CACHE_TEMPORA
     ),
   );
 }
-
-/**
-
 
 /**
  * Helper function for building cache ids.
