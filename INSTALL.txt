@@ -111,45 +111,60 @@ INSTALLATION
    Take note of the username, password, database name, and hostname as you
    create the database. You will enter this information during the install.
 
-4. Make the sites/default directory writable.
+4. Run the install script.
 
-   During installation, several files and directories need to be created, which
-   the installation script can do automatically if the web server has write
-   permission on the sites/default directory. If you are creating a multisite
-   installation, substitute the correct sites directory for sites/default (see
-   the Multisite Configuration section of this file, below).
-
-   For example, on a Unix/Linux command line, you can grant everyone (including
-   the web server) permission to write to the sites/default directory with this
-   command:
-
-      chmod a+w sites/default
-
-   Be sure to set the permissions back after the installation is finished!
-   Sample command:
-
-      chmod go-w sites/default
-
-5. Run the install script.
-
-   To run the install script point your browser to the base URL of your website
-   (e.g., http://www.example.com).
+   To run the install script, point your browser to the base URL of your
+   website (e.g., http://www.example.com).
 
    You will be guided through several screens to set up the database, add the
    site maintenance account (the first user, also known as user/1), and provide
    basic web site settings.
 
-   The install script may also tell you that it cannot proceed until you fix
-   certain issues with server requirements and files. The most common file
-   system issues are with write permissions on directories and files:
+   During installation, several files and directories need to be created, which
+   the install script will try to do automatically. However, on some hosting
+   environments, manual steps are required, and the install script will tell
+   you that it cannot proceed until you fix certain issues. This is normal and
+   does not indicate a problem with your server.
 
-   a. Missing settings.php file.
+   The most common steps you may need to perform are:
+
+   a. Missing files directory.
+
+      The install script will attempt to create a file storage directory in
+      the default location at sites/default/files (the location of the files
+      directory may be changed after Drupal is installed).
+
+      If auto-creation fails, you can make it work by changing permissions on
+      the sites/default directory so that the web server can create the files
+      directory within it for you. (If you are creating a multisite
+      installation, substitute the correct sites directory for sites/default;
+      see the Multisite Configuration section of this file, below.)
+
+      For example, on a Unix/Linux command line, you can grant everyone
+      (including the web server) permission to write to the sites/default
+      directory with this command:
+
+        chmod a+w sites/default
+
+      Be sure to set the permissions back after the installation is finished!
+      Sample command:
+
+        chmod go-w sites/default
+
+      Alternatively, instead of allowing the web server to create the files
+      directory for you as described above, you can create it yourself. Sample
+      commands from a Unix/Linux command line:
+
+        mkdir sites/default/files
+        chmod a+w sites/default/files
+
+   b. Missing settings file.
 
       Drupal will try to automatically create a settings.php configuration file,
       which is normally in the directory sites/default (to avoid problems when
       upgrading, Drupal is not packaged with this file). If auto-creation fails,
-      and you followed step 4 above, you can create this file yourself, using
-      the file sites/default/default.settings.php as a template.
+      you will need to create this file yourself, using the file
+      sites/default/default.settings.php as a template.
 
       For example, on a Unix/Linux command line, you can make a copy of the
       default.settings.php file with the command:
@@ -166,18 +181,6 @@ INSTALLATION
 
         chmod go-w sites/default/settings.php
 
-   b. Files directory.
-
-      The install script will attempt to create a files storage directory in the
-      default location at sites/default/files (the location of the files
-      directory may be changed after Drupal is installed). If auto-creation
-      fails, and you followed step 4 above, you can create this directory
-      yourself. You will also need to grant the web server write permission on
-      this directory. Sample commands from a Unix/Linux command line:
-
-        mkdir sites/default/files
-        chmod a+w sites/default/files
-
    c. Write permissions after install.
 
       The install script will attempt to write-protect the settings.php file and
@@ -188,7 +191,7 @@ INSTALLATION
         chmod go-w sites/default/settings.php
         chmod go-w sites/default
 
-6. Verify that the site is working.
+5. Verify that the site is working.
 
    When the install script finishes, you will be logged in with the site
    maintenance account on a "Welcome" page. If the default Drupal theme is not
@@ -196,9 +199,9 @@ INSTALLATION
    you may be experiencing problems with clean URLs. Visit
    http://drupal.org/getting-started/clean-urls to troubleshoot.
 
-7. Change file system storage settings (optional).
+6. Change file system storage settings (optional).
 
-   The files directory created in step 5 is the default file system path used to
+   The files directory created in step 4 is the default file system path used to
    store all uploaded files, as well as some temporary files created by
    Drupal. After installation, you can modify the file system path to store
    uploaded files in a different location.
@@ -236,7 +239,7 @@ INSTALLATION
    on an existing site, remember to copy all files from the original location
    to the new location.
 
-8. Revoke documentation file permissions (optional).
+7. Revoke documentation file permissions (optional).
 
    Some administrators suggest making the documentation files, especially
    CHANGELOG.txt, non-readable so that the exact version of Drupal you are
@@ -256,7 +259,7 @@ INSTALLATION
    "Modifying Windows file permissions" (http://drupal.org/node/202491) in the
    online handbook.
 
-9. Set up independent "cron" maintenance jobs.
+8. Set up independent "cron" maintenance jobs.
 
    Many Drupal modules have tasks that must be run periodically, including the
    Search module (building and updating the index used for keyword searching),
@@ -379,7 +382,7 @@ NOTE: for more information about multiple virtual hosts or the configuration
 settings, consult http://drupal.org/getting-started/6/install/multi-site
 
 For more information on configuring Drupal's file system path in a multisite
-configuration, see step 7 above.
+configuration, see step 6 above.
 
 
 MORE INFORMATION
