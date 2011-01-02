@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.531 2010/12/29 03:46:39 webchick Exp $
+// $Id: system.install,v 1.532 2011/01/02 17:26:39 webchick Exp $
 
 /**
  * @file
@@ -1718,8 +1718,9 @@ function system_update_dependencies() {
 }
 
 /**
- * @defgroup updates-6.x-to-7.x System updates from 6.x to 7.x
+ * @defgroup updates-6.x-to-7.x Updates from 6.x to 7.x
  * @{
+ * Update functions from 6.x to 7.x.
  */
 
 /**

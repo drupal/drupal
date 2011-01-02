@@ -1,5 +1,5 @@
 <?php
-// $Id: update.install,v 1.20 2010/10/03 22:44:48 dries Exp $
+// $Id: update.install,v 1.21 2011/01/02 17:26:39 webchick Exp $
 
 /**
  * @file
@@ -160,7 +160,7 @@ function _update_requirement_check($project, $type) {
 }
 
 /**
- * @defgroup updates-6.x-to-7.x Filter updates from 6.x to 7.x
+ * @addtogroup updates-6.x-to-7.x
  * @{
  */
 
@@ -187,6 +187,5 @@ function update_update_7001() {
 }
 
 /**
- * @} End of "defgroup updates-6.x-to-7.x"
- * The next series of updates should start at 8000.
+ * @} End of "addtogroup updates-6.x-to-7.x"
  */

@@ -1,5 +1,5 @@
 <?php
-// $Id: lock.inc,v 1.5 2010/07/16 11:19:38 dries Exp $
+// $Id: lock.inc,v 1.6 2011/01/02 17:26:39 webchick Exp $
 
 /**
  * @file
@@ -7,8 +7,10 @@
  */
 
 /**
- * @defgroup lock Functions to coordinate long-running operations across requests.
+ * @defgroup lock Locking mechanisms
  * @{
+ * Functions to coordinate long-running operations across requests.
+ *
  * In most environments, multiple Drupal page requests (a.k.a. threads or
  * processes) will execute in parallel. This leads to potential conflicts or
  * race conditions when two requests execute the same code at the same time. A

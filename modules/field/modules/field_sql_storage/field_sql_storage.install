@@ -1,5 +1,5 @@
 <?php
-// $Id: field_sql_storage.install,v 1.13 2010/12/31 20:40:42 webchick Exp $
+// $Id: field_sql_storage.install,v 1.14 2011/01/02 17:26:39 webchick Exp $
 
 /**
  * @file
@@ -83,7 +83,7 @@ function _update_7000_field_sql_storage_write($entity_type, $bundle, $entity_id,
 }
 
 /**
- * @defgroup field-sql-storage-updates-6.x-to-7.x Field SQL storage updates from 6.x to 7.x
+ * @addtogroup updates-6.x-to-7.x
  * @{
  */
 
@@ -212,5 +212,5 @@ function field_sql_storage_update_7002() {
 }
 
 /**
- * @} End of "defgroup field-updates-6.x-to-7.x"
+ * @} End of "addtogroup updates-6.x-to-7.x"
  */

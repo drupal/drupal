@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.install,v 1.25 2010/06/08 03:48:14 webchick Exp $
+// $Id: contact.install,v 1.26 2011/01/02 17:26:39 webchick Exp $
 
 /**
  * @file
@@ -90,7 +90,7 @@ function contact_uninstall() {
 }
 
 /**
- * @defgroup updates-6.x-to-7.x Contact updates from 6.x to 7.x
+ * @addtogroup updates-6.x-to-7.x
  * @{
  */
 
@@ -146,6 +146,5 @@ function contact_update_7003() {
 }
 
 /**
- * @} End of "defgroup updates-6.x-to-7.x"
- * The next series of updates should start at 8000.
+ * @} End of "addtogroup updates-6.x-to-7.x"
  */

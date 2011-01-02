@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.install,v 1.75 2010/12/18 01:50:15 dries Exp $
+// $Id: comment.install,v 1.76 2011/01/02 17:26:39 webchick Exp $
 
 /**
  * @file
@@ -99,7 +99,7 @@ function comment_update_dependencies() {
 }
 
 /**
- * @defgroup updates-6.x-to-7.x Comment updates from 6.x to 7.x
+ * @addtogroup updates-6.x-to-7.x
  * @{
  */
 
@@ -338,8 +338,7 @@ function comment_update_7006(&$sandbox) {
 }
 
 /**
- * @} End of "defgroup updates-6.x-to-7.x"
- * The next series of updates should start at 8000.
+ * @} End of "addtogroup updates-6.x-to-7.x"
  */
 
 /**

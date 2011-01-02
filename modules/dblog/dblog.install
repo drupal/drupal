@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.install,v 1.23 2010/09/05 19:56:03 dries Exp $
+// $Id: dblog.install,v 1.24 2011/01/02 17:26:39 webchick Exp $
 
 /**
  * @file
@@ -93,7 +93,7 @@ function dblog_schema() {
 }
 
 /**
- * @defgroup updates-6.x-to-7.x database logging updates from 6.x to 7.x
+ * @addtogroup updates-6.x-to-7.x
  * @{
  */
 
@@ -132,6 +132,5 @@ function dblog_update_7001() {
 }
 
 /**
- * @} End of "defgroup updates-6.x-to-7.x"
- * The next series of updates should start at 8000.
+ * @} End of "addtogroup updates-6.x-to-7.x"
  */

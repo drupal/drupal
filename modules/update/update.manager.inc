@@ -1,5 +1,5 @@
 <?php
-// $Id: update.manager.inc,v 1.30 2010/12/15 03:52:05 webchick Exp $
+// $Id: update.manager.inc,v 1.31 2011/01/02 17:26:39 webchick Exp $
 
 /**
  * @file
@@ -37,8 +37,11 @@
  */
 
 /**
- * @defgroup update_manager_update Update manager for updating existing code.
+ * @defgroup update_manager_update Update manager: update
  * @{
+ * Update manager for updating existing code.
+ *
+ * Provides a user interface to update existing code.
  */
 
 /**
@@ -436,8 +439,11 @@ function update_manager_update_ready_form_submit($form, &$form_state) {
  */
 
 /**
- * @defgroup update_manager_install Update manager for installing new code.
+ * @defgroup update_manager_install Update manager: install
  * @{
+ * Update manager for installing new code.
+ *
+ * Provides a user interface to install new code.
  */
 
 /**
@@ -617,8 +623,12 @@ function update_manager_install_form_submit($form, &$form_state) {
  */
 
 /**
- * @defgroup update_manager_file Update manager file management functions.
+ * @defgroup update_manager_file Update manager: file management
  * @{
+ * Update manager file management functions.
+ *
+ * These functions are used by the update manager to copy, extract
+ * and verify archive files.
  */
 
 /**

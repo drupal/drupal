@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.install,v 1.28 2010/12/08 06:43:07 webchick Exp $
+// $Id: statistics.install,v 1.29 2011/01/02 17:26:39 webchick Exp $
 
 /**
  * @file
@@ -137,7 +137,7 @@ function statistics_schema() {
 }
 
 /**
- * @defgroup updates-6.x-to-7.x statistics updates from 6.x to 7.x
+ * @addtogroup updates-6.x-to-7.x
  * @{
  */
 
@@ -155,6 +155,5 @@ function statistics_update_7000() {
 }
 
 /**
- * @} End of "defgroup updates-6.x-to-7.x"
- * The next series of updates should start at 8000.
+ * @} End of "addtogroup updates-6.x-to-7.x"
  */

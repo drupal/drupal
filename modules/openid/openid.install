@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.install,v 1.12 2010/08/22 22:00:16 dries Exp $
+// $Id: openid.install,v 1.13 2011/01/02 17:26:39 webchick Exp $
 
 /**
  * @file
@@ -112,7 +112,7 @@ function openid_requirements($phase) {
 }
 
 /**
- * @defgroup updates-6.x-extra Extra openid updates for 6.x
+ * @addtogroup updates-6.x-to-7.x
  * @{
  */
 
@@ -150,6 +150,5 @@ function openid_update_6000() {
 }
 
 /**
- * @} End of "defgroup updates-6.x-extra"
- * The next series of updates should start at 7000.
+ * @} End of "addtogroup updates-6.x-to-7.x"
  */

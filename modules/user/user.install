@@ -1,5 +1,5 @@
 <?php
-// $Id: user.install,v 1.68 2010/10/20 01:15:58 dries Exp $
+// $Id: user.install,v 1.69 2011/01/02 17:26:40 webchick Exp $
 
 /**
  * @file
@@ -393,7 +393,7 @@ function _update_7000_user_role_grant_permissions($rid, array $permissions, $mod
 }
 
 /**
- * @defgroup user-updates-6.x-to-7.x User updates from 6.x to 7.x
+ * @addtogroup updates-6.x-to-7.x
  * @{
  */
 
@@ -855,6 +855,5 @@ function user_update_7015() {
 }
 
 /**
- * @} End of "defgroup user-updates-6.x-to-7.x"
- * The next series of updates should start at 8000.
+ * @} End of "addtogroup updates-6.x-to-7.x"
  */

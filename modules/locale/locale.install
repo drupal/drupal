@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.install,v 1.71 2010/11/09 17:46:34 webchick Exp $
+// $Id: locale.install,v 1.72 2011/01/02 17:26:39 webchick Exp $
 
 /**
  * @file
@@ -28,7 +28,7 @@ function locale_install() {
 }
 
 /**
- * @defgroup updates-6.x-to-7.x Locale updates from 6.x to 7.x
+ * @addtogroup updates-6.x-to-7.x
  * @{
  */
 
@@ -127,7 +127,7 @@ function locale_update_7002() {
 }
 
 /**
- * @} End of "defgroup updates-6.x-to-7.x"
+ * @} End of "addtogroup updates-6.x-to-7.x"
  */
 
 /**

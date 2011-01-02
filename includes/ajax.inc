@@ -1,5 +1,5 @@
 <?php
-// $Id: ajax.inc,v 1.41 2010/12/23 04:26:31 webchick Exp $
+// $Id: ajax.inc,v 1.42 2011/01/02 17:26:39 webchick Exp $
 
 /**
  * @file
@@ -9,6 +9,8 @@
 /**
  * @defgroup ajax AJAX framework
  * @{
+ * Functions for Drupal's AJAX framework.
+ *
  * Drupal's AJAX framework is used to dynamically update parts of a page's HTML
  * based on data from the server. Upon a specified event, such as a button
  * click, a callback function is triggered which performs server-side logic and
@@ -696,6 +698,10 @@ function ajax_pre_render_element($element) {
 /**
  * @defgroup ajax_commands AJAX framework commands
  * @{
+ * Functions to create various AJAX commands.
+ *
+ * These functions can be used to create arrays for use with the
+ * ajax_render() function.
  */
 
 /**

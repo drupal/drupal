@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.623 2010/12/15 03:39:42 webchick Exp $
+// $Id: taxonomy.module,v 1.624 2011/01/02 17:26:39 webchick Exp $
 
 /**
  * @file
@@ -1622,6 +1622,8 @@ function taxonomy_rdf_mapping() {
 
 /**
  * @defgroup taxonomy indexing Taxonomy functions maintaining {taxonomy_index}.
+ * @{
+ * Functions to maintain taxonomy indexing.
  *
  * Taxonomy uses default field storage to store canonical relationships
  * between terms and fieldable entities. However its most common use case
@@ -1634,7 +1636,6 @@ function taxonomy_rdf_mapping() {
  * field storage engines or alternative methods of denormalizing this data
  * you should set the variable 'taxonomy_maintain_index_table' to FALSE
  * to avoid unnecessary writes in SQL.
- * @{
  */
 
 /**
