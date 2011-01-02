@@ -611,15 +611,13 @@ function theme_comment_block() {
 function comment_node_view($node, $view_mode) {
   $links = array();
 
-  if ($node->comment) {
+  if ($node->comment != COMMENT_NODE_HIDDEN) {
     if ($view_mode == 'rss') {
-      if ($node->comment != COMMENT_NODE_HIDDEN) {
-        // Add a comments RSS element which is a URL to the comments of this node.
-        $node->rss_elements[] = array(
-          'key' => 'comments',
-          'value' => url('node/' . $node->nid, array('fragment' => 'comments', 'absolute' => TRUE))
-        );
-      }
+      // Add a comments RSS element which is a URL to the comments of this node.
+      $node->rss_elements[] = array(
+        'key' => 'comments',
+        'value' => url('node/' . $node->nid, array('fragment' => 'comments', 'absolute' => TRUE))
+      );
     }
     elseif ($view_mode == 'teaser') {
       // Teaser view: display the number of comments that have been posted,
@@ -634,9 +632,8 @@ function comment_node_view($node, $view_mode) {
             'fragment' => 'comments',
             'html' => TRUE,
           );
-
-          $new = comment_num_new($node->nid);
-          if ($new) {
+          // Show a link to the first new comment.
+          if ($new = comment_num_new($node->nid)) {
             $links['comment-new-comments'] = array(
               'title' => format_plural($new, '1 new comment', '@count new comments'),
               'href' => "node/$node->nid",
@@ -647,21 +644,21 @@ function comment_node_view($node, $view_mode) {
             );
           }
         }
+      }
+      if ($node->comment == COMMENT_NODE_OPEN) {
+        if (user_access('post comments')) {
+          $links['comment-add'] = array(
+            'title' => t('Add new comment'),
+            'href' => "comment/reply/$node->nid",
+            'attributes' => array('title' => t('Add a new comment to this page.')),
+            'fragment' => 'comment-form',
+          );
+        }
         else {
-          if ($node->comment == COMMENT_NODE_OPEN) {
-            if (user_access('post comments')) {
-              $links['comment-add'] = array(
-                'title' => t('Add new comment'),
-                'href' => "comment/reply/$node->nid",
-                'attributes' => array('title' => t('Add a new comment to this page.')),
-                'fragment' => 'comment-form',
-                'html' => TRUE,
-              );
-            }
-            else {
-              $links['comment_forbidden']['title'] = theme('comment_post_forbidden', array('node' => $node));
-            }
-          }
+          $links['comment_forbidden'] = array(
+            'title' => theme('comment_post_forbidden', array('node' => $node)),
+            'html' => TRUE,
+          );
         }
       }
     }
@@ -671,28 +668,29 @@ function comment_node_view($node, $view_mode) {
       // But we don't want this link if we're building the node for search
       // indexing or constructing a search result excerpt.
       if ($node->comment == COMMENT_NODE_OPEN) {
+        $comment_form_location = variable_get('comment_form_location_' . $node->type, COMMENT_FORM_BELOW);
         if (user_access('post comments')) {
-          $links['comment-add'] = array(
-            'title' => t('Add new comment'),
-            'attributes' => array('title' => t('Share your thoughts and opinions related to this posting.')),
-            'fragment' => 'comment-form',
-            'html' => TRUE,
-          );
-          if (variable_get('comment_form_location_' . $node->type, COMMENT_FORM_BELOW) == COMMENT_FORM_SEPARATE_PAGE) {
-            $links['comment-add']['href'] = "comment/reply/$node->nid";
-          }
-          else {
-            $links['comment-add']['href'] = "node/$node->nid";
+          // Show the "post comment" link if the form is on another page, or
+          // if there are existing comments that the link will skip past.
+          if ($comment_form_location == COMMENT_FORM_SEPARATE_PAGE || (!empty($node->comment_count) && user_access('access comments'))) {
+            $links['comment-add'] = array(
+              'title' => t('Add new comment'),
+              'attributes' => array('title' => t('Share your thoughts and opinions related to this posting.')),
+              'href' => "node/$node->nid",
+              'fragment' => 'comment-form',
+            );
+            if ($comment_form_location == COMMENT_FORM_SEPARATE_PAGE) {
+              $links['comment-add']['href'] = "comment/reply/$node->nid";
+            }
           }
         }
         else {
-          $links['comment_forbidden']['title'] = theme('comment_post_forbidden', array('node' => $node));
+          $links['comment_forbidden'] = array(
+            'title' => theme('comment_post_forbidden', array('node' => $node)),
+            'html' => TRUE,
+          );
         }
       }
-    }
-
-    if (isset($links['comment_forbidden'])) {
-      $links['comment_forbidden']['html'] = TRUE;
     }
 
     $node->content['links']['comment'] = array(
@@ -705,7 +703,7 @@ function comment_node_view($node, $view_mode) {
     // page. We compare $node and $page_node to ensure that comments are not
     // appended to other nodes shown on the page, for example a node_reference
     // displayed in 'full' view mode within another node.
-    if ($node->comment && $view_mode == 'full' && node_is_page($node) && empty($node->in_preview) && user_access('access comments')) {
+    if ($node->comment && $view_mode == 'full' && node_is_page($node) && empty($node->in_preview)) {
       $node->content['comments'] = comment_node_page_additions($node);
     }
   }
@@ -723,7 +721,7 @@ function comment_node_page_additions($node) {
   // Only attempt to render comments if the node has visible comments.
   // Unpublished comments are not included in $node->comment_count, so show
   // comments unconditionally if the user is an administrator.
-  if ($node->comment_count || user_access('administer comments')) {
+  if (($node->comment_count && user_access('access comments')) || user_access('administer comments')) {
     $mode = variable_get('comment_default_mode_' . $node->type, COMMENT_MODE_THREADED);
     $comments_per_page = variable_get('comment_default_per_page_' . $node->type, 50);
     if ($cids = comment_get_thread($node, $mode, $comments_per_page)) {
@@ -2340,7 +2338,7 @@ function theme_comment_post_forbidden($variables) {
     if (!isset($authenticated_post_comments)) {
       // We only output a link if we are certain that users will get permission
       // to post comments by logging in.
-      $comment_roles = user_roles(TRUE, 'post comments') + user_roles(TRUE, 'skip comment approval');
+      $comment_roles = user_roles(TRUE, 'post comments');
       $authenticated_post_comments = isset($comment_roles[DRUPAL_AUTHENTICATED_RID]);
     }
 
