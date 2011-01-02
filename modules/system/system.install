@@ -1718,8 +1718,9 @@ function system_update_dependencies() {
 }
 
 /**
- * @defgroup updates-6.x-to-7.x System updates from 6.x to 7.x
+ * @defgroup updates-6.x-to-7.x Updates from 6.x to 7.x
  * @{
+ * Update functions from 6.x to 7.x.
  */
 
 /**

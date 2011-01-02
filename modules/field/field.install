@@ -379,7 +379,7 @@ function _update_7000_field_create_instance($field, &$instance) {
 }
 
 /**
- * @defgroup field-updates-6.x-to-7.x Field updates from 6.x to 7.x
+ * @addtogroup updates-6.x-to-7.x
  * @{
  */
 
@@ -427,5 +427,5 @@ function field_update_7001() {
 }
 
 /**
- * @} End of "defgroup field-updates-6.x-to-7.x"
+ * @} End of "addtogroup updates-6.x-to-7.x"
  */

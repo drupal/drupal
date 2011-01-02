@@ -114,7 +114,7 @@ function tracker_schema() {
 }
 
 /**
- * @defgroup updates-6.x-to-7.x Tracker updates from 6.x to 7.x
+ * @addtogroup updates-6.x-to-7.x
  * @{
  */
 
@@ -217,6 +217,5 @@ function tracker_update_7000() {
 }
 
 /**
- * @} End of "defgroup updates-6.x-to-7.x"
- * The next series of updates should start at 8000.
+ * @} End of "addtogroup updates-6.x-to-7.x"
  */

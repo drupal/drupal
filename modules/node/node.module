@@ -3493,6 +3493,7 @@ function _node_access_rebuild_batch_finished($success, $results, $operations) {
 /**
  * @defgroup node_content Hook implementations for user-created content types.
  * @{
+ * Functions that implement hooks for user-created content types.
  */
 
 /**

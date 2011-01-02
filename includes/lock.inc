@@ -7,8 +7,10 @@
  */
 
 /**
- * @defgroup lock Functions to coordinate long-running operations across requests.
+ * @defgroup lock Locking mechanisms
  * @{
+ * Functions to coordinate long-running operations across requests.
+ *
  * In most environments, multiple Drupal page requests (a.k.a. threads or
  * processes) will execute in parallel. This leads to potential conflicts or
  * race conditions when two requests execute the same code at the same time. A

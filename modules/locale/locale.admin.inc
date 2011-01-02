@@ -7,8 +7,12 @@
  */
 
 /**
- * @defgroup locale-language-overview Language overview functionality
+ * @defgroup locale-language-administration Language administration interface
  * @{
+ * Administration interface for languages.
+ *
+ * These functions provide the user interface to show, add, edit and
+ * delete languages as well as providing options for language negotiation.
  */
 
 /**
@@ -161,14 +165,6 @@ function locale_languages_overview_form_submit($form, &$form_state) {
   $form_state['redirect'] = 'admin/config/regional/language';
   return;
 }
-/**
- * @} End of "locale-language-overview"
- */
-
-/**
- * @defgroup locale-language-add-edit Language addition and editing functionality
- * @{
- */
 
 /**
  * User interface for the language addition screen.
@@ -421,14 +417,6 @@ function locale_languages_edit_form_submit($form, &$form_state) {
   $form_state['redirect'] = 'admin/config/regional/language';
   return;
 }
-/**
- * @} End of "locale-language-add-edit"
- */
-
-/**
- * @defgroup locale-language-delete Language deletion functionality
- * @{
- */
 
 /**
  * User interface for the language deletion confirmation screen.
@@ -492,14 +480,6 @@ function locale_languages_delete_form_submit($form, &$form_state) {
   $form_state['redirect'] = 'admin/config/regional/language';
   return;
 }
-/**
- * @} End of "locale-language-add-edit"
- */
-
-/**
- * @defgroup locale-languages-negotiation Language negotiation options
- * @{
- */
 
 /**
  * Setting for language negotiation options
@@ -759,12 +739,16 @@ function locale_language_providers_session_form($form, &$form_state) {
 }
 
 /**
- * @} End of "locale-languages-negotiation"
+ * @} End of "locale-language-administration"
  */
 
 /**
- * @defgroup locale-translate-overview Translation overview screen.
+ * @defgroup locale-translate-administration-screens Translation administration screens.
  * @{
+ * Screens for translation administration.
+ *
+ * These functions provide various screens as administration interface
+ * to import, export and view translations.
  */
 
 /**
@@ -803,14 +787,6 @@ function locale_translate_overview_screen() {
 
   return theme('table', array('header' => $headers, 'rows' => $rows));
 }
-/**
- * @} End of "locale-translate-overview"
- */
-
-/**
- * @defgroup locale-translate-seek Translation search screen.
- * @{
- */
 
 /**
  * String search screen.
@@ -948,15 +924,6 @@ function locale_translation_filter_form_submit($form, &$form_state) {
 }
 
 /**
- * @} End of "locale-translate-seek"
- */
-
-/**
- * @defgroup locale-translate-import Translation import screen.
- * @{
- */
-
-/**
  * User interface for the translation import screen.
  */
 function locale_translate_import_form($form) {
@@ -1045,14 +1012,6 @@ function locale_translate_import_form_submit($form, &$form_state) {
   $form_state['redirect'] = 'admin/config/regional/translate';
   return;
 }
-/**
- * @} End of "locale-translate-import"
- */
-
-/**
- * @defgroup locale-translate-export Translation export screen.
- * @{
- */
 
 /**
  * User interface for the translation export screen.
@@ -1132,12 +1091,16 @@ function locale_translate_export_po_form_submit($form, &$form_state) {
   _locale_export_po($language, _locale_export_po_generate($language, _locale_export_get_strings($language, $form_state['values']['group'])));
 }
 /**
- * @} End of "locale-translate-export"
+ * @} End of "locale-translate-administration-screens"
  */
 
 /**
- * @defgroup locale-translate-edit Translation text editing
+ * @defgroup locale-translate-edit-delete Translation editing/deletion interface
  * @{
+ * Edit and delete translation strings.
+ *
+ * These functions provide the user interface to edit and delete
+ * translation strings.
  */
 
 /**
@@ -1272,14 +1235,6 @@ function locale_translate_edit_form_submit($form, &$form_state) {
   $form_state['redirect'] = 'admin/config/regional/translate/translate';
   return;
 }
-/**
- * @} End of "locale-translate-edit"
- */
-
-/**
- * @defgroup locale-translate-delete Translation delete interface.
- * @{
- */
 
 /**
  * String deletion confirmation page.
@@ -1318,7 +1273,7 @@ function locale_translate_delete_form_submit($form, &$form_state) {
   $form_state['redirect'] = 'admin/config/regional/translate/translate';
 }
 /**
- * @} End of "locale-translate-delete"
+ * @} End of "locale-translate-edit-delete"
  */
 
 /**

@@ -721,6 +721,7 @@ function update_verify_update_archive($project, $archive_file, $directory) {
 /**
  * @defgroup update_status_cache Private update status cache system
  * @{
+ * Functions to manage the update status cache.
  *
  * We specifically do NOT use the core cache API for saving the fetched data
  * about available updates. It is vitally important that this cache is only

@@ -70,6 +70,10 @@ define('LOCALE_LANGUAGE_NEGOTIATION_URL_DOMAIN', 1);
 /**
  * @defgroup locale-languages-negotiation Language negotiation options
  * @{
+ * Functions for language negotiation.
+ *
+ * There are functions that provide the ability to identify the
+ * language. This behavior can be controlled by various options.
  */
 
 /**
@@ -422,6 +426,9 @@ function locale_string_is_safe($string) {
 /**
  * @defgroup locale-api-add Language addition API.
  * @{
+ * Add a language.
+ *
+ * The language addition API is used to create languages and store them.
  */
 
 /**
@@ -498,8 +505,12 @@ function locale_add_language($langcode, $name = NULL, $native = NULL, $direction
  */
 
 /**
- * @defgroup locale-api-import Translation import API.
+ * @defgroup locale-api-import-export Translation import/export API.
  * @{
+ * Functions to import and export translations.
+ *
+ * These functions provide the ability to import translations from
+ * external files and to export translations and translation templates.
  */
 
 /**
@@ -1274,7 +1285,7 @@ function _locale_import_parse_quoted($string) {
   }
 }
 /**
- * @} End of "locale-api-import"
+ * @} End of "locale-api-import-export"
  */
 
 /**
@@ -1347,7 +1358,7 @@ function _locale_parse_js_file($filepath) {
 }
 
 /**
- * @defgroup locale-api-export Translation (template) export API.
+ * @addtogroup locale-api-import-export
  * @{
  */
 
@@ -1584,12 +1595,16 @@ function _locale_export_remove_plural($entry) {
   return preg_replace('/(@count)\[[0-9]\]/', '\\1', $entry);
 }
 /**
- * @} End of "locale-api-export"
+ * @} End of "locale-api-import-export"
  */
 
 /**
- * @defgroup locale-api-seek String search functions.
+ * @defgroup locale-api-seek Translation search API.
  * @{
+ * Functions to search in translation files.
+ *
+ * These functions provide the functionality to search for specific
+ * translations.
  */
 
 /**
@@ -1894,6 +1909,7 @@ function _locale_translate_language_list($translation, $limit_language) {
 /**
  * @defgroup locale-api-predefined List of predefined languages
  * @{
+ * API to provide a list of predefined languages.
  */
 
 /**
@@ -1928,6 +1944,10 @@ function _locale_prepare_predefined_list() {
 /**
  * @defgroup locale-autoimport Automatic interface translation import
  * @{
+ * Functions to create batches for importing translations.
+ *
+ * These functions can be used to import translations for installed
+ * modules.
  */
 
 /**

@@ -28,7 +28,7 @@ function locale_install() {
 }
 
 /**
- * @defgroup updates-6.x-to-7.x Locale updates from 6.x to 7.x
+ * @addtogroup updates-6.x-to-7.x
  * @{
  */
 
@@ -127,7 +127,7 @@ function locale_update_7002() {
 }
 
 /**
- * @} End of "defgroup updates-6.x-to-7.x"
+ * @} End of "addtogroup updates-6.x-to-7.x"
  */
 
 /**

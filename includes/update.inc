@@ -209,7 +209,7 @@ function update_prepare_d7_bootstrap() {
     db_create_table('registry_file', $schema['registry_file']);
   }
 
-  // Older versions of Drupal 6 do not include the semaphore table, which is 
+  // Older versions of Drupal 6 do not include the semaphore table, which is
   // required to bootstrap, so we add it now so that we can bootstrap and
   // provide a reasonable error message.
   if (!db_table_exists('semaphore')) {
