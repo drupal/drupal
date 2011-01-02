@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.151 2010/12/28 18:17:27 webchick Exp $
+// $Id: install.inc,v 1.152 2011/01/02 17:23:20 webchick Exp $
 
 /**
  * Indicates that a module has not been installed yet.
@@ -299,7 +299,7 @@ abstract class DatabaseTasks {
     ),
     array(
       'arguments'   => array(
-        'CREATE TABLE drupal_install_test (id int NULL)',
+        'CREATE TABLE {drupal_install_test} (id int NULL)',
         'Drupal can use CREATE TABLE database commands.',
         'Failed to <strong>CREATE</strong> a test table on your database server with the command %query. The server reports the following message: %error.<p>Are you sure the configured username has the necessary permissions to create tables in the database?</p>',
         TRUE,
@@ -307,33 +307,34 @@ abstract class DatabaseTasks {
     ),
     array(
       'arguments'   => array(
-        'INSERT INTO drupal_install_test (id) VALUES (1)',
+        'INSERT INTO {drupal_install_test} (id) VALUES (1)',
         'Drupal can use INSERT database commands.',
         'Failed to <strong>INSERT</strong> a value into a test table on your database server. We tried inserting a value with the command %query and the server reported the following error: %error.',
       ),
     ),
     array(
       'arguments'   => array(
-        'UPDATE drupal_install_test SET id = 2',
+        'UPDATE {drupal_install_test} SET id = 2',
         'Drupal can use UPDATE database commands.',
         'Failed to <strong>UPDATE</strong> a value in a test table on your database server. We tried updating a value with the command %query and the server reported the following error: %error.',
       ),
     ),
     array(
       'arguments'   => array(
-        'DELETE FROM drupal_install_test',
+        'DELETE FROM {drupal_install_test}',
         'Drupal can use DELETE database commands.',
         'Failed to <strong>DELETE</strong> a value from a test table on your database server. We tried deleting a value with the command %query and the server reported the following error: %error.',
       ),
     ),
     array(
       'arguments'   => array(
-        'DROP TABLE drupal_install_test',
+        'DROP TABLE {drupal_install_test}',
         'Drupal can use DROP TABLE database commands.',
         'Failed to <strong>DROP</strong> a test table from your database server. We tried dropping a table with the command %query and the server reported the following error %error.',
       ),
     ),
   );
+
   /**
    * Results from tasks.
    *
