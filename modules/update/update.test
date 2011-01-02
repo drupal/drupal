@@ -592,8 +592,12 @@ class UpdateTestUploadCase extends UpdateTestHelper {
    * Tests upload and extraction of a module.
    */
   public function testUploadModule() {
-    // Images are not valid archives, so get one and try to install it.
-    $invalidArchiveFile = reset($this->drupalGetTestFiles('image'));
+    // Images are not valid archives, so get one and try to install it. We
+    // need an extra variable to store the result of drupalGetTestFiles()
+    // since reset() takes an argument by reference and passing in a constant
+    // emits a notice in strict mode.
+    $imageTestFiles = $this->drupalGetTestFiles('image');
+    $invalidArchiveFile = reset($imageTestFiles);
     $edit = array(
       'files[project_upload]' => $invalidArchiveFile->uri,
     );
