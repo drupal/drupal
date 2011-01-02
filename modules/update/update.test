@@ -1,5 +1,5 @@
 <?php
-// $Id: update.test,v 1.20 2010/10/23 15:48:45 webchick Exp $
+// $Id: update.test,v 1.21 2011/01/02 21:59:19 webchick Exp $
 
 /**
  * @file
@@ -592,8 +592,12 @@ class UpdateTestUploadCase extends UpdateTestHelper {
    * Tests upload and extraction of a module.
    */
   public function testUploadModule() {
-    // Images are not valid archives, so get one and try to install it.
-    $invalidArchiveFile = reset($this->drupalGetTestFiles('image'));
+    // Images are not valid archives, so get one and try to install it. We
+    // need an extra variable to store the result of drupalGetTestFiles()
+    // since reset() takes an argument by reference and passing in a constant
+    // emits a notice in strict mode.
+    $imageTestFiles = $this->drupalGetTestFiles('image');
+    $invalidArchiveFile = reset($imageTestFiles);
     $edit = array(
       'files[project_upload]' => $invalidArchiveFile->uri,
     );
