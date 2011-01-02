@@ -580,8 +580,21 @@ function update_manager_install_form_submit($form, &$form_state) {
   drupal_get_updaters();
 
   $project_location = $directory . '/' . $project;
-  $updater = Updater::factory($project_location);
-  $project_title = Updater::getProjectTitle($project_location);
+  try {
+    $updater = Updater::factory($project_location);
+  }
+  catch (Exception $e) {
+    form_set_error($field, $e->getMessage());
+    return;
+  }
+
+  try {
+    $project_title = Updater::getProjectTitle($project_location);
+  }
+  catch (Exception $e) {
+    form_set_error($field, $e->getMessage());
+    return;
+  }
 
   if (!$project_title) {
     form_set_error($field, t('Unable to determine %project name.', array('%project' => $project)));
