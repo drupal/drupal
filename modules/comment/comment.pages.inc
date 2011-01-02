@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.pages.inc,v 1.40 2010/09/09 23:01:48 dries Exp $
+// $Id: comment.pages.inc,v 1.41 2011/01/02 23:54:05 webchick Exp $
 
 /**
  * @file
@@ -33,26 +33,26 @@ function comment_reply($node, $pid = NULL) {
   $op = isset($_POST['op']) ? $_POST['op'] : '';
   $build = array();
 
-  if (user_access('access comments')) {
-    // The user is previewing a comment prior to submitting it.
-    if ($op == t('Preview')) {
-      if (user_access('post comments')) {
-        $build['comment_form'] = drupal_get_form("comment_node_{$node->type}_form", (object) array('pid' => $pid, 'nid' => $node->nid));
-      }
-      else {
-        drupal_set_message(t('You are not authorized to post comments.'), 'error');
-        drupal_goto("node/$node->nid");
-      }
+  // The user is previewing a comment prior to submitting it.
+  if ($op == t('Preview')) {
+    if (user_access('post comments')) {
+      $build['comment_form'] = drupal_get_form("comment_node_{$node->type}_form", (object) array('pid' => $pid, 'nid' => $node->nid));
     }
     else {
-      // $pid indicates that this is a reply to a comment.
-      if ($pid) {
+      drupal_set_message(t('You are not authorized to post comments.'), 'error');
+      drupal_goto("node/$node->nid");
+    }
+  }
+  else {
+    // $pid indicates that this is a reply to a comment.
+    if ($pid) {
+      if (user_access('access comments')) {
         // Load the comment whose cid = $pid
         $comment = db_query('SELECT c.*, u.uid, u.name AS registered_name, u.signature, u.signature_format, u.picture, u.data FROM {comment} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = :cid AND c.status = :status', array(
           ':cid' => $pid,
           ':status' => COMMENT_PUBLISHED,
         ))->fetchObject();
-        if ( $comment ) {
+        if ($comment) {
           // If that comment exists, make sure that the current comment and the
           // parent comment both belong to the same parent node.
           if ($comment->nid != $node->nid) {
@@ -71,29 +71,29 @@ function comment_reply($node, $pid = NULL) {
           drupal_goto("node/$node->nid");
         }
       }
-      // This is the case where the comment is in response to a node. Display the node.
-      elseif (user_access('access content')) {
-        $build['comment_node'] = node_view($node);
-      }
-
-      // Should we show the reply box?
-      if ($node->comment != COMMENT_NODE_OPEN) {
-        drupal_set_message(t("This discussion is closed: you can't post new comments."), 'error');
-        drupal_goto("node/$node->nid");
-      }
-      elseif (user_access('post comments')) {
-        $edit = array('nid' => $node->nid, 'pid' => $pid);
-        $build['comment_form'] = drupal_get_form("comment_node_{$node->type}_form", (object) $edit);
-      }
       else {
-        drupal_set_message(t('You are not authorized to post comments.'), 'error');
+        drupal_set_message(t('You are not authorized to view comments.'), 'error');
         drupal_goto("node/$node->nid");
       }
     }
-  }
-  else {
-    drupal_set_message(t('You are not authorized to view comments.'), 'error');
-    drupal_goto("node/$node->nid");
+    // This is the case where the comment is in response to a node. Display the node.
+    elseif (user_access('access content')) {
+      $build['comment_node'] = node_view($node);
+    }
+
+    // Should we show the reply box?
+    if ($node->comment != COMMENT_NODE_OPEN) {
+      drupal_set_message(t("This discussion is closed: you can't post new comments."), 'error');
+      drupal_goto("node/$node->nid");
+    }
+    elseif (user_access('post comments')) {
+      $edit = array('nid' => $node->nid, 'pid' => $pid);
+      $build['comment_form'] = drupal_get_form("comment_node_{$node->type}_form", (object) $edit);
+    }
+    else {
+      drupal_set_message(t('You are not authorized to post comments.'), 'error');
+      drupal_goto("node/$node->nid");
+    }
   }
 
   return $build;
