@@ -1,5 +1,5 @@
 <?php
-// $Id: update.module,v 1.73 2011/01/02 17:26:39 webchick Exp $
+// $Id: update.module,v 1.74 2011/01/02 23:28:16 webchick Exp $
 
 /**
  * @file
@@ -696,14 +696,14 @@ function update_verify_update_archive($project, $archive_file, $directory) {
   // Parse all the .info files and make sure they're compatible with this
   // version of Drupal core.
   $incompatible = array();
-  $files = file_scan_directory("$directory/$project", '/^' . DRUPAL_PHP_FUNCTION_PATTERN . '\.info/', array('key' => 'name', 'min_depth' => 0));
+  $files = file_scan_directory("$directory/$project", '/^' . DRUPAL_PHP_FUNCTION_PATTERN . '\.info$/', array('key' => 'name', 'min_depth' => 0));
   foreach ($files as $key => $file) {
     // Get the .info file for the module or theme this file belongs to.
     $info = drupal_parse_info_file($file->uri);
 
     // If the module or theme is incompatible with Drupal core, set an error.
     if (empty($info['core']) || $info['core'] != DRUPAL_CORE_COMPATIBILITY) {
-      $incompatible[] = $info['name'];
+      $incompatible[] = !empty($info['name']) ? $info['name'] : t('Unknown');
     }
   }
   if (!empty($incompatible)) {
