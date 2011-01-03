@@ -1,5 +1,5 @@
 <?php
-// $Id: update.manager.inc,v 1.33 2011/01/03 02:41:33 webchick Exp $
+// $Id: update.manager.inc,v 1.34 2011/01/03 02:53:07 webchick Exp $
 
 /**
  * @file
@@ -397,6 +397,8 @@ function update_manager_update_ready_form($form, &$form_state) {
  * @see system_authorized_get_url()
  */
 function update_manager_update_ready_form_submit($form, &$form_state) {
+  // Store maintenance_mode setting so we can restore it when done.
+  $_SESSION['maintenance_mode'] = variable_get('maintenance_mode', FALSE);
   if ($form_state['values']['maintenance_mode'] == TRUE) {
     variable_set('maintenance_mode', TRUE);
   }
