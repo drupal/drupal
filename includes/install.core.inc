@@ -1,5 +1,5 @@
 <?php
-// $Id: install.core.inc,v 1.48 2010/12/28 18:17:27 webchick Exp $
+// $Id: install.core.inc,v 1.49 2011/01/03 15:48:11 webchick Exp $
 
 /**
  * @file
@@ -1123,6 +1123,11 @@ function install_find_locales($profilename) {
   foreach ($locales as $key => $locale) {
     // The locale (file name) might be drupal-7.2.cs.po instead of cs.po.
     $locales[$key]->langcode = preg_replace('!^(.+\.)?([^\.]+)$!', '\2', $locale->name);
+    // Language codes cannot exceed 12 characters to fit into the {languages}
+    // table.
+    if (strlen($locales[$key]->langcode) > 12) {
+      unset($locales[$key]);
+    }
   }
   return $locales;
 }
@@ -1370,8 +1375,19 @@ function install_profile_modules(&$install_state) {
 function install_import_locales(&$install_state) {
   include_once DRUPAL_ROOT . '/includes/locale.inc';
   $install_locale = $install_state['parameters']['locale'];
-  // Enable installation language as default site language.
-  locale_add_language($install_locale, NULL, NULL, NULL, '', NULL, 1, TRUE);
+
+  include_once DRUPAL_ROOT . '/includes/iso.inc';
+  $predefined = _locale_get_predefined_list();
+  if (!isset($predefined[$install_locale])) {
+    // Drupal does not know about this language, so we prefill its values with
+    // our best guess. The user will be able to edit afterwards.
+    locale_add_language($install_locale, $install_locale, $install_locale, LANGUAGE_LTR, '', '', TRUE, TRUE);
+  }
+  else {
+    // A known predefined language, details will be filled in properly.
+    locale_add_language($install_locale, NULL, NULL, NULL, '', '', TRUE, TRUE);
+  }
+
   // Collect files to import for this language.
   $batch = locale_batch_by_language($install_locale, NULL);
   if (!empty($batch)) {
