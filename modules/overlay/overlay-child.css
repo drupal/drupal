@@ -1,4 +1,4 @@
-/* $Id: overlay-child.css,v 1.7 2010/11/06 00:18:24 dries Exp $ */
+/* $Id: overlay-child.css,v 1.8 2011/01/03 06:53:35 webchick Exp $ */
 
 html.js {
   background: transparent !important;
@@ -67,11 +67,6 @@ html.js body {
   /* Replace with position:fixed to get a scrolling close button. */
   position: absolute;
   width: 26px;
-}
-#overlay-title:active,
-#overlay-close:hover,
-#overlay-close:focus {
-  padding: 0;
 }
 
 /**
