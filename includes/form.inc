@@ -3368,7 +3368,7 @@ function form_validate_machine_name(&$element, &$form_state) {
   // Verify that the machine name is unique.
   if ($element['#default_value'] !== $element['#value']) {
     $function = $element['#machine_name']['exists'];
-    if ($function($element['#value'])) {
+    if ($function($element['#value'], $form_state)) {
       form_error($element, t('The machine-readable name is already in use. It must be unique.'));
     }
   }
