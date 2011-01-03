@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.admin.inc,v 1.22 2011/01/02 17:26:39 webchick Exp $
+// $Id: locale.admin.inc,v 1.23 2011/01/03 18:03:54 webchick Exp $
 
 /**
  * @file
@@ -743,7 +743,7 @@ function locale_language_providers_session_form($form, &$form_state) {
  */
 
 /**
- * @defgroup locale-translate-administration-screens Translation administration screens.
+ * @defgroup locale-translate-administration-screens Translation administration screens
  * @{
  * Screens for translation administration.
  *

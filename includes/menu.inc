@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.429 2010/12/17 01:08:15 dries Exp $
+// $Id: menu.inc,v 1.430 2011/01/03 18:03:54 webchick Exp $
 
 /**
  * @file
@@ -125,8 +125,10 @@ define('MENU_IS_LOCAL_ACTION', 0x0100);
 /**
  * @defgroup menu_item_types Menu item types
  * @{
+ * Definitions for various menu types.
+ *
  * Menu item definitions provide one of these constants, which are shortcuts for
- * combinations of the above flags.
+ * combinations of @link menu_flags Menu flags @endlink.
  */
 
 /**
@@ -251,7 +253,7 @@ define('MENU_SITE_ONLINE', 5);
 /**
  * @defgroup menu_tree_parameters Menu tree parameters
  * @{
- * Menu tree
+ * Parameters for a menu tree.
  */
 
  /**

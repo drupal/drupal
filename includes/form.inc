@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.518 2011/01/03 00:26:47 webchick Exp $
+// $Id: form.inc,v 1.519 2011/01/03 18:03:54 webchick Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -3986,6 +3986,8 @@ function _form_set_class(&$element, $class = array()) {
 /**
  * @defgroup batch Batch operations
  * @{
+ * Create and process batch operations.
+ *
  * Functions allowing forms processing to be spread out over several page
  * requests, thus ensuring that the processing does not get interrupted
  * because of a PHP timeout, while allowing the user to receive feedback

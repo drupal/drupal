@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.624 2011/01/02 17:26:39 webchick Exp $
+// $Id: taxonomy.module,v 1.625 2011/01/03 18:03:54 webchick Exp $
 
 /**
  * @file
@@ -1621,7 +1621,7 @@ function taxonomy_rdf_mapping() {
 }
 
 /**
- * @defgroup taxonomy indexing Taxonomy functions maintaining {taxonomy_index}.
+ * @defgroup taxonomy_index Taxonomy indexing
  * @{
  * Functions to maintain taxonomy indexing.
  *
@@ -1725,5 +1725,5 @@ function taxonomy_taxonomy_term_delete($term) {
 }
 
 /**
- * @} End of "defgroup taxonomy indexing"
+ * @} End of "defgroup taxonomy_index"
  */

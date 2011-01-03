@@ -1,5 +1,5 @@
 <?php
-// $Id: update.inc,v 1.86 2011/01/02 17:26:39 webchick Exp $
+// $Id: update.inc,v 1.87 2011/01/03 18:03:54 webchick Exp $
 
 /**
  * @file
@@ -1448,7 +1448,7 @@ function update_retrieve_dependencies() {
 }
 
 /**
- * @defgroup update-api-6.x-to-7.x Update versions of API functions.
+ * @defgroup update-api-6.x-to-7.x Update versions of API functions
  * @{
  * Functions similar to normal API function but not firing hooks.
  *

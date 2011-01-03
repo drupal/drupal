@@ -1,5 +1,5 @@
 <?php
-// $Id: node.api.php,v 1.82 2010/11/20 04:33:56 webchick Exp $
+// $Id: node.api.php,v 1.83 2011/01/03 18:03:54 webchick Exp $
 
 /**
  * @file
@@ -9,9 +9,7 @@
 /**
  * @defgroup node_api_hooks Node API Hooks
  * @{
- * The Node API allows modules to define content types, to modify content
- * types created in the user interface, and to modify content types created by
- * other modules.
+ * Functions to define and modify content types.
  *
  * Each content type is maintained by a primary module, which is either
  * node.module (for content types created in the user interface) or the

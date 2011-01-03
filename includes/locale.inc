@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.265 2011/01/02 17:26:39 webchick Exp $
+// $Id: locale.inc,v 1.266 2011/01/03 18:03:54 webchick Exp $
 
 /**
  * @file
@@ -424,7 +424,7 @@ function locale_string_is_safe($string) {
 }
 
 /**
- * @defgroup locale-api-add Language addition API.
+ * @defgroup locale-api-add Language addition API
  * @{
  * Add a language.
  *
@@ -1599,7 +1599,7 @@ function _locale_export_remove_plural($entry) {
  */
 
 /**
- * @defgroup locale-api-seek Translation search API.
+ * @defgroup locale-api-seek Translation search API
  * @{
  * Functions to search in translation files.
  *

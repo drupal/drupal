@@ -1,5 +1,5 @@
 <?php
-// $Id: field.multilingual.inc,v 1.14 2010/10/09 03:43:31 webchick Exp $
+// $Id: field.multilingual.inc,v 1.15 2011/01/03 18:03:54 webchick Exp $
 
 /**
  * @file
@@ -7,7 +7,7 @@
  */
 
 /**
- * @defgroup field_language Field language API
+ * @defgroup field_language Field Language API
  * @{
  * Handling of multilingual fields.
  *

@@ -1,5 +1,5 @@
 <?php
-// $Id: system.queue.inc,v 1.13 2010/06/14 13:10:31 dries Exp $
+// $Id: system.queue.inc,v 1.14 2011/01/03 18:03:54 webchick Exp $
 
 /**
  * @file
@@ -9,6 +9,8 @@
 /**
  * @defgroup queue Queue operations
  * @{
+ * Queue items to allow later processing.
+ *
  * The queue system allows placing items in a queue and processing them later.
  * The system tries to ensure that only one consumer can process an item.
  *

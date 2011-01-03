@@ -1,11 +1,10 @@
 <?php
-// $Id: theme.api.php,v 1.4 2010/08/08 19:35:49 dries Exp $
+// $Id: theme.api.php,v 1.5 2011/01/03 18:03:54 webchick Exp $
 
 /**
  * @defgroup themeable Default theme implementations
  * @{
- * Functions and templates that present output to the user, and can be
- * implemented by themes.
+ * Functions and templates for the user interface to be implemented by themes.
  *
  * Drupal's presentation layer is a pluggable system known as the theme
  * layer. Each theme can take control over most of Drupal's output, and
