@@ -1,4 +1,4 @@
-/* $Id: block.css,v 1.8 2010/07/31 12:54:58 webchick Exp $ */
+/* $Id: block.css,v 1.9 2011/01/03 07:04:48 webchick Exp $ */
 
 #blocks tr.region-title td {
   font-weight: bold;
@@ -20,9 +20,9 @@ a.block-demo-backlink,
 a.block-demo-backlink:link,
 a.block-demo-backlink:visited {
   background-color: #B4D7F0;
-  border-radius: 0 0 10px 10px;
   -moz-border-radius: 0 0 10px 10px;
   -webkit-border-radius: 0 0 10px 10px;
+  border-radius: 0 0 10px 10px;
   color: #000;
   font-family: "Lucida Grande", Verdana, sans-serif;
   font-size: small;

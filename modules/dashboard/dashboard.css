@@ -1,4 +1,4 @@
-/* $Id: dashboard.css,v 1.15 2010/11/06 23:24:33 webchick Exp $ */
+/* $Id: dashboard.css,v 1.16 2011/01/03 07:04:48 webchick Exp $ */
 
 #dashboard div.dashboard-region {
   float: left;
@@ -32,9 +32,9 @@
   padding: 6px 4px 6px 8px;
   margin: 3px 3px 3px 0;
   float: left;
-  border-radius: 4px;
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
+  border-radius: 4px;
 }
 
 #dashboard .dashboard-add-other-blocks {

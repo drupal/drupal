@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.87 2010/10/30 03:52:14 dries Exp $ */
+/* $Id: style.css,v 1.88 2011/01/03 07:04:48 webchick Exp $ */
 
 /**
  * Generic elements
@@ -334,10 +334,10 @@ span.form-required {
   text-decoration: none;
   -khtml-border-radius: 0 0 2px 2px;
   -moz-border-radius: 0 0 2px 2px;
-  -webkit-border-top-left-radius: 0;
-  -webkit-border-top-right-radius: 0;
   -webkit-border-bottom-left-radius: 2px;
   -webkit-border-bottom-right-radius: 2px;
+  -webkit-border-top-left-radius: 0;
+  -webkit-border-top-right-radius: 0;
   border-radius: 0 0 2px 2px;
 }
 #skip-link a:hover,

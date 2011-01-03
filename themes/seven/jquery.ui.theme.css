@@ -305,8 +305,10 @@
   border-bottom: solid 1px #ccc;
   -moz-border-radius-bottomleft: 0;
   -webkit-border-bottom-left-radius: 0;
+  border-bottom-left-radius: 0;
   -moz-border-radius-bottomright: 0;
   -webkit-border-bottom-right-radius: 0;
+  border-bottom-right-radius: 0;
 }
 .ui-tabs .ui-tabs-nav li {
   padding: 0 1em 0 10px;
@@ -317,7 +319,8 @@
   float: none;
   padding: 0 10px;
   -moz-border-radius: 10px;
-  -webkit-border-radius: 7px;  
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
 }
 .ui-tabs .ui-tabs-nav li.ui-tabs-selected a {
   color: #fff;
@@ -362,9 +365,9 @@
   border-left-color: #D2D2D2;
   border-right-color: #D2D2D2;
   background: url(images/buttons.png) 0 0 repeat-x;
-  border-radius: 20px;
   -moz-border-radius: 20px;
-  -webkit-border-radius: 15px;
+  -webkit-border-radius: 20px;
+  border-radius: 20px;
 }
 .ui-dialog .ui-dialog-buttonpane button:active {
   background: #666;
@@ -394,9 +397,9 @@
   border-left-color: #D2D2D2;
   border-right-color: #D2D2D2;
   background: url(images/buttons.png) 0 0 repeat-x;
-  border-radius: 4px;
-  -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
 }
 .ui-slider a.ui-state-active,
 .ui-slider .ui-slider-handle:active {

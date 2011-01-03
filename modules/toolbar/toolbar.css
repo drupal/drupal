@@ -1,4 +1,4 @@
-/* $Id: toolbar.css,v 1.26 2010/09/11 14:45:23 dries Exp $ */
+/* $Id: toolbar.css,v 1.27 2011/01/03 07:04:48 webchick Exp $ */
 
 body.toolbar {
   padding-top: 2.2em;
@@ -42,9 +42,9 @@ body.toolbar-drawer {
   margin: 0 -20px;
   padding: 0 20px;
   z-index: 600;
-  box-shadow: 0 3px 20px #000;
   -moz-box-shadow: 0 3px 20px #000;
   -webkit-box-shadow: 0 3px 20px #000;
+  box-shadow: 0 3px 20px #000;
   filter: progid:DXImageTransform.Microsoft.Shadow(color=#000000, direction='180', strength='10');
   -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(color=#000000, direction='180', strength='10')";
 }
