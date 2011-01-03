@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.222 2010/12/15 03:39:42 webchick Exp $
+// $Id: system.api.php,v 1.223 2011/01/03 00:28:46 webchick Exp $
 
 /**
  * @file
@@ -1735,7 +1735,11 @@ function hook_boot() {
  * implement this hook, but declare these files in their .info file.
  */
 function hook_init() {
-  drupal_add_css(drupal_get_path('module', 'book') . '/book.css');
+  // Since this file should only be loaded on the front page, it cannot be
+  // declared in the info file.
+  if (drupal_is_front_page()) {
+    drupal_add_css(drupal_get_path('module', 'foo') . '/foo.css');
+  }
 }
 
 /**
