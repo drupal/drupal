@@ -1,5 +1,5 @@
 <?php
-// $Id: filetransfer.inc,v 1.13 2010/12/01 00:23:36 webchick Exp $
+// $Id: filetransfer.inc,v 1.14 2011/01/03 02:20:45 webchick Exp $
 
 /*
  * Base FileTransfer class.
@@ -28,8 +28,15 @@ abstract class FileTransfer {
    * Classes that extend this class must override the factory() static method.
    *
    * @param string $jail
+   *   The full path where all file operations performed by this object will
+   *   be restricted to. This prevents the FileTransfer classes from being
+   *   able to touch other parts of the filesystem.
    * @param array $settings
-   * @return object New instance of the appropriate FileTransfer subclass.
+   *   An array of connection settings for the FileTransfer subclass. If the
+   *   getSettingsForm() method uses any nested settings, the same structure
+   *   will be assumed here.
+   * @return object
+   *   New instance of the appropriate FileTransfer subclass.
    */
   static function factory($jail, $settings) {
     throw new FileTransferException('FileTransfer::factory() static method not overridden by FileTransfer subclass.');

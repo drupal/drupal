@@ -1,5 +1,5 @@
 <?php
-// $Id: ftp.inc,v 1.15 2010/12/01 00:23:36 webchick Exp $
+// $Id: ftp.inc,v 1.16 2011/01/03 02:20:45 webchick Exp $
 
 /**
  * Base class for FTP implementations.
@@ -24,10 +24,10 @@ abstract class FileTransferFTP extends FileTransfer {
    *   options. If the FTP PHP extension is available, use it.
    */
   static function factory($jail, $settings) {
-    $settings['username'] = empty($settings['username']) ? '' : $settings['username'];
-    $settings['password'] = empty($settings['password']) ? '' : $settings['password'];
-    $settings['hostname'] = empty($settings['hostname']) ? 'localhost' : $settings['hostname'];
-    $settings['port'] = empty($settings['port']) ? 21 : $settings['port'];
+    $username = empty($settings['username']) ? '' : $settings['username'];
+    $password = empty($settings['password']) ? '' : $settings['password'];
+    $hostname = empty($settings['advanced']['hostname']) ? 'localhost' : $settings['advanced']['hostname'];
+    $port = empty($settings['advanced']['port']) ? 21 : $settings['advanced']['port'];
 
     if (function_exists('ftp_connect')) {
       $class = 'FileTransferFTPExtension';
@@ -36,7 +36,7 @@ abstract class FileTransferFTP extends FileTransfer {
       throw new FileTransferException('No FTP backend available.');
     }
 
-    return new $class($jail, $settings['username'], $settings['password'], $settings['hostname'], $settings['port']);
+    return new $class($jail, $username, $password, $hostname, $port);
   }
 
   /**

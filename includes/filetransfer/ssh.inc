@@ -1,5 +1,5 @@
 <?php
-// $Id: ssh.inc,v 1.6 2010/12/01 00:23:36 webchick Exp $
+// $Id: ssh.inc,v 1.7 2011/01/03 02:20:45 webchick Exp $
 
 /**
  * The SSH connection class for the update module.
@@ -25,11 +25,11 @@ class FileTransferSSH extends FileTransfer implements FileTransferChmodInterface
   }
 
   static function factory($jail, $settings) {
-    $settings['username'] = empty($settings['hostname']) ? '' : $settings['username'];
-    $settings['password'] = empty($settings['password']) ? '' : $settings['password'];
-    $settings['hostname'] = empty($settings['hostname']) ? 'localhost' : $settings['hostname'];
-    $settings['port'] = empty($settings['port']) ? 22 : $settings['port'];
-    return new FileTransferSSH($jail, $settings['username'], $settings['password'], $settings['hostname'], $settings['port']);
+    $username = empty($settings['username']) ? '' : $settings['username'];
+    $password = empty($settings['password']) ? '' : $settings['password'];
+    $hostname = empty($settings['advanced']['hostname']) ? 'localhost' : $settings['advanced']['hostname'];
+    $port = empty($settings['advanced']['port']) ? 22 : $settings['advanced']['port'];
+    return new FileTransferSSH($jail, $username, $password, $hostname, $port);
   }
 
   protected function copyFileJailed($source, $destination) {
