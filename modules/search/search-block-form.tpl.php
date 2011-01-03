@@ -1,34 +1,31 @@
 <?php
-// $Id: search-block-form.tpl.php,v 1.5 2010/12/18 01:14:36 dries Exp $
+// $Id: search-block-form.tpl.php,v 1.6 2011/01/03 00:17:55 webchick Exp $
 
 /**
  * @file
- * Default theme implementation for displaying a search form within a block
- * region.
+ * Displays the search form block.
  *
  * Available variables:
  * - $search_form: The complete search form ready for print.
- * - $search: Array of keyed search elements. Can be used to print each form
- *   element separately.
+ * - $search: Associative array of search elements. Can be used to print each
+ *   form element separately.
  *
- * Default keys within $search:
+ * Default elements within $search:
  * - $search['search_block_form']: Text input area wrapped in a div.
- * - $search['submit']: Form submit button.
- * - $search['hidden']: Hidden form elements. Used to validate forms when submitted.
+ * - $search['actions']: Rendered form buttons.
+ * - $search['hidden']: Hidden form elements. Used to validate forms when
+ *   submitted.
  *
- * Since $search is keyed, a direct print of the form element is possible.
- * Modules can add to the search form so it is recommended to check for their
- * existence before printing. The default keys will always exist.
- *
+ * Modules can add to the search form, so it is recommended to check for their
+ * existence before printing. The default keys will always exist. To check for
+ * a module-provided field, use code like this:
+ * @code
  *   <?php if (isset($search['extra_field'])): ?>
  *     <div class="extra-field">
  *       <?php print $search['extra_field']; ?>
  *     </div>
  *   <?php endif; ?>
- *
- * To check for all available data within $search, use the code below.
- *
- *   <?php print '<pre>'. check_plain(print_r($search, 1)) .'</pre>'; ?>
+ * @endcode
  *
  * @see template_preprocess_search_block_form()
  */
