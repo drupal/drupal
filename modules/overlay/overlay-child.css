@@ -68,11 +68,6 @@ html.js body {
   position: absolute;
   width: 26px;
 }
-#overlay-title:active,
-#overlay-close:hover,
-#overlay-close:focus {
-  padding: 0;
-}
 
 /**
  * Tabs on the overlay.
