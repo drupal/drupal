@@ -649,11 +649,9 @@ function theme_update_last_check($variables) {
  * First, we ensure that the archive isn't a copy of Drupal core, which the
  * Update manager does not yet support. @see http://drupal.org/node/606592
  *
- * Then, we make sure that every module included in the archive has an info
- * file.
- *
- * Finally, we check that all the .info files claim the code is compatible
- * with the current version of Drupal core.
+ * Then, we make sure that at least one module included in the archive file has
+ * an .info file which claims that the code is compatible with the current
+ * version of Drupal core.
  *
  * @see drupal_system_listing()
  * @see _system_rebuild_module_data()
@@ -674,27 +672,12 @@ function update_verify_update_archive($project, $archive_file, $directory) {
     );
   }
 
-  // Look for any .module file that doesn't have a corresponding .info file.
-  $missing_info = array();
-  $files = file_scan_directory("$directory/$project", '/^' . DRUPAL_PHP_FUNCTION_PATTERN . '\.module$/', array('key' => 'name', 'min_depth' => 0));
-  foreach ($files as $key => $file) {
-    // If it has no info file, set an error.
-    $info_file = dirname($file->uri) . '/' . $file->name . '.info';
-    if (!file_exists($info_file)) {
-      $missing_info[] = $file->filename;
-    }
-  }
-  if (!empty($missing_info)) {
-    $errors[] = format_plural(
-      count($missing_info),
-      '%archive_file contains %names which is missing an info file.',
-      '%archive_file contains the following modules which are missing info files: %names',
-      array('%archive_file' => basename($archive_file), '%names' => implode(', ', $missing_info))
-    );
-  }
-
-  // Parse all the .info files and make sure they're compatible with this
-  // version of Drupal core.
+  // Parse all the .info files and make sure at least one is compatible with
+  // this version of Drupal core. If one is compatible, then the project as a
+  // whole is considered compatible (since, for example, the project may ship
+  // with some out-of-date modules that are not necessary for its overall
+  // functionality).
+  $compatible_project = FALSE;
   $incompatible = array();
   $files = file_scan_directory("$directory/$project", '/^' . DRUPAL_PHP_FUNCTION_PATTERN . '\.info$/', array('key' => 'name', 'min_depth' => 0));
   foreach ($files as $key => $file) {
@@ -705,8 +688,16 @@ function update_verify_update_archive($project, $archive_file, $directory) {
     if (empty($info['core']) || $info['core'] != DRUPAL_CORE_COMPATIBILITY) {
       $incompatible[] = !empty($info['name']) ? $info['name'] : t('Unknown');
     }
+    else {
+      $compatible_project = TRUE;
+      break;
+    }
   }
-  if (!empty($incompatible)) {
+
+  if (empty($files)) {
+    $errors[] = t('%archive_file does not contain any .info files.', array('%archive_file' => basename($archive_file)));
+  }
+  elseif (!$compatible_project) {
     $errors[] = format_plural(
       count($incompatible),
       '%archive_file contains a version of %names that is not compatible with Drupal !version.',
