@@ -1448,7 +1448,7 @@ function update_retrieve_dependencies() {
 }
 
 /**
- * @defgroup update-api-6.x-to-7.x Update versions of API functions.
+ * @defgroup update-api-6.x-to-7.x Update versions of API functions
  * @{
  * Functions similar to normal API function but not firing hooks.
  *

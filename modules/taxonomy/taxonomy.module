@@ -1621,7 +1621,7 @@ function taxonomy_rdf_mapping() {
 }
 
 /**
- * @defgroup taxonomy indexing Taxonomy functions maintaining {taxonomy_index}.
+ * @defgroup taxonomy_index Taxonomy indexing
  * @{
  * Functions to maintain taxonomy indexing.
  *
@@ -1725,5 +1725,5 @@ function taxonomy_taxonomy_term_delete($term) {
 }
 
 /**
- * @} End of "defgroup taxonomy indexing"
+ * @} End of "defgroup taxonomy_index"
  */

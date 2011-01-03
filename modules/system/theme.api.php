@@ -4,8 +4,7 @@
 /**
  * @defgroup themeable Default theme implementations
  * @{
- * Functions and templates that present output to the user, and can be
- * implemented by themes.
+ * Functions and templates for the user interface to be implemented by themes.
  *
  * Drupal's presentation layer is a pluggable system known as the theme
  * layer. Each theme can take control over most of Drupal's output, and

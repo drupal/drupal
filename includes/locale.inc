@@ -424,7 +424,7 @@ function locale_string_is_safe($string) {
 }
 
 /**
- * @defgroup locale-api-add Language addition API.
+ * @defgroup locale-api-add Language addition API
  * @{
  * Add a language.
  *
@@ -1599,7 +1599,7 @@ function _locale_export_remove_plural($entry) {
  */
 
 /**
- * @defgroup locale-api-seek Translation search API.
+ * @defgroup locale-api-seek Translation search API
  * @{
  * Functions to search in translation files.
  *

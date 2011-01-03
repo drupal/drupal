@@ -3986,6 +3986,8 @@ function _form_set_class(&$element, $class = array()) {
 /**
  * @defgroup batch Batch operations
  * @{
+ * Create and process batch operations.
+ *
  * Functions allowing forms processing to be spread out over several page
  * requests, thus ensuring that the processing does not get interrupted
  * because of a PHP timeout, while allowing the user to receive feedback

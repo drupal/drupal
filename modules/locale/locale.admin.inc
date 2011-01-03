@@ -743,7 +743,7 @@ function locale_language_providers_session_form($form, &$form_state) {
  */
 
 /**
- * @defgroup locale-translate-administration-screens Translation administration screens.
+ * @defgroup locale-translate-administration-screens Translation administration screens
  * @{
  * Screens for translation administration.
  *

@@ -11,6 +11,7 @@ require_once dirname(__FILE__) . '/query.inc';
 /**
  * @defgroup schemaapi Schema API
  * @{
+ * API to handle database schemas.
  *
  * A Drupal schema definition is an array structure representing one or
  * more tables and their related keys and indexes. A schema is defined by
