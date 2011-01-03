@@ -1735,7 +1735,11 @@ function hook_boot() {
  * implement this hook, but declare these files in their .info file.
  */
 function hook_init() {
-  drupal_add_css(drupal_get_path('module', 'book') . '/book.css');
+  // Since this file should only be loaded on the front page, it cannot be
+  // declared in the info file.
+  if (drupal_is_front_page()) {
+    drupal_add_css(drupal_get_path('module', 'foo') . '/foo.css');
+  }
 }
 
 /**
