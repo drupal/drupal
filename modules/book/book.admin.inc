@@ -1,5 +1,5 @@
 <?php
-// $Id: book.admin.inc,v 1.38 2010/10/20 01:31:06 dries Exp $
+// $Id: book.admin.inc,v 1.39 2011/01/03 07:34:46 webchick Exp $
 
 /**
  * @file
@@ -175,6 +175,10 @@ function _book_admin_table($node, &$form) {
  * @see book_admin_edit()
  */
 function _book_admin_table_tree($tree, &$form) {
+  // The delta must be big enough to give each node a distinct value.
+  $count = count($tree);
+  $delta = ($count < 30) ? 15 : intval($count / 2) + 1;
+
   foreach ($tree as $data) {
     $form['book-admin-' . $data['link']['nid']] = array(
       '#item' => $data['link'],
@@ -190,7 +194,7 @@ function _book_admin_table_tree($tree, &$form) {
       'weight' => array(
         '#type' => 'weight',
         '#default_value' => $data['link']['weight'],
-        '#delta' => 15,
+        '#delta' => max($delta, abs($data['link']['weight'])),
         '#title' => t('Weight for @title', array('@title' => $data['link']['title'])),
         '#title_display' => 'invisible',
       ),
