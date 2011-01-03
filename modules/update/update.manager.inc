@@ -1,5 +1,5 @@
 <?php
-// $Id: update.manager.inc,v 1.32 2011/01/02 21:29:08 webchick Exp $
+// $Id: update.manager.inc,v 1.33 2011/01/03 02:41:33 webchick Exp $
 
 /**
  * @file
@@ -59,6 +59,10 @@
  *   The form array for selecting which projects to update.
  */
 function update_manager_update_form($form, $form_state = array(), $context) {
+  if (!_update_manager_check_backends($form, 'update')) {
+    return $form;
+  }
+
   $form['#theme'] = 'update_manager_update_form';
 
   $available = update_get_available(TRUE);
@@ -354,6 +358,10 @@ function update_manager_download_batch_finished($success, $results) {
  * file transfer credentials and attempt to complete the update.
  */
 function update_manager_update_ready_form($form, &$form_state) {
+  if (!_update_manager_check_backends($form, 'update')) {
+    return $form;
+  }
+
   $form['backup'] = array(
     '#prefix' => '<strong>',
     '#markup' => t('Back up your database and site before you continue. <a href="@backup_url">Learn how</a>.', array('@backup_url' => url('http://drupal.org/node/22281'))),
@@ -461,11 +469,18 @@ function update_manager_update_ready_form_submit($form, &$form_state) {
  *   The form array for selecting which project to install.
  */
 function update_manager_install_form($form, &$form_state, $context) {
-  $form = array();
+  if (!_update_manager_check_backends($form, 'install')) {
+    return $form;
+  }
 
   $form['help_text'] = array(
     '#prefix' => '<p>',
-    '#markup' => t('To install a new module or theme, either enter the URL of an archive file you wish to install, or upload the archive file that you have downloaded. You can find <a href="@module_url">modules</a> and <a href="@theme_url">themes</a> at <a href="@drupal_org_url">http://drupal.org</a>.<br/>The following archive extensions are supported: %extensions.', array('@module_url' => 'http://drupal.org/project/modules', '@theme_url' => 'http://drupal.org/project/themes', '@drupal_org_url' => 'http://drupal.org', '%extensions' => archiver_get_extensions())),
+    '#markup' => t('You can find <a href="@module_url">modules</a> and <a href="@theme_url">themes</a> on <a href="@drupal_org_url">drupal.org</a>. The following file extensions are supported: %extensions.', array(
+      '@module_url' => 'http://drupal.org/project/modules',
+      '@theme_url' => 'http://drupal.org/project/themes',
+      '@drupal_org_url' => 'http://drupal.org',
+      '%extensions' => archiver_get_extensions(),
+    )),
     '#suffix' => '</p>',
   );
 
@@ -494,6 +509,73 @@ function update_manager_install_form($form, &$form_state, $context) {
   );
 
   return $form;
+}
+
+/**
+ * Checks for file transfer backends and prepares a form fragment about them.
+ *
+ * @param array $form
+ *   Reference to the form array we're building.
+ * @param string $operation
+ *   The Update manager operation we're in the middle of. Can be either
+ *   'update' or 'install'. Use to provide operation-specific interface text.
+ *
+ * @return
+ *   TRUE if the Update manager should continue to the next step in the
+ *   workflow, or FALSE if we've hit a fatal configuration and must halt the
+ *   workflow.
+ */
+function _update_manager_check_backends(&$form, $operation) {
+  // If file transfers will be performed locally, we do not need to display any
+  // warnings or notices to the user and should automatically continue the
+  // workflow, since we won't be using a FileTransfer backend that requires
+  // user input or a specific server configuration.
+  if (update_manager_local_transfers_allowed()) {
+    return TRUE;
+  }
+
+  // Otherwise, show the available backends.
+  $form['available_backends'] = array(
+    '#prefix' => '<p>',
+    '#suffix' => '</p>',
+  );
+
+  $available_backends = drupal_get_filetransfer_info();
+  if (empty($available_backends)) {
+    if ($operation == 'update') {
+      $form['available_backends']['#markup'] = t('Your server does not support updating modules and themes from this interface. Instead, update modules and themes by uploading the new versions directly to the server, as described in the <a href="@handbook_url">handbook</a>.', array('@handbook_url' => 'http://drupal.org/getting-started/install-contrib'));
+    }
+    else {
+      $form['available_backends']['#markup'] = t('Your server does not support installing modules and themes from this interface. Instead, install modules and themes by uploading them directly to the server, as described in the <a href="@handbook_url">handbook</a>.', array('@handbook_url' => 'http://drupal.org/getting-started/install-contrib'));
+    }
+    return FALSE;
+  }
+
+  $backend_names = array();
+  foreach ($available_backends as $backend) {
+    $backend_names[] = $backend['title'];
+  }
+  if ($operation == 'update') {
+    $form['available_backends']['#markup'] = format_plural(
+      count($available_backends),
+      'Updating modules and themes requires <strong>@backends access</strong> to your server. See the <a href="@handbook_url">handbook</a> for other update methods.',
+      'Updating modules and themes requires access to your server via one of the following methods: <strong>@backends</strong>. See the <a href="@handbook_url">handbook</a> for other update methods.',
+      array(
+        '@backends' => implode(', ', $backend_names),
+        '@handbook_url' => 'http://drupal.org/getting-started/install-contrib',
+      ));
+  }
+  else {
+    $form['available_backends']['#markup'] = format_plural(
+      count($available_backends),
+      'Installing modules and themes requires <strong>@backends access</strong> to your server. See the <a href="@handbook_url">handbook</a> for other installation methods.',
+      'Installing modules and themes requires access to your server via one of the following methods: <strong>@backends</strong>. See the <a href="@handbook_url">handbook</a> for other installation methods.',
+      array(
+        '@backends' => implode(', ', $backend_names),
+        '@handbook_url' => 'http://drupal.org/getting-started/install-contrib',
+      ));
+  }
+  return TRUE;
 }
 
 /**
@@ -809,6 +891,41 @@ function update_manager_batch_project_get($project, $url, &$context) {
   // Yay, success.
   $context['results']['projects'][$project] = $url;
   $context['finished'] = 1;
+}
+
+/**
+ * Determines if file transfers will be performed locally.
+ *
+ * If the server is configured such that webserver-created files have the same
+ * owner as the configuration directory (e.g. sites/default) where new code
+ * will eventually be installed, the Update manager can transfer files entirely
+ * locally, without changing their ownership (in other words, without prompting
+ * the user for FTP, SSH or other credentials).
+ *
+ * This server configuration is an inherent security weakness because it allows
+ * a malicious webserver process to append arbitrary PHP code and then execute
+ * it. However, it is supported here because it is a common configuration on
+ * shared hosting, and there is nothing Drupal can do to prevent it.
+ *
+ * @return
+ *   TRUE if local file transfers are allowed on this server, or FALSE if not.
+ *
+ * @see update_manager_update_ready_form_submit()
+ * @see update_manager_install_form_submit()
+ * @see install_check_requirements()
+ */
+function update_manager_local_transfers_allowed() {
+  // Compare the owner of a webserver-created temporary file to the owner of
+  // the configuration directory to determine if local transfers will be
+  // allowed.
+  $temporary_file = drupal_tempnam('temporary://', 'update_');
+  $local_transfers_allowed = fileowner($temporary_file) === fileowner(conf_path());
+
+  // Clean up. If this fails, we can ignore it (since this is just a temporary
+  // file anyway).
+  @drupal_unlink($temporary_file);
+
+  return $local_transfers_allowed;
 }
 
 /**

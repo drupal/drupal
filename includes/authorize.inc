@@ -1,5 +1,5 @@
 <?php
-// $Id: authorize.inc,v 1.13 2010/12/29 04:07:52 webchick Exp $
+// $Id: authorize.inc,v 1.14 2011/01/03 02:41:33 webchick Exp $
 
 /**
  * @file
@@ -194,7 +194,12 @@ function authorize_filetransfer_form_validate($form, &$form_state) {
       $filetransfer->connect();
     }
     catch (Exception $e) {
-      form_set_error('connection_settings', $e->getMessage());
+      // The format of this error message is similar to that used on the
+      // database connection form in the installer.
+      form_set_error('connection_settings', t('Failed to connect to the server. The server reports the following message: !message For more help installing or updating code on your server, see the <a href="@handbook_url">handbook</a>.', array(
+        '!message' => '<p class="error">' . $e->getMessage()  . '</p>',
+        '@handbook_url' => 'http://drupal.org/documentation/install/modules-themes',
+      )));
     }
   }
 }
