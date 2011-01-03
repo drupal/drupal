@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.394 2011/01/03 00:03:34 webchick Exp $
+// $Id: CHANGELOG.txt,v 1.395 2011/01/03 02:11:26 webchick Exp $
 
 Drupal 7.0, xxxx-xx-xx (development version)
 ----------------------
@@ -191,7 +191,7 @@ Drupal 7.0, xxxx-xx-xx (development version)
     * Added support for translatable fields to Field API.
 - JavaScript changes
     * Upgraded the core JavaScript library to jQuery version 1.4.4.
-    * Upgraded the jQuery Forms library to 2.49.
+    * Upgraded the jQuery Forms library to 2.52.
     * Added jQuery UI 1.8.7, which allows improvements to Drupal's user
       experience.
 - Better module version support
