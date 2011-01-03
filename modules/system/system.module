@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.1000 2010/12/21 21:00:17 webchick Exp $
+// $Id: system.module,v 1.1001 2011/01/03 00:03:35 webchick Exp $
 
 /**
  * @file
@@ -1249,7 +1249,7 @@ function system_library() {
   $libraries['ui'] = array(
     'title' => 'jQuery UI: Core',
     'website' => 'http://jqueryui.com',
-    'version' => '1.8.6',
+    'version' => '1.8.7',
     'js' => array(
       'misc/ui/jquery.ui.core.min.js' => array('group' => JS_LIBRARY, 'weight' => -11),
     ),
@@ -1261,7 +1261,7 @@ function system_library() {
   $libraries['ui.accordion'] = array(
     'title' => 'jQuery UI: Accordion',
     'website' => 'http://jqueryui.com/demos/accordion/',
-    'version' => '1.8.6',
+    'version' => '1.8.7',
     'js' => array(
       'misc/ui/jquery.ui.accordion.min.js' => array(),
     ),
@@ -1275,7 +1275,7 @@ function system_library() {
   $libraries['ui.autocomplete'] = array(
     'title' => 'jQuery UI: Autocomplete',
     'website' => 'http://jqueryui.com/demos/autocomplete/',
-    'version' => '1.8.6',
+    'version' => '1.8.7',
     'js' => array(
       'misc/ui/jquery.ui.autocomplete.min.js' => array(),
     ),
@@ -1290,7 +1290,7 @@ function system_library() {
   $libraries['ui.button'] = array(
     'title' => 'jQuery UI: Button',
     'website' => 'http://jqueryui.com/demos/button/',
-    'version' => '1.8.6',
+    'version' => '1.8.7',
     'js' => array(
       'misc/ui/jquery.ui.button.min.js' => array(),
     ),
@@ -1304,7 +1304,7 @@ function system_library() {
   $libraries['ui.datepicker'] = array(
     'title' => 'jQuery UI: Date Picker',
     'website' => 'http://jqueryui.com/demos/datepicker/',
-    'version' => '1.8.6',
+    'version' => '1.8.7',
     'js' => array(
       'misc/ui/jquery.ui.datepicker.min.js' => array(),
     ),
@@ -1318,7 +1318,7 @@ function system_library() {
   $libraries['ui.dialog'] = array(
     'title' => 'jQuery UI: Dialog',
     'website' => 'http://jqueryui.com/demos/dialog/',
-    'version' => '1.8.6',
+    'version' => '1.8.7',
     'js' => array(
       'misc/ui/jquery.ui.dialog.min.js' => array(),
     ),
@@ -1337,7 +1337,7 @@ function system_library() {
   $libraries['ui.draggable'] = array(
     'title' => 'jQuery UI: Draggable',
     'website' => 'http://jqueryui.com/demos/draggable/',
-    'version' => '1.8.6',
+    'version' => '1.8.7',
     'js' => array(
       'misc/ui/jquery.ui.draggable.min.js' => array(),
     ),
@@ -1349,7 +1349,7 @@ function system_library() {
   $libraries['ui.droppable'] = array(
     'title' => 'jQuery UI: Droppable',
     'website' => 'http://jqueryui.com/demos/droppable/',
-    'version' => '1.8.6',
+    'version' => '1.8.7',
     'js' => array(
       'misc/ui/jquery.ui.droppable.min.js' => array(),
     ),
@@ -1362,7 +1362,7 @@ function system_library() {
   $libraries['ui.mouse'] = array(
     'title' => 'jQuery UI: Droppable',
     'website' => 'http://docs.jquery.com/UI/Mouse',
-    'version' => '1.8.6',
+    'version' => '1.8.7',
     'js' => array(
       'misc/ui/jquery.ui.mouse.min.js' => array(),
     ),
@@ -1373,7 +1373,7 @@ function system_library() {
   $libraries['ui.position'] = array(
     'title' => 'jQuery UI: Position',
     'website' => 'http://jqueryui.com/demos/position/',
-    'version' => '1.8.6',
+    'version' => '1.8.7',
     'js' => array(
       'misc/ui/jquery.ui.position.min.js' => array(),
     ),
@@ -1381,7 +1381,7 @@ function system_library() {
   $libraries['ui.progressbar'] = array(
     'title' => 'jQuery UI: Progress Bar',
     'website' => 'http://jqueryui.com/demos/progressbar/',
-    'version' => '1.8.6',
+    'version' => '1.8.7',
     'js' => array(
       'misc/ui/jquery.ui.progressbar.min.js' => array(),
     ),
@@ -1395,7 +1395,7 @@ function system_library() {
   $libraries['ui.resizable'] = array(
     'title' => 'jQuery UI: Resizable',
     'website' => 'http://jqueryui.com/demos/resizable/',
-    'version' => '1.8.6',
+    'version' => '1.8.7',
     'js' => array(
       'misc/ui/jquery.ui.resizable.min.js' => array(),
     ),
@@ -1410,7 +1410,7 @@ function system_library() {
   $libraries['ui.selectable'] = array(
     'title' => 'jQuery UI: Selectable',
     'website' => 'http://jqueryui.com/demos/selectable/',
-    'version' => '1.8.6',
+    'version' => '1.8.7',
     'js' => array(
       'misc/ui/jquery.ui.selectable.min.js' => array(),
     ),
@@ -1425,7 +1425,7 @@ function system_library() {
   $libraries['ui.slider'] = array(
     'title' => 'jQuery UI: Slider',
     'website' => 'http://jqueryui.com/demos/slider/',
-    'version' => '1.8.6',
+    'version' => '1.8.7',
     'js' => array(
       'misc/ui/jquery.ui.slider.min.js' => array(),
     ),
@@ -1440,7 +1440,7 @@ function system_library() {
   $libraries['ui.sortable'] = array(
     'title' => 'jQuery UI: Sortable',
     'website' => 'http://jqueryui.com/demos/sortable/',
-    'version' => '1.8.6',
+    'version' => '1.8.7',
     'js' => array(
       'misc/ui/jquery.ui.sortable.min.js' => array(),
     ),
@@ -1452,7 +1452,7 @@ function system_library() {
   $libraries['ui.tabs'] = array(
     'title' => 'jQuery UI: Tabs',
     'website' => 'http://jqueryui.com/demos/tabs/',
-    'version' => '1.8.6',
+    'version' => '1.8.7',
     'js' => array(
       'misc/ui/jquery.ui.tabs.min.js' => array(),
     ),
@@ -1466,7 +1466,7 @@ function system_library() {
   $libraries['ui.widget'] = array(
     'title' => 'jQuery UI: Widget',
     'website' => 'http://docs.jquery.com/UI/Widget',
-    'version' => '1.8.6',
+    'version' => '1.8.7',
     'js' => array(
       'misc/ui/jquery.ui.widget.min.js' => array('group' => JS_LIBRARY, 'weight' => -10),
     ),
@@ -1477,7 +1477,7 @@ function system_library() {
   $libraries['effects'] = array(
     'title' => 'jQuery UI: Effects',
     'website' => 'http://jqueryui.com/demos/effect/',
-    'version' => '1.8.6',
+    'version' => '1.8.7',
     'js' => array(
       'misc/ui/jquery.effects.core.min.js' => array('group' => JS_LIBRARY, 'weight' => -9),
     ),
@@ -1485,7 +1485,7 @@ function system_library() {
   $libraries['effects.blind'] = array(
     'title' => 'jQuery UI: Effects Blind',
     'website' => 'http://jqueryui.com/demos/effect/',
-    'version' => '1.8.6',
+    'version' => '1.8.7',
     'js' => array(
       'misc/ui/jquery.effects.blind.min.js' => array(),
     ),
@@ -1496,7 +1496,7 @@ function system_library() {
   $libraries['effects.bounce'] = array(
     'title' => 'jQuery UI: Effects Bounce',
     'website' => 'http://jqueryui.com/demos/effect/',
-    'version' => '1.8.6',
+    'version' => '1.8.7',
     'js' => array(
       'misc/ui/jquery.effects.bounce.min.js' => array(),
     ),
@@ -1507,7 +1507,7 @@ function system_library() {
   $libraries['effects.clip'] = array(
     'title' => 'jQuery UI: Effects Clip',
     'website' => 'http://jqueryui.com/demos/effect/',
-    'version' => '1.8.6',
+    'version' => '1.8.7',
     'js' => array(
       'misc/ui/jquery.effects.clip.min.js' => array(),
     ),
@@ -1518,7 +1518,7 @@ function system_library() {
   $libraries['effects.drop'] = array(
     'title' => 'jQuery UI: Effects Drop',
     'website' => 'http://jqueryui.com/demos/effect/',
-    'version' => '1.8.6',
+    'version' => '1.8.7',
     'js' => array(
       'misc/ui/jquery.effects.drop.min.js' => array(),
     ),
@@ -1529,7 +1529,7 @@ function system_library() {
   $libraries['effects.explode'] = array(
     'title' => 'jQuery UI: Effects Explode',
     'website' => 'http://jqueryui.com/demos/effect/',
-    'version' => '1.8.6',
+    'version' => '1.8.7',
     'js' => array(
       'misc/ui/jquery.effects.explode.min.js' => array(),
     ),
@@ -1540,7 +1540,7 @@ function system_library() {
   $libraries['effects.fade'] = array(
     'title' => 'jQuery UI: Effects Fade',
     'website' => 'http://jqueryui.com/demos/effect/',
-    'version' => '1.8.6',
+    'version' => '1.8.7',
     'js' => array(
       'misc/ui/jquery.effects.fade.min.js' => array(),
     ),
@@ -1551,7 +1551,7 @@ function system_library() {
   $libraries['effects.fold'] = array(
     'title' => 'jQuery UI: Effects Fold',
     'website' => 'http://jqueryui.com/demos/effect/',
-    'version' => '1.8.6',
+    'version' => '1.8.7',
     'js' => array(
       'misc/ui/jquery.effects.fold.min.js' => array(),
     ),
@@ -1562,7 +1562,7 @@ function system_library() {
   $libraries['effects.highlight'] = array(
     'title' => 'jQuery UI: Effects Highlight',
     'website' => 'http://jqueryui.com/demos/effect/',
-    'version' => '1.8.6',
+    'version' => '1.8.7',
     'js' => array(
       'misc/ui/jquery.effects.highlight.min.js' => array(),
     ),
@@ -1573,7 +1573,7 @@ function system_library() {
   $libraries['effects.pulsate'] = array(
     'title' => 'jQuery UI: Effects Pulsate',
     'website' => 'http://jqueryui.com/demos/effect/',
-    'version' => '1.8.6',
+    'version' => '1.8.7',
     'js' => array(
       'misc/ui/jquery.effects.pulsate.min.js' => array(),
     ),
@@ -1584,7 +1584,7 @@ function system_library() {
   $libraries['effects.scale'] = array(
     'title' => 'jQuery UI: Effects Scale',
     'website' => 'http://jqueryui.com/demos/effect/',
-    'version' => '1.8.6',
+    'version' => '1.8.7',
     'js' => array(
       'misc/ui/jquery.effects.scale.min.js' => array(),
     ),
@@ -1595,7 +1595,7 @@ function system_library() {
   $libraries['effects.shake'] = array(
     'title' => 'jQuery UI: Effects Shake',
     'website' => 'http://jqueryui.com/demos/effect/',
-    'version' => '1.8.6',
+    'version' => '1.8.7',
     'js' => array(
       'misc/ui/jquery.effects.shake.min.js' => array(),
     ),
@@ -1606,7 +1606,7 @@ function system_library() {
   $libraries['effects.slide'] = array(
     'title' => 'jQuery UI: Effects Slide',
     'website' => 'http://jqueryui.com/demos/effect/',
-    'version' => '1.8.6',
+    'version' => '1.8.7',
     'js' => array(
       'misc/ui/jquery.effects.slide.min.js' => array(),
     ),
@@ -1617,7 +1617,7 @@ function system_library() {
   $libraries['effects.transfer'] = array(
     'title' => 'jQuery UI: Effects Transfer',
     'website' => 'http://jqueryui.com/demos/effect/',
-    'version' => '1.8.6',
+    'version' => '1.8.7',
     'js' => array(
       'misc/ui/jquery.effects.transfer.min.js' => array(),
     ),
