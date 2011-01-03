@@ -1,5 +1,5 @@
 <?php
-// $Id: ssh.inc,v 1.7 2011/01/03 02:20:45 webchick Exp $
+// $Id: ssh.inc,v 1.8 2011/01/03 02:32:27 webchick Exp $
 
 /**
  * The SSH connection class for the update module.
@@ -17,7 +17,7 @@ class FileTransferSSH extends FileTransfer implements FileTransferChmodInterface
   function connect() {
     $this->connection = @ssh2_connect($this->hostname, $this->port);
     if (!$this->connection) {
-      throw new FileTransferException('SSH Connection failed to @host:@port', NULL, array('@host' => $this->hostname, '@port' => 21));
+      throw new FileTransferException('SSH Connection failed to @host:@port', NULL, array('@host' => $this->hostname, '@port' => $this->port));
     }
     if (!@ssh2_auth_password($this->connection, $this->username, $this->password)) {
       throw new FileTransferException('The supplied username/password combination was not accepted.');
