@@ -1830,7 +1830,8 @@ function format_interval($timestamp, $granularity = 2, $langcode = NULL) {
  * @param $type
  *   (optional) The format to use, one of:
  *   - 'short', 'medium', or 'long' (the corresponding built-in date formats).
- *   - The name of a date type defined by a module in hook_date_format_types().
+ *   - The name of a date type defined by a module in hook_date_format_types(),
+ *     if it's been assigned a format.
  *   - The machine name of an administrator-defined date format.
  *   - 'custom', to use $format.
  *   Defaults to 'medium'.
