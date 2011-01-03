@@ -32,9 +32,9 @@
   padding: 6px 4px 6px 8px;
   margin: 3px 3px 3px 0;
   float: left;
-  border-radius: 4px;
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
+  border-radius: 4px;
 }
 
 #dashboard .dashboard-add-other-blocks {

@@ -23,9 +23,9 @@ div#toolbar div.toolbar-shortcuts ul {
 div#toolbar div.toolbar-shortcuts ul li a {
   padding: 0 5px 0 5px;
   margin-right: 5px;
-  border-radius: 5px;
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
+  border-radius: 5px;
 }
 
 div#toolbar div.toolbar-shortcuts ul li a:focus,
@@ -45,9 +45,9 @@ div#toolbar div.toolbar-shortcuts span.icon {
   width: 30px;
   height: 30px;
   margin-right: 5px;
-  border-radius: 5px;
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
+  border-radius: 5px;
 }
 
 div.add-or-remove-shortcuts {
@@ -90,12 +90,12 @@ div.add-or-remove-shortcuts a:hover span.text {
   display: block;
   padding-right: 6px;
   cursor: pointer;
-  border-top-right-radius: 5px;
-  border-bottom-right-radius: 5px;
-  -moz-border-radius-topright: 5px;
   -moz-border-radius-bottomright: 5px;
-  -webkit-border-top-right-radius: 5px;
+  -moz-border-radius-topright: 5px;
   -webkit-border-bottom-right-radius: 5px;
+  -webkit-border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  border-top-right-radius: 5px;
 }
 
 #shortcut-set-switch .form-type-radios {

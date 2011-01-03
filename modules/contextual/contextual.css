@@ -36,9 +36,9 @@ a.contextual-links-trigger {
   text-indent: 34px; /* LTR */
   width: 28px;
   overflow: hidden;
+  -khtml-border-radius: 4px;
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
-  -khtml-border-radius: 4px;
   border-radius: 4px;
 }
 a.contextual-links-trigger:hover,
@@ -53,8 +53,8 @@ div.contextual-links-active a.contextual-links-trigger {
   position: relative;
   z-index: 1;
   -moz-border-radius: 4px 4px 0 0;
-  -webkit-border-bottom-right-radius: 0;
   -webkit-border-bottom-left-radius: 0;
+  -webkit-border-bottom-right-radius: 0;
   border-radius: 4px 4px 0 0;
 }
 div.contextual-links-wrapper ul.contextual-links {
@@ -69,10 +69,10 @@ div.contextual-links-wrapper ul.contextual-links {
   top: 18px;
   white-space: nowrap;
   -moz-border-radius: 4px 0 4px 4px; /* LTR */
-  -webkit-border-top-left-radius: 4px; /* LTR */
-  -webkit-border-top-right-radius: 0; /* LTR */
-  -webkit-border-bottom-right-radius: 4px;
   -webkit-border-bottom-left-radius: 4px;
+  -webkit-border-bottom-right-radius: 4px;
+  -webkit-border-top-right-radius: 0; /* LTR */
+  -webkit-border-top-left-radius: 4px; /* LTR */
   border-radius: 4px 0 4px 4px; /* LTR */
 }
 .contextual-links-region:hover a.contextual-links-trigger,
