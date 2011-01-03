@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.223 2011/01/03 00:28:46 webchick Exp $
+// $Id: system.api.php,v 1.224 2011/01/03 06:51:00 webchick Exp $
 
 /**
  * @file
@@ -3718,8 +3718,14 @@ function hook_archiver_info_alter(&$info) {
  *
  * Next to the 'long', 'medium' and 'short' date types defined in core, any
  * module can define additional types that can be used when displaying dates. A
- * date type is a key which can be passed to format_date() to return a date in
- * the configured display format.
+ * date type is a key that can be passed to format_date() to return a date in
+ * the configured display format, once a format has been assigned to it. To
+ * assign a format to a date type, use
+ * @code variable_set('date_format_' . $type, $format); @endcode
+ * where $type is the machine-readable name defined here, and $format is a PHP
+ * date format string. This can also be done in the administrative interface,
+ * which allows date types defined here to be associated with date format
+ * strings defined in hook_date_formats().
  *
  * To avoid namespace collisions with date types defined by other modules, it is
  * recommended that each date type starts with the module name. A date type
