@@ -1,4 +1,4 @@
-/* $Id: style-rtl.css,v 1.18 2010/12/14 02:50:24 dries Exp $ */
+/* $Id: style-rtl.css,v 1.19 2011/01/04 06:23:29 dries Exp $ */
 
 /* ------------------ Reset Styles ------------------ */
 
@@ -148,7 +148,7 @@ ul.tips {
 input.form-submit,
 a.button {
   margin-right: 0;
-  margin-left: 1em;
+  margin-left: 0.6em;
 }
 
 /* --------------- Search Form ---------------- */
@@ -228,16 +228,18 @@ html.js input.throbbing {
 }
 
 /* Comment form */
-.comment-form .form-type-textfield label,
-.comment-form .form-type-item label {
+.comment-form label {
   float: right;
 }
-.comment-form .form-type-textfield input,
-.comment-form .form-item .username {
-  float: left;
-}
+.comment-form .form-type-checkbox,
+.comment-form .form-radios,
 .comment-form .form-item .description {
-  float: left;
+  margin-left: 0;
+  margin-right: 120px;
+}
+#edit-actions input {
+  margin-left: 0.6em;
+  margin-right: 0;
 }
 
 /* -------------- Shortcut Links ------------- */
