@@ -1,5 +1,5 @@
 <?php
-// $Id: system.updater.inc,v 1.11 2010/11/30 17:58:44 dries Exp $
+// $Id: system.updater.inc,v 1.12 2011/01/04 03:06:24 webchick Exp $
 
 /**
  * @file
@@ -39,7 +39,7 @@ class ModuleUpdater extends Updater implements DrupalUpdaterInterface {
   }
 
   public static function canUpdateDirectory($directory) {
-    if (file_scan_directory($directory, '/.*\.module/')) {
+    if (file_scan_directory($directory, '/.*\.module$/')) {
       return TRUE;
     }
     return FALSE;
@@ -121,7 +121,7 @@ class ThemeUpdater extends Updater implements DrupalUpdaterInterface {
 
   static function canUpdateDirectory($directory) {
     // This is a lousy test, but don't know how else to confirm it is a theme.
-    if (file_scan_directory($directory, '/.*\.module/')) {
+    if (file_scan_directory($directory, '/.*\.module$/')) {
       return FALSE;
     }
     return TRUE;
