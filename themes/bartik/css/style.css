@@ -1,9 +1,8 @@
-/* $Id: style.css,v 1.51 2011/01/04 02:59:37 webchick Exp $ */
+/* $Id: style.css,v 1.52 2011/01/04 05:24:13 webchick Exp $ */
 
 /* ---------- Overall Specifications ---------- */
 
 body {
-  background-color: #fff;
   line-height: 1.5;
   font-size: 87.5%;
   word-wrap: break-word;
