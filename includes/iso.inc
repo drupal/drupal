@@ -241,7 +241,7 @@ function _country_get_predefined_list() {
     'TH' => $t('Thailand'),
     'TJ' => $t('Tajikistan'),
     'TK' => $t('Tokelau'),
-    'TL' => $t('East Timor'),
+    'TL' => $t('Timor-Leste'),
     'TM' => $t('Turkmenistan'),
     'TN' => $t('Tunisia'),
     'TO' => $t('Tonga'),
