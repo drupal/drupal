@@ -1,4 +1,4 @@
-/* $Id: ie-rtl.css,v 1.6 2010/11/29 05:01:37 webchick Exp $ */
+/* $Id: ie-rtl.css,v 1.7 2011/01/04 02:59:37 webchick Exp $ */
 
 fieldset legend {
   left: 6px;
@@ -10,11 +10,6 @@ ul.action-links li a,
 }
 .comment .attribution {
   float: right;
-}
-.comment-text {
-  float: right;
-  margin-left: 0;
-  margin-right: 25px;
 }
 .comment .comment-arrow {
   position: absolute;

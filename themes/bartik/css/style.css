@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.50 2011/01/03 07:04:48 webchick Exp $ */
+/* $Id: style.css,v 1.51 2011/01/04 02:59:37 webchick Exp $ */
 
 /* ---------- Overall Specifications ---------- */
 
@@ -695,6 +695,9 @@ ul.links {
   margin: 0;
   border: 1px solid #d3d7d9;
 }
+.comment .attribution .username {
+  white-space: nowrap;
+}
 .comment .submitted p {
   margin: 4px 0;
   font-size: 1.071em;
@@ -728,6 +731,7 @@ ul.links {
   display: table-cell;
   vertical-align: top;
   position: relative;
+  width: 100%;
 }
 .comment .indented {
   margin-left: 40px; /* LTR */
