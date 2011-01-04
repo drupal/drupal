@@ -1,5 +1,5 @@
 <?php
-// $Id: iso.inc,v 1.12 2010/10/09 18:20:43 webchick Exp $
+// $Id: iso.inc,v 1.13 2011/01/04 16:07:48 webchick Exp $
 
 /**
  * @file
@@ -241,7 +241,7 @@ function _country_get_predefined_list() {
     'TH' => $t('Thailand'),
     'TJ' => $t('Tajikistan'),
     'TK' => $t('Tokelau'),
-    'TL' => $t('East Timor'),
+    'TL' => $t('Timor-Leste'),
     'TM' => $t('Turkmenistan'),
     'TN' => $t('Tunisia'),
     'TO' => $t('Tonga'),
