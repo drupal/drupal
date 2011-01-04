@@ -1,5 +1,5 @@
 <?php
-// $Id: authorize.inc,v 1.14 2011/01/03 02:41:33 webchick Exp $
+// $Id: authorize.inc,v 1.15 2011/01/04 04:37:27 webchick Exp $
 
 /**
  * @file
@@ -9,7 +9,7 @@
 /**
  * Build the form for choosing a FileTransfer type and supplying credentials.
  */
-function authorize_filetransfer_form($form_state) {
+function authorize_filetransfer_form($form, &$form_state) {
   global $base_url, $is_https;
   $form = array();
 
@@ -28,7 +28,11 @@ function authorize_filetransfer_form($form_state) {
   $available_backends = $_SESSION['authorize_filetransfer_info'];
 
   if (!$is_https) {
-    drupal_set_message(t('WARNING: You are not using an encrypted connection, so your password will be sent in plain text. <a href="@https-link">Learn more</a>.', array('@https-link' => 'http://drupal.org/https-information')), 'error');
+    $form['information']['https_warning'] = array(
+      '#prefix' => '<div class="messages error">',
+      '#markup' => t('WARNING: You are not using an encrypted connection, so your password will be sent in plain text. <a href="@https-link">Learn more</a>.', array('@https-link' => 'http://drupal.org/https-information')),
+      '#suffix' => '</div>',
+    );
   }
 
   // Decide on a default backend.
@@ -77,13 +81,17 @@ function authorize_filetransfer_form($form_state) {
     '#attributes' => array('style' => 'display:none'),
   );
 
-  // Build a hidden fieldset for each one.
+  // Build a container for each connection type.
   foreach ($available_backends as $name => $backend) {
     $form['connection_settings']['authorize_filetransfer_default']['#options'][$name] = $backend['title'];
     $form['connection_settings'][$name] = array(
-      '#type' => 'fieldset',
+      '#type' => 'container',
       '#attributes' => array('class' => array("filetransfer-$name", 'filetransfer')),
-      '#title' => t('@backend connection settings', array('@backend' => $backend['title'])),
+    );
+    // We can't use #prefix on the container itself since then the header won't
+    // be hidden and shown when the containers are being manipulated via JS.
+    $form['connection_settings'][$name]['header'] = array(
+      '#markup' => '<h4>' . t('@backend connection settings', array('@backend' => $backend['title'])) . '</h4>',
     );
 
     $form['connection_settings'][$name] += _authorize_filetransfer_connection_settings($name);
@@ -111,7 +119,7 @@ function authorize_filetransfer_form($form_state) {
         '#type' => 'submit',
         '#value' => t('Change connection type'),
         '#weight' => -5,
-        '#attributes' => array('class' => 'filetransfer-change-connection-type'),
+        '#attributes' => array('class' => array('filetransfer-change-connection-type')),
       );
     }
     // End non-JS code.
@@ -184,6 +192,12 @@ function _authorize_filetransfer_connection_settings_set_defaults(&$element, $ke
  * @see authorize_filetransfer_form()
  */
 function authorize_filetransfer_form_validate($form, &$form_state) {
+  // Only validate the form if we have collected all of the user input and are
+  // ready to proceed with updating or installing.
+  if ($form_state['clicked_button']['#name'] != 'process_updates') {
+    return;
+  }
+
   if (isset($form_state['values']['connection_settings'])) {
     $backend = $form_state['values']['connection_settings']['authorize_filetransfer_default'];
     $filetransfer = authorize_get_filetransfer($backend, $form_state['values']['connection_settings'][$backend]);
