@@ -269,7 +269,6 @@ Trigger module
 
 Update module
 - Derek Wright 'dww' <http://drupal.org/user/46549>
-- Dave Reid 'davereid' <http://drupal.org/user/53892>
 
 User module
 - Moshe Weitzman 'moshe weitzman' <http://drupal.org/user/23>
