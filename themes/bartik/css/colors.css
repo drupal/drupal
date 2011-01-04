@@ -2,19 +2,15 @@
 
 /* ---------- Color Module Styles ----------- */
 
-body {
-  background-color: #292929;
-  color: #ffffff;
-}
-#page-wrapper,
-#main,
+body,
 body.overlay {
-  background-color: #ffffff;
   color: #3b3b3b;
 }
 .comment .comment-arrow {
   border-color: #ffffff;
 }
+#page,
+#main-wrapper,
 #main-menu-links li a.active,
 #main-menu-links li.active-trail a {
   background: #ffffff;
@@ -45,6 +41,7 @@ a:active {
   background-color: #f6f6f2;
   border-color: #f9f9f9;
 }
+#page-wrapper,
 #footer-wrapper {
   background: #292929;
 }

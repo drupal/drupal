@@ -2,7 +2,13 @@
 
 /* ---------- Basic Layout Styles ----------- */
 
+html,
+body,
+#page  {
+  height: 100%;
+}
 #page-wrapper {
+  min-height: 100%;
   min-width: 960px;
 }
 #header div.section,
