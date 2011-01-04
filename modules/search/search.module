@@ -1142,12 +1142,13 @@ function search_excerpt($keys, $text) {
   array_walk($keys, '_search_excerpt_replace');
   $workkeys = $keys;
 
-  // Extract a fragment per keyword for at most 4 keywords.
+  // Extract fragments around keywords.
   // First we collect ranges of text around each keyword, starting/ending
-  // at spaces.
+  // at spaces, trying to get to 256 characters.
   // If the sum of all fragments is too short, we look for second occurrences.
   $ranges = array();
   $included = array();
+  $foundkeys = array();
   $length = 0;
   while ($length < 256 && count($workkeys)) {
     foreach ($workkeys as $k => $key) {
@@ -1164,10 +1165,26 @@ function search_excerpt($keys, $text) {
       if (!isset($included[$key])) {
         $included[$key] = 0;
       }
-      // Locate a keyword (position $p), then locate a space in front (position
-      // $q) and behind it (position $s)
+      // Locate a keyword (position $p, always >0 because $text starts with a
+      // space). First try bare keyword, but if that doesn't work, try to find a
+      // derived form from search_simplify().
+      $p = 0;
       if (preg_match('/' . $boundary . $key . $boundary . '/iu', $text, $match, PREG_OFFSET_CAPTURE, $included[$key])) {
         $p = $match[0][1];
+      }
+      else {
+        $info = search_simplify_excerpt_match($key, $text, $included[$key], $boundary);
+        if ($info['where']) {
+          $p = $info['where'];
+          if ($info['keyword']) {
+            $foundkeys[] = $info['keyword'];
+          }
+        }
+      }
+      // Now locate a space in front (position $q) and behind it (position $s),
+      // leaving about 60 characters extra before and after for context.
+      // Note that a space was added to the front and end of $text above.
+      if ($p) {
         if (($q = strpos(' ' . $text, ' ', max(0, $p - 61))) !== FALSE) {
           $end = substr($text . ' ', $p, 80);
           if (($s = strrpos($end, ' ')) !== FALSE) {
@@ -1233,6 +1250,10 @@ function search_excerpt($keys, $text) {
   $text = (isset($newranges[0]) ? '' : $dots[0]) . implode($dots[1], $out) . $dots[2];
   $text = check_plain($text);
 
+  // Slash-escape quotes in keys found in a derived form and merge with original keys.
+  array_walk($foundkeys, '_search_excerpt_replace');
+  $keys = array_merge($keys, $foundkeys);
+
   // Highlight keywords. Must be done at once to prevent conflicts ('strong' and '<strong>').
   $text = preg_replace('/' . $boundary . '(' . implode('|', $keys) . ')' . $boundary . '/iu', '<strong>\0</strong>', $text);
   return $text;
@@ -1247,6 +1268,76 @@ function search_excerpt($keys, $text) {
  */
 function _search_excerpt_replace(&$text) {
   $text = preg_quote($text, '/');
+}
+
+/**
+ * Find words in the original text that matched via search_simplify().
+ *
+ * This is called in search_excerpt() if an exact match is not found in the
+ * text, so that we can find the derived form that matches.
+ *
+ * @param $key
+ *   The keyword to find.
+ * @param $text
+ *   The text to search for the keyword.
+ * @param $offset
+ *   Offset position in $text to start searching at.
+ * @param $boundary
+ *   Text to include in a regular expression that will match a word boundary.
+ *
+ * @return
+ *   FALSE if no match is found. If a match is found, return an associative
+ *   array with element 'where' giving the position of the match, and element
+ *   'keyword' giving the actual word found in the text at that position.
+ */
+function search_simplify_excerpt_match($key, $text, $offset, $boundary) {
+  $pos = NULL;
+  $simplified_key = search_simplify($key);
+  $simplified_text = search_simplify($text);
+
+  // Check if we have a match after simplification in the text.
+  if (!preg_match('/' . $boundary . $simplified_key . $boundary . '/iu', $simplified_text, $match, PREG_OFFSET_CAPTURE, $offset)) {
+    return FALSE;
+  }
+
+  // If we get here, we have a match. Now find the exact location of the match
+  // and the original text that matched. Start by splitting up the text by all
+  // potential starting points of the matching text and iterating through them.
+  $split = array_filter(preg_split('/' . $boundary . '/iu', $text, -1, PREG_SPLIT_OFFSET_CAPTURE), '_search_excerpt_match_filter');
+  foreach ($split as $value) {
+    // Skip starting points before the offset.
+    if ($value[1] < $offset) {
+      continue;
+    }
+
+    // Check a window of 80 characters after the starting point for a match,
+    // based on the size of the excerpt window.
+    $window = substr($text, $value[1], 80);
+    $simplified_window = search_simplify($window);
+    if (strpos($simplified_window, $simplified_key) === 0) {
+      // We have a match in this window. Store the position of the match.
+      $pos = $value[1];
+      // Iterate through the text in the window until we find the full original
+      // matching text.
+      $length = strlen($window);
+      for ($i = 1; $i <= $length; $i++) {
+        $keyfound = substr($text, $value[1], $i);
+        if ($simplified_key == search_simplify($keyfound)) {
+          break;
+        }
+      }
+      break;
+    }
+  }
+
+  return $pos ? array('where' => $pos, 'keyword' => $keyfound) : FALSE;
+}
+
+/**
+ * Helper function for array_filter() in search_search_excerpt_match().
+ */
+function _search_excerpt_match_filter($var) {
+  return strlen(trim($var[0]));
 }
 
 /**
