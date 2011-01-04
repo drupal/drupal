@@ -39,7 +39,7 @@ class ModuleUpdater extends Updater implements DrupalUpdaterInterface {
   }
 
   public static function canUpdateDirectory($directory) {
-    if (file_scan_directory($directory, '/.*\.module/')) {
+    if (file_scan_directory($directory, '/.*\.module$/')) {
       return TRUE;
     }
     return FALSE;
@@ -121,7 +121,7 @@ class ThemeUpdater extends Updater implements DrupalUpdaterInterface {
 
   static function canUpdateDirectory($directory) {
     // This is a lousy test, but don't know how else to confirm it is a theme.
-    if (file_scan_directory($directory, '/.*\.module/')) {
+    if (file_scan_directory($directory, '/.*\.module$/')) {
       return FALSE;
     }
     return TRUE;
