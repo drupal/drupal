@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.519 2011/01/03 18:03:54 webchick Exp $
+// $Id: form.inc,v 1.520 2011/01/04 16:46:24 webchick Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -3368,7 +3368,7 @@ function form_validate_machine_name(&$element, &$form_state) {
   // Verify that the machine name is unique.
   if ($element['#default_value'] !== $element['#value']) {
     $function = $element['#machine_name']['exists'];
-    if ($function($element['#value'], $form_state)) {
+    if ($function($element['#value'], $element, $form_state)) {
       form_error($element, t('The machine-readable name is already in use. It must be unique.'));
     }
   }
