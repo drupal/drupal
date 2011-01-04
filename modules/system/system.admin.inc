@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.326 2010/11/23 02:54:13 dries Exp $
+// $Id: system.admin.inc,v 1.327 2011/01/04 04:02:29 webchick Exp $
 
 /**
  * @file
@@ -2039,7 +2039,6 @@ function theme_system_date_time_settings($variables) {
     $row = array();
     $row[] = $form['format'][$key]['#title'];
     $form['format'][$key]['#title_display'] = 'invisible';
-    $row[] = $form['format'][$key]['#title_display'];
     $row[] = array('data' => drupal_render($form['format'][$key]));
     $row[] = array('data' => drupal_render($form['delete'][$delete_key]));
     $rows[] = $row;
