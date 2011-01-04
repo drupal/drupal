@@ -105,7 +105,8 @@ pre {
 
 body,
 #site-slogan,
-.ui-widget {
+.ui-widget,
+.comment-form label {
   font-family: Georgia, "Times New Roman", Times, serif;
 }
 #header,
@@ -1101,7 +1102,7 @@ a.button {
   font-weight: normal;
   text-align: center;
   margin-bottom: 1em;
-  margin-right: 1em; /* LTR */
+  margin-right: 0.6em; /* LTR */
   padding: 4px 17px;
   -khtml-border-radius: 15px;
   -moz-border-radius: 20px;
@@ -1135,9 +1136,12 @@ fieldset {
 .fieldset-wrapper {
   margin-top: 25px;
 }
+.node-form .fieldset-wrapper {
+  margin-top: 0;
+}
 .filter-wrapper {
   top: 0;
-  padding-bottom: 10px;
+  padding: 1em 0 0.2em;
   -khtml-border-radius-topright: 0;
   -khtml-border-radius-topleft: 0;
   -moz-border-radius-topright: 0;
@@ -1146,6 +1150,19 @@ fieldset {
   -webkit-border-top-right-radius: 0;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
+}
+.filter-help a {
+  font-size: 0.857em;
+  padding: 2px 20px 0;
+}
+.filter-wrapper .form-item label {
+  margin-right: 10px;
+}
+.filter-wrapper .form-item {
+  padding: 0 0 0.5em 0.5em;
+}
+.filter-guidelines {
+  padding: 0 1.5em 0 0.5em;
 }
 fieldset.collapsed {
   background: transparent;
@@ -1321,28 +1338,57 @@ html.js input.throbbing {
 }
 
 /* Comment form */
-.comment-form .form-item {
-  overflow: hidden;
-  margin-bottom: 0.8em;
-}
-.comment-form .form-type-textfield label,
-.comment-form .form-type-item label {
+.comment-form label {
   float: left; /* LTR */
+  font-size: 0.929em;
+  width: 120px;
 }
-.comment-form .form-type-textfield input,
-.comment-form .form-item .username {
-  float: right; /* LTR */
-  width: 75%;
+.comment-form input,
+.comment-form .form-select {
+  margin: 0;
   -khtml-border-radius: 4px;
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
   border-radius: 4px;
 }
+.comment-form .form-type-textarea label {
+  float: none;
+}
+.comment-form .form-item,
+.comment-form .form-radios,
+.comment-form .form-type-checkbox,
+.comment-form .form-select {
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+.comment-form .form-type-checkbox,
+.comment-form .form-radios {
+  margin-left: 120px; /* LTR */
+}
+.comment-form .form-type-checkbox label,
+.comment-form .form-radios label {
+  float: none;
+  margin-top: 0;
+}
+.comment-form input.form-file {
+  width: auto;
+}
+.no-sidebars .comment-form .form-text {
+  width: 800px;
+}
+.one-sidebar .comment-form .form-text {
+  width: 500px;
+}
+.two-sidebars .comment-form .form-text {
+  width: 320px;
+}
 .comment-form .form-item .description {
   font-size: 0.786em;
-  line-height: 1;
-  float: right; /* LTR */
-  width: 76%;
+  line-height: 1.2;
+  margin-left: 120px; /* LTR */
+}
+#content h2.comment-form {
+  margin-bottom: 0.5em;
 }
 .comment-form .form-textarea {
   -khtml-border-radius-topleft: 4px;
@@ -1359,8 +1405,21 @@ html.js input.throbbing {
   margin-top: 0;
   margin-bottom: 0;
 }
+.filter-wrapper label {
+  width: auto;
+  float: none;
+}
+.filter-wrapper .form-select {
+  min-width: 120px;
+}
 .comment-form fieldset.filter-wrapper .tips {
   font-size: 0.786em;
+}
+#comment-body-add-more-wrapper .form-type-textarea label {
+  margin-bottom: 0.4em;
+}
+#edit-actions input {
+  margin-right: 0.6em; /* LTR */
 }
 
 /* -------------- Other Overrides ------------- */
