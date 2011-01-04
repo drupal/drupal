@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.327 2010/12/28 18:31:16 webchick Exp $
+// $Id: update.php,v 1.328 2011/01/04 05:57:26 webchick Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -179,11 +179,11 @@ function update_results_page() {
 
   // Output a list of queries executed.
   if (!empty($_SESSION['update_results'])) {
-    $output .= '<div id="update-results">';
-    $output .= '<h2>The following updates returned messages</h2>';
+    $all_messages = '';
     foreach ($_SESSION['update_results'] as $module => $updates) {
       if ($module != '#abort') {
-        $output .= '<h3>' . $module . ' module</h3>';
+        $module_has_message = FALSE;
+        $query_messages = '';
         foreach ($updates as $number => $queries) {
           $messages = array();
           foreach ($queries as $query) {
@@ -191,6 +191,7 @@ function update_results_page() {
             if (empty($query['query'])) {
               continue;
             }
+
             if ($query['success']) {
               $messages[] = '<li class="success">' . $query['query'] . '</li>';
             }
@@ -200,13 +201,24 @@ function update_results_page() {
           }
 
           if ($messages) {
-            $output .= '<h4>Update #' . $number . "</h4>\n";
-            $output .= '<ul>' . implode("\n", $messages) . "</ul>\n";
+            $module_has_message = TRUE;
+            $query_messages .= '<h4>Update #' . $number . "</h4>\n";
+            $query_messages .= '<ul>' . implode("\n", $messages) . "</ul>\n";
           }
+        }
+
+        // If there were any messages in the queries then prefix them with the
+        // module name and add it to the global message list.
+        if ($module_has_message) {
+          $all_messages .= '<h3>' . $module . " module</h3>\n" . $query_messages;
         }
       }
     }
-    $output .= '</div>';
+    if ($all_messages) {
+      $output .= '<div id="update-results"><h2>The following updates returned messages</h2>';
+      $output .= $all_messages;
+      $output .= '</div>';
+    }
   }
   unset($_SESSION['update_results']);
   unset($_SESSION['update_success']);
