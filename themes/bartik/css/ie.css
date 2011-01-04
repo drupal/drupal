@@ -14,15 +14,14 @@ fieldset legend {
   height: 100%;
 }
 .comment .attribution {
-  display: inline;
+  display: inline-block;
+  position: relative;
   float: left; /* LTR */
   overflow: hidden;
-  padding: 0;
 }
-.comment-text {
-  display: inline;
-  float: left; /* LTR */
-  margin-left: 25px; /* LTR */
+.comment .comment-text {
+  display: inline-block;
+  width: auto;
 }
 #search-block-form input.form-submit,
 #search-form input.form-submit {
