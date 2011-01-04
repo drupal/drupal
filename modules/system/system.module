@@ -3661,7 +3661,7 @@ function _system_date_format_types_build() {
   // Get custom formats added to the database by the end user.
   $result = db_query('SELECT dft.type, dft.title, dft.locked FROM {date_format_type} dft ORDER BY dft.title');
   foreach ($result as $record) {
-    if (!in_array($record->type, $types)) {
+    if (!isset($types[$record->type])) {
       $type = array();
       $type['is_new'] = FALSE;
       $type['module'] = '';
