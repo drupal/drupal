@@ -1,4 +1,4 @@
-// $Id: MAINTAINERS.txt,v 1.52 2010/12/23 20:06:40 webchick Exp $
+// $Id: MAINTAINERS.txt,v 1.53 2011/01/04 01:03:23 webchick Exp $
 
 Drupal core is maintained by the community.  To participate, go to
 
@@ -269,7 +269,6 @@ Trigger module
 
 Update module
 - Derek Wright 'dww' <http://drupal.org/user/46549>
-- Dave Reid 'davereid' <http://drupal.org/user/53892>
 
 User module
 - Moshe Weitzman 'moshe weitzman' <http://drupal.org/user/23>
