@@ -22,12 +22,13 @@ are created automatically.
 REQUIREMENTS
 ------------
 
-Drupal requires a web server, PHP4 (4.3.5 or greater) or PHP5
-(http://www.php.net/) and either MySQL (http://www.mysql.com/) or PostgreSQL
-(http://www.postgresql.org/). The Apache web server and MySQL database are
-recommended; other web server and database combinations such as IIS and
-PostgreSQL have been tested to a lesser extent. When using MySQL, version 4.1
-or greater is recommended to assure you can safely transfer the database.
+Drupal requires a web server, PHP4 (4.3.5 or greater) or PHP5 (through 5.2.x
+only; 5.3.x and later versions are not supported) (http://php.net/) and either
+MySQL (http://www.mysql.com/) or PostgreSQL (http://www.postgresql.org/). The
+Apache web server and MySQL database are recommended; other web server and
+database combinations such as IIS and PostgreSQL have been tested to a lesser
+extent. When using MySQL, version 4.1 or greater is recommended to assure you
+can safely transfer the database.
 
 For more detailed information about Drupal requirements, see "Requirements"
 (http://drupal.org/requirements) in the Drupal Handbook.
