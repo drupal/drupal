@@ -1,5 +1,5 @@
 <?php
-// $Id: database_test.test,v 1.110 2010/12/31 20:43:43 webchick Exp $
+// $Id: database_test.test,v 1.111 2011/01/10 18:04:23 webchick Exp $
 
 /**
  * Dummy class for fetching into a class.
@@ -1687,6 +1687,9 @@ class DatabaseSelectSubqueryTestCase extends DatabaseTestCase {
 
   /**
    * Test EXISTS subquery conditionals on SELECT statements.
+   *
+   * We essentially select all rows from the {test} table that have matching
+   * rows in the {test_people} table based on the shared name column.
    */
   function testExistsSubquerySelect() {
     // Put George into {test_people}.
@@ -1703,7 +1706,7 @@ class DatabaseSelectSubqueryTestCase extends DatabaseTestCase {
     // Subquery to {test_people}.
     $subquery = db_select('test_people', 'tp')
       ->fields('tp', array('name'))
-      ->condition('name', 'George');
+      ->where('tp.name = t.name');
     $query->exists($subquery);
     $result = $query->execute();
 
@@ -1714,6 +1717,9 @@ class DatabaseSelectSubqueryTestCase extends DatabaseTestCase {
 
   /**
    * Test NOT EXISTS subquery conditionals on SELECT statements.
+   *
+   * We essentially select all rows from the {test} table that don't have
+   * matching rows in the {test_people} table based on the shared name column.
    */
   function testNotExistsSubquerySelect() {
     // Put George into {test_people}.
@@ -1731,13 +1737,12 @@ class DatabaseSelectSubqueryTestCase extends DatabaseTestCase {
     // Subquery to {test_people}.
     $subquery = db_select('test_people', 'tp')
       ->fields('tp', array('name'))
-      ->condition('name', 'George');
+      ->where('tp.name = t.name');
     $query->notExists($subquery);
-    $result = $query->execute();
 
-    // Ensure that we got the right record.
-    $record = $result->fetch();
-    $this->assertFalse($record, t('NOT EXISTS query returned no results.'));
+    // Ensure that we got the right number of records.
+    $people = $query->execute()->fetchCol();
+    $this->assertEqual(count($people), 3, t('NOT EXISTS query returned the correct results.'));
   }
 }
 
