@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.225 2011/01/04 00:58:30 webchick Exp $
+// $Id: system.api.php,v 1.226 2011/01/11 13:40:06 dries Exp $
 
 /**
  * @file
@@ -123,12 +123,15 @@ function hook_hook_info_alter(&$hooks) {
  *       build the label, a 'label callback' should be defined instead (see
  *       the 'label callback' section above for details).
  *   - bundle keys: An array describing how the Field API can extract the
- *     information it needs from the bundle objects for this type (e.g
- *     $vocabulary objects for terms; not applicable for nodes). This entry can
- *     be omitted if this type's bundles do not exist as standalone objects.
- *     Elements:
- *     - bundle: The name of the property that contains the name of the bundle
- *       object.
+ *     information it needs from the bundle objects for this type. This entry
+ *     is required if the 'path' provided in the 'bundles'/'admin' section
+ *     identifies the bundle using a named menu placeholder whose loader
+ *     callback returns an object (e.g., $vocabulary for taxonomy terms, or
+ *     $node_type for nodes). If the path does not include the bundle, or the
+ *     bundle is just a string rather than an automatically loaded object, then
+ *     this can be omitted. Elements:
+ *     - bundle: The name of the property of the bundle object that contains
+ *       the name of the bundle object.
  *   - bundles: An array describing all bundles for this object type. Keys are
  *     bundles machine names, as found in the objects' 'bundle' property
  *     (defined in the 'entity keys' entry above). Elements:
@@ -142,9 +145,9 @@ function hook_hook_info_alter(&$hooks) {
  *       Elements:
  *       - path: the path of the bundle's main administration page, as defined
  *         in hook_menu(). If the path includes a placeholder for the bundle,
- *         the 'bundle argument', 'bundle helper' and 'real path' keys below
- *         are required.
- *       - bundle argument: The position of the placeholder in 'path', if any.
+ *         the 'bundle argument' and 'real path' keys below are required.
+ *       - bundle argument: The position of the bundle placeholder in 'path', if
+ *         any.
  *       - real path: The actual path (no placeholder) of the bundle's main
  *         administration page. This will be used to generate links.
  *       - access callback: As in hook_menu(). 'user_access' will be assumed if
