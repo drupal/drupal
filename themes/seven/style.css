@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.86 2011/01/03 07:04:48 webchick Exp $ */
+/* $Id: style.css,v 1.87 2011/01/11 13:36:18 dries Exp $ */
 
 /**
  * Generic elements.
@@ -918,7 +918,7 @@ div.add-or-remove-shortcuts {
 #dashboard div.block h2 {
   margin: 0;
   font-size: 1em;
-  padding: 3px 9px 3px 19px;
+  padding: 3px 10px;
 }
 #dashboard div.block div.content {
   padding: 10px 5px 5px 5px;
