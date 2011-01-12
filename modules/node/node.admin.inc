@@ -1,5 +1,5 @@
 <?php
-// $Id: node.admin.inc,v 1.103 2010/12/09 02:16:21 dries Exp $
+// $Id: node.admin.inc,v 1.104 2011/01/12 23:09:13 dries Exp $
 
 /**
  * @file
@@ -388,9 +388,9 @@ function node_admin_nodes() {
     '#submit' => array('node_admin_nodes_submit'),
   );
 
-  // Enable language column if translation module is enabled
-  // or if we have any node with language.
-  $multilanguage = (module_exists('translation') || db_query("SELECT COUNT(*) FROM {node} WHERE language <> :language", array(':language' => LANGUAGE_NONE))->fetchField());
+  // Enable language column if translation module is enabled or if we have any
+  // node with language.
+  $multilanguage = (module_exists('translation') || db_query_range("SELECT 1 FROM {node} WHERE language <> :language", 0, 1, array(':language' => LANGUAGE_NONE))->fetchField());
 
   // Build the sortable table header.
   $header = array(
