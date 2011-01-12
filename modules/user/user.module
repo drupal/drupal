@@ -404,8 +404,6 @@ function user_load_by_name($name) {
 function user_save($account, $edit = array(), $category = 'account') {
   $transaction = db_transaction();
   try {
-    $table = drupal_get_schema('users');
-
     if (!empty($edit['pass'])) {
       // Allow alternate password hashing schemes.
       require_once DRUPAL_ROOT . '/' . variable_get('password_inc', 'includes/password.inc');
