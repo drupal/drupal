@@ -5694,13 +5694,17 @@ function drupal_render_children(&$element, $children_keys = NULL) {
 }
 
 /**
- * Render and print an element.
+ * Render an element.
  *
  * This function renders an element using drupal_render(). The top level
- * element is always rendered even if hide() had been previously used on it.
+ * element is shown with show() before rendering, so it will always be rendered
+ * even if hide() had been previously used on it.
  *
- * Any nested elements are only rendered if they haven't been rendered before
- * or if they have been re-enabled with show().
+ * @param $element
+ *   The element to be rendered.
+ *
+ * @return
+ *   The rendered element.
  *
  * @see drupal_render()
  * @see show()
@@ -5721,6 +5725,21 @@ function render(&$element) {
 /**
  * Hide an element from later rendering.
  *
+ * The first time render() or drupal_render() is called on an element tree,
+ * as each element in the tree is rendered, it is marked with a #printed flag
+ * and the rendered children of the element are cached. Subsequent calls to
+ * render() or drupal_render() will not traverse the child tree of this element
+ * again: they will just use the cached children. So if you want to hide an
+ * element, be sure to call hide() on the element before its parent tree is
+ * rendered for the first time, as it will have no effect on subsequent
+ * renderings of the parent tree.
+ *
+ * @param $element
+ *   The element to be hidden.
+ *
+ * @return
+ *   The element.
+ *
  * @see render()
  * @see show()
  */
@@ -5730,10 +5749,25 @@ function hide(&$element) {
 }
 
 /**
- * Show a hidden or already printed element from later rendering.
+ * Show a hidden element for later rendering.
  *
- * Alternatively, render($element) could be used which automatically shows the
- * element while rendering it.
+ * You can also use render($element), which shows the element while rendering
+ * it.
+ *
+ * The first time render() or drupal_render() is called on an element tree,
+ * as each element in the tree is rendered, it is marked with a #printed flag
+ * and the rendered children of the element are cached. Subsequent calls to
+ * render() or drupal_render() will not traverse the child tree of this element
+ * again: they will just use the cached children. So if you want to show an
+ * element, be sure to call show() on the element before its parent tree is
+ * rendered for the first time, as it will have no effect on subsequent
+ * renderings of the parent tree.
+ *
+ * @param $element
+ *   The element to be shown.
+ *
+ * @return
+ *   The element.
  *
  * @see render()
  * @see hide()
