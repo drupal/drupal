@@ -125,7 +125,11 @@ function aggregator_parse_feed(&$data, $feed) {
     else {
       $item['link'] = $feed->link;
     }
-    $item['guid'] = isset($item['guid']) ? $item['guid'] : '';
+
+    // Atom feeds have an ID tag instead of a GUID tag.
+    if (!isset($item['guid'])) {
+      $item['guid'] = isset($item['id']) ? $item['id'] : '';
+    }
 
     // Atom feeds have a content and/or summary tag instead of a description tag.
     if (!empty($item['content:encoded'])) {
