@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.test,v 1.47 2010/10/25 15:51:21 webchick Exp $
+// $Id: aggregator.test,v 1.48 2011/01/12 23:20:33 dries Exp $
 
 /**
  * @file
@@ -854,6 +854,7 @@ class FeedParserTestCase extends AggregatorTestCase {
     $this->assertText('Atom-Powered Robots Run Amok');
     $this->assertLinkByHref('http://example.org/2003/12/13/atom03');
     $this->assertText('Some text.');
+    $this->assertEqual('urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa6a', db_query('SELECT guid FROM {aggregator_item} WHERE link = :link', array(':link' => 'http://example.org/2003/12/13/atom03'))->fetchField(), 'Atom entry id element is parsed correctly.');
   }
 }
 
