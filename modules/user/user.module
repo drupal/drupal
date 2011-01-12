@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1229 2010/12/28 21:46:23 webchick Exp $
+// $Id: user.module,v 1.1230 2011/01/12 23:01:51 dries Exp $
 
 /**
  * @file
@@ -404,8 +404,6 @@ function user_load_by_name($name) {
 function user_save($account, $edit = array(), $category = 'account') {
   $transaction = db_transaction();
   try {
-    $table = drupal_get_schema('users');
-
     if (!empty($edit['pass'])) {
       // Allow alternate password hashing schemes.
       require_once DRUPAL_ROOT . '/' . variable_get('password_inc', 'includes/password.inc');
