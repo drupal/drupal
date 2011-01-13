@@ -275,9 +275,9 @@ function openid_begin($claimed_id, $return_to = '', $form_values = array()) {
   // user_exteral_login later.
   $_SESSION['openid']['user_login_values'] = $form_values;
 
-  // If bcmath is present, then create an association
+  // If a supported math library is present, then create an association.
   $assoc_handle = '';
-  if (function_exists('bcadd')) {
+  if (_openid_get_math_library()) {
     $assoc_handle = openid_association($service['uri']);
   }
 
@@ -540,8 +540,8 @@ function openid_association($op_endpoint) {
     $mod = OPENID_DH_DEFAULT_MOD;
     $gen = OPENID_DH_DEFAULT_GEN;
     $r = _openid_dh_rand($mod);
-    $private = bcadd($r, 1);
-    $public = bcpowmod($gen, $private, $mod);
+    $private = _openid_math_add($r, 1);
+    $public = _openid_math_powmod($gen, $private, $mod);
 
     // If there is no existing association, then request one
     $assoc_request = openid_association_request($public);
@@ -564,7 +564,7 @@ function openid_association($op_endpoint) {
     if ($assoc_response['session_type'] == 'DH-SHA1') {
       $spub = _openid_dh_base64_to_long($assoc_response['dh_server_public']);
       $enc_mac_key = base64_decode($assoc_response['enc_mac_key']);
-      $shared = bcpowmod($spub, $private, $mod);
+      $shared = _openid_math_powmod($spub, $private, $mod);
       $assoc_response['mac_key'] = base64_encode(_openid_dh_xorsecret($shared, $enc_mac_key));
     }
     db_insert('openid_association')
