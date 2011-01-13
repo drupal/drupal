@@ -103,7 +103,7 @@ Drupal 7.0, xxxx-xx-xx (development version)
       are available.
 - OpenID:
     * Added support for Gmail and Google Apps for Domain identifiers. Users can
-      now login with their user@domain.com identifier when domain.com is powered
+      now login with their user@example.com identifier when example.com is powered
       by Google.
     * Made the OpenID module more pluggable.
 - Added code registry:
