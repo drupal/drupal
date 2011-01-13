@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.admin.inc,v 1.42 2010/12/04 01:52:15 webchick Exp $
+// $Id: dblog.admin.inc,v 1.43 2011/01/13 00:41:12 dries Exp $
 
 /**
  * @file
@@ -286,7 +286,7 @@ function dblog_filter_form($form) {
     '#type' => 'fieldset',
     '#title' => t('Filter log messages'),
     '#collapsible' => TRUE,
-    '#collapsed' => empty($session),
+    '#collapsed' => empty($_SESSION['dblog_overview_filter']),
   );
   foreach ($filters as $key => $filter) {
     $form['filters']['status'][$key] = array(
