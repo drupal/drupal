@@ -189,7 +189,6 @@ function image_theme() {
         'alt' => '',
         'title' => NULL,
         'attributes' => array(),
-        'getsize' => TRUE,
       ),
     ),
 
@@ -1082,8 +1081,6 @@ function image_effect_apply($image, $effect) {
  *   - title: The title text is displayed when the image is hovered in some
  *     popular browsers.
  *   - attributes: Associative array of attributes to be placed in the img tag.
- *   - getsize: If set to TRUE, the image's dimension are fetched and added as
- *     width/height attributes.
  *
  * @ingroup themeable
  */
@@ -1091,7 +1088,6 @@ function theme_image_style($variables) {
   $style_name = $variables['style_name'];
   $path = $variables['path'];
 
-  // theme_image() can only honor the $getsize parameter with local file paths.
   // The derivative image is not created until it has been requested so the file
   // may not yet exist, in this case we just fallback to the URL.
   $style_path = image_style_path($style_name, $path);

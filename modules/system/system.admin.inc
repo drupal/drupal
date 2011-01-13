@@ -158,7 +158,6 @@ function system_themes_page() {
           'alt' => t('Screenshot for !theme theme', array('!theme' => $theme->info['name'])),
           'title' => t('Screenshot for !theme theme', array('!theme' => $theme->info['name'])),
           'attributes' => array('class' => array('screenshot')),
-          'getsize' => FALSE,
         );
         break;
       }
