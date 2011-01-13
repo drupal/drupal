@@ -286,7 +286,7 @@ function dblog_filter_form($form) {
     '#type' => 'fieldset',
     '#title' => t('Filter log messages'),
     '#collapsible' => TRUE,
-    '#collapsed' => empty($session),
+    '#collapsed' => empty($_SESSION['dblog_overview_filter']),
   );
   foreach ($filters as $key => $filter) {
     $form['filters']['status'][$key] = array(
