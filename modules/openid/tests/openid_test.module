@@ -1,5 +1,5 @@
 <?php
-// $Id: openid_test.module,v 1.17 2010/07/07 08:05:01 webchick Exp $
+// $Id: openid_test.module,v 1.18 2011/01/13 01:12:18 dries Exp $
 
 /**
  * @file
@@ -228,14 +228,14 @@ function _openid_test_endpoint_associate() {
 
   // Generate private Diffie-Helmann key.
   $r = _openid_dh_rand($mod);
-  $private = bcadd($r, 1);
+  $private = _openid_math_add($r, 1);
 
   // Calculate public Diffie-Helmann key.
-  $public = bcpowmod($gen, $private, $mod);
+  $public = _openid_math_powmod($gen, $private, $mod);
 
   // Calculate shared secret based on Relying Party's public key.
   $cpub = _openid_dh_base64_to_long($_REQUEST['openid_dh_consumer_public']);
-  $shared = bcpowmod($cpub, $private, $mod);
+  $shared = _openid_math_powmod($cpub, $private, $mod);
 
   // Encrypt the MAC key using the shared secret.
   $enc_mac_key = base64_encode(_openid_dh_xorsecret($shared, base64_decode(variable_get('mac_key'))));
