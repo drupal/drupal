@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.444 2010/09/24 00:37:41 dries Exp $
+// $Id: aggregator.module,v 1.445 2011/01/13 00:38:46 dries Exp $
 
 /**
  * @file
@@ -27,9 +27,9 @@ function aggregator_help($path, $arg) {
       $output .= '<dt>' . t('Adding, editing, and deleting feeds') . '</dt>';
       $output .= '<dd>' . t('Administrators can add, edit, and delete feeds, and choose how often to check each feed for newly updated items on the <a href="@feededit">Feed aggregator administration page</a>.', array('@feededit' => url('admin/config/services/aggregator'))) . '</dd>';
       $output .= '<dt>' . t('OPML integration') . '</dt>';
-      $output .= '<dd>' .  t('A <a href="@aggregator-opml">machine-readable OPML file</a> of all feeds is available. OPML is an XML-based file format used to share outline-structured information such as a list of RSS feeds. Feeds can also be <a href="@import-opml">imported via an OPML file</a>.', array('@aggregator-opml' => url('aggregator/opml'), '@import-opml' => url('admin/config/services/aggregator'))) . '</dd>';
+      $output .= '<dd>' . t('A <a href="@aggregator-opml">machine-readable OPML file</a> of all feeds is available. OPML is an XML-based file format used to share outline-structured information such as a list of RSS feeds. Feeds can also be <a href="@import-opml">imported via an OPML file</a>.', array('@aggregator-opml' => url('aggregator/opml'), '@import-opml' => url('admin/config/services/aggregator'))) . '</dd>';
       $output .= '<dt>' . t('Configuring cron') . '</dt>';
-      $output .= '<dd>' .  t('A correctly configured <a href="@cron">cron maintenance task</a> is required to update feeds automatically.', array('@cron' => 'http://drupal.org/cron')) . '</dd>';
+      $output .= '<dd>' . t('A correctly configured <a href="@cron">cron maintenance task</a> is required to update feeds automatically.', array('@cron' => 'http://drupal.org/cron')) . '</dd>';
       $output .= '</dl>';
       return $output;
     case 'admin/config/services/aggregator':
@@ -195,7 +195,6 @@ function aggregator_menu() {
     'title arguments' => array(2),
     'page callback' => 'aggregator_page_category',
     'page arguments' => array(2),
-    'access callback' => 'user_access',
     'access arguments' => array('access news feeds'),
     'file' => 'aggregator.pages.inc',
   );
@@ -268,7 +267,7 @@ function aggregator_menu() {
 }
 
 /**
- * Menu callback.
+ * Title callback for aggregatory category pages.
  *
  * @return
  *   An aggregator category title.
@@ -281,7 +280,8 @@ function _aggregator_category_title($category) {
  * Find out whether there are any aggregator categories.
  *
  * @return
- *   TRUE if there is at least one category and the user has access to them, FALSE otherwise.
+ *   TRUE if there is at least one category and the user has access to them, FALSE
+ *   otherwise.
  */
 function _aggregator_has_categories() {
   return user_access('access news feeds') && db_query('SELECT COUNT(*) FROM {aggregator_category}')->fetchField();
@@ -307,7 +307,7 @@ function aggregator_permission() {
  * Queues news feeds for updates once their refresh interval has elapsed.
  */
 function aggregator_cron() {
-  $result = db_query('SELECT * FROM {aggregator_feed} WHERE queued = 0 AND checked + refresh < :time AND refresh != :never', array(
+  $result = db_query('SELECT * FROM {aggregator_feed} WHERE queued = 0 AND checked + refresh < :time AND refresh <> :never', array(
     ':time' => REQUEST_TIME,
     ':never' => AGGREGATOR_CLEAR_NEVER
   ));
@@ -344,16 +344,16 @@ function aggregator_cron_queue_info() {
  * Implements hook_block_info().
  */
 function aggregator_block_info() {
-  $block = array();
+  $blocks = array();
   $result = db_query('SELECT cid, title FROM {aggregator_category} ORDER BY title');
   foreach ($result as $category) {
-    $block['category-' . $category->cid]['info'] = t('!title category latest items', array('!title' => $category->title));
+    $blocks['category-' . $category->cid]['info'] = t('!title category latest items', array('!title' => $category->title));
   }
   $result = db_query('SELECT fid, title FROM {aggregator_feed} WHERE block <> 0 ORDER BY fid');
   foreach ($result as $feed) {
-    $block['feed-' . $feed->fid]['info'] = t('!title feed latest items', array('!title' => $feed->title));
+    $blocks['feed-' . $feed->fid]['info'] = t('!title feed latest items', array('!title' => $feed->title));
   }
-  return $block;
+  return $blocks;
 }
 
 /**
@@ -367,7 +367,7 @@ function aggregator_block_configure($delta = '') {
       '#type' => 'select',
       '#title' => t('Number of news items in block'),
       '#default_value' => $value,
-      '#options' => drupal_map_assoc(array(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20))
+      '#options' => drupal_map_assoc(range(2, 20)),
     );
     return $form;
   }
@@ -720,7 +720,8 @@ function aggregator_filter_xss($value) {
 /**
  * Check and sanitize aggregator configuration.
  *
- * Goes through all fetchers, parsers and processors and checks whether they are available.
+ * Goes through all fetchers, parsers and processors and checks whether they are
+ * available.
  * If one is missing resets to standard configuration.
  *
  * @return
