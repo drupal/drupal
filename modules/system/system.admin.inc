@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.327 2011/01/04 04:02:29 webchick Exp $
+// $Id: system.admin.inc,v 1.328 2011/01/13 01:08:28 dries Exp $
 
 /**
  * @file
@@ -158,7 +158,6 @@ function system_themes_page() {
           'alt' => t('Screenshot for !theme theme', array('!theme' => $theme->info['name'])),
           'title' => t('Screenshot for !theme theme', array('!theme' => $theme->info['name'])),
           'attributes' => array('class' => array('screenshot')),
-          'getsize' => FALSE,
         );
         break;
       }

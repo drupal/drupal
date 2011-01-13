@@ -1,5 +1,5 @@
 <?php
-// $Id: image.test,v 1.31 2010/09/22 03:24:09 dries Exp $
+// $Id: image.test,v 1.32 2011/01/13 01:08:28 dries Exp $
 
 /**
  * @file
@@ -695,7 +695,6 @@ class ImageFieldDisplayTestCase extends ImageFieldTestCase {
     // image style callback paths.
     $this->drupalGet(image_style_url('thumbnail', $image_uri));
     $image_info['path'] = image_style_path('thumbnail', $image_uri);
-    $image_info['getsize'] = FALSE;
     $default_output = theme('image', $image_info);
     $this->drupalGet('node/' . $nid);
     $this->assertRaw($default_output, t('Image style thumbnail formatter displaying correctly on full node view.'));
