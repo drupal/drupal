@@ -1,5 +1,5 @@
 <?php
-// $Id: dashboard.module,v 1.41 2010/11/06 23:24:33 webchick Exp $
+// $Id: dashboard.module,v 1.42 2011/01/13 01:04:13 dries Exp $
 
 /**
  * Implements hook_help().
@@ -82,6 +82,9 @@ function dashboard_permission() {
   return array(
     'access dashboard' => array(
       'title' => t('View the administrative dashboard'),
+      // Note: We translate the 'Administer blocks' permission string here with
+      // a separate t() call, to make sure it gets the same translation as when
+      // it's in block_permission().
       'description' => t('Customizing the dashboard requires the !permission-name permission.', array(
         '!permission-name' => l(t('Administer blocks'), 'admin/people/permissions', array('fragment' => 'module-block')),
       )),
