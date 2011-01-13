@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.931 2011/01/02 23:54:05 webchick Exp $
+// $Id: comment.module,v 1.932 2011/01/13 00:43:21 dries Exp $
 
 /**
  * @file
@@ -1406,15 +1406,15 @@ function comment_user_delete($account) {
 }
 
 /**
- * This is *not* a hook_access() implementation. This function is called
- * to determine whether the current user has access to a particular comment.
+ * Determines whether the current user has access to a particular comment.
  *
  * Authenticated users can edit their comments as long they have not been
- * replied to. This prevents people from changing or revising their
- * statements based on the replies to their posts.
+ * replied to. This prevents people from changing or revising their statements
+ * based on the replies to their posts.
  *
  * @param $op
- *   The operation that is to be performed on the comment. Only 'edit' is recognized now.
+ *   The operation that is to be performed on the comment. Only 'edit' is
+ *   recognized now.
  * @param $comment
  *   The comment object.
  * @return
