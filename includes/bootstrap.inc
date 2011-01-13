@@ -1222,181 +1222,54 @@ function drupal_unpack($obj, $field = 'data') {
 /**
  * Translates a string to the current language or to a given language.
  *
- * All human-readable text that will be displayed on the site or sent to a user
- * should be passed through the t() function. This ensures that sites can be
- * fully translated into other languages.
+ * The t() function serves two purposes. First, at run-time it translates
+ * user-visible text into the appropriate language. Second, various mechanisms
+ * that figure out what text needs to be translated work off t() -- the text
+ * inside t() calls is added to the database of strings to be translated. So,
+ * to enable a fully-translatable site, it is important that all human-readable
+ * text that will be displayed on the site or sent to a user is passed through
+ * the t() function, or a related function. See the
+ * @link http://drupal.org/node/322729 Localization API @endlink pages for
+ * more information, including recommendations on how to break up or not
+ * break up strings for translation.
  *
- * Here are some examples of translating static text using t():
+ * You should never use t() to translate variables, such as calling
+ * @code t($text); @endcode, unless the text that the variable holds has been
+ * passed through t() elsewhere (e.g., $text is one of several translated
+ * literal strings in an array). It is especially important never to call
+ * @code t($user_text); @endcode, where $user_text is some text that a user
+ * entered - doing that can lead to cross-site scripting and other security
+ * problems. However, you can use variable substitution in your string, to put
+ * variable text such as user names or link URLs into translated text. Variable
+ * substitution looks like this:
  * @code
- *   if (!$info || !$info['extension']) {
- *     form_set_error('picture_upload', t('The uploaded file was not an image.'));
- *   }
- *
- *   $form['submit'] = array(
- *     '#type' => 'submit',
- *     '#value' => t('Log in'),
- *   );
+ * $text = t("@name's blog", array('@name' => format_username($account)));
  * @endcode
- *
- * In addition to translating static text, t() can handle text that should not
- * be translated or that might change from time to time (such as link paths)
- * and dynamic text from variables, using special "placeholders". There are
- * three styles of placeholders:
- * - !variable: Indicates that the text should be inserted as-is. This is
- *   useful for inserting variables into things like e-mail. Example:
- *   @code
- *     $message[] = t("If you don't want to receive such e-mails, you can change your settings at !url.", array('!url' => url("user/$account->uid", array('absolute' => TRUE))));
- *   @endcode
- * - @variable: Indicates that the text should be run through check_plain(), to
- *   escape HTML characters. Use this for any output that is displayed within a
- *   Drupal page. Example:
- *   @code
- *     drupal_set_title($title = t("@name's blog", array('@name' => format_username($account))), PASS_THROUGH);
- *   @endcode
- * - %variable: Indicates that the string should be HTML-escaped and highlighted
- *   with drupal_placeholder(), which shows up as <em>emphasized</em>.
- *   @code
- *     $message = t('%name-from sent %name-to an e-mail.', array('%name-from' => format_username($user), '%name-to' => format_username($account)));
- *   @endcode
- *
- * When using t(), try to put entire paragraphs in one t() call. This makes it
- * easier for translators, as it provides context as to what each word refers
- * to (and also allows translators to adjust word order, which may not be the
- * same in all languages). HTML markup within translation strings is allowed,
- * but should be avoided if possible. The exception is embedded links: link
- * titles add context for translators and need to be translated, so they should
- * be kept in the main string, while link URLs should be generated using
- * placeholders.
- * - Incorrect HTML in t():
- *   @code
- *     $output .= t('<p>Go to the @contact-page.</p>', array('@contact-page' => l(t('contact page'), 'contact')));
- *   @endcode
- * - Correct HTML in t():
- *   @code
- *     $output .= '<p>' . t('Go to the <a href="@contact-page">contact page</a>.', array('@contact-page' => url('contact'))) . '</p>';
- *   @endcode
- *
- * Another thing that is helpful is to avoid escaping quotation marks wherever
- * possible, because it can be confusing to translation teams.
- * - Less desirable quotation mark escaping:
- *   @code
- *     $output .= t('Don\'t click me.');
- *   @endcode
- * - Better way to use quotation marks:
- *   @code
- *     $output .= t("Don't click me.");
- *   @endcode
- *
- * It is important that all translation uses the t() mechanism, because in
- * addition to actually translating the text at run-time, the t() function is
- * also used by text-extraction routines to find text that needs to be
- * translated, and build databases of text to be translated for translation
- * teams. For that reason, you must put the actual string into the t() function,
- * in most cases, and not a variable.
- * - Incorrect use of a variable in t():
- *   @code
- *     $message = 'An error occurred.';
- *     drupal_set_message(t($message), 'error');
- *     $output .= t($message);
- *   @endcode
- * - Correct translation of a variable with t():
- *   @code
- *     $message = t('An error occurred.');
- *     drupal_set_message($message, 'error');
- *     $output .= $message;
- *   @endcode
- *
- * The only case in which variables can be passed safely through t() is when
- * code-based versions of the same strings will be passed through t() (or
- * otherwise extracted) elsewhere.
- *
- * Also, you cannot use t() early in the bootstrap process, prior to the
- * DRUPAL_BOOTSTRAP_LANGUAGE phase. The language variables will not be
- * initialized yet, so the string will not be translated into the correct
- * language. Examples of places where t() cannot be used include:
- * - In a PHP define() statement.
- * - In a hook_boot() implementation.
- *
- * In some cases, modules may include strings in code that can't use t()
- * calls. For example, a module may use an external PHP application that
- * produces strings that are loaded into variables in Drupal for output.
- * In these cases, module authors may include a dummy file that passes the
- * relevant strings through t(). This approach will allow the strings to be
- * extracted.
- *
- * Sample external (non-Drupal) code:
- * @code
- *   class Time {
- *     public $yesterday = 'Yesterday';
- *     public $today = 'Today';
- *     public $tomorrow = 'Tomorrow';
- *   }
- * @endcode
- *
- * Sample dummy file:
- * @code
- *   // Dummy function included in example.potx.inc.
- *   function example_potx() {
- *     $strings = array(
- *       t('Yesterday'),
- *       t('Today'),
- *       t('Tomorrow'),
- *     );
- *     // No return value needed, since this is a dummy function.
- *   }
- * @endcode
- *
- * Having passed strings through t() in a dummy function, it is then
- * possible to pass variables through t():
- * @code
- *   $time = new Time();
- *   $output .= t($time->today);
- * @endcode
- *
- * However tempting it is, custom data from user input or other non-code
- * sources should not be passed through t(). Doing so leads to the following
- * problems and errors:
- *  - The t() system doesn't support updates to existing strings. When user
- *    data is updated, the next time it's passed through t(), a new record is
- *    created instead of an update. The database bloats over time and any
- *    existing translations are orphaned with each update.
- *  - The t() system assumes any data it receives is in English. User data may
- *    be in another language, producing translation errors.
- *  - The "Built-in interface" text group in the locale system is used to
- *    produce translations for storage in .po files. When non-code strings are
- *    passed through t(), they are added to this text group, which is rendered
- *    inaccurate since it is a mix of actual interface strings and various user
- *    input strings of uncertain origin.
- * Instead, translation of these data can be done through the locale system,
- * either directly through hook_local() or through helper functions provided by
- * contributed modules.
- *
- * Incorrect:
- * @code
- *   $item = item_load();
- *   $output .= check_plain(t($item['title']));
- * @endcode
- *
- * During installation, st() is used in place of t(). Code that may be called
- * during installation or during normal operation should use the get_t()
- * helper function.
+ * Basically, you can put variables like @name into your string, and t() will
+ * substitute their sanitized values at translation time (see $args below or
+ * the Localization API pages referenced above for details). Translators can
+ * then rearrange the string as necessary for the language (e.g., in Spanish,
+ * it might be "blog de @name").
  *
  * @param $string
  *   A string containing the English string to translate.
  * @param $args
- *   An associative array of replacements to make after translation. Incidences
- *   of any key in this array are replaced with the corresponding value. Based
- *   on the first character of the key, the value is escaped and/or themed:
- *    - !variable: inserted as is
- *    - @variable: escape plain text to HTML (using check_plain())
- *    - %variable: escape text and theme as a placeholder for user-submitted
- *      content (using check_plain() + drupal_placeholder())
+ *   An associative array of replacements to make after translation.
+ *   Occurrences in $string of any key in $args are replaced with the
+ *   corresponding value, after sanitization. The sanitization function depends
+ *   on the first character of the key:
+ *   - !variable: Inserted as is. Use this for text that has already been
+ *     sanitized.
+ *   - @variable: Escaped to HTML using check_plain(). Use this for anything
+ *     displayed on a page on the site.
+ *   - %variable: Escaped as a placeholder for user-submitted content using
+ *     drupal_placeholder(), which shows up as <em>emphasized</em> text.
  * @param $options
- *   An associative array of additional options, with the following keys:
- *     - 'langcode' (defaults to the current language) The language code to
- *       translate to a language other than what is used to display the page.
- *     - 'context' (defaults to the empty context) The context the source string
- *       belongs to.
+ *   An associative array of additional options, with the following elements:
+ *   - 'langcode' (defaults to the current language): The language code to
+ *     translate to a language other than what is used to display the page.
+ *   - 'context' (defaults to the empty context): The context the source string
+ *     belongs to.
  *
  * @return
  *   The translated string.
