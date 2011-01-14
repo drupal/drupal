@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.test,v 1.82 2010/12/01 00:00:21 webchick Exp $
+// $Id: filter.test,v 1.83 2011/01/14 08:33:46 webchick Exp $
 
 /**
  * Tests for text format and filter CRUD operations.
@@ -1176,10 +1176,11 @@ person@example.com or mailto:person2@example.com
         '<a href="mailto:person@example.com">person@example.com</a>' => TRUE,
         '<a href="mailto:person2@example.com">mailto:person2@example.com</a>' => TRUE,
       ),
-      // URI parts.
+      // URI parts and special characters.
       '
 http://trailingslash.com/ or www.trailingslash.com/
 http://host.com/some/path?query=foo&bar[baz]=beer#fragment or www.host.com/some/path?query=foo&bar[baz]=beer#fragment
+http://twitter.com/#!/example/status/22376963142324226
 ftp://user:pass@ftp.example.com/~home/dir1
 sftp://user@nonstandardport:222/dir
 ssh://192.168.0.100/srv/git/drupal.git
@@ -1188,6 +1189,7 @@ ssh://192.168.0.100/srv/git/drupal.git
         '<a href="http://www.trailingslash.com/">www.trailingslash.com/</a>' => TRUE,
         '<a href="http://host.com/some/path?query=foo&amp;bar[baz]=beer#fragment">http://host.com/some/path?query=foo&amp;bar[baz]=beer#fragment</a>' => TRUE,
         '<a href="http://www.host.com/some/path?query=foo&amp;bar[baz]=beer#fragment">www.host.com/some/path?query=foo&amp;bar[baz]=beer#fragment</a>' => TRUE,
+        '<a href="http://twitter.com/#!/example/status/22376963142324226">http://twitter.com/#!/example/status/22376963142324226</a>' => TRUE,
         '<a href="ftp://user:pass@ftp.example.com/~home/dir1">ftp://user:pass@ftp.example.com/~home/dir1</a>' => TRUE,
         '<a href="sftp://user@nonstandardport:222/dir">sftp://user@nonstandardport:222/dir</a>' => TRUE,
         '<a href="ssh://192.168.0.100/srv/git/drupal.git">ssh://192.168.0.100/srv/git/drupal.git</a>' => TRUE,
