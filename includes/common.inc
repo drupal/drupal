@@ -3543,7 +3543,7 @@ function drupal_load_stylesheet_content($contents, $optimize = FALSE) {
     // There are different conditions for removing leading and trailing
     // whitespace.
     // @see http://php.net/manual/en/regexp.reference.subpatterns.php
-    $contents = preg_replace_callback('<
+    $contents = preg_replace('<
       # Strip leading and trailing whitespace.
         \s*([@{};,])\s*
       # Strip only leading whitespace from:
@@ -3554,7 +3554,10 @@ function drupal_load_stylesheet_content($contents, $optimize = FALSE) {
       # - Colon: Retain :pseudo-selectors.
       | ([\(:])\s+
     >xS',
-      '_drupal_load_stylesheet_content',
+      // Only one of the three capturing groups will match, so its reference
+      // will contain the wanted value and the references for the
+      // two non-matching groups will be replaced with empty strings.
+      '$1$2$3',
       $contents
     );
     // End the file with a new line.
@@ -3566,16 +3569,6 @@ function drupal_load_stylesheet_content($contents, $optimize = FALSE) {
   // This happens recursively but omits external files.
   $contents = preg_replace_callback('/@import\s*(?:url\(\s*)?[\'"]?(?![a-z]+:)([^\'"\()]+)[\'"]?\s*\)?\s*;/', '_drupal_load_stylesheet', $contents);
   return $contents;
-}
-
-/**
- * Helper for drupal_load_stylesheet_content().
- */
-function _drupal_load_stylesheet_content($matches) {
-  // Discard the full match.
-  unset($matches[0]);
-  // Use the non-empty match.
-  return current(array_filter($matches));
 }
 
 /**
