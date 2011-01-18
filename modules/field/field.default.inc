@@ -135,7 +135,7 @@ function field_default_insert($entity_type, $entity, $field, $instance, $langcod
  *   - the name of a view mode
  *   - or an array of display settings to use for display, as found in the
  *     'display' entry of $instance definitions.
-*/
+ */
 function field_default_prepare_view($entity_type, $entities, $field, $instances, $langcode, &$items, $display) {
   // Group entities, instances and items by formatter module.
   $modules = array();

@@ -288,7 +288,7 @@ function field_test_field_storage_query($field_id, $conditions, $count, &$cursor
           case '<=':
           case '>':
           case '>=':
-            eval('$match = $match && '. $row->{$column} . ' ' . $operator . ' '. $value);
+            eval('$match = $match && ' . $row->{$column} . ' ' . $operator . ' '. $value);
             break;
           case 'IN':
             $match = $match && in_array($row->{$column}, $value);

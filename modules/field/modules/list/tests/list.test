@@ -98,8 +98,8 @@ class ListFieldTestCase extends FieldTestCase {
 }
 
 /**
-* List module UI tests.
-*/
+ * List module UI tests.
+ */
 class ListFieldUITestCase extends FieldTestCase {
   public static function getInfo() {
     return array(
