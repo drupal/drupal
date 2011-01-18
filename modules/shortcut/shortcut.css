@@ -16,13 +16,13 @@ div#toolbar div.toolbar-shortcuts ul {
   padding: 5px 0 2px 0;
   height: 28px;
   line-height: 24px;
-  float: left;
-  margin-left:5px;
+  float: left; /* LTR */
+  margin-left:5px; /* LTR */
 }
 
 div#toolbar div.toolbar-shortcuts ul li a {
   padding: 0 5px 0 5px;
-  margin-right: 5px;
+  margin-right: 5px; /* LTR */
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
   border-radius: 5px;
@@ -40,11 +40,11 @@ div#toolbar div.toolbar-shortcuts ul li a.active {
 }
 
 div#toolbar div.toolbar-shortcuts span.icon {
-  float: left;
+  float: left; /* LTR */
   background: #444;
   width: 30px;
   height: 30px;
-  margin-right: 5px;
+  margin-right: 5px; /* LTR */
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
   border-radius: 5px;
@@ -88,14 +88,12 @@ div.add-or-remove-shortcuts a:hover span.text {
   color: #fff;
   background-color: #5f605b;
   display: block;
-  padding-right: 6px;
+  padding-right: 6px; /* LTR */
   cursor: pointer;
-  -moz-border-radius-bottomright: 5px;
-  -moz-border-radius-topright: 5px;
-  -webkit-border-bottom-right-radius: 5px;
-  -webkit-border-top-right-radius: 5px;
-  border-bottom-right-radius: 5px;
-  border-top-right-radius: 5px;
+  -moz-border-radius: 0 5px 5px 0; /* LTR */
+  -webkit-border-top-right-radius: 5px; /* LTR */
+  -webkit-border-bottom-right-radius: 5px; /* LTR */
+  border-radius: 0 5px 5px 0; /* LTR */
 }
 
 #shortcut-set-switch .form-type-radios {
@@ -105,5 +103,5 @@ div.add-or-remove-shortcuts a:hover span.text {
 
 #shortcut-set-switch .form-item-new {
   padding-top: 0;
-  padding-left: 17px;
+  padding-left: 17px; /* LTR */
 }
