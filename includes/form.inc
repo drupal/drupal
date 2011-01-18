@@ -2492,7 +2492,7 @@ function form_process_select($element) {
     if (($required && !isset($element['#default_value'])) || isset($element['#empty_value']) || isset($element['#empty_option'])) {
       $element += array(
         '#empty_value' => '',
-        '#empty_option' => $required ? t('- Select - ') : t('- None -'),
+        '#empty_option' => $required ? t('- Select -') : t('- None -'),
       );
       // The empty option is prepended to #options and purposively not merged
       // to prevent another option in #options mistakenly using the same value
