@@ -754,17 +754,20 @@ function node_type_cache_reset() {
 }
 
 /**
- * Set the default values for a node type.
+ * Sets the default values for a node type.
  *
- * The defaults are for a type defined through hook_node_info().
- * When populating a custom node type $info should have the 'custom'
- * key set to 1.
+ * The defaults are appropriate for a type defined through hook_node_info(),
+ * since 'custom' is TRUE for types defined in the user interface, and FALSE
+ * for types defined by modules. (The 'custom' flag prevents types from being
+ * deleted through the user interface.) Also, the default for 'locked' is TRUE,
+ * which prevents users from changing the machine name of the type.
  *
  * @param $info
- *   An object or array containing values to override the defaults.
+ *   An object or array containing values to override the defaults. See
+ *   hook_node_info() for details on what the array elements mean.
  *
  * @return
- *   A node type object.
+ *   A node type object, with missing values in $info set to their defaults.
  */
 function node_type_set_defaults($info = array()) {
   $info = (array) $info;
