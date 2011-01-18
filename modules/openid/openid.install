@@ -96,7 +96,7 @@ function openid_requirements($phase) {
       $requirements['openid_math'] = array(
         'value' => t('Not installed'),
         'severity' => REQUIREMENT_ERROR,
-        'description' => t('OpenID suggest the use of either the the <a href="@gmp">GMP Math</a> (recommended for performance) or <a href="@bc">BC Math</a> libraries to enable OpenID associations.', array('@gmp' => 'http://php.net/manual/en/book.gmp.php', '@bc' => 'http://www.php.net/manual/en/book.bc.php')),
+        'description' => t('OpenID suggests the use of either the <a href="@gmp">GMP Math</a> (recommended for performance) or <a href="@bc">BC Math</a> libraries to enable OpenID associations.', array('@gmp' => 'http://php.net/manual/en/book.gmp.php', '@bc' => 'http://www.php.net/manual/en/book.bc.php')),
       );
     }
     elseif (!function_exists('gmp_add')) {
