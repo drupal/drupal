@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.625 2011/01/03 18:03:54 webchick Exp $
+// $Id: taxonomy.module,v 1.626 2011/01/18 18:48:59 dries Exp $
 
 /**
  * @file
@@ -1467,11 +1467,12 @@ function taxonomy_field_formatter_prepare_view($entity_type, $entities, $field, 
  *
  * @param $term
  *   A term object.
+ *
  * @return
  *   The term name to be used as the page title.
  */
 function taxonomy_term_title($term) {
-  return check_plain($term->name);
+  return $term->name;
 }
 
 /**
