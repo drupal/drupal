@@ -1467,11 +1467,12 @@ function taxonomy_field_formatter_prepare_view($entity_type, $entities, $field, 
  *
  * @param $term
  *   A term object.
+ *
  * @return
  *   The term name to be used as the page title.
  */
 function taxonomy_term_title($term) {
-  return check_plain($term->name);
+  return $term->name;
 }
 
 /**
