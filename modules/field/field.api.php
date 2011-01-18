@@ -1,5 +1,5 @@
 <?php
-// $Id: field.api.php,v 1.101 2010/12/14 19:50:05 dries Exp $
+// $Id: field.api.php,v 1.102 2011/01/18 18:11:30 dries Exp $
 
 /**
  * @ingroup field_fieldable_type
@@ -2416,7 +2416,7 @@ function hook_field_delete_instance($instance) {
  * @param $field
  *   The field record just read from the database.
  */
-function hook_field_read_field(&$field) {
+function hook_field_read_field($field) {
   // @todo Needs function body.
 }
 
