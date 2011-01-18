@@ -1,5 +1,5 @@
 <?php
-// $Id: field.api.php,v 1.102 2011/01/18 18:11:30 dries Exp $
+// $Id: field.api.php,v 1.103 2011/01/18 18:25:17 dries Exp $
 
 /**
  * @ingroup field_fieldable_type
@@ -1271,7 +1271,7 @@ function hook_field_attach_delete_revision($entity_type, $entity) {
  */
 function hook_field_attach_purge($entity_type, $entity, $field, $instance) {
   // find the corresponding data in mymodule and purge it
-  if($entity_type == 'node' && $field->field_name == 'my_field_name') {
+  if ($entity_type == 'node' && $field->field_name == 'my_field_name') {
     mymodule_remove_mydata($entity->nid);
   }
 }

@@ -1,5 +1,5 @@
 <?php
-// $Id: field.default.inc,v 1.41 2010/11/21 19:09:18 dries Exp $
+// $Id: field.default.inc,v 1.42 2011/01/18 18:25:17 dries Exp $
 
 /**
  * @file
@@ -135,7 +135,7 @@ function field_default_insert($entity_type, $entity, $field, $instance, $langcod
  *   - the name of a view mode
  *   - or an array of display settings to use for display, as found in the
  *     'display' entry of $instance definitions.
-*/
+ */
 function field_default_prepare_view($entity_type, $entities, $field, $instances, $langcode, &$items, $display) {
   // Group entities, instances and items by formatter module.
   $modules = array();
