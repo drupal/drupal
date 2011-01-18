@@ -2416,7 +2416,7 @@ function hook_field_delete_instance($instance) {
  * @param $field
  *   The field record just read from the database.
  */
-function hook_field_read_field(&$field) {
+function hook_field_read_field($field) {
   // @todo Needs function body.
 }
 
