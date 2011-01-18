@@ -1,4 +1,4 @@
-/* $Id: toolbar.css,v 1.27 2011/01/03 07:04:48 webchick Exp $ */
+/* $Id: toolbar.css,v 1.28 2011/01/18 18:20:54 dries Exp $ */
 
 body.toolbar {
   padding-top: 2.2em;
@@ -21,7 +21,7 @@ body.toolbar-drawer {
   font-size: 100%;
   vertical-align: baseline;
   line-height: inherit;
-  text-align: left;
+  text-align: left; /* LTR */
   list-style: none;
 }
 
@@ -62,7 +62,7 @@ body.toolbar-drawer {
 
 #toolbar ul li,
 #toolbar ul li a {
-  float: left;
+  float: left; /* LTR */
 }
 
 /**
@@ -71,7 +71,7 @@ body.toolbar-drawer {
 #toolbar div.toolbar-menu {
   background: #000;
   line-height: 20px;
-  padding: 5px 50px 5px 10px;
+  padding: 5px 50px 5px 10px; /* LTR */
   position: relative;
 }
 
@@ -86,16 +86,16 @@ body.toolbar-drawer {
 }
 
 #toolbar-user {
-  float: right;
+  float: right; /* LTR */
 }
 
 #toolbar-menu {
-  float: left;
+  float: left; /* LTR */
 }
 
 #toolbar div.toolbar-menu a.toggle {
   position: absolute;
-  right: 10px;
+  right: 10px; /* LTR */
   bottom: 0;
   cursor: pointer;
   background: url(toolbar.png) 0 -20px no-repeat;
