@@ -860,7 +860,7 @@ function ajax_command_prepend($selector, $html, $settings = NULL) {
  * Creates a Drupal AJAX 'insert/append' command.
  *
  * The 'insert/append' command instructs the client to use jQuery's append()
- * method to append the given HTML content to the inside each element matched
+ * method to append the given HTML content to the inside of each element matched
  * by the given selector.
  *
  * This command is implemented by Drupal.ajax.prototype.commands.insert()
