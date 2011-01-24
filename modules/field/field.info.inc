@@ -793,7 +793,7 @@ function field_info_max_weight($entity_type, $bundle, $context) {
     if ($context == 'form') {
       $weights[] = $instance['widget']['weight'];
     }
-    else {
+    elseif (isset($instance['display'][$context]['weight'])) {
       $weights[] = $instance['display'][$context]['weight'];
     }
   }
