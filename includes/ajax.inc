@@ -1,5 +1,5 @@
 <?php
-// $Id: ajax.inc,v 1.42 2011/01/02 17:26:39 webchick Exp $
+// $Id: ajax.inc,v 1.43 2011/01/24 12:56:06 dries Exp $
 
 /**
  * @file
@@ -860,7 +860,7 @@ function ajax_command_prepend($selector, $html, $settings = NULL) {
  * Creates a Drupal AJAX 'insert/append' command.
  *
  * The 'insert/append' command instructs the client to use jQuery's append()
- * method to append the given HTML content to the inside each element matched
+ * method to append the given HTML content to the inside of each element matched
  * by the given selector.
  *
  * This command is implemented by Drupal.ajax.prototype.commands.insert()
