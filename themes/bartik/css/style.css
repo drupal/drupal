@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.53 2011/01/04 06:23:29 dries Exp $ */
+/* $Id: style.css,v 1.54 2011/01/24 12:54:29 dries Exp $ */
 
 /* ---------- Overall Specifications ---------- */
 
@@ -1136,7 +1136,7 @@ fieldset {
 .fieldset-wrapper {
   margin-top: 25px;
 }
-.node-form .fieldset-wrapper {
+.vertical-tabs .fieldset-wrapper {
   margin-top: 0;
 }
 .filter-wrapper {
