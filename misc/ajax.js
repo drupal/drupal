@@ -318,20 +318,38 @@ Drupal.ajax.prototype.beforeSubmit = function (form_values, element, options) {
  * Prepare the AJAX request before it is sent.
  */
 Drupal.ajax.prototype.beforeSend = function (xmlhttprequest, options) {
+  // For forms without file inputs, the jQuery Form plugin serializes the form
+  // values, and then calls jQuery's $.ajax() function, which invokes this
+  // handler. In this circumstance, options.extraData is never used. For forms
+  // with file inputs, the jQuery Form plugin uses the browser's normal form
+  // submission mechanism, but captures the response in a hidden IFRAME. In this
+  // circumstance, it calls this handler first, and then appends hidden fields
+  // to the form to submit the values in options.extraData. There is no simple
+  // way to know which submission mechanism will be used, so we add to extraData
+  // regardless, and allow it to be ignored in the former case.
+  if (this.form) {
+    options.extraData = options.extraData || {};
+
+    // Let the server know when the IFRAME submission mechanism is used. The
+    // server can use this information to wrap the JSON response in a TEXTAREA,
+    // as per http://jquery.malsup.com/form/#file-upload.
+    options.extraData.ajax_iframe_upload = '1';
+
+    // The triggering element is about to be disabled (see below), but if it
+    // contains a value (e.g., a checkbox, textfield, select, etc.), ensure that
+    // value is included in the submission. As per above, submissions that use
+    // $.ajax() are already serialized prior to the element being disabled, so
+    // this is only needed for IFRAME submissions.
+    var v = $.fieldValue(this.element);
+    if (v !== null) {
+      options.extraData[this.element.name] = v;
+    }
+  }
+
   // Disable the element that received the change to prevent user interface
   // interaction while the AJAX request is in progress. ajax.ajaxing prevents
   // the element from triggering a new request, but does not prevent the user
   // from changing its value.
-  // Forms without file inputs are already serialized before this function is
-  // called. Forms with file inputs use an IFRAME to perform a POST request
-  // similar to a browser, so disabled elements are not contained in the
-  // submitted values. Therefore, we manually add the element's value to
-  // options.extraData.
-  var v = $.fieldValue(this.element);
-  if (v !== null) {
-    options.extraData = options.extraData || {};
-    options.extraData[this.element.name] = v;
-  }
   $(this.element).addClass('progress-disabled').attr('disabled', true);
 
   // Insert progressbar or throbber.
