@@ -350,16 +350,17 @@ function aggregator_form_opml_submit($form, &$form_state) {
 /**
  * Parse an OPML file.
  *
- * Feeds are recognized as <outline> elements with the attributes
- * <em>text</em> and <em>xmlurl</em> set.
+ * Feeds are recognized as <outline> elements with the attributes "text" and
+ * "xmlurl" set.
  *
  * @param $opml
  *   The complete contents of an OPML document.
+ *
  * @return
- *   An array of feeds, each an associative array with a <em>title</em> and
- *   a <em>url</em> element, or NULL if the OPML document failed to be parsed.
- *   An empty array will be returned if the document is valid but contains
- *   no feeds, as some OPML documents do.
+ *   An array of feeds, each an associative array with a "title" and a "url"
+ *   element, or NULL if the OPML document failed to be parsed. An empty
+ *   array will be returned if the document is valid but contains no feeds, as
+ *   some OPML documents do.
  */
 function _aggregator_parse_opml($opml) {
   $feeds = array();
