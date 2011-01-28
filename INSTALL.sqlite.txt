@@ -3,18 +3,18 @@
 SQLITE REQUIREMENTS
 -------------------
 
-To use SQLite with your Drupal installation, the following requirements must
-be met: server has PHP 5.2 or later with PDO, and the PDO SQLite driver must
-be enabled.
+To use SQLite with your Drupal installation, the following requirements must be
+met: Server has PHP 5.2 or later with PDO, and the PDO SQLite driver must be
+enabled.
 
 SQLITE DATABASE CREATION
 ------------------------
 
 The Drupal installer will create the SQLite database for you. The only
-requirement is the installer must have write permissions the directory where
-the database file resides. This directory (not just the database file) also has
-to remain writeable by the web server going forward for SQLite to continue to be
-able to operate.
+requirement is that the installer must have write permissions to the directory
+where the database file resides. This directory (not just the database file) also
+has to remain writeable by the web server going forward for SQLite to continue to
+be able to operate.
 
 On the "Database configuration" form in the "Database file" field, you must
 supply the exact path to where you wish your database file to reside. It is
