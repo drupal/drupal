@@ -1,10 +1,10 @@
-/* $Id: vertical-tabs.css,v 1.10 2010/11/19 20:45:04 dries Exp $ */
+/* $Id: vertical-tabs.css,v 1.11 2011/01/28 07:17:18 webchick Exp $ */
 
 /**
  * Override of misc/vertical-tabs.css.
  */
 div.vertical-tabs {
-  background: #fff url(images/fc.png) repeat-y 0 0;
+  background: #fff url(images/fc.png) repeat-y 0 0; /* LTR */
   border: 1px solid #ccc;
   margin: 10px 0;
   position: relative;
@@ -16,10 +16,10 @@ div.vertical-tabs fieldset {
 }
 div.vertical-tabs .vertical-tabs-list {
   border-bottom: 1px solid #ccc;
-  float: left;
+  float: left; /* LTR */
   font-size: 1em;
   line-height: 1;
-  margin: 0 -100% -1px 0;
+  margin: 0 -100% -1px 0; /* LTR */
   padding: 0;
   width: 240px;
 }
@@ -56,7 +56,7 @@ div.vertical-tabs ul li.selected a:hover,
 div.vertical-tabs ul li.selected a:focus,
 div.vertical-tabs ul li.selected a:active {
   background: #fff;
-  border-right-color: #fff;
+  border-right-color: #fff; /* LTR */
   border-top: 1px solid #ccc;
 }
 div.vertical-tabs ul li.first.selected a,
@@ -67,12 +67,28 @@ div.vertical-tabs ul li.selected a:focus strong {
   text-decoration: underline;
 }
 div.vertical-tabs .vertical-tabs-panes {
-  margin: 0 0 0 265px;
-  padding: 10px 15px 10px 0;
+  margin: 0 0 0 265px; /* LTR */
+  padding: 10px 15px 10px 0; /* LTR */
 }
 div.vertical-tabs .vertical-tabs-panes legend {
   display: none;
 }
 .vertical-tabs-pane .fieldset-wrapper > div:first-child {
   padding-top: 5px;
+}
+
+/**
+ * Prevent text inputs from overflowing when container is too narrow. "width" is
+ * applied to override hardcoded cols or size attributes and used in conjunction
+ * with "box-sizing" to prevent box model issues from occurring in most browsers.
+*/
+.vertical-tabs .form-type-textfield input {
+  width: 100%;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+* html .vertical-tabs .form-type-textfield,
+* html .vertical-tabs .form-textarea-wrapper {
+  width: 95%; /* IE6 */
 }
