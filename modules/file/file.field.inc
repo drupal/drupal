@@ -1,5 +1,5 @@
 <?php
-// $Id: file.field.inc,v 1.42 2010/12/24 15:25:28 webchick Exp $
+// $Id: file.field.inc,v 1.43 2011/01/28 06:44:56 webchick Exp $
 
 /**
  * @file
@@ -203,9 +203,9 @@ function file_field_prepare_view($entity_type, $entities, $field, $instances, $l
       if (!file_field_displayed($item, $field)) {
         unset($items[$id][$delta]);
       }
-      // Ensure consecutive deltas.
-      $items[$id] = array_values($items[$id]);
     }
+    // Ensure consecutive deltas.
+    $items[$id] = array_values($items[$id]);
   }
 }
 
