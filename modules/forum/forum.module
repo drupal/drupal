@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.582 2010/11/29 04:53:32 webchick Exp $
+// $Id: forum.module,v 1.583 2011/01/28 08:02:37 webchick Exp $
 
 /**
  * @file
@@ -611,7 +611,7 @@ function forum_form_alter(&$form, $form_state, $form_id) {
       // ID from the URL (e.g., if we are on a page like node/add/forum/2, we
       // expect "2" to be the ID of the forum that was requested).
       $requested_forum_id = arg(3);
-      $form['taxonomy_forums'][$langcode]['#default_value'] = is_numeric($requested_forum_id) ? $requested_forum_id : NULL;
+      $form['taxonomy_forums'][$langcode]['#default_value'] = is_numeric($requested_forum_id) ? $requested_forum_id : '';
     }
   }
 }
