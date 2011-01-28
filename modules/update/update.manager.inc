@@ -1,5 +1,5 @@
 <?php
-// $Id: update.manager.inc,v 1.34 2011/01/03 02:53:07 webchick Exp $
+// $Id: update.manager.inc,v 1.35 2011/01/28 07:20:50 webchick Exp $
 
 /**
  * @file
@@ -644,8 +644,11 @@ function update_manager_install_form_submit($form, &$form_state) {
     form_set_error($field, t('Provided archive contains no files.'));
     return;
   }
-  // Unfortunately, we can only use the directory name for this. :(
-  $project = drupal_substr($files[0], 0, -1);
+
+  // Unfortunately, we can only use the directory name to determine the project
+  // name. Some archivers list the first file as the directory (i.e., MODULE/)
+  // and others list an actual file (i.e., MODULE/README.TXT).
+  $project = strtok($files[0], '/\\');
 
   $archive_errors = update_manager_archive_verify($project, $local_cache, $directory);
   if (!empty($archive_errors)) {
@@ -771,8 +774,12 @@ function update_manager_archive_extract($file, $directory) {
   // old files mixed with the new files (e.g. in cases where files were removed
   // from a later release).
   $files = $archiver->listContents();
-  // Unfortunately, we can only use the directory name for this. :(
-  $project = drupal_substr($files[0], 0, -1);
+
+  // Unfortunately, we can only use the directory name to determine the project
+  // name. Some archivers list the first file as the directory (i.e., MODULE/)
+  // and others list an actual file (i.e., MODULE/README.TXT).
+  $project = strtok($files[0], '/\\');
+
   $extract_location = $directory . '/' . $project;
   if (file_exists($extract_location)) {
     file_unmanaged_delete_recursive($extract_location);
