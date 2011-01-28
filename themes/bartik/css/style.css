@@ -159,7 +159,7 @@ blockquote:after {
   line-height: 0.1em;
   vertical-align: -.45em;
 }
-blockquote :first-child {
+blockquote > p:first-child {
   display: inline;
 }
 a.feed-icon {
