@@ -1,0 +1,14 @@
+/* $Id: system.messages-rtl.css,v 1.1 2011/01/28 07:08:47 webchick Exp $ */
+
+/**
+ * @file
+ * RTL Styles for system messages.
+ */
+
+div.messages {
+  background-position: 99% 8px;
+  padding: 10px 50px 10px 10px;
+}
+div.messages ul {
+  margin: 0 1em 0 0;
+}
