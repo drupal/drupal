@@ -1,5 +1,5 @@
 <?php
-// $Id: book.test,v 1.28 2010/10/18 05:53:34 webchick Exp $
+// $Id: book.test,v 1.29 2011/01/28 08:04:59 webchick Exp $
 
 class BookTestCase extends DrupalWebTestCase {
   protected $book;
@@ -236,6 +236,10 @@ class BookTestCase extends DrupalWebTestCase {
     // Make sure we can't export an unsupported format.
     $this->drupalGet('book/export/foobar/' . $this->book->nid);
     $this->assertResponse('404', t('Unsupported export format returned "not found".'));
+
+    // Make sure we get a 404 on a not existing book node.
+    $this->drupalGet('book/export/html/123');
+    $this->assertResponse('404', t('Not existing book node returned "not found".'));
 
     // Make sure an anonymous user cannot view printer-friendly version.
     $this->drupalLogout();
