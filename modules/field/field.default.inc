@@ -1,5 +1,5 @@
 <?php
-// $Id: field.default.inc,v 1.42 2011/01/18 18:25:17 dries Exp $
+// $Id: field.default.inc,v 1.43 2011/01/28 07:38:46 webchick Exp $
 
 /**
  * @file
@@ -142,14 +142,18 @@ function field_default_prepare_view($entity_type, $entities, $field, $instances,
   foreach ($instances as $id => $instance) {
     if (is_string($display)) {
       $view_mode = $display;
-      $display = field_get_display($instance, $view_mode, $entities[$id]);
+      $instance_display = field_get_display($instance, $view_mode, $entities[$id]);
     }
-    if ($display['type'] !== 'hidden') {
-      $module = $display['module'];
+    else {
+      $instance_display = $display;
+    }
+
+    if ($instance_display['type'] !== 'hidden') {
+      $module = $instance_display['module'];
       $modules[$module] = $module;
       $grouped_entities[$module][$id] = $entities[$id];
       $grouped_instances[$module][$id] = $instance;
-      $grouped_displays[$module][$id] = $display;
+      $grouped_displays[$module][$id] = $instance_display;
       // hook_field_formatter_prepare_view() alters $items by reference.
       $grouped_items[$module][$id] = &$items[$id];
     }
