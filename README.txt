@@ -25,14 +25,14 @@ Legal information about Drupal:
 CONFIGURATION AND FEATURES
 --------------------------
 
-Drupal core (what you get when you download and unzip a drupal-x.y.tar.gz file
-from http://drupal.org/project/drupal) has what you need to get started with
-your website. It includes several modules (extensions that add functionality)
-for common website features, such as managing content, user accounts, image
-uploading, and search. Core comes with many options that allow site-specific
-configuration. In addition to the core modules, there are thousands of
-contributed modules (for functionality not included with Drupal core)
-available for download.
+Drupal core (what you get when you download and extract a drupal-x.y.tar.gz or
+drupal-x.y.zip file from http://drupal.org/project/drupal) has what you need to
+get started with your website. It includes several modules (extensions that add
+functionality) for common website features, such as managing content, user
+accounts, image uploading, and search. Core comes with many options that allow
+site-specific configuration. In addition to the core modules, there are
+thousands of contributed modules (for functionality not included with Drupal
+core) available for download.
 
 More about configuration:
  * Install, upgrade, and maintain Drupal:
@@ -49,8 +49,8 @@ APPEARANCE
 
 In Drupal, the appearance of your site is set by the theme (themes are
 extensions that set fonts, colors, and layout). Drupal core comes with several
-themes. More themes are available for download, and you can also create your
-own custom theme.
+themes. More themes are available for download, and you can also create your own
+custom theme.
 
 More about themes:
  * Download contributed themes to sites/all/themes to modify Drupal's
