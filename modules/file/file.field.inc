@@ -203,9 +203,9 @@ function file_field_prepare_view($entity_type, $entities, $field, $instances, $l
       if (!file_field_displayed($item, $field)) {
         unset($items[$id][$delta]);
       }
-      // Ensure consecutive deltas.
-      $items[$id] = array_values($items[$id]);
     }
+    // Ensure consecutive deltas.
+    $items[$id] = array_values($items[$id]);
   }
 }
 
