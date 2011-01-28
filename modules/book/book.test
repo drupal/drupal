@@ -237,6 +237,10 @@ class BookTestCase extends DrupalWebTestCase {
     $this->drupalGet('book/export/foobar/' . $this->book->nid);
     $this->assertResponse('404', t('Unsupported export format returned "not found".'));
 
+    // Make sure we get a 404 on a not existing book node.
+    $this->drupalGet('book/export/html/123');
+    $this->assertResponse('404', t('Not existing book node returned "not found".'));
+
     // Make sure an anonymous user cannot view printer-friendly version.
     $this->drupalLogout();
 
