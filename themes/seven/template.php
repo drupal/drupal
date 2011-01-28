@@ -104,6 +104,9 @@ function seven_css_alter(&$css) {
   if (isset($css['misc/vertical-tabs.css'])) {
     $css['misc/vertical-tabs.css']['data'] = drupal_get_path('theme', 'seven') . '/vertical-tabs.css';
   }
+  if (isset($css['misc/vertical-tabs-rtl.css'])) {
+    $css['misc/vertical-tabs-rtl.css']['data'] = drupal_get_path('theme', 'seven') . '/vertical-tabs-rtl.css';
+  }
   // Use Seven's jQuery UI theme style instead of the default one.
   if (isset($css['misc/ui/jquery.ui.theme.css'])) {
     $css['misc/ui/jquery.ui.theme.css']['data'] = drupal_get_path('theme', 'seven') . '/jquery.ui.theme.css';
