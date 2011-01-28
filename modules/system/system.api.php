@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.226 2011/01/11 13:40:06 dries Exp $
+// $Id: system.api.php,v 1.227 2011/01/28 07:51:09 webchick Exp $
 
 /**
  * @file
@@ -925,6 +925,7 @@ function hook_menu_get_item_alter(&$router_item, $path, $original_map) {
  *     $items['abc/def'] = array(
  *       'page callback' => 'mymodule_abc_view',
  *     );
+ *     return $items;
  *   }
  *
  *   function mymodule_abc_view($ghi = 0, $jkl = '') {
@@ -953,6 +954,7 @@ function hook_menu_get_item_alter(&$router_item, $path, $original_map) {
  *       'page callback' => 'mymodule_abc_view',
  *       'page arguments' => array(1, 'foo'),
  *     );
+ *     return $items;
  *   }
  * @endcode
  * When path 'abc/def' is requested, the page callback function will get 'def'
