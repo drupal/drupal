@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.521 2011/01/18 18:23:40 dries Exp $
+// $Id: form.inc,v 1.522 2011/01/29 10:08:45 webchick Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -3724,7 +3724,7 @@ function theme_textarea($variables) {
 function theme_password($variables) {
   $element = $variables['element'];
   $element['#attributes']['type'] = 'password';
-  element_set_attributes($element, array('id', 'name', 'value', 'size', 'maxlength'));
+  element_set_attributes($element, array('id', 'name', 'size', 'maxlength'));
   _form_set_class($element, array('form-text'));
 
   return '<input' . drupal_attributes($element['#attributes']) . ' />';

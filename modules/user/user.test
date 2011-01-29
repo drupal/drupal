@@ -1,5 +1,5 @@
 <?php
-// $Id: user.test,v 1.111 2010/12/18 00:56:18 dries Exp $
+// $Id: user.test,v 1.112 2011/01/29 10:08:45 webchick Exp $
 
 class UserRegistrationTestCase extends DrupalWebTestCase {
   public static function getInfo() {
@@ -406,6 +406,7 @@ class UserLoginTestCase extends DrupalWebTestCase {
       'pass' => $account->pass_raw,
     );
     $this->drupalPost('user', $edit, t('Log in'));
+    $this->assertNoFieldByXPath("//input[@name='pass' and @value!='']", NULL, t('Password value attribute is blank.'));
     if (isset($flood_trigger)) {
       if ($flood_trigger == 'user') {
         $this->assertRaw(format_plural(variable_get('user_failed_login_user_limit', 5), 'Sorry, there has been more than one failed login attempt for this account. It is temporarily blocked. Try again later or <a href="@url">request a new password</a>.', 'Sorry, there have been more than @count failed login attempts for this account. It is temporarily blocked. Try again later or <a href="@url">request a new password</a>.', array('@url' => url('user/password'))));
