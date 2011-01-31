@@ -24,8 +24,7 @@ if (version_compare(PHP_VERSION, '5.3.0') < 0) {
 
 define('DEV_MODE', 1);
 
-$drupal_root_dir = realpath(dirname(__FILE__) . '/../src');
-
+$drupal_root_dir = realpath(dirname(__FILE__)) . '/../';
 chdir($drupal_root_dir);
 
 /**
@@ -36,7 +35,7 @@ define('DRUPAL_ROOT', getcwd());
 
 // Drop drupal tables
 if (!isset($_GET['profile']) && !isset($_POST['profile'])) {
-	require_once '../.dev/db_clean.php';
+	require_once '.dev/db_clean.php';
 }
 
 if (isset($_GET['lcweb']) || isset($_POST['lcweb'])) {
@@ -89,6 +88,6 @@ function dev_install_configure_form($form)
 
 
 // Start the installer.
-require_once DRUPAL_ROOT . '/../.dev/dev_install.inc.php';
+require_once DRUPAL_ROOT . '/.dev/dev_install.inc.php';
 
 install_drupal();

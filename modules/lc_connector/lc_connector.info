@@ -30,4 +30,4 @@ dependencies[] = node
 core = 7.x
 php = 5.3.0
 
-lc_dir_default = ../../xlite/src
+lc_dir_default = ../xlite/src
