@@ -24,7 +24,7 @@ if (version_compare(PHP_VERSION, '5.3.0') < 0) {
 
 define('DEV_MODE', 1);
 
-$drupal_root_dir = realpath(dirname(__FILE__)) . '/../';
+$drupal_root_dir = realpath(dirname(__FILE__) . '/../');
 chdir($drupal_root_dir);
 
 /**
