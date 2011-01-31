@@ -1,0 +1,33 @@
+; Module manifest
+;
+; @category  Litecommerce connector
+; @package   Litecommerce connector
+; @author    Creative Development LLC <info@cdev.ru>
+; @copyright Copyright (c) 2010 Creative Development LLC <info@cdev.ru>. All rights reserved
+; @license   http://www.gnu.org/licenses/gpl-2.0.html GNU General Public License, version 2
+; @version   SVN: $Id$
+; @link      http://www.litecommerce.com/
+; @see       ____file_see____
+; @since     1.0.0
+
+name = LC connector
+description = LC connector module
+
+configure = admin/modules/lc_connector
+
+files[] = classes/Abstract.php
+files[] = classes/Handler.php
+files[] = classes/Admin.php
+files[] = classes/Install.php
+
+scripts[] = js/block_manage.js
+
+dependencies[] = menu
+dependencies[] = user
+dependencies[] = block
+dependencies[] = node
+
+core = 7.x
+php = 5.3.0
+
+lc_dir_default = ../../xlite/src

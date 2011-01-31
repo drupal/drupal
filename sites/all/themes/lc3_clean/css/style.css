@@ -1,0 +1,1909 @@
+/* vim: set ts=2 sw=2 sts=2 et: */
+
+/**
+ * @file
+ * Theme styles
+ *
+ * @category  LiteCommerce themes
+ * @package   LiteCommerce3 theme
+ * @author    Creative Development LLC <info@cdev.ru>
+ * @copyright Copyright (c) 2010 Creative Development LLC <info@cdev.ru>. All rights reserved
+ * @license   http://www.gnu.org/licenses/gpl-2.0.html GNU General Public License, version 2
+ * @version   SVN: $Id$
+ * @link      http://www.litecommerce.com/
+ * @see       ____file_see____
+ * @since     1.0.0
+ */
+
+/*
+ *
+ * COMMON STYLES
+ *
+ */
+
+html {
+  margin: 0px;
+  padding: 0px;
+}
+
+body
+{
+  font-size: 14px;
+  font-family: Helvetica, Arial, sans-serif;
+  margin: 0px;
+  padding: 0px;
+}
+
+body,
+input.form-text
+{
+  color: #333;
+}
+
+/*
+ * Headers
+ */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+#site-slogan,
+#main-menu,
+fieldset legend,
+button.action,
+button.bright
+{
+  font-family: "Trebuchet MS", Helvetica, Jamrul, sans-serif;
+}
+
+h1
+{
+  font-size: 32px;
+  margin: 0 0 9px;
+}
+
+h2
+{
+  font-size: 24px;
+  margin: 42px 0 16px;
+}
+
+h3,
+fieldset legend,
+#comments h2
+{
+  font-size: 20px;
+  margin-top: 8px;
+}
+
+h3,
+#comments h2
+{
+  margin: 28px 0 16px;
+}
+
+h1,
+h2,
+h3,
+fieldset legend,
+.form-required
+{
+  color: #579ed2;
+  font-weight: normal;
+}
+
+h4,
+#comments h3,
+#forum .name
+{
+  color: #4b7797;
+  font-size: 16px;
+}
+
+h4,
+#comments h3
+{
+  font-weight: bold;
+  margin: 14px 0;
+}
+
+h5
+{
+  font-size: 14px;
+  font-weight: bold;
+  font-style: italic;
+}
+
+hr {
+  height: 0px;
+  border: none;
+  border-top: 1px solid #d7e1e8;
+}
+
+/*
+ * Links
+ */
+
+a,
+#main-menu ul.menu a,
+div.tabs .primary a:hover
+{
+  color: #2c5fa6;
+}
+
+a:hover
+{
+  color: #0f9dcc;
+}
+
+/*
+ * Tables
+ */
+
+table
+{
+  width: 100%;
+  margin: 0 0 20px;
+  font-size: 12px;
+}
+
+table,
+tr,
+td,
+th
+{
+  border-width: 1px;
+  border-style: solid;
+}
+
+th,
+thead th
+{
+  padding: 9px 10px;
+  font-weight: normal;
+  border-width: 1px;
+  font-size: 12px;
+}
+
+td
+{
+  padding: 12px;
+  background-color: white;
+}
+
+th,
+div.tabs .primary a
+{
+  background: #eff8fe url(../images/bg.png) repeat-x top left;
+}
+
+/* Sort arrows */
+
+table th a
+{
+  text-decoration: none;
+}
+
+table .tablesort-indicator
+{
+  background: url(../images/sort.png) no-repeat 0px 6px;
+  position: relative;
+  left: 0;
+  top: -2px;
+  font-size: 14px;
+  padding-left: 10px;
+  margin-left: 4px;
+}
+
+table .tablesort-indicator span
+{
+    clip: rect(1px, 1px, 1px, 1px);
+    position: absolute !important;
+}
+
+table .descending-order
+{
+  background-position: 0px -19px;
+}
+
+/*
+ * Borders
+ */
+
+#main-menu,
+.sidebar div.block,
+.comment-content,
+.internal-popup,
+.buttons-box
+{
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+}
+
+div.tabs .secondary a.active
+{
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+}
+
+#main-menu > li.first,
+#main-menu > li.first a
+{
+  -moz-border-radius-bottomleft: 5px;
+  -moz-border-radius-topleft: 5px;
+  -webkit-border-bottom-left-radius: 5px;
+  -webkit-border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  border-top-left-radius: 5px;
+}
+
+ul.primary li a
+{
+  -moz-border-radius-topleft: 12px;
+  -moz-border-radius-topright: 12px;
+  -webkit-border-top-left-radius: 12px;
+  -webkit-border-top-right-radius: 12px;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+
+#header .block:first-child .content,
+#header .block:first-child .content > div
+{
+  -moz-border-radius-bottomleft: 5px;
+  -webkit-border-bottom-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+
+#header .block:last-child .content,
+#header .block:last-child .content > div
+{
+  -moz-border-radius-bottomright: 5px;
+  -webkit-border-bottom-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+#header-bar div.block .content
+{
+  border-style: none;
+}
+
+table,
+tr,
+tr.even,
+tr.odd,
+td,
+table th,
+ul.tabs,
+div.tabs ul.primary a,
+#header,
+#header .block .content,
+#header-bar
+{
+  border-color: #cadce8;
+}
+
+#main-menu ul
+{
+  border-color: #b1c9e0;
+}
+
+div.block,
+#social-links a,
+.comment .user-signature,
+.comment-content,
+blockquote,
+.internal-popup
+{
+  border-color: #dfdfdf;
+}
+
+/*
+ * Forms
+ */
+
+fieldset
+{
+  border-style: none;
+}
+
+input.form-text,
+input[type="text"],
+textarea
+{
+  border-width: 1px;
+  border-color: #cbcbcb #b4b4b4 #dadada;
+  border-style: solid;
+}
+
+input.form-text,
+input[type="text"]
+{
+  height: 17px;
+  padding: 2px 0 2px 6px;
+}
+
+label
+{
+  color: #53769d;
+  font-size: 16px;
+  font-weight: normal;
+  line-height: 24px;
+  white-space: nowrap;
+}
+
+/* Filter form */
+
+.comment-form-is-logged .form-type-item label
+{
+  display: inline;
+  font-size: 14px;
+  color: #888;
+}
+
+.filter-help a
+{
+  background-position: top left;
+  padding: 0 0 0 22px;
+}
+
+.filter-wrapper .form-item
+{
+  margin: 0;
+  padding: 0 0 1.5em 0;
+}
+
+.filter-guidelines
+{
+  clear: both;
+  padding: 0;
+}
+
+form.comment-form .form-actions
+{
+  margin-top: 0;
+}
+
+.filter-wrapper .filter-list
+{
+  margin-left: 1em;
+}
+
+/*
+ * Buttons
+ */
+
+.action-links
+{
+  padding: 0;
+  margin: 1.5em 0;
+}
+
+
+input[type="submit"],
+input[type="button"],
+input[type="reset"],
+button,
+.action-links a
+{
+  cursor: pointer;
+  margin: 7px 7px 7px 0;
+  padding: 3px 10px 4px;
+  height: 26px;
+  background: #eff8fe url(../images/button-regular.png) repeat-x center top;
+  border: 1px solid #cadce8;
+  -moz-border-radius: 13px;
+  -webkit-border-radius: 13px;
+  border-radius: 13px;
+  font-size: 12px;
+  color: #2c5fa6;
+  line-height: 1em;
+}
+
+button {
+  white-space: nowrap;
+}
+
+.action-links li
+{
+  display: inline;
+  background-image: none;
+  padding: 0 2em 0 0;
+}
+
+
+
+.action-links li a
+{
+  text-decoration: none;
+}
+
+input[type="submit"]:hover,
+input[type="button"]:hover,
+input[type="reset"]:hover,
+button:hover,
+.action-links li:hover
+{
+  border-color: #b1c9e0;
+}
+
+/* Hide the dotted outline */
+
+input[type="submit"]::-moz-focus-inner,   /* FireFox */
+input[type="button"]::-moz-focus-inner,
+input[type="reset"]::-moz-focus-inner,
+button::-moz-focus-inner
+{
+  border : 0px;
+}
+input[type="submit"]:focus,               /* IE8 */
+input[type="button"]:focus,
+input[type="reset"]:focus,
+button:focus
+{
+  outline : none;
+}
+
+/* Big button */
+
+button.action,
+button.bright
+{
+  font-size: 14px;
+  padding: 6px 20px 6px;
+  height: 36px;
+  -moz-border-radius: 19px;
+  -webkit-border-radius: 19px;
+  border-radius: 19px;
+}
+
+button.action
+{
+  background-image: url(../images/button.png);
+  font-size: 15px;
+}
+
+input[type="submit"]:active,
+input[type="button"]:active,
+input[type="reset"]:active,
+button:active,
+.action-links a:active
+{
+  background: #f8fdff;
+}
+
+button.bright
+{
+  border-style: none;
+  padding: 5px 17px 5px;
+  height: 36px;
+  background-image: url(../images/button-bright.png);
+  font-size: 19px;
+  color: white;
+}
+
+button.bright:hover
+{
+  background-position: center -36px;
+}
+
+button.bright:active
+{
+  background-position: center -72px;
+}
+
+button.disabled
+{
+  background-image: none;
+  background-color: #c6c6c6;
+  cursor: default;
+  border-color: #c6c6c6;
+  color: #fff;
+}
+
+/*
+ * Definition lists
+ */
+
+dd
+{
+  margin: 0 0 1em;
+}
+
+/*
+ * Paragraphs
+ */
+
+p,
+ul,
+ol,
+blockquote
+{
+  line-height: 1.6em;
+  margin: 0 0 1em;
+  padding: 0;
+}
+
+li
+{
+  margin: 0.5em 0 0;
+}
+
+li:first-child
+{
+  margin-top: 0;
+}
+
+div p:last-child
+{
+  margin-bottom: 0;
+}
+
+/*
+ * Quotes
+ */
+
+blockquote
+{
+  color: #888;
+  padding: 10px 20px 14px 50px;
+  background: #f7f7f7 url(../images/quote.png) no-repeat 17px 14px;
+  border-style: solid;
+  border-width: 1px;
+}
+
+blockquote .quote-author
+{
+  font-weight: normal;
+  font-size: 14px;
+  font-style: italic;
+}
+
+blockquote .quote-author em
+{
+  font-weight: bold;
+}
+
+/*
+ * Lists
+ */
+
+ul,
+ol,
+{
+  padding-left: 0;
+  margin-left: 0;
+}
+
+ol li
+{
+  list-style: decimal outside;
+  padding-left: 0;
+  margin-left: 26px;
+}
+
+ul li
+{
+  list-style: none;
+  padding-left: 26px;
+  background: url(../images/bullet.png) no-repeat 8px 8px;
+}
+
+.item-list li,
+#toolbar li,
+ul.contextual-links li,
+ul.links li,
+.field-type-taxonomy-term-reference ul li,
+#main-menu li,
+#secondary-menu li,
+.account-links li,
+ul.menu li,
+ul.tabs li
+{
+  background-image: none;
+}
+
+#block-user-login .item-list ul li {
+  margin-left: 0px;
+}
+
+/*
+ * Shadows
+ */
+
+#main-menu ul,
+.internal-popup,
+.buttons-box
+{
+  box-shadow: 1px 1px 5px silver;
+  -webkit-box-shadow: 1px 1px 5px silver;
+  -moz-box-shadow: 1px 1px 5px silver;
+  /* Commented due to a problem in IE: IE crops drop-down submenus in the main menu */
+  /*
+  filter: progid:DXImageTransform.Microsoft.Shadow(color='silver', Direction= 135, Strength=3);
+  */
+}
+
+/**
+ * Popup
+ */
+.internal-popup
+{
+  border-style: solid;
+  border-width: 1px;
+  text-align: left;
+  background: white;
+}
+
+/*
+ *
+ * HEADER
+ *
+ */
+
+#logo
+{
+  padding: 0 20px;
+}
+
+#header-bar,
+#header
+{
+  padding-left: 20px;
+}
+
+#site-name h1,
+#site-name strong
+{
+  margin: 0;
+  font-family: Verdana, Helvetica, sans-serif;
+  font-weight: normal;
+  font-size: 30px;
+}
+
+#site-name a
+{
+  text-decoration: none;
+  color: #316185;
+}
+
+#site-slogan
+{
+  font-style: italic;
+  font-size: 15px;
+  color: #5d94bd;
+}
+
+#header .block .content
+{
+  border-width: 1px;
+  border-style: none solid solid none;
+  padding: 0;
+}
+
+#header .block:first-child .content
+{
+  border-left-style: solid;
+}
+
+#header-bar
+{
+  text-align: right;
+  white-space: nowrap;
+  width: 100%;
+}
+
+/* Action links */
+
+.node ul.links
+{
+  display: block;
+}
+
+ul.links
+{
+  clear: both;
+  margin: 0;
+}
+
+ul.links li
+{
+  padding: 0 1em 0 0;
+  display: inline;
+}
+
+/*
+ * Links generated by theme_links().
+ */
+
+ul.inline,
+ul.links.inline
+{
+  display: inline;
+  padding-left: 0;
+}
+
+ul.inline li
+{
+  display: inline;
+  list-style-type: none;
+  padding: 0 0.5em;
+}
+
+
+
+/*
+ * Account links
+ */
+
+ul.account-links
+{
+  padding: 0;
+  margin: 0;
+  height: 46px;
+  line-height: 46px;
+}
+
+ul.account-links li
+{
+  display: inline;
+  list-style: none;
+  margin: 0 0 0 20px;
+  padding: 0;
+}
+
+ul.account-links a
+{
+  text-decoration: none;
+}
+
+ul.account-links a:hover
+{
+  text-decoration: underline;
+}
+
+/* Popup forms */
+
+#login-popup-box,
+#password-popup-box
+{
+  width: 564px;
+}
+
+#login-popup-box #user-login,
+#password-popup-box #user-pass
+{
+  text-align: left;
+}
+
+#login-popup-box label,
+#password-popup-box label
+{
+  float: left;
+}
+
+#login-popup-box button,
+#login-popup-box .description,
+#login-popup-box .item-list
+{
+  margin-left: 90px;
+}
+
+#login-popup-box label
+{
+  width: 90px;
+}
+
+#password-popup-box button,
+#password-popup-box .description,
+#password-popup-box .item-list
+{
+  margin-left: 140px;
+}
+
+#password-popup-box label
+{
+  width: 140px;
+}
+
+.blockUI #login-popup-box .description,
+.blockUI #password-popup-box .description
+{
+  margin-top: 4px;
+  font-size: 11px;
+  padding-left: 0px;
+}
+
+.blockUI #login-popup-box .description,
+.blockUI #login-popup-box .description a,
+.blockUI #password-popup-box .description,
+.blockUI #password-popup-box .description a
+{
+  color: #1a6992;
+}
+
+.blockUI #login-popup-box input,
+.blockUI #password-popup-box input
+{
+  width: 248px;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #949494 #ddd #ddd #949494;
+  height: 22px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.blockUI .form-required
+{
+  display: none;
+}
+
+.blockUI .form-item
+{
+  margin: 2em 0 1.5em;
+}
+
+.blockUI .item-list
+{
+  margin-top: 0.5em;
+}
+
+.blockUI ul,
+.blockUI div.item-list li
+{
+  margin: 0;
+  padding: 0;
+}
+
+.blockUI div.item-list li
+{
+  list-style: none;
+  background-image: none;
+}
+
+/*
+ * Popup box
+ */
+
+.blockMsg
+{
+  background: transparent none;
+  margin: 0px;
+  padding: 0px;
+  z-index: 1001;
+  position: absolute;
+  top: 30%;
+}
+
+.blockMsg .close-link
+{
+  display: block;
+  position: absolute;
+  background: transparent url(../images/icon_window_close.png) no-repeat 10px 10px;
+  top: 0px;
+  right: 0px;
+  width: 41px;
+  height: 41px;
+  outline-style: none;
+  -moz-border-radius-bottomright: 11px;
+  -moz-border-radius-topright: 11px;
+  -webkit-border-bottom-right-radius: 11px;
+  -webkit-border-top-right-radius: 11px;
+  border-bottom-right-radius: 11px;
+  border-top-right-radius: 11px;
+}
+
+.blockMsg .block-container
+{
+  margin-right: 31px;
+  border-style: none;
+  -moz-border-radius: 11px;
+  -webkit-border-radius: 11px;
+  border-radius: 11px;
+  padding: 10px;
+}
+
+.blockMsg .block-subcontainer
+{
+  padding: 40px;
+  padding-top: 30px;
+  background: white;
+  overflow: auto;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+}
+
+.block-wait
+{
+  text-align: left;
+  vertical-align: middle;
+  font-weight: bold;
+  min-width: 200px;
+  border: 1px solid #cadce8;
+  background: #fff none;
+}
+
+.block-wait div
+{
+  background: transparent url(../images/progress.gif) repeat-x left top;
+  height: 11px;
+  margin: 10px;
+}
+
+.mini-block-wait div
+{
+  margin: 0px;
+}
+
+/* Background overlay */
+
+.blockOverlay
+{
+  background-image: url(../images/popup_overlay.png);
+  background-repeat: repeat;
+  background-position: top left;
+}
+
+.blockMsg .close-link,
+.blockMsg .block-container
+{
+  background-color: black;
+}
+
+/* Common popup styles */
+
+.blockMsg h2
+{
+  margin-top: 0px;
+  font-size: 32px;
+}
+
+.blockMsg h3
+{
+  font-size: 24px;
+}
+
+/*
+ * Search box
+ */
+
+.simple-search-product-form
+{
+  float: right;
+}
+
+#search input.form-text
+{
+  width: 232px;
+  float: right;
+  font-size: 12px;
+  background: url(../images/search.png) no-repeat 217px 3px;
+  outline: none;
+}
+
+#search div.form-actions
+{
+  display: none;
+}
+
+/*
+ * Primary links
+ */
+
+#main-menu
+{
+  border-style: none;
+  height: 50px;
+  padding: 0;
+  margin: 0 0 13px;
+  background: #589dce url(../images/top-menu.png) repeat-x top left;
+}
+
+.no-breadcrumbs #main-menu
+{
+  margin-bottom: 20px;
+}
+
+.no-breadcrumbs h1#page-title {
+  padding-top: 11px;
+}
+
+/* First level */
+
+#main-menu li
+{
+  float: left;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  position: relative;   /* Position nested menus below parent menus */
+}
+
+#main-menu li a
+{
+  display: block;
+  font-size: 19px;
+  line-height: 50px;
+  padding: 0 20px;
+  height: 50px;
+  color: white;
+  text-decoration: none;
+}
+#main-menu li a
+{
+  background: url(../images/top-menu-arrows.png) no-repeat left top;
+}
+
+#main-menu li:hover a
+{
+  background-position: left bottom;
+}
+
+#main-menu li.expanded a,
+#main-menu li.collapsed a
+{
+  padding-right: 40px;
+  background-position: right top;
+}
+
+#main-menu li.expanded:hover a,
+#main-menu li.collapsed:hover a
+{
+  background-position: right bottom;
+}
+
+/* Nested levels */
+
+#main-menu li ul
+{
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 110%;
+  min-width: 198px;
+  margin: 0;
+  padding: 1px 0 1px;
+  background: white;
+  border-style: none solid solid;
+  border-width: 1px;
+  /* put submenus above parent menus and other page contents*/
+  /* we can't set it for the ".menu-tree" element because that will trigger hasLayout in IE6 and will crop submenus */
+  z-index: 20000;
+}
+#main-menu li:hover > ul  /* Popup child menus */
+{
+  display: block;
+}
+
+#main-menu ul li
+{
+  float: none;
+}
+
+#main-menu ul.menu a
+{
+  font-size: 16px;
+  height: 30px;
+  line-height: 30px;
+  padding: 0 14px;
+  background-color: white;
+  background-image: none;
+}
+
+#main-menu ul.menu .expanded > a,
+#main-menu ul.menu .collapsed > a
+{
+  background-image: url(../images/menu-arrows.png);
+  background-repeat: no-repeat;
+  background-position: 184px -7px;
+}
+
+#main-menu ul li:hover > a
+{
+  background-color: #eff8fe;
+}
+
+#main-menu ul ul
+{
+  border-style: solid;
+  top: 2px;
+  left: 94%;
+}
+
+/*
+ * Breadcrumbs
+ */
+
+#breadcrumb
+{
+  margin: 0 0 13px 13px;
+  height: 24px;
+  font-size: 12px;
+  position: relative;
+  top: -1px;
+}
+
+#breadcrumb .home-link {
+  line-height: 26px;
+}
+
+#breadcrumb .home-link img
+{
+  vertical-align: middle;
+  position: relative;
+  top: -1px;
+  width: 23px;
+  height: 23px;
+}
+
+#breadcrumb .separator
+{
+  margin: 0 5px;
+  font-size: 18px;
+  color: #a2a2a2;
+  position: relative;
+  top: 1px;
+}
+
+div.location-node {
+  display: inline;
+  position: relative;
+}
+
+div.location-node:hover ul.location-subnodes {
+  visibility: visible;
+}
+
+div.location-node.expandable {
+  padding-right: 0.8em;
+  background: url(../images/down_arrow.png) no-repeat right 0.6em;
+}
+
+ul.location-subnodes {
+  position: absolute;
+  top: 15px;
+  right: 0px;
+  list-style-type: none;
+  background-color: #fff;
+  z-index: 10000;
+  display: inline;
+  visibility: hidden;
+}
+
+ul.location-subnodes li {
+  background-image: none;
+  padding: 0;
+  white-space: nowrap;
+}
+
+.location-title-subnodes-mark {
+  text-decoration: none;
+  padding-top: 0.2em;
+}
+
+
+/*
+ *
+ * SIDEBARS
+ *
+ */
+
+/*
+ * Blocks
+ */
+
+.sidebar .block
+{
+  border-style: solid;
+  border-width: 1px;
+  padding: 20px;
+  margin: 0 0 20px;
+}
+
+.sidebar .block h2
+{
+  font-size: 24px;
+  font-weight: normal;
+  margin-top: -4px;
+}
+
+.sidebar .block-menu,
+.sidebar .block-user
+{
+  padding-bottom: 14px;
+}
+
+.sidebar .block-menu h2,
+.sidebar .block-user h2
+{
+  margin-bottom: 7px;
+}
+
+/*
+ * Menus
+ */
+
+.sidebar ul.menu
+{
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar ul.menu li
+{
+  display: block;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar ul.menu .first a           /* Hide the dotted border for the first item */
+{
+  border-style: none;
+}
+
+.sidebar ul.menu a,
+.sidebar ul.menu li .first a,
+.sidebar ul.menu .first li a        /* Restore the border for nested first items */
+{
+  border-top: 1px dotted #dfdfdf;
+}
+
+.sidebar ul.menu a
+{
+  display: block;
+  text-decoration: none;
+  padding: 8px 14px 6px 0;
+}
+
+.sidebar .block-without-title div > ul.menu > li.first > a
+{
+  padding-top: 0;
+}
+
+.sidebar ul.menu li li a
+{
+  padding-left: 16px;
+}
+
+.sidebar ul.menu li li li a
+{
+  padding-left: 32px;
+  font-size: 12px;
+}
+
+.sidebar ul.menu li li li li a
+{
+  padding-left: 48px;
+}
+
+.sidebar ul.menu li li li li li a
+{
+  padding-left: 64px;
+}
+
+.sidebar ul.menu .expanded a
+{
+  background: url(../images/menu-arrows.png) no-repeat 183px -40px;
+}
+
+.sidebar ul.menu .collapsed a
+{
+  background: url(../images/menu-arrows.png) no-repeat 183px -3px;
+}
+
+.sidebar ul.menu .leaf a
+{
+  background-image: none;
+}
+
+.sidebar ul.menu .collapsed ul
+{
+  display: none;
+}
+
+.sidebar ul.menu a.active
+{
+  color: #646c76;
+}
+
+/*
+ * Tabs
+ */
+
+div.tabs
+{
+  margin: 31px 0px 28px;
+}
+
+ul.tabs,
+ul.tabs li
+{
+  margin: 0;
+  padding: 0;
+}
+
+ul.tabs li
+{
+  display: inline;
+  white-space: nowrap;
+}
+
+/* Primary tabs */
+
+div.tabs .primary
+{
+  height: 32px;
+  line-height: 32px;
+  padding: 0;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  border-collapse: collapse;
+  margin: 5px;
+}
+
+div.tabs .primary a
+{
+  padding: 11px 18px 7px;
+  vertical-align: baseline;
+  border-style: solid solid none solid;
+  border-width: 1px;
+  text-decoration: none;
+}
+
+div.tabs .primary .active a
+{
+  color: #333;
+  border-bottom-style: solid;
+  border-bottom-color: #fff;
+}
+
+div.tabs .primary .active a,
+div.tabs .primary a:hover,
+div.tabs .primary .active a:hover
+{
+  border-bottom-color: white;
+  background: white;
+}
+
+/* Secondary tabs */
+
+div.tabs .secondary
+{
+  padding: 11px;
+  height: 22px;
+  line-height: 22px;
+}
+
+div.tabs .secondary li
+{
+  border-style: none;
+  margin: 0 10px 0 0;
+}
+
+div.tabs .secondary a
+{
+  text-decoration: underline;
+}
+
+div.tabs .secondary a.active
+{
+  border-style: none;
+  background-color: #5296ca;
+  text-decoration: none;
+  color: white;
+  padding: 3px 10px;
+}
+
+/*
+ *
+ * FOOTER
+ *
+ */
+
+.sidebar,
+#content
+{
+  margin-bottom: 40px;
+}
+
+#footer-area
+{
+  font-size: 12px;
+  background: #f7f7f7;
+  padding: 26px;
+  margin: 40px 0 7px;
+  position: relative;       /* Position Facebook and Twitter links inside the footer box */
+}
+
+.powered-by p
+{
+  margin: 0 0 7px;
+}
+
+/*
+ * Twitter and Facebook links
+ */
+
+#social-links
+{
+  position: absolute;
+  top: -11px;
+  right: 30px;
+}
+
+#social-links .social-link
+{
+  float: left;
+  margin: 0 0 0 20px;
+  height: 60px;
+  padding-top: 30px;
+}
+
+#social-links a
+{
+  display: block;
+  font-size: 11px;
+  width: 126px;
+  height: 26px;
+  line-height: 26px;
+  text-align: center;
+  vertical-align: middle;
+  text-decoration: none;
+}
+
+#facebook-link
+{
+  background: url(../images/facebook.png) no-repeat top left;
+}
+
+#twitter-link
+{
+  background: url(../images/twitter.png) no-repeat top left;
+}
+
+#twitter-link a
+{
+  width: 121px;
+  color: #0080bc;
+}
+
+/*
+ * Secondary links
+ */
+
+#secondary-menu
+{
+  padding: 0;
+  margin: 0 0 24px;
+}
+
+#secondary-menu li
+{
+  padding: 0;
+  margin: 0;
+  float: left;
+  list-style: none;
+}
+
+#secondary-menu li.last
+{
+  margin: 0;
+}
+
+#secondary-menu li a
+{
+  display: block;
+  border-style: none none none solid;
+  border-width: 1px;
+  border-color: #7f7f7f;
+  padding: 0 18px 1px;
+  line-height: 0.9em;
+}
+
+#secondary-menu li.first a
+{
+  padding-left: 0;
+  border-style: none;
+}
+
+/*
+ * Status messages
+ */
+
+#status-messages
+{
+  position: fixed;  /* TODO: WARNING! IE6 doesn't support this style! Emulation is required */
+  top: 0px;
+  left: 0;
+  right: 0;
+  margin: 0px auto;
+  z-index: 1300000;
+  font-size: 12px;
+  width: 400px;
+}
+
+#status-messages,
+#status-messages ul,
+#status-messages ul li:last-child
+{
+  -moz-border-radius-bottomleft: 5px;
+  -webkit-border-bottom-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  -moz-border-radius-bottomright: 5px;
+  -webkit-border-bottom-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+#status-messages a.close
+{
+  display: block;
+  position: absolute;
+  right: 8px;
+  top: 5px;
+  background-color: transparent;
+  background-image: url(../images/icon_cross_white.png);
+  background-repeat: no-repeat;
+  background-position: 0px 0px;
+  width: 15px;
+  height: 15px;
+}
+
+#status-messages ul
+{
+  margin: 0;
+  padding: 0;
+}
+
+#status-messages li
+{
+  list-style: none;
+  background-image: none;
+  padding: 5px 31px 6px 1em;
+}
+
+#status-messages .status
+{
+}
+
+#status-messages,
+#status-messages a
+{
+  background-color: #fff1a8; /*#eeede8;*/
+  color: black; /*#1b5d8e;*/
+}
+
+#status-messages .warning,
+#status-messages .warning a
+{
+  background-color: #eedeb4;
+  color: #94572a;
+}
+
+#status-messages .error,
+#status-messages .error a
+{
+  background-color: #e65e57;
+  color: white;
+}
+
+/*
+ * Nodes
+ */
+
+.node-content .field-item
+{
+  margin-bottom: 1em;
+}
+
+/* Node meta info */
+
+.node-meta
+{
+  font-size: 12px;
+  margin: 0 0 2em;
+  position: relative;   /* Position the comment counter inside the meta box */
+  padding-right: 46px;  /* Leave space for the counter */
+}
+
+.node-teaser .node-meta
+{
+  margin-bottom: 1em;
+}
+
+.node-meta .submitted
+{
+  color: #a2a2a2;
+  margin-right: 2em;
+  padding: 3px 0 0;
+}
+
+.node-meta .comment-count
+{
+  display: block;
+  position: absolute;
+  right: 0;
+  top: 0;
+  color: #2c5fa6;
+  margin: 0 10px 0 0;
+  padding: 2px 10px 2px 9px;
+  height: 22px;
+  background: url(../images/count.png) no-repeat top left;
+  text-decoration: none;
+}
+
+.node-meta .comment-count span
+{
+  display: block;
+  text-indent: -8000em;
+}
+
+/* Taxonomy terms */
+
+.node div.terms
+{
+  margin: 0.5em 2em 0.5em 0;
+  padding-left: 22px;
+  background: url(../images/tag.png) no-repeat top left;
+  line-height: 20px;
+  clear: both;
+}
+
+.node div.terms ul
+{
+  line-height: normal;
+  margin: 0;
+}
+
+.node div.terms ul li
+{
+  padding: 2px 0;
+  margin-right: 0.3em;
+}
+
+/* Comments */
+
+.comment
+{
+  margin: 30px 0 50px;
+  position: relative;
+}
+
+.comment-meta
+{
+  width: 120px;
+  float: left;
+}
+
+.comment-meta .picture
+{
+  margin-bottom: 0.5em;
+}
+
+.comment-content
+{
+  border-style: solid;
+  border-width: 1px;
+  padding: 14px 18px;
+  margin-bottom: 1em;
+}
+
+.comment .comment-arrow
+{
+  display: block;
+  width: 16px;
+  height: 13px;
+  font-size: 7px;
+  background: url(../images/speach.png) no-repeat top left;
+  position: absolute;
+  top: 10px;
+  left: 111px;
+}
+
+.comment .comment-body
+{
+  margin-left: 126px;
+}
+
+.comment-body h3:first-child
+{
+  margin-top: 0;
+}
+
+.comment .subject
+{
+  display: block;
+  margin: 0 0 0.5em;
+  clear: right;
+}
+
+.comment .submitted,
+.comment .links
+{
+  font-size: 12px;
+}
+
+.comment .submitted
+{
+  float: left;
+}
+
+.comment .submitted span span
+{
+  color: #888;
+}
+
+.comment .submitted .permalink
+{
+  margin-left: 0.5em;
+}
+
+.comment .links
+{
+  clear: right;
+  float: right;
+  text-align: right;
+  margin: 0;
+  line-height: normal;
+  width: 350px;
+}
+
+.comment .links li
+{
+  padding: 0 0.5em;
+}
+
+.comment .user-signature
+{
+  border-style: solid none none;
+  border-width: 1px;
+  padding-top: 1em;
+  margin-top: 1em;
+  font-size: 13px;
+}
+
+.indented
+{
+  margin-left: 0;
+  padding-left: 26px;
+  background: url(../images/quoted.png) no-repeat 8px 0px;
+}
+
+#comments h2
+{
+  margin-top: 56px;
+}
+
+
+/*
+ * Pagers
+ */
+
+.item-list ul.pager
+{
+  text-align: left;
+  margin-top: 20px;
+  padding-top: 10px;
+  border-top: 1px solid #dfdfdf;
+} 
+
+.item-list ul.pager li
+{
+  padding: 0;
+  list-style: none;
+  vertical-align: top;
+  display: -moz-inline-stack;   /* FF2 supports this instead of "inline-block" */
+  display: inline-block;
+  border-style: solid;          /* Weird but FF requires this in order to display "inline-blocks" properly */
+  border-color: transparent;    /* Hide the border in all browsers but IE6 */
+  border-width: 0px;
+}
+
+
+ul.pager a,
+ul.pager span
+{
+  display: block;
+  text-align: center;
+  text-decoration: none;
+  outline-style: none;
+}
+
+ul.pager li.next-page,
+ul.pager li.previous-page
+{
+  text-indent: -8000em;
+  background: url(../images/pager.png) no-repeat top left;
+}
+
+ul.pager li.previous-page
+{
+  background-position: 10px -31px;
+}
+
+ul.pager li.next-page
+{
+  background-position: 12px -61px;
+}
+
+/*
+ * Forums
+ */
+
+#forum th
+{
+  white-space: nowrap;
+  width: 1%;
+}
+
+#forum th:first-child
+{
+  width: auto;
+}
+
+#forum .description,
+#forum .last-post-author,
+#forum .new-comment-count,
+#forum td.title .created
+{
+  margin: 0.5em 0 0;
+}
+
+#forum td.topics,
+#forum td.posts,
+#forum td.last-reply,
+#forum td.replies
+{
+  vertical-align: top;
+}
+
+/* List of forums */
+
+#forum td.container
+{
+  background-color: #f6f6f6;
+}
+
+#forum .last-post-author,
+#forum td.title .created
+{
+  color: #888;
+}
+
+#forum .last-post-author .username
+{
+  color: #333;
+}
+
+/* List of forum topics */
+
+#forum td.title .icon
+{
+  float: left;
+  width: 13px;
+}
+
+#forum td.title .title,
+#forum td.title .created
+{
+  margin-left: 23px;
+}
+
+#forum td.title .title
+{
+  font-size: 14px;
+}
+
+#forum .icon div
+{
+  background-image: url(../images/forum.png);
+}
+

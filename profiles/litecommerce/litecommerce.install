@@ -1,0 +1,999 @@
+<?php
+// vim: set ts=4 sw=4 sts=4 et:
+
+/**
+ * @file
+ * Ecommerce CMS installation profile
+ *
+ * @category    Litecommerce connector
+ * @package     Litecommerce connector
+ * @author        Creative Development LLC <info@cdev.ru>
+ * @copyright Copyright (c) 2010 Creative Development LLC <info@cdev.ru>. All rights reserved
+ * @license     http://www.gnu.org/licenses/gpl-2.0.html GNU General Public License, version 2
+ * @version     SVN: $Id$
+ * @link            http://www.litecommerce.com/
+ * @see             ____file_see____
+ * @since         1.0.0
+ */
+
+
+/**
+ * Implements hook_install().
+ *
+ * Perform actions to set up the site for this profile.
+ */
+function litecommerce_install() 
+{
+    // Add text formats.
+    $filtered_html_format = array(
+        'format' => 'filtered_html',
+        'name' => 'Filtered HTML',
+        'weight' => 0,
+        'filters' => array(
+            // URL filter.
+            'filter_url' => array(
+                'weight' => 0,
+                'status' => 1,
+            ),
+            // HTML filter.
+            'filter_html' => array(
+                'weight' => 1,
+                'status' => 1,
+            ),
+            // Line break filter.
+            'filter_autop' => array(
+                'weight' => 2,
+                'status' => 1,
+            ),
+            // HTML corrector filter.
+            'filter_htmlcorrector' => array(
+                'weight' => 10,
+                'status' => 1,
+            ),
+        ),
+    );
+    $filtered_html_format = (object) $filtered_html_format;
+    filter_format_save($filtered_html_format);
+
+    $full_html_format = array(
+        'format' => 'full_html',
+        'name' => 'Full HTML',
+        'weight' => 1,
+        'filters' => array(
+            // URL filter.
+            'filter_url' => array(
+                'weight' => 0,
+                'status' => 1,
+            ),
+            // Line break filter.
+            'filter_autop' => array(
+                'weight' => 1,
+                'status' => 1,
+            ),
+            // HTML corrector filter.
+            'filter_htmlcorrector' => array(
+                'weight' => 10,
+                'status' => 1,
+            ),
+        ),
+    );
+    $full_html_format = (object) $full_html_format;
+    filter_format_save($full_html_format);
+
+    // Enable some standard blocks.
+    $default_theme = 'lc3_clean';
+
+    variable_set('theme_default', $default_theme);
+
+    $theme_settings = array(
+        'lc3_facebook_account' => 'litecommerce',
+        'lc3_twitter_account' => 'litecommerce',
+        'toggle_logo' => 1,
+        'toggle_name' => 0,
+        'toggle_slogan' => 0,
+        'toggle_mission' => 0,
+        'toggle_node_user_picture' => 0,
+        'toggle_comment_user_picture' => 0,
+        'toggle_search' => 0,
+        'toggle_favicon' => 1,
+        'toggle_primary_links' => 1,
+        'toggle_secondary_links' => 1,
+        'default_logo' => 1,
+        'logo_path' => '',
+        'logo_upload' => '',
+        'default_favicon' => 1,
+        'favicon_path' => '',
+        'favicon_upload' => '',
+    );
+
+    variable_set('theme_' . $default_theme . '_settings', $theme_settings);
+
+    // Enable the LC theme.
+    db_update('system')
+        ->fields(array('status' => 1))
+        ->condition('type', 'theme')
+        ->condition('name', $default_theme)
+        ->execute();
+
+    // Disable the Bartik theme
+    db_update('system')
+        ->fields(array('status' => 0))
+        ->condition('type', 'theme')
+        ->condition('name', 'bartik')
+        ->execute();
+
+    $admin_theme = 'seven';
+    $values = array(
+        array(
+            'module' => 'system',
+            'delta' => 'main',
+            'theme' => $default_theme,
+            'status' => 1,
+            'weight' => -14,
+            'region' => 'content',
+            'pages' => '',
+            'cache' => -1,
+        ),
+        array(
+            'module' => 'search',
+            'delta' => 'form',
+            'theme' => $default_theme,
+            'status' => 0,
+            'weight' => -1,
+            'region' => 'sidebar_first',
+            'pages' => '',
+            'cache' => -1,
+        ),
+        array(
+            'module' => 'node',
+            'delta' => 'recent',
+            'theme' => $admin_theme,
+            'status' => 1,
+            'weight' => 10,
+            'region' => 'dashboard_main',
+            'pages' => '',
+            'cache' => -1,
+        ),
+        array(
+            'module' => 'user',
+            'delta' => 'login',
+            'theme' => $default_theme,
+            'status' => 0,
+            'weight' => 0,
+            'region' => 'sidebar_first',
+            'pages' => '',
+            'cache' => -1,
+        ),
+        array(
+            'module' => 'system',
+            'delta' => 'navigation',
+            'theme' => $default_theme,
+            'status' => 0,
+            'weight' => 0,
+            'region' => 'sidebar_first',
+            'pages' => '',
+            'cache' => -1,
+        ),
+        array(
+            'module' => 'system',
+            'delta' => 'powered-by',
+            'theme' => $default_theme,
+            'status' => 0,
+            'weight' => 10,
+            'region' => 'footer',
+            'pages' => '',
+            'cache' => -1,
+        ),
+        array(
+            'module' => 'system',
+            'delta' => 'help',
+            'theme' => $default_theme,
+            'status' => 1,
+            'weight' => 0,
+            'region' => 'help',
+            'pages' => '',
+            'cache' => -1,
+        ),
+        array(
+            'module' => 'system',
+            'delta' => 'main',
+            'theme' => $admin_theme,
+            'status' => 1,
+            'weight' => 0,
+            'region' => 'content',
+            'pages' => '',
+            'cache' => -1,
+        ),
+        array(
+            'module' => 'system',
+            'delta' => 'help',
+            'theme' => $admin_theme,
+            'status' => 1,
+            'weight' => 0,
+            'region' => 'help',
+            'pages' => '',
+            'cache' => -1,
+        ),
+        array(
+            'module' => 'user',
+            'delta' => 'login',
+            'theme' => $admin_theme,
+            'status' => 1,
+            'weight' => 10,
+            'region' => 'content',
+            'pages' => '',
+            'cache' => -1,
+        ),
+        array(
+            'module' => 'user',
+            'delta' => 'new',
+            'theme' => $admin_theme,
+            'status' => 1,
+            'weight' => 0,
+            'region' => 'dashboard_sidebar',
+            'pages' => '',
+            'cache' => -1,
+        ),
+        array(
+            'module' => 'search',
+            'delta' => 'form',
+            'theme' => $admin_theme,
+            'status' => 1,
+            'weight' => -10,
+            'region' => 'dashboard_sidebar',
+            'pages' => '',
+            'cache' => -1,
+        ),
+    );
+    $query = db_insert('block')->fields(array('module', 'delta', 'theme', 'status', 'weight', 'region', 'pages', 'cache'));
+    foreach ($values as $record) {
+        $query->values($record);
+    }
+    $query->execute();
+
+    _litecommerce_blocks($default_theme);
+
+    _litecommerce_preconfigure_variables();
+    
+    // Insert default pre-defined node types into the database. For a complete
+    // list of available node type attributes, refer to the node type API
+    // documentation at: http://api.drupal.org/api/HEAD/function/hook_node_info.
+    $types = array(
+        array(
+            'type' => 'page',
+            'name' => st('Basic page'),
+            'base' => 'node_content',
+            'description' => st("Use <em>basic pages</em> for your static content, such as an 'About us' page."),
+            'custom' => 1,
+            'modified' => 1,
+            'locked' => 0,
+        ),
+        array(
+            'type' => 'article',
+            'name' => st('Article'),
+            'base' => 'node_content',
+            'description' => st('Use <em>articles</em> for time-sensitive content like news, press releases or blog posts.'),
+            'custom' => 1,
+            'modified' => 1,
+            'locked' => 0,
+        ),
+    );
+
+    foreach ($types as $type) {
+        $type = node_type_set_defaults($type);
+        node_type_save($type);
+        node_add_body_field($type);
+    }
+
+    _litecommerce_preconfigure_node();
+
+    // Insert default pre-defined RDF mapping into the database.
+    $rdf_mappings = array(
+        array(
+            'type' => 'node',
+            'bundle' => 'page',
+            'mapping' => array(
+                'rdftype' => array('foaf:Document'),
+            ),
+        ),
+        array(
+            'type' => 'node',
+            'bundle' => 'article',
+            'mapping' => array(
+                'field_image' => array(
+                    'predicates' => array('og:image', 'rdfs:seeAlso'),
+                    'type' => 'rel',
+                ),
+                'field_tags' => array(
+                    'predicates' => array('dc:subject'),
+                    'type' => 'rel',
+                ),
+            ),
+        ),
+    );
+    foreach ($rdf_mappings as $rdf_mapping) {
+        rdf_mapping_save($rdf_mapping);
+    }
+
+    // Default "Basic page" to not be promoted and have comments disabled.
+    variable_set('node_options_page', array('status'));
+    variable_set('comment_page', COMMENT_NODE_HIDDEN);
+
+    // Don't display date and author information for "Basic page" nodes by default.
+    variable_set('node_submitted_page', FALSE);
+
+    // Enable user picture support and set the default to a square thumbnail option.
+    variable_set('user_pictures', '1');
+    variable_set('user_picture_dimensions', '1024x1024');
+    variable_set('user_picture_file_size', '800');
+    variable_set('user_picture_style', 'thumbnail');
+
+    // Allow visitor account creation with administrative approval.
+    variable_set('user_register', USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL);
+
+    // Create a default vocabulary named "Tags", enabled for the 'article' content type.
+    $description = st('Use tags to group articles on similar topics into categories.');
+    $help = st('Enter a comma-separated list of words to describe your content.');
+    $vocabulary = (object) array(
+        'name' => 'Tags',
+        'description' => $description,
+        'machine_name' => 'tags',
+        'help' => $help,
+
+    );
+    taxonomy_vocabulary_save($vocabulary);
+
+    $field = array(
+        'field_name' => 'field_' . $vocabulary->machine_name,
+        'type' => 'taxonomy_term_reference',
+        // Set cardinality to unlimited for tagging.
+        'cardinality' => FIELD_CARDINALITY_UNLIMITED,
+        'settings' => array(
+            'allowed_values' => array(
+                array(
+                    'vocabulary' => $vocabulary->machine_name,
+                    'parent' => 0,
+                ),
+            ),
+        ),
+    );
+    field_create_field($field);
+
+    $instance = array(
+        'field_name' => 'field_' . $vocabulary->machine_name,
+        'entity_type' => 'node',
+        'label' => $vocabulary->name,
+        'bundle' => 'article',
+        'description' => $vocabulary->help,
+        'widget' => array(
+            'type' => 'taxonomy_autocomplete',
+            'weight' => -4,
+        ),
+        'display' => array(
+            'default' => array(
+                'type' => 'taxonomy_term_reference_link',
+                'weight' => 10,
+            ),
+            'teaser' => array(
+                'type' => 'taxonomy_term_reference_link',
+                'weight' => 10,
+            ),
+        ),
+    );
+    field_create_instance($instance);
+
+
+    // Create an image field named "Image", enabled for the 'article' content type.
+    // Many of the following values will be defaulted, they're included here as an illustrative examples.
+    // See http://api.drupal.org/api/function/field_create_field/7
+
+    $field = array(
+        'field_name' => 'field_image',
+        'type' => 'image',
+        'cardinality' => 1,
+        'translatable' => TRUE,
+        'locked' => FALSE,
+        'indexes' => array('fid' => array('fid')),
+        'settings' => array(
+            'uri_scheme' => 'public',
+            'default_image' => FALSE,
+        ),
+        'storage' => array(
+            'type' => 'field_sql_storage',
+            'settings' => array(),
+        ),
+    );
+    field_create_field($field);
+
+
+    // Many of the following values will be defaulted, they're included here as an illustrative examples.
+    // See http://api.drupal.org/api/function/field_create_instance/7
+    $instance = array(
+        'field_name' => 'field_image',
+        'entity_type' => 'node',
+        'label' => 'Image',
+        'bundle' => 'article',
+        'description' => st('Upload an image to go with this article.'),
+        'required' => FALSE,
+
+        'settings' => array(
+            'file_directory' => 'field/image',
+            'file_extensions' => 'png gif jpg jpeg',
+            'max_filesize' => '',
+            'max_resolution' => '',
+            'min_resolution' => '',
+            'alt_field' => TRUE,
+            'title_field' => '',
+        ),
+
+        'widget' => array(
+            'type' => 'image_image',
+            'settings' => array(
+                'progress_indicator' => 'throbber',
+                'preview_image_style' => 'thumbnail',
+            ),
+            'weight' => -1,
+        ),
+
+        'display' => array(
+            'default' => array(
+                'label' => 'hidden',
+                'type' => 'image',
+                'settings' => array('image_style' => 'large', 'image_link' => ''),
+                'weight' => -1,
+            ),
+            'teaser' => array(
+                'label' => 'hidden',
+                'type' => 'image',
+                'settings' => array('image_style' => 'medium', 'image_link' => 'content'),
+                'weight' => -1,
+            ),
+        ),
+    );
+    field_create_instance($instance);
+
+    // Enable default permissions for system roles.
+    $filtered_html_permission = filter_permission_name($filtered_html_format);
+    user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access content', 'access comments', $filtered_html_permission));
+    user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array('access content', 'access comments', 'post comments', 'skip comment approval', $filtered_html_permission));
+
+    // Create a default role for site administrators, with all available permissions assigned.
+    $admin_role = new stdClass();
+    $admin_role->name = 'administrator';
+    $admin_role->weight = 2;
+    user_role_save($admin_role);
+    user_role_grant_permissions($admin_role->rid, array_keys(module_invoke_all('permission')));
+    // Set this as the administrator role.
+    variable_set('user_admin_role', $admin_role->rid);
+
+    // Assign user 1 the "administrator" role.
+    db_insert('users_roles')
+        ->fields(array('uid' => 1, 'rid' => $admin_role->rid))
+        ->execute();
+
+    // Assign permission to access contact form for anonymous user
+    db_insert('role_permission')
+        ->fields(array('rid' => DRUPAL_ANONYMOUS_RID, 'permission' => 'access site-wide contact form', 'module' => 'contact'))
+        ->execute();
+
+    // Assign permission to access contact form for authenticated user
+    db_insert('role_permission')
+        ->fields(array('rid' => DRUPAL_AUTHENTICATED_RID, 'permission' => 'access site-wide contact form', 'module' => 'contact'))
+        ->execute();
+
+    // Assign permission to access user contact form for authenticated user
+    db_insert('role_permission')
+        ->fields(array('rid' => DRUPAL_AUTHENTICATED_RID, 'permission' => 'access user contact forms', 'module' => 'contact'))
+        ->execute();
+
+/*
+    // Create a Home link in the main menu.
+    $item = array(
+        'link_title' => 'Home',
+        'link_path' => '<front>',
+        'menu_name' => 'main-menu',
+    );
+    menu_link_save($item);
+ */
+    _litecommerce_preconfigure_menu_links();
+
+    // Update the menu router information.
+    menu_rebuild();
+
+    // Enable the admin theme.
+    db_update('system')
+        ->fields(array('status' => 1))
+        ->condition('type', 'theme')
+        ->condition('name', 'seven')
+        ->execute();
+    variable_set('admin_theme', 'seven');
+    variable_set('node_admin_theme', '1');
+}
+
+
+/**
+ * LiteCommerce blocks installation
+ * 
+ * @return void
+ * @see    ____func_see____
+ * @since  1.0.0
+ */
+function _litecommerce_blocks($default_theme)
+{
+    $values = array(
+        // Top categories block
+        array(
+            'bid' => 1,
+            'block_custom' => array(
+                'info'     => 'Top categories',
+                'lc_class' => '\\XLite\\View\\TopCategories',
+            ),
+            'block_lc_widget_settings' => array(
+                'displayMode' => 'list',
+                'rootId' => '1',
+            ),
+            'block' => array(
+                'weight' => -14,
+                'region' => 'sidebar_first',
+                'title'  => 'Catalog',
+            ),
+        ),
+        // Subcategories block
+        array(
+            'bid' => 2,
+            'block_custom' => array(
+                'info'     => 'Subcategories',
+                'lc_class' => '\\XLite\\View\\Subcategories',
+            ),
+            'block_lc_widget_settings' => array(
+                'displayMode' => 'icons',
+                'iconHeight' => '170',
+                'iconWidth' => '170',
+            ),
+            'block' => array(
+                'weight' => -13,
+                'region' => 'content',
+            ),
+        ),
+        // Category products list block
+        array(
+            'bid' => 3,
+            'block_custom' => array(
+                'info'     => 'Category products',
+                'lc_class' => '\\XLite\\View\\ItemsList\\Product\\Customer\\Category',
+            ),
+            'block_lc_widget_settings' => array(
+                'displayMode' => 'grid',
+                'gridColumns' => 3,
+                'iconHeight' => '110',
+                'iconWidth' => '110',
+                'itemsPerPage' => '9',
+                'showAdd2Cart' => '1',
+                'showAllItemsPerPage' => '0',
+                'showDescription' => '1',
+                'showDisplayModeSelector' => '1',
+                'showItemsPerPageSelector' => '1',
+                'showPrice' => '1',
+                'showSortBySelector' => '1',
+                'showThumbnail' => '1',
+                'sidebarMaxItems' => '5',
+                'widgetType' => 'center',
+            ),
+            'block' => array(
+                'weight' => -12,
+                'region' => 'content',
+            ),
+        ),
+        // Powered by LiteCommerce CMS block
+        array(
+            'bid' => 4,
+            'block_custom' => array(
+                'info' => 'Powered by LC CMS',
+                'lc_class' => '\\XLite\\View\\PoweredBy',
+            ),
+            'block_lc_widget_settings' => array(),
+            'block' => array(
+                'weight' => 0,
+                'region' => 'footer',
+            ),
+        ),
+        // Simple search form block
+        array(
+            'bid' => 5,
+            'block_custom' => array(
+                'info' => 'Simple search form',
+                'lc_class' => '\\XLite\\View\\Form\\Product\\Search\\Customer\\Simple',
+            ),
+            'block_lc_widget_settings' => array(),
+            'block' => array(
+                'weight' => 0,
+                'region' => 'search',
+            ),
+        ),
+        // Search products list block
+        array(
+            'bid' => 6,
+            'block_custom' => array(
+                'info' => 'Search products list',
+                'lc_class' => '\\XLite\\View\\Search',
+            ),
+            'block_lc_widget_settings' => array(),
+            'block' => array(
+                'weight' => -11,
+                'region' => 'content',
+            ),
+        ),
+        // Bestsellers products list block
+        array(
+            'bid' => 7,
+            'block_custom' => array(
+                'info' => 'Bestsellers',
+                'lc_class' => '\\XLite\\Module\\CDev\\Bestsellers\\View\\Bestsellers',
+            ),
+            'block_lc_widget_settings' => array(
+                'displayMode' => 'grid',
+                'gridColumns' => 3,
+                'iconHeight' => '110',
+                'iconWidth' => '110',
+                'itemsPerPage' => '0',
+                'rootId' => '1',
+                'showAdd2Cart' => '1',
+                'showAllItemsPerPage' => '1',
+                'showDescription' => '1',
+                'showDisplayModeSelector' => '0',
+                'showItemsPerPageSelector' => '1',
+                'showPrice' => '1',
+                'showSortBySelector' => '0',
+                'showThumbnail' => '1',
+                'sidebarMaxItems' => '5',
+                'useNode' => '1',
+                'widgetType' => 'center',
+            ),
+            'block' => array(
+                'weight' => -10,
+                'region' => 'content',
+                'title'  => 'Bestsellers',
+            ),
+        ),
+        // Featured products list block
+        array(
+            'bid' => 8,
+            'block_custom' => array(
+                'info' => 'Featured products',
+                'lc_class' => '\\XLite\\Module\\CDev\\FeaturedProducts\\View\\Customer\\FeaturedProducts',
+            ),
+            'block_lc_widget_settings' => array(
+                'displayMode' => 'grid',
+                'gridColumns' => 3,
+                'iconHeight' => '110',
+                'iconWidth' => '110',
+                'itemsPerPage' => '0',
+                'showAdd2Cart' => '1',
+                'showAllItemsPerPage' => '1',
+                'showDescription' => '1',
+                'showDisplayModeSelector' => '0',
+                'showItemsPerPageSelector' => '1',
+                'showPrice' => '1',
+                'showSortBySelector' => '0',
+                'showThumbnail' => '1',
+                'sidebarMaxItems' => '5',
+                'widgetType' => 'center',
+            ),
+            'block' => array(
+                'weight' => -9,
+                'region' => 'content',
+                'title'  => 'Featured products',
+            ),
+        ),
+        // Minicart block
+        array(
+            'bid' => 9,
+            'block_custom' => array(
+                'info' => 'Minicart',
+                'lc_class' => '\\XLite\\View\\Minicart',
+            ),
+            'block_lc_widget_settings' => array(
+                'displayMode' => 'horizontal',
+            ),
+            'block' => array(
+                'weight' => 0,
+                'region' => 'header',
+            ),
+        ),
+    );
+
+    $block_custom_default_values = array(
+        'body'   => '____FROM_LC____',
+        'format' => 'filtered_html',
+    );
+
+    $block_default_values = array(
+        'module' => 'block',
+        'theme' => $default_theme,
+        'status' => '1',
+        'title' => '',
+        'pages' => '',
+        'cache' => '-1',
+    );
+
+    $query_block_custom = db_insert('block_custom')->fields(array('bid', 'info', 'lc_class', 'body', 'format'));
+    $query_block_lc_widget_settings = db_insert('block_lc_widget_settings')->fields(array('bid', 'name', 'value'));
+    $query_block = db_insert('block')->fields(array('delta', 'module', 'theme', 'status', 'weight', 'region', 'title', 'pages', 'cache'));
+
+    foreach ($values as $record) {
+
+        $bid = array('bid' => $record['bid']);
+        $record_block_custom = $bid + $record['block_custom'] + $block_custom_default_values;
+        $query_block_custom->values($record_block_custom);
+
+        foreach ($record['block_lc_widget_settings'] as $settingName => $settingValue) {
+            $record_block_lc_widget_settings = $bid + array('name' => $settingName, 'value' => $settingValue);
+            $query_block_lc_widget_settings->values($record_block_lc_widget_settings);
+        }
+
+        $record_block = array('delta' => $record['bid']) + $record['block'] + $block_default_values;
+        $query_block->values($record_block);
+    }
+
+    $query_block_custom->execute();
+    $query_block_lc_widget_settings->execute();
+    $query_block->execute();
+}
+
+/**
+ * Preconfigure Drupal menu_links 
+ * 
+ * @return void
+ * @see    ____func_see____
+ * @since  1.0.0
+ */
+function _litecommerce_preconfigure_menu_links()
+{
+    global $lc_nodes_values;
+
+    $menu = array(
+        'menu_name'   => 'secondary-menu',
+        'title'       => 'Secondary menu',
+        'description' => 'This menu is provided for secondary links menu and displayed at the bottom of pages',
+    );
+    
+    menu_save($menu);
+
+    variable_set('menu_secondary_links_source', 'secondary-menu');
+
+    $menu_links = array();
+
+    // Add menu link 'Your cart' into general navigation menu block
+
+    $menu_links[] = array(
+        'menu_name'   => 'navigation',
+        'link_path'   => 'store/cart',
+        'router_path' => 'store/%',
+        'link_title'  => 'My cart',
+        'weight'      => 0,
+    );
+
+    // Create primary links menu
+
+    $menu_links[] = array(
+        'menu_name'   => 'main-menu',
+        'link_path'   => '<front>',
+        'router_path' => '',
+        'link_title'  => 'Home',
+        'weight'      => 0,
+    );
+
+    $menu_links[] = array(
+        'menu_name'   => 'main-menu',
+        'link_path'   => 'user',
+        'router_path' => 'user',
+        'link_title'  => 'My Account',
+        'weight'      => 20,
+    );
+
+    $menu_links[] = array(
+        'menu_name'   => 'main-menu',
+        'link_path'   => 'contact',
+        'router_path' => 'contact',
+        'link_title'  => 'Contact Us',
+        'weight'      => 30,
+    );
+
+    // Create secondary links menu
+
+    $menu_links[] = array(
+        'menu_name'   => 'secondary-menu',
+        'link_path'   => '<front>',
+        'router_path' => '',
+        'link_title'  => 'Home',
+        'weight'      => 0,
+    );
+
+    $menu_links[] = array(
+        'menu_name'   => 'secondary-menu',
+        'link_path'   => sprintf('node/%d', $lc_nodes_values['terms-of-service']['nid']),
+        'router_path' => 'node/%',
+        'link_title'  => 'Terms of Service',
+        'weight'      => 10,
+    );
+
+    $menu_links[] = array(
+        'menu_name'   => 'secondary-menu',
+        'link_path'   => sprintf('node/%d', $lc_nodes_values['privacy-policy']['nid']),
+        'router_path' => 'node/%',
+        'link_title'  => 'Privacy Policy',
+        'weight'      => 20,
+    );
+
+    $menu_links[] = array(
+        'menu_name'   => 'secondary-menu',
+        'link_path'   => 'contact',
+        'router_path' => 'contact',
+        'link_title'  => 'Contact Us',
+        'weight'      => 30,
+    );
+
+    foreach ($menu_links as $menu_link) {
+        menu_link_save($menu_link);
+    }
+}
+
+/**
+ * Preconfigure Drupal nodes
+ * 
+ * @return void
+ * @see    ____func_see____
+ * @since  1.0.0
+ */
+function _litecommerce_preconfigure_node()
+{
+    $default_values = array(
+        'node' => array(
+            'type'      => 'page', 
+            'uid'       => 1,
+            'body'      => array(LANGUAGE_NONE => array(array('value' => 'asasa'))),
+            'comment'   => 0,
+            'moderate'  => 0,
+            'promote'   => 0,
+            'revision'  => 1,
+            'status'    => 1,
+            'sticky'    => 0,
+            'revisions' => NULL,
+            'log'       => '',
+            'language'  => LANGUAGE_NONE,
+        ),
+    );
+
+    global $lc_nodes_values;
+
+    $lc_nodes_values = array(
+        // 'Terms of Service' page node
+        'terms-of-service' => array(
+            'node' => array(
+                'title' => 'Terms of Service',
+                'body'  => array(
+                    LANGUAGE_NONE => array(
+                        array(
+                            'value' => 'Sample of Terms Service',
+                        ),
+                    ),
+                ),
+            ),
+            'url_alias' => array(
+                'alias' => 'terms-of-service.html',
+            ),
+        ),
+        // 'Privacy Policy' page node
+        'privacy-policy' => array(
+            'node' => array(
+                'title' => 'Privacy Policy',
+                'body'  => array(
+                    LANGUAGE_NONE => array(
+                        array(
+                            'value' => 'Sample of Privacy policy',
+                        ),
+                    ),
+                ),
+            ),
+            'url_alias' => array(
+                'alias' => 'privacy-policy.html',
+            ),
+        ),
+        // 'Page not found' page node
+        'page-not-found' => array(
+            'node' => array(
+                'title' => 'Page not found',
+                'body'  => array(
+                    LANGUAGE_NONE => array(
+                        array(
+                            'value' => '<div class="page-not-found"><span>404</span></div><div class="page-not-found-links"><p>The page you\'re looking for was either moved or deleted.<br /> You can start from the <a href="' . drupal_detect_baseurl() . '">home  page</a>.</p></div>',
+                            'format' => 'full_html',
+                        ),
+                    ),
+                ),
+            ),
+            'url_alias' => array(
+                'alias' => 'page-not-found.html',
+            ),
+        ),
+
+    );
+
+    foreach ($lc_nodes_values as $key => $value) {
+
+        // Prepare and save node
+        $node = (object) ($value['node'] + $default_values['node']);
+        node_save($node);
+
+        // Get node Id
+        $nid = $lc_nodes_values[$key]['nid'] = $node->nid;
+
+        // Prepare and save url alias for node
+        $path = array('source' => sprintf('node/%d', $nid), 'language' => LANGUAGE_NONE) + $value['url_alias'];
+        path_save($path);
+    }
+}
+
+/**
+ * Setup some variables 
+ * 
+ * @return void
+ * @see    ____func_see____
+ * @since  1.0.0
+ */
+function _litecommerce_preconfigure_variables()
+{
+    // Set up variables
+
+    variable_set('site_frontpage', 'store/main');
+
+    variable_set('menu_expanded', array('primary-links'));
+
+    $menu_breadcrumb_menus = variable_get('menu_breadcrumb_menus', array());
+
+    $menu_breadcrumb_menus['menu_breadcrumb_default_menu']['title'] = 'menu_breadcrumb_default_menu';
+    $menu_breadcrumb_menus['menu_breadcrumb_default_menu']['weight'] = '0';
+
+    $menu_breadcrumb_menus['navigation']['title'] = 'Navigation';
+    $menu_breadcrumb_menus['navigation']['weight'] = '0';
+
+    $menu_breadcrumb_menus['menu-gift-certificates'] = array(
+        'enabled' => 1,
+        'weight' => '0',
+        'type' => 'menu',
+        'name' => 'menu-gift-certificates'
+    );
+    $menu_breadcrumb_menus['primary-links'] = array(
+        'enabled' => 1,
+        'weight' => '0',
+        'type' => 'menu',
+        'title' => 'Primary links',
+        'name' => 'primary-links',
+    );
+    $menu_breadcrumb_menus['secondary-links'] = array(
+        'enabled' => 1,
+        'weight' => '0',
+        'type' => 'menu',
+        'name' => 'secondary-links'
+    );
+
+    variable_set('menu_breadcrumb_menus', $menu_breadcrumb_menus);
+    variable_set('menu_breadcrumb_pattern_matches_rebuild', false);
+    variable_set('menu_breadcrumb_determine_menu', 1);
+    variable_set('menu_breadcrumb_append_node_title', 1);
+    variable_set('menu_breadcrumb_append_node_url', 0);
+    variable_set('menu_breadcrumb_hide_on_single_item', 1);
+    variable_set('menu_breadcrumb_menu_patterns', '/^book-toc-\d+$/Books/');
+
+    variable_set('contact_form_information', '<p>Our friendly and helpful Customer Services team are here to help with any queries you might have.</p>');
+    
+    variable_set('menu_block_ids', array(1));
+    variable_set('menu_block_1_title_link', 0);
+    variable_set('menu_block_1_admin_title', 'My account');
+    variable_set('menu_block_1_parent', 'navigation:0');
+    variable_set('menu_block_1_level', '1');
+    variable_set('menu_block_1_follow', 0);
+    variable_set('menu_block_1_depth', '1');
+    variable_set('menu_block_1_expanded', 0);
+    variable_set('menu_block_1_sort', 0);
+}

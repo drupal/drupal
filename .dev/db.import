@@ -1,0 +1,115 @@
+#!/usr/local/php-530/bin/php
+<?php
+#
+# SVN: $Id: db.import 3894 2010-09-02 11:02:50Z max $
+#
+# DB dump import
+#
+
+// This line prevents PHP notices when script launched in console
+error_reporting(E_ALL ^ E_NOTICE);
+
+if (!defined('DRUPAL_ROOT')) {
+    define('DRUPAL_ROOT', dirname(realpath(__FILE__)) . '/../src');
+}
+
+define('EXT', ob_get_level() > 0);
+if (EXT) {
+    ob_end_clean();
+}
+
+$pathToSql = realpath(dirname(realpath(__FILE__)) . '/sql') . '/';
+
+$dumps = array();
+
+if (isset($argv[1]) && $argv[1] == "fromsite") {
+	// Import a website dump created with the following command:
+	// mysql {DB} -u{USER} -p{PASS} {нужно на сервере сайта: --socket=/var/run/mysqld/mysqld.sock} -e 'show tables like "drupal_%"' | grep -v Tables_in | xargs mysqldump --skip-extended-insert --complete-insert --add-drop-table -u{USER} -p{PASS} {нужно на сервере сайта: --socket=/var/run/mysqld/mysqld.sock} {DB} > lc-site-dump.sql
+	$dumps[] = 'lc-site-dump.sql';
+	$dumps[] = 'lc-site-localize.sql';
+
+} else {
+	// Import default dumps
+	$dumps[] = 'lcweb.sql';
+	$dumps[] = 'demo.sql';
+}
+
+// Drop & create database
+$dropDatabase = true;
+
+
+$dir = DRUPAL_ROOT . '/sites/default';
+
+$f1 = $dir . '/settings.php';
+
+require_once ($f1);
+
+$c = $databases['default']['default'];
+
+$tmp = explode(':', urldecode($c['host']));
+$c['host'] = $tmp[0];
+if (!empty($tmp[1])) {
+	$c['unix_socket'] = $tmp[1];
+}
+
+echo 'Database: ' . $c['database'] . "\n";
+echo 'User: ' . $c['username'] . "\n";
+echo 'Dump files: ' . "\n";
+
+if (isset($dropDatabase)) {
+
+    // Create db if not exists
+
+	$cmd = 'mysql -h' . $c['host'] . ' -u' . $c['username'] . ' -p' . $c['password'] . (isset($c['unix_socket']) ? ' -S ' . $c['unix_socket'] : '') . ' -e\'CREATE DATABASE IF NOT EXISTS `' . $c['database'] . '` DEFAULT CHARACTER SET utf8;\'';
+
+	$cmd = 'mysql -h' . $c['host'] . ' -u' . $c['username'] . ' -p' . $c['password'] . (isset($c['unix_socket']) ? ' -S ' . $c['unix_socket'] : '') . ' ' . $c['database'] . ' -e\'SHOW TABLES LIKE "drupal_%"\'';
+    exec($cmd, $out, $r);
+
+    if (!empty($out)) {
+	
+        echo 'Dropping old drupal tables...';
+
+        array_shift($out);
+
+        $baseCmd = 'DROP TABLE ';
+        $queries = $baseCmd . implode('; ' . $baseCmd, $out) . ';';
+
+        $cmd = 'mysql -h' . $c['host'] . ' -u' . $c['username'] . ' -p' . $c['password'] . (isset($c['unix_socket']) ? ' -S ' . $c['unix_socket'] : '') .' ' . $c['database'] . ' -e\'' . $queries . '\'';
+
+	    $out = array();
+    	$r = 0;
+
+	    exec($cmd, $out, $r);
+
+	    if ($r > 0) {
+    	    echo implode("\n", $out) . "\n";
+		    exit($r);
+    	}
+    
+        echo 'OK' . "\n";
+    }
+}
+
+foreach ($dumps as $sqlFile) {
+
+    if ($sqlFile && file_exists($pathToSql . $sqlFile)) {
+
+		echo "   $sqlFile...";
+
+		$cmd = 'mysql --default_character_set=utf8 -h' . $c['host'] . ' -u' . $c['username'] . ' -p' . $c['password'] . (isset($c['unix_socket']) ? ' -S ' . $c['unix_socket'] : '') . ' ' . $c['database'] . ' < ' . $pathToSql . $sqlFile;
+
+    	$out = array();
+	    $r = 0;
+		exec($cmd, $out, $r);
+
+		echo implode("\n", $out) . "\n";
+
+    	if ($r > 0) {
+	        exit($r);
+    	}
+	}
+}
+
+if (!EXT) {
+	exit($r);
+}

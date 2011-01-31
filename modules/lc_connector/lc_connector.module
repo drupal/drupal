@@ -1,0 +1,252 @@
+<?php
+// vim: set ts=4 sw=4 sts=4 et:
+
+/**
+ * @file
+ * General module functionality
+ *
+ * @category  Litecommerce connector
+ * @package   Litecommerce connector
+ * @author    Creative Development LLC <info@cdev.ru>
+ * @copyright Copyright (c) 2010 Creative Development LLC <info@cdev.ru>. All rights reserved
+ * @license   http://www.gnu.org/licenses/gpl-2.0.html GNU General Public License, version 2
+ * @version   SVN: $Id$
+ * @link      http://www.litecommerce.com/
+ * @see       ____file_see____
+ * @since     1.0.0
+ */
+
+// TODO: devcode, to remove
+error_reporting(E_ALL | E_STRICT);
+ini_set('display_errors', true);
+
+/**
+ * Module initialization
+ *
+ * @hook   init
+ * @return void
+ * @see    ____func_see____
+ * @since  1.0.0
+ */
+function lc_connector_init()
+{
+    return LCConnector_Handler::callSafely('Module', 'invokeHookInit');
+}
+
+/**
+ * Navigation menu access point declaration
+ *
+ * @hook   menu
+ * @return array
+ * @see    ____func_see____
+ * @since  1.0.0
+ */
+function lc_connector_menu()
+{
+    return array(
+        'admin/modules/lc_connector' => array(
+            'title'            => 'LC Connector',
+            'description'      => 'Settings for the LC connector module.',
+            'page callback'    => 'drupal_get_form',
+            'page arguments'   => array('lc_connector_get_settings_form'),
+            'access arguments' => array('administer users'),
+            'file'             => 'lc_connector.admin.inc',
+        ),
+    ) + ((array) LCConnector_Handler::callSafely('Module', 'invokeHookMenu'));
+}
+
+/**
+ * Modify admin area form for new widget
+ *
+ * @param array &$form       Form description
+ * @param array &$form_state Form state
+ *
+ * @hook   form_FORM_ID_alter
+ * @return void
+ * @see    ____func_see____
+ * @since  1.0.0
+ */
+function lc_connector_form_block_add_block_form_alter(array &$form, array &$form_state)
+{
+    return LCConnector_Handler::callSafely('Admin', 'alterWidgetModifyForm', array(&$form, &$form_state));
+}
+
+/**
+ * Modify admin area form for existing widget
+ *
+ * @param array &$form       Form description
+ * @param array &$form_state Form state
+ *
+ * @hook   form_FORM_ID_alter
+ * @return void
+ * @see    ____func_see____
+ * @since  1.0.0
+ */
+function lc_connector_form_block_admin_configure_alter(array &$form, array &$form_state)
+{
+    return LCConnector_Handler::callSafely('Admin', 'alterWidgetModifyForm', array(&$form, &$form_state));
+}
+
+/**
+ * Modify admin area form for widget delete confirmation
+ *
+ * @param array &$form       Form description
+ * @param array &$form_state Form state
+ *
+ * @hook   form_FORM_ID_alter
+ * @return void
+ * @see    ____func_see____
+ * @since  1.0.0
+ */
+function lc_connector_form_custom_block_delete_alter(array &$form, array &$form_state)
+{
+    return LCConnector_Handler::callSafely('Admin', 'alterWidgetDeleteForm', array(&$form, &$form_state));
+}
+
+/**
+ * Modify block content
+ *
+ * @param array     &$data      Data returned from the hook_block_view()
+ * @param \stdClass $form_state Block object loaded from the database
+ *
+ * @hook   block_view_alter
+ * @return void
+ * @see    ____func_see____
+ * @since  1.0.0
+ */
+function lc_connector_block_view_alter(array &$data, \stdClass $block)
+{
+    $result   = null;
+    $settings = block_custom_block_get($block->delta);
+
+    if (!empty($settings['lc_class'])) {
+        if (!($result = LCConnector_Handler::callSafely('Block', 'setBlockContent', array(&$data, $block)))) {
+            $data['content'] = null;
+        }
+    }
+
+    return $result;
+}
+
+/**
+ * A user account is about to be created or updated
+ * 
+ * @param array     $edit     The array of form values submitted by the user
+ * @param \stdClass $account  The user object on which the operation is performed
+ * @param mixed     $category The active category of user information being edited
+ *
+ * @hook   user_presave
+ * @return void
+ * @see    ____func_see____
+ * @since  1.0.0
+ */
+function lc_connector_user_presave(array &$edit, \stdClass $account, $category)
+{
+    return LCConnector_Handler::callSafely('Profile', 'performAction', array('presave', &$edit, $account, $category));
+}
+
+/**
+ * A user account was created
+ *
+ * @param array     $edit     The array of form values submitted by the user
+ * @param \stdClass $account  The user object on which the operation is performed
+ * @param mixed     $category The active category of user information being edited
+ *
+ * @hook   user_insert
+ * @return void
+ * @see    ____func_see____
+ * @since  1.0.0
+ */
+function lc_connector_user_insert(array &$edit, \stdClass $account, $category)
+{
+    return LCConnector_Handler::callSafely('Profile', 'performAction', array('insert', &$edit, $account, $category));
+}
+
+/**
+ * A user account was updated
+ *
+ * @param array     $edit     The array of form values submitted by the user
+ * @param \stdClass $account  The user object on which the operation is performed
+ * @param mixed     $category The active category of user information being edited
+ *
+ * @hook   user_update
+ * @return void
+ * @see    ____func_see____
+ * @since  1.0.0
+ */
+function lc_connector_user_update(array &$edit, \stdClass $account, $category)
+{
+    return LCConnector_Handler::callSafely('Profile', 'performAction', array('update', &$edit, $account, $category));
+}
+
+/**
+ * The user just logged in
+ *
+ * @param array     $edit     The array of form values submitted by the user
+ * @param \stdClass $account  The user object on which the operation is performed
+ * @param mixed     $category The active category of user information being edited
+ *
+ * @hook   user_login
+ * @return void
+ * @see    ____func_see____
+ * @since  1.0.0
+ */
+function lc_connector_user_login(array &$edit, \stdClass $account, $category)
+{
+    return LCConnector_Handler::callSafely('Profile', 'performAction', array('login', &$edit, $account, $category));
+}
+
+/**
+ * The user just logged out
+ * 
+ * @param \stdClass $account The user object on which the operation is performed
+ *
+ * @hook   user_logout
+ * @return void
+ * @see    ____func_see____
+ * @since  1.0.0
+ */
+function lc_connector_user_logout(\stdClass $account)
+{
+    $edit = array();
+
+    return LCConnector_Handler::callSafely('Profile', 'performAction', array('logout', &$edit, $account, $category));
+}
+
+/**
+ * Modify login form
+ *
+ * @param array &$form       Form description
+ * @param array &$form_state Form state
+ *
+ * @hook   form_FORM_ID_alter
+ * @return void
+ * @see    ____func_see____
+ * @since  1.0.0
+ */
+function lc_connector_form_user_login_block_alter(array &$form, array &$form_state)
+{
+    return LCConnector_Handler::callSafely('Customer', 'alterLoginForm', array(&$form, &$form_state));
+}
+
+
+/**
+ * Check access for current LC controller
+ *
+ * FIXME: due to the stupid Drupal architecture,
+ * this function is called before the module is initialized.
+ * So, we cannot move it into the "Include/Callbacks.php".
+ * See: http://drupal.org/node/928160
+ *
+ * TODO: check if we can call LC methods here.
+ * Or the initialization is not required.
+ * Or it's not needed to check anything here at all
+ *
+ * @return boolean
+ * @see    ____func_see____
+ * @since  1.0.0
+ */
+function lc_connector_check_controller_access()
+{
+    return is_null($result = LCConnector_Handler::callSafely('Controller', 'checkAccess')) ? true : $result;
+}

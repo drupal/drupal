@@ -1,0 +1,329 @@
+/* vim: set ts=2 sw=2 sts=2 et: */
+
+/**
+ * @file
+ * Styles specific for IE6 and IE7
+ *
+ * @category  LiteCommerce themes
+ * @package   LiteCommerce3 theme
+ * @author    Creative Development LLC <info@cdev.ru>
+ * @copyright Copyright (c) 2010 Creative Development LLC <info@cdev.ru>. All rights reserved
+ * @license   http://www.gnu.org/licenses/gpl-2.0.html GNU General Public License, version 2
+ * @version   SVN: $Id$
+ * @link      http://www.litecommerce.com/
+ * @see       ____file_see____
+ * @since     1.0.0
+ */
+
+/*
+ * Header
+ */
+
+#logo
+{
+	float: left;
+	width: 354px;
+}
+
+/*
+ * CSS emulation
+ */
+
+* html button,
+* html input.form-submit,
+* html #main-menu li,
+* html .delete-from-list input
+{
+  behavior: expression(
+    this.onmouseover = new Function("this.className += ' hover'"),
+    this.onmouseout = new Function("this.className = this.className.replace(' hover','')"),
+    this.style.behavior = null
+  );
+}
+
+* html #main-menu li.collapsed
+{
+  behavior: expression(
+    this.onmouseover = new Function("this.className += ' hover hover-collapsed'"),
+    this.onmouseout = new Function("this.className = this.className.replace(' hover hover-collapsed','')"),
+    this.style.behavior = null
+  );
+}
+
+* html #main-menu li.expanded
+{
+  behavior: expression(
+    this.onmouseover = new Function("this.className += ' hover hover-expanded'"),
+    this.onmouseout = new Function("this.className = this.className.replace(' hover hover-expanded','')"),
+    this.style.behavior = null
+  );
+}
+
+/*
+ * Buttons
+ */
+
+* html button.action
+{
+  padding: 2px 6px 2px 6px;
+  border: 2px outset ButtonFace;
+  background: ButtonFace;
+  color: ButtonText;
+  cursor: default;
+}
+
+*:first-child+html button.action    /* IE7 only */
+{
+  padding-top: 3px;
+  padding-bottom: 3px;
+}
+
+* html button.bright
+{
+  padding: 3px 6px 3px 6px;
+  border-style: outset;
+  border-width: 2px;
+  border-color: #f78c13;
+}
+
+/*
+ * Nodes
+ */
+
+* html div.comment .comment-submitted   /* IE6 bug */
+{
+  margin-left: 63px;
+}
+
+/*
+ * Main menu
+ */
+
+#main-menu
+{
+  position: relative;           /* IE6 & IE7: popup menus above the page contents */
+  z-index: 1;
+}
+
+* html #main-menu li a    /* IE6 only */
+{
+  width: 0;
+  white-space: nowrap;
+}
+
+* html #main-menu ul.menu a
+{
+  width: 100%;
+}
+
+#main-menu ul.menu
+{
+  z-index: 1;
+  zoom: 100%;
+}
+
+#main-menu ul.menu li
+{
+  list-style-image: none;
+  width: 100%;
+  float: left;
+}
+
+/* Colors for selected items */
+
+#main-menu li.hover a
+{
+  background-position: left bottom;
+  color: white;
+}
+
+#main-menu li.hover-expanded a,
+#main-menu li.hover-collapsed:hover a
+{
+  background-position: right bottom;
+}
+
+* html #main-menu ul.menu li.collapsed a,
+* html #main-menu ul.menu li.expanded a
+{
+  background-position: 210px -7px;
+}
+
+#main-menu li.hover li a
+{
+  color: #2c5fa6;
+}
+
+#main-menu li.hover li a:hover
+{
+  color: #0f9dcc;
+}
+
+#main-menu ul li.hover a,
+#main-menu ul li li.hover a,
+#main-menu ul li li li.hover a,
+#main-menu ul li li li li.hover a,
+#main-menu ul li li li li li.hover a
+{
+  background-color: #eff8fe;
+}
+
+#main-menu ul li.hover * a,
+#main-menu ul li li.hover * a,
+#main-menu ul li li li.hover * a,
+#main-menu ul li li li li.hover * a,
+#main-menu ul li li li li li.hover * a
+{
+  background-color: white;
+}
+
+#main-menu ul.menu .expanded a,
+#main-menu ul.menu .collapsed a,
+#main-menu ul.menu li .expanded a,
+#main-menu ul.menu li .collapsed a,
+#main-menu ul.menu li li .expanded a,
+#main-menu ul.menu li li .collapsed a,
+#main-menu ul.menu li li li .expanded a,
+#main-menu ul.menu li li li .collapsed a,
+#main-menu ul.menu li li li li .expanded a,
+#main-menu ul.menu li li li li .collapsed a
+{
+  background-image: url(../images/menu-arrows.png);
+  background-repeat: no-repeat;
+  background-position: 184px -7px;
+}
+
+#main-menu ul.menu .expanded * a,
+#main-menu ul.menu .collapsed * a,
+#main-menu ul.menu li .expanded * a,
+#main-menu ul.menu li .collapsed * a,
+#main-menu ul.menu li li .expanded * a,
+#main-menu ul.menu li li .collapsed * a,
+#main-menu ul.menu li li li .expanded * a,
+#main-menu ul.menu li li li .collapsed * a,
+#main-menu ul.menu li li li li .expanded * a,
+#main-menu ul.menu li li li li .collapsed * a
+{
+  background-image: none;
+}
+
+
+/* Popup child menus */
+
+
+/* #main-menu li ul, */
+
+#main-menu li.hover ul,
+#main-menu li li.hover ul,
+#main-menu li li li.hover ul,
+#main-menu li li li li.hover ul,
+#main-menu li li li li li.hover ul
+{
+  display: block;
+}
+
+#main-menu li.hover * ul,
+#main-menu li li.hover * ul,
+#main-menu li li li.hover * ul,
+#main-menu li li li li.hover * ul,
+#main-menu li li li li li.hover * ul
+{
+  display: none;
+}
+
+/*
+ * Menus
+ */
+
+.sidebar ul.menu li
+{
+  list-style-image: none;
+  zoom: 1;
+}
+
+/*
+ * Tabs
+ */
+
+div.tabs ul.primary li a
+{
+  float: left;
+  line-height: 31px;
+  padding: 0 18px;
+}
+
+div.tabs ul.primary li.active a
+{
+  border-bottom: 0px none white;
+}
+
+/*
+ * Search box
+ */
+
+#search-box div#search input.form-text
+{
+  border-style: solid;
+}
+
+#search-box
+{
+  width: 232px;
+  float: right;
+}
+
+/*
+ * LC3-specific hacks
+ */
+
+.products .product-cell .drag-n-drop-handle  /* Disable drag'n'drop adding of products to cart */
+{
+  display: none;
+}
+
+ul.display-modes li
+{
+  line-height: 36px;
+}
+
+/* IE6 doesn't support transparent borders */
+* html .products .products-list .product-cell td
+{
+  border-color: #fff;
+}
+
+.products table.products-grid
+{
+  width: auto;
+  margin: 0;
+}
+
+.products-list div.product-photo
+{
+  zoom: 1;
+}
+
+/*
+ * Pager
+ */
+
+/* IE6 requires this in order to correctly display li as "inline-blocks */
+* html .item-list .pager li
+{
+  display: inline;
+  border-style: none;           /* Hide the border in IE6 */
+}
+
+/* IE7 requires this in order to correctly display li as "inline-blocks */
+*:first-child+html .item-list .pager li
+{
+  display: inline;
+}
+
+/* IE6 only */
+* html .tablesort-indicator
+{
+  background-image: none;
+  padding: 0;
+  margin: 0;
+}

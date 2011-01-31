@@ -1,0 +1,139 @@
+<?php
+// vim: set ts=4 sw=4 sts=4 et:
+
+/**
+ * @file
+ * Installation routines
+ *
+ * @category  Litecommerce connector
+ * @package   Litecommerce connector
+ * @author    Creative Development LLC <info@cdev.ru>
+ * @copyright Copyright (c) 2010 Creative Development LLC <info@cdev.ru>. All rights reserved
+ * @license   http://www.gnu.org/licenses/gpl-2.0.html GNU General Public License, version 2
+ * @version   SVN: $Id$
+ * @link      http://www.litecommerce.com/
+ * @see       ____file_see____
+ * @since     1.0.0
+ */
+
+/**
+ * Module tables schema
+ * 
+ * @hook   schema
+ * @return void
+ * @see    ____func_see____
+ * @since  1.0.0
+ */
+function lc_connector_schema()
+{
+    return LCConnector_Install::getSchema();
+}
+
+/**
+ * Install module
+ *
+ * @hook   install
+ * @return void
+ * @see    ____func_see____
+ * @since  1.0.0
+ */
+function lc_connector_install()
+{
+    LCConnector_Install::performInstall();
+}
+
+/**
+ * Uninstall module
+ *
+ * @hook   uninstall
+ * @return void
+ * @see    ____func_see____
+ * @since  1.0.0
+ */
+function lc_connector_uninstall()
+{
+    LCConnector_Install::performUninstall();
+}
+
+/**
+ * Implementation of hook_requirements()
+ *
+ * @hook   requirements
+ * @return array
+ * @see    ____func_see____
+ * @since  1.0.0
+ */
+function lc_connector_requirements($phase)
+{
+    return LCConnector_Install::checkRequirements($phase);
+}
+
+
+
+// --------------- FIXME: all of the code below must be revised -
+
+/**
+ * Returns an array of database connection parameters
+ *
+ * @return array
+ * @see    ____func_see____
+ * @since  1.0.0
+ */
+function lc_connector_get_database_params()
+{
+    $dbParams = &drupal_static(__FUNCTION__, null);
+
+    if (!isset($dbParams)) {
+
+        global $databases;
+
+        $dbParams = array();
+
+        if (!empty($databases['default']['default'])) {
+
+            $mysql = $databases['default']['default'];
+
+            $dbParams['mysqluser'] = $mysql['username'];
+            $dbParams['mysqlpass'] = $mysql['password'];
+            $dbParams['mysqlhost'] = $mysql['host'];
+            $dbParams['mysqlport'] = isset($mysql['port']) ? $mysql['port'] : '';
+            $dbParams['mysqlsock'] = isset($mysql['unix_socket']) ? $mysql['unix_socket'] : '';
+            $dbParams['mysqlbase'] = $mysql['database'];
+        }
+    }
+
+    return $dbParams;
+}
+
+/**
+ * Detect the LiteCommerce directory
+ * Returns a absolute path of a directory or null if not found
+ *
+ * @return string
+ * @see    ____func_see____
+ * @since  1.0.0
+ */
+function lc_connector_get_litecommerce_dir()
+{
+    $result = &drupal_static(__FUNCTION__, null);
+
+    if (!isset($result)) {
+
+        if (!LCConnector_Install::isLCExists()) {
+            drupal_set_message(st('Installation cannot proceed because of LiteCommerce software not found. LiteCommerce software is a part of Ecommerce CMS package and it must be located within LC connector module directory.'), 'error');
+        
+        } else {
+            $result = LCConnector_Install::getLCCanonicalDir();
+        }
+    }
+
+    return $result;
+}
+
+// Include some scripts if not loaded yet
+if (!class_exists('LCConnector_Install')) {
+    $currentDir = dirname(__FILE__);
+    require_once $currentDir . '/classes/Abstract.php';
+    require_once $currentDir . '/classes/Install.php';
+}
+
