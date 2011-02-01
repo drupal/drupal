@@ -24,7 +24,28 @@ if (version_compare(PHP_VERSION, '5.3.0') < 0) {
 
 define('DEV_MODE', 1);
 
-$drupal_root_dir = realpath(dirname(__FILE__) . '/../');
+$d = dirname(__FILE__);
+$drupal_root_dir = null;
+if (preg_match('/.\.dev$/Ss', $d)) {
+    $drupal_root_dir = $d . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR;
+
+} else {
+    while ($d != dirname($d) && !file_exists($d . DIRECTORY_SEPARATOR . 'index.php')) {
+        $d = dirname($d);
+    }
+    if ($d && $d != dirname($d)) {
+        $drupal_root_dir = $d;
+    }
+}
+
+if (isset($drupal_root_dir))  {
+    $drupal_root_dir = realpath($drupal_root_dir);
+
+} else {
+    echo ('Drupal root not found!' . PHP_EOL);
+    die(1);
+}
+
 chdir($drupal_root_dir);
 
 /**
