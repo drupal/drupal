@@ -214,7 +214,7 @@ function drupal_install_profile_distribution_name() {
  *   The auto-detected $base_url that should be configured in settings.php
  */
 function drupal_detect_baseurl($file = 'install.php') {
-  $proto = $_SERVER['HTTPS'] ? 'https://' : 'http://';
+  $proto = isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on' ? 'https://' : 'http://';
   $host = $_SERVER['SERVER_NAME'];
   $port = ($_SERVER['SERVER_PORT'] == 80 ? '' : ':' . $_SERVER['SERVER_PORT']);
   $uri = preg_replace("/\?.*/", '', $_SERVER['REQUEST_URI']);
