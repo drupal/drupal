@@ -10,7 +10,7 @@
 error_reporting(E_ALL ^ E_NOTICE);
 
 if (!defined('DRUPAL_ROOT')) {
-    define('DRUPAL_ROOT', dirname(realpath(__FILE__)) . '/../src');
+    define('DRUPAL_ROOT', dirname(realpath(__FILE__)) . '/..');
 }
 
 define('EXT', ob_get_level() > 0);
