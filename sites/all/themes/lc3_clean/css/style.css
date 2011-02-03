@@ -1482,13 +1482,29 @@ div.tabs .secondary a.active
   font-size: 12px;
   background: #f7f7f7;
   padding: 26px;
+  padding-bottom: 0px;
   margin: 40px 0 7px;
   position: relative;       /* Position Facebook and Twitter links inside the footer box */
+}
+
+.powered-by {
+  border-top: 1px solid #dbdbdb; 
+  padding-top: 11px;
+  padding-bottom: 10px;
+  font-size: 11px;
 }
 
 .powered-by p
 {
   margin: 0 0 7px;
+  display: inline;
+  width: 45%;
+  white-space: nowrap;
+}
+
+.powered-by .powered-by-label {
+  float: right;
+  text-align: right;
 }
 
 /*
@@ -1498,7 +1514,7 @@ div.tabs .secondary a.active
 #social-links
 {
   position: absolute;
-  top: -11px;
+  top: -10px;
   right: 30px;
 }
 
@@ -1545,7 +1561,7 @@ div.tabs .secondary a.active
 #secondary-menu
 {
   padding: 0;
-  margin: 0 0 24px;
+  margin: 3px 0 24px;
 }
 
 #secondary-menu li
@@ -1567,7 +1583,7 @@ div.tabs .secondary a.active
   border-style: none none none solid;
   border-width: 1px;
   border-color: #7f7f7f;
-  padding: 0 18px 1px;
+  padding: 0 17px 1px;
   line-height: 0.9em;
 }
 
