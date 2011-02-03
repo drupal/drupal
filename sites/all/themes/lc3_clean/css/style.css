@@ -331,10 +331,72 @@ input[type="text"]
 label
 {
   color: #53769d;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: normal;
-  line-height: 24px;
-  white-space: nowrap;
+  line-height: 18px;
+  vertical-align: top;
+}
+
+.form-item label {
+  display: inline-block;
+  vertical-align: top;
+  color: #53769d;
+  padding-top: 3px;
+  font-weight: normal;
+  width: 160px;
+}
+
+.form-item .description,
+form .wysiwyg,
+.form-item label.option,
+form .wysiwyg + p
+{
+  padding-left: 165px;
+}
+
+.form-item .form-radios label.option,
+.form-item .form-checkboxes label.option,
+form table .form-item label.option
+{
+  padding-left: 0px;
+}
+
+.form-item .description {
+  color: #1a6992;
+  font-size: 10px;
+  margin-top: 7px;
+}
+
+.form-item .resizable-textarea {
+  display: inline-block;
+  width: auto;
+}
+
+.form-item .form-radios,
+.form-item .form-checkboxes
+{
+  display: inline-block;
+  margin: 0px;
+}
+
+.form-required {
+  line-height: 16px;
+}
+
+.password-parent {
+  width: 42em;
+}
+
+div.password-strength,
+div.password-confirm
+{
+  margin-top: 0px;
+  font-size: 12px;
+  padding-left: 3px;
+}
+
+.password-description ul li {
+  background-image: none;
 }
 
 /* Filter form */
@@ -1341,8 +1403,8 @@ ul.tabs li
 
 div.tabs .primary
 {
-  height: 32px;
-  line-height: 32px;
+  height: 31px;
+  line-height: 31px;
   padding: 0;
   border-bottom-style: solid;
   border-bottom-width: 1px;
@@ -1927,3 +1989,127 @@ ul.pager li.next-page
   background-image: url(../images/forum.png);
 }
 
+/**
+ * Form : user-profile
+ */
+#user-profile-form fieldset {
+  margin-top: 33px;
+}
+
+#user-profile-form .form-item label {
+  padding-left: 4px;
+  width: 151px;
+}
+
+#user-profile-form legend {
+  margin-left: -6px;
+}
+
+#user-profile-form .form-item .description,
+#user-profile-form .wysiwyg,
+#user-profile-form .form-item label.option,
+#user-profile-form .wysiwyg + p
+{
+  padding-left: 160px;
+}
+
+#user-profile-form .form-item .form-radios label.option,
+#user-profile-form .form-item .form-checkboxes label.option
+{
+  padding-left: 0px;
+}
+
+#user-profile-form .form-required {
+  float: right;
+}
+
+#user-profile-form #edit-mail-wrapper {
+  margin-top: 10px;
+}
+
+#user-profile-form #edit-mail,
+#user-profile-form #edit-pass-wrapper input,
+#user-profile-form #edit-pass-pass2-wrapper input
+{
+  width: 240px;
+}
+
+#user-profile-form .form-type-password-confirm {
+  margin-top: 48px;
+}
+
+#user-profile-form .form-item-pass-pass2 {
+  margin-top: 30px;
+}
+
+#user-profile-form #edit-pass-wrapper input,
+#user-profile-form #edit-pass-pass2-wrapper input
+{
+  vertical-align: middle;
+}
+
+#user-profile-form .form-item .password-suggestions {
+  margin-left: 159px;
+  margin-top: 14px;
+  width: 416px;
+  line-height: 20px;
+  font-size: 12px;
+  padding: 13px 17px;
+}
+
+#user-profile-form .password-suggestions li {
+  background-image: none;
+}
+
+#user-profile-form .picture-block .fieldset-wrapper {
+  margin-top: 9px;
+}
+
+#user-profile-form .picture-block .user-picture {
+  float: left;
+}
+
+#user-profile-form .picture-block label.option,
+#user-profile-form .picture-block .description
+{
+  padding-left: 0px;
+}
+
+#user-profile-form .picture-block .form-item {
+  margin-left: 97px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+#user-profile-form .picture-block .form-item-picture-delete input {
+  margin-top: 5px;
+}
+
+#user-profile-form .picture-block .form-item-picture-delete label {
+  vertical-align: middle;
+}
+
+#user-profile-form .picture-block .form-item-files-picture-upload {
+  padding-top: 4px;
+}
+
+#user-profile-form .picture-block .form-item-files-picture-upload label {
+  display: block;
+  width: 100%;
+  padding-bottom: 4px;
+}
+
+#user-profile-form #edit-delete {
+  border: 0px none;
+  background: transparent url(../images/icon_trash.png) no-repeat left 10px;
+  color: #333;
+  padding-left: 18px;
+  padding-top: 5px;
+  height: 36px;
+  vertical-align: middle;
+}
+
+#user-profile-form #edit-delete span {
+  text-decoration: underline;
+  vertical-align: middle;
+}
