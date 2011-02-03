@@ -74,6 +74,11 @@ function lc3_clean_theme(&$existing, $type, $theme, $path)
             'file' => 'templates/theme.inc',
             'render element' => 'element',
         ),
+        // input with type=password
+        'password' => array(
+            'file' => 'templates/theme.inc',
+            'render element' => 'element',
+        ),
         // Drupal pagers
         'pager' => array(
             'file' => 'templates/theme.inc',
@@ -301,6 +306,56 @@ function lc3_clean_form_user_pass_alter(&$form, &$form_state, $form_id)
 
     // Shorten the label
     $form['name']['#title'] = t('Username or e-mail');
+}
+
+/**
+ * Alter the 'user-profile' form
+ * 
+ * @param array  $form        Nested array of form elements that comprise the form.
+ * @param array  $form_state  A keyed array containing the current state of the form
+ * @param string $form_id     String representing the name of the form itself
+ *
+ * @return void
+ * @access public
+ *
+ * @see hook_form_alter()
+ * @see drupal_prepare_form()
+ */
+function lc3_clean_form_user_profile_form_alter(&$form, &$form_state, $form_id)
+{
+    if (isset($form['picture'])) {
+        if (!isset($form['picture']['#attributes'])) {
+            $form['picture']['#attributes'] = array();
+        }
+
+        if (!isset($form['picture']['#attributes']['class'])) {
+            $form['picture']['#attributes']['class'] = array('picture-block');
+
+        } else {
+            $form['picture']['#attributes']['class'][] = ' picture-block';
+        }
+    }
+
+    if (!isset($form['actions']['#attributes'])) {
+        $form['actions']['#attributes'] = array();
+    }
+
+    if (!isset($form['actions']['#attributes']['class'])) {
+        $form['actions']['#attributes']['class'] = array();
+    }
+
+    $form['actions']['#attributes']['class'][] = 'buttons-box';
+    $form['actions']['#attributes']['class'][] = 'floatable-box';
+
+    if (!isset($form['actions']['submit']['#attributes'])) {
+        $form['actions']['submit']['#attributes'] = array();
+    }
+
+    if (!isset($form['actions']['submit']['#attributes']['class'])) {
+        $form['actions']['submit']['#attributes']['class'] = array();
+    }
+
+    $form['actions']['submit']['#attributes']['class'][] = 'action';
 }
 
 /**
