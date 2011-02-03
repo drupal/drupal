@@ -166,6 +166,27 @@ function lc3_clean_button($vars)
 }
 
 /**
+ * Returns HTML for a password form element.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - element: An associative array containing the properties of the element.
+ *     Properties used: #title, #value, #description, #size, #maxlength,
+ *     #required, #attributes.
+ *
+ * @ingroup themeable
+ */
+function lc3_clean_password($variables) {
+  $element = $variables['element'];
+  $element['#attributes']['type'] = 'password';
+  $element['#attributes']['autocomplete'] = 'off';
+  element_set_attributes($element, array('id', 'name', 'size', 'maxlength'));
+  _form_set_class($element, array('form-text'));
+
+  return '<input' . drupal_attributes($element['#attributes']) . ' />';
+}
+
+/**
  * Renders a pager
  *
  * @param array $vars Array containing:

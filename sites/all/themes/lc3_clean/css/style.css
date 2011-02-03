@@ -1782,6 +1782,26 @@ div.tabs .secondary a.active
   margin-top: 56px;
 }
 
+/**
+ * Float box
+ */
+form .floatable-box {
+  width: 30%;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+  text-align: center;
+  padding: 14px 17px;
+  vertical-align: middle;
+}
+
+form .floatable-box.float-box {
+  position: fixed;
+  bottom: 20px;
+  background-color: #fff;
+  opacity: 0.9;
+}
+
 
 /*
  * Pagers
