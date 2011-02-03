@@ -954,7 +954,7 @@ ul.account-links a:hover
 .blockMsg .close-link,
 .blockMsg .block-container
 {
-  background-color: black;
+  background-color: #7a7a7a;
 }
 
 /* Common popup styles */
