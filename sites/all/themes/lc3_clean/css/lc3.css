@@ -885,35 +885,18 @@ div.product-details .product-image-gallery
 
 
 
-.product-details .product-stock-level,
-.product-details .product-more-link
+.product-details .product-more-link,
+.product-details .stock-level,
+.product-quicklook .stock-level
 {
   font-size: 18px;
 }
 
 .product-details .product-more-link
 {
-  margin-bottom: 30px;
+  margin-bottom: 20px;
   display: block;
 }
-
-div.product-details .product-stock-level
-{
-  margin-bottom: 20px;
-}
-
-.product-details .product-stock-level
-{
-  color: #019026;
-  margin-top: 20px;
-}
-
-.product-details .product-stock-level span
-{
-  font-size: 14px;
-  color: #888;
-}
-
 
 .product-details .product-price
 {
@@ -951,6 +934,25 @@ div.product-details .product-stock-level
 .product-details .product-qty
 {
   margin-bottom: 20px;
+}
+
+.product-details .product-out-of-stock,
+.product-quicklook .product-out-of-stock,
+.product-details .product-items-available
+{
+  color: #888;
+
+}
+
+.product-details .product-in-stock,
+.product-quicklook .product-in-stock
+{
+  color: #019026;
+}
+
+.product-details .product-items-available
+{
+  font-size: 14px;
 }
 
 .product-quicklook .product-qty
@@ -1009,7 +1011,12 @@ button.buy-more span
 div.product-details button.continue
 {
   display: block;
-  margin-left: 94px;
+}
+
+div.product-details .continue-button-intend
+{
+  width: 94px;
+  float: left;
 }
 
 
