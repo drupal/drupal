@@ -228,7 +228,19 @@ function image_update_7000() {
 
     db_create_table('cache_image', $schema['cache_image']);
     db_create_table('image_styles', $schema['image_styles']);
-    db_create_table('image_effect', $schema['image_effects']);
+    db_create_table('image_effects', $schema['image_effects']);
+  }
+}
+
+/**
+ * Rename possibly misnamed {image_effect} table to {image_effects}.
+ */
+function image_update_7001() {
+  // Due to a bug in earlier versions of image_update_7000() it is possible
+  // to end up with an {image_effect} table where there should be an
+  // {image_effects} table.
+  if (!db_table_exists('image_effects') && db_table_exists('image_effect')) {
+    db_rename_table('image_effect', 'image_effects');
   }
 }
 
