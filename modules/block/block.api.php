@@ -77,12 +77,12 @@
  *     enabled theme, the block will be disabled.
  *   - 'visibility': (optional) Initial value for the visibility flag, which
  *     tells how to interpret the 'pages' value. Possible values are:
- *     - 0: Show on all pages except listed pages. 'pages' lists the paths where
- *       the block should not be shown.
- *     - 1: Show only on listed pages. 'pages' lists the paths where the block
- *       should be shown.
- *     - 2: Use custom PHP code to determine visibility. 'pages' gives the PHP
- *       code to use.
+ *     - BLOCK_VISIBILITY_NOTLISTED: Show on all pages except listed pages.
+ *       'pages' lists the paths where the block should not be shown.
+ *     - BLOCK_VISIBILITY_LISTED: Show only on listed pages. 'pages' lists the
+ *       paths where the block should be shown.
+ *     - BLOCK_VISIBILITY_PHP: Use custom PHP code to determine visibility.
+ *       'pages' gives the PHP code to use.
  *     Most modules do not provide an initial value for 'visibility' or 'pages',
  *     and any value provided can be modified by a user on the block
  *     configuration screen.
