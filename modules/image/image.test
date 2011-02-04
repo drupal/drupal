@@ -155,12 +155,27 @@ class ImageStylesPathAndUrlUnitTest extends DrupalWebTestCase {
   }
 
   /**
+   * Test image_style_url() with the "public://" scheme and unclean URLs.
+   */
+   function testImageStylUrlAndPathPublicUnclean() {
+     $this->_testImageStyleUrlAndPath('public', FALSE);
+   }
+
+  /**
+   * Test image_style_url() with the "private://" schema and unclean URLs.
+   */
+  function testImageStyleUrlAndPathPrivateUnclean() {
+    $this->_testImageStyleUrlAndPath('private', FALSE);
+  }
+
+  /**
    * Test image_style_url().
    */
-  function _testImageStyleUrlAndPath($scheme) {
+  function _testImageStyleUrlAndPath($scheme, $clean_url = TRUE) {
     // Make the default scheme neither "public" nor "private" to verify the
     // functions work for other than the default scheme.
     variable_set('file_default_scheme', 'temporary');
+    variable_set('clean_url', $clean_url);
 
     // Create the directories for the styles.
     $directory = $scheme . '://styles/' . $this->style_name;
@@ -181,6 +196,10 @@ class ImageStylesPathAndUrlUnitTest extends DrupalWebTestCase {
     $generated_uri = $scheme . '://styles/' . $this->style_name . '/' . $scheme . '/'. basename($original_uri);
     $this->assertFalse(file_exists($generated_uri), t('Generated file does not exist.'));
     $generate_url = image_style_url($this->style_name, $original_uri);
+
+    if (!$clean_url) {
+      $this->assertTrue(strpos($generate_url, '?q=') !== FALSE, 'When using non-clean URLS, the system path contains the query string.');
+    }
 
     // Fetch the URL that generates the file.
     $this->drupalGet($generate_url);

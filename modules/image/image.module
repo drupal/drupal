@@ -805,16 +805,18 @@ function image_style_flush($style) {
  * @see image_style_deliver()
  */
 function image_style_url($style_name, $path) {
-  $scheme = file_uri_scheme($path);
-  if ($scheme === 'private') {
-    $target = file_uri_target($path);
-    $url = url('system/files/styles/' . $style_name . '/' . $scheme . '/' . $target, array('absolute' => TRUE));
+  $uri = image_style_path($style_name, $path);
+
+  // If not using clean URLs, the image derivative callback is only available
+  // with the query string. If the file does not exist, use url() to ensure
+  // that it is included. Once the file exists it's fine to fall back to the
+  // actual file path, this avoids bootstrapping PHP once the files are built.
+  if (!variable_get('clean_url') && file_uri_scheme($uri) == 'public' && !file_exists($uri)) {
+    $directory_path = file_stream_wrapper_get_instance_by_uri($uri)->getDirectoryPath();
+    return url($directory_path . '/' . file_uri_target($uri), array('absolute' => TRUE));
   }
-  else {
-    $destination = image_style_path($style_name, $path);
-    $url = url(file_stream_wrapper_get_instance_by_scheme($scheme)->getDirectoryPath() . '/' . file_uri_target($destination), array('absolute' => TRUE));
-  }
-  return $url;
+
+  return file_create_url($uri);
 }
 
 /**
@@ -1092,16 +1094,7 @@ function image_effect_apply($image, $effect) {
  * @ingroup themeable
  */
 function theme_image_style($variables) {
-  $style_name = $variables['style_name'];
-  $path = $variables['path'];
-
-  // The derivative image is not created until it has been requested so the file
-  // may not yet exist, in this case we just fallback to the URL.
-  $style_path = image_style_path($style_name, $path);
-  if (!file_exists($style_path)) {
-    $style_path = image_style_url($style_name, $path);
-  }
-  $variables['path'] = $style_path;
+  $variables['path'] = image_style_url($variables['style_name'], $variables['path']);
   return theme('image', $variables);
 }
 
