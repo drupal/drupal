@@ -1,6 +1,11 @@
 <?php
 // $Id$
 
+/**
+ * @file 
+ * Tests for comment.module.
+ */
+
 class CommentHelperCase extends DrupalWebTestCase {
   protected $admin_user;
   protected $web_user;

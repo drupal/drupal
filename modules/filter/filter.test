@@ -2,6 +2,11 @@
 // $Id$
 
 /**
+ * @file
+ * Tests for filter.module.
+ */
+
+/**
  * Tests for text format and filter CRUD operations.
  */
 class FilterCRUDTestCase extends DrupalWebTestCase {

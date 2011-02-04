@@ -2,6 +2,11 @@
 // $Id$
 
 /**
+ * @file
+ * Tests for profile.module.
+ */
+
+/**
  * A class for common methods for testing profile fields.
  */
 class ProfileTestCase extends DrupalWebTestCase {

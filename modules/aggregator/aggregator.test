@@ -3,7 +3,7 @@
 
 /**
  * @file
- * Creates tests for aggregator module.
+ * Tests for aggregator.module.
  */
 
 class AggregatorTestCase extends DrupalWebTestCase {

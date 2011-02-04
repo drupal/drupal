@@ -1,6 +1,11 @@
 <?php
 // $Id$
 
+/**
+ * @file
+ * Tests for text.module.
+ */
+
 class TextFieldTestCase extends DrupalWebTestCase {
   protected $instance;
   protected $admin_user;

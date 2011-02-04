@@ -2,6 +2,11 @@
 // $Id$
 
 /**
+ * @file
+ * Tests for statistics.module.
+ */
+
+/**
  * Sets up a base class for the Statistics module.
  */
 class StatisticsTestCase extends DrupalWebTestCase {

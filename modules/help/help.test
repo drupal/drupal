@@ -1,6 +1,11 @@
 <?php
 // $Id$
 
+/**
+ * @file
+ * Tests for help.module.
+ */
+
 class HelpTestCase extends DrupalWebTestCase {
   protected $big_user;
   protected $any_user;

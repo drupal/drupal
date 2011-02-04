@@ -1,6 +1,11 @@
 <?php
 // $Id$
 
+/**
+ * @file
+ * Tests for simpletest.module.
+ */
+
 class SimpleTestFunctionalTest extends DrupalWebTestCase {
   /**
    * The results array that has been parsed by getTestResults().

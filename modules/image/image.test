@@ -3,9 +3,8 @@
 
 /**
  * @file
- * Image module tests.
+ * Tests for image.module.
  */
-
 
 /**
  * TODO: Test the following functions.

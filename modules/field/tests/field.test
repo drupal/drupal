@@ -3,7 +3,7 @@
 
 /**
  * @file
- * Unit test file for fields in core.
+ * Tests for field.module.
  */
 
 /**

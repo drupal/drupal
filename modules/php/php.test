@@ -2,6 +2,11 @@
 // $Id$
 
 /**
+ * @file
+ * Tests for php.module.
+ */
+
+/**
  * Base PHP test case class.
  */
 class PHPTestCase extends DrupalWebTestCase {

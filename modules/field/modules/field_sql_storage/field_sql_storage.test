@@ -3,7 +3,7 @@
 
 /**
  * @file
- * Unit tests for field_sql_ storage.module
+ * Tests for field_sql_storage.module.
  *
  * Field_sql_storage.module implements the default back-end storage plugin
  * for the Field Strage API.

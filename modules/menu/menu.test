@@ -3,7 +3,7 @@
 
 /**
  * @file
- * Tests file for the menu module.
+ * Tests for menu.module.
  */
 
 class MenuTestCase extends DrupalWebTestCase {

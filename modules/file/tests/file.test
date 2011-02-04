@@ -3,7 +3,7 @@
 
 /**
  * @file
- * Tests file uploading through the File module.
+ * Tests for file.module.
  */
 
 /**

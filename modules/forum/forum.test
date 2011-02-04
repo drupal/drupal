@@ -1,6 +1,11 @@
 <?php
 // $Id$
 
+/**
+ * @file
+ * Tests for forum.module.
+ */
+
 class ForumTestCase extends DrupalWebTestCase {
   protected $admin_user;
   protected $edit_own_topics_user;

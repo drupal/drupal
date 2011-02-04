@@ -1,6 +1,11 @@
 <?php
 // $Id$
 
+/**
+ * @file
+ * Tests for tracker.module.
+ */
+
 class TrackerTest extends DrupalWebTestCase {
   protected $user;
   protected $other_user;

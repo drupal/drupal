@@ -3,6 +3,8 @@
 
 /**
  * @file
+ * Tests for update.module.
+ *
  * This file contains tests for the update module. The overarching methodology
  * of these tests is we need to compare a given state of installed modules and
  * themes (e.g. version, project grouping, timestamps, etc) vs. a current

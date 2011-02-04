@@ -2,6 +2,11 @@
 // $Id$
 
 /**
+ * @file
+ * Tests for node.module.
+ */
+
+/**
  * Test the node_load_multiple() function.
  */
 class NodeLoadMultipleUnitTest extends DrupalWebTestCase {

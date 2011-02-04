@@ -3,7 +3,7 @@
 
 /**
  * @file
- * Tests for the dashboard module.
+ * Tests for dashboard.module.
  */
 
 class DashboardBlocksTestCase extends DrupalWebTestCase {

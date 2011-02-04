@@ -1,6 +1,11 @@
 <?php
 // $Id$
 
+/**
+ * @file
+ * Tests for user.module.
+ */
+
 class UserRegistrationTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(

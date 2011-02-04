@@ -2,6 +2,11 @@
 // $Id$
 
 /**
+ * @file
+ * Tests for openid.module.
+ */
+
+/**
  * Base class for OpenID tests.
  */
 abstract class OpenIDWebTestCase extends DrupalWebTestCase {

@@ -3,7 +3,7 @@
 
 /**
  * @file
- * Tests for Locale module.
+ * Tests for locale.module.
  *
  * The test file includes:
  *  - a functional test for the language configuration forms;

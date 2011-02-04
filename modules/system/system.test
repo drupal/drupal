@@ -2,6 +2,11 @@
 // $Id$
 
 /**
+ * @file
+ * Tests for system.module.
+ */
+
+/**
  * Helper class for module test cases.
  */
 class ModuleTestCase extends DrupalWebTestCase {

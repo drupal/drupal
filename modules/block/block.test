@@ -3,7 +3,7 @@
 
 /**
  * @file
- * Tests for the block module
+ * Tests for block.module.
  */
 
 class BlockTestCase extends DrupalWebTestCase {

@@ -3,7 +3,7 @@
 
 /**
  * @file
- * Tests for the poll module.
+ * Tests for poll.module.
  */
 
 class PollTestCase extends DrupalWebTestCase {

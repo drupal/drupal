@@ -2,8 +2,10 @@
 // $Id$
 
 /**
- * Test the sitewide contact form.
+ * @file 
+ * Tests for contact.module.
  */
+
 class ContactSitewideTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(

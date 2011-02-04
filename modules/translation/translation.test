@@ -1,6 +1,11 @@
 <?php
 // $Id$
 
+/**
+ * @file
+ * Tests for translation.module
+ */
+
 class TranslationTestCase extends DrupalWebTestCase {
   protected $book;
 

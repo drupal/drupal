@@ -3,7 +3,7 @@
 
 /**
  * @file
- * Tests for RDF functionality.
+ * Tests for rdf.module.
  */
 
 class RdfMappingHookTestCase extends DrupalWebTestCase {

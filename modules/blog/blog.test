@@ -1,6 +1,11 @@
 <?php
 // $Id$
 
+/**
+ * @file
+ * Tests for blog.module.
+ */
+
 class BlogTestCase extends DrupalWebTestCase {
   protected $big_user;
   protected $own_user;

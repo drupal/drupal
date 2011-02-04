@@ -1,6 +1,11 @@
 <?php
 // $Id$
 
+/**
+ * @file
+ * Tests for syslog.module.
+ */
+
 class SyslogTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
