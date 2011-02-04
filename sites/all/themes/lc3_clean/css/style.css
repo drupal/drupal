@@ -728,6 +728,12 @@ ul.tabs li
   padding: 0 20px;
 }
 
+#logo img {
+  width: 313px;
+  height: 39px;
+  padding: 0px;
+}
+
 #header-bar,
 #header
 {
@@ -1642,12 +1648,18 @@ div.tabs .secondary a.active
   position: absolute;
   right: 8px;
   top: 5px;
-  background-color: transparent;
-  background-image: url(../images/icon_cross_white.png);
-  background-repeat: no-repeat;
-  background-position: 0px 0px;
   width: 15px;
   height: 15px;
+  padding: 0px;
+}
+
+#status-messages a.close img
+{
+  background: transparent url(../images/icon_cross_white.png) no-repeat left top;
+  width: 15px;
+  height: 15px;
+  margin: 0px;
+  padding: 0px;
 }
 
 #status-messages ul

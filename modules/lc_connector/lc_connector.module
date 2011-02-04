@@ -250,3 +250,19 @@ function lc_connector_check_controller_access()
 {
     return is_null($result = LCConnector_Handler::callSafely('Controller', 'checkAccess')) ? true : $result;
 }
+
+/**
+ * Implements hook_js_alter().
+ */
+function lc_connector_js_alter(&$javascript)
+{
+    return LCConnector_Handler::callSafely('Module', 'optimizeJSFiles', array(&$javascript));
+}
+ 
+/**
+ * Implements hook_css_alter().
+ */
+function lc_connector_css_alter(&$css)
+{
+    return LCConnector_Handler::callSafely('Module', 'optimizeCSSFiles', array(&$css));
+}
