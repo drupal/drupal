@@ -399,6 +399,21 @@ div.password-confirm
   background-image: none;
 }
 
+.form-type-radio .description,
+.form-type-checkbox .description
+{
+  margin-left: 0px;
+}
+
+.form-type-radio label,
+.form-type-checkbox label
+{
+  width: auto;
+}
+
+.form-item label.option {
+}
+
 /* Filter form */
 
 .comment-form-is-logged .form-type-item label
@@ -1403,7 +1418,7 @@ ul.tabs li
 
 div.tabs .primary
 {
-  height: 31px;
+  height: 32px;
   line-height: 31px;
   padding: 0;
   border-bottom-style: solid;
@@ -2017,16 +2032,29 @@ ul.pager li.next-page
   width: 151px;
 }
 
+#user-profile-form .form-type-radio label,
+#user-profile-form .form-type-checkbox label
+{
+  width: auto;
+}
+
+
 #user-profile-form legend {
   margin-left: -6px;
 }
 
 #user-profile-form .form-item .description,
 #user-profile-form .wysiwyg,
-#user-profile-form .form-item label.option,
 #user-profile-form .wysiwyg + p
 {
   padding-left: 160px;
+}
+
+#user-profile-form .form-item .form-checkbox,
+#user-profile-form .form-item .form-radio
+{
+  padding-left: 0px;
+  margin-left: 135px;
 }
 
 #user-profile-form .form-item .form-radios label.option,
@@ -2099,10 +2127,15 @@ ul.pager li.next-page
 
 #user-profile-form .picture-block .form-item-picture-delete input {
   margin-top: 5px;
+  margin-left: 2px;
 }
 
 #user-profile-form .picture-block .form-item-picture-delete label {
   vertical-align: middle;
+}
+
+#user-profile-form .picture-block .form-item-picture-delete .description {
+  margin-left: 2.4em;
 }
 
 #user-profile-form .picture-block .form-item-files-picture-upload {
