@@ -221,7 +221,7 @@ function drupal_xml_parser_create(&$data) {
  * @param $data
  *   The data to be converted.
  * @param $encoding
- *   The encoding that the data is in
+ *   The encoding that the data is in.
  *
  * @return
  *   Converted data or FALSE.
