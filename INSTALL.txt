@@ -67,7 +67,8 @@ INSTALLATION
 1. Download and extract Drupal.
 
    You can obtain the latest Drupal release from http://drupal.org -- the files
-   are in .tar.gz format and can be extracted using most compression tools.
+   are available in .tar.gz and .zip formats and can be extracted using most
+   compression tools.
 
    To download and extract the files, on a typical Unix/Linux command line, use
    the following commands (assuming you want version x.y of Drupal):

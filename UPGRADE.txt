@@ -13,7 +13,7 @@ First steps and definitions:
 
   * If you are upgrading to Drupal version x.y, then x is known as the major
     version number, and y is known as the minor version number. The download
-    file will be named drupal-x.y.tar.gz.
+    file will be named drupal-x.y.tar.gz (or drupal-x.y.zip).
 
   * All directories mentioned in this document are relative to the directory of
     your Drupal installation.
