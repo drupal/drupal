@@ -3,7 +3,6 @@
 body.toolbar {
   padding-top: 2.2em;
 }
-
 body.toolbar-drawer {
   padding-top: 5.3em;
 }
@@ -14,15 +13,15 @@ body.toolbar-drawer {
  */
 #toolbar,
 #toolbar * {
-  margin: 0;
-  padding: 0;
   border: 0;
-  outline: 0;
   font-size: 100%;
-  vertical-align: baseline;
   line-height: inherit;
-  text-align: left; /* LTR */
   list-style: none;
+  margin: 0;
+  outline: 0;
+  padding: 0;
+  text-align: left; /* LTR */
+  vertical-align: baseline;
 }
 
 /**
@@ -32,34 +31,31 @@ body.toolbar-drawer {
  * across different themes, while still allowing browsers to resize the text.
  */
 #toolbar {
-  font: normal small "Lucida Grande", Verdana, sans-serif;
   background: #666;
   color: #ccc;
-  position: fixed;
-  top: 0;
+  font: normal small "Lucida Grande", Verdana, sans-serif;
   left: 0;
-  right: 0;
   margin: 0 -20px;
   padding: 0 20px;
-  z-index: 600;
+  position: fixed;
+  right: 0;
+  top: 0;
   -moz-box-shadow: 0 3px 20px #000;
   -webkit-box-shadow: 0 3px 20px #000;
   box-shadow: 0 3px 20px #000;
   filter: progid:DXImageTransform.Microsoft.Shadow(color=#000000, direction='180', strength='10');
   -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(color=#000000, direction='180', strength='10')";
+  z-index: 600;
 }
-
 #toolbar div.collapsed {
   display: none;
   visibility: hidden;
 }
-
 #toolbar a {
   color: #fff;
   font-size: .846em;
   text-decoration: none;
 }
-
 #toolbar ul li,
 #toolbar ul li a {
   float: left; /* LTR */
@@ -74,69 +70,61 @@ body.toolbar-drawer {
   padding: 5px 50px 5px 10px; /* LTR */
   position: relative;
 }
-
 #toolbar-home a span {
+  background: url(toolbar.png) no-repeat 0 -45px;
+  display: block;
+  height: 14px;
+  margin: 3px 0px;
+  text-indent: -9999px;
   vertical-align: text-bottom;
   width: 11px;
-  height: 14px;
-  display: block;
-  background: url(toolbar.png) no-repeat 0 -45px;
-  text-indent: -9999px;
-  margin: 3px 0px;
 }
-
 #toolbar-user {
   float: right; /* LTR */
 }
-
 #toolbar-menu {
   float: left; /* LTR */
 }
-
 #toolbar div.toolbar-menu a.toggle {
-  position: absolute;
-  right: 10px; /* LTR */
+  background: url(toolbar.png) 0 -20px no-repeat;
   bottom: 0;
   cursor: pointer;
-  background: url(toolbar.png) 0 -20px no-repeat;
-  text-indent: -9999px;
-  overflow: hidden;
-  width: 25px;
   height: 25px;
+  overflow: hidden;
+  position: absolute;
+  right: 10px; /* LTR */
+  text-indent: -9999px;
+  width: 25px;
 }
 #toolbar div.toolbar-menu a.toggle:focus,
 #toolbar div.toolbar-menu a.toggle:hover {
-background-position:  -50px -20px;
+  background-position:  -50px -20px;
 }
-
 #toolbar div.toolbar-menu a.toggle-active {
   background-position:  -25px -20px;
 }
 #toolbar div.toolbar-menu a.toggle-active.toggle:focus,
 #toolbar div.toolbar-menu a.toggle-active.toggle:hover {
-background-position:  -75px -20px;
+  background-position:  -75px -20px;
 }
-
 #toolbar div.toolbar-menu ul li a {
+  padding: 0 10px;
   -moz-border-radius: 10px;
   -webkit-border-radius: 10px;
   border-radius: 10px;
-  padding: 0 10px;
 }
-
 #toolbar div.toolbar-menu ul li a:focus,
 #toolbar div.toolbar-menu ul li a:hover,
 #toolbar div.toolbar-menu ul li a:active,
 #toolbar div.toolbar-menu ul li a.active:focus {
   background: #444;
 }
-
 #toolbar div.toolbar-menu ul li a.active:hover,
 #toolbar div.toolbar-menu ul li a.active:active,
 #toolbar div.toolbar-menu ul li a.active,
 #toolbar div.toolbar-menu ul li.active-trail a {
-  text-shadow: #333 0 1px 0;
   background: url(toolbar.png) 0 0 repeat-x;
+  text-shadow: #333 0 1px 0;
 }
 
 /**
@@ -154,10 +142,10 @@ background-position:  -75px -20px;
  * it with position:absolute; toolbar needs its z-index to stay above overlay.
  */
 * html #toolbar {
-  position: absolute;
+  left: -20px;
   margin: 0;
   padding-right: 0;
-  left: -20px;
+  position: absolute;
   right: 0;
   width: 100%;
 }

@@ -8,8 +8,8 @@
   float: right;
 }
 #toolbar ul li a {
-  float: none;
   display: inline-block;
+  float: none;
   zoom: 1;
 }
 #toolbar div.toolbar-menu {
@@ -19,8 +19,8 @@
   float: left;
 }
 #toolbar ul#toolbar-user li {
-  display: inline;
   float: none;
+  display: inline;
 }
 #toolbar-menu {
   float: none;
