@@ -3,10 +3,10 @@
 CREATE THE MySQL DATABASE
 --------------------------
 
-This step is only necessary if you don't already have a database set-up (e.g. by
-your host). In the following examples, 'username' is an example MySQL user which
-has the CREATE and GRANT privileges. Use the appropriate user name for your
-system.
+This step is only necessary if you don't already have a database set up (e.g.,
+by your host). In the following examples, 'username' is an example MySQL user
+which has the CREATE and GRANT privileges. Use the appropriate user name for
+your system.
 
 First, you must create a new database for your Drupal site (here, 'databasename'
 is the name of the new database):
