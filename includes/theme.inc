@@ -1263,8 +1263,6 @@ function theme_enable($theme_list) {
 
   // Invoke hook_themes_enabled after the themes have been enabled.
   module_invoke_all('themes_enabled', $theme_list);
-
-  return;
 }
 
 /**
@@ -1298,8 +1296,6 @@ function theme_disable($theme_list) {
 
   // Invoke hook_themes_enabled after the themes have been enabled.
   module_invoke_all('themes_disabled', $theme_list);
-
-  return;
 }
 
 /**
