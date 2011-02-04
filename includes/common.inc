@@ -5827,12 +5827,56 @@ function drupal_render_cache_set(&$markup, $elements) {
   // be retrieved and used.
   $data['#markup'] = &$markup;
   // Persist attached data associated with this element.
-  if (isset($elements['#attached'])) {
-    $data['#attached'] = $elements['#attached'];
+  $attached = drupal_render_collect_attached($elements, TRUE);
+  if ($attached) {
+    $data['#attached'] = $attached;
   }
   $bin = isset($elements['#cache']['bin']) ? $elements['#cache']['bin'] : 'cache';
   $expire = isset($elements['#cache']['expire']) ? $elements['#cache']['expire'] : CACHE_PERMANENT;
   cache_set($cid, $data, $bin, $expire);
+}
+
+/**
+ * Collect #attached for an element and all child elements into a single array.
+ *
+ * When caching elements, it is necessary to collect all libraries, javascript
+ * and CSS into a single array, from both the element itself and all child
+ * elements. This allows drupal_render() to add these back to the page when the
+ * element is returned from cache.
+ *
+ * @param $elements
+ *   The element to collect #attached from.
+ * @param $return
+ *   Whether to return the attached elements and reset the internal static.
+ *
+ * @return
+ *   The #attached array for this element and its descendants.
+ */
+function drupal_render_collect_attached($elements, $return = FALSE) {
+  $attached = &drupal_static(__FUNCTION__, array());
+
+  // Collect all #attached for this element.
+  if (isset($elements['#attached'])) {
+    foreach ($elements['#attached'] as $key => $value) {
+      if (!isset($attached[$key])) {
+        $attached[$key] = array();
+      }
+      $attached[$key] = array_merge($attached[$key], $value);
+    }
+  }
+  if ($children = element_children($elements)) {
+    foreach ($children as $child) {
+      drupal_render_collect_attached($elements[$child]);
+    }
+  }
+
+  // If this was the first call to the function, return all attached elements
+  // and reset the static cache.
+  if ($return) {
+    $return = $attached;
+    $attached = array();
+    return $return;
+  }
 }
 
 /**
