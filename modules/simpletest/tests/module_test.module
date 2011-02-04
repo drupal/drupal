@@ -36,6 +36,20 @@ function module_test_system_info_alter(&$info, $file, $type) {
       $info['dependencies'][] = 'php';
     }
   }
+  elseif (variable_get('dependency_test', FALSE) == 'version dependency') {
+    if ($file->name == 'forum') {
+      // Make the forum module depend on poll.
+      $info['dependencies'][] = 'poll';
+    }
+    elseif ($file->name == 'poll') {
+      // Make poll depend on a specific version of php module.
+      $info['dependencies'][] = 'php (1.x)';
+    }
+    elseif ($file->name == 'php') {
+      // Set php module to a version compatible with the above.
+      $info['version'] = '7.x-1.0';
+    }
+  }
   if ($file->name == 'seven' && $type == 'theme') {
     $info['regions']['test_region'] = t('Test region');
   }

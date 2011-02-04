@@ -372,7 +372,7 @@ function module_enable($module_list, $enable_dependencies = TRUE) {
 
       // Add dependencies to the list, with a placeholder weight.
       // The new modules will be processed as the while loop continues.
-      foreach ($module_data[$module]->info['dependencies'] as $dependency) {
+      foreach (array_keys($module_data[$module]->requires) as $dependency) {
         if (!isset($module_list[$dependency])) {
           $module_list[$dependency] = 0;
         }

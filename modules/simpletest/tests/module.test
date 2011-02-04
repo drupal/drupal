@@ -212,6 +212,27 @@ class ModuleUnitTest extends DrupalWebTestCase {
     $uninstalled_modules = variable_get('test_module_uninstall_order', array());
     $this->assertTrue(in_array('comment', $uninstalled_modules), t('Comment module is in the list of uninstalled modules.'));
     $this->assertFalse(in_array($profile, $uninstalled_modules), t('The installation profile is not in the list of uninstalled modules.'));
+
+    // Enable forum module again, which should enable both the poll module and
+    // php module. But, this time do it with poll module declaring a dependency
+    // on a specific version of php module in its info file. Make sure that
+    // module_enable() still works.
+    variable_set('dependency_test', 'version dependency');
+    drupal_static_reset('system_rebuild_module_data');
+    $result = module_enable(array('forum'));
+    $this->assertTrue($result, t('module_enable() returns the correct value.'));
+    // Verify that the fake dependency chain was installed.
+    $this->assertTrue(module_exists('poll') && module_exists('php'), t('Dependency chain was installed by module_enable().'));
+    // Verify that the original module was installed.
+    $this->assertTrue(module_exists('forum'), t('Module installation with version dependencies succeeded.'));
+    // Finally, verify that the modules were enabled in the correct order.
+    $enable_order = variable_get('test_module_enable_order', array());
+    $php_position = array_search('php', $enable_order);
+    $poll_position = array_search('poll', $enable_order);
+    $forum_position = array_search('forum', $enable_order);
+    $php_before_poll = $php_position !== FALSE && $poll_position !== FALSE && $php_position < $poll_position;
+    $poll_before_forum = $poll_position !== FALSE && $forum_position !== FALSE && $poll_position < $forum_position;
+    $this->assertTrue($php_before_poll && $poll_before_forum, t('Modules were enabled in the correct order by module_enable().'));
   }
 }
 
