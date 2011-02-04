@@ -713,7 +713,11 @@ function image_style_deliver($style, $scheme) {
 }
 
 /**
- * Create a new image based on an image style.
+ * Creates a new image derivative based on an image style.
+ *
+ * Generates an image derivative by creating the destination folder (if it does
+ * not already exist), applying all image effects defined in $style['effects'],
+ * and saving a cached version of the resulting image.
  *
  * @param $style
  *   An image style array.
@@ -721,9 +725,12 @@ function image_style_deliver($style, $scheme) {
  *   Path of the source file.
  * @param $destination
  *   Path or URI of the destination file.
+ *
  * @return
- *   TRUE if an image derivative is generated, FALSE if no image derivative
- *   is generated. NULL if the derivative is being generated.
+ *   TRUE if an image derivative was generated, or FALSE if the image derivative
+ *   could not be generated.
+ *
+ * @see image_style_load()
  */
 function image_style_create_derivative($style, $source, $destination) {
   // Get the folder for the final location of this style.
