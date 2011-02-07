@@ -255,6 +255,20 @@ div.list-header .sort-box a
   text-decoration: none;
 }
 
+table.form-data,
+table.form-data tbody,
+table.form-data tr,
+table.form-data th,
+table.form-data td
+{
+  border: 0px none;
+  border-spacing: 0px;
+}
+
+table.form-data td {
+  padding: 3px;
+}
+
 /* Colorbox jQuery plugin */
 #colorbox,
   #cboxOverlay,
