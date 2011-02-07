@@ -1511,7 +1511,7 @@ body.store-cart #main h1 {
 }
 
 #cart-right .box {
-  padding: 11px 21px;
+  padding: 0px;
   background-color: #f6f6f6;
   margin-top: 20px;
 }
@@ -1529,6 +1529,7 @@ body.store-cart #main h1 {
 }
 
 #cart-right .estimator {
+  padding: 11px 21px;
 }
 
 #cart-right .estimator ul span {
@@ -1542,6 +1543,10 @@ body.store-cart #main h1 {
 
 #cart-right .estimator .buttons {
   text-align: center;
+}
+
+#cart-right .estimator .error {
+  display: block;
 }
 
 /**
