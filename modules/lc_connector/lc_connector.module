@@ -16,10 +16,6 @@
  * @since     1.0.0
  */
 
-// TODO: devcode, to remove
-error_reporting(E_ALL | E_STRICT);
-ini_set('display_errors', true);
-
 /**
  * Module initialization
  *
@@ -227,6 +223,53 @@ function lc_connector_user_logout(\stdClass $account)
 function lc_connector_form_user_login_block_alter(array &$form, array &$form_state)
 {
     return LCConnector_Handler::callSafely('Customer', 'alterLoginForm', array(&$form, &$form_state));
+}
+
+/**
+ * Perform necessary alterations to the JavaScript before it is presented on the page
+ *
+ * @param array &$javascript An array of all JavaScript being presented on the page
+ *
+ * @hook   js_alter
+ * @return void
+ * @see    ____func_see____
+ * @since  1.0.0
+ */
+function lc_connector_js_alter(array &$javascript)
+{
+    return LCConnector_Handler::callSafely('Module', 'optimizeJSFiles', array(&$javascript));
+}
+
+/**
+ * Perform necessary alterations to the CSS before it is presented on the page
+ *
+ * @param array &$css An array of all CSS being presented on the page
+ *
+ * @hook   css_alter
+ * @return void
+ * @see    ____func_see____
+ * @since  1.0.0
+ */
+function lc_connector_css_alter(array &$css)
+{
+    return LCConnector_Handler::callSafely('Module', 'optimizeCSSFiles', array(&$css));
+}
+
+/**
+ * Alters outbound URLs
+ *
+ * @param string &$path         The outbound path to alter
+ * @param array  &$options      A set of URL options
+ * @param string $original_path The original path, before being altered by any modules
+ *
+ * @hook   url_outbound_alter
+ * @return void
+ * @see    ____func_see____
+ * @since  1.0.0
+ */
+function lc_connector_url_outbound_alter(&$path, array &$options, $original_path)
+{
+    LCConnector_Handler::callSafely('Module', 'translateOutboundURL', array(&$path, &$options, $original_path));
 }
 
 
