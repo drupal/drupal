@@ -255,6 +255,20 @@ div.list-header .sort-box a
   text-decoration: none;
 }
 
+table.form-data,
+table.form-data tbody,
+table.form-data tr,
+table.form-data th,
+table.form-data td
+{
+  border: 0px none;
+  border-spacing: 0px;
+}
+
+table.form-data td {
+  padding: 3px;
+}
+
 /* Colorbox jQuery plugin */
 #colorbox,
   #cboxOverlay,
@@ -1511,7 +1525,7 @@ body.store-cart #main h1 {
 }
 
 #cart-right .box {
-  padding: 11px 21px;
+  padding: 0px;
   background-color: #f6f6f6;
   margin-top: 20px;
 }
@@ -1529,6 +1543,7 @@ body.store-cart #main h1 {
 }
 
 #cart-right .estimator {
+  padding: 11px 21px;
 }
 
 #cart-right .estimator ul span {
@@ -1542,6 +1557,10 @@ body.store-cart #main h1 {
 
 #cart-right .estimator .buttons {
   text-align: center;
+}
+
+#cart-right .estimator .error {
+  display: block;
 }
 
 /**
@@ -1741,51 +1760,27 @@ form.estimator .main,
 }
 
 /* Steps */
-.checkout-block .steps {
-  clear: both;
-  background-position: left top;
-  background-repeat: no-repeat;
-}
-
-.checkout-block .step-1 {
-  background-image: url(../images/checkout_title_step1.png);
-}
-
-.checkout-block .step-2 {
-  background-image: url(../images/checkout_title_step2.png);
-}
-
-.checkout-block .step-3 {
-  background-image: url(../images/checkout_title_step3.png);
-}
-
-.checkout-block .step-1 .shipping-step {
+.checkout-block .shipping-step.current {
   width: 425px;
 }
 
-.checkout-block .step-1 .payment-step,
-.checkout-block .step-3 .payment-step
-{
+.checkout-block .payment-step.inactive {
   width: 280px;
 }
 
-.checkout-block .step-1 .review-step,
-.checkout-block .step-2 .review-step
-{
+.checkout-block .review-step.inactive {
   width: 255px;
 }
 
-.checkout-block .step-2 .shipping-step,
-.checkout-block .step-3 .shipping-step
-{
+.checkout-block .shipping-step.inactive {
   width: 265px;
 }
 
-.checkout-block .step-2 .payment-step {
+.checkout-block .payment-step.current {
   width: 440px;
 }
 
-.checkout-block .step-3 .review-step {
+.checkout-block .review-step.current {
   width: 415px;
 }
 
@@ -1796,18 +1791,65 @@ form.estimator .main,
 .checkout-block .steps h2 {
   margin-top: 6px;
   margin-bottom: 10px;
-  padding-left: 16px;
+  padding-left: 0px;
   color: #fff;
+  position: relative;
 }
 
-.checkout-block .steps .payment-step h2,
-.checkout-block .steps .review-step h2
-{
-  padding-left: 22px;
+.checkout-block .steps h2 span.text {
+  display: block;
+  padding-left: 20px;
+  padding-top: 5px;
+  padding-bottom: 6px;
 }
 
-.checkout-block .step-3 .review-step h2 {
-  padding-left: 27px;
+.checkout-block .steps .left-arrow h2 span.text {
+  margin-left: 10px;
+}
+
+.checkout-block .steps .right-arrow h2 span.text {
+  margin-right: 10px;
+}
+
+.checkout-block .steps .current h2 span.text {
+  background-color: #69b7f0;
+}
+
+.checkout-block .steps .inactive h2 span.text {
+  background-color: #d4d4d4;
+}
+
+.checkout-block .steps h2 img {
+  background-position: top left;
+  background-repeat: no-repeat;
+  width: 10px;
+  height: 40px;
+  position: absolute;
+  top: 0px;
+}
+
+.checkout-block .steps h2 img.left {
+  left: 0px;
+}
+
+.checkout-block .steps h2 img.right {
+  right: 0px;
+}
+
+.checkout-block .steps .current h2 img.left {
+  background-image: url(../images/wizard_selected_larr.png);
+}
+
+.checkout-block .steps .current h2 img.right {
+  background-image: url(../images/wizard_selected_rarr.png);
+}
+
+.checkout-block .steps .inactive h2 img.left {
+  background-image: url(../images/wizard_inactive_larr.png);
+}
+
+.checkout-block .steps .inactive h2 img.right {
+  background-image: url(../images/wizard_inactive_rarr.png);
 }
 
 .checkout-block .shipping-step .step-box,
