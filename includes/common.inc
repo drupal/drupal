@@ -6900,15 +6900,15 @@ function drupal_write_record($table, &$record, $primary_keys = array()) {
  * @see forum.info
  *
  * Information stored in a theme .info file:
- * - name: The real name of the theme for display purposes
- * - description: Brief description
+ * - name: The real name of the theme for display purposes.
+ * - description: Brief description.
  * - screenshot: Path to screenshot relative to the theme's .info file.
  * - engine: Theme engine; typically phptemplate.
- * - base: Name of a base theme, if applicable, eg: base = zen
- * - regions: Listed regions eg: region[left] = Left sidebar
- * - features: Features available eg: features[] = logo
- * - stylesheets: Theme stylesheets eg: stylesheets[all][] = my-style.css
- * - scripts: Theme scripts eg: scripts[] = my-script.css
+ * - base: Name of a base theme, if applicable; e.g., base = zen.
+ * - regions: Listed regions; e.g., region[left] = Left sidebar.
+ * - features: Features available; e.g., features[] = logo.
+ * - stylesheets: Theme stylesheets; e.g., stylesheets[all][] = my-style.css.
+ * - scripts: Theme scripts; e.g., scripts[] = my-script.js.
  *
  * @see bartik.info
  *
