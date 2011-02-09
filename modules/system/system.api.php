@@ -2419,8 +2419,8 @@ function hook_modules_disabled($modules) {
  * modules a chance to perform actions when a module is uninstalled, whereas
  * hook_uninstall() is only called on the module actually being uninstalled.
  *
- * It is recommended that you implement this module if your module
- * stores data that may have been set by other modules.
+ * It is recommended that you implement this hook if your module stores
+ * data that may have been set by other modules.
  *
  * @param $modules
  *   An array of the uninstalled modules.
