@@ -46,7 +46,7 @@ function simpletest_requirements($phase) {
   );
   if (!$has_domdocument) {
     $requirements['php_domdocument']['severity'] = REQUIREMENT_ERROR;
-    $requirements['php_domdocument']['description'] =t('The testing framework requires the DOMDocument class to be available. Check the configure command at the <a href="@link-phpinfo">PHP info page</a>.', array('@link-phpinfo' => url('admin/reports/status/php')));
+    $requirements['php_domdocument']['description'] = $t('The testing framework requires the DOMDocument class to be available. Check the configure command at the <a href="@link-phpinfo">PHP info page</a>.', array('@link-phpinfo' => url('admin/reports/status/php')));
   }
 
   // SimpleTest currently needs 2 cURL options which are incompatible with
@@ -58,7 +58,7 @@ function simpletest_requirements($phase) {
   );
   if ($open_basedir) {
     $requirements['php_open_basedir']['severity'] = REQUIREMENT_ERROR;
-    $requirements['php_open_basedir']['description'] = t('The testing framework requires the PHP <a href="@open_basedir-url">open_basedir</a> restriction to be disabled. Check your webserver configuration or contact your web host.', array('@open_basedir-url' => 'http://php.net/manual/en/ini.core.php#ini.open-basedir'));
+    $requirements['php_open_basedir']['description'] = $t('The testing framework requires the PHP <a href="@open_basedir-url">open_basedir</a> restriction to be disabled. Check your webserver configuration or contact your web host.', array('@open_basedir-url' => 'http://php.net/manual/en/ini.core.php#ini.open-basedir'));
   }
 
   // Check the current memory limit. If it is set too low, SimpleTest will fail
@@ -66,7 +66,7 @@ function simpletest_requirements($phase) {
   $memory_limit = ini_get('memory_limit');
   if ($memory_limit && $memory_limit != -1 && parse_size($memory_limit) < parse_size(SIMPLETEST_MINIMUM_PHP_MEMORY_LIMIT)) {
     $requirements['php_memory_limit']['severity'] = REQUIREMENT_ERROR;
-    $requirements['php_memory_limit']['description'] = t('The testing framework requires the PHP memory limit to be at least %memory_minimum_limit. The current value is %memory_limit. <a href="@url">Follow these steps to continue</a>.', array('%memory_limit' => $memory_limit, '%memory_minimum_limit' => SIMPLETEST_MINIMUM_PHP_MEMORY_LIMIT, '@url' => 'http://drupal.org/node/207036'));
+    $requirements['php_memory_limit']['description'] = $t('The testing framework requires the PHP memory limit to be at least %memory_minimum_limit. The current value is %memory_limit. <a href="@url">Follow these steps to continue</a>.', array('%memory_limit' => $memory_limit, '%memory_minimum_limit' => SIMPLETEST_MINIMUM_PHP_MEMORY_LIMIT, '@url' => 'http://drupal.org/node/207036'));
   }
 
   return $requirements;
