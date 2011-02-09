@@ -10,7 +10,6 @@ CONTENTS OF THIS FILE
  * Multisite configuration
  * More information
 
-
 REQUIREMENTS AND NOTES
 ----------------------
 
@@ -27,24 +26,23 @@ Drupal requires:
 
 For more detailed information about Drupal requirements, including a list of
 PHP extensions and configurations that are required, see "System requirements"
-(http://drupal.org/requirements) in the Drupal handbook.
+(http://drupal.org/requirements) in the Drupal.org online documentation.
 
 For detailed information on how to configure a test server environment using a
 variety of operating systems and web servers, see "Local server setup"
-(http://drupal.org/node/157602) in the Drupal handbook.
+(http://drupal.org/node/157602) in the Drupal.org online documentation.
 
 Note that all directories mentioned in this document are always relative to the
 directory of your Drupal installation, and commands are meant to be run from
 this directory (except for the initial commands that create that directory).
-
 
 OPTIONAL SERVER REQUIREMENTS
 ----------------------------
 
 - If you want to use Drupal's "Clean URLs" feature on an Apache web server, you
   will need the mod_rewrite module and the ability to use local .htaccess
-  files. For Clean URLs support on IIS, see "Using Clean URLs with IIS"
-  (http://drupal.org/node/3854) in the Drupal handbook.
+  files. For Clean URLs support on IIS, see "Clean URLs with IIS"
+  (http://drupal.org/node/3854) in the Drupal.org online documentation.
 
 - If you plan to use XML-based services such as RSS aggregation, you will need
   PHP's XML extension. This extension is enabled by default on most PHP
@@ -60,7 +58,6 @@ OPTIONAL SERVER REQUIREMENTS
   configuration allows the web server to initiate outbound connections. Most web
   hosting setups allow this.
 
-
 INSTALLATION
 ------------
 
@@ -71,7 +68,8 @@ INSTALLATION
    compression tools.
 
    To download and extract the files, on a typical Unix/Linux command line, use
-   the following commands (assuming you want version x.y of Drupal):
+   the following commands (assuming you want version x.y of Drupal in .tar.gz
+   format):
 
      wget http://drupal.org/files/projects/drupal-x.y.tar.gz
      tar -zxvf drupal-x.y.tar.gz
@@ -90,7 +88,7 @@ INSTALLATION
    initially:
 
    - Download a translation file for the correct Drupal version and language
-     from the translation server: http://localize.drupal.org/download
+     from the translation server: http://localize.drupal.org/translate/downloads
 
    - Place the file into your installation profile's translations
      directory. For instance, if you are using the Standard install profile,
@@ -258,7 +256,7 @@ INSTALLATION
    For more information on setting file permissions, see "Modifying Linux,
    Unix, and Mac file permissions" (http://drupal.org/node/202483) or
    "Modifying Windows file permissions" (http://drupal.org/node/202491) in the
-   online handbook.
+   Drupal.org online documentation.
 
 8. Set up independent "cron" maintenance jobs.
 
@@ -300,7 +298,6 @@ INSTALLATION
    scripts/ directory. (Note that these scripts must be customized like the
    above example, to add your site-specific cron key and domain name.)
 
-
 BUILDING AND CUSTOMIZING YOUR SITE
 ----------------------------------
 
@@ -318,11 +315,10 @@ multisite installation, you can also place modules and themes in the
 site-specific directories -- see the Multisite Configuration section, below.
 
 Never edit Drupal's core modules and themes; instead, use the hooks available in
-the Drupal API. To modify the behavior of Drupal, develope a module as described
+the Drupal API. To modify the behavior of Drupal, develop a module as described
 at http://drupal.org/developing/modules. To modify the look of Drupal, create a
 subtheme as described at http://drupal.org/node/225125, or a completely new
 theme as described at http://drupal.org/documentation/theme
-
 
 MULTISITE CONFIGURATION
 -----------------------
@@ -333,16 +329,15 @@ its own individual configuration.
 Additional site configurations are created in subdirectories within the 'sites'
 directory. Each subdirectory must have a 'settings.php' file, which specifies
 the configuration settings. The easiest way to create additional sites is to
-copy the 'default' directory and modify the 'settings.php' file as
-appropriate. The new directory name is constructed from the site's URL. The
-configuration for www.example.com could be in 'sites/example.com/settings.php'
-(note that 'www.' should be omitted if users can access your site at
-http://example.com/).
+copy the 'default' directory and modify the 'settings.php' file as appropriate.
+The new directory name is constructed from the site's URL. The configuration for
+www.example.com could be in 'sites/example.com/settings.php' (note that 'www.'
+should be omitted if users can access your site at http://example.com/).
 
 Sites do not have to have a different domain. You can also use subdomains and
-subdirectories for Drupal sites. For example, example.com, sub.example.com,
-and sub.example.com/site3 can all be defined as independent Drupal sites. The
-setup for a configuration such as this would look like the following:
+subdirectories for Drupal sites. For example, example.com, sub.example.com, and
+sub.example.com/site3 can all be defined as independent Drupal sites. The setup
+for a configuration such as this would look like the following:
 
   sites/default/settings.php
   sites/example.com/settings.php
@@ -385,15 +380,14 @@ settings, consult http://drupal.org/getting-started/6/install/multi-site
 For more information on configuring Drupal's file system path in a multisite
 configuration, see step 6 above.
 
-
 MORE INFORMATION
 ----------------
 
-- For additional documentation, see the online Drupal handbook:
-  http://drupal.org/handbook
+- See the Drupal.org online documentation:
+  http://drupal.org/documentation
 
-- For a list of security announcements, see the "Security announcements" page
-  at http://drupal.org/security (available as an RSS feed). This page also
+- For a list of security announcements, see the "Security advisories" page at
+  http://drupal.org/security (available as an RSS feed). This page also
   describes how to subscribe to these announcements via e-mail.
 
 - For information about the Drupal security process, or to find out how to
