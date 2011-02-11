@@ -67,12 +67,6 @@ if (isset($_GET['lcweb']) || isset($_POST['lcweb'])) {
 	$devProfile = 'litecommerce';
 }
 
-if (!preg_match('/~(\w+)/', $_SERVER['REQUEST_URI'], $match)) {
-    die('Can\'t get ~login from the URL ' . $_SERVER['REQUEST_URI']);
-}
-
-define('LC_URI', sprintf('/~%s/xlite/src/', $match[1]));
-
 /**
  * Global flag to indicate that site is in installation mode.
  */
