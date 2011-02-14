@@ -232,6 +232,7 @@ function system_form_install_settings_form_alter(&$form, $form_state) {
     } else {
 
         $form['settings']['mysql']['advanced_options']['db_prefix']['#default_value'] = 'drupal_';
+        $form['settings']['mysql']['advanced_options']['db_prefix']['#description'] = st('Drupal and LiteCommerce will use the same database, so, to make difference between them it is recommended to specify prefix for drupal tables (e.g. \'drupal_\'). Note: LiteCommerce tables will be created with prefix \'xlite_\', so you cannot use the same prefix for Drupal tables.');
 
         $form['settings']['mysql']['advanced_options']['unix_socket'] = $form['settings']['mysql']['advanced_options']['port'];
         $form['settings']['mysql']['advanced_options']['unix_socket']['#title'] = st('Database socket');
@@ -259,8 +260,17 @@ function system_form_install_settings_form_alter(&$form, $form_state) {
 function litecommerce_install_settings_form_validate($form, &$form_state) {
     
     $unix_socket = trim($form_state['values']['mysql']['unix_socket']);
+
     if (empty($unix_socket)) {
         unset($form_state['values']['mysql']['unix_socket']);
+    }
+
+    $drupal_prefix = trim($form_state['values']['mysql']['db_prefix']);
+
+    $xlite_prefix = \Includes\Utils\ConfigParser::getOptions(array('database_details', 'table_prefix'));
+
+    if ($drupal_prefix == $xlite_prefix) {
+        form_set_error('mysql][db_prefix', st('Prefix for Drupal tables cannot be :db_prefix as it is reserved for LiteCommerce tables.', array(':db_prefix' => $xlite_prefix)));
     }
 }
 

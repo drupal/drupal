@@ -244,7 +244,7 @@ abstract class LCConnector_Install extends LCConnector_Abstract
 
             $tablePrefix = \Includes\Utils\ConfigParser::getOptions(array('database_details', 'table_prefix'));
 
-            if (isset($dbParams['prefix']) && $tablePrefix === $dbParams['prefix']) {
+            if (isset($dbParams['drupal_prefix']) && $tablePrefix === $dbParams['drupal_prefix']) {
                 $requirements['lc_db_prefix_reserved'] = array(
                     'description' => st('Tables prefix \':prefix\' is reserved by LiteCommerce. Please specify other prefix in the settings.php file.', array(':prefix' => $tablePrefix)),
                     'severity' => REQUIREMENT_ERROR

@@ -99,6 +99,15 @@ function lc_connector_get_database_params()
             $dbParams['mysqlport'] = isset($mysql['port']) ? $mysql['port'] : '';
             $dbParams['mysqlsock'] = isset($mysql['unix_socket']) ? $mysql['unix_socket'] : '';
             $dbParams['mysqlbase'] = $mysql['database'];
+
+            if (isset($mysql['db_prefix'])) {
+                $dbParams['drupal_prefix'] = $mysql['db_prefix'];
+
+            } elseif (isset($mysql['prefix'])) {
+                $dbParams['drupal_prefix'] = $mysql['prefix'];
+            }
+
+            $dbParams['driver'] = $mysql['driver'];
         }
     }
 
