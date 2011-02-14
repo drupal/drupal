@@ -370,12 +370,20 @@ function litecommerce_software_install(&$install_state) {
         $steps = array();
 
         $steps[] = array(
+            'function' => 'doUpdateConfig',
+            'message' => st('Config file was updated'),
+        );
+        $steps[] = array(
             'function' => 'doInstallDirs',
             'message' => st('Directories were installed'),
         );
         $steps[] = array(
             'function' => 'doRemoveCache',
             'message' => st('Prepare for cache building'),
+        );
+        $steps[] = array(
+            'function' => 'doPrepareFixtures',
+            'message' => st('Fixtures were prepared'),
         );
         $steps[] = array(
             'function' => 'doBuildCache',
@@ -427,8 +435,8 @@ function _litecommerce_software_install_batch($step, &$context) {
             // Suppress any direct output from the function
             ob_start();
 
-            if ('doInstallDirs' == $function) {
-                $result = $function($params, $silentMode);
+            if (in_array($function, array('doUpdateConfig', 'doPrepareFixtures'))) {
+                $result = $function($params);
             
             } else {
                 $result = $function();
@@ -437,6 +445,8 @@ function _litecommerce_software_install_batch($step, &$context) {
             $output = ob_get_contents();
 
             ob_end_clean();
+
+            x_install_log($function, array('result' => $result, 'output' => $output));
 
             if (false === $result) {
                 // Print output and break the batch process if function is failed
