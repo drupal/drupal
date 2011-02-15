@@ -16,6 +16,9 @@
  * @since     1.0.0
  */
 
+error_reporting(E_ALL | E_STRICT);
+ini_set('display_errors', true);
+
 /**
  * Module initialization
  *

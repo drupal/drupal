@@ -119,15 +119,15 @@ abstract class LCConnector_Install extends LCConnector_Abstract
         $requirements = array();
 
         // Trying to include LiteCommerce installation scripts
-        $errorMsg = static::includeLCFiles();
+        $errorMsg = self::includeLCFiles();
 
         if (is_null($errorMsg)) {
 
             if ('install' == $phase) {
-                $requirements = static::checkRequirementsInstall();
+                $requirements = self::checkRequirementsInstall();
           
             } else {
-                $requirements = static::checkRequirementsUpdate();
+                $requirements = self::checkRequirementsUpdate();
             }
         
         } else {
@@ -166,13 +166,13 @@ abstract class LCConnector_Install extends LCConnector_Abstract
 
         foreach ($includeFiles as $includeFile) {
 
-            $file = static::getLCCanonicalDir() . $includeFile;
+            $file = self::getLCCanonicalDir() . $includeFile;
 
             if (file_exists($file)) {
                 require_once $file;
 
             } else {
-                $errorMsg = st('LiteCommerce software not found in :lcdir (file :filename)', array(':lcdir' => static::getLCDir(), ':filename' => $file));
+                $errorMsg = st('LiteCommerce software not found in :lcdir (file :filename)', array(':lcdir' => self::getLCDir(), ':filename' => $file));
                 break;
             }
         }

@@ -18,7 +18,7 @@ ini_set('display_errors', true);
 
 // Exit early if running an incompatible PHP version to avoid fatal errors.
 if (version_compare(PHP_VERSION, '5.3.0') < 0) {
-  print 'Your PHP installation is too old. Drupal requires at least PHP 5.2.4. See the <a href="http://drupal.org/requirements">system requirements</a> page for more information.';
+  print 'Your PHP installation is too old. LC CMS requires at least PHP 5.3.0';
   exit;
 }
 

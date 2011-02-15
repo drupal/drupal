@@ -73,7 +73,7 @@ abstract class LCConnector_Abstract
      */
     public static function getLCDir()
     {
-        return variable_get('lc_dir', static::getModuleInfo('lc_dir_default'));
+        return variable_get('lc_dir', self::getModuleInfo('lc_dir_default'));
     }
 
     /**
@@ -86,7 +86,7 @@ abstract class LCConnector_Abstract
      */
     protected static function getLCTopIncFile()
     {
-        return static::getLCCanonicalDir() . 'top.inc.php';
+        return self::getLCCanonicalDir() . 'top.inc.php';
     }
 
     /**
@@ -99,7 +99,7 @@ abstract class LCConnector_Abstract
      */
     public static function getLCCanonicalDir()
     {
-        return static::getCanonicalDir(static::getLCDir());
+        return self::getCanonicalDir(self::getLCDir());
     }
 
     /**
@@ -114,13 +114,13 @@ abstract class LCConnector_Abstract
      */
     protected static function getModuleInfo($field = null)
     {
-        if (!isset(static::$moduleInfo)) {
-            static::$moduleInfo = (array) drupal_parse_info_file(
-                static::getCanonicalDir(dirname(__DIR__)) . 'lc_connector.info'
+        if (!isset(self::$moduleInfo)) {
+            self::$moduleInfo = (array) drupal_parse_info_file(
+                self::getCanonicalDir(dirname(dirname(__FILE__))) . 'lc_connector.info'
             );
         }
 
-        return isset($field) ? @static::$moduleInfo[$field] : static::$moduleInfo;
+        return isset($field) ? @self::$moduleInfo[$field] : self::$moduleInfo;
     }
 
     /**
@@ -133,7 +133,7 @@ abstract class LCConnector_Abstract
      */
     public static function isLCExists()
     {
-        return file_exists(static::getLCTopIncFile());
+        return file_exists(self::getLCTopIncFile());
     }
 
     /**
@@ -146,11 +146,11 @@ abstract class LCConnector_Abstract
      */
     protected static function isLCConnected()
     {
-        if (!isset(static::$isLCConnected) && (static::$isLCConnected = static::isLCExists())) {
-            require_once (static::getLCTopIncFile());
+        if (!isset(self::$isLCConnected) && (self::$isLCConnected = self::isLCExists())) {
+            require_once (self::getLCTopIncFile());
         }
 
-        return static::$isLCConnected;
+        return self::$isLCConnected;
     }
 
 
@@ -185,7 +185,7 @@ abstract class LCConnector_Abstract
      */
     public static function callDirectly($class, $method, array $args = array())
     {
-        return call_user_func_array(array(static::getLCClassInstance($class), $method), $args);
+        return call_user_func_array(array(self::getLCClassInstance($class), $method), $args);
     }
 
     /**
@@ -202,6 +202,6 @@ abstract class LCConnector_Abstract
      */
     public static function callSafely($class, $method, array $args = array())
     {
-        return static::isLCConnected() ? static::callDirectly($class, $method, $args) : null;
+        return self::isLCConnected() ? self::callDirectly($class, $method, $args) : null;
     }
 }

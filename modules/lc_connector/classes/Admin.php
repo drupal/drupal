@@ -42,7 +42,7 @@ abstract class LCConnector_Admin extends LCConnector_Abstract
                     '#type'          => 'textfield',
                     '#title'         => t('LiteCommerce installation dir'),
                     '#required'      => true,
-                    '#default_value' => static::getLCDir(),
+                    '#default_value' => self::getLCDir(),
                 ),
 
                 '#type'  => 'fieldset',
