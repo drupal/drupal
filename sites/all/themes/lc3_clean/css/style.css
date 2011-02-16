@@ -2174,3 +2174,7 @@ ul.pager li.next-page
   text-decoration: underline;
   vertical-align: middle;
 }
+
+#toolbar {
+  z-index: 30000;
+}
