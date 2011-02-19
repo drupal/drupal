@@ -93,6 +93,13 @@ function dblog_schema() {
 }
 
 /**
+ * Implements hook_uninstall().
+ */
+function dblog_uninstall() {
+  variable_del('dblog_row_limit');
+}
+
+/**
  * @addtogroup updates-6.x-to-7.x
  * @{
  */
