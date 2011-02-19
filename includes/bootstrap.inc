@@ -1136,7 +1136,6 @@ function drupal_serve_page_from_cache(stdClass $cache) {
   $etag = '"' . $cache->created . '-' . intval($return_compressed) . '"';
   header('Etag: ' . $etag);
 
-  drupal_set_configured_timezone();
   // See if the client has provided the required HTTP headers.
   $if_modified_since = isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) ? strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']) : FALSE;
   $if_none_match = isset($_SERVER['HTTP_IF_NONE_MATCH']) ? stripslashes($_SERVER['HTTP_IF_NONE_MATCH']) : FALSE;
@@ -1944,26 +1943,9 @@ function drupal_get_user_timezone() {
     return $user->timezone;
   }
   else {
-    // Note that is no site-wide timezone is set, and date.timezone is not set
-    // in php.ini, then calling date functions will cause a system call and
-    // PHP will issue an E_STRICT or E_WARNING error depending on PHP version.
-    // @todo: consider always setting the date_default_timezone variable from 
-    // the installer.
-    return variable_get('date_default_timezone');
-  }
-}
-
-/**
- * Set the timezone for a request when configured.
- */
-function drupal_set_configured_timezone() {
-  $configured_timezone = drupal_get_user_timezone();
-  $system_timezone = ini_get('date.timezone');
-  // There is no point setting the timezone if it is configured the same
-  // as date.timezone in php.ini. Also date_default_timezone_set() validates 
-  // the timezone, which relies on a system call to get the timezone database.
-  if ($configured_timezone != $system_timezone) {
-    date_default_timezone_set($configured_timezone);
+    // Ignore PHP strict notice if time zone has not yet been set in the php.ini
+    // configuration.
+    return variable_get('date_default_timezone', @date_default_timezone_get());
   }
 }
 
@@ -2064,6 +2046,7 @@ function _drupal_bootstrap_page_cache() {
       // Restore the metadata cached with the page.
       $_GET['q'] = $cache->data['path'];
       drupal_set_title($cache->data['title'], PASS_THROUGH);
+      date_default_timezone_set(drupal_get_user_timezone());
       // If the skipping of the bootstrap hooks is not enforced, call
       // hook_boot.
       if (variable_get('page_cache_invoke_hooks', TRUE)) {

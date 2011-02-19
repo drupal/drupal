@@ -2226,7 +2226,7 @@ class FormatDateUnitTest extends DrupalWebTestCase {
     $real_language = $language->language;
     $language->language = $user->language;
     // Simulate a Drupal bootstrap with the logged-in user.
-    drupal_set_configured_timezone();
+    date_default_timezone_set(drupal_get_user_timezone());
 
     $this->assertIdentical(format_date($timestamp, 'custom', 'l, d-M-y H:i:s T', 'America/Los_Angeles', 'en'), 'Sunday, 25-Mar-07 17:00:00 PDT', t('Test a different language.'));
     $this->assertIdentical(format_date($timestamp, 'custom', 'l, d-M-y H:i:s T', 'Europe/London'), 'Monday, 26-Mar-07 01:00:00 BST', t('Test a different time zone.'));
@@ -2240,7 +2240,7 @@ class FormatDateUnitTest extends DrupalWebTestCase {
     $user = $real_user;
     $language->language = $real_language;
     // Restore default time zone.
-    drupal_set_configured_timezone();
+    date_default_timezone_set(drupal_get_user_timezone());
     drupal_save_session(TRUE);
   }
 }
