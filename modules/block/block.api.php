@@ -34,7 +34,7 @@
  * it is preferable to use descriptive strings whenever possible, and only use a
  * numeric identifier if you have to (for instance if your module allows users
  * to create several similar blocks that you identify within your module code
- * with numeric IDs).
+ * with numeric IDs). The maximum length for delta values is 32 bytes.
  *
  * @return
  *   An associative array whose keys define the delta for each block and whose
