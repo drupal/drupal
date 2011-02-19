@@ -833,6 +833,25 @@ class FilterUnitTestCase extends DrupalUnitTestCase {
       '<blockquote><pre>aaa</pre></blockquote>' => array(
         "<blockquote><pre>aaa</pre></blockquote>" => TRUE,
       ),
+      "<pre>aaa\nbbb\nccc</pre>\nddd\neee" => array(
+        "<pre>aaa\nbbb\nccc</pre>" => TRUE,
+        "<p>ddd<br />\neee</p>" => TRUE,
+      ),
+      // Comments remain unchanged and subsequent lines/paragraphs are
+      // transformed normally.
+      "aaa<!--comment-->\n\nbbb\n\nccc\n\nddd<!--comment\nwith linebreak-->\n\neee\n\nfff" => array(
+        "<p>aaa</p>\n<!--comment--><p>\nbbb</p>\n<p>ccc</p>\n<p>ddd</p>" => TRUE,
+        "<!--comment\nwith linebreak--><p>\neee</p>\n<p>fff</p>" => TRUE,
+      ),
+      // Check that a comment in a PRE will result that the text after
+      // the comment, but still in PRE, is not transformed.
+      "<pre>aaa\nbbb<!-- comment -->\n\nccc</pre>\nddd" => array(
+        "<pre>aaa\nbbb<!-- comment -->\n\nccc</pre>" => TRUE,
+      ),
+      // Bug 810824, paragraphs were appearing around iframe tags.
+      "<iframe>aaa</iframe>\n\n" => array(
+        "<p><iframe>aaa</iframe></p>" => FALSE,
+      ),
     );
     $this->assertFilteredString($filter, $tests);
 
@@ -1464,7 +1483,7 @@ www.example.com with a newline in comments -->
         if (!$success) {
           $this->verbose('Source:<pre>' . check_plain(var_export($source, TRUE)) . '</pre>'
             . '<hr />' . 'Result:<pre>' . check_plain(var_export($result, TRUE)) . '</pre>'
-            . '<hr />' . ($is_expected ? 'Found:' : 'Not found:')
+            . '<hr />' . ($is_expected ? 'Expected:' : 'Not expected:')
             . '<pre>' . check_plain(var_export($value, TRUE)) . '</pre>'
           );
         }
