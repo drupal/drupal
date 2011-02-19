@@ -100,6 +100,8 @@ function hook_form_system_theme_settings_alter(&$form, &$form_state) {
  * It is called for all invocations of theme(), to allow modules to add to
  * or override variables for all theme hooks.
  *
+ * For more detailed information, see theme().
+ *
  * @param $variables
  *   The variables array (modify in place).
  * @param $hook
@@ -146,6 +148,8 @@ function hook_preprocess(&$variables, $hook) {
  * hook. It should only be used if a module needs to override or add to the
  * theme preprocessing for a theme hook it didn't define.
  *
+ * For more detailed information, see theme().
+ *
  * @param $variables
  *   The variables array (modify in place).
  */
@@ -161,6 +165,8 @@ function hook_preprocess_HOOK(&$variables) {
  * This hook allows modules to process theme variables for theme templates.
  * It is called for all invocations of theme(), to allow modules to add to
  * or override variables for all theme hooks.
+ *
+ * For more detailed information, see theme().
  *
  * @param $variables
  *   The variables array (modify in place).
@@ -187,6 +193,8 @@ function hook_process(&$variables, $hook) {
  * This hook allows modules to process theme variables for a specific theme
  * hook. It should only be used if a module needs to override or add to the
  * theme processing for a theme hook it didn't define.
+ *
+ * For more detailed information, see theme().
  *
  * @param $variables
  *   The variables array (modify in place).

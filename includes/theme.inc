@@ -2038,6 +2038,9 @@ function _theme_table_cell($cell, $header = FALSE) {
  * Adds a default set of helper variables for variable processors and templates.
  * This comes in before any other preprocess function which makes it possible to
  * be used in default theme implementations (non-overridden theme functions).
+ *
+ * For more detailed information, see theme().
+ *
  */
 function template_preprocess(&$variables, $hook) {
   global $user;
@@ -2115,6 +2118,9 @@ function _template_preprocess_default_variables() {
 
 /**
  * A default process function used to alter variables as late as possible.
+ *
+ * For more detailed information, see theme().
+ *
  */
 function template_process(&$variables, $hook) {
   // Flatten out classes.
