@@ -6886,7 +6886,7 @@ function drupal_write_record($table, &$record, $primary_keys = array()) {
  */
 
 /**
- * Parse Drupal module and theme info file format.
+ * Parses Drupal module and theme .info files.
  *
  * Info files are NOT for placing arbitrary theme and module-specific settings.
  * Use variable_get() and variable_set() for that.
@@ -6897,7 +6897,7 @@ function drupal_write_record($table, &$record, $primary_keys = array()) {
  * - dependencies: An array of shortnames of other modules this module requires.
  * - package: The name of the package of modules this module belongs to.
  *
- * @see forum.info
+ * See forum.info for an example of a module .info file.
  *
  * Information stored in a theme .info file:
  * - name: The real name of the theme for display purposes.
@@ -6910,10 +6910,11 @@ function drupal_write_record($table, &$record, $primary_keys = array()) {
  * - stylesheets: Theme stylesheets; e.g., stylesheets[all][] = my-style.css.
  * - scripts: Theme scripts; e.g., scripts[] = my-script.js.
  *
- * @see bartik.info
+ * See bartik.info for an example of a theme .info file.
  *
  * @param $filename
  *   The file we are parsing. Accepts file with relative or absolute path.
+ *
  * @return
  *   The info array.
  *
