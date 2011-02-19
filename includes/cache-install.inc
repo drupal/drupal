@@ -31,7 +31,7 @@ class DrupalFakeCache extends DrupalDatabaseCache implements DrupalCacheInterfac
     // If there is a database cache, attempt to clear it whenever possible. The
     // reason for doing this is that the database cache can accumulate data
     // during installation due to any full bootstraps that may occur at the
-    // same time (for example, AJAX requests triggered by the installer). If we
+    // same time (for example, Ajax requests triggered by the installer). If we
     // didn't try to clear it whenever this function is called, the data in the
     // cache would become stale; for example, the installer sometimes calls
     // variable_set(), which updates the {variable} table and then clears the

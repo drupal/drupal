@@ -104,7 +104,7 @@ function drupal_theme_initialize() {
   drupal_static_reset('drupal_alter');
 
   // Provide the page with information about the theme that's used, so that a
-  // later AJAX request can be rendered using the same theme.
+  // later Ajax request can be rendered using the same theme.
   // @see ajax_base_page_theme()
   $setting['ajaxPageState'] = array(
     'theme' => $theme_key,

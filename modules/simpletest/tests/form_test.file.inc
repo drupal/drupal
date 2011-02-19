@@ -11,7 +11,7 @@
  * hook_menu().
  */
 function form_test_load_include_menu($form, &$form_state) {
-  // Submit the form via AJAX. That way the FAPI has to care about including
+  // Submit the form via Ajax. That way the FAPI has to care about including
   // the file specified in hook_menu().
   $ajax_wrapper_id = drupal_html_id('form-test-load-include-menu-ajax-wrapper');
   $form['ajax_wrapper'] = array(
@@ -43,7 +43,7 @@ function form_test_load_include_submit($form, $form_state) {
 function form_test_load_include_menu_ajax($form) {
   // We don't need to return anything, since #ajax['method'] is 'append', which
   // does not remove the original #ajax['wrapper'] element, and status messages
-  // are automatically added by the AJAX framework as long as there's a wrapper
+  // are automatically added by the Ajax framework as long as there's a wrapper
   // element to add them to.
   return '';
 }

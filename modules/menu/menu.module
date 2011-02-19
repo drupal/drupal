@@ -352,7 +352,7 @@ function menu_parent_options($menus, $item) {
 
 /**
  * Page callback.
- * Get all available menus and menu items as Javascript array.
+ * Get all the available menus and menu items as a JavaScript array.
  */
 function menu_parent_options_js() {
   $available_menus = array();

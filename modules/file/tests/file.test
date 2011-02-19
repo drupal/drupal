@@ -254,7 +254,7 @@ class FileManagedFileElementTestCase extends FileFieldTestCase {
         $this->drupalPost($path . '/' . $last_fid, array(), t('Save'));
         $this->assertRaw(t('The file id is %fid.', array('%fid' => $last_fid)), t('Empty submission did not change an existing file.'));
 
-        // Now, test the Upload and Remove buttons, with and without AJAX.
+        // Now, test the Upload and Remove buttons, with and without Ajax.
         foreach (array(FALSE, TRUE) as $ajax) {
           // Upload, then Submit.
           $last_fid_prior = $this->getLastFileId();
@@ -302,7 +302,7 @@ class FileManagedFileElementTestCase extends FileFieldTestCase {
 }
 
 /**
- * Test class to test file field widget, single and multi-valued, with and without AJAX, with public and private files.
+ * Test class to test file field widget, single and multi-valued, with and without Ajax, with public and private files.
  */
 class FileFieldWidgetTestCase extends FileFieldTestCase {
   public static function getInfo() {
@@ -314,7 +314,7 @@ class FileFieldWidgetTestCase extends FileFieldTestCase {
   }
 
   /**
-   * Tests upload and remove buttons, with and without AJAX, for a single-valued File field.
+   * Tests upload and remove buttons, with and without Ajax, for a single-valued File field.
    */
   function testSingleValuedWidget() {
     // Use 'page' instead of 'article', so that the 'article' image field does
@@ -371,7 +371,7 @@ class FileFieldWidgetTestCase extends FileFieldTestCase {
   }
 
   /**
-   * Tests upload and remove buttons, with and without AJAX, for a multi-valued File field.
+   * Tests upload and remove buttons, with and without Ajax, for a multi-valued File field.
    */
   function testMultiValuedWidget() {
     // Use 'page' instead of 'article', so that the 'article' image field does
@@ -390,7 +390,7 @@ class FileFieldWidgetTestCase extends FileFieldTestCase {
       // Visit the node creation form, and upload 3 files. Since the field has
       // cardinality of 3, ensure the "Upload" button is displayed until after
       // the 3rd file, and after that, isn't displayed.
-      // @todo This is only testing a non-AJAX upload, because drupalPostAJAX()
+      // @todo This is only testing a non-Ajax upload, because drupalPostAJAX()
       //   does not yet emulate jQuery's file upload.
       $this->drupalGet("node/add/$type_name");
       for ($delta = 0; $delta < 3; $delta++) {

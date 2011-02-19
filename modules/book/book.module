@@ -419,7 +419,7 @@ function book_form_node_form_alter(&$form, &$form_state, $form_id) {
  * rebuild so that the "Parent item" options are changed to reflect the newly
  * selected book. When JavaScript is enabled, the submit button that triggers
  * this handler is hidden, and the "Book" dropdown directly triggers the
- * book_form_update() AJAX callback instead.
+ * book_form_update() Ajax callback instead.
  *
  * @see book_form_update()
  */
@@ -432,7 +432,7 @@ function book_pick_book_nojs_submit($form, &$form_state) {
  * Build the parent selection form element for the node form or outline tab.
  *
  * This function is also called when generating a new set of options during the
- * AJAX callback, so an array is returned that can be used to replace an existing
+ * Ajax callback, so an array is returned that can be used to replace an existing
  * form element.
  */
 function _book_parent_select($book_link) {
@@ -479,7 +479,7 @@ function _book_parent_select($book_link) {
  * Build the common elements of the book form for the node and outline forms.
  */
 function _book_add_form_elements(&$form, &$form_state, $node) {
-  // If the form is being processed during the AJAX callback of our book bid
+  // If the form is being processed during the Ajax callback of our book bid
   // dropdown, then $form_state will hold the value that was selected.
   if (isset($form_state['values']['book'])) {
     $node->book = $form_state['values']['book'];
@@ -563,7 +563,7 @@ function _book_add_form_elements(&$form, &$form_state, $node) {
 /**
  * Renders a new parent page select element when the book selection changes.
  *
- * This function is called via AJAX when the selected book is changed on a node
+ * This function is called via Ajax when the selected book is changed on a node
  * or book outline form.
  *
  * @return

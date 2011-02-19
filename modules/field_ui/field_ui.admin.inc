@@ -875,7 +875,7 @@ function field_ui_display_overview_form($form, &$form_state, $entity_type, $bund
       'class' => array('field-ui-overview'),
       'id' => 'field-display-overview',
     ),
-    // Add AJAX wrapper.
+    // Add Ajax wrapper.
     '#prefix' => '<div id="field-display-overview-wrapper">',
     '#suffix' => '</div>',
   );
@@ -1157,7 +1157,7 @@ function field_ui_display_overview_form($form, &$form_state, $entity_type, $bund
       'callback' => 'field_ui_display_overview_multistep_js',
       'wrapper' => 'field-display-overview-wrapper',
       'effect' => 'fade',
-      // The button stays hidden, so we hide the AJAX spinner too. Ad-hoc
+      // The button stays hidden, so we hide the Ajax spinner too. Ad-hoc
       // spinners will be added manually by the client-side script.
       'progress' => 'none',
     ),
@@ -1218,7 +1218,7 @@ function field_ui_display_overview_multistep_submit($form, &$form_state) {
 }
 
 /**
- * AJAX handler for multistep buttons on the 'Manage display' screen.
+ * Ajax handler for multistep buttons on the 'Manage display' screen.
  */
 function field_ui_display_overview_multistep_js($form, &$form_state) {
   $trigger = $form_state['triggering_element'];

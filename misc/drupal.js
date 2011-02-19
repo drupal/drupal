@@ -11,7 +11,7 @@ jQuery.noConflict();
  * Attach all registered behaviors to a page element.
  *
  * Behaviors are event-triggered actions that attach to page elements, enhancing
- * default non-Javascript UIs. Behaviors are registered in the Drupal.behaviors
+ * default non-JavaScript UIs. Behaviors are registered in the Drupal.behaviors
  * object using the method 'attach' and optionally also 'detach' as follows:
  * @code
  *    Drupal.behaviors.behaviorName = {
@@ -25,7 +25,7 @@ jQuery.noConflict();
  * @endcode
  *
  * Drupal.attachBehaviors is added below to the jQuery ready event and so
- * runs on initial page load. Developers implementing AHAH/AJAX in their
+ * runs on initial page load. Developers implementing AHAH/Ajax in their
  * solutions should also call this function after new page content has been
  * loaded, feeding in an element to be processed, in order to attach all
  * behaviors to the new content.
@@ -61,7 +61,7 @@ Drupal.attachBehaviors = function (context, settings) {
 /**
  * Detach registered behaviors from a page element.
  *
- * Developers implementing AHAH/AJAX in their solutions should call this
+ * Developers implementing AHAH/Ajax in their solutions should call this
  * function before page content is about to be removed, feeding in an element
  * to be processed, in order to allow special behaviors to detach from the
  * content.
@@ -89,7 +89,7 @@ Drupal.attachBehaviors = function (context, settings) {
  *     IFRAME elements reload their "src" when being moved within the DOM,
  *     behaviors bound to IFRAME elements (like WYSIWYG editors) may need to
  *     take some action.
- *   - serialize: When an AJAX form is submitted, this is called with the
+ *   - serialize: When an Ajax form is submitted, this is called with the
  *     form as the context. This provides every behavior within the form an
  *     opportunity to ensure that the field elements have correct content
  *     in them before the form is serialized. The canonical use-case is so
@@ -302,7 +302,7 @@ Drupal.getSelection = function (element) {
 };
 
 /**
- * Build an error message from an AJAX response.
+ * Build an error message from an Ajax response.
  */
 Drupal.ajaxError = function (xmlhttp, uri) {
   var statusCode, statusText, pathText, responseText, readyStateText, message;

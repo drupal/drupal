@@ -626,7 +626,7 @@ function overlay_overlay_parent_initialize() {
     $type = str_replace('<front>', variable_get('site_frontpage', 'node'), $type);
   }
   drupal_add_js(array('overlay' => array('paths' => $paths)), 'setting');
-  // Pass along the AJAX callback for rerendering sections of the parent window.
+  // Pass along the Ajax callback for rerendering sections of the parent window.
   drupal_add_js(array('overlay' => array('ajaxCallback' => 'overlay-ajax')), 'setting');
 }
 
@@ -643,7 +643,7 @@ function overlay_overlay_child_initialize() {
   // the initial rendered content of those regions here, so that we can compare
   // it to the same content rendered in overlay_exit(), at the end of the page
   // request. This allows us to check if anything actually did change, and, if
-  // so, trigger an immediate AJAX refresh of the parent window.
+  // so, trigger an immediate Ajax refresh of the parent window.
   if (!empty($_POST) || isset($_GET['token'])) {
     foreach (overlay_supplemental_regions() as $region) {
       overlay_store_rendered_content($region, overlay_render_region($region));
@@ -945,7 +945,7 @@ function overlay_trigger_refresh() {
 /**
  * Prints the markup obtained by rendering a single region of the page.
  *
- * This function is intended to be called via AJAX.
+ * This function is intended to be called via Ajax.
  *
  * @param $region
  *   The name of the page region to render.

@@ -295,10 +295,10 @@ function system_element_info() {
     '#theme' => 'page',
     '#theme_wrappers' => array('html'),
   );
-  // By default, we don't want AJAX commands being rendered in the context of an
+  // By default, we don't want Ajax commands being rendered in the context of an
   // HTML page, so we don't provide defaults for #theme or #theme_wrappers.
   // However, modules can set these properties (for example, to provide an HTML
-  // debugging page that displays rather than executes AJAX commands).
+  // debugging page that displays rather than executes Ajax commands).
   $types['ajax'] = array(
     '#header' => TRUE,
     '#commands' => array(),
@@ -1079,7 +1079,7 @@ function _system_batch_theme() {
  * Implements hook_library().
  */
 function system_library() {
-  // Drupal's AJAX framework.
+  // Drupal's Ajax framework.
   $libraries['drupal.ajax'] = array(
     'title' => 'Drupal AJAX',
     'website' => 'http://api.drupal.org/api/drupal/includes--ajax.inc/group/ajax/7',
@@ -3451,7 +3451,7 @@ function system_page_alter(&$page) {
  */
 function system_run_automated_cron() {
   // If the site is not fully installed, suppress the automated cron run.
-  // Otherwise it could be triggered prematurely by AJAX requests during
+  // Otherwise it could be triggered prematurely by Ajax requests during
   // installation.
   if (($threshold = variable_get('cron_safe_threshold', DRUPAL_CRON_DEFAULT_THRESHOLD)) > 0 && variable_get('install_task') == 'done') {
     $cron_last = variable_get('cron_last', NULL);

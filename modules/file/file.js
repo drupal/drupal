@@ -5,7 +5,7 @@
  * Provides JavaScript additions to the managed file field type.
  *
  * This file provides progress bar support (if available), popup windows for
- * file previews, and disabling of other file fields during AJAX uploads (which
+ * file previews, and disabling of other file fields during Ajax uploads (which
  * prevents separate file fields from accidentally uploading files).
  */
 
@@ -90,7 +90,7 @@ Drupal.file = Drupal.file || {
   disableFields: function (event){
     var clickedButton = this;
 
-    // Only disable upload fields for AJAX buttons.
+    // Only disable upload fields for Ajax buttons.
     if (!$(clickedButton).hasClass('ajax-processed')) {
       return;
     }
@@ -105,7 +105,7 @@ Drupal.file = Drupal.file || {
     // working with. Filter out fields that are already disabled so that they
     // do not get enabled when we re-enable these fields at the end of behavior
     // processing. Re-enable in a setTimeout set to a relatively short amount
-    // of time (1 second). All the other mousedown handlers (like Drupal's AJAX
+    // of time (1 second). All the other mousedown handlers (like Drupal's Ajax
     // behaviors) are excuted before any timeout functions are called, so we
     // don't have to worry about the fields being re-enabled too soon.
     // @todo If the previous sentence is true, why not set the timeout to 0?

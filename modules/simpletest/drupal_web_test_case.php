@@ -1769,17 +1769,17 @@ class DrupalWebTestCase extends DrupalTestCase {
    *   button with the value t('Delete'), and execute different code depending
    *   on which one is clicked.
    *
-   *   This function can also be called to emulate an AJAX submission. In this
+   *   This function can also be called to emulate an Ajax submission. In this
    *   case, this value needs to be an array with the following keys:
-   *   - path: A path to submit the form values to for AJAX-specific processing,
+   *   - path: A path to submit the form values to for Ajax-specific processing,
    *     which is likely different than the $path parameter used for retrieving
    *     the initial form. Defaults to 'system/ajax'.
    *   - triggering_element: If the value for the 'path' key is 'system/ajax' or
-   *     another generic AJAX processing path, this needs to be set to the name
+   *     another generic Ajax processing path, this needs to be set to the name
    *     of the element. If the name doesn't identify the element uniquely, then
    *     this should instead be an array with a single key/value pair,
    *     corresponding to the element name and value. The callback for the
-   *     generic AJAX processing path uses this to find the #ajax information
+   *     generic Ajax processing path uses this to find the #ajax information
    *     for the element, including which specific callback to use for
    *     processing the request.
    *
@@ -1829,7 +1829,7 @@ class DrupalWebTestCase extends DrupalTestCase {
         $action = isset($form['action']) ? $this->getAbsoluteUrl((string) $form['action']) : $this->getUrl();
         if ($ajax) {
           $action = $this->getAbsoluteUrl(!empty($submit['path']) ? $submit['path'] : 'system/ajax');
-          // AJAX callbacks verify the triggering element if necessary, so while
+          // Ajax callbacks verify the triggering element if necessary, so while
           // we may eventually want extra code that verifies it in the
           // handleForm() function, it's not currently a requirement.
           $submit_matches = TRUE;
@@ -1886,26 +1886,26 @@ class DrupalWebTestCase extends DrupalTestCase {
   }
 
   /**
-   * Execute an AJAX submission.
+   * Execute an Ajax submission.
    *
    * This executes a POST as ajax.js does. It uses the returned JSON data, an
    * array of commands, to update $this->content using equivalent DOM
    * manipulation as is used by ajax.js. It also returns the array of commands.
    *
    * @param $path
-   *   Location of the form containing the AJAX enabled element to test. Can be
+   *   Location of the form containing the Ajax enabled element to test. Can be
    *   either a Drupal path or an absolute path or NULL to use the current page.
    * @param $edit
    *   Field data in an associative array. Changes the current input fields
    *   (where possible) to the values indicated.
    * @param $triggering_element
-   *   The name of the form element that is responsible for triggering the AJAX
+   *   The name of the form element that is responsible for triggering the Ajax
    *   functionality to test. May be a string or, if the triggering element is
    *   a button, an associative array where the key is the name of the button
    *   and the value is the button label. i.e.) array('op' => t('Refresh')).
    * @param $ajax_path
-   *   (optional) Override the path set by the AJAX settings of the triggering
-   *   element. In the absence of both the triggering element's AJAX path and
+   *   (optional) Override the path set by the Ajax settings of the triggering
+   *   element. In the absence of both the triggering element's Ajax path and
    *   $ajax_path 'system/ajax' will be used.
    * @param $options
    *   (optional) Options to be forwarded to url().
@@ -1918,11 +1918,11 @@ class DrupalWebTestCase extends DrupalTestCase {
    *   element is not enough to identify the form. Note this is not the Drupal
    *   ID of the form but rather the HTML ID of the form.
    * @param $ajax_settings
-   *   (optional) An array of AJAX settings which if specified will be used in
-   *   place of the AJAX settings of the triggering element.
+   *   (optional) An array of Ajax settings which if specified will be used in
+   *   place of the Ajax settings of the triggering element.
    *
    * @return
-   *   An array of AJAX commands.
+   *   An array of Ajax commands.
    *
    * @see drupalPost()
    * @see ajax.js
@@ -1936,7 +1936,7 @@ class DrupalWebTestCase extends DrupalTestCase {
     $content = $this->content;
     $drupal_settings = $this->drupalSettings;
 
-    // Get the AJAX settings bound to the triggering element.
+    // Get the Ajax settings bound to the triggering element.
     if (!isset($ajax_settings)) {
       if (is_array($triggering_element)) {
         $xpath = '//*[@name="' . key($triggering_element) . '" and @value="' . current($triggering_element) . '"]';
@@ -1965,7 +1965,7 @@ class DrupalWebTestCase extends DrupalTestCase {
     }
 
     // Unless a particular path is specified, use the one specified by the
-    // AJAX settings, or else 'system/ajax'.
+    // Ajax settings, or else 'system/ajax'.
     if (!isset($ajax_path)) {
       $ajax_path = isset($ajax_settings['url']) ? $ajax_settings['url'] : 'system/ajax';
     }

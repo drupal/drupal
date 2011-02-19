@@ -486,7 +486,7 @@ function dashboard_dashboard_regions() {
 }
 
 /**
- * AJAX callback to show disabled blocks in the dashboard customization mode.
+ * Ajax callback to show disabled blocks in the dashboard customization mode.
  */
 function dashboard_show_disabled() {
   global $theme_key;
@@ -507,7 +507,7 @@ function dashboard_show_disabled() {
 }
 
 /**
- * AJAX callback to display the rendered contents of a specific block.
+ * Ajax callback to display the rendered contents of a specific block.
  *
  * @param $module
  *   The block's module name.

@@ -167,7 +167,7 @@ Drupal.fieldUIOverview = {
         refreshRows = rowHandler.regionChange(region);
         // Update the row region.
         rowHandler.region = region;
-        // AJAX-update the rows.
+        // Ajax-update the rows.
         Drupal.fieldUIOverview.AJAXRefreshRows(refreshRows);
       }
     }
@@ -206,7 +206,7 @@ Drupal.fieldUIOverview = {
   },
 
   /**
-   * Triggers AJAX refresh of selected rows.
+   * Triggers Ajax refresh of selected rows.
    *
    * The 'format type' selects can trigger a series of changes in child rows.
    * The #ajax behavior is therefore not attached directly to the selects, but
@@ -215,7 +215,7 @@ Drupal.fieldUIOverview = {
    * @param rows
    *   A hash object, whose keys are the names of the rows to refresh (they
    *   will receive the 'ajax-new-content' effect on the server side), and
-   *   whose values are the DOM element in the row that should get an AJAX
+   *   whose values are the DOM element in the row that should get an Ajax
    *   throbber.
    */
   AJAXRefreshRows: function (rows) {
@@ -234,7 +234,7 @@ Drupal.fieldUIOverview = {
         .addClass('progress-disabled')
         .after($throbber);
 
-      // Fire the AJAX update.
+      // Fire the Ajax update.
       $('input[name=refresh_rows]').val(rowNames.join(' '));
       $('input#edit-refresh').mousedown();
 
@@ -295,7 +295,7 @@ Drupal.fieldUIDisplayOverview.field.prototype = {
    * @param region
    *   The name of the new region for the row.
    * @return
-   *   A hash object indicating which rows should be AJAX-updated as a result
+   *   A hash object indicating which rows should be Ajax-updated as a result
    *   of the change, in the format expected by
    *   Drupal.displayOverview.AJAXRefreshRows().
    */

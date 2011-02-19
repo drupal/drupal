@@ -448,7 +448,7 @@ function file_field_widget_form(&$form, &$form_state, $field, $instance, $langco
     'description' => '',
   );
 
-  // Retrieve any values set in $form_state, as will be the case during AJAX
+  // Retrieve any values set in $form_state, as will be the case during Ajax
   // rebuilds of this form.
   if (isset($form_state['values'])) {
     $path = array_merge($element['#field_parents'], array($field['field_name'], $langcode));
@@ -650,7 +650,7 @@ function file_field_widget_process($element, &$form_state, $form) {
     );
   }
 
-  // Adjust the AJAX settings so that on upload and remove of any individual
+  // Adjust the Ajax settings so that on upload and remove of any individual
   // file, the entire group of file fields is updated together.
   if ($field['cardinality'] != 1) {
     $parents = array_slice($element['#array_parents'], 0, -1);
@@ -681,7 +681,7 @@ function file_field_widget_process($element, &$form_state, $form) {
 /**
  * An element #process callback for a group of file_generic fields.
  *
- * Adds the weight field to each row so it can be ordered and adds a new AJAX
+ * Adds the weight field to each row so it can be ordered and adds a new Ajax
  * wrapper around the entire group so it can be replaced all at once.
  */
 function file_field_widget_process_multiple($element, &$form_state, $form) {
@@ -710,7 +710,7 @@ function file_field_widget_process_multiple($element, &$form_state, $form) {
     }
   }
 
-  // Add a new wrapper around all the elements for AJAX replacement.
+  // Add a new wrapper around all the elements for Ajax replacement.
   $element['#prefix'] = '<div id="' . $element['#id'] . '-ajax-wrapper">';
   $element['#suffix'] = '</div>';
 
@@ -770,7 +770,7 @@ function theme_file_widget($variables) {
   $element = $variables['element'];
   $output = '';
 
-  // The "form-managed-file" class is required for proper AJAX functionality.
+  // The "form-managed-file" class is required for proper Ajax functionality.
   $output .= '<div class="file-widget form-managed-file clearfix">';
   if ($element['fid']['#value'] != 0) {
     // Add the file size after the file name.

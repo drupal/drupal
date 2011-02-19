@@ -128,9 +128,9 @@
  * - 'triggering_element': (read-only) The form element that triggered
  *   submission. This is the same as the deprecated
  *   $form_state['clicked_button']. It is the element that caused submission,
- *   which may or may not be a button (in the case of AJAX forms.) This is
+ *   which may or may not be a button (in the case of Ajax forms.) This is
  *   often used to distinguish between various buttons in a submit handler,
- *   and is also used in AJAX handlers.
+ *   and is also used in Ajax handlers.
  * - 'cache': The typical form workflow involves two page requests. During the
  *   first page request, a form is built and returned for the user to fill in.
  *   Then the user fills the form in and submits it, triggering a second page
@@ -139,9 +139,9 @@
  *   In some special use-cases, it is necessary or desired to persist the $form
  *   and $form_state variables from the initial page request to the one that
  *   processes the submission. A form builder function can set 'cache' to TRUE
- *   to do this. One example where this is needed is to handle AJAX submissions,
+ *   to do this. One example where this is needed is to handle Ajax submissions,
  *   so ajax_process_form() sets this for all forms that include an element with
- *   a #ajax property. (In AJAX, the handler has no way to build the form
+ *   a #ajax property. (In Ajax, the handler has no way to build the form
  *   itself, so must rely on the cached version created on each page load, so
  *   it's a classic example of this use case.) Note that the persistence of
  *   $form and $form_state across successive submissions of a multi-step form
@@ -254,7 +254,7 @@ function drupal_get_form($form_id) {
  *   - must_validate: Ordinarily, a form is only validated once but there are
  *     times when a form is resubmitted internally and should be validated
  *     again. Setting this to TRUE will force that to happen. This is most
- *     likely to occur during AHAH or AJAX operations.
+ *     likely to occur during AHAH or Ajax operations.
  *   - temporary: An array holding temporary data accessible during the current
  *     page request only. It may be used to temporary save any data that doesn't
  *     need to or shouldn't be cached during the whole form workflow, e.g. data
@@ -396,9 +396,9 @@ function form_state_defaults() {
  * function is called to generate a new $form, the next step in the form
  * workflow, to be returned for rendering.
  *
- * AJAX form submissions are almost always multi-step workflows, so that is one
+ * Ajax form submissions are almost always multi-step workflows, so that is one
  * common use-case during which form rebuilding occurs. See ajax_form_callback()
- * for more information about creating AJAX-enabled forms.
+ * for more information about creating Ajax-enabled forms.
  *
  * @param $form_id
  *   The unique string identifying the desired form. If a function
@@ -411,7 +411,7 @@ function form_state_defaults() {
  *   A keyed array containing the current state of the form.
  * @param $old_form
  *   (optional) A previously built $form. Used to retain the #build_id and
- *   #action properties in AJAX callbacks and similar partial form rebuilds. The
+ *   #action properties in Ajax callbacks and similar partial form rebuilds. The
  *   only properties copied from $old_form are the ones which both exist in
  *   $old_form and for which $form_state['rebuild_info']['copy'][PROPERTY] is
  *   TRUE. If $old_form is not passed, the entire $form is rebuilt freshly.
@@ -427,7 +427,7 @@ function form_state_defaults() {
 function drupal_rebuild_form($form_id, &$form_state, $old_form = NULL) {
   $form = drupal_retrieve_form($form_id, $form_state);
 
-  // If only parts of the form will be returned to the browser (e.g. AJAX or
+  // If only parts of the form will be returned to the browser (e.g., Ajax or
   // RIA clients), re-use the old #build_id to not require client-side code to
   // manually update the hidden 'build_id' input element.
   // Otherwise, a new #build_id is generated, to not clobber the previous
@@ -441,7 +441,7 @@ function drupal_rebuild_form($form_id, &$form_state, $old_form = NULL) {
     $form['#build_id'] = 'form-' . drupal_hash_base64(uniqid(mt_rand(), TRUE) . mt_rand());
   }
 
-  // #action defaults to request_uri(), but in case of AJAX and other partial
+  // #action defaults to request_uri(), but in case of Ajax and other partial
   // rebuilds, the form is submitted to an alternate URL, and the original
   // #action needs to be retained.
   if (isset($old_form['#action']) && !empty($form_state['rebuild_info']['copy']['#action'])) {
@@ -882,13 +882,13 @@ function drupal_process_form($form_id, &$form, &$form_state) {
     // yet complete. A new $form needs to be constructed based on the changes
     // made to $form_state during this request. Normally, a submit handler sets
     // $form_state['rebuild'] if a fully executed form requires another step.
-    // However, for forms that have not been fully executed (e.g., AJAX
+    // However, for forms that have not been fully executed (e.g., Ajax
     // submissions triggered by non-buttons), there is no submit handler to set
     // $form_state['rebuild']. It would not make sense to redisplay the
     // identical form without an error for the user to correct, so we also
     // rebuild error-free non-executed forms, regardless of
     // $form_state['rebuild'].
-    // @todo D8: Simplify this logic; considering AJAX and non-HTML front-ends,
+    // @todo D8: Simplify this logic; considering Ajax and non-HTML front-ends,
     //   along with element-level #submit properties, it makes no sense to have
     //   divergent form execution based on whether the triggering element has
     //   #executes_submit_callback set to TRUE.
@@ -1146,7 +1146,7 @@ function drupal_validate_form($form_id, &$form, &$form_state) {
  * - If $form_state['no_redirect'] is TRUE, then the callback that originally
  *   built the form explicitly disallows any redirection, regardless of the
  *   redirection value in $form_state['redirect']. For example, ajax_get_form()
- *   defines $form_state['no_redirect'] when building a form in an AJAX
+ *   defines $form_state['no_redirect'] when building a form in an Ajax
  *   callback to prevent any redirection. $form_state['no_redirect'] should NOT
  *   be altered by form builder functions or form validation/submit handlers.
  * - If $form_state['programmed'] is TRUE, the form submission was usually
@@ -1286,7 +1286,7 @@ function _form_validate(&$elements, &$form_state, $form_id = NULL) {
     // If submit handlers won't run (due to the submission having been triggered
     // by an element whose #executes_submit_callback property isn't TRUE), then
     // it's safe to suppress all validation errors, and we do so by default,
-    // which is particularly useful during an AJAX submission triggered by a
+    // which is particularly useful during an Ajax submission triggered by a
     // non-button. An element can override this default by setting the
     // #limit_validation_errors property. For button element types,
     // #limit_validation_errors defaults to FALSE (via system_element_info()),
@@ -1962,12 +1962,12 @@ function _form_builder_handle_input_element($form_id, &$element, &$form_state) {
   // form_state_values_clean(). Enforce the same input processing restrictions
   // as above.
   if ($process_input) {
-    // Detect if the element triggered the submission via AJAX.
+    // Detect if the element triggered the submission via Ajax.
     if (_form_element_triggered_scripted_submission($element, $form_state)) {
       $form_state['triggering_element'] = $element;
     }
 
-    // If the form was submitted by the browser rather than via AJAX, then it
+    // If the form was submitted by the browser rather than via Ajax, then it
     // can only have been triggered by a button, and we need to determine which
     // button within the constraints of how browsers provide this information.
     if (isset($element['#button_type'])) {
@@ -1992,7 +1992,7 @@ function _form_builder_handle_input_element($form_id, &$element, &$form_state) {
  * Helper function to handle the convoluted logic of button click detection.
  *
  * This detects button or non-button controls that trigger a form submission via
- * AJAX or some other scriptable environment. These environments can set the
+ * Ajax or some other scriptable environment. These environments can set the
  * special input key '_triggering_element_name' to identify the triggering
  * element. If the name alone doesn't identify the element uniquely, the input
  * key '_triggering_element_value' may also be set to require a match on element
@@ -2017,7 +2017,7 @@ function _form_element_triggered_scripted_submission($element, &$form_state) {
  * of the POST data, but with extra code to deal with the convoluted way in
  * which browsers submit data for image button clicks.
  *
- * This does not detect button clicks processed by AJAX (that is done in
+ * This does not detect button clicks processed by Ajax (that is done in
  * _form_element_triggered_scripted_submission()) and it does not detect form
  * submissions from Internet Explorer in response to an ENTER key pressed in a
  * textfield (form_builder() has extra code for that).

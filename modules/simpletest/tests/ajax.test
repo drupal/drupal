@@ -11,9 +11,9 @@ class AJAXTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Assert that a command with the required properties exists within the array of AJAX commands returned by the server.
+   * Assert that a command with the required properties exists within the array of Ajax commands returned by the server.
    *
-   * The AJAX framework, via the ajax_deliver() and ajax_render() functions,
+   * The Ajax framework, via the ajax_deliver() and ajax_render() functions,
    * returns an array of commands. This array sometimes includes commands
    * automatically provided by the framework in addition to commands returned by
    * a particular page callback. During testing, we're usually interested that a
@@ -28,7 +28,7 @@ class AJAXTestCase extends DrupalWebTestCase {
    * additional settings that aren't part of $needle.
    *
    * @param $haystack
-   *   An array of AJAX commands returned by the server.
+   *   An array of Ajax commands returned by the server.
    * @param $needle
    *   Array of info we're expecting in one of those commands.
    * @param $message
@@ -56,7 +56,7 @@ class AJAXTestCase extends DrupalWebTestCase {
 }
 
 /**
- * Tests primary AJAX framework functions.
+ * Tests primary Ajax framework functions.
  */
 class AJAXFrameworkTestCase extends AJAXTestCase {
   protected $profile = 'testing';
@@ -87,7 +87,7 @@ class AJAXFrameworkTestCase extends AJAXTestCase {
     );
     $this->assertCommand($commands, $expected, t('ajax_render() loads settings added with drupal_add_js().'));
 
-    // Verify that AJAX settings are loaded for #type 'link'.
+    // Verify that Ajax settings are loaded for #type 'link'.
     $this->drupalGet('ajax-test/link');
     $settings = $this->drupalGetSettings();
     $this->assertEqual($settings['ajax']['ajax-link']['url'], url('filter/tips'));
@@ -120,7 +120,7 @@ class AJAXFrameworkTestCase extends AJAXTestCase {
 }
 
 /**
- * Tests AJAX framework commands.
+ * Tests Ajax framework commands.
  */
 class AJAXCommandsTestCase extends AJAXTestCase {
   public static function getInfo() {
@@ -132,7 +132,7 @@ class AJAXCommandsTestCase extends AJAXTestCase {
   }
 
   /**
-   * Test the various AJAX Commands.
+   * Test the various Ajax Commands.
    */
   function testAJAXCommands() {
     $form_path = 'ajax_forms_test_ajax_commands_form';
@@ -324,7 +324,7 @@ class AJAXFormValuesTestCase extends AJAXTestCase {
 }
 
 /**
- * Tests that AJAX-enabled forms work when multiple instances of the same form are on a page.
+ * Tests that Ajax-enabled forms work when multiple instances of the same form are on a page.
  */
 class AJAXMultiFormTestCase extends AJAXTestCase {
   public static function getInfo() {
@@ -338,7 +338,7 @@ class AJAXMultiFormTestCase extends AJAXTestCase {
   function setUp() {
     parent::setUp(array('form_test'));
 
-    // Create a multi-valued field for 'page' nodes to use for AJAX testing.
+    // Create a multi-valued field for 'page' nodes to use for Ajax testing.
     $field_name = 'field_ajax_test';
     $field = array(
       'field_name' => $field_name,
@@ -363,7 +363,7 @@ class AJAXMultiFormTestCase extends AJAXTestCase {
    */
   function testMultiForm() {
     // HTML IDs for elements within the field are potentially modified with
-    // each AJAX submission, but these variables are stable and help target the
+    // each Ajax submission, but these variables are stable and help target the
     // desired elements.
     $field_name = 'field_ajax_test';
     $field_xpaths = array(
@@ -399,7 +399,7 @@ class AJAXMultiFormTestCase extends AJAXTestCase {
 }
 
 /**
- * Miscellaneous AJAX tests using ajax_test module.
+ * Miscellaneous Ajax tests using ajax_test module.
  */
 class AJAXElementValidation extends AJAXTestCase {
   public static function getInfo() {
@@ -411,12 +411,12 @@ class AJAXElementValidation extends AJAXTestCase {
   }
 
   /**
-   * Try to post an AJAX change to a form that has a validated element.
+   * Try to post an Ajax change to a form that has a validated element.
    *
-   * The drivertext field is AJAX-enabled. An additional field is not, but
+   * The drivertext field is Ajax-enabled. An additional field is not, but
    * is set to be a required field. In this test the required field is not
    * filled in, and we want to see if the activation of the "drivertext"
-   * AJAX-enabled field fails due to the required field being empty.
+   * Ajax-enabled field fails due to the required field being empty.
    */
   function testAJAXElementValidation() {
     $web_user = $this->drupalCreateUser();

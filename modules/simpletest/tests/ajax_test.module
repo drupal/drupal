@@ -3,7 +3,7 @@
 
 /**
  * @file
- * Helper module for AJAX framework tests.
+ * Helper module for Ajax framework tests.
  */
 
 /**
@@ -45,7 +45,7 @@ function ajax_test_render() {
 }
 
 /**
- * Menu callback; Returns AJAX element with #error property set.
+ * Menu callback; Returns Ajax element with #error property set.
  */
 function ajax_test_error() {
   $message = '';

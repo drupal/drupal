@@ -1497,7 +1497,7 @@ class FieldFormTestCase extends FieldTestCase {
       $field_values[$weight]['value'] = (string) $value;
       $pattern[$weight] = "<input [^>]*value=\"$value\" [^>]*";
     }
-    // Press 'add more' button through AJAX, and place the expected HTML result
+    // Press 'add more' button through Ajax, and place the expected HTML result
     // as the tested content.
     $commands = $this->drupalPostAJAX(NULL, $edit, $this->field_name . '_add_more');
     $this->content = $commands[1]['data'];
@@ -1694,7 +1694,7 @@ class FieldFormTestCase extends FieldTestCase {
     $this->assertFieldValues($entity_1, 'field_unlimited', LANGUAGE_NONE, array(3, 2));
     $this->assertFieldValues($entity_2, 'field_unlimited', LANGUAGE_NONE, array(13, 12));
 
-    // Test the 'add more' buttons. Only AJAX submission is tested, because
+    // Test the 'add more' buttons. Only Ajax submission is tested, because
     // the two 'add more' buttons present in the form have the same #value,
     // which confuses drupalPost().
     // 'Add more' button in the first entity:

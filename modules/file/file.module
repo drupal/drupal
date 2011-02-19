@@ -221,7 +221,7 @@ function file_file_download($uri, $field_type = 'file') {
 }
 
 /**
- * Menu callback; Shared AJAX callback for file uploads and deletions.
+ * Menu callback; Shared Ajax callback for file uploads and deletions.
  *
  * This rebuilds the form element for a particular field item. As long as the
  * form processing is properly encapsulated in the widget element the form
@@ -265,7 +265,7 @@ function file_ajax_upload() {
     $form = $form[$parent];
   }
 
-  // Add the special AJAX class if a new file was added.
+  // Add the special Ajax class if a new file was added.
   if (isset($form['#file_upload_delta']) && $current_file_count < $form['#file_upload_delta']) {
     $form[$current_file_count]['#attributes']['class'][] = 'ajax-new-content';
   }
@@ -453,7 +453,7 @@ function file_managed_file_process($element, &$form_state, $form) {
     );
   }
 
-  // Prefix and suffix used for AJAX replacement.
+  // Prefix and suffix used for Ajax replacement.
   $element['#prefix'] = '<div id="' . $element['#id'] . '-ajax-wrapper">';
   $element['#suffix'] = '</div>';
 

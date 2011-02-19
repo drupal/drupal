@@ -242,7 +242,7 @@ function poll_form($node, &$form_state) {
   $type = node_type_get_type($node);
 
   // The submit handlers to add more poll choices require that this form is
-  // cached, regardless of whether AJAX is used.
+  // cached, regardless of whether Ajax is used.
   $form_state['cache'] = TRUE;
 
   $form['title'] = array(
@@ -296,7 +296,7 @@ function poll_form($node, &$form_state) {
   }
 
   // We name our button 'poll_more' to avoid conflicts with other modules using
-  // AJAX-enabled buttons with the id 'more'.
+  // Ajax-enabled buttons with the id 'more'.
   $form['choice_wrapper']['poll_more'] = array(
     '#type' => 'submit',
     '#value' => t('More choices'),
@@ -362,7 +362,7 @@ function poll_form($node, &$form_state) {
  * return just the changed part of the form.
  */
 function poll_more_choices_submit($form, &$form_state) {
-  // If this is a AJAX POST, add 1, otherwise add 5 more choices to the form.
+  // If this is a Ajax POST, add 1, otherwise add 5 more choices to the form.
   if ($form_state['values']['poll_more']) {
     $n = $_GET['q'] == 'system/ajax' ? 1 : 5;
     $form_state['choice_count'] = count($form_state['values']['choice']) + $n;
