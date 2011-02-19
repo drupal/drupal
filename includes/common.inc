@@ -6722,30 +6722,27 @@ function drupal_schema_fields_sql($table, $prefix = NULL) {
 }
 
 /**
- * Saves a record to the database based upon the schema.
- *
- * Default values are filled in for missing items, and 'serial' (auto increment)
- * types are filled in with IDs.
+ * Saves (inserts or updates) a record to the database based upon the schema.
  *
  * @param $table
  *   The name of the table; this must be defined by a hook_schema()
  *   implementation.
  * @param $record
  *   An object or array representing the record to write, passed in by
- *   reference. The function will fill in defaults from the schema and add an
- *   ID value to serial fields.
+ *   reference. If inserting a new record, values not provided in $record will
+ *   be populated in $record and in the database with the default values from
+ *   the schema, as well as a single serial (auto-increment) field (if present).
+ *   If updating an existing record, only provided values are updated in the
+ *   database, and $record is not modified.
  * @param $primary_keys
- *   If this is an update, specify the primary keys' field names. If this is a
- *   new record, you must not provide this value. If there is only 1 field in
- *   the key, you may pass in a string; if there are multiple fields in the key,
- *   pass in an array.
+ *   To indicate that this is a new record to be inserted, omit this argument.
+ *   If this is an update, this argument specifies the primary keys' field
+ *   names. If there is only 1 field in the key, you may pass in a string; if
+ *   there are multiple fields in the key, pass in an array.
  *
  * @return
- *   Failure to write a record will return FALSE. Otherwise SAVED_NEW or
- *   SAVED_UPDATED is returned depending on the operation performed. The $object
- *   parameter will contain values for any serial fields defined by the $table.
- *   For example, $record->nid or $record['nid'] will be populated after
- *   inserting a new a new node.
+ *   If the record insert or update failed, returns FALSE. If it succeeded,
+ *   returns SAVED_NEW or SAVED_UPDATED, depending on the operation performed.
  */
 function drupal_write_record($table, &$record, $primary_keys = array()) {
   // Standardize $primary_keys to an array.
