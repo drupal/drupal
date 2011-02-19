@@ -1050,15 +1050,15 @@ function _fix_gpc_magic_files(&$item, $key) {
  * Fix double-escaping problems caused by "magic quotes" in some PHP installations.
  */
 function fix_gpc_magic() {
-  $fixed = &drupal_static(__FUNCTION__, FALSE);
+  static $fixed = FALSE;
   if (!$fixed && ini_get('magic_quotes_gpc')) {
     array_walk($_GET, '_fix_gpc_magic');
     array_walk($_POST, '_fix_gpc_magic');
     array_walk($_COOKIE, '_fix_gpc_magic');
     array_walk($_REQUEST, '_fix_gpc_magic');
     array_walk($_FILES, '_fix_gpc_magic_files');
-    $fixed = TRUE;
   }
+  $fixed = TRUE;
 }
 
 /**
@@ -4874,12 +4874,12 @@ function drupal_valid_token($token, $value = '', $skip_anonymous = FALSE) {
 }
 
 function _drupal_bootstrap_full() {
-  $called = &drupal_static(__FUNCTION__);
+  static $called = FALSE;
 
   if ($called) {
     return;
   }
-  $called = 1;
+  $called = TRUE;
   require_once DRUPAL_ROOT . '/' . variable_get('path_inc', 'includes/path.inc');
   require_once DRUPAL_ROOT . '/includes/theme.inc';
   require_once DRUPAL_ROOT . '/includes/pager.inc';
