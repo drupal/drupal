@@ -259,7 +259,7 @@ function drupal_session_initialize() {
     // a user becomes authenticated.
     session_id(drupal_hash_base64(uniqid(mt_rand(), TRUE)));
   }
-  date_default_timezone_set(drupal_get_user_timezone());
+  drupal_set_configured_timezone();
 }
 
 /**
@@ -387,7 +387,7 @@ function drupal_session_regenerate() {
     drupal_session_start();
     $user = $account;
   }
-  date_default_timezone_set(drupal_get_user_timezone());
+  drupal_set_configured_timezone();
 }
 
 /**
