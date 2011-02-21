@@ -56,7 +56,7 @@ function _litecommerce_install_tasks(&$install_state) {
             'run' => INSTALL_TASK_RUN_IF_NOT_COMPLETED,
         ),
         'litecommerce_license_form' => array(
-            'display_name' => st('License agreement'),
+            'display_name' => st('License agreements'),
             'type' => 'form',
             'run' => !empty($install_state['license_confirmed']) ? INSTALL_TASK_SKIP : INSTALL_TASK_RUN_IF_NOT_COMPLETED,
         ),
@@ -128,22 +128,21 @@ function litecommerce_preset_locale($install_state) {
  */
 function litecommerce_license_form($form, &$form_state, &$install_state) {
 
-    drupal_set_title(st('License agreement'));
+    drupal_set_title(st('License agreements'));
 
     $licenseText =<<< OUT
 
 <br />
 
 This package contains the following parts distributed under the <a href="http://www.gnu.org/licenses/gpl-2.0.html" target="new">http://www.gnu.org/licenses/gpl-2.0.html</a> ("GNU General Public License v.2.0"): <br />
-&nbsp;&nbsp;- Drupal v6.xx <br />
+&nbsp;&nbsp;- Drupal 7 <br />
 &nbsp;&nbsp;- additional Drupal modules that may be useful for most e-commerce websites <br />
-&nbsp;&nbsp;- Bettercrumbs module developed by <a href="http://www.qtmsoft.com/" target="new">http://www.qtmsoft.com</a> <br />
-&nbsp;&nbsp;- LiteCommerce CMS theme developed by <a href="http://www.qtmsoft.com/" target="new">http://www.qtmsoft.com</a> <br />
+&nbsp;&nbsp;- theme developed by <a href="http://www.qtmsoft.com/" target="new">http://www.qtmsoft.com</a> <br />
 &nbsp;&nbsp;- LiteCommerce Connector module developed by <a href="http://www.qtmsoft.com/" target="new">http://www.qtmsoft.com</a> <br />
 
 <br />
 
-Also, this package installs <a href="http://www.litecommerce.com/" target="new">http://www.litecommerce.com</a> e-commerce software, distributed under the <a href="http://opensource.org/licenses/osl-3.0.php" target="new">http://opensource.org/licenses/osl-3.0.php</a> ("Open Software License"). LiteCommerce v.3 is not a part of Drupal and can be downloaded, installed and used as a separate web application for building e-commerce websites.
+Also, this package installs <a href="http://www.litecommerce.com/" target="new">http://www.litecommerce.com</a> e-commerce software, distributed under the <a href="http://opensource.org/licenses/osl-3.0.php" target="new">http://opensource.org/licenses/osl-3.0.php</a> ("Open Software License"). LiteCommerce 3 is not a part of Drupal and can be downloaded, installed and used as a separate web application for building e-commerce websites.
 
 <br /><br />
 
@@ -157,7 +156,7 @@ OUT;
 
     $form['license'] = array(
         '#type' => 'fieldset',
-        '#title' => st('Ecommerce CMS license agreement'),
+        '#title' => st('License agreements'),
         '#collapsible' => FALSE,
         '#description' => $licenseText
     );
