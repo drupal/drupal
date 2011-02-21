@@ -27,6 +27,13 @@ function lc3_clean_preprocess_html(&$vars)
 {
     // Add conditional stylesheets for IE
     drupal_add_css(path_to_theme().'/css/ie.css', array('group'=>CSS_THEME, 'browsers'=>array('IE'=>'lte IE 7', '!IE'=>FALSE), 'preprocess'=>FALSE));
+
+    // Add a special CSS class to the page when there no breadcrumb is going to be displayed
+    if (count(drupal_get_breadcrumb()) < 2) {
+        $vars['classes_array'][] = 'no-breadcrumbs';
+    }
+
+
 }
 
 /**
