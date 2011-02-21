@@ -773,7 +773,24 @@ function locale_language_list($field = 'name', $all = FALSE) {
 }
 
 /**
- * Imports translations when new modules or themes are installed or enabled.
+ * Implements hook_modules_installed().
+ */
+function locale_modules_installed($modules) {
+  locale_system_update($modules);
+}
+
+/**
+ * Implements hook_themes_enabled().
+ *
+ * @todo This is technically wrong. We must not import upon enabling, but upon
+ *   initial installation. The theme system is missing an installation hook.
+ */
+function locale_themes_enabled($themes) {
+  locale_system_update($themes);
+}
+
+/**
+ * Imports translations when new modules or themes are installed.
  *
  * This function will either import translation for the component change
  * right away, or start a batch if more files need to be imported.

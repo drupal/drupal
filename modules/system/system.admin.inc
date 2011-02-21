@@ -1181,11 +1181,6 @@ function system_modules_submit($form, &$form_state) {
   }
 
   $form_state['redirect'] = 'admin/modules';
-
-  // Notify locale module about module changes, so translations can be
-  // imported. This might start a batch, and only return to the redirect
-  // path after that.
-  module_invoke('locale', 'system_update', $actions['install']);
 }
 
 /**
