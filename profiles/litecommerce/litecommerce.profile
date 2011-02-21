@@ -143,11 +143,11 @@ This package contains the following parts distributed under the <a href="http://
 
 <br />
 
-Also, this package installs <a href="http://www.litecommerce.com/" target="new">http://www.litecommerce.com</a> ecommerce software that is distributed under the <a href="http://opensource.org/licenses/osl-3.0.php" target="new">http://opensource.org/licenses/osl-3.0.php</a> ("Open Software License"). LiteCommerce v.3 is not a part of Drupal and can be downloaded, installed and used as a separate web application for building e-commerce websites.
+Also, this package installs <a href="http://www.litecommerce.com/" target="new">http://www.litecommerce.com</a> e-commerce software, distributed under the <a href="http://opensource.org/licenses/osl-3.0.php" target="new">http://opensource.org/licenses/osl-3.0.php</a> ("Open Software License"). LiteCommerce v.3 is not a part of Drupal and can be downloaded, installed and used as a separate web application for building e-commerce websites.
 
 <br /><br />
 
-In order to continue the installation script you must accept both the license agreements.
+In order to continue the installation script, you must accept both the license agreements.
 
 <br /><br />
 
@@ -226,22 +226,22 @@ function system_form_install_settings_form_alter(&$form, $form_state) {
         $form['msg'] = array(
             '#type' => 'fieldset',
             '#title' => 'Error',
-            '#description' => st('Database cannot be installed because of PHP configuration doesn\'t support MySQL (PDO extension with MySQL driver support required). Please check your PHP configuration and try again.'),
+            '#description' => st('Database could not be installed because the PHP configuration does not support MySQL (PDO extension with MySQL driver support required). Please check your PHP configuration and try again.'),
         );
 
     } else {
 
         $form['settings']['mysql']['advanced_options']['db_prefix']['#default_value'] = 'drupal_';
-        $form['settings']['mysql']['advanced_options']['db_prefix']['#description'] = st('Drupal and LiteCommerce will use the same database, so, to make difference between them it is recommended to specify prefix for drupal tables (e.g. \'drupal_\'). Note: LiteCommerce tables will be created with prefix \'xlite_\', so you cannot use the same prefix for Drupal tables.');
+        $form['settings']['mysql']['advanced_options']['db_prefix']['#description'] = st('Drupal and LiteCommerce will share the same database; to distinguish between them, it is recommended to specify a prefix for the Drupal tables (e.g. \'drupal_\'). Note: LiteCommerce tables will be created with the \'xlite_\' prefix; therefore, please avoid using the same prefix for the Drupal tables.');
 
         $form['settings']['mysql']['advanced_options']['unix_socket'] = $form['settings']['mysql']['advanced_options']['port'];
         $form['settings']['mysql']['advanced_options']['unix_socket']['#title'] = st('Database socket');
-        $form['settings']['mysql']['advanced_options']['unix_socket']['#description'] = st('If your database server is used a non-standard socket, specify it (e.g. /tmp/mysql-5.1.34.sock). If specified it will be used to connect database server instead of host:port');
+        $form['settings']['mysql']['advanced_options']['unix_socket']['#description'] = st('If your database server uses a non-standard socket, specify it (e.g.: /tmp/mysql-5.1.34.sock). If specified, the socket will be used for connecting to the database server instead of host:port');
         $form['settings']['mysql']['advanced_options']['unix_socket']['#maxlength'] = 255;
 
         $form['driver']['#disabled'] = TRUE;
         $form['driver']['#required'] = FALSE;
-        $form['driver']['#description'] = st('The type of database your Drupal and LiteCommerce data will be stored in.');
+        $form['driver']['#description'] = st('Type of database to be used for storing your Drupal and LiteCommerce data.');
 
         if (is_array($form['#validate'])) {
             array_unshift($form['#validate'], 'litecommerce_install_settings_form_validate');
@@ -270,7 +270,7 @@ function litecommerce_install_settings_form_validate($form, &$form_state) {
     $xlite_prefix = \Includes\Utils\ConfigParser::getOptions(array('database_details', 'table_prefix'));
 
     if ($drupal_prefix == $xlite_prefix) {
-        form_set_error('mysql][db_prefix', st('Prefix for Drupal tables cannot be :db_prefix as it is reserved for LiteCommerce tables.', array(':db_prefix' => $xlite_prefix)));
+        form_set_error('mysql][db_prefix', st('A prefix for the Drupal tables cannot be :db_prefix as it is reserved for the LiteCommerce tables.', array(':db_prefix' => $xlite_prefix)));
     }
 }
 
@@ -291,7 +291,7 @@ function litecommerce_setup_form($form, &$form_state, &$install_state) {
             '#type' => 'fieldset',
             '#title' => st('LiteCommerce installation settings'),
             '#collapsible' => FALSE,
-            '#description' => st('LiteCommerce software will be installed in the directory <i>:lcdir</i> <br />Please choose the installation options below and proceed.<br /><br />', array(':lcdir' => lc_connector_get_litecommerce_dir())),
+            '#description' => st('LiteCommerce software will be installed in the directory <i>:lcdir</i> <br />Please choose the installation options below and continue.<br /><br />', array(':lcdir' => lc_connector_get_litecommerce_dir())),
             '#weight' => 10,
         );
 
@@ -313,9 +313,9 @@ function litecommerce_setup_form($form, &$form_state, &$install_state) {
 
             $form['litecommerce_installed'] = array(
                 '#type' => 'fieldset',
-                '#title' => st('LiteCommerce installation was found'),
+                '#title' => st('Existing LiteCommerce installation found'),
                 '#collapsible' => FALSE,
-                '#description' => st('The LiteCommerce installation was found. If you choose to proceed all data will be lost.'),
+                '#description' => st('An existing LiteCommerce installation has been found. If you choose to proceed, all the existing data will be lost.'),
                 '#weight' => 5,
             );
 
@@ -327,7 +327,7 @@ function litecommerce_setup_form($form, &$form_state, &$install_state) {
                 '#attributes' => array('onClick' => "javascript: if (this.checked) document.getElementById('edit-litecommerce-settings').style.display='none'; else document.getElementById('edit-litecommerce-settings').style.display='block';"),
             );
 
-            drupal_set_message(st('The previous LiteCommerce installation was found!'), 'warning');
+            drupal_set_message(st('A previous LiteCommerce installation found!'), 'warning');
 
 
         }
@@ -337,7 +337,7 @@ function litecommerce_setup_form($form, &$form_state, &$install_state) {
         $form['litecommerce_settings'] = array(
             '#type' => 'fieldset',
             '#title' => st('LiteCommerce installation settings'),
-            '#description' => 'Installation can not proceed because of error.'
+            '#description' => 'Installation cannot proceed because of an error'
         );
     }
 
@@ -381,19 +381,19 @@ function litecommerce_software_install(&$install_state) {
 
         $steps[] = array(
             'function' => 'doUpdateConfig',
-            'message' => st('Config file was updated'),
+            'message' => st('Config file updated'),
         );
         $steps[] = array(
             'function' => 'doInstallDirs',
-            'message' => st('Directories were installed'),
+            'message' => st('Directories installed'),
         );
         $steps[] = array(
             'function' => 'doRemoveCache',
-            'message' => st('Prepare for cache building'),
+            'message' => st('Prepare for building cache'),
         );
         $steps[] = array(
             'function' => 'doPrepareFixtures',
-            'message' => st('Fixtures were prepared'),
+            'message' => st('Fixtures prepared'),
         );
         $steps[] = array(
             'function' => 'doBuildCache',
@@ -417,7 +417,7 @@ function litecommerce_software_install(&$install_state) {
         $batch = array(
             'operations' => $operations,
             'title' => st('Installing LiteCommerce'),
-            'error_message' => st('The installation has encountered an error.'),
+            'error_message' => st('An error occurred during the installation.'),
             'finished' => '_litecommerce_software_install_finished',
         );
     }
@@ -492,7 +492,7 @@ function _litecommerce_software_installation_postconfigure() {
 function _litecommerce_software_install_finished($success, $results, $operations) {
 
     if (!$success) {
-        drupal_set_message(st('LiteCommerce installing failed.'));
+        drupal_set_message(st('LiteCommerce installation failed.'));
     
     } else {
         variable_set('is_litecommerce_installed', true);
@@ -548,7 +548,7 @@ function litecommerce_form_install_configure_form_submit($form, &$form_state) {
     }
 
     if (false === $result) {
-        drupal_set_message(st('LiteCommerce administrator account creation is failed. <br />' . $output), 'error');
+        drupal_set_message(st('Creation of LiteCommerce administrator account failed. <br />' . $output), 'error');
     
     } else {
         // Update LiteCommerce admin profile with additional data
@@ -609,7 +609,7 @@ function detect_lc_connector_uri($realpath = false) {
         }
 
         if (!isset($result) || FALSE == realpath($result)) {
-            drupal_set_message(st('Installation cannot proceed because of LC Connector module not found. It is required for installation of Ecommerce CMS package.'), 'error');
+            drupal_set_message(st('Installation cannot continue because the LC Connector module could not be found. The module is required for installing the Ecommerce CMS package.'), 'error');
             $result = '';
         }
     }
