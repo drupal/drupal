@@ -1,0 +1,747 @@
+#
+# LANGUAGE translation of Drupal (general)
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+# Generated from files:
+#  captcha.admin.inc,v 1.5.2.5 2008/03/09 02:16:57 soxofaan
+#  image_captcha.admin.inc,v 1.3 2008/01/07 13:34:53 soxofaan
+#  captcha.module,v 1.58.2.5 2008/03/09 02:16:57 soxofaan
+#  captcha.info,v 1.5 2007/10/27 18:24:50 robloach
+#  image_captcha.user.inc,v 1.3 2008/01/07 13:34:53 soxofaan
+#  image_captcha.module,v 1.8.2.1 2008/03/09 01:42:07 soxofaan
+#  captcha.install,v 1.3.2.2 2008/03/20 10:27:53 soxofaan
+#  image_captcha.info,v 1.3 2007/12/11 12:05:32 soxofaan
+#  text_captcha.info,v 1.3 2008/01/04 14:29:58 soxofaan
+#  text_captcha.admin.inc,v 1.1 2008/01/04 14:29:58 soxofaan
+#  text_captcha.user.inc,v 1.1 2008/01/04 14:29:58 soxofaan
+#  text_captcha.module,v 1.3.2.1 2008/02/27 15:20:51 soxofaan
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: captcha-6.x-2.0\n"
+"POT-Creation-Date: 2009-08-22 09:54+0300\n"
+"PO-Revision-Date: 2009-08-22 16:15+0200\n"
+"Last-Translator: Juhani Pirinen <juhani.pirinen@ontieto.com>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Poedit-Language: Finnish\n"
+"X-Poedit-Country: FINLAND\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+#: captcha.admin.inc:16
+#: image_captcha/image_captcha.admin.inc:157;179
+msgid "none"
+msgstr "ei mitään"
+
+#: captcha.admin.inc:17
+msgid "default challenge type"
+msgstr "oletus tarkistustyyppi"
+
+#: captcha.admin.inc:23
+msgid "@type (from module @module)"
+msgstr "@type (moduuli @module)"
+
+#: captcha.admin.inc:42
+msgid "Form protection"
+msgstr "Lomakkeen suojaus"
+
+#: captcha.admin.inc:43
+msgid "Select the challenge type you want for each of the listed forms (identified by their so called <em>form_id</em>'s). You can easily add arbitrary forms with textfield at the bottom of the table or with the help of the '%CAPTCHA_admin_links' option below."
+msgstr "Valitse tarkistuksen tyyppi jokaiselle listan lomakkeelle (yksilöintiin käytetään <em>form_id</em>:tä). Voit helposti lisätä tarkituksen muillekin lomakkeille taulukon alla tai käyttämällä alla valintaa '%CAPTCHA_admin_links'."
+
+#: captcha.admin.inc:44;108
+#: captcha.module:46
+msgid "Add CAPTCHA administration links to forms"
+msgstr "Lisää CAPTCHA ylläpitolinkit lomakkeille"
+
+#: captcha.admin.inc:49
+msgid "Default challenge type"
+msgstr "Oletus tarkistustyyppi"
+
+#: captcha.admin.inc:50
+msgid "Select the default challenge type for CAPTCHAs. This can be overriden for each form if desired."
+msgstr "Valitse oletus tarkistustyyppi CAPTCHAlle.  Tämä voidaan tarvittaessa ohittaa kunkin lomakkeen asetuksissa."
+
+#: captcha.admin.inc:86
+msgid "delete"
+msgstr "poista"
+
+#: captcha.admin.inc:110
+msgid "This option makes it easy to manage CAPTCHA settings on forms. When enabled, users with the \"%admincaptcha\" permission will see a fieldsset with CAPTCHA administration links on all forms, except on administrative pages."
+msgstr "Tämä valinta helpottaa CAPTCHAn asetusten ylläpitoa lomakkeissa. Kun tämä on käytössä, ne käyttäjät joilla on \"%admincaptcha\" oikeus näkevät CAPTCHA ylläpitolinkin kaikilla lomakkeilla, paitsi ylläpitosivuilla."
+
+#: captcha.admin.inc:110
+#: captcha.module:107
+msgid "administer CAPTCHA settings"
+msgstr "CAPTCHAn asetusten määrittely"
+
+#: captcha.admin.inc:115
+msgid "Allow CAPTCHAs and CAPTCHA administration links on administrative pages"
+msgstr "Ota käyttöön CAPTCHAt ja CAPTCHAn ylläpitolinkit ylläpitosivuilla"
+
+#: captcha.admin.inc:117
+msgid "This option makes it possible to add CAPTCHAs to forms on administrative pages. CAPTCHAs are disabled by default on administrative pages (which shouldn't be accessible to untrusted users normally) to avoid the related overhead. In some situations, e.g. in the case of demo sites, it can be usefull to allow CAPTCHAs on administrative pages."
+msgstr "Tämä valinta mahdollistaa CAPTCHAn lisäämisen lomakkeisiin ylläpitosivuilla.  Oletusarvoisesti CAPTCHAt eivät ole käytössä ylläpitosivuilla (joille epäluotetuilla käyttäjillä ei normaalisti pitäisi olla pääsyä) turhan kuormituksen välttämiseksi.  Joissain tapauksissa, esim. demosivuilla, voi olla käytännöllistä käyttää CAPTCHAa ylläpitosivuilla."
+
+#: captcha.admin.inc:123
+msgid "Add a description to the CAPTCHA"
+msgstr "Lisää CAPTCHAlle kuvaus"
+
+#: captcha.admin.inc:124
+msgid "Add a configurable description to explain the purpose of the CAPTCHA to the visitor."
+msgstr "Lisää muokattava kuvaus selittämään CAPTCHAn tarkoitusta käyttäjälle."
+
+#: captcha.admin.inc:132
+msgid "CAPTCHA description"
+msgstr "CAPTCHAn kuvaus"
+
+#: captcha.admin.inc:133;149
+msgid "Configurable description of the CAPTCHA. An empty entry will reset the description."
+msgstr "CAPTCHAn muokattava kuvaus.  Tyhjä arvo tyhjentää kuvauksen."
+
+#: captcha.admin.inc:139
+msgid "For language %lang_name (code %lang_code)"
+msgstr "Kielelle %lang_name (koodi %lang_code)"
+
+#: captcha.admin.inc:148
+msgid "Challenge description"
+msgstr "Tarkistuksen kuvaus"
+
+#: captcha.admin.inc:159
+msgid "Default CAPTCHA validation"
+msgstr "CAPTCHAn oletushyväksyntä"
+
+#: captcha.admin.inc:160
+msgid "Define how the response should be processed by default. Note that the modules that provide the actual challenges can override or ignore this."
+msgstr "Määrittele miten vastauksia prosessoidaan oletusarvoisesti.  Huomaa, että moduulit jotka varsinaisesti tuottavat tarkistukset, voivat ohittaa tämän tai olla välittämättä tästä."
+
+#: captcha.admin.inc:162
+msgid "Case sensitive validation: the response has to exactly match the solution."
+msgstr "Merkkikokoriippuvainen hyväksyntä: vastauksen täytyy vastata ratkaisua tarkasti."
+
+#: captcha.admin.inc:163
+msgid "Case insensitive validation: lowercase/uppercase errors are ignored."
+msgstr "Merkkikokoriippumaton hyväksyntä: pieni/iso eroavuudesta syntyvät virheet jätetään huomiotta."
+
+#: captcha.admin.inc:171
+msgid "Persistence"
+msgstr "Pysyvyys"
+
+#: captcha.admin.inc:174
+msgid "Always add a challenge."
+msgstr "Lisää tarkistus aina."
+
+#: captcha.admin.inc:175
+msgid "Omit challenges for a form once the user has successfully responded to a challenge for that form."
+msgstr "Ohita tarkistukset samalla lomakkeella, jolla käyttäjä on vastannut tarkistuskyselyyn oikein."
+
+#: captcha.admin.inc:176
+msgid "Omit challenges for all forms once the user has successfully responded to a challenge."
+msgstr "Ohita tarkistukset kaikissa lomakkeissa, kun käyttäjä on vastannut tarkistuskyselyyn oikein."
+
+#: captcha.admin.inc:178
+msgid "Define if challenges should be omitted during the rest of a session once the user successfully responses to a challenge."
+msgstr "Määrittele ohitetaanko tarkistukset loppuistunnon ajaksi, kun käyttäjä on vastannut tarkistuskyselyyn oikein."
+
+#: captcha.admin.inc:184
+msgid "Log wrong responses"
+msgstr "Kirjaa väärät vastaukset lokiin"
+
+#: captcha.admin.inc:185
+msgid "Report information about wrong responses to the !log."
+msgstr "Raportoi vääristä vastauksista !log."
+
+#: captcha.admin.inc:185
+msgid "log"
+msgstr "lokiin"
+
+#: captcha.admin.inc:192
+msgid "Save configuration"
+msgstr "Tallenna asetukset"
+
+#: captcha.admin.inc:202;342
+msgid "Challenge type"
+msgstr "Tarkistustyyppi"
+
+#: captcha.admin.inc:202
+msgid "Operations"
+msgstr "Toiminnot"
+
+#: captcha.admin.inc:229;363
+msgid "Illegal form_id"
+msgstr "Kielletty form_id"
+
+#: captcha.admin.inc:255
+msgid "Added CAPTCHA point."
+msgstr "CAPTCHA kohde lisätty."
+
+#: captcha.admin.inc:270
+msgid "Reset of CAPTCHA description for language %language."
+msgstr "Tyhjennä CAPTCHAn kuvaus kielelle %language."
+
+#: captcha.admin.inc:281
+msgid "Reset of CAPTCHA description."
+msgstr "CAPTCHA kuvauksen tyhjennys."
+
+#: captcha.admin.inc:289
+msgid "The CAPTCHA settings were saved."
+msgstr "CAPTCHAn asetukset tallennettu."
+
+#: captcha.admin.inc:321;335
+msgid "Form ID"
+msgstr "Form ID"
+
+#: captcha.admin.inc:322;336
+msgid "The Drupal form_id of the form to add the CAPTCHA to."
+msgstr "Drupalin form_id lomakkeelle johon CAPTCHA lisätään."
+
+#: captcha.admin.inc:343
+msgid "The CAPTCHA type to use for this form"
+msgstr "CAPTCHA tyyppi tälle lomakkeelle"
+
+#: captcha.admin.inc:352
+msgid "Save"
+msgstr "Tallenna"
+
+#: captcha.admin.inc:375
+msgid "Saved CAPTCHA point settings."
+msgstr "CAPTCHA kohdeasetukset tallennettu."
+
+#: captcha.admin.inc:392
+msgid "Are you sure you want to delete the CAPTCHA for form_id %form_id?"
+msgstr "Haluatko varmasti poistaa CAPTCHAn lomakkeelta %form_id?"
+
+#: captcha.admin.inc:393
+msgid "Delete"
+msgstr "Poista"
+
+#: captcha.admin.inc:396
+msgid "Are you sure you want to disable the CAPTCHA for form_id %form_id?"
+msgstr "Haluatko varmasti poistaa CAPTCHAn käytöstä lomakkeelta %form_id?"
+
+#: captcha.admin.inc:397
+msgid "Disable"
+msgstr "Poista käytöstä"
+
+#: captcha.admin.inc:410
+msgid "Deleted CAPTCHA for form %form_id."
+msgstr "CAPTCHA poistettu lomakkeelta %form_id."
+
+#: captcha.admin.inc:414
+msgid "Disabled CAPTCHA for form %form_id."
+msgstr "CAPTCHA poistettu käytöstä lomakkeelta %form_id."
+
+#: captcha.admin.inc:451
+msgid "This page gives an overview of all available challenge types, generated with their current settings."
+msgstr "Tämä sivu antaa yleiskatsauksen saatavilla olevista tarkistustyyppeistä, jotka on muodostettu nykyisillä asetuksilla."
+
+#: captcha.admin.inc:459
+msgid "Challenge \"%challenge\" by module \"%module\""
+msgstr "Moduulin \"%module\" tarkistus \"%challenge\""
+
+#: captcha.admin.inc:462
+msgid "10 more examples of this challenge."
+msgstr "10 lisäesimerkkiä tarkistuksesta."
+
+#: captcha.inc:38
+msgid "Failed to set a CAPTCHA type for form %form_id: could not interpret value \"@captcha_type\""
+msgstr "CAPTCHA-tyypin asetus lomakkeelle %form_id epäonnistui: ei voitu tulkita arvoa \"@captcha_type\""
+
+#: captcha.inc:145
+msgid "This question is for testing whether you are a human visitor and to prevent automated spam submissions."
+msgstr "Tämä kysymys esitetään, jotta lomakkeen automatisoitu käyttö voitaisiin estää."
+
+#: captcha.module:31
+msgid "\"CAPTCHA\" is an acronym for \"Completely Automated Public Turing test to tell Computers and Humans Apart\". It is typically a challenge-response test to determine whether the user is human. The CAPTCHA module is a tool to fight automated submission by malicious users (spamming) of for example comments forms, user registration forms, guestbook forms, etc. You can extend the desired forms with an additional challenge, which should be easy for a human to solve correctly, but hard enough to keep automated scripts and spam bots out."
+msgstr "\"CAPTCHA\" on lyhenne sanoista \"Completely Automated Public Turing test to tell Computers and Humans Apart\".  Yleensä se on kysymys-vastaus testi, jolla määritetään, onko käyttäjä ihminen. CAPTCHA moduuli on työkalu taistelussa pahantahtoisten käyttäjien automatisoituja lähetyksiä (spamia) vastaan, esimerkiksi rekisteröitymislomakkeissa, vieraskirjalomakkeissa, jne.  Haluttuja lomakkeita voi laajentaa lisätarkistuksella, jonka ihmisten pitäisi olla helppo ratkaista oikein, mutta joka on riittävän vaikea pitämään automaattiset skriptit ja spam botit poissa."
+
+#: captcha.module:32
+msgid "Note that the CAPTCHA module interacts with page caching (see <a href=\"!performancesettings\">performance settings</a>). Because the challenge should be unique for each generated form, the caching of the page it appears on is prevented. Make sure that these forms do not appear on too many pages or you will lose much caching efficiency. For example, if you put a CAPTCHA on the user login block, which typically appears on each page for anonymous visitors, caching will practically be disabled. The comment submission forms are another example. In this case you should set the \"%commentlocation\" to \"%separatepage\" in the comment settings of the relevant <a href=\"!contenttypes\">content types</a> for better caching efficiency."
+msgstr "Huomaa, että CAPTCHA moduuli vaikuttaa sivuvälimuistin käyttöön (katso <a href=\"!performancesettings\">suorituskykyasetukset</a>). Koska tarkistus on ainutkertainen joka lomakkeelle, estetään kohdelomakkeen tallennus sivuvälimuistiin.  Varmista, että näitä lomakkeita ei ole sivustolla liian monta, muuten sivuvälimuistin käytön hyötysuhteesta menetetään paljon.  Esimerkiksi, jos laitat CAPTCHAn sisäänkirjautumislohkoon, mikä tavallisesti on joka sivulla anonyymeille vierailijoille, sivuvälimuistin käyttö käytännössä estyy.  Kommenttien lähetyslomakkeet ovat toinen esimerkki.  Tässä tapauksessa \"%commentlocation\" pitäisi asettaa kohteeseen \"%separatepage\" kommenttien asetuksissa <a href=\"!contenttypes\">sisällön tyypeissä</a>, jotta välimuistin käytön hyötysuhde olisi parempi."
+
+#: captcha.module:35
+msgid "Location of comment submission form"
+msgstr "Kommenttien lähetyslomakkeen sijainti"
+
+#: captcha.module:36
+msgid "Display on separate page"
+msgstr "Näytä erillisellä sivulla"
+
+#: captcha.module:40
+msgid "CAPTCHA is a trademark of Carnegie Mellon University."
+msgstr "CAPTCHA on Carnegie Mellon Yliopiston tavaramerkki."
+
+#: captcha.module:45
+msgid "A CAPTCHA can be added to virtually each Drupal form. Some default forms are already provided in the form list, but arbitrary forms can be easily added and managed when the option \"%adminlinks\" is enabled."
+msgstr "CAPTCHA voidaan lisätä käytännöllisesti katsoen kaikkiin Drupalin lomakkeisiin. Joitakin oletuslomakkeita on jo listalla, mutta yleensä kaikkiin lomakkeisiin voidaan lisätä tarkistus kun valinta \"%adminlinks\" on käytössä."
+
+#: captcha.module:47
+msgid "Users with the \"%skipcaptcha\" <a href=\"@perm\">permission</a> won't be offered a challenge. Be sure to grant this permission to the trusted users (e.g. site administrators). If you want to test a protected form, be sure to do it as a user without the \"%skipcaptcha\" permission (e.g. as anonymous user)."
+msgstr "Käyttäjille, joilla on \"%skipcaptcha\" <a href=\"@perm\">oikeus</a> ei näytetä tarkistusta. Varmista, että tämä annetaan vain luotetuille käyttäjille (esim. ylläpitäjille). Jos tahdot testata suojattua lomaketta, varmista että teet sen käyttäjänä ilman \"%skipcaptcha\" oikeutta (esim. anonyyminä käyttäjänä)."
+
+#: captcha.module:48;107
+msgid "skip CAPTCHA"
+msgstr "CAPTCHAn ohittaminen"
+
+#: (duplicate) captcha.module:269;322;119
+#: ;222;442;60;71 captcha.info:0
+#: image_captcha/image_captcha.user.inc:29;72
+#: image_captcha/image_captcha.module:94
+msgid "CAPTCHA"
+msgstr "CAPTCHA"
+
+#: captcha.module:327
+msgid "CAPTCHA: challenge \"@type\" enabled"
+msgstr "CAPTCHA: tarkistus \"@type\" käytössä"
+
+#: captcha.module:328
+msgid "Untrusted users will see a CAPTCHA here (!settings)."
+msgstr "Epäluotetut käyttäjät näkevät CAPTCHAn tässä (!settings)."
+
+#: captcha.module:329
+msgid "general CAPTCHA settings"
+msgstr "Yleiset CAPTCHA asetukset"
+
+#: captcha.module:333
+msgid "Enabled challenge"
+msgstr "Käyttöönotettu tarkistus"
+
+#: captcha.module:334
+msgid "\"@type\" by module \"@module\" (!change, !disable)"
+msgstr "Moduulin \"@module\" \"@type\" (!change, !disable)"
+
+#: captcha.module:337
+msgid "change"
+msgstr "muuta"
+
+#: captcha.module:338
+msgid "disable"
+msgstr "pois käytöstä"
+
+#: captcha.module:343
+#: image_captcha/image_captcha.admin.inc:49
+msgid "Example"
+msgstr "Esimerkki"
+
+#: captcha.module:344
+msgid "This is a pre-solved, non-blocking example of this challenge."
+msgstr "Tämä on esiratkaistu, ei-estävä esimerkki tästä tarkistuksesta."
+
+#: captcha.module:353
+msgid "CAPTCHA: no challenge enabled"
+msgstr "CAPTCHA: tarkistusta ei käytössä"
+
+#: captcha.module:355
+msgid "Place a CAPTCHA here for untrusted users."
+msgstr "Aseta tähän CAPTCHA epäluotetuille käyttäjille."
+
+#: captcha.module:417
+msgid "CAPTCHA test failed (unknown csid)."
+msgstr "CAPTCHA testi epäonnistui (tuntematon csid)."
+
+#: captcha.module:437
+msgid "The answer you entered for the CAPTCHA was not correct."
+msgstr "CAPTCHAan annettu vastaus ei ollut oikein."
+
+#: captcha.module:524
+msgid "Math question"
+msgstr "Laskutehtävä"
+
+#: captcha.module:525
+msgid "Solve this simple math problem and enter the result. E.g. for 1+3, enter 4."
+msgstr "Ratkaise tämä pieni laskutehtävä ja anna vastaus. Esim. 1+3, anna 4."
+
+#: captcha.module:526
+msgid "@x + @y = "
+msgstr "@x + @y = "
+
+#: captcha.module:545
+msgid "Test one two three"
+msgstr "Testi yksi kaksi kolme"
+
+#: captcha.module:222
+msgid "CAPTCHA problem: hook_captcha() of module %module returned nothing when trying to retrieve challenge type %type for form %form_id."
+msgstr "CAPTCHA ongelma: moduulin %module hook_captcha() ei palauttanut mitään kun yritettiin hakea tarkistustyyppiä %type lomakkeelle %form_id."
+
+#: captcha.module:442
+msgid "%form_id post blocked by CAPTCHA module: challenge \"%challenge\" (by module \"%module\"), user answered \"%response\", but the solution was \"%solution\"."
+msgstr "CAPTCHA moduuli on estänyt %form_id:n lähetyksen. Tarkistus \"%challenge\" (moduulilta \"%module\"), käyttäjä vastasi \"%response\", kun oikea vastaus oli \"%solution\"."
+
+#: captcha.module:120
+msgid "Already 1 blocked form submission"
+msgid_plural "Already @count blocked form submissions"
+msgstr[0] "Jo 1 estetty lomakkeen lähetys"
+msgstr[1] "Jo @count estettyä lomakkeen lähetystä"
+
+#: captcha.module:61
+msgid "Administer how and where CAPTCHAs are used."
+msgstr "Aseta miten ja missä CAPTCHAa käytetään."
+
+#: captcha.module:77
+msgid "General settings"
+msgstr "Yleiset asetukset"
+
+#: captcha.module:83
+msgid "Examples"
+msgstr "Esimerkit"
+
+#: captcha.module:84
+msgid "An overview of the available challenge types with examples."
+msgstr "Yleiskatsaus saatavilla oleviin tarkistustyyppeihin esimerkkien kanssa."
+
+#: captcha.module:93
+msgid "CAPTCHA point administration"
+msgstr "CAPTCHA kohteiden ylläpito"
+
+#: captcha.install:156
+msgid "Unsupported database."
+msgstr "Ei tukea tälle tietokannalle."
+
+#: (duplicate) captcha.install:115
+msgid "You can now <a href=\"!captcha_admin\">configure the CAPTCHA module</a> for your site."
+msgstr "Nyt voit muokata <a href=\"!captcha_admin\">CAPTCHA moduulin asetuksia</a> sivustollasi."
+
+#: captcha.info:0
+msgid "Base CAPTCHA module for adding challenges to arbitrary forms."
+msgstr "Perus CAPTCHA moduuli tarkistusten lisäämiseksi kaikkiin lomakkeisiin."
+
+#: captcha.info:0
+#: image_captcha/image_captcha.info:0
+msgid "Spam control"
+msgstr "Roskapostin hallinta"
+
+#: image_captcha/image_captcha.admin.inc:13
+msgid "Built-in font"
+msgstr "Sisäänrakennettu fontti"
+
+#: image_captcha/image_captcha.admin.inc:39
+msgid "The Image CAPTCHA module can not generate images because your PHP setup does not support it (no <a href=\"!gdlib\">GD library</a>)."
+msgstr "Kuva CAPTCHA moduuli ei voi muodostaa kuvia, koska PHP asennus ei tue sitä (ei <a href=\"!gdlib\">GD kirjastoa</a>)."
+
+#: image_captcha/image_captcha.admin.inc:50
+msgid "Presolved image CAPTCHA example, generated with the current settings."
+msgstr "Esiratkaistu Kuva CAPTCHA esimerkki, muodostettu nykyisillä asetuksilla."
+
+#: image_captcha/image_captcha.admin.inc:61
+msgid "Code settings"
+msgstr "Koodiasetukset"
+
+#: image_captcha/image_captcha.admin.inc:65
+msgid "Characters to use in the code"
+msgstr "Koodissa käytettävät merkit"
+
+#: image_captcha/image_captcha.admin.inc:70
+msgid "Code length"
+msgstr "Koodin pituus"
+
+#: image_captcha/image_captcha.admin.inc:73
+msgid "The code length influences the size of the image. Note that larger values make the image generation more CPU intensive."
+msgstr "Koodin pituus vaikuttaa kuvan kokoon. Huomaa, että suuremmat arvot tekevät kuvien muodostamisesta palvelinta kuormittavampaa."
+
+#: image_captcha/image_captcha.admin.inc:79
+msgid "Font settings"
+msgstr "Fonttiasetukset"
+
+#: image_captcha/image_captcha.admin.inc:85
+msgid "Font"
+msgstr "Fontti"
+
+#: image_captcha/image_captcha.admin.inc:87
+msgid "The TrueType font (.ttf) to use for the text in the image CAPTCHA."
+msgstr "TrueType fontti (.ttf) tekstin käyttöön Kuva CAPTCHAssa."
+
+#: image_captcha/image_captcha.admin.inc:96
+msgid "Font size"
+msgstr "Fontin koko"
+
+#: image_captcha/image_captcha.admin.inc:98
+msgid "tiny"
+msgstr "hyvin pieni"
+
+#: image_captcha/image_captcha.admin.inc:99;158
+msgid "small"
+msgstr "pieni"
+
+#: image_captcha/image_captcha.admin.inc:101;125;185
+msgid "normal"
+msgstr "normaali"
+
+#: image_captcha/image_captcha.admin.inc:103
+msgid "large"
+msgstr "suuri"
+
+#: image_captcha/image_captcha.admin.inc:105
+msgid "extra large"
+msgstr "hyvin suuri"
+
+#: image_captcha/image_captcha.admin.inc:108
+msgid "The font size influences the size of the image. Note that larger values make the image generation more CPU intensive."
+msgstr "Fontin koko vaikuttaa kuvan kokoon. Huomaa, että suuremmat arvot tekevät kuvien muodostamisesta palvelinta kuormittavampaa."
+
+#: image_captcha/image_captcha.admin.inc:120
+msgid "Character spacing"
+msgstr "Merkkien väli"
+
+#: image_captcha/image_captcha.admin.inc:121
+msgid "Define the average spacing between characters. Note that larger values make the image generation more CPU intensive."
+msgstr "Määrittele keskimääräinen merkkien väli. Huomaa, että suuremmat arvot tekevät kuvien muodostamisesta palvelinta kuormittavampaa."
+
+#: image_captcha/image_captcha.admin.inc:124
+msgid "tight"
+msgstr "kapea"
+
+#: image_captcha/image_captcha.admin.inc:126
+msgid "wide"
+msgstr "laaja"
+
+#: image_captcha/image_captcha.admin.inc:127
+msgid "extra wide"
+msgstr "hyvin laaja"
+
+#: image_captcha/image_captcha.admin.inc:134
+msgid "Color settings"
+msgstr "Väriasetukset"
+
+#: image_captcha/image_captcha.admin.inc:135
+msgid "Configuration of the background and text colors in the image CAPTCHA."
+msgstr "Kuva CAPTCHAN taustan ja tekstin värien asetukset."
+
+#: image_captcha/image_captcha.admin.inc:139
+msgid "Background color"
+msgstr "Taustaväri"
+
+#: image_captcha/image_captcha.admin.inc:140
+msgid "Enter the hexadecimal code for the background color (e.g. #FFF or #FFCE90)."
+msgstr "Kirjoita taustavärin heksadesimaalikoodi (esim. #FFF tai #FFCE90)."
+
+#: image_captcha/image_captcha.admin.inc:147
+msgid "Text color"
+msgstr "Tekstin väri"
+
+#: image_captcha/image_captcha.admin.inc:148
+msgid "Enter the hexadecimal code for the text color (e.g. #000 or #004283)."
+msgstr "Kirjoita tekstin värin heksadesimaalikoodi (e.g. #000 or #004283)."
+
+#: image_captcha/image_captcha.admin.inc:155
+msgid "Additional variation of text color"
+msgstr "Ylimääräinen tekstin värin muuntelu"
+
+#: image_captcha/image_captcha.admin.inc:159;183
+msgid "moderate"
+msgstr "keskinkertainen"
+
+#: image_captcha/image_captcha.admin.inc:160;187;221
+msgid "high"
+msgstr "korkea"
+
+#: image_captcha/image_captcha.admin.inc:161
+msgid "very high"
+msgstr "hyvin korkea"
+
+#: image_captcha/image_captcha.admin.inc:164
+msgid "The different characters will have randomized colors in the specified range around the text color."
+msgstr "Eri merkeille tulevat satunnaiset värit tietyllä vaihteluvälillä tekstin väristä."
+
+#: image_captcha/image_captcha.admin.inc:171
+msgid "Distortion and noise"
+msgstr "Väännös ja kohina"
+
+#: image_captcha/image_captcha.admin.inc:172
+msgid "With these settings you can control the degree of obfuscation by distortion and added noise. Do not exaggerate the obfuscation and assure that the code in the image is reasonably readable. For example, do not combine high levels of distortion and noise."
+msgstr "Näillä asetuksilla voit hallita sekoituksen määrää väännöksissä ja kohinassa. Älä lisää sekoitusta liikaa ja varmista, että kuva pysyy ymmärrettävästi luettavana.  Esimerkiksi, älä yhdistä korkeita väännöstasoja ja kohinaa."
+
+#: image_captcha/image_captcha.admin.inc:177
+msgid "Distortion level"
+msgstr "Väännöstaso"
+
+#: image_captcha/image_captcha.admin.inc:181;217
+msgid "low"
+msgstr "alhainen"
+
+#: image_captcha/image_captcha.admin.inc:189;223
+msgid "severe"
+msgstr "rankka"
+
+#: image_captcha/image_captcha.admin.inc:192
+msgid "Set the degree of wave distortion in the image."
+msgstr "Aseta asteluku kuvan aaltoväännölle."
+
+#: image_captcha/image_captcha.admin.inc:196
+msgid "Smooth distortion"
+msgstr "Pehmeä väännös"
+
+#: image_captcha/image_captcha.admin.inc:198
+msgid "This option enables bilinear interpolation of the distortion which makes the image look smoother, but it is more CPU intensive."
+msgstr "Tämä valinta ottaa käyttöön bilineaarisen interpoloinnin väännöksiin, joka tekee kuvasta pehmeämmän, mutta rasittaa palvelinta enemmän."
+
+#: image_captcha/image_captcha.admin.inc:203
+msgid "Add salt and pepper noise"
+msgstr "Lisää suola & pippuri -kohinaa"
+
+#: image_captcha/image_captcha.admin.inc:205
+msgid "This option adds randomly colored point noise."
+msgstr "Tämä valinta lisää satunnaisesti väritettyä pistekohinaa."
+
+#: image_captcha/image_captcha.admin.inc:209
+msgid "Add line noise"
+msgstr "Lisää linjakohinaa"
+
+#: image_captcha/image_captcha.admin.inc:211
+msgid "This option enables lines randomly drawn on top of the text code."
+msgstr "Tämä valinta piirtää satunnaislinjoja tekstin päälle."
+
+#: image_captcha/image_captcha.admin.inc:215
+msgid "Noise level"
+msgstr "Kohinataso"
+
+#: image_captcha/image_captcha.admin.inc:219
+msgid "medium"
+msgstr "keskikokoinen"
+
+#: image_captcha/image_captcha.admin.inc:240
+msgid "The Image CAPTCHA module can not use True Type fonts because your PHP setup does not support it. There is only a built-in bitmap font available."
+msgstr "Kuva CAPTCHA moduuli ei voi käyttää True Type fontteja, koska PHP asennus ei tue sitä.  Vain sisäänrakennettu bittikarttafontti on saatavana."
+
+#: image_captcha/image_captcha.admin.inc:245
+msgid "The image CAPTCHA module works best with a TrueType font file (TTF) for generating the images, but because of licencing issues it is not allowed to package fonts with the module. A simple built-in bitmap font is provided as default instead. You can install TrueType fonts yourself by putting them in the fonts directory of the image CAPTCHA module (directory \"%fontsdir\") or by uploading them to your Drupal file system (directory \"%filesdir\") with for example the upload module."
+msgstr "Kuva CAPTCHA toimii parhaiten TrueType fonteilla kuvien muodostamisessa, mutta lisenssiongelmien vuoksi fontteja ei ole sallittua toimittaa yhdessä moduulin kanssa.  Sen sijaan oletuksena tarjotaan yksinkertainen bittikarttafontti.  TrueType fontteja voi asentaa itse laittamalla ne kuva CAPTCHA moduulin fonttihakemistoon (directory \"%fontsdir\") tai lataamalla ne Drupalin tiedostojärjestelmään (hakupolku \"%filesdir\") esimerkiksi latausmoduulilla."
+
+#: image_captcha/image_captcha.admin.inc:248
+msgid "The usage of the built-in bitmap font it is not recommended because of its small size and missing UTF-8 support."
+msgstr "Sisäänrakennetun bittikarttafontin käyttöä ei suositella, koska koko on pieni eikä siinä ole UTF-8 tukea."
+
+#: image_captcha/image_captcha.admin.inc:259
+msgid "The list of characters to use should not contain spaces."
+msgstr "Käytettävän merkkilistan ei pitäisi sisältää välilyöntejä."
+
+#: image_captcha/image_captcha.admin.inc:264
+msgid "You need to select a font"
+msgstr "Valitse fontti"
+
+#: image_captcha/image_captcha.admin.inc:267
+msgid "Font does not exist or is not readable."
+msgstr "Fonttia ei ole tai se ei ole luettavissa."
+
+#: image_captcha/image_captcha.admin.inc:272
+msgid "Background color is not a valid hexadecimal color value."
+msgstr "Taustaväri ei ole kelvollinen heksadesimaali väriarvo."
+
+#: image_captcha/image_captcha.admin.inc:275
+msgid "Text color is not a valid hexadecimal color value."
+msgstr "Tekstin väri ei ole kelvollinen heksadesimaali väriarvo."
+
+#: image_captcha/image_captcha.user.inc:29
+msgid "Generation of image CAPTCHA failed. Check your image CAPTCHA configuration and especially the used font."
+msgstr "CAPTCHAn kuvan luonti epäonnistui. Tarkista Kuva CAPTCHAn asetukset ja erityisesti käytetty fontti."
+
+#: image_captcha/image_captcha.user.inc:72
+msgid "Could not find or read the configured font (\"%font\") for the image CAPTCHA."
+msgstr "Ei voitu löytää tai lukea Kuva CAPTCHAlle asetettua fonttia (\"%font\")."
+
+#: image_captcha/image_captcha.module:28
+msgid "The image CAPTCHA is a popular challenge where a random textual code is obfuscated in an image. The image is generated on the fly for each request, which is rather CPU intensive for the server. Be careful with the size and computation related settings."
+msgstr "Kuva CAPTCHA on suosittu tarkistuskysely, missä satunnainen koodi on muutettu epäselvennetyksi kuvaksi. Kuva muodostetaan lennossa erikseen joka sivulatauksella, mikä on melko palvelinta rasittavaa. Ole tarkkana koon ja muiden laskentaa vaativien asetusten suhteen."
+
+#: image_captcha/image_captcha.module:166
+msgid "Enter the characters shown in the image. Ignore spaces and be careful about upper and lower case."
+msgstr "Kirjoita kuvassa näkyvät merkit (ilman välilyöntejä).  Huomioi isot ja pienet kirjaimet."
+
+#: image_captcha/image_captcha.module:169
+msgid "Enter the characters (without spaces) shown in the image."
+msgstr "Kirjoita kuvassa näkyvät merkit (ilman välilyöntejä)."
+
+#: image_captcha/image_captcha.module:179;179;40
+#: image_captcha/image_captcha.info:0
+msgid "Image CAPTCHA"
+msgstr "Kuva CAPTCHA"
+
+#: image_captcha/image_captcha.module:184
+msgid "What code is in the image?"
+msgstr "Mikä koodi on kuvassa?"
+
+#: image_captcha/image_captcha.module:94
+msgid "Encountered an illegal byte while splitting an utf8 string in characters."
+msgstr "Havaittiin kielletty bitti kun jaettiin utf8 merkkijonoa merkkeihin."
+
+#: image_captcha/image_captcha.info:0
+msgid "Provides an image based CAPTCHA."
+msgstr "Tarjoaa kuvapohjaisen CAPTCHAn."
+
+#~ msgid "Challenge type per form"
+#~ msgstr "Tarkistustyyppi per lomake"
+#~ msgid "Challenge type (module)"
+#~ msgstr "Tarkistustyyppi (moduuli)"
+#~ msgid "Invalid CAPTCHA token."
+#~ msgstr "Väärä CAPTCHA merkki."
+#~ msgid "captcha"
+#~ msgstr "captcha"
+#~ msgid ""
+#~ "Images cannot be generated, because your PHP installation's GD library "
+#~ "has no JPEG support."
+#~ msgstr ""
+#~ "Kuvaa ei voi luoda, koska palvelimen PHP asetuksista puuttuu jpeg tuki."
+#~ msgid "Double vision"
+#~ msgstr "Kaksoiskuva"
+#~ msgid ""
+#~ "When enabled, characters appear twice in the image, overlayed onto each "
+#~ "other."
+#~ msgstr "Kun on käytössä, kirjaimet ilmestyvät kahdesti toistensa päälle."
+#~ msgid "Copy the characters (respecting upper/lower case) from the image."
+#~ msgstr "Kopio kirjaimet kuvasta (Huomio isot ja pienet kirjaimet)."
+#~ msgid "image_captcha"
+#~ msgstr "kuva_captcha"
+#~ msgid "Kind of words to use in the phrase"
+#~ msgstr "Lauseessa käytettäviä sanoja"
+#~ msgid "Generate nonsense random words."
+#~ msgstr "Muodosta merkityksettömiä satunnaissanoja."
+#~ msgid "Use user defined words."
+#~ msgstr "Käytä käyttäjän antamia sanoja."
+#~ msgid "User defined words"
+#~ msgstr "Käyttäjän antamat sanat"
+#~ msgid "Enter a bunch of space separated words (at least @min)."
+#~ msgstr "Anna ryhmä sanavälillä eroteltuja sanoja (vähintään @min)."
+#~ msgid "Number of words in the phrase"
+#~ msgstr "Sanojen määrä lauseessa"
+#~ msgid ""
+#~ "You need to enter at least @min words if you want to use user defined "
+#~ "words."
+#~ msgstr ""
+#~ "Sinun on annettava vähintään @min sanaa jos haluat käyttää itse "
+#~ "määriteltyjä sanoja."
+#~ msgid "Number of words in the phrase should be between 4 and 10."
+#~ msgstr "Sanojen määrä lauseessa tulee olla 4 ja 10 välillä."
+#~ msgid "first"
+#~ msgstr "ensimmäinen"
+#~ msgid "second"
+#~ msgstr "toinen"
+#~ msgid "third"
+#~ msgstr "kolmas"
+#~ msgid "fourth"
+#~ msgstr "neljäs"
+#~ msgid "fifth"
+#~ msgstr "viides"
+#~ msgid "sixth"
+#~ msgstr "kuudes"
+#~ msgid "seventh"
+#~ msgstr "seitsemäs"
+#~ msgid "ninth"
+#~ msgstr "yhdeksäs"
+#~ msgid "tenth"
+#~ msgstr "kymmenes"
+#~ msgid ""
+#~ "In this challenge the visitor is asked for the n<sup>th</sup> word of a "
+#~ "given phrase."
+#~ msgstr ""
+#~ "Tässä tarkistuksessa vierailijalta kysytään määrättyä sanaa annetusta "
+#~ "lauseesta."
+#~ msgid "What is the @nth word in the phrase \"@words\"?"
+#~ msgstr "Mikä on @nth sana lauseessa \"@words\"?"
+#~ msgid "Text CAPTCHA"
+#~ msgstr "Teksti CAPTCHA"
+#~ msgid "text_captcha"
+#~ msgstr "teksti_captcha"
+#~ msgid "Provides a simple text based CAPTCHA."
+#~ msgstr "Tarjoaa yksinkertaisen tekstipohjaisen CAPTCHA tunnistuksen."
+

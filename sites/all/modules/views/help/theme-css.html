@@ -1,0 +1,76 @@
+<!-- $Id: theme-css.html,v 1.3.6.1 2009/11/02 22:01:26 merlinofchaos Exp $ -->
+Views uses a wide array of CSS classes on all of its content to ensure that you can easily and accurately select exactly the content you need in order to manipulate it with CSS.
+
+Typically, every view is wrapped in a div with the name of the view as part of its class (for all these examples, we will assume the name of the view is <strong>myview</strong>), as well as the generic class 'view':
+
+<pre>
+&lt;div class="view view-myview"&gt;
+...
+&lt;/div&gt;
+</pre>
+
+In your CSS, you can modify all views:
+
+<pre>
+div.view {
+  border: 1px solid black;
+}
+</pre>
+
+Or just your view:
+
+<pre>
+div.view-myview {
+  background: yellow;
+}
+</pre>
+
+By default, the general view template also provides the following classes to easily style other areas of the view:
+<ul>
+<li> .view-header </li>
+<li> .view-filters </li>
+<li> .view-content </li>
+<li> .view-empty (if an "empty" text is used when the view has no results) </li>
+<li> .view-footer </li>
+<li> .feed-icon </li>
+<li> .attachment-before (if using an "attachment" display)</li>
+<li> .attachment-after (if using an "attachment" display)</li>
+</ul>
+
+So for example:
+<pre>
+div.view-myview div.view-header {
+  /* make the header stand out */
+  font-size: 120%;
+  font-weight: bold;
+}
+
+div.view-myview div.view-footer {
+  /* Make the footer less important */
+  font-size: 80%;
+  font-style: italic;
+  color: #CCC;
+}
+</pre>
+
+In the above example, we whimsically made the header bold and in a bigger font, and the footer smaller, italicized, and greyish.
+
+<h3>Views with fields</h3>
+If your view has fields, each field is uniquely tagged with its ID. A field's ID may be gleaned from the Theme: Information page. Note that due to CSS rules, any _ in the id will be converted to - automatically, so if you have a field whose id is 'edit_node' (this is the field used to provide an "edit" link to a node), it will be 'edit-node'. Additionally, to make sure that the view IDs don't conflict with other css classes in the system, they will be pretended with 'views-field-'; thus, the final CSS class for the field with the id 'edit_node' will be <strong>views-field-edit-node</strong>.
+
+Exactly how this appears is going to depend upon the style you're using. For example, the 'unformatted' style uses <strong>div.views-field-edit-node</strong> and <strong>div.views-label-edit-node</strong> to access that particular field, but a table would use <strong>td.views-field-edit-node</strong> and <strong>th.views-field-edit-node</strong> to access the table header; or just <strong>.views-field-edit-node</strong> to affect both.
+
+<pre>
+.view-myview th {
+  color: red; /* make all headers red */
+}
+
+.view-myview .views-field-title {
+  font-weight: bold; /* Make the 'title' field bold */
+}
+
+.view-myview td.views-field-body {
+  font-size: 60%; /* Make the text in the body field small */
+}
+</pre>
+

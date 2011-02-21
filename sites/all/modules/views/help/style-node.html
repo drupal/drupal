@@ -1,0 +1,10 @@
+<!-- $Id: style-node.html,v 1.4.6.1 2010/09/15 09:01:01 dereine Exp $ -->
+The <strong>node</strong> row style will display each item of the view through Drupal's standard <em>node_view()</em> function. Views has very little control over this output, except for the options you see. Instead, the output is run through the standard node template mechanism (typically <strong>node.tpl.php</strong> or a variant thereof) and any decisions about what is output may be done there.
+
+Views does add an extra 'suggestion' to the list of possible node templates: <strong>node--view--VIEWNAME.tpl.php</strong> -- you may use this to theme a node specifically for the view. This can be handy for creating very small teasers and the like.
+
+You may opt to display the full node body or the node teaser, and you may add the node links (such as he 'comment' links that appear after a node) or not.
+
+Because of this behavior, <strong>the node row style does not utilize fields</strong> and the Fields section will not be displayed.
+
+<strong>Please note that this row style performs a node_load() for every row, and as such can produce a lot of extra queries.</strong> Sometimes this is necessary, but it can have a negative impact on your site's performance!

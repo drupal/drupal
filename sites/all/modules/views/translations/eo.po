@@ -1,0 +1,4100 @@
+# Esperanto translation of Drupal (general)
+# Copyright 2008 Chuck Smith <chuck@chucksmith.de>
+# Generated from files:
+# views.module,v 1.300 2008/06/25 21:10:10 merlinofchaos
+# admin.inc,v 1.123 2008/07/02 18:43:08 merlinofchaos
+# views_ui.module,v 1.99 2008/06/04 00:09:53 merlinofchaos
+# views_export.module,v 1.2 2008/06/25 21:42:20 merlinofchaos
+# views.info,v 1.7 2007/08/12 06:52:14 merlinofchaos
+# views_ui.info,v 1.10 2008/01/09 00:05:08 merlinofchaos
+# views_export.info,v 1.1 2008/06/12 16:17:25 merlinofchaos
+# plugins.inc,v 1.134 2008/07/04 16:47:20 merlinofchaos
+# convert.inc,v 1.11 2008/06/26 16:41:01 merlinofchaos
+# theme.inc,v 1.53 2008/07/03 15:54:08 merlinofchaos
+# views.install,v 1.41 2008/06/03 23:50:44 merlinofchaos
+# docs.php,v 1.8 2008/06/18 15:25:46 merlinofchaos
+# node.views.inc,v 1.76 2008/07/02 18:14:03 merlinofchaos
+# view.inc,v 1.116 2008/07/03 18:01:44 merlinofchaos
+# system.views.inc,v 1.6 2008/06/26 00:58:29 merlinofchaos
+# user.views.inc,v 1.47 2008/06/26 00:58:29 merlinofchaos
+# argument.handlers.inc,v 1.40 2008/07/04 20:43:33 merlinofchaos
+# comment.views.inc,v 1.20 2008/07/02 17:42:57 merlinofchaos
+# statistics.views.inc,v 1.7 2008/06/26 00:58:29 merlinofchaos
+# upload.views.inc,v 1.12 2008/06/30 16:37:14 merlinofchaos
+# book.views.inc,v 1.4 2008/07/02 17:42:57 merlinofchaos
+# taxonomy.views.inc,v 1.37 2008/07/02 18:53:40 merlinofchaos
+# ajax.inc,v 1.15 2008/06/14 17:42:42 merlinofchaos
+# field.handlers.inc,v 1.13 2008/06/18 15:25:46 merlinofchaos
+# filter.handlers.inc,v 1.25 2008/07/03 05:05:12 merlinofchaos
+# relationship.handlers.inc,v 1.7 2008/06/30 16:37:14 merlinofchaos
+# sort.handlers.inc,v 1.6 2008/06/18 15:25:46 merlinofchaos
+# form.inc,v 1.10 2008/06/25 21:10:10 merlinofchaos
+# handlers.inc,v 1.88 2008/06/25 22:20:01 merlinofchaos
+# ajax.js,v 1.21 2008/05/27 22:31:59 merlinofchaos
+# ajax_view.js,v 1.5 2008/05/27 22:31:59 merlinofchaos
+# tabs.js,v 1.3 2008/03/30 15:58:26 merlinofchaos
+# poll.views.inc,v 1.2 2008/03/12 04:32:07 merlinofchaos
+# profile.views.inc,v 1.7 2008/06/26 00:58:29 merlinofchaos
+# search.views.inc,v 1.11 2008/06/27 00:39:07 merlinofchaos
+# views.views.inc,v 1.4 2008/06/26 00:58:29 merlinofchaos
+# views-more.tpl.php,v 1.2 2008/04/11 08:46:26 merlinofchaos
+# views-ui-edit-item.tpl.php,v 1.7 2008/05/09 19:32:12 merlinofchaos
+# views-ui-edit-tab.tpl.php,v 1.10 2008/05/14 00:30:25 merlinofchaos
+# views-ui-edit-view.tpl.php,v 1.8 2008/05/14 00:52:10 merlinofchaos
+# views-ui-list-views.tpl.php,v 1.5 2008/05/08 05:29:30 merlinofchaos
+#
+#, fuzzy
+msgid ""
+""
+msgstr "Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2008-07-06 13:10+0200\n"
+"PO-Revision-Date: 2008-08-12 HH:MM+ZZZZ\n"
+"Last-Translator: Chuck Smith <chuck@chucksmith.de>\n"
+"Language-Team: Esperanto <chuck@chucksmith.de>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: views.module:640
+msgid "Skipping broken view @view"
+msgstr "Preterpasi rompitan aspekton @view"
+
+#: views.module:687
+#: includes/admin.inc:92
+msgid "Overridden"
+msgstr "Anstataŭigita"
+
+#: views.module:690
+#: views_ui.module:284
+#: includes/admin.inc:91
+msgid "Default"
+msgstr "Defaŭlta"
+
+#: views.module:828
+#: includes/admin.inc:286
+#: views_export/views_export.module:116
+msgid "Apply"
+msgstr "Apliki"
+
+#: views.module:109
+#: views_ui.module:23
+#: views.info:0
+#: views_ui.info:0
+#: views_export/views_export.info:0
+msgid "Views"
+msgstr "Aspektoj"
+
+#: views.module:114
+msgid "Ajax callback for view loading."
+msgstr "Ajax-revoko por ŝarĝi aspekton."
+
+#: views.module:0
+msgid "views"
+msgstr "aspektoj"
+
+#: views_ui.module:158
+msgid "The converter will make a best-effort attempt to convert a Views 1 view to Views 2. This conversion is not reliable; you will very likely have to make adjustments to your view to get it to match. You can import Views 1 views through the normal Import tab."
+msgstr "La konvertilo klopodos kiel eble plej bone konverti aspekton de Aspektoj 1 al Aspektoj 2. Tiu konvertado ne fidindas; vi plej verŝajne devos ĝustigi vian aspekton por ke ĝi kongruu. Vi povas importi aspektojn de Aspektoj 1 per la normala importa langeto."
+
+#: views_ui.module:25
+msgid "Views are customized lists of content on your system; they are highly configurable and give you control over how lists of content are presented."
+msgstr "Aspektoj estas adapteblaj listoj de enhavo en via sistemo; ili estas tre adapteblaj kaj donos al vi regon super kiel listoj de enhavo prezentiĝos."
+
+#: views_ui.module:29
+#: includes/plugins.inc:88
+msgid "List"
+msgstr "Listo"
+
+#: views_ui.module:35
+#: includes/admin.inc:1105
+msgid "Add"
+msgstr "Aldoni"
+
+#: views_ui.module:40
+#: includes/admin.inc:715
+msgid "Import"
+msgstr "Importi"
+
+#: views_ui.module:46
+msgid "Tools"
+msgstr "Iloj"
+
+#: views_ui.module:52
+msgid "Basic"
+msgstr "Baza"
+
+#: views_ui.module:60
+#: includes/convert.inc:30
+msgid "Convert"
+msgstr "Konverti"
+
+#: views_ui.module:61
+msgid "Convert stored Views 1 views."
+msgstr "Konverti konservitajn aspektojn de Aspektoj 1."
+
+#: views_ui.module:67
+msgid "Delete view"
+msgstr "Forigi aspekton"
+
+#: views_ui.module:73
+msgid "Convert view"
+msgstr "Konverti aspekton"
+
+#: views_ui.module:110
+#: includes/admin.inc:87
+#: theme/theme.inc:89
+msgid "Edit"
+msgstr "Redakti"
+
+#: views_ui.module:0
+msgid "views_ui"
+msgstr "views_ui"
+
+#: views.install:31
+msgid "Stores the general data for a view."
+msgstr "Konservas la ĝeneralajn datumojn por aspekto."
+
+#: views.install:37
+msgid "The view ID of the field, defined by the database."
+msgstr "La aspekta ID de la kampo, difinita de la datumbazo."
+
+#: views.install:45
+msgid "The unique name of the view. This is the primary field views are loaded from, and is used so that views may be internal and not necessarily in the database. May only be alphanumeric characters plus underscores."
+msgstr "La unika nomo de la aspekto. Tio estas la ĉefa kampo de kiu aspektoj estas ŝarĝitaj, kaj estas uzata por ke aspektoj povu esti internaj kaj ne necese en la datumbazo. Povas nur esti alfanumeraj signoj kaj substrekoj."
+
+#: views.install:51
+msgid "A description of the view for the admin interface."
+msgstr "Priskribo de la aspekto por la administra interfaco."
+
+#: views.install:57
+msgid "A tag used to group/sort views in the admin interface"
+msgstr "Etikedo uzata por grupigi/ordigi aspektojn en la administra interfaco"
+
+#: views.install:61
+msgid "A chunk of PHP code that can be used to provide modifications to the view prior to building."
+msgstr "Peco de PHP-kodo kiu povas esti uzata por modifi la aspekton antaŭ ĝia konstruado."
+
+#: views.install:68
+msgid "What table this view is based on, such as node, user, comment, or term."
+msgstr "Sur kiu tabelo ĉi tiu aspekto estas bazita, kiel nodo, uzanto, komento aŭ termino."
+
+#: views.install:74
+msgid "A boolean to indicate whether or not this view may have its query cached."
+msgstr "Buleo por indiki ĉu aŭ ne ĉi tiu aspekto povas kaŝmemorigi sian informpeton."
+
+#: views.install:82
+msgid "Stores information about each display attached to a view."
+msgstr "Konservas informojn pri ĉiu aspekto alkroĉita al aspekto."
+
+#: views.install:89
+msgid "The view this display is attached to."
+msgstr "La aspekto al kiu ĝi estas alkroĉita."
+
+#: views.install:97
+msgid "An identifier for this display; usually generated from the display_plugin, so should be something like page or page_1 or block_2, etc."
+msgstr "Identigilo por ĉi tiu aspekto; kutime generita de la display_plugin, do devas esti io kiel page aŭ page_1 aŭ block_2 ktp."
+
+#: views.install:104
+msgid "The title of the display, viewable by the administrator."
+msgstr "La titolo de la aspekto, videbla de la administranto."
+
+#: views.install:111
+msgid "The type of the display. Usually page, block or embed, but is pluggable so may be other things."
+msgstr "La speco de la aspekto. Kutime paĝo, bloko aŭ enteksta, sed estas kromprogramebla, do povas esti aliaj aferoj."
+
+#: views.install:116
+msgid "The order in which this display is loaded."
+msgstr "La sinsekvo en kiu ĉi tiu aspekto ŝarĝiĝas."
+
+#: views.install:120
+msgid "A serialized array of options for this display; it contains options that are generally only pertinent to that display plugin type."
+msgstr "Serialigita matrico de opcioj por ĉi tiu aspekto; ĝi enhavas opciojn kiuj ĝenerale rilatas al tiu aspekta kromprograma speco. "
+
+#: views.install:131
+msgid "A special cache used to store objects that are being edited; it serves to save state in an ordinarily stateless environment."
+msgstr "Speciala kaŝmemoro uzata por konservi objektojn kiuj estas redaktataj; ĝi servas por konservi staton en ordinare senstata ĉirkaŭaĵo."
+
+#: views.install:136
+msgid "The session ID this cache object belongs to."
+msgstr "La seanca ID al kiu ĉi tiu kaŝmemora objekto apartenas."
+
+#: views.install:141
+msgid "The name of the view this cache is attached to."
+msgstr "La nomo de la aspekto al kiu ĉi tiu kaŝmemoro estas alkroĉita."
+
+#: views.install:146
+msgid "The name of the object this cache is attached to; this essentially represents the owner so that several sub-systems can use this cache."
+msgstr "La nomo de la objekto al kiu ĉi tiu kaŝmemoro estas alkroĉita; tio esence reprezentas la havanto por ke kelkaj subsistemoj povas uzi ĉi tiun kaŝmemoron."
+
+#: views.install:153
+msgid "The time this cache was created or updated."
+msgstr "La tempo kiam ĉi tiu kaŝmemoro estis kreita aŭ ĝisdatigita."
+
+#: views.install:157
+msgid "Serialized data being stored."
+msgstr "Serialigitaj datumoj konserviĝas."
+
+#: views.info:0
+msgid "Create customized lists and queries from your database."
+msgstr "Krei proprajn listojn kaj vicojn el via datumbazo."
+
+#: views_ui.info:0
+msgid "Views UI"
+msgstr "Aspektoj UI"
+
+#: views_ui.info:0
+msgid "Administrative interface to views. Without this module, you cannot create or edit your views."
+msgstr "Administranta interfaco al aspektoj. Sen ĉi tiu modulo, vi ne povas krei aŭ redakti viajn aspektojn."
+
+#: docs/docs.php:106
+msgid "Emulates the default Drupal front page; you may set the default home page path to this view to make it your front page."
+msgstr "Imitas la defaŭltan frontpaĝon de Drupalo; oni povas fiksi la defaŭltan hejmpaĝan vojon al ĉi tiu aspekto por ke ĝi ĉefpaĝiĝu."
+
+#: docs/docs.php:107
+msgid "default"
+msgstr "defaŭlta"
+
+#: docs/docs.php:116
+#: includes/plugins.inc:18
+msgid "Defaults"
+msgstr "Defaŭltoj"
+
+#: docs/docs.php:205
+#: includes/plugins.inc:32
+msgid "Page"
+msgstr "Paĝo"
+
+#: docs/docs.php:260
+#: includes/plugins.inc:65
+msgid "Feed"
+msgstr "Fluo"
+
+#: docs/docs.php:328
+msgid "Front page feed"
+msgstr "Ĉefpaĝa fluo"
+
+#: includes/admin.inc:34
+msgid "If you install the advanced help module from !href, Views will provide more and better help. <a href=\"@hide\">Hide this message.</a>"
+msgstr "Se vi instalas la help-modulo por spertuloj de !href, Aspektoj provizos pli bonan helpon. <a href=\"@hide\">Kaŝi ĉi tiun mesaĝon.</a>"
+
+#: includes/admin.inc:88
+#: theme/theme.inc:96
+#: views_export/views_export.module:128
+msgid "Export"
+msgstr "Eksporti"
+
+#: includes/admin.inc:89
+#: theme/theme.inc:101
+msgid "Clone"
+msgstr "Kloni"
+
+#: includes/admin.inc:92
+msgid "Revert"
+msgstr "Malfari ŝanĝojn"
+
+#: includes/admin.inc:92
+#: includes/convert.inc:35
+msgid "Delete"
+msgstr "Forigi"
+
+#: includes/admin.inc:97
+msgid "Disable"
+msgstr "Malŝalti"
+
+#: includes/admin.inc:100
+msgid "Enable"
+msgstr "Ŝalti"
+
+#: includes/admin.inc:106
+msgid "Warning! Broken view!"
+msgstr "Atentu! Rompita aspekto!"
+
+#: includes/admin.inc:121
+msgid "Broken"
+msgstr "Rompita"
+
+#: includes/admin.inc:180
+msgid "Install the advanced help module for the getting started"
+msgstr "Instalu la help-modulon por spertuloj por komenci"
+
+#: includes/admin.inc:183
+msgid "Not sure what to do? Try the \"!getting-started\" page."
+msgstr "Ne certas kion fari? Provu la paĝon de \"Komenci\"."
+
+#: includes/admin.inc:197
+msgid "<All>"
+msgstr "<All>"
+
+#: includes/admin.inc:198
+#: includes/plugins.inc:2975
+msgid "<None>"
+msgstr "<None>"
+
+#: includes/admin.inc:213
+#: views_export/views_export.module:146
+msgid "Tag"
+msgstr "Etikedo"
+
+#: includes/admin.inc:229
+msgid "Displays"
+msgstr "Aspektoj"
+
+#: includes/admin.inc:241
+#: includes/plugins.inc:1128
+#: modules/node.views.inc:139
+msgid "Type"
+msgstr "Speco"
+
+#: includes/admin.inc:248
+msgid "Storage"
+msgstr "Konservado"
+
+#: includes/admin.inc:251
+#: includes/view.inc:1097
+msgid "Normal"
+msgstr "Normala"
+
+#: includes/admin.inc:260
+msgid "Sort by"
+msgstr "Ordigi laŭ"
+
+#: includes/admin.inc:262
+#: includes/plugins.inc:831
+#: modules/system.views.inc:69
+#: modules/user.views.inc:59
+msgid "Name"
+msgstr "Nomo"
+
+#: includes/admin.inc:263
+#: includes/argument.handlers.inc:127
+#: includes/plugins.inc:843
+#: modules/comment.views.inc:44
+#: modules/node.views.inc:84
+msgid "Title"
+msgstr "Titolo"
+
+#: includes/admin.inc:265
+#: includes/plugins.inc:2098
+#: modules/statistics.views.inc:146
+#: modules/system.views.inc:88
+msgid "Path"
+msgstr "Vojo"
+
+#: includes/admin.inc:267
+#: includes/convert.inc:21
+#: modules/upload.views.inc:56
+#: views_export/views_export.module:146
+msgid "Description"
+msgstr "Priskribo"
+
+#: includes/admin.inc:274
+msgid "Order"
+msgstr "Sinsekvo"
+
+#: includes/admin.inc:276
+msgid "Up"
+msgstr "Supren"
+
+#: includes/admin.inc:277
+msgid "Down"
+msgstr "Malsupren"
+
+#: includes/admin.inc:361
+msgid "Query"
+msgstr "Informpeto"
+
+#: includes/admin.inc:363
+msgid "These queries were run during view rendering:"
+msgstr "Ĉi tiuj informpetoj funkciis dum kreado de aspekto:"
+
+#: includes/admin.inc:368
+msgid "[@time ms] "
+msgstr "[@time ms]"
+
+#: includes/admin.inc:371
+msgid "Other queries"
+msgstr "Aliaj informpetoj"
+
+#: includes/admin.inc:379
+msgid "This display has no path."
+msgstr "Ĉi tiu aspekto ne havas vojon."
+
+#: includes/admin.inc:384
+msgid "Query build time"
+msgstr "Tempo por konstrui informpeton"
+
+#: includes/admin.inc:384
+msgid "@time ms"
+msgstr "@time ms"
+
+#: includes/admin.inc:385
+msgid "Query execute time"
+msgstr "Tempo por plenumi informpeton"
+
+#: includes/admin.inc:386
+msgid "View render time"
+msgstr "Tempo por montri aspekton"
+
+#: includes/admin.inc:392
+msgid "No query was run"
+msgstr "Neniu informpeto funkciis"
+
+#: includes/admin.inc:399
+msgid "Unable to preview due to validation errors."
+msgstr "Ne eblas antaŭvidi pro validigaj eraroj."
+
+#: includes/admin.inc:450
+msgid "Display"
+msgstr "Montri"
+
+#: includes/admin.inc:458
+#: includes/view.inc:1774
+msgid "Arguments"
+msgstr "Argumentoj"
+
+#: includes/admin.inc:460
+msgid "Separate arguments with a / as though they were a URL path."
+msgstr "Disigi argumentojn per / kvazaŭ ili estis URL-vojo."
+
+#: includes/admin.inc:466
+msgid "Preview"
+msgstr "Antaŭvidi"
+
+#: includes/admin.inc:504
+msgid "Clone view @view"
+msgstr "Klona aspekto @view"
+
+#: includes/admin.inc:517
+#: includes/convert.inc:20
+msgid "View name"
+msgstr "Nomo de aspekto"
+
+#: includes/admin.inc:518
+msgid "This is the unique name of the view. It must contain only alphanumeric characters and underscores; it is used to identify the view internally and to generate unique theming template names for this view. If overriding a module provided view, the name must not be changed or instead a new view will be created."
+msgstr "Ĉi tio estas unika nomo de la aspekto. Ĝi devas enhavi nur alfanumerajn signojn kaj substrekojn; ĝi estas uzata por identigi la aspekton interne kaj por generi unikajn haŭtajn ŝablonajn nomojn por ĉi tiu aspekto. Se oni anstataŭigas modulprovitan aspekton, la nomo ne povas esti ŝanĝita aŭ anstataŭe nova aspekto kreiĝos."
+
+#: includes/admin.inc:526
+msgid "View description"
+msgstr "Priskribo de aspekto"
+
+#: includes/admin.inc:527
+msgid "This description will appear on the Views administrative UI to tell you what the view is about."
+msgstr "Ĉi tiu priskribo aperos en la administra UI por Aspektoj por montri al vi pri kio temas la aspekto."
+
+#: includes/admin.inc:533
+msgid "View tag"
+msgstr "Etikedo de aspekto"
+
+#: includes/admin.inc:534
+msgid "Enter an optional tag for this view; it is used only to help sort views on the administrative page."
+msgstr "Enmetu nedevigan etikedon por ĉi tiu aspekto; ĝi estas uzata nur por helpi ordigi aspektojn en la administra paĝo."
+
+#: includes/admin.inc:546
+msgid "View type"
+msgstr "Aspekta speco"
+
+#: includes/admin.inc:547
+msgid "The view type is the primary table for which information is being retrieved. The view type controls what arguments, fields, sort criteria and filters are available, so once this is set it <strong>cannot be changed</strong>."
+msgstr "La aspekta speco estas la ĉefa tabelo por kiu informoj estas ricevita. La aspekta speco regas kiuj argumentoj, kampoj, ordigaj kriterioj kaj filtriloj alireblas, do kiam tio estas fiksita, <strong>ĝi estas neŝanĝebla</strong>."
+
+#: includes/admin.inc:558
+msgid "Next"
+msgstr "Sekva"
+
+#: includes/admin.inc:574
+msgid "View name must be alphanumeric or underscores only."
+msgstr "Aspekta nomo devas enhavi nur alfanumerojn aŭ substrekojn."
+
+#: includes/admin.inc:580
+msgid "You must use a unique name for this view."
+msgstr "Vi devas uzi unikan nomon por ĉi tiu aspekto."
+
+#: includes/admin.inc:613
+msgid "Are you sure you want to revert the view %name?"
+msgstr "Ĉu vi certas ke vi volas refari la ŝanĝojn al la aspekto %name?"
+
+#: includes/admin.inc:614
+msgid "Reverting the view will delete the view that is in the database, reverting it to the original default view. Any changes you have made will be lost and cannot be recovered."
+msgstr "Refari la ŝanĝojn de la aspekto forigos la aspekton kiu estas en la datumbazo, revenante al ĝia originala defaŭlta aspekto. Ŝanĝojn kiujn vi faris estos plene perditaj."
+
+#: includes/admin.inc:617
+#: includes/convert.inc:105
+msgid "Are you sure you want to delete the view %name?"
+msgstr "Ĉu vi certas ke vi volas forigi la aspekton %name?"
+
+#: includes/admin.inc:618
+msgid "Deleting a view cannot be undone."
+msgstr "Forigi aspekton ne povas esti malfarata."
+
+#: includes/admin.inc:626
+#: includes/convert.inc:110
+msgid "Cancel"
+msgstr "Nuligi"
+
+#: includes/admin.inc:635
+msgid "The view has been deleted."
+msgstr "La aspekto estis forigita."
+
+#: includes/admin.inc:647
+msgid "There is no lock on view %view to break."
+msgstr "Ne estas ŝlosilo por rompi de aspekto %view."
+
+#: includes/admin.inc:657
+msgid "Are you sure you want to break the lock on view %name?"
+msgstr "Ĉu vi certas ke vi volas rompi la ŝlosilon de aspekto %name?"
+
+#: includes/admin.inc:660
+msgid "By breaking this lock, any unsaved changes made by !user will be lost!"
+msgstr "Rompante ĉi tiun ŝlosilon, nekonservitaj ŝanĝoj de !user estos perdita!"
+
+#: includes/admin.inc:661
+msgid "Break lock"
+msgstr "Rompi ŝlosilon"
+
+#: includes/admin.inc:678
+msgid "Edit view \"%view\""
+msgstr "Redakti aspekton \"%view\""
+
+#: includes/admin.inc:705
+msgid "Enter the name to use for this view if it is different from the source view. Leave blank to use the name of the view."
+msgstr "Enmeti la nomon por uzi por ĉi tiu aspekto se ĝi malsamas de la fonta aspekto. Lasu malplena por uzi la nomon de la aspekto."
+
+#: includes/admin.inc:710
+msgid "Paste view code here"
+msgstr "Glui aspektan kodon ĉi tie"
+
+#: includes/admin.inc:732
+msgid "Unable to interpret view code."
+msgstr "Ne eblas interpreti kodon de aspekto."
+
+#: includes/admin.inc:740
+msgid "You are importing a view created in Views version 1. You may need to adjust some parameters to work correctly in version 2."
+msgstr "Vi importas aspekton kreita en versio 1 de Aspektoj. Vi eble devas ĝustigi kelkajn parametrojn por funkcii ĝuste en versio 2."
+
+#: includes/admin.inc:743
+msgid "That view is not compatible with this version of Views."
+msgstr "Tiu aspekto ne kongruas kun ĉi tiu versio de Aspektoj."
+
+#: includes/admin.inc:758
+msgid "A view by that name already exists; please choose a different name"
+msgstr "Aspekto de tiu nomo jam ekzistas; bonvolu elekti alian nomon"
+
+#: includes/admin.inc:779
+msgid "Save"
+msgstr "Konservi"
+
+#: includes/admin.inc:831
+msgid "The view has been saved."
+msgstr "La aspekto estas konservita."
+
+#: includes/admin.inc:875
+msgid "Unknown or missing table name"
+msgstr "Nekonata aŭ mankata tabela nomo"
+
+#: includes/admin.inc:880
+msgid "Click on an item to edit that item's details."
+msgstr "Klaku sur ero por redakti ties detalojn."
+
+#: includes/admin.inc:883
+msgid "This view has a broken default display and cannot be used."
+msgstr "Ĉi tiu aspekto havas rompitan defaŭltan montradon kaj ne povas esti uzata."
+
+#: includes/admin.inc:919
+msgid "break this lock"
+msgstr "rompi ĉi tiun ŝlosilon"
+
+#: includes/admin.inc:925
+#: theme/theme.inc:97
+msgid "Export this view"
+msgstr "Eksporti ĉi tiun aspekton"
+
+#: includes/admin.inc:930
+#: theme/theme.inc:102
+msgid "Create a copy of this view"
+msgstr "Krei kopion de ĉi tiu aspekto"
+
+#: includes/admin.inc:941
+msgid "View \"!display\""
+msgstr "Vidi \"!display\""
+
+#: includes/admin.inc:942
+msgid "Go to the real page for this display"
+msgstr "Iri al la vera paĝo por ĉi tiu montro"
+
+#: includes/admin.inc:1008
+#: includes/plugins.inc:838
+msgid "None"
+msgstr "Neniu"
+
+#: includes/admin.inc:1082
+msgid "Invalid"
+msgstr "Nevalida"
+
+#: includes/admin.inc:1082
+msgid "Error: Display @display refers to a plugin named '@plugin', but that plugin doesn't exist!"
+msgstr "Eraro: Montro @display referencas al kromprogramo nomata '@plugin', sed tiu kromprogramo ne ekzistas!"
+
+#: includes/admin.inc:1103
+msgid "Rearrange"
+msgstr "Rearanĝi"
+
+#: includes/admin.inc:1136
+msgid "Error: handler for @table > @field doesn't exist!"
+msgstr "Eraro: traktilo por @table > @field ne ekzistas!"
+
+#: includes/admin.inc:1155
+msgid "Settings"
+msgstr "Agordoj"
+
+#: includes/admin.inc:1160
+#: includes/plugins.inc:849
+msgid "Missing style plugin"
+msgstr "Mankata stila kromprogramo"
+
+#: includes/admin.inc:1164
+#: includes/plugins.inc:862
+msgid "Change settings for this style"
+msgstr "Ŝanĝi agordojn por ĉi tiu stilo"
+
+#: includes/admin.inc:1167
+msgid " &nbsp; Style: !style"
+msgstr " &nbsp; Stilo: !style"
+
+#: includes/admin.inc:1198
+msgid "Invalid display id while regenerating tabs"
+msgstr "Nevalida montra id regenerante langetojn"
+
+#: includes/admin.inc:1231
+msgid "Update"
+msgstr "Ĝisdatigo"
+
+#: includes/admin.inc:1249
+msgid "Ok"
+msgstr "Ok"
+
+#: includes/admin.inc:1518
+msgid "Unable to initialize default display"
+msgstr "Ne eblas pravalorizi defaŭltan montron"
+
+#: includes/admin.inc:1550
+msgid "Add display"
+msgstr "Aldoni montron"
+
+#: includes/admin.inc:1590
+msgid "Remove display"
+msgstr "Forigi montron"
+
+#: includes/admin.inc:1601
+msgid "Restore display"
+msgstr "Restarigi montron"
+
+#: includes/admin.inc:1673
+msgid "Analyze"
+msgstr "Analizi"
+
+#: includes/admin.inc:1693
+msgid "This view has only a default display and therefore will not be placed anywhere on your site; perhaps you want to add a page or a block display."
+msgstr "Ĉi tiu aspekto havas nur defaŭltan montron kaj tiel ne povas lokiĝi ie en via retejo; eble vi volas aldoni paĝon aŭ blokan montron."
+
+#: includes/admin.inc:1705
+msgid "View analysis"
+msgstr "Analizo de aspekto"
+
+#: includes/admin.inc:1714
+msgid "View analysis can find nothing to report."
+msgstr "Analizo de aspekto ne povas trovi ion por raporti."
+
+#: includes/admin.inc:1788
+msgid "View details"
+msgstr "Detaloj de aspekto"
+
+#: includes/admin.inc:1829
+msgid "Invalid display id @display"
+msgstr "Nevalida montra id @display"
+
+#: includes/admin.inc:1887
+msgid "Configure @type"
+msgstr "Agordi @type"
+
+#: includes/admin.inc:1942
+msgid "Rearrange @type"
+msgstr "Rearanĝi @type"
+
+#: includes/admin.inc:1985
+msgid "Broken field @id"
+msgstr "Rompita kampo @id"
+
+#: includes/admin.inc:2025
+msgid "Remove"
+msgstr "Forigi"
+
+#: includes/admin.inc:2025
+msgid "Remove this item"
+msgstr "Forigi ĉi tiun eron"
+
+#: includes/admin.inc:2031
+msgid "No fields available."
+msgstr "Neniuj kampoj alireblaj."
+
+#: includes/admin.inc:2034
+#: includes/plugins.inc:2190
+#: modules/book.views.inc:57
+#: modules/taxonomy.views.inc:115
+#: modules/upload.views.inc:90
+msgid "Weight"
+msgstr "Pezo"
+
+#: includes/admin.inc:2090
+msgid "Add @type"
+msgstr "Aldoni @type"
+
+#: includes/admin.inc:2101
+msgid "Groups"
+msgstr "Grupoj"
+
+#: includes/admin.inc:2120
+msgid "!group: !field"
+msgstr "!group: !field"
+
+#: includes/admin.inc:2129
+msgid "There are no @types available to add."
+msgstr "Ne estas @types alireblaj por aldoni."
+
+#: includes/admin.inc:2226
+msgid "Do not use a relationship"
+msgstr "Ne uzu en rilato"
+
+#: includes/admin.inc:2235
+#: includes/view.inc:1798
+msgid "Relationship"
+msgstr "Rilato"
+
+#: includes/admin.inc:2248
+msgid "Configure @type \"@item\""
+msgstr "Agordi @type \"@item\""
+
+#: includes/admin.inc:2361
+msgid "Configure extra settings for @type \"@item\""
+msgstr "Agordi ekstrajn agordojn por @type \"@item\""
+
+#: includes/admin.inc:2426
+msgid "Change summary style for @type \"@item\""
+msgstr "Ŝanĝi resuman stilon por @type \"@item\""
+
+#: includes/admin.inc:2449
+msgid "Internal error: broken plugin."
+msgstr "Interna eraro: rompita kromprogramo."
+
+#: includes/admin.inc:2513
+msgid "Configure summary style for @type \"@item\""
+msgstr "Agordi resuman stilon por @type \"@item\""
+
+#: includes/admin.inc:2605
+msgid "Clear Views' cache"
+msgstr "Malplenigi kaŝmemoron de Aspekto"
+
+#: includes/admin.inc:2611
+msgid "Add Views signature to all SQL queries"
+msgstr "Aldoni subskribon de Aspekto al ĉiuj SQL-informpetoj"
+
+#: includes/admin.inc:2612
+msgid "All Views-generated queries will include a special 'VIEWS' = 'VIEWS' string in the WHERE clause. This makes identifying Views queries in database server logs simpler, but should only be used when troubleshooting."
+msgstr "Ĉiuj Aspekto-generitaj informpetoj inkluzivos specialan 'VIEWS' = 'VIEWS' teksto en la WHERE sekcio. Tio simpligas identigi informpetojn de Aspektoj en datumbazaj servilaj protokoloj, sed devas esti uzata nur dum problemsolvado."
+
+#: includes/admin.inc:2618
+msgid "Disable views data caching"
+msgstr "Malŝalti datum-kaŝmemoradon de aspektoj"
+
+#: includes/admin.inc:2619
+msgid "Views caches data about tables, modules and views available, to increase performance. By checking this box, Views will skip this cache and always rebuild this data when needed. This can have a serious performance impact on your site."
+msgstr "Aspektoj kaŝmemorigas datumojn pri alireblaj tabeloj, moduloj kaj aspektoj, por plibonigi rendimenton. Se ŝaltita, Aspektoj preterpasos ĉi tiun kaŝmemoron kaj ĉiam rekonstruas ĉi tiujn datumojn kiam bezonata. Tio povas serioze influi la rendimenton de via retejo."
+
+#: includes/admin.inc:2625
+msgid "Ignore missing advanced help module"
+msgstr "Ignori mankantan help-modulo por spertuloj"
+
+#: includes/admin.inc:2626
+msgid "Views uses the advanced help module to provide help text; if this module is not present Views will complain, unless this setting is checked."
+msgstr "Aspektoj uzas la help-modulon de spertoj por provizi helpan tekston; se tiu modulo ne ekzistas, Aspektoj eble plendos, krom se ĉi tiu agordo estas ŝaltita."
+
+#: includes/admin.inc:2632
+msgid "Show query above live preview"
+msgstr "Montri informpeton super viva antaŭvido"
+
+#: includes/admin.inc:2633
+msgid "The live preview feature will show you the output of the view you're creating, as well as the view. Check here to show the query and other information above the view; leave this unchecked to show that information below the view."
+msgstr "La viva antaŭvida funkcio montros al vi la eligo de la aspekto kiun vi kreas, kune kun la aspekto. Ŝaltu ĝin por montri la informpeton kaj aliajn informojn super la aspekto; lasu ĝin malŝaltita por montri tiujn informojn sub la aspekto."
+
+#: includes/admin.inc:2639
+msgid "Show other queries run during render during live preview"
+msgstr "Montri aliajn informpetojn kiuj funkcias dum montrado de viva antaŭvido"
+
+#: includes/admin.inc:2640
+msgid "Drupal has the potential to run many queries while a view is being rendered. Checking this box will display every query run during view render as part of the live preview."
+msgstr "Drupalo havas potencialon por funkciigi multajn informpetojn dum aspekto montriĝas. Kiam ŝaltita, oni vidos ĉiun informpeton dum la montriĝo kiel parto de la viva antaŭvido."
+
+#: includes/admin.inc:2646
+msgid "Do not show hover links over views"
+msgstr "Ne montri superligilojn super aspektoj"
+
+#: includes/admin.inc:2647
+msgid "To make it easier to administrate your views, Views provides 'hover' links to take you to the edit and export screen of a view whenever the view is used. This can be distracting on some themes, though; if it is problematic, you can turn it off here."
+msgstr "Por faciligi administradon de viaj aspektoj, Aspektoj provizas 'superligilojn' al la redakta kaj eksporta ekrano de aspekto kiam la aspekto estas uzata. Tio povas distri en kelkaj haŭtoj, tamen, se estas problema, vi povas malŝalti ĝin ĉi tie."
+
+#: includes/admin.inc:2653
+msgid "Enable views performance statistics via the Devel module"
+msgstr "Ŝalti rendimentajn statistikon de aspektoj per la Devel-modulo."
+
+#: includes/admin.inc:2654
+msgid "Check this to enable some Views query and performance statistics <em>if Devel is installed</em>."
+msgstr "Ĉi tio ŝaltas kelkajn informpetan kaj rendimentajn statistikojn de Aspektoj <em>se Devel estas instalita</em>. "
+
+#: includes/admin.inc:2660
+msgid "Disable javascript with Views"
+msgstr "Malŝalti JavaSkripton kun Aspektoj"
+
+#: includes/admin.inc:2661
+msgid "If you are having problems with the javascript, you can disable it here; the Views UI should degrade and still be usable without javascript, it just not as good."
+msgstr "Se vi havas problemojn kun la JavaSkripto, vi povas malŝalti ĝin ĉi tie; la Aspektoj UI devas daŭre funkcii kaj uzeblas sen JavaSkripto, ĝi simple ne estas tiel bona."
+
+#: includes/admin.inc:2669
+msgid "Page region to output performance statistics"
+msgstr "Paĝa regiono por eligi rendimentan statistikon"
+
+#: includes/admin.inc:2682
+msgid "The cache has been cleared."
+msgstr "La kaŝmemoro estas malplenigita."
+
+#: includes/admin.inc:2872
+msgid "Error: missing @component"
+msgstr "Eraro: mankas @component"
+
+#: includes/ajax.inc:73
+msgid "Server reports invalid input error."
+msgstr "Servilo raportas nevalidan enmetan eraron."
+
+#: includes/ajax.inc:74
+msgid "Error"
+msgstr "Eraro"
+
+#: includes/argument.handlers.inc:110
+msgid "All"
+msgstr "Ĉiuj"
+
+#: includes/argument.handlers.inc:129
+msgid "The title to use when this argument is present; it will override the title of the view and titles from previous arguments. You can use percent substitution here to replace with argument titles. Use \"%1\" for the first argument, \"%2\" for the second, etc."
+msgstr "La titolo por uzi kiam ĉi tiu argumento ekzistas; ĝi anstataŭigos la titolon de la aspekto kaj titoloj de antaŭaj argumentoj. Vi povas uzi procentan anstataŭigon por anstataŭigi kun argumentaj titoloj. Uzu \"%1\" por la unua argumento, \"%2\" por la dua ktp."
+
+#: includes/argument.handlers.inc:142
+msgid "Action to take if argument is not present"
+msgstr "Ago por fari se argumento ne ekzistas"
+
+#: includes/argument.handlers.inc:154
+msgid "Wildcard"
+msgstr "Ĵokero"
+
+#: includes/argument.handlers.inc:157
+msgid "If this value is received as an argument, the argument will be ignored; i.e, \"all values\""
+msgstr "Se tiu valoro ne estas ricevita kiel argumento, la argumento estos ignorita; alivorte \"ĉiuj valoroj\""
+
+#: includes/argument.handlers.inc:163
+msgid "Wildcard title"
+msgstr "Ĵokera titolo"
+
+#: includes/argument.handlers.inc:166
+msgid "The title to use for the wildcard in substitutions elsewhere."
+msgstr "La titolo por uzi por la ĵokero en anstataŭigoj aliloke."
+
+#: includes/argument.handlers.inc:189
+msgid "Validator options"
+msgstr "Validilaj opcioj"
+
+#: includes/argument.handlers.inc:194
+msgid "Validator"
+msgstr "Validilo"
+
+#: includes/argument.handlers.inc:198
+msgid "<Basic validation>"
+msgstr "<Basic validation>"
+
+#: includes/argument.handlers.inc:233
+msgid "Action to take if argument does not validate"
+msgstr "Ago por fari se argumento ne validiĝas"
+
+#: includes/argument.handlers.inc:252
+msgid "Display all values"
+msgstr "Montri ĉiujn valorojn"
+
+#: includes/argument.handlers.inc:257
+msgid "Hide view / Page not found (404)"
+msgstr "Kaŝi aspekton / Paĝo ne trovita (404)"
+
+#: includes/argument.handlers.inc:262
+msgid "Display empty text"
+msgstr "Montri malplenan tekston"
+
+#: includes/argument.handlers.inc:267
+msgid "Summary, sorted ascending"
+msgstr "Resumo, ordigita kreskante"
+
+#: includes/argument.handlers.inc:274
+msgid "Summary, sorted descending"
+msgstr "Resumo, ordigita malkreskante"
+
+#: includes/argument.handlers.inc:281
+msgid "Provide default argument"
+msgstr "Provizi defaŭltan argumenton"
+
+#: includes/argument.handlers.inc:314
+msgid "Provide default argument options"
+msgstr "Provizi defaŭltan argumentajn opciojn"
+
+#: includes/argument.handlers.inc:324
+msgid "Default argument type"
+msgstr "Defaŭlta argumenta speco"
+
+#: includes/argument.handlers.inc:710
+#: includes/field.handlers.inc:217
+#: includes/filter.handlers.inc:577
+#: includes/relationship.handlers.inc:132
+#: includes/sort.handlers.inc:71
+msgid "Broken/missing handler"
+msgstr "Rompita/mankata traktilo"
+
+#: includes/argument.handlers.inc:718
+#: includes/field.handlers.inc:225
+#: includes/filter.handlers.inc:585
+#: includes/relationship.handlers.inc:140
+#: includes/sort.handlers.inc:79
+msgid "The handler for this item is broken or missing and cannot be used. If a module provided the handler and was disabled, re-enabling the module may restore it. Otherwise, you should probably delete this item."
+msgstr "La traktilo por ĉi tiu ero estas rompita aŭ mankata kaj ne povas esti uzata. Se modulo provizis la traktilon kaj estis malŝaltita, reŝalti la modulon eble restarigos ĝin. Alikaze, vi verŝajne devas forigi la eron."
+
+#: includes/argument.handlers.inc:804
+msgid "Current date"
+msgstr "Aktuala dato"
+
+#: includes/argument.handlers.inc:859
+msgid "Glossary mode"
+msgstr "Glosara reĝimo"
+
+#: includes/argument.handlers.inc:860
+msgid "Glossary mode applies a limit to the number of characters used in the argument, which allows the summary view to act as a glossary."
+msgstr "Glosara reĝimo aplikas limon al nombro da signoj uzitaj en la argumento, kiu ebligas ke la resuma aspekto povu agi kiel glosaro."
+
+#: includes/argument.handlers.inc:866
+msgid "Character limit"
+msgstr "Signa limo"
+
+#: includes/argument.handlers.inc:867
+msgid "How many characters of the argument to filter against. If set to 1, all fields starting with the letter in the argument would be matched."
+msgstr "Kiom da signoj por filtri de la argumento. Se agordita al 1, ĉiuj kampoj komencante kun la litero en la argumento kongruus. "
+
+#: includes/argument.handlers.inc:875
+msgid "Case"
+msgstr "Uskleco"
+
+#: includes/argument.handlers.inc:876
+msgid "When printing the argument result, how to transform the case."
+msgstr "Montrante la argumentan rezulton, kiel transformi la usklecon."
+
+#: includes/argument.handlers.inc:878
+msgid "No transform"
+msgstr "Neniu transformo"
+
+#: includes/argument.handlers.inc:879
+msgid "Upper case"
+msgstr "Majuskla"
+
+#: includes/argument.handlers.inc:880
+msgid "Lower case"
+msgstr "Minuskla"
+
+#: includes/argument.handlers.inc:881
+msgid "Capitalize first letter"
+msgstr "Majuskligi unuan literon"
+
+#: includes/argument.handlers.inc:882
+msgid "Capitalize each word"
+msgstr "Majuskligi ĉiun vorton"
+
+#: includes/argument.handlers.inc:889
+msgid "Case in path"
+msgstr "Uskleco en vojo"
+
+#: includes/argument.handlers.inc:890
+msgid "When printing url paths, how to transform the of the argument. Do not use this unless with Postgres as it uses case sensitive comparisons."
+msgstr "Kiam montrante url-vojojn, kiel transformi la de la argumento. Ne uzu tion krom kun Postgres ĉar ĝi uzas usklecodistingajn komparojn."
+
+#: includes/argument.handlers.inc:903
+msgid "Transform spaces to dashes in URL"
+msgstr "Transformi spacetojn al streketojn en URL"
+
+#: includes/argument.handlers.inc:910
+msgid "Allow multiple arguments to work together."
+msgstr "Ebligi multajn argumentojn por kunfunkcii."
+
+#: includes/argument.handlers.inc:911
+msgid "If selected, multiple instances of this argument can work together, as though multiple terms were supplied to the same argument. This setting is not compatible with the \"Reduce duplicates\" setting."
+msgstr "Se elektita, multaj ekzemploj de ĉi tiu argumento povas kunfunkcii, kvazaŭ multaj terminoj estis donitaj al la sama argumento. Tiu agordo ne kongruas kun la agordo de \"Redukti kopiojn\"."
+
+#: includes/argument.handlers.inc:917
+msgid "Do not display items with no value in summary"
+msgstr "Ne montru erojn kun neniu valoro en resumo."
+
+#: includes/argument.handlers.inc:1043
+msgid "Allow multiple terms per argument."
+msgstr "Ebligi multajn terminojn por argumento."
+
+#: includes/argument.handlers.inc:1044
+msgid "If selected, users can enter multiple arguments in the form of 1+2+3 or 1,2,3."
+msgstr "Se elektita, uzantoj povas enmeti multajn argumentojn en la formo de 1+2+3 aŭ 1,2,3."
+
+#: includes/argument.handlers.inc:1050
+msgid "Exclude the argument"
+msgstr "Ekskludi la argumenton"
+
+#: includes/argument.handlers.inc:1051
+msgid "If selected, the numbers entered in the argument will be excluded rather than limiting the view."
+msgstr "Se elektita, la nombroj enmetitaj en la argumento ekskludiĝos anstataŭ limigi la aspekton."
+
+#: includes/argument.handlers.inc:1058
+#: modules/taxonomy.views.inc:109
+msgid "Uncategorized"
+msgstr "Nekategoriigita"
+
+#: includes/argument.handlers.inc:1074
+msgid "Invalid input"
+msgstr "Nevalida enmeto"
+
+#: includes/argument.handlers.inc:1150
+msgid "If selected, users can enter multiple arguments in the form of 1+2+3 (for OR) or 1,2,3 (for AND)."
+msgstr "Se elektita, uzantoj povas enmeti multajn argumentojn en la formo de 1+2+3 (por OR) aŭ 1,2,3 (por AND)."
+
+#: includes/convert.inc:14
+msgid "There are no Views 1 views stored in the database to convert."
+msgstr "Ne estas aspektoj de Aspektoj 1 en la datumbazo por konverti."
+
+#: includes/convert.inc:22
+msgid "Operations"
+msgstr "Operacioj"
+
+#: includes/convert.inc:33
+msgid "Converted"
+msgstr "Konvertita"
+
+#: includes/convert.inc:68
+msgid "The table below lists Views version 1 views that are stored in the database. You can either convert them to work in Views version 2, or delete them. The views are convertible only if there is no Views 2 view with the same name."
+msgstr "La tabelo sube listigas aspektoj de Aspektoj versio 1 kiuj estas konservitaj en la datumbazo. Vi povas aŭ konverti ilin por funkcii en Aspektoj versio 2, aŭ forigi ilin. La aspektoj estas konverteblaj nur se ne estas aspektoj de Aspektoj 2 kun la sama nomo."
+
+#: includes/convert.inc:79
+msgid "Unable to find view."
+msgstr "Ne eblas trovi aspekton."
+
+#: includes/convert.inc:89
+msgid "Unable to convert view."
+msgstr "Ne eblas konverti aspekton."
+
+#: includes/convert.inc:108
+msgid "This action cannot be undone."
+msgstr "Tiu ago ne povas esti malfarata."
+
+#: includes/convert.inc:118
+msgid "The view has been deleted"
+msgstr "Tiu aspekto estis forigita."
+
+#: includes/field.handlers.inc:138
+#: includes/filter.handlers.inc:309
+#: includes/relationship.handlers.inc:78
+msgid "Label"
+msgstr "Etikedo"
+
+#: includes/field.handlers.inc:140
+msgid "The label for this field that will be displayed to end users if the style requires it."
+msgstr "La etikedo por ĉi tiu kampo montriĝos al uzantoj se la stilo bezonas ĝin."
+
+#: includes/field.handlers.inc:144
+msgid "Exclude from display"
+msgstr "Ekskludu de montrado"
+
+#: includes/field.handlers.inc:146
+msgid "Check this box to not display this field, but still load it in the view.  Use this option to not show a grouping field in each record, or when doing advanced theming."
+msgstr "Ŝaltu por ne montri ĉi tiun kampon, sed tamen ŝarĝi ĝin en la montro. Uzu ĉi tiun opcion por ne montri grupigan kampon en ĉiu rikardo, aŭ kiam vi faras haŭtadon por spertuloj."
+
+#: includes/field.handlers.inc:255
+msgid "Date format"
+msgstr "Datoformato"
+
+#: includes/field.handlers.inc:260
+msgid "Custom"
+msgstr "Propra"
+
+#: includes/field.handlers.inc:261
+msgid "Time ago"
+msgstr "Tempo antaŭe"
+
+#: includes/field.handlers.inc:267
+msgid "Custom date format"
+msgstr "Propra datoformato"
+
+#: includes/field.handlers.inc:268
+msgid "If \"Custom\", see <a href=\"http://us.php.net/manual/en/function.date.php\">the PHP docs</a> for date formats. If \"Time ago\" this is the the number of different units to display, which defaults to two."
+msgstr "Se \"Propra\" vidu <a href=\"http://us.php.net/manual/en/function.date.php\">la PHP-dokumentojn</a> por datoformatoj. Se \"Tempo antaŭe\", tio estas la nombro da malsamaj unuoj por montri, kiu defaŭltas al du."
+
+#: includes/field.handlers.inc:284
+msgid "%time ago"
+msgstr "%time antaŭe"
+
+#: includes/field.handlers.inc:312
+msgid "Output format"
+msgstr "Eliga formato"
+
+#: includes/field.handlers.inc:314
+msgid "Yes/No"
+msgstr "Jes/Ne"
+
+#: includes/field.handlers.inc:315
+msgid "True/False"
+msgstr "Vera/Malvera"
+
+#: includes/field.handlers.inc:316
+msgid "On/Off"
+msgstr "Ŝaltita/Malŝaltita"
+
+#: includes/field.handlers.inc:322
+msgid "Reverse"
+msgstr "Inversa"
+
+#: includes/field.handlers.inc:323
+msgid "If checked, true will be displayed as false."
+msgstr "Se ŝaltita, vera montriĝos kiel malvera."
+
+#: includes/field.handlers.inc:337
+#: includes/filter.handlers.inc:929
+#: includes/plugins.inc:884
+msgid "Yes"
+msgstr "Jes"
+
+#: includes/field.handlers.inc:337
+#: includes/filter.handlers.inc:929
+#: includes/plugins.inc:884
+msgid "No"
+msgstr "Ne"
+
+#: includes/field.handlers.inc:339
+#: includes/filter.handlers.inc:898
+msgid "True"
+msgstr "Vera"
+
+#: includes/field.handlers.inc:339
+#: includes/filter.handlers.inc:939
+msgid "False"
+msgstr "Malvera"
+
+#: includes/field.handlers.inc:341
+msgid "On"
+msgstr "Ŝaltita"
+
+#: includes/field.handlers.inc:341
+msgid "Off"
+msgstr "Malŝaltita"
+
+#: includes/field.handlers.inc:404
+#: modules/statistics.views.inc:274
+msgid "Display as link"
+msgstr "Montri kiel ligilo"
+
+#: includes/field.handlers.inc:446
+#: modules/node.views.inc:1259
+msgid "Display type"
+msgstr "Montra speco"
+
+#: includes/field.handlers.inc:448
+#: includes/plugins.inc:3129
+msgid "Unordered list"
+msgstr "Neordigita listo"
+
+#: includes/field.handlers.inc:449
+#: includes/plugins.inc:3129
+msgid "Ordered list"
+msgstr "Ordigita listo"
+
+#: includes/field.handlers.inc:450
+msgid "Simple separator"
+msgstr "Simpla disigilo"
+
+#: includes/field.handlers.inc:457
+#: includes/plugins.inc:3423
+msgid "Separator"
+msgstr "Disigilo"
+
+#: includes/field.handlers.inc:465
+msgid "Empty list text"
+msgstr "Malplena lista teksto"
+
+#: includes/field.handlers.inc:467
+msgid "If the list is empty, you may enter text here that will be displayed."
+msgstr "Se la listo estas malplena, vi povas enmeti tekston ĉi tie kiu montriĝos."
+
+#: includes/field.handlers.inc:524
+msgid "Round"
+msgstr "Rondigo"
+
+#: includes/field.handlers.inc:525
+msgid "If checked, the number will be rounded."
+msgstr "Se ŝaltita, la numero rondiĝos."
+
+#: includes/field.handlers.inc:530
+msgid "Precision"
+msgstr "Precizo"
+
+#: includes/field.handlers.inc:532
+msgid "Specify how many digits to print after the decimal point."
+msgstr "Indiki kiom da ciferoj por montri post la dekuma punkto."
+
+#: includes/field.handlers.inc:539
+msgid "Decimal point"
+msgstr "Dekuma punkto"
+
+#: includes/field.handlers.inc:541
+msgid "What single character to use as a decimal point."
+msgstr "Kiu signo por uzi kiel dekuma punkto."
+
+#: includes/field.handlers.inc:547
+msgid "Thousands separator"
+msgstr "Disigilo de miloj"
+
+#: includes/field.handlers.inc:549
+msgid "What single character to use as the thousands separator."
+msgstr "Kiu signo por uzi kiel la disigilo de miloj."
+
+#: includes/field.handlers.inc:554
+msgid "Prefix"
+msgstr "Prefikso"
+
+#: includes/field.handlers.inc:556
+msgid "Text to put before the number, such as currency symbol."
+msgstr "Teksto por meti antaŭ la numero, kiel mona simbolo."
+
+#: includes/field.handlers.inc:560
+msgid "Suffix"
+msgstr "Sufikso"
+
+#: includes/field.handlers.inc:562
+msgid "Text to put after the number, such as currency symbol."
+msgstr "Teksto por meti post la numero, kiel mona simbolo."
+
+#: includes/filter.handlers.inc:124
+msgid "Operator"
+msgstr "Operacio"
+
+#: includes/filter.handlers.inc:188
+msgid "Expose"
+msgstr "Montri"
+
+#: includes/filter.handlers.inc:193
+msgid "This item is currently not exposed. If you <strong>expose</strong> it, users will be able to change the filter as they view it."
+msgstr "Ĉi tiu ero nun estas kaŝita. Se vi <strong>montras</strong> ĝin, uzantoj povos ŝanĝi la filtrilon dum ili vidas ĝin."
+
+#: includes/filter.handlers.inc:200
+msgid "Hide"
+msgstr "Kaŝi"
+
+#: includes/filter.handlers.inc:205
+msgid "This item is currently exposed. If you <strong>hide</strong> it, users will not able to change the filter as they view it."
+msgstr "Ĉi tiu ero estas nun montrata. Se vi <strong>kaŝas</strong> ĝin, uzantoj ne povos ŝanĝi la filtrilon dum ili vidas ĝin. "
+
+#: includes/filter.handlers.inc:276
+msgid "Unlock operator"
+msgstr "Malŝlosi operatoron"
+
+#: includes/filter.handlers.inc:277
+msgid "When checked, the operator will be exposed to the user"
+msgstr "Kiam ŝaltita, la operatoro montriĝas al la uzanto"
+
+#: includes/filter.handlers.inc:283
+msgid "Operator identifier"
+msgstr "Operatora identigilo"
+
+#: includes/filter.handlers.inc:285
+msgid "This will appear in the URL after the ? to identify this operator."
+msgstr "Ĉi tio aperos en la URL post la ? por identigi ĉi tiun operatoron."
+
+#: includes/filter.handlers.inc:302
+msgid "Filter identifier"
+msgstr "Filtrila identigilo"
+
+#: includes/filter.handlers.inc:304
+msgid "This will appear in the URL after the ? to identify this filter. Cannot be blank."
+msgstr "Ĉi tio aperos en la URL post la ? por identigi ĉi tiun filtrilon. Ne povas esti malplena."
+
+#: includes/filter.handlers.inc:320
+msgid "Optional"
+msgstr "Nedeviga"
+
+#: includes/filter.handlers.inc:321
+msgid "This exposed filter is optional and will have added options to allow it not to be set."
+msgstr "Ĉi tiu montrata filtrilo estas nedeviga kaj havos aldonajn opciojn por ebligi ke ĝi ne estu ŝaltita."
+
+#: includes/filter.handlers.inc:327
+msgid "Force single"
+msgstr "Devigi unuopan"
+
+#: includes/filter.handlers.inc:328
+msgid "Force this exposed filter to accept only one option."
+msgstr "Devigi ke ĉi tiu montrata filtrilo akceptu nur unu opcion."
+
+#: includes/filter.handlers.inc:334
+msgid "Remember"
+msgstr "Memori"
+
+#: includes/filter.handlers.inc:335
+msgid "Remember the last setting the user gave this filter."
+msgstr "Memori la lastan agordon kiun la uzanto donis al ĉi tiu filtrilo."
+
+#: includes/filter.handlers.inc:346
+msgid "The identifier is required if the filter is\n        exposed."
+msgstr "La identigilo estas bezonata se la filtrilo estas\n        montrata."
+
+#: includes/filter.handlers.inc:352
+msgid "This identifier is not allowed."
+msgstr "Ĉi tiu identigilo ne estas permesata."
+
+#: includes/filter.handlers.inc:453
+msgid "<Any>"
+msgstr "<Any>"
+
+#: includes/filter.handlers.inc:607
+msgid "Is equal to"
+msgstr "Egalas al"
+
+#: includes/filter.handlers.inc:608
+msgid "Is not equal to"
+msgstr "Ne egalas al"
+
+#: includes/filter.handlers.inc:618
+msgid "Value"
+msgstr "Valoro"
+
+#: includes/filter.handlers.inc:650
+msgid "="
+msgstr "="
+
+#: includes/filter.handlers.inc:661
+msgid "Contains"
+msgstr "Enhavas"
+
+#: includes/filter.handlers.inc:662
+msgid "contains"
+msgstr "enhavas"
+
+#: includes/filter.handlers.inc:667
+msgid "Contains any word"
+msgstr "Enhavas iun vorton"
+
+#: includes/filter.handlers.inc:668
+msgid "has word"
+msgstr "havas vorton"
+
+#: includes/filter.handlers.inc:673
+msgid "Contains all words"
+msgstr "Enhavas ĉiujn vortojn"
+
+#: includes/filter.handlers.inc:674
+msgid "has all"
+msgstr "havas ĉiujn"
+
+#: includes/filter.handlers.inc:679
+msgid "Starts with"
+msgstr "Komenciĝas per"
+
+#: includes/filter.handlers.inc:680
+msgid "begins"
+msgstr "komenciĝas"
+
+#: includes/filter.handlers.inc:685
+msgid "Ends with"
+msgstr "Finiĝas per"
+
+#: includes/filter.handlers.inc:686
+msgid "ends"
+msgstr "finiĝas"
+
+#: includes/filter.handlers.inc:691
+msgid "Does not contain"
+msgstr "Ne enhavas"
+
+#: includes/filter.handlers.inc:692
+msgid "!has"
+msgstr "!has"
+
+#: includes/filter.handlers.inc:701
+msgid "Is empty (NULL)"
+msgstr "Malplenas (NULL)"
+
+#: includes/filter.handlers.inc:703
+msgid "empty"
+msgstr "malplena"
+
+#: includes/filter.handlers.inc:707
+msgid "Is not empty (NULL)"
+msgstr "Ne malplenas (NULL)"
+
+#: includes/filter.handlers.inc:709
+msgid "not empty"
+msgstr "ne malplena"
+
+#: includes/filter.handlers.inc:732
+msgid "exposed>"
+msgstr "montrata>"
+
+#: includes/filter.handlers.inc:739
+msgid "Case sensitive"
+msgstr "Usklecodistinga"
+
+#: includes/filter.handlers.inc:741
+msgid "Case sensitive filters may be faster; MySQL might ignore case sensitivity."
+msgstr "Usklecodistingaj filtriloj povas esti pli rapidaj; MySQL eble ignoras usklecodistingeco."
+
+#: includes/filter.handlers.inc:936
+msgid "exposed"
+msgstr "montrita"
+
+#: includes/filter.handlers.inc:968
+msgid "Options"
+msgstr "Opcioj"
+
+#: includes/filter.handlers.inc:990
+msgid "Limit list to selected items"
+msgstr "Limigi liston al elektitaj eroj"
+
+#: includes/filter.handlers.inc:991
+msgid "If checked, the selected items presented to the user will be the only ones selected here."
+msgstr "Se ŝaltita, la elektitaj eroj prezentitaj al la uzanto estos la solaj kiuj estas elektitaj ĉi tie. "
+
+#: includes/filter.handlers.inc:1010
+msgid "Is one of"
+msgstr "Estas unu el"
+
+#: includes/filter.handlers.inc:1011
+msgid "Is not one of"
+msgstr "Ne estas unu el"
+
+#: includes/filter.handlers.inc:1102
+#: modules/system.views.inc:234
+msgid "Unknown"
+msgstr "Nekonata"
+
+#: includes/filter.handlers.inc:1157
+msgid "Is less than"
+msgstr "Estas malpli ol"
+
+#: includes/filter.handlers.inc:1159
+msgid "<"
+msgstr "<"
+
+#: includes/filter.handlers.inc:1163
+msgid "Is less than or equal to"
+msgstr "Estas malpli ol aŭ egala al"
+
+#: includes/filter.handlers.inc:1165
+msgid "<="
+msgstr "<="
+
+#: includes/filter.handlers.inc:1177
+msgid "!="
+msgstr "!="
+
+#: includes/filter.handlers.inc:1181
+msgid "Is greater than or equal to"
+msgstr "Estas pli granda aŭ egala al"
+
+#: includes/filter.handlers.inc:1183
+msgid ">="
+msgstr ">="
+
+#: includes/filter.handlers.inc:1187
+msgid "Is greater than"
+msgstr "Estas pli granda ol"
+
+#: includes/filter.handlers.inc:1189
+msgid ">"
+msgstr ">"
+
+#: includes/filter.handlers.inc:1193
+msgid "Is between"
+msgstr "Estas inter"
+
+#: includes/filter.handlers.inc:1195
+msgid "between"
+msgstr "inter"
+
+#: includes/filter.handlers.inc:1199
+msgid "Is not between"
+msgstr "Ne estas inter"
+
+#: includes/filter.handlers.inc:1201
+msgid "not between"
+msgstr "ne inter"
+
+#: includes/filter.handlers.inc:1292
+msgid "Min"
+msgstr "Min"
+
+#: includes/filter.handlers.inc:1298
+msgid "And max"
+msgstr "Kaj maks"
+
+#: includes/filter.handlers.inc:1298
+msgid "And"
+msgstr "Kaj"
+
+#: includes/filter.handlers.inc:1355
+msgid "@min and @max"
+msgstr "@min kaj @max"
+
+#: includes/filter.handlers.inc:1381
+msgid "Value type"
+msgstr "Valora speco"
+
+#: includes/filter.handlers.inc:1383
+msgid "A date in any machine readable format. CCYY-MM-DD HH:MM:SS is preferred."
+msgstr "Dato en maŝinlegebla formato. CCYY-MM-DD HH:MM:SS estas preferata."
+
+#: includes/filter.handlers.inc:1384
+msgid "An offset from the current time such as \"+1 day\" or \"-2 hours -30 minutes\""
+msgstr "Deŝovo de la nuna tempo kiel \"+1 tago\" aŭ \"-2 horoj -30 minutoj\""
+
+#: includes/filter.handlers.inc:1434
+msgid "Invalid date format."
+msgstr "Nevalida datoformato."
+
+#: includes/filter.handlers.inc:1540
+msgid "Is all of"
+msgstr "Estas ĉio el"
+
+#: includes/filter.handlers.inc:1541
+msgid "Is none of"
+msgstr "Estas nenio el"
+
+#: includes/form.inc:249
+msgid "Validation error, please try again. If this error persists, please contact the site administrator."
+msgstr "Validiga eraro, bonvolu reprovi. Se ĉi tiu eraro daŭras, bonvolu kontakti la retejan administranton."
+
+#: includes/handlers.inc:154
+msgid "!group: !title"
+msgstr "!group: !title"
+
+#: includes/handlers.inc:380
+msgid "Reduce duplicates"
+msgstr "Redukti kopiojn"
+
+#: includes/handlers.inc:381
+msgid "This filter can cause items that have more than one of the selected options to appear as duplicate results. If this filter causes duplicate results to occur, this checkbox can reduce those duplicates; however, the more terms it has to search for, the less performant the query will be, so use this with caution."
+msgstr "Ĉi tiu filtrilo povas kaŭzi ke eroj havu pli ol unu el la elektitaj opcioj por aperi kiel kopiaj rezultoj. Se tiu filtrilo kaŭzas ke kopiaj rezultoj okazu, tiu markobutono povas redukti tiujn kopiojn; tamen, ju pli da terminoj ĝi devas serĉi, des malpli rendimenta la informpeto estos, do uzu tion atente. "
+
+#: includes/plugins.inc:19
+msgid "Default settings for this view."
+msgstr "Defaŭltaj agordoj por ĉi tiu aspekto."
+
+#: includes/plugins.inc:33
+msgid "Display the view as a page, with a URL and menu links."
+msgstr "Montri la aspekton kiel paĝo, kun URL kaj menuligiloj."
+
+#: includes/plugins.inc:44
+msgid "Block"
+msgstr "Bloko"
+
+#: includes/plugins.inc:45
+msgid "Display the view as a block."
+msgstr "Montri la aspekton kiel blokon."
+
+#: includes/plugins.inc:57
+msgid "Attachment"
+msgstr "Alkroĉaĵo"
+
+#: includes/plugins.inc:58
+msgid "Attachments added to other displays to achieve multiple views in the same view."
+msgstr "Alkroĉaĵoj aldonitaj al aliaj montroj por atingi multajn aspektojn en la sama aspekto."
+
+#: includes/plugins.inc:66
+msgid "Display the view as a feed, such as an RSS feed."
+msgstr "Montri la aspekton kiel fluo, ekzemple kiel RSS-fluo."
+
+#: includes/plugins.inc:78
+msgid "Unformatted"
+msgstr "Neformatita"
+
+#: includes/plugins.inc:79
+msgid "Displays rows one after another."
+msgstr "Montras vicojn unu post la alia."
+
+#: includes/plugins.inc:89
+msgid "Displays rows as an HTML list."
+msgstr "Montras vicojn kiel HTML-liston."
+
+#: includes/plugins.inc:97
+msgid "Grid"
+msgstr "Krado"
+
+#: includes/plugins.inc:98
+msgid "Displays rows in a grid."
+msgstr "Montras vicojn en krado."
+
+#: includes/plugins.inc:106
+msgid "Table"
+msgstr "Tabelo"
+
+#: includes/plugins.inc:107
+msgid "Displays rows in a table."
+msgstr "Montras vicojn en tabelo."
+
+#: includes/plugins.inc:117
+msgid "Displays the default summary summary as a list."
+msgstr "Montras la defaŭltan resumon kiel liston."
+
+#: includes/plugins.inc:125
+msgid "Displays the summary unformatted, with option for one after another or inline."
+msgstr "Montras la resumon neformatitan, kun opcio por unu post la alia aŭ enteksta."
+
+#: includes/plugins.inc:132
+msgid "RSS Feed"
+msgstr "RSS-Fluo"
+
+#: includes/plugins.inc:133
+msgid "Generates an RSS feed from a view."
+msgstr "Generas RSS-fluon de aspekto."
+
+#: includes/plugins.inc:143
+#: includes/view.inc:1767
+msgid "Fields"
+msgstr "Kampoj"
+
+#: includes/plugins.inc:144
+msgid "Displays the fields with an optional template."
+msgstr "Montras la kampojn kun nedeviga ŝablono."
+
+#: includes/plugins.inc:154
+msgid "Fixed entry"
+msgstr "Fiksita ero"
+
+#: includes/plugins.inc:158
+msgid "PHP Code"
+msgstr "PHP-Kodo"
+
+#: includes/plugins.inc:168
+msgid "Numeric"
+msgstr "Numera"
+
+#: includes/plugins.inc:809
+msgid "Broken field"
+msgstr "Rompita kampo"
+
+#: includes/plugins.inc:826
+msgid "Basic settings"
+msgstr "Bazaj agordoj"
+
+#: includes/plugins.inc:833
+msgid "Change the name of this display."
+msgstr "Ŝanĝi la nomon de ĉi tiu montro."
+
+#: includes/plugins.inc:845
+msgid "Change the title that this display will use."
+msgstr "Ŝanĝu la titolon kiun ĉi tiu montro uzos."
+
+#: includes/plugins.inc:855
+msgid "Style"
+msgstr "Stilo"
+
+#: includes/plugins.inc:857
+msgid "Change the style plugin."
+msgstr "Ŝanĝi la stilan kromprogramon."
+
+#: includes/plugins.inc:871
+msgid "Row style"
+msgstr "Vica stilo"
+
+#: includes/plugins.inc:873
+msgid "Change the row plugin."
+msgstr "Ŝanĝi la vican kromprogramon."
+
+#: includes/plugins.inc:883
+msgid "Use AJAX"
+msgstr "Uzi AJAX-n"
+
+#: includes/plugins.inc:885
+msgid "Change whether or not this display will use AJAX."
+msgstr "Ŝanĝi ĉu aŭ ne ĉi tiu montro uzos AJAX-n."
+
+#: includes/plugins.inc:892
+msgid "Use pager"
+msgstr "Uzi paĝilon"
+
+#: includes/plugins.inc:893
+msgid "Mini"
+msgstr "Mini"
+
+#: includes/plugins.inc:894
+msgid "Change this display's pager setting."
+msgstr "Ŝanĝi la agordon de ĉi tiu montra paĝilo"
+
+#: includes/plugins.inc:901
+msgid "Items per page"
+msgstr "Eroj de paĝo"
+
+#: includes/plugins.inc:901
+msgid "Items to display"
+msgstr "Eroj por montri"
+
+#: includes/plugins.inc:902
+msgid "Unlimited"
+msgstr "Senlima"
+
+#: includes/plugins.inc:903
+msgid "Change how many items to display."
+msgstr "Ŝanĝi kiom da eroj por montri"
+
+#: includes/plugins.inc:909
+msgid "More link"
+msgstr "Plia ligilo"
+
+#: includes/plugins.inc:911
+msgid "Specify whether this display will provide a \"more\" link."
+msgstr "Elekti ĉu ĉi tiu montro provizos \"plian\" ligilon."
+
+#: includes/plugins.inc:917
+msgid "Distinct"
+msgstr "Distinga"
+
+#: includes/plugins.inc:919
+msgid "Display only distinct items, without duplicates."
+msgstr "Montri nur distinktajn erojn, sen kopioj."
+
+#: includes/plugins.inc:930
+msgid "Unrestricted"
+msgstr "Nelimigita"
+
+#: includes/plugins.inc:938
+msgid "Multiple roles"
+msgstr "Multaj roloj"
+
+#: includes/plugins.inc:950
+msgid "Access"
+msgstr "Aliro"
+
+#: includes/plugins.inc:952
+msgid "Specify access control settings for this display."
+msgstr "Indiki alirajn agordojn por ĉi tiu montro."
+
+#: includes/plugins.inc:972
+msgid "Link display"
+msgstr "Ligila montro"
+
+#: includes/plugins.inc:974
+msgid "Specify which display this display will link to."
+msgstr "Indiki al kiu montro ĉi tiu montro ligos."
+
+#: includes/plugins.inc:979
+msgid "Header"
+msgstr "Kaplinio"
+
+#: includes/plugins.inc:979
+msgid "Footer"
+msgstr "Piedlinio"
+
+#: includes/plugins.inc:979
+msgid "Empty text"
+msgstr "Malplena teksto"
+
+#: includes/plugins.inc:995
+msgid "Unknown/missing filter"
+msgstr "Nekonata/mankata filtrilo"
+
+#: includes/plugins.inc:1003
+msgid "Change this display's !name."
+msgstr "Ŝanĝi la !name de la montro."
+
+#: includes/plugins.inc:1009
+msgid "Theme"
+msgstr "Haŭto"
+
+#: includes/plugins.inc:1010
+msgid "Information"
+msgstr "Informoj"
+
+#: includes/plugins.inc:1011
+msgid "Get information on how to theme this display"
+msgstr "Akiri informojn pri kiel haŭtigi ĉi tiun montron"
+
+#: includes/plugins.inc:1037
+msgid "The name of this display"
+msgstr "La nomo de ĉi tiu montro"
+
+#: includes/plugins.inc:1040
+msgid "This title will appear only in the administrative interface for the View."
+msgstr "Ĉi tiu titolo aperos nur en la administra interfaco por la Aspekto."
+
+#: includes/plugins.inc:1045
+msgid "The title of this view"
+msgstr "La titolo de ĉi tiu aspekto"
+
+#: includes/plugins.inc:1048
+msgid "This title will be displayed with the view, wherever titles are normally displayed; i.e, as the page title, block title, etc."
+msgstr "Ĉi tiu titolo montros kun la aspekto, kie ajn titoloj normale montriĝas; ekzemple, kiel la paĝa titolo, bloka titolo ktp."
+
+#: includes/plugins.inc:1053
+msgid "Use AJAX when available to load this view"
+msgstr "Uzi AJAX-n kiam eblas por ŝarĝi ĉi tiun aspekton"
+
+#: includes/plugins.inc:1057
+msgid "If set, this view will use an AJAX mechanism for paging, table sorting and exposed filters. This means the entire page will not refresh. It is not recommended that you use this if this view is the main content of the page as it will prevent deep linking to specific pages, but it is very useful for side content."
+msgstr "Se ŝaltita, ĉi tiu aspekto uzos AJAX-n mekanismon por paĝado, tabelordigo kaj montrataj filtriloj. Tio signifas ke la tuta paĝo ne refreŝiĝos. Ne estas rekomendita uzi tion se ĉi tiu aspekto estas la ĉefa enhavo de la paĝo ĉar tio malebligos profundajn ligilojn al specifaj paĝoj, sed tre utilas por flanka enhavo."
+
+#: includes/plugins.inc:1066
+msgid "Use a pager for this view"
+msgstr "Uzi paĝilon por ĉi tiu aspekto"
+
+#: includes/plugins.inc:1069
+msgid "Full pager"
+msgstr "Plena paĝilo"
+
+#: includes/plugins.inc:1069
+msgid "Mini pager"
+msgstr "Mini-paĝilo"
+
+#: includes/plugins.inc:1074
+msgid "Pager element"
+msgstr "Paĝila elemento"
+
+#: includes/plugins.inc:1075
+msgid "Unless you're experiencing problems with pagers related to this view, you should leave this at 0. If using multiple pagers on one page you may need to set this number to a higher value so as not to conflict within the ?page= array. Large values will add a lot of commas to your URLs, so avoid if possible."
+msgstr "Krom se vi spertas problemojn kun paĝiloj rilate al ĉi tiu aspekto, indas lasi ĉe 0. Se vi uzas multajn paĝilojn en unu paĝo, vi eble bezonas ke tiu numero estu pli alta valoro por ke ĝi ne konfliktu kun la ?page=array. Grandaj valoroj aldonos multe da komoj al viaj URL-oj, do evitu se eblas."
+
+#: includes/plugins.inc:1084
+msgid "The number of items to display per page. Enter 0 for no limit."
+msgstr "La nombro da eroj por montri en ĉiu paĝo. Enmetu 0 por neniu limo."
+
+#: includes/plugins.inc:1089
+msgid "Offset"
+msgstr "Deŝovo"
+
+#: includes/plugins.inc:1090
+msgid "The number of items to skip. For example, if this field is 3, the first 3 items will be skipped and not displayed. Offset can not be used if items to display is 0; instead use a very large number there."
+msgstr "La nombro da eroj por preterpasi. Ekzemple, se ĉi tiu kampo estas 3, la unuaj 3 eroj preterpasiĝos kaj ne montriĝos. Deŝovo ne povas esti uzata se la montro estas 0; anstataŭe uzu tre grandan numeron tie."
+
+#: includes/plugins.inc:1095
+msgid "Add a more link to the bottom of the display."
+msgstr "Aldonu "pli" ligilon sube de la montro. "
+
+#: includes/plugins.inc:1098
+msgid "Create more link"
+msgstr "Kreu "pli" ligilon"
+
+#: includes/plugins.inc:1099
+msgid "This will add a more link to the bottom of this view, which will link to the page view. If you have more than one page view, the link will point to the display specified in 'Link display' above."
+msgstr "Tio aldonos "pli" ligilon sube de ĉi tiu montro, kiu ligos al la paĝa aspekto. Se vi havas pli ol unu paĝa aspekto, la ligilo iros al la montro indikita en 'Ligila montro' supre."
+
+#: includes/plugins.inc:1108
+msgid "This will make the view display only distinct items. If there are multiple identical items, each will be displayed only once. You can use this to try and remove duplicates from a view, though it does not always work. Note that this can slow queries down, so use it with caution."
+msgstr "Tio kaŭzos ke la aspekto montros nur malsamajn erojn. Se estas multaj samaj eroj, ĉiu montriĝos nur unufoje. Vi povas uzi ĉi tion por provi forigi kopiojn de aspekto, kvankam tio ne ĉiam funkcias. Rimarku ke tio povas malrapidigi informpetojn, do uzu ĝin zorgeme."
+
+#: includes/plugins.inc:1113
+msgid "Access restrictions"
+msgstr "Aliraj limigoj"
+
+#: includes/plugins.inc:1130
+msgid "By role"
+msgstr "De rolo"
+
+#: includes/plugins.inc:1130
+msgid "By permission"
+msgstr "De permeso"
+
+#: includes/plugins.inc:1139
+msgid "Role"
+msgstr "Rolo"
+
+#: includes/plugins.inc:1142
+msgid "Only the checked roles will be able to access this display. Note that users with \"access all views\" can see any view, regardless of role."
+msgstr "Nur la elektitaj roloj eblos aliri ĉi tiun montron. Rimarku ke uzantoj kun \"aliri ĉiujn aspektojn\" povas vidi ĉiujn aspektojn, egale de la rolo."
+
+#: includes/plugins.inc:1159
+msgid "Permission"
+msgstr "Permeso"
+
+#: includes/plugins.inc:1161
+msgid "Only users with the selected permission flag will be able to access this display. Note that users with \"access all views\" can see any view, regardless of other permissions."
+msgstr "Nur uzantoj kun la elektita permeso povos aliri ĉi tiun montron. Rimarku ke uzantoj kun la permeso \"aliri ĉiujn aspektojn\" povas vidi ĉiujn aspektojn, egale de aliaj permesoj."
+
+#: includes/plugins.inc:1172
+msgid "Display even if view has no result"
+msgstr "Montru eĉ se la aspekto ne havas rezulton"
+
+#: includes/plugins.inc:1179
+msgid "Text to display at the top of the view. May contain an explanation or links or whatever you like. Optional."
+msgstr "Teksto por montri supre de la aspekto. Eble enhavas klarigon aŭ ligilojn aŭ kion ajn vi volas. Nedeviga."
+
+#: includes/plugins.inc:1195
+msgid "Text to display beneath the view. May contain an explanation or links or whatever you like. Optional."
+msgstr "Teksto por montri sub la aspekto. Eblas enhavas klarigon aŭ ligiloj aŭ kion ajn vi volas. Nedeviga."
+
+#: includes/plugins.inc:1206
+msgid "Text to display if the view has no results. Optional."
+msgstr "Teksto por montri se la aspekto ne havas rezultojn. Nedeviga."
+
+#: includes/plugins.inc:1212
+msgid "How should this view be styled"
+msgstr "Kiel ĉi tiu aspekto devas esti stilita."
+
+#: includes/plugins.inc:1218
+msgid "If the style you choose has settings, be sure to click the settings button that will appear next to it in the View summary."
+msgstr "Se la stilo vi elektis havas agordojn, certe klaku la butonon de agordoj kiu aperos apud ĝi en la resumo de la Aspekto."
+
+#: includes/plugins.inc:1226
+msgid "You may also adjust the !settings for the currently selected style by clicking on the icon."
+msgstr "Vi ankaŭ povas ŝanĝi la !settings por la nune elektita stilo klakante sur la bildsimbolo."
+
+#: includes/plugins.inc:1226
+msgid "settings"
+msgstr "agordoj"
+
+#: includes/plugins.inc:1232
+msgid "Style options"
+msgstr "Stilaj opcioj"
+
+#: includes/plugins.inc:1244
+msgid "Row style options"
+msgstr "Stilaj opcioj de vico"
+
+#: includes/plugins.inc:1256
+msgid "How should each row in this view be styled"
+msgstr "Kiel ĉiu vico en ĉi tiu aspekto devas esti stilita"
+
+#: includes/plugins.inc:1269
+msgid "You may also adjust the !settings for the currently selected row style by clicking on the icon."
+msgstr "Vi ankaŭ povas ŝanĝi la agordojn por la nune elektita vica stilo klakante la ikonon."
+
+#: includes/plugins.inc:1275
+msgid "Which display to use for path"
+msgstr "Kiun montron por uzi kiel vojo"
+
+#: includes/plugins.inc:1284
+msgid "Which display to use to get this display's path for things like summary links, rss feed links, more links, etc."
+msgstr "Kiun montron por uzi por preni la vojon de la montro por aferoj kiel resumaj ligiloj, rss-fluaj ligiloj, pliaj ligiloj ktp."
+
+#: includes/plugins.inc:1289
+msgid "Theming information"
+msgstr "Haŭtaj informoj"
+
+#: includes/plugins.inc:1297
+msgid "Display output"
+msgstr "Eligo de montro"
+
+#: includes/plugins.inc:1301
+msgid "Alternative display output"
+msgstr "Alternativa eligo de montro"
+
+#: includes/plugins.inc:1308
+msgid "Style output"
+msgstr "Eligo de stilo"
+
+#: includes/plugins.inc:1312
+msgid "Alternative style"
+msgstr "Alternative stilo"
+
+#: includes/plugins.inc:1319
+msgid "Row style output"
+msgstr "Eligo de vica stilo"
+
+#: includes/plugins.inc:1323
+msgid "Alternative row style"
+msgstr "Alternativa vica stilo"
+
+#: includes/plugins.inc:1331
+msgid "Field @field (ID: @id)"
+msgstr "Kampo @field (ID: @id)"
+
+#: includes/plugins.inc:1339
+msgid "This section lists all possible templates for the display plugin and for the style plugins, ordered roughly from the least specific to the most specific. The active template for each plugin -- which is the most specific template found on the system -- is highlighted in bold."
+msgstr "Ĉi tiu sekcio listigas ĉiujn eblajn ŝablonojn por la montra kromprogramo kaj por la stilaj kromprogramoj, ordigitaj pli malpli de la malplej specifaj ĝis la plej specifaj. La aktiva ŝablono por ĉiu kromprogramo -- kiu estas la plej specifa ŝablonon trovita en la sistemo -- estas markita grase."
+
+#: includes/plugins.inc:1354
+msgid "Rescan template files"
+msgstr "Reskani ŝablonajn dosierojn"
+
+#: includes/plugins.inc:1360
+msgid "<strong>Important!</strong> When adding, removing, or renaming template files, it is necessary to make Drupal aware of the changes by making it rescan the files on your system. By clicking this button you clear Drupal's theme registry and thereby trigger this rescanning process. The highlighted templates above will then reflect the new state of your system."
+msgstr "<strong>Grave!</strong> Kiam aldonante, forigante, aŭ renomante ŝablonajn dosierojn, necesas atentigi Drupalon de la ŝanĝoj per reskanado de la dosieroj en via sistemo. Klakante ĉi tiun butonon, vi malplenigas la registrejon de la Drupala haŭto kaj tiel ekigas la reskanan procezon. La markitaj ŝablonoj supre tiam reflektos la novan staton de via sistemo."
+
+#: includes/plugins.inc:1366
+msgid "Theming information (display)"
+msgstr "Haŭtaj informoj (montro)"
+
+#: includes/plugins.inc:1367
+msgid "Back to !info."
+msgstr "Reen al !info."
+
+#: includes/plugins.inc:1367
+msgid "theming information"
+msgstr "haŭtaj informoj"
+
+#: includes/plugins.inc:1370
+msgid "This display has no theming information"
+msgstr "Ĉi tiu ŝablono ne havas haŭtajn informojn"
+
+#: includes/plugins.inc:1373
+msgid "This is the default theme template used for this display."
+msgstr "Tio estas la defaŭlta haŭta ŝablono uzata por ĉi tiu montro."
+
+#: includes/plugins.inc:1379
+msgid "This is an alternative template for this display."
+msgstr "Tio estas alternativa ŝablono por ĉi tiu montro."
+
+#: includes/plugins.inc:1393
+msgid "Theming information (style)"
+msgstr "Haŭtaj informoj (stilo)"
+
+#: includes/plugins.inc:1399
+msgid "This display has no style theming information"
+msgstr "Ĉi tiu montro ne havas informojn de stila haŭtado"
+
+#: includes/plugins.inc:1402
+msgid "This is the default theme template used for this style."
+msgstr "Tio estas la defaŭlta haŭta ŝablono uzata por ĉi tiu stilo."
+
+#: includes/plugins.inc:1408
+msgid "This is an alternative template for this style."
+msgstr "Tio estas alternative ŝablono por ĉi tiu stilo."
+
+#: includes/plugins.inc:1422
+msgid "Theming information (row style)"
+msgstr "Haŭtaj informoj (vica stilo)"
+
+#: includes/plugins.inc:1428
+msgid "This display has no row style theming information"
+msgstr "Ĉi tiu montro ne havas informojn de vica stila haŭtado"
+
+#: includes/plugins.inc:1431
+msgid "This is the default theme template used for this row style."
+msgstr "Tio estas la defaŭlta haŭta ŝablono uzata por ĉi tiu vica stilo."
+
+#: includes/plugins.inc:1437
+msgid "This is an alternative template for this row style."
+msgstr "Tio estas alternativa ŝablono por ĉi tiu vica stilo."
+
+#: includes/plugins.inc:1494
+msgid "File found in folder @template-path"
+msgstr "Dosiero trovita en dosierujo @template-path"
+
+#: includes/plugins.inc:1498
+msgid "(File not found, in folder @template-path)"
+msgstr "(Dosiero ne trovita, en dosierujo @template-path)"
+
+#: includes/plugins.inc:1525
+msgid "You must select at least one role if type is \"by role\""
+msgstr "Vi devas elektia almenaŭ unu rolon se speco estas \"de rolo\""
+
+#: includes/plugins.inc:1633
+msgid "Override"
+msgstr "Anstataŭigi"
+
+#: includes/plugins.inc:1638
+msgid "Status: using default values."
+msgstr "Stato: uzante defaŭltajn valorojn."
+
+#: includes/plugins.inc:1642
+msgid "Update default display"
+msgstr "Ĝisdatigi defaŭltan montron"
+
+#: includes/plugins.inc:1647
+msgid "Use default"
+msgstr "Uzu defaŭltan"
+
+#: includes/plugins.inc:1652
+msgid "Status: using overridden values."
+msgstr "Stato: uzante anstataŭigitajn valorojn."
+
+#: includes/plugins.inc:1842
+msgid "Display @display uses fields but there are none defined for it."
+msgstr "Montro @display uzas kampojn, sed ne estas iuj difinitaj por ĝi."
+
+#: includes/plugins.inc:1846
+msgid "Display @display uses path but path is undefined."
+msgstr "Montro @display uzas vojon, sed vojo estas nedifinita."
+
+#: includes/plugins.inc:1851
+msgid "Display @display has an invalid style plugin."
+msgstr "Montro @display havas nevalidan stilan kromprogramon."
+
+#: includes/plugins.inc:2084
+msgid "Page settings"
+msgstr "Paĝaj agordoj"
+
+#: includes/plugins.inc:2109
+msgid "No menu"
+msgstr "Neniu menuo"
+
+#: includes/plugins.inc:2112
+msgid "Normal: @title"
+msgstr "Normala: @title"
+
+#: includes/plugins.inc:2116
+msgid "Tab: @title"
+msgstr "Langeto: @title"
+
+#: includes/plugins.inc:2126
+msgid "Menu"
+msgstr "Menuo"
+
+#: includes/plugins.inc:2132
+msgid "Change settings for the parent menu"
+msgstr "Ŝanĝi agordojn por la patra menuo"
+
+#: includes/plugins.inc:2145
+msgid "The menu path or URL of this view"
+msgstr "La menua vojo aŭ URL de ĉi tiu aspekto"
+
+#: includes/plugins.inc:2149
+msgid "This view will be displayed by visiting this path on your site. You may use \"%\" in your URL to represent values that will be used for arguments: For example, \"node/%/feed\"."
+msgstr "Ĉi tiu aspekto montriĝos vizitante ĉi tiun vojon en via retejo. Vi povas uzi \"%\" en via URL por reprezenti valorojn kiuj estos uzataj por argumentoj: Ekzemple, \"node/%f/feed\"."
+
+#: includes/plugins.inc:2155
+msgid "Menu item entry"
+msgstr "Menuera enskribo"
+
+#: includes/plugins.inc:2172
+msgid "No menu entry"
+msgstr "Neniu menua enskribo"
+
+#: includes/plugins.inc:2173
+msgid "Normal menu entry"
+msgstr "Normala menua enskribo"
+
+#: includes/plugins.inc:2174
+msgid "Menu tab"
+msgstr "Menua langeto"
+
+#: includes/plugins.inc:2175
+msgid "Default menu tab"
+msgstr "Defaŭlta menua langeto"
+
+#: includes/plugins.inc:2184
+msgid "If set to normal or tab, enter the text to use for the menu item."
+msgstr "Se agordita al normala aŭ langeto, enmetu la tekston por uzi por la menuero."
+
+#: includes/plugins.inc:2193
+msgid "If set to tab, enter the weight of the item. The lower the weight the higher/further left it will appear."
+msgstr "Se agordita al langeto, enmetu la pezon de la ero. Ju pli malalta la pezo, des pli alta/pli dekstre ĝi aperos."
+
+#: includes/plugins.inc:2199
+msgid "Default tab options"
+msgstr "Defaŭltaj langetaj opcioj"
+
+#: includes/plugins.inc:2208
+msgid "When providing a menu item as a tab, Drupal needs to know what the parent menu item of that tab will be. Sometimes the parent will already exist, but other times you will need to have one created. The path of a parent item will always be the same path with the last part left off. i.e, if the path to this view is <em>foo/bar/baz</em>, the parent path would be <em>foo/bar</em>."
+msgstr "Kiam provizante menueron kiel langeto, Drupalo devas scii kio estos la gepatra menuero de tiu langeto.  Kelkfoje la gepatro jam ekzistos, sed alifoje vi devos krei ĝin.  La vojo de gepatra ero ĉiam estos la sama vojo kun la lasta parto for.  Ekz, se la vojo de ĉi tiu vojo estas <em>foo/bar/baz</em>, la patra vojo estos <em>foo/bar</em>"
+
+#: includes/plugins.inc:2219
+msgid "Parent menu item"
+msgstr "Patra menuero"
+
+#: includes/plugins.inc:2221
+msgid "Already exists"
+msgstr "Jam ekzistas"
+
+#: includes/plugins.inc:2221
+msgid "Normal menu item"
+msgstr "Normala menuero"
+
+#: includes/plugins.inc:2229
+msgid "If creating a parent menu item, enter the title of the item."
+msgstr "Se kreante patran menueron, enmetu la titolon de la ero."
+
+#: includes/plugins.inc:2235
+msgid "Tab weight"
+msgstr "Langeta pezo"
+
+#: includes/plugins.inc:2239
+msgid "If the parent menu item is a tab, enter the weight of the tab. The lower the number, the more to the left it will be."
+msgstr "Se la patra menuero estas langeto, enmetu la pezon de la langeto. Ju pli malalta la numero, des pli dekstre ĝi estos."
+
+#: includes/plugins.inc:2253
+msgid "\"$arg\" is no longer supported. Use % instead."
+msgstr "\"$arg\" ne plu estas subtenata. Anstataŭe uzu %."
+
+#: includes/plugins.inc:2263
+msgid "Views cannot create normal menu items for paths with a % in them."
+msgstr "Aspektoj ne povas krei normalajn menuerojn por vojoj kun % en ili."
+
+#: includes/plugins.inc:2270
+msgid "A display whose path ends with a % cannot be a tab."
+msgstr "Montro kies vojo finiĝas per % ne povas esti langeto."
+
+#: includes/plugins.inc:2275
+msgid "Title is required for this menu type."
+msgstr "Titolo estas bezonata por ĉi tiu speco de menuo."
+
+#: includes/plugins.inc:2306
+msgid "Display @display is set to use a menu but the menu title is not set."
+msgstr "Montro @display estas agordita por uzi menuon, sed ne ekzistas titolo de la menuo."
+
+#: includes/plugins.inc:2312
+msgid "Display @display is set to use a parent menu but the parent menu title is not set."
+msgstr "Montro @display estas agordi por uzi gepatran menuon, sed ne ekzistas gepatra titolo de la menuo."
+
+#: includes/plugins.inc:2378
+msgid "Block settings"
+msgstr "Agordoj de bloko"
+
+#: includes/plugins.inc:2392
+msgid "Admin"
+msgstr "Admin"
+
+#: includes/plugins.inc:2416
+msgid "Do not cache"
+msgstr "Ne kaŝmemorigu"
+
+#: includes/plugins.inc:2417
+msgid "Cache once for everything (global)"
+msgstr "Kaŝmemorigu unufoje por ĉio (globala)"
+
+#: includes/plugins.inc:2418
+msgid "Per page"
+msgstr "Por paĝo"
+
+#: includes/plugins.inc:2419
+msgid "Per role"
+msgstr "Por rolo"
+
+#: includes/plugins.inc:2420
+msgid "Per role per page"
+msgstr "Por rolo por paĝo"
+
+#: includes/plugins.inc:2421
+msgid "Per user"
+msgstr "Por uzanto"
+
+#: includes/plugins.inc:2422
+msgid "Per user per page"
+msgstr "Por uzanto por paĝo"
+
+#: includes/plugins.inc:2447
+msgid "Block admin description"
+msgstr "Priskribo de bloka administranto"
+
+#: includes/plugins.inc:2450
+msgid "This will appear as the name of this block in administer >> site building >> blocks."
+msgstr "Tio aperos kiel la nomo de ĉi tiu bloko en administri >> reteja konstruado >> blokoj."
+
+#: includes/plugins.inc:2455
+msgid "Block caching type"
+msgstr "Bloka speco de kaŝmemorado"
+
+#: includes/plugins.inc:2459
+msgid "This sets the default status for Drupal's built-in block caching method; this requires that caching be turned on in block administration, and be careful because you have little control over when this cache is flushed."
+msgstr "Tio agordas la defaŭltan staton por la enkonstruita blokokaŝada metodo de Drupalo; tio bezonatas ke kaŝmemorado estu ŝaltita en bloka administrado, kaj zorgi ĉar vi havas malmulte da rego super kiam tiu kaŝmemoro estas malplenigita."
+
+#: includes/plugins.inc:2511
+msgid "Before"
+msgstr "Antaŭ"
+
+#: includes/plugins.inc:2512
+msgid "After"
+msgstr "Post"
+
+#: includes/plugins.inc:2513
+msgid "Both"
+msgstr "Ambaŭ"
+
+#: includes/plugins.inc:2533
+msgid "Attachment settings"
+msgstr "Alkroĉaj agordoj"
+
+#: includes/plugins.inc:2538
+msgid "Inherit arguments"
+msgstr "Heredaj argumentoj"
+
+#: includes/plugins.inc:2544
+msgid "Inherit exposed filters"
+msgstr "Heredi montratajn filtrilojn"
+
+#: includes/plugins.inc:2550
+msgid "Position"
+msgstr "Pozicio"
+
+#: includes/plugins.inc:2556
+msgid "Multiple displays"
+msgstr "Multajn montrojn"
+
+#: includes/plugins.inc:2571
+msgid "Attach to"
+msgstr "Alkroĉi al"
+
+#: includes/plugins.inc:2588
+msgid "Inherit"
+msgstr "Heredi"
+
+#: includes/plugins.inc:2589
+msgid "Should this display inherit its arguments from the parent display to which it is attached?"
+msgstr "Ĉu ĉi tiu montro heredu ĝiajn argumentojn de la patra montro al kiu ĝi estas alkroĉita?"
+
+#: includes/plugins.inc:2598
+msgid "Should this display inherit its exposed filter values from the parent display to which it is attached?"
+msgstr "Ĉu ĉi tiu montro heredu ĝiajn montratajn filtrajn valorojn de la patra montro al kiu ĝi estas alkroĉita?"
+
+#: includes/plugins.inc:2606
+msgid "Attach before or after the parent display?"
+msgstr "Alkroĉi antaŭ aŭ post la patra montro?"
+
+#: includes/plugins.inc:2621
+msgid "Select which display or displays this should attach to."
+msgstr "Elektu kiun montron aŭ montrojn al kiu ĝi devas alkroĉi."
+
+#: includes/plugins.inc:2776
+msgid "Feed settings"
+msgstr "Fluaj agordoj"
+
+#: includes/plugins.inc:2780
+msgid "Using the site name"
+msgstr "Uzante la retejan nomon"
+
+#: includes/plugins.inc:2822
+msgid "Use the site name for the title"
+msgstr "Uzi la retejan nomon por la titolo"
+
+#: includes/plugins.inc:2845
+msgid "This view will be displayed by visiting this path on your site. It is recommended that the path be something like \"path/%/%/feed\" or \"path/%/%/rss.xml\", putting one % in the path for each argument you have defined in the view."
+msgstr "Ĉi tiu aspekto montriĝos per vizito de ĉi tiu vojo en via retejo. Estas rekomentia ke la vojo estu kiel \"vojo/%/%/fluo\" aŭ "\vojo/%/%/rss.xml\", metante unu % en la vojo por ĉiu argumento kiun vi difinis en la aspekto. "
+
+#: includes/plugins.inc:2990
+msgid "Grouping field"
+msgstr "Grupigi kampon"
+
+#: includes/plugins.inc:2993
+msgid "You may optionally specify a field by which to group the records.  Leave blank to not group."
+msgstr "Vi povas nedevige indiki kampon per kiu grupigi la rikordojn. Lasu malplena por ne grupigi."
+
+#: includes/plugins.inc:3081
+msgid "Style @style requires a row style but the row plugin is invalid."
+msgstr "Stilo @style bezonas vican stilon, sed la vica kromprogramo estas nevalida."
+
+#: includes/plugins.inc:3128
+msgid "List type"
+msgstr "Lista speco"
+
+#: includes/plugins.inc:3158
+msgid "Number of columns"
+msgstr "Nombro da kolumnoj"
+
+#: includes/plugins.inc:3163
+msgid "Alignment"
+msgstr "Ĝisrandigo"
+
+#: includes/plugins.inc:3164
+msgid "Horizontal"
+msgstr "Horizontale"
+
+#: includes/plugins.inc:3164
+msgid "Vertical"
+msgstr "Vertikale"
+
+#: includes/plugins.inc:3166
+msgid "Horizontal alignment will place items starting in the upper left and moving right. Vertical alignment will place items starting in the upper left and moving down."
+msgstr "Horizontala ĝisrandigo lokigos erojn komencante en la supra maldesktra angulo kaj iras dekstren. Vertikala ĝisrandigo lokigos erojn en la supra maldekstra angulo kaj subiras."
+
+#: includes/plugins.inc:3285
+msgid "You need at least one field before you can configure your table settings"
+msgstr "Vi bezonas almenaŭ unu kampon antaŭ ol vi povas agordi vian tabelon."
+
+#: includes/plugins.inc:3294
+msgid "Override normal sorting if click sorting is used"
+msgstr "Anstataŭigi normalan ordigon se klaka ordigo estas uzata"
+
+#: includes/plugins.inc:3300
+msgid "Enable Drupal style \"sticky\" table headers (Javascript)"
+msgstr "Ŝalti Drupal-stilan \"fiksa\" tabelaj kaplinioj (JavaSkripto)"
+
+#: includes/plugins.inc:3302
+msgid "(Sticky header effects will not be active for preview below, only on live output.)"
+msgstr "(Fiksita kapliniaj efikoj ne aktivos por la antaŭvido sube, nur en viva eligo.)"
+
+#: includes/plugins.inc:3307
+msgid "Default sort order"
+msgstr "Defaŭlta ordiga sinsekvo"
+
+#: includes/plugins.inc:3308
+#: includes/sort.handlers.inc:60
+msgid "Ascending"
+msgstr "Kreskante"
+
+#: includes/plugins.inc:3308
+#: includes/sort.handlers.inc:60
+msgid "Descending"
+msgstr "Malkreskante"
+
+#: includes/plugins.inc:3310
+msgid "If a default sort order is selected, what order should it use by default."
+msgstr "Se defaŭlta ordiga sinsekvo estas elektita, kiun ordigon ĝi uzu defaŭlte."
+
+#: includes/plugins.inc:3396
+msgid "Place fields into columns; you may combine multiple fields into the same column. If you do, the separator in the column specified will be used to separate the fields. Check the sortable box to make that column click sortable, and check the default sort radio to determine which column will be sorted by default, if any. You may control column order and field labels in the fields section."
+msgstr "Lokigi kampojn en kolumnojn; vi povas kombini multajn kampojn en la saman kolumnon. Se vi faras, la disigilo en la kolumno indikita estos uzata por disigi la kampojn. Kontrolu la ordigeblan skatolon por certigi ke tiu kolumo ordigeblos, kaj ŝaltu la defaŭltan ordigan radion por determini kiun kolumnon ordiĝos defaŭlte, se iun. Vi povas regi kolumnan sinsekvon kaj kampajn enketojn en la kampa sekcio."
+
+#: includes/plugins.inc:3421
+#: includes/view.inc:1769
+msgid "Field"
+msgstr "Kampo"
+
+#: includes/plugins.inc:3422
+msgid "Column"
+msgstr "Propra"
+
+#: includes/plugins.inc:3425
+msgid "Sortable"
+msgstr "Ordigebla"
+
+#: includes/plugins.inc:3429
+msgid "Default sort"
+msgstr "Defaŭlta ordigo"
+
+#: includes/plugins.inc:3488
+msgid "Display record count with link"
+msgstr "Montri rikordan kalkulon kun ligilo"
+
+#: includes/plugins.inc:3493
+msgid "Override number of items to display"
+msgstr "Anstataŭigi nombron da eroj por montri"
+
+#: includes/plugins.inc:3530
+msgid "Display items inline"
+msgstr "Montri erojn entekste"
+
+#: includes/plugins.inc:3580
+msgid "Use the site mission for the description"
+msgstr "Uzu la retejan mision por la priskribo"
+
+#: includes/plugins.inc:3584
+msgid "RSS description"
+msgstr "RSS-priskribo"
+
+#: includes/plugins.inc:3586
+msgid "This will appear in the RSS feed itself."
+msgstr "Ĉi tio aperos en la RSS-fluo mem."
+
+#: includes/plugins.inc:3709
+msgid "Inline fields"
+msgstr "Entekstaj kampoj"
+
+#: includes/plugins.inc:3712
+msgid "Inline fields will be displayed next to each other rather than one after another."
+msgstr "Entekstaj kampoj montriĝos apud unu la alia anstataŭ unu post la alia."
+
+#: includes/plugins.inc:3720
+msgid "The separator may be placed between inline fields to keep them from squishing up next to each other. You can use HTML in this field."
+msgstr "La disigilo povas lokiĝi inter entekstaj kampoj por certigi ke ili ne aperas tuj apud unu la alia. Vi povas uzi HTML-n en ĉi tiu kampo."
+
+#: includes/plugins.inc:3770
+msgid "Default argument"
+msgstr "Defaŭlta argumento"
+
+#: includes/plugins.inc:3792
+msgid "Note: you do not have permission to modify this. If you change the default argument type, this setting will be lost and you will NOT be able to get it back."
+msgstr "Notu: vi ne havas permeson modifi ĉi tion. Se vi ŝanĝas la defaŭltan argumentan specon, ĉi tiu agordo estos perdita kaj vi NE povos rehavi ĝin."
+
+#: includes/plugins.inc:3813
+msgid "PHP argument code"
+msgstr "Argumenta kodo de PHP"
+
+#: includes/plugins.inc:3816
+msgid "Enter PHP code that returns a value to use for this argument. Do not use &lt;?php ?&gt;. You must return only a single value for just this argument."
+msgstr "Enmetu PHP-kodon kiu revenigas valoron por uzi por ĉi tiu argumento. Ne uzu &lt;?php ?&gt; Vi devas revenigi nur unu valoron por precize ĉi tiu argumento."
+
+#: includes/plugins.inc:3896
+msgid "Note: you do not have permission to modify this. If you change the validator, this setting will be lost and you will NOT be able to get it back."
+msgstr "Rimarku: vi ne havas permeson modifi ĉi tion. Se vi ŝanĝas la validigilon, ĉi tiu agordo estos perdita kaj vi NE povos rehavi ĝin."
+
+#: includes/plugins.inc:3921
+msgid "PHP validate code"
+msgstr "Validigi kodon de PHP"
+
+#: includes/plugins.inc:3923
+msgid "Enter PHP code that returns TRUE or FALSE. No return is the same as FALSE, so be SURE to return something if you do not want to declare the argument invalid. Do not use &lt;?php ?&gt;. The argument to validate will be \"$argument\" and the view will be \"$view\". You may change the argument by setting \"$handler->argument\"."
+msgstr "Enmetu PHP-kodon kiu revenas TRUE aŭ FALSE. Neniu reveno estas la sama kiel FALSE, do CERTE revenigu ion se vi volas volas deklari la argumenton nevalida. Ne uzu &lt;?php ?&gt;. La argumento por validigi estos \"$argument\" kaj la montro estos \"$view\". Vi rajtas ŝanĝi la argumenton agordante \"$handler->argument\"."
+
+#: includes/relationship.handlers.inc:80
+msgid "The label for this relationship that will be displayed only administratively."
+msgstr "La enketo por ĉi tiu rilato kiu montriĝos nur administre."
+
+#: includes/relationship.handlers.inc:85
+msgid "Require this relationship"
+msgstr "Bezoni ĉi tiun rilaton"
+
+#: includes/relationship.handlers.inc:86
+msgid "If required, items that do not contain this relationship will not appear."
+msgstr "Se bezonata, eroj kiuj ne enhavas ĉi tiun rilaton ne aperos."
+
+#: includes/sort.handlers.inc:43
+msgid "asc"
+msgstr "kresk"
+
+#: includes/sort.handlers.inc:47
+msgid "desc"
+msgstr "malkresk"
+
+#: includes/sort.handlers.inc:59
+msgid "Sort order"
+msgstr "Ordiga sinsekvo"
+
+#: includes/sort.handlers.inc:108
+msgid "views_handler_sort_formula missing default: @formula"
+msgstr "views_handler_sort_formula mankante defaŭlto: @formula"
+
+#: includes/sort.handlers.inc:148
+msgid "Granularity"
+msgstr "Granuleco"
+
+#: includes/sort.handlers.inc:150
+msgid "Second"
+msgstr "Sekundo"
+
+#: includes/sort.handlers.inc:151
+msgid "Minute"
+msgstr "Minuto"
+
+#: includes/sort.handlers.inc:152
+msgid "Hour"
+msgstr "Horo"
+
+#: includes/sort.handlers.inc:153
+msgid "Day"
+msgstr "Tago"
+
+#: includes/sort.handlers.inc:154
+msgid "Month"
+msgstr "Monato"
+
+#: includes/sort.handlers.inc:155
+msgid "Year"
+msgstr "Jaro"
+
+#: includes/sort.handlers.inc:157
+msgid "The granularity is the smallest unit to use when determining whether two dates are the same; for example, if the granularity is \"Year\" then all dates in 1999, regardless of when they fall in 1999, will be considered the same date."
+msgstr "La granuleco estas la plej malgranda unuo por uzi kiam determinante ĉu du datoj estas la samaj; ekzemple, se la granuleco estas \"Jaro\" tiam ĉiuj datoj en 1999, egale de kiam ili estas en 1999, estos konsiderataj la sama dato."
+
+#: includes/view.inc:255
+msgid "set_display called with invalid display id @display"
+msgstr "set_display vokita kun nevalida montra id @display"
+
+#: includes/view.inc:995
+msgid "Home"
+msgstr "Hejmo"
+
+#: includes/view.inc:1768
+msgid "fields"
+msgstr "kampoj"
+
+#: includes/view.inc:1770
+msgid "field"
+msgstr "kampo"
+
+#: includes/view.inc:1775
+msgid "arguments"
+msgstr "argumentoj"
+
+#: includes/view.inc:1776
+msgid "Argument"
+msgstr "Argumento"
+
+#: includes/view.inc:1781
+msgid "Sort criteria"
+msgstr "Ordiga kriterioj"
+
+#: includes/view.inc:1782
+msgid "sort criteria"
+msgstr "ordiga kriterioj"
+
+#: includes/view.inc:1783
+msgid "Sort criterion"
+msgstr "Ordiga kriterio"
+
+#: includes/view.inc:1784
+msgid "sort criterion"
+msgstr "ordiga kriterio"
+
+#: includes/view.inc:1788
+msgid "Filters"
+msgstr "Filtriloj"
+
+#: includes/view.inc:1789
+msgid "filters"
+msgstr "filtriloj"
+
+#: includes/view.inc:1790
+msgid "Filter"
+msgstr "Filtrilo"
+
+#: includes/view.inc:1791
+msgid "filter"
+msgstr "filtrilo"
+
+#: includes/view.inc:1796
+msgid "Relationships"
+msgstr "Rilatoj"
+
+#: includes/view.inc:1797
+msgid "relationships"
+msgstr "rilatoj"
+
+#: js/ajax.js:0
+#: js/ajax_view.js:0
+msgid "An error occurred at "
+msgstr "Eraro okazis ĉe"
+
+#: js/tabs.js:0
+msgid "jQuery UI Tabs: Mismatching fragment identifier."
+msgstr "jQuery UI Langetoj: Miskongrua fragmenta identigilo."
+
+#: js/tabs.js:0
+msgid "jQuery UI Tabs: Not enough arguments to add tab."
+msgstr "jQuery UI Langetoj: Ne sufiĉe da argumentoj por aldoni langeton."
+
+#: modules/book.views.inc:21
+msgid "Book"
+msgstr "Libro"
+
+#: modules/book.views.inc:30
+msgid "Top level book"
+msgstr "Plej altnivela libro"
+
+#: modules/book.views.inc:31
+msgid "The book the node is in."
+msgstr "La libro en kiu la nodo estas."
+
+#: modules/book.views.inc:58
+msgid "The weight of the book page."
+msgstr "La pezo de la libra paĝo."
+
+#: modules/book.views.inc:69
+#: modules/comment.views.inc:202
+#: modules/taxonomy.views.inc:310
+msgid "Depth"
+msgstr "Profundeco"
+
+#: modules/book.views.inc:70
+msgid "The depth of the book page in the hierarchy; top level books have a depth of 1."
+msgstr "La profundeco de la libra paĝo en la hierarkio; plej altnivelaj libroj havas profundecon de 1."
+
+#: modules/book.views.inc:87
+msgid "Hierarchy"
+msgstr "Hierarkio"
+
+#: modules/book.views.inc:88
+msgid "The order of pages in the book hierarchy.  Remember to sort by weight too if you want exactly the right order."
+msgstr "La sinsekvo de paĝoj en la libra hierarkio. Memoru ordigi ankaŭ laŭ pezo se vi volas precize la ĝustan sinsekvon."
+
+#: modules/book.views.inc:110
+msgid "Parent"
+msgstr "Gepatra"
+
+#: modules/book.views.inc:111
+msgid "The parent book node."
+msgstr "La gepatra libra nodo."
+
+#: modules/book.views.inc:116
+msgid "Book parent"
+msgstr "Libra gepatro"
+
+#: modules/comment.views.inc:22
+msgid "Comment"
+msgstr "Komento"
+
+#: modules/comment.views.inc:27
+msgid "Comments are responses to node content."
+msgstr "Komentoj estas respondoj al noda enhavo."
+
+#: modules/comment.views.inc:45
+msgid "The title of the comment."
+msgstr "La titolo de la komento."
+
+#: modules/comment.views.inc:63
+#: modules/node.views.inc:366
+msgid "Body"
+msgstr "Korpo"
+
+#: modules/comment.views.inc:64
+msgid "The text of the comment."
+msgstr "La teksto de la komento."
+
+#: modules/comment.views.inc:76
+msgid "ID"
+msgstr "ID"
+
+#: modules/comment.views.inc:77
+msgid "The comment ID of the field"
+msgstr "La komenta ID de la kampo"
+
+#: modules/comment.views.inc:95
+msgid "Author"
+msgstr "Aŭtoro"
+
+#: modules/comment.views.inc:96
+msgid "The name of the poster."
+msgstr "La nomo de la afiŝinto."
+
+#: modules/comment.views.inc:114
+msgid "Author's website"
+msgstr "Aŭtora retejo"
+
+#: modules/comment.views.inc:115
+msgid "The website address of the comment's author. Can be a link. The homepage can also be linked with the Name field. Will be empty if posted by a registered user."
+msgstr "La reteja adreso de la komenta aŭtoro. Povas esti ligilo. La hejmpaĝo ankaŭ povas esti ligita kun la Noma kampo. Malplenos se afiŝita de registrita uzanto."
+
+#: modules/comment.views.inc:133
+#: modules/node.views.inc:107
+msgid "Post date"
+msgstr "Afiŝa dato"
+
+#: modules/comment.views.inc:134
+msgid "Date and time of when the comment was posted."
+msgstr "Dato kaj tempo kiam la komento estis afiŝita."
+
+#: modules/comment.views.inc:149
+msgid "In moderation"
+msgstr "Prizorgata"
+
+#: modules/comment.views.inc:150
+msgid "Whether or not the comment is currently in moderation."
+msgstr "Ĉu aŭ ne la komento estas nun en moderado."
+
+#: modules/comment.views.inc:157
+#: modules/node.views.inc:203
+msgid "Moderated"
+msgstr "Prizorgita"
+
+#: modules/comment.views.inc:167
+msgid "View link"
+msgstr "Vidi ligilon"
+
+#: modules/comment.views.inc:168
+msgid "Provide a simple link to view the comment."
+msgstr "Provizi simplan ligilon por vidi la komenton."
+
+#: modules/comment.views.inc:176
+#: modules/node.views.inc:249
+#: modules/user.views.inc:204
+msgid "Edit link"
+msgstr "Redakti ligilon"
+
+#: modules/comment.views.inc:177
+msgid "Provide a simple link to edit the comment."
+msgstr "Provizi simplan ligilon por redakti la komenton."
+
+#: modules/comment.views.inc:185
+#: modules/node.views.inc:257
+#: modules/user.views.inc:212
+msgid "Delete link"
+msgstr "Forigi ligilon"
+
+#: modules/comment.views.inc:186
+msgid "Provide a simple link to delete the comment."
+msgstr "Provizi simplan ligilon por forigi la komenton."
+
+#: modules/comment.views.inc:194
+msgid "Reply-to link"
+msgstr "Respondi-al ligilo"
+
+#: modules/comment.views.inc:195
+msgid "Provide a simple link to reply to the comment."
+msgstr "Provizi simplan ligilon por respondi al la komento."
+
+#: modules/comment.views.inc:203
+msgid "Display the depth of the comment if it is threaded."
+msgstr "Montri la profundecon de la komento se ĝi estas fadenita."
+
+#: modules/comment.views.inc:207
+msgid "Thread"
+msgstr "Fadeno"
+
+#: modules/comment.views.inc:208
+msgid "Sort by the threaded order. This will keep child comments together with their parents."
+msgstr "Ordigi laŭ la fadena sinsekvo. Tio tenos idajn komentojn kune kun siaj patroj."
+
+#: modules/comment.views.inc:214
+#: modules/node.views.inc:24
+#: modules/upload.views.inc:43
+msgid "Node"
+msgstr "Nodo"
+
+#: modules/comment.views.inc:215
+msgid "The node the comment is a reply to."
+msgstr "La nodo al kiu komento estas respondo."
+
+#: modules/comment.views.inc:225
+#: modules/node.views.inc:353
+#: modules/statistics.views.inc:201
+#: modules/user.views.inc:23
+msgid "User"
+msgstr "Uzanto"
+
+#: modules/comment.views.inc:226
+msgid "The user who wrote the comment."
+msgstr "La uzanto kiu skribis la komenton."
+
+#: modules/comment.views.inc:236
+msgid "Parent CID"
+msgstr "Patra CID"
+
+#: modules/comment.views.inc:237
+msgid "The Comment ID of the parent comment."
+msgstr "La komenta ID de la patra komento."
+
+#: modules/comment.views.inc:242
+msgid "Parent comment"
+msgstr "Patra komento"
+
+#: modules/comment.views.inc:243
+msgid "The parent comment."
+msgstr "La gepatra komento."
+
+#: modules/comment.views.inc:268
+msgid "Last comment time"
+msgstr "Lasta komenta tempo"
+
+#: modules/comment.views.inc:269
+msgid "Date and time of when the last comment was posted."
+msgstr "Dato kaj tempo de kiam la lasta komento estis afiŝita."
+
+#: modules/comment.views.inc:284
+msgid "Last comment author"
+msgstr "Lasta komento de aŭtoro"
+
+#: modules/comment.views.inc:285
+msgid "The name of the author of the last posted comment."
+msgstr "La nomo de la aŭtoro de la laste afiŝita komento."
+
+#: modules/comment.views.inc:297
+msgid "Comment count"
+msgstr "Kvanto da komentoj"
+
+#: modules/comment.views.inc:298
+msgid "The number of comments a node has."
+msgstr "La nombro da komentoj kiun nodo havas."
+
+#: modules/comment.views.inc:316
+msgid "Updated/commented date"
+msgstr "Ĝisdatigita/komentita dato"
+
+#: modules/comment.views.inc:317
+msgid "The most recent of last comment posted or node updated time."
+msgstr "La plej lasta de lasta komento afiŝita aŭ nodo ĝisdatigita tempo."
+
+#: modules/comment.views.inc:340
+msgid "New comments"
+msgstr "Novaj komentoj"
+
+#: modules/comment.views.inc:341
+msgid "The number of new comments on the node."
+msgstr "La nombro da novaj komentoj en la nodo."
+
+#: modules/comment.views.inc:349
+msgid "Comment status"
+msgstr "Komenta stato"
+
+#: modules/comment.views.inc:350
+msgid "Whether comments are enabled or disabled on the node."
+msgstr "Ĉu komentoj estas ŝaltitaj aŭ malŝaltitaj en la nodo."
+
+#: modules/comment.views.inc:364
+msgid "User posted or commented"
+msgstr "Uzanto afiŝis aŭ komentis"
+
+#: modules/comment.views.inc:365
+msgid "Display comments only if a user posted the node or commented on the node."
+msgstr "Montri komentojn nur se uzanto afiŝis la nodon aŭ komentis en la nodo."
+
+#: modules/comment.views.inc:385
+msgid "Display the comment with standard comment view."
+msgstr "Montri la komenton kun norma komenta montro."
+
+#: modules/comment.views.inc:394
+msgid "Display the comment as RSS."
+msgstr "Montri la komenton kiel RSS."
+
+#: modules/comment.views.inc:462
+msgid "Link this field to its comment"
+msgstr "Ligi ĉi tiun kampon al ĝia komento"
+
+#: modules/comment.views.inc:504
+msgid "Link this field to its user or an author's homepage"
+msgstr "Ligi ĉi tiun kampon al ĝia uzanto aŭ aŭtora hejmpaĝo"
+
+#: modules/comment.views.inc:549
+#: modules/node.views.inc:611
+#: modules/user.views.inc:452
+msgid "Text to display"
+msgstr "Teksto por montri"
+
+#: modules/comment.views.inc:560
+#: modules/node.views.inc:622
+#: modules/user.views.inc:468
+msgid "view"
+msgstr "vidi"
+
+#: modules/comment.views.inc:583
+#: modules/node.views.inc:651
+#: modules/user.views.inc:484
+msgid "edit"
+msgstr "redakti"
+
+#: modules/comment.views.inc:597
+#: modules/node.views.inc:679
+#: modules/user.views.inc:500
+msgid "delete"
+msgstr "forigi"
+
+#: modules/comment.views.inc:611
+msgid "reply"
+msgstr "respondi"
+
+#: modules/comment.views.inc:742
+msgid "Link this field to new comments"
+msgstr "Ligi ĉi tiun kampon al novaj komentoj"
+
+#: modules/comment.views.inc:747
+msgid "Display nothing if no new comments"
+msgstr "Montri nenion se neniuj novaj komentoj"
+
+#: modules/comment.views.inc:812
+#: modules/user.views.inc:599
+msgid "Anonymous"
+msgstr "Anonima"
+
+#: modules/comment.views.inc:818
+msgid "No user"
+msgstr "Neniu uzanto"
+
+#: modules/comment.views.inc:852
+msgid "Disabled"
+msgstr "Malŝaltita"
+
+#: modules/comment.views.inc:854
+msgid "Read only"
+msgstr "Nur-legi"
+
+#: modules/comment.views.inc:856
+msgid "Read/Write"
+msgstr "Legi/Modifi"
+
+#: modules/comment.views.inc:887
+#: modules/node.views.inc:1207
+msgid "Display links"
+msgstr "Montri ligilojn"
+
+#: modules/node.views.inc:30
+msgid "Nodes are a Drupal site's primary content."
+msgstr "Nodoj estas ĉefa enhavo de Drupala retejo."
+
+#: modules/node.views.inc:57
+msgid "Nid"
+msgstr "Nid"
+
+#: modules/node.views.inc:58
+msgid "The node ID of the node."
+msgstr "La noda ID de la nodo."
+
+#: modules/node.views.inc:85
+msgid "The title of the node."
+msgstr "La titolo de la nodo."
+
+#: modules/node.views.inc:108
+msgid "The date the node was posted."
+msgstr "La dato kiam la nodo estis afiŝita."
+
+#: modules/node.views.inc:123
+msgid "Updated date"
+msgstr "Ĝisdatigita dato"
+
+#: modules/node.views.inc:124
+msgid "The date the node was last updated."
+msgstr "La dato kiam la nodo estis laste ĝisdatigita."
+
+#: modules/node.views.inc:140
+msgid "The type of a node (for example, \"blog entry\", \"forum post\", \"story\", etc)."
+msgstr "La speco de nodo (ekzemple, \"blog-enskribo\", \"forum-afiŝo\", \"rakonto\", ktp)"
+
+#: modules/node.views.inc:158
+#: modules/upload.views.inc:82
+msgid "Published"
+msgstr "Publikigita"
+
+#: modules/node.views.inc:159
+msgid "The published status of the node."
+msgstr "La eldona stato de la nodo."
+
+#: modules/node.views.inc:175
+msgid "Published or admin"
+msgstr "Eldonita aŭ admin"
+
+#: modules/node.views.inc:176
+msgid "Filters out unpublished nodes if the current user cannot view them."
+msgstr "Elfiltras neeldonitajn nodojn se la nuna uzanto ne povas vidi ilin."
+
+#: modules/node.views.inc:186
+msgid "Promoted to front page"
+msgstr "Promociita al ĉefpaĝo"
+
+#: modules/node.views.inc:187
+msgid "The front page of the node."
+msgstr "La ĉefpaĝo de la nodo."
+
+#: modules/node.views.inc:204
+msgid "Whether or not the node is moderated."
+msgstr "Ĉu aŭ ne la nodo estas moderata."
+
+#: modules/node.views.inc:221
+msgid "Sticky"
+msgstr "Fiksita"
+
+#: modules/node.views.inc:222
+msgid "Whether or not the node is sticky."
+msgstr "Ĉu aŭ ne la nodo estas fiksita."
+
+#: modules/node.views.inc:241
+msgid "Link"
+msgstr "Ligilo"
+
+#: modules/node.views.inc:242
+msgid "Provide a simple link to the node."
+msgstr "Provizi simplan ligilon al la nodo."
+
+#: modules/node.views.inc:250
+msgid "Provide a simple link to edit the node."
+msgstr "Provizi simplan ligilon por redakti la nodon."
+
+#: modules/node.views.inc:258
+msgid "Provide a simple link to delete the node."
+msgstr "Provizi simplan ligilon por forigi la nodon."
+
+#: modules/node.views.inc:266
+msgid "Language"
+msgstr "Lingvo"
+
+#: modules/node.views.inc:267
+msgid "The language the content is in."
+msgstr "La lingvo de la enhavo."
+
+#: modules/node.views.inc:284
+#: modules/user.views.inc:125
+msgid "Created date"
+msgstr "Kreita dato"
+
+#: modules/node.views.inc:285
+msgid "In the form of CCYYMMDD."
+msgstr "en la formo de CCYYMMDD."
+
+#: modules/node.views.inc:293
+msgid "Created year + month"
+msgstr "Kreita jaro + monato"
+
+#: modules/node.views.inc:294
+msgid "In the form of YYYYMM."
+msgstr "En la formo de YYYYMM."
+
+#: modules/node.views.inc:302
+msgid "Created year"
+msgstr "Kreita jaro"
+
+#: modules/node.views.inc:303
+msgid "In the form of YYYY."
+msgstr "En la formo de YYYY."
+
+#: modules/node.views.inc:311
+msgid "Created month"
+msgstr "Kreita monato"
+
+#: modules/node.views.inc:312
+msgid "In the form of MM (01 - 12)."
+msgstr "En la formo de MM (01 - 12)."
+
+#: modules/node.views.inc:320
+msgid "Created week"
+msgstr "Kreita semajno"
+
+#: modules/node.views.inc:321
+msgid "In the form of WW (01 - 53)."
+msgstr "En la formo de WW (01 - 53)."
+
+#: modules/node.views.inc:333
+msgid "Node revision"
+msgstr "Noda revizio"
+
+#: modules/node.views.inc:339
+msgid "Node revisions are a history of changes to nodes."
+msgstr "Nodaj revizioj estas historio de ŝanĝoj al nodoj."
+
+#: modules/node.views.inc:354
+msgid "Relate a node revision to the user who created the revision."
+msgstr "Rilatu nodan rivizion al la uzanto kiu kreis la revizion."
+
+#: modules/node.views.inc:359
+msgid "user"
+msgstr "uzanto"
+
+#: modules/node.views.inc:367
+msgid "The actual, full data in the body field; this may not be valid data on all node types."
+msgstr "La veraj, plenaj datumoj en la korpa kampo; tio eble ne estas validaj datumoj por ĉiuj nodaj specoj."
+
+#: modules/node.views.inc:381
+msgid "Teaser"
+msgstr "Resumo"
+
+#: modules/node.views.inc:382
+msgid "The stored teaser field. This may not be valid or useful data on all node types."
+msgstr "La konservita resuma kampo. Tio eble ne estas validaj aŭ utilaj datumoj por ĉiuj nodaj specoj. "
+
+#: modules/node.views.inc:395
+msgid "Vid"
+msgstr "Vid"
+
+#: modules/node.views.inc:396
+msgid "The revision ID of the node revision."
+msgstr "La revizia ID de la noda revizio."
+
+#: modules/node.views.inc:441
+msgid "Log message"
+msgstr "Protokola mesaĝo"
+
+#: modules/node.views.inc:442
+msgid "The log message entered when the revision was created."
+msgstr "La protokola mesaĝo enmetita kiam la revizio estis kreita."
+
+#: modules/node.views.inc:456
+msgid "The date the node revision was created."
+msgstr "La dato kiam la noda revizio estis kreita."
+
+#: modules/node.views.inc:471
+msgid "Revert link"
+msgstr "Ligilo por malfari ŝanĝojn"
+
+#: modules/node.views.inc:472
+msgid "Provide a simple link to revert to the revision."
+msgstr "Provizi simplan ligilon por malfari ŝanĝojn al la revizio."
+
+#: modules/node.views.inc:480
+msgid "Provide a simple link to delete the node revision."
+msgstr "Provizi simplan ligilon por forigi la nodan revizion."
+
+#: modules/node.views.inc:507
+msgid "Has new content"
+msgstr "Havas novan enhavon"
+
+#: modules/node.views.inc:510
+msgid "Show a marker if the node has new or updated content."
+msgstr "Montri markilon se la nodo havas novan aŭ ĝisdatigitan enhavon."
+
+#: modules/node.views.inc:513
+msgid "Show only nodes that have new content."
+msgstr "Montri nur nodojn kiuj havas novan enhavon."
+
+#: modules/node.views.inc:544
+msgid "Link this field to its node"
+msgstr "Ligi ĉi tiun kampon al ĝia nodo"
+
+#: modules/node.views.inc:717
+msgid "revert"
+msgstr "malfari ŝanĝojn"
+
+#: modules/node.views.inc:788
+msgid "Check for new comments as well"
+msgstr "Kontrolu ankaŭ por novaj komentoj"
+
+#: modules/node.views.inc:858
+msgid "Unknown node type"
+msgstr "Nekonata noda speco"
+
+#: modules/node.views.inc:1027
+msgid "Week @week"
+msgstr "Semajno @week"
+
+#: modules/node.views.inc:1037
+msgid "Node type"
+msgstr "Noda speco"
+
+#: modules/node.views.inc:1094
+msgid "Current user's language"
+msgstr "Lingvo de nuna uzanto"
+
+#: modules/node.views.inc:1094
+msgid "No language"
+msgstr "Neniu lingvo"
+
+#: modules/node.views.inc:1140
+msgid "Unknown language"
+msgstr "Nekonata lingvo"
+
+#: modules/node.views.inc:1153
+msgid "Display the node with standard node view."
+msgstr "Montri la nodon kun norma noda montro."
+
+#: modules/node.views.inc:1177
+msgid "Node ID from URL"
+msgstr "Noda ID de URL"
+
+#: modules/node.views.inc:1202
+msgid "Display only teaser"
+msgstr "Montri nur resumon"
+
+#: modules/node.views.inc:1261
+msgid "Full text"
+msgstr "Plena teksto"
+
+#: modules/node.views.inc:1262
+msgid "Title plus teaser"
+msgstr "Titolo plus resumo"
+
+#: modules/node.views.inc:1263
+msgid "Title only"
+msgstr "Nur titolo"
+
+#: modules/node.views.inc:1264
+msgid "Use default RSS settings"
+msgstr "Uzi defaŭltajn RSS-agordojn"
+
+#: modules/node.views.inc:1330
+msgid "read more"
+msgstr "legi pli"
+
+#: modules/node.views.inc:1363
+msgid "Types"
+msgstr "Specoj"
+
+#: modules/node.views.inc:1366
+msgid "If you wish to validate for specific node types, check them; if none are checked, all nodes will pass."
+msgstr "Se vi deziras validigi specifajn nodajn specojn, kontrolu ilin; se neniu estas ŝaltita, ĉiuj nodoj sukcesos."
+
+#: modules/node.views.inc:1373
+msgid "Validate user has access to the node"
+msgstr "Validiga uzanto povas aliri la nodon"
+
+#: modules/node.views.inc:1381
+#: modules/taxonomy.views.inc:1015
+msgid "Argument type"
+msgstr "Argumenta speco"
+
+#: modules/node.views.inc:1383
+msgid "Node ID"
+msgstr "Noda ID"
+
+#: modules/node.views.inc:1384
+msgid "Node IDs separated by , or +"
+msgstr "Nodaj ID-oj disigitaj per , aŭ +"
+
+#: modules/node.views.inc:1507
+msgid "Display %display has no access control but does not contain a filter for published nodes."
+msgstr "Montro %display ne havas aliran regadon, sed ne enhavas filtrilon por eldonitaj nodoj."
+
+#: modules/poll.views.inc:23
+msgid "Poll"
+msgstr "Enketo"
+
+#: modules/poll.views.inc:38
+#: modules/user.views.inc:173
+msgid "Active"
+msgstr "Aktiva"
+
+#: modules/poll.views.inc:39
+msgid "Whether the poll is open for voting."
+msgstr "Ĉu la enketo estas malfermita por voĉdonado."
+
+#: modules/profile.views.inc:20
+msgid "Profile"
+msgstr "Profilo"
+
+#: modules/profile.views.inc:100
+msgid "@field-name"
+msgstr "@field-name"
+
+#: modules/profile.views.inc:107
+msgid "Profile textfield"
+msgstr "Profila tekstkampo"
+
+#: modules/profile.views.inc:126
+msgid "Profile textarea"
+msgstr "Profila tekstareo"
+
+#: modules/profile.views.inc:142
+msgid "Profile checkbox"
+msgstr "Profila markobutono"
+
+#: modules/profile.views.inc:159
+msgid "Profile URL"
+msgstr "Profila URL"
+
+#: modules/profile.views.inc:175
+msgid "Profile selection"
+msgstr "Profila elektado"
+
+#: modules/profile.views.inc:195
+msgid "Profile freeform list %field-name."
+msgstr "Profila liberforma listo %field-name."
+
+#: modules/profile.views.inc:207
+msgid "Profile date %field-name."
+msgstr "Profila dato %field-name."
+
+#: modules/search.views.inc:23
+msgid "Search"
+msgstr "Serĉi"
+
+#: modules/search.views.inc:72
+msgid "Score"
+msgstr "Poentaro"
+
+#: modules/search.views.inc:73
+msgid "The score of the search item."
+msgstr "La poentaro de la serĉero."
+
+#: modules/search.views.inc:95
+msgid "Links from"
+msgstr "Ligiloj de"
+
+#: modules/search.views.inc:96
+msgid "Nodes that link from the node."
+msgstr "Nodoj kiuj ligas de la nodo."
+
+#: modules/search.views.inc:113
+msgid "Links to"
+msgstr "Ligiloj al"
+
+#: modules/search.views.inc:114
+msgid "Nodes that link to the node."
+msgstr "Nodoj kiuj ligas al la nodo."
+
+#: modules/search.views.inc:125
+msgid "Search Terms"
+msgstr "Serĉaj Terminoj"
+
+#: modules/search.views.inc:126
+msgid "The terms to search for."
+msgstr "La terminoj por serĉi."
+
+#: modules/search.views.inc:155
+msgid "On empty input"
+msgstr "Per malplena enmeto"
+
+#: modules/search.views.inc:158
+msgid "Show All"
+msgstr "Montri ĉiujn"
+
+#: modules/search.views.inc:159
+msgid "Show None"
+msgstr "Montri nenion"
+
+#: modules/search.views.inc:173
+msgid "Enter the terms you wish to search for."
+msgstr "Enmetu la terminojn kiujn vi deziras serĉi."
+
+#: modules/search.views.inc:188
+msgid "You must include at least one positive keyword with @count characters or more."
+msgstr "Vi devas inkluzivi almenaŭ unu pozitivan ŝlosilvorton kun @count signoj aŭ pli."
+
+#: modules/search.views.inc:192
+msgid "Search for either of the two terms with uppercase <strong>OR</strong>. For example, <strong>cats OR dogs</strong>."
+msgstr "Serĉi por unu el la du terminoj kun majuskla <strong>OR</strong>. Ekzemple, <strong>katoj OR hundoj</strong>."
+
+#: modules/search.views.inc:245
+msgid "Display the results with standard search view."
+msgstr "Montri la rezultojn per norma serĉa montro."
+
+#: modules/search.views.inc:269
+msgid "Display score"
+msgstr "Montri poentaron"
+
+#: modules/statistics.views.inc:24
+msgid "Node statistics"
+msgstr "Noda statistiko"
+
+#: modules/statistics.views.inc:36
+msgid "Total views"
+msgstr "Ĉiuj vidoj"
+
+#: modules/statistics.views.inc:37
+msgid "The total number of times the node has been viewed."
+msgstr "La tuta nombro da fojoj la nodo estas vidita."
+
+#: modules/statistics.views.inc:53
+msgid "Views today"
+msgstr "Vidoj hodiaŭ"
+
+#: modules/statistics.views.inc:54
+msgid "The total number of times the node has been viewed today."
+msgstr "La tuta nombro da fojoj la nodo estas vidita hodiaŭ."
+
+#: modules/statistics.views.inc:70
+msgid "Most recent view"
+msgstr "Plej lasta vido"
+
+#: modules/statistics.views.inc:71
+msgid "The most recent time the node has been viewed."
+msgstr "La plej lasta fojo kiam la nodo estas vidita."
+
+#: modules/statistics.views.inc:86
+msgid "Access log"
+msgstr "Alira protokolo"
+
+#: modules/statistics.views.inc:92
+msgid "Stores site access information."
+msgstr "Konservas alirajn informojn de la retejo."
+
+#: modules/statistics.views.inc:106
+msgid "Session ID"
+msgstr "Seanca ID"
+
+#: modules/statistics.views.inc:107
+msgid "Browser session ID of user that visited page."
+msgstr "Retumila seanca ID de uzanto kiu vizitis paĝon."
+
+#: modules/statistics.views.inc:126
+msgid "Page title"
+msgstr "Paĝa titolo"
+
+#: modules/statistics.views.inc:127
+msgid "Title of page visited."
+msgstr "Titolo de paĝo vizitita."
+
+#: modules/statistics.views.inc:147
+msgid "Internal path to page visited (relative to Drupal root.)"
+msgstr "Interna vojo al paĝo vizitita (relativa al Drupala radiko.)"
+
+#: modules/statistics.views.inc:166
+msgid "Referrer"
+msgstr "Referanto"
+
+#: modules/statistics.views.inc:167
+msgid "Referrer URI."
+msgstr "Referanta URI."
+
+#: modules/statistics.views.inc:182
+msgid "Hostname"
+msgstr "Gastiga nomo"
+
+#: modules/statistics.views.inc:183
+msgid "Hostname of user that visited the page."
+msgstr "Gastiga nomo de uzanto kiu vizitis la paĝon."
+
+#: modules/statistics.views.inc:202
+msgid "The user who visited the site."
+msgstr "La uzanto kiu vizitis la retejon."
+
+#: modules/statistics.views.inc:212
+msgid "Timer"
+msgstr "Horloĝo"
+
+#: modules/statistics.views.inc:213
+msgid "Time in milliseconds that the page took to load."
+msgstr "Tempo en milisekundoj dum kiam la paĝo ŝargiĝis."
+
+#: modules/statistics.views.inc:228
+msgid "Timestamp"
+msgstr "Tempindiko"
+
+#: modules/statistics.views.inc:229
+msgid "Timestamp of when the page was visited."
+msgstr "Tempindiko kiam la paĝo estis vizitita."
+
+#: modules/system.views.inc:25
+msgid "File"
+msgstr "Dosiero"
+
+#: modules/system.views.inc:31
+msgid "Files maintained by Drupal and various modules."
+msgstr "Dosieroj administrataj de Drupalo kaj diversaj moduloj."
+
+#: modules/system.views.inc:49
+msgid "File ID"
+msgstr "Dosiera ID"
+
+#: modules/system.views.inc:50
+msgid "The ID of the file."
+msgstr "La ID de la dosiero."
+
+#: modules/system.views.inc:70
+msgid "The name of the file."
+msgstr "La nomo de la dosiero."
+
+#: modules/system.views.inc:89
+msgid "The path of the file."
+msgstr "La vojo de la dosiero."
+
+#: modules/system.views.inc:107
+msgid "Mime type"
+msgstr "MIME-speco"
+
+#: modules/system.views.inc:108
+msgid "The mime type of the file."
+msgstr "La MIME-speco de la dosiero."
+
+#: modules/system.views.inc:126
+msgid "Size"
+msgstr "Grandeco"
+
+#: modules/system.views.inc:127
+msgid "The size of the file."
+msgstr "La grandeco de la dosiero."
+
+#: modules/system.views.inc:142
+msgid "Status"
+msgstr "Stato"
+
+#: modules/system.views.inc:143
+msgid "The status of the file."
+msgstr "La stato de la dosiero."
+
+#: modules/system.views.inc:158
+msgid "Upload date"
+msgstr "Alŝutita dato"
+
+#: modules/system.views.inc:159
+msgid "The date the file was uploaded."
+msgstr "La dato kiam la dosiero estis alŝutita."
+
+#: modules/system.views.inc:202
+#: modules/upload.views.inc:152
+msgid "Link this field to download the file"
+msgstr "Ligu ĉi tiun kampon por elŝuti la dosieron."
+
+#: modules/system.views.inc:229
+msgid "Temporary"
+msgstr "Provizora"
+
+#: modules/system.views.inc:230
+msgid "Permanent"
+msgstr "Daŭra"
+
+#: modules/system.views.inc:270
+msgid "No title"
+msgstr "Neniu titolo"
+
+#: modules/taxonomy.views.inc:24
+msgid "Taxonomy"
+msgstr "Taksonomio"
+
+#: modules/taxonomy.views.inc:48
+msgid "Vocabulary name"
+msgstr "Vortproviza nomo"
+
+#: modules/taxonomy.views.inc:50
+msgid "Name of the vocabulary a term is a member of. This will be the vocabulary that whichever term the \"Taxonomy: Term\" field is; and can similarly cause duplicates."
+msgstr "Nomo de la vortprovizo kiun termino estas membro. Tio estos la vortprovizo kiu ajn termino la \"Taksonomio: Termino\" kampo estas; kaj povas simile kaŭzi kopiojn."
+
+#: modules/taxonomy.views.inc:56
+msgid "Vocabulary ID"
+msgstr "Vortproviza ID"
+
+#: modules/taxonomy.views.inc:57
+msgid "The taxonomy vocabulary ID"
+msgstr "La taksonomia vortproviza ID"
+
+#: modules/taxonomy.views.inc:70
+msgid "Term"
+msgstr "Termino"
+
+#: modules/taxonomy.views.inc:71
+msgid "Taxonomy terms are attached to nodes."
+msgstr "Taksonomiaj terminoj estas alkroĉitaj al nodoj."
+
+#: modules/taxonomy.views.inc:97
+msgid "Taxonomy terms. Note that using this can cause duplicate nodes to appear in views; you must add filters to reduce the result set."
+msgstr "Taksonomiaj terminoj. Rimarku ke uzante ĉi tion povas kaŭzi ke kopiaj nodoj aperu en montroj; vi devas aldoni filtrilojn por redukti la rezultaron. "
+
+#: modules/taxonomy.views.inc:107
+msgid "Taxonomy term name"
+msgstr "Nomo de taksonomia termino"
+
+#: modules/taxonomy.views.inc:116
+msgid "The term weight field"
+msgstr "Peza kampo de la termino"
+
+#: modules/taxonomy.views.inc:128
+msgid "Term description"
+msgstr "Priskribo de la termino"
+
+#: modules/taxonomy.views.inc:129
+msgid "The description associated with a taxonomy term."
+msgstr "La priskribo asociita kun taksonomia termino."
+
+#: modules/taxonomy.views.inc:140
+msgid "Vocabulary"
+msgstr "Vortprovizo"
+
+#: modules/taxonomy.views.inc:141
+msgid "Filter the results of \"Taxonomy: Term\" to a particular vocabulary."
+msgstr "Filtri la rezultojn de \"Taksonomio: Termino\" al specifa vortprovizo."
+
+#: modules/taxonomy.views.inc:176
+msgid "Term ID"
+msgstr "Termina ID"
+
+#: modules/taxonomy.views.inc:177
+msgid "The taxonomy term ID"
+msgstr "La taksonomia termina ID"
+
+#: modules/taxonomy.views.inc:179
+msgid "All terms"
+msgstr "Ĉiuj terminoj"
+
+#: modules/taxonomy.views.inc:180
+msgid "Display all taxonomy terms associated with a node."
+msgstr "Montri ĉiujn taksonomiajn terminojn asociitaj kun nodo."
+
+#: modules/taxonomy.views.inc:253
+msgid "Term synonym"
+msgstr "Sinonimo de termino"
+
+#: modules/taxonomy.views.inc:254
+msgid "Term synonyms may be used to find terms by alternate names."
+msgstr "Sinonimoj de termino povas esti uzata por trovi terminojn per alternativaj nomoj."
+
+#: modules/taxonomy.views.inc:270
+msgid "Term ID (with depth)"
+msgstr "Termina ID (kun profundeco)"
+
+#: modules/taxonomy.views.inc:271
+msgid "The depth filter is more complex, so provides fewer options."
+msgstr "La profunda filtrilo estas pli kompleksa, do provizas malpli da opcioj."
+
+#: modules/taxonomy.views.inc:281
+msgid "Term ID depth modifier"
+msgstr "Profunda modifilo de termina ID"
+
+#: modules/taxonomy.views.inc:282
+msgid "Allows the \"depth\" for Taxonomy: Term ID (with depth) to be modified via an additional argument."
+msgstr "Ebligas ke la \"profundeco\" por Taksonomio: Termina ID (kun profundeco) estu modifebla per aldona argumento."
+
+#: modules/taxonomy.views.inc:312
+msgid "The depth will match nodes tagged with terms in the hierarchy. For example, if you have the term \"fruit\" and a child term \"apple\", with a depth of 1 (or higher) then filtering for the term \"fruit\" will get nodes that are tagged with \"apple\" as well as \"fruit\". If negative, the reverse is true; searching for \"apple\" will also pick up nodes tagged with \"fruit\" if depth is -1 (or lower)."
+msgstr "La profundeco kongruos kun nodoj etikeditaj kun terminoj en la hierarkio. Ekzemple, se oni havas la terminon \"frukto\" kaj ida termino \"pomo\", kun profundeco de 1 (aŭ pli) tiam filtrado por la termino \"frukto\" kongruos kun nodoj kiuj estas etiketitaj kun \"pomo\" kaj \"frukto\". Se negativa, la inverso veras, serĉante por \"pomo\" ankaŭ kongruos kun nodoj etiketitaj kun \"frukto\" se profundeco estas -1 (aŭ malpli)."
+
+#: modules/taxonomy.views.inc:317
+msgid "Allow multiple terms per argument"
+msgstr "Ebligi multajn erojn por ĉiu argumento"
+
+#: modules/taxonomy.views.inc:318
+msgid "If selected, users can enter multiple arguments in the form of 1+2+3. Due to the number of JOINs it would require, AND will be treated as OR with this argument."
+msgstr "Se elektita, uzantoj povas enmeti multajn argumentojn en la formo de 1+2+3. Pro la nombro da JOIN-oj kiujn tiu bezonatus, AND estos traktata kiel OR kun tiu argumento."
+
+#: modules/taxonomy.views.inc:324
+msgid "Set the breadcrumb for the term parents"
+msgstr "Agordu la paĝnivelan navigo por la gepatra termino"
+
+#: modules/taxonomy.views.inc:325
+msgid "If selected, the breadcrumb trail will include all parent terms, each one linking to this view. Note that this only works if just one term was received."
+msgstr "Se elektita, la paĝnivela navigo inkluzivos ĉiujn patrajn terminojn, ĉiu ligante al ĉi tiu montro. Rimarku ke tio funkcias nur se nur unu termino estis ricevita."
+
+#: modules/taxonomy.views.inc:411
+msgid "No name"
+msgstr "Neniu nomo"
+
+#: modules/taxonomy.views.inc:520
+msgid "Link this field to its term page"
+msgstr "Ligi ĉi tiun kampon al ĝia termina paĝo"
+
+#: modules/taxonomy.views.inc:527
+msgid "Limit terms by vocabulary"
+msgstr "Limigi terminojn per vortprovizo"
+
+#: modules/taxonomy.views.inc:541
+msgid "Vocabularies"
+msgstr "Vortprovizoj"
+
+#: modules/taxonomy.views.inc:612
+msgid "Link this field to its taxonomy term page"
+msgstr "Ligi ĉi tiun kampon al ĝia taksonomia termina paĝo"
+
+#: modules/taxonomy.views.inc:684
+msgid "No vocabulary"
+msgstr "Neniu vortprovizo"
+
+#: modules/taxonomy.views.inc:726
+msgid "Select which vocabulary to show terms for in the regular options."
+msgstr "Elekti kiun vortprovizon por montri terminojn en la regulaj opcioj."
+
+#: modules/taxonomy.views.inc:736
+msgid "Selection type"
+msgstr "Elekta speco"
+
+#: modules/taxonomy.views.inc:737
+msgid "Dropdown"
+msgstr "Falmenuo"
+
+#: modules/taxonomy.views.inc:737
+msgid "Autocomplete"
+msgstr "Aŭtokompletigi"
+
+#: modules/taxonomy.views.inc:743
+msgid "Show hierarchy in dropdown"
+msgstr "Montri hierarkion en falmenuo"
+
+#: modules/taxonomy.views.inc:760
+msgid "An invalid vocabulary is selected. Please change it in the options."
+msgstr "Nevalida vortprovizo estis elektita. Bonvolu ŝanĝi ĝin en la opcioj."
+
+#: modules/taxonomy.views.inc:778
+msgid "Select terms from vocabulary @voc"
+msgstr "Elekti terminojn el vortprovizo @voc"
+
+#: modules/taxonomy.views.inc:983
+msgid "Taxonomy term"
+msgstr "Taksonomia termino"
+
+#: modules/taxonomy.views.inc:1008
+msgid "If you wish to validate for specific vocabularies, check them; if none are checked, all nodes will pass."
+msgstr "Se vi deziras validigi speciajn vortprovizojn, kontrolu ilin; se neniu estas ŝaltita, ĉiuj nodoj sukcesos."
+
+#: modules/taxonomy.views.inc:1018
+msgid "Term IDs separated by , or +"
+msgstr "Terminaj ID-oj disigita per , aŭ +"
+
+#: modules/taxonomy.views.inc:1019
+msgid "Term name or synonym"
+msgstr "Termina nomo aŭ sinonimo"
+
+#: modules/taxonomy.views.inc:1020
+msgid "Term name/synonym converted to Term ID"
+msgstr "Termina nomo/sinonimo konvertita al Termina ID"
+
+#: modules/taxonomy.views.inc:1023
+msgid "Select the form of this argument; if using term name, it is generally more efficient to convert it to a term ID and use Taxonomy: Term ID rather than Taxonomy: Term Name\" as an argument."
+msgstr "Elekti la formon de ĉi tiu argumento; se uzante la terminan nomon, estas ĝenerale pli efika konverti ĝin al termina ID kaj uzi Taksonomion; Termina ID anstataŭ ol Taksonomio; Termina Nomo\" kiel argumento."
+
+#: modules/taxonomy.views.inc:910
+msgid "Unable to find term: @terms"
+msgid_plural "Unable to find terms: @terms"
+msgstr[0] "Ne eblas trovi terminon: @terms"
+msgstr[1] "Ne eblas trovi terminojn: @terms"
+
+#: modules/upload.views.inc:25
+msgid "Upload"
+msgstr "Alŝuti"
+
+#: modules/upload.views.inc:44
+msgid "The node the uploaded file is attached to"
+msgstr "La nodo al kiu la alŝutita dosiero estas alkroĉita"
+
+#: modules/upload.views.inc:46
+msgid "upload"
+msgstr "alŝuti"
+
+#: modules/upload.views.inc:57
+msgid "The description of the uploaded file."
+msgstr "La priskribo de la alŝutita dosiero"
+
+#: modules/upload.views.inc:74
+msgid "Listed"
+msgstr "Listita"
+
+#: modules/upload.views.inc:75
+msgid "Whether or not the file is marked to be listed."
+msgstr "Ĉu aŭ ne la dosiero estas markita kiel listita."
+
+#: modules/upload.views.inc:91
+msgid "The weight, used for sorting."
+msgstr "La pezo, uzita por ordigi."
+
+#: modules/upload.views.inc:110
+msgid "Attached files"
+msgstr "Alkroĉitaj dosieroj"
+
+#: modules/upload.views.inc:111
+msgid "All files attached to a node with upload.module."
+msgstr "Ĉiuj dosieroj alkroĉitaj al nodo kun alŝuta modulo."
+
+#: modules/upload.views.inc:118
+msgid "Has attached files"
+msgstr "Havas alkroĉitajn dosierojn"
+
+#: modules/upload.views.inc:119
+msgid "Only display items with attached files. This can cause duplicates if there are multiple attached files."
+msgstr "Nur montri erojn kun alkroĉitaj dosieroj. Tio povas kaŭzi kopiojn se estas multaj alkroĉitaj dosieroj."
+
+#: modules/upload.views.inc:123
+msgid "Add a relationship to gain access to more file data for files uploaded by upload.module. Note that this relationship will cause duplicate nodes if there are multiple files attached to the node."
+msgstr "Aldoni rilaton por ekaliron pli da dosieraj datumoj por dosieroj alŝutitaj de upload.module. Rimarku ke ĉi tiu rilato kaŭzos kopiitajn nodojn se estas multaj dosieroj alkroĉitaj al la nodo."
+
+#: modules/upload.views.inc:129
+msgid "Files"
+msgstr "Dosieroj"
+
+#: modules/upload.views.inc:158
+msgid "Only show \"listed\" file attachments"
+msgstr "Nur montri \"listitaj\" dosier-alkroĉaĵoj"
+
+#: modules/user.views.inc:28
+msgid "Users who have created accounts on your site."
+msgstr "Uzantoj kiuj kreis konton en via retejo."
+
+#: modules/user.views.inc:48
+msgid "Uid"
+msgstr "Uid"
+
+#: modules/user.views.inc:49
+msgid "The user ID"
+msgstr "La ID de uzanto"
+
+#: modules/user.views.inc:70
+msgid "Current"
+msgstr "Aktuala"
+
+#: modules/user.views.inc:71
+msgid "Filter the view to the currently logged in user."
+msgstr "Filtri la montron al la nune ensalutinta uzanto."
+
+#: modules/user.views.inc:80
+msgid "The user or author name."
+msgstr "La uzanto aŭ aŭtora nomo."
+
+#: modules/user.views.inc:96
+msgid "E-mail"
+msgstr "Retpoŝto"
+
+#: modules/user.views.inc:97
+msgid "Email address for a given user. Only accessible to users with <em>administer users</em> permission"
+msgstr "Retpoŝtadreso por uzanto. Nur alirebla al uzantoj kun permeso de <em>administri uzantoj</em>"
+
+#: modules/user.views.inc:114
+msgid "Picture"
+msgstr "Bildo"
+
+#: modules/user.views.inc:115
+msgid "The user's picture, if allowed."
+msgstr "La bildo de uzanto, se permesata."
+
+#: modules/user.views.inc:126
+msgid "The date the user was created."
+msgstr "La dato kiam la uzanto estis kreita."
+
+#: modules/user.views.inc:141
+msgid "Last access"
+msgstr "Lasta aliro"
+
+#: modules/user.views.inc:142
+msgid "The user's last access date."
+msgstr "Lasta alira dato de la uzanto."
+
+#: modules/user.views.inc:157
+msgid "Last login"
+msgstr "Lasta ensaluto"
+
+#: modules/user.views.inc:158
+msgid "The user's last login date."
+msgstr "Lasta ensaluta dato de la uzanto."
+
+#: modules/user.views.inc:174
+msgid "Whether a user is active or blocked."
+msgstr "Ĉu uzanto estas aktiva aŭ blokita."
+
+#: modules/user.views.inc:191
+msgid "Signature"
+msgstr "Subskribo"
+
+#: modules/user.views.inc:192
+msgid "The user's signature."
+msgstr "Subskribo de la uzanto."
+
+#: modules/user.views.inc:205
+msgid "Provide a simple link to edit the user."
+msgstr "Provizi simplan ligilon por redakti la uzanton."
+
+#: modules/user.views.inc:213
+msgid "Provide a simple link to delete the user."
+msgstr "Provizi simplan ligilon por forigi la uzanton."
+
+#: modules/user.views.inc:242
+msgid "Roles"
+msgstr "Roloj"
+
+#: modules/user.views.inc:243
+msgid "Roles that a user belongs to."
+msgstr "Roloj kiuj apertenas al uzanto."
+
+#: modules/user.views.inc:255
+msgid "No role"
+msgstr "Neniu rolo"
+
+#: modules/user.views.inc:306
+msgid "User ID from URL"
+msgstr "ID de uzanto de URL"
+
+#: modules/user.views.inc:322
+msgid "Also look for a node and use the node author"
+msgstr "Ankaŭ serĉu por nodo kaj uzu la nodan aŭtoron"
+
+#: modules/user.views.inc:396
+msgid "Link this field to its user"
+msgstr "Ligi ĉi tiun kampon al ĝia uzanto"
+
+#: modules/user.views.inc:519
+msgid "Link this field"
+msgstr "Ligi ĉi tiun kampon"
+
+#: modules/user.views.inc:522
+msgid "No link"
+msgstr "Neniu ligilo"
+
+#: modules/user.views.inc:523
+msgid "To the user"
+msgstr "Al la uzanto"
+
+#: modules/user.views.inc:524
+msgid "With a mailto:"
+msgstr "Kun mailto:"
+
+#: modules/user.views.inc:634
+msgid "Usernames"
+msgstr "Uzantnomoj"
+
+#: modules/user.views.inc:635
+msgid "Enter a comma separated list of user names."
+msgstr "Enmetu koman disigitan liston de uzantnomoj."
+
+#: modules/user.views.inc:754
+msgid "Is the logged in user"
+msgstr "Estas la ensalutinta uzanto"
+
+#: modules/user.views.inc:714
+msgid "Unable to find user: @users"
+msgid_plural "Unable to find users: @users"
+msgstr[0] "Ne eblas trovi uzanton: @users"
+msgstr[1] "Ne eblas trovi uzantojn: @users"
+
+#: modules/views.views.inc:18
+msgid "Global"
+msgstr "Globala"
+
+#: modules/views.views.inc:23
+msgid "Random"
+msgstr "Hazarda"
+
+#: modules/views.views.inc:24
+msgid "Randomize the display order."
+msgstr "Hazardigu la montran sinsekvon."
+
+#: modules/views.views.inc:31
+msgid "Null"
+msgstr "Nulo"
+
+#: modules/views.views.inc:32
+msgid "Allow an argument to be ignored. The query will not be altered by this argument."
+msgstr "Ebligas ke argumento estu ignorata. La informpeto ne ŝanĝiĝos pro ĉi tiu argumento."
+
+#: modules/views.views.inc:84
+msgid "Fail basic validation if any argument is given"
+msgstr "Malsukcesigu bazan validigon se argumento estas donita."
+
+#: modules/views.views.inc:86
+msgid "By checking this field, you can use this to make sure views with more arguments than necessary fail validation."
+msgstr "Ŝaltante ĉi tiun kampon, vi povas uzi ĝin por certigi ke montroj kun pliaj argumentoj ol necese malsukcesas validigon."
+
+#: theme/views-more.tpl.php:15
+msgid "more"
+msgstr "pli"
+
+#: theme/views-ui-edit-item.tpl.php:18
+msgid "None defined"
+msgstr "Neniuj difinitaj"
+
+#: theme/views-ui-edit-tab.tpl.php:31
+msgid "View settings"
+msgstr "Montraj agordoj"
+
+#: theme/views-ui-edit-view.tpl.php:11
+msgid "This view is being edited by user !user, and is therefore locked from editing by others. This lock is !age old. Click here to !break."
+msgstr "Ĉi tiu montro estas redaktata de uzanto !uzanto kaj tiel ŝlosita de redaktado de aliaj. Tiu ŝloso estas !age malnova. Alklaku ĉi tie por !break."
+
+#: theme/views-ui-edit-view.tpl.php:16
+msgid "New view"
+msgstr "Nova montro"
+
+#: theme/views-ui-edit-view.tpl.php:18
+msgid "Changed view"
+msgstr "Ŝanĝita montro"
+
+#: theme/views-ui-edit-view.tpl.php:23
+msgid "View %name, displaying items of type <strong>@base</strong>."
+msgstr "Montro %name, montrante erojn de speco <strong>@base</strong>."
+
+#: theme/views-ui-edit-view.tpl.php:42
+msgid "Live preview"
+msgstr "Viva antaŭvido"
+
+#: theme/views-ui-list-views.tpl.php:17
+msgid "<em>@type</em> @base view: <strong>@view</strong>"
+msgstr "<em>@type</em> @base montro: <strong>@view</strong>"
+
+#: theme/views-ui-list-views.tpl.php:27
+msgid "Title: @title"
+msgstr "Titolo: @title"
+
+#: theme/views-ui-list-views.tpl.php:30
+msgid "Path: !path"
+msgstr "Vojo: !path"
+
+#: theme/theme.inc:90
+msgid "Edit this view"
+msgstr "Redakti ĉi tiun montron"
+
+#: theme/theme.inc:290
+msgid "sort by @s"
+msgstr "ordigi laŭ @s"
+
+#: theme/theme.inc:500
+msgid "‹‹"
+msgstr "‹‹"
+
+#: theme/theme.inc:501
+msgid "››"
+msgstr "››"
+
+#: theme/theme.inc:511
+msgid "@current of @max"
+msgstr "@current de @max"
+
+#: views_export/views_export.module:76
+msgid "There are no views to be exported at this time."
+msgstr "Estas neniuj montroj por eksporti momente."
+
+#: views_export/views_export.module:108
+msgid "Show only these tags"
+msgstr "Montri nur ĉi tiujn etikedojn"
+
+#: views_export/views_export.module:122
+msgid "Module name"
+msgstr "Modula nomo"
+
+#: views_export/views_export.module:123
+msgid "Enter the module name to export code to."
+msgstr "Enmeti la modulan nomon al kiu vi volas eksporti kodon."
+
+#: views_export/views_export.module:190
+msgid "Put this in @module.views_default.inc in your modules/@module directory or modules/@module/includes directory"
+msgstr "Meti ĉi tion en @module.views_default.inc en via dosierujo de modules/@module aŭ modules/@module/includes."
+
+#: views_export/views_export.module:44
+msgid "use views exporter"
+msgstr "uzi montro-eksportilon"
+
+#: views_export/views_export.module:17
+msgid "Bulk export"
+msgstr "Amas-eksporti"
+
+#: views_export/views_export.module:0
+msgid "views_export"
+msgstr "views_export"
+
+#: views_export/views_export.info:0
+msgid "Views exporter"
+msgstr "Montro-eksportilo"
+
+#: views_export/views_export.info:0
+msgid "Allows exporting multiple views at once."
+msgstr "Ebligas eksportadon de multaj montroj samtempe."

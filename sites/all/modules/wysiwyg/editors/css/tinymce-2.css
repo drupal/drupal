@@ -1,0 +1,28 @@
+/* $Id: tinymce-2.css,v 1.2 2008/10/29 00:35:11 sun Exp $ */
+
+/**
+ * TinyMCE 2.x
+ */
+table.mceEditor {
+  clear: left;
+}
+
+/**
+ * Align all buttons and separators in a single row, so they wrap into multiple
+ * rows if required.
+ */
+.mceToolbarTop a, .mceToolbarBottom a {
+  float: left;
+}
+.mceSeparatorLine {
+  float: left;
+  margin-top: 3px;
+}
+.mceSelectList {
+  float: left;
+  margin-bottom: 1px;
+}
+/* Place table plugin buttons into new row */
+#mce_editor_0_table, #mce_editor_1_table {
+  clear: left;
+}

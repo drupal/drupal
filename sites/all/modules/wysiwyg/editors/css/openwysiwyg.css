@@ -1,0 +1,12 @@
+/* $Id: openwysiwyg.css,v 1.1 2009/06/06 05:20:09 sun Exp $ */
+
+/**
+ * openWYSIWYG.
+ */
+table.tableTextareaEditor, table.tableTextareaEditor table {
+  margin: 0;
+  border-collapse: separate;
+}
+table.tableTextareaEditor td {
+  padding: 0;
+}

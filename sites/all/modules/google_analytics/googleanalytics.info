@@ -1,0 +1,14 @@
+; $Id: googleanalytics.info,v 1.12.2.3 2011/01/02 22:01:30 hass Exp $
+name = "Google Analytics"
+description = Allows your site to be tracked by Google Analytics by adding a Javascript tracking code to every page.
+core = 7.x
+package = Statistics
+configure = admin/config/system/googleanalytics
+files[] = googleanalytics.test
+
+; Information added by drupal.org packaging script on January 1, 1970 - 00:00
+version = "7.x-1.1"
+core = "7.x"
+project = "google_analytics"
+datestamp = "1297103606"
+

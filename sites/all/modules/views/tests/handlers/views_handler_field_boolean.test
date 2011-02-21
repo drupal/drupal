@@ -1,0 +1,64 @@
+<?php
+// $Id: views_handler_field_boolean.test,v 1.1.2.1 2010/11/07 11:32:25 dereine Exp $
+
+class ViewsHandlerFieldBooleanTest extends ViewsSqlTest {
+  public static function getInfo() {
+    return array(
+      'name' => 'Field: Boolean',
+      'description' => 'Test the core views_handler_field_boolean handler.',
+      'group' => 'Views Handlers',
+    );
+  }
+
+  function dataSet() {
+    // Use default dataset but remove the age from john and paul
+    $data = parent::dataSet();
+    $data[0]['age'] = 0;
+    $data[3]['age'] = 0;
+    return $data;
+  }
+  
+  function viewsData() {
+    $data = parent::viewsData();
+    $data['views_test']['age']['field']['handler'] = 'views_handler_field_boolean';
+    return $data;
+  }
+
+  public function testFieldBoolean() {
+    $view = $this->getBasicView();
+
+    $view->display['default']->handler->override_option('fields', array(
+      'age' => array(
+        'id' => 'age',
+        'table' => 'views_test',
+        'field' => 'age',
+        'relationship' => 'none',
+      ),
+    ));
+
+    $this->executeView($view);
+
+    // This is john, which has no age, there are no custom formats defined, yet.
+    $this->assertEqual(t('No'), $view->field['age']->advanced_render($view->result[0]));
+    $this->assertEqual(t('Yes'), $view->field['age']->advanced_render($view->result[1]));
+    
+    // Reverse the output.
+    $view->field['age']->options['not'] = TRUE;
+    $this->assertEqual(t('Yes'), $view->field['age']->advanced_render($view->result[0]));
+    $this->assertEqual(t('No'), $view->field['age']->advanced_render($view->result[1]));
+    
+    unset($view->field['age']->options['not']);
+    
+    // Use another output format.
+    $view->field['age']->options['type'] = 'true-false';
+    $this->assertEqual(t('False'), $view->field['age']->advanced_render($view->result[0]));
+    $this->assertEqual(t('True'), $view->field['age']->advanced_render($view->result[1]));
+    
+    // Set a custom output format.
+    $view->field['age']->formats['test'] = array(t('Test-True'), t('Test-False'));
+    $view->field['age']->options['type'] = 'test';
+    $this->assertEqual(t('Test-False'), $view->field['age']->advanced_render($view->result[0]));
+    $this->assertEqual(t('Test-True'), $view->field['age']->advanced_render($view->result[1]));
+    
+  }
+}

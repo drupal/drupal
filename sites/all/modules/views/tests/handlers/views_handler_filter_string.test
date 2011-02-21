@@ -1,0 +1,406 @@
+<?php
+// $Id: views_handler_filter_string.test,v 1.1.2.1 2010/12/27 22:06:04 dereine Exp $
+
+class viewsHandlerFilterStringTest extends ViewsSqlTest {
+  var $column_map = array();
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Filter: String',
+      'description' => 'Tests the core views_handler_filter_string handler.',
+      'group' => 'Views Handlers',
+    );
+  }
+
+  function setUp() {
+    parent::setUp();
+    $this->column_map = array(
+      'views_test_name' => 'name',
+    );
+  }
+
+  function viewsData() {
+    $data = parent::viewsData();
+    $data['views_test']['name']['filter']['allow empty'] = TRUE;
+    $data['views_test']['job']['filter']['allow empty'] = FALSE;
+    $data['views_test']['description'] = $data['views_test']['name'];
+
+    return $data;
+  }
+
+  protected function schemaDefinition() {
+    $schema = parent::schemaDefinition();
+    $schema['views_test']['fields']['description'] = array(
+      'description' => "A person's description",
+      'type' => 'text',
+      'not null' => FALSE,
+      'size' => 'big',
+    );
+
+    return $schema;
+  }
+
+  /**
+   * A extended test dataset.
+   */
+  protected function dataSet() {
+    $dataset = parent::dataSet();
+    $dataset[0]['description'] = 'John Winston Ono Lennon, MBE (9 October 1940 – 8 December 1980) was an English musician and singer-songwriter who rose to worldwide fame as one of the founding members of The Beatles, one of the most commercially successful and critically acclaimed acts in the history of popular music. Along with fellow Beatle Paul McCartney, he formed one of the most successful songwriting partnerships of the 20th century.';
+    $dataset[1]['description'] = 'George Harrison,[1] MBE (25 February 1943 – 29 November 2001)[2] was an English rock guitarist, singer-songwriter, actor and film producer who achieved international fame as lead guitarist of The Beatles.';
+    $dataset[2]['description'] = 'Richard Starkey, MBE (born 7 July 1940), better known by his stage name Ringo Starr, is an English musician, singer-songwriter, and actor who gained worldwide fame as the drummer for The Beatles.';
+    $dataset[3]['description'] = 'Sir James Paul McCartney, MBE (born 18 June 1942) is an English musician, singer-songwriter and composer. Formerly of The Beatles (1960–1970) and Wings (1971–1981), McCartney is the most commercially successful songwriter in the history of popular music, according to Guinness World Records.[1]';
+    $dataset[4]['description'] = NULL;
+
+    return $dataset;
+  }
+
+  protected function getBasicView() {
+    $view = parent::getBasicView();
+    $view->display['default']->options['fields']['description'] = array(
+      'id' => 'description',
+      'table' => 'views_test',
+      'field' => 'description',
+      'relationship' => 'none',
+    );
+    return $view;
+  }
+
+  function testFilterStringEqual() {
+    $view = $this->getBasicView();
+
+    // Change the filtering
+    $view->display['default']->handler->override_option('filters', array(
+      'name' => array(
+        'id' => 'name',
+        'table' => 'views_test',
+        'field' => 'name',
+        'relationship' => 'none',
+        'operator' => '=',
+        'value' => 'Ringo',
+      ),
+    ));
+
+    $this->executeView($view);
+    $resultset = array(
+      array(
+        'name' => 'Ringo',
+      ),
+    );
+    $this->assertIdenticalResultset($view, $resultset, $this->column_map);
+    $view->destroy();
+
+
+    $view = $this->getBasicView();
+
+    // Change the filtering
+    $view->display['default']->handler->override_option('filters', array(
+      'name' => array(
+        'id' => 'name',
+        'table' => 'views_test',
+        'field' => 'name',
+        'relationship' => 'none',
+        'operator' => '!=',
+        'value' => array('value' => 'Ringo'),
+      ),
+    ));
+
+    $this->executeView($view);
+    $resultset = array(
+      array(
+        'name' => 'John',
+      ),
+      array(
+        'name' => 'George',
+      ),
+      array(
+        'name' => 'Paul',
+      ),
+      array(
+        'name' => 'Meredith',
+      ),
+    );
+    $this->assertIdenticalResultset($view, $resultset, $this->column_map);
+  }
+
+  function testFilterStringContains() {
+    $view = $this->getBasicView();
+
+    // Change the filtering
+    $view->display['default']->handler->override_option('filters', array(
+      'name' => array(
+        'id' => 'name',
+        'table' => 'views_test',
+        'field' => 'name',
+        'relationship' => 'none',
+        'operator' => 'contains',
+        'value' => 'ing',
+      ),
+    ));
+
+    $this->executeView($view);
+    $resultset = array(
+      array(
+        'name' => 'Ringo',
+      ),
+    );
+    $this->assertIdenticalResultset($view, $resultset, $this->column_map);
+  }
+
+  function testFilterStringWord() {
+    return;
+    $view = $this->getBasicView();
+
+    // Change the filtering
+    $view->display['default']->handler->override_option('filters', array(
+      'description' => array(
+        'id' => 'description',
+        'table' => 'views_test',
+        'field' => 'description',
+        'relationship' => 'none',
+        'operator' => 'word',
+        'value' => 'musician producer',
+      ),
+    ));
+
+    $this->executeView($view);
+    $resultset = array(
+      array(
+        'name' => 'Ringo',
+      ),
+    );
+    $this->assertIdenticalResultset($view, $resultset, $this->column_map);
+    $view->destroy();
+
+    $view = $this->getBasicView();
+
+    // Change the filtering
+    $view->display['default']->handler->override_option('filters', array(
+      'description' => array(
+        'id' => 'description',
+        'table' => 'views_test',
+        'field' => 'description',
+        'relationship' => 'none',
+        'operator' => 'allwords',
+        'value' => 'Richard Starkey',
+      ),
+    ));
+
+    $this->executeView($view);
+    $resultset = array(
+      array(
+        'name' => 'Ringo',
+      ),
+    );
+    $this->assertIdenticalResultset($view, $resultset, $this->column_map);
+  }
+  function testFilterStringStarts() {
+    $view = $this->getBasicView();
+
+    // Change the filtering
+    $view->display['default']->handler->override_option('filters', array(
+      'description' => array(
+        'id' => 'description',
+        'table' => 'views_test',
+        'field' => 'description',
+        'relationship' => 'none',
+        'operator' => 'starts',
+        'value' => 'George',
+      ),
+    ));
+
+    $this->executeView($view);
+    $resultset = array(
+      array(
+        'name' => 'George',
+      ),
+    );
+    $this->assertIdenticalResultset($view, $resultset, $this->column_map);
+  }
+  function testFilterStringNotStarts() {
+    $view = $this->getBasicView();
+
+    // Change the filtering
+    $view->display['default']->handler->override_option('filters', array(
+      'description' => array(
+        'id' => 'description',
+        'table' => 'views_test',
+        'field' => 'description',
+        'relationship' => 'none',
+        'operator' => 'not_starts',
+        'value' => 'George',
+      ),
+    ));
+
+    $this->executeView($view);
+    $resultset = array(
+      array(
+        'name' => 'John',
+      ),
+      array(
+        'name' => 'Ringo',
+      ),
+      array(
+        'name' => 'Paul',
+      ),
+      // There is no Meredith returned because his description is empty
+    );
+    $this->assertIdenticalResultset($view, $resultset, $this->column_map);
+  }
+
+  function testFilterStringEnds() {
+    $view = $this->getBasicView();
+
+    // Change the filtering
+    $view->display['default']->handler->override_option('filters', array(
+      'description' => array(
+        'id' => 'description',
+        'table' => 'views_test',
+        'field' => 'description',
+        'relationship' => 'none',
+        'operator' => 'ends',
+        'value' => 'Beatles.',
+      ),
+    ));
+
+    $this->executeView($view);
+    $resultset = array(
+      array(
+        'name' => 'George',
+      ),
+      array(
+        'name' => 'Ringo',
+      ),
+    );
+    $this->assertIdenticalResultset($view, $resultset, $this->column_map);
+  }
+
+  function testFilterStringNotEnds() {
+    $view = $this->getBasicView();
+
+    // Change the filtering
+    $view->display['default']->handler->override_option('filters', array(
+      'description' => array(
+        'id' => 'description',
+        'table' => 'views_test',
+        'field' => 'description',
+        'relationship' => 'none',
+        'operator' => 'not_ends',
+        'value' => 'Beatles.',
+      ),
+    ));
+
+    $this->executeView($view);
+    $resultset = array(
+      array(
+        'name' => 'John',
+      ),
+      array(
+        'name' => 'Paul',
+      ),
+      // There is no Meredith returned because his description is empty
+    );
+    $this->assertIdenticalResultset($view, $resultset, $this->column_map);
+  }
+
+  function testFilterStringNot() {
+    $view = $this->getBasicView();
+
+    // Change the filtering
+    $view->display['default']->handler->override_option('filters', array(
+      'description' => array(
+        'id' => 'description',
+        'table' => 'views_test',
+        'field' => 'description',
+        'relationship' => 'none',
+        'operator' => 'not',
+        'value' => 'Beatles.',
+      ),
+    ));
+
+    $this->executeView($view);
+    $resultset = array(
+      array(
+        'name' => 'John',
+      ),
+      array(
+        'name' => 'Paul',
+      ),
+      // There is no Meredith returned because his description is empty
+    );
+    $this->assertIdenticalResultset($view, $resultset, $this->column_map);
+  }
+
+  function testFilterStringShorter() {
+    $view = $this->getBasicView();
+
+    // Change the filtering
+    $view->display['default']->handler->override_option('filters', array(
+      'name' => array(
+        'id' => 'name',
+        'table' => 'views_test',
+        'field' => 'name',
+        'relationship' => 'none',
+        'operator' => 'shorterthan',
+        'value' => 5,
+      ),
+    ));
+
+    $this->executeView($view);
+    $resultset = array(
+      array(
+        'name' => 'John',
+      ),
+      array(
+        'name' => 'Paul',
+      ),
+    );
+    $this->assertIdenticalResultset($view, $resultset, $this->column_map);
+  }
+
+  function testFilterStringLonger() {
+    $view = $this->getBasicView();
+
+    // Change the filtering
+    $view->display['default']->handler->override_option('filters', array(
+      'name' => array(
+        'id' => 'name',
+        'table' => 'views_test',
+        'field' => 'name',
+        'relationship' => 'none',
+        'operator' => 'longerthan',
+        'value' => 7,
+      ),
+    ));
+
+    $this->executeView($view);
+    $resultset = array(
+      array(
+        'name' => 'Meredith',
+      ),
+    );
+    $this->assertIdenticalResultset($view, $resultset, $this->column_map);
+  }
+
+  function testFilterStringEmpty() {
+    $view = $this->getBasicView();
+
+    // Change the filtering
+    $view->display['default']->handler->override_option('filters', array(
+      'description' => array(
+        'id' => 'description',
+        'table' => 'views_test',
+        'field' => 'description',
+        'relationship' => 'none',
+        'operator' => 'empty',
+      ),
+    ));
+
+    $this->executeView($view);
+    $resultset = array(
+      array(
+        'name' => 'Meredith',
+      ),
+    );
+    $this->assertIdenticalResultset($view, $resultset, $this->column_map);
+  }
+}

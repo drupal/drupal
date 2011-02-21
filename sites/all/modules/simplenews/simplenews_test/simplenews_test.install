@@ -1,0 +1,26 @@
+<?php
+// $Id: simplenews_test.install,v 1.2 2009/12/23 23:25:40 sutharsan Exp $
+
+/**
+ * @file
+ * Install simplenews test.
+ */
+
+/**
+ * Implementation of hook_enable().
+ */
+function simplenews_test_enable() {
+  drupal_set_message('OLD: ' . variable_get('smtp_library', ''));
+  variable_set('simplenews_test_old_smtp_library', variable_get('smtp_library', ''));
+  variable_set('smtp_library', drupal_get_filename('module', 'simplenews_test'));
+  drupal_set_message('NEW: ' . variable_get('smtp_library', ''));
+}
+
+/**
+ * Implementation of hook_disable().
+ */
+function simplenews_test_disable() {
+  // Restore SMTP server.
+  variable_set('smtp_library', variable_get('simplenews_test_old_smtp_library', ''));
+  variable_del('simplenews_test_old_smtp_library');
+}

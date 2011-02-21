@@ -1,0 +1,235 @@
+<!-- $Id: api-tables.html,v 1.8.4.3 2010/10/12 21:21:02 merlinofchaos Exp $ -->
+Tables are described to Views via hook_views_data(), which returns an array of table information, keyed by the name of the table. For example, if your module is describing three tables, 'foo', 'bar' and 'baz', your array will look like this:
+<pre>$data = array(
+  'foo' =&gt; array(
+    // ...info here...
+  ),
+  'bar' =&gt; array(
+    // ...info here...
+  ),
+  'baz' =&gt; array(
+    // ...info here...
+  ),
+);
+</pre>
+
+The key should be the actual database name of the table (not including prefix), but it can be an alias as long as the join information (explained later) contains the real name of the table.
+
+Each item in the array should be a field in the table, with the exception of a special information section called 'table'. Example:
+
+<pre>$data['foo'] = array(
+  'table' =&gt; array(
+    // ... info about the table, described later ...
+  ),
+  'bar' =&gt; array(
+    // ... info about the field named 'bar', i.e, foo.bar,
+  ),
+  'baz' =&gt; array(
+    // ... info about the field named 'baz', i.e, foo.baz,
+  ),
+);
+</pre>
+
+Once you get down to an array that contains actual data, that piece of the array will often be referred to as the definition.
+
+<h2>The 'table' section</h2>
+Each table should have a 'table' section in it, which is used to set default information for the table, such as the group, as well as the very important joins and whether or not this is a base table.
+
+First, there are several items that are actually for fields but can be placed here so that all fields within the table inherit them:
+<dl>
+<dt>group</dt>
+<dd>The name of the group this item will be with. In the UI, this is displayed as Group: Title. For example, "Node: Node ID", "Taxonomy: Term description", etc. It is important to be consistent with groups, because the UI sorts by group, and allows filtering by group to find fields as well.</dd>
+<dt>title</dt>
+<dd>The actual name of the field; it should be concise and descriptive.</dd>
+<dt>help</dt>
+<dd>A longer description to help describe what the field is or does. It should try to be only a line or two so as not to clutter the UI.</dd>
+</dl>
+
+In general, having 'title' and 'help' at the table level doesn't make a lot of sense, but usually every item in a table is in the same group. Thus it is very common to define the 'group':
+
+<pre>
+  $data['foo']['table']['group'] = t('Foo');
+</pre>
+
+<h3>Base table</h3>
+If your table is a base table -- meaning it can be the primary, central table for a View to use, you can declare it to be a base table. This primarily provides UI information so that it can be selected.
+For example:
+<pre>
+  // Advertise this table as a possible base table
+  $data['node']['table']['base'] = array(
+    'field' =&gt; 'nid',
+    'title' =&gt; t('Node'),
+    'help' =&gt; t("Nodes are a Drupal site's primary content."),
+    'weight' =&gt; -10,
+  );
+</pre>
+
+The following tags are available in the
+<dl>
+<dt>field</dt>
+<dd>The primary key field for this table. For Views to treat any table as a base table, it <b>must</b> have a primary field. For node this is the 'nid', for users this is the 'uid', etc. <strong>Without a single primary key field (i.e. not a composite key), Views will not be able to utilize the table as a base table.</strong> If your table does not have a primary key field, it is not too difficult to just add a serial field to it, usually.</dd>
+<dt>title</dt>
+<dd>The title of this table in the UI. It should be singular and describe the object that this table contains from the perspective of the user.</dd>
+<dt>help</dt>
+<dd>A short piece of text to describe what object this table contains.</dd>
+<dt>database</dt>
+<dd>If this table is held in a different database from your Drupal database, specify it as a string in the exact same format as the settings.php file. This is a special purpose variable that will probably be only used in site specific code, and <b>it must be the same database type as your Drupal database</b>. Also, don't try to join it to any table that isn't in the same database. That'll just create all kinds of silly errors. For example:
+<pre>
+  // In settings.php for your site
+  // Your drupal (site) database needs to be called 'default'
+  $db_url['default'] = 'mysqli://user:pass@host/drupal_db';
+  $db_url['budget'] = 'mysqli://user:pass@host/other_db';
+</pre>
+Then when you are describing the external database in your base table you would write something like this:
+<pre>
+  $data[$table]['table']['base'] = array(
+    'field' => 'Primary key',
+    'title' => t('Field name'),
+    'help' => t('Field description'),
+    'database' => 'budget',
+    'weight' => -10,
+    );
+</pre>
+</dd>
+</dl>
+
+<h3>Linking your table to existing base tables</h3>
+For Views to use your table, it has to either be a base table, or know how to link to an existing base table. Or sometimes both. Views uses this information to create a path to the base table; when the table is added to the query, Views will walk along this path, adding all tables required into the query.
+
+<div class="help-box" style="text-align:center">
+<a href="path:images/node-term_node-term_data-large.png"><img src="path:images/node-term_node-term_data.png" /></a>
+<em>How taxonomy_term_data joins to node</em>
+</div>
+
+In the above example, to use these with 'node' as the base table, both 'taxonomy_term_data' and 'term_node' need to be defined, and they each need a join handler for node:
+
+<pre>
+$data['taxonomy_term_data']['table']['join']['node'] = array(
+  'left_table' =&gt; 'term_node',
+  'left_field' =&gt; 'tid',
+  'field' =&gt; 'tid',
+);
+</pre>
+
+The above can be read as "In order to join to the node table, the taxonomy_term_data table must first link to the term_node table, and they join on the 'tid' field.". When adding this table to the query for a node view, Views will look at this and then look for the term_node table.
+
+<pre>
+$data['term_node']['table']['join']['node'] = array(
+  'left_field' =&gt; 'nid',
+  'field' =&gt; 'nid',
+);
+</pre>
+
+Above, the fact that 'left_table' is left out lets us know that term_node links directly to the node table, using the 'nid' field on both sides of the join.
+
+Quite a few more fields are available in this definition:
+<dl>
+  <dt>handler</dt>
+  <dd>The name of the handler object to use. Defaults to 'views_join'. You may create custom join handlers that may or may not use any of the data below, as they see fit.</dd>
+  <dt>table</dt>
+  <dd>Table to join. This is optional, and should only be used if the table being referenced is an alias.</dd>
+  <dt>field</dt>
+  <dd>Field to join on. This is required.</dd>
+  <dt>left_table</dt>
+  <dd>The next step toward the final destination. If this is the final destination it may be omitted.</dd>
+  <dt>left_field</dt>
+  <dd>The field to join to on the left side. This is required.</dd>
+  <dt>type</dt>
+  <dd>Either LEFT (default) or INNER.</dd>
+  <dt>extra</dt>
+  <dd>Either a string that's directly added, or an array of items. Each item is, itself, an array:
+    <dl>
+      <dt>field</dt>
+      <dd>Field or formula</dd>
+      <dt>operator</dt>
+      <dd>Similar to filters, this is the operator, such as &gt;, &lt;, =, etc. Defaults to = or IN.</dd>
+      <dt>value</dt>
+      <dd>Must be set. If an array, operator will be defaulted to IN.</dd>
+      <dt>numeric</dt>
+      <dd>If true, the value will not be surrounded in quotes, and %d will be used for its placeholder.</dd>
+    </dl>
+  </dd>
+  <dt>extra type</dt>
+  <dd> How all the extras will be combined. Either AND or OR. Defaults to AND.</dd>
+</dl>
+
+<h2>Describing fields on tables</h2>
+Aside from the special table tag, each table can also have an unlimited number of field designations; these correspond roughly to fields on the table, though it is very common to use non-fields to display data that isn't directly in a field, such as data arrived from formulae, or special links related to the object the table is part of.
+
+Each field is described in the view data with an array, keyed to the database name of the field. This array may contain some information fields, plus an entry in each of the five types of items Views has per field: argument, field, filter, relationship, sort. For example:
+
+<pre>
+$data['node']['nid'] = array(
+  'title' =&gt; t('Nid'),
+  'help' =&gt; t('The node ID of the node.'), // The help that appears on the UI,
+  // Information for displaying the nid
+  'field' =&gt; array(
+    'handler' =&gt; 'views_handler_field_node',
+    'click sortable' =&gt; TRUE,
+  ),
+  // Information for accepting a nid as an argument
+  'argument' =&gt; array(
+    'handler' =&gt; 'views_handler_argument_node_nid',
+    'name field' =&gt; 'title', // the field to display in the summary.
+    'numeric' =&gt; TRUE,
+    'validate type' =&gt; 'nid',
+  ),
+  // Information for accepting a nid as a filter
+  'filter' =&gt; array(
+    'handler' =&gt; 'views_handler_filter_numeric',
+  ),
+  // Information for sorting on a nid.
+  'sort' =&gt; array(
+    'handler' =&gt; 'views_handler_sort',
+  ),
+);
+</pre>
+
+The above example describes the 'nid' field on the 'node' table, providing 4 of the 5 handlers. Note that while field is normally expected to be the database name of the field, it doesn't have to be; you can use an alias (which is how you get multiple handlers per field) or something completely made up for items that aren't tied to the database. For example:
+
+<pre>
+$data['node']['edit_node'] = array(
+  'field' =&gt; array(
+    'title' =&gt; t('Edit link'),
+    'help' =&gt; t('Provide a simple link to edit the node.'),
+    'handler' =&gt; 'views_handler_field_node_link_edit',
+  ),
+);
+</pre>
+
+The above handler definition an edit link to a node, but this isn't a field in and of itself. For aliased fields, here is another example:
+
+<pre>
+$data['users']['uid_current'] = array(
+  'real field' =&gt; 'uid',
+  'title' =&gt; t('Current'),
+  'help' =&gt; t('Filter the view to the currently logged in user.'),
+  'filter' =&gt; array(
+    'handler' =&gt; 'views_handler_filter_user_current',
+  ),
+);
+</pre>
+
+The above definition provides an alternate filter handler on the uid field for the current user.
+
+The following items are allowed in the field definition:
+
+<dl>
+<dt>group, title, help</dt>
+<dd>As above, these fields are for the UI. If placed here, any of these fields will override a setting on the base table.</dd>
+<dt>real field</dt>
+<dd>If this field is an alias, the "real field" may be placed here, and the handler will never know the difference.</dd>
+
+<dt>field</dt>
+<dd>A handler definition for the "Field" section, which is a field that may be displayed in a view. The definition is an array; the contents of the array are completely up to the handler, other than the 'handler' definition. If omitted, handler will default to 'views_handler_field'.</dd>
+<dt>filter</dt>
+<dd>A handler definition for the "Filters" section, which will be used to apply WHERE clauses to the view. The definition is an array; the contents of the array are completely up to the handler, other than the 'handler' definition. If omitted, handler will default to 'views_handler_filter'.</dd>
+<dt>sort</dt>
+<dd>A handler definition for the "Sort criteria" section, which will be used to add an ORDER BY clause to the view. The definition is an array; the contents of the array are completely up to the handler, other than the 'handler' definition. If omitted, handler will default to 'views_handler_sort'.</dd>
+<dt>relationship</dt>
+<dd>A handler definition for the "Field" section, which is a way to bring in new or alternative base tables in the view. The definition is an array; the contents of the array are completely up to the handler, other than the 'handler' definition. If omitted, handler will default to 'views_handler_relationship'. The basic relationship handler requires 'base' and 'base field' to be set; 'base' and 'base field' represent the "right" half of the join that will use this field as the left side.</dd>
+<dt>argument</dt>
+<dd>A handler definition for the "Field" section, which is method of accepting user input from the URL or some other source. The definition is an array; the contents of the array are completely up to the handler, other than the 'handler' definition. If omitted, handler will default to 'views_handler_argument'.</dd>
+</dl>
+
+For more information about what handlers need/use what data, visit <a href="http://views.doc.logrus.com">the Views API site</a> and check out the available handlers.

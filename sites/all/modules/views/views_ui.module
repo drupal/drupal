@@ -1,0 +1,422 @@
+<?php
+// $Id: views_ui.module,v 1.109.6.18 2010/12/24 13:42:00 dereine Exp $
+/**
+ * @file views_ui.module
+ * Provide structure for the administrative interface to Views.
+ */
+
+/*
+ * Implements hook_menu().
+ */
+function views_ui_menu() {
+  $items = array();
+
+  // Minor code reduction technique
+  $base = array(
+    'access callback' => 'user_access',
+    'access arguments' => array('administer views'),
+    'file' => 'includes/admin.inc',
+  );
+
+  $callback = $base + array('type' => MENU_CALLBACK);
+
+  $convert = array('file' => 'includes/convert.inc') + $base;
+
+  $items['admin/structure/views'] = $base + array(
+    'title' => 'Views',
+    'page callback' => 'views_ui_list_views',
+    'description' => 'Views are customized lists of content on your system; they are highly configurable and give you control over how lists of content are presented.',
+    'type' => MENU_NORMAL_ITEM
+  );
+  $items['admin/structure/views/list'] = $base + array(
+    'title' => 'List',
+    'page callback' => 'views_ui_list_views',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => '-1'
+  );
+  $items['admin/structure/views/add'] = $base + array(
+    'title' => 'Add new view',
+    'page callback' => 'views_ui_add_page',
+    'type' => MENU_LOCAL_ACTION,
+  );
+  $items['admin/structure/views/import'] = array(
+    'title' => 'Import view from code',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('views_ui_import_page'),
+    'access callback' => 'views_import_access',
+    'type' => MENU_LOCAL_ACTION,
+  ) + $base;
+  $items['admin/structure/views/tools'] = $base + array(
+    'title' => 'Tools',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('views_ui_admin_tools'),
+    'type' => MENU_LOCAL_TASK
+  );
+  $items['admin/structure/views/tools/basic'] = $base + array(
+    'title' => 'Basic',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('views_ui_admin_tools'),
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -10,
+  );
+
+  $items['admin/structure/views/tools/convert'] = $convert + array(
+    'title' => 'Convert',
+    'description' => 'Convert stored Views 1 views.',
+    'page callback' => 'views_ui_admin_convert',
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 1,
+  );
+  $items['admin/structure/views1/delete'] = $convert + array(
+    'title' => 'Delete view',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('views_ui_delete1_confirm', 4),
+    'type' => MENU_CALLBACK,
+  );
+  $items['admin/structure/views1/convert'] = $convert + array(
+    'title' => 'Convert view',
+    'page callback' => 'views_ui_convert1',
+    'page arguments' => array(4),
+    'type' => MENU_CALLBACK,
+  );
+
+  $items['admin/structure/views/delete/%views_ui_cache'] = $callback + array(
+    'title' => 'Delete view',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('views_ui_delete_confirm', 4),
+  );
+  $items['admin/structure/views/break-lock/%views_ui_cache'] = $callback + array(
+    'title' => 'Delete view',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('views_ui_break_lock_confirm', 4),
+  );
+  $items['admin/structure/views/export/%views_ui_cache'] = $callback + array(
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('views_ui_export_page', 4),
+    'type' => MENU_LOCAL_TASK
+  );
+  $items['admin/structure/views/clone/%views_ui_cache'] = $callback + array(
+    'page callback' => 'views_ui_clone_page',
+    'page arguments' => array(4),
+    'type' => MENU_LOCAL_TASK
+  );
+  $items['admin/structure/views/enable/%views_ui_default'] = $callback + array(
+    'page callback' => 'views_ui_enable_page',
+    'page arguments' => array(4),
+  );
+  $items['admin/structure/views/disable/%views_ui_default'] = $callback + array(
+    'page callback' => 'views_ui_disable_page',
+    'page arguments' => array(4),
+  );
+
+  // Many line items for editing a view.
+  $items['admin/structure/views/edit/%views_ui_cache'] = $base + array(
+    'title' => 'Edit',
+    'page callback' => 'views_ui_edit_page',
+    'page arguments' => array(4),
+    'type' => MENU_LOCAL_TASK
+  );
+  $ajax_callbacks = array(
+    'analyze' => 'views_ui_analyze_view',
+    'add-display' => 'views_ui_add_display',
+    'preview' => 'views_ui_preview',
+    'reorder-displays' => 'views_ui_reorder_view',
+  );
+
+  foreach ($ajax_callbacks as $menu => $menu_callback) {
+    $items['admin/structure/views/nojs/' . $menu . '/%views_ui_cache'] = $callback + array(
+      'page callback' => $menu_callback,
+      'page arguments' => array(FALSE, 5),
+    );
+    $items['admin/structure/views/ajax/' . $menu . '/%views_ui_cache'] = $callback + array(
+      'page callback' => $menu_callback,
+      'page arguments' => array(TRUE, 5),
+      'delivery callback' => 'views_ui_ajax_deliver',
+    );
+  }
+
+  $items['admin/structure/views/nojs/human_name/%views_ui_cache'] = $callback + array(
+    'page callback' => 'views_ui_edit_details',
+    'page arguments' => array('human_name', FALSE, 5),
+  );
+  $items['admin/structure/views/ajax/human_name/%views_ui_cache'] = $callback + array(
+    'page callback' => 'views_ui_edit_details',
+    'page arguments' => array('human_name', TRUE, 5),
+    'delivery callback' => 'views_ui_ajax_deliver',
+  );
+  $items['admin/structure/views/nojs/tag/%views_ui_cache'] = $callback + array(
+    'page callback' => 'views_ui_edit_details',
+    'page arguments' => array('tag', FALSE, 5),
+  );
+  $items['admin/structure/views/ajax/tag/%views_ui_cache'] = $callback + array(
+    'page callback' => 'views_ui_edit_details',
+    'page arguments' => array('tag', TRUE, 5),
+    'delivery callback' => 'views_ui_ajax_deliver',
+  );
+  $items['admin/structure/views/nojs/description/%views_ui_cache'] = $callback + array(
+    'page callback' => 'views_ui_edit_details',
+    'page arguments' => array('description', FALSE, 5),
+  );
+  $items['admin/structure/views/ajax/description/%views_ui_cache'] = $callback + array(
+    'page callback' => 'views_ui_edit_details',
+    'page arguments' => array('description', TRUE, 5),
+    'delivery callback' => 'views_ui_ajax_deliver',
+  );
+
+  $items['admin/build/views/nojs/clone-display/%views_ui_cache'] = $callback + array(
+    'page callback' => 'views_ui_clone_display',
+    'page arguments' => array(FALSE, 5, 6),
+  );
+
+  $items['admin/build/views/ajax/clone-display/%views_ui_cache'] = $callback + array(
+    'page callback' => 'views_ui_clone_display',
+    'page arguments' => array(TRUE, 5, 6),
+    'delivery callback' => 'views_ui_ajax_deliver',
+  );
+
+  $items['admin/structure/views/nojs/%/%views_ui_cache'] = $callback + array(
+    'page callback' => 'views_ui_ajax_form',
+    'page arguments' => array(FALSE, 4, 5),
+  );
+  $items['admin/structure/views/ajax/%/%views_ui_cache'] = $callback + array(
+    'page callback' => 'views_ui_ajax_form',
+    'page arguments' => array(TRUE, 4, 5),
+    'delivery callback' => 'views_ui_ajax_deliver',
+  );
+
+  // autocompletes for handlers and such
+  $items['admin/views/ajax/autocomplete/tag'] = $callback + array(
+    'page callback' => 'views_ui_autocomplete_tag',
+    'access arguments' => array('administer views'),
+    'type' => MENU_CALLBACK,
+    'file' => 'includes/admin.inc',
+  );
+
+  return $items;
+}
+
+/*
+ * Implements hook_help().
+ */
+function views_ui_help($path, $arg = '') {
+  switch ($path) {
+    case 'admin/structure/views/tools/convert':
+      return '<p>' . t('The converter will make a best-effort attempt to convert a Views 1 view to Views 2. This conversion is not reliable; you will very likely have to make adjustments to your view to get it to match. You can import Views 1 views through the normal Import tab.') . '</p>';
+  }
+}
+
+/*
+ * Implements hook_theme().
+ */
+function views_ui_theme() {
+  $path = drupal_get_path('module', 'views');
+  require_once DRUPAL_ROOT . "/$path/includes/admin.inc";
+
+  return array(
+    // edit a view
+    'views_ui_edit_view' => array(
+      'variables' => array('view' => NULL),
+      'template' => 'views-ui-edit-view',
+      'path' => "$path/theme",
+    ),
+    'views_ui_edit_tab' => array(
+      'variables' => array('view' => NULL, 'display' => NULL),
+      'template' => 'views-ui-edit-tab',
+      'path' => "$path/theme",
+    ),
+    'views_ui_edit_item' => array(
+      'variables' => array('type' => NULL, 'view' => NULL, 'display' => NULL, 'no_fields' => FALSE),
+      'template' => 'views-ui-edit-item',
+      'path' => "$path/theme",
+    ),
+    'views_ui_rearrange_form' => array(
+      'render element' => 'form',
+    ),
+    'views_ui_rearrange_filter_form' => array(
+      'render element' => 'form',
+      'file' => 'includes/admin.inc',
+    ),
+
+    // list views
+    'views_ui_list_views' => array(
+      'variables' => array(
+        'views' => array(),
+        'help' => '',
+        'widgets' => '',
+        'help_type_icon' => '',
+      ),
+      'template' => 'views-ui-list-views',
+      'path' => "$path/theme",
+    ),
+
+    // tab themes
+    'views_tabset' => array(
+      'variables' => array('tabs' => NULL),
+    ),
+    'views_tab' => array(
+      'variables' => array('body' => NULL),
+    ),
+    'views_ui_reorder_displays_form' => array(
+      'render element' => 'form',
+      'file' => 'includes/admin.inc',
+    ),
+
+
+    // On behalf of a plugin
+    'views_ui_style_plugin_table' => array(
+      'render element' => 'form',
+    ),
+  );
+}
+
+/**
+ * Specialized menu callback to load a view either out of the cache or just
+ * load it.
+ */
+function views_ui_cache_load($name) {
+  ctools_include('object-cache');
+  views_include('view');
+  $view = ctools_object_cache_get('view', $name);
+
+  if (empty($view)) {
+    $view = views_get_view($name);
+
+    if (!empty($view)) {
+      // Check to see if someone else is already editing this view.
+      $view->locked = ctools_object_cache_test('view', $view->name);
+      // Set a flag to indicate that this view is being edited.
+      // This flag will be used e.g. to determine whether strings
+      // should be localized.
+      $view->editing = TRUE;
+    }
+  }
+
+  if (empty($view)) {
+    return FALSE;
+  }
+
+  else {
+    return $view;
+  }
+}
+
+/**
+ * Specialized cache function to add a flag to our view, include an appropriate
+ * include, and cache more easily.
+ */
+function views_ui_cache_set(&$view) {
+  if (!empty($view->locked)) {
+    drupal_set_message(t('Changes cannot be made to a locked view.'), 'error');
+    return;
+  }
+  ctools_include('object-cache');
+  $view->changed = TRUE; // let any future object know that this view has changed.
+
+  // Unset handlers; we don't want to write these into the cache
+  unset($view->display_handler);
+  unset($view->current_display);
+  unset($view->default_display);
+  $view->query = NULL;
+  foreach (array_keys($view->display) as $id) {
+    unset($view->display[$id]->handler);
+    unset($view->display[$id]->default_display);
+  }
+  ctools_object_cache_set('view', $view->name, $view);
+}
+
+
+/**
+ * Specialized menu callback to load a view that is only a default
+ * view.
+ */
+function views_ui_default_load($name) {
+  $view = views_get_view($name);
+  if ($view->type == t('Default')) {
+    return $view;
+  }
+
+  return FALSE;
+}
+
+/**
+ * Package and send the result of a page callback to the browser as an AJAX
+ * response, and add the HTML.
+ *
+ * @param $page_callback_result
+ *   The result of a page callback. Can be one of:
+ *   - NULL: to indicate no content.
+ *   - An integer menu status constant: to indicate an error condition.
+ *   - A string of HTML content.
+ *   - A renderable array of content.
+ */
+function views_ui_ajax_deliver($page_callback_result) {
+  $commands = array();
+  $header = TRUE;
+
+  if (!isset($page_callback_result)) {
+    // Simply delivering an empty commands array is sufficient. This results
+    // in the AJAX request being completed, but nothing being done to the page.
+  }
+  elseif (is_int($page_callback_result)) {
+    switch ($page_callback_result) {
+      case MENU_NOT_FOUND:
+        $commands[] = ajax_command_alert(t('The requested page could not be found.'));
+        break;
+
+      case MENU_ACCESS_DENIED:
+        $commands[] = ajax_command_alert(t('You are not authorized to access this page.'));
+        break;
+
+      case MENU_SITE_OFFLINE:
+        $commands[] = ajax_command_alert(filter_xss_admin(variable_get('maintenance_mode_message',
+          t('@site is currently under maintenance. We should be back shortly. Thank you for your patience.', array('@site' => variable_get('site_name', 'Drupal'))))));
+        break;
+    }
+  }
+  elseif (is_array($page_callback_result) && isset($page_callback_result['#type']) && ($page_callback_result['#type'] == 'ajax')) {
+    // Complex AJAX callbacks can return a result that contains an error message
+    // or a specific set of commands to send to the browser.
+    $page_callback_result += element_info('ajax');
+    $header = $page_callback_result['#header'];
+    $error = $page_callback_result['#error'];
+    if (isset($error) && $error !== FALSE) {
+      if ((empty($error) || $error === TRUE)) {
+        $error = t('An error occurred while handling the request: The server received invalid input.');
+      }
+      $commands[] = ajax_command_alert($error);
+    }
+    else {
+      $commands = $page_callback_result['#commands'];
+    }
+  }
+  else {
+    // Like normal page callbacks, simple AJAX callbacks can return html
+    // content, as a string or renderable array, to replace what was previously
+    // there in the wrapper. In this case, in addition to the content, we want
+    // to add the status messages, but inside the new wrapper, so that they get
+    // replaced on subsequent AJAX calls for the same wrapper.
+    $html = is_string($page_callback_result) ? $page_callback_result : drupal_render($page_callback_result);
+    $commands[] = ajax_command_replace(NULL, $html);
+    $commands[] = ajax_command_prepend(NULL, theme('status_messages'));
+  }
+
+  // This function needs to do the same thing that drupal_deliver_html_page()
+  // does: add any needed http headers, print rendered output, and perform
+  // end-of-request tasks. By default, $header=TRUE, and we add a
+  // 'text/javascript' header. The page callback can override $header by
+  // returning an 'ajax' element with a #header property. This can be set to
+  // FALSE to prevent the 'text/javascript' header from being output, necessary
+  // when outputting to an IFRAME. This can also be set to 'multipart', in which
+  // case, we don't output JSON, but JSON content wrapped in a textarea, making
+  // a 'text/javascript' header incorrect.
+  if ($header && $header !== 'multipart') {
+    drupal_add_http_header('Content-Type', 'text/javascript; charset=utf-8');
+  }
+  $output = ajax_render($commands);
+  if ($header === 'multipart') {
+    // jQuery file uploads: http://malsup.com/jquery/form/#code-samples
+    $output = '<textarea>' . $output . '</textarea>';
+  }
+  print $output;
+  ajax_footer();
+}

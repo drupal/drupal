@@ -1,0 +1,14 @@
+; $Id: views_export.info,v 1.1.6.2 2010/12/23 17:52:53 dereine Exp $
+
+name = Views exporter
+description = Allows exporting multiple views at once.
+package = "Views"
+dependencies[] = views
+core = 7.x
+
+; Information added by drupal.org packaging script on 2011-01-06
+version = "7.x-3.0-alpha1"
+core = "7.x"
+project = "views"
+datestamp = "1294276880"
+

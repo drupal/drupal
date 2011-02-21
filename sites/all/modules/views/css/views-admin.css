@@ -1,0 +1,724 @@
+/* $Id: views-admin.css,v 1.14.4.12 2010/12/24 13:42:00 dereine Exp $ */
+
+/*
+ * Summary pad
+ */
+/* set up some defaults so weird themes don't override us too badly. */
+.views-tabset {
+  color: #494949;
+  background-color: white;
+}
+
+.views-tabset a:visited,
+.views-tabset a:hover,
+.views-tabset a {
+  color: #027AC6;
+}
+
+.views-tabset .views-tab fieldset {
+  margin-top: 0;
+}
+
+/*
+ * First column: display drawers
+ */
+.views-tabset .views-tabs {
+  background: #F6F6F6;
+  border-top: #D6DBDE 1px solid;
+  border-bottom: #D6DBDE 1px solid;
+  border-left: #D6DBDE 1px solid;
+  float: left;
+  width: 117px;
+  margin-right: 0;
+}
+
+* html .views-tabset .views-tabs {
+  width: 114px;
+  position: relative;
+  left: 4px;
+}
+
+.views-tabset .views-tabs ul {
+  list-style-type: none !important;
+  list-style-image: none !important;
+  padding: 0;
+  margin: 0;
+  position: relative;
+}
+
+.views-tabset .views-tabs ul li {
+  background: #efefef;
+  list-style-type: none;
+  list-style-image: none;
+  line-height: 100%;
+  border-bottom: #D6DBDE 1px solid;
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+
+.views-tabset .views-tabs ul li.active {
+  background: #fff url(../images/arrow-active.png) no-repeat right;
+  position: relative;
+  width: 118px;
+  margin-right: -1px;
+}
+
+.views-tabset .views-tabs ul li a {
+  display: block;
+  font-size: 90%;
+  color: #777;
+  font-weight: normal;
+  padding: 0.5em;
+}
+
+.views-tabset .views-tabs ul li a:hover {
+  background-color: #f6f6f6;
+  text-decoration: none;
+}
+
+.views-tabset .views-tabs ul li.active a {
+  color: #000;
+  font-weight: bold;
+}
+
+.views-tabset .views-tabs ul li.active a:hover {
+  color: #000;
+  background: #fff url(../images/arrow-active.png) no-repeat right;
+}
+
+.views-tabset .extra {
+  text-align: center;
+  margin-right: 0;
+}
+
+.views-tabset .extra input {
+  margin-top: 0;
+  margin-right: 0;
+  font-size: 10px;
+  white-space: normal;
+}
+
+/*
+ * Three columns with setting-summaries
+ */
+.views-tabset .views-display {
+  border: #D6DBDE 1px solid;
+  margin-left: 118px; /* 118 -1 causes borders to overlap */
+  min-height: 302px;
+  _height: 300px; /*stupid IE hack */
+}
+
+* html .views-tabset .views-display {
+  margin-left: 114px;
+}
+
+div.views-display-deleted,
+div.views-display-deleted div.top,
+div.views-display-deleted div.tab-section {
+  background-color: #eee;
+}
+
+.views-display {
+  background: #fff;
+}
+
+.views-display div {
+  font-size: 8pt;
+  line-height: 12pt;
+}
+
+.views-display .top {
+  padding: 0.5em 0em 0em 1em;
+  background: #fff;
+}
+
+.views-display .top .display-title {
+  font-weight: bold;
+}
+.views-display .top .display-description {
+  margin-left: 1em;
+  font-style: italic;
+  overflow: hide;
+  white-space: nowrap;
+  font-size: 90%;
+}
+
+.views-display .tab-section {
+  width: 32.5%;
+  padding: 0;
+  margin: 0;
+  float: left;
+  min-height: 273px;
+  _height: 274px;
+}
+
+.views-display .tab-section .inside {
+  margin: 0.5em 0.5em 0.5em 1em;
+}
+
+.views-display .tab-section .inside .views-category {
+  margin-bottom: 1em;
+  background: #f6f6f6;
+  border: 1px #efefef solid;
+}
+
+.views-display .tab-section .inside .views-category-content {
+  padding: 0em 0em 0.5em 1em;
+}
+
+.views-display .tab-section .inside .views-category-title {
+  padding: .1em .1em .1em .3em;
+  margin: 0 0 .1em 0;
+  font-size: 9pt;
+  font-weight: bold;
+  background-color: #efefef;
+  border-bottom: 1px #efefef solid;
+}
+
+.views-display .tab-section .links {
+  float: right;
+  font-size: 6pt;
+  position: relative;
+  display: inline;
+}
+
+.views-display .tab-section .links a {
+  font-size: 6pt;
+  font-style: italic;
+}
+
+.views-display .form-submit,
+#views-ajax-pad .form-submit {
+  margin: 0;
+}
+
+.views-display .middle {
+  width: 34%;
+}
+
+.views-basic-info {
+  margin: 0.5em 0em 0 0;
+  padding: 0.5em;
+}
+
+/*
+ * AJAX pad, the bottom part where settings are edited.
+ */
+#views-ajax-pad {
+  background: transparent;
+  margin-top: 0px;
+}
+
+#views-ajax-pad > div.ajax-progress {
+  display: none;
+}
+
+#views-ajax-title {
+  background: #f6f6f6;
+  color: #000;
+  border-left: #D6DBDE 1px solid;
+  border-right: #D6DBDE 1px solid;
+  margin: 0 0 0 118px;
+  padding: 1em 1em 0em 1em;
+  font-weight: bold;
+}
+
+#views-ajax-pad .message {
+  background: #f6f6f6;
+  color: #000;
+  margin-left: 118px;
+  border: #D6DBDE 1px solid;
+  border-top: 0;
+  /* padding: 3em 0em; */
+  text-align: center;
+  font-style: italic;
+}
+
+#views-ajax-pad form {
+  background: #fff;
+  color: #000;
+  margin-left: 118px;
+  border: #D6DBDE 1px solid;
+  padding-top: 3px;
+  border-top: 0;
+  float: none;
+}
+
+#views-ajax-pad .views-messages {
+  background: transparent;
+  margin-left: 118px;
+  padding: 5px;
+  border: #D6DBDE 1px solid;
+  border-top: 0;
+}
+
+#views-ajax-pad .form-buttons {
+  margin: 0;
+  padding: 0.5em 1em;
+  background: #f6f6f6;
+  clear: left;
+}
+
+#views-ajax-pad .clear {
+  clear: left;
+}
+
+#views-ajax-pad .form-buttons .form-submit {
+  font-size: 10px;
+}
+
+#views-ajax-pad .form-item {
+  margin: 0.5em;
+  padding: 0em 0.5em;
+}
+
+/* These put checkboxes closer together */
+#views-ajax-pad .form-checkboxes .form-item,
+#views-ajax-pad .form-checkboxes .description,
+#views-ajax-pad .form-checkboxes input,
+#views-ajax-pad .form-radios .form-item,
+#views-ajax-pad .form-radios label,
+#views-ajax-pad .form-radios input {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+#views-ajax-pad .form-item .form-checkboxes,
+#views-ajax-pad .form-checkboxes input,
+#views-ajax-pad .form-checkboxes label,
+#views-ajax-pad .form-item .form-checkboxes .form-item,
+#views-ajax-pad .form-item .form-radios,
+#views-ajax-pad .form-radios input,
+#views-ajax-pad .form-radios label,
+#views-ajax-pad .form-item .form-radios .form-item {
+  padding-left: 0;
+  margin-left: 0;
+}
+
+#views-ajax-pad .form-checkboxes .description,
+#views-ajax-pad .form-radios .description {
+  margin-left: 2em;
+}
+
+#views-ajax-pad {
+  display: none;
+}
+
+html.js #views-ajax-pad {
+  display: block;
+}
+
+.views-override,
+.views-expose {
+  padding: 0.5em 1em 0em 1em;
+}
+
+#views-ajax-pad .views-override .form-submit,
+#views-ajax-pad .views-expose .form-submit {
+  float: right;
+  margin: 0 .5em 0 1em;
+}
+
+#views-ajax-pad .views-expose .description,
+#views-ajax-pad .views-override .description {
+  margin-bottom: .25em;
+}
+
+/*
+ * Some column widths for use within the ajax pad
+ */
+#views-ajax-pad .views-left-10 {
+  float: left;
+  width: 10%;
+}
+
+#views-ajax-pad .views-left-20 {
+  float: left;
+  width: 20%;
+}
+
+#views-ajax-pad .views-left-25 {
+  float: left;
+  width: 25%;
+}
+
+#views-ajax-pad .views-left-30 {
+  float: left;
+  width: 30%;
+}
+
+#views-ajax-pad .views-left-40 {
+  float: left;
+  width: 40%;
+}
+
+#views-ajax-pad .views-left-50 {
+  float: left;
+  width: 49.5%;
+}
+
+#views-ajax-pad .views-right-50 {
+  float: right;
+  width: 50%;
+}
+
+#views-ajax-pad .views-right-60 {
+  float: right;
+  width: 60%;
+}
+
+#views-ajax-pad .views-right-70 {
+  float: right;
+  width: 70%;
+}
+
+#views-ajax-pad .views-left-75 {
+  float: left;
+  width: 75%;
+}
+
+#views-ajax-pad .views-radio-box {
+  overflow: auto;
+  height: 22em;
+}
+
+#views-ajax-pad fieldset {
+  margin: 0 .5em;
+}
+
+#views-ajax-pad table td .form-item,
+#views-ajax-pad table td .form-item input,
+#views-ajax-pad table td .form-item select {
+  padding: 0;
+  margin: 0;
+}
+
+#views-ajax-pad label.hidden-options {
+  background: transparent url(../images/arrow-active.png) no-repeat right;
+  height: 12px;
+  padding-right: 12px;
+}
+
+#views-ajax-pad label.expanded-options {
+  background: transparent url(../images/expanded-options.png) no-repeat right;
+  height: 12px;
+  padding-right: 16px;
+}
+
+#views-ajax-pad .dependent-options {
+  padding-left: 30px;
+}
+
+/*
+ * Add, Rearrange and Configure buttons using sprites
+ */
+a.views-button-configure,
+a.views-button-add,
+a.views-button-rearrange,
+a.views-button-remove {
+  background:transparent url(../images/sprites.png);
+  display: inline-block;
+  float: right;
+  height: 12px;
+  width: 16px;
+  margin: 2px 0px 1px 0px;
+  border-bottom: #C2C9CE 1px solid;
+  border-right: #C2C9CE 1px solid;
+  padding: 0px;
+}
+
+a.views-button-remove {
+  background-position: 0px -72px;
+  position: relative;
+}
+a.views-button-remove:hover {
+  background-position: 0px -84px;
+}
+
+a.views-button-configure {
+  background-position: 0px -48px;
+  margin: 0;
+}
+a.views-button-configure:hover {
+  background-position: 0px -60px;
+}
+
+a.views-button-add {
+  background-position: 0px -24px;
+}
+a.views-button-add:hover {
+  background-position: 0px -36px;
+}
+
+a.views-button-rearrange {
+  background-position: 0px 0px;
+}
+a.views-button-rearrange:hover {
+  background-position: 0px -12px;
+}
+
+a.views-button-remove span,
+a.views-button-rearrange span,
+a.views-button-configure span,
+a.views-button-add span {
+  display: none;
+}
+
+html.js #arrange thead {
+  display: none;
+}
+
+html.js #ungroupable_arrange .views-hide-label {
+  color: #D4E7F3;
+}
+
+#ungroupable_arrange thead tr {
+  /* this CSS mirrors what is found in core for blocks admin. */
+  background-color: #D4E7F3;
+  border-bottom: 1px solid #B4D7F0;
+  border-top: 1.5em solid #FFFFFF;
+  color: #455067;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+html.js .views-remove-checkbox {
+  display: none;
+}
+
+a.views-button-remove {
+  display: none;
+}
+
+html.js a.views-button-remove {
+  display: inline;
+}
+
+.arrange tr.even,
+.arrange tr.odd,
+.arrange td {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.arrange .form-item {
+  padding: 0;
+}
+
+div.changed {
+  background-color: #ffe;
+  font-weight: bold;
+}
+
+div.view-changed {
+  display: none;
+  float: right;
+  font-style: italic;
+  color: #f93;
+  padding-left: 1em;
+}
+
+div.views-tab div.changed a {
+
+}
+
+div.changed div.view-changed {
+  display: block;
+}
+
+.views-display .tab-section .inside .overridden {
+  /* all this so we don't mess up background-color */
+/*  background-image: url(../images/overridden.gif);
+  background-repeat: no-repeat;
+  background-position: left;
+  padding-left: 10px; */
+}
+
+.views-display .tab-section .views-category-content.overridden {
+  background-image: none;
+}
+
+.views-display .tab-section .inside .defaulted {
+  color: #aaa;
+  font-style: italic;
+}
+
+.views-display .tab-section .inside .defaulted a {
+  font-style: italic;
+}
+
+.hilited {
+  color: #000;
+  font-weight: bold;
+  background-color: #ffd;
+  padding-left: 10px;
+}
+
+#views-ajax-pad fieldset {
+  background: transparent;
+  padding-left: 10px;
+}
+
+#views-ajax-pad pre {
+  overflow: auto;
+  border: 1px solid #333;
+  background-color: #f0f0f0;
+  padding: .5em;
+}
+
+form#views-ui-reorder-displays-button {
+  margin-bottom: 0em;
+  border-bottom: 1px solid #ccc;
+}
+form#views-ui-reorder-displays-button input.form-submit{
+  margin-bottom: 2em;
+}
+
+form#views-add-display-form {
+  margin-bottom: 0em;
+  border-bottom: 1px solid #ccc;
+}
+
+form#views-add-display-form select {
+  width: 8.5em;
+}
+
+#views-ui-edit-view-form {
+  margin: 10px 0 0;
+  padding: 0;
+  clear: both;
+}
+
+#views-live-preview {
+  padding-top: .5em;
+}
+
+#views-live-preview form,
+#center #views-live-preview form {
+  border: 1px solid #D6DBDE;
+  margin: 0 0 .5em 0;
+  padding: .5em;
+}
+
+#views-live-preview form div.form-item {
+  float: left;
+  margin: 0;
+  padding: 0 1em 0 0;
+}
+
+#views-live-preview form input#preview-submit {
+  margin: 1em 0 0 0;
+}
+
+.view-locked {
+  color: red;
+  border: 1px solid red;
+  padding: 1em;
+}
+
+/* Hide by default only with js */
+html.js .views-hidden {
+  display: none;
+}
+
+.views-query-info {
+/*  overflow: auto; */
+}
+
+.views-query-info pre {
+  white-space: pre; /* CSS2 */
+  white-space: -moz-pre-wrap; /* Mozilla */
+  white-space: -hp-pre-wrap; /* HP printers */
+  white-space: -o-pre-wrap; /* Opera 7 */
+  white-space: -pre-wrap; /* Opera 4-6 */
+  white-space: pre-wrap; /* CSS 2.1 */
+  white-space: pre-line; /* CSS 3 (and 2.1 as well, actually) */
+  word-wrap: break-word; /* IE */
+  max-height: 200px;
+  overflow: scroll;
+}
+
+.views-quick-links {
+  float: right;
+}
+
+.views-quick-links ul.links li {
+  padding-left: 1em;
+}
+
+.views-quick-links li.last {
+}
+
+.views-edit-view .advanced-help-link {
+  padding-right: 3px;
+}
+
+#views-ajax-title .advanced-help-link {
+  position: relative;
+  top: 2px;
+  padding-right: 3px;
+}
+
+#views-ajax-pad input,
+#views-ajax-pad textarea {
+  max-width: 95%;
+}
+
+.clone-display,
+.remove-display {
+  float: right;
+  margin: 0;
+  padding: .2em 1em 0 0;
+  position: relative;
+  top: .1em;
+}
+
+.views-display .remove-display form,
+.remove-display input,
+.views-display .clone-display form,
+.clone-display input {
+  margin: 0 !important;
+}
+
+.views-validator-options {
+  padding: 0 1em;
+  margin: 0 1em;
+  border: 1px solid;
+}
+
+div.views-category #page-title {
+  background: none;
+  padding-top: 0px;
+}
+
+.group-populated {
+  display: none;
+}
+
+td.group {
+  /* this CSS mirrors what is found in core for blocks admin. */
+  background-color: #D4E7F3;
+  border-bottom: 1px solid #B4D7F0;
+  border-top: 1.5em solid #FFFFFF;
+  color: #455067;
+}
+
+td.group-title {
+  font-weight: bold;
+}
+
+tr.group-message {
+  font-style: italic;
+  color:#999999;
+}
+
+.group-message .form-submit,
+#views-add-group {
+  float: right;
+  clear: both;
+}
+
+html.js .views-group-select {
+  display: none;
+}

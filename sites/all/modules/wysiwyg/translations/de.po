@@ -1,0 +1,938 @@
+# $Id: de.po,v 1.8 2009/06/17 21:22:23 hass Exp $
+#
+# LANGUAGE translation of Drupal (general)
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+# Generated from file: wysiwyg_editor.module,v 1.90.4.23 2007/05/06 01:41:35 m3avrck
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: German translation of WYSIWYG editor\n"
+"POT-Creation-Date: 2009-06-17 21:00+0200\n"
+"PO-Revision-Date: 2009-06-17 23:21+0100\n"
+"Last-Translator: Alexander Haß\n"
+"Language-Team: Alexander Hass\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n"
+"X-Poedit-Language: German\n"
+"X-Poedit-Country: GERMANY\n"
+
+#: wysiwyg.api.php:51;52
+msgid "My plugin title"
+msgstr "Mein Plugin-Titel"
+
+#: wysiwyg.api.php:61
+msgid "Button title (optional)"
+msgstr "Schaltknopftitel (optional)"
+
+#: wysiwyg.admin.inc:51
+msgid "%editor profile for %format"
+msgstr "%editor-Profil für %format"
+
+#: wysiwyg.admin.inc:60
+msgid "Basic setup"
+msgstr "Basis-Setup"
+
+#: wysiwyg.admin.inc:67
+msgid "Enabled by default"
+msgstr "Standardmäßig aktiviert"
+
+#: wysiwyg.admin.inc:70
+msgid "The default editor state for users having access to this profile. Users are able to override this state if the next option is enabled."
+msgstr "Der standardmäßige Status des Editors für Benutzer mit Zugriff auf dieses Profil. Benutzer können diese Einstellung übersteuern, wenn die nachfolgende Option aktiviert ist."
+
+#: wysiwyg.admin.inc:75
+msgid "Allow users to choose default"
+msgstr "Benutzer können Standardeinstellung auswählen"
+
+#: wysiwyg.admin.inc:78
+msgid "If allowed, users will be able to choose their own editor default state in their user account settings."
+msgstr "Sobald aktiviert, können Benutzer auf ihrer Profilseite ihren eigenen standardmäßigen Status des Editors auswählen."
+
+#: wysiwyg.admin.inc:83
+msgid "Show <em>enable/disable rich text</em> toggle link"
+msgstr "<em>Ein-/Auschalter</em> für Rich-Text anzeigen"
+
+#: wysiwyg.admin.inc:86
+msgid "Whether or not to show the <em>enable/disable rich text</em> toggle link below a textarea. If disabled, the user setting or global default is used (see above)."
+msgstr "Ob der <em>Rich-Text aktivieren/deaktivieren</em>-Link unterhalb eines Textfeldes angezeigt werden soll oder nicht. Sollte diese Einstellung deaktiviert sein, werden die Benutzereinstellungen oder globalen Standardwerte verwendet (siehe oberhalb)."
+
+#: wysiwyg.admin.inc:96
+msgid "Language"
+msgstr "Sprache"
+
+#: wysiwyg.admin.inc:99
+msgid "The language to use for the editor interface. Language codes are based on the <a href=\"http://www.loc.gov/standards/iso639-2/englangn.html\">ISO-639-2</a> format."
+msgstr "Die für die Eingabeoberfläche der Editors zu verwendende Sprache. Die Sprachcodes basieren auf dem <a href=\"http://www.loc.gov/standards/iso639-2/englangn.html\">ISO-639-2</a>-Format."
+
+#: wysiwyg.admin.inc:104
+msgid "Buttons and plugins"
+msgstr "Schaltflächen und Plugins"
+
+#: wysiwyg.admin.inc:149
+msgid "Editor appearance"
+msgstr "Erscheinungsbild des Editors"
+
+#: wysiwyg.admin.inc:156
+msgid "Toolbar location"
+msgstr "Position der Werkzeugleiste"
+
+#: wysiwyg.admin.inc:158;174
+msgid "Bottom"
+msgstr "Unten"
+
+#: wysiwyg.admin.inc:158;174
+msgid "Top"
+msgstr "Oben"
+
+#: wysiwyg.admin.inc:159
+msgid "This option controls whether the editor toolbar is displayed above or below the editing area."
+msgstr "Diese Option kontrolliert, ob die Editor-Werkzeugleiste über oder unter dem Bearbeitungsfeld angezeigt wird."
+
+#: wysiwyg.admin.inc:164
+msgid "Button alignment"
+msgstr "Ausrichtung der Schaltknöpfe"
+
+# context senstive issues
+#: wysiwyg.admin.inc:166
+#, fuzzy
+msgid "Center"
+msgstr "Mitte"
+
+#: wysiwyg.admin.inc:166
+msgid "Left"
+msgstr "Links"
+
+#: wysiwyg.admin.inc:166
+msgid "Right"
+msgstr "Rechts"
+
+#: wysiwyg.admin.inc:167
+msgid "This option controls the alignment of icons in the editor toolbar."
+msgstr "Diese Option kontrolliert die Anordnung der Symbole in der Editor-Werkzeugleiste."
+
+#: wysiwyg.admin.inc:172
+msgid "Path location"
+msgstr "Position der Pfad-Leiste"
+
+#: wysiwyg.admin.inc:174
+msgid "Hide"
+msgstr "Ausblenden"
+
+#: wysiwyg.admin.inc:175
+msgid "Where to display the path to HTML elements (i.e. <code>body > table > tr > td</code>)."
+msgstr "Wo der Pfad zu den HTML-Elementen angezeigt werden soll (d.h. <code>body > table > tr > td</code>)."
+
+#: wysiwyg.admin.inc:180
+msgid "Enable resizing button"
+msgstr "Schaltfläche zur Größenanpassung aktivieren"
+
+# "Path location toolbar" not literally
+#: wysiwyg.admin.inc:183
+msgid "This option gives you the ability to enable/disable the resizing button. If enabled, the Path location toolbar must be set to \"Top\" or \"Bottom\" in order to display the resize icon."
+msgstr "Diese Option ermöglicht die Schaltfläche zur Größenanpassung zu aktivieren/deaktivieren. Sobald aktiviert, muss die Pfad-Leiste auf „Oben“ oder „Unten“ eingestellt werden, damit das Symbol zur Größenanpassung angezeigt wird."
+
+#: wysiwyg.admin.inc:188
+msgid "Cleanup and output"
+msgstr "Bereinigung und Ausgabe"
+
+#: wysiwyg.admin.inc:195
+msgid "Verify HTML"
+msgstr "HTML prüfen"
+
+#: wysiwyg.admin.inc:198
+msgid "If enabled, potentially malicious code like <code>&lt;HEAD&gt;</code> tags will be removed from HTML contents."
+msgstr "Sobald aktiviert, wird potentiell bösartiger Code wie <code>&lt;HEAD&gt;</code>-Tags aus den HTML-Inhalten entfernt."
+
+#: wysiwyg.admin.inc:203
+msgid "Preformatted"
+msgstr "Vorformattiert"
+
+#: wysiwyg.admin.inc:206
+msgid "If enabled, the editor will insert TAB characters on tab and preserve other whitespace characters just like a PRE element in HTML does."
+msgstr "Sobald aktiviert, wird der Editor für Tabulatoren ein „TAB“-Zeichen einfügen und andere Leerzeichen beibehalten, wie dies mit einem „PRE“-HTML-Element der Fall wäre."
+
+#: wysiwyg.admin.inc:211
+msgid "Convert &lt;font&gt; tags to styles"
+msgstr "&lt;font&gt;-Tags zu Styles konvertieren"
+
+#: wysiwyg.admin.inc:214
+msgid "If enabled, HTML tags declaring the font size, font family, font color and font background color will be replaced by inline CSS styles."
+msgstr "Sobald aktiviert, werden HTML-Tags mit Schriftgröße, Schriftfamilie, Schriftfarbe und Schrifthintergrundfarbe durch Inline-Styles ersetzt."
+
+#: wysiwyg.admin.inc:219
+msgid "Remove linebreaks"
+msgstr "Zeilenumbrüche entfernen"
+
+#: wysiwyg.admin.inc:222
+msgid "If enabled, the editor will remove most linebreaks from contents. Disabling this option could avoid conflicts with other input filters."
+msgstr "Sobald aktiviert, wird der Editor die meisten Zeilenumbrüche aus dem Inhalt entfernen. Die Deaktivierung dieser Option kann Konflikte mit anderen Eingabefiltern verhindern."
+
+#: wysiwyg.admin.inc:227
+msgid "Apply source formatting"
+msgstr "Quellcodeformatierung anwenden"
+
+#: wysiwyg.admin.inc:230
+msgid "If enabled, the editor will re-format the HTML source code. Disabling this option could avoid conflicts with other input filters."
+msgstr "Sobald aktiviert, wird der Editor den HTML-Quelltext neu formatieren. Die Deaktivierung dieser Option kann Konflikte mit anderen Eingabefiltern verhindern."
+
+#: wysiwyg.admin.inc:235
+msgid "Force cleanup on standard paste"
+msgstr "Bereinigung beim standardmäßigen Einfügen erzwingen"
+
+#: wysiwyg.admin.inc:238
+msgid "If enabled, the default paste function (CTRL-V or SHIFT-INS) behaves like the \"paste from word\" plugin function."
+msgstr "Sobald aktiviert, verhält sich die standardmäßige Einfügen-Funktion (STRG+V oder STRG-Einf) wie die „aus MS-Word einfügen“-Funktion."
+
+#: wysiwyg.admin.inc:243
+msgid "CSS"
+msgstr "CSS"
+
+#: wysiwyg.admin.inc:250
+msgid "Block formats"
+msgstr "Blockformate"
+
+#: wysiwyg.admin.inc:254
+msgid "Comma separated list of HTML block formats. Possible values: <code>@format-list</code>."
+msgstr "Eine kommagetrennte Liste von HTML-Blockformaten. Mögliche Werte: <code>@format-list</code>."
+
+#: wysiwyg.admin.inc:259
+msgid "Editor CSS"
+msgstr "Editor-CSS"
+
+#: wysiwyg.admin.inc:261
+msgid "Use theme CSS"
+msgstr "CSS-Anweisungen des Themes verwenden"
+
+#: wysiwyg.admin.inc:261
+msgid "Define CSS"
+msgstr "CSS festlegen"
+
+#: wysiwyg.admin.inc:261
+msgid "Editor default CSS"
+msgstr "Standardmäßiges Editor-CSS"
+
+#: wysiwyg.admin.inc:262
+msgid "Defines the CSS to be used in the editor area.<br />Use theme CSS - loads stylesheets from current site theme.<br/>Define CSS - enter path for stylesheet files below.<br />Editor default CSS - uses default stylesheets from editor."
+msgstr "Legt das im Textfeld des Editors zu verwendende CSS fest.<br />CSS des Themes verwenden - läd Stylesheets aus dem aktuellen Website-Theme.<br/>CSS festlegen - Nachfolgend einen Pfad zu den Stylesheet-Dateien eingeben.<br />Standardmäßiges CSS des Editors - verwendet das standardmäßige CSS des Editors."
+
+#: wysiwyg.admin.inc:267
+msgid "CSS path"
+msgstr "CSS-Verzeichnis"
+
+#: wysiwyg.admin.inc:271
+msgid "If \"Define CSS\" was selected above, enter path to a CSS file or a list of CSS files separated by a comma."
+msgstr ""
+
+#: wysiwyg.admin.inc:271
+msgid "Available tokens: <code>%b</code> (base path, eg: <code>/</code>), <code>%t</code> (path to theme, eg: <code>themes/garland</code>)"
+msgstr "Verfügbare Platzhalter: <code>%b</code> (Basispfad, z.B.: <code>/</code>), <code>%t</code> (Pfad zum Theme, z.B.: <code>themes/garland</code>)"
+
+#: wysiwyg.admin.inc:271
+msgid "Example:"
+msgstr "Beispiel:"
+
+#: wysiwyg.admin.inc:276
+msgid "CSS classes"
+msgstr "CSS-Klassen"
+
+#: wysiwyg.admin.inc:278
+msgid "Optionally define CSS classes for the \"Font style\" dropdown list.<br />Enter one class on each line in the format: !format. Example: !example<br />If left blank, CSS classes are automatically imported from all loaded stylesheet(s)."
+msgstr ""
+
+#: wysiwyg.admin.inc:283;438
+msgid "Save"
+msgstr "Speichern"
+
+#: wysiwyg.admin.inc:317
+msgid "Wysiwyg profile for %format has been saved."
+msgstr "Das Wysiwyg-Profil für %format wurde gespeichert."
+
+#: wysiwyg.admin.inc:366
+msgid "No editor"
+msgstr "Kein Editor"
+
+#: wysiwyg.admin.inc:371
+msgid "<a href=\"!vendor-url\">@editor</a> (<a href=\"!download-url\">Download</a>)"
+msgstr "<a href=\"!vendor-url\">@editor</a> (<a href=\"!download-url\">Herunterladen</a>)"
+
+#: wysiwyg.admin.inc:372
+msgid "Not installed."
+msgstr "Nicht installiert."
+
+#: wysiwyg.admin.inc:386
+msgid "Extract the archive and copy its contents into a new folder in the following location:<br /><code>@editor-path</code>"
+msgstr "Das Archiv extrahieren und dessen Inhalt in ein neues Verzeichnis an der folgenden Stelle kopieren:<br /><code>@editor-path</code>"
+
+# not literally
+#: wysiwyg.admin.inc:387
+msgid "So the actual library can be found at:<br /><code>@library-filepath</code>"
+msgstr "Damit lässt sich die aktuelle Bibliothek hier finden:<br /><code>@library-filepath</code>"
+
+#: wysiwyg.admin.inc:402
+msgid "Installation instructions"
+msgstr "Installationsanweisungen"
+
+#: wysiwyg.admin.inc:405
+msgid "There are no editor libraries installed currently. The following list contains a list of currently supported editors:"
+msgstr "Derzeit sind keine Editor-Bibliotheken installiert. Die folgende Liste enthält eine Liste der derzeit unterstützten Editoren:"
+
+#: wysiwyg.admin.inc:430
+#: wysiwyg.module:26
+msgid "Edit"
+msgstr "Bearbeiten"
+
+#: wysiwyg.admin.inc:433;489
+#: wysiwyg.module:36
+msgid "Remove"
+msgstr "Entfernen"
+
+#: wysiwyg.admin.inc:450
+msgid "Input format"
+msgstr "Eingabeformat"
+
+#: wysiwyg.admin.inc:450
+msgid "Editor"
+msgstr "Editor"
+
+#: wysiwyg.admin.inc:450
+msgid "Operations"
+msgstr "Operationen"
+
+#: wysiwyg.admin.inc:487
+msgid "Are you sure you want to remove the profile for %name?"
+msgstr "Soll das Profil für %name wirklich gelöscht werden?"
+
+#: wysiwyg.admin.inc:489
+msgid "This action cannot be undone."
+msgstr "Diese Aktion kann nicht rückgängig gemacht werden."
+
+#: wysiwyg.admin.inc:489
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#: wysiwyg.admin.inc:501
+msgid "Wysiwyg profile for %name has been deleted."
+msgstr "Das Wysiwyg-Profil für %name wurde gelöscht."
+
+#: wysiwyg.module:80
+msgid "A Wysiwyg profile can be associated to an input format. A Wysiwyg profile defines which client-side editor is loaded, what buttons or themes are enabled for the editor, how the editor is displayed, and a few other editor-specific functions."
+msgstr ""
+
+#: wysiwyg.module:306
+msgid "Disable rich-text"
+msgstr "Rich-Text deaktivieren"
+
+#: wysiwyg.module:307
+msgid "Enable rich-text"
+msgstr "Rich-Text aktivieren"
+
+#: wysiwyg.module:608
+msgid "Wysiwyg Editor settings"
+msgstr "Einstellungen für Wysiwyg-Editor"
+
+#: wysiwyg.module:615
+msgid "Enable editor by default"
+msgstr "Editor standardmäßig aktivieren"
+
+#: wysiwyg.module:618
+msgid "If enabled, rich-text editing is enabled by default in textarea fields."
+msgstr "Sobald aktiviert, wird die Rich-Text-Bearbeitung in Textfeldern standardmässig aktiviert."
+
+#: wysiwyg.module:702
+msgid "The version of %editor could not be detected."
+msgstr "Die Version von %editor konnte nicht erkannt werden."
+
+#: wysiwyg.module:715
+msgid "The installed version %version of %editor is not supported."
+msgstr "Die installierte Version %version von %editor ist nicht unterstützt."
+
+#: wysiwyg.module:14
+#: wysiwyg.info:0
+msgid "Wysiwyg"
+msgstr "Wysiwyg"
+
+#: wysiwyg.module:17
+msgid "Configure client-side editors."
+msgstr "Client-seitige Editor-Profile konfigurieren."
+
+#: wysiwyg.module:22
+msgid "Profiles"
+msgstr "Profile"
+
+#: wysiwyg.module:0
+msgid "wysiwyg"
+msgstr "wysiwyg"
+
+#: wysiwyg.install:10
+msgid "Stores Wysiwyg profiles."
+msgstr ""
+
+#: wysiwyg.info:0
+msgid "Allows users to edit contents with client-side editors."
+msgstr "Ermöglicht Benutzern die Bearbeitung von Inhalten mit clientseitigen Editoren."
+
+#: wysiwyg.info:0
+msgid "User interface"
+msgstr "Benutzeroberfläche"
+
+#: editors/fckeditor.inc:217
+#: editors/markitup.inc:105;170
+#: editors/nicedit.inc:103
+#: editors/openwysiwyg.inc:140
+#: editors/tinymce.inc:377
+#: editors/whizzywig.inc:113
+#: editors/yui.inc:276
+msgid "Bold"
+msgstr "Fett"
+
+#: editors/fckeditor.inc:217
+#: editors/markitup.inc:112;170
+#: editors/nicedit.inc:103
+#: editors/openwysiwyg.inc:140
+#: editors/tinymce.inc:377
+#: editors/whizzywig.inc:113
+#: editors/yui.inc:276
+msgid "Italic"
+msgstr "Kursiv"
+
+#: editors/fckeditor.inc:217
+#: editors/nicedit.inc:103
+#: editors/openwysiwyg.inc:140
+#: editors/tinymce.inc:377
+#: editors/whizzywig.inc:113
+#: editors/yui.inc:276
+msgid "Underline"
+msgstr "Unterstrichen"
+
+#: editors/fckeditor.inc:218
+#: editors/markitup.inc:119;171
+#: editors/nicedit.inc:104
+#: editors/openwysiwyg.inc:141
+#: editors/tinymce.inc:378
+#: editors/yui.inc:277
+msgid "Strike-through"
+msgstr "Durchgestrichen"
+
+#: editors/fckeditor.inc:219
+#: editors/nicedit.inc:105
+#: editors/openwysiwyg.inc:142
+#: editors/tinymce.inc:379
+#: editors/whizzywig.inc:114
+#: editors/yui.inc:278
+msgid "Align left"
+msgstr "Linksbündig"
+
+#: editors/fckeditor.inc:219
+#: editors/nicedit.inc:105
+#: editors/openwysiwyg.inc:142
+#: editors/tinymce.inc:379
+#: editors/whizzywig.inc:114
+#: editors/yui.inc:278
+msgid "Align center"
+msgstr "Zentriert"
+
+#: editors/fckeditor.inc:219
+#: editors/nicedit.inc:105
+#: editors/openwysiwyg.inc:142
+#: editors/tinymce.inc:379
+#: editors/whizzywig.inc:114
+#: editors/yui.inc:278
+msgid "Align right"
+msgstr "Rechtsbündig"
+
+#: editors/fckeditor.inc:219
+#: editors/openwysiwyg.inc:142
+#: editors/tinymce.inc:379
+#: editors/yui.inc:278
+msgid "Justify"
+msgstr "Blocksatz"
+
+#: editors/fckeditor.inc:220
+#: editors/nicedit.inc:106
+#: editors/openwysiwyg.inc:143
+#: editors/tinymce.inc:380
+#: editors/whizzywig.inc:115
+#: editors/yui.inc:279
+msgid "Bullet list"
+msgstr "Aufzählungszeichen"
+
+#: editors/fckeditor.inc:220
+#: editors/nicedit.inc:106
+#: editors/openwysiwyg.inc:143
+#: editors/tinymce.inc:380
+#: editors/whizzywig.inc:115
+#: editors/yui.inc:279
+msgid "Numbered list"
+msgstr "Nummerierte Liste"
+
+#: editors/fckeditor.inc:221
+#: editors/nicedit.inc:107
+#: editors/openwysiwyg.inc:144
+#: editors/tinymce.inc:381
+#: editors/whizzywig.inc:116
+#: editors/yui.inc:280
+msgid "Outdent"
+msgstr "Einzug verkleinern"
+
+#: editors/fckeditor.inc:221
+#: editors/nicedit.inc:107
+#: editors/openwysiwyg.inc:144
+#: editors/tinymce.inc:381
+#: editors/whizzywig.inc:116
+#: editors/yui.inc:280
+msgid "Indent"
+msgstr "Einzug vergrößern"
+
+#: editors/fckeditor.inc:222
+#: editors/openwysiwyg.inc:145
+#: editors/tinymce.inc:382
+#: editors/whizzywig.inc:117
+#: editors/yui.inc:281
+msgid "Undo"
+msgstr "Rückgängig"
+
+#: editors/fckeditor.inc:222
+#: editors/openwysiwyg.inc:145
+#: editors/tinymce.inc:382
+#: editors/whizzywig.inc:117
+#: editors/yui.inc:281
+msgid "Redo"
+msgstr "Wiederholen"
+
+# not literally and not context senstive issue, should be "Link einfügen/bearbeiten"
+#: editors/fckeditor.inc:223
+#: editors/markitup.inc:132;173
+#: editors/nicedit.inc:114
+#: editors/openwysiwyg.inc:146
+#: editors/tinymce.inc:383
+#: editors/whizzywig.inc:121
+#: editors/yui.inc:282
+#, fuzzy
+msgid "Link"
+msgstr "Link"
+
+#: editors/fckeditor.inc:223
+#: editors/nicedit.inc:114
+#: editors/tinymce.inc:383
+msgid "Unlink"
+msgstr "Link entfernen"
+
+#: editors/fckeditor.inc:223
+#: editors/tinymce.inc:383
+msgid "Anchor"
+msgstr "Anker"
+
+#: editors/fckeditor.inc:224
+#: editors/markitup.inc:126;172
+#: editors/nicedit.inc:108
+#: editors/openwysiwyg.inc:147
+#: editors/tinymce.inc:384
+#: editors/whizzywig.inc:118;122
+#: editors/yui.inc:283
+msgid "Image"
+msgstr "Bild"
+
+#: editors/fckeditor.inc:225
+#: editors/nicedit.inc:109
+#: editors/openwysiwyg.inc:149
+#: editors/tinymce.inc:386
+#: editors/whizzywig.inc:119
+msgid "Forecolor"
+msgstr "Vordergrundfarbe"
+
+#: editors/fckeditor.inc:225
+#: editors/nicedit.inc:109
+#: editors/openwysiwyg.inc:149
+#: editors/tinymce.inc:386
+#: editors/whizzywig.inc:119
+msgid "Backcolor"
+msgstr "Hintergrundfarbe"
+
+#: editors/fckeditor.inc:226
+msgid "Superscript"
+msgstr "Hochgestellt"
+
+#: editors/fckeditor.inc:226
+msgid "Subscript"
+msgstr "Tiefgestellt"
+
+#: editors/fckeditor.inc:227
+#: editors/openwysiwyg.inc:151
+#: editors/tinymce.inc:388
+msgid "Blockquote"
+msgstr "Zitatblock"
+
+#: editors/fckeditor.inc:227
+#: editors/nicedit.inc:116
+#: editors/openwysiwyg.inc:151
+#: editors/tinymce.inc:388
+#: editors/whizzywig.inc:125
+msgid "Source code"
+msgstr "Quellcode"
+
+#: editors/fckeditor.inc:228
+#: editors/nicedit.inc:111
+#: editors/openwysiwyg.inc:152
+#: editors/tinymce.inc:389
+#: editors/whizzywig.inc:120
+msgid "Horizontal rule"
+msgstr "Horizontale Linie"
+
+#: editors/fckeditor.inc:229
+#: editors/openwysiwyg.inc:153
+#: editors/tinymce.inc:390
+msgid "Cut"
+msgstr "Ausschneiden"
+
+#: editors/fckeditor.inc:229
+#: editors/openwysiwyg.inc:153
+#: editors/tinymce.inc:390
+msgid "Copy"
+msgstr "Kopieren"
+
+#: editors/fckeditor.inc:229
+#: editors/openwysiwyg.inc:153
+#: editors/tinymce.inc:390
+msgid "Paste"
+msgstr "Einfügen"
+
+#: editors/fckeditor.inc:230
+msgid "Paste Text"
+msgstr "Text einfügen"
+
+#: editors/fckeditor.inc:230
+#: editors/tinymce.inc:494
+msgid "Paste from Word"
+msgstr "Aus MS-Word einfügen"
+
+#: editors/fckeditor.inc:231
+msgid "Show blocks"
+msgstr "Blöcke anzeigen"
+
+#: editors/fckeditor.inc:232
+#: editors/openwysiwyg.inc:155
+#: editors/tinymce.inc:392
+#: editors/yui.inc:287
+msgid "Remove format"
+msgstr "Formatierungen entfernen"
+
+#: editors/fckeditor.inc:233
+#: editors/openwysiwyg.inc:156
+#: editors/tinymce.inc:393
+msgid "Character map"
+msgstr "Sonderzeichen"
+
+#: editors/fckeditor.inc:234
+msgid "About"
+msgstr "Über"
+
+#: editors/fckeditor.inc:235
+#: editors/nicedit.inc:115
+#: editors/openwysiwyg.inc:157
+#: editors/tinymce.inc:452
+#: editors/whizzywig.inc:112
+#: editors/yui.inc:288
+msgid "HTML block format"
+msgstr "HTML-Blockformat"
+
+#: editors/fckeditor.inc:235
+#: editors/nicedit.inc:115
+#: editors/openwysiwyg.inc:157
+#: editors/tinymce.inc:452
+#: editors/whizzywig.inc:112
+#: editors/yui.inc:288
+msgid "Font"
+msgstr "Schriftart"
+
+#: editors/fckeditor.inc:235
+#: editors/nicedit.inc:115
+#: editors/openwysiwyg.inc:157
+#: editors/tinymce.inc:452
+#: editors/whizzywig.inc:112
+#: editors/yui.inc:288
+msgid "Font size"
+msgstr "Schriftgröße"
+
+# ???
+#: editors/fckeditor.inc:235
+#: editors/tinymce.inc:452
+#, fuzzy
+msgid "Font style"
+msgstr "Formatstil"
+
+#: editors/fckeditor.inc:236
+#: editors/openwysiwyg.inc:161
+#: editors/tinymce.inc:529
+#: editors/whizzywig.inc:123
+msgid "Table"
+msgstr "Tabelle"
+
+#: editors/fckeditor.inc:237
+#: editors/tinymce.inc:515
+msgid "Search"
+msgstr "Suchen"
+
+#: editors/fckeditor.inc:237
+#: editors/tinymce.inc:515
+msgid "Replace"
+msgstr "Ersetzen"
+
+#: editors/fckeditor.inc:237
+#: editors/tinymce.inc:494
+msgid "Select all"
+msgstr "Alles markieren"
+
+#: editors/fckeditor.inc:238
+msgid "Create DIV container"
+msgstr "DIV-Block erstellen"
+
+#: editors/fckeditor.inc:239
+#: editors/tinymce.inc:538
+msgid "Flash"
+msgstr "Flash"
+
+#: editors/fckeditor.inc:239
+msgid "Smiley"
+msgstr "Smiley"
+
+#: editors/fckeditor.inc:240
+#, fuzzy
+msgid "FitWindow"
+msgstr "Fenster anpassen"
+
+#: editors/fckeditor.inc:241
+msgid "Check spelling"
+msgstr "Rechtschreibung überprüfen"
+
+#: editors/fckeditor.inc:248
+#, fuzzy
+msgid "Autogrow"
+msgstr "Automatische Größenanpassung"
+
+#: editors/fckeditor.inc:259
+#: editors/tinymce.inc:564
+msgid "BBCode"
+msgstr "BBCode"
+
+#: editors/fckeditor.inc:267
+#, fuzzy
+msgid "Table drag/resize"
+msgstr "Tabelle verschieben/skalieren"
+
+#: editors/fckeditor.inc:275
+msgid "Table: Cell properties"
+msgstr "Tabelle: Zellen-Eigenschaften"
+
+#: editors/fckeditor.inc:276
+msgid "Table: Insert row after"
+msgstr "Tabelle: Zeile unterhalb einfügen"
+
+#: editors/fckeditor.inc:277
+msgid "Table: Insert column after"
+msgstr "Tabelle: Spalte rechts danach einfügen"
+
+#: editors/fckeditor.inc:278
+msgid "Table: Insert cell after"
+msgstr "Tabelle: Zelle danach einfügen"
+
+#: editors/fckeditor.inc:279
+msgid "Table: Delete rows"
+msgstr "Tabelle: Zeilen entfernen"
+
+#: editors/fckeditor.inc:280
+msgid "Table: Delete columns"
+msgstr "Tabelle: Spalten löschen"
+
+#: editors/fckeditor.inc:281
+msgid "Table: Delete cells"
+msgstr "Tabelle: Zellen löschen"
+
+#: editors/fckeditor.inc:282
+msgid "Table: Merge cells"
+msgstr "Tabelle: Zellen verbinden"
+
+#: editors/fckeditor.inc:283
+msgid "Table: Horizontal split cell"
+msgstr "Tabelle: Zelle horizontal teilen"
+
+#: editors/markitup.inc:142;175
+#: editors/openwysiwyg.inc:159
+#: editors/tinymce.inc:501
+msgid "Preview"
+msgstr "Vorschau"
+
+#: editors/nicedit.inc:110
+#: editors/openwysiwyg.inc:150
+#: editors/tinymce.inc:387
+#: editors/yui.inc:285
+#, fuzzy
+msgid "Sup"
+msgstr "Hochgestellt"
+
+#: editors/nicedit.inc:110
+#: editors/openwysiwyg.inc:150
+#: editors/tinymce.inc:387
+#: editors/yui.inc:285
+#, fuzzy
+msgid "Sub"
+msgstr "Tiefgestellt"
+
+#: editors/openwysiwyg.inc:148
+#: editors/tinymce.inc:385
+#: editors/whizzywig.inc:124
+msgid "Clean-up"
+msgstr "Bereinigen"
+
+#: editors/openwysiwyg.inc:154
+#: editors/tinymce.inc:391
+msgid "Visual aid"
+msgstr "Optische Hilfe"
+
+#: editors/openwysiwyg.inc:158
+#: editors/tinymce.inc:459
+msgid "Fullscreen"
+msgstr "Vollbild"
+
+#: editors/openwysiwyg.inc:160
+#: editors/tinymce.inc:508
+msgid "Print"
+msgstr "Drucken"
+
+#: editors/openwysiwyg.inc:162
+#: editors/tinymce.inc:394
+msgid "Help"
+msgstr "Hilfe"
+
+#: editors/tinymce.inc:400
+msgid "Advanced horizontal rule"
+msgstr "Erweiterte horizontale Linie"
+
+#: editors/tinymce.inc:408
+#, fuzzy
+msgid "Advanced image"
+msgstr "Erweitertes Bild"
+
+#: editors/tinymce.inc:416
+#, fuzzy
+msgid "Advanced link"
+msgstr "Erweiterter Link"
+
+#: editors/tinymce.inc:424
+msgid "Auto save"
+msgstr "Hintergrundspeicherung"
+
+#: editors/tinymce.inc:431
+msgid "Context menu"
+msgstr "Kontextmenü"
+
+#: editors/tinymce.inc:438
+msgid "Left-to-right"
+msgstr "Links nach rechts"
+
+#: editors/tinymce.inc:438
+msgid "Right-to-left"
+msgstr "Rechts nach links"
+
+#: editors/tinymce.inc:445
+msgid "Emotions"
+msgstr "Emotionen"
+
+#: editors/tinymce.inc:466
+#, fuzzy
+msgid "Inline popups"
+msgstr "Inline-Popups"
+
+#: editors/tinymce.inc:476
+msgid "Insert date"
+msgstr "Datum einfügen"
+
+#: editors/tinymce.inc:476
+msgid "Insert time"
+msgstr "Zeit einfügen"
+
+#: editors/tinymce.inc:487
+msgid "Insert layer"
+msgstr "Ebene einfügen"
+
+# oder "In den Vordergrund"?
+#: editors/tinymce.inc:487
+#, fuzzy
+msgid "Move forward"
+msgstr "Eine Ebene nach vorne"
+
+# oder "In den Hintergrund"?
+#: editors/tinymce.inc:487
+#, fuzzy
+msgid "Move backward"
+msgstr "Eine Ebene nach hinten"
+
+#: editors/tinymce.inc:487
+msgid "Absolute"
+msgstr "Absolut"
+
+#: editors/tinymce.inc:494
+msgid "Paste text"
+msgstr "Text einfügen"
+
+#: editors/tinymce.inc:522
+msgid "Style properties"
+msgstr "Design-Einstellungen"
+
+#: editors/tinymce.inc:548
+#, fuzzy
+msgid "Media"
+msgstr "Medien"
+
+#: editors/tinymce.inc:555
+msgid "Citation"
+msgstr "Zitat"
+
+#: editors/tinymce.inc:555
+msgid "Deleted"
+msgstr "Gelöscht"
+
+#: editors/tinymce.inc:555
+msgid "Abbreviation"
+msgstr "Abkürzung"
+
+#: editors/tinymce.inc:555
+msgid "Acronym"
+msgstr "Akronym"
+
+# NICHT Eingefügt
+#: editors/tinymce.inc:555
+#, fuzzy
+msgid "Inserted"
+msgstr "Eingefügt"
+
+#: editors/tinymce.inc:571
+msgid "Safari compatibility"
+msgstr "Safari-Kompatibilität"
+
+#: editors/whizzywig.inc:126
+msgid "Spell check"
+msgstr "Rechtschreibprüfung"
+
+#: editors/yui.inc:284
+msgid "Font Color"
+msgstr "Schriftfarbe"
+
+#: editors/yui.inc:284
+msgid "Background Color"
+msgstr "Hintergrundfarbe"
+
+#: editors/yui.inc:286
+msgid "Show/hide hidden elements"
+msgstr "Ein-/Ausblenden versteckter Elemente"
+
+#: plugins/break.inc:14
+#, fuzzy
+msgid "Teaser break"
+msgstr "Anrisstext trennen"
+
+#: plugins/break.inc:17
+msgid "Separate the teaser and body of this content"
+msgstr "Separiert den Anrisstext und Textkörper des Inhalts an dieser Stelle"
+

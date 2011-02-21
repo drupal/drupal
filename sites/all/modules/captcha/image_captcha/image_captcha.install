@@ -1,0 +1,41 @@
+<?php
+// $Id: image_captcha.install,v 1.12 2010/11/16 23:22:12 soxofaan Exp $
+
+/**
+ * @file
+ * Installation/uninstallation related functions for the image_captcha module.
+ */
+
+/**
+ * Implements hook_requirements().
+ */
+function image_captcha_requirements($phase) {
+  $requirements = array();
+  $t = get_t();
+  if ($phase == 'install') {
+    // _image_captcha_check_setup() is defined in image_captcha.module.
+    module_load_include('module', 'image_captcha');
+    // Check if the GD library is available and raise an error when not.
+    if (_image_captcha_check_setup(FALSE) & IMAGE_CAPTCHA_ERROR_NO_GDLIB) {
+      $requirements['image_captcha_requires_gd'] = array(
+        'title' => $t('Image CAPTCHA requires GD library'),
+        'description' =>
+          $t('The Image CAPTCHA module can not be installed because your PHP setup does not provide the <a href="!gddoc">GD library</a>, which is required to generate images.',
+            array('!gddoc' => 'http://www.php.net/manual/en/book.image.php',)
+          ),
+        'severity' => REQUIREMENT_ERROR,
+      );
+    }
+  }
+  return $requirements;
+}
+
+/**
+ * On uninstall: remove module variables and clear variable cache
+ */
+function image_captcha_uninstall() {
+  db_delete('variable')
+    ->condition('name', db_like('image_captcha_') . '%', 'LIKE')
+    ->execute();
+  cache_clear_all('variables', 'cache');
+}

@@ -1,0 +1,70 @@
+<!-- $Id: api-handlers.html,v 1.4.6.2 2010/07/19 09:18:42 dereine Exp $ -->
+In Views, a handler is an object that is part of the view and is part of the query building flow.
+
+Handlers are objects; much of the time, the base handlers will work, but often you'll need to override the handler for something. One typical handler override will be views_handler_filter_operator_in which allows you to have a filter select from a list of options; you'll need to override this to provide your list.
+
+Handlers have two distint code flows; the UI flow and the view building flow.
+
+For the query flow:
+
+<dl>
+<dt>handler-&gt;construct()</dt>
+<dd>Create the initial handler; at this time it is not yet attached to a view. It is here that you can set basic defaults if needed, but there will be no knowledge of the environment yet.</dd>
+<dt>handler-&gt;set_definition()</dt>
+<dd>Set the data from hook_views_data() relevant to the handler.</dd>
+<dt>handler-&gt;init()</dt>
+<dd>Attach the handler to a view, and usually provides the options from the display.</dd>
+<dt>handler-&gt;pre_query()</dt>
+<dd>Run prior to the query() stage to do early processing.</dd>
+<dt>handler-&gt;query()</dt>
+<dd>Do the bulk of the work this handler needs to do to add itself to the query.</dd>
+</dl>
+
+Fields, being the only handlers concerned with output, also have an extended piece of the flow:
+<dl>
+<dt>handler-&gt;pre_render()</dt>
+<dd>Called prior to the actual rendering, this allows handlers to query for extra data; the entire resultset is available here, and this is where items that have "multiple values" per record can do their extra query for all of the records available. There are several examples of this at work in the code.</dd>
+<dt>handler-&gt;render()</dt>
+<dd>This does the actual work of rendering the field.</dd>
+</dl>
+
+Most handlers are just extensions of existing classes with a few tweaks that are specific to the field in question. For example:
+
+<pre>
+/**
+ * Filter by node type
+ */
+class views_handler_filter_node_type extends views_handler_filter_in_operator {
+  function get_value_options() {
+    if (!isset($this-&gt;value_options)) {
+      $this-&gt;value_title = t('Node type');
+      $types = node_get_types();
+      foreach ($types as $type =&gt; $info) {
+        $options[$type] = $info-&gt;name;
+      }
+      $this-&gt;value_options = $options;
+    }
+  }
+}
+</pre>
+
+<i>views_handler_filter_in_operator</i> provides a simple mechanism to set the list used and the rest of the handler is perfectly fine for this.
+
+Handlers are stored in their own files and loaded on demand.
+Like all other module files, they must first be registered through the module's info file. For example:
+<pre>
+name = Example module
+description = "Gives an example of a module."
+core = 7.x
+files[] = example.module
+files[] = example.install
+
+; Views handlers
+files[] = includes/views/handlers/example_handler_argument_string.inc
+</pre>
+
+The best place to learn more about handlers and how they work is to explore <a href="http://views.doc.logrus.com">the views API site</a> and use existing handlers as a guide and a model. Understanding how views_handler and its child classes work is handy but you can do a lot just following these models. You can also explore the views module directory, particularly node.views.inc.
+
+Please note that while all handler names in views are prefixed with views_, you should use your own module's name to prefix your handler names in order to ensure namespace safety. Note that the basic pattern for handler naming goes like this:
+
+[module]_handler_[type]_[tablename]_[fieldname]. Sometimes table and fieldname are not appropriate, but something that resembles what the table/field would be can be used.

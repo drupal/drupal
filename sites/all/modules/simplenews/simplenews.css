@@ -1,0 +1,30 @@
+/* $Id: simplenews.css,v 1.9 2009/12/31 13:01:17 sutharsan Exp $ */
+
+#simplenews-admin-filter .form-item { 
+  clear: both;
+  line-height: 1.75em;
+  margin: 0pt 1em 0pt 0pt;
+}
+
+#simplenews-admin-filter .form-item label { 
+  float: left;
+  width: 12em; 
+}
+
+#simplenews-admin-filter .spacer {
+  margin-left: 12em;  
+}
+
+#simplenews-admin-filter .form-select, 
+#simplenews-admin-filter .form-text {
+  width: 14em;
+}
+
+.block-simplenews .issues-link,
+.block-simplenews .issues-list {
+  margin-top: 1em;
+}
+
+.block-simplenews .issues-list .newsletter-created {
+  display: none;
+}

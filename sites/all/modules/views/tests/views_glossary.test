@@ -1,0 +1,58 @@
+<?php
+// $Id: views_glossary.test,v 1.1.4.4 2010/03/14 11:45:38 dereine Exp $
+/**
+ * @file
+ *   Test glossary view ( summary of arguments )
+ */
+
+class ViewsGlossaryTestCase extends ViewsSqlTest {
+  public static function getInfo() {
+    return array(
+      'name' => 'Glossary Test',
+      'description' => 'Tests glossary functionality of views.',
+      'group' => 'Views',
+    );
+  }
+
+  public function setUp() {
+    parent::setUp('views');
+  }
+
+  /**
+   * Test the default glossary view.
+   */
+  public function testGlossaryView() {
+    // create a contentype and add some nodes, with a non random title.
+    $type = $this->drupalCreateContentType();
+    $nodes_per_char = array(
+      'd' => 1,
+      'r' => 4,
+      'u' => 10,
+      'p' => 2,
+      'a' => 3,
+      'l' => 6,
+    );
+    foreach ($nodes_per_char as $char => $count) {
+      $setting = array(
+        'type' => $type->type
+      );
+      for ($i = 0; $i < $count; $i++) {
+        $node = $setting;
+        $node['title'] = $char . $this->randomString(3);
+        $this->drupalCreateNode($node);
+      }
+    }
+
+    // Execute glossary view
+    $view = views_get_view('glossary');
+    $view->set_display('attachment');
+    $view->execute_display('attachment');
+
+    // Check that the amount of nodes per char.
+    $result_nodes_per_char = array();
+    foreach ($view->result as $item) {
+      $this->assertEqual($nodes_per_char[$item->title_truncated], $item->num_records);
+    }
+  }
+}
+

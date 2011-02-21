@@ -1,0 +1,19 @@
+; $Id: image_captcha.info,v 1.8 2010/11/19 23:32:36 soxofaan Exp $
+name = "Image CAPTCHA"
+description = "Provides an image based CAPTCHA."
+package = "Spam control"
+dependencies[] = captcha
+core = 7.x
+configure = admin/config/people/captcha/image_captcha
+
+files[] = image_captcha.install
+files[] = image_captcha.module
+files[] = image_captcha.admin.inc
+files[] = image_captcha.user.inc
+
+; Information added by drupal.org packaging script on 2010-12-31
+version = "7.x-1.0-alpha2"
+core = "7.x"
+project = "captcha"
+datestamp = "1293755549"
+

@@ -1,0 +1,383 @@
+<?php
+// $Id: simplenews.test,v 1.7 2011/01/06 21:18:08 mirodietiker Exp $
+
+/**
+ * @file
+ * Simplenews test functions.
+ *
+ * @ingroup simplenews
+ * @todo Redo all database functions: http://drupal.org/node/224333#dbtng
+ * @todo Where possible build re-usable functions wrapped around database calls.
+ */
+
+class SimplenewsTestCase extends DrupalWebTestCase {
+
+  public function setUp() {
+    parent::setUp('taxonomy', 'simplenews', 'simplenews_test');
+
+    //$this->simplenews_admin_user = $this->drupalCreateUser(array('administer newsletters', 'administer simplenews settings', 'administer simplenews subscriptions'));
+    //$this->sender_user = $this->drupalCreateUser(array('create simplenews content', 'edit own simplenews content', 'send newsletter'));
+
+    variable_set('site_mail', 'user@example.com');
+  }
+
+  /**
+   * Set anonymous user permission to subscribe.
+   *
+   * @param boolean $enabled
+   *   Allow anonymous commenting.
+   * @todo Replace {permission} table http://drupal.org/node/224333#permission_tables
+   */
+  function setAnonymousUserSubscription($enabled) {
+
+    if ($enabled) {
+      db_insert('role_permission')
+        ->fields(array('rid', 'permission'), array(DRUPAL_ANONYMOUS_RID, 'subscribe to newsletters'))
+        ->execute();
+    }
+    db_insert('role_permission')
+      ->fields(array('rid', 'permission'), array(DRUPAL_ANONYMOUS_RID, 'access content'))
+      ->execute();
+    // Throw an error message with tests: Duplicate entry.
+  }
+
+  /**
+   * Generates a random email address.
+   *
+   * @todo: Make this function redundant by modification of Simplenews.
+   * Email addresses are case sensitive, simplenews system should handle with
+   * this correctly.
+   */
+  function randomEmail($number = 4, $prefix = 'simpletest_', $domain = 'example.com') {
+    return strtolower($this->randomName($number, $prefix) . '@' . $domain);
+  }
+
+  /**
+   * Select randomly one of the available newsletters.
+   *
+   * @return newsletter tid.
+   */
+  function getRandomNewsletter() {
+    if ($taxonomies = taxonomy_get_tree(variable_get('simplenews_vid', ''))) {
+      $tids = array();
+      foreach ($taxonomies as $newsletter) {
+        $tids[] = $newsletter->tid;
+      }
+    $key = array_rand($tids);
+    return $tids[$key];
+    }
+    return 0;
+  }
+
+
+  /**
+   * Enable newsletter subscription block.
+   *
+   * @param integer $tid
+   *   newsletter term id
+   * @param array $settings
+   *  ['message'] = Block message
+   *  ['form'] = '1': Subscription form; '0': Link to form
+   *  ['link to previous'] = {1, 0} Display link to previous issues
+   *  ['previous issues'] = {1, 0} Display previous issues
+   *  ['issue count'] = {1, 2, 3, ...}Number of issues to display
+   *  ['rss feed'] = {1, 0} Display RSS-feed icon
+   */
+  function setupSubscriptionBlock($tid, $settings = array()) {
+    $bid = db_select('blocks')
+      ->fields('block', array('bid'))
+      ->condition('module', 'simplenews')
+      ->condition('delta', $tid)
+      ->execute();
+
+    // Check to see if the box was created by checking that it's in the database..
+    $this->assertNotNull($bid, t('Block found in database'));
+
+    // Enable the block in the left side bar.
+    //@todo: replace this by BlockTestCase::moveBlockToRegion in D7
+    $block['module'] = 'simplenews';
+    $block['delta'] = $tid;
+    $edit[$block['module'] . '_' . $block['delta'] . '[region]'] = 'left';
+    $this->drupalPost('admin/build/block', $edit, t('Save blocks'));
+
+    // Set block parameters
+    $edit = array();
+    if (isset($settings['message'])) {
+      $edit['simplenews_block_m_'. $tid] = $settings['message'];
+    }
+    if (isset($settings['form'])) {
+      $edit['simplenews_block_f_'. $tid] = $settings['form'];
+    }
+    if (isset($settings['link to previous'])) {
+      $edit['simplenews_block_l_'. $tid] = $settings['link to previous'];
+    }
+    if (isset($settings['previous issues'])) {
+      $edit['simplenews_block_i_status_'. $tid] = $settings['previous issues'];
+    }
+    if (isset($settings['issue count'])) {
+      $edit['simplenews_block_i_'. $tid] = $settings['issue count'];
+    // TODO: check the count
+    }
+    if (isset($settings['rss feed'])) {
+      $edit['simplenews_block_r_'. $tid] = $settings['rss feed'];
+    }
+    $this->drupalPost('admin/build/block/configure/simplenews/'. $tid, $edit, t('Save block'));
+    file_put_contents('output1.html', $this->drupalGetContent());
+    $this->assertText('The block configuration has been saved.', 'The newsletter block configuration has been saved.');
+  }
+}
+
+class SimplenewsBlockTestCase extends SimplenewsTestCase {
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+    return array(
+      'name' => t('Simplenews block'),
+      'description' => t('Test the simplenews subscription block'),
+      'group' => t('Simplenews'),
+    );
+  }
+
+  /**
+   * Test basic subscription block functionality.
+   */
+  function testBlockBasic() {
+
+    /* Test code goes here */
+
+  }
+
+  /**
+   * Test multiple blocks on one page.
+   */
+  function testBlockMultiple() {
+
+    /* Test code goes here */
+
+  }
+}
+
+class SimplenewsSubscribeTestCase extends SimplenewsTestCase {
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+    return array(
+      'name' => t('Subscribe and unsubscribe users'),
+      'description' => t('(un)subscription of anonymous and authenticated users. Subscription via block, subscription page and account page'),
+      'group' => t('Simplenews'),
+    );
+  }
+
+  /**
+    * testSubscribeAnonymous
+    *
+    * Steps performed:
+    *   Preparation
+    *   1. Subscribe anonymous via block
+    *   2. Subscribe anonymous via subscription page
+    */
+  function testSubscribeAnonymous() {
+    // 0. Preparation
+    // Login admin
+    // Set permission for anonymous to subscribe
+    // Enable newsletter block
+    // Logout admin
+    $admin_user = $this->drupalCreateUser(array('administer blocks', 'administer content types', 'administer nodes', 'access administration pages', 'administer permissions'));
+    $this->drupalLogin($admin_user);
+    $this->setAnonymousUserSubscription(TRUE);
+
+    // Setup subscription block with subscription form.
+    $block_settings = array(
+      'message' => $this->randomName(4),
+      'form' => '1',
+      'link to previous' => FALSE,
+      'previous issues' => FALSE,
+      'rss feed' => TRUE,
+    );
+    $tid = $this->getRandomNewsletter();
+    $this->setupSubscriptionBlock($tid, $block_settings);
+
+    $this->drupalLogout();
+
+    //file_put_contents('output.html', $this->drupalGetContent());
+
+    // 1. Subscribe anonymous via block
+    // Subscribe + submit
+    // Assert confirmation message
+    // Assert outgoing email
+    //
+    // Confirm using mail link
+    // Confirm using mail link
+    // Assert confirmation message
+
+    $mail = $this->randomEmail(8, 'testmail');
+    $edit = array (
+      'mail' => $mail,
+      'action' => 'subscribe',
+    );
+    $this->drupalPost('', $edit, t('Save'));
+    $this->assertText(t('You will receive a confirmation email shortly containing further instructions on how to complete your subscription.'), t('Subscription confirmation email sent.'));
+
+    //file_put_contents('output.html', $this->drupalGetContent());
+
+    $content = $this->drupalGetContent();
+    $pattern = '@the link below\.[\r\n]+?(http:/.*)</li\>@';
+    $match = array();
+    preg_match($pattern, $content, $match);
+    $confirm_url = $match[1];
+
+    $pattern = '@http:/.*/newsletter/confirm/add/[0-9,a-f]{10}[0-9]+t[0-9]+@';
+    $this->assertPattern($pattern, t('Confirmation URL found: @url', array('@url' => $confirm_url)));
+
+    $this->drupalGet($confirm_url);
+    $newsletter = taxonomy_get_term($tid);
+    $this->assertRaw(t('Are you sure you want to add %user to the %newsletter mailing list?', array('%user' => $mail, '%newsletter' => $newsletter->name)), t('Subscription confirmation found.'));
+
+    //file_put_contents('output1.html', $this->drupalGetContent());
+
+    $this->drupalPost($confirm_url, NULL, t('Subscribe'));
+    $this->assertRaw(t('%user was added to the %newsletter mailing list.', array('%user' => $mail, '%newsletter' => $newsletter->name)), t('Anonymous subscriber added to newsletter'));;
+
+    //file_put_contents('output2.html', $this->drupalGetContent());
+
+    // 2. Subscribe anonymous via subscription page
+    // Subscribe + submit
+    // Assert confirmation message
+    // Assert outgoing email
+    //
+    // Confirm using mail link
+    // Confirm using mail link
+    // Assert confirmation message
+
+    $mail = $this->randomEmail(8, 'testmail');
+    $edit = array (
+      "newsletters[$tid]" => '1',
+      'mail' => $mail,
+    );
+    $this->drupalPost('newsletter/subscriptions', $edit, t('Subscribe'));
+    $this->assertText(t('You will receive a confirmation email shortly containing further instructions on how to complete your subscription.'), t('Subscription confirmation email sent.'));
+
+    //file_put_contents('output.html', $this->drupalGetContent());
+
+    $content = $this->drupalGetContent();
+    $pattern = '@the link below\.[\r\n]+?(http:/.*)</li\>@';
+    $match = array();
+    preg_match($pattern, $content, $match);
+    $confirm_url = $match[1];
+
+    $pattern = '@http:/.*/newsletter/confirm/add/[0-9,a-f]{10}[0-9]+t[0-9]+@';
+    $this->assertPattern($pattern, t('Confirmation URL found: @url', array('@url' => $confirm_url)));
+
+    $this->drupalGet($confirm_url);
+    $newsletter = taxonomy_get_term($tid);
+    $this->assertRaw(t('Are you sure you want to add %user to the %newsletter mailing list?', array('%user' => $mail, '%newsletter' => $newsletter->name)), t('Subscription confirmation found.'));
+
+    //file_put_contents('output1.html', $this->drupalGetContent());
+
+    $this->drupalPost($confirm_url, NULL, t('Subscribe'));
+    $this->assertRaw(t('%user was added to the %newsletter mailing list.', array('%user' => $mail, '%newsletter' => $newsletter->name)), t('Anonymous subscriber added to newsletter'));;
+
+    //file_put_contents('output2.html', $this->drupalGetContent());
+  }
+
+   /**
+    * testSubscribeAuthenticated
+    *
+    * Steps performed:
+    *   0. Preparation
+    *   1. Subscribe authenticated via block
+    *   2. Unsubscribe authenticated via subscription page
+    *   3. Subscribe authenticated via subscription page
+    *   4. Unsubscribe authenticated via account page
+    *   5. Subscribe authenticated via account page
+    */
+   function testSubscribeAuthenticated() {
+    // 0. Preparation
+    // Login admin
+    // Set permission for anonymous to subscribe
+    // Enable newsletter block
+    // Logout admin
+    // Login Subscriber
+
+    $admin_user = $this->drupalCreateUser(array('administer blocks', 'administer content types', 'administer nodes', 'access administration pages', 'administer permissions'));
+    $this->drupalLogin($admin_user);
+    $this->setAnonymousUserSubscription(TRUE);
+
+    // Setup subscription block with subscription form.
+    $block_settings = array(
+      'message' => $this->randomName(4),
+      'form' => '1',
+      'link to previous' => FALSE,
+      'previous issues' => FALSE,
+      'rss feed' => TRUE,
+    );
+    $tid = $this->getRandomNewsletter();
+    $this->setupSubscriptionBlock($tid, $block_settings);
+    $this->drupalLogout();
+
+    $subscriber_user = $this->drupalCreateUser(array('subscribe to newsletters'));
+    $this->drupalLogin($subscriber_user);
+
+    // 1. Subscribe authenticated via block
+    // Subscribe + submit
+    // Assert confirmation message
+
+    $this->drupalPost('', NULL, t('Subscribe'));
+    $this->assertText(t('You have been subscribed.'), t('Authenticated user subscribed using the subscription block.'));
+
+    // 2. Unsubscribe authenticated via subscription page
+    // Unsubscribe + submit
+    // Assert confirmation message
+
+    $edit = array (
+      "newsletters[$tid]" => 0,
+    );
+    $this->drupalPost('newsletter/subscriptions', $edit, t('Update'));
+    $this->assertRaw(t('The newsletter subscriptions for %mail have been updated.', array('%mail' => $subscriber_user->mail)), t('Authenticated user unsubscribed on the subscriptions page.'));
+
+    // 3. Subscribe authenticated via subscription page
+    // Subscribe + submit
+    // Assert confirmation message
+
+    $edit = array (
+      "newsletters[$tid]" => '1',
+    );
+    $this->drupalPost('newsletter/subscriptions', $edit, t('Update'));
+    $this->assertRaw(t('The newsletter subscriptions for %mail have been updated.', array('%mail' => $subscriber_user->mail)), t('Authenticated user subscribed on the subscriptions page.'));
+
+    //file_put_contents('output.html', $this->drupalGetContent());
+
+    // 4. Unsubscribe authenticated via account page
+    // Unsubscribe + submit
+    // Assert confirmation message
+
+    $edit = array (
+      "newsletters[$tid]" => 0,
+    );
+    $url = 'user/'. $subscriber_user->uid .'/edit/newsletter';
+    $this->drupalPost($url, $edit, t('Save'));
+    $this->assertRaw(t('The changes have been saved.', array('%mail' => $subscriber_user->mail)), t('Authenticated user unsubscribed on the account page.'));
+
+    // 5. Subscribe authenticated via account page
+    // Subscribe + submit
+    // Assert confirmation message
+
+    $edit = array (
+      "newsletters[$tid]" => '1',
+    );
+    $url = 'user/'. $subscriber_user->uid .'/edit/newsletter';
+    $this->drupalPost($url, $edit, t('Save'));
+    $this->assertRaw(t('The changes have been saved.', array('%mail' => $subscriber_user->mail)), t('Authenticated user unsubscribed on the account page.'));
+  }
+
+}
+
+/**
+ * @todo:
+ * Subscriptions list, mass subscribe, mass unsubscribe, export
+ * Newsletter (term) create, read, edit, delete
+ * Newsletter node create, send draft, send final
+ */
+

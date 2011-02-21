@@ -1,0 +1,279 @@
+<?php
+// $Id: views_export.module,v 1.9.4.5 2010/12/01 20:29:24 dereine Exp $
+
+/**
+ * @file views_export.module
+ *
+ * Provides functionality to export multiple items at once to make it easy to
+ * dump a set of views into code.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function views_export_menu() {
+  $items = array();
+  $items['admin/structure/views/tools/export'] = array(
+    'title' => 'Bulk export',
+    'access arguments' => array('use views exporter'),
+    'page callback' => 'views_export_export',
+    'type' => MENU_LOCAL_TASK,
+  );
+
+  $items['admin/structure/views/tools/export/results'] = array(
+    'access arguments' => array('use views exporter'),
+    'page callback' => 'views_export_export',
+    'type' => MENU_LOCAL_TASK,
+  );
+
+  return $items;
+}
+/**
+ * Implements hook_theme().
+ */
+function views_export_theme() {
+  return array(
+    'views_export_export_form' => array(
+      'render element' => 'form',
+    ),
+  );
+}
+
+/**
+ * Implements hook_perm().
+ */
+function views_export_permission() {
+  return array(
+    'use views exporter' => array(
+      'title' => t('Use Views exporter'),
+      'description' => t('Use the Views exporter.'),
+    ),
+  );
+}
+
+/**
+ * Page callback to export views in bulk.
+ */
+function views_export_export() {
+  $tags = array();
+  if (!empty($_GET['tags'])) {
+    $tags = explode(',', $_GET['tags']);
+  }
+
+  $exportables = array();
+  foreach (module_implements('views_exportables') as $module) {
+    $function = $module . '_views_exportables';
+    $exportables[$module] = $function('list', $tags);
+    asort($exportables[$module]);
+  }
+
+  if ($exportables) {
+    $form_state = array(
+      'no_redirect' => TRUE,
+      'exportables' => $exportables,
+      'tags' => $tags,
+      'build_info' => array(
+        'args' => array(),
+      ),
+    );
+
+    $form = drupal_build_form('views_export_export_form', $form_state);
+    $output = drupal_render($form);
+    if ($form_state['submitted']) {
+      $output = $form_state['output'];
+    }
+    return $output;
+  }
+  else {
+    return t('There are no views to be exported at this time.');
+  }
+}
+
+/**
+ * Form to choose a group of views to export.
+ */
+function views_export_export_form($form, &$form_state) {
+  foreach ($form_state['exportables'] as $module => $views) {
+    foreach ($views as $name => $data) {
+      $options[$name] = $data['name'];
+    }
+
+    $form['modules']['#tree'] = TRUE;
+    $form['modules'][$module] = array(
+      '#type' => 'checkboxes',
+      '#options' => $options,
+      '#default_value' => array(),
+    );
+  }
+
+  $tags = array();
+  foreach (views_get_all_views() as $name => $view) {
+    if (!empty($view->tag)) {
+      $tags[$view->tag] = $view->tag;
+    }
+  }
+
+  asort($tags);
+
+  $form['tags'] = array(
+    '#type' => 'select',
+    '#title' => t('Show only these tags'),
+    '#options' => $tags,
+    '#default_value' => $form_state['tags'],
+    '#multiple' => TRUE,
+  );
+
+  $form['apply'] = array(
+    '#type' => 'submit',
+    '#value' => t('Apply'),
+    '#submit' => array('views_export_export_form_apply'),
+  );
+
+  $form['name'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Module name'),
+    '#description' => t('Enter the module name to export code to.'),
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Export'),
+  );
+
+  $form['#action'] = url('admin/structure/views/tools/export/results');
+  $form['#redirect'] = FALSE;
+  if (isset($form_state['exportables'])) {
+    $form['#exportables'] = $form_state['exportables'];
+  }
+  return $form;
+}
+
+function theme_views_export_export_form(&$vars) {
+  $form = $vars['form'];
+  $output = '';
+    // Get current list of modules.
+  $files = system_rebuild_module_data();
+
+  $exportables = $form['#exportables'];
+  $output .= drupal_render($form['tags']);
+  $output .= drupal_render($form['apply']);
+  $output .= '<div class="clearfix">';
+
+  foreach ($exportables as $module => $views) {
+    $header = array(theme('table_select_header_cell'), $files[$module]->info['name'], t('Tag'), t('Description'));
+    $rows = array();
+    foreach ($views as $name => $view) {
+      $title = $form['modules'][$module][$name]['#title'];
+      unset($form['modules'][$module][$name]['#title']);
+      $rows[] = array(drupal_render($form['modules'][$module][$name]), $title, $view['tag'], '<div class="description">' . $view['desc'] . '</div>');
+    }
+    $output .= '<div class="export-container">';
+    $output .= theme('table', array(
+      'header' => $header,
+      'rows' => $rows
+    ));
+    $output .= "</div>\n";
+  }
+  $output .= '</div>';
+  $form['#attached']['css'] = array(drupal_add_css(drupal_get_path('module', 'views_export') . '/views_export.css'));
+
+  $output .= drupal_render_children($form);
+  return $output;
+}
+
+function views_export_export_form_apply(&$form, &$form_state) {
+  $tags = $form_state['values']['tags'];
+  if ($tags) {
+    drupal_goto('admin/structure/views/tools/export', array('tags' => implode(',', $tags)));
+  }
+  else {
+    drupal_goto('admin/structure/views/tools/export');
+  }
+}
+
+function views_export_export_form_submit(&$form, &$form_state) {
+  $code = '';
+  if (empty($form_state['values']['name'])) {
+    $form_state['values']['name'] = 'foo';
+  }
+
+  foreach ($form_state['values']['modules'] as $module => $views) {
+    $views = array_filter($views);
+    asort($views);
+    if ($views) {
+      $code .= module_invoke($module, 'views_exportables', 'export', $views, $form_state['values']['name']) . "\n\n";
+    }
+  }
+
+  $lines = substr_count($code, "\n");
+
+  $types = system_element_info();
+
+  $info  = '; $Id: views_export.module,v 1.9.4.5 2010/12/01 20:29:24 dereine Exp $'."\n";
+  $info .= "\n";
+  $info .= strtr("name = @module Export Module\n", array('@module' => $form_state['values']['name']));
+  $info .= strtr("description = Exports some views of @module\n", array('@module' => $form_state['values']['name']));
+  $info .= "dependencies[] = views\n";
+  $info .= "core = 6.x\n";
+
+
+  $element_info = array(
+    '#title' => t('Put this in @module.info in your modules/@module directory',  array('@module' => $form_state['values']['name'])),
+    '#type' => 'textarea',
+    '#id' => 'export-info-textarea',
+    '#name' => 'export-info-textarea',
+    '#attributes' => array(),
+    '#rows' => 9,
+    '#cols' => 60,
+    '#value' => $info,
+    '#parents' => array('dummy'),
+    '#required' => FALSE,
+  ) + $types['textarea'];
+
+  $api  = "/**\n";
+  $api .= " * Implements hook_views_api().\n";
+  $api .= " */\n";
+  $api .= "function @module_views_api() {\n";
+  $api .= "  return array(\n";
+  $api .= "    'api' => '" . views_api_version() . "',\n";
+  $api .= "    'path' => drupal_get_path('module', '@module'),\n";
+  $api .= "    //'path' => drupal_get_path('module', '@module') . '/includes',\n";
+  $api .= "  );\n";
+  $api .= "}";
+
+  $api = strtr($api, array('@module' => check_plain($form_state['values']['name'])));
+
+  $element_api = array(
+    '#title' => t('Put this in @module.module in your modules/@module directory', array('@module' => $form_state['values']['name'])),
+    '#type' => 'textarea',
+    '#id' => 'export-api-textarea',
+    '#name' => 'export-api-textarea',
+    '#attributes' => array( 'dir' => 'ltr' ),
+    '#rows' => 9,
+    '#cols' => 60,
+    '#value' => $api,
+    '#parents' => array('dummy'),
+    '#required' => FALSE,
+  ) + $types['textarea'];
+
+  $element_hook = array(
+    '#title' => t('Put this in @module.views_default.inc in your modules/@module directory or modules/@module/includes directory', array('@module' => $form_state['values']['name'])),
+    '#type' => 'textarea',
+    '#id' => 'export-textarea',
+    '#name' => 'export-textarea',
+    '#attributes' => array( 'dir' => 'ltr' ),
+    '#rows' => min($lines, 150),
+    '#value' => $code,
+    '#parents' => array('dummy'),
+    '#required' => FALSE,
+  ) + $types['textarea'];
+
+
+  $form_state['output'] = theme('textarea', array(
+    'element' => $element_info));
+  $form_state['output'] .= theme('textarea', array(
+    'element' => $element_api));
+  $form_state['output'] .= theme('textarea', array(
+    'element' => $element_hook));
+}
+

@@ -1,0 +1,651 @@
+# LANGUAGE translation of Drupal (captcha.module)
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+# Generated from file: captcha.module,v 1.24 2006/05/19 15:00:51 wundo
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: block-module5\n"
+"POT-Creation-Date: 2009-07-03 15:01+0200\n"
+"PO-Revision-Date: 2009-03-22 12:52+0300\n"
+"Last-Translator: Domas Jokubauskis <domasj@gmail.com>\n"
+"Language-Team: Domas Jokubauskis <domasj@gmail.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Poedit-Language: Lithuanian\n"
+"X-Poedit-Country: LITHUANIA\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+#: captcha.admin.inc:16 image_captcha/image_captcha.admin.inc:157;179
+msgid "none"
+msgstr "joks"
+
+#: captcha.admin.inc:17
+msgid "default challenge type"
+msgstr ""
+
+#: captcha.admin.inc:23
+msgid "@type (from module @module)"
+msgstr ""
+
+#: captcha.admin.inc:42
+msgid "Form protection"
+msgstr "Formos apsauga"
+
+#: captcha.admin.inc:43
+msgid "Select the challenge type you want for each of the listed forms (identified by their so called <em>form_id</em>'s). You can easily add arbitrary forms with textfield at the bottom of the table or with the help of the '%CAPTCHA_admin_links' option below."
+msgstr "Pasirinkite jūsų norimą užduotį kiekvienai išvardintai formai (atpažįstamai pagal jos <em>form_id</em> identifikatorių). Jūs galite lengvai pridėti reikiamas formas naudodamiesi lentelės apačioje esančiu laukeliu arba žemiau esančiu „%CAPTCHA_admin_links“ nustatymu."
+
+#: captcha.admin.inc:44;108 captcha.module:46
+msgid "Add CAPTCHA administration links to forms"
+msgstr "Pridėti CAPTCHA užduoties administravimo nuorodas prie formų"
+
+#: captcha.admin.inc:49
+msgid "Default challenge type"
+msgstr ""
+
+#: captcha.admin.inc:50
+msgid "Select the default challenge type for CAPTCHAs. This can be overriden for each form if desired."
+msgstr ""
+
+#: captcha.admin.inc:86
+msgid "delete"
+msgstr "šalinti"
+
+#: captcha.admin.inc:110
+msgid "This option makes it easy to manage CAPTCHA settings on forms. When enabled, users with the \"%admincaptcha\" permission will see a fieldset with CAPTCHA administration links on all forms, except on administrative pages."
+msgstr ""
+
+#: captcha.admin.inc:110 captcha.module:107
+msgid "administer CAPTCHA settings"
+msgstr "administruoti CAPTCHA užduočių nustatymus"
+
+#: captcha.admin.inc:115
+msgid "Allow CAPTCHAs and CAPTCHA administration links on administrative pages"
+msgstr ""
+
+#: captcha.admin.inc:117
+msgid "This option makes it possible to add CAPTCHAs to forms on administrative pages. CAPTCHAs are disabled by default on administrative pages (which shouldn't be accessible to untrusted users normally) to avoid the related overhead. In some situations, e.g. in the case of demo sites, it can be usefull to allow CAPTCHAs on administrative pages."
+msgstr ""
+
+#: captcha.admin.inc:123
+msgid "Add a description to the CAPTCHA"
+msgstr ""
+
+#: captcha.admin.inc:124
+msgid "Add a configurable description to explain the purpose of the CAPTCHA to the visitor."
+msgstr ""
+
+#: captcha.admin.inc:132
+msgid "CAPTCHA description"
+msgstr ""
+
+#: captcha.admin.inc:133;149
+msgid "Configurable description of the CAPTCHA. An empty entry will reset the description."
+msgstr ""
+
+#: captcha.admin.inc:139
+msgid "For language %lang_name (code %lang_code)"
+msgstr "Kalba %lang_name (kodas %lang_code)"
+
+#: captcha.admin.inc:148
+msgid "Challenge description"
+msgstr "Užduoties aprašymas"
+
+#: captcha.admin.inc:159
+msgid "Default CAPTCHA validation"
+msgstr ""
+
+#: captcha.admin.inc:160
+msgid "Define how the response should be processed by default. Note that the modules that provide the actual challenges can override or ignore this."
+msgstr ""
+
+#: captcha.admin.inc:162
+msgid "Case sensitive validation: the response has to exactly match the solution."
+msgstr ""
+
+#: captcha.admin.inc:163
+msgid "Case insensitive validation: lowercase/uppercase errors are ignored."
+msgstr ""
+
+#: captcha.admin.inc:171
+msgid "Persistence"
+msgstr "Veikimas"
+
+#: captcha.admin.inc:174
+msgid "Always add a challenge."
+msgstr "Visuomet pridėti užduotį."
+
+#: captcha.admin.inc:175
+msgid "Omit challenges for a form once the user has successfully responded to a challenge for that form."
+msgstr "Nerodyti užduoties prie formos, kuomet naudotojas jau sėkmingai išsprendė užduotį tai formai."
+
+#: captcha.admin.inc:176
+msgid "Omit challenges for all forms once the user has successfully responded to a challenge."
+msgstr "Nerodyti užduočių prie visų formų, kuomet naudotojas jau sėkmingai išsprendė užduotį."
+
+#: captcha.admin.inc:178
+msgid "Define if challenges should be omitted during the rest of a session once the user successfully responses to a challenge."
+msgstr "Nurodykite, ar užduotys neturėtų būti rodomos likusį sesijos laiką, jei naudotojas sėkmingai išsprendžia užduotį."
+
+#: captcha.admin.inc:184
+msgid "Log wrong responses"
+msgstr "Įrašyti neteisingus atsakymus"
+
+#: captcha.admin.inc:185
+msgid "Report information about wrong responses to the !log."
+msgstr "Pranešti apie neteisingus atsakymus !log."
+
+#: captcha.admin.inc:185
+msgid "log"
+msgstr "žurnale"
+
+#: captcha.admin.inc:192
+msgid "Save configuration"
+msgstr "Įrašyti konfigūraciją"
+
+#: captcha.admin.inc:202;342
+msgid "Challenge type"
+msgstr "Užduotis"
+
+#: captcha.admin.inc:202
+msgid "Operations"
+msgstr "Veiksmai"
+
+#: captcha.admin.inc:229;363
+msgid "Illegal form_id"
+msgstr "Negalimas form_id"
+
+#: captcha.admin.inc:255
+msgid "Added CAPTCHA point."
+msgstr "Kitų formų CAPTCHA užduotis pridėta."
+
+#: captcha.admin.inc:270
+msgid "Reset of CAPTCHA description for language %language."
+msgstr ""
+
+#: captcha.admin.inc:281
+msgid "Reset of CAPTCHA description."
+msgstr ""
+
+#: captcha.admin.inc:289
+msgid "The CAPTCHA settings were saved."
+msgstr "CAPTCHA užduočių nustatymai išsaugoti."
+
+#: captcha.admin.inc:321;335
+msgid "Form ID"
+msgstr "Formos ID"
+
+#: captcha.admin.inc:322;336
+msgid "The Drupal form_id of the form to add the CAPTCHA to."
+msgstr "Drupal form_id identifikatorius formos, prie kurios pridėti CAPTCHA užduotį."
+
+#: captcha.admin.inc:343
+msgid "The CAPTCHA type to use for this form"
+msgstr "CAPTCHA užduotis, naudojama šiai formai"
+
+#: captcha.admin.inc:352
+msgid "Save"
+msgstr "Saugoti"
+
+#: captcha.admin.inc:375
+msgid "Saved CAPTCHA point settings."
+msgstr "Kitų formų CAPTCHA užduočių nustatymai išsaugoti."
+
+#: captcha.admin.inc:392
+msgid "Are you sure you want to delete the CAPTCHA for form_id %form_id?"
+msgstr "Ar jūs esate įsitikinę, jog norite pašalinti CAPTCHA užduotį formai, kurios ID yra %form_id?"
+
+#: captcha.admin.inc:393
+msgid "Delete"
+msgstr "Pašalinti"
+
+#: captcha.admin.inc:396
+msgid "Are you sure you want to disable the CAPTCHA for form_id %form_id?"
+msgstr "Ar jūs esate įsitikinę, jog norite išjungti CAPTCHA užduotį formai, kurios ID yra %form_id?"
+
+#: captcha.admin.inc:397
+msgid "Disable"
+msgstr "Išjungti"
+
+#: captcha.admin.inc:410
+msgid "Deleted CAPTCHA for form %form_id."
+msgstr "Pašalinta formos %form_id CAPTCHA užduotis."
+
+#: captcha.admin.inc:414
+msgid "Disabled CAPTCHA for form %form_id."
+msgstr "Išjungta formos %form_id CAPTCHA užduotis."
+
+#: captcha.admin.inc:451
+msgid "This page gives an overview of all available challenge types, generated with their current settings."
+msgstr "Šis puslapis leidžia peržvelgti visas galimas užduotis, sugeneruotas su jų dabartiniais nustatymais."
+
+#: captcha.admin.inc:459
+msgid "Challenge \"%challenge\" by module \"%module\""
+msgstr "Užduotis „%challenge“, kurią suteikia modulis „%module“"
+
+#: captcha.admin.inc:462
+msgid "10 more examples of this challenge."
+msgstr "10 papildomų šios užduoties pavyzdžių."
+
+#: captcha.inc:38
+msgid "Failed to set a CAPTCHA type for form %form_id: could not interpret value \"@captcha_type\""
+msgstr ""
+
+#: captcha.inc:145
+msgid "This question is for testing whether you are a human visitor and to prevent automated spam submissions."
+msgstr "Šis klausimas yra skirtas įsitikinti, jog jūs esate žmogus, ir sustabdyti automatinį šlamšto siuntimą."
+
+#: captcha.module:31
+msgid "\"CAPTCHA\" is an acronym for \"Completely Automated Public Turing test to tell Computers and Humans Apart\". It is typically a challenge-response test to determine whether the user is human. The CAPTCHA module is a tool to fight automated submission by malicious users (spamming) of for example comments forms, user registration forms, guestbook forms, etc. You can extend the desired forms with an additional challenge, which should be easy for a human to solve correctly, but hard enough to keep automated scripts and spam bots out."
+msgstr "„CAPTCHA“ yra anglų k. akronimas šiam pavadininimui: „Completely Automated Public Turing test to tell Computers and Humans Apart“. Jis reiškia visiškai automatizuotą viešą Turingo testą, skirtą nustatyti ar vartotojas yra kompiuteris ar žmogus. Dažniausiai tai yra užduotis-atsakymas testas, kuris nustato ar vartotojas yra žmogus. CAPTCHA užduoties modulis yra įrankis padedantis kovoti su automatiniais įrašais, kuriuos padaro blogų tikslų turintys naudotojai, komentarų, naudotojų registravimo, svečių knygos ir kitose formose. Jūs galite prie pasirinktų formų pridėti papildomą užduotį, kuri žmonėms turėtų būti lengvai teisingai išsprendžiama, bet pakankamai sudėtinga automatizuotiems scenarijams ir šlamštą platinantiems botams."
+
+#: captcha.module:32
+msgid "Note that the CAPTCHA module interacts with page caching (see <a href=\"!performancesettings\">performance settings</a>). Because the challenge should be unique for each generated form, the caching of the page it appears on is prevented. Make sure that these forms do not appear on too many pages or you will lose much caching efficiency. For example, if you put a CAPTCHA on the user login block, which typically appears on each page for anonymous visitors, caching will practically be disabled. The comment submission forms are another example. In this case you should set the \"%commentlocation\" to \"%separatepage\" in the comment settings of the relevant <a href=\"!contenttypes\">content types</a> for better caching efficiency."
+msgstr ""
+
+#: captcha.module:35
+msgid "Location of comment submission form"
+msgstr "Location of comment submission form"
+
+#: captcha.module:36
+msgid "Display on separate page"
+msgstr "Rodyti atskirame puslapyje"
+
+#: captcha.module:40
+msgid "CAPTCHA is a trademark of Carnegie Mellon University."
+msgstr "CAPTCHA yra  Carnegie Mellon University prekinis ženklas."
+
+#: captcha.module:45
+msgid "A CAPTCHA can be added to virtually each Drupal form. Some default forms are already provided in the form list, but arbitrary forms can be easily added and managed when the option \"%adminlinks\" is enabled."
+msgstr ""
+
+#: captcha.module:47
+msgid "Users with the \"%skipcaptcha\" <a href=\"@perm\">permission</a> won't be offered a challenge. Be sure to grant this permission to the trusted users (e.g. site administrators). If you want to test a protected form, be sure to do it as a user without the \"%skipcaptcha\" permission (e.g. as anonymous user)."
+msgstr ""
+
+#: captcha.module:48;107
+msgid "skip CAPTCHA"
+msgstr "praleisti CAPTCHA užduotį"
+
+#: (duplicate) captcha.module:269;322;119 ;222;442;60;71 captcha.info:0
+#: image_captcha/image_captcha.user.inc:29;72
+#: image_captcha/image_captcha.module:94
+msgid "CAPTCHA"
+msgstr "CAPTCHA"
+
+#: captcha.module:327
+msgid "CAPTCHA: challenge \"@type\" enabled"
+msgstr ""
+
+#: captcha.module:328
+msgid "Untrusted users will see a CAPTCHA here (!settings)."
+msgstr "Nepatikimi naudotojai čia matys CAPTCHA užduotį (!settings)."
+
+#: captcha.module:329
+msgid "general CAPTCHA settings"
+msgstr "bendri CAPTCHA užduoties nustatymai"
+
+#: captcha.module:333
+msgid "Enabled challenge"
+msgstr "Užduotis įjungta"
+
+#: captcha.module:334
+msgid "\"@type\" by module \"@module\" (!change, !disable)"
+msgstr ""
+
+#: captcha.module:337
+msgid "change"
+msgstr "keisti"
+
+#: captcha.module:338
+msgid "disable"
+msgstr "išjungti"
+
+#: captcha.module:343 image_captcha/image_captcha.admin.inc:49
+msgid "Example"
+msgstr ""
+
+#: captcha.module:344
+msgid "This is a pre-solved, non-blocking example of this challenge."
+msgstr ""
+
+#: captcha.module:353
+msgid "CAPTCHA: no challenge enabled"
+msgstr "CAPTCHA užduotis: nėra įjungtų užduočių"
+
+#: captcha.module:355
+msgid "Place a CAPTCHA here for untrusted users."
+msgstr "Čia rodyti CAPTCHA užduotį nepatikimiems naudotojams."
+
+#: captcha.module:417
+msgid "CAPTCHA test failed (unknown csid)."
+msgstr "CAPTCHA užduoties bandymas nepavyko (nežinomas csid)."
+
+#: captcha.module:437
+msgid "The answer you entered for the CAPTCHA was not correct."
+msgstr "Jūsų įvestas CAPTCHA užduoties atsakymas buvo neteisingas."
+
+#: captcha.module:524
+msgid "Math question"
+msgstr ""
+
+#: captcha.module:525
+msgid "Solve this simple math problem and enter the result. E.g. for 1+3, enter 4."
+msgstr "Išspręskite šią paprastą matematinę užduotį ir įveskite atsakymą. Pvz., jei užduotis yra 1+3, įveskite 4."
+
+#: captcha.module:526
+msgid "@x + @y = "
+msgstr "@x + @y = "
+
+#: captcha.module:545
+msgid "Test one two three"
+msgstr ""
+
+#: captcha.module:222
+msgid "CAPTCHA problem: hook_captcha() of module %module returned nothing when trying to retrieve challenge type %type for form %form_id."
+msgstr ""
+
+#: captcha.module:442
+msgid "%form_id post blocked by CAPTCHA module: challenge \"%challenge\" (by module \"%module\"), user answered \"%response\", but the solution was \"%solution\"."
+msgstr "%form_id įrašas užblokuotas CAPTCHA modulio: užduotis „%challenge“ (modulis „%module“), naudotojas atsakė „%response“, bet sprendimas buvo „%solution“."
+
+#: captcha.module:120
+msgid "Already 1 blocked form submission"
+msgid_plural "Already @count blocked form submissions"
+msgstr[0] ""
+msgstr[1] ""
+
+#: captcha.module:61
+msgid "Administer how and where CAPTCHAs are used."
+msgstr "Nustatykite kur ir kada naudoti CAPTCHA užduotis."
+
+#: captcha.module:77
+msgid "General settings"
+msgstr "Bendri nustatymai"
+
+#: captcha.module:83
+msgid "Examples"
+msgstr "Pavyzdžiai"
+
+#: captcha.module:84
+msgid "An overview of the available challenge types with examples."
+msgstr "Galimų užduočių su pavyzdžiais apžvalga."
+
+#: captcha.module:93
+msgid "CAPTCHA point administration"
+msgstr "Kitų formų CAPTCHA užduočių administravimas"
+
+#: captcha.install:156
+msgid "Unsupported database."
+msgstr "Nepalaikoma duomenų bazė."
+
+#: (duplicate) captcha.install:115
+msgid "You can now <a href=\"!captcha_admin\">configure the CAPTCHA module</a> for your site."
+msgstr "Dabar jūs galite <a href=\"!captcha_admin\">sukonfigūruoti CAPTCHA užduoties modulį</a> savo svetainei."
+
+#: captcha.info:0
+msgid "Base CAPTCHA module for adding challenges to arbitrary forms."
+msgstr "Pagrindinis CAPTCHA užduoties modulis, leidžiantis pridėti užduotis prie pasirinktų formų."
+
+#: captcha.info:0 image_captcha/image_captcha.info:0
+msgid "Spam control"
+msgstr "Šlamšto kontrolė"
+
+#: image_captcha/image_captcha.admin.inc:13
+msgid "Built-in font"
+msgstr "Vidinis šriftas"
+
+#: image_captcha/image_captcha.admin.inc:39
+msgid "The Image CAPTCHA module can not generate images because your PHP setup does not support it (no <a href=\"!gdlib\">GD library</a>)."
+msgstr ""
+
+#: image_captcha/image_captcha.admin.inc:50
+msgid "Presolved image CAPTCHA example, generated with the current settings."
+msgstr ""
+
+#: image_captcha/image_captcha.admin.inc:61
+msgid "Code settings"
+msgstr "Kodo nustatymai"
+
+#: image_captcha/image_captcha.admin.inc:65
+msgid "Characters to use in the code"
+msgstr "Kode naudojami rašmenys"
+
+#: image_captcha/image_captcha.admin.inc:70
+msgid "Code length"
+msgstr "Kodo ilgis"
+
+#: image_captcha/image_captcha.admin.inc:73
+msgid "The code length influences the size of the image. Note that larger values make the image generation more CPU intensive."
+msgstr "Kodo ilgis daro įtaką paveikslėlio dydžiui. Reikia pastebėti, kad didesnės reikšmės reiškia daugiau darbo procesoriui generuojant paveikslėlius."
+
+#: image_captcha/image_captcha.admin.inc:79
+msgid "Font settings"
+msgstr "Šrifto nustatymai"
+
+#: image_captcha/image_captcha.admin.inc:85
+msgid "Font"
+msgstr "Šriftas"
+
+#: image_captcha/image_captcha.admin.inc:87
+msgid "The TrueType font (.ttf) to use for the text in the image CAPTCHA."
+msgstr "TrueType šriftas (.ttf), naudojamas tekstui vaizdinėje CAPTCHA užduotyje."
+
+#: image_captcha/image_captcha.admin.inc:96
+msgid "Font size"
+msgstr "Šrifto dydis"
+
+#: image_captcha/image_captcha.admin.inc:98
+msgid "tiny"
+msgstr "mažytis"
+
+#: image_captcha/image_captcha.admin.inc:99;158
+msgid "small"
+msgstr "mažas"
+
+#: image_captcha/image_captcha.admin.inc:101;125;185
+msgid "normal"
+msgstr "normalus"
+
+#: image_captcha/image_captcha.admin.inc:103
+msgid "large"
+msgstr "didelis"
+
+#: image_captcha/image_captcha.admin.inc:105
+msgid "extra large"
+msgstr ""
+
+#: image_captcha/image_captcha.admin.inc:108
+msgid "The font size influences the size of the image. Note that larger values make the image generation more CPU intensive."
+msgstr "Šrifto dydis daro įtaką paveikslėlio dydžiui. Reikia pastebėti, kad didesnis paveikslėlis reiškia daugiau darbo procesoriui generuojant jį."
+
+#: image_captcha/image_captcha.admin.inc:120
+msgid "Character spacing"
+msgstr "Tarpų plotis tarp simbolių"
+
+#: image_captcha/image_captcha.admin.inc:121
+msgid "Define the average spacing between characters. Note that larger values make the image generation more CPU intensive."
+msgstr "Nustatykite vidutinį tarpą tarp simbolių. Reikia pastebėti, kad didesnis paveikslėlis reiškia daugiau darbo procesoriui generuojant jį."
+
+#: image_captcha/image_captcha.admin.inc:124
+msgid "tight"
+msgstr ""
+
+#: image_captcha/image_captcha.admin.inc:126
+msgid "wide"
+msgstr ""
+
+#: image_captcha/image_captcha.admin.inc:127
+msgid "extra wide"
+msgstr ""
+
+#: image_captcha/image_captcha.admin.inc:134
+msgid "Color settings"
+msgstr "Spalvų nustatymai"
+
+#: image_captcha/image_captcha.admin.inc:135
+msgid "Configuration of the background and text colors in the image CAPTCHA."
+msgstr "Fono ir teksto spalvų vaizdinėje CAPTCHA užduotyje konfigūravimas."
+
+#: image_captcha/image_captcha.admin.inc:139
+msgid "Background color"
+msgstr "Fono spalva"
+
+#: image_captcha/image_captcha.admin.inc:140
+msgid "Enter the hexadecimal code for the background color (e.g. #FFF or #FFCE90)."
+msgstr "Įveskite šešioliktainį fono spalvos kodą, pvz., #FFF ar #FFCE90."
+
+#: image_captcha/image_captcha.admin.inc:147
+msgid "Text color"
+msgstr "Teksto"
+
+#: image_captcha/image_captcha.admin.inc:148
+msgid "Enter the hexadecimal code for the text color (e.g. #000 or #004283)."
+msgstr "Įveskite šešioliktainį teksto spalvos kodą, pvz., #000 ar #004283."
+
+#: image_captcha/image_captcha.admin.inc:155
+msgid "Additional variation of text color"
+msgstr "Papildomas teksto spalvos variavimas"
+
+#: image_captcha/image_captcha.admin.inc:159;183
+msgid "moderate"
+msgstr "vidutinis"
+
+#: image_captcha/image_captcha.admin.inc:160;187;221
+msgid "high"
+msgstr "aukštas"
+
+#: image_captcha/image_captcha.admin.inc:161
+msgid "very high"
+msgstr "labai aukštas"
+
+#: image_captcha/image_captcha.admin.inc:164
+msgid "The different characters will have randomized colors in the specified range around the text color."
+msgstr "Skirtingi simboliai turės atsitiktines spalvas, parenkamas iš panašių į nurodytą teksto spalvą."
+
+#: image_captcha/image_captcha.admin.inc:171
+msgid "Distortion and noise"
+msgstr "Iškraipymas ir triukšmas"
+
+#: image_captcha/image_captcha.admin.inc:172
+msgid "With these settings you can control the degree of obfuscation by distortion and added noise. Do not exaggerate the obfuscation and assure that the code in the image is reasonably readable. For example, do not combine high levels of distortion and noise."
+msgstr "Šiuo nustatymu jūs galite valdyti apgadinimo lygį iškraipant ir pridedant triukšmą. Nepersistenkite su apgadinimu ir įsitikinkite, kad kodas yra perskaitomas. Pvz., kartu nenaudokite aukštų iškraipymo ir triukšmo lygių."
+
+#: image_captcha/image_captcha.admin.inc:177
+msgid "Distortion level"
+msgstr "Iškraipymo lygis"
+
+#: image_captcha/image_captcha.admin.inc:181;217
+msgid "low"
+msgstr "žemas"
+
+#: image_captcha/image_captcha.admin.inc:189;223
+msgid "severe"
+msgstr "milžiniškas"
+
+#: image_captcha/image_captcha.admin.inc:192
+msgid "Set the degree of wave distortion in the image."
+msgstr "Nustatykite paveikslėlio iškraipymo bangelėmis lygį."
+
+#: image_captcha/image_captcha.admin.inc:196
+msgid "Smooth distortion"
+msgstr "Išlyginimo iškraipymas"
+
+#: image_captcha/image_captcha.admin.inc:198
+msgid "This option enables bilinear interpolation of the distortion which makes the image look smoother, but it is more CPU intensive."
+msgstr "Šis nustatymas įjungia „bilinear“ iškraipymų interpoliaciją. Tai paveikslėlį daro glotnesnį, bet labiau apkrauna procesorių"
+
+#: image_captcha/image_captcha.admin.inc:203
+msgid "Add salt and pepper noise"
+msgstr "Druskos ir pipirų triukšmas"
+
+#: image_captcha/image_captcha.admin.inc:205
+msgid "This option adds randomly colored point noise."
+msgstr "Šis nustatymas prideda atsitiktinės spalvos taškinį triukšmą."
+
+#: image_captcha/image_captcha.admin.inc:209
+msgid "Add line noise"
+msgstr "Linijinis triukšmas"
+
+#: image_captcha/image_captcha.admin.inc:211
+msgid "This option enables lines randomly drawn on top of the text code."
+msgstr "Šis nustatymas įjungia ant tekstinio kodo atsitiktinai piešiamas linijas."
+
+#: image_captcha/image_captcha.admin.inc:215
+msgid "Noise level"
+msgstr "Triukšmo lygis"
+
+#: image_captcha/image_captcha.admin.inc:219
+msgid "medium"
+msgstr ""
+
+#: image_captcha/image_captcha.admin.inc:240
+msgid "The Image CAPTCHA module can not use True Type fonts because your PHP setup does not support it. There is only a built-in bitmap font available."
+msgstr ""
+
+#: image_captcha/image_captcha.admin.inc:245
+msgid "The image CAPTCHA module works best with a TrueType font file (TTF) for generating the images, but because of licencing issues it is not allowed to package fonts with the module. A simple built-in bitmap font is provided as default instead. You can install TrueType fonts yourself by putting them in the fonts directory of the image CAPTCHA module (directory \"%fontsdir\") or by uploading them to your Drupal file system (directory \"%filesdir\") with for example the upload module."
+msgstr "Vaizdinės CAPTCHA užduoties modulis geriausiai veikia su su TrueType šriftų failais (TTF) paveikslėlių generavimui, bet dėl licencijavimo ypatybių negalima šriftų platinti kartu su moduliu. Vietoje to paprastas taškinės grafikos šriftas yra pridedamas kaip numatytas. Jūs patys galite įdiegti TrueType šriftus padėdami juos vaizdinės CAPTCHA užduoties modulio šriftų aplanke „%fontsdir“ arba atsiųsdami juos į jūsų Drupal failų sistemos aplanką „%filesdir“ pasinaudoję atsiuntimo moduliu."
+
+#: image_captcha/image_captcha.admin.inc:248
+msgid "The usage of the built-in bitmap font it is not recommended because of its small size and missing UTF-8 support."
+msgstr "Nerekomenduojama naudoti pateikiamą taškinės grafikos šriftą dėl jo mažo dydžio ir UTF-8 nepalaikymo."
+
+#: image_captcha/image_captcha.admin.inc:259
+msgid "The list of characters to use should not contain spaces."
+msgstr "Rašmenų sąraše neturi būti tarpų."
+
+#: image_captcha/image_captcha.admin.inc:264
+msgid "You need to select a font"
+msgstr "Jūs turite pasirinkti šriftą"
+
+#: image_captcha/image_captcha.admin.inc:267
+msgid "Font does not exist or is not readable."
+msgstr "Šriftas neegzistuoja ar yra neperskaitomas."
+
+#: image_captcha/image_captcha.admin.inc:272
+msgid "Background color is not a valid hexadecimal color value."
+msgstr "Fono spalva nėra galima šešioliktainė spalvos vertė."
+
+#: image_captcha/image_captcha.admin.inc:275
+msgid "Text color is not a valid hexadecimal color value."
+msgstr "Teksto spalva nėra galima šešioliktainė spalvos vertė."
+
+#: image_captcha/image_captcha.user.inc:29
+msgid "Generation of image CAPTCHA failed. Check your image CAPTCHA configuration and especially the used font."
+msgstr "Vaizdinės CAPTCHA užduoties generavimas nepavyko. Patikrinkite savo vaizdinės CAPTCHA užduoties konfigūraciją, atkreipkite dėmesį į naudojamus šriftus."
+
+#: image_captcha/image_captcha.user.inc:72
+msgid "Could not find or read the configured font (\"%font\") for the image CAPTCHA."
+msgstr ""
+
+#: image_captcha/image_captcha.module:28
+msgid "The image CAPTCHA is a popular challenge where a random textual code is obfuscated in an image. The image is generated on the fly for each request, which is rather CPU intensive for the server. Be careful with the size and computation related settings."
+msgstr "Vaizdinė CAPTCHA užduotis, kur atsitiktinis tekstinis kodas yra apgadinamas paveikslėlyje, yra labai plačiai naudojama. Paveikslėlis yra sugeneruojamas kiekvienai užklausai, dėl to tai gana stipriai apkrauna serverio procesorių. Būkite atsargūs su dydžio ir skaičiavimų nustatymais."
+
+#: image_captcha/image_captcha.module:166
+msgid "Enter the characters shown in the image. Ignore spaces and be careful about upper and lower case."
+msgstr "Įveskite paveikslėlyje esančius simbolius. Tarpų nepaisykite ir būkite atidūs su didžiosiomis ir mažosiomis raidėmis."
+
+#: image_captcha/image_captcha.module:169
+msgid "Enter the characters (without spaces) shown in the image."
+msgstr "Įveskite paveikslėlyje esančius simbolius be tarpų."
+
+#: image_captcha/image_captcha.module:179;179;40
+#: image_captcha/image_captcha.info:0
+msgid "Image CAPTCHA"
+msgstr "Vaizdinė CAPTCHA užduotis"
+
+#: image_captcha/image_captcha.module:184
+msgid "What code is in the image?"
+msgstr "Koks kodas yra paveikslėlyje?"
+
+#: image_captcha/image_captcha.module:94
+msgid "Encountered an illegal byte while splitting an utf8 string in characters."
+msgstr "Prieitas negalimas baitas dalijant UTF8 simbolių eilutę į simbolius."
+
+#: image_captcha/image_captcha.info:0
+msgid "Provides an image based CAPTCHA."
+msgstr "Suteikia vaizdinę CAPTCHA užduotį."

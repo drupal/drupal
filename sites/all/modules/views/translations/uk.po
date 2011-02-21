@@ -1,0 +1,4863 @@
+# Ukrainian translation of Views (all releases)
+# Copyright (c) 2009 by the Ukrainian translation team
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Views (all releases)\n"
+"POT-Creation-Date: 2009-10-08 19:03+0000\n"
+"PO-Revision-Date: 2009-10-08 22:04+0200\n"
+"Language-Team: Ukrainian <podarok@ua.fm>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=((((n%10)==1)&&((n%100)!=11))?(0):(((((n%10)>=2)&&((n%10)<=4))&&(((n%100)<10)||((n%100)>=20)))?(1):2));\n"
+"Last-Translator: podarok <podarok@ua.fm>\n"
+"X-Poedit-Language: Ukrainian\n"
+"X-Poedit-Country: UKRAINE\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+msgid "Home"
+msgstr "Головна"
+
+msgid "Title"
+msgstr "Назва"
+
+msgid "Body"
+msgstr "Тіло"
+
+msgid "Next"
+msgstr "Наступний"
+
+msgid "user"
+msgstr "користувач"
+
+msgid "delete"
+msgstr "видалити"
+
+msgid "Status"
+msgstr "Статус"
+
+msgid "Prefix"
+msgstr "Префікс"
+
+msgid "Suffix"
+msgstr "Суфікс"
+
+msgid "E-mail"
+msgstr "Адреса електронної пошти"
+
+msgid "Delete"
+msgstr "Видалити"
+
+msgid "Submit"
+msgstr "Надіслати"
+
+msgid "Operations"
+msgstr "Дії"
+
+msgid "Value"
+msgstr "Значення"
+
+msgid "Groups"
+msgstr "Групи"
+
+msgid "Group"
+msgstr "Група"
+
+msgid "Type"
+msgstr "Тип"
+
+msgid "Author"
+msgstr "Автор"
+
+msgid "Replies"
+msgstr "Відповіді"
+
+msgid "Last Post"
+msgstr "Останнє повідомлення"
+
+msgid "List"
+msgstr "Список"
+
+msgid "Actions"
+msgstr "Дії"
+
+msgid "Cancel"
+msgstr "Скасувати"
+
+msgid "Remove"
+msgstr "Вилучити"
+
+msgid "Description"
+msgstr "Опис"
+
+msgid "Language"
+msgstr "Мова"
+
+msgid "more"
+msgstr "більше"
+
+msgid "Enable"
+msgstr "Ввімкнути"
+
+msgid "Disable"
+msgstr "Вимкнено"
+
+msgid "Disabled"
+msgstr "Вимкнено"
+
+msgid "Enabled"
+msgstr "Ввімкнено"
+
+msgid "On"
+msgstr "Увімкнути"
+
+msgid "Taxonomy"
+msgstr "Таксономія"
+
+msgid "Yes"
+msgstr "Так"
+
+msgid "No"
+msgstr "Ні"
+
+msgid "Version"
+msgstr "Версія"
+
+msgid "view"
+msgstr "переглянути"
+
+msgid "File"
+msgstr "Файл"
+
+msgid "Tag"
+msgstr "Таг"
+
+msgid "Edit"
+msgstr "Редагувати"
+
+msgid "Size"
+msgstr "Розмір"
+
+msgid "Search"
+msgstr "Пошук"
+
+msgid "Reset"
+msgstr "Скинути"
+
+msgid "None"
+msgstr "Жодного"
+
+msgid "default"
+msgstr "типовий"
+
+msgid "This action cannot be undone."
+msgstr "Цю дію не можна буде скасувати."
+
+msgid "Block settings"
+msgstr "Параметри Блоку"
+
+msgid "Weight"
+msgstr "Вага"
+
+msgid "Link"
+msgstr "Посилання"
+
+msgid "Types"
+msgstr "Типи"
+
+msgid "Hierarchy"
+msgstr "Ієрархія"
+
+msgid "Parent"
+msgstr "Попередник"
+
+msgid "Depth"
+msgstr "Глибина"
+
+msgid "Category"
+msgstr "Категорія"
+
+msgid "Settings"
+msgstr "Налаштування"
+
+msgid "Feed"
+msgstr "RSS стрічка"
+
+msgid "Name"
+msgstr "Назва"
+
+msgid "edit"
+msgstr "редагувати"
+
+msgid "Import"
+msgstr "Імпорт"
+
+msgid "Book"
+msgstr "Книга"
+
+msgid "Export"
+msgstr "Експорт"
+
+msgid "Taxonomy term"
+msgstr "Термін таксономії"
+
+msgid "settings"
+msgstr "налаштування"
+
+msgid "Node ID"
+msgstr "Ідентифікатор ноди"
+
+msgid "Field"
+msgstr "Поле"
+
+msgid "Label"
+msgstr "Заголовок"
+
+msgid "Preview"
+msgstr "Перегляд"
+
+msgid "Save"
+msgstr "Зберегти"
+
+msgid "True"
+msgstr "Так"
+
+msgid "False"
+msgstr "Ні"
+
+msgid "Default"
+msgstr "Типовий"
+
+msgid "Update"
+msgstr "Оновити"
+
+msgid "Top"
+msgstr "Вгору"
+
+msgid "As Link"
+msgstr ""
+
+msgid "Without Link"
+msgstr ""
+
+msgid "Icon"
+msgstr "Значок"
+
+msgid "Views"
+msgstr "Views"
+
+msgid "Access"
+msgstr "Доступ"
+
+msgid "Add"
+msgstr "Додати"
+
+msgid "View"
+msgstr "Перегляд"
+
+msgid "URL"
+msgstr "URL"
+
+msgid "Path"
+msgstr "Шлях"
+
+msgid "Vocabularies"
+msgstr "Словники"
+
+msgid "Display"
+msgstr "Відображення"
+
+msgid "Node type"
+msgstr "Тип ноди"
+
+msgid "Menu"
+msgstr "Меню"
+
+msgid "Teaser"
+msgstr "Анонс"
+
+msgid "never"
+msgstr "ніколи"
+
+msgid "Text"
+msgstr "Текст"
+
+msgid "Theme"
+msgstr "Шаблон"
+
+msgid "read more"
+msgstr "докладніше"
+
+msgid "Timestamp"
+msgstr "Мітка часу"
+
+msgid "ID"
+msgstr "Ідентифікатор"
+
+msgid "Unknown"
+msgstr "Невідомо"
+
+msgid "Attachment"
+msgstr "Долучення"
+
+msgid "Upload"
+msgstr "Вивантажити"
+
+msgid "Picture"
+msgstr "Зображення"
+
+msgid "Before"
+msgstr "До"
+
+msgid "After"
+msgstr "Після"
+
+msgid "User"
+msgstr "Користувач"
+
+msgid "Files"
+msgstr "Файли"
+
+msgid "Error"
+msgstr "Помилка"
+
+msgid "Options"
+msgstr "Параметри"
+
+msgid "Created"
+msgstr "Створено"
+
+msgid "Node"
+msgstr "Матеріал"
+
+msgid "Number of columns"
+msgstr "Кількість колонок"
+
+msgid "Separator"
+msgstr "Розділювач"
+
+msgid "Horizontal"
+msgstr "Горизонтально"
+
+msgid "Vertical"
+msgstr "Вертикально"
+
+msgid "Are you sure you want to delete %title?"
+msgstr "Ви дійсно бажаєте стерти %title?"
+
+msgid "All"
+msgstr "Все"
+
+msgid "Access log"
+msgstr "Лоґ доступу"
+
+msgid "Active"
+msgstr "Діючий"
+
+msgid "Year"
+msgstr "Рік"
+
+msgid "Date format"
+msgstr "Формат дати"
+
+msgid "Page title"
+msgstr "Назва сторінки"
+
+msgid "Block"
+msgstr "Блок"
+
+msgid "Display links"
+msgstr "Відображення посилань"
+
+msgid "View type"
+msgstr "Тип Вигляду"
+
+msgid "Page"
+msgstr "Сторінка"
+
+msgid "Bottom"
+msgstr "Донизу"
+
+msgid "Breadcrumb"
+msgstr ""
+
+msgid "Off"
+msgstr "Вимкнено"
+
+msgid "Header"
+msgstr "Заголовок"
+
+msgid "Footer"
+msgstr "Нижній колонтитул"
+
+msgid "Aggregator category"
+msgstr ""
+
+msgid "Aggregator feed"
+msgstr "Стрічка збиральника"
+
+msgid "Aggregator item"
+msgstr "Агрегатор пункту"
+
+msgid "Custom"
+msgstr "Власний"
+
+msgid "Roles"
+msgstr "Ролі"
+
+msgid "Comment"
+msgstr "Коментар"
+
+msgid "Hostname"
+msgstr "Сервер:"
+
+msgid "Score"
+msgstr "Вага"
+
+msgid "Published"
+msgstr "Опубліковано"
+
+msgid "Input format"
+msgstr "Формат вводу"
+
+msgid "Signature"
+msgstr "Підпис"
+
+msgid "Filter"
+msgstr "Фільтр"
+
+msgid "Location"
+msgstr "Адреса"
+
+msgid "Promoted to front page"
+msgstr "Розміщене на першій сторінці"
+
+msgid "Log message"
+msgstr "Повідомлення в системний журнал"
+
+msgid "Session ID"
+msgstr "ID сесії"
+
+msgid "File ID"
+msgstr "ID файлу"
+
+msgid "Vocabulary"
+msgstr "Словник"
+
+msgid "Vocabulary ID"
+msgstr "ID словника"
+
+msgid "Vocabulary name"
+msgstr "Назва словника"
+
+msgid "Term"
+msgstr "Термін"
+
+msgid "Term ID"
+msgstr "ID терміну"
+
+msgid "Last access"
+msgstr "Останній вхід"
+
+msgid "Last login"
+msgstr "Останній вхід"
+
+msgid "Fields"
+msgstr "Поля"
+
+msgid "Contains"
+msgstr "Містить"
+
+msgid "Does not contain"
+msgstr "Не містить"
+
+msgid "Is less than"
+msgstr "Є меншим, ніж"
+
+msgid "Is less than or equal to"
+msgstr "Є меншим або рівним, ніж"
+
+msgid "Is equal to"
+msgstr "Є рівним"
+
+msgid "Is greater than or equal to"
+msgstr "Є більшим або рівним за"
+
+msgid "Is greater than"
+msgstr "Є більшим, ніж"
+
+msgid "Is not equal to"
+msgstr "Не є рівним"
+
+msgid "Overridden"
+msgstr "Пріоритетно"
+
+msgid "Watchdog"
+msgstr "Вартовий"
+
+msgid "Normal"
+msgstr "Нормально"
+
+msgid "%time ago"
+msgstr "%time тому"
+
+msgid "Sort order"
+msgstr "Сортування"
+
+msgid "Up"
+msgstr "Вгору"
+
+msgid "Sortable"
+msgstr "Сортується"
+
+msgid "Caching"
+msgstr ""
+
+msgid "Month"
+msgstr "Місяць"
+
+msgid "Basic Information"
+msgstr ""
+
+msgid "Unlimited"
+msgstr "Необмежено"
+
+msgid "Current"
+msgstr "Поточна"
+
+msgid "Recent posts"
+msgstr "Останні повідомлення"
+
+msgid "Day"
+msgstr "День"
+
+msgid "Table"
+msgstr "Таблиця"
+
+msgid "Basic"
+msgstr "Базовий"
+
+msgid "List type"
+msgstr "Тип списку"
+
+msgid "Role"
+msgstr "Роль"
+
+msgid "Case"
+msgstr "Вибір"
+
+msgid "Referrer"
+msgstr "Джерело"
+
+msgid "Exists"
+msgstr "Існує"
+
+msgid "Both"
+msgstr "Все"
+
+msgid "Maximum length"
+msgstr "Максимальна довжина"
+
+msgid "Argument"
+msgstr "Аргумент"
+
+msgid "Anonymous"
+msgstr "Гість"
+
+msgid "The views module creates customized views of node lists. You may need to activate the Views UI module to get to the user administration pages."
+msgstr "Модуль Види створює керовані види списків матеріалів. Вам потрібно задіяти модуль Інтерфейса Видів для доступу до сторінок керування"
+
+msgid "<All>"
+msgstr "<Всі>"
+
+msgid "As Short Date"
+msgstr "Коротка дата"
+
+msgid "As Medium Date"
+msgstr "Середня дата"
+
+msgid "As Long Date"
+msgstr "Довга дата"
+
+msgid "As Custom Date"
+msgstr "Власна дата"
+
+msgid "As Time Ago"
+msgstr ""
+
+msgid "Granularity: minute"
+msgstr "Деталізація: хвилина"
+
+msgid "Granularity: hour"
+msgstr "Деталізація: година"
+
+msgid "Granularity: day"
+msgstr "Деталізація: день"
+
+msgid "Granularity: month"
+msgstr "Деталізація: місяць"
+
+msgid "Granularity: year"
+msgstr "Деталізація: рік"
+
+msgid "Is All Of"
+msgstr "Все з"
+
+msgid "Is One Of"
+msgstr "Одне з"
+
+msgid "Is None Of"
+msgstr "Жодне з"
+
+msgid "Is Equal To"
+msgstr "Дорівнює"
+
+msgid "Is Not Equal To"
+msgstr "Не дорівнює"
+
+msgid "Is Greater Than"
+msgstr "Більше за"
+
+msgid "Is Greater Than Or Equals"
+msgstr "Більше чи дорінює"
+
+msgid "Is Less Than Or Equals"
+msgstr "Менеше чи дорінює"
+
+msgid "Is Less Than"
+msgstr "Менше за"
+
+msgid "List View"
+msgstr "Списком"
+
+msgid "Table View"
+msgstr "Таблицею"
+
+msgid "Teaser List"
+msgstr ""
+
+msgid "Full Nodes"
+msgstr ""
+
+msgid "Contains Any Word"
+msgstr "Не містить жодного слова"
+
+msgid "Contains All Words"
+msgstr "Містить всі слова"
+
+msgid "Starts With"
+msgstr "Починається з"
+
+msgid "Ends With"
+msgstr "Закінчується з"
+
+msgid "Does Not Contain"
+msgstr "Не містить"
+
+msgid "Save and edit"
+msgstr "Зберегти і відредагувати"
+
+msgid "@filter must have a value!"
+msgstr "@filter мусить містити значення!"
+
+msgid "The \"Value\" can either be a date in the format: CCYY-MM-DD HH:MM:SS or the word \"now\" to use the current time. You may enter a positive or negative number in the \"Option\" field that will represent the amount of seconds that will be added or substracted to the time; this is most useful when combined with \"now\". If you have the jscalendar module from jstools installed, you can use a popup date picker here."
+msgstr ""
+
+msgid "access all views"
+msgstr "доступ до всіх видів"
+
+msgid "Views RSS: RSS feed"
+msgstr ""
+
+msgid "RSS: RSS Feed Selector"
+msgstr ""
+
+msgid "This argument specifies a specific RSS feed selector; it will only select RSS feeds, unlike the built-in selector which can select pluggable feeds. You may enter the title the feed will advertise in the title field here, and the description of the feed in the option field here."
+msgstr ""
+
+msgid "Theme wizard"
+msgstr "Майстер шаблонів"
+
+msgid "<p>The views theming wizard generates code that you can use in your phptemplate theme to help you customize the output of a view. Simply select a theme and it will generate code for your template.php as well as template files for the individual views.</p><p>At this time this code assumes your view is a <b>list type view</b>! It may not generate effective code for other types of views. Future versions of this program will be smarter, and give more options, but this wizard is still a huge start.</p>"
+msgstr "<p>Майстер шаблонів створює код, який ви можете використати у вашому phptemplate шаблоні щоб допомогти вам змінити вигляд виводу. Просто виберіть шаблон і він створить код для вашого template.php так само як файли шаблонів для окремих виглядів.</p><p>Зараз цей код припускає, що ваш вид<b>список</b>! Він може генерувати не ефективний код для інших типів вигляду. Наступні версії цього додатку будуть кмітливіші і даватимуть змогу більше налаштовувати його, але цей майстер це лише величезний початок.</p>"
+
+msgid "Select a view"
+msgstr "Вибір виду"
+
+msgid "Select Theme Type"
+msgstr "Вибір типу шаблону"
+
+msgid "List Theme Fields"
+msgstr ""
+
+msgid "This is a list of all the theme functions you can use to override individual field displays"
+msgstr ""
+
+msgid "This is a basic theme function"
+msgstr ""
+
+msgid "Generate Theme"
+msgstr "Генерувати шаблон"
+
+msgid "This code goes in your template.php file"
+msgstr ""
+
+msgid "This code goes in a file named views-list-@s.tpl.php"
+msgstr ""
+
+msgid "This code goes in a file named views-list-@s.css"
+msgstr ""
+
+msgid "Simple List"
+msgstr "Простий список"
+
+msgid "Grouped List"
+msgstr "Групований список"
+
+msgid "Nested Tree"
+msgstr "Вкладене дерево"
+
+msgid "Select the field on which to group"
+msgstr "Виберіть поле за яким групувати"
+
+msgid "Select the field to use as the ID for each row (usually nid)"
+msgstr ""
+
+msgid "Select the field that refers to the parent node by the ID field"
+msgstr ""
+
+msgid "You may import a view by cut-and-pasting the results of an export view. If the import is successful you will be taken to the Add View page with all of the settings of the imported view.."
+msgstr ""
+
+msgid "This screen shows all of the views that are currently defined in your system. The default views are provided by Views and other modules and are automatically available. If a customized view of the same name exists, it will be used in place of a default view."
+msgstr ""
+
+msgid "Please see !s or the views documentation on drupal.org for help here."
+msgstr ""
+
+msgid "the views help page"
+msgstr "довідник видів"
+
+msgid "You may cut & paste this view into an import function on another system. The view will only work if all modules required by the view are installed on the target location."
+msgstr ""
+
+msgid "<p>A view retrieves some number of nodes from the database and displays them in a variety of formats.</p>"
+msgstr ""
+
+msgid ""
+"<h3>View Types</h3>\n"
+"    <dl>\n"
+"      <dt><em>List View</em></dt><dd>A List View provides the data for each node retrieved in the form of an unordered list. Each item in the Fields section will be displayed; the Title will be displayed as a label. The order the items appear in the Fields list is the order the items will appear in the output. Leaving the title blank will cause the field to appear with no label (which is desirable in lists that just display titles, for example).</dd>\n"
+"      <dt><em>Table View</em></dt><dd>A Table View provides the data for each node as one row of a table. The Fields selected in the Fields list will be displayed in the order they are listed. The title column will be shown in the header. If you set the field to 'sortable' then the header will be click-sortable; be careful here as click-sorts will be processed after built-in sort criteria, and built-in sort criteria can easily make click-sorts invalid. If using click-sorts, choose a field to be the default sort; otherwise the first field presented will be the default sort.</dd>\n"
+"      <dt><em>Teaser List</em></dt><dd>A Teaser List will simply present the teaser of each node retrieved.</dd>\n"
+"      <dt><em>Full Nodes</em></dt><dd>This will show the full content of each node retrieved.</dd>\n"
+"      <dt><em>Random Teaser</em></dt><dd>This will show a single random teaser.</dd>\n"
+"      <dt><em>Random Node</em></dt><dd>This will show a single random node's full view.</dd>\n"
+"    </dl>"
+msgstr ""
+
+msgid "<h3>Fields</h3>\n"
+msgstr ""
+
+msgid "<p>When using List or Table view, it is necessary to choose which fields will be displayed to the user.</p><dl>\n"
+msgstr ""
+
+msgid "<h3>Arguments</h3>\n"
+msgstr "<h3>Аргументи</h3>\n"
+
+msgid "<p>Arguments can be passed to the View through the URL, in order to create views that are configurable by the user. This is very useful to create views for taxonomy, or to sort by user. When using arguments, substitution is performed on the title. %1 will represent argument 1, %2 will represent argument 2. Each argument has a title field; this title is used if providing a summary view (which can matter because the argument is missing which could result in confusing phrases such as 'view for')</p><dl>\n"
+msgstr ""
+
+msgid "<h3>Filters</h3>\n"
+msgstr "<h3>Фільтри</h3>\n"
+
+msgid "<p>Views may be filtered to restrict the view on a number of criteria.</p><dl>\n"
+msgstr ""
+
+msgid "<h3>Sorting Critera</h3>\n"
+msgstr "<h3>Правило сортування</h3>\n"
+
+msgid "<p>The result set may be sorted on any of the following criteria.</p><dl>\n"
+msgstr ""
+
+msgid "Views are customized lists of content on your system; they are highly configurable and give you control over how lists of content are presented."
+msgstr "Види - це особливі списки матеріалу в Вашій системі; вони глибоко модифікуються і дають можливість керувати виглядом відображених матеріалів"
+
+msgid "Tools"
+msgstr "Інструменти"
+
+msgid "Edit view"
+msgstr "Правка виду"
+
+msgid "Override"
+msgstr "Переназначити"
+
+msgid "Clone"
+msgstr "Клонування"
+
+msgid "Administer views"
+msgstr "Керування видами"
+
+msgid "No Page View"
+msgstr ""
+
+msgid "Provides"
+msgstr "Надає"
+
+msgid "Existing Views"
+msgstr "Доступні види"
+
+msgid "<p>No views have currently been defined.</p>"
+msgstr ""
+
+msgid "<p>Below are system default views; if you edit one of these, a view will be created that will override any system use of the view.</p>"
+msgstr ""
+
+msgid "Default view"
+msgstr "Базовий вид"
+
+msgid "Default Views"
+msgstr "Базові види"
+
+msgid "<p>Occasionally, something or other can cause the Views cache to contain stale data; this is particularly true after module updates and sometimes true after taxonomy and profile updates. If you are having problems with Views creating malformed queries, the first thing you should always do is clear the Views cache to see if that is the problem.</p>"
+msgstr ""
+
+msgid "Clear views cache"
+msgstr ""
+
+msgid "Import View Code"
+msgstr "Втягнути код виду"
+
+msgid "Cut and paste the results of an Export View here."
+msgstr ""
+
+msgid "Add a View"
+msgstr "Додати вид"
+
+msgid "You don't seem to have the following requirements: "
+msgstr ""
+
+msgid "Unable to get a view out of that."
+msgstr ""
+
+msgid "Edit view %n"
+msgstr ""
+
+msgid "Return Page Not Found"
+msgstr ""
+
+msgid "Display All Values"
+msgstr ""
+
+msgid "Summary, unsorted"
+msgstr ""
+
+msgid "Summary, sorted ascending"
+msgstr "Сумарно, сортування пряме"
+
+msgid "Summary, sorted descending"
+msgstr "Сумарно, сортування зворотнє"
+
+msgid "Summary, sorted as view"
+msgstr ""
+
+msgid "Use Empty Text"
+msgstr ""
+
+msgid "Ascending"
+msgstr "Зростання"
+
+msgid "Descending"
+msgstr "Спадання"
+
+msgid "Add Filter"
+msgstr "Додати фільтр"
+
+msgid "Add Criteria"
+msgstr ""
+
+msgid "Add Argument"
+msgstr ""
+
+msgid "Add Field"
+msgstr ""
+
+msgid "Expose Filter"
+msgstr ""
+
+msgid "You have modified this view; changes will not be recorded until you Save the form."
+msgstr ""
+
+msgid "The unique identifier of the view; it is only important for overridden views and views that modules or themes will need to use. Only alphanumeric and _ allowed here"
+msgstr ""
+
+msgid "Only the checked roles will be able to see this view in any form; if no roles are checked, access will not be restricted."
+msgstr ""
+
+msgid "A description of the view for the admin list."
+msgstr ""
+
+msgid "Provide Page View"
+msgstr ""
+
+msgid "If checked this view will be provided as a page. If not checked, the fields in this group will be ignored."
+msgstr ""
+
+msgid "Enter the URL to use for this view in the form of 'dir/dir'. Do not begin or end the URL with a /. Example: 'view/tracker'. This is required if providing a page view. You can also add $arg as a placeholder for arguments passed in the URL, for example 'user/$arg/tracker' or 'node/$arg/related'. Note that any arguments listed here will be required, even if they are listed as optional below. You do not need to list arguments at the end of the path. Do not try to use URLs such as taxonomy/term/$arg."
+msgstr ""
+
+msgid "View Type"
+msgstr "Тип Перегляду"
+
+msgid "How the nodes should be displayed to the user."
+msgstr ""
+
+msgid "The title that be shown at the top of the view. May be blank. This title ignores arguments; if you want your title to take arguments into account, use the \"title\" field in the arguments section."
+msgstr ""
+
+msgid "Use Pager"
+msgstr "Сторінка Користувача"
+
+msgid "If checked this query may be multiple pages. If not checked this query will be one page."
+msgstr ""
+
+msgid "Breadcrumb trail should not include \"Home\""
+msgstr ""
+
+msgid "If checked the breadcrumb trail for this page will discard \"Home\". Usually you will not set this, but this is used for the Front Page View, where it IS Home and should not leave a trail to itself."
+msgstr ""
+
+msgid "Nodes per Page"
+msgstr ""
+
+msgid "The number of nodes to display per page. If 0, all nodes will be displayed. If not using a pager, this will be the maximum number of nodes in the list."
+msgstr ""
+
+msgid "Text to display at the top of the view. May contain an explanation or links or whatever you like. Optional."
+msgstr ""
+
+msgid "Text to display at the bottom of the view. May contain an explanation or links or whatever you like. Optional."
+msgstr ""
+
+msgid "Empty Text"
+msgstr ""
+
+msgid "Text to display if a view returns no nodes. Optional."
+msgstr ""
+
+msgid "Provide Menu"
+msgstr ""
+
+msgid "If checked this view be given a menu entry in the Drupal menu system. If not checked the data in this group will be ignored."
+msgstr ""
+
+msgid "Provide Menu as Tab"
+msgstr ""
+
+msgid "If checked this view's menu entry will be provided as a tab rather than in the main menu system."
+msgstr ""
+
+msgid "Tab Weight"
+msgstr ""
+
+msgid "If this is a menu tab, select the weight; lower numbers will be further to the left."
+msgstr ""
+
+msgid "Menu Title"
+msgstr ""
+
+msgid "Enter the title to use for the menu entry or tab. If blank, the page title will be used."
+msgstr ""
+
+msgid "Default Menu Tab"
+msgstr ""
+
+msgid "Make Default Menu Tab"
+msgstr ""
+
+msgid "If checked this view's menu entry will be provided as a tab, and will be the default tab for that URL path. For example, if the URL is 'tracker/all' and it is set as the default menu tab, it will be put into the menu as 'tracker' and 'tracker/all' will be the default tab. The following settings allow you to customize the parent item, for example 'tracker'. For tabs to work properly, one tab in the group must be set as the default."
+msgstr ""
+
+msgid "Parent Menu Item Type"
+msgstr ""
+
+msgid "Tab"
+msgstr "Закладка"
+
+msgid "Normal menu item"
+msgstr "Нормальний елемент меню"
+
+msgid "Already exists (don't create)"
+msgstr ""
+
+msgid "Select type of parent item to use for this default menu tab. You can either specify the parent should be a tab (the default), a normal menu item, or to use the menu item that already exists at the specified URL. For example, if the URL for the default tab is 'tracker/all', then 'tracker' would already have to be a valid menu item to use this final choice."
+msgstr ""
+
+msgid "If the parent menu item is a tab, select the weight; lower numbers will be further to the left."
+msgstr ""
+
+msgid "Parent Menu Item Title"
+msgstr ""
+
+msgid "If the Parent Menu Item is being defined by this view (if you set the %type_field to either %tab or %menu), you can specify its title here.  If blank, the menu title will be used if that is defined, or the page title if not."
+msgstr ""
+
+msgid "Provide Block"
+msgstr ""
+
+msgid "If checked this view will be provided as a block. If checked title may not be blank."
+msgstr ""
+
+msgid "The title that will be shown at the top of the block. May be blank."
+msgstr ""
+
+msgid "Nodes per Block"
+msgstr ""
+
+msgid "If using a block, the maximum number of items to display in the block. Pagers are not used in blocks."
+msgstr ""
+
+msgid "[More] Link?"
+msgstr ""
+
+msgid "If using a view as both a page and a block, display a more link in the block that links to the view URL?"
+msgstr ""
+
+msgid "Use Page Header"
+msgstr ""
+
+msgid "If checked, use the Page Header for block view instead. If so, you should leave the Block Header blank."
+msgstr ""
+
+msgid "Use Page Footer"
+msgstr ""
+
+msgid "If checked, use the page footer for block view instead. If so, you should leave the block footer blank."
+msgstr ""
+
+msgid "Empty text"
+msgstr "Пустий текст"
+
+msgid "Use Page empty"
+msgstr ""
+
+msgid "If checked, use the Page Empty Text for block view instead. If so, you should leave the block empty text blank."
+msgstr ""
+
+msgid "Text to display if a view results in no nodes. Optional."
+msgstr ""
+
+msgid "Argument Handling Code"
+msgstr ""
+
+msgid "Argument Code"
+msgstr ""
+
+msgid "Advanced Usage Only: PHP code that returns a custom array of arguments for the view. Should not include &lt;?php ?&gt; delimiters."
+msgstr ""
+
+msgid "For more information, please see the <a href=\"!arg\">Argument Handling Code documentation</a> in the Drupal handbook."
+msgstr ""
+
+msgid "Expose"
+msgstr "Виставляти"
+
+msgid "Delete this item."
+msgstr ""
+
+msgid "Move this item up."
+msgstr ""
+
+msgid "Down"
+msgstr "Вниз"
+
+msgid "Move this item down."
+msgstr ""
+
+msgid "Move this item to the top."
+msgstr ""
+
+msgid "Move this item to the bottom."
+msgstr ""
+
+msgid "Handler"
+msgstr "Обробник"
+
+msgid "Option"
+msgstr "Параметр"
+
+msgid "Default Sort"
+msgstr ""
+
+msgid "Fields are only meaningful with List view and Table View; they allow you to choose which fields are presented and in what order."
+msgstr ""
+
+msgid "Argument Type"
+msgstr ""
+
+msgid "Wildcard"
+msgstr "Джокер"
+
+msgid "Wildcard Sub"
+msgstr ""
+
+msgid "Arguments are parsed directly from the URL. They are not necessary to any given view, but allow flexibility."
+msgstr ""
+
+msgid "Arguments"
+msgstr "Аргументи"
+
+msgid "Operator"
+msgstr "Оператор"
+
+msgid "Filters allow you to select a subset of all the nodes to display. All Filters are ANDed together."
+msgstr ""
+
+msgid "Filters"
+msgstr "Фільтри"
+
+msgid "Optional"
+msgstr "Необов'язкове"
+
+msgid "Filter settings Default"
+msgstr ""
+
+msgid "Force Single"
+msgstr ""
+
+msgid "Lock Operator"
+msgstr ""
+
+msgid "Exposed filters will be presented to the viewer. If not set required, then filters will include a \"&lt;None&gt;\" Value if possible. If set default, filters will default as set here, otherwise filter settings will be ignored. If Lock Operator is set, no operator will be made available to the user."
+msgstr ""
+
+msgid "Exposed Filters"
+msgstr ""
+
+msgid "Order"
+msgstr "Замовлення"
+
+msgid "Add criteria"
+msgstr "Додати критерій"
+
+msgid "Sort Criteria"
+msgstr "Критерії впорядкування"
+
+msgid "This view currently has no %s defined."
+msgstr ""
+
+msgid "Ops"
+msgstr ""
+
+msgid "Another user has modified this view, unable to save. You can get this error by using the Back button to re-edit a view after saving one; if you do this, be sure to Reload before making any changes!"
+msgstr ""
+
+msgid "View name is required."
+msgstr ""
+
+msgid "View name must be alphanumeric or underscores only."
+msgstr ""
+
+msgid "View name already in use."
+msgstr ""
+
+msgid "Nodes per page cannot be 0 if using the pager."
+msgstr ""
+
+msgid "If being used as a block, Nodes Per Block must be positive."
+msgstr ""
+
+msgid "View successfully saved."
+msgstr ""
+
+msgid "View successfully added."
+msgstr ""
+
+msgid "List and Table types require at least one field."
+msgstr ""
+
+msgid "You can only set on Default Sort on one field."
+msgstr ""
+
+msgid "View '%vid' not found."
+msgstr ""
+
+msgid "administer views"
+msgstr "адмініструвати види"
+
+msgid "Views module installed tables successfully."
+msgstr ""
+
+msgid "The installation of views module was unsuccessful."
+msgstr ""
+
+msgid "The views module creates customized views of node lists."
+msgstr ""
+
+msgid "Views RSS"
+msgstr ""
+
+msgid "RSS plugin for the views feed selector argument."
+msgstr ""
+
+msgid "Views Theme Wizard"
+msgstr ""
+
+msgid "The views theme wizard helps create stub theming for views."
+msgstr ""
+
+msgid "Views UI"
+msgstr "Views UI"
+
+msgid "The Views UI module allows you to create and edit views."
+msgstr ""
+
+msgid "Book: Parent Node"
+msgstr ""
+
+msgid "This allows you to filter books based on parent node."
+msgstr ""
+
+msgid "Book: Weight"
+msgstr ""
+
+msgid "This will sort the view by book weight, if that is applicable."
+msgstr ""
+
+msgid "Book: Parent Title"
+msgstr ""
+
+msgid "Display the title of the parent node"
+msgstr ""
+
+msgid "Sort by the title of the parent node"
+msgstr ""
+
+msgid "Book: Parent Node ID"
+msgstr ""
+
+msgid "Comment: Subject"
+msgstr "Коментар: Тема"
+
+msgid "With updated mark"
+msgstr ""
+
+msgid "Comment: Comment"
+msgstr ""
+
+msgid "Display the content of a comment."
+msgstr ""
+
+msgid "Comment: Comment ID"
+msgstr ""
+
+msgid "Display the CID of a comment."
+msgstr ""
+
+msgid "Comment: Created Time"
+msgstr ""
+
+msgid "Display the post time of the comment."
+msgstr ""
+
+msgid "Comment: Author Name"
+msgstr ""
+
+msgid "This will display the author of the node."
+msgstr ""
+
+msgid "Comment: Add link"
+msgstr ""
+
+msgid "Display a link to add a comment to the node. Enter the text of this link into the option field; if blank the default \"Comment\" will be used."
+msgstr ""
+
+msgid "Comment: Pending approval"
+msgstr ""
+
+msgid "Equals"
+msgstr "Рівне"
+
+msgid "Sort by the created time of comments."
+msgstr ""
+
+msgid "Comment: Last Comment Time"
+msgstr ""
+
+msgid "This will display the last comment time."
+msgstr ""
+
+msgid "Comment: Last Comment Author"
+msgstr ""
+
+msgid "This will display the name of the last user to comment on the post."
+msgstr ""
+
+msgid "Comment: Count"
+msgstr ""
+
+msgid "With New Count"
+msgstr ""
+
+msgid "This will display the comment count."
+msgstr ""
+
+msgid "Comment: Last Changed Time"
+msgstr ""
+
+msgid "This will display the time of the last comment or node edit."
+msgstr ""
+
+msgid "Comment: Comment Count"
+msgstr ""
+
+msgid "This filter allows you to filter by the amount of comments."
+msgstr ""
+
+msgid "This filter allows nodes to be filtered by the timestamp for the last comment or node edit."
+msgstr ""
+
+msgid "Comment: Last Comment Date"
+msgstr ""
+
+msgid "This will allow you to sort by the date of the most recent comment on a node."
+msgstr ""
+
+msgid "This filter allows you to sort by the number of comments."
+msgstr ""
+
+msgid "Comment: Last Changed"
+msgstr ""
+
+msgid "Sort based on the most recent comment or edit for the node."
+msgstr ""
+
+msgid "@num new"
+msgstr ""
+
+msgid "Display recent comments block"
+msgstr ""
+
+msgid "Recent comments"
+msgstr "Останні коментарі"
+
+msgid "Node: Title"
+msgstr ""
+
+msgid "Display the title of the node."
+msgstr ""
+
+msgid "Node: ID"
+msgstr ""
+
+msgid "Display the NID of a node."
+msgstr ""
+
+msgid "Node: Created Time"
+msgstr ""
+
+msgid "Display the post time of the node."
+msgstr ""
+
+msgid "The option field may be used to specify the custom date format as it's required by the date() function or if \"as time ago\" has been chosen to customize the granularity of the time interval."
+msgstr ""
+
+msgid "Node: Updated Time"
+msgstr ""
+
+msgid "Display the last time the node was updated."
+msgstr ""
+
+msgid "Node: Type"
+msgstr ""
+
+msgid "The Node Type field will display the type of a node (for example, 'blog entry', 'forum post', 'story', etc)"
+msgstr ""
+
+msgid "Node: Link to node"
+msgstr ""
+
+msgid "This will create a link to the node; fill the option field with the text for the link. If you want titles that link to the node, use Node: Title instead."
+msgstr ""
+
+msgid "Node: Body"
+msgstr ""
+
+msgid "Full Text"
+msgstr "Повний текст"
+
+msgid "Display the Main Content."
+msgstr ""
+
+msgid "Node: View link"
+msgstr ""
+
+msgid "Display a link to view the node. Enter the text of this link into the option field; if blank the default \"View\" will be used."
+msgstr ""
+
+msgid "Node: Edit link"
+msgstr ""
+
+msgid "Return To View"
+msgstr ""
+
+msgid "Return to Node"
+msgstr ""
+
+msgid "Display a link to edit the node. Enter the text of this link into the option field; if blank the default \"Edit\" will be used."
+msgstr ""
+
+msgid "Node: Delete link"
+msgstr ""
+
+msgid "Return To The Frontpage"
+msgstr ""
+
+msgid "Display a link to delete the node. Enter the text of this link into the option field; if blank the default \"Delete\" will be used."
+msgstr ""
+
+msgid "Sort by the database ID of the node."
+msgstr ""
+
+msgid "Sort by the submission date of the node."
+msgstr ""
+
+msgid "Sort by the last update date of the node."
+msgstr ""
+
+msgid "Node: Sticky"
+msgstr ""
+
+msgid "Sort by whether or not the node is sticky. Choose descending to put sticky nodes at the top."
+msgstr ""
+
+msgid "Sort by the node title, alphabetically"
+msgstr ""
+
+msgid "Sort by the node type, alphabetically"
+msgstr ""
+
+msgid "Random"
+msgstr "Випадково"
+
+msgid "By choosing random, nodes will be ordered completely randomly. This is a good way to choose X random nodes from a group of nodes."
+msgstr ""
+
+msgid "Node: Published"
+msgstr ""
+
+msgid "Filter by whether or not the node is published. This is recommended for most Views!"
+msgstr ""
+
+msgid "Node: Front Page"
+msgstr ""
+
+msgid "Filter by whether or not the node has been promoted to Front Page."
+msgstr ""
+
+msgid "Filter by whether or not the node is set sticky."
+msgstr ""
+
+msgid "Node: Moderated"
+msgstr ""
+
+msgid "Filter by whether or not the node is moderated."
+msgstr ""
+
+msgid "Include or exclude nodes of the selected types."
+msgstr ""
+
+msgid "Node: Author is Anonymous"
+msgstr ""
+
+msgid "This allows you to filter by whether or not the node author is anonymous."
+msgstr ""
+
+msgid "Node: Author is Current User"
+msgstr ""
+
+msgid "This allows you to filter by whether or not the node was authored by the logged in user of the view."
+msgstr ""
+
+msgid "Node: Current User Authored or Commented"
+msgstr ""
+
+msgid "This allows you to filter by whether or not the logged in user authored or commented on the node."
+msgstr ""
+
+msgid "Node: Distinct"
+msgstr ""
+
+msgid "This filter ensures that each node may only be listed once, even if it matches multiple criteria. Use this if multiple taxonomy matches return duplicated nodes."
+msgstr ""
+
+msgid "This filter allows nodes to be filtered by their title."
+msgstr ""
+
+msgid "This filter allows nodes to be filtered by their creation date."
+msgstr ""
+
+msgid "This filter allows nodes to be filtered by the time they were updated."
+msgstr ""
+
+msgid "This filter allows nodes to be filtered by their body."
+msgstr ""
+
+msgid "Node: Has New Content"
+msgstr ""
+
+msgid "Including this filter will reduce the node set to nodes that have been updated or have new content since the user last read the node, as well as unread nodes."
+msgstr ""
+
+msgid "The node type argument allows users to filter a view by specifying the type of node."
+msgstr ""
+
+msgid "The argument will filter by the node title. For this argument, set the option to the number of characters, using 0 for full term; use 1 for an A/B/C style glossary."
+msgstr ""
+
+msgid "Node: Posted Year"
+msgstr ""
+
+msgid "This argument allows users to filter by what year the node was posted, in the form of CCYY."
+msgstr ""
+
+msgid "Node: Posted Month"
+msgstr ""
+
+msgid "Months are specified by the numbers 1-12. Since this argument does not specify a year, it is recommended that it usually follow a 'Year' argument."
+msgstr ""
+
+msgid "Node: Posted Week"
+msgstr ""
+
+msgid "This allows the user to filter a view by the week number from 1-52. It is recommended this argument follow a 'Year' argument."
+msgstr ""
+
+msgid "Node: Posted Month + Year"
+msgstr ""
+
+msgid "This argument combines Month and Year into a single argument, specified in the form CCYYMM."
+msgstr ""
+
+msgid "Node: Posted Full Date"
+msgstr ""
+
+msgid "This argument is a complete date in the form of CCYYMMDD."
+msgstr ""
+
+msgid "This argument is a single Node ID."
+msgstr ""
+
+msgid "Node: Feed Selector"
+msgstr ""
+
+msgid "This argument allows pluggable \"feed\" selectors. If using views_rss module, \"feed\" will turn the view into an RSS feed. Other modules may provide their own feeds. You may enter the title the feed will advertise in the title field here. If the feed type offers a description, enter the description of the feed in the option field here."
+msgstr ""
+
+msgid "The basic front page view."
+msgstr ""
+
+msgid "Untitled"
+msgstr "Без назви"
+
+msgid "Profile: @field-name"
+msgstr ""
+
+msgid "This will display all options of the profile field %field-name. "
+msgstr ""
+
+msgid "Display the date of the %field-name field."
+msgstr ""
+
+msgid "Checkbox based profile field help"
+msgstr ""
+
+msgid "Other types based profile field help"
+msgstr ""
+
+msgid "This allows you to sort by vocabulary terms"
+msgstr ""
+
+msgid "This allows you to sort by selection options"
+msgstr ""
+
+msgid "This allows you to sort by date"
+msgstr ""
+
+msgid "This allows you to sort yes/no"
+msgstr ""
+
+msgid "Taxonomy based profile field help"
+msgstr ""
+
+msgid "Selection based profile field help"
+msgstr ""
+
+msgid "Search: Index"
+msgstr ""
+
+msgid "Node: Total Hits"
+msgstr ""
+
+msgid "This will display the number of times a node has been read."
+msgstr ""
+
+msgid "Node: Recent Hits"
+msgstr ""
+
+msgid "This will display the number of times a node has been read recently."
+msgstr ""
+
+msgid "Node: Last Hit Time"
+msgstr ""
+
+msgid "Display the time the node was last read."
+msgstr ""
+
+msgid "This allows you to sort by the number of times a node has been read."
+msgstr ""
+
+msgid "This allows you to sort by the number of times a node has been read recently."
+msgstr ""
+
+msgid "This allows you to sort by the time a node was last read."
+msgstr ""
+
+msgid "Nodes sorted by recent page-views"
+msgstr ""
+
+msgid "Recent popular content"
+msgstr "Популярне останнім часом"
+
+msgid "Recent hits"
+msgstr "Останні хіти"
+
+msgid "Nodes sorted by total page-views"
+msgstr ""
+
+msgid "All-time popular content"
+msgstr "Популярне за весь час"
+
+msgid "Reads"
+msgstr ""
+
+msgid "Taxonomy: Terms for @voc-name"
+msgstr ""
+
+msgid "This will display all taxonomy terms associated with the node that are members of %voc-name. Note that this causes one extra query per row displayed, and might have a minor performance impact."
+msgstr ""
+
+msgid "Only terms associated with %voc-name will appear in the select box for this filter. When filtering by taxonomy term you may specify the 'depth' as an option. Please see the taxonomy help for more information."
+msgstr ""
+
+msgid "Taxonomy: Term"
+msgstr ""
+
+msgid "This will display one of the taxonomy terms associated with the node; if taxonomy terms were used to filter or sort, it will be the one that triggered the sort or filter."
+msgstr ""
+
+msgid "Taxonomy: Term Description"
+msgstr ""
+
+msgid "This will display the description associated with a taxonomy term."
+msgstr ""
+
+msgid "Taxonomy: Term Name"
+msgstr ""
+
+msgid "This will sort nodes by taxonomy weight and name, as defined in the category administration."
+msgstr ""
+
+msgid "Taxonomy: Vocabulary Name"
+msgstr ""
+
+msgid "This will filter a view to only nodes that contain a term in the associated vocabulary."
+msgstr ""
+
+msgid "Taxonomy: Term ID"
+msgstr ""
+
+msgid "The argument will filter by a taxonomy term ID. For this argument, set the option to the depth to search. See taxonomy for more information."
+msgstr ""
+
+msgid "The argument will filter by a taxonomy term name. For this argument, set the option to the number of characters, using 0 for full term; use 1 for an A/B/C style glossary."
+msgstr ""
+
+msgid "Taxonomy: Vocabulary ID"
+msgstr ""
+
+msgid "The argument will filter to nodes with terms in a vocabulary."
+msgstr ""
+
+msgid "The taxonomy view with a depth of 0."
+msgstr ""
+
+msgid "Uncategorized"
+msgstr "Без категорії"
+
+msgid "Uncatgorized"
+msgstr ""
+
+msgid "File: Id"
+msgstr ""
+
+msgid "File Id which represents the file."
+msgstr "Файл Id, який представляє файл."
+
+msgid "Sort by File Id"
+msgstr ""
+
+msgid "File: Has file downloads"
+msgstr ""
+
+msgid "Filter whether the node has files for download"
+msgstr ""
+
+msgid "File: Listed in file downloads"
+msgstr ""
+
+msgid "Filter whether the file is listed in downloads"
+msgstr ""
+
+msgid "File: All files"
+msgstr ""
+
+msgid "All files"
+msgstr "Всі файли"
+
+msgid "Listed files"
+msgstr ""
+
+msgid "File names with links"
+msgstr ""
+
+msgid "File names without links"
+msgstr ""
+
+msgid "File descriptions with links"
+msgstr ""
+
+msgid "File descriptions without links"
+msgstr ""
+
+msgid "Display all attached files in one field."
+msgstr ""
+
+msgid "File: Name"
+msgstr ""
+
+msgid "Plain"
+msgstr "Простий"
+
+msgid "With download link"
+msgstr "З посиланням завантаження"
+
+msgid "Display file name"
+msgstr "Відобразити ім'я файлу"
+
+msgid "File: Path"
+msgstr ""
+
+msgid "Display Path to File."
+msgstr "Показати шлях до файлу."
+
+msgid "File: Size"
+msgstr ""
+
+msgid "Display the size of the associated file."
+msgstr ""
+
+msgid "File: Mime type"
+msgstr ""
+
+msgid "This filter allows nodes to be filtered by mime type."
+msgstr "Цей фільтр дозволяє повідомлення фільтруватися типом MIME."
+
+msgid "File: Filename"
+msgstr ""
+
+msgid "This filter allows nodes to be filtered by the name of attached files."
+msgstr ""
+
+msgid "This filter allows nodes to be filtered by file size."
+msgstr ""
+
+msgid "File: Sort by Filename"
+msgstr ""
+
+msgid "Sort by file name"
+msgstr ""
+
+msgid "File: File size"
+msgstr ""
+
+msgid "Sort by file size."
+msgstr ""
+
+msgid "Sort by mime type."
+msgstr ""
+
+msgid "Node: Author Name"
+msgstr ""
+
+msgid "User: Author Picture"
+msgstr ""
+
+msgid "Display the user picture of the author."
+msgstr "Показати зображення автора."
+
+msgid "This allows you to sort alphabetically by author."
+msgstr ""
+
+msgid "This allows you to filter by a particular user. You might not find this useful if you have a lot of users."
+msgstr ""
+
+msgid "Node: Authors in role %role-name"
+msgstr ""
+
+msgid "Only users in role %role-name will appear in the select box for this filter."
+msgstr ""
+
+msgid "Role: Author Role"
+msgstr ""
+
+msgid "Include the node only if the author is a member of the selected role."
+msgstr ""
+
+msgid "User: UID is Author"
+msgstr ""
+
+msgid "The User ID argument allows users to filter to nodes authored by the specified user ID."
+msgstr ""
+
+msgid "User: UID Authored or Commented"
+msgstr ""
+
+msgid "The User ID argument allows users to filter a to nodes authored or commented on the specified user ID."
+msgstr ""
+
+msgid "User: Username is Author"
+msgstr ""
+
+msgid "views_handler_arg_username"
+msgstr ""
+
+msgid "The Username argument allows users to file to a nodes authored by the specified username."
+msgstr ""
+
+msgid "Shows all new activity on system."
+msgstr ""
+
+msgid "recent posts for %1"
+msgstr ""
+
+msgid "Currently Logged In User"
+msgstr ""
+
+msgid "Position"
+msgstr "Розташування"
+
+msgid "Basic settings"
+msgstr "Базові параметри"
+
+msgid "Last checked"
+msgstr "Востаннє перевірено"
+
+msgid "Profile"
+msgstr "Профіль"
+
+msgid "filters"
+msgstr "фільтри"
+
+msgid "Term description"
+msgstr "Опис терміна"
+
+msgid "fields"
+msgstr "поля"
+
+msgid "reply"
+msgstr "відповісти"
+
+msgid "Defaults"
+msgstr "Типово"
+
+msgid "="
+msgstr "="
+
+msgid "Sort by"
+msgstr "Сортувати за"
+
+msgid "Created date"
+msgstr "Дата створення"
+
+msgid "Updated date"
+msgstr "Дата оновлення"
+
+msgid "Default language"
+msgstr "Базова мова"
+
+msgid "Other queries"
+msgstr "Інші запити"
+
+msgid "Timer"
+msgstr "Таймер"
+
+msgid "in"
+msgstr "в"
+
+msgid "Full text"
+msgstr "Повний текст"
+
+msgid "Feed settings"
+msgstr "Налаштування вибірок"
+
+msgid "Source"
+msgstr "Джерело"
+
+msgid "Replacement patterns"
+msgstr "Шаблони заміни"
+
+msgid "Query"
+msgstr "Запит"
+
+msgid "Hour"
+msgstr "Година"
+
+msgid "Minute"
+msgstr "Хвилина"
+
+msgid "Second"
+msgstr "Секунда"
+
+msgid "Granularity"
+msgstr "Деталізація"
+
+msgid "Moderated"
+msgstr "Модеровано"
+
+msgid "Alignment"
+msgstr "Вирівнювання"
+
+msgid "Link label"
+msgstr ""
+
+msgid "Revert"
+msgstr "Відновити"
+
+msgid "or"
+msgstr "або"
+
+msgid "Convert"
+msgstr "Перетворити"
+
+msgid "Parent term"
+msgstr "Терм-попередник"
+
+msgid "Style"
+msgstr "Стиль"
+
+msgid "revert"
+msgstr "повернути"
+
+msgid "Last modified"
+msgstr "Востаннє змінено"
+
+msgid "Reverse"
+msgstr "Зворотній"
+
+msgid "Thousands separator"
+msgstr "Розділювач тисяч"
+
+msgid "Unformatted"
+msgstr "Неформатоване"
+
+msgid "RSS Feed"
+msgstr "RSS потік"
+
+msgid "New comments"
+msgstr "Новий коментар"
+
+msgid "Relationships"
+msgstr "Зв'язки"
+
+msgid "Plural"
+msgstr "Множина"
+
+msgid "Relationship"
+msgstr "Зв'язок"
+
+msgid "relationships"
+msgstr "зв'язки"
+
+msgid "Sort criteria"
+msgstr "Критерій сортування"
+
+msgid "Parent menu item"
+msgstr "Батьківський елемент меню"
+
+msgid "Translations"
+msgstr "Переклади"
+
+msgid "Sticky"
+msgstr "Приліпити"
+
+msgid "Read only"
+msgstr "Тільки для читання"
+
+msgid "Ok"
+msgstr "Гаразд"
+
+msgid "Output format"
+msgstr "Вихідний формат"
+
+msgid "Storage"
+msgstr "Накопичувач"
+
+msgid "Apply"
+msgstr "Застосувати"
+
+msgid "Enter the terms you wish to search for."
+msgstr "Впишіть слова для пошуку."
+
+msgid "Information"
+msgstr "Інформація"
+
+msgid "PHP Code"
+msgstr "Код PHP"
+
+msgid "Translation"
+msgstr "Переклад"
+
+msgid "Translation status"
+msgstr "Статус перекладу"
+
+msgid "@min and @max"
+msgstr "@min та @max"
+
+msgid "Full node"
+msgstr "Повний матеріал"
+
+msgid "Precision"
+msgstr "Точність"
+
+msgid "Permission"
+msgstr "Повноваження"
+
+msgid "Grid"
+msgstr "Ґратка"
+
+msgid "Hide"
+msgstr "Сховати"
+
+msgid "Read/Write"
+msgstr "Читати/Писати"
+
+msgid "Global"
+msgstr "Глобальне"
+
+msgid "arguments"
+msgstr "аргументи"
+
+msgid "Thread"
+msgstr "Гілки"
+
+msgid "You must include at least one positive keyword with @count characters or more."
+msgstr "Вам необхідно вказати хоча б одне ключове слово, що містить не менше @count символів."
+
+msgid "Distinct"
+msgstr "Окремий"
+
+msgid "<None>"
+msgstr "<Нічого>"
+
+msgid "Node access"
+msgstr ""
+
+msgid "<Any>"
+msgstr "<любе>"
+
+msgid "Rearrange"
+msgstr "Пересортувати"
+
+msgid "empty"
+msgstr "пусто"
+
+msgid "Aggregator"
+msgstr "Підбірка новин"
+
+msgid "Attach to"
+msgstr "Приєднати до"
+
+msgid "Argument type"
+msgstr "Тип аргументу"
+
+msgid "Attached files"
+msgstr "Вкладені файли"
+
+msgid "Remove this item"
+msgstr "Видалити цей елемент"
+
+msgid "No title"
+msgstr "Без заголовку"
+
+msgid "Module name"
+msgstr "Ім'я модуля"
+
+msgid "Enter the module name to export code to."
+msgstr ""
+
+msgid "Page settings"
+msgstr "Параметри сторінки"
+
+msgid "Use pager"
+msgstr "Використовувати сторінковість"
+
+msgid "Items to display"
+msgstr "Відображати елементів"
+
+msgid "Offset"
+msgstr "Зміщення"
+
+msgid "More link"
+msgstr "Посилання \"ще(далі)\""
+
+msgid "More link text"
+msgstr ""
+
+msgid "Edit this view"
+msgstr "Правити вид"
+
+msgid "Book parent"
+msgstr ""
+
+msgid "Top level book"
+msgstr ""
+
+msgid "contains"
+msgstr "містить"
+
+msgid "Selection type"
+msgstr "Тип вибору"
+
+msgid "No name"
+msgstr "Без назви"
+
+msgid "Validation error, please try again. If this error persists, please contact the site administrator."
+msgstr "Помилка при перевірці значення, будь-ласка, спробуйте ще. Якщо помилка повториться, повідомте адміністратора сайту."
+
+msgid "In moderation"
+msgstr "В модерації"
+
+msgid "Ordered list"
+msgstr "Нумерований список"
+
+msgid "Unordered list"
+msgstr "Ненумерований список"
+
+msgid "Case sensitive"
+msgstr "Враховувати регістр"
+
+msgid "Link class"
+msgstr ""
+
+msgid "Column"
+msgstr "Стовпець"
+
+msgid "Default sort"
+msgstr "Базове сортування"
+
+msgid "sort by @s"
+msgstr "сортувати за @s"
+
+msgid "and"
+msgstr "і"
+
+msgid "Add @type"
+msgstr "Додати @type"
+
+msgid "Nid"
+msgstr "Nid"
+
+msgid "Parent comment"
+msgstr "Батьківський коментар"
+
+msgid "The parent comment."
+msgstr "Батьківський коментар."
+
+msgid "Author's website"
+msgstr "Сайт автора"
+
+msgid "Display the depth of the comment if it is threaded."
+msgstr ""
+
+msgid "Sort by the threaded order. This will keep child comments together with their parents."
+msgstr ""
+
+msgid "Reply-to link"
+msgstr "Посилання відповіді"
+
+msgid "Provide a simple link to reply to the comment."
+msgstr ""
+
+msgid "Text to display"
+msgstr "Текст для виду"
+
+msgid "Link this field to its user or an author's homepage"
+msgstr ""
+
+msgid "field"
+msgstr "поле"
+
+msgid "The node the uploaded file is attached to"
+msgstr ""
+
+msgid "View settings"
+msgstr "Параметри видів"
+
+msgid "Week @week"
+msgstr "Тиждень @week"
+
+msgid "Delete view"
+msgstr "Стерти вид"
+
+msgid "Time ago"
+msgstr "Часу назад"
+
+msgid "The taxonomy vocabulary ID"
+msgstr ""
+
+msgid "The taxonomy term ID"
+msgstr ""
+
+msgid "Force single"
+msgstr "Примусово одиничний"
+
+msgid "The language the content is in."
+msgstr ""
+
+msgid "Title only"
+msgstr "Тільки назва"
+
+msgid "Validator"
+msgstr "Перевірка"
+
+msgid "Inherit"
+msgstr "Залежність"
+
+msgid "Mime type"
+msgstr "MIME Тип"
+
+msgid "Use default"
+msgstr "Використовувати базове"
+
+msgid "The weight, used for sorting."
+msgstr ""
+
+msgid "The date the node was last updated."
+msgstr ""
+
+msgid "In the form of WW (01 - 53)."
+msgstr "У форматі ТТ (01 - 53)."
+
+msgid "Category ID"
+msgstr ""
+
+msgid "!group: !field"
+msgstr "!group: !field"
+
+msgid "Invalid display id @display"
+msgstr ""
+
+msgid "Error: handler for @table > @field doesn't exist!"
+msgstr ""
+
+msgid "Do not use a relationship"
+msgstr ""
+
+msgid "Display type"
+msgstr "Тип виду"
+
+msgid "The cache has been cleared."
+msgstr "Кеш - очищено!"
+
+msgid "Default sort order"
+msgstr "Базове сортування"
+
+msgid "An error occurred at @path."
+msgstr "Помилка на @path."
+
+msgid "No link"
+msgstr "Без посилання"
+
+msgid "Path: !path"
+msgstr "Шлях: !path"
+
+msgid "Is not one of"
+msgstr "Жоден з"
+
+msgid "Analyze"
+msgstr "Аналіз"
+
+msgid "Admin"
+msgstr "Адмін"
+
+msgid "Starts with"
+msgstr "Починається з"
+
+msgid "Autocomplete"
+msgstr "Автодоповнення"
+
+msgid "Decimal point"
+msgstr "Десяткова кома"
+
+msgid "Permanent"
+msgstr "Постійна"
+
+msgid "Temporary"
+msgstr "Тимчасово"
+
+msgid "Custom date format"
+msgstr "Власний формат дати"
+
+msgid "Is one of"
+msgstr "Один з"
+
+msgid "Access will be granted to users with the specified permission string."
+msgstr "Доступ буде надано користувачам вказаного рядка повноважень"
+
+msgid "Show All"
+msgstr "Показати все"
+
+msgid "Nodes are a Drupal site's primary content."
+msgstr "Матеріал є основним вмістом сайтів на Drupal."
+
+msgid "Comments are responses to node content."
+msgstr "Коментарі є відгуками на матеріал вмісту."
+
+msgid "Users who have created accounts on your site."
+msgstr ""
+
+msgid "!group: !title"
+msgstr "!group: !title"
+
+msgid "!="
+msgstr "!="
+
+msgid "Is empty (NULL)"
+msgstr "Пусто (NULL)"
+
+msgid "Is not empty (NULL)"
+msgstr "Не пусто (NOT NULL)"
+
+msgid "not empty"
+msgstr "не пусто"
+
+msgid "Theming information"
+msgstr "Інформація для розробки шаблонів"
+
+msgid "Ends with"
+msgstr "Закінчується на"
+
+msgid "Upload date"
+msgstr "Дата завантаження"
+
+msgid "Do not cache"
+msgstr "Не кешувати"
+
+msgid "Action to take if argument is not present"
+msgstr ""
+
+msgid "If this value is received as an argument, the argument will be ignored; i.e, \"all values\""
+msgstr ""
+
+msgid "Wildcard title"
+msgstr "Джокер назви"
+
+msgid "The title to use for the wildcard in substitutions elsewhere."
+msgstr ""
+
+msgid "<Basic validation>"
+msgstr "<Базова перевірка>"
+
+msgid "Action to take if argument does not validate"
+msgstr ""
+
+msgid "Link this field to its user"
+msgstr ""
+
+msgid "This will override any other link you have set."
+msgstr ""
+
+msgid "Overwrite the value to display for anonymous users"
+msgstr ""
+
+msgid "If selected, you will see a field to enter the text to use for anonymous users."
+msgstr ""
+
+msgid "Text to display for anonymous users"
+msgstr ""
+
+msgid "Use default RSS settings"
+msgstr "Використовувати стандартні налаштування RSS"
+
+msgid "Title plus teaser"
+msgstr "Назва плюс анонс"
+
+msgid "Front page feed"
+msgstr "Стрічка головної сторінки"
+
+msgid "This will appear as the name of this block in administer >> site building >> blocks."
+msgstr ""
+
+msgid "The node ID of the node."
+msgstr "Ідентифікатор матеріалу"
+
+msgid "Tab weight"
+msgstr "Вага закладки"
+
+msgid "No role"
+msgstr "Без ролі"
+
+msgid "View link"
+msgstr "Показати посилання"
+
+msgid "The size of the file."
+msgstr "Розмір файлу"
+
+msgid "Link this field"
+msgstr ""
+
+msgid "Only show \"listed\" file attachments"
+msgstr ""
+
+msgid "Link this field to its node"
+msgstr ""
+
+msgid "Delete link"
+msgstr "Посилання на видалення"
+
+msgid "Filter the view to the currently logged in user."
+msgstr ""
+
+msgid "Cache once for everything (global)"
+msgstr "Кеш разово для всього (глобально)"
+
+msgid "Per page"
+msgstr "Для сторінки"
+
+msgid "Per role"
+msgstr "Для ролі"
+
+msgid "Per role per page"
+msgstr "Для ролі і для сторінки"
+
+msgid "Per user"
+msgstr "Для користувача"
+
+msgid "Per user per page"
+msgstr "Для користувача і для сторінки"
+
+msgid "Has Avatar"
+msgstr "Має Аватар"
+
+msgid "Display the node with standard node view."
+msgstr "Показує матеріал з стандартним видом."
+
+msgid "Capitalize first letter"
+msgstr "Виправлення першої букви"
+
+msgid "Uid"
+msgstr "Uid"
+
+msgid "Custom text"
+msgstr "Свій текст"
+
+msgid "Default argument"
+msgstr "Базовий аргумент"
+
+msgid "Yes/No"
+msgstr "Так/Ні"
+
+msgid "No fields available."
+msgstr "Недоступні поля"
+
+msgid "Numeric"
+msgstr "Числовий"
+
+msgid "Alt text"
+msgstr "Альтернативний текст"
+
+msgid "Edit link"
+msgstr "Посилання на редагування"
+
+msgid "Broken handler @table.@field"
+msgstr "Втрачено handler @table.@field"
+
+msgid "Skipping broken view @view"
+msgstr "Пропущено поломаний вид @view"
+
+msgid "Ajax callback for view loading."
+msgstr "Ajax callback для завантаження вида."
+
+msgid "The converter will make a best-effort attempt to convert a Views 1 view to Views 2. This conversion is not reliable; you will very likely have to make adjustments to your view to get it to match. You can import Views 1 views through the normal Import tab."
+msgstr ""
+
+msgid "Changes cannot be made to a locked view."
+msgstr "Зміни не можуть бути зроблені до заблокованого виду."
+
+msgid "Convert stored Views 1 views."
+msgstr "Конвертувати збережений View 1 view."
+
+msgid "Convert view"
+msgstr "Конвертація виду"
+
+msgid "Create customized lists and queries from your database."
+msgstr "Створення видозмінених видів і запитів з Вашої Бази Даних"
+
+msgid "Administrative interface to views. Without this module, you cannot create or edit your views."
+msgstr "Адміністративний інтерфейс для видів. Без цього модуля Ви не зможете створювати або змінювати Ваші види."
+
+msgid "Example table"
+msgstr "Таблиця приклад"
+
+msgid "Example table contains example content and can be related to nodes."
+msgstr "Таблиця прикладів відображає варіанти і може бути застосована для матеріалів."
+
+msgid "Example content"
+msgstr "Матеріал приклад"
+
+msgid "Some example content that references a node."
+msgstr "Деякі приклади, пов'язані з матеріалами"
+
+msgid "Example node"
+msgstr "Матеріал приклад"
+
+msgid "Plain text field"
+msgstr "Поле чистого тексту"
+
+msgid "Just a plain text field."
+msgstr "Просто поле з просто текстом."
+
+msgid "Numeric field"
+msgstr "Цифрове поле"
+
+msgid "Just a numeric field."
+msgstr "Просто поле з просто цифр."
+
+msgid "Boolean field"
+msgstr "Булеве поле"
+
+msgid "Just an on/off field."
+msgstr "Просто поле так/ні, 1/0, ввімкнено/вимкнено"
+
+msgid "Timestamp field"
+msgstr "Поле моменту часу"
+
+msgid "Just a timestamp field."
+msgstr "Просто поле для часу"
+
+msgid "Emulates the default Drupal front page; you may set the default home page path to this view to make it your front page."
+msgstr "Емулює базову головну сторінку Друпал; Ви можете встановити базовою сторінкою сайту цей вид, щоб спробувати різні модифікації головної сторінки"
+
+msgid "The title to use when this argument is present. It will override the title of the view and titles from previous arguments. You can use percent substitution here to replace with argument titles. Use \"%1\" for the first argument, \"%2\" for the second, etc."
+msgstr ""
+
+msgid "The Breadcrumb title to use when this argument is present. If no breadcrumb is setted here, default Title values will be used, see \"Title\" for percent substitutions."
+msgstr ""
+
+msgid "Validator options"
+msgstr "Параметри перевірки"
+
+msgid "Display all values"
+msgstr "Показувати всі значення"
+
+msgid "Hide view / Page not found (404)"
+msgstr "Сховати вид / Сторінку не знайдено (404)"
+
+msgid "Display empty text"
+msgstr "Відображати пустий текст"
+
+msgid "Provide default argument"
+msgstr "Вказати аргумент по замовчуванню"
+
+msgid "Provide default argument options"
+msgstr ""
+
+msgid "Default argument type"
+msgstr "Базовий тип аргумента"
+
+msgid "Broken/missing handler"
+msgstr "Пошкоджена/відсутня оболонка"
+
+msgid "The handler for this item is broken or missing and cannot be used. If a module provided the handler and was disabled, re-enabling the module may restore it. Otherwise, you should probably delete this item."
+msgstr ""
+
+msgid "Current date"
+msgstr "Поточна дата"
+
+msgid "Current node's creation time"
+msgstr ""
+
+msgid "Current node's update time"
+msgstr ""
+
+msgid "Allow multiple terms per argument."
+msgstr "Дозволити багато термінів на аргумент"
+
+msgid "If selected, users can enter multiple arguments in the form of 1+2+3 (for OR) or 1,2,3 (for AND)."
+msgstr ""
+
+msgid "Allow multiple arguments to work together."
+msgstr "Дозволити багато аргументів в спільній роботі"
+
+msgid "If selected, multiple instances of this argument can work together, as though multiple terms were supplied to the same argument. This setting is not compatible with the \"Reduce duplicates\" setting."
+msgstr ""
+
+msgid "Do not display items with no value in summary"
+msgstr ""
+
+msgid "Invalid input"
+msgstr "Некоректний ввід"
+
+msgid "Fail basic validation if any argument is given"
+msgstr ""
+
+msgid "By checking this field, you can use this to make sure views with more arguments than necessary fail validation."
+msgstr ""
+
+msgid "If selected, users can enter multiple arguments in the form of 1+2+3 or 1,2,3."
+msgstr ""
+
+msgid "Exclude the argument"
+msgstr "Пропук аргумента"
+
+msgid "If selected, the numbers entered in the argument will be excluded rather than limiting the view."
+msgstr ""
+
+msgid "Glossary mode"
+msgstr "Режим глосарію"
+
+msgid "Glossary mode applies a limit to the number of characters used in the argument, which allows the summary view to act as a glossary."
+msgstr ""
+
+msgid "Character limit"
+msgstr "Лімит символа"
+
+msgid "How many characters of the argument to filter against. If set to 1, all fields starting with the letter in the argument would be matched."
+msgstr ""
+
+msgid "When printing the argument result, how to transform the case."
+msgstr ""
+
+msgid "No transform"
+msgstr "Без перетворення"
+
+msgid "Upper case"
+msgstr "Великі літери"
+
+msgid "Lower case"
+msgstr "Малі літери"
+
+msgid "Capitalize each word"
+msgstr "Виправлення першої літери в кожному слові"
+
+msgid "Case in path"
+msgstr "Вибір в шляху"
+
+msgid "When printing url paths, how to transform the of the argument. Do not use this unless with Postgres as it uses case sensitive comparisons."
+msgstr ""
+
+msgid "Transform spaces to dashes in URL"
+msgstr ""
+
+msgid "The label for this field that will be displayed to end users if the style requires it."
+msgstr ""
+
+msgid "Exclude from display"
+msgstr "Прибрати з показу"
+
+msgid "Check this box to not display this field, but still load it in the view.  Use this option to not show a grouping field in each record, or when doing advanced theming."
+msgstr ""
+
+msgid "Rewrite the output of this field"
+msgstr ""
+
+msgid "If checked, you can alter the output of this field by specifying a string of text with replacement tokens that can use any existing field output."
+msgstr ""
+
+msgid "The text to display for this field. You may include HTML. You may enter data from this view as per the \"Replacement patterns\" below."
+msgstr ""
+
+msgid "Output this field as a link"
+msgstr "Вивід даного поля посиланням"
+
+msgid "If checked, this field will be made into a link. The destination must be given below."
+msgstr ""
+
+msgid "Link path"
+msgstr "Шлях посилання"
+
+msgid "The Drupal path or absolute URL for this link. You may enter data from this view as per the \"Replacement patterns\" below."
+msgstr ""
+
+msgid "The CSS class to apply to the link."
+msgstr ""
+
+msgid "Text to place as \"alt\" text which most browsers display as a tooltip when hovering over the link."
+msgstr ""
+
+msgid "Prefix text"
+msgstr "Текст-префікс"
+
+msgid "Any text to display before this link. You may include HTML."
+msgstr ""
+
+msgid "Suffix text"
+msgstr "Текст-суфікс"
+
+msgid "Any text to display after this link. You may include HTML."
+msgstr ""
+
+msgid "<p>You must add some additional fields to this display before using this field. These fields may be marked as <em>Exclude from display</em> if you prefer. Note that due to rendering order, you cannot use fields that come after this field; if you need a field not listed here, rearrange your fields.</p>"
+msgstr ""
+
+msgid "<p>The following substitution patterns are available for this display. Use the pattern shown on the left to display the value indicated on the right. Note that due to rendering order, you cannot use fields that come after this field; if you need a field not listed here, rearrange your fields.</p>"
+msgstr ""
+
+msgid "Trim this field to a maximum length"
+msgstr "Скоротити це поле до максимальної довжини"
+
+msgid "If checked, this field be trimmed to a maximum length in characters."
+msgstr ""
+
+msgid "The maximum number of characters his field can be."
+msgstr "Максимальна кількість символів в полі."
+
+msgid "Trim only on a word boundary"
+msgstr "Обрізати тільки слова на межі"
+
+msgid "If checked, this field be trimmed only on a word boundary. This is guaranteed to be the maximum characters stated or less. If there are no word boundaries this could trim a field to nothing."
+msgstr ""
+
+msgid "Add an ellipsis"
+msgstr "Додати три крапки"
+
+msgid "If checked, a \"...\" will be added if a field was trimmed."
+msgstr ""
+
+msgid "Strip HTML tags"
+msgstr "Обмежувати теги HTML"
+
+msgid "If checked, all HTML tags will be stripped."
+msgstr ""
+
+msgid "Field can contain HTML"
+msgstr "Поле може сприймати HTML"
+
+msgid "If checked, HTML corrector will be run to ensure tags are properly closed after trimming."
+msgstr ""
+
+msgid "File size display"
+msgstr ""
+
+msgid "Formatted (in KB or MB)"
+msgstr ""
+
+msgid "Raw bytes"
+msgstr ""
+
+msgid "True/False"
+msgstr "True/False"
+
+msgid "On/Off"
+msgstr "Ввімкнено/Вимкнено"
+
+msgid "If checked, true will be displayed as false."
+msgstr "Відмічене - TRUE буде відображене як FALSE"
+
+msgid "Time ago (with \"ago\" appended)"
+msgstr ""
+
+msgid "Time span (future dates start with - )"
+msgstr ""
+
+msgid "Time span (with \"ago/hence\" appended)"
+msgstr ""
+
+msgid "If \"Custom\", see <a href=\"http://us.php.net/manual/en/function.date.php\" target=\"_blank\">the PHP docs</a> for date formats. If \"Time ago\" this is the the number of different units to display, which defaults to two."
+msgstr ""
+
+msgid "Round"
+msgstr "Округлення"
+
+msgid "If checked, the number will be rounded."
+msgstr ""
+
+msgid "Specify how many digits to print after the decimal point."
+msgstr ""
+
+msgid "What single character to use as a decimal point."
+msgstr ""
+
+msgid "What single character to use as the thousands separator."
+msgstr ""
+
+msgid "Text to put before the number, such as currency symbol."
+msgstr ""
+
+msgid "Text to put after the number, such as currency symbol."
+msgstr ""
+
+msgid "Simple separator"
+msgstr "Простий розділювач"
+
+msgid "Empty list text"
+msgstr "Текст, коли пустий список"
+
+msgid "If the list is empty, you may enter text here that will be displayed."
+msgstr "Якщо список порожній, Ви можете ввести текст тут і його буде відображено."
+
+msgid "Display as link"
+msgstr "Відображати як посилання"
+
+msgid "This item is currently not exposed. If you <strong>expose</strong> it, users will be able to change the filter as they view it."
+msgstr ""
+
+msgid "This item is currently exposed. If you <strong>hide</strong> it, users will not be able to change the filter as they view it."
+msgstr ""
+
+msgid "Unlock operator"
+msgstr "Розблокувати оператор"
+
+msgid "When checked, the operator will be exposed to the user"
+msgstr ""
+
+msgid "Operator identifier"
+msgstr "Ідентифікатор оператора"
+
+msgid "This will appear in the URL after the ? to identify this operator."
+msgstr ""
+
+msgid "Filter identifier"
+msgstr "Ідентифікатор фільтра"
+
+msgid "This will appear in the URL after the ? to identify this filter. Cannot be blank."
+msgstr ""
+
+msgid "This exposed filter is optional and will have added options to allow it not to be set."
+msgstr ""
+
+msgid "Force this exposed filter to accept only one option."
+msgstr ""
+
+msgid "Remember"
+msgstr "Запам'ятати"
+
+msgid "Remember the last setting the user gave this filter."
+msgstr ""
+
+msgid "The identifier is required if the filter is exposed."
+msgstr ""
+
+msgid "This identifier is not allowed."
+msgstr "Ідентифікатор недозволено"
+
+msgid "- Any -"
+msgstr "- любе -"
+
+msgid "You must select a value unless this is an optional exposed filter."
+msgstr ""
+
+msgid "exposed"
+msgstr "відображено"
+
+msgid "Value type"
+msgstr "Тип значення"
+
+msgid "A date in any machine readable format. CCYY-MM-DD HH:MM:SS is preferred."
+msgstr ""
+
+msgid "An offset from the current time such as \"+1 day\" or \"-2 hours and 30 minutes\""
+msgstr ""
+
+msgid "Invalid date format."
+msgstr "Некоректний формат дати"
+
+msgid "Limit list to selected items"
+msgstr "Ліміт списку обраних пунктів"
+
+msgid "If checked, the only items presented to the user will be the ones selected here."
+msgstr ""
+
+msgid "not in"
+msgstr "не в"
+
+msgid "<>"
+msgstr "<>"
+
+msgid "Is all of"
+msgstr "З всіма"
+
+msgid "Is none of"
+msgstr "Без жодного"
+
+msgid "not"
+msgstr "не"
+
+msgid "<"
+msgstr "<"
+
+msgid "<="
+msgstr "<="
+
+msgid ">="
+msgstr ">="
+
+msgid ">"
+msgstr ">"
+
+msgid "Is between"
+msgstr "Між"
+
+msgid "between"
+msgstr "між"
+
+msgid "Is not between"
+msgstr "Поза межами"
+
+msgid "not between"
+msgstr "оза межами"
+
+msgid "Min"
+msgstr "Мін"
+
+msgid "And max"
+msgstr "І макс"
+
+msgid "And"
+msgstr "І"
+
+msgid "Contains any word"
+msgstr "Містить будь-яке слово"
+
+msgid "has word"
+msgstr "містить слово"
+
+msgid "Contains all words"
+msgstr "Містить всі слова"
+
+msgid "has all"
+msgstr "містить всі"
+
+msgid "begins"
+msgstr "починається"
+
+msgid "ends"
+msgstr "закінчується"
+
+msgid "!has"
+msgstr "!has"
+
+msgid "Case sensitive filters may be faster. MySQL might ignore case sensitivity."
+msgstr ""
+
+msgid "The label for this relationship that will be displayed only administratively."
+msgstr ""
+
+msgid "Require this relationship"
+msgstr ""
+
+msgid "If required, items that do not contain this relationship will not appear."
+msgstr ""
+
+msgid "asc"
+msgstr "зрост"
+
+msgid "desc"
+msgstr "спад"
+
+msgid "The granularity is the smallest unit to use when determining whether two dates are the same; for example, if the granularity is \"Year\" then all dates in 1999, regardless of when they fall in 1999, will be considered the same date."
+msgstr ""
+
+msgid "views_handler_sort_formula missing default: @formula"
+msgstr ""
+
+msgid "If you <a href=\"@modules\">enable the advanced help module</a>, Views will provide more and better help. <a href=\"@hide\">Hide this message.</a>"
+msgstr ""
+
+msgid "If you install the advanced help module from !href, Views will provide more and better help. <a href=\"@hide\">Hide this message.</a>"
+msgstr "Проінсталювавши advanced help модуль із !href, Views буде описано краще. <a href=\"@hide\">Сховати.</a>"
+
+msgid "Warning! Broken view!"
+msgstr ""
+
+msgid "Broken"
+msgstr "Пошкоджено"
+
+msgid "Install the advanced help module for the getting started"
+msgstr "Проінсталюйте модуль advanced help для початку роботи"
+
+msgid "Not sure what to do? Try the \"!getting-started\" page."
+msgstr "Не впевнені що робити?? Спробуйте \"!getting-started\" сторінку."
+
+msgid "Displays"
+msgstr "Відображення"
+
+msgid "These queries were run during view rendering:"
+msgstr ""
+
+msgid "[@time ms]"
+msgstr "[@time мсек]"
+
+msgid "This display has no path."
+msgstr "Цей вид немає шляху"
+
+msgid "Query build time"
+msgstr "Час побудови запиту"
+
+msgid "@time ms"
+msgstr "@time мсек"
+
+msgid "Query execute time"
+msgstr "Час виконання запиту"
+
+msgid "View render time"
+msgstr "Переглянути час рендерингу"
+
+msgid "No query was run"
+msgstr "Немає запущених запитів"
+
+msgid "Unable to preview due to validation errors."
+msgstr ""
+
+msgid "Separate arguments with a / as though they were a URL path."
+msgstr ""
+
+msgid "Clone view %view"
+msgstr "Копія виду %view"
+
+msgid "View name"
+msgstr "Ім'я Вигляду"
+
+msgid "This is the unique name of the view. It must contain only alphanumeric characters and underscores; it is used to identify the view internally and to generate unique theming template names for this view. If overriding a module provided view, the name must not be changed or instead a new view will be created."
+msgstr ""
+
+msgid "View description"
+msgstr "Опис Вигляду"
+
+msgid "This description will appear on the Views administrative UI to tell you what the view is about."
+msgstr ""
+
+msgid "View tag"
+msgstr "Тег Вигляду"
+
+msgid "Enter an optional tag for this view; it is used only to help sort views on the administrative page."
+msgstr ""
+
+msgid "The view type is the primary table for which information is being retrieved. The view type controls what arguments, fields, sort criteria and filters are available, so once this is set it <strong>cannot be changed</strong>."
+msgstr ""
+
+msgid "You must use a unique name for this view."
+msgstr ""
+
+msgid "Are you sure you want to revert the view %name?"
+msgstr ""
+
+msgid "Reverting the view will delete the view that is in the database, reverting it to the original default view. Any changes you have made will be lost and cannot be recovered."
+msgstr ""
+
+msgid "Are you sure you want to delete the view %name?"
+msgstr ""
+
+msgid "Deleting a view cannot be undone."
+msgstr ""
+
+msgid "The view has been deleted."
+msgstr "Вид видалено."
+
+msgid "There is no lock on view %view to break."
+msgstr ""
+
+msgid "Are you sure you want to break the lock on view %name?"
+msgstr ""
+
+msgid "By breaking this lock, any unsaved changes made by !user will be lost!"
+msgstr ""
+
+msgid "Break lock"
+msgstr "Перервати блокування"
+
+msgid "The lock has been broken and you may now edit this view."
+msgstr ""
+
+msgid "Edit view %view"
+msgstr "Змінити вид %view"
+
+msgid "Enter the name to use for this view if it is different from the source view. Leave blank to use the name of the view."
+msgstr ""
+
+msgid "Paste view code here"
+msgstr "Вставити код виду сюди"
+
+msgid "Unable to interpret view code."
+msgstr "Неможливо інтерпретувати код виду"
+
+msgid "You are importing a view created in Views version 1. You may need to adjust some parameters to work correctly in version 2."
+msgstr ""
+
+msgid "That view is not compatible with this version of Views."
+msgstr ""
+
+msgid "A view by that name already exists; please choose a different name"
+msgstr ""
+
+msgid "Display plugin @plugin is not available."
+msgstr ""
+
+msgid "Style plugin @plugin is not available."
+msgstr ""
+
+msgid "Row plugin @plugin is not available."
+msgstr ""
+
+msgid "@type handler @table.@field is not available."
+msgstr ""
+
+msgid "Unable to import view."
+msgstr ""
+
+msgid "The view has been saved."
+msgstr ""
+
+msgid "Unknown or missing table name"
+msgstr ""
+
+msgid "Click on an item to edit that item's details."
+msgstr ""
+
+msgid "This view has a broken default display and cannot be used."
+msgstr ""
+
+msgid "Export this view"
+msgstr "Експортувати вид"
+
+msgid "Create a copy of this view"
+msgstr "Створити копію даного виду"
+
+msgid "View \"@display\""
+msgstr ""
+
+msgid "Go to the real page for this display"
+msgstr ""
+
+msgid "Invalid"
+msgstr "Некоректно"
+
+msgid "Error: Display @display refers to a plugin named '@plugin', but that plugin doesn't exist!"
+msgstr ""
+
+msgid "Missing style plugin"
+msgstr "Загублено додаток стилю"
+
+msgid "Change settings for this style"
+msgstr ""
+
+msgid "&nbsp; Style: !style"
+msgstr "&nbsp; Стиль: !style"
+
+msgid "Invalid display id found while regenerating tabs"
+msgstr ""
+
+msgid "Unable to initialize default display"
+msgstr ""
+
+msgid "Add display"
+msgstr "Додати вид"
+
+msgid "Remove display"
+msgstr "Видалити вид"
+
+msgid "Restore display"
+msgstr "Відновити вид"
+
+msgid "View analysis"
+msgstr "Аналізування Вигляду"
+
+msgid "View details"
+msgstr "Деталі Вигляду"
+
+msgid "Configure @type"
+msgstr "Конфігурування @type"
+
+msgid "Rearrange @type"
+msgstr "Пересортування @type"
+
+msgid "Broken field @id"
+msgstr "Втрачене поле @id"
+
+msgid "There are no @types available to add."
+msgstr ""
+
+msgid "Configure @type %item"
+msgstr ""
+
+msgid "Configure extra settings for @type %item"
+msgstr ""
+
+msgid "Change summary style for @type %item"
+msgstr ""
+
+msgid "Internal error: broken plugin."
+msgstr ""
+
+msgid "Configure summary style for @type %item"
+msgstr ""
+
+msgid "Clear Views' cache"
+msgstr "Очистити кеш"
+
+msgid "Add Views signature to all SQL queries"
+msgstr ""
+
+msgid "All Views-generated queries will include a special 'VIEWS' = 'VIEWS' string in the WHERE clause. This makes identifying Views queries in database server logs simpler, but should only be used when troubleshooting."
+msgstr ""
+
+msgid "Disable views data caching"
+msgstr ""
+
+msgid "Views caches data about tables, modules and views available, to increase performance. By checking this box, Views will skip this cache and always rebuild this data when needed. This can have a serious performance impact on your site."
+msgstr ""
+
+msgid "Ignore missing advanced help module"
+msgstr ""
+
+msgid "Views uses the advanced help module to provide help text; if this module is not present Views will complain, unless this setting is checked."
+msgstr ""
+
+msgid "Show query above live preview"
+msgstr ""
+
+msgid "The live preview feature will show you the output of the view you're creating, as well as the view. Check here to show the query and other information above the view; leave this unchecked to show that information below the view."
+msgstr ""
+
+msgid "Show other queries run during render during live preview"
+msgstr ""
+
+msgid "Drupal has the potential to run many queries while a view is being rendered. Checking this box will display every query run during view render as part of the live preview."
+msgstr ""
+
+msgid "Do not show hover links over views"
+msgstr ""
+
+msgid "To make it easier to administrate your views, Views provides 'hover' links to take you to the edit and export screen of a view whenever the view is used. This can be distracting on some themes, though; if it is problematic, you can turn it off here."
+msgstr ""
+
+msgid "Enable views performance statistics via the Devel module"
+msgstr ""
+
+msgid "Check this to enable some Views query and performance statistics <em>if Devel is installed</em>."
+msgstr ""
+
+msgid "Disable javascript with Views"
+msgstr ""
+
+msgid "If you are having problems with the javascript, you can disable it here; the Views UI should degrade and still be usable without javascript, it just not as good."
+msgstr ""
+
+msgid "Page region to output performance statistics"
+msgstr ""
+
+msgid "Label for \"Any\" value on optional single-select exposed filters"
+msgstr ""
+
+msgid "Error: missing @component"
+msgstr ""
+
+msgid "Server reports invalid input error."
+msgstr ""
+
+msgid "View analysis can find nothing to report."
+msgstr ""
+
+msgid "This view has only a default display and therefore will not be placed anywhere on your site; perhaps you want to add a page or a block display."
+msgstr ""
+
+msgid "There are no Views 1 views stored in the database to convert."
+msgstr ""
+
+msgid "Converted"
+msgstr "Конвертовано"
+
+msgid "The table below lists Views version 1 views that are stored in the database. You can either convert them to work in Views version 2, or delete them. The views are convertible only if there is no Views 2 view with the same name."
+msgstr ""
+
+msgid "Unable to find view."
+msgstr "Неможливо знайти вид"
+
+msgid "Unable to convert view."
+msgstr "Неможливо перетворити вид"
+
+msgid "The view has been deleted"
+msgstr "Вид видалено."
+
+msgid "Handler @handler include tried to loop infinitely!"
+msgstr ""
+
+msgid "Reduce duplicates"
+msgstr "Зменшення дублів"
+
+msgid "This filter can cause items that have more than one of the selected options to appear as duplicate results. If this filter causes duplicate results to occur, this checkbox can reduce those duplicates; however, the more terms it has to search for, the less performant the query will be, so use this with caution."
+msgstr ""
+
+msgid "Default settings for this view."
+msgstr "Базові налаштування для виду"
+
+msgid "Display the view as a page, with a URL and menu links."
+msgstr "Відображення вигляду сторінкою, з адресою і елементом меню"
+
+msgid "Display the view as a block."
+msgstr "Відображення вигляду блоком"
+
+msgid "Attachments added to other displays to achieve multiple views in the same view."
+msgstr "Додатки додаються до інших видів для збору кількох видів в один."
+
+msgid "Display the view as a feed, such as an RSS feed."
+msgstr "Відображення вигляду потоком, наприклад RSS"
+
+msgid "Displays rows one after another."
+msgstr "Відображення рядків один за іншим"
+
+msgid "HTML List"
+msgstr "Список HTML"
+
+msgid "Displays rows as an HTML list."
+msgstr "Показувати рядки як HTML-список."
+
+msgid "Displays rows in a grid."
+msgstr "Відображає рядків у сітці."
+
+msgid "Displays rows in a table."
+msgstr "Показувати рядки в таблиці"
+
+msgid "Displays the default summary as a list."
+msgstr "Відображає стандартний анонс списком"
+
+msgid "Displays the summary unformatted, with option for one after another or inline."
+msgstr "Відображає сумарно, неформатовано, з опцією для одного за одним або в лінію."
+
+msgid "Generates an RSS feed from a view."
+msgstr "Ґенерує RSS-стрічку з виду."
+
+msgid "Displays the fields with an optional template."
+msgstr "Відображенян полів з необов'язковим шаблоном"
+
+msgid "Fixed entry"
+msgstr "Фіксований запис"
+
+msgid "Will be available to all users."
+msgstr "Буде доступно всім користувачам"
+
+msgid "Access will be granted to users with any of the specified roles."
+msgstr "Доступ буде надано користувачам будь-якої вказаної ролі"
+
+msgid "No caching of Views data."
+msgstr "Без кешування даних Видів"
+
+msgid "Time-based"
+msgstr "Базовано на часі"
+
+msgid "Simple time-based caching of data."
+msgstr "Просте кешування базоване на часі"
+
+msgid "set_display() called with invalid display id @display."
+msgstr ""
+
+msgid "sort criteria"
+msgstr "критерій сортування"
+
+msgid "Sort criterion"
+msgstr "Критерій сортування"
+
+msgid "sort criterion"
+msgstr "критерій сортування"
+
+msgid "filter"
+msgstr "фільтр"
+
+msgid "jQuery UI Tabs: Mismatching fragment identifier."
+msgstr ""
+
+msgid "jQuery UI Tabs: Not enough arguments to add tab."
+msgstr ""
+
+msgid "Aggregator items are imported from external RSS and Atom news feeds."
+msgstr ""
+
+msgid "The title of the aggregator item."
+msgstr ""
+
+msgid "The link to the original source URL of the item."
+msgstr ""
+
+msgid "The author of the original imported item."
+msgstr ""
+
+msgid "The actual content of the imported item."
+msgstr ""
+
+msgid "The date the original feed item was posted. (With some feeds, this will be the date it was imported.)"
+msgstr ""
+
+msgid "Feed ID"
+msgstr "Feed ID"
+
+msgid "The unique ID of the aggregator feed."
+msgstr ""
+
+msgid "The title of the aggregator feed."
+msgstr "Заголовок агрегатора пункту."
+
+msgid "The link to the source URL of the feed."
+msgstr "Посилання на URL каналу."
+
+msgid "The date the feed was last checked for new content."
+msgstr ""
+
+msgid "The description of the aggregator feed."
+msgstr ""
+
+msgid "The date of the most recent new content onf the feed."
+msgstr ""
+
+msgid "The unique ID of the aggregator category."
+msgstr ""
+
+msgid "The title of the aggregator category."
+msgstr ""
+
+msgid "Display the aggregator item using the data from the original source."
+msgstr ""
+
+msgid "The book the node is in."
+msgstr ""
+
+msgid "The weight of the book page."
+msgstr ""
+
+msgid "The depth of the book page in the hierarchy; top level books have a depth of 1."
+msgstr ""
+
+msgid "The order of pages in the book hierarchy. If you want the exactly right order, remember to sort by weight, too."
+msgstr ""
+
+msgid "The parent book node."
+msgstr ""
+
+msgid "The title of the comment."
+msgstr "Тема коментаря"
+
+msgid "The text of the comment."
+msgstr "Текст коментаря"
+
+msgid "The comment ID of the field"
+msgstr "ID коментаря поля"
+
+msgid "The name of the comment's author. Can be rendered as a link to the author's homepage."
+msgstr ""
+
+msgid "The website address of the comment's author. Can be rendered as a link. Will be empty if the author is a registered user."
+msgstr ""
+
+msgid "Post date"
+msgstr "Дата публікації"
+
+msgid "Date and time of when the comment was posted."
+msgstr ""
+
+msgid "Whether or not the comment is currently in moderation."
+msgstr ""
+
+msgid "Provide a simple link to view the comment."
+msgstr ""
+
+msgid "Provide a simple link to edit the comment."
+msgstr ""
+
+msgid "Provide a simple link to delete the comment."
+msgstr ""
+
+msgid "Node link"
+msgstr "Посилання матеріалу"
+
+msgid "Display the standard comment link used on regular nodes."
+msgstr ""
+
+msgid "The node the comment is a reply to."
+msgstr ""
+
+msgid "The User ID of the comment's author."
+msgstr "ID користувача-автора коментаря"
+
+msgid "Parent CID"
+msgstr "Батьківська CID"
+
+msgid "The Comment ID of the parent comment."
+msgstr ""
+
+msgid "Last comment time"
+msgstr "Час останнього коментаря"
+
+msgid "Date and time of when the last comment was posted."
+msgstr ""
+
+msgid "Last comment author"
+msgstr "Автор останнього коментаря"
+
+msgid "The name of the author of the last posted comment."
+msgstr ""
+
+msgid "Comment count"
+msgstr "Кількість коментарів"
+
+msgid "The number of comments a node has."
+msgstr ""
+
+msgid "Updated/commented date"
+msgstr "Дата оновлення/коментування"
+
+msgid "The most recent of last comment posted or node updated time."
+msgstr ""
+
+msgid "The number of new comments on the node."
+msgstr ""
+
+msgid "Comment status"
+msgstr "Статус коментарів"
+
+msgid "Whether comments are enabled or disabled on the node."
+msgstr ""
+
+msgid "User posted or commented"
+msgstr ""
+
+msgid "Display nodes only if a user posted the node or commented on the node."
+msgstr ""
+
+msgid "Display the comment with standard comment view."
+msgstr "Відображення коментаря стандартним виглядом коментарів"
+
+msgid "Display the comment as RSS."
+msgstr "Показати коментарі у форматі RSS."
+
+msgid "Link to contact page"
+msgstr ""
+
+msgid "Provide a simple link to the user contact page."
+msgstr ""
+
+msgid "Locale source"
+msgstr "Локальне джерело"
+
+msgid "A source string for translation, in English or the default site language."
+msgstr ""
+
+msgid "LID"
+msgstr "LID"
+
+msgid "The ID of the source string."
+msgstr "ID початкового джерела."
+
+msgid "A description of the location or context of the string."
+msgstr ""
+
+msgid "The group the translation is in."
+msgstr ""
+
+msgid "The full original string."
+msgstr "Повний оригінальний текст."
+
+msgid "The version of Drupal core that this string is for."
+msgstr ""
+
+msgid "Provide a simple link to edit the translations."
+msgstr ""
+
+msgid "Locale target"
+msgstr ""
+
+msgid "The full translation string."
+msgstr ""
+
+msgid "The language this translation is in."
+msgstr ""
+
+msgid "Singular LID"
+msgstr "Одинична LID"
+
+msgid "The ID of the parent translation."
+msgstr "ID батьківського перекладу."
+
+msgid "Whether or not the translation is plural."
+msgstr ""
+
+msgid "The title of the node."
+msgstr "Тема матеріалу"
+
+msgid "The date the node was posted."
+msgstr ""
+
+msgid "The type of a node (for example, \"blog entry\", \"forum post\", \"story\", etc)."
+msgstr ""
+
+msgid "Whether or not the node is published."
+msgstr ""
+
+msgid "Published or admin"
+msgstr "Опубліковано або адміністування"
+
+msgid "Filters out unpublished nodes if the current user cannot view them."
+msgstr ""
+
+msgid "Whether or not the node is promoted to the front page."
+msgstr ""
+
+msgid "Whether or not the node is moderated."
+msgstr ""
+
+msgid "Whether or not the node is sticky."
+msgstr ""
+
+msgid "Provide a simple link to the node."
+msgstr ""
+
+msgid "Provide a simple link to edit the node."
+msgstr ""
+
+msgid "Provide a simple link to delete the node."
+msgstr ""
+
+msgid "In the form of CCYYMMDD."
+msgstr ""
+
+msgid "Created year + month"
+msgstr "Рік створення + місяць"
+
+msgid "In the form of YYYYMM."
+msgstr "У форматі РРРРММ."
+
+msgid "Created year"
+msgstr "Рік створення"
+
+msgid "In the form of YYYY."
+msgstr "У форматі РРРР."
+
+msgid "Created month"
+msgstr "Місяць створення"
+
+msgid "In the form of MM (01 - 12)."
+msgstr "У форматі ММ(01 - 12)."
+
+msgid "Created day"
+msgstr "День створення"
+
+msgid "In the form of DD (01 - 31)."
+msgstr "У форматі ДД (01 - 31)."
+
+msgid "Created week"
+msgstr "Тиждень створення"
+
+msgid "Updated year + month"
+msgstr ""
+
+msgid "Updated year"
+msgstr ""
+
+msgid "Updated month"
+msgstr ""
+
+msgid "Updated day"
+msgstr ""
+
+msgid "Updated week"
+msgstr ""
+
+msgid "Node revision"
+msgstr "Ревізія матеріалу"
+
+msgid "Node revisions are a history of changes to nodes."
+msgstr "Ревізія матеріалів це історія змін."
+
+msgid "Relate a node revision to the user who created the revision."
+msgstr "Відносити матеріал до користувача, який створив ревізію."
+
+msgid "The actual, full data in the body field; this may not be valid data on all node types."
+msgstr ""
+
+msgid "The stored teaser field. This may not be valid or useful data on all node types."
+msgstr ""
+
+msgid "Vid"
+msgstr "Vid"
+
+msgid "The revision ID of the node revision."
+msgstr "Ідентифікатор версії матеріалу"
+
+msgid "The log message entered when the revision was created."
+msgstr ""
+
+msgid "The date the node revision was created."
+msgstr ""
+
+msgid "Input format id"
+msgstr ""
+
+msgid "The numeric input format of the node revision. !default means the default input format."
+msgstr ""
+
+msgid "The name of the input format of the node revision."
+msgstr ""
+
+msgid "Revert link"
+msgstr "Посилання повернення"
+
+msgid "Provide a simple link to revert to the revision."
+msgstr ""
+
+msgid "Provide a simple link to delete the node revision."
+msgstr ""
+
+msgid "Filter by access."
+msgstr ""
+
+msgid "Filter for nodes by view access. <strong>Not necessary if you are using node as your base table.</strong>"
+msgstr ""
+
+msgid "Has new content"
+msgstr "Має новий вміст"
+
+msgid "Show a marker if the node has new or updated content."
+msgstr ""
+
+msgid "Show only nodes that have new content."
+msgstr ""
+
+msgid "Node ID from URL"
+msgstr "ID матеріалу з URL"
+
+msgid "Display %display has no access control but does not contain a filter for published nodes."
+msgstr ""
+
+msgid "Poll"
+msgstr "Опитування"
+
+msgid "Whether the poll is open for voting."
+msgstr ""
+
+msgid "@field-name"
+msgstr "@назва поля"
+
+msgid "Profile textfield"
+msgstr "Однорядкове поле введення тексту профілю"
+
+msgid "Profile textarea"
+msgstr "Багаторядкове поле введення тексту профілю"
+
+msgid "Profile checkbox"
+msgstr "Чекбокс профілю"
+
+msgid "Profile URL"
+msgstr "URL профілю"
+
+msgid "Profile selection"
+msgstr "Вибір профілю"
+
+msgid "Profile freeform list %field-name."
+msgstr "Profile freeform list %field-name."
+
+msgid "Profile date %field-name."
+msgstr "Профіль датою %field-name."
+
+msgid "The score of the search item. This will not be used if the search filter is not also present."
+msgstr ""
+
+msgid "Links from"
+msgstr "Посилання з"
+
+msgid "Other nodes that are linked from the node."
+msgstr ""
+
+msgid "Links to"
+msgstr "Посилання на"
+
+msgid "Other nodes that link to the node."
+msgstr ""
+
+msgid "Search Terms"
+msgstr "Пошукові терміни"
+
+msgid "The terms to search for."
+msgstr "Терміни для пошуку."
+
+msgid "Display the results with standard search view."
+msgstr "Відображає результати пошуку з стандартним видом."
+
+msgid "Node statistics"
+msgstr "Статистика матеріалів"
+
+msgid "Total views"
+msgstr "Переглядів"
+
+msgid "The total number of times the node has been viewed."
+msgstr ""
+
+msgid "Views today"
+msgstr "Переглядів сьогодні"
+
+msgid "The total number of times the node has been viewed today."
+msgstr ""
+
+msgid "Most recent view"
+msgstr "Найактуальніший вид"
+
+msgid "The most recent time the node has been viewed."
+msgstr ""
+
+msgid "Stores site access information."
+msgstr ""
+
+msgid "Browser session ID of user that visited page."
+msgstr ""
+
+msgid "Title of page visited."
+msgstr "Заголовок відвідуваної сторінки."
+
+msgid "Internal path to page visited (relative to Drupal root.)"
+msgstr "Внутрішній шлях до відвідуваної сторінки (відносно папки, де встановлено Drupal)."
+
+msgid "Referrer URI."
+msgstr "URI реферала."
+
+msgid "Hostname of user that visited the page."
+msgstr ""
+
+msgid "The user who visited the site."
+msgstr ""
+
+msgid "Time in milliseconds that the page took to load."
+msgstr ""
+
+msgid "Timestamp of when the page was visited."
+msgstr ""
+
+msgid "Files maintained by Drupal and various modules."
+msgstr ""
+
+msgid "The ID of the file."
+msgstr "ID файлу."
+
+msgid "The name of the file."
+msgstr "Ім'я файлу"
+
+msgid "The path of the file."
+msgstr "Шлях до файлу."
+
+msgid "The mime type of the file."
+msgstr "Mime-тип файлу."
+
+msgid "The status of the file."
+msgstr "Статус файлу."
+
+msgid "The date the file was uploaded."
+msgstr "Дата завантаження."
+
+msgid "Name of the vocabulary a term is a member of. This will be the vocabulary that whichever term the \"Taxonomy: Term\" field is; and can similarly cause duplicates."
+msgstr ""
+
+msgid "Taxonomy terms are attached to nodes."
+msgstr ""
+
+msgid "Taxonomy terms. Note that using this can cause duplicate nodes to appear in views; you must add filters to reduce the result set."
+msgstr ""
+
+msgid "Taxonomy term name."
+msgstr ""
+
+msgid "The term weight field"
+msgstr "Термі напівжирного поля"
+
+msgid "The description associated with a taxonomy term."
+msgstr ""
+
+msgid "Filter the results of \"Taxonomy: Term\" to a particular vocabulary."
+msgstr ""
+
+msgid "All terms"
+msgstr "Всі терміни"
+
+msgid "Display all taxonomy terms associated with a node from specified vocabularies."
+msgstr ""
+
+msgid "The parent term of the term. This can produce duplicate entries if you are using a vocabulary that allows multiple parents."
+msgstr ""
+
+msgid "The parent term of the term."
+msgstr "Терм-попередник"
+
+msgid "Term synonym"
+msgstr "Термін синонім"
+
+msgid "Term synonyms may be used to find terms by alternate names."
+msgstr ""
+
+msgid "Term ID (with depth)"
+msgstr ""
+
+msgid "The depth filter is more complex, so provides fewer options."
+msgstr ""
+
+msgid "Term ID depth modifier"
+msgstr ""
+
+msgid "Allows the \"depth\" for Taxonomy: Term ID (with depth) to be modified via an additional argument."
+msgstr ""
+
+msgid "Node translation"
+msgstr "Переклад матеріалу"
+
+msgid "Translation set node ID"
+msgstr "Задати ID перекладу матеріалу"
+
+msgid "The ID of the translation set the content belongs to."
+msgstr ""
+
+msgid "Source translation"
+msgstr "Базовий переклад"
+
+msgid "The source that this content was translated from."
+msgstr ""
+
+msgid "Versions of content in different languages."
+msgstr ""
+
+msgid "Nodes that are either untranslated or are the original versions of a translation set."
+msgstr ""
+
+msgid "Child translation"
+msgstr "Дочірній переклад"
+
+msgid "Nodes that are translations of a source translation."
+msgstr ""
+
+msgid "The translation status of the node--whether or not the translation needs to be updated."
+msgstr ""
+
+msgid "Outdated"
+msgstr "Просрочений"
+
+msgid "upload"
+msgstr "завантажити"
+
+msgid "The description of the uploaded file."
+msgstr ""
+
+msgid "Listed"
+msgstr "Списком"
+
+msgid "Whether or not the file is marked to be listed."
+msgstr ""
+
+msgid "All files attached to a node with upload.module."
+msgstr ""
+
+msgid "Has attached files"
+msgstr "Присутні вкладені файли"
+
+msgid "Only display items with attached files. This can cause duplicates if there are multiple attached files."
+msgstr ""
+
+msgid "Add a relationship to gain access to more file data for files uploaded by upload.module. Note that this relationship will cause duplicate nodes if there are multiple files attached to the node."
+msgstr ""
+
+msgid "The user ID"
+msgstr "ID користувача"
+
+msgid "The user or author name."
+msgstr "Користувач або ім’я автора"
+
+msgid "Email address for a given user. This field is normally not shown to users, so be cautious when using it."
+msgstr ""
+
+msgid "Language of the user"
+msgstr ""
+
+msgid "The user's picture, if allowed."
+msgstr "Зображення користувача. якщо дозволено."
+
+msgid "The date the user was created."
+msgstr "Дата створення користувача."
+
+msgid "The user's last access date."
+msgstr "Дата останнього візиту користувача."
+
+msgid "The user's last login date."
+msgstr "Остання дата входу користувача"
+
+msgid "Whether a user is active or blocked."
+msgstr ""
+
+msgid "The user's signature."
+msgstr "Підпис користувача"
+
+msgid "Provide a simple link to edit the user."
+msgstr ""
+
+msgid "Provide a simple link to delete the user."
+msgstr ""
+
+msgid "Roles that a user belongs to."
+msgstr ""
+
+msgid "User ID from URL"
+msgstr "ІД користувача з Адреси"
+
+msgid "User ID from logged in user"
+msgstr "ІД зареєстрованого користувача"
+
+msgid "Randomize the display order."
+msgstr "Випадковість сортування виду"
+
+msgid "Null"
+msgstr "Зеро"
+
+msgid "Allow an argument to be ignored. The query will not be altered by this argument."
+msgstr ""
+
+msgid "Provide custom text or link."
+msgstr "Занзачити свій текст або посилання"
+
+msgid "View result counter"
+msgstr "Перегляд лічильника результату"
+
+msgid "Displays the actual position of the view result"
+msgstr ""
+
+msgid "Link this field to its aggregator category page"
+msgstr ""
+
+msgid "No user"
+msgstr "Нема користувача"
+
+msgid "Link this field to its comment"
+msgstr ""
+
+msgid "Show teaser-style link"
+msgstr ""
+
+msgid "Link this field to new comments"
+msgstr ""
+
+msgid "Display nothing if no new comments"
+msgstr "Не відображає нічого, за відсутності коментарів"
+
+msgid "Type of link"
+msgstr ""
+
+msgid "contact"
+msgstr "контакт"
+
+msgid "Contact %user"
+msgstr ""
+
+msgid "Unknown group"
+msgstr "Невідома група"
+
+msgid "Unknown language"
+msgstr "Невідома мова"
+
+msgid "Current user's language"
+msgstr "Теперішня мова користувача"
+
+msgid "Default site language"
+msgstr "Базова мова сайту"
+
+msgid "No language"
+msgstr "Нема мови"
+
+msgid "Current installed version"
+msgstr "Теперішня встановлена версія"
+
+msgid "Unknown node type"
+msgstr "Невідомий тип матеріалу"
+
+msgid "Check for new comments as well"
+msgstr ""
+
+msgid "If you wish to validate for specific node types, check them; if none are checked, all nodes will pass."
+msgstr ""
+
+msgid "Validate user has access to the node"
+msgstr ""
+
+msgid "Node IDs separated by , or +"
+msgstr ""
+
+msgid "Build mode"
+msgstr "Створення режиму"
+
+msgid "Display node comments"
+msgstr "Відображає коментарі до матеріалу"
+
+msgid "No alternate"
+msgstr "нема альтернативних"
+
+msgid "Alternative sort"
+msgstr "Альтернативне сортування"
+
+msgid "If no search is performed and this field does not appear, pick an alternative default table sort field."
+msgstr ""
+
+msgid "Alternate sort order"
+msgstr ""
+
+msgid "On empty input"
+msgstr "На порожньому полі"
+
+msgid "Show None"
+msgstr "Не позувати нічого"
+
+msgid "Search for either of the two terms with uppercase <strong>OR</strong>. For example, <strong>cats OR dogs</strong>."
+msgstr ""
+
+msgid "Display score"
+msgstr "Відображає оцінку"
+
+msgid "Link this field to download the file"
+msgstr ""
+
+msgid "Set the breadcrumb for the term parents"
+msgstr ""
+
+msgid "If selected, the breadcrumb trail will include all parent terms, each one linking to this view. Note that this only works if just one term was received."
+msgstr ""
+
+msgid "The depth will match nodes tagged with terms in the hierarchy. For example, if you have the term \"fruit\" and a child term \"apple\", with a depth of 1 (or higher) then filtering for the term \"fruit\" will get nodes that are tagged with \"apple\" as well as \"fruit\". If negative, the reverse is true; searching for \"apple\" will also pick up nodes tagged with \"fruit\" if depth is -1 (or lower)."
+msgstr ""
+
+msgid "Allow multiple terms per argument"
+msgstr "Дозволити багато термінів на аргумент"
+
+msgid "If selected, users can enter multiple arguments in the form of 1+2+3. Due to the number of JOINs it would require, AND will be treated as OR with this argument."
+msgstr ""
+
+msgid "No vocabulary"
+msgstr "Без словника"
+
+msgid "Link this field to its taxonomy term page"
+msgstr ""
+
+msgid "Link this field to its term page"
+msgstr ""
+
+msgid "Limit terms by vocabulary"
+msgstr "Ліміт термінів словника"
+
+msgid "Select which vocabulary to show terms for in the regular options."
+msgstr ""
+
+msgid "Dropdown"
+msgstr "Випадання"
+
+msgid "Show hierarchy in dropdown"
+msgstr ""
+
+msgid "An invalid vocabulary is selected. Please change it in the options."
+msgstr ""
+
+msgid "Select terms from vocabulary @voc"
+msgstr ""
+
+msgid "Select terms"
+msgstr "Вибір термінів"
+
+msgid "Unable to find term: @terms"
+msgid_plural "Unable to find terms: @terms"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+msgid "If you wish to validate for specific vocabularies, check them; if none are checked, all terms will pass."
+msgstr ""
+
+msgid "Term IDs separated by , or +"
+msgstr ""
+
+msgid "Term name or synonym"
+msgstr ""
+
+msgid "Term name/synonym converted to Term ID"
+msgstr ""
+
+msgid "Select the form of this argument; if using term name, it is generally more efficient to convert it to a term ID and use Taxonomy: Term ID rather than Taxonomy: Term Name\" as an argument."
+msgstr ""
+
+msgid "Transform dashes in URL to spaces in term name arguments"
+msgstr ""
+
+msgid "Include untranslated nodes"
+msgstr ""
+
+msgid "Current language"
+msgstr "Теперішня мова"
+
+msgid "Translation option"
+msgstr "Параметри перекладу"
+
+msgid "The translation options allows you to select which translation or translations in a translation set join on. Select \"Current language\" or \"Default language\" to join on the translation in the current or default language respectively. Select a specific language to join on a translation in that language. If you select \"All\", each translation will create a new row, which may appear to cause duplicates."
+msgstr ""
+
+msgid "To the user"
+msgstr "До користувача"
+
+msgid "With a mailto:"
+msgstr "З mailto:"
+
+msgid "Is the logged in user"
+msgstr "Залоґований користувач"
+
+msgid "Usernames"
+msgstr "Імена користувачів"
+
+msgid "Enter a comma separated list of user names."
+msgstr ""
+
+msgid "Unable to find user: @users"
+msgid_plural "Unable to find users: @users"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+msgid "Also look for a node and use the node author"
+msgstr ""
+
+msgid "Type of user argument to allow"
+msgstr ""
+
+msgid "Only allow numeric UIDs"
+msgstr ""
+
+msgid "Only allow string usernames"
+msgstr ""
+
+msgid "Allow both numeric UIDs and string usernames"
+msgstr ""
+
+msgid "Restrict user based on role"
+msgstr ""
+
+msgid "Restrict to the selected roles"
+msgstr ""
+
+msgid "If no roles are selected, users from any role will be allowed."
+msgstr ""
+
+msgid "Unrestricted"
+msgstr "Необмежено"
+
+msgid "Only users with the selected permission flag will be able to access this display. Note that users with \"access all views\" can see any view, regardless of other permissions."
+msgstr ""
+
+msgid "No role(s) selected"
+msgstr "Жодної ролі(ролей не обрано)"
+
+msgid "Multiple roles"
+msgstr "Багато ролей"
+
+msgid "Only the checked roles will be able to access this display. Note that users with \"access all views\" can see any view, regardless of role."
+msgstr ""
+
+msgid "You must select at least one role if type is \"by role\""
+msgstr ""
+
+msgid "Note: you do not have permission to modify this. If you change the default argument type, this setting will be lost and you will NOT be able to get it back."
+msgstr ""
+
+msgid "PHP argument code"
+msgstr ""
+
+msgid "Enter PHP code that returns a value to use for this argument. Do not use &lt;?php ?&gt;. You must return only a single value for just this argument."
+msgstr ""
+
+msgid "Note: you do not have permission to modify this. If you change the validator, this setting will be lost and you will NOT be able to get it back."
+msgstr ""
+
+msgid "PHP validate code"
+msgstr ""
+
+msgid "Enter PHP code that returns TRUE or FALSE. No return is the same as FALSE, so be SURE to return something if you do not want to declare the argument invalid. Do not use &lt;?php ?&gt;. The argument to validate will be \"$argument\" and the view will be \"$view\". You may change the argument by setting \"$handler->argument\"."
+msgstr ""
+
+msgid "Never cache"
+msgstr ""
+
+msgid "Query results"
+msgstr ""
+
+msgid "The length of time raw query results should be cached."
+msgstr ""
+
+msgid "Rendered output"
+msgstr ""
+
+msgid "The length of time rendered HTML output should be cached."
+msgstr ""
+
+msgid "Broken field"
+msgstr ""
+
+msgid "Change the name of this display."
+msgstr ""
+
+msgid "Change the title that this display will use."
+msgstr ""
+
+msgid "Change the style plugin."
+msgstr "Змінити додаток стилю"
+
+msgid "Row style"
+msgstr "Рядковий стиль"
+
+msgid "Change the row plugin."
+msgstr ""
+
+msgid "Use AJAX"
+msgstr "Використовувати AJAX"
+
+msgid "Change whether or not this display will use AJAX."
+msgstr ""
+
+msgid "Mini"
+msgstr "Міні"
+
+msgid "Change this display's pager setting."
+msgstr ""
+
+msgid "Items per page"
+msgstr "Елементів на сторінку"
+
+msgid "Change how many items to display."
+msgstr ""
+
+msgid "Specify whether this display will provide a \"more\" link."
+msgstr ""
+
+msgid "Display only distinct items, without duplicates."
+msgstr ""
+
+msgid "Specify access control type for this display."
+msgstr ""
+
+msgid "Change settings for this access type."
+msgstr ""
+
+msgid "Specify caching type for this display."
+msgstr ""
+
+msgid "Change settings for this caching type."
+msgstr ""
+
+msgid "Link display"
+msgstr "Відображення посилання"
+
+msgid "Specify which display this display will link to."
+msgstr ""
+
+msgid "Exposed form in block"
+msgstr ""
+
+msgid "Allow the exposed form to appear in a block instead of the view."
+msgstr ""
+
+msgid "Unknown/missing format"
+msgstr ""
+
+msgid "Change this display's !name."
+msgstr ""
+
+msgid "Get information on how to theme this display"
+msgstr ""
+
+msgid "The name of this display"
+msgstr "Ім'я виду"
+
+msgid "This title will appear only in the administrative interface for the View."
+msgstr ""
+
+msgid "The title of this view"
+msgstr ""
+
+msgid "This title will be displayed with the view, wherever titles are normally displayed; i.e, as the page title, block title, etc."
+msgstr ""
+
+msgid "Use AJAX when available to load this view"
+msgstr ""
+
+msgid "If set, this view will use an AJAX mechanism for paging, table sorting and exposed filters. This means the entire page will not refresh. It is not recommended that you use this if this view is the main content of the page as it will prevent deep linking to specific pages, but it is very useful for side content."
+msgstr ""
+
+msgid "Use a pager for this view"
+msgstr "Використовувати розбиття по сторінках для цього виду"
+
+msgid "Full pager"
+msgstr "Повний стиль"
+
+msgid "Mini pager"
+msgstr "Міні стиль"
+
+msgid "Pager element"
+msgstr "Розбиття по сторінках"
+
+msgid "Unless you're experiencing problems with pagers related to this view, you should leave this at 0. If using multiple pagers on one page you may need to set this number to a higher value so as not to conflict within the ?page= array. Large values will add a lot of commas to your URLs, so avoid if possible."
+msgstr ""
+
+msgid "The number of items to display per page. Enter 0 for no limit."
+msgstr ""
+
+msgid "The number of items to skip. For example, if this field is 3, the first 3 items will be skipped and not displayed. Offset can not be used if items to display is 0; instead use a very large number there."
+msgstr ""
+
+msgid "Add a more link to the bottom of the display."
+msgstr ""
+
+msgid "Create more link"
+msgstr "Створити посилання \"далі(ще)\""
+
+msgid "This will add a more link to the bottom of this view, which will link to the page view. If you have more than one page view, the link will point to the display specified in 'Link display' above."
+msgstr ""
+
+msgid "Text to use for the more link."
+msgstr ""
+
+msgid "The text to display for the more link."
+msgstr ""
+
+msgid "This will make the view display only distinct items. If there are multiple identical items, each will be displayed only once. You can use this to try and remove duplicates from a view, though it does not always work. Note that this can slow queries down, so use it with caution."
+msgstr ""
+
+msgid "Access restrictions"
+msgstr "Обмеження доступу"
+
+msgid "You may also adjust the !settings for the currently selected style by clicking on the icon."
+msgstr ""
+
+msgid "Access options"
+msgstr "Параметри доступу"
+
+msgid "Caching options"
+msgstr ""
+
+msgid "Display even if view has no result"
+msgstr ""
+
+msgid "Text to display beneath the view. May contain an explanation or links or whatever you like. Optional."
+msgstr ""
+
+msgid "Text to display if the view has no results. Optional."
+msgstr ""
+
+msgid "How should this view be styled"
+msgstr ""
+
+msgid "If the style you choose has settings, be sure to click the settings button that will appear next to it in the View summary."
+msgstr ""
+
+msgid "Style options"
+msgstr "Параметри стилю"
+
+msgid "Row style options"
+msgstr "Параметри стилю рядка"
+
+msgid "How should each row in this view be styled"
+msgstr ""
+
+msgid "You may also adjust the !settings for the currently selected row style by clicking on the icon."
+msgstr ""
+
+msgid "Which display to use for path"
+msgstr ""
+
+msgid "Which display to use to get this display's path for things like summary links, rss feed links, more links, etc."
+msgstr ""
+
+msgid "Display output"
+msgstr "Відображення виводу"
+
+msgid "Alternative display output"
+msgstr "Альтернативний стиль виду"
+
+msgid "Style output"
+msgstr "Стиль виводу"
+
+msgid "Alternative style"
+msgstr "Альтернативний стиль"
+
+msgid "Row style output"
+msgstr "Стиль виводу - в рядок"
+
+msgid "Alternative row style"
+msgstr "Альтернативний стиль рядка"
+
+msgid "Field @field (ID: @id)"
+msgstr ""
+
+msgid "This section lists all possible templates for the display plugin and for the style plugins, ordered roughly from the least specific to the most specific. The active template for each plugin -- which is the most specific template found on the system -- is highlighted in bold."
+msgstr ""
+
+msgid "Change theme"
+msgstr ""
+
+msgid "Rescan template files"
+msgstr "Перечитати файли шаблона"
+
+msgid "<strong>Important!</strong> When adding, removing, or renaming template files, it is necessary to make Drupal aware of the changes by making it rescan the files on your system. By clicking this button you clear Drupal's theme registry and thereby trigger this rescanning process. The highlighted templates above will then reflect the new state of your system."
+msgstr ""
+
+msgid "Theming information (display)"
+msgstr ""
+
+msgid "Back to !info."
+msgstr "Повернутись до !info"
+
+msgid "theming information"
+msgstr "Інформація для розробки тем"
+
+msgid "This display has no theming information"
+msgstr ""
+
+msgid "This is the default theme template used for this display."
+msgstr ""
+
+msgid "This is an alternative template for this display."
+msgstr ""
+
+msgid "Theming information (style)"
+msgstr ""
+
+msgid "This display has no style theming information"
+msgstr ""
+
+msgid "This is the default theme template used for this style."
+msgstr ""
+
+msgid "This is an alternative template for this style."
+msgstr ""
+
+msgid "Theming information (row style)"
+msgstr ""
+
+msgid "This display has no row style theming information"
+msgstr ""
+
+msgid "This is the default theme template used for this row style."
+msgstr ""
+
+msgid "This is an alternative template for this row style."
+msgstr ""
+
+msgid "Put the exposed form in a block"
+msgstr ""
+
+msgid "If set, any exposed widgets will not appear with this view. Instead, a block will be made available to the Drupal block administration system, and the exposed form will appear there. Note that this block must be enabled manually, Views will not enable it for you."
+msgstr ""
+
+msgid "File found in folder @template-path"
+msgstr ""
+
+msgid "(File not found, in folder @template-path)"
+msgstr ""
+
+msgid "Status: using default values."
+msgstr ""
+
+msgid "Update default display"
+msgstr "Оновити базовий вид"
+
+msgid "Status: using overridden values."
+msgstr ""
+
+msgid "Display \"@display\" uses fields but there are none defined for it or all are excluded."
+msgstr ""
+
+msgid "Display \"@display\" uses a path but the path is undefined."
+msgstr ""
+
+msgid "Display \"@display\" has an invalid style plugin."
+msgstr ""
+
+msgid "Exposed form: @view-@display_id"
+msgstr "Відображена форма: @view-@display_id"
+
+msgid "Attachment settings"
+msgstr "Параметри вкладень"
+
+msgid "Inherit arguments"
+msgstr "Залежність аргументів"
+
+msgid "Inherit exposed filters"
+msgstr "Залежність відображених фільтрів"
+
+msgid "Multiple displays"
+msgstr "Сукупність відображень"
+
+msgid "Should this display inherit its arguments from the parent display to which it is attached?"
+msgstr ""
+
+msgid "Should this display inherit its exposed filter values from the parent display to which it is attached?"
+msgstr ""
+
+msgid "Attach before or after the parent display?"
+msgstr ""
+
+msgid "Select which display or displays this should attach to."
+msgstr ""
+
+msgid "@view: @display"
+msgstr "@view: @display"
+
+msgid "Block admin description"
+msgstr ""
+
+msgid "Block caching type"
+msgstr ""
+
+msgid "This sets the default status for Drupal's built-in block caching method; this requires that caching be turned on in block administration, and be careful because you have little control over when this cache is flushed."
+msgstr ""
+
+msgid "Using the site name"
+msgstr ""
+
+msgid "Use the site name for the title"
+msgstr ""
+
+msgid "The feed icon will be available only to the selected displays."
+msgstr ""
+
+msgid "This view will be displayed by visiting this path on your site. It is recommended that the path be something like \"path/%/%/feed\" or \"path/%/%/rss.xml\", putting one % in the path for each argument you have defined in the view."
+msgstr ""
+
+msgid "No menu"
+msgstr "Без меню"
+
+msgid "Normal: @title"
+msgstr "Нормально: @title"
+
+msgid "Tab: @title"
+msgstr "Закладка: @title"
+
+msgid "Change settings for the parent menu"
+msgstr ""
+
+msgid "The menu path or URL of this view"
+msgstr ""
+
+msgid "This view will be displayed by visiting this path on your site. You may use \"%\" in your URL to represent values that will be used for arguments: For example, \"node/%/feed\"."
+msgstr ""
+
+msgid "Menu item entry"
+msgstr "Пункт елемента меню"
+
+msgid "No menu entry"
+msgstr "Без пункта меню"
+
+msgid "Normal menu entry"
+msgstr "Нормальний пункт меню"
+
+msgid "Menu tab"
+msgstr "Закладки меню"
+
+msgid "Default menu tab"
+msgstr "Базові закладки меню"
+
+msgid "If set to normal or tab, enter the text to use for the menu item."
+msgstr ""
+
+msgid "If set to normal or tab, enter the text to use for the menu item's description."
+msgstr ""
+
+msgid "Warning: Changing this item's menu will not work reliably in Drupal 6.4 or earlier. Please upgrade your copy of Drupal at !url."
+msgstr ""
+
+msgid "Insert item into an available menu."
+msgstr ""
+
+msgid "Menu selection requires the activation of menu module."
+msgstr ""
+
+msgid "The lower the weight the higher/further left it will appear."
+msgstr ""
+
+msgid "Default tab options"
+msgstr "Базові параметри закладки"
+
+msgid "When providing a menu item as a tab, Drupal needs to know what the parent menu item of that tab will be. Sometimes the parent will already exist, but other times you will need to have one created. The path of a parent item will always be the same path with the last part left off. i.e, if the path to this view is <em>foo/bar/baz</em>, the parent path would be <em>foo/bar</em>."
+msgstr ""
+
+msgid "Already exists"
+msgstr "Вже наявне"
+
+msgid "If creating a parent menu item, enter the title of the item."
+msgstr ""
+
+msgid "If creating a parent menu item, enter the description of the item."
+msgstr ""
+
+msgid "If the parent menu item is a tab, enter the weight of the tab. The lower the number, the more to the left it will be."
+msgstr ""
+
+msgid "\"$arg\" is no longer supported. Use % instead."
+msgstr ""
+
+msgid "\"%\" may not be used for the first segment of a path."
+msgstr ""
+
+msgid "Views cannot create normal menu items for paths with a % in them."
+msgstr ""
+
+msgid "A display whose path ends with a % cannot be a tab."
+msgstr ""
+
+msgid "Title is required for this menu type."
+msgstr ""
+
+msgid "Display @display is set to use a menu but the menu title is not set."
+msgstr ""
+
+msgid "Display @display is set to use a parent menu but the parent menu title is not set."
+msgstr ""
+
+msgid "Inline fields"
+msgstr "Поля без розділювачів"
+
+msgid "Inline fields will be displayed next to each other rather than one after another."
+msgstr ""
+
+msgid "The separator may be placed between inline fields to keep them from squishing up next to each other. You can use HTML in this field."
+msgstr ""
+
+msgid "Grouping field"
+msgstr "Групуюче поле"
+
+msgid "You may optionally specify a field by which to group the records. Leave blank to not group."
+msgstr ""
+
+msgid "Style @style requires a row style but the row plugin is invalid."
+msgstr ""
+
+msgid "Horizontal alignment will place items starting in the upper left and moving right. Vertical alignment will place items starting in the upper left and moving down."
+msgstr ""
+
+msgid "Use the site mission for the description"
+msgstr ""
+
+msgid "RSS description"
+msgstr "Опис RSS"
+
+msgid "This will appear in the RSS feed itself."
+msgstr ""
+
+msgid "Display record count with link"
+msgstr ""
+
+msgid "Override number of items to display"
+msgstr ""
+
+msgid "Display items inline"
+msgstr "Відображення елементів без розділювачів"
+
+msgid "You need at least one field before you can configure your table settings"
+msgstr ""
+
+msgid "Override normal sorting if click sorting is used"
+msgstr ""
+
+msgid "Enable Drupal style \"sticky\" table headers (Javascript)"
+msgstr ""
+
+msgid "(Sticky header effects will not be active for preview below, only on live output.)"
+msgstr ""
+
+msgid "If a default sort order is selected, what order should it use by default."
+msgstr ""
+
+msgid "Place fields into columns; you may combine multiple fields into the same column. If you do, the separator in the column specified will be used to separate the fields. Check the sortable box to make that column click sortable, and check the default sort radio to determine which column will be sorted by default, if any. You may control column order and field labels in the fields section."
+msgstr ""
+
+msgid "The style selected does not utilize fields."
+msgstr ""
+
+msgid "None defined"
+msgstr "Не зазначено"
+
+msgid "This view is being edited by user !user, and is therefore locked from editing by others. This lock is !age old. Click here to <a href=\"!break\">break this lock</a>."
+msgstr ""
+
+msgid "New view"
+msgstr "Новий вид"
+
+msgid "Changed view"
+msgstr "Змінений вид"
+
+msgid "View %name, displaying items of type <strong>@base</strong>."
+msgstr ""
+
+msgid "Live preview"
+msgstr "Швидкий вид"
+
+msgid "<em>@type</em> @base view: <strong>@view</strong>"
+msgstr "<em>@type</em> @base view: <strong>@view</strong>"
+
+msgid "Title: @title"
+msgstr "Заголовок: @title"
+
+msgid "‹‹"
+msgstr "‹‹"
+
+msgid "››"
+msgstr "››"
+
+msgid "@current of @max"
+msgstr ""
+
+msgid "There are no views to be exported at this time."
+msgstr "Наразі відсутні види для експортування"
+
+msgid "Show only these tags"
+msgstr "Показувати лише ці теги"
+
+msgid "name = @module Export Module\n"
+msgstr ""
+
+msgid "description = Exports some views of @module\n"
+msgstr ""
+
+msgid "Put this in @module.info in your modules/@module directory"
+msgstr ""
+
+msgid "Put this in @module.module in your modules/@module directory"
+msgstr ""
+
+msgid "Put this in @module.views_default.inc in your modules/@module directory or modules/@module/includes directory"
+msgstr ""
+
+msgid "use views exporter"
+msgstr "використання експорту видів"
+
+msgid "Bulk export"
+msgstr "Масовий експорт"
+
+msgid "Views exporter"
+msgstr "Експорт видів"
+
+msgid "Allows exporting multiple views at once."
+msgstr ""
+

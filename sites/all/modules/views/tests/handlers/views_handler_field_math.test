@@ -1,0 +1,38 @@
+<?php
+// $Id: views_handler_field_math.test,v 1.1.2.1 2010/12/24 14:05:39 dereine Exp $
+
+class ViewsHandlerFieldMath extends ViewsSqlTest {
+  public static function getInfo() {
+    return array(
+      'name' => 'Field: Math',
+      'description' => 'Test the core views_handler_field_math handler.',
+      'group' => 'Views Handlers',
+    );
+  }
+
+  function viewsData() {
+    $data = parent::viewsData();
+    return $data;
+  }
+
+  public function testFieldCustom() {
+    $view = $this->getBasicView();
+
+    // Alter the text of the field to a random string.
+    $rand1 = rand(0, 100);
+    $rand2 = rand(0, 100);
+    $view->display['default']->handler->override_option('fields', array(
+      'expression' => array(
+        'id' => 'expression',
+        'table' => 'views',
+        'field' => 'expression',
+        'relationship' => 'none',
+        'expression' => $rand1 . ' + ' . $rand2,
+      ),
+    ));
+
+    $this->executeView($view);
+
+    $this->assertEqual($rand1 + $rand2, $view->field['expression']->render($view->result[0]));
+  }
+}
