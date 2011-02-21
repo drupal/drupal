@@ -1,0 +1,55 @@
+<!-- $Id: plugins-api.html,v 1.3 2009/04/17 19:16:21 merlinofchaos Exp $ -->
+APIs are a form of plugins that are tightly associated with a module. Instead of a module providing any number of plugins, each module provides only one file for an API and this file can contain hooks that the module should invoke.
+
+Modules support this API by implementing hook_ctools_plugin_api($module, $api). If they support the API, they return a packet of data:
+<pre>
+function mymodule_ctools_plugin_api($module, $api) {
+  if ($module == 'some module' && $api = 'some api') {
+    return array(
+      'version' => The minimum API version this system supports. If this API version is incompatible then the .inc file will not be loaded.
+      'path' => Where to find the file. Optional; if not specified it will be the module's directory.
+      'file' => an alternative version of the filename. If not specified it will be $module.$api.inc
+    );
+  }
+}
+</pre>
+
+This implementation must be in the .module file.
+
+Modules utilizing this can invole ctools_plugin_api_include() in order to ensure all modules that support the API will have their files loaded as necessary. It's usually easiest to create a small helper function like this:
+
+<pre>
+define('MYMODULE_MINIMUM_VERSION', 1);
+define('MYMODULE_VERSION', 1);
+
+function mymodule_include_api() {
+  ctools_include('plugins');
+  return ctools_plugin_api_include('mymodule', 'myapi', MYMODULE_MINIMUM_VERSION, MYMODULE_VERSION);
+}
+</pre>
+
+Using a define will ensure your use of version numbers is consistent and easy to update when you make API changes. You can then use the usual module_invoke type commands:
+
+<pre>
+mymodule_include_api();
+module_invoke('myhook', $data);
+</pre>
+
+If you need to pass references, this construct is standard:
+
+<pre>
+foreach (mymodule_include_api() as $module => $info) {
+  $function = $module . '_hookname';
+  // Just because they implement the API and include a file does not guarantee they implemented
+  // a hook function!
+  if (!function_exists($function)) {
+    continue;
+  }
+
+  // Typically array_merge() is used below if data is returned.
+  $result = $function($data1, $data2, $data3);
+}
+</pre>
+
+TODO: There needs to be a way to check API version without including anything, as a module may simply
+provide normal plugins and versioning could still matter.

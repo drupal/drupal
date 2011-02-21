@@ -1,0 +1,6 @@
+<?php
+// $Id: views_test.install,v 1.1.2.3 2010/05/24 09:13:58 dereine Exp $
+
+function views_test_schema() {
+  return variable_get('views_test_schema', array());
+}

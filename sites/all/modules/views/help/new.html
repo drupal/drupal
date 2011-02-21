@@ -1,0 +1,114 @@
+<!-- $Id: new.html,v 1.5.6.1 2010/10/12 21:35:03 merlinofchaos Exp $ -->
+Views 2 is the newest major release of Views and it is specifically coded for Drupal 6. Views 2 retains all of the core functionality of Views 1, together with a completely revamped user interface and a large set of new features which greatly expand upon the original feature-set of Views 1. This document is a side-by-side comparison of Views 1 versus Views 2 from a user's perspective, detailing the UI changes, some new ways to perform old tasks, the cool new features of Views 2 and how these features can be used to address some of the shortcomings of Views 1.
+
+<h2>Admin interface</h2>
+The first thing that pops out after you install Views 2 is the radically different admin interface:
+<div class="help-box" style="text-align:center">
+<a href="path:images/views2-admin-large.png"><img src="path:images/views2-admin.png" /></a>
+<em>Views 2 admin interface</em>
+</div>
+
+compared to the old comfy Views 1 interface:
+
+<div class="help-box" style="text-align:center">
+<a href="path:images/views1-admin-large.png"><img src="path:images/views1-admin.png" /></a>
+<em>Views 1 admin interface</em>
+</div>
+
+The new admin interface performs the same functions as the old -- listing all the views in the system, providing links to add or import views and a link to Views Tools -- but has been compacted, with each view displayed as a paragraph style-row compared to the table of Views 1 and set of filters on top to ease locating views among a large list.
+
+Context-help is available by clicking the small blue question-mark icon. Context-help in Views 2 is provided by the <a href="http://drupal.org/project/advanced_help">Advanced Help</a> module, so make sure to install that together with installing Views 2. The small blue help icons will be available in various parts of the Views UI. In particular, look for them as part of the description of a <strong>display</strong>, when setting <strong>style</strong> options, and in various editing sections such as <strong>path</strong>, <strong>menu</strong> and the like.
+
+Several new attributes of each view are visible in the filter header:
+<ol>
+<li><strong>Tag</strong> - This is just another label for organizing and sorting views. Tags can be any text. Views that are provided by modules will often be tagged together to make it easy to find them. Tags are also added to your template suggestions, so take care what you set here. For example setting the tag <i>Page</i> will give all your views the Page template.</li>
+<li><strong>Display</strong> - In Views 1 each view query was tied to its display; in other words your fields, sorts, filters, and arguments could only be displayed in the single page or block display provided in the view definition. In Views 2, view displays have been decoupled from view queries - it is now possible to have multiple page, block, and feed displays from a single view. More on view displays later. </li>
+<li><strong>Type</strong> - Views 2 view types are radically different from Views 1 types. Views 1 types basically defined how the node list displays were <i>styled</i> - you had Full Nodes, Teaser List, Table View, and so on. In Views 2 view display styles have been broken out into the separate <i>Style</i> attribute. View types now refer to the primary table on which information for the query will be retrieved which controls what arguments, fields, sort criteria and filters are available. Views 2 view types are discussed later.
+</li>
+</ol>
+
+<h2>Adding a view</h2>
+So let's jump in and add a view. For this example, we're going to create a <strong>user</strong> view, which will display a list of users.
+<div class="help-box" style="text-align:center">
+<a href="path:images/views2-addaview-large.png"><img src="path:images/views2-addaview.png" /></a>
+<em>Adding a view</em>
+</div>
+
+The first step in adding a view is simply entering a name (only alphanumeric characters, no spaces) a description, tag, and the view type. To get the user view, we selected the <strong>User</strong> radio button.
+
+<div class="help-box" style="text-align:center">
+<a href="path:images/views2-newview-large.png"><img src="path:images/views2-newview.png" /></a>
+<em>Configuring the new view</em>
+</div>
+
+This might be the 2nd whoa moment as the interface here is also completely revamped from Views 1.x. The best way to summarize is to say all the pieces from the Views 1.x interface are still there...just in different places. Fields, arguments, sort critera and filters are all still there there, just in new AJAXY-flavours.
+
+Let's start by adding some fields:
+
+<div class="help-box" style="text-align:center">
+<a href="path:images/views2-addfields-large.png"><img src="path:images/views2-addfields.png" /></a>
+<em>Adding fields</em>
+</div>
+
+Clicking on the [+] icon next to the word Fields unfurls a section beneath the view information with all the available fields grouped by Comment, File, Node, Node revision, Taxonomy and User, and probably a few others. This is a general paradigm for the Views 2 interface -- clicking on a widget or link unfurls a section beneath the view information with the relevant interface. Usually, what is being edited will be hilited in yellow, as well.
+
+When adding items, you can use the Groups drop-down box to show only a subset of the fields available according to the above groups, or select All to see all fields available, which is what was selected when the section unfurled. For our example, we're selecting the 'User' group and adding the <strong>User: E-mail</strong>, <strong>User: Name</strong> and <strong>User: Picture</strong> fields.
+
+<div class="help-box" style="text-align:center">
+<a href="path:images/views2-addfieldsajax-large.png"><img src="path:images/views2-addfieldsajax.png" /></a>
+<em>Adding fields</em>
+</div>
+
+Once we add our fields they show up in the Fields section of the interface. We will be walked through each field we added, so keep clicking <strong>update</strong>, even if you don't make changes to the field and you will see the next one.
+
+The fields we added can be rearranged by clicking the up/down icon, right next to the add icon we used earlier. We can also remove a field using the same interface.
+
+<div class="help-box" style="text-align:center">
+<a href="path:images/views2-rearrangefields-large.png"><img src="path:images/views2-rearrangefields.png" /></a>
+<em>Rearranging fields</em>
+</div>
+
+From here, the fields can be dragged up and down by grabbing the little drag handle on the left and moving them where you like. Making a change to any part of the view by clicking update usually triggers a refresh of the view preview which is conveniently located right below the main interface.
+
+<div class="help-box" style="text-align:center">
+<a href="path:images/views2-fieldspreview-large.png"><img src="path:images/views2-fieldspreview.png" /></a>
+<em>Views preview</em>
+</div>
+
+Now that we have some fields set up we can turn our attention to Basic Settings for the view.
+
+It's important to note that all the interface elements pertain to the current <i>Display</i> selected for the view. As mentioned before a view can have multiple displays. The first time you create a view you'll be manipulating the <i>Default</i> display. You can add displays using the Add Display button, whose Basic Settings are completely different from each other; this lets you have as many displays of a view as you would like all sharing items such as Sort Criteria, Filters and Arguments but different display settings like Title, Style, Fields, and Pager settings. Also, any display you add automatically inherits display settings from the default display initially, so you can keep a core of common settings in your default display and add additional settings for every other display.
+
+<div class="help-box" style="text-align:center">
+<a href="path:images/views2-adddisplay-large.png"><img src="path:images/views2-adddisplay.png" /></a>
+<em>Adding a <strong>Page</strong> display </em>
+</div>
+Let's stick with the Default display and twiddle some settings. We can set the <i>Title</i> to "User View 1" and the <i>Style</i> to Table. As mentioned earlier, view styles in Views 2 correspond more to view types in Views 1 (remember, List, Table, Teasers, Full nodes).
+
+<div class="help-box" style="text-align:center">
+<a href="path:images/views1-changeviewtype-large.png"><img src="path:images/views1-changeviewtype.png" /></a>
+<em>Selecting a Views 1 View Type</em>
+</div>
+
+In Views 2, view <i>styles</i> control how a view display looks. These styles are significantly different from the Types in Views 1; in particular, types have been 'broken up'; there is now the <em>style</em> as well as the <em>row style</em> which focus on different parts of the output.
+
+<div class="help-box" style="text-align:center">
+<a href="path:images/style-breakdown-large.png"><img src="path:images/style-breakdown.png" /></a>
+<em>A breakdown of View output</em>
+</div>
+
+We change the style by clicking on the current style on the left hand side of the View information area.
+
+<div class="help-box" style="text-align:center">
+<a href="path:images/views2-changedisplaystyle-large.png"><img src="path:images/views2-changedisplaystyle.png" /></a>
+<em>Selecting a Views 2 Display Style</em>
+</div>
+
+We're given the style options of <strong>Grid</strong>, <strong>List</strong>, <strong>Table</strong> and <strong>Unformatted</strong>. Additional display styles can be added by modules which have Views <i>style plugins</i>. Choosing a style reveals a "settings" button which you can click to configure the style you've chosen. In the shot below we've selected and are configuring the Table style, which we're using to produce a more compact output than we had earlier.
+
+<div class="help-box" style="text-align:center">
+<a href="path:images/views2-tablestyle-large.png"><img src="path:images/views2-tablestyle.png" /></a>
+<em>Selecting and configuring the table style</em>
+</div>
+
+... TODO: Finish this document ...

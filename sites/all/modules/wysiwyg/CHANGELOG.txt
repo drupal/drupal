@@ -1,0 +1,309 @@
+// $Id: CHANGELOG.txt,v 1.243 2011/01/06 02:08:10 sun Exp $
+
+Wysiwyg 7.x-2.x, xxxx-xx-xx
+---------------------------
+
+
+Wysiwyg 7.x-2.0, 2010-01-06
+---------------------------
+#950216 by TwoD, sun: Fixed missing editor for a single text format.
+#1007630 by aspilicious: Removed files[] declarations from .info file.
+#612954 by sun: Reverted 'buttons' change in profile configuration form.
+#975546 by TwoD, sun: Fixed markItUp CSS loaded with wrong weight.
+#659428 by TwoD, sun: Fixed editor is attached to disabled text format widgets.
+#975490 by Gábor Hojtsy: Updated for 'group' API change in drupal_add_js().
+#974604 by CrookedNumber, Gábor Hojtsy: Fixed theme CSS not loaded in editors.
+#931374 by TwoD, ksenzee: Updated for text format schema change.
+#826914 by catch, sun: Added database cache for wysiwyg_profile_load().
+#941230 by sun: Fixed missing Configuration link on Modules page.
+#739558 by sun, TwoD: Updated for new #type text_format.
+#612954 by TwoD: Fixed broken editor settings.
+#585932 by sun: Ported to Drupal 7.
+
+
+Wysiwyg 6.x-2.x, xxxx-xx-xx
+---------------------------
+by sun: Fixed coding style in wysiwyg_schema().
+#964978 by sun, TwoD: Added hook_wysiwyg_editor_settings_alter() documentation.
+#775972 by TwoD, Agileware, sun: Fixed broken user default status preferences.
+#1007066 by TwoD, penguin25: Fixed CKEditor ignores resizable option.
+#613944 by TwoD, sun: Fixed data.node not always present in CKEditor.
+#1009880 by TwoD: Fixed selection handling broken in CKEditor.
+
+
+Wysiwyg 6.x-2.2, 2010-12-20
+---------------------------
+#613944 by TwoD, sun: Fixed data.node not available in CKEditor.
+#748888 by TwoD, sun: Fixed isNode() not called in CKEditor.
+#767550 by TwoD, sun, ungeek: Fixed invalid API docs and logic for
+  $plugin['filename'].
+#988200 by sun: Changed static language list to ISO 639 defaults of Drupal core.
+#973808 by David_Rothstein: Fixed CKEditor incorrectly formatting the <br> tag.
+#773856 by Roi Danton: Added CSS path and file documentation.
+#735186 by TwoD, torbs: Fixed missing Norwegian language code.
+#678580 by TwoD, sun: Fixed Drupal.wysiwygAttachToggleLink breaks click events.
+#497654 by TwoD: Fixed Drupal plugins disabled in FCKeditor/WebKit browsers.
+#735624 by sun: Fixed enabling one button removes default editor toolbar.
+#755610 by sun, TwoD, BrightBold: Fixed white-space in block formats setting
+  breaks editors.
+#713942 by TwoD, sun: Fixed jQuery closure breaks OpenWYSIWYG.
+#679056 by sun, TwoD: Fixed pressing enter in autocomplete detaches editors.
+#80170 by sun: Changed dialog/plugin API for Inline API compatibility.
+#803466 by hotspoons: Fixed TinyMCE image map support in advimage plugin.
+#922436 by TwoD: Fixed Whizzywig Uncaught TypeError in Chrome.
+#922520 by TwoD: Fixed Whizzywig is not detached properly.
+#907186 by TwoD: Fixed Whizzywig v60+ compatibility.
+#765292 by TwoD: Added TinyMCE WordCount plugin.
+#768726 by TwoD: Added TinyMCE AutoResize plugin.
+#781086 by TwoD: Fixed TinyMCE plugin options merged wrongly.
+#767628 by TwoD: Fixed 'The version of markItUp could not be detected' error.
+#651490 by TwoD: Fixed Whizzywig width.
+#715228 by TwoD: Fixed TinyMCE image popups not launching for existing images.
+#606952 by TwoD: Fixed inserting content in fullscreen TinyMCE.
+#593008 by TwoD: Fixed third-party scripts breaking Wysiwyg.
+#695398 by RichieB, Cl1mh4224rd, mcpuddin: Fixed TinyMCE 3.3.9.1 detection.
+#737318 by dboune: Fixed CKEditor default skin depends on filesystem order.
+#775608 by TwoD: Fixed FCKEditor crashes IE on save.
+#824710 by TwoD: CKEditor not disabled upon enabling.
+#752516 by nquocbao, sun: Fixed openwysiwyg version callback.
+#753536 by TwoD: Fixed version detection for Whizzywig.
+#752516 by nquocbao, sun: Fixed file stream warnings in version callbacks.
+
+
+Wysiwyg 6.x-2.1, 2010-03-08
+---------------------------
+#628110 by quicksketch, sun, markus_petrux: Added editor settings alter hook.
+#689218 by wwalc, TwoD, sun: Improved support for CKEditor.
+#695398 by TwoD: Updated support for TinyMCE 3.3.
+#613096 by Scott Reynolds: Fixed no editor appearing for user signature field.
+#696040 by Dave Reid: Fixed missing Cancel link on profile form.
+#594322 by TwoD: Added insert method for NicEdit.
+#659200 by TwoD: Fixed YUI Editor content lost in IE.
+#594928 by ericbellot, TwoD, sun: Fixed 'attribs' button missing in TinyMCE.
+#557090 by TwoD: Fixed Whizzywig 56 instance not removed on detach().
+#667848 by TwoD, kaakuu: Fixed FCKeditor is not properly detached in IE.
+#695768 by sun: Fixed #resizable removed when no editor profiles are loaded.
+#631494 by TwoD: Fixed multi-site libraries directory failure for WYMeditor.
+#660080 by TwoD: Fixed Notice: Undefined offset.
+#613922 by TwoD, sun: Fixed PHP warning when saving profiles.
+#582298 by dereine: Added auto-paste from Word detection for FCKeditor.
+#597852 by sun: Fixed missing Turkish in language list.
+#620176 by sun: Fixed missing Ukrainian in language list.
+#613480 by TwoD, Dave Reid: Fixed PHP 5.3 compatibility.
+#462146 by TwoD: Cleaned up CKEditor implementation.
+#380586 by SimonEast: Updated YUI editor: Version detection not working.
+#610132 by TwoD: Updated CKEditor 3.0.1, stylesheets and version check.
+#620858 by quicksketch: Fixed focus event not firing for CKeditor.
+#585932 by sun: Synced various clean-ups from 7.x.
+#489156 by sun: Removed orphan global 'showToggle' JS setting.
+#462146 by sun, Niels Hackius: Fixed version detection for CKeditor.
+#545210 by sun: Fixed default value for editor toggle link.
+#372826 by Roi Danton, sun: Added Wysiwyg API developer documentation.
+by sun: Fixed PHP notice.
+#514912 by Likeless, sun: Added plugin/button handling for WYMeditor.
+#538996 by darktygur: Fixed 404 errors for non-existing theme CSS files.
+#509570 by Rob Loach, sun: Added forced detaching of editor upon form submit.
+#526644 by Darren Oh: Fixed broken editor theme validation.
+#490914 by sun: Fixed JS/CSS not updated after update with caching enabled.
+#522440 by authentictech, sun: UX: Fixed user interface for Wysiwyg profiles.
+#507608 by jfh: Added WYMeditor instance API methods.
+by sun: Fixed form_build_id not removed from serialized profile settings.
+#496744 by TwoD: Fixed FCKeditor: "Apply source formatting" not working.
+#462146 by TwoD, et al: Added support for CKeditor.
+#490270 by sun: Fixed openWYSIWYG displays no buttons by default.
+#490266 by sun: Fixed JS error when wysiwyg profile contains no buttons.
+#400482 by sun: Fixed editor.instance.prepareContent() breaks editor's native
+  markup handling. Drupal plugin authors should add the CSS class
+  'drupal-content' to prevent the editor selection to activate internal editor
+  buttons.
+#394068 by kswan: Fixed missing button icons in markItUp.
+
+
+Wysiwyg 6.x-2.0, 2009-06-10
+---------------------------
+#474908 by TwoD: Fixed Teaser break causing error in IE8.
+by sun: Major code clean-up.
+#331089 by wwalc: Fixed FCKeditor toolbar buttons do not wrap.
+#407014 by sun: Fixed/removed migration from other editor integration modules.
+#485264 by sun: Changed installation instructions to be more concise.
+#479514 by sun: Fixed native plugin loading for TinyMCE (follow-up).
+#434590 by sun: Fixed path admin/settings/wysiwyg not found.
+#479514 by TwoD, sun: Added native plugin support for FCKeditor.
+#341054 by sun: Fixed toggle link configuration setting not working.
+by sun: Fixed markItUp button icons are not displayed.
+by sun: Added openWYSIWYG editor support.
+#362137 by jfh, sun: Fixed WYMeditor broken when JS/CSS aggregation is enabled.
+#328252 by sun: Added TinyMCE plugin BBCode for 3.x.
+#429926 by TwoD, sun: Fixed TinyMCE broken due to renamed Flash/Media plugin.
+#342864 by davexoxide, sun: Added YUI editor support.
+#332139 by sun: Fixed editor must not be changed when profile is configured.
+#362137 by jfh: Added WYMeditor support.
+#470928 by jfh, sun: Fixed Drupal.wysiwyg.clone turns arrays into objects.
+#445826 by TwoD: Fixed FCKeditor: Drupal.wysiwyg.activeId not updated.
+#478324 by jeffschuler: Fixed typo in profile configuration form.
+#373542 by sun: Fixed encoding of HTML entities for certain languages.
+#320562 by sun: Changed location for external editor libraries.
+#449134 by sun: Fixed stylesheets of theme missing in node form previews.
+
+
+Wysiwyg 6.x-2.0-ALPHA1, 2009-05-17
+----------------------------------
+#403728 by jfduchesneau: Fixed none.js breaks if textarea.js is not loaded.
+#454992 by sun: Fixed drupal_get_js() query string 'q' breaks plugin loading.
+#419696 by sun: Fixed native plugins plugins are not loaded for all profiles.
+#414768 by sun: Fixed Wysiwyg API not working in Konqueror.
+#293803 by sun: Fixed "Show summary in full view" checkbox not displayed.
+#416742 by sun: Fixed type casting of $profile in profile configuration form.
+#404532 by TwoD: Fixed Teaser break comment stripped in IE.
+#380698 by TwoD: Added Drupal plugin support for FCKeditor.
+#380698 by TwoD, sun: Added Drupal plugin support for FCKeditor (part I).
+#398848 by sun: Added support for TinyMCE 3.1.
+#394068 by StephaneC: markItUp: Fixed icons not displayed due to #385736.
+#385974 by sun: Fixed form element description for CSS path (for Define CSS).
+#390460 by sun: Fixed broken plugin loading due to #359626.
+#385736 by sun: Fixed markItUp: Wrong editor library location.
+#308912 by sun: Fixed TinyMCE: Buttons do not wrap in IE/Chrome.
+#380586 by sun, hass: YUI editor: Fixed version detection.
+#390224 by hass: Fixed JS error YAHOO.widget.Editor is not a constructor.
+#359626 by sun: Fixed external/Drupal plugins are not loaded for all profiles.
+#369115 by sun: Fixed TinyMCE's URL conversion magic breaks some input filters.
+#376400 by TwoD: Fixed bad grammar in help text on profile overview page.
+#367632 by sun: Fixed $this and i JavaScript variables defined in global scope.
+#319363 by sun: Fixed missing spacer.gif for Teaser break plugin.
+#373672 by chawl: Added (native) xhtmlextras plugin for TinyMCE 3.
+#287025 by sun: Fixed native editor plugin options for TinyMCE and FCKeditor.
+#373542 by sun: Fixed TinyMCE: entity_encoding 'raw' removes HTML entities.
+#372806 by sun: Fixed block format configuration form element description.
+#370277 by sun: Fixed "Uncaught SyntaxError: Unexpected token" in IE/Chrome.
+#367632 by sun: Fixed "Unexpected identifier, string or number" error in IE.
+#367632 by sun: Fixed invalid JavaScript syntax.
+#319363 by sun: Follow-up: Synced 1.x with 2.x where possible.
+#319363 by sun, quicksketch: Rewrote editor plugin API.  The new plugin API
+  allows Drupal modules to expose editor plugins for ANY editor without
+  implementing editor-specific code.  Major milestone for better content-editing
+  in Drupal.
+#364782 by sun: Fixed theme stylesheets not properly loaded.
+#352938 by sun: Fixed JS error (blank page) in IE when plugins are loaded.
+#331089 by wwalc, sun: Added custom toolbar configuration support for FCKeditor.
+#331089 by sun: Fixed PHP notice for 'user_choose'; FCKeditor clean-up.
+#344230 by wwalc: Fixed wrong editor base path setting for FCKeditor.
+#361289 by sun: Fixed CSS files do not need to use media 'screen'.
+#360696 by sun: Fixed IE does not trigger onChange event when selecting an input
+  format.
+#342376 by sun: Extended API to allow "preprocess" JavaScript option for some
+  editors.
+#352295 by sun: Added markItUp editor support.
+#352703 by sun: Fixed wrong default configuration options for TinyMCE 3.2.1+.
+#348317 by sun: Fixed TinyMCE's extended_valid_elements for advlink/advimage
+  plugin.
+#348986 by sun: Added CSS class for toggle link container.
+#342864 by davexoxide, sun: Added YUI editor support.
+#343217 by sun: Fixed improperly capitalized library script name for nicEdit.
+#341267 by sun: Fixed improper test for internal editor plugins.
+#341996 by sun: Fixed editor cannot be re-enabled with one input format only.
+#341267 by sun: Added support for extensions that do not need to be loaded.
+
+
+Wysiwyg 6.x-0.5, 2008-12-01
+---------------------------
+#340758 by sun: Changed installation instructions to be displayed permanently.
+#322657 by sun: Fixed "Enabled by default" option does not work when disabled.
+#328052 by sun: Fixed switching input formats leads to wrong editor/state.
+#337569 by sun: Fixed different profiles for same editor are not respected.
+#340195 by sun: Fixed #after_build function not invoked on all forms.
+#333521 by sun: Fixed TinyMCE version detection to look at the actual script.
+#329657 by svendecabooter, sun: Added Whizzywig support.
+#333521 by sun: Fixed TinyMCE version detection docs.
+#327100 by sun: Changed access permission for settings page to 'administer
+  filters' to prevent incomplete updates.
+#322731 by sun: Fixed improper use of t() in module install file.
+#329410 by sun: Fixed editor not loaded if there is only one input format.
+#324366 by sun: Fixed "Illegal offset type" error on custom content-types.
+#328948 by sun: Fixed PHP notices when editors are assigned, but not configured.
+#327710 by sun: Fixed nicEdit version could not be detected.
+#328116 by sun: Added Safari plugin for TinyMCE 3.
+#327710 by sun: Added nicEdit support.
+#323855 by sun: Increased supported version of jWYSIWYG to 0.5.
+#323671 by sun: Fixed TinyMCE editor not resized when browser is resized.
+#327152 by sun: Fixed breadcrumbs for profile configuration pages.
+#323855 by Rob Loach, sun: Added jWYSIWYG support.
+#327100 by sun: Associate editors/profiles with input formats. Major milestone.
+#325980 by markus_petrux: Added Spanish/Catalan translation for Break plugin.
+#323795 by sun: Removed obsolete Wysiwyg Editor module files.
+#308912 by sun: Fixed alignment of editor buttons in TinyMCE 3.
+#316507 by sun: Fixed TinyMCE 3 not detached properly from AJAX contents.
+#320559 by markus_petrux, sun: Added confirmation form to delete profiles.
+
+
+Wysiwyg 6.x-0.4, 2008-10-14
+---------------------------
+#321216 by sun: Replaced Wysiwyg Editor module with Wysiwyg module.
+#321086 by sun: Fixed (old-style) Teaser break plugin breaks TinyMCE 3.
+#316507 by sun: Code clean-up; editor settings should be cloned for init, too.
+#282717 by sun: Fixed FCKeditor default settings while FCKeditor maintainers get
+  up and running.
+#319363 by sun: Changed JS settings namespace 'wysiwygEditor' to 'wysiwyg'.
+#319363 by sun: Code clean-up; fixed missing namespace change in tinymce-3.js.
+#273408 by quicksketch: Added blockquote button for TinyMCE 3.
+#319363 by sun: Changed JavaScript namespaces and centralized namespace
+  initialization.
+#270780 by sun: Fixed TinyMCE 3 support for external plugins.
+#309832 by sun: Fixed README.txt.
+#253600 by sun: Changed editor integration so that client-side editors attach to
+  input formats instead of textareas and are invoked for input format enabled
+  textareas only.
+#282717 by sun: Added (basic) FCKeditor support.
+#316507 by sun: Added Drupal.wysiwyg function stacks to execute editor library
+  specific actions upon initializing, attaching, detaching, and toggling an
+  editor. Editor specific JavaScript resides in separate files now, as specified
+  and returned by implementations of hook_editor().
+  Wysiwyg is a real API finally, supporting multiple editors and editor versions.
+#316507 by sun: Rewrote Wysiwyg API's internal architecture to support multiple
+  editors.
+
+
+Wysiwyg 6.x-0.3, 2008-09-12
+---------------------------
+#125267 by sun: Removed Safari browser warning configuration option.
+#304243 by sun: Fixed profile configuration improperly passed to JavaScript.
+#304243 by sun: Code clean-up for wysiwyg_editor_profile_overview().
+#289218 by gustav: Fixed E^ALL notice if node has no body field.
+#304243 by sun: Code clean-up for wysiwyg_editor_user_status().
+#299108 by toniw: Added setting for TinyMCE's auto-cleanup paste feature.
+#293916 by sun: Clarified TinyMCE compatibility in README.txt.
+#293425 by sun: Fixed foreach warning during upgrade from TinyMCE module.
+#292517 by sun: Fixed SQL error during upgrade from TinyMCE module.
+#286470 by chayner, sun: Fixed wrong editorBasePath in editor configuration.
+#227687 by sun: Fixed improperly capitalized package name.
+#288028 by Matthew Davidson: Fixed outdated check for PHP input filter.
+#280727 by sun: Removed gzip compressor from installation instructions.
+
+
+Wysiwyg 5.x-0.2, 2008-07-16
+---------------------------
+by sun: Fixed JavaScript errors when JS aggregation/compression is enabled.
+#268562 by sun: Code clean-up; changed format for custom defined CSS classes
+  and removed error-prone auto-layout of buttons in favor of aligning them in
+  one row with a stylesheet; may break existing profiles.
+#270730 by hass, sun: Added German translation for Teaser break plugin.
+#268838 by sun: Fixed PHP warning if no buttons are enabled for a profile.
+#268838 by sun: Ported to Drupal 6.x.
+#152046 by sun: Added hook_wysiwyg_plugin().
+#268562 by sun: Code clean-up.
+#60667 by sun: Fixed wrong editor profile is loaded when user is granted access
+  to more than one profile.
+#264739 by sun: Fixed missing t() around some profile settings options.
+
+
+Wysiwyg 5.x-0.1, 2008-06-07
+---------------------------
+#264739 by sun: Improved output strings.
+#264739 by hass, sun: Fixed potx error due to wrong t() string.
+#264411 by sun: Cleaned coding-style using coder_format script.
+#264411 by sun: Moved admin functions into separate include file.
+#264411 by sun: Added TinyMCE data import upon installation.
+#264411 by sun: Renamed module to Wysiwyg Editor.
+#118747 by nedjo, sun: Upgraded code for jQuery.
+Initial fork of TinyMCE module (2008-05-30).
+
+

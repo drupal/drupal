@@ -1,0 +1,11 @@
+/* $Id: context.css,v 1.2 2008/12/05 00:15:36 merlinofchaos Exp $ */
+.ctools-context-holder .ctools-context-title {
+  float: left;
+  width: 49%;
+  font-style: italic;
+}
+
+.ctools-context-holder .ctools-context-content {
+  float: right;
+  width: 49%;
+}

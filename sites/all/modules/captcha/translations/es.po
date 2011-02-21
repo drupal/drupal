@@ -1,0 +1,717 @@
+# $Id: es.po,v 1.2 2009/10/04 22:24:55 soxofaan Exp $
+#
+# Spanish translation of Drupal (general)
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+# Generated from files:
+#  captcha.admin.inc,v 1.30 2009/08/10 22:33:34 soxofaan
+#  image_captcha.admin.inc,v 1.28 2009/09/23 21:23:00 soxofaan
+#  captcha.module,v 1.100 2009/09/20 10:57:07 soxofaan
+#  captcha.inc,v 1.11 2009/08/27 22:21:56 soxofaan
+#  captcha.info,v 1.7 2008/02/17 12:49:24 soxofaan
+#  image_captcha.user.inc,v 1.21 2009/09/22 22:51:00 soxofaan
+#  image_captcha.module,v 1.31 2009/09/22 22:51:00 soxofaan
+#  captcha.install,v 1.10 2009/05/26 20:17:40 soxofaan
+#  image_captcha.info,v 1.5 2008/02/17 12:49:24 soxofaan
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Drupal 6.x\n"
+"POT-Creation-Date: 2009-09-28 04:38-0400\n"
+"PO-Revision-Date: 2009-10-03 15:57+0100\n"
+"Last-Translator: Gusgsm <gusgsm@gmail.com>\n"
+"Language-Team: Gusgsm <gusgsm@gmail.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n"
+"X-Poedit-Language: Spanish\n"
+"X-Poedit-Country: SPAIN\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+#: captcha.admin.inc:16
+#: image_captcha/image_captcha.admin.inc:171
+msgid "none"
+msgstr "ninguno"
+
+#: captcha.admin.inc:17
+msgid "default challenge type"
+msgstr "Tipo de "
+
+#: captcha.admin.inc:23
+msgid "@type (from module @module)"
+msgstr "@type (del módulo @module)"
+
+#: captcha.admin.inc:42
+msgid "Form protection"
+msgstr "Protección de formulario"
+
+#: captcha.admin.inc:43
+msgid "Select the challenge type you want for each of the listed forms (identified by their so called <em>form_id</em>'s). You can easily add arbitrary forms with textfield at the bottom of the table or with the help of the '%CAPTCHA_admin_links' option below."
+msgstr "Seleccione el tipo de pregunta que desee para cada uno de los formularios listados (identificados por lo que se llama su <em>form_id</em>). Puede añadir fácilmente formularios con campos de texto de forma arbitraria al final de la tabla con la ayuda de la opción CAPTCHA_admin_links, más abajo. "
+
+#: captcha.admin.inc:44;108
+#: captcha.module:46
+msgid "Add CAPTCHA administration links to forms"
+msgstr "Añadir enlaces de administración de CAPTCHA a los formularios"
+
+#: captcha.admin.inc:49
+msgid "Default challenge type"
+msgstr "Tipo de pregunta predefinida"
+
+#: captcha.admin.inc:50
+msgid "Select the default challenge type for CAPTCHAs. This can be overriden for each form if desired."
+msgstr "Seleccione el tipo de pregunta CAPTCHA predeterminada. Puede cambiarlo en cada formulario especificando otro, si lo desea."
+
+#: captcha.admin.inc:86
+msgid "delete"
+msgstr "borrar"
+
+#: captcha.admin.inc:110
+msgid "This option makes it easy to manage CAPTCHA settings on forms. When enabled, users with the \"%admincaptcha\" permission will see a fieldset with CAPTCHA administration links on all forms, except on administrative pages."
+msgstr "Esta opción facilita la gestión de las opciones de preguntas CAPTCHA en los formularios. Si se activa los usuarios con los permisos \"%admincaptcha\" verán un campo de texto con los enlaces de administración de CAPTCHAs en todos los formularios excepto en los de las páginas administrativas."
+
+#: captcha.admin.inc:110
+#: captcha.module:107
+msgid "administer CAPTCHA settings"
+msgstr "Administrar las opciones de CAPTCHA"
+
+#: captcha.admin.inc:115
+msgid "Allow CAPTCHAs and CAPTCHA administration links on administrative pages"
+msgstr "Permitir el planteamiento de preguntas CAPTCHA y los enlaces para su gestión en las páginas administrativas."
+
+#: captcha.admin.inc:117
+msgid "This option makes it possible to add CAPTCHAs to forms on administrative pages. CAPTCHAs are disabled by default on administrative pages (which shouldn't be accessible to untrusted users normally) to avoid the related overhead. In some situations, e.g. in the case of demo sites, it can be usefull to allow CAPTCHAs on administrative pages."
+msgstr "Esta opción permite añadir preguntas CAPTCHA a los formularios en las páginas administrativas. En principio, los CAPTCHA están desactivados en las páginas administrativas (ya que lo usual es que no sean accesibles a usuarios que no sean de confianza) para evitar la sobrecarga y retraso consiguiente. Sin embargo, en algunas situaciones (como sitios de demostración o prueba) podría ser útil añadir CAPTCHAs en las páginas administrativas,"
+
+#: captcha.admin.inc:123
+msgid "Add a description to the CAPTCHA"
+msgstr "Añadir una descripción a la pregunta CAPTCHA"
+
+#: captcha.admin.inc:124
+msgid "Add a configurable description to explain the purpose of the CAPTCHA to the visitor."
+msgstr "Añadir una descripción configurable para explicar la finalidad de la pregunta CAPTCHA al visitante."
+
+#: captcha.admin.inc:132
+msgid "CAPTCHA description"
+msgstr "Descripción de CAPTCHA"
+
+#: captcha.admin.inc:133;149
+msgid "Configurable description of the CAPTCHA. An empty entry will reset the description."
+msgstr "Descripción configurable de la pregunta CAPTCHA. Si se deja el campo vacío, la descripción se reconfigurará."
+
+#: captcha.admin.inc:139
+msgid "For language %lang_name (code %lang_code)"
+msgstr "Para idioma %lang_name (código %lang_code)"
+
+#: captcha.admin.inc:148
+msgid "Challenge description"
+msgstr "Descripción de la pregunta"
+
+#: captcha.admin.inc:159
+msgid "Default CAPTCHA validation"
+msgstr "Validación predefinida de CAPTCHA"
+
+#: captcha.admin.inc:160
+msgid "Define how the response should be processed by default. Note that the modules that provide the actual challenges can override or ignore this."
+msgstr "Define cómo se deben procesar las respuestas de forma predefinida. Tenga en cuenta que los módulos que proporcionan las preguntas pueden alterar o ignorar esto."
+
+#: captcha.admin.inc:162
+msgid "Case sensitive validation: the response has to exactly match the solution."
+msgstr "Validación que diferencia mayúsculas de mínúsculas: La respuesta tiene que coincidir exactamente con la solución."
+
+#: captcha.admin.inc:163
+msgid "Case insensitive validation: lowercase/uppercase errors are ignored."
+msgstr "Validación que no diferencia mayúsculas de mínúsculas: Las diferencias en esos casos no se tienen en cuenta."
+
+#: captcha.admin.inc:171
+msgid "Persistence"
+msgstr "Persistencia"
+
+#: captcha.admin.inc:174
+msgid "Always add a challenge."
+msgstr "Añadir siempre una pregunta"
+
+#: captcha.admin.inc:175
+msgid "Omit challenges for a form once the user has successfully responded to a challenge for that form."
+msgstr "Omitir preguntas de un formulario siempre que el usuario haya sabido responder bien a una en ese formulario."
+
+#: captcha.admin.inc:176
+msgid "Omit challenges for all forms once the user has successfully responded to a challenge."
+msgstr "Omitir preguntas de todos los formularios cuando el usuario haya sabido responder bien a una."
+
+#: captcha.admin.inc:178
+msgid "Define if challenges should be omitted during the rest of a session once the user successfully responses to a challenge."
+msgstr "Definir si las preguntas deben desactivarse para el resto de la sesión una vez que un usuario haya respondido con éxito a una de ellas."
+
+#: captcha.admin.inc:184
+msgid "Log wrong responses"
+msgstr "Registrar respuestas erróneas"
+
+#: captcha.admin.inc:185
+msgid "Report information about wrong responses to the !log."
+msgstr "Registrar la información de las respuestas erróneas en el !log."
+
+#: captcha.admin.inc:185
+msgid "log"
+msgstr "registro"
+
+#: captcha.admin.inc:192
+msgid "Save configuration"
+msgstr "Guardar configuración"
+
+#: captcha.admin.inc:202;342
+msgid "Challenge type"
+msgstr "Tipo de pregunta"
+
+#: captcha.admin.inc:202
+msgid "Operations"
+msgstr "Operaciones"
+
+#: captcha.admin.inc:229;363
+msgid "Illegal form_id"
+msgstr "form_id ilegal"
+
+#: captcha.admin.inc:255
+msgid "Added CAPTCHA point."
+msgstr "Añadido punto CAPTCHA."
+
+#: captcha.admin.inc:270
+msgid "Reset of CAPTCHA description for language %language."
+msgstr "Se ha restablecido la descripción de la pregunta CAPTCHA para el idioma %language."
+
+#: captcha.admin.inc:281
+msgid "Reset of CAPTCHA description."
+msgstr "Restablecer la descripción de CAPTCHA."
+
+#: captcha.admin.inc:289
+msgid "The CAPTCHA settings were saved."
+msgstr "Las opciones de CAPTCHA se han guardado."
+
+#: captcha.admin.inc:321;335
+msgid "Form ID"
+msgstr "ID del formulario"
+
+#: captcha.admin.inc:322;336
+msgid "The Drupal form_id of the form to add the CAPTCHA to."
+msgstr "La form_id de Drupal del formulario al que se quiere añadir la pregunta CAPTCHA."
+
+#: captcha.admin.inc:343
+msgid "The CAPTCHA type to use for this form"
+msgstr "El tipo de CAPTCHA que se usará para este formulario"
+
+#: captcha.admin.inc:352
+msgid "Save"
+msgstr "Guardar"
+
+#: captcha.admin.inc:375
+msgid "Saved CAPTCHA point settings."
+msgstr "Opciones de puntos CAPTCHA guardadas."
+
+#: captcha.admin.inc:392
+msgid "Are you sure you want to delete the CAPTCHA for form_id %form_id?"
+msgstr "¿Está seguro de querer borrar la pregungta CAPTCHA para form_id %form_id?"
+
+#: captcha.admin.inc:393
+msgid "Delete"
+msgstr "Borrar"
+
+#: captcha.admin.inc:396
+msgid "Are you sure you want to disable the CAPTCHA for form_id %form_id?"
+msgstr "¿Está seguro de querer desactivar CAPCHA para form_id %form_id?"
+
+#: captcha.admin.inc:397
+msgid "Disable"
+msgstr "Desactivar"
+
+#: captcha.admin.inc:410
+msgid "Deleted CAPTCHA for form %form_id."
+msgstr "Se ha borrado la pregunta CAPTCHA para el formulario %form_id."
+
+#: captcha.admin.inc:414
+msgid "Disabled CAPTCHA for form %form_id."
+msgstr "Se ha desactivado  la pregunta CAPTCHA para el formulario %form_id."
+
+#: captcha.admin.inc:451
+msgid "This page gives an overview of all available challenge types, generated with their current settings."
+msgstr "Esta página proporciona un resumen de los tipos de preguntas disponibles, generadas con sus configuraciones actuales."
+
+#: captcha.admin.inc:459
+msgid "Challenge \"%challenge\" by module \"%module\""
+msgstr "Pregunta \"%challenge\" por módulo \"%module\""
+
+#: captcha.admin.inc:462
+msgid "10 more examples of this challenge."
+msgstr "Diez ejemplos más de esta pregunta."
+
+#: captcha.inc:38
+msgid "Failed to set a CAPTCHA type for form %form_id: could not interpret value \"@captcha_type\""
+msgstr "No se pudo establecer un tipo de pregunta CAPTCHA para el formulario %form_id: No se logró interpretar el valor \"@captcha_type\""
+
+#: captcha.inc:146
+msgid "This question is for testing whether you are a human visitor and to prevent automated spam submissions."
+msgstr "Esta pregunta se hace para comprobar que es usted una persona real e impedir el envío automatizado de mensajes basura."
+
+#: captcha.module:31
+msgid "\"CAPTCHA\" is an acronym for \"Completely Automated Public Turing test to tell Computers and Humans Apart\". It is typically a challenge-response test to determine whether the user is human. The CAPTCHA module is a tool to fight automated submission by malicious users (spamming) of for example comments forms, user registration forms, guestbook forms, etc. You can extend the desired forms with an additional challenge, which should be easy for a human to solve correctly, but hard enough to keep automated scripts and spam bots out."
+msgstr "\"CAPTCHA\" es un acrónimo de \"Completely Automated Public Turing test to tell Computers and Humans Apart\" <em>(test de Turing completamente automatizado para distinguir humanos de ordenadores)</em>. Es la típica pregunta cuya respuesta permite determinar si el usuario es o no humano. El módulo CAPTCHA es una herramienta para combatir contra los envíos automatizados por parte de usuarios mal intencionados (spam) en formularios de comentarios, de registro como nuevos usuarios, libros de visitas, etc... Pueden añadirse nuevos formularios con nuevas preguntas que un humano debería poder contestar pero que deberían ser lo bastante difíciles para rechazar  códigos y programas automáticos."
+
+#: captcha.module:32
+msgid "Note that the CAPTCHA module interacts with page caching (see <a href=\"!performancesettings\">performance settings</a>). Because the challenge should be unique for each generated form, the caching of the page it appears on is prevented. Make sure that these forms do not appear on too many pages or you will lose much caching efficiency. For example, if you put a CAPTCHA on the user login block, which typically appears on each page for anonymous visitors, caching will practically be disabled. The comment submission forms are another example. In this case you should set the \"%commentlocation\" to \"%separatepage\" in the comment settings of the relevant <a href=\"!contenttypes\">content types</a> for better caching efficiency."
+msgstr "Tenga en cuenta que el módulo CAPTCHA interactua con la caché de páginas (consulte <a href=\"!performancesettings\">opciones de rendimiento</a>). Como la pregunta debe ser distinta para cada formulario generado, la caché de la página en la que aparece queda inutilizada. Asegúrese de que estos formularios no aparezcan en demasiadas páginas o la caché perderá mucha eficiencia. Por ejemplo, si pone una pregunta CAPTCHA en el bloque de comienzo de sesión como usuario, que suele aparecer en cada página que ve un usuario anónimo, la caché quedará virtualmente desactivada. En ese caso, debería disponer el %commentlocation\" en\"%separatepage\" en las opciones de comentarios de los <a href=\"!contenttypes\">tipos de contenido</a> relevantes para ajustar la eficiencia de la caché."
+
+#: captcha.module:35
+msgid "Location of comment submission form"
+msgstr "Ubicación del formulario de envío de comentarios"
+
+#: captcha.module:36
+msgid "Display on separate page"
+msgstr "Mostrar en una página aparte"
+
+#: captcha.module:40
+msgid "CAPTCHA is a trademark of Carnegie Mellon University."
+msgstr "CAPTCHA es una marca registrada de la Universidad Carnegie Mellon."
+
+#: captcha.module:45
+msgid "A CAPTCHA can be added to virtually each Drupal form. Some default forms are already provided in the form list, but arbitrary forms can be easily added and managed when the option \"%adminlinks\" is enabled."
+msgstr "Se puede añadir una pregunta CAPTCHA casi a cualquier formulario en Drupal. Algunos formularios ya vienen en la lista de formularios predeterminada, pero se pueden añadir y gestionar otros formularios si se activa la opción \"%adminlinks\"."
+
+#: captcha.module:47
+msgid "Users with the \"%skipcaptcha\" <a href=\"@perm\">permission</a> won't be offered a challenge. Be sure to grant this permission to the trusted users (e.g. site administrators). If you want to test a protected form, be sure to do it as a user without the \"%skipcaptcha\" permission (e.g. as anonymous user)."
+msgstr "A los usuarios con <a href=\"@perm\">permisos</a> \"%skipcaptcha\"  no se les planteará una pregunta. Asegúrese de conceder este permiso a usuarios de confianza (como los administradores del sitio web). Si quiere probar un formualrio protegido, compruebe que lo hace como usario sin el permiso \"%skipcaptcha\"; por ejemplo: Como usuario anónimo no registrado."
+
+#: captcha.module:48;107
+msgid "skip CAPTCHA"
+msgstr "Evitar CAPTCHA"
+
+#: (duplicate) captcha.module:269;322;119
+#: ;222;427;456;60;71 captcha.info:0
+#: image_captcha/image_captcha.user.inc:29;73
+#: image_captcha/image_captcha.module:95
+msgid "CAPTCHA"
+msgstr "CAPTCHA"
+
+#: captcha.module:327
+msgid "CAPTCHA: challenge \"@type\" enabled"
+msgstr "CAPTCHA: Activada la pregunta \"@type\""
+
+#: captcha.module:328
+msgid "Untrusted users will see a CAPTCHA here (!settings)."
+msgstr "Los usuarios que no son de confianza verán un CAPTCHA aquí (!settings)."
+
+#: captcha.module:329
+msgid "general CAPTCHA settings"
+msgstr "opciones generales de CAPTCHA"
+
+#: captcha.module:333
+msgid "Enabled challenge"
+msgstr "Pregunta activada"
+
+#: captcha.module:334
+msgid "\"@type\" by module \"@module\" (!change, !disable)"
+msgstr "\"@type\" por el módulo \"@module\" (!change, !disable)"
+
+#: captcha.module:337
+msgid "change"
+msgstr "cambiar"
+
+#: captcha.module:338
+msgid "disable"
+msgstr "desactivar"
+
+#: captcha.module:352
+#: image_captcha/image_captcha.admin.inc:57
+msgid "Example"
+msgstr "Ejemplo"
+
+#: captcha.module:353
+msgid "This is a pre-solved, non-blocking example of this challenge."
+msgstr "Este es un ejemplo ya resuelto de la pregunta y no impide nada."
+
+#: captcha.module:362
+msgid "CAPTCHA: no challenge enabled"
+msgstr "CAPTCHA: No se ha establecido ninguna pregunta"
+
+#: captcha.module:364
+msgid "Place a CAPTCHA here for untrusted users."
+msgstr "Ponga un CAPTCHA a aquellos usuarios que no son de confianza."
+
+#: captcha.module:426
+msgid "CAPTCHA validation error: unknown CAPTCHA session ID. Contact the site administrator if this problem persists."
+msgstr "Error de validación CAPTCHA: ID de sesión CAPCHA no identificada. Contacte con los administradores de este sitio si el problema persiste."
+
+#: captcha.module:451
+msgid "The answer you entered for the CAPTCHA was not correct."
+msgstr "La respuesta a la pregunta no es correcta."
+
+#: captcha.module:538
+msgid "Math question"
+msgstr "Pregunta matemática"
+
+#: captcha.module:539
+msgid "Solve this simple math problem and enter the result. E.g. for 1+3, enter 4."
+msgstr "Resuelva este simple problema matemático y escriba la solución; por ejemplo: Para 1+3, escriba 4."
+
+#: captcha.module:540
+msgid "@x + @y = "
+msgstr "@x + @y = "
+
+#: captcha.module:559
+msgid "Test one two three"
+msgstr "Prueba uno dos tres"
+
+#: captcha.module:222
+msgid "CAPTCHA problem: hook_captcha() of module %module returned nothing when trying to retrieve challenge type %type for form %form_id."
+msgstr "Problema de CAPTCHA: hook_captcha() del módulo %module no devolvió nada al intentar extraer la pregunta del tipo %type para el formulario %form_id."
+
+#: captcha.module:427
+msgid "CAPTCHA validation error: unknown CAPTCHA session ID (%csid)."
+msgstr "Error de validación de CAPTCHA: ID de sesión de CAPTCHA desconocido (%csid)."
+
+#: captcha.module:456
+msgid "%form_id post blocked by CAPTCHA module: challenge \"%challenge\" (by module \"%module\"), user answered \"%response\", but the solution was \"%solution\"."
+msgstr "mensaje de %form_id bloqueado por el módulo CAPTCHA: Pregunta \"%challenge\" (del módulo \"%module\"), el usuario respondió \"%response\", pero la solución era \"%solution\"."
+
+#: captcha.module:120
+msgid "Already 1 blocked form submission"
+msgid_plural "Already @count blocked form submissions"
+msgstr[0] "Ya se ha bloqueado 1 envío a formulario"
+msgstr[1] "Ya se han bloqueado @count envíos a formularios"
+
+#: captcha.module:61
+msgid "Administer how and where CAPTCHAs are used."
+msgstr "Administra cómo y cuándo se usa CAPTCHA."
+
+#: captcha.module:77
+msgid "General settings"
+msgstr "Opciones generales"
+
+#: captcha.module:83
+msgid "Examples"
+msgstr "Ejemplos"
+
+#: captcha.module:84
+msgid "An overview of the available challenge types with examples."
+msgstr "Un resumen de los tipos de preguntas disponibles con ejemplos."
+
+#: captcha.module:93
+msgid "CAPTCHA point administration"
+msgstr "Administración de puntos CAPTCHA"
+
+#: captcha.module:0
+msgid "captcha"
+msgstr "captcha"
+
+#: captcha.install:156
+msgid "Unsupported database."
+msgstr "Base de datos no admitida."
+
+#: (duplicate) captcha.install:115
+msgid "You can now <a href=\"!captcha_admin\">configure the CAPTCHA module</a> for your site."
+msgstr "Ahora puede <a href=\"!captcha_admin\">configurar el módulo CAPTCHYA </a> en el sitio web."
+
+#: captcha.info:0
+msgid "Base CAPTCHA module for adding challenges to arbitrary forms."
+msgstr "El módulo CAPTCHA base para añadir preguntas a los formularios de manera arbitraria."
+
+#: captcha.info:0
+#: image_captcha/image_captcha.info:0
+msgid "Spam control"
+msgstr "Control de correo basura"
+
+#: image_captcha/image_captcha.admin.inc:29
+msgid "Built-in font"
+msgstr "Fuente predefinida"
+
+#: image_captcha/image_captcha.admin.inc:47
+msgid "The Image CAPTCHA module can not generate images because your PHP setup does not support it (no <a href=\"!gdlib\">GD library</a> with JPEG support)."
+msgstr "El módulo de preguntas CAPTCHA de imágenes no puede generar las imágenes por que su configuración de PHP no lo admite  (no hay una <a href=\"!gdlib\">GD library</a> que admita formato JPEG)."
+
+#: image_captcha/image_captcha.admin.inc:58
+msgid "Presolved image CAPTCHA example, generated with the current settings."
+msgstr "Ejemplo de un CAPTCHA de imagen ya solucionado, creado con las opciones actuales."
+
+#: image_captcha/image_captcha.admin.inc:69
+msgid "Code settings"
+msgstr "Opciones de código"
+
+#: image_captcha/image_captcha.admin.inc:73
+msgid "Characters to use in the code"
+msgstr "Caracteres que se usarán en el código"
+
+#: image_captcha/image_captcha.admin.inc:78
+msgid "Code length"
+msgstr "Longitud del código"
+
+#: image_captcha/image_captcha.admin.inc:81
+msgid "The code length influences the size of the image. Note that larger values make the image generation more CPU intensive."
+msgstr "La longitud del código influye en el tamaño de la imagen. Tenga en cuenta que cuanto mayor sea la longitud, más tendrá que esforzarse la CPU para crear la imagen."
+
+#: image_captcha/image_captcha.admin.inc:87
+msgid "Font settings"
+msgstr "Opciones de fuente"
+
+#: image_captcha/image_captcha.admin.inc:93
+msgid "Font"
+msgstr "Fuente"
+
+#: image_captcha/image_captcha.admin.inc:95
+msgid "Select the font to use for the text in the image CAPTCHA. Apart from the provided defaults, you can also use your own TrueType fonts (filename extension .ttf) by putting them in the Drupal \"files\" directory (directory %filesdir), %fonts_library_general or %fonts_library_specific."
+msgstr "Seleccione que tipo de letra desea usar en el texto del CAPTCHA de imagen. Además de las predefinidas, puede añadir sus propias fuentes TrueType (con la extensión de documento .ttf) colocándolas en el directorio \"files\" de su instalación Drupal (directory %filesdir), %fonts_library_general o %fonts_library_specific."
+
+#: image_captcha/image_captcha.admin.inc:110
+msgid "Font size"
+msgstr "Tamaño de letras"
+
+#: image_captcha/image_captcha.admin.inc:112
+msgid "tiny"
+msgstr "Diminuto"
+
+#: image_captcha/image_captcha.admin.inc:113;172
+msgid "small"
+msgstr "pequeño"
+
+#: image_captcha/image_captcha.admin.inc:115;139
+msgid "normal"
+msgstr "normal"
+
+#: image_captcha/image_captcha.admin.inc:117
+msgid "large"
+msgstr "grande"
+
+#: image_captcha/image_captcha.admin.inc:119
+msgid "extra large"
+msgstr "extra grande"
+
+#: image_captcha/image_captcha.admin.inc:122
+msgid "The font size influences the size of the image. Note that larger values make the image generation more CPU intensive."
+msgstr "El tamaño de la fuente influye en el tamaño de la imagen. Tenga en cuenta que un valor mayor hará que la creación de la imagen será más trabajosa para la CPU."
+
+#: image_captcha/image_captcha.admin.inc:134
+msgid "Character spacing"
+msgstr "Espacio entre caracteres"
+
+#: image_captcha/image_captcha.admin.inc:135
+msgid "Define the average spacing between characters. Note that larger values make the image generation more CPU intensive."
+msgstr "Define el espacio promedio entre caracteres. Tenga en cuenta que a mayores tamaños, la imagen resultante será mayor y también lo será el esfuerzo que tenga que hacer la CPU."
+
+#: image_captcha/image_captcha.admin.inc:138
+msgid "tight"
+msgstr "apretado"
+
+#: image_captcha/image_captcha.admin.inc:140
+msgid "wide"
+msgstr "amplio"
+
+#: image_captcha/image_captcha.admin.inc:141
+msgid "extra wide"
+msgstr "extra amplio"
+
+#: image_captcha/image_captcha.admin.inc:148
+msgid "Color and image settings"
+msgstr "Opciones de color e imagen"
+
+#: image_captcha/image_captcha.admin.inc:149
+msgid "Configuration of the background, text colors and file format of the image CAPTCHA."
+msgstr "Configuración de los colores de fondo y textos, y del formato del documento con la imagen CAPTCHA."
+
+#: image_captcha/image_captcha.admin.inc:153
+msgid "Background color"
+msgstr "Color de fondo"
+
+#: image_captcha/image_captcha.admin.inc:154
+msgid "Enter the hexadecimal code for the background color (e.g. #FFF or #FFCE90). When using the PNG file format with transparent background, it is recommended to set this close to the underlying background color."
+msgstr "Indique el valor hexadecimal del color de fondo; por ejemplo: #fff o #ffce90. En el caso de usar el formato PNG con fondo transparente, se recomienda indicar un color similar al color que tenga el fondo."
+
+#: image_captcha/image_captcha.admin.inc:161
+msgid "Text color"
+msgstr "Color del texto"
+
+#: image_captcha/image_captcha.admin.inc:162
+msgid "Enter the hexadecimal code for the text color (e.g. #000 or #004283)."
+msgstr "Indique un valor decimal para el color del texto; por ejemplo: #000 o #004283."
+
+#: image_captcha/image_captcha.admin.inc:169
+msgid "Additional variation of text color"
+msgstr "Variación adicional del color del texto"
+
+#: image_captcha/image_captcha.admin.inc:173
+msgid "moderate"
+msgstr "moderada"
+
+#: image_captcha/image_captcha.admin.inc:174;245
+msgid "high"
+msgstr "alta"
+
+#: image_captcha/image_captcha.admin.inc:175
+msgid "very high"
+msgstr "extrema"
+
+#: image_captcha/image_captcha.admin.inc:178
+msgid "The different characters will have randomized colors in the specified range around the text color."
+msgstr "Las distintas letras tendrán colores al azar en el rango determinado en torno al color del texto."
+
+#: image_captcha/image_captcha.admin.inc:182
+msgid "File format"
+msgstr "Formato de documento"
+
+#: image_captcha/image_captcha.admin.inc:183
+msgid "Select the file format for the image. JPEG usually results in smaller files, PNG allows tranparency."
+msgstr "Seleccione el formato de documento para la imagen. JPEG suele proporcionar documentos más reducidos, mientras que PNG permite transparencia."
+
+#: image_captcha/image_captcha.admin.inc:186
+msgid "JPEG"
+msgstr "JPEG"
+
+#: image_captcha/image_captcha.admin.inc:187
+msgid "PNG"
+msgstr "PNG"
+
+#: image_captcha/image_captcha.admin.inc:188
+msgid "PNG with transparent background"
+msgstr "PNG con fondo transparente"
+
+#: image_captcha/image_captcha.admin.inc:195
+msgid "Distortion and noise"
+msgstr "Distorsión y ruido"
+
+#: image_captcha/image_captcha.admin.inc:196
+msgid "With these settings you can control the degree of obfuscation by distortion and added noise. Do not exaggerate the obfuscation and assure that the code in the image is reasonably readable. For example, do not combine high levels of distortion and noise."
+msgstr "Con estas opciones se controla el grado de legibilidad añadiendo dirtorsiones y ruido. No exagere la pérdida de legibilidad y asegúrese de que el código de la imagen será razonablemente comprensible; por ejemplo: No combine altos niveles de distorsión y ruido."
+
+#: image_captcha/image_captcha.admin.inc:201
+msgid "Distortion level"
+msgstr "Nivel de distorsión"
+
+#: image_captcha/image_captcha.admin.inc:203
+msgid "@level - no distortion"
+msgstr "@level - Sin distorsión"
+
+#: image_captcha/image_captcha.admin.inc:204
+msgid "@level - low"
+msgstr "@level - Poca"
+
+#: image_captcha/image_captcha.admin.inc:208
+msgid "@level - medium"
+msgstr "@level - Media"
+
+#: image_captcha/image_captcha.admin.inc:213
+msgid "@level - high"
+msgstr "@level - Alta"
+
+#: image_captcha/image_captcha.admin.inc:216
+msgid "Set the degree of wave distortion in the image."
+msgstr "Establecer el nivel de la onda de distorsión en la imagen."
+
+#: image_captcha/image_captcha.admin.inc:220
+msgid "Smooth distortion"
+msgstr "Distorsión suave"
+
+#: image_captcha/image_captcha.admin.inc:222
+msgid "This option enables bilinear interpolation of the distortion which makes the image look smoother, but it is more CPU intensive."
+msgstr "Esta opción permite la interpolación bilineal de la distorsión, lo que hace que la imagen se vea más suavizada, pero añade más carga a la CPU."
+
+#: image_captcha/image_captcha.admin.inc:227
+msgid "Add salt and pepper noise"
+msgstr "Añadir ruido granular"
+
+#: image_captcha/image_captcha.admin.inc:229
+msgid "This option adds randomly colored point noise."
+msgstr "Esta opción añade ruido de puntos de colores al azar."
+
+#: image_captcha/image_captcha.admin.inc:233
+msgid "Add line noise"
+msgstr "Añadir línea de ruido"
+
+#: image_captcha/image_captcha.admin.inc:235
+msgid "This option enables lines randomly drawn on top of the text code."
+msgstr "Esta opción coloca trazos al azar encima del texto del código."
+
+#: image_captcha/image_captcha.admin.inc:239
+msgid "Noise level"
+msgstr "Nivel de ruido"
+
+#: image_captcha/image_captcha.admin.inc:241
+msgid "low"
+msgstr "bajo"
+
+#: image_captcha/image_captcha.admin.inc:243
+msgid "medium"
+msgstr "medio"
+
+#: image_captcha/image_captcha.admin.inc:247
+msgid "severe"
+msgstr "intenso"
+
+#: image_captcha/image_captcha.admin.inc:264
+msgid "The Image CAPTCHA module can not use TrueType fonts because your PHP setup does not support it. You can only use a low quality built-in bitmap font."
+msgstr "El módulo de preguntas CAPTCHAs de imagen no puede usar fuentes TrueType porque su configuración de PHP no lo admite. Sólo puede usar una fuente de sistema de mapa de bits de baja calidad."
+
+#: image_captcha/image_captcha.admin.inc:269
+msgid "The usage of the built-in bitmap font it is not recommended because of its small size and missing UTF-8 support."
+msgstr "El uso de una fuente de mapa de bits del sistema no se recomienda debido a su reducido tamaño y a que no funcionan con UTF-8."
+
+#: image_captcha/image_captcha.admin.inc:280
+msgid "The list of characters to use should not contain spaces."
+msgstr "La lista de caracteres no deben incluir espacios"
+
+#: image_captcha/image_captcha.admin.inc:285
+msgid "You need to select a font"
+msgstr "Tiene que seleccionar una fuente"
+
+#: image_captcha/image_captcha.admin.inc:290
+msgid "The built-in font only supports Latin2 characters. Only use \"a\" to \"z\" and numbers."
+msgstr "La fuente del sistema sólo admite caracteres Latin2. Utilice sólo letras de la \"a\" a la \"z\" y números."
+
+#: image_captcha/image_captcha.admin.inc:294
+msgid "Font does not exist or is not readable."
+msgstr "La fuente no existe o no es legible."
+
+#: image_captcha/image_captcha.admin.inc:299
+msgid "Background color is not a valid hexadecimal color value."
+msgstr "El color de fondo no es un valor de color hexadecimal válido."
+
+#: image_captcha/image_captcha.admin.inc:302
+msgid "Text color is not a valid hexadecimal color value."
+msgstr "El color del texto no es un valor hexadecimal válido."
+
+#: image_captcha/image_captcha.user.inc:29
+msgid "Generation of image CAPTCHA failed. Check your image CAPTCHA configuration and especially the used font."
+msgstr "No se pudo crear la imagen CAPTCHA. Compruebe la configuración de su CAPTCHA de imagen y, sobre todo, qué tipo de letra se ha usado."
+
+#: image_captcha/image_captcha.user.inc:73
+msgid "Could not find or read the configured font (\"%font\") for the image CAPTCHA."
+msgstr "No se pudo leer la fuente  (\"%font\") especificada para la pregunta CAPTCHA de imagen."
+
+#: image_captcha/image_captcha.module:29
+msgid "The image CAPTCHA is a popular challenge where a random textual code is obfuscated in an image. The image is generated on the fly for each request, which is rather CPU intensive for the server. Be careful with the size and computation related settings."
+msgstr "El CAPTCHA de imagen es un tipo popular de pregunta en la que un texto aleatorio se distorsiona y oculta como una imagen. Ésta imagen se genera sobre la marcha con cada petición, por lo que se incrementa el esfuerzo de la CPU del servidor. Tenga cuidado con las opciones relacionadas con su tamaño y cualquier esfuerzo del procesador."
+
+#: image_captcha/image_captcha.module:165
+msgid "Enter the characters shown in the image. Ignore spaces and be careful about upper and lower case."
+msgstr "Escriba los caracteres que se deben mosytrar en la imagen. Los espacios no se tendrán en cuenta. Tenga cuidado con las mayúsculas y minúsculas."
+
+#: image_captcha/image_captcha.module:168
+msgid "Enter the characters (without spaces) shown in the image."
+msgstr "Escriba los caracteres (sin espacios) que se deben mostrar en la imagen."
+
+#: image_captcha/image_captcha.module:178;178;41
+#: image_captcha/image_captcha.info:0
+msgid "Image CAPTCHA"
+msgstr "CAPTCHA de imagen"
+
+#: image_captcha/image_captcha.module:183
+msgid "What code is in the image?"
+msgstr "¿Cuál es el código de la imagen?"
+
+#: image_captcha/image_captcha.module:95
+msgid "Encountered an illegal byte while splitting an utf8 string in characters."
+msgstr "Se ha encontrado un byte ilegal al distribuir en caracteres una cadena utf8."
+
+#: image_captcha/image_captcha.module:0
+msgid "image_captcha"
+msgstr "image_captcha"
+
+#: image_captcha/image_captcha.info:0
+msgid "Provides an image based CAPTCHA."
+msgstr "Proporcionar una pregunta CAPTCHA basada en una imagen."
+

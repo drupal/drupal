@@ -1,0 +1,25 @@
+/* $Id: tinymce-3.css,v 1.3 2008/10/29 00:35:11 sun Exp $ */
+
+/**
+ * TinyMCE 3.x
+ */
+table.mceLayout {
+  clear: left;
+}
+
+/**
+ * Align all buttons and separators in a single row, so they wrap into multiple
+ * rows if required.
+ */
+.mceToolbar td {
+  display: inline;
+}
+.mceToolbar a,
+.mceSeparator {
+  float: left;
+}
+.mceListBox,
+.mceSplitButton {
+  float: left;
+  margin-bottom: 1px;
+}

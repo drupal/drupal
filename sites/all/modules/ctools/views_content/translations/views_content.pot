@@ -1,0 +1,437 @@
+# $Id: views_content.pot,v 1.1 2009/08/16 19:13:58 hass Exp $
+#
+# LANGUAGE translation of Drupal (views_content-plugins-content_types)
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+# Generated from files:
+#  views.inc,v 1.11 2009/05/12 00:17:27 merlinofchaos
+#  views_panes.inc,v 1.13 2009/07/20 17:45:21 merlinofchaos
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2009-08-16 20:47+0200\n"
+"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: views_content/plugins/content_types/views.inc:18
+msgid "All views"
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:32
+msgid "Select display"
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:35
+msgid "Configure view"
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:234
+msgid "Display"
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:236
+msgid "Choose which display of this view you wish to use."
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:266
+#: views_content/plugins/content_types/views_panes.inc:277
+msgid "Broken/missing/deleted view."
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:272
+msgid "Configure view @view (@display)"
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:294
+msgid "Link title to view"
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:295
+msgid "If checked, the title will be a link to the view."
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:301
+msgid "Provide a \"more\" link that links to the view"
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:302
+msgid "This is independent of any more link that may be provided by the view itself; if you see two more links, turn this one off. Views will only provide a more link if using the \"block\" type, however, so if using embed, use this one."
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:308
+#: views_content/plugins/content_types/views_panes.inc:330
+msgid "Display feed icons"
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:309
+msgid "If checked, any feed icons provided by this view will be displayed."
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:324
+#: views_content/plugins/content_types/views_panes.inc:348
+msgid "Pager ID"
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:337
+msgid "Num posts"
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:339
+msgid "Select the number of posts to display, or 0 to display all results."
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:345
+#: views_content/plugins/content_types/views_panes.inc:371
+msgid "Offset"
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:347
+msgid "Offset in the node list or 0 to start at 1st item."
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:352
+msgid "Send arguments"
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:354
+msgid "Select this to send all arguments from the panel directly to the view. If checked, the panel arguments will come after any context arguments above and precede any additional arguments passed in through the Arguments field below."
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:362
+msgid "Additional arguments to send to the view as if they were part of the URL in the form of arg1/arg2/arg3. You may use %0, %1, ..., %N to grab arguments from the URL. Or use @0, @1, @2, ..., @N to use arguments passed into the panel."
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:368
+msgid "Override URL"
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:370
+msgid "If this is set, override the View URL; this can sometimes be useful to set to the panel URL"
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:402;422
+#: views_content/plugins/content_types/views_panes.inc:410;413
+msgid "Deleted/missing view @view"
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:404
+msgid "View: @name"
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:426
+msgid "View information"
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:429
+msgid "Using display @display."
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:450
+msgid "Argument @arg using context @context converted into @converter"
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:458
+msgid "@count items displayed."
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:460
+msgid "With pager."
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:463
+msgid "Without pager."
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:467
+msgid "Skipping first @count results"
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:470
+msgid "With more link."
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:473
+msgid "With feed icon."
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:476
+msgid "Sending arguments."
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:479
+msgid "Using arguments: @args"
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:482
+msgid "Using url: @url"
+msgstr ""
+
+#: views_content/plugins/content_types/views_panes.inc:314
+msgid "Link title to page"
+msgstr ""
+
+#: views_content/plugins/content_types/views_panes.inc:321
+msgid "Provide a \"more\" link."
+msgstr ""
+
+#: views_content/plugins/content_types/views_panes.inc:362
+msgid "Num items"
+msgstr ""
+
+#: views_content/plugins/content_types/views_panes.inc:364
+msgid "Select the number of items to display, or 0 to display all results."
+msgstr ""
+
+#: views_content/plugins/content_types/views_panes.inc:373
+msgid "Enter the number of items to skip; enter 0 to skip no items."
+msgstr ""
+
+#: views_content/plugins/content_types/views_panes.inc:380
+msgid "Override path"
+msgstr ""
+
+#: views_content/plugins/content_types/views_panes.inc:382
+msgid "If this is set, override the View URL path; this can sometimes be useful to set to the panel URL."
+msgstr ""
+
+#: views_content/plugins/views/views_content.views.inc:16
+msgid "Content pane"
+msgstr ""
+
+#: views_content/plugins/views/views_content.views.inc:17
+msgid "Is available as content for a panel or dashboard display."
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:56
+msgid "Pane settings"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:61
+msgid "Use view name"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:70
+msgid "Admin title"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:76
+msgid "Use view description"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:85
+msgid "Admin desc"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:101
+msgid "Category"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:107;151
+msgid "Link to view"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:108;114;208;218
+msgid "Yes"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:108;114;208;218
+msgid "No"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:113
+msgid "Use Panel path"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:119
+msgid "Argument input"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:128;142
+msgid "Allow settings"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:129
+msgid "None"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:129
+msgid "All"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:129
+msgid "Some"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:144
+msgid "Checked settings will be available in the panel pane config dialog for modification by the panels user. Unchecked settings will not be available and will only use the settings in this display."
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:149
+msgid "Items per page"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:150
+msgid "Pager offset"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:152
+msgid "More link"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:153
+msgid "Path override"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:154
+msgid "Title override"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:171
+msgid "This is the title that will appear for this view pane in the add content dialog. If left blank, the view name will be used."
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:181
+msgid "This is text that will be displayed when the user mouses over the pane in the add content dialog. If blank the view description will be used."
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:193
+msgid "This is category the pane will appear in on the add content dialog."
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:199
+msgid "This is the default weight of the category. Note that if the weight of a category is defined in multiple places, only the first one Panels sees will get that definition, so if the weight does not appear to be working, check other places that the weight might be set."
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:204
+msgid "Link pane title to view"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:214
+msgid "Inherit path from panel display"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:220
+msgid "If yes, all links generated by Views, such as more links, summary links, and exposed input links will go to the panels display path, not the view, if the display has a path."
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:225
+msgid "Choose the data source for view arguments"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:242
+msgid "No argument"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:243
+msgid "Argument wildcard"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:244
+msgid "From context"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:245
+msgid "From panel argument"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:246
+msgid "Fixed"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:247
+msgid "Input on pane config"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:250
+msgid "@arg source"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:256
+msgid "Required context"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:257
+msgid "If \"From context\" is selected, which context to require."
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:266
+msgid "Panel argument"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:267
+msgid "If \"From panel argument\" is selected, which panel argument to use."
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:269
+msgid "First"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:269
+msgid "Second"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:269
+msgid "Third"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:269
+msgid "Fourth"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:269
+msgid "Fifth"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:269
+msgid "Sixth"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:276
+msgid "Fixed argument"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:277
+msgid "If \"Fixed\" is selected, what to use as an argument."
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:285
+msgid "Label"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:286
+msgid "If this argument is presented to the panels user, what label to apply to it."
+msgstr ""
+
+#: views_content/views_content.module:92
+msgid "Make all views available as panes"
+msgstr ""
+
+#: views_content/views_content.module:93
+msgid "If checked, all views will be made available as content panes to be added to content types. If not checked, only Views that have a 'Content pane' display will be available as content panes. Uncheck this if you want to be able to more carefully control what view content is available to users using the panels layout UI."
+msgstr ""
+
+#: views_content/views_content.module:20
+msgid "Views panes"
+msgstr ""
+
+#: views_content/views_content.module:24
+msgid "Configure Views to be used as CTools content."
+msgstr ""
+
+#: views_content/views_content.module:0
+msgid "views_content"
+msgstr ""
+
+#: views_content/views_content.info:0
+msgid "Views content panes"
+msgstr ""
+
+#: views_content/views_content.info:0
+msgid "Allows Views content to be used in Panels, Dashboard and other modules which use the CTools Content API."
+msgstr ""

@@ -1,0 +1,69 @@
+# $Id: bulk_export.pot,v 1.1 2009/08/16 19:13:58 hass Exp $
+#
+# LANGUAGE translation of Drupal (bulk_export)
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+# Generated from files:
+#  bulk_export.module,v 1.3 2009/07/22 21:12:07 merlinofchaos
+#  bulk_export.info,v 1.2 2009/07/12 18:11:58 merlinofchaos
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2009-08-16 20:47+0200\n"
+"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: bulk_export/bulk_export.module:68
+msgid "Bulk export results"
+msgstr ""
+
+#: bulk_export/bulk_export.module:92;116;127
+msgid "Place this in @file"
+msgstr ""
+
+#: bulk_export/bulk_export.module:133
+msgid "There are no objects to be exported at this time."
+msgstr ""
+
+#: bulk_export/bulk_export.module:159
+msgid "Module name"
+msgstr ""
+
+#: bulk_export/bulk_export.module:160
+msgid "Enter the module name to export code to."
+msgstr ""
+
+#: bulk_export/bulk_export.module:200
+msgid "There are no objects in your system that may be exported at this time."
+msgstr ""
+
+#: bulk_export/bulk_export.module:13
+msgid "use bulk exporter"
+msgstr ""
+
+#: bulk_export/bulk_export.module:31
+msgid "Bulk Exporter"
+msgstr ""
+
+#: bulk_export/bulk_export.module:32
+msgid "Bulk-export multiple CTools-handled data objects to code."
+msgstr ""
+
+#: bulk_export/bulk_export.module:0
+msgid "bulk_export"
+msgstr ""
+
+#: bulk_export/bulk_export.info:0
+msgid "Bulk Export"
+msgstr ""
+
+#: bulk_export/bulk_export.info:0
+msgid "Performs bulk exporting of data objects known about by Chaos tools."
+msgstr ""
+

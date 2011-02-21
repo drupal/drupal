@@ -1,0 +1,33 @@
+<?php
+// $Id: simplenews_test.module,v 1.2 2009/12/23 23:25:40 sutharsan Exp $
+
+/**
+ * @file
+ * Helper module for automated simplenews testing.
+ */
+
+if (/**
+ * Install drupal_mail_wrapper() to redirect email output to the screen.
+ *
+ * During install of simplenews_test module claims the smtp_library. 
+ * Only define our mail wrapper if the simplenews_test module is the current
+ * mail wrapper.
+ */
+variable_get('smtp_library', '') == drupal_get_filename('module', 'simplenews_test')) {
+  //
+  // Redirect email output to the screen.
+  //
+  function drupal_mail_wrapper($message) {
+    $text = '';
+    foreach ($message['headers'] as $name => $value) {
+      $text .= t('Header [@name]: @value', array('@name' => $name, '@value' => $value)) . "<br />";
+    }
+    // NOTE output is escaped. Simpletest assertion may lead to false 
+    // results if special html characters (e.g. &, <, > ) are used in
+    // 'to' name or subject.
+    $text .= t('To: @to', array('@to' => $message['to'])) . "<br />";
+    $text .= t('Subject: @subject', array('@subject' => $message['subject'])) . "<br />";
+    $text .= t('Body: @body', array('@body' => $message['body']));
+    drupal_set_message($text, 'status');
+  }
+}

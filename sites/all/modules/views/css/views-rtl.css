@@ -1,0 +1,6 @@
+
+.views-exposed-form .views-exposed-widget {
+  float: right; /* RTL */
+  padding: .5em 1em 0 0; /* RTL */
+}
+

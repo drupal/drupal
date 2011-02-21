@@ -1,0 +1,130 @@
+/* $Id: stylizer.css,v 1.2 2010/10/11 22:18:23 sdboyer Exp $ */
+
+/* Farbtastic placement */
+.color-form {
+  max-width: 50em;
+  position: relative;
+  min-height: 195px;
+}
+#placeholder {
+/*
+  position: absolute;
+  top: 0;
+  right: 0;
+*/
+  margin: 0 auto;
+  width: 195px;
+}
+
+/* Palette */
+.color-form .form-item {
+  height: 2em;
+  line-height: 2em;
+  padding-left: 1em; /* LTR */
+  margin: 0.5em 0;
+}
+
+.color-form .form-item input {
+  margin-top: .2em;
+}
+
+.color-form label {
+  float: left; /* LTR */
+  clear: left; /* LTR */
+  width: 14em;
+}
+.color-form .form-text, .color-form .form-select {
+  float: left; /* LTR */
+}
+.color-form .form-text {
+  text-align: center;
+  margin-right: 5px; /* LTR */
+  cursor: pointer;
+}
+
+#palette .hook {
+  float: left; /* LTR */
+  margin-top: 3px;
+  width: 16px;
+  height: 16px;
+}
+#palette .up {
+  background-position: 100% -27px; /* LTR */
+}
+#palette .both {
+  background-position: 100% -54px; /* LTR */
+}
+
+
+#palette .form-item {
+  width: 24em;
+}
+#palette .item-selected {
+  background: #eee;
+}
+
+/* Preview */
+#preview {
+  width: 45%;
+  float: right;
+  margin: 0;
+}
+
+#ctools_stylizer_color_scheme_form {
+  float: left;
+  width: 45%;
+  margin: 0;
+}
+
+/* general style for the layout-icon */
+.ctools-style-icon .caption {
+  width: 100px;
+  margin-bottom: 1em;
+  line-height: 1em;
+  text-align: center;
+  cursor: default;
+}
+
+.ctools-style-icons .form-item  {
+  width: 100px;
+  float: left;
+  margin: 0 3px !important;
+}
+
+.ctools-style-icons .form-item .ctools-style-icon {
+  float: none;
+  height: 150px;
+  width: 100px;
+}
+
+.ctools-style-icons .form-item label.option {
+  width: 100px;
+  display: block;
+  text-align: center;
+}
+
+.ctools-style-icons .form-item label.option input {
+  margin: 0 auto;
+}
+
+.ctools-style-icons .ctools-style-category {
+  height: 190px;
+}
+
+.ctools-style-icons .ctools-style-category label {
+  font-weight: bold;
+  width: 100%;
+  float: left;
+}
+
+/**
+ * Stylizer font editor widget
+ */
+.ctools-stylizer-spacing-form .form-item {
+  float: left;
+  margin: .25em;
+}
+
+#edit-font-font {
+  width: 9em;
+}

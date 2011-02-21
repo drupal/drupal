@@ -1,0 +1,179 @@
+// $Id: captcha_api.txt,v 1.13 2010/02/20 16:57:41 soxofaan Exp $
+
+This documentation is for developers that want to implement their own
+challenge type and integrate it with the base CAPTCHA module.
+
+
+=== Required: hook_captcha($op, $captcha_type='') ===
+
+The hook_captcha() hook is the only required function if you want to integrate
+with the base CAPTCHA module.
+Functionality depends on the first argument $op:
+  * 'list': you should return an array of possible challenge types
+    that your module implements.
+  * 'generate': generate a challenge.
+    You should return an array that offers form elements and the solution
+    of your challenge, defined by the second argument $captcha_type.
+    The returned array $captcha should have the following items:
+    $captcha['solution']: this is the solution of your challenge
+    $captcha['form']: an array of the form elements you want to add to the form.
+      There should be a key 'captcha_response' in this array, which points to
+      the form element where the user enters his answer.
+    An optional additional argument $captcha_sid with the captcha session ID is
+    available for more advanced challenges (e.g. the image CAPTCHA uses this
+    argument, see image_captcha_captcha()).
+
+Let's give a simple example to make this more clear.
+We create the challenge 'Foo CAPTCHA', which requires the user to
+enter "foo" in a textfield.
+
+"""
+/**
+ * Implementation of hook_captcha().
+ */
+function foo_captcha_captcha($op, $captcha_type='') {
+  switch ($op) {
+    case 'list':
+      return array('Foo CAPTCHA');
+    case 'generate':
+      if ($captcha_type == 'Foo CAPTCHA') {
+        $captcha = array();
+        $captcha['solution'] = 'foo';
+        $captcha['form']['captcha_response'] = array(
+          '#type' => 'textfield',
+          '#title' => t('Enter "foo"'),
+          '#required' => TRUE,
+        );
+        return $captcha;
+      }
+      break;
+  }
+}
+"""
+
+Validation of the answer against the solution and other stuff is done by the
+base CAPTCHA module.
+
+
+
+
+=== Required: the .info file ===
+
+You should specify that your module depends on the base CAPTCHA module.
+Optionally you could put your module in the "Spam control" package.
+
+For our simple foo CAPTCHA module this would mean the following lines in the
+file foo_captcha.info:
+
+"""
+name = "Foo CAPTCHA"
+description = "The foo CAPTCHA requires the user to enter the word 'foo'."
+package = "Spam control"
+dependencies[] = captcha
+core = 6.x
+"""
+
+
+
+
+=== Recommended: hook_menu($may_cache) ===
+
+More advanced CAPTCHA modules probably want some configuration page.
+To integrate nicely with the base CAPTCHA module you should offer your
+configuration page as a MENU_LOCAL_TASK menu entry under 'admin/config/people/captcha/'.
+
+For our simple foo CAPTCHA module this would mean:
+
+"""
+/**
+ * Implementation of hook_menu().
+ */
+function foo_captcha_menu($may_cache) {
+  $items = array();
+  if ($may_cache) {
+    $items['admin/config/people/captcha/foo_captcha'] = array(
+      'title' => t('Foo CAPTCHA'),
+      'page callback' => 'drupal_get_form',
+      'page arguments' => array('foo_captcha_settings_form'),
+      'type' => MENU_LOCAL_TASK,
+    );
+  }
+  return $items;
+}
+"""
+
+You should of course implement a function foo_captcha_settings_form() which
+returns the form of your configuration page.
+
+
+
+
+=== Optional: hook_help($section) ===
+To offer a description/explanation of your challenge, you can use the
+normal hook_help() system.
+
+For our simple foo CAPTCHA module this would mean:
+
+"""
+/**
+ * Implementation of hook_help().
+ */
+function foo_captcha_help($path, $arg) {
+  switch ($path) {
+    case 'admin/config/people/captcha/foo_captcha':
+      return '<p>'. t('This is a very simple challenge, which requires users to enter "foo" in a textfield.') .'</p>';
+  }
+}
+"""
+
+
+
+=== Optional: custom response validation ===
+The CAPTCHA module provides an option for case sensitive and case insensitve
+validation of the responses. If this is not sufficient, you can provide
+your own validation function with the 'captcha_validate' field, illustrated
+by the following example:
+
+"""
+/**
+ * Implementation of hook_captcha().
+ */
+function foo_captcha_captcha($op, $captcha_type='') {
+  switch ($op) {
+    ...
+    case 'generate':
+      if ($captcha_type == 'Foo CAPTCHA') {
+        $captcha = array();
+        $captcha['solution'] = ...
+        $captcha['form'] = ...
+        $captcha['captcha_validate'] = 'foo_captcha_custom_validation';
+        return $captcha;
+      }
+      break;
+  }
+}
+
+/**
+ * Custom CAPTCHA validation function.
+ *
+ * @param solution the solution for the challenge as reported by hook_captcha('generate', ...).
+ * @param response the answer given by the user.
+ * @return TRUE on succes and FALSE on failure.
+ */
+function foo_captcha_custom_validation($solution, $response) {
+  return $response == "foo" || $response == "bar";
+}
+"""
+
+Previous example shows the basic usage for custom validation with only a $solution
+and $response argument, which should be sufficient for most CAPTCHA modules.
+More advanced CAPTCHA modules can also use extra provided arguments $element
+and $form_state:
+"""
+function foo_captcha_custom_validation($solution, $response, $element, $form_state) {
+  return $form_state['foo']['#bar'] = 'baz';
+}
+"""
+These extra arguments are the $element and $form_state arguments of the validation function
+of the #captcha element. See captcha_validate() in captcha.module for more info about this.
+

@@ -1,0 +1,99 @@
+<?php
+// $Id: ctools_custom_content.module,v 1.3 2011/01/05 22:57:26 merlinofchaos Exp $
+
+/**
+ * @file
+ * ctools_custom_content module
+ *
+ * This module allows styles to be created and managed on behalf of modules
+ * that implement styles.
+ *
+ * The ctools_custom_content tool allows recolorable styles to be created via a miniature
+ * scripting language. Panels utilizes this to allow administrators to add
+ * styles directly to any panel display.
+ */
+
+/**
+ * Implementation of hook_permission()
+ */
+function ctools_custom_content_permission() {
+  return array(
+    'administer custom content' => array(
+      'title' => t('Administer custom content'),
+      'description' => t('Add, edit and delete CTools custom stored custom content'),
+    ),
+  );
+}
+
+/**
+ * Implementation of hook_ctools_plugin_directory() to let the system know
+ * we implement task and task_handler plugins.
+ */
+function ctools_custom_content_ctools_plugin_directory($module, $plugin) {
+  // Most of this module is implemented as an export ui plugin, and the
+  // rest is in ctools/includes/ctools_custom_content.inc
+  if ($module == 'ctools' && $plugin == 'export_ui') {
+    return 'plugins/' . $plugin;
+  }
+}
+
+/**
+ * Create callback for creating a new CTools custom content type.
+ *
+ * This ensures we get proper defaults from the plugin for its settings.
+ */
+function ctools_content_type_new($set_defaults) {
+  $item = ctools_export_new_object('ctools_custom_content', $set_defaults);
+  ctools_include('content');
+  $plugin = ctools_get_content_type('custom');
+  $item->settings = ctools_content_get_defaults($plugin, array());
+  return $item;
+}
+
+/**
+ * Implementation of hook_panels_dashboard_blocks().
+ *
+ * Adds page information to the Panels dashboard.
+ */
+function ctools_custom_content_panels_dashboard_blocks(&$vars) {
+  $vars['links']['ctools_custom_content'] = array(
+    'title' => l(t('Custom content'), 'admin/structure/ctools-content/add'),
+    'description' => t('Custom content panes are basic HTML you enter that can be reused in all of your panels.'),
+  );
+
+   // Load all mini panels and their displays.
+  ctools_include('export');
+  $items = ctools_export_crud_load_all('ctools_custom_content');
+  $count = 0;
+  $rows = array();
+
+  foreach ($items as $item) {
+    $rows[] = array(
+      check_plain($item->admin_title),
+      array(
+        'data' => l(t('Edit'), "admin/structure/ctools-content/list/$item->name/edit"),
+        'class' => 'links',
+      ),
+    );
+
+    // Only show 10.
+    if (++$count >= 10) {
+      break;
+    }
+  }
+
+  if ($rows) {
+    $content = theme('table', array('rows' => $rows, 'attributes' => array('class' => 'panels-manage')));
+  }
+  else {
+    $content = '<p>' . t('There are no custom content panes.') . '</p>';
+  }
+
+  $vars['blocks']['ctools_custom_content'] = array(
+    'title' => t('Manage custom content'),
+    'link' => l(t('Go to list'), 'admin/structure/ctools-content'),
+    'content' => $content,
+    'class' => 'dashboard-content',
+    'section' => 'right',
+  );
+}

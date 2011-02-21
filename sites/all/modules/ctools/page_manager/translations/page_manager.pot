@@ -1,0 +1,921 @@
+# $Id: page_manager.pot,v 1.1 2009/08/16 19:13:58 hass Exp $
+#
+# LANGUAGE translation of Drupal (page_manager-plugins-tasks)
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+# Generated from files:
+#  node_edit.inc,v 1.3 2009/08/04 21:43:06 merlinofchaos
+#  node_view.inc,v 1.4 2009/08/04 21:43:06 merlinofchaos
+#  page.admin.inc,v 1.16 2009/08/07 23:40:39 merlinofchaos
+#  page.inc,v 1.16 2009/08/13 23:35:26 merlinofchaos
+#  term_view.inc,v 1.5 2009/08/04 21:43:06 merlinofchaos
+#  user_view.inc,v 1.3 2009/08/04 21:43:06 merlinofchaos
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2009-08-16 20:47+0200\n"
+"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: page_manager/plugins/tasks/node_edit.inc:13;14
+msgid "Node add/edit form"
+msgstr ""
+
+#: page_manager/plugins/tasks/node_edit.inc:15
+msgid "When enabled, this overrides the default Drupal behavior for adding or edit nodes at <em>node/%node/edit</em> and <em>node/add/%node_type</em>. If you add variants, you may use selection criteria such as node type or language or user access to provide different edit forms for nodes. If no variant is selected, the default Drupal node edit will be used."
+msgstr ""
+
+#: page_manager/plugins/tasks/node_edit.inc:55
+msgid "Page manager module is unable to enable node/%node/edit because some other module already has overridden with %callback."
+msgstr ""
+
+#: page_manager/plugins/tasks/node_edit.inc:65
+msgid "Page manager module is unable to override @path because some other module already has overridden with %callback. Node edit will be enabled but that edit path will not be overridden."
+msgstr ""
+
+#: page_manager/plugins/tasks/node_edit.inc:129
+msgid "Create @name"
+msgstr ""
+
+#: page_manager/plugins/tasks/node_edit.inc:143
+msgid "Node being edited"
+msgstr ""
+
+#: page_manager/plugins/tasks/node_view.inc:22;24
+msgid "Node template"
+msgstr ""
+
+#: page_manager/plugins/tasks/node_view.inc:25
+msgid "When enabled, this overrides the default Drupal behavior for displaying nodes at <em>node/%node</em>. If you add variants, you may use selection criteria such as node type or language or user access to provide different views of nodes. If no variant is selected, the default Drupal node view will be used. This page only affects nodes viewed as pages, it will not affect nodes viewed in lists or at other locations. Also please note that if you are using pathauto, aliases may make a node to be somewhere else, but as far as Drupal is concerned, they are still at node/%node."
+msgstr ""
+
+#: page_manager/plugins/tasks/node_view.inc:66
+msgid "Page manager module is unable to enable node/%node because some other module already has overridden with %callback."
+msgstr ""
+
+#: page_manager/plugins/tasks/node_view.inc:118
+msgid "Node being viewed"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:196;274
+msgid "Basic settings"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:197;970;978
+msgid "Argument settings"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:198;434
+msgid "Access control"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:199
+msgid "Menu settings"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:275
+msgid "A meaningless second page"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:368;1359
+msgid "The name of this page. This will appear in the administrative interface to easily identify it."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:374
+msgid "Machine name"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:375
+msgid "The machine readable name of this page. It must be unique, and it must contain only alphanumeric characters and underscores. Once created, you will not be able to change this value!"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:387
+msgid "A description of what this page is, does or is for, for administrative use."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:395
+msgid "The URL path to get to this page. You may create named placeholders for variable parts of the path by using %name for required elements and !name for optional elements. For example: \"node/%node/foo\", \"forum/%forum\" or \"dashboard/!input\". These named placeholders can be turned into contexts on the arguments form."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:417
+msgid "Make this your site home page."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:418
+msgid "If this box is checked this page will become the site home page. Only paths that have no placeholders can be used as the site home page. The current site home page is set to %homepage."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:423
+msgid "This page is currently set to be your site home page."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:435
+msgid "Visible menu item"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:456
+msgid "Name is required."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:463
+msgid "That name is used by another page: @page"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:468
+msgid "Page name must be alphanumeric or underscores only."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:475
+msgid "That path is used by another page: @page"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:483
+msgid "Path is required."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:497
+msgid "You cannot have a dynamic path element after an optional path element."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:506
+msgid "You cannot have a static path element after an optional path element."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:517
+msgid "That path is already in used. This system cannot override existing paths."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:525
+msgid "That path is currently assigned to be an alias for @alias. This system cannot override existing aliases."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:530
+msgid "You cannot make this page your site home page if it uses % placeholders."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:538
+msgid "Duplicated argument %arg"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:543
+msgid "Invalid arg <em>%</em>. All arguments must be named with keywords."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:636
+#: page_manager/plugins/tasks/page.inc:680
+#: page_manager/plugins/tasks/term_view.inc:269
+msgid "No menu entry"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:637
+msgid "Normal menu entry"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:638;700
+msgid "Menu tab"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:639
+msgid "Default menu tab"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:648
+msgid "If set to normal or tab, enter the text to use for the menu item."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:658
+msgid "Warning: Changing this item's menu will not work reliably in Drupal 6.4 or earlier. Please upgrade your copy of Drupal at !url."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:668
+#: page_manager/plugins/tasks/page.inc:171;685
+#: page_manager/plugins/tasks/term_view.inc:272
+msgid "Menu"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:672;722
+msgid "Insert item into an available menu."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:683
+msgid "Menu selection requires the activation of menu module."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:690
+msgid "The lower the weight the higher/further left it will appear."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:698
+msgid "Parent menu item"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:700
+msgid "Already exists"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:700
+msgid "Normal menu item"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:702
+msgid "When providing a menu item as a default tab, Drupal needs to know what the parent menu item of that tab will be. Sometimes the parent will already exist, but other times you will need to have one created. The path of a parent item will always be the same path with the last part left off. i.e, if the path to this view is <em>foo/bar/baz</em>, the parent path would be <em>foo/bar</em>."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:707
+msgid "Parent item title"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:710
+msgid "If creating a parent menu item, enter the title of the item."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:718
+msgid "Parent item menu"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:735
+msgid "Tab weight"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:739
+msgid "If the parent menu item is a tab, enter the weight of the tab. The lower the number, the more to the left it will be."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:774
+msgid "Paths with non optional placeholders cannot be used as normal menu items unless the selected argument handler provides a default argument to use for the menu item."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:807
+msgid "Access rules are used to test if the page is accessible and any menu items associated with it are visible."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:848
+msgid "No context assigned"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:872
+msgid "Change"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:889
+#: page_manager/plugins/tasks/page.inc:143
+#: page_manager/plugins/tasks/term_view.inc:50;65
+msgid "Settings"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:902
+msgid "Argument"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:903
+msgid "Position in path"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:904
+msgid "Context assigned"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:923
+msgid "The path %path has no arguments to configure."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:957
+msgid "Invalid keyword."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:969
+msgid "Change context type"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:974
+msgid "Change argument"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:1080
+msgid "No context selected"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:1163
+msgid "Error: missing argument."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:1176
+msgid "Context identifier"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:1177
+msgid "This is the title of the context used to identify it later in the administrative process. This will never be shown to a user."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:1183
+msgid "Error: missing or invalid argument plugin %argument."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:1231
+msgid "Import page"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:1234;1352
+msgid "Page name"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:1235
+msgid "Enter the name to use for this page if it is different from the source page. Leave blank to use the original name of the page."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:1241
+msgid "Enter the path to use for this page if it is different from the source page. Leave blank to use the original path of the page."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:1246
+msgid "Allow overwrite of an existing page"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:1247
+msgid "If the name you selected already exists in the database, this page will be allowed to overwrite the existing page."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:1252
+msgid "Paste page code here"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:1258
+msgid "Import"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:1274
+msgid "No handler found."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:1276
+msgid "Unable to get a page from the import. Errors reported: @errors"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:1287
+msgid "That page name is in use and locked by another user. You must <a href=\"!break\">break the lock</a> on that page before proceeding, or choose a different name."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:1353
+msgid "Enter the name to the new page It must be unique and contain only alphanumeric characters and underscores."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:1367
+msgid "The URL path to get to this page. You may create named placeholders for variable parts of the path by using %name for required elements and !name for optional elements. For example: \"node/%node/foo\", \"forum/%forum\" or \"dashboard/!input\". These named placeholders can be turned into contexts on the arguments form. You cannot use the same path as the original page."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:1373
+msgid "Clone variants"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:1374
+msgid "If checked all variants associated with the page will be cloned as well. If not checked the page will be cloned without variants."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:1482
+msgid "Reverting the page will delete the page that is in the database, reverting it to the original default page. Any changes you have made will be lost and cannot be recovered."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:1485
+msgid "Are you sure you want to delete this page? Deleting a page cannot be undone."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:1508
+msgid "The page has been deleted."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:1512
+msgid "The page has been reverted."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.inc:22
+msgid "Custom pages"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.inc:23
+msgid "Administrator created pages that have a URL path, access control and entries in the Drupal menu system."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.inc:39
+msgid "Create a new page"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.inc:150
+#: page_manager/plugins/tasks/term_view.inc:68
+msgid "Basic"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.inc:151
+#: page_manager/plugins/tasks/term_view.inc:69
+msgid "Edit name, path and other basic settings for the page."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.inc:159
+msgid "Set up contexts for the arguments on this page."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.inc:165;650
+#: page_manager/plugins/tasks/term_view.inc:264
+msgid "Access"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.inc:166
+msgid "Control what users can access this page."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.inc:172
+msgid "Provide this page a visible menu or a menu tab."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.inc:178
+msgid "Make a copy of this page"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.inc:183
+msgid "Export this page as code that can be imported or embedded into a module."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.inc:189
+msgid "Remove all changes to this page and revert to the version in code."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.inc:196
+msgid "Remove this page from your system completely."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.inc:574;589;629;650;685
+#: page_manager/plugins/tasks/term_view.inc:258;264;272;285;298
+msgid "page-summary-label"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.inc:575;590;616;630;651;686
+#: page_manager/plugins/tasks/term_view.inc:259;265;273;286;299
+msgid "page-summary-data"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.inc:576;591;617;631;652;687
+#: page_manager/plugins/tasks/term_view.inc:260;266;274;287;300
+msgid "page-summary-operation"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.inc:589
+msgid "Status"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.inc:608
+msgid "This is your site home page."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.inc:611
+msgid "This page is set to become your site home page."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.inc:641
+msgid "Accessible only if @conditions."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.inc:644
+#: page_manager/plugins/tasks/term_view.inc:265
+msgid "This page is publicly accessible."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.inc:656
+msgid "No menu entry."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.inc:657
+msgid "Normal menu entry."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.inc:658
+msgid "Menu tab."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.inc:659
+msgid "Default menu tab."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.inc:665
+msgid "Title: %title."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.inc:668
+msgid "Parent title: %title."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.inc:673
+msgid "Menu block: %title."
+msgstr ""
+
+#: page_manager/plugins/tasks/term_view.inc:23;24
+msgid "Taxonomy term template"
+msgstr ""
+
+#: page_manager/plugins/tasks/term_view.inc:25
+msgid "When enabled, this overrides the default Drupal behavior for displaying taxonomy terms at <em>taxonomy/term/%term</em>. If you add variants, you may use selection criteria such as vocabulary or user access to provide different displays of the taxonomy term and associated nodes. If no variant is selected, the default Drupal taxonomy term display will be used. This page only affects items actually displayed ad taxonomy/term/%term. Some taxonomy terms, such as forums, have their displays moved elsewhere. Also please note that if you are using pathauto, aliases may make a taxonomy terms appear somewhere else, but as far as Drupal is concerned, they are still at taxonomy/term/%term."
+msgstr ""
+
+#: page_manager/plugins/tasks/term_view.inc:51
+msgid "Update settings specific to the taxonomy term view."
+msgstr ""
+
+#: page_manager/plugins/tasks/term_view.inc:101
+msgid "Page manager module is unable to enable taxonomy/term/%term because some other module already has overridden with %callback."
+msgstr ""
+
+#: page_manager/plugins/tasks/term_view.inc:161
+msgid "Term(s) being viewed"
+msgstr ""
+
+#: page_manager/plugins/tasks/term_view.inc:161
+msgid "Term being viewed"
+msgstr ""
+
+#: page_manager/plugins/tasks/term_view.inc:169
+msgid "Depth"
+msgstr ""
+
+#: page_manager/plugins/tasks/term_view.inc:224
+msgid "Allow multiple terms on taxonomy/term/%term"
+msgstr ""
+
+#: page_manager/plugins/tasks/term_view.inc:225
+msgid "Single term"
+msgstr ""
+
+#: page_manager/plugins/tasks/term_view.inc:225
+msgid "Multiple terms"
+msgstr ""
+
+#: page_manager/plugins/tasks/term_view.inc:226
+msgid "By default, Drupal allows multiple terms as an argument by separating them with commas or plus signs. If you set this to single, that feature will be disabled."
+msgstr ""
+
+#: page_manager/plugins/tasks/term_view.inc:278
+msgid "Multiple terms may be used, separated by , or +."
+msgstr ""
+
+#: page_manager/plugins/tasks/term_view.inc:281
+msgid "Only a single term may be used."
+msgstr ""
+
+#: page_manager/plugins/tasks/term_view.inc:285
+msgid "%term"
+msgstr ""
+
+#: page_manager/plugins/tasks/term_view.inc:291
+msgid "Breadcrumb trail will contain taxonomy term hierarchy"
+msgstr ""
+
+#: page_manager/plugins/tasks/term_view.inc:294
+msgid "Breadcrumb trail will not contain taxonomy term hiearchy."
+msgstr ""
+
+#: page_manager/plugins/tasks/term_view.inc:298
+msgid "Breadcrumb"
+msgstr ""
+
+#: page_manager/plugins/tasks/user_view.inc:12;13
+msgid "User profile template"
+msgstr ""
+
+#: page_manager/plugins/tasks/user_view.inc:14
+msgid "When enabled, this overrides the default Drupal behavior for displaying user profiles at <em>user/%user</em>. If you add variants, you may use selection criteria such as roles or user access to provide different views of user profiles. If no variant is selected, the default Drupal user view will be used. Please note that if you are using pathauto, aliases may make a node to be somewhere else, but as far as Drupal is concerned, they are still at user/%user."
+msgstr ""
+
+#: page_manager/plugins/tasks/user_view.inc:56
+msgid "Page manager module is unable to enable user/%user because some other module already has overridden with %callback."
+msgstr ""
+
+#: page_manager/plugins/tasks/user_view.inc:97
+msgid "User being viewed"
+msgstr ""
+
+#: page_manager/theme/page_manager.theme.inc:42
+msgid "Locked"
+msgstr ""
+
+#: page_manager/theme/page_manager.theme.inc:42
+msgid "This page is being edited by another user and you cannot make changes to it."
+msgstr ""
+
+#: page_manager/theme/page_manager.theme.inc:45
+msgid "New"
+msgstr ""
+
+#: page_manager/theme/page_manager.theme.inc:45
+msgid "This page is newly created and has not yet been saved to the database. It will not be available until you save it."
+msgstr ""
+
+#: page_manager/theme/page_manager.theme.inc:48
+msgid "Changed"
+msgstr ""
+
+#: page_manager/theme/page_manager.theme.inc:48
+msgid "This page has been modified, but these modifications are not yet live. While modifying this page, it is locked from modification by other users."
+msgstr ""
+
+#: page_manager/theme/page_manager.theme.inc:98
+msgid "No task handlers are defined for this task."
+msgstr ""
+
+#: page_manager/theme/page_manager.theme.inc:102
+msgid "Variant"
+msgstr ""
+
+#: page_manager/theme/page_manager.theme.inc:124
+msgid "This page is being edited by user !user, and is therefore locked from editing by others. This lock is !age old. Click here to <a href=\"!break\">break this lock</a>."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:34;278
+msgid "Reset"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:71;249
+msgid "Name"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:145
+msgid "System"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:215
+msgid "<All>"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:240
+msgid "Search"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:245
+msgid "Sort by"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:247
+msgid "Enabled, title"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:259
+msgid "Order"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:261
+msgid "Up"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:262
+msgid "Down"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:271
+msgid "Apply"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:451;643
+msgid "Summary"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:452
+msgid "Get a summary of the information about this page."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:505
+msgid "Activate this page so that it will be in use in your system."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:518
+msgid "De-activate this page. The data will remain but the page will not be in use on your system."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:529
+msgid "Add variant"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:530
+msgid "Add a new variant to this page."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:535;568
+msgid "Create variant"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:540
+msgid "Import variant"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:541
+msgid "Add a new variant to this page from code exported from another page."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:547
+msgid "Reorder variants"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:549
+msgid "Change the priority of the variants to ensure that the right one gets selected."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:560
+msgid "Configure a newly created variant prior to actually adding it to the page."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:587;592
+msgid "Break lock"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:588
+msgid "Break the lock on this page so that you can edit it."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:611
+msgid "Variants"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:636
+msgid "Variant operations"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:644
+msgid "Get a summary of the information about this variant."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:659
+msgid "Make an exact copy of this variant."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:664
+msgid "Export this variant into code to import into another page."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:670
+msgid "Remove all changes to this variant and revert to the version in code."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:680
+msgid "Remove this variant from the page completely."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:690
+msgid "Activate this variant so that it will be in use in your system."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:701
+msgid "De-activate this variant. The data will remain but the variant will not be in use on your system."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:713
+msgid "No variants"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:907
+msgid "This operation trail does not exist."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:924
+msgid "The page has been updated. Changes will not be permanent until you save."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:941
+msgid "Unable to update changes due to lock."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:1091
+msgid "This setting contains unsaved changes."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:1149
+msgid "You have unsaved changes to this page. You must select Save to write them to the database, or Cancel to discard these changes. Please note that if you have changed any form, you must submit that form before saving."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:1180
+msgid "All pending changes have been discarded, and the page is now unlocked."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:1231
+msgid "Before this variant can be added, it must be configured. When you are finished, click \"Create variant\" at the end of this wizard to add this to your page."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:1296
+msgid "Administrative title of this variant. If you leave blank it will be automatically assigned."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:1301
+msgid "Variant type"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:1310
+msgid "Optional features"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:1312
+msgid "Check any optional features you need to be presented with forms for configuring them. If you do not check them here you will still be able to utilize these features once the new page is created. If you are not sure, leave these unchecked."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:1340;1496
+msgid "Variant name"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:1341;1497
+msgid "Enter the name of the new variant."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:1346
+msgid "Paste variant code here"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:1363
+msgid "No variant found."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:1366
+msgid "Unable to get a variant from the import. Errors reported: @errors"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:1454
+msgid "Reverting the variant will delete the variant that is in the database, reverting it to the original default variant. This deletion will not be made permanent until you click Save."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:1457
+msgid "Are you sure you want to delete this variant? This deletion will not be made permanent until you click Save."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:1523
+msgid "This variant is currently disabled. Enabling it will make it available in your system. This will not take effect until you save this page."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:1542
+msgid "This variant is currently enabled. Disabling it will make it unavailable in your system, and it will not be used. This will not take effect until you save this page."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:1574
+msgid "Breaking the lock on this page will <strong>discard</strong> any pending changes made by the locking user. Are you REALLY sure you want to do this?"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:1586
+msgid "The lock has been cleared and all changes discarded. You may now make changes to this page."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:1594
+msgid "Enabling this page will immediately make it available in your system (there is no need to wait for a save.)"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:1621
+msgid "Disabling this page will immediately make it unavailable in your system (there is no need to wait for a save.)"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:1677
+msgid "This page has no variants and thus no output of its own."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:1682
+msgid "Add a new variant"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:1700
+msgid "Unable to disable due to lock."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:1703
+msgid "Unable to enable due to lock."
+msgstr ""
+
+#: page_manager/page_manager.module:42
+msgid "use page manager"
+msgstr ""
+
+#: page_manager/page_manager.module:42
+msgid "administer page manager"
+msgstr ""
+
+#: page_manager/page_manager.module:66
+msgid "Pages"
+msgstr ""
+
+#: page_manager/page_manager.module:67
+msgid "Add, edit and remove overridden system pages and user defined pages from the system."
+msgstr ""
+
+#: page_manager/page_manager.module:72
+msgid "List"
+msgstr ""
+
+#: page_manager/page_manager.module:0
+msgid "page_manager"
+msgstr ""
+
+#: page_manager/page_manager.install:222
+msgid "Panel"
+msgstr ""
+
+#: page_manager/page_manager.info:0
+msgid "Page manager"
+msgstr ""
+
+#: page_manager/page_manager.info:0
+msgid "Provides a UI and API to manage pages within the site."
+msgstr ""

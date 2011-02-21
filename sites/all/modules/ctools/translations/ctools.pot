@@ -1,0 +1,3850 @@
+# $Id: ctools.pot,v 1.2 2009/10/22 20:00:00 thomaszahreddin Exp $
+#
+# LANGUAGE translation of Drupal (general)
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+# Generated from files:
+#  ctools.install,v 1.12 2009/08/16 21:59:42 merlinofchaos
+#  ctools.info,v 1.3 2009/07/12 18:11:58 merlinofchaos
+#  bulk_export.info,v 1.2 2009/07/12 18:11:58 merlinofchaos
+#  ctools_plugin_example/ctools_plugin_example.info: n/a
+#  page_manager.info,v 1.2 2009/07/12 18:11:58 merlinofchaos
+#  views_content.info,v 1.2 2009/07/12 18:11:59 merlinofchaos
+#  bulk_export.module,v 1.3 2009/07/22 21:12:07 merlinofchaos
+#  page_manager.admin.inc,v 1.27.2.4 2009/10/15 18:37:54 merlinofchaos
+#  page.inc,v 1.17.2.1 2009/10/09 22:35:56 merlinofchaos
+#  ctools_plugin_example.module,v 1.1 2009/08/17 22:07:14 merlinofchaos
+#  arg_length.inc,v 1.1 2009/08/17 22:02:26 merlinofchaos
+#  simplecontext_content_type.inc,v 1.1.2.1 2009/10/13 20:55:30 merlinofchaos
+#  simplecontext.inc,v 1.1 2009/08/17 22:02:26 merlinofchaos
+#  relcontext_from_simplecontext.inc,v 1.1 2009/08/17 22:02:26 merlinofchaos
+#  example_role.inc,v 1.1 2009/08/17 22:02:26 merlinofchaos
+#  role.inc,v 1.7.2.1 2009/10/01 22:00:08 merlinofchaos
+#  node_access.inc,v 1.7.2.1 2009/10/01 22:00:08 merlinofchaos
+#  perm.inc,v 1.6.2.1 2009/10/01 22:00:08 merlinofchaos
+#  user_contact.inc,v 1.1.2.1 2009/10/12 23:17:18 merlinofchaos
+#  profile_fields.inc,v 1.4 2009/08/13 22:24:02 merlinofchaos
+#  user_picture.inc,v 1.3 2009/08/05 18:11:05 merlinofchaos
+#  user_profile.inc,v 1.7 2009/09/08 21:25:04 merlinofchaos
+#  user.inc,v 1.4.2.1 2009/10/01 22:00:08 merlinofchaos
+#  simplecontext_arg.inc,v 1.1 2009/08/17 22:02:26 merlinofchaos
+#  no_context_content_type.inc,v 1.1 2009/08/17 22:02:26 merlinofchaos
+#  relcontext_content_type.inc,v 1.1.2.1 2009/10/13 20:55:30 merlinofchaos
+#  relcontext.inc,v 1.1 2009/08/17 22:02:26 merlinofchaos
+#  ajax.inc,v 1.14.2.1 2009/10/01 21:34:36 merlinofchaos
+#  content.inc,v 1.12.2.3 2009/10/21 21:25:39 merlinofchaos
+#  content.menu.inc,v 1.2 2009/07/09 16:54:29 merlinofchaos
+#  node_author.inc,v 1.1 2009/07/18 22:10:48 merlinofchaos
+#  context-access-admin.inc,v 1.7 2009/08/16 21:59:42 merlinofchaos
+#  context-admin.inc,v 1.9.2.1 2009/10/06 18:08:23 merlinofchaos
+#  page.admin.inc,v 1.18.2.2 2009/10/13 20:38:17 merlinofchaos
+#  custom.inc,v 1.9.2.2 2009/10/06 17:42:07 merlinofchaos
+#  search_result.inc,v 1.1.2.2 2009/10/12 21:39:24 merlinofchaos
+#  views.inc,v 1.11.2.3 2009/10/21 20:18:09 merlinofchaos
+#  node_links.inc,v 1.2 2009/08/05 16:54:51 sdboyer
+#  export.inc,v 1.19.2.2 2009/10/08 16:12:17 merlinofchaos
+#  page_manager.module,v 1.17.2.2 2009/10/09 22:35:56 merlinofchaos
+#  search_form.inc,v 1.1.2.1 2009/10/12 21:35:54 merlinofchaos
+#  context-task-handler.inc,v 1.23.2.2 2009/10/01 22:26:30 merlinofchaos
+#  context.inc,v 1.33.2.4 2009/10/09 22:35:55 merlinofchaos
+#  context.theme.inc,v 1.7.2.1 2009/10/13 20:55:30 merlinofchaos
+#  page_manager/theme/page_manager.theme.inc: n/a
+#  views_content_plugin_display_panel_pane.inc,v 1.3 2009/09/09 18:25:03 merlinofchaos
+#  css.inc,v 1.10.2.1 2009/10/08 16:12:17 merlinofchaos
+#  form.inc,v 1.11 2009/08/13 22:24:02 merlinofchaos
+#  menu.inc,v 1.4 2009/07/12 05:28:31 merlinofchaos
+#  modal.inc,v 1.7.2.1 2009/10/13 20:06:36 merlinofchaos
+#  modal.js,v 1.17.2.2 2009/10/13 20:06:36 merlinofchaos
+#  wizard.inc,v 1.12 2009/09/08 21:44:52 merlinofchaos
+#  term_view.inc,v 1.5 2009/08/04 21:43:06 merlinofchaos
+#  search.inc,v 1.1.2.1 2009/10/12 21:35:54 merlinofchaos
+#  page_manager.install,v 1.7 2009/07/12 11:32:30 sdboyer
+#  blog.inc,v 1.1.2.1 2009/10/13 18:10:37 merlinofchaos
+#  blog_user.inc,v 1.1.2.2 2009/10/13 18:12:20 merlinofchaos
+#  contact_user.inc,v 1.1.2.2 2009/10/13 18:10:37 merlinofchaos
+#  user_view.inc,v 1.3 2009/08/04 21:43:06 merlinofchaos
+#  contact_site.inc,v 1.1.2.1 2009/10/12 23:17:18 merlinofchaos
+#  node_edit.inc,v 1.3 2009/08/04 21:43:06 merlinofchaos
+#  node_view.inc,v 1.4 2009/08/04 21:43:06 merlinofchaos
+#  node.inc,v 1.6 2009/08/18 04:36:53 merlinofchaos
+#  poll.inc,v 1.1.2.2 2009/10/13 18:27:42 merlinofchaos
+#  terms.inc,v 1.3.2.2 2009/10/01 22:39:02 merlinofchaos
+#  term.inc,v 1.6.2.2 2009/10/01 22:39:02 merlinofchaos
+#  page_breadcrumb.inc,v 1.1 2009/08/17 21:23:13 merlinofchaos
+#  compare_users.inc,v 1.3.2.1 2009/10/01 22:00:08 merlinofchaos
+#  node_language.inc,v 1.7.2.1 2009/10/01 22:00:08 merlinofchaos
+#  node_type.inc,v 1.7.2.1 2009/10/01 22:00:08 merlinofchaos
+#  node_attachments.inc,v 1.1 2009/04/18 02:00:34 merlinofchaos
+#  node_body.inc,v 1.2 2009/07/22 21:40:31 merlinofchaos
+#  node_book_nav.inc,v 1.1 2009/04/18 02:00:34 merlinofchaos
+#  node_comment_form.inc,v 1.1 2009/04/18 02:00:34 merlinofchaos
+#  node_comments.inc,v 1.2 2009/05/20 23:26:45 merlinofchaos
+#  node_content.inc,v 1.4 2009/08/18 04:36:53 merlinofchaos
+#  node_created.inc,v 1.1 2009/07/18 22:10:48 merlinofchaos
+#  node_title.inc,v 1.2 2009/07/18 22:10:48 merlinofchaos
+#  node_type_desc.inc,v 1.1 2009/04/18 02:00:34 merlinofchaos
+#  node_updated.inc,v 1.1 2009/07/18 22:10:48 merlinofchaos
+#  node.inc,v 1.11.2.2 2009/10/06 18:08:24 merlinofchaos
+#  book_parent.inc,v 1.2.2.1 2009/10/01 22:00:09 merlinofchaos
+#  term_from_node.inc,v 1.2.2.2 2009/10/21 21:25:39 merlinofchaos
+#  user_from_node.inc,v 1.3.2.1 2009/10/01 22:00:09 merlinofchaos
+#  site_language.inc,v 1.6.2.1 2009/10/01 22:00:08 merlinofchaos
+#  node_add_form.inc,v 1.9.2.1 2009/10/01 22:00:08 merlinofchaos
+#  php.inc,v 1.1.2.1 2009/10/01 22:00:08 merlinofchaos
+#  term.inc,v 1.1.2.3 2009/10/01 22:26:30 merlinofchaos
+#  term_vocabulary.inc,v 1.4.2.1 2009/10/01 22:00:08 merlinofchaos
+#  term_description.inc,v 1.1 2009/04/18 02:00:35 merlinofchaos
+#  term_list.inc,v 1.3 2009/05/09 07:44:55 merlinofchaos
+#  term_parent.inc,v 1.2.2.1 2009/10/01 22:00:09 merlinofchaos
+#  vocabulary_terms.inc,v 1.3 2009/05/05 23:31:10 merlinofchaos
+#  term.inc,v 1.5.2.1 2009/10/01 22:00:08 merlinofchaos
+#  vocabulary.inc,v 1.3.2.1 2009/10/01 22:00:08 merlinofchaos
+#  nid.inc,v 1.8.2.2 2009/10/01 22:39:02 merlinofchaos
+#  node_edit.inc,v 1.5.2.2 2009/10/01 22:39:02 merlinofchaos
+#  node_add.inc,v 1.3.2.2 2009/10/01 22:39:02 merlinofchaos
+#  string.inc,v 1.3.2.2 2009/10/09 22:35:56 merlinofchaos
+#  string.inc,v 1.5.2.2 2009/10/09 22:35:57 merlinofchaos
+#  uid.inc,v 1.9.2.1 2009/10/01 22:39:02 merlinofchaos
+#  user_name.inc,v 1.1.2.1 2009/10/01 22:39:02 merlinofchaos
+#  vid.inc,v 1.4.2.2 2009/10/01 22:39:02 merlinofchaos
+#  block.inc,v 1.9 2009/07/17 21:53:41 merlinofchaos
+#  contact.inc,v 1.1.2.1 2009/10/12 23:17:18 merlinofchaos
+#  views_content.module,v 1.4 2009/08/07 19:58:33 merlinofchaos
+#  form.inc,v 1.1 2009/04/18 02:00:34 merlinofchaos
+#  node_form_attachments.inc,v 1.1 2009/04/18 02:00:35 merlinofchaos
+#  node_form_author.inc,v 1.1 2009/04/18 02:00:35 merlinofchaos
+#  node_form_book.inc,v 1.1 2009/04/18 02:00:35 merlinofchaos
+#  node_form_buttons.inc,v 1.1 2009/04/18 02:00:35 merlinofchaos
+#  node_form_comment.inc,v 1.1 2009/04/18 02:00:35 merlinofchaos
+#  node_form_input_format.inc,v 1.1 2009/04/18 02:00:35 merlinofchaos
+#  node_form_log.inc,v 1.1 2009/04/18 02:00:35 merlinofchaos
+#  node_form_menu.inc,v 1.1 2009/04/18 02:00:35 merlinofchaos
+#  node_form_path.inc,v 1.1 2009/04/18 02:00:35 merlinofchaos
+#  node_form_publishing.inc,v 1.1 2009/04/18 02:00:35 merlinofchaos
+#  node_form_taxonomy.inc,v 1.1 2009/04/18 02:00:35 merlinofchaos
+#  node_edit_form.inc,v 1.10.2.2 2009/10/06 18:08:24 merlinofchaos
+#  page_footer_message.inc,v 1.1 2009/09/21 20:53:00 merlinofchaos
+#  page_help.inc,v 1.1 2009/08/17 21:23:13 merlinofchaos
+#  page_messages.inc,v 1.1 2009/08/17 21:23:13 merlinofchaos
+#  page_mission.inc,v 1.1 2009/08/19 01:18:35 merlinofchaos
+#  page_slogan.inc,v 1.1 2009/08/19 01:18:35 merlinofchaos
+#  page_tabs.inc,v 1.1 2009/08/17 21:23:13 merlinofchaos
+#  page_title.inc,v 1.1 2009/08/17 21:23:13 merlinofchaos
+#  terms.inc,v 1.4.2.1 2009/10/01 22:00:08 merlinofchaos
+#  views_panes.inc,v 1.14.2.3 2009/10/21 19:52:07 merlinofchaos
+#  views_content.views.inc,v 1.2 2009/04/30 22:37:52 merlinofchaos
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2009-10-22 21:56+0200\n"
+"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: ctools.install:25
+msgid "CTools CSS Cache"
+msgstr ""
+
+#: ctools.install:27
+msgid "Exists"
+msgstr ""
+
+#: ctools.install:31
+msgid "The CTools CSS cache directory, %path could not be created due to a misconfigured files directory. Please ensure that the files directory is correctly configured and that the webserver has permission to create directories."
+msgstr ""
+
+#: ctools.install:33
+msgid "Unable to create"
+msgstr ""
+
+#: ctools.install:113
+msgid "A special cache used to store objects that are being edited; it serves to save state in an ordinarily stateless environment."
+msgstr ""
+
+#: ctools.info:0
+msgid "Chaos tools"
+msgstr ""
+
+#: ctools.info:0
+msgid "A library of helpful tools by Merlin of Chaos."
+msgstr ""
+
+#: ctools.info:0 bulk_export/bulk_export.info:0 ctools_plugin_example/ctools_plugin_example.info:0 page_manager/page_manager.info:0 views_content/views_content.info:0
+msgid "Chaos tool suite"
+msgstr ""
+
+#: bulk_export/bulk_export.module:68
+msgid "Bulk export results"
+msgstr ""
+
+#: bulk_export/bulk_export.module:92;116;127
+msgid "Place this in @file"
+msgstr ""
+
+#: bulk_export/bulk_export.module:133
+msgid "There are no objects to be exported at this time."
+msgstr ""
+
+#: bulk_export/bulk_export.module:159
+msgid "Module name"
+msgstr ""
+
+#: bulk_export/bulk_export.module:160
+msgid "Enter the module name to export code to."
+msgstr ""
+
+#: bulk_export/bulk_export.module:165 page_manager/page_manager.admin.inc:682 page_manager/plugins/tasks/page.inc:183
+msgid "Export"
+msgstr ""
+
+#: bulk_export/bulk_export.module:200
+msgid "There are no objects in your system that may be exported at this time."
+msgstr ""
+
+#: bulk_export/bulk_export.module:13
+msgid "use bulk exporter"
+msgstr ""
+
+#: bulk_export/bulk_export.module:31
+msgid "Bulk Exporter"
+msgstr ""
+
+#: bulk_export/bulk_export.module:32
+msgid "Bulk-export multiple CTools-handled data objects to code."
+msgstr ""
+
+#: bulk_export/bulk_export.info:0
+msgid "Bulk Export"
+msgstr ""
+
+#: bulk_export/bulk_export.info:0
+msgid "Performs bulk exporting of data objects known about by Chaos tools."
+msgstr ""
+
+#: ctools_plugin_example/ctools_plugin_example.module:36
+msgid "Demonstration code, advanced help, and a demo panel to show how to build ctools plugins."
+msgstr ""
+
+#: ctools_plugin_example/ctools_plugin_example.module:79
+msgid "The CTools Plugin Example is simply a developer's demo of how to create plugins for CTools. It provides no useful functionality for an ordinary user."
+msgstr ""
+
+#: ctools_plugin_example/ctools_plugin_example.module:81
+msgid "There is a demo panel demonstrating much of the functionality provided at\n    <a href=\"@demo_url\">CTools demo panel</a>, and you can find documentation on the examples at\n    !ctools_plugin_example_help.\n    CTools itself provides documentation at !ctools_help. Mostly, though, the code itself is intended to be the teacher.\n    You can find it in %path."
+msgstr ""
+
+#: ctools_plugin_example/ctools_plugin_example.module:35
+msgid "CTools plugin example"
+msgstr ""
+
+#: ctools_plugin_example/ctools_plugin_example.info:0
+msgid "Chaos Tools (CTools) Plugin Example"
+msgstr ""
+
+#: ctools_plugin_example/ctools_plugin_example.info:0
+msgid "Shows how an external module can provide ctools plugins (for Panels, etc.)."
+msgstr ""
+
+#: ctools_plugin_example/plugins/access/arg_length.inc:15
+msgid "Arg length"
+msgstr ""
+
+#: ctools_plugin_example/plugins/access/arg_length.inc:16
+msgid "Control access by length of simplecontext argument."
+msgstr ""
+
+#: ctools_plugin_example/plugins/access/arg_length.inc:20 ctools_plugin_example/plugins/content_types/simplecontext_content_type.inc:33;42 ctools_plugin_example/plugins/contexts/simplecontext.inc:16 ctools_plugin_example/plugins/relationships/relcontext_from_simplecontext.inc:22
+msgid "Simplecontext"
+msgstr ""
+
+#: ctools_plugin_example/plugins/access/arg_length.inc:30
+msgid "Grant access if simplecontext argument length is"
+msgstr ""
+
+#: ctools_plugin_example/plugins/access/arg_length.inc:31
+msgid "Greater than"
+msgstr ""
+
+#: ctools_plugin_example/plugins/access/arg_length.inc:31
+msgid "Less than or equal to"
+msgstr ""
+
+#: ctools_plugin_example/plugins/access/arg_length.inc:36
+msgid "Length of simplecontext argument"
+msgstr ""
+
+#: ctools_plugin_example/plugins/access/arg_length.inc:39
+msgid "Access/visibility will be granted based on arg length."
+msgstr ""
+
+#: ctools_plugin_example/plugins/access/arg_length.inc:63
+msgid "Simpletext argument must be !comp @length characters"
+msgstr ""
+
+#: ctools_plugin_example/plugins/access/example_role.inc:16
+msgid "CTools example: role"
+msgstr ""
+
+#: ctools_plugin_example/plugins/access/example_role.inc:17 plugins/access/role.inc:15
+msgid "Control access by role."
+msgstr ""
+
+#: ctools_plugin_example/plugins/access/example_role.inc:22 plugins/access/node_access.inc:22 plugins/access/perm.inc:20 plugins/access/role.inc:21 plugins/content_types/contact/user_contact.inc:17;18 plugins/content_types/user_context/profile_fields.inc:15;16 plugins/content_types/user_context/user_picture.inc:13;14 plugins/content_types/user_context/user_profile.inc:13;14 plugins/contexts/user.inc:15
+msgid "User"
+msgstr ""
+
+#: ctools_plugin_example/plugins/access/example_role.inc:32 plugins/access/role.inc:31
+msgid "Role"
+msgstr ""
+
+#: ctools_plugin_example/plugins/access/example_role.inc:35 plugins/access/role.inc:34
+msgid "Only the checked roles will be granted access."
+msgstr ""
+
+#: ctools_plugin_example/plugins/access/example_role.inc:74 plugins/access/role.inc:75
+msgid "@identifier can have any role"
+msgstr ""
+
+#: ctools_plugin_example/plugins/access/example_role.inc:76
+msgid "@identifier must have role \"@roles\""
+msgid_plural "@identifier can be one of \"@roles\""
+msgstr[0] ""
+msgstr[1] ""
+
+#: ctools_plugin_example/plugins/arguments/simplecontext_arg.inc:26
+msgid "Simplecontext arg"
+msgstr ""
+
+#: ctools_plugin_example/plugins/arguments/simplecontext_arg.inc:29
+msgid "Creates a \"simplecontext\" from the arg."
+msgstr ""
+
+#: ctools_plugin_example/plugins/arguments/simplecontext_arg.inc:37
+msgid "Enter the simplecontext arg"
+msgstr ""
+
+#: ctools_plugin_example/plugins/content_types/no_context_content_type.inc:19
+msgid "CTools example no context content type"
+msgstr ""
+
+#: ctools_plugin_example/plugins/content_types/no_context_content_type.inc:20
+msgid "No context content type - requires and uses no context."
+msgstr ""
+
+#: ctools_plugin_example/plugins/content_types/no_context_content_type.inc:37 ctools_plugin_example/plugins/content_types/relcontext_content_type.inc:30 ctools_plugin_example/plugins/content_types/simplecontext_content_type.inc:37
+msgid "CTools Examples"
+msgstr ""
+
+#: ctools_plugin_example/plugins/content_types/no_context_content_type.inc:94
+msgid "Item1"
+msgstr ""
+
+#: ctools_plugin_example/plugins/content_types/no_context_content_type.inc:96
+msgid "The setting for item 1."
+msgstr ""
+
+#: ctools_plugin_example/plugins/content_types/no_context_content_type.inc:103
+msgid "Item2"
+msgstr ""
+
+#: ctools_plugin_example/plugins/content_types/no_context_content_type.inc:105
+msgid "The setting for item 2"
+msgstr ""
+
+#: ctools_plugin_example/plugins/content_types/relcontext_content_type.inc:21
+msgid "CTools example relcontext content type"
+msgstr ""
+
+#: ctools_plugin_example/plugins/content_types/relcontext_content_type.inc:28
+msgid "Relcontext content type - works with relcontext context."
+msgstr ""
+
+#: ctools_plugin_example/plugins/content_types/relcontext_content_type.inc:29 ctools_plugin_example/plugins/contexts/relcontext.inc:16
+msgid "Relcontext"
+msgstr ""
+
+#: ctools_plugin_example/plugins/content_types/relcontext_content_type.inc:55
+msgid "\n    This is a block of data created by the Relcontent content type.\n    Data in the block may be assembled from static text (like this) or from the\n    content type settings form ($conf) for the content type, or from the context\n    that is passed in. <br />\n    In our case, the configuration form ($conf) has just one field, 'config_item_1;\n    and it's configured with:\n    "
+msgstr ""
+
+#: ctools_plugin_example/plugins/content_types/relcontext_content_type.inc:87
+msgid "Config Item 1 (relcontext)"
+msgstr ""
+
+#: ctools_plugin_example/plugins/content_types/relcontext_content_type.inc:89
+msgid "Setting for relcontext."
+msgstr ""
+
+#: ctools_plugin_example/plugins/content_types/simplecontext_content_type.inc:23
+msgid "Simplecontext content type"
+msgstr ""
+
+#: ctools_plugin_example/plugins/content_types/simplecontext_content_type.inc:32
+msgid "Simplecontext content type - works with a simplecontext context."
+msgstr ""
+
+#: ctools_plugin_example/plugins/content_types/simplecontext_content_type.inc:82
+msgid "\n    This is a block of data created by the Simplecontext content type.\n    Data in the block may be assembled from static text (like this) or from the\n    content type settings form ($conf) for the content type, or from the context\n    that is passed in. <br />\n    In our case, the configuration form ($conf) has just one field, 'config_item_1;\n    and it's configured with:\n    "
+msgstr ""
+
+#: ctools_plugin_example/plugins/content_types/simplecontext_content_type.inc:111
+msgid "Config Item 1 for simplecontext content type"
+msgstr ""
+
+#: ctools_plugin_example/plugins/content_types/simplecontext_content_type.inc:113
+msgid "The stuff for item 1."
+msgstr ""
+
+#: ctools_plugin_example/plugins/contexts/relcontext.inc:17
+msgid "A relcontext object."
+msgstr ""
+
+#: ctools_plugin_example/plugins/contexts/relcontext.inc:53
+msgid "Relcontext context from simplecontext"
+msgstr ""
+
+#: ctools_plugin_example/plugins/contexts/relcontext.inc:77
+msgid "Relcontext setting"
+msgstr ""
+
+#: ctools_plugin_example/plugins/contexts/relcontext.inc:79
+msgid "Just an example setting."
+msgstr ""
+
+#: ctools_plugin_example/plugins/contexts/simplecontext.inc:17
+msgid "A single \"simplecontext\" context, or data element."
+msgstr ""
+
+#: ctools_plugin_example/plugins/contexts/simplecontext.inc:25
+msgid "Enter some data to represent this \"simplecontext\"."
+msgstr ""
+
+#: ctools_plugin_example/plugins/contexts/simplecontext.inc:58
+msgid "Simplecontext context from config"
+msgstr ""
+
+#: ctools_plugin_example/plugins/contexts/simplecontext.inc:87
+msgid "Setting for simplecontext"
+msgstr ""
+
+#: ctools_plugin_example/plugins/contexts/simplecontext.inc:89
+msgid "An example setting that could be used to configure a context"
+msgstr ""
+
+#: ctools_plugin_example/plugins/relationships/relcontext_from_simplecontext.inc:19
+msgid "Relcontext from simplecontext"
+msgstr ""
+
+#: ctools_plugin_example/plugins/relationships/relcontext_from_simplecontext.inc:21
+msgid "Adds a relcontext from existing simplecontext."
+msgstr ""
+
+#: includes/ajax.inc:137 page_manager/page_manager.admin.inc:927
+msgid "Error"
+msgstr ""
+
+#: includes/ajax.inc:138
+msgid "Server reports invalid input error."
+msgstr ""
+
+#: includes/content.inc:337
+msgid "@type:@subtype will not display due to missing context"
+msgstr ""
+
+#: includes/content.inc:422
+msgid "No info"
+msgstr ""
+
+#: includes/content.inc:423
+msgid "No info available."
+msgstr ""
+
+#: includes/content.inc:454
+msgid "Override title"
+msgstr ""
+
+#: includes/content.inc:473
+msgid "You may use %keywords from contexts, as well as %title to contain the original title."
+msgstr ""
+
+#: includes/content.inc:544 page_manager/page_manager.admin.inc:578
+msgid "Configure"
+msgstr ""
+
+#: includes/content.inc:547
+msgid "Configure new !subtype_title"
+msgstr ""
+
+#: includes/content.inc:550
+msgid "Configure !subtype_title"
+msgstr ""
+
+#: includes/content.menu.inc:45 plugins/content_types/node_context/node_author.inc:36 plugins/contexts/user.inc:49
+msgid "Anonymous"
+msgstr ""
+
+#: includes/content.menu.inc:46
+msgid "by @user"
+msgstr ""
+
+#: includes/context-access-admin.inc:159
+msgid "Add"
+msgstr ""
+
+#: includes/context-access-admin.inc:165
+msgid "All criteria must pass."
+msgstr ""
+
+#: includes/context-access-admin.inc:166
+msgid "Only one criteria must pass."
+msgstr ""
+
+#: includes/context-access-admin.inc:174;405 includes/context-admin.inc:622;701;772;883 page_manager/page_manager.admin.inc:1177
+msgid "Save"
+msgstr ""
+
+#: includes/context-access-admin.inc:198
+msgid "Broken/missing access plugin %plugin"
+msgstr ""
+
+#: includes/context-access-admin.inc:205 includes/context-admin.inc:342
+msgid "Configure settings for this item."
+msgstr ""
+
+#: includes/context-access-admin.inc:206 includes/context-admin.inc:338
+msgid "Remove this item."
+msgstr ""
+
+#: includes/context-access-admin.inc:214 includes/context-admin.inc:850 page_manager/page_manager.admin.inc:90;267;1316 page_manager/plugins/tasks/page.admin.inc:654 plugins/content_types/custom/custom.inc:113 plugins/content_types/search/search_result.inc:117;155
+msgid "Title"
+msgstr ""
+
+#: includes/context-access-admin.inc:215
+msgid "Description"
+msgstr ""
+
+#: includes/context-access-admin.inc:220
+msgid "No criteria selected, this test will pass."
+msgstr ""
+
+#: includes/context-access-admin.inc:278;346;457
+msgid "Missing callback hooks."
+msgstr ""
+
+#: includes/context-access-admin.inc:303
+msgid "Add criteria"
+msgstr ""
+
+#: includes/context-access-admin.inc:367
+msgid "Edit criteria"
+msgstr ""
+
+#: includes/context-admin.inc:26 page_manager/plugins/tasks/page.inc:158 views_content/plugins/content_types/views.inc:360
+msgid "Arguments"
+msgstr ""
+
+#: includes/context-admin.inc:27;858
+msgid "argument"
+msgstr ""
+
+#: includes/context-admin.inc:29
+msgid "Add argument"
+msgstr ""
+
+#: includes/context-admin.inc:37
+msgid "Relationships"
+msgstr ""
+
+#: includes/context-admin.inc:38;748
+msgid "relationship"
+msgstr ""
+
+#: includes/context-admin.inc:40
+msgid "Add relationship"
+msgstr ""
+
+#: includes/context-admin.inc:48
+msgid "Contexts"
+msgstr ""
+
+#: includes/context-admin.inc:49;598
+msgid "context"
+msgstr ""
+
+#: includes/context-admin.inc:51
+msgid "Add context"
+msgstr ""
+
+#: includes/context-admin.inc:59
+msgid "Required contexts"
+msgstr ""
+
+#: includes/context-admin.inc:60;686
+msgid "required context"
+msgstr ""
+
+#: includes/context-admin.inc:62
+msgid "Add required context"
+msgstr ""
+
+#: includes/context-admin.inc:365;493;931 page_manager/plugins/tasks/page.admin.inc:952
+msgid "Invalid object name."
+msgstr ""
+
+#: includes/context-admin.inc:412
+msgid "Add @type \"@context\""
+msgstr ""
+
+#: includes/context-admin.inc:511
+msgid "Invalid context type"
+msgstr ""
+
+#: includes/context-admin.inc:530
+msgid "Edit @type \"@context\""
+msgstr ""
+
+#: includes/context-admin.inc:597;685;747;857 plugins/content_types/node_context/node_links.inc:93
+msgid "Identifier"
+msgstr ""
+
+#: includes/context-admin.inc:598;686;748;858
+msgid "Enter a name to identify this !type on administrative screens."
+msgstr ""
+
+#: includes/context-admin.inc:604;692;754;864 plugins/content_types/custom/custom.inc:147
+msgid "Keyword"
+msgstr ""
+
+#: includes/context-admin.inc:605;693;755;865
+msgid "Enter a keyword to use for substitution in titles."
+msgstr ""
+
+#: includes/context-admin.inc:839 includes/export.inc:191;275 page_manager/page_manager.module:500;515 page_manager/plugins/tasks/page.inc:217 plugins/content_types/search/search_form.inc:117 views_content/plugins/content_types/views.inc:432
+msgid "Default"
+msgstr ""
+
+#: includes/context-admin.inc:841
+msgid "Ignore it; content that requires this context will not be available."
+msgstr ""
+
+#: includes/context-admin.inc:842
+msgid "Display page not found or display nothing at all."
+msgstr ""
+
+#: includes/context-admin.inc:845
+msgid "If the argument is missing or is not valid, select how this should behave."
+msgstr ""
+
+#: includes/context-admin.inc:852
+msgid "Enter a title to use when this argument is present. You may use %KEYWORD substitution, where the keyword is specified below."
+msgstr ""
+
+#: includes/context-admin.inc:942
+msgid "Unable to delete missing item!"
+msgstr ""
+
+#: includes/context-task-handler.inc:118
+msgid "Edit @type"
+msgstr ""
+
+#: includes/context-task-handler.inc:308
+msgid "If there is more than one variant on a page, when the page is visited each variant is given an opportunity to be displayed. Starting from the first variant and working to the last, each one tests to see if its selection rules will pass. The first variant that its criteria (as specified below) will be used."
+msgstr ""
+
+#: includes/context-task-handler.inc:356
+msgid "Summary of contexts"
+msgstr ""
+
+#: includes/context.inc:49
+msgid "Unknown context"
+msgstr ""
+
+#: includes/context.inc:195;196;400 page_manager/plugins/tasks/page.admin.inc:1120;1140
+msgid "No context"
+msgstr ""
+
+#: includes/context.inc:311;418
+msgid "Context %count"
+msgstr ""
+
+#: includes/context.inc:311;418
+msgid "Context"
+msgstr ""
+
+#: includes/context.inc:425
+msgid "Please choose which context and how you would like it converted."
+msgstr ""
+
+#: includes/context.inc:1233
+msgid "@identifier (@keyword)"
+msgstr ""
+
+#: includes/context.inc:1297
+msgid "Logged in user"
+msgstr ""
+
+#: includes/context.inc:1335
+msgid ", and "
+msgstr ""
+
+#: includes/context.inc:1335
+msgid ", or "
+msgstr ""
+
+#: includes/context.theme.inc:80 page_manager/plugins/tasks/page.admin.inc:696 page_manager/theme/page_manager.theme.inc:103 views_content/plugins/views/views_content_plugin_display_panel_pane.inc:196
+msgid "Weight"
+msgstr ""
+
+#: includes/context.theme.inc:82 plugins/access/node_access.inc:33
+msgid "Operation"
+msgstr ""
+
+#: includes/context.theme.inc:131;237
+msgid "Built in context"
+msgstr ""
+
+#: includes/context.theme.inc:134;158;181;201;240;259;275;290
+msgid "Keyword: %@keyword"
+msgstr ""
+
+#: includes/context.theme.inc:136;161;183;203
+msgid "@keyword --&gt; @title"
+msgstr ""
+
+#: includes/context.theme.inc:155;256
+msgid "Argument @count"
+msgstr ""
+
+#: includes/context.theme.inc:178;272
+msgid "Context @count"
+msgstr ""
+
+#: includes/context.theme.inc:198;287
+msgid "From \"@title\""
+msgstr ""
+
+#: includes/css.inc:162
+msgid "Unable to create CTools CSS cache directory. Check the permissions on your files directory."
+msgstr ""
+
+#: includes/export.inc:146 page_manager/page_manager.module:366 page_manager/plugins/tasks/page.admin.inc:1456
+msgid "Normal"
+msgstr ""
+
+#: includes/export.inc:184 page_manager/page_manager.admin.inc:1473 page_manager/page_manager.module:509 page_manager/plugins/tasks/page.admin.inc:1485;1499;1510
+msgid "Overridden"
+msgstr ""
+
+#: includes/export.inc:608 page_manager/page_manager.module:636
+msgid "Local"
+msgstr ""
+
+#: includes/form.inc:303
+msgid "Validation error, please try again. If this error persists, please contact the site administrator."
+msgstr ""
+
+#: includes/menu.inc:58
+msgid "Home"
+msgstr ""
+
+#: includes/modal.inc:52
+msgid "Close Window"
+msgstr ""
+
+#: includes/modal.inc:53;53
+msgid "Close window"
+msgstr ""
+
+#: includes/modal.inc:54 js/modal.js:0;0
+msgid "Loading..."
+msgstr ""
+
+#: includes/modal.inc:54
+msgid "Loading"
+msgstr ""
+
+#: includes/wizard.inc:373
+msgid "Continue"
+msgstr ""
+
+#: includes/wizard.inc:374
+msgid "Back"
+msgstr ""
+
+#: includes/wizard.inc:375
+msgid "Update and return"
+msgstr ""
+
+#: includes/wizard.inc:376
+msgid "Finish"
+msgstr ""
+
+#: includes/wizard.inc:377 page_manager/page_manager.admin.inc:1183
+msgid "Cancel"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:25
+msgid "See the getting started guide for more information."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:40
+msgid "This page is currently locked for editing by you. Nobody else may edit this page until these changes are saved or canceled."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:44
+msgid "This page is currently locked for editing by another user. You may not edit this page without breaking the lock."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:52;297
+msgid "Reset"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:88;238;270 page_manager/plugins/tasks/page.admin.inc:642
+msgid "Type"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:89;268
+msgid "Name"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:91;269 page_manager/plugins/tasks/page.admin.inc:399;1244;1370 page_manager/plugins/tasks/page.inc:647 page_manager/plugins/tasks/term_view.inc:258 plugins/content_types/search/search_form.inc:115
+msgid "Path"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:92;245;271 page_manager/plugins/tasks/page.inc:46;592
+msgid "Storage"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:95 page_manager/plugins/tasks/page.admin.inc:909
+msgid "Operations"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:163 page_manager/plugins/tasks/search.inc:213
+msgid "System"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:171 page_manager/plugins/tasks/page.inc:217 page_manager/plugins/tasks/search.inc:215
+msgid "In code"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:189 page_manager/page_manager.module:79 page_manager/plugins/tasks/page.inc:623;665;701 views_content/plugins/views/views_content_plugin_display_panel_pane.inc:120
+msgid "Edit"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:197;523;529;708;713 page_manager/plugins/tasks/page.inc:598
+msgid "Enable"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:203;536;542;719;724 page_manager/plugins/tasks/page.inc:602
+msgid "Disable"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:234
+msgid "<All>"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:252;253 page_manager/plugins/tasks/page.inc:603
+msgid "Enabled"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:253 page_manager/plugins/tasks/page.inc:599
+msgid "Disabled"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:259 page_manager/plugins/tasks/search.inc:25
+msgid "Search"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:264
+msgid "Sort by"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:266
+msgid "Enabled, title"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:278
+msgid "Order"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:280
+msgid "Up"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:281
+msgid "Down"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:290
+msgid "Apply"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:470;662
+msgid "Summary"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:471
+msgid "Get a summary of the information about this page."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:524
+msgid "Activate this page so that it will be in use in your system."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:537
+msgid "De-activate this page. The data will remain but the page will not be in use on your system."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:548
+msgid "Add variant"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:549
+msgid "Add a new variant to this page."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:554;587
+msgid "Create variant"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:559
+msgid "Import variant"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:560
+msgid "Add a new variant to this page from code exported from another page."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:566
+msgid "Reorder variants"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:568
+msgid "Change the priority of the variants to ensure that the right one gets selected."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:579
+msgid "Configure a newly created variant prior to actually adding it to the page."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:606;611
+msgid "Break lock"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:607
+msgid "Break the lock on this page so that you can edit it."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:630
+msgid "Variants"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:655
+msgid "Variant operations"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:663
+msgid "Get a summary of the information about this variant."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:677 page_manager/plugins/tasks/page.admin.inc:1384 page_manager/plugins/tasks/page.inc:178
+msgid "Clone"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:678
+msgid "Make an exact copy of this variant."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:683
+msgid "Export this variant into code to import into another page."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:688;692 page_manager/plugins/tasks/page.admin.inc:1499 page_manager/plugins/tasks/page.inc:189
+msgid "Revert"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:689
+msgid "Remove all changes to this variant and revert to the version in code."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:698;702 page_manager/plugins/tasks/page.admin.inc:1499 page_manager/plugins/tasks/page.inc:196 plugins/access/node_access.inc:38
+msgid "Delete"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:699
+msgid "Remove this variant from the page completely."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:709
+msgid "Activate this variant so that it will be in use in your system."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:720
+msgid "De-activate this variant. The data will remain but the variant will not be in use on your system."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:732
+msgid "No variants"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:814 plugins/access/node_access.inc:37
+msgid "Update"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:928
+msgid "This operation trail does not exist."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:945
+msgid "The page has been updated. Changes will not be permanent until you save."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:962
+msgid "Unable to update changes due to lock."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:1112
+msgid "This setting contains unsaved changes."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:1170
+msgid "You have unsaved changes to this page. You must select Save to write them to the database, or Cancel to discard these changes. Please note that if you have changed any form, you must submit that form before saving."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:1201
+msgid "All pending changes have been discarded, and the page is now unlocked."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:1252
+msgid "Before this variant can be added, it must be configured. When you are finished, click \"Create variant\" at the end of this wizard to add this to your page."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:1317
+msgid "Administrative title of this variant. If you leave blank it will be automatically assigned."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:1322
+msgid "Variant type"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:1331
+msgid "Optional features"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:1333
+msgid "Check any optional features you need to be presented with forms for configuring them. If you do not check them here you will still be able to utilize these features once the new page is created. If you are not sure, leave these unchecked."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:1361;1516
+msgid "Variant name"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:1362;1517
+msgid "Enter the name of the new variant."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:1367
+msgid "Paste variant code here"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:1383
+msgid "No variant found."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:1386
+msgid "Unable to get a variant from the import. Errors reported: @errors"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:1474
+msgid "Reverting the variant will delete the variant that is in the database, reverting it to the original default variant. This deletion will not be made permanent until you click Save."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:1477
+msgid "Are you sure you want to delete this variant? This deletion will not be made permanent until you click Save."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:1543
+msgid "This variant is currently disabled. Enabling it will make it available in your system. This will not take effect until you save this page."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:1562
+msgid "This variant is currently enabled. Disabling it will make it unavailable in your system, and it will not be used. This will not take effect until you save this page."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:1594
+msgid "Breaking the lock on this page will <strong>discard</strong> any pending changes made by the locking user. Are you REALLY sure you want to do this?"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:1606
+msgid "The lock has been cleared and all changes discarded. You may now make changes to this page."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:1614
+msgid "Enabling this page will immediately make it available in your system (there is no need to wait for a save.)"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:1641
+msgid "Disabling this page will immediately make it unavailable in your system (there is no need to wait for a save.)"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:1699
+msgid "This page has no variants and thus no output of its own."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:1704
+msgid "Add a new variant"
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:1722
+msgid "Unable to disable due to lock."
+msgstr ""
+
+#: page_manager/page_manager.admin.inc:1725
+msgid "Unable to enable due to lock."
+msgstr ""
+
+#: page_manager/page_manager.module:42
+msgid "use page manager"
+msgstr ""
+
+#: page_manager/page_manager.module:42
+msgid "administer page manager"
+msgstr ""
+
+#: page_manager/page_manager.module:66
+msgid "Pages"
+msgstr ""
+
+#: page_manager/page_manager.module:67
+msgid "Add, edit and remove overridden system pages and user defined pages from the system."
+msgstr ""
+
+#: page_manager/page_manager.module:72
+msgid "List"
+msgstr ""
+
+#: page_manager/page_manager.install:222
+msgid "Panel"
+msgstr ""
+
+#: page_manager/page_manager.info:0
+msgid "Page manager"
+msgstr ""
+
+#: page_manager/page_manager.info:0
+msgid "Provides a UI and API to manage pages within the site."
+msgstr ""
+
+#: page_manager/plugins/tasks/blog.inc:17;18
+msgid "All blogs"
+msgstr ""
+
+#: page_manager/plugins/tasks/blog.inc:19
+msgid "When enabled, this overrides the default Drupal behavior for the all blogs at <em>/blog</em>. If no variant is selected, the default Drupal most recent blog posts will be shown."
+msgstr ""
+
+#: page_manager/plugins/tasks/blog.inc:56
+msgid "Page manager module is unable to enable blog because some other module already has overridden with %callback."
+msgstr ""
+
+#: page_manager/plugins/tasks/blog_user.inc:16;17
+msgid "User blog"
+msgstr ""
+
+#: page_manager/plugins/tasks/blog_user.inc:18
+msgid "When enabled, this overrides the default Drupal behavior for displaying user blogs at <em>blog/%user</em>. If no variant is selected, the default Drupal user blog will be used."
+msgstr ""
+
+#: page_manager/plugins/tasks/blog_user.inc:59
+msgid "Page manager module is unable to enable blog/%user because some other module already has overridden with %callback."
+msgstr ""
+
+#: page_manager/plugins/tasks/blog_user.inc:109 page_manager/plugins/tasks/contact_user.inc:105 page_manager/plugins/tasks/user_view.inc:97
+msgid "User being viewed"
+msgstr ""
+
+#: page_manager/plugins/tasks/contact_site.inc:17;18
+msgid "Site contact page"
+msgstr ""
+
+#: page_manager/plugins/tasks/contact_site.inc:19
+msgid "When enabled, this overrides the default Drupal behavior for the site contact page at <em>/contact</em>. If no variant is selected, the default Drupal contact form will be used."
+msgstr ""
+
+#: page_manager/plugins/tasks/contact_site.inc:56
+msgid "Page manager module is unable to enable contact because some other module already has overridden with %callback."
+msgstr ""
+
+#: page_manager/plugins/tasks/contact_user.inc:12;13
+msgid "User contact"
+msgstr ""
+
+#: page_manager/plugins/tasks/contact_user.inc:14
+msgid "When enabled, this overrides the default Drupal behavior for displaying the user contact form at <em>user/%user/contact</em>. If no variant is selected, the default Drupal user contact form will be used."
+msgstr ""
+
+#: page_manager/plugins/tasks/contact_user.inc:55
+msgid "Page manager module is unable to enable user/%user/contact because some other module already has overridden with %callback."
+msgstr ""
+
+#: page_manager/plugins/tasks/node_edit.inc:13;14
+msgid "Node add/edit form"
+msgstr ""
+
+#: page_manager/plugins/tasks/node_edit.inc:15
+msgid "When enabled, this overrides the default Drupal behavior for adding or edit nodes at <em>node/%node/edit</em> and <em>node/add/%node_type</em>. If you add variants, you may use selection criteria such as node type or language or user access to provide different edit forms for nodes. If no variant is selected, the default Drupal node edit will be used."
+msgstr ""
+
+#: page_manager/plugins/tasks/node_edit.inc:55
+msgid "Page manager module is unable to enable node/%node/edit because some other module already has overridden with %callback."
+msgstr ""
+
+#: page_manager/plugins/tasks/node_edit.inc:65
+msgid "Page manager module is unable to override @path because some other module already has overridden with %callback. Node edit will be enabled but that edit path will not be overridden."
+msgstr ""
+
+#: page_manager/plugins/tasks/node_edit.inc:129
+msgid "Create @name"
+msgstr ""
+
+#: page_manager/plugins/tasks/node_edit.inc:143
+msgid "Node being edited"
+msgstr ""
+
+#: page_manager/plugins/tasks/node_view.inc:22;24
+msgid "Node template"
+msgstr ""
+
+#: page_manager/plugins/tasks/node_view.inc:25
+msgid "When enabled, this overrides the default Drupal behavior for displaying nodes at <em>node/%node</em>. If you add variants, you may use selection criteria such as node type or language or user access to provide different views of nodes. If no variant is selected, the default Drupal node view will be used. This page only affects nodes viewed as pages, it will not affect nodes viewed in lists or at other locations. Also please note that if you are using pathauto, aliases may make a node to be somewhere else, but as far as Drupal is concerned, they are still at node/%node."
+msgstr ""
+
+#: page_manager/plugins/tasks/node_view.inc:66
+msgid "Page manager module is unable to enable node/%node because some other module already has overridden with %callback."
+msgstr ""
+
+#: page_manager/plugins/tasks/node_view.inc:118
+msgid "Node being viewed"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:201;279
+msgid "Basic settings"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:202;974;982
+msgid "Argument settings"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:203;439
+msgid "Access control"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:204
+msgid "Menu settings"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:280
+msgid "A meaningless second page"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:372;1362 plugins/content_types/custom/custom.inc:106 views_content/plugins/views/views_content_plugin_display_panel_pane.inc:166
+msgid "Administrative title"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:373;1363
+msgid "The name of this page. This will appear in the administrative interface to easily identify it."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:379
+msgid "Machine name"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:380
+msgid "The machine readable name of this page. It must be unique, and it must contain only alphanumeric characters and underscores. Once created, you will not be able to change this value!"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:391 views_content/plugins/views/views_content_plugin_display_panel_pane.inc:176;186
+msgid "Administrative description"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:392
+msgid "A description of what this page is, does or is for, for administrative use."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:400
+msgid "The URL path to get to this page. You may create named placeholders for variable parts of the path by using %name for required elements and !name for optional elements. For example: \"node/%node/foo\", \"forum/%forum\" or \"dashboard/!input\". These named placeholders can be turned into contexts on the arguments form."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:422
+msgid "Make this your site home page."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:423
+msgid "To set this panel as your home page you must create a unique path name with no % placeholders in the path. The current site home page is set to %homepage."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:428
+msgid "This page is currently set to be your site home page."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:440
+msgid "Visible menu item"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:461
+msgid "Name is required."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:468
+msgid "That name is used by another page: @page"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:473
+msgid "Page name must be alphanumeric or underscores only."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:480
+msgid "That path is used by another page: @page"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:488
+msgid "Path is required."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:501
+msgid "You cannot have an unnamed placeholder (% or ! by itself). Please name your placeholder by adding a short piece of descriptive text to the % or !, such as %user or %node."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:506
+msgid "You cannot have a dynamic path element after an optional path element."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:515
+msgid "You cannot have a static path element after an optional path element."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:526
+msgid "That path is already in used. This system cannot override existing paths."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:534
+msgid "That path is currently assigned to be an alias for @alias. This system cannot override existing aliases."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:539
+msgid "You cannot make this page your site home page if it uses % placeholders."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:547
+msgid "Duplicated argument %arg"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:552
+msgid "Invalid arg <em>%</em>. All arguments must be named with keywords."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:645 page_manager/plugins/tasks/page.inc:698 page_manager/plugins/tasks/term_view.inc:269
+msgid "No menu entry"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:646
+msgid "Normal menu entry"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:647;709
+msgid "Menu tab"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:648
+msgid "Default menu tab"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:657
+msgid "If set to normal or tab, enter the text to use for the menu item."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:667
+msgid "Warning: Changing this item's menu will not work reliably in Drupal 6.4 or earlier. Please upgrade your copy of Drupal at !url."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:677 page_manager/plugins/tasks/page.inc:172;703 page_manager/plugins/tasks/term_view.inc:272
+msgid "Menu"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:681;731
+msgid "Insert item into an available menu."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:692
+msgid "Menu selection requires the activation of menu module."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:699
+msgid "The lower the weight the higher/further left it will appear."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:707
+msgid "Parent menu item"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:709
+msgid "Already exists"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:709
+msgid "Normal menu item"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:711
+msgid "When providing a menu item as a default tab, Drupal needs to know what the parent menu item of that tab will be. Sometimes the parent will already exist, but other times you will need to have one created. The path of a parent item will always be the same path with the last part left off. i.e, if the path to this view is <em>foo/bar/baz</em>, the parent path would be <em>foo/bar</em>."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:716
+msgid "Parent item title"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:719
+msgid "If creating a parent menu item, enter the title of the item."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:727
+msgid "Parent item menu"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:744
+msgid "Tab weight"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:748
+msgid "If the parent menu item is a tab, enter the weight of the tab. The lower the number, the more to the left it will be."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:783
+msgid "Paths with non optional placeholders cannot be used as normal menu items unless the selected argument handler provides a default argument to use for the menu item."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:852
+msgid "No context assigned"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:876
+msgid "Change"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:893 page_manager/plugins/tasks/page.inc:143 page_manager/plugins/tasks/term_view.inc:50;65
+msgid "Settings"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:906
+msgid "Argument"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:907
+msgid "Position in path"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:908
+msgid "Context assigned"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:927
+msgid "The path %path has no arguments to configure."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:961
+msgid "Invalid keyword."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:973
+msgid "Change context type"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:978
+msgid "Change argument"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:1084
+msgid "No context selected"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:1167
+msgid "Error: missing argument."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:1180
+msgid "Context identifier"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:1181
+msgid "This is the title of the context used to identify it later in the administrative process. This will never be shown to a user."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:1187
+msgid "Error: missing or invalid argument plugin %argument."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:1235
+msgid "Import page"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:1238;1356
+msgid "Page name"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:1239
+msgid "Enter the name to use for this page if it is different from the source page. Leave blank to use the original name of the page."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:1245
+msgid "Enter the path to use for this page if it is different from the source page. Leave blank to use the original path of the page."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:1250
+msgid "Allow overwrite of an existing page"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:1251
+msgid "If the name you selected already exists in the database, this page will be allowed to overwrite the existing page."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:1256
+msgid "Paste page code here"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:1262
+msgid "Import"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:1278
+msgid "No handler found."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:1280
+msgid "Unable to get a page from the import. Errors reported: @errors"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:1291
+msgid "That page name is in use and locked by another user. You must <a href=\"!break\">break the lock</a> on that page before proceeding, or choose a different name."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:1357
+msgid "Enter the name to the new page It must be unique and contain only alphanumeric characters and underscores."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:1371
+msgid "The URL path to get to this page. You may create named placeholders for variable parts of the path by using %name for required elements and !name for optional elements. For example: \"node/%node/foo\", \"forum/%forum\" or \"dashboard/!input\". These named placeholders can be turned into contexts on the arguments form. You cannot use the same path as the original page."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:1377
+msgid "Clone variants"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:1378
+msgid "If checked all variants associated with the page will be cloned as well. If not checked the page will be cloned without variants."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:1486
+msgid "Reverting the page will delete the page that is in the database, reverting it to the original default page. Any changes you have made will be lost and cannot be recovered."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:1489
+msgid "Are you sure you want to delete this page? Deleting a page cannot be undone."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:1512
+msgid "The page has been deleted."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.admin.inc:1516
+msgid "The page has been reverted."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.inc:22
+msgid "Custom pages"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.inc:23
+msgid "Administrator created pages that have a URL path, access control and entries in the Drupal menu system."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.inc:39
+msgid "Create a new page"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.inc:150 page_manager/plugins/tasks/term_view.inc:68
+msgid "Basic"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.inc:151 page_manager/plugins/tasks/term_view.inc:69
+msgid "Edit name, path and other basic settings for the page."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.inc:159
+msgid "Set up contexts for the arguments on this page."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.inc:165;668 page_manager/plugins/tasks/term_view.inc:264
+msgid "Access"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.inc:166
+msgid "Control what users can access this page."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.inc:167
+msgid "Access rules are used to test if the page is accessible and any menu items associated with it are visible."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.inc:173
+msgid "Provide this page a visible menu or a menu tab."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.inc:179
+msgid "Make a copy of this page"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.inc:184
+msgid "Export this page as code that can be imported or embedded into a module."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.inc:190
+msgid "Remove all changes to this page and revert to the version in code."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.inc:197
+msgid "Remove this page from your system completely."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.inc:208 plugins/content_types/custom/custom.inc:26;58 plugins/content_types/node/node.inc:27 plugins/content_types/search/search_form.inc:119
+msgid "Custom"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.inc:322 page_manager/plugins/tasks/term_view.inc:133 plugins/access/node_access.inc:36
+msgid "View"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.inc:592;607;647;668;703 page_manager/plugins/tasks/term_view.inc:258;264;272;285;298
+msgid "page-summary-label"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.inc:593;608;634;648;669;704 page_manager/plugins/tasks/term_view.inc:259;265;273;286;299
+msgid "page-summary-data"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.inc:594;609;635;649;670;705 page_manager/plugins/tasks/term_view.inc:260;266;274;287;300
+msgid "page-summary-operation"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.inc:607
+msgid "Status"
+msgstr ""
+
+#: page_manager/plugins/tasks/page.inc:626
+msgid "This is your site home page."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.inc:629
+msgid "This page is set to become your site home page."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.inc:659
+msgid "Accessible only if @conditions."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.inc:662 page_manager/plugins/tasks/term_view.inc:265
+msgid "This page is publicly accessible."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.inc:674
+msgid "No menu entry."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.inc:675
+msgid "Normal menu entry."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.inc:676
+msgid "Menu tab."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.inc:677
+msgid "Default menu tab."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.inc:683
+msgid "Title: %title."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.inc:686
+msgid "Parent title: %title."
+msgstr ""
+
+#: page_manager/plugins/tasks/page.inc:691
+msgid "Menu block: %title."
+msgstr ""
+
+#: page_manager/plugins/tasks/poll.inc:17;18
+msgid "All polls"
+msgstr ""
+
+#: page_manager/plugins/tasks/poll.inc:19
+msgid "When enabled, this overrides the default Drupal behavior for the polls at <em>/poll</em>. If no variant is selected, the default Drupal most recent polls will be shown."
+msgstr ""
+
+#: page_manager/plugins/tasks/poll.inc:56
+msgid "Page manager module is unable to enable poll because some other module already has overridden with %callback."
+msgstr ""
+
+#: page_manager/plugins/tasks/search.inc:91
+msgid "Page manager module is unable to enable search/@name/%menu_tail because some other module already has overridden with %callback."
+msgstr ""
+
+#: page_manager/plugins/tasks/search.inc:155 plugins/content_types/search/search_form.inc:17 plugins/content_types/search/search_result.inc:17
+msgid "Keywords"
+msgstr ""
+
+#: page_manager/plugins/tasks/search.inc:212
+msgid "Search @type"
+msgstr ""
+
+#: page_manager/plugins/tasks/term_view.inc:23;24
+msgid "Taxonomy term template"
+msgstr ""
+
+#: page_manager/plugins/tasks/term_view.inc:25
+msgid "When enabled, this overrides the default Drupal behavior for displaying taxonomy terms at <em>taxonomy/term/%term</em>. If you add variants, you may use selection criteria such as vocabulary or user access to provide different displays of the taxonomy term and associated nodes. If no variant is selected, the default Drupal taxonomy term display will be used. This page only affects items actually displayed ad taxonomy/term/%term. Some taxonomy terms, such as forums, have their displays moved elsewhere. Also please note that if you are using pathauto, aliases may make a taxonomy terms appear somewhere else, but as far as Drupal is concerned, they are still at taxonomy/term/%term."
+msgstr ""
+
+#: page_manager/plugins/tasks/term_view.inc:51
+msgid "Update settings specific to the taxonomy term view."
+msgstr ""
+
+#: page_manager/plugins/tasks/term_view.inc:101
+msgid "Page manager module is unable to enable taxonomy/term/%term because some other module already has overridden with %callback."
+msgstr ""
+
+#: page_manager/plugins/tasks/term_view.inc:161
+msgid "Term(s) being viewed"
+msgstr ""
+
+#: page_manager/plugins/tasks/term_view.inc:161
+msgid "Term being viewed"
+msgstr ""
+
+#: page_manager/plugins/tasks/term_view.inc:169
+msgid "Depth"
+msgstr ""
+
+#: page_manager/plugins/tasks/term_view.inc:224
+msgid "Allow multiple terms on taxonomy/term/%term"
+msgstr ""
+
+#: page_manager/plugins/tasks/term_view.inc:225
+msgid "Single term"
+msgstr ""
+
+#: page_manager/plugins/tasks/term_view.inc:225
+msgid "Multiple terms"
+msgstr ""
+
+#: page_manager/plugins/tasks/term_view.inc:226
+msgid "By default, Drupal allows multiple terms as an argument by separating them with commas or plus signs. If you set this to single, that feature will be disabled."
+msgstr ""
+
+#: page_manager/plugins/tasks/term_view.inc:230 plugins/arguments/terms.inc:54
+msgid "Inject hierarchy of first term into breadcrumb trail"
+msgstr ""
+
+#: page_manager/plugins/tasks/term_view.inc:233 plugins/arguments/term.inc:93 plugins/arguments/terms.inc:57
+msgid "If checked, taxonomy term parents will appear in the breadcrumb trail."
+msgstr ""
+
+#: page_manager/plugins/tasks/term_view.inc:278
+msgid "Multiple terms may be used, separated by , or +."
+msgstr ""
+
+#: page_manager/plugins/tasks/term_view.inc:281
+msgid "Only a single term may be used."
+msgstr ""
+
+#: page_manager/plugins/tasks/term_view.inc:285
+msgid "%term"
+msgstr ""
+
+#: page_manager/plugins/tasks/term_view.inc:291
+msgid "Breadcrumb trail will contain taxonomy term hierarchy"
+msgstr ""
+
+#: page_manager/plugins/tasks/term_view.inc:294
+msgid "Breadcrumb trail will not contain taxonomy term hiearchy."
+msgstr ""
+
+#: page_manager/plugins/tasks/term_view.inc:298 plugins/content_types/page/page_breadcrumb.inc:15
+msgid "Breadcrumb"
+msgstr ""
+
+#: page_manager/plugins/tasks/user_view.inc:12;13
+msgid "User profile template"
+msgstr ""
+
+#: page_manager/plugins/tasks/user_view.inc:14
+msgid "When enabled, this overrides the default Drupal behavior for displaying user profiles at <em>user/%user</em>. If you add variants, you may use selection criteria such as roles or user access to provide different views of user profiles. If no variant is selected, the default Drupal user view will be used. Please note that if you are using pathauto, aliases may make a node to be somewhere else, but as far as Drupal is concerned, they are still at user/%user."
+msgstr ""
+
+#: page_manager/plugins/tasks/user_view.inc:56
+msgid "Page manager module is unable to enable user/%user because some other module already has overridden with %callback."
+msgstr ""
+
+#: page_manager/theme/page_manager.theme.inc:42
+msgid "Locked"
+msgstr ""
+
+#: page_manager/theme/page_manager.theme.inc:42
+msgid "This page is being edited by another user and you cannot make changes to it."
+msgstr ""
+
+#: page_manager/theme/page_manager.theme.inc:45
+msgid "New"
+msgstr ""
+
+#: page_manager/theme/page_manager.theme.inc:45
+msgid "This page is newly created and has not yet been saved to the database. It will not be available until you save it."
+msgstr ""
+
+#: page_manager/theme/page_manager.theme.inc:48
+msgid "Changed"
+msgstr ""
+
+#: page_manager/theme/page_manager.theme.inc:48
+msgid "This page has been modified, but these modifications are not yet live. While modifying this page, it is locked from modification by other users."
+msgstr ""
+
+#: page_manager/theme/page_manager.theme.inc:98
+msgid "No task handlers are defined for this task."
+msgstr ""
+
+#: page_manager/theme/page_manager.theme.inc:102
+msgid "Variant"
+msgstr ""
+
+#: page_manager/theme/page_manager.theme.inc:124
+msgid "This page is being edited by user !user, and is therefore locked from editing by others. This lock is !age old. Click here to <a href=\"!break\">break this lock</a>."
+msgstr ""
+
+#: plugins/access/compare_users.inc:14
+msgid "User: compare"
+msgstr ""
+
+#: plugins/access/compare_users.inc:15
+msgid "Compare two users (logged-in user and user being viewed, for example)"
+msgstr ""
+
+#: plugins/access/compare_users.inc:23
+msgid "First User"
+msgstr ""
+
+#: plugins/access/compare_users.inc:24
+msgid "Second User"
+msgstr ""
+
+#: plugins/access/compare_users.inc:36
+msgid "Grant access based on comparison of the two user contexts. For example, to grant access to a user to view their own profile, choose \"logged in user\" and \"user being viewed\" and say \"grant access if equal\". When they're the same, access will be granted."
+msgstr ""
+
+#: plugins/access/compare_users.inc:41
+msgid "Grant access if user contexts are"
+msgstr ""
+
+#: plugins/access/compare_users.inc:42
+msgid "Equal"
+msgstr ""
+
+#: plugins/access/compare_users.inc:42
+msgid "Not equal"
+msgstr ""
+
+#: plugins/access/compare_users.inc:70
+msgid "@id1 @comp @id2"
+msgstr ""
+
+#: plugins/access/node_access.inc:14
+msgid "Node: accessible"
+msgstr ""
+
+#: plugins/access/node_access.inc:15
+msgid "Control access with built in Drupal node access test."
+msgstr ""
+
+#: plugins/access/node_access.inc:23 plugins/access/node_language.inc:22 plugins/access/node_type.inc:21 plugins/content_types/node/node.inc:15 plugins/content_types/node_context/node_attachments.inc:13;14 plugins/content_types/node_context/node_author.inc:13;14 plugins/content_types/node_context/node_body.inc:13;14 plugins/content_types/node_context/node_book_nav.inc:14;15 plugins/content_types/node_context/node_comment_form.inc:14;15 plugins/content_types/node_context/node_comments.inc:15;16 plugins/content_types/node_context/node_content.inc:13;14 plugins/content_types/node_context/node_created.inc:13;14 plugins/content_types/node_context/node_links.inc:14;15 plugins/content_types/node_context/node_title.inc:13;14 plugins/content_types/node_context/node_type_desc.inc:13;14 plugins/content_types/node_context/node_updated.inc:13;14 plugins/contexts/node.inc:16 plugins/relationships/book_parent.inc:17 plugins/relationships/term_from_node.inc:17 plugins/relationships/user_from_node.inc:17
+msgid "Node"
+msgstr ""
+
+#: plugins/access/node_access.inc:39
+msgid "Create nodes of the same type"
+msgstr ""
+
+#: plugins/access/node_access.inc:41
+msgid "Using built in Drupal node access rules, determine if the user can perform the selected operation on the node."
+msgstr ""
+
+#: plugins/access/node_access.inc:78
+msgid "@user can view @node."
+msgstr ""
+
+#: plugins/access/node_access.inc:81
+msgid "@user can edit @node."
+msgstr ""
+
+#: plugins/access/node_access.inc:84
+msgid "@user can delete @node."
+msgstr ""
+
+#: plugins/access/node_access.inc:87
+msgid "@user can create nodes of the same type as @node."
+msgstr ""
+
+#: plugins/access/node_language.inc:15
+msgid "Node: language"
+msgstr ""
+
+#: plugins/access/node_language.inc:16
+msgid "Control access by node language."
+msgstr ""
+
+#: plugins/access/node_language.inc:32;94
+msgid "Current site language"
+msgstr ""
+
+#: plugins/access/node_language.inc:33;95 plugins/access/site_language.inc:31;69
+msgid "Default site language"
+msgstr ""
+
+#: plugins/access/node_language.inc:34;96
+msgid "No language"
+msgstr ""
+
+#: plugins/access/node_language.inc:38 plugins/access/site_language.inc:35
+msgid "Language"
+msgstr ""
+
+#: plugins/access/node_language.inc:41
+msgid "Pass only if the node is in one of the selected languages."
+msgstr ""
+
+#: plugins/access/node_language.inc:110
+msgid "@identifier is in any language"
+msgstr ""
+
+#: plugins/access/node_language.inc:113
+msgid "@identifier language is \"@languages\""
+msgid_plural "@identifier language is one of \"@languages\""
+msgstr[0] ""
+msgstr[1] ""
+
+#: plugins/access/node_type.inc:14
+msgid "Node: type"
+msgstr ""
+
+#: plugins/access/node_type.inc:15
+msgid "Control access by node_type."
+msgstr ""
+
+#: plugins/access/node_type.inc:36 plugins/contexts/node.inc:170 plugins/contexts/node_add_form.inc:21;100
+msgid "Node type"
+msgstr ""
+
+#: plugins/access/node_type.inc:39
+msgid "Only the checked node types will be valid."
+msgstr ""
+
+#: plugins/access/node_type.inc:96
+msgid "@identifier is any node type"
+msgstr ""
+
+#: plugins/access/node_type.inc:99
+msgid "@identifier is type \"@types\""
+msgid_plural "@identifier type is one of \"@types\""
+msgstr[0] ""
+msgstr[1] ""
+
+#: plugins/access/perm.inc:14
+msgid "User: permission"
+msgstr ""
+
+#: plugins/access/perm.inc:15
+msgid "Control access by permission string."
+msgstr ""
+
+#: plugins/access/perm.inc:41
+msgid "Permission"
+msgstr ""
+
+#: plugins/access/perm.inc:43
+msgid "Only users with the selected permission flag will be able to access this."
+msgstr ""
+
+#: plugins/access/perm.inc:65
+msgid "Error, unset permission"
+msgstr ""
+
+#: plugins/access/perm.inc:68
+msgid "@identifier has \"@perm\""
+msgstr ""
+
+#: plugins/access/php.inc:14;41
+msgid "PHP Code"
+msgstr ""
+
+#: plugins/access/php.inc:15
+msgid "Control access through arbitrary PHP code."
+msgstr ""
+
+#: plugins/access/php.inc:35
+msgid "Administrative desc"
+msgstr ""
+
+#: plugins/access/php.inc:37
+msgid "A description for this test for administrative purposes."
+msgstr ""
+
+#: plugins/access/php.inc:43
+msgid "Access will be granted if the following PHP code returns <code>TRUE</code>. Do not include &lt;?php ?&gt;. Note that executing incorrect PHP-code can break your Drupal site. All contexts will be available in the <em>$contexts</em> variable."
+msgstr ""
+
+#: plugins/access/php.inc:48
+msgid "You do not have sufficient permissions to edit PHP code."
+msgstr ""
+
+#: plugins/access/role.inc:14
+msgid "User: role"
+msgstr ""
+
+#: plugins/access/role.inc:78
+msgid "@identifier has role \"@roles\""
+msgid_plural "@identifier has one of \"@roles\""
+msgstr[0] ""
+msgstr[1] ""
+
+#: plugins/access/site_language.inc:15
+msgid "User: language"
+msgstr ""
+
+#: plugins/access/site_language.inc:16
+msgid "Control access by the language the user or site currently uses."
+msgstr ""
+
+#: plugins/access/site_language.inc:38
+msgid "Pass only if the current site language is one of the selected languages."
+msgstr ""
+
+#: plugins/access/site_language.inc:83
+msgid "Site language is any language"
+msgstr ""
+
+#: plugins/access/site_language.inc:86
+msgid "Site language is \"@languages\""
+msgid_plural "Site language is one of \"@languages\""
+msgstr[0] ""
+msgstr[1] ""
+
+#: plugins/access/term.inc:14
+msgid "Taxonomy: term"
+msgstr ""
+
+#: plugins/access/term.inc:15
+msgid "Control access by a specific term."
+msgstr ""
+
+#: plugins/access/term.inc:22 plugins/access/term_vocabulary.inc:21 plugins/content_types/term_context/term_description.inc:13 plugins/content_types/term_context/term_list.inc:13 plugins/relationships/term_parent.inc:17
+msgid "Term"
+msgstr ""
+
+#: plugins/access/term.inc:41 plugins/content_types/vocabulary_context/vocabulary_terms.inc:14;15 plugins/contexts/term.inc:67 plugins/contexts/vocabulary.inc:57 plugins/relationships/term_from_node.inc:53
+msgid "Vocabulary"
+msgstr ""
+
+#: plugins/access/term.inc:44 plugins/contexts/term.inc:70 plugins/contexts/vocabulary.inc:63
+msgid "Select the vocabulary for this form."
+msgstr ""
+
+#: plugins/access/term.inc:63
+msgid "Terms"
+msgstr ""
+
+#: plugins/access/term.inc:64
+msgid "Select a term or terms from @vocabulary."
+msgstr ""
+
+#: plugins/access/term.inc:148
+msgid "@term can be the term \"@terms\""
+msgid_plural "@term can be one of these terms: @terms"
+msgstr[0] ""
+msgstr[1] ""
+
+#: plugins/access/term_vocabulary.inc:14
+msgid "Taxonomy: vocabulary"
+msgstr ""
+
+#: plugins/access/term_vocabulary.inc:15
+msgid "Control access by term vocabulary."
+msgstr ""
+
+#: plugins/access/term_vocabulary.inc:37
+msgid "Vocabularies"
+msgstr ""
+
+#: plugins/access/term_vocabulary.inc:39
+msgid "Only terms in the checked vocabularies will be valid."
+msgstr ""
+
+#: plugins/access/term_vocabulary.inc:83
+msgid "@identifier is any vocabulary"
+msgstr ""
+
+#: plugins/access/term_vocabulary.inc:86
+msgid "@identifier vocabulary is \"@vids\""
+msgid_plural "@identifier vocabulary is one of \"@vids\""
+msgstr[0] ""
+msgstr[1] ""
+
+#: plugins/arguments/nid.inc:15
+msgid "Node: ID"
+msgstr ""
+
+#: plugins/arguments/nid.inc:17
+msgid "Creates a node context from a node ID argument."
+msgstr ""
+
+#: plugins/arguments/nid.inc:21 plugins/arguments/node_edit.inc:22
+msgid "Enter the node ID of a node for this argument"
+msgstr ""
+
+#: plugins/arguments/node_add.inc:15
+msgid "Node add form: node type"
+msgstr ""
+
+#: plugins/arguments/node_add.inc:18
+msgid "Creates a node add form context from a node type argument."
+msgstr ""
+
+#: plugins/arguments/node_edit.inc:15
+msgid "Node edit form: node ID"
+msgstr ""
+
+#: plugins/arguments/node_edit.inc:18
+msgid "Creates a node edit form context from a node ID argument."
+msgstr ""
+
+#: plugins/arguments/string.inc:15 plugins/contexts/string.inc:15
+msgid "String"
+msgstr ""
+
+#: plugins/arguments/string.inc:18
+msgid "A string is a minimal context that simply holds a string that can be used for some other purpose."
+msgstr ""
+
+#: plugins/arguments/string.inc:23
+msgid "Enter a value for this argument"
+msgstr ""
+
+#: plugins/arguments/string.inc:49
+msgid "Get all arguments after this one"
+msgstr ""
+
+#: plugins/arguments/string.inc:52
+msgid "If checked, this string will include all arguments. For example, if the path is \"path/%\" and the user visits \"path/foo/bar\", if this is not checked the string will be \"foo\". If it is checked the string will be \"foo/bar\"."
+msgstr ""
+
+#: plugins/arguments/term.inc:15
+msgid "Taxonomy term: ID"
+msgstr ""
+
+#: plugins/arguments/term.inc:18
+msgid "Creates a single taxonomy term from a taxonomy ID or taxonomy term name."
+msgstr ""
+
+#: plugins/arguments/term.inc:81
+msgid "Argument type"
+msgstr ""
+
+#: plugins/arguments/term.inc:83 plugins/contexts/term.inc:24
+msgid "Term ID"
+msgstr ""
+
+#: plugins/arguments/term.inc:83 plugins/contexts/term.inc:25
+msgid "Term name"
+msgstr ""
+
+#: plugins/arguments/term.inc:90
+msgid "Inject hierarchy into breadcrumb trail"
+msgstr ""
+
+#: plugins/arguments/term.inc:106
+msgid "Enter a taxonomy term ID."
+msgstr ""
+
+#: plugins/arguments/term.inc:111
+msgid "Enter a taxonomy term name."
+msgstr ""
+
+#: plugins/arguments/terms.inc:15
+msgid "Taxonomy term (multiple): ID"
+msgstr ""
+
+#: plugins/arguments/terms.inc:18
+msgid "Creates a group of taxonomy terms from a list of tids separated by a comma or a plus sign. In general the first term of the list will be used for panes."
+msgstr ""
+
+#: plugins/arguments/terms.inc:24
+msgid "Enter a term ID or a list of term IDs separated by a + or a ,"
+msgstr ""
+
+#: plugins/arguments/uid.inc:15
+msgid "User: ID"
+msgstr ""
+
+#: plugins/arguments/uid.inc:18
+msgid "Creates a user context from a user ID argument."
+msgstr ""
+
+#: plugins/arguments/uid.inc:22
+msgid "Enter the user ID of a user for this argument"
+msgstr ""
+
+#: plugins/arguments/user_name.inc:15
+msgid "User: name"
+msgstr ""
+
+#: plugins/arguments/user_name.inc:18
+msgid "Creates a user context from a user name."
+msgstr ""
+
+#: plugins/arguments/user_name.inc:22
+msgid "Enter the username of a user for this argument"
+msgstr ""
+
+#: plugins/arguments/vid.inc:15
+msgid "Vocabulary: ID"
+msgstr ""
+
+#: plugins/arguments/vid.inc:18
+msgid "Creates a vocabulary context from a vocabulary ID argument."
+msgstr ""
+
+#: plugins/arguments/vid.inc:22
+msgid "Enter the vocabulary ID for this argument"
+msgstr ""
+
+#: plugins/content_types/block/block.inc:21
+msgid "Block"
+msgstr ""
+
+#: plugins/content_types/block/block.inc:91
+msgid "Configure block"
+msgstr ""
+
+#: plugins/content_types/block/block.inc:92
+msgid "Configure this block's 'block settings' in administer >> site building >> blocks"
+msgstr ""
+
+#: plugins/content_types/block/block.inc:229
+msgid "Deleted/missing block @module-@delta"
+msgstr ""
+
+#: plugins/content_types/block/block.inc:267;271;346
+msgid "Miscellaneous"
+msgstr ""
+
+#: plugins/content_types/block/block.inc:279;359
+msgid "Menus"
+msgstr ""
+
+#: plugins/content_types/block/block.inc:286;316;321;326;350;383
+msgid "Activity"
+msgstr ""
+
+#: plugins/content_types/block/block.inc:331;336;354;378;388 plugins/content_types/contact/contact.inc:17 plugins/content_types/search/search_form.inc:18 plugins/content_types/search/search_result.inc:18 views_content/views_content.module:56
+msgid "Widgets"
+msgstr ""
+
+#: plugins/content_types/block/block.inc:341
+msgid "Feeds"
+msgstr ""
+
+#: plugins/content_types/contact/contact.inc:14;62
+msgid "Contact form"
+msgstr ""
+
+#: plugins/content_types/contact/contact.inc:16
+msgid "The site contact form that allows users to send a message to site administrators."
+msgstr ""
+
+#: plugins/content_types/contact/contact.inc:32
+msgid "Contact"
+msgstr ""
+
+#: plugins/content_types/contact/user_contact.inc:14;68
+msgid "User contact form"
+msgstr ""
+
+#: plugins/content_types/contact/user_contact.inc:16
+msgid "The site contact form that allows users to contact other users."
+msgstr ""
+
+#: plugins/content_types/contact/user_contact.inc:38
+msgid "Contact @name"
+msgstr ""
+
+#: plugins/content_types/custom/custom.inc:20
+msgid "New custom content"
+msgstr ""
+
+#: plugins/content_types/custom/custom.inc:22
+msgid "Create a completely custom piece of HTML content."
+msgstr ""
+
+#: plugins/content_types/custom/custom.inc:61
+msgid "Custom: @title"
+msgstr ""
+
+#: plugins/content_types/custom/custom.inc:107
+msgid "This title will be used administratively to identify this pane. If blank, the regular title will be used."
+msgstr ""
+
+#: plugins/content_types/custom/custom.inc:117
+msgid "Body"
+msgstr ""
+
+#: plugins/content_types/custom/custom.inc:127
+msgid "Use context keywords"
+msgstr ""
+
+#: plugins/content_types/custom/custom.inc:128
+msgid "If checked, context keywords will be substituted in this content."
+msgstr ""
+
+#: plugins/content_types/custom/custom.inc:132
+msgid "Substitutions"
+msgstr ""
+
+#: plugins/content_types/custom/custom.inc:143
+msgid "@identifier: @title"
+msgstr ""
+
+#: plugins/content_types/custom/custom.inc:147
+msgid "Value"
+msgstr ""
+
+#: plugins/content_types/form/form.inc:13
+msgid "General form"
+msgstr ""
+
+#: plugins/content_types/form/form.inc:15
+msgid "Everything in the form that is not displayed by other content."
+msgstr ""
+
+#: plugins/content_types/form/form.inc:16;17;43 plugins/content_types/node_form/node_form_attachments.inc:14;15 plugins/content_types/node_form/node_form_author.inc:13;14 plugins/content_types/node_form/node_form_book.inc:14;15 plugins/content_types/node_form/node_form_buttons.inc:13;14 plugins/content_types/node_form/node_form_comment.inc:14;15 plugins/content_types/node_form/node_form_input_format.inc:13;14 plugins/content_types/node_form/node_form_log.inc:13;14 plugins/content_types/node_form/node_form_menu.inc:14;15 plugins/content_types/node_form/node_form_path.inc:14;15 plugins/content_types/node_form/node_form_publishing.inc:19;20 plugins/content_types/node_form/node_form_taxonomy.inc:14;15
+msgid "Form"
+msgstr ""
+
+#: plugins/content_types/form/form.inc:44
+msgid "Form goes here."
+msgstr ""
+
+#: plugins/content_types/form/form.inc:52
+msgid "\"@s\" base form"
+msgstr ""
+
+#: plugins/content_types/node/node.inc:24
+msgid "Existing node"
+msgstr ""
+
+#: plugins/content_types/node/node.inc:26
+msgid "Add a node from your site as content."
+msgstr ""
+
+#: plugins/content_types/node/node.inc:70 plugins/content_types/node_context/node_content.inc:61
+msgid "Edit node"
+msgstr ""
+
+#: plugins/content_types/node/node.inc:71 plugins/content_types/node_context/node_content.inc:62
+msgid "Edit this node"
+msgstr ""
+
+#: plugins/content_types/node/node.inc:106 plugins/content_types/node_context/node_content.inc:130
+msgid "Leave node title"
+msgstr ""
+
+#: plugins/content_types/node/node.inc:107 plugins/content_types/node_context/node_content.inc:131
+msgid "Advanced: if checked, do not touch the node title; this can cause the node title to appear twice unless your theme is aware of this."
+msgstr ""
+
+#: plugins/content_types/node/node.inc:113 plugins/contexts/node.inc:81 plugins/contexts/node_edit_form.inc:99
+msgid "Enter the title or NID of a node"
+msgstr ""
+
+#: plugins/content_types/node/node.inc:114
+msgid "To use a NID from the URL, you may use %0, %1, ..., %N to get URL arguments. Or use @0, @1, @2, ..., @N to use arguments passed into the panel."
+msgstr ""
+
+#: plugins/content_types/node/node.inc:130 plugins/content_types/node_context/node_content.inc:141
+msgid "Show only node teaser"
+msgstr ""
+
+#: plugins/content_types/node/node.inc:138 plugins/content_types/node_context/node_content.inc:154
+msgid "Include node links for \"add comment\", \"read more\" etc."
+msgstr ""
+
+#: plugins/content_types/node/node.inc:144 plugins/content_types/node_context/node_content.inc:167
+msgid "Template identifier"
+msgstr ""
+
+#: plugins/content_types/node/node.inc:145 plugins/content_types/node_context/node_content.inc:168
+msgid "This identifier will be added as a template suggestion to display this node: node-panel-IDENTIFIER.tpl.php. Please see the Drupal theming guide for information about template suggestions."
+msgstr ""
+
+#: plugins/content_types/node/node.inc:179
+msgid "Invalid node"
+msgstr ""
+
+#: plugins/content_types/node/node.inc:197
+msgid "Node loaded from @var"
+msgstr ""
+
+#: plugins/content_types/node/node.inc:205
+msgid "Deleted/missing node @nid"
+msgstr ""
+
+#: plugins/content_types/node_context/node_attachments.inc:10;23
+msgid "Attached files"
+msgstr ""
+
+#: plugins/content_types/node_context/node_attachments.inc:12
+msgid "A list of files attached to the node."
+msgstr ""
+
+#: plugins/content_types/node_context/node_attachments.inc:31
+msgid "Attached files go here."
+msgstr ""
+
+#: plugins/content_types/node_context/node_attachments.inc:39
+msgid "\"@s\" attachments"
+msgstr ""
+
+#: plugins/content_types/node_context/node_author.inc:10 plugins/relationships/user_from_node.inc:14
+msgid "Node author"
+msgstr ""
+
+#: plugins/content_types/node_context/node_author.inc:12
+msgid "The author of the referenced node."
+msgstr ""
+
+#: plugins/content_types/node_context/node_author.inc:35
+msgid "Author"
+msgstr ""
+
+#: plugins/content_types/node_context/node_author.inc:49
+msgid "Link to author profile"
+msgstr ""
+
+#: plugins/content_types/node_context/node_author.inc:52
+msgid "Check here to link to the node author profile."
+msgstr ""
+
+#: plugins/content_types/node_context/node_author.inc:70
+msgid "\"@s\" author"
+msgstr ""
+
+#: plugins/content_types/node_context/node_body.inc:10
+msgid "Node body"
+msgstr ""
+
+#: plugins/content_types/node_context/node_body.inc:12
+msgid "The body of the referenced node."
+msgstr ""
+
+#: plugins/content_types/node_context/node_body.inc:58
+msgid "\"@s\" body"
+msgstr ""
+
+#: plugins/content_types/node_context/node_book_nav.inc:11;25
+msgid "Book navigation"
+msgstr ""
+
+#: plugins/content_types/node_context/node_book_nav.inc:13
+msgid "The navigation menu the book the node belongs to."
+msgstr ""
+
+#: plugins/content_types/node_context/node_book_nav.inc:31
+msgid "Book navigation goes here."
+msgstr ""
+
+#: plugins/content_types/node_context/node_book_nav.inc:39
+msgid "\"@s\" book navigation"
+msgstr ""
+
+#: plugins/content_types/node_context/node_comment_form.inc:11
+msgid "Comment form"
+msgstr ""
+
+#: plugins/content_types/node_context/node_comment_form.inc:13
+msgid "A form to add a new comment."
+msgstr ""
+
+#: plugins/content_types/node_context/node_comment_form.inc:26
+msgid "Add comment"
+msgstr ""
+
+#: plugins/content_types/node_context/node_comment_form.inc:29
+msgid "Comment form here."
+msgstr ""
+
+#: plugins/content_types/node_context/node_comment_form.inc:47
+msgid "\"@s\" comment form"
+msgstr ""
+
+#: plugins/content_types/node_context/node_comments.inc:12
+msgid "Node comments"
+msgstr ""
+
+#: plugins/content_types/node_context/node_comments.inc:14
+msgid "The comments of the referenced node."
+msgstr ""
+
+#: plugins/content_types/node_context/node_comments.inc:32
+msgid "Comments"
+msgstr ""
+
+#: plugins/content_types/node_context/node_comments.inc:34
+msgid "Node comments go here."
+msgstr ""
+
+#: plugins/content_types/node_context/node_comments.inc:49
+msgid "Mode"
+msgstr ""
+
+#: plugins/content_types/node_context/node_comments.inc:56
+msgid "Sort"
+msgstr ""
+
+#: plugins/content_types/node_context/node_comments.inc:62
+msgid "!a comments per page"
+msgstr ""
+
+#: plugins/content_types/node_context/node_comments.inc:65
+msgid "Pager"
+msgstr ""
+
+#: plugins/content_types/node_context/node_comments.inc:80
+msgid "\"@s\" comments"
+msgstr ""
+
+#: plugins/content_types/node_context/node_content.inc:10
+msgid "Node content"
+msgstr ""
+
+#: plugins/content_types/node_context/node_content.inc:12
+msgid "The content of the referenced node."
+msgstr ""
+
+#: plugins/content_types/node_context/node_content.inc:44 plugins/content_types/node_context/node_links.inc:41
+msgid "Node title."
+msgstr ""
+
+#: plugins/content_types/node_context/node_content.inc:45
+msgid "Node content goes here."
+msgstr ""
+
+#: plugins/content_types/node_context/node_content.inc:135 plugins/content_types/node_context/node_links.inc:78
+msgid "Link title to node"
+msgstr ""
+
+#: plugins/content_types/node_context/node_content.inc:138 plugins/content_types/node_context/node_links.inc:81 plugins/content_types/node_context/node_title.inc:55
+msgid "Check here to make the title link to the node."
+msgstr ""
+
+#: plugins/content_types/node_context/node_content.inc:148
+msgid "Treat this as the primary node page"
+msgstr ""
+
+#: plugins/content_types/node_context/node_content.inc:149
+msgid "This can affect title rendering and breadcrumbs from some node types."
+msgstr ""
+
+#: plugins/content_types/node_context/node_content.inc:160
+msgid "No extras"
+msgstr ""
+
+#: plugins/content_types/node_context/node_content.inc:161
+msgid "Check here to disable additions that modules might make to the node, such as file attachments and CCK fields; this should just display the basic teaser or body."
+msgstr ""
+
+#: plugins/content_types/node_context/node_content.inc:182
+msgid "\"@s\" content"
+msgstr ""
+
+#: plugins/content_types/node_context/node_created.inc:10
+msgid "Node created date"
+msgstr ""
+
+#: plugins/content_types/node_context/node_created.inc:12
+msgid "The date the referenced node was created."
+msgstr ""
+
+#: plugins/content_types/node_context/node_created.inc:35
+msgid "Created date"
+msgstr ""
+
+#: plugins/content_types/node_context/node_created.inc:50 plugins/content_types/node_context/node_updated.inc:50
+msgid "Date format"
+msgstr ""
+
+#: plugins/content_types/node_context/node_created.inc:75
+msgid "\"@s\" created date"
+msgstr ""
+
+#: plugins/content_types/node_context/node_links.inc:11
+msgid "Node links"
+msgstr ""
+
+#: plugins/content_types/node_context/node_links.inc:13
+msgid "Node links of the referenced node."
+msgstr ""
+
+#: plugins/content_types/node_context/node_links.inc:42
+msgid "Node links go here."
+msgstr ""
+
+#: plugins/content_types/node_context/node_links.inc:84
+msgid "Teaser mode"
+msgstr ""
+
+#: plugins/content_types/node_context/node_links.inc:87
+msgid "Check here to show links in teaser mode."
+msgstr ""
+
+#: plugins/content_types/node_context/node_links.inc:94
+msgid "Whatever is placed here will appear in $node->panel_identifier to help theme node links displayed on the panel"
+msgstr ""
+
+#: plugins/content_types/node_context/node_links.inc:108
+msgid "\"@s\" links"
+msgstr ""
+
+#: plugins/content_types/node_context/node_title.inc:10 plugins/contexts/node.inc:168
+msgid "Node title"
+msgstr ""
+
+#: plugins/content_types/node_context/node_title.inc:12
+msgid "The title of the referenced node."
+msgstr ""
+
+#: plugins/content_types/node_context/node_title.inc:52
+msgid "Link to node"
+msgstr ""
+
+#: plugins/content_types/node_context/node_title.inc:73
+msgid "\"@s\" title"
+msgstr ""
+
+#: plugins/content_types/node_context/node_type_desc.inc:10;34
+msgid "Node type description"
+msgstr ""
+
+#: plugins/content_types/node_context/node_type_desc.inc:12
+msgid "Node type description."
+msgstr ""
+
+#: plugins/content_types/node_context/node_type_desc.inc:35
+msgid "Node type description goes here."
+msgstr ""
+
+#: plugins/content_types/node_context/node_type_desc.inc:43
+msgid "\"@s\" type description"
+msgstr ""
+
+#: plugins/content_types/node_context/node_updated.inc:10
+msgid "Node last updated date"
+msgstr ""
+
+#: plugins/content_types/node_context/node_updated.inc:12
+msgid "The date the referenced node was last updated."
+msgstr ""
+
+#: plugins/content_types/node_context/node_updated.inc:35
+msgid "Last updated date"
+msgstr ""
+
+#: plugins/content_types/node_context/node_updated.inc:75
+msgid "\"@s\" last updated date"
+msgstr ""
+
+#: plugins/content_types/node_form/node_form_attachments.inc:12
+msgid "Node form file attachments"
+msgstr ""
+
+#: plugins/content_types/node_form/node_form_attachments.inc:13
+msgid "File attachments on the Node form."
+msgstr ""
+
+#: plugins/content_types/node_form/node_form_attachments.inc:22 plugins/content_types/node_form/node_form_author.inc:20 plugins/content_types/node_form/node_form_book.inc:22 plugins/content_types/node_form/node_form_buttons.inc:20 plugins/content_types/node_form/node_form_comment.inc:22 plugins/content_types/node_form/node_form_input_format.inc:20 plugins/content_types/node_form/node_form_log.inc:20 plugins/content_types/node_form/node_form_menu.inc:22 plugins/content_types/node_form/node_form_path.inc:22 plugins/content_types/node_form/node_form_publishing.inc:28 plugins/content_types/node_form/node_form_taxonomy.inc:22
+msgid "node_form"
+msgstr ""
+
+#: plugins/content_types/node_form/node_form_attachments.inc:24
+msgid "Attach files"
+msgstr ""
+
+#: plugins/content_types/node_form/node_form_attachments.inc:35
+msgid "Attach files."
+msgstr ""
+
+#: plugins/content_types/node_form/node_form_attachments.inc:41
+msgid "\"@s\" node form attach files"
+msgstr ""
+
+#: plugins/content_types/node_form/node_form_author.inc:11
+msgid "Node form author information"
+msgstr ""
+
+#: plugins/content_types/node_form/node_form_author.inc:12
+msgid "Author information on the Node form."
+msgstr ""
+
+#: plugins/content_types/node_form/node_form_author.inc:22
+msgid "Authoring information"
+msgstr ""
+
+#: plugins/content_types/node_form/node_form_author.inc:35
+msgid "Authoring information."
+msgstr ""
+
+#: plugins/content_types/node_form/node_form_author.inc:41
+msgid "\"@s\" node form publishing options"
+msgstr ""
+
+#: plugins/content_types/node_form/node_form_book.inc:12
+msgid "Node form book options"
+msgstr ""
+
+#: plugins/content_types/node_form/node_form_book.inc:13
+msgid "Book options for the node."
+msgstr ""
+
+#: plugins/content_types/node_form/node_form_book.inc:24
+msgid "Book options"
+msgstr ""
+
+#: plugins/content_types/node_form/node_form_book.inc:39
+msgid "Book options."
+msgstr ""
+
+#: plugins/content_types/node_form/node_form_book.inc:45
+msgid "\"@s\" node form book options"
+msgstr ""
+
+#: plugins/content_types/node_form/node_form_buttons.inc:11
+msgid "Node form submit buttons"
+msgstr ""
+
+#: plugins/content_types/node_form/node_form_buttons.inc:12
+msgid "Submit buttons for the node form."
+msgstr ""
+
+#: plugins/content_types/node_form/node_form_buttons.inc:29
+msgid "Node form buttons."
+msgstr ""
+
+#: plugins/content_types/node_form/node_form_buttons.inc:35
+msgid "\"@s\" node form submit buttons"
+msgstr ""
+
+#: plugins/content_types/node_form/node_form_comment.inc:12
+msgid "Node form comment settings"
+msgstr ""
+
+#: plugins/content_types/node_form/node_form_comment.inc:13
+msgid "Comment settings on the Node form."
+msgstr ""
+
+#: plugins/content_types/node_form/node_form_comment.inc:24
+msgid "Comment options"
+msgstr ""
+
+#: plugins/content_types/node_form/node_form_comment.inc:35
+msgid "Comment options."
+msgstr ""
+
+#: plugins/content_types/node_form/node_form_comment.inc:41
+msgid "\"@s\" node form comment settings"
+msgstr ""
+
+#: plugins/content_types/node_form/node_form_input_format.inc:11
+msgid "Node form input format"
+msgstr ""
+
+#: plugins/content_types/node_form/node_form_input_format.inc:12
+msgid "Input format for the body field on a node."
+msgstr ""
+
+#: plugins/content_types/node_form/node_form_input_format.inc:22 plugins/content_types/search/search_result.inc:135;173
+msgid "Input format"
+msgstr ""
+
+#: plugins/content_types/node_form/node_form_input_format.inc:33
+msgid "Input format."
+msgstr ""
+
+#: plugins/content_types/node_form/node_form_input_format.inc:39
+msgid "\"@s\" node form input format"
+msgstr ""
+
+#: plugins/content_types/node_form/node_form_log.inc:11
+msgid "Node form revision log message"
+msgstr ""
+
+#: plugins/content_types/node_form/node_form_log.inc:12
+msgid "Revision log message for the node."
+msgstr ""
+
+#: plugins/content_types/node_form/node_form_log.inc:28
+msgid "\"@s\" node form revision log"
+msgstr ""
+
+#: plugins/content_types/node_form/node_form_menu.inc:12
+msgid "Node form menu settings"
+msgstr ""
+
+#: plugins/content_types/node_form/node_form_menu.inc:13
+msgid "Menu settings on the Node form."
+msgstr ""
+
+#: plugins/content_types/node_form/node_form_menu.inc:24
+msgid "Menu options"
+msgstr ""
+
+#: plugins/content_types/node_form/node_form_menu.inc:36
+msgid "Menu options."
+msgstr ""
+
+#: plugins/content_types/node_form/node_form_menu.inc:42
+msgid "\"@s\" node form menu settings"
+msgstr ""
+
+#: plugins/content_types/node_form/node_form_path.inc:12
+msgid "Node form url path settings"
+msgstr ""
+
+#: plugins/content_types/node_form/node_form_path.inc:13 plugins/content_types/node_form/node_form_publishing.inc:18
+msgid "Publishing options on the Node form."
+msgstr ""
+
+#: plugins/content_types/node_form/node_form_path.inc:24
+msgid "URL path options"
+msgstr ""
+
+#: plugins/content_types/node_form/node_form_path.inc:36
+msgid "URL Path options."
+msgstr ""
+
+#: plugins/content_types/node_form/node_form_path.inc:42
+msgid "\"@s\" node form path options"
+msgstr ""
+
+#: plugins/content_types/node_form/node_form_publishing.inc:16
+msgid "Node form publishing options"
+msgstr ""
+
+#: plugins/content_types/node_form/node_form_publishing.inc:27
+msgid "Publishing options"
+msgstr ""
+
+#: plugins/content_types/node_form/node_form_publishing.inc:39
+msgid "Publishing options."
+msgstr ""
+
+#: plugins/content_types/node_form/node_form_publishing.inc:45
+msgid "\"@s\" node form author information"
+msgstr ""
+
+#: plugins/content_types/node_form/node_form_taxonomy.inc:12
+msgid "Node form categories"
+msgstr ""
+
+#: plugins/content_types/node_form/node_form_taxonomy.inc:13
+msgid "Taxonomy categories for the node."
+msgstr ""
+
+#: plugins/content_types/node_form/node_form_taxonomy.inc:24
+msgid "Categories"
+msgstr ""
+
+#: plugins/content_types/node_form/node_form_taxonomy.inc:35
+msgid "Categories."
+msgstr ""
+
+#: plugins/content_types/node_form/node_form_taxonomy.inc:41
+msgid "\"@s\" node form select taxonomy"
+msgstr ""
+
+#: plugins/content_types/page/page_breadcrumb.inc:18
+msgid "Add the breadcrumb trail as content."
+msgstr ""
+
+#: plugins/content_types/page/page_breadcrumb.inc:19 plugins/content_types/page/page_footer_message.inc:19 plugins/content_types/page/page_help.inc:19 plugins/content_types/page/page_messages.inc:19 plugins/content_types/page/page_mission.inc:19 plugins/content_types/page/page_slogan.inc:19 plugins/content_types/page/page_tabs.inc:19 plugins/content_types/page/page_title.inc:19
+msgid "Page elements"
+msgstr ""
+
+#: plugins/content_types/page/page_footer_message.inc:16
+msgid "Page footer message"
+msgstr ""
+
+#: plugins/content_types/page/page_footer_message.inc:18
+msgid "Add the page footer message as content."
+msgstr ""
+
+#: plugins/content_types/page/page_help.inc:15
+msgid "Help"
+msgstr ""
+
+#: plugins/content_types/page/page_help.inc:18
+msgid "Add the help text of the current page as content."
+msgstr ""
+
+#: plugins/content_types/page/page_messages.inc:15
+msgid "Status messages"
+msgstr ""
+
+#: plugins/content_types/page/page_messages.inc:18
+msgid "Add the status messages of the current page as content."
+msgstr ""
+
+#: plugins/content_types/page/page_mission.inc:15
+msgid "Mission"
+msgstr ""
+
+#: plugins/content_types/page/page_mission.inc:18
+msgid "Add the site mission statement as content."
+msgstr ""
+
+#: plugins/content_types/page/page_slogan.inc:15
+msgid "Site Slogan"
+msgstr ""
+
+#: plugins/content_types/page/page_slogan.inc:18
+msgid "Add the slogan trail as content."
+msgstr ""
+
+#: plugins/content_types/page/page_tabs.inc:15
+msgid "Tabs"
+msgstr ""
+
+#: plugins/content_types/page/page_tabs.inc:18
+msgid "Add the tabs (local tasks) as content."
+msgstr ""
+
+#: plugins/content_types/page/page_title.inc:16
+msgid "Page title"
+msgstr ""
+
+#: plugins/content_types/page/page_title.inc:18
+msgid "Add the page title as content."
+msgstr ""
+
+#: plugins/content_types/search/search_form.inc:14
+msgid "Advanced search form"
+msgstr ""
+
+#: plugins/content_types/search/search_form.inc:16
+msgid "A search form with advanced options."
+msgstr ""
+
+#: plugins/content_types/search/search_form.inc:96 plugins/content_types/search/search_result.inc:99
+msgid "Search type"
+msgstr ""
+
+#: plugins/content_types/search/search_form.inc:103
+msgid "Search form"
+msgstr ""
+
+#: plugins/content_types/search/search_form.inc:105
+msgid "Simple"
+msgstr ""
+
+#: plugins/content_types/search/search_form.inc:106
+msgid "Advanced"
+msgstr ""
+
+#: plugins/content_types/search/search_form.inc:109
+msgid "The advanced form may have additional options based upon the search type. For example the advanced content (node) search form will allow searching by node type and taxonomy term."
+msgstr ""
+
+#: plugins/content_types/search/search_form.inc:118
+msgid "Same page"
+msgstr ""
+
+#: plugins/content_types/search/search_form.inc:136
+msgid "Override default prompt"
+msgstr ""
+
+#: plugins/content_types/search/search_form.inc:163
+msgid "@type search form"
+msgstr ""
+
+#: plugins/content_types/search/search_result.inc:14;69
+msgid "Search results"
+msgstr ""
+
+#: plugins/content_types/search/search_result.inc:16
+msgid "The results of a search using keywords."
+msgstr ""
+
+#: plugins/content_types/search/search_result.inc:62
+msgid "results"
+msgstr ""
+
+#: plugins/content_types/search/search_result.inc:74
+msgid "Your search yielded no results"
+msgstr ""
+
+#: plugins/content_types/search/search_result.inc:107
+msgid "Record a watchdog log entry when searches are made"
+msgstr ""
+
+#: plugins/content_types/search/search_result.inc:113
+msgid "Override \"no result\" text"
+msgstr ""
+
+#: plugins/content_types/search/search_result.inc:125
+msgid "No result text"
+msgstr ""
+
+#: plugins/content_types/search/search_result.inc:151
+msgid "Display text if no search keywords were submitted"
+msgstr ""
+
+#: plugins/content_types/search/search_result.inc:163
+msgid "No keywords text"
+msgstr ""
+
+#: plugins/content_types/search/search_result.inc:202
+msgid "@type search result"
+msgstr ""
+
+#: plugins/content_types/search/search_result.inc:62
+msgid "search"
+msgstr ""
+
+#: plugins/content_types/search/search_result.inc:62
+msgid "%keys (@type)."
+msgstr ""
+
+#: plugins/content_types/term_context/term_description.inc:10
+msgid "Term description"
+msgstr ""
+
+#: plugins/content_types/term_context/term_description.inc:12
+msgid "Term description."
+msgstr ""
+
+#: plugins/content_types/term_context/term_description.inc:14 plugins/content_types/term_context/term_list.inc:14 plugins/contexts/term.inc:15
+msgid "Taxonomy term"
+msgstr ""
+
+#: plugins/content_types/term_context/term_description.inc:30
+msgid "Edit term"
+msgstr ""
+
+#: plugins/content_types/term_context/term_description.inc:31
+msgid "Edit this term"
+msgstr ""
+
+#: plugins/content_types/term_context/term_description.inc:38 plugins/content_types/term_context/term_list.inc:62
+msgid "Term description goes here."
+msgstr ""
+
+#: plugins/content_types/term_context/term_description.inc:46
+msgid "\"@s\" term description"
+msgstr ""
+
+#: plugins/content_types/term_context/term_list.inc:10
+msgid "List of related terms"
+msgstr ""
+
+#: plugins/content_types/term_context/term_list.inc:12
+msgid "Terms related to an existing term; may be child, siblings or top level."
+msgstr ""
+
+#: plugins/content_types/term_context/term_list.inc:71
+msgid "Child terms"
+msgstr ""
+
+#: plugins/content_types/term_context/term_list.inc:72
+msgid "Related terms"
+msgstr ""
+
+#: plugins/content_types/term_context/term_list.inc:73
+msgid "Sibling terms"
+msgstr ""
+
+#: plugins/content_types/term_context/term_list.inc:74
+msgid "Top level terms"
+msgstr ""
+
+#: plugins/content_types/term_context/term_list.inc:75
+msgid "Term synonyms"
+msgstr ""
+
+#: plugins/content_types/term_context/term_list.inc:87
+msgid "Which terms"
+msgstr ""
+
+#: plugins/content_types/term_context/term_list.inc:96
+msgid "List type"
+msgstr ""
+
+#: plugins/content_types/term_context/term_list.inc:97
+msgid "Unordered"
+msgstr ""
+
+#: plugins/content_types/term_context/term_list.inc:97
+msgid "Ordered"
+msgstr ""
+
+#: plugins/content_types/term_context/term_list.inc:104
+msgid "\"@s\" @type"
+msgstr ""
+
+#: plugins/content_types/user_context/profile_fields.inc:12
+msgid "Profile category"
+msgstr ""
+
+#: plugins/content_types/user_context/profile_fields.inc:14
+msgid "Contents of a single profile category."
+msgstr ""
+
+#: plugins/content_types/user_context/profile_fields.inc:64
+msgid "Profile content goes here."
+msgstr ""
+
+#: plugins/content_types/user_context/profile_fields.inc:91
+msgid "Which category"
+msgstr ""
+
+#: plugins/content_types/user_context/profile_fields.inc:101
+msgid "Text to display if category has no data. Note that title will not display unless overridden."
+msgstr ""
+
+#: plugins/content_types/user_context/profile_fields.inc:122
+msgid "\"@s\" profile fields"
+msgstr ""
+
+#: plugins/content_types/user_context/user_picture.inc:10
+msgid "User picture"
+msgstr ""
+
+#: plugins/content_types/user_context/user_picture.inc:12
+msgid "The picture of a user."
+msgstr ""
+
+#: plugins/content_types/user_context/user_picture.inc:37
+msgid "\"@s\" user picture"
+msgstr ""
+
+#: plugins/content_types/user_context/user_profile.inc:10
+msgid "User profile"
+msgstr ""
+
+#: plugins/content_types/user_context/user_profile.inc:12
+msgid "The profile of a user."
+msgstr ""
+
+#: plugins/content_types/user_context/user_profile.inc:42
+msgid "\"@s\" user profile"
+msgstr ""
+
+#: plugins/content_types/vocabulary_context/vocabulary_terms.inc:11
+msgid "Vocabulary terms"
+msgstr ""
+
+#: plugins/content_types/vocabulary_context/vocabulary_terms.inc:13
+msgid "All the terms in a vocabulary."
+msgstr ""
+
+#: plugins/content_types/vocabulary_context/vocabulary_terms.inc:66
+msgid "\"@s\" terms"
+msgstr ""
+
+#: plugins/content_types/vocabulary_context/vocabulary_terms.inc:73
+msgid "Maximum depth"
+msgstr ""
+
+#: plugins/content_types/vocabulary_context/vocabulary_terms.inc:74
+msgid "unlimited"
+msgstr ""
+
+#: plugins/content_types/vocabulary_context/vocabulary_terms.inc:76
+msgid "Define the maximum depth of terms being displayed."
+msgstr ""
+
+#: plugins/content_types/vocabulary_context/vocabulary_terms.inc:81
+msgid "Display as tree"
+msgstr ""
+
+#: plugins/content_types/vocabulary_context/vocabulary_terms.inc:83
+msgid "If checked, the terms are displayed in a tree, otherwise in a flat list."
+msgstr ""
+
+#: plugins/contexts/node.inc:17
+msgid "A node object."
+msgstr ""
+
+#: plugins/contexts/node.inc:29
+msgid "Enter the node ID of a node for this context."
+msgstr ""
+
+#: plugins/contexts/node.inc:91 plugins/contexts/node_edit_form.inc:109
+msgid "'%title' [node id %nid]"
+msgstr ""
+
+#: plugins/contexts/node.inc:91 plugins/contexts/node_edit_form.inc:109
+msgid "Open in new window"
+msgstr ""
+
+#: plugins/contexts/node.inc:92 plugins/contexts/node_edit_form.inc:110
+msgid "Currently set to !link"
+msgstr ""
+
+#: plugins/contexts/node.inc:104 plugins/contexts/node_edit_form.inc:122
+msgid "Reset identifier to node title"
+msgstr ""
+
+#: plugins/contexts/node.inc:105 plugins/contexts/node_edit_form.inc:123
+msgid "If checked, the identifier will be reset to the node title of the selected node."
+msgstr ""
+
+#: plugins/contexts/node.inc:117 plugins/contexts/node_edit_form.inc:135
+msgid "You must select a node."
+msgstr ""
+
+#: plugins/contexts/node.inc:143 plugins/contexts/node_edit_form.inc:161
+msgid "Invalid node selected."
+msgstr ""
+
+#: plugins/contexts/node.inc:166
+msgid "Node ID"
+msgstr ""
+
+#: plugins/contexts/node.inc:167
+msgid "Node revision ID"
+msgstr ""
+
+#: plugins/contexts/node.inc:169
+msgid "Author UID"
+msgstr ""
+
+#: plugins/contexts/node_add_form.inc:15
+msgid "Node add form"
+msgstr ""
+
+#: plugins/contexts/node_add_form.inc:16
+msgid "A node add form."
+msgstr ""
+
+#: plugins/contexts/node_add_form.inc:25
+msgid "Enter the node type this context."
+msgstr ""
+
+#: plugins/contexts/node_add_form.inc:78
+msgid "Submit @name"
+msgstr ""
+
+#: plugins/contexts/node_add_form.inc:104
+msgid "Select the node type for this form."
+msgstr ""
+
+#: plugins/contexts/node_edit_form.inc:15
+msgid "Node edit form"
+msgstr ""
+
+#: plugins/contexts/node_edit_form.inc:16
+msgid "A node edit form."
+msgstr ""
+
+#: plugins/contexts/node_edit_form.inc:27
+msgid "Enter the node ID of a node for this argument:"
+msgstr ""
+
+#: plugins/contexts/string.inc:16
+msgid "A context that is just a string."
+msgstr ""
+
+#: plugins/contexts/string.inc:22
+msgid "Raw string"
+msgstr ""
+
+#: plugins/contexts/string.inc:23
+msgid "HTML-safe string"
+msgstr ""
+
+#: plugins/contexts/string.inc:28
+msgid "Enter the string for this context."
+msgstr ""
+
+#: plugins/contexts/term.inc:16
+msgid "A single taxonomy term object."
+msgstr ""
+
+#: plugins/contexts/term.inc:26
+msgid "Vocabulary ID"
+msgstr ""
+
+#: plugins/contexts/term.inc:79
+msgid "Currently set to @term. Enter another term if you wish to change the term."
+msgstr ""
+
+#: plugins/contexts/term.inc:96
+msgid "Select a term from @vocabulary."
+msgstr ""
+
+#: plugins/contexts/term.inc:114
+msgid "Reset identifier to term title"
+msgstr ""
+
+#: plugins/contexts/term.inc:115
+msgid "If checked, the identifier will be reset to the term name of the selected term."
+msgstr ""
+
+#: plugins/contexts/term.inc:128
+msgid "You must select a term."
+msgstr ""
+
+#: plugins/contexts/term.inc:139
+msgid "Invalid term selected."
+msgstr ""
+
+#: plugins/contexts/terms.inc:16
+msgid "Taxonomy terms"
+msgstr ""
+
+#: plugins/contexts/terms.inc:17
+msgid "Multiple taxonomy terms, as a group."
+msgstr ""
+
+#: plugins/contexts/terms.inc:25
+msgid "Term ID of first term"
+msgstr ""
+
+#: plugins/contexts/terms.inc:26
+msgid "Term ID of all term, separated by + or ,"
+msgstr ""
+
+#: plugins/contexts/terms.inc:27
+msgid "Term name of first term"
+msgstr ""
+
+#: plugins/contexts/terms.inc:28
+msgid "Term name of all terms, separated by + or ,"
+msgstr ""
+
+#: plugins/contexts/terms.inc:29
+msgid "Vocabulary ID of first term"
+msgstr ""
+
+#: plugins/contexts/user.inc:16
+msgid "A single user object."
+msgstr ""
+
+#: plugins/contexts/user.inc:24
+msgid "User ID"
+msgstr ""
+
+#: plugins/contexts/user.inc:25
+msgid "User name"
+msgstr ""
+
+#: plugins/contexts/vocabulary.inc:15
+msgid "Taxonomy vocabulary"
+msgstr ""
+
+#: plugins/contexts/vocabulary.inc:16
+msgid "A single taxonomy vocabulary object."
+msgstr ""
+
+#: plugins/relationships/book_parent.inc:14
+msgid "Book parent"
+msgstr ""
+
+#: plugins/relationships/book_parent.inc:16
+msgid "Adds a book parent from a node context."
+msgstr ""
+
+#: plugins/relationships/book_parent.inc:63 plugins/relationships/term_parent.inc:63
+msgid "Relationship type"
+msgstr ""
+
+#: plugins/relationships/book_parent.inc:64 plugins/relationships/term_parent.inc:64
+msgid "Immediate parent"
+msgstr ""
+
+#: plugins/relationships/book_parent.inc:64
+msgid "Top level book"
+msgstr ""
+
+#: plugins/relationships/term_from_node.inc:14
+msgid "Term from node"
+msgstr ""
+
+#: plugins/relationships/term_from_node.inc:16
+msgid "Adds a taxonomy term from a node context; if multiple terms are selected, this will get the \"first\" term only."
+msgstr ""
+
+#: plugins/relationships/term_parent.inc:14
+msgid "Term parent"
+msgstr ""
+
+#: plugins/relationships/term_parent.inc:16
+msgid "Adds a taxonomy term parent from a term context."
+msgstr ""
+
+#: plugins/relationships/term_parent.inc:64
+msgid "Top level term"
+msgstr ""
+
+#: plugins/relationships/user_from_node.inc:16
+msgid "Creates the author of a node as a user context."
+msgstr ""
+
+#: views_content/views_content.module:61 views_content/plugins/content_types/views.inc:99
+msgid "Views"
+msgstr ""
+
+#: views_content/views_content.module:92
+msgid "Make all views available as panes"
+msgstr ""
+
+#: views_content/views_content.module:93
+msgid "If checked, all views will be made available as content panes to be added to content types. If not checked, only Views that have a 'Content pane' display will be available as content panes. Uncheck this if you want to be able to more carefully control what view content is available to users using the panels layout UI."
+msgstr ""
+
+#: views_content/views_content.module:20
+msgid "Views panes"
+msgstr ""
+
+#: views_content/views_content.module:24
+msgid "Configure Views to be used as CTools content."
+msgstr ""
+
+#: views_content/views_content.info:0
+msgid "Views content panes"
+msgstr ""
+
+#: views_content/views_content.info:0
+msgid "Allows Views content to be used in Panels, Dashboard and other modules which use the CTools Content API."
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:18
+msgid "All views"
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:33
+msgid "Select display"
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:36
+msgid "Configure view"
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:226
+msgid "Display"
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:228
+msgid "Choose which display of this view you wish to use."
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:249 views_content/plugins/content_types/views_panes.inc:282
+msgid "Broken/missing/deleted view."
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:253
+msgid "Configure view @view (@display)"
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:275
+msgid "Link title to view"
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:281
+msgid "Provide a \"more\" link that links to the view"
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:282
+msgid "This is independent of any more link that may be provided by the view itself; if you see two more links, turn this one off. Views will only provide a more link if using the \"block\" type, however, so if using embed, use this one."
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:288 views_content/plugins/content_types/views_panes.inc:335
+msgid "Display feed icons"
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:294
+msgid "Custom pager settings"
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:299
+msgid "Use different pager settings from view settings"
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:306
+msgid "<strong>Warning: </strong> This view has AJAX enabled. Overriding the pager settings will work initially, but when the view is updated via AJAX, the original settings will be used. You should not override pager settings on Views with the AJAX setting enabled."
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:313 views_content/plugins/content_types/views_panes.inc:343 views_content/plugins/views/views_content_plugin_display_panel_pane.inc:148
+msgid "Use pager"
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:322 views_content/plugins/content_types/views_panes.inc:351
+msgid "Pager ID"
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:335
+msgid "Num posts"
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:343 views_content/plugins/content_types/views_panes.inc:372
+msgid "Offset"
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:345
+msgid "The number of items to skip and not display."
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:352
+msgid "Send arguments"
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:354
+msgid "Select this to send all arguments from the panel directly to the view. If checked, the panel arguments will come after any context arguments above and precede any additional arguments passed in through the Arguments field below. Note that arguments do not include the base URL; only values after the URL or set as placeholders are considered arguments."
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:362
+msgid "Additional arguments to send to the view as if they were part of the URL in the form of arg1/arg2/arg3. You may use %0, %1, ..., %N to grab arguments from the URL. Or use @0, @1, @2, ..., @N to use arguments passed into the panel. Note: use these values only as a last resort. In future versions of Panels these may go away."
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:368
+msgid "Override URL"
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:370
+msgid "If this is set, override the View URL; this can sometimes be useful to set to the panel URL"
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:394;406 views_content/plugins/content_types/views_panes.inc:411;414
+msgid "Deleted/missing view @view"
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:396
+msgid "View: @name"
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:409
+msgid "View information"
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:412
+msgid "Using display @display."
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:433
+msgid "Argument @arg using context @context converted into @converter"
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:441
+msgid "@count items displayed."
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:443
+msgid "With pager."
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:446
+msgid "Without pager."
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:450
+msgid "Skipping first @count results"
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:453
+msgid "With more link."
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:456
+msgid "With feed icon."
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:459
+msgid "Sending arguments."
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:462
+msgid "Using arguments: @args"
+msgstr ""
+
+#: views_content/plugins/content_types/views.inc:465
+msgid "Using url: @url"
+msgstr ""
+
+#: views_content/plugins/content_types/views_panes.inc:15;94 views_content/plugins/views/views_content_plugin_display_panel_pane.inc:92
+msgid "View panes"
+msgstr ""
+
+#: views_content/plugins/content_types/views_panes.inc:319
+msgid "Link title to page"
+msgstr ""
+
+#: views_content/plugins/content_types/views_panes.inc:326
+msgid "Provide a \"more\" link."
+msgstr ""
+
+#: views_content/plugins/content_types/views_panes.inc:363
+msgid "Num items"
+msgstr ""
+
+#: views_content/plugins/content_types/views_panes.inc:365
+msgid "Select the number of items to display, or 0 to display all results."
+msgstr ""
+
+#: views_content/plugins/content_types/views_panes.inc:374
+msgid "Enter the number of items to skip; enter 0 to skip no items."
+msgstr ""
+
+#: views_content/plugins/content_types/views_panes.inc:381
+msgid "Override path"
+msgstr ""
+
+#: views_content/plugins/content_types/views_panes.inc:383
+msgid "If this is set, override the View URL path; this can sometimes be useful to set to the panel URL."
+msgstr ""
+
+#: views_content/plugins/views/views_content.views.inc:16
+msgid "Content pane"
+msgstr ""
+
+#: views_content/plugins/views/views_content.views.inc:17
+msgid "Is available as content for a panel or dashboard display."
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:56
+msgid "Pane settings"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:61
+msgid "Use view name"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:70
+msgid "Admin title"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:76
+msgid "Use view description"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:85
+msgid "Admin desc"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:101
+msgid "Category"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:107;151
+msgid "Link to view"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:108;114;208;218
+msgid "Yes"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:108;114;208;218
+msgid "No"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:113
+msgid "Use Panel path"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:119
+msgid "Argument input"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:128;142
+msgid "Allow settings"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:129
+msgid "None"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:129
+msgid "All"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:129
+msgid "Some"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:144
+msgid "Checked settings will be available in the panel pane config dialog for modification by the panels user. Unchecked settings will not be available and will only use the settings in this display."
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:149
+msgid "Items per page"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:150
+msgid "Pager offset"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:152
+msgid "More link"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:153
+msgid "Path override"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:154
+msgid "Title override"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:171
+msgid "This is the title that will appear for this view pane in the add content dialog. If left blank, the view name will be used."
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:181
+msgid "This is text that will be displayed when the user mouses over the pane in the add content dialog. If blank the view description will be used."
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:193
+msgid "This is category the pane will appear in on the add content dialog."
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:199
+msgid "This is the default weight of the category. Note that if the weight of a category is defined in multiple places, only the first one Panels sees will get that definition, so if the weight does not appear to be working, check other places that the weight might be set."
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:204
+msgid "Link pane title to view"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:214
+msgid "Inherit path from panel display"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:220
+msgid "If yes, all links generated by Views, such as more links, summary links, and exposed input links will go to the panels display path, not the view, if the display has a path."
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:225
+msgid "Choose the data source for view arguments"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:242
+msgid "No argument"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:243
+msgid "Argument wildcard"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:244
+msgid "From context"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:245
+msgid "From panel argument"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:246
+msgid "Fixed"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:247
+msgid "Input on pane config"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:250
+msgid "@arg source"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:256
+msgid "Required context"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:257
+msgid "If \"From context\" is selected, which type of context to use."
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:266
+msgid "Context is optional"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:267
+msgid "This context need not be present for the pane to function. If you plan to use this, ensure that the argument handler can handle empty values gracefully."
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:275
+msgid "Panel argument"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:276
+msgid "If \"From panel argument\" is selected, which panel argument to use."
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:278
+msgid "First"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:278
+msgid "Second"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:278
+msgid "Third"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:278
+msgid "Fourth"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:278
+msgid "Fifth"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:278
+msgid "Sixth"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:285
+msgid "Fixed argument"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:286
+msgid "If \"Fixed\" is selected, what to use as an argument."
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:294
+msgid "Label"
+msgstr ""
+
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:295
+msgid "If this argument is presented to the panels user, what label to apply to it."
+msgstr ""
+

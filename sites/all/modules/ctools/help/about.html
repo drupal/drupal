@@ -1,0 +1,31 @@
+<!-- $Id: about.html,v 1.1 2009/01/22 01:57:18 merlinofchaos Exp $ -->
+The Chaos Tool Suite is a series of tools for developers to make code that I've found to be very useful to Views and Panels more readily available. Certain methods of doing things, particularly with AJAX, exportable objects, and a plugin system are proving to be ideas that are useful outside of just Views and Panels. This module does not offer much directly ot the end user, but instead creates a library for other modules to use. If you are an end user and some module asked you to install the CTools suite, then this is far as you really need to go. If you're a developer and are interested in these tools, read on!
+
+<h3>Tools provided by CTools</h3>
+<dl>
+<dt><a href="&topic:ctools/plugins&">Plugins</a></dt>
+<dd>The plugins tool allows a module to allow <b>other</b> modules (and themes!) to provide plugins which provide some kind of functionality or some kind of task. For example, in Panels there are several types of plugins: Content types (which are like blocks), layouts (which are page layouts) and styles (which can be used to style a panel). Each plugin is represented by a .inc file, and the functionaly they offer can differ wildly.
+
+<dt><a href="&topic:ctools/context&">Context</a></dt>
+<dd>Context is the idea that the objects that are used in page generation have more value than simply creating a single piece of output. Instead, contexts can be used to create multiple pieces of content that can all be put onto the page. Additionally, contexts can be used to derive other contexts via relationships, such as determining the node author and displaying data about the new context.</dd>
+
+<dt><a href="&topic:ctools/ajax&">AJAX Tools</a></dt>
+<dd>AJAX (also known as AHAH) is a method of allowing the browser and the server to communicate without requiring a page refresh. It can be used to create complicated interactive forms, but it is somewhat difficult to integrate into Drupal's Form API. These tools make it easier to accomplish this goal. In addition, CTools provides a few other javascript helpers, such as a modal dialog, a collapsible div, a simple dropdown and dependent checkboxes.
+
+<dt><a href="&topic:ctools/css&">CSS scrubbing and caching</a></dt>
+<dd>Drupal comes with a fantastic array of tools to ensure HTML is safe to output, but does not contain any similar tools for CSS. CTools provides a small tool to sanitize CSS so that user-input CSS code can still be safely used. It also provides a method for caching CSS for better performance.</dd>
+
+<dt><a href="&topic:ctools/export&">Exportable objects</a></dt>
+<dd>Views and Panels both use objects that can either be in code or in the database, and the object can be exported into a piece of PHP code so that it can be moved from site to site or out of the database entirely. This library abstracts that so that other modules can use this same concept for their data.</dd>
+
+<dt><a href="&topic:ctools/form&">Form tools</a></dt>
+<dd>Drupal 6's FAPI really improved over Drupal 5, and made a lot of things possible. Still, it missed a few items that were needed to make form wizards and truly dynamic AJAX forms possible. CTools includes a replacement for drupal_get_form() that has a few more options and allows the caller to examine the $form_state once the form has completed.</dd>
+
+<dt><a href="&topic:ctools/wizard&">Form wizards</a></dt>
+<dd>Finally! An easy way to have form wizards, which is any 'form' which is actually a string of forms that build up to a final conclusion. The form wizard supports a single entry point, the ability to choose whether or not the user can go forward/back/up on the form and easy callbacks to handle the difficult job of dealing with data in between forms.</dd>
+
+<dt><a href="&topic:ctools/object-cache&">Temporary object cache</a></dt>
+<dd>For normal forms, all of the data needed for an object is stored in the form so that the browser handles a lot of the work. For multi-step and ajax forms, however, this is impractical, and letting the browser store data can be insecure. The object cache provides a non-volatile location to store temporary data while the form is being worked on. This is much safer than the standard Drupal caching mechanism, which is volatile, meaning it can be cleared at any time and any system using it must be capable of recreating the data that was there. This system also allows for object locking, since any object which has an item in the cache from another person can be assumed to be 'locked for editing'.</dd>
+
+
+</dl>

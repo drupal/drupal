@@ -1,0 +1,9 @@
+/* $Id: wizard.css,v 1.1 2008/12/06 02:13:48 merlinofchaos Exp $ */
+
+.wizard-trail {
+  font-size: 120%;
+}
+
+.wizard-trail-current {
+  font-weight: bold;
+}

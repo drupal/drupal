@@ -1,0 +1,25 @@
+; $Id: simplenews.info,v 1.24 2011/01/25 12:29:18 simongeorges Exp $
+name = Simplenews
+description = Send newsletters to subscribed email addresses.
+package = Mail
+core = 7.x
+configure = admin/config/simplenews
+dependencies[] = taxonomy
+
+
+files[] = includes/views/handlers/simplenews_handler_field_newsletter_status.inc
+files[] = includes/views/handlers/simplenews_handler_field_newsletter_priority.inc
+files[] = includes/views/handlers/simplenews_handler_field_category_hyperlinks.inc
+files[] = includes/views/handlers/simplenews_handler_field_category_new_account.inc
+files[] = includes/views/handlers/simplenews_handler_field_category_opt_inout.inc
+files[] = includes/views/handlers/simplenews_handler_filter_newsletter_status.inc
+files[] = includes/views/handlers/simplenews_handler_filter_newsletter_priority.inc
+files[] = includes/views/handlers/simplenews_handler_filter_category_hyperlinks.inc
+files[] = includes/views/handlers/simplenews_handler_filter_category_new_account.inc
+files[] = includes/views/handlers/simplenews_handler_filter_category_opt_inout.inc
+; Information added by drupal.org packaging script on January 1, 1970 - 00:00
+version = "7.x-1.x-dev"
+core = "7.x"
+project = "simplenews"
+datestamp = "1296218226"
+

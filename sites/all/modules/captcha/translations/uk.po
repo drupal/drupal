@@ -1,0 +1,428 @@
+# Ukrainian translation of CAPTCHA (all releases)
+# Copyright (c) 2009 by the Ukrainian translation team
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: CAPTCHA (all releases)\n"
+"POT-Creation-Date: 2009-10-08 19:53+0000\n"
+"PO-Revision-Date: 2009-10-08 22:54+0200\n"
+"Language-Team: Ukrainian\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=((((n%10)==1)&&((n%100)!=11))?(0):(((((n%10)>=2)&&((n%10)<=4))&&(((n%100)<10)||((n%100)>=20)))?(1):2));\n"
+"Last-Translator: podarok <podarok@ua.fm>\n"
+"X-Poedit-Language: Ukrainian\n"
+"X-Poedit-Country: UKRAINE\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+msgid "Save configuration"
+msgstr "Запам'ятати конфігурацію"
+
+msgid "delete"
+msgstr "видалити"
+
+msgid "Delete"
+msgstr "Видалити"
+
+msgid "Submit"
+msgstr "Надіслати"
+
+msgid "Operations"
+msgstr "Дії"
+
+msgid "Disable"
+msgstr "Вимкнено"
+
+msgid "Math Question: What is %problem?"
+msgstr "Порахуйте: скільки буде %problem?"
+
+msgid "none"
+msgstr "нічого"
+
+msgid "General settings"
+msgstr "Загальні налаштування"
+
+msgid "Save"
+msgstr "Зберегти"
+
+msgid "Font"
+msgstr "Шрифт"
+
+msgid "Form ID"
+msgstr "Ідентифікатор форми"
+
+msgid "Example"
+msgstr "Приклад"
+
+msgid "Background color"
+msgstr "Колір тла"
+
+msgid "Text color"
+msgstr "Колір тексту"
+
+msgid "Unsupported database."
+msgstr "База даних не підтримується!"
+
+msgid "normal"
+msgstr "звичайний"
+
+msgid "second"
+msgstr "другий"
+
+msgid "Code length"
+msgstr "Довжина коду"
+
+msgid "Font size"
+msgstr "Розмір шрифта"
+
+msgid "Spam control"
+msgstr "КОнтроль спаму"
+
+msgid "The list of characters to use should not contain spaces."
+msgstr "Список символів не повинен містити пропусків"
+
+msgid "Math question"
+msgstr "Математичне завдання"
+
+msgid "Encountered an illegal byte while splitting an utf8 string in characters."
+msgstr "Трапився неправильний байт при розділенні utf8 строки в символи"
+
+msgid "For language %lang_name (code %lang_code)"
+msgstr "Для мови %lang_name ( код %lang_code )"
+
+msgid "first"
+msgstr "перший"
+
+msgid "third"
+msgstr "третій"
+
+msgid "fourth"
+msgstr "четвертий"
+
+msgid "fifth"
+msgstr "п'ятий"
+
+msgid "sixth"
+msgstr "шостий"
+
+msgid "seventh"
+msgstr "сьомий"
+
+msgid "eighth"
+msgstr "восьмий"
+
+msgid "ninth"
+msgstr "дев'ятий"
+
+msgid "tenth"
+msgstr "десятий"
+
+msgid "change"
+msgstr "зміна"
+
+msgid "disable"
+msgstr "вимкнути"
+
+msgid "low"
+msgstr "низько"
+
+msgid "medium"
+msgstr "середній"
+
+msgid "high"
+msgstr "високо"
+
+msgid "Display on separate page"
+msgstr "Показувати на окремій сторінці"
+
+msgid "Add CAPTCHA administration links to forms"
+msgstr "Додати CAPTCHA адміністративні посилання до форм"
+
+msgid "This option is very helpful to enable/disable challenges on forms. When enabled, users with the \"%admincaptcha\" permission will see CAPTCHA administration links on all forms (except on administrative pages, which shouldn't be accessible to untrusted users in the first place). These links make it possible to enable a challenge of the desired type or disable it."
+msgstr "Дана функциональність дуже корисна на перших порах налагодження вебсайтів. Коли увімкнена - користувачі з \"%admincaptcha\" доступом будуть бачити спеціальні посилання біля всіх форм, що дозволить швидко увімкнути-вимкнути капчу саме в потрібних місцях сайту."
+
+msgid "administer CAPTCHA settings"
+msgstr "керування параметрами CAPTCHA"
+
+msgid "Challenge type per form"
+msgstr "Типи в залежності від форм"
+
+msgid "Select the challenge type you want for each of the listed forms (identified by their so called <em>form_id</em>'s). You can easily add arbitrary forms with the help of the '%CAPTCHA_admin_links' option or the <a href=\"!add_captcha_point\">the CAPTCHA point form</a>."
+msgstr "Виберіть тип запитання, яке ви бажаєте відображати на перерахованих формах ( ідентифікатори - так звані <em>form_id</em> ). Ви можете легко і просто додати будь-які форми з допомогою '%CAPTCHA_admin_links' параметру або <a href=\"!add_captcha_point\">CAPTCHA point форми</a>."
+
+msgid "Challenge description"
+msgstr "Опис типу капчі"
+
+msgid "With this description you can explain the purpose of the challenge to the user."
+msgstr "Цей опис пояснюватиме користувачу вимогу виконання капчі."
+
+msgid "Persistence"
+msgstr "Стійкість"
+
+msgid "Always add a challenge."
+msgstr "Завжди вмикати капчу"
+
+msgid "Omit challenges for a form once the user has successfully responded to a challenge for that form."
+msgstr "Вмикати капчу для форми лише один раз до моменту правильної відповіді користувача."
+
+msgid "Omit challenges for all forms once the user has successfully responded to a challenge."
+msgstr "Вмикати капчу для всіх форм лише один раз до моменту правильної видповіді користувача"
+
+msgid "Define if challenges should be omitted during the rest of a session once the user successfully responses to a challenge."
+msgstr "Вказуєм чи потрібно вмикати капчу протягом подальшої сесії користувача після правильної відповіді одного разу"
+
+msgid "Log wrong responses"
+msgstr "Логувати неправильні відповіді"
+
+msgid "Report information about wrong responses to the !log."
+msgstr "Записувати інформацію про неправильні відповіді в !log"
+
+msgid "log"
+msgstr "лог"
+
+msgid "Challenge type (module)"
+msgstr "Тип капчі ( субмобуль )"
+
+msgid "The CAPTCHA settings were saved."
+msgstr "Параметри капчі було збережено"
+
+msgid "The Drupal form_id of the form to add the CAPTCHA to."
+msgstr "Ідентифікатор форми form_id Друпала, до якого застосувати капчу"
+
+msgid "Challenge type"
+msgstr "Тип капчі"
+
+msgid "The CAPTCHA type to use for this form"
+msgstr "Тип капчі, що використовувати до цієї форми"
+
+msgid "Illegal form_id"
+msgstr "Некоректний form_id"
+
+msgid "Saved CAPTCHA point settings."
+msgstr "Збережено параметри балів капчі"
+
+msgid "Are you sure you want to delete the CAPTCHA for form_id %form_id?"
+msgstr "Ви впевнені щодо видалення капчі для ідентифікатора форми form_id = %form_id ?"
+
+msgid "Are you sure you want to disable the CAPTCHA for form_id %form_id?"
+msgstr "Ви впевнені щодо вимкнення капчі для ідентифікатора форми form_id = %form_id ?"
+
+msgid "Deleted CAPTCHA for form %form_id."
+msgstr "Видалено капчу для форми %form_id."
+
+msgid "Disabled CAPTCHA for form %form_id."
+msgstr "Вимкнено капчу для форми %form_id."
+
+msgid "This page gives an overview of all available challenge types, generated with their current settings."
+msgstr "Ця сторінка надає опис всіх доступних типів капчі, згенерованих теперішніми параметрами."
+
+msgid "Challenge \"%challenge\" by module \"%module\""
+msgstr "Капча \"%challenge\" модуля \"%module\""
+
+msgid "10 more examples of this challenge."
+msgstr "Ще 10 прикладів даного типу капчі"
+
+msgid "\"CAPTCHA\" is an acronym for \"Completely Automated Public Turing test to tell Computers and Humans Apart\". It is typically a challenge-response test to determine whether the user is human. The CAPTCHA module is a tool to fight automated submission by malicious users (spamming) of for example comments forms, user registration forms, guestbook forms, etc. You can extend the desired forms with an additional challenge, which should be easy for a human to solve correctly, but hard enough to keep automated scripts and spam bots out."
+msgstr "CAPTCHA (англ. «completely automated public turing test to tell computers and humans apart» — повністю автоматизований публічний тест Тюринга для розрізнення комп'ютерів і людей) — торгова марка Університет Карнегі — Меллона, комп'ютерний тест, який використовується для того, щоб визначити, хто використовує систему — людина чи комп'ютер. Термін з'явився в 2000 році."
+
+msgid "Location of comment submission form"
+msgstr "Розміщення форми подання коментаря"
+
+msgid "CAPTCHA is a trademark of Carnegie Mellon University."
+msgstr "CAPTCHA is a trademark of Carnegie Mellon University."
+
+msgid "skip CAPTCHA"
+msgstr "обхід капчі"
+
+msgid "This question is for testing whether you are a human visitor and to prevent automated spam submissions."
+msgstr "Дайте відповідь на це запитання, щоб ми знали що ви людина, а не тупий робот )."
+
+msgid "CAPTCHA"
+msgstr "CAPTCHA"
+
+msgid "general CAPTCHA settings"
+msgstr "головні параметри капчі"
+
+msgid "Enabled challenge"
+msgstr "Ввімкнена капча"
+
+msgid "Place a CAPTCHA here for untrusted users."
+msgstr "Вставляти Капчу тут для недовірених користувачів"
+
+msgid "Invalid CAPTCHA token."
+msgstr "Неправильна Капча"
+
+msgid "The answer you entered for the CAPTCHA was not correct."
+msgstr "ВІдповідь, введена вами для Капчі - некоректна"
+
+msgid "Math Question"
+msgstr "Математичне завдання"
+
+msgid "Solve this simple math problem and enter the result. E.g. for 1+3, enter 4."
+msgstr "Розв'яжіть цю просту задачку і введіть відповідь. Наприклад, для 1+3 введіть 4."
+
+msgid "@x + @y = "
+msgstr "@x + @y = "
+
+msgid "Already @counter blocked form submissions"
+msgstr "Вже блоковано @counter некоректних відповідей на капчу"
+
+msgid "Administer how and where CAPTCHAs are used."
+msgstr "Керування використанням Капчі"
+
+msgid "Examples"
+msgstr "Приклади"
+
+msgid "CAPTCHA point adminstration"
+msgstr "Адміністрування балів капчі"
+
+msgid "Built-in font"
+msgstr "Вбудований шрифт"
+
+msgid "Code settings"
+msgstr "Параметри коду"
+
+msgid "Font settings"
+msgstr "Налаштування шрифтів"
+
+msgid "tiny"
+msgstr "дрібний"
+
+msgid "small"
+msgstr "малий"
+
+msgid "large"
+msgstr "великий"
+
+msgid "Character spacing"
+msgstr "Пропуски між символами"
+
+msgid "Color settings"
+msgstr "Параметри кольору"
+
+msgid "Additional variation of text color"
+msgstr "Додаткові варіанти кольорів тексту"
+
+msgid "moderate"
+msgstr "керувати"
+
+msgid "very high"
+msgstr "дуже високо"
+
+msgid "Distortion and noise"
+msgstr "Розмивання та шум"
+
+msgid "Distortion level"
+msgstr "Рівень розмивання"
+
+msgid "severe"
+msgstr "середньо"
+
+msgid "Set the degree of wave distortion in the image."
+msgstr "Встановити процент хвильового розмивання картинки"
+
+msgid "Smooth distortion"
+msgstr "М'яке розмивання"
+
+msgid "This option enables bilineair interpolation of the distortion which makes the image look smoother, but it is more CPU intensive."
+msgstr "Цей параметр вмикає білінійну інтерполяцію розмивання що робить картинку більш розмитою, але це створює більше навантаження на процесор!"
+
+msgid "Double vision"
+msgstr "Подвійне відображення"
+
+msgid "When enabled, characters appear twice in the image, overlayed onto each other."
+msgstr "Якщо увімкнено, символи малюються двічі на картинці, один над одним"
+
+msgid "Add salt and peper noise"
+msgstr "Додати шум \"сіль і перець\""
+
+msgid "This option adds randomly colored point noise."
+msgstr "Цей параметр додає випадкові кольорові точки шуму"
+
+msgid "Add line noise"
+msgstr "Додати лінійний шум"
+
+msgid "This option enables lines randomly drawn on top of the text code."
+msgstr "Цей параметр вмикає лінії, випадково намальовані поверх тексту"
+
+msgid "Noise level"
+msgstr "Рівень шуму"
+
+msgid "You need to select a font"
+msgstr "Вам потрібно обрати шрифт"
+
+msgid "Font does not exist or is not readable."
+msgstr "Шрифт недоступний або нечитаємий"
+
+msgid "Background color is not a valid hexadecimal color value."
+msgstr "Колір фону має неправильне шіснадцяткове значення"
+
+msgid "Text color is not a valid hexadecimal color value."
+msgstr "Колір тексту має неправильне шіснадцяткове значення"
+
+msgid "<p>Example image, generated with the current settings:</p>!img"
+msgstr "<p>Приклад картинки, згенерованої теперішнімі параметрами: </p> !img"
+
+msgid "Image CAPTCHA"
+msgstr "Фото Капча"
+
+msgid "What code is in the image?"
+msgstr "Які символи ви бачите на малюнку?"
+
+msgid "Copy the characters (respecting upper/lower case) from the image."
+msgstr "Впишіть символи із зображення ('а' та 'А' - це різні символи)."
+
+msgid "Provides an image based CAPTCHA."
+msgstr "Надає фото капчу"
+
+msgid "Kind of words to use in the phrase"
+msgstr "Тип слів для фрази"
+
+msgid "Generate nonsense random words."
+msgstr "Генерація беззмістовних випадкових слів"
+
+msgid "Use user defined words."
+msgstr "Використовувати слова, зазначені користувачем"
+
+msgid "User defined words"
+msgstr "Користувацькі слова"
+
+msgid "Enter a bunch of space separated words (at least @min)."
+msgstr "Введіть набір слів ( як мінімум @min )"
+
+msgid "Number of words in the phrase"
+msgstr "Кількість слів в фразі"
+
+msgid "You need to enter at least @min words if you want to use user defined words."
+msgstr "Вам потрібно ввести мінімум @min слів, якщо Ви хочете використовувати \"зазначені\" слова"
+
+msgid "Number of words in the phrase should be between 4 and 10."
+msgstr "КІлькість слів у фразі повинна бути між 4 та 10"
+
+msgid "In this challenge the visitor is asked for the n<sup>th</sup> word of a given phrase."
+msgstr "В даній капчі користувач зобов'язаний написати порядкове слово з цілої фрази"
+
+msgid "What is the @nth word in the phrase \"@words\"?"
+msgstr "Напишіть @nth слово в фразі \"@words\""
+
+msgid "Text CAPTCHA"
+msgstr "Текстова Капча"
+
+msgid "Provides a simple text based CAPTCHA."
+msgstr "Надає просту текстову капчу"
+
+msgid "File format"
+msgstr "Формат файлу"
+
+msgid "The GD library for PHP is missing or outdated. Please check the <a href=\"@url\">PHP image documentation</a> for information on how to correct this."
+msgstr "Бібліотека GD для PHP відсутня або застаріла. Будь-ласка, зверніться до <a href=\"@url\">документації по роботі PHP із зображеннями</a> щоб отримати інформацію по усуненню цієї помилки."
+
+msgid "CAPTCHA point administration"
+msgstr "керування CAPTCHA"
+
+msgid "JPEG"
+msgstr "JPEG"
+
+msgid "PNG"
+msgstr "PNG"

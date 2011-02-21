@@ -1,0 +1,743 @@
+<?php
+// $Id: ctools.module,v 1.40 2011/01/05 20:06:57 merlinofchaos Exp $
+
+/**
+ * @file
+ * CTools primary module file.
+ *
+ * Most of the CTools tools are in their own .inc files. This contains
+ * nothing more than a few convenience functions and some hooks that
+ * must be implemented in the module file.
+ */
+
+define('CTOOLS_API_VERSION', '2.0-alpha1');
+
+/**
+ * Test the CTools API version.
+ *
+ * This function can always be used to safely test if CTools has the minimum
+ * API version that your module can use. It can also try to protect you from
+ * running if the CTools API version is too new, but if you do that you need
+ * to be very quick about watching CTools API releases and release new versions
+ * of your software as soon as the new release is made, or people might end up
+ * updating CTools and having your module shut down without any recourse.
+ *
+ * It is recommended that every hook of your module that might use CTools or
+ * might lead to a use of CTools be guarded like this:
+ *
+ * @code
+ * if (!module_invoke('ctools', 'api_version', '1.0')) {
+ *   return;
+ * }
+ * @endcode
+ *
+ * Note that some hooks such as _menu() or _theme() must return an array().
+ *
+ * You can use it in your hook_requirements to report this error condition
+ * like this:
+ *
+ * @code
+ * define('MODULENAME_MINIMUM_CTOOLS_API_VERSION', '1.0');
+ * define('MODULENAME_MAXIMUM_CTOOLS_API_VERSION', '1.1');
+ *
+ * function MODULENAME_requirements($phase) {
+ *   $requirements = array();
+ *   if (!module_invoke('ctools', 'api_version', MODULENAME_MINIMUM_CTOOLS_API_VERSION, MODULENAME_MAXIMUM_CTOOLS_API_VERSION)) {
+ *      $requirements['MODULENAME_ctools'] = array(
+ *        'title' => $t('MODULENAME required Chaos Tool Suite (CTools) API Version'),
+ *        'value' => t('Between @a and @b', array('@a' => MODULENAME_MINIMUM_CTOOLS_API_VERSION, '@b' => MODULENAME_MAXIMUM_CTOOLS_API_VERSION)),
+ *        'severity' => REQUIREMENT_ERROR,
+ *      );
+ *   }
+ *   return $requirements;
+ * }
+ * @endcode
+ *
+ * Please note that the version is a string, not an floating point number.
+ * This will matter once CTools reaches version 1.10.
+ *
+ * A CTools API changes history will be kept in API.txt. Not every new
+ * version of CTools will necessarily update the API version.
+ * @param $minimum
+ *   The minimum version of CTools necessary for your software to run with it.
+ * @param $maximum
+ *   The maximum version of CTools allowed for your software to run with it.
+ */
+function ctools_api_version($minimum, $maximum = NULL) {
+  if (version_compare(CTOOLS_API_VERSION, $minimum, '<')) {
+    return FALSE;
+  }
+
+  if (isset($maximum) && version_compare(CTOOLS_API_VERSION, $maximum, '>')) {
+    return FALSE;
+  }
+
+  return TRUE;
+}
+
+// -----------------------------------------------------------------------
+// General utility functions
+
+/**
+ * Include .inc files as necessary.
+ *
+ * This fuction is helpful for including .inc files for your module. The
+ * general case is including ctools funcitonality like this:
+ *
+ * @code
+ * ctools_include('plugins');
+ * @endcode
+ *
+ * Similar funcitonality can be used for other modules by providing the $module
+ * and $dir arguments like this:
+ *
+ * @code
+ * // include mymodule/includes/import.inc
+ * ctools_include('import', 'mymodule');
+ * // include mymodule/plugins/foobar.inc
+ * ctools_include('foobar', 'mymodule', 'plugins');
+ * @endcode
+ *
+ * @param $file
+ *   The base file name to be included.
+ * @param $module
+ *   Optional module containing the include.
+ * @param $dir
+ *   Optional subdirectory containing the include file.
+ */
+function ctools_include($file, $module = 'ctools', $dir = 'includes') {
+  static $used = array();
+
+  $dir = '/' . ($dir ? $dir . '/' : '');
+
+  if (!isset($used[$module][$dir][$file])) {
+    require_once DRUPAL_ROOT . '/' . drupal_get_path('module', $module) . "$dir$file.inc";
+    $used[$module][$dir][$file] = true;
+  }
+}
+
+/**
+ * Provide the proper path to an image as necessary.
+ *
+ * This helper function is used by ctools but can also be used in other
+ * modules in the same way as explained in the comments of ctools_include.
+ *
+ * @param $image
+ *   The base file name (with extension)  of the image to be included.
+ * @param $module
+ *   Optional module containing the include.
+ * @param $dir
+ *   Optional subdirectory containing the include file.
+ */
+function ctools_image_path($image, $module = 'ctools', $dir = 'images') {
+  return drupal_get_path('module', $module) . "/$dir/" . $image;
+}
+
+/**
+ * Include css files as necessary.
+ *
+ * This helper function is used by ctools but can also be used in other
+ * modules in the same way as explained in the comments of ctools_include.
+ *
+ * @param $file
+ *   The base file name to be included.
+ * @param $module
+ *   Optional module containing the include.
+ * @param $dir
+ *   Optional subdirectory containing the include file.
+ */
+function ctools_add_css($file, $module = 'ctools', $dir = 'css') {
+  drupal_add_css(drupal_get_path('module', $module) . "/$dir/$file.css");
+}
+
+/**
+ * Include js files as necessary.
+ *
+ * This helper function is used by ctools but can also be used in other
+ * modules in the same way as explained in the comments of ctools_include.
+ *
+ * @param $file
+ *   The base file name to be included.
+ * @param $module
+ *   Optional module containing the include.
+ * @param $dir
+ *   Optional subdirectory containing the include file.
+ */
+function ctools_add_js($file, $module = 'ctools', $dir = 'js') {
+  drupal_add_js(drupal_get_path('module', $module) . "/$dir/$file.js");
+}
+
+/**
+ * Format a javascript file name for use with $form['#attached']['js'].
+ *
+ * This helper function is used by ctools but can also be used in other
+ * modules in the same way as explained in the comments of ctools_include.
+ *
+ * @code
+ *   $form['#attached']['js'] = array(ctools_attach_js('auto-submit'));
+ * @endcode
+ *
+ * @param $file
+ *   The base file name to be included.
+ * @param $module
+ *   Optional module containing the include.
+ * @param $dir
+ *   Optional subdirectory containing the include file.
+ */
+function ctools_attach_js($file, $module = 'ctools', $dir = 'js') {
+  return drupal_get_path('module', $module) . "/$dir/$file.js";
+}
+
+/**
+ * Get a list of roles in the system.
+ *
+ * @return
+ *   An array of role names keyed by role ID.
+ */
+function ctools_get_roles() {
+  static $roles = NULL;
+  if (!isset($roles)) {
+    $roles = user_roles(TRUE);
+    unset($roles[DRUPAL_AUTHENTICATED_RID]);
+  }
+
+  return $roles;
+}
+
+/*
+ * Break x,y,z and x+y+z into an array. Numeric only.
+ *
+ * @param $str
+ *   The string to parse.
+ *
+ * @return $object
+ *   An object containing
+ *   - operator: Either 'and' or 'or'
+ *   - value: An array of numeric values.
+ */
+function ctools_break_phrase($str) {
+  $object = new stdClass();
+
+  if (preg_match('/^([0-9]+[+ ])+[0-9]+$/', $str)) {
+    // The '+' character in a query string may be parsed as ' '.
+    $object->operator = 'or';
+    $object->value = preg_split('/[+ ]/', $str);
+  }
+  else if (preg_match('/^([0-9]+,)*[0-9]+$/', $str)) {
+    $object->operator = 'and';
+    $object->value = explode(',', $str);
+  }
+
+  // Keep an 'error' value if invalid strings were given.
+  if (!empty($str) && (empty($object->value) || !is_array($object->value))) {
+    $object->value = array(-1);
+    $object->invalid_input = TRUE;
+    return $object;
+  }
+
+  if (empty($object->value)) {
+    $object->value = array();
+  }
+
+  // Doubly ensure that all values are numeric only.
+  foreach ($object->value as $id => $value) {
+    $object->value[$id] = intval($value);
+  }
+
+  return $object;
+}
+
+/**
+ * Set a token/value pair to be replaced later in the request, specifically in
+ * ctools_preprocess_page().
+ *
+ * @param $token
+ *   The token to be replaced later, during page rendering.  This should
+ *    ideally be a string inside of an HTML comment, so that if there is
+ *    no replacement, the token will not render on the page.
+ * @param $type
+ *   The type of the token. Can be either 'variable', which will pull data
+ *   directly from the page variables
+ * @param $argument
+ *   If $type == 'variable' then argument should be the key to fetch from
+ *   the $variables. If $type == 'callback' then it should either be the
+ *   callback, or an array that will be sent to call_user_func_array().
+ *
+ * @return
+ *   A array of token/variable names to be replaced.
+ */
+function ctools_set_page_token($token = NULL, $type = NULL, $argument = NULL) {
+  static $tokens = array();
+
+  if (isset($token)) {
+    $tokens[$token] = array($type, $argument);
+  }
+  return $tokens;
+}
+
+/**
+ * Easily set a token from the page variables.
+ *
+ * This function can be used like this:
+ * $token = ctools_set_variable_token('tabs');
+ *
+ * $token will then be a simple replacement for the 'tabs' about of the
+ * variables available in the page template.
+ */
+function ctools_set_variable_token($token) {
+  $string = '<!-- ctools-page-' . $token . ' -->';
+  ctools_set_page_token($string, 'variable', $token);
+  return $string;
+}
+
+/**
+ * Easily set a token from the page variables.
+ *
+ * This function can be used like this:
+ * $token = ctools_set_variable_token('id', 'mymodule_myfunction');
+ */
+function ctools_set_callback_token($token, $callback) {
+  $string = '<!-- ctools-page-' . $token . ' -->';
+  ctools_set_page_token($string, 'callback', $callback);
+  return $string;
+}
+
+/**
+ * Tell CTools that sidebar blocks should not be rendered.
+ *
+ * It is often desirable to not display sidebars when rendering a page,
+ * particularly when using Panels. This informs CTools to alter out any
+ * sidebar regions during block render.
+ */
+function ctools_set_no_blocks($blocks = FALSE) {
+  $status = &drupal_static(__FUNCTION__, TRUE);
+  $status = $blocks;
+}
+
+// -----------------------------------------------------------------------
+// Drupal core hooks
+
+/**
+ * Implement hook_init to keep our global CSS at the ready.
+ */
+function ctools_init() {
+  ctools_add_css('ctools');
+  // If we are sure that CTools' AJAX is in use, change the error handling.
+  if (!empty($_REQUEST['ctools_ajax'])) {
+    ini_set('display_errors', 0);
+    register_shutdown_function('ctools_shutdown_handler');
+  }
+
+  // Clear plugin cache on the module page submit.
+  if ($_GET['q'] == 'admin/modules/list/confirm' && !empty($_POST)) {
+    cache_clear_all('ctools_plugin_files:', 'cache', TRUE);
+  }
+}
+
+/**
+ * Shutdown handler used during ajax operations to help catch fatal errors.
+ */
+function ctools_shutdown_handler() {
+  if (function_exists('error_get_last') AND ($error = error_get_last())){
+    switch($error['type']){
+      case E_ERROR:
+      case E_CORE_ERROR:
+      case E_COMPILE_ERROR:
+      case E_USER_ERROR:
+        // Do this manually because including files here is dangerous.
+        $commands = array(
+          array(
+            'command' => 'alert',
+            'title' => t('Error'),
+            'text' => t('Unable to complete operation. Fatal error in @file on line @line: @message', array(
+              '@file' => $error['file'],
+              '@line' => $error['line'],
+              '@message' => $error['message'],
+            )),
+          ),
+        );
+
+        // Change the status code so that the client will read the AJAX returned.
+        header('HTTP/1.1 200 OK');
+        drupal_json($commands);
+    }
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function ctools_theme() {
+  ctools_include('utility');
+  $items = array();
+  _ctools_passthrough($items, 'theme');
+  return $items;
+}
+
+/**
+ * Implements hook_menu().
+ */
+function ctools_menu() {
+  ctools_include('utility');
+  $items = array();
+  _ctools_passthrough($items, 'menu');
+  return $items;
+}
+
+/**
+ * Implementation of hook_cron. Clean up old caches.
+ */
+function ctools_cron() {
+  ctools_include('utility');
+  _ctools_passthrough($items, 'cron');
+}
+
+/**
+ * Ensure the CTools CSS cache is flushed whenever hook_flush_caches is invoked.
+ */
+function ctools_flush_caches() {
+  // Do not actually flush caches if running on cron. Drupal uses this hook
+  // in an inconsistent fashion and it does not necessarily mean to *flush*
+  // caches when running from cron. Instead it's just getting a list of cache
+  // tables and may not do any flushing.
+  if (variable_get('cron_semaphore', FALSE)) {
+    return;
+  }
+
+  ctools_include('css');
+  ctools_css_flush_caches();
+}
+
+/**
+ * Provide a search form with a different id so that form_alters will miss it
+ * and thus not get advanced search settings.
+ */
+function ctools_forms() {
+  $forms['ctools_search_form']= array(
+    'callback' => 'search_form',
+  );
+
+  return $forms;
+}
+
+/**
+ * Implementation of hook_file_download()
+ *
+ * When using the private file system, we have to let Drupal know it's ok to
+ * download CSS and image files from our temporary directory.
+ */
+function ctools_file_download($filepath) {
+  if (strpos($filepath, 'ctools') === 0) {
+    $mime = file_get_mimetype($filepath);
+    // For safety's sake, we allow only text and images.
+    if (strpos($mime, 'text') === 0 || strpos($mime, 'image') === 0) {
+      return array('Content-type:' . $mime);
+    }
+  }
+}
+
+/**
+ * Implements hook_registry_files_alter().
+ *
+ * Alter the registry of files to automagically include all classes in
+ * class-based plugins.
+ */
+function ctools_registry_files_alter(&$files, $indexed_modules) {
+  ctools_include('registry');
+  return _ctools_registry_files_alter($files, $indexed_modules);
+}
+
+// -----------------------------------------------------------------------
+// CTools hook implementations.
+
+/**
+ * Implementation of hook_ctools_plugin_directory() to let the system know
+ * where all our own plugins are.
+ */
+function ctools_ctools_plugin_directory($owner, $plugin_type) {
+  if ($owner == 'ctools') {
+    return 'plugins/' . $plugin_type;
+  }
+}
+
+/**
+ * Implements hook_ctools_plugin_type().
+ */
+function ctools_ctools_plugin_type() {
+  ctools_include('utility');
+  $items = array();
+  // Add all the plugins that have their own declaration space elsewhere.
+  _ctools_passthrough($items, 'plugin-type');
+
+  return $items;
+}
+
+// -----------------------------------------------------------------------
+// Drupal theme preprocess hooks that must be in the .module file.
+
+/**
+ * A theme preprocess function to automatically allow panels-based node
+ * templates based upon input when the panel was configured.
+ */
+function ctools_preprocess_node(&$vars) {
+  // The 'panel_identifier' attribute of the node is added when the pane is
+  // rendered.
+  if (!empty($vars['node']->panel_identifier)) {
+    $vars['panel_identifier'] = check_plain($vars['node']->panel_identifier);
+    $vars['template_files'][] = 'node-panel-' . check_plain($vars['node']->panel_identifier);
+  }
+}
+
+function ctools_page_alter(&$page) {
+  $page['#post_render'][] = 'ctools_page_token_processing';
+}
+
+/**
+ * A theme post_render callback to allow content type plugins to use page
+ * template variables which are not yet available when the content type is
+ * rendered.
+ */
+function ctools_page_token_processing($children, $elements) {
+  $tokens = ctools_set_page_token();
+  if (!empty($tokens)) {
+    foreach ($tokens as $token => $key) {
+      list($type, $argument) = $key;
+      switch ($type) {
+        case 'variable':
+          $tokens[$token] = isset($variables[$argument]) ? $variables[$argument] : '';
+          break;
+        case 'callback':
+          if (is_string($argument) && function_exists($argument)) {
+            $tokens[$token] = $argument($variables);
+          }
+          if (is_array($argument) && function_exists($argument[0])) {
+            $function = array_shift($argument);
+            $argument = array_merge(array(&$variables), $argument);
+            $tokens[$token] = call_user_func_array($function, $argument);
+          }
+          break;
+      }
+    }
+    $children = strtr($children, $tokens);
+  }
+  return $children;
+}
+
+// -----------------------------------------------------------------------
+// Menu callbacks that must be in the .module file.
+
+/**
+ * Determine if the current user has access via a plugin.
+ *
+ * This function is meant to be embedded in the Drupal menu system, and
+ * therefore is in the .module file since sub files can't be loaded, and
+ * takes arguments a little bit more haphazardly than ctools_access().
+ *
+ * @param $access
+ *   An access control array which contains the following information:
+ *   - 'logic': and or or. Whether all tests must pass or one must pass.
+ *   - 'plugins': An array of access plugins. Each contains:
+ *   - - 'name': The name of the plugin
+ *   - - 'settings': The settings from the plugin UI.
+ *   - - 'context': Which context to use.
+ * @param ...
+ *   zero or more context arguments generated from argument plugins. These
+ *   contexts must have an 'id' attached to them so that they can be
+ *   properly associated. The argument plugin system should set this, but
+ *   if the context is coming from elsewhere it will need to be set manually.
+ *
+ * @return
+ *   TRUE if access is granted, false if otherwise.
+ */
+function ctools_access_menu($access) {
+  // Short circuit everything if there are no access tests.
+  if (empty($access['plugins'])) {
+    return TRUE;
+  }
+
+  $contexts = array();
+  foreach (func_get_args() as $arg) {
+    if (is_object($arg) && get_class($arg) == 'ctools_context') {
+      $contexts[$arg->id] = $arg;
+    }
+  }
+
+  ctools_include('context');
+  return ctools_access($access, $contexts);
+}
+
+/**
+ * Determine if the current user has access via checks to multiple different
+ * permissions.
+ *
+ * This function is a thin wrapper around user_access that allows multiple
+ * permissions to be easily designated for use on, for example, a menu callback.
+ *
+ * @param ...
+ *   An indexed array of zero or more permission strings to be checked by
+ *   user_access().
+ *
+ * @return
+ *   Iff all checks pass will this function return TRUE. If an invalid argument
+ *   is passed (e.g., not a string), this function errs on the safe said and
+ *   returns FALSE.
+ */
+function ctools_access_multiperm() {
+  foreach (func_get_args() as $arg) {
+    if (!is_string($arg) || !user_access($arg)) {
+      return FALSE;
+    }
+  }
+  return TRUE;
+}
+
+/**
+ * Check to see if the incoming menu item is js capable or not.
+ *
+ * This can be used as %ctools_js as part of a path in hook menu. CTools
+ * ajax functions will automatically change the phrase 'nojs' to 'ajax'
+ * when it attaches ajax to a link. This can be used to autodetect if
+ * that happened.
+ */
+function ctools_js_load($js) {
+  if ($js == 'ajax') {
+    return TRUE;
+  }
+  return 0;
+}
+
+/**
+ * Menu _load hook.
+ *
+ * This function will be called to load an object as a replacement for
+ * %ctools_export_ui in menu paths.
+ */
+function ctools_export_ui_load($item_name, $plugin_name) {
+  $return = &drupal_static(__FUNCTION__, FALSE);
+
+  if (!$return) {
+    ctools_include('export-ui');
+    $plugin = ctools_get_export_ui($plugin_name);
+
+    if ($plugin) {
+      // Get the load callback.
+      $item = ctools_export_crud_load($plugin['schema'], $item_name);
+      return empty($item) ? FALSE : $item;
+    }
+  }
+
+  return $return;
+}
+
+// -----------------------------------------------------------------------
+// Caching callbacks on behalf of export-ui.
+
+/**
+ * Menu access callback for various tasks of export-ui.
+ */
+function ctools_export_ui_task_access($plugin_name, $op, $item = NULL) {
+  ctools_include('export-ui');
+  $plugin = ctools_get_export_ui($plugin_name);
+  $handler = ctools_export_ui_get_handler($plugin);
+
+  if ($handler) {
+    return $handler->access($op, $item);
+  }
+
+  // Deny access if the handler cannot be found.
+  return FALSE;
+}
+
+/**
+ * Cache callback on behalf of ctools_export_ui.
+ */
+function ctools_export_ui_context_cache_get($plugin_name, $key) {
+  dsm('should not be called!');
+  return;
+}
+
+/**
+ * Cache callback on behalf of ctools_export_ui.
+ */
+function ctools_export_ui_context_cache_set($plugin_name, $key, $item) {
+  dsm('should not be called!');
+  return;
+}
+
+/**
+ * Callback for access control ajax form on behalf of export ui.
+ *
+ * Returns the cached access config and contexts used.
+ * Note that this is assuming that access will be in $item->access -- if it
+ * is not, an export UI plugin will have to make its own callbacks.
+ */
+function ctools_export_ui_ctools_access_get($argument) {
+  ctools_include('export-ui');
+  list($plugin_name, $key) = explode(':', $argument, 2);
+
+  $plugin = ctools_get_export_ui($plugin_name);
+  $handler = ctools_export_ui_get_handler($plugin);
+
+  if ($handler) {
+    ctools_include('context');
+    $item = $handler->edit_cache_get($key);
+    if (!$item) {
+      $item = ctools_export_crud_load($handler->plugin['schema'], $key);
+    }
+
+    $contexts = ctools_context_load_contexts($item);
+    return array($item->access, $contexts);
+  }
+}
+
+/**
+ * Callback for access control ajax form on behalf of export ui
+ *
+ * Returns the cached access config and contexts used.
+ * Note that this is assuming that access will be in $item->access -- if it
+ * is not, an export UI plugin will have to make its own callbacks.
+ */
+function ctools_export_ui_ctools_access_set($argument, $access) {
+  ctools_include('export-ui');
+  list($plugin_name, $key) = explode(':', $argument, 2);
+
+  $plugin = ctools_get_export_ui($plugin_name);
+  $handler = ctools_export_ui_get_handler($plugin);
+
+  if ($handler) {
+    ctools_include('context');
+    $item = $handler->edit_cache_get($key);
+    if (!$item) {
+      $item = ctools_export_crud_load($handler->plugin['schema'], $key);
+    }
+    $item->access = $access;
+    return $handler->edit_cache_set_key($item, $key);
+  }
+}
+
+/**
+ * Implements hook_menu_local_tasks_alter().
+ */
+function ctools_menu_local_tasks_alter(&$data, $router_item, $root_path) {
+  ctools_include('menu');
+  _ctools_menu_add_dynamic_items($data, $router_item, $root_path);
+}
+
+/**
+ * Implement hook_block_list_alter() to potentially remove blocks.
+ *
+ * This exists in order to replicate Drupal 6's "no blocks" functionality.
+ */
+function ctools_block_list_alter(&$blocks) {
+  $check = drupal_static('ctools_set_no_blocks', TRUE);
+  if (!$check) {
+    foreach ($blocks as $block_id => $block) {
+      // @todo -- possibly we can set configuration for this so that users can
+      // specify which blocks will not get rendered.
+      if (substr_compare($block->region, 'sidebar', 0)) {
+        unset($blocks[$block_id]);
+      }
+    }
+  }
+}
+

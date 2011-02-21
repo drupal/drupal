@@ -1,0 +1,33 @@
+/* $Id: export-ui-list.css,v 1.3 2011/01/05 23:16:59 merlinofchaos Exp $ */
+body form#ctools-export-ui-list-form {
+  margin: 0 0 20px 0;
+}
+
+#ctools-export-ui-list-form .form-item {
+  padding-right: 1em; /* LTR */
+  float: left; /* LTR */
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+#ctools-export-ui-list-items {
+  width: 100%;
+}
+
+#edit-order-wrapper {
+  clear: left; /* LTR */
+}
+
+#ctools-export-ui-list-form .form-submit {
+  margin-top: 1.65em;
+  float: left; /* LTR */
+}
+
+tr.ctools-export-ui-disabled td {
+  color: #999;
+}
+
+th.ctools-export-ui-operations,
+td.ctools-export-ui-operations {
+  text-align: right; /* LTR */
+}

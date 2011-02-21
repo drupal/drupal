@@ -1,0 +1,58 @@
+<!-- $Id: argument.html,v 1.8.6.1 2010/03/19 23:03:13 merlinofchaos Exp $ -->
+Arguments are input. While they often come from the URL, <strong>they don't always</strong> so please don't be shocked when they don't. Each display type may have its own source for arguments. Block displays have no source of arguments at all; they cannot pull arguments from the URL, and often require use of the default argument PHP code in order to get arguments. The argument default plugins can be used to get arguments into a block view. See "Provide default", below.
+
+In general, arguments are used to filter the view, and in that sense they have a very close relationship to filters, but that isn't necessarily true for every argument. Arguments can be used for any purpose, really; the extent of what the argument does is up to the developer of the argument, but the arguments that come with Views are almost entirely filters.
+
+A typical use of an argument might be to reduce a view to a single node, a single user, or nodes with a given taxonomy term.
+
+<h3>Action to take if argument is not present</h3>
+<dl>
+<dt>Ignore</dt>
+<dd>The argument is removed from the view as though it weren't there and all results will be displayed.</dd>
+
+<dt>Hide view / Page not found</dt>
+<dd>The view will remove itself entirely if the argument is not present; for a block this means it simply won't appear. For page views the View will return a 404 and present a "Page not found" error. </dd>
+
+<dt>Display empty text</dt>
+<dd>The value of the <a href=topic:views/empty-text>empty text</a> will be displayed.</dd>
+
+<dt>Summary</dt>
+<dd>The view will attempt to display a summary of arguments available, based upon the view, and provide links to the view with those arguments. Summaries have their own style handlers as well as options. The default summary style simply displays a list of arguments with a count of entries found per argument. This special mode is a very powerful part of Views.</dd>
+
+<dt>Provide default</dt>
+<dd>If no argument is given, a default argument can be selected. The method of choosing the default argument is selectable and pluggable.</dd>
+</dl>
+
+<h3>Wildcards</h3>
+All arguments have a 'wildcard', which is an argument that means to use all values. In practice, it is the same as 'Ignore' above, where the argument is simply removed and the view is created without the argument. The wildcard title is used in titles and breadcrumb trails.
+<h3>Default arguments</h3>
+Default argument selection is available <strong>only if the action to take is "Provide default"</strong>. When that is selected, a new fieldset will appear letting you choose what the default argument will be. Views provides the following default selectors by default (but other modules may add more):
+<dl>
+<dt>Fixed entry </dt>
+<dd>You may directly enter what the argument will be. This is not a variable, it will always be the same argument. </dd>
+<dt>Node ID from URL</dt>
+<dd>This will attempt to find a Node ID from the URL, and is primarily useful for the Node: ID argument (though other arguments that use Node IDs, such as the CCK Node Reference argument, will find it useful too). For example, when visiting the path 'node/1' or 'node/1/edit' it will know that the '1' in that path is a node ID and use it.</dd>
+<dt>User ID from URL</dt>
+<dd>Like Node ID from URL, this will attempt to find a user ID from the path. It also includes an option to look for a node and use the node author as the user ID.</dd>
+<dt>User ID from logged in user</dt>
+<dd>You can use this to easily default a menu item to the logged in user. For example, if you created the path 'blogs' and gave it a User: ID argument with this default, 'blogs' would go to the user's own blogs, and blogs/1 would go to User ID 1's blogs.</dd>
+</dl>
+
+Please bear in mind that the selection of default argument happens only if an argument is not provided. If using a display that has no argument source, such as a block, this will always be used. However, if using a display that reads arguments from the URL, this will happen only if the URL did not contain an argument.
+<h3>Argument validation</h3>
+Arguments can also have validators, which are pluggable systems used to ensure that arguments fit within certain parameters. When a validator is chosen, it may provide some settings for the validator, including the action to take if an argument is presented, but it fails to validate. These actions are generally the same as the default actions above, excluding the ability to provide another default.
+
+If a view provides a menu option, such as a tab, if the argument does not validate the tab will not appear.
+
+This sytem can have other validators plugged in; by default, Views provides:
+<dl>
+<dt>Basic validation</dt>
+<dd>Ensures that the argument is present. A PHP NULL value (from eg. PHP default argument code) will invalidate.</dd>
+<dt>Node</dt>
+<dd>Ensure that the argument is a valid Node ID. You may select which types of node the validator will accept.</dd>
+<dt>Taxonomy term</dt>
+<dd>Ensure that the argument is a valid taxonomy term. This includes options to limit to specific vocabularies and can transform the argument to the right type depending upon the actual argument. Set the Argument Type option to the actual type of data that the argument being used is expecting.</dd>
+<dt>PHP Code</dt>
+<dd>You may enter arbitrary PHP code, similar to the php block visibility code, to determine if the argument is valid or not.</dd>
+
+</dl>

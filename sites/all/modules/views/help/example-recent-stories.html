@@ -1,0 +1,58 @@
+<!-- $Id: example-recent-stories.html,v 1.1.6.1 2009/11/02 22:01:26 merlinofchaos Exp $ -->
+In this example you will create a list of nodes of the content type "story", to be shown in a block. Through this step-by-step process, you will become familiar with some basic steps in creating a view, and familiarize yourself with the Views User Interface.
+
+<ol>
+<li><h3>Creating a new view</h3>
+<p>Go to <a target="_blank" href="base_url:admin/structure/views/add">add new view</a>. Give your new view the name 'recent_stories', description 'Recent Stories', tag 'story', type 'Node' and click <strong>Next</strong>.</p></li>
+<li><h3>About the interface</h3>
+<p>You have been brought to Views User Interface. As you start, you are editing the "Default" options for the view. In the 1st column on the left you can see the drop-down menu offers 'block', for example, to select settings specific only to block views. In the remaining columns, you will be able to add or change options by clicking on links or icons. These options will then appear below this main area. Most likely, you will need to scroll a bit to see the options appear.</p></li>
+<li><h3>Selecting the fields to display</h3>
+  <ol>
+    <li>In 3rd column locate the <strong>Fields</strong> options. Click the <strong>+</strong> icon to add fields.</li>
+    <li>Scroll down to <strong>Defaults: Add fields</strong>. In the <strong>Groups</strong> drop-down menu select 'Node', then check the following two fields: <em>Node: Post date</em>, <em>Node: Title</em>. Then click <strong>Add</strong>.</li>
+    <li>You will be taken through the fields you added one at a time. Make the changes specified below.
+      <ul>
+        <li>For the <em>Post date</em> field: Delete the 'Post date' label. Change the <strong>Date format</strong> to <em>Custom</em>, and the <strong>Custom date format</strong> to 'F j, Y, g:i a' (do not type the single quotes; for the meaning of these letter codes, click on <em>the PHP docs</em> link under that box to arrive at the explanation). Click <strong>Update</strong>.</li>
+        <li>For the <em>Title</em> field: Delete the 'Title' label. Select <em>Link this field to its node.</em> Click <strong>Update</strong>.</li>
+      </ul>
+    </li>
+    <li>Scroll back up to <strong>Fields</strong> and click the <strong>&uarr;&darr;</strong> icon to rearrange fields.</li>
+    <li>Drag the four-sided arrow next to <em>Node: Title</em> so that it appears above <em>Node: Post date</em>. Click <strong>Update</strong> to save the new field order.</li>
+  </ol>
+</li>
+<li><h3>Filtering to <em>story</em> nodes only</h3>
+  <ol>
+    <li>Click the <strong>+</strong> icon next to <strong>Filters</strong>.</li>
+    <li>In the <strong>Groups</strong> drop-down menu select 'Node', then check the <em>Node: Published</em> and <em>Node: Type</em> filters, and click <strong>Add</strong>.</li>
+    <li>Select the <em>Published</em> checkbox. Click <strong>Update</strong></li>
+    <li>Select <em>Is one of</em> and check <em>Story</em> in the <em>Node Type</em> field. Click <strong>Update</strong>.</li>
+  </ol>
+</li>
+<li><h3>Sorting to show most recent first</h3>
+  <ol>
+    <li>Scroll  up to <strong>Sort criteria</strong> and click the <strong>+</strong> icon.</li>
+    <li>In the <strong>Groups</strong> drop-down menu below, select 'Node', then check <em>Node: Post date</em>, and click <strong>Add</strong>. Alternatively, you may instead check <em>Node: Last comment time</em>, or <em>Node: Updated/commented date</em>, or <em>Node: Updated date</em>.</li>
+    <li>Select <em>Descending</em> <strong>Sort order</strong>. Click <strong>Update</strong>.</li>
+  </ol>
+</li>
+<li><h3>Refining the basic settings</h3>
+  <ul>
+    <li>In 1st column under <strong>Basic settings</strong> locate these options:
+      <ul>
+        <li><em>Items to Display</em> setting, click <em>10</em>. Change the '10' to '4'. Click <strong>Update</strong></li>
+        <li><em>Style</em> setting, click <em>Unformatted</em>. Change to <em>List</em>. Click <strong>Update</strong>.</li>
+      </ul>
+    </li>
+  </ul>
+</li>
+<li><h3>Adding a block display for custom options</h3>
+  <ol>
+    <li>In the dropdown on the left, ensure that <em>Block</em> is selected, and click <strong>Add Display</strong>.</li>
+    <li>Under <strong>Block settings</strong>, click the <em>None</em> link next to the <em>Admin</em> setting. Change <strong>Block: Block admin description</strong> to 'Recent Stories'.</li>
+  </ol>
+</li>
+<li><h3>Saving the view</h3>
+<p>Click <strong>Save</strong> to save your work.</p></li>
+<li><h3>Instructing Drupal to show the block</h3>
+<p>Finally, you should tell Drupal to show this block. Configure your block by going to <a target="_blank" href="base_url:admin/build/block">admin/build/block</a>. Locate the block in the list: it is labeled <em>Recent Stories</em>. Place this block in a region and click <strong>Save</strong>. You may click <em>Configure</em> to set a different title, to determine which roles can view the block, and on which pages it appears; If you want your block on the front page only, enter '&lt;front&gt;'.</p></li>
+</ol>

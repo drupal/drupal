@@ -1,0 +1,185 @@
+<?php
+// $Id: views_content.module,v 1.8 2010/11/01 18:51:22 merlinofchaos Exp $
+
+/**
+ * @file views_content.module
+ *
+ * Provides views as panels content, configurable by the administrator.
+ * Each view provided as panel content must be configured in advance,
+ * but once configured, building panels with views is a little bit simpler.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function views_content_menu() {
+  $items = array();
+
+  if (!module_exists('panels')) {
+    $items['admin/config/content-views'] = array(
+      'title' => 'Views panes',
+      'access arguments' => array('administer views content plugin'),
+      'page callback' => 'drupal_get_form',
+      'page arguments' => array('views_content_admin_page'),
+      'description' => 'Configure Views to be used as CTools content.',
+      'type' => MENU_NORMAL_ITEM,
+    );
+  }
+
+  return $items;
+}
+
+/**
+ * Implementation of hook_ctools_plugin_dierctory() to let the system know
+ * where our content_type plugins are.
+ */
+function views_content_ctools_plugin_directory($owner, $plugin_type) {
+  if ($owner == 'ctools') {
+    return 'plugins/' . $plugin_type;
+  }
+}
+
+/**
+ * Don't show Views' blocks; we expose them already.
+ */
+function views_ctools_block_info($module, $delta, &$info) {
+  if (strlen($delta) == 32) {
+    $hashes = variable_get('views_block_hashes', array());
+    if (!empty($hashes[$delta])) {
+      $delta = $hashes[$delta];
+    }
+  }
+
+  if (substr($delta, 0, 1) != '-') {
+    $info = NULL;
+  }
+  else {
+    $info['category'] = t('Views');
+    $info['icon'] = 'icon_views_block_legacy.png';
+    $info['path'] = drupal_get_path('module', 'views_content');
+    $info['edit form'] = 'views_content_exposed_form_pane_edit';
+    $info['add form'] = 'views_content_exposed_form_pane_edit';
+    $info['render callback'] = 'views_content_exposed_form_pane_render';
+  }
+}
+
+/**
+ * Add settings to the "exposed form in block" views.
+ */
+function views_content_exposed_form_pane_edit($form, &$form_state) {
+  // This is a cheesy way to add defaults only to new versions of the block
+  // but leave older blocks without the setting alone. We can tell because
+  // all older content will have something set for override_title which is
+  // the only pre-existing setting.
+  if (!isset($form_state['conf']['inherit_path']) && !isset($form_state['conf']['override_title'])) {
+    $form_state['conf']['inherit_path'] = TRUE;
+  }
+
+  $form['inherit_path'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Inherit path'),
+    '#default_value' => !empty($form_state['conf']['inherit_path']),
+  );
+
+  return $form;
+}
+
+/**
+ * Store data for the exposed form in block settings page.
+ */
+function views_content_exposed_form_pane_edit_submit($form, &$form_state) {
+  $form_state['conf']['inherit_path'] = $form_state['values']['inherit_path'];
+}
+
+/**
+ * Render function for 'special' view blocks.
+ *
+ * We took over the render for the special view blocks so that we could
+ * add options to it.
+ */
+function views_content_exposed_form_pane_render($subtype, $conf, $panel_args, $contexts) {
+  $delta = str_replace('views-', '', $subtype);
+
+  if (strlen($delta) == 32) {
+    $hashes = variable_get('views_block_hashes', array());
+    if (!empty($hashes[$delta])) {
+      $delta = $hashes[$delta];
+    }
+  }
+
+  list($nothing, $type, $name, $display_id) = explode('-', $delta);
+  // Put the - back on. For views special blocks, the first character is always - but
+  // the explode killed it. Note that this code is mostly copied from views_block().
+  $type = '-' . $type;
+  if ($view = views_get_view($name)) {
+    if ($view->access($display_id)) {
+      if (!empty($conf['inherit_path'])) {
+        $view->override_path = $_GET['q'];
+      }
+
+      $view->set_display($display_id);
+      if (isset($view->display_handler)) {
+        $block = (object) $view->display_handler->view_special_blocks($type);
+        return $block;
+      }
+    }
+    $view->destroy();
+  }
+}
+
+/**
+ * Implements hook_views_api().
+ *
+ * This one is used as the base to reduce errors when updating.
+ */
+function views_content_views_api() {
+  return array(
+    'api' => 2,
+    'path' => drupal_get_path('module', 'views_content') . '/plugins/views',
+  );
+}
+
+/**
+ * Page callback to provide the basic administration form.
+ */
+function views_content_admin_page() {
+  $form = array();
+  views_content_admin_form($form);
+
+  return system_settings_form($form);
+}
+
+function views_content_admin_form(&$form) {
+  $form['ctools_content_all_views'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Make all views available as panes'),
+    '#description' => t("If checked, all views will be made available as content panes to be added to content types. If not checked, only Views that have a 'Content pane' display will be available as content panes. Uncheck this if you want to be able to more carefully control what view content is available to users using the panels layout UI."),
+    '#default_value' => variable_get('ctools_content_all_views', TRUE),
+  );
+}
+
+/**
+ * API function to get the view.
+ */
+function views_content_context_get_view(&$context) {
+  if (empty($context->view) || get_class($context->view) == '__PHP_Incomplete_Class') {
+    $context->view = views_get_view($context->data['name']);
+    if ($context->view) {
+      $context->view->set_display($context->data['display']);
+    }
+  }
+
+  return $context->view;
+}
+
+/**
+ * API function to get the view.
+ */
+function views_content_context_get_output(&$context) {
+  if (empty($context->output)) {
+    $view = views_content_context_get_view($context);
+    $context->output = $view->execute_display($context->data['display']);
+  }
+
+  return $context->output;
+}

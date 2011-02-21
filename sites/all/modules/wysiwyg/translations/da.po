@@ -1,0 +1,436 @@
+# Danish translation of Drupal (wysiwyg_editor.module)
+# Copyright 2006 netbjarne <netbjarne@gmail.com>
+# Copyright 2007 Morten Wulff <wulff@ratatosk.net>
+msgid ""
+msgstr ""
+"Project-Id-Version: Danish translation of Drupal (wysiwyg_editor.module) $Id: da.po,v 1.2 2008/05/30 02:19:15 sun Exp $\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2007-12-16 19:47+0100\n"
+"Last-Translator: Morten Wulff <wulff@ratatosk.net>\n"
+"Language-Team: Danish <l10n@drupaldanmark.dk>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-Language: Danish\n"
+"X-Poedit-Country: DENMARK\n"
+
+#: wysiwyg_editor.module:17
+#: wysiwyg_editor.info:0
+msgid "TinyMCE"
+msgstr "TinyMCE"
+
+#: wysiwyg_editor.module:19
+msgid "Configure the rich editor."
+msgstr "Konfigurer editoren."
+
+#: wysiwyg_editor.module:116
+msgid "enable rich-text"
+msgstr "aktiver avanceret redigering"
+
+#: wysiwyg_editor.module:117
+msgid "disable rich-text"
+msgstr "deaktiver avanceret redigering"
+
+#: wysiwyg_editor.module:169
+msgid "Your current web browser does not support WYSIWYG editing."
+msgstr "Din browser understøtter ikke WYSIWYG redigering."
+
+#: wysiwyg_editor.module:250
+msgid "TinyMCE rich-text settings"
+msgstr "TinyMCE "
+
+#: wysiwyg_editor.module:258
+#: ;701
+msgid "Default state"
+msgstr "Standardtilstand"
+
+#: wysiwyg_editor.module:260
+#: ;703
+msgid "disabled"
+msgstr "deaktiveret"
+
+#: wysiwyg_editor.module:260
+#: ;703
+msgid "enabled"
+msgstr "aktiveret"
+
+#: wysiwyg_editor.module:261
+msgid "Should rich-text editing be enabled or disabled by default in textarea fields?"
+msgstr "Skal avanceret redigering være aktiveret for tekstfelter?"
+
+#: wysiwyg_editor.module:443
+msgid "administer"
+msgstr "administrer"
+
+#: wysiwyg_editor.module:444
+#: ;47;0
+msgid "wysiwyg_editor"
+msgstr "TinyMCE"
+
+#: wysiwyg_editor.module:445
+msgid "Add new TinyMCE profile"
+msgstr "Tilføj TinyMCE profil"
+
+#: wysiwyg_editor.module:451
+msgid "Edit wysiwyg_editor profile"
+msgstr "Rediger TinyMCE profil"
+
+#: wysiwyg_editor.module:457
+msgid "Deleted profile"
+msgstr "Profil slettet"
+
+#: wysiwyg_editor.module:461
+#: ;666
+msgid "Create profile"
+msgstr "Opret Profil"
+
+#: wysiwyg_editor.module:462
+#: ;670
+msgid "Update profile"
+msgstr "Opdater profil"
+
+#: wysiwyg_editor.module:465
+msgid "Your TinyMCE profile has been updated."
+msgstr "TinyMCE profil opdateret."
+
+#: wysiwyg_editor.module:465
+msgid "Your TinyMCE profile has been created."
+msgstr "TinyMCE profil oprettet."
+
+#: wysiwyg_editor.module:474
+msgid "TinyMCE settings"
+msgstr "TinyMCE indstillinger"
+
+#: wysiwyg_editor.module:478
+msgid "Could not find the TinyMCE engine installed at <strong>!wysiwyg_editor-directory</strong>. Please <a href=\"http://wysiwyg_editor.moxiecode.com/\">download TinyMCE</a>, uncompress it and copy the folder into !wysiwyg_editor-path."
+msgstr "Kan ikke finde TinyMCE i kataloget <strong>!wysiwyg_editor-directory</strong>. <a href=\"http://wysiwyg_editor.moxiecode.com/\">Hent TinyMCE</a>, udpak den og kopier kataloget til !wysiwyg_editor-path."
+
+#: wysiwyg_editor.module:658
+msgid "You must <a href=\"!access-control-url\">assign</a> at least one role with the 'access wysiwyg_editor' permission before creating a profile."
+msgstr "Du skal <a href=\"!access-control-url\">give</a> mindst én rolle tilladelsen 'brug TinyMCE' før du kan oprette en profil."
+
+#: wysiwyg_editor.module:661
+msgid "You will not be allowed to create a new profile since all user roles have already been assigned profiles. Either remove an existing wysiwyg_editor profile from at least one role or assign another role the 'access wysiwyg_editor' permission."
+msgstr "Du kan ikke oprette en ny profil, da alle roller allerede har fået tildelt profiler. Fjern en eksisterende TinyMCE profil fra en rolle, eller giv endnu en rolle tilladelsen 'brug TinyMCE'."
+
+#: wysiwyg_editor.module:664
+msgid "Not all user roles are shown since they already have wysiwyg_editor profiles. You must first unassign profiles in order to add them to a new one."
+msgstr "Ikke alle roller vises, da de allerede er tildelt TinyMCE profiler. Fratag en rolles profil, for at tildele en anden rolle profilen."
+
+#: wysiwyg_editor.module:675
+msgid "Basic setup"
+msgstr "Grundlæggende indstillinger"
+
+#: wysiwyg_editor.module:682
+msgid "Profile name"
+msgstr "Profilnavn"
+
+#: wysiwyg_editor.module:686
+msgid "Enter a name for this profile. This name is only visible within the wysiwyg_editor administration page."
+msgstr "Indtast et profilnavn. Navnet er kun synligt på TinyMCE administrationssiden."
+
+#: wysiwyg_editor.module:692
+msgid "Roles allowed to use this profile"
+msgstr "Roller der kan benytte denne profil"
+
+#: wysiwyg_editor.module:695
+msgid "Check at least one role. Only roles with 'access wysiwyg_editor' permission will be shown here."
+msgstr "Vælg mindst én rolle. Kun roller med tilladelsen 'brug TinyMCE' vises her."
+
+#: wysiwyg_editor.module:704
+msgid "Default editor state for users in this profile. Users will be able to override this state if the next option is enabled."
+msgstr "Standard TinyMCE tilstand for brugere med denne profil. Brugere har mulighed for at ændre denne tilstand, hvis næste valgmulighed er slået til."
+
+#: wysiwyg_editor.module:709
+msgid "Allow users to choose default"
+msgstr "Tillad bruger at vælge standardtilstand"
+
+#: wysiwyg_editor.module:711
+#: ;719;743;877;901;909;917
+msgid "false"
+msgstr "falsk"
+
+#: wysiwyg_editor.module:711
+#: ;719;743;877;901;909;917
+msgid "true"
+msgstr "sand"
+
+#: wysiwyg_editor.module:712
+msgid "If allowed, users will be able to choose their own TinyMCE default state by visiting their profile page."
+msgstr "Hvis tilladt, kan brugere selv vælge TinyMCE's standardtilstand på deres profilside."
+
+#: wysiwyg_editor.module:717
+msgid "Show disable/enable rich text editor toggle"
+msgstr "Vis omskifter for avanceret redigering"
+
+#: wysiwyg_editor.module:720
+msgid "Whether or not to show the disable/enable rich text editor toggle below the textarea. If false, editor defaults to the global default or user default (see above)."
+msgstr "Hvorvidt omskifteren for avanceret redigering skal vises under tekstfelter. Hvis slået fra, vil TinyMCE benytte sig af global eller brugervalgt indstilling (se ovenfor)."
+
+#: wysiwyg_editor.module:733
+msgid "Language"
+msgstr "Sprog"
+
+#: wysiwyg_editor.module:736
+msgid "The language for the TinyMCE interface. Language codes based on the <a href=\"http://www.loc.gov/standards/iso639-2/englangn.html\">ISO-639-2</a> format."
+msgstr "Sproget der anvendes i TinyMCE's brugerflade. Sprogkoder er baseret på <a href=\"http://www.loc.gov/standards/iso639-2/englangn.html\">ISO-639-2</a> format."
+
+#: wysiwyg_editor.module:741
+msgid "Safari browser warning"
+msgstr "Safari browser advarsel."
+
+#: wysiwyg_editor.module:744
+msgid "TinyMCE support for the Safari web browser is experimental and a warning message is displayed when that browser is detected. You can disable this message here."
+msgstr "TinyMCE's understøttelse af Safari browseren er eksperimentel, og der vises en advarsel hvis Safari browseren benyttes. Du kan deaktivere denne advarsel her."
+
+#: wysiwyg_editor.module:749
+msgid "Visibility"
+msgstr "Synlighed"
+
+#: wysiwyg_editor.module:769
+msgid "Show on every page except the listed pages."
+msgstr "Vis på alle sider undtaget de angivne."
+
+#: wysiwyg_editor.module:769
+msgid "Show on only the listed pages."
+msgstr "Vis kun på de angivne sider."
+
+#: wysiwyg_editor.module:770
+msgid "Enter one page per line as Drupal paths. The '*' character is a wildcard. Example paths are '!blog' for the blog page and !blog-wildcard for every personal blog. !front is the front page."
+msgstr "Indtast én side pr. linje som Drupal-stier. Brug '*'-tegnet som joker. Indtast f.eks. '!blog' for blogsiden og !blog-wildcard for alle personlige blogs. !front er forsiden."
+
+#: wysiwyg_editor.module:773
+msgid "Show if the following PHP code returns <code>TRUE</code> (PHP-mode, experts only)."
+msgstr "Vis hvis følgende PHP kode returnerer <code>SAND</code> (PHP tilstand, kun for eksperter)."
+
+#: wysiwyg_editor.module:774
+msgid "If the PHP-mode is chosen, enter PHP code between !php. Note that executing incorrect PHP-code can break your Drupal site."
+msgstr "Hvis PHP tilstanden er valgt, kan du indtaste PHP kode mellem !php. Bemærk at ugyldig PHP kode kan få dit Drupal-netsted til at holde op med at virke."
+
+#: wysiwyg_editor.module:778
+msgid "Show wysiwyg_editor on specific pages"
+msgstr "Vis TinyMCE på specifikke sider"
+
+#: wysiwyg_editor.module:784
+msgid "Pages"
+msgstr "Sider"
+
+#: wysiwyg_editor.module:792
+msgid "Buttons and plugins"
+msgstr "Knapper og udvidelsesmoduler"
+
+#: wysiwyg_editor.module:844
+msgid "Editor appearance"
+msgstr "TinyMCE's fremtoning"
+
+#: wysiwyg_editor.module:851
+msgid "Toolbar location"
+msgstr "Værktøjslinjens placering"
+
+#: wysiwyg_editor.module:853
+#: ;869
+msgid "bottom"
+msgstr "bund"
+
+#: wysiwyg_editor.module:853
+#: ;869
+msgid "top"
+msgstr "top"
+
+#: wysiwyg_editor.module:854
+msgid "Show toolbar at the top or bottom of the editor area?"
+msgstr "Vis værktøjslinjen over eller under tekstområdet?"
+
+#: wysiwyg_editor.module:859
+msgid "Toolbar alignment"
+msgstr "Værktøjslinjens justering"
+
+#: wysiwyg_editor.module:861
+msgid "center"
+msgstr "centreret"
+
+#: wysiwyg_editor.module:861
+msgid "left"
+msgstr "venstre"
+
+#: wysiwyg_editor.module:861
+msgid "right"
+msgstr "højre"
+
+#: wysiwyg_editor.module:862
+msgid "Align tool icons left, center, or right within the toolbar."
+msgstr "Placer knapper til venstre, i midten eller til højre i værktøjslinjen."
+
+#: wysiwyg_editor.module:867
+msgid "Path location"
+msgstr "Placering af sti"
+
+#: wysiwyg_editor.module:869
+msgid "none"
+msgstr "ingen"
+
+#: wysiwyg_editor.module:870
+msgid "Path to html elements (i.e. \"body>table>tr>td\"). Show at top, bottom, or not at all."
+msgstr "Sti til HTML elementer (f.eks. \"body>table>tr>td\"). Vis for oven, for neden, eller slet ikke."
+
+#: wysiwyg_editor.module:875
+msgid "Enable resizing button"
+msgstr "Aktiver knap til ændring af størrelse"
+
+#: wysiwyg_editor.module:878
+msgid " This option gives you the ability to enable/disable the resizing button. If enabled the <strong>Path location toolbar</strong> must be set to \"top\" or \"bottom\" in order to display the resize icon."
+msgstr "Mulighed for at aktivere knap til ændring af størrelse. Hvis aktiveret, skal <strong>Placering af sti</strong> være  \"for oven\" eller \"for neden\"."
+
+#: wysiwyg_editor.module:883
+msgid "Block formats"
+msgstr "Blokformater"
+
+#: wysiwyg_editor.module:887
+msgid "Comma separated list of HTML block formats. You can only remove elements, not add."
+msgstr "Komma separeret liste af HTML blokformater. Du kan kun fjerne elementer, ikke tilføje."
+
+#: wysiwyg_editor.module:892
+msgid "Cleanup and output"
+msgstr "Oprydning og uddata"
+
+#: wysiwyg_editor.module:899
+msgid "Verify HTML"
+msgstr "Kontroller HTML"
+
+#: wysiwyg_editor.module:902
+msgid "Should the HTML contents be verified or not? Verifying will strip &lt;head&gt tags, so choose false if you will be editing full page HTML."
+msgstr "Kontrol af HTML fjerner &lt;head&gt mærker, så deaktiver HTML kontrol, hvis du redigerer hele HTML sider."
+
+#: wysiwyg_editor.module:907
+msgid "Preformatted"
+msgstr "Preformatteret"
+
+#: wysiwyg_editor.module:910
+msgid "If this option is set to true, the editor will insert TAB characters on tab and preserve other whitespace characters just like a PRE HTML element does."
+msgstr "Hvis aktiveret, vil TinyMCE indsætte tabulator tegn og bevare andre mellemrum, som PRE HTML element gør det."
+
+#: wysiwyg_editor.module:915
+msgid "Convert &lt;font&gt; tags to styles"
+msgstr "Konverter &lt;font&gt; mærker til typografier"
+
+#: wysiwyg_editor.module:918
+msgid "If you set this option to true, font size, font family, font color and font background color will be replaced by inline styles."
+msgstr "Hvis aktiveret, vil font size, font family, font color og font background color blive erstattet med indlejrede typografier."
+
+#: wysiwyg_editor.module:923
+msgid "Remove linebreaks"
+msgstr "Fjern linjeskift"
+
+#: wysiwyg_editor.module:926
+msgid "Set this option to false to prevent TinyMCE from removing linebreaks from existing nodes.  True avoids conflicts with some filters."
+msgstr "Sæt denne til falsk for at forhindre TinyMCE i at fjerne linjeskift fra eksisterende indholdselementer. Vælges sand undgås konflikt med visse filtre."
+
+#: wysiwyg_editor.module:931
+msgid "Apply source formatting"
+msgstr "Anvend kilde-formattering"
+
+#: wysiwyg_editor.module:934
+msgid "This option makes TinyMCE apply source formatting.  Set this to true for a cleaner HTML source.  Choose false to avoid conflicts with some filters."
+msgstr "Anvend kilde-formatering. Vælg sand for at få renere HTML. Vælg falsk for at undgå konflikt med visse filtre."
+
+#: wysiwyg_editor.module:939
+msgid "CSS"
+msgstr "CSS"
+
+#: wysiwyg_editor.module:946
+msgid "Editor CSS"
+msgstr "TinyMCE CSS"
+
+#: wysiwyg_editor.module:948
+msgid "use theme css"
+msgstr "brug tema CSS"
+
+#: wysiwyg_editor.module:948
+msgid "define css"
+msgstr "definer CSS"
+
+#: wysiwyg_editor.module:948
+msgid "tinyMCE default"
+msgstr "TinyMCE standard"
+
+#: wysiwyg_editor.module:949
+msgid "Defines the CSS to be used in the editor area.<br />use theme css - load style.css from current site theme.<br/>define css - enter path for css file below.<br />tinyMCE default - uses default CSS from editor."
+msgstr "Afgør hvilken CSS der benyttes i TinyMCE.<br />Brug tema CSS - hent style.css fra det nuværende tema.<br/>Definer CSS - indtast stien til css filen herunder.<br />TinyMCE standard - bruger standard CSS fra editoren."
+
+#: wysiwyg_editor.module:954
+msgid "CSS path"
+msgstr "CSS sti"
+
+#: wysiwyg_editor.module:958
+msgid "Enter path to CSS file (<em>example: \"css/editor.css\"</em>) or a list of css files seperated by a comma (<em>example: /themes/garland/style.css,http://domain.com/customMCE.css</em>).<br />Macros: %h (host name: http://www.example.com/), %t (path to theme: theme/yourtheme/)<br />Be sure to select \"define css\" above."
+msgstr "Indtast stien til CSS filen (f.eks. \"css/editor.css\") eller en liste af css filer adskilt af komma (f.eks. \"/themes/garland/style.css,http://domain.com/customMCE.css\").<br />Makroer: %h (værtsnavn: http://www.example.com/), %t (sti til tema: theme/yourtheme/)<br />Husk at vælge \"definer css\" herover."
+
+#: wysiwyg_editor.module:963
+msgid "CSS classes"
+msgstr "CSS klasser"
+
+#: wysiwyg_editor.module:967
+msgid "Adds CSS classes to the \"styles\" droplist. Format is: &lt;title&gt;=&lt;class&gt;;<br/> Example: Header 1=header1;Header 2=header2;Header 3=header3 (note: no trailing ';')<br />Leave blank to automatically import list of CSS classes from style sheet."
+msgstr "Tilføj CSS klasser til \"typografi\" rullelisten. Formatet er: &lt;navn&gt;=&lt;klasse&gt;;<br/>F.eks. Overskrift 1=overskrift1;Overskrift 2=overskrift2;Overskrift 3=overskrift3 (bemærk: intet afsluttende ';')<br />Lad feltet være tomt for automatisk at importerer CSS klasserne fra stilarket."
+
+#: wysiwyg_editor.module:1049
+msgid "Profile"
+msgstr "Profil"
+
+#: wysiwyg_editor.module:1049
+msgid "Roles"
+msgstr "Roller"
+
+#: wysiwyg_editor.module:1049
+msgid "Operations"
+msgstr "Handlinger"
+
+#: wysiwyg_editor.module:1051
+msgid "edit"
+msgstr "rediger"
+
+#: wysiwyg_editor.module:1051
+msgid "delete"
+msgstr "slet"
+
+#: wysiwyg_editor.module:1054
+msgid "<p><a href=\"!create-profile-url\">Create new profile</a></p>"
+msgstr "<p><a href=\"!create-profile-url\">Opret profil</a></p>"
+
+#: wysiwyg_editor.module:1057
+msgid "No profiles found. Click here to <a href=\"!create-profile-url\">create a new profile</a>."
+msgstr "Ingen profiler fundet. <a href=\"!create-profile-url\">Opret profil</a>."
+
+#: wysiwyg_editor.module:1088
+msgid "You must give a profile name."
+msgstr "Du skal angive et profilnavn."
+
+#: wysiwyg_editor.module:1092
+msgid "You must select at least one role."
+msgstr "Du skal vælge mindst én rolle."
+
+#: wysiwyg_editor.module:46
+msgid "administer wysiwyg_editor"
+msgstr "administrer TinyMCE"
+
+#: wysiwyg_editor.module:46
+msgid "access wysiwyg_editor"
+msgstr "tilgå TinyMCE"
+
+#: wysiwyg_editor.module:47
+msgid "module"
+msgstr "modul"
+
+#: wysiwyg_editor.module:49
+msgid "/wysiwyg_editor/jscripts/tiny_mce/plugins/imagemanager/"
+msgstr "/wysiwyg_editor/jscripts/tiny_mce/plugins/imagemanager/"
+
+#: wysiwyg_editor.module:50
+msgid "access wysiwyg_editor imagemanager"
+msgstr "tilgå wysiwyg_editor billedhåndtering"
+
+#: wysiwyg_editor.info:0
+msgid "The most popular WYSIWYG editor for advanced content editing."
+msgstr "Den mest populære WYSIWYG-editor til avanceret redigering af indhold."
+

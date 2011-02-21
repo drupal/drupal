@@ -1,0 +1,80 @@
+/* $Id: views-list.css,v 1.12.6.2 2009/11/18 20:04:07 merlinofchaos Exp $ */
+
+table.views-entry {
+  margin: 3px 0;
+  border: 1px solid #ddd;
+  background-color: white;
+  color: #494949; /* matches garland */
+  clear: left; /* LTR */
+  width: 100%;
+}
+
+table.views-entry tbody {
+  border: none;
+}
+
+table.views-entry td.view-ops {
+  width: 45%;
+  text-align: right; /* LTR */
+  background-color: #eee;
+}
+
+table.views-entry td.view-name {
+  background-color: #eee;
+}
+
+table.views-entry .description {
+  vertical-align: top;
+}
+
+body form#views-ui-list-views-form {
+  margin: 0 0 1.5em 0;
+}
+
+#views-ui-list-views-form .form-item {
+  padding-right: 1em; /* LTR */
+  float: left; /* LTR */
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+#edit-order-wrapper {
+  clear: left; /* LTR */
+}
+
+#edit-views-apply,
+#edit-views-reset {
+  margin-top: 1.65em;
+  float: left; /* LTR */
+}
+
+.views-entry .advanced-help-link {
+  position: relative;
+  top: 2px;
+  padding-right: 3px; /* LTR */
+}
+
+table.view-disabled {
+  color: #999;
+}
+
+table.views-entry td {
+  line-height: 1.4;
+  padding-bottom: 10px;
+}
+table.view-disabled td {
+  line-height: 1.4;
+  padding-bottom: 10px;
+  background: none;
+}
+table.view-enabled td.view-name,
+table.view-enabled td.view-ops,
+table.view-disabled td.view-name,
+table.view-disabled td.view-ops {
+  line-height: 1.6;
+  padding-bottom: 0.3em;
+}
+table.view-enabled td.view-name,
+table.view-enabled td.view-ops {
+  background: #E4F0F8;
+}

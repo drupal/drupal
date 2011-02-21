@@ -1,0 +1,315 @@
+<?php
+// $Id: simplenews_action.module,v 1.19 2011/01/04 16:07:16 mirodietiker Exp $
+
+/**
+ * @file simplenews_action.module
+ * Provide actions for simplenews.
+ *
+ * @ingroup simplenews
+ * @todo Check and rework actions/trigger code for trigger API overhaul: http://drupal.org/node/224333#trigger_overhaul
+ */
+
+/*
+* Implementation of hook_action_info()
+*/
+function simplenews_action_info() {
+  return array(
+    'simplenews_action_send_newsletter' => array(
+      'label' => t('Send single simplenews newsletter'),
+      'type' => 'simplenews',
+      'configurable' => TRUE,
+      'triggers' => array('cron', 'user_insert', 'simplenews_subscribe'),
+    ),
+    'simplenews_action_cron_run' => array(
+      'label' => t('Send pending simplenews newsletters'),
+      'type' => 'simplenews',
+      'configurable' => FALSE,
+      'triggers' => array('cron'),
+    ),
+    'simplenews_action_subscribe_user' => array(
+      'type' => 'simplenews',
+      'label' => t('Subscribe the user to a newsletter'),
+      'configurable' => TRUE,
+      'triggers' => array('user_insert', 'user_update'),
+    ),
+    'simplenews_action_unsubscribe_user' => array(
+      'type' => 'simplenews',
+      'label' => t('Unsubscribe the user from a newsletter'),
+      'configurable' => TRUE,
+      'triggers' => array('user_update', 'user_delete'),
+    ),
+  );
+}
+
+/**
+* Implementation of hook_action_info_alter().
+*
+* Makes user and system actions available to the Simplenews 'subscribe' and 'unsubscribe' triggers.
+*/
+function simplenews_action_action_info_alter(&$actions) {
+  foreach ($actions as $id => $action) {
+    if ($action['type'] == 'user' || $action['type'] == 'system') {
+      $actions[$id]['triggers'][] = 'simplenews_subscribe';
+      $actions[$id]['triggers'][] = 'simplenews_unsubscribe';
+    }
+  }
+}
+
+/**
+ * A configurable Drupal action. Send a simplenews newsletter.
+ *   hook = cron: Send a newsletter to all subscribers.
+ *   hook = user: Send a newsletter to the user who triggered the action.
+ *
+ *   Available context:
+ *    $context['nid']     newsletter id
+ *    $context['title']   newsletter title
+ *    $context['resend']  allow resending of a previously send newsletter
+ *
+ *   @see simplenews_action_send_newsletter_form()
+ *   @see simplenews_action_send_newsletter_submit()
+ */
+function simplenews_action_send_newsletter(&$object, $context = array()) {
+  if ($context['hook'] == 'cron' || $context['hook'] == 'user' || $context['hook'] == 'simplenews') {
+
+    // Determine newsletter recipients
+    $accounts = array();
+    if ($context['hook'] == 'user' || $context['hook'] == 'simplenews') {
+      $accounts[] = $context['account'];
+    }
+
+    // Get sent status of this newsletter. The newsletter sent status is used not the sent status of individual emails.
+    $newsletter = simplenews_newsletter_load($context['nid'], $context['vid']);
+
+    // Send newsletter if resend is allowed OR newsletter is not yet send.
+    if ($context['resend'] OR $newsletter->s_status == SIMPLENEWS_STATUS_SEND_NOT) {
+      if ($context['hook'] == 'cron') {
+        // Set newsletter sent status to pending if send by cron.
+        $newsletter->s_status = SIMPLENEWS_STATUS_SEND_PENDING;
+        simplenews_newsletter_save($newsletter);
+      }
+      module_load_include('inc', 'simplenews', 'includes/simplenews.mail');
+      simplenews_send_node($context['nid'], $accounts);
+    }
+    watchdog('action', 'Simplenews newsletter %title send.', array('%title' => $context['title']));
+  }
+}
+
+/**
+ * Implementation of a configurable Drupal action. Send newsletter
+ */
+function simplenews_action_send_newsletter_form($context) {
+  //TODO improve usability by adding a pre-selection of newsletters before the newsletter issue selection
+  //     Requires AHAH function to select newsletters issues based on selected newsletter
+  //
+  //  if (!isset($context['newsletter'])) {
+  //    $context['newsletter'] = array();
+  //  }
+  if (!isset($context['newsletter_issue'])) {
+    $context['newsletter_issue'] = array();
+  }
+  if (!isset($context['resend'])) {
+    $context['resend'] = FALSE;
+  }
+
+  $categories = simplenews_category_list();
+  //  $form['newsletter'] = array(
+  //    '#title' => t('Newsletter'),
+  //    '#type' => 'select',
+  //    '#options' => $categories,
+  //    '#default_value' => $context['newsletter'],
+  //    '#description' => t('The newsletter series'),
+  //  );
+  $newsletters = simplenews_newsletter_load_multiple(array(), array('scid' => array_keys($categories)));
+  $newsletter_nodes = array();
+  foreach ($newsletters as $newsletter) {
+    $newsletter_nodes[$newsletter->nid] = $newsletter->title;
+  }
+  $form['newsletter_issue'] = array(
+    '#title' => t('Newsletter issue'),
+    '#type' => 'select',
+    '#options' => $newsletter_nodes,
+    '#default_value' => $context['newsletter_issue'],
+    '#description' => t('The newsletter issue to send'),
+  );
+  $form['resend'] = array(
+    '#title' => t('Allow to resend newsletter'),
+    '#type' => 'checkbox',
+    '#default_value' => $context['resend'],
+    '#description' => t('When checked a newsletter will be send even when already send before. The newsletter sent status is checked, not the status of individual email addresses. Use this for repeated (e.g. monthly) newsletters.'),
+  );
+
+  return $form;
+}
+
+/**
+ * Validate simplenews_action_send_newsletter form submissions.
+ */
+function simplenews_action_send_newsletter_validate($form, $form_state) {
+  $form_values = $form_state['values'];
+  // Validate the send newsletter form.
+  if (empty($form_values['newsletter_issue'])) {
+    form_set_error('newsletter_issue', t('Please select a newsletter issue.'));
+  }
+}
+
+/**
+ * Process simplenews_action_send_newsletter form submissions.
+ */
+function simplenews_action_send_newsletter_submit($form, $form_state) {
+  $form_values = $form_state['values'];
+
+  $params = array(
+    'nid' => $form_values['newsletter_issue'],
+    'title' => $form['newsletter_issue']['#options'][$form_values['newsletter_issue']],
+    'resend' => $form_values['resend'],
+  );
+  return $params;
+}
+
+/**
+ * Implementation of a Drupal action. Send pending simplenews newsletters.
+ */
+function simplenews_action_cron_run(&$object, $context = array()) {
+  simplenews_cron();
+  watchdog('action', 'Simplenews cron executed.');
+}
+
+/**
+ * A configurable Drupal action. Subscribe the user to a newsletter
+ *   hook = user: Subscribe this user to selected newsletter
+ *
+ *   Available context:
+ *    $context['slid']   Mailing list id
+ *    $context['name']   List name
+ *
+ *   @see simplenews_action_subscribe_user_form()
+ *   @see simplenews_action_subscribe_user_submit()
+ */
+function simplenews_action_subscribe_user(&$object, $context = array()) {
+  if ($context['hook'] == 'user') {
+    if (isset($context['slid'])) {
+      // This action is only called in the context of user. User data is in $context.
+      $account = $context['account'];
+      simplenews_subscribe_user($account->mail, $context['slid'], FALSE, 'action');
+      drupal_set_message(t('You have been subscribed to mailing list %list.', array('%list' => $context['name'])));
+      watchdog('action', 'User %name subscribed to mailing list %list.', array('%name' => $account->name, '%list' => $context['name']));
+    }
+  }
+}
+
+/**
+ * Implementation of a configurable Drupal action.
+ */
+function simplenews_action_subscribe_user_form($context) {
+  if (!isset($context['list'])) {
+    $context['list'] = array();
+  }
+
+  $lists = simplenews_get_mailing_lists(TRUE);
+  $options = array();
+  foreach ($tree as $newsletter) {
+    $options[$list->slid] = $list->name;
+  }
+  $form['list'] = array(
+    '#title' => t('Mailing list'),
+    '#type' => 'select',
+    '#options' => $options,
+    '#description' => t('The mailing list the user will be subscribed to.'),
+  );
+  return $form;
+}
+
+/**
+ * Process simplenews_action_subscribe_user form submissions.
+ */
+function simplenews_action_subscribe_user_submit($form, $form_state) {
+  $form_values = $form_state['values'];
+
+  $params = array(
+    'slid' => $form_values['list'],
+    'name' => $form['list']['#options'][$form_values['list']],
+  );
+  return $params;
+}
+
+/**
+ * A configurable Drupal action. Unsubscribe the user from a newsletter
+ *   hook = user: Unsubscribe this user from selected newsletter
+ *
+ *   Available context:
+ *    $context['slid']    Mailing list id
+ *    $context['name']    List name
+ *
+ *   @see simplenews_action_unsubscribe_user_form()
+ *   @see simplenews_action_unsubscribe_user_submit()
+ * @todo Replace time(): http://drupal.org/node/224333#time
+ */
+function simplenews_action_unsubscribe_user(&$object, $context = array()) {
+  if ($context['hook'] == 'user') {
+    if (isset($context['slid'])) {
+      // This action is only called in the context of user. User data is in $context.
+      $account = $context['account'];
+      //TODO: Unsubscribing should be done by simplenews_unsubscribe_user but simplenews_get_user_subscription fails because the user is already removed
+      $subscriber = reset(simplenews_subscriber_load_multiple(array(), array('mail' => $account->mail)));
+      $data = array(
+        'status' => SIMPLENEWS_SUBSCRIPTION_STATUS_UNSUBSCRIBED,
+        'timestamp' => REQUEST_TIME,
+        'source' => 'action',
+      );
+      simplenews_subscription_update(array('ssid' => $subscriber->ssid, 'slid' => $context['slid']), $data);
+      drupal_set_message(t('You have been removed from the %newsletter subscription list.', array('%newsletter' => $context['name'])));
+      watchdog('action', 'User %name unsubscribed from newsletter %newsletter.', array('%name' => $account->name, '%newsletter' => $context['name']));
+    }
+  }
+}
+
+/**
+ * Implementation of a configurable Drupal action.
+ */
+function simplenews_action_unsubscribe_user_form($context) {
+  if (!isset($context['list'])) {
+    $context['list'] = array();
+  }
+
+  $lists = simplenews_get_mailing_lists(TRUE);
+  $options = array();
+  foreach ($tree as $newsletter) {
+    $options[$list->slid] = $list->name;
+  }
+  $form['list'] = array(
+    '#title' => t('Mailing list'),
+    '#type' => 'select',
+    '#options' => $options,
+    '#description' => t('The mailing list the user will be unsubscribed from.'),
+  );
+  return $form;
+}
+
+/**
+ * Process simplenews_action_unsubscribe_user form submissions.
+ */
+function simplenews_action_unsubscribe_user_submit($form, $form_state) {
+  $form_values = $form_state['values'];
+
+  $params = array(
+    'slid' => $form_values['list'],
+    'name' => $form['list']['#options'][$form_values['list']],
+  );
+  return $params;
+}
+
+/**
+ * Implementation of hook_trigger_info().
+ */
+function simplenews_action_trigger_info() {
+  return array(
+    'simplenews' => array(
+      'simplenews_subscribe' => array(
+        'label' => t('After a user has been subscribed'),
+      ),
+      'simplenews_unsubscribe' => array(
+        'label' => t('After a user has been unsubscribed'),
+      ),
+    ),
+  );
+}

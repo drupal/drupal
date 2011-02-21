@@ -1,0 +1,17 @@
+; $Id: simplenews_test.info,v 1.4 2011/01/02 12:03:30 simongeorges Exp $
+name = Simplenews test
+description = Simplenews helper module for automated simplenews tests.
+dependencies[] = simplenews
+package = Testing
+hidden = TRUE
+core = 7.x
+
+files[] = simplenews_test.install
+files[] = simplenews_test.module
+
+; Information added by drupal.org packaging script on January 1, 1970 - 00:00
+version = "7.x-1.x-dev"
+core = "7.x"
+project = "simplenews"
+datestamp = "1296218226"
+

@@ -1,0 +1,22 @@
+# Hungarian translation of Chaos tool suite (6.x-1.2)
+# Copyright (c) 2009 by the Hungarian translation team
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Chaos tool suite (6.x-1.2)\n"
+"POT-Creation-Date: 2009-12-13 13:41+0000\n"
+"PO-Revision-Date: 2009-11-12 20:02+0000\n"
+"Language-Team: Hungarian\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n"
+
+msgid "General form"
+msgstr "Általános űrlap"
+msgid "Form goes here."
+msgstr "Ide jön az űrlap."
+msgid "\"@s\" base form"
+msgstr "„@s” alap űrlap"
+msgid "Everything in the form that is not displayed by other content."
+msgstr "Minden az űrlapon, amit más környezetek nem jelenítenek meg."

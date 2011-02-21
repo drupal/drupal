@@ -1,0 +1,276 @@
+<?php
+// $Id: image_captcha.module,v 1.39 2010/11/29 00:12:19 soxofaan Exp $
+
+/**
+ * @file
+ * Implements image CAPTCHA for use with the CAPTCHA module
+ */
+
+define('IMAGE_CAPTCHA_ALLOWED_CHARACTERS', 'aAbBCdEeFfGHhijKLMmNPQRrSTtWXYZ23456789');
+
+// Setup status flags.
+define('IMAGE_CAPTCHA_ERROR_NO_GDLIB', 1);
+define('IMAGE_CAPTCHA_ERROR_NO_TTF_SUPPORT', 2);
+define('IMAGE_CAPTCHA_ERROR_TTF_FILE_READ_PROBLEM', 4);
+
+define('IMAGE_CAPTCHA_FILE_FORMAT_JPG', 1);
+define('IMAGE_CAPTCHA_FILE_FORMAT_PNG', 2);
+define('IMAGE_CAPTCHA_FILE_FORMAT_TRANSPARENT_PNG', 3);
+
+
+/**
+ * Implements hook_help().
+ */
+function image_captcha_help($path, $arg) {
+  switch ($path) {
+    case 'admin/config/people/captcha/image_captcha':
+      $output = '<p>' . t('The image CAPTCHA is a popular challenge where a random textual code is obfuscated in an image. The image is generated on the fly for each request, which is rather CPU intensive for the server. Be careful with the size and computation related settings.') . '</p>';
+      return $output;
+  }
+}
+
+/**
+ * Implements hook_menu().
+ */
+function image_captcha_menu() {
+  $items = array();
+  // add an administration tab for image_captcha
+  $items['admin/config/people/captcha/image_captcha'] = array(
+    'title' => 'Image CAPTCHA',
+    'file' => 'image_captcha.admin.inc',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('image_captcha_settings_form'),
+    'access arguments' => array('administer CAPTCHA settings'),
+    'type' => MENU_LOCAL_TASK,
+  );
+  // Menu path for generating font example.
+  $items['admin/config/people/captcha/image_captcha/font_preview'] = array(
+    'title' => 'Font example',
+    'file' => 'image_captcha.admin.inc',
+    'page callback' => 'image_captcha_font_preview',
+    'access arguments' => array('administer CAPTCHA settings'),
+    'type' => MENU_CALLBACK,
+  );
+  // callback for generating an image
+  $items['image_captcha'] = array(
+    'file' => 'image_captcha.user.inc',
+    'page callback' => 'image_captcha_image',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+  return $items;
+}
+
+/**
+ * Helper function for getting the fonts to use in the image CAPTCHA.
+ *
+ * @return a list of font paths.
+ */
+function _image_captcha_get_enabled_fonts() {
+  if (IMAGE_CAPTCHA_ERROR_NO_TTF_SUPPORT & _image_captcha_check_setup(FALSE)) {
+    return array('BUILTIN');
+  }
+  else {
+    $default = array(
+      drupal_get_path('module', 'image_captcha') . '/fonts/Tesox/tesox.ttf',
+      drupal_get_path('module', 'image_captcha') . '/fonts/Tuffy/Tuffy.ttf',
+    );
+    return variable_get('image_captcha_fonts', $default);
+  }
+}
+
+/**
+ * Helper function for checking if the specified fonts are available.
+ *
+ * @param $fonts paths of fonts to check.
+ * @return list($readable_fonts, $problem_fonts)
+ */
+function _image_captcha_check_fonts($fonts) {
+  $readable_fonts = array();
+  $problem_fonts = array();
+  foreach ($fonts as $font) {
+    if ($font != 'BUILTIN' && (!is_file($font) || !is_readable($font))) {
+      $problem_fonts[] = $font;
+    }
+    else {
+      $readable_fonts[] = $font;
+    }
+  }
+  return array($readable_fonts, $problem_fonts);
+}
+
+/**
+ * Helper function for splitting an utf8 string correctly in characters.
+ * Assumes the given utf8 string is well formed.
+ * See http://en.wikipedia.org/wiki/Utf8 for more info
+ */
+function _image_captcha_utf8_split($str) {
+  $characters = array();
+  $len = strlen($str);
+  for ($i=0; $i < $len; ) {
+    $chr = ord($str[$i]);
+    if (($chr & 0x80) == 0x00) { // one byte character (0zzzzzzz)
+      $width = 1;
+    }
+    else {
+      if (($chr & 0xE0) == 0xC0) { // two byte character (first byte: 110yyyyy)
+        $width = 2;
+      }
+      elseif (($chr & 0xF0) == 0xE0) { // three byte character (first byte: 1110xxxx)
+        $width = 3;
+      }
+      elseif (($chr & 0xF8) == 0xF0) { // four byte character (first byte: 11110www)
+        $width = 4;
+      }
+      else {
+        watchdog('CAPTCHA', 'Encountered an illegal byte while splitting an utf8 string in characters.', array(), WATCHDOG_ERROR);
+        return $characters;
+      }
+    }
+    $characters[] = substr($str, $i, $width);
+    $i += $width;
+  }
+  return $characters;
+}
+
+/**
+ * Helper function for checking the setup of the Image CAPTCHA.
+ *
+ * The image CAPTCHA requires at least the GD PHP library.
+ * Support for TTF is recommended and the enabled
+ * font files should be readable.
+ * This functions checks these things.
+ *
+ * @param $check_fonts whether or not the enabled fonts should be checked.
+ *
+ * @return status code: bitwise 'OR' of status flags like
+ *   IMAGE_CAPTCHA_ERROR_NO_GDLIB, IMAGE_CAPTCHA_ERROR_NO_TTF_SUPPORT,
+ *   IMAGE_CAPTCHA_ERROR_TTF_FILE_READ_PROBLEM.
+ */
+function _image_captcha_check_setup($check_fonts=TRUE) {
+  // Start clean.
+  $status = 0;
+  // Check if we can use the GD library.
+  // Note that we are only checking
+  // for the existence of the imagejpeg function.
+  // We could also check for imagepng, which can also be used
+  // (optionally) for the image CAPTCHA by the site admin.
+  // However, this incurs extra complexity in the setup checking
+  // (more constants to define) and in the caller functions
+  // (more situations to check for).
+  // We take this shortcut (only checking for imagejpeg) because
+  // it's probably pretty safe to assume that imagepng
+  // is available when imagejpeg is available.
+  if (!function_exists('imagejpeg')) {
+    $status = $status | IMAGE_CAPTCHA_ERROR_NO_GDLIB;
+  }
+  if (!function_exists('imagettftext')) {
+    $status = $status | IMAGE_CAPTCHA_ERROR_NO_TTF_SUPPORT;
+  }
+  if ($check_fonts) {
+    // Check availability of enabled fonts.
+    $fonts = _image_captcha_get_enabled_fonts();
+    list($readable_fonts, $problem_fonts) = _image_captcha_check_fonts($fonts);
+    if (count($problem_fonts) != 0) {
+      $status = $status | IMAGE_CAPTCHA_ERROR_TTF_FILE_READ_PROBLEM;
+    }
+  }
+  return $status;
+}
+
+/**
+ * Helper function for calculating image height and width
+ * based on given code and current font/spacing settings.
+ *
+ * @return array($width, $heigh)
+ */
+function _image_captcha_image_size($code) {
+  // Get settings
+  $font_size = (int) variable_get('image_captcha_font_size', 30);
+  $character_spacing = (float) variable_get('image_captcha_character_spacing', '1.2');
+  $characters = _image_captcha_utf8_split($code);
+  $character_quantity = count($characters);
+
+  // Calculate height and width
+  $width = $character_spacing * $font_size * $character_quantity;
+  $height = 2 * $font_size;
+
+  return array($width, $height);
+}
+
+
+/**
+ * Implements hook_captcha().
+ */
+function image_captcha_captcha($op, $captcha_type='', $captcha_sid=NULL) {
+  switch ($op) {
+    case 'list':
+      // Only offer the image CAPTCHA if it is possible to generate an image on this setup.
+      if (!(_image_captcha_check_setup() & IMAGE_CAPTCHA_ERROR_NO_GDLIB)) {
+        return array('Image');
+      }
+      else {
+        return array();
+      }
+      break;
+
+    case 'generate':
+      if ($captcha_type == 'Image') {
+        // In maintenance mode, the image CAPTCHA does not work because the request
+        // for the image itself won't succeed (only ?q=user is permitted for
+        // unauthenticated users). We fall back to the Math CAPTCHA in that case.
+        global $user;
+        if (variable_get('maintenance_mode', 0) && $user->uid == 0) {
+          return captcha_captcha('generate', 'Math');
+        }
+        // generate a CAPTCHA code
+        $allowed_chars = _image_captcha_utf8_split(variable_get('image_captcha_image_allowed_chars', IMAGE_CAPTCHA_ALLOWED_CHARACTERS));
+        $code_length = (int)variable_get('image_captcha_code_length', 5);
+        $code = '';
+        for ($i = 0; $i < $code_length; $i++) {
+          $code .= $allowed_chars[array_rand($allowed_chars)];
+        }
+
+        // build the result to return
+        $result = array();
+
+        $result['solution'] = $code;
+        // Generate image source URL (add timestamp to avoid problems with
+        // client side caching: subsequent images of the same CAPTCHA session
+        // have the same URL, but should display a different code).
+        $img_src = check_url(url("image_captcha/$captcha_sid/" . REQUEST_TIME));
+        list($width, $height) = _image_captcha_image_size($code);
+        // TODO: start using a theming funtion for generating the image markup?
+        $result['form']['captcha_image'] = array(
+          '#type' => 'markup',
+          '#markup' => '<img src="' . $img_src
+            . '" width="'. $width . '" height="' . $height
+            . '" alt="' . t('Image CAPTCHA') . '" title="' . t('Image CAPTCHA') . '" />',
+          '#weight' => -2,
+        );
+        $result['form']['captcha_response'] = array(
+          '#type' => 'textfield',
+          '#title' => t('What code is in the image?'),
+          '#description' => t('Enter the characters shown in the image.'),
+          '#weight' => 0,
+          '#required' => TRUE,
+          '#size' => 15,
+          '#attributes' => array('autocomplete' => 'off'),
+        );
+
+        // Handle the case insensitive validation option combined with ignoring spaces.
+        switch (variable_get('captcha_default_validation', CAPTCHA_DEFAULT_VALIDATION_CASE_INSENSITIVE)) {
+          case CAPTCHA_DEFAULT_VALIDATION_CASE_SENSITIVE:
+            $result['captcha_validate'] = 'captcha_validate_ignore_spaces';
+            break;
+          case CAPTCHA_DEFAULT_VALIDATION_CASE_INSENSITIVE:
+            $result['captcha_validate'] = 'captcha_validate_case_insensitive_ignore_spaces';
+            break;
+        }
+
+        return $result;
+      }
+      break;
+
+  }
+}

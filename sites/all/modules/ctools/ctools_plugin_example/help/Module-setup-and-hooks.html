@@ -1,0 +1,20 @@
+<div id="node-11" class="node">
+
+
+
+  
+  <div class="content clear-block">
+    <p>Your module must provide a few things so that your plugins can be found.</p>
+<p>First, you need to implement hook_ctools_plugin_directory(). Here we're telling CTools that our plugins will be found in the module's directory in the plugins/&lt;plugintype&gt; directory. Context plugins will be in ctools_plugin_example/plugins/contexts, Content-type plugins will be in ctools_plugin_example/plugins/content_types.</p>
+<p><div class="codeblock"><code><span style="color: #000000"><span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">function </span><span style="color: #0000BB">ctools_plugin_example_ctools_plugin_directory</span><span style="color: #007700">(</span><span style="color: #0000BB">$module</span><span style="color: #007700">, </span><span style="color: #0000BB">$plugin</span><span style="color: #007700">) {<br />&nbsp; if (</span><span style="color: #0000BB">$module </span><span style="color: #007700">== </span><span style="color: #DD0000">'ctools' </span><span style="color: #007700">&amp;&amp; !empty(</span><span style="color: #0000BB">$plugin</span><span style="color: #007700">)) {<br />&nbsp;&nbsp;&nbsp; return </span><span style="color: #DD0000">"plugins/$plugin"</span><span style="color: #007700">;<br />&nbsp; }<br />}<br /></span><span style="color: #0000BB">?&gt;</span></span></code></div></p>
+<p>Second, if you module wants to provide default panels pages, you can implement hook_ctools_plugin_api(). CTools will then pick up your panels pages in the file named &lt;modulename&gt;.pages_default.inc.</p>
+<p><div class="codeblock"><code><span style="color: #000000"><span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">function </span><span style="color: #0000BB">ctools_plugin_example_ctools_plugin_api</span><span style="color: #007700">(</span><span style="color: #0000BB">$module</span><span style="color: #007700">, </span><span style="color: #0000BB">$api</span><span style="color: #007700">) {<br />&nbsp; if (</span><span style="color: #0000BB">$module </span><span style="color: #007700">== </span><span style="color: #DD0000">'panels_mini' </span><span style="color: #007700">&amp;&amp; </span><span style="color: #0000BB">$api </span><span style="color: #007700">== </span><span style="color: #DD0000">'panels_default'</span><span style="color: #007700">) {<br />&nbsp;&nbsp;&nbsp; return array(</span><span style="color: #DD0000">'version' </span><span style="color: #007700">=&gt; </span><span style="color: #0000BB">1</span><span style="color: #007700">);<br />&nbsp; }<br />&nbsp; if (</span><span style="color: #0000BB">$module </span><span style="color: #007700">== </span><span style="color: #DD0000">'page_manager' </span><span style="color: #007700">&amp;&amp; </span><span style="color: #0000BB">$api </span><span style="color: #007700">== </span><span style="color: #DD0000">'pages_default'</span><span style="color: #007700">) {<br />&nbsp;&nbsp;&nbsp; return array(</span><span style="color: #DD0000">'version' </span><span style="color: #007700">=&gt; </span><span style="color: #0000BB">1</span><span style="color: #007700">);<br />&nbsp; }<br />}<br /></span><span style="color: #0000BB">?&gt;</span></span></code></div></p>
+  </div>
+
+  <div class="clear-block">
+    <div class="meta">
+        </div>
+
+      </div>
+
+</div>

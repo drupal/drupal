@@ -1,0 +1,875 @@
+# Dansk translation of captcha (6.x-2.0-beta5)
+# Copyright (c) 2009 by the Dansk translation team
+# Generated from files:
+# captcha.admin.inc,v 1.24 2009/05/14 22:47:37 soxofaan
+# image_captcha.admin.inc,v 1.19 2009/05/14 22:47:38 soxofaan
+# captcha.module,v 1.89 2009/05/17 17:02:20 soxofaan
+# captcha.info,v 1.7 2008/02/17 12:49:24 soxofaan
+# image_captcha.user.inc,v 1.19 2009/04/24 22:16:48 soxofaan
+# image_captcha.module,v 1.25 2009/05/14 22:47:38 soxofaan
+# captcha.inc,v 1.4 2009/05/03 21:20:46 soxofaan
+# captcha.install,v 1.9 2009/03/22 20:06:39 soxofaan
+# image_captcha.info,v 1.5 2008/02/17 12:49:24 soxofaan
+# 
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: captcha (6.x-2.0-beta5)\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-05-29 02:46-0700\n"
+"PO-Revision-Date: 2009-05-29 11:47+0200\n"
+"Last-Translator: Morten Wulff <wulff@ratatosk.net>\n"
+"Language-Team: Dansk <dansk@klid.dk>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);"
+
+#: captcha.admin.inc:176
+msgid "Save configuration"
+msgstr "Gem indstillinger"
+
+#: captcha.admin.inc:83
+msgid "delete"
+msgstr "slet"
+
+#: captcha.admin.inc:186
+msgid "Operations"
+msgstr "Handlinger"
+
+#: captcha.admin.inc:359
+msgid "Delete"
+msgstr "Slet"
+
+#: captcha.admin.inc:318
+msgid "Save"
+msgstr "Gem"
+
+#: captcha.admin.inc:16; image_captcha/image_captcha.admin.inc:148,170
+msgid "none"
+msgstr "ingen"
+
+#: image_captcha/image_captcha.admin.inc:138
+msgid "Text color"
+msgstr "Tekstfarve"
+
+#: captcha.module:34
+msgid "Location of comment submission form"
+msgstr "Placering af formular"
+
+#: captcha.module:35
+msgid "Display on separate page"
+msgstr "Vis på separat side"
+
+#: captcha.module:76
+msgid "General settings"
+msgstr "Generelle indstillinger"
+
+#: captcha.admin.inc:363
+msgid "Disable"
+msgstr "Deaktivér"
+
+#: captcha.module:327
+msgid "disable"
+msgstr "deaktivér"
+
+#: captcha.module:263,311,118,211,413,59,70; captcha.info:0; image_captcha/image_captcha.user.inc:29,72; image_captcha/image_captcha.module:94
+msgid "CAPTCHA"
+msgstr "CAPTCHA"
+
+#: image_captcha/image_captcha.admin.inc:130
+msgid "Background color"
+msgstr "Baggrundsfarve"
+
+#: image_captcha/image_captcha.admin.inc:151,174
+msgid "high"
+msgstr "høj"
+
+#: image_captcha/image_captcha.admin.inc:96,117,173
+msgid "normal"
+msgstr "normal"
+
+#: image_captcha/image_captcha.admin.inc:171
+msgid "low"
+msgstr "lav"
+
+#: captcha.module:30
+msgid ""
+"\"CAPTCHA\" is an acronym for \"Completely Automated Public Turing "
+"test to tell Computers and Humans Apart\". It is typically a "
+"challenge-response test to determine whether the user is human. The "
+"CAPTCHA module is a tool to fight automated submission by malicious "
+"users (spamming) of for example comments forms, user registration "
+"forms, guestbook forms, etc. You can extend the desired forms with an "
+"additional challenge, which should be easy for a human to solve "
+"correctly, but hard enough to keep automated scripts and spam bots "
+"out."
+msgstr ""
+"CAPTCHA er et akronym for \"Completely Automated Public Turing test to "
+"tell Computers and Humans Apart\" (fulstændig automatisk offentlig "
+"Turing-test til at skille computere fra mennesker). Det er typisk en "
+"udfordring-svar test som bestemmer hvorvidt brugeren er et menneske. "
+"CAPTCHA-modulet er et værktøj til bekæmpelse af ondsindede brugeres "
+"automatiske indsendelse (spamming) af kommentarformularer, "
+"brugeroprettelser, gæstebogsindlæg osv. Du kan udvide de ønskede "
+"formularer med en yderligere udfordring, som vil være let at løse "
+"for mennesker men svær nok til at holde automatiske scripts og "
+"spam-robotter ude."
+
+#: captcha.module:39
+msgid "CAPTCHA is a trademark of Carnegie Mellon University."
+msgstr "CAPTCHA er et varemærke tilhørende Carnegie Mellon University."
+
+#: captcha.module:60
+msgid "Administer how and where CAPTCHAs are used."
+msgstr "Administrer hvor og hvordan CAPTCHAs bruges."
+
+#: captcha.module:82
+msgid "Examples"
+msgstr "Eksempler"
+
+#: captcha.module:83
+msgid "An overview of the available challenge types with examples."
+msgstr "En oversigt over de forskellige udfordringstyper med eksempler."
+
+#: captcha.inc:131
+msgid ""
+"This question is for testing whether you are a human visitor and to "
+"prevent automated spam submissions."
+msgstr ""
+"Dette spørgsmål tester hvorvidt du er et menneske og forhindrer "
+"automatisk indsendelse af spam."
+
+#: captcha.admin.inc:380
+msgid "Disabled CAPTCHA for form %form_id."
+msgstr "CAPTCHA for formular %form_id deaktiveret."
+
+#: captcha.admin.inc:376
+msgid "Deleted CAPTCHA for form %form_id."
+msgstr "CAPTCHA for formular %form_id slettet."
+
+#: captcha.admin.inc:122,137
+msgid "Challenge description"
+msgstr "Beskrivelse af udfordring"
+
+#: captcha.admin.inc:123,138
+msgid ""
+"With this description you can explain the purpose of the challenge to "
+"the user."
+msgstr ""
+"Med denne beskrivelse kan du forklarer formålet med udfordringen til "
+"brugeren."
+
+#: captcha.admin.inc:128
+msgid "For language %lang_name (code %lang_code)"
+msgstr "For sproget %lang_name (kode %lang_code)"
+
+#: captcha.admin.inc:155
+msgid "Persistence"
+msgstr "Vedholdenhed"
+
+#: captcha.admin.inc:158
+msgid "Always add a challenge."
+msgstr "Tilføj altid en udfordring."
+
+#: captcha.admin.inc:159
+msgid ""
+"Omit challenges for a form once the user has successfully responded to "
+"a challenge for that form."
+msgstr ""
+"Udelad udfordringer fra en formular når brugeren har klaret "
+"udfordringen for den pågældende formular."
+
+#: captcha.admin.inc:160
+msgid ""
+"Omit challenges for all forms once the user has successfully responded "
+"to a challenge."
+msgstr ""
+"Udelad udfordringer fra alle formularer når brugeren har klaret "
+"udfordringen for en formular."
+
+#: captcha.admin.inc:162
+msgid ""
+"Define if challenges should be omitted during the rest of a session "
+"once the user successfully responses to a challenge."
+msgstr ""
+"Angiv om udfordringerne skal udelades under resten af en session når "
+"brugeren har givet et korrekt svar på en udfordring."
+
+#: captcha.admin.inc:168
+msgid "Log wrong responses"
+msgstr "Log forkerte svar"
+
+#: captcha.admin.inc:255
+msgid "The CAPTCHA settings were saved."
+msgstr "Indstillinger for CAPTCHA gemt."
+
+#: captcha.module:211
+msgid ""
+"CAPTCHA problem: hook_captcha() of module %module returned nothing "
+"when trying to retrieve challenge type %type for form %form_id."
+msgstr ""
+"CAPTCHA-problem: hook_captcha() fra modulet %module returnerede intet "
+"under forsøget på at hente udfordringstypen %type for formularen "
+"%form_id."
+
+#: captcha.module:408
+msgid "The answer you entered for the CAPTCHA was not correct."
+msgstr "Svaret, som du indtastede på CAPTCHAen, er ikke korrekt."
+
+#: captcha.module:413
+msgid ""
+"%form_id post blocked by CAPTCHA module: challenge \"%challenge\" (by "
+"module \"%module\"), user answered \"%response\", but the solution was "
+"\"%solution\"."
+msgstr ""
+"%form_id-indsendelse blokeret af CAPTCHA-modulet: udfordring "
+"\"%challenge\" (fra modulet \"%module\"), brugeren svarede "
+"\"%response\", men løsningen var \"%solution\"."
+
+#: captcha.admin.inc:417
+msgid ""
+"This page gives an overview of all available challenge types, "
+"generated with their current settings."
+msgstr ""
+"Denne side giver et overblik over alle tilgængelige udfordringstyper "
+"genereret med deres aktuelle indstillinger."
+
+#: captcha.admin.inc:425
+msgid "Challenge \"%challenge\" by module \"%module\""
+msgstr "Udfordring \"%challenge\" fra modulet \"%module\""
+
+#: captcha.admin.inc:428
+msgid "10 more examples of this challenge."
+msgstr "10 eksempler til på denne udfordring."
+
+#: captcha.module:497
+msgid ""
+"Solve this simple math problem and enter the result. E.g. for 1+3, "
+"enter 4."
+msgstr ""
+"Løs denne simple matematikopgave og indtast resultatet. Indtast "
+"f.eks. 4 hvis opgaven er 1+3."
+
+#: captcha.module:498
+msgid "@x + @y = "
+msgstr "@x + @y = "
+
+#: captcha.admin.inc:107; captcha.module:106
+msgid "administer CAPTCHA settings"
+msgstr "administrer CAPTCHA-indstillinger"
+
+#: captcha.module:47,106
+msgid "skip CAPTCHA"
+msgstr "spring over CAPTCHA"
+
+#: captcha.module:0
+msgid "captcha"
+msgstr "captcha"
+
+#: captcha.install:156
+msgid "Unsupported database."
+msgstr "Database ikke understøttet."
+
+#: captcha.info:0
+msgid "Base CAPTCHA module for adding challenges to arbitrary forms."
+msgstr ""
+"Basalt CAPTCHA-modul som tilføjer udfordringer til vilkårlige "
+"formularer."
+
+#: captcha.info:0; image_captcha/image_captcha.info:0
+msgid "Spam control"
+msgstr "Spam-kontrol"
+
+#: image_captcha/image_captcha.module:179,40; image_captcha/image_captcha.info:0
+msgid "Image CAPTCHA"
+msgstr "Billed-CAPTCHA"
+
+#: image_captcha/image_captcha.admin.inc:13
+msgid "Built-in font"
+msgstr "Indbygget skrifttype"
+
+#: image_captcha/image_captcha.admin.inc:57
+msgid "Code settings"
+msgstr "Kodeindstillinger"
+
+#: image_captcha/image_captcha.admin.inc:61
+msgid "Characters to use in the code"
+msgstr "Tegn som bruges i koden"
+
+#: image_captcha/image_captcha.admin.inc:66
+msgid "Code length"
+msgstr "Kodelængde"
+
+#: image_captcha/image_captcha.admin.inc:69
+msgid ""
+"The code length influences the size of the image. Note that larger "
+"values make the image generation more CPU intensive."
+msgstr ""
+"Kodelængden har betydning for billedets størrelse. Bemærk at "
+"større værdier gør genereringen af billedet mere CPU-tung."
+
+#: image_captcha/image_captcha.admin.inc:75
+msgid "Font settings"
+msgstr "Skrifttypeindstillinger"
+
+#: image_captcha/image_captcha.admin.inc:81
+msgid "Font"
+msgstr "Skrift"
+
+#: image_captcha/image_captcha.admin.inc:83
+msgid "The TrueType font (.ttf) to use for the text in the image CAPTCHA."
+msgstr ""
+"TrueType skrifttypen (.ttf) som skal bruges til teksten i "
+"billed-CAPTCHAen."
+
+#: image_captcha/image_captcha.admin.inc:92
+msgid "Font size"
+msgstr "Skriftstørrelse"
+
+#: image_captcha/image_captcha.admin.inc:94
+msgid "tiny"
+msgstr "lillebitte"
+
+#: image_captcha/image_captcha.admin.inc:95,116,149
+msgid "small"
+msgstr "lille"
+
+#: image_captcha/image_captcha.admin.inc:97,118
+msgid "large"
+msgstr "stor"
+
+#: image_captcha/image_captcha.admin.inc:100
+msgid ""
+"The font size influences the size of the image. Note that larger "
+"values make the image generation more CPU intensive."
+msgstr ""
+"Skriftstørrelsen har betydning for billedets størrelse. Bemærk at "
+"større værdier gør genereringen af billedet mere CPU-tung."
+
+#: image_captcha/image_captcha.admin.inc:112
+msgid "Character spacing"
+msgstr "Spatiering"
+
+#: image_captcha/image_captcha.admin.inc:113
+msgid ""
+"Define the average spacing between characters. Note that larger values "
+"make the image generation more CPU intensive."
+msgstr ""
+"Angiv den gennemsnitlige afstand mellem tegnene. Bemærk at større "
+"værdier gør genereringen af billedet mere CPU-tung."
+
+#: image_captcha/image_captcha.admin.inc:162
+msgid "Distortion and noise"
+msgstr "Forvrængning og støj"
+
+#: image_captcha/image_captcha.admin.inc:163
+msgid ""
+"With these settings you can control the degree of obfuscation by "
+"distortion and added noise. Do not exaggerate the obfuscation and "
+"assure that the code in the image is reasonably readable. For example, "
+"do not combine high levels of distortion and noise."
+msgstr ""
+"Med disse indstillinger kan du kontrollér hvor godt tekststrengen "
+"skal skjules med forvrængning og støj. Du bør ikke overdrive "
+"forvrængningen og du skal sikre dig at koden i billede er nogenlunde "
+"læselig. Du bør f.eks. ikke kombinere store mængder af "
+"forvrængning og støj."
+
+#: image_captcha/image_captcha.admin.inc:168
+msgid "Distortion level"
+msgstr "Forvrængningsniveau"
+
+#: image_captcha/image_captcha.admin.inc:150,172
+msgid "moderate"
+msgstr "moderat"
+
+#: image_captcha/image_captcha.admin.inc:175
+msgid "severe"
+msgstr "kraftig"
+
+#: image_captcha/image_captcha.admin.inc:178
+msgid "Set the degree of wave distortion in the image."
+msgstr "Angiv mængden af bølge-forvrænging i billedet."
+
+#: image_captcha/image_captcha.admin.inc:182
+msgid "Smooth distortion"
+msgstr "Jævn forvrængning"
+
+#: image_captcha/image_captcha.admin.inc:191
+msgid "This option adds randomly colored point noise."
+msgstr "Tilføjer tilfældig  farvet punktstøj."
+
+#: image_captcha/image_captcha.admin.inc:195
+msgid "Add line noise"
+msgstr "Tilføj linjestøj"
+
+#: image_captcha/image_captcha.admin.inc:197
+msgid "This option enables lines randomly drawn on top of the text code."
+msgstr "Tegner tilfældige linjer ovenpå teksten."
+
+#: image_captcha/image_captcha.admin.inc:201
+msgid "Noise level"
+msgstr "Støjniveau"
+
+#: image_captcha/image_captcha.admin.inc:234
+msgid ""
+"The usage of the built-in bitmap font it is not recommended because of "
+"its small size and missing UTF-8 support."
+msgstr ""
+"Brugen af den indbyggede bitmap-skrifttype er ikke anbefalet på grund "
+"af dens lille størrelse og manglende UTF8-understøttelse."
+
+#: image_captcha/image_captcha.admin.inc:245
+msgid "The list of characters to use should not contain spaces."
+msgstr "Listen af anvendte tegn skal ikke indeholde mellemrum."
+
+#: image_captcha/image_captcha.admin.inc:250
+msgid "You need to select a font"
+msgstr "Du skal vælge en skrifttype"
+
+#: image_captcha/image_captcha.admin.inc:253
+msgid "Font does not exist or is not readable."
+msgstr "Skrifttypen eksisterer ikke eller er ikke læsbar."
+
+#: image_captcha/image_captcha.module:94
+msgid ""
+"Encountered an illegal byte while splitting an utf8 string in "
+"characters."
+msgstr ""
+"Stødte på en ugyldig byte ved opsplitning af en UTF8-tekststreng i "
+"tegn."
+
+#: image_captcha/image_captcha.module:184
+msgid "What code is in the image?"
+msgstr "Hvilken kode vises i billedet?"
+
+#: image_captcha/image_captcha.user.inc:29
+msgid ""
+"Generation of image CAPTCHA failed. Check your image CAPTCHA "
+"configuration and especially the used font."
+msgstr ""
+"Generereing af billed-CAPTCHA mislykkedes. Undersøg dine Image "
+"CAPTCHA indstillinger og især den anvendte skrifttype."
+
+#: image_captcha/image_captcha.module:0
+msgid "image_captcha"
+msgstr "image_captcha"
+
+#: image_captcha/image_captcha.info:0
+msgid "Provides an image based CAPTCHA."
+msgstr "Tilbyder en billedbaseret CAPTCHA."
+
+#: captcha.admin.inc:41,105; captcha.module:45
+msgid "Add CAPTCHA administration links to forms"
+msgstr "Tilføj CAPTCHA-administrationslinks til formularer"
+
+#: captcha.admin.inc:169
+msgid "Report information about wrong responses to the !log."
+msgstr "Gem information om forkerte besvarelser i !log."
+
+#: captcha.admin.inc:169
+msgid "log"
+msgstr "log"
+
+#: captcha.admin.inc:287,301
+msgid "Form ID"
+msgstr "Formular ID"
+
+#: captcha.admin.inc:288,302
+msgid "The Drupal form_id of the form to add the CAPTCHA to."
+msgstr "Drupal form_id for formularen som CAPTCHA skal tilføjees til."
+
+#: captcha.admin.inc:186,308
+msgid "Challenge type"
+msgstr "Udfordringstype"
+
+#: captcha.admin.inc:309
+msgid "The CAPTCHA type to use for this form"
+msgstr "CAPTCHA-typen som skal bruges til denne formular"
+
+#: captcha.admin.inc:213,329
+msgid "Illegal form_id"
+msgstr "Ugyldig form_id"
+
+#: captcha.admin.inc:341
+msgid "Saved CAPTCHA point settings."
+msgstr "CAPTCHA-indstillinger gemt."
+
+#: captcha.admin.inc:358
+msgid "Are you sure you want to delete the CAPTCHA for form_id %form_id?"
+msgstr "Ønsker du at slette CAPTCHA for form_id %form_id?"
+
+#: captcha.admin.inc:362
+msgid "Are you sure you want to disable the CAPTCHA for form_id %form_id?"
+msgstr "Ønsker du at deaktivere CAPTCHA for form_id %form_id?"
+
+#: captcha.module:31
+msgid ""
+"Note that the CAPTCHA module interacts with page caching (see <a "
+"href=\"!performancesettings\">performance settings</a>). Because the "
+"challenge should be unique for each generated form, the caching of the "
+"page it appears on is prevented. Make sure that these forms do not "
+"appear on too many pages or you will lose much caching efficiency. For "
+"example, if you put a CAPTCHA on the user login block, which typically "
+"appears on each page for anonymous visitors, caching will practically "
+"be disabled. The comment submission forms are another example. In this "
+"case you should set the \"%commentlocation\" to \"%separatepage\" in "
+"the comment settings of the relevant <a href=\"!contenttypes\">content "
+"types</a> for better caching efficiency."
+msgstr ""
+"Bemærk at CAPTCHA-modulet interagerer med sidecaching (ee <a "
+"href=\"!performancesettings\">indstillinger for ydelse</a>). Fordi "
+"udfordringen skal være unik for hver genereret formular forhindres "
+"caching af siden hvor formularen optræder. Forvis dig om at disse "
+"formularer ikke optræder på for mange sider eller du vil miste en "
+"del cacheffektivitet. Hvis du f.eks. tilføjer CAPTCHA til "
+"login-blokken, som typisk optræder på alle sider for anonyme "
+"brugere, vil caching i praksis være deaktiveret. "
+"Kommentarformularerne er et andet eksempel. I dette tilfælde skal du "
+"sætte \"%commentlocation\" til \"%separatepage\" under <a "
+"href=\"!commentsettings\">kommentarindstillingerne</a> for bedre "
+"cache-effektivitet."
+
+#: captcha.module:44
+msgid ""
+"A CAPTCHA can be added to virtually each Drupal form. Some default "
+"forms are already provided in the form list, but arbitrary forms can "
+"be easily added and managed when the option \"%adminlinks\" is "
+"enabled."
+msgstr ""
+"En CAPTCHA kan tilføjes til praktisk talt enhver Drupal-formular. "
+"Enkelte standardformularer er til rådighed i formularlisten, men "
+"vilkårlige formularer kan let tilføjes og håndteres når "
+"\"%adminlinks\" er aktiveret."
+
+#: captcha.module:46
+msgid ""
+"Users with the \"%skipcaptcha\" <a href=\"@perm\">permission</a> won't "
+"be offered a challenge. Be sure to grant this permission to the "
+"trusted users (e.g. site administrators). If you want to test a "
+"protected form, be sure to do it as a user without the "
+"\"%skipcaptcha\" permission (e.g. as anonymous user)."
+msgstr ""
+"Brugere med <a href=\"@perm\">tilladelsen</a> \"%skipcaptcha\" bliver "
+"ikke tilbudt en udfordring. Giv kun denne tilladelse til betroede "
+"brugere (f.eks. administratorer). Hvis du ønsker at teste en "
+"beskyttet formular skal du gøre det som en bruger uden tilladelsen "
+"\"%skipcaptcha\" (f.eks. som anonym bruger)."
+
+#: captcha.module:317
+msgid "Untrusted users will see a CAPTCHA here (!settings)."
+msgstr "Utroværdige brugere vil se en CAPTCHA her (!settings)."
+
+#: captcha.module:318
+msgid "general CAPTCHA settings"
+msgstr "generelle CAPTCHA-indstillinger"
+
+#: captcha.module:322
+msgid "Enabled challenge"
+msgstr "Udfordring aktiveret"
+
+#: captcha.module:323
+msgid "\"@type\" by module \"@module\" (!change, !disable)"
+msgstr "\"@type\" af modul \"@module\" (!change, !disable)"
+
+#: captcha.module:326
+msgid "change"
+msgstr "skift"
+
+#: captcha.module:344
+msgid "Place a CAPTCHA here for untrusted users."
+msgstr "Placér en CAPTCHA her for utroværdige brugere."
+
+#: captcha.install:115
+msgid ""
+"You can now <a href=\"!captcha_admin\">configure the CAPTCHA "
+"module</a> for your site."
+msgstr ""
+"Du kan nu <a href=\"!captcha_admin\">indstille CAPTCHA-modulet</a> på "
+"dit site."
+
+#: image_captcha/image_captcha.admin.inc:125
+msgid "Color settings"
+msgstr "Farveindstillinger"
+
+#: image_captcha/image_captcha.admin.inc:126
+msgid "Configuration of the background and text colors in the image CAPTCHA."
+msgstr "Indstilling af baggrunds- og tekstfarver i billed-CAPTCHA."
+
+#: image_captcha/image_captcha.admin.inc:131
+msgid ""
+"Enter the hexadecimal code for the background color (e.g. #FFF or "
+"#FFCE90)."
+msgstr ""
+"Indtast den hexadecimale kode for baggrundsfarven (f.eks. #FFF eller "
+"#FFCE90)."
+
+#: image_captcha/image_captcha.admin.inc:139
+msgid "Enter the hexadecimal code for the text color (e.g. #000 or #004283)."
+msgstr ""
+"Indtast den hexadecimale kode for tekstfarven (f.eks. #000 eller "
+"#004283)."
+
+#: image_captcha/image_captcha.admin.inc:146
+msgid "Additional variation of text color"
+msgstr "Variation i tekstfarve"
+
+#: image_captcha/image_captcha.admin.inc:152
+msgid "very high"
+msgstr "meget høj"
+
+#: image_captcha/image_captcha.admin.inc:155
+msgid ""
+"The different characters will have randomized colors in the specified "
+"range around the text color."
+msgstr ""
+"De forskellige tegn får tilfældige farver i det angivne interval "
+"omkring tekstfarven."
+
+#: image_captcha/image_captcha.admin.inc:258
+msgid "Background color is not a valid hexadecimal color value."
+msgstr "Baggrundsfarven er ikke en gyldig hexadecimal farveværdi."
+
+#: image_captcha/image_captcha.admin.inc:261
+msgid "Text color is not a valid hexadecimal color value."
+msgstr "Tekstfarven er ikke en gyldig hexadecimal farveværdi."
+
+#: captcha.module:517
+msgid "Test"
+msgstr "Test"
+
+#: captcha.admin.inc:39
+msgid "Form protection"
+msgstr "Formularbeskyttelse"
+
+#: captcha.admin.inc:40
+msgid ""
+"Select the challenge type you want for each of the listed forms "
+"(identified by their so called <em>form_id</em>'s). You can easily add "
+"arbitrary forms with textfield at the bottom of the table or with the "
+"help of the '%CAPTCHA_admin_links' option below."
+msgstr ""
+"Vælg typen af udfordring du ønsker for hver af de viste formularer "
+"(identificeret ved deres såkaldte <em>form_id</em>). Du kan let "
+"tilføje vilkårlige formularer med tekstfeltet i bunden af tabellen "
+"eller ved hjælp af '%CAPTCHA_admin_links' herunder."
+
+#: captcha.admin.inc:237
+msgid "Added CAPTCHA point."
+msgstr "CAPTCHA-punkt tilføjet."
+
+#: captcha.module:389
+msgid "CAPTCHA test failed (unknown csid)."
+msgstr "CAPTCHA-test mislykkedes (ukendt csid)."
+
+#: captcha.module:342
+msgid "CAPTCHA: no challenge enabled"
+msgstr "CAPTCHA: ingen udfordring aktiveret"
+
+#: captcha.module:92
+msgid "CAPTCHA point administration"
+msgstr "CAPTCHA pointadministration"
+
+#: image_captcha/image_captcha.admin.inc:184
+msgid ""
+"This option enables bilinear interpolation of the distortion which "
+"makes the image look smoother, but it is more CPU intensive."
+msgstr ""
+"Dette valg aktiverer biliniær interpolation af forvrængningen, som "
+"får billedet til at se mere jævnt ud, men er mere CPU-tungt."
+
+#: image_captcha/image_captcha.admin.inc:189
+msgid "Add salt and pepper noise"
+msgstr "Tilføj \"salt og peber\" støj"
+
+#: image_captcha/image_captcha.admin.inc:231
+msgid ""
+"The image CAPTCHA module works best with a TrueType font file (TTF) "
+"for generating the images, but because of licencing issues it is not "
+"allowed to package fonts with the module. A simple built-in bitmap "
+"font is provided as default instead. You can install TrueType fonts "
+"yourself by putting them in the fonts directory of the image CAPTCHA "
+"module (directory \"%fontsdir\") or by uploading them to your Drupal "
+"file system (directory \"%filesdir\") with for example the upload "
+"module."
+msgstr ""
+"Image CAPTCHA-modulet virker bedst med en TrueType skrifttypefil "
+"(.ttf) til generering af billederne, men på grund af licensproblemer "
+"er det ikke muligt at inkludere skrifttyper med modulet. Der bruges en "
+"simpel indbygget bitmap-skrifttype som standard i stedet. Du kan selv "
+"installere TrueType skrifttyper ved at placere dem i mappen fonts i "
+"Image CAPTCHA-modulets mappe (\"%fontsdir\") eller ved at uploade dem "
+"til dit Drupal filsystem (\"%filesdir\") med Upload-modulet."
+
+#: image_captcha/image_captcha.module:28
+msgid ""
+"The image CAPTCHA is a popular challenge where a random textual code "
+"is obfuscated in an image. The image is generated on the fly for each "
+"request, which is rather CPU intensive for the server. Be careful with "
+"the size and computation related settings."
+msgstr ""
+"Billed-CAPTCHAen er en populær udfordring hvor en tilfældig "
+"tekstkode skjules i et billede. Billedet genereres i farten for hver "
+"anmodning, hvilket er ganske CPU-intensivt for serveren. Vær varsom "
+"med størrelsen og de beregningsrelaterede indstillinger."
+
+#: image_captcha/image_captcha.module:169
+msgid "Enter the characters (without spaces) shown in the image."
+msgstr "Indtast tegnene som er vist på billeder (uden mellemrum)"
+
+#: image_captcha/image_captcha.module:166
+msgid ""
+"Enter the characters shown in the image. Ignore spaces and be careful "
+"about upper and lower case."
+msgstr ""
+"Indtast tegnene som vises på billeder. Ignorér mellemrum og vær "
+"omhyggelig med store og små bogstaver."
+
+#: captcha.module:316
+msgid "CAPTCHA: challenge \"@type\" enabled"
+msgstr "CAPTCHA: udfordring \"@type\" aktiveret"
+
+#: captcha.module:332; image_captcha/image_captcha.admin.inc:45
+msgid "Example"
+msgstr "Eksempel"
+
+#: captcha.module:333
+msgid "This is a pre-solved, non-blocking example of this challenge."
+msgstr ""
+"Dette er et ikke-blokerende og allerede løst eksempel på denne "
+"udfordring."
+
+#: captcha.module:119
+msgid "Already 1 blocked form submission"
+msgid_plural "Already @count blocked form submissions"
+msgstr[0] "Har allerede blokeret 1 formularindsendelse"
+msgstr[1] "Har allerede blokeret @count formularindsendelser"
+
+#: image_captcha/image_captcha.admin.inc:35
+msgid ""
+"The Image CAPTCHA module can not generate images because your PHP "
+"setup does not support it (no <a href=\"!gdlib\">GD library</a>)."
+msgstr ""
+"Image CAPTCHA-modulet kan ikke generere billeder fordi din "
+"PHP-opsætning ikke understøtter det (intet <a "
+"href=\"!gdlib\">GD-bibliotek</a>)."
+
+#: image_captcha/image_captcha.admin.inc:203
+msgid "1 - low"
+msgstr "1 - lav"
+
+#: image_captcha/image_captcha.admin.inc:205
+msgid "3 - medium"
+msgstr "3 - middel"
+
+#: image_captcha/image_captcha.admin.inc:207
+msgid "5 - high"
+msgstr "5 - høj"
+
+#: image_captcha/image_captcha.admin.inc:209
+msgid "10 - severe"
+msgstr "10 - alvorlig"
+
+#: image_captcha/image_captcha.admin.inc:226
+msgid ""
+"The Image CAPTCHA module can not use True Type fonts because your PHP "
+"setup does not support it. There is only a built-in bitmap font "
+"available."
+msgstr ""
+"Image CAPTCHA-modulet kan ikke bruge True Type skrifttyper fordi din "
+"PHP-opsætning ikke understøtter dem. Kun den indbyggede "
+"bitmap-skrifttype er tilgængelig."
+
+#: image_captcha/image_captcha.user.inc:72
+msgid ""
+"Could not find or read the configured font (\"%font\") for the image "
+"CAPTCHA."
+msgstr ""
+"Kan ikke finde eller læse den valgte skrifttype (\"%font\") for Image "
+"CAPTCHA."
+
+#: captcha.admin.inc:17
+msgid "default challenge type"
+msgstr "standard udfordringstype"
+
+#: captcha.admin.inc:23
+msgid "@type (from module @module)"
+msgstr "@type (fra modulet @module)"
+
+#: captcha.admin.inc:46
+msgid "Default challenge type"
+msgstr "Standard udfordringstype"
+
+#: captcha.admin.inc:47
+msgid ""
+"Select the default challenge type for CAPTCHAs. This can be overriden "
+"for each form if desired."
+msgstr ""
+"Vælg standardudfordringstypen for CAPTCHAer. Den kan tilsidesættes "
+"på hver formular hvis det ønskes."
+
+#: captcha.admin.inc:107
+msgid ""
+"This option makes it easy to manage CAPTCHA settings on forms. When "
+"enabled, users with the \"%admincaptcha\" permission will see a "
+"fieldset with CAPTCHA administration links on all forms, except on "
+"administrative pages."
+msgstr ""
+"Gør det nemt at administrere CAPTCHA-indstillinger på formularer. "
+"Brugere med tilladelsen \"%admincaptcha\" vil se en feltgruppe med "
+"CAPTCHA administrationslinks på alle formularer, undtagen på "
+"administrationssider."
+
+#: captcha.admin.inc:112
+msgid ""
+"Allow CAPTCHAs and CAPTCHA administration links on administrative "
+"pages"
+msgstr ""
+"Tillad CAPTCHAer og CAPTCHA administrationslinks på administrative "
+"sider."
+
+#: captcha.admin.inc:114
+msgid ""
+"This option makes it possible to add CAPTCHAs to forms on "
+"administrative pages. CAPTCHAs are disabled by default on "
+"administrative pages (which shouldn't be accessible to untrusted users "
+"normally) to avoid the related overhead. In some situations, e.g. in "
+"the case of demo sites, it can be usefull to allow CAPTCHAs on "
+"administrative pages."
+msgstr ""
+"Gør det muligt at tilføje CAPTCHAs til formularer på administrative "
+"sider. CAPTCHAs er som standard deaktiveret på administrative sider "
+"(som normalt ikke er tilgængelige for almindelige brugere) for at "
+"undgå de relaterede omkostninger. I visse situationer, f.eks. på "
+"demosites, kan det være nyttigt at tillade CAPTCHAs på "
+"administrative sider."
+
+#: captcha.admin.inc:147
+msgid "Case sensitive validation"
+msgstr "Versalfølsom validering"
+
+#: captcha.admin.inc:148
+msgid ""
+"Disable this option to ignore uppercase/lowercase errors in the "
+"response."
+msgstr "Deaktivér for at ignorere fejl i store/små bogstaver i svaret."
+
+#: captcha.inc:35
+msgid ""
+"Failed to set a CAPTCHA type for form %form_id: could not interpret "
+"value \"@captcha_type\""
+msgstr ""
+"Kunne ikke sætte en CAPTCHA-type på formularen %form_id: kunne ikke "
+"fortolke værdien \"@captcha_type\""
+
+#: captcha.module:496
+msgid "Math question"
+msgstr "Matematikspørgsmål"
+
+#: image_captcha/image_captcha.admin.inc:46
+msgid "Presolved image CAPTCHA example, generated with the current settings."
+msgstr ""
+"Forudfyldt billed-CAPTCHA eksempel, genereret med de aktuelle "
+"indstillinger."
+

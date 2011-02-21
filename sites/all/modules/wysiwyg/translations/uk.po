@@ -1,0 +1,818 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: wysiwig Uk\n"
+"POT-Creation-Date: 2009-03-02 01:23+0100\n"
+"PO-Revision-Date: \n"
+"Last-Translator: podarok <podarok@ua.fm>\n"
+"Language-Team: Pavonine.com.ua <drupalua@googlegroups.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: Ukrainian\n"
+"X-Poedit-Country: UKRAINE\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"Plural-Forms: nplurals=3; plural=((((n%10)==1)&&((n%100)!=11))?(0):(((((n%10)>=2)&&((n%10)<=4))&&(((n%100)<10)||((n%100)>=20)))?(1):2));\n"
+
+#: wysiwyg.api.php:50;51
+msgid "My plugin title"
+msgstr "Мій заголовок плаґіну"
+
+#: wysiwyg.api.php:60
+msgid "Button title (optional)"
+msgstr "Назва кнопки (необов’язково)"
+
+#: wysiwyg.admin.inc:19
+msgid "Home"
+msgstr "Додому"
+
+#: wysiwyg.admin.inc:20
+msgid "Administer"
+msgstr "Адміністрування"
+
+#: wysiwyg.admin.inc:21
+msgid "Site configuration"
+msgstr "Конфіґурація сайту"
+
+#: wysiwyg.admin.inc:22
+msgid "Wysiwyg profiles"
+msgstr "Профілі візуального редактора"
+
+#: wysiwyg.admin.inc:78
+msgid "%format Wysiwyg profile"
+msgstr "%format профілю візуального редактора"
+
+#: wysiwyg.admin.inc:87
+msgid "Basic setup"
+msgstr "Базове встановлення"
+
+#: wysiwyg.admin.inc:94
+msgid "Enabled by default"
+msgstr "Дозволити стандартно"
+
+#: wysiwyg.admin.inc:97
+msgid "The default editor state for users having access to this profile. Users are able to override this state if the next option is enabled."
+msgstr "Стандартний редактор за замовчуванням для користувачів, що мають доступ до цього профілю. Користувачі мають можливість змінити цей стан, якщо включена наступна опція."
+
+#: wysiwyg.admin.inc:102
+msgid "Allow users to choose default"
+msgstr "Дозволити користувачам обирати стандартно"
+
+#: wysiwyg.admin.inc:105
+msgid "If allowed, users will be able to choose their own editor default state in their user account settings."
+msgstr "Якщо дозволено, користувачі зможуть вибирати свій власний стандартний редактор за замовчуванням у налаштуваннях облікового запису користувача."
+
+#: wysiwyg.admin.inc:110
+msgid "Show <em>enable/disable rich text</em> toggle link"
+msgstr ""
+
+#: wysiwyg.admin.inc:113
+msgid "Whether or not to show the <em>enable/disable rich text</em> toggle link below a textarea. If disabled, the user setting or global default is used (see above)."
+msgstr ""
+
+#: wysiwyg.admin.inc:123
+msgid "Language"
+msgstr "Мова"
+
+#: wysiwyg.admin.inc:126
+msgid "The language to use for the editor interface. Language codes are based on the <a href=\"http://www.loc.gov/standards/iso639-2/englangn.html\">ISO-639-2</a> format."
+msgstr "Мова, яка використовується в редакторі кодується у форматі <a href=\"http://www.loc.gov/standards/iso639-2/englangn.html\">ISO-639-2</a>."
+
+#: wysiwyg.admin.inc:131
+msgid "Buttons and plugins"
+msgstr "Кнопки та плаґіни"
+
+#: wysiwyg.admin.inc:176
+msgid "Editor appearance"
+msgstr "Дизайн редактора"
+
+#: wysiwyg.admin.inc:183
+msgid "Toolbar location"
+msgstr "Розміщення панеоі"
+
+#: wysiwyg.admin.inc:185;201
+msgid "Bottom"
+msgstr "Знизу"
+
+#: wysiwyg.admin.inc:185;201
+msgid "Top"
+msgstr "Вгорі"
+
+#: wysiwyg.admin.inc:186
+msgid "This option controls whether the editor toolbar is displayed above or below the editing area."
+msgstr "Ця опція контролює чи панель інструментів редактора відображається вище або нижче вікна редагування."
+
+#: wysiwyg.admin.inc:191
+msgid "Button alignment"
+msgstr "Вирівнювання кнопок"
+
+#: wysiwyg.admin.inc:193
+msgid "Center"
+msgstr "По центру"
+
+#: wysiwyg.admin.inc:193
+msgid "Left"
+msgstr "Зліва"
+
+#: wysiwyg.admin.inc:193
+msgid "Right"
+msgstr "Справа"
+
+#: wysiwyg.admin.inc:194
+msgid "This option controls the alignment of icons in the editor toolbar."
+msgstr "Ця опція контролює розстановку іконок в панелі інструментів редактора."
+
+#: wysiwyg.admin.inc:199
+msgid "Path location"
+msgstr "Шлях розміщення"
+
+#: wysiwyg.admin.inc:201
+msgid "Hide"
+msgstr "Сховати"
+
+#: wysiwyg.admin.inc:202
+msgid "Where to display the path to HTML elements (i.e. <code>body > table > tr > td</code>)."
+msgstr ""
+
+#: wysiwyg.admin.inc:207
+msgid "Enable resizing button"
+msgstr "Дозволити кнопку зміни розміру"
+
+#: wysiwyg.admin.inc:210
+msgid "This option gives you the ability to enable/disable the resizing button. If enabled, the Path location toolbar must be set to \"Top\" or \"Bottom\" in order to display the resize icon."
+msgstr ""
+
+#: wysiwyg.admin.inc:215
+msgid "Cleanup and output"
+msgstr ""
+
+#: wysiwyg.admin.inc:222
+msgid "Verify HTML"
+msgstr "перевірити HTML"
+
+#: wysiwyg.admin.inc:225
+msgid "If enabled, potentially malicious code like <code>&lt;HEAD&gt;</code> tags will be removed from HTML contents."
+msgstr ""
+
+#: wysiwyg.admin.inc:230
+msgid "Preformatted"
+msgstr "Преформатований"
+
+#: wysiwyg.admin.inc:233
+msgid "If enabled, the editor will insert TAB characters on tab and preserve other whitespace characters just like a PRE element in HTML does."
+msgstr ""
+
+#: wysiwyg.admin.inc:238
+msgid "Convert &lt;font&gt; tags to styles"
+msgstr ""
+
+#: wysiwyg.admin.inc:241
+msgid "If enabled, HTML tags declaring the font size, font family, font color and font background color will be replaced by inline CSS styles."
+msgstr ""
+
+#: wysiwyg.admin.inc:246
+msgid "Remove linebreaks"
+msgstr "Видалити порожні рядки"
+
+#: wysiwyg.admin.inc:249
+msgid "If enabled, the editor will remove most linebreaks from contents. Disabling this option could avoid conflicts with other input filters."
+msgstr "Якщо включено, редактор буде видаляти сам розриви рядків з тексту. Ця опція може уникнути конфліктів з іншими фільтрами введення."
+
+#: wysiwyg.admin.inc:254
+msgid "Apply source formatting"
+msgstr "Застосувати форматування вихідного тексту"
+
+#: wysiwyg.admin.inc:257
+msgid "If enabled, the editor will re-format the HTML source code. Disabling this option could avoid conflicts with other input filters."
+msgstr "Якщо включений, редактор буде переформатувати вихідний код. Ця опція може уникнути конфліктів з іншими фільтрами введення."
+
+#: wysiwyg.admin.inc:262
+msgid "Force cleanup on standard paste"
+msgstr ""
+
+#: wysiwyg.admin.inc:265
+msgid "If enabled, the default paste function (CTRL-V or SHIFT-INS) behaves like the \"paste from word\" plugin function."
+msgstr "Якщо включена функція «Вставити» за замовчуванням (CTRL-V або SHIFT-INS) поводить себе як функція плаґіну  \"paste from word\"."
+
+#: wysiwyg.admin.inc:270
+msgid "CSS"
+msgstr "CSS"
+
+#: wysiwyg.admin.inc:277
+msgid "Block formats"
+msgstr "Блочні формати"
+
+#: wysiwyg.admin.inc:281
+msgid "Comma separated list of HTML block formats. Possible values: <code>@format-list</code>."
+msgstr "Розділяйте комою список HTML блочних форматів. Можливі значення: <code>@format-list</code>."
+
+#: wysiwyg.admin.inc:286
+msgid "Editor CSS"
+msgstr "Редактор CSS"
+
+#: wysiwyg.admin.inc:288
+msgid "Use theme CSS"
+msgstr "Використовувати CSS шаблону"
+
+#: wysiwyg.admin.inc:288
+msgid "Define CSS"
+msgstr "Визначити CSS"
+
+#: wysiwyg.admin.inc:288
+msgid "Editor default CSS"
+msgstr "Редактор стандартного CSS"
+
+#: wysiwyg.admin.inc:289
+msgid "Defines the CSS to be used in the editor area.<br />Use theme CSS - loads stylesheets from current site theme.<br/>Define CSS - enter path for stylesheet files below.<br />Editor default CSS - uses default stylesheets from editor."
+msgstr "Визначає CSS, які будуть використовуватися в редакторі.<br /> Використовуйте CSS-стилі від поточної шаблону сайту. <br /> Визначити CSS - Введіть шлях до файлів стилів нижче. <br/> Редактор стандартного CSS редактор за замовчуванням — використовує стандартний стиль з редактора."
+
+#: wysiwyg.admin.inc:294
+msgid "CSS path"
+msgstr "Шлях до CSS"
+
+#: wysiwyg.admin.inc:298
+msgid "If \"Define CSS\" has been selected above, enter path to a CSS file or a list of CSS files seperated by a comma."
+msgstr "Якщо \"Визначити CSS\" був обраний вище, введіть шлях до файлу CSS або список доданих типів файлів, розділених комами."
+
+#: wysiwyg.admin.inc:298
+msgid "Available tokens: %b (base path, f.e.: /), %t (path to theme, f.e.: themes/garland)"
+msgstr "Доступні лексеми: %b (базовий шлях, для прикладу.: /), %t (шлях до шаблону, f.e.: themes/garland)"
+
+#: wysiwyg.admin.inc:298
+msgid "Examples:"
+msgstr "Приклади: "
+
+#: wysiwyg.admin.inc:303
+msgid "CSS classes"
+msgstr "Класи CSS"
+
+#: wysiwyg.admin.inc:305
+msgid "Optionally define CSS classes for the \"Font style\" dropdown list.<br />Enter one class on each line in the format: !format. Example: !example<br />If left blank, CSS classes are automatically imported from all loaded stylesheet(s)."
+msgstr "Можливе визначення CSS-класів для \"стилю тексту\" як випадаючий список.<br />Введіть один клас в одному рядку: !format. Приклад: !example<br />Якщо залишити порожнім,CSS класи будуть автоматично імпортовані з всіх завантажених стилів."
+
+#: wysiwyg.admin.inc:310;444
+msgid "Save"
+msgstr "Зберегти"
+
+#: wysiwyg.admin.inc:343
+msgid "Wysiwyg profile for %format has been saved."
+msgstr "Профіль візуального редактора %format збережено."
+
+#: wysiwyg.admin.inc:392
+msgid "No editor"
+msgstr "Без редактора"
+
+#: wysiwyg.admin.inc:396
+msgid "<a href=\"!vendor-url\">@editor</a> (<a href=\"!download-url\">Download</a>)"
+msgstr "<a href=\"!vendor-url\">@editor</a> (<a href=\"!download-url\">Завантажити</a>)"
+
+#: wysiwyg.admin.inc:397
+msgid "Not installed."
+msgstr "Не встановлено"
+
+#: wysiwyg.admin.inc:398
+msgid "Extract the archive and copy its contents into a new folder in the following location:<br /><code>@editor-path</code>"
+msgstr "Розпакуйте архів і скопіюйте його вміст в нову папку в наступному місці:<br /><code>@editor-path</code>"
+
+#: wysiwyg.admin.inc:409
+msgid "Installation instructions"
+msgstr "Інструкції з встановлення"
+
+#: wysiwyg.admin.inc:412
+msgid "There are no editor libraries installed currently. The following list contains a list of currently supported editors:"
+msgstr "Тут немає бібліотеки редакторів, що встановлені в даний час. Наступний список містить список підтримуваних в даний час редакторів:"
+
+#: wysiwyg.admin.inc:436
+msgid "Edit"
+msgstr "Редагувати"
+
+#: wysiwyg.admin.inc:439;496
+msgid "Remove"
+msgstr "Прибрати"
+
+#: wysiwyg.admin.inc:456
+msgid "Input format"
+msgstr "Формат ввлду"
+
+#: wysiwyg.admin.inc:456
+msgid "Editor"
+msgstr "Редактор"
+
+#: wysiwyg.admin.inc:456
+msgid "Operations"
+msgstr "Операції"
+
+#: wysiwyg.admin.inc:494
+msgid "Are you sure you want to remove the profile for %name?"
+msgstr "Ви впевнені, що бажаєте видалити профіль для %name?"
+
+#: wysiwyg.admin.inc:496
+msgid "This action cannot be undone."
+msgstr "Ця дія не може бути скасованою."
+
+#: wysiwyg.admin.inc:496
+msgid "Cancel"
+msgstr "Скасувати"
+
+#: wysiwyg.admin.inc:507
+msgid "Wysiwyg profile for %name has been deleted."
+msgstr "Профіль візуального редактора для %name збережено."
+
+#: wysiwyg.plugins.inc:15
+msgid "Teaser break"
+msgstr ""
+
+#: wysiwyg.module:41
+msgid "A Wysiwyg profile can be associated to an input format. A Wysiwyg profile defines which client-side editor is loaded, what buttons or themes are enabled for the editor, how the editor is displayed, and a few other editor-specific functions."
+msgstr "Профіль візуального редактора може бути пов'язано з вхідний форматом. Профіль візуального редактора визначає, які клієнтські редактори завантажуються, які кнопки або теми включені в редакторі, як це відображено в редакторі, і кілька інших специфічних функцій редактора."
+
+#: wysiwyg.module:273
+msgid "Disable rich-text"
+msgstr "Вимкнути rich-text"
+
+#: wysiwyg.module:274
+msgid "Enable rich-text"
+msgstr "Дозволити rich-text"
+
+#: wysiwyg.module:485
+msgid "Wysiwyg Editor settings"
+msgstr "налаштування візуального редактора"
+
+#: wysiwyg.module:492
+msgid "Enable editor by default"
+msgstr "Дозволити редактор за замовчуванням"
+
+#: wysiwyg.module:495
+msgid "If enabled, rich-text editing is enabled by default in textarea fields."
+msgstr "Якщо увімкнено, rich-text є вбудованим за замовчуванням у текстові поля"
+
+#: wysiwyg.module:579
+msgid "The version of %editor could not be detected."
+msgstr "Версія редактора %editor неможливо визначити."
+
+#: wysiwyg.module:592
+msgid "The installed version %version of %editor is not supported."
+msgstr "Встановлена версія %version  %editor не підтримується."
+
+#: wysiwyg.module:15
+#: wysiwyg.info:0
+msgid "Wysiwyg"
+msgstr "Wysiwyg"
+
+#: wysiwyg.module:17
+msgid "Configure client-side editor profiles."
+msgstr "Налаштування клієнтських профілів боку редактора."
+
+#: wysiwyg.module:0
+msgid "wysiwyg"
+msgstr "wysiwyg"
+
+#: wysiwyg.install:10
+msgid "Stores Wysiwyg profiles."
+msgstr "Магазини профілів візуальних редакторів."
+
+#: wysiwyg.info:0
+msgid "Allows users to edit contents with client-side editors."
+msgstr "Дозволяє користувачам редагувати вміст на стороні клієнтського редактора."
+
+#: wysiwyg.info:0
+msgid "User interface"
+msgstr "Користувацький інтерфейс"
+
+#: editors/fckeditor.inc:166
+#: editors/markitup.inc:91;140
+#: editors/nicedit.inc:102
+#: editors/tinymce.inc:348
+#: editors/whizzywig.inc:110
+#: editors/yui.inc:227
+msgid "Bold"
+msgstr "Напівжирний"
+
+#: editors/fckeditor.inc:166
+#: editors/markitup.inc:92;140
+#: editors/nicedit.inc:102
+#: editors/tinymce.inc:348
+#: editors/whizzywig.inc:110
+#: editors/yui.inc:227
+msgid "Italic"
+msgstr "Курсив"
+
+#: editors/fckeditor.inc:166
+#: editors/nicedit.inc:102
+#: editors/tinymce.inc:348
+#: editors/whizzywig.inc:110
+#: editors/yui.inc:227
+msgid "Underline"
+msgstr "Підкреслений"
+
+#: editors/fckeditor.inc:167
+#: editors/markitup.inc:93;141
+#: editors/nicedit.inc:103
+#: editors/tinymce.inc:349
+#: editors/yui.inc:228
+msgid "Strike-through"
+msgstr "Перекреслени"
+
+#: editors/fckeditor.inc:168
+#: editors/nicedit.inc:104
+#: editors/tinymce.inc:350
+#: editors/whizzywig.inc:111
+#: editors/yui.inc:229
+msgid "Align left"
+msgstr "Зліва"
+
+#: editors/fckeditor.inc:168
+#: editors/nicedit.inc:104
+#: editors/tinymce.inc:350
+#: editors/whizzywig.inc:111
+#: editors/yui.inc:229
+msgid "Align center"
+msgstr "По центру"
+
+#: editors/fckeditor.inc:168
+#: editors/nicedit.inc:104
+#: editors/tinymce.inc:350
+#: editors/whizzywig.inc:111
+#: editors/yui.inc:229
+msgid "Align right"
+msgstr "Справа"
+
+#: editors/fckeditor.inc:168
+#: editors/tinymce.inc:350
+msgid "Justify"
+msgstr "По ширині"
+
+#: editors/fckeditor.inc:169
+#: editors/nicedit.inc:105
+#: editors/tinymce.inc:351
+#: editors/whizzywig.inc:112
+#: editors/yui.inc:230
+msgid "Bullet list"
+msgstr "Звичайний список"
+
+#: editors/fckeditor.inc:169
+#: editors/nicedit.inc:105
+#: editors/tinymce.inc:351
+#: editors/whizzywig.inc:112
+#: editors/yui.inc:230
+msgid "Numbered list"
+msgstr "Нумерований список"
+
+#: editors/fckeditor.inc:170
+#: editors/nicedit.inc:106
+#: editors/tinymce.inc:352
+#: editors/whizzywig.inc:113
+#: editors/yui.inc:231
+msgid "Outdent"
+msgstr ""
+
+#: editors/fckeditor.inc:170
+#: editors/nicedit.inc:106
+#: editors/tinymce.inc:352
+#: editors/whizzywig.inc:113
+#: editors/yui.inc:231
+msgid "Indent"
+msgstr ""
+
+#: editors/fckeditor.inc:171
+#: editors/tinymce.inc:353
+#: editors/whizzywig.inc:114
+msgid "Undo"
+msgstr "Скасувати"
+
+#: editors/fckeditor.inc:171
+#: editors/tinymce.inc:353
+#: editors/whizzywig.inc:114
+msgid "Redo"
+msgstr "Відмінити"
+
+#: editors/fckeditor.inc:172
+#: editors/markitup.inc:95;143
+#: editors/nicedit.inc:113
+#: editors/tinymce.inc:354
+#: editors/whizzywig.inc:118
+#: editors/yui.inc:232
+msgid "Link"
+msgstr "Посилання"
+
+#: editors/fckeditor.inc:172
+#: editors/nicedit.inc:113
+#: editors/tinymce.inc:354
+msgid "Unlink"
+msgstr "Прибрати посилання"
+
+#: editors/fckeditor.inc:172
+#: editors/tinymce.inc:354
+msgid "Anchor"
+msgstr "Анкор"
+
+#: editors/fckeditor.inc:173
+#: editors/markitup.inc:94;142
+#: editors/nicedit.inc:107
+#: editors/tinymce.inc:355
+#: editors/whizzywig.inc:115;119
+#: editors/yui.inc:233
+msgid "Image"
+msgstr "Зображення"
+
+#: editors/fckeditor.inc:174
+#: editors/nicedit.inc:108
+#: editors/tinymce.inc:357
+#: editors/whizzywig.inc:116
+msgid "Forecolor"
+msgstr "Колір переднього плану"
+
+#: editors/fckeditor.inc:174
+#: editors/nicedit.inc:108
+#: editors/tinymce.inc:357
+#: editors/whizzywig.inc:116
+msgid "Backcolor"
+msgstr "Фон"
+
+#: editors/fckeditor.inc:175
+msgid "Superscript"
+msgstr "Надрядковий індекс"
+
+#: editors/fckeditor.inc:175
+msgid "Subscript"
+msgstr "Підрядковий індекс"
+
+#: editors/fckeditor.inc:176
+#: editors/tinymce.inc:359
+msgid "Blockquote"
+msgstr "Цитата"
+
+#: editors/fckeditor.inc:176
+#: editors/nicedit.inc:115
+#: editors/tinymce.inc:359
+#: editors/whizzywig.inc:122
+msgid "Source code"
+msgstr "Вихідний код"
+
+#: editors/fckeditor.inc:177
+#: editors/nicedit.inc:110
+#: editors/tinymce.inc:360
+#: editors/whizzywig.inc:117
+msgid "Horizontal rule"
+msgstr "Горизонтальне правило"
+
+#: editors/fckeditor.inc:178
+#: editors/tinymce.inc:361
+msgid "Cut"
+msgstr "Вирізати"
+
+#: editors/fckeditor.inc:178
+#: editors/tinymce.inc:361
+msgid "Copy"
+msgstr "Копіювати"
+
+#: editors/fckeditor.inc:178
+#: editors/tinymce.inc:361
+msgid "Paste"
+msgstr "Вставитив"
+
+#: editors/fckeditor.inc:179
+msgid "Paste Text"
+msgstr "Вставити текст"
+
+#: editors/fckeditor.inc:179
+#: editors/tinymce.inc:472
+msgid "Paste from Word"
+msgstr "Вставити з «Word»"
+
+#: editors/fckeditor.inc:180
+msgid "Show blocks"
+msgstr "Показати блоки"
+
+#: editors/fckeditor.inc:181
+#: editors/tinymce.inc:363
+#: editors/yui.inc:236
+msgid "Remove format"
+msgstr "Прибрати формат"
+
+#: editors/fckeditor.inc:182
+#: editors/tinymce.inc:364
+msgid "Character map"
+msgstr "Таблиця символів"
+
+#: editors/fckeditor.inc:183
+msgid "About"
+msgstr "Про"
+
+#: editors/fckeditor.inc:185
+#: editors/nicedit.inc:114
+#: editors/tinymce.inc:430
+#: editors/whizzywig.inc:109
+#: editors/yui.inc:238
+msgid "HTML block format"
+msgstr "HTML формат блоку"
+
+#: editors/fckeditor.inc:185
+#: editors/nicedit.inc:114
+#: editors/tinymce.inc:430
+#: editors/whizzywig.inc:109
+#: editors/yui.inc:238
+msgid "Font"
+msgstr "Шрифт"
+
+#: editors/fckeditor.inc:185
+#: editors/nicedit.inc:114
+#: editors/tinymce.inc:430
+#: editors/whizzywig.inc:109
+#: editors/yui.inc:238
+msgid "Font size"
+msgstr "Розмір шрифту"
+
+#: editors/fckeditor.inc:185
+#: editors/tinymce.inc:430
+#: editors/yui.inc:238
+msgid "Font style"
+msgstr "Стиль шрифту"
+
+#: editors/fckeditor.inc:186
+#: editors/tinymce.inc:507
+#: editors/whizzywig.inc:120
+msgid "Table"
+msgstr "Таблиця"
+
+#: editors/fckeditor.inc:187
+#: editors/tinymce.inc:493
+msgid "Search"
+msgstr "Пошук"
+
+#: editors/fckeditor.inc:187
+#: editors/tinymce.inc:493
+msgid "Replace"
+msgstr "Заміна"
+
+#: editors/fckeditor.inc:187
+#: editors/tinymce.inc:472
+msgid "Select all"
+msgstr "Виділити все"
+
+#: editors/fckeditor.inc:188
+msgid "Create DIV container"
+msgstr "Створити контейнер DIV"
+
+#: editors/fckeditor.inc:189
+#: editors/tinymce.inc:422
+msgid "Flash"
+msgstr "Флеш"
+
+#: editors/fckeditor.inc:189
+msgid "Smiley"
+msgstr "Смайлики"
+
+#: editors/fckeditor.inc:190
+msgid "FitWindow"
+msgstr "Ввікно"
+
+#: editors/fckeditor.inc:191
+msgid "Check spelling"
+msgstr "Перевірка правопису"
+
+#: editors/markitup.inc:98;145
+#: editors/tinymce.inc:479
+msgid "Preview"
+msgstr "Попередній перегляд"
+
+#: editors/nicedit.inc:109
+#: editors/tinymce.inc:358
+#: editors/yui.inc:235
+msgid "Sup"
+msgstr "Верхній індекс"
+
+#: editors/nicedit.inc:109
+#: editors/tinymce.inc:358
+#: editors/yui.inc:235
+msgid "Sub"
+msgstr "Нижній індекс"
+
+#: editors/tinymce.inc:356
+#: editors/whizzywig.inc:121
+msgid "Clean-up"
+msgstr "Очистити"
+
+#: editors/tinymce.inc:362
+msgid "Visual aid"
+msgstr "Наочні посібники"
+
+#: editors/tinymce.inc:365
+msgid "Help"
+msgstr "Допомога"
+
+#: editors/tinymce.inc:370
+msgid "Advanced horizontal rule"
+msgstr "Розширений горизонтальні правила"
+
+#: editors/tinymce.inc:378
+msgid "Advanced image"
+msgstr "Розширене зображення"
+
+#: editors/tinymce.inc:386
+msgid "Advanced link"
+msgstr "Розширене посилання"
+
+#: editors/tinymce.inc:394
+msgid "Auto save"
+msgstr "Автозбереження"
+
+#: editors/tinymce.inc:401
+msgid "Context menu"
+msgstr "Контекстне меню"
+
+#: editors/tinymce.inc:408
+msgid "Left-to-right"
+msgstr "Зліва направо"
+
+#: editors/tinymce.inc:408
+msgid "Right-to-left"
+msgstr "Справа наліво"
+
+#: editors/tinymce.inc:415
+msgid "Emotions"
+msgstr "Емоції"
+
+#: editors/tinymce.inc:437
+msgid "Fullscreen"
+msgstr "Повноекренний режим перегляду"
+
+#: editors/tinymce.inc:444
+msgid "Inline popups"
+msgstr "Рядкові спливаючі вікна"
+
+#: editors/tinymce.inc:454
+msgid "Insert date"
+msgstr "Вставити дата"
+
+#: editors/tinymce.inc:454
+msgid "Insert time"
+msgstr "Вставити час"
+
+#: editors/tinymce.inc:465
+msgid "Insert layer"
+msgstr "Вставити шар"
+
+#: editors/tinymce.inc:465
+msgid "Move forward"
+msgstr "Переміщення вперед"
+
+#: editors/tinymce.inc:465
+msgid "Move backward"
+msgstr "Переміщення назад"
+
+#: editors/tinymce.inc:465
+msgid "Absolute"
+msgstr "Абсолютно"
+
+#: editors/tinymce.inc:472
+msgid "Paste text"
+msgstr "Вставити текст"
+
+#: editors/tinymce.inc:486
+msgid "Print"
+msgstr "Роздрукувати"
+
+#: editors/tinymce.inc:500
+msgid "Style properties"
+msgstr "Опції стилю"
+
+#: editors/tinymce.inc:516
+msgid "Citation"
+msgstr "Цитування"
+
+#: editors/tinymce.inc:516
+msgid "Deleted"
+msgstr "Видалено"
+
+#: editors/tinymce.inc:516
+msgid "Abbreviation"
+msgstr "Абревіатура"
+
+#: editors/tinymce.inc:516
+msgid "Acronym"
+msgstr "Акронім"
+
+#: editors/tinymce.inc:516
+msgid "Inserted"
+msgstr "Вставлено"
+
+#: editors/tinymce.inc:523
+msgid "Safari compatibility"
+msgstr "Сумісність із Safari"
+
+#: editors/whizzywig.inc:123
+msgid "Spell check"
+msgstr "Перевірка орфографії"
+
+#: editors/yui.inc:234
+msgid "Font Color"
+msgstr "Колір шрифту"
+
+#: editors/yui.inc:234
+msgid "Background Color"
+msgstr "Колір тла"
+
+#: editors/yui.inc:237
+msgid "Show/hide hidden elements"
+msgstr "Показати/сховати приховані елементи"
+

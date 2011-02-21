@@ -1,0 +1,11 @@
+/* $Id: break.css,v 1.2 2008/06/11 04:29:01 sun Exp $ */
+
+.wysiwyg-break {
+  display: block;
+  border: 0;
+  border-top: 1px dotted #ccc;
+  margin-top: 1em;
+  width: 100%;
+  height: 12px;
+  background: transparent url(images/breaktext.gif) no-repeat center top;
+}

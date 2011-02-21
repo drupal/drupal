@@ -1,0 +1,44 @@
+<!-- $Id: api-task-handler.html,v 1.1 2009/07/09 00:07:04 merlinofchaos Exp $ -->
+task handler definition:
+  title -- visible title of the task handler.
+  description -- description of the task handler.
+  task type -- The type of the task this handler can service.
+  render -- callback of the function to render the handler. The arguments to this callback are specific to the task type.
+  admin title -- callback to render the admin title as this handler is listed.
+    params: $handler, $task, $subtask_id
+  admin summary -- callback to render what's in the collapsible info as the handler is listed. Optional.
+    params: $handler, $task, $subtask_id
+  default conf -- either an array() of default conf data or a callback that returns an array.
+    params: $handler, $task, $subtask_id
+  save -- callback to call just prior to the task handler being saved so it can adjust its data.
+    params: &$handler, $update (as drupal_write_record would receive)
+  export -- callback to call just prior to the task being exported. It should return text to append to the export if necessary. 
+    params: &$handler, $indent
+
+  forms => array(
+    'id' => array(
+       'form' => form callback (receives $form, $form_state)
+       'submit' => submit callback
+       'validate' => validate callback
+       'include' => an optional file to include to get functionality for this form. Must include full path.
+       'no return' => hide the 'return' button, meaning that the form requires extra steps if submitted
+       'alternate next' => an alternate next form. Used for hidden edit forms that don't have tabs.
+       'no blocks' => if TRUE, use Drupal's mechanism to not render blocks for this form.
+     )
+   )
+  ),
+
+ 'add forms' => array(
+  'form1', => t('form title'),
+  'form2', => t('form title'),
+  // ...etc.../
+),
+ 'edit forms' => array(
+   'id' => t('tab name'),
+   'id2' => t('tab name'),
+ ),
+
+ If a form name is blank it is a 'hidden' form -- it has no tab but can still be reached.
+
+
+Notes: Because #required validation cannot be skipped when clicking cancel, please don't use it.

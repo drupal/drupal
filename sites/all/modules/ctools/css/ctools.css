@@ -1,0 +1,26 @@
+/* $Id: ctools.css,v 1.5 2010/09/07 09:02:50 sdboyer Exp $ */
+.ctools-locked {
+  color: red;
+  border: 1px solid red;
+  padding: 1em;
+}
+
+.ctools-owns-lock {
+  background: #FFFFDD none repeat scroll 0 0;
+  border: 1px solid #F0C020;
+  padding: 1em;
+}
+
+a.ctools-ajaxing,
+input.ctools-ajaxing,
+button.ctools-ajaxing,
+select.ctools-ajaxing {
+  padding-right: 18px !important;
+  background: url(../images/status-active.gif) right center no-repeat;
+}
+
+div.ctools-ajaxing {
+  float: left;
+  width: 18px;
+  background: url(../images/status-active.gif) center center no-repeat;
+}

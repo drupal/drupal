@@ -1,0 +1,12 @@
+API.txt: $Id: API.txt,v 1.16 2010/10/11 22:18:22 sdboyer Exp $
+
+This file contains a log of changes to the API.
+API Version 2.0
+  Remove the deprecated callback-based behavior of the 'defaults' property on
+    plugin types; array addition is now the only option. If you need more
+    complex logic, do it with the 'process' callback.
+  Introduce a global plugin type registration hook and remove the per-plugin
+    type magic callbacks.
+
+Versions prior to 2.0 have been removed from this document. See the D6 version
+for that information.

@@ -1,0 +1,39 @@
+<?php
+// $Id: views_handlers.test,v 1.1.4.4 2010/05/24 19:58:36 dereine Exp $
+
+/**
+* @file
+* Test abstract handlers of views
+*/
+
+class ViewsHandlersTest extends ViewsSqlTest {
+  public static function getInfo() {
+    return array(
+      'name' => t('Handlers test'),
+      'description' => t('test abstract handler definitions'),
+      'group' => 'Views',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('views', 'views_ui');
+    module_enable(array('views_ui'));
+  }
+
+  function testFilterInOperatorUi() {
+    $admin_user = $this->drupalCreateUser(array('administer views', 'administer site configuration'));
+    $this->drupalLogin($admin_user);
+    menu_rebuild();
+
+    $path = 'admin/structure/views/nojs/config-item/test_filter_in_operator_ui/default/filter/type';
+    $this->drupalGet($path);
+    $this->assertFieldByName('options[expose][reduce]', FALSE);
+
+    $edit = array(
+      'options[expose][reduce]' => TRUE,
+    );
+    $this->drupalPost($path, $edit, t('Update'));
+    $this->drupalGet($path);
+    $this->assertFieldByName('options[expose][reduce]', TRUE);
+  }
+}

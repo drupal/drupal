@@ -1,0 +1,57 @@
+/* $Id: views.css,v 1.11.6.5 2010/07/04 10:04:50 dereine Exp $ */
+.views-exposed-form .views-exposed-widget {
+  float: left; /* LTR */
+  padding: .5em 1em 0 0; /* LTR */
+}
+
+.views-exposed-form .views-exposed-widget .form-submit {
+  margin-top: 1.6em;
+}
+
+.views-exposed-form .form-item,
+.views-exposed-form .form-submit {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.views-exposed-form label {
+  font-weight: bold;
+}
+
+.views-exposed-widgets {
+  margin-bottom: .5em;
+}
+
+/* table style column align */
+.views-align-left {
+  text-align: left;
+}
+.views-align-right {
+  text-align: right;
+}
+.views-align-center {
+  text-align: center;
+}
+
+div.view div.views-hide {
+  display: none;
+}
+
+/** For IE we add the class via js; for other browsers we rely on :hover **/
+div.view div.views-hide-hover,
+div.view:hover div.views-hide {
+  display: block;
+  position: absolute;
+  z-index: 200;
+}
+
+/* don't do this one in IE */
+div.view:hover div.views-hide {
+  margin-top: -1.5em;
+}
+
+/* Remove the border on tbody that system puts in */
+.views-view-grid tbody {
+  border-top: none;
+}
+

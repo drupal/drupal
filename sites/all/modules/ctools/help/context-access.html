@@ -1,0 +1,15 @@
+<!-- $Id: context-access.html,v 1.1 2008/12/17 08:29:20 merlinofchaos Exp $ -->
+
+access plugins allow context based access control to pages.    
+
+    
+    'title' => Title of the plugin
+    'description' => Description of the plugin
+    'callback' => callback to see if there is access is available. params: $conf, $contexts, $account
+    'required context' => zero or more required contexts for this access plugin
+    'default' => an array of defaults or a callback giving defaults
+    'settings form' => settings form. params: &$form, &$form_state, $conf
+    settings form validate
+    settings form submit
+
+warning: Your settings array will be stored IN THE MENU SYSTEM to reduce loads, so be TRIM.

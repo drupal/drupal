@@ -1,0 +1,92 @@
+# $Id: ctools.fr.po,v 1.1 2009/08/16 20:10:09 hass Exp $
+#
+# French translation of Drupal (general)
+# Copyright 2009 Jérémy Chatard <jchatard@breek.fr>
+# Generated from files:
+#  ctools.install,v 1.11 2009/08/09 19:33:12 merlinofchaos
+#  ctools.info,v 1.3 2009/07/12 18:11:58 merlinofchaos
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2009-08-15 10:42+0200\n"
+"PO-Revision-Date: 2009-08-15 10:55+0100\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: French <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n>1);\n"
+
+#: ctools.install:25
+msgid "CTools CSS Cache"
+msgstr "Cache CSS de CTools"
+
+#: ctools.install:27
+msgid "Exists"
+msgstr "Présent"
+
+#: ctools.install:31
+msgid "The CTools CSS cache directory, %path could not be created due to a misconfigured files directory. Please ensure that the files directory is correctly configured and that the webserver has permission to create directories."
+msgstr "Le répertoire de cache CSS de CTools, %path n'a pas pu être créé car il y a un problème de configuration sur le répertoire files. Veuillez vous assurez que le répertoire files est correctement configuré et que le serveur web dispose des permissions suffisantes pour créer des répertoires."
+
+#: ctools.install:33
+msgid "Unable to create"
+msgstr "Création impossible"
+
+#: ctools.install:75
+msgid "A special cache used to store CSS that must be non-volatile."
+msgstr "Un cache spécial utilisé pour stocker le code CSS qui ne doit pas être géré de façon volatile."
+
+#: ctools.install:80
+msgid "The CSS ID this cache object belongs to."
+msgstr "L'ID CSS auquel cet objet mis en cache appartient."
+
+#: ctools.install:86
+msgid "The filename this CSS is stored in."
+msgstr "Le nom du fichier dans lequel ce CSS est stocké."
+
+#: ctools.install:91
+msgid "CSS being stored."
+msgstr "Règles CSS qui sont stockées."
+
+#: ctools.install:97
+msgid "Whether or not this CSS needs to be filtered."
+msgstr "Ce CSS doit-il ou non être filtré."
+
+#: ctools.install:113
+msgid "A special cache used to store objects that are being edited; it serves to save state in an ordinarily stateless environment."
+msgstr "Cache spécial utilisé pour enregistrer les objets en cours d'édition ; il sert à enregistrer l'état dans un environnement normalement sans état."
+
+#: ctools.install:119
+msgid "The session ID this cache object belongs to."
+msgstr "L'identifiant de session auquel cet objet de cache appartient."
+
+#: ctools.install:125
+msgid "The name of the object this cache is attached to."
+msgstr "Le nom de l'objet auquel ce cache est attaché."
+
+#: ctools.install:131
+msgid "The type of the object this cache is attached to; this essentially represents the owner so that several sub-systems can use this cache."
+msgstr "Le type d'objet auquel ce cache est rattaché ; cela représente essentiellement le propriétaire afin que d'autres sous-systèmes puissent utiliser ce cache."
+
+#: ctools.install:138
+msgid "The time this cache was created or updated."
+msgstr "Date de création ou de mise à jour de ce cache."
+
+#: ctools.install:143
+msgid "Serialized data being stored."
+msgstr "Données sérialisées en cours d'enregistrement."
+
+#: ctools.info:0
+msgid "Chaos tools"
+msgstr "Chaos tools"
+
+#: ctools.info:0
+msgid "A library of helpful tools by Merlin of Chaos."
+msgstr "Une librairie d'outils par Merlin of Cahos"
+
+#: ctools.info:0
+msgid "Chaos tool suite"
+msgstr "Chaos tool suite"
+

@@ -1,0 +1,451 @@
+# $Id: general.de.po,v 1.1 2009/08/16 21:28:46 hass Exp $
+#
+# LANGUAGE translation of Drupal (general)
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+# Generated from files:
+#  panels.module,v 1.10.2.9 2007/03/15 23:13:41 merlinofchaos
+#  fourcol_25_25_25_25.inc,v 1.0 2006/09/02 11:47:00 alexander.hass
+#  threecol_33_33_33.inc,v 1.0 2006/09/02 11:47:00 alexander.hass
+#  twocol_25_75.inc,v 1.0 2006/09/02 11:47:00 alexander.hass
+#  twocol_33_66.inc,v 1.0 2006/09/02 11:47:00 alexander.hass
+#  twocol_38_62.inc,v 1.0 2006/09/02 11:47:00 alexander.hass
+#  twocol_50_50.inc,v 1.0 2006/09/02 11:47:00 alexander.hass
+#  twocol_62_38.inc,v 1.0 2006/09/02 11:47:00 alexander.hass
+#  twocol_66_33.inc,v 1.0 2006/09/02 11:47:00 alexander.hass
+#  twocol_75_25.inc,v 1.0 2006/09/02 11:47:00 alexander.hass
+#  threecol_25_50_25_stacked.inc,v 1.5 2006/08/22 23:54:20 merlinofchaos
+#  threecol_33_34_33.inc,v 1.5 2006/08/22 23:54:20 merlinofchaos
+#  threecol_33_34_33_stacked.inc,v 1.5 2006/08/22 23:54:20 merlinofchaos
+#  twocol.inc,v 1.6 2006/08/22 23:54:20 merlinofchaos
+#  twocol_stacked.inc,v 1.5 2006/08/22 23:54:20 merlinofchaos
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: panels 5.x\n"
+"POT-Creation-Date: 2009-08-16 20:47+0200\n"
+"PO-Revision-Date: 2009-08-16 22:16+0100\n"
+"Last-Translator: Alexander Haß\n"
+"Language-Team: Alexander Hass\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-Language: German\n"
+"X-Poedit-Country: GERMANY\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+#: bulk_export/bulk_export.module:165
+#: page_manager/page_manager.admin.inc:663
+#: page_manager/plugins/tasks/page.inc:182
+msgid "Export"
+msgstr "Exportieren"
+
+#: includes/ajax.inc:123
+#: page_manager/page_manager.admin.inc:906
+msgid "Error"
+msgstr "Fehler"
+
+#: includes/content.inc:539
+#: page_manager/page_manager.admin.inc:559
+msgid "Configure"
+msgstr "Konfigurieren"
+
+#: includes/content.menu.inc:45
+#: plugins/content_types/node_context/node_author.inc:36
+#: plugins/contexts/user.inc:50
+msgid "Anonymous"
+msgstr "Gast"
+
+#: includes/context-access-admin.inc:174;405
+#: includes/context-admin.inc:565;644;715;826
+#: page_manager/page_manager.admin.inc:1156
+msgid "Save"
+msgstr "Speichern"
+
+#: includes/context-access-admin.inc:214
+#: includes/context-admin.inc:793
+#: page_manager/page_manager.admin.inc:72;248;1295
+#: page_manager/plugins/tasks/page.admin.inc:645
+#: plugins/content_types/custom/custom.inc:105
+msgid "Title"
+msgstr "Titel"
+
+#: includes/context-admin.inc:26
+#: page_manager/plugins/tasks/page.inc:158
+#: views_content/plugins/content_types/views.inc:360
+msgid "Arguments"
+msgstr "Argumente"
+
+#: includes/context-admin.inc:312;436;874
+#: page_manager/plugins/tasks/page.admin.inc:948
+msgid "Invalid object name."
+msgstr "Ungültiger Objektname."
+
+#: includes/context-admin.inc:540;628;690;800
+#: plugins/content_types/node/node.inc:146
+#: plugins/content_types/node_context/node_content.inc:162
+#: plugins/content_types/node_context/node_links.inc:93
+msgid "Identifier"
+msgstr "Bezeichner"
+
+#: includes/context-admin.inc:547;635;697;807
+#: plugins/content_types/custom/custom.inc:138
+msgid "Keyword"
+msgstr "Platzhalter"
+
+#: includes/context-admin.inc:782
+#: includes/export.inc:191;254
+#: page_manager/page_manager.module:499;514
+#: page_manager/plugins/tasks/page.inc:216
+#: views_content/plugins/content_types/views.inc:449
+msgid "Default"
+msgstr "Standard"
+
+#: includes/context.inc:195;196;400
+#: page_manager/plugins/tasks/page.admin.inc:1116;1136
+msgid "No context"
+msgstr "Kein Kontext"
+
+#: includes/context.theme.inc:80
+#: page_manager/plugins/tasks/page.admin.inc:687
+#: page_manager/theme/page_manager.theme.inc:103
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:196
+msgid "Weight"
+msgstr "Reihenfolge"
+
+#: includes/context.theme.inc:82
+#: plugins/access/node_access.inc:35
+msgid "Operation"
+msgstr "Operation"
+
+#: includes/export.inc:146
+#: page_manager/page_manager.module:365
+#: page_manager/plugins/tasks/page.admin.inc:1452
+msgid "Normal"
+msgstr "Normal"
+
+#: includes/export.inc:184
+#: page_manager/page_manager.admin.inc:1453
+#: page_manager/page_manager.module:508
+#: page_manager/plugins/tasks/page.admin.inc:1481;1495;1506
+msgid "Overridden"
+msgstr "Übersteuert"
+
+#: includes/export.inc:586
+#: page_manager/page_manager.module:635
+msgid "Local"
+msgstr "Lokal"
+
+#: includes/modal.inc:54
+#: js/modal.js:0
+msgid "Loading..."
+msgstr "Laden..."
+
+#: includes/wizard.inc:273
+#: page_manager/page_manager.admin.inc:1162
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#: page_manager/page_manager.admin.inc:70;219;251
+#: page_manager/plugins/tasks/page.admin.inc:633
+msgid "Type"
+msgstr "Typ"
+
+#: page_manager/page_manager.admin.inc:73;250
+#: page_manager/plugins/tasks/page.admin.inc:394;1240;1366
+#: page_manager/plugins/tasks/page.inc:629
+#: page_manager/plugins/tasks/term_view.inc:258
+msgid "Path"
+msgstr "Pfad"
+
+#: page_manager/page_manager.admin.inc:74;226;252
+#: page_manager/plugins/tasks/page.inc:46;574
+msgid "Storage"
+msgstr "Speicher"
+
+#: page_manager/page_manager.admin.inc:77
+#: page_manager/plugins/tasks/page.admin.inc:905
+msgid "Operations"
+msgstr "Operationen"
+
+#: page_manager/page_manager.admin.inc:153
+#: page_manager/plugins/tasks/page.inc:216
+msgid "In code"
+msgstr "Im Code"
+
+#: page_manager/page_manager.admin.inc:171
+#: page_manager/page_manager.module:79
+#: page_manager/plugins/tasks/page.inc:605;647;683
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:120
+msgid "Edit"
+msgstr "Bearbeiten"
+
+#: page_manager/page_manager.admin.inc:179;504;510;689;694
+#: page_manager/plugins/tasks/page.inc:580
+msgid "Enable"
+msgstr "Aktivieren"
+
+#: page_manager/page_manager.admin.inc:185;517;523;700;705
+#: page_manager/plugins/tasks/page.inc:584
+msgid "Disable"
+msgstr "Deaktivieren"
+
+#: page_manager/page_manager.admin.inc:233;234
+#: page_manager/plugins/tasks/page.inc:585
+msgid "Enabled"
+msgstr "Aktiviert"
+
+#: page_manager/page_manager.admin.inc:234
+#: page_manager/plugins/tasks/page.inc:581
+msgid "Disabled"
+msgstr "Deaktiviert"
+
+#: page_manager/page_manager.admin.inc:658
+#: page_manager/plugins/tasks/page.admin.inc:1380
+#: page_manager/plugins/tasks/page.inc:177
+msgid "Clone"
+msgstr "Duplizieren"
+
+#: page_manager/page_manager.admin.inc:669;673
+#: page_manager/plugins/tasks/page.admin.inc:1495
+#: page_manager/plugins/tasks/page.inc:188
+msgid "Revert"
+msgstr "Zurücksetzen"
+
+#: page_manager/page_manager.admin.inc:679;683
+#: page_manager/plugins/tasks/page.admin.inc:1495
+#: page_manager/plugins/tasks/page.inc:195
+#: plugins/access/node_access.inc:40
+msgid "Delete"
+msgstr "Löschen"
+
+#: page_manager/page_manager.admin.inc:795
+#: plugins/access/node_access.inc:39
+msgid "Update"
+msgstr "Aktualisieren"
+
+#: page_manager/plugins/tasks/page.admin.inc:367;1358
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:166
+msgid "Administrative title"
+msgstr "Administrativer Titel"
+
+#: page_manager/plugins/tasks/page.admin.inc:386
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:176;186
+msgid "Administrative description"
+msgstr "Administrative Beschreibung"
+
+#: page_manager/plugins/tasks/page.inc:207
+#: plugins/content_types/custom/custom.inc:26;58
+#: plugins/content_types/node/node.inc:27
+msgid "Custom"
+msgstr "Benutzerdefiniert"
+
+#: page_manager/plugins/tasks/page.inc:304
+#: page_manager/plugins/tasks/term_view.inc:133
+#: plugins/access/node_access.inc:38
+msgid "View"
+msgstr "Anzeigen"
+
+#: page_manager/plugins/tasks/term_view.inc:230
+#: plugins/arguments/terms.inc:55
+msgid "Inject hierarchy of first term into breadcrumb trail"
+msgstr ""
+
+#: page_manager/plugins/tasks/term_view.inc:233
+#: plugins/arguments/term.inc:94
+#: plugins/arguments/terms.inc:58
+msgid "If checked, taxonomy term parents will appear in the breadcrumb trail."
+msgstr "Sobald aktiviert, werden übergeordnete Taxonomie-Begriffe in der Pfadnavigation erscheinen."
+
+#: plugins/access/node_access.inc:22
+#: plugins/access/perm.inc:20
+#: plugins/access/role.inc:21
+#: plugins/content_types/user_context/profile_fields.inc:15;16
+#: plugins/content_types/user_context/user_picture.inc:13;14
+#: plugins/content_types/user_context/user_profile.inc:13;14
+#: plugins/contexts/user.inc:15
+msgid "User"
+msgstr "Benutzer"
+
+#: plugins/access/node_access.inc:23
+#: plugins/access/node_language.inc:22
+#: plugins/access/node_type.inc:21
+#: plugins/content_types/node/node.inc:15
+#: plugins/content_types/node_context/node_attachments.inc:13;14
+#: plugins/content_types/node_context/node_author.inc:13;14
+#: plugins/content_types/node_context/node_body.inc:13;14
+#: plugins/content_types/node_context/node_book_nav.inc:14;15
+#: plugins/content_types/node_context/node_comment_form.inc:14;15
+#: plugins/content_types/node_context/node_comments.inc:15;16
+#: plugins/content_types/node_context/node_content.inc:13;14
+#: plugins/content_types/node_context/node_created.inc:13;14
+#: plugins/content_types/node_context/node_links.inc:14;15
+#: plugins/content_types/node_context/node_title.inc:13;14
+#: plugins/content_types/node_context/node_type_desc.inc:13;14
+#: plugins/content_types/node_context/node_updated.inc:13;14
+#: plugins/contexts/node.inc:16
+#: plugins/relationships/book_parent.inc:17
+#: plugins/relationships/term_from_node.inc:17
+#: plugins/relationships/user_from_node.inc:17
+msgid "Node"
+msgstr "Beitrag"
+
+#: plugins/access/node_type.inc:38
+#: plugins/contexts/node.inc:170
+#: plugins/contexts/node_add_form.inc:21;101
+msgid "Node type"
+msgstr "Inhaltstyp"
+
+#: plugins/access/term_vocabulary.inc:21
+#: plugins/content_types/term_context/term_description.inc:13
+#: plugins/content_types/term_context/term_list.inc:13
+#: plugins/relationships/term_parent.inc:17
+msgid "Term"
+msgstr "Begriff"
+
+#: plugins/arguments/nid.inc:15
+#: plugins/contexts/node.inc:166
+msgid "Node ID"
+msgstr "Beitrag-ID"
+
+#: plugins/arguments/node_add.inc:15
+#: plugins/contexts/node_add_form.inc:15
+msgid "Node add form"
+msgstr "Beitragserstellungsformular"
+
+#: plugins/arguments/node_edit.inc:15
+#: plugins/contexts/node_edit_form.inc:15
+msgid "Node edit form"
+msgstr "Beitragsbearbeitungsformular"
+
+#: plugins/arguments/string.inc:15
+#: plugins/contexts/string.inc:15
+msgid "String"
+msgstr "Zeichenkette"
+
+#: plugins/arguments/term.inc:15
+#: plugins/content_types/term_context/term_description.inc:14
+#: plugins/content_types/term_context/term_list.inc:14
+#: plugins/contexts/term.inc:15
+msgid "Taxonomy term"
+msgstr "Taxonomie-Begriff"
+
+#: plugins/arguments/term.inc:84
+#: plugins/contexts/term.inc:24
+msgid "Term ID"
+msgstr "Begriffs-ID"
+
+#: plugins/arguments/term.inc:84
+#: plugins/contexts/term.inc:25
+msgid "Term name"
+msgstr "Begriffsname"
+
+#: plugins/arguments/uid.inc:15
+#: plugins/contexts/user.inc:24
+msgid "User ID"
+msgstr "Benutzer-ID"
+
+#: plugins/arguments/vid.inc:15
+#: plugins/contexts/term.inc:26
+msgid "Vocabulary ID"
+msgstr "Vokabular-ID"
+
+#: plugins/content_types/block/block.inc:331;336;354;378;388
+#: views_content/views_content.module:56
+msgid "Widgets"
+msgstr "Steuerelement"
+
+#: plugins/content_types/form/form.inc:16;17;43
+#: plugins/content_types/node_form/node_form_attachments.inc:14;15
+#: plugins/content_types/node_form/node_form_author.inc:13;14
+#: plugins/content_types/node_form/node_form_book.inc:14;15
+#: plugins/content_types/node_form/node_form_buttons.inc:13;14
+#: plugins/content_types/node_form/node_form_comment.inc:14;15
+#: plugins/content_types/node_form/node_form_input_format.inc:13;14
+#: plugins/content_types/node_form/node_form_log.inc:13;14
+#: plugins/content_types/node_form/node_form_menu.inc:14;15
+#: plugins/content_types/node_form/node_form_path.inc:14;15
+#: plugins/content_types/node_form/node_form_publishing.inc:19;20
+#: plugins/content_types/node_form/node_form_taxonomy.inc:14;15
+msgid "Form"
+msgstr "Formular"
+
+#: plugins/content_types/node/node.inc:70
+#: plugins/content_types/node_context/node_content.inc:61
+msgid "Edit node"
+msgstr "Beitrag bearbeiten"
+
+#: plugins/content_types/node/node.inc:71
+#: plugins/content_types/node_context/node_content.inc:62
+msgid "Edit this node"
+msgstr "Diesen Beitrag bearbeiten"
+
+#: plugins/content_types/node/node.inc:106
+#: plugins/contexts/node.inc:81
+#: plugins/contexts/node_edit_form.inc:80
+msgid "Enter the title or NID of a node"
+msgstr "Den Titel oder die Beitrag-ID eines Beitrages eingeben"
+
+#: plugins/content_types/node/node.inc:123
+#: plugins/content_types/node_context/node_content.inc:134
+msgid "Teaser"
+msgstr "Anrisstext"
+
+#: plugins/content_types/node/node.inc:132
+#: plugins/content_types/node_context/node_content.inc:148
+msgid "Display links"
+msgstr "Links anzeigen"
+
+#: plugins/content_types/node/node.inc:133
+#: plugins/content_types/node_context/node_content.inc:149
+msgid "Check here to display the links with the post."
+msgstr "Aktivieren, um die Links mit dem Beitrag anzuzeigen."
+
+#: plugins/content_types/node/node.inc:139
+#: plugins/content_types/node_context/node_content.inc:169
+msgid "Leave node title"
+msgstr "Beitragstitel beibehalten"
+
+#: plugins/content_types/node/node.inc:140
+#: plugins/content_types/node_context/node_content.inc:170
+msgid "Advanced: if checked, do not touch the node title; this can cause the node title to appear twice unless your theme is aware of this."
+msgstr "Erweitert: Falls aktiviert, bleibt der Beitragstitel unberührt. Dies kann zur doppelten Darstellung in der Ausgabe führen, sofern die Theme dies nicht berücksichtigt."
+
+#: plugins/content_types/node/node.inc:147
+#: plugins/content_types/node_context/node_content.inc:163
+msgid "Whatever is placed here will appear in $node->panel_identifier in the node template to make it easier to theme a node or part of a node as necessary. This identifier will automatically be added as a node template suggestion: node-panel-IDENTIFIER.tpl.php"
+msgstr "Was immer hier steht wird in $node->panel_identifier bereitgestellt, um die Gestaltung von Beiträgen oder Teilen von Beiträgen zu vereinfachen. Dieser Identifikator wird automatisch als Vorlagen-Vorschlag hinzugefügt: node-panel-IDENTIFIER.tpl.php"
+
+#: plugins/content_types/node_context/node_author.inc:10
+#: plugins/relationships/user_from_node.inc:14
+msgid "Node author"
+msgstr "Beitragsauthor"
+
+#: plugins/content_types/node_context/node_title.inc:10
+#: plugins/contexts/node.inc:168
+msgid "Node title"
+msgstr "Beitragstitel"
+
+#: plugins/content_types/vocabulary_context/vocabulary_terms.inc:14;15
+#: plugins/contexts/term.inc:68
+#: plugins/contexts/vocabulary.inc:58
+#: plugins/relationships/term_from_node.inc:52
+msgid "Vocabulary"
+msgstr "Vokabular"
+
+#: views_content/views_content.module:61
+#: views_content/plugins/content_types/views.inc:99
+msgid "Views"
+msgstr "Ansichten"
+
+#: views_content/plugins/content_types/views.inc:317
+#: views_content/plugins/content_types/views_panes.inc:341
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:148
+msgid "Use pager"
+msgstr "Seitennavigation verwenden"
+
+#: views_content/plugins/content_types/views_panes.inc:15;94
+#: views_content/plugins/views/views_content_plugin_display_panel_pane.inc:92
+msgid "View panes"
+msgstr ""
+

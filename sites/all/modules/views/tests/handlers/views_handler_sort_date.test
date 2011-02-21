@@ -1,0 +1,89 @@
+<?php
+// $Id: views_handler_sort_date.test,v 1.1.2.1 2010/11/07 11:32:25 dereine Exp $
+
+/**
+ * Test for core views_handler_sort_date handler.
+ */
+class ViewsHandlerSortDateTest extends ViewsSqlTest {
+  public static function getInfo() {
+    return array(
+      'name' => t('Sort: date'),
+      'description' => t('Test the core views_handler_sort_date handler.'),
+      'group' => t('Views Handlers'),
+    );
+  }
+
+  protected function orderResultSetDate($result_set, $column, $granularity, $reverse = TRUE) {
+    // Build a technical sort column.
+    foreach ($result_set as &$result) {
+      $result['_sort'] = $this->orderResultSetDateHelper($result[$column], $granularity);
+    }
+    return $this->orderResultSet($result_set, '_sort', $reverse);
+  }
+
+  protected function orderResultSetDateHelper($date, $granularity) {
+    switch ('granularity') {
+      case 'second':
+      default:
+        return $date;
+      case 'minute':
+        return date('YmdHi', $date);
+      case 'hour':
+        return date('YmdH', $date);
+      case 'day':
+        return date('Ymd', $date);
+      case 'month':
+        return date('Ym', $date);
+      case 'year':
+        return date('Y', $date);
+    }
+  }
+
+  /**
+   * Test numeric ordering of the result set.
+   */
+  public function testDateOrdering() {
+    foreach (array('second', 'minute', 'hour', 'day', 'month', 'year') as $granularity) {
+      foreach (array(FALSE, TRUE) as $reverse) {
+        $view = $this->getBasicView();
+
+        // Change the fields.
+        $view->display['default']->handler->override_option('fields', array(
+          'id' => array(
+            'id' => 'id',
+            'table' => 'views_test',
+            'field' => 'id',
+            'relationship' => 'none',
+          ),
+          'created' => array(
+            'id' => 'created',
+            'table' => 'views_test',
+            'field' => 'created',
+            'relationship' => 'none',
+          ),
+        ));
+
+        // Change the ordering
+        $view->display['default']->handler->override_option('sorts', array(
+          'created' => array(
+            'id' => 'created',
+            'table' => 'views_test',
+            'field' => 'created',
+            'relationship' => 'none',
+            'granularity' => 'second',
+            'order' => $reverse ? 'DESC' : 'ASC',
+          ),
+        ));
+
+        // Execute the view.
+        $this->executeView($view);
+
+        // Verify the result.
+        $this->assertEqual(count($this->dataSet()), count($view->result), t('The number of returned rows match.'));
+        $this->assertIdenticalResultset($view, $this->orderResultSetDate($this->dataSet(), 'created', $granularity, $reverse), array(
+          'views_test_created' => 'created',
+        ), t('Result is returned correctly when ordering by granularity @granularity, @reverse.', array('@granularity' => $granularity, '@reverse' => $reverse ? t('reverse') : t('forward'))));
+      }
+    }
+  }
+}

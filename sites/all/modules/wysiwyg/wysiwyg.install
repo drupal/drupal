@@ -1,0 +1,308 @@
+<?php
+// $Id: wysiwyg.install,v 1.12 2011/01/06 01:49:52 sun Exp $
+
+/**
+ * Implementation of hook_schema().
+ */
+function wysiwyg_schema() {
+  $schema['wysiwyg'] = array(
+    'description' => 'Stores Wysiwyg profiles.',
+    'fields' => array(
+      'format' => array(
+        'description' => 'The {filter_format}.format of the text format.',
+        'type' => 'varchar',
+        'length' => 255,
+        // Primary keys are implicitly not null.
+        'not null' => TRUE,
+      ),
+      'editor' => array(
+        'description' => 'Internal name of the editor attached to the text format.',
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'settings' => array(
+        'description' => 'Configuration settings for the editor.',
+        'type' => 'text',
+        'size' => 'normal',
+      ),
+    ),
+    'primary key' => array('format'),
+    'foreign keys' => array(
+      'format' => array(
+        'table' => 'filter_format',
+        'columns' => array('format' => 'format'),
+      ),
+    ),
+  );
+  $schema['wysiwyg_user'] = array(
+    'description' => 'Stores user preferences for wysiwyg profiles.',
+    'fields' => array(
+      'uid' => array(
+        'description' => 'The {users}.uid of the user.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'format' => array(
+        'description' => 'The {filter_format}.format of the text format.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+      ),
+      'status' => array(
+        'description' => 'Boolean indicating whether the format is enabled by default.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'tiny',
+      ),
+    ),
+    'indexes' => array(
+      'uid' => array('uid'),
+      'format' => array('format'),
+    ),
+    'foreign keys' => array(
+      'uid' => array(
+        'table' => 'users',
+        'columns' => array('uid' => 'uid'),
+      ),
+      'format' => array(
+        'table' => 'filter_format',
+        'columns' => array('format' => 'format'),
+      ),
+    ),
+  );
+  return $schema;
+}
+
+/**
+ * Implementation of hook_enable().
+ */
+function wysiwyg_enable() {
+  // Disable conflicting, obsolete editor integration modules whenever this
+  // module is enabled. This is crude, but the only way to ensure no conflicts.
+  module_disable(array(
+    'ckeditor',
+    'editarea',
+    'editonpro',
+    'editor',
+    'fckeditor',
+    'freerte',
+    'htmlarea',
+    'htmlbox',
+    'jwysiwyg',
+    'markitup',
+    'nicedit',
+    'openwysiwyg',
+    'pegoeditor',
+    'quicktext',
+    'tinymce',
+    'tinymce_autoconf',
+    'tinytinymce',
+    'whizzywig',
+    'widgeditor',
+    'wymeditor',
+    'xstandard',
+    'yui_editor',
+  ));
+}
+
+/**
+ * Implements hook_update_dependencies().
+ */
+function wysiwyg_update_dependencies() {
+  // Ensure that format columns are only changed after Filter module has changed
+  // the primary records.
+  $dependencies['wysiwyg'][7000] = array(
+    'filter' => 7010,
+  );
+
+  return $dependencies;
+}
+
+/**
+ * Retrieve a list of input formats to associate profiles to.
+ */
+function _wysiwyg_install_get_formats() {
+  $formats = array();
+  $result = db_query("SELECT format, name FROM {filter_formats}");
+  while ($format = db_fetch_object($result)) {
+    // Build a list of all formats.
+    $formats[$format->format] = $format->name;
+    // Fetch filters.
+    $result2 = db_query("SELECT module, delta FROM {filters} WHERE format = %d", $format->format);
+    while ($filter = db_fetch_object($result2)) {
+      // If PHP filter is enabled, remove this format.
+      if ($filter->module == 'php') {
+        unset($formats[$format->format]);
+        break;
+      }
+    }
+  }
+  return $formats;
+}
+
+/**
+ * Associate Wysiwyg profiles with input formats.
+ *
+ * Since there was no association yet, we can only assume that there is one
+ * profile only, and that profile must be duplicated and assigned to all input
+ * formats (except PHP code format).  Also, input formats already have
+ * titles/names, so Wysiwyg profiles do not need an own.
+ *
+ * Because input formats are already granted to certain user roles only, we can
+ * remove our custom Wysiwyg profile permissions.  A 1:1 relationship between
+ * input formats and permissions makes plugin_count obsolete, too.
+ *
+ * Since the resulting table is completely different, a new schema is installed.
+ */
+function wysiwyg_update_6001() {
+  $ret = array();
+  if (db_table_exists('wysiwyg')) {
+    return $ret;
+  }
+  // Install new schema.
+  db_create_table($ret, 'wysiwyg', array(
+    'fields' => array(
+      'format' => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'editor' => array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''),
+      'settings' => array('type' => 'text', 'size' => 'normal'),
+    ),
+    'primary key' => array('format'),
+  ));
+
+  // Fetch all input formats.
+  $formats = _wysiwyg_install_get_formats();
+
+  // Fetch all profiles.
+  $result = db_query("SELECT name, settings FROM {wysiwyg_profile}");
+  while ($profile = db_fetch_object($result)) {
+    $profile->settings = unserialize($profile->settings);
+    // Extract editor name from profile settings.
+    $profile->editor = $profile->settings['editor'];
+    // Clean-up.
+    unset($profile->settings['editor']);
+    unset($profile->settings['old_name']);
+    unset($profile->settings['name']);
+    unset($profile->settings['rids']);
+    // Sorry.  There Can Be Only One. ;)
+    break;
+  }
+
+  if ($profile) {
+    // Rebuild profiles and associate with input formats.
+    foreach ($formats as $format => $name) {
+      // Insert profiles.
+      // We can't use update_sql() here because of curly braces in serialized
+      // array.
+      db_query("INSERT INTO {wysiwyg} (format, editor, settings) VALUES (%d, '%s', '%s')", $format, $profile->editor, serialize($profile->settings));
+      $ret[] = array(
+        'success' => TRUE,
+        'query' => strtr('Wysiwyg profile %profile converted and associated with input format %format.', array('%profile' => check_plain($profile->name), '%format' => check_plain($name))),
+      );
+    }
+  }
+
+  // Drop obsolete tables {wysiwyg_profile} and {wysiwyg_role}.
+  db_drop_table($ret, 'wysiwyg_profile');
+  db_drop_table($ret, 'wysiwyg_role');
+
+  return $ret;
+}
+
+/**
+ * Clear JS/CSS caches to ensure that clients load fresh copies.
+ */
+function wysiwyg_update_6200() {
+  $ret = array();
+  // Change query-strings on css/js files to enforce reload for all users.
+  _drupal_flush_css_js();
+
+  drupal_clear_css_cache();
+  drupal_clear_js_cache();
+
+  // Rebuild the menu to remove old admin/settings/wysiwyg/profile item.
+  menu_rebuild();
+
+  // Flush content caches.
+  cache_clear_all();
+
+  $ret[] = array(
+    'success' => TRUE,
+    'query' => 'Caches have been flushed.',
+  );
+  return $ret;
+}
+
+/**
+ * Change {wysiwyg}.format into a string.
+ */
+function wysiwyg_update_7000() {
+  db_drop_primary_key('wysiwyg');
+  db_change_field('wysiwyg', 'format', 'format', array(
+    'type' => 'varchar',
+    'length' => 255,
+    'not null' => TRUE,
+  ));
+  db_add_primary_key('wysiwyg', array('format'));
+}
+
+/**
+ * Create the {wysiwyg_user} table.
+ */
+function wysiwyg_update_7200() {
+  if (!db_table_exists('wysiwyg_user')) {
+    db_create_table('wysiwyg_user', array(
+      'description' => 'Stores user preferences for wysiwyg profiles.',
+      'fields' => array(
+        'uid' => array(
+          'description' => 'The {users}.uid of the user.',
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+          'default' => 0,
+        ),
+        'format' => array(
+          'description' => 'The {filter_format}.format of the text format.',
+          'type' => 'varchar',
+          'length' => 255,
+          'not null' => FALSE,
+        ),
+        'status' => array(
+          'description' => 'Boolean indicating whether the format is enabled by default.',
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+          'default' => 0,
+          'size' => 'tiny',
+        ),
+      ),
+      'indexes' => array(
+        'uid' => array('uid'),
+        'format' => array('format'),
+      ),
+      'foreign keys' => array(
+        'uid' => array(
+          'table' => 'users',
+          'columns' => array('uid' => 'uid'),
+        ),
+        'format' => array(
+          'table' => 'filter_format',
+          'columns' => array('format' => 'format'),
+        ),
+      ),
+    ));
+  }
+  else {
+    db_change_field('wysiwyg_user', 'format', 'format', array(
+      'description' => 'The {filter_format}.format of the text format.',
+      'type' => 'varchar',
+      'length' => 255,
+      'not null' => FALSE,
+    ));
+  }
+}

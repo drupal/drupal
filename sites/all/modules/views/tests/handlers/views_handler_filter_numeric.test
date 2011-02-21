@@ -1,0 +1,216 @@
+<?php
+// $Id: views_handler_filter_numeric.test,v 1.1.2.1 2010/11/06 14:31:59 dereine Exp $
+
+class viewsHandlerFilterNumericTest extends ViewsSqlTest {
+  var $column_map = array();
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Handlers: filter_numeric',
+      'description' => 'Tests the numeric filter handler',
+      'group' => 'Views Handlers',
+    );
+  }
+
+  function setUp() {
+    parent::setUp();
+    $this->column_map = array(
+      'views_test_name' => 'name',
+      'views_test_age' => 'age',
+    );
+  }
+
+  function viewsData() {
+    $data = parent::viewsData();
+    $data['views_test']['age']['filter']['allow empty'] = TRUE;
+    $data['views_test']['id']['filter']['allow empty'] = FALSE;
+
+    return $data;
+  }
+
+  public function testFilterNumericSimple() {
+    $view = $this->getBasicView();
+
+    // Change the filtering
+    $view->display['default']->handler->override_option('filters', array(
+      'age' => array(
+        'id' => 'age',
+        'table' => 'views_test',
+        'field' => 'age',
+        'relationship' => 'none',
+        'operator' => '=',
+        'value' => array('value' => 28),
+      ),
+    ));
+
+    $this->executeView($view);
+    $resultset = array(
+      array(
+        'name' => 'Ringo',
+        'age' => 28,
+      ),
+    );
+    $this->assertIdenticalResultset($view, $resultset, $this->column_map);
+  }
+
+  public function testFilterNumericBetween() {
+    $view = $this->getBasicView();
+
+    // Change the filtering
+    $view->display['default']->handler->override_option('filters', array(
+      'age' => array(
+        'id' => 'age',
+        'table' => 'views_test',
+        'field' => 'age',
+        'relationship' => 'none',
+        'operator' => 'between',
+        'value' => array(
+          'min' => 26,
+          'max' => 29,
+        ),
+      ),
+    ));
+
+    $this->executeView($view);
+    $resultset = array(
+      array(
+        'name' => 'George',
+        'age' => 27,
+      ),
+      array(
+        'name' => 'Ringo',
+        'age' => 28,
+      ),
+      array(
+        'name' => 'Paul',
+        'age' => 26,
+      ),
+    );
+    $this->assertIdenticalResultset($view, $resultset, $this->column_map);
+
+    // test not between
+    $view->delete();
+    $view = $this->getBasicView();
+
+      // Change the filtering
+    $view->display['default']->handler->override_option('filters', array(
+      'age' => array(
+        'id' => 'age',
+        'table' => 'views_test',
+        'field' => 'age',
+        'relationship' => 'none',
+        'operator' => 'not between',
+        'value' => array(
+          'min' => 26,
+          'max' => 29,
+        ),
+      ),
+    ));
+
+    $this->executeView($view);
+    $resultset = array(
+      array(
+        'name' => 'John',
+        'age' => 25,
+      ),
+      array(
+        'name' => 'Paul',
+        'age' => 26,
+      ),
+      array(
+        'name' => 'Meredith',
+        'age' => 30,
+      ),
+    );
+    $this->assertIdenticalResultset($view, $resultset, $this->column_map);
+  }
+
+  public function testFilterNumericEmpty() {
+    $view = $this->getBasicView();
+
+    // Change the filtering
+    $view->display['default']->handler->override_option('filters', array(
+      'age' => array(
+        'id' => 'age',
+        'table' => 'views_test',
+        'field' => 'age',
+        'relationship' => 'none',
+        'operator' => 'empty',
+      ),
+    ));
+
+    $this->executeView($view);
+    $resultset = array(
+    );
+    $this->assertIdenticalResultset($view, $resultset, $this->column_map);
+
+    $view->delete();
+    $view = $this->getBasicView();
+
+    // Change the filtering
+    $view->display['default']->handler->override_option('filters', array(
+      'age' => array(
+        'id' => 'age',
+        'table' => 'views_test',
+        'field' => 'age',
+        'relationship' => 'none',
+        'operator' => 'not empty',
+      ),
+    ));
+
+    $this->executeView($view);
+    $resultset = array(
+    array(
+        'name' => 'John',
+        'age' => 25,
+      ),
+      array(
+        'name' => 'George',
+        'age' => 27,
+      ),
+      array(
+        'name' => 'Ringo',
+        'age' => 28,
+      ),
+      array(
+        'name' => 'Paul',
+        'age' => 26,
+      ),
+      array(
+        'name' => 'Meredith',
+        'age' => 30,
+      ),
+    );
+    $this->assertIdenticalResultset($view, $resultset, $this->column_map);
+  }
+
+  public function testAllowEmpty() {
+    $view = $this->getBasicView();
+
+    $view->display['default']->handler->override_option('filters', array(
+      'id' => array(
+        'id' => 'id',
+        'table' => 'views_test',
+        'field' => 'id',
+        'relationship' => 'none',
+      ),
+      'age' => array(
+        'id' => 'age',
+        'table' => 'views_test',
+        'field' => 'age',
+        'relationship' => 'none',
+      ),
+    ));
+
+    $view->set_display('default');
+    $view->init_handlers();
+
+    $id_operators = $view->filter['id']->operators();
+    $age_operators = $view->filter['age']->operators();
+
+    $this->assertFalse(isset($id_operators['empty']));
+    $this->assertFalse(isset($id_operators['not empty']));
+    $this->assertTrue(isset($age_operators['empty']));
+    $this->assertTrue(isset($age_operators['not empty']));
+  }
+}

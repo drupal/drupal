@@ -1,0 +1,235 @@
+<!-- $Id: export.html,v 1.4 2010/10/11 22:18:22 sdboyer Exp $ -->
+Exportable objects are objects that can live either in the database or in code, or in both. If they live in both, then the object in code is considered to be "overridden", meaning that the version in code is ignored in favor of the version in the database.
+
+The main benefit to this is that you can move objects that are intended to be structure or feature-related into code, thus removing them entirely from the database. This is a very important part of the deployment path, since in an ideal world, the database is primarily user generated content, whereas site structure and site features should be in code. However, many many features in Drupal rely on objects being in the database and provide UIs to create them.
+
+Using this system, you can give your objects dual life. They can be created in the UI, exported into code and put in revision control. Views and Panels both use this system heavily. Plus, any object that properly implements this system can be utilized by the Features module to be used as part of a bundle of objects that can be turned into feature modules.
+
+Typically, exportable objects have two identifiers. One identifier is a simple serial used for database identification. It is a primary key in the database and can be used locally. It also has a name which is an easy way to uniquely identify it. This makes it much less likely that importing and exporting these objects across systems will have collisions. They still can, of course, but with good name selection, these problems can be worked around.
+
+<h3>Making your objects exportable</h3>
+To make your objects exportable, you do have to do a medium amount of work.
+<ol>
+<li>Create a chunk of code in your object's schema definition in the .install file to introduce the object to CTools' export system.</li>
+<li>Create a load function for your object that utilizes ctools_export_load_object().</li>
+<li>Create a save function for your object that utilizes drupal_write_record() or any method you desire.</li>
+<li>Create an import and export mechanism from the UI.</li>
+</ol>
+<h3>The export section of the schema file</h3>
+
+Exportable objects are created by adding definition to the schema in an 'export' section. For example:
+
+<pre>
+function mymodule_schema() {
+  $schema['mymodule_myobj'] = array(
+    'description' => t('Table storing myobj definitions.'),
+    'export' => array(
+      'key' => 'name',
+      'key name' => 'Name',
+      'primary key' => 'oid',
+      'identifier' => 'myobj', // Exports will be as $myobj
+      'default hook' => 'default_mymodule_myobj',  // Function hook name.
+      'api' => array(
+        'owner' => 'mymodule',
+        'api' => 'default_mymodule_myobjs',  // Base name for api include files.
+        'minimum_version' => 1,
+        'current_version' => 1,
+      ),
+      // If the key is stored in a table that is joined in, specify it:
+      'key in table' => 'my_join_table',
+
+    ),
+
+    // If your object's data is split up across multiple tables, you can
+    // specify additional tables to join. This is very useful when working
+    // with modules like exportables.module that has a special table for
+    // translating keys to local database IDs.
+    //
+    // The joined table must have its own schema definition.
+    //
+    // If using joins, you should implement a 'delete callback' (see below)
+    // to ensure that deletes happen properly. export.inc does not do this
+    // automatically!
+    'join' => array(
+      'exportables' => array(
+        // The following parameters will be used in this way:
+        // SELECT ... FROM {mymodule_myobj} t__0 INNER JOIN {my_join_table} t__1 ON t__0.id = t__1.id AND extras
+        'table' => 'my_join_table',
+        'left_key' => 'format',
+        'right_key' => 'id',
+        // Optionally you can define a callback to add custom conditions or
+        // alter the query as necessary. The callback function takes 3 args:
+        //
+        //   myjoincallback(&$query, $schema, $join_schema);
+        //
+        // where $query is the database query object, $schema is the schema for
+        // the export base table and $join_schema is the schema for the current
+        // join table.
+        'callback' => 'myjoincallback',
+
+        // You must specify which fields will be loaded. These fields must
+        // exist in the schema definition of the joined table.
+        'load' => array(
+          'machine',
+        ),
+
+        // And finally you can define other tables to perform INNER JOINS
+        //'other_joins' => array(
+        //   'table' => ...
+        //),
+      ),
+    )
+    'fields' => array(
+      'name' => array(
+        'type' => 'varchar',
+        'length' => '255',
+        'description' => 'Unique ID for this object. Used to identify it programmatically.',
+      ),
+      'oid' => array(
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'Primary ID field for the table. Not used for anything except internal lookups.',
+        'no export' => TRUE, // Do not export database-only keys.
+      ),
+    // ......
+    'primary key' => array('oid'),
+    'unique keys' => array(
+      'name' => array('name'),
+    ),
+  );
+  return $schema;
+}
+</pre>
+
+<dl>
+<dt>key</dt>
+<dd>This is the primary key of the exportable object and should be a string as names are more portable across systems. It is possible to use numbers here, but be aware that export collisions are very likely. Defaults to 'name'.</dd>
+
+<dt>key name</dt>
+<dd>Human readable title of the export key. Defaults to 'Name'. Because the schema is cached, do not translate this. It must instead be translated when used.</dd>
+
+<dt>primary key</dt>
+<dd>Objects should contain a primary key which is a database identifier primarily used to determine if an object has been written or not. This is required for the default CRUD save callback to work.</dd>
+
+<dt>object</dt>
+<dd>The class the object should be created as. Defaults as stdClass.</dd>
+
+<dt>can disable</dt>
+<dd>Control whether or not the exportable objects can be disabled. All this does is cause the 'disabled' field on the object to always be set appropriately, and a variable is kept to record the state. Changes made to this state must be handled by the owner of the object. Defaults to TRUE.</dd>
+
+<dt>status</dt>
+<dd>Exportable objects can be enabled or disabled, and this status is stored in a variable. This defines what variable that is. Defaults to: 'default_' . $table.</dd>
+
+<dt>default hook</dt>
+<dd>What hook to invoke to find exportable objects that are currently defined. These will all be gathered into a giant array. Defaults to 'default_' . $table.</dd>
+
+<dt>identifier</dt>
+<dd>When exporting the object, the identifier is the variable that the exported object will be placed in. Defaults to $table.</dd>
+
+<dt>bulk export</dt>
+<dd>Declares whether or not the exportable will be available for bulk exporting.</dd>
+
+<dt>list callback</dt>
+<dd>Bulk export callback to provide a list of exportable objects to be chosen for bulk exporting. Defaults to $module . '_' . $table . '_list' if the function exists. If it is not, a default listing function will be provided that will make a best effort to list the titles. See ctools_export_default_list().</dd>
+
+<dt>to hook code callback</dt>
+<dd>Function used to generate an export for the bulk export process. This is only necessary if the export is more complicated than simply listing the fields. Defaults to $module . '_' . $table . '_to_hook_code'.</dt>
+</dl>
+
+<dt>create callback</dt>
+<dd>CRUD callback to use to create a new exportable item in memory. If not provided, the default function will be used. The single argument is a boolean used to determine if defaults should be set on the object. This object will not be written to the database by this callback.</dd>
+
+<dt>load callback</dt>
+<dd>CRUD callback to use to load a single item. If not provided, the default load function will be used. The callback will accept a single argument which should be an identifier of the export key.</dd>
+
+<dt>load all callback</dt>
+<dd>CRUD callback to use to load all items, usually for administrative purposes. If not provided, the default load function will be used. The callback will accept a single argument to determine if the load cache should be reset or not.</dd>
+
+<dt>save callback</dt>
+<dd>CRUD callback to use to save a single item. If not provided, the default save function will be used. The callback will accept a single argument which should be the complete exportable object to save.</dd>
+
+<dt>delete callback</dt>
+<dd>CRUD callback to use to delete a single item. If not provided, the default delete function will be used. The callback will accept a single argument which can be *either* the object or just the export key to delete. The callback MUST be able to accept either.</dd>
+
+<dt>export callback</dt>
+<dd>CRUD callback to use for exporting. If not provided, the default export function will be used. The callback will accept two arguments, the first is the item to export, the second is the indent to place on the export, if any.</dd>
+
+<dt>import callback</dt>
+<dd>CRUD callback to use for importing. If not provided, the default export function will be used. This function will accept the code as a single argument and, if the code evaluates, return an object represented by that code. In the case of failure, this will return a string with human readable errors.</dd>
+
+In addition, each field can contain the following:
+<dl>
+<dt>no export</dt>
+<dd>Set to TRUE to prevent that field from being exported.</dd>
+
+<dt>export callback</dt>
+<dd>A function to override the export behavior. It will receive ($myobject, $field, $value, $indent) as arguments. By default, fields are exported through ctools_var_export().</dd>
+</dl>
+
+<h3>Reserved keys on exportable objects</h3>
+
+Exportable objects have several reserved keys that are used by the CTools export API. Each key can be found at <code>$myobj-&gt;{$key}</code> on an object loaded through <code>ctools_export_load_object()</code>. Implementing modules should not use these keys as they will be overwritten by the CTools export API.
+<dl>
+<dt>api_version</dt>
+<dd>The API version that this object implements.</dd>
+
+<dt>disabled</dt>
+<dd>A boolean for whether the object is disabled.</dd>
+
+<dt>export_module</dt>
+<dd>For objects that live in code, the module which provides the default object.</dd>
+
+<dt>export_type</dt>
+<dd>A bitmask representation of an object current storage. You can use this bitmask in combination with the <code>EXPORT_IN_CODE</code> and <code>EXPORT_IN_DATABASE</code> constants to test for an object's storage in your code.
+</dd>
+
+<dt>in_code_only</dt>
+<dd>A boolean for whether the object lives only in code.</dd>
+
+<dt>table</dt>
+<dd>The schema API table that this object belongs to.</dd>
+
+<dt>type</dt>
+<dd>A string representing the storage type of this object. Can be one of the following:
+<ul>
+<li><em>Normal</em> is an object that lives only in the database.</li>
+<li><em>Overridden</em> is an object that lives in the database and is overriding the exported configuration of a corresponding object in code.</li>
+<li><em>Default</em> is an object that lives only in code.</li>
+</ul>
+</dd>
+</dl>
+
+<h3>The load callback</h3>
+Calling ctools_export_crud_load($table, $name) will invoke your load callback, and calling ctools_export_crud_load_all($table, $reset) will invoke your load all callback. The default handlers should be sufficient for most uses.
+
+Typically, there will be two load functions. A 'single' load, to load just one object, and an 'all' load, to load all of the objects for use in administrating the objects or utilizing the objects when you need all of them. Using ctools_export_load_object() you can easily do both, as well as quite a bit in between. This example duplicates the default functionality for loading one myobj.
+
+<pre>
+/**
+* Load a single myobj.
+*/
+function mymodule_myobj_load($name) {
+  ctools_include('export');
+  $result = ctools_export_load_object('mymodule_myobjs', 'names', array($name));
+  if (isset($result[$name])) {
+    return $result[$name];
+  }
+}
+</pre>
+
+<h3>The save callback</h3>
+Calling ctools_export_crud_save($table, $object) will invoke your save callback. The default handlers should be sufficient for most uses. For the default save mechanism to work, you <b>must</b> define a 'primary key' in the 'export' section of your schema. The following example duplicates the default functionality for the myobj.
+
+<pre>
+/**
+* Save a single myobj.
+*/
+function mymodule_myobj_save(&$myobj) {
+  $update = (isset($myobj->oid) && is_numeric($myobj->oid)) ? array('oid') : array();
+  return drupal_write_record('myobj', $myobj, $update);
+}
+</pre>
+
+<h3>Default hooks for your exports</h3>
+All exportables come with a 'default' hook, which can be used to put your exportable into code. The easiest way to actually use this hook is to set up your exportable for bulk exporting, enable the bulk export module and export an object.

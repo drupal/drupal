@@ -1,0 +1,151 @@
+<?php
+// $Id: views_translatable.test,v 1.1.4.2 2010/12/01 20:05:06 dereine Exp $
+
+module_load_include('test', 'views', 'tests/views_query');
+
+class viewsTranslatableTest extends ViewsSqlTest {
+  var $strings;
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Views Translatable Test',
+      'description' => 'Tests the pluggable translations',
+      'group' => 'Views',
+    );
+  }
+
+  /*
+   * The views plugin definition. Override it if you test provides a plugin.
+   */
+  public function viewsPlugins() {
+    return array(
+      'localization' => array(
+        'test' => array(
+          'no ui' => TRUE,
+          'title' => t('Test'),
+          'help' => t('This is a test description.'),
+          'handler' => 'views_plugin_localization_test',
+          'parent' => 'parent',
+          'path' => drupal_get_path('module', 'views') .'/tests',
+        ),
+      ),
+    );
+  }
+
+  public function setUp() {
+    parent::setUp();
+
+    variable_set('views_localization_plugin', 'test');
+    // Reset the plugin data.
+    views_fetch_plugin_data(NULL, NULL, TRUE);
+    $this->strings = array('Defaults1', 'Apply1', 'Sort By1', 'Asc1', 'Desc1', 'more1', 'Reset1', 'Offset1', 'Defaults1', 'title1', 'Items per page1', 'fieldlabel1', 'filterlabel1');
+    $this->enableViewsUi();
+  }
+
+  /**
+   * Test the unpack translation funtionality.
+   */
+  public function testUnpackTranslatable() {
+    $view = $this->view_unpack_translatable();
+    $view->init_localization();
+
+    $this->assertEqual('views_plugin_localization_test', get_class($view->localization_plugin), 'Take sure that init_localization initiales the right translation plugin');
+
+    $view->export_locale_strings();
+
+    $expected_strings = $this->strings;
+    $result_strings = $view->localization_plugin->get_export_strings();
+    $this->assertEqual(sort($expected_strings), sort($result_strings), 'Take sure that the localisation plugin got every translatable string.');
+  }
+
+  public function testUi() {
+    // Take sure that the string is not translated on the ui.
+    $view = $this->view_unpack_translatable();
+    $view->save();
+    views_invalidate_cache();
+
+    $admin_user = $this->drupalCreateUser(array('administer views', 'administer site configuration'));
+    $this->drupalLogin($admin_user);
+
+    $this->drupalGet("admin/structure/views/edit/$view->name");
+    $this->assertNoText('-translated', 'Take sure that no strings get\'s translated in the ui.');
+  }
+
+  /**
+   * Take sure that the translations get's into the loaded view.
+   */
+  public function testTranslation() {
+    $view = $this->view_unpack_translatable();
+    $view->set_display('default');
+    $view->pre_execute();
+    $view->execute();
+
+    $expected_strings = array();
+    foreach ($this->strings as $string) {
+      $expected_strings[] = $string .= '-translated';
+    }
+    $this->assertEqual(sort($expected_strings), sort($view->localization_plugin->translated_strings), 'Take sure that every string got loaded translated');
+  }
+
+  public function view_unpack_translatable() {
+    $view = new view;
+    $view->name = 'view_unpack_translatable';
+    $view->description = '';
+    $view->tag = '';
+    $view->base_table = 'node';
+    $view->api_version = '3.0-alpha1';
+    $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
+
+    /* Display: Defaults */
+    $handler = $view->new_display('default', 'Defaults1', 'default');
+    $handler->display->display_options['title'] = 'title1';
+    $handler->display->display_options['use_more_text'] = 'more1';
+    $handler->display->display_options['access']['type'] = 'none';
+    $handler->display->display_options['cache']['type'] = 'none';
+    $handler->display->display_options['query']['type'] = 'views_query';
+    $handler->display->display_options['exposed_form']['type'] = 'basic';
+    $handler->display->display_options['exposed_form']['options']['submit_button'] = 'Apply1';
+    $handler->display->display_options['exposed_form']['options']['reset_button'] = TRUE;
+    $handler->display->display_options['exposed_form']['options']['reset_button_label'] = 'Reset1';
+    $handler->display->display_options['exposed_form']['options']['exposed_sorts_label'] = 'Sort By1';
+    $handler->display->display_options['exposed_form']['options']['sort_asc_label'] = 'Asc1';
+    $handler->display->display_options['exposed_form']['options']['sort_desc_label'] = 'Desc1';
+    $handler->display->display_options['pager']['type'] = 'full';
+    $handler->display->display_options['pager']['options']['items_per_page'] = '10';
+    $handler->display->display_options['pager']['options']['offset'] = '0';
+    $handler->display->display_options['pager']['options']['id'] = '0';
+    $handler->display->display_options['pager']['options']['expose']['items_per_page'] = TRUE;
+    $handler->display->display_options['pager']['options']['expose']['items_per_page_label'] = 'Items per page1';
+    $handler->display->display_options['pager']['options']['expose']['offset'] = TRUE;
+    $handler->display->display_options['pager']['options']['expose']['offset_label'] = 'Offset1';
+    $handler->display->display_options['style_plugin'] = 'default';
+    $handler->display->display_options['row_plugin'] = 'fields';
+    /* Field: Node: Nid */
+    $handler->display->display_options['fields']['nid']['id'] = 'nid';
+    $handler->display->display_options['fields']['nid']['table'] = 'node';
+    $handler->display->display_options['fields']['nid']['field'] = 'nid';
+    $handler->display->display_options['fields']['nid']['label'] = 'fieldlabel1';
+    $handler->display->display_options['fields']['nid']['alter']['alter_text'] = 0;
+    $handler->display->display_options['fields']['nid']['alter']['make_link'] = 0;
+    $handler->display->display_options['fields']['nid']['alter']['trim'] = 0;
+    $handler->display->display_options['fields']['nid']['alter']['word_boundary'] = 1;
+    $handler->display->display_options['fields']['nid']['alter']['ellipsis'] = 1;
+    $handler->display->display_options['fields']['nid']['alter']['strip_tags'] = 0;
+    $handler->display->display_options['fields']['nid']['alter']['html'] = 0;
+    $handler->display->display_options['fields']['nid']['hide_empty'] = 0;
+    $handler->display->display_options['fields']['nid']['empty_zero'] = 0;
+    $handler->display->display_options['fields']['nid']['link_to_node'] = 0;
+    /* Filter: Node: Nid */
+    $handler->display->display_options['filters']['nid']['id'] = 'nid';
+    $handler->display->display_options['filters']['nid']['table'] = 'node';
+    $handler->display->display_options['filters']['nid']['field'] = 'nid';
+    $handler->display->display_options['filters']['nid']['exposed'] = TRUE;
+    $handler->display->display_options['filters']['nid']['expose']['operator'] = 'nid_op';
+    $handler->display->display_options['filters']['nid']['expose']['label'] = 'filterlabel1';
+    $handler->display->display_options['filters']['nid']['expose']['identifier'] = 'nid';
+    $handler->display->display_options['filters']['nid']['expose']['single'] = 0;
+    $handler->display->display_options['filters']['nid']['expose']['reduce'] = 0;
+
+    return $view;
+  }
+}

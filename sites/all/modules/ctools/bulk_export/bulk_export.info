@@ -1,0 +1,13 @@
+; $Id: bulk_export.info,v 1.4 2011/01/01 00:01:46 merlinofchaos Exp $
+name = Bulk Export
+description = Performs bulk exporting of data objects known about by Chaos tools.
+core = 7.x
+dependencies[] = ctools
+package = Chaos tool suite
+
+; Information added by drupal.org packaging script on 2011-01-06
+version = "7.x-1.0-alpha2"
+core = "7.x"
+project = "ctools"
+datestamp = "1294276864"
+

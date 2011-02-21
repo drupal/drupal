@@ -1,0 +1,434 @@
+# translation of el.po to Greek
+# Greek translation of Drupal (wysiwyg_editor.module)
+# $Id: el.po,v 1.2 2008/05/30 02:19:15 sun Exp $
+# LANGUAGE translation of Drupal (general)
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+# Generated from file: wysiwyg_editor.module,v 1.91 2007/02/22 22:41:06 nedjo
+#
+# Vasileios Lourdas <lourdas_v@yahoo.gr>, 2007.
+# Vasileios Lourdas <vasilis@lourdas.name>, 2008.
+msgid ""
+msgstr ""
+"Project-Id-Version: el\n"
+"POT-Creation-Date: 2008-04-13 16:27+0300\n"
+"PO-Revision-Date: 2008-04-13 16:40+0300\n"
+"Last-Translator: Vasileios Lourdas <vasilis@lourdas.name>\n"
+"Language-Team: Greek <el@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms:  nplurals=2; plural=(n != 1);\n"
+"X-Generator: KBabel 1.11.4\n"
+
+#: wysiwyg_editor.module:17 wysiwyg_editor.info:0
+msgid "TinyMCE"
+msgstr "TinyMCE"
+
+#: wysiwyg_editor.module:19
+msgid "Configure the rich editor."
+msgstr "Παραμετροποίηση του πλήρους συντάκτη κειμένου."
+
+#: wysiwyg_editor.module:34
+msgid "<p style=\"font-size:x-small\">$Revision: 1.2 $ $Date: 2008/05/30 02:19:15 $</p><p>TinyMCE adds what-you-see-is-what-you-get (WYSIWYG) html editing to textareas. This editor can be enabled/disabled without reloading the page by clicking a link below each textarea.</p><p>Profiles can be defined based on user roles. A TinyMCE profile can define which pages receive this TinyMCE capability, what buttons or themes are enabled for the editor, how the editor is displayed, and a few other editor functions.</p><p>Lastly, only users with the <code>access wysiwyg_editor</code> <a href=\"!url\">permission</a> will be able to use TinyMCE.</p>"
+msgstr "<p style=\"font-size:x-small\">$Revision: 1.2 $ $Date: 2008/05/30 02:19:15 $</p><p>Το TinyMCE προσθέτει δυνατότητα επεξεργασίας HTML τύπου what-you-see-is-what-you-get (WYSIWYG) στις περιοχές κειμένου. Ο επεξεργαστής μπορεί να ενεργοποιηθεί/απενεργοποιηθεί χωρίς την επαναφόρτωση της σελίδας κάνοντας κλικ σε ένα σύνδεσμο κάτω από κάθε περιοχή κειμένου.</p><p>Τα προφίλ ορίζονται βάσει των ρόλων των χρηστών. Ένα προφίλ TinyMCE μπορεί να ορίσει σε ποιες σελίδες θα υπάρχει η δυνατότητα TinyMCE, ποια κουμπιά ή θεματικές παραλλαγές θα είναι ενεργοποιημένες στον επεξεργαστή, πως θα εμφανίζεται ο επεξεργαστής και ορισμένες άλλες λειτουργίες.</p><p>Τέλος, μόνο χρήστες με την <a href=\"!url\">άδεια</a> <code>πρόσβαση στο wysiwyg_editor</code> θα μπορούν να χρησιμοποιούν το TinyMCE.</p>"
+
+#: wysiwyg_editor.module:113
+msgid "enable rich-text"
+msgstr "ενεργοποίηση του πλήρους κειμένου"
+
+#: wysiwyg_editor.module:114
+msgid "disable rich-text"
+msgstr "απενεργοποίηση του πλήρους κειμένου"
+
+#: wysiwyg_editor.module:166
+msgid "Your current web browser does not support WYSIWYG editing."
+msgstr "Ο φυλλομετρητής σας δεν υποστηρίζει επεξεργασία WYSIWYG."
+
+#: wysiwyg_editor.module:247
+msgid "TinyMCE rich-text settings"
+msgstr "Ρυθμίσεις πλήρους-κειμένου TinyMCE"
+
+#: wysiwyg_editor.module:255;698
+msgid "Default state"
+msgstr "Εξ' ορισμού κατάσταση"
+
+#: wysiwyg_editor.module:257;700
+msgid "disabled"
+msgstr "απενεργοποιημένο"
+
+#: wysiwyg_editor.module:257;700
+msgid "enabled"
+msgstr "ενεργοποιημένο"
+
+#: wysiwyg_editor.module:258
+msgid "Should rich-text editing be enabled or disabled by default in textarea fields?"
+msgstr "Το πλήρες κείμενο στα πεδία περιοχής κειμένου θα πρέπει να είναι ενεργοποιημένο ή απενεργοποιημένο εξ' ορισμού;"
+
+#: wysiwyg_editor.module:440
+msgid "administer"
+msgstr "διαχείριση"
+
+#: wysiwyg_editor.module:441;44;0
+msgid "wysiwyg_editor"
+msgstr "wysiwyg_editor"
+
+#: wysiwyg_editor.module:442
+msgid "Add new TinyMCE profile"
+msgstr "Προσθήκη νέου προφίλ TinyMCE"
+
+#: wysiwyg_editor.module:448
+msgid "Edit wysiwyg_editor profile"
+msgstr "Επεξεργασία προφίλ wysiwyg_editor"
+
+#: wysiwyg_editor.module:454
+msgid "Deleted profile"
+msgstr "Το προφίλ διαγράφηκε"
+
+#: wysiwyg_editor.module:458;663
+msgid "Create profile"
+msgstr "Δημιουργία προφίλ"
+
+#: wysiwyg_editor.module:459;667
+msgid "Update profile"
+msgstr "Ενημέρωση προφίλ"
+
+#: wysiwyg_editor.module:462
+msgid "Your TinyMCE profile has been updated."
+msgstr "Το TinyMCE προφίλ σας έχει ενημερωθεί"
+
+#: wysiwyg_editor.module:462
+msgid "Your TinyMCE profile has been created."
+msgstr "Το TinyMCE προφίλ σας έχει δημιουργηθεί."
+
+#: wysiwyg_editor.module:471
+msgid "TinyMCE settings"
+msgstr "Ρυθμίσεις TinyMCE"
+
+#: wysiwyg_editor.module:475
+msgid "Could not find the TinyMCE engine installed at <strong>!wysiwyg_editor-directory</strong>. Please <a href=\"http://wysiwyg_editor.moxiecode.com/\">download TinyMCE</a>, uncompress it and copy the folder into !wysiwyg_editor-path."
+msgstr "Δε βρέθηκε εγκατεστημένη η μηχανή TinyMCE στον κατάλογο <strong>!wysiwyg_editor-directory</strong>. Παρακαλώ <a href=\"http://wysiwyg_editor.moxiecode.com/\">κατεβάστε το TinyMCE</a>, αποσυμπιέστε το και αντιγράψτε τον κατάλογό του στο !wysiwyg_editor-path."
+
+#: wysiwyg_editor.module:655
+msgid "You must <a href=\"!access-control-url\">assign</a> at least one role with the 'access wysiwyg_editor' permission before creating a profile."
+msgstr "Θα πρέπει να <a href=\"!access-control-url\">αποδώσετε</a> τουλάχιστον ένα ρόλο με το δικαίωμα 'πρόσβαση στο wysiwyg_editor' προτού δημιουργήσετε προφίλ."
+
+#: wysiwyg_editor.module:658
+msgid "You will not be allowed to create a new profile since all user roles have already been assigned profiles. Either remove an existing wysiwyg_editor profile from at least one role or assign another role the 'access wysiwyg_editor' permission."
+msgstr "Δεν μπορείτε να δημιουργήσετε νέο προφίλ, εφόσον σε όλους τους ρόλους χρηστών έχουν αποδωθεί προφίλ. Αφαιρέστε ένα υπάρχον προφίλ wysiwyg_editor από ένα τουλάχιστον ρόλο ή αποδώστε το δικαίωμα 'πρόσβαση στο wysiwyg_editor' σε άλλο ρόλο."
+
+#: wysiwyg_editor.module:661
+msgid "Not all user roles are shown since they already have wysiwyg_editor profiles. You must first unassign profiles in order to add them to a new one."
+msgstr "Δεν εμφανίζονται όλοι οι ρόλοι χρηστών εφόσον τους έχει αποδοθεί ήδη προφίλ wysiwyg_editor. Θα πρέπει πρώτα να αφαιρέσετε προφίλ προκειμένου να τους προσθέσετε ένα ακόμη."
+
+#: wysiwyg_editor.module:672
+msgid "Basic setup"
+msgstr "Βασική διαμόρφωση"
+
+#: wysiwyg_editor.module:679
+msgid "Profile name"
+msgstr "Όνομα προφίλ"
+
+#: wysiwyg_editor.module:683
+msgid "Enter a name for this profile. This name is only visible within the wysiwyg_editor administration page."
+msgstr "Εισάγετε ένα όνομα για το προφίλ αυτό. Το όνομα αυτό θα εμφανίζεται μόνο στις σελίδες διαχείρισης του wysiwyg_editor."
+
+#: wysiwyg_editor.module:689
+msgid "Roles allowed to use this profile"
+msgstr "Ρόλοι που τους επιτρέπεται να χρησιμοποιούν αυτό το προφίλ"
+
+#: wysiwyg_editor.module:692
+msgid "Check at least one role. Only roles with 'access wysiwyg_editor' permission will be shown here."
+msgstr "Επιλέξτε τουλάχιστον ένα ρόλο. Εδώ εμφανίζονται μόνο οι ρόλοι με το δικαίωμα 'πρόσβαση στο wysiwyg_editor'."
+
+#: wysiwyg_editor.module:701
+msgid "Default editor state for users in this profile. Users will be able to override this state if the next option is enabled."
+msgstr "Εξ' ορισμού κατάσταση του συντάκτη για τους χρήστες σε αυτό το προφίλ. Οι χρήστες θα μπορούν να αλλάξουν την κατάσταση αυτή αν η επόμενη επιλογή είναι ενεργοποιημένη."
+
+#: wysiwyg_editor.module:706
+msgid "Allow users to choose default"
+msgstr "Να επιτρέπεται στους χρήστες να επιλέγουν το εξ' ορισμού"
+
+#: wysiwyg_editor.module:708;716;740;874;898;906;914
+msgid "false"
+msgstr "ψευδές"
+
+#: wysiwyg_editor.module:708;716;740;874;898;906;914
+msgid "true"
+msgstr "αληθές"
+
+#: wysiwyg_editor.module:709
+msgid "If allowed, users will be able to choose their own TinyMCE default state by visiting their profile page."
+msgstr "Αν επιτρέπεται, οι χρήστες θα μπορούν να επιλέξουν την εξ' ορισμού κατάσταση για το TinyMCE τους επισκεπτόμενοι τη σελίδα του προφίλ τους."
+
+#: wysiwyg_editor.module:714
+msgid "Show disable/enable rich text editor toggle"
+msgstr "Εμφάνιση του διακόπτη απενεργοποίηση/ενεργοποίηση του συντάκτη πλήρους κειμένου"
+
+#: wysiwyg_editor.module:717
+msgid "Whether or not to show the disable/enable rich text editor toggle below the textarea. If false, editor defaults to the global default or user default (see above)."
+msgstr "Εμφάνιση ή όχι του διακόπτη για την απενεργοποίηση/ενεργοποίηση του συντάκτη πλήρους κειμένου κάτω από την περιοχή κειμένου. Αν όχι, ο συντάκτης θα είναι με βάση την εξ' ορισμού καθολική ή από το χρήστη κατάσταση (δείτε παραπάνω)"
+
+#: wysiwyg_editor.module:730
+msgid "Language"
+msgstr "Γλώσσα"
+
+#: wysiwyg_editor.module:733
+msgid "The language for the TinyMCE interface. Language codes based on the <a href=\"http://www.loc.gov/standards/iso639-2/englangn.html\">ISO-639-2</a> format."
+msgstr "Η γλώσσα για τη διεπαφή του TinyMCE. Οι κωδικοί των γλωσσών βασίζονται στη μορφή <a href=\"http://www.loc.gov/standards/iso639-2/englangn.html\">ISO-639-2</a>."
+
+#: wysiwyg_editor.module:738
+msgid "Safari browser warning"
+msgstr "Προειδοποίηση για το φυλλομετρητή Safari"
+
+#: wysiwyg_editor.module:741
+msgid "TinyMCE support for the Safari web browser is experimental and a warning message is displayed when that browser is detected. You can disable this message here."
+msgstr "Η υποστήριξη του φυλλομετρητή Safari από το TinyMCE είναι σε πειραματικό στάδιο και όταν εντοπίζεται ο φυλλομετρητής αυτός θα εμφανίζεται μια προειδοποίηση. Μπορείτε εδώ να απενεργοποιήσετε το μήνυμα αυτό."
+
+#: wysiwyg_editor.module:746
+msgid "Visibility"
+msgstr "Ορατότητα"
+
+#: wysiwyg_editor.module:766
+msgid "Show on every page except the listed pages."
+msgstr "Εμφάνιση σε όλες τις σελίδες εκτός από τις παρακάτω."
+
+#: wysiwyg_editor.module:766
+msgid "Show on only the listed pages."
+msgstr "Εμφάνιση μόνο στις παρακάτω σελίδες."
+
+#: wysiwyg_editor.module:767
+msgid "Enter one page per line as Drupal paths. The '*' character is a wildcard. Example paths are '!blog' for the blog page and !blog-wildcard for every personal blog. !front is the front page."
+msgstr "Εισάγετε μια σελίδα ανά γραμμή ως διαδρομές του Drupal. Ο χαρακτήρας '*' είναι χαρακτήρας μπαλαντέρ. Παραδείγματα διαδρομών είναι το '!blog' για τις σελίδες ιστολογίου και το !blog-wildcard για κάθε προσωπικό ιστολόγιο. Το !front είναι για την κεντρική σελίδα."
+
+#: wysiwyg_editor.module:770
+msgid "Show if the following PHP code returns <code>TRUE</code> (PHP-mode, experts only)."
+msgstr "Εμφάνιση ανάλογα με το αν ο παρακάτω κώδικας PHP επιστρέψει <code>TRUE</code> (κατάσταση PHP, για τους ειδικούς μόνο)."
+
+#: wysiwyg_editor.module:771
+msgid "If the PHP-mode is chosen, enter PHP code between !php. Note that executing incorrect PHP-code can break your Drupal site."
+msgstr "Αν επιλεχθεί η κατάσταση PHP, εισάγετε τον κώδικα PHP ανάμεσα στα !php. Σημειώστε ότι η εκτέλεση λάθους κώδικα μπορεί να προκαλέσει ζημιά στο Drupal ιστοχώρο σας."
+
+#: wysiwyg_editor.module:775
+msgid "Show wysiwyg_editor on specific pages"
+msgstr "Εμφάνιση του wysiwyg_editor σε συγκεκριμένες σελίδες"
+
+#: wysiwyg_editor.module:781
+msgid "Pages"
+msgstr "Σελίδες"
+
+#: wysiwyg_editor.module:789
+msgid "Buttons and plugins"
+msgstr "Κουμπιά και επιπλέον αρθρώματα"
+
+#: wysiwyg_editor.module:841
+msgid "Editor appearance"
+msgstr "Εμφάνιση συντάκτη κειμένου"
+
+#: wysiwyg_editor.module:848
+msgid "Toolbar location"
+msgstr "Τοποθεσία γραμμής εργαλείων"
+
+#: wysiwyg_editor.module:850;866
+msgid "bottom"
+msgstr "κάτω μέρος"
+
+#: wysiwyg_editor.module:850;866
+msgid "top"
+msgstr "πάνω μέρος"
+
+#: wysiwyg_editor.module:851
+msgid "Show toolbar at the top or bottom of the editor area?"
+msgstr "Να εμφανίζεται η γραμμή εργαλείων στο πάνω ή κάτω μέρος της περιοχής του συντάκτη;"
+
+#: wysiwyg_editor.module:856
+msgid "Toolbar alignment"
+msgstr "Στοίχιση γραμμής εργαλείων"
+
+#: wysiwyg_editor.module:858
+msgid "center"
+msgstr "κέντρο"
+
+#: wysiwyg_editor.module:858
+msgid "left"
+msgstr "αριστερά"
+
+#: wysiwyg_editor.module:858
+msgid "right"
+msgstr "δεξιά"
+
+#: wysiwyg_editor.module:859
+msgid "Align tool icons left, center, or right within the toolbar."
+msgstr "Στοίχιση των εικονιδίων των εργαλείων αριστερά, στο κέντρο ή δεξιά μέσα στη γραμμή εργαλείων."
+
+#: wysiwyg_editor.module:864
+msgid "Path location"
+msgstr "Τοποθεσία διαδρομής"
+
+#: wysiwyg_editor.module:866
+msgid "none"
+msgstr "κανένα"
+
+#: wysiwyg_editor.module:867
+msgid "Path to html elements (i.e. \"body>table>tr>td\"). Show at top, bottom, or not at all."
+msgstr "Η διαδρομή των στοιχείων html (πχ. \"body>table>tr>td\"). Να εμφανίζεται πάνω, κάτω ή καθόλου."
+
+#: wysiwyg_editor.module:872
+msgid "Enable resizing button"
+msgstr "Ενεργοποίηση πλήκτρου αλλαγής μεγέθους"
+
+#: wysiwyg_editor.module:875
+msgid " This option gives you the ability to enable/disable the resizing button. If enabled the <strong>Path location toolbar</strong> must be set to \"top\" or \"bottom\" in order to display the resize icon."
+msgstr "Η επιλογή αυτή δίνει τη δυνατότητα να ενεργοποιείτε/απενεργοποιείτε το πλήκτρο αλλαγής μεγέθους. Αν είναι ενεργοποιημένη, η <strong>γραμμή εργαλείων τοποθεσίας διαδρομής</strong> θα πρέπει να είναι \"πάνω\" ή \"κάτω\" για να εμφανίζεται το εικονίδιο αλλαγής μεγέθους."
+
+#: wysiwyg_editor.module:880
+msgid "Block formats"
+msgstr "Μορφές μπλοκ"
+
+#: wysiwyg_editor.module:884
+msgid "Comma separated list of HTML block formats. You can only remove elements, not add."
+msgstr "Λίστα μπλοκ μορφών HTML χωρισμένη με το κόμμα. Μπορείτε να αφαιρέσετε μόνο στοιχεία, όχι να προσθέσετε."
+
+#: wysiwyg_editor.module:889
+msgid "Cleanup and output"
+msgstr "Εκκαθάριση και έξοδος"
+
+#: wysiwyg_editor.module:896
+msgid "Verify HTML"
+msgstr "Επαλήθευση της HTML"
+
+#: wysiwyg_editor.module:899
+msgid "Should the HTML contents be verified or not? Verifying will strip &lt;head&gt tags, so choose false if you will be editing full page HTML."
+msgstr "Επαλήθευση ή όχι των στοιχείων της HTML; Η επαλήθευση θα αφαιρέσει τις σημάνσεις &lt;head&gt, οπότε επιλέξτε ψευδές αν θέλετε να επεξεργαστείτε πλήρεις σελίδες HTML."
+
+#: wysiwyg_editor.module:904
+msgid "Preformatted"
+msgstr "Προμορφοποιημένο"
+
+#: wysiwyg_editor.module:907
+msgid "If this option is set to true, the editor will insert TAB characters on tab and preserve other whitespace characters just like a PRE HTML element does."
+msgstr "Αν η επιλογή αυτή έχει ως τιμή αληθές, ο συντάκτης κειμένου θα εισάγει χαρακτήρες TAB και θα διατηρεί τους υπόλοιπους λευκούς χαρακτήρες (whitespaces), ακριβώς όπως κάνει και το στοιχείο PRE της HTML."
+
+#: wysiwyg_editor.module:912
+msgid "Convert &lt;font&gt; tags to styles"
+msgstr "Μετατροπή των σημάνσεων  &lt;font&gt; σε στυλ"
+
+#: wysiwyg_editor.module:915
+msgid "If you set this option to true, font size, font family, font color and font background color will be replaced by inline styles."
+msgstr "Αν η επιλογή αυτή έχει ως τιμή αληθές, το μέγεθος, η οικογένεια, το χρώμα των γραμματοσειρών και το χρώμα του υπόβαθρου θα αντικαθίστανται από στυλ μέσα στο κείμενο (inline)."
+
+#: wysiwyg_editor.module:920
+msgid "Remove linebreaks"
+msgstr "Αφαίρεση των αλλαγών γραμμών"
+
+#: wysiwyg_editor.module:923
+msgid "Set this option to false to prevent TinyMCE from removing linebreaks from existing nodes.  True avoids conflicts with some filters."
+msgstr "Θέστε την επιλογή αυτή σε ψευδές για να αποτρέψετε το TinyMCE να αφαιρεί τις αλλαγές γραμμών από τους υπάρχοντες κόμβους. Το αληθές αποφεύγει προβλήματα με ορισμένα φίλτρα."
+
+#: wysiwyg_editor.module:928
+msgid "Apply source formatting"
+msgstr "Εφαρμογή μορφοποίησης κώδικα"
+
+#: wysiwyg_editor.module:931
+msgid "This option makes TinyMCE apply source formatting.  Set this to true for a cleaner HTML source.  Choose false to avoid conflicts with some filters."
+msgstr "Η επιλογή αυτή ορίζει στο TinyMCE να εφαρμόζει μορφοποίηση κώδικα. Θέστε την επιλογή σε αληθές για ένα πιο ευανάγνωστο κώδικα HTML. Θέστε σε ψευδές για την αποφυγή προβλημάτων με ορισμένα φίλτρα."
+
+#: wysiwyg_editor.module:936
+msgid "CSS"
+msgstr "CSS"
+
+#: wysiwyg_editor.module:943
+msgid "Editor CSS"
+msgstr "Συντάκτης CSS"
+
+#: wysiwyg_editor.module:945
+msgid "use theme css"
+msgstr "χρησιμοποίηση css θεματικής παραλλαγής"
+
+#: wysiwyg_editor.module:945
+msgid "define css"
+msgstr "ορισμός css"
+
+#: wysiwyg_editor.module:945
+msgid "tinyMCE default"
+msgstr "προεπιλογή TinyMCE"
+
+#: wysiwyg_editor.module:946
+msgid "Defines the CSS to be used in the editor area.<br />use theme css - load style.css from current site theme.<br/>define css - enter path for css file below.<br />tinyMCE default - uses default CSS from editor."
+msgstr "Καθορίζει το CSS που θα χρησιμοποιηθεί στην περιοχή κειμένου του συντάκτη. <br />χρησιμοποίηση του θέματος css - χρησιμοποιεί το style.css από το τρέχων θέμα του ιστοχώρου. <br/>ορισμός του css - εισάγετε παρακάτω τη διαδρομή για το αρχείο του css<br />εξ' ορισμού του tinyMCE - χρησιμοποιεί το εξ' ορισμού CSS του συντάκτη κειμένου."
+
+#: wysiwyg_editor.module:951
+msgid "CSS path"
+msgstr "Διαδρομή CSS"
+
+#: wysiwyg_editor.module:955
+msgid "Enter path to CSS file (<em>example: \"css/editor.css\"</em>) or a list of css files seperated by a comma (<em>example: /themes/garland/style.css,http://domain.com/customMCE.css</em>).<br />Macros: %h (host name: http://www.example.com/), %t (path to theme: theme/yourtheme/)<br />Be sure to select \"define css\" above."
+msgstr "Εισάγετε τη διαδρομή για το αρχείο CSS (<em>παράδειγμα: \"css/editor.css\"</em>) ή μια λίστα αρχείων css χωρισμένα με το κόμμα (<em>παράδειγμα: /themes/garland/style.css,http://domain.com/customMCE.css</em>). <br />Μακροεντολές: %h (όνομα υπολογιστή: http://www.example.com/), %t (διαδρομή στο θέμα: theme/yourtheme/)<br />Σιγουρευτείτε να επιλέξετε το \"ορισμός του css\" παραπάνω."
+
+#: wysiwyg_editor.module:960
+msgid "CSS classes"
+msgstr "Κλάσεις CSS"
+
+#: wysiwyg_editor.module:964
+msgid "Adds CSS classes to the \"styles\" droplist. Format is: &lt;title&gt;=&lt;class&gt;;<br/> Example: Header 1=header1;Header 2=header2;Header 3=header3 (note: no trailing ';')<br />Leave blank to automatically import list of CSS classes from style sheet."
+msgstr "Προσθέτει κλάσεις css στη λίστα \"στυλ\". Η μορφοποίηση είναι &lt;τίτλος&gt;=&lt;κλάση&gt;;<br/> Παράδειγμα: Επικεφαλίδα 1=header1;Επικεφαλίδα 2=header2;Επικεφαλίδα 3=header3 (σημείωση: χωρίς το ';' στο τέλος)<br />Αφήστε το κενό για να εισαχθεί αυτόματα η λίστα των κλάσεων CSS από το αρχείο των στυλ."
+
+#: wysiwyg_editor.module:1046
+msgid "Profile"
+msgstr "Προφίλ"
+
+#: wysiwyg_editor.module:1046
+msgid "Roles"
+msgstr "Ρόλοι"
+
+#: wysiwyg_editor.module:1046
+msgid "Operations"
+msgstr "Λειτουργίες"
+
+#: wysiwyg_editor.module:1048
+msgid "edit"
+msgstr "επεξεργασία"
+
+#: wysiwyg_editor.module:1048
+msgid "delete"
+msgstr "διαγραφή"
+
+#: wysiwyg_editor.module:1051
+msgid "<p><a href=\"!create-profile-url\">Create new profile</a></p>"
+msgstr "<p><a href=\"!create-profile-url\">Δημιουργία νέου προφίλ</a></p>"
+
+#: wysiwyg_editor.module:1054
+msgid "No profiles found. Click here to <a href=\"!create-profile-url\">create a new profile</a>."
+msgstr "Δε βρέθηκαν προφίλ. Κάντε κλικ εδώ για να <a href=\"!create-profile-url\">δημιουργήσετε ένα νέο προφίλ</a>."
+
+#: wysiwyg_editor.module:1085
+msgid "You must give a profile name."
+msgstr "Πρέπει να εισάγετε ένα όνομα προφίλ."
+
+#: wysiwyg_editor.module:1089
+msgid "You must select at least one role."
+msgstr "Πρέπει να επιλέξετε τουλάχιστον ένα ρόλο."
+
+#: wysiwyg_editor.module:43
+msgid "administer wysiwyg_editor"
+msgstr "διαχείριση του wysiwyg_editor"
+
+#: wysiwyg_editor.module:43
+msgid "access wysiwyg_editor"
+msgstr "πρόσβαση στο wysiwyg_editor"
+
+#: wysiwyg_editor.module:44
+msgid "module"
+msgstr "άρθρωμα"
+
+#: wysiwyg_editor.module:46
+msgid "/wysiwyg_editor/jscripts/tiny_mce/plugins/imagemanager/"
+msgstr "/wysiwyg_editor/jscripts/tiny_mce/plugins/imagemanager/"
+
+#: wysiwyg_editor.module:47
+msgid "access wysiwyg_editor imagemanager"
+msgstr "πρόσβαση στο διαχειριστή εικόνων wysiwyg_editor"
+
+#: wysiwyg_editor.info:0
+msgid "The most popular WYSIWYG editor for advanced content editing."
+msgstr "Ο δημοφιλέστερος WYSIWYG συντάκτης κειμένου για προχωρημένη επεξεργασία περιεχομένου."
+

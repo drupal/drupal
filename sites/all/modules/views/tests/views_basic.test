@@ -1,0 +1,174 @@
+<?php
+// $Id: views_basic.test,v 1.1.4.4 2010/05/24 11:18:18 dereine Exp $
+
+/**
+ * Basic test class for Views query builder tests.
+ */
+class ViewsBasicTest extends ViewsSqlTest {
+  public static function getInfo() {
+    return array(
+      'name' => t('Basic query test'),
+      'description' => t('A basic query test for Views.'),
+      'group' => t('Views')
+    );
+  }
+
+  /**
+   * Test a trivial result set.
+   */
+  public function testSimpleResultSet() {
+    $view = $this->getBasicView();
+
+    // Execute the view.
+    $view->execute();
+
+    // Verify the result.
+    $this->assertEqual(5, count($view->result), t('The number of returned rows match.'));
+    $this->assertIdenticalResultset($view, $this->dataSet(), array(
+      'views_test_name' => 'name',
+      'views_test_age' => 'age',
+    ));
+  }
+
+  /**
+   * Test filtering of the result set.
+   */
+  public function testSimpleFiltering() {
+    $view = $this->getBasicView();
+
+    // Add a filter.
+    $view->display['default']->handler->override_option('filters', array(
+      'age' => array(
+        'operator' => '<',
+        'value' => array(
+          'value' => '28',
+          'min' => '',
+          'max' => '',
+        ),
+        'group' => '0',
+        'exposed' => FALSE,
+        'expose' => array(
+          'operator' => FALSE,
+          'label' => '',
+        ),
+        'id' => 'age',
+        'table' => 'views_test',
+        'field' => 'age',
+        'relationship' => 'none',
+      ),
+    ));
+
+    // Execute the view.
+    $view->execute();
+
+    // Build the expected result.
+    $dataset = array(
+      array(
+        'id' => 1,
+        'name' => 'John',
+        'age' => 25,
+      ),
+      array(
+        'id' => 2,
+        'name' => 'George',
+        'age' => 27,
+      ),
+      array(
+        'id' => 4,
+        'name' => 'Paul',
+        'age' => 26,
+      ),
+    );
+
+    // Verify the result.
+    $this->assertEqual(3, count($view->result), t('The number of returned rows match.'));
+    $this->assertIdenticalResultSet($view, $dataset, array(
+      'views_test_name' => 'name',
+      'views_test_age' => 'age',
+    ));
+  }
+
+  /**
+   * Test simple argument.
+   */
+  public function testSimpleArgument() {
+    $view = $this->getBasicView();
+
+    // Add a argument.
+    $view->display['default']->handler->override_option('arguments', array(
+      'age' => array(
+        'default_action' => 'ignore',
+        'style_plugin' => 'default_summary',
+        'style_options' => array(),
+        'wildcard' => 'all',
+        'wildcard_substitution' => 'All',
+        'title' => '',
+        'breadcrumb' => '',
+        'default_argument_type' => 'fixed',
+        'default_argument' => '',
+        'validate_type' => 'none',
+        'validate_fail' => 'not found',
+        'break_phrase' => 0,
+        'not' => 0,
+        'id' => 'age',
+        'table' => 'views_test',
+        'field' => 'age',
+        'validate_user_argument_type' => 'uid',
+        'validate_user_roles' => array(
+          '2' => 0,
+        ),
+        'relationship' => 'none',
+        'default_options_div_prefix' => '',
+        'default_argument_user' => 0,
+        'default_argument_fixed' => '',
+        'default_argument_php' => '',
+        'validate_argument_node_type' => array(
+          'page' => 0,
+          'story' => 0,
+        ),
+        'validate_argument_node_access' => 0,
+        'validate_argument_nid_type' => 'nid',
+        'validate_argument_vocabulary' => array(),
+        'validate_argument_type' => 'tid',
+        'validate_argument_transform' => 0,
+        'validate_user_restrict_roles' => 0,
+        'validate_argument_php' => '',
+      )
+    ));
+
+    $saved_view = clone $view;
+
+    // Execute with a view
+    $view->set_arguments(array(27));
+    $view->execute();
+
+    // Build the expected result.
+    $dataset = array(
+      array(
+        'id' => 2,
+        'name' => 'George',
+        'age' => 27,
+      ),
+    );
+
+    // Verify the result.
+    $this->assertEqual(1, count($view->result), t('The number of returned rows match.'));
+    $this->assertIdenticalResultSet($view, $dataset, array(
+      'views_test_name' => 'name',
+      'views_test_age' => 'age',
+    ));
+
+    // Test "show all" if no argument is present.
+    $view = $saved_view;
+    $view->execute();
+
+    // Build the expected result.
+    $dataset = $this->dataSet();
+
+    $this->assertEqual(5, count($view->result), t('The number of returned rows match.'));
+    $this->assertIdenticalResultSet($view, $dataset, array(
+      'views_test_name' => 'name',
+      'views_test_age' => 'age',
+    ));
+  }
+}

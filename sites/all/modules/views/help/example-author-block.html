@@ -1,0 +1,78 @@
+<!-- $Id: example-author-block.html,v 1.1.6.2 2010/08/13 22:22:28 merlinofchaos Exp $ -->
+<p>In this example you will create a context-sensitive block that shows the titles of recent blog entries by an author when viewing one of their posts. This will demonstrate using Views <em>arguments</em> to dynamically filter a view's contents at display time.</p>
+
+<p>Before working through this example, enable the <strong>Blog</strong> module and populate some entries from a few different users.</p>
+
+<h3>Creating the View</h3>
+<p>The first step is creating a view for our recent blog entries block. Because the block will show the titles of blog entries, this view is considered a "Node" type. Go to <a target="_blank" href="/admin/structure/views/add">add new view</a>, enter the following properties, and click <strong>Next</strong>:</p>
+
+<dl>
+  <dt>View name</dt>
+  <dd>recent_blog_entries</dd>
+  <dt>View description</dt>
+  <dd>List of recent blog entries for a given author.</dd>
+  <dt>View tag</dt>
+  <dd>blog</dd>
+  <dt>View type</dt>
+  <dd>Node</dd>
+</dl>
+
+<h3>Generating a list of blog entries</h3>
+<p>It will be much easier to see the view progress if we can see it doing something. In this section, we will create a basic view displaying blog entry titles.</p>
+
+<ol>
+<li>In the third column, locate the <strong>Fields</strong> area. Generally speaking, fields are the pieces of information that you want to display in the view (in this case, node title). Click the <strong>+</strong> icon to add a field.</li>
+<li>Scroll down to <strong>Defaults: Add fields</strong>, below the settings table. A large selection of fields will be available.</li>
+<li>In the <strong>Groups</strong> drop-down menu, select <em>Node</em>. This will limit the list to only the default fields exposed by Node module.</li>
+<li>Scroll down the list, select the <em>Node: Title</em> field, and click <strong>Add</strong>.</li>
+<li>You will now be presented with settings for the <em>Node: Title</em> field. Delete the label from the <strong>Label</strong> field, so that each individual node title is not prefixed with the word "Title." Additionally, check the <em>Link this field to its node</em> box so that visitors who see an interesting title can click directly on it to read the blog entry to which it belongs.</li>
+<li>When finished, click <strong>Update</strong>. If you scroll down to the <strong>Live Preview</strong> section, you should now see a list of several node titles; however both blog entries and other node types will be in the list. Let's fix that.</li>
+<li>In the fourth column, locate the <strong>Filters</strong> area. Filters limit the results displayed in the view, and we can use this to our advantage here by showing node titles only from blog entries and not every type of node. Click the <strong>+</strong> icon to add a filter.</li>
+<li>As before, scroll down to the <strong>Defaults: Add filters</strong> section, select <em>Node</em> from the <strong>Groups</strong> select box to limit the list of options to only those exposed by Node module.</li>
+<li>Scroll down and select the <em>Node: Type</em> field and click <strong>Add</strong>. In the settings page that appears, leave <strong>Operator</strong> as <em>Is one of</em> and select <em>Blog entry</em> under <strong>Node type</strong>. Click <strong>Update</strong> when finished.</li>
+<li>Now, by scrolling down to <strong>Live preview</strong>, you'll see that the list only shows blog entries.</li>
+</ol>
+
+<h3>Adding context with arguments</h3>
+<p>While filters are very useful for limiting the results of a view when the condition is always consistent (for example, a view of blog entry nodes should <em>always</em> be filtered by the blog entry type), something filters can't do is smart decision-making based on the page context. In our case, we want the view to display a different list of blog entries when looking at a post by user 'admin' than we do when looking at a post by user 'member', and filters won't be able to help.</p>
+
+<p>Luckily, there's another way to filter a view's content: <em>arguments</em>. Through arguments, Views are able to obtain additional context (typically via dynamic URLs with IDs in them) and can take this context into consideration when displaying the view.</p>
+
+<p>Let's walk through adding and configuring an argument to our view so that we can change its contents based on post author.</p>
+
+<ol>
+<li>In the third column, locate the <strong>Arguments</strong> area. Click the <strong>+</strong> icon to add an argument.</li>
+<li>Because we are basing the view around content <em>authors</em>, this time under <strong>Groups</strong> select <em>User</em>. Check <em>User: Uid</em> and click <strong>Add</strong>.</li>
+<li>The <strong>Defaults: Configure Argument User: Uid</strong> settings page has a lot going on, but only a few things that need our attention.</li>
+<li>The <strong>Title</strong> field here, unlike the Title field under <em>Basic Settings</em>, can be based upon the context that the view is being displayed in. Change the title to 'Recent entries by %1.' %1 will later be expanded to the user's name (based on the User: Uid argument) when the view is displayed.</li>
+<li>Under <strong>Action to take if argument is not present</strong>, there are a variety of options, ranging from displaying a 404 or a 403 page to simply displaying all values in the view. In our case, if an argument isn't specified (which it won't be, since this view will be displayed in a sidebar block, not as a page with its own URL), we want to give it a default one to act on. Select <em>Provide default argument</em>.</li>
+<li>Assuming JavaScript is enabled in your browser, you should now get another selection for <strong>Default argument type</strong>. Select <em>User ID from URL</em>. This will cause Views to first see if it can figure out a user ID from the current URL (for example, user/1). If it can't, it will instead check to see if the current page is a node page (such as node/42) and, if so, take the user ID from the node's author field instead.</li>
+<li><strong>Validator options</strong> provide a useful way to control what kind of arguments your view will accept. Select <em>User</em> as the <strong>Validator</strong>. By default, changing this setting will check the incoming argument and ensure it's a valid user ID; if not, the view will be hidden from the page.</li>
+<li>Once you have changed the argument's title, default argument, and validator options, click <strong>Update</strong> to save your changes.</li>
+<li>You'll notice that now the Live preview no longer shows anything. Did we just break the view? Fortunately, no. It's merely abiding by our wishes to hide itself if there is no valid user ID given to it. Try entering a '1' in the <strong>Arguments</strong> box and clicking <strong>Preview</strong>. You should now see a list of only user 1's blog entries.</li>
+</ol>
+
+<h3>Creating the block</h3>
+<p>So the live preview is now showing basically what we want. There's just one problem: we have no way to stick what we've done so far into a sidebar block! Let's fix that by adding a new <strong>Display</strong>.</p>
+
+<ol>
+<li>In the first column, under <strong>Defaults</strong>, there is a select box containing entries such as <em>Page</em>, <em>Feed</em>, and, yes, <em>Block</em>! Select <em>Block</em> and click <strong>Add display</strong>.</li>
+<li>There's not much else to do here as far as Views is concerned. Under <strong>Block settings</strong>, click the <em>None</em> link next to <strong>Admin</strong> and fill in a description for the block in the administrative interface, such as: 'Recent blog entries by author.' and click <strong>Update</strong>.</li>
+<li>Save your work by clicking the <strong>Save</strong> button at the bottom of the Views interface. You should receive a message that the view has been saved.</li>
+<li>Next, navigate to the <a target="_blank" href="/admin/build/block">blocks interface</a> and drag the 'Recent blog entries by author' block to the right sidebar region (or similar) and click <strong>Save blocks</strong>.</li>
+<li>You'll notice this appeared to do nothing. No block shows in the sidebar. But remember, we are looking at an adminitrative page; we are not looking at a page that would provide a user ID context. Navigate to the <a target="_blank" href="/blog">main blog listing</a> and click on an entry there. You should now see a sidebar block, titled something like "Recent entries by admin," with a list of blog entries beneath it.</li>
+</ol>
+
+<h3>Finishing touches</h3>
+<p>There are still a few remaining things to do before our view is complete. For example, we said that the block was to show <em>recent</em> blog entries, but instead it's showing them in the order they were entered, with oldest on top. Additionally, even unpublished entries are showing in the list currently.</p>
+
+<ol>
+<li>Return to the <a target="_blank" href="/admin/structure/views/edit/recent_blog_entries">recent_blog_entries view edit page</a>.</li>
+<li>Add an additional filter by clicking the <strong>+</strong> icon in the <strong>Filters</strong> section in the fourth column.</li>
+<li>Change <strong>Groups</strong> to <em>Node</em> and select <em>Node: Published</em>. Click <strong>Add</strong>.</li>
+<li>Under the <strong>Published</strong> selection, choose <em>Yes</em> and click <strong>Update</strong>.</li>
+<li>To handle sorting, locate the <strong>Sort criteria</strong> area, just above filters, and click the <strong>+</strong> icon there.</li>
+<li>Under <strong>Groups</strong>, again select <em>Node</em>. From the list of options, check <em>Node: Post date</em> and click <strong>Add</strong>.</li>
+<li>In the settings page, change <strong>Sort order</strong> to <em>Descending</em>. This will place the newer posts on top of the older ones. Click <strong>Update</strong> when finished.</li>
+<li>Finally, <strong>Save</strong> the view for your new settings to take effect.</li>
+</ol>

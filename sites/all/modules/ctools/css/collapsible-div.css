@@ -1,0 +1,19 @@
+/* $Id: collapsible-div.css,v 1.2 2008/11/27 17:29:34 merlinofchaos Exp $ */
+
+.ctools-collapsible-container .ctools-toggle {
+  float: left;
+  width: 21px;
+  height: 21px;
+  cursor: pointer;
+  background-position: 7px 7px;
+  background-repeat: no-repeat;
+  background-image: url(../images/collapsible-expanded.png);
+}
+
+.ctools-collapsible-container .ctools-collapsible-handle {
+  cursor: pointer;
+}
+
+.ctools-collapsible-container .ctools-toggle-collapsed {
+  background-image: url(../images/collapsible-collapsed.png);
+}

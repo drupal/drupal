@@ -1,0 +1,8 @@
+<!-- $Id: path.html,v 1.3 2008/06/25 19:26:01 merlinofchaos Exp $ -->
+If a display has a path that means that it can be retrieved directly by calling a URL as a first class page on your Drupal site. Any items after the path will be passed into the view as arguments. For example, if the path is <strong>foo/bar</strong> and a user visits <strong>http://www.example.com/foo/bar/baz/beta</strong>, 'baz' and 'beta' will be given as arguments to the view. These can be handled by adding items to the <a href="topic:views/arguments">arguments</a> section.
+
+You may also use placeholders in your path to represent arguments that come in the middle. For example, the path <strong>node/%/someview</strong> would expect the first argument to be the second part of the path. For example, <strong>node/21/someview</strong> would have an argument of '21'.
+
+<em>Note:</em> Views 1 used <strong>$arg</strong> for this kind of thing. $arg is no longer allowed as part of the path. You must use % instead.
+
+If multiple displays <strong>within the same view</strong> have the same path, the user will get the first display they have access to. This means you can create successfuly less restricted displays in order to give administrators and privileged users different content at the same path.

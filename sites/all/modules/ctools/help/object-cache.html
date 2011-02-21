@@ -1,0 +1,133 @@
+<!-- $Id: object-cache.html,v 1.1 2009/01/23 23:14:04 merlinofchaos Exp $ -->
+The CTools Object Cache is a specialized cache for storing data that is non-volatile. This differs from the standard Drupal cache mechanism, which is volatile, meaning that the data can be cleared at any time and it is expected that any cached data can easily be reconstructed. In contrast, data stored in this cache is not expected to be reconstructable. It is primarily used for storing user input which is retrieved in stages, allowing for more complex user interface interactions.
+
+The object cache consists of 3 normal functions for cache maintenance, and 2 additional functions to facilitate locking.
+
+To use any of these functions, you must first use ctools_include:
+
+<pre>
+ctools_include('object-cache');
+</pre>
+
+<pre>
+/**
+ * Get an object from the non-volatile ctools cache.
+ *
+ * This function caches in memory as well, so that multiple calls to this
+ * will not result in multiple database reads.
+ *
+ * @param $obj
+ *   A 32 character or less string to define what kind of object is being
+ *   stored; primarily this is used to prevent collisions.
+ * @param $name
+ *   The name of the object being stored.
+ * @param $skip_cache
+ *   Skip the memory cache, meaning this must be read from the db again.
+ *
+ * @return
+ *   The data that was cached.
+ */
+function ctools_object_cache_get($obj, $name, $skip_cache = FALSE) {
+</pre>
+
+<pre>
+/**
+ * Store an object in the non-volatile ctools cache.
+ *
+ * @param $obj
+ *   A 32 character or less string to define what kind of object is being
+ *   stored; primarily this is used to prevent collisions.
+ * @param $name
+ *   The name of the object being stored.
+ * @param $cache
+ *   The object to be cached. This will be serialized prior to writing.
+ */
+function ctools_object_cache_set($obj, $name, $cache) {
+</pre>
+
+<pre>
+/**
+ * Remove an object from the non-volatile ctools cache
+ *
+ * @param $obj
+ *   A 32 character or less string to define what kind of object is being
+ *   stored; primarily this is used to prevent collisions.
+ * @param $name
+ *   The name of the object being removed.
+ */
+function ctools_object_cache_clear($obj, $name) {
+</pre>
+
+To facilitate locking, which is the ability to prohibit updates by other users while one user has an object cached, this system provides two functions:
+
+<pre>
+/**
+ * Determine if another user has a given object cached.
+ *
+ * This is very useful for 'locking' objects so that only one user can
+ * modify them.
+ *
+ * @param $obj
+ *   A 32 character or less string to define what kind of object is being
+ *   stored; primarily this is used to prevent collisions.
+ * @param $name
+ *   The name of the object being removed.
+ *
+ * @return
+ *   An object containing the UID and updated date if found; NULL if not.
+ */
+function ctools_object_cache_test($obj, $name) {
+</pre>
+
+The object returned by ctools_object_cache_test can be directly used to determine whether a user should be allowed to cache their own version of an object.
+
+To allow the concept of breaking a lock, that is, clearing another users changes:
+
+<pre>
+/**
+ * Remove an object from the non-volatile ctools cache for all session IDs.
+ *
+ * This is useful for clearing a lock.
+ *
+ * @param $obj
+ *   A 32 character or less string to define what kind of object is being
+ *   stored; primarily this is used to prevent collisions.
+ * @param $name
+ *   The name of the object being removed.
+ */
+function ctools_object_cache_clear_all($obj, $name) {
+</pre>
+
+Typical best practice is to use wrapper functions such as these:
+
+<pre>
+/**
+ * Get the cached changes to a given task handler.
+ */
+function delegator_page_get_page_cache($name) {
+  ctools_include('object-cache');
+  $cache = ctools_object_cache_get('delegator_page', $name);
+  if (!$cache) {
+    $cache = delegator_page_load($name);
+    $cache->locked = ctools_object_cache_test('delegator_page', $name);
+  }
+
+  return $cache;
+}
+
+/**
+ * Store changes to a task handler in the object cache.
+ */
+function delegator_page_set_page_cache($name, $page) {
+  ctools_include('object-cache');
+  $cache = ctools_object_cache_set('delegator_page', $name, $page);
+}
+
+/**
+ * Remove an item from the object cache.
+ */
+function delegator_page_clear_page_cache($name) {
+  ctools_include('object-cache');
+  ctools_object_cache_clear('delegator_page', $name);
+}
+</pre>

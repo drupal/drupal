@@ -1,0 +1,920 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: wysiwyg-6.x-2.0\n"
+"POT-Creation-Date: 2009-08-22 09:55+0300\n"
+"PO-Revision-Date: 2009-08-23 11:01+0200\n"
+"Last-Translator: Juhani Pirinen <juhani.pirinen@ontieto.com>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Poedit-Language: Finnish\n"
+"X-Poedit-Country: FINLAND\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-Bookmarks: -1,-1,-1,-1,-1,-1,54,-1,-1,-1\n"
+
+#: wysiwyg.api.php:51;52
+msgid "My plugin title"
+msgstr "Oman laajennusosan otsikko"
+
+#: wysiwyg.api.php:61
+msgid "Button title (optional)"
+msgstr "Painikkeen otsikko (vaihtoehtoinen)"
+
+#: wysiwyg.admin.inc:51
+msgid "%editor profile for %format"
+msgstr "%editor profiilili formaatille %format"
+
+#: wysiwyg.admin.inc:60
+msgid "Basic setup"
+msgstr "Perusasetukset"
+
+#: wysiwyg.admin.inc:67
+msgid "Enabled by default"
+msgstr "Käytössä oletusarvoisesti"
+
+#: wysiwyg.admin.inc:70
+msgid "The default editor state for users having access to this profile. Users are able to override this state if the next option is enabled."
+msgstr "Oletuseditoritila käyttäjille, joilla on pääsy tähän profiiliin. Käyttäjät pystyvät ohittamaan tämän tilan, jos seuraava valinta on käytössä."
+
+#: wysiwyg.admin.inc:75
+msgid "Allow users to choose default"
+msgstr "Salli käyttäjien valita oletus"
+
+#: wysiwyg.admin.inc:78
+msgid "If allowed, users will be able to choose their own editor default state in their user account settings."
+msgstr "Jos sallittu, käyttäjät pystyvät valitsemaan oman editorinsa oletustilan käyttäjätilinsä asetuksista."
+
+#: wysiwyg.admin.inc:83
+msgid "Show <em>enable/disable rich text</em> toggle link"
+msgstr "Näytä <em>ota editori käyttöön / poista editori käytöstä</em> kytkinlinkki"
+
+#: wysiwyg.admin.inc:86
+msgid "Whether or not to show the <em>enable/disable rich text</em> toggle link below a textarea. If disabled, the user setting or global default is used (see above)."
+msgstr "Joko näytetään tai ei näytetä <em>ota editori käyttöön / poista editori käytöstä</em> kytkinlinkki tekstialueen alla. Jos ei näytetä, käyttäjän asetus tai yleinen oletus on käytössä (katso yllä)."
+
+#: wysiwyg.admin.inc:96
+msgid "Language"
+msgstr "Kieli"
+
+#: wysiwyg.admin.inc:99
+msgid "The language to use for the editor interface. Language codes are based on the <a href=\"http://www.loc.gov/standards/iso639-2/englangn.html\">ISO-639-2</a> format."
+msgstr "Kieli, jota käytetään editorin käyttöliittymässä. Kielikoodit perustuvat <a href=\"http://www.loc.gov/standards/iso639-2/englangn.html\">ISO-639-2</a> formaattiin."
+
+#: wysiwyg.admin.inc:104
+msgid "Buttons and plugins"
+msgstr "Painikkeet ja laajennusosat"
+
+#: wysiwyg.admin.inc:149
+msgid "Editor appearance"
+msgstr "Editorin ulkoasu"
+
+#: wysiwyg.admin.inc:156
+msgid "Toolbar location"
+msgstr "Työkalupalkin sijainti"
+
+#: wysiwyg.admin.inc:158;174
+msgid "Bottom"
+msgstr "Alhaalla"
+
+#: wysiwyg.admin.inc:158;174
+msgid "Top"
+msgstr "Ylhäällä"
+
+#: wysiwyg.admin.inc:159
+msgid "This option controls whether the editor toolbar is displayed above or below the editing area."
+msgstr "Tämä valinta määrittelee näkyykö editorin työkalupalkki muokkausalueen ylä- vai alapuolella."
+
+#: wysiwyg.admin.inc:164
+msgid "Button alignment"
+msgstr "Painikkeiden tasaus"
+
+#: wysiwyg.admin.inc:166
+msgid "Center"
+msgstr "Keskellä"
+
+#: wysiwyg.admin.inc:166
+msgid "Left"
+msgstr "Vasemmalla"
+
+#: wysiwyg.admin.inc:166
+msgid "Right"
+msgstr "Oikealla"
+
+#: wysiwyg.admin.inc:167
+msgid "This option controls the alignment of icons in the editor toolbar."
+msgstr "Tämä valinta määrittelee kuvakkeiden tasauksen editorin työkalupalkissa."
+
+#: wysiwyg.admin.inc:172
+msgid "Path location"
+msgstr "Polun sijainti"
+
+#: wysiwyg.admin.inc:174
+msgid "Hide"
+msgstr "Piilossa"
+
+#: wysiwyg.admin.inc:175
+msgid "Where to display the path to HTML elements (i.e. <code>body > table > tr > td</code>)."
+msgstr "Missä näytetään polku HTML elementteihin (esim. <code>body > table > tr > td</code>)."
+
+#: wysiwyg.admin.inc:180
+msgid "Enable resizing button"
+msgstr "Ota käyttöön koonmuunnospainike"
+
+#: wysiwyg.admin.inc:183
+msgid "This option gives you the ability to enable/disable the resizing button. If enabled, the Path location toolbar must be set to \"Top\" or \"Bottom\" in order to display the resize icon."
+msgstr "Tämä valinta antaa mahdollisuuden ottaa käyttöön / poistaa käytöstä koonmuunnospainikkeen. Jos käytössä, Polun sijainti -työkalupalkki täytyy asettaa joko \"Ylös\" tai \"Alas\" jotta koonmuunnoskuvake näkyy."
+
+#: wysiwyg.admin.inc:188
+msgid "Cleanup and output"
+msgstr "Siistintä ja ulostulo"
+
+#: wysiwyg.admin.inc:195
+msgid "Verify HTML"
+msgstr "Tarkista HTML"
+
+#: wysiwyg.admin.inc:198
+msgid "If enabled, potentially malicious code like <code>&lt;HEAD&gt;</code> tags will be removed from HTML contents."
+msgstr "Jos käytössä, mahdolliset haitalliset koodit kuten <code>&lt;HEAD&gt;</code> merkkaukset poistetaan HTML sisällöstä."
+
+#: wysiwyg.admin.inc:203
+msgid "Preformatted"
+msgstr "Esimuotoiltu"
+
+#: wysiwyg.admin.inc:206
+msgid "If enabled, the editor will insert TAB characters on tab and preserve other whitespace characters just like a PRE element in HTML does."
+msgstr "Jos käytössä, editori lisää TAB merkkejä tab näppäimestä ja säilyttää muut whitespace merkit aivan kuten PRE elementti tekee HTML koodissa."
+
+#: wysiwyg.admin.inc:211
+msgid "Convert &lt;font&gt; tags to styles"
+msgstr "Muuntaa &lt;font&gt; merkkaukset tyyleiksi"
+
+#: wysiwyg.admin.inc:214
+msgid "If enabled, HTML tags declaring the font size, font family, font color and font background color will be replaced by inline CSS styles."
+msgstr "Jos käytössä, fonttikoon, fonttiperheen, fontin värin ja fontin taustavärin HTML merkkaukset korvataan rivinsisäisillä CSS tyyleillä."
+
+#: wysiwyg.admin.inc:219
+msgid "Remove linebreaks"
+msgstr "Poista rivinvaihdot"
+
+#: wysiwyg.admin.inc:222
+msgid "If enabled, the editor will remove most linebreaks from contents. Disabling this option could avoid conflicts with other input filters."
+msgstr "Jos käytössä, editori poistaa useimmat rivinvaihdot sisällöstä. Poistamalla käytöstä tämä valinta, voidaan välttää ristiriidat toisten syöttömuotojen kanssa."
+
+#: wysiwyg.admin.inc:227
+msgid "Apply source formatting"
+msgstr "Käytä lähdekoodin muotoilua"
+
+#: wysiwyg.admin.inc:230
+msgid "If enabled, the editor will re-format the HTML source code. Disabling this option could avoid conflicts with other input filters."
+msgstr "Jos käytössä, editori muotoilee uudelleen HTML lähdekoodin. Poistamalla käytöstä tämä valinta, voidaan välttää ristiriidat toisten syöttömuotojen kanssa."
+
+#: wysiwyg.admin.inc:235
+msgid "Force cleanup on standard paste"
+msgstr "Pakota siistintä normaalille liitä-toiminnolle"
+
+#: wysiwyg.admin.inc:238
+msgid "If enabled, the default paste function (CTRL-V or SHIFT-INS) behaves like the \"paste from word\" plugin function."
+msgstr "Jos käytössä, oletus liitä-toiminto (CTRL-V tai SHIFT-INS) käyttäytyy kuten \"liitä wordistä\" laajennusosan toiminto."
+
+#: wysiwyg.admin.inc:243
+msgid "CSS"
+msgstr "CSS"
+
+#: wysiwyg.admin.inc:250
+msgid "Block formats"
+msgstr "Kappalemerkkaukset"
+
+#: wysiwyg.admin.inc:254
+msgid "Comma separated list of HTML block formats. Possible values: <code>@format-list</code>."
+msgstr "Pilkulla eroteltu lista HTML kappaleiden merkkauksista.  Mahdolliset arvot: <code>@format-list</code>."
+
+#: wysiwyg.admin.inc:259
+msgid "Editor CSS"
+msgstr "Editorin CSS"
+
+#: wysiwyg.admin.inc:261
+msgid "Use theme CSS"
+msgstr "Käytä teeman CSS:ää"
+
+#: wysiwyg.admin.inc:261
+msgid "Define CSS"
+msgstr "Määrittele CSS"
+
+#: wysiwyg.admin.inc:261
+msgid "Editor default CSS"
+msgstr "Editorin oletus CSS"
+
+#: wysiwyg.admin.inc:262
+msgid "Defines the CSS to be used in the editor area.<br />Use theme CSS - loads stylesheets from current site theme.<br/>Define CSS - enter path for stylesheet files below.<br />Editor default CSS - uses default stylesheets from editor."
+msgstr "Määrittelee CSS:n, jota käytetään editorin alueella.<br>Käytä teeman CSS:ää - lataa tyylipohjat sivuston nykyisestä teemasta.<br>Määrittele CSS - anna polku tyylipohjatiedostoihin alla.<br>Editorin oletus CSS - käyttää editorin oletustyylipohjia."
+
+#: wysiwyg.admin.inc:267
+msgid "CSS path"
+msgstr "CSS polku"
+
+#: wysiwyg.admin.inc:271
+#, fuzzy
+msgid "If \"Define CSS\" was selected above, enter path to a CSS file or a list of CSS files separated by a comma."
+msgstr "Jos \"Määrittele CSS\"on valittu ylhäältä, anna polku CSS-tiedostoon tai CSS tiedostojen listaan, jotka on eroteltu pilkulla."
+
+#: wysiwyg.admin.inc:271
+msgid "Available tokens: <code>%b</code> (base path, eg: <code>/</code>), <code>%t</code> (path to theme, eg: <code>themes/garland</code>)"
+msgstr "Käytettävissä olevat merkit: <code>%b</code> (juuripolku, esim: <code>/</code>), <code>%t</code> (polku teemaan, esim: <code>themes/garland</code>)"
+
+#: wysiwyg.admin.inc:271
+msgid "Example:"
+msgstr "Esimerkki:"
+
+#: wysiwyg.admin.inc:276
+msgid "CSS classes"
+msgstr "CSS luokat"
+
+#: wysiwyg.admin.inc:278
+msgid "Optionally define CSS classes for the \"Font style\" dropdown list.<br />Enter one class on each line in the format: !format. Example: !example<br />If left blank, CSS classes are automatically imported from all loaded stylesheet(s)."
+msgstr "Vaihtoehtoisesti määrittele CSS luokat \"Fonttityyli\" pudotuslistalle.<br />Anna yksi luokka joka rivillä muodossa: !format. Esimerkki: !example<br />Jos jätetty tyhjäksi, CSS luokat tuodaan automaattisesti kaikista ladatuista tyylipohjista."
+
+#: wysiwyg.admin.inc:283;438
+msgid "Save"
+msgstr "Tallenna"
+
+#: wysiwyg.admin.inc:317
+msgid "Wysiwyg profile for %format has been saved."
+msgstr "Wysiwyg profiili %format on tallennettu."
+
+#: wysiwyg.admin.inc:366
+msgid "No editor"
+msgstr "Ei editoria"
+
+#: wysiwyg.admin.inc:371
+msgid "<a href=\"!vendor-url\">@editor</a> (<a href=\"!download-url\">Download</a>)"
+msgstr "<a href=\"!vendor-url\">@editor</a> (<a href=\"!download-url\">Lataa</a>)"
+
+#: wysiwyg.admin.inc:372
+msgid "Not installed."
+msgstr "Ei ole asennettu."
+
+#: wysiwyg.admin.inc:386
+msgid "Extract the archive and copy its contents into a new folder in the following location:<br /><code>@editor-path</code>"
+msgstr "Pura paketti ja kopioi sen sisältö uuteen kansioon seuraavaan sijaintiin: <br /><code>@editor-path</code>"
+
+#: wysiwyg.admin.inc:387
+msgid "So the actual library can be found at:<br /><code>@library-filepath</code>"
+msgstr "Jotta varsinainen kirjasto voidaan löytää sijainnista:<br /><code>@library-filepath</code>"
+
+#: wysiwyg.admin.inc:402
+msgid "Installation instructions"
+msgstr "Asennusohjeet"
+
+#: wysiwyg.admin.inc:405
+msgid "There are no editor libraries installed currently. The following list contains a list of currently supported editors:"
+msgstr "Editorin kirjastoja ei ole asennettu. Seuraava listaus sisältää tällä hetkellä tuetut editorit:"
+
+#: wysiwyg.admin.inc:430
+#: wysiwyg.module:26
+msgid "Edit"
+msgstr "Muokkaa"
+
+#: wysiwyg.admin.inc:433;489
+#: wysiwyg.module:36
+msgid "Remove"
+msgstr "Poista"
+
+#: wysiwyg.admin.inc:450
+msgid "Input format"
+msgstr "Syöttömuoto"
+
+#: wysiwyg.admin.inc:450
+msgid "Editor"
+msgstr "Editori"
+
+#: wysiwyg.admin.inc:450
+msgid "Operations"
+msgstr "Toimenpiteet"
+
+#: wysiwyg.admin.inc:487
+msgid "Are you sure you want to remove the profile for %name?"
+msgstr "Haluatko varmasti poistaa profiilin %name?"
+
+#: wysiwyg.admin.inc:489
+msgid "This action cannot be undone."
+msgstr "Tätä toimintoa ei voi perua."
+
+#: wysiwyg.admin.inc:489
+msgid "Cancel"
+msgstr "Peruuta"
+
+#: wysiwyg.admin.inc:501
+msgid "Wysiwyg profile for %name has been deleted."
+msgstr "Wysiwyg profiili %name on poistettu."
+
+#: wysiwyg.module:80
+msgid "A Wysiwyg profile can be associated to an input format. A Wysiwyg profile defines which client-side editor is loaded, what buttons or themes are enabled for the editor, how the editor is displayed, and a few other editor-specific functions."
+msgstr "Wysiwyg profiili voidaan liittää syöttömuotoon. Wysiwyg profiili määrittelee mikä asiakaspuolen editori ladataan, mitkä painikkeet tai teemat ovat käytössä editorissa, kuinka editori näytetään ja muutamia editorin omia toimintoja."
+
+#: wysiwyg.module:306
+msgid "Disable rich-text"
+msgstr "Poista editori käytöstä"
+
+#: wysiwyg.module:307
+msgid "Enable rich-text"
+msgstr "Ota editori käyttöön"
+
+#: wysiwyg.module:608
+msgid "Wysiwyg Editor settings"
+msgstr "Wysiwyg editorin asetukset"
+
+#: wysiwyg.module:615
+msgid "Enable editor by default"
+msgstr "Ota editori käyttöön oletuksena"
+
+#: wysiwyg.module:618
+msgid "If enabled, rich-text editing is enabled by default in textarea fields."
+msgstr "Jos käytössä, wysiwyg-editori on oletuksena käytössä tekstialuekentissä."
+
+#: wysiwyg.module:702
+msgid "The version of %editor could not be detected."
+msgstr "Editorin %editor versiota ei voitu havaita."
+
+#: wysiwyg.module:715
+msgid "The installed version %version of %editor is not supported."
+msgstr "Asennettu versio %version editorista %editor ei ole tuettu."
+
+#: wysiwyg.module:14
+#: wysiwyg.info:0
+msgid "Wysiwyg"
+msgstr "Wysiwyg"
+
+#: wysiwyg.module:17
+msgid "Configure client-side editors."
+msgstr "Määrittele asiakaspuolen editoriprofiilit"
+
+#: wysiwyg.module:22
+msgid "Profiles"
+msgstr "Profiilit"
+
+#: wysiwyg.install:10
+msgid "Stores Wysiwyg profiles."
+msgstr "Säilyttää Wysiwyg profiilit."
+
+#: wysiwyg.info:0
+msgid "Allows users to edit contents with client-side editors."
+msgstr "Sallii käyttäjän muokata sisältöä asiakaspuolen editoreilla."
+
+#: wysiwyg.info:0
+msgid "User interface"
+msgstr "Käyttöliittymä"
+
+#: editors/fckeditor.inc:217
+#: editors/markitup.inc:105;171
+#: editors/nicedit.inc:103
+#: editors/openwysiwyg.inc:141
+#: editors/tinymce.inc:377
+#: editors/whizzywig.inc:113
+#: editors/yui.inc:276
+msgid "Bold"
+msgstr "Lihavoitu"
+
+#: editors/fckeditor.inc:217
+#: editors/markitup.inc:112;171
+#: editors/nicedit.inc:103
+#: editors/openwysiwyg.inc:141
+#: editors/tinymce.inc:377
+#: editors/whizzywig.inc:113
+#: editors/yui.inc:276
+msgid "Italic"
+msgstr "Kursivoitu"
+
+#: editors/fckeditor.inc:217
+#: editors/nicedit.inc:103
+#: editors/openwysiwyg.inc:141
+#: editors/tinymce.inc:377
+#: editors/whizzywig.inc:113
+#: editors/yui.inc:276
+msgid "Underline"
+msgstr "Alleviivattu"
+
+#: editors/fckeditor.inc:218
+#: editors/markitup.inc:119;172
+#: editors/nicedit.inc:104
+#: editors/openwysiwyg.inc:142
+#: editors/tinymce.inc:378
+#: editors/yui.inc:277
+msgid "Strike-through"
+msgstr "Yliviivattu"
+
+#: editors/fckeditor.inc:219
+#: editors/nicedit.inc:105
+#: editors/openwysiwyg.inc:143
+#: editors/tinymce.inc:379
+#: editors/whizzywig.inc:114
+#: editors/yui.inc:278
+msgid "Align left"
+msgstr "Tasaa vasemmat reunat"
+
+#: editors/fckeditor.inc:219
+#: editors/nicedit.inc:105
+#: editors/openwysiwyg.inc:143
+#: editors/tinymce.inc:379
+#: editors/whizzywig.inc:114
+#: editors/yui.inc:278
+msgid "Align center"
+msgstr "Keskitä"
+
+#: editors/fckeditor.inc:219
+#: editors/nicedit.inc:105
+#: editors/openwysiwyg.inc:143
+#: editors/tinymce.inc:379
+#: editors/whizzywig.inc:114
+#: editors/yui.inc:278
+msgid "Align right"
+msgstr "Tasaa oikeat reunat"
+
+#: editors/fckeditor.inc:219
+#: editors/openwysiwyg.inc:143
+#: editors/tinymce.inc:379
+#: editors/yui.inc:278
+msgid "Justify"
+msgstr "Tasaa molemmat reunat"
+
+#: editors/fckeditor.inc:220
+#: editors/nicedit.inc:106
+#: editors/openwysiwyg.inc:144
+#: editors/tinymce.inc:380
+#: editors/whizzywig.inc:115
+#: editors/yui.inc:279
+msgid "Bullet list"
+msgstr "Luettelomerkkilista"
+
+#: editors/fckeditor.inc:220
+#: editors/nicedit.inc:106
+#: editors/openwysiwyg.inc:144
+#: editors/tinymce.inc:380
+#: editors/whizzywig.inc:115
+#: editors/yui.inc:279
+msgid "Numbered list"
+msgstr "Numeroitu lista"
+
+#: editors/fckeditor.inc:221
+#: editors/nicedit.inc:107
+#: editors/openwysiwyg.inc:145
+#: editors/tinymce.inc:381
+#: editors/whizzywig.inc:116
+#: editors/yui.inc:280
+msgid "Outdent"
+msgstr "Pienennä sisennystä"
+
+#: editors/fckeditor.inc:221
+#: editors/nicedit.inc:107
+#: editors/openwysiwyg.inc:145
+#: editors/tinymce.inc:381
+#: editors/whizzywig.inc:116
+#: editors/yui.inc:280
+msgid "Indent"
+msgstr "Suurenna sisennystä"
+
+#: editors/fckeditor.inc:222
+#: editors/openwysiwyg.inc:146
+#: editors/tinymce.inc:382
+#: editors/whizzywig.inc:117
+#: editors/yui.inc:281
+msgid "Undo"
+msgstr "Kumoa"
+
+#: editors/fckeditor.inc:222
+#: editors/openwysiwyg.inc:146
+#: editors/tinymce.inc:382
+#: editors/whizzywig.inc:117
+#: editors/yui.inc:281
+msgid "Redo"
+msgstr "Toista"
+
+#: editors/fckeditor.inc:223
+#: editors/markitup.inc:132;174
+#: editors/nicedit.inc:114
+#: editors/openwysiwyg.inc:147
+#: editors/tinymce.inc:383
+#: editors/whizzywig.inc:121
+#: editors/yui.inc:282
+msgid "Link"
+msgstr "Linkki"
+
+#: editors/fckeditor.inc:223
+#: editors/nicedit.inc:114
+#: editors/tinymce.inc:383
+msgid "Unlink"
+msgstr "Poista linkki"
+
+#: editors/fckeditor.inc:223
+#: editors/tinymce.inc:383
+msgid "Anchor"
+msgstr "Ankkuri"
+
+#: editors/fckeditor.inc:224
+#: editors/markitup.inc:126;173
+#: editors/nicedit.inc:108
+#: editors/openwysiwyg.inc:148
+#: editors/tinymce.inc:384
+#: editors/whizzywig.inc:118;122
+#: editors/yui.inc:283
+msgid "Image"
+msgstr "Kuva"
+
+#: editors/fckeditor.inc:225
+#: editors/nicedit.inc:109
+#: editors/openwysiwyg.inc:150
+#: editors/tinymce.inc:386
+#: editors/whizzywig.inc:119
+msgid "Forecolor"
+msgstr "Tekstiväri"
+
+#: editors/fckeditor.inc:225
+#: editors/nicedit.inc:109
+#: editors/openwysiwyg.inc:150
+#: editors/tinymce.inc:386
+#: editors/whizzywig.inc:119
+msgid "Backcolor"
+msgstr "Taustaväri"
+
+#: editors/fckeditor.inc:226
+msgid "Superscript"
+msgstr "Yläindeksi"
+
+#: editors/fckeditor.inc:226
+msgid "Subscript"
+msgstr "Alaindeksi"
+
+#: editors/fckeditor.inc:227
+#: editors/openwysiwyg.inc:152
+#: editors/tinymce.inc:388
+msgid "Blockquote"
+msgstr "Kappalelainaus"
+
+#: editors/fckeditor.inc:227
+#: editors/nicedit.inc:116
+#: editors/openwysiwyg.inc:152
+#: editors/tinymce.inc:388
+#: editors/whizzywig.inc:125
+msgid "Source code"
+msgstr "Lähdekoodi"
+
+#: editors/fckeditor.inc:228
+#: editors/nicedit.inc:111
+#: editors/openwysiwyg.inc:153
+#: editors/tinymce.inc:389
+#: editors/whizzywig.inc:120
+msgid "Horizontal rule"
+msgstr "Vaakaviiva"
+
+#: editors/fckeditor.inc:229
+#: editors/openwysiwyg.inc:154
+#: editors/tinymce.inc:390
+msgid "Cut"
+msgstr "Leikkaa"
+
+#: editors/fckeditor.inc:229
+#: editors/openwysiwyg.inc:154
+#: editors/tinymce.inc:390
+msgid "Copy"
+msgstr "Kopioi"
+
+#: editors/fckeditor.inc:229
+#: editors/openwysiwyg.inc:154
+#: editors/tinymce.inc:390
+msgid "Paste"
+msgstr "Liitä"
+
+#: editors/fckeditor.inc:230
+msgid "Paste Text"
+msgstr "Liitä teksti"
+
+#: editors/fckeditor.inc:230
+#: editors/tinymce.inc:494
+msgid "Paste from Word"
+msgstr "Liitä Wordista"
+
+#: editors/fckeditor.inc:231
+msgid "Show blocks"
+msgstr "Näytä elementit"
+
+#: editors/fckeditor.inc:232
+#: editors/openwysiwyg.inc:156
+#: editors/tinymce.inc:392
+#: editors/yui.inc:287
+msgid "Remove format"
+msgstr "Poista muotoilu"
+
+#: editors/fckeditor.inc:233
+#: editors/openwysiwyg.inc:157
+#: editors/tinymce.inc:393
+msgid "Character map"
+msgstr "Merkkikartta"
+
+#: editors/fckeditor.inc:234
+msgid "About"
+msgstr "Tietoja"
+
+#: editors/fckeditor.inc:235
+#: editors/nicedit.inc:115
+#: editors/openwysiwyg.inc:158
+#: editors/tinymce.inc:452
+#: editors/whizzywig.inc:112
+#: editors/yui.inc:288
+msgid "HTML block format"
+msgstr "HTML kappaleen merkkaus"
+
+#: editors/fckeditor.inc:235
+#: editors/nicedit.inc:115
+#: editors/openwysiwyg.inc:158
+#: editors/tinymce.inc:452
+#: editors/whizzywig.inc:112
+#: editors/yui.inc:288
+msgid "Font"
+msgstr "Fontti"
+
+#: editors/fckeditor.inc:235
+#: editors/nicedit.inc:115
+#: editors/openwysiwyg.inc:158
+#: editors/tinymce.inc:452
+#: editors/whizzywig.inc:112
+#: editors/yui.inc:288
+msgid "Font size"
+msgstr "Fonttikoko"
+
+#: editors/fckeditor.inc:235
+#: editors/tinymce.inc:452
+msgid "Font style"
+msgstr "Fonttityyli"
+
+#: editors/fckeditor.inc:236
+#: editors/openwysiwyg.inc:162
+#: editors/tinymce.inc:529
+#: editors/whizzywig.inc:123
+msgid "Table"
+msgstr "Taulukko"
+
+#: editors/fckeditor.inc:237
+#: editors/tinymce.inc:515
+msgid "Search"
+msgstr "Etsi"
+
+#: editors/fckeditor.inc:237
+#: editors/tinymce.inc:515
+msgid "Replace"
+msgstr "Korvaa"
+
+#: editors/fckeditor.inc:237
+#: editors/tinymce.inc:494
+msgid "Select all"
+msgstr "Valitse kaikki"
+
+#: editors/fckeditor.inc:238
+msgid "Create DIV container"
+msgstr "Luo DIV alue"
+
+#: editors/fckeditor.inc:239
+#: editors/tinymce.inc:538
+msgid "Flash"
+msgstr "Flash"
+
+#: editors/fckeditor.inc:239
+msgid "Smiley"
+msgstr "Hymiö"
+
+#: editors/fckeditor.inc:240
+msgid "FitWindow"
+msgstr "Sovita ikkunaan"
+
+#: editors/fckeditor.inc:241
+msgid "Check spelling"
+msgstr "Tarkista oikeinkirjoitus"
+
+#: editors/fckeditor.inc:248
+msgid "Autogrow"
+msgstr "Kasva automaattisesti"
+
+#: editors/fckeditor.inc:259
+#: editors/tinymce.inc:564
+msgid "BBCode"
+msgstr "BBCode"
+
+#: editors/fckeditor.inc:267
+msgid "Table drag/resize"
+msgstr "Taulukon vetäminen / koon muuttaminen"
+
+#: editors/fckeditor.inc:275
+msgid "Table: Cell properties"
+msgstr "Taulukko: Solun ominaisuudet"
+
+#: editors/fckeditor.inc:276
+msgid "Table: Insert row after"
+msgstr "Taulukko: Lisää rivi perään"
+
+#: editors/fckeditor.inc:277
+msgid "Table: Insert column after"
+msgstr "Taulukko: Lisää sarake perään"
+
+#: editors/fckeditor.inc:278
+msgid "Table: Insert cell after"
+msgstr "Taulukko: Lisää solu perään"
+
+#: editors/fckeditor.inc:279
+msgid "Table: Delete rows"
+msgstr "Taulukko: Poista rivit"
+
+#: editors/fckeditor.inc:280
+msgid "Table: Delete columns"
+msgstr "Taulukko: Poista sarakkeet"
+
+#: editors/fckeditor.inc:281
+msgid "Table: Delete cells"
+msgstr "Taulukko: Poista solut"
+
+#: editors/fckeditor.inc:282
+msgid "Table: Merge cells"
+msgstr "Taulukko: Yhdistä solut"
+
+#: editors/fckeditor.inc:283
+msgid "Table: Horizontal split cell"
+msgstr "Taulukko: Jaa solu vaakasuunnassa"
+
+#: editors/markitup.inc:142;176
+#: editors/openwysiwyg.inc:160
+#: editors/tinymce.inc:501
+msgid "Preview"
+msgstr "Esikatselu"
+
+#: editors/nicedit.inc:110
+#: editors/openwysiwyg.inc:151
+#: editors/tinymce.inc:387
+#: editors/yui.inc:285
+msgid "Sup"
+msgstr "Yläindeksi"
+
+#: editors/nicedit.inc:110
+#: editors/openwysiwyg.inc:151
+#: editors/tinymce.inc:387
+#: editors/yui.inc:285
+msgid "Sub"
+msgstr "Alaindeksi"
+
+#: editors/openwysiwyg.inc:149
+#: editors/tinymce.inc:385
+#: editors/whizzywig.inc:124
+msgid "Clean-up"
+msgstr "Poista muotoilu"
+
+#: editors/openwysiwyg.inc:155
+#: editors/tinymce.inc:391
+msgid "Visual aid"
+msgstr "Visuaalinen apu"
+
+#: editors/openwysiwyg.inc:159
+#: editors/tinymce.inc:459
+msgid "Fullscreen"
+msgstr "Kokoruututila"
+
+#: editors/openwysiwyg.inc:161
+#: editors/tinymce.inc:508
+msgid "Print"
+msgstr "Tulosta"
+
+#: editors/openwysiwyg.inc:163
+#: editors/tinymce.inc:394
+msgid "Help"
+msgstr "Ohje"
+
+#: editors/tinymce.inc:400
+msgid "Advanced horizontal rule"
+msgstr "Edistynyt vaakaviiva"
+
+#: editors/tinymce.inc:408
+msgid "Advanced image"
+msgstr "Edistynyt kuva"
+
+#: editors/tinymce.inc:416
+msgid "Advanced link"
+msgstr "Edistynyt linkki"
+
+#: editors/tinymce.inc:424
+msgid "Auto save"
+msgstr "Automaattinen tallennus"
+
+#: editors/tinymce.inc:431
+msgid "Context menu"
+msgstr "Kohdevalikko"
+
+#: editors/tinymce.inc:438
+msgid "Left-to-right"
+msgstr "Vasemmalta oikealle"
+
+#: editors/tinymce.inc:438
+msgid "Right-to-left"
+msgstr "Oikealta vasemmalle"
+
+#: editors/tinymce.inc:445
+msgid "Emotions"
+msgstr "Hymiöt"
+
+#: editors/tinymce.inc:466
+msgid "Inline popups"
+msgstr "Tekstinsisäiset ponnahdusikkunat"
+
+#: editors/tinymce.inc:476
+msgid "Insert date"
+msgstr "Lisää päiväys"
+
+#: editors/tinymce.inc:476
+msgid "Insert time"
+msgstr "Lisää aika"
+
+#: editors/tinymce.inc:487
+msgid "Insert layer"
+msgstr "Lisää taso"
+
+#: editors/tinymce.inc:487
+msgid "Move forward"
+msgstr "Siirrä eteenpäin"
+
+#: editors/tinymce.inc:487
+msgid "Move backward"
+msgstr "Siirrä taaksepäin"
+
+#: editors/tinymce.inc:487
+msgid "Absolute"
+msgstr "Absoluuttinen"
+
+#: editors/tinymce.inc:494
+msgid "Paste text"
+msgstr "Liitä teksti"
+
+#: editors/tinymce.inc:522
+msgid "Style properties"
+msgstr "Tyyliominaisuudet"
+
+#: editors/tinymce.inc:548
+msgid "Media"
+msgstr "Media"
+
+#: editors/tinymce.inc:555
+msgid "Citation"
+msgstr "Sitaatti"
+
+#: editors/tinymce.inc:555
+msgid "Deleted"
+msgstr "Poistettu"
+
+#: editors/tinymce.inc:555
+msgid "Abbreviation"
+msgstr "Lyhennetty muoto"
+
+#: editors/tinymce.inc:555
+msgid "Acronym"
+msgstr "Lyhenne"
+
+#: editors/tinymce.inc:555
+msgid "Inserted"
+msgstr "Lisätty"
+
+#: editors/tinymce.inc:571
+msgid "Safari compatibility"
+msgstr "Safari yhteensopivuus"
+
+#: editors/whizzywig.inc:126
+msgid "Spell check"
+msgstr "Oikoluku"
+
+#: editors/yui.inc:284
+msgid "Font Color"
+msgstr "Fontin väri"
+
+#: editors/yui.inc:284
+msgid "Background Color"
+msgstr "Taustaväri"
+
+#: editors/yui.inc:286
+msgid "Show/hide hidden elements"
+msgstr "Näytä/piilota piilotetut elementit"
+
+#: plugins/break.inc:14
+msgid "Teaser break"
+msgstr "Tiivistelmän katkaisu"
+
+#: plugins/break.inc:17
+msgid "Separate the teaser and body of this content"
+msgstr "Erota tämän sisällön tiivistelmä ja vartalo"
+
+#~ msgid "Home"
+#~ msgstr "Koti"
+#~ msgid "Administer"
+#~ msgstr "Ylläpitäjä"
+#~ msgid "Site configuration"
+#~ msgstr "Sivustoasetukset"
+#~ msgid "Wysiwyg profiles"
+#~ msgstr "Wysiwyg profiilit"
+#~ msgid "%format Wysiwyg profile"
+#~ msgstr "%format Wysiwyg profiili"
+#~ msgid "wysiwyg"
+#~ msgstr "wysiwyg"
+

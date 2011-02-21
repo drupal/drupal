@@ -1,0 +1,101 @@
+<?php
+// $Id: ctools.plugins.test,v 1.3 2010/10/11 22:18:22 sdboyer Exp $
+/**
+ * @file
+ * Tests for different parts of the ctools plugin system.
+ */
+
+/**
+ * Test menu links depending on user permissions.
+ */
+class CtoolsPluginsGetInfoTestCase extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Get plugin info',
+      'description' => 'Verify that plugin type definitions can properly set and overide values.',
+      'group' => 'Chaos Tools Suite',
+    );
+  }
+
+  function setUp() {
+    // Additionally enable contact module.
+    parent::setUp('ctools', 'ctools_plugin_test');
+  }
+
+  protected function assertPluginFunction($module, $type, $id, $function = 'function') {
+    $func = ctools_plugin_load_function($module, $type, $id, $function);
+    $this->assertTrue(function_exists($func), t('Plugin @plugin of plugin type @module:@type successfully retrieved @retrieved for @function.', array(
+      '@plugin' => $id,
+      '@module' => $module,
+      '@type' => $type,
+      '@function' => $function,
+      '@retrieved' => $func,
+    )));
+  }
+
+  protected function assertPluginMissingFunction($module, $type, $id, $function = 'function') {
+    $func = ctools_plugin_load_function($module, $type, $id, $function);
+    $this->assertEqual($func, NULL, t('Plugin @plugin of plugin type @module:@type for @function with missing function successfully failed.', array(
+      '@plugin' => $id,
+      '@module' => $module,
+      '@type' => $type,
+      '@function' => $func,
+    )));
+  }
+
+  protected function assertPluginClass($module, $type, $id, $class = 'handler') {
+    $class_name = ctools_plugin_load_class($module, $type, $id, $class);
+    $this->assertTrue(class_exists($class_name), t('Plugin @plugin of plugin type @module:@type successfully retrieved @retrieved for @class.', array(
+      '@plugin' => $id,
+      '@module' => $module,
+      '@type' => $type,
+      '@class' => $class,
+      '@retrieved' => $class_name,
+    )));
+  }
+
+  protected function assertPluginMissingClass($module, $type, $id, $class = 'handler') {
+    $class_name = ctools_plugin_load_class($module, $type, $id, $class);
+    $this->assertEqual($class_name, NULL, t('Plugin @plugin of plugin type @module:@type for @class with missing class successfully failed.', array(
+      '@plugin' => $id,
+      '@module' => $module,
+      '@type' => $type,
+      '@class' => $class,
+    )));
+  }
+
+  /**
+   * Test that plugins are loaded correctly.
+   */
+  function testPluginLoading() {
+    ctools_include('plugins');
+    $module = 'ctools_plugin_test';
+    $type = 'not_cached';
+
+    // Test function retrieval for plugins using different definition methods.
+    $this->assertPluginFunction($module, $type, 'plugin_array', 'function');
+    $this->assertPluginFunction($module, $type, 'plugin_array2', 'function');
+    $this->assertPluginMissingFunction($module, $type, 'plugin_array_dne', 'function');
+    $this->assertPluginFunction($module, "big_hook_$type", 'test1', 'function');
+
+    // Test class retrieval for plugins using different definition methods.
+    $this->assertPluginClass($module, $type, 'plugin_array', 'handler');
+    $this->assertPluginClass($module, $type, 'plugin_array2', 'handler');
+    $this->assertPluginMissingClass($module, $type, 'plugin_array_dne', 'handler');
+    // TODO Test big hook plugins.
+
+    $type = 'cached';
+
+    // Test function retrieval for plugins using different definition methods.
+    $this->assertPluginFunction($module, $type, 'plugin_array', 'function');
+    $this->assertPluginFunction($module, $type, 'plugin_array2', 'function');
+    $this->assertPluginMissingFunction($module, $type, 'plugin_array_dne', 'function');
+    $this->assertPluginFunction($module, "big_hook_$type", 'test1', 'function');
+
+    // Test class retrieval for plugins using different definition methods.
+    $this->assertPluginClass($module, $type, 'plugin_array', 'handler');
+    $this->assertPluginClass($module, $type, 'plugin_array2', 'handler');
+    $this->assertPluginMissingClass($module, $type, 'plugin_array_dne', 'handler');
+    // TODO Test big hook plugins.
+  }
+}

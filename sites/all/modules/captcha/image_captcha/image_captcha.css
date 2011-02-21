@@ -1,0 +1,32 @@
+/* $Id: image_captcha.css,v 1.3 2010/11/20 00:19:22 soxofaan Exp $ */
+
+/**
+ * Styling of the font selection list (with previews)
+ * on the Image CAPTCHA settings page.
+ */
+
+/**
+ * Float the fonts with preview (with a fixed width)
+ * to create a multi-column layout.
+ */
+.image_captcha_admin_fonts_selection .form-item {
+  float: left;
+  width: 160px;
+}
+
+/**
+ * Stop floating with the item for the built in font.
+ */
+.image_captcha_admin_fonts_selection .form-item-image-captcha-fonts-BUILTIN {
+  clear: both;
+  float: none;
+  width: 100%;
+}
+
+/**
+ * Center the font previews vertically to the text.
+ */
+.image_captcha_admin_fonts_selection img {
+  vertical-align: middle;
+}
+
