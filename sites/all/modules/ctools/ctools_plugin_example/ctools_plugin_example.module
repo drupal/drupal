@@ -1,0 +1,95 @@
+<?php
+// $Id: ctools_plugin_example.module,v 1.2 2009/10/17 22:58:24 sdboyer Exp $
+
+/*
+ * @file
+ *
+ * Working sample module to demonstrate CTools 3 plugins
+ *
+ * This sample module is only intended to demonstrate how external modules can
+ * provide ctools plugins. There is no useful functionality, and it's only
+ * intended for developers or for educational use.
+ *
+ * As far as possible, everything is kept very simple, not exercising all of
+ * the capabilities of CTools or Panels.
+ *
+ * Although the ctools documentation suggests that strict naming conventions
+ * be followed, this code attempts to follow only the conventions which are
+ * required (the hooks), in order to demonstrate the difference. You can
+ * certainly use the conventions, but it's important to know the difference
+ * between a convention and a requirement.
+ *
+ * The advanced_help module is required, because both CTools and this module
+ * provide help that way.
+ *
+ * There is a demonstration panel provided at /ctools_plugin_example/123
+ */
+
+/**
+ * Implements hook_menu
+ */
+function ctools_plugin_example_menu() {
+  $items = array();
+
+  $items["admin/settings/ctools_plugin_example"] = array(
+    'title' => 'CTools plugin example',
+    'description' => t("Demonstration code, advanced help, and a demo panel to show how to build ctools plugins."),
+    'page callback' => 'ctools_plugin_example_explanation_page',
+    'access arguments' => array('administer site configuration'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_ctools_plugin_directory().
+ *
+ * It simply tells panels where to find the .inc files that define various
+ * args, contexts, content_types. In this case the subdirectories of
+ * ctools_plugin_example/panels are used.
+ */
+function ctools_plugin_example_ctools_plugin_directory($module, $plugin) {
+  if ($module == 'ctools' && !empty($plugin)) {
+    return "plugins/$plugin";
+  }
+}
+
+/**
+ * Implement hook_ctools_plugin_api().
+ *
+ * If you do this, CTools will pick up default panels pages in
+ * <modulename>.pages_default.inc
+ */
+function ctools_plugin_example_ctools_plugin_api($module, $api) {
+  // @todo -- this example should explain how to put it in a different file.
+  if ($module == 'panels_mini' && $api == 'panels_default') {
+    return array('version' => 1);
+  }
+  if ($module == 'page_manager' && $api == 'pages_default') {
+    return array('version' => 1);
+  }
+}
+
+/**
+ * Just provide an explanation page for the admin section
+ * @return unknown_type
+ */
+function ctools_plugin_example_explanation_page() {
+  $content = '<p>' . t("The CTools Plugin Example is simply a developer's demo of how to create plugins for CTools. It provides no useful functionality for an ordinary user.") . '</p>';
+
+  $content .= '<p>' . t(
+    'There is a demo panel demonstrating much of the functionality provided at
+    <a href="@demo_url">CTools demo panel</a>, and you can find documentation on the examples at
+    !ctools_plugin_example_help.
+    CTools itself provides documentation at !ctools_help. Mostly, though, the code itself is intended to be the teacher.
+    You can find it in %path.',
+    array(
+      '@demo_url' => url('ctools_plugin_example/xxxxx'),
+      '!ctools_plugin_example_help' => theme('advanced_help_topic', 'ctools_plugin_example', 'Chaos-Tools--CTools--Plugin-Examples', 'title'),
+      '!ctools_help' => theme('advanced_help_topic', 'ctools', 'plugins', 'title'),
+      '%path' => drupal_get_path('module', 'ctools_plugin_example'),
+    )) . '</p>';
+
+  return $content;
+}

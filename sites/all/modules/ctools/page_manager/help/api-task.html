@@ -1,0 +1,39 @@
+<!-- $Id: api-task.html,v 1.1 2009/07/09 00:07:04 merlinofchaos Exp $ -->
+task definition:
+  title -- visible title of the task.
+  description -- description of the task.
+  hook menu -- function to delegate from hook_menu. Params: &$items, $task
+  hook menu alter -- function to delegate from hook_menu_alter. Params: &$items, $task
+  hook theme -- function to delegate from hook_theme. Params: &$items, $task
+
+  admin name -- if set an admin menu will appear in the delegator UI
+  admin description -- to describe the admin menu
+  
+  admin access callback -- if set, the callback to use to determine administrative 
+    access to this task. Defaults to user_access. Note that this is required even
+    if delegator isn't handling administration, since this gets used to on handler
+    edit forms.
+  admin access arguments -- If set, the arguments to use to determine administrative 
+    access to this task. Defaults to array('administer delegator');  
+
+  type -- The type of the task, used to determine which handlers can service it.
+
+  subtasks -- can be TRUE in which case it supports subtasks with the default
+    configuration or a string (array?) with callbacks to fetch subtask data.
+  subtask callback -- A callback which returns just one subtask. Param: $task, $subtask_id
+  subtasks callback -- A callback which returns an array of all subtasks. 
+    This MUST return an array, even if it's empty.Param: $task
+
+  default handlers -- If the task contains any default handlers, they can be included here.
+
+task names must not contain a - as that is used to separate the task name from the subtask ID.
+
+subtasks implement data very similar to their parent task. In particular, they
+implement the following items exactly like their task:
+  hook menu
+  hook menu alter
+  description
+  admin name
+  admin description
+  admin access callback
+  admin access arguments

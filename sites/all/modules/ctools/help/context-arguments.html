@@ -1,0 +1,20 @@
+<!-- $Id: context-arguments.html,v 1.3 2008/12/19 17:35:57 merlinofchaos Exp $ -->
+
+Arguments create a context from external input, which is assumed to be a
+string as though it came from a URL element.
+
+    'title' => title
+    'description' => Description
+    'keyword' => Default keyword for the context
+    'context' => Callback to create the context. Params: $arg = NULL, $conf = NULL, $empty = FALSE
+
+    'default' => either an array of default settings or a string which is a callback or null to not use.
+
+    'settings form' => params: $form, $form_state, $conf -- gets the whole form. Should put anything it wants to keep automatically in $form['settings']
+    'settings form validate' => params: $form, $form_state
+    'settings form submit' => params: $form, $form_state
+
+    'criteria form' => params: $form, &$form_state, $conf, $argument, $id -- gets the whole argument. It should only put form widgets in $form[$id]. $conf may not be properly initialized so always guard against this due to arguments being changed and handlers not being updated to match.
+    + submit + validate
+
+    'criteria select' => returns true if the selected criteria matches the context. params: $context, $conf

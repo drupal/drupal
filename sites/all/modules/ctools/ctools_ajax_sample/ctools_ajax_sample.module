@@ -1,0 +1,745 @@
+<?php
+// $Id: ctools_ajax_sample.module,v 1.5 2010/12/31 23:58:52 merlinofchaos Exp $
+
+/**
+ * @file
+ * Sample AJAX functionality so people can see some of the CTools AJAX
+ * features in use.
+ */
+
+// ---------------------------------------------------------------------------
+// Drupal hooks.
+
+/**
+ *  Implementation of hook_menu()
+ */
+function ctools_ajax_sample_menu() {
+  $items['ctools_ajax_sample'] = array(
+      'title' => 'Chaos Tools AJAX Demo',
+      'page callback' => 'ctools_ajax_sample_page',
+      'access callback' => TRUE,
+      'type' => MENU_NORMAL_ITEM,
+  );
+  $items['ctools_ajax_sample/simple_form'] = array(
+    'title' => 'Simple Form',
+    'page callback' => 'ctools_ajax_simple_form',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+  $items['ctools_ajax_sample/%ctools_js/tablenix/%'] = array(
+      'title' => 'Hello World',
+      'page callback' => 'ctools_ajax_sample_tablenix',
+      'page arguments' => array(1, 3),
+      'access callback' => TRUE,
+      'type' => MENU_CALLBACK,
+  );
+  $items['ctools_ajax_sample/%ctools_js/login'] = array(
+      'title' => 'Login',
+      'page callback' => 'ctools_ajax_sample_login',
+      'page arguments' => array(1),
+      'access callback' => TRUE,
+      'type' => MENU_CALLBACK,
+  );
+  $items['ctools_ajax_sample/%ctools_js/animal'] = array(
+      'title' => 'Animal',
+      'page callback' => 'ctools_ajax_sample_animal',
+      'page arguments' => array(1),
+      'access callback' => TRUE,
+      'type' => MENU_CALLBACK,
+  );
+  $items['ctools_ajax_sample/%ctools_js/login/%'] = array(
+      'title' => 'Post-Login Action',
+      'page callback' => 'ctools_ajax_sample_login_success',
+      'page arguments' => array(1, 3),
+      'access callback' => TRUE,
+      'type' => MENU_CALLBACK,
+  );
+  $items['ctools_ajax_sample/jumped'] = array(
+    'title' => 'Successful Jumping',
+    'page callback' => 'ctools_ajax_sample_jump_menu_page',
+    'access callback' => TRUE,
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  return $items;
+}
+
+function ctools_ajax_simple_form() {
+  ctools_include('content');
+  ctools_include('context');
+  $node = node_load(1);
+  $context = ctools_context_create('node', $node);
+  $context = array('context_node_1' => $context);
+  return ctools_content_render('node_comment_form', 'node_comment_form', ctools_ajax_simple_form_pane(), array(), array(), $context);
+}
+
+function ctools_ajax_simple_form_pane() {
+  $configuration = array(
+    'anon_links' => 0,
+    'context' => 'context_node_1',
+    'override_title' => 0,
+    'override_title_text' => '',
+  );
+  return $configuration;
+}
+
+/**
+ * Implementation of hook_theme()
+ *
+ * Render some basic output for this module.
+ */
+function ctools_ajax_sample_theme() {
+  return array(
+    // Sample theme functions.
+    'ctools_ajax_sample_container' => array(
+      'arguments' => array('content' => NULL),
+    ),
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Page callbacks
+
+/**
+ * Page callback to display links and render a container for AJAX stuff.
+ */
+function ctools_ajax_sample_page() {
+  global $user;
+
+  // Include the CTools tools that we need.
+  ctools_include('ajax');
+  ctools_include('modal');
+
+  // Add CTools' javascript to the page.
+  ctools_modal_add_js();
+
+  // Create our own javascript that will be used to theme a modal.
+  $sample_style = array(
+    'ctools-sample-style' => array(
+      'modalSize' => array(
+        'type' => 'fixed',
+        'width' => 500,
+        'height' => 300,
+        'addWidth' => 20,
+        'addHeight' => 15,
+      ),
+      'modalOptions' => array(
+        'opacity' => .5,
+        'background-color' => '#000',
+      ),
+      'animation' => 'fadeIn',
+      'modalTheme' => 'CToolsSampleModal',
+      'throbber' => theme('image', array('path' => ctools_image_path('ajax-loader.gif', 'ctools_ajax_sample'), 'alt' => t('Loading...'), 'title' => t('Loading'))),
+    ),
+  );
+
+  drupal_add_js($sample_style, 'setting');
+
+  // Since we have our js, css and images in well-known named directories,
+  // CTools makes it easy for us to just use them without worrying about
+  // using drupal_get_path() and all that ugliness.
+  ctools_add_js('ctools-ajax-sample', 'ctools_ajax_sample');
+  ctools_add_css('ctools-ajax-sample', 'ctools_ajax_sample');
+
+  // Create a list of clickable links.
+  $links = array();
+
+  // Only show login links to the anonymous user.
+  if ($user->uid == 0) {
+    $links[] = ctools_modal_text_button(t('Modal Login (default style)'), 'ctools_ajax_sample/nojs/login', t('Login via modal'));
+
+    // The extra class points to the info in ctools-sample-style which we added to the settings.
+    $links[] = ctools_modal_text_button(t('Modal Login (custom style)'), 'ctools_ajax_sample/nojs/login', t('Login via modal'),  'ctools-modal-ctools-sample-style');
+  }
+
+  // Four ways to do our animal picking wizard.
+  $button_form = ctools_ajax_sample_ajax_button_form();
+  $links[] = l(t('Wizard (no modal)'), 'ctools_ajax_sample/nojs/animal');
+  $links[] = ctools_modal_text_button(t('Wizard (default modal)'), 'ctools_ajax_sample/nojs/animal', t('Pick an animal'));
+  $links[] = ctools_modal_text_button(t('Wizard (custom modal)'), 'ctools_ajax_sample/nojs/animal', t('Pick an animal'),  'ctools-modal-ctools-sample-style');
+  $links[] = drupal_render($button_form);
+
+  $links[] = ctools_ajax_text_button(t('Hello world!'), "ctools_ajax_sample/nojs/hello", t('Replace text with "hello world"'));
+
+  $output = theme('item_list', array('items' => $links, 'title' => t('Actions')));
+
+  // This container will have data AJAXed into it.
+  $output .= theme('ctools_ajax_sample_container', array('content' => '<h1>' . t('Sample Content') . '</h1>'));
+
+  // Create a table that we can have data removed from via AJAX.
+  $header = array(t('Row'), t('Content'), t('Actions'));
+  $rows = array();
+  for($i = 1; $i < 11; $i++) {
+    $rows[] = array(
+      'class' => array('ajax-sample-row-'. $i),
+      'data' => array(
+        $i,
+        md5($i),
+        ctools_ajax_text_button("remove", "ctools_ajax_sample/nojs/tablenix/$i", t('Delete this row')),
+      ),
+    );
+  }
+
+  $output .= theme('table', array('header' => $header, 'rows' => $rows, array('class' => array('ajax-sample-table'))));
+
+  // Show examples of ctools javascript widgets
+  $output .= '<h2>'. t('CTools Javascript Widgets') .'</h2>';
+
+  // Create a drop down menu
+  $links = array();
+  $links[] = array('title' => t('Link 1'), 'href' => $_GET['q']);
+  $links[] = array('title' => t('Link 2'), 'href' => $_GET['q']);
+  $links[] = array('title' => t('Link 3'), 'href' => $_GET['q']);
+
+  $output .= '<h3>' . t('Drop Down Menu') . '</h3>';
+  $output .= theme('ctools_dropdown', array('title' => t('Click to Drop Down'), 'links' => $links));
+
+  // Create a collapsible div
+  $handle = t('Click to Collapse');
+  $content = 'Nulla ligula ante, aliquam at adipiscing egestas, varius vel arcu. Etiam laoreet elementum mi vel consequat. Etiam scelerisque lorem vel neque consequat quis bibendum libero congue. Nulla facilisi. Mauris a elit a leo feugiat porta. Phasellus placerat cursus est vitae elementum.';
+  $output .= '<h3>'. t('Collapsible Div') .'</h3>';
+  $output .= theme('ctools_collapsible', array('handle' => $handle, 'content' => $content, 'collapsed' => FALSE));
+
+  // Create a jump menu
+  ctools_include('jump-menu');
+  $form = drupal_get_form('ctools_ajax_sample_jump_menu_form');
+  $output .= '<h3>'. t('Jump Menu') .'</h3>';
+  $output .= drupal_render($form);
+
+  return array('markup' => array('#markup' => $output));
+}
+
+/**
+ * Returns a "take it all over" hello world style request.
+ */
+function ctools_ajax_sample_hello($js = NULL) {
+  $output = '<h1>' . t('Hello World') . '</h1>';
+  if ($js) {
+    ctools_include('ajax');
+    $commands = array();
+    $commands[] = ajax_command_html('#ctools-sample', $output);
+    print ajax_render($commands); // this function exits.
+    exit;
+  }
+  else {
+    return $output;
+  }
+}
+
+/**
+ *  Nix a row from a table and restripe.
+ */
+function ctools_ajax_sample_tablenix($js, $row) {
+  if (!$js) {
+    // We don't support degrading this from js because we're not
+    // using the server to remember the state of the table.
+    return MENU_ACCESS_DENIED;
+  }
+  ctools_include('ajax');
+
+  $commands = array();
+  $commands[] = ajax_command_remove("tr.ajax-sample-row-$row");
+  $commands[] = ajax_command_restripe("table.ajax-sample-table");
+  print ajax_render($commands);
+  exit;
+}
+
+/**
+ * A modal login callback.
+ */
+function ctools_ajax_sample_login($js = NULL) {
+  // Fall back if $js is not set.
+  if (!$js) {
+    return drupal_get_form('user_login');
+  }
+
+  ctools_include('modal');
+  ctools_include('ajax');
+  $form_state = array(
+    'title' => t('Login'),
+    'ajax' => TRUE,
+  );
+  $output = ctools_modal_form_wrapper('user_login', $form_state);
+  if (empty($output)) {
+    // empty $output signifies success, so we'll use it as our $commands
+    // array.
+    $output = array();
+    $inplace = ctools_ajax_text_button(t('remain here'), 'ctools_ajax_sample/nojs/login/inplace', t('Go to your account'));
+    $account = ctools_ajax_text_button(t('your account'), 'ctools_ajax_sample/nojs/login/user', t('Go to your account'));
+    $output[] = ctools_modal_command_display(t('Login Success'), '<div class="modal-message">Login successful. You can now choose whether to '. $inplace .', or go to '. $account.'.</div>');
+  }
+  print ajax_render($output);
+  exit;
+}
+
+/**
+ * Post-login processor: should we go to the user account or stay in place?
+ */
+function ctools_ajax_sample_login_success($js, $action) {
+  if (!$js) {
+    // we should never be here out of ajax context
+    return MENU_NOT_FOUND;
+  }
+
+  ctools_include('ajax');
+  $commands = array();
+  if ($action == 'inplace') {
+    // stay here
+    $commands[] = ctools_ajax_command_reload();
+  }
+  else {
+    // bounce bounce
+    $commands[] = ctools_ajax_command_redirect('user');
+  }
+  print ajax_render($commands);
+  exit;
+}
+
+/**
+ * A modal login callback.
+ */
+function ctools_ajax_sample_animal($js = NULL, $step = NULL) {
+  if ($js) {
+    ctools_include('modal');
+    ctools_include('ajax');
+  }
+
+  $form_info = array(
+    'id' => 'animals',
+    'path' => "ctools_ajax_sample/" . ($js ? 'ajax' : 'nojs') . "/animal/%step",
+    'show trail' => TRUE,
+    'show back' => TRUE,
+    'show cancel' => TRUE,
+    'show return' => FALSE,
+    'next callback' =>  'ctools_ajax_sample_wizard_next',
+    'finish callback' => 'ctools_ajax_sample_wizard_finish',
+    'cancel callback' => 'ctools_ajax_sample_wizard_cancel',
+   // this controls order, as well as form labels
+    'order' => array(
+      'start' => t('Choose animal'),
+    ),
+   // here we map a step to a form id.
+    'forms' => array(
+      // e.g. this for the step at wombat/create
+      'start' => array(
+        'form id' => 'ctools_ajax_sample_start'
+      ),
+    ),
+  );
+
+  // We're not using any real storage here, so we're going to set our
+  // object_id to 1. When using wizard forms, id management turns
+  // out to be one of the hardest parts. Editing an object with an id
+  // is easy, but new objects don't usually have ids until somewhere
+  // in creation.
+  //
+  // We skip all this here by just using an id of 1.
+
+  $object_id = 1;
+
+  if (empty($step)) {
+    // We reset the form when $step is NULL because that means they have
+    // for whatever reason started over.
+    ctools_ajax_sample_cache_clear($object_id);
+    $step = 'start';
+  }
+
+  // This automatically gets defaults if there wasn't anything saved.
+  $object = ctools_ajax_sample_cache_get($object_id);
+
+  $animals = ctools_ajax_sample_animals();
+
+  // Make sure we can't somehow accidentally go to an invalid animal.
+  if (empty($animals[$object->type])) {
+    $object->type = 'unknown';
+  }
+
+  // Now that we have our object, dynamically add the animal's form.
+  if ($object->type == 'unknown') {
+    // If they haven't selected a type, add a form that doesn't exist yet.
+    $form_info['order']['unknown'] = t('Configure animal');
+    $form_info['forms']['unknown'] = array('form id' => 'nothing');
+  }
+  else {
+    // Add the selected animal to the order so that it shows up properly in the trail.
+    $form_info['order'][$object->type] = $animals[$object->type]['config title'];
+  }
+
+  // Make sure all animals forms are represented so that the next stuff can
+  // work correctly:
+  foreach ($animals as $id => $animal) {
+    $form_info['forms'][$id] = array('form id' => $animals[$id]['form']);
+  }
+
+  $form_state = array(
+    'ajax' => $js,
+    // Put our object and ID into the form state cache so we can easily find
+    // it.
+    'object_id' => $object_id,
+    'object' => &$object,
+  );
+
+  // Send this all off to our form. This is like drupal_get_form only wizardy.
+  ctools_include('wizard');
+  $form = ctools_wizard_multistep_form($form_info, $step, $form_state);
+  $output = drupal_render($form);
+
+  if ($output === FALSE || !empty($form_state['complete'])) {
+    // This creates a string based upon the animal and its setting using
+    // function indirection.
+    $animal = $animals[$object->type]['output']($object);
+  }
+
+  // If $output is FALSE, there was no actual form.
+  if ($js) {
+    // If javascript is active, we have to use a render array.
+    $commands = array();
+    if ($output === FALSE || !empty($form_state['complete'])) {
+      // Dismiss the modal.
+      $commands[] = ajax_command_html('#ctools-sample', $animal);
+      $commands[] = ctools_modal_command_dismiss();
+    }
+    else if (!empty($form_state['cancel'])) {
+      // If cancelling, return to the activity.
+      $commands[] = ctools_modal_command_dismiss();
+    }
+    else {
+      $commands = ctools_modal_form_render($form_state, $output);
+    }
+    print ajax_render($commands);
+    exit;
+  }
+  else {
+    if ($output === FALSE || !empty($form_state['complete'])) {
+      return $animal;
+    }
+    else if (!empty($form_state['cancel'])) {
+      drupal_goto('ctools_ajax_sample');
+    }
+    else {
+      return $output;
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Themes
+
+/**
+ * Theme function for main rendered output.
+ */
+function theme_ctools_ajax_sample_container($vars) {
+  $output = '<div id="ctools-sample">';
+  $output .= $vars['content'];
+  $output .= '</div>';
+
+  return $output;
+}
+
+// ---------------------------------------------------------------------------
+// Stuff needed for our little wizard.
+
+/**
+ * Get a list of our animals and associated forms.
+ *
+ * What we're doing is making it easy to add more animals in just one place,
+ * which is often how it will work in the real world. If using CTools, what
+ * you would probably really have, here, is a set of plugins for each animal.
+ */
+function ctools_ajax_sample_animals() {
+  return array(
+    'sheep' => array(
+      'title' => t('Sheep'),
+      'config title' => t('Configure sheep'),
+      'form' => 'ctools_ajax_sample_configure_sheep',
+      'output' => 'ctools_ajax_sample_show_sheep',
+    ),
+    'lizard' => array(
+      'title' => t('Lizard'),
+      'config title' => t('Configure lizard'),
+      'form' => 'ctools_ajax_sample_configure_lizard',
+      'output' => 'ctools_ajax_sample_show_lizard',
+    ),
+    'raptor' => array(
+      'title' => t('Raptor'),
+      'config title' => t('Configure raptor'),
+      'form' => 'ctools_ajax_sample_configure_raptor',
+      'output' => 'ctools_ajax_sample_show_raptor',
+    ),
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Wizard caching helpers.
+
+/**
+ * Store our little cache so that we can retain data from form to form.
+ */
+function ctools_ajax_sample_cache_set($id, $object) {
+  ctools_include('object-cache');
+  ctools_object_cache_set('ctools_ajax_sample', $id, $object);
+}
+
+/**
+ * Get the current object from the cache, or default.
+ */
+function ctools_ajax_sample_cache_get($id) {
+  ctools_include('object-cache');
+  $object = ctools_object_cache_get('ctools_ajax_sample', $id);
+  if (!$object) {
+    // Create a default object.
+    $object = new stdClass;
+    $object->type = 'unknown';
+    $object->name = '';
+  }
+
+  return $object;
+}
+
+/**
+ * Clear the wizard cache.
+ */
+function ctools_ajax_sample_cache_clear($id) {
+  ctools_include('object-cache');
+  ctools_object_cache_clear('ctools_ajax_sample', $id);
+}
+
+// ---------------------------------------------------------------------------
+// Wizard in-between helpers; what to do between or after forms.
+
+/**
+ * Handle the 'next' click on the add/edit pane form wizard.
+ *
+ * All we need to do is store the updated pane in the cache.
+ */
+function ctools_ajax_sample_wizard_next(&$form_state) {
+  ctools_ajax_sample_cache_set($form_state['object_id'], $form_state['object']);
+}
+
+/**
+ * Handle the 'finish' click on teh add/edit pane form wizard.
+ *
+ * All we need to do is set a flag so the return can handle adding
+ * the pane.
+ */
+function ctools_ajax_sample_wizard_finish(&$form_state) {
+  $form_state['complete'] = TRUE;
+}
+
+/**
+ * Handle the 'cancel' click on the add/edit pane form wizard.
+ */
+function ctools_ajax_sample_wizard_cancel(&$form_state) {
+  $form_state['cancel'] = TRUE;
+}
+
+// ---------------------------------------------------------------------------
+// Wizard forms for our simple info collection wizard.
+
+/**
+ * Wizard start form. Choose an animal.
+ */
+function ctools_ajax_sample_start($form, &$form_state) {
+  $form_state['title'] = t('Choose animal');
+
+  $animals = ctools_ajax_sample_animals();
+  foreach ($animals as $id => $animal) {
+    $options[$id] = $animal['title'];
+  }
+
+  $form['type'] = array(
+    '#title' => t('Choose your animal'),
+    '#type' => 'radios',
+    '#options' => $options,
+    '#default_value' => $form_state['object']->type,
+    '#required' => TRUE,
+  );
+  return $form;
+}
+
+/**
+ * They have selected a sheep. Set it.
+ */
+function ctools_ajax_sample_start_submit(&$form, &$form_state) {
+  $form_state['object']->type = $form_state['values']['type'];
+  // Override where to go next based on the animal selected.
+  $form_state['clicked_button']['#next'] = $form_state['values']['type'];
+}
+
+/**
+ * Wizard form to configure your sheep.
+ */
+function ctools_ajax_sample_configure_sheep($form, &$form_state) {
+  $form_state['title'] = t('Configure sheep');
+
+  $form['name'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Name your sheep'),
+    '#default_value' => $form_state['object']->name,
+    '#required' => TRUE,
+  );
+
+  $form['sheep'] = array(
+    '#title' => t('What kind of sheep'),
+    '#type' => 'radios',
+    '#options' => array(
+      t('Wensleydale') => t('Wensleydale'),
+      t('Merino') => t('Merino'),
+      t('Corriedale') => t('Coriedale'),
+    ),
+    '#default_value' => !empty($form_state['object']->sheep) ? $form_state['object']->sheep : '',
+    '#required' => TRUE,
+  );
+  return $form;
+}
+
+/**
+ * Submit the sheep and store the values from the form.
+ */
+function ctools_ajax_sample_configure_sheep_submit(&$form, &$form_state) {
+  $form_state['object']->name = $form_state['values']['name'];
+  $form_state['object']->sheep = $form_state['values']['sheep'];
+}
+
+/**
+ * Provide some output for our sheep.
+ */
+function ctools_ajax_sample_show_sheep($object) {
+  return t('You have a @type sheep named "@name".', array(
+    '@type' => $object->sheep,
+    '@name' => $object->name,
+  ));
+}
+
+/**
+ * Wizard form to configure your lizard.
+ */
+function ctools_ajax_sample_configure_lizard($form, &$form_state) {
+  $form_state['title'] = t('Configure lizard');
+
+  $form['name'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Name your lizard'),
+    '#default_value' => $form_state['object']->name,
+    '#required' => TRUE,
+  );
+
+  $form['lizard'] = array(
+    '#title' => t('Venomous'),
+    '#type' => 'checkbox',
+    '#default_value' => !empty($form_state['object']->lizard),
+  );
+  return $form;
+}
+
+/**
+ * Submit the lizard and store the values from the form.
+ */
+function ctools_ajax_sample_configure_lizard_submit(&$form, &$form_state) {
+  $form_state['object']->name = $form_state['values']['name'];
+  $form_state['object']->lizard = $form_state['values']['lizard'];
+}
+
+/**
+ * Provide some output for our raptor.
+ */
+function ctools_ajax_sample_show_lizard($object) {
+  return t('You have a @type lizard named "@name".', array(
+    '@type' => empty($object->lizard) ? t('non-venomous') : t('venomous'),
+    '@name' => $object->name,
+  ));
+}
+
+/**
+ * Wizard form to configure your raptor.
+ */
+function ctools_ajax_sample_configure_raptor($form, &$form_state) {
+  $form_state['title'] = t('Configure raptor');
+
+  $form['name'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Name your raptor'),
+    '#default_value' => $form_state['object']->name,
+    '#required' => TRUE,
+  );
+
+  $form['raptor'] = array(
+    '#title' => t('What kind of raptor'),
+    '#type' => 'radios',
+    '#options' => array(
+      t('Eagle') => t('Eagle'),
+      t('Hawk') => t('Hawk'),
+      t('Owl') => t('Owl'),
+      t('Buzzard') => t('Buzzard'),
+    ),
+    '#default_value' => !empty($form_state['object']->raptor) ? $form_state['object']->raptor : '',
+    '#required' => TRUE,
+  );
+
+  $form['domesticated'] = array(
+    '#title' => t('Domesticated'),
+    '#type' => 'checkbox',
+    '#default_value' => !empty($form_state['object']->domesticated),
+  );
+  return $form;
+}
+
+/**
+ * Submit the raptor and store the values from the form.
+ */
+function ctools_ajax_sample_configure_raptor_submit(&$form, &$form_state) {
+  $form_state['object']->name = $form_state['values']['name'];
+  $form_state['object']->raptor = $form_state['values']['raptor'];
+  $form_state['object']->domesticated = $form_state['values']['domesticated'];
+}
+
+/**
+ * Provide some output for our raptor.
+ */
+function ctools_ajax_sample_show_raptor($object) {
+  return t('You have a @type @raptor named "@name".', array(
+    '@type' => empty($object->domesticated) ? t('wild') : t('domesticated'),
+    '@raptor' => $object->raptor,
+    '@name' => $object->name,
+  ));
+}
+
+/**
+ * Helper function to provide a sample jump menu form
+ */
+function ctools_ajax_sample_jump_menu_form() {
+  $url = url('ctools_ajax_sample/jumped');
+  $form = ctools_jump_menu(array(), array($url => t('Jump!')), array());
+  return $form;
+}
+
+/**
+ * Provide a message to the user that the jump menu worked
+ */
+function ctools_ajax_sample_jump_menu_page() {
+  $return_link = l(t('Return to the examples page.'), 'ctools_ajax_sample');
+  $output = t('You successfully jumped! !return_link', array('!return_link' => $return_link));
+  return $output;
+}
+
+/**
+ * Provide a form for an example ajax modal button
+ */
+function ctools_ajax_sample_ajax_button_form() {
+  $form = array();
+
+  $form['url'] = array(
+    '#type' => 'hidden',
+    '#attributes' => array('class' => array('ctools-ajax-sample-button-url')),
+    '#value' => 'ctools_ajax_sample/nojs/animal',
+  );
+
+  $form['ajax_button'] = array(
+    '#type' => 'button',
+    '#value' => 'Wizard (button modal)',
+    '#attributes' => array('class' => array('ctools-use-modal')),
+    '#id' => 'ctools-ajax-sample-button',
+  );
+
+  return $form;
+}

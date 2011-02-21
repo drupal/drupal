@@ -1,0 +1,73 @@
+<?php
+// $Id: ctools_plugin_test.module,v 1.2 2010/10/11 22:18:22 sdboyer Exp $
+/**
+ * Define some plugin systems to test ctools plugin includes.
+ */
+
+/**
+ * Implementation of hook_ctools_plugin_dierctory()
+ */
+function ctools_plugin_test_ctools_plugin_directory($module, $plugin) {
+  if ($module == 'ctools_plugin_test') {
+    return 'plugins/' . $plugin;
+  }
+}
+
+function ctools_plugin_test_ctools_plugin_type() {
+  return array(
+    'extra_defaults' => array(
+      'defaults' => array(
+        'bool' => true,
+        'string' => 'string',
+        'array' => array('some value'),
+      ),
+    ),
+    'cached' => array(
+      'cache' => TRUE,
+      'classes' => array(
+        'handler',
+      ),
+    ),
+    'not_cached' => array(
+      'cache' => FALSE,
+      'classes' => array(
+        'handler',
+      ),
+    ),
+    'big_hook_cached' => array(
+      'cache' => TRUE,
+      'use hooks' => TRUE,
+      'classes' => array(
+        'handler',
+      ),
+    ),
+    'big_hook_not_cached' => array(
+      'cache' => FALSE,
+      'use hooks' => TRUE,
+      'classes' => array(
+        'handler',
+      ),
+    ),
+  );
+}
+
+function ctools_plugin_test_ctools_plugin_test_big_hook_cached() {
+  return array(
+    'test1' => array(
+      'function' => 'ctools_plugin_test_hook_cached_test',
+      'handler' => 'class1',
+    ),
+  );
+}
+
+function ctools_plugin_test_ctools_plugin_test_big_hook_not_cached() {
+  return array(
+    'test1' => array(
+      'function' => 'ctools_plugin_test_hook_not_cached_test',
+      'class' => 'class1',
+    ),
+  );
+}
+
+function ctools_plugin_test_hook_cached_test() {}
+function ctools_plugin_test_hook_not_cached_test() {}

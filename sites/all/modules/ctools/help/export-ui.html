@@ -1,0 +1,85 @@
+<!-- $Id: export-ui.html,v 1.2 2010/10/11 22:18:22 sdboyer Exp $ -->
+Most user interfaces for exportables are very similar, so CTools includes a tool to provide the framework for the most common UI. This tool is a plugin of the 'export_ui' type. In order to create a UI for your exportable object with this tool, you first need to ensure that your module supports the plugin:
+
+<pre>
+function HOOK_ctools_plugin_directory($module, $plugin) {
+  if ($module == 'ctools' && $plugin == 'export_ui') {
+    return 'plugins/' . $plugin;
+  }
+}
+</pre>
+
+Then, you need to create a plugin .inc file describing your UI. Most of the UI runs with sane but simple defaults, so for the very simplest UI you don't need to do very much. This is a very simple example plugin for the 'example' export type:
+
+<pre>
+$plugin = array(
+  // The name of the table as found in the schema in hook_install. This
+  // must be an exportable type with the 'export' section defined.
+  'schema' => 'example',
+
+  // The access permission to use. If not provided it will default to
+  // 'administer site configuration'
+  'access' => 'administer example',
+
+  // You can actually define large chunks of the menu system here. Nothing
+  // is required here. If you leave out the values, the prefix will default
+  // to admin/structure and the item will default to the plugin name.
+  'menu' => array(
+    'menu prefix' => 'admin/structure',
+    'menu item' => 'example',
+    // Title of the top level menu. Note this should not be translated,
+    // as the menu system will translate it.
+    'menu title' => 'Example', 
+    // Description of the top level menu, which is usually needed for
+    // menu items in an administration list. Will be translated
+    // by the menu system.
+    'menu description' => 'Administer site example objects.',
+  ),
+
+  // These are required to provide proper strings for referring to the
+  // actual type of exportable. "proper" means it will appear at the
+  // beginning of a sentence.
+  'title singular' => t('example'),
+  'title singular proper' => t('Example'),
+  'title plural' => t('examples'),
+  'title plural proper' => t('Examples'),
+
+  // This will provide you with a form for editing the properties on your
+  // exportable, with validate and submit handler.
+  //
+  // The item being edited will be in $form_state['item'].
+  //
+  // The submit handler is only responsible for moving data from
+  // $form_state['values'] to $form_state['item'].
+  //
+  // All callbacks will accept &$form and &$form_state as arguments.
+  'form' => array(
+    'settings' => 'example_ctools_export_ui_form',
+    'validate' => 'example_ctools_export_ui_form_validate',
+    'submit' => 'example_ctools_export_ui_form_submit',
+  ),
+
+);
+</pre>
+
+For a more complete list of what you can set in your plugin, please see ctools_export_ui_defaults() in includes/export-ui.inc to see what the defaults are.
+
+<h3>More advanced UIs</h3>
+The bulk of this UI is built on an class called ctools_export_ui, which is itself stored in ctools/plugins/export_ui as the default plugin. Many UIs will have more complex needs than the defaults provide. Using OO and overriding methods can allow an implementation to use the basics and still provide more where it is needed. To utilize this, first add a 'handler' directive to your plugin .inc file:
+
+<pre>
+   'handler' => array(
+     'class' => 'ctools_export_ui_example',
+     'parent' => 'ctools_export_ui',
+   ),
+</pre>
+
+Then create your class in ctools_export_ui_example.class.php in your plugins directory:
+
+<pre>
+class ctools_export_ui_example extends ctools_export_ui {
+
+}
+</pre>
+
+You can override any method found in the class (see the source file for details). In particular, there are several list methods that are good candidates for overriding if you need to provide richer data for listing, sorting or filtering. If you need multi-step add/edit forms, you can override edit_page(), add_page(), clone_page(), and import_page() to put your wizard in place of the basic editing system. For an example of how to use multi-step wizards, see the import_page() method.

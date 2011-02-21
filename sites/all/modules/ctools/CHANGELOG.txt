@@ -1,0 +1,75 @@
+Current API VERSION: 2.0. See API.txt for more information.
+
+ctools 7.x-1.x-alpha2 (05-Jan-2011)
+===================================
+
+#911396 by alex_b: Prevent notices in export UI.
+#919768 by mikey_p: Allow url options to be sent to ctools_ajax_command_url().
+#358953 by cedarm: Allow term context to return lowercase, spaces to dashes versions of terms.
+#931434 by EclipseGc: Argument plugin for node revision ID.
+#910656: CTools AJAX sample wizard demo "domesticated" checkbox value not stored.
+#922442 by EugenMayer, neclimdul and voxpelli: Make sure ctools_include can handle '' or NULL directory.
+#919956 by traviss359: Correct example in wizard advanced help.
+#942968: Fix taxonomy term access rule with tag term vocabs.
+#840344: node add argument had crufty code causing notices.
+#944462 by longhairedgit: Invalid character in regex causes rare notice.
+#938778 by dereine: Fix profile content type for D7 updates.
+Add detach event to modal close so that wysiwyg can detach the editor.
+Variant titles showing up as blank if more than one variant on a page.
+#940016: token support was not yet updated for D7.
+#940446: Skip validation on back and cancel buttons in all wizards.
+#954492: Redirect not always working in wizard.inc
+#955348: Lack of redirect on "Update" button in Page Manager causing data loss sometimes.
+#941778: Update and save button should not appear in the "Add variant" path.
+#955070 by EclipseGc: Update ctools internal page tokens to work properly on content all content.
+#956890 by EclipseGc: Update views_content to not use views dependency since that is gone.
+#954728 by EclipseGc: Update node template page function name to not collide with new hook_node_view().
+#946534 by EclipseGc: Add support for field content on all entitities.
+#952586 by EclipseGc: Fix node_author content type.
+#959206: If a context is not set when rendering content, attempt to guess the context (fixes Views panes where "From context" was added but pane was never edited.)
+#961654 by benshell: drupal_alter() only supports 4 arguments.
+#911362 by alex_b: Facilitate plugin cache resets for tests.
+#945360 by naxoc: node_tag_new() not updated to D7.
+#953804 by EclipseGc: Fix node comment rendering.
+#953542 by EclipseGc: Fix node rendering.
+#953776 by EclipseGc: Fix node link rendering.
+#954772 by EclipseGc: Fix node build mode selection in node content type.
+#954762 by EclipseGc: Fix comment forbidden theme call.
+#954894 by EclipseGc: Fix breadcrumb content type.
+#955180 by EclipseGc: Fix page primary navigation type.
+#957190 by EclipseGc: Fix page secondary navigation type.
+#957194 by EclipseGc: Remove mission content type, since D7 no longer has a site mission.
+#957348 by EclipseGc: Fix search form URL path.
+#952586 by andypost: Use format_username for displaying unlinked usernames.
+#963800 by benshell: Fix query to fetch custom block title.
+#983496 by Amitaibu: Fix term argument to use proper load function.
+#989484 by Amitaibu: Fix notice in views plugin.
+#982496: Fix token context.
+#995026: Fix export UI during enable/disable which would throw notices and not properly set/unset menu items.
+#998870 by Amitaibu: Fix notice when content has no icon by using function already designed for that.
+#983576 by Amitaibu: Node view fallback task showed white screen.
+#1004644 by pillarsdotnet: Update a missed theme() call to D7.
+#1006162 by aspilicious: .info file cleanup.
+#998312 by dereine: Support the expanded/hidden options that Views did for dependent.js
+#955030: Remove no longer supported footer message content type.
+Fix broken query in term context config.
+#992022 by pcambra: Fix node autocomplete.
+#946302 by BerdArt and arywyr: Fix PHP 5.3 reference error.
+#980528 by das-peter: Notice fix with entity settings.
+#999302 by troky: ctools_jump_menu() needed updating to new form parameters.
+#964174: stylizer plugin theme delegation was in the wrong place, causing errors.
+#991658 by burlap: Fully load the "user" context for the logged in user because not all fields are in $user.
+#1014866 by das-peter: Smarter title panes, notice fix on access plugin descriptions.
+#1015662 by troky: plugin .info files were not using correct filepaths.
+#941780 by EclipseGc: Restore the "No blocks" functionality.
+#951048 by EclipseGc: Tighter entity integration so that new entities are automatic contexts and relationships.
+#941800 by me and aspilicious: Use Drupal 7 #machine_name automation on page manager pages and all export_ui defaults.
+Disabled exportables and pages not properly greyed out.
+#969208 by me and benshell: Get user_view and user profile working.
+#941796: Recategorize blocks
+
+ctools 7.x-1.x-alpha1
+=====================
+
+Changelog reset for 7.x
+Basic conversion done during sprint.

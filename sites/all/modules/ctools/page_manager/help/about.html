@@ -1,0 +1,12 @@
+<!-- $Id: about.html,v 1.1 2009/07/22 23:42:47 merlinofchaos Exp $ -->
+The Page Manager module creates and manages pages in your Drupal site. Pages are defined as items that have a path and provide output to the user. It is a complete round trip from getting user input to providing user output.
+
+There are two types of pages that the Page Manager currently supports:
+<dl>
+<dt>Custom pages</dt>
+<dd>Custom pages are defined completely by the administrator. Their path, access control and visible menu characteristics are completely arbitrary.</dd>
+<dt>System pages</dt>
+<dd>System pages are defined by Drupal and Drupal modules. They primarily override pre-existing pages to provide different functionality. They often do not allow such features as access control in favor of what already exists, and they will usually 'fall back' to default Drupal behavior.
+</dl>
+
+Both types of pages figure out what to show the user by using <strong>Variants</strong>. Variants are output handlers, and every page should have at least one. Most pages will simply have only one. Pages with multiple variants will choose one and only one Variant to display content to the user and will use the <strong>Selection Rules</strong> to figure out which Variant to display.

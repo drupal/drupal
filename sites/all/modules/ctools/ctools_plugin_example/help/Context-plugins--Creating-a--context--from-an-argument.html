@@ -1,0 +1,21 @@
+<div id="node-13" class="node">
+
+
+
+  
+  <div class="content clear-block">
+    <p>Now that we have a plugin for a simplecontext argument, we can create a plugin for a simplecontext context. </p>
+<p>Normally, a context would take an argument which is a key like a node ID (nid) and retrieve a more complex object from a database or whatever. In our example, we'll artificially transform the argument into an arbitrary "context" data object. </p>
+<p>plugins/contexts/simplecontext.inc implements our context.</p>
+<p>Note that there are actually two ways to create a context. The normal one, which we've been referring to, is to create a context from an argument. However, it is also possible to configure a context in a panel using the panels interface. This is quite inflexible, but might be useful for configuring single page. However, it means that we have a settings form for exactly that purpose. Our context would have to know how to create itself from a settings form as well as from an argument. Simplecontext can do that.</p>
+<p>A context plugin can also provide keywords that expose parts of its context using keywords like masterkeyword:dataitem. The node plugin for ctools has node:nid and node:title, for example. The simplecontext plugin here provides the simplest of keywords.</p>
+ 
+  </div>
+
+  <div class="clear-block">
+    <div class="meta">
+        </div>
+
+      </div>
+
+</div>

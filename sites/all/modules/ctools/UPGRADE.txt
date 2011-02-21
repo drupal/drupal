@@ -1,0 +1,63 @@
+Upgrading from ctools-6.x-1.x to ctools-7.x-2.x:
+
+  - Remove ctools_ajax_associate_url_to_element as it shouldn't be necessary
+    with the new AJAX api's in Drupal core.
+
+  - All calls to the ctools_ajax_command_prepend() should be replace with 
+    the core function ajax_command_prepend();
+    This is also the case for append, insert, after, before, replace, html, 
+    and remove commands. 
+    Each of these commands have been incorporated into the 
+    Drupal.ajax.prototype.commands.insert   
+    function with a corresponding parameter specifying which method to use.
+
+  - All calls to ctools_ajax_render() should be replaced with calls to core
+    ajax_render(). Note that ctools_ajax_render() printed the json object and
+    exited, ajax_render() gives you this responsibility. 
+
+    ctools_ajax_render() 
+
+    becomes
+
+    print ajax_render();
+    exit;
+
+  - All calls to ctools_static*() should be replaced with corresponding calls
+    to drupal_static*().
+
+  - All calls to ctools_css_add_css should be replaced with calls to
+    drupal_add_css(). Note that the arguments to drupal_add_css() have changed.
+
+  - All wizard form builder functions must now return a form array().
+
+  - ctools_build_form is very close to being removed.  In anticipation of this, 
+    all $form_state['wrapper callback']s must now be 
+    $form_state['wrapper_callback']. In addition to this $form_state['args'] 
+    must now be $form_state['build_info']['args'].
+
+    NOTE: Previously checking to see if the return from ctools_build_form()
+    is empty would be enough to see if the form was submitted. This is no
+    longer true. Please check for $form_state['executed']. If using a wizard
+    check for $form_state['complete'].
+
+  - Plugin types now must be explicitly registered via a registration hook,
+    hook_ctools_plugin_type(); info once provided in magically-named functions
+    (e.g., ctools_ctools_plugin_content_types() was the old function to
+    provide plugin type info for ctools' content_type plugins) now must be
+    provided in that global hook. See http://drupal.org/node/910538 for more
+    details.
+
+  - Plugins that use 'theme arguments' now use 'theme variables' instead.
+
+  - Context, argument and relationship plugins now use 'add form' and/or
+    'edit form' rather than 'settings form'. These plugins now support 
+    form wizards just like content plugins. These forms now all take
+    $form, &$form_state as arguments, and the configuration for the plugin
+    can be found in $form_state['conf'].
+
+    For all these forms, the submit handler MUST put appropriate data in
+    $form_state['conf']. Data will no longer be stored automatically.
+
+    For all of these forms, the separate settings #trees in the form are now
+    gone, so form ids may be adjusted. Also, these are now all real forms
+    using CTools form wizard instead of fake subforms as previously.

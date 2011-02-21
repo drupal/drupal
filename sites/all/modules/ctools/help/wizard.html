@@ -1,0 +1,288 @@
+<!-- $Id: wizard.html,v 1.8 2010/10/15 22:13:37 merlinofchaos Exp $ -->
+Form wizards, or multi-step forms, are a process by which the user goes through or can use an arbitrary number of different forms to create a single object or perform a single task. Traditionally the multi-step form is difficult in Drupal because there is no easy place to put data in between forms. No longer! The form wizard tool allows a single entry point to easily set up a wizard of multiple forms, provide callbacks  to handle data storage and updates between forms and when forms are completed. This tool pairs well with the <a href="&topic:ctools/object-cache&">object cache</a> tool for storage.
+
+<h3>The form info array</h3>
+The wizard starts with an array of data that describes all of the forms available to the wizard and sets options for how the wizard will present and control the flow. Here is an example of the $form_info array as used in the delegator module:
+
+<pre>
+  $form_info = array(
+    'id' => 'delegator_page',
+    'path' => "admin/structure/pages/edit/$page_name/%step",
+    'show trail' => TRUE,
+    'show back' => TRUE,
+    'show return' => FALSE,
+    'next callback' => 'delegator_page_add_subtask_next',
+    'finish callback' => 'delegator_page_add_subtask_finish',
+    'return callback' => 'delegator_page_add_subtask_finish',
+    'cancel callback' => 'delegator_page_add_subtask_cancel',
+    'order' => array(
+      'basic' => t('Basic settings'),
+      'argument' => t('Argument settings'),
+      'access' => t('Access control'),
+      'menu' => t('Menu settings'),
+      'multiple' => t('Task handlers'),
+    ),
+    'forms' => array(
+      'basic' => array(
+        'form id' => 'delegator_page_form_basic'
+      ),
+      'access' => array(
+        'form id' => 'delegator_page_form_access'
+      ),
+      'menu' => array(
+        'form id' => 'delegator_page_form_menu'
+      ),
+      'argument' => array(
+        'form id' => 'delegator_page_form_argument'
+      ),
+      'multiple' => array(
+        'form id' => 'delegator_page_argument_form_multiple'
+      ),
+    ),
+  );
+</pre>
+
+The above array starts with an <b>id</b> which is used to identify the wizard in various places and a <b>path</b> which is needed to redirect to the next step between forms. It then creates some <b>settings</b> which control which pieces are displayed. In this case, it displays a form trail and a 'back' button, but not the 'return' button. Then there are the <b>wizard callbacks</b> which allow the wizard to act appropriately when forms are submitted. Finally it contains a <b>list of forms</b> and their <b>order</b> so that it knows which forms to use and what order to use them by default. Note that the keys in the order and list of forms match; that key is called the <b>step</b> and is used to identify each individual step of the wizard.
+
+Here is a full list of every item that can be in the form info array:
+
+<dl>
+<dt>id</dt>
+<dd>An id for wizard. This is used like a hook to automatically name <b>callbacks</b>, as well as a form step's form building function. It is also used in trail theming.</dd>
+<dt>path</dt>
+<dd>The path to use when redirecting between forms. <strong>%step</strong> will be replaced with the key for the form.</dd>
+<dt>return path</dt>
+<dd>When a form is complete, this is the path to go to. This is required if the 'return' button is shown and not using AJAX. It is also used for the 'Finish' button. If it is not present and needed, the cancel path will also be checked.</dd>
+<dt>cancel path</dt>
+<dd>When a form is canceled, this is the path to go to. This is required if the 'cancel' is shown and not using AJAX.</dd>
+<dt>show trail</dt>
+<dd>If set to TRUE, the form trail will be shown like a breadcrumb at the top of each form. Defaults to FALSE.</dd>
+<dt>show back</dt>
+<dd>If set to TRUE, show a back button on each form. Defaults to FALSE.</dd>
+<dt>show return</dt>
+<dd>If set to TRUE, show a return button. Defaults to FALSE.</dd>
+<dt>show cancel</dt>
+<dd>If set to TRUE, show a cancel button. Defaults to FALSE.</dd>
+<dt>back text</dt>
+<dd>Set the text of the 'back' button. Defaults to t('Back').</dd>
+<dt>next text</dt>
+<dd>Set the text of the 'next' button. Defaults to t('Continue').</dd>
+<dt>return text</dt>
+<dd>Set the text of the 'return' button. Defaults to t('Update and return').</dd>
+<dt>finish text</dt>
+<dd>Set the text of the 'finish' button. Defaults to t('Finish').</dd>
+<dt>cancel text</dt>
+<dd>Set the text of the 'cancel' button. Defaults to t('Cancel').</dd>
+<dt>ajax</dt>
+<dd>Turn on AJAX capabilities, using CTools' ajax.inc. Defaults to FALSE.</dd>
+<dt>modal</dt>
+<dd>Put the wizard in the modal tool. The modal must already be open and called from an ajax button for this to work, which is easily accomplished using functions provided by the modal tool.</dd>
+<dt>ajax render</dt>
+<dd>A callback to display the rendered form via ajax. This is not required if using the modal tool, but is required otherwise since ajax by itself does not know how to render the results. Params: &$form_state, $output.</dd>
+<dt>finish callback</dt>
+<dd>
+The function to call when a form is complete and the finish button has been clicked. This function should finalize all data. Params: &$form_state. 
+Defaults to $form_info['id']._finish if function exists.
+</dd>
+<dt>cancel callback</dt>
+<dd>
+The function to call when a form is canceled by the user. This function should clean up any data that is cached. Params: &$form_state. 
+Defaults to $form_info['id']._cancel if function exists.</dd>
+<dt>return callback</dt>
+<dd>
+The function to call when a form is complete and the return button has been clicked. This is often the same as the finish callback. Params: &$form_state. 
+Defaults to $form_info['id']._return if function exists.</dd>
+<dt>next callback</dt>
+<dd>
+The function to call when the next button has been clicked. This function should take the submitted data and cache it for later use by the finish callback. Params: &$form_state. 
+Defaults to $form_info['id']._next if function exists.</dd>
+<dt>order</dt>
+<dd>An optional array of forms, keyed by the step, which represents the default order the forms will be displayed in. If not set, the forms array will control the order. Note that submit callbacks can override the order so that branching logic can be used.</dd>
+<dt>forms</dt>
+<dd>An array of form info arrays, keyed by step, describing every form available to the wizard. If order array isn't set, the wizard will use this to set the default order. Each array contains:
+  <dl>
+  <dt>form id</dt>
+  <dd>
+    The id of the form, as used in the Drupal form system. This is also the name of the function that represents the form builder. 
+    Defaults to $form_info['id']._.$step._form.
+  </dd>
+  <dt>include</dt>
+  <dd>The name of a file to include which contains the code for this form. This makes it easy to include the form wizard in another file or set of files. This must be the full path of the file, so be sure to use drupal_get_path() when setting this. This can also be an array of files if multiple files need to be included.</dd>
+  <dt>title</dt>
+  <dd>The title of the form, to be optionally set via drupal_get_title. This is required when using the modal if $form_state['title'] is not set.</dd>
+  </dl>
+</dd>
+</dl>
+
+<h3>Invoking the form wizard</h3>
+Your module should create a page callback via hook_menu, and this callback should contain an argument for the step. The path that leads to this page callback should be the same as the 'path' set in the $form_info array.
+
+The page callback should set up the $form_info, and figure out what the default step should be if no step is provided (note that the wizard does not do this for you; you MUST specify a step). Then invoke the form wizard:
+
+<pre>
+  $form_state = array();
+  ctools_include('wizard');
+  $output = ctools_wizard_multistep_form($form_info, $step, $form_state);
+</pre>
+
+If using AJAX or the modal, This part is actually done! If not, you have one more small step:
+<pre>
+  return $output;
+</pre>
+
+<h3>Forms and their callbacks</h3>
+Each form within the wizard is a complete, independent form using Drupal's Form API system. It has a form builder callback as well as submit and validate callbacks and can be form altered. The primary difference between these forms and a normal Drupal form is that the submit handler should not save any data. Instead, it should make any changes to a cached object (usually placed on the $form_state) and only the _finish or _return handler should actually save any real data.
+
+How you handle this is completely up to you. The recommended best practice is to use the CTools Object cache, and a good way to do this is to write a couple of wrapper functions around the cache that look like these example functions:
+
+<pre>
+/**
+ * Get the cached changes to a given task handler.
+ */
+function delegator_page_get_page_cache($name) {
+  ctools_include('object-cache');
+  $cache = ctools_object_cache_get('delegator_page', $name);
+  if (!$cache) {
+    $cache = delegator_page_load($name);
+    $cache->locked = ctools_object_cache_test('delegator_page', $name);
+  }
+
+  return $cache;
+}
+
+/**
+ * Store changes to a task handler in the object cache.
+ */
+function delegator_page_set_page_cache($name, $page) {
+  ctools_include('object-cache');
+  $cache = ctools_object_cache_set('delegator_page', $name, $page);
+}
+
+/**
+ * Remove an item from the object cache.
+ */
+function delegator_page_clear_page_cache($name) {
+  ctools_include('object-cache');
+  ctools_object_cache_clear('delegator_page', $name);
+}
+</pre>
+
+Using these wrappers, when performing a get_cache operation, it defaults to loading the real object. It then checks to see if another user has this object cached using the ctools_object_cache_test() function, which automatically sets a lock (which can be used to prevent writes later on).
+
+With this set up, the _next, _finish and _cancel callbacks are quite simple:
+
+<pre>
+/**
+ * Callback generated when the add page process is finished.
+ */
+function delegator_page_add_subtask_finish(&$form_state) {
+  $page = &$form_state['page'];
+
+  // Create a real object from the cache
+  delegator_page_save($page);
+
+  // Clear the cache
+  delegator_page_clear_page_cache($form_state['cache name']);
+}
+
+/**
+ * Callback generated when the 'next' button is clicked.
+ *
+ * All we do here is store the cache.
+ */
+function delegator_page_add_subtask_next(&$form_state) {
+  // Update the cache with changes.
+  delegator_page_set_page_cache($form_state['cache name'], $form_state['page']);
+}
+
+/**
+ * Callback generated when the 'cancel' button is clicked.
+ *
+ * All we do here is clear the cache.
+ */
+function delegator_page_add_subtask_cancel(&$form_state) {
+  // Update the cache with changes.
+  delegator_page_clear_page_cache($form_state['cache name']);
+}
+</pre>
+
+All that's needed to tie this together is to understand how the changes made it into the cache in the first place. This happened in the various form _submit handlers, which made changes to $form_state['page'] based upon the values set in the form:
+
+<pre>
+/**
+ * Store the values from the basic settings form.
+ */
+function delegator_page_form_basic_submit(&$form, &$form_state) {
+  if (!isset($form_state['page']->pid) && empty($form_state['page']->import)) {
+    $form_state['page']->name = $form_state['values']['name'];
+  }
+
+  $form_state['page']->admin_title = $form_state['values']['admin_title'];
+  $form_state['page']->path = $form_state['values']['path'];
+}
+</pre>
+
+No database operations were made during this _submit, and that's a very important distinction about this system.
+
+<h3>Proper handling of back button</h3>
+When using <strong>'show back' => TRUE</strong> the cached data should be assigned to the <em>#default_value</em> form property. Otherwise when the user goes back to the previous step the forms default values instead of his (cached) input is used.
+
+<pre>
+/**
+ * Form builder function for wizard.
+ */
+function wizardid_step2_form(&$form, &$form_state) {
+  $form_state['my data'] = my_module_get_cache($form_state['cache name']);
+  $form['example'] = array(
+    '#type' => 'radios',
+    '#title' => t('Title'),
+    '#default_value' => $form_state['my data']->example ? $form_state['my data']->example : default,
+    '#options' => array(
+      'default' => t('Default'),
+      'setting1' => t('Setting1'),
+    ),
+  );
+}
+
+/**
+ * Submit handler to prepare needed values for storing in cache.
+ */
+function wizardid_step2_form_submit($form, &$form_state) {
+  $form_state['my data']->example = $form_state['values']['example'];
+}
+</pre>
+
+The data is stored in the <em>my data</em> object on submitting. If the user goes back to this step the cached <em>my data</em> is used as the default form value. The function <em>my_module_get_cache()</em> is like the cache functions explained above.
+
+<h3>Required fields, cancel and back buttons</h3>
+If you have required fields in your forms, the back and cancel buttons will not work as expected since validation of the form will fail. You can add the following code to the top of your form validation to avoid this problem :
+<pre>
+/**
+ * Validation handler for step2 form
+ */
+function wizardid_step2_form_validate(&$form, &$form_state) {
+  // if the clicked button is anything but the normal flow
+  if ($form_state['clicked_button']['#next'] != $form_state['next']) {
+    drupal_get_messages('error');
+    form_set_error(NULL, '', TRUE);
+    return;
+  }
+  // you form validation goes here
+  // ...
+}
+</pre>
+
+<h3>Wizard for anonymous users</h3>
+If you are creating a wizard which is be used by anonymous users, you might run into some issues with drupal's caching for anonymous users. You can circumvent this by using hook_init and telling drupal to not cache your wizard pages :
+<pre>
+/**
+ * Implementation of hook init
+ */
+function mymodule_init() {
+  // if the path leads to the wizard
+  if (drupal_match_path($_GET['q'], 'path/to/your/wizard/*')) {
+    // set cache to false
+    $GLOBALS['conf']['cache'] = FALSE;   
+  }
+}
+</pre>

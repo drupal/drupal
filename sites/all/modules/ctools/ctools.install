@@ -1,0 +1,198 @@
+<?php
+// $Id: ctools.install,v 1.15 2010/09/07 09:02:50 sdboyer Exp $
+
+/**
+ * @file
+ * Contains install and update functions for ctools.
+ */
+
+/**
+ * Use requirements to ensure that the CTools CSS cache directory can be
+ * created and that the PHP version requirement is met.
+ */
+function ctools_requirements($phase) {
+  $requirements = array();
+  if ($phase == 'runtime') {
+    $requirements['ctools_css_cache'] = array(
+      'title' => t('CTools CSS Cache'),
+      'severity' => REQUIREMENT_OK,
+      'value' => t('Exists'),
+    );
+
+    $path = 'public://ctools/css';
+    if (!file_prepare_directory($path, FILE_CREATE_DIRECTORY)) {
+      $requirements['ctools_css_cache']['description'] = t('The CTools CSS cache directory, %path could not be created due to a misconfigured files directory. Please ensure that the files directory is correctly configured and that the webserver has permission to create directories.', array('%path' => file_uri_target($path)));
+      $requirements['ctools_css_cache']['severity'] = REQUIREMENT_ERROR;
+      $requirements['ctools_css_cache']['value'] = t('Unable to create');
+    }
+
+    if (!function_exists('error_get_last')) {
+  	  $requirements['ctools_php_52']['title'] = t('CTools PHP requirements');
+      $requirements['ctools_php_52']['description'] = t('CTools requires certain features only available in PHP 5.2.0 or higher.');
+      $requirements['ctools_php_52']['severity'] = REQUIREMENT_WARNING;
+      $requirements['ctools_php_52']['value'] = t('PHP !version', array('!version' => phpversion()));
+    }
+  }
+
+  return $requirements;
+}
+
+/**
+ * Implements hook_schemea
+ */
+function ctools_schema() {
+  return ctools_schema_2();
+}
+
+/**
+ * Version 2 of the CTools schema.
+ */
+function ctools_schema_2() {
+  $schema = ctools_schema_1();
+
+  // update the 'name' field to be 128 bytes long:
+  $schema['ctools_object_cache']['fields']['name']['length'] = 128;
+
+  // DO NOT MODIFY THIS TABLE -- this definition is used to create the table.
+  // Changes to this table must be made in schema_3 or higher.
+  $schema['ctools_css_cache'] = array(
+    'description' => 'A special cache used to store CSS that must be non-volatile.',
+    'fields' => array(
+      'cid' => array(
+        'type' => 'varchar',
+        'length' => '128',
+        'description' => 'The CSS ID this cache object belongs to.',
+        'not null' => TRUE,
+      ),
+      'filename' => array(
+        'type' => 'varchar',
+        'length' => '255',
+        'description' => 'The filename this CSS is stored in.',
+      ),
+      'css' => array(
+        'type' => 'text',
+        'size' => 'big',
+        'description' => 'CSS being stored.',
+        'serialize' => TRUE,
+      ),
+      'filter' => array(
+         'type' => 'int',
+         'size' => 'tiny',
+         'description' => 'Whether or not this CSS needs to be filtered.',
+       ),
+    ),
+    'primary key' => array('cid'),
+  );
+
+  return $schema;
+}
+
+/**
+ * CTools' initial schema; separated for the purposes of updates.
+ *
+ * DO NOT MAKE CHANGES HERE. This schema version is locked.
+ */
+function ctools_schema_1() {
+  $schema['ctools_object_cache'] = array(
+    'description' => t('A special cache used to store objects that are being edited; it serves to save state in an ordinarily stateless environment.'),
+    'fields' => array(
+      'sid' => array(
+        'type' => 'varchar',
+        'length' => '64',
+        'not null' => TRUE,
+        'description' => 'The session ID this cache object belongs to.',
+      ),
+      'name' => array(
+        'type' => 'varchar',
+        'length' => '32',
+        'not null' => TRUE,
+        'description' => 'The name of the object this cache is attached to.',
+      ),
+      'obj' => array(
+        'type' => 'varchar',
+        'length' => '32',
+        'not null' => TRUE,
+        'description' => 'The type of the object this cache is attached to; this essentially represents the owner so that several sub-systems can use this cache.',
+      ),
+      'updated' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The time this cache was created or updated.',
+      ),
+      'data' => array(
+        'type' => 'text',
+        'size' => 'big',
+        'description' => 'Serialized data being stored.',
+        'serialize' => TRUE,
+      ),
+    ),
+    'primary key' => array('sid', 'obj', 'name'),
+    'indexes' => array('updated' => array('updated')),
+  );
+  return $schema;
+}
+
+/**
+ * Enlarge the ctools_object_cache.name column to prevent truncation and weird
+ * errors.
+ */
+function ctools_update_6001() {
+  // Perform updates like this to reduce code duplication.
+  $schema = ctools_schema_2();
+
+  db_change_field('ctools_object_cache', 'name', 'name', $schema['ctools_object_cache']['fields']['name']);
+}
+
+/**
+ * Add the new css cache table.
+ */
+function ctools_update_6002() {
+  // Schema 2 is locked and should not be changed.
+  $schema = ctools_schema_2();
+
+  db_create_table('ctools_css_cache', $schema['ctools_css_cache']);
+}
+
+/**
+ * Take over for the panels_views module if it was on.
+ */
+function ctools_update_6003() {
+  $result = db_query('SELECT status FROM {system} WHERE name = :name', array(':name' => 'panels_views'))->fetchField();
+  if ($result) {
+    db_delete('system')->condition('name', 'panels_views')->execute();
+    drupal_install_modules(array('views_content'));
+  }
+}
+
+/**
+ * Add primary key to the ctools_object_cache table.
+ */
+function ctools_update_6004() {
+  db_add_primary_key('ctools_object_cache', array('sid', 'obj', 'name'));
+  db_drop_index('ctools_object_cache', 'sid_obj_name');
+}
+
+/**
+ * Removed update.
+ */
+function ctools_update_6005() {
+  return array();
+}
+
+/**
+ * ctools_custom_content table was originally here, but is now moved to
+ * its own module.
+ */
+function ctools_update_6007() {
+  $ret = array();
+  if (db_table_exists('ctools_custom_content')) {
+    // Enable the module to make everything as seamless as possible.
+    drupal_install_modules(array('ctools_custom_content'));
+  }
+
+  return $ret;
+}
+
+

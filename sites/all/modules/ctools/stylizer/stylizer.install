@@ -1,0 +1,65 @@
+<?php
+// $Id: stylizer.install,v 1.2 2010/10/11 22:18:23 sdboyer Exp $
+
+/**
+ * Schema for stylizer.
+ */
+function stylizer_schema() {
+  return stylizer_schema_1();
+}
+
+function stylizer_schema_1() {
+  $schema = array();
+
+  $schema['stylizer'] = array(
+    'description' => 'Customized stylizer styles created by administrative users.',
+    'export' => array(
+      'bulk export' => TRUE,
+      'export callback' => 'stylizer_style_export',
+      'can disable' => TRUE,
+      'identifier' => 'style',
+      'primary key' => 'sid',
+    ),
+    'fields' => array(
+      'sid' => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'no export' => TRUE,
+      ),
+      'name' => array(
+        'type' => 'varchar',
+        'length' => '255',
+        'description' => 'Unique ID for this style. Used to identify it programmatically.',
+      ),
+      'admin_title' => array(
+        'type' => 'varchar',
+        'length' => '255',
+        'description' => 'Human readable title for this style.',
+      ),
+      'admin_description' => array(
+        'type' => 'text',
+        'size' => 'big',
+        'description' => 'Administrative description of this style.',
+        'object default' => '',
+      ),
+      'settings' => array(
+        'type' => 'text',
+        'size' => 'big',
+        'serialize' => TRUE,
+        'object default' => array(),
+        'initial ' => array(
+          'name' => '_temporary',
+          'style_base' => NULL,
+          'palette' => array(),
+        ),
+        'description' => 'A serialized array of settings specific to the style base that describes this plugin.',
+      ),
+    ),
+    'primary key' => array('sid'),
+    'unique keys' => array(
+      'name' => array('name'),
+    ),
+  );
+
+  return $schema;
+}

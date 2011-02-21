@@ -1,0 +1,68 @@
+<?php
+// $Id: ctools_custom_content.install,v 1.2 2010/10/11 22:18:21 sdboyer Exp $
+
+/**
+ * Schema for CTools custom content.
+ */
+function ctools_custom_content_schema() {
+  return ctools_custom_content_schema_1();
+}
+
+function ctools_custom_content_schema_1() {
+  $schema = array();
+
+  $schema['ctools_custom_content'] = array(
+    'description' => 'Contains exportable customized content for this site.',
+    'export' => array(
+      'identifier' => 'content',
+      'bulk export' => TRUE,
+      'primary key' => 'cid',
+      'api' => array(
+        'owner' => 'ctools',
+        'api' => 'ctools_content',
+        'minimum_version' => 1,
+        'current_version' => 1,
+      ),
+      'create callback' => 'ctools_content_type_new',
+    ),
+    'fields' => array(
+      'cid' => array(
+        'type' => 'serial',
+        'description' => 'A database primary key to ensure uniqueness',
+        'not null' => TRUE,
+        'no export' => TRUE,
+      ),
+      'name' => array(
+        'type' => 'varchar',
+        'length' => '255',
+        'description' => 'Unique ID for this content. Used to identify it programmatically.',
+      ),
+      'admin_title' => array(
+        'type' => 'varchar',
+        'length' => '255',
+        'description' => 'Administrative title for this content.',
+      ),
+      'admin_description' => array(
+        'type' => 'text',
+        'size' => 'big',
+        'description' => 'Administrative description for this content.',
+        'object default' => '',
+      ),
+      'category' => array(
+        'type' => 'varchar',
+        'length' => '255',
+        'description' => 'Administrative category for this content.',
+      ),
+      'settings' => array(
+        'type' => 'text',
+        'size' => 'big',
+        'description' => 'Serialized settings for the actual content to be used',
+        'serialize' => TRUE,
+        'object default' => array(),
+      ),
+    ),
+    'primary key' => array('cid'),
+  );
+
+  return $schema;
+}

@@ -1,0 +1,128 @@
+/* $Id: modal.css,v 1.9 2011/01/01 00:31:27 merlinofchaos Exp $ */
+div.ctools-modal-content {
+  background: #fff;
+  color: #000;
+  padding: 0;
+  margin: 2px;
+  border: 1px solid #000;
+  width: 600px;
+  text-align: left;
+}
+
+div.ctools-modal-content .modal-title {
+  font-size: 120%;
+  font-weight: bold;
+  color: white;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+div.ctools-modal-content .modal-header {
+  background-color: #2385c2;
+  padding: 0 .25em 0 1em;
+}
+
+div.ctools-modal-content .modal-header a {
+  color: white;
+  float: right;
+}
+
+div.ctools-modal-content .modal-content {
+  padding: 1em 1em 0 1em;
+  overflow: auto;
+  position: relative; /* Keeps IE7 from flowing outside the modal. */
+}
+
+div.ctools-modal-content .modal-form {
+}
+
+div.ctools-modal-content a.close {
+  color: white;
+}
+
+div.ctools-modal-content a.close:hover {
+  text-decoration: none;
+}
+
+div.ctools-modal-content a.close img {
+  position: relative;
+  top: 1px;
+}
+
+div.ctools-modal-content .modal-content .modal-throbber-wrapper {
+  text-align: center;
+}
+
+div.ctools-modal-content .modal-content .modal-throbber-wrapper img {
+  margin-top: 160px;
+}
+
+/** modal forms CSS **/
+div.ctools-modal-content .form-item label {
+  width: 15em;
+  float: left;
+}
+
+div.ctools-modal-content .form-item label.option {
+  width: auto;
+  float: none;
+}
+
+div.ctools-modal-content .form-item .description {
+  clear: left;
+}
+
+div.ctools-modal-content .form-item .description .tips {
+  margin-left: 2em;
+}
+
+div.ctools-modal-content .no-float .form-item * {
+  float: none;
+}
+
+div.ctools-modal-content .modal-form .no-float label  {
+  width: auto;
+}
+
+div.ctools-modal-content fieldset,
+div.ctools-modal-content .form-radios,
+div.ctools-modal-content .form-checkboxes {
+  clear: left;
+}
+
+div.ctools-modal-content .resizable-textarea {
+  width: auto;
+  margin-left: 15em;
+  margin-right: 5em;
+}
+
+div.ctools-modal-content .container-inline .form-item {
+  margin-right: 2em;
+}
+
+#views-exposed-pane-wrapper .form-item {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+div.ctools-modal-content label.hidden-options {
+  background: transparent url(../images/arrow-active.png) no-repeat right;
+  height: 12px;
+  padding-right: 12px;
+}
+
+div.ctools-modal-content label.expanded-options {
+  background: transparent url(../images/expanded-options.png) no-repeat right;
+  height: 12px;
+  padding-right: 16px;
+}
+
+div.ctools-modal-content .option-text-aligner label.expanded-options,
+div.ctools-modal-content .option-text-aligner label.hidden-options {
+  background: none;
+}
+
+
+div.ctools-modal-content .dependent-options {
+  padding-left: 30px;
+}

@@ -1,0 +1,13 @@
+<!-- $Id: context-context.html,v 1.1 2008/12/04 22:22:40 merlinofchaos Exp $ -->
+
+Context plugin data:
+
+    'title' => Visible title
+    'description' => Description of context
+    'context' => Callback to create a context. Params: $empty, $data = NULL, $conf = FALSE
+    'settings form' => Callback to show a context setting form. Params: ($conf, $external = FALSE)
+    'settings form validate' => params: ($form, &$form_values, &$form_state)
+    'settings form submit' => params: 'ctools_context_node_settings_form_submit',
+    'keyword' => The default keyword to use.
+    'context name' => The unique identifier for this context for use by required context checks.
+    'no ui' => if TRUE this context cannot be selected.

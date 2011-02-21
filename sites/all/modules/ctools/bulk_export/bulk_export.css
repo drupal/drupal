@@ -1,0 +1,18 @@
+/* $Id: bulk_export.css,v 1.1 2009/07/12 11:32:30 sdboyer Exp $ */
+
+div.export-container {
+  width: 48%;
+  float: left;
+  padding: .5em;
+}
+
+div.export-container table {
+  width: 100%;
+}
+
+div.export-container table input,
+div.export-container table th,
+div.export-container table td {
+  padding: 0 0 0 .5em;
+  margin: 0;
+}

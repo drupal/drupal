@@ -1,0 +1,247 @@
+<!-- $Id: context-content.html,v 1.3 2009/07/18 22:06:33 merlinofchaos Exp $ -->
+<p>The CTools pluggable content system provides various pieces of
+content as discrete bits of data that can be added to other
+applications, such as Panels or Dashboard via the UI. Whatever the
+content is added to stores the configuration for that individual piece
+of content, and provides this to the content.</p>
+
+<p>Each content type plugin will be contained in a .inc file, with
+subsidiary files, if necessary, in or near the same directory. Each
+content type consists of some information and one or more subtypes,
+which all use the same renderer. Subtypes are considered to be
+instances of the type. For example, the 'views' content type would have
+each view in the system as a subtype. Many content types will have
+exactly one subtype.</p>
+
+<p>Because the content and forms can be provided via ajax, the plugin
+also provides a list of CSS and JavaScript information that should be available
+on whatever page the content or forms may be AJAXed onto.</p>
+
+<p>For the purposes of selecting content from the UI, each content
+subtype will have the following information:</p>
+
+<ul>
+  <li>A title</li>
+
+  <li>A short description</li>
+
+  <li>A category [Do we want to add hierarchy categories? Do we want
+  category to be more than just a string?]</li>
+
+  <li>An icon [do we want multiple icons? This becomes a hefty
+  requirement]</li>
+</ul>
+
+<p>Each piece of content provides one or more configuration forms, if
+necessary, and the system that includes the content will handle the
+data storage. These forms can be provided in sequence as wizards or as
+extra forms that can be accessed through advanced administration.</p>
+
+<p>The plugin for a content type should contain:</p>
+
+<dl>
+  <dt>title</dt>
+
+  <dd>For use on the content permissions screen.</dd>
+
+  <dt>content types</dt>
+
+  <dd>Either an array of content type definitions, or a callback that
+  will return content type definitions. This callback will get the
+  plugin definition as an argument.</dd>
+
+  <dt>content type</dt>
+
+  <dd>[Optional] Provide a single content type definition. This is only
+  necessary if content types might be intensive.</dd>
+
+  <dt>render callback</dt>
+
+  <dd>
+    The callback to render the content. Parameters:
+
+    <dl>
+      <dt>$subtype</dt>
+
+      <dd>The name of the subtype being rendered. NOT the loaded
+      subtype data.</dd>
+
+      <dt>$conf</dt>
+
+      <dd>The stored configuration for the content.</dd>
+
+      <dt>$args</dt>
+
+      <dd>Any arguments passed.</dd>
+
+      <dt>$context</dt>
+
+      <dd>An array of contexts requested by the required contexts and
+      assigned by the configuration step.</dd>
+
+      <dt>$incoming_content</dt>
+
+      <dd>Any 'incoming content' if this is a wrapper.</dd>
+    </dl>
+  </dd>
+
+  <dt>admin title</dt>
+
+  <dd>A callback to provide the administrative title. If it is not a
+  function, then it will be counted as a string to use as the admin
+  title.</dd>
+
+  <dt>admin info</dt>
+
+  <dd>A callback to provide administrative information about the
+  content, to be displayed when manipulating the content. It should
+  contain a summary of configuration.</dd>
+
+  <dt>edit form</dt>
+
+  <dd>
+    Either a single form ID or an array of forms *keyed* by form ID
+    with the value to be used as the title of the form. %title me be
+    used as a placeholder for the administrative title if necessary.
+    Example:
+    <pre>
+  array(
+    'ctools_example_content_form_second' =&gt; t('Configure first form'),
+    'ctools_example_content_form_first' =&gt; t('Configure second form'),
+  ),
+</pre>The first form will always have required configuration added to
+it. These forms are normal FAPI forms, but you do not need to provide
+buttons, these will be added by the form wizard.
+  </dd>
+
+  <dt>add form</dt>
+
+  <dd>[Optional] If different from the edit forms, provide them here in
+  the same manner. Also may be set to FALSE to not have an add
+  form.</dd>
+
+  <dt>css</dt>
+
+  <dd>A file or array of CSS files that are necessary for the
+  content.</dd>
+
+  <dt>js</dt>
+
+  <dd>A file or array of javascript files that are necessary for the
+  content to be displayed.</dd>
+
+  <dt>admin css</dt>
+
+  <dd>A file or array of CSS files that are necessary for the
+  forms.</dd>
+
+  <dt>admin js</dt>
+
+  <dd>A file or array of JavaScript files that are necessary for the
+  forms.</dd>
+
+  <dt>extra forms</dt>
+
+  <dd>An array of form information to handle extra administrative
+  forms.</dd>
+
+  <dt>no title override</dt>
+
+  <dd>Set to TRUE if the title cannot be overridden.</dd>
+
+  <dt>single</dt>
+
+  <dd>Set to TRUE if this content provides exactly one subtype.</dd>
+
+  <dt>render last</dt>
+
+  <dd>Set to true if for some reason this content needs to render after
+  other content. This is primarily used for forms to ensure that render
+  order is correct.</dd>
+</dl>
+
+<p>TODO: many of the above callbacks can be assumed based upon
+patterns: modulename + '_' + name + '_' + function. i.e, render,
+admin_title, admin_info, etc.</p>
+
+<p>TODO: Some kind of simple access control to easily filter out
+content.</p>
+
+<p>The subtype definition should contain:</p>
+
+<dl>
+  <dt>title</dt>
+
+  <dd>The title of the subtype.</dd>
+
+  <dt>icon</dt>
+
+  <dd>The icon to display for the subtype.</dd>
+
+  <dt>path</dt>
+
+  <dd>The path for the icon if it is not in the same directory as the
+  plugin.</dd>
+
+  <dt>description</dt>
+
+  <dd>The short description of the subtype, to be used when selecting
+  it in the UI.</dd>
+
+  <dt>category</dt>
+
+  <dd>Either a text string for the category, or an array of the text
+  string followed by the category weight.</dd>
+
+  <dt>required context [Optional]</dt>
+
+  <dd>Either a ctools_context_required or ctools_context_optional or
+  array of contexts for this content. If omitted, no contexts are
+  used.</dd>
+</dl>
+
+<h3>Rendered content</h3>
+
+<p>Rendered content is a little more than just HTML.</p>
+
+<dl>
+  <dt>title</dt>
+
+  <dd>The safe to render title of the content.</dd>
+
+  <dt>content</dt>
+
+  <dd>The safe to render HTML content.</dd>
+
+  <dt>links</dt>
+
+  <dd>An array of links associated with the content suitable for
+  theme('links').</dd>
+
+  <dt>more</dt>
+
+  <dd>An optional 'more' link (destination only)</dd>
+
+  <dt>admin_links</dt>
+
+  <dd>Administrative links associated with the content, suitable for
+  theme('links').</dd>
+
+  <dt>feeds</dt>
+
+  <dd>An array of feed icons or links associated with the content. Each
+  member of the array is rendered HTML.</dd>
+
+  <dt>type</dt>
+
+  <dd>The content type.</dd>
+
+  <dt>subtype</dt>
+
+  <dd>The content subtype. These two may be used together as
+  module-delta for block style rendering.</dd>
+</dl>
+
+<h3>Todo: example</h3>
+
+<p>Todo after implementations are updated to new version.</p>

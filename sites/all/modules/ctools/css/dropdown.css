@@ -1,0 +1,74 @@
+/* $Id: dropdown.css,v 1.6 2010/10/11 22:18:23 sdboyer Exp $ */
+html.js div.ctools-dropdown div.ctools-dropdown-container {
+  z-index: 1001;
+  display: none;
+  text-align: left;
+  position: absolute;
+}
+
+html.js div.ctools-dropdown div.ctools-dropdown-container ul li a {
+  display: block;
+}
+
+html.js div.ctools-dropdown div.ctools-dropdown-container ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+html.js div.ctools-dropdown div.ctools-dropdown-container ul li {
+  display: block;
+  /* prevent excess right margin in IE */
+  margin-right: 0;
+  margin-left: 0;
+  padding-right: 0;
+  padding-left: 0;
+  background-image: none; /* prevent list backgrounds from mucking things up */
+}
+
+.ctools-dropdown-no-js .ctools-dropdown-link,
+.ctools-dropdown-no-js span.text {
+  display: none;
+}
+
+/* Everything from here down is purely visual style and can be overridden. */
+
+html.js div.ctools-dropdown a.ctools-dropdown-text-link {
+  background: url(../images/collapsible-expanded.png) 3px 5px no-repeat;
+  padding-left: 12px;
+}
+
+html.js div.ctools-dropdown div.ctools-dropdown-container {
+  width: 175px;
+  background: #fff;
+  border: 1px solid black;
+  margin: 4px 1px 0 0;
+  padding: 0;
+  color: #494949;
+}
+
+html.js div.ctools-dropdown div.ctools-dropdown-container ul li li a {
+  padding-left: 25px;
+  width: 150px;
+  color: #027AC6;
+}
+
+html.js div.ctools-dropdown div.ctools-dropdown-container ul li a {
+  text-decoration: none;
+  padding-left: 5px;
+  width: 170px;
+  color: #027AC6;
+}
+
+html.js div.ctools-dropdown div.ctools-dropdown-container ul li span {
+  display: block;
+}
+
+html.js div.ctools-dropdown div.ctools-dropdown-container ul li span.text {
+  font-style: italic;
+  padding-left: 5px;
+}
+
+html.js .ctools-dropdown-hover {
+  background-color: #ECECEC;
+}

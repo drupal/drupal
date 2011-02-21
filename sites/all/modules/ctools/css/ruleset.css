@@ -1,0 +1,11 @@
+.ctools-right-container {
+  float: right;
+  padding: 0 0 0 .5em;
+  margin: 0;
+  width: 48.5%;
+}
+
+.ctools-left-container {
+  padding-right: .5em;
+  width: 48.5%;
+}

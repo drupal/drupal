@@ -1,0 +1,1091 @@
+# $Id: page_manager.fr.po,v 1.1 2009/08/16 20:10:09 hass Exp $
+#
+# French translation of Drupal (general)
+# Copyright 2009 Jérémy Chatard <jchatard@breek.fr>
+# Generated from files:
+#  page_manager.admin.inc,v 1.25 2009/08/13 22:24:02 merlinofchaos
+#  page.admin.inc,v 1.16 2009/08/07 23:40:39 merlinofchaos
+#  page.inc,v 1.16 2009/08/13 23:35:26 merlinofchaos
+#  term_view.inc,v 1.5 2009/08/04 21:43:06 merlinofchaos
+#  page_manager.module,v 1.15 2009/08/09 16:25:02 merlinofchaos
+#  page_manager.install,v 1.7 2009/07/12 11:32:30 sdboyer
+#  page_manager.info,v 1.2 2009/07/12 18:11:58 merlinofchaos
+#  node_edit.inc,v 1.3 2009/08/04 21:43:06 merlinofchaos
+#  node_view.inc,v 1.4 2009/08/04 21:43:06 merlinofchaos
+#  theme/page_manager.theme.inc: n/a
+#  user_view.inc,v 1.3 2009/08/04 21:43:06 merlinofchaos
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2009-08-15 10:56+0200\n"
+"PO-Revision-Date: 2009-08-16 10:38+0100\n"
+"Last-Translator: Jérémy Chatard <jchatard@breek.fr>\n"
+"Language-Team: French <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n>1);\n"
+
+#: page_manager.admin.inc:34;278
+msgid "Reset"
+msgstr "Réinitialiser"
+
+#: page_manager.admin.inc:70;219;251
+#: plugins/tasks/page.admin.inc:633
+msgid "Type"
+msgstr "Type"
+
+#: page_manager.admin.inc:71;249
+msgid "Name"
+msgstr "Nom"
+
+#: page_manager.admin.inc:72;248;1295
+#: plugins/tasks/page.admin.inc:645
+msgid "Title"
+msgstr "Titre"
+
+#: page_manager.admin.inc:73;250
+#: plugins/tasks/page.admin.inc:394;1240;1366
+#: plugins/tasks/page.inc:629
+#: plugins/tasks/term_view.inc:258
+msgid "Path"
+msgstr "Chemin"
+
+#: page_manager.admin.inc:74;226;252
+#: plugins/tasks/page.inc:46;574
+msgid "Storage"
+msgstr "Stockage"
+
+#: page_manager.admin.inc:77
+#: plugins/tasks/page.admin.inc:905
+msgid "Operations"
+msgstr "Opérations"
+
+#: page_manager.admin.inc:145
+msgid "System"
+msgstr "Système"
+
+#: page_manager.admin.inc:153
+#: plugins/tasks/page.inc:216
+msgid "In code"
+msgstr "Dans le code"
+
+#: page_manager.admin.inc:171
+#: page_manager.module:79
+#: plugins/tasks/page.inc:605;647;683
+msgid "Edit"
+msgstr "Modifier"
+
+#: page_manager.admin.inc:179;504;510;689;694
+#: plugins/tasks/page.inc:580
+msgid "Enable"
+msgstr "Activer"
+
+#: page_manager.admin.inc:185;517;523;700;705
+#: plugins/tasks/page.inc:584
+msgid "Disable"
+msgstr "Désactiver"
+
+#: page_manager.admin.inc:215
+msgid "<All>"
+msgstr "<Tout>"
+
+#: page_manager.admin.inc:233;234
+#: plugins/tasks/page.inc:585
+msgid "Enabled"
+msgstr "Activé"
+
+#: page_manager.admin.inc:234
+#: plugins/tasks/page.inc:581
+msgid "Disabled"
+msgstr "Désactivé"
+
+#: page_manager.admin.inc:240
+msgid "Search"
+msgstr "Recherche"
+
+#: page_manager.admin.inc:245
+msgid "Sort by"
+msgstr "Trier par"
+
+#: page_manager.admin.inc:247
+msgid "Enabled, title"
+msgstr "Activées, titre"
+
+#: page_manager.admin.inc:259
+msgid "Order"
+msgstr "Ordre"
+
+#: page_manager.admin.inc:261
+msgid "Up"
+msgstr "Haut"
+
+#: page_manager.admin.inc:262
+msgid "Down"
+msgstr "Bas"
+
+#: page_manager.admin.inc:271
+msgid "Apply"
+msgstr "Appliquer"
+
+#: page_manager.admin.inc:451;643
+msgid "Summary"
+msgstr "Résumé"
+
+#: page_manager.admin.inc:452
+msgid "Get a summary of the information about this page."
+msgstr "Obtenir un résumé des informations sur cette page."
+
+#: page_manager.admin.inc:505
+msgid "Activate this page so that it will be in use in your system."
+msgstr "Activez cette page afin qu'elle soit utilisée dans votre système."
+
+#: page_manager.admin.inc:518
+msgid "De-activate this page. The data will remain but the page will not be in use on your system."
+msgstr "Désactiver cette page. Les données seront conservées mais la page ne sera plus utilisée par votre système."
+
+#: page_manager.admin.inc:529
+msgid "Add variant"
+msgstr "Ajouter une variante"
+
+#: page_manager.admin.inc:530
+msgid "Add a new variant to this page."
+msgstr "Ajouter une nouvelle variante de cette page."
+
+#: page_manager.admin.inc:535;568
+msgid "Create variant"
+msgstr "Créer la variante"
+
+#: page_manager.admin.inc:540
+msgid "Import variant"
+msgstr "Importer une variante"
+
+#: page_manager.admin.inc:541
+msgid "Add a new variant to this page from code exported from another page."
+msgstr "Ajouter une variante de cette page à partir de code exporté d'une autre page."
+
+#: page_manager.admin.inc:547
+msgid "Reorder variants"
+msgstr "Ré-ordonner les variantes"
+
+#: page_manager.admin.inc:549
+msgid "Change the priority of the variants to ensure that the right one gets selected."
+msgstr "Changer la priorité des variantes pour s'assurer que la sélection s'opère de façon correcte."
+
+#: page_manager.admin.inc:559
+msgid "Configure"
+msgstr "Configurer"
+
+#: page_manager.admin.inc:560
+msgid "Configure a newly created variant prior to actually adding it to the page."
+msgstr "Configurer une nouvelle variante avant de l'ajouter réellement à la page."
+
+#: page_manager.admin.inc:587;592
+msgid "Break lock"
+msgstr "Faire sauter le verrou"
+
+#: page_manager.admin.inc:588
+msgid "Break the lock on this page so that you can edit it."
+msgstr "Casser le verrou de cette page afin de pouvoir l'éditer."
+
+#: page_manager.admin.inc:611
+msgid "Variants"
+msgstr "Variantes"
+
+#: page_manager.admin.inc:636
+msgid "Variant operations"
+msgstr "Opérations sur les variantes"
+
+#: page_manager.admin.inc:644
+msgid "Get a summary of the information about this variant."
+msgstr "Obtenir un résumé des informations de cette variante."
+
+#: page_manager.admin.inc:658
+#: plugins/tasks/page.admin.inc:1380
+#: plugins/tasks/page.inc:177
+msgid "Clone"
+msgstr "Cloner"
+
+#: page_manager.admin.inc:659
+msgid "Make an exact copy of this variant."
+msgstr "Faire une copie exacte de cette variante."
+
+#: page_manager.admin.inc:663
+#: plugins/tasks/page.inc:182
+msgid "Export"
+msgstr "Exporter"
+
+#: page_manager.admin.inc:664
+msgid "Export this variant into code to import into another page."
+msgstr "Exporter cette variante sous forme de code pour l'importer dans une autre page."
+
+#: page_manager.admin.inc:669;673
+#: plugins/tasks/page.admin.inc:1495
+#: plugins/tasks/page.inc:188
+msgid "Revert"
+msgstr "Revenir"
+
+#: page_manager.admin.inc:670
+msgid "Remove all changes to this variant and revert to the version in code."
+msgstr "Supprimer tous les changements apportés à cette variante et revenir à la version fournie par le code source."
+
+#: page_manager.admin.inc:679;683
+#: plugins/tasks/page.admin.inc:1495
+#: plugins/tasks/page.inc:195
+msgid "Delete"
+msgstr "Supprimer"
+
+#: page_manager.admin.inc:680
+msgid "Remove this variant from the page completely."
+msgstr "Supprimer cette variante de la page."
+
+#: page_manager.admin.inc:690
+msgid "Activate this variant so that it will be in use in your system."
+msgstr "Activer cette variante afin qu'elle soit utilisée par votre système."
+
+#: page_manager.admin.inc:701
+msgid "De-activate this variant. The data will remain but the variant will not be in use on your system."
+msgstr "Désactiver cette variante. Les données seront conservées mais la variante ne sera plus utilisée par votre système."
+
+#: page_manager.admin.inc:713
+msgid "No variants"
+msgstr "Aucune variante"
+
+#: page_manager.admin.inc:795
+msgid "Update"
+msgstr "Mise à jour"
+
+#: page_manager.admin.inc:906
+msgid "Error"
+msgstr "Erreur"
+
+#: page_manager.admin.inc:907
+#, fuzzy
+msgid "This operation trail does not exist."
+msgstr "Cette opération n'existe pas."
+
+#: page_manager.admin.inc:924
+msgid "The page has been updated. Changes will not be permanent until you save."
+msgstr "Cette page a été mise à jour. Les changements ne seront pas sauvegardés tant que vous n'aurez enregistré."
+
+#: page_manager.admin.inc:941
+msgid "Unable to update changes due to lock."
+msgstr "Impossible d'appliquer les changements, un verrou est présent."
+
+#: page_manager.admin.inc:1091
+msgid "This setting contains unsaved changes."
+msgstr "Ces paramètres contiennent des changements non sauvegardés."
+
+#: page_manager.admin.inc:1149
+msgid "You have unsaved changes to this page. You must select Save to write them to the database, or Cancel to discard these changes. Please note that if you have changed any form, you must submit that form before saving."
+msgstr "Vous avez effectué des changements sur cette page qui ne sont pas sauvegardés. Vous devez cliquer sur Enregistrer pour sauvegarder les changements dans la base de données, ou sur Annuler pour ne pas prendre en compte ces changements. Veuillez notez que si vous avez changé les valeurs d'un formulaire, vous devez cliquer sur le bouton Mise à jour avant d'enregistrer votre page."
+
+#: page_manager.admin.inc:1156
+msgid "Save"
+msgstr "Enregistrer"
+
+#: page_manager.admin.inc:1162
+msgid "Cancel"
+msgstr "Annuler"
+
+#: page_manager.admin.inc:1180
+msgid "All pending changes have been discarded, and the page is now unlocked."
+msgstr "Tous les changements ont été annulés, la page est maintenant déverrouillée."
+
+#: page_manager.admin.inc:1231
+msgid "Before this variant can be added, it must be configured. When you are finished, click \"Create variant\" at the end of this wizard to add this to your page."
+msgstr "Avant que cette variante ne puisse être ajoutée, elle doit être configurée. Lorsque vous avez terminé, cliquez sur \"Créer la variante\" à la fin de l'assistant pour l'ajouter à votre page."
+
+#: page_manager.admin.inc:1296
+msgid "Administrative title of this variant. If you leave blank it will be automatically assigned."
+msgstr "Le titre administratif de cette variante. Si vous laissez ce champ vide il sera automatiquement renseigné."
+
+#: page_manager.admin.inc:1301
+msgid "Variant type"
+msgstr "Type de variante"
+
+#: page_manager.admin.inc:1310
+msgid "Optional features"
+msgstr "Fonctionnalités optionnelles"
+
+#: page_manager.admin.inc:1312
+msgid "Check any optional features you need to be presented with forms for configuring them. If you do not check them here you will still be able to utilize these features once the new page is created. If you are not sure, leave these unchecked."
+msgstr "Sélectionnez les fonctionnalités facultatives dont vous avez besoin pour quelles soient présentes dans les formulaires de configuration. Si vous ne sélectionnez pas ces options ici vous pourrez toujours les activer une fois que votre page sera créée. Si vous n'êtes pas sûr, laissez ces options décochées."
+
+#: page_manager.admin.inc:1340;1496
+msgid "Variant name"
+msgstr "Nom de la variante"
+
+#: page_manager.admin.inc:1341;1497
+msgid "Enter the name of the new variant."
+msgstr "Saisissez le nom de la nouvelle variante."
+
+#: page_manager.admin.inc:1346
+msgid "Paste variant code here"
+msgstr "Collez le code de la variante ici"
+
+#: page_manager.admin.inc:1363
+msgid "No variant found."
+msgstr "Aucune variante trouvée."
+
+#: page_manager.admin.inc:1366
+msgid "Unable to get a variant from the import. Errors reported: @errors"
+msgstr "Impossible d'importer une variante. Rapport d'erreurs : @errors"
+
+#: page_manager.admin.inc:1453
+#: page_manager.module:508
+#: plugins/tasks/page.admin.inc:1481;1495;1506
+msgid "Overridden"
+msgstr "Supplantée"
+
+#: page_manager.admin.inc:1454
+msgid "Reverting the variant will delete the variant that is in the database, reverting it to the original default variant. This deletion will not be made permanent until you click Save."
+msgstr "Ré-initialiser la variante va la supprimer de la base de données, la ramenant à sa variante d'origine, celle par défaut. Cette suppression ne sera effective que lorsque vous aurez cliqué sur le bouton Enregistrer."
+
+#: page_manager.admin.inc:1457
+msgid "Are you sure you want to delete this variant? This deletion will not be made permanent until you click Save."
+msgstr "Êtes-vous sûr(e) de vouloir supprimer cette variante ? Cette suppression ne sera effective que lorsque vous aurez cliqué sur Enregistrer."
+
+#: page_manager.admin.inc:1523
+msgid "This variant is currently disabled. Enabling it will make it available in your system. This will not take effect until you save this page."
+msgstr "Cette variante est désactivée. L'activer la rendra disponible dans votre système. Cela ne prendra effet que lorsque vous aurez enregistré cette page."
+
+#: page_manager.admin.inc:1542
+msgid "This variant is currently enabled. Disabling it will make it unavailable in your system, and it will not be used. This will not take effect until you save this page."
+msgstr "Cette variante est activée. La désactiver la rendra indisponible pour le système, et elle ne sera pas utilisée. Cela ne prendra effet que lorsque vous aurez enregistré cette page."
+
+#: page_manager.admin.inc:1574
+msgid "Breaking the lock on this page will <strong>discard</strong> any pending changes made by the locking user. Are you REALLY sure you want to do this?"
+msgstr "Faire sauter le verrou de cet page va <strong>annuler</strong> tout changement réalisé par l'utilisateur qui a verrouillé cette page. Êtes-vous SÛR de vouloir le faire ?"
+
+#: page_manager.admin.inc:1586
+msgid "The lock has been cleared and all changes discarded. You may now make changes to this page."
+msgstr "Le verrou a été effacé ainsi que tous les changements. Vous pouvez maintenant faire des changements sur cette page."
+
+#: page_manager.admin.inc:1594
+msgid "Enabling this page will immediately make it available in your system (there is no need to wait for a save.)"
+msgstr "Activer cette page la rendra disponible immédiatement dans votre système (il n'y a pas besoin d'attendre pour une sauvegarde)."
+
+#: page_manager.admin.inc:1621
+msgid "Disabling this page will immediately make it unavailable in your system (there is no need to wait for a save.)"
+msgstr "Désactiver cette page la rendra indisponible immédiatement dans votre système (il n'y a pas besoin d'attendre pour une sauvegarde)."
+
+#: page_manager.admin.inc:1677
+msgid "This page has no variants and thus no output of its own."
+msgstr "Cette page n'a pas de variante et donc aucun sortie à générer."
+
+#: page_manager.admin.inc:1682
+msgid "Add a new variant"
+msgstr "Ajouter une nouvelle variante"
+
+#: page_manager.admin.inc:1700
+msgid "Unable to disable due to lock."
+msgstr "Impossible de désactiver, un verrou est présent."
+
+#: page_manager.admin.inc:1703
+msgid "Unable to enable due to lock."
+msgstr "Impossible d'activer, un verrou est présent."
+
+#: page_manager.module:365
+#: plugins/tasks/page.admin.inc:1452
+msgid "Normal"
+msgstr "Normal"
+
+#: page_manager.module:499;514
+#: plugins/tasks/page.inc:216
+msgid "Default"
+msgstr "Par défaut"
+
+#: page_manager.module:635
+msgid "Local"
+msgstr "Locale"
+
+#: page_manager.module:42
+msgid "use page manager"
+msgstr "utiliser le gestionnaire de pages"
+
+#: page_manager.module:42
+msgid "administer page manager"
+msgstr "administrer le gestionnaire de pages"
+
+#: page_manager.module:66
+msgid "Pages"
+msgstr "Pages"
+
+#: page_manager.module:67
+msgid "Add, edit and remove overridden system pages and user defined pages from the system."
+msgstr "Ajouter, modifier et supprimer des pages de surchargement et des pages définies par l'utilisateur."
+
+#: page_manager.module:72
+msgid "List"
+msgstr "Liste"
+
+#: page_manager.install:222
+msgid "Panel"
+msgstr "Panel"
+
+#: page_manager.info:0
+msgid "Page manager"
+msgstr "Page manager"
+
+#: page_manager.info:0
+msgid "Provides a UI and API to manage pages within the site."
+msgstr "Fournit une interface utilisateur et une API pour gérer les pages dans le site."
+
+#: page_manager.info:0
+msgid "Chaos tool suite"
+msgstr "Chaos tool suite"
+
+#: plugins/tasks/node_edit.inc:13;14
+msgid "Node add/edit form"
+msgstr "Formulaire de création/édition d'un noeud"
+
+#: plugins/tasks/node_edit.inc:15
+msgid "When enabled, this overrides the default Drupal behavior for adding or edit nodes at <em>node/%node/edit</em> and <em>node/add/%node_type</em>. If you add variants, you may use selection criteria such as node type or language or user access to provide different edit forms for nodes. If no variant is selected, the default Drupal node edit will be used."
+msgstr "Lorsque activé, ceci surcharge le comportement par défaut de Drupal pour créer ou modifier des noeuds sur les chemins <em>node/%node/edit</em> et <em>node/add/%node_type</em>. Si vous ajouté des variantes, vous pouvez utiliser les critères de sélection tel que le type de noeud ou la langue ou les permissions pour fournir des formulaires différents pour les noeuds. Si aucune variante n'est sélectionnée, le formulaire d'édition de noeud standard de Drupal sera utilisé."
+
+#: plugins/tasks/node_edit.inc:55
+msgid "Page manager module is unable to enable node/%node/edit because some other module already has overridden with %callback."
+msgstr "Le module Page manager est incapable d'activer node/%node/edit parce que d'autres modules l'on déjà surchargé avec %callback."
+
+#: plugins/tasks/node_edit.inc:65
+msgid "Page manager module is unable to override @path because some other module already has overridden with %callback. Node edit will be enabled but that edit path will not be overridden."
+msgstr "Le module Page manager est incapable de surcharger le chemin @path parce que d'autres modules l'on déjà surchargé avec %callback. L'édition de noeud sera activé mais le chemin d'édition ne sera pas surchargé."
+
+#: plugins/tasks/node_edit.inc:129
+msgid "Create @name"
+msgstr "Créer '@name'"
+
+#: plugins/tasks/node_edit.inc:143
+msgid "Node being edited"
+msgstr "Noeud en cours d'édition"
+
+#: plugins/tasks/node_view.inc:22;24
+msgid "Node template"
+msgstr "Template du noeud"
+
+#: plugins/tasks/node_view.inc:25
+msgid "When enabled, this overrides the default Drupal behavior for displaying nodes at <em>node/%node</em>. If you add variants, you may use selection criteria such as node type or language or user access to provide different views of nodes. If no variant is selected, the default Drupal node view will be used. This page only affects nodes viewed as pages, it will not affect nodes viewed in lists or at other locations. Also please note that if you are using pathauto, aliases may make a node to be somewhere else, but as far as Drupal is concerned, they are still at node/%node."
+msgstr "Lorsque activé, ceci surcharge le comportement par défaut de Drupal pour afficher les noeuds sur le chemin <em>node/%node</em>. Si vous ajoutez des variantes, vous pourrez utiliser des critères de sélection tel que le type de noeud, la langue ou les permissions pour fournir différents types d'affichage à ces noeuds. Si vous ne sélectionnez pas de variante, l'affichage par défaut de Drupal sera utilisé pour les noeuds. Cette page affecte seulement les noeuds affichés en tant que page, elle n'affectera pas les listes de noeuds ou les noeuds affichés dans d'autres endroits. Veuillez également noter que si vous utilisez Pathauto, les alias d'URLs peuvent laisser paraître qu'un noeud est affiché ailleurs, mais pour Drupal ils sont toujours sur un chemin du type node/%node."
+
+#: plugins/tasks/node_view.inc:66
+msgid "Page manager module is unable to enable node/%node because some other module already has overridden with %callback."
+msgstr "Le module Page manager est incapable d'activer node/%node car d'autres modules l'ont déjà surchargé avec %callback."
+
+#: plugins/tasks/node_view.inc:118
+msgid "Node being viewed"
+msgstr "Noeud en cours d'affichage"
+
+#: plugins/tasks/page.admin.inc:196;274
+msgid "Basic settings"
+msgstr "Paramètres de base"
+
+#: plugins/tasks/page.admin.inc:197;970;978
+msgid "Argument settings"
+msgstr "Paramètres des arguments"
+
+#: plugins/tasks/page.admin.inc:198;434
+msgid "Access control"
+msgstr "Droits d'accès"
+
+#: plugins/tasks/page.admin.inc:199
+msgid "Menu settings"
+msgstr "Paramètres du menu"
+
+#: plugins/tasks/page.admin.inc:275
+msgid "A meaningless second page"
+msgstr ""
+
+#: plugins/tasks/page.admin.inc:367;1358
+msgid "Administrative title"
+msgstr "Titre pour l'administration"
+
+#: plugins/tasks/page.admin.inc:368;1359
+msgid "The name of this page. This will appear in the administrative interface to easily identify it."
+msgstr "Le nom de cette page. Il apparaîtra dans l'interface d'administration afin de l'identifier facilement."
+
+#: plugins/tasks/page.admin.inc:374
+msgid "Machine name"
+msgstr "Nom machine"
+
+#: plugins/tasks/page.admin.inc:375
+msgid "The machine readable name of this page. It must be unique, and it must contain only alphanumeric characters and underscores. Once created, you will not be able to change this value!"
+msgstr "Le nom machine de cette page. Il doit être unique et ne doit contenir que des caractères alphanumériques et des caractères de soulignement (_). Une fois créée, vous ne pourrez pas changer cette valeur !"
+
+#: plugins/tasks/page.admin.inc:386
+msgid "Administrative description"
+msgstr "Description pour l'administration"
+
+#: plugins/tasks/page.admin.inc:387
+msgid "A description of what this page is, does or is for, for administrative use."
+msgstr "Une description de ce qu'est cette page, ce qu'elle fait ou est faîte pour, pour l'administration."
+
+#: plugins/tasks/page.admin.inc:395
+msgid "The URL path to get to this page. You may create named placeholders for variable parts of the path by using %name for required elements and !name for optional elements. For example: \"node/%node/foo\", \"forum/%forum\" or \"dashboard/!input\". These named placeholders can be turned into contexts on the arguments form."
+msgstr "Le chemin d'URL pour accéder à cette page. Vous pouvez créer des jetons nommés pour les parties variables du chemin en utilisant la syntaxe %name pour les parties obligatoires et !name pour les parties optionnelles. Par exemple : \"node/%node/foo\", \"forum/%forum\" ou \"dashboard/!input\". Ces jetons nommés peuvent être transformés en contextes sur le formulaire d'arguments."
+
+#: plugins/tasks/page.admin.inc:417
+msgid "Make this your site home page."
+msgstr "Définir comme page d'accueil du site."
+
+#: plugins/tasks/page.admin.inc:418
+msgid "If this box is checked this page will become the site home page. Only paths that have no placeholders can be used as the site home page. The current site home page is set to %homepage."
+msgstr "Si vous cochez cette option, cette page deviendra la page d'accueil du site. Seuls les alias qui ne contiennent pas de caractères de remplecement peuvent être utilisés pour la page d'accueil. La page d'accueil acutelle du site est %homepage."
+
+#: plugins/tasks/page.admin.inc:423
+msgid "This page is currently set to be your site home page."
+msgstr "Cette page est actuellement votre page d'accueil."
+
+#: plugins/tasks/page.admin.inc:435
+msgid "Visible menu item"
+msgstr "Elément de menu visible"
+
+#: plugins/tasks/page.admin.inc:456
+msgid "Name is required."
+msgstr "Le nom est obligatoire."
+
+#: plugins/tasks/page.admin.inc:463
+msgid "That name is used by another page: @page"
+msgstr "Ce nom est déjà utilisé par une autre page : @page"
+
+#: plugins/tasks/page.admin.inc:468
+msgid "Page name must be alphanumeric or underscores only."
+msgstr "Le nom d'une page ne peut contenir que des caractères alphanumériques et des caractères de soulignements (_)."
+
+#: plugins/tasks/page.admin.inc:475
+msgid "That path is used by another page: @page"
+msgstr "Ce chemin est déjà utilisé par une autre page : @page"
+
+#: plugins/tasks/page.admin.inc:483
+msgid "Path is required."
+msgstr "Le chemin est obligatoire"
+
+#: plugins/tasks/page.admin.inc:497
+msgid "You cannot have a dynamic path element after an optional path element."
+msgstr "Vous ne pouvez pas utiliser de partie de chemin dynamique après une partie de chemin optionnelle."
+
+#: plugins/tasks/page.admin.inc:506
+msgid "You cannot have a static path element after an optional path element."
+msgstr "Vous ne pouvez pas utiliser de partie de chemin statique après une partie de chemin optionnelle."
+
+#: plugins/tasks/page.admin.inc:517
+msgid "That path is already in used. This system cannot override existing paths."
+msgstr "Ce chemin est déjà utilisé. Ce système ne peut surcharger des chemins existants."
+
+#: plugins/tasks/page.admin.inc:525
+msgid "That path is currently assigned to be an alias for @alias. This system cannot override existing aliases."
+msgstr "Ce chemin est actuellement assigné à l'alias @alias. Ce système ne peut pas surcharger les alias existants."
+
+#: plugins/tasks/page.admin.inc:530
+msgid "You cannot make this page your site home page if it uses % placeholders."
+msgstr "Vous ne pouvez pas faire de cette page votre page d'accueil du site si elle utilise des jetons % ."
+
+#: plugins/tasks/page.admin.inc:538
+msgid "Duplicated argument %arg"
+msgstr "Argument dupliqué %arg"
+
+#: plugins/tasks/page.admin.inc:543
+msgid "Invalid arg <em>%</em>. All arguments must be named with keywords."
+msgstr "Argument non valide <em>%</em>. Tous les arguments doivent être nommé avec des mots clés."
+
+#: plugins/tasks/page.admin.inc:636
+#: plugins/tasks/page.inc:680
+#: plugins/tasks/term_view.inc:269
+msgid "No menu entry"
+msgstr "Aucune entrée de menu"
+
+#: plugins/tasks/page.admin.inc:637
+msgid "Normal menu entry"
+msgstr "Entrée de menu normale"
+
+#: plugins/tasks/page.admin.inc:638;700
+msgid "Menu tab"
+msgstr "Onglet de menu"
+
+#: plugins/tasks/page.admin.inc:639
+msgid "Default menu tab"
+msgstr "Onglet de menu par défaut"
+
+#: plugins/tasks/page.admin.inc:648
+msgid "If set to normal or tab, enter the text to use for the menu item."
+msgstr "Si positionné à normal ou onglet, saisissez le texte à utiliser pour l'élément de menu."
+
+#: plugins/tasks/page.admin.inc:658
+msgid "Warning: Changing this item's menu will not work reliably in Drupal 6.4 or earlier. Please upgrade your copy of Drupal at !url."
+msgstr "Attention : changer le menu de cet élément ne fonctionnera pas correctement avec Drupal 6.4 ou inférieur. Veuillez mettre à jour votre installation de Drupal ici !url."
+
+#: plugins/tasks/page.admin.inc:668
+#: plugins/tasks/page.inc:171;685
+#: plugins/tasks/term_view.inc:272
+msgid "Menu"
+msgstr "Menu"
+
+#: plugins/tasks/page.admin.inc:672;722
+msgid "Insert item into an available menu."
+msgstr "Insérer l'élément dans un menu disponible."
+
+#: plugins/tasks/page.admin.inc:683
+msgid "Menu selection requires the activation of menu module."
+msgstr "La sélection du menu requiert l'activation du module menu."
+
+#: plugins/tasks/page.admin.inc:687
+#: theme/page_manager.theme.inc:103
+msgid "Weight"
+msgstr "Poids"
+
+#: plugins/tasks/page.admin.inc:690
+msgid "The lower the weight the higher/further left it will appear."
+msgstr ""
+
+#: plugins/tasks/page.admin.inc:698
+msgid "Parent menu item"
+msgstr "Élément de menu parent"
+
+#: plugins/tasks/page.admin.inc:700
+msgid "Already exists"
+msgstr "Existe déjà"
+
+#: plugins/tasks/page.admin.inc:700
+msgid "Normal menu item"
+msgstr "Élément de menu normal"
+
+#: plugins/tasks/page.admin.inc:702
+msgid "When providing a menu item as a default tab, Drupal needs to know what the parent menu item of that tab will be. Sometimes the parent will already exist, but other times you will need to have one created. The path of a parent item will always be the same path with the last part left off. i.e, if the path to this view is <em>foo/bar/baz</em>, the parent path would be <em>foo/bar</em>."
+msgstr "Lorsque vous définissez un élément de menu comme un onglet par défaut, Drupal a besoin de savoir quel sera son élément parent. Des fois le parent existera déjà, mais dans certains cas vous devez le créer. Le chemin d'un élément parent doit toujours être le même chemin avec la dernière partie supprimée, càd si le chemin de cette vue est <em>foo/bar/baz</em>, le chemin du parent doit être <em>foo/bar</em>."
+
+#: plugins/tasks/page.admin.inc:707
+msgid "Parent item title"
+msgstr "Titre de l'élément parent"
+
+#: plugins/tasks/page.admin.inc:710
+msgid "If creating a parent menu item, enter the title of the item."
+msgstr "Si vous créez un élément de menu parent, saisissez le titre de l'élément."
+
+#: plugins/tasks/page.admin.inc:718
+#, fuzzy
+msgid "Parent item menu"
+msgstr "Menu parent de l'élément"
+
+#: plugins/tasks/page.admin.inc:735
+msgid "Tab weight"
+msgstr "Poids de l'onglet"
+
+#: plugins/tasks/page.admin.inc:739
+msgid "If the parent menu item is a tab, enter the weight of the tab. The lower the number, the more to the left it will be."
+msgstr "Si l'élément de menu parent est un onglet, saisissez le poids de l'onglet. Plus le nombre est faible, plus l'élément apparaîtra à gauche."
+
+#: plugins/tasks/page.admin.inc:774
+msgid "Paths with non optional placeholders cannot be used as normal menu items unless the selected argument handler provides a default argument to use for the menu item."
+msgstr "Les chemins avec des jetons obligatoires ne peuvent pas être des éléments de menu normaux à moins que le gestionnaire d'argument fournisse une valeur par défaut pour utiliser cet élément de menu."
+
+#: plugins/tasks/page.admin.inc:807
+msgid "Access rules are used to test if the page is accessible and any menu items associated with it are visible."
+msgstr "Les règles d'accès sont utilisées pour tester si la page est accessible et rendre ou non visible les éléments de menu correspondants."
+
+#: plugins/tasks/page.admin.inc:848
+msgid "No context assigned"
+msgstr "Aucun contexte assigné"
+
+#: plugins/tasks/page.admin.inc:872
+msgid "Change"
+msgstr "Changer"
+
+#: plugins/tasks/page.admin.inc:889
+#: plugins/tasks/page.inc:143
+#: plugins/tasks/term_view.inc:50;65
+msgid "Settings"
+msgstr "Paramètres"
+
+#: plugins/tasks/page.admin.inc:902
+msgid "Argument"
+msgstr "Argument"
+
+#: plugins/tasks/page.admin.inc:903
+msgid "Position in path"
+msgstr "Position dans le chemin"
+
+#: plugins/tasks/page.admin.inc:904
+msgid "Context assigned"
+msgstr "Context assigné"
+
+#: plugins/tasks/page.admin.inc:923
+msgid "The path %path has no arguments to configure."
+msgstr "Le chemin %path n'a pas d'argument à configurer"
+
+#: plugins/tasks/page.admin.inc:948
+msgid "Invalid object name."
+msgstr "Nom d'objet non valide."
+
+#: plugins/tasks/page.admin.inc:957
+msgid "Invalid keyword."
+msgstr "Mot clé non valide."
+
+#: plugins/tasks/page.admin.inc:969
+msgid "Change context type"
+msgstr "Changer le type de contexte"
+
+#: plugins/tasks/page.admin.inc:974
+msgid "Change argument"
+msgstr "Changer l'argument"
+
+#: plugins/tasks/page.admin.inc:1080
+msgid "No context selected"
+msgstr "Pas de contexte sélectionné"
+
+#: plugins/tasks/page.admin.inc:1116;1136
+msgid "No context"
+msgstr "Pas de contexte"
+
+#: plugins/tasks/page.admin.inc:1163
+msgid "Error: missing argument."
+msgstr "Erreur : argument manquant."
+
+#: plugins/tasks/page.admin.inc:1176
+msgid "Context identifier"
+msgstr "Identifiant du context"
+
+#: plugins/tasks/page.admin.inc:1177
+msgid "This is the title of the context used to identify it later in the administrative process. This will never be shown to a user."
+msgstr "Ceci est le titre du contexte utilisé pour l'identifier plus tard dans la partie administration. Il ne sera jamais affiché à l'utilisateur."
+
+#: plugins/tasks/page.admin.inc:1183
+msgid "Error: missing or invalid argument plugin %argument."
+msgstr "Erreur : plugin d'argument %argument manquant ou non valide."
+
+#: plugins/tasks/page.admin.inc:1231
+msgid "Import page"
+msgstr "Importer une page"
+
+#: plugins/tasks/page.admin.inc:1234;1352
+msgid "Page name"
+msgstr "Nom de la page"
+
+#: plugins/tasks/page.admin.inc:1235
+msgid "Enter the name to use for this page if it is different from the source page. Leave blank to use the original name of the page."
+msgstr "Saisissez le nom à utiliser pour cette page si il est différent de la page source. Laissez le champ vide pour utiliser le nom original de la page."
+
+#: plugins/tasks/page.admin.inc:1241
+msgid "Enter the path to use for this page if it is different from the source page. Leave blank to use the original path of the page."
+msgstr "Saisissez le chemin à utiliser pour cette page si il est différent de la page source. Laissez le champ vide pour utiliser le chemin original de la page."
+
+#: plugins/tasks/page.admin.inc:1246
+msgid "Allow overwrite of an existing page"
+msgstr "Permettre l'écrasement d'une page existante"
+
+#: plugins/tasks/page.admin.inc:1247
+msgid "If the name you selected already exists in the database, this page will be allowed to overwrite the existing page."
+msgstr "Si le nom que vous sélectionnez existe déjà dans la base de données, cette page pourra écraser celle déjà existante."
+
+#: plugins/tasks/page.admin.inc:1252
+msgid "Paste page code here"
+msgstr "Coller le code de la page ici"
+
+#: plugins/tasks/page.admin.inc:1258
+msgid "Import"
+msgstr "Importer"
+
+#: plugins/tasks/page.admin.inc:1274
+msgid "No handler found."
+msgstr "Pas de gestionnaire trouvé."
+
+#: plugins/tasks/page.admin.inc:1276
+msgid "Unable to get a page from the import. Errors reported: @errors"
+msgstr "Impossible de récupérer une page à partir de l'import. Erreurs rapportées : @erros"
+
+#: plugins/tasks/page.admin.inc:1287
+msgid "That page name is in use and locked by another user. You must <a href=\"!break\">break the lock</a> on that page before proceeding, or choose a different name."
+msgstr "Ce nom de page est actuellement utilisé et verrouillé par un autre utilisateur. Vous devez <a href=\"!break\">casser le verrou</a> de cette page avant de pouvoir continuer, ou choisir un nom différent."
+
+#: plugins/tasks/page.admin.inc:1353
+msgid "Enter the name to the new page It must be unique and contain only alphanumeric characters and underscores."
+msgstr "Entrez le nom de la nouvelle page. Il doit être unique et ne contenir que des caractères alphanumériques et des caractères de soulignements (_)."
+
+#: plugins/tasks/page.admin.inc:1367
+msgid "The URL path to get to this page. You may create named placeholders for variable parts of the path by using %name for required elements and !name for optional elements. For example: \"node/%node/foo\", \"forum/%forum\" or \"dashboard/!input\". These named placeholders can be turned into contexts on the arguments form. You cannot use the same path as the original page."
+msgstr "Le chemin d'URL pour accéder à cette page. Vous pouvez créer des jetons nommés pour les parties variables du chemin en utilisant la syntaxe %name pour les parties obligatoires et !name pour les parties optionnelles. Par exemple : \"node/%node/foo\", \"forum/%forum\" ou \"dashboard/!input\". Ces jetons nommés peuvent être transformés en contextes sur le formulaire d'arguments. Vous ne pouvez pas utiliser le même chemin que l'original."
+
+#: plugins/tasks/page.admin.inc:1373
+msgid "Clone variants"
+msgstr "Cloner les variantes"
+
+#: plugins/tasks/page.admin.inc:1374
+msgid "If checked all variants associated with the page will be cloned as well. If not checked the page will be cloned without variants."
+msgstr "Si sélectionné toutes les variantes associées à cette page seront également clonées. Si non sélectionné la page sera clonée sans ses variantes."
+
+#: plugins/tasks/page.admin.inc:1482
+msgid "Reverting the page will delete the page that is in the database, reverting it to the original default page. Any changes you have made will be lost and cannot be recovered."
+msgstr "Ré-initialiser la page va la supprimer de la base de données, la ramenant à sa version d'origine, celle par défaut. Tout changement effectué sera perdu et ne pourra être récupéré."
+
+#: plugins/tasks/page.admin.inc:1485
+msgid "Are you sure you want to delete this page? Deleting a page cannot be undone."
+msgstr "Êtes-vous sûr de vouloir supprimer cette page ? Supprimer une page est irréversible."
+
+#: plugins/tasks/page.admin.inc:1508
+msgid "The page has been deleted."
+msgstr "La page a été supprimée."
+
+#: plugins/tasks/page.admin.inc:1512
+msgid "The page has been reverted."
+msgstr "La page a été réinitialisée."
+
+#: plugins/tasks/page.inc:22
+msgid "Custom pages"
+msgstr "Pages personnalisées"
+
+#: plugins/tasks/page.inc:23
+msgid "Administrator created pages that have a URL path, access control and entries in the Drupal menu system."
+msgstr "Des pages créées par l'administrateur qui ont une chemin (URL), un contrôle d'accès et des entrées dans le système de menu de Drupal."
+
+#: plugins/tasks/page.inc:39
+msgid "Create a new page"
+msgstr "Créer une nouvelle page"
+
+#: plugins/tasks/page.inc:150
+#: plugins/tasks/term_view.inc:68
+msgid "Basic"
+msgstr "Basique"
+
+#: plugins/tasks/page.inc:151
+#: plugins/tasks/term_view.inc:69
+msgid "Edit name, path and other basic settings for the page."
+msgstr "Modifier le nom, le chemin et les paramètres de base de cette page."
+
+#: plugins/tasks/page.inc:158
+msgid "Arguments"
+msgstr "Arguments"
+
+#: plugins/tasks/page.inc:159
+msgid "Set up contexts for the arguments on this page."
+msgstr "Définir les contextes pour les arguments de cette page."
+
+#: plugins/tasks/page.inc:165;650
+#: plugins/tasks/term_view.inc:264
+msgid "Access"
+msgstr "Accès"
+
+#: plugins/tasks/page.inc:166
+msgid "Control what users can access this page."
+msgstr "Contrôler quels utilisateurs peuvent accéder à cette page."
+
+#: plugins/tasks/page.inc:172
+msgid "Provide this page a visible menu or a menu tab."
+msgstr "Fournir à cette page un menu visible ou un onglet."
+
+#: plugins/tasks/page.inc:178
+msgid "Make a copy of this page"
+msgstr "Créer une copie de cette page"
+
+#: plugins/tasks/page.inc:183
+msgid "Export this page as code that can be imported or embedded into a module."
+msgstr "Exporter cette page sous forme de code qu'il sera possible d'importer ou d'encapsuler dans un module."
+
+#: plugins/tasks/page.inc:189
+msgid "Remove all changes to this page and revert to the version in code."
+msgstr "Supprimer tous les changements de cette page et revenir à la version fournie par son code source."
+
+#: plugins/tasks/page.inc:196
+msgid "Remove this page from your system completely."
+msgstr "Supprimer entièrement cette page du système."
+
+#: plugins/tasks/page.inc:207
+msgid "Custom"
+msgstr "Personnalisé"
+
+#: plugins/tasks/page.inc:304
+#: plugins/tasks/term_view.inc:133
+msgid "View"
+msgstr "Voir"
+
+#: plugins/tasks/page.inc:574;589;629;650;685
+#: plugins/tasks/term_view.inc:258;264;272;285;298
+msgid "page-summary-label"
+msgstr "page-summary-label"
+
+#: plugins/tasks/page.inc:575;590;616;630;651;686
+#: plugins/tasks/term_view.inc:259;265;273;286;299
+msgid "page-summary-data"
+msgstr "page-summary-data"
+
+#: plugins/tasks/page.inc:576;591;617;631;652;687
+#: plugins/tasks/term_view.inc:260;266;274;287;300
+msgid "page-summary-operation"
+msgstr "page-summary-operation"
+
+#: plugins/tasks/page.inc:589
+msgid "Status"
+msgstr "Statut"
+
+#: plugins/tasks/page.inc:608
+msgid "This is your site home page."
+msgstr "C'est la page d'accueil de votre site."
+
+#: plugins/tasks/page.inc:611
+msgid "This page is set to become your site home page."
+msgstr "Cette page est définie pour devenir votre page d'accueil."
+
+#: plugins/tasks/page.inc:641
+msgid "Accessible only if @conditions."
+msgstr "Accessible seulement si @conditions."
+
+#: plugins/tasks/page.inc:644
+#: plugins/tasks/term_view.inc:265
+msgid "This page is publicly accessible."
+msgstr "Cette page est accessible publiquement."
+
+#: plugins/tasks/page.inc:656
+msgid "No menu entry."
+msgstr "Pas d'entrée dans le menu."
+
+#: plugins/tasks/page.inc:657
+msgid "Normal menu entry."
+msgstr "Entrée de menu normale."
+
+#: plugins/tasks/page.inc:658
+msgid "Menu tab."
+msgstr "Onglet."
+
+#: plugins/tasks/page.inc:659
+msgid "Default menu tab."
+msgstr "Onglet par défaut."
+
+#: plugins/tasks/page.inc:665
+msgid "Title: %title."
+msgstr "Titre : %title."
+
+#: plugins/tasks/page.inc:668
+msgid "Parent title: %title."
+msgstr "Titre du parent : %title"
+
+#: plugins/tasks/page.inc:673
+msgid "Menu block: %title."
+msgstr "Bloc de menu : %title"
+
+#: plugins/tasks/term_view.inc:23;24
+msgid "Taxonomy term template"
+msgstr "Template des termes de taxinomie"
+
+#: plugins/tasks/term_view.inc:25
+msgid "When enabled, this overrides the default Drupal behavior for displaying taxonomy terms at <em>taxonomy/term/%term</em>. If you add variants, you may use selection criteria such as vocabulary or user access to provide different displays of the taxonomy term and associated nodes. If no variant is selected, the default Drupal taxonomy term display will be used. This page only affects items actually displayed ad taxonomy/term/%term. Some taxonomy terms, such as forums, have their displays moved elsewhere. Also please note that if you are using pathauto, aliases may make a taxonomy terms appear somewhere else, but as far as Drupal is concerned, they are still at taxonomy/term/%term."
+msgstr "Si activé, ceci surcharge le comportement par défaut de Drupal de l'affichage des pages de termes de taxinomie <em>taxonomy/term/%term</em>. Si vous aviez des variantes, vous pourriez utiliser des critères de sélection tel que le vocabulaire ou les permissions pour afficher différentes vues de la page des termes de taxinomies et des noeuds affichés. Si aucune variante n'est sélectionnée, l'affichage par défaut des pages de termes de taxinomie sera utilisée. Cette page affecte uniquement les éléments affichés au chemin taxonomy/term/%term. Certains termes, tel que les forums, ont leur affichage gérer ailleurs. Veuillez également noter que si vous utilisez Pathauto, les alias peuvent donner le sentiment qu'un terme de taxinomie est affiché ailleurs, mais pour Drupal ceci sont toujours au chemin taxonomy/term/%term."
+
+#: plugins/tasks/term_view.inc:51
+msgid "Update settings specific to the taxonomy term view."
+msgstr "Mettre à jour les paramètres spécifiques de la vue des termes de taxinomie."
+
+#: plugins/tasks/term_view.inc:101
+msgid "Page manager module is unable to enable taxonomy/term/%term because some other module already has overridden with %callback."
+msgstr "Le module Page manager est incapable d'activer la page taxonomy/term/%term parce que d'autres modules l'ont déjà surchargé avec %callback."
+
+#: plugins/tasks/term_view.inc:161
+msgid "Term(s) being viewed"
+msgstr "Les termes en cours d'affichage"
+
+#: plugins/tasks/term_view.inc:161
+msgid "Term being viewed"
+msgstr "Le terme en cours d'affichage"
+
+#: plugins/tasks/term_view.inc:169
+msgid "Depth"
+msgstr "Profondeur"
+
+#: plugins/tasks/term_view.inc:224
+msgid "Allow multiple terms on taxonomy/term/%term"
+msgstr "Permettre plusieurs termes sur taxonomy/term/%term"
+
+#: plugins/tasks/term_view.inc:225
+msgid "Single term"
+msgstr "Un seul term"
+
+#: plugins/tasks/term_view.inc:225
+msgid "Multiple terms"
+msgstr "Plusieurs termes"
+
+#: plugins/tasks/term_view.inc:226
+msgid "By default, Drupal allows multiple terms as an argument by separating them with commas or plus signs. If you set this to single, that feature will be disabled."
+msgstr "Par défaut Drupal permet d'avoir plusieurs termes en argument en les séparant par des virgules ou des plus (+). Si vous sélectionnez un seul, cette fonctionnalité sera désactivée."
+
+#: plugins/tasks/term_view.inc:230
+msgid "Inject hierarchy of first term into breadcrumb trail"
+msgstr "Injecte la hiérarchie du premier terme dans le fil d'Arianne"
+
+#: plugins/tasks/term_view.inc:233
+msgid "If checked, taxonomy term parents will appear in the breadcrumb trail."
+msgstr "Si sélectionné, les parents du terme de taxinomie apparaîtra dans le fil d'Arianne."
+
+#: plugins/tasks/term_view.inc:278
+msgid "Multiple terms may be used, separated by , or +."
+msgstr "Plusieurs termes peuvent être utilisés, séparés par des virgules (,) ou des plus (+)."
+
+#: plugins/tasks/term_view.inc:281
+msgid "Only a single term may be used."
+msgstr "Seul un terme peut être utilisé"
+
+#: plugins/tasks/term_view.inc:285
+msgid "%term"
+msgstr ""
+
+#: plugins/tasks/term_view.inc:291
+msgid "Breadcrumb trail will contain taxonomy term hierarchy"
+msgstr "Le fil d'Arianne va contenir la hiérarchie des termes de la taxinomie"
+
+#: plugins/tasks/term_view.inc:294
+msgid "Breadcrumb trail will not contain taxonomy term hiearchy."
+msgstr "Le fil d'Arianne ne va pas contenir la hiérarchie des termes de la taxinomie"
+
+#: plugins/tasks/term_view.inc:298
+msgid "Breadcrumb"
+msgstr "Fil d'Arianne"
+
+#: plugins/tasks/user_view.inc:12;13
+msgid "User profile template"
+msgstr "Template profile utilisateur"
+
+#: plugins/tasks/user_view.inc:14
+msgid "When enabled, this overrides the default Drupal behavior for displaying user profiles at <em>user/%user</em>. If you add variants, you may use selection criteria such as roles or user access to provide different views of user profiles. If no variant is selected, the default Drupal user view will be used. Please note that if you are using pathauto, aliases may make a node to be somewhere else, but as far as Drupal is concerned, they are still at user/%user."
+msgstr "Si activé, ceci surcharge l'affichage par défaut de Drupal pour afficher le profile des utilisateurs <em>user/%user</em>. Si vous ajoutez des variantes, vous pourrez sélectionner des critères de sélection tel que les rôles ou les permissions pour fournir des affichages différents des profiles utilisateurs. Si aucune variante n'est sélectionnée, l'affichage par défaut de Drupal sera utilisé. Notez que si vous utilisez Pathauto, les alias peuvent donner l'impression que les profiles utilisateurs sont affichés ailleurs, mais pour Drupal ils sont toujours affiché au chemin user/%user."
+
+#: plugins/tasks/user_view.inc:56
+msgid "Page manager module is unable to enable user/%user because some other module already has overridden with %callback."
+msgstr "Le module Page manager est incapable d'activer la page user/%user car d'autres modules l'ont déjà surchargé avec %callback."
+
+#: plugins/tasks/user_view.inc:97
+msgid "User being viewed"
+msgstr "L'utilisateur en cours d'affichage"
+
+#: theme/page_manager.theme.inc:42
+msgid "Locked"
+msgstr "Vérouillé"
+
+#: theme/page_manager.theme.inc:42
+msgid "This page is being edited by another user and you cannot make changes to it."
+msgstr "Cette page est en cours d'édition par un autre utilisateur, vous ne pouvez donc pas la modifier."
+
+#: theme/page_manager.theme.inc:45
+msgid "New"
+msgstr "Nouveau"
+
+#: theme/page_manager.theme.inc:45
+msgid "This page is newly created and has not yet been saved to the database. It will not be available until you save it."
+msgstr "Cette page vient d'être créée et n'a pas été enregistrée dans la base de données. Elle ne sera pas disponible tant que vous ne l'aurez pas sauvegardée."
+
+#: theme/page_manager.theme.inc:48
+msgid "Changed"
+msgstr "Modifiée"
+
+#: theme/page_manager.theme.inc:48
+msgid "This page has been modified, but these modifications are not yet live. While modifying this page, it is locked from modification by other users."
+msgstr "Cette page a été modifiée, mais ces changements ne sont pas encore actifs. Lors de la modification de cette page, celle-ci est verrouillée et ne peut pas être modifiée par les autres utilisateurs."
+
+#: theme/page_manager.theme.inc:98
+msgid "No task handlers are defined for this task."
+msgstr "Aucun gestionnaire de tâche n'est définie pour cette tâche."
+
+#: theme/page_manager.theme.inc:102
+msgid "Variant"
+msgstr "Variante"
+
+#: theme/page_manager.theme.inc:124
+msgid "This page is being edited by user !user, and is therefore locked from editing by others. This lock is !age old. Click here to <a href=\"!break\">break this lock</a>."
+msgstr "Cette page est en cours d'édition par l'utilisateur !user, et est donc verrouillée. Ce verrou est actif depuis !age. Cliquez ici pour <a href=\"!break\">cassé ce verrou</a>."
+

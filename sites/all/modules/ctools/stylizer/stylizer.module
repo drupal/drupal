@@ -1,0 +1,136 @@
+<?php
+// $Id: stylizer.module,v 1.4 2011/01/05 22:53:04 merlinofchaos Exp $
+
+/**
+ * @file
+ * Stylizer module
+ *
+ * This module allows styles to be created and managed on behalf of modules
+ * that implement styles.
+ *
+ * The Stylizer tool allows recolorable styles to be created via a miniature
+ * scripting language. Panels utilizes this to allow administrators to add
+ * styles directly to any panel display.
+ */
+
+/**
+ * Implements hook_permission()
+ */
+function stylizer_permission() {
+  return array(
+    'administer stylizer' => array(
+      'title' => t("Use the Stylizer UI"),
+      'description' => t("Allows a user to use the CTools Stylizer UI."),
+    ),
+  );
+}
+
+/**
+ * Implementation of hook_ctools_plugin_directory() to let the system know
+ * we implement task and task_handler plugins.
+ */
+function stylizer_ctools_plugin_directory($module, $plugin) {
+  // Most of this module is implemented as an export ui plugin, and the
+  // rest is in ctools/includes/stylizer.inc
+  if ($module == 'ctools' && $plugin == 'export_ui') {
+    return 'plugins/' . $plugin;
+  }
+}
+
+/**
+ * Implements hook_ctools_plugin_type() to inform the plugin system that
+ * Stylizer style_base plugin types.
+ */
+function stylizer_ctools_plugin_type() {
+  return array(
+    'style_bases' => array(
+      'load themes' => TRUE,
+    ),
+  );
+}
+
+/**
+ * Implementation of hook_panels_dashboard_blocks().
+ *
+ * Adds page information to the Panels dashboard.
+ */
+function stylizer_panels_dashboard_blocks(&$vars) {
+  $vars['links']['stylizer'] = array(
+    'title' => l(t('Custom style'), 'admin/structure/stylizer/add'),
+    'description' => t('Custom styles can be applied to Panel regions and Panel panes.'),
+  );
+
+   // Load all mini panels and their displays.
+  ctools_include('export');
+  ctools_include('stylizer');
+  $items = ctools_export_crud_load_all('stylizer');
+  $count = 0;
+  $rows = array();
+
+  $base_types = ctools_get_style_base_types();
+  foreach ($items as $item) {
+    $style = ctools_get_style_base($item->settings['style_base']);
+    if ($style && $style['module'] == 'panels') {
+      $type = $base_types[$style['module']][$style['type']]['title'];
+
+      $rows[] = array(
+        check_plain($item->admin_title),
+        $type,
+        array(
+          'data' => l(t('Edit'), "admin/structure/stylizer/list/$item->name/edit"),
+          'class' => 'links',
+        ),
+      );
+
+      // Only show 10.
+      if (++$count >= 10) {
+        break;
+      }
+    }
+  }
+
+  if ($rows) {
+    $content = theme('table', array('rows' => $rows, 'attributes' => array('class' => 'panels-manage')));
+  }
+  else {
+    $content = '<p>' . t('There are no custom styles.') . '</p>';
+  }
+
+  $vars['blocks']['stylizer'] = array(
+    'title' => t('Manage styles'),
+    'link' => l(t('Go to list'), 'admin/structure/stylizer'),
+    'content' => $content,
+    'class' => 'dashboard-styles',
+    'section' => 'left',
+  );
+}
+
+/**
+ * Implementation of hook_theme to load all content plugins and pass thru if
+ * necessary.
+ */
+function stylizer_theme() {
+  $theme = array();
+  ctools_include('stylizer');
+  // Register all themes given for basetypes.
+  $plugins = ctools_get_style_bases();
+  $base_types = ctools_get_style_base_types();
+  foreach ($plugins as $plugin) {
+    if (!empty($base_types[$plugin['module']][$plugin['type']]) && !empty($plugin['theme'])) {
+      $base_type = $base_types[$plugin['module']][$plugin['type']];
+      $theme[$plugin['theme']] = array(
+        'variables' => $base_type['theme variables'],
+        'path' => $plugin['path'],
+      );
+
+      // if no theme function exists, assume template.
+      if (!function_exists("theme_$plugin[theme]")) {
+        $theme[$plugin['theme']]['template'] = str_replace('_', '-', $plugin['theme']);
+        $theme[$plugin['theme']]['file'] = $plugin['file']; // for preprocess.
+      }
+    }
+  }
+
+  return $theme;
+}
+

@@ -1,0 +1,221 @@
+<!-- $Id: modal.html,v 1.4 2010/12/31 23:58:52 merlinofchaos Exp $ -->
+CTools provides a simple modal that can be used as a popup to place forms. It differs from the normal modal frameworks in that it does not do its work via an iframe. This is both an advantage and a disadvantage. The iframe simply renders normal pages in a sub-browser and they can do their thing. That makes it much easier to put arbitrary pages and forms in a modal. However, the iframe is not very good at actually communicating changes to the main page, so you cannot open the modal, have it do some work, and then modify the page. 
+
+<h3>Invoking the modal</h3>
+
+The basic form of the modal can be set up just by including the javascript and adding the proper class to a link or form that will open the modal. To include the proper javascript, simply include the library and call the add_js function:
+
+<pre>
+ctools_include('modal');
+ctools_modal_add_js();
+</pre>
+
+You can have links and buttons bound to use the modal by adding the class ctools-use-modal. For convenience, there is a helper function to try and do this, though it's not great at doing all links so using this is optional:
+
+<pre>
+/**
+ * Render an image as a button link. This will automatically apply an AJAX class
+ * to the link and add the appropriate javascript to make this happen.
+ *
+ * @param $image
+ *   The path to an image to use that will be sent to theme('image') for rendering.
+ * @param $dest
+ *   The destination of the link.
+ * @param $alt
+ *   The alt text of the link.
+ * @param $class
+ *   Any class to apply to the link. @todo this should be a options array.
+ */
+function ctools_modal_image_button($image, $dest, $alt, $class = '') {
+  return ctools_ajax_text_button(theme('image', array('path' => $image), $dest, $alt, $class, 'ctools-use-modal');
+}
+
+/**
+ * Render text as a link. This will automatically apply an AJAX class
+ * to the link and add the appropriate javascript to make this happen.
+ *
+ * Note: 'html' => true so be sure any text is vetted! Chances are these kinds of buttons will
+ * not use user input so this is a very minor concern.
+ *
+ * @param $text
+ *   The text to display as the link.
+ * @param $dest
+ *   The destination of the link.
+ * @param $alt
+ *   The alt text of the link.
+ * @param $class
+ *   Any class to apply to the link. @todo this should be a options array.
+ */
+function ctools_modal_text_button($text, $dest, $alt, $class = '') {
+  return ctools_ajax_text_button($text, $dest, $alt, $class, 'ctools-use-modal');
+}
+</pre>
+
+Like with all CTools' AJAX functionality, the href of the link will be the destination, with any appearance of /nojs/ converted to /ajax/.
+
+
+For submit buttons, however, the URL may be found a different, slightly more complex way. If you do not wish to simply submit the form to the modal, you can create a URL using hidden form fields. The ID of the item is taken and -url is appended to it to derive a class name. Then, all form elements that contain that class name are founded and their values put together to form a URL.
+
+For example, let's say you have an 'add' button, and it has a select form item that tells your system what widget it is adding. If the id of the add button is edit-add, you would place a hidden input with the base of your URL in the form and give it a class of 'edit-add-url'. You would then add 'edit-add-url' as a class to the select widget allowing you to convert this value to the form without posting. If no URL is found, the action of the form will be used and the entire form posted to it.
+
+<h3>Customizing the modal</h3>
+
+If you do not wish to use the default modal, the modal can be customized by creating an array of data to define a customized modal. To do this, you add an array of info to the javascript settings to define the customizations for the modal and add an additional class to your modal link or button to tell it which modal to use.
+
+First, you need to create a settings array. You can do this most easily with a bit of PHP:
+
+<pre>
+  drupal_add_js(array(
+    'my-modal-style' => array(
+      'modalSize' => array(
+        'type' => 'fixed',
+        'width' => 250,
+        'height' => 250,
+      ),
+    ),
+  ), 'setting');
+</pre>
+
+The key to the array above (in this case, my-modal-style) is the identifier to your modal theme. You can have multiple modal themes on a page, so be sure to use an ID that will not collide with some other module's use. Using your module or theme as a prefix is a good idea.
+
+Then, when adding the ctools-use-modal class to your link or button, also add the following class: ctools-modal-ID (in the example case, that would be ctools-modal-my-modal-style).
+
+modalSize can be 'fixed' or 'scale'. If fixed it will be a raw pixel value; if 'scale' it will be a percentage of the screen.
+
+You can set:
+<ul>
+<li> <b>modalSize</b>: an array of data to control the sizing of the modal. It can contain:
+<ul>
+<li> <b>type</b>: Either <i>fixed</i> or <i>scale</i>. If fixed, the modal will always be a fixed size. If <i>scale</i> the modal will scale to a percentage of the browser window. <i>Default: scale</i>.
+<li> <b>width</b>: If <i>fixed</i> the width in pixels. If <i>scale</i> the percentage of the screen expressed as a number less than zero. (For 80 percent, use .8, for example). <i>Default: .8</i></li>
+<li> <b>height</b>: If <i>fixed</i> the height in pixels. If <i>scale</i> the percentage of the screen expressed as a number less than zero. (For 80 percent, use .8, for example). <i>Default: .8</i></li>
+<li> <b>addWidth</b>: Any additional width to add to the modal in pixels. Only useful if the type is scale. <i>Default: 0</i></li>
+<li> <b>addHeight</b>: Any additional height to add to the modal in pixels. Only useful if the type is scale. <i>Default: 0</i></li>
+<li> <b>contentRight</b>: The number of pixels to remove from the content inside the modal to make room for scroll bar and decorations. <i>Default: 25</i></li>
+<li> <b>contentBottom</b>: The number of pixels to remove from the content inside the modal to make room for scroll bar and decorations. <i>Default: 45</i></li>
+</ul>
+</li>
+<li> <b>modalTheme</b>: The Drupal javascript themable function which controls how the modal will be rendered. This function must be in the <i>Drupal.theme.prototype</i> namespace. If you set this value, you must include a corresponding function in a javascript file and use drupal_add_js() to add that file. <i>Default: CToolsModalDialog</i>
+<pre>
+  Drupal.theme.prototype.CToolsModalDialog = function () {
+    var html = ''
+    html += '  &lt;div id="ctools-modal"&gt;'
+    html += '    &lt;div class="ctools-modal-content"&gt;' // panels-modal-content
+    html += '      &lt;div class="modal-header"&gt;';
+    html += '        &lt;a class="close" href="#"&gt;';
+    html +=            Drupal.CTools.Modal.currentSettings.closeText + Drupal.CTools.Modal.currentSettings.closeImage;
+    html += '        &lt;/a&gt;';
+    html += '        &lt;span id="modal-title" class="modal-title"&gt;&nbsp;&lt;/span&gt;';
+    html += '      &lt;/div&gt;';
+    html += '      &lt;div id="modal-content" class="modal-content"&gt;';
+    html += '      &lt;/div&gt;';
+    html += '    &lt;/div&gt;';
+    html += '  &lt;/div&gt;';
+
+    return html;
+  }
+</pre></li>
+<li> <b>throbberTheme</b>: The Drupal javascript themable function which controls how the modal throbber will be rendered. This function must be in the <i>Drupal.theme.prototype</i> namespace. If you set this value, you must include a corresponding function in a javascript file and use drupal_add_js() to add that file. <i>Default: CToolsModalThrobber</i>
+<pre>
+  Drupal.theme.prototype.CToolsModalThrobber = function () {
+    var html = '';
+    html += '  &lt;div id="modal-throbber"&gt;';
+    html += '    &lt;div class="modal-throbber-wrapper"&gt;';
+    html +=        Drupal.CTools.Modal.currentSettings.throbber;
+    html += '    &lt;/div&gt;';
+    html += '  &lt;/div&gt;';
+
+    return html;
+  };
+</pre>
+</li>
+<li> <b>modalOptions</b>: The options object that's sent to Drupal.CTools.Modal.modalContent. Can contain any CSS settings that will be applied to the modal backdrop, in particular settings such as <b>opacity</b> and <b>background</b>. <i>Default: array('opacity' => .55, 'background' => '#fff');</i></li>
+<li> <b>animation</b>: Controls how the modal is animated when it is first drawn. Either <b>show</b>, <b>fadeIn</b> or <b>slideDown</b>. <i>Default: show</i></li>
+<li> <b>animationSpeed</b>: The speed of the animation, expressed either as a word jQuery understands (slow, medium or fast) or a number of milliseconds for the animation to run. <i>Defaults: fast</i></li>
+<li><b>closeText</b>: The text to display for the close button. Be sure to wrap this in t() for translatability. <i>Default: t('Close window')</i></li>
+<li><b>closeImage</b>: The image to use for the close button of the modal. <i>Default: theme('image', array('path' => ctools_image_path('icon-close-window.png'), 'alt' => t('Close window'), 'title' => t('Close window')))</i></li>
+<li><b>loadingText</b>: The text to display for the modal title during loading, along with the throbber. Be sure to wrap this in t() for translatability. <i>Default: t('Close window')</i></li>
+<li><b>throbber</b>: The HTML to display for the throbber image. You can use this instead of CToolsModalThrobber theme if you just want to change the image but not the throbber HTML. <i>Default: theme('image', array('path' => ctools_image_path('throbber.gif'), 'alt' => t('Loading...'), 'title' => t('Loading')))</i></li>
+<li>
+</ul>
+
+<h3>Rendering within the modal</h3>
+To render your data inside the modal, you need to provide a page callback in your module that responds more or less like a normal page.
+
+In order to handle degradability, it's nice to allow your page to work both inside and outside of the modal so that users whose javascript is turned off can still use your page. There are two ways to accomplish this. First, you can embed 'nojs' as a portion of the URL and then watch to see if that turns into 'ajax' when the link is clicked. Second, if you do not wish to modify the URLs, you can check $_POST['js'] or $_POST['ctools_js'] to see if that flag was set. The URL method is the most flexible because it is easy to send the two links along completely different paths if necessary, and it is also much easier to manually test your module's output by manually visiting the nojs URL. It's actually quite difficult to do this if you have to set $_POST['js'] to test.
+
+In your hook_menu, you can use the a CTools' AJAX convenience loader to help:
+
+<pre>
+  $items['ctools_ajax_sample/%ctools_js/login'] = array(
+      'title' => 'Login',
+      'page callback' => 'ctools_ajax_sample_login',
+      'page arguments' => array(1),
+      'access callback' => TRUE,
+      'type' => MENU_CALLBACK,
+  );
+</pre>
+
+The first argument to the page callback will be the result of ctools_js_load() which will return TRUE if 'ajax' was the string, and FALSE if anything else (i.e, nojs) is the string. Which means you can then declare your function like this:
+
+<pre>
+function ctools_ajax_sample_login($js) {
+  if ($js) {
+    // react with the modal
+  }
+  else {
+    // react without the modal
+  }
+}
+</pre>
+
+If your modal does not include a form, rendering the output you wish to give the user is just a matter of calling the modal renderer with your data:
+
+<pre>
+function ctools_ajax_hello_world($js) {
+  $title = t('Greetings');
+  $output = '&lt;p&gt;' . t('Hello world') . ''&lt;/p&gt;';
+  if ($js) {
+    ctools_modal_render($title, $output);
+  }
+  else {
+    drupal_set_title($title);
+    return $output;
+  }
+}
+</pre>
+
+If you need to do more than just render your modal, you can use a CTools $commands array. See the function ctools_modal_render() for more information on what you need to do here.
+
+If you are displaying a form -- and the vast majority of modals display forms -- then you need to do just slightly more. Fortunately there is the ctools_modal_form_wrapper() function:
+
+<pre>
+  ctools_include('modal');
+  ctools_include('ajax');
+  $form_state = array(
+    'title' => t('Title of my form'),
+    'ajax' => $js,
+  );
+  $output = ctools_modal_form_wrapper('my_form', $form_state);
+  // There are some possible states after calling the form wrapper:
+  // 1) We are not using $js and there is form output to be rendered.
+  // 2) We are using $js and the form was successfully submitted and
+  //    we need to dismiss the modal.
+  // Most other states are handled automatically unless you set flags in
+  // $form_state to avoid handling them, so we only deal with those two
+  // states.
+  if (empty($output) && $js) {
+    $commands = array();
+    $commands[] = ctools_modal_command_dismiss(t('Login Success');
+    // In typical usage you will do something else here, such as update a
+    // div with HTML or redirect the page based upon the results of the modal
+    // form.
+    print ajax_render($commands);
+    exit;
+  }
+
+  // Otherwise, just return the output.
+  return $output;
+</pre>
+
+You can also use CTools' form wizard inside the modal. You do not need to do much special beyond setting $form_state['modal'] = TRUE in the wizard form; it already knows how to handle the rest.

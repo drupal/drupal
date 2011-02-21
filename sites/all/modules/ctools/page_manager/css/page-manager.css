@@ -1,0 +1,342 @@
+/* $Id: page-manager.css,v 1.13 2011/01/05 23:16:59 merlinofchaos Exp $ */
+body form#page-manager-list-pages-form {
+  margin: 0 0 20px 0;
+}
+
+#page-manager-list-pages-form .form-item {
+  padding-right: 1em; /* LTR */
+  float: left; /* LTR */
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+#page-manager-list-pages {
+  width: 100%;
+}
+
+#edit-order-wrapper {
+  clear: left; /* LTR */
+}
+
+#edit-pages-apply,
+#edit-pages-reset {
+  margin-top: 1.65em;
+  float: left; /* LTR */
+}
+
+#page-manager-edit {
+  margin-top: 1em;
+}
+
+#page-manager-edit table {
+  width: 100%;
+}
+
+#page-manager-edit table tr.even {
+  background-color: #fafafa;
+}
+
+#page-manager-list-pages tr.page-manager-disabled td {
+  color: #999;
+}
+
+#page-manager-list-pages tr.page-manager-locked td.page-manager-page-name {
+  font-style: italic;
+  color: green;
+  padding-left: 22px; /* LTR */
+  background: url(../images/locked.png) no-repeat scroll left center; /* LTR */
+}
+
+#page-manager-list-pages tr.page-manager-locked-other td.page-manager-page-name {
+  font-style: italic;
+  color: red;
+  padding-left: 22px; /* LTR */
+  background: url(../images/locked-other.png) no-repeat scroll left center; /* LTR */
+}
+
+#page-manager-edit .page-manager-wrapper {
+  margin: 0;
+  padding: 0 0 0 149px;
+  color: #494949;
+}
+
+#page-manager-edit .page-manager-tabs {
+  border: 1px solid #aaa;
+}
+
+#page-manager-edit .page-manager-edit-operations {
+  float: left; /* LTR */
+  width: 150px;
+  margin-left: -150px;
+  margin-top: -1px;
+  height: 100%;
+  font-size: 90%;
+}
+
+#page-manager-edit .page-manager-edit-operations .inside {
+  border-top: 1px solid #aaa;
+  border-bottom: 1px solid #aaa;
+}
+
+#page-manager-edit .page-manager-edit-operations ul {
+  margin-top: 0;
+  margin-bottom: 0;
+  padding: 0;
+  margin-left: 0;
+}
+
+#page-manager-edit .page-manager-edit-operations li {
+  list-style: none;
+  background: #F6F6F6;
+  border-top: 1px solid #aaa;
+  border-left: 1px solid #aaa;
+  border-right: 1px solid #aaa;
+  padding: 0 0 0 0;
+  margin: 0;
+  line-height: 2em;
+}
+
+#page-manager-edit .page-manager-edit-operations li.active,
+#page-manager-edit .page-manager-edit-operations li.active-group .page-manager-group-title {
+  background: #FFFFFF url(../images/arrow-active.png) no-repeat scroll right center;
+}
+
+#page-manager-edit .page-manager-edit-operations li.changed,
+#page-manager-edit .page-manager-edit-operations li.changed-group .page-manager-group-title {
+  background-color: #ffe;
+  font-weight: bold;
+}
+
+/** provide a reset for non active stray paths */
+#page-manager-edit .page-manager-edit-operations li.active-group li.not-active .page-manager-group-title,
+#page-manager-edit .page-manager-edit-operations li.changed-group li.not-changed .page-manager-group-title {
+  background: #F6F6F6;
+}
+
+#page-manager-edit .page-manager-edit-operations li.active {
+  border-right: 1px solid white;
+}
+
+#page-manager-edit .page-manager-edit-operations li.active a,
+#page-manager-edit .page-manager-edit-operations li.active a:hover {
+  background: #FFFFFF url(../images/arrow-active.png) no-repeat scroll right center;
+  color: #000000;
+  font-weight: bold;
+}
+
+#page-manager-edit .page-manager-edit-operations li.operation-first {
+  border-top: none;
+}
+
+#page-manager-edit .page-manager-edit-operations li li.operation-first {
+  border-top: 1px solid #aaa;
+}
+
+#page-manager-edit .page-manager-edit-operations li a {
+  display: block;
+  padding: 0 0 0 .5em;
+  color: #494949;
+}
+
+#page-manager-edit .page-manager-edit-operations li a:hover {
+  background-color: #eee;
+  text-decoration: none;
+}
+
+#page-manager-edit .ctools-collapsible-container {
+  display: inline-block;
+  position: relative;
+  *float: left; /* LTR */
+  width: 100%;
+}
+
+#page-manager-edit .page-manager-edit-operations li .ctools-collapsible-handle:hover {
+  background-color: #eee;
+}
+
+#page-manager-edit .page-manager-edit-operations li li {
+  border-right: none;
+  border-left: none;
+  margin-left: 1em;
+}
+
+#page-manager-edit .page-manager-edit-operations li ul {
+}
+
+#page-manager-edit .page-manager-group-title {
+  line-height: 2em;
+  font-weight: bold;
+  padding: 0 0 0 .5em;
+}
+
+/* Change the position of the arrow on the dropdown to look nicer with our defaults. */
+#page-manager-edit .page-manager-edit-operations .ctools-toggle {
+  background-position: 0 9px;
+  width: 10px;
+}
+
+#page-manager-edit .page-manager-ajax-pad {
+  float: left; /* LTR */
+  width: 100%;
+  border-left: none;
+  height: 100%;
+  background: white;
+}
+
+/** A riser to force the ajax pad to a minimum height. **/
+#page-manager-edit .page-manager-ajax-pad .page-manager-riser {
+  width: 1px;
+  float: right; /* LTR */
+  height: 400px;
+}
+
+#page-manager-edit .page-manager-ajax-pad .page-manager-riser span {
+  display: none;
+}
+
+#page-manager-edit .page-manager-ajax-pad .content-title {
+  font-weight: bold;
+  font-size: 120%;
+  background-color: #fafafa;
+  border-bottom: 1px solid #aaa;
+  border-left: 1px solid #aaa;
+  margin-left: -1px;
+  padding: 2px 5px 2px 20px;
+}
+
+#page-manager-edit .actions {
+  padding: 0 0 0 20px;
+}
+
+#page-manager-edit .primary-actions li {
+  border-top: 1px solid #aaa;
+}
+
+#page-manager-edit .secondary-actions {
+  border-bottom: 1px solid #aaa;
+}
+
+#page-manager-edit .handler-actions {
+  float: right; /* LTR */
+}
+
+#page-manager-edit .actions .page-manager-group-title {
+  float: left; /* LTR */
+  padding-left: 0;
+}
+
+#page-manager-edit .actions ul {
+  float: right; /* LTR */
+  text-align: right; /* LTR */
+  padding: 0;
+  margin: 0;
+  border-right: 1px solid #aaa;
+}
+
+#page-manager-edit .handler-title .actions ul {
+  border-right: none;
+}
+
+#page-manager-edit .actions li {
+  float: left; /* LTR */
+  background: none;
+  list-style: none;
+  border-left: 1px solid #aaa;
+  margin: 0;
+  padding: 0;
+}
+
+#page-manager-edit .actions ul li.operation-last {
+  border-right: none;
+}
+
+#page-manager-edit .actions li a:hover {
+  background-color: #eee;
+  text-decoration: none;
+}
+
+#page-manager-edit .actions li a {
+  display: block;
+  padding: 0.2em 0.5em;
+  color:#0062A0;
+  background-color: #F6F6F6;
+}
+
+#page-manager-edit .page-manager-changed {
+  float: right; /* LTR */
+  font-style: italic;
+  color: #f93;
+  padding-left: 1em;
+  padding-right: 22px;
+  background: url(../images/locked.png) no-repeat scroll right center;
+}
+
+#page-manager-edit .page-manager-ajax-pad .content-content {
+  padding: .5em 20px;
+}
+
+#page-manager-edit .page-manager-ajax-pad textarea {
+  width: 100%;
+}
+
+#page-manager-edit .changed-notification {
+  border: 1px solid #aaa;
+  background-color: #ffe;
+  color: #494949;
+  padding: 1em;
+  margin-top: 1em;
+}
+
+#page-manager-edit .ctools-locked {
+  margin-bottom: 2em;
+}
+
+#page-manager-page-summary .title {
+  font-weight: bold;
+  font-size: 160%;
+}
+
+#page-manager-page-summary .handler-summary {
+}
+
+#page-manager-page-summary .page-summary-operation {
+  text-align: right;
+}
+
+#page-manager-page-summary .page-summary-label {
+  width: 8em;
+  font-weight: bold;
+}
+
+
+.handler-summary dl {
+  margin: 0;
+}
+
+.handler-summary dt {
+  margin: 0;
+  padding: 0;
+}
+
+.handler-summary dd {
+  margin: 0;
+}
+
+.handler-summary ol {
+  margin: 0;
+}
+
+.handler-summary .handler-title {
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  background: #fafafa;
+  padding: 0 0 0 5px;
+  margin-top: .5em;
+}
+
+.handler-summary .handler-title .title-label {
+  font-weight: bold;
+  font-size: 120%;
+  line-height: 1.75em;
+}
+

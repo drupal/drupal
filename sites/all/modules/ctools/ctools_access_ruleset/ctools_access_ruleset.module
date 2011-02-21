@@ -1,0 +1,86 @@
+<?php
+// $Id: ctools_access_ruleset.module,v 1.3 2011/01/05 22:57:26 merlinofchaos Exp $
+
+/**
+ * @file
+ * ctools_access_ruleset module
+ *
+ * This module allows styles to be created and managed on behalf of modules
+ * that implement styles.
+ *
+ * The ctools_access_ruleset tool allows recolorable styles to be created via a miniature
+ * scripting language. Panels utilizes this to allow administrators to add
+ * styles directly to any panel display.
+ */
+
+/**
+ * Implementation of hook_permission()
+ */
+function ctools_access_ruleset_permission() {
+  return array(
+    'administer ctools access ruleset' => array(
+      'title' => t('Administer access rulesets'),
+      'description' => t('Add, delete and edit custom access rulesets.'),
+    ),
+  );
+}
+
+/**
+ * Implementation of hook_ctools_plugin_directory() to let the system know
+ * we implement task and task_handler plugins.
+ */
+function ctools_access_ruleset_ctools_plugin_directory($module, $plugin) {
+  // Most of this module is implemented as an export ui plugin, and the
+  // rest is in ctools/includes/ctools_access_ruleset.inc
+  if ($module == 'ctools' && ($plugin == 'export_ui' || $plugin == 'access')) {
+    return 'plugins/' . $plugin;
+  }
+}
+
+/**
+ * Implementation of hook_panels_dashboard_blocks().
+ *
+ * Adds page information to the Panels dashboard.
+ */
+function ctools_access_ruleset_panels_dashboard_blocks(&$vars) {
+  $vars['links']['ctools_access_ruleset'] = array(
+    'title' => l(t('Custom ruleset'), 'admin/structure/ctools-rulesets/add'),
+    'description' => t('Custom rulesets are combinations of access plugins you can use for access control, selection criteria and pane visibility.'),
+  );
+
+   // Load all mini panels and their displays.
+  ctools_include('export');
+  $items = ctools_export_crud_load_all('ctools_access_ruleset');
+  $count = 0;
+  $rows = array();
+
+  foreach ($items as $item) {
+    $rows[] = array(
+      check_plain($item->admin_title),
+      array(
+        'data' => l(t('Edit'), "admin/structure/ctools-rulesets/list/$item->name/edit"),
+        'class' => 'links',
+      ),
+    );
+
+    // Only show 10.
+    if (++$count >= 10) {
+      break;
+    }
+  }
+
+  if ($rows) {
+    $content = theme('table', array('rows' => $rows, 'attributes' => array('class' => 'panels-manage')));
+  }
+  else {
+    $content = '<p>' . t('There are no custom rulesets.') . '</p>';
+  }
+
+  $vars['blocks']['ctools_access_ruleset'] = array(
+    'title' => t('Manage custom rulesets'),
+    'link' => l(t('Go to list'), 'admin/structure/ctools-rulesets'),
+    'content' => $content,
+    'class' => 'dashboard-ruleset',
+    'section' => 'right',
+  );
+}
