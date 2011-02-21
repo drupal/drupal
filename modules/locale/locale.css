@@ -5,9 +5,9 @@
   text-decoration: line-through;
 }
 
-.form-item-language,
-.form-item-translation,
-.form-item-group {
+#locale-translation-filter-form .form-item-language,
+#locale-translation-filter-form .form-item-translation,
+#locale-translation-filter-form .form-item-group {
   float: left; /* LTR */
   padding-right: .8em; /* LTR */
   margin: 0.1em;
