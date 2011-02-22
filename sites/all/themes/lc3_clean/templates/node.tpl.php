@@ -96,19 +96,17 @@
   <?php endif; ?>
   <?php print render($title_suffix); ?>
 
-  <?php if (true || $meta): ?>
+  <?php if ($display_submitted || $linked_comment_count || isset($content['field_tags'])): ?>
     <div class="node-meta clearfix">
       <?php if ($display_submitted): ?>
         <div class="submitted"><?php print $submitted ?></div>
       <?php endif; ?>
-     <?php if ($linked_comment_count): ?>
+      <?php if ($linked_comment_count): ?>
         <?php print $linked_comment_count; ?>
       <?php endif; ?>
-
       <?php if (isset($content['field_tags'])): ?>
         <?php print render ($content['field_tags']) ?>
       <?php endif;?>
- 
     </div>
   <?php endif; ?>
 
