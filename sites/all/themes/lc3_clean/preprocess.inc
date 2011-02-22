@@ -110,7 +110,11 @@ function lc3_clean_preprocess_node(&$vars)
     }
 
     // Render the comment count as a link
-    $vars['linked_comment_count'] = (isset($vars['comment_count'])) ? l(format_plural($vars['comment_count'], '1<span> comment</span>', '@count<span> comments</span>'), 'node/'.$vars['node']->nid, array('html'=>true, 'attributes'=>array('title'=>format_plural($vars['comment_count'], '1 comment', '@count comments'), 'class'=>array('comment-count'))), '#comments') : '';
+    if (defined('COMMENT_NODE_CLOSED') && ($vars['node']->comment != COMMENT_NODE_CLOSED)) {
+        $vars['linked_comment_count'] = (isset($vars['comment_count'])) ? l(format_plural($vars['comment_count'], '1<span> comment</span>', '@count<span> comments</span>'), 'node/'.$vars['node']->nid, array('html'=>true, 'attributes'=>array('title'=>format_plural($vars['comment_count'], '1 comment', '@count comments'), 'class'=>array('comment-count'))), '#comments') : '';
+    } else {
+        $vars['linked_comment_count'] = '';
+    }
 
     // Link "Add new comment" to the form on the node page
     if (isset($vars['content']['links']['comment']['#links']['comment-add']) && (variable_get('comment_form_location_'.$vars['node']->type, COMMENT_FORM_BELOW) !== COMMENT_FORM_SEPARATE_PAGE)) {
