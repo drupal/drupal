@@ -61,7 +61,7 @@ function list_update_7001() {
       $allowed_values = _list_update_7001_extract_allowed_values($allowed_values, $position_keys);
 
       // Additionally, float keys need to be disambiguated ('.5' is '0.5').
-      if ($field['type'] == 'list_number') {
+      if ($field['type'] == 'list_number' && !empty($allowed_values)) {
         $keys = array_map(create_function('$a', 'return (string) (float) $a;'), array_keys($allowed_values));
         $allowed_values = array_combine($keys, array_values($allowed_values));
       }
