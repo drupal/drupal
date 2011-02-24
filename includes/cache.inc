@@ -325,10 +325,15 @@ class DrupalDatabaseCache implements DrupalCacheInterface {
     try {
       // Garbage collection necessary when enforcing a minimum cache lifetime.
       $this->garbageCollection($this->bin);
-      $query = db_select($this->bin);
-      $query->fields($this->bin, array('cid', 'data', 'created', 'expire', 'serialized'));
-      $query->condition($this->bin . '.cid', $cids, 'IN');
-      $result = $query->execute();
+
+      // When serving cached pages, the overhead of using db_select() was found
+      // to add around 30% overhead to the request. Since $this->bin is a
+      // variable, this means the call to db_query() here uses a concatenated
+      // string. This is highly discouraged under any other circumstances, and
+      // is used here only due to the performance overhead we would incur
+      // otherwise. When serving an uncached page, the overhead of using
+      // db_select() is a much smaller proportion of the request.
+      $result = db_query('SELECT cid, data, created, expire, serialized FROM {' . db_escape_table($this->bin) . '} WHERE cid IN (:cids)', array(':cids' => $cids));
       $cache = array();
       foreach ($result as $item) {
         $item = $this->prepareItem($item);

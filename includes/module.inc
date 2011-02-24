@@ -127,6 +127,9 @@ function system_list($type) {
   // if not fetch only the required information to fire bootstrap hooks
   // in case we are going to serve the page from cache.
   if ($type == 'bootstrap') {
+    if (isset($lists['bootstrap'])) {
+      return $lists['bootstrap'];
+    }
     if ($cached = cache_get('bootstrap_modules', 'cache_bootstrap')) {
       $bootstrap_list = $cached->data;
     }

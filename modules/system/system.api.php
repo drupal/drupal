@@ -2552,7 +2552,7 @@ function hook_file_load($files) {
  *
  * @see file_validate()
  */
-function hook_file_validate(&$file) {
+function hook_file_validate($file) {
   $errors = array();
 
   if (empty($file->filename)) {
