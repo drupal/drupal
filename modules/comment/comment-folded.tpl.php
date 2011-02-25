@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 /**
  * @file comment-folded.tpl.php

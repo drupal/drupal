@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 /**
  * @file block-admin-display-form.tpl.php

@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 /**
  * @file aggregator-summary-item.tpl.php

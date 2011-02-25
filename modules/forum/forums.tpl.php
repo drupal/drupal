@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 /**
  * @file forums.tpl.php

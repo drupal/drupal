@@ -1,6 +1,5 @@
 #!/usr/bin/php
 <?php
-// $Id$
 
 /**
  * Drupal shell execution script

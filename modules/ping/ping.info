@@ -1,4 +1,3 @@
-; $Id$
 name = Ping
 description = Alerts other sites when your site has been updated.
 package = Core - optional

@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 /**
  * Form API callback to validate the upload settings form.

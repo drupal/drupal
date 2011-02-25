@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 /**
  * A stub cache implementation to be used during the installation

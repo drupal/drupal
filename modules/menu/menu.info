@@ -1,4 +1,3 @@
-; $Id$
 name = Menu
 description = Allows administrators to customize the site navigation menu.
 package = Core - optional

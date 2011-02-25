@@ -1,4 +1,3 @@
-; $Id$
 name = Book
 description = Allows users to structure site pages in a hierarchy or outline.
 package = Core - optional

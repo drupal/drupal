@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 /**
  * @file poll-vote.tpl.php

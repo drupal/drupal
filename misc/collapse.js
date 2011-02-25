@@ -1,4 +1,3 @@
-// $Id$
 
 /**
  * Toggle the visibility of a fieldset using smooth animations

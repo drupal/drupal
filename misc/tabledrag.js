@@ -1,4 +1,3 @@
-// $Id$
 
 /**
  * Drag and drop table rows with field manipulation.

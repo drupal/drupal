@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 /**
  * @file search-block-form.tpl.php

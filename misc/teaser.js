@@ -1,4 +1,3 @@
-// $Id$
 
 /**
  * Auto-attach for teaser behavior.

@@ -1,4 +1,3 @@
-// $Id$
 
 /**
  * Internal function to check using Ajax if clean URLs can be enabled on the

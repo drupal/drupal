@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 /**
  * @file search-theme-form.tpl.php

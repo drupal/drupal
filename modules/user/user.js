@@ -1,4 +1,3 @@
-// $Id$
 
 /**
  * Attach handlers to evaluate the strength of any password fields and to check

@@ -1,4 +1,3 @@
-// $Id$
 
 Drupal.behaviors.comment = function (context) {
   var parts = new Array("name", "homepage", "mail");

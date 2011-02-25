@@ -1,5 +1,4 @@
 <?php
-// $Id$
 ?>
   <div class="comment<?php print ' '. $status; ?>">
     <?php if ($picture) {

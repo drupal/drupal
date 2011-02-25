@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 /**
  * @file profile-listing.tpl.php

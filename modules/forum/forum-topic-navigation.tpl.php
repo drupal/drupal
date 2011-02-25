@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 /**
  * @file forum-topic-navigation.tpl.php

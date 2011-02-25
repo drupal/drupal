@@ -1,4 +1,3 @@
-// $Id$
 
 /**
  * Add functionality to the profile drag and drop table.

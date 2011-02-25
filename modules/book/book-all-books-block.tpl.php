@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 /**
  * @file book-all-books-block.tpl.php

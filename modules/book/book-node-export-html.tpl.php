@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 /**
  * @file book-node-export-html.tpl.php

@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 // MySQL specific install functions
 

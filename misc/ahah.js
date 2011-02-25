@@ -1,4 +1,3 @@
-// $Id$
 
 /**
  * Provides AJAX-like page updating via AHAH (Asynchronous HTML and HTTP).

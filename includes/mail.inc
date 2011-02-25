@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 /**
  * Compose and optionally send an e-mail message.

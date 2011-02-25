@@ -1,4 +1,3 @@
-// $Id$
 
 Drupal 6.21-dev, xxxx-xx-xx (development release)
 ----------------------

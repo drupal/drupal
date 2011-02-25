@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 /**
  * @file node.tpl.php

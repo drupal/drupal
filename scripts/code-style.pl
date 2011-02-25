@@ -1,5 +1,4 @@
 #!/usr/bin/perl -w
-# $Id$
 
 use Pod::Usage;
 use Getopt::Long qw(GetOptions);

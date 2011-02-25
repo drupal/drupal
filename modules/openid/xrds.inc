@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 // Global variables to track parsing state
 $xrds_open_elements = array();

@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 define('SCHEMA_UNINSTALLED', -1);
 define('SCHEMA_INSTALLED', 0);

@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 /**
  * @file maintenance-page.tpl.php

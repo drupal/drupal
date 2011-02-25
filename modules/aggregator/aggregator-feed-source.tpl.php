@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 /**
  * @file aggregator-feed-source.tpl.php
