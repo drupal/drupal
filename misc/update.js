@@ -1,4 +1,3 @@
-// $Id$
 
 if (isJsEnabled()) {
   addLoadEvent(function() {

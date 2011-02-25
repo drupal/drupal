@@ -1,4 +1,3 @@
--- $Id$
 
 -- Do not show NOTICE: messages, it's hard to spot errors.
 set client_min_messages = 'warning';

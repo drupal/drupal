@@ -1,4 +1,3 @@
-// $Id$
 
 // Global killswitch
 if (isJsEnabled()) {

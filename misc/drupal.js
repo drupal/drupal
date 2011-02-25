@@ -1,4 +1,3 @@
-// $Id$
 
 /**
  * Only enable Javascript functionality if all required features are supported.

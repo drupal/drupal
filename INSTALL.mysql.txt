@@ -1,4 +1,3 @@
-// $Id$
 
 CONTENTS OF THIS FILE
 ---------------------

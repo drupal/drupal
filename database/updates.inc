@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 function system_update_110() {
   $ret = array();

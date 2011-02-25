@@ -1,5 +1,4 @@
 #!/bin/sh
-# $Id$
 
 find . -name "*~" -type f | xargs rm -f
 find . -name ".#*" -type f | xargs rm -f

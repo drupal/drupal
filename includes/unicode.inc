@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 define('UNICODE_ERROR', -1);
 define('UNICODE_SINGLEBYTE', 0);

@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 /**
  * The main entry point for XML-RPC requests.
