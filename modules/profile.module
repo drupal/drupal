@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 function _profile_init() {
   /*

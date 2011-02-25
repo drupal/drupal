@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 // Initialization hook, runs each time statistic module is loaded
 function statistics_init() {

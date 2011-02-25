@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 class Theme_example extends BaseTheme {
 

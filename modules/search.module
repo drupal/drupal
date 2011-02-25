@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 function search_help() {
   $output = "<b>". t("Search guidelines") ."</b>";

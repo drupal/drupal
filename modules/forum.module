@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 function forum_system($field){
   $system["description"] = t("Enable threaded discussions about general topics.");

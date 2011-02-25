@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 function cloud_help($type = "administrator") {
   if ($type == "user") {

@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 function conf_init() {
   global $HTTP_HOST;
