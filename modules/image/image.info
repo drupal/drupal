@@ -1,4 +1,3 @@
-; $Id$
 name = Image
 description = Provides image manipulation tools.
 package = Core

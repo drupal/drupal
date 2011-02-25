@@ -1,5 +1,4 @@
 <?php
-// $Id$
 ?>
   <?php print render($page['header']); ?>
 

@@ -1,4 +1,3 @@
-; $Id$
 name = Taxonomy
 description = Enables the categorization of content.
 package = Core

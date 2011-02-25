@@ -1,4 +1,3 @@
-; $Id$
 name = File
 description = Defines a file field type.
 package = Core

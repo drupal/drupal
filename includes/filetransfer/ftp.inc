@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 /**
  * Base class for FTP implementations.

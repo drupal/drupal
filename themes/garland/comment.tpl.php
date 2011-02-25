@@ -1,5 +1,4 @@
 <?php
-// $Id$
 ?>
 <div class="<?php print $classes . ' ' . $zebra; ?>"<?php print $attributes; ?>>
 

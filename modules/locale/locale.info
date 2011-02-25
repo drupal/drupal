@@ -1,4 +1,3 @@
-; $Id$
 name = Locale
 description = Adds language handling functionality and enables the translation of the user interface to languages other than English.
 package = Core

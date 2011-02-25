@@ -1,4 +1,3 @@
-; $Id$
 name = CCC Update test
 description = Support module for update module testing.
 package = Testing

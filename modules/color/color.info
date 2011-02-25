@@ -1,4 +1,3 @@
-; $Id$
 name = Color
 description = Allows administrators to change the color scheme of compatible themes.
 package = Core

@@ -1,4 +1,3 @@
-; $Id$
 name = "Entity CRUD Hooks Test"
 description = "Support module for CRUD hook tests."
 core = 7.x

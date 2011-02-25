@@ -1,4 +1,3 @@
-$Id$
 
 These files are use in some tests that upload files or other operations were
 a file is useful. These files are copied to the files directory as specified

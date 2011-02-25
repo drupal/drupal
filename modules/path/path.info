@@ -1,4 +1,3 @@
-; $Id$
 name = Path
 description = Allows users to rename URLs.
 package = Core

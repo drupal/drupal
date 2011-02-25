@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 /**
  * Perform end-to-end tests of the upgrade path.

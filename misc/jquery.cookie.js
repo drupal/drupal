@@ -1,4 +1,3 @@
-// $Id$
 
 /**
  * Cookie plugin 1.0

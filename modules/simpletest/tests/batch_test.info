@@ -1,4 +1,3 @@
-; $Id$
 name = "Batch API test"
 description = "Support module for Batch API tests."
 package = Testing

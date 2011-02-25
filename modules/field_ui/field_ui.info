@@ -1,4 +1,3 @@
-; $Id$
 name = Field UI
 description = User interface for the Field API.
 package = Core

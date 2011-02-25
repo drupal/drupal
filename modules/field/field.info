@@ -1,4 +1,3 @@
-; $Id$
 name = Field
 description = Field API to add fields to entities like nodes and users.
 package = Core

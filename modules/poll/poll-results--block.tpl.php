@@ -1,5 +1,4 @@
 <?php
-// $Id$
 /**
  * @file
  * Default theme implementation to display the poll results in a block.

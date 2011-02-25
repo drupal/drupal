@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 class RegistryParseFileTestCase extends DrupalWebTestCase {
   public static function getInfo() {

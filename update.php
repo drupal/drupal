@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 /**
  * Root directory of Drupal installation.

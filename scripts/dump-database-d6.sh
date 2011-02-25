@@ -1,6 +1,5 @@
 #!/usr/bin/env php
 <?php
-// $Id$
 
 /**
  * Dump a Drupal 6 database into a Drupal 7 PHP script to test the upgrade

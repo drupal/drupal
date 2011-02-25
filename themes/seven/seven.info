@@ -1,4 +1,3 @@
-; $Id$
 name = Seven
 description = A simple one-column, tableless, fluid width administration theme.
 package = Core

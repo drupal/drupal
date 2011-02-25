@@ -1,4 +1,3 @@
-; $Id$
 ; Test parsing with a simple string.
 simple_string = A simple string
 

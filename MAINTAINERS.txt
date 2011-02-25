@@ -1,4 +1,3 @@
-// $Id$
 
 Drupal core is maintained by the community.  To participate, go to
 

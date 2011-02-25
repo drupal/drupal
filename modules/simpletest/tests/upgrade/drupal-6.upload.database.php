@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 db_insert('files')->fields(array(
   'fid',

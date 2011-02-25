@@ -1,4 +1,3 @@
-; $Id$
 name = Dashboard
 description = Provides a dashboard page in the administrative interface for organizing administrative tasks and tracking information within your site.
 core = 7.x

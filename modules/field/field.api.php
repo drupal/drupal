@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 /**
  * @ingroup field_fieldable_type

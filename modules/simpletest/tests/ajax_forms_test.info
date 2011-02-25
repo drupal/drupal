@@ -1,4 +1,3 @@
-; $Id$
 name = "AJAX form test mock module"
 description = "Test for AJAX form calls."
 core = 7.x

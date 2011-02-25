@@ -1,4 +1,3 @@
-; $Id$
 name = Testing
 description = Minimal profile for running tests. Includes absolutely required modules only.
 version = VERSION

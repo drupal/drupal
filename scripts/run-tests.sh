@@ -1,5 +1,4 @@
 <?php
-// $Id$
 /**
  * @file
  * This script runs Drupal tests from command line.

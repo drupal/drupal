@@ -1,4 +1,3 @@
-; $Id$
 name = OpenID
 description = "Allows users to log into your site using OpenID."
 version = VERSION

@@ -1,4 +1,3 @@
-; $Id$
 name = Poll
 description = Allows your site to capture votes on different topics in the form of multiple choice questions.
 package = Core

@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 /**
  * Test invocation of hooks when inserting, loading, updating or deleting an

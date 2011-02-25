@@ -1,4 +1,3 @@
-// $Id$
 (function ($) {
 
 Drupal.contextualLinks = Drupal.contextualLinks || {};

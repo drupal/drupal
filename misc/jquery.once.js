@@ -1,4 +1,3 @@
-// $Id$
 
 /**
  * jQuery Once Plugin v1.2

@@ -1,6 +1,5 @@
 #!/usr/bin/env php
 <?php
-// $Id$
 
 /**
  * Generate content for a Drupal 6 database to test the upgrade process.

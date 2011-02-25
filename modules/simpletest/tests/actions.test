@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 class ActionsConfigurationTestCase extends DrupalWebTestCase {
   public static function getInfo() {

@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 /**
  * @defgroup themeable Default theme implementations

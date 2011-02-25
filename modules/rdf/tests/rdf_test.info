@@ -1,4 +1,3 @@
-; $Id$
 name = "RDF module tests"
 description = "Support module for RDF module testing."
 package = Testing

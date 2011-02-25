@@ -1,4 +1,3 @@
-; $Id$
 name = Blog
 description = Enables multi-user blogs.
 package = Core

@@ -1,4 +1,3 @@
-// $Id$
 
 /*
  * jQuery BBQ: Back Button & Query Library - v1.2.1 - 2/17/2010

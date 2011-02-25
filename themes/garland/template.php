@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 /**
  * Return a themed breadcrumb trail.

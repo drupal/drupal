@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 /**
  * Perform basic XML-RPC tests that do not require addition callbacks.

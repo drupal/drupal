@@ -1,4 +1,3 @@
-;$Id$
 name = "List test"
 description = "Support module for the List module tests."
 core = 7.x

@@ -1,4 +1,3 @@
-; $Id$
 name = "Entity cache test dependency"
 description = "Support dependency module for testing entity cache."
 package = Testing

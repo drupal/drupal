@@ -1,4 +1,3 @@
-// $Id$
 
 This directory is reserved for core theme files. Custom or contributed themes
 should be placed in their own subdirectory of the sites/all/themes directory.

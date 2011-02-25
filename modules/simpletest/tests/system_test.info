@@ -1,4 +1,3 @@
-; $Id$
 name = System test
 description = Support module for system testing.
 package = Testing

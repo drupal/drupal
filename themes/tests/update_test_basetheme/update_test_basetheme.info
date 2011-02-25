@@ -1,4 +1,3 @@
-; $Id$
 name = Update test base theme
 description = Test theme which acts as a base theme for other test subthemes.
 core = 7.x

@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 /**
  * The SSH connection class for the update module.

@@ -1,4 +1,3 @@
-; $Id$
 name = Block test
 description = Provides test blocks.
 package = Testing

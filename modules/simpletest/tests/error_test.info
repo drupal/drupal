@@ -1,4 +1,3 @@
-; $Id$
 name = "Error test"
 description = "Support module for error and exception testing."
 package = Testing

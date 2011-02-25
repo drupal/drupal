@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 /**
  * Get the cache object for a cache bin.

@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 /**
  * Global variable that holds information about the tests being run.

@@ -1,4 +1,3 @@
-; $Id$
 name = Requirements 2 Test
 description = "Tests that a module is not installed when the one it depends on fails hook_requirements('install)."
 dependencies[] = requirements1_test

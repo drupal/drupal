@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 class AJAXTestCase extends DrupalWebTestCase {
   function setUp() {

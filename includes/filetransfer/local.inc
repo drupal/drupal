@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 /**
  * The local connection class for copying files as the httpd user.

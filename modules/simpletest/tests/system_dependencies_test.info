@@ -1,4 +1,3 @@
-; $Id$
 name = "System dependency test"
 description = "Support module for testing system dependencies."
 package = Testing

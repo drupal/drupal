@@ -1,4 +1,3 @@
-; $Id$
 name = Testing
 description = Provides a framework for unit and functional testing.
 package = Core

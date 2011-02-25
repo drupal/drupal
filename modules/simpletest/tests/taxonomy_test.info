@@ -1,4 +1,3 @@
-; $Id$
 name = "Taxonomy test module"
 description = "Tests functions and hooks not used in core".
 package = Testing

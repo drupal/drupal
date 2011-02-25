@@ -1,4 +1,3 @@
-; $Id$
 name = Number
 description = Defines numeric field types.
 package = Core

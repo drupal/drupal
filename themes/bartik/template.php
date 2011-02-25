@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 /**
  * Add body classes if certain regions have content.

@@ -1,4 +1,3 @@
-; $Id$
 name = Forum
 description = Provides discussion forums.
 dependencies[] = taxonomy

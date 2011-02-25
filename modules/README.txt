@@ -1,4 +1,3 @@
-// $Id$
 
 This directory is reserved for core module files. Custom or contributed modules
 should be placed in their own subdirectory of the sites/all/modules directory.

@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 /**
  * Tests Drupal error and exception handlers.

@@ -1,6 +1,5 @@
 #!/usr/bin/php
 <?php
-// $Id$
 
 /**
  * Drupal hash script - to generate a hash from a plaintext password

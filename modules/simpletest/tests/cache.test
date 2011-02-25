@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 class CacheTestCase extends DrupalWebTestCase {
   protected $default_bin = 'cache';

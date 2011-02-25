@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 /**
  * Impelement hook_install().

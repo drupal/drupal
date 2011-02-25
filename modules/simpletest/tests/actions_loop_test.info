@@ -1,4 +1,3 @@
-; $Id$
 name = Actions loop test
 description = Support module for action loop testing.
 package = Testing

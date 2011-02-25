@@ -1,5 +1,4 @@
 <?php
-// $Id$
 ?>
   <div id="branding" class="clearfix">
     <?php print $breadcrumb; ?>

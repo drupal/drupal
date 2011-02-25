@@ -1,4 +1,3 @@
-; $Id$
 name = System
 description = Handles general site configuration for administrators.
 package = Core

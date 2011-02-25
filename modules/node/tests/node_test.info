@@ -1,4 +1,3 @@
-; $Id$
 name = "Node module tests"
 description = "Support module for node related testing."
 package = Testing

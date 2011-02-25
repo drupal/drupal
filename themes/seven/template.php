@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 /**
  * Override or insert variables into the maintenance page template.

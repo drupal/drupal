@@ -1,4 +1,3 @@
-// $Id$
 
 /*!
  * jQuery JavaScript Library v1.4.4

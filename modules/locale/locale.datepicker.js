@@ -1,4 +1,3 @@
-// $Id$
 (function ($) {
 
 $.datepicker.regional['drupal-locale'] = {

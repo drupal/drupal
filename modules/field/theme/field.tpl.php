@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 /**
  * @file field.tpl.php

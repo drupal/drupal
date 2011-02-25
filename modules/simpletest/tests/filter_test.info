@@ -1,4 +1,3 @@
-; $Id$
 name = Filter test module
 description = Tests filter hooks and functions.
 package = Testing
