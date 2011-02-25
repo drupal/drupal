@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 function xmlrpc_server($callbacks) {
   $xmlrpc_server = new stdClass();

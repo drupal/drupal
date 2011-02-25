@@ -1,5 +1,4 @@
 #!/usr/bin/perl -w
-# $Id$
 
 # Author: Alexander Schwartz (alexander.schwartz@gmx.net)
 # Licence: GPL

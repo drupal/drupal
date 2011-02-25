@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 /*
   Drupal XML-RPC library. Based on the IXR - The Incutio XML-RPC Library - (c) Incutio Ltd 2002-2005
