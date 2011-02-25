@@ -727,7 +727,6 @@ body.store-product h1#page-title,
 }
 
 
-
 .product-details .title
 {
   padding-top: 0;
@@ -982,7 +981,6 @@ div.product-details .product-image-gallery
   text-align: right;
   padding: 4px 6px;
   margin-left: 8px;
-  margin-right: 20px;
   vertical-align: middle;
 }
 
@@ -1029,7 +1027,7 @@ div.product-details button.continue
 
 div.product-details .continue-button-intend
 {
-  width: 94px;
+  width: 112px;
   float: left;
 }
 
