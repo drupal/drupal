@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 function ping_help() {
   $output = "<p>Drupal can pings sites automatically to notify them that your site has changed. It can ping the following sites :</p>";

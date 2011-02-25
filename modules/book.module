@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 function book_system($field){
   $system["description"] = t("Allows users to collaboratively author a book.");

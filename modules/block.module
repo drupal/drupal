@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 function block_help() {
   $output .= "<p>Blocks are the boxes visible in the sidebar(s) of your web site. These are usually generated automatically by modules (e.g. recent forum topics), but you can also create your own blocks using either static HTML or dynamic PHP content.</p>";

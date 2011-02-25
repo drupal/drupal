@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 function taxonomy_system($field){
   $system["description"] = t("Enables the organization of content into categories.");

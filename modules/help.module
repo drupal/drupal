@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 function help_system($field){
   $system["description"] = t("Manages displaying online help.");

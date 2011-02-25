@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 function story_help() {
   $output .= "<p>The story module lets your users submit articles for consideration by the rest of the community, who can vote on them if moderation is enabled.  Stories usually follow a publishing flow of <b>submit -&gt; moderate -&gt; post to the main page -&gt; comments</b>.  Administrators are able to shortcut this flow as desired.</p>";

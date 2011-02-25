@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 function locale_help() {
   $output .= "<p>Normally programs are written and documented in English, and use English to interact with users.  This is true for a great deal of web sites.  However, most people are less comfortable with English than with their own native language, and would prefer to use their mother tongue as much as possible.  Many people love see their web site showing a lot less of English, and far more of their own language.</p>";

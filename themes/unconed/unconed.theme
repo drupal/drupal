@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
  class Theme_unconed extends BaseTheme {
    var $foreground = "#000000";

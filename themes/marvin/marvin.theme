@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
  class Theme_marvin extends BaseTheme {
    var $link = "#666699";

@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 function blog_system($field){
   $system["description"] = t("Enables keeping a blog or easily and regularly updated web page.");

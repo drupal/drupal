@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 function tracker_help() {
   $output .= "<p>The tracker module is a handy module for displaying the most recent posts.  By following the <i>view recent posts</i> link in the user block, a user may quickly review all recent postings.</p>";

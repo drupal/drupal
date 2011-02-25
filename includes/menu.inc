@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 function menu($path, $title, $callback = NULL, $help = NULL, $weight = 0, $hidden = 0) {
   global $_gmenu;

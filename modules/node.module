@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 function node_help() {
   global $mod;

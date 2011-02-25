@@ -1,6 +1,5 @@
 #!/usr/local/bin/php -q
 <?php
-// $Id$
 
 ini_set("include_path", ".:/home/dries/personal/cvs/web/pear:/home/dries/personal/cvs/web/drupal.org/x.x.x");
 include_once "includes/common.inc";

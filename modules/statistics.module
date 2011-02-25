@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 function statistics_init() {
   global $recent_activity;
