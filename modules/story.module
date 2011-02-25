@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 function story_help($section = "admin/help#story") {
   $output = "";

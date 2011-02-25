@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 function comment_help($section = "admin/help#comment") {
   $output = "";

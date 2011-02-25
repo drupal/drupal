@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 function drupal_help($section = "admin/help#drupal") {
   $output = "";

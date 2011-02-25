@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 function xtemplate_settings() {
   $output  = form_select(t("Sidebar placement"), "xtemplate_sidebar", variable_get("xtemplate_sidebar", "left"), array("none" => t("No sidebars"), "left" => t("Sidebar on the left"), "right" => t("Sidebar on the right"), "both" => t("Sidebar on the left and the right")));

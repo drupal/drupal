@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 function archive_help($section) {
   $output = "";

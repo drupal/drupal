@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 
 function import_help($section = "admin/help#import") {

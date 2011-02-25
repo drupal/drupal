@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 /**
  * Register a menu item with the menu system.

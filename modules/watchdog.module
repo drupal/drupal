@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 function watchdog_help($section = "admin/help#watchdog") {
   $output = "";

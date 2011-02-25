@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 function page_help($section = "admin/help#page") {
   $output = "";

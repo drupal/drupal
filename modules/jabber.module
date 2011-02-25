@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 function jabber_help($section) {
   $output = "";

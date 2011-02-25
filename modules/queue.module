@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 function queue_help($section) {
   $output = "";

@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 function node_help($section = "admin/help#node") {
   global $mod;

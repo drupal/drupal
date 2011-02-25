@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 function book_node($field) {
   global $user;

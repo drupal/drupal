@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 function forum_node($field) {
   $info["name"] = t("forum topic");
