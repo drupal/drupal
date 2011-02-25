@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 function weblogs_help() {
   $output = "<p><a href=\"http://www.weblogs.com/\">Weblogs.com</a> is a website that tracks and displays links to changed weblogs and news-oriented websites.  To get your Drupal site listed, weblogs.com must be informed about your site's updates.  This is the job of the weblog module and when installed, the administrator doesn't have to do anything to participate in the <a href=\"http://www.weblogs.com/\">weblogs.com system</a>. The weblog module automatically notifies weblogs.com when your site is updated.  To do so, Drupal implements the <a href=\"http://www.xmlrpc.com/weblogsCom/\">XML-RPC interface of weblogs.com</a>. Requires crontab.</p>";

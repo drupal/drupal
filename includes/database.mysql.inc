@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 function db_connect($url) {
   $url = parse_url($url);

@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 if (variable_get("referrer", 0) && $referrer = getenv("HTTP_REFERER")) {
   db_query("INSERT INTO referrer (URL, timestamp) values ('%s', '%s')", $referrer, time());

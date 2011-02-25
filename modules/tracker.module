@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 function tracker_help() {
   $output .= "The tracker module is a handy module for displaying the most recent comments happenning all over your web site.  By following the <i>view new comments</i> link in the user block, a user may quickly review all recent comments.  When a user first arrives at the main tracker page, she sees all recent comments in reverse chronological order, grouped by post.  In addition, a self-centered user may choose to display only his own comments.</p>";

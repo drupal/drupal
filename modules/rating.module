@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 function rating_help() {
   $output .= "<p>Drupal uses <i>gravity</i> as an indication for each user's contributed value.  The system can be compared with <a href=\"http://www.slashcode.com/\">SlashCode</a>'s Karma and is - in fact - even more similar to <a href=\"http://scoop.kuro5hin.org/\">Scoop</a>'s Mojo.</p>";
