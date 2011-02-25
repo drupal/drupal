@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 define('FILTER_HTML_DONOTHING', 0);
 define('FILTER_HTML_STRIP', 1);

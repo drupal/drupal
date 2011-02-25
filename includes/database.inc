@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 function db_prefix_tables($sql) {
   global $db_prefix;

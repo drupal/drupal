@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 function title_help($section) {
   $output = "";

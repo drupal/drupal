@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 include_once "includes/bootstrap.inc";
 drupal_page_header();

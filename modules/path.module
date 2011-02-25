@@ -1,5 +1,4 @@
 <?php
-/* $Id$ */
 
 function path_admin() {
   $op = $_POST["op"];

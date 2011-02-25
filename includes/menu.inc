@@ -1,5 +1,4 @@
 <?php
-/* $Id$ */
 
 /**
  * @defgroup menu Menu system

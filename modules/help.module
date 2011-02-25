@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 function help_link($type) {
   if ($type == "system" && user_access("access administration pages")) {

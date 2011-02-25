@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 function chameleon_help($section) {
 

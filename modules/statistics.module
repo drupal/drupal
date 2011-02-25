@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 // Exit hook, runs at the end of every page request
 function statistics_exit() {

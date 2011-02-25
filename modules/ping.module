@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 function ping_help($section = "admin/help#ping") {
   $output = "";

@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 if (!class_exists("XTemplate")) {
   include_once("themes/xtemplate/xtemplate.inc");

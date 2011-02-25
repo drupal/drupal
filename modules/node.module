@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 define('NODE_NEW_LIMIT', time() - 30 * 24 * 60 * 60);
 

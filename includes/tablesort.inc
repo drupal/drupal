@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 function tablesort_init($header) {
   static $ts;

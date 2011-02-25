@@ -1,5 +1,4 @@
 <?php
-/* $Id$ */
 
 // Define the various updates in an array("date : comment" => "function");
 $sql_updates = array(

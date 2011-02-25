@@ -1,6 +1,5 @@
 <?php
 
-// $Id$
 
 function blogapi_help($section) {
   switch ($section) {

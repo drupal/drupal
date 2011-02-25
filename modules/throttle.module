@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 /*  Call the throttle_status() function from your own modules, themes, blocks,
  * etc, to determine the current throttle status.  For example, in your theme

@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 function search_help($section = "admin/help#search") {
   $output = "";

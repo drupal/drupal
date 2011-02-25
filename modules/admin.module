@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 function admin_help($section) {
   switch ($section) {

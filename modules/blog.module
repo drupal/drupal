@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 function blog_settings() {
   $output = form_textarea(t("Explanation or submission guidelines"), "blog_help", variable_get("blog_help", ""), 70, 4, t("This text is displayed at the top of the blog submission form.  It's useful for helping or instructing your users."));

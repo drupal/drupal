@@ -1,5 +1,4 @@
 <?php
-/* $Id$ */
 
 function aggregator_help($section) {
   switch ($section) {

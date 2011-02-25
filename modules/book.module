@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 function book_node_name($node) {
   return t("book page");

@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 function system_help($section = "admin/help#system") {
   global $base_url;

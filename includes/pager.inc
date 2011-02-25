@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 /**
  * @defgroup pager Pager interface
