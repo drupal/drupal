@@ -1,4 +1,3 @@
-// $Id$
 
 Drupal.tableSelect = function() {
   // Keep track of the table, which checkbox is checked and alias the settings.

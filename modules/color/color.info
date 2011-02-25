@@ -1,4 +1,3 @@
-; $Id$
 name = Color
 description = Allows the user to change the color scheme of certain themes.
 package = Core - optional

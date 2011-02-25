@@ -1,4 +1,3 @@
-// $Id$
 
 Drupal.textareaAttach = function() {
   $('textarea.resizable:not(.processed)').each(function() {

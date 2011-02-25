@@ -1,4 +1,3 @@
-// $Id$
 
 /**
  * Attaches the autocomplete behaviour to all required fields

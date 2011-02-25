@@ -1,4 +1,3 @@
-// $Id$
 
 /**
  * Attaches the upload behaviour to the upload form.

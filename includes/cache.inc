@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 /**
  * Return data from the persistent cache.

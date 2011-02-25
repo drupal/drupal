@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 require_once './includes/install.inc';
 

@@ -1,4 +1,3 @@
-// $Id$
 
 var Drupal = Drupal || {};
 

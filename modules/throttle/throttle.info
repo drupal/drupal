@@ -1,4 +1,3 @@
-; $Id$
 name = Throttle
 description = Handles the auto-throttling mechanism, to control site congestion.
 package = Core - optional

@@ -1,4 +1,3 @@
-; $Id$
 name = Legacy
 description = Provides legacy handlers for upgrades from older Drupal installations.
 package = Core - optional

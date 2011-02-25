@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 // PostgreSQL specific install functions
 

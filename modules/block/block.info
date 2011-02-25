@@ -1,4 +1,3 @@
-; $Id$
 name = Block
 description = Controls the boxes that are displayed around the main content.
 package = Core - required

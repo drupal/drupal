@@ -1,4 +1,3 @@
-; $Id$
 name = Blog API
 description = Allows users to post content using applications that support XML-RPC blog APIs.
 package = Core - optional

@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 define('DRUPAL_MINIMUM_PHP',    '4.3.5');
 define('DRUPAL_MINIMUM_MYSQL',  '3.23.17'); // If using MySQL

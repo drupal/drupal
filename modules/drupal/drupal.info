@@ -1,4 +1,3 @@
-; $Id$
 name = Drupal
 description = Lets you register your site with a central server and improve ranking of Drupal projects by posting information on your installed modules and themes; also enables users to log in using a Drupal ID.
 package = Core - optional

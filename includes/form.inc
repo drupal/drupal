@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 /**
  * @defgroup form Form generation
