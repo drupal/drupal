@@ -19,7 +19,7 @@ function menu_help($path, $arg) {
     case 'admin/help#menu':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Menu module provides an interface for managing menus. A menu is a hierarchical collection of links, which can be within or external to the site, generally used for navigation. Each menu is rendered in a block that can be enabled and positioned through the <a href="@blocks"">Blocks administration page</a>. You can view and manage menus on the <a href="@menus">Menus administration page</a>. For more information, see the online handbook entry for the <a href="@menu">Menu module</a>.', array('@blocks' => url('admin/structure/block'), '@menus' => url('admin/structure/menu'), '@menu' => 'http://drupal.org/handbook/modules/menu/')) . '</p>';
+      $output .= '<p>' . t('The Menu module provides an interface for managing menus. A menu is a hierarchical collection of links, which can be within or external to the site, generally used for navigation. Each menu is rendered in a block that can be enabled and positioned through the <a href="@blocks">Blocks administration page</a>. You can view and manage menus on the <a href="@menus">Menus administration page</a>. For more information, see the online handbook entry for the <a href="@menu">Menu module</a>.', array('@blocks' => url('admin/structure/block'), '@menus' => url('admin/structure/menu'), '@menu' => 'http://drupal.org/handbook/modules/menu/')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Managing menus') . '</dt>';
