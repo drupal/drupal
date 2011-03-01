@@ -1026,7 +1026,7 @@ class FileTokenReplaceTestCase extends FileFieldTestCase {
 
     foreach ($tests as $input => $expected) {
       $output = token_replace($input, array('file' => $file), array('language' => $language));
-      $this->assertFalse(strcmp($output, $expected), t('Sanitized file token %token replaced.', array('%token' => $input)));
+      $this->assertEqual($output, $expected, t('Sanitized file token %token replaced.', array('%token' => $input)));
     }
 
     // Generate and test unsanitized tokens.
@@ -1038,7 +1038,7 @@ class FileTokenReplaceTestCase extends FileFieldTestCase {
 
     foreach ($tests as $input => $expected) {
       $output = token_replace($input, array('file' => $file), array('language' => $language, 'sanitize' => FALSE));
-      $this->assertFalse(strcmp($output, $expected), t('Unsanitized file token %token replaced.', array('%token' => $input)));
+      $this->assertEqual($output, $expected, t('Unsanitized file token %token replaced.', array('%token' => $input)));
     }
   }
 }

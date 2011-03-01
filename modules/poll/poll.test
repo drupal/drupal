@@ -652,7 +652,7 @@ class PollTokenReplaceTestCase extends PollTestCase {
 
     foreach ($tests as $input => $expected) {
       $output = token_replace($input, array('node' => $poll), array('language' => $language));
-      $this->assertFalse(strcmp($output, $expected), t('Sanitized poll token %token replaced.', array('%token' => $input)));
+      $this->assertEqual($output, $expected, t('Sanitized poll token %token replaced.', array('%token' => $input)));
     }
 
     // Generate and test unsanitized tokens.
@@ -660,7 +660,7 @@ class PollTokenReplaceTestCase extends PollTestCase {
 
     foreach ($tests as $input => $expected) {
       $output = token_replace($input, array('node' => $poll), array('language' => $language, 'sanitize' => FALSE));
-      $this->assertFalse(strcmp($output, $expected), t('Unsanitized poll token %token replaced.', array('%token' => $input)));
+      $this->assertEqual($output, $expected, t('Unsanitized poll token %token replaced.', array('%token' => $input)));
     }
   }
 }

@@ -1904,7 +1904,7 @@ class UserTokenReplaceTestCase extends DrupalWebTestCase {
 
     foreach ($tests as $input => $expected) {
       $output = token_replace($input, array('user' => $account), array('language' => $language));
-      $this->assertFalse(strcmp($output, $expected), t('Sanitized user token %token replaced.', array('%token' => $input)));
+      $this->assertEqual($output, $expected, t('Sanitized user token %token replaced.', array('%token' => $input)));
     }
 
     // Generate and test unsanitized tokens.
@@ -1914,7 +1914,7 @@ class UserTokenReplaceTestCase extends DrupalWebTestCase {
 
     foreach ($tests as $input => $expected) {
       $output = token_replace($input, array('user' => $account), array('language' => $language, 'sanitize' => FALSE));
-      $this->assertFalse(strcmp($output, $expected), t('Unsanitized user token %token replaced.', array('%token' => $input)));
+      $this->assertEqual($output, $expected, t('Unsanitized user token %token replaced.', array('%token' => $input)));
     }
   }
 }

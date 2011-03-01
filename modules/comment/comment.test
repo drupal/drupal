@@ -1698,7 +1698,7 @@ class CommentTokenReplaceTestCase extends CommentHelperCase {
 
     foreach ($tests as $input => $expected) {
       $output = token_replace($input, array('comment' => $comment), array('language' => $language));
-      $this->assertFalse(strcmp($output, $expected), t('Sanitized comment token %token replaced.', array('%token' => $input)));
+      $this->assertEqual($output, $expected, t('Sanitized comment token %token replaced.', array('%token' => $input)));
     }
 
     // Generate and test unsanitized tokens.
@@ -1714,7 +1714,7 @@ class CommentTokenReplaceTestCase extends CommentHelperCase {
 
     foreach ($tests as $input => $expected) {
       $output = token_replace($input, array('comment' => $comment), array('language' => $language, 'sanitize' => FALSE));
-      $this->assertFalse(strcmp($output, $expected), t('Unsanitized comment token %token replaced.', array('%token' => $input)));
+      $this->assertEqual($output, $expected, t('Unsanitized comment token %token replaced.', array('%token' => $input)));
     }
 
     // Load node so comment_count gets computed.
@@ -1727,7 +1727,7 @@ class CommentTokenReplaceTestCase extends CommentHelperCase {
 
     foreach ($tests as $input => $expected) {
       $output = token_replace($input, array('node' => $node), array('language' => $language));
-      $this->assertFalse(strcmp($output, $expected), t('Node comment token %token replaced.', array('%token' => $input)));
+      $this->assertEqual($output, $expected, t('Node comment token %token replaced.', array('%token' => $input)));
     }
   }
 }

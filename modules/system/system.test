@@ -1575,13 +1575,13 @@ class TokenReplaceTestCase extends DrupalWebTestCase {
 
     // Test that the clear parameter cleans out non-existent tokens.
     $result = token_replace($source, array('node' => $node), array('language' => $language, 'clear' => TRUE));
-    $result = $this->assertFalse(strcmp($target, $result), 'Valid tokens replaced while invalid tokens cleared out.');
+    $result = $this->assertEqual($target, $result, 'Valid tokens replaced while invalid tokens cleared out.');
 
     // Test without using the clear parameter (non-existant token untouched).
     $target .= '[user:name]';
     $target .= '[bogus:token]';
     $result = token_replace($source, array('node' => $node), array('language' => $language));
-    $this->assertFalse(strcmp($target, $result), 'Valid tokens replaced while invalid tokens ignored.');
+    $this->assertEqual($target, $result, 'Valid tokens replaced while invalid tokens ignored.');
 
     // Check that the results of token_generate are sanitized properly. This does NOT
     // test the cleanliness of every token -- just that the $sanitize flag is being
@@ -1589,10 +1589,10 @@ class TokenReplaceTestCase extends DrupalWebTestCase {
     // token, [node:title].
     $raw_tokens = array('title' => '[node:title]');
     $generated = token_generate('node', $raw_tokens, array('node' => $node));
-    $this->assertFalse(strcmp($generated['[node:title]'], check_plain($node->title)), t('Token sanitized.'));
+    $this->assertEqual($generated['[node:title]'], check_plain($node->title), t('Token sanitized.'));
 
     $generated = token_generate('node', $raw_tokens, array('node' => $node), array('sanitize' => FALSE));
-    $this->assertFalse(strcmp($generated['[node:title]'], $node->title), t('Unsanitized token generated properly.'));
+    $this->assertEqual($generated['[node:title]'], $node->title, t('Unsanitized token generated properly.'));
   }
 
   /**
@@ -1624,7 +1624,7 @@ class TokenReplaceTestCase extends DrupalWebTestCase {
 
     foreach ($tests as $input => $expected) {
       $output = token_replace($input, array(), array('language' => $language));
-      $this->assertFalse(strcmp($output, $expected), t('Sanitized system site information token %token replaced.', array('%token' => $input)));
+      $this->assertEqual($output, $expected, t('Sanitized system site information token %token replaced.', array('%token' => $input)));
     }
 
     // Generate and test unsanitized tokens.
@@ -1633,7 +1633,7 @@ class TokenReplaceTestCase extends DrupalWebTestCase {
 
     foreach ($tests as $input => $expected) {
       $output = token_replace($input, array(), array('language' => $language, 'sanitize' => FALSE));
-      $this->assertFalse(strcmp($output, $expected), t('Unsanitized system site information token %token replaced.', array('%token' => $input)));
+      $this->assertEqual($output, $expected, t('Unsanitized system site information token %token replaced.', array('%token' => $input)));
     }
   }
 
@@ -1660,7 +1660,7 @@ class TokenReplaceTestCase extends DrupalWebTestCase {
 
     foreach ($tests as $input => $expected) {
       $output = token_replace($input, array('date' => $date), array('language' => $language));
-      $this->assertFalse(strcmp($output, $expected), t('Date token %token replaced.', array('%token' => $input)));
+      $this->assertEqual($output, $expected, t('Date token %token replaced.', array('%token' => $input)));
     }
   }
 }

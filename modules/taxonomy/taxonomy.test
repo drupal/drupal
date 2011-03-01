@@ -1107,7 +1107,7 @@ class TaxonomyTokenReplaceTestCase extends TaxonomyWebTestCase {
 
     foreach ($tests as $input => $expected) {
       $output = token_replace($input, array('term' => $term1), array('language' => $language));
-      $this->assertFalse(strcmp($output, $expected), t('Sanitized taxonomy term token %token replaced.', array('%token' => $input)));
+      $this->assertEqual($output, $expected, t('Sanitized taxonomy term token %token replaced.', array('%token' => $input)));
     }
 
     // Generate and test sanitized tokens for term2.
@@ -1127,7 +1127,7 @@ class TaxonomyTokenReplaceTestCase extends TaxonomyWebTestCase {
 
     foreach ($tests as $input => $expected) {
       $output = token_replace($input, array('term' => $term2), array('language' => $language));
-      $this->assertFalse(strcmp($output, $expected), t('Sanitized taxonomy term token %token replaced.', array('%token' => $input)));
+      $this->assertEqual($output, $expected, t('Sanitized taxonomy term token %token replaced.', array('%token' => $input)));
     }
 
     // Generate and test unsanitized tokens.
@@ -1138,7 +1138,7 @@ class TaxonomyTokenReplaceTestCase extends TaxonomyWebTestCase {
 
     foreach ($tests as $input => $expected) {
       $output = token_replace($input, array('term' => $term2), array('language' => $language, 'sanitize' => FALSE));
-      $this->assertFalse(strcmp($output, $expected), t('Unsanitized taxonomy term token %token replaced.', array('%token' => $input)));
+      $this->assertEqual($output, $expected, t('Unsanitized taxonomy term token %token replaced.', array('%token' => $input)));
     }
 
     // Generate and test sanitized tokens.
@@ -1154,7 +1154,7 @@ class TaxonomyTokenReplaceTestCase extends TaxonomyWebTestCase {
 
     foreach ($tests as $input => $expected) {
       $output = token_replace($input, array('vocabulary' => $this->vocabulary), array('language' => $language));
-      $this->assertFalse(strcmp($output, $expected), t('Sanitized taxonomy vocabulary token %token replaced.', array('%token' => $input)));
+      $this->assertEqual($output, $expected, t('Sanitized taxonomy vocabulary token %token replaced.', array('%token' => $input)));
     }
 
     // Generate and test unsanitized tokens.
@@ -1163,7 +1163,7 @@ class TaxonomyTokenReplaceTestCase extends TaxonomyWebTestCase {
 
     foreach ($tests as $input => $expected) {
       $output = token_replace($input, array('vocabulary' => $this->vocabulary), array('language' => $language, 'sanitize' => FALSE));
-      $this->assertFalse(strcmp($output, $expected), t('Unsanitized taxonomy vocabulary token %token replaced.', array('%token' => $input)));
+      $this->assertEqual($output, $expected, t('Unsanitized taxonomy vocabulary token %token replaced.', array('%token' => $input)));
     }
   }
 }
