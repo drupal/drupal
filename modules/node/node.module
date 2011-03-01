@@ -2192,7 +2192,7 @@ function node_get_recent($number = 10) {
   }
   $nids = $query
     ->fields('n', array('nid'))
-    ->orderBy('changed', 'DESC')
+    ->orderBy('n.changed', 'DESC')
     ->range(0, $number)
     ->addTag('node_access')
     ->execute()
