@@ -566,8 +566,12 @@ function taxonomy_update_7005(&$sandbox) {
   // of term references stored so far for the current revision, which
   // provides the delta value for each term reference data insert. The
   // deltas are reset for each new revision.
-
-  $field_info = _update_7000_field_read_fields();
+  
+  $conditions = array(
+    'type' => 'taxonomy_term_reference',
+    'deleted' => 0,
+  );
+  $field_info = _update_7000_field_read_fields($conditions, 'field_name');
 
   // This is a multi-pass update. On the first call we need to initialize some
   // variables.

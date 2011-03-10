@@ -309,18 +309,27 @@ function _update_7000_field_delete_instance($field_name, $entity_type, $bundle) 
 /**
  * Utility function: fetch all the field definitions from the database.
  *
+ * Warning: unlike the field_read_fields() API function, this function returns
+ * all fields by default, including deleted and inactive fields, unless
+ * specified otherwise in the $conditions parameter.
+ *
  * @param $conditions
  *   An array of conditions to limit the select query to.
+ * @param $key
+ *   The name of the field property the return array is indexed by. Using
+ *   anything else than 'id' might cause incomplete results if the $conditions
+ *   do not filter out deleted fields.
+ *
+ * @return
+ *   An array of fields matching $conditions, keyed by the property specified
+ *   by the $key parameter.
  */
-function _update_7000_field_read_fields(array $conditions = array()) {
+function _update_7000_field_read_fields(array $conditions = array(), $key = 'id') {
   $fields = array();
   $query = db_select('field_config', 'fc', array('fetch' => PDO::FETCH_ASSOC))
-    ->fields('fc')
-    ->condition('deleted', 0);
-  if (!empty($conditions)) {
-    foreach ($conditions as $column => $value) {
-      $query->condition($column, $value);
-    }
+    ->fields('fc');
+  foreach ($conditions as $column => $value) {
+    $query->condition($column, $value);
   }
   foreach ($query->execute() as $record) {
     $field = unserialize($record['data']);
@@ -337,7 +346,7 @@ function _update_7000_field_read_fields(array $conditions = array()) {
     $field['translatable'] = $record['translatable'];
     $field['deleted'] = $record['deleted'];
 
-    $fields[$field['field_name']] = $field;
+    $fields[$field[$key]] = $field;
   }
   return $fields;
 }

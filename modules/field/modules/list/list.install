@@ -50,7 +50,7 @@ function list_field_schema($field) {
  */
 function list_update_7001() {
   $fields = _update_7000_field_read_fields(array('module' => 'list'));
-  foreach ($fields as $field_name => $field) {
+  foreach ($fields as $field) {
     $update = array();
 
     // Translate the old string format into the new array format.
@@ -114,4 +114,16 @@ function _list_update_7001_extract_allowed_values($string, $position_keys) {
   }
 
   return $values;
+}
+
+/**
+ * Re-apply list_update_7001() for deleted fields.
+ */
+function list_update_7002() {
+  // See http://drupal.org/node/1022924: list_update_7001() intitally
+  // overlooked deleted fields, which then caused fatal errors when the fields
+  // were being purged.
+  // list_update_7001() has the required checks to ensure it is reentrant, so
+  // it can simply be executed once more..
+  list_update_7001();
 }
