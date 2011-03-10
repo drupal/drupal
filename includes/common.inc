@@ -2601,7 +2601,8 @@ function drupal_exit($destination = NULL) {
  *   A linear array.
  * @param $function
  *   A name of a function to apply to all values before output.
- * @result
+ *
+ * @return
  *   An associative array.
  */
 function drupal_map_assoc($array, $function = NULL) {
