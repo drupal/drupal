@@ -7388,8 +7388,7 @@ function entity_create_stub_entity($entity_type, $ids) {
 /**
  * Load entities from the database.
  *
- * This function should be used whenever you need to load more than one entity
- * from the database. The entities are loaded into memory and will not require
+ * The entities are stored in a static memory cache, and will not require
  * database access if loaded again during the same page request.
  *
  * The actual loading is done through a class that has to implement the
