@@ -516,8 +516,6 @@ function hook_entity_prepare_view($entities, $type) {
 /**
  * Perform periodic actions.
  *
- * This hook will only be called if cron.php is run (e.g. by crontab).
- *
  * Modules that require some commands to be executed periodically can
  * implement hook_cron(). The engine will then call the hook whenever a cron
  * run happens, as defined by the administrator. Typical tasks managed by
