@@ -1056,8 +1056,6 @@ function hook_prepare($node) {
  * displayed automatically by the node module. This hook just needs to
  * return the node title and form editing fields specific to the node type.
  *
- * For a detailed usage example, see node_example.module.
- *
  * @param $node
  *   The node being added or edited.
  * @param $form_state
