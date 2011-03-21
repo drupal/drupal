@@ -2,6 +2,6 @@ name = Poll
 description = Allows your site to capture votes on different topics in the form of multiple choice questions.
 package = Core
 version = VERSION
-core = 7.x
+core = 8.x
 files[] = poll.test
 stylesheets[all][] = poll.css

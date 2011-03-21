@@ -2,6 +2,6 @@ name = Path
 description = Allows users to rename URLs.
 package = Core
 version = VERSION
-core = 7.x
+core = 8.x
 files[] = path.test
 configure = admin/config/search/path

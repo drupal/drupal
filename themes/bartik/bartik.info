@@ -3,7 +3,7 @@ name = Bartik
 description = A flexible, recolorable theme with many regions.
 package = Core
 version = VERSION
-core = 7.x
+core = 8.x
 
 stylesheets[all][] = css/layout.css
 stylesheets[all][] = css/style.css

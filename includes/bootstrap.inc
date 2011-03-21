@@ -8,12 +8,12 @@
 /**
  * The current system version.
  */
-define('VERSION', '7.0-dev');
+define('VERSION', '8.0-dev');
 
 /**
  * Core API compatibility.
  */
-define('DRUPAL_CORE_COMPATIBILITY', '7.x');
+define('DRUPAL_CORE_COMPATIBILITY', '8.x');
 
 /**
  * Minimum supported version of PHP.

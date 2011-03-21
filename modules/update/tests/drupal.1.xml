@@ -3,7 +3,7 @@
 <title>Drupal</title>
 <short_name>drupal</short_name>
 <dc:creator>Drupal</dc:creator>
-<api_version>7.x</api_version>
+<api_version>8.x</api_version>
 <recommended_major>7</recommended_major>
 <supported_majors>7</supported_majors>
 <default_major>7</default_major>

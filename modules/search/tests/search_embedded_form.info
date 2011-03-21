@@ -2,5 +2,5 @@ name = "Search embedded form"
 description = "Support module for search module testing of embedded forms."
 package = Testing
 version = VERSION
-core = 7.x
+core = 8.x
 hidden = TRUE

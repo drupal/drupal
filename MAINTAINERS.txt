@@ -10,9 +10,8 @@ particular areas of Drupal.  All of them are subject to change.
 Branch maintainers
 ------------------
 
-Drupal 7
+Drupal 8
 - Dries Buytaert 'dries' <http://drupal.org/user/1>
-- Angela Byron 'webchick' <http://drupal.org/user/24967>
 
 
 Component maintainers
@@ -126,7 +125,7 @@ Topic coordinators
 
 Accessibility
 - Everett Zufelt 'Everett Zufelt' <http://drupal.org/user/406552>
-- Brandon Bowersox 'brandonojc' <http://drupal.org/user/186415> 
+- Brandon Bowersox 'brandonojc' <http://drupal.org/user/186415>
 
 Documentation
 - Ariane Khachatourians 'arianek' <http://drupal.org/user/158886>

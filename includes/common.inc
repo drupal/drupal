@@ -7166,7 +7166,7 @@ function debug($data, $label = NULL, $print_r = FALSE) {
  * Parse a dependency for comparison by drupal_check_incompatibility().
  *
  * @param $dependency
- *   A dependency string, for example 'foo (>=7.x-4.5-beta5, 3.x)'.
+ *   A dependency string, for example 'foo (>=8.x-4.5-beta5, 3.x)'.
  * @return
  *   An associative array with three keys:
  *   - 'name' includes the name of the thing to depend on (e.g. 'foo').
@@ -7183,7 +7183,7 @@ function drupal_parse_dependency($dependency) {
   // We use named subpatterns and support every op that version_compare
   // supports. Also, op is optional and defaults to equals.
   $p_op = '(?P<operation>!=|==|=|<|<=|>|>=|<>)?';
-  // Core version is always optional: 7.x-2.x and 2.x is treated the same.
+  // Core version is always optional: 8.x-2.x and 2.x is treated the same.
   $p_core = '(?:' . preg_quote(DRUPAL_CORE_COMPATIBILITY) . '-)?';
   $p_major = '(?P<major>\d+)';
   // By setting the minor version to x, branches can be matched.

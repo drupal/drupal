@@ -3,7 +3,7 @@
 <title>Drupal</title>
 <short_name>drupal</short_name>
 <dc:creator>Drupal</dc:creator>
-<api_version>7.x</api_version>
+<api_version>8.x</api_version>
 <recommended_major>7</recommended_major>
 <supported_majors>7</supported_majors>
 <default_major>7</default_major>
@@ -31,14 +31,14 @@
   </terms>
  </release>
  <release>
-  <name>Drupal 7.x-dev</name>
-  <version>7.x-dev</version>
+  <name>Drupal 8.x-dev</name>
+  <version>8.x-dev</version>
   <tag>DRUPAL-7</tag>
   <version_major>7</version_major>
   <version_extra>dev</version_extra>
   <status>published</status>
   <release_link>http://example.com/drupal-7-x-dev-release</release_link>
-  <download_link>http://example.com/drupal-7.x-dev.tar.gz</download_link>
+  <download_link>http://example.com/drupal-8.x-dev.tar.gz</download_link>
   <date>1250424581</date>
   <mdhash>b966255555d9c9b86d480ca08cfaa98e</mdhash>
   <filesize>2147483648</filesize>

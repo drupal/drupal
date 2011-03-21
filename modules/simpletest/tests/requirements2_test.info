@@ -4,5 +4,5 @@ dependencies[] = requirements1_test
 dependencies[] = comment
 package = Core
 version = VERSION
-core = 7.x
+core = 8.x
 hidden = TRUE

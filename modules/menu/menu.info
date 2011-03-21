@@ -2,6 +2,6 @@ name = Menu
 description = Allows administrators to customize the site navigation menu.
 package = Core
 version = VERSION
-core = 7.x
+core = 8.x
 files[] = menu.test
 configure = admin/structure/menu

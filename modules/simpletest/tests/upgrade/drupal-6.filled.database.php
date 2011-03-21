@@ -12431,7 +12431,7 @@ db_insert('system')->fields(array(
   'bootstrap' => '0',
   'schema_version' => '-1',
   'weight' => '0',
-  'info' => 'a:9:{s:4:"name";s:12:"Drush extras";s:11:"description";s:43:"Useful Drush commands. Requires Drush core.";s:7:"package";s:11:"Development";s:4:"core";s:3:"7.x";s:5:"files";a:7:{i:0;s:19:"drush_extras.module";i:1;s:12:"pm.drush.inc";i:2;s:16:"pm_cvs.drush.inc";i:3;s:16:"pm_svn.drush.inc";i:4;s:20:"simpletest.drush.inc";i:5;s:13:"sql.drush.inc";i:6;s:15:"tools.drush.inc";}s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:7:"version";N;s:3:"php";s:5:"4.3.5";}',
+  'info' => 'a:9:{s:4:"name";s:12:"Drush extras";s:11:"description";s:43:"Useful Drush commands. Requires Drush core.";s:7:"package";s:11:"Development";s:4:"core";s:3:"8.x";s:5:"files";a:7:{i:0;s:19:"drush_extras.module";i:1;s:12:"pm.drush.inc";i:2;s:16:"pm_cvs.drush.inc";i:3;s:16:"pm_svn.drush.inc";i:4;s:20:"simpletest.drush.inc";i:5;s:13:"sql.drush.inc";i:6;s:15:"tools.drush.inc";}s:12:"dependencies";a:0:{}s:10:"dependents";a:0:{}s:7:"version";N;s:3:"php";s:5:"4.3.5";}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/mymap/mymap.module',

@@ -1,6 +1,6 @@
 name = "Database Test"
 description = "Support module for Database layer tests."
-core = 7.x
+core = 8.x
 package = Testing
 version = VERSION
 hidden = TRUE

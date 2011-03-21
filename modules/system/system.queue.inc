@@ -215,7 +215,7 @@ class SystemQueue implements DrupalReliableQueueInterface {
   }
 
   public function createItem($data) {
-    // During a Drupal 6.x to 7.x update, drupal_get_schema() does not contain
+    // During a Drupal 6.x to 8.x update, drupal_get_schema() does not contain
     // the queue table yet, so we cannot rely on drupal_write_record().
     $query = db_insert('queue')
       ->fields(array(

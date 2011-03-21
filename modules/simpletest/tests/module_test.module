@@ -46,7 +46,7 @@ function module_test_system_info_alter(&$info, $file, $type) {
     }
     elseif ($file->name == 'php') {
       // Set php module to a version compatible with the above.
-      $info['version'] = '7.x-1.0';
+      $info['version'] = '8.x-1.0';
     }
   }
   if ($file->name == 'seven' && $type == 'theme') {

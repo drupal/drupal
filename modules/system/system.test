@@ -411,7 +411,7 @@ class ModuleVersionTestCase extends ModuleTestCase {
    */
   function testModuleVersions() {
     $dependencies = array(
-      // Alternating between being compatible and incompatible with 7.x-2.4-beta3.
+      // Alternating between being compatible and incompatible with 8.x-2.4-beta3.
       // The first is always a compatible.
       'common_test',
       // Branch incompatibility.
@@ -427,9 +427,9 @@ class ModuleVersionTestCase extends ModuleTestCase {
       // Another branch compatibility.
       'common_test (>=2.x)',
       // Nonsense, misses a dash. Incompatible with everything.
-      'common_test (=7.x2.x, >=2.4)',
+      'common_test (=8.x2.x, >=2.4)',
       // Core version is optional. Compatible.
-      'common_test (=7.x-2.x, >=2.4-alpha2)',
+      'common_test (=8.x-2.x, >=2.4-alpha2)',
       // Test !=, explicitly incompatible.
       'common_test (=2.x, !=2.4-beta3)',
       // Three operations. Compatible.

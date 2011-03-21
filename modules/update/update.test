@@ -239,7 +239,7 @@ class UpdateTestContribCase extends UpdateTestHelper {
       ),
       'aaa_update_test' => array(
         'project' => 'aaa_update_test',
-        'version' => '7.x-1.0',
+        'version' => '8.x-1.0',
         'hidden' => FALSE,
       ),
     );
@@ -267,7 +267,7 @@ class UpdateTestContribCase extends UpdateTestHelper {
       ),
       'aaa_update_test' => array(
         'project' => 'aaa_update_test',
-        'version' => '7.x-1.0',
+        'version' => '8.x-1.0',
         'hidden' => FALSE,
       ),
     );
@@ -304,21 +304,21 @@ class UpdateTestContribCase extends UpdateTestHelper {
       '#all' => array(
         'version' => '7.0',
       ),
-      // All the rest should be visible as contrib modules at version 7.x-1.0.
+      // All the rest should be visible as contrib modules at version 8.x-1.0.
 
       // aaa_update_test needs to be part of the "CCC Update test" project,
       // which would throw off the report if we weren't properly sorting by
       // the project names.
       'aaa_update_test' => array(
         'project' => 'ccc_update_test',
-        'version' => '7.x-1.0',
+        'version' => '8.x-1.0',
         'hidden' => FALSE,
       ),
 
       // This should be its own project, and listed first on the report.
       'bbb_update_test' => array(
         'project' => 'bbb_update_test',
-        'version' => '7.x-1.0',
+        'version' => '8.x-1.0',
         'hidden' => FALSE,
       ),
 
@@ -326,7 +326,7 @@ class UpdateTestContribCase extends UpdateTestHelper {
       // should come after the bbb_update_test project.
       'ccc_update_test' => array(
         'project' => 'ccc_update_test',
-        'version' => '7.x-1.0',
+        'version' => '8.x-1.0',
         'hidden' => FALSE,
       ),
     );
@@ -377,13 +377,13 @@ class UpdateTestContribCase extends UpdateTestHelper {
       // Show the update_test_basetheme
       'update_test_basetheme' => array(
         'project' => 'update_test_basetheme',
-        'version' => '7.x-1.0',
+        'version' => '8.x-1.0',
         'hidden' => FALSE,
       ),
       // Show the update_test_subtheme
       'update_test_subtheme' => array(
         'project' => 'update_test_subtheme',
-        'version' => '7.x-1.0',
+        'version' => '8.x-1.0',
         'hidden' => FALSE,
       ),
     );
@@ -418,13 +418,13 @@ class UpdateTestContribCase extends UpdateTestHelper {
       // The update_test_basetheme should be visible and up to date.
       'update_test_basetheme' => array(
         'project' => 'update_test_basetheme',
-        'version' => '7.x-1.1',
+        'version' => '8.x-1.1',
         'hidden' => FALSE,
       ),
       // The update_test_subtheme should be visible and up to date.
       'update_test_subtheme' => array(
         'project' => 'update_test_subtheme',
-        'version' => '7.x-1.0',
+        'version' => '8.x-1.0',
         'hidden' => FALSE,
       ),
     );
@@ -464,17 +464,17 @@ class UpdateTestContribCase extends UpdateTestHelper {
       ),
       'aaa_update_test' => array(
         'project' => 'aaa_update_test',
-        'version' => '7.x-1.0',
+        'version' => '8.x-1.0',
         'hidden' => FALSE,
       ),
       'bbb_update_test' => array(
         'project' => 'bbb_update_test',
-        'version' => '7.x-1.0',
+        'version' => '8.x-1.0',
         'hidden' => FALSE,
       ),
       'ccc_update_test' => array(
         'project' => 'ccc_update_test',
-        'version' => '7.x-1.0',
+        'version' => '8.x-1.0',
         'hidden' => FALSE,
       ),
     );
@@ -513,7 +513,7 @@ class UpdateTestContribCase extends UpdateTestHelper {
   /**
    * Check that hook_update_status_alter() works to change a status.
    *
-   * We provide the same external data as if aaa_update_test 7.x-1.0 were
+   * We provide the same external data as if aaa_update_test 8.x-1.0 were
    * installed and that was the latest release. Then we use
    * hook_update_status_alter() to try to mark this as missing a security
    * update, then assert if we see the appropriate warnings on the right
@@ -530,7 +530,7 @@ class UpdateTestContribCase extends UpdateTestHelper {
       ),
       'aaa_update_test' => array(
         'project' => 'aaa_update_test',
-        'version' => '7.x-1.0',
+        'version' => '8.x-1.0',
         'hidden' => FALSE,
       ),
     );

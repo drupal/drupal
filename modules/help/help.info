@@ -2,5 +2,5 @@ name = Help
 description = Manages the display of online help.
 package = Core
 version = VERSION
-core = 7.x
+core = 8.x
 files[] = help.test

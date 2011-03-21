@@ -217,7 +217,7 @@ function system_test_system_info_alter(&$info, $file, $type) {
     }
     if ($file->name == 'common_test') {
       $info['hidden'] = FALSE;
-      $info['version'] = '7.x-2.4-beta3';
+      $info['version'] = '8.x-2.4-beta3';
     }
   }
 

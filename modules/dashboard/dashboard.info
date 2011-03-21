@@ -1,6 +1,6 @@
 name = Dashboard
 description = Provides a dashboard page in the administrative interface for organizing administrative tasks and tracking information within your site.
-core = 7.x
+core = 8.x
 package = Core
 version = VERSION
 files[] = dashboard.test

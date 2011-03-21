@@ -1,6 +1,6 @@
 name = "Field API Test"
 description = "Support module for the Field API tests."
-core = 7.x
+core = 8.x
 package = Testing
 files[] = field_test.entity.inc
 version = VERSION

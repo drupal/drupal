@@ -2,6 +2,6 @@ name = OpenID dummy provider
 description = "OpenID provider used for testing."
 package = Testing
 version = VERSION
-core = 7.x
+core = 8.x
 dependencies[] = openid
 hidden = TRUE

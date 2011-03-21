@@ -1,5 +1,8 @@
 
-Drupal 7.0, xxxx-xx-xx (development version)
+Drupal 8.0, xxxx-xx-xx (development version)
+----------------------
+
+Drupal 7.0, 2011-01-05
 ----------------------
 - Database:
     * Fully rewritten database layer utilizing PHP 5's PDO abstraction layer.
