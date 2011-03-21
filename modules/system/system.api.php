@@ -75,6 +75,7 @@ function hook_hook_info_alter(&$hooks) {
  *     Leave blank to use the DrupalDefaultEntityController implementation.
  *   - base table: (used by DrupalDefaultEntityController) The name of the
  *     entity type's base table.
+ *   - revision table: The name of the entity type's revision table (if any).
  *   - static cache: (used by DrupalDefaultEntityController) FALSE to disable
  *     static caching of entities during a page request. Defaults to TRUE.
  *   - field cache: (used by Field API loading and saving of field data) FALSE
@@ -96,7 +97,8 @@ function hook_hook_info_alter(&$hooks) {
  *     specify a callback function here, which will be called to determine the
  *     entity label. See also the entity_label() function, which implements this
  *     logic.
- *   - fieldable: Set to TRUE if you want your entity type to be fieldable.
+ *   - fieldable: Set to TRUE if you want your entity type to accept fields
+ *     being attached to it.
  *   - translation: An associative array of modules registered as field
  *     translation handlers. Array keys are the module names, array values
  *     can be any data structure the module uses to provide field translation.
