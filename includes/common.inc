@@ -626,14 +626,15 @@ function drupal_encode_path($path) {
  * This issues an on-site HTTP redirect. The function makes sure the redirected
  * URL is formatted correctly.
  *
- * Usually the redirected URL is constructed from this function's input
- * parameters. However you may override that behavior by setting a
- * destination in either the $_REQUEST-array (i.e. by using
- * the query string of an URI) This is used to direct the user back to
- * the proper page after completing a form. For example, after editing
- * a post on the 'admin/content'-page or after having logged on using the
- * 'user login'-block in a sidebar. The function drupal_get_destination()
- * can be used to help set the destination URL.
+ * If a destination was specified in the current request's URI (i.e.,
+ * $_GET['destination']) then it will override the $path and $options values
+ * passed to this function. This provides the flexibility to build a link to
+ * user/login and override the default redirection so that the user is
+ * redirected to a specific path after logging in:
+ * @code
+ *   $destination = array('destination' => "node/$node->nid");
+ *   l(t('Log in'), array('@login' => url('user/login', array('query' => array($destination)))));
+ * @endcode
  *
  * Drupal will ensure that messages set by drupal_set_message() and other
  * session data are written to the database before the user is redirected.
