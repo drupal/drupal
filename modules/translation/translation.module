@@ -117,11 +117,10 @@ function translation_form_node_type_form_alter(&$form, &$form_state) {
 }
 
 /**
- * Implements hook_form_alter().
+ * Implements hook_form_BASE_FORM_ID_alter().
  *
- * - Add translation option to content type form.
- * - Alters language fields on node forms when a translation
- *   is about to be created.
+ * This function alters language fields on node edit forms when a translation is
+ * about to be created.
  */
 function translation_form_node_form_alter(&$form, &$form_state) {
   if (translation_supported_type($form['#node']->type)) {
