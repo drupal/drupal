@@ -257,7 +257,7 @@ function block_page_build(&$page) {
   // The theme system might not yet be initialized. We need $theme.
   drupal_theme_initialize();
 
-  // Populate all block regions
+  // Fetch a list of regions for the current theme.
   $all_regions = system_region_list($theme);
 
   $item = menu_get_item();
