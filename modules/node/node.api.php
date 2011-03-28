@@ -579,7 +579,7 @@ function hook_node_load($nodes, $types) {
  * @return
  *   NODE_ACCESS_ALLOW if the operation is to be allowed;
  *   NODE_ACCESS_DENY if the operation is to be denied;
- *   NODE_ACCESSS_IGNORE to not affect this operation at all.
+ *   NODE_ACCESS_IGNORE to not affect this operation at all.
  */
 function hook_node_access($node, $op, $account) {
   $type = is_string($node) ? $node : $node->type;
