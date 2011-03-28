@@ -2,7 +2,13 @@
 
 /**
  * @file
- * Allows administrators to customize the site navigation menu.
+ * Allows administrators to customize the site's navigation menus.
+ *
+ * A menu (in this context) is a hierarchical collection of links, generally
+ * used for navigation. This is not to be confused with the
+ * @link menu Menu system @endlink of menu.inc and hook_menu(), which defines
+ * page routing requests for Drupal, and also allows the defined page routing
+ * URLs to be added to the main site navigation menu.
  */
 
 /**
