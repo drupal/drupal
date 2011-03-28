@@ -31,18 +31,12 @@ function search_reindex_confirm_submit(&$form, &$form_state) {
 function _search_get_module_names() {
 
   $search_info = search_get_info(TRUE);
-  $modules = db_select('system', 's')
-    ->fields('s', array('name', 'info'))
-    ->condition('s.status', 1)
-    ->condition('s.type', 'module')
-    ->condition('s.name', array_keys($search_info), 'IN')
-    ->orderBy('s.name')
-    ->execute();
+  $system_info = system_get_info('module');
   $names = array();
-  foreach ($modules as $item) {
-    $info = unserialize($item->info);
-    $names[$item->name] = $info['name'];
+  foreach ($search_info as $module => $info) {
+    $names[$module] = $system_info[$module]['name'];
   }
+  asort($names, SORT_STRING);
   return $names;
 }
 
@@ -114,19 +108,20 @@ function search_admin_settings($form) {
     '#type' => 'fieldset',
     '#title' => t('Active search modules ')
   );
+  $module_options = _search_get_module_names();
   $form['active']['search_active_modules'] = array(
     '#type' => 'checkboxes',
     '#title' => t('Active modules'),
     '#title_display' => 'invisible',
     '#default_value' => variable_get('search_active_modules', array('node', 'user')),
-    '#options' => _search_get_module_names(),
+    '#options' => $module_options,
     '#description' => t('Choose which search modules are active from the available modules.')
   );
   $form['active']['search_default_module'] = array(
     '#title' => t('Default search module'),
     '#type' => 'radios',
     '#default_value' => variable_get('search_default_module', 'node'),
-    '#options' => _search_get_module_names(),
+    '#options' => $module_options,
     '#description' => t('Choose which search module is the default.')
   );
   $form['#validate'][] = 'search_admin_settings_validate';
