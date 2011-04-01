@@ -17,37 +17,37 @@ function update_test_1_update_dependencies() {
   // the correct array structure. Therefore, we use updates from System module
   // (which have already run), so that they will not get in the way of other
   // tests.
-  $dependencies['system'][7000] = array(
+  $dependencies['system'][8000] = array(
     // Compare to update_test_2_update_dependencies(), where the same System
     // module update function is forced to depend on an update function from a
     // different module. This allows us to test that both dependencies are
     // correctly recorded.
-    'update_test_1' => 7000,
+    'update_test_1' => 8000,
   );
-  $dependencies['system'][7001] = array(
+  $dependencies['system'][8001] = array(
     // Compare to update_test_2_update_dependencies(), where the same System
     // module update function is forced to depend on a different update
     // function within the same module. This allows us to test that only the
     // dependency on the higher-numbered update function is recorded.
-    'update_test_1' => 7002,
+    'update_test_1' => 8002,
   );
   return $dependencies;
 }
 
 /**
- * Dummy update_test_1 update 7000.
+ * Dummy update_test_1 update 8000.
  */
-function update_test_1_update_7000() {
+function update_test_1_update_8000() {
 }
 
 /**
- * Dummy update_test_1 update 7001.
+ * Dummy update_test_1 update 8001.
  */
-function update_test_1_update_7001() {
+function update_test_1_update_8001() {
 }
 
 /**
- * Dummy update_test_1 update 7002.
+ * Dummy update_test_1 update 8002.
  */
-function update_test_1_update_7002() {
+function update_test_1_update_8002() {
 }

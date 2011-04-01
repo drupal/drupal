@@ -278,31 +278,3 @@ function aggregator_schema() {
 
   return $schema;
 }
-
-/**
- * Add hash column to aggregator_feed table.
- */
-function aggregator_update_7000() {
-  db_add_field('aggregator_feed', 'hash', array('type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''));
-}
-
-/**
- * Add aggregator teaser length to settings from old global default teaser length
- */
-function aggregator_update_7001() {
-  variable_set('aggregator_teaser_length', variable_get('teaser_length'));
-}
-
-/**
- * Add queued timestamp.
- */
-function aggregator_update_7002() {
-  db_add_field('aggregator_feed', 'queued', array(
-    'type' => 'int',
-    'not null' => TRUE,
-    'default' => 0,
-    'description' => 'Time when this feed was queued for refresh, 0 if not queued.',
-  ));
-  db_add_index('aggregator_feed', 'queued', array('queued'));
-}
-

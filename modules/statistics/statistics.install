@@ -134,25 +134,3 @@ function statistics_schema() {
 
   return $schema;
 }
-
-/**
- * @addtogroup updates-6.x-to-7.x
- * @{
- */
-
-/**
- * Update the {accesslog}.sid column to match the length of {sessions}.sid
- */
-function statistics_update_7000() {
-  db_change_field('accesslog', 'sid', 'sid', array(
-    'type' => 'varchar',
-    'length' => 128,
-    'not null' => TRUE,
-    'default' => '',
-    'description' => 'Browser session ID of user that visited page.',
-  ));
-}
-
-/**
- * @} End of "addtogroup updates-6.x-to-7.x"
- */

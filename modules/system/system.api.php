@@ -3206,21 +3206,21 @@ function hook_update_N(&$sandbox) {
  * @see hook_update_N()
  */
 function hook_update_dependencies() {
-  // Indicate that the mymodule_update_7000() function provided by this module
-  // must run after the another_module_update_7002() function provided by the
+  // Indicate that the mymodule_update_8000() function provided by this module
+  // must run after the another_module_update_8002() function provided by the
   // 'another_module' module.
-  $dependencies['mymodule'][7000] = array(
-    'another_module' => 7002,
+  $dependencies['mymodule'][8000] = array(
+    'another_module' => 8002,
   );
-  // Indicate that the mymodule_update_7001() function provided by this module
-  // must run before the yet_another_module_update_7004() function provided by
+  // Indicate that the mymodule_update_8001() function provided by this module
+  // must run before the yet_another_module_update_8004() function provided by
   // the 'yet_another_module' module. (Note that declaring dependencies in this
   // direction should be done only in rare situations, since it can lead to the
   // following problem: If a site has already run the yet_another_module
   // module's database updates before it updates its codebase to pick up the
   // newest mymodule code, then the dependency declared here will be ignored.)
-  $dependencies['yet_another_module'][7004] = array(
-    'mymodule' => 7001,
+  $dependencies['yet_another_module'][8004] = array(
+    'mymodule' => 8001,
   );
   return $dependencies;
 }

@@ -230,7 +230,8 @@ function user_hash_password($password, $count_log2 = 0) {
 function user_check_password($password, $account) {
   if (substr($account->pass, 0, 2) == 'U$') {
     // This may be an updated password from user_update_7000(). Such hashes
-    // have 'U' added as the first character and need an extra md5().
+    // have 'U' added as the first character and need an extra md5() (see the
+    // Drupal 7 documentation).
     $stored_hash = substr($account->pass, 1);
     $password = md5($password);
   }
@@ -264,7 +265,7 @@ function user_check_password($password, $account) {
  * password is available. A new hash is needed when the desired iteration count
  * has changed through a change in the variable password_count_log2 or
  * DRUPAL_HASH_COUNT or if the user's password hash was generated in an update
- * like user_update_7000().
+ * like user_update_7000() (see the Drupal 7 documentation).
  *
  * Alternative implementations of this function might use other criteria based
  * on the fields in $account.

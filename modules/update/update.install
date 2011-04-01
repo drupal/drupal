@@ -157,34 +157,3 @@ function _update_requirement_check($project, $type) {
   $requirement['value'] = l($requirement_label, update_manager_access() ? 'admin/reports/updates/update' : 'admin/reports/updates');
   return $requirement;
 }
-
-/**
- * @addtogroup updates-6.x-to-7.x
- * @{
- */
-
-/**
- * Create a queue to store tasks for requests to fetch available update data.
- */
-function update_update_7000() {
-  module_load_include('inc', 'system', 'system.queue');
-  $queue = DrupalQueue::get('update_fetch_tasks');
-  $queue->createQueue();
-}
-
-/**
- * Recreates cache_update table.
- *
- * Converts fields that hold serialized variables from text to blob.
- * Removes 'headers' column.
- */
-function update_update_7001() {
-  $schema = system_schema_cache_7054();
-
-  db_drop_table('cache_update');
-  db_create_table('cache_update', $schema);
-}
-
-/**
- * @} End of "addtogroup updates-6.x-to-7.x"
- */

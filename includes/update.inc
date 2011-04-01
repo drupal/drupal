@@ -68,683 +68,56 @@ function update_check_incompatibility($name, $type = 'module') {
 }
 
 /**
- * Performs extra steps required to bootstrap when using a Drupal 6 database.
+ * Performs extra steps required to bootstrap when using a Drupal 7 database.
  *
- * Users who still have a Drupal 6 database (and are in the process of
- * updating to Drupal 7) need extra help before a full bootstrap can be
+ * Users who still have a Drupal 7 database (and are in the process of
+ * updating to Drupal 8) need extra help before a full bootstrap can be
  * achieved. This function does the necessary preliminary work that allows
  * the bootstrap to be successful.
  *
  * No access check has been performed when this function is called, so no
  * irreversible changes to the database are made here.
  */
-function update_prepare_d7_bootstrap() {
-  // Allow the bootstrap to proceed even if a Drupal 6 settings.php file is
-  // still being used.
-  include_once DRUPAL_ROOT . '/includes/install.inc';
-  drupal_bootstrap(DRUPAL_BOOTSTRAP_CONFIGURATION);
-  global $databases, $db_url, $db_prefix, $update_rewrite_settings;
-  if (empty($databases) && !empty($db_url)) {
-    $databases = update_parse_db_url($db_url, $db_prefix);
-    // Record the fact that the settings.php file will need to be rewritten.
-    $update_rewrite_settings = TRUE;
-    $settings_file = conf_path() . '/settings.php';
-    $writable = drupal_verify_install_file($settings_file, FILE_EXIST|FILE_READABLE|FILE_WRITABLE);
-    $requirements = array(
-      'settings file' => array(
-        'title' => 'Settings file',
-        'value' => $writable ? 'The settings file is writable.' : 'The settings file is not writable.',
-        'severity' => $writable ? REQUIREMENT_OK : REQUIREMENT_ERROR,
-        'description' => $writable ? '' : 'Drupal requires write permissions to <em>' . $settings_file . '</em> during the update process. If you are unsure how to grant file permissions, consult the <a href="http://drupal.org/server-permissions">online handbook</a>.',
-      ),
-    );
-    update_extra_requirements($requirements);
-  }
-
-  // The new {blocked_ips} table is used in Drupal 7 to store a list of
-  // banned IP addresses. If this table doesn't exist then we are still
-  // running on a Drupal 6 database, so we suppress the unavoidable errors
-  // that occur by creating a static list.
-  $GLOBALS['conf']['blocked_ips'] = array();
-
-  // Check that PDO is available and that the correct PDO database driver is
-  // loaded. Bootstrapping to DRUPAL_BOOTSTRAP_DATABASE will result in a fatal
-  // error otherwise.
-  $message = '';
-  $pdo_link = 'http://drupal.org/requirements/pdo';
-  // Check that PDO is loaded.
-  if (!extension_loaded('pdo')) {
-    $message = '<h2>PDO is required!</h2><p>Drupal 7 requires PHP ' . DRUPAL_MINIMUM_PHP . ' or higher with the PHP Data Objects (PDO) extension enabled.</p>';
-  }
-  // The PDO::ATTR_DEFAULT_FETCH_MODE constant is not available in the PECL
-  // version of PDO.
-  elseif (!defined('PDO::ATTR_DEFAULT_FETCH_MODE')) {
-    $message = '<h2>The wrong version of PDO is installed!</h2><p>Drupal 7 requires the PHP Data Objects (PDO) extension from PHP core to be enabled. This system has the older PECL version installed.';
-    $pdo_link = 'http://drupal.org/requirements/pdo#pecl';
-  }
-  // Check that the correct driver is loaded for the database being updated.
-  // If we have no driver information (for example, if someone tried to create
-  // the Drupal 7 $databases array themselves but did not do it correctly),
-  // this message will be confusing, so do not perform the check; instead, just
-  // let the database connection fail in the code that follows.
-  elseif (isset($databases['default']['default']['driver']) && !in_array($databases['default']['default']['driver'], PDO::getAvailableDrivers())) {
-    $message = '<h2>A PDO database driver is required!</h2><p>You need to enable the PDO_' . strtoupper($databases['default']['default']['driver']) . ' database driver for PHP ' . DRUPAL_MINIMUM_PHP . ' or higher so that Drupal 7 can access the database.</p>';
-  }
-  if ($message) {
-    print $message . '<p>See the <a href="' . $pdo_link . '">system requirements page</a> for more information.</p>';
-    exit();
-  }
-
+function update_prepare_d8_bootstrap() {
   // Allow the database system to work even if the registry has not been
   // created yet.
+  include_once DRUPAL_ROOT . '/includes/install.inc';
   drupal_bootstrap(DRUPAL_BOOTSTRAP_DATABASE);
 
-  // If the site has not updated to Drupal 7 yet, check to make sure that it is
-  // running an up-to-date version of Drupal 6 before proceeding. Note this has
+  // If the site has not updated to Drupal 8 yet, check to make sure that it is
+  // running an up-to-date version of Drupal 7 before proceeding. Note this has
   // to happen AFTER the database bootstraps because of
   // drupal_get_installed_schema_version().
   $system_schema = drupal_get_installed_schema_version('system');
-  if ($system_schema < 7000) {
+  if ($system_schema < 8000) {
     $has_required_schema = $system_schema >= REQUIRED_D7_SCHEMA_VERSION;
     $requirements = array(
-      'drupal 6 version' => array(
-        'title' => 'Drupal 6 version',
-        'value' => $has_required_schema ? 'You are running a current version of Drupal 6.' : 'You are not running a current version of Drupal 6',
+      'drupal 7 version' => array(
+        'title' => 'Drupal 7 version',
+        'value' => $has_required_schema ? 'You are running a current version of Drupal 7.' : 'You are not running a current version of Drupal 7',
         'severity' => $has_required_schema ? REQUIREMENT_OK : REQUIREMENT_ERROR,
-        'description' => $has_required_schema ? '' : 'Please update your Drupal 6 installation to the most recent version before attempting to upgrade to Drupal 7',
+        'description' => $has_required_schema ? '' : 'Please update your Drupal 7 installation to the most recent version before attempting to upgrade to Drupal 8',
       ),
     );
-
-    // Make sure that the database environment is properly set up.
-    try {
-      db_run_tasks(db_driver());
-    }
-    catch (DatabaseTaskException $e) {
-      $requirements['database tasks'] = array(
-        'title' => 'Database environment',
-        'value' => 'There is a problem with your database environment',
-        'severity' => REQUIREMENT_ERROR,
-        'description' => $e->getMessage(),
-      );
-    }
-
-    update_extra_requirements($requirements);
-
-    // Allow a D6 session to work, since the upgrade has not been performed yet.
-    $d6_session_name = update_get_d6_session_name();
-    if (!empty($_COOKIE[$d6_session_name])) {
-      // Set the current sid to the one found in the D6 cookie.
-      $sid = $_COOKIE[$d6_session_name];
-      $_COOKIE[session_name()] = $sid;
-      session_id($sid);
-    }
-  }
-
-  // Create the registry tables.
-  if (!db_table_exists('registry')) {
-    $schema['registry'] = array(
-      'fields' => array(
-        'name'   => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
-        'type'   => array('type' => 'varchar', 'length' => 9, 'not null' => TRUE, 'default' => ''),
-        'filename'   => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
-        'module'   => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
-        'weight'   => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
-      ),
-      'primary key' => array('name', 'type'),
-      'indexes' => array(
-        'hook' => array('type', 'weight', 'module'),
-      ),
-    );
-    db_create_table('registry', $schema['registry']);
-  }
-  if (!db_table_exists('registry_file')) {
-    $schema['registry_file'] = array(
-      'fields' => array(
-        'filename'   => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE),
-        'hash'   => array('type' => 'varchar', 'length' => 64, 'not null' => TRUE),
-      ),
-      'primary key' => array('filename'),
-    );
-    db_create_table('registry_file', $schema['registry_file']);
-  }
-
-  // Older versions of Drupal 6 do not include the semaphore table, which is
-  // required to bootstrap, so we add it now so that we can bootstrap and
-  // provide a reasonable error message.
-  if (!db_table_exists('semaphore')) {
-    $semaphore = array(
-      'description' => 'Table for holding semaphores, locks, flags, etc. that cannot be stored as Drupal variables since they must not be cached.',
-      'fields' => array(
-        'name' => array(
-          'description' => 'Primary Key: Unique name.',
-          'type' => 'varchar',
-          'length' => 255,
-          'not null' => TRUE,
-          'default' => ''
-        ),
-        'value' => array(
-          'description' => 'A value for the semaphore.',
-          'type' => 'varchar',
-          'length' => 255,
-          'not null' => TRUE,
-          'default' => ''
-        ),
-        'expire' => array(
-          'description' => 'A Unix timestamp with microseconds indicating when the semaphore should expire.',
-          'type' => 'float',
-          'size' => 'big',
-          'not null' => TRUE
-        ),
-      ),
-      'indexes' => array(
-        'value' => array('value'),
-        'expire' => array('expire'),
-      ),
-      'primary key' => array('name'),
-    );
-    db_create_table('semaphore', $semaphore);
-  }
-
-  // The new cache_bootstrap bin is required to bootstrap to
-  // DRUPAL_BOOTSTRAP_SESSION, so create it here rather than in
-  // update_fix_d7_requirements().
-  if (!db_table_exists('cache_bootstrap')) {
-    $cache_bootstrap = array(
-      'description' => 'Cache table for data required to bootstrap Drupal, may be routed to a shared memory cache.',
-      'fields' => array(
-        'cid' => array(
-          'description' => 'Primary Key: Unique cache ID.',
-          'type' => 'varchar',
-          'length' => 255,
-          'not null' => TRUE,
-          'default' => '',
-        ),
-        'data' => array(
-          'description' => 'A collection of data to cache.',
-          'type' => 'blob',
-          'not null' => FALSE,
-          'size' => 'big',
-        ),
-        'expire' => array(
-          'description' => 'A Unix timestamp indicating when the cache entry should expire, or 0 for never.',
-          'type' => 'int',
-          'not null' => TRUE,
-          'default' => 0,
-        ),
-        'created' => array(
-          'description' => 'A Unix timestamp indicating when the cache entry was created.',
-          'type' => 'int',
-          'not null' => TRUE,
-          'default' => 0,
-        ),
-        'serialized' => array(
-          'description' => 'A flag to indicate whether content is serialized (1) or not (0).',
-          'type' => 'int',
-          'size' => 'small',
-          'not null' => TRUE,
-          'default' => 0,
-        ),
-      ),
-      'indexes' => array(
-        'expire' => array('expire'),
-      ),
-      'primary key' => array('cid'),
-    );
-    db_create_table('cache_bootstrap', $cache_bootstrap);
-  }
-
-  // Set a valid timezone for 6 -> 7 upgrade process.
-  drupal_bootstrap(DRUPAL_BOOTSTRAP_VARIABLES);
-  $timezone_offset = variable_get('date_default_timezone', 0);
-  if (is_numeric($timezone_offset)) {
-    // Save the original offset.
-    variable_set('date_temporary_timezone', $timezone_offset);
-    // Set the timezone for this request only.
-    $GLOBALS['conf']['date_default_timezone'] = 'UTC';
   }
 }
 
 /**
- * Perform Drupal 6.x to 7.x updates that are required for update.php
+ * Perform Drupal 7.x to 8.x updates that are required for update.php
  * to function properly.
  *
- * This function runs when update.php is run the first time for 7.x,
+ * This function runs when update.php is run the first time for 8.x,
  * even before updates are selected or performed. It is important
  * that if updates are not ultimately performed that no changes are
  * made which make it impossible to continue using the prior version.
  */
-function update_fix_d7_requirements() {
+function update_fix_d8_requirements() {
   global $conf;
 
-  // Rewrite the settings.php file if necessary, see
-  // update_prepare_d7_bootstrap().
-  global $update_rewrite_settings, $db_url, $db_prefix;
-  if (!empty($update_rewrite_settings)) {
-    $databases = update_parse_db_url($db_url, $db_prefix);
-    $salt = drupal_hash_base64(drupal_random_bytes(55));
-    file_put_contents(conf_path() . '/settings.php', "\n" . '$databases = ' . var_export($databases, TRUE) . ";\n\$drupal_hash_salt = '$salt';", FILE_APPEND);
+  if (drupal_get_installed_schema_version('system') < 8000 && !variable_get('update_d8_requirements', FALSE)) {
+    // @todo: Make critical, first-run changes to the database here.
+    variable_set('update_d8_requirements', TRUE);
   }
-  if (drupal_get_installed_schema_version('system') < 7000 && !variable_get('update_d7_requirements', FALSE)) {
-    // Change 6.x system table field values to 7.x equivalent.
-    // Change field values.
-    db_change_field('system', 'schema_version', 'schema_version', array(
-     'type' => 'int',
-     'size' => 'small',
-     'not null' => TRUE,
-     'default' => -1)
-    );
-    db_change_field('system', 'status', 'status', array(
-      'type' => 'int', 'not null' => TRUE, 'default' => 0));
-    db_change_field('system', 'weight', 'weight', array(
-      'type' => 'int', 'not null' => TRUE, 'default' => 0));
-    db_change_field('system', 'bootstrap', 'bootstrap', array(
-      'type' => 'int', 'not null' => TRUE, 'default' => 0));
-    // Drop and recreate 6.x indexes.
-    db_drop_index('system', 'bootstrap');
-    db_add_index('system', 'bootstrap', array(
-      'status', 'bootstrap', array('type', 12), 'weight', 'name'));
-
-    db_drop_index('system' ,'modules');
-    db_add_index('system', 'modules', array(array(
-      'type', 12), 'status', 'weight', 'name'));
-
-    db_drop_index('system', 'type_name');
-    db_add_index('system', 'type_name', array(array('type', 12), 'name'));
-    // Add 7.x indexes.
-    db_add_index('system', 'system_list', array('weight', 'name'));
-
-    // Add the cache_path table.
-    if (db_table_exists('cache_path')) {
-      db_drop_table('cache_path');
-    }
-    require_once('./modules/system/system.install');
-    $schema['cache_path'] = system_schema_cache_7054();
-    $schema['cache_path']['description'] = 'Cache table used for path alias lookups.';
-    db_create_table('cache_path', $schema['cache_path']);
-
-    // system_update_7042() renames columns, but these are needed to bootstrap.
-    // Add empty columns for now.
-    db_add_field('url_alias', 'source', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''));
-    db_add_field('url_alias', 'alias', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''));
-
-    // Add new columns to {menu_router}.
-    db_add_field('menu_router', 'delivery_callback', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''));
-    db_add_field('menu_router', 'context', array(
-      'description' => 'Only for local tasks (tabs) - the context of a local task to control its placement.',
-      'type' => 'int',
-      'not null' => TRUE,
-      'default' => 0,
-    ));
-    db_drop_index('menu_router', 'tab_parent');
-    db_add_index('menu_router', 'tab_parent', array(array('tab_parent', 64), 'weight', 'title'));
-    db_add_field('menu_router', 'theme_callback', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''));
-    db_add_field('menu_router', 'theme_arguments', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''));
-
-    // Add the role_permission table.
-    $schema['role_permission'] = array(
-      'fields' => array(
-        'rid' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-      ),
-      'permission' => array(
-        'type' => 'varchar',
-        'length' => 128,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-    ),
-    'primary key' => array('rid', 'permission'),
-    'indexes' => array(
-      'permission' => array('permission'),
-      ),
-    );
-    db_create_table('role_permission', $schema['role_permission']);
-
-    // Drops and recreates semaphore value index.
-    db_drop_index('semaphore', 'value');
-    db_add_index('semaphore', 'value', array('value'));
-
-    $schema['date_format_type'] = array(
-      'description' => 'Stores configured date format types.',
-      'fields' => array(
-        'type' => array(
-          'description' => 'The date format type, e.g. medium.',
-          'type' => 'varchar',
-          'length' => 64,
-          'not null' => TRUE,
-        ),
-        'title' => array(
-          'description' => 'The human readable name of the format type.',
-          'type' => 'varchar',
-          'length' => 255,
-          'not null' => TRUE,
-        ),
-        'locked' => array(
-          'description' => 'Whether or not this is a system provided format.',
-          'type' => 'int',
-          'size' => 'tiny',
-          'default' => 0,
-          'not null' => TRUE,
-        ),
-      ),
-      'primary key' => array('type'),
-    );
-
-    $schema['date_formats'] = array(
-      'description' => 'Stores configured date formats.',
-      'fields' => array(
-        'dfid' => array(
-          'description' => 'The date format identifier.',
-          'type' => 'serial',
-          'not null' => TRUE,
-          'unsigned' => TRUE,
-        ),
-        'format' => array(
-          'description' => 'The date format string.',
-          'type' => 'varchar',
-          'length' => 100,
-          'not null' => TRUE,
-        ),
-        'type' => array(
-          'description' => 'The date format type, e.g. medium.',
-          'type' => 'varchar',
-          'length' => 64,
-          'not null' => TRUE,
-        ),
-        'locked' => array(
-          'description' => 'Whether or not this format can be modified.',
-          'type' => 'int',
-          'size' => 'tiny',
-          'default' => 0,
-          'not null' => TRUE,
-        ),
-      ),
-      'primary key' => array('dfid'),
-      'unique keys' => array('formats' => array('format', 'type')),
-    );
-
-    $schema['date_format_locale'] = array(
-      'description' => 'Stores configured date formats for each locale.',
-      'fields' => array(
-        'format' => array(
-          'description' => 'The date format string.',
-          'type' => 'varchar',
-          'length' => 100,
-          'not null' => TRUE,
-        ),
-        'type' => array(
-          'description' => 'The date format type, e.g. medium.',
-          'type' => 'varchar',
-          'length' => 64,
-          'not null' => TRUE,
-        ),
-        'language' => array(
-          'description' => 'A {languages}.language for this format to be used with.',
-          'type' => 'varchar',
-          'length' => 12,
-          'not null' => TRUE,
-        ),
-      ),
-      'primary key' => array('type', 'language'),
-    );
-
-    db_create_table('date_format_type', $schema['date_format_type']);
-    // Sites that have the Drupal 6 Date module installed already have the
-    // following tables.
-    if (db_table_exists('date_formats')) {
-      db_rename_table('date_formats', 'd6_date_formats');
-    }
-    db_create_table('date_formats', $schema['date_formats']);
-    if (db_table_exists('date_format_locale')) {
-      db_rename_table('date_format_locale', 'd6_date_format_locale');
-    }
-    db_create_table('date_format_locale', $schema['date_format_locale']);
-
-    // Add the queue table.
-    $schema['queue'] = array(
-      'description' => 'Stores items in queues.',
-      'fields' => array(
-        'item_id' => array(
-          'type' => 'serial',
-          'unsigned' => TRUE,
-          'not null' => TRUE,
-          'description' => 'Primary Key: Unique item ID.',
-        ),
-        'name' => array(
-          'type' => 'varchar',
-          'length' => 255,
-          'not null' => TRUE,
-          'default' => '',
-          'description' => 'The queue name.',
-        ),
-        'data' => array(
-          'type' => 'blob',
-          'not null' => FALSE,
-          'size' => 'big',
-          'serialize' => TRUE,
-          'description' => 'The arbitrary data for the item.',
-        ),
-        'expire' => array(
-          'type' => 'int',
-          'not null' => TRUE,
-          'default' => 0,
-          'description' => 'Timestamp when the claim lease expires on the item.',
-        ),
-        'created' => array(
-          'type' => 'int',
-          'not null' => TRUE,
-          'default' => 0,
-          'description' => 'Timestamp when the item was created.',
-        ),
-      ),
-      'primary key' => array('item_id'),
-      'indexes' => array(
-        'name_created' => array('name', 'created'),
-        'expire' => array('expire'),
-      ),
-    );
-    // Check for queue table that may remain from D5 or D6, if found
-    //drop it.
-    if (db_table_exists('queue')) {
-      db_drop_table('queue');
-    }
-
-    db_create_table('queue', $schema['queue']);
-
-    // Create the sequences table.
-    $schema['sequences'] = array(
-      'description' => 'Stores IDs.',
-      'fields' => array(
-        'value' => array(
-          'description' => 'The value of the sequence.',
-          'type' => 'serial',
-          'unsigned' => TRUE,
-          'not null' => TRUE,
-        ),
-       ),
-      'primary key' => array('value'),
-    );
-    // Check for sequences table that may remain from D5 or D6, if found
-    //drop it.
-    if (db_table_exists('sequences')) {
-      db_drop_table('sequences');
-    }
-    db_create_table('sequences', $schema['sequences']);
-    // Initialize the table with the maximum current increment of the tables
-    // that will rely on it for their ids.
-    $max_aid = db_query('SELECT MAX(aid) FROM {actions_aid}')->fetchField();
-    $max_uid = db_query('SELECT MAX(uid) FROM {users}')->fetchField();
-    $max_batch_id = db_query('SELECT MAX(bid) FROM {batch}')->fetchField();
-    db_insert('sequences')->fields(array('value' => max($max_aid, $max_uid, $max_batch_id)))->execute();
-
-    // Add column for locale context.
-    if (db_table_exists('locales_source')) {
-      db_add_field('locales_source', 'context', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => '', 'description' => 'The context this string applies to.'));
-    }
-
-    // Rename 'site_offline_message' variable to 'maintenance_mode_message'
-    // and 'site_offline' variable to 'maintenance_mode'.
-    // Old variable is removed in update for system.module, see
-    // system_update_7036().
-    if ($message = variable_get('site_offline_message', NULL)) {
-      variable_set('maintenance_mode_message', $message);
-    }
-    // Old variable is removed in update for system.module, see
-    // system_update_7069().
-    $site_offline = variable_get('site_offline', -1);
-    if ($site_offline != -1) {
-      variable_set('maintenance_mode', $site_offline);
-    }
-
-    // Add ssid column and index.
-    db_add_field('sessions', 'ssid', array('description' => "Secure session ID. The value is generated by Drupal's session handlers.", 'type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''));
-    db_add_index('sessions', 'ssid', array('ssid'));
-    // Drop existing primary key.
-    db_drop_primary_key('sessions');
-    // Add new primary key.
-    db_add_primary_key('sessions', array('sid', 'ssid'));
-
-    // Allow longer javascript file names.
-    if (db_table_exists('languages')) {
-      db_change_field('languages', 'javascript', 'javascript', array('type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''));
-    }
-
-    // Rename action description to label.
-    db_change_field('actions', 'description', 'label', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => '0'));
-
-    variable_set('update_d7_requirements', TRUE);
-  }
-
-  update_fix_d7_install_profile();
-}
-
-/**
- * Register the currently installed profile in the system table.
- *
- * Install profiles are now treated as modules by Drupal, and have an upgrade
- * path based on their schema version in the system table.
- *
- * The install profile will be set to schema_version 0, as it has already been
- * installed. Any other hook_update_N functions provided by the install profile
- * will be run by update.php.
- */
-function update_fix_d7_install_profile() {
-  $profile = drupal_get_profile();
-
-  $results = db_select('system', 's')
-    ->fields('s', array('name', 'schema_version'))
-    ->condition('name', $profile)
-    ->condition('type', 'module')
-    ->execute()
-    ->fetchAll();
-
-  if (empty($results)) {
-    $filename = 'profiles/' . $profile . '/' . $profile . '.profile';
-
-    // Read profile info file
-    $info = drupal_parse_info_file(dirname($filename) . '/' . $profile . '.info');
-
-    // Merge in defaults.
-    $info = $info + array(
-      'dependencies' => array(),
-      'description' => '',
-      'package' => 'Other',
-      'version' => NULL,
-      'php' => DRUPAL_MINIMUM_PHP,
-      'files' => array(),
-    );
-
-    // The install profile is always required.
-    $file->info['required'] = TRUE;
-
-    $values = array(
-      'filename' => $filename,
-      'name' => $profile,
-      'info' => serialize($info),
-      'schema_version' => 0,
-      'type' => 'module',
-      'status' => 1,
-      'owner' => '',
-    );
-
-    // Install profile hooks are always executed last by the module system
-    $values['weight'] = 1000;
-
-    // Initializing the system table entry for the install profile
-    db_insert('system')
-      ->fields(array_keys($values))
-      ->values($values)
-      ->execute();
-
-    // Reset the cached schema version.
-    drupal_get_installed_schema_version($profile, TRUE);
-
-    // Load the updates again to make sure the install profile updates are loaded
-    drupal_load_updates();
-  }
-}
-
-/**
- * Parse pre-Drupal 7 database connection URLs and return D7 compatible array.
- *
- * @return
- *   Drupal 7 DBTNG compatible array of database connection information.
- */
-function update_parse_db_url($db_url, $db_prefix) {
-  $databases = array();
-  if (!is_array($db_url)) {
-    $db_url = array('default' => $db_url);
-  }
-  foreach ($db_url as $database => $url) {
-    $url = parse_url($url);
-    $databases[$database]['default'] = array(
-      // MySQLi uses the mysql driver.
-      'driver' => $url['scheme'] == 'mysqli' ? 'mysql' : $url['scheme'],
-      // Remove the leading slash to get the database name.
-      'database' => substr(urldecode($url['path']), 1),
-      'username' => urldecode($url['user']),
-      'password' => isset($url['pass']) ? urldecode($url['pass']) : '',
-      'host' => urldecode($url['host']),
-      'port' => isset($url['port']) ? urldecode($url['port']) : '',
-    );
-    if (isset($db_prefix)) {
-      $databases[$database]['default']['prefix'] = $db_prefix;
-    }
-  }
-  return $databases;
-}
-
-/**
- * Constructs a session name compatible with a D6 environment.
- *
- * @return
- *   D6-compatible session name string.
- *
- * @see drupal_settings_initialize()
- */
-function update_get_d6_session_name() {
-  global $base_url, $cookie_domain;
-  $cookie_secure = ini_get('session.cookie_secure');
-
-  // If a custom cookie domain is set in settings.php, that variable forms
-  // the basis of the session name. Re-compute the D7 hashing method to find
-  // out if $cookie_domain was used as the session name.
-  if (($cookie_secure ? 'SSESS' : 'SESS') . substr(hash('sha256', $cookie_domain), 0, 32) == session_name()) {
-    $session_name = $cookie_domain;
-  }
-  else {
-    // Otherwise use $base_url as session name, without the protocol
-    // to use the same session identifiers across http and https.
-    list( , $session_name) = explode('://', $base_url, 2);
-  }
-
-  if ($cookie_secure) {
-    $session_name .= 'SSL';
-  }
-
-  return 'SESS' . md5($session_name);
 }
 
 /**
@@ -1138,10 +511,10 @@ function update_get_update_function_list($starting_updates) {
  * requirement that the first update function needs to run before the second.
  * For example, consider this graph:
  *
- * system_update_7000 ---> system_update_7001 ---> system_update_7002
+ * system_update_8000 ---> system_update_8001 ---> system_update_8002
  *
- * Visually, this indicates that system_update_7000() must run before
- * system_update_7001(), which in turn must run before system_update_7002().
+ * Visually, this indicates that system_update_8000() must run before
+ * system_update_8001(), which in turn must run before system_update_8002().
  *
  * The function takes into account standard dependencies within each module, as
  * shown above (i.e., the fact that each module's updates must run in numerical
@@ -1288,15 +661,15 @@ function update_retrieve_dependencies() {
               // implementation of hook_update_dependencies() required this
               // ordering:
               //
-              // system_update_7001 ---> user_update_7000
+              // system_update_8001 ---> user_update_8000
               //
               // but another module's implementation of the hook required this
               // one:
               //
-              // system_update_7002 ---> user_update_7000
+              // system_update_8002 ---> user_update_8000
               //
-              // we record the second one, since system_update_7001() is always
-              // guaranteed to run before system_update_7002() anyway (within
+              // we record the second one, since system_update_8001() is always
+              // guaranteed to run before system_update_8002() anyway (within
               // an individual module, updates are always run in numerical
               // order).
               if (!isset($return[$module][$update][$module_dependency]) || $update_dependency > $return[$module][$update][$module_dependency]) {
@@ -1313,7 +686,7 @@ function update_retrieve_dependencies() {
 }
 
 /**
- * @defgroup update-api-6.x-to-7.x Update versions of API functions
+ * @defgroup update-api-7.x-to-8.x Update versions of API functions
  * @{
  * Functions similar to normal API function but not firing hooks.
  *
@@ -1323,5 +696,5 @@ function update_retrieve_dependencies() {
  */
 
 /**
- * @} End of "defgroup update-api-6.x-to-7.x"
+ * @} End of "defgroup update-api-7.x-to-8.x"
  */

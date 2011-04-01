@@ -51,20 +51,3 @@ function trigger_install() {
   // Do initial synchronization of actions in code and the database.
   actions_synchronize();
 }
-
-/**
- * Adds operation names to the hook names and drops the "op" field.
- */
-function trigger_update_7000() {
-  $result = db_query("SELECT hook, op, aid FROM {trigger_assignments} WHERE op <> ''");
-
-  foreach ($result as $record) {
-    db_update('trigger_assignments')
-      ->fields(array('hook' => $record->hook . '_' . $record->op))
-      ->condition('hook', $record->hook)
-      ->condition('op', $record->op)
-      ->condition('aid', $record->aid)
-      ->execute();
-  }
-  db_drop_field('trigger_assignments', 'op');
-}

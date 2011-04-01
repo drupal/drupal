@@ -170,12 +170,9 @@ function field_schema() {
 /**
  * Utility function: create a field by writing directly to the database.
  *
- * This function can be used for databases whose schema is at field module
- * version 7000 or higher.
- *
- * @ingroup update-api-6.x-to-7.x
+ * @ingroup update-api-7.x-to-8.x
  */
-function _update_7000_field_create_field(&$field) {
+function _update_8000_field_create_field(&$field) {
   // Merge in default values.`
   $field += array(
     'entity_types' => array(),
@@ -246,17 +243,14 @@ function _update_7000_field_create_field(&$field) {
  * To protect user data, this function can only be used to delete fields once
  * all information it stored is gone. Delete all data from the
  * field_data_$field_name table before calling by either manually issuing
- * delete queries against it or using _update_7000_field_delete_instance().
- *
- * This function can be used for databases whose schema is at field module
- * version 7000 or higher.
+ * delete queries against it or using _update_8000_field_delete_instance().
  *
  * @param $field_name
  *   The field name to delete.
  *
- * @ingroup update-api-6.x-to-7.x
+ * @ingroup update-api-7.x-to-8.x
  */
-function _update_7000_field_delete_field($field_name) {
+function _update_8000_field_delete_field($field_name) {
   $table_name = 'field_data_' . $field_name;
   if (db_select($table_name)->range(0, 1)->countQuery()->execute()->fetchField()) {
     $t = get_t();
@@ -283,11 +277,9 @@ function _update_7000_field_delete_field($field_name) {
  *
  * BEWARE: this function deletes user data from the field storage tables.
  *
- * This function is valid for a database schema version 7000.
- *
- * @ingroup update-api-6.x-to-7.x
+ * @ingroup update-api-7.x-to-8.x
  */
-function _update_7000_field_delete_instance($field_name, $entity_type, $bundle) {
+function _update_8000_field_delete_instance($field_name, $entity_type, $bundle) {
   // Delete field instance configuration data.
   db_delete('field_config_instance')
     ->condition('field_name', $field_name)
@@ -323,8 +315,9 @@ function _update_7000_field_delete_instance($field_name, $entity_type, $bundle) 
  * @return
  *   An array of fields matching $conditions, keyed by the property specified
  *   by the $key parameter.
+ * @ingroup update-api-7.x-to-8.x
  */
-function _update_7000_field_read_fields(array $conditions = array(), $key = 'id') {
+function _update_8000_field_read_fields(array $conditions = array(), $key = 'id') {
   $fields = array();
   $query = db_select('field_config', 'fc', array('fetch' => PDO::FETCH_ASSOC))
     ->fields('fc');
@@ -354,12 +347,9 @@ function _update_7000_field_read_fields(array $conditions = array(), $key = 'id'
 /**
  * Utility function: write a field instance directly to the database.
  *
- * This function can be used for databases whose schema is at field module
- * version 7000 or higher.
- *
- * @ingroup update-api-6.x-to-7.x
+ * @ingroup update-api-7.x-to-8.x
  */
-function _update_7000_field_create_instance($field, &$instance) {
+function _update_8000_field_create_instance($field, &$instance) {
   // Merge in defaults.
   $instance += array(
     'field_id' => $field['id'],
@@ -385,55 +375,3 @@ function _update_7000_field_create_instance($field, &$instance) {
     ->fields($record)
     ->execute();
 }
-
-/**
- * @addtogroup updates-6.x-to-7.x
- * @{
- */
-
-/**
- * Field update version placeholder.
- */
-function field_update_7000() {
-  // Some update helper functions (such as _update_7000_field_create_field())
-  // modify the database directly. They can be used safely only if the database
-  // schema matches the field module schema established for Drupal 7.0 (i.e.
-  // version 7000). This function exists solely to set the schema version to
-  // 7000, so that update functions calling those helpers can do so safely
-  // by declaring a dependency on field_update_7000().
-}
-
-/**
- * Fix fields definitions created during the d6 to d7 upgrade path.
- */
-function field_update_7001() {
-  $fields = _update_7000_field_read_fields();
-  foreach ($fields as $field) {
-    // _update_7000_field_create_field() was broken in d7 RC2, and the fields
-    // created during a d6 to d7 upgrade do not correcly store the 'index'
-    // entry. See http://drupal.org/node/996160.
-
-    module_load_install($field['module']);
-    $schema = (array) module_invoke($field['module'], 'field_schema', $field);
-    $schema += array('indexes' => array());
-    // 'indexes' can be both hardcoded in the field type, and specified in the
-    // incoming $field definition.
-    $field['indexes'] += $schema['indexes'];
-
-    // Place the updated entries in the existing serialized 'data' column.
-    $data = db_query("SELECT data FROM {field_config} WHERE id = :id", array(':id' => $field['id']))->fetchField();
-    $data = unserialize($data);
-    $data['columns'] = $field['columns'];
-    $data['indexes'] = $field['indexes'];
-
-    // Save the new data.
-    $query = db_update('field_config')
-      ->condition('id', $field['id'])
-      ->fields(array('data' => serialize($data)))
-      ->execute();
-  }
-}
-
-/**
- * @} End of "addtogroup updates-6.x-to-7.x"
- */

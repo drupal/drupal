@@ -11,14 +11,14 @@
  * @see update_test_2_update_dependencies()
  */
 function update_test_3_update_dependencies() {
-  $dependencies['update_test_3'][7000] = array(
-    'update_test_2' => 7000,
+  $dependencies['update_test_3'][8000] = array(
+    'update_test_2' => 8000,
   );
   return $dependencies;
 }
 
 /**
- * Dummy update_test_3 update 7000.
+ * Dummy update_test_3 update 8000.
  */
-function update_test_3_update_7000() {
+function update_test_3_update_8000() {
 }

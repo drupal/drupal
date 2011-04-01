@@ -153,30 +153,3 @@ function search_schema() {
 
   return $schema;
 }
-
-/**
- * Replace unique keys in 'search_dataset' and 'search_index' by primary keys.
- */
-function search_update_7000() {
-  db_drop_unique_key('search_dataset', 'sid_type');
-  $dataset_type_spec = array(
-    'type' => 'varchar',
-    'length' => 16,
-    'not null' => TRUE,
-    'description' => 'Type of item, e.g. node.',
-  );
-  db_change_field('search_dataset', 'type', 'type', $dataset_type_spec);
-  db_add_primary_key('search_dataset', array('sid', 'type'));
-
-  db_drop_index('search_index', 'word');
-  db_drop_unique_key('search_index', 'word_sid_type');
-  $index_type_spec = array(
-    'type' => 'varchar',
-    'length' => 16,
-    'not null' => TRUE,
-    'description' => 'The {search_dataset}.type of the searchable item to which the word belongs.',
-  );
-  db_change_field('search_index', 'type', 'type', $index_type_spec);
-  db_add_primary_key('search_index', array('word', 'sid', 'type'));
-}
-
