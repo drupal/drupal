@@ -1004,7 +1004,6 @@ function search_form($form, &$form_state, $action = '', $keys = '', $module = NU
  *
  * @ingroup forms
  * @see search_box_form_submit()
- * @see search-theme-form.tpl.php
  * @see search-block-form.tpl.php
  */
 function search_box($form, &$form_state, $form_id) {
