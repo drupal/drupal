@@ -2,7 +2,7 @@
 
 Drupal.behaviors.tableSelect = {
   attach: function (context, settings) {
-    $('form table:has(th.select-all)', context).once('table-select', Drupal.tableSelect);
+    $('table:has(th.select-all)', context).once('table-select', Drupal.tableSelect);
   }
 };
 
