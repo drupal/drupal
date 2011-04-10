@@ -452,7 +452,7 @@ Drupal.overlay.eventhandlerAlterDisplacedElements = function (event) {
 Drupal.overlay.eventhandlerRestoreDisplacedElements = function (event) {
   var $displacedElements = $('.overlay-displace-top, .overlay-displace-bottom');
   try {
-    $displacedElements.css({ maxWidth: null, clip: null });
+    $displacedElements.css({ maxWidth: '', clip: '' });
   }
   // IE bug that doesn't allow unsetting style.clip (http://dev.jquery.com/ticket/6512).
   catch (err) {
