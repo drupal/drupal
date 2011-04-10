@@ -32,6 +32,7 @@ files[] = tests/path.test
 files[] = tests/registry.test
 files[] = tests/schema.test
 files[] = tests/session.test
+files[] = tests/tablesort.test
 files[] = tests/theme.test
 files[] = tests/unicode.test
 files[] = tests/update.test
