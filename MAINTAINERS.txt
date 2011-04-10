@@ -43,7 +43,7 @@ Database system
 
   - MySQL driver
     - Larry Garfield 'Crell' <http://drupal.org/user/26398>
-    - David Strauss 'David Strauss' <hhttp://drupal.org/user/93254>
+    - David Strauss 'David Strauss' <http://drupal.org/user/93254>
 
   - PostgreSQL driver
     - Damien Tournoud 'DamZ' <http://drupal.org/user/22211>
