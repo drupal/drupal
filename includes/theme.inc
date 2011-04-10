@@ -362,7 +362,6 @@ function drupal_theme_rebuild() {
  */
 function _theme_process_registry(&$cache, $name, $type, $theme, $path) {
   $result = array();
-  $function = $name . '_theme';
 
   // Processor functions work in two distinct phases with the process
   // functions always being executed after the preprocess functions.
@@ -371,24 +370,43 @@ function _theme_process_registry(&$cache, $name, $type, $theme, $path) {
     'process functions'    => 'process',
   );
 
+  $hook_defaults = array(
+    'variables' => TRUE,
+    'render element' => TRUE,
+    'pattern' => TRUE,
+    'base hook' => TRUE,
+  );
+
+  // Invoke the hook_theme() implementation, process what is returned, and
+  // merge it into $cache.
+  $function = $name . '_theme';
   if (function_exists($function)) {
     $result = $function($cache, $type, $theme, $path);
     foreach ($result as $hook => $info) {
+      // When a theme or engine overrides a module's theme function
+      // $result[$hook] will only contain key/value pairs for information being
+      // overridden.  Pull the rest of the information from what was defined by
+      // an earlier hook.
+
+      // Fill in the type and path of the module, theme, or engine that
+      // implements this theme function.
       $result[$hook]['type'] = $type;
       $result[$hook]['theme path'] = $path;
-      // if function and file are left out, default to standard naming
+
+      // If function and file are omitted, default to standard naming
       // conventions.
       if (!isset($info['template']) && !isset($info['function'])) {
         $result[$hook]['function'] = ($type == 'module' ? 'theme_' : $name . '_') . $hook;
       }
-      // If a path is set in the info, use what was set. Otherwise use the
-      // default path. This is mostly so system.module can declare theme
-      // functions on behalf of core .include files.
-      // All files are included to be safe. Conditionally included
-      // files can prevent them from getting registered.
+
       if (isset($cache[$hook]['includes'])) {
         $result[$hook]['includes'] = $cache[$hook]['includes'];
       }
+
+      // If the theme implementation defines a file, then also use the path
+      // that it defined. Otherwise use the default path. This allows
+      // system.module to declare theme functions on behalf of core .include
+      // files.
       if (isset($info['file'])) {
         $include_file = isset($info['path']) ? $info['path'] : $path;
         $include_file .= '/' . $info['file'];
@@ -396,14 +414,10 @@ function _theme_process_registry(&$cache, $name, $type, $theme, $path) {
         $result[$hook]['includes'][] = $include_file;
       }
 
-      // If these keys are left unspecified within overridden entries returned
-      // by hook_theme(), carry them forward from the prior entry. This is so
-      // that themes don't need to specify this information, since the module
-      // that registered the theme hook already has.
-      foreach (array('variables', 'render element', 'pattern', 'base hook') as $key) {
-        if (!isset($info[$key]) && isset($cache[$hook][$key])) {
-          $result[$hook][$key] = $cache[$hook][$key];
-        }
+      // If the default keys are not set, use the default values registered
+      // by the module.
+      if (isset($cache[$hook])) {
+        $result[$hook] += array_intersect_key($cache[$hook], $hook_defaults);
       }
 
       // The following apply only to theming hooks implemented as templates.
@@ -468,7 +482,7 @@ function _theme_process_registry(&$cache, $name, $type, $theme, $path) {
     }
 
     // Merge the newly created theme hooks into the existing cache.
-    $cache = array_merge($cache, $result);
+    $cache = $result + $cache;
   }
 
   // Let themes have variable processors even if they didn't register a template.
