@@ -5568,9 +5568,9 @@ function drupal_render(&$elements) {
     return $cached_output;
   }
 
-  // If #markup is not empty, set #type. This allows to specify just #markup on
-  // an element without setting #type.
-  if (!empty($elements['#markup']) && !isset($elements['#type'])) {
+  // If #markup is set, ensure #type is set. This allows to specify just #markup
+  // on an element without setting #type.
+  if (isset($elements['#markup']) && !isset($elements['#type'])) {
     $elements['#type'] = 'markup';
   }
 
