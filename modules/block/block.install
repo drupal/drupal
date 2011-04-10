@@ -228,6 +228,7 @@ function block_update_7000() {
  * {boxes} to {block_custom}.
  */
 function block_update_7002() {
+  db_drop_index('blocks', 'list');
   db_rename_table('blocks', 'block');
   db_rename_table('blocks_roles', 'block_role');
   db_rename_table('boxes', 'block_custom');
@@ -237,7 +238,6 @@ function block_update_7002() {
  * Change the weight column to normal int.
  */
 function block_update_7003() {
-  db_drop_index('block', 'list');
   db_change_field('block', 'weight', 'weight', array(
     'type' => 'int',
     'not null' => TRUE,
