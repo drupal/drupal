@@ -2215,7 +2215,7 @@ function comment_form_submit($form, &$form_state) {
   $comment = comment_form_submit_build_comment($form, $form_state);
   if (user_access('post comments') && (user_access('administer comments') || $node->comment == COMMENT_NODE_OPEN)) {
     // Save the anonymous user information to a cookie for reuse.
-    if (!$comment->uid) {
+    if (user_is_anonymous()) {
       user_cookie_save(array_intersect_key($form_state['values'], array_flip(array('name', 'mail', 'homepage'))));
     }
 
