@@ -2972,6 +2972,14 @@ function system_update_7069() {
 }
 
 /**
+ * Remove the obsolete 'drupal_badge_color' and 'drupal_badge_size' variables.
+ */
+function system_update_7070() {
+  variable_del('drupal_badge_color');
+  variable_del('drupal_badge_size');
+}
+
+/**
  * @} End of "defgroup updates-6.x-to-7.x"
  * The next series of updates should start at 8000.
  */
