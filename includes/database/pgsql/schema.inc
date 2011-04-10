@@ -527,6 +527,9 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
       $this->connection->query('ALTER TABLE {' . $table . '} DROP CONSTRAINT "' . $check . '"');
     }
 
+    // Remove old default.
+    $this->fieldSetNoDefault($table, $field);
+
     $this->connection->query('ALTER TABLE {' . $table . '} ALTER "' . $field . '" TYPE ' . $typecast . ' USING "' . $field . '"::' . $typecast);
 
     if (isset($spec['not null'])) {
@@ -559,6 +562,11 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
     // Add unsigned check if necessary.
     if (!empty($spec['unsigned'])) {
       $this->connection->query('ALTER TABLE {' . $table . '} ADD CHECK ("' . $field_new . '" >= 0)');
+    }
+
+    // Add default if necessary.
+    if (isset($spec['default'])) {
+      $this->fieldSetDefault($table, $field_new, $spec['default']);
     }
 
     // Change description if necessary.
