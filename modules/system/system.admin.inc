@@ -1029,7 +1029,7 @@ function system_modules_confirm_form($modules, $storage) {
       '@module' => $name,
       '@depends' => implode(', ', $info['depends']),
     );
-    $items[] = format_plural(count($info['depends']), 'The @module module is missing, so the following module will be disabled: @depends.', 'The @module module is missing, so the following module will be disabled: @depends.', $t_argument);
+    $items[] = format_plural(count($info['depends']), 'The @module module is missing, so the following module will be disabled: @depends.', 'The @module module is missing, so the following modules will be disabled: @depends.', $t_argument);
   }
 
   $form['text'] = array('#markup' => theme('item_list', array('items' => $items)));
