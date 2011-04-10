@@ -6918,12 +6918,18 @@ function drupal_write_record($table, &$record, $primary_keys = array()) {
  * @see drupal_parse_info_format()
  */
 function drupal_parse_info_file($filename) {
-  if (!file_exists($filename)) {
-    return array();
-  }
+  $info = &drupal_static(__FUNCTION__, array());
 
-  $data = file_get_contents($filename);
-  return drupal_parse_info_format($data);
+  if (!isset($info[$filename])) {
+    if (!file_exists($filename)) {
+      $info[$filename] = array();
+    }
+    else {
+      $data = file_get_contents($filename);
+      $info[$filename] = drupal_parse_info_format($data);
+    }
+  }
+  return $info[$filename];
 }
 
 /**
