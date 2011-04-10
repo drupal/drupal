@@ -336,7 +336,7 @@ function xmlrpc_server_get_capabilities() {
 }
 
 /**
- * Returns the method signature of a function.
+ * Returns one method signature for a function.
  *
  * This is the function mapped to the XML-RPC method system.methodSignature.
  *
@@ -348,8 +348,8 @@ function xmlrpc_server_get_capabilities() {
  *   Name of method to return a method signature for.
  *
  * @return array
- *   An array of types representing the method signature of the function that
- *   $methodname maps to.
+ *   An array of arrays of types, each of the arrays representing one method
+ *   signature of the function that $methodname maps to.
  */
 function xmlrpc_server_method_signature($methodname) {
   $xmlrpc_server = xmlrpc_server_get();
@@ -364,7 +364,7 @@ function xmlrpc_server_method_signature($methodname) {
   foreach ($xmlrpc_server->signatures[$methodname] as $type) {
     $return[] = $type;
   }
-  return $return;
+  return array($return);
 }
 
 /**

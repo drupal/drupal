@@ -42,6 +42,16 @@ class XMLRPCBasicTestCase extends DrupalWebTestCase {
   }
 
   /**
+   * Ensure that system.methodSignature returns an array of signatures.
+   */
+  protected function testMethodSignature() {
+    $url = url(NULL, array('absolute' => TRUE)) . 'xmlrpc.php';
+    $signature = xmlrpc($url, array('system.methodSignature' => array('system.listMethods')));
+    $this->assert(is_array($signature) && !empty($signature) && is_array($signature[0]),
+      t('system.methodSignature returns an array of signature arrays.'));
+  }
+
+  /**
    * Ensure that XML-RPC correctly handles invalid messages when parsing.
    */
   protected function testInvalidMessageParsing() {
