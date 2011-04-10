@@ -146,7 +146,7 @@ function taxonomy_form_vocabulary($form, &$form_state, $edit = array()) {
   $form['machine_name'] = array(
     '#type' => 'machine_name',
     '#default_value' => $vocabulary->machine_name,
-    '#maxlength' => 21,
+    '#maxlength' => 255,
     '#machine_name' => array(
       'exists' => 'taxonomy_vocabulary_machine_name_load',
     ),
