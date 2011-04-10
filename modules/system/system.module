@@ -2681,7 +2681,7 @@ function system_region_list($theme_key, $show = REGIONS_ALL) {
   // If requested, suppress hidden regions. See block_admin_display_form().
   foreach ($info['regions'] as $name => $label) {
     if ($show == REGIONS_ALL || !isset($info['regions_hidden']) || !in_array($name, $info['regions_hidden'])) {
-      $list[$name] = $label;
+      $list[$name] = t($label);
     }
   }
 
