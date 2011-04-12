@@ -57,7 +57,7 @@ function path_menu() {
     'description' => "Change your site's URL paths by aliasing them.",
     'page callback' => 'path_admin_overview',
     'access arguments' => array('administer url aliases'),
-    'weight' => -10,
+    'weight' => -5,
     'file' => 'path.admin.inc',
   );
   $items['admin/config/search/path/edit/%path'] = array(
