@@ -757,7 +757,7 @@ function hook_field_widget_info_alter(&$info) {
 /**
  * Return the form for a single field widget.
  *
- * Field widget form elements should be based on the passed in $element, which
+ * Field widget form elements should be based on the passed-in $element, which
  * contains the base form element properties derived from the field
  * configuration.
  *

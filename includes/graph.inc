@@ -32,7 +32,7 @@
  *   @endcode
  *
  * @return
- *   The passed in $graph with more secondary keys filled in:
+ *   The passed-in $graph with more secondary keys filled in:
  *   - 'paths': Contains a list of vertices than can be reached on a path from
  *     this vertex.
  *   - 'reverse_paths': Contains a list of vertices that has a path from them

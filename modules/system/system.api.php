@@ -873,7 +873,7 @@ function hook_page_build(&$page) {
  *
  * This hook is invoked by menu_get_item() and allows for run-time alteration of router
  * information (page_callback, title, and so on) before it is translated and checked for
- * access. The passed in $router_item is statically cached for the current request, so this
+ * access. The passed-in $router_item is statically cached for the current request, so this
  * hook is only invoked once for any router item that is retrieved via menu_get_item().
  *
  * Usually, modules will only want to inspect the router item and conditionally

@@ -364,7 +364,7 @@ function node_mark($nid, $timestamp) {
  *   Either a string or object, containing the node type information.
  *
  * @return
- *   Node type of the passed in data.
+ *   Node type of the passed-in data.
  */
 function _node_extract_type($node) {
   return is_object($node) ? $node->type : $node;
@@ -1413,7 +1413,7 @@ function node_show($node, $message = FALSE) {
 }
 
 /**
- * Returns whether the current page is the full page view of the passed in node.
+ * Returns whether the current page is the full page view of the passed-in node.
  *
  * @param $node
  *   A node object.

@@ -877,7 +877,7 @@ function field_attach_presave($entity_type, $entity) {
 /**
  * Save field data for a new entity.
  *
- * The passed in entity must already contain its id and (if applicable)
+ * The passed-in entity must already contain its id and (if applicable)
  * revision id attributes.
  * Default values (if any) will be saved for fields not present in the
  * $entity.

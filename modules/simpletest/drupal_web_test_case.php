@@ -1151,7 +1151,7 @@ class DrupalWebTestCase extends DrupalTestCase {
    * If a user is already logged in, then the current user is logged out before
    * logging in the specified user.
    *
-   * Please note that neither the global $user nor the passed in user object is
+   * Please note that neither the global $user nor the passed-in user object is
    * populated with data of the logged in user. If you need full access to the
    * user object after logging in, it must be updated manually. If you also need
    * access to the plain-text password of the user (set by drupalCreateUser()),

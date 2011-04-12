@@ -856,7 +856,7 @@ function drupal_required_modules() {
 /**
  * Hands off alterable variables to type-specific *_alter implementations.
  *
- * This dispatch function hands off the passed in variables to type-specific
+ * This dispatch function hands off the passed-in variables to type-specific
  * hook_TYPE_alter() implementations in modules. It ensures a consistent
  * interface for all altering operations.
  *
