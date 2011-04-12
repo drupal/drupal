@@ -362,7 +362,12 @@ states.State.prototype = {
 
   $(document).bind('state:required', function(e) {
     if (e.trigger) {
-      $(e.target).closest('.form-item, .form-submit, .form-wrapper')[e.value ? 'addClass' : 'removeClass']('form-required');
+      if (e.value) {
+        $(e.target).closest('.form-item, .form-wrapper').find('label').append('<span class="form-required">*</span>');
+      }
+      else {
+        $(e.target).closest('.form-item, .form-wrapper').find('label .form-required').remove();
+      }
     }
   });
 
