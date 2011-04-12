@@ -635,13 +635,13 @@ function system_menu() {
     'weight' => -1,
   );
 
-  foreach (list_themes() as $theme) {
+  foreach (list_themes() as $key => $theme) {
     $items['admin/appearance/settings/' . $theme->name] = array(
       'title' => $theme->info['name'],
       'page arguments' => array('system_theme_settings', $theme->name),
       'type' => MENU_LOCAL_TASK,
       'access callback' => '_system_themes_access',
-      'access arguments' => array($theme),
+      'access arguments' => array($key),
       'file' => 'system.admin.inc',
     );
   }

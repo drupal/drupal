@@ -60,12 +60,6 @@ function field_ui_menu() {
     'file' => 'field_ui.admin.inc',
   );
 
-  // Ensure the following is not executed until field_bundles is working and
-  // tables are updated. Needed to avoid errors on initial installation.
-  if (defined('MAINTENANCE_MODE')) {
-    return $items;
-  }
-
   // Create tabs for all possible bundles.
   foreach (entity_get_info() as $entity_type => $entity_info) {
     if ($entity_info['fieldable']) {

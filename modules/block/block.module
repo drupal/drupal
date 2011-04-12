@@ -148,7 +148,7 @@ function block_menu() {
       'type' => $key == $default_theme ? MENU_DEFAULT_LOCAL_TASK : MENU_LOCAL_TASK,
       'weight' => $key == $default_theme ? -10 : 0,
       'access callback' => '_block_themes_access',
-      'access arguments' => array($theme),
+      'access arguments' => array($key),
       'file' => 'block.admin.inc',
     );
     if ($key != $default_theme) {
@@ -167,7 +167,7 @@ function block_menu() {
       'page arguments' => array($key),
       'type' => MENU_CALLBACK,
       'access callback' => '_block_themes_access',
-      'access arguments' => array($theme),
+      'access arguments' => array($key),
       'theme callback' => '_block_custom_theme',
       'theme arguments' => array($key),
       'file' => 'block.admin.inc',

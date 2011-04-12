@@ -2566,10 +2566,7 @@ function menu_reset_static_cache() {
  *
  * This function will clear and populate the {menu_router} table, add entries
  * to {menu_links} for new router items, then remove stale items from
- * {menu_links}. If called from update.php or install.php, it will also
- * schedule a call to itself on the first real page load from
- * menu_execute_active_handler(), because the maintenance page environment
- * is different and leaves stale data in the menu tables.
+ * {menu_links}.
  *
  * @return
  *   TRUE if the menu was rebuilt, FALSE if another thread was rebuilding
@@ -2593,13 +2590,8 @@ function menu_rebuild() {
     // Clear the menu, page and block caches.
     menu_cache_clear_all();
     _menu_clear_page_cache();
-
-    if (defined('MAINTENANCE_MODE')) {
-      variable_set('menu_rebuild_needed', TRUE);
-    }
-    else {
-      variable_del('menu_rebuild_needed');
-    }
+    // Indicate that the menu has been successfully rebuilt.
+    variable_del('menu_rebuild_needed');
   }
   catch (Exception $e) {
     $transaction->rollback();
