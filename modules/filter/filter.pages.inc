@@ -39,7 +39,7 @@ function filter_tips_long() {
  *         ),
  *       );
  *     @endcode
- *   - long: (optional) Whether the passed in filter tips contain extended
+ *   - long: (optional) Whether the passed-in filter tips contain extended
  *     explanations, i.e. intended to be output on the path 'filter/tips'
  *     (TRUE), or are in a short format, i.e. suitable to be displayed below a
  *     form element. Defaults to FALSE.

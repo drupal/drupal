@@ -1419,7 +1419,7 @@ function request_uri() {
  *   The exception that is going to be logged.
  * @param $message
  *   The message to store in the log. If empty, a text that contains all useful
- *   information about the passed in exception is used.
+ *   information about the passed-in exception is used.
  * @param $variables
  *   Array of variables to replace in the message on display. Defaults to the
  *   return value of drupal_decode_exception().

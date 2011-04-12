@@ -2066,7 +2066,7 @@ function menu_local_tasks($level = 0) {
  *   node or array('system', 'navigation') for a certain block.
  *
  * @return
- *   A list of menu router items that are local tasks for the passed in path.
+ *   A list of menu router items that are local tasks for the passed-in path.
  *
  * @see contextual_links_preprocess()
  */

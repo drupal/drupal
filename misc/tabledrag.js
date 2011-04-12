@@ -1079,7 +1079,7 @@ Drupal.tableDrag.prototype.row.prototype.indent = function (indentDiff) {
 
 /**
  * Find all siblings for a row, either according to its subgroup or indentation.
- * Note that the passed in row is included in the list of siblings.
+ * Note that the passed-in row is included in the list of siblings.
  *
  * @param settings
  *   The field settings we're using to identify what constitutes a sibling.

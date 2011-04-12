@@ -746,7 +746,7 @@ function template_preprocess_taxonomy_term(&$variables) {
 }
 
 /**
- * Returns whether the current page is the page of the passed in term.
+ * Returns whether the current page is the page of the passed-in term.
  *
  * @param $term
  *   A term object.

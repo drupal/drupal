@@ -319,8 +319,8 @@ function drupal_theme_rebuild() {
  *   The theme registry that will eventually be cached; It is an associative
  *   array keyed by theme hooks, whose values are associative arrays describing
  *   the hook:
- *   - 'type': The passed in $type.
- *   - 'theme path': The passed in $path.
+ *   - 'type': The passed-in $type.
+ *   - 'theme path': The passed-in $path.
  *   - 'function': The name of the function generating output for this theme
  *     hook. Either defined explicitly in hook_theme() or, if neither 'function'
  *     nor 'template' is defined, then the default theme function name is used.
