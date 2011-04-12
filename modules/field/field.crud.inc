@@ -421,7 +421,6 @@ function field_delete_field($field_name) {
  *   will be given the following default values:
  *   - label: the field name
  *   - description: empty string
- *   - weight: 0
  *   - required: FALSE
  *   - default_value_function: empty string
  *   - settings: each omitted setting is given the default value specified in
