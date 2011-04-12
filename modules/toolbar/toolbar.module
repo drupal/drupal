@@ -95,7 +95,7 @@ function theme_toolbar_toggle($variables) {
     $toggle_text = t('Hide shortcuts');
     $variables['attributes']['class'][] = 'toggle-active';
   }
-  return '<a href="' . url('toolbar/toggle', array('query' => drupal_get_destination())) . '" title="' . $toggle_text . '"' .  drupal_attributes($variables['attributes']) . '>' . $toggle_text . '</a>';
+  return l($toggle_text, 'toolbar/toggle', array('query' => drupal_get_destination(), 'attributes' => array('title' => $toggle_text) + $variables['attributes']));
 }
 
 /**
