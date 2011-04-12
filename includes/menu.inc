@@ -127,7 +127,7 @@ define('MENU_IS_LOCAL_ACTION', 0x0100);
 /**
  * @defgroup menu_item_types Menu item types
  * @{
- * Definitions for various menu types.
+ * Definitions for various menu item types.
  *
  * Menu item definitions provide one of these constants, which are shortcuts for
  * combinations of @link menu_flags Menu flags @endlink.
