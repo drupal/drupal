@@ -162,8 +162,8 @@ function aggregator_save_item($edit) {
     $result = db_query('SELECT cid FROM {aggregator_category_feed} WHERE fid = :fid', array(':fid' => $edit['fid']));
     foreach ($result as $category) {
       db_merge('aggregator_category_item')
-        ->key(array('iid' => $edit['iid']))
-        ->fields(array(
+        ->key(array(
+          'iid' => $edit['iid'],
           'cid' => $category->cid,
         ))
         ->execute();
