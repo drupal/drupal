@@ -2893,10 +2893,11 @@ function _menu_delete_item($item, $force = FALSE) {
         menu_link_save($child);
       }
     }
-    db_delete('menu_links')->condition('mlid', $item['mlid'])->execute();
 
-    // Notify modules we have deleted the item.
+    // Notify modules we are deleting the item.
     module_invoke_all('menu_link_delete', $item);
+
+    db_delete('menu_links')->condition('mlid', $item['mlid'])->execute();
 
     // Update the has_children status of the parent.
     _menu_update_parental_status($item);
