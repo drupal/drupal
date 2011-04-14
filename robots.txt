@@ -40,7 +40,6 @@ Disallow: /xmlrpc.php
 # Paths (clean URLs)
 Disallow: /admin/
 Disallow: /comment/reply/
-Disallow: /contact/
 Disallow: /logout/
 Disallow: /node/add/
 Disallow: /search/
@@ -50,7 +49,6 @@ Disallow: /user/login/
 # Paths (no clean URLs)
 Disallow: /?q=admin/
 Disallow: /?q=comment/reply/
-Disallow: /?q=contact/
 Disallow: /?q=logout/
 Disallow: /?q=node/add/
 Disallow: /?q=search/
