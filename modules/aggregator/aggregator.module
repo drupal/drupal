@@ -782,6 +782,11 @@ function aggregator_parse_feed(&$data, $feed) {
       }
     }
 
+    // Resolve dc:creator tag as the item author if author tag is not set.
+    if (empty($item['AUTHOR']) && !empty($item['DC:CREATOR'])) {
+      $item['AUTHOR'] = $item['DC:CREATOR'];
+    }
+
     // Save this item. Try to avoid duplicate entries as much as possible. If
     // we find a duplicate entry, we resolve it and pass along its ID is such
     // that we can update it if needed.
