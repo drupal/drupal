@@ -773,17 +773,7 @@ function user_block($op = 'list', $delta = 0, $edit = array()) {
           // Perform database queries to gather online user lists.  We use s.timestamp
           // rather than u.access because it is much faster.
           $anonymous_count = sess_count($interval);
-          $authenticated_users = db_query('SELECT DISTINCT u.uid, u.name, s.timestamp FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.timestamp >= %d AND s.uid > 0 ORDER BY s.timestamp DESC', $interval);
-          $authenticated_count = 0;
-          $max_users = variable_get('user_block_max_list_count', 10);
-          $items = array();
-          while ($account = db_fetch_object($authenticated_users)) {
-            if ($max_users > 0) {
-              $items[] = $account;
-              $max_users--;
-            }
-            $authenticated_count++;
-          }
+          $authenticated_count = db_result(db_query('SELECT COUNT(DISTINCT s.uid) FROM {sessions} s WHERE s.timestamp >= %d AND s.uid > 0', $interval));
 
           // Format the output with proper grammar.
           if ($anonymous_count == 1 && $authenticated_count == 1) {
@@ -796,6 +786,10 @@ function user_block($op = 'list', $delta = 0, $edit = array()) {
           // Display a list of currently online users.
           $max_users = variable_get('user_block_max_list_count', 10);
           if ($authenticated_count && $max_users) {
+            $authenticated_users = db_query_range('SELECT u.uid, u.name, MAX(s.timestamp) AS timestamp FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.timestamp >= %d AND s.uid > 0 GROUP BY u.uid, u.name ORDER BY s.timestamp DESC', $interval, 0, $max_users);
+            while ($account = db_fetch_object($authenticated_users)) {
+              $items[] = $account;
+            }
             $output .= theme('user_list', $items, t('Online users'));
           }
 
