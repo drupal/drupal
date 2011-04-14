@@ -409,7 +409,7 @@ function menu_edit_menu(&$form_state, $type, $menu = array()) {
     $form['menu_name'] = array(
       '#type' => 'textfield',
       '#title' => t('Menu name'),
-      '#maxsize' => MENU_MAX_MENU_NAME_LENGTH_UI,
+      '#maxlength' => MENU_MAX_MENU_NAME_LENGTH_UI,
       '#description' => t('The machine-readable name of this menu. This text will be used for constructing the URL of the <em>menu overview</em> page for this menu. This name must contain only lowercase letters, numbers, and hyphens, and must be unique.'),
       '#required' => TRUE,
     );
@@ -508,9 +508,6 @@ function menu_edit_menu_validate($form, &$form_state) {
   $item = $form_state['values'];
   if (preg_match('/[^a-z0-9-]/', $item['menu_name'])) {
     form_set_error('menu_name', t('The menu name may only consist of lowercase letters, numbers, and hyphens.'));
-  }
-  if (strlen($item['menu_name']) > MENU_MAX_MENU_NAME_LENGTH_UI) {
-    form_set_error('menu_name', format_plural(MENU_MAX_MENU_NAME_LENGTH_UI, "The menu name can't be longer than 1 character.", "The menu name can't be longer than @count characters."));
   }
   if ($form['#insert']) {
     // We will add 'menu-' to the menu name to help avoid name-space conflicts.
