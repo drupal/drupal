@@ -244,7 +244,7 @@ function _batch_process() {
       '@percentage' => $percentage,
       );
     $message = strtr($progress_message, $values) .'<br/>';
-    $message .= $task_message ? $task_message : '&nbsp';
+    $message .= $task_message ? $task_message : '&nbsp;';
 
     return array($percentage, $message);
   }
