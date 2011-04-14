@@ -919,7 +919,13 @@ function _system_theme_data() {
     $themes_info = $themes;
   }
 
-  return $themes_info;
+  // To avoid side effects, we don't return the original objects.
+  $themes_info_cloned = array();
+  foreach ($themes_info as $key => $theme) {
+    $themes_info_cloned[$key] = drupal_clone($theme);
+  }
+
+  return $themes_info_cloned;
 }
 
 /**
