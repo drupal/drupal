@@ -82,17 +82,28 @@ function file_create_path($dest = 0) {
 }
 
 /**
- * Check that the directory exists and is writable. Directories need to
- * have execute permissions to be considered a directory by FTP servers, etc.
+ * Checks whether a directory exists and is writable.
  *
- * @param $directory A string containing the name of a directory path.
- * @param $mode A Boolean value to indicate if the directory should be created
- *   if it does not exist or made writable if it is read-only.
- * @param $form_item An optional string containing the name of a form item that
- *   any errors will be attached to. This is useful for settings forms that
- *   require the user to specify a writable directory. If it can't be made to
- *   work, a form error will be set preventing them from saving the settings.
- * @return FALSE when directory not found, or TRUE when directory exists.
+ * Furthermore, the directory can optionally be created if it does not exist,
+ * and/or be set to writable if it is currently not. Directories need to have
+ * execute permission to be considered a directory by FTP servers.
+ *
+ * @param $directory
+ *   A string representing the directory path.
+ * @param $mode
+ *   An optional bitmask containing the actions, if any, to be carried out on
+ *   the directory. Any combination of the actions FILE_CREATE_DIRECTORY and
+ *   FILE_MODIFY_PERMISSIONS is allowed.
+ * @param $form_item
+ *   An optional string containing the name of a form item that any errors
+ *   will be attached to. Useful when the function validates a directory path
+ *   entered as a form value. An error will consequently prevent form submit
+ *   handlers from running, and instead display the form along with the
+ *   error messages.
+ *
+ * @return
+ *   FALSE if the directory does not exist or is not writable, even after
+ *   any optional actions have been carried out. Otherwise, TRUE is returned.
  */
 function file_check_directory(&$directory, $mode = 0, $form_item = NULL) {
   $directory = rtrim($directory, '/\\');
