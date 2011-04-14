@@ -345,8 +345,8 @@ function update_results_page() {
           if (!count($queries)) {
             $output .= '<li class="none">No queries</li>';
           }
+          $output .= '</ul>';
         }
-        $output .= '</ul>';
       }
     }
     $output .= '</div>';
