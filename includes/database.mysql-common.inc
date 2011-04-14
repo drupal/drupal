@@ -289,7 +289,7 @@ function db_drop_table(&$ret, $table) {
  *   table along with adding the field. The format is the same as a
  *   table specification but without the 'fields' element.  If you are
  *   adding a type 'serial' field, you MUST specify at least one key
- *   or index including it in this array. @see db_change_field for more
+ *   or index including it in this array. See db_change_field() for more
  *   explanation why.
  */
 function db_add_field(&$ret, $table, $field, $spec, $keys_new = array()) {
