@@ -396,10 +396,9 @@ function filter_list_format($format) {
 }
 
 /**
- * @name Filtering functions
+ * @defgroup filtering_functions Filtering functions
  * @{
- * Modules which need to have content filtered can use these functions to
- * interact with the filter system.
+ * Functions for interacting with the content filtering system.
  *
  * For more info, see the hook_filter() documentation.
  *
@@ -603,7 +602,7 @@ function theme_filter_tips_more_info() {
 }
 
 /**
- * @name Standard filters
+ * @defgroup standard_filters Standard filters
  * @{
  * Filters implemented by the filter.module.
  */

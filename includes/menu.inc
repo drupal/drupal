@@ -71,7 +71,7 @@
  */
 
 /**
- * @name Menu flags
+ * @defgroup menu_flags Menu flags
  * @{
  * Flags for use in the "type" attribute of menu items.
  */
@@ -89,8 +89,10 @@ define('MENU_IS_LOCAL_TASK', 0x0080);
  */
 
 /**
- * @name Menu item types
+ * @defgroup menu_item_types Menu item types
  * @{
+ * Definitions for various menu item types.
+ *
  * Menu item definitions provide one of these constants, which are shortcuts for
  * combinations of the above flags.
  */
@@ -134,7 +136,7 @@ define('MENU_DEFAULT_LOCAL_TASK', MENU_IS_LOCAL_TASK | MENU_LINKS_TO_PARENT);
  */
 
 /**
- * @name Menu status codes
+ * @defgroup menu_status_codes Menu status codes
  * @{
  * Status codes for menu callbacks.
  */
@@ -149,9 +151,9 @@ define('MENU_SITE_OFFLINE', 4);
  */
 
 /**
- * @Name Menu tree parameters
+ * @defgroup menu_tree_parameters Menu tree parameters
  * @{
- * Menu tree
+ * Parameters for a menu tree.
  */
 
  /**

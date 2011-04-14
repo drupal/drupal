@@ -11,14 +11,27 @@
  */
 
 /**
- * @name Content markers
+ * @defgroup content_flags Content markers
  * @{
  * Markers used by theme_mark() and node_mark() to designate content.
  * @see theme_mark(), node_mark()
  */
-define('MARK_READ',    0);
-define('MARK_NEW',     1);
+
+/**
+ * Mark content as read.
+ */
+define('MARK_READ', 0);
+
+/**
+ * Mark content as being new.
+ */
+define('MARK_NEW', 1);
+
+/**
+ * Mark content as being updated.
+ */
 define('MARK_UPDATED', 2);
+
 /**
  * @} End of "Content markers".
  */
