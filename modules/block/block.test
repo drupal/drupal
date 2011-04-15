@@ -414,7 +414,7 @@ class BlockAdminThemeTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Admin theme block admin accessibility',
-      'description' => "Check whether the block administer page for a disabled theme acccessible if and only if it's the admin theme.",
+      'description' => "Check whether the block administer page for a disabled theme accessible if and only if it's the admin theme.",
       'group' => 'Block',
     );
   }
