@@ -408,7 +408,7 @@ class EntityFieldQueryException extends Exception {}
  * direct access to the collected properties in order to handle alternate
  * execution routines. We therefore use public properties for simplicity. Note
  * that code that is simply creating and running a field query should still use
- * the appropriate methods add conditions on the query.
+ * the appropriate methods to add conditions on the query.
  *
  * Storage engines are not required to support every type of query. By default,
  * an EntityFieldQueryException will be raised if an unsupported condition is
