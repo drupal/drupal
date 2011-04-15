@@ -1302,7 +1302,7 @@ function theme_disable($theme_list) {
   menu_rebuild();
   drupal_theme_rebuild();
 
-  // Invoke hook_themes_enabled after the themes have been enabled.
+  // Invoke hook_themes_disabled after the themes have been disabled.
   module_invoke_all('themes_disabled', $theme_list);
 }
 
