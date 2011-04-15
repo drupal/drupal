@@ -1478,6 +1478,7 @@ function template_preprocess_user_picture(&$variables) {
 function theme_user_list($variables) {
   $users = $variables['users'];
   $title = $variables['title'];
+  $items = array();
 
   if (!empty($users)) {
     foreach ($users as $user) {
