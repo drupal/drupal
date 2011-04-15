@@ -1269,12 +1269,7 @@ function theme_enable($theme_list) {
   menu_rebuild();
   drupal_theme_rebuild();
 
-  // Notify locale module about new themes being enabled, so translations can
-  // be imported. This might start a batch, and only return to the redirect
-  // path after that.
-  module_invoke('locale', 'system_update', $theme_list);
-
-  // Invoke hook_themes_enabled after the themes have been enabled.
+  // Invoke hook_themes_enabled() after the themes have been enabled.
   module_invoke_all('themes_enabled', $theme_list);
 }
 
