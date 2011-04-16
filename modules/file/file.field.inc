@@ -567,14 +567,17 @@ function file_field_widget_upload_validators($field, $instance) {
  *   A field array.
  * @param $instance
  *   A field instance array.
+ * @param $data
+ *   An array of token objects to pass to token_replace().
  * @return
  *   A file directory URI with tokens replaced.
+ *
+ * @see token_replace()
  */
-function file_field_widget_uri($field, $instance, $account = NULL) {
+function file_field_widget_uri($field, $instance, $data = array()) {
   $destination = trim($instance['settings']['file_directory'], '/');
 
   // Replace tokens.
-  $data = array('user' => isset($account) ? $account : $GLOBALS['user']);
   $destination = token_replace($destination, $data);
 
   return $field['settings']['uri_scheme'] . '://' . $destination;

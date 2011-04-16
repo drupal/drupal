@@ -932,7 +932,7 @@ class FileFieldPathTestCase extends FileFieldTestCase {
 
     // Check the path when used with tokens.
     // Change the path to contain multiple token directories.
-    $field = $this->updateFileField($field_name, $type_name, array('file_directory' => '[user:uid]/[user:name]'));
+    $field = $this->updateFileField($field_name, $type_name, array('file_directory' => '[current-user:uid]/[current-user:name]'));
 
     // Upload a new file into the token subdirectories.
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
@@ -940,6 +940,8 @@ class FileFieldPathTestCase extends FileFieldTestCase {
     // Check that the file was uploaded into the subdirectory.
     $node = node_load($nid, NULL, TRUE);
     $node_file = (object) $node->{$field_name}[LANGUAGE_NONE][0];
+    // Do token replacement using the same user which uploaded the file, not
+    // the user running the test case.
     $data = array('user' => $this->admin_user);
     $subdirectory = token_replace('[user:uid]/[user:name]', $data);
     $this->assertPathMatch('public://' . $subdirectory . '/' . $test_file->filename, $node_file->uri, t('The file %file was uploaded to the correct path with token replacements.', array('%file' => $node_file->uri)));
