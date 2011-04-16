@@ -88,10 +88,10 @@ function seven_tablesort_indicator($variables) {
   $style = $variables['style'];
   $theme_path = drupal_get_path('theme', 'seven');
   if ($style == 'asc') {
-    return theme('image', array('path' => $theme_path . '/images/arrow-asc.png', 'alt' => t('sort ascending'), 'title' => t('sort ascending')));
+    return theme('image', array('path' => $theme_path . '/images/arrow-asc.png', 'alt' => t('sort ascending'), 'width' => 13, 'height' => 13, 'title' => t('sort ascending')));
   }
   else {
-    return theme('image', array('path' => $theme_path . '/images/arrow-desc.png', 'alt' => t('sort descending'), 'title' => t('sort descending')));
+    return theme('image', array('path' => $theme_path . '/images/arrow-desc.png', 'alt' => t('sort descending'), 'width' => 13, 'height' => 13, 'title' => t('sort descending')));
   }
 }
 
