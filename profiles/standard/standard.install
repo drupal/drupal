@@ -271,7 +271,7 @@ function standard_install() {
   $description = st('Use tags to group articles on similar topics into categories.');
   $help = st('Enter a comma-separated list of words to describe your content.');
   $vocabulary = (object) array(
-    'name' => 'Tags',
+    'name' => st('Tags'),
     'description' => $description,
     'machine_name' => 'tags',
     'help' => $help,
@@ -298,7 +298,7 @@ function standard_install() {
   $instance = array(
     'field_name' => 'field_' . $vocabulary->machine_name,
     'entity_type' => 'node',
-    'label' => $vocabulary->name,
+    'label' => 'Tags',
     'bundle' => 'article',
     'description' => $vocabulary->help,
     'widget' => array(
