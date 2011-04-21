@@ -59,9 +59,9 @@ function locale_help($path, $arg) {
       return '<p>' . t('This page exports the translated strings used by your site. An export file may be in Gettext Portable Object (<em>.po</em>) form, which includes both the original string and the translation (used to share translations with others), or in Gettext Portable Object Template (<em>.pot</em>) form, which includes the original strings only (used to create new translations with a Gettext translation editor).') . '</p>';
     case 'admin/config/regional/translate/translate':
       return '<p>' . t('This page allows a translator to search for specific translated and untranslated strings, and is used when creating or editing translations. (Note: For translation tasks involving many strings, it may be more convenient to <a href="@export">export</a> strings for offline editing in a desktop Gettext translation editor.) Searches may be limited to strings found within a specific text group or in a specific language.', array('@export' => url('admin/config/regional/translate/export'))) . '</p>';
-    case 'admin/structure/block/manage':
-      if ($arg[4] == 'locale' && $arg[5] == 0) {
-        return '<p>' . t('This block is only shown if <a href="@languages">at least two languages are enabled</a> and <a href="@configuration">language negotiation</a> is set to something other than <em>None</em>.', array('@languages' => url('admin/config/regional/language'), '@configuration' => url('admin/config/regional/language/configure'))) . '</p>';
+    case 'admin/structure/block/manage/%/%':
+      if ($arg[4] == 'locale' && $arg[5] == 'language') {
+        return '<p>' . t('This block is only shown if <a href="@languages">at least two languages are enabled</a> and <a href="@configuration">language negotiation</a> is set to <em>URL</em> or <em>Session</em>.', array('@languages' => url('admin/config/regional/language'), '@configuration' => url('admin/config/regional/language/configure'))) . '</p>';
       }
       break;
   }
