@@ -2321,11 +2321,11 @@ function menu_set_active_trail($new_trail = NULL) {
       }
       list($key, $curr) = each($tree);
     }
-    // Make sure the current page is in the trail (needed for the page title),
-    // if the link's type allows it to be shown in the breadcrumb. Also exclude
-    // it if we are on the front page.
+    // Make sure the current page is in the trail to build the page title, by
+    // appending either the preferred link or the menu router item for the
+    // current page. Exclude it if we are on the front page.
     $last = end($trail);
-    if ($last['href'] != $preferred_link['href'] && ($preferred_link['type'] & MENU_VISIBLE_IN_BREADCRUMB) == MENU_VISIBLE_IN_BREADCRUMB && !drupal_is_front_page()) {
+    if ($last['href'] != $preferred_link['href'] && !drupal_is_front_page()) {
       $trail[] = $preferred_link;
     }
   }
