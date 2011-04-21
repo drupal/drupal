@@ -2389,7 +2389,7 @@ function hook_modules_installed($modules) {
  * invoked.
  *
  * @param $modules
- *   An array of the enabled modules.
+ *   An array of the modules being enabled.
  *
  * @see hook_enable()
  * @see hook_modules_installed()
