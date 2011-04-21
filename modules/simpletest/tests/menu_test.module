@@ -15,6 +15,13 @@ function menu_test_menu() {
     'page callback' => 'node_save',
     'menu_name' => menu_test_menu_name(),
   );
+  // This item is of type MENU_CALLBACK with no parents to test title.
+  $items['menu_callback_title'] = array(
+    'title' => 'Menu Callback Title',
+    'page callback' => 'menu_test_callback',
+    'type' => MENU_CALLBACK,
+    'access arguments' => array('access content'),
+  );
   // Use FALSE as 'title callback' to bypass t().
   $items['menu_no_title_callback'] = array(
     'title' => 'A title with @placeholder',

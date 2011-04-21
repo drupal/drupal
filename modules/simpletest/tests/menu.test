@@ -34,6 +34,18 @@ class MenuRouterTestCase extends DrupalWebTestCase {
   }
 
   /**
+   * Tests page title of MENU_CALLBACKs.
+   */
+  function testTitleMenuCallback() {
+    // Verify that the menu router item title is not visible.
+    $this->drupalGet('');
+    $this->assertNoText(t('Menu Callback Title'));
+    // Verify that the menu router item title is output as page title.
+    $this->drupalGet('menu_callback_title');
+    $this->assertText(t('Menu Callback Title'));
+  }
+
+  /**
    * Test the theme callback when it is set to use an administrative theme.
    */
   function testThemeCallbackAdministrative() {
