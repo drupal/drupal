@@ -46,7 +46,7 @@ function forum_enable() {
   // Create the 'taxonomy_forums' field if it doesn't already exist.
   if (!field_info_field('taxonomy_forums')) {
     $field = array(
-      'field_name' => 'taxonomy_' . $vocabulary->machine_name,
+      'field_name' => 'taxonomy_forums',
       'type' => 'taxonomy_term_reference',
       'settings' => array(
         'allowed_values' => array(
@@ -73,7 +73,7 @@ function forum_enable() {
 
     // Create the instance on the bundle.
     $instance = array(
-      'field_name' => 'taxonomy_' . $vocabulary->machine_name,
+      'field_name' => 'taxonomy_forums',
       'entity_type' => 'node',
       'label' => $vocabulary->name,
       'bundle' => 'forum',
@@ -233,4 +233,11 @@ function forum_schema() {
 
 
   return $schema;
+}
+
+/**
+ * Implements hook_update_last_removed().
+ */
+function forum_update_last_removed() {
+  return 7002;
 }
