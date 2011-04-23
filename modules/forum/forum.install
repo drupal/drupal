@@ -215,7 +215,7 @@ function forum_schema() {
       ),
     ),
     'indexes' => array(
-      'forum_topics' => array('tid', 'sticky', 'last_comment_timestamp'),
+      'forum_topics' => array('nid', 'tid', 'sticky', 'last_comment_timestamp'),
     ),
     'foreign keys' => array(
       'tracked_node' => array(
