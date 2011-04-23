@@ -320,7 +320,7 @@ abstract class DatabaseConnection extends PDO {
    *   PDO::FETCH_OBJ, PDO::FETCH_NUM, or a string representing the name of a
    *   class. If a string is specified, each record will be fetched into a new
    *   object of that class. The behavior of all other values is defined by PDO.
-   *   See http://www.php.net/PDOStatement-fetch
+   *   See http://php.net/manual/pdostatement.fetch.php
    * - return: Depending on the type of query, different return values may be
    *   meaningful. This directive instructs the system which type of return
    *   value is desired. The system will generally set the correct value
