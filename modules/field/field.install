@@ -172,7 +172,7 @@ function field_schema() {
  *
  * @ingroup update-api-7.x-to-8.x
  */
-function _update_8000_field_create_field(&$field) {
+function _update_7000_field_create_field(&$field) {
   // Merge in default values.`
   $field += array(
     'entity_types' => array(),
@@ -243,14 +243,14 @@ function _update_8000_field_create_field(&$field) {
  * To protect user data, this function can only be used to delete fields once
  * all information it stored is gone. Delete all data from the
  * field_data_$field_name table before calling by either manually issuing
- * delete queries against it or using _update_8000_field_delete_instance().
+ * delete queries against it or using _update_7000_field_delete_instance().
  *
  * @param $field_name
  *   The field name to delete.
  *
  * @ingroup update-api-7.x-to-8.x
  */
-function _update_8000_field_delete_field($field_name) {
+function _update_7000_field_delete_field($field_name) {
   $table_name = 'field_data_' . $field_name;
   if (db_select($table_name)->range(0, 1)->countQuery()->execute()->fetchField()) {
     $t = get_t();
@@ -279,7 +279,7 @@ function _update_8000_field_delete_field($field_name) {
  *
  * @ingroup update-api-7.x-to-8.x
  */
-function _update_8000_field_delete_instance($field_name, $entity_type, $bundle) {
+function _update_7000_field_delete_instance($field_name, $entity_type, $bundle) {
   // Delete field instance configuration data.
   db_delete('field_config_instance')
     ->condition('field_name', $field_name)
@@ -317,7 +317,7 @@ function _update_8000_field_delete_instance($field_name, $entity_type, $bundle) 
  *   by the $key parameter.
  * @ingroup update-api-7.x-to-8.x
  */
-function _update_8000_field_read_fields(array $conditions = array(), $key = 'id') {
+function _update_7000_field_read_fields(array $conditions = array(), $key = 'id') {
   $fields = array();
   $query = db_select('field_config', 'fc', array('fetch' => PDO::FETCH_ASSOC))
     ->fields('fc');
@@ -349,7 +349,7 @@ function _update_8000_field_read_fields(array $conditions = array(), $key = 'id'
  *
  * @ingroup update-api-7.x-to-8.x
  */
-function _update_8000_field_create_instance($field, &$instance) {
+function _update_7000_field_create_instance($field, &$instance) {
   // Merge in defaults.
   $instance += array(
     'field_id' => $field['id'],

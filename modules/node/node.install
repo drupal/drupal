@@ -448,6 +448,6 @@ function node_install() {
  *
  * @ingroup update-api-7.x-to-8.x
  */
-function _update_8000_node_get_types() {
+function _update_7000_node_get_types() {
   return db_query('SELECT * FROM {node_type}')->fetchAllAssoc('type', PDO::FETCH_OBJ);
 }
