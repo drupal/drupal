@@ -215,7 +215,7 @@ function forum_schema() {
       ),
     ),
     'indexes' => array(
-      'forum_topics' => array('tid', 'sticky', 'last_comment_timestamp'),
+      'forum_topics' => array('nid', 'tid', 'sticky', 'last_comment_timestamp'),
     ),
     'foreign keys' => array(
       'tracked_node' => array(
@@ -329,4 +329,12 @@ function forum_update_7001() {
     ->fields(array('nid', 'title', 'sticky', 'created', 'tid', 'last_comment_timestamp', 'comment_count'))
     ->from($select)
     ->execute();
+}
+
+/**
+ * Add new index to forum_index table.
+ */
+function forum_update_7002() {
+  db_drop_index('forum_index', 'forum_topics');
+  db_add_index('forum_index', 'forum_topics', array('nid', 'tid', 'sticky', 'last_comment_timestamp'));
 }

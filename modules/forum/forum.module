@@ -879,7 +879,6 @@ function forum_get_topics($tid, $sortby, $forum_per_page) {
     ->addTag('node_access')
     ->orderBy('f.sticky', 'DESC')
     ->orderByHeader($forum_topic_list_header)
-    ->orderBy('f.last_comment_timestamp', 'DESC')
     ->limit($forum_per_page);
 
   $count_query = db_select('forum_index', 'f');
@@ -894,7 +893,29 @@ function forum_get_topics($tid, $sortby, $forum_per_page) {
     $nids[] = $record->nid;
   }
   if ($nids) {
-    $result = db_query("SELECT n.title, n.nid, n.type, n.sticky, n.created, n.uid, n.comment AS comment_mode, ncs.*, f.tid AS forum_tid, u.name, CASE ncs.last_comment_uid WHEN 0 THEN ncs.last_comment_name ELSE u2.name END AS last_comment_name FROM {node} n INNER JOIN {node_comment_statistics} ncs ON n.nid = ncs.nid INNER JOIN {forum} f ON n.vid = f.vid INNER JOIN {users} u ON n.uid = u.uid INNER JOIN {users} u2 ON ncs.last_comment_uid = u2.uid WHERE n.nid IN (:nids)", array(':nids' => $nids));
+    $query = db_select('node', 'n')->extend('TableSort');
+    $query->fields('n', array('title', 'nid', 'type', 'sticky', 'created', 'uid'));
+    $query->addField('n', 'comment', 'comment_mode');
+
+    $query->join('node_comment_statistics', 'ncs', 'n.nid = ncs.nid');
+    $query->fields('ncs', array('cid', 'last_comment_uid', 'last_comment_timestamp', 'comment_count'));
+
+    $query->join('forum_index', 'f', 'f.nid = ncs.nid');
+    $query->addField('f', 'tid', 'forum_tid');
+
+    $query->join('users', 'u', 'n.uid = u.uid');
+    $query->addField('u', 'name');
+
+    $query->join('users', 'u2', 'ncs.last_comment_uid = u2.uid');
+
+    $query->addExpression('CASE ncs.last_comment_uid WHEN 0 THEN ncs.last_comment_name ELSE u2.name END', 'last_comment_name');
+
+    $query
+      ->orderBy('f.sticky', 'DESC')
+      ->orderByHeader($forum_topic_list_header)
+      ->condition('n.nid', $nids);
+
+    $result = $query->execute();
   }
   else {
     $result = array();
@@ -1193,16 +1214,16 @@ function _forum_user_last_visit($nid) {
 function _forum_get_topic_order($sortby) {
   switch ($sortby) {
     case 1:
-      return array('field' => 'ncs.last_comment_timestamp', 'sort' => 'desc');
+      return array('field' => 'f.last_comment_timestamp', 'sort' => 'desc');
       break;
     case 2:
-      return array('field' => 'ncs.last_comment_timestamp', 'sort' => 'asc');
+      return array('field' => 'f.last_comment_timestamp', 'sort' => 'asc');
       break;
     case 3:
-      return array('field' => 'ncs.comment_count', 'sort' => 'desc');
+      return array('field' => 'f.comment_count', 'sort' => 'desc');
       break;
     case 4:
-      return array('field' => 'ncs.comment_count', 'sort' => 'asc');
+      return array('field' => 'f.comment_count', 'sort' => 'asc');
       break;
   }
 }
