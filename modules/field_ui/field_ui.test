@@ -388,7 +388,7 @@ class FieldUIManageFieldsTestCase extends FieldUITestCase {
       'bundle' => $this->type,
       'entity_type' => 'node',
       'label' => t('Hidden field'),
-      'widget_type' => 'test_field_widget',
+      'widget' => array('type' => 'test_field_widget'),
     );
     field_create_instance($instance);
     $this->assertTrue(field_read_instance('node', $field_name, $this->type), t('An instance of the field %field was created programmatically.', array('%field' => $field_name)));
