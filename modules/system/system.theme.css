@@ -30,9 +30,6 @@ th {
   padding-right: 1em; /* LTR */
   text-align: left; /* LTR */
 }
-tbody {
-  border-top: 1px solid #ccc;
-}
 tr.even,
 tr.odd {
   background-color: #eee;
