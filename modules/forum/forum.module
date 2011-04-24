@@ -169,12 +169,9 @@ function forum_menu_local_tasks_alter(&$data, $router_item, $root_path) {
     $tid = (isset($router_item['page_arguments'][0]) ? $router_item['page_arguments'][0]->tid : 0);
     $forum_term = forum_forum_load($tid);
     if ($forum_term) {
-      $vid = variable_get('forum_nav_vocabulary', 0);
-      $vocabulary = taxonomy_vocabulary_load($vid);
-
       $links = array();
       // Loop through all bundles for forum taxonomy vocabulary field.
-      $field = field_info_field('taxonomy_' . $vocabulary->machine_name);
+      $field = field_info_field('taxonomy_forums');
       foreach ($field['bundles']['node'] as $type) {
         if (node_access('create', $type)) {
           $links[$type] = array(
