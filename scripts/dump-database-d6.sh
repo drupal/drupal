@@ -33,7 +33,6 @@ include_once dirname(__FILE__) . '/../includes/utility.inc';
 // Output the PHP header.
 $output = <<<ENDOFHEADER
 <?php
-// \$Id\$
 
 /**
  * @file
