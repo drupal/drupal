@@ -562,7 +562,9 @@ function user_save($account, $edit = array(), $category = 'account') {
       if (!isset($edit['created'])) {
         $edit['created'] = REQUEST_TIME;
       }
-      $edit['mail'] = trim($edit['mail']);
+      if (isset($edit['mail'])) {
+        $edit['mail'] = trim($edit['mail']);
+      }
       $success = drupal_write_record('users', $edit);
       if ($success === FALSE) {
         // On a failed INSERT some other existing user's uid may be returned.
