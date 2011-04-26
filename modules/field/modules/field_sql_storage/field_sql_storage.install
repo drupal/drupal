@@ -29,7 +29,7 @@ function field_sql_storage_schema() {
  *
  * @ingroup update-api-7.x-to-8.x
  */
-function _update_8000_field_sql_storage_write($entity_type, $bundle, $entity_id, $revision_id, $field_name, $data) {
+function _update_7000_field_sql_storage_write($entity_type, $bundle, $entity_id, $revision_id, $field_name, $data) {
   $table_name = "field_data_{$field_name}";
   $revision_name = "field_revision_{$field_name}";
 
