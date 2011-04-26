@@ -108,6 +108,31 @@ class UserRegistrationTestCase extends DrupalWebTestCase {
     $this->assertText(t('Member for'), t('User can log in after administrator approval.'));
   }
 
+  function testRegistrationEmailDuplicates() {
+    // Don't require e-mail verification.
+    variable_set('user_email_verification', FALSE);
+
+    // Allow registration by site visitors without administrator approval.
+    variable_set('user_register', USER_REGISTER_VISITORS);
+
+    // Set up a user to check for duplicates.
+    $duplicate_user = $this->drupalCreateUser();
+
+    $edit = array();
+    $edit['name'] = $this->randomName();
+    $edit['mail'] = $duplicate_user->mail;
+
+    // Attempt to create a new account using an existing e-mail address.
+    $this->drupalPost('user/register', $edit, t('Create new account'));
+    $this->assertText(t('The e-mail address @email is already registered.', array('@email' => $duplicate_user->mail)), t('Supplying an exact duplicate email address displays an error message'));
+
+    // Attempt to bypass duplicate email registration validation by adding spaces.
+    $edit['mail'] = '   ' . $duplicate_user->mail . '   ';
+
+    $this->drupalPost('user/register', $edit, t('Create new account'));
+    $this->assertText(t('The e-mail address @email is already registered.', array('@email' => $duplicate_user->mail)), t('Supplying a duplicate email address with added whitespace displays an error message'));
+  }
+
   function testRegistrationDefaultValues() {
     // Allow registration by site visitors without administrator approval.
     variable_set('user_register', USER_REGISTER_VISITORS);
