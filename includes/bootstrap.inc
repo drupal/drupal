@@ -1516,7 +1516,7 @@ function watchdog($type, $message, $variables = array(), $severity = WATCHDOG_NO
  *
  * @param $message
  *   The message to be displayed to the user. For consistency with other
- *   messages, it should begin with a capital letter and end with period.
+ *   messages, it should begin with a capital letter and end with a period.
  * @param $type
  *   The type of the message. One of the following values are possible:
  *   - 'status'
