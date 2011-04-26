@@ -286,8 +286,6 @@ function _field_info_prepare_field($field) {
  *   Field instance array.
  */
 function _field_info_prepare_instance($instance, $field) {
-  $field_type = field_info_field_types($field['type']);
-
   // Make sure all expected instance settings are present.
   $instance['settings'] += field_info_instance_settings($field['type']);
 
