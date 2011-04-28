@@ -719,6 +719,21 @@ class DatabaseUpdateTestCase extends DatabaseTestCase {
   }
 
   /**
+   * Confirm updating to NULL.
+   */
+  function testSimpleNullUpdate() {
+    $this->ensureSampleDataNull();
+    $num_updated = db_update('test_null')
+      ->fields(array('age' => NULL))
+      ->condition('name', 'Kermit')
+      ->execute();
+    $this->assertIdentical($num_updated, 1, t('Updated 1 record.'));
+
+    $saved_age = db_query('SELECT age FROM {test_null} WHERE name = :name', array(':name' => 'Kermit'))->fetchField();
+    $this->assertNull($saved_age, t('Updated name successfully.'));
+  }
+
+  /**
    * Confirm that we can update a multiple records successfully.
    */
   function testMultiUpdate() {

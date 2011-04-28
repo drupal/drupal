@@ -101,7 +101,7 @@ class UpdateQuery_sqlite extends UpdateQuery {
       }
       elseif (!isset($data)) {
         // The field will be set to NULL.
-        $condition->isNull($field);
+        $condition->isNotNull($field);
       }
       else {
         $condition->condition($field, $data, '<>');
