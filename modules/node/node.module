@@ -489,7 +489,6 @@ function node_type_load($name) {
  *   Status flag indicating outcome of the operation.
  */
 function node_type_save($info) {
-  $is_existing = FALSE;
   $existing_type = !empty($info->old_type) ? $info->old_type : $info->type;
   $is_existing = (bool) db_query_range('SELECT 1 FROM {node_type} WHERE type = :type', 0, 1, array(':type' => $existing_type))->fetchField();
   $type = node_type_set_defaults($info);
