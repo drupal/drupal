@@ -4015,7 +4015,9 @@ function _form_set_class(&$element, $class = array()) {
  * Note: if the batch 'title', 'init_message', 'progress_message', or
  * 'error_message' could contain any user input, it is the responsibility of
  * the code calling batch_set() to sanitize them first with a function like
- * check_plain() or filter_xss().
+ * check_plain() or filter_xss(). Furthermore, if the batch operation
+ * returns any user input in the 'results' or 'message' keys of $context,
+ * it must also sanitize them first.
  *
  * Sample batch operations:
  * @code
@@ -4038,8 +4040,8 @@ function _form_set_class(&$element, $class = array()) {
  *   //   and the batch processing can continue to the next operation.
  *
  *   $node = node_load(array('uid' => $uid, 'type' => $type));
- *   $context['results'][] = $node->nid . ' : ' . $node->title;
- *   $context['message'] = $node->title;
+ *   $context['results'][] = $node->nid . ' : ' . check_plain($node->title);
+ *   $context['message'] = check_plain($node->title);
  * }
  *
  * // More advanced example: multi-step operation - load all nodes, five by five
@@ -4058,10 +4060,10 @@ function _form_set_class(&$element, $class = array()) {
  *     ->execute();
  *   foreach ($result as $row) {
  *     $node = node_load($row->nid, NULL, TRUE);
- *     $context['results'][] = $node->nid . ' : ' . $node->title;
+ *     $context['results'][] = $node->nid . ' : ' . check_plain($node->title);
  *     $context['sandbox']['progress']++;
  *     $context['sandbox']['current_node'] = $node->nid;
- *     $context['message'] = $node->title;
+ *     $context['message'] = check_plain($node->title);
  *   }
  *   if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
  *     $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
