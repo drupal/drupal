@@ -467,6 +467,9 @@ function locale_languages_delete_form_submit($form, &$form_state) {
       ->fields(array('language' => ''))
       ->condition('language', $form_state['values']['langcode'])
       ->execute();
+    if ($languages[$form_state['values']['langcode']]->enabled) {
+      variable_set('language_count', variable_get('language_count', 1) - 1);
+    }
     module_invoke_all('multilingual_settings_changed');
     $variables = array('%locale' => $languages[$form_state['values']['langcode']]->name);
     drupal_set_message(t('The language %locale has been removed.', $variables));
