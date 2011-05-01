@@ -2178,3 +2178,37 @@ class SystemAuthorizeCase extends DrupalWebTestCase {
     $this->assertText('System Test Username');
   }
 }
+
+/**
+ * Test the handling of requests containing 'index.php'.
+ */
+class SystemIndexPhpTest extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Index.php handling',
+      'description' => "Test the handling of requests containing 'index.php'.",
+      'group' => 'System',
+    );
+  }
+
+  function setUp() {
+    parent::setUp();
+  }
+
+  /**
+   * Test index.php handling.
+   */
+  function testIndexPhpHandling() {
+    $index_php = $GLOBALS['base_url'] . '/index.php';
+
+    $this->drupalGet($index_php, array('external' => TRUE));
+    $this->assertResponse(200, t('Make sure index.php returns a valid page.'));
+
+    $this->drupalGet($index_php, array('external' => TRUE, 'query' => array('q' => 'user')));
+    $this->assertResponse(200, t('Make sure index.php?q=user returns a valid page.'));
+
+    $this->drupalGet($index_php .'/user', array('external' => TRUE));
+    $this->assertResponse(404, t("Make sure index.php/user returns a 'page not found'."));
+  }
+}
+
