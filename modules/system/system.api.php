@@ -2761,9 +2761,10 @@ function hook_file_url_alter(&$uri) {
 /**
  * Check installation requirements and do status reporting.
  *
- * This hook has two closely related uses, determined by the $phase argument:
- * checking installation requirements ($phase == 'install')
- * and status reporting ($phase == 'runtime').
+ * This hook has three closely related uses, determined by the $phase argument:
+ * - Checking installation requirements ($phase == 'install').
+ * - Checking update requirements ($phase == 'update').
+ * - Status reporting ($phase == 'runtime').
  *
  * Note that this hook, like all others dealing with installation and updates,
  * must reside in a module_name.install file, or it will not properly abort
