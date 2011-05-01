@@ -2292,6 +2292,9 @@ function drupal_language_types() {
  * Return true if there is more than one language enabled.
  */
 function drupal_multilingual() {
+  // The "language_count" variable stores the number of enabled languages to
+  // avoid unnecessarily querying the database when building the list of
+  // enabled languages on monolingual sites.
   return variable_get('language_count', 1) > 1;
 }
 

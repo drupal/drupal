@@ -129,7 +129,7 @@ class LocaleConfigurationTest extends DrupalWebTestCase {
     $this->drupalGet('admin/config/regional/language');
     $this->clickLink(t('delete'));
     $this->assertText(t('Are you sure you want to delete the language'), t('"delete" link is correct.'));
-    // Delete the language.
+    // Delete an enabled language.
     $this->drupalGet('admin/config/regional/language/delete/' . $langcode);
     // First test the 'cancel' link.
     $this->clickLink(t('Cancel'));
@@ -144,6 +144,31 @@ class LocaleConfigurationTest extends DrupalWebTestCase {
     // Verify that language is no longer found.
     $this->drupalGet('admin/config/regional/language/delete/' . $langcode);
     $this->assertResponse(404, t('Language no longer found.'));
+    // Make sure the "language_count" variable has been updated correctly.
+    drupal_static_reset('language_list');
+    $enabled = language_list('enabled');
+    $this->assertEqual(variable_get('language_count', 1), count($enabled[1]), t('Language count is correct.'));
+    // Delete a disabled language.
+    // Disable an enabled language.
+    $edit = array(
+      'enabled[fr]' => FALSE,
+    );
+    $this->drupalPost($path, $edit, t('Save configuration'));
+    $this->assertNoFieldChecked('edit-enabled-fr', t('French language disabled.'));
+    // Get the count of enabled languages.
+    drupal_static_reset('language_list');
+    $enabled = language_list('enabled');
+    // Delete the disabled language.
+    $this->drupalPost('admin/config/regional/language/delete/fr', array(), t('Delete'));
+    // We need raw here because %locale will add HTML.
+    $this->assertRaw(t('The language %locale has been removed.', array('%locale' => 'French')), t('Disabled language has been removed.'));
+    $this->assertEqual($this->getUrl(), url('admin/config/regional/language', array('absolute' => TRUE)), t('Correct page redirection.'));
+    // Verify that language is no longer found.
+    $this->drupalGet('admin/config/regional/language/delete/fr');
+    $this->assertResponse(404, t('Language no longer found.'));
+    // Make sure the "language_count" variable has not changed.
+    $this->assertEqual(variable_get('language_count', 1), count($enabled[1]), t('Language count is correct.'));
+
 
     // Ensure we can't delete the English language.
     $this->drupalGet('admin/config/regional/language/delete/en');
