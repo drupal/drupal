@@ -1054,7 +1054,12 @@ function install_goto($path) {
  * Used during the install process, when database, theme, and localization
  * system is possibly not yet available.
  *
+ * Use t() if your code will never run during the Drupal installation phase.
+ * Use st() if your code will only run during installation and never any other
+ * time. Use get_t() if your code could run in either circumstance.
+ *
  * @see t()
+ * @see get_t()
  * @ingroup sanitization
  */
 function st($string, array $args = array(), array $options = array()) {

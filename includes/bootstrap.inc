@@ -1250,6 +1250,10 @@ function drupal_unpack($obj, $field = 'data') {
  * then rearrange the string as necessary for the language (e.g., in Spanish,
  * it might be "blog de @name").
  *
+ * During the Drupal installation phase, some resources used by t() wil not be
+ * available to code that needs localization. See st() and get_t() for
+ * alternatives.
+ *
  * @param $string
  *   A string containing the English string to translate.
  * @param $args
@@ -1273,6 +1277,8 @@ function drupal_unpack($obj, $field = 'data') {
  * @return
  *   The translated string.
  *
+ * @see st()
+ * @see get_t()
  * @ingroup sanitization
  */
 function t($string, array $args = array(), array $options = array()) {
@@ -2235,8 +2241,30 @@ function drupal_installation_attempted() {
 }
 
 /**
- * Return the name of the localization function. Use in code that needs to
- * run both during installation and normal operation.
+ * Returns the name of the proper localization function.
+ *
+ * get_t() exists to support localization for code that might run during
+ * the installation phase, when some elements of the system might not have
+ * loaded.
+ *
+ * This would include implementations of hook_install(), which could run
+ * during the Drupal installation phase, and might also be run during
+ * non-installation time, such as while installing the module from the the
+ * module administration page.
+ *
+ * Example useage:
+ * @code
+ *   $t = get_t();
+ *   $translated = $t('translate this');
+ * @endcode
+ *
+ * Use t() if your code will never run during the Drupal installation phase.
+ * Use st() if your code will only run during installation and never any other
+ * time. Use get_t() if your code could run in either circumstance.
+ *
+ * @see t()
+ * @see st()
+ * @ingroup sanitization
  */
 function get_t() {
   static $t;
