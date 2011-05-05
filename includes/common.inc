@@ -7584,7 +7584,7 @@ function entity_label($entity_type, $entity) {
   $label = FALSE;
   $info = entity_get_info($entity_type);
   if (isset($info['label callback']) && function_exists($info['label callback'])) {
-    $label = $info['label callback']($entity);
+    $label = $info['label callback']($entity_type, $entity);
   }
   elseif (!empty($info['entity keys']['label']) && isset($entity->{$info['entity keys']['label']})) {
     $label = $entity->{$info['entity keys']['label']};

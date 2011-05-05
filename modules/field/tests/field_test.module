@@ -225,13 +225,15 @@ function field_test_dummy_field_storage_query(EntityFieldQuery $query) {
 /**
  * Entity label callback.
  *
+ * @param $entity_type
+ *   The entity type.
  * @param $entity
  *   The entity object.
  *
  * @return
  *   The label of the entity prefixed with "label callback".
  */
-function field_test_entity_label_callback($entity) {
+function field_test_entity_label_callback($entity_type, $entity) {
   return 'label callback ' . $entity->ftlabel;
 }
 
