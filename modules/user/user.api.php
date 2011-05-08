@@ -126,7 +126,7 @@ function hook_user_cancel($edit, $account, $method) {
  *   a method. If #access is defined, the method cannot be configured as default
  *   method.
  *
- * @param &$methods
+ * @param $methods
  *   An array containing user account cancellation methods, keyed by method id.
  *
  * @see user_cancel_methods()
@@ -213,7 +213,7 @@ function hook_user_categories() {
  * user account object is loaded, modules may add to $edit['data'] in order
  * to have their data serialized on save.
  *
- * @param &$edit
+ * @param $edit
  *   The array of form values submitted by the user.
  * @param $account
  *   The user object on which the operation is performed.
@@ -236,7 +236,7 @@ function hook_user_presave(&$edit, $account, $category) {
  * The module should save its custom additions to the user object into the
  * database.
  *
- * @param &$edit
+ * @param $edit
  *   The array of form values submitted by the user.
  * @param $account
  *   The user object on which the operation is being performed.
@@ -261,7 +261,7 @@ function hook_user_insert(&$edit, $account, $category) {
  * Modules may use this hook to update their user data in a custom storage
  * after a user account has been updated.
  *
- * @param &$edit
+ * @param $edit
  *   The array of form values submitted by the user.
  * @param $account
  *   The user object on which the operation is performed.
@@ -283,7 +283,7 @@ function hook_user_update(&$edit, $account, $category) {
 /**
  * The user just logged in.
  *
- * @param &$edit
+ * @param $edit
  *   The array of form values submitted by the user.
  * @param $account
  *   The user object on which the operation was just performed.

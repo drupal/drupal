@@ -1318,7 +1318,7 @@ function hook_field_attach_view_alter(&$output, $context) {
  *
  * This hook is invoked after the field module has performed the operation.
  *
- * @param &$entity
+ * @param $entity
  *   The entity being prepared for translation.
  * @param $context
  *   An associative array containing:
@@ -1361,7 +1361,7 @@ function hook_field_language_alter(&$display_language, $context) {
  * This hook is invoked from field_available_languages() to allow modules to
  * alter the array of available languages for the given field.
  *
- * @param &$languages
+ * @param $languages
  *   A reference to an array of language codes to be made available.
  * @param $context
  *   An associative array containing:

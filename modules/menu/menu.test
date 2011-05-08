@@ -379,7 +379,7 @@ class MenuTestCase extends DrupalWebTestCase {
   /**
    * Modify a menu link using the menu module UI.
    *
-   * @param array &$item Menu link passed by reference.
+   * @param array $item Menu link passed by reference.
    */
   function modifyMenuLink(&$item) {
     $item['link_title'] = $this->randomName(16);

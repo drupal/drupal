@@ -74,15 +74,15 @@ function drupal_depth_first_search(&$graph) {
 /**
  * Helper function to perform a depth first sort.
  *
- * @param &$graph
+ * @param $graph
  *   A three dimensional associated graph array.
- * @param &$state
+ * @param $state
  *   An associative array. The key 'last_visit_order' stores a list of the
  *   vertices visited. The key components stores list of vertices belonging
  *   to the same the component.
  * @param $start
  *   An arbitrary vertex where we started traversing the graph.
- * @param &$component
+ * @param $component
  *   The component of the last vertex.
  *
  * @see drupal_depth_first_search()
