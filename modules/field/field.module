@@ -558,7 +558,7 @@ function _field_sort_items_value_helper($a, $b) {
  *         // the 'default' mode:
  *         'default' => array(
  *           'weight' => The weight of the pseudo-field,
- *           'visibility' => Whether the pseudo-field is visible or hidden,
+ *           'visible' => TRUE if the pseudo-field is visible, FALSE if hidden,
  *         ),
  *         'full' => ...
  *       ),
