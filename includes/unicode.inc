@@ -169,7 +169,7 @@ function unicode_requirements() {
  * This is also where unsupported encodings will be converted. Callers should
  * take this into account: $data might have been changed after the call.
  *
- * @param &$data
+ * @param $data
  *   The XML data which will be parsed later.
  *
  * @return

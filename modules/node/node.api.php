@@ -314,7 +314,7 @@ function hook_node_access_records($node) {
  * @see hook_node_grants()
  * @see hook_node_grants_alter()
  *
- * @param &$grants
+ * @param $grants
  *   The $grants array returned by hook_node_access_records().
  * @param $node
  *   The node for which the grants were acquired.
@@ -359,7 +359,7 @@ function hook_node_access_records_alter(&$grants, $node) {
  * @see hook_node_access_records()
  * @see hook_node_access_records_alter()
  *
- * @param &$grants
+ * @param $grants
  *   The $grants array returned by hook_node_grants().
  * @param $account
  *   The user account requesting access to content.

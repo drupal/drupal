@@ -6311,7 +6311,7 @@ function drupal_array_set_nested_value(array &$array, array $parents, $value, $f
  *   The array from which to get the value.
  * @param $parents
  *   An array of parent keys of the value, starting with the outermost key.
- * @param &$key_exists
+ * @param $key_exists
  *   (optional) If given, an already defined variable that is altered by
  *   reference.
  *

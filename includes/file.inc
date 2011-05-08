@@ -422,7 +422,7 @@ function file_create_url($uri) {
  * Directories need to have execute permissions to be considered a directory by
  * FTP servers, etc.
  *
- * @param &$directory
+ * @param $directory
  *   A string reference containing the name of a directory path or URI. A
  *   trailing slash will be trimmed from a path.
  * @param $options

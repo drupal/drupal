@@ -383,7 +383,7 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
    *   The file mode ("r", "wb" etc.).
    * @param $options
    *   A bit mask of STREAM_USE_PATH and STREAM_REPORT_ERRORS.
-   * @param &$opened_path
+   * @param $opened_path
    *   A string containing the path actually opened.
    *
    * @return

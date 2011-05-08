@@ -855,7 +855,7 @@ function update_manager_file_get($url) {
  *   The short name of the project to download.
  * @param string $url
  *   The URL to download a specific project release archive file.
- * @param array &$context
+ * @param array $context
  *   Reference to an array used for BatchAPI storage.
  *
  * @see update_manager_download_page()

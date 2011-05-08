@@ -101,7 +101,7 @@ function update_authorize_run_install($filetransfer, $project, $updater_name, $l
  *   already been downloaded and extracted into.
  * @param FileTransfer $filetransfer
  *   The FileTransfer object to use for performing this operation.
- * @param array &$context
+ * @param array $context
  *   Reference to an array used for BatchAPI storage.
  */
 function update_authorize_batch_copy_project($project, $updater_name, $local_url, $filetransfer, &$context) {

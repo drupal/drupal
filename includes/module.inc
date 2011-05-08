@@ -890,14 +890,14 @@ function drupal_required_modules() {
  *   values in $type. For example, when Form API is using drupal_alter() to
  *   execute both hook_form_alter() and hook_form_FORM_ID_alter()
  *   implementations, it passes array('form', 'form_' . $form_id) for $type.
- * @param &$data
+ * @param $data
  *   The variable that will be passed to hook_TYPE_alter() implementations to be
  *   altered. The type of this variable depends on the value of the $type
  *   argument. For example, when altering a 'form', $data will be a structured
  *   array. When altering a 'profile', $data will be an object.
- * @param &$context1
+ * @param $context1
  *   (optional) An additional variable that is passed by reference.
- * @param &$context2
+ * @param $context2
  *   (optional) An additional variable that is passed by reference. If more
  *   context needs to be provided to implementations, then this should be an
  *   associative array as described above.

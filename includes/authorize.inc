@@ -159,7 +159,7 @@ function _authorize_filetransfer_connection_settings($backend) {
  * Therefore, to properly add defaults, we need to walk through all the
  * children form elements and process those defaults recursively.
  *
- * @param &$element
+ * @param $element
  *   Reference to the Form API form element we're operating on.
  * @param $key
  *   The key for our current form element, if any.
