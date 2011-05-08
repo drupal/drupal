@@ -694,12 +694,15 @@ function taxonomy_term_view($term, $view_mode = 'full', $langcode = NULL) {
 
   $build += field_attach_view('taxonomy_term', $term, $view_mode, $langcode);
 
-  $build['description'] = array(
-    '#markup' => check_markup($term->description, $term->format, '', TRUE),
-    '#weight' => 0,
-    '#prefix' => '<div class="taxonomy-term-description">',
-    '#suffix' => '</div>',
-  );
+  // Add term description if the term has one.
+  if (!empty($term->description)) {
+    $build['description'] = array(
+      '#markup' => check_markup($term->description, $term->format, '', TRUE),
+      '#weight' => 0,
+      '#prefix' => '<div class="taxonomy-term-description">',
+      '#suffix' => '</div>',
+    );
+  }
 
   $build['#attached']['css'][] = drupal_get_path('module', 'taxonomy') . '/taxonomy.css';
 
@@ -727,6 +730,7 @@ function template_preprocess_taxonomy_term(&$variables) {
   $variables = array_merge((array) $term, $variables);
 
   // Helpful $content variable for templates.
+  $variables['content'] = array();
   foreach (element_children($variables['elements']) as $key) {
     $variables['content'][$key] = $variables['elements'][$key];
   }
