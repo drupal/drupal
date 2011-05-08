@@ -105,6 +105,10 @@ function openid_test_yadis_xrds() {
           <Service>
             <Type>http://example.com/this-is-ignored</Type>
           </Service>
+          <Service priority="5">
+            <Type>http://openid.net/signon/1.0</Type>
+            <URI>http://example.com/this-is-only-openid-1.0</URI>
+          </Service>
           <Service priority="10">
             <Type>http://specs.openid.net/auth/2.0/signon</Type>
             <Type>http://openid.net/srv/ax/1.0</Type>
@@ -133,7 +137,7 @@ function openid_test_yadis_xrds() {
     }
     elseif (arg(3) == 'delegate') {
       print '
-          <Service priority="5">
+          <Service priority="0">
             <Type>http://specs.openid.net/auth/2.0/signon</Type>
             <Type>http://openid.net/srv/ax/1.0</Type>
             <URI>' . url('openid-test/endpoint', array('absolute' => TRUE)) . '</URI>

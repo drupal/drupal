@@ -188,32 +188,33 @@ function _openid_select_service(array $services) {
   // Extensible Resource Identifier (XRI) Resolution Version 2.0, section 4.3.3:
   // Find the service with the highest priority (lowest integer value). If there
   // is a tie, select a random one, not just the first in the XML document.
-  $selected_service = NULL;
   shuffle($services);
+  $selected_service = NULL;
+  $selected_type_priority = FALSE;
 
   // Search for an OP Identifier Element.
   foreach ($services as $service) {
     if (!empty($service['uri'])) {
+      $type_priority = FALSE;
       if (in_array('http://specs.openid.net/auth/2.0/server', $service['types'])) {
         $service['version'] = 2;
+        $type_priority = 1;
+      }
+      elseif (in_array('http://specs.openid.net/auth/2.0/signon', $service['types'])) {
+        $service['version'] = 2;
+        $type_priority = 2;
       }
       elseif (in_array(OPENID_NS_1_0, $service['types']) || in_array(OPENID_NS_1_1, $service['types'])) {
         $service['version'] = 1;
+        $type_priority = 3;
       }
-      if (isset($service['version']) && (!$selected_service || $service['priority'] < $selected_service['priority'])) {
-        $selected_service = $service;
-      }
-    }
-  }
 
-  if (!$selected_service) {
-    // Search for Claimed Identifier Element.
-    foreach ($services as $service) {
-      if (!empty($service['uri']) && in_array('http://specs.openid.net/auth/2.0/signon', $service['types'])) {
-        $service['version'] = 2;
-        if (!$selected_service || $service['priority'] < $selected_service['priority']) {
-          $selected_service = $service;
-        }
+      if ($type_priority
+          && (!$selected_service
+              || $type_priority < $selected_type_priority
+              || ($type_priority == $selected_type_priority && $service['priority'] < $selected_service['priority']))) {
+        $selected_service = $service;
+        $selected_type_priority = $type_priority;
       }
     }
   }
