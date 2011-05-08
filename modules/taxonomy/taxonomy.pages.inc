@@ -31,14 +31,12 @@ function taxonomy_term_page($term) {
   drupal_add_feed('taxonomy/term/' . $term->tid . '/feed', 'RSS - ' . $term->name);
 
   $build = array();
-  // Add term heading if the term has a description
-  if (!empty($term->description)) {
-    $build['term_heading'] = array(
-      '#prefix' => '<div class="term-listing-heading">',
-      '#suffix' => '</div>',
-      'term' => taxonomy_term_view($term, 'full'),
-    );
-  }
+
+  $build['term_heading'] = array(
+    '#prefix' => '<div class="term-listing-heading">',
+    '#suffix' => '</div>',
+    'term' => taxonomy_term_view($term, 'full'),
+  );
 
   if ($nids = taxonomy_select_nodes($term->tid, TRUE, variable_get('default_nodes_main', 10))) {
     $nodes = node_load_multiple($nids);
