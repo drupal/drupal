@@ -732,7 +732,7 @@ function field_info_instance($entity_type, $field_name, $bundle_name) {
  *         'default' => array(
  *           'weight' => The weight of the component in displayed entities in
  *             this view mode,
- *           'visibility' => Whether the component is visible or hidden in
+ *           'visible' => TRUE if the component is visible, FALSE if hidden, in
  *             displayed entities in this view mode,
  *         ),
  *         'teaser' => array(
