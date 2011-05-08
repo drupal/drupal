@@ -562,7 +562,7 @@ function _locale_import_po($file, $langcode, $mode, $group = NULL) {
   if ($skips) {
     $skip_message = format_plural($skips, 'One translation string was skipped because it contains disallowed HTML.', '@count translation strings were skipped because they contain disallowed HTML.');
     drupal_set_message($skip_message);
-    watchdog('locale', '@count disallowed HTML string(s) in %file', array('@count' => $skips, '%file' => $file->uri), WATCHDOG_WARNING);
+    watchdog('locale', '@count disallowed HTML string(s) in %file', array('@count' => $skips, '%file' => $file->uri), LOG_WARNING);
   }
   return TRUE;
 }
@@ -1956,7 +1956,7 @@ function _locale_rebuild_js($langcode = NULL) {
       watchdog('locale', 'Updated JavaScript translation file for the language %language.', array('%language' => t($language->name)));
       return TRUE;
     case 'rebuilt':
-      watchdog('locale', 'JavaScript translation file %file.js was lost.', array('%file' => $language->javascript), WATCHDOG_WARNING);
+      watchdog('locale', 'JavaScript translation file %file.js was lost.', array('%file' => $language->javascript), LOG_WARNING);
       // Proceed to the 'created' case as the JavaScript translation file has
       // been created again.
     case 'created':
@@ -1966,7 +1966,7 @@ function _locale_rebuild_js($langcode = NULL) {
       watchdog('locale', 'Removed JavaScript translation file for the language %language, because no translations currently exist for that language.', array('%language' => t($language->name)));
       return TRUE;
     case 'error':
-      watchdog('locale', 'An error occurred during creation of the JavaScript translation file for the language %language.', array('%language' => t($language->name)), WATCHDOG_ERROR);
+      watchdog('locale', 'An error occurred during creation of the JavaScript translation file for the language %language.', array('%language' => t($language->name)), LOG_ERR);
       return FALSE;
     default:
       // No operation needed.

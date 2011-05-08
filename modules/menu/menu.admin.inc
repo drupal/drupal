@@ -545,7 +545,7 @@ function menu_delete_menu_confirm_submit($form, &$form_state) {
 
   $t_args = array('%title' => $menu['title']);
   drupal_set_message(t('The custom menu %title has been deleted.', $t_args));
-  watchdog('menu', 'Deleted custom menu %title and all its menu links.', $t_args, WATCHDOG_NOTICE);
+  watchdog('menu', 'Deleted custom menu %title and all its menu links.', $t_args, LOG_NOTICE);
 }
 
 /**
@@ -627,7 +627,7 @@ function menu_item_delete_form_submit($form, &$form_state) {
   menu_link_delete($item['mlid']);
   $t_args = array('%title' => $item['link_title']);
   drupal_set_message(t('The menu link %title has been deleted.', $t_args));
-  watchdog('menu', 'Deleted menu link %title.', $t_args, WATCHDOG_NOTICE);
+  watchdog('menu', 'Deleted menu link %title.', $t_args, LOG_NOTICE);
   $form_state['redirect'] = 'admin/structure/menu/manage/' . $item['menu_name'];
 }
 

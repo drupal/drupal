@@ -737,7 +737,7 @@ function image_style_create_derivative($style, $source, $destination) {
 
   // Build the destination folder tree if it doesn't already exist.
   if (!file_prepare_directory($directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS)) {
-    watchdog('image', 'Failed to create style directory: %directory', array('%directory' => $directory), WATCHDOG_ERROR);
+    watchdog('image', 'Failed to create style directory: %directory', array('%directory' => $directory), LOG_ERR);
     return FALSE;
   }
 
@@ -751,7 +751,7 @@ function image_style_create_derivative($style, $source, $destination) {
 
   if (!image_save($image, $destination)) {
     if (file_exists($destination)) {
-      watchdog('image', 'Cached image file %destination already exists. There may be an issue with your rewrite configuration.', array('%destination' => $destination), WATCHDOG_ERROR);
+      watchdog('image', 'Cached image file %destination already exists. There may be an issue with your rewrite configuration.', array('%destination' => $destination), LOG_ERR);
     }
     return FALSE;
   }

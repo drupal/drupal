@@ -70,7 +70,7 @@ function actions_loop_test_log() {
  * Replacement of the watchdog() function that eliminates the use of semaphores
  * so that we can test the abortion of an action loop.
  */
-function watchdog_skip_semaphore($type, $message, $variables = array(), $severity = WATCHDOG_NOTICE, $link = NULL) {
+function watchdog_skip_semaphore($type, $message, $variables = array(), $severity = LOG_NOTICE, $link = NULL) {
   global $user, $base_root;
 
   // Prepare the fields to be logged

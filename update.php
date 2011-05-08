@@ -251,7 +251,7 @@ function update_info_page() {
 
 function update_access_denied_page() {
   drupal_add_http_header('Status', '403 Forbidden');
-  watchdog('access denied', 'update.php', NULL, WATCHDOG_WARNING);
+  watchdog('access denied', 'update.php', NULL, LOG_WARNING);
   drupal_set_title('Access denied');
   return '<p>Access denied. You are not authorized to access this page. Log in using either an account with the <em>administer software updates</em> permission or the site maintenance account (the account you created during installation). If you cannot log in, you will have to edit <code>settings.php</code> to bypass this access check. To do this:</p>
 <ol>

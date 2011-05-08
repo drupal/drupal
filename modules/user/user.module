@@ -2314,7 +2314,7 @@ function user_cancel($edit, $uid, $method) {
 
   if (!$account) {
     drupal_set_message(t('The user account %id does not exist.', array('%id' => $uid)), 'error');
-    watchdog('user', 'Attempted to cancel non-existing user account: %id.', array('%id' => $uid), WATCHDOG_ERROR);
+    watchdog('user', 'Attempted to cancel non-existing user account: %id.', array('%id' => $uid), LOG_ERR);
     return;
   }
 
@@ -2365,7 +2365,7 @@ function _user_cancel($edit, $account, $method) {
       }
       user_save($account, array('status' => 0));
       drupal_set_message(t('%name has been disabled.', array('%name' => $account->name)));
-      watchdog('user', 'Blocked user: %name %email.', array('%name' => $account->name, '%email' => '<' . $account->mail . '>'), WATCHDOG_NOTICE);
+      watchdog('user', 'Blocked user: %name %email.', array('%name' => $account->name, '%email' => '<' . $account->mail . '>'), LOG_NOTICE);
       break;
 
     case 'user_cancel_reassign':
@@ -2376,7 +2376,7 @@ function _user_cancel($edit, $account, $method) {
       }
       user_delete($account->uid);
       drupal_set_message(t('%name has been deleted.', array('%name' => $account->name)));
-      watchdog('user', 'Deleted user: %name %email.', array('%name' => $account->name, '%email' => '<' . $account->mail . '>'), WATCHDOG_NOTICE);
+      watchdog('user', 'Deleted user: %name %email.', array('%name' => $account->name, '%email' => '<' . $account->mail . '>'), LOG_NOTICE);
       break;
   }
 
@@ -3061,7 +3061,7 @@ function user_user_operations($form = array(), $form_state = array()) {
         );
       }
       else {
-        watchdog('security', 'Detected malicious attempt to alter protected user fields.', array(), WATCHDOG_WARNING);
+        watchdog('security', 'Detected malicious attempt to alter protected user fields.', array(), LOG_WARNING);
         return;
       }
     }
@@ -3719,7 +3719,7 @@ function user_register_submit($form, &$form_state) {
   $form_state['user'] = $account;
   $form_state['values']['uid'] = $account->uid;
 
-  watchdog('user', 'New user: %name (%email).', array('%name' => $form_state['values']['name'], '%email' => $form_state['values']['mail']), WATCHDOG_NOTICE, l(t('edit'), 'user/' . $account->uid . '/edit'));
+  watchdog('user', 'New user: %name (%email).', array('%name' => $form_state['values']['name'], '%email' => $form_state['values']['mail']), LOG_NOTICE, l(t('edit'), 'user/' . $account->uid . '/edit'));
 
   // Add plain text password into user account to generate mail tokens.
   $account->password = $pass;

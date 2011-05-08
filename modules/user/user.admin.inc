@@ -352,7 +352,7 @@ function user_admin_settings() {
     $picture_path =  file_default_scheme() . '://' . variable_get('user_picture_path', 'pictures');
     if (!file_prepare_directory($picture_path, FILE_CREATE_DIRECTORY)) {
       form_set_error('user_picture_path', t('The directory %directory does not exist or is not writable.', array('%directory' => $picture_path)));
-      watchdog('file system', 'The directory %directory does not exist or is not writable.', array('%directory' => $picture_path), WATCHDOG_ERROR);
+      watchdog('file system', 'The directory %directory does not exist or is not writable.', array('%directory' => $picture_path), LOG_ERR);
     }
   }
   $picture_support = variable_get('user_pictures', 0);

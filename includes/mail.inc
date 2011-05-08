@@ -152,7 +152,7 @@ function drupal_mail($module, $key, $to, $language, $params = array(), $from = N
 
     // Log errors
     if (!$message['result']) {
-      watchdog('mail', 'Error sending e-mail (from %from to %to).', array('%from' => $message['from'], '%to' => $message['to']), WATCHDOG_ERROR);
+      watchdog('mail', 'Error sending e-mail (from %from to %to).', array('%from' => $message['from'], '%to' => $message['to']), LOG_ERR);
       drupal_set_message(t('Unable to send e-mail. Contact the site administrator if the problem persists.'), 'error');
     }
   }

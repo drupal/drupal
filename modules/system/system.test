@@ -78,7 +78,7 @@ class ModuleTestCase extends DrupalWebTestCase {
    * @param $link
    *   A link to associate with the message.
    */
-  function assertLogMessage($type, $message, $variables = array(), $severity = WATCHDOG_NOTICE, $link = '') {
+  function assertLogMessage($type, $message, $variables = array(), $severity = LOG_NOTICE, $link = '') {
     $count = db_select('watchdog', 'w')
       ->condition('type', $type)
       ->condition('message', $message)
@@ -126,8 +126,8 @@ class EnableDisableTestCase extends ModuleTestCase {
     $this->assertText(t('hook_modules_enabled fired for aggregator'), t('hook_modules_enabled fired.'));
     $this->assertModules(array('aggregator'), TRUE);
     $this->assertTableCount('aggregator', TRUE);
-    $this->assertLogMessage('system', "%module module installed.", array('%module' => 'aggregator'), WATCHDOG_INFO);
-    $this->assertLogMessage('system', "%module module enabled.", array('%module' => 'aggregator'), WATCHDOG_INFO);
+    $this->assertLogMessage('system', "%module module installed.", array('%module' => 'aggregator'), LOG_INFO);
+    $this->assertLogMessage('system', "%module module enabled.", array('%module' => 'aggregator'), LOG_INFO);
 
     // Disable aggregator, check tables, uninstall aggregator, check tables.
     $edit = array();
@@ -139,7 +139,7 @@ class EnableDisableTestCase extends ModuleTestCase {
     $this->assertText(t('hook_modules_disabled fired for aggregator'), t('hook_modules_disabled fired.'));
     $this->assertModules(array('aggregator'), FALSE);
     $this->assertTableCount('aggregator', TRUE);
-    $this->assertLogMessage('system', "%module module disabled.", array('%module' => 'aggregator'), WATCHDOG_INFO);
+    $this->assertLogMessage('system', "%module module disabled.", array('%module' => 'aggregator'), LOG_INFO);
 
     // Uninstall the module.
     $edit = array();
@@ -153,7 +153,7 @@ class EnableDisableTestCase extends ModuleTestCase {
     $this->assertText(t('hook_modules_uninstalled fired for aggregator'), t('hook_modules_uninstalled fired.'));
     $this->assertModules(array('aggregator'), FALSE);
     $this->assertTableCount('aggregator', FALSE);
-    $this->assertLogMessage('system', "%module module uninstalled.", array('%module' => 'aggregator'), WATCHDOG_INFO);
+    $this->assertLogMessage('system', "%module module uninstalled.", array('%module' => 'aggregator'), LOG_INFO);
 
     // Reinstall (and enable) aggregator module.
     $edit = array();

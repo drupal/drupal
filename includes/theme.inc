@@ -789,7 +789,7 @@ function theme($hook, $variables = array()) {
       // Only log a message when not trying theme suggestions ($hook being an
       // array).
       if (!isset($candidate)) {
-        watchdog('theme', 'Theme key "@key" not found.', array('@key' => $hook), WATCHDOG_WARNING);
+        watchdog('theme', 'Theme key "@key" not found.', array('@key' => $hook), LOG_WARNING);
       }
       return '';
     }

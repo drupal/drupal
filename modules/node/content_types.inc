@@ -342,7 +342,7 @@ function node_type_form_submit($form, &$form_state) {
   elseif ($status == SAVED_NEW) {
     node_add_body_field($type);
     drupal_set_message(t('The content type %name has been added.', $t_args));
-    watchdog('node', 'Added content type %name.', $t_args, WATCHDOG_NOTICE, l(t('view'), 'admin/structure/types'));
+    watchdog('node', 'Added content type %name.', $t_args, LOG_NOTICE, l(t('view'), 'admin/structure/types'));
   }
 
   $form_state['redirect'] = 'admin/structure/types';
@@ -425,7 +425,7 @@ function node_type_delete_confirm_submit($form, &$form_state) {
   variable_del('node_preview_' . $form_state['values']['type']);
   $t_args = array('%name' => $form_state['values']['name']);
   drupal_set_message(t('The content type %name has been deleted.', $t_args));
-  watchdog('menu', 'Deleted content type %name.', $t_args, WATCHDOG_NOTICE);
+  watchdog('menu', 'Deleted content type %name.', $t_args, LOG_NOTICE);
 
   node_types_rebuild();
   menu_rebuild();

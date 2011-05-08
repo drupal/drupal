@@ -374,7 +374,7 @@ function profile_field_form_submit($form, &$form_state) {
       ->fields($values)
       ->execute();
     drupal_set_message(t('The field has been created.'));
-    watchdog('profile', 'Profile field %field added under category %category.', array('%field' => $form_state['values']['title'], '%category' => $form_state['values']['category']), WATCHDOG_NOTICE, l(t('view'), 'admin/config/people/profile'));
+    watchdog('profile', 'Profile field %field added under category %category.', array('%field' => $form_state['values']['title'], '%category' => $form_state['values']['category']), LOG_NOTICE, l(t('view'), 'admin/config/people/profile'));
   }
   else {
     db_update('profile_field')
@@ -422,7 +422,7 @@ function profile_field_delete_submit($form, &$form_state) {
   cache_clear_all();
 
   drupal_set_message(t('The field %field has been deleted.', array('%field' => $form_state['values']['title'])));
-  watchdog('profile', 'Profile field %field deleted.', array('%field' => $form_state['values']['title']), WATCHDOG_NOTICE, l(t('view'), 'admin/config/people/profile'));
+  watchdog('profile', 'Profile field %field deleted.', array('%field' => $form_state['values']['title']), LOG_NOTICE, l(t('view'), 'admin/config/people/profile'));
 
   $form_state['redirect'] = 'admin/config/people/profile';
   return;

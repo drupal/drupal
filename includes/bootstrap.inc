@@ -38,94 +38,6 @@ define('CACHE_PERMANENT', 0);
 define('CACHE_TEMPORARY', -1);
 
 /**
- * Log message severity -- Emergency: system is unusable.
- *
- * The WATCHDOG_* constant definitions correspond to the logging severity levels
- * defined in RFC 3164, section 4.1.1: http://www.faqs.org/rfcs/rfc3164.html
- *
- * @see watchdog()
- * @see watchdog_severity_levels()
- */
-define('WATCHDOG_EMERGENCY', 0);
-
-/**
- * Log message severity -- Alert: action must be taken immediately.
- *
- * The WATCHDOG_* constant definitions correspond to the logging severity levels
- * defined in RFC 3164, section 4.1.1: http://www.faqs.org/rfcs/rfc3164.html
- *
- * @see watchdog()
- * @see watchdog_severity_levels()
- */
-define('WATCHDOG_ALERT', 1);
-
-/**
- * Log message severity -- Critical: critical conditions.
- *
- * The WATCHDOG_* constant definitions correspond to the logging severity levels
- * defined in RFC 3164, section 4.1.1: http://www.faqs.org/rfcs/rfc3164.html
- *
- * @see watchdog()
- * @see watchdog_severity_levels()
- */
-define('WATCHDOG_CRITICAL', 2);
-
-/**
- * Log message severity -- Error: error conditions.
- *
- * The WATCHDOG_* constant definitions correspond to the logging severity levels
- * defined in RFC 3164, section 4.1.1: http://www.faqs.org/rfcs/rfc3164.html
- *
- * @see watchdog()
- * @see watchdog_severity_levels()
- */
-define('WATCHDOG_ERROR', 3);
-
-/**
- * Log message severity -- Warning: warning conditions.
- *
- * The WATCHDOG_* constant definitions correspond to the logging severity levels
- * defined in RFC 3164, section 4.1.1: http://www.faqs.org/rfcs/rfc3164.html
- *
- * @see watchdog()
- * @see watchdog_severity_levels()
- */
-define('WATCHDOG_WARNING', 4);
-
-/**
- * Log message severity -- Notice: normal but significant condition.
- *
- * The WATCHDOG_* constant definitions correspond to the logging severity levels
- * defined in RFC 3164, section 4.1.1: http://www.faqs.org/rfcs/rfc3164.html
- *
- * @see watchdog()
- * @see watchdog_severity_levels()
- */
-define('WATCHDOG_NOTICE', 5);
-
-/**
- * Log message severity -- Informational: informational messages.
- *
- * The WATCHDOG_* constant definitions correspond to the logging severity levels
- * defined in RFC 3164, section 4.1.1: http://www.faqs.org/rfcs/rfc3164.html
- *
- * @see watchdog()
- * @see watchdog_severity_levels()
- */
-define('WATCHDOG_INFO', 6);
-
-/**
- * Log message severity -- Debug: debug-level messages.
- *
- * The WATCHDOG_* constant definitions correspond to the logging severity levels
- * defined in RFC 3164, section 4.1.1: http://www.faqs.org/rfcs/rfc3164.html
- *
- * @see watchdog()
- * @see watchdog_severity_levels()
- */
-define('WATCHDOG_DEBUG', 7);
-
-/**
  * First bootstrap phase: initialize configuration.
  */
 define('DRUPAL_BOOTSTRAP_CONFIGURATION', 0);
@@ -1437,7 +1349,7 @@ function request_uri() {
  * @see watchdog()
  * @see drupal_decode_exception()
  */
-function watchdog_exception($type, Exception $exception, $message = NULL, $variables = array(), $severity = WATCHDOG_ERROR, $link = NULL) {
+function watchdog_exception($type, Exception $exception, $message = NULL, $variables = array(), $severity = LOG_ERR, $link = NULL) {
 
    // Use a default value if $message is not set.
    if (empty($message)) {
@@ -1472,14 +1384,14 @@ function watchdog_exception($type, Exception $exception, $message = NULL, $varia
  *   translate.
  * @param $severity
  *   The severity of the message, as per RFC 3164. Possible values are
- *   WATCHDOG_ERROR, WATCHDOG_WARNING, etc.
+ *   LOG_ERR, LOG_WARNING, etc.
  * @param $link
  *   A link to associate with the message.
  *
  * @see watchdog_severity_levels()
  * @see hook_watchdog()
  */
-function watchdog($type, $message, $variables = array(), $severity = WATCHDOG_NOTICE, $link = NULL) {
+function watchdog($type, $message, $variables = array(), $severity = LOG_NOTICE, $link = NULL) {
   global $user, $base_root;
 
   static $in_error_state = FALSE;

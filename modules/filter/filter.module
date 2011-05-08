@@ -721,7 +721,7 @@ function check_markup($text, $format_id = NULL, $langcode = '', $cache = FALSE) 
   }
   // If the requested text format does not exist, the text cannot be filtered.
   if (!$format = filter_format_load($format_id)) {
-    watchdog('filter', 'Missing text format: %format.', array('%format' => $format_id), WATCHDOG_ALERT);
+    watchdog('filter', 'Missing text format: %format.', array('%format' => $format_id), LOG_ALERT);
     return '';
   }
 

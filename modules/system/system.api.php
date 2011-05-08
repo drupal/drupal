@@ -2206,21 +2206,21 @@ function hook_xmlrpc_alter(&$methods) {
  * @param $log_entry
  *   An associative array containing the following keys:
  *   - type: The type of message for this entry. For contributed modules, this is
- *     normally the module name. Do not use 'debug', use severity WATCHDOG_DEBUG instead.
+ *     normally the module name. Do not use 'debug', use severity LOG_DEBUG instead.
  *   - user: The user object for the user who was logged in when the event happened.
  *   - request_uri: The Request URI for the page the event happened in.
  *   - referer: The page that referred the use to the page where the event occurred.
  *   - ip: The IP address where the request for the page came from.
  *   - timestamp: The UNIX timestamp of the date/time the event occurred
  *   - severity: One of the following values as defined in RFC 3164 http://www.faqs.org/rfcs/rfc3164.html
- *     WATCHDOG_EMERGENCY Emergency: system is unusable
- *     WATCHDOG_ALERT     Alert: action must be taken immediately
- *     WATCHDOG_CRITICAL  Critical: critical conditions
- *     WATCHDOG_ERROR     Error: error conditions
- *     WATCHDOG_WARNING   Warning: warning conditions
- *     WATCHDOG_NOTICE    Notice: normal but significant condition
- *     WATCHDOG_INFO      Informational: informational messages
- *     WATCHDOG_DEBUG     Debug: debug-level messages
+ *     LOG_EMERG    Emergency: system is unusable
+ *     LOG_ALERT    Alert: action must be taken immediately
+ *     LOG_CRIT     Critical: critical conditions
+ *     LOG_ERR      Error: error conditions
+ *     LOG_WARNING  Warning: warning conditions
+ *     LOG_NOTICE   Notice: normal but significant condition
+ *     LOG_INFO     Informational: informational messages
+ *     LOG_DEBUG    Debug: debug-level messages
  *   - link: an optional link provided by the module that called the watchdog() function.
  *   - message: The text of the message to be logged.
  */
@@ -2228,14 +2228,14 @@ function hook_watchdog(array $log_entry) {
   global $base_url, $language;
 
   $severity_list = array(
-    WATCHDOG_EMERGENCY => t('Emergency'),
-    WATCHDOG_ALERT     => t('Alert'),
-    WATCHDOG_CRITICAL  => t('Critical'),
-    WATCHDOG_ERROR     => t('Error'),
-    WATCHDOG_WARNING   => t('Warning'),
-    WATCHDOG_NOTICE    => t('Notice'),
-    WATCHDOG_INFO      => t('Info'),
-    WATCHDOG_DEBUG     => t('Debug'),
+    LOG_EMERG     => t('Emergency'),
+    LOG_ALERT     => t('Alert'),
+    LOG_CRITI     => t('Critical'),
+    LOG_ERR       => t('Error'),
+    LOG_WARNING   => t('Warning'),
+    LOG_NOTICE    => t('Notice'),
+    LOG_INFO      => t('Info'),
+    LOG_DEBUG     => t('Debug'),
   );
 
   $to = 'someone@example.com';

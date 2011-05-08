@@ -507,7 +507,7 @@ function file_create_htaccess($directory, $private = TRUE) {
   }
   else {
     $variables = array('%directory' => $directory, '!htaccess' => '<br />' . nl2br(check_plain($htaccess_lines)));
-    watchdog('security', "Security warning: Couldn't write .htaccess file. Please create a .htaccess file in your %directory directory which contains the following lines: <code>!htaccess</code>", $variables, WATCHDOG_ERROR);
+    watchdog('security', "Security warning: Couldn't write .htaccess file. Please create a .htaccess file in your %directory directory which contains the following lines: <code>!htaccess</code>", $variables, LOG_ERR);
   }
 }
 
@@ -896,7 +896,7 @@ function file_unmanaged_copy($source, $destination = NULL, $replace = FILE_EXIST
   file_ensure_htaccess();
   // Perform the copy operation.
   if (!@copy($source, $destination)) {
-    watchdog('file', 'The specified file %file could not be copied to %destination.', array('%file' => $source, '%destination' => drupal_realpath($destination)), WATCHDOG_ERROR);
+    watchdog('file', 'The specified file %file could not be copied to %destination.', array('%file' => $source, '%destination' => drupal_realpath($destination)), LOG_ERR);
     return FALSE;
   }
 
@@ -1261,7 +1261,7 @@ function file_unmanaged_delete($path) {
   // Resolve streamwrapper URI to local path.
   $path = drupal_realpath($path);
   if (is_dir($path)) {
-    watchdog('file', '%path is a directory and cannot be removed using file_unmanaged_delete().', array('%path' => $path), WATCHDOG_ERROR);
+    watchdog('file', '%path is a directory and cannot be removed using file_unmanaged_delete().', array('%path' => $path), LOG_ERR);
     return FALSE;
   }
   if (is_file($path)) {
@@ -1270,12 +1270,12 @@ function file_unmanaged_delete($path) {
   // Return TRUE for non-existent file, but log that nothing was actually
   // deleted, as the current state is the intended result.
   if (!file_exists($path)) {
-    watchdog('file', 'The file %path was not deleted, because it does not exist.', array('%path' => $path), WATCHDOG_NOTICE);
+    watchdog('file', 'The file %path was not deleted, because it does not exist.', array('%path' => $path), LOG_NOTICE);
     return TRUE;
   }
   // We cannot handle anything other than files and directories. Log an error
   // for everything else (sockets, symbolic links, etc).
-  watchdog('file', 'The file %path is not of a recognized type so it was not deleted.', array('%path' => $path), WATCHDOG_ERROR);
+  watchdog('file', 'The file %path is not of a recognized type so it was not deleted.', array('%path' => $path), LOG_ERR);
   return FALSE;
 }
 
@@ -2104,7 +2104,7 @@ function drupal_chmod($uri, $mode = NULL) {
     }
   }
 
-  watchdog('file', 'The file permissions could not be set on %uri.', array('%uri' => $uri), WATCHDOG_ERROR);
+  watchdog('file', 'The file permissions could not be set on %uri.', array('%uri' => $uri), LOG_ERR);
   return FALSE;
 }
 

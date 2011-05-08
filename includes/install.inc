@@ -791,7 +791,7 @@ function drupal_uninstall_modules($module_list = array(), $uninstall_dependents 
     module_invoke($module, 'uninstall');
     drupal_uninstall_schema($module);
 
-    watchdog('system', '%module module uninstalled.', array('%module' => $module), WATCHDOG_INFO);
+    watchdog('system', '%module module uninstalled.', array('%module' => $module), LOG_INFO);
 
     // Now remove the menu links for all paths declared by this module.
     if (!empty($paths)) {
