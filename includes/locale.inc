@@ -1671,7 +1671,7 @@ function _locale_import_shorten_comments($comment) {
       break;
     }
   }
-  return substr($comm, 0, -2);
+  return trim(substr($comm, 0, -2));
 }
 
 /**
