@@ -59,8 +59,6 @@ function forum_enable() {
     );
     field_create_field($field);
 
-    variable_set('forum_nav_vocabulary', $vocabulary->vid);
-
     // Create a default forum so forum posts can be created.
     $edit = array(
       'name' => t('General discussion'),
