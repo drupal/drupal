@@ -341,14 +341,18 @@ function openid_complete($response = array()) {
             $response['openid.claimed_id'] = $service['claimed_id'];
           }
           elseif ($service['version'] == 2) {
-            $response['openid.claimed_id'] = openid_normalize($response['openid.claimed_id']);
+            // Returned Claimed Identifier could contain unique fragment
+            // identifier to allow identifier recycling so we need to preserve
+            // it in the response.
+            $response_claimed_id = openid_normalize($response['openid.claimed_id']);
+
             // OpenID Authentication, section 11.2:
             // If the returned Claimed Identifier is different from the one sent
             // to the OpenID Provider, we need to do discovery on the returned
             // identififer to make sure that the provider is authorized to
             // respond on behalf of this.
-            if ($response['openid.claimed_id'] != $claimed_id) {
-              $services = openid_discovery($response['openid.claimed_id']);
+            if ($response_claimed_id != $claimed_id) {
+              $services = openid_discovery($response_claimed_id);
               $uris = array();
               foreach ($services as $discovered_service) {
                 if (in_array('http://specs.openid.net/auth/2.0/server', $discovered_service['types']) || in_array('http://specs.openid.net/auth/2.0/signon', $discovered_service['types'])) {
