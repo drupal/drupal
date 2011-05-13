@@ -540,18 +540,23 @@ function menu_node_delete($node) {
 function menu_node_prepare($node) {
   if (empty($node->menu)) {
     // Prepare the node for the edit form so that $node->menu always exists.
-    $menu_name = variable_get('menu_parent_' . $node->type, 'main-menu:0');
+    $menu_name = strtok(variable_get('menu_parent_' . $node->type, 'main-menu:0'), ':');
     $item = array();
     if (isset($node->nid)) {
+      $mlid = FALSE;
       // Give priority to the default menu
-      $mlid = db_query_range("SELECT mlid FROM {menu_links} WHERE link_path = :path AND menu_name = :menu_name AND module = 'menu' ORDER BY mlid ASC", 0, 1, array(
-        ':path' => 'node/' . $node->nid,
-        ':menu_name' => $menu_name,
-      ))->fetchField();
-      // Check all menus if a link does not exist in the default menu.
-      if (!$mlid) {
-        $mlid = db_query_range("SELECT mlid FROM {menu_links} WHERE link_path = :path AND module = 'menu' ORDER BY mlid ASC", 0, 1, array(
+      $type_menus = variable_get('menu_options_' . $node->type, array('main-menu' => 'main-menu'));
+      if (in_array($menu_name, $type_menus)) {
+        $mlid = db_query_range("SELECT mlid FROM {menu_links} WHERE link_path = :path AND menu_name = :menu_name AND module = 'menu' ORDER BY mlid ASC", 0, 1, array(
           ':path' => 'node/' . $node->nid,
+          ':menu_name' => $menu_name,
+        ))->fetchField();
+      }
+      // Check all allowed menus if a link does not exist in the default menu.
+      if (!$mlid && !empty($type_menus)) {
+        $mlid = db_query_range("SELECT mlid FROM {menu_links} WHERE link_path = :path AND module = 'menu' AND menu_name IN (:type_menus) ORDER BY mlid ASC", 0, 1, array(
+          ':path' => 'node/' . $node->nid,
+          ':type_menus' => array_values($type_menus),
         ))->fetchField();
       }
       if ($mlid) {
