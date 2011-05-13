@@ -513,6 +513,8 @@ function locale_language_types_info() {
       'description' => t('Order of language detection methods for user interface text. If a translation of user interface text is available in the detected language, it will be displayed.'),
     ),
     LANGUAGE_TYPE_CONTENT => array(
+      'name' => t('Content'),
+      'description' => t('Order of language detection methods for content. If a version of content is available in the detected language, it will be displayed.'),
       'fixed' => array(LOCALE_LANGUAGE_NEGOTIATION_INTERFACE),
     ),
     LANGUAGE_TYPE_URL => array(
@@ -591,6 +593,22 @@ function locale_language_negotiation_info() {
   );
 
   return $providers;
+}
+
+/**
+ * Implements hook_modules_enabled().
+ */
+function locale_modules_enabled($modules) {
+  include_once DRUPAL_ROOT . '/includes/language.inc';
+  language_types_set();
+  language_negotiation_purge();
+}
+
+/**
+ * Implements hook_modules_disabled().
+ */
+function locale_modules_disabled($modules) {
+  locale_modules_enabled($modules);
 }
 
 // ---------------------------------------------------------------------------------
@@ -928,7 +946,7 @@ function locale_block_info() {
   include_once DRUPAL_ROOT . '/includes/language.inc';
   $block = array();
   $info = language_types_info();
-  foreach (language_types_configurable() as $type) {
+  foreach (language_types_configurable(FALSE) as $type) {
     $block[$type] = array(
       'info' => t('Language switcher (@type)', array('@type' => $info[$type]['name'])),
       // Not worth caching.
