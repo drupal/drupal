@@ -204,6 +204,38 @@ class TranslationTestCase extends DrupalWebTestCase {
     $this->assertLanguageSwitchLinks($node, $node, TRUE, $type);
     $this->assertLanguageSwitchLinks($node, $translation_es, TRUE, $type);
     $this->assertLanguageSwitchLinks($node, $translation_it, TRUE, $type);
+
+    // Create a language neutral node and check that the language switcher is
+    // left untouched.
+    $node2 = $this->createPage($this->randomName(), $this->randomName(), LANGUAGE_NONE);
+    $node2_en = (object) array('nid' => $node2->nid, 'language' => 'en');
+    $node2_es = (object) array('nid' => $node2->nid, 'language' => 'es');
+    $node2_it = (object) array('nid' => $node2->nid, 'language' => 'it');
+    $this->assertLanguageSwitchLinks($node2_en, $node2_en, TRUE, $type);
+    $this->assertLanguageSwitchLinks($node2_en, $node2_es, TRUE, $type);
+    $this->assertLanguageSwitchLinks($node2_en, $node2_it, TRUE, $type);
+
+    // Disable translation support to check that the language switcher is left
+    // untouched only for new nodes.
+    $this->drupalLogin($this->admin_user);
+    $edit = array('language_content_type' => 0);
+    $this->drupalPost('admin/structure/types/manage/page', $edit, t('Save content type'));
+    $this->drupalLogin($this->translator);
+
+    // Existing translations trigger alterations even if translation support is
+    // disabled.
+    $this->assertLanguageSwitchLinks($node, $node, TRUE, $type);
+    $this->assertLanguageSwitchLinks($node, $translation_es, TRUE, $type);
+    $this->assertLanguageSwitchLinks($node, $translation_it, TRUE, $type);
+
+    // Check that new nodes with a language assigned do not trigger language
+    // switcher alterations when translation support is disabled.
+    $node = $this->createPage($this->randomName(), $this->randomName());
+    $node_es = (object) array('nid' => $node->nid, 'language' => 'es');
+    $node_it = (object) array('nid' => $node->nid, 'language' => 'it');
+    $this->assertLanguageSwitchLinks($node, $node, TRUE, $type);
+    $this->assertLanguageSwitchLinks($node, $node_es, TRUE, $type);
+    $this->assertLanguageSwitchLinks($node, $node_it, TRUE, $type);
   }
 
   /**
@@ -268,12 +300,14 @@ class TranslationTestCase extends DrupalWebTestCase {
    * @param
    *   $language Language code.
    */
-  function createPage($title, $body, $language) {
+  function createPage($title, $body, $language = NULL) {
     $edit = array();
     $langcode = LANGUAGE_NONE;
     $edit["title"] = $title;
     $edit["body[$langcode][0][value]"] = $body;
-    $edit['language'] = $language;
+    if (!empty($language)) {
+      $edit['language'] = $language;
+    }
     $this->drupalPost('node/add/page', $edit, t('Save'));
     $this->assertRaw(t('Basic page %title has been created.', array('%title' => $title)), t('Basic page created.'));
 
