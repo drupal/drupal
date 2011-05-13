@@ -1350,15 +1350,15 @@ function node_build_content($node, $view_mode = 'full', $langcode = NULL) {
   // The 'view' hook can be implemented to overwrite the default function
   // to display nodes.
   if (node_hook($node, 'view')) {
-    $node = node_invoke($node, 'view', $view_mode);
+    $node = node_invoke($node, 'view', $view_mode, $langcode);
   }
 
   // Build fields content.
   // In case of a multiple view, node_view_multiple() already ran the
   // 'prepare_view' step. An internal flag prevents the operation from running
   // twice.
-  field_attach_prepare_view('node', array($node->nid => $node), $view_mode);
-  entity_prepare_view('node', array($node->nid => $node));
+  field_attach_prepare_view('node', array($node->nid => $node), $view_mode, $langcode);
+  entity_prepare_view('node', array($node->nid => $node), $langcode);
   $node->content += field_attach_view('node', $node, $view_mode, $langcode);
 
   // Always display a read more link on teasers because we have no way
@@ -2517,8 +2517,8 @@ function node_feed($nids = FALSE, $channel = array()) {
  *   An array in the format expected by drupal_render().
  */
 function node_view_multiple($nodes, $view_mode = 'teaser', $weight = 0, $langcode = NULL) {
-  field_attach_prepare_view('node', $nodes, $view_mode);
-  entity_prepare_view('node', $nodes);
+  field_attach_prepare_view('node', $nodes, $view_mode, $langcode);
+  entity_prepare_view('node', $nodes, $langcode);
   $build = array();
   foreach ($nodes as $node) {
     $build['nodes'][$node->nid] = node_view($node, $view_mode, $langcode);
