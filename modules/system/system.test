@@ -1359,7 +1359,7 @@ class SystemThemeFunctionalTest extends DrupalWebTestCase {
   function setUp() {
     parent::setUp();
 
-    $this->admin_user = $this->drupalCreateUser(array('access administration pages', 'view the administration theme', 'administer themes', 'bypass node access'));
+    $this->admin_user = $this->drupalCreateUser(array('access administration pages', 'view the administration theme', 'administer themes', 'bypass node access', 'administer blocks'));
     $this->drupalLogin($this->admin_user);
     $this->node = $this->drupalCreateNode();
   }
@@ -1442,6 +1442,26 @@ class SystemThemeFunctionalTest extends DrupalWebTestCase {
 
     $this->drupalGet('node/add');
     $this->assertRaw('themes/bartik', t('Site default theme used on the add content page.'));
+  }
+
+  /**
+   * Test switching the default theme.
+   */
+  function testSwitchDefaultTheme() {
+    // Enable "stark" and set it as the default theme.
+    theme_enable(array('stark'));
+    $this->drupalGet('admin/appearance');
+    $this->clickLink(t('Set default'), 1);
+    $this->assertTrue(variable_get('theme_default', '') == 'stark', t('Site default theme switched successfully.'));
+
+    // Test the default theme on the secondary links (blocks admin page).
+    $this->drupalGet('admin/structure/block');
+    $this->assertText('Stark(' . t('active tab') . ')', t('Default local task on blocks admin page is the default theme.'));
+    // Switch back to Bartik and test again to test that the menu cache is cleared.
+    $this->drupalGet('admin/appearance');
+    $this->clickLink(t('Set default'), 0);
+    $this->drupalGet('admin/structure/block');
+    $this->assertText('Bartik(' . t('active tab') . ')', t('Default local task on blocks admin page has changed.'));
   }
 }
 

@@ -349,6 +349,14 @@ function system_theme_default() {
       }
       // Set the default theme.
       variable_set('theme_default', $theme);
+
+      // Rebuild the menu. This duplicates the menu_rebuild() in theme_enable().
+      // However, modules must know the current default theme in order to use
+      // this information in hook_menu() or hook_menu_alter() implementations,
+      // and doing the variable_set() before the theme_enable() could result
+      // in a race condition where the theme is default but not enabled.
+      menu_rebuild();
+
       // The status message depends on whether an admin theme is currently in use:
       // a value of 0 means the admin theme is set to be the default theme.
       $admin_theme = variable_get('admin_theme', 0);
