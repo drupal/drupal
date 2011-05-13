@@ -502,8 +502,23 @@ function translation_path_get_translations($path) {
  */
 function translation_language_switch_links_alter(array &$links, $type, $path) {
   $language_type = variable_get('translation_language_type', LANGUAGE_TYPE_INTERFACE);
-  if ($type == $language_type && preg_match("!^node/(\d+)(/.+|)!", $path, $matches) && ($node = node_load((int) $matches[1]))) {
-    $translations = $node->tnid ? translation_node_get_translations($node->tnid) : array($node->language => $node);
+
+  if ($type == $language_type && preg_match("!^node/(\d+)(/.+|)!", $path, $matches)) {
+    $node = node_load((int) $matches[1]);
+
+    if (empty($node->tnid)) {
+      // If the node cannot be found nothing needs to be done. If it does not
+      // have translations it might be a language neutral node, in which case we
+      // must leave the language switch links unaltered. This is true also for
+      // nodes not having translation support enabled.
+      if (empty($node) || $node->language == LANGUAGE_NONE || !translation_supported_type($node->type)) {
+        return;
+      }
+      $translations = array($node->language => $node);
+    }
+    else {
+      $translations = translation_node_get_translations($node->tnid);
+    }
 
     foreach ($links as $langcode => $link) {
       if (isset($translations[$langcode]) && $translations[$langcode]->status) {
