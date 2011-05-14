@@ -857,13 +857,70 @@ function update_flush_caches() {
  */
 
 /**
+ * Return a short unique identifier for this Drupal installation.
+ *
+ * @return
+ *   An eight character string uniquely identifying this Drupal installation.
+ */
+function _update_manager_unique_identifier() {
+  $id = &drupal_static(__FUNCTION__, '');
+  if (empty($id)) {
+    $id = substr(hash('sha256', drupal_get_hash_salt()), 0, 8);
+  }
+  return $id;
+}
+
+/**
+ * Return the directory where update archive files should be extracted.
+ *
+ * @param $create
+ *   If TRUE, attempt to create the directory if it does not already exist.
+ *
+ * @return
+ *   The full path to the temporary directory where update file archives
+ *   should be extracted.
+ */
+function _update_manager_extract_directory($create = TRUE) {
+  $directory = &drupal_static(__FUNCTION__, '');
+  if (empty($directory)) {
+    $directory = 'temporary://update-extraction-' . _update_manager_unique_identifier();
+    if ($create && !file_exists($directory)) {
+      mkdir($directory);
+    }
+  }
+  return $directory;
+}
+
+/**
+ * Return the directory where update archive files should be cached.
+ *
+ * @param $create
+ *   If TRUE, attempt to create the directory if it does not already exist.
+ *
+ * @return
+ *   The full path to the temporary directory where update file archives
+ *   should be cached.
+ */
+function _update_manager_cache_directory($create = TRUE) {
+  $directory = &drupal_static(__FUNCTION__, '');
+  if (empty($directory)) {
+    $directory = 'temporary://update-cache-' . _update_manager_unique_identifier();
+    if ($create && !file_exists($directory)) {
+      mkdir($directory);
+    }
+  }
+  return $directory;
+}
+
+/**
  * Clear the temporary files and directories based on file age from disk.
  */
 function update_clear_update_disk_cache() {
-  // List of update module cache directories.
+  // List of update module cache directories. Do not create the directories if
+  // they do not exist.
   $directories = array(
-    'temporary://update-cache',
-    'temporary://update-extraction',
+    _update_manager_cache_directory(FALSE),
+    _update_manager_extract_directory(FALSE),
   );
 
   // Search for files and directories in base folder only without recursion.
