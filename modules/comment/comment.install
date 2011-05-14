@@ -179,6 +179,7 @@ function comment_schema() {
       'comment_num_new' => array('nid', 'status', 'created', 'cid', 'thread'),
       'comment_uid' => array('uid'),
       'comment_nid_language' => array('nid', 'language'),
+      'comment_created' => array('created'),
     ),
     'primary key' => array('cid'),
     'foreign keys' => array(
