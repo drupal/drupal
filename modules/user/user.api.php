@@ -367,6 +367,25 @@ function hook_user_view_alter(&$build) {
 }
 
 /**
+ * Inform other modules that a user role is about to be saved.
+ *
+ * Modules implementing this hook can act on the user role object before
+ * it has been saved to the database.
+ *
+ * @param $role
+ *   A user role object.
+ *
+ * @see hook_user_role_insert()
+ * @see hook_user_role_update()
+ */
+function hook_user_role_presave($role) {
+  // Set a UUID for the user role if it doesn't already exist
+  if (empty($role->uuid)) {
+    $role->uuid = uuid_uuid();
+  }
+}
+
+/**
  * Inform other modules that a user role has been added.
  *
  * Modules implementing this hook can act on the user role object when saved to

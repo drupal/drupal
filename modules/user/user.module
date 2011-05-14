@@ -2828,6 +2828,10 @@ function user_role_save($role) {
     $query->addExpression('MAX(weight)');
     $role->weight = $query->execute()->fetchField() + 1;
   }
+
+  // Let modules modify the user role before it is saved to the database.
+  module_invoke_all('user_role_presave', $role);
+
   if (!empty($role->rid) && $role->name) {
     $status = drupal_write_record('role', $role, 'rid');
     module_invoke_all('user_role_update', $role);
