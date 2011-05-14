@@ -1488,7 +1488,7 @@ function comment_save($comment) {
       db_ignore_slave();
 
       // Update the {node_comment_statistics} table prior to executing hooks.
-       _comment_update_node_statistics($comment->nid);
+      _comment_update_node_statistics($comment->nid);
 
       field_attach_update('comment', $comment);
       // Allow modules to respond to the updating of a comment.
@@ -1928,11 +1928,9 @@ function comment_form($form, &$form_state, $comment) {
       '#default_value' => $author,
       '#maxlength' => 60,
       '#size' => 30,
+      '#description' => t('Leave blank for %anonymous.', array('%anonymous' => variable_get('anonymous', t('Anonymous')))),
+      '#autocomplete_path' => 'user/autocomplete',
     );
-    // If the comment is by a registered user, allow to autocomplete username.
-    if ($comment->registered_name != '') {
-      $form['author']['name']['#autocomplete_path'] = 'user/autocomplete';
-    }
   }
   elseif ($user->uid) {
     $form['author']['_author'] = array(
@@ -2113,18 +2111,21 @@ function comment_form_validate($form, &$form_state) {
   entity_form_field_validate('comment', $form, $form_state);
 
   if (!empty($form_state['values']['cid'])) {
+    // Verify the name in case it is being changed from being anonymous.
+    $account = user_load_by_name($form_state['values']['name']);
+    $form_state['values']['uid'] = $account ? $account->uid : 0;
+
     if ($form_state['values']['date'] && strtotime($form_state['values']['date']) === FALSE) {
       form_set_error('date', t('You have to specify a valid date.'));
     }
-    if ($form_state['values']['name'] && !$form_state['values']['is_anonymous'] && !$account = user_load_by_name($form_state['values']['name'])) {
+    if ($form_state['values']['name'] && !$form_state['values']['is_anonymous'] && !$account) {
       form_set_error('name', t('You have to specify a valid author.'));
     }
   }
-
-  // Validate anonymous comment author fields (if given).
-  if ($form_state['values']['is_anonymous']) {
-    // If the (original) author of this comment was an anonymous user, verify
-    // that no registered user with this name exists.
+  elseif ($form_state['values']['is_anonymous']) {
+    // Validate anonymous comment author fields (if given). If the (original)
+    // author of this comment was an anonymous user, verify that no registered
+    // user with this name exists.
     if ($form_state['values']['name']) {
       $query = db_select('users', 'u');
       $query->addField('u', 'uid', 'uid');

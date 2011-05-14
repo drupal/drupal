@@ -307,6 +307,26 @@ class CommentInterfaceTest extends CommentHelperCase {
     $this->drupalLogin($this->admin_user);
     $this->setCommentSubject(TRUE);
     $this->setCommentPreview(DRUPAL_OPTIONAL);
+
+    // Test changing the comment author to "Anonymous".
+    $this->drupalGet('comment/' . $comment->id . '/edit');
+    $comment = $this->postComment(NULL, $comment->comment, $comment->subject, array('name' => ''));
+    $comment_loaded = comment_load($comment->id);
+    $this->assertTrue(empty($comment_loaded->name) && $comment_loaded->uid == 0, t('Comment author successfully changed to anonymous.'));
+
+    // Test changing the comment author to an unverified user.
+    $random_name = $this->randomName();
+    $this->drupalGet('comment/' . $comment->id . '/edit');
+    $comment = $this->postComment(NULL, $comment->comment, $comment->subject, array('name' => $random_name));
+    $this->drupalGet('node/' . $this->node->nid);
+    $this->assertText($random_name . ' (' . t('not verified') . ')', t('Comment author successfully changed to an unverified user.'));
+
+    // Test changing the comment author to a verified user.
+    $this->drupalGet('comment/' . $comment->id . '/edit');
+    $comment = $this->postComment(NULL, $comment->comment, $comment->subject, array('name' => $this->web_user->name));
+    $comment_loaded = comment_load($comment->id);
+    $this->assertTrue($comment_loaded->name == $this->web_user->name && $comment_loaded->uid == $this->web_user->uid, t('Comment author successfully changed to a registered user.'));
+
     $this->drupalLogout();
 
     // Reply to comment #2 creating comment #3 with optional preview and no
