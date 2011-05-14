@@ -205,23 +205,27 @@ function hook_block_save($delta = '', $edit = array()) {
  * @see hook_block_view_MODULE_DELTA_alter()
  */
 function hook_block_view($delta = '') {
-  // This example comes from node.module. Note that you can also return a
-  // renderable array rather than rendered HTML for 'content'.
+  // This example is adapted from node.module.
   $block = array();
 
   switch ($delta) {
     case 'syndicate':
       $block['subject'] = t('Syndicate');
-      $block['content'] = theme('feed_icon', array('url' => url('rss.xml'), 'title' => t('Syndicate')));
+      $block['content'] = array(
+        '#theme' => 'feed_icon',
+        '#url' => 'rss.xml',
+        '#title' => t('Syndicate'),
+      );
       break;
 
     case 'recent':
       if (user_access('access content')) {
         $block['subject'] = t('Recent content');
         if ($nodes = node_get_recent(variable_get('node_recent_block_count', 10))) {
-          $block['content'] = theme('node_recent_block', array(
-            'nodes' => $nodes,
-          ));
+          $block['content'] = array(
+            '#theme' => 'node_recent_block',
+            '#nodes' => $nodes,
+          );
         } else {
           $block['content'] = t('No content available.');
         }
