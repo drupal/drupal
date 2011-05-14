@@ -494,6 +494,7 @@ function comment_permalink($cid) {
  *
  * @param integer $number
  *   (optional) The maximum number of comments to find. Defaults to 10.
+ *
  * @return
  *   An array of comment objects or an empty array if there are no recent
  *   comments visible to the current user.
@@ -501,15 +502,12 @@ function comment_permalink($cid) {
 function comment_get_recent($number = 10) {
   $query = db_select('comment', 'c');
   $query->innerJoin('node', 'n', 'n.nid = c.nid');
-  $query->innerJoin('node_comment_statistics', 'ncs', 'ncs.nid = c.nid');
   $query->addTag('node_access');
   $comments = $query
     ->fields('c')
-    ->condition('ncs.comment_count', 0, '>')
     ->condition('c.status', COMMENT_PUBLISHED)
     ->condition('n.status', NODE_PUBLISHED)
-    ->orderBy('ncs.last_comment_timestamp', 'DESC')
-    ->orderBy('c.cid', 'DESC')
+    ->orderBy('c.created', 'DESC')
     ->range(0, $number)
     ->execute()
     ->fetchAll();

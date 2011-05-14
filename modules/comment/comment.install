@@ -337,6 +337,13 @@ function comment_update_7006(&$sandbox) {
 }
 
 /**
+ * Add an index to the created column.
+ */
+function comment_update_7007() {
+  db_add_index('comment', 'comment_created', array('created'));
+}
+
+/**
  * @} End of "addtogroup updates-6.x-to-7.x"
  */
 
@@ -441,6 +448,7 @@ function comment_schema() {
       'comment_num_new' => array('nid', 'status', 'created', 'cid', 'thread'),
       'comment_uid' => array('uid'),
       'comment_nid_language' => array('nid', 'language'),
+      'comment_created' => array('created'),
     ),
     'primary key' => array('cid'),
     'foreign keys' => array(
