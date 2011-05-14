@@ -1066,24 +1066,25 @@ div.messages {
 
 /* -------------- Password Meter  ------------- */
 
+.confirm-parent,
+.password-parent {
+  width: 34em;
+}
 .password-parent,
 div.form-item div.password-suggestions {
   position: relative;
-  width: auto;
 }
-#password-strength {
-  float: none;
-  left: 16em;
-  position: absolute;
-  width: 11.5em;
-}
-#password-strength-text,
+.password-strength-text,
 .password-strength-title,
 div.password-confirm {
   font-size: 0.82em;
 }
-#password-strength-text {
+.password-strength-text {
   margin-top: 0.2em;
+}
+div.password-confirm {
+  margin-top: 2.2em;
+  width: 20.73em;
 }
 
 /* ---------------- Buttons    ---------------- */
