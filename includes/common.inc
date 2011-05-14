@@ -3951,10 +3951,15 @@ function drupal_add_js($data = NULL, $options = NULL) {
     // Add jquery.js and drupal.js, as well as the basePath setting, the
     // first time a JavaScript file is added.
     if (empty($javascript)) {
+      // url() generates the prefix using hook_url_outbound_alter(). Instead of
+      // running the hook_url_outbound_alter() again here, extract the prefix
+      // from url().
+      url('', array('prefix' => &$prefix));
       $javascript = array(
         'settings' => array(
           'data' => array(
             array('basePath' => base_path()),
+            array('pathPrefix' => empty($prefix) ? '' : $prefix),
           ),
           'type' => 'setting',
           'scope' => 'header',
