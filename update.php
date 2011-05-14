@@ -56,9 +56,10 @@ function update_script_selection_form($form, &$form_state) {
   foreach ($updates as $module => $update) {
     if (!isset($update['start'])) {
       $form['start'][$module] = array(
-        '#title' => $module,
-        '#item'  => $update['warning'],
-        '#prefix' => '<div class="warning">',
+        '#type' => 'item',
+        '#title' => $module . ' module',
+        '#markup'  => $update['warning'],
+        '#prefix' => '<div class="messages warning">',
         '#suffix' => '</div>',
       );
       $incompatible_updates_exist = TRUE;
