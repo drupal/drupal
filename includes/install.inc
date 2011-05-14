@@ -547,7 +547,7 @@ abstract class DatabaseTasks {
    *
    * @param $database
    *   An array of driver specific configuration options.
-   * 
+   *
    * @return
    *   An array of driver configuration errors, keyed by form element name.
    */
@@ -782,44 +782,12 @@ function drupal_uninstall_modules($module_list = array(), $uninstall_dependents 
   }
 
   foreach ($module_list as $module) {
-    // First, retrieve all the module's menu paths from db.
-    drupal_load('module', $module);
-    $paths = module_invoke($module, 'menu');
-
     // Uninstall the module.
     module_load_install($module);
     module_invoke($module, 'uninstall');
     drupal_uninstall_schema($module);
 
     watchdog('system', '%module module uninstalled.', array('%module' => $module), WATCHDOG_INFO);
-
-    // Now remove the menu links for all paths declared by this module.
-    if (!empty($paths)) {
-      $paths = array_keys($paths);
-      // Clean out the names of load functions.
-      foreach ($paths as $index => $path) {
-        $parts = explode('/', $path, MENU_MAX_PARTS);
-        foreach ($parts as $k => $part) {
-          if (preg_match('/^%[a-z_]*$/', $part)) {
-            $parts[$k] = '%';
-          }
-        }
-        $paths[$index] = implode('/', $parts);
-      }
-
-      $result = db_select('menu_links')
-        ->fields('menu_links')
-        ->condition('router_path', $paths, 'IN')
-        ->condition('external', 0)
-        ->orderBy('depth')
-        ->execute();
-      // Remove all such items. Starting from those with the greatest depth will
-      // minimize the amount of re-parenting done by menu_link_delete().
-      foreach ($result as $item) {
-        _menu_delete_item($item, TRUE);
-      }
-    }
-
     drupal_set_installed_schema_version($module, SCHEMA_UNINSTALLED);
   }
 
