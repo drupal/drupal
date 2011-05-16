@@ -227,7 +227,7 @@ function field_ui_menu_load($field_name, $entity_type, $bundle_name, $bundle_pos
  * Menu title callback.
  */
 function field_ui_menu_title($instance) {
-  return t($instance['label']);
+  return $instance['label'];
 }
 
 /**
@@ -356,4 +356,3 @@ function field_ui_form_node_type_form_submit($form, &$form_state) {
     $form_state['redirect'] = _field_ui_bundle_admin_path('node', $form_state['values']['type']) .'/fields';
   }
 }
-
