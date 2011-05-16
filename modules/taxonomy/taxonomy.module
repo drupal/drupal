@@ -1316,7 +1316,7 @@ function taxonomy_field_validate($entity_type, $entity, $field, $instance, $lang
       if (!$validate) {
         $errors[$field['field_name']][$langcode][$delta][] = array(
           'error' => 'taxonomy_term_reference_illegal_value',
-          'message' => t('%name: illegal value.', array('%name' => t($instance['label']))),
+          'message' => t('%name: illegal value.', array('%name' => $instance['label'])),
         );
       }
     }

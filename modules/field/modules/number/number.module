@@ -138,13 +138,13 @@ function number_field_validate($entity_type, $entity, $field, $instance, $langco
       if (is_numeric($instance['settings']['min']) && $item['value'] < $instance['settings']['min']) {
         $errors[$field['field_name']][$langcode][$delta][] = array(
           'error' => 'number_min',
-          'message' => t('%name: the value may be no less than %min.', array('%name' => t($instance['label']), '%min' => $instance['settings']['min'])),
+          'message' => t('%name: the value may be no less than %min.', array('%name' => $instance['label'], '%min' => $instance['settings']['min'])),
         );
       }
       if (is_numeric($instance['settings']['max']) && $item['value'] > $instance['settings']['max']) {
         $errors[$field['field_name']][$langcode][$delta][] = array(
           'error' => 'number_max',
-          'message' => t('%name: the value may be no greater than %max.', array('%name' => t($instance['label']), '%max' => $instance['settings']['max'])),
+          'message' => t('%name: the value may be no greater than %max.', array('%name' => $instance['label'], '%max' => $instance['settings']['max'])),
         );
       }
     }
@@ -367,12 +367,12 @@ function number_field_widget_validate($element, &$form_state) {
       case 'float':
       case 'decimal':
         $regexp = '@[^-0-9\\' . $field['settings']['decimal_separator'] . ']@';
-        $message = t('Only numbers and the decimal separator (@separator) allowed in %field.', array('%field' => t($instance['label']), '@separator' => $field['settings']['decimal_separator']));
+        $message = t('Only numbers and the decimal separator (@separator) allowed in %field.', array('%field' => $instance['label'], '@separator' => $field['settings']['decimal_separator']));
         break;
 
       case 'integer':
         $regexp = '@[^-0-9]@';
-        $message = t('Only numbers are allowed in %field.', array('%field' => t($instance['label'])));
+        $message = t('Only numbers are allowed in %field.', array('%field' => $instance['label']));
         break;
     }
     if ($value != preg_replace($regexp, '', $value)) {
