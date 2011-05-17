@@ -24,9 +24,9 @@
  * @see profile_user_load()
  */
 function hook_user_load($users) {
-  $result = db_query('SELECT * FROM {my_table} WHERE uid IN (:uids)', array(':uids' => array_keys($users)));
+  $result = db_query('SELECT uid, foo FROM {my_table} WHERE uid IN (:uids)', array(':uids' => array_keys($users)));
   foreach ($result as $record) {
-    $users[$record->uid]->foo = $result->foo;
+    $users[$record->uid]->foo = $record->foo;
   }
 }
 
