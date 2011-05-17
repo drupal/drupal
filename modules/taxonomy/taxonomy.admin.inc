@@ -99,10 +99,11 @@ function theme_taxonomy_overview_vocabularies($variables) {
 }
 
 /**
- * Display form for adding and editing vocabularies.
+ * Form builder for the vocabulary editing form.
  *
  * @ingroup forms
  * @see taxonomy_form_vocabulary_submit()
+ * @see taxonomy_form_vocabulary_validate()
  */
 function taxonomy_form_vocabulary($form, &$form_state, $edit = array()) {
   // During initial form build, add the entity to the form state for use
@@ -174,11 +175,38 @@ function taxonomy_form_vocabulary($form, &$form_state, $edit = array()) {
     $form['vid'] = array('#type' => 'value', '#value' => $vocabulary->vid);
     $form['module'] = array('#type' => 'value', '#value' => $vocabulary->module);
   }
+  $form['#validate'][] = 'taxonomy_form_vocabulary_validate';
+
   return $form;
 }
 
 /**
- * Accept the form submission for a vocabulary and save the results.
+ * Form validation handler for taxonomy_form_vocabulary().
+ *
+ * Makes sure that the machine name of the vocabulary is not in the
+ * disallowed list (names that conflict with menu items, such as 'list'
+ * and 'add').
+ *
+ * @see taxonomy_form_vocabulary()
+ * @see taxonomy_form_vocabulary_submit()
+ */
+function taxonomy_form_vocabulary_validate($form, &$form_state) {
+  // During the deletion there is no 'machine_name' key
+  if (isset($form_state['values']['machine_name'])) {
+    // Do not allow machine names to conflict with taxonomy path arguments.
+    $machine_name = $form_state['values']['machine_name'];
+    $disallowed = array('add', 'list');
+    if (in_array($machine_name, $disallowed)) {
+      form_set_error('machine_name', t('The machine-readable name cannot be "add" or "list".'));
+    }
+  }
+}
+
+/**
+ * Form submission handler for taxonomy_form_vocabulary().
+ *
+ * @see taxonomy_form_vocabulary()
+ * @see taxonomy_form_vocabulary_validate()
  */
 function taxonomy_form_vocabulary_submit($form, &$form_state) {
   if ($form_state['clicked_button']['#value'] == t('Delete')) {
