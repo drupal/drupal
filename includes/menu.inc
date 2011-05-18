@@ -1692,6 +1692,22 @@ function menu_set_custom_theme() {
 }
 
 /**
+ * Build a list of named menus.
+ */
+function menu_get_names() {
+  $names = &drupal_static(__FUNCTION__);
+
+  if (empty($names)) {
+    $names = db_select('menu_links')
+      ->distinct()
+      ->fields('menu_links', array('menu_name'))
+      ->orderBy('menu_name')
+      ->execute()->fetchCol();
+  }
+  return $names;
+}
+
+/**
  * Return an array containing the names of system-defined (default) menus.
  */
 function menu_list_system_menus() {
