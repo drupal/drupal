@@ -469,7 +469,26 @@ function node_update_dependencies() {
  * @ingroup update-api-6.x-to-7.x
  */
 function _update_7000_node_get_types() {
-  return db_query('SELECT * FROM {node_type}')->fetchAllAssoc('type', PDO::FETCH_OBJ);
+  $node_types = db_query('SELECT * FROM {node_type}')->fetchAllAssoc('type', PDO::FETCH_OBJ);
+
+  // Create default settings for orphan nodes.
+  $all_types = db_query('SELECT DISTINCT type FROM {node}')->fetchCol();
+  $extra_types = array_diff($all_types, array_keys($node_types));
+
+  foreach ($extra_types as $type) {
+    $type_object = new stdClass;
+    $type_object->type = $type;
+
+    // In Drupal 6, whether you have a body field or not is a flag in the node
+    // type table. If it's enabled, nodes may or may not have an empty string
+    // for the bodies. As we can't detect what this setting should be in
+    // Drupal 7 without access to the Drupal 6 node type settings, we assume
+    // the default, which is to enable the body field.
+    $type_object->has_body = 1;
+    $type_object->body_label = 'Body';
+    $node_types[$type_object->type] = $type_object;
+  }
+  return $node_types;
 }
 
 /**
@@ -599,19 +618,6 @@ function node_update_7006(&$sandbox) {
 
     // Get node type info, specifically the body field settings.
     $node_types = _update_7000_node_get_types();
-
-    // Create default settings for orphan nodes.
-    $extra_types = db_query('SELECT DISTINCT type FROM {node} WHERE type NOT IN (:types)', array(':types' => array_keys($node_types)))->fetchCol();
-    foreach ($extra_types as $type) {
-      $type_object = new stdClass;
-      $type_object->type = $type;
-      // Always create a body. Querying node_revisions for a non-empty body
-      // would skip creating body fields for types that have a body but
-      // the nodes of that type so far had empty bodies.
-      $type_object->has_body = 1;
-      $type_object->body_label = 'Body';
-      $node_types[$type_object->type] = $type_object;
-    }
 
     // Add body field instances for existing node types.
     foreach ($node_types as $node_type) {
