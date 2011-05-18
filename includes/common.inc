@@ -7496,8 +7496,15 @@ function entity_get_controller($entity_type) {
  *   The type of entity, i.e. 'node', 'user'.
  * @param $entities
  *   The entity objects which are being prepared for view, keyed by object ID.
+ * @param $langcode
+ *   (optional) A language code to be used for rendering. Defaults to the global
+ *   content language of the current request.
  */
-function entity_prepare_view($entity_type, $entities) {
+function entity_prepare_view($entity_type, $entities, $langcode = NULL) {
+  if (!isset($langcode)) {
+    $langcode = $GLOBALS['language_content']->language;
+  }
+
   // To ensure hooks are only run once per entity, check for an
   // entity_view_prepared flag and only process items without it.
   // @todo: resolve this more generally for both entity and field level hooks.
@@ -7513,7 +7520,7 @@ function entity_prepare_view($entity_type, $entities) {
   }
 
   if (!empty($prepare)) {
-    module_invoke_all('entity_prepare_view', $prepare, $entity_type);
+    module_invoke_all('entity_prepare_view', $prepare, $entity_type, $langcode);
   }
 }
 

@@ -2512,8 +2512,8 @@ function user_build_content($account, $view_mode = 'full', $langcode = NULL) {
   $account->content = array();
 
   // Build fields content.
-  field_attach_prepare_view('user', array($account->uid => $account), $view_mode);
-  entity_prepare_view('user', array($account->uid => $account));
+  field_attach_prepare_view('user', array($account->uid => $account), $view_mode, $langcode);
+  entity_prepare_view('user', array($account->uid => $account), $langcode);
   $account->content += field_attach_view('user', $account, $view_mode, $langcode);
 
   // Populate $account->content with a render() array.

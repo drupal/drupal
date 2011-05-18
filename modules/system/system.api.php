@@ -502,8 +502,10 @@ function hook_admin_paths_alter(&$paths) {
  *   The entities keyed by entity ID.
  * @param $type
  *   The type of entities being loaded (i.e. node, user, comment).
+ * @param $langcode
+ *   The language to display the entity in.
  */
-function hook_entity_prepare_view($entities, $type) {
+function hook_entity_prepare_view($entities, $type, $langcode) {
   // Load a specific node into the user object for later theming.
   if ($type == 'user') {
     $nodes = mymodule_get_user_nodes(array_keys($entities));
