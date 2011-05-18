@@ -1451,10 +1451,6 @@ function template_preprocess_node(&$variables) {
   $variables['title']     = check_plain($node->title);
   $variables['page']      = $variables['view_mode'] == 'full' && node_is_page($node);
 
-  if (!empty($node->in_preview)) {
-    unset($node->content['links']);
-  }
-
   // Flatten the node object's member fields.
   $variables = array_merge((array) $node, $variables);
 
