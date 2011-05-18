@@ -89,12 +89,12 @@ class OpenIDFunctionalTestCase extends OpenIDWebTestCase {
     // Identifier is the URL of an XRDS document containing an OP Identifier
     // Element. The Relying Party sends the special value
     // "http://specs.openid.net/auth/2.0/identifier_select" as Claimed
-    // Identifier. The OpenID Provider responds with the actual identifier
-    // including the fragment.
-    $identity = url('openid-test/yadis/xrds/dummy-user', array('absolute' => TRUE, 'fragment' => $this->randomName()));
-    // Tell openid_test.module to respond with this identifier. We test if
-    // openid_complete() processes it right.
-    variable_set('openid_test_response', array('openid.claimed_id' => $identity));
+    // Identifier. The OpenID Provider responds with the actual identifier.
+    $identity = url('openid-test/yadis/xrds/dummy-user', array('absolute' => TRUE));
+    // Tell openid_test.module to respond with this identifier. The URL scheme
+    // is stripped in order to test that the returned identifier is normalized in
+    // openid_complete().
+    variable_set('openid_test_response', array('openid.claimed_id' => preg_replace('@^https?://@', '', $identity)));
     $this->addIdentity(url('openid-test/yadis/xrds/server', array('absolute' => TRUE)), 2, 'http://specs.openid.net/auth/2.0/identifier_select', $identity);
     variable_set('openid_test_response', array());
 
