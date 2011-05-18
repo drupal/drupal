@@ -541,6 +541,63 @@ abstract class DatabaseConnection extends PDO {
   }
 
   /**
+   * Flatten an array of query comments into a single comment string.
+   *
+   * The comment string will be sanitized to avoid SQL injection attacks.
+   *
+   * @param $comments
+   *   An array of query comment strings.
+   *
+   * @return
+   *   A sanitized comment string.
+   */
+  public function makeComment($comments) {
+    if (empty($comments))
+      return '';
+
+    // Flatten the array of comments.
+    $comment = implode('; ', $comments);
+
+    // Sanitize the comment string so as to avoid SQL injection attacks.
+    return '/* ' . $this->filterComment($comment) . ' */ ';
+  }
+
+  /**
+   * Sanitize a query comment string.
+   *
+   * Ensure a query comment does not include strings such as "* /" that might
+   * terminate the comment early. This avoids SQL injection attacks via the
+   * query comment. The comment strings in this example are separated by a
+   * space to avoid PHP parse errors.
+   *
+   * For example, the comment:
+   * @code
+   * db_update('example')
+   *  ->condition('id', $id)
+   *  ->fields(array('field2' => 10))
+   *  ->comment('Exploit * / DROP TABLE node; --')
+   *  ->execute()
+   * @endcode
+   *
+   * Would result in the following SQL statement being generated:
+   * @code
+   * "/ * Exploit * / DROP TABLE node; -- * / UPDATE example SET field2=..."
+   * @endcode
+   *
+   * Unless the comment is sanitised first, the SQL server would drop the
+   * node table and ignore the rest of the SQL statement.
+   *
+   * @param $comment
+   *   A query comment string.
+   *
+   * @return
+   *   A sanitized version of the query comment string.
+   */
+  protected function filterComment($comment = '') {
+    return preg_replace('/(\/\*\s*)|(\s*\*\/)/', '', $comment);
+  }
+
+  /**
    * Executes a query string against the database.
    *
    * This method provides a central handler for the actual execution of every
