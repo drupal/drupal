@@ -248,31 +248,6 @@ class MenuRouterTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Test menu_get_names().
-   */
-  function testMenuGetNames() {
-    // Create three menu items.
-    for ($i = 0; $i < 3; $i++) {
-      $menu_link = array(
-        'link_title' => 'Menu link #' . $i,
-        'link_path' => 'menu_test/' . $i,
-        'module' => 'menu_test',
-        'menu_name' => 'menu_test_' . $i,
-      );
-      menu_link_save($menu_link);
-    }
-
-    drupal_static_reset('menu_get_names');
-
-    // Verify that the menu names are correctly reported by menu_get_names().
-    $menu_names = menu_get_names();
-    $this->pass(implode(' | ', $menu_names));
-    for ($i = 0; $i < 3; $i++) {
-      $this->assertTrue(in_array('menu_test_' . $i, $menu_names), t('Expected menu name %expected is returned.', array('%expected' => 'menu_test_' . $i)));
-    }
-  }
-
-  /**
    * Tests for menu_name parameter for hook_menu().
    */
   function testMenuName() {
