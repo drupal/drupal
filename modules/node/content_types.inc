@@ -69,7 +69,7 @@ function theme_node_admin_overview($variables) {
   $type = $variables['type'];
 
   $output = check_plain($name);
-  $output .= ' <small> (Machine name: ' . check_plain($type->type) . ')</small>';
+  $output .= ' <small>' . t('(Machine name: @type)', array('@type' => $type->type)) . '</small>';
   $output .= '<div class="description">' . filter_xss_admin($type->description) . '</div>';
   return $output;
 }
