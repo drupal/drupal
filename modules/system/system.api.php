@@ -2369,7 +2369,7 @@ function hook_flush_caches() {
  * enable hooks are invoked.
  *
  * @param $modules
- *   An array of the installed modules.
+ *   An array of the modules that were installed.
  *
  * @see module_enable()
  * @see hook_modules_enabled()
@@ -2391,7 +2391,7 @@ function hook_modules_installed($modules) {
  * invoked.
  *
  * @param $modules
- *   An array of the modules being enabled.
+ *   An array of the modules that were enabled.
  *
  * @see hook_enable()
  * @see hook_modules_installed()
@@ -2412,7 +2412,7 @@ function hook_modules_enabled($modules) {
  * is only called on the module actually being disabled.
  *
  * @param $modules
- *   An array of the disabled modules.
+ *   An array of the modules that were disabled.
  *
  * @see hook_disable()
  * @see hook_modules_uninstalled()
@@ -2434,7 +2434,7 @@ function hook_modules_disabled($modules) {
  * data that may have been set by other modules.
  *
  * @param $modules
- *   An array of the uninstalled modules.
+ *   An array of the modules that were uninstalled.
  *
  * @see hook_uninstall()
  * @see hook_modules_disabled()
