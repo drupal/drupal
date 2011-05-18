@@ -1044,7 +1044,7 @@ function menu_tree_output($tree) {
     }
 
     // Allow menu-specific theme overrides.
-    $element['#theme'] = 'menu_link__' . $data['link']['menu_name'];
+    $element['#theme'] = 'menu_link__' . strtr($data['link']['menu_name'], '-', '_');
     $element['#attributes']['class'] = $class;
     $element['#title'] = $data['link']['title'];
     $element['#href'] = $data['link']['href'];
