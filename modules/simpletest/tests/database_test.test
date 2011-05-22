@@ -1325,6 +1325,27 @@ class DatabaseSelectTestCase extends DatabaseTestCase {
   }
 
   /**
+   * Test query COMMENT system against vulnerabilities.
+   */
+  function testVulnerableComment() {
+    $query = db_select('test')->comment('Testing query comments */ SELECT nid FROM {node}; --');
+    $name_field = $query->addField('test', 'name');
+    $age_field = $query->addField('test', 'age', 'age');
+    $result = $query->execute();
+
+    $num_records = 0;
+    foreach ($result as $record) {
+      $num_records++;
+    }
+
+    $query = (string)$query;
+    $expected = "/* Testing query comments SELECT nid FROM {node}; -- */ SELECT test.name AS name, test.age AS age\nFROM \n{test} test";
+
+    $this->assertEqual($num_records, 4, t('Returned the correct number of rows.'));
+    $this->assertEqual($query, $expected, t('The flattened query contains the sanitised comment string.'));
+  }
+
+  /**
    * Test basic conditionals on SELECT statements.
    */
   function testSimpleSelectConditional() {

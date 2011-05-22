@@ -103,8 +103,8 @@ class InsertQuery_pgsql extends InsertQuery {
   }
 
   public function __toString() {
-    // Create a comments string to prepend to the query.
-    $comments = (!empty($this->comments)) ? '/* ' . implode('; ', $this->comments) . ' */ ' : '';
+    // Create a sanitized comment string to prepend to the query.
+    $comments = $this->connection->makeComment($this->comments);
 
     // Default fields are always placed first for consistency.
     $insert_fields = array_merge($this->defaultFields, $this->insertFields);

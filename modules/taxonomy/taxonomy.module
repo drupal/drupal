@@ -682,8 +682,8 @@ function taxonomy_term_view($term, $view_mode = 'full', $langcode = NULL) {
     $langcode = $GLOBALS['language_content']->language;
   }
 
-  field_attach_prepare_view('taxonomy_term', array($term->tid => $term), $view_mode);
-  entity_prepare_view('taxonomy_term', array($term->tid => $term));
+  field_attach_prepare_view('taxonomy_term', array($term->tid => $term), $view_mode, $langcode);
+  entity_prepare_view('taxonomy_term', array($term->tid => $term), $langcode);
 
   $build = array(
     '#theme' => 'taxonomy_term',

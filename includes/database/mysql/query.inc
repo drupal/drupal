@@ -42,8 +42,8 @@ class InsertQuery_mysql extends InsertQuery {
   }
 
   public function __toString() {
-    // Create a comments string to prepend to the query.
-    $comments = (!empty($this->comments)) ? '/* ' . implode('; ', $this->comments) . ' */ ' : '';
+    // Create a sanitized comment string to prepend to the query.
+    $comments = $this->connection->makeComment($this->comments);
 
     // Default fields are always placed first for consistency.
     $insert_fields = array_merge($this->defaultFields, $this->insertFields);
@@ -92,8 +92,8 @@ class TruncateQuery_mysql extends TruncateQuery {
     // not transactional, and result in an implicit COMMIT. When we are in a
     // transaction, fallback to the slower, but transactional, DELETE.
     if ($this->connection->inTransaction()) {
-      // Create a comments string to prepend to the query.
-      $comments = (!empty($this->comments)) ? '/* ' . implode('; ', $this->comments) . ' */ ' : '';
+      // Create a comment string to prepend to the query.
+      $comments = $this->connection->makeComment($this->comments);
       return $comments . 'DELETE FROM {' . $this->connection->escapeTable($this->table) . '}';
     }
     else {

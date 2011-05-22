@@ -87,16 +87,16 @@ function hook_hook_info_alter(&$hooks) {
  *   - uri callback: A function taking an entity as argument and returning the
  *     uri elements of the entity, e.g. 'path' and 'options'. The actual entity
  *     uri can be constructed by passing these elements to url().
- *   - label callback: (optional) A function taking an entity as argument and
- *     returning the label of the entity. The entity label is the main string
- *     associated with an entity; for example, the title of a node or the
- *     subject of a comment. If there is an entity object property that defines
- *     the label, use the 'label' element of the 'entity keys' return
- *     value component to provide this information (see below). If more complex
- *     logic is needed to determine the label of an entity, you can instead
- *     specify a callback function here, which will be called to determine the
- *     entity label. See also the entity_label() function, which implements this
- *     logic.
+ *   - label callback: (optional) A function taking an entity and an entity type
+ *     as arguments and returning the label of the entity. The entity label is
+ *     the main string associated with an entity; for example, the title of a
+ *     node or the subject of a comment. If there is an entity object property
+ *     that defines the label, use the 'label' element of the 'entity keys'
+ *     return value component to provide this information (see below). If more
+ *     complex logic is needed to determine the label of an entity, you can
+ *     instead specify a callback function here, which will be called to
+ *     determine the entity label. See also the entity_label() function, which
+ *     implements this logic.
  *   - fieldable: Set to TRUE if you want your entity type to accept fields
  *     being attached to it.
  *   - translation: An associative array of modules registered as field
@@ -502,8 +502,10 @@ function hook_admin_paths_alter(&$paths) {
  *   The entities keyed by entity ID.
  * @param $type
  *   The type of entities being loaded (i.e. node, user, comment).
+ * @param $langcode
+ *   The language to display the entity in.
  */
-function hook_entity_prepare_view($entities, $type) {
+function hook_entity_prepare_view($entities, $type, $langcode) {
   // Load a specific node into the user object for later theming.
   if ($type == 'user') {
     $nodes = mymodule_get_user_nodes(array_keys($entities));

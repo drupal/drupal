@@ -986,8 +986,8 @@ function comment_build_content($comment, $node, $view_mode = 'full', $langcode =
   $comment->content = array();
 
   // Build fields content.
-  field_attach_prepare_view('comment', array($comment->cid => $comment), $view_mode);
-  entity_prepare_view('comment', array($comment->cid => $comment));
+  field_attach_prepare_view('comment', array($comment->cid => $comment), $view_mode, $langcode);
+  entity_prepare_view('comment', array($comment->cid => $comment), $langcode);
   $comment->content += field_attach_view('comment', $comment, $view_mode, $langcode);
 
   $comment->content['links'] = array(
@@ -1089,8 +1089,8 @@ function comment_links($comment, $node) {
  *   An array in the format expected by drupal_render().
  */
 function comment_view_multiple($comments, $node, $view_mode = 'full', $weight = 0, $langcode = NULL) {
-  field_attach_prepare_view('comment', $comments, $view_mode);
-  entity_prepare_view('comment', $comments);
+  field_attach_prepare_view('comment', $comments, $view_mode, $langcode);
+  entity_prepare_view('comment', $comments, $langcode);
 
   $build = array(
     '#sorted' => TRUE,
