@@ -985,7 +985,7 @@ function drupal_find_theme_functions($cache, $prefixes) {
       // start with. The default is the name of the hook followed by '__'. An
       // 'base hook' key is added to each entry made for a found suggestion,
       // so that common functionality can be implemented for all suggestions of
-      // the same base hook. To keep things simple, deep heirarchy of
+      // the same base hook. To keep things simple, deep hierarchy of
       // suggestions is not supported: each suggestion's 'base hook' key
       // refers to a base hook, not to another suggestion, and all suggestions
       // are found using the base hook's pattern, not a pattern from an
@@ -995,7 +995,7 @@ function drupal_find_theme_functions($cache, $prefixes) {
         $matches = preg_grep('/^' . $prefix . '_' . $pattern . '/', $functions['user']);
         if ($matches) {
           foreach ($matches as $match) {
-            $new_hook = str_replace($prefix . '_', '', $match);
+            $new_hook = substr($match, strlen($prefix) + 1);
             $arg_name = isset($info['variables']) ? 'variables' : 'render element';
             $implementations[$new_hook] = array(
               'function' => $match,
