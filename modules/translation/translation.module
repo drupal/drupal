@@ -133,7 +133,7 @@ function translation_form_node_form_alter(&$form, &$form_state) {
     // might need to distinguish between enabled and disabled languages, hence
     // we divide them in two option groups.
     if ($translator_widget) {
-      $options = array();
+      $options = array($groups[1] => array(LANGUAGE_NONE => t('Language neutral')));
       $language_list = locale_language_list('name', TRUE);
       foreach (array(1, 0) as $status) {
         $group = $groups[$status];
