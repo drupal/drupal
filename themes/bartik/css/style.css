@@ -1136,7 +1136,7 @@ fieldset {
 .fieldset-wrapper {
   margin-top: 25px;
 }
-.vertical-tabs .fieldset-wrapper {
+.node-form .vertical-tabs .fieldset-wrapper {
   margin-top: 0;
 }
 .filter-wrapper {
