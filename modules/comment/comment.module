@@ -1465,21 +1465,8 @@ function comment_save($comment) {
     module_invoke_all('entity_presave', $comment, 'comment');
 
     if ($comment->cid) {
-      // Update the comment in the database.
-      db_update('comment')
-        ->fields(array(
-          'status' => $comment->status,
-          'created' => $comment->created,
-          'changed' => $comment->changed,
-          'subject' => $comment->subject,
-          'uid' => $comment->uid,
-          'name' => $comment->name,
-          'mail' => $comment->mail,
-          'homepage' => $comment->homepage,
-          'language' => $comment->language,
-        ))
-        ->condition('cid', $comment->cid)
-        ->execute();
+
+      drupal_write_record('comment', $comment, 'cid');
 
       // Ignore slave server temporarily to give time for the
       // saved comment to be propagated to the slave.
@@ -1551,23 +1538,16 @@ function comment_save($comment) {
         $comment->name = $user->name;
       }
 
-      $comment->cid = db_insert('comment')
-        ->fields(array(
-          'nid' => $comment->nid,
-          'pid' => empty($comment->pid) ? 0 : $comment->pid,
-          'uid' => $comment->uid,
-          'subject' => $comment->subject,
-          'hostname' => ip_address(),
-          'created' => $comment->created,
-          'changed' => $comment->changed,
-          'status' => $comment->status,
-          'thread' => $thread,
-          'name' => $comment->name,
-          'mail' => $comment->mail,
-          'homepage' => $comment->homepage,
-          'language' => $comment->language,
-        ))
-        ->execute();
+      // Ensure the parent id (pid) has a value set.
+      if (empty($comment->pid)) {
+        $comment->pid = 0;
+      }
+
+      // Add the values which aren't passed into the function.
+      $comment->thread = $thread;
+      $comment->hostname = ip_address();
+
+      drupal_write_record('comment', $comment);
 
       // Ignore slave server temporarily to give time for the
       // created comment to be propagated to the slave.
