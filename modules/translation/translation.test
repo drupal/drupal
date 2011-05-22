@@ -125,6 +125,13 @@ class TranslationTestCase extends DrupalWebTestCase {
     $translation_it = $this->createTranslation($node, $this->randomName(), $this->randomName(), 'it');
     $this->assertRaw($translation_it->body['it'][0]['value'], t('Content created in Italian (disabled).'));
 
+    // Confirm that language neutral is an option for translators when there are
+    // disabled languages.
+    $this->drupalGet('node/add/page');
+    $this->assertFieldByXPath('//select[@name="language"]//option', LANGUAGE_NONE, t('Language neutral is available in language selection with disabled languages.'));
+    $node2 = $this->createPage($this->randomName(), $this->randomName(), LANGUAGE_NONE);
+    $this->assertRaw($node2->body[LANGUAGE_NONE][0]['value'], t('Language neutral content created with disabled languages available.'));
+
     // Leave just one language enabled and check that the translation overview
     // page is still accessible.
     $this->drupalLogin($this->admin_user);
