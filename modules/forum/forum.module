@@ -494,11 +494,31 @@ function forum_get_forums($tid = 0) {
   $_forums = taxonomy_get_tree($vid, $tid);
 
   if (count($_forums)) {
-
-    $counts = array();
-
-    $sql = "SELECT r.tid, COUNT(n.nid) AS topic_count, SUM(l.comment_count) AS comment_count FROM {node} n INNER JOIN {node_comment_statistics} l ON n.nid = l.nid INNER JOIN {term_node} r ON n.vid = r.vid WHERE n.status = 1 GROUP BY r.tid";
-    $sql = db_rewrite_sql($sql);
+  $counts = array();
+    $sql = "
+      SELECT r.tid AS tid, n.nid AS nid, l.comment_count AS nid_comment_count
+        FROM {node} n
+        INNER JOIN {node_comment_statistics} l ON n.nid = l.nid
+        INNER JOIN {term_node} r ON n.vid = r.vid
+        WHERE n.status = 1
+        GROUP BY r.tid, n.nid, l.comment_count";
+    $sql_rewritten = db_rewrite_sql($sql);
+    if ($sql_rewritten == $sql) {
+      $sql = "
+        SELECT r.tid, COUNT(n.nid) AS topic_count, SUM(l.comment_count) AS comment_count
+          FROM {node} n
+          INNER JOIN {node_comment_statistics} l ON n.nid = l.nid
+          INNER JOIN {term_node} r ON n.vid = r.vid
+          WHERE n.status = 1
+          GROUP BY r.tid";
+      $sql = db_rewrite_sql($sql);
+    }
+    else {
+      $sql = "
+        SELECT tid, COUNT(nid) AS topic_count, SUM(nid_comment_count) AS comment_count
+          FROM ($sql_rewritten) AS forum_content_list
+          GROUP BY tid";
+    }
     $_counts = db_query($sql);
     while ($count = db_fetch_object($_counts)) {
       $counts[$count->tid] = $count;
@@ -545,7 +565,7 @@ function forum_get_forums($tid = 0) {
  * than NODE_NEW_LIMIT.
  */
 function _forum_topics_unread($term, $uid) {
-  $sql = "SELECT COUNT(n.nid) FROM {node} n INNER JOIN {term_node} tn ON n.vid = tn.vid AND tn.tid = %d LEFT JOIN {history} h ON n.nid = h.nid AND h.uid = %d WHERE n.status = 1 AND n.created > %d AND h.nid IS NULL";
+  $sql = "SELECT COUNT(DISTINCT n.nid) FROM {node} n INNER JOIN {term_node} tn ON n.vid = tn.vid AND tn.tid = %d LEFT JOIN {history} h ON n.nid = h.nid AND h.uid = %d WHERE n.status = 1 AND n.created > %d AND h.nid IS NULL";
   $sql = db_rewrite_sql($sql);
   return db_result(db_query($sql, $term, $uid, NODE_NEW_LIMIT));
 }
@@ -574,7 +594,7 @@ function forum_get_topics($tid, $sortby, $forum_per_page) {
   $sql .= tablesort_sql($forum_topic_list_header, 'n.sticky DESC,');
   $sql .= ', n.created DESC';  // Always add a secondary sort order so that the news forum topics are on top.
 
-  $sql_count = db_rewrite_sql("SELECT COUNT(n.nid) FROM {node} n INNER JOIN {term_node} r ON n.vid = r.vid AND r.tid = %d WHERE n.status = 1");
+  $sql_count = db_rewrite_sql("SELECT COUNT(DISTINCT n.nid) FROM {node} n INNER JOIN {term_node} r ON n.vid = r.vid AND r.tid = %d WHERE n.status = 1");
 
   $result = pager_query($sql, $forum_per_page, 0, $sql_count, $tid);
   $topics = array();
