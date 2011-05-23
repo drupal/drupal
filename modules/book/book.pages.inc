@@ -77,8 +77,11 @@ function book_export_html($nid) {
     if (isset($node->book)) {
       $tree = book_menu_subtree_data($node->book);
       $contents = book_export_traverse($tree, 'book_node_export');
+      return theme('book_export_html', $node->title, $contents, $node->book['depth']);
     }
-    return theme('book_export_html', $node->title, $contents, $node->book['depth']);
+    else {
+      drupal_not_found();
+    }
   }
   else {
     drupal_access_denied();
