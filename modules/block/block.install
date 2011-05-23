@@ -461,5 +461,12 @@ function block_update_7007() {
 }
 
 /**
+ * Update database to match Drupal 7 schema.
+ */
+function block_update_7008() {
+  db_drop_field('block', 'throttle');
+}
+
+/**
  * @} End of "addtogroup updates-6.x-to-7.x"
  */
