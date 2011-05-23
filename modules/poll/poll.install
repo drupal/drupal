@@ -196,3 +196,11 @@ function poll_update_7003() {
     'description' => 'The sort order of this choice among all choices for the same node.',
   ));
 }
+
+/**
+ * Update the database to match the schema.
+ */
+function poll_update_7004() {
+  // Remove field default.
+  db_change_field('poll_vote', 'chid', 'chid', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE));
+}
