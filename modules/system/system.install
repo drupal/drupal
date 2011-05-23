@@ -2953,6 +2953,19 @@ function system_update_7070() {
 }
 
 /**
+ * Add index missed during upgrade, and fix field default.
+ */
+function system_update_7071() {
+  db_drop_index('date_format_type', 'title');
+  db_add_index('date_format_type', 'title', array('title'));
+  db_change_field('registry', 'filename', 'filename', array(
+    'type' => 'varchar',
+    'length' => 255,
+    'not null' => TRUE,
+  ));
+}
+
+/**
  * @} End of "defgroup updates-6.x-to-7.x"
  * The next series of updates should start at 8000.
  */
