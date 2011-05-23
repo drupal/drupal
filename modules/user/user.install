@@ -854,5 +854,18 @@ function user_update_7015() {
 }
 
 /**
+ * Update the database to match the schema.
+ */
+function user_update_7016() {
+  // Add field default.
+  db_change_field('users', 'uid', 'uid', array(
+    'type' => 'int',
+    'unsigned' => TRUE,
+    'not null' => TRUE,
+    'default' => 0,
+  ));
+}
+
+/**
  * @} End of "addtogroup updates-6.x-to-7.x"
  */
