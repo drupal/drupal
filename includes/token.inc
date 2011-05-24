@@ -4,16 +4,16 @@
  * @file
  * Drupal placeholder/token replacement system.
  *
- * Provides a set of extensible API functions for replacing placeholders in text
- * with meaningful values.
+ * API functions for replacing placeholders in text with meaningful values.
  *
- * For example: When configuring automated emails, an administrator enters standard
- * text for the email. Variables like the title of a node and the date the email
- * was sent can be entered as placeholders like [node:title] and [date:short].
- * When a Drupal module prepares to send the email, it can call the token_replace()
- * function, passing in the text. The token system will scan the text for placeholder
- * tokens, give other modules an opportunity to replace them with meaningful text,
- * then return the final product to the original module.
+ * For example: When configuring automated emails, an administrator enters
+ * standard text for the email. Variables like the title of a node and the date
+ * the email was sent can be entered as placeholders like [node:title] and
+ * [date:short]. When a Drupal module prepares to send the email, it can call
+ * the token_replace() function, passing in the text. The token system will
+ * scan the text for placeholder tokens, give other modules an opportunity to
+ * replace them with meaningful text, then return the final product to the
+ * original module.
  *
  * Tokens follow the form: [$type:$name], where $type is a general class of
  * tokens like 'node', 'user', or 'comment' and $name is the name of a given
@@ -37,8 +37,8 @@
  * Some tokens may be chained in the form of [$type:$pointer:$name], where $type
  * is a normal token type, $pointer is a reference to another token type, and
  * $name is the name of a given placeholder. For example, [node:author:mail]. In
- * that example, 'author' is a pointer to the 'user' account that created the node,
- * and 'mail' is a placeholder available for any 'user'.
+ * that example, 'author' is a pointer to the 'user' account that created the
+ * node, and 'mail' is a placeholder available for any 'user'.
  *
  * @see token_replace()
  * @see hook_tokens()
@@ -46,7 +46,7 @@
  */
 
 /**
- * Replace all tokens in a given string with appropriate values.
+ * Replaces all tokens in a given string with appropriate values.
  *
  * @param $text
  *   A string potentially containing replaceable tokens.
@@ -54,22 +54,25 @@
  *   (optional) An array of keyed objects. For simple replacement scenarios
  *   'node', 'user', and others are common keys, with an accompanying node or
  *   user object being the value. Some token types, like 'site', do not require
- *   any explicit information from $data and can be replaced even if it is empty.
+ *   any explicit information from $data and can be replaced even if it is
+ *   empty.
  * @param $options
  *   (optional) A keyed array of settings and flags to control the token
  *   replacement process. Supported options are:
  *   - language: A language object to be used when generating locale-sensitive
  *     tokens.
  *   - callback: A callback function that will be used to post-process the array
- *     of token replacements after they are generated. For example, a module using
- *     tokens in a text-only email might provide a callback to strip HTML
+ *     of token replacements after they are generated. For example, a module
+ *     using tokens in a text-only email might provide a callback to strip HTML
  *     entities from token values before they are inserted into the final text.
  *   - clear: A boolean flag indicating that tokens should be removed from the
  *     final text if no replacement value can be generated.
  *   - sanitize: A boolean flag indicating that tokens should be sanitized for
- *     display to a web browser. Defaults to TRUE. Developers who set this option
- *     to FALSE assume responsibility for running filter_xss(), check_plain() or
- *     other appropriate scrubbing functions before displaying data to users.
+ *     display to a web browser. Defaults to TRUE. Developers who set this
+ *     option to FALSE assume responsibility for running filter_xss(),
+ *     check_plain() or other appropriate scrubbing functions before displaying
+ *     data to users.
+ *
  * @return
  *   Text with tokens replaced.
  */
@@ -95,10 +98,11 @@ function token_replace($text, array $data = array(), array $options = array()) {
 }
 
 /**
- * Build a list of all token-like patterns that appear in the text.
+ * Builds a list of all token-like patterns that appear in the text.
  *
  * @param $text
  *   The text to be scanned for possible tokens.
+ *
  * @return
  *   An associative array of discovered tokens, grouped by type.
  */
@@ -129,7 +133,7 @@ function token_scan($text) {
 }
 
 /**
- * Generate replacement values for a list of tokens.
+ * Generates replacement values for a list of tokens.
  *
  * @param $type
  *   The type of token being replaced. 'node', 'user', and 'date' are common.
@@ -140,20 +144,22 @@ function token_scan($text) {
  *   (optional) An array of keyed objects. For simple replacement scenarios
  *   'node', 'user', and others are common keys, with an accompanying node or
  *   user object being the value. Some token types, like 'site', do not require
- *   any explicit information from $data and can be replaced even if it is empty.
+ *   any explicit information from $data and can be replaced even if it is
+ *   empty.
  * @param $options
  *   (optional) A keyed array of settings and flags to control the token
  *   replacement process. Supported options are:
- *   - 'language' A language object to be used when generating locale-sensitive
+ *   - language: A language object to be used when generating locale-sensitive
  *     tokens.
- *   - 'callback' A callback function that will be used to post-process the array
- *     of token replacements after they are generated. Can be used when modules
- *     require special formatting of token text, for example URL encoding or
- *     truncation to a specific length.
- *   - 'sanitize' A boolean flag indicating that tokens should be sanitized for
+ *   - callback: A callback function that will be used to post-process the
+ *     array of token replacements after they are generated. Can be used when
+ *     modules require special formatting of token text, for example URL
+ *     encoding or truncation to a specific length.
+ *   - sanitize: A boolean flag indicating that tokens should be sanitized for
  *     display to a web browser. Developers who set this option to FALSE assume
  *     responsibility for running filter_xss(), check_plain() or other
  *     appropriate scrubbing functions before displaying data to users.
+ *
  * @return
  *   An associative array of replacement values, keyed by the original 'raw'
  *   tokens that were found in the source text. For example:
@@ -179,7 +185,7 @@ function token_generate($type, array $tokens, array $data = array(), array $opti
 }
 
 /**
- * Given a list of tokens, return those that begin with a specific prefix.
+ * Given a list of tokens, returns those that begin with a specific prefix.
  *
  * Used to extract a group of 'chained' tokens (such as [node:author:name]) from
  * the full list of tokens found in text. For example:
@@ -187,7 +193,7 @@ function token_generate($type, array $tokens, array $data = array(), array $opti
  *   $data = array(
  *     'author:name' => '[node:author:name]',
  *     'title'       => '[node:title]',
- *     'created'     => '[node:author:name]',
+ *     'created'     => '[node:created]',
  *   );
  *   $results = token_find_with_prefix($data, 'author');
  *   $results == array('name' => '[node:author:name]');
@@ -200,6 +206,7 @@ function token_generate($type, array $tokens, array $data = array(), array $opti
  * @param $delimiter
  *   An optional string containing the character that separates the prefix from
  *   the rest of the token. Defaults to ':'.
+ *
  * @return
  *   An associative array of discovered tokens, with the prefix and delimiter
  *   stripped from the key.
@@ -236,6 +243,7 @@ function token_find_with_prefix(array $tokens, $prefix, $delimiter = ':') {
  *     'type' => 'user',
  *   );
  * @endcode
+ *
  * @return
  *   An associative array of token information, grouped by token type.
  */
