@@ -348,7 +348,7 @@ function _field_invoke_multiple($op, $entity_type, $entities, &$a = NULL, &$b = 
     // fields with an empty array (those are not equivalent on update).
     foreach ($grouped_entities[$field_id] as $id => $entity) {
       foreach ($grouped_items[$field_id] as $langcode => $items) {
-        if ($grouped_items[$field_id][$langcode][$id] !== array() || isset($entity->{$field_name}[$langcode])) {
+        if (isset($grouped_items[$field_id][$langcode][$id]) && ($grouped_items[$field_id][$langcode][$id] !== array() || isset($entity->{$field_name}[$langcode]))) {
           $entity->{$field_name}[$langcode] = $grouped_items[$field_id][$langcode][$id];
         }
       }

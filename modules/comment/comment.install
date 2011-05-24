@@ -344,6 +344,26 @@ function comment_update_7007() {
 }
 
 /**
+ * Update database to match Drupal 7 schema.
+ */
+function comment_update_7008() {
+  // Update default status to 1.
+  db_change_field('comment', 'status', 'status', array(
+    'type' => 'int',
+    'unsigned' => TRUE,
+    'not null' => TRUE,
+    'default' => 1,
+    'size' => 'tiny',
+  ));
+
+  // Realign indexes.
+  db_drop_index('comment', 'comment_status_pid');
+  db_add_index('comment', 'comment_status_pid', array('pid', 'status'));
+  db_drop_index('comment', 'comment_pid_status');
+  db_drop_index('comment', 'nid');
+}
+
+/**
  * @} End of "addtogroup updates-6.x-to-7.x"
  */
 

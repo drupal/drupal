@@ -88,7 +88,9 @@ function field_test_field_test_op($entity_type, $entity, $field, $instance, $lan
 function field_test_field_test_op_multiple($entity_type, $entities, $field, $instances, $langcode, &$items) {
   $result = array();
   foreach ($entities as $id => $entity) {
-    $result[$id] = array($langcode => hash('sha256', serialize(array($entity_type, $entity, $field['field_name'], $langcode, $items[$id]))));
+    if (isset($items[$id])) {
+      $result[$id] = array($langcode => hash('sha256', serialize(array($entity_type, $entity, $field['field_name'], $langcode, $items[$id]))));
+    }
   }
   return $result;
 }
