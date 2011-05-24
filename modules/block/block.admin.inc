@@ -16,7 +16,7 @@ function block_admin_demo($theme = NULL) {
 /**
  * Menu callback for admin/structure/block.
  *
- * @param $theme
+ * @param $theme
  *   The theme to display the administration page for. If not provided, defaults
  *   to the currently used theme.
  */
