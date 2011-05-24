@@ -17,6 +17,7 @@
  *  - a functional test for multilingual support by content type and on nodes.
  *  - a functional test for multilingual fields.
  *  - a functional test for comment language.
+ *  - a functional test fot language types/negotiation info.
  */
 
 
@@ -2248,10 +2249,13 @@ class LocaleCommentLanguageFunctionalTest extends DrupalWebTestCase {
     variable_set('locale_test_content_language_type', TRUE);
 
     // Set interface language detection to user and content language detection
-    // to URL.
+    // to URL. Disable inheritance from interface language to ensure content
+    // language will fall back to the default language if no URL language can be
+    // detected.
     $edit = array(
       'language[enabled][locale-user]' => TRUE,
-      'language_content[enabled][locale-url]' => TRUE
+      'language_content[enabled][locale-url]' => TRUE,
+      'language_content[enabled][locale-interface]' => FALSE,
     );
     $this->drupalPost('admin/config/regional/language/configure', $edit, t('Save settings'));
 
@@ -2371,5 +2375,160 @@ class LocaleDateFormatsFunctionalTest extends DrupalWebTestCase {
     $this->drupalGet('fr/node/' . $node->nid);
     $french_date = format_date($node->created, 'custom', 'd.m.Y');
     $this->assertText($french_date, t('French date format appears'));
+  }
+}
+
+/**
+ * Functional test for language types/negotiation info.
+ */
+class LocaleLanguageNegotiationInfoFunctionalTest extends DrupalWebTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Language negotiation info',
+      'description' => 'Tests alterations to language types/negotiation info.',
+      'group' => 'Locale',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('locale');
+    require_once DRUPAL_ROOT .'/includes/language.inc';
+    $admin_user = $this->drupalCreateUser(array('administer languages', 'access administration pages', 'view the administration theme'));
+    $this->drupalLogin($admin_user);
+    $this->drupalPost('admin/config/regional/language/add', array('langcode' => 'it'), t('Add language'));
+  }
+
+  /**
+   * Tests alterations to language types/negotiation info.
+   */
+  function testInfoAlterations() {
+    // Enable language type/negotiation info alterations.
+    variable_set('locale_test_language_types', TRUE);
+    variable_set('locale_test_language_negotiation_info', TRUE);
+    $this->languageNegotiationUpdate();
+
+    // Check that fixed language types are properly configured without the need
+    // of saving the language negotiation settings.
+    $this->checkFixedLanguageTypes();
+
+    // Make the content language type configurable by updating the language
+    // negotiation settings with the proper flag enabled.
+    variable_set('locale_test_content_language_type', TRUE);
+    $this->languageNegotiationUpdate();
+    $type = LANGUAGE_TYPE_CONTENT;
+    $language_types = variable_get('language_types', drupal_language_types());
+    $this->assertTrue($language_types[$type], t('Content language type is configurable.'));
+
+    // Enable some core and custom language providers. The test language type is
+    // supposed to be configurable.
+    $test_type = 'test_language_type';
+    $provider = LOCALE_LANGUAGE_NEGOTIATION_INTERFACE;
+    $test_provider = 'test_language_provider';
+    $form_field = $type . '[enabled]['. $provider .']';
+    $edit = array(
+      $form_field => TRUE,
+      $type . '[enabled][' . $test_provider . ']' => TRUE,
+      $test_type . '[enabled][' . $test_provider . ']' => TRUE,
+    );
+    $this->drupalPost('admin/config/regional/language/configure', $edit, t('Save settings'));
+
+    // Remove the interface language provider by updating the language
+    // negotiation settings with the proper flag enabled.
+    variable_set('locale_test_language_negotiation_info_alter', TRUE);
+    $this->languageNegotiationUpdate();
+    $negotiation = variable_get("language_negotiation_$type", array());
+    $this->assertFalse(isset($negotiation[$provider]), t('Interface language provider removed from the stored settings.'));
+    $this->assertNoFieldByXPath("//input[@name=\"$form_field\"]", NULL, t('Interface language provider unavailable.'));
+
+    // Check that type-specific language providers can be assigned only to the
+    // corresponding language types.
+    foreach (language_types_configurable() as $type) {
+      $form_field = $type . '[enabled][test_language_provider_ts]';
+      if ($type == $test_type) {
+        $this->assertFieldByXPath("//input[@name=\"$form_field\"]", NULL, t('Type-specific test language provider available for %type.', array('%type' => $type)));
+      }
+      else {
+        $this->assertNoFieldByXPath("//input[@name=\"$form_field\"]", NULL, t('Type-specific test language provider unavailable for %type.', array('%type' => $type)));
+      }
+    }
+
+    // Check language negotiation results.
+    $this->drupalGet('');
+    $last = variable_get('locale_test_language_negotiation_last', array());
+    foreach (language_types() as $type) {
+      $langcode = $last[$type];
+      $value = $type == LANGUAGE_TYPE_CONTENT || strpos($type, 'test') !== FALSE ? 'it' : 'en';
+      $this->assertEqual($langcode, $value, t('The negotiated language for %type is %language', array('%type' => $type, '%language' => $langcode)));
+    }
+
+    // Disable locale_test and check that everything is set back to the original
+    // status.
+    $this->languageNegotiationUpdate('disable');
+
+    // Check that only the core language types are available.
+    foreach (language_types() as $type) {
+      $this->assertTrue(strpos($type, 'test') === FALSE, t('The %type language is still available', array('%type' => $type)));
+    }
+
+    // Check that fixed language types are properly configured, even those
+    // previously set to configurable.
+    $this->checkFixedLanguageTypes();
+
+    // Check that unavailable language providers are not present in the
+    // negotiation settings.
+    $negotiation = variable_get("language_negotiation_$type", array());
+    $this->assertFalse(isset($negotiation[$test_provider]), t('The disabled test language provider is not part of the content language negotiation settings.'));
+
+    // Check that configuration page presents the correct options and settings.
+    $this->assertNoRaw(t('Test language detection'), t('No test language type configuration available.'));
+    $this->assertNoRaw(t('This is a test language provider'), t('No test language provider available.'));
+  }
+
+  /**
+   * Update language types/negotiation information.
+   *
+   * Manually invoke locale_modules_enabled()/locale_modules_disabled() since
+   * they would not be invoked after enabling/disabling locale_test the first
+   * time.
+   */
+  private function languageNegotiationUpdate($op = 'enable') {
+    static $last_op = NULL;
+    $modules = array('locale_test');
+
+    // Enable/disable locale_test only if we did not already before.
+    if ($last_op != $op) {
+      $function = "module_{$op}";
+      $function($modules);
+      // Reset hook implementation cache.
+      module_implements(NULL, FALSE, TRUE);
+    }
+
+    drupal_static_reset('language_types_info');
+    drupal_static_reset('language_negotiation_info');
+    $function = "locale_modules_{$op}d";
+    if (function_exists($function)) {
+      $function($modules);
+    }
+
+    $this->drupalGet('admin/config/regional/language/configure');
+  }
+
+  /**
+   * Check that language negotiation for fixed types matches the stored one.
+   */
+  private function checkFixedLanguageTypes() {
+    drupal_static_reset('language_types_info');
+    foreach (language_types_info() as $type => $info) {
+      if (isset($info['fixed'])) {
+        $negotiation = variable_get("language_negotiation_$type", array());
+        $equal = count($info['fixed']) == count($negotiation);
+        while ($equal && list($id) = each($negotiation)) {
+          list(, $info_id) = each($info['fixed']);
+          $equal = $info_id == $id;
+        }
+        $this->assertTrue($equal, t('language negotiation for %type is properly set up', array('%type' => $type)));
+      }
+    }
   }
 }
