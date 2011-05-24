@@ -355,7 +355,7 @@ function _block_get_renderable_array($list = array()) {
 /**
  * Update the 'block' DB table with the blocks currently exported by modules.
  *
- * @param $theme
+ * @param $theme
  *   The theme to rehash blocks for. If not provided, defaults to the currently
  *   used theme.
  *
