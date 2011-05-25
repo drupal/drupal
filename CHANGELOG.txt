@@ -1,4 +1,7 @@
 
+Drupal 7.3-dev, xxxx-xx-xx (development version)
+----------------------
+
 Drupal 7.2, 2011-05-25
 ----------------------
 - Added a default .gitignore file.
