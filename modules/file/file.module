@@ -976,7 +976,7 @@ function file_get_file_references($file, $field = NULL, $age = FIELD_LOAD_REVISI
     }
   }
 
-  return isset($field) ? $references[$field['field_name']] : $references;
+  return isset($field) ? $references[$field['field_name']] : array_filter($references);
 }
 
 /**

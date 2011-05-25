@@ -1,6 +1,21 @@
 
-Drupal 7.1-dev, xxxx-xx-xx (development version)
+Drupal 7.2, 2011-05-25
 ----------------------
+- Added a default .gitignore file.
+- Improved PostgreSQL and SQLite support.
+- Numerous critical performance improvements.
+- Numerous critical fixes to the upgrade path.
+- Numerous fixes to language and translation systems.
+- Numerous fixes to AJAX and #states systems.
+- Improvements to the locking system.
+- Numerous documentation fixes.
+- Numerous styling and theme system fixes.
+- Numerous fixes for schema mis-matches between Drupal 6 and 7.
+- Minor internal API clean-ups.
+
+Drupal 7.1, 2011-05-25
+----------------------
+- Fixed security issues (Cross site scripting, File access bypass), see SA-CORE-2011-001.
 
 Drupal 7.0, 2011-01-05 
 ----------------------
@@ -220,6 +235,17 @@ Drupal 7.0, 2011-01-05
     * Added queue API support to cron API.
     * Added a locking framework to coordinate long-running operations across
       requests.
+
+Drupal 6.22, 2011-05-25
+-----------------------
+- Made Drupal 6 work better with IIS and Internet Explorer.
+- Fixed .po file imports to work better with custom textgroups.
+- Improved code documentation at various places.
+- Fixed a variety of other bugs.
+
+Drupal 6.21, 2011-05-25
+----------------------
+- Fixed security issues (Cross site scripting), see SA-CORE-2011-001.
 
 Drupal 6.20, 2010-12-15
 ----------------------
