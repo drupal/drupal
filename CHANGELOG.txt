@@ -1,4 +1,7 @@
-// $Id$
+
+Drupal 7.1, 2011-05-25
+----------------------
+- Fixed security issues (Cross site scripting, File access bypass), see SA-CORE-2011-001.
 
 Drupal 7.0, 2011-01-05
 ----------------------
