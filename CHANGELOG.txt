@@ -1,5 +1,8 @@
 
-Drupal 7.0, xxxx-xx-xx (development version)
+Drupal 7.1-dev, xxxx-xx-xx (development version)
+----------------------
+
+Drupal 7.0, 2011-01-05 
 ----------------------
 - Database:
     * Fully rewritten database layer utilizing PHP 5's PDO abstraction layer.
@@ -218,6 +221,145 @@ Drupal 7.0, xxxx-xx-xx (development version)
     * Added a locking framework to coordinate long-running operations across
       requests.
 
+Drupal 6.20, 2010-12-15
+----------------------
+- Fixed a variety of small bugs, improved code documentation.
+
+Drupal 6.19, 2010-08-11
+----------------------
+- Fixed a variety of small bugs, improved code documentation.
+
+Drupal 6.18, 2010-08-11
+----------------------
+- Fixed security issues (OpenID authentication bypass, File download access
+  bypass, Comment unpublishing bypass, Actions cross site scripting),
+  see SA-CORE-2010-002.
+
+Drupal 6.17, 2010-06-02
+----------------------
+- Improved PostgreSQL compatibility
+- Better PHP 5.3 and PHP 4 compatibility
+- Better browser compatibility of CSS and JS aggregation
+- Improved logging for login failures
+- Fixed an incompatibility with some contributed modules and the locking system
+- Fixed a variety of other bugs.
+
+Drupal 6.16, 2010-03-03
+----------------------
+- Fixed security issues (Installation cross site scripting, Open redirection,
+  Locale module cross site scripting, Blocked user session regeneration),
+  see SA-CORE-2010-001.
+- Better support for updated jQuery versions.
+- Reduced resource usage of update.module.
+- Fixed several issues relating to support of install profiles and
+  distributions.
+- Added a locking framework to avoid data corruption on long operations.
+- Fixed a variety of other bugs.
+
+Drupal 6.15, 2009-12-16
+----------------------
+- Fixed security issues (Cross site scripting), see SA-CORE-2009-009.
+- Fixed a variety of other bugs.
+
+Drupal 6.14, 2009-09-16
+----------------------
+- Fixed security issues (OpenID association cross site request forgeries,
+  OpenID impersonation and File upload), see SA-CORE-2009-008.
+- Changed the system modules page to not run all cache rebuilds; use the
+  button on the performance settings page to achieve the same effect.
+- Added support for PHP 5.3.0 out of the box.
+- Fixed a variety of small bugs.
+
+Drupal 6.13, 2009-07-01
+----------------------
+- Fixed security issues (Cross site scripting, Input format access bypass and
+  Password leakage in URL), see SA-CORE-2009-007.
+- Fixed a variety of small bugs.
+
+Drupal 6.12, 2009-05-13
+----------------------
+- Fixed security issues (Cross site scripting), see SA-CORE-2009-006.
+- Fixed a variety of small bugs.
+
+Drupal 6.11, 2009-04-29
+----------------------
+- Fixed security issues (Cross site scripting and limited information
+  disclosure), see SA-CORE-2009-005
+- Fixed performance issues with the menu router cache, the update
+  status cache and improved cache invalidation
+- Fixed a variety of small bugs.
+
+Drupal 6.10, 2009-02-25
+----------------------
+- Fixed a security issue, (Local file inclusion on Windows),
+  see SA-CORE-2009-003
+- Fixed node_feed() so custom fields can show up in RSS feeds.
+- Improved PostgreSQL compatibility.
+- Fixed a variety of small bugs.
+
+Drupal 6.9, 2009-01-14
+----------------------
+- Fixed security issues, (Access Bypass, Validation Bypass and Hardening
+  against SQL injection), see SA-CORE-2009-001
+- Made HTTP request checking more robust and informative.
+- Fixed HTTP_HOST checking to work again with HTTP 1.0 clients and
+  basic shell scripts.
+- Removed t() calls from all schema documentation. Suggested best practice
+  changed for contributed modules, see http://drupal.org/node/322731.
+- Fixed a variety of small bugs.
+
+Drupal 6.8, 2008-12-11
+----------------------
+- Removed a previous change incompatible with PHP 5.1.x and lower.
+
+Drupal 6.7, 2008-12-10
+----------------------
+- Fixed security issues, (Cross site request forgery and Cross site scripting), see SA-2008-073
+- Updated robots.txt and .htaccess to match current file use.
+- Fixed a variety of small bugs.
+
+Drupal 6.6, 2008-10-22
+----------------------
+- Fixed security issues, (File inclusion, Cross site scripting), see SA-2008-067
+- Fixed a variety of small bugs.
+
+Drupal 6.5, 2008-10-08
+----------------------
+- Fixed security issues, (File upload access bypass, Access rules bypass,
+  BlogAPI access bypass), see SA-2008-060.
+- Fixed a variety of small bugs.
+
+Drupal 6.4, 2008-08-13
+----------------------
+- Fixed a security issue (Cross site scripting, Arbitrary file uploads via
+  BlogAPI, Cross site request forgeries and Various Upload module
+  vulnerabilities), see SA-2008-047.
+- Improved error messages during installation.
+- Fixed a bug that prevented AHAH handlers to be attached to radios widgets.
+- Fixed a variety of small bugs.
+
+Drupal 6.3, 2008-07-09
+----------------------
+- Fixed security issues, (Cross site scripting, cross site request forgery,
+  session fixation and SQL injection), see SA-2008-044.
+- Slightly modified installation process to prevent file ownership issues on
+  shared hosts.
+- Improved PostgreSQL compatibility (rewritten queries; custom blocks).
+- Upgraded to jQuery 1.2.6.
+- Performance improvements to search, menu handling and form API caches.
+- Fixed Views compatibility issues (Views for Drupal 6 requires Drupal 6.3+).
+- Fixed a variety of small bugs.
+
+Drupal 6.2, 2008-04-09
+----------------------
+- Fixed a variety of small bugs.
+- Fixed a security issue (Access bypasses), see SA-2008-026.
+
+Drupal 6.1, 2008-02-27
+----------------------
+- Fixed a variety of small bugs.
+- Fixed a security issue (Cross site scripting), see SA-2008-018.
+
 Drupal 6.0, 2008-02-13
 ----------------------
 - New, faster and better menu system.
@@ -319,6 +461,95 @@ Drupal 6.0, 2008-02-13
   contributed module (http://drupal.org/project/site_network).
 - Removed old system updates. Updates from Drupal versions prior to 5.x will
   require upgrading to 5.x before upgrading to 6.x.
+
+Drupal 5.23, 2010-08-11
+-----------------------
+- Fixed security issues (File download access bypass, Comment unpublishing
+  bypass), see SA-CORE-2010-002.
+
+Drupal 5.22, 2010-03-03
+-----------------------
+- Fixed security issues (Open redirection, Locale module cross site scripting,
+  Blocked user session regeneration), see SA-CORE-2010-001.
+
+Drupal 5.21, 2009-12-16
+-----------------------
+- Fixed a security issue (Cross site scripting), see SA-CORE-2009-009.
+- Fixed a variety of small bugs.
+
+Drupal 5.20, 2009-09-16
+-----------------------
+- Avoid security problems resulting from writing Drupal 6-style menu
+  declarations.
+- Fixed security issues (session fixation), see SA-CORE-2009-008.
+- Fixed a variety of small bugs.
+
+Drupal 5.19, 2009-07-01
+-----------------------
+- Fixed security issues (Cross site scripting and Password leakage in URL), see
+  SA-CORE-2009-007.          
+- Fixed a variety of small bugs.
+
+Drupal 5.18, 2009-05-13
+-----------------------
+- Fixed security issues (Cross site scripting), see SA-CORE-2009-006.
+- Fixed a variety of small bugs.
+
+Drupal 5.17, 2009-04-29
+-----------------------
+- Fixed security issues (Cross site scripting and limited information
+  disclosure) see SA-CORE-2009-005.
+- Fixed a variety of small bugs.
+
+Drupal 5.16, 2009-02-25
+-----------------------
+- Fixed a security issue, (Local file inclusion on Windows), see SA-CORE-2009-004.
+- Fixed a variety of small bugs.
+
+Drupal 5.15, 2009-01-14
+-----------------------
+- Fixed security issues, (Hardening against SQL injection), see
+  SA-CORE-2009-001
+- Fixed HTTP_HOST checking to work again with HTTP 1.0 clients and basic shell
+  scripts.
+- Fixed a variety of small bugs.
+
+Drupal 5.14, 2008-12-11
+-----------------------
+- removed a previous change incompatible with PHP 5.1.x and lower.
+
+Drupal 5.13, 2008-12-10
+-----------------------
+- fixed a variety of small bugs.
+- fixed security issues, (Cross site request forgery and Cross site scripting), see SA-2008-073
+- updated robots.txt and .htaccess to match current file use.
+
+Drupal 5.12, 2008-10-22
+-----------------------
+- fixed security issues, (File inclusion), see SA-2008-067
+
+Drupal 5.11, 2008-10-08
+-----------------------
+- fixed a variety of small bugs.
+- fixed security issues, (File upload access bypass, Access rules bypass,
+  BlogAPI access bypass, Node validation bypass), see SA-2008-060
+
+Drupal 5.10, 2008-08-13
+-----------------------
+- fixed a variety of small bugs.
+- fixed security issues, (Cross site scripting, Arbitrary file uploads via
+  BlogAPI and Cross site request forgery), see SA-2008-047
+
+Drupal 5.9, 2008-07-23
+----------------------
+- fixed a variety of small bugs.
+- fixed security issues, (Session fixation), see SA-2008-046
+
+Drupal 5.8, 2008-07-09
+----------------------
+- fixed a variety of small bugs.
+- fixed security issues, (Cross site scripting, cross site request forgery, and
+  session fixation), see SA-2008-044
 
 Drupal 5.7, 2008-01-28
 ----------------------
