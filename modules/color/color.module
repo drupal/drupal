@@ -46,6 +46,7 @@ function color_form_alter(&$form, $form_state, $form_id) {
         '#theme' => 'color_scheme_form',
       );
       $form['color'] += color_scheme_form($form_state, arg(4));
+      $form['#validate'][] = 'color_scheme_form_validate';
       $form['#submit'][] = 'color_scheme_form_submit';
     }
   }
@@ -234,6 +235,18 @@ function theme_color_scheme_form($form) {
   $output .= '</div>';
 
   return $output;
+}
+
+/**
+ * Validation handler for color change form.
+ */
+function color_scheme_form_validate($form, &$form_state) {
+  // Only accept hexadecimal CSS color strings to avoid XSS upon use.
+  foreach ($form_state['values']['palette'] as $key => $color) {
+    if (!preg_match('/^#([a-f0-9]{3}){1,2}$/iD', $color)) {
+      form_set_error('palette][' . $key, t('%name must be a valid hexadecimal CSS color value.', array('%name' => $form['color']['palette'][$key]['#title'])));
+    }
+  }
 }
 
 /**

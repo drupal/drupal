@@ -1,4 +1,7 @@
-// $Id$
+
+Drupal 6.21, 2011-05-25
+----------------------
+- Fixed security issues (Cross site scripting), see SA-CORE-2011-001.
 
 Drupal 6.20, 2010-12-15
 ----------------------

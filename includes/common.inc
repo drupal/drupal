@@ -653,7 +653,7 @@ function drupal_error_handler($errno, $message, $filename, $line, $context) {
       }
     }
 
-    $entry = $types[$errno] .': '. $message .' in '. $filename .' on line '. $line .'.';
+    $entry = check_plain($types[$errno]) .': '. filter_xss($message) .' in '. check_plain($filename) .' on line '. check_plain($line) .'.';
 
     // Force display of error messages in update.php.
     if (variable_get('error_level', 1) == 1 || strstr($_SERVER['SCRIPT_NAME'], 'update.php')) {
