@@ -134,6 +134,19 @@ class UpdateCoreTestCase extends UpdateTestHelper {
   }
 
   /**
+   * Check that running cron updates the list of available updates.
+   */
+  function testModulePageRunCron() {
+    $this->setSystemInfo7_0();
+    variable_set('update_fetch_url', url('update-test', array('absolute' => TRUE)));
+    variable_set('update_test_xml_map', array('drupal' => '0'));
+
+    $this->cronRun();
+    $this->drupalGet('admin/modules');
+    $this->assertNoText(t('No update information available.'));
+  }
+
+  /**
    * Check the messages at admin/modules when the site is up to date.
    */
   function testModulePageUpToDate() {
@@ -142,10 +155,10 @@ class UpdateCoreTestCase extends UpdateTestHelper {
     variable_set('update_fetch_url', url('update-test', array('absolute' => TRUE)));
     variable_set('update_test_xml_map', array('drupal' => '0'));
 
-    $this->drupalGet('admin/modules');
-    $this->assertText(t('No update information available.'));
-    $this->clickLink(t('check manually'));
+    $this->drupalGet('admin/reports/updates');
+    $this->clickLink(t('Check manually'));
     $this->assertText(t('Checked available update data for one project.'));
+    $this->drupalGet('admin/modules');
     $this->assertNoText(t('There are updates available for your version of Drupal.'));
     $this->assertNoText(t('There is a security update available for your version of Drupal.'));
   }
@@ -159,10 +172,10 @@ class UpdateCoreTestCase extends UpdateTestHelper {
     variable_set('update_fetch_url', url('update-test', array('absolute' => TRUE)));
     variable_set('update_test_xml_map', array('drupal' => '1'));
 
-    $this->drupalGet('admin/modules');
-    $this->assertText(t('No update information available.'));
-    $this->clickLink(t('check manually'));
+    $this->drupalGet('admin/reports/updates');
+    $this->clickLink(t('Check manually'));
     $this->assertText(t('Checked available update data for one project.'));
+    $this->drupalGet('admin/modules');
     $this->assertText(t('There are updates available for your version of Drupal.'));
     $this->assertNoText(t('There is a security update available for your version of Drupal.'));
   }
@@ -176,10 +189,10 @@ class UpdateCoreTestCase extends UpdateTestHelper {
     variable_set('update_fetch_url', url('update-test', array('absolute' => TRUE)));
     variable_set('update_test_xml_map', array('drupal' => '2-sec'));
 
-    $this->drupalGet('admin/modules');
-    $this->assertText(t('No update information available.'));
-    $this->clickLink(t('check manually'));
+    $this->drupalGet('admin/reports/updates');
+    $this->clickLink(t('Check manually'));
     $this->assertText(t('Checked available update data for one project.'));
+    $this->drupalGet('admin/modules');
     $this->assertNoText(t('There are updates available for your version of Drupal.'));
     $this->assertText(t('There is a security update available for your version of Drupal.'));
 
