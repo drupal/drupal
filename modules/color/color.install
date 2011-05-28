@@ -40,3 +40,18 @@ function color_requirements($phase) {
 
   return $requirements;
 }
+
+/**
+ * Warn site administrator if unsafe CSS color codes are found in the database.
+ */
+function color_update_7001() {
+  $theme_palettes = db_query("SELECT name FROM {variable} WHERE name LIKE 'color_%_palette'")->fetchCol();
+  foreach ($theme_palettes as $name) {
+    $palette = variable_get($name, array());
+    foreach ($palette as $key => $color) {
+      if (!preg_match('/^#([a-f0-9]{3}){1,2}$/iD', $color)) {
+        drupal_set_message('Some of the custom CSS color codes specified via the color module are invalid. Please examine the themes which are making use of the color module at the <a href="'. url('admin/appearance/settings') .'">Appearance settings</a> page to verify their CSS color values.', 'warning');
+      }
+    }
+  }
+}

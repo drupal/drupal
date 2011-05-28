@@ -20,7 +20,7 @@ class TranslationTestCase extends DrupalWebTestCase {
     parent::setUp('locale', 'translation', 'translation_test');
 
     // Setup users.
-    $this->admin_user = $this->drupalCreateUser(array('bypass node access', 'administer nodes', 'administer languages', 'administer content types', 'administer blocks', 'access administration pages'));
+    $this->admin_user = $this->drupalCreateUser(array('bypass node access', 'administer nodes', 'administer languages', 'administer content types', 'administer blocks', 'access administration pages', 'translate content'));
     $this->translator = $this->drupalCreateUser(array('create page content', 'edit own page content', 'translate content'));
 
     $this->drupalLogin($this->admin_user);
@@ -66,6 +66,14 @@ class TranslationTestCase extends DrupalWebTestCase {
     $node_title = $this->randomName();
     $node_body =  $this->randomName();
     $node = $this->createPage($node_title, $node_body, 'en');
+
+    // Unpublish the original node to check that this has no impact on the
+    // translation overview page, publish it again afterwards.
+    $this->drupalLogin($this->admin_user);
+    $this->drupalPost('node/' . $node->nid . '/edit', array('status' => FALSE), t('Save'));
+    $this->drupalGet('node/' . $node->nid . '/translate');
+    $this->drupalPost('node/' . $node->nid . '/edit', array('status' => NODE_PUBLISHED), t('Save'));
+    $this->drupalLogin($this->translator);
 
     // Check that the "add translation" link uses a localized path.
     $languages = language_list();

@@ -84,6 +84,44 @@ function language_types_disable($types) {
 }
 
 /**
+ * Updates the language type configuration.
+ */
+function language_types_set() {
+  // Ensure that we are getting the defined language negotiation information. An
+  // invocation of module_enable() or module_disable() could outdate the cached
+  // information.
+  drupal_static_reset('language_types_info');
+  drupal_static_reset('language_negotiation_info');
+
+  // Determine which language types are configurable and which not by checking
+  // whether the 'fixed' key is defined. Non-configurable (fixed) language types
+  // have their language negotiation settings stored there.
+  $defined_providers = language_negotiation_info();
+  foreach (language_types_info() as $type => $info) {
+    if (isset($info['fixed'])) {
+      $language_types[$type] = FALSE;
+      $negotiation = array();
+      foreach ($info['fixed'] as $weight => $id) {
+        if (isset($defined_providers[$id])) {
+          $negotiation[$id] = $weight;
+        }
+      }
+      language_negotiation_set($type, $negotiation);
+    }
+    else {
+      $language_types[$type] = TRUE;
+    }
+  }
+
+  // Save language types.
+  variable_set('language_types', $language_types);
+
+  // Ensure that subsequent calls of language_types_configurable() return the
+  // updated language type information.
+  drupal_static_reset('language_types_configurable');
+}
+
+/**
  * Check if a language provider is enabled.
  *
  * This has two possible behaviors:
@@ -173,6 +211,28 @@ function language_negotiation_get_switch_links($type, $path) {
   return $links;
 }
 
+/**
+ * Updates language configuration to remove any language provider that is no longer defined.
+ */
+function language_negotiation_purge() {
+  // Ensure that we are getting the defined language negotiation information. An
+  // invocation of module_enable() or module_disable() could outdate the cached
+  // information.
+  drupal_static_reset('language_negotiation_info');
+  drupal_static_reset('language_types_info');
+
+  $defined_providers = language_negotiation_info();
+  foreach (language_types_info() as $type => $type_info) {
+    $weight = 0;
+    $negotiation = array();
+    foreach (variable_get("language_negotiation_$type", array()) as $id => $provider) {
+      if (isset($defined_providers[$id])) {
+        $negotiation[$id] = $weight++;
+      }
+    }
+    language_negotiation_set($type, $negotiation);
+  }
+}
 
 /**
  * Save a list of language providers.
@@ -180,7 +240,8 @@ function language_negotiation_get_switch_links($type, $path) {
  * @param $type
  *   The language negotiation type.
  * @param $language_providers
- *   An array of language provider ids.
+ *   An array of language provider weights keyed by id.
+ *   @see language_provider_weight()
  */
 function language_negotiation_set($type, $language_providers) {
   // Save only the necessary fields.
@@ -189,7 +250,7 @@ function language_negotiation_set($type, $language_providers) {
   $negotiation = array();
   $providers_weight = array();
   $defined_providers = language_negotiation_info();
-  $default_types = language_types_configurable();
+  $default_types = language_types_configurable(FALSE);
 
   // Initialize the providers weight list.
   foreach ($language_providers as $id => $provider) {
