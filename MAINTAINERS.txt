@@ -209,6 +209,7 @@ Node module
 - David Strauss 'David Strauss' <http://drupal.org/user/93254>
 
 OpenID module
+- Vojtech Kusy 'wojtha' <http://drupal.org/user/56154>
 - Heine Deelstra 'Heine' <http://drupal.org/user/17943>
 - Christian Schmidt 'c960657' <http://drupal.org/user/216078>
 - Damien Tournoud 'DamZ' <http://drupal.org/user/22211>
