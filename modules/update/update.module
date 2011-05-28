@@ -293,6 +293,7 @@ function update_cron() {
     // the cached data for all projects, attempt to re-fetch, and trigger any
     // configured notifications about the new status.
     update_refresh();
+    update_fetch_data();
     _update_cron_notify();
   }
   else {
