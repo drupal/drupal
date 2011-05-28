@@ -166,7 +166,7 @@ Drupal installation as the webserver user (differs per configuration), or root:
 sudo -u [wwwrun|www-data|etc] php ./scripts/{$args['script']}
   --url http://example.com/ --all
 sudo -u [wwwrun|www-data|etc] php ./scripts/{$args['script']}
-  --url http://example.com/ --class UploadTestCase
+  --url http://example.com/ --class BlockTestCase
 \n
 EOF;
 }
