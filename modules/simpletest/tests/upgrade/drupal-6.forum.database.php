@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 /**
  * Database additions for forum tests.
