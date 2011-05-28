@@ -414,7 +414,7 @@ interface SelectQueryInterface extends QueryConditionInterface, QueryAlterableIn
    * @param $start
    *   The first record from the result set to return. If NULL, removes any
    *   range directives that are set.
-   * @param $limit
+   * @param $length
    *   The number of records to return from the result set.
    * @return SelectQueryInterface
    *   The called object.
