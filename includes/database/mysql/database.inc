@@ -133,6 +133,55 @@ class DatabaseConnection_mysql extends DatabaseConnection {
     catch (PDOException $e) {
     }
   }
+
+  /**
+   * Overridden to work around issues to MySQL not supporting transactional DDL.
+   */
+  public function popTransaction($name) {
+    if (!$this->supportsTransactions()) {
+      return;
+    }
+    if (!$this->inTransaction()) {
+      throw new DatabaseTransactionNoActiveException();
+    }
+
+    // Commit everything since SAVEPOINT $name.
+    while ($savepoint = array_pop($this->transactionLayers)) {
+      if ($savepoint != $name) {
+        continue;
+      }
+
+      // If there are no more layers left then we should commit.
+      if (empty($this->transactionLayers)) {
+        if (!PDO::commit()) {
+          throw new DatabaseTransactionCommitFailedException();
+        }
+      }
+      else {
+        // Attempt to release this savepoint in the standard way.
+        try {
+          $this->query('RELEASE SAVEPOINT ' . $name);
+        }
+        catch (PDOException $e) {
+          // However, in MySQL (InnoDB), savepoints are automatically committed
+          // when tables are altered or created (DDL transactions are not
+          // supported). This can cause exceptions due to trying to release
+          // savepoints which no longer exist.
+          //
+          // To avoid exceptions when no actual error has occurred, we silently
+          // succeed for PDOExceptions with error code 42000 ("Syntax error or
+          // access rule violation").
+          if ($e->getCode() != '42000') {
+            throw $e;
+          }
+          // If one SAVEPOINT was released automatically, then all were.
+          // Therefore, we keep just the topmost transaction.
+          $this->transactionLayers = array('drupal_transaction');
+        }
+        break;
+      }
+    }
+  }
 }
 
 
