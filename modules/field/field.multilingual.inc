@@ -20,7 +20,7 @@
  * - For untranslatable fields this set only contains LANGUAGE_NONE.
  * - For translatable fields this set can contain any language code. By default
  *   it is the list returned by field_content_languages(), which contains all
- *   enabled languages with the addition of LANGUAGE_NONE. This default can be
+ *   installed languages with the addition of LANGUAGE_NONE. This default can be
  *   altered by modules implementing hook_field_available_languages_alter().
  *
  * The available languages for a particular field are returned by
