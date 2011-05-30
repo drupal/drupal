@@ -2698,6 +2698,7 @@ Your account on [site:name] has been canceled.
 /**
  * Token callback to add unsafe tokens for user mails.
  *
+ * @see _user_mail_text()
  * @see user_mail()
  */
 function user_mail_tokens(&$replacements, $data, $options) {
