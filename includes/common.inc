@@ -2822,6 +2822,8 @@ function drupal_add_html_head_link($attributes, $header = FALSE) {
  *
  * @return
  *   An array of queued cascading stylesheets.
+ *
+ * @see drupal_get_css()
  */
 function drupal_add_css($data = NULL, $options = NULL) {
   $css = &drupal_static(__FUNCTION__, array());
@@ -2902,8 +2904,11 @@ function drupal_add_css($data = NULL, $options = NULL) {
  *   (optional) If set to TRUE, this function skips calling drupal_alter() on
  *   $css, useful when the calling function passes a $css array that has already
  *   been altered.
+ *
  * @return
  *   A string of XHTML CSS tags.
+ *
+ * @see drupal_add_css()
  */
 function drupal_get_css($css = NULL, $skip_alter = FALSE) {
   if (!isset($css)) {
