@@ -256,8 +256,8 @@ function hook_field_schema($field) {
   }
   $columns += array(
     'format' => array(
-      'type' => 'int',
-      'unsigned' => TRUE,
+      'type' => 'varchar',
+      'length' => 255,
       'not null' => FALSE,
     ),
   );
