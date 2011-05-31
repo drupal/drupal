@@ -1136,7 +1136,7 @@ function template_process_field(&$variables, $hook) {
  *   - label_hidden: A boolean indicating to show or hide the field label.
  *   - title_attributes: A string containing the attributes for the title.
  *   - label: The label for the field.
- *   - content_attributes: A string containing the attaributes for the content's
+ *   - content_attributes: A string containing the attributes for the content's
  *     div.
  *   - items: An array of field items.
  *   - item_attributes: An array of attributes for each item.
