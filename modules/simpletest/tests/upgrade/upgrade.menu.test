@@ -1,0 +1,44 @@
+<?php
+
+/**
+ * Upgrade test for menu.module.
+ */
+class MenuUpgradePathTestCase extends UpgradePathTestCase {
+  public static function getInfo() {
+    return array(
+      'name'  => 'Menu upgrade path',
+      'description'  => 'Menu upgrade path tests.',
+      'group' => 'Upgrade path',
+    );
+  }
+
+  public function setUp() {
+    // Path to the database dump files.
+    $this->databaseDumpFiles = array(
+      drupal_get_path('module', 'simpletest') . '/tests/upgrade/drupal-6.filled.database.php',
+      drupal_get_path('module', 'simpletest') . '/tests/upgrade/drupal-6.menu.database.php',
+    );
+    parent::setUp();
+
+    $this->uninstallModulesExcept(array('menu'));
+  }
+
+  /**
+   * Test a successful upgrade.
+   */
+  public function testMenuUpgrade() {
+    $this->assertTrue($this->performUpgrade(), t('The upgrade was completed successfully.'));
+
+    // Test the migration of "Default menu for content" setting to individual node types.
+    $this->drupalGet("admin/structure/types/manage/page/edit");
+    $this->assertNoFieldChecked('edit-menu-options-management', 'Management menu is not selected as available menu');
+    $this->assertNoFieldChecked('edit-menu-options-navigation', 'Navigation menu is not selected as available menu');
+    $this->assertNoFieldChecked('edit-menu-options-primary-links', 'Primary Links menu is not selected as available menu');
+    $this->assertFieldChecked('edit-menu-options-secondary-links', 'Secondary Links menu is selected as available menu');
+    $this->assertNoFieldChecked('edit-menu-options-user-menu', 'User menu is not selected as available menu');
+    $this->assertOptionSelected('edit-menu-parent', 'secondary-links:0', 'Secondary links is selected as default parent item');
+
+    $this->assertEqual(variable_get('menu_default_node_menu'), NULL, 'Redundant variable menu_default_node_menu has been removed');
+
+  }
+}
