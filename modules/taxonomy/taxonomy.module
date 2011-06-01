@@ -1092,7 +1092,8 @@ class TaxonomyVocabularyController extends DrupalDefaultEntityController {
  *   this function.
  *
  * @return
- *   An array of term objects, indexed by tid.
+ *   An array of term objects, indexed by tid. When no results are found, an
+ *   empty array is returned.
  *
  * @todo Remove $conditions in Drupal 8.
  */

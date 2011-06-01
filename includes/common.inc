@@ -7437,7 +7437,8 @@ function entity_create_stub_entity($entity_type, $ids) {
  *   Whether to reset the internal cache for the requested entity type.
  *
  * @return
- *   An array of entity objects indexed by their ids.
+ *   An array of entity objects indexed by their ids. When no results are
+ *   found, an empty array is returned.
  *
  * @todo Remove $conditions in Drupal 8.
  */

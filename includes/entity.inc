@@ -39,7 +39,8 @@ interface DrupalEntityControllerInterface {
    *   An array of conditions in the form 'field' => $value.
    *
    * @return
-   *   An array of entity objects indexed by their ids.
+   *   An array of entity objects indexed by their ids. When no results are
+   *   found, an empty array is returned.
    */
   public function load($ids = array(), $conditions = array());
 }
