@@ -758,7 +758,7 @@ function hook_node_validate($node, $form, &$form_state) {
  * properties.
  *
  * @param $node
- *   The node being updated in response to a form submission.
+ *   The node object being updated in response to a form submission.
  * @param $form
  *   The form being used to edit the node.
  * @param $form_state
