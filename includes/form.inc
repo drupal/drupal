@@ -4074,6 +4074,8 @@ function _form_set_class(&$element, $class = array()) {
  * Sample 'finished' callback:
  * @code
  * function batch_test_finished($success, $results, $operations) {
+ *   // The 'success' parameter means no fatal PHP errors were detected. All
+ *   // other error management should be handled using 'results'.
  *   if ($success) {
  *     $message = format_plural(count($results), 'One post processed.', '@count posts processed.');
  *   }
