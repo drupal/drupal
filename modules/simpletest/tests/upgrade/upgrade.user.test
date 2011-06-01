@@ -1,0 +1,60 @@
+<?php
+/**
+ * Upgrade test for user.module (password token involved).
+ */
+class UserUpgradePathPasswordTokenTestCase extends UpgradePathTestCase {
+  public static function getInfo() {
+    return array(
+      'name'  => 'User upgrade path (password token involved)',
+      'description'  => 'User upgrade path tests (password token involved).',
+      'group' => 'Upgrade path',
+    );
+  }
+
+  public function setUp() {
+    // Path to the database dump files.
+    $this->databaseDumpFiles = array(
+      drupal_get_path('module', 'simpletest') . '/tests/upgrade/drupal-6.bare.database.php',
+      drupal_get_path('module', 'simpletest') . '/tests/upgrade/drupal-6.user-password-token.database.php',
+    );
+    parent::setUp();
+  }
+
+  /**
+   * Test a successful upgrade.
+   */
+  public function testUserUpgrade() {
+    $this->assertTrue($this->performUpgrade(), 'The upgrade was completed successfully.');
+    $this->assertEqual(variable_get('user_mail_register_no_approval_required_body'), ', [user:name], [site:name], [site:url], [site:url-brief], [user:mail], [date:medium], [site:login-url], [user:edit-url], [user:one-time-login-url].', 'Existing email templates have been modified (password token involved).');
+  }
+}
+
+/**
+ * Upgrade test for user.module (password token not involved).
+ */
+class UserUpgradePathNoPasswordTokenTestCase extends UpgradePathTestCase {
+  public static function getInfo() {
+    return array(
+      'name'  => 'User upgrade path (password token not involved)',
+      'description'  => 'User upgrade path tests (password token not involved).',
+      'group' => 'Upgrade path',
+    );
+  }
+
+  public function setUp() {
+    // Path to the database dump files.
+    $this->databaseDumpFiles = array(
+      drupal_get_path('module', 'simpletest') . '/tests/upgrade/drupal-6.bare.database.php',
+      drupal_get_path('module', 'simpletest') . '/tests/upgrade/drupal-6.user-no-password-token.database.php',
+    );
+    parent::setUp();
+  }
+
+  /**
+   * Test a successful upgrade.
+   */
+  public function testUserUpgrade() {
+    $this->assertTrue($this->performUpgrade(), 'The upgrade was completed successfully.');
+    $this->assertEqual(variable_get('user_mail_register_no_approval_required_body'), '[user:name], [site:name], [site:url], [site:url-brief], [user:mail], [date:medium], [site:login-url], [user:edit-url], [user:one-time-login-url].', 'Existing email templates have been modified (password token not involved).');
+  }
+}
