@@ -570,7 +570,7 @@ abstract class DatabaseTasks {
 }
 
 /**
- * @class Exception class used to throw error if the DatabaseInstaller fails.
+ * Exception thrown if the database installer fails.
  */
 class DatabaseTaskException extends Exception {
 }
