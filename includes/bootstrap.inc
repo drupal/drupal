@@ -18,7 +18,7 @@ define('DRUPAL_CORE_COMPATIBILITY', '8.x');
 /**
  * Minimum supported version of PHP.
  */
-define('DRUPAL_MINIMUM_PHP', '5.2.4');
+define('DRUPAL_MINIMUM_PHP', '5.3.2');
 
 /**
  * Minimum recommended value of PHP memory_limit.
