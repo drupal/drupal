@@ -458,7 +458,7 @@ function field_behaviors_widget($op, $instance) {
  * Returns information about field types from hook_field_info().
  *
  * @param $field_type
- *   (optional) A field type name. If ommitted, all field types will be
+ *   (optional) A field type name. If omitted, all field types will be
  *   returned.
  *
  * @return
@@ -482,7 +482,7 @@ function field_info_field_types($field_type = NULL) {
  * Returns information about field widgets from hook_field_widget_info().
  *
  * @param $widget_type
- *   (optional) A widget type name. If ommitted, all widget types will be
+ *   (optional) A widget type name. If omitted, all widget types will be
  *   returned.
  *
  * @return
@@ -507,7 +507,7 @@ function field_info_widget_types($widget_type = NULL) {
  * Returns information about field formatters from hook_field_formatter_info().
  *
  * @param $formatter_type
- *   (optional) A formatter type name. If ommitted, all formatter types will be
+ *   (optional) A formatter type name. If omitted, all formatter types will be
  *   returned.
  *
  * @return
@@ -532,7 +532,7 @@ function field_info_formatter_types($formatter_type = NULL) {
  * Returns information about field storage from hook_field_storage_info().
  *
  * @param $storage_type
- *   (optional) A storage type name. If ommitted, all storage types will be
+ *   (optional) A storage type name. If omitted, all storage types will be
  *   returned.
  *
  * @return
