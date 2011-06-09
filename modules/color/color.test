@@ -11,6 +11,7 @@
 class ColorTestCase extends DrupalWebTestCase {
   protected $big_user;
   protected $themes;
+  protected $colorTests;
 
   public static function getInfo() {
     return array(
@@ -40,6 +41,19 @@ class ColorTestCase extends DrupalWebTestCase {
       ),
     );
     theme_enable(array_keys($this->themes));
+
+    // Array filled with valid and not valid color values
+    $this->colorTests = array(
+      '#000' => TRUE,
+      '#123456' => TRUE,
+      '#abcdef' => TRUE,
+      '#0' => FALSE,
+      '#00' => FALSE,
+      '#0000' => FALSE,
+      '#00000' => FALSE,
+      '123456' => FALSE,
+      '#00000g' => FALSE,
+    );
   }
 
   /**
@@ -92,5 +106,28 @@ class ColorTestCase extends DrupalWebTestCase {
     }
     $this->assertTrue(strpos($stylesheet_content, 'public://') === FALSE, 'Make sure the color paths have been translated to local paths. (' . $theme . ')');
     variable_set('preprocess_css', 0);
+  }
+
+  /**
+   * Test to see if the provided color is valid
+   */
+  function testValidColor() {
+    variable_set('theme_default', 'bartik');
+    $settings_path = 'admin/appearance/settings/bartik';
+
+    $this->drupalLogin($this->big_user);
+    $edit['scheme'] = '';
+
+    foreach ($this->colorTests as $color => $is_valid) {
+      $edit['palette[bg]'] = $color;
+      $this->drupalPost($settings_path, $edit, t('Save configuration'));
+
+      if($is_valid) {
+        $this->assertText('The configuration options have been saved.');
+      }
+      else {
+        $this->assertText('Main background must be a valid hexadecimal CSS color value.');
+      }
+    }
   }
 }
