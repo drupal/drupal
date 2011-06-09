@@ -263,23 +263,6 @@ function system_hook_info() {
 }
 
 /**
- * Implements hook_entity_info().
- */
-function system_entity_info() {
-  return array(
-    'file' => array(
-      'label' => t('File'),
-      'base table' => 'file_managed',
-      'entity keys' => array(
-        'id' => 'fid',
-        'label' => 'filename',
-      ),
-      'static cache' => FALSE,
-    ),
-  );
-}
-
-/**
  * Implements hook_element_info().
  */
 function system_element_info() {
