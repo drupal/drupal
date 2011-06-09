@@ -947,8 +947,11 @@ function hook_menu_get_item_alter(&$router_item, $path, $original_map) {
  * called, the corresponding path components will be substituted for the
  * integers. That is, the integer 0 in an argument list will be replaced with
  * the first path component, integer 1 with the second, and so on (path
- * components are numbered starting from zero). This substitution feature allows
- * you to re-use a callback function for several different paths. For example:
+ * components are numbered starting from zero). To pass an integer without it
+ * being replaced with its respective path component, use the string value of
+ * the integer (e.g., '1') as the argument value. This substitution feature
+ * allows you to re-use a callback function for several different paths. For
+ * example:
  * @code
  *   function mymodule_menu() {
  *     $items['abc/def'] = array(
