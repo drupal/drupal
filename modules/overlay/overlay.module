@@ -832,11 +832,14 @@ function overlay_render_region($region) {
   // on the final rendered page.
   $original_js = drupal_add_js();
   $original_css = drupal_add_css();
+  $original_libraries = drupal_static('drupal_add_library');
   $js = &drupal_static('drupal_add_js');
   $css = &drupal_static('drupal_add_css');
+  $libraries = &drupal_static('drupal_add_library');
   $markup = drupal_render_page($page);
   $js = $original_js;
   $css = $original_css;
+  $libraries = $original_libraries;
   // Indicate that the main page content has not, in fact, been displayed, so
   // that future calls to drupal_render_page() will be able to render it
   // correctly.
