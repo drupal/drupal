@@ -44,7 +44,7 @@ class DrupalVerifiedStorageSQL {
   }
 
   function isOutOfSync() {
-    return $this->read() === $this->readFromFile();
+    return $this->read() !== $this->readFromFile();
   }
 
   function writeToActive($content) {
