@@ -274,7 +274,7 @@ function get_verified_storage_names_with_prefix($type = '*', $prefix = '') {
 }
 
 function config_get_names_with_prefix($prefix) {
-  $return = get_verified_storage_names_with_prefix('json', $prefix);
+  return get_verified_storage_names_with_prefix('json', $prefix);
 }
 
 function config($name) {
@@ -282,16 +282,16 @@ function config($name) {
 }
 
 class DrupalConfig {
-  public function __construct($name, $data) {
+  final public function __construct($name) {
     $this->_verifiedStorage = new DrupalVerifiedStorageSQL('json', $name);
     foreach (json_decode($this->_verifiedStorage->read()) as $key => $value) {
       $this->$key = $value;
     }
   }
 
-  public function save() {
+  final public function save() {
     $verifiedStorage = $this->_verifiedStorage;
     unset($this->_verifiedStorage);
-    $verifiedStorage->write(get_object_vars($this));
+    $verifiedStorage->write(json_encode(get_object_vars($this)));
   }
 }
