@@ -11,8 +11,8 @@
 class SecureFileTestCase extends DrupalUnitTestCase {
   public static function getInfo() {
     return array(
-      'name' => 'Configuration tools',
-      'description' => 'Tests the core configuration system.',
+      'name' => 'Secure file tests',
+      'description' => 'Tests the saving of secure files.',
       'group' => 'Configuration',
     );
   }
