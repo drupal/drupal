@@ -259,9 +259,9 @@ class DrupalConfig {
 
   public function __construct(DrupalConfigVerifiedStorageInterface $verified_storage, $overrides = array()) {
     $this->_verifiedStorage = $verified_storage;
-    $original_keys = json_decode($this->_verifiedStorage->read());
+    $original_keys = (array) json_decode($this->_verifiedStorage->read());
     $active = array_merge($original_keys, $overrides);
-    foreach (json_decode($this->verifiedStorage->read()) as $key => $value) {
+    foreach ($active as $key => $value) {
       $this->$key = $value;
     }
   }
