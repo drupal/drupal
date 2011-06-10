@@ -14,15 +14,18 @@ function get_signed_file_storage_names_with_prefix($type, $prefix = '') {
   return array_map($clean_name, $files);
 }
 
-function config_write_signed_file_storage_key() {
-  $key = uniqid() . uniqid() . uniqid();
-  if (!file_put_contents(conf_path() . '/config/key.php', '<?php die(); ' . $key . "\n")) {
-    throw new Exception('Failed to write configuration signing key.');
+function config_write_signed_file_storage_key($force_rekey = FALSE) {
+  $file_path = conf_path() . '/key.php';
+  if (!file_exists($file_path) || $force_rekey) {
+    $key = uniqid() . uniqid() . uniqid();
+    if (!file_put_contents($file_path, '<?php die(); ' . $key . "\n")) {
+      throw new Exception('Failed to write configuration signing key.');
+    }
   }
 }
 
 function config_sign_data($data) {
-  $file = file_get_contents(conf_path() . '/config/key.php');
+  $file = file_get_contents(conf_path() . '/key.php');
   if ($file === FALSE) {
     throw new Exception('Key file not found.');
   }
