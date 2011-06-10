@@ -632,8 +632,8 @@ function drupal_encode_path($path) {
  * user/login and override the default redirection so that the user is
  * redirected to a specific path after logging in:
  * @code
- *   $destination = array('destination' => "node/$node->nid");
- *   l(t('Log in'), array('@login' => url('user/login', array('query' => array($destination)))));
+ *   $query = array('destination' => "node/$node->nid");
+ *   $link = l(t('Log in'), 'user/login', array('query' => $query));
  * @endcode
  *
  * Drupal will ensure that messages set by drupal_set_message() and other
@@ -7437,7 +7437,8 @@ function entity_create_stub_entity($entity_type, $ids) {
  *   Whether to reset the internal cache for the requested entity type.
  *
  * @return
- *   An array of entity objects indexed by their ids.
+ *   An array of entity objects indexed by their ids. When no results are
+ *   found, an empty array is returned.
  *
  * @todo Remove $conditions in Drupal 8.
  */

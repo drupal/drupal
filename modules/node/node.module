@@ -1455,7 +1455,7 @@ function template_preprocess_node(&$variables) {
   $variables = array_merge((array) $node, $variables);
 
   // Helpful $content variable for templates.
-  $variables['content'] = array();
+  $variables += array('content' => array());
   foreach (element_children($variables['elements']) as $key) {
     $variables['content'][$key] = $variables['elements'][$key];
   }

@@ -532,12 +532,35 @@ function taxonomy_check_vocabulary_hierarchy($vocabulary, $changed_term) {
 }
 
 /**
- * Save a term object to the database.
+ * Saves a term object to the database.
  *
  * @param $term
- *  A term object.
+ *   The taxonomy term object with the following properties:
+ *   - vid: The ID of the vocabulary the term is assigned to.
+ *   - name: The name of the term.
+ *   - tid: (optional) The unique ID for the term being saved. If $term->tid is
+ *     empty or omitted, a new term will be inserted.
+ *   - description: (optional) The term's description.
+ *   - format: (optional) The text format for the term's description.
+ *   - weight: (optional) The weight of this term in relation to other terms
+ *     within the same vocabulary.
+ *   - parent: (optional) The parent term(s) for this term. This can be a single
+ *     term ID or an array of term IDs. A value of 0 means this term does not
+ *     have any parents. When omitting this variable during an update, the
+ *     existing hierarchy for the term remains unchanged.
+ *   - vocabulary_machine_name: (optional) The machine name of the vocabulary
+ *     the term is assigned to. If not given, this value will be set
+ *     automatically by loading the vocabulary based on $term->vid.
+ *   - original: (optional) The original taxonomy term object before any changes
+ *     were applied. When omitted, the unchanged taxonomy term object is
+ *     loaded from the database and stored in this property.
+ *   Since a taxonomy term is an entity, any fields contained in the term object
+ *   are saved alongside the term object.
+ *
  * @return
- *   Status constant indicating if term was inserted or updated.
+ *   Status constant indicating whether term was inserted (SAVED_NEW) or updated
+ *   (SAVED_UPDATED). When inserting a new term, $term->tid will contain the
+ *   term ID of the newly created term.
  */
 function taxonomy_term_save($term) {
   // Prevent leading and trailing spaces in term names.
@@ -1092,7 +1115,8 @@ class TaxonomyVocabularyController extends DrupalDefaultEntityController {
  *   this function.
  *
  * @return
- *   An array of term objects, indexed by tid.
+ *   An array of term objects, indexed by tid. When no results are found, an
+ *   empty array is returned.
  *
  * @todo Remove $conditions in Drupal 8.
  */

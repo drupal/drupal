@@ -26,6 +26,7 @@ function blog_user_view($account) {
     $account->content['summary']['blog'] =  array(
       '#type' => 'user_profile_item',
       '#title' => t('Blog'),
+      // l() escapes the attributes, so we should not escape !username here.
       '#markup' => l(t('View recent blog entries'), "blog/$account->uid", array('attributes' => array('title' => t("Read !username's latest blog entries.", array('!username' => format_username($account)))))),
       '#attributes' => array('class' => array('blog')),
     );
@@ -67,7 +68,7 @@ function blog_form($node, $form_state) {
  */
 function blog_view($node, $view_mode) {
   if ($view_mode == 'full' && node_is_page($node)) {
-    // Breadcrumb navigation.
+    // Breadcrumb navigation.  l() escapes title, so we should not escape !name.
     drupal_set_breadcrumb(array(l(t('Home'), NULL), l(t('Blogs'), 'blog'), l(t("!name's blog", array('!name' => format_username($node))), 'blog/' . $node->uid)));
   }
   return $node;
@@ -79,6 +80,7 @@ function blog_view($node, $view_mode) {
 function blog_node_view($node, $view_mode) {
   if ($view_mode != 'rss') {
     if ($node->type == 'blog' && (arg(0) != 'blog' || arg(1) != $node->uid)) {
+      // This goes to l(), which escapes !username in both title and attributes.
       $links['blog_usernames_blog'] = array(
         'title' => t("!username's blog", array('!username' => format_username($node))),
         'href' => "blog/$node->uid",

@@ -170,21 +170,27 @@ function block_admin_display_form($form, &$form_state, $blocks, $theme, $block_r
  * @see block_admin_display_form()
  */
 function block_admin_display_form_submit($form, &$form_state) {
-  $txn = db_transaction();
-
-  foreach ($form_state['values']['blocks'] as $block) {
-    $block['status'] = (int) ($block['region'] != BLOCK_REGION_NONE);
-    $block['region'] = $block['status'] ? $block['region'] : '';
-    db_update('block')
-      ->fields(array(
-        'status' => $block['status'],
-        'weight' => $block['weight'],
-        'region' => $block['region'],
-      ))
-      ->condition('module', $block['module'])
-      ->condition('delta', $block['delta'])
-      ->condition('theme', $block['theme'])
-      ->execute();
+  $transaction = db_transaction();
+  try {
+    foreach ($form_state['values']['blocks'] as $block) {
+      $block['status'] = (int) ($block['region'] != BLOCK_REGION_NONE);
+      $block['region'] = $block['status'] ? $block['region'] : '';
+      db_update('block')
+        ->fields(array(
+          'status' => $block['status'],
+          'weight' => $block['weight'],
+          'region' => $block['region'],
+        ))
+        ->condition('module', $block['module'])
+        ->condition('delta', $block['delta'])
+        ->condition('theme', $block['theme'])
+        ->execute();
+    }
+  }
+  catch (Exception $e) {
+    $transaction->rollback();
+    watchdog_exception('block', $e);
+    throw $e;
   }
   drupal_set_message(t('The block settings have been updated.'));
   cache_clear_all();
@@ -460,46 +466,52 @@ function block_admin_configure_validate($form, &$form_state) {
  */
 function block_admin_configure_submit($form, &$form_state) {
   if (!form_get_errors()) {
-    $txn = db_transaction();
-
-    db_update('block')
-      ->fields(array(
-        'visibility' => (int) $form_state['values']['visibility'],
-        'pages' => trim($form_state['values']['pages']),
-        'custom' => (int) $form_state['values']['custom'],
-        'title' => $form_state['values']['title'],
-      ))
-      ->condition('module', $form_state['values']['module'])
-      ->condition('delta', $form_state['values']['delta'])
-      ->execute();
-
-    db_delete('block_role')
-      ->condition('module', $form_state['values']['module'])
-      ->condition('delta', $form_state['values']['delta'])
-      ->execute();
-    $query = db_insert('block_role')->fields(array('rid', 'module', 'delta'));
-    foreach (array_filter($form_state['values']['roles']) as $rid) {
-      $query->values(array(
-        'rid' => $rid,
-        'module' => $form_state['values']['module'],
-        'delta' => $form_state['values']['delta'],
-      ));
-    }
-    $query->execute();
-
-    // Store regions per theme for this block
-    foreach ($form_state['values']['regions'] as $theme => $region) {
-      db_merge('block')
-        ->key(array('theme' => $theme, 'delta' => $form_state['values']['delta'], 'module' => $form_state['values']['module']))
+    $transaction = db_transaction();
+    try {
+      db_update('block')
         ->fields(array(
-          'region' => ($region == BLOCK_REGION_NONE ? '' : $region),
+          'visibility' => (int) $form_state['values']['visibility'],
           'pages' => trim($form_state['values']['pages']),
-          'status' => (int) ($region != BLOCK_REGION_NONE),
+          'custom' => (int) $form_state['values']['custom'],
+          'title' => $form_state['values']['title'],
         ))
+        ->condition('module', $form_state['values']['module'])
+        ->condition('delta', $form_state['values']['delta'])
         ->execute();
-    }
 
-    module_invoke($form_state['values']['module'], 'block_save', $form_state['values']['delta'], $form_state['values']);
+      db_delete('block_role')
+        ->condition('module', $form_state['values']['module'])
+        ->condition('delta', $form_state['values']['delta'])
+        ->execute();
+      $query = db_insert('block_role')->fields(array('rid', 'module', 'delta'));
+      foreach (array_filter($form_state['values']['roles']) as $rid) {
+        $query->values(array(
+          'rid' => $rid,
+          'module' => $form_state['values']['module'],
+          'delta' => $form_state['values']['delta'],
+        ));
+      }
+      $query->execute();
+
+      // Store regions per theme for this block
+      foreach ($form_state['values']['regions'] as $theme => $region) {
+        db_merge('block')
+          ->key(array('theme' => $theme, 'delta' => $form_state['values']['delta'], 'module' => $form_state['values']['module']))
+          ->fields(array(
+            'region' => ($region == BLOCK_REGION_NONE ? '' : $region),
+            'pages' => trim($form_state['values']['pages']),
+            'status' => (int) ($region != BLOCK_REGION_NONE),
+          ))
+          ->execute();
+      }
+
+      module_invoke($form_state['values']['module'], 'block_save', $form_state['values']['delta'], $form_state['values']);
+    }
+    catch (Exception $e) {
+      $transaction->rollback();
+      watchdog_exception('block', $e);
+      throw $e;
+    }
     drupal_set_message(t('The block configuration has been saved.'));
     cache_clear_all();
     $form_state['redirect'] = 'admin/structure/block';
