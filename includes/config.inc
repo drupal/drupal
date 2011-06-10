@@ -189,39 +189,39 @@ class DrupalVerifiedStorageSQL implements DrupalConfigVerifiedStorageInterface {
     return new SignedFileStorage($this->type, $this->name);
   }
 
-  function read() {
+  public function read() {
     return db_query('SELECT data FROM {config} WHERE type = :type, name = :name', array(':type' => $this->type, ':name' => $this->name))->fetchField();
   }
 
-  function copyTofile() {
+  public function copyTofile() {
     return $this->signedFileStorage()->write($data);
   }
 
-  function copyFromFile() {
+  public function copyFromFile() {
     return $this->writeToActive($this->readFromFile());
   }
 
-  function readFromFile() {
+  public function readFromFile() {
     return $this->signedFileStorage()->read($this->name);
   }
 
-  function isOutOfSync() {
+  public function isOutOfSync() {
     return $this->read() !== $this->readFromFile();
   }
 
-  function writeToActive($data) {
+  public function writeToActive($data) {
     return db_merge('config')
       ->key(array('type' => $this->type, 'name' => $this->name))
       ->fields(array('data' => $data))
       ->execute();
   }
 
-  function write($data) {
+  public function write($data) {
     $this->writeToActive($data);
     $this->syncToFile();
   }
 
-  static function getNamesWithPrefix($type = '*', $prefix = '') {
+  static public function getNamesWithPrefix($type = '*', $prefix = '') {
     $query = db_select('config');
     $query->addField('name');
     if ($type != '*') {
