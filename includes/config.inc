@@ -5,18 +5,22 @@ function get_signed_file_storage_names_with_prefix($prefix = '') {
   $clean_name = function ($value) {
     return basename($value, '.php');
   };
-  return array_map($clean_name, $files);
+  $files = array_map($clean_name, $files);
+  if ($files[0] == '!key') {
+    unset($files[0]);
+  }
+  return $files;
 }
 
 function config_write_signed_file_storage_key() {
   $key = uniqid() . uniqid() . uniqid();
-  if (!file_put_contents(conf_path() . '/config/key.php', '<?php die(); ' . $key . "\n")) {
+  if (!file_put_contents(conf_path() . '/config/!key.php', '<?php die(); ' . $key . "\n")) {
     throw new Exception('Failed to write configuration signing key.');
   }
 }
 
 function config_sign_data($data) {
-  $parts = explode(' ', file_get_contents(conf_path() . '/config/key.php'));
+  $parts = explode(' ', file_get_contents(conf_path() . '/config/!key.php'));
   $key = $parts[3];
   // TODO: Consider an HMAC-SHA1 to be more secure?
   return sha1($data . '|' . $key);
@@ -32,8 +36,7 @@ class SignedFileStorage {
     $content = file_get_contents($this->getPath());
     $parts = explode("\n", $content, 2);
     $header_parts = explode(' ', $parts[0]);
-    $split = array('data' => $parts[1], 'signature' => $header_parts[2]);
-    return $split;
+    return array('data' => $parts[1], 'signature' => $header_parts[2]);
   }
 
   public function getPath() {
