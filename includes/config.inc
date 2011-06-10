@@ -6,8 +6,8 @@
  */
 
 
-function get_signed_file_storage_names_with_prefix($type, $prefix = '') {
-  $files = glob(conf_path() . '/config/' . $prefix . '*.' . $type . '.php');
+function get_signed_file_storage_names_with_prefix($prefix = '') {
+  $files = glob(conf_path() . '/config/' . $prefix . '*.json.php');
   $clean_name = function ($value) {
     return basename($value, '.php');
   };
@@ -48,13 +48,10 @@ class SignedFileStorage {
    * This class allows reading and writing configuration data from/to the
    * disk while automatically managing and verifying cryptographic signatures.
    *
-   * param @type
-   *   The type of the stored data. For example 'json' or 'xml' etc.
    * param @name
    *   Lowercase string, the name for the configuration data.
    */
-  public function __construct($type, $name) {
-    $this->type = $type;
+  public function __construct($name) {
     $this->name = $name;
   }
 
@@ -85,7 +82,7 @@ class SignedFileStorage {
   }
 
   public function getFilePath() {
-    return conf_path() . '/config/' . $this->name  . '.' . $this->type . '.php';
+    return conf_path() . '/config/' . $this->name  . '.json.php';
   }
 
   public function resign() {
@@ -131,12 +128,10 @@ interface DrupalConfigVerifiedStorageInterface {
    * verified storage and copying to/from the signed file storing the same
    * data.
    *
-   * param @type
-   *   The type of the stored data. For example 'json' or 'xml' etc.
    * param @name
    *   Lowercase string, the name for the configuration data.
    */
-  function __construct($type, $name);
+  function __construct($name);
 
   /**
    * Read the configuration data from the verified storage, including local overlays.
@@ -203,13 +198,12 @@ function config_get_local_overrides() {
 }
 
 abstract class DrupalConfigVerifiedStorage implements DrupalConfigVerifiedStorageInterface {
-  function __construct($type, $name) {
-    $this->type = $type;
+  function __construct($name) {
     $this->name = $name;
   }
 
   protected function signedFileStorage() {
-    return new SignedFileStorage($this->type, $this->name);
+    return new SignedFileStorage($this->name);
   }
 
   public function read() {
@@ -246,22 +240,19 @@ abstract class DrupalConfigVerifiedStorage implements DrupalConfigVerifiedStorag
 class DrupalVerifiedStorageSQL extends DrupalConfigVerifiedStorage {
 
   public function readFromActive() {
-    return db_query('SELECT data FROM {config} WHERE type = :type, name = :name', array(':type' => $this->type, ':name' => $this->name))->fetchField();
+    return db_query('SELECT data FROM {config} WHERE name = :name', array(':name' => $this->name))->fetchField();
   }
 
   public function writeToActive($data) {
     return db_merge('config')
-      ->key(array('type' => $this->type, 'name' => $this->name))
+      ->key(array('name' => $this->name))
       ->fields(array('data' => $data))
       ->execute();
   }
 
-  static public function getNamesWithPrefix($type = '*', $prefix = '') {
+  static public function getNamesWithPrefix($prefix = '') {
     $query = db_select('config');
     $query->addField('name');
-    if ($type != '*') {
-      $query->condition('type', $type);
-    }
     if ($prefix) {
       $query->condition('name', db_like($prefix) . '%', 'LIKE');
     }
@@ -269,16 +260,16 @@ class DrupalVerifiedStorageSQL extends DrupalConfigVerifiedStorage {
   }
 }
 
-function get_verified_storage_names_with_prefix($type = '*', $prefix = '') {
-  return DrupalVerifiedStorageSQL::getNamesWithPrefix($type, $prefix);
+function get_verified_storage_names_with_prefix($prefix = '') {
+  return DrupalVerifiedStorageSQL::getNamesWithPrefix($prefix);
 }
 
 function config_get_names_with_prefix($prefix) {
-  $return = get_verified_storage_names_with_prefix('json', $prefix);
+  $return = get_verified_storage_names_with_prefix($prefix);
 }
 
 function config($name) {
-  $verifiedStorage = new DrupalVerifiedStorageSQL('json', $name);
+  $verifiedStorage = new DrupalVerifiedStorageSQL($name);
   return new DrupalConfig($name, json_decode($verifiedStorage->read()));
 }
 
@@ -297,7 +288,7 @@ class DrupalConfig {
 
   function save() {
     // Pretty hideous but get_object_vars is too agressive.
-    $verifiedStorage = new DrupalVerifiedStorageSQL('json', $this->__construct('', ''));
+    $verifiedStorage = new DrupalVerifiedStorageSQL($this->__construct('', ''));
     return $verifiedStorage->write(json_encode(get_object_vars($this)));
   }
 }
