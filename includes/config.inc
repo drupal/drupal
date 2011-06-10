@@ -76,25 +76,60 @@ class SignedFileStorage {
   }
 }
 
-interface DrupalVerifiedStorageInterface {
+interface DrupalConfigVerifiedStorageInterface {
+
+  /**
+   * Constructor for the verified storage manipulation class.
+   * 
+   * param @name
+   *   Lowercase string, the name for the configuration data.
+   */
   function __construct($name);
 
+  /**
+   * Read the configuration data from the verified storage.
+   */
   function read();
 
-  function syncToFile();
+  /**
+   * Copy the configuration data from the verified storage into a file.
+   */
+  function copyToFile();
 
-  function syncFromFile();
+  /**
+   * Copy the configuration data from the file into the verified storage.
+   */
+  function copyFromFile();
 
+  /**
+   * Check whether the file and the verified storage is in sync.
+   * 
+   * @return
+   *   TRUE if the file and the verified storage contains the same data, FALSE
+   *   if not.
+   */
   function isOutOfSync();
 
+  /**
+   * Write the configuration data into the active storage but not the file.
+   * 
+   * Use this function if you need to make temporary changes to your
+   * configuration.
+   */
   function writeToActive($content);
 
+  /**
+   * Write the configuration data into the active storage and the file.
+   */
   function write($content);
 
+  /**
+   * Get names starting with this prefix.
+   */
   static function getNamesWithPrefix($prefix);
 }
 
-class DrupalVerifiedStorageSQL implements DrupalVerifiedStorageInterface {
+class DrupalVerifiedStorageSQL implements DrupalConfigVerifiedStorageInterface {
 
   function __construct($name) {
     $this->name = $name;
@@ -108,11 +143,11 @@ class DrupalVerifiedStorageSQL implements DrupalVerifiedStorageInterface {
     return db_query('SELECT data FROM {config} WHERE name = :name', array(':name' => $this->name))->fetchField();
   }
 
-  function syncTofile() {
+  function copyTofile() {
     return $this->signedFileStorage()->write($content);
   }
 
-  function syncFromFile() {
+  function copyFromFile() {
     return $this->writeToActive($this->readFromFile());
   }
 
