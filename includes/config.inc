@@ -241,11 +241,11 @@ function config_get_names_with_prefix($prefix) {
 function config($name, $class = 'DrupalConfig') {
   static $overrides;
   if (!isset($overrides)) {
-    // TODO: Use the appropriate factory?
     $overrides = (array) json_decode(SignedFileStorage('local'));
   }
   $key_overrides = isset($overrides[$name]) ? $overrides[$name] : array();
-  return new $class(new DrupalVerifiedStorageSQL($name, $key_overrides));
+  // @TODO Replace this with the appropriate factory.
+  return new $class(new DrupalVerifiedStorageSQL($name), $key_overrides);
 }
 
 class DrupalConfig {
