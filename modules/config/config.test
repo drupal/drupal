@@ -74,7 +74,7 @@ class SecureFileTestCase extends DrupalUnitTestCase {
     // Manually overwrite the body of the secure file. Note that we skip the 
     // first line, which is reserved for the signature and such, to overwrite
     // just the payload.
-    $raw_file = new SplFileObject($file->getPath() . '/' . $this->filename, 'w');
+    $raw_file = new SplFileObject($file->getFilePath(), 'w');
     $raw_file->seek(1);
     $raw_file->fwrite('Good morning, Detroit!');
     $raw_file->fflush();
