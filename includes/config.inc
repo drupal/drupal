@@ -41,10 +41,10 @@ class ConfigFileStorageSignatureException extends ConfigFileStorageException {}
 class SignedFileStorage {
   /**
    * Constructor for the signed file storage interface.
-   * 
+   *
    * This class allows reading and writing configuration data from/to the
    * disk while automatically managing and verifying cryptographic signatures.
-   * 
+   *
    * param @type
    *   The type of the stored data. For example 'json' or 'xml' etc.
    * param @name
@@ -123,11 +123,11 @@ interface DrupalConfigVerifiedStorageInterface {
 
   /**
    * Constructor for the verified storage manipulation class.
-   * 
+   *
    * This class allows reading and writing configuration data from/to the
    * verified storage and copying to/from the signed file storing the same
    * data.
-   * 
+   *
    * param @type
    *   The type of the stored data. For example 'json' or 'xml' etc.
    * param @name
@@ -152,7 +152,7 @@ interface DrupalConfigVerifiedStorageInterface {
 
   /**
    * Check whether the file and the verified storage is in sync.
-   * 
+   *
    * @return
    *   TRUE if the file and the verified storage contains the same data, FALSE
    *   if not.
@@ -161,7 +161,7 @@ interface DrupalConfigVerifiedStorageInterface {
 
   /**
    * Write the configuration data into the active storage but not the file.
-   * 
+   *
    * Use this function if you need to make temporary changes to your
    * configuration.
    */
