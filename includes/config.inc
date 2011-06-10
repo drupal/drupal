@@ -30,7 +30,7 @@ class SignedFileStorage {
 
   protected function readAndSplit() {
     // TODO: Optimize with explicit offsets?
-    $content = file_get_contents($this->getPath());
+    $content = file_get_contents($this->getFilePath());
     $parts = explode("\n", $content, 2);
     $header_parts = explode(' ', $parts[0]);
     return array('data' => $parts[1], 'signature' => $header_parts[2]);
