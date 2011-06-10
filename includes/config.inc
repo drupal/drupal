@@ -22,8 +22,12 @@ function config_write_signed_file_storage_key() {
 }
 
 function config_sign_data($data) {
-  $parts = explode(' ', file_get_contents(conf_path() . '/config/key.php'));
-  $key = $parts[3];
+  $file = file_get_contents(conf_path() . '/config/key.php');
+  if ($file === FALSE) {
+    throw new Exception('Key file not found.');
+  }
+  $parts = explode(' ', $file);
+  $key = $parts[2];
   // SHA-512 is both secure and very fast on 64 bit CPUs.
   return hash_hmac('sha512', $data, $key);
 }
@@ -62,12 +66,18 @@ class SignedFileStorage {
    */
   protected function readAndSplit() {
     // TODO: Optimize with explicit offsets?
-    $content = file_get_contents($this->getPath());
-    if (!$content) {
-      throw new Exception('Could not read signed file.');
+    $content = file_get_contents($this->getFilePath());
+    if ($content === FALSE) {
+      throw new Exception('Read file is invalid.');
     }
     $parts = explode("\n", $content, 2);
+    if (count($parts) !== 2) {
+      throw new Exception('Read file does not verify.');
+    }
     $header_parts = explode(' ', $parts[0]);
+    if (count($header_parts) !== 3) {
+      throw new Exception('Read file not valid.');
+    }
     return array('data' => $parts[1], 'signature' => $header_parts[2]);
   }
 
@@ -95,7 +105,7 @@ class SignedFileStorage {
   public function write($data) {
     $signature = config_sign_data($data);
     $content = '<?php die(); ' . $signature . "\n" . $data;
-    if (!file_put_contents($this->getPath(), $content)) {
+    if (!file_put_contents($this->getFilePath(), $content)) {
       throw new Exception('Failed to write signed file.');
     }
   }
