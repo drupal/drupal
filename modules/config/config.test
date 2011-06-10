@@ -19,6 +19,13 @@ class SecureFileTestCase extends DrupalUnitTestCase {
 
   function setUp() {
     parent::setUp();
+    
+    try {
+      config_write_signed_file_storage_key();
+    }
+    catch (Exception $e) {
+      $this->fail($e->getMessage());
+    }
   }
   
   protected $filename = 'foo.bar';
