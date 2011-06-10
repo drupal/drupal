@@ -1,6 +1,6 @@
 <?php
 
-function get_signed_file_storage_names_with_prefix($type, $prefix = '') {
+function config_get_signed_file_storage_names_with_prefix($type, $prefix = '') {
   $files = glob(conf_path() . '/config/' . $prefix . '*.' . $type . '.php');
   $clean_name = function ($value) {
     return basename($value, '.php');
