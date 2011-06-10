@@ -278,12 +278,12 @@ function config_get_names_with_prefix($prefix) {
 }
 
 function config($name, $class = 'DrupalConfig') {
-  return new $class($name);
+  return new $class(new DrupalVerifiedStorageSQL('json', $name));
 }
 
 class DrupalConfig {
-  public function __construct($name) {
-    $this->_verifiedStorage = new DrupalVerifiedStorageSQL('json', $name);
+  public function __construct($storage) {
+    $this->_verifiedStorage = $storage;
     foreach (json_decode($this->_verifiedStorage->read()) as $key => $value) {
       $this->$key = $value;
     }
