@@ -16,8 +16,12 @@ function config_write_signed_file_storage_key() {
 }
 
 function config_sign_data($data) {
-  $parts = explode(' ', file_get_contents(conf_path() . '/config/key.php'));
-  $key = $parts[3];
+  $file = file_get_contents(conf_path() . '/config/key.php');
+  if ($file === FALSE) {
+    throw new Exception('Key file not found.');
+  }
+  $parts = explode(' ', $file);
+  $key = $parts[2];
   // SHA-512 is both secure and very fast on 64 bit CPUs.
   return hash_hmac('sha512', $data, $key);
 }
