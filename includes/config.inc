@@ -271,3 +271,36 @@ class DrupalConfig {
     return $verifiedStorage->write(json_encode(get_object_vars($this)));
   }
 }
+
+
+
+class DrupalConfig2 {
+
+  protected $_verifiedStorage;
+
+  protected $_name;
+
+  public function __construct($name, $data, DrupalConfigVerifiedStorageInterface $storage) {
+    $this->_verifiedStorage = $storage;
+    $this->_name = $name;
+
+    foreach ($data as $key => $value) {
+      $this->$key = $value;
+    }
+  }
+
+  public function save() {
+
+    $keys = array_filter(get_object_vars($this), function($key) {
+      return $key[0] != '_';
+    });
+
+    $obj = new stdClass();
+    foreach ($keys as $key) {
+      $obj->$key = $this->$key;
+    }
+
+    $this->_verifiedStorage->write(json_encode($obj));
+  }
+
+}
