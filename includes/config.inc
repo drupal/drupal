@@ -14,15 +14,18 @@ function get_signed_file_storage_names_with_prefix($type, $prefix = '') {
   return array_map($clean_name, $files);
 }
 
-function config_write_signed_file_storage_key() {
-  $key = uniqid() . uniqid() . uniqid();
-  if (!file_put_contents(conf_path() . '/config/key.php', '<?php die(); ' . $key . "\n")) {
-    throw new Exception('Failed to write configuration signing key.');
+function config_write_signed_file_storage_key($force_rekey = FALSE) {
+  $file_path = conf_path() . '/key.php';
+  if (!file_exists($file_path) || $force_rekey) {
+    $key = uniqid() . uniqid() . uniqid();
+    if (!file_put_contents($file_path, '<?php die(); ' . $key . "\n")) {
+      throw new Exception('Failed to write configuration signing key.');
+    }
   }
 }
 
 function config_sign_data($data) {
-  $file = file_get_contents(conf_path() . '/config/key.php');
+  $file = file_get_contents(conf_path() . '/key.php');
   if ($file === FALSE) {
     throw new Exception('Key file not found.');
   }
@@ -41,10 +44,10 @@ class ConfigFileStorageSignatureException extends ConfigFileStorageException {}
 class SignedFileStorage {
   /**
    * Constructor for the signed file storage interface.
-   * 
+   *
    * This class allows reading and writing configuration data from/to the
    * disk while automatically managing and verifying cryptographic signatures.
-   * 
+   *
    * param @type
    *   The type of the stored data. For example 'json' or 'xml' etc.
    * param @name
@@ -123,11 +126,11 @@ interface DrupalConfigVerifiedStorageInterface {
 
   /**
    * Constructor for the verified storage manipulation class.
-   * 
+   *
    * This class allows reading and writing configuration data from/to the
    * verified storage and copying to/from the signed file storing the same
    * data.
-   * 
+   *
    * param @type
    *   The type of the stored data. For example 'json' or 'xml' etc.
    * param @name
@@ -152,7 +155,7 @@ interface DrupalConfigVerifiedStorageInterface {
 
   /**
    * Check whether the file and the verified storage is in sync.
-   * 
+   *
    * @return
    *   TRUE if the file and the verified storage contains the same data, FALSE
    *   if not.
@@ -161,7 +164,7 @@ interface DrupalConfigVerifiedStorageInterface {
 
   /**
    * Write the configuration data into the active storage but not the file.
-   * 
+   *
    * Use this function if you need to make temporary changes to your
    * configuration.
    */
@@ -178,8 +181,7 @@ interface DrupalConfigVerifiedStorageInterface {
   static function getNamesWithPrefix($prefix);
 }
 
-class DrupalVerifiedStorageSQL implements DrupalConfigVerifiedStorageInterface {
-
+abstract class DrupalConfigVerifiedStorage implements DrupalConfigVerifiedStorageInterface {
   function __construct($type, $name) {
     $this->type = $type;
     $this->name = $name;
@@ -189,39 +191,42 @@ class DrupalVerifiedStorageSQL implements DrupalConfigVerifiedStorageInterface {
     return new SignedFileStorage($this->type, $this->name);
   }
 
-  function read() {
-    return db_query('SELECT data FROM {config} WHERE type = :type, name = :name', array(':type' => $this->type, ':name' => $this->name))->fetchField();
-  }
-
-  function copyTofile() {
+  public function copyTofile() {
     return $this->signedFileStorage()->write($data);
   }
 
-  function copyFromFile() {
+  public function copyFromFile() {
     return $this->writeToActive($this->readFromFile());
   }
 
-  function readFromFile() {
+  public function readFromFile() {
     return $this->signedFileStorage()->read($this->name);
   }
 
-  function isOutOfSync() {
+  public function isOutOfSync() {
     return $this->read() !== $this->readFromFile();
   }
 
-  function writeToActive($data) {
+  public function write($data) {
+    $this->writeToActive($data);
+    $this->syncToFile();
+  }
+}
+
+class DrupalVerifiedStorageSQL extends DrupalConfigVerifiedStorage {
+
+  public function read() {
+    return db_query('SELECT data FROM {config} WHERE type = :type, name = :name', array(':type' => $this->type, ':name' => $this->name))->fetchField();
+  }
+
+  public function writeToActive($data) {
     return db_merge('config')
       ->key(array('type' => $this->type, 'name' => $this->name))
       ->fields(array('data' => $data))
       ->execute();
   }
 
-  function write($data) {
-    $this->writeToActive($data);
-    $this->syncToFile();
-  }
-
-  static function getNamesWithPrefix($type = '*', $prefix = '') {
+  static public function getNamesWithPrefix($type = '*', $prefix = '') {
     $query = db_select('config');
     $query->addField('name');
     if ($type != '*') {
