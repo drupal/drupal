@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ * Entity API controller classes and interface.
+ */
+
+/**
  * Interface for entity controller classes.
  *
  * All entity controller classes specified via the 'controller class' key

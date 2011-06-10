@@ -1,7 +1,12 @@
 <?php
 
 /**
- * Implements hook_modules_enabled().
+ * @file
+ * Entity API for handling entities like nodes or users.
+ */
+
+/**
+ * Implements hook_modules_preenable().
  */
 function entity_modules_preenable() {
   entity_info_cache_clear();

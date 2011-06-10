@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ * Entity query API.
+ */
+
+/**
  * Exception thrown by EntityFieldQuery() on unsupported query syntax.
  *
  * Some storage modules might not support the full range of the syntax for
