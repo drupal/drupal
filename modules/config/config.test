@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @file 
+ * @file
  * Tests for config.module.
  */
 
@@ -19,7 +19,7 @@ class SecureFileTestCase extends DrupalUnitTestCase {
 
   function setUp() {
     parent::setUp();
-    
+
     try {
       config_write_signed_file_storage_key();
     }
@@ -72,7 +72,7 @@ class SecureFileTestCase extends DrupalUnitTestCase {
       $this->fail(t('File failed verification when being read.'));
     }
   }
-  
+
   /**
    * Tests that a file fails validation if it's been monkeyed with.
    */
@@ -80,7 +80,7 @@ class SecureFileTestCase extends DrupalUnitTestCase {
     $file = new SignedFileStorage($this->fileType, $this->filename);
     $file->write($this->testContent);
 
-    // Manually overwrite the body of the secure file. Note that we skip the 
+    // Manually overwrite the body of the secure file. Note that we skip the
     // first line, which is reserved for the signature and such, to overwrite
     // just the payload.
     $raw_file = new SplFileObject($file->getFilePath(), 'a+');
