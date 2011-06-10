@@ -81,6 +81,10 @@ interface DrupalConfigVerifiedStorageInterface {
   /**
    * Constructor for the verified storage manipulation class.
    * 
+   * This class allows reading and writing configuration data from/to the
+   * verified storage and copying to/from the signed file storing the same
+   * data.
+   * 
    * param @name
    *   Lowercase string, the name for the configuration data.
    */
@@ -116,12 +120,12 @@ interface DrupalConfigVerifiedStorageInterface {
    * Use this function if you need to make temporary changes to your
    * configuration.
    */
-  function writeToActive($content);
+  function writeToActive($data);
 
   /**
    * Write the configuration data into the active storage and the file.
    */
-  function write($content);
+  function write($data);
 
   /**
    * Get names starting with this prefix.
@@ -144,7 +148,7 @@ class DrupalVerifiedStorageSQL implements DrupalConfigVerifiedStorageInterface {
   }
 
   function copyTofile() {
-    return $this->signedFileStorage()->write($content);
+    return $this->signedFileStorage()->write($data);
   }
 
   function copyFromFile() {
@@ -159,15 +163,15 @@ class DrupalVerifiedStorageSQL implements DrupalConfigVerifiedStorageInterface {
     return $this->read() !== $this->readFromFile();
   }
 
-  function writeToActive($content) {
+  function writeToActive($data) {
     return db_merge('config')
       ->key(array('name' => $this->name))
-      ->fields(array('data' => $content))
+      ->fields(array('data' => $data))
       ->execute();
   }
 
-  function write($content) {
-    $this->writeToActive($content);
+  function write($data) {
+    $this->writeToActive($data);
     $this->syncToFile();
   }
 
@@ -180,3 +184,16 @@ function get_verified_storage_names_with_prefix($prefix = '') {
   return DrupalVerifiedStorageSQL::getNamesWithPrefix($prefix);
 }
 
+function config_get_names_with_prefix($prefix) {
+  return get_verified_storage_names_with_prefix($prefix);
+}
+
+function config_get($name) {
+  $verifiedStorage = new DrupalVerifiedStorageSQL($name);
+  return new json_decode($verifiedStorage->read());
+}
+
+function config_set($name, $data) {
+  $verifiedStorage = new DrupalVerifiedStorageSQL($name);
+  return $verifiedStorage->write(json_encode($data));
+}
