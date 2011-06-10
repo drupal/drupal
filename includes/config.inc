@@ -278,59 +278,20 @@ function config_get_names_with_prefix($prefix) {
 }
 
 function config($name) {
-  $verifiedStorage = new DrupalVerifiedStorageSQL('json', $name);
-  return new DrupalConfig($name, json_decode($verifiedStorage->read()));
+  return new DrupalConfig($name);
 }
 
 class DrupalConfig {
-  function __construct($name, $data) {
-    static $stored_name;
-
-    if (!$name && !$data) {
-      return $stored_name;
-    }
-
-    foreach (get_object_vars($data) as $key => $value) {
-      $this->$key = $value;
-    }
-  }
-
-  function save() {
-    // Pretty hideous but get_object_vars is too agressive.
-    $verifiedStorage = new DrupalVerifiedStorageSQL('json', $this->__construct('', ''));
-    return $verifiedStorage->write(json_encode(get_object_vars($this)));
-  }
-}
-
-
-
-class DrupalConfig2 {
-
-  protected $_verifiedStorage;
-
-  protected $_name;
-
-  public function __construct($name, $data, DrupalConfigVerifiedStorageInterface $storage) {
-    $this->_verifiedStorage = $storage;
-    $this->_name = $name;
-
-    foreach ($data as $key => $value) {
+  public function __construct($name, $data) {
+    $this->_verifiedStorage = new DrupalVerifiedStorageSQL('json', $name);
+    foreach (json_decode($this->_verifiedStorage->read()) as $key => $value) {
       $this->$key = $value;
     }
   }
 
   public function save() {
-
-    $keys = array_filter(get_object_vars($this), function($key) {
-      return $key[0] != '_';
-    });
-
-    $obj = new stdClass();
-    foreach ($keys as $key) {
-      $obj->$key = $this->$key;
-    }
-
-    $this->_verifiedStorage->write(json_encode($obj));
+    $verifiedStorage = $this->_verifiedStorage;
+    unset($this->_verifiedStorage);
+    $verifiedStorage->write(get_object_vars($this));
   }
-
 }
