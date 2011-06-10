@@ -2,7 +2,9 @@
 
 function get_signed_file_storage_names_with_prefix($prefix = '') {
   $files = glob(conf_path() . '/config/' . $prefix . '*.php');
-  $clean_name = function ($value) { return basename($value, '.inc'); };
+  $clean_name = function ($value) {
+    return basename($value, '.php');
+  };
   return array_map($clean_name, $files);
 }
 
