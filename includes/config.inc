@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * @file
+ * Configuration storage and management API.
+ */
+
+
 function get_signed_file_storage_names_with_prefix($type, $prefix = '') {
   $files = glob(conf_path() . '/config/' . $prefix . '*.' . $type . '.php');
   $clean_name = function ($value) {
@@ -22,15 +28,44 @@ function config_sign_data($data) {
   return hash_hmac('sha512', $data, $key);
 }
 
+class ConfigException extends Exception {}
+
+class ConfigFileStorageException extends ConfigException {}
+class ConfigFileStorageReadException extends ConfigFileStorageException {}
+class ConfigFileStorageSignatureException extends ConfigFileStorageException {}
+
 class SignedFileStorage {
+  /**
+   * Constructor for the signed file storage interface.
+   * 
+   * This class allows reading and writing configuration data from/to the
+   * disk while automatically managing and verifying cryptographic signatures.
+   * 
+   * param @type
+   *   The type of the stored data. For example 'json' or 'xml' etc.
+   * param @name
+   *   Lowercase string, the name for the configuration data.
+   */
   public function __construct($type, $name) {
     $this->type = $type;
     $this->name = $name;
   }
 
+  /**
+   * Read a signed file and split the content into signature and data.
+   *
+   * @return
+   *   An array with "signature" and "data" keys.
+   *
+   * @throws
+   *   Exception
+   */
   protected function readAndSplit() {
     // TODO: Optimize with explicit offsets?
     $content = file_get_contents($this->getPath());
+    if (!$content) {
+      throw new Exception('Could not read signed file.');
+    }
     $parts = explode("\n", $content, 2);
     $header_parts = explode(' ', $parts[0]);
     return array('data' => $parts[1], 'signature' => $header_parts[2]);
