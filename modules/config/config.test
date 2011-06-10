@@ -26,14 +26,6 @@ class SecureFileTestCase extends DrupalUnitTestCase {
   protected $testContent = 'Good morning, Denver!';
 
   /**
-   * Tests that the file name is preserved properly.
-   */
-  public function testFileName() {
-    $file = new SignedFileStorage($this->filename);
-    $this->assertEqual($this->filename, $file->getName(), t('File name persisted properly.'));
-  }
-
-  /**
    * Tests that a file written by this system has a valid signature.
    */
   public function testFileVerify() {
