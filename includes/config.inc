@@ -28,7 +28,7 @@ class DrupalVerifiedStorageSQL {
   }
 
   function read() {
-    return db_query('SELECT data FROM {config} WHERE name = :name', array(':name' => $name))->fetchField();
+    return db_query('SELECT data FROM {config} WHERE name = :name', array(':name' => $this->name))->fetchField();
   }
 
   function syncTofile() {
@@ -40,7 +40,7 @@ class DrupalVerifiedStorageSQL {
   }
 
   function readFromFile() {
-    return $this->signedFileStorage()->read($name);
+    return $this->signedFileStorage()->read($this->name);
   }
 
   function isOutOfSync() {
