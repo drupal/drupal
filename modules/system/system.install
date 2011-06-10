@@ -704,7 +704,7 @@ function system_schema() {
       'type' => array(
         'description' => 'The type of the config data.',
         'type' => 'varchar',
-        'length' => 255,
+        'length' => 64,
         'not null' => TRUE,
         'default' => '',
       ),
@@ -725,7 +725,7 @@ function system_schema() {
     ),
     'primary key' => array('type', 'name'),
     'indexes' => array(
-      'name' => 'name',
+      'name' => array('name'),
     ),
   );
 
