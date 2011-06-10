@@ -181,8 +181,7 @@ interface DrupalConfigVerifiedStorageInterface {
   static function getNamesWithPrefix($prefix);
 }
 
-class DrupalVerifiedStorageSQL implements DrupalConfigVerifiedStorageInterface {
-
+abstract class DrupalConfigVerifiedStorage implements DrupalConfigVerifiedStorageInterface {
   function __construct($type, $name) {
     $this->type = $type;
     $this->name = $name;
@@ -190,10 +189,6 @@ class DrupalVerifiedStorageSQL implements DrupalConfigVerifiedStorageInterface {
 
   protected function signedFileStorage() {
     return new SignedFileStorage($this->type, $this->name);
-  }
-
-  public function read() {
-    return db_query('SELECT data FROM {config} WHERE type = :type, name = :name', array(':type' => $this->type, ':name' => $this->name))->fetchField();
   }
 
   public function copyTofile() {
@@ -212,16 +207,23 @@ class DrupalVerifiedStorageSQL implements DrupalConfigVerifiedStorageInterface {
     return $this->read() !== $this->readFromFile();
   }
 
+  public function write($data) {
+    $this->writeToActive($data);
+    $this->syncToFile();
+  }
+}
+
+class DrupalVerifiedStorageSQL extends DrupalConfigVerifiedStorage {
+
+  public function read() {
+    return db_query('SELECT data FROM {config} WHERE type = :type, name = :name', array(':type' => $this->type, ':name' => $this->name))->fetchField();
+  }
+
   public function writeToActive($data) {
     return db_merge('config')
       ->key(array('type' => $this->type, 'name' => $this->name))
       ->fields(array('data' => $data))
       ->execute();
-  }
-
-  public function write($data) {
-    $this->writeToActive($data);
-    $this->syncToFile();
   }
 
   static public function getNamesWithPrefix($type = '*', $prefix = '') {
