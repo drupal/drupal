@@ -21,7 +21,7 @@ class SecureFileTestCase extends DrupalUnitTestCase {
     parent::setUp();
   }
   
-  protected $filename = 'foo.bar.json';
+  protected $filename = 'foo.bar';
   
   protected $testContent = 'Good morning, Denver!';
 
@@ -29,7 +29,7 @@ class SecureFileTestCase extends DrupalUnitTestCase {
    * Tests that a file written by this system has a valid signature.
    */
   public function testFileVerify() {
-    $file = new SignedFileStorage($this->filename);
+    $file = new SignedFileStorage('json', $this->filename);
     $file->write($this->testContent);
     
     $this->assertTrue($file->verify(), t('A file verifies after being written.'));
@@ -37,7 +37,7 @@ class SecureFileTestCase extends DrupalUnitTestCase {
     unset($file);
     
     // Load the file again, so that there is no stale data from the old object.
-    $file = new SignedFileStorage($this->filename);
+    $file = new SignedFileStorage('json', $this->filename);
     $this->assertTrue($file->verify(), t('A file verifies after being written and reloaded.'));
   }
 
@@ -45,7 +45,7 @@ class SecureFileTestCase extends DrupalUnitTestCase {
    * Tests that a file written by this system can be successfully read back.
    */
   public function testFilePersist() {
-    $file = new SignedFileStorage($this->filename);
+    $file = new SignedFileStorage('json', $this->filename);
     $file->write($this->testContent);
     
     unset($file);
@@ -54,7 +54,7 @@ class SecureFileTestCase extends DrupalUnitTestCase {
     // Note that if any other exception is thrown, we let the test system
     // handle catching and reporting it.
     try {
-      $file = new SignedFileStorage($this->filename);
+      $file = new SignedFileStorage('json', $this->filename);
       $saved_content = $file->read();
 
       $this->assertEqual($saved_content, $this->testContent, t('A file can be read back successfully.'));
@@ -68,7 +68,7 @@ class SecureFileTestCase extends DrupalUnitTestCase {
    * Tests that a file fails validation if it's been monkeyed with.
    */
   public function testFileNotVerify() {
-    $file = new SignedFileStorage($this->filename);
+    $file = new SignedFileStorage('json', $this->filename);
     $file->write($this->testContent);
 
     // Manually overwrite the body of the secure file. Note that we skip the 
