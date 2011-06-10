@@ -1,33 +1,29 @@
 <?php
 
-function get_signed_file_storage_names_with_prefix($prefix = '') {
-  $files = glob(conf_path() . '/config/' . $prefix . '*.php');
+function get_signed_file_storage_names_with_prefix($type, $prefix = '') {
+  $files = glob(conf_path() . '/config/' . $prefix . '*.' . $type . '.php');
   $clean_name = function ($value) {
     return basename($value, '.php');
   };
-  $files = array_map($clean_name, $files);
-  if ($files[0] == '!key') {
-    unset($files[0]);
-  }
-  return $files;
+  return array_map($clean_name, $files);
 }
 
 function config_write_signed_file_storage_key() {
   $key = uniqid() . uniqid() . uniqid();
-  if (!file_put_contents(conf_path() . '/config/!key.php', '<?php die(); ' . $key . "\n")) {
+  if (!file_put_contents(conf_path() . '/config/key.php', '<?php die(); ' . $key . "\n")) {
     throw new Exception('Failed to write configuration signing key.');
   }
 }
 
 function config_sign_data($data) {
-  $parts = explode(' ', file_get_contents(conf_path() . '/config/!key.php'));
+  $parts = explode(' ', file_get_contents(conf_path() . '/config/key.php'));
   $key = $parts[3];
-  // TODO: Consider an HMAC-SHA1 to be more secure?
-  return sha1($data . '|' . $key);
+  return hash_hmac('sha512', $data, $key);
 }
 
 class SignedFileStorage {
-  public function __construct($name) {
+  public function __construct($type, $name) {
+    $this->type = $type;
     $this->name = $name;
   }
 
@@ -40,11 +36,7 @@ class SignedFileStorage {
   }
 
   public function getPath() {
-    return conf_path() . '/config/' . $this->name . '.php';
-  }
-
-  public function getName() {
-    return $this->name;
+    return conf_path() . '/config/' . $this->name  . '.' . $this->type . '.php';
   }
 
   public function resign() {
@@ -55,7 +47,7 @@ class SignedFileStorage {
   public function verify($contentOnSuccess = FALSE) {
     $split = $this->readAndSplit();
     $expected_signature = config_sign_data($split['data']);
-    if ($expected_signature == $split['signature']) {
+    if ($expected_signature === $split['signature']) {
       if ($contentOnSuccess) {
         return $split['data'];
       }
@@ -90,10 +82,12 @@ interface DrupalConfigVerifiedStorageInterface {
    * verified storage and copying to/from the signed file storing the same
    * data.
    * 
+   * param @type
+   *   The type of the stored data. For example 'json' or 'xml' etc.
    * param @name
    *   Lowercase string, the name for the configuration data.
    */
-  function __construct($name);
+  function __construct($type, $name);
 
   /**
    * Read the configuration data from the verified storage.
@@ -140,16 +134,17 @@ interface DrupalConfigVerifiedStorageInterface {
 
 class DrupalVerifiedStorageSQL implements DrupalConfigVerifiedStorageInterface {
 
-  function __construct($name) {
+  function __construct($type, $name) {
+    $this->type = $type;
     $this->name = $name;
   }
 
   protected function signedFileStorage() {
-    return new SignedFileStorage($this->name);
+    return new SignedFileStorage($this->type, $this->name);
   }
 
   function read() {
-    return db_query('SELECT data FROM {config} WHERE name = :name', array(':name' => $this->name))->fetchField();
+    return db_query('SELECT data FROM {config} WHERE type = :type, name = :name', array(':type' => $this->type, ':name' => $this->name))->fetchField();
   }
 
   function copyTofile() {
@@ -170,7 +165,7 @@ class DrupalVerifiedStorageSQL implements DrupalConfigVerifiedStorageInterface {
 
   function writeToActive($data) {
     return db_merge('config')
-      ->key(array('name' => $this->name))
+      ->key(array('type' => $this->type, 'name' => $this->name))
       ->fields(array('data' => $data))
       ->execute();
   }
@@ -180,25 +175,33 @@ class DrupalVerifiedStorageSQL implements DrupalConfigVerifiedStorageInterface {
     $this->syncToFile();
   }
 
-  static function getNamesWithPrefix($prefix) {
-    return db_query('SELECT name FROM {config} WHERE name LIKE :name', array(':name' => db_like($prefix) . '%'))->fetchCol();
+  static function getNamesWithPrefix($type = '*', $prefix = '') {
+    $query = db_select('config');
+    $query->addField('name');
+    if ($type != '*') {
+      $query->condition('type', $type);
+    }
+    if ($prefix) {
+      $query->condition('name', db_like($prefix) . '%', 'LIKE');
+    }
+    return $query->execute()->fetchCol();
   }
 }
 
-function get_verified_storage_names_with_prefix($prefix = '') {
-  return DrupalVerifiedStorageSQL::getNamesWithPrefix($prefix);
+function get_verified_storage_names_with_prefix($type = '*', $prefix = '') {
+  return DrupalVerifiedStorageSQL::getNamesWithPrefix($type, $prefix);
 }
 
 function config_get_names_with_prefix($prefix) {
-  return get_verified_storage_names_with_prefix($prefix);
+  $return = get_verified_storage_names_with_prefix('json', $prefix);
 }
 
 function config_get($name) {
-  $verifiedStorage = new DrupalVerifiedStorageSQL($name);
+  $verifiedStorage = new DrupalVerifiedStorageSQL('json', $name);
   return new json_decode($verifiedStorage->read());
 }
 
 function config_set($name, $data) {
-  $verifiedStorage = new DrupalVerifiedStorageSQL($name);
+  $verifiedStorage = new DrupalVerifiedStorageSQL('json', $name);
   return $verifiedStorage->write(json_encode($data));
 }
