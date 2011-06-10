@@ -265,30 +265,32 @@ function get_verified_storage_names_with_prefix($prefix = '') {
 }
 
 function config_get_names_with_prefix($prefix) {
-  $return = get_verified_storage_names_with_prefix($prefix);
+  return get_verified_storage_names_with_prefix($prefix);
 }
 
-function config($name) {
-  $verifiedStorage = new DrupalVerifiedStorageSQL($name);
-  return new DrupalConfig($name, json_decode($verifiedStorage->read()));
+function config($name, $class = 'DrupalConfig') {
+  return new $class(new DrupalVerifiedStorageSQL($name));
 }
 
 class DrupalConfig {
-  function __construct($name, $data) {
-    static $stored_name;
 
-    if (!$name && !$data) {
-      return $stored_name;
-    }
+  /**
+   * The storage engine to save this config object to.
+   *
+   * @var DrupalConfigVerifiedStorageInterface
+   */
+  protected $_verifiedStorage;
 
-    foreach (get_object_vars($data) as $key => $value) {
+  public function __construct(DrupalConfigVerifiedStorageInterface $verified_storage) {
+    $this->_verifiedStorage = $verified_storage;
+    foreach (json_decode($this->verifiedStorage->read()) as $key => $value) {
       $this->$key = $value;
     }
   }
 
-  function save() {
-    // Pretty hideous but get_object_vars is too agressive.
-    $verifiedStorage = new DrupalVerifiedStorageSQL($this->__construct('', ''));
-    return $verifiedStorage->write(json_encode(get_object_vars($this)));
+  public function save() {
+    $verifiedStorage = $this->_verifiedStorage;
+    unset($this->_verifiedStorage);
+    $verifiedStorage->write(json_encode(get_object_vars($this)));
   }
 }
