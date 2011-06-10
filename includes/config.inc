@@ -134,14 +134,9 @@ interface DrupalConfigVerifiedStorageInterface {
   function __construct($name);
 
   /**
-   * Read the configuration data from the verified storage, including local overlays.
+   * Read the configuration data from the verified storage.
    */
   function read();
-
-  /**
-   * Read the configuration data from the verified storage, excluding local overlays.
-   */
-  function readFromActive();
 
   /**
    * Copy the configuration data from the verified storage into a file.
@@ -181,22 +176,6 @@ interface DrupalConfigVerifiedStorageInterface {
   static function getNamesWithPrefix($prefix);
 }
 
-/**
- * Retrieve any local overrides to configuration.
- *
- * @return
- *   An array mapping configuration bundle names
- *   to keys to replace to the replacement values.
- */
-function config_get_local_overrides() {
-  static $overrides;
-  if (!isset($overrides)) {
-    // TODO: Use the appropriate factory.
-    $overrides = (array) DrupalVerifiedStorageSQL('local');
-  }
-  return $overrides;
-}
-
 abstract class DrupalConfigVerifiedStorage implements DrupalConfigVerifiedStorageInterface {
   function __construct($name) {
     $this->name = $name;
@@ -204,15 +183,6 @@ abstract class DrupalConfigVerifiedStorage implements DrupalConfigVerifiedStorag
 
   protected function signedFileStorage() {
     return new SignedFileStorage($this->name);
-  }
-
-  public function read() {
-    $overrides = config_get_local_overrides();
-    $active = $this->readFromActive();
-    if (isset($overrides[$this->name])) {
-      return array_merge($active, $overrides[$this->name]);
-    }
-    return $active;
   }
 
   public function copyTofile() {
@@ -239,7 +209,7 @@ abstract class DrupalConfigVerifiedStorage implements DrupalConfigVerifiedStorag
 
 class DrupalVerifiedStorageSQL extends DrupalConfigVerifiedStorage {
 
-  public function readFromActive() {
+  public function read() {
     return db_query('SELECT data FROM {config} WHERE name = :name', array(':name' => $this->name))->fetchField();
   }
 
@@ -269,7 +239,13 @@ function config_get_names_with_prefix($prefix) {
 }
 
 function config($name, $class = 'DrupalConfig') {
-  return new $class(new DrupalVerifiedStorageSQL($name));
+  static $overrides;
+  if (!isset($overrides)) {
+    // TODO: Use the appropriate factory?
+    $overrides = (array) json_decode(DrupalVerifiedStorageSQL('local'));
+  }
+  $key_overrides = isset($overrides[$name]) ? $overrides[$name] : array();
+  return new $class(new DrupalVerifiedStorageSQL($name, $key_overrides));
 }
 
 class DrupalConfig {
@@ -281,8 +257,10 @@ class DrupalConfig {
    */
   protected $_verifiedStorage;
 
-  public function __construct(DrupalConfigVerifiedStorageInterface $verified_storage) {
+  public function __construct(DrupalConfigVerifiedStorageInterface $verified_storage, $overrides = array()) {
     $this->_verifiedStorage = $verified_storage;
+    $original_keys = json_decode($this->_verifiedStorage->read());
+    $active = array_merge($original_keys, $overrides);
     foreach (json_decode($this->verifiedStorage->read()) as $key => $value) {
       $this->$key = $value;
     }
