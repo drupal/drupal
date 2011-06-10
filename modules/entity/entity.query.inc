@@ -30,7 +30,7 @@ class EntityFieldQueryException extends Exception {}
  * direct access to the collected properties in order to handle alternate
  * execution routines. We therefore use public properties for simplicity. Note
  * that code that is simply creating and running a field query should still use
- * the appropriate methods add conditions on the query.
+ * the appropriate methods to add conditions on the query.
  *
  * Storage engines are not required to support every type of query. By default,
  * an EntityFieldQueryException will be raised if an unsupported condition is
@@ -272,7 +272,11 @@ class EntityFieldQuery {
    */
   public function fieldCondition($field, $column = NULL, $value = NULL, $operator = NULL, $delta_group = NULL, $language_group = NULL) {
     if (is_scalar($field)) {
-      $field = field_info_field($field);
+      $field_definition = field_info_field($field);
+      if (empty($field_definition)) {
+        throw new EntityFieldQueryException(t('Unknown field: @field_name', array('@field_name' => $field)));
+      }
+      $field = $field_definition;
     }
     // Ensure the same index is used for fieldConditions as for fields.
     $index = count($this->fields);
@@ -374,7 +378,11 @@ class EntityFieldQuery {
    */
   public function fieldOrderBy($field, $column, $direction = 'ASC') {
     if (is_scalar($field)) {
-      $field = field_info_field($field);
+      $field_definition = field_info_field($field);
+      if (empty($field_definition)) {
+        throw new EntityFieldQueryException(t('Unknown field: @field_name', array('@field_name' => $field)));
+      }
+      $field = $field_definition;
     }
     // Save the index used for the new field, for later use in field storage.
     $index = count($this->fields);

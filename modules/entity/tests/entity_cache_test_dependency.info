@@ -2,5 +2,5 @@ name = "Entity cache test dependency"
 description = "Support dependency module for testing entity cache."
 package = Testing
 version = VERSION
-core = 7.x
+core = 8.x
 hidden = TRUE
