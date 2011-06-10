@@ -81,16 +81,14 @@ class SecureFileTestCase extends DrupalUnitTestCase {
     // Manually overwrite the body of the secure file. Note that we skip the 
     // first line, which is reserved for the signature and such, to overwrite
     // just the payload.
-    $raw_file = new SplFileObject($file->getFilePath(), 'w');
-    $raw_file->seek(1);
+    $raw_file = new SplFileObject($file->getFilePath(), 'a+');
     $raw_file->fwrite('Good morning, Detroit!');
     $raw_file->fflush();
-    $raw_file->ftruncate($raw_file->ftell());
     unset($raw_file);
 
     unset($file);
-    
-    $file = new SignedFileStorage($this->filename);
+
+    $file = new SignedFileStorage('json', $this->filename);
     $this->assertFalse($file->verify(), t('Corrupted file does not verify.'));
   }
   
