@@ -242,7 +242,7 @@ function config($name, $class = 'DrupalConfig') {
   static $overrides;
   if (!isset($overrides)) {
     // TODO: Use the appropriate factory?
-    $overrides = (array) json_decode(DrupalVerifiedStorageSQL('local'));
+    $overrides = (array) json_decode(SignedFileStorage('local'));
   }
   $key_overrides = isset($overrides[$name]) ? $overrides[$name] : array();
   return new $class(new DrupalVerifiedStorageSQL($name, $key_overrides));
