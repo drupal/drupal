@@ -277,19 +277,19 @@ function config_get_names_with_prefix($prefix) {
   return get_verified_storage_names_with_prefix('json', $prefix);
 }
 
-function config($name) {
-  return new DrupalConfig($name);
+function config($name, $class = 'DrupalConfig') {
+  return new $class($name);
 }
 
 class DrupalConfig {
-  final public function __construct($name) {
+  public function __construct($name) {
     $this->_verifiedStorage = new DrupalVerifiedStorageSQL('json', $name);
     foreach (json_decode($this->_verifiedStorage->read()) as $key => $value) {
       $this->$key = $value;
     }
   }
 
-  final public function save() {
+  public function save() {
     $verifiedStorage = $this->_verifiedStorage;
     unset($this->_verifiedStorage);
     $verifiedStorage->write(json_encode(get_object_vars($this)));
