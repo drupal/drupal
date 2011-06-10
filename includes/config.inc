@@ -35,8 +35,17 @@ class SignedFileStorage {
   protected function readAndSplit() {
     // TODO: Optimize with explicit offsets?
     $content = file_get_contents($this->getFilePath());
+    if ($content === FALSE) {
+      throw new Exception('Read file is invalid.');
+    }
     $parts = explode("\n", $content, 2);
+    if (count($parts) !== 2) {
+      throw new Exception('Read file does not verify.');
+    }
     $header_parts = explode(' ', $parts[0]);
+    if (count($header_parts) !== 3) {
+      throw new Exception('Read file not valid.');
+    }
     return array('data' => $parts[1], 'signature' => $header_parts[2]);
   }
 
