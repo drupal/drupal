@@ -282,6 +282,11 @@ function config($name, $class = 'DrupalConfig') {
 }
 
 class DrupalConfig {
+
+  protected $_verifiedStorage;
+
+  protected $_name;
+
   public function __construct($name) {
     $this->_verifiedStorage = new DrupalVerifiedStorageSQL('json', $name);
     foreach (json_decode($this->_verifiedStorage->read()) as $key => $value) {
