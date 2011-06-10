@@ -139,9 +139,14 @@ interface DrupalConfigVerifiedStorageInterface {
   function __construct($type, $name);
 
   /**
-   * Read the configuration data from the verified storage.
+   * Read the configuration data from the verified storage, including local overlays.
    */
   function read();
+
+  /**
+   * Read the configuration data from the verified storage, excluding local overlays.
+   */
+  function readFromActive();
 
   /**
    * Copy the configuration data from the verified storage into a file.
@@ -181,6 +186,22 @@ interface DrupalConfigVerifiedStorageInterface {
   static function getNamesWithPrefix($prefix);
 }
 
+/**
+ * Retrieve any local overrides to configuration.
+ *
+ * @return
+ *   An array mapping configuration bundle names
+ *   to keys to replace to the replacement values.
+ */
+function config_get_local_overrides() {
+  static $overrides;
+  if (!isset($overrides)) {
+    // TODO: Use the appropriate factory.
+    $overrides = (array) DrupalVerifiedStorageSQL('local');
+  }
+  return $overrides;
+}
+
 abstract class DrupalConfigVerifiedStorage implements DrupalConfigVerifiedStorageInterface {
   function __construct($type, $name) {
     $this->type = $type;
@@ -189,6 +210,15 @@ abstract class DrupalConfigVerifiedStorage implements DrupalConfigVerifiedStorag
 
   protected function signedFileStorage() {
     return new SignedFileStorage($this->type, $this->name);
+  }
+
+  public function read() {
+    $overrides = config_get_local_overrides();
+    $active = $this->readFromActive();
+    if (isset($overrides[$this->name])) {
+      return array_merge($active, $overrides[$this->name]);
+    }
+    return $active;
   }
 
   public function copyTofile() {
@@ -215,7 +245,7 @@ abstract class DrupalConfigVerifiedStorage implements DrupalConfigVerifiedStorag
 
 class DrupalVerifiedStorageSQL extends DrupalConfigVerifiedStorage {
 
-  public function read() {
+  public function readFromActive() {
     return db_query('SELECT data FROM {config} WHERE type = :type, name = :name', array(':type' => $this->type, ':name' => $this->name))->fetchField();
   }
 
