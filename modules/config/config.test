@@ -59,7 +59,7 @@ class SecureFileTestCase extends DrupalUnitTestCase {
 
       $this->assertEqual($saved_content, $this->testContent, t('A file can be read back successfully.'));
     }
-    catch (SecureFileNotVerifiedException $e) {
+    catch (Exception $e) {
       $this->fail(t('File failed verification when being read.'));
     }
   }
