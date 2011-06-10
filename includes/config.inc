@@ -36,7 +36,7 @@ class SignedFileStorage {
     return array('data' => $parts[1], 'signature' => $header_parts[2]);
   }
 
-  public function getPath() {
+  public function getFilePath() {
     return conf_path() . '/config/' . $this->name  . '.' . $this->type . '.php';
   }
 
