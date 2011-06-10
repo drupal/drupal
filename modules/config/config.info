@@ -1,0 +1,5 @@
+name = Configuration manager
+core = VERSION
+files[] = config.module
+files[] = config.test
+package = Core

@@ -91,6 +91,7 @@ interface DrupalVerifiedStorageInterface {
 
   function write($content);
 
+  static function getNamesWithPrefix($prefix);
 }
 
 class DrupalVerifiedStorageSQL implements DrupalVerifiedStorageInterface {
@@ -135,5 +136,12 @@ class DrupalVerifiedStorageSQL implements DrupalVerifiedStorageInterface {
     $this->syncToFile();
   }
 
+  static function getNamesWithPrefix($prefix) {
+    return db_query('SELECT name FROM {config} WHERE name LIKE :name', array(':name' => db_like($prefix) . '%'))->fetchCol();
+  }
+}
+
+function get_verified_storage_names_with_prefix($prefix = '') {
+  return DrupalVerifiedStorageSQL::getNamesWithPrefix($prefix);
 }
 
