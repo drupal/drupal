@@ -701,13 +701,6 @@ function system_schema() {
   $schema['config'] = array(
     'description' => 'Configuration active store',
     'fields' => array(
-      'type' => array(
-        'description' => 'The type of the config data.',
-        'type' => 'varchar',
-        'length' => 64,
-        'not null' => TRUE,
-        'default' => '',
-      ),
       'name' => array(
         'description' => 'The name of the config data.',
         'type' => 'varchar',
@@ -715,7 +708,7 @@ function system_schema() {
         'not null' => TRUE,
         'default' => '',
       ),
-      'value' => array(
+      'data' => array(
         'description' => 'The value of the config data.',
         'type' => 'blob',
         'not null' => TRUE,
@@ -723,10 +716,7 @@ function system_schema() {
         'translatable' => TRUE,
       ),
     ),
-    'primary key' => array('type', 'name'),
-    'indexes' => array(
-      'name' => array('name'),
-    ),
+    'primary key' => array('name'),
   );
 
 
