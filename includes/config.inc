@@ -257,18 +257,30 @@ class DrupalConfig {
    */
   protected $_verifiedStorage;
 
+  protected $_overrides;
+
   public function __construct(DrupalConfigVerifiedStorageInterface $verified_storage, $overrides = array()) {
     $this->_verifiedStorage = $verified_storage;
     $original_keys = (array) json_decode($this->_verifiedStorage->read());
+    $this->_overrides = $overrides;
     $active = array_merge($original_keys, $overrides);
     foreach ($active as $key => $value) {
       $this->$key = $value;
     }
   }
 
+  public function isOverridden($key) {
+    return isset($this->_overrides[$key]);
+  }
+
   public function save() {
-    $verifiedStorage = $this->_verifiedStorage;
-    unset($this->_verifiedStorage);
-    $verifiedStorage->write(json_encode(get_object_vars($this)));
+    $obj = new stdClass();
+    foreach (get_object_vars($this) as $key => $val) {
+      if ($key[0] != '_') {
+        $obj->$key = $val;
+      }
+    }
+
+    $this->_verifiedStorage->write(json_encode($obj));
   }
 }
