@@ -236,10 +236,10 @@ function config_get_names_with_prefix($prefix) {
 function config($name, $class = 'DrupalConfig') {
   static $overrides;
   if (!isset($overrides)) {
-    // TODO: Use the appropriate factory?
     $overrides = (array) json_decode(SignedFileStorage('local'));
   }
   $key_overrides = isset($overrides[$name]) ? $overrides[$name] : array();
+  // @TODO Replace this with the appropriate factory.
   return new $class(new DrupalVerifiedStorageSQL($name), $key_overrides);
 }
 
@@ -252,18 +252,30 @@ class DrupalConfig {
    */
   protected $_verifiedStorage;
 
+  protected $_overrides;
+
   public function __construct(DrupalConfigVerifiedStorageInterface $verified_storage, $overrides = array()) {
     $this->_verifiedStorage = $verified_storage;
-    $original_keys = json_decode($this->_verifiedStorage->read());
+    $original_keys = (array) json_decode($this->_verifiedStorage->read());
+    $this->_overrides = $overrides;
     $active = array_merge($original_keys, $overrides);
-    foreach (json_decode($this->verifiedStorage->read()) as $key => $value) {
+    foreach ($active as $key => $value) {
       $this->$key = $value;
     }
   }
 
+  public function isOverridden($key) {
+    return isset($this->_overrides[$key]);
+  }
+
   public function save() {
-    $verifiedStorage = $this->_verifiedStorage;
-    unset($this->_verifiedStorage);
-    $verifiedStorage->write(json_encode(get_object_vars($this)));
+    $obj = new stdClass();
+    foreach (get_object_vars($this) as $key => $val) {
+      if ($key[0] != '_') {
+        $obj->$key = $val;
+      }
+    }
+
+    $this->_verifiedStorage->write(json_encode($obj));
   }
 }
