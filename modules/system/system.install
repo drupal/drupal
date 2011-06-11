@@ -698,6 +698,27 @@ function system_schema() {
   $schema['cache_menu']['description'] = 'Cache table for the menu system to store router information as well as generated link trees for various menu/page/user combinations.';
   $schema['cache_path'] = $schema['cache'];
   $schema['cache_path']['description'] = 'Cache table for path alias lookup.';
+  $schema['config'] = array(
+    'description' => 'Configuration active store',
+    'fields' => array(
+      'name' => array(
+        'description' => 'The name of the config data.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'data' => array(
+        'description' => 'The value of the config data.',
+        'type' => 'blob',
+        'not null' => TRUE,
+        'size' => 'big',
+        'translatable' => TRUE,
+      ),
+    ),
+    'primary key' => array('name'),
+  );
+
 
   $schema['date_format_type'] = array(
     'description' => 'Stores configured date format types.',

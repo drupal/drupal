@@ -22,5 +22,7 @@ $sfs->resign();
 echo $sfs->read() . PHP_EOL;
 
 // Fail
-file_put_contents($sfs->getPath(), $existing_content . 'extra');
-echo $sfs->read() . PHP_EOL;
+//file_put_contents($sfs->getPath(), $existing_content . 'extra');
+//echo $sfs->read() . PHP_EOL;
+
+print_r(get_signed_file_storage_names_with_prefix());

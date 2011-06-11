@@ -1,5 +1,6 @@
 name = Configuration manager
-core = VERSION
+version = VERSION
+core = 8.x
 files[] = config.module
 files[] = config.test
 package = Core
