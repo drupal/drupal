@@ -40,12 +40,10 @@ function drupal_error_levels() {
     E_USER_NOTICE => array('User notice', LOG_NOTICE),
     E_STRICT => array('Strict warning', LOG_DEBUG),
     E_RECOVERABLE_ERROR => array('Recoverable fatal error', LOG_ERR),
+    E_DEPRECATED => array('Deprecated function', LOG_DEBUG),
+    E_USER_DEPRECATED => array('User deprecated function', LOG_DEBUG),
   );
-  // E_DEPRECATED and E_USER_DEPRECATED were added in PHP 5.3.0.
-  if (defined('E_DEPRECATED')) {
-    $types[E_DEPRECATED] = array('Deprecated function', LOG_DEBUG);
-    $types[E_USER_DEPRECATED] = array('User deprecated function', LOG_DEBUG);
-  }
+
   return $types;
 }
 

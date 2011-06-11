@@ -317,9 +317,7 @@ function authorize_get_filetransfer($backend, $settings = array()) {
       require_once $file;
     }
     if (class_exists($backend_info['class'])) {
-      // PHP 5.2 doesn't support $class::factory() syntax, so we have to
-      // use call_user_func_array() until we can require PHP 5.3.
-      $filetransfer = call_user_func_array(array($backend_info['class'], 'factory'), array(DRUPAL_ROOT, $settings));
+      $filetransfer = $backend_info['class']::factory(DRUPAL_ROOT, $settings);
     }
   }
   return $filetransfer;

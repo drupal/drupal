@@ -17,10 +17,6 @@ class DatabaseTasks_pgsql extends DatabaseTasks {
       'arguments' => array(),
     );
     $this->tasks[] = array(
-      'function' => 'checkPHPVersion',
-      'arguments' => array(),
-    );
-    $this->tasks[] = array(
       'function' => 'checkBinaryOutput',
       'arguments' => array(),
     );
@@ -60,23 +56,6 @@ class DatabaseTasks_pgsql extends DatabaseTasks {
     catch (Exception $e) {
       $this->fail(st('Drupal could not determine the encoding of the database was set to UTF-8'));
     }
-  }
-
-  /**
-   * Check PHP version.
-   *
-   * There are two bugs in PDO_pgsql affecting Drupal:
-   *
-   * - in versions < 5.2.7, PDO_pgsql refuses to insert an empty string into
-   *   a NOT NULL BLOB column. See: http://bugs.php.net/bug.php?id=46249
-   * - in versions < 5.2.11 and < 5.3.1 that prevents inserting integer values
-   *   into numeric columns that exceed the PHP_INT_MAX value.
-   *   See: http://bugs.php.net/bug.php?id=48924
-   */
-  function checkPHPVersion() {
-    if (!version_compare(PHP_VERSION, '5.2.11', '>=') || (version_compare(PHP_VERSION, '5.3.0', '>=') && !version_compare(PHP_VERSION, '5.3.1', '>='))) {
-      $this->fail(st('The version of PHP you are using has known issues with PostgreSQL. You need to upgrade PHP to 5.2.11, 5.3.1 or greater.'));
-    };
   }
 
   /**
