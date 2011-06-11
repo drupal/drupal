@@ -221,12 +221,7 @@ class DrupalVerifiedStorageSQL extends DrupalConfigVerifiedStorage {
   }
 
   static public function getNamesWithPrefix($prefix = '') {
-    $query = db_select('config');
-    $query->addField('name');
-    if ($prefix) {
-      $query->condition('name', db_like($prefix) . '%', 'LIKE');
-    }
-    return $query->execute()->fetchCol();
+    return db_query('SELECT name FROM {config} WHERE name LIKE :name', array(':name' => db_like($prefix) . '%'))->fetchCol();
   }
 }
 
@@ -245,7 +240,7 @@ function config($name, $class = 'DrupalConfig') {
     $overrides = (array) json_decode(SignedFileStorage('local'));
   }
   $key_overrides = isset($overrides[$name]) ? $overrides[$name] : array();
-  return new $class(new DrupalVerifiedStorageSQL($name, $key_overrides));
+  return new $class(new DrupalVerifiedStorageSQL($name), $key_overrides);
 }
 
 class DrupalConfig {
