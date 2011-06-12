@@ -36,7 +36,7 @@ function config_get_signed_file_storage_names_with_prefix($prefix = '') {
 function config_write_signed_file_storage_key($force_rekey = FALSE) {
   $file_path = conf_path() . '/key.php';
   if (!file_exists($file_path) || $force_rekey) {
-    $key = uniqid() . uniqid() . uniqid();
+    $key = drupal_hash_base64(drupal_random_bytes(55));
     if (!file_put_contents($file_path, '<?php die(); ' . $key . "\n")) {
       throw new Exception('Failed to write configuration signing key.');
     }
