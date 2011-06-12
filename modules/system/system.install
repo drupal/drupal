@@ -698,18 +698,19 @@ function system_schema() {
   $schema['cache_menu']['description'] = 'Cache table for the menu system to store router information as well as generated link trees for various menu/page/user combinations.';
   $schema['cache_path'] = $schema['cache'];
   $schema['cache_path']['description'] = 'Cache table for path alias lookup.';
+
   $schema['config'] = array(
-    'description' => 'Configuration active store',
+    'description' => 'Default active store for the configuration system.',
     'fields' => array(
       'name' => array(
-        'description' => 'The name of the config data.',
+        'description' => 'The identifier for the configuration entry, such as module.example (the name of the file, minus .json.php).',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
       ),
       'data' => array(
-        'description' => 'The value of the config data.',
+        'description' => 'The raw JSON data for this configuration entry.',
         'type' => 'blob',
         'not null' => TRUE,
         'size' => 'big',
