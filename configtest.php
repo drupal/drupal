@@ -8,21 +8,29 @@ drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
 
 config_write_signed_file_storage_key();
 //echo config_sign_data('onetwothree');
-$sfs = new SignedFileStorage('one.two.json');
+$sfs = new SignedFileStorage('one.two');
 
 // Write and read
 $sfs->write('nothing');
 echo $sfs->read() . PHP_EOL;
-$existing_content = file_get_contents($sfs->getPath());
-echo $sfs->getPath() . PHP_EOL;
+$existing_content = file_get_contents($sfs->getFilePath());
+echo $sfs->getFilePath() . PHP_EOL;
 
 // Modify and resign
-file_put_contents($sfs->getPath(), $existing_content . 'extra');
+file_put_contents($sfs->getFilePath(), $existing_content . 'extra');
 $sfs->resign();
 echo $sfs->read() . PHP_EOL;
 
 // Fail
-//file_put_contents($sfs->getPath(), $existing_content . 'extra');
+////file_put_contents($sfs->getFilePath(), $existing_content . 'extra');
 //echo $sfs->read() . PHP_EOL;
 
 print_r(get_signed_file_storage_names_with_prefix());
+
+print '<hr>';
+
+$config = config('foo.bar');
+$config->foo = 'bar';
+$config->save();
+echo config('foo.bar')->foo;
+echo '<br>That should be bar';
