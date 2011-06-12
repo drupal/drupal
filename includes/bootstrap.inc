@@ -1034,13 +1034,12 @@ function drupal_serve_page_from_cache(stdClass $cache) {
     }
   }
 
-  // If a cache is served from a HTTP proxy without hitting the web server,
-  // the boot and exit hooks cannot be fired, so only allow caching in
-  // proxies if boot hooks are disabled. If the client send a session cookie,
-  // do not bother caching the page in a public proxy, because the cached copy
-  // will only be served to that particular user due to Vary: Cookie, unless
-  // the Vary header has been replaced or unset in hook_boot() (see below).
-  $max_age = !variable_get('page_cache_invoke_hooks', TRUE) && (!isset($_COOKIE[session_name()]) || isset($hook_boot_headers['vary'])) ? variable_get('page_cache_maximum_age', 0) : 0;
+  // If the client sent a session cookie, a cached copy will only be served
+  // to that one particular client due to Vary: Cookie. Thus, do not set
+  // max-age > 0, allowing the page to be cached by external proxies, when a
+  // session cookie is present unless the Vary header has been replaced or
+  // unset in hook_boot().
+  $max_age = !isset($_COOKIE[session_name()]) || isset($hook_boot_headers['vary']) ? variable_get('page_cache_maximum_age', 0) : 0;
   $default_headers['Cache-Control'] = 'public, max-age=' . $max_age;
 
   // Entity tag should change if the output changes.
