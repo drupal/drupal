@@ -1,10 +1,22 @@
 <?php
 
 /**
- * Read a signed file and split the content into signature and data.
+ * Retrieve an iterable array which lists the children under a config 'branch'.
+ *
+ * Given the following configuration files:
+ *   core.entity.node_type.article.json.php
+ *   core.entity.node_type.page.json.php
+ *
+ * You can pass a prefix 'core.entity.node_type' and get back an array of the
+ * filenames that match. This allows you to iterate through all files in a 
+ * branch. Note that this will only work on the level above the tips, so
+ * a prefix of 'core.entity' would return an empty array.
+ *
+ * @param $prefix
+ *   The prefix of the files we are searching for.
  *
  * @return
- *   An array with "signature" and "data" keys.
+ *   An array of file names under a branch.
  */
 function config_get_signed_file_storage_names_with_prefix($prefix = '') {
   $files = glob(conf_path() . '/config/' . $prefix . '*.json.php');
@@ -14,6 +26,13 @@ function config_get_signed_file_storage_names_with_prefix($prefix = '') {
   return array_map($clean_name, $files);
 }
 
+/**
+ * Write our signing key out to the filesystem.
+ *
+ * @param $force_rekey
+ *   Boolean to specify whether we should force a new key to be generated
+ *   and written, even if a key file exists already.
+ */
 function config_write_signed_file_storage_key($force_rekey = FALSE) {
   $file_path = conf_path() . '/key.php';
   if (!file_exists($file_path) || $force_rekey) {
