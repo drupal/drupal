@@ -14,7 +14,6 @@
  *
  * @param $prefix
  *   The prefix of the files we are searching for.
- *
  * @return
  *   An array of file names under a branch.
  */
@@ -43,13 +42,24 @@ function config_write_signed_file_storage_key($force_rekey = FALSE) {
   }
 }
 
+/**
+ * Generate a hash of a config file's contents using our encryption key.
+ * 
+ * @param $data
+ *   The contents of a configuration file.
+ * @return
+ *   A hash of the data.
+ */
 function config_sign_data($data) {
   $file = file_get_contents(conf_path() . '/key.php');
   if ($file === FALSE) {
     throw new Exception('Key file not found.');
   }
+
+  // Strip the header from the file contents.
   $parts = explode(' ', $file);
   $key = $parts[2];
+  
   // SHA-512 is both secure and very fast on 64 bit CPUs.
   return hash_hmac('sha512', $data, $key);
 }
