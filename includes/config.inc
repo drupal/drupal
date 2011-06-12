@@ -1,7 +1,13 @@
 <?php
 
-function config_get_signed_file_storage_names_with_prefix($type, $prefix = '') {
-  $files = glob(conf_path() . '/config/' . $prefix . '*.' . $type . '.php');
+/**
+ * Read a signed file and split the content into signature and data.
+ *
+ * @return
+ *   An array with "signature" and "data" keys.
+ */
+function config_get_signed_file_storage_names_with_prefix($prefix = '') {
+  $files = glob(conf_path() . '/config/' . $prefix . '*.json.php');
   $clean_name = function ($value) {
     return basename($value, '.php');
   };
