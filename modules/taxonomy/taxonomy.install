@@ -12,6 +12,11 @@ function taxonomy_uninstall() {
   // Remove variables.
   variable_del('taxonomy_override_selector');
   variable_del('taxonomy_terms_per_page_admin');
+  // Remove taxonomy_term bundles.
+  $vocabularies = db_query("SELECT machine_name FROM {taxonomy_vocabulary}")->fetchCol();
+  foreach ($vocabularies as $vocabulary) {
+    field_attach_delete_bundle('taxonomy_term', $vocabulary);
+  }
 }
 
 /**
