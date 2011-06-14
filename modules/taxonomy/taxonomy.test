@@ -350,6 +350,40 @@ class TaxonomyVocabularyUnitTest extends TaxonomyWebTestCase {
     // Check that the field instance is still attached to the vocabulary.
     $this->assertTrue(field_info_instance('taxonomy_term', 'field_test', $new_name), t('The bundle name was updated correctly.'));
   }
+
+  /**
+   * Test uninstall and reinstall of the taxonomy module.
+   */
+  function testUninstallReinstall() {
+    // Fields and field instances attached to taxonomy term bundles should be
+    // removed when the module is uninstalled.
+    $this->field_name = drupal_strtolower($this->randomName() . '_field_name');
+    $this->field = array('field_name' => $this->field_name, 'type' => 'text', 'cardinality' => 4);
+    $this->field = field_create_field($this->field);
+    $this->field_id = $this->field['id'];
+    $this->instance = array(
+      'field_name' => $this->field_name,
+      'entity_type' => 'taxonomy_term',
+      'bundle' => $this->vocabulary->machine_name,
+      'label' => $this->randomName() . '_label',
+    );
+    field_create_instance($this->instance);
+
+    module_disable(array('taxonomy'));
+    require_once DRUPAL_ROOT . '/includes/install.inc';
+    drupal_uninstall_modules(array('taxonomy'));
+    module_enable(array('taxonomy'));
+
+    // Now create a vocabulary with the same name. All field instances
+    // connected to this vocabulary name should have been removed when the
+    // module was uninstalled. Creating a new field with the same name and
+    // an instance of this field on the same bundle name should be successful.
+    unset($this->vocabulary->vid);
+    taxonomy_vocabulary_save($this->vocabulary);
+    unset($this->field['id']);
+    field_create_field($this->field);
+    field_create_instance($this->instance);
+  }
 }
 
 /**

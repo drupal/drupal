@@ -1333,8 +1333,10 @@ function field_attach_rename_bundle($entity_type, $bundle_old, $bundle_new) {
  *   The bundle to delete.
  */
 function field_attach_delete_bundle($entity_type, $bundle) {
-  // First, delete the instances themseves.
-  $instances = field_info_instances($entity_type, $bundle);
+  // First, delete the instances themselves. field_read_instances() must be
+  // used here since field_info_instances() does not return instances for
+  // disabled entity types or bundles.
+  $instances = field_read_instances(array('entity_type' => $entity_type, 'bundle' => $bundle), array('include_inactive' => 1));
   foreach ($instances as $instance) {
     field_delete_instance($instance);
   }

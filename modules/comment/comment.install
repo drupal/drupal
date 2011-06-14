@@ -16,6 +16,7 @@ function comment_uninstall() {
   variable_del('comment_block_count');
   $node_types = array_keys(node_type_get_types());
   foreach ($node_types as $node_type) {
+    field_attach_delete_bundle('comment', 'comment_node_' . $node_type);
     variable_del('comment_' . $node_type);
     variable_del('comment_anonymous_' . $node_type);
     variable_del('comment_controls_' . $node_type);
