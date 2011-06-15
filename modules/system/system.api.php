@@ -3267,6 +3267,14 @@ function hook_update_last_removed() {
  * module's database tables are removed, allowing your module to query its own
  * tables during this routine.
  *
+ * When hook_uninstall() is called, your module will already be disabled, so
+ * its .module file will not be automatically included. If you need to call API
+ * functions from your .module file in this hook, use drupal_load() to make
+ * them available. (Keep this usage to a minimum, though, especially when
+ * calling API functions that invoke hooks, or API functions from modules
+ * listed as dependencies, since these may not be available or work as expected
+ * when the module is disabled.)
+ *
  * @see hook_install()
  * @see hook_schema()
  * @see hook_disable()

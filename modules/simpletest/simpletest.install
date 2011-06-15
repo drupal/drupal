@@ -167,7 +167,8 @@ function simpletest_schema() {
  * Implements hook_uninstall().
  */
 function simpletest_uninstall() {
-  simpletest_clean_environment();
+  drupal_load('module', 'simpletest');
+  simpletest_clean_database();
 
   // Remove settings variables.
   variable_del('simpletest_httpauth_method');

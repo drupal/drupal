@@ -32,6 +32,7 @@ function shortcut_install() {
  * Implements hook_uninstall().
  */
 function shortcut_uninstall() {
+  drupal_load('module', 'shortcut');
   // Delete the menu links associated with each shortcut set.
   foreach (shortcut_sets() as $shortcut_set) {
     menu_delete_links($shortcut_set->set_name);
