@@ -1,6 +1,6 @@
 name = Requirements 1 Test
 description = "Tests that a module is not installed when it fails hook_requirements('install')."
-package = Core
+package = Testing
 version = VERSION
 core = 7.x
 hidden = TRUE
