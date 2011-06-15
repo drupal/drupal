@@ -796,7 +796,7 @@ class ImageFieldDisplayTestCase extends ImageFieldTestCase {
     // that would be used on the image field.
     $this->assertNoPattern('<div class="(.*?)field-name-' . strtr($field_name, '_', '-') . '(.*?)">', t('No image displayed when no image is attached and no default image specified.'));
 
-    // Add a default image to the imagefield instance.
+    // Add a default image to the public imagefield instance.
     $images = $this->drupalGetTestFiles('image');
     $edit = array(
       'files[field_settings_default_image]' => drupal_realpath($images[0]->uri),
@@ -806,6 +806,7 @@ class ImageFieldDisplayTestCase extends ImageFieldTestCase {
     field_info_cache_clear();
     $field = field_info_field($field_name);
     $image = file_load($field['settings']['default_image']);
+    $this->assertTrue($image->status == FILE_STATUS_PERMANENT, t('The default image status is permanent.'));
     $default_output = theme('image', array('path' => $image->uri));
     $this->drupalGet('node/' . $node->nid);
     $this->assertRaw($default_output, t('Default image displayed when no user supplied image is present.'));
@@ -831,6 +832,25 @@ class ImageFieldDisplayTestCase extends ImageFieldTestCase {
     field_info_cache_clear();
     $field = field_info_field($field_name);
     $this->assertFalse($field['settings']['default_image'], t('Default image removed from field.'));
+    // Create an image field that uses the private:// scheme and test that the
+    // default image works as expected.
+    $private_field_name = strtolower($this->randomName());
+    $this->createImageField($private_field_name, 'article', array('uri_scheme' => 'private'));
+    // Add a default image to the new field.
+    $edit = array(
+      'files[field_settings_default_image]' => drupal_realpath($images[1]->uri),
+    );
+    $this->drupalPost('admin/structure/types/manage/article/fields/' . $private_field_name, $edit, t('Save settings'));
+    $private_field = field_info_field($private_field_name);
+    $image = file_load($private_field['settings']['default_image']);
+    $this->assertEqual('private', file_uri_scheme($image->uri), t('Default image uses private:// scheme.'));
+    $this->assertTrue($image->status == FILE_STATUS_PERMANENT, t('The default image status is permanent.'));
+    // Create a new node with no image attached and ensure that default private
+    // image is displayed.
+    $node = $this->drupalCreateNode(array('type' => 'article'));
+    $default_output = theme('image', array('path' => $image->uri));
+    $this->drupalGet('node/' . $node->nid);
+    $this->assertRaw($default_output, t('Default private image displayed when no user supplied image is present.'));
   }
 }
 
