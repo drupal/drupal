@@ -59,7 +59,7 @@ function dblog_overview() {
         format_date($dblog->timestamp, 'short'),
         theme('dblog_message', array('event' => $dblog, 'link' => TRUE)),
         theme('username', array('account' => $dblog)),
-        $dblog->link,
+        filter_xss($dblog->link),
       ),
       // Attributes for tr
       'class' => array(drupal_html_class('dblog-' . $dblog->type), $classes[$dblog->severity]),
