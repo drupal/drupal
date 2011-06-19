@@ -80,9 +80,19 @@ function theme_locale_languages_overview_form($variables) {
       if ($key == $default->language) {
         $form['enabled'][$key]['#attributes']['disabled'] = 'disabled';
       }
+
+      // Add invisible labels for the checkboxes and radio buttons in the table
+      // for accessibility. These changes are only required and valid when the
+      // form is themed as a table, so it would be wrong to perform them in the
+      // form constructor.
+      $title = drupal_render($form['name'][$key]);
+      $form['enabled'][$key]['#title'] = t('Enable !title', array('!title' => $title));
+      $form['enabled'][$key]['#title_display'] = 'invisible';
+      $form['site_default'][$key]['#title'] = t('Set !title as default', array('!title' => $title));
+      $form['site_default'][$key]['#title_display'] = 'invisible';
       $rows[] = array(
         'data' => array(
-          '<strong>' . drupal_render($form['name'][$key]) . '</strong>',
+          '<strong>' . $title . '</strong>',
           drupal_render($form['native'][$key]),
           check_plain($key),
           drupal_render($form['direction'][$key]),
@@ -556,20 +566,21 @@ function _locale_languages_configure_form_language_table(&$form, $type) {
 
     if (isset($types[$type])) {
       $table_form['#language_providers'][$id] = $provider;
+      $provider_name = check_plain($provider['name']);
 
       $table_form['weight'][$id] = array(
         '#type' => 'weight',
-        '#title' => t('Weight for @title', array('@title' => $provider['name'])),
+        '#title' => t('Weight for !title language detection method', array('!title' => drupal_strtolower($provider_name))),
         '#title_display' => 'invisible',
         '#default_value' => $weight,
         '#attributes' => array('class' => array("language-provider-weight-$type")),
       );
 
-      $table_form['title'][$id] = array('#markup' => check_plain($provider['name']));
+      $table_form['title'][$id] = array('#markup' => $provider_name);
 
       $table_form['enabled'][$id] = array(
         '#type' => 'checkbox',
-        '#title' => t('@title language provider', array('@title' => $provider['name'])),
+        '#title' => t('Enable !title language detection method', array('!title' => drupal_strtolower($provider_name))),
         '#title_display' => 'invisible',
         '#default_value' => $enabled,
       );
