@@ -508,6 +508,9 @@ function comment_get_recent($number = 10) {
     ->condition('c.status', COMMENT_PUBLISHED)
     ->condition('n.status', NODE_PUBLISHED)
     ->orderBy('c.created', 'DESC')
+    // Additionally order by cid to ensure that comments with the same timestamp
+    // are returned in the exact order posted.
+    ->orderBy('c.cid', 'DESC')
     ->range(0, $number)
     ->execute()
     ->fetchAll();
