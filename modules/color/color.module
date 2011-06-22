@@ -216,7 +216,7 @@ function color_scheme_form($complete_form, &$form_state, $theme) {
     if (isset($names[$name])) {
       $form['palette'][$name] = array(
         '#type' => 'textfield',
-        '#title' => $names[$name],
+        '#title' => check_plain($names[$name]),
         '#default_value' => $value,
         '#size' => 8,
       );
