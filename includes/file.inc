@@ -2152,8 +2152,7 @@ function drupal_unlink($uri, $context = NULL) {
  * @see http://drupal.org/node/515192
  *
  * @param $uri
- *   A string containing the URI to verify. If this value is omitted,
- *   Drupal's public files directory will be used [public://].
+ *   A string containing the URI to verify.
  *
  * @return
  *   The absolute pathname, or FALSE on failure.
