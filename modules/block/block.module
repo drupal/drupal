@@ -633,14 +633,14 @@ function block_theme_initialize($theme) {
  *   The name of a region.
  *
  * @return
- *   An array of block objects, indexed with <i>module</i>_<i>delta</i>.
- *   If you are displaying your blocks in one or two sidebars, you may check
- *   whether this array is empty to see how many columns are going to be
- *   displayed.
+ *   An array of block objects, indexed with the module name and block delta
+ *   concatenated with an underscore, thus: MODULE_DELTA. If you are displaying
+ *   your blocks in one or two sidebars, you may check whether this array is
+ *   empty to see how many columns are going to be displayed.
  *
  * @todo
  *   Now that the blocks table has a primary key, we should use that as the
- *   array key instead of <i>module</i>_<i>delta</i>.
+ *   array key instead of MODULE_DELTA.
  */
 function block_list($region) {
   $blocks = &drupal_static(__FUNCTION__);
