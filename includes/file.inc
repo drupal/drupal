@@ -737,8 +737,7 @@ function file_usage_delete(stdClass $file, $module, $type = NULL, $id = NULL, $c
  *   A file object.
  * @param $destination
  *   A string containing the destination that $source should be copied to.
- *   This must be a stream wrapper URI. If this value is omitted, Drupal's
- *   default files scheme will be used, usually "public://".
+ *   This must be a stream wrapper URI.
  * @param $replace
  *   Replace behavior when the destination file already exists:
  *   - FILE_EXISTS_REPLACE - Replace the existing file. If a managed file with
