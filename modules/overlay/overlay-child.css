@@ -49,6 +49,13 @@ html.js body {
   outline: 0;
 }
 
+.overlay #skip-link {
+  margin-top: -20px;
+}
+.overlay #skip-link a {
+  color: #fff; /* This is white to contrast with the dark background behind it. */
+}
+
 #overlay-close-wrapper {
   position: absolute;
   right: 0;
