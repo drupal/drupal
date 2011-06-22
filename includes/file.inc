@@ -1753,9 +1753,9 @@ function file_validate_image_resolution(stdClass $file, $maximum_dimensions = 0,
  * @param $data
  *   A string containing the contents of the file.
  * @param $destination
- *   A string containing the destination URI.
- *   This must be a stream wrapper URI. If this value is omitted, Drupal's
- *   default files scheme will be used, usually "public://".
+ *   A string containing the destination URI. This must be a stream wrapper URI.
+ *   If no value is provided, a randomized name will be generated and the file
+ *   will be saved using Drupal's default files scheme, usually "public://".
  * @param $replace
  *   Replace behavior when the destination file already exists:
  *   - FILE_EXISTS_REPLACE - Replace the existing file. If a managed file with
