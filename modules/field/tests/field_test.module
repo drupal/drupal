@@ -88,9 +88,12 @@ function field_test_field_test_op($entity_type, $entity, $field, $instance, $lan
 function field_test_field_test_op_multiple($entity_type, $entities, $field, $instances, $langcode, &$items) {
   $result = array();
   foreach ($entities as $id => $entity) {
-    if (isset($items[$id])) {
-      $result[$id] = array($langcode => hash('sha256', serialize(array($entity_type, $entity, $field['field_name'], $langcode, $items[$id]))));
-    }
+    // Entities, instances and items are assumed to be consistently grouped by
+    // language. To verify this we try to access all the passed data structures
+    // by entity id. If they are grouped correctly, one entity, one instance and
+    // one array of items should be available for each entity id.
+    $field_name = $instances[$id]['field_name'];
+    $result[$id] = array($langcode => hash('sha256', serialize(array($entity_type, $entity, $field_name, $langcode, $items[$id]))));
   }
   return $result;
 }

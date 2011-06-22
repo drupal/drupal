@@ -303,9 +303,6 @@ function _field_invoke_multiple($op, $entity_type, $entities, &$a = NULL, &$b = 
         if (!isset($fields[$field_id])) {
           $fields[$field_id] = $field;
         }
-        // Group the corresponding instances and entities.
-        $grouped_instances[$field_id][$id] = $instance;
-        $grouped_entities[$field_id][$id] = $entities[$id];
         // Extract the field values into a separate variable, easily accessed
         // by hook implementations.
         // Unless a language suggestion is provided we iterate on all the
@@ -315,6 +312,10 @@ function _field_invoke_multiple($op, $entity_type, $entities, &$a = NULL, &$b = 
         $languages = _field_language_suggestion($available_languages, $language, $field_name);
         foreach ($languages as $langcode) {
           $grouped_items[$field_id][$langcode][$id] = isset($entity->{$field_name}[$langcode]) ? $entity->{$field_name}[$langcode] : array();
+          // Group the instances and entities corresponding to the current
+          // field.
+          $grouped_instances[$field_id][$langcode][$id] = $instance;
+          $grouped_entities[$field_id][$langcode][$id] = $entities[$id];
         }
       }
     }
@@ -327,8 +328,10 @@ function _field_invoke_multiple($op, $entity_type, $entities, &$a = NULL, &$b = 
     $field_name = $field['field_name'];
     $function = $options['default'] ? 'field_default_' . $op : $field['module'] . '_field_' . $op;
     // Iterate over all the field translations.
-    foreach ($grouped_items[$field_id] as $langcode => $items) {
-      $results = $function($entity_type, $grouped_entities[$field_id], $field, $grouped_instances[$field_id], $langcode, $grouped_items[$field_id][$langcode], $a, $b);
+    foreach ($grouped_items[$field_id] as $langcode => &$items) {
+      $entities = $grouped_entities[$field_id][$langcode];
+      $instances = $grouped_instances[$field_id][$langcode];
+      $results = $function($entity_type, $entities, $field, $instances, $langcode, $items, $a, $b);
       if (isset($results)) {
         // Collect results by entity.
         // For hooks with array results, we merge results together.
@@ -346,9 +349,9 @@ function _field_invoke_multiple($op, $entity_type, $entities, &$a = NULL, &$b = 
 
     // Populate field values back in the entities, but avoid replacing missing
     // fields with an empty array (those are not equivalent on update).
-    foreach ($grouped_entities[$field_id] as $id => $entity) {
-      foreach ($grouped_items[$field_id] as $langcode => $items) {
-        if (isset($grouped_items[$field_id][$langcode][$id]) && ($grouped_items[$field_id][$langcode][$id] !== array() || isset($entity->{$field_name}[$langcode]))) {
+    foreach ($grouped_entities[$field_id] as $langcode => $entities) {
+      foreach ($entities as $id => $entity) {
+        if ($grouped_items[$field_id][$langcode][$id] !== array() || isset($entity->{$field_name}[$langcode])) {
           $entity->{$field_name}[$langcode] = $grouped_items[$field_id][$langcode][$id];
         }
       }
