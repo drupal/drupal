@@ -445,7 +445,7 @@ function field_associate_fields($module) {
  * Helper function to get the default value for a field on an entity.
  *
  * @param $entity_type
- *   The type of $entity; e.g. 'node' or 'user'.
+ *   The type of $entity; e.g., 'node' or 'user'.
  * @param $entity
  *   The entity for the operation.
  * @param $field
@@ -569,7 +569,7 @@ function _field_sort_items_value_helper($a, $b) {
  * @endcode
  *
  * @param $entity_type
- *   The type of $entity; e.g. 'node' or 'user'.
+ *   The type of $entity; e.g., 'node' or 'user'.
  * @param $bundle
  *   The bundle name.
  * @param $settings
@@ -674,7 +674,7 @@ function field_get_display($instance, $view_mode, $entity) {
  * Returns the display settings to use for pseudo-fields in a given view mode.
  *
  * @param $entity_type
- *   The type of $entity; e.g. 'node' or 'user'.
+ *   The type of $entity; e.g., 'node' or 'user'.
  * @param $bundle
  *   The bundle name.
  * @param $view_mode
@@ -773,7 +773,7 @@ function _field_filter_xss_display_allowed_tags() {
  * Returns a renderable array for a single field value.
  *
  * @param $entity_type
- *   The type of $entity; e.g. 'node' or 'user'.
+ *   The type of $entity; e.g., 'node' or 'user'.
  * @param $entity
  *   The entity containing the field to display. Must at least contain the id
  *   key and the field data to display.
@@ -832,7 +832,7 @@ function field_view_value($entity_type, $entity, $field_name, $item, $display = 
  * field access permissions.
  *
  * @param $entity_type
- *   The type of $entity; e.g. 'node' or 'user'.
+ *   The type of $entity; e.g., 'node' or 'user'.
  * @param $entity
  *   The entity containing the field to display. Must at least contain the id
  *   key and the field data to display.
@@ -921,7 +921,7 @@ function field_view_field($entity_type, $entity, $field_name, $display = array()
  * Returns the field items in the language they currently would be displayed.
  *
  * @param $entity_type
- *   The type of $entity.
+ *   The type of $entity; e.g., 'node' or 'user'.
  * @param $entity
  *   The entity containing the data to be displayed.
  * @param $field_name
@@ -965,7 +965,7 @@ function field_has_data($field) {
  * @param $field
  *   The field on which the operation is to be performed.
  * @param $entity_type
- *   The type of $entity; e.g. 'node' or 'user'.
+ *   The type of $entity; e.g., 'node' or 'user'.
  * @param $entity
  *   (optional) The entity for the operation.
  * @param $account
@@ -995,7 +995,7 @@ function field_access($op, $field, $entity_type, $entity = NULL, $account = NULL
  * Helper function to extract the bundle name of from a bundle object.
  *
  * @param $entity_type
- *   The type of $entity; e.g. 'node' or 'user'.
+ *   The type of $entity; e.g., 'node' or 'user'.
  * @param $bundle
  *   The bundle object (or string if bundles for this entity type do not exist
  *   as standalone objects).
