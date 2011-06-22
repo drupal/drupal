@@ -1315,7 +1315,8 @@ class DrupalWebTestCase extends DrupalTestCase {
       $modules = $modules[0];
     }
     if ($modules) {
-      module_enable($modules, TRUE);
+      $success = module_enable($modules, TRUE);
+      $this->assertTrue($success, t('Enabled modules: %modules', array('%modules' => implode(', ', $modules))));
     }
 
     // Run the profile tasks.
