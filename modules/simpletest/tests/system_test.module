@@ -28,6 +28,13 @@ function system_test_menu() {
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
+  $items['system-test/multiple-redirects/%'] = array(
+    'title' => 'Redirect',
+    'page callback' => 'system_test_multiple_redirects',
+    'page arguments' => array(2),
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
   $items['system-test/set-header'] = array(
     'page callback' => 'system_test_set_header',
     'access arguments' => array('access content'),
@@ -117,6 +124,30 @@ function system_test_redirect($code) {
   if ($code != 200) {
     // Header names are case-insensitive.
     header("locaTION: " . url('system-test/redirect/200', array('absolute' => TRUE)), TRUE, $code);
+    exit;
+  }
+  return '';
+}
+
+/**
+ * Menu callback; sends a redirect header to itself until $count argument is 0.
+ *
+ * Emulates the variable number of redirects (given by initial $count argument)
+ * to the final destination URL by continuous sending of 301 HTTP redirect
+ * headers to itself together with decrementing the $count parameter until the
+ * $count parameter reaches 0. After that it returns an empty string to render
+ * the final destination page.
+ *
+ * @param $count
+ *   The count of redirects left until the final destination page.
+ *
+ * @returns
+ *   The location redirect if the $count > 0, otherwise an empty string.
+ */
+function system_test_multiple_redirects($count) {
+  $count = (int) $count;
+  if ($count > 0) {
+    header("location: " . url('system-test/multiple-redirects/' . --$count, array('absolute' => TRUE)), TRUE, 301);
     exit;
   }
   return '';
