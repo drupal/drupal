@@ -1298,7 +1298,7 @@ function hook_menu_link_insert($link) {
  */
 function hook_menu_link_update($link) {
   // If the parent menu has changed, update our record.
-  $menu_name = db_result(db_query("SELECT mlid, menu_name, status FROM {menu_example} WHERE mlid = :mlid", array(':mlid' => $link['mlid'])));
+  $menu_name = db_query("SELECT menu_name FROM {menu_example} WHERE mlid = :mlid", array(':mlid' => $link['mlid']))->fetchField();
   if ($menu_name != $link['menu_name']) {
     db_update('menu_example')
       ->fields(array('menu_name' => $link['menu_name']))
