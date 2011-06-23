@@ -1821,10 +1821,9 @@ function file_save_data($data, $destination = NULL, $replace = FILE_EXISTS_RENAM
  * @param $data
  *   A string containing the contents of the file.
  * @param $destination
- *   A string containing the destination location.
- *   This must be a stream wrapper URI.  If no value is provided, a
- *   randomized name will be generated and the file is saved using Drupal's
- *   default files scheme, usually "public://".
+ *   A string containing the destination location. This must be a stream wrapper
+ *   URI. If no value is provided, a randomized name will be generated and the
+ *   file will be saved using Drupal's default files scheme, usually "public://".
  * @param $replace
  *   Replace behavior when the destination file already exists:
  *   - FILE_EXISTS_REPLACE - Replace the existing file.
