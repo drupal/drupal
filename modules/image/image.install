@@ -264,7 +264,7 @@ function image_requirements($phase) {
         $requirements['image_gd']['severity'] = REQUIREMENT_OK;
       }
       else {
-        $requirements['image_gd']['severity'] = REQUIREMENT_ERROR;
+        $requirements['image_gd']['severity'] = REQUIREMENT_WARNING;
         $requirements['image_gd']['description'] = t('The GD Library for PHP is enabled, but was compiled without support for functions used by the rotate and desaturate effects. It was probably compiled using the official GD libraries from http://www.libgd.org instead of the GD library bundled with PHP. You should recompile PHP --with-gd using the bundled GD library. See <a href="http://www.php.net/manual/book.image.php">the PHP manual</a>.');
       }
     }
