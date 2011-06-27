@@ -1369,7 +1369,7 @@ function comment_node_search_result($node) {
     // Do not make a string if comments are closed and there are currently
     // zero comments.
     if ($node->comment != COMMENT_NODE_CLOSED || $comments > 0) {
-      return format_plural($comments, '1 comment', '@count comments');
+      return array('comment' => format_plural($comments, '1 comment', '@count comments'));
     }
   }
 }
