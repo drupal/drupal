@@ -2018,6 +2018,7 @@ function system_block_info() {
   $blocks['help'] = array(
     'info' => t('System help'),
     'weight' => '5',
+    'cache' => DRUPAL_NO_CACHE,
   );
   // System-defined menu blocks.
   foreach (menu_list_system_menus() as $menu_name => $title) {
