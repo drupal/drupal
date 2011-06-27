@@ -273,16 +273,7 @@ abstract class DatabaseConnection extends PDO {
   protected $schema = NULL;
 
   /**
-   * The default prefix used by this database connection.
-   *
-   * Separated from the other prefixes for performance reasons.
-   *
-   * @var string
-   */
-  protected $defaultPrefix = '';
-
-  /**
-   * The non-default prefixes used by this database connection.
+   * The prefixes used by this database connection.
    *
    * @var array
    */
@@ -389,7 +380,7 @@ abstract class DatabaseConnection extends PDO {
   }
 
   /**
-   * Preprocess the prefixes used by this database connection.
+   * Set the list of prefixes used by this database connection.
    *
    * @param $prefix
    *   The prefixes, in any of the multiple forms documented in
@@ -397,13 +388,10 @@ abstract class DatabaseConnection extends PDO {
    */
   protected function setPrefix($prefix) {
     if (is_array($prefix)) {
-      $this->defaultPrefix = isset($prefix['default']) ? $prefix['default'] : '';
-      unset($prefix['default']);
-      $this->prefixes = $prefix;
+      $this->prefixes = $prefix + array('default' => '');
     }
     else {
-      $this->defaultPrefix = $prefix;
-      $this->prefixes = array();
+      $this->prefixes = array('default' => $prefix);
     }
 
     // Set up variables for use in prefixTables(). Replace table-specific
@@ -411,12 +399,14 @@ abstract class DatabaseConnection extends PDO {
     $this->prefixSearch = array();
     $this->prefixReplace = array();
     foreach ($this->prefixes as $key => $val) {
-      $this->prefixSearch[] = '{' . $key . '}';
-      $this->prefixReplace[] = $val . $key;
+      if ($key != 'default') {
+        $this->prefixSearch[] = '{' . $key . '}';
+        $this->prefixReplace[] = $val . $key;
+      }
     }
     // Then replace remaining tables with the default prefix.
     $this->prefixSearch[] = '{';
-    $this->prefixReplace[] = $this->defaultPrefix;
+    $this->prefixReplace[] = $this->prefixes['default'];
     $this->prefixSearch[] = '}';
     $this->prefixReplace[] = '';
   }
@@ -450,7 +440,7 @@ abstract class DatabaseConnection extends PDO {
       return $this->prefixes[$table];
     }
     else {
-      return $this->defaultPrefix;
+      return $this->prefixes['default'];
     }
   }
 

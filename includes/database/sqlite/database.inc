@@ -71,12 +71,8 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
     ));
 
     // Attach one database for each registered prefix.
-    $prefixes = &$this->prefixes;
-    if (!empty($this->defaultPrefix)) {
-      // Add in the default prefix, which is also attached.
-      $prefixes[] = &$this->defaultPrefix;
-    }
-    foreach ($this->prefixes as $table => &$prefix) {
+    $prefixes = $this->prefixes;
+    foreach ($prefixes as $table => &$prefix) {
       // Empty prefix means query the main database -- no need to attach anything.
       if (!empty($prefix)) {
         // Only attach the database once.
@@ -90,6 +86,8 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
         $prefix .= '.';
       }
     }
+    // Regenerate the prefixes replacement table.
+    $this->setPrefix($prefixes);
 
     // Detect support for SAVEPOINT.
     $version = $this->query('SELECT sqlite_version()')->fetchField();
@@ -240,7 +238,9 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
     // Generate a new temporary table name and protect it from prefixing.
     // SQLite requires that temporary tables to be non-qualified.
     $tablename = $this->generateTemporaryTableName();
-    $this->prefixes[$tablename] = '';
+    $prefixes = $this->prefixes;
+    $prefixes[$tablename] = '';
+    $this->setPrefix($prefixes);
 
     $this->query(preg_replace('/^SELECT/i', 'CREATE TEMPORARY TABLE ' . $tablename . ' AS SELECT', $query), $args, $options);
     return $tablename;
