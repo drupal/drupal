@@ -2266,7 +2266,18 @@ function user_pass_reset_url($account) {
 }
 
 /**
- * Generate a URL to confirm an account cancellation request.
+ * Generates a URL to confirm an account cancellation request.
+ *
+ * @param object $account
+ *   The user account object, which must contain at least the following
+ *   properties:
+ *   - uid: The user uid number.
+ *   - pass: The hashed user password string.
+ *   - login: The user login name.
+ *
+ * @return
+ *   A unique URL that may be used to confirm the cancellation of the user
+ *   account.
  *
  * @see user_mail_tokens()
  * @see user_cancel_confirm()
