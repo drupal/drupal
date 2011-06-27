@@ -379,9 +379,21 @@ function number_field_widget_validate($element, &$form_state) {
       form_error($element, $message);
     }
     else {
-      // Substitute the decimal separator,
       if ($type == 'decimal' || $type == 'float') {
-        $value = strtr($value, $field['settings']['decimal_separator'], '.');
+        // Verify that only one decimal separator exists in the field.
+        if (substr_count($value, $field['settings']['decimal_separator']) > 1) {
+          $message = t('%field: There should only be one decimal separator (@separator).',
+            array(
+              '%field' => t($instance['label']),
+              '@separator' => $field['settings']['decimal_separator'],
+            )
+          );
+          form_error($element, $message);
+        }
+        else {
+          // Substitute the decimal separator; things should be fine.
+          $value = strtr($value, $field['settings']['decimal_separator'], '.');
+        }
       }
       form_set_value($element, $value, $form_state);
     }
