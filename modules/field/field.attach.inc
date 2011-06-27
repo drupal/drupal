@@ -43,7 +43,7 @@ class FieldValidationException extends FieldException {
  * such as a cloud-based database.
  *
  * Each field defines which storage backend it uses. The Drupal system variable
- * 'field_default_storage' identifies the storage backend used by default.
+ * 'field_storage_default' identifies the storage backend used by default.
  */
 
 /**
