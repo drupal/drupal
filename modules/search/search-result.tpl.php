@@ -31,8 +31,6 @@
  * - $info_split['date']: Last update of the node. Short formatted.
  * - $info_split['comment']: Number of comments output as "% comments", %
  *   being the count. Depends on comment.module.
- * - $info_split['upload']: Number of attachments output as "% attachments", %
- *   being the count. Depends on upload.module.
  *
  * Other variables:
  * - $classes_array: Array of HTML class attribute values. It is flattened

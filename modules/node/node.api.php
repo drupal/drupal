@@ -642,14 +642,20 @@ function hook_node_prepare($node) {
  * @param $node
  *   The node being displayed in a search result.
  *
- * @return
- *   Extra information to be displayed with search result.
+ * @return array
+ *   Extra information to be displayed with search result. This information
+ *   should be presented as an associative array. It will be concatenated
+ *   with the post information (last updated, author) in the default search
+ *   result theming.
+ *
+ * @see template_preprocess_search_result()
+ * @see search-result.tpl.php
  *
  * @ingroup node_api_hooks
  */
 function hook_node_search_result($node) {
   $comments = db_query('SELECT comment_count FROM {node_comment_statistics} WHERE nid = :nid', array('nid' => $node->nid))->fetchField();
-  return format_plural($comments, '1 comment', '@count comments');
+  return array('comment' => format_plural($comments, '1 comment', '@count comments'));
 }
 
 /**
