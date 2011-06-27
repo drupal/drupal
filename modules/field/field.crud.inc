@@ -38,7 +38,7 @@
  *   - settings: each omitted setting is given the default value defined in
  *     hook_field_info().
  *   - storage:
- *     - type: the storage backend specified in the 'field_default_storage'
+ *     - type: the storage backend specified in the 'field_storage_default'
  *       system variable.
  *     - settings: each omitted setting is given the default value specified in
  *       hook_field_storage_info().
