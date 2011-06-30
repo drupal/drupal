@@ -209,7 +209,7 @@ function taxonomy_form_vocabulary_validate($form, &$form_state) {
  * @see taxonomy_form_vocabulary_validate()
  */
 function taxonomy_form_vocabulary_submit($form, &$form_state) {
-  if ($form_state['clicked_button']['#value'] == t('Delete')) {
+  if ($form_state['triggering_element']['#value'] == t('Delete')) {
     // Rebuild the form to confirm vocabulary deletion.
     $form_state['rebuild'] = TRUE;
     $form_state['confirm_delete'] = TRUE;
@@ -434,7 +434,7 @@ function taxonomy_overview_terms($form, &$form_state, $vocabulary) {
  * @see taxonomy_overview_terms()
  */
 function taxonomy_overview_terms_submit($form, &$form_state) {
-  if ($form_state['clicked_button']['#value'] == t('Reset to alphabetical')) {
+  if ($form_state['triggering_element']['#value'] == t('Reset to alphabetical')) {
     // Execute the reset action.
     if ($form_state['values']['reset_alphabetical'] === TRUE) {
       return taxonomy_vocabulary_confirm_reset_alphabetical_submit($form, $form_state);
@@ -801,7 +801,7 @@ function taxonomy_form_term_validate($form, &$form_state) {
  * @see taxonomy_form_term()
  */
 function taxonomy_form_term_submit($form, &$form_state) {
-  if ($form_state['clicked_button']['#value'] == t('Delete')) {
+  if ($form_state['triggering_element']['#value'] == t('Delete')) {
     // Execute the term deletion.
     if ($form_state['values']['delete'] === TRUE) {
       return taxonomy_term_confirm_delete_submit($form, $form_state);
@@ -812,7 +812,7 @@ function taxonomy_form_term_submit($form, &$form_state) {
     return;
   }
   // Rebuild the form to confirm enabling multiple parents.
-  elseif ($form_state['clicked_button']['#value'] == t('Save') && count($form_state['values']['parent']) > 1 && $form['#vocabulary']->hierarchy < 2) {
+  elseif ($form_state['triggering_element']['#value'] == t('Save') && count($form_state['values']['parent']) > 1 && $form['#vocabulary']->hierarchy < 2) {
     $form_state['rebuild'] = TRUE;
     $form_state['confirm_parents'] = TRUE;
     return;

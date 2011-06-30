@@ -533,7 +533,7 @@ function file_managed_file_validate(&$element, &$form_state) {
   // If referencing an existing file, only allow if there are existing
   // references. This prevents unmanaged files from being deleted if this
   // item were to be deleted.
-  $clicked_button = end($form_state['clicked_button']['#parents']);
+  $clicked_button = end($form_state['triggering_element']['#parents']);
   if ($clicked_button != 'remove_button' && !empty($element['fid']['#value'])) {
     if ($file = file_load($element['fid']['#value'])) {
       if ($file->status == FILE_STATUS_PERMANENT) {

@@ -143,7 +143,7 @@ function search_admin_settings($form) {
  */
 function search_admin_settings_validate($form, &$form_state) {
   // Check whether we selected a valid default.
-  if ($form_state['clicked_button']['#value'] != t('Reset to defaults')) {
+  if ($form_state['triggering_element']['#value'] != t('Reset to defaults')) {
     $new_modules = array_filter($form_state['values']['search_active_modules']);
     $default = $form_state['values']['search_default_module'];
     if (!in_array($default, $new_modules, TRUE)) {
@@ -164,7 +164,7 @@ function search_admin_settings_submit($form, &$form_state) {
   }
   $current_modules = variable_get('search_active_modules', array('node', 'user'));
   // Check whether we are resetting the values.
-  if ($form_state['clicked_button']['#value'] == t('Reset to defaults')) {
+  if ($form_state['triggering_element']['#value'] == t('Reset to defaults')) {
     $new_modules = array('node', 'user');
   }
   else {

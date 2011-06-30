@@ -373,7 +373,7 @@ function field_default_form_errors($entity_type, $entity, $field, $instance, $la
  * to return just the changed part of the form.
  */
 function field_add_more_submit($form, &$form_state) {
-  $button = $form_state['clicked_button'];
+  $button = $form_state['triggering_element'];
 
   // Go one level up in the form, to the widgets container.
   $element = drupal_array_get_nested_value($form, array_slice($button['#array_parents'], 0, -1));
@@ -398,7 +398,7 @@ function field_add_more_submit($form, &$form_state) {
  * @see field_add_more_submit()
  */
 function field_add_more_js($form, $form_state) {
-  $button = $form_state['clicked_button'];
+  $button = $form_state['triggering_element'];
 
   // Go one level up in the form, to the widgets container.
   $element = drupal_array_get_nested_value($form, array_slice($button['#array_parents'], 0, -1));
