@@ -358,7 +358,7 @@ function field_ui_form_node_type_form_alter(&$form, $form_state) {
  * Redirect to manage fields form.
  */
 function field_ui_form_node_type_form_submit($form, &$form_state) {
-  if ($form_state['clicked_button']['#parents'][0] === 'save_continue') {
+  if ($form_state['triggering_element']['#parents'][0] === 'save_continue') {
     $form_state['redirect'] = _field_ui_bundle_admin_path('node', $form_state['values']['type']) .'/fields';
   }
 }

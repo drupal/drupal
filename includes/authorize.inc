@@ -193,7 +193,7 @@ function _authorize_filetransfer_connection_settings_set_defaults(&$element, $ke
 function authorize_filetransfer_form_validate($form, &$form_state) {
   // Only validate the form if we have collected all of the user input and are
   // ready to proceed with updating or installing.
-  if ($form_state['clicked_button']['#name'] != 'process_updates') {
+  if ($form_state['triggering_element']['#name'] != 'process_updates') {
     return;
   }
 
@@ -224,7 +224,7 @@ function authorize_filetransfer_form_validate($form, &$form_state) {
  */
 function authorize_filetransfer_form_submit($form, &$form_state) {
   global $base_url;
-  switch ($form_state['clicked_button']['#name']) {
+  switch ($form_state['triggering_element']['#name']) {
     case 'process_updates':
 
       // Save the connection settings to the DB.
