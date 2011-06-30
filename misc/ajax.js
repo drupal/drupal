@@ -182,9 +182,16 @@ Drupal.ajax = function (base, element, element_settings) {
   // can be triggered through keyboard input as well as e.g. a mousedown
   // action.
   if (element_settings.keypress) {
-    $(element_settings.element).keypress(function (event) {
+    $(ajax.element).keypress(function (event) {
       return ajax.keypressResponse(this, event);
     });
+  }
+
+  // If necessary, prevent the browser default action of an additional event.
+  // For example, prevent the browser default action of a click, even if the
+  // AJAX behavior binds to mousedown.
+  if (element_settings.prevent) {
+    $(ajax.element).bind(element_settings.prevent, false);
   }
 };
 
