@@ -12,8 +12,10 @@
  */
 function node_access_test_node_grants($account, $op) {
   $grants = array();
+  // First grant a grant to the author for own content.
+  $grants['node_access_test_author'] = array($account->uid);
   if ($op == 'view' && user_access('node test view', $account)) {
-    $grants['node_access_test'] = array(888);
+    $grants['node_access_test'] = array(8888);
   }
   if ($op == 'view' && $account->uid == variable_get('node_test_node_access_all_uid', 0)) {
     $grants['node_access_all'] = array(0);
@@ -26,14 +28,27 @@ function node_access_test_node_grants($account, $op) {
  */
 function node_access_test_node_access_records($node) {
   $grants = array();
-  $grants[] = array(
-    'realm' => 'node_access_test',
-    'gid' => 888,
-    'grant_view' => 1,
-    'grant_update' => 0,
-    'grant_delete' => 0,
-    'priority' => 999,
+  // For NodeAccessBaseTableTestCase, only set records for private nodes.
+  if (!variable_get('node_access_test_private') || $node->private) {
+    $grants[] = array(
+      'realm' => 'node_access_test',
+      'gid' => 8888,
+      'grant_view' => 1,
+      'grant_update' => 0,
+      'grant_delete' => 0,
+      'priority' => 0,
     );
+    // For the author realm, the GID is equivalent to a UID, which
+    // means there are many many groups of just 1 user.
+    $grants[] = array(
+      'realm' => 'node_access_test_author',
+      'gid' => $node->uid,
+      'grant_view' => 1,
+      'grant_update' => 1,
+      'grant_delete' => 1,
+      'priority' => 0,
+    );
+  }
 
   return $grants;
 }
@@ -141,4 +156,63 @@ function node_access_entity_test_page() {
   }
 
   return $output;
+}
+
+/**
+ * Implements hook_form_node_form_alter().
+ */
+function node_access_test_form_node_form_alter(&$form, $form_state) {
+  // Only show this checkbox for NodeAccessBaseTableTestCase.
+  if (variable_get('node_access_test_private')) {
+    $form['private'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Private'),
+      '#description' => t('Check here if this content should be set private and only shown to privileged users.'),
+      '#default_value' => isset($form['#node']->private) ? $form['#node']->private : FALSE,
+    );
+  }
+}
+
+/**
+ * Implements hook_node_load().
+ */
+function node_access_test_node_load($nodes, $types) {
+  $result = db_query('SELECT nid, private FROM {node_access_test} WHERE nid IN(:nids)', array(':nids' => array_keys($nodes)));
+  foreach ($result as $record) {
+    $nodes[$record->nid]->private = $record->private;
+  }
+}
+
+/**
+ * Implements hook_node_delete().
+ */
+
+function node_access_test_node_delete($node) {
+  db_delete('node_access_test')->condition('nid', $node->nid)->execute();
+}
+
+/**
+ * Implements hook_node_insert().
+ */
+function node_access_test_node_insert($node) {
+  _node_access_test_node_write($node);
+}
+
+/**
+ * Implements hook_nodeapi_update().
+ */
+function node_access_test_node_update($node) {
+  _node_access_test_node_write($node);
+}
+
+/**
+ * Helper for node insert/update.
+ */
+function _node_access_test_node_write($node) {
+  if (isset($node->private)) {
+    db_merge('node_access_test')
+      ->key(array('nid' => $node->nid))
+      ->fields(array('private' => (int) $node->private))
+      ->execute();
+  }
 }
