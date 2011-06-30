@@ -196,9 +196,12 @@ class FileTestCase extends DrupalWebTestCase {
    * @return
    *   File object.
    */
-  function createFile($filepath = NULL, $contents = NULL, $scheme = 'public') {
+  function createFile($filepath = NULL, $contents = NULL, $scheme = NULL) {
     if (!isset($filepath)) {
       $filepath = $this->randomName();
+    }
+    if (!isset($scheme)) {
+      $scheme = file_default_scheme();
     }
     $filepath = $scheme . '://' . $filepath;
 
@@ -427,7 +430,7 @@ class FileValidatorTest extends DrupalWebTestCase {
     // Maximum size.
     if (image_get_toolkit()) {
       // Copy the image so that the original doesn't get resized.
-      copy(drupal_realpath('misc/druplicon.png'), 'temporary://druplicon.png');
+      copy('misc/druplicon.png', 'temporary://druplicon.png');
       $this->image->uri = 'temporary://druplicon.png';
 
       $errors = file_validate_image_resolution($this->image, '10x5');
@@ -437,7 +440,7 @@ class FileValidatorTest extends DrupalWebTestCase {
       $this->assertTrue($info['width'] <= 10, t('Image scaled to correct width.'), 'File');
       $this->assertTrue($info['height'] <= 5, t('Image scaled to correct height.'), 'File');
 
-      drupal_unlink(drupal_realpath('temporary://druplicon.png'));
+      drupal_unlink('temporary://druplicon.png');
     }
     else {
       // TODO: should check that the error is returned if no toolkit is available.
@@ -531,14 +534,30 @@ class FileUnmanagedSaveDataTest extends FileTestCase {
     $filepath = file_unmanaged_save_data($contents);
     $this->assertTrue($filepath, t('Unnamed file saved correctly.'));
     $this->assertEqual(file_uri_scheme($filepath), file_default_scheme(), t("File was placed in Drupal's files directory."));
-    $this->assertEqual($contents, file_get_contents(drupal_realpath($filepath)), t('Contents of the file are correct.'));
+    $this->assertEqual($contents, file_get_contents($filepath), t('Contents of the file are correct.'));
 
     // Provide a filename.
     $filepath = file_unmanaged_save_data($contents, 'public://asdf.txt', FILE_EXISTS_REPLACE);
     $this->assertTrue($filepath, t('Unnamed file saved correctly.'));
     $this->assertEqual('asdf.txt', basename($filepath), t('File was named correctly.'));
-    $this->assertEqual($contents, file_get_contents(drupal_realpath($filepath)), t('Contents of the file are correct.'));
+    $this->assertEqual($contents, file_get_contents($filepath), t('Contents of the file are correct.'));
     $this->assertFilePermissions($filepath, variable_get('file_chmod_file', 0664));
+  }
+}
+
+/**
+ *  Tests the file_unmanaged_save_data() function on remote filesystems.
+ */
+class RemoteFileUnmanagedSaveDataTest extends FileUnmanagedSaveDataTest {
+  public static function getInfo() {
+    $info = parent::getInfo();
+    $info['group'] = 'File API (remote)';
+    return $info;
+  }
+
+  function setUp() {
+    parent::setUp('file_test');
+    variable_set('file_default_scheme', 'dummy-remote');
   }
 }
 
@@ -863,6 +882,22 @@ class FileSaveUploadTest extends FileHookTestCase {
 }
 
 /**
+ * Test the file_save_upload() function on remote filesystems.
+ */
+class RemoteFileSaveUploadTest extends FileSaveUploadTest {
+  public static function getInfo() {
+    $info = parent::getInfo();
+    $info['group'] = 'File API (remote)';
+    return $info;
+  }
+
+  function setUp() {
+    parent::setUp('file_test');
+    variable_set('file_default_scheme', 'dummy-remote');
+  }
+}
+
+/**
  * Directory related tests.
  */
 class FileDirectoryTest extends FileTestCase {
@@ -879,7 +914,7 @@ class FileDirectoryTest extends FileTestCase {
    */
   function testFileCheckDirectoryHandling() {
     // A directory to operate on.
-    $directory = file_stream_wrapper_get_instance_by_scheme(file_default_scheme())->getDirectoryPath() . '/' . $this->randomName() . '/' . $this->randomName();
+    $directory = file_default_scheme() . '://' . $this->randomName() . '/' . $this->randomName();
     $this->assertFalse(is_dir($directory), t('Directory does not exist prior to testing.'));
 
     // Non-existent directory.
@@ -982,6 +1017,22 @@ class FileDirectoryTest extends FileTestCase {
     $this->assertEqual(empty($tmp_directory), FALSE, t('file_directory_temp() returned a non-empty value.'));
     $setting = variable_get('file_temporary_path', '');
     $this->assertEqual($setting, $tmp_directory, t("The 'file_temporary_path' variable has the same value that file_directory_temp() returned."));
+  }
+}
+
+/**
+ * Directory related tests.
+ */
+class RemoteFileDirectoryTest extends FileDirectoryTest {
+  public static function getInfo() {
+    $info = parent::getInfo();
+    $info['group'] = 'File API (remote)';
+    return $info;
+  }
+
+  function setUp() {
+    parent::setUp('file_test');
+    variable_set('file_default_scheme', 'dummy-remote');
   }
 }
 
@@ -1114,6 +1165,21 @@ class FileScanDirectoryTest extends FileTestCase {
   }
 }
 
+/**
+ * Tests the file_scan_directory() function on remote filesystems.
+ */
+class RemoteFileScanDirectoryTest extends FileScanDirectoryTest {
+  public static function getInfo() {
+    $info = parent::getInfo();
+    $info['group'] = 'File API (remote)';
+    return $info;
+  }
+
+  function setUp() {
+    parent::setUp('file_test');
+    variable_set('file_default_scheme', 'dummy-remote');
+  }
+}
 
 /**
  * Deletion related tests.
@@ -1160,6 +1226,21 @@ class FileUnmanagedDeleteTest extends FileTestCase {
   }
 }
 
+/**
+ * Deletion related tests on remote filesystems.
+ */
+class RemoteFileUnmanagedDeleteTest extends FileUnmanagedDeleteTest {
+  public static function getInfo() {
+    $info = parent::getInfo();
+    $info['group'] = 'File API (remote)';
+    return $info;
+  }
+
+  function setUp() {
+    parent::setUp('file_test');
+    variable_set('file_default_scheme', 'dummy-remote');
+  }
+}
 
 /**
  * Deletion related tests.
@@ -1237,6 +1318,21 @@ class FileUnmanagedDeleteRecursiveTest extends FileTestCase {
   }
 }
 
+/**
+ * Deletion related tests on remote filesystems.
+ */
+class RemoteFileUnmanagedDeleteRecursiveTest extends FileUnmanagedDeleteRecursiveTest {
+  public static function getInfo() {
+    $info = parent::getInfo();
+    $info['group'] = 'File API (remote)';
+    return $info;
+  }
+
+  function setUp() {
+    parent::setUp('file_test');
+    variable_set('file_default_scheme', 'dummy-remote');
+  }
+}
 
 /**
  * Unmanaged move related tests.
@@ -1310,6 +1406,21 @@ class FileUnmanagedMoveTest extends FileTestCase {
   }
 }
 
+/**
+ * Unmanaged move related tests on remote filesystems.
+ */
+class RemoteFileUnmanagedMoveTest extends FileUnmanagedMoveTest {
+  public static function getInfo() {
+    $info = parent::getInfo();
+    $info['group'] = 'File API (remote)';
+    return $info;
+  }
+
+  function setUp() {
+    parent::setUp('file_test');
+    variable_set('file_default_scheme', 'dummy-remote');
+  }
+}
 
 /**
  * Unmanaged copy related tests.
@@ -1396,6 +1507,22 @@ class FileUnmanagedCopyTest extends FileTestCase {
     $this->assertTrue(file_exists($file->uri), t('Original file exists after copying onto itself.'));
     $this->assertTrue(file_exists($new_filepath), t('Copied file exists after copying onto itself.'));
     $this->assertFilePermissions($new_filepath, variable_get('file_chmod_file', 0664));
+  }
+}
+
+/**
+ * Unmanaged copy related tests on remote filesystems.
+ */
+class RemoteFileUnmanagedCopyTest extends FileUnmanagedCopyTest {
+  public static function getInfo() {
+    $info = parent::getInfo();
+    $info['group'] = 'File API (remote)';
+    return $info;
+  }
+
+  function setUp() {
+    parent::setUp('file_test');
+    variable_set('file_default_scheme', 'dummy-remote');
   }
 }
 
