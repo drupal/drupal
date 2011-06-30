@@ -1,4 +1,17 @@
 
+Drupal 7.4, 2011-06-29
+----------------------
+- Rolled back patch that caused fatal errors in CTools, Feeds, and other modules using the class registry.
+- Fixed critical bug with saving default images.
+- Fixed fatal errors when uninstalling some modules.
+- Added workaround for MySQL transaction support breaking on DDL statments.
+- Improved page caching with external caching systems.
+- Fix to Batch API, which was terminating too early.
+- Numerous upgrade path fixes.
+- Performance fixes.
+- Additional test coverage.
+- Numerous documentation fixes.
+
 Drupal 7.3, 2011-06-29
 ----------------------
 - Fixed security issue (Access bypass), see SA-CORE-2011-002.
