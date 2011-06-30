@@ -107,6 +107,10 @@ function hook_search_reset() {
 /**
  * Report the status of indexing.
  *
+ * The core search module only invokes this hook on active modules.
+ * Implementing modules do not need to check whether they are active when
+ * calculating their return values.
+ *
  * @return
  *  An associative array with the key-value pairs:
  *  - 'remaining': The number of items left to index.
