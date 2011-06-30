@@ -430,7 +430,7 @@ function drupal_html_to_text($string, $allowed_tags = NULL) {
           $indent[] = count($lists) ? ' "' : '>';
           break;
         case 'li':
-          $indent[] = is_numeric($lists[0]) ? ' ' . $lists[0]++ . ') ' : ' * ';
+          $indent[] = isset($lists[0]) && is_numeric($lists[0]) ? ' ' . $lists[0]++ . ') ' : ' * ';
           break;
         case 'dd':
           $indent[] = '    ';
@@ -509,7 +509,7 @@ function drupal_html_to_text($string, $allowed_tags = NULL) {
         $chunk = $casing($chunk);
       }
       // Format it and apply the current indentation.
-      $output .= drupal_wrap_mail($chunk, implode('', $indent));
+      $output .= drupal_wrap_mail($chunk, implode('', $indent)) . MAIL_LINE_ENDINGS;
       // Remove non-quotation markers from indentation.
       $indent = array_map('_drupal_html_to_text_clean', $indent);
     }
