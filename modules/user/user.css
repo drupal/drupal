@@ -22,8 +22,8 @@
   clear: both;
 }
 #user-admin-roles .form-item-name {
-  float: left;
-  margin-right: 1em;
+  float: left; /* LTR */
+  margin-right: 1em; /* LTR */
 }
 
 /**
