@@ -88,10 +88,6 @@ function system_token_info() {
     'name' => t("File name"),
     'description' => t("The name of the file on disk."),
   );
-  $file['description'] = array(
-    'name' => t("Description"),
-    'description' => t("An optional human-readable description of the file."),
-  );
   $file['path'] = array(
     'name' => t("Path"),
     'description' => t("The location of the file relative to Drupal root."),
@@ -228,10 +224,6 @@ function system_tokens($type, $tokens, array $data = array(), array $options = a
           $replacements[$original] = $sanitize ? check_plain($file->filename) : $file->filename;
           break;
 
-        case 'description':
-          $replacements[$original] = $sanitize ? check_plain($file->description) : $file->description;
-          break;
-
         case 'path':
           $replacements[$original] = $sanitize ? check_plain($file->uri) : $file->uri;
           break;
@@ -255,7 +247,8 @@ function system_tokens($type, $tokens, array $data = array(), array $options = a
 
         case 'owner':
           $account = user_load($file->uid);
-          $replacements[$original] = $sanitize ? check_plain($account->name) : $account->name;
+          $name = format_username($account);
+          $replacements[$original] = $sanitize ? check_plain($name) : $name;
           break;
       }
     }

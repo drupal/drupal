@@ -1006,21 +1006,19 @@ class FileTokenReplaceTestCase extends FileFieldTestCase {
 
     // Load the node and the file.
     $node = node_load($nid, NULL, TRUE);
-    $file = (object) $node->{$field_name}[LANGUAGE_NONE][0];
-    $file->description = 'File description.';
+    $file = file_load($node->{$field_name}[LANGUAGE_NONE][0]['fid']);
 
     // Generate and test sanitized tokens.
     $tests = array();
     $tests['[file:fid]'] = $file->fid;
     $tests['[file:name]'] = check_plain($file->filename);
-    $tests['[file:description]'] = filter_xss($file->description);
-    $tests['[file:path]'] = filter_xss($file->uri);
-    $tests['[file:mime]'] = filter_xss($file->filemime);
+    $tests['[file:path]'] = check_plain($file->uri);
+    $tests['[file:mime]'] = check_plain($file->filemime);
     $tests['[file:size]'] = format_size($file->filesize);
-    $tests['[file:url]'] = url(file_create_url($file->uri), $url_options);
+    $tests['[file:url]'] = check_plain(file_create_url($file->uri));
     $tests['[file:timestamp]'] = format_date($file->timestamp, 'medium', '', NULL, $language->language);
     $tests['[file:timestamp:short]'] = format_date($file->timestamp, 'short', '', NULL, $language->language);
-    $tests['[file:owner]'] = $this->admin_user->name;
+    $tests['[file:owner]'] = check_plain(format_username($this->admin_user));
     $tests['[file:owner:uid]'] = $file->uid;
 
     // Test to make sure that we generated something for each token.
@@ -1033,7 +1031,6 @@ class FileTokenReplaceTestCase extends FileFieldTestCase {
 
     // Generate and test unsanitized tokens.
     $tests['[file:name]'] = $file->filename;
-    $tests['[file:description]'] = $file->description;
     $tests['[file:path]'] = $file->uri;
     $tests['[file:mime]'] = $file->filemime;
     $tests['[file:size]'] = format_size($file->filesize);
