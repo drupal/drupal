@@ -2292,7 +2292,9 @@ function drupal_attributes(array $attributes = array()) {
  *     to work in a call to drupal_attributes($options['attributes']).
  *   - 'html' (default FALSE): Whether $text is HTML or just plain-text. For
  *     example, to make an image tag into a link, this must be set to TRUE, or
- *     you will see the escaped HTML image tag.
+ *     you will see the escaped HTML image tag. $text is not sanitized if
+ *     'html' is TRUE. The calling function must ensure that $text is already
+ *     safe.
  *   - 'language': An optional language object. If the path being linked to is
  *     internal to the site, $options['language'] is used to determine whether
  *     the link is "active", or pointing to the current page (the language as
