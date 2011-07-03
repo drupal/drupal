@@ -1022,7 +1022,7 @@ function hook_node_type_delete($info) {
  */
 function hook_delete($node) {
   db_delete('mytable')
-    ->condition('nid', $nid->nid)
+    ->condition('nid', $node->nid)
     ->execute();
 }
 
