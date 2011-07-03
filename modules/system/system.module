@@ -3018,6 +3018,7 @@ function system_cron() {
     ->fields(array(
       'expire' => 0,
     ))
+    ->condition('expire', 0, '<>')
     ->condition('expire', REQUEST_TIME, '<')
     ->execute();
 }
