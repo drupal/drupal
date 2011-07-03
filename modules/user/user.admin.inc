@@ -712,7 +712,12 @@ function user_admin_permissions($form, $form_state, $rid = NULL) {
 
   // Have to build checkboxes here after checkbox arrays are built
   foreach ($role_names as $rid => $name) {
-    $form['checkboxes'][$rid] = array('#type' => 'checkboxes', '#options' => $options, '#default_value' => isset($status[$rid]) ? $status[$rid] : array());
+    $form['checkboxes'][$rid] = array(
+      '#type' => 'checkboxes',
+      '#options' => $options,
+      '#default_value' => isset($status[$rid]) ? $status[$rid] : array(),
+      '#attributes' => array('class' => array('rid-' . $rid)),
+    );
     $form['role_names'][$rid] = array('#markup' => check_plain($name), '#tree' => TRUE);
   }
 
