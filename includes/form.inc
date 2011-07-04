@@ -995,6 +995,8 @@ function drupal_prepare_form($form_id, &$form, &$form_state) {
   $form += array('#tree' => FALSE, '#parents' => array());
 
   if (!isset($form['#validate'])) {
+    // Ensure that modules can rely on #validate being set.
+    $form['#validate'] = array();
     // Check for a handler specific to $form_id.
     if (function_exists($form_id . '_validate')) {
       $form['#validate'][] = $form_id . '_validate';
@@ -1007,6 +1009,8 @@ function drupal_prepare_form($form_id, &$form, &$form_state) {
   }
 
   if (!isset($form['#submit'])) {
+    // Ensure that modules can rely on #submit being set.
+    $form['#submit'] = array();
     // Check for a handler specific to $form_id.
     if (function_exists($form_id . '_submit')) {
       $form['#submit'][] = $form_id . '_submit';
