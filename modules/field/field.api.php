@@ -1132,7 +1132,7 @@ function hook_field_attach_form($entity_type, $entity, &$form, &$form_state, $la
  *
  * See field_attach_load() for details and arguments.
  */
-function hook_field_attach_load($entity_type, &$entities, $age, $options) {
+function hook_field_attach_load($entity_type, $entities, $age, $options) {
   // @todo Needs function body.
 }
 
@@ -1580,7 +1580,7 @@ function hook_field_storage_details_alter(&$details, $field) {
  *     non-deleted fields. If unset or FALSE, only non-deleted fields should be
  *     loaded.
  */
-function hook_field_storage_load($entity_type, &$entities, $age, $fields, $options) {
+function hook_field_storage_load($entity_type, $entities, $age, $fields, $options) {
   $field_info = field_info_field_by_ids();
   $load_current = $age == FIELD_LOAD_CURRENT;
 
