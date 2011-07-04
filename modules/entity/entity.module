@@ -20,23 +20,6 @@ function entity_modules_disabled() {
 }
 
 /**
- * Implements hook_entity_info().
- */
-function entity_entity_info() {
-  return array(
-    'file' => array(
-      'label' => t('File'),
-      'base table' => 'file_managed',
-      'entity keys' => array(
-        'id' => 'fid',
-        'label' => 'filename',
-      ),
-      'static cache' => FALSE,
-    ),
-  );
-}
-
-/**
  * Gets the entity info array of an entity type.
  *
  * @see hook_entity_info()
