@@ -458,7 +458,7 @@ class EntityFieldQuery {
   }
 
   /**
-   * Enable a pager for the query.
+   * Enables a pager for the query.
    *
    * @param $limit
    *   An integer specifying the number of elements per page.  If passed a false
@@ -486,7 +486,7 @@ class EntityFieldQuery {
   }
 
   /**
-   * Enable sortable tables for this query.
+   * Enables sortable tables for this query.
    *
    * @param $headers
    *   An EFQ Header array based on which the order clause is added to the query.
@@ -763,7 +763,7 @@ class EntityFieldQuery {
   }
 
   /**
-   * Get the total number of results and initialize a pager for the query.
+   * Gets the total number of results and initialize a pager for the query.
    *
    * This query can be detected by checking for ($this->pager && $this->count),
    * which allows a driver to return 0 from the count query and disable

@@ -37,7 +37,7 @@ function entity_entity_info() {
 }
 
 /**
- * Get the entity info array of an entity type.
+ * Gets the entity info array of an entity type.
  *
  * @see hook_entity_info()
  * @see hook_entity_info_alter()
@@ -132,6 +132,7 @@ function entity_info_cache_clear() {
  *   The entity type; e.g. 'node' or 'user'.
  * @param $entity
  *   The entity from which to extract values.
+ *
  * @return
  *   A numerically indexed array (not a hash table) containing these
  *   elements:
@@ -163,6 +164,7 @@ function entity_extract_ids($entity_type, $entity) {
  *   0: primary id of the entity
  *   1: revision id of the entity, or NULL if $entity_type is not versioned
  *   2: bundle name of the entity, or NULL if $entity_type has no bundles
+ *
  * @return
  *   An entity structure, initialized with the ids provided.
  */
@@ -180,7 +182,7 @@ function entity_create_stub_entity($entity_type, $ids) {
 }
 
 /**
- * Load entities from the database.
+ * Loads entities from the database.
  *
  * This function should be used whenever you need to load more than one entity
  * from the database. The entities are loaded into memory and will not require
@@ -247,7 +249,7 @@ function entity_load_unchanged($entity_type, $id) {
 }
 
 /**
- * Get the entity controller class for an entity type.
+ * Gets the entity controller class for an entity type.
  */
 function entity_get_controller($entity_type) {
   $controllers = &drupal_static(__FUNCTION__, array());
@@ -260,7 +262,7 @@ function entity_get_controller($entity_type) {
 }
 
 /**
- * Invoke hook_entity_prepare_view().
+ * Invokes hook_entity_prepare_view().
  *
  * If adding a new entity similar to nodes, comments or users, you should
  * invoke this function during the ENTITY_build_content() or
@@ -272,6 +274,7 @@ function entity_get_controller($entity_type) {
  * recursion. By convention, entity_prepare_view() is called after
  * field_attach_prepare_view() to allow entity level hooks to act on content
  * loaded by field API.
+ *
  * @see hook_entity_prepare_view()
  *
  * @param $entity_type
@@ -306,6 +309,7 @@ function entity_prepare_view($entity_type, $entities) {
  *   The entity type; e.g. 'node' or 'user'.
  * @param $entity
  *   The entity for which to generate a path.
+ *
  * @return
  *   An array containing the 'path' and 'options' keys used to build the uri of
  *   the entity, and matching the signature of url(). NULL if the entity has no
