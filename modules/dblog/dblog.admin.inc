@@ -15,14 +15,14 @@ function dblog_overview() {
   $filter = dblog_build_filter_query();
   $rows = array();
   $classes = array(
-    LOG_DEBUG     => 'dblog-debug',
-    LOG_INFO      => 'dblog-info',
-    LOG_NOTICE    => 'dblog-notice',
-    LOG_WARNING   => 'dblog-warning',
-    LOG_ERR       => 'dblog-error',
-    LOG_CRIT      => 'dblog-critical',
-    LOG_ALERT     => 'dblog-alert',
-    LOG_EMERG     => 'dblog-emerg',
+    WATCHDOG_DEBUG     => 'dblog-debug',
+    WATCHDOG_INFO      => 'dblog-info',
+    WATCHDOG_NOTICE    => 'dblog-notice',
+    WATCHDOG_WARNING   => 'dblog-warning',
+    WATCHDOG_ERROR       => 'dblog-error',
+    WATCHDOG_CRITICAL      => 'dblog-critical',
+    WATCHDOG_ALERT     => 'dblog-alert',
+    WATCHDOG_EMERGENCY     => 'dblog-emerg',
   );
 
   $build['dblog_filter_form'] = drupal_get_form('dblog_filter_form');

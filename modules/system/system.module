@@ -2146,13 +2146,13 @@ function system_check_directory($form_element) {
   if (!is_dir($directory) && !drupal_mkdir($directory, NULL, TRUE)) {
     // If the directory does not exists and cannot be created.
     form_set_error($form_element['#parents'][0], t('The directory %directory does not exist and could not be created.', array('%directory' => $directory)));
-    watchdog('file system', 'The directory %directory does not exist and could not be created.', array('%directory' => $directory), LOG_ERR);
+    watchdog('file system', 'The directory %directory does not exist and could not be created.', array('%directory' => $directory), WATCHDOG_ERROR);
   }
 
   if (is_dir($directory) && !is_writable($directory) && !drupal_chmod($directory)) {
     // If the directory is not writable and cannot be made so.
     form_set_error($form_element['#parents'][0], t('The directory %directory exists but is not writable and could not be made writable.', array('%directory' => $directory)));
-    watchdog('file system', 'The directory %directory exists but is not writable and could not be made writable.', array('%directory' => $directory), LOG_ERR);
+    watchdog('file system', 'The directory %directory exists but is not writable and could not be made writable.', array('%directory' => $directory), WATCHDOG_ERROR);
   }
   elseif (is_dir($directory)) {
     if ($form_element['#name'] == 'file_public_path') {
@@ -2988,11 +2988,11 @@ function system_cron() {
       $references = file_usage_list($file);
       if (empty($references)) {
         if (!file_delete($file)) {
-          watchdog('file system', 'Could not delete temporary file "%path" during garbage collection', array('%path' => $file->uri), LOG_ERR);
+          watchdog('file system', 'Could not delete temporary file "%path" during garbage collection', array('%path' => $file->uri), WATCHDOG_ERROR);
         }
       }
       else {
-        watchdog('file system', 'Did not delete temporary file "%path" during garbage collection, because it is in use by the following modules: %modules.', array('%path' => $file->uri, '%modules' => implode(', ', array_keys($references))), LOG_INFO);
+        watchdog('file system', 'Did not delete temporary file "%path" during garbage collection, because it is in use by the following modules: %modules.', array('%path' => $file->uri, '%modules' => implode(', ', array_keys($references))), WATCHDOG_INFO);
       }
     }
   }

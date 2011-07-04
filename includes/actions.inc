@@ -59,7 +59,7 @@ function actions_do($action_ids, $object = NULL, $context = NULL, $a1 = NULL, $a
   static $stack;
   $stack++;
   if ($stack > variable_get('actions_max_stack', 35)) {
-    watchdog('actions', 'Stack overflow: too many calls to actions_do(). Aborting to prevent infinite recursion.', array(), LOG_ERR);
+    watchdog('actions', 'Stack overflow: too many calls to actions_do(). Aborting to prevent infinite recursion.', array(), WATCHDOG_ERROR);
     return;
   }
   $actions = array();
@@ -311,7 +311,7 @@ function actions_synchronize($delete_orphans = FALSE) {
       $link = l(t('Remove orphaned actions'), 'admin/config/system/actions/orphan');
       $count = count($actions_in_db);
       $orphans = implode(', ', $orphaned);
-      watchdog('actions', '@count orphaned actions (%orphans) exist in the actions table. !link', array('@count' => $count, '%orphans' => $orphans, '!link' => $link), LOG_WARNING);
+      watchdog('actions', '@count orphaned actions (%orphans) exist in the actions table. !link', array('@count' => $count, '%orphans' => $orphans, '!link' => $link), WATCHDOG_WARNING);
     }
   }
 }

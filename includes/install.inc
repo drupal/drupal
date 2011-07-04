@@ -787,7 +787,7 @@ function drupal_uninstall_modules($module_list = array(), $uninstall_dependents 
     module_invoke($module, 'uninstall');
     drupal_uninstall_schema($module);
 
-    watchdog('system', '%module module uninstalled.', array('%module' => $module), LOG_INFO);
+    watchdog('system', '%module module uninstalled.', array('%module' => $module), WATCHDOG_INFO);
     drupal_set_installed_schema_version($module, SCHEMA_UNINSTALLED);
   }
 

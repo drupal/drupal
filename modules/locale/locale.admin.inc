@@ -1001,7 +1001,7 @@ function locale_translate_import_form_submit($form, &$form_state) {
     if ($return = _locale_import_po($file, $langcode, $form_state['values']['mode'], $form_state['values']['group']) == FALSE) {
       $variables = array('%filename' => $file->filename);
       drupal_set_message(t('The translation import of %filename failed.', $variables), 'error');
-      watchdog('locale', 'The translation import of %filename failed.', $variables, LOG_ERR);
+      watchdog('locale', 'The translation import of %filename failed.', $variables, WATCHDOG_ERROR);
     }
   }
   else {
@@ -1180,7 +1180,7 @@ function locale_translate_edit_form_validate($form, &$form_state) {
   foreach ($form_state['values']['translations'] as $key => $value) {
     if ($safe_check_needed && !locale_string_is_safe($value)) {
       form_set_error('translations', t('The submitted string contains disallowed HTML: %string', array('%string' => $value)));
-      watchdog('locale', 'Attempted submission of a translation string with disallowed HTML: %string', array('%string' => $value), LOG_WARNING);
+      watchdog('locale', 'Attempted submission of a translation string with disallowed HTML: %string', array('%string' => $value), WATCHDOG_WARNING);
     }
   }
 }

@@ -2441,7 +2441,7 @@ function drupal_deliver_page($page_callback_result, $default_delivery_callback =
     // If a delivery callback is specified, but doesn't exist as a function,
     // something is wrong, but don't print anything, since it's not known
     // what format the response needs to be in.
-    watchdog('delivery callback not found', 'callback %callback not found: %q.', array('%callback' => $delivery_callback, '%q' => $_GET['q']), LOG_ERR);
+    watchdog('delivery callback not found', 'callback %callback not found: %q.', array('%callback' => $delivery_callback, '%q' => $_GET['q']), WATCHDOG_ERROR);
   }
 }
 
@@ -2474,7 +2474,7 @@ function drupal_deliver_html_page($page_callback_result) {
         // Print a 404 page.
         drupal_add_http_header('Status', '404 Not Found');
 
-        watchdog('page not found', check_plain($_GET['q']), NULL, LOG_WARNING);
+        watchdog('page not found', check_plain($_GET['q']), NULL, WATCHDOG_WARNING);
 
         // Keep old path for reference, and to allow forms to redirect to it.
         if (!isset($_GET['destination'])) {
@@ -2503,7 +2503,7 @@ function drupal_deliver_html_page($page_callback_result) {
       case MENU_ACCESS_DENIED:
         // Print a 403 page.
         drupal_add_http_header('Status', '403 Forbidden');
-        watchdog('access denied', check_plain($_GET['q']), NULL, LOG_WARNING);
+        watchdog('access denied', check_plain($_GET['q']), NULL, WATCHDOG_WARNING);
 
         // Keep old path for reference, and to allow forms to redirect to it.
         if (!isset($_GET['destination'])) {
@@ -5030,7 +5030,7 @@ function drupal_cron_run() {
   // Try to acquire cron lock.
   if (!lock_acquire('cron', 240.0)) {
     // Cron is still running normally.
-    watchdog('cron', 'Attempting to re-run cron while it is already running.', array(), LOG_WARNING);
+    watchdog('cron', 'Attempting to re-run cron while it is already running.', array(), WATCHDOG_WARNING);
   }
   else {
     // Make sure every queue exists. There is no harm in trying to recreate an
@@ -5046,7 +5046,7 @@ function drupal_cron_run() {
 
     // Record cron time
     variable_set('cron_last', REQUEST_TIME);
-    watchdog('cron', 'Cron run completed.', array(), LOG_NOTICE);
+    watchdog('cron', 'Cron run completed.', array(), WATCHDOG_NOTICE);
 
     // Release cron lock.
     lock_release('cron');
@@ -5077,7 +5077,7 @@ function drupal_cron_run() {
 function drupal_cron_cleanup() {
   // See if the semaphore is still locked.
   if (variable_get('cron_semaphore', FALSE)) {
-    watchdog('cron', 'Cron run exceeded the time limit and was aborted.', array(), LOG_WARNING);
+    watchdog('cron', 'Cron run exceeded the time limit and was aborted.', array(), WATCHDOG_WARNING);
 
     // Release cron semaphore
     variable_del('cron_semaphore');
@@ -7050,17 +7050,18 @@ function drupal_parse_info_format($data) {
  *   Array of the possible severity levels for log messages.
  *
  * @see watchdog()
+ * @ingroup logging_severity_levels
  */
 function watchdog_severity_levels() {
   return array(
-    LOG_EMERG   => t('emergency'),
-    LOG_ALERT   => t('alert'),
-    LOG_CRIT    => t('critical'),
-    LOG_ERR     => t('error'),
-    LOG_WARNING => t('warning'),
-    LOG_NOTICE  => t('notice'),
-    LOG_INFO    => t('info'),
-    LOG_DEBUG   => t('debug'),
+    WATCHDOG_EMERGENCY   => t('emergency'),
+    WATCHDOG_ALERT   => t('alert'),
+    WATCHDOG_CRITICAL    => t('critical'),
+    WATCHDOG_ERROR     => t('error'),
+    WATCHDOG_WARNING => t('warning'),
+    WATCHDOG_NOTICE  => t('notice'),
+    WATCHDOG_INFO    => t('info'),
+    WATCHDOG_DEBUG   => t('debug'),
   );
 }
 

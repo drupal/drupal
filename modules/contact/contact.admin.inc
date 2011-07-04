@@ -162,7 +162,7 @@ function contact_category_edit_form_submit($form, &$form_state) {
   }
 
   drupal_set_message(t('Category %category has been saved.', array('%category' => $form_state['values']['category'])));
-  watchdog('contact', 'Category %category has been saved.', array('%category' => $form_state['values']['category']), LOG_NOTICE, l(t('Edit'), 'admin/structure/contact/edit/' . $form_state['values']['cid']));
+  watchdog('contact', 'Category %category has been saved.', array('%category' => $form_state['values']['category']), WATCHDOG_NOTICE, l(t('Edit'), 'admin/structure/contact/edit/' . $form_state['values']['cid']));
   $form_state['redirect'] = 'admin/structure/contact';
 }
 
@@ -200,7 +200,7 @@ function contact_category_delete_form_submit($form, &$form_state) {
     ->execute();
 
   drupal_set_message(t('Category %category has been deleted.', array('%category' => $contact['category'])));
-  watchdog('contact', 'Category %category has been deleted.', array('%category' => $contact['category']), LOG_NOTICE);
+  watchdog('contact', 'Category %category has been deleted.', array('%category' => $contact['category']), WATCHDOG_NOTICE);
 
   $form_state['redirect'] = 'admin/structure/contact';
 }

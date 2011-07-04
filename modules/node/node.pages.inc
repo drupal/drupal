@@ -409,11 +409,11 @@ function node_form_submit($form, &$form_state) {
   $t_args = array('@type' => node_type_get_name($node), '%title' => $node->title);
 
   if ($insert) {
-    watchdog('content', '@type: added %title.', $watchdog_args, LOG_NOTICE, $node_link);
+    watchdog('content', '@type: added %title.', $watchdog_args, WATCHDOG_NOTICE, $node_link);
     drupal_set_message(t('@type %title has been created.', $t_args));
   }
   else {
-    watchdog('content', '@type: updated %title.', $watchdog_args, LOG_NOTICE, $node_link);
+    watchdog('content', '@type: updated %title.', $watchdog_args, WATCHDOG_NOTICE, $node_link);
     drupal_set_message(t('@type %title has been updated.', $t_args));
   }
   if ($node->nid) {

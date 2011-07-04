@@ -318,7 +318,7 @@ function ajax_get_form() {
     // system/ajax without actually viewing the concerned form in the browser.
     // This is likely a hacking attempt as it never happens under normal
     // circumstances, so we just do nothing.
-    watchdog('ajax', 'Invalid form POST data.', array(), LOG_WARNING);
+    watchdog('ajax', 'Invalid form POST data.', array(), WATCHDOG_WARNING);
     drupal_exit();
   }
 

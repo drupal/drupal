@@ -24,24 +24,26 @@ define('ERROR_REPORTING_DISPLAY_ALL', 2);
  * Map PHP error constants to watchdog severity levels.
  * The error constants are documented at
  * http://php.net/manual/en/errorfunc.constants.php
+ *
+ * @ingroup logging_severity_levels
  */
 function drupal_error_levels() {
   $types = array(
-    E_ERROR => array('Error', LOG_ERR),
-    E_WARNING => array('Warning', LOG_WARNING),
-    E_PARSE => array('Parse error', LOG_ERR),
-    E_NOTICE => array('Notice', LOG_NOTICE),
-    E_CORE_ERROR => array('Core error', LOG_ERR),
-    E_CORE_WARNING => array('Core warning', LOG_WARNING),
-    E_COMPILE_ERROR => array('Compile error', LOG_ERR),
-    E_COMPILE_WARNING => array('Compile warning', LOG_WARNING),
-    E_USER_ERROR => array('User error', LOG_ERR),
-    E_USER_WARNING => array('User warning', LOG_WARNING),
-    E_USER_NOTICE => array('User notice', LOG_NOTICE),
-    E_STRICT => array('Strict warning', LOG_DEBUG),
-    E_RECOVERABLE_ERROR => array('Recoverable fatal error', LOG_ERR),
-    E_DEPRECATED => array('Deprecated function', LOG_DEBUG),
-    E_USER_DEPRECATED => array('User deprecated function', LOG_DEBUG),
+    E_ERROR => array('Error', WATCHDOG_ERROR),
+    E_WARNING => array('Warning', WATCHDOG_WARNING),
+    E_PARSE => array('Parse error', WATCHDOG_ERROR),
+    E_NOTICE => array('Notice', WATCHDOG_NOTICE),
+    E_CORE_ERROR => array('Core error', WATCHDOG_ERROR),
+    E_CORE_WARNING => array('Core warning', WATCHDOG_WARNING),
+    E_COMPILE_ERROR => array('Compile error', WATCHDOG_ERROR),
+    E_COMPILE_WARNING => array('Compile warning', WATCHDOG_WARNING),
+    E_USER_ERROR => array('User error', WATCHDOG_ERROR),
+    E_USER_WARNING => array('User warning', WATCHDOG_WARNING),
+    E_USER_NOTICE => array('User notice', WATCHDOG_NOTICE),
+    E_STRICT => array('Strict warning', WATCHDOG_DEBUG),
+    E_RECOVERABLE_ERROR => array('Recoverable fatal error', WATCHDOG_ERROR),
+    E_DEPRECATED => array('Deprecated function', WATCHDOG_DEBUG),
+    E_USER_DEPRECATED => array('User deprecated function', WATCHDOG_DEBUG),
   );
 
   return $types;
@@ -127,7 +129,7 @@ function _drupal_decode_exception($exception) {
     '%function' => $caller['function'],
     '%file' => $caller['file'],
     '%line' => $caller['line'],
-    'severity_level' => LOG_ERR,
+    'severity_level' => WATCHDOG_ERROR,
   );
 }
 

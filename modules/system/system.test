@@ -112,7 +112,7 @@ class ModuleTestCase extends DrupalWebTestCase {
    * @param $link
    *   A link to associate with the message.
    */
-  function assertLogMessage($type, $message, $variables = array(), $severity = LOG_NOTICE, $link = '') {
+  function assertLogMessage($type, $message, $variables = array(), $severity = WATCHDOG_NOTICE, $link = '') {
     $count = db_select('watchdog', 'w')
       ->condition('type', $type)
       ->condition('message', $message)
@@ -213,8 +213,8 @@ class EnableDisableTestCase extends ModuleTestCase {
           $this->assertText(t('hook_modules_enabled fired for @module', array('@module' => $module_to_enable)));
           $this->assertModules(array($module_to_enable), TRUE);
           $this->assertModuleTablesExist($module_to_enable);
-          $this->assertLogMessage('system', "%module module installed.", array('%module' => $module_to_enable), LOG_INFO);
-          $this->assertLogMessage('system', "%module module enabled.", array('%module' => $module_to_enable), LOG_INFO);
+          $this->assertLogMessage('system', "%module module installed.", array('%module' => $module_to_enable), WATCHDOG_INFO);
+          $this->assertLogMessage('system', "%module module enabled.", array('%module' => $module_to_enable), WATCHDOG_INFO);
         }
 
         // Disable and uninstall the original module, and check appropriate
@@ -301,7 +301,7 @@ class EnableDisableTestCase extends ModuleTestCase {
     // Check that the appropriate hook was fired and the appropriate log
     // message appears.
     $this->assertText(t('hook_modules_disabled fired for @module', array('@module' => $module)));
-    $this->assertLogMessage('system', "%module module disabled.", array('%module' => $module), LOG_INFO);
+    $this->assertLogMessage('system', "%module module disabled.", array('%module' => $module), WATCHDOG_INFO);
 
     //  Check that the module's database tables still exist.
     $this->assertModuleTablesExist($module);
@@ -320,7 +320,7 @@ class EnableDisableTestCase extends ModuleTestCase {
     // anymore.)
     $this->assertText(t('hook_modules_uninstalled fired for @module', array('@module' => $module)));
     if ($module != 'dblog') {
-      $this->assertLogMessage('system', "%module module uninstalled.", array('%module' => $module), LOG_INFO);
+      $this->assertLogMessage('system', "%module module uninstalled.", array('%module' => $module), WATCHDOG_INFO);
     }
 
     // Check that the module's database tables no longer exist.

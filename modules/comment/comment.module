@@ -2212,7 +2212,7 @@ function comment_form_submit($form, &$form_state) {
     $form_state['values']['cid'] = $comment->cid;
 
     // Add an entry to the watchdog log.
-    watchdog('content', 'Comment posted: %subject.', array('%subject' => $comment->subject), LOG_NOTICE, l(t('view'), 'comment/' . $comment->cid, array('fragment' => 'comment-' . $comment->cid)));
+    watchdog('content', 'Comment posted: %subject.', array('%subject' => $comment->subject), WATCHDOG_NOTICE, l(t('view'), 'comment/' . $comment->cid, array('fragment' => 'comment-' . $comment->cid)));
 
     // Explain the approval queue if necessary.
     if ($comment->status == COMMENT_NOT_PUBLISHED) {
@@ -2233,7 +2233,7 @@ function comment_form_submit($form, &$form_state) {
     $redirect = array('node/' . $node->nid, array('query' => $query, 'fragment' => 'comment-' . $comment->cid));
   }
   else {
-    watchdog('content', 'Comment: unauthorized comment submitted or comment submitted to a closed post %subject.', array('%subject' => $comment->subject), LOG_WARNING);
+    watchdog('content', 'Comment: unauthorized comment submitted or comment submitted to a closed post %subject.', array('%subject' => $comment->subject), WATCHDOG_WARNING);
     drupal_set_message(t('Comment: unauthorized comment submitted or comment submitted to a closed post %subject.', array('%subject' => $comment->subject)), 'error');
     // Redirect the user to the node they are commenting on.
     $redirect = 'node/' . $node->nid;
