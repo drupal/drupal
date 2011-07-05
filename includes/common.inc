@@ -7049,6 +7049,7 @@ function drupal_parse_info_format($data) {
  *   Array of the possible severity levels for log messages.
  *
  * @see watchdog()
+ * @ingroup logging_severity_levels
  */
 function watchdog_severity_levels() {
   return array(

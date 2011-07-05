@@ -24,6 +24,8 @@ define('ERROR_REPORTING_DISPLAY_ALL', 2);
  * Map PHP error constants to watchdog severity levels.
  * The error constants are documented at
  * http://php.net/manual/en/errorfunc.constants.php
+ *
+ * @ingroup logging_severity_levels
  */
 function drupal_error_levels() {
   $types = array(
