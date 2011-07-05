@@ -3916,7 +3916,7 @@ function theme_form_required_marker($variables) {
     'class' => 'form-required',
     'title' => $t('This field is required.'),
   );
-  return '<span' . drupal_attributes($attributes) . '>*</span>';
+  return '<abbr' . drupal_attributes($attributes) . '>*</abbr>';
 }
 
 /**

@@ -1141,7 +1141,7 @@ Drupal.tableDrag.prototype.row.prototype.removeIndentClasses = function () {
 Drupal.tableDrag.prototype.row.prototype.markChanged = function () {
   var marker = Drupal.theme('tableDragChangedMarker');
   var cell = $('td:first', this.element);
-  if ($('span.tabledrag-changed', cell).length == 0) {
+  if ($('abbr.tabledrag-changed', cell).length == 0) {
     cell.append(marker);
   }
 };
@@ -1161,7 +1161,7 @@ Drupal.tableDrag.prototype.row.prototype.onSwap = function (swappedRow) {
 };
 
 Drupal.theme.prototype.tableDragChangedMarker = function () {
-  return '<span class="warning tabledrag-changed">*</span>';
+  return '<abbr class="warning tabledrag-changed" title="' + Drupal.t('Changed') + '">*</abbr>';
 };
 
 Drupal.theme.prototype.tableDragIndentation = function () {
