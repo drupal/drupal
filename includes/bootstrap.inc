@@ -192,8 +192,11 @@ define('LANGUAGE_RTL', 1);
 
 /**
  * For convenience, define a short form of the request time global.
+ *
+ * REQUEST_TIME is a float with microseconds since PHP 5.4.0, but float
+ * timestamps confuses most of the PHP functions (including date_create()).
  */
-define('REQUEST_TIME', $_SERVER['REQUEST_TIME']);
+define('REQUEST_TIME', (int) $_SERVER['REQUEST_TIME']);
 
 /**
  * Flag for drupal_set_title(); text is not sanitized, so run check_plain().
