@@ -29,16 +29,50 @@ class MenuUpgradePathTestCase extends UpgradePathTestCase {
   public function testMenuUpgrade() {
     $this->assertTrue($this->performUpgrade(), t('The upgrade was completed successfully.'));
 
-    // Test the migration of "Default menu for content" setting to individual node types.
-    $this->drupalGet("admin/structure/types/manage/page/edit");
+    // Test the migration of "Default menu for content" setting to individual
+    // node types.
+    $this->drupalGet('admin/structure/types/manage/page/edit');
     $this->assertNoFieldChecked('edit-menu-options-management', 'Management menu is not selected as available menu');
     $this->assertNoFieldChecked('edit-menu-options-navigation', 'Navigation menu is not selected as available menu');
-    $this->assertNoFieldChecked('edit-menu-options-primary-links', 'Primary Links menu is not selected as available menu');
-    $this->assertFieldChecked('edit-menu-options-secondary-links', 'Secondary Links menu is selected as available menu');
+    $this->assertNoFieldChecked('edit-menu-options-main-menu', 'Main menu is not selected as available menu');
+    $this->assertFieldChecked('edit-menu-options-secondary-menu', 'Secondary menu is selected as available menu');
     $this->assertNoFieldChecked('edit-menu-options-user-menu', 'User menu is not selected as available menu');
-    $this->assertOptionSelected('edit-menu-parent', 'secondary-links:0', 'Secondary links is selected as default parent item');
+    $this->assertOptionSelected('edit-menu-parent', 'secondary-menu:0', 'Secondary menu is selected as default parent item');
 
     $this->assertEqual(variable_get('menu_default_node_menu'), NULL, 'Redundant variable menu_default_node_menu has been removed');
 
+    // Verify Primary/Secondary Links have been renamed.
+    $this->drupalGet('admin/structure/menu');
+    $this->assertNoLinkByHref('admin/structure/menu/manage/primary-links');
+    $this->assertLinkByHref('admin/structure/menu/manage/main-menu');
+    $this->assertNoLinkByHref('admin/structure/menu/manage/secondary-links');
+    $this->assertLinkByHref('admin/structure/menu/manage/secondary-menu');
+
+    // Verify the existence of all system-defined (default) menus.
+    foreach (menu_list_system_menus() as $menu_name => $title) {
+      $this->assertLinkByHref('admin/structure/menu/manage/' . $menu_name, 0, 'Found default menu: ' . $title);
+    }
+
+    // Verify a few known links are still present, plus the ones created here.
+    $test_menus = array(
+      'navigation' => array('Add content', 'nodeadd-navigation'),
+      'management' => array('Administration', 'Account settings'),
+      'user-menu' => array('My account', 'Log out'),
+      'main-menu' => array('nodeadd-primary'),
+      'secondary-menu' => array('nodeadd-secondary'),
+    );
+
+    foreach ($test_menus as $menu_name => $links) {
+      $this->drupalGet('admin/structure/menu/manage/' . $menu_name);
+      $this->assertResponse(200, 'Access menu management for ' . $menu_name);
+      foreach ($links as $link_text) {
+        $this->assertLink(t($link_text));
+      }
+    }
+
+    // Check the "source for primary/secondary links" setting.
+    $this->drupalGet('admin/structure/menu/settings');
+    $this->assertOptionSelected('edit-menu-main-links-source', 'secondary-menu');
+    $this->assertOptionSelected('edit-menu-secondary-links-source', 'main-menu');
   }
 }
