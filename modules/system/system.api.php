@@ -1972,8 +1972,8 @@ function hook_permission() {
  *   containing information about the hook. Each array may contain the
  *   following elements:
  *   - variables: (required if "render element" not present) An array of
- *     variables that this theme hook uses. This value allows the theme layer to
- *     properly utilize templates. Each array key represents the name of the
+ *     variables that this theme hook uses. This value allows the theme layer
+ *     to properly utilize templates. Each array key represents the name of the
  *     variable and the value will be used as the default value if it is not
  *     given when theme() is called. Template implementations receive these
  *     arguments as variables in the template file. Function implementations
@@ -1989,20 +1989,20 @@ function hook_permission() {
  *     preprocess function (as needed) is actually loaded; this makes it
  *     possible to split theme functions out into separate files quite easily.
  *   - path: Override the path of the file to be used. Ordinarily the module or
- *     theme path will be used, but if the file will not be in the default path,
- *     include it here. This path should be relative to the Drupal root
+ *     theme path will be used, but if the file will not be in the default
+ *     path, include it here. This path should be relative to the Drupal root
  *     directory.
- *   - template: If specified, this theme implementation is a template, and this
- *     is the template file without an extension. Do not put .tpl.php on this
- *     file; that extension will be added automatically by the default rendering
- *     engine (which is PHPTemplate). If 'path', above, is specified, the
- *     template should also be in this path.
- *   - function: If specified, this will be the function name to invoke for this
- *     implementation. If neither file nor function is specified, a default
- *     function name will be assumed. For example, if a module registers
- *     the 'node' theme hook, 'theme_node' will be assigned to its function.
- *     If the chameleon theme registers the node hook, it will be assigned
- *     'chameleon_node' as its function.
+ *   - template: If specified, this theme implementation is a template, and
+ *     this is the template file without an extension. Do not put .tpl.php on
+ *     this file; that extension will be added automatically by the default
+ *     rendering engine (which is PHPTemplate). If 'path', above, is specified,
+ *     the template should also be in this path.
+ *   - function: If specified, this will be the function name to invoke for
+ *     this implementation. If neither 'template' nor 'function' is specified,
+ *     a default function name will be assumed. For example, if a module
+ *     registers the 'node' theme hook, 'theme_node' will be assigned to its
+ *     function. If the chameleon theme registers the node hook, it will be
+ *     assigned 'chameleon_node' as its function.
  *   - pattern: A regular expression pattern to be used to allow this theme
  *     implementation to have a dynamic name. The convention is to use __ to
  *     differentiate the dynamic portion of the theme. For example, to allow
@@ -2017,11 +2017,11 @@ function hook_permission() {
  *     a theme this will be filled in as phptemplate_preprocess and
  *     phptemplate_preprocess_HOOK as well as themename_preprocess and
  *     themename_preprocess_HOOK.
- *   - override preprocess functions: Set to TRUE when a theme does NOT want the
- *     standard preprocess functions to run. This can be used to give a theme
- *     FULL control over how variables are set. For example, if a theme wants
- *     total control over how certain variables in the page.tpl.php are set,
- *     this can be set to true. Please keep in mind that when this is used
+ *   - override preprocess functions: Set to TRUE when a theme does NOT want
+ *     the standard preprocess functions to run. This can be used to give a
+ *     theme FULL control over how variables are set. For example, if a theme
+ *     wants total control over how certain variables in the page.tpl.php are
+ *     set, this can be set to true. Please keep in mind that when this is used
  *     by a theme, that theme becomes responsible for making sure necessary
  *     variables are set.
  *   - type: (automatically derived) Where the theme hook is defined:
