@@ -1404,11 +1404,13 @@ function node_show($node, $message = FALSE) {
     drupal_set_title(t('Revision of %title from %date', array('%title' => $node->title, '%date' => format_date($node->revision_timestamp))), PASS_THROUGH);
   }
 
+  // For markup consistency with other pages, use node_view_multiple() rather than node_view().
+  $nodes = node_view_multiple(array($node->nid => $node), 'full');
+
   // Update the history table, stating that this user viewed this node.
   node_tag_new($node);
 
-  // For markup consistency with other pages, use node_view_multiple() rather than node_view().
-  return node_view_multiple(array($node->nid => $node), 'full');
+  return $nodes;
 }
 
 /**
