@@ -363,7 +363,7 @@ states.State.prototype = {
   $(document).bind('state:required', function(e) {
     if (e.trigger) {
       if (e.value) {
-        $(e.target).closest('.form-item, .form-wrapper').find('label').append('<span class="form-required">*</span>');
+        $(e.target).closest('.form-item, .form-wrapper').find('label').append('<abbr class="form-required" title="' + Drupal.t('This field is required.') + '">*</abbr>');
       }
       else {
         $(e.target).closest('.form-item, .form-wrapper').find('label .form-required').remove();
