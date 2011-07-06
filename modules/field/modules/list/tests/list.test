@@ -55,6 +55,23 @@ class ListFieldTestCase extends FieldTestCase {
     $this->assertTrue(!empty($form[$this->field_name][$langcode][2]), t('Option 2 exists'));
     $this->assertTrue(!empty($form[$this->field_name][$langcode][3]), t('Option 3 exists'));
 
+    // Use one of the values in an actual entity, and check that this value
+    // cannot be removed from the list.
+    $entity = field_test_create_stub_entity();
+    $entity->{$this->field_name}[$langcode][0] = array('value' => 1);
+    field_test_entity_save($entity);
+    $this->field['settings']['allowed_values'] = array(2 => 'Two');
+    try {
+      field_update_field($this->field);
+      $this->fail(t('Cannot update a list field to not include keys with existing data.'));
+    }
+    catch (FieldException $e) {
+      $this->pass(t('Cannot update a list field to not include keys with existing data.'));
+    }
+    // Empty the value, so that we can actually remove the option.
+    $entity->{$this->field_name}[$langcode] = array();
+    field_test_entity_save($entity);
+
     // Removed options do not appear.
     $this->field['settings']['allowed_values'] = array(2 => 'Two');
     field_update_field($this->field);
