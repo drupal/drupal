@@ -2161,7 +2161,7 @@ function node_block_save($delta = '', $edit = array()) {
 }
 
 /**
- * Find the most recent nodes that are available to the current user.
+ * Finds the most recently changed nodes that are available to the current user.
  *
  * @param $number
  *   (optional) The maximum number of nodes to find. Defaults to 10.
