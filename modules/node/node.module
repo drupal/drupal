@@ -3339,6 +3339,9 @@ function node_access_acquire_grants($node, $delete = TRUE) {
  * node_access can use this function when doing mass updates due to widespread
  * permission changes.
  *
+ * Note: Don't call this function directly from a contributed module. Call
+ * node_access_acquire_grants() instead.
+ *
  * @param $node
  *   The $node being written to. All that is necessary is that it contains a
  *   nid.
