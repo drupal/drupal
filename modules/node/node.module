@@ -3328,7 +3328,7 @@ function node_access_acquire_grants($node, $delete = TRUE) {
     $grants = array_shift($grant_by_priority);
   }
 
-  node_access_write_grants($node, $grants, NULL, $delete);
+  _node_access_write_grants($node, $grants, NULL, $delete);
 }
 
 /**
@@ -3338,6 +3338,9 @@ function node_access_acquire_grants($node, $delete = TRUE) {
  * will always delete a grant from the 'all' realm. Modules that utilize
  * node_access can use this function when doing mass updates due to widespread
  * permission changes.
+ *
+ * Note: Don't call this function directly from a contributed module. Call
+ * node_access_acquire_grants() instead.
  *
  * @param $node
  *   The $node being written to. All that is necessary is that it contains a
@@ -3354,7 +3357,7 @@ function node_access_acquire_grants($node, $delete = TRUE) {
  *   If false, do not delete records. This is only for optimization purposes,
  *   and assumes the caller has already performed a mass delete of some form.
  */
-function node_access_write_grants($node, $grants, $realm = NULL, $delete = TRUE) {
+function _node_access_write_grants($node, $grants, $realm = NULL, $delete = TRUE) {
   if ($delete) {
     $query = db_delete('node_access')->condition('nid', $node->nid);
     if ($realm) {

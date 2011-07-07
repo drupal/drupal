@@ -256,7 +256,7 @@ function hook_node_grants($account, $op) {
  *
  * Note: a deny all grant is not written to the database; denies are implicit.
  *
- * @see node_access_write_grants()
+ * @see _node_access_write_grants()
  *
  * @param $node
  *   The node that has just been saved.
