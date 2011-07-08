@@ -272,7 +272,8 @@ function drupal_get_form($form_id) {
  *   form submission may be found in drupal_redirect_form().
  *
  * @return
- *   The rendered form or NULL, depending upon the $form_state flags that were set.
+ *   The rendered form. This function may also perform a redirect and hence may
+ *   not return at all, depending upon the $form_state flags that were set.
  *
  * @see drupal_redirect_form()
  */
