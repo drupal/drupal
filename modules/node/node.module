@@ -2417,7 +2417,10 @@ function node_block_list_alter(&$blocks) {
 }
 
 /**
- * A generic function for generating RSS feeds from a set of nodes.
+ * Generates and prints an RSS feed.
+ *
+ * Generates an RSS feed from an array of node IDs, and prints it with an HTTP
+ * header, with Content Type set to RSS/XML.
  *
  * @param $nids
  *   An array of node IDs (nid). Defaults to FALSE so empty feeds can be
