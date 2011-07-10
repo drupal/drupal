@@ -2256,7 +2256,7 @@ function drupal_http_header_attributes(array $attributes = array()) {
  *   An associative array of key-value pairs to be converted to attributes.
  *
  * @return
- *   A string ready for insertion in a tag.
+ *   A string ready for insertion in a tag (starts with a space).
  *
  * @ingroup sanitization
  */
