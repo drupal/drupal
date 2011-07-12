@@ -25,6 +25,13 @@ function shortcut_install() {
       'weight' => -19,
     ),
   );
+  // If Drupal is being installed, rebuild the menu before saving the shortcut
+  // set, to make sure the links defined above can be correctly saved. (During
+  // installation, the menu might not have been built at all yet, or it might
+  // have been built but without the node module's links in it.)
+  if (drupal_installation_attempted()) {
+    menu_rebuild();
+  }
   shortcut_set_save($shortcut_set);
 }
 
