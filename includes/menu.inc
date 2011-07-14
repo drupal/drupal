@@ -2696,19 +2696,15 @@ function _menu_navigation_links_rebuild($menu) {
     }
   }
   if ($menu_links) {
+    // Keep an array of processed menu links, to allow menu_link_save() to
+    // check this for parents instead of querying the database.
+    $parent_candidates = array();
     // Make sure no child comes before its parent.
     array_multisort($sort, SORT_NUMERIC, $menu_links);
 
-    foreach ($menu_links as $item) {
+    foreach ($menu_links as $key => $item) {
       $existing_item = db_select('menu_links')
-        ->fields('menu_links', array(
-          'mlid',
-          'menu_name',
-          'plid',
-          'customized',
-          'has_children',
-          'updated',
-        ))
+        ->fields('menu_links')
         ->condition('link_path', $item['path'])
         ->condition('module', 'system')
         ->execute()->fetchAssoc();
@@ -2727,9 +2723,14 @@ function _menu_navigation_links_rebuild($menu) {
         $item['has_children'] = $existing_item['has_children'];
         $item['updated'] = $existing_item['updated'];
       }
-      if (!$existing_item || !$existing_item['customized']) {
+      if ($existing_item && $existing_item['customized']) {
+        $parent_candidates[$existing_item['mlid']] = $existing_item;
+      }
+      else {
         $item = _menu_link_build($item);
-        menu_link_save($item);
+        menu_link_save($item, $existing_item, $parent_candidates);
+        $parent_candidates[$item['mlid']] = $item;
+        unset($menu_links[$key]);
       }
     }
   }
@@ -2927,12 +2928,17 @@ function _menu_delete_item($item, $force = FALSE) {
  *     to insert a new link.
  *   - plid: (optional) The mlid of the parent.
  *   - router_path: (optional) The path of the relevant router item.
+ * @param $existing_item
+ *   Optional, the current record from the {menu_links} table as an array.
+ * @param $parent_candidates
+ *   Optional array of menu links keyed by mlid. Used by
+ *   _menu_navigation_links_rebuild() only.
  *
  * @return
  *   The mlid of the saved menu link, or FALSE if the menu link could not be
  *   saved.
  */
-function menu_link_save(&$item) {
+function menu_link_save(&$item, $existing_item = array(), $parent_candidates = array()) {
   drupal_alter('menu_link', $item);
 
   // This is the easiest way to handle the unique internal path '<front>',
@@ -2951,15 +2957,20 @@ function menu_link_save(&$item) {
     'customized' => 0,
     'updated' => 0,
   );
-  $existing_item = FALSE;
   if (isset($item['mlid'])) {
-    if ($existing_item = db_query("SELECT * FROM {menu_links} WHERE mlid = :mlid", array(':mlid' => $item['mlid']))->fetchAssoc()) {
+    if (!$existing_item) {
+      $existing_item = db_query('SELECT * FROM {menu_links} WHERE mlid = :mlid', array('mlid' => $item['mlid']))->fetchAssoc();
+    }
+    if ($existing_item) {
       $existing_item['options'] = unserialize($existing_item['options']);
     }
   }
+  else {
+    $existing_item = FALSE;
+  }
 
   // Try to find a parent link. If found, assign it and derive its menu.
-  $parent = _menu_link_find_parent($item);
+  $parent = _menu_link_find_parent($item, $parent_candidates);
   if (!empty($parent['mlid'])) {
     $item['plid'] = $parent['mlid'];
     $item['menu_name'] = $parent['menu_name'];
@@ -3093,11 +3104,13 @@ function menu_link_save(&$item) {
  *
  * @param $menu_link
  *   A menu link.
+ * @param $parent_candidates
+ *   An array of menu links keyed by mlid.
  * @return
  *   A menu link structure of the possible parent or FALSE if no valid parent
  *   has been found.
  */
-function _menu_link_find_parent($menu_link) {
+function _menu_link_find_parent($menu_link, $parent_candidates = array()) {
   $parent = FALSE;
 
   // This item is explicitely top-level, skip the rest of the parenting.
@@ -3119,7 +3132,12 @@ function _menu_link_find_parent($menu_link) {
   }
 
   foreach ($candidates as $mlid) {
-    $parent = db_query("SELECT * FROM {menu_links} WHERE mlid = :mlid", array(':mlid' => $mlid))->fetchAssoc();
+    if (isset($parent_candidates[$mlid])) {
+      $parent = $parent_candidates[$mlid];
+    }
+    else {
+      $parent = db_query("SELECT * FROM {menu_links} WHERE mlid = :mlid", array(':mlid' => $mlid))->fetchAssoc();
+    }
     if ($parent) {
       return $parent;
     }
