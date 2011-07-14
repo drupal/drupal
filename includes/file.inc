@@ -2342,11 +2342,9 @@ function file_directory_temp() {
     if (substr(PHP_OS, 0, 3) == 'WIN') {
       $directories[] = 'c:\\windows\\temp';
       $directories[] = 'c:\\winnt\\temp';
-      $path_delimiter = '\\';
     }
     else {
       $directories[] = '/tmp';
-      $path_delimiter = '/';
     }
     // PHP may be able to find an alternative tmp directory.
     $directories[] = sys_get_temp_dir();
@@ -2359,8 +2357,14 @@ function file_directory_temp() {
     }
 
     if (empty($temporary_directory)) {
-      // If no directory has been found default to 'files/tmp' or 'files\\tmp'.
-      $temporary_directory = variable_get('file_public_path', conf_path() . '/files') . $path_delimiter . 'tmp';
+      // If no directory has been found default to 'files/tmp'.
+      $temporary_directory = variable_get('file_public_path', conf_path() . '/files') . '/tmp';
+
+      // Windows accepts paths with either slash (/) or backslash (\), but will
+      // not accept a path which contains both a slash and a backslash. Since
+      // the 'file_public_path' variable may have either format, we sanitize
+      // everything to use slash which is supported on all platforms.
+      $temporary_directory = str_replace('\\', '/', $temporary_directory);
     }
     // Save the path of the discovered directory.
     variable_set('file_temporary_path', $temporary_directory);
