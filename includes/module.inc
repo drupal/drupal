@@ -449,7 +449,7 @@ function module_enable($module_list, $enable_dependencies = TRUE) {
         module_invoke($module, 'install');
         // Record the fact that it was installed.
         $modules_installed[] = $module;
-        watchdog('system', '%module module installed.', array('%module' => $module), LOG_INFO);
+        watchdog('system', '%module module installed.', array('%module' => $module), WATCHDOG_INFO);
       }
 
       // Allow modules to react prior to the enabling of a module.
@@ -460,7 +460,7 @@ function module_enable($module_list, $enable_dependencies = TRUE) {
 
       // Record the fact that it was enabled.
       $modules_enabled[] = $module;
-      watchdog('system', '%module module enabled.', array('%module' => $module), LOG_INFO);
+      watchdog('system', '%module module enabled.', array('%module' => $module), WATCHDOG_INFO);
     }
   }
 
@@ -534,7 +534,7 @@ function module_disable($module_list, $disable_dependents = TRUE) {
         ->condition('name', $module)
         ->execute();
       $invoke_modules[] = $module;
-      watchdog('system', '%module module disabled.', array('%module' => $module), LOG_INFO);
+      watchdog('system', '%module module disabled.', array('%module' => $module), WATCHDOG_INFO);
     }
   }
 

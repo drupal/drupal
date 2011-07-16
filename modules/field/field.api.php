@@ -1132,7 +1132,7 @@ function hook_field_attach_form($entity_type, $entity, &$form, &$form_state, $la
  *
  * See field_attach_load() for details and arguments.
  */
-function hook_field_attach_load($entity_type, &$entities, $age, $options) {
+function hook_field_attach_load($entity_type, $entities, $age, $options) {
   // @todo Needs function body.
 }
 
@@ -1580,7 +1580,7 @@ function hook_field_storage_details_alter(&$details, $field) {
  *     non-deleted fields. If unset or FALSE, only non-deleted fields should be
  *     loaded.
  */
-function hook_field_storage_load($entity_type, &$entities, $age, $fields, $options) {
+function hook_field_storage_load($entity_type, $entities, $age, $fields, $options) {
   $field_info = field_info_field_by_ids();
   $load_current = $age == FIELD_LOAD_CURRENT;
 
@@ -2136,7 +2136,7 @@ function hook_field_info_max_weight($entity_type, $bundle, $context) {
  *   found in the 'display' key of $instance definitions.
  * @param $context
  *   An associative array containing:
- *   - entity_type: The entity type; e.g. 'node' or 'user'.
+ *   - entity_type: The entity type; e.g., 'node' or 'user'.
  *   - field: The field being rendered.
  *   - instance: The instance being rendered.
  *   - entity: The entity being rendered.
@@ -2171,7 +2171,7 @@ function hook_field_display_alter(&$display, $context) {
  *   found in the 'display' key of $instance definitions.
  * @param $context
  *   An associative array containing:
- *   - entity_type: The entity type; e.g. 'node' or 'user'.
+ *   - entity_type: The entity type; e.g., 'node' or 'user'.
  *   - field: The field being rendered.
  *   - instance: The instance being rendered.
  *   - entity: The entity being rendered.
@@ -2198,7 +2198,7 @@ function hook_field_display_ENTITY_TYPE_alter(&$display, $context) {
  *   by pseudo-field names.
  * @param $context
  *   An associative array containing:
- *   - entity_type: The entity type; e.g. 'node' or 'user'.
+ *   - entity_type: The entity type; e.g., 'node' or 'user'.
  *   - bundle: The bundle name.
  *   - view_mode: The view mode, e.g. 'full', 'teaser'...
  */
@@ -2224,7 +2224,7 @@ function hook_field_extra_fields_display_alter(&$displays, $context) {
  *   The instance's widget properties.
  * @param $context
  *   An associative array containing:
- *   - entity_type: The entity type; e.g. 'node' or 'user'.
+ *   - entity_type: The entity type; e.g., 'node' or 'user'.
  *   - entity: The entity object.
  *   - field: The field that the widget belongs to.
  *   - instance: The instance of the field.
@@ -2256,7 +2256,7 @@ function hook_field_widget_properties_alter(&$widget, $context) {
  *   The instance's widget properties.
  * @param $context
  *   An associative array containing:
- *   - entity_type: The entity type; e.g. 'node' or 'user'.
+ *   - entity_type: The entity type; e.g., 'node' or 'user'.
  *   - entity: The entity object.
  *   - field: The field that the widget belongs to.
  *   - instance: The instance of the field.

@@ -613,7 +613,8 @@ class FieldUIManageDisplayTestCase extends FieldUITestCase {
 
     // Render a cloned node, so that we do not alter the original.
     $clone = clone $node;
-    $output = drupal_render(node_view($clone, $view_mode));
+    $element = node_view($clone, $view_mode);
+    $output = drupal_render($element);
     $this->verbose(t('Rendered node - view mode: @view_mode', array('@view_mode' => $view_mode)) . '<hr />'. $output);
 
     // Assign content so that DrupalWebTestCase functions can be used.

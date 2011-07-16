@@ -209,7 +209,7 @@ function taxonomy_form_vocabulary_validate($form, &$form_state) {
  * @see taxonomy_form_vocabulary_validate()
  */
 function taxonomy_form_vocabulary_submit($form, &$form_state) {
-  if ($form_state['clicked_button']['#value'] == t('Delete')) {
+  if ($form_state['triggering_element']['#value'] == t('Delete')) {
     // Rebuild the form to confirm vocabulary deletion.
     $form_state['rebuild'] = TRUE;
     $form_state['confirm_delete'] = TRUE;
@@ -222,12 +222,12 @@ function taxonomy_form_vocabulary_submit($form, &$form_state) {
   switch (taxonomy_vocabulary_save($vocabulary)) {
     case SAVED_NEW:
       drupal_set_message(t('Created new vocabulary %name.', array('%name' => $vocabulary->name)));
-      watchdog('taxonomy', 'Created new vocabulary %name.', array('%name' => $vocabulary->name), LOG_NOTICE, l(t('edit'), 'admin/structure/taxonomy/' . $vocabulary->machine_name . '/edit'));
+      watchdog('taxonomy', 'Created new vocabulary %name.', array('%name' => $vocabulary->name), WATCHDOG_NOTICE, l(t('edit'), 'admin/structure/taxonomy/' . $vocabulary->machine_name . '/edit'));
       break;
 
     case SAVED_UPDATED:
       drupal_set_message(t('Updated vocabulary %name.', array('%name' => $vocabulary->name)));
-      watchdog('taxonomy', 'Updated vocabulary %name.', array('%name' => $vocabulary->name), LOG_NOTICE, l(t('edit'), 'admin/structure/taxonomy/' . $vocabulary->machine_name . '/edit'));
+      watchdog('taxonomy', 'Updated vocabulary %name.', array('%name' => $vocabulary->name), WATCHDOG_NOTICE, l(t('edit'), 'admin/structure/taxonomy/' . $vocabulary->machine_name . '/edit'));
       break;
   }
 
@@ -434,7 +434,7 @@ function taxonomy_overview_terms($form, &$form_state, $vocabulary) {
  * @see taxonomy_overview_terms()
  */
 function taxonomy_overview_terms_submit($form, &$form_state) {
-  if ($form_state['clicked_button']['#value'] == t('Reset to alphabetical')) {
+  if ($form_state['triggering_element']['#value'] == t('Reset to alphabetical')) {
     // Execute the reset action.
     if ($form_state['values']['reset_alphabetical'] === TRUE) {
       return taxonomy_vocabulary_confirm_reset_alphabetical_submit($form, $form_state);
@@ -674,9 +674,6 @@ function taxonomy_form_term($form, &$form_state, $edit = array(), $vocabulary = 
   if (isset($form_state['confirm_delete'])) {
     return array_merge($form, taxonomy_term_confirm_delete($form, $form_state, $term->tid));
   }
-  elseif (isset($form_state['confirm_parents'])) {
-    return array_merge($form, taxonomy_term_confirm_parents($form, $form_state, $vocabulary));
-  }
 
   $form['name'] = array(
     '#type' => 'textfield',
@@ -801,7 +798,7 @@ function taxonomy_form_term_validate($form, &$form_state) {
  * @see taxonomy_form_term()
  */
 function taxonomy_form_term_submit($form, &$form_state) {
-  if ($form_state['clicked_button']['#value'] == t('Delete')) {
+  if ($form_state['triggering_element']['#value'] == t('Delete')) {
     // Execute the term deletion.
     if ($form_state['values']['delete'] === TRUE) {
       return taxonomy_term_confirm_delete_submit($form, $form_state);
@@ -811,12 +808,6 @@ function taxonomy_form_term_submit($form, &$form_state) {
     $form_state['confirm_delete'] = TRUE;
     return;
   }
-  // Rebuild the form to confirm enabling multiple parents.
-  elseif ($form_state['clicked_button']['#value'] == t('Save') && count($form_state['values']['parent']) > 1 && $form['#vocabulary']->hierarchy < 2) {
-    $form_state['rebuild'] = TRUE;
-    $form_state['confirm_parents'] = TRUE;
-    return;
-  }
 
   $term = taxonomy_form_term_submit_build_taxonomy_term($form, $form_state);
 
@@ -824,11 +815,11 @@ function taxonomy_form_term_submit($form, &$form_state) {
   switch ($status) {
     case SAVED_NEW:
       drupal_set_message(t('Created new term %term.', array('%term' => $term->name)));
-      watchdog('taxonomy', 'Created new term %term.', array('%term' => $term->name), LOG_NOTICE, l(t('edit'), 'taxonomy/term/' . $term->tid . '/edit'));
+      watchdog('taxonomy', 'Created new term %term.', array('%term' => $term->name), WATCHDOG_NOTICE, l(t('edit'), 'taxonomy/term/' . $term->tid . '/edit'));
       break;
     case SAVED_UPDATED:
       drupal_set_message(t('Updated term %term.', array('%term' => $term->name)));
-      watchdog('taxonomy', 'Updated term %term.', array('%term' => $term->name), LOG_NOTICE, l(t('edit'), 'taxonomy/term/' . $term->tid . '/edit'));
+      watchdog('taxonomy', 'Updated term %term.', array('%term' => $term->name), WATCHDOG_NOTICE, l(t('edit'), 'taxonomy/term/' . $term->tid . '/edit'));
       // Clear the page and block caches to avoid stale data.
       cache_clear_all();
       break;
@@ -873,25 +864,6 @@ function taxonomy_form_term_submit_build_taxonomy_term($form, &$form_state) {
 }
 
 /**
- * Form builder for the confirmation of multiple term parents.
- *
- * @ingroup forms
- * @see taxonomy_form_term()
- */
-function taxonomy_term_confirm_parents($form, &$form_state, $vocabulary) {
-  foreach (element_children($form_state['values']) as $key) {
-    $form[$key] = array(
-      '#type' => 'value',
-      '#value' => $form_state['values'][$key],
-    );
-  }
-  $question = t('Set multiple term parents?');
-  $description = '<p>' . t("Adding multiple parents to a term will cause the %vocabulary vocabulary to look for multiple parents on every term. Because multiple parents are not supported when using the drag and drop outline interface, drag and drop will be disabled if you enable this option. If you choose to have multiple parents, you will only be able to set parents by using the term edit form.", array('%vocabulary' => $vocabulary->name)) . '</p>';
-  $description .= '<p>' . t("You may re-enable the drag and drop interface at any time by reducing multiple parents to a single parent for the terms in this vocabulary.") . '</p>';
-  return confirm_form($form, $question, drupal_get_destination(), $description, t('Set multiple parents'));
-}
-
-/**
  * Form builder for the term delete form.
  *
  * @ingroup forms
@@ -926,7 +898,7 @@ function taxonomy_term_confirm_delete_submit($form, &$form_state) {
   taxonomy_term_delete($form_state['values']['tid']);
   taxonomy_check_vocabulary_hierarchy($form['#vocabulary'], $form_state['values']);
   drupal_set_message(t('Deleted term %name.', array('%name' => $form_state['values']['name'])));
-  watchdog('taxonomy', 'Deleted term %name.', array('%name' => $form_state['values']['name']), LOG_NOTICE);
+  watchdog('taxonomy', 'Deleted term %name.', array('%name' => $form_state['values']['name']), WATCHDOG_NOTICE);
   $form_state['redirect'] = 'admin/structure/taxonomy';
   cache_clear_all();
   return;
@@ -966,7 +938,7 @@ function taxonomy_vocabulary_confirm_delete($form, &$form_state, $vid) {
 function taxonomy_vocabulary_confirm_delete_submit($form, &$form_state) {
   $status = taxonomy_vocabulary_delete($form_state['values']['vid']);
   drupal_set_message(t('Deleted vocabulary %name.', array('%name' => $form_state['values']['name'])));
-  watchdog('taxonomy', 'Deleted vocabulary %name.', array('%name' => $form_state['values']['name']), LOG_NOTICE);
+  watchdog('taxonomy', 'Deleted vocabulary %name.', array('%name' => $form_state['values']['name']), WATCHDOG_NOTICE);
   $form_state['redirect'] = 'admin/structure/taxonomy';
   cache_clear_all();
   return;
@@ -1006,6 +978,6 @@ function taxonomy_vocabulary_confirm_reset_alphabetical_submit($form, &$form_sta
     ->condition('vid', $form_state['values']['vid'])
     ->execute();
   drupal_set_message(t('Reset vocabulary %name to alphabetical order.', array('%name' => $form_state['values']['name'])));
-  watchdog('taxonomy', 'Reset vocabulary %name to alphabetical order.', array('%name' => $form_state['values']['name']), LOG_NOTICE);
+  watchdog('taxonomy', 'Reset vocabulary %name to alphabetical order.', array('%name' => $form_state['values']['name']), WATCHDOG_NOTICE);
   $form_state['redirect'] = 'admin/structure/taxonomy/' . $form_state['values']['machine_name'];
 }

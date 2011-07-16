@@ -104,8 +104,10 @@
  *   function via $form_state. This is commonly used for wizard-style
  *   multi-step forms, add-more buttons, and the like. For further information
  *   see drupal_build_form().
- * - 'redirect': a URL that will be used to redirect the form on submission.
- *   See drupal_redirect_form() for complete information.
+ * - 'redirect': $form_state['redirect'] is used to redirect the form on
+ *   submission. It may either be a string containing the destination URL, or
+ *   an array of arguments compatible with drupal_goto(). See
+ *   drupal_redirect_form() for complete information.
  * - 'storage': $form_state['storage'] is not a special key, and no specific
  *   support is provided for it in the Form API, but by tradition it was
  *   the location where application-specific data was stored for communication
@@ -270,7 +272,8 @@ function drupal_get_form($form_id) {
  *   form submission may be found in drupal_redirect_form().
  *
  * @return
- *   The rendered form or NULL, depending upon the $form_state flags that were set.
+ *   The rendered form. This function may also perform a redirect and hence may
+ *   not return at all, depending upon the $form_state flags that were set.
  *
  * @see drupal_redirect_form()
  */
@@ -993,6 +996,8 @@ function drupal_prepare_form($form_id, &$form, &$form_state) {
   $form += array('#tree' => FALSE, '#parents' => array());
 
   if (!isset($form['#validate'])) {
+    // Ensure that modules can rely on #validate being set.
+    $form['#validate'] = array();
     // Check for a handler specific to $form_id.
     if (function_exists($form_id . '_validate')) {
       $form['#validate'][] = $form_id . '_validate';
@@ -1005,6 +1010,8 @@ function drupal_prepare_form($form_id, &$form, &$form_state) {
   }
 
   if (!isset($form['#submit'])) {
+    // Ensure that modules can rely on #submit being set.
+    $form['#submit'] = array();
     // Check for a handler specific to $form_id.
     if (function_exists($form_id . '_submit')) {
       $form['#submit'][] = $form_id . '_submit';
@@ -1128,10 +1135,28 @@ function drupal_validate_form($form_id, &$form, &$form_state) {
  * Redirects the user to a URL after a form has been processed.
  *
  * After a form was executed, the data in $form_state controls whether the form
- * is redirected. By default, we redirect to a new destination page. The path of
- * the destination page can be set in $form_state['redirect']. If that is not
- * set, the user is redirected to the current page to display a fresh,
- * unpopulated copy of the form.
+ * is redirected. By default, we redirect to a new destination page. The path
+ * of the destination page can be set in $form_state['redirect'], as either a
+ * string containing the destination or an array of arguments compatible with
+ * drupal_goto(). If that is not set, the user is redirected to the current
+ * page to display a fresh, unpopulated copy of the form.
+ *
+ * For example, to redirect to 'node':
+ * @code
+ * $form_state['redirect'] = 'node';
+ * @endcode
+ * Or to redirect to 'node/123?foo=bar#baz':
+ * @code
+ * $form_state['redirect'] = array(
+ *   'node/123',
+ *   array(
+ *     'query' => array(
+ *       'foo' => 'bar',
+ *     ),
+ *     'fragment' => 'baz',
+ *   ),
+ * );
+ * @endcode
  *
  * There are several triggers that may prevent a redirection though:
  * - If $form_state['redirect'] is FALSE, a form builder function or form
@@ -1244,7 +1269,7 @@ function _form_validate(&$elements, &$form_state, $form_id = NULL) {
           foreach ($value as $v) {
             if (!isset($options[$v])) {
               form_error($elements, $t('An illegal choice has been detected. Please contact the site administrator.'));
-              watchdog('form', 'Illegal choice %choice in !name element.', array('%choice' => $v, '!name' => empty($elements['#title']) ? $elements['#parents'][0] : $elements['#title']), LOG_ERR);
+              watchdog('form', 'Illegal choice %choice in !name element.', array('%choice' => $v, '!name' => empty($elements['#title']) ? $elements['#parents'][0] : $elements['#title']), WATCHDOG_ERROR);
             }
           }
         }
@@ -1263,7 +1288,7 @@ function _form_validate(&$elements, &$form_state, $form_id = NULL) {
         }
         elseif (!isset($options[$elements['#value']])) {
           form_error($elements, $t('An illegal choice has been detected. Please contact the site administrator.'));
-          watchdog('form', 'Illegal choice %choice in %name element.', array('%choice' => $elements['#value'], '%name' => empty($elements['#title']) ? $elements['#parents'][0] : $elements['#title']), LOG_ERR);
+          watchdog('form', 'Illegal choice %choice in %name element.', array('%choice' => $elements['#value'], '%name' => empty($elements['#title']) ? $elements['#parents'][0] : $elements['#title']), WATCHDOG_ERROR);
         }
       }
     }
@@ -2833,9 +2858,9 @@ function form_process_date($element) {
 /**
  * Validates the date type to stop dates like February 30, 2006.
  */
-function date_validate($form) {
-  if (!checkdate($form['#value']['month'], $form['#value']['day'], $form['#value']['year'])) {
-    form_error($form, t('The specified date is invalid.'));
+function date_validate($element) {
+  if (!checkdate($element['#value']['month'], $element['#value']['day'], $element['#value']['year'])) {
+    form_error($element, t('The specified date is invalid.'));
   }
 }
 
@@ -3892,7 +3917,7 @@ function theme_form_required_marker($variables) {
     'class' => 'form-required',
     'title' => $t('This field is required.'),
   );
-  return '<span' . drupal_attributes($attributes) . '>*</span>';
+  return '<abbr' . drupal_attributes($attributes) . '>*</abbr>';
 }
 
 /**

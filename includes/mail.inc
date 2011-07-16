@@ -152,7 +152,7 @@ function drupal_mail($module, $key, $to, $language, $params = array(), $from = N
 
     // Log errors
     if (!$message['result']) {
-      watchdog('mail', 'Error sending e-mail (from %from to %to).', array('%from' => $message['from'], '%to' => $message['to']), LOG_ERR);
+      watchdog('mail', 'Error sending e-mail (from %from to %to).', array('%from' => $message['from'], '%to' => $message['to']), WATCHDOG_ERROR);
       drupal_set_message(t('Unable to send e-mail. Contact the site administrator if the problem persists.'), 'error');
     }
   }
@@ -430,7 +430,7 @@ function drupal_html_to_text($string, $allowed_tags = NULL) {
           $indent[] = count($lists) ? ' "' : '>';
           break;
         case 'li':
-          $indent[] = is_numeric($lists[0]) ? ' ' . $lists[0]++ . ') ' : ' * ';
+          $indent[] = isset($lists[0]) && is_numeric($lists[0]) ? ' ' . $lists[0]++ . ') ' : ' * ';
           break;
         case 'dd':
           $indent[] = '    ';
@@ -509,7 +509,7 @@ function drupal_html_to_text($string, $allowed_tags = NULL) {
         $chunk = $casing($chunk);
       }
       // Format it and apply the current indentation.
-      $output .= drupal_wrap_mail($chunk, implode('', $indent));
+      $output .= drupal_wrap_mail($chunk, implode('', $indent)) . MAIL_LINE_ENDINGS;
       // Remove non-quotation markers from indentation.
       $indent = array_map('_drupal_html_to_text_clean', $indent);
     }

@@ -2681,6 +2681,9 @@ class FieldTranslationsTestCase extends FieldTestCase {
    * Test the multilanguage logic of _field_invoke().
    */
   function testFieldInvoke() {
+    // Enable field translations for the entity.
+    field_test_entity_info_translatable('test_entity', TRUE);
+
     $entity_type = 'test_entity';
     $entity = field_test_create_stub_entity(0, 0, $this->instance['bundle']);
 
@@ -2708,6 +2711,7 @@ class FieldTranslationsTestCase extends FieldTestCase {
       // forwarded to the callback function.
       $this->assertEqual($hash, $result, t('The result for %language is correctly stored.', array('%language' => $langcode)));
     }
+
     $this->assertEqual(count($results), count($available_languages), t('No unavailable language has been processed.'));
   }
 
@@ -2767,8 +2771,8 @@ class FieldTranslationsTestCase extends FieldTestCase {
       foreach ($results as $langcode => $result) {
         if (isset($values[$id][$langcode])) {
           $hash = hash('sha256', serialize(array($entity_type, $entities[$id], $this->field_name, $langcode, $values[$id][$langcode])));
-          // Check whether the parameters passed to _field_invoke() were correctly
-          // forwarded to the callback function.
+          // Check whether the parameters passed to _field_invoke_multiple()
+          // were correctly forwarded to the callback function.
           $this->assertEqual($hash, $result, t('The result for entity %id/%language is correctly stored.', array('%id' => $id, '%language' => $langcode)));
         }
       }

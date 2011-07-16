@@ -612,7 +612,8 @@ function block_theme_initialize($theme) {
   $has_blocks = (bool) db_query_range('SELECT 1 FROM {block} WHERE theme = :theme', 0, 1, array(':theme' => $theme))->fetchField();
   if (!$has_blocks) {
     $default_theme = variable_get('theme_default', 'bartik');
-    $regions = system_region_list($theme);
+    // Apply only to new theme's visible regions.
+    $regions = system_region_list($theme, REGIONS_VISIBLE);
     $result = db_query("SELECT * FROM {block} WHERE theme = :theme", array(':theme' => $default_theme), array('fetch' => PDO::FETCH_ASSOC));
     foreach ($result as $block) {
       // If the region isn't supported by the theme, assign the block to the theme's default region.
@@ -633,14 +634,14 @@ function block_theme_initialize($theme) {
  *   The name of a region.
  *
  * @return
- *   An array of block objects, indexed with <i>module</i>_<i>delta</i>.
- *   If you are displaying your blocks in one or two sidebars, you may check
- *   whether this array is empty to see how many columns are going to be
- *   displayed.
+ *   An array of block objects, indexed with the module name and block delta
+ *   concatenated with an underscore, thus: MODULE_DELTA. If you are displaying
+ *   your blocks in one or two sidebars, you may check whether this array is
+ *   empty to see how many columns are going to be displayed.
  *
  * @todo
  *   Now that the blocks table has a primary key, we should use that as the
- *   array key instead of <i>module</i>_<i>delta</i>.
+ *   array key instead of MODULE_DELTA.
  */
 function block_list($region) {
   $blocks = &drupal_static(__FUNCTION__);

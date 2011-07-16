@@ -343,7 +343,7 @@ function list_allowed_values_string($values) {
 function list_field_update_forbid($field, $prior_field, $has_data) {
   if ($field['module'] == 'list' && $has_data) {
     // Forbid any update that removes allowed values with actual data.
-    $lost_keys = array_diff(array_keys($field['settings']['allowed_values']), array_keys($prior_field['settings']['allowed_values']));
+    $lost_keys = array_diff(array_keys($prior_field['settings']['allowed_values']), array_keys($field['settings']['allowed_values']));
     if (_list_values_in_use($field, $lost_keys)) {
       throw new FieldUpdateForbiddenException(t('Cannot update a list field to not include keys with existing data.'));
     }

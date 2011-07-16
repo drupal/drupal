@@ -37,6 +37,40 @@ class ModuleTestCase extends DrupalWebTestCase {
   }
 
   /**
+   * Assert that all tables defined in a module's hook_schema() exist.
+   *
+   * @param $module
+   *   The name of the module.
+   */
+  function assertModuleTablesExist($module) {
+    $tables = array_keys(drupal_get_schema_unprocessed($module));
+    $tables_exist = TRUE;
+    foreach ($tables as $table) {
+      if (!db_table_exists($table)) {
+        $tables_exist = FALSE;
+      }
+    }
+    return $this->assertTrue($tables_exist, t('All database tables defined by the @module module exist.', array('@module' => $module)));
+  }
+
+  /**
+   * Assert that none of the tables defined in a module's hook_schema() exist.
+   *
+   * @param $module
+   *   The name of the module.
+   */
+  function assertModuleTablesDoNotExist($module) {
+    $tables = array_keys(drupal_get_schema_unprocessed($module));
+    $tables_exist = FALSE;
+    foreach ($tables as $table) {
+      if (db_table_exists($table)) {
+        $tables_exist = TRUE;
+      }
+    }
+    return $this->assertFalse($tables_exist, t('None of the database tables defined by the @module module exist.', array('@module' => $module)));
+  }
+
+  /**
    * Assert the list of modules are enabled or disabled.
    *
    * @param $modules
@@ -78,7 +112,7 @@ class ModuleTestCase extends DrupalWebTestCase {
    * @param $link
    *   A link to associate with the message.
    */
-  function assertLogMessage($type, $message, $variables = array(), $severity = LOG_NOTICE, $link = '') {
+  function assertLogMessage($type, $message, $variables = array(), $severity = WATCHDOG_NOTICE, $link = '') {
     $count = db_select('watchdog', 'w')
       ->condition('type', $type)
       ->condition('message', $message)
@@ -96,6 +130,8 @@ class ModuleTestCase extends DrupalWebTestCase {
  * Test module enabling/disabling functionality.
  */
 class EnableDisableTestCase extends ModuleTestCase {
+  protected $profile = 'testing';
+
   public static function getInfo() {
     return array(
       'name' => 'Enable/disable modules',
@@ -105,59 +141,132 @@ class EnableDisableTestCase extends ModuleTestCase {
   }
 
   /**
-   * Enable a module, check the database for related tables, disable module,
-   * check for related tables, uninstall module, check for related tables.
-   * Also check for invocation of the hook_module_action hook.
+   * Test that all core modules can be enabled, disabled and uninstalled.
    */
   function testEnableDisable() {
-    // Enable aggregator, and check tables.
-    $this->assertModules(array('aggregator'), FALSE);
-    $this->assertTableCount('aggregator', FALSE);
+    // Try to enable, disable and uninstall all core modules, unless they are
+    // hidden or required.
+    $modules = system_rebuild_module_data();
+    foreach ($modules as $name => $module) {
+      if ($module->info['package'] != 'Core' || !empty($module->info['hidden']) || !empty($module->info['required'])) {
+        unset($modules[$name]);
+      }
+    }
+    $this->assertTrue(count($modules), t('Found @count core modules that we can try to enable in this test.', array('@count' => count($modules))));
 
-    // Install (and enable) aggregator module.
+    // Enable the dblog module first, since we will be asserting the presence
+    // of log messages throughout the test.
+   if (isset($modules['dblog'])) {
+     $modules = array('dblog' => $modules['dblog']) + $modules;
+   }
+
+   // Set a variable so that the hook implementations in system_test.module
+   // will display messages via drupal_set_message().
+   variable_set('test_verbose_module_hooks', TRUE);
+
+    // Throughout this test, some modules may be automatically enabled (due to
+    // dependencies). We'll keep track of them in an array, so we can handle
+    // them separately.
+    $automatically_enabled = array();
+
+    // Go through each module in the list and try to enable it (unless it was
+    // already enabled automatically due to a dependency).
+    foreach ($modules as $name => $module) {
+      if (empty($automatically_enabled[$name])) {
+        // Start a list of modules that we expect to be enabled this time.
+        $modules_to_enable = array($name);
+
+        // Find out if the module has any dependencies that aren't enabled yet;
+        // if so, add them to the list of modules we expect to be automatically
+        // enabled.
+        foreach (array_keys($module->requires) as $dependency) {
+          if (isset($modules[$dependency]) && empty($automatically_enabled[$dependency])) {
+            $modules_to_enable[] = $dependency;
+            $automatically_enabled[$dependency] = TRUE;
+          }
+        }
+
+        // Check that each module is not yet enabled and does not have any
+        // database tables yet.
+        foreach ($modules_to_enable as $module_to_enable) {
+          $this->assertModules(array($module_to_enable), FALSE);
+          $this->assertModuleTablesDoNotExist($module_to_enable);
+        }
+
+        // Install and enable the module.
+        $edit = array();
+        $edit['modules[Core][' . $name . '][enable]'] = $name;
+        $this->drupalPost('admin/modules', $edit, t('Save configuration'));
+        // Handle the case where modules were installed along with this one and
+        // where we therefore hit a confirmation screen.
+        if (count($modules_to_enable) > 1) {
+          $this->drupalPost(NULL, array(), t('Continue'));
+        }
+        $this->assertText(t('The configuration options have been saved.'), t('Modules status has been updated.'));
+
+        // Check that hook_modules_installed() and hook_modules_enabled() were
+        // invoked with the expected list of modules, that each module's
+        // database tables now exist, and that appropriate messages appear in
+        // the logs.
+        foreach ($modules_to_enable as $module_to_enable) {
+          $this->assertText(t('hook_modules_installed fired for @module', array('@module' => $module_to_enable)));
+          $this->assertText(t('hook_modules_enabled fired for @module', array('@module' => $module_to_enable)));
+          $this->assertModules(array($module_to_enable), TRUE);
+          $this->assertModuleTablesExist($module_to_enable);
+          $this->assertLogMessage('system', "%module module installed.", array('%module' => $module_to_enable), WATCHDOG_INFO);
+          $this->assertLogMessage('system', "%module module enabled.", array('%module' => $module_to_enable), WATCHDOG_INFO);
+        }
+
+        // Disable and uninstall the original module, and check appropriate
+        // hooks, tables, and log messages. (Later, we'll go back and do the
+        // same thing for modules that were enabled automatically.) Skip this
+        // for the dblog module, because that is needed for the test; we'll go
+        // back and do that one at the end also.
+        if ($name != 'dblog') {
+          $this->assertSuccessfulDisableAndUninstall($name);
+        }
+      }
+    }
+
+    // Go through all modules that were automatically enabled, and try to
+    // disable and uninstall them one by one.
+    while (!empty($automatically_enabled)) {
+      $initial_count = count($automatically_enabled);
+      foreach (array_keys($automatically_enabled) as $name) {
+        // If the module can't be disabled due to dependencies, skip it and try
+        // again the next time. Otherwise, try to disable it.
+        $this->drupalGet('admin/modules');
+        $disabled_checkbox = $this->xpath('//input[@type="checkbox" and @disabled="disabled" and @name="modules[Core][' . $name . '][enable]"]');
+        if (empty($disabled_checkbox) && $name != 'dblog') {
+          unset($automatically_enabled[$name]);
+          $this->assertSuccessfulDisableAndUninstall($name);
+        }
+      }
+      $final_count = count($automatically_enabled);
+      // If all checkboxes were disabled, something is really wrong with the
+      // test. Throw a failure and avoid an infinite loop.
+      if ($initial_count == $final_count) {
+        $this->fail(t('Remaining modules could not be disabled.'));
+        break;
+      }
+    }
+
+    // Disable and uninstall the dblog module last, since we needed it for
+    // assertions in all the above tests.
+    if (isset($modules['dblog'])) {
+      $this->assertSuccessfulDisableAndUninstall('dblog');
+    }
+
+    // Now that all modules have been tested, go back and try to enable them
+    // all again at once. This tests two things:
+    // - That each module can be successfully enabled again after being
+    //   uninstalled.
+    // - That enabling more than one module at the same time does not lead to
+    //   any errors.
     $edit = array();
-    $edit['modules[Core][aggregator][enable]'] = 'aggregator';
-    $edit['modules[Core][forum][enable]'] = 'forum';
-    $this->drupalPost('admin/modules', $edit, t('Save configuration'));
-    $this->assertText(t('The configuration options have been saved.'), t('Modules status has been updated.'));
-
-    // Check that hook_modules_installed and hook_modules_enabled hooks were invoked and check tables.
-    $this->assertText(t('hook_modules_installed fired for aggregator'), t('hook_modules_installed fired.'));
-    $this->assertText(t('hook_modules_enabled fired for aggregator'), t('hook_modules_enabled fired.'));
-    $this->assertModules(array('aggregator'), TRUE);
-    $this->assertTableCount('aggregator', TRUE);
-    $this->assertLogMessage('system', "%module module installed.", array('%module' => 'aggregator'), LOG_INFO);
-    $this->assertLogMessage('system', "%module module enabled.", array('%module' => 'aggregator'), LOG_INFO);
-
-    // Disable aggregator, check tables, uninstall aggregator, check tables.
-    $edit = array();
-    $edit['modules[Core][aggregator][enable]'] = FALSE;
-    $this->drupalPost('admin/modules', $edit, t('Save configuration'));
-    $this->assertText(t('The configuration options have been saved.'), t('Modules status has been updated.'));
-
-    // Check that hook_modules_disabled hook was invoked and check tables.
-    $this->assertText(t('hook_modules_disabled fired for aggregator'), t('hook_modules_disabled fired.'));
-    $this->assertModules(array('aggregator'), FALSE);
-    $this->assertTableCount('aggregator', TRUE);
-    $this->assertLogMessage('system', "%module module disabled.", array('%module' => 'aggregator'), LOG_INFO);
-
-    // Uninstall the module.
-    $edit = array();
-    $edit['uninstall[aggregator]'] = 'aggregator';
-    $this->drupalPost('admin/modules/uninstall', $edit, t('Uninstall'));
-
-    $this->drupalPost(NULL, NULL, t('Uninstall'));
-    $this->assertText(t('The selected modules have been uninstalled.'), t('Modules status has been updated.'));
-
-    // Check that hook_modules_uninstalled hook was invoked and check tables.
-    $this->assertText(t('hook_modules_uninstalled fired for aggregator'), t('hook_modules_uninstalled fired.'));
-    $this->assertModules(array('aggregator'), FALSE);
-    $this->assertTableCount('aggregator', FALSE);
-    $this->assertLogMessage('system', "%module module uninstalled.", array('%module' => 'aggregator'), LOG_INFO);
-
-    // Reinstall (and enable) aggregator module.
-    $edit = array();
-    $edit['modules[Core][aggregator][enable]'] = 'aggregator';
+    foreach (array_keys($modules) as $name) {
+      $edit['modules[Core][' . $name . '][enable]'] = $name;
+    }
     $this->drupalPost('admin/modules', $edit, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'), t('Modules status has been updated.'));
   }
@@ -173,6 +282,49 @@ class EnableDisableTestCase extends ModuleTestCase {
     $info = variable_get('entity_cache_test');
     $this->assertEqual($info['label'], 'Entity Cache Test', 'Entity info label is correct.');
     $this->assertEqual($info['controller class'], 'DrupalDefaultEntityController', 'Entity controller class info is correct.');
+  }
+
+  /**
+   * Disables and uninstalls a module and asserts that it was done correctly.
+   *
+   * @param $module
+   *   The name of the module to disable and uninstall.
+   */
+  function assertSuccessfulDisableAndUninstall($module) {
+    // Disable the module.
+    $edit = array();
+    $edit['modules[Core][' . $module . '][enable]'] = FALSE;
+    $this->drupalPost('admin/modules', $edit, t('Save configuration'));
+    $this->assertText(t('The configuration options have been saved.'), t('Modules status has been updated.'));
+    $this->assertModules(array($module), FALSE);
+
+    // Check that the appropriate hook was fired and the appropriate log
+    // message appears.
+    $this->assertText(t('hook_modules_disabled fired for @module', array('@module' => $module)));
+    $this->assertLogMessage('system', "%module module disabled.", array('%module' => $module), WATCHDOG_INFO);
+
+    //  Check that the module's database tables still exist.
+    $this->assertModuleTablesExist($module);
+
+    // Uninstall the module.
+    $edit = array();
+    $edit['uninstall[' . $module . ']'] = $module;
+    $this->drupalPost('admin/modules/uninstall', $edit, t('Uninstall'));
+    $this->drupalPost(NULL, NULL, t('Uninstall'));
+    $this->assertText(t('The selected modules have been uninstalled.'), t('Modules status has been updated.'));
+    $this->assertModules(array($module), FALSE);
+
+    // Check that the appropriate hook was fired and the appropriate log
+    // message appears. (But don't check for the log message if the dblog
+    // module was just uninstalled, since the {watchdog} table won't be there
+    // anymore.)
+    $this->assertText(t('hook_modules_uninstalled fired for @module', array('@module' => $module)));
+    if ($module != 'dblog') {
+      $this->assertLogMessage('system', "%module module uninstalled.", array('%module' => $module), WATCHDOG_INFO);
+    }
+
+    // Check that the module's database tables no longer exist.
+    $this->assertModuleTablesDoNotExist($module);
   }
 }
 
@@ -196,7 +348,7 @@ class HookRequirementsTestCase extends ModuleTestCase {
 
     // Attempt to install the requirements1_test module.
     $edit = array();
-    $edit['modules[Core][requirements1_test][enable]'] = 'requirements1_test';
+    $edit['modules[Testing][requirements1_test][enable]'] = 'requirements1_test';
     $this->drupalPost('admin/modules', $edit, t('Save configuration'));
 
     // Makes sure the module was NOT installed.
@@ -278,8 +430,8 @@ class ModuleDependencyTestCase extends ModuleTestCase {
 
     // Attempt to install both modules at the same time.
     $edit = array();
-    $edit['modules[Core][requirements1_test][enable]'] = 'requirements1_test';
-    $edit['modules[Core][requirements2_test][enable]'] = 'requirements2_test';
+    $edit['modules[Testing][requirements1_test][enable]'] = 'requirements1_test';
+    $edit['modules[Testing][requirements2_test][enable]'] = 'requirements2_test';
     $this->drupalPost('admin/modules', $edit, t('Save configuration'));
 
     // Makes sure the modules were NOT installed.
@@ -1210,6 +1362,8 @@ class FrontPageTestCase extends DrupalWebTestCase {
 }
 
 class SystemBlockTestCase extends DrupalWebTestCase {
+  protected $profile = 'testing';
+
   public static function getInfo() {
     return array(
       'name' => 'Block functionality',
@@ -1219,17 +1373,17 @@ class SystemBlockTestCase extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp();
+    parent::setUp('block');
 
     // Create and login user
-    $admin_user = $this->drupalCreateUser(array('administer blocks'));
+    $admin_user = $this->drupalCreateUser(array('administer blocks', 'access administration pages'));
     $this->drupalLogin($admin_user);
   }
 
   /**
-   * Test displaying and hiding the powered-by block.
+   * Test displaying and hiding the powered-by and help blocks.
    */
-  function testPoweredByBlock() {
+  function testSystemBlocks() {
     // Set block title and some settings to confirm that the interface is available.
     $this->drupalPost('admin/structure/block/manage/system/powered-by/configure', array('title' => $this->randomName(8)), t('Save block'));
     $this->assertText(t('The block configuration has been saved.'), t('Block configuration set.'));
@@ -1237,6 +1391,7 @@ class SystemBlockTestCase extends DrupalWebTestCase {
     // Set the powered-by block to the footer region.
     $edit = array();
     $edit['blocks[system_powered-by][region]'] = 'footer';
+    $edit['blocks[system_main][region]'] = 'content';
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
     $this->assertText(t('The block settings have been updated.'), t('Block successfully moved to footer region.'));
 
@@ -1257,6 +1412,18 @@ class SystemBlockTestCase extends DrupalWebTestCase {
     $edit['blocks[system_powered-by][region]'] = 'footer';
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
     $this->drupalPost('admin/structure/block/manage/system/powered-by/configure', array('title' => ''), t('Save block'));
+
+    // Set the help block to the help region.
+    $edit = array();
+    $edit['blocks[system_help][region]'] = 'help';
+    $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
+
+    // Test displaying the help block with block caching enabled.
+    variable_set('block_cache', TRUE);
+    $this->drupalGet('admin/structure/block/add');
+    $this->assertRaw(t('Use this page to create a new custom block.'));
+    $this->drupalGet('admin/index');
+    $this->assertRaw(t('This page shows you all available administration tasks for each module.'));
   }
 }
 

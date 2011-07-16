@@ -246,7 +246,8 @@ function menu_load_all() {
  *
  * @param $menu
  *   An array representing a custom menu:
- *   - menu_name: The unique name of the custom menu.
+ *   - menu_name: The unique name of the custom menu (composed of lowercase
+ *     letters, numbers, and hyphens).
  *   - title: The human readable menu title.
  *   - description: The custom menu description.
  *

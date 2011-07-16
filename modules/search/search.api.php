@@ -108,7 +108,7 @@ function hook_search_reset() {
  * Report the status of indexing.
  *
  * The core search module only invokes this hook on active modules.
- * Implementing modules do not need to check whether they are active
+ * Implementing modules do not need to check whether they are active when
  * calculating their return values.
  *
  * @return

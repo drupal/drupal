@@ -169,10 +169,8 @@ class DatabaseConnection_mysql extends DatabaseConnection {
           // savepoints which no longer exist.
           //
           // To avoid exceptions when no actual error has occurred, we silently
-          // succeed for PDOExceptions with SQLSTATE 42000 ("Syntax error or
-          // access rule violation") and MySQL error code 1305 ("SAVEPOINT does
-          // not exist").
-          if ($e->getCode() == '42000' && $e->errorInfo[1] == '1305') {
+          // succeed for MySQL error code 1305 ("SAVEPOINT does not exist").
+          if ($e->errorInfo[1] == '1305') {
             // If one SAVEPOINT was released automatically, then all were.
             // Therefore, we keep just the topmost transaction.
             $this->transactionLayers = array('drupal_transaction');

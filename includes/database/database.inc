@@ -273,20 +273,25 @@ abstract class DatabaseConnection extends PDO {
   protected $schema = NULL;
 
   /**
-   * The default prefix used by this database connection.
-   *
-   * Separated from the other prefixes for performance reasons.
-   *
-   * @var string
-   */
-  protected $defaultPrefix = '';
-
-  /**
-   * The non-default prefixes used by this database connection.
+   * The prefixes used by this database connection.
    *
    * @var array
    */
   protected $prefixes = array();
+
+  /**
+   * List of search values for use in prefixTables().
+   *
+   * @var array
+   */
+  protected $prefixSearch = array();
+
+  /**
+   * List of replacement values for use in prefixTables().
+   *
+   * @var array
+   */
+  protected $prefixReplace = array();
 
   function __construct($dsn, $username, $password, $driver_options = array()) {
     // Initialize and prepare the connection prefix.
@@ -375,7 +380,7 @@ abstract class DatabaseConnection extends PDO {
   }
 
   /**
-   * Preprocess the prefixes used by this database connection.
+   * Set the list of prefixes used by this database connection.
    *
    * @param $prefix
    *   The prefixes, in any of the multiple forms documented in
@@ -383,14 +388,27 @@ abstract class DatabaseConnection extends PDO {
    */
   protected function setPrefix($prefix) {
     if (is_array($prefix)) {
-      $this->defaultPrefix = isset($prefix['default']) ? $prefix['default'] : '';
-      unset($prefix['default']);
-      $this->prefixes = $prefix;
+      $this->prefixes = $prefix + array('default' => '');
     }
     else {
-      $this->defaultPrefix = $prefix;
-      $this->prefixes = array();
+      $this->prefixes = array('default' => $prefix);
     }
+
+    // Set up variables for use in prefixTables(). Replace table-specific
+    // prefixes first.
+    $this->prefixSearch = array();
+    $this->prefixReplace = array();
+    foreach ($this->prefixes as $key => $val) {
+      if ($key != 'default') {
+        $this->prefixSearch[] = '{' . $key . '}';
+        $this->prefixReplace[] = $val . $key;
+      }
+    }
+    // Then replace remaining tables with the default prefix.
+    $this->prefixSearch[] = '{';
+    $this->prefixReplace[] = $this->prefixes['default'];
+    $this->prefixSearch[] = '}';
+    $this->prefixReplace[] = '';
   }
 
   /**
@@ -408,12 +426,7 @@ abstract class DatabaseConnection extends PDO {
    *   The properly-prefixed string.
    */
   public function prefixTables($sql) {
-    // Replace specific table prefixes first.
-    foreach ($this->prefixes as $key => $val) {
-      $sql = strtr($sql, array('{' . $key . '}' => $val . $key));
-    }
-    // Then replace remaining tables with the default prefix.
-    return strtr($sql, array('{' => $this->defaultPrefix , '}' => ''));
+    return str_replace($this->prefixSearch, $this->prefixReplace, $sql);
   }
 
   /**
@@ -427,7 +440,7 @@ abstract class DatabaseConnection extends PDO {
       return $this->prefixes[$table];
     }
     else {
-      return $this->defaultPrefix;
+      return $this->prefixes['default'];
     }
   }
 

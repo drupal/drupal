@@ -544,6 +544,7 @@ function template_preprocess_profile_block(&$variables) {
   // Supply filtered version of $fields that have values.
   foreach ($variables['fields'] as $field) {
     if ($field->value) {
+      $variables['profile'][$field->name] = new stdClass;
       $variables['profile'][$field->name]->title = check_plain($field->title);
       $variables['profile'][$field->name]->value = $field->value;
       $variables['profile'][$field->name]->type = $field->type;

@@ -94,7 +94,7 @@ class DBLogTestCase extends DrupalWebTestCase {
    * @param $severity
    *   The severity of the watchdog entry.
    */
-  private function generateLogEntries($count, $type = 'custom', $severity = LOG_NOTICE) {
+  private function generateLogEntries($count, $type = 'custom', $severity = WATCHDOG_NOTICE) {
     global $base_root;
 
     // Prepare the fields to be logged
@@ -384,7 +384,7 @@ class DBLogTestCase extends DrupalWebTestCase {
       'type'        => 'custom',
       'message'     => 'Log entry added to test the doClearTest clear down.',
       'variables'   => array(),
-      'severity'    => LOG_NOTICE,
+      'severity'    => WATCHDOG_NOTICE,
       'link'        => NULL,
       'user'        => $this->big_user,
       'request_uri' => $base_root . request_uri(),
@@ -419,7 +419,7 @@ class DBLogTestCase extends DrupalWebTestCase {
     $types = array();
     for ($i = 0; $i < 3; $i++) {
       $type_names[] = $type_name = $this->randomName();
-      $severity = LOG_EMERG;
+      $severity = WATCHDOG_EMERGENCY;
       for ($j = 0; $j < 3; $j++) {
         $types[] = $type = array(
           'count' => mt_rand(1, 5),
@@ -532,14 +532,14 @@ class DBLogTestCase extends DrupalWebTestCase {
   protected function getSeverityConstant($class) {
     // Reversed array from dblog_overview().
     $map = array(
-      'dblog-debug' => LOG_DEBUG,
-      'dblog-info' => LOG_INFO,
-      'dblog-notice' => LOG_NOTICE,
-      'dblog-warning' => LOG_WARNING,
-      'dblog-error' => LOG_ERR,
-      'dblog-critical' => LOG_CRIT,
-      'dblog-alert' => LOG_ALERT,
-      'dblog-emerg' => LOG_EMERG,
+      'dblog-debug' => WATCHDOG_DEBUG,
+      'dblog-info' => WATCHDOG_INFO,
+      'dblog-notice' => WATCHDOG_NOTICE,
+      'dblog-warning' => WATCHDOG_WARNING,
+      'dblog-error' => WATCHDOG_ERROR,
+      'dblog-critical' => WATCHDOG_CRITICAL,
+      'dblog-alert' => WATCHDOG_ALERT,
+      'dblog-emerg' => WATCHDOG_EMERGENCY,
     );
 
     // Find the class that contains the severity.

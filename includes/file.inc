@@ -507,7 +507,7 @@ function file_create_htaccess($directory, $private = TRUE) {
   }
   else {
     $variables = array('%directory' => $directory, '!htaccess' => '<br />' . nl2br(check_plain($htaccess_lines)));
-    watchdog('security', "Security warning: Couldn't write .htaccess file. Please create a .htaccess file in your %directory directory which contains the following lines: <code>!htaccess</code>", $variables, LOG_ERR);
+    watchdog('security', "Security warning: Couldn't write .htaccess file. Please create a .htaccess file in your %directory directory which contains the following lines: <code>!htaccess</code>", $variables, WATCHDOG_ERROR);
   }
 }
 
@@ -737,8 +737,7 @@ function file_usage_delete(stdClass $file, $module, $type = NULL, $id = NULL, $c
  *   A file object.
  * @param $destination
  *   A string containing the destination that $source should be copied to.
- *   This must be a stream wrapper URI. If this value is omitted, Drupal's
- *   default files scheme will be used, usually "public://".
+ *   This must be a stream wrapper URI.
  * @param $replace
  *   Replace behavior when the destination file already exists:
  *   - FILE_EXISTS_REPLACE - Replace the existing file. If a managed file with
@@ -756,7 +755,12 @@ function file_usage_delete(stdClass $file, $module, $type = NULL, $id = NULL, $c
  */
 function file_copy(stdClass $source, $destination = NULL, $replace = FILE_EXISTS_RENAME) {
   if (!file_valid_uri($destination)) {
-    watchdog('file', 'File %file (%realpath) could not be copied, because the destination %destination is invalid. This is often caused by improper use of file_copy() or a missing stream wrapper.', array('%file' => $source->uri, '%realpath' => drupal_realpath($source->uri), '%destination' => $destination));
+    if (($realpath = drupal_realpath($source->uri)) !== FALSE) {
+      watchdog('file', 'File %file (%realpath) could not be copied, because the destination %destination is invalid. This is often caused by improper use of file_copy() or a missing stream wrapper.', array('%file' => $source->uri, '%realpath' => $realpath, '%destination' => $destination));
+    }
+    else {
+      watchdog('file', 'File %file could not be copied, because the destination %destination is invalid. This is often caused by improper use of file_copy() or a missing stream wrapper.', array('%file' => $source->uri, '%destination' => $destination));
+    }
     drupal_set_message(t('The specified file %file could not be copied, because the destination is invalid. More information is available in the system log.', array('%file' => $source->uri)), 'error');
     return FALSE;
   }
@@ -848,11 +852,15 @@ function file_unmanaged_copy($source, $destination = NULL, $replace = FILE_EXIST
   $original_destination = $destination;
 
   // Assert that the source file actually exists.
-  $source = drupal_realpath($source);
   if (!file_exists($source)) {
     // @todo Replace drupal_set_message() calls with exceptions instead.
     drupal_set_message(t('The specified file %file could not be copied, because no file by that name exists. Please check that you supplied the correct filename.', array('%file' => $original_source)), 'error');
-    watchdog('file', 'File %file (%realpath) could not be copied because it does not exist.', array('%file' => $original_source, '%realpath' => drupal_realpath($original_source)));
+    if (($realpath = drupal_realpath($original_source)) !== FALSE) {
+      watchdog('file', 'File %file (%realpath) could not be copied because it does not exist.', array('%file' => $original_source, '%realpath' => $realpath));
+    }
+    else {
+      watchdog('file', 'File %file could not be copied because it does not exist.', array('%file' => $original_source));
+    }
     return FALSE;
   }
 
@@ -872,7 +880,7 @@ function file_unmanaged_copy($source, $destination = NULL, $replace = FILE_EXIST
     $dirname = drupal_dirname($destination);
     if (!file_prepare_directory($dirname)) {
       // The destination is not valid.
-      watchdog('file', 'File %file could not be copied, because the destination directory %destination is not configured correctly.', array('%file' => $original_source, '%destination' => drupal_realpath($dirname)));
+      watchdog('file', 'File %file could not be copied, because the destination directory %destination is not configured correctly.', array('%file' => $original_source, '%destination' => $dirname));
       drupal_set_message(t('The specified file %file could not be copied, because the destination directory is not properly configured. This may be caused by a problem with file or directory permissions. More information is available in the system log.', array('%file' => $original_source)), 'error');
       return FALSE;
     }
@@ -882,12 +890,14 @@ function file_unmanaged_copy($source, $destination = NULL, $replace = FILE_EXIST
   $destination = file_destination($destination, $replace);
   if ($destination === FALSE) {
     drupal_set_message(t('The file %file could not be copied because a file by that name already exists in the destination directory.', array('%file' => $original_source)), 'error');
-    watchdog('file', 'File %file could not be copied because a file by that name already exists in the destination directory (%directory)', array('%file' => $original_source, '%destination' => drupal_realpath($destination)));
+    watchdog('file', 'File %file could not be copied because a file by that name already exists in the destination directory (%directory)', array('%file' => $original_source, '%destination' => $destination));
     return FALSE;
   }
 
   // Assert that the source and destination filenames are not the same.
-  if (drupal_realpath($source) == drupal_realpath($destination)) {
+  $real_source = drupal_realpath($source);
+  $real_destination = drupal_realpath($destination);
+  if ($source == $destination || ($real_source !== FALSE) && ($real_source == $real_destination)) {
     drupal_set_message(t('The specified file %file was not copied because it would overwrite itself.', array('%file' => $source)), 'error');
     watchdog('file', 'File %file could not be copied because it would overwrite itself.', array('%file' => $source));
     return FALSE;
@@ -896,7 +906,7 @@ function file_unmanaged_copy($source, $destination = NULL, $replace = FILE_EXIST
   file_ensure_htaccess();
   // Perform the copy operation.
   if (!@copy($source, $destination)) {
-    watchdog('file', 'The specified file %file could not be copied to %destination.', array('%file' => $source, '%destination' => drupal_realpath($destination)), LOG_ERR);
+    watchdog('file', 'The specified file %file could not be copied to %destination.', array('%file' => $source, '%destination' => $destination), WATCHDOG_ERR);
     return FALSE;
   }
 
@@ -967,8 +977,7 @@ function file_destination($destination, $replace) {
  *   A file object.
  * @param $destination
  *   A string containing the destination that $source should be moved to.
- *   This must be a stream wrapper URI. If this value is omitted, Drupal's
- *   default files scheme will be used, usually "public://".
+ *   This must be a stream wrapper URI.
  * @param $replace
  *   Replace behavior when the destination file already exists:
  *   - FILE_EXISTS_REPLACE - Replace the existing file. If a managed file with
@@ -988,7 +997,12 @@ function file_destination($destination, $replace) {
  */
 function file_move(stdClass $source, $destination = NULL, $replace = FILE_EXISTS_RENAME) {
   if (!file_valid_uri($destination)) {
-    watchdog('file', 'File %file (%realpath) could not be moved, because the destination %destination is invalid. This may be caused by improper use of file_move() or a missing stream wrapper.', array('%file' => $source->uri, '%realpath' => drupal_realpath($source->uri), '%destination' => $destination));
+    if (($realpath = drupal_realpath($source->uri)) !== FALSE) {
+      watchdog('file', 'File %file (%realpath) could not be moved, because the destination %destination is invalid. This may be caused by improper use of file_move() or a missing stream wrapper.', array('%file' => $source->uri, '%realpath' => $realpath, '%destination' => $destination));
+    }
+    else {
+      watchdog('file', 'File %file could not be moved, because the destination %destination is invalid. This may be caused by improper use of file_move() or a missing stream wrapper.', array('%file' => $source->uri, '%destination' => $destination));
+    }
     drupal_set_message(t('The specified file %file could not be moved, because the destination is invalid. More information is available in the system log.', array('%file' => $source->uri)), 'error');
     return FALSE;
   }
@@ -1214,7 +1228,12 @@ function file_create_filename($basename, $directory) {
  */
 function file_delete(stdClass $file, $force = FALSE) {
   if (!file_valid_uri($file->uri)) {
-    watchdog('file', 'File %file (%realpath) could not be deleted because it is not a valid URI. This may be caused by improper use of file_delete() or a missing stream wrapper.', array('%file' => $file->uri, '%realpath' => drupal_realpath($file->uri)));
+    if (($realpath = drupal_realpath($file->uri)) !== FALSE) {
+      watchdog('file', 'File %file (%realpath) could not be deleted because it is not a valid URI. This may be caused by improper use of file_delete() or a missing stream wrapper.', array('%file' => $file->uri, '%realpath' => $realpath));
+    }
+    else {
+      watchdog('file', 'File %file could not be deleted because it is not a valid URI. This may be caused by improper use of file_delete() or a missing stream wrapper.', array('%file' => $file->uri));
+    }
     drupal_set_message(t('The specified file %file could not be deleted, because it is not a valid URI. More information is available in the system log.', array('%file' => $file->uri)), 'error');
     return FALSE;
   }
@@ -1258,10 +1277,8 @@ function file_delete(stdClass $file, $force = FALSE) {
  * @see file_unmanaged_delete_recursive()
  */
 function file_unmanaged_delete($path) {
-  // Resolve streamwrapper URI to local path.
-  $path = drupal_realpath($path);
   if (is_dir($path)) {
-    watchdog('file', '%path is a directory and cannot be removed using file_unmanaged_delete().', array('%path' => $path), LOG_ERR);
+    watchdog('file', '%path is a directory and cannot be removed using file_unmanaged_delete().', array('%path' => $path), WATCHDOG_ERROR);
     return FALSE;
   }
   if (is_file($path)) {
@@ -1270,12 +1287,12 @@ function file_unmanaged_delete($path) {
   // Return TRUE for non-existent file, but log that nothing was actually
   // deleted, as the current state is the intended result.
   if (!file_exists($path)) {
-    watchdog('file', 'The file %path was not deleted, because it does not exist.', array('%path' => $path), LOG_NOTICE);
+    watchdog('file', 'The file %path was not deleted, because it does not exist.', array('%path' => $path), WATCHDOG_NOTICE);
     return TRUE;
   }
   // We cannot handle anything other than files and directories. Log an error
   // for everything else (sockets, symbolic links, etc).
-  watchdog('file', 'The file %path is not of a recognized type so it was not deleted.', array('%path' => $path), LOG_ERR);
+  watchdog('file', 'The file %path is not of a recognized type so it was not deleted.', array('%path' => $path), WATCHDOG_ERROR);
   return FALSE;
 }
 
@@ -1301,8 +1318,6 @@ function file_unmanaged_delete($path) {
  * @see file_unmanaged_delete()
  */
 function file_unmanaged_delete_recursive($path) {
-  // Resolve streamwrapper URI to local path.
-  $path = drupal_realpath($path);
   if (is_dir($path)) {
     $dir = dir($path);
     while (($entry = $dir->read()) !== FALSE) {
@@ -1755,9 +1770,9 @@ function file_validate_image_resolution(stdClass $file, $maximum_dimensions = 0,
  * @param $data
  *   A string containing the contents of the file.
  * @param $destination
- *   A string containing the destination URI.
- *   This must be a stream wrapper URI. If this value is omitted, Drupal's
- *   default files scheme will be used, usually "public://".
+ *   A string containing the destination URI. This must be a stream wrapper URI.
+ *   If no value is provided, a randomized name will be generated and the file
+ *   will be saved using Drupal's default files scheme, usually "public://".
  * @param $replace
  *   Replace behavior when the destination file already exists:
  *   - FILE_EXISTS_REPLACE - Replace the existing file. If a managed file with
@@ -1823,10 +1838,9 @@ function file_save_data($data, $destination = NULL, $replace = FILE_EXISTS_RENAM
  * @param $data
  *   A string containing the contents of the file.
  * @param $destination
- *   A string containing the destination location.
- *   This must be a stream wrapper URI.  If no value is provided, a
- *   randomized name will be generated and the file is saved using Drupal's
- *   default files scheme, usually "public://".
+ *   A string containing the destination location. This must be a stream wrapper
+ *   URI. If no value is provided, a randomized name will be generated and the
+ *   file will be saved using Drupal's default files scheme, usually "public://".
  * @param $replace
  *   Replace behavior when the destination file already exists:
  *   - FILE_EXISTS_REPLACE - Replace the existing file.
@@ -2104,7 +2118,7 @@ function drupal_chmod($uri, $mode = NULL) {
     }
   }
 
-  watchdog('file', 'The file permissions could not be set on %uri.', array('%uri' => $uri), LOG_ERR);
+  watchdog('file', 'The file permissions could not be set on %uri.', array('%uri' => $uri), WATCHDOG_ERROR);
   return FALSE;
 }
 
@@ -2153,8 +2167,7 @@ function drupal_unlink($uri, $context = NULL) {
  * @see http://drupal.org/node/515192
  *
  * @param $uri
- *   A string containing the URI to verify. If this value is omitted,
- *   Drupal's public files directory will be used [public://].
+ *   A string containing the URI to verify.
  *
  * @return
  *   The absolute pathname, or FALSE on failure.
@@ -2169,14 +2182,8 @@ function drupal_realpath($uri) {
   if ($wrapper = file_stream_wrapper_get_instance_by_uri($uri)) {
     return $wrapper->realpath();
   }
-  // Check that the uri has a value. There is a bug in PHP 5.2 on *BSD systems
-  // that makes realpath not return FALSE as expected when passing an empty
-  // variable.
-  // @todo Remove when Drupal drops support for PHP 5.2.
-  elseif (!empty($uri)) {
-    return realpath($uri);
-  }
-  return FALSE;
+
+  return realpath($uri);
 }
 
 /**
@@ -2335,18 +2342,12 @@ function file_directory_temp() {
     if (substr(PHP_OS, 0, 3) == 'WIN') {
       $directories[] = 'c:\\windows\\temp';
       $directories[] = 'c:\\winnt\\temp';
-      $path_delimiter = '\\';
     }
     else {
       $directories[] = '/tmp';
-      $path_delimiter = '/';
     }
     // PHP may be able to find an alternative tmp directory.
-    // This function exists in PHP 5 >= 5.2.1, but Drupal
-    // requires PHP 5 >= 5.2.0, so we check for it.
-    if (function_exists('sys_get_temp_dir')) {
-      $directories[] = sys_get_temp_dir();
-    }
+    $directories[] = sys_get_temp_dir();
 
     foreach ($directories as $directory) {
       if (is_dir($directory) && is_writable($directory)) {
@@ -2356,8 +2357,14 @@ function file_directory_temp() {
     }
 
     if (empty($temporary_directory)) {
-      // If no directory has been found default to 'files/tmp' or 'files\\tmp'.
-      $temporary_directory = variable_get('file_public_path', conf_path() . '/files') . $path_delimiter . 'tmp';
+      // If no directory has been found default to 'files/tmp'.
+      $temporary_directory = variable_get('file_public_path', conf_path() . '/files') . '/tmp';
+
+      // Windows accepts paths with either slash (/) or backslash (\), but will
+      // not accept a path which contains both a slash and a backslash. Since
+      // the 'file_public_path' variable may have either format, we sanitize
+      // everything to use slash which is supported on all platforms.
+      $temporary_directory = str_replace('\\', '/', $temporary_directory);
     }
     // Save the path of the discovered directory.
     variable_set('file_temporary_path', $temporary_directory);

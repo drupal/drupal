@@ -250,7 +250,7 @@ function theme_field_multiple_value_form($variables) {
   if ($element['#cardinality'] > 1 || $element['#cardinality'] == FIELD_CARDINALITY_UNLIMITED) {
     $table_id = drupal_html_id($element['#field_name'] . '_values');
     $order_class = $element['#field_name'] . '-delta-order';
-    $required = !empty($element['#required']) ? '<span class="form-required" title="' . t('This field is required. ') . '">*</span>' : '';
+    $required = !empty($element['#required']) ? '<abbr class="form-required" title="' . t('This field is required. ') . '">*</abbr>' : '';
 
     $header = array(
       array(
@@ -373,7 +373,7 @@ function field_default_form_errors($entity_type, $entity, $field, $instance, $la
  * to return just the changed part of the form.
  */
 function field_add_more_submit($form, &$form_state) {
-  $button = $form_state['clicked_button'];
+  $button = $form_state['triggering_element'];
 
   // Go one level up in the form, to the widgets container.
   $element = drupal_array_get_nested_value($form, array_slice($button['#array_parents'], 0, -1));
@@ -398,7 +398,7 @@ function field_add_more_submit($form, &$form_state) {
  * @see field_add_more_submit()
  */
 function field_add_more_js($form, $form_state) {
-  $button = $form_state['clicked_button'];
+  $button = $form_state['triggering_element'];
 
   // Go one level up in the form, to the widgets container.
   $element = drupal_array_get_nested_value($form, array_slice($button['#array_parents'], 0, -1));

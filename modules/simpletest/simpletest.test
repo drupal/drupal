@@ -37,7 +37,7 @@ class SimpleTestFunctionalTest extends DrupalWebTestCase {
       $this->drupalLogin($admin_user);
     }
     else {
-      parent::setUp();
+      parent::setUp('non_existent_module');
     }
   }
 
@@ -189,6 +189,8 @@ class SimpleTestFunctionalTest extends DrupalWebTestCase {
    * Confirm that the stub test produced the desired results.
    */
   function confirmStubTestResults() {
+    $this->assertAssertion(t('Enabled modules: %modules', array('%modules' => 'non_existent_module')), 'Other', 'Fail', 'simpletest.test', 'SimpleTestFunctionalTest->setUp()');
+
     $this->assertAssertion($this->pass, 'Other', 'Pass', 'simpletest.test', 'SimpleTestFunctionalTest->stubTest()');
     $this->assertAssertion($this->fail, 'Other', 'Fail', 'simpletest.test', 'SimpleTestFunctionalTest->stubTest()');
 
@@ -208,7 +210,7 @@ class SimpleTestFunctionalTest extends DrupalWebTestCase {
 
     $this->assertAssertion("Debug: 'Foo'", 'Debug', 'Fail', 'simpletest.test', 'SimpleTestFunctionalTest->stubTest()');
 
-    $this->assertEqual('6 passes, 2 fails, 2 exceptions, and 1 debug message', $this->childTestResults['summary'], 'Stub test summary is correct');
+    $this->assertEqual('6 passes, 5 fails, 2 exceptions, and 1 debug message', $this->childTestResults['summary'], 'Stub test summary is correct');
 
     $this->test_ids[] = $test_id = $this->getTestIdFromResults();
     $this->assertTrue($test_id, t('Found test ID in results.'));

@@ -341,7 +341,11 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
    * Base implementation of chmod().
    */
   function chmod($mode) {
-    return @chmod($this->getLocalPath(), $mode);
+    $output = @chmod($this->getLocalPath(), $mode);
+    // We are modifying the underlying file here, so we have to clear the stat
+    // cache so that PHP understands that URI has changed too.
+    clearstatcache();
+    return $output;
   }
 
   /**

@@ -104,6 +104,9 @@ input.form-radio {
 .form-required {
   color: #f00;
 }
+abbr.form-required, abbr.tabledrag-changed, abbr.ajax-changed {
+  border-bottom: none;
+}
 .form-item input.error,
 .form-item textarea.error,
 .form-item select.error {
