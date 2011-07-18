@@ -438,6 +438,7 @@ function taxonomy_update_7004() {
         'entity_type' => 'node',
         'settings' => array(),
         'description' => $vocabulary->help,
+        'required' => $vocabulary->required,
         'widget' => array(),
         'display' => array(
           'default' => array(

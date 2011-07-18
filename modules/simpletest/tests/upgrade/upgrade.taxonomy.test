@@ -68,6 +68,12 @@ class UpgradePathTaxonomyTestCase extends UpgradePathTestCase {
     sort($inst_keys);
     $this->assertEqual($voc_keys, $inst_keys, t('Node type page has instances for every vocabulary.'));
 
+    // Ensure instance variables are getting through.
+    foreach ($instances as $instance) {
+      $this->assertTrue(isset($instance['required']), 'The required setting was preserved during the upgrade path.');
+      $this->assertTrue($instance['description'], 'The description was preserved during the upgrade path');
+    }
+
     // Node type 'story' was not explicitly in $vocabulary->nodes but
     // each node of type 'story' was associated to one or more terms.
     // Check that the node type 'story' has been associated only to
