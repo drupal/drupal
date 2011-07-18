@@ -27,6 +27,11 @@ class NodeBodyUpgradePathTestCase extends UpgradePathTestCase {
    */
   public function testNodeBodyUpgrade() {
     $this->assertTrue($this->performUpgrade(), t('The upgrade was completed successfully.'));
+
+    $instance = field_info_instance('node', 'body', 'story');
+    $this->assertIdentical($instance['required'], 0, 'The required setting was preserved during the upgrade path.');
+    $this->assertTrue($instance['description'], 'The description was preserved during the upgrade path');
+
     $this->drupalGet("content/1263769200");
     $this->assertText('node body (broken) - 37');
 

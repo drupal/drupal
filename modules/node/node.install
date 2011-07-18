@@ -628,6 +628,8 @@ function node_update_7006(&$sandbox) {
           'entity_type' => 'node',
           'bundle' => $node_type->type,
           'label' => $node_type->body_label,
+          'description' => isset($node_type->description) ? $node_type->description : '',
+          'required' => (isset($node_type->min_word_count) && $node_type->min_word_count > 0) ? 1 : 0,
           'widget' => array(
             'type' => 'text_textarea_with_summary',
             'settings' => array(
