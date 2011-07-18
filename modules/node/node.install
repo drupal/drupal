@@ -476,7 +476,7 @@ function _update_7000_node_get_types() {
   $extra_types = array_diff($all_types, array_keys($node_types));
 
   foreach ($extra_types as $type) {
-    $type_object = new stdClass;
+    $type_object = new stdClass();
     $type_object->type = $type;
 
     // In Drupal 6, whether you have a body field or not is a flag in the node
