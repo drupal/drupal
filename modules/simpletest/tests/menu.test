@@ -395,6 +395,14 @@ class MenuRouterTestCase extends DrupalWebTestCase {
   }
 
   /**
+   * Test menu_get_item() with empty ancestors.
+   */
+  function testMenuGetItemNoAncestors() {
+    variable_set('menu_masks', array());
+    $this->drupalGet('');
+  }
+
+  /**
    * Test menu_set_item().
    */
   function testMenuSetItem() {
