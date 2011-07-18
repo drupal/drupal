@@ -100,7 +100,7 @@ module_load_include('inc', 'node', 'node.pages');
 for ($i = 0; $i < 24; $i++) {
   $uid = intval($i / 8) + 3;
   $user = user_load($uid);
-  $node = new stdClass;
+  $node = new stdClass();
   $node->uid = $uid;
   $node->type = $i < 12 ? 'page' : 'story';
   $node->sticky = 0;
@@ -148,7 +148,7 @@ for ($i = 0; $i < 24; $i++) {
 for ($i = 0; $i < 12; $i++) {
   $uid = intval($i / 4) + 3;
   $user = user_load($uid);
-  $node = new stdClass;
+  $node = new stdClass();
   $node->uid = $uid;
   $node->type = 'poll';
   $node->sticky = 0;
@@ -187,7 +187,7 @@ for ($i = 0; $i < 12; $i++) {
 
 $uid = 6;
 $user = user_load($uid);
-$node = new stdClass;
+$node = new stdClass();
 $node->uid = $uid;
 $node->type = 'broken';
 $node->sticky = 0;
