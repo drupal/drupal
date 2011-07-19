@@ -1824,7 +1824,6 @@ class TokenReplaceTestCase extends DrupalWebTestCase {
     // Set a few site variables.
     variable_set('site_name', '<strong>Drupal<strong>');
     variable_set('site_slogan', '<blink>Slogan</blink>');
-    variable_set('site_mission', '<em>Mission</em>');
 
     // Generate and test sanitized tokens.
     $tests = array();
