@@ -503,7 +503,7 @@ function field_sql_storage_field_storage_query(EntityFieldQuery $query) {
   _field_sql_storage_query_field_conditions($query, $select_query, $query->fieldConditions, $table_aliases, '_field_sql_storage_columnname');
 
   // Add field meta conditions.
-  _field_sql_storage_query_field_conditions($query, $select_query, $query->fieldMetaConditions, $table_aliases, function ($field_name, $column) { return $column; });
+  _field_sql_storage_query_field_conditions($query, $select_query, $query->fieldMetaConditions, $table_aliases, '_field_sql_storage_query_columnname');
 
   if (isset($query->deleted)) {
     $select_query->condition("$field_base_table.deleted", (int) $query->deleted);
@@ -612,6 +612,13 @@ function _field_sql_storage_query_field_conditions(EntityFieldQuery $query, Sele
       }
     }
   }
+}
+
+/**
+ * Field meta condition column callback.
+ */
+function _field_sql_storage_query_columnname($field_name, $column) {
+  return $column;
 }
 
 /**
