@@ -558,7 +558,6 @@ function node_add_body_field($type, $label = 'Body') {
       'field_name' => 'body',
       'type' => 'text_with_summary',
       'entity_types' => array('node'),
-      'translatable' => TRUE,
     );
     $field = field_create_field($field);
   }

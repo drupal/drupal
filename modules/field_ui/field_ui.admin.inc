@@ -509,6 +509,10 @@ function field_ui_field_overview_form($form, &$form_state, $entity_type, $bundle
         '#cell_attributes' => array('colspan' => 3),
         '#prefix' => '<div class="add-new-placeholder">&nbsp;</div>',
       ),
+      'translatable' => array(
+        '#type' => 'value',
+        '#value' => FALSE,
+      ),
     );
   }
 
@@ -753,7 +757,7 @@ function field_ui_field_overview_form_submit($form, &$form_state) {
     $field = array(
       'field_name' => $values['field_name'],
       'type' => $values['type'],
-      'translatable' => TRUE,
+      'translatable' => $values['translatable'],
     );
     $instance = array(
       'field_name' => $field['field_name'],

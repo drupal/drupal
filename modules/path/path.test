@@ -279,8 +279,9 @@ class PathLanguageTestCase extends DrupalWebTestCase {
     $this->drupalGet('node/' . $english_node->nid . '/translate');
     $this->clickLink(t('add translation'));
     $edit = array();
+    $langcode = LANGUAGE_NONE;
     $edit["title"] = $this->randomName();
-    $edit["body[fr][0][value]"] = $this->randomName();
+    $edit["body[$langcode][0][value]"] = $this->randomName();
     $french_alias = $this->randomName();
     $edit['path[alias]'] = $french_alias;
     $this->drupalPost(NULL, $edit, t('Save'));

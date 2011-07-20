@@ -108,9 +108,9 @@ class TranslationTestCase extends DrupalWebTestCase {
 
     // Update original and mark translation as outdated.
     $node_body = $this->randomName();
-    $node->body[$node->language][0]['value'] = $node_body;
+    $node->body[LANGUAGE_NONE][0]['value'] = $node_body;
     $edit = array();
-    $edit["body[$node->language][0][value]"] = $node_body;
+    $edit["body[$langcode][0][value]"] = $node_body;
     $edit['translation[retranslate]'] = TRUE;
     $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
     $this->assertRaw(t('Basic page %title has been updated.', array('%title' => $node_title)), t('Original node updated.'));
@@ -121,7 +121,7 @@ class TranslationTestCase extends DrupalWebTestCase {
 
     // Update translation and mark as updated.
     $edit = array();
-    $edit["body[$node_translation->language][0][value]"] = $this->randomName();
+    $edit["body[$langcode][0][value]"] = $this->randomName();
     $edit['translation[status]'] = FALSE;
     $this->drupalPost('node/' . $node_translation->nid . '/edit', $edit, t('Save'));
     $this->assertRaw(t('Basic page %title has been updated.', array('%title' => $node_translation_title)), t('Translated node updated.'));
@@ -131,7 +131,7 @@ class TranslationTestCase extends DrupalWebTestCase {
     $this->drupalGet('node/add/page');
     $this->assertFieldByXPath('//select[@name="language"]//option', 'it', t('Italian (disabled) is available in language selection.'));
     $translation_it = $this->createTranslation($node, $this->randomName(), $this->randomName(), 'it');
-    $this->assertRaw($translation_it->body['it'][0]['value'], t('Content created in Italian (disabled).'));
+    $this->assertRaw($translation_it->body[LANGUAGE_NONE][0]['value'], t('Content created in Italian (disabled).'));
 
     // Confirm that language neutral is an option for translators when there are
     // disabled languages.
@@ -349,9 +349,10 @@ class TranslationTestCase extends DrupalWebTestCase {
   function createTranslation($node, $title, $body, $language) {
     $this->drupalGet('node/add/page', array('query' => array('translation' => $node->nid, 'target' => $language)));
 
-    $body_key = "body[$language][0][value]";
+    $langcode = LANGUAGE_NONE;
+    $body_key = "body[$langcode][0][value]";
     $this->assertFieldByXPath('//input[@id="edit-title"]', $node->title, "Original title value correctly populated.");
-    $this->assertFieldByXPath("//textarea[@name='$body_key']", $node->body[$node->language][0]['value'], "Original body value correctly populated.");
+    $this->assertFieldByXPath("//textarea[@name='$body_key']", $node->body[LANGUAGE_NONE][0]['value'], "Original body value correctly populated.");
 
     $edit = array();
     $edit["title"] = $title;
