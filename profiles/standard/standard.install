@@ -327,7 +327,6 @@ function standard_install() {
     'field_name' => 'field_image',
     'type' => 'image',
     'cardinality' => 1,
-    'translatable' => TRUE,
     'locked' => FALSE,
     'indexes' => array('fid' => array('fid')),
     'settings' => array(

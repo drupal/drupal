@@ -464,7 +464,7 @@ class TextTranslationTestCase extends DrupalWebTestCase {
     $node = $this->drupalGetNodeByTitle($edit['title']);
     $this->drupalGet("node/$node->nid/translate");
     $this->clickLink(t('add translation'));
-    $this->assertFieldByXPath("//textarea[@name='body[fr][0][value]']", $body, t('The textfield widget is populated.'));
+    $this->assertFieldByXPath("//textarea[@name='body[$langcode][0][value]']", $body, t('The textfield widget is populated.'));
   }
 
   /**
@@ -484,17 +484,17 @@ class TextTranslationTestCase extends DrupalWebTestCase {
     );
 
     // Create an article with the first body input format set to "Full HTML".
-    $langcode = 'en';
     $title = $this->randomName();
     $edit = array(
       'title' => $title,
-      'language' => $langcode,
+      'language' => 'en',
     );
     $this->drupalPost('node/add/article', $edit, t('Save'));
 
     // Populate the body field: the first item gets the "Full HTML" input
     // format, the second one "Filtered HTML".
     $formats = array('full_html', 'filtered_html');
+    $langcode = LANGUAGE_NONE;
     foreach ($body as $delta => $value) {
       $edit = array(
         "body[$langcode][$delta][value]" => $value,

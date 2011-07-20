@@ -2137,6 +2137,11 @@ class LocaleMultilingualFieldsFunctionalTest extends DrupalWebTestCase {
     );
     $this->drupalPost('admin/structure/types/manage/page', $edit, t('Save content type'));
     $this->assertRaw(t('The content type %type has been updated.', array('%type' => 'Basic page')), t('Basic page content type has been updated.'));
+
+    // Make node body translatable.
+    $field = field_info_field('body');
+    $field['translatable'] = TRUE;
+    field_update_field($field);
   }
 
   /**
