@@ -458,6 +458,21 @@ class EntityFieldQuery {
   public $fieldConditions = array();
 
   /**
+   * List of field meta conditions (language and delta).
+   *
+   * Field conditions operate on columns specified by hook_field_schema(),
+   * the meta conditions operate on columns added by the system: delta
+   * and language. These can not be mixed with the field conditions because
+   * field columns can have any name including delta and language.
+   *
+   * @var array
+   *
+   * @see EntityFieldQuery::fieldLanguageCondition()
+   * @see EntityFieldQuery::fielDeltaCondition()
+   */
+  public $fieldMetaConditions = array();
+
+  /**
    * List of property conditions.
    *
    * @var array
@@ -613,6 +628,90 @@ class EntityFieldQuery {
   /**
    * Adds a condition on field values.
    *
+   * @param $type
+   *   The condition array the given conditions should be added to.
+   * @param $field
+   *   Either a field name or a field array.
+   * @param $column
+   *   The column that should hold the value to be matched.
+   * @param $value
+   *   The value to test the column value against.
+   * @param $operator
+   *   The operator to be used to test the given value.
+   * @param $delta_group
+   *   An arbitrary identifier: conditions in the same group must have the same
+   *   $delta_group.
+   * @param $language_group
+   *   An arbitrary identifier: conditions in the same group must have the same
+   *   $language_group.
+   *
+   * @return EntityFieldQuery
+   *   The called object.
+   *
+   * @see EntityFieldQuery::addFieldCondition
+   * @see EntityFieldQuery::deleted
+   */
+  public function fieldCondition($field, $column = NULL, $value = NULL, $operator = NULL, $delta_group = NULL, $language_group = NULL) {
+    return $this->addFieldCondition($this->fieldConditions, $field, $column, $value, $operator, $delta_group, $language_group);
+  }
+
+  /**
+   * Adds a condition on the field language column.
+   *
+   * @param $field
+   *   Either a field name or a field array.
+   * @param $value
+   *   The value to test the column value against.
+   * @param $operator
+   *   The operator to be used to test the given value.
+   * @param $delta_group
+   *   An arbitrary identifier: conditions in the same group must have the same
+   *   $delta_group.
+   * @param $language_group
+   *   An arbitrary identifier: conditions in the same group must have the same
+   *   $language_group.
+   *
+   * @return EntityFieldQuery
+   *   The called object.
+   *
+   * @see EntityFieldQuery::addFieldCondition
+   * @see EntityFieldQuery::deleted
+   */
+  public function fieldLanguageCondition($field, $value = NULL, $operator = NULL, $delta_group = NULL, $language_group = NULL) {
+    return $this->addFieldCondition($this->fieldMetaConditions, $field, 'language', $value, $operator, $delta_group, $language_group);
+  }
+
+  /**
+   * Adds a condition on the field delta column.
+   *
+   * @param $field
+   *   Either a field name or a field array.
+   * @param $value
+   *   The value to test the column value against.
+   * @param $operator
+   *   The operator to be used to test the given value.
+   * @param $delta_group
+   *   An arbitrary identifier: conditions in the same group must have the same
+   *   $delta_group.
+   * @param $language_group
+   *   An arbitrary identifier: conditions in the same group must have the same
+   *   $language_group.
+   *
+   * @return EntityFieldQuery
+   *   The called object.
+   *
+   * @see EntityFieldQuery::addFieldCondition
+   * @see EntityFieldQuery::deleted
+   */
+  public function fieldDeltaCondition($field, $value = NULL, $operator = NULL, $delta_group = NULL, $language_group = NULL) {
+    return $this->addFieldCondition($this->fieldMetaConditions, $field, 'delta', $value, $operator, $delta_group, $language_group);
+  }
+
+  /**
+   * Adds the given condition to the proper condition array.
+   *
+   * @param $conditions
+   *   A reference to an array of conditions.
    * @param $field
    *   Either a field name or a field array.
    * @param $column
@@ -649,7 +748,7 @@ class EntityFieldQuery {
    * @return EntityFieldQuery
    *   The called object.
    */
-  public function fieldCondition($field, $column = NULL, $value = NULL, $operator = NULL, $delta_group = NULL, $language_group = NULL) {
+  protected function addFieldCondition(&$conditions, $field, $column = NULL, $value = NULL, $operator = NULL, $delta_group = NULL, $language_group = NULL) {
     if (is_scalar($field)) {
       $field_definition = field_info_field($field);
       if (empty($field_definition)) {
@@ -657,11 +756,11 @@ class EntityFieldQuery {
       }
       $field = $field_definition;
     }
-    // Ensure the same index is used for fieldConditions as for fields.
+    // Ensure the same index is used for field conditions as for fields.
     $index = count($this->fields);
     $this->fields[$index] = $field;
     if (isset($column)) {
-      $this->fieldConditions[$index] = array(
+      $conditions[$index] = array(
         'field' => $field,
         'column' => $column,
         'value' => $value,
