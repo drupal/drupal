@@ -610,7 +610,6 @@ function node_update_7006(&$sandbox) {
       'module' => 'text',
       'cardinality' => 1,
       'entity_types' => array('node'),
-      'translatable' => TRUE,
     );
     _update_7000_field_create_field($body_field);
 
