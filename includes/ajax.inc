@@ -143,6 +143,21 @@
  * - #ajax['event']: The JavaScript event to respond to. This is normally
  *   selected automatically for the type of form widget being used, and
  *   is only needed if you need to override the default behavior.
+ * - #ajax['prevent']: A JavaScript event to prevent when 'event' is triggered.
+ *   Defaults to 'click' for #ajax on #type 'submit', 'button', and
+ *   'image_button'. Multiple events may be specified separated by spaces.
+ *   For example, when binding #ajax behaviors to form buttons, pressing the
+ *   ENTER key within a textfield triggers the 'click' event of the form's first
+ *   submit button. Triggering Ajax in this situation leads to problems, like
+ *   breaking autocomplete textfields. Because of that, Ajax behaviors are bound
+ *   to the 'mousedown' event on form buttons by default. However, binding to
+ *   'mousedown' rather than 'click' means that it is possible to trigger a
+ *   click by pressing the mouse, holding the mouse button down until the Ajax
+ *   request is complete and the button is re-enabled, and then releasing the
+ *   mouse button. For this case, 'prevent' can be set to 'click', so an
+ *   additional event handler is bound to prevent such a click from triggering a
+ *   non-Ajax form submission. This also prevents a textfield's ENTER press
+ *   triggering a button's non-Ajax form submission behavior.
  * - #ajax['method']: The jQuery method to use to place the new HTML.
  *   Defaults to 'replaceWith'. May be: 'replaceWith', 'append', 'prepend',
  *   'before', 'after', or 'html'. See the
@@ -591,6 +606,7 @@ function ajax_process_form($element, &$form_state) {
  *   An associative array containing the properties of the element.
  *   Properties used:
  *   - #ajax['event']
+ *   - #ajax['prevent']
  *   - #ajax['path']
  *   - #ajax['options']
  *   - #ajax['wrapper']
@@ -636,7 +652,9 @@ function ajax_pre_render_element($element) {
         // an additional handler to prevent such a click from triggering a
         // non-Ajax form submission. This also prevents a textfield's ENTER
         // press triggering this button's non-Ajax form submission behavior.
-        $element['#ajax']['prevent'] = 'click';
+        if (!isset($element['#ajax']['prevent'])) {
+          $element['#ajax']['prevent'] = 'click';
+        }
         break;
 
       case 'password':
