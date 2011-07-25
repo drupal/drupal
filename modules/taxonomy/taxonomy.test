@@ -580,7 +580,7 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
     field_create_instance($instance);
     $terms = array(
       $this->randomName(),
-      $this->randomName(),
+      $this->randomName() . ', ' . $this->randomName(),
       $this->randomName(),
     );
 
@@ -590,7 +590,7 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
     $edit["body[$langcode][0][value]"] = $this->randomName();
     // Insert the terms in a comma separated list. Vocabulary 1 is a
     // free-tagging field created by the default profile.
-    $edit[$instance['field_name'] . "[$langcode]"] = implode(', ', $terms);
+    $edit[$instance['field_name'] . "[$langcode]"] = drupal_implode_tags($terms);
 
     // Preview and verify the terms appear but are not created.
     $this->drupalPost('node/add/page', $edit, t('Preview'));
@@ -611,9 +611,9 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
     }
 
     // Get the created terms.
-    list($term1, $term2, $term3) = taxonomy_get_tree($this->vocabulary->vid);
+    list($term1, $term2, $term3) = array_values(taxonomy_term_load_multiple(FALSE));
 
-    // Delete one term.
+    // Delete term 1.
     $this->drupalPost('taxonomy/term/' . $term1->tid . '/edit', array(), t('Delete'));
     $this->drupalPost(NULL, NULL, t('Delete'));
     $term_names = array($term2->name, $term3->name);
@@ -627,10 +627,17 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
     }
     $this->assertNoText($term1->name, t('The deleted term %name does not appear on the node page.', array('%name' => $term1->name)));
 
-    // Test autocomplete on term 2.
+    // Test autocomplete on term 2 - it contains a comma, so expect the key to
+    // be quoted.
     $input = substr($term2->name, 0, 3);
     $this->drupalGet('taxonomy/autocomplete/taxonomy_' . $this->vocabulary->machine_name . '/' . $input);
-    $this->assertRaw('{"' . $term2->name . '":"' . $term2->name . '"}', t('Autocomplete returns term %term_name after typing the first 3 letters.', array('%term_name' => $term2->name)));
+    $this->assertRaw('{"\"' . $term2->name . '\"":"' . $term2->name . '"}', t('Autocomplete returns term %term_name after typing the first 3 letters.', array('%term_name' => $term2->name)));
+
+    // Test autocomplete on term 3 - it is alphanumeric only, so no extra
+    // quoting.
+    $input = substr($term3->name, 0, 3);
+    $this->drupalGet('taxonomy/autocomplete/taxonomy_' . $this->vocabulary->machine_name . '/' . $input);
+    $this->assertRaw('{"' . $term3->name . '":"' . $term3->name . '"}', t('Autocomplete returns term %term_name after typing the first 3 letters.', array('%term_name' => $term3->name)));
   }
 
   /**
