@@ -2263,6 +2263,9 @@ function system_update_7042() {
   // provided any meaningful unique constraint ('pid' is a primary key).
   db_add_index('url_alias', 'source_language_pid', array('source', 'language', 'pid'));
   db_add_index('url_alias', 'alias_language_pid', array('alias', 'language', 'pid'));
+
+  // Now that the URL aliases are correct, we can rebuild the whitelist.
+  drupal_path_alias_whitelist_rebuild();
 }
 
 /**
