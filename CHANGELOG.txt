@@ -1,4 +1,23 @@
 
+Drupal 7.7-dev, xxxx-xx-xx (development version)
+----------------------
+
+
+Drupal 7.6, 2011-07-27
+----------------------
+- Fixed support for remote streamwrappers.
+- AJAX now binds to 'click' instead of 'mousedown'.
+- 'Translatable' flag on fields created in UI now defaults to FALSE, to match those created via the API.
+- Performance enhancement to permissions page on large numbers of permissions.
+- More secure password generation.
+- Fix for temporary directory on Windows servers.
+- run-tests.sh now uses proc_open() instead of pcntl_fork() for better Windows support.
+- Numerous upgrade path fixes.
+- Numerous documentation fixes.
+- Numerous notice fixes.
+- Numerous fixes to improve PHP 5.4 support.
+- Numerous RTL improvements.
+
 Drupal 7.5, 2011-07-27
 ----------------------
 - Fixed security issue (Access bypass), see SA-CORE-2011-003.
