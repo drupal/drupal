@@ -2110,7 +2110,7 @@ function theme_user_signature($signature) {
  *
  * @param $account
  *  The user object of the account being notified.  Must contain at
- *  least the fields 'uid', 'name', and 'mail'.
+ *  least the fields 'uid', 'name', 'pass', 'login', and 'mail'.
  * @param $language
  *  Language object to generate the tokens with.
  * @return
