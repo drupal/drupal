@@ -1788,8 +1788,11 @@ function drupal_add_link($attributes) {
  *
  *   Typical candidates for caching are for example styles for nodes across
  *   the site, or used in the theme.
+ *
  * @return
  *   An array of CSS files.
+ *
+ * @see drupal_get_css()
  */
 function drupal_add_css($path = NULL, $type = 'module', $media = 'all', $preprocess = TRUE) {
   static $css = array();
@@ -1835,8 +1838,11 @@ function drupal_add_css($path = NULL, $type = 'module', $media = 'all', $preproc
  * @param $css
  *   (optional) An array of CSS files. If no array is provided, the default
  *   stylesheets array is used instead.
+ *
  * @return
  *   A string of XHTML CSS tags.
+ *
+ * @see drupal_add_css()
  */
 function drupal_get_css($css = NULL) {
   $output = '';
