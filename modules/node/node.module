@@ -1069,8 +1069,8 @@ function node_prepare($node, $teaser = FALSE) {
  *   Whether the node is being displayed by itself as a page.
  *
  * @return
- *   An structured array containing the individual elements
- *   of the node's body.
+ *   A node object with its content property set to a structured array
+ *   containing the individual elements of the node's body.
  */
 function node_build_content($node, $teaser = FALSE, $page = FALSE) {
 
