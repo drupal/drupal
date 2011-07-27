@@ -523,7 +523,7 @@ function list_themes($refresh = FALSE) {
 }
 
 /**
- * Generate the themed output.
+ * Generates the themed output.
  *
  * All requests for theme hooks must go through this function. It examines
  * the request and routes it to the appropriate theme function. The theme
@@ -539,14 +539,14 @@ function list_themes($refresh = FALSE) {
  * functions may be used to modify the $variables array. They are processed in
  * this order when available:
  *
- * - template_preprocess(&$variables)
+ * - template_preprocess(&$variables, $hook)
  *   This sets a default set of variables for all template implementations.
  *
  * - template_preprocess_HOOK(&$variables)
  *   This is the first preprocessor called specific to the hook; it should be
  *   implemented by the module that registers it.
  *
- * - MODULE_preprocess(&$variables)
+ * - MODULE_preprocess(&$variables, $hook)
  *   This will be called for all templates; it should only be used if there
  *   is a real need. It's purpose is similar to template_preprocess().
  *
@@ -557,7 +557,7 @@ function list_themes($refresh = FALSE) {
  *   preprocess function of foo_preprocess_node() can be created to intercept
  *   and alter the variable.
  *
- * - ENGINE_engine_preprocess(&$variables)
+ * - ENGINE_engine_preprocess(&$variables, $hook)
  *   This function should only be implemented by theme engines and exists
  *   so that it can set necessary variables for all hooks.
  *
@@ -565,7 +565,7 @@ function list_themes($refresh = FALSE) {
  *   This is the same as the previous function, but it is called for a single
  *   theming hook.
  *
- * - ENGINE_preprocess(&$variables)
+ * - ENGINE_preprocess(&$variables, $hook)
  *   This is meant to be used by themes that utilize a theme engine. It is
  *   provided so that the preprocessor is not locked into a specific theme.
  *   This makes it easy to share and transport code but theme authors must be
@@ -581,7 +581,7 @@ function list_themes($refresh = FALSE) {
  *   The same applies from the previous function, but it is called for a
  *   specific hook.
  *
- * - THEME_preprocess(&$variables)
+ * - THEME_preprocess(&$variables, $hook)
  *   These functions are based upon the raw theme; they should primarily be
  *   used by themes that do not use an engine or by sub-themes. It serves the
  *   same purpose as ENGINE_preprocess().
@@ -606,6 +606,7 @@ function list_themes($refresh = FALSE) {
  *   implementations for named objects.
  * @param ...
  *   Additional arguments to pass along to the theme function.
+ * 
  * @return
  *   An HTML string that generates the themed output.
  */
