@@ -2688,6 +2688,10 @@ function comment_rdf_mapping() {
  */
 function comment_file_download_access($field, $entity_type, $entity) {
   if ($entity_type == 'comment') {
-    return user_access('access comments') && $entity->status == COMMENT_PUBLISHED || user_access('administer comments');
+    if (user_access('access comments') && $entity->status == COMMENT_PUBLISHED || user_access('administer comments')) {
+      $node = node_load($entity->nid);
+      return node_access('view', $node);
+    }
+    return FALSE;
   }
 }

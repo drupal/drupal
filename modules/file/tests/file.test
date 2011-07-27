@@ -540,6 +540,7 @@ class FileFieldWidgetTestCase extends FileFieldTestCase {
       'title' => $this->randomName(),
     );
     $this->drupalPost('node/add/article', $edit, t('Save'));
+    $node = $this->drupalGetNodeByTitle($edit['title']);
 
     // Add a comment with a file.
     $text_file = $this->getTestFile('text');
@@ -567,6 +568,18 @@ class FileFieldWidgetTestCase extends FileFieldTestCase {
 
     // Test anonymous file download.
     $this->drupalLogout();
+    $this->drupalGet(file_create_url($comment_file->uri));
+    $this->assertResponse(403, t('Confirmed that access is denied for the file without the needed permission.'));
+
+    // Unpublishes node.
+    $this->drupalLogin($this->admin_user);
+    $edit = array(
+      'status' => FALSE,
+    );
+    $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
+
+    // Ensures normal user can no longer download the file.
+    $this->drupalLogin($user);
     $this->drupalGet(file_create_url($comment_file->uri));
     $this->assertResponse(403, t('Confirmed that access is denied for the file without the needed permission.'));
   }
