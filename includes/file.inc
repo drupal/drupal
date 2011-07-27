@@ -918,6 +918,7 @@ function file_download() {
 
 /**
  * Finds all files that match a given mask in a given directory.
+ *
  * Directories and files beginning with a period are excluded; this
  * prevents hidden files and directories (such as SVN working directories)
  * from being scanned.
@@ -934,18 +935,19 @@ function file_download() {
  *   When TRUE, the directory scan will recurse the entire tree
  *   starting at the provided directory.
  * @param $key
- *   The key to be used for the returned array of files. Possible
- *   values are "filename", for the path starting with $dir,
- *   "basename", for the basename of the file, and "name" for the name
- *   of the file without an extension.
+ *   The key to be used for the returned associative array of files. Possible
+ *   values are "filename", for the path starting with $dir; "basename", for
+ *   the basename of the file; and "name" for the name of the file without the
+ *   extension.
  * @param $min_depth
  *   Minimum depth of directories to return files from.
  * @param $depth
- *   Current depth of recursion. This parameter is only used internally and should not be passed.
+ *   Current depth of recursion. This parameter is only used internally and
+ *   should not be passed in.
  *
  * @return
  *   An associative array (keyed on the provided key) of objects with
- *   "path", "basename", and "name" members corresponding to the
+ *   "filename", "basename", and "name" members corresponding to the
  *   matching files.
  */
 function file_scan_directory($dir, $mask, $nomask = array('.', '..', 'CVS'), $callback = 0, $recurse = TRUE, $key = 'filename', $min_depth = 0, $depth = 0) {
