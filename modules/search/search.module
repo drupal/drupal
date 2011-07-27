@@ -1036,7 +1036,7 @@ function search_form(&$form_state, $action = '', $keys = '', $type = NULL, $prom
     '#attributes' => array('class' => 'search-form'),
   );
   $form['module'] = array('#type' => 'value', '#value' => $type);
-  $form['basic'] = array('#type' => 'item', '#title' => $prompt);
+  $form['basic'] = array('#type' => 'item', '#title' => $prompt, '#id' => 'edit-keys');
   $form['basic']['inline'] = array('#prefix' => '<div class="container-inline">', '#suffix' => '</div>');
   $form['basic']['inline']['keys'] = array(
     '#type' => 'textfield',
