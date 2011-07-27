@@ -115,10 +115,11 @@ function db_prefix_tables($sql) {
  * code.
  *
  * @param $name
- *   The name assigned to the newly active database connection. If omitted, the
+ *   The key in the $db_url global variable from settings.php. If omitted, the
  *   default connection will be made active.
  *
- * @return the name of the previously active database or FALSE if non was found.
+ * @return
+ *   The name of the previously active database, or FALSE if none was found.
  */
 function db_set_active($name = 'default') {
   global $db_url, $db_type, $active_db;
