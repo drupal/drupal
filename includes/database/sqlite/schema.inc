@@ -196,6 +196,7 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
     // $map does not use drupal_static as its value never changes.
     static $map = array(
       'varchar:normal'  => 'VARCHAR',
+      'char:normal'     => 'CHAR',
 
       'text:tiny'       => 'TEXT',
       'text:small'      => 'TEXT',
