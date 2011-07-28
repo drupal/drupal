@@ -879,7 +879,8 @@ function taxonomy_get_parents_all($tid) {
  *   An optional vocabulary ID to restrict the child search.
  *
  * @return
- *   An array of term objects which are the children of the term $tid.
+ *   An array of term objects that are the children of the term $tid, or an
+ *   empty array when no children exist.
  */
 function taxonomy_get_children($tid, $vid = 0) {
   $children = &drupal_static(__FUNCTION__, array());
