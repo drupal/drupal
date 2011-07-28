@@ -2905,7 +2905,7 @@ function system_get_module_admin_tasks($module, $info) {
       ->condition('ml.hidden', 0, '>=')
       ->condition('ml.module', 'system')
       ->condition('m.number_parts', 1, '>')
-      ->condition('m.page_callback', 'system_admin_menu_block_page', '!=');
+      ->condition('m.page_callback', 'system_admin_menu_block_page', '<>');
     foreach ($query->execute() as $link) {
       _menu_link_translate($link);
       if ($link['access']) {
