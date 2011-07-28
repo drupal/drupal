@@ -2745,13 +2745,14 @@ function drupal_add_html_head_link($attributes, $header = FALSE) {
  * @param $data
  *   (optional) The stylesheet data to be added, depending on what is passed
  *   through to the $options['type'] parameter:
- *   - 'file': The path to the CSS file relative to the base_path(), e.g.,
- *     "modules/devel/devel.css". Note that Modules should always prefix the
- *     names of their CSS files with the module name; for example,
- *     system-menus.css rather than simply menus.css. Themes can override
- *     module-supplied CSS files based on their filenames, and this prefixing
- *     helps prevent confusing name collisions for theme developers. See
- *     drupal_get_css() where the overrides are performed. Also, if the
+ *   - 'file': The path to the CSS file relative to the base_path(), or a
+ *     stream wrapper URI. For example: "modules/devel/devel.css" or
+ *     "public://generated_css/stylesheet_1.css". Note that Modules should
+ *     always prefix the names of their CSS files with the module name; for
+ *     example, system-menus.css rather than simply menus.css. Themes can
+ *     override module-supplied CSS files based on their filenames, and this
+ *     prefixing helps prevent confusing name collisions for theme developers.
+ *     See drupal_get_css() where the overrides are performed. Also, if the
  *     direction of the current language is right-to-left (Hebrew, Arabic,
  *     etc.), the function will also look for an RTL CSS file and append it to
  *     the list. The name of this file should have an '-rtl.css' suffix.  For
