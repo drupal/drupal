@@ -1,7 +1,7 @@
 
-Drupal 7.7-dev, xxxx-xx-xx (development version)
+Drupal 7.7, 2011-07-27
 ----------------------
-
+- Fixed VERSION string.
 
 Drupal 7.6, 2011-07-27
 ----------------------
