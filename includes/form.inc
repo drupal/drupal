@@ -4033,8 +4033,9 @@ function _form_set_class(&$element, $class = array()) {
  *   'file' => 'path_to_file_containing_myfunctions',
  * );
  * batch_set($batch);
- * // only needed if not inside a form _submit handler :
- * batch_process();
+ * // Only needed if not inside a form _submit handler.
+ * // Setting redirect in batch_process.
+ * batch_process('node/1');
  * @endcode
  *
  * Note: if the batch 'title', 'init_message', 'progress_message', or
