@@ -841,7 +841,7 @@ function user_admin_roles($form, $form_state) {
     $form['roles'][$rid]['#weight'] = $order;
     $form['roles'][$rid]['weight'] = array(
       '#type' => 'textfield',
-      '#title' => t('Weight for @title', array('@title' => $name['label'])),
+      '#title' => t('Weight for @title', array('@title' => $name)),
       '#title_display' => 'invisible',
       '#size' => 4,
       '#default_value' => $order,
