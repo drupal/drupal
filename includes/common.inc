@@ -7372,12 +7372,24 @@ function entity_info_cache_clear() {
  */
 function entity_extract_ids($entity_type, $entity) {
   $info = entity_get_info($entity_type);
+
   // Objects being created might not have id/vid yet.
   $id = isset($entity->{$info['entity keys']['id']}) ? $entity->{$info['entity keys']['id']} : NULL;
   $vid = ($info['entity keys']['revision'] && isset($entity->{$info['entity keys']['revision']})) ? $entity->{$info['entity keys']['revision']} : NULL;
-  // If no bundle key provided, then we assume a single bundle, named after the
-  // entity type.
-  $bundle = $info['entity keys']['bundle'] ? $entity->{$info['entity keys']['bundle']} : $entity_type;
+
+  if (!empty($info['entity keys']['bundle'])) {
+    // Explicitly fail for malformed entities missing the bundle property.
+    if (!isset($entity->{$info['entity keys']['bundle']}) || $entity->{$info['entity keys']['bundle']} === '') {
+      throw new EntityMalformedException(t('Missing bundle property on entity of type @entity_type.', array('@entity_type' => $entity_type)));
+    }
+    $bundle = $entity->{$info['entity keys']['bundle']};
+  }
+  else {
+    // The entity type provides no bundle key: assume a single bundle, named
+    // after the entity type.
+    $bundle = $entity_type;
+  }
+
   return array($id, $vid, $bundle);
 }
 
