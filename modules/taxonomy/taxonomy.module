@@ -510,19 +510,22 @@ function taxonomy_taxonomy_vocabulary_update($vocabulary) {
 }
 
 /**
- * Dynamically check and update the hierarchy flag of a vocabulary.
+ * Checks and updates the hierarchy flag of a vocabulary.
  *
  * Checks the current parents of all terms in a vocabulary and updates the
- * vocabularies hierarchy setting to the lowest possible level. A hierarchy with
- * no parents in any of its terms will be given a hierarchy of 0. If terms
- * contain at most a single parent, the vocabulary will be given a hierarchy of
- * 1. If any term contain multiple parents, the vocabulary will be given a
- * hierarchy of 2.
+ * vocabulary's hierarchy setting to the lowest possible level. If no term
+ * has parent terms then the vocabulary will be given a hierarchy of 0.
+ * If any term has a single parent then the vocabulary will be given a
+ * hierarchy of 1. If any term has multiple parents then the vocabulary
+ * will be given a hierarchy of 2.
  *
  * @param $vocabulary
  *   A vocabulary object.
  * @param $changed_term
  *   An array of the term structure that was updated.
+ *
+ * @return
+ *   An integer that represents the level of the vocabulary's hierarchy.
  */
 function taxonomy_check_vocabulary_hierarchy($vocabulary, $changed_term) {
   $tree = taxonomy_get_tree($vocabulary->vid);
