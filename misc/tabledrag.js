@@ -131,31 +131,28 @@ Drupal.tableDrag.prototype.initColumns = function () {
     }
 
     // Mark the column containing this field so it can be hidden.
-    if (hidden && cell[0] && cell.css('display') != 'none') {
+    if (hidden && cell[0]) {
       // Add 1 to our indexes. The nth-child selector is 1 based, not 0 based.
       // Match immediate children of the parent element to allow nesting.
       var columnIndex = $('> td', cell.parent()).index(cell.get(0)) + 1;
-      var headerIndex = $('> td:not(:hidden)', cell.parent()).index(cell.get(0)) + 1;
-      $('> thead > tr, > tbody > tr, > tr', this.table).each(function (){
-        var row = $(this);
-        var parentTag = row.parent().get(0).tagName.toLowerCase();
-        var index = (parentTag == 'thead') ? headerIndex : columnIndex;
-
-        // Adjust the index to take into account colspans.
-        row.children().each(function (n) {
-          if (n < index) {
-            index -= (this.colSpan && this.colSpan > 1) ? this.colSpan - 1 : 0;
+      $('> thead > tr, > tbody > tr, > tr', this.table).each(function () {
+        // Get the columnIndex and adjust for any colspans in this row.
+        var index = columnIndex;
+        var cells = $(this).children();
+        cells.each(function (n) {
+          if (n < index && this.colSpan && this.colSpan > 1) {
+            index -= this.colSpan - 1;
           }
         });
         if (index > 0) {
-          cell = row.children(':nth-child(' + index + ')');
-          if (cell[0].colSpan > 1) {
+          cell = cells.filter(':nth-child(' + index + ')');
+          if (cell[0].colSpan && cell[0].colSpan > 1) {
             // If this cell has a colspan, mark it so we can reduce the colspan.
-            $(cell[0]).addClass('tabledrag-has-colspan');
+            cell.addClass('tabledrag-has-colspan');
           }
           else {
             // Mark this cell so we can hide it.
-            $(cell[0]).addClass('tabledrag-hide');
+            cell.addClass('tabledrag-hide');
           }
         }
       });
