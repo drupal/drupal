@@ -2785,8 +2785,9 @@ function node_search_validate($form, &$form_state) {
  * hook_node_access() is not called on each node for performance reasons and for
  * proper functioning of the pager system. When adding a node listing to your
  * module, be sure to use a dynamic query created by db_select() and add a tag
- * of "node_access" to ensure that only nodes to which the user has access
- * are retrieved.
+ * of "node_access". This will allow modules dealing with node access to ensure
+ * only nodes to which the user has access are retrieved, through the use of
+ * hook_query_TAG_alter().
  *
  * Note: Even a single module returning NODE_ACCESS_DENY from hook_node_access()
  * will block access to the node. Therefore, implementers should take care to
