@@ -1790,6 +1790,13 @@ function system_authorized_get_url(array $options = array()) {
 }
 
 /**
+ * Returns the URL for the authorize.php script when it is processing a batch.
+ */
+function system_authorized_batch_processing_url() {
+  return system_authorized_get_url(array('query' => array('batch' => '1')));
+}
+
+/**
  * Setup and invoke an operation using authorize.php.
  *
  * @see system_authorized_init()
@@ -1806,7 +1813,7 @@ function system_authorized_run($callback, $file, $arguments = array(), $page_tit
  */
 function system_authorized_batch_process() {
   $finish_url = system_authorized_get_url();
-  $process_url = system_authorized_get_url(array('query' => array('batch' => '1')));
+  $process_url = system_authorized_batch_processing_url();
   batch_process($finish_url, $process_url);
 }
 

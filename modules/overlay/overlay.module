@@ -137,8 +137,15 @@ function overlay_init() {
     }
 
     if (isset($_GET['render']) && $_GET['render'] == 'overlay') {
-      // If this page shouldn't be rendered here, redirect to the parent.
-      if (!path_is_admin($current_path)) {
+      // If a previous page requested that we close the overlay, close it and
+      // redirect to the final destination.
+      if (isset($_SESSION['overlay_close_dialog'])) {
+        call_user_func_array('overlay_close_dialog', $_SESSION['overlay_close_dialog']);
+        unset($_SESSION['overlay_close_dialog']);
+      }
+      // If this page shouldn't be rendered inside the overlay, redirect to the
+      // parent.
+      elseif (!path_is_admin($current_path)) {
         overlay_close_dialog($current_path);
       }
 
@@ -226,14 +233,23 @@ function overlay_library() {
 
 /**
  * Implements hook_drupal_goto_alter().
- *
- * If the current page request is inside the overlay, add ?render=overlay to
- * the new path, so that it appears correctly inside the overlay.
- *
- * @see overlay_get_mode()
  */
 function overlay_drupal_goto_alter(&$path, &$options, &$http_response_code) {
   if (overlay_get_mode() == 'child') {
+    // The authorize.php script bootstraps Drupal to a very low level, where
+    // the PHP code that is necessary to close the overlay properly will not be
+    // loaded. Therefore, if we are redirecting to authorize.php inside the
+    // overlay, instead redirect back to the current page with instructions to
+    // close the overlay there before redirecting to the final destination; see
+    // overlay_init().
+    if ($path == system_authorized_get_url() || $path == system_authorized_batch_processing_url()) {
+      $_SESSION['overlay_close_dialog'] = array($path, $options);
+      $path = current_path();
+      $options = drupal_get_query_parameters();
+    }
+
+    // If the current page request is inside the overlay, add ?render=overlay
+    // to the new path, so that it appears correctly inside the overlay.
     if (isset($options['query'])) {
       $options['query'] += array('render' => 'overlay');
     }
