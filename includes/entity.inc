@@ -606,7 +606,7 @@ class EntityFieldQuery {
    *   dependent on $operator.
    * @param $operator
    *   Possible values:
-   *   - '=', '!=', '>', '>=', '<', '<=', 'STARTS_WITH', 'CONTAINS': These
+   *   - '=', '<>', '>', '>=', '<', '<=', 'STARTS_WITH', 'CONTAINS': These
    *     operators expect $value to be a literal of the same type as the
    *     column.
    *   - 'IN', 'NOT IN': These operators expect $value to be an array of
@@ -724,7 +724,7 @@ class EntityFieldQuery {
    *   element in the array is dependent on $operator.
    * @param $operator
    *   Possible values:
-   *   - '=', '!=', '>', '>=', '<', '<=', 'STARTS_WITH', 'CONTAINS': These
+   *   - '=', '<>', '>', '>=', '<', '<=', 'STARTS_WITH', 'CONTAINS': These
    *     operators expect $value to be a literal of the same type as the
    *     column.
    *   - 'IN', 'NOT IN': These operators expect $value to be an array of
@@ -789,7 +789,7 @@ class EntityFieldQuery {
    *   array is dependent on $operator.
    * @param $operator
    *   Possible values:
-   *   - '=', '!=', '>', '>=', '<', '<=', 'STARTS_WITH', 'CONTAINS': These
+   *   - '=', '<>', '>', '>=', '<', '<=', 'STARTS_WITH', 'CONTAINS': These
    *     operators expect $value to be a literal of the same type as the
    *     column.
    *   - 'IN', 'NOT IN': These operators expect $value to be an array of
