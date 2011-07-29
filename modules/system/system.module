@@ -3101,7 +3101,7 @@ function system_send_email_action_form($context) {
     '#title' => t('Recipient'),
     '#default_value' => $context['recipient'],
     '#maxlength' => '254',
-    '#description' => t('The email address to which the message should be sent OR enter [node:author:mail], [comment:author:mail], etc. if you would like to send an e-mail to the author of the original post.'),
+    '#description' => t('The e-mail address to which the message should be sent OR enter [node:author:mail], [comment:author:mail], etc. if you would like to send an e-mail to the author of the original post.'),
   );
   $form['subject'] = array(
     '#type' => 'textfield',
