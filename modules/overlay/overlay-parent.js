@@ -346,6 +346,10 @@ Drupal.overlay.setFocusBefore = function ($element, document) {
  *   TRUE if the URL represents an administrative link, FALSE otherwise.
  */
 Drupal.overlay.isAdminLink = function (url) {
+  if (Drupal.overlay.isExternalLink(url)) {
+    return false;
+  }
+
   var path = this.getPath(url);
 
   // Turn the list of administrative paths into a regular expression.
@@ -360,6 +364,20 @@ Drupal.overlay.isAdminLink = function (url) {
   }
 
   return this.adminPathRegExp.exec(path) && !this.nonAdminPathRegExp.exec(path);
+};
+
+/**
+ * Determine whether a link is external to the site.
+ *
+ * @param url
+ *   The url to be tested.
+ *
+ * @return boolean
+ *   TRUE if the URL is external to the site, FALSE otherwise.
+ */
+Drupal.overlay.isExternalLink = function (url) {
+  var re = RegExp('^((f|ht)tps?:)?//(?!' + window.location.host + ')');
+  return re.test(url);
 };
 
 /**
