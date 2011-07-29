@@ -460,7 +460,7 @@ function shortcut_set_assign_user($shortcut_set, $account) {
  *   to any set.
  */
 function shortcut_set_unassign_user($account) {
-  $deleted = db_delete('shortcut_set')
+  $deleted = db_delete('shortcut_set_users')
     ->condition('uid', $account->uid)
     ->execute();
   return (bool) $deleted;
