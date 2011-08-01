@@ -112,7 +112,9 @@
       <div id="breadcrumb"><?php print $breadcrumb; ?></div>
     <?php endif; ?>
 
-    <?php print $messages; ?>
+    <?php if ($messages): ?>
+      <div id="messages"><?php print $messages; ?></div>
+    <?php endif; ?>
 
     <div id="main-wrapper"><div id="main" class="clearfix">
 
