@@ -537,7 +537,7 @@ function form_state_keys_no_cache() {
     'buttons',
     'triggering_element',
     'clicked_button',
-    'complete form',
+    'complete_form',
     'groups',
     'input',
     'method',
@@ -1358,7 +1358,7 @@ function _form_validate(&$elements, &$form_state, $form_id = NULL) {
     // #value data.
     elseif (isset($elements['#element_validate'])) {
       foreach ($elements['#element_validate'] as $function) {
-        $function($elements, $form_state, $form_state['complete form']);
+        $function($elements, $form_state, $form_state['complete_form']);
       }
     }
     $elements['#validated'] = TRUE;
@@ -1718,7 +1718,7 @@ function form_builder($form_id, &$element, &$form_state) {
     // Store a reference to the complete form in $form_state prior to building
     // the form. This allows advanced #process and #after_build callbacks to
     // perform changes elsewhere in the form.
-    $form_state['complete form'] = &$element;
+    $form_state['complete_form'] = &$element;
 
     // Set a flag if we have a correct form submission. This is always TRUE for
     // programmed forms coming from drupal_form_submit(), or if the form_id coming
@@ -1745,7 +1745,7 @@ function form_builder($form_id, &$element, &$form_state) {
   // checkboxes and files.
   if (isset($element['#process']) && !$element['#processed']) {
     foreach ($element['#process'] as $process) {
-      $element = $process($element, $form_state, $form_state['complete form']);
+      $element = $process($element, $form_state, $form_state['complete_form']);
     }
     $element['#processed'] = TRUE;
   }
@@ -3330,7 +3330,7 @@ function form_process_machine_name($element, &$form_state) {
   // complete form in $form_state. By reference, because we need to append
   // a #field_suffix that will hold the live preview.
   $key_exists = NULL;
-  $source = drupal_array_get_nested_value($form_state['complete form'], $element['#machine_name']['source'], $key_exists);
+  $source = drupal_array_get_nested_value($form_state['complete_form'], $element['#machine_name']['source'], $key_exists);
   if (!$key_exists) {
     return $element;
   }
@@ -3342,7 +3342,7 @@ function form_process_machine_name($element, &$form_state) {
   $source['#field_suffix'] .= ' <small id="' . $suffix_id . '">&nbsp;</small>';
 
   $parents = array_merge($element['#machine_name']['source'], array('#field_suffix'));
-  drupal_array_set_nested_value($form_state['complete form'], $parents, $source['#field_suffix']);
+  drupal_array_set_nested_value($form_state['complete_form'], $parents, $source['#field_suffix']);
 
   $element['#machine_name']['suffix'] = '#' . $suffix_id;
 
