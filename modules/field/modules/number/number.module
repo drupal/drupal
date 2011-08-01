@@ -98,14 +98,14 @@ function number_field_instance_settings_form($field, $instance) {
     '#title' => t('Minimum'),
     '#default_value' => $settings['min'],
     '#description' => t('The minimum value that should be allowed in this field. Leave blank for no minimum.'),
-    '#element_validate' => array('_element_validate_number'),
+    '#element_validate' => array('element_validate_number'),
   );
   $form['max'] = array(
     '#type' => 'textfield',
     '#title' => t('Maximum'),
     '#default_value' => $settings['max'],
     '#description' => t('The maximum value that should be allowed in this field. Leave blank for no maximum.'),
-    '#element_validate' => array('_element_validate_number'),
+    '#element_validate' => array('element_validate_number'),
   );
   $form['prefix'] = array(
     '#type' => 'textfield',
