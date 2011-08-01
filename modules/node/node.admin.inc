@@ -394,7 +394,7 @@ function node_admin_nodes() {
   // Build the sortable table header.
   $header = array(
     'title' => array('data' => t('Title'), 'field' => 'n.title'),
-    'type' => array('data' => t('Type'), 'field' => 'n.type'),
+    'type' => array('data' => t('Content type'), 'field' => 'n.type'),
     'author' => t('Author'),
     'status' => array('data' => t('Status'), 'field' => 'n.status'),
     'changed' => array('data' => t('Updated'), 'field' => 'n.changed', 'sort' => 'desc')
