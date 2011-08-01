@@ -1176,31 +1176,37 @@ function theme_field($variables) {
 }
 
 /**
- * Helper form element validator: integer.
+ * DEPRECATED: Helper form element validator: integer.
+ *
+ * Use element_validate_integer() instead.
+ *
+ * @deprecated
+ * @see element_validate_integer()
  */
 function _element_validate_integer($element, &$form_state) {
-  $value = $element['#value'];
-  if ($value !== '' && (!is_numeric($value) || intval($value) != $value)) {
-    form_error($element, t('%name must be an integer.', array('%name' => $element['#title'])));
-  }
+  element_validate_integer($element, $form_state);
 }
 
 /**
- * Helper form element validator: integer > 0.
+ * DEPRECATED: Helper form element validator: integer > 0.
+ *
+ * Use element_validate_integer_positive() instead.
+ *
+ * @deprecated
+ * @see element_validate_number_positive()
  */
 function _element_validate_integer_positive($element, &$form_state) {
-  $value = $element['#value'];
-  if ($value !== '' && (!is_numeric($value) || intval($value) != $value || $value <= 0)) {
-    form_error($element, t('%name must be a positive integer.', array('%name' => $element['#title'])));
-  }
+  element_validate_integer_positive($element, $form_state);
 }
 
 /**
- * Helper form element validator: number.
+ * DEPRECATED: Helper form element validator: number.
+ *
+ * Use element_validate_number() instead.
+ *
+ * @deprecated
+ * @see element_validate_number()
  */
 function _element_validate_number($element, &$form_state) {
-  $value = $element['#value'];
-  if ($value != '' && !is_numeric($value)) {
-    form_error($element, t('%name must be a number.', array('%name' => $element['#title'])));
-  }
+  element_validate_number($element, $form_state);
 }
