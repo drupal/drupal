@@ -435,7 +435,7 @@ function _batch_next_set() {
     if (isset($current_set['form_submit']) && ($function = $current_set['form_submit']) && function_exists($function)) {
       // We use our stored copies of $form and $form_state to account for
       // possible alterations by previous form submit handlers.
-      $function($batch['form_state']['complete form'], $batch['form_state']);
+      $function($batch['form_state']['complete_form'], $batch['form_state']);
     }
     return TRUE;
   }
