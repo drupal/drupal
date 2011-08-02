@@ -1022,7 +1022,9 @@ abstract class DatabaseConnection extends PDO {
     }
 
     // We need to find the point we're rolling back to, all other savepoints
-    // before are no longer needed.
+    // before are no longer needed. If we rolled back other active savepoints,
+    // we need to throw an exception.
+    $rolled_back_other_active_savepoints = FALSE;
     while ($savepoint = array_pop($this->transactionLayers)) {
       if ($savepoint == $savepoint_name) {
         // If it is the last the transaction in the stack, then it is not a
@@ -1032,10 +1034,20 @@ abstract class DatabaseConnection extends PDO {
           break;
         }
         $this->query('ROLLBACK TO SAVEPOINT ' . $savepoint);
+        $this->popCommittableTransactions();
+        if ($rolled_back_other_active_savepoints) {
+          throw new DatabaseTransactionOutOfOrderException();
+        }
         return;
+      }
+      else {
+        $rolled_back_other_active_savepoints = TRUE;
       }
     }
     parent::rollBack();
+    if ($rolled_back_other_active_savepoints) {
+      throw new DatabaseTransactionOutOfOrderException();
+    }
   }
 
   /**
@@ -1084,15 +1096,28 @@ abstract class DatabaseConnection extends PDO {
     if (!$this->supportsTransactions()) {
       return;
     }
-    if (!$this->inTransaction()) {
+    if (!isset($this->transactionLayers[$name])) {
       throw new DatabaseTransactionNoActiveException();
     }
 
-    // Commit everything since SAVEPOINT $name.
-    while($savepoint = array_pop($this->transactionLayers)) {
-      if ($savepoint != $name) continue;
+    // Mark this layer as committable.
+    $this->transactionLayers[$name] = FALSE;
+    $this->popCommittableTransactions();
+  }
+
+  /**
+   * Internal function: commit all the transaction layers that can commit.
+   */
+  protected function popCommittableTransactions() {
+    // Commit all the committable layers.
+    foreach (array_reverse($this->transactionLayers) as $name => $active) {
+      // Stop once we found an active transaction.
+      if ($active) {
+        break;
+      }
 
       // If there are no more layers left then we should commit.
+      unset($this->transactionLayers[$name]);
       if (empty($this->transactionLayers)) {
         if (!parent::commit()) {
           throw new DatabaseTransactionCommitFailedException();
@@ -1100,7 +1125,6 @@ abstract class DatabaseConnection extends PDO {
       }
       else {
         $this->query('RELEASE SAVEPOINT ' . $name);
-        break;
       }
     }
   }
@@ -1745,6 +1769,11 @@ class DatabaseTransactionCommitFailedException extends Exception { }
 class DatabaseTransactionExplicitCommitNotAllowedException extends Exception { }
 
 /**
+ * Exception thrown when a rollback() resulted in other active transactions being rolled-back.
+ */
+class DatabaseTransactionOutOfOrderException extends Exception { }
+
+/**
  * Exception thrown for merge queries that do not make semantic sense.
  *
  * There are many ways that a merge query could be malformed.  They should all
@@ -1839,7 +1868,7 @@ class DatabaseTransaction {
 
   public function __destruct() {
     // If we rolled back then the transaction would have already been popped.
-    if ($this->connection->inTransaction() && !$this->rolledBack) {
+    if (!$this->rolledBack) {
       $this->connection->popTransaction($this->name);
     }
   }
