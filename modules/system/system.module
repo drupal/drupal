@@ -2164,11 +2164,11 @@ function system_check_directory($form_element) {
   elseif (is_dir($directory)) {
     if ($form_element['#name'] == 'file_public_path') {
       // Create public .htaccess file.
-      file_create_htaccess($directory, FALSE);
+      file_save_htaccess($directory, FALSE);
     }
     else {
       // Create private .htaccess file.
-      file_create_htaccess($directory);
+      file_save_htaccess($directory);
     }
   }
 
