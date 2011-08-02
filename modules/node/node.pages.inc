@@ -189,7 +189,7 @@ function node_form($form, &$form_state, $node) {
     '#title' => t('Revision log message'),
     '#rows' => 4,
     '#default_value' => !empty($node->log) ? $node->log : '',
-    '#description' => t('Provide an explanation of the changes you are making. This will help other authors understand your motivations.'),
+    '#description' => t('Briefly describe the changes you have made.'),
   );
 
   // Node author information for administrators
