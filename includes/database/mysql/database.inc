@@ -137,21 +137,16 @@ class DatabaseConnection_mysql extends DatabaseConnection {
   /**
    * Overridden to work around issues to MySQL not supporting transactional DDL.
    */
-  public function popTransaction($name) {
-    if (!$this->supportsTransactions()) {
-      return;
-    }
-    if (!$this->inTransaction()) {
-      throw new DatabaseTransactionNoActiveException();
-    }
-
-    // Commit everything since SAVEPOINT $name.
-    while ($savepoint = array_pop($this->transactionLayers)) {
-      if ($savepoint != $name) {
-        continue;
+  protected function popCommittableTransactions() {
+    // Commit all the committable layers.
+    foreach (array_reverse($this->transactionLayers) as $name => $active) {
+      // Stop once we found an active transaction.
+      if ($active) {
+        break;
       }
 
       // If there are no more layers left then we should commit.
+      unset($this->transactionLayers[$name]);
       if (empty($this->transactionLayers)) {
         if (!PDO::commit()) {
           throw new DatabaseTransactionCommitFailedException();
@@ -173,13 +168,12 @@ class DatabaseConnection_mysql extends DatabaseConnection {
           if ($e->errorInfo[1] == '1305') {
             // If one SAVEPOINT was released automatically, then all were.
             // Therefore, we keep just the topmost transaction.
-            $this->transactionLayers = array('drupal_transaction');
+            $this->transactionLayers = array('drupal_transaction' => 'drupal_transaction');
           }
           else {
             throw $e;
           }
         }
-        break;
       }
     }
   }
