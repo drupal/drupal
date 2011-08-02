@@ -140,7 +140,7 @@ function locale_menu() {
     'description' => 'Translate the built in interface and optionally other text.',
     'page callback' => 'locale_translate_overview_screen',
     'access arguments' => array('translate interface'),
-    'file' => 'locale.admin.inc',
+    'file' => 'locale.pages.inc',
     'weight' => -5,
   );
   $items['admin/config/regional/translate/overview'] = array(
@@ -154,7 +154,7 @@ function locale_menu() {
     'type' => MENU_LOCAL_TASK,
     'page callback' => 'locale_translate_seek_screen', // search results and form concatenated
     'access arguments' => array('translate interface'),
-    'file' => 'locale.admin.inc',
+    'file' => 'locale.pages.inc',
   );
   $items['admin/config/regional/translate/import'] = array(
     'title' => 'Import',
@@ -178,14 +178,14 @@ function locale_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('locale_translate_edit_form', 5),
     'access arguments' => array('translate interface'),
-    'file' => 'locale.admin.inc',
+    'file' => 'locale.pages.inc',
   );
   $items['admin/config/regional/translate/delete/%'] = array(
     'title' => 'Delete string',
     'page callback' => 'locale_translate_delete_page',
     'page arguments' => array(5),
     'access arguments' => array('translate interface'),
-    'file' => 'locale.admin.inc',
+    'file' => 'locale.pages.inc',
   );
 
   // Localize date formats.
