@@ -215,7 +215,7 @@ function comment_schema() {
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
-        'description' => 'The Unix timestamp of the last comment that was posted within this node, from {comment}.timestamp.',
+        'description' => 'The Unix timestamp of the last comment that was posted within this node, from {comment}.changed.',
       ),
       'last_comment_name' => array(
         'type' => 'varchar',
