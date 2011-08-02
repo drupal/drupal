@@ -222,6 +222,7 @@ function template_preprocess_user_profile_item(&$variables) {
  */
 function template_preprocess_user_profile_category(&$variables) {
   $variables['title'] = check_plain($variables['element']['#title']);
+  $variables['classes_array'][] = 'user-profile-category-' . drupal_html_class($variables['title']);
   $variables['profile_items'] = $variables['element']['#children'];
   $variables['attributes'] = '';
   if (isset($variables['element']['#attributes'])) {
