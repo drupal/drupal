@@ -605,7 +605,8 @@ function file_save(stdClass $file) {
  *
  * @return
  *   A nested array with usage data. The first level is keyed by module name,
- *   the second by object type, the third has 'id' and 'count' keys.
+ *   the second by object type and the third by the object id. The value
+ *   of the third level contains the usage count.
  *
  * @see file_usage_add()
  * @see file_usage_delete()
@@ -618,7 +619,7 @@ function file_usage_list(stdClass $file) {
     ->execute();
   $references = array();
   foreach ($result as $usage) {
-    $references[$usage->module][$usage->type] = array('id' => $usage->id, 'count' => $usage->count);
+    $references[$usage->module][$usage->type][$usage->id] = $usage->count;
   }
   return $references;
 }
