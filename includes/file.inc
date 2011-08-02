@@ -1902,10 +1902,11 @@ function file_transfer($uri, $headers) {
  * Menu handler for private file transfers.
  *
  * Call modules that implement hook_file_download() to find out if a file is
- * accessible and what headers it should be transferred with. If a module
- * returns -1 drupal_access_denied() will be returned. If one or more modules
- * returned headers the download will start with the returned headers. If no
- * modules respond drupal_not_found() will be returned.
+ * accessible and what headers it should be transferred with. If one or more
+ * modules returned headers the download will start with the returned headers.
+ * If a module returns -1 drupal_access_denied() will be returned. If the file
+ * exists but no modules responded drupal_access_denied() will be returned.
+ * If the file does not exist drupal_not_found() will be returned.
  *
  * @see hook_file_download()
  */
@@ -1934,6 +1935,7 @@ function file_download() {
     if (count($headers)) {
       file_transfer($uri, $headers);
     }
+    return drupal_access_denied();
   }
   return drupal_not_found();
 }

@@ -1104,6 +1104,6 @@ class FilePrivateTestCase extends FileFieldTestCase {
     $this->assertResponse(200, t('Confirmed that the generated URL is correct by downloading the shipped file.'));
     $this->drupalLogOut();
     $this->drupalGet(file_create_url($node_file->uri));
-    $this->assertNoResponse(200, t('Confirmed that access is denied for the file without the needed permission.'));
+    $this->assertResponse(403, t('Confirmed that access is denied for the file without the needed permission.'));
   }
 }
