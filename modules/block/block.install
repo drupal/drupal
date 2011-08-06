@@ -190,15 +190,11 @@ function block_install() {
  * Implements hook_update_dependencies().
  */
 function block_update_dependencies() {
-  // Block update 7005 needs to query the list of existing text formats and
-  // therefore must run after filter_update_7000().
+  // block_update_7005() needs to query the {filter_format} table to get a list
+  // of existing text formats, so it must run after filter_update_7000(), which
+  // creates that table.
   $dependencies['block'][7005] = array(
     'filter' => 7000,
-  );
-  // Ensure that format columns are only changed after Filter module has changed
-  // the primary records.
-  $dependencies['block'][7007] = array(
-    'filter' => 7010,
   );
 
   return $dependencies;

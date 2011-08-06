@@ -340,24 +340,31 @@ function user_install() {
  * Implements hook_update_dependencies().
  */
 function user_update_dependencies() {
-  // Run all the critical user upgrades before everything.
-  $dependencies['system'][7000] = array(
-    'user' => 7008,
-  );
-  // Both user_update_7006() and user_update_7010() need to query the list of
-  // existing text formats and therefore must run after filter_update_7003().
-  // @todo: move user_update_7006 down below in the upgrade process.
+  // user_update_7006() updates data in the {role_permission} table, so it must
+  // run after system_update_7007(), which populates that table.
   $dependencies['user'][7006] = array(
-    'filter' => 7003,
+    'system' => 7007,
   );
-  // user_update_7013 relies on system_update_7060.
+
+  // user_update_7010() needs to query the {filter_format} table to get a list
+  // of existing text formats, so it must run after filter_update_7000(), which
+  // creates that table.
+  $dependencies['user'][7010] = array(
+    'filter' => 7000,
+  );
+
+  // user_update_7012() uses the file API, which relies on the {file_managed}
+  // table, so it must run after system_update_7034(), which creates that
+  // table.
+  $dependencies['user'][7012] = array(
+    'system' => 7034,
+  );
+
+  // user_update_7013() uses the file usage API, which relies on the
+  // {file_usage} table, so it must run after system_update_7059(), which
+  // creates that table.
   $dependencies['user'][7013] = array(
     'system' => 7059,
-  );
-  // Ensure that format columns are only changed after Filter module has changed
-  // the primary records.
-  $dependencies['user'][7015] = array(
-    'filter' => 7010,
   );
 
   return $dependencies;

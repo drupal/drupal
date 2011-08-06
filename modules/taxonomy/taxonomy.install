@@ -251,26 +251,11 @@ function taxonomy_field_schema($field) {
  * Implements hook_update_dependencies().
  */
 function taxonomy_update_dependencies() {
-  // Taxonomy update 7002 creates comment Field API bundles and therefore must
-  // run after the Field module has been enabled, but before upgrading field
-  // data.
-  $dependencies['taxonomy'][7002] = array(
-    'system' => 7049,
-  );
-  $dependencies['user'][7006] = array(
-    'taxonomy' => 7002,
-  );
-  $dependencies['system'][7050] = array(
-    'taxonomy' => 7002,
-  );
-  // It also must run before nodes are upgraded to use the Field API.
-  $dependencies['node'][7006] = array(
-    'taxonomy' => 7002,
-  );
-  // Ensure that format columns are only changed after Filter module has changed
-  // the primary records.
-  $dependencies['taxonomy'][7009] = array(
-    'filter' => 7010,
+  // taxonomy_update_7004() migrates taxonomy term data to fields and therefore
+  // must run after all Field modules have been enabled, which happens in
+  // system_update_7027().
+  $dependencies['taxonomy'][7004] = array(
+    'system' => 7027,
   );
 
   return $dependencies;

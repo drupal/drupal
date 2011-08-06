@@ -1681,9 +1681,17 @@ function system_update_last_removed() {
  * Implements hook_update_dependencies().
  */
 function system_update_dependencies() {
-  // Update 7053 adds new blocks, so make sure the block tables are updated.
+  // system_update_7053() queries the {block} table, so it must run after
+  // block_update_7002(), which creates that table.
   $dependencies['system'][7053] = array(
     'block' => 7002,
+  );
+
+  // system_update_7067() migrates role permissions and therefore must run
+  // after the {role} and {role_permission} tables are properly set up, which
+  // happens in user_update_7007().
+  $dependencies['system'][7067] = array(
+    'user' => 7007,
   );
 
   return $dependencies;
@@ -1866,9 +1874,6 @@ function system_update_7005() {
 
 /**
  * Convert to new method of storing permissions.
- *
- * This update is in system.install rather than user.install so that
- * all modules can use the updated permission scheme during their updates.
  */
 function system_update_7007() {
   // Copy the permissions from the old {permission} table to the new {role_permission} table.

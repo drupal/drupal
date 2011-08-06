@@ -67,19 +67,6 @@ function text_field_schema($field) {
 }
 
 /**
- * Implements hook_update_dependencies().
- */
-function text_update_dependencies() {
-  // Ensure that format columns are only changed after Filter module has changed
-  // the primary records.
-  $dependencies['text'][7000] = array(
-    'filter' => 7010,
-  );
-
-  return $dependencies;
-}
-
-/**
  * Change text field 'format' columns into varchar.
  */
 function text_update_7000() {
