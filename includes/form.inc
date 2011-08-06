@@ -3650,14 +3650,14 @@ function theme_hidden($variables) {
  *   An associative array containing:
  *   - element: An associative array containing the properties of the element.
  *     Properties used: #title, #value, #description, #size, #maxlength,
- *     #required, #attributes, #autocomplete_path.
+ *     #placeholder, #required, #attributes, #autocomplete_path.
  *
  * @ingroup themeable
  */
 function theme_textfield($variables) {
   $element = $variables['element'];
   $element['#attributes']['type'] = 'text';
-  element_set_attributes($element, array('id', 'name', 'value', 'size', 'maxlength'));
+  element_set_attributes($element, array('id', 'name', 'value', 'size', 'maxlength', 'placeholder'));
   _form_set_class($element, array('form-text'));
 
   $extra = '';
@@ -3708,14 +3708,14 @@ function theme_form($variables) {
  * @param $variables
  *   An associative array containing:
  *   - element: An associative array containing the properties of the element.
- *     Properties used: #title, #value, #description, #rows, #cols, #required,
- *     #attributes
+ *     Properties used: #title, #value, #description, #rows, #cols,
+ *     #placeholder, #required, #attributes
  *
  * @ingroup themeable
  */
 function theme_textarea($variables) {
   $element = $variables['element'];
-  element_set_attributes($element, array('id', 'name', 'cols', 'rows'));
+  element_set_attributes($element, array('id', 'name', 'rows', 'cols', 'placeholder'));
   _form_set_class($element, array('form-textarea'));
 
   $wrapper_attributes = array(
@@ -3741,14 +3741,14 @@ function theme_textarea($variables) {
  *   An associative array containing:
  *   - element: An associative array containing the properties of the element.
  *     Properties used: #title, #value, #description, #size, #maxlength,
- *     #required, #attributes.
+ *     #placeholder, #required, #attributes.
  *
  * @ingroup themeable
  */
 function theme_password($variables) {
   $element = $variables['element'];
   $element['#attributes']['type'] = 'password';
-  element_set_attributes($element, array('id', 'name', 'size', 'maxlength'));
+  element_set_attributes($element, array('id', 'name', 'size', 'maxlength', 'placeholder'));
   _form_set_class($element, array('form-text'));
 
   return '<input' . drupal_attributes($element['#attributes']) . ' />';
