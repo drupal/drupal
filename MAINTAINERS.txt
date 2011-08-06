@@ -54,7 +54,7 @@ Database system
     - Károly Négyesi 'chx' <http://drupal.org/user/9446>
 
 Database update system
-- ?
+- Károly Négyesi 'chx' <http://drupal.org/user/9446>
 
 Entity system
 - Nathaniel Catchpole 'catch' <http://drupal.org/user/35733>
