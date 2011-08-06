@@ -387,6 +387,30 @@ class FormElementTestCase extends DrupalWebTestCase {
   }
 
   /**
+   * Tests placeholder text for textfield, password, and textarea.
+   */
+  function testPlaceHolderText() {
+    $this->drupalGet('form-test/placeholder-text');
+    $expected = 'placeholder-text';
+    // Test to make sure textfields and passwords have the proper placeholder
+    // text.
+    foreach (array('textfield', 'password') as $type) {
+      $element = $this->xpath('//input[@id=:id and @placeholder=:expected]', array(
+        ':id' => 'edit-' . $type,
+        ':expected' => $expected,
+      ));
+      $this->assertTrue(!empty($element), t('Placeholder text placed in @type.', array('@type' => $type)));
+    }
+
+    // Test to make sure textarea has the proper placeholder text.
+    $element = $this->xpath('//textarea[@id=:id and @placeholder=:expected]', array(
+      ':id' => 'edit-textarea',
+      ':expected' => $expected,
+    ));
+    $this->assertTrue(!empty($element), t('Placeholder text placed in textarea.'));
+  }
+
+  /**
    * Tests expansion of #options for #type checkboxes and radios.
    */
   function testOptions() {
