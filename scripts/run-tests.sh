@@ -297,7 +297,7 @@ function simpletest_script_init($server_software) {
     }
   }
 
-  chdir(realpath(__DIR__ . '/..'));
+  chdir(realpath(dirname(__FILE__) . '/..'));
   define('DRUPAL_ROOT', getcwd());
   require_once DRUPAL_ROOT . '/includes/bootstrap.inc';
 }

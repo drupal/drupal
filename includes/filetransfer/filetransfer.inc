@@ -296,7 +296,7 @@ abstract class FileTransfer {
       return FALSE;
     }
 
-    $path = __DIR__;
+    $path = dirname(__FILE__);
     $path = $this->fixRemotePath($path, FALSE);
     $parts = explode('/', $path);
     $chroot = '';
