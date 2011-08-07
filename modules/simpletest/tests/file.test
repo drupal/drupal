@@ -2618,6 +2618,7 @@ class FileMimeTypeTest extends DrupalWebTestCase {
       'foo.file_test_1' => 'madeup/file_test_1',
       'foo.file_test_2' => 'madeup/file_test_2',
       'foo.doc' => 'madeup/doc',
+      'test.ogg' => 'audio/ogg',
     );
 
     // Test using default mappings.
@@ -2656,6 +2657,7 @@ class FileMimeTypeTest extends DrupalWebTestCase {
       'foo.file_test_1' => 'application/octet-stream',
       'foo.file_test_2' => 'application/octet-stream',
       'foo.doc' => 'application/octet-stream',
+      'test.ogg' => 'application/octet-stream',
     );
 
     foreach ($test_case as $input => $expected) {
