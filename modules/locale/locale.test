@@ -247,7 +247,6 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
       'string' => $name,
       'language' => 'all',
       'translation' => 'all',
-      'group' => 'all',
     );
     $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
     // assertText() seems to remove the input field where $name always could be
@@ -302,7 +301,6 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
       'string' => $name,
       'language' => 'all',
       'translation' => 'all',
-      'group' => 'all',
     );
     $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
     // Assume this is the only result, given the random name.
@@ -357,9 +355,7 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
     // table and translate it.
     $query = db_select('locales_source', 'l');
     $query->addExpression('min(l.lid)', 'lid');
-    $result = $query->condition('l.location', '%.js%', 'LIKE')
-      ->condition('l.textgroup', 'default')
-      ->execute();
+    $result = $query->condition('l.location', '%.js%', 'LIKE')->execute();
     $url = 'admin/config/regional/translate/edit/' . $result->fetchObject()->lid;
     $edit = array('translations['. $langcode .']' => $this->randomName());
     $this->drupalPost($url, $edit, t('Save translations'));
@@ -431,7 +427,6 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
       'string' => $name,
       'language' => 'all',
       'translation' => 'all',
-      'group' => 'all',
     );
     $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
     // Find the edit path.
@@ -497,7 +492,6 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
       'string' => $name,
       'language' => 'all',
       'translation' => 'all',
-      'group' => 'all',
     );
     $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
     // assertText() seems to remove the input field where $name always could be
@@ -511,7 +505,6 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
       'string' => $name,
       'language' => 'all',
       'translation' => 'translated',
-      'group' => 'all',
     );
     $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
     $this->assertText(t('No strings available.'), t("Search didn't find the string."));
@@ -522,7 +515,6 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
       'string' => $name,
       'language' => 'all',
       'translation' => 'untranslated',
-      'group' => 'all',
     );
     $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
     $this->assertNoText(t('No strings available.'), t('Search found the string.'));
@@ -545,7 +537,6 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
       'string' => $translation,
       'language' => 'all',
       'translation' => 'translated',
-      'group' => 'all',
     );
     $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
     $this->assertNoText(t('No strings available.'), t('Search found the translation.'));
@@ -556,7 +547,6 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
       'string' => $name,
       'language' => 'all',
       'translation' => 'untranslated',
-      'group' => 'all',
     );
     $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
     $this->assertText(t('No strings available.'), t("Search didn't find the source string."));
@@ -567,7 +557,6 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
       'string' => $translation,
       'language' => 'all',
       'translation' => 'untranslated',
-      'group' => 'all',
     );
     $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
     $this->assertText(t('No strings available.'), t("Search didn't find the translation."));
@@ -577,7 +566,6 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
       'string' => $translation,
       'language' => $langcode,
       'translation' => 'all',
-      'group' => 'all',
     );
     $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
     $this->assertNoText(t('No strings available.'), t('Search found the translation.'));
@@ -587,7 +575,6 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
       'string' => $translation,
       'language' => 'en',
       'translation' => 'all',
-      'group' => 'all',
     );
     $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
     $this->assertText(t('No strings available.'), t("Search didn't find the translation."));
@@ -598,7 +585,6 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
       'string' => $unavailable_string,
       'language' => 'all',
       'translation' => 'all',
-      'group' => 'all',
     );
     $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
     $this->assertText(t('No strings available.'), t("Search didn't find the invalid string."));
@@ -651,7 +637,7 @@ class LocaleImportFunctionalTest extends DrupalWebTestCase {
     $this->assertEqual($this->getUrl(), url('admin/config/regional/translate', array('absolute' => TRUE)), t('Correct page redirection.'));
 
 
-    // Try importing a .po file with invalid tags in the default text group.
+    // Try importing a .po file with invalid tags.
     $this->importPoFile($this->getBadPoFile(), array(
       'langcode' => 'fr',
     ));
@@ -662,22 +648,11 @@ class LocaleImportFunctionalTest extends DrupalWebTestCase {
     $this->assertRaw($skip_message, t('Unsafe strings were skipped.'));
 
 
-    // Try importing a .po file with invalid tags in a non default text group.
-    $this->importPoFile($this->getBadPoFile(), array(
-      'langcode' => 'fr',
-      'group' => 'custom',
-    ));
-
-    // The import should have created 3 strings.
-    $this->assertRaw(t('The translation was successfully imported. There are %number newly created translated strings, %update strings were updated and %delete strings were removed.', array('%number' => 3, '%update' => 0, '%delete' => 0)), t('The translation file was successfully imported.'));
-
-
     // Try importing a .po file which doesn't exist.
     $name = $this->randomName(16);
     $this->drupalPost('admin/config/regional/translate/import', array(
       'langcode' => 'fr',
       'files[file]' => $name,
-      'group' => 'custom',
     ), t('Import'));
     $this->assertEqual($this->getUrl(), url('admin/config/regional/translate/import', array('absolute' => TRUE)), t('Correct page redirection.'));
     $this->assertText(t('File to import not found.'), t('File to import not found message.'));
@@ -697,7 +672,6 @@ class LocaleImportFunctionalTest extends DrupalWebTestCase {
       'string' => 'Montag',
       'language' => 'fr',
       'translation' => 'translated',
-      'group' => 'all',
     );
     $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
     $this->assertText(t('No strings available.'), t('String not overwritten by imported string.'));
@@ -719,7 +693,6 @@ class LocaleImportFunctionalTest extends DrupalWebTestCase {
       'string' => 'Montag',
       'language' => 'fr',
       'translation' => 'translated',
-      'group' => 'all',
     );
     $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
     $this->assertNoText(t('No strings available.'), t('String overwritten by imported string.'));
@@ -760,7 +733,6 @@ class LocaleImportFunctionalTest extends DrupalWebTestCase {
       'string' => 'lundi',
       'language' => $langcode,
       'translation' => 'translated',
-      'group' => 'all',
     );
     $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
     $this->assertNoText(t('No strings available.'), t('String successfully imported.'));
@@ -807,7 +779,6 @@ class LocaleImportFunctionalTest extends DrupalWebTestCase {
       'string' => $str,
       'language' => 'all',
       'translation' => 'all',
-      'group' => 'all',
     );
     $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
     // assertText() seems to remove the input field where $str always could be
@@ -1144,9 +1115,8 @@ class LocaleUninstallFunctionalTest extends DrupalWebTestCase {
     $user = $this->drupalCreateUser(array('translate interface', 'access administration pages'));
     $this->drupalLogin($user);
     $this->drupalGet('admin/config/regional/translate/translate');
-    $string = db_query('SELECT min(lid) AS lid FROM {locales_source} WHERE location LIKE :location AND textgroup = :textgroup', array(
+    $string = db_query('SELECT min(lid) AS lid FROM {locales_source} WHERE location LIKE :location', array(
       ':location' => '%.js%',
-      ':textgroup' => 'default',
     ))->fetchObject();
     $edit = array('translations[fr]' => 'french translation');
     $this->drupalPost('admin/config/regional/translate/edit/' . $string->lid, $edit, t('Save translations'));

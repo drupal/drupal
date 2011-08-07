@@ -177,13 +177,6 @@ function locale_schema() {
         'size' => 'big',
         'description' => 'Drupal path in case of online discovered translations or file path in case of imported strings.',
       ),
-      'textgroup' => array(
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => 'default',
-        'description' => 'A module defined group of translations, see hook_locale().',
-      ),
       'source' => array(
         'type' => 'text',
         'mysql_type' => 'blob',
