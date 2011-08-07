@@ -12,6 +12,7 @@
  *   hide($content['field_example']) to temporarily suppress the printing of a
  *   given element.
  * - $term_url: Direct url of the current term.
+ * - $term_name: Name of the current term.
  * - $classes: String of classes that can be used to style contextually through
  *   CSS. It can be manipulated through the variable $classes_array from
  *   preprocess functions. The default values can be one or more of the following:
