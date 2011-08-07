@@ -370,7 +370,7 @@ function forum_node_update($node) {
     }
     // If the node has a shadow forum topic, update the record for this
     // revision.
-    if ($node->shadow) {
+    if (!empty($node->shadow)) {
       db_delete('forum')
         ->condition('nid', $node->nid)
         ->condition('vid', $node->vid)
