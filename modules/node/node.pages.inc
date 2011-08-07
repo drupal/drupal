@@ -7,7 +7,7 @@
 
 
 /**
- * Menu callback; presents the node editing form, or redirects to delete confirmation.
+ * Menu callback; presents the node editing form.
  */
 function node_page_edit($node) {
   $type_name = node_type_get_name($node);
