@@ -659,8 +659,8 @@ a.button:active {
   text-decoration: none;
   color: #5a5a5a;
 }
-div.node-form input#edit-submit,
-div.node-form input#edit-submit-1 {
+.node-form input#edit-submit,
+.node-form input#edit-submit-1 {
   border: 1px solid #8eB7cd;
   border-left-color: #8eB7cd;
   border-right-color: #8eB7cd;
