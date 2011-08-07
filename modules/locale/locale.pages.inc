@@ -1,11 +1,8 @@
 <?php
 
 /**
- * @defgroup locale-translate-administration-screens Translation administration screens
- * @{
- * Screens for translation administration.
- *
- * These functions provide various screens to view, edit and delete translations.
+ * @file
+ * Interface translation summary, editing and deletion user interfaces.
  */
 
 /**
@@ -14,32 +11,26 @@
 function locale_translate_overview_screen() {
   drupal_static_reset('language_list');
   $languages = language_list('language');
-  $groups = module_invoke_all('locale', 'groups');
-
-  // Build headers with all groups in order.
-  $headers = array_merge(array(t('Language')), array_values($groups));
-
-  // Collect summaries of all source strings in all groups.
-  $sums = db_query("SELECT COUNT(*) AS strings, textgroup FROM {locales_source} GROUP BY textgroup");
-  $groupsums = array();
-  foreach ($sums as $group) {
-    $groupsums[$group->textgroup] = $group->strings;
-  }
+  $headers = array(t('Language'), t('Interface translation status'));
+  $num_strings = db_query("SELECT COUNT(*) FROM {locales_source}")->fetchField();
 
   // Set up overview table with default values, ensuring common order for values.
   $rows = array();
   foreach ($languages as $langcode => $language) {
-    $rows[$langcode] = array('name' => ($langcode == 'en' ? t('English (built-in)') : t($language->name)));
-    foreach ($groups as $group => $name) {
-      $rows[$langcode][$group] = ($langcode == 'en' ? t('n/a') : '0/' . (isset($groupsums[$group]) ? $groupsums[$group] : 0) . ' (0%)');
-    }
+    $rows[$langcode] = array(
+      'name' => ($langcode == 'en' ? t('English (built-in)') : t($language->name)),
+      'status' => ($langcode == 'en' ? t('n/a') : '0/' . $num_strings . ' (0%)'),
+    );
   }
 
-  // Languages with at least one record in the locale table.
-  $translations = db_query("SELECT COUNT(*) AS translation, t.language, s.textgroup FROM {locales_source} s INNER JOIN {locales_target} t ON s.lid = t.lid GROUP BY textgroup, language");
-  foreach ($translations as $data) {
-    $ratio = (!empty($groupsums[$data->textgroup]) && $data->translation > 0) ? round(($data->translation/$groupsums[$data->textgroup]) * 100.0, 2) : 0;
-    $rows[$data->language][$data->textgroup] = $data->translation . '/' . $groupsums[$data->textgroup] . " ($ratio%)";
+  if (!empty($num_strings)) {
+    // If we have source strings, match translations and compute progress. Not
+    // all languages may have information.
+    $translations = db_query("SELECT COUNT(*) AS translation, t.language FROM {locales_source} s INNER JOIN {locales_target} t ON s.lid = t.lid GROUP BY language");
+    foreach ($translations as $data) {
+      $ratio = ($data->translation > 0) ? round(($data->translation/$num_strings) * 100.0, 2) : 0;
+      $rows[$data->language]['status'] = $data->translation . '/' . $num_strings . " ($ratio%)";
+    }
   }
 
   return theme('table', array('header' => $headers, 'rows' => $rows));
@@ -68,7 +59,6 @@ function _locale_translate_seek() {
   if (!($query = _locale_translate_seek_query())) {
     $query = array(
       'translation' => 'all',
-      'group' => 'all',
       'language' => 'all',
       'string' => '',
     );
@@ -76,7 +66,7 @@ function _locale_translate_seek() {
 
   $sql_query = db_select('locales_source', 's');
   $sql_query->leftJoin('locales_target', 't', 't.lid = s.lid');
-  $sql_query->fields('s', array('source', 'location', 'context', 'lid', 'textgroup'));
+  $sql_query->fields('s', array('source', 'location', 'context', 'lid'));
   $sql_query->fields('t', array('translation', 'language'));
 
   // Compute LIKE section.
@@ -110,22 +100,15 @@ function _locale_translate_seek() {
     $limit_language = $query['language'];
   }
 
-  // Add a condition on the text group.
-  if (!empty($query['group']) && $query['group'] != 'all') {
-    $sql_query->condition('s.textgroup', $query['group']);
-  }
-
   $sql_query = $sql_query->extend('PagerDefault')->limit(50);
   $locales = $sql_query->execute();
 
-  $groups = module_invoke_all('locale', 'groups');
-  $header = array(t('Text group'), t('String'), t('Context'), ($limit_language) ? t('Language') : t('Languages'), array('data' => t('Operations'), 'colspan' => '2'));
+  $header = array(t('String'), t('Context'), ($limit_language) ? t('Language') : t('Languages'), array('data' => t('Operations'), 'colspan' => '2'));
 
   $strings = array();
   foreach ($locales as $locale) {
     if (!isset($strings[$locale->lid])) {
       $strings[$locale->lid] = array(
-        'group' => $locale->textgroup,
         'languages' => array(),
         'location' => $locale->location,
         'source' => $locale->source,
@@ -140,7 +123,6 @@ function _locale_translate_seek() {
   $rows = array();
   foreach ($strings as $lid => $string) {
     $rows[] = array(
-      $groups[$string['group']],
       array('data' => check_plain(truncate_utf8($string['source'], 150, FALSE, TRUE)) . '<br /><small>' . $string['location'] . '</small>'),
       $string['context'],
       array('data' => _locale_translate_language_list($string['languages'], $limit_language), 'align' => 'center'),
@@ -181,7 +163,7 @@ function _locale_translate_seek_query() {
   $query = &drupal_static(__FUNCTION__);
   if (!isset($query)) {
     $query = array();
-    $fields = array('string', 'language', 'translation', 'group');
+    $fields = array('string', 'language', 'translation');
     foreach ($fields as $field) {
       if (isset($_SESSION['locale_translation_filter'][$field])) {
         $query[$field] = $_SESSION['locale_translation_filter'][$field];
@@ -215,12 +197,6 @@ function locale_translation_filters() {
   $filters['translation'] = array(
     'title' => t('Search in'),
     'options' => array('all' => t('Both translated and untranslated strings'), 'translated' => t('Only translated strings'), 'untranslated' => t('Only untranslated strings')),
-  );
-
-  $groups = module_invoke_all('locale', 'groups');
-  $filters['group'] = array(
-    'title' => t('Limit search to'),
-    'options' => array_merge(array('all' => t('All text groups')), $groups),
   );
 
   return $filters;
@@ -286,7 +262,7 @@ function locale_translation_filter_form() {
  * Validate result from locale translation filter form.
  */
 function locale_translation_filter_form_validate($form, &$form_state) {
-  if ($form_state['values']['op'] == t('Filter') && empty($form_state['values']['language']) && empty($form_state['values']['group'])) {
+  if ($form_state['values']['op'] == t('Filter') && empty($form_state['values']['language'])) {
     form_set_error('type', t('You must select something to filter by.'));
   }
 }
@@ -313,25 +289,15 @@ function locale_translation_filter_form_submit($form, &$form_state) {
   $form_state['redirect'] = 'admin/config/regional/translate/translate';
 }
 
-/**
- * @} End of "locale-translate-administration-screens"
- */
-
-/**
- * @defgroup locale-translate-edit-delete Translation editing/deletion interface
- * @{
- * Edit and delete translation strings.
- *
- * These functions provide the user interface to edit and delete
- * translation strings.
- */
 
 /**
  * User interface for string editing.
+ *
+ * @ingroup forms
  */
 function locale_translate_edit_form($form, &$form_state, $lid) {
   // Fetch source string, if possible.
-  $source = db_query('SELECT source, context, textgroup, location FROM {locales_source} WHERE lid = :lid', array(':lid' => $lid))->fetchObject();
+  $source = db_query('SELECT source, context, location FROM {locales_source} WHERE lid = :lid', array(':lid' => $lid))->fetchObject();
   if (!$source) {
     drupal_set_message(t('String not found.'), 'error');
     drupal_goto('admin/config/regional/translate/translate');
@@ -354,10 +320,6 @@ function locale_translate_edit_form($form, &$form_state, $lid) {
     '#type'  => 'value',
     '#value' => $lid
   );
-  $form['textgroup'] = array(
-    '#type'  => 'value',
-    '#value' => $source->textgroup,
-  );
   $form['location'] = array(
     '#type'  => 'value',
     '#value' => $source->location
@@ -366,10 +328,7 @@ function locale_translate_edit_form($form, &$form_state, $lid) {
   // Include default form controls with empty values for all languages.
   // This ensures that the languages are always in the same order in forms.
   $languages = language_list();
-  $default = language_default();
-  // We don't need the default language value, that value is in $source.
-  $omit = $source->textgroup == 'default' ? 'en' : $default->language;
-  unset($languages[($omit)]);
+  unset($languages['en']);
   $form['translations'] = array('#tree' => TRUE);
   // Approximate the number of rows to use in the default textarea.
   $rows = min(ceil(str_word_count($source->source) / 12), 10);
@@ -383,7 +342,7 @@ function locale_translate_edit_form($form, &$form_state, $lid) {
   }
 
   // Fetch translations and fill in default values in the form.
-  $result = db_query("SELECT DISTINCT translation, language FROM {locales_target} WHERE lid = :lid AND language <> :omit", array(':lid' => $lid, ':omit' => $omit));
+  $result = db_query("SELECT DISTINCT translation, language FROM {locales_target} WHERE lid = :lid", array(':lid' => $lid));
   foreach ($result as $translation) {
     $form['translations'][$translation->language]['#default_value'] = $translation->translation;
   }
@@ -397,10 +356,8 @@ function locale_translate_edit_form($form, &$form_state, $lid) {
  * Validate string editing form submissions.
  */
 function locale_translate_edit_form_validate($form, &$form_state) {
-  // Locale string check is needed for default textgroup only.
-  $safe_check_needed = $form_state['values']['textgroup'] == 'default';
   foreach ($form_state['values']['translations'] as $key => $value) {
-    if ($safe_check_needed && !locale_string_is_safe($value)) {
+    if (!locale_string_is_safe($value)) {
       form_set_error('translations', t('The submitted string contains disallowed HTML: %string', array('%string' => $value)));
       watchdog('locale', 'Attempted submission of a translation string with disallowed HTML: %string', array('%string' => $value), WATCHDOG_WARNING);
     }
@@ -473,6 +430,8 @@ function locale_translate_delete_page($lid) {
 
 /**
  * User interface for the string deletion confirmation screen.
+ *
+ * @ingroup forms
  */
 function locale_translate_delete_form($form, &$form_state, $source) {
   $form['lid'] = array('#type' => 'value', '#value' => $source->lid);
@@ -495,6 +454,3 @@ function locale_translate_delete_form_submit($form, &$form_state) {
   drupal_set_message(t('The string has been removed.'));
   $form_state['redirect'] = 'admin/config/regional/translate/translate';
 }
-/**
- * @} End of "locale-translate-edit-delete"
- */

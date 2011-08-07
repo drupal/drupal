@@ -48,8 +48,7 @@ function locale_help($path, $arg) {
       $output = '<p>' . t('Determine the language from a request/session parameter. Example: "http://example.com?language=de" sets language to German based on the use of "de" within the "language" parameter.') . '</p>';
       return $output;
     case 'admin/config/regional/translate':
-      $output = '<p>' . t('This page provides an overview of available translatable strings. Drupal displays translatable strings in text groups; modules may define additional text groups containing other translatable strings. Because text groups provide a method of grouping related strings, they are often used to focus translation efforts on specific areas of the Drupal interface.') . '</p>';
-      $output .= '<p>' . t('See the <a href="@languages">Languages page</a> for more information on adding support for additional languages.', array('@languages' => url('admin/config/regional/language'))) . '</p>';
+      $output = '<p>' . t('This page provides an overview of available translatable strings. See the <a href="@languages">Languages page</a> for more information on adding support for additional languages.', array('@languages' => url('admin/config/regional/language'))) . '</p>';
       return $output;
     case 'admin/config/regional/translate/import':
       $output = '<p>' . t('This page imports the translated strings contained in an individual Gettext Portable Object (<em>.po</em>) file. Normally distributed as part of a translation package (each translation package may contain several <em>.po</em> files), a <em>.po</em> file may need to be imported after offline editing in a Gettext translation editor. Importing an individual <em>.po</em> file may be a lengthy process.') . '</p>';
@@ -58,7 +57,7 @@ function locale_help($path, $arg) {
     case 'admin/config/regional/translate/export':
       return '<p>' . t('This page exports the translated strings used by your site. An export file may be in Gettext Portable Object (<em>.po</em>) form, which includes both the original string and the translation (used to share translations with others), or in Gettext Portable Object Template (<em>.pot</em>) form, which includes the original strings only (used to create new translations with a Gettext translation editor).') . '</p>';
     case 'admin/config/regional/translate/translate':
-      return '<p>' . t('This page allows a translator to search for specific translated and untranslated strings, and is used when creating or editing translations. (Note: For translation tasks involving many strings, it may be more convenient to <a href="@export">export</a> strings for offline editing in a desktop Gettext translation editor.) Searches may be limited to strings found within a specific text group or in a specific language.', array('@export' => url('admin/config/regional/translate/export'))) . '</p>';
+      return '<p>' . t('This page allows a translator to search for specific translated and untranslated strings, and is used when creating or editing translations. (Note: For translation tasks involving many strings, it may be more convenient to <a href="@export">export</a> strings for offline editing in a desktop Gettext translation editor.) Searches may be limited to strings in a specific language.', array('@export' => url('admin/config/regional/translate/export'))) . '</p>';
     case 'admin/structure/block/manage/%/%':
       if ($arg[4] == 'locale' && $arg[5] == 'language') {
         return '<p>' . t('This block is only shown if <a href="@languages">at least two languages are enabled</a> and <a href="@configuration">language negotiation</a> is set to <em>URL</em> or <em>Session</em>.', array('@languages' => url('admin/config/regional/language'), '@configuration' => url('admin/config/regional/language/configure'))) . '</p>';
@@ -255,16 +254,6 @@ function locale_permission() {
       'title' => t('Translate interface texts'),
     ),
   );
-}
-
-/**
- * Implements hook_locale().
- */
-function locale_locale($op = 'groups') {
-  switch ($op) {
-    case 'groups':
-      return array('default' => t('Built-in interface'));
-  }
 }
 
 /**
@@ -655,7 +644,7 @@ function locale($string = NULL, $context = NULL, $langcode = NULL) {
         // Refresh database stored cache of translations for given language.
         // We only store short strings used in current version, to improve
         // performance and consume less memory.
-        $result = db_query("SELECT s.source, s.context, t.translation, t.language FROM {locales_source} s LEFT JOIN {locales_target} t ON s.lid = t.lid AND t.language = :language WHERE s.textgroup = 'default' AND s.version = :version AND LENGTH(s.source) < :length", array(':language' => $langcode, ':version' => VERSION, ':length' => variable_get('locale_cache_length', 75)));
+        $result = db_query("SELECT s.source, s.context, t.translation, t.language FROM {locales_source} s LEFT JOIN {locales_target} t ON s.lid = t.lid AND t.language = :language WHERE s.version = :version AND LENGTH(s.source) < :length", array(':language' => $langcode, ':version' => VERSION, ':length' => variable_get('locale_cache_length', 75)));
         foreach ($result as $data) {
           $locale_t[$langcode][$data->context][$data->source] = (empty($data->translation) ? TRUE : $data->translation);
         }
@@ -669,7 +658,7 @@ function locale($string = NULL, $context = NULL, $langcode = NULL) {
   if (!isset($locale_t[$langcode][$context][$string])) {
 
     // We do not have this translation cached, so get it from the DB.
-    $translation = db_query("SELECT s.lid, t.translation, s.version FROM {locales_source} s LEFT JOIN {locales_target} t ON s.lid = t.lid AND t.language = :language WHERE s.source = :source AND s.context = :context AND s.textgroup = 'default'", array(
+    $translation = db_query("SELECT s.lid, t.translation, s.version FROM {locales_source} s LEFT JOIN {locales_target} t ON s.lid = t.lid AND t.language = :language WHERE s.source = :source AND s.context = :context", array(
       ':language' => $langcode,
       ':source' => $string,
       ':context' => (string) $context,
@@ -697,7 +686,6 @@ function locale($string = NULL, $context = NULL, $langcode = NULL) {
           'location' => request_uri(),
           'source' => $string,
           'context' => (string) $context,
-          'textgroup' => 'default',
           'version' => VERSION,
         ))
         ->execute();
