@@ -5,7 +5,7 @@
  * @{
  */
 
-require_once dirname(__FILE__) . '/query.inc';
+require_once __DIR__ . '/query.inc';
 
 /**
  * Interface for extendable query objects.
