@@ -1783,12 +1783,6 @@ function field_ui_field_edit_form($form, &$form_state, $instance) {
     '#required' => TRUE,
     '#weight' => -20,
   );
-  $form['instance']['required'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Required field'),
-    '#default_value' => !empty($instance['required']),
-    '#weight' => -10,
-  );
 
   $form['instance']['description'] = array(
     '#type' => 'textarea',
@@ -1796,6 +1790,13 @@ function field_ui_field_edit_form($form, &$form_state, $instance) {
     '#default_value' => !empty($instance['description']) ? $instance['description'] : '',
     '#rows' => 5,
     '#description' => t('Instructions to present to the user below this field on the editing form.<br />Allowed HTML tags: @tags', array('@tags' => _field_filter_xss_display_allowed_tags())),
+    '#weight' => -10,
+  );
+
+  $form['instance']['required'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Required field'),
+    '#default_value' => !empty($instance['required']),
     '#weight' => -5,
   );
 
@@ -1842,7 +1843,9 @@ function field_ui_field_edit_form($form, &$form_state, $instance) {
   // Create a form structure for the field values.
   $form['field'] = array(
     '#type' => 'fieldset',
-    '#title' => t('%field field settings', array('%field' => $instance['label'])),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+    '#title' => t('Global settings'),
     '#description' => $description,
     '#tree' => TRUE,
   );
@@ -1869,8 +1872,29 @@ function field_ui_field_edit_form($form, &$form_state, $instance) {
   }
 
   $form['actions'] = array('#type' => 'actions');
-  $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save settings'));
+  $form['actions']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save settings')
+  );
+  $form['actions']['delete'] = array(
+    '#type' => 'submit',
+    '#value' => t('Delete field'),
+    '#submit' => array('field_ui_field_edit_form_delete_submit'),
+  );
   return $form;
+}
+
+/**
+ * Handle the 'Delete' button on the field instance edit form.
+ */
+function field_ui_field_edit_form_delete_submit($form, &$form_state) {
+  $destination = array();
+  if (isset($_GET['destination'])) {
+    $destination = drupal_get_destination();
+    unset($_GET['destination']);
+  }
+  $instance = $form['#instance'];
+  $form_state['redirect'] = array('admin/structure/types/manage/' . $instance['bundle'] . '/fields/' . $instance['field_name'] . '/delete', array('query' => $destination));
 }
 
 /**
