@@ -2075,6 +2075,15 @@ function node_page_title($node) {
   return $node->title;
 }
 
+/**
+ * Finds the last time a node was changed.
+ *
+ * @param $nid
+ *   The ID of a node.
+ *
+ * @return
+ *   A unix timestamp indicating the last time the node was changed.
+ */
 function node_last_changed($nid) {
   return db_query('SELECT changed FROM {node} WHERE nid = :nid', array(':nid' => $nid))->fetch()->changed;
 }
