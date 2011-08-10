@@ -4420,6 +4420,8 @@ function drupal_process_attached($elements, $group = JS_DEFAULT, $dependency_che
  * The following states may be applied to an element:
  * - enabled
  * - disabled
+ * - required
+ * - optional
  * - visible
  * - invisible
  * - checked
@@ -4428,26 +4430,22 @@ function drupal_process_attached($elements, $group = JS_DEFAULT, $dependency_che
  * - collapsed
  *
  * The following states may be used in remote conditions:
- * - enabled
- * - disabled
- * - visible
- * - invisible
+ * - empty
+ * - filled
  * - checked
  * - unchecked
+ * - expanded
+ * - collapsed
  * - value
  *
- * The following states exist for both states and remote conditions, but are not
- * fully implemented and may not change anything on the element:
- * - required
- * - optional
+ * The following states exist for both elements and remote conditions, but are
+ * not fully implemented and may not change anything on the element:
  * - relevant
  * - irrelevant
  * - valid
  * - invalid
  * - touched
  * - untouched
- * - filled
- * - empty
  * - readwrite
  * - readonly
  *
