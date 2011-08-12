@@ -89,7 +89,7 @@ define('JS_THEME', 100);
  * Error code indicating that the request made by drupal_http_request() exceeded
  * the specified timeout.
  */
-define('HTTP_REQUEST_TIMEOUT', 1);
+define('HTTP_REQUEST_TIMEOUT', -1);
 
 /**
  * Constants defining cache granularity for blocks and renderable arrays.
