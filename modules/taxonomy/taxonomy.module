@@ -1236,10 +1236,11 @@ function taxonomy_implode_tags($tags, $vid = NULL) {
       if (isset($tag->name)) {
         // Commas and quotes in tag names are special cases, so encode 'em.
         if (strpos($tag->name, ',') !== FALSE || strpos($tag->name, '"') !== FALSE) {
-          $tag->name = '"' . str_replace('"', '""', $tag->name) . '"';
+          $typed_tags[] = '"' . str_replace('"', '""', $tag->name) . '"';
         }
-
-        $typed_tags[] = $tag->name;
+        else {
+          $typed_tags[] = $tag->name;
+        }
       }
     }
   }
