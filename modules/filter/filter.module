@@ -760,9 +760,12 @@ function check_markup($text, $format_id = NULL, $langcode = '', $cache = FALSE) 
     }
   }
 
-  // Store in cache with a minimum expiration time of 1 day.
+  // Cache the filtered text. This cache is infinitely valid. It becomes
+  // obsolete when $text changes (which leads to a new $cache_id). It is
+  // automatically flushed when the text format is updated.
+  // @see filter_format_save()
   if ($cache) {
-    cache_set($cache_id, $text, 'cache_filter', REQUEST_TIME + (60 * 60 * 24));
+    cache_set($cache_id, $text, 'cache_filter');
   }
 
   return $text;
