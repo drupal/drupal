@@ -89,6 +89,25 @@ function contact_uninstall() {
 }
 
 /**
+ * Implements hook_update_dependencies().
+ */
+function contact_update_dependencies() {
+  // contact_update_7001() relies on the {role_permission} table being updated
+  // to the new format and filled with data.
+  $dependencies['contact'][7001] = array(
+    'system' => 7007,
+  );
+
+  // contact_update_7002() relies on the {role_permission} table having the
+  // module field, which is created in user_update_7006().
+  $dependencies['contact'][7002] = array(
+    'user' => 7006,
+  );
+
+  return $dependencies;
+}
+
+/**
  * @addtogroup updates-6.x-to-7.x
  * @{
  */
