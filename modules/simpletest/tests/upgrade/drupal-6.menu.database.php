@@ -127,3 +127,49 @@ db_insert('menu_links')->fields(array(
   'updated' => '0',
 ))
 ->execute();
+db_insert('blocks')->fields(array(
+  'bid',
+  'module',
+  'delta',
+  'theme',
+  'status',
+  'weight',
+  'region',
+  'custom',
+  'throttle',
+  'visibility',
+  'pages',
+  'title',
+  'cache',
+))
+->values(array(
+  'bid' => '4',
+  'module' => 'menu',
+  'delta' => 'primary-links',
+  'theme' => 'garland',
+  'status' => '1',
+  'weight' => '0',
+  'region' => 'left',
+  'custom' => '0',
+  'throttle' => '0',
+  'visibility' => '0',
+  'pages' => '',
+  'title' => 'My Primary Links',
+  'cache' => '-1',
+))
+->values(array(
+  'bid' => '5',
+  'module' => 'menu',
+  'delta' => 'secondary-links',
+  'theme' => 'garland',
+  'status' => '1',
+  'weight' => '0',
+  'region' => 'left',
+  'custom' => '0',
+  'throttle' => '0',
+  'visibility' => '0',
+  'pages' => '',
+  'title' => 'My Secondary Links',
+  'cache' => '-1',
+))
+->execute();

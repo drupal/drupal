@@ -74,5 +74,10 @@ class MenuUpgradePathTestCase extends UpgradePathTestCase {
     $this->drupalGet('admin/structure/menu/settings');
     $this->assertOptionSelected('edit-menu-main-links-source', 'secondary-menu');
     $this->assertOptionSelected('edit-menu-secondary-links-source', 'main-menu');
+
+    // Check that both primary/secondary links blocks are visible.
+    $this->drupalGet('node');
+    $this->assertText('My Primary Links', '(Formerly) Primary Links block is still visible');
+    $this->assertText('My Secondary Links', '(Formerly) Secondary Links block is still visible');
   }
 }

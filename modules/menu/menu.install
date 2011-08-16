@@ -120,6 +120,8 @@ function menu_update_7001() {
   }
 
   // Rename each menu, and any settings that refer to the old menu name.
+  // - "Primary Links" has become system menu "Main menu".
+  // - "Secondary Links" has become a new custom menu "Secondary menu".
   $rename = array(
     'primary-links' => array('main-menu', 'Main menu'),
     'secondary-links' => array('secondary-menu', 'Secondary menu'),
@@ -160,6 +162,23 @@ function menu_update_7001() {
   }
 }
 
+/**
+ * Rename the primary/secondary menu blocks to match previously renamed menus.
+ */
+function menu_update_7002(&$sandbox) {
+  $renamed_deltas = array(
+    'menu' => array(
+      'primary-links' => 'main-menu',
+      'secondary-links' => 'secondary-menu',
+    ),
+  );
+
+  $moved_deltas = array(
+    'menu' => array('main-menu' => 'system'),
+  );
+
+  update_fix_d7_block_deltas($sandbox, $renamed_deltas, $moved_deltas);
+}
 /**
  * @} End of "defgroup updates-7.x-extra"
  * The next series of updates should start at 8000.

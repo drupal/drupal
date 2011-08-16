@@ -355,6 +355,12 @@ function update_fix_d7_block_deltas(&$sandbox, $renamed_deltas, $moved_deltas) {
             ))
             ->fetchField();
           if ($block_exists) {
+            // Delete any existing blocks with the new module+delta.
+            db_delete($table)
+              ->condition('module', $module)
+              ->condition('delta', $new_delta)
+              ->execute();
+            // Rename the old block to the new module+delta.
             db_update($table)
               ->fields(array('delta' => $new_delta))
               ->condition('module', $module)
@@ -372,6 +378,12 @@ function update_fix_d7_block_deltas(&$sandbox, $renamed_deltas, $moved_deltas) {
             ))
             ->fetchField();
           if ($block_exists) {
+            // Delete any existing blocks with the new module+delta.
+            db_delete($table)
+              ->condition('module', $new_module)
+              ->condition('delta', $delta)
+              ->execute();
+            // Rename the old block to the new module+delta.
             db_update($table)
               ->fields(array('module' => $new_module))
               ->condition('module', $old_module)
