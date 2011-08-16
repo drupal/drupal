@@ -598,13 +598,6 @@ function user_update_7006(&$sandbox) {
     // Add a new field for the fid.
     db_add_field('role_permission', 'module', $module_field);
   }
-  $permissions = user_permission_get_modules();
-  foreach ($permissions as $key => $value) {
-    db_update('role_permission')
-      ->fields(array('module' => $value))
-      ->condition('permission', $key)
-      ->execute();
-  }
 }
 
 /**
