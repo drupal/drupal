@@ -188,7 +188,7 @@ class PollCreateTestCase extends PollTestCase {
   function testPollCreate() {
     $title = $this->randomName();
     $choices = $this->_generateChoices(7);
-    $this->pollCreate($title, $choices, TRUE);
+    $poll_nid = $this->pollCreate($title, $choices, TRUE);
 
     // Verify poll appears on 'poll' page.
     $this->drupalGet('poll');
@@ -198,6 +198,25 @@ class PollCreateTestCase extends PollTestCase {
     // Click on the poll title to go to node page.
     $this->clickLink($title);
     $this->assertText('Total votes: 0', 'Link to poll correct.');
+
+    // Now add a new option to make sure that when we update the node the
+    // option is displayed.
+    $node = node_load($poll_nid);
+
+    $new_option = $this->randomName();
+
+    $node->choice[] = array(
+      'chid' => '',
+      'chtext' => $new_option,
+      'chvotes' => 0,
+      'weight' => 0,
+    );
+
+    node_save($node);
+
+    $this->drupalGet('poll');
+    $this->clickLink($title);
+    $this->assertText($new_option, 'New option found.');
   }
 
   function testPollClose() {
