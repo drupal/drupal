@@ -176,10 +176,33 @@ abstract class DatabaseSchema implements QueryPlaceholderInterface {
    */
   protected $defaultSchema = 'public';
 
+  /**
+   * A unique identifier for this query object.
+   */
+  protected $uniqueIdentifier;
+
   public function __construct($connection) {
+    $this->uniqueIdentifier = uniqid('', TRUE);
     $this->connection = $connection;
   }
 
+  /**
+   * Implements the magic __clone function.
+   */
+  public function __clone() {
+    $this->uniqueIdentifier = uniqid('', TRUE);
+  }
+
+  /**
+   * Implements QueryPlaceHolderInterface::uniqueIdentifier().
+   */
+  public function uniqueIdentifier() {
+    return $this->uniqueIdentifier;
+  }
+
+  /**
+   * Implements QueryPlaceHolderInterface::nextPlaceholder().
+   */
   public function nextPlaceholder() {
     return $this->placeholder++;
   }

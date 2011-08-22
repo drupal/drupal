@@ -1629,22 +1629,28 @@ class DatabaseSelectSubqueryTestCase extends DatabaseTestCase {
     $subquery->addField('tt', 'task', 'task');
     $subquery->condition('priority', 1);
 
-    // Create another query that joins against the virtual table resulting
-    // from the subquery.
-    $select = db_select($subquery, 'tt2');
-    $select->join('test', 't', 't.id=tt2.pid');
-    $select->addField('t', 'name');
+    for ($i = 0; $i < 2; $i++) {
+      // Create another query that joins against the virtual table resulting
+      // from the subquery.
+      $select = db_select($subquery, 'tt2');
+      $select->join('test', 't', 't.id=tt2.pid');
+      $select->addField('t', 'name');
+      if ($i) {
+        // Use a different number of conditions here to confuse the subquery
+        // placeholder counter, testing http://drupal.org/node/1112854.
+        $select->condition('name', 'John');
+      }
+      $select->condition('task', 'code');
 
-    $select->condition('task', 'code');
+      // The resulting query should be equivalent to:
+      // SELECT t.name
+      // FROM (SELECT tt.pid AS pid, tt.task AS task FROM test_task tt WHERE priority=1) tt
+      //   INNER JOIN test t ON t.id=tt.pid
+      // WHERE tt.task = 'code'
+      $people = $select->execute()->fetchCol();
 
-    // The resulting query should be equivalent to:
-    // SELECT t.name
-    // FROM (SELECT tt.pid AS pid, tt.task AS task FROM test_task tt WHERE priority=1) tt
-    //   INNER JOIN test t ON t.id=tt.pid
-    // WHERE tt.task = 'code'
-    $people = $select->execute()->fetchCol();
-
-    $this->assertEqual(count($people), 1, t('Returned the correct number of rows.'));
+      $this->assertEqual(count($people), 1, t('Returned the correct number of rows.'));
+    }
   }
 
   /**
