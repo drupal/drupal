@@ -17,7 +17,7 @@ html.js body {
   min-width: 700px;
   position: relative;
   padding: .2em;
-  padding-right: 26px;
+  padding-right: 26px; /* LTR */
   width: 88%;
 }
 #overlay-titlebar {
@@ -39,7 +39,7 @@ html.js body {
 }
 #overlay-title {
   color: #fff;
-  float: left;
+  float: left; /* LTR */
   font-size: 20px;
   margin: 0;
   padding: 0.3em 0;
@@ -58,14 +58,14 @@ html.js body {
 
 #overlay-close-wrapper {
   position: absolute;
-  right: 0;
+  right: 0; /* LTR */
 }
 #overlay-close,
 #overlay-close:hover {
-  background: transparent url(images/close.png) no-repeat;
-  -moz-border-radius-topleft: 0;
-  -webkit-border-top-left-radius: 0;
-  border-top-left-radius: 0;
+  background: transparent url(images/close.png) no-repeat; /* LTR */
+  -moz-border-radius-topleft: 0; /* LTR */
+  -webkit-border-top-left-radius: 0; /* LTR */
+  border-top-left-radius: 0; /* LTR */
   display: block;
   height: 26px;
   margin: 0;
@@ -82,13 +82,13 @@ html.js body {
   line-height: 27px;
   margin: -28px 0 0 0;
   position: absolute;
-  right: 20px;
+  right: 20px; /* LTR */
   text-transform: uppercase;
 }
 #overlay-tabs li {
   display: inline;
   list-style: none;
-  margin: 0 0 0 -3px;
+  margin: 0 0 0 -3px; /* LTR */
   padding: 0;
 }
 #overlay-tabs li a,
