@@ -549,17 +549,31 @@ class SelectQueryExtender implements SelectQueryInterface {
   protected $connection;
 
   /**
+   * A unique identifier for this query object.
+   */
+  protected $uniqueIdentifier;
+
+  /**
    * The placeholder counter.
    */
   protected $placeholder = 0;
 
   public function __construct(SelectQueryInterface $query, DatabaseConnection $connection) {
+    $this->uniqueIdentifier = uniqid('', TRUE);
     $this->query = $query;
     $this->connection = $connection;
   }
 
-  /* Implementations of QueryPlaceholderInterface. */
+  /**
+   * Implements QueryPlaceholderInterface::uniqueIdentifier().
+   */
+  public function uniqueIdentifier() {
+    return $this->uniqueIdentifier;
+  }
 
+  /**
+   * Implements QueryPlaceholderInterface::nextPlaceholder().
+   */
   public function nextPlaceholder() {
     return $this->placeholder++;
   }
@@ -612,8 +626,12 @@ class SelectQueryExtender implements SelectQueryInterface {
     return $this;
   }
 
-  public function compile(DatabaseConnection $connection, QueryPlaceholderInterface $queryPlaceholder = NULL) {
-    return $this->condition->compile($connection, isset($queryPlaceholder) ? $queryPlaceholder : $this);
+  public function compile(DatabaseConnection $connection, QueryPlaceholderInterface $queryPlaceholder) {
+    return $this->query->compile($connection, $queryPlaceholder);
+  }
+
+  public function compiled() {
+    return $this->query->compiled();
   }
 
   /* Implementations of QueryConditionInterface for the HAVING clause. */
@@ -824,6 +842,8 @@ class SelectQueryExtender implements SelectQueryInterface {
   }
 
   public function __clone() {
+    $this->uniqueIdentifier = uniqid('', TRUE);
+
     // We need to deep-clone the query we're wrapping, which in turn may
     // deep-clone other objects.  Exciting!
     $this->query = clone($this->query);
@@ -1013,7 +1033,35 @@ class SelectQuery extends Query implements SelectQueryInterface {
   }
 
   public function arguments() {
-    return $this->where->arguments();
+    if (!$this->compiled()) {
+      return NULL;
+    }
+
+    $args = $this->where->arguments() + $this->having->arguments();
+
+    foreach ($this->tables as $table) {
+      if ($table['arguments']) {
+        $args += $table['arguments'];
+      }
+      // If this table is a subquery, grab its arguments recursively.
+      if ($table['table'] instanceof SelectQueryInterface) {
+        $args += $table['table']->arguments();
+      }
+    }
+
+    foreach ($this->expressions as $expression) {
+      if ($expression['arguments']) {
+        $args += $expression['arguments'];
+      }
+    }
+
+    // If there are any dependent queries to UNION,
+    // incorporate their arguments recursively.
+    foreach ($this->union as $union) {
+      $args += $union['query']->arguments();
+    }
+
+    return $args;
   }
 
   public function where($snippet, $args = array()) {
@@ -1041,8 +1089,44 @@ class SelectQuery extends Query implements SelectQueryInterface {
     return $this;
   }
   
-  public function compile(DatabaseConnection $connection, QueryPlaceholderInterface $queryPlaceholder = NULL) {
-    return $this->where->compile($connection, isset($queryPlaceholder) ? $queryPlaceholder : $this);
+  public function compile(DatabaseConnection $connection, QueryPlaceholderInterface $queryPlaceholder) {
+    $this->where->compile($connection, $queryPlaceholder);
+    $this->having->compile($connection, $queryPlaceholder);
+
+    foreach ($this->tables as $table) {
+      // If this table is a subquery, compile it recursively.
+      if ($table['table'] instanceof SelectQueryInterface) {
+        $table['table']->compile($connection, $queryPlaceholder);
+      }
+    }
+
+    // If there are any dependent queries to UNION, compile it recursively.
+    foreach ($this->union as $union) {
+      $union['query']->compile($connection, $queryPlaceholder);
+    }
+  }
+
+  public function compiled() {
+    if (!$this->where->compiled() || !$this->having->compiled()) {
+      return FALSE;
+    }
+
+    foreach ($this->tables as $table) {
+      // If this table is a subquery, check its status recursively.
+      if ($table['table'] instanceof SelectQueryInterface) {
+        if (!$table['table']->compiled()) {
+          return FALSE;
+        }
+      }
+    }
+
+    foreach ($this->union as $union) {
+      if (!$union['query']->compiled()) {
+        return FALSE;
+      }
+    }
+
+    return TRUE;
   }
 
   /* Implementations of QueryConditionInterface for the HAVING clause. */
@@ -1136,33 +1220,8 @@ class SelectQuery extends Query implements SelectQueryInterface {
     if (!isset($queryPlaceholder)) {
       $queryPlaceholder = $this;
     }
-    $this->where->compile($this->connection, $queryPlaceholder);
-    $this->having->compile($this->connection, $queryPlaceholder);
-    $args = $this->where->arguments() + $this->having->arguments();
-
-    foreach ($this->tables as $table) {
-      if ($table['arguments']) {
-        $args += $table['arguments'];
-      }
-      // If this table is a subquery, grab its arguments recursively.
-      if ($table['table'] instanceof SelectQueryInterface) {
-        $args += $table['table']->getArguments($queryPlaceholder);
-      }
-    }
-
-    foreach ($this->expressions as $expression) {
-      if ($expression['arguments']) {
-        $args += $expression['arguments'];
-      }
-    }
-
-    // If there are any dependent queries to UNION,
-    // incorporate their arguments recursively.
-    foreach ($this->union as $union) {
-      $args += $union['query']->getArguments($queryPlaceholder);
-    }
-
-    return $args;
+    $this->compile($this->connection, $queryPlaceholder);
+    return $this->arguments();
   }
 
   /**
@@ -1439,6 +1498,14 @@ class SelectQuery extends Query implements SelectQueryInterface {
   }
 
   public function __toString() {
+    // For convenience, we compile the query ourselves if the caller forgot
+    // to do it. This allows constructs like "(string) $query" to work. When
+    // the query will be executed, it will be recompiled using the proper
+    // placeholder generator anyway.
+    if (!$this->compiled()) {
+      $this->compile($this->connection, $this);
+    }
+
     // Create a sanitized comment string to prepend to the query.
     $comments = $this->connection->makeComment($this->comments);
 
@@ -1496,14 +1563,6 @@ class SelectQuery extends Query implements SelectQueryInterface {
 
     // WHERE
     if (count($this->where)) {
-      // The following line will not generate placeholders correctly if there
-      // is a subquery. Fortunately, it is also called from getArguments() first
-      // so it's not a problem in practice... unless you try to call __toString()
-      // before calling getArguments().  That is a problem that we will have to
-      // fix in Drupal 8, because it requires more refactoring than we are
-      // able to do in Drupal 7.
-      // @todo Move away from __toString() For SelectQuery compilation at least.
-      $this->where->compile($this->connection, $this);
       // There is an implicit string cast on $this->condition.
       $query .= "\nWHERE " . $this->where;
     }
@@ -1515,7 +1574,6 @@ class SelectQuery extends Query implements SelectQueryInterface {
 
     // HAVING
     if (count($this->having)) {
-      $this->having->compile($this->connection, $this);
       // There is an implicit string cast on $this->having.
       $query .= "\nHAVING " . $this->having;
     }
