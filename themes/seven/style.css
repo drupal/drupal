@@ -19,7 +19,7 @@ hr {
   padding: 0;
   border: none;
   height: 1px;
-  background: #CCCCCC;
+  background: #cccccc;
 }
 legend {
   font-weight: bold;
@@ -57,7 +57,7 @@ dl {
 }
 dl dd,
 dl dl {
-  margin-left: 20px;
+  margin-left: 20px; /* LTR */
   margin-bottom: 10px;
 }
 blockquote {
@@ -117,7 +117,7 @@ ul.menu li {
 }
 ol {
   list-style-type: decimal;
-  margin: 0.25em 0 0.25em 2em;
+  margin: 0.25em 0 0.25em 2em; /* LTR */
 }
 .item-list ul li.collapsed,
 ul.menu li.collapsed {
@@ -149,8 +149,8 @@ pre {
 #skip-link {
   margin-top: 0;
   position: absolute;
-  left: 50%;
-  margin-left: -5.25em;
+  left: 50%; /* LTR */
+  margin-left: -5.25em; /* LTR */
   width: auto;
   z-index: 50;
 }
@@ -161,7 +161,7 @@ pre {
   background: #444;
   color: #fff;
   font-size: 0.94em;
-  padding: 1px 10px 2px 10px;
+  padding: 1px 10px 2px 10px; /* LTR */
   text-decoration: none;
   -moz-border-radius: 0 0 10px 10px;
   -webkit-border-top-left-radius: 0;
@@ -181,7 +181,7 @@ pre {
  */
 #branding {
   overflow: hidden;
-  padding: 20px 20px 0 20px;
+  padding: 20px 20px 0 20px; /* LTR */
   position: relative;
   background-color: #e0e0d8;
 }
@@ -191,23 +191,23 @@ pre {
 }
 #branding div.block {
   position: relative;
-  float: right;
+  float: right; /* LTR */
   width: 240px;
-  padding-left: 10px;
+  padding-left: 10px; /* LTR */
   background: #333;
 }
 #branding div.block form label {
   display: none;
 }
 #branding div.block form div.form-item {
-  float: left;
+  float: left; /* LTR */
   border: 0;
   margin: 0;
   padding: 0;
 }
 #branding div.block form input.form-text {
   width: 140px;
-  margin-right: 10px;
+  margin-right: 10px; /* LTR */
 }
 #branding div.block form input.form-submit {
   text-align: center;
@@ -225,7 +225,7 @@ pre {
   margin: 0 0 10px;
 }
 #help div.more-help-link {
-  text-align: right;
+  text-align: right; /* LTR */
 }
 
 /**
@@ -241,7 +241,7 @@ pre {
   padding-bottom: 10px;
   font-size: 1.385em;
   font-weight: normal;
-  float: left;
+  float: left; /* LTR */
 }
 
 /**
@@ -255,26 +255,33 @@ pre {
  * Tabs.
  */
 ul.primary {
-  float: right;
+  float: right; /* LTR */
   border-bottom: none;
-  padding: 0.769em 0 5px 8px;
   text-transform: uppercase;
   font-size: 0.923em;
+  height: 2.60em;
+  margin: 0;
+  padding-top: 0;
 }
 ul.primary li {
-  display: inline;
+  float: left; /* LTR */
   list-style: none;
+  margin: 0 2px;
 }
-ul.primary li a,
+ul.primary li a:link,
 ul.primary li a.active,
 ul.primary li a:active,
 ul.primary li a:visited,
 ul.primary li a:hover,
 ul.primary li.active a {
+  display: block;
+  float: left; /* LTR */
+  height: 2.60em;
+  line-height: 2.60em;
+  padding: 0 18px 8px;
   background-color: #a6a7a2;
   color: #000;
   font-weight: bold;
-  padding: 6px 20px;
   border-width: 1px 1px 0 1px;
   border-style: solid;
   border-color: #a6a7a2;
@@ -296,22 +303,25 @@ ul.primary li a:hover {
 ul.primary li.active a:hover {
   color: #000;
 }
-ul.secondary {
-  float: none;
+.tabs-secondary {
   clear: both;
+}
+ul.secondary {
+  float: right; /* LTR */
   font-size: 0.923em;
-  text-align: right;
-  padding: 4px 10px 10px;
+  padding: 0 3px 5px;
   line-height: 1.385em;
   overflow: hidden;
   background-color: #fff;
 }
 ul.secondary li {
-  padding-left: 10px;
+  margin: 0 5px;
+  float: right; /* LTR */
 }
 ul.secondary li a {
   background-color: #ddd;
   color: #000;
+  display: inline-block;
 }
 ul.secondary li a,
 ul.secondary li a:hover,
@@ -328,20 +338,23 @@ ul.secondary li.active a.active {
   color: #fff;
   background: #666;
 }
+#content {
+  clear: left;
+}
 
 /**
  * Page layout.
  */
 #page {
-  padding: 20px 0 40px 0;
-  margin-right: 40px;
-  margin-left: 40px;
+  padding: 20px 0 40px 0; /* LTR */
+  margin-right: 40px; /* LTR */
+  margin-left: 40px; /* LTR */
   background: #fff;
   position: relative;
   color: #333;
 }
 #secondary-links ul.links li {
-  padding: 0 10px 10px 0;
+  padding: 0 10px 10px 0; /* LTR */
 }
 #secondary-links ul.links li a {
   font-size: 0.923em;
@@ -361,7 +374,7 @@ ul.secondary li.active a.active {
 }
 ul.links li,
 ul.inline li {
-  padding-right: 1em;
+  padding-right: 1em; /* LTR */
 }
 ul.inline li {
   display: inline;
@@ -372,12 +385,12 @@ ul.inline li {
 }
 ul.admin-list li {
   position: relative;
-  padding-left: 30px;
+  padding-left: 30px; /* LTR */
   padding-top: 9px;
   border-top: 1px solid #ccc;
-  margin-left: 0;
+  margin-left: 0; /* LTR */
   margin-bottom: 10px;
-  background: url(images/list-item.png) no-repeat 0 11px;
+  background: url(images/list-item.png) no-repeat 0 11px; /* LTR */
   list-style-type: none;
   list-style-image: none;
 }
@@ -402,17 +415,17 @@ ul.admin-list li:last-child {
   border-bottom: none;
 }
 ul.admin-list li a {
-  margin-left: -30px;
-  padding: 0px 0 4px 30px;
+  margin-left: -30px; /* LTR */
+  padding: 0 0 4px 30px; /* LTR */
   min-height: 0;
 }
 ul.admin-list.compact li a {
-  margin-left: 0;
+  margin-left: 0; /* LTR */
   padding: 0;
 }
 ul.admin-list li div.description a {
-  margin-left: 0px;
-  padding: 0px;
+  margin-left: 0; /* LTR */
+  padding: 0;
   min-height: inherit;
 }
 div.submitted {
@@ -473,7 +486,7 @@ table th.active a {
 table th.active img {
   position: absolute;
   top: 3px;
-  right: 3px;
+  right: 3px; /* LTR */
 }
 table td.active {
   background: #e9e9dd;
@@ -510,7 +523,7 @@ table.system-status-report tr.error {
  * in some tables, since it's webkit only, we can use :last-child
  */
 tr td:last-child {
-  border-right: 1px solid #BEBFB9;
+  border-right: 1px solid #bebfb9; /* LTR */
 }
 
 
@@ -534,18 +547,18 @@ tr td:last-child {
  */
 fieldset {
   border: 1px solid #ccc;
-  padding: 2.5em 0 0 0;
+  padding: 2.5em 0 0 0; /* LTR */
   position: relative;
   margin: 1em 0;
 }
 fieldset .fieldset-legend {
   margin-top: 0.5em;
-  padding-left: 15px;
+  padding-left: 15px; /* LTR */
   position: absolute;
   text-transform: uppercase;
 }
 fieldset .fieldset-wrapper {
-  padding: 0 13px 13px 15px;
+  padding: 0 13px 13px 15px; /* LTR */
 }
 fieldset.collapsed {
   background-color: transparent;
@@ -615,7 +628,7 @@ div.teaser-checkbox .form-item,
 .filter-wrapper .filter-guidelines,
 .filter-wrapper .filter-help {
   font-size: 0.923em;
-  padding: 2px 0 0 0;
+  padding: 2px 0 0 0; /* LTR */
 }
 ul.tips,
 div.description,
@@ -626,18 +639,18 @@ div.description,
   color: #666;
 }
 ul.tips li {
-  margin: 0.25em 0 0.25em 1.5em;
+  margin: 0.25em 0 0.25em 1.5em; /* LTR */
 }
 body div.form-type-radio div.description,
 body div.form-type-checkbox div.description {
-  margin-left: 1.5em;
+  margin-left: 1.5em; /* LTR */
 }
 input.form-submit,
 a.button {
   cursor: pointer;
   padding: 4px 17px;
   margin-bottom: 1em;
-  margin-right: 1em;
+  margin-right: 1em; /* LTR */
   color: #5a5a5a;
   text-align: center;
   font-weight: normal;
@@ -645,8 +658,8 @@ a.button {
   font-family: "Lucida Grande", Verdana, sans-serif;
   border: 1px solid #e4e4e4;
   border-bottom: 1px solid #b4b4b4;
-  border-left-color: #D2D2D2;
-  border-right-color: #D2D2D2;
+  border-left-color: #d2d2d2;
+  border-right-color: #d2d2d2;
   background: url(images/buttons.png) 0 0 repeat-x;
   -moz-border-radius: 20px;
   -webkit-border-radius: 20px;
@@ -665,14 +678,14 @@ a.button:active {
   border-left-color: #8eB7cd;
   border-right-color: #8eB7cd;
   border-bottom-color: #7691a2;
-  background: url(images/buttons.png) 0px -40px repeat-x;
+  background: url(images/buttons.png) 0 -40px repeat-x;
   color: #133B54;
 }
 input.form-submit:active {
   background: #666;
   color: #fff;
   border-color: #555;
-  text-shadow: #222 0px -1px 0px;
+  text-shadow: #222 0 -1px 0;
 }
 input.form-button-disabled,
 input.form-button-disabled:active {
@@ -707,16 +720,16 @@ html.js input.throbbing {
 }
 ul.action-links {
   margin: 1em 0;
-  padding: 0 20px 0 20px;
+  padding: 0 20px 0 20px; /* LTR */
   list-style-type: none;
   overflow: hidden;
 }
 ul.action-links li {
-  float: left;
-  margin: 0 1em 0 0;
+  float: left; /* LTR */
+  margin: 0 1em 0 0; /* LTR */
 }
 ul.action-links a {
-  padding-left: 15px;
+  padding-left: 15px; /* LTR */
   background: transparent url(images/add.png) no-repeat 0 center;
   line-height: 30px;
 }
@@ -772,7 +785,7 @@ div.admin-panel h3 {
 dl.multiselect,
 dl.multiselect dt,
 dl.multiselect dd {
-  margin: 0 10px 0 0;
+  margin: 0 10px 0 0; /* LTR */
 }
 dl.multiselect select,
 dl.multiselect dd select {
@@ -796,8 +809,8 @@ div.admin-options label {
 }
 div.admin-options label,
 div.admin-options div.form-item {
-  margin-right: 10px;
-  float: left;
+  margin-right: 10px; /* LTR */
+  float: left; /* LTR */
 }
 div.admin-options div.form-item {
   padding: 0;
@@ -811,13 +824,14 @@ div.admin-options div.form-item {
 
 /* Maintenance theming */
 body.in-maintenance #sidebar-first {
-  float: left;
+  float: left; /* LTR */
   width: 200px;
 }
 body.in-maintenance #content {
-  float: right;
+  float: right; /* LTR */
   width: 550px;
-  padding-right: 20px;
+  padding-right: 20px; /* LTR */
+  clear: none;
 }
 body.in-maintenance #page {
   overflow: auto;
@@ -860,7 +874,7 @@ ol.task-list li.active {
 }
 ol.task-list li.done {
   color: #393;
-  background: transparent url(images/task-check.png) no-repeat 0px 50%; /* LTR */
+  background: transparent url(images/task-check.png) no-repeat 0 50%;
   color: green;
 }
 
@@ -879,7 +893,7 @@ ol.task-list li.done {
   padding: 0 20px;
 }
 .overlay #branding div.breadcrumb {
-  float: left;
+  float: left; /* LTR */
   position: relative;
   z-index: 10;
 }
@@ -894,7 +908,8 @@ ol.task-list li.done {
 }
 .overlay ul.secondary {
   background: transparent none;
-  margin: -2.4em 0 0.3em 0;
+  margin: -1.4em 0 0.3em 0; /* LTR */
+  overflow: visible;
 }
 .overlay #content {
   padding: 0;
@@ -905,9 +920,9 @@ h1#overlay-title {
 
 /* Shortcut theming */
 div.add-or-remove-shortcuts {
-  float: left;
+  float: left; /* LTR */
   padding-top: 6px;
-  padding-left: 6px;
+  padding-left: 6px; /* LTR */
 }
 
 /* Dashboard */
@@ -920,10 +935,10 @@ div.add-or-remove-shortcuts {
   padding: 3px 10px;
 }
 #dashboard div.block div.content {
-  padding: 10px 5px 5px 5px;
+  padding: 10px 5px 5px 5px; /* LTR */
 }
 #dashboard div.block div.content ul.menu {
-  margin-left: 20px;
+  margin-left: 20px; /* LTR */
 }
 #dashboard .dashboard-region .block {
   border: #ccc 1px solid;
@@ -960,7 +975,7 @@ div.add-or-remove-shortcuts {
   border: none;
 }
 #block-node-recent .more-link {
-  padding: 0 5px 5px 0;
+  padding: 0 5px 5px 0; /* LTR */
 }
 
 /* User login block */
@@ -988,7 +1003,7 @@ div.add-or-remove-shortcuts {
   padding: 0.4em 0.6em;
 }
 .overlay-disable-message-focused #overlay-dismiss-message {
-  background-color: #59A0D8;
+  background-color: #59a0d8;
   color: #fff;
   -moz-border-radius: 8px;
   -webkit-border-radius: 8px;
