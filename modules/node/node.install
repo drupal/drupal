@@ -616,6 +616,7 @@ function node_update_7006(&$sandbox) {
       'module' => 'text',
       'cardinality' => 1,
       'entity_types' => array('node'),
+      'translatable' => TRUE,
     );
     _update_7000_field_create_field($body_field);
 
@@ -864,6 +865,38 @@ function node_update_7011() {
     'length' => 255,
     'not null' => TRUE,
   ));
+}
+
+/**
+ * Switches body fields to untranslatable while upgrading from D6 and makes them language neutral.
+ */
+function node_update_7012() {
+  // If we are upgrading from D6, then body fields should be set back to
+  // untranslatable, as D6 did not know about the idea of translating fields,
+  // but only nodes. If a D7 > D7 update is running we need to skip this update,
+  // as it is a valid use case to have translatable body fields in this context.
+  if (variable_get('update_d6', FALSE)) {
+    // Make node bodies untranslatable: field_update_field() cannot be used
+    // throughout the upgrade process and we do not have an update counterpart
+    // for _update_7000_field_create_field(). Hence we are forced to update the
+    // 'field_config' table directly. This is a safe operation since it is
+    // being performed while upgrading from D6. Perfoming the same operation
+    // during a D7 update is highly discouraged.
+    db_update('field_config')
+      ->fields(array('translatable' => 0))
+      ->condition('field_name', 'body')
+      ->execute();
+
+    // Switch field languages to LANGUAGE_NONE, since initially they were
+    // assigned $node->language.
+    foreach (array('field_data_body', 'field_revision_body') as $table) {
+      db_update($table)
+        ->fields(array('language' => LANGUAGE_NONE))
+        ->execute();
+    }
+
+    node_type_cache_reset();
+  }
 }
 
 /**

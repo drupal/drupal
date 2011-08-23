@@ -402,5 +402,9 @@ class BasicUpgradePath extends UpgradePathTestCase {
     // Confirm that no {menu_links} entry exists for user/autocomplete.
     $result = db_query('SELECT COUNT(*) FROM {menu_links} WHERE link_path = :user_autocomplete', array(':user_autocomplete' => 'user/autocomplete'))->fetchField();
     $this->assertFalse($result, t('No {menu_links} entry exists for user/autocomplete'));
+
+    // Test that the environment after the upgrade is in a consistent status.
+    $update_d6 = variable_get('update_d6', FALSE);
+    $this->assertFalse($update_d6, t('The D6 upgrade flag variable has been correctly disabled.'));
   }
 }
