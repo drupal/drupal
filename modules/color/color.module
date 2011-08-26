@@ -314,7 +314,11 @@ function color_scheme_form_submit($form, &$form_state) {
     // We need at least a copy of the source and a target buffer of the same
     // size (both at 32bpp).
     $required = $width * $height * 8;
-    $usage = memory_get_usage();
+    // We intend to prevent color scheme changes if there isn't enough memory
+    // available.  memory_get_usage(TRUE) returns a more accurate number than
+    // memory_get_usage(), therefore we won't inadvertently reject a color
+    // scheme change based on a faulty memory calculation.
+    $usage = memory_get_usage(TRUE);
     $limit = parse_size(ini_get('memory_limit'));
     if ($usage + $required > $limit) {
       drupal_set_message(t('There is not enough memory available to PHP to change this theme\'s color scheme. You need at least %size more. Check the <a href="@url">PHP documentation</a> for more information.', array('%size' => format_size($usage + $required - $limit), '@url' => 'http://www.php.net/manual/ini.core.php#ini.sect.resource-limits')), 'error');

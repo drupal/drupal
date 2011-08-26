@@ -161,7 +161,7 @@ Color module
 - ?
 
 Comment module
-- Nathaniel Catchpole 'catch' <http://drupal.org/user/35733>
+- ?
 
 Contact module
 - Dave Reid 'davereid' <http://drupal.org/user/53892>

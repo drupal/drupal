@@ -380,7 +380,26 @@ function taxonomy_admin_vocabulary_title_callback($vocabulary) {
 }
 
 /**
- * Save a vocabulary given a vocabulary object.
+ * Saves a vocabulary.
+ *
+ * @param $vocabulary
+ *   A vocabulary object with the following properties:
+ *   - vid: The ID of the vocabulary.
+ *   - name: The human-readable name of the vocabulary.
+ *   - machine_name: The machine name of the vocabulary.
+ *   - description: (optional) The vocabulary's description.
+ *   - hierarchy: The hierarchy level of the vocabulary.
+ *   - module: (optional) The module altering the vocabulary.
+ *   - weight: (optional) The weight of this vocabulary in relation to other
+ *     vocabularies.
+ *   - original: (optional) The original vocabulary object before any changes
+ *     are applied.
+ *   - old_machine_name: (optional) The original machine name of the
+ *     vocabulary.
+ *
+ * @return
+ *   Status constant indicating whether the vocabulary was inserted (SAVED_NEW)
+ *   or updated(SAVED_UPDATED).
  */
 function taxonomy_vocabulary_save($vocabulary) {
   // Prevent leading and trailing spaces in vocabulary names.
@@ -491,19 +510,22 @@ function taxonomy_taxonomy_vocabulary_update($vocabulary) {
 }
 
 /**
- * Dynamically check and update the hierarchy flag of a vocabulary.
+ * Checks and updates the hierarchy flag of a vocabulary.
  *
  * Checks the current parents of all terms in a vocabulary and updates the
- * vocabularies hierarchy setting to the lowest possible level. A hierarchy with
- * no parents in any of its terms will be given a hierarchy of 0. If terms
- * contain at most a single parent, the vocabulary will be given a hierarchy of
- * 1. If any term contain multiple parents, the vocabulary will be given a
- * hierarchy of 2.
+ * vocabulary's hierarchy setting to the lowest possible level. If no term
+ * has parent terms then the vocabulary will be given a hierarchy of 0.
+ * If any term has a single parent then the vocabulary will be given a
+ * hierarchy of 1. If any term has multiple parents then the vocabulary
+ * will be given a hierarchy of 2.
  *
  * @param $vocabulary
  *   A vocabulary object.
  * @param $changed_term
  *   An array of the term structure that was updated.
+ *
+ * @return
+ *   An integer that represents the level of the vocabulary's hierarchy.
  */
 function taxonomy_check_vocabulary_hierarchy($vocabulary, $changed_term) {
   $tree = taxonomy_get_tree($vocabulary->vid);
@@ -879,7 +901,8 @@ function taxonomy_get_parents_all($tid) {
  *   An optional vocabulary ID to restrict the child search.
  *
  * @return
- *   An array of term objects which are the children of the term $tid.
+ *   An array of term objects that are the children of the term $tid, or an
+ *   empty array when no children exist.
  */
 function taxonomy_get_children($tid, $vid = 0) {
   $children = &drupal_static(__FUNCTION__, array());
@@ -1213,10 +1236,11 @@ function taxonomy_implode_tags($tags, $vid = NULL) {
       if (isset($tag->name)) {
         // Commas and quotes in tag names are special cases, so encode 'em.
         if (strpos($tag->name, ',') !== FALSE || strpos($tag->name, '"') !== FALSE) {
-          $tag->name = '"' . str_replace('"', '""', $tag->name) . '"';
+          $typed_tags[] = '"' . str_replace('"', '""', $tag->name) . '"';
         }
-
-        $typed_tags[] = $tag->name;
+        else {
+          $typed_tags[] = $tag->name;
+        }
       }
     }
   }

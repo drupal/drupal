@@ -28,7 +28,7 @@ include_once './includes/bootstrap.inc';
 drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
 
 // Include the utility drupal_var_export() function.
-include_once dirname(__FILE__) . '/../includes/utility.inc';
+include_once __DIR__ . '/../includes/utility.inc';
 
 // Output the PHP header.
 $output = <<<ENDOFHEADER

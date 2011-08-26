@@ -145,10 +145,9 @@ class DatabaseConnection_pgsql extends DatabaseConnection {
     if (!isset($specials)) {
       $specials = array(
         // In PostgreSQL, 'LIKE' is case-sensitive. For case-insensitive LIKE
-        // statements, we need to use ILIKE instead. Use backslash for escaping
-        // wildcard characters.
-        'LIKE' => array('operator' => 'ILIKE', 'postfix' => ' ESCAPE ' . $this->quote("\\")),
-        'NOT LIKE' => array('operator' => 'NOT ILIKE', 'postfix' => ' ESCAPE ' . $this->quote("\\")),
+        // statements, we need to use ILIKE instead.
+        'LIKE' => array('operator' => 'ILIKE'),
+        'NOT LIKE' => array('operator' => 'NOT ILIKE'),
       );
     }
 

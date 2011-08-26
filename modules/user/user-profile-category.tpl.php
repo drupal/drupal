@@ -24,10 +24,12 @@
  * @see template_preprocess_user_profile_category()
  */
 ?>
-<?php if ($title) : ?>
-  <h3><?php print $title; ?></h3>
-<?php endif; ?>
+<section class="<?php print $classes; ?>">
+  <?php if ($title) : ?>
+    <h2><?php print $title; ?></h2>
+  <?php endif; ?>
 
-<dl<?php print $attributes; ?>>
-  <?php print $profile_items; ?>
-</dl>
+  <dl<?php print $attributes; ?>>
+    <?php print $profile_items; ?>
+  </dl>
+</section>

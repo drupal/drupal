@@ -537,7 +537,7 @@ function form_state_keys_no_cache() {
     'buttons',
     'triggering_element',
     'clicked_button',
-    'complete form',
+    'complete_form',
     'groups',
     'input',
     'method',
@@ -1358,7 +1358,7 @@ function _form_validate(&$elements, &$form_state, $form_id = NULL) {
     // #value data.
     elseif (isset($elements['#element_validate'])) {
       foreach ($elements['#element_validate'] as $function) {
-        $function($elements, $form_state, $form_state['complete form']);
+        $function($elements, $form_state, $form_state['complete_form']);
       }
     }
     $elements['#validated'] = TRUE;
@@ -1718,7 +1718,7 @@ function form_builder($form_id, &$element, &$form_state) {
     // Store a reference to the complete form in $form_state prior to building
     // the form. This allows advanced #process and #after_build callbacks to
     // perform changes elsewhere in the form.
-    $form_state['complete form'] = &$element;
+    $form_state['complete_form'] = &$element;
 
     // Set a flag if we have a correct form submission. This is always TRUE for
     // programmed forms coming from drupal_form_submit(), or if the form_id coming
@@ -1745,7 +1745,7 @@ function form_builder($form_id, &$element, &$form_state) {
   // checkboxes and files.
   if (isset($element['#process']) && !$element['#processed']) {
     foreach ($element['#process'] as $process) {
-      $element = $process($element, $form_state, $form_state['complete form']);
+      $element = $process($element, $form_state, $form_state['complete_form']);
     }
     $element['#processed'] = TRUE;
   }
@@ -3330,7 +3330,7 @@ function form_process_machine_name($element, &$form_state) {
   // complete form in $form_state. By reference, because we need to append
   // a #field_suffix that will hold the live preview.
   $key_exists = NULL;
-  $source = drupal_array_get_nested_value($form_state['complete form'], $element['#machine_name']['source'], $key_exists);
+  $source = drupal_array_get_nested_value($form_state['complete_form'], $element['#machine_name']['source'], $key_exists);
   if (!$key_exists) {
     return $element;
   }
@@ -3342,7 +3342,7 @@ function form_process_machine_name($element, &$form_state) {
   $source['#field_suffix'] .= ' <small id="' . $suffix_id . '">&nbsp;</small>';
 
   $parents = array_merge($element['#machine_name']['source'], array('#field_suffix'));
-  drupal_array_set_nested_value($form_state['complete form'], $parents, $source['#field_suffix']);
+  drupal_array_set_nested_value($form_state['complete_form'], $parents, $source['#field_suffix']);
 
   $element['#machine_name']['suffix'] = '#' . $suffix_id;
 
@@ -3650,14 +3650,14 @@ function theme_hidden($variables) {
  *   An associative array containing:
  *   - element: An associative array containing the properties of the element.
  *     Properties used: #title, #value, #description, #size, #maxlength,
- *     #required, #attributes, #autocomplete_path.
+ *     #placeholder, #required, #attributes, #autocomplete_path.
  *
  * @ingroup themeable
  */
 function theme_textfield($variables) {
   $element = $variables['element'];
   $element['#attributes']['type'] = 'text';
-  element_set_attributes($element, array('id', 'name', 'value', 'size', 'maxlength'));
+  element_set_attributes($element, array('id', 'name', 'value', 'size', 'maxlength', 'placeholder'));
   _form_set_class($element, array('form-text'));
 
   $extra = '';
@@ -3708,14 +3708,14 @@ function theme_form($variables) {
  * @param $variables
  *   An associative array containing:
  *   - element: An associative array containing the properties of the element.
- *     Properties used: #title, #value, #description, #rows, #cols, #required,
- *     #attributes
+ *     Properties used: #title, #value, #description, #rows, #cols,
+ *     #placeholder, #required, #attributes
  *
  * @ingroup themeable
  */
 function theme_textarea($variables) {
   $element = $variables['element'];
-  element_set_attributes($element, array('id', 'name', 'cols', 'rows'));
+  element_set_attributes($element, array('id', 'name', 'rows', 'cols', 'placeholder'));
   _form_set_class($element, array('form-textarea'));
 
   $wrapper_attributes = array(
@@ -3741,14 +3741,14 @@ function theme_textarea($variables) {
  *   An associative array containing:
  *   - element: An associative array containing the properties of the element.
  *     Properties used: #title, #value, #description, #size, #maxlength,
- *     #required, #attributes.
+ *     #placeholder, #required, #attributes.
  *
  * @ingroup themeable
  */
 function theme_password($variables) {
   $element = $variables['element'];
   $element['#attributes']['type'] = 'password';
-  element_set_attributes($element, array('id', 'name', 'size', 'maxlength'));
+  element_set_attributes($element, array('id', 'name', 'size', 'maxlength', 'placeholder'));
   _form_set_class($element, array('form-text'));
 
   return '<input' . drupal_attributes($element['#attributes']) . ' />';
@@ -4004,6 +4004,36 @@ function _form_set_class(&$element, $class = array()) {
 }
 
 /**
+ * Helper form element validator: integer.
+ */
+function element_validate_integer($element, &$form_state) {
+  $value = $element['#value'];
+  if ($value !== '' && (!is_numeric($value) || intval($value) != $value)) {
+    form_error($element, t('%name must be an integer.', array('%name' => $element['#title'])));
+  }
+}
+
+/**
+ * Helper form element validator: integer > 0.
+ */
+function element_validate_integer_positive($element, &$form_state) {
+  $value = $element['#value'];
+  if ($value !== '' && (!is_numeric($value) || intval($value) != $value || $value <= 0)) {
+    form_error($element, t('%name must be a positive integer.', array('%name' => $element['#title'])));
+  }
+}
+
+/**
+ * Helper form element validator: number.
+ */
+function element_validate_number($element, &$form_state) {
+  $value = $element['#value'];
+  if ($value != '' && !is_numeric($value)) {
+    form_error($element, t('%name must be a number.', array('%name' => $element['#title'])));
+  }
+}
+
+/**
  * @} End of "defgroup form_api".
  */
 
@@ -4033,8 +4063,9 @@ function _form_set_class(&$element, $class = array()) {
  *   'file' => 'path_to_file_containing_myfunctions',
  * );
  * batch_set($batch);
- * // only needed if not inside a form _submit handler :
- * batch_process();
+ * // Only needed if not inside a form _submit handler.
+ * // Setting redirect in batch_process.
+ * batch_process('node/1');
  * @endcode
  *
  * Note: if the batch 'title', 'init_message', 'progress_message', or

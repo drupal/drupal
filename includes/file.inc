@@ -462,11 +462,11 @@ function file_prepare_directory(&$directory, $options = FILE_MODIFY_PERMISSIONS)
  * If missing, create a .htaccess file in each Drupal files directory.
  */
 function file_ensure_htaccess() {
-  file_create_htaccess('public://', FALSE);
+  file_save_htaccess('public://', FALSE);
   if (variable_get('file_private_path', FALSE)) {
-    file_create_htaccess('private://', TRUE);
+    file_save_htaccess('private://', TRUE);
   }
-  file_create_htaccess('temporary://', TRUE);
+  file_save_htaccess('temporary://', TRUE);
 }
 
 /**
@@ -478,7 +478,7 @@ function file_ensure_htaccess() {
  *   FALSE indicates that $directory should be an open and public directory.
  *   The default is TRUE which indicates a private and protected directory.
  */
-function file_create_htaccess($directory, $private = TRUE) {
+function file_save_htaccess($directory, $private = TRUE) {
   if (file_uri_scheme($directory)) {
     $directory = file_stream_wrapper_uri_normalize($directory);
   }
@@ -605,7 +605,8 @@ function file_save(stdClass $file) {
  *
  * @return
  *   A nested array with usage data. The first level is keyed by module name,
- *   the second by object type, the third has 'id' and 'count' keys.
+ *   the second by object type and the third by the object id. The value
+ *   of the third level contains the usage count.
  *
  * @see file_usage_add()
  * @see file_usage_delete()
@@ -618,7 +619,7 @@ function file_usage_list(stdClass $file) {
     ->execute();
   $references = array();
   foreach ($result as $usage) {
-    $references[$usage->module][$usage->type] = array('id' => $usage->id, 'count' => $usage->count);
+    $references[$usage->module][$usage->type][$usage->id] = $usage->count;
   }
   return $references;
 }
@@ -906,7 +907,7 @@ function file_unmanaged_copy($source, $destination = NULL, $replace = FILE_EXIST
   file_ensure_htaccess();
   // Perform the copy operation.
   if (!@copy($source, $destination)) {
-    watchdog('file', 'The specified file %file could not be copied to %destination.', array('%file' => $source, '%destination' => $destination), WATCHDOG_ERR);
+    watchdog('file', 'The specified file %file could not be copied to %destination.', array('%file' => $source, '%destination' => $destination), WATCHDOG_ERROR);
     return FALSE;
   }
 
@@ -1902,10 +1903,11 @@ function file_transfer($uri, $headers) {
  * Menu handler for private file transfers.
  *
  * Call modules that implement hook_file_download() to find out if a file is
- * accessible and what headers it should be transferred with. If a module
- * returns -1 drupal_access_denied() will be returned. If one or more modules
- * returned headers the download will start with the returned headers. If no
- * modules respond drupal_not_found() will be returned.
+ * accessible and what headers it should be transferred with. If one or more
+ * modules returned headers the download will start with the returned headers.
+ * If a module returns -1 drupal_access_denied() will be returned. If the file
+ * exists but no modules responded drupal_access_denied() will be returned.
+ * If the file does not exist drupal_not_found() will be returned.
  *
  * @see hook_file_download()
  */
@@ -1934,6 +1936,7 @@ function file_download() {
     if (count($headers)) {
       file_transfer($uri, $headers);
     }
+    return drupal_access_denied();
   }
   return drupal_not_found();
 }

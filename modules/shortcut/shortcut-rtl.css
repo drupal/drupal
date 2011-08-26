@@ -28,6 +28,7 @@ div.add-or-remove-shortcuts a span.text {
   padding-right: 10px;
   padding-left: 0;
 }
+div.add-or-remove-shortcuts a:focus span.text,
 div.add-or-remove-shortcuts a:hover span.text {
   -moz-border-radius: 5px 0 0 5px;
   -webkit-border-top-left-radius: 5px;

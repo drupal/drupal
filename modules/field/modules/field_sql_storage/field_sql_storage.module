@@ -468,7 +468,6 @@ function field_sql_storage_field_storage_purge($entity_type, $entity, $field, $i
  * Implements hook_field_storage_query().
  */
 function field_sql_storage_field_storage_query(EntityFieldQuery $query) {
-  $groups = array();
   if ($query->age == FIELD_LOAD_CURRENT) {
     $tablename_function = '_field_sql_storage_tablename';
     $id_key = 'entity_id';
@@ -499,26 +498,12 @@ function field_sql_storage_field_storage_query(EntityFieldQuery $query) {
     }
   }
 
-  // Add field conditions.
-  foreach ($query->fieldConditions as $key => $condition) {
-    $table_alias = $table_aliases[$key];
-    $field = $condition['field'];
-    // Add the specified condition.
-    $sql_field = "$table_alias." . _field_sql_storage_columnname($field['field_name'], $condition['column']);
-    $query->addCondition($select_query, $sql_field, $condition);
-    // Add delta / language group conditions.
-    foreach (array('delta', 'language') as $column) {
-      if (isset($condition[$column . '_group'])) {
-        $group_name = $condition[$column . '_group'];
-        if (!isset($groups[$column][$group_name])) {
-          $groups[$column][$group_name] = $table_alias;
-        }
-        else {
-          $select_query->where("$table_alias.$column = " . $groups[$column][$group_name] . ".$column");
-        }
-      }
-    }
-  }
+  // Add field conditions. We need a fresh grouping cache.
+  drupal_static_reset('_field_sql_storage_query_field_conditions');
+  _field_sql_storage_query_field_conditions($query, $select_query, $query->fieldConditions, $table_aliases, '_field_sql_storage_columnname');
+
+  // Add field meta conditions.
+  _field_sql_storage_query_field_conditions($query, $select_query, $query->fieldMetaConditions, $table_aliases, function ($field_name, $column) { return $column; });
 
   if (isset($query->deleted)) {
     $select_query->condition("$field_base_table.deleted", (int) $query->deleted);
@@ -589,6 +574,44 @@ function _field_sql_storage_query_join_entity(SelectQuery $select_query, $entity
   $entity_field = $entity_info['entity keys']['id'];
   $select_query->join($entity_base_table, $entity_base_table, "$entity_base_table.$entity_field = $field_base_table.entity_id");
   return $entity_base_table;
+}
+
+/**
+ * Adds field (meta) conditions to the given query objects respecting groupings.
+ *
+ * @param EntityFieldQuery $query
+ *   The field query object to be processed.
+ * @param SelectQuery $select_query
+ *   The SelectQuery that should get grouping conditions.
+ * @param condtions
+ *   The conditions to be added.
+ * @param $table_aliases
+ *   An associative array of table aliases keyed by field index.
+ * @param $column_callback
+ *   A callback that should return the column name to be used for the field
+ *   conditions. Accepts a field name and a field column name as parameters.
+ */
+function _field_sql_storage_query_field_conditions(EntityFieldQuery $query, SelectQuery $select_query, $conditions, $table_aliases, $column_callback) {
+  $groups = &drupal_static(__FUNCTION__, array());
+  foreach ($conditions as $key => $condition) {
+    $table_alias = $table_aliases[$key];
+    $field = $condition['field'];
+    // Add the specified condition.
+    $sql_field = "$table_alias." . $column_callback($field['field_name'], $condition['column']);
+    $query->addCondition($select_query, $sql_field, $condition);
+    // Add delta / language group conditions.
+    foreach (array('delta', 'language') as $column) {
+      if (isset($condition[$column . '_group'])) {
+        $group_name = $condition[$column . '_group'];
+        if (!isset($groups[$column][$group_name])) {
+          $groups[$column][$group_name] = $table_alias;
+        }
+        else {
+          $select_query->where("$table_alias.$column = " . $groups[$column][$group_name] . ".$column");
+        }
+      }
+    }
+  }
 }
 
 /**

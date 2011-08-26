@@ -339,7 +339,7 @@ function field_default_form_errors($entity_type, $entity, $field, $instance, $la
     $function_exists = function_exists($function);
 
     // Locate the correct element in the the form.
-    $element = drupal_array_get_nested_value($form_state['complete form'], $field_state['array_parents']);
+    $element = drupal_array_get_nested_value($form_state['complete_form'], $field_state['array_parents']);
 
     $multiple_widget = field_behaviors_widget('multiple values', $instance) != FIELD_BEHAVIOR_DEFAULT;
     foreach ($field_state['errors'] as $delta => $delta_errors) {

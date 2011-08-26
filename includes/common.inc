@@ -89,7 +89,7 @@ define('JS_THEME', 100);
  * Error code indicating that the request made by drupal_http_request() exceeded
  * the specified timeout.
  */
-define('HTTP_REQUEST_TIMEOUT', 1);
+define('HTTP_REQUEST_TIMEOUT', -1);
 
 /**
  * Constants defining cache granularity for blocks and renderable arrays.
@@ -1297,7 +1297,7 @@ function check_url($uri) {
  * for scripts and styles.
  */
 function filter_xss_admin($string) {
-  return filter_xss($string, array('a', 'abbr', 'acronym', 'address', 'b', 'bdo', 'big', 'blockquote', 'br', 'caption', 'cite', 'code', 'col', 'colgroup', 'dd', 'del', 'dfn', 'div', 'dl', 'dt', 'em', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'hr', 'i', 'img', 'ins', 'kbd', 'li', 'ol', 'p', 'pre', 'q', 'samp', 'small', 'span', 'strong', 'sub', 'sup', 'table', 'tbody', 'td', 'tfoot', 'th', 'thead', 'tr', 'tt', 'ul', 'var'));
+  return filter_xss($string, array('a', 'abbr', 'acronym', 'address', 'article', 'aside', 'b', 'bdi', 'bdo', 'big', 'blockquote', 'br', 'caption', 'cite', 'code', 'col', 'colgroup', 'command', 'dd', 'del', 'details', 'dfn', 'div', 'dl', 'dt', 'em', 'figcaption', 'figure', 'footer', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'header', 'hgroup', 'hr', 'i', 'img', 'ins', 'kbd', 'li', 'mark', 'menu', 'meter', 'nav', 'ol', 'output', 'p', 'pre', 'progress', 'q', 'rp', 'rt', 'ruby', 's', 'samp', 'section', 'small', 'span', 'strong', 'sub', 'summary', 'sup', 'table', 'tbody', 'td', 'tfoot', 'th', 'thead', 'time', 'tr', 'tt', 'u', 'ul', 'var', 'wbr'));
 }
 
 /**
@@ -2746,13 +2746,14 @@ function drupal_add_html_head_link($attributes, $header = FALSE) {
  * @param $data
  *   (optional) The stylesheet data to be added, depending on what is passed
  *   through to the $options['type'] parameter:
- *   - 'file': The path to the CSS file relative to the base_path(), e.g.,
- *     "modules/devel/devel.css". Note that Modules should always prefix the
- *     names of their CSS files with the module name; for example,
- *     system-menus.css rather than simply menus.css. Themes can override
- *     module-supplied CSS files based on their filenames, and this prefixing
- *     helps prevent confusing name collisions for theme developers. See
- *     drupal_get_css() where the overrides are performed. Also, if the
+ *   - 'file': The path to the CSS file relative to the base_path(), or a
+ *     stream wrapper URI. For example: "modules/devel/devel.css" or
+ *     "public://generated_css/stylesheet_1.css". Note that Modules should
+ *     always prefix the names of their CSS files with the module name; for
+ *     example, system-menus.css rather than simply menus.css. Themes can
+ *     override module-supplied CSS files based on their filenames, and this
+ *     prefixing helps prevent confusing name collisions for theme developers.
+ *     See drupal_get_css() where the overrides are performed. Also, if the
  *     direction of the current language is right-to-left (Hebrew, Arabic,
  *     etc.), the function will also look for an RTL CSS file and append it to
  *     the list. The name of this file should have an '-rtl.css' suffix.  For
@@ -4420,6 +4421,8 @@ function drupal_process_attached($elements, $group = JS_DEFAULT, $dependency_che
  * The following states may be applied to an element:
  * - enabled
  * - disabled
+ * - required
+ * - optional
  * - visible
  * - invisible
  * - checked
@@ -4428,26 +4431,22 @@ function drupal_process_attached($elements, $group = JS_DEFAULT, $dependency_che
  * - collapsed
  *
  * The following states may be used in remote conditions:
- * - enabled
- * - disabled
- * - visible
- * - invisible
+ * - empty
+ * - filled
  * - checked
  * - unchecked
+ * - expanded
+ * - collapsed
  * - value
  *
- * The following states exist for both states and remote conditions, but are not
- * fully implemented and may not change anything on the element:
- * - required
- * - optional
+ * The following states exist for both elements and remote conditions, but are
+ * not fully implemented and may not change anything on the element:
  * - relevant
  * - irrelevant
  * - valid
  * - invalid
  * - touched
  * - untouched
- * - filled
- * - empty
  * - readwrite
  * - readonly
  *
@@ -7139,7 +7138,7 @@ function drupal_flush_all_caches() {
 
   // Don't clear cache_form - in-progress form submissions may break.
   // Ordered so clearing the page cache will always be the last action.
-  $core = array('cache', 'cache_filter', 'cache_bootstrap', 'cache_page');
+  $core = array('cache', 'cache_path', 'cache_filter', 'cache_bootstrap', 'cache_page');
   $cache_tables = array_merge(module_invoke_all('flush_caches'), $core);
   foreach ($cache_tables as $table) {
     cache_clear_all('*', $table, TRUE);

@@ -283,7 +283,7 @@ function _aggregator_category_title($category) {
  *   otherwise.
  */
 function _aggregator_has_categories() {
-  return user_access('access news feeds') && db_query('SELECT COUNT(*) FROM {aggregator_category}')->fetchField();
+  return user_access('access news feeds') && (bool) db_query_range('SELECT 1 FROM {aggregator_category}', 0, 1)->fetchField();
 }
 
 /**

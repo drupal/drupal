@@ -486,7 +486,7 @@ function poll_load($nodes) {
     $poll = db_query("SELECT runtime, active FROM {poll} WHERE nid = :nid", array(':nid' => $node->nid))->fetchObject();
 
     if (empty($poll)) {
-      $poll = new stdClass;
+      $poll = new stdClass();
     }
 
     // Load the appropriate choices into the $poll object.
@@ -583,7 +583,10 @@ function poll_update($node) {
           'chvotes' => (int) $choice['chvotes'],
           'weight' => $choice['weight'],
         ))
-        ->insertFields(array('nid' => $node->nid))
+        ->insertFields(array(
+           'nid' => $node->nid,
+           'chtext' => $choice['chtext'],
+        ))
         ->execute();
     }
     else {

@@ -431,6 +431,11 @@ function menu_get_item($path = NULL, $router_item = NULL) {
     $router_items[$path] = $router_item;
   }
   if (!isset($router_items[$path])) {
+    // Rebuild if we know it's needed, or if the menu masks are missing which
+    // occurs rarely, likely due to a race condition of multiple rebuilds.
+    if (variable_get('menu_rebuild_needed', FALSE) || !variable_get('menu_masks', array())) {
+      menu_rebuild();
+    }
     $original_map = arg(NULL, $path);
 
     // Since there is no limit to the length of $path, use a hash to keep it
@@ -490,11 +495,6 @@ function menu_execute_active_handler($path = NULL, $deliver = TRUE) {
 
   // Only continue if the site status is not set.
   if ($page_callback_result == MENU_SITE_ONLINE) {
-    // Rebuild if we know it's needed, or if the menu masks are missing which
-    // occurs rarely, likely due to a race condition of multiple rebuilds.
-    if (variable_get('menu_rebuild_needed', FALSE) || !variable_get('menu_masks', array())) {
-      menu_rebuild();
-    }
     if ($router_item = menu_get_item($path)) {
       if ($router_item['access']) {
         if ($router_item['include_file']) {
@@ -2320,7 +2320,7 @@ function menu_set_active_trail($new_trail = NULL) {
  *   menu link ('node/5' if it exists, or fallback to 'node/%').
  *
  * @return
- *   A fully translated menu link, or NULL if not matching menu link was
+ *   A fully translated menu link, or NULL if no matching menu link was
  *   found. The most specific menu link ('node/5' preferred over 'node/%') in
  *   the most preferred menu (as defined by menu_get_active_menu_names()) is
  *   returned.
