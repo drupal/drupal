@@ -1,5 +1,5 @@
 name = Entity
-description = Entity API for handling entities like nodes or users.
+description = API for managing entities like nodes and users.
 package = Core
 version = VERSION
 core = 8.x
