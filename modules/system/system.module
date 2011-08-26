@@ -3004,7 +3004,7 @@ function system_cron() {
     }
   }
 
-  $core = array('cache', 'cache_filter', 'cache_page', 'cache_form', 'cache_menu');
+  $core = array('cache', 'cache_path', 'cache_filter', 'cache_page', 'cache_form', 'cache_menu');
   $cache_tables = array_merge(module_invoke_all('flush_caches'), $core);
   foreach ($cache_tables as $table) {
     cache_clear_all(NULL, $table);
