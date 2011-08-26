@@ -264,12 +264,12 @@ class DrupalVerifiedStorageSQL extends DrupalConfigVerifiedStorage {
   }
 }
 
-function get_verified_storage_names_with_prefix($prefix = '') {
+function config_get_verified_storage_names_with_prefix($prefix = '') {
   return DrupalVerifiedStorageSQL::getNamesWithPrefix($prefix);
 }
 
 function config_get_names_with_prefix($prefix) {
-  return get_verified_storage_names_with_prefix($prefix);
+  return config_get_verified_storage_names_with_prefix($prefix);
 }
 
 function config($name, $class = 'DrupalConfig') {
