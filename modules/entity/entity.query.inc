@@ -947,7 +947,3 @@ class EntityFieldQuery {
 
 }
 
-/**
- * Exception thrown when a malformed entity is passed.
- */
-class EntityMalformedException extends Exception { }
