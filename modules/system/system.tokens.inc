@@ -98,7 +98,7 @@ function system_token_info() {
   );
   $file['size'] = array(
     'name' => t("File size"),
-    'description' => t("The size of the file, in kilobytes."),
+    'description' => t("The size of the file."),
   );
   $file['url'] = array(
     'name' => t("URL"),
