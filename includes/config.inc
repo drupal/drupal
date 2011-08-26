@@ -283,12 +283,56 @@ function config($name, $class = 'DrupalConfig') {
   return new $class(new DrupalVerifiedStorageSQL($name), $key_overrides);
 }
 
-function config_encode($data) {
-	return json_encode($data);
+/**
+ * Decode configuration data from its native format to an associative array.
+ *
+ * @param $data
+ *   Configuration data
+ * @return
+ *   An associative array representation of the data.
+ */
+function config_decode($data) {
+  $xml = new SimpleXMLElement($data);
+  $json = json_encode($xml);
+  return json_decode($json);
 }
 
-function config_decode($data) {
-	return json_decode($data);
+/**
+ * Encode an array into the native configuration format.
+ *
+ * @param $data
+ *   An associative array or an object
+ * @return
+ *   A representation of this array or object in the native configuration
+ *   format. 
+ * @todo
+ *   This needs to work for objects as well and currently doesn't
+ */
+function config_encode($data) {
+	return config_array_to_xml($data);
+}
+
+/**
+ * Encode an array or object into the native configuration format.
+ *
+ * @param $data
+ *   An associative array or an object
+ * @return
+ *   A representation of this array or object in the native configuration
+ *   format. 
+ */
+function config_array_to_xml($arr, $tab_count = 0) {
+  foreach ($arr as $tag => $val) { 
+    if (!is_array($val)) { 
+      $xml .= PHP_EOL . '<' . $tag . '>' . htmlentities($val) . '</' . $tag . '>'; 
+    } else { 
+      $tab_count++; 
+      $xml .= PHP_EOL . '<' . $tag . '>' . config_array_to_xml($val, $tab_count); 
+      $xml .= PHP_EOL . '</' . $tag . '>'; 
+    } 
+  } 
+  
+	return $xml; 
 }
 
 class DrupalConfig {
