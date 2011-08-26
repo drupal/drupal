@@ -628,8 +628,6 @@ class EntityFieldQuery {
   /**
    * Adds a condition on field values.
    *
-   * @param $type
-   *   The condition array the given conditions should be added to.
    * @param $field
    *   Either a field name or a field array.
    * @param $column
