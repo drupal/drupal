@@ -260,7 +260,6 @@ function install_begin_request(&$install_state) {
   module_list(TRUE, FALSE, FALSE, $module_list);
   drupal_load('module', 'system');
   drupal_load('module', 'entity');
-  //require_once DRUPAL_ROOT . '/modules/entity/entity.controller.inc';
   drupal_load('module', 'user');
 
   // Load the cache infrastructure using a "fake" cache implementation that
