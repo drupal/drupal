@@ -2172,13 +2172,17 @@ function menu_local_tabs() {
 function theme_menu_local_tasks(&$variables) {
   $output = '';
 
-  if ($primary = drupal_render($variables['primary'])) {
-    $output .= '<h2 class="element-invisible">' . t('Primary tabs') . '</h2>';
-    $output .= '<ul class="tabs primary">' . $primary . '</ul>';
+  if (!empty($variables['primary'])) {
+    $variables['primary']['#prefix'] = '<h2 class="element-invisible">' . t('Primary tabs') . '</h2>';
+    $variables['primary']['#prefix'] .= '<ul class="tabs primary">';
+    $variables['primary']['#suffix'] = '</ul>';
+    $output .= drupal_render($variables['primary']);
   }
-  if ($secondary = drupal_render($variables['secondary'])) {
-    $output .= '<h2 class="element-invisible">' . t('Secondary tabs') . '</h2>';
-    $output .= '<ul class="tabs secondary">' . $secondary . '</ul>';
+  if (!empty($variables['secondary'])) {
+    $variables['secondary']['#prefix'] = '<h2 class="element-invisible">' . t('Secondary tabs') . '</h2>';
+    $variables['secondary']['#prefix'] .= '<ul class="tabs secondary">';
+    $variables['secondary']['#suffix'] = '</ul>';
+    $output .= drupal_render($variables['secondary']);
   }
 
   return $output;
