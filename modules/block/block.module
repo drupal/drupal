@@ -761,6 +761,12 @@ function block_block_list_alter(&$blocks) {
     else {
       $enabled = TRUE;
     }
+
+    // Limited visibility blocks must list at least one page.
+    if ($block->visibility == BLOCK_VISIBILITY_LISTED && empty($block->pages)) {
+      $enabled = FALSE;
+    }
+
     if (!$enabled) {
       unset($blocks[$key]);
       continue;
