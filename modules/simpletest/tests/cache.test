@@ -310,6 +310,27 @@ class CacheClearCase extends CacheTestCase {
                        || $this->checkCacheExists('test_cid_clear3', $this->default_value),
                        t('All cache entries removed when the array exceeded the cache clear threshold.'));
   }
+
+  /**
+   * Test drupal_flush_all_caches().
+   */
+  function testFlushAllCaches() {
+    // Create cache entries for each flushed cache bin.
+    $bins = array('cache', 'cache_filter', 'cache_page', 'cache_boostrap', 'cache_path');
+    $bins = array_merge(module_invoke_all('flush_caches'), $bins);
+    foreach ($bins as $id => $bin) {
+      $id = 'test_cid_clear' . $id;
+      cache_set($id, $this->default_value, $bin);
+    }
+
+    // Remove all caches then make sure that they are cleared.
+    drupal_flush_all_caches();
+
+    foreach ($bins as $id => $bin) {
+      $id = 'test_cid_clear' . $id;
+      $this->assertFalse($this->checkCacheExists($id, $this->default_value, $bin), t('All cache entries removed from @bin.', array('@bin' => $bin)));
+    }
+  }
 }
 
 /**
