@@ -80,7 +80,7 @@ function statistics_exit() {
       ->fields(array(
         'title' => strip_tags(drupal_get_title()),
         'path' => $_GET['q'],
-        'url' => $_SERVER['HTTP_REFERER'],
+        'url' => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '',
         'hostname' => ip_address(),
         'uid' => $user->uid,
         'sid' => session_id(),
