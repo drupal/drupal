@@ -276,11 +276,19 @@ function config($name, $class = 'DrupalConfig') {
   static $overrides;
   if (!isset($overrides)) {
     $storage = new SignedFileStorage('local');
-    $overrides = (array) json_decode($storage->read());
+    $overrides = (array) config_decode($storage->read());
   }
   $key_overrides = isset($overrides[$name]) ? $overrides[$name] : array();
   // @TODO Replace this with the appropriate factory.
   return new $class(new DrupalVerifiedStorageSQL($name), $key_overrides);
+}
+
+function config_encode($data) {
+	return json_encode($data);
+}
+
+function config_decode($data) {
+	return json_decode($data);
 }
 
 class DrupalConfig {
@@ -296,7 +304,7 @@ class DrupalConfig {
 
   public function __construct(DrupalConfigVerifiedStorageInterface $verified_storage, $overrides = array()) {
     $this->_verifiedStorage = $verified_storage;
-    $original_keys = (array) json_decode($this->_verifiedStorage->read());
+    $original_keys = (array) config_decode($this->_verifiedStorage->read());
     $this->_overrides = $overrides;
     $active = array_merge($original_keys, $overrides);
     foreach ($active as $key => $value) {
@@ -316,6 +324,6 @@ class DrupalConfig {
       }
     }
 
-    $this->_verifiedStorage->write(json_encode($obj));
+    $this->_verifiedStorage->write(config_encode($obj));
   }
 }
