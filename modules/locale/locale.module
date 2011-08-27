@@ -162,7 +162,7 @@ function locale_menu() {
     'access arguments' => array('translate interface'),
     'weight' => 20,
     'type' => MENU_LOCAL_TASK,
-    'file' => 'locale.admin.inc',
+    'file' => 'locale.bulk.inc',
   );
   $items['admin/config/regional/translate/export'] = array(
     'title' => 'Export',
@@ -170,7 +170,7 @@ function locale_menu() {
     'access arguments' => array('translate interface'),
     'weight' => 30,
     'type' => MENU_LOCAL_TASK,
-    'file' => 'locale.admin.inc',
+    'file' => 'locale.bulk.inc',
   );
   $items['admin/config/regional/translate/edit/%'] = array(
     'title' => 'Edit string',
@@ -516,6 +516,7 @@ function locale_language_types_info() {
  * Implements hook_language_negotiation_info().
  */
 function locale_language_negotiation_info() {
+  require_once DRUPAL_ROOT . '/includes/locale.inc';
   $file = 'includes/locale.inc';
   $providers = array();
 
@@ -805,7 +806,7 @@ function locale_themes_enabled($themes) {
  *   translations for.
  */
 function locale_system_update($components) {
-  include_once DRUPAL_ROOT . '/includes/locale.inc';
+  include_once drupal_get_path('module', 'locale') . '/locale.bulk.inc';
   if ($batch = locale_batch_by_component($components)) {
     batch_set($batch);
   }
