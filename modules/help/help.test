@@ -21,7 +21,7 @@ class HelpTestCase extends DrupalWebTestCase {
    * Enable modules and create users with specific permissions.
    */
   function setUp() {
-    parent::setUp('blog', 'poll');
+    parent::setUp('poll');
 
     $this->getModuleList();
 
