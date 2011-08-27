@@ -1373,6 +1373,7 @@ function install_profile_modules(&$install_state) {
  */
 function install_import_locales(&$install_state) {
   include_once DRUPAL_ROOT . '/includes/locale.inc';
+  include_once drupal_get_path('module', 'locale') . '/locale.bulk.inc';
   $install_locale = $install_state['parameters']['locale'];
 
   include_once DRUPAL_ROOT . '/includes/iso.inc';
