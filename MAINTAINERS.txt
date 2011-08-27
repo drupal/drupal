@@ -226,9 +226,6 @@ PHP module
 Poll module
 - ?
 
-Profile module
-- ?
-
 RDF module
 - Stéphane Corlosquet 'scor' <http://drupal.org/user/52142>
 
