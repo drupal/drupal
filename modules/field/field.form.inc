@@ -76,6 +76,17 @@ function field_default_form($entity_type, $entity, $field, $instance, $langcode,
           '#delta' => $delta,
         );
         if ($element = $function($form, $form_state, $field, $instance, $langcode, $items, $delta, $element)) {
+          // Allow modules to alter the field widget form element.
+          $context = array(
+            'form' => $form,
+            'field' => $field,
+            'instance' => $instance,
+            'langcode' => $langcode,
+            'items' => $items,
+            'delta' => $delta,
+          );
+          drupal_alter(array('field_widget_form', 'field_widget_' . $instance['widget']['type'] . '_form'), $element, $form_state, $context);
+
           // If we're processing a specific delta value for a field where the
           // field module handles multiples, set the delta in the result.
           // For fields that handle their own processing, we can't make
@@ -193,6 +204,18 @@ function field_multiple_value_form($field, $instance, $langcode, $items, &$form,
             '#weight' => 100,
           );
         }
+
+        // Allow modules to alter the field widget form element.
+        $context = array(
+          'form' => $form,
+          'field' => $field,
+          'instance' => $instance,
+          'langcode' => $langcode,
+          'items' => $items,
+          'delta' => $delta,
+        );
+        drupal_alter(array('field_widget_form', 'field_widget_' . $instance['widget']['type'] . '_form'), $element, $form_state, $context);
+
         $field_elements[$delta] = $element;
       }
     }
