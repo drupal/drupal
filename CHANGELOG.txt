@@ -1,6 +1,12 @@
 
 Drupal 8.0, xxxx-xx-xx (development version)
 ----------------------
+- Removed modules from core
+    * The following modules have been removed from core, because contributed
+      modules with similar functionality are available:
+      * Blog
+      * Profile
+
 
 Drupal 7.0, 2011-01-05
 ----------------------

@@ -20,7 +20,7 @@
  * @return
  *   A list of mapping structures, where each mapping is an associative array:
  *   - type: The name of an entity type (e.g., 'node', 'comment', and so on.)
- *   - bundle: The name of the bundle (e.g., 'page', 'blog', or
+ *   - bundle: The name of the bundle (e.g., 'page', 'article', or
  *     RDF_DEFAULT_BUNDLE for default mappings.)
  *   - mapping: The mapping structure which applies to the entity type and
  *     bundle. A mapping structure is an array with keys corresponding to
@@ -46,10 +46,10 @@
 function hook_rdf_mapping() {
   return array(
     array(
-      'type' => 'node',
-      'bundle' => 'blog',
+      'type' => 'comment',
+      'bundle' => RDF_DEFAULT_BUNDLE,
       'mapping' => array(
-        'rdftype' => array('sioct:Weblog'),
+        'rdftype' => array('sioc:Post', 'sioct:Comment'),
         'title' => array(
           'predicates' => array('dc:title'),
         ),
@@ -58,8 +58,17 @@ function hook_rdf_mapping() {
           'datatype' => 'xsd:dateTime',
           'callback' => 'date_iso8601',
         ),
-        'body' => array(
+        'changed' => array(
+          'predicates' => array('dc:modified'),
+          'datatype' => 'xsd:dateTime',
+          'callback' => 'date_iso8601',
+        ),
+        'comment_body' => array(
           'predicates' => array('content:encoded'),
+        ),
+        'pid' => array(
+          'predicates' => array('sioc:reply_of'),
+          'type' => 'rel',
         ),
         'uid' => array(
           'predicates' => array('sioc:has_creator'),

@@ -1319,8 +1319,8 @@ function node_view($node, $view_mode = 'full', $langcode = NULL) {
  * Drupal core defines the following view modes for nodes, with the following
  * default use cases:
  *   - full (default): node is being displayed on its own page (node/123)
- *   - teaser: node is being displayed on the default home page listing, on
- *     taxonomy listing pages, or on blog listing pages.
+ *   - teaser: node is being displayed on the default home page listing, or on
+ *     taxonomy listing pages.
  *   - rss: node displayed in an RSS feed.
  *   If search.module is enabled:
  *   - search_index: node is being indexed for search.

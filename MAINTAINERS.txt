@@ -151,9 +151,6 @@ Aggregator module
 Block module
 - John Albin Wilkins 'JohnAlbin' <http://drupal.org/user/32095>
 
-Blog module
-- ?
-
 Book module
 - Peter Wolanin 'pwolanin' <http://drupal.org/user/49851>
 

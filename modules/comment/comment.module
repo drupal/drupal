@@ -6,7 +6,7 @@
  *
  * When enabled, the Drupal comment module creates a discussion
  * board for each Drupal node. Users can post comments to discuss
- * a forum topic, weblog post, story, collaborative book page, etc.
+ * a forum topic, story, collaborative book page, etc.
  */
 
 /**

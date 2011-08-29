@@ -290,7 +290,7 @@ class RdfMappingDefinitionTestCase extends TaxonomyWebTestCase {
   }
 
   /**
-   * Create a node of type blog and test whether the RDF mapping defined for
+   * Create a node of type article and test whether the RDF mapping defined for
    * this node type in rdf_test.module is used in the node page.
    */
   function testAttributesInMarkup1() {
@@ -301,10 +301,10 @@ class RdfMappingDefinitionTestCase extends TaxonomyWebTestCase {
 
     // Ensure the default bundle mapping for node is used. These attributes come
     // from the node default bundle definition.
-    $blog_title = $this->xpath("//meta[@property='dc:title' and @content='$node->title']");
-    $blog_meta = $this->xpath("//div[(@about='$url')]//span[contains(@property, 'dc:date') and contains(@property, 'dc:created') and @datatype='xsd:dateTime' and @content='$isoDate']");
-    $this->assertTrue(!empty($blog_title), t('Property dc:title is present in meta tag.'));
-    $this->assertTrue(!empty($blog_meta), t('RDF type is present on post. Properties dc:date and dc:created are present on post date.'));
+    $node_title = $this->xpath("//meta[@property='dc:title' and @content='$node->title']");
+    $node_meta = $this->xpath("//div[(@about='$url')]//span[contains(@property, 'dc:date') and contains(@property, 'dc:created') and @datatype='xsd:dateTime' and @content='$isoDate']");
+    $this->assertTrue(!empty($node_title), t('Property dc:title is present in meta tag.'));
+    $this->assertTrue(!empty($node_meta), t('RDF type is present on post. Properties dc:date and dc:created are present on post date.'));
   }
 
   /**

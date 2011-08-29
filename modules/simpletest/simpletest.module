@@ -295,11 +295,11 @@ function simpletest_log_read($test_id, $prefix, $test_class, $during_test = FALS
  *   structure is provided below.
  *
  *   @code
- *     $groups['Blog'] => array(
- *       'BlogTestCase' => array(
- *         'name' => 'Blog functionality',
- *         'description' => 'Create, view, edit, delete, ...',
- *         'group' => 'Blog',
+ *     $groups['Block'] => array(
+ *       'BlockTestCase' => array(
+ *         'name' => 'Block functionality',
+ *         'description' => 'Add, edit and delete custom block...',
+ *         'group' => 'Block',
  *       ),
  *     );
  *   @endcode
