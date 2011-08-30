@@ -1,0 +1,6 @@
+name = "Common Test Cron Helper"
+description = "Helper module for CronRunTestCase::testCronExceptions()."
+package = Testing
+version = VERSION
+core = 7.x
+hidden = TRUE
