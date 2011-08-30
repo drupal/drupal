@@ -1538,7 +1538,7 @@ function file_save_upload($source, $validators = array(), $destination = FALSE, 
   // directory. This overcomes open_basedir restrictions for future file
   // operations.
   $file->uri = $file->destination;
-  if (!move_uploaded_file($_FILES['files']['tmp_name'][$source], $file->uri)) {
+  if (!drupal_move_uploaded_file($_FILES['files']['tmp_name'][$source], $file->uri)) {
     form_set_error($source, t('File upload error. Could not move uploaded file.'));
     watchdog('file', 'Upload error. Could not move uploaded file %file to destination %destination.', array('%file' => $file->filename, '%destination' => $file->uri));
     return FALSE;
@@ -1565,6 +1565,42 @@ function file_save_upload($source, $validators = array(), $destination = FALSE, 
   return FALSE;
 }
 
+/**
+ * Moves an uploaded file to a new location.
+ *
+ * PHP's move_uploaded_file() does not properly support streams if safe_mode
+ * or open_basedir are enabled, so this function fills that gap.
+ *
+ * Compatibility: normal paths and stream wrappers.
+ * @see http://drupal.org/node/515192
+ *
+ * @param $filename
+ *   The filename of the uploaded file.
+ * @param $uri
+ *   A string containing the destination URI of the file.
+ *
+ * @return
+ *   TRUE on success, or FALSE on failure.
+ *
+ * @see move_uploaded_file()
+ * @ingroup php_wrappers
+ */
+function drupal_move_uploaded_file($filename, $uri) {
+  $result = @move_uploaded_file($filename, $uri);
+  // PHP's move_uploaded_file() does not properly support streams if safe_mode
+  // or open_basedir are enabled so if the move failed, try finding a real path
+  // and retry the move operation.
+  if (!$result) {
+    if ($realpath = drupal_realpath($uri)) {
+      $result = move_uploaded_file($filename, $realpath);
+    }
+    else {
+      $result = move_uploaded_file($filename, $uri);
+    }
+  }
+
+  return $result;
+}
 
 /**
  * Check that a file meets the criteria specified by the validators.
