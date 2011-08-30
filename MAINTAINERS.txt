@@ -190,7 +190,7 @@ Filter module
 - Daniel F. Kudwien 'sun' <http://drupal.org/user/54136>
 
 Forum module
-- ?
+- Lee Rowlands 'larowlan' <http://drupal.org/user/395439>
 
 Help module
 - ?
