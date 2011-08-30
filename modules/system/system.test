@@ -446,39 +446,6 @@ class ModuleDependencyTestCase extends ModuleTestCase {
   }
 
   /**
-   * Tests re-enabling forum with taxonomy disabled.
-   */
-  function testEnableForumTaxonomyFieldDependency() {
-    // Enable the forum module.
-    $edit = array();
-    $edit['modules[Core][forum][enable]'] = 'forum';
-    $this->drupalPost('admin/modules', $edit, t('Save configuration'));
-    $this->assertModules(array('forum'), TRUE);
-
-    // Disable the forum module.
-    $edit = array();
-    $edit['modules[Core][forum][enable]'] = FALSE;
-    $this->drupalPost('admin/modules', $edit, t('Save configuration'));
-    $this->assertModules(array('forum'), FALSE);
-
-    // Disable the taxonomy module.
-    $edit = array();
-    $edit['modules[Core][taxonomy][enable]'] = FALSE;
-    $this->drupalPost('admin/modules', $edit, t('Save configuration'));
-    $this->assertModules(array('taxonomy'), FALSE);
-
-    // Attempt to re-enable the forum module with taxonomy disabled and ensure
-    // forum does not try to recreate the taxonomy_forums field.
-    $edit = array();
-    $edit['modules[Core][forum][enable]'] = 'forum';
-    $this->drupalPost('admin/modules', $edit, t('Save configuration'));
-    $this->assertText(t('Some required modules must be enabled'), t('Dependency required.'));
-    $this->drupalPost(NULL, NULL, t('Continue'));
-    $this->assertText(t('The configuration options have been saved.'), t('Modules status has been updated.'));
-    $this->assertModules(array('taxonomy', 'forum'), TRUE);
-  }
-
-  /**
    * Tests that module dependencies are enabled in the correct order via the
    * UI. Dependencies should be enabled before their dependents.
    */
@@ -516,18 +483,18 @@ class ModuleDependencyTestCase extends ModuleTestCase {
     $this->drupalPost('admin/modules', $edit, t('Save configuration'));
     $this->assertModules(array('forum'), TRUE);
 
-    // Disable forum and taxonomy. Both should now be installed but disabled.
+    // Disable forum and comment. Both should now be installed but disabled.
     $edit = array('modules[Core][forum][enable]' => FALSE);
     $this->drupalPost('admin/modules', $edit, t('Save configuration'));
     $this->assertModules(array('forum'), FALSE);
-    $edit = array('modules[Core][taxonomy][enable]' => FALSE);
+    $edit = array('modules[Core][comment][enable]' => FALSE);
     $this->drupalPost('admin/modules', $edit, t('Save configuration'));
-    $this->assertModules(array('taxonomy'), FALSE);
+    $this->assertModules(array('comment'), FALSE);
 
     // Check that the taxonomy module cannot be uninstalled.
     $this->drupalGet('admin/modules/uninstall');
-    $checkbox = $this->xpath('//input[@type="checkbox" and @disabled="disabled" and @name="uninstall[taxonomy]"]');
-    $this->assert(count($checkbox) == 1, t('Checkbox for uninstalling the taxonomy module is disabled.'));
+    $checkbox = $this->xpath('//input[@type="checkbox" and @disabled="disabled" and @name="uninstall[comment]"]');
+    $this->assert(count($checkbox) == 1, t('Checkbox for uninstalling the comment module is disabled.'));
 
     // Uninstall the forum module, and check that taxonomy now can also be
     // uninstalled.
@@ -535,7 +502,7 @@ class ModuleDependencyTestCase extends ModuleTestCase {
     $this->drupalPost('admin/modules/uninstall', $edit, t('Uninstall'));
     $this->drupalPost(NULL, NULL, t('Uninstall'));
     $this->assertText(t('The selected modules have been uninstalled.'), t('Modules status has been updated.'));
-    $edit = array('uninstall[taxonomy]' => 'taxonomy');
+    $edit = array('uninstall[comment]' => 'comment');
     $this->drupalPost('admin/modules/uninstall', $edit, t('Uninstall'));
     $this->drupalPost(NULL, NULL, t('Uninstall'));
     $this->assertText(t('The selected modules have been uninstalled.'), t('Modules status has been updated.'));
@@ -728,6 +695,10 @@ class CronRunTestCase extends DrupalWebTestCase {
     );
   }
 
+  function setUp() {
+    parent::setUp(array('common_test', 'common_test_cron_helper'));
+  }
+
   /**
    * Test cron runs.
    */
@@ -831,6 +802,19 @@ class CronRunTestCase extends DrupalWebTestCase {
     $this->assertTrue(file_exists($temp_new->uri), t('New temp file was correctly ignored.'));
     $this->assertTrue(file_exists($perm_old->uri), t('Old permanent file was correctly ignored.'));
     $this->assertTrue(file_exists($perm_new->uri), t('New permanent file was correctly ignored.'));
+  }
+
+  /**
+   * Make sure exceptions thrown on hook_cron() don't affect other modules.
+   */
+  function testCronExceptions() {
+    variable_del('common_test_cron');
+    // The common_test module throws an exception. If it isn't caught, the tests
+    // won't finish successfully.
+    // The common_test_cron_helper module sets the 'common_test_cron' variable.
+    $this->cronRun();
+    $result = variable_get('common_test_cron');
+    $this->assertEqual($result, 'success', t('Cron correctly handles exceptions thrown during hook_cron() invocations.'));
   }
 }
 

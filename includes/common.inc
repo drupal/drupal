@@ -5041,7 +5041,15 @@ function drupal_cron_run() {
     drupal_register_shutdown_function('drupal_cron_cleanup');
 
     // Iterate through the modules calling their cron handlers (if any):
-    module_invoke_all('cron');
+    foreach (module_implements('cron') as $module) {
+      // Do not let an exception thrown by one module disturb another.
+      try {
+        module_invoke($module, 'cron');
+      }
+      catch (Exception $e) {
+        watchdog_exception('cron', $e);
+      }
+    }
 
     // Record cron time
     variable_set('cron_last', REQUEST_TIME);

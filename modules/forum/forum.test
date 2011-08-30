@@ -31,6 +31,7 @@ class ForumTestCase extends DrupalWebTestCase {
     // Create users.
     $this->admin_user = $this->drupalCreateUser(array(
       'access administration pages',
+      'administer modules',
       'administer blocks',
       'administer forums',
       'administer menu',
@@ -49,6 +50,30 @@ class ForumTestCase extends DrupalWebTestCase {
       'delete own forum content',
     ));
     $this->web_user = $this->drupalCreateUser(array());
+  }
+
+  /**
+   * Tests disabling and re-enabling forum.
+   */
+  function testEnableForumField() {
+    $this->drupalLogin($this->admin_user);
+
+    // Disable the forum module.
+    $edit = array();
+    $edit['modules[Core][forum][enable]'] = FALSE;
+    $this->drupalPost('admin/modules', $edit, t('Save configuration'));
+    $this->assertText(t('The configuration options have been saved.'), t('Modules status has been updated.'));
+    module_list(TRUE);
+    $this->assertFalse(module_exists('forum'), t('Forum module is not enabled.'));
+
+    // Attempt to re-enable the forum module and ensure it does not try to
+    // recreate the taxonomy_forums field.
+    $edit = array();
+    $edit['modules[Core][forum][enable]'] = 'forum';
+    $this->drupalPost('admin/modules', $edit, t('Save configuration'));
+    $this->assertText(t('The configuration options have been saved.'), t('Modules status has been updated.'));
+    module_list(TRUE);
+    $this->assertTrue(module_exists('forum'), t('Forum module is enabled.'));
   }
 
   /**
