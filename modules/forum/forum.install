@@ -113,6 +113,11 @@ function forum_uninstall() {
   variable_del('forum_block_num_active');
   variable_del('forum_block_num_new');
   variable_del('node_options_forum');
+
+  field_delete_field('taxonomy_forums');
+  // Purge field data now to allow taxonomy module to be uninstalled
+  // if this is the only field remaining.
+  field_purge_batch(10);
 }
 
 /**

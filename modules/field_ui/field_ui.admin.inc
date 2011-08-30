@@ -12,17 +12,27 @@ function field_ui_fields_list() {
   $instances = field_info_instances();
   $field_types = field_info_field_types();
   $bundles = field_info_bundles();
+
+  $modules = system_rebuild_module_data();
+
   $header = array(t('Field name'), t('Field type'), t('Used in'));
   $rows = array();
   foreach ($instances as $entity_type => $type_bundles) {
     foreach ($type_bundles as $bundle => $bundle_instances) {
       foreach ($bundle_instances as $field_name => $instance) {
         $field = field_info_field($field_name);
+
+        // Initialize the row if we encounter the field for the first time.
+        if (!isset($rows[$field_name])) {
+          $rows[$field_name]['class'] = $field['locked'] ? array('menu-disabled') : array('');
+          $rows[$field_name]['data'][0] = $field['locked'] ? t('@field_name (Locked)', array('@field_name' => $field_name)) : $field_name;
+          $module_name = $field_types[$field['type']]['module'];
+          $rows[$field_name]['data'][1] = $field_types[$field['type']]['label'] . ' ' . t('(module: !module)', array('!module' => $modules[$module_name]->info['name']));
+        }
+
+        // Add the current instance.
         $admin_path = _field_ui_bundle_admin_path($entity_type, $bundle);
-        $rows[$field_name]['data'][0] = $field['locked'] ? t('@field_name (Locked)', array('@field_name' => $field_name)) : $field_name;
-        $rows[$field_name]['data'][1] = $field_types[$field['type']]['label'];
         $rows[$field_name]['data'][2][] = $admin_path ? l($bundles[$entity_type][$bundle]['label'], $admin_path . '/fields') : $bundles[$entity_type][$bundle]['label'];
-        $rows[$field_name]['class'] = $field['locked'] ? array('menu-disabled') : array('');
       }
     }
   }
@@ -1717,6 +1727,14 @@ function field_ui_field_delete_form_submit($form, &$form_state) {
 
   $admin_path = _field_ui_bundle_admin_path($entity_type, $bundle);
   $form_state['redirect'] = field_ui_get_destinations(array($admin_path . '/fields'));
+
+  // Fields are purged on cron. However field module prevents disabling modules
+  // when field types they provided are used in a field until it is fully
+  // purged. In the case that a field has minimal or no content, a single call
+  // to field_purge_batch() will remove it from the system. Call this with a
+  // low batch limit to avoid administrators having to wait for cron runs when
+  // removing instances that meet this criteria.
+  field_purge_batch(10);
 }
 
 /**
