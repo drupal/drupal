@@ -799,7 +799,7 @@ function system_modules($form, $form_state = array()) {
     $extra['enabled'] = (bool) $module->status;
     if (!empty($module->info['required'] )) {
       $extra['disabled'] = TRUE;
-      $extra['required_by'][] = $distribution_name;
+      $extra['required_by'][] = $distribution_name . (!empty($module->info['explanation']) ? ' ('. $module->info['explanation'] .')' : '');
     }
 
     // If this module requires other modules, add them to the array.

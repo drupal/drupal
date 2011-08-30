@@ -2356,6 +2356,7 @@ class FieldCrudTestCase extends FieldTestCase {
     $this->assertTrue($field_definition <= $field, t('The field was properly read.'));
 
     module_disable($modules, FALSE);
+    drupal_flush_all_caches();
 
     $fields = field_read_fields(array('field_name' => $field_name), array('include_inactive' => TRUE));
     $this->assertTrue(isset($fields[$field_name]) && $field_definition < $field, t('The field is properly read when explicitly fetching inactive fields.'));
@@ -2368,6 +2369,7 @@ class FieldCrudTestCase extends FieldTestCase {
 
       $module = array_shift($modules);
       module_enable(array($module), FALSE);
+      drupal_flush_all_caches();
     }
 
     // Check that the field is active again after all modules have been

@@ -360,7 +360,6 @@ class TaxonomyVocabularyUnitTest extends TaxonomyWebTestCase {
     $this->field_name = drupal_strtolower($this->randomName() . '_field_name');
     $this->field = array('field_name' => $this->field_name, 'type' => 'text', 'cardinality' => 4);
     $this->field = field_create_field($this->field);
-    $this->field_id = $this->field['id'];
     $this->instance = array(
       'field_name' => $this->field_name,
       'entity_type' => 'taxonomy_term',
@@ -370,6 +369,7 @@ class TaxonomyVocabularyUnitTest extends TaxonomyWebTestCase {
     field_create_instance($this->instance);
 
     module_disable(array('taxonomy'));
+    drupal_flush_all_caches();
     require_once DRUPAL_ROOT . '/includes/install.inc';
     drupal_uninstall_modules(array('taxonomy'));
     module_enable(array('taxonomy'));
