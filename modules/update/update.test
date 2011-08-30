@@ -441,6 +441,11 @@ class UpdateTestContribCase extends UpdateTestHelper {
         'hidden' => FALSE,
       ),
     );
+    // When there are contributed modules in the site's file system, the
+    // total number of attempts made in the test may exceed the default value
+    // of update_max_fetch_attempts. Therefore this variable is set very high
+    // to avoid test failures in those cases.
+    variable_set('update_max_fetch_attempts', 99999);
     variable_set('update_test_system_info', $system_info);
     $xml_mapping = array(
       'drupal' => '0',
