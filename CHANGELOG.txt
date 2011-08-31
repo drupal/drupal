@@ -1,7 +1,26 @@
 
-Drupal 7.8-dev, xxxx-xx-xx (development version)
+Drupal 7.8, 2011-08-31
 ----------------------
-
+- Fixed critical upgrade path issue with multilingual sites, leading to lost
+  content.
+- Numerous fixes to upgrade path, preventing fatal errors due to incorrect
+  dependencies.
+- Fixed issue with saving files on hosts with open_basedir restrictions.
+- Fixed Update manger error when used with Overlay.
+- Fixed RTL support in Seven administration theme and Overlay.
+- Fixes to nested transaction support.
+- Introduced performance pattern to reduce Drupal core's RAM usage.
+- Added support for HTML 5 tags to filter_xss_admin().
+- Added exception handling to cron.
+- Added new hook hook_field_widget_form_alter() for contribtued modules.
+- element_validate_*() functions now available to contrib.
+- Added new maintainers for several subsystems.
+- Numerous testing system improvements.
+- Numerous markup and CSS fixes.
+- Numerous poll module fixes.
+- Numerous notice/warning fixes.
+- Numerous documentation fixes.
+- Numerous token fixes.
 
 Drupal 7.7, 2011-07-27
 ----------------------
