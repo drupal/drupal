@@ -6,6 +6,8 @@ Drupal 8.0, xxxx-xx-xx (development version)
       modules with similar functionality are available:
       * Blog
       * Profile
+- Universally Unique IDentifier (UUID):
+    * Support for generating and validating UUIDs.
 
 
 Drupal 7.0, 2011-01-05
