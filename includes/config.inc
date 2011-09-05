@@ -1,6 +1,18 @@
 <?php
 
 /**
+ * Get the randomly generated config directory name.
+ *
+ * @return
+ *   The directory name.
+ */
+function config_get_config_directory_name() {
+  global $conf;
+  
+  return $conf['drupal_config_directory_name'];
+}
+
+/**
  * Retrieve an iterable array which lists the children under a config 'branch'.
  *
  * Given the following configuration files:
