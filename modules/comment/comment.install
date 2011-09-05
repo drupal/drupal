@@ -371,6 +371,27 @@ function comment_update_7008() {
  */
 
 /**
+ * @addtogroup updates-7.x-extra
+ * @{
+ */
+
+/**
+ * Change the last_comment_timestamp column description.
+ */
+function comment_update_7009() {
+  db_change_field('node_comment_statistics', 'last_comment_timestamp', 'last_comment_timestamp', array(
+    'type' => 'int',
+    'not null' => TRUE,
+    'default' => 0,
+    'description' => 'The Unix timestamp of the last comment that was posted within this node, from {comment}.changed.',
+  ));
+}
+
+/**
+ * @} End of "addtogroup updates-7.x-extra"
+ */
+
+/**
  * Implements hook_schema().
  */
 function comment_schema() {
@@ -506,7 +527,7 @@ function comment_schema() {
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
-        'description' => 'The Unix timestamp of the last comment that was posted within this node, from {comment}.timestamp.',
+        'description' => 'The Unix timestamp of the last comment that was posted within this node, from {comment}.changed.',
       ),
       'last_comment_name' => array(
         'type' => 'varchar',
