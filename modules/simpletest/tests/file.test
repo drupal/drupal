@@ -1563,7 +1563,7 @@ class FileDeleteTest extends FileHookTestCase {
     file_usage_delete($file, 'testing', 'test', 1);
     file_delete($file);
     $usage = file_usage_list($file);
-    $this->assertEqual($usage['testing']['test'], array('id' => 1, 'count' => 1), t('Test file is still in use.'));
+    $this->assertEqual($usage['testing']['test'], array(1 => 1), t('Test file is still in use.'));
     $this->assertTrue(file_exists($file->uri), t('File still exists on the disk.'));
     $this->assertTrue(file_load($file->fid), t('File still exists in the database.'));
 
@@ -2066,10 +2066,10 @@ class FileUsageTest extends FileTestCase {
     $usage = file_usage_list($file);
 
     $this->assertEqual(count($usage['testing']), 2, t('Returned the correct number of items.'));
-    $this->assertEqual($usage['testing']['foo']['id'], 1, t('Returned the correct id.'));
-    $this->assertEqual($usage['testing']['bar']['id'], 2, t('Returned the correct id.'));
-    $this->assertEqual($usage['testing']['foo']['count'], 1, t('Returned the correct count.'));
-    $this->assertEqual($usage['testing']['bar']['count'], 2, t('Returned the correct count.'));
+    $this->assertTrue(isset($usage['testing']['foo'][1]), t('Returned the correct id.'));
+    $this->assertTrue(isset($usage['testing']['bar'][2]), t('Returned the correct id.'));
+    $this->assertEqual($usage['testing']['foo'][1], 1, t('Returned the correct count.'));
+    $this->assertEqual($usage['testing']['bar'][2], 2, t('Returned the correct count.'));
   }
 
   /**
