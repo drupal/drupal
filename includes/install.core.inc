@@ -970,11 +970,18 @@ function install_settings_form_submit($form, &$form_state) {
   );
   // This duplicates drupal_get_token() because that function relies on a 
   // global hash salt which hasn't been set yet.
-  $settings['drupal_config_directory'] = array(
+  $settings['drupal_config_directory_name'] = array(
     'value'     => 'config_' . drupal_hmac_base64($value, session_id() . drupal_get_private_key() . $settings['drupal_hash_salt']['value']),
     'required'  => TRUE,
   );
   drupal_rewrite_settings($settings);
+  // Actually create the config directory named above.
+  if (!file_prepare_directory(conf_path() . '/files/' . $settings['drupal_config_directory_name'], FILE_CREATE_DIRECTORY)) {
+    // How best to handle errors here?
+    
+    // Will also want to create a default .htaccess for this dir to block
+    // reading of json, xml, yaml, ini, others?
+  };
   // Indicate that the settings file has been verified, and check the database
   // for the last completed task, now that we have a valid connection. This
   // last step is important since we want to trigger an error if the new
