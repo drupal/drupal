@@ -976,7 +976,8 @@ function install_settings_form_submit($form, &$form_state) {
   );
   drupal_rewrite_settings($settings);
   // Actually create the config directory named above.
-  if (!file_prepare_directory(conf_path() . '/files/' . $settings['drupal_config_directory_name'], FILE_CREATE_DIRECTORY)) {
+  $config_path = conf_path() . '/files/' . $settings['drupal_config_directory_name']['value'];
+  if (!file_prepare_directory($config_path, FILE_CREATE_DIRECTORY)) {
     // How best to handle errors here?
     
     // Will also want to create a default .htaccess for this dir to block
