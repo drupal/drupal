@@ -2796,7 +2796,17 @@ function password_confirm_validate($element, &$element_state) {
  */
 function theme_date($variables) {
   $element = $variables['element'];
-  return '<div class="container-inline">' . drupal_render_children($element) . '</div>';
+
+  $attributes = array();
+  if (isset($element['#id'])) {
+    $attributes['id'] = $element['#id'];
+  }
+  if (!empty($element['#attributes']['class'])) {
+    $attributes['class'] = (array) $element['#attributes']['class'];
+  }
+  $attributes['class'][] = 'container-inline';
+
+  return '<div' . drupal_attributes($attributes) . '>' . drupal_render_children($element) . '</div>';
 }
 
 /**
