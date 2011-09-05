@@ -89,12 +89,12 @@ class OpenIDFunctionalTestCase extends OpenIDWebTestCase {
     // Identifier is the URL of an XRDS document containing an OP Identifier
     // Element. The Relying Party sends the special value
     // "http://specs.openid.net/auth/2.0/identifier_select" as Claimed
-    // Identifier. The OpenID Provider responds with the actual identifier.
-    $identity = url('openid-test/yadis/xrds/dummy-user', array('absolute' => TRUE));
-    // Tell openid_test.module to respond with this identifier. The URL scheme
-    // is stripped in order to test that the returned identifier is normalized in
-    // openid_complete().
-    variable_set('openid_test_response', array('openid.claimed_id' => preg_replace('@^https?://@', '', $identity)));
+    // Identifier. The OpenID Provider responds with the actual identifier
+    // including the fragment.
+    $identity = url('openid-test/yadis/xrds/dummy-user', array('absolute' => TRUE, 'fragment' => $this->randomName()));
+    // Tell openid_test.module to respond with this identifier. We test if
+    // openid_complete() processes it right.
+    variable_set('openid_test_response', array('openid.claimed_id' => $identity));
     $this->addIdentity(url('openid-test/yadis/xrds/server', array('absolute' => TRUE)), 2, 'http://specs.openid.net/auth/2.0/identifier_select', $identity);
     variable_set('openid_test_response', array());
 
@@ -124,6 +124,28 @@ class OpenIDFunctionalTestCase extends OpenIDWebTestCase {
 
     // OpenID Authentication 2.0, section 7.3.3:
     $this->addIdentity(url('openid-test/html/openid2', array('absolute' => TRUE)), 2, 'http://example.com/html-openid2');
+
+    // OpenID Authentication 2.0, section 7.2.4:
+    // URL Identifiers MUST then be further normalized by both (1) following
+    // redirects when retrieving their content and finally (2) applying the
+    // rules in Section 6 of RFC3986 to the final destination URL. This final
+    // URL MUST be noted by the Relying Party as the Claimed Identifier and be
+    // used when requesting authentication.
+
+    // Single redirect.
+    $identity = $expected_claimed_id = url('openid-test/redirected/yadis/xrds/1', array('absolute' => TRUE));
+    $this->addRedirectedIdentity($identity, 2, 'http://example.com/xrds', $expected_claimed_id, 0);
+
+    // Exact 3 redirects (default value for the 'max_redirects' option in
+    // drupal_http_request()).
+    $identity = $expected_claimed_id = url('openid-test/redirected/yadis/xrds/2', array('absolute' => TRUE));
+    $this->addRedirectedIdentity($identity, 2, 'http://example.com/xrds', $expected_claimed_id, 2);
+
+    // Fails because there are more than 3 redirects (default value for the
+    // 'max_redirects' option in drupal_http_request()).
+    $identity = url('openid-test/redirected/yadis/xrds/3', array('absolute' => TRUE));
+    $expected_claimed_id = FALSE;
+    $this->addRedirectedIdentity($identity, 2, 'http://example.com/xrds', $expected_claimed_id, 3);
   }
 
   /**
@@ -277,6 +299,41 @@ class OpenIDFunctionalTestCase extends OpenIDWebTestCase {
       $claimed_id = $identity;
     }
     $this->assertRaw(t('Successfully added %identity', array('%identity' => $claimed_id)), t('Identity %identity was added.', array('%identity' => $identity)));
+  }
+
+  /**
+   * Add OpenID identity, changed by the following redirects, to user's profile.
+   *
+   * According to OpenID Authentication 2.0, section 7.2.4, URL Identifiers MUST
+   * be further normalized by following redirects when retrieving their content
+   * and this final URL MUST be noted by the Relying Party as the Claimed
+   * Identifier and be used when requesting authentication.
+   *
+   * @param $identity
+   *   The User-supplied Identifier.
+   * @param $version
+   *   The protocol version used by the service.
+   * @param $local_id
+   *   The expected OP-Local Identifier found during discovery.
+   * @param $claimed_id
+   *   The expected Claimed Identifier returned by the OpenID Provider, or FALSE
+   *   if the discovery is expected to fail.
+   * @param $redirects
+   *   The number of redirects.
+   */
+  function addRedirectedIdentity($identity, $version = 2, $local_id = 'http://example.com/xrds', $claimed_id = NULL, $redirects = 0) {
+    // Set the final destination URL which is the same as the Claimed
+    // Identifier, we insert the same identifier also to the provider response,
+    // but provider could futher change the Claimed ID actually (e.g. it could
+    // add unique fragment).
+    variable_set('openid_test_redirect_url', $identity);
+    variable_set('openid_test_response', array('openid.claimed_id' => $identity));
+
+    $this->addIdentity(url('openid-test/redirect/' . $redirects, array('absolute' => TRUE)), $version, $local_id, $claimed_id);
+
+    // Clean up.
+    variable_del('openid_test_redirect_url');
+    variable_del('openid_test_response');
   }
 
   /**
