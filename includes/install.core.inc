@@ -968,8 +968,9 @@ function install_settings_form_submit($form, &$form_state) {
     'value'    => drupal_hash_base64(drupal_random_bytes(55)),
     'required' => TRUE,
   );
-  // This duplicates drupal_get_token() because that function relies on a 
-  // global hash salt which hasn't been set yet.
+  // This duplicates drupal_get_token() because that function can't work yet.
+  // Wondering if it makes sense to move this later in the process, but its
+  // nice having all the settings stuff here.
   $settings['drupal_config_directory_name'] = array(
     'value'     => 'config_' . drupal_hmac_base64('', session_id() . drupal_hash_base64(drupal_random_bytes(55)) . $settings['drupal_hash_salt']['value']),
     'required'  => TRUE,
