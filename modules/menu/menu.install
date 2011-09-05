@@ -166,18 +166,21 @@ function menu_update_7001() {
  * Rename the primary/secondary menu blocks to match previously renamed menus.
  */
 function menu_update_7002(&$sandbox) {
-  $renamed_deltas = array(
-    'menu' => array(
-      'primary-links' => 'main-menu',
-      'secondary-links' => 'secondary-menu',
-    ),
-  );
+  // Check for the presence of old or new table names.
+  if (db_table_exists('blocks') || db_table_exists('block')) {
+    $renamed_deltas = array(
+      'menu' => array(
+        'primary-links' => 'main-menu',
+        'secondary-links' => 'secondary-menu',
+      ),
+    );
 
-  $moved_deltas = array(
-    'menu' => array('main-menu' => 'system'),
-  );
+    $moved_deltas = array(
+      'menu' => array('main-menu' => 'system'),
+    );
 
-  update_fix_d7_block_deltas($sandbox, $renamed_deltas, $moved_deltas);
+    update_fix_d7_block_deltas($sandbox, $renamed_deltas, $moved_deltas);
+  }
 }
 /**
  * @} End of "defgroup updates-7.x-extra"
