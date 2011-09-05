@@ -89,7 +89,7 @@ define('JS_THEME', 100);
  * Error code indicating that the request made by drupal_http_request() exceeded
  * the specified timeout.
  */
-define('HTTP_REQUEST_TIMEOUT', 1);
+define('HTTP_REQUEST_TIMEOUT', -1);
 
 /**
  * Constants defining cache granularity for blocks and renderable arrays.
@@ -753,7 +753,8 @@ function drupal_access_denied() {
  *     received.
  *   - redirect_code: If redirected, an integer containing the initial response
  *     status code.
- *   - redirect_url: If redirected, a string containing the redirection location.
+ *   - redirect_url: If redirected, a string containing the URL of the redirect
+ *     target.
  *   - error: If an error occurred, the error message. Otherwise not set.
  *   - headers: An array containing the response headers as name/value pairs.
  *     HTTP header names are case-insensitive (RFC 2616, section 4.2), so for
@@ -1009,7 +1010,9 @@ function drupal_http_request($url, array $options = array()) {
         $result = drupal_http_request($location, $options);
         $result->redirect_code = $code;
       }
-      $result->redirect_url = $location;
+      if (!isset($result->redirect_url)) {
+        $result->redirect_url = $location;
+      }
       break;
     default:
       $result->error = $status_message;
@@ -1294,7 +1297,7 @@ function check_url($uri) {
  * for scripts and styles.
  */
 function filter_xss_admin($string) {
-  return filter_xss($string, array('a', 'abbr', 'acronym', 'address', 'b', 'bdo', 'big', 'blockquote', 'br', 'caption', 'cite', 'code', 'col', 'colgroup', 'dd', 'del', 'dfn', 'div', 'dl', 'dt', 'em', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'hr', 'i', 'img', 'ins', 'kbd', 'li', 'ol', 'p', 'pre', 'q', 'samp', 'small', 'span', 'strong', 'sub', 'sup', 'table', 'tbody', 'td', 'tfoot', 'th', 'thead', 'tr', 'tt', 'ul', 'var'));
+  return filter_xss($string, array('a', 'abbr', 'acronym', 'address', 'article', 'aside', 'b', 'bdi', 'bdo', 'big', 'blockquote', 'br', 'caption', 'cite', 'code', 'col', 'colgroup', 'command', 'dd', 'del', 'details', 'dfn', 'div', 'dl', 'dt', 'em', 'figcaption', 'figure', 'footer', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'header', 'hgroup', 'hr', 'i', 'img', 'ins', 'kbd', 'li', 'mark', 'menu', 'meter', 'nav', 'ol', 'output', 'p', 'pre', 'progress', 'q', 'rp', 'rt', 'ruby', 's', 'samp', 'section', 'small', 'span', 'strong', 'sub', 'summary', 'sup', 'table', 'tbody', 'td', 'tfoot', 'th', 'thead', 'time', 'tr', 'tt', 'u', 'ul', 'var', 'wbr'));
 }
 
 /**
@@ -2253,7 +2256,7 @@ function drupal_http_header_attributes(array $attributes = array()) {
  *   An associative array of key-value pairs to be converted to attributes.
  *
  * @return
- *   A string ready for insertion in a tag.
+ *   A string ready for insertion in a tag (starts with a space).
  *
  * @ingroup sanitization
  */
@@ -2289,7 +2292,9 @@ function drupal_attributes(array $attributes = array()) {
  *     to work in a call to drupal_attributes($options['attributes']).
  *   - 'html' (default FALSE): Whether $text is HTML or just plain-text. For
  *     example, to make an image tag into a link, this must be set to TRUE, or
- *     you will see the escaped HTML image tag.
+ *     you will see the escaped HTML image tag. $text is not sanitized if
+ *     'html' is TRUE. The calling function must ensure that $text is already
+ *     safe.
  *   - 'language': An optional language object. If the path being linked to is
  *     internal to the site, $options['language'] is used to determine whether
  *     the link is "active", or pointing to the current page (the language as
@@ -2436,7 +2441,7 @@ function drupal_deliver_page($page_callback_result, $default_delivery_callback =
     // If a delivery callback is specified, but doesn't exist as a function,
     // something is wrong, but don't print anything, since it's not known
     // what format the response needs to be in.
-    watchdog('delivery callback not found', 'callback %callback not found: %q.', array('%callback' => $delivery_callback, '%q' => $_GET['q']), LOG_ERR);
+    watchdog('delivery callback not found', 'callback %callback not found: %q.', array('%callback' => $delivery_callback, '%q' => $_GET['q']), WATCHDOG_ERROR);
   }
 }
 
@@ -2469,7 +2474,7 @@ function drupal_deliver_html_page($page_callback_result) {
         // Print a 404 page.
         drupal_add_http_header('Status', '404 Not Found');
 
-        watchdog('page not found', check_plain($_GET['q']), NULL, LOG_WARNING);
+        watchdog('page not found', check_plain($_GET['q']), NULL, WATCHDOG_WARNING);
 
         // Keep old path for reference, and to allow forms to redirect to it.
         if (!isset($_GET['destination'])) {
@@ -2498,7 +2503,7 @@ function drupal_deliver_html_page($page_callback_result) {
       case MENU_ACCESS_DENIED:
         // Print a 403 page.
         drupal_add_http_header('Status', '403 Forbidden');
-        watchdog('access denied', check_plain($_GET['q']), NULL, LOG_WARNING);
+        watchdog('access denied', check_plain($_GET['q']), NULL, WATCHDOG_WARNING);
 
         // Keep old path for reference, and to allow forms to redirect to it.
         if (!isset($_GET['destination'])) {
@@ -2741,13 +2746,14 @@ function drupal_add_html_head_link($attributes, $header = FALSE) {
  * @param $data
  *   (optional) The stylesheet data to be added, depending on what is passed
  *   through to the $options['type'] parameter:
- *   - 'file': The path to the CSS file relative to the base_path(), e.g.,
- *     "modules/devel/devel.css". Note that Modules should always prefix the
- *     names of their CSS files with the module name; for example,
- *     system-menus.css rather than simply menus.css. Themes can override
- *     module-supplied CSS files based on their filenames, and this prefixing
- *     helps prevent confusing name collisions for theme developers. See
- *     drupal_get_css() where the overrides are performed. Also, if the
+ *   - 'file': The path to the CSS file relative to the base_path(), or a
+ *     stream wrapper URI. For example: "modules/devel/devel.css" or
+ *     "public://generated_css/stylesheet_1.css". Note that Modules should
+ *     always prefix the names of their CSS files with the module name; for
+ *     example, system-menus.css rather than simply menus.css. Themes can
+ *     override module-supplied CSS files based on their filenames, and this
+ *     prefixing helps prevent confusing name collisions for theme developers.
+ *     See drupal_get_css() where the overrides are performed. Also, if the
  *     direction of the current language is right-to-left (Hebrew, Arabic,
  *     etc.), the function will also look for an RTL CSS file and append it to
  *     the list. The name of this file should have an '-rtl.css' suffix.  For
@@ -4415,6 +4421,8 @@ function drupal_process_attached($elements, $group = JS_DEFAULT, $dependency_che
  * The following states may be applied to an element:
  * - enabled
  * - disabled
+ * - required
+ * - optional
  * - visible
  * - invisible
  * - checked
@@ -4423,26 +4431,22 @@ function drupal_process_attached($elements, $group = JS_DEFAULT, $dependency_che
  * - collapsed
  *
  * The following states may be used in remote conditions:
- * - enabled
- * - disabled
- * - visible
- * - invisible
+ * - empty
+ * - filled
  * - checked
  * - unchecked
+ * - expanded
+ * - collapsed
  * - value
  *
- * The following states exist for both states and remote conditions, but are not
- * fully implemented and may not change anything on the element:
- * - required
- * - optional
+ * The following states exist for both elements and remote conditions, but are
+ * not fully implemented and may not change anything on the element:
  * - relevant
  * - irrelevant
  * - valid
  * - invalid
  * - touched
  * - untouched
- * - filled
- * - empty
  * - readwrite
  * - readonly
  *
@@ -5025,7 +5029,7 @@ function drupal_cron_run() {
   // Try to acquire cron lock.
   if (!lock_acquire('cron', 240.0)) {
     // Cron is still running normally.
-    watchdog('cron', 'Attempting to re-run cron while it is already running.', array(), LOG_WARNING);
+    watchdog('cron', 'Attempting to re-run cron while it is already running.', array(), WATCHDOG_WARNING);
   }
   else {
     // Make sure every queue exists. There is no harm in trying to recreate an
@@ -5037,11 +5041,19 @@ function drupal_cron_run() {
     drupal_register_shutdown_function('drupal_cron_cleanup');
 
     // Iterate through the modules calling their cron handlers (if any):
-    module_invoke_all('cron');
+    foreach (module_implements('cron') as $module) {
+      // Do not let an exception thrown by one module disturb another.
+      try {
+        module_invoke($module, 'cron');
+      }
+      catch (Exception $e) {
+        watchdog_exception('cron', $e);
+      }
+    }
 
     // Record cron time
     variable_set('cron_last', REQUEST_TIME);
-    watchdog('cron', 'Cron run completed.', array(), LOG_NOTICE);
+    watchdog('cron', 'Cron run completed.', array(), WATCHDOG_NOTICE);
 
     // Release cron lock.
     lock_release('cron');
@@ -5072,7 +5084,7 @@ function drupal_cron_run() {
 function drupal_cron_cleanup() {
   // See if the semaphore is still locked.
   if (variable_get('cron_semaphore', FALSE)) {
-    watchdog('cron', 'Cron run exceeded the time limit and was aborted.', array(), LOG_WARNING);
+    watchdog('cron', 'Cron run exceeded the time limit and was aborted.', array(), WATCHDOG_WARNING);
 
     // Release cron semaphore
     variable_del('cron_semaphore');
@@ -7045,17 +7057,18 @@ function drupal_parse_info_format($data) {
  *   Array of the possible severity levels for log messages.
  *
  * @see watchdog()
+ * @ingroup logging_severity_levels
  */
 function watchdog_severity_levels() {
   return array(
-    LOG_EMERG   => t('emergency'),
-    LOG_ALERT   => t('alert'),
-    LOG_CRIT    => t('critical'),
-    LOG_ERR     => t('error'),
-    LOG_WARNING => t('warning'),
-    LOG_NOTICE  => t('notice'),
-    LOG_INFO    => t('info'),
-    LOG_DEBUG   => t('debug'),
+    WATCHDOG_EMERGENCY   => t('emergency'),
+    WATCHDOG_ALERT   => t('alert'),
+    WATCHDOG_CRITICAL    => t('critical'),
+    WATCHDOG_ERROR     => t('error'),
+    WATCHDOG_WARNING => t('warning'),
+    WATCHDOG_NOTICE  => t('notice'),
+    WATCHDOG_INFO    => t('info'),
+    WATCHDOG_DEBUG   => t('debug'),
   );
 }
 
@@ -7133,7 +7146,7 @@ function drupal_flush_all_caches() {
 
   // Don't clear cache_form - in-progress form submissions may break.
   // Ordered so clearing the page cache will always be the last action.
-  $core = array('cache', 'cache_filter', 'cache_bootstrap', 'cache_page');
+  $core = array('cache', 'cache_path', 'cache_filter', 'cache_bootstrap', 'cache_page');
   $cache_tables = array_merge(module_invoke_all('flush_caches'), $core);
   foreach ($cache_tables as $table) {
     cache_clear_all('*', $table, TRUE);
@@ -7366,12 +7379,24 @@ function entity_info_cache_clear() {
  */
 function entity_extract_ids($entity_type, $entity) {
   $info = entity_get_info($entity_type);
+
   // Objects being created might not have id/vid yet.
   $id = isset($entity->{$info['entity keys']['id']}) ? $entity->{$info['entity keys']['id']} : NULL;
   $vid = ($info['entity keys']['revision'] && isset($entity->{$info['entity keys']['revision']})) ? $entity->{$info['entity keys']['revision']} : NULL;
-  // If no bundle key provided, then we assume a single bundle, named after the
-  // entity type.
-  $bundle = $info['entity keys']['bundle'] ? $entity->{$info['entity keys']['bundle']} : $entity_type;
+
+  if (!empty($info['entity keys']['bundle'])) {
+    // Explicitly fail for malformed entities missing the bundle property.
+    if (!isset($entity->{$info['entity keys']['bundle']}) || $entity->{$info['entity keys']['bundle']} === '') {
+      throw new EntityMalformedException(t('Missing bundle property on entity of type @entity_type.', array('@entity_type' => $entity_type)));
+    }
+    $bundle = $entity->{$info['entity keys']['bundle']};
+  }
+  else {
+    // The entity type provides no bundle key: assume a single bundle, named
+    // after the entity type.
+    $bundle = $entity_type;
+  }
+
   return array($id, $vid, $bundle);
 }
 

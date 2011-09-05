@@ -313,6 +313,19 @@ class ShortcutSetsTestCase extends ShortcutTestCase {
   }
 
   /**
+   * Tests unassigning a shortcut set.
+   */
+  function testShortcutSetUnassign() {
+    $new_set = $this->generateShortcutSet($this->randomName(10));
+
+    shortcut_set_assign_user($new_set, $this->shortcut_user);
+    shortcut_set_unassign_user($this->shortcut_user);
+    $current_set = shortcut_current_displayed_set($this->shortcut_user);
+    $default_set = shortcut_default_set($this->shortcut_user);
+    $this->assertTrue($current_set->set_name == $default_set->set_name, "Successfully unassigned another user's shortcut set.");
+  }
+
+  /**
    * Tests deleting a shortcut set.
    */
   function testShortcutSetDelete() {

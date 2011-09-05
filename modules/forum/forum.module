@@ -370,7 +370,7 @@ function forum_node_update($node) {
     }
     // If the node has a shadow forum topic, update the record for this
     // revision.
-    if ($node->shadow) {
+    if (!empty($node->shadow)) {
       db_delete('forum')
         ->condition('nid', $node->nid)
         ->condition('vid', $node->vid)
@@ -1064,11 +1064,15 @@ function template_preprocess_forum_list(&$variables) {
     $variables['forums'][$id]->new_url = '';
     $variables['forums'][$id]->new_topics = 0;
     $variables['forums'][$id]->old_topics = $forum->num_topics;
+    $variables['forums'][$id]->icon_class = 'default';
+    $variables['forums'][$id]->icon_title = t('No new posts');
     if ($user->uid) {
       $variables['forums'][$id]->new_topics = _forum_topics_unread($forum->tid, $user->uid);
       if ($variables['forums'][$id]->new_topics) {
         $variables['forums'][$id]->new_text = format_plural($variables['forums'][$id]->new_topics, '1 new', '@count new');
         $variables['forums'][$id]->new_url = url("forum/$forum->tid", array('fragment' => 'new'));
+        $variables['forums'][$id]->icon_class = 'new';
+        $variables['forums'][$id]->icon_title = t('New posts');
       }
       $variables['forums'][$id]->old_topics = $forum->num_topics - $variables['forums'][$id]->new_topics;
     }

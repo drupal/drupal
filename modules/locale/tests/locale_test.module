@@ -6,16 +6,6 @@
  */
 
 /**
- * Implements hook_locale().
- */
-function locale_test_locale($op = 'groups') {
-  switch ($op) {
-    case 'groups':
-      return array('custom' => t('Custom'));
-  }
-}
-
-/**
  * Implements hook_boot().
  *
  * For testing domain language negotiation, we fake it by setting

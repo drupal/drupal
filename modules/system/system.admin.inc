@@ -19,7 +19,7 @@ function system_admin_config_page() {
       SELECT m.*, ml.*
       FROM {menu_links} ml
       INNER JOIN {menu_router} m ON ml.router_path = m.path
-      WHERE ml.link_path != 'admin/help' AND menu_name = :menu_name AND ml.plid = :mlid AND hidden = 0", $admin, array('fetch' => PDO::FETCH_ASSOC));
+      WHERE ml.link_path <> 'admin/help' AND menu_name = :menu_name AND ml.plid = :mlid AND hidden = 0", $admin, array('fetch' => PDO::FETCH_ASSOC));
     foreach ($result as $item) {
       _menu_link_translate($item);
       if (!$item['access']) {
@@ -799,7 +799,7 @@ function system_modules($form, $form_state = array()) {
     $extra['enabled'] = (bool) $module->status;
     if (!empty($module->info['required'] )) {
       $extra['disabled'] = TRUE;
-      $extra['required_by'][] = $distribution_name;
+      $extra['required_by'][] = $distribution_name . (!empty($module->info['explanation']) ? ' ('. $module->info['explanation'] .')' : '');
     }
 
     // If this module requires other modules, add them to the array.
@@ -1475,12 +1475,6 @@ function system_site_information_settings() {
     '#type' => 'fieldset',
     '#title' => t('Front page'),
   );
-  $form['front_page']['default_nodes_main'] = array(
-    '#type' => 'select', '#title' => t('Number of posts on front page'),
-    '#default_value' => variable_get('default_nodes_main', 10),
-    '#options' => drupal_map_assoc(array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30)),
-    '#description' => t('The maximum number of posts displayed on overview pages such as the front page.')
-  );
   $form['front_page']['site_frontpage'] = array(
     '#type' => 'textfield',
     '#title' => t('Default front page'),
@@ -1489,6 +1483,13 @@ function system_site_information_settings() {
     '#description' => t('Optionally, specify a relative URL to display as the front page.  Leave blank to display the default content feed.'),
     '#field_prefix' => url(NULL, array('absolute' => TRUE)) . (variable_get('clean_url', 0) ? '' : '?q='),
   );
+  $form['front_page']['default_nodes_main'] = array(
+    '#type' => 'select', '#title' => t('Number of posts on front page'),
+    '#default_value' => variable_get('default_nodes_main', 10),
+    '#options' => drupal_map_assoc(array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30)),
+    '#description' => t('The maximum number of posts displayed on overview pages such as the front page.'),
+    '#access' => (variable_get('site_frontpage')=='node'),
+  );  
   $form['error_page'] = array(
     '#type' => 'fieldset',
     '#title' => t('Error pages'),
@@ -1757,7 +1758,7 @@ function system_file_system_settings() {
     '#title' => t('Private file system path'),
     '#default_value' => variable_get('file_private_path', ''),
     '#maxlength' => 255,
-    '#description' => t('A local file system path where private files will be stored. This directory must exist and be writable by Drupal. This directory should not be accessible over the web.'),
+    '#description' => t('An existing local file system path for storing private files. It should be writable by Drupal and not accessible over the web. See the online handbook for <a href="@handbook">more information about securing private files</a>.', array('@handbook' => 'http://drupal.org/handbook/modules/file')),
     '#after_build' => array('system_check_directory'),
   );
 

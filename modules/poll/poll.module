@@ -485,6 +485,10 @@ function poll_load($nodes) {
   foreach ($nodes as $node) {
     $poll = db_query("SELECT runtime, active FROM {poll} WHERE nid = :nid", array(':nid' => $node->nid))->fetchObject();
 
+    if (empty($poll)) {
+      $poll = new stdClass();
+    }
+
     // Load the appropriate choices into the $poll object.
     $poll->choice = db_select('poll_choice', 'c')
       ->addTag('translatable')
@@ -579,13 +583,20 @@ function poll_update($node) {
           'chvotes' => (int) $choice['chvotes'],
           'weight' => $choice['weight'],
         ))
-        ->insertFields(array('nid' => $node->nid))
+        ->insertFields(array(
+           'nid' => $node->nid,
+           'chtext' => $choice['chtext'],
+        ))
         ->execute();
     }
     else {
       db_delete('poll_vote')
         ->condition('nid', $node->nid)
         ->condition('chid', $key)
+        ->execute();
+      db_delete('poll_choice')
+        ->condition('nid', $node->nid)
+        ->condition('chid', $choice['chid'])
         ->execute();
     }
   }

@@ -282,7 +282,7 @@ function field_test_field_storage_query($field_id, $conditions, $count, &$cursor
           case '=':
             $match = $match && $row->{$column} == $value;
             break;
-          case '!=':
+          case '<>':
           case '<':
           case '<=':
           case '>':

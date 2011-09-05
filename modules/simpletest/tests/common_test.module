@@ -225,3 +225,16 @@ function common_test_js_and_css_querystring() {
    drupal_add_css('/' . drupal_get_path('module', 'node') . '/node-fake.css?arg1=value1&arg2=value2');
    return '';
 }
+
+/**
+ * Implements hook_cron().
+ *
+ * System module should handle if a module does not catch an exception and keep
+ * cron going.
+ *
+ * @see common_test_cron_helper()
+ *
+ */
+function common_test_cron() {
+  throw new Exception(t('Uncaught exception'));
+}

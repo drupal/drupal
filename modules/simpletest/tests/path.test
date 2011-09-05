@@ -55,18 +55,18 @@ class DrupalMatchPathTestCase extends DrupalWebTestCase {
   private function drupalMatchPathTests() {
     return array(
       // Single absolute paths.
-      'blog/1' => array(
-        'blog/1' => TRUE,
-        'blog/2' => FALSE,
+      'example/1' => array(
+        'example/1' => TRUE,
+        'example/2' => FALSE,
         'test' => FALSE,
       ),
       // Single paths with wildcards.
-      'blog/*' => array(
-        'blog/1' => TRUE,
-        'blog/2' => TRUE,
-        'blog/3/edit' => TRUE,
-        'blog/' => TRUE,
-        'blog' => FALSE,
+      'example/*' => array(
+        'example/1' => TRUE,
+        'example/2' => TRUE,
+        'example/3/edit' => TRUE,
+        'example/' => TRUE,
+        'example' => FALSE,
         'test' => FALSE,
       ),
       // Single paths with multiple wildcards.
@@ -102,14 +102,14 @@ class DrupalMatchPathTestCase extends DrupalWebTestCase {
         'test/example' => FALSE,
       ),
       // Multiple paths with the \r delimiter.
-      "user/*\rblog/*" => array(
+      "user/*\rexample/*" => array(
         'user/1' => TRUE,
-        'blog/1' => TRUE,
-        'user/1/blog/1' => TRUE,
-        'user/blog' => TRUE,
+        'example/1' => TRUE,
+        'user/1/example/1' => TRUE,
+        'user/example' => TRUE,
         'test/example' => FALSE,
         'user' => FALSE,
-        'blog' => FALSE,
+        'example' => FALSE,
       ),
       // Multiple paths with the \r\n delimiter.
       "test\r\n<front>" => array(

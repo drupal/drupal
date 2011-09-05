@@ -295,11 +295,11 @@ function simpletest_log_read($test_id, $prefix, $test_class, $during_test = FALS
  *   structure is provided below.
  *
  *   @code
- *     $groups['Blog'] => array(
- *       'BlogTestCase' => array(
- *         'name' => 'Blog functionality',
- *         'description' => 'Create, view, edit, delete, ...',
- *         'group' => 'Blog',
+ *     $groups['Block'] => array(
+ *       'BlockTestCase' => array(
+ *         'name' => 'Block functionality',
+ *         'description' => 'Add, edit and delete custom block...',
+ *         'group' => 'Block',
  *       ),
  *     );
  *   @endcode
@@ -452,13 +452,15 @@ function simpletest_clean_database() {
  * Find all leftover temporary directories and remove them.
  */
 function simpletest_clean_temporary_directories() {
-  $files = scandir('public://simpletest');
   $count = 0;
-  foreach ($files as $file) {
-    $path = 'public://simpletest/' . $file;
-    if (is_dir($path) && is_numeric($file)) {
-      file_unmanaged_delete_recursive($path);
-      $count++;
+  if (is_dir('public://simpletest')) {
+    $files = scandir('public://simpletest');
+    foreach ($files as $file) {
+      $path = 'public://simpletest/' . $file;
+      if (is_dir($path) && is_numeric($file)) {
+        file_unmanaged_delete_recursive($path);
+        $count++;
+      }
     }
   }
 

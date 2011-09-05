@@ -188,7 +188,7 @@ class PollCreateTestCase extends PollTestCase {
   function testPollCreate() {
     $title = $this->randomName();
     $choices = $this->_generateChoices(7);
-    $this->pollCreate($title, $choices, TRUE);
+    $poll_nid = $this->pollCreate($title, $choices, TRUE);
 
     // Verify poll appears on 'poll' page.
     $this->drupalGet('poll');
@@ -198,6 +198,25 @@ class PollCreateTestCase extends PollTestCase {
     // Click on the poll title to go to node page.
     $this->clickLink($title);
     $this->assertText('Total votes: 0', 'Link to poll correct.');
+
+    // Now add a new option to make sure that when we update the node the
+    // option is displayed.
+    $node = node_load($poll_nid);
+
+    $new_option = $this->randomName();
+
+    $node->choice[] = array(
+      'chid' => '',
+      'chtext' => $new_option,
+      'chvotes' => 0,
+      'weight' => 0,
+    );
+
+    node_save($node);
+
+    $this->drupalGet('poll');
+    $this->clickLink($title);
+    $this->assertText($new_option, 'New option found.');
   }
 
   function testPollClose() {
@@ -725,5 +744,41 @@ class PollExpirationTestCase extends PollTestCase {
     $this->drupalGet("node/$poll_nid/edit");
     $elements = $this->xpath('//input[@id="edit-active-0"]');
     $this->assertTrue(isset($elements[0]) && !empty($elements[0]['checked']), t('Poll has expired.'));
+  }
+}
+
+class PollDeleteChoiceTestCase extends PollTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Poll choice deletion',
+      'description' => 'Test the poll choice deletion logic.',
+      'group' => 'Poll',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('poll');
+  }
+
+  function testChoiceRemoval() {
+    // Set up a poll with three choices.
+    $title = $this->randomName();
+    $choices = array('First choice', 'Second choice', 'Third choice');
+    $poll_nid = $this->pollCreate($title, $choices, FALSE);
+    $this->assertTrue($poll_nid, t('Poll for choice deletion logic test created.'));
+
+    // Edit the poll, and try to delete first poll choice.
+    $this->drupalGet("node/$poll_nid/edit");
+    $edit['choice[chid:1][chtext]'] = '';
+    $this->drupalPost(NULL, $edit, t('Save'));
+
+    // Click on the poll title to go to node page.
+    $this->drupalGet('poll');
+    $this->clickLink($title);
+
+    // Check the first poll choice is deleted, while the others remain.
+    $this->assertNoText('First choice', t('First choice removed.'));
+    $this->assertText('Second choice', t('Second choice remains.'));
+    $this->assertText('Third choice', t('Third choice remains.'));
   }
 }

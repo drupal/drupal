@@ -256,7 +256,7 @@ function hook_node_grants($account, $op) {
  *
  * Note: a deny all grant is not written to the database; denies are implicit.
  *
- * @see node_access_write_grants()
+ * @see _node_access_write_grants()
  *
  * @param $node
  *   The node that has just been saved.
@@ -642,14 +642,20 @@ function hook_node_prepare($node) {
  * @param $node
  *   The node being displayed in a search result.
  *
- * @return
- *   Extra information to be displayed with search result.
+ * @return array
+ *   Extra information to be displayed with search result. This information
+ *   should be presented as an associative array. It will be concatenated
+ *   with the post information (last updated, author) in the default search
+ *   result theming.
+ *
+ * @see template_preprocess_search_result()
+ * @see search-result.tpl.php
  *
  * @ingroup node_api_hooks
  */
 function hook_node_search_result($node) {
   $comments = db_query('SELECT comment_count FROM {node_comment_statistics} WHERE nid = :nid', array('nid' => $node->nid))->fetchField();
-  return format_plural($comments, '1 comment', '@count comments');
+  return array('comment' => format_plural($comments, '1 comment', '@count comments'));
 }
 
 /**
@@ -786,7 +792,6 @@ function hook_node_submit($node, $form, &$form_state) {
  * the RSS item generated for this node.
  * For details on how this is used, see node_feed().
  *
- * @see blog_node_view()
  * @see forum_node_view()
  * @see comment_node_view()
  *
@@ -843,8 +848,8 @@ function hook_node_view_alter(&$build) {
  * Define module-provided node types.
  *
  * This hook allows a module to define one or more of its own node types. For
- * example, the blog module uses it to define a blog node-type named "Blog
- * entry." The name and attributes of each desired node type are specified in
+ * example, the forum module uses it to define a forum node-type named "Forum
+ * topic." The name and attributes of each desired node type are specified in
  * an array returned by the hook.
  *
  * Only module-provided node types should be defined through this hook. User-
@@ -886,10 +891,11 @@ function hook_node_view_alter(&$build) {
  */
 function hook_node_info() {
   return array(
-    'blog' => array(
-      'name' => t('Blog entry'),
-      'base' => 'blog',
-      'description' => t('Use for multi-user blogs. Every user gets a personal blog.'),
+    'forum' => array(
+      'name' => t('Forum topic'),
+      'base' => 'forum',
+      'description' => t('A <em>forum topic</em> starts a new discussion thread within a forum.'),
+      'title_label' => t('Subject'),
     )
   );
 }
@@ -1016,7 +1022,7 @@ function hook_node_type_delete($info) {
  */
 function hook_delete($node) {
   db_delete('mytable')
-    ->condition('nid', $nid->nid)
+    ->condition('nid', $node->nid)
     ->execute();
 }
 

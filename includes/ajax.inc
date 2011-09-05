@@ -143,6 +143,21 @@
  * - #ajax['event']: The JavaScript event to respond to. This is normally
  *   selected automatically for the type of form widget being used, and
  *   is only needed if you need to override the default behavior.
+ * - #ajax['prevent']: A JavaScript event to prevent when 'event' is triggered.
+ *   Defaults to 'click' for #ajax on #type 'submit', 'button', and
+ *   'image_button'. Multiple events may be specified separated by spaces.
+ *   For example, when binding #ajax behaviors to form buttons, pressing the
+ *   ENTER key within a textfield triggers the 'click' event of the form's first
+ *   submit button. Triggering Ajax in this situation leads to problems, like
+ *   breaking autocomplete textfields. Because of that, Ajax behaviors are bound
+ *   to the 'mousedown' event on form buttons by default. However, binding to
+ *   'mousedown' rather than 'click' means that it is possible to trigger a
+ *   click by pressing the mouse, holding the mouse button down until the Ajax
+ *   request is complete and the button is re-enabled, and then releasing the
+ *   mouse button. For this case, 'prevent' can be set to 'click', so an
+ *   additional event handler is bound to prevent such a click from triggering a
+ *   non-Ajax form submission. This also prevents a textfield's ENTER press
+ *   triggering a button's non-Ajax form submission behavior.
  * - #ajax['method']: The jQuery method to use to place the new HTML.
  *   Defaults to 'replaceWith'. May be: 'replaceWith', 'append', 'prepend',
  *   'before', 'after', or 'html'. See the
@@ -318,7 +333,7 @@ function ajax_get_form() {
     // system/ajax without actually viewing the concerned form in the browser.
     // This is likely a hacking attempt as it never happens under normal
     // circumstances, so we just do nothing.
-    watchdog('ajax', 'Invalid form POST data.', array(), LOG_WARNING);
+    watchdog('ajax', 'Invalid form POST data.', array(), WATCHDOG_WARNING);
     drupal_exit();
   }
 
@@ -591,6 +606,7 @@ function ajax_process_form($element, &$form_state) {
  *   An associative array containing the properties of the element.
  *   Properties used:
  *   - #ajax['event']
+ *   - #ajax['prevent']
  *   - #ajax['path']
  *   - #ajax['options']
  *   - #ajax['wrapper']
@@ -619,13 +635,26 @@ function ajax_pre_render_element($element) {
       case 'submit':
       case 'button':
       case 'image_button':
-        // Use the mousedown instead of the click event because form
-        // submission via pressing the enter key triggers a click event on
-        // submit inputs, inappropriately triggering Ajax behaviors.
+        // Pressing the ENTER key within a textfield triggers the click event of
+        // the form's first submit button. Triggering Ajax in this situation
+        // leads to problems, like breaking autocomplete textfields, so we bind
+        // to mousedown instead of click.
+        // @see http://drupal.org/node/216059
         $element['#ajax']['event'] = 'mousedown';
-        // Attach an additional event handler so that Ajax behaviors
-        // can be triggered still via keyboard input.
+        // Retain keyboard accessibility by setting 'keypress'. This causes
+        // ajax.js to trigger 'event' when SPACE or ENTER are pressed while the
+        // button has focus.
         $element['#ajax']['keypress'] = TRUE;
+        // Binding to mousedown rather than click means that it is possible to
+        // trigger a click by pressing the mouse, holding the mouse button down
+        // until the Ajax request is complete and the button is re-enabled, and
+        // then releasing the mouse button. Set 'prevent' so that ajax.js binds
+        // an additional handler to prevent such a click from triggering a
+        // non-Ajax form submission. This also prevents a textfield's ENTER
+        // press triggering this button's non-Ajax form submission behavior.
+        if (!isset($element['#ajax']['prevent'])) {
+          $element['#ajax']['prevent'] = 'click';
+        }
         break;
 
       case 'password':

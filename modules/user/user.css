@@ -22,8 +22,8 @@
   clear: both;
 }
 #user-admin-roles .form-item-name {
-  float: left;
-  margin-right: 1em;
+  float: left; /* LTR */
+  margin-right: 1em; /* LTR */
 }
 
 /**
@@ -87,7 +87,7 @@ div.password-suggestions ul {
   float: right; /* LTR */
   margin: 0 1em 1em 0; /* LTR */
 }
-.profile h3 {
+.profile h2 {
   border-bottom: 1px solid #ccc;
 }
 .profile dl {

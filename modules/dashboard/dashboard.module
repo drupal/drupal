@@ -14,7 +14,7 @@ function dashboard_help($path, $arg) {
       $output .= '<dt>' . t('Tracking user activity') . '</dt>';
       $output .= '<dd>' . t("By enabling blocks such as <em>Who's online</em> and <em>Who's new</em>, site users can track who is logged in and new user signups at a centralized location.") . '</dd>';
       $output .= '<dt>' . t('Tracking content activity') . '</dt>';
-      $output .= '<dd>' . t('By enabling blocks such as <em>Recent blog posts</em>, <em>New forum topics</em> and <em>Recent comments</em>, site users can view newly added site content at a glance.') . '</dd>';
+      $output .= '<dd>' . t('By enabling blocks such as <em>New forum topics</em> and <em>Recent comments</em>, site users can view newly added site content at a glance.') . '</dd>';
       $output .= '</dl>';
       return $output;
 

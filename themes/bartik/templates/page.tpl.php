@@ -192,9 +192,9 @@
         </h1>
       <?php endif; ?>
       <?php print render($title_suffix); ?>
-      <?php if ($tabs = render($tabs)): ?>
+      <?php if ($tabs): ?>
         <div class="tabs">
-          <?php print $tabs; ?>
+          <?php print render($tabs); ?>
         </div>
       <?php endif; ?>
       <?php print render($page['help']); ?>

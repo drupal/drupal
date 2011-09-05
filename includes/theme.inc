@@ -789,7 +789,7 @@ function theme($hook, $variables = array()) {
       // Only log a message when not trying theme suggestions ($hook being an
       // array).
       if (!isset($candidate)) {
-        watchdog('theme', 'Theme key "@key" not found.', array('@key' => $hook), LOG_WARNING);
+        watchdog('theme', 'Theme key "@key" not found.', array('@key' => $hook), WATCHDOG_WARNING);
       }
       return '';
     }
@@ -1820,6 +1820,7 @@ function theme_item_list($variables) {
     foreach ($items as $i => $item) {
       $attributes = array();
       $children = array();
+      $data = '';
       if (is_array($item)) {
         foreach ($item as $key => $value) {
           if ($key == 'data') {
@@ -2482,7 +2483,6 @@ function template_preprocess_maintenance_page(&$variables) {
   $variables['site_slogan']       = (theme_get_setting('toggle_slogan') ? variable_get('site_slogan', '') : '');
   $variables['tabs']              = '';
   $variables['title']             = drupal_get_title();
-  $variables['closure']           = '';
 
   // Compile a list of classes that are going to be applied to the body element.
   $variables['classes_array'][] = 'in-maintenance';

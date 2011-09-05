@@ -42,7 +42,7 @@ function hook_field_settings_form($field, $instance, $has_data) {
     '#title' => t('Maximum length'),
     '#default_value' => $settings['max_length'],
     '#required' => FALSE,
-    '#element_validate' => array('_element_validate_integer_positive'),
+    '#element_validate' => array('element_validate_integer_positive'),
     '#description' => t('The maximum length of the field in characters. Leave blank for an unlimited size.'),
   );
   return $form;
@@ -113,7 +113,7 @@ function hook_field_widget_settings_form($field, $instance) {
       '#type' => 'textfield',
       '#title' => t('Size of textfield'),
       '#default_value' => $settings['size'],
-      '#element_validate' => array('_element_validate_integer_positive'),
+      '#element_validate' => array('element_validate_integer_positive'),
       '#required' => TRUE,
     );
   }
@@ -122,7 +122,7 @@ function hook_field_widget_settings_form($field, $instance) {
       '#type' => 'textfield',
       '#title' => t('Rows'),
       '#default_value' => $settings['rows'],
-      '#element_validate' => array('_element_validate_integer_positive'),
+      '#element_validate' => array('element_validate_integer_positive'),
       '#required' => TRUE,
     );
   }
@@ -160,7 +160,7 @@ function hook_field_formatter_settings_form($field, $instance, $view_mode, $form
       '#type' => 'textfield',
       '#size' => 20,
       '#default_value' => $settings['trim_length'],
-      '#element_validate' => array('_element_validate_integer_positive'),
+      '#element_validate' => array('element_validate_integer_positive'),
       '#required' => TRUE,
     );
   }

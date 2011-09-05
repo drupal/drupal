@@ -151,9 +151,6 @@ Aggregator module
 Block module
 - John Albin Wilkins 'JohnAlbin' <http://drupal.org/user/32095>
 
-Blog module
-- ?
-
 Book module
 - Peter Wolanin 'pwolanin' <http://drupal.org/user/49851>
 
@@ -161,7 +158,7 @@ Color module
 - ?
 
 Comment module
-- Nathaniel Catchpole 'catch' <http://drupal.org/user/35733>
+- ?
 
 Contact module
 - Dave Reid 'davereid' <http://drupal.org/user/53892>
@@ -189,7 +186,7 @@ Filter module
 - Daniel F. Kudwien 'sun' <http://drupal.org/user/54136>
 
 Forum module
-- ?
+- Lee Rowlands 'larowlan' <http://drupal.org/user/395439>
 
 Help module
 - ?
@@ -225,9 +222,6 @@ PHP module
 Poll module
 - ?
 
-Profile module
-- ?
-
 RDF module
 - Stéphane Corlosquet 'scor' <http://drupal.org/user/52142>
 
@@ -236,6 +230,7 @@ Search module
 
 Shortcut module
 - David Rothstein 'David_Rothstein' <http://drupal.org/user/124982>
+- Kristof De Jaeger 'swentel' <http://drupal.org/user/107403>
 
 Simpletest module
 - Jimmy Berry 'boombatower' <http://drupal.org/user/214218>

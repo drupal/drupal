@@ -1629,22 +1629,28 @@ class DatabaseSelectSubqueryTestCase extends DatabaseTestCase {
     $subquery->addField('tt', 'task', 'task');
     $subquery->condition('priority', 1);
 
-    // Create another query that joins against the virtual table resulting
-    // from the subquery.
-    $select = db_select($subquery, 'tt2');
-    $select->join('test', 't', 't.id=tt2.pid');
-    $select->addField('t', 'name');
+    for ($i = 0; $i < 2; $i++) {
+      // Create another query that joins against the virtual table resulting
+      // from the subquery.
+      $select = db_select($subquery, 'tt2');
+      $select->join('test', 't', 't.id=tt2.pid');
+      $select->addField('t', 'name');
+      if ($i) {
+        // Use a different number of conditions here to confuse the subquery
+        // placeholder counter, testing http://drupal.org/node/1112854.
+        $select->condition('name', 'John');
+      }
+      $select->condition('task', 'code');
 
-    $select->condition('task', 'code');
+      // The resulting query should be equivalent to:
+      // SELECT t.name
+      // FROM (SELECT tt.pid AS pid, tt.task AS task FROM test_task tt WHERE priority=1) tt
+      //   INNER JOIN test t ON t.id=tt.pid
+      // WHERE tt.task = 'code'
+      $people = $select->execute()->fetchCol();
 
-    // The resulting query should be equivalent to:
-    // SELECT t.name
-    // FROM (SELECT tt.pid AS pid, tt.task AS task FROM test_task tt WHERE priority=1) tt
-    //   INNER JOIN test t ON t.id=tt.pid
-    // WHERE tt.task = 'code'
-    $people = $select->execute()->fetchCol();
-
-    $this->assertEqual(count($people), 1, t('Returned the correct number of rows.'));
+      $this->assertEqual(count($people), 1, t('Returned the correct number of rows.'));
+    }
   }
 
   /**
@@ -3433,7 +3439,7 @@ class DatabaseTransactionTestCase extends DatabaseTestCase {
       $this->assertIdentical($count, '0', t('Table was successfully created inside a transaction.'));
     }
     catch (Exception $e) {
-      $this->fail($e->getMessage());
+      $this->fail((string) $e);
     }
 
     // If we rollback the transaction, an exception might be thrown.
@@ -3450,6 +3456,163 @@ class DatabaseTransactionTestCase extends DatabaseTestCase {
       // An exception also lets the test pass.
       $this->assertTrue(true, t('Exception thrown on rollback after a DDL statement was executed.'));
     }
+  }
+
+  /**
+   * Insert a single row into the testing table.
+   */
+  protected function insertRow($name) {
+    db_insert('test')
+      ->fields(array(
+        'name' => $name,
+      ))
+      ->execute();
+  }
+
+  /**
+   * Start over for a new test.
+   */
+  protected function cleanUp() {
+    db_truncate('test')
+      ->execute();
+  }
+
+  /**
+   * Assert that a given row is present in the test table.
+   *
+   * @param $name
+   *   The name of the row.
+   * @param $message
+   *   The message to log for the assertion.
+   */
+  function assertRowPresent($name, $message = NULL) {
+    if (!isset($message)) {
+      $message = t('Row %name is present.', array('%name' => $name));
+    }
+    $present = (boolean) db_query('SELECT 1 FROM {test} WHERE name = :name', array(':name' => $name))->fetchField();
+    return $this->assertTrue($present, $message);
+  }
+
+  /**
+   * Assert that a given row is absent from the test table.
+   *
+   * @param $name
+   *   The name of the row.
+   * @param $message
+   *   The message to log for the assertion.
+   */
+  function assertRowAbsent($name, $message = NULL) {
+    if (!isset($message)) {
+      $message = t('Row %name is absent.', array('%name' => $name));
+    }
+    $present = (boolean) db_query('SELECT 1 FROM {test} WHERE name = :name', array(':name' => $name))->fetchField();
+    return $this->assertFalse($present, $message);
+  }
+
+  /**
+   * Test transaction stacking and commit / rollback.
+   */
+  function testTransactionStacking() {
+    // This test won't work right if transactions are supported.
+    if (Database::getConnection()->supportsTransactions()) {
+      return;
+    }
+
+    $database = Database::getConnection();
+
+    // Standard case: pop the inner transaction before the outer transaction.
+    $transaction = db_transaction();
+    $this->insertRow('outer');
+    $transaction2 = db_transaction();
+    $this->insertRow('inner');
+    // Pop the inner transaction.
+    unset($transaction2);
+    $this->assertTrue($database->inTransaction(), t('Still in a transaction after popping the inner transaction'));
+    // Pop the outer transaction.
+    unset($transaction);
+    $this->assertFalse($database->inTransaction(), t('Transaction closed after popping the outer transaction'));
+    $this->assertRowPresent('outer');
+    $this->assertRowPresent('inner');
+
+    // Pop the transaction in a different order they have been pushed.
+    $this->cleanUp();
+    $transaction = db_transaction();
+    $this->insertRow('outer');
+    $transaction2 = db_transaction();
+    $this->insertRow('inner');
+    // Pop the outer transaction, nothing should happen.
+    unset($transaction);
+    $this->insertRow('inner-after-outer-commit');
+    $this->assertTrue($database->inTransaction(), t('Still in a transaction after popping the outer transaction'));
+    // Pop the inner transaction, the whole transaction should commit.
+    unset($transaction2);
+    $this->assertFalse($database->inTransaction(), t('Transaction closed after popping the inner transaction'));
+    $this->assertRowPresent('outer');
+    $this->assertRowPresent('inner');
+    $this->assertRowPresent('inner-after-outer-commit');
+
+    // Rollback the inner transaction.
+    $this->cleanUp();
+    $transaction = db_transaction();
+    $this->insertRow('outer');
+    $transaction2 = db_transaction();
+    $this->insertRow('inner');
+    // Now rollback the inner transaction.
+    $transaction2->rollback();
+    unset($transaction2);
+    $this->assertTrue($database->inTransaction(), t('Still in a transaction after popping the outer transaction'));
+    // Pop the outer transaction, it should commit.
+    $this->insertRow('outer-after-inner-rollback');
+    unset($transaction);
+    $this->assertFalse($database->inTransaction(), t('Transaction closed after popping the inner transaction'));
+    $this->assertRowPresent('outer');
+    $this->assertRowAbsent('inner');
+    $this->assertRowPresent('outer-after-inner-rollback');
+
+    // Rollback the inner transaction after committing the outer one.
+    $this->cleanUp();
+    $transaction = db_transaction();
+    $this->insertRow('outer');
+    $transaction2 = db_transaction();
+    $this->insertRow('inner');
+    // Pop the outer transaction, nothing should happen.
+    unset($transaction);
+    $this->assertTrue($database->inTransaction(), t('Still in a transaction after popping the outer transaction'));
+    // Now rollback the inner transaction, it should rollback.
+    $transaction2->rollback();
+    unset($transaction2);
+    $this->assertFalse($database->inTransaction(), t('Transaction closed after popping the inner transaction'));
+    $this->assertRowPresent('outer');
+    $this->assertRowAbsent('inner');
+
+    // Rollback the outer transaction while the inner transaction is active.
+    // In that case, an exception will be triggered because we cannot
+    // ensure that the final result will have any meaning.
+    $this->cleanUp();
+    $transaction = db_transaction();
+    $this->insertRow('outer');
+    $transaction2 = db_transaction();
+    $this->insertRow('inner');
+    // Rollback the outer transaction.
+    try {
+      $transaction->rollback();
+      unset($transaction);
+      $this->fail(t('Rolling back the outer transaction while the inner transaction is active resulted in an exception.'));
+    }
+    catch (Exception $e) {
+      $this->pass(t('Rolling back the outer transaction while the inner transaction is active resulted in an exception.'));
+    }
+    $this->assertFalse($database->inTransaction(), t('No more in a transaction after rolling back the outer transaction'));
+    // Try to commit the inner transaction.
+    try {
+      unset($transaction2);
+      $this->fail(t('Trying to commit the inner transaction resulted in an exception.'));
+    }
+    catch (Exception $e) {
+      $this->pass(t('Trying to commit the inner transaction resulted in an exception.'));
+    }
+    $this->assertRowAbsent('outer');
+    $this->assertRowAbsent('inner');
   }
 }
 

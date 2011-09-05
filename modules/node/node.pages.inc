@@ -7,7 +7,7 @@
 
 
 /**
- * Menu callback; presents the node editing form, or redirects to delete confirmation.
+ * Menu callback; presents the node editing form.
  */
 function node_page_edit($node) {
   $type_name = node_type_get_name($node);
@@ -189,7 +189,7 @@ function node_form($form, &$form_state, $node) {
     '#title' => t('Revision log message'),
     '#rows' => 4,
     '#default_value' => !empty($node->log) ? $node->log : '',
-    '#description' => t('Provide an explanation of the changes you are making. This will help other authors understand your motivations.'),
+    '#description' => t('Briefly describe the changes you have made.'),
   );
 
   // Node author information for administrators
@@ -409,11 +409,11 @@ function node_form_submit($form, &$form_state) {
   $t_args = array('@type' => node_type_get_name($node), '%title' => $node->title);
 
   if ($insert) {
-    watchdog('content', '@type: added %title.', $watchdog_args, LOG_NOTICE, $node_link);
+    watchdog('content', '@type: added %title.', $watchdog_args, WATCHDOG_NOTICE, $node_link);
     drupal_set_message(t('@type %title has been created.', $t_args));
   }
   else {
-    watchdog('content', '@type: updated %title.', $watchdog_args, LOG_NOTICE, $node_link);
+    watchdog('content', '@type: updated %title.', $watchdog_args, WATCHDOG_NOTICE, $node_link);
     drupal_set_message(t('@type %title has been updated.', $t_args));
   }
   if ($node->nid) {

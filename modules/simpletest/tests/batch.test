@@ -365,6 +365,19 @@ class BatchPercentagesUnitTestCase extends DrupalUnitTestCase {
       '99.95' => array('total' => 2000, 'current' => 1999),
       // 19999/20000 should add yet another digit and go to 99.995%.
       '99.995' => array('total' => 20000, 'current' => 19999),
+      // The next five test cases simulate a batch with a single operation
+      // ('total' equals 1) that takes several steps to complete. Within the
+      // operation, we imagine that there are 501 items to process, and 100 are
+      // completed during each step. The percentages we get back should be
+      // rounded the usual way for the first few passes (i.e., 20%, 40%, etc.),
+      // but for the last pass through, when 500 out of 501 items have been
+      // processed, we do not want to round up to 100%, since that would
+      // erroneously indicate that the processing is complete.
+      '20' => array('total' => 1, 'current' => 100/501),
+      '40' => array('total' => 1, 'current' => 200/501),
+      '60' => array('total' => 1, 'current' => 300/501),
+      '80' => array('total' => 1, 'current' => 400/501),
+      '99.8' => array('total' => 1, 'current' => 500/501),
     );
     require_once DRUPAL_ROOT . '/includes/batch.inc';
     parent::setUp();

@@ -792,7 +792,7 @@ class FilterUnitTestCase extends DrupalUnitTestCase {
    */
   function testLineBreakFilter() {
     // Setup dummy filter object.
-    $filter = new stdClass;
+    $filter = new stdClass();
     $filter->callback = '_filter_autop';
 
     // Since the line break filter naturally needs plenty of newlines in test
@@ -1156,7 +1156,7 @@ class FilterUnitTestCase extends DrupalUnitTestCase {
    */
   function testHtmlEscapeFilter() {
     // Setup dummy filter object.
-    $filter = new stdClass;
+    $filter = new stdClass();
     $filter->callback = '_filter_html_escape';
 
     $tests = array(
@@ -1174,7 +1174,7 @@ class FilterUnitTestCase extends DrupalUnitTestCase {
    */
   function testUrlFilter() {
     // Setup dummy filter object.
-    $filter = new stdClass;
+    $filter = new stdClass();
     $filter->callback = '_filter_url';
     $filter->settings = array(
       'filter_url_length' => 496,
@@ -1509,7 +1509,7 @@ www.example.com with a newline in comments -->
    */
   function testUrlFilterContent() {
     // Setup dummy filter object.
-    $filter = new stdClass;
+    $filter = new stdClass();
     $filter->settings = array(
       'filter_url_length' => 496,
     );

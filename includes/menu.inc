@@ -431,6 +431,11 @@ function menu_get_item($path = NULL, $router_item = NULL) {
     $router_items[$path] = $router_item;
   }
   if (!isset($router_items[$path])) {
+    // Rebuild if we know it's needed, or if the menu masks are missing which
+    // occurs rarely, likely due to a race condition of multiple rebuilds.
+    if (variable_get('menu_rebuild_needed', FALSE) || !variable_get('menu_masks', array())) {
+      menu_rebuild();
+    }
     $original_map = arg(NULL, $path);
 
     // Since there is no limit to the length of $path, use a hash to keep it
@@ -490,11 +495,6 @@ function menu_execute_active_handler($path = NULL, $deliver = TRUE) {
 
   // Only continue if the site status is not set.
   if ($page_callback_result == MENU_SITE_ONLINE) {
-    // Rebuild if we know it's needed, or if the menu masks are missing which
-    // occurs rarely, likely due to a race condition of multiple rebuilds.
-    if (variable_get('menu_rebuild_needed', FALSE) || !variable_get('menu_masks', array())) {
-      menu_rebuild();
-    }
     if ($router_item = menu_get_item($path)) {
       if ($router_item['access']) {
         if ($router_item['include_file']) {
@@ -2172,13 +2172,17 @@ function menu_local_tabs() {
 function theme_menu_local_tasks(&$variables) {
   $output = '';
 
-  if ($primary = drupal_render($variables['primary'])) {
-    $output .= '<h2 class="element-invisible">' . t('Primary tabs') . '</h2>';
-    $output .= '<ul class="tabs primary">' . $primary . '</ul>';
+  if (!empty($variables['primary'])) {
+    $variables['primary']['#prefix'] = '<h2 class="element-invisible">' . t('Primary tabs') . '</h2>';
+    $variables['primary']['#prefix'] .= '<ul class="tabs primary">';
+    $variables['primary']['#suffix'] = '</ul>';
+    $output .= drupal_render($variables['primary']);
   }
-  if ($secondary = drupal_render($variables['secondary'])) {
-    $output .= '<h2 class="element-invisible">' . t('Secondary tabs') . '</h2>';
-    $output .= '<ul class="tabs secondary">' . $secondary . '</ul>';
+  if (!empty($variables['secondary'])) {
+    $variables['secondary']['#prefix'] = '<h2 class="element-invisible">' . t('Secondary tabs') . '</h2>';
+    $variables['secondary']['#prefix'] .= '<ul class="tabs secondary">';
+    $variables['secondary']['#suffix'] = '</ul>';
+    $output .= drupal_render($variables['secondary']);
   }
 
   return $output;
@@ -2320,7 +2324,7 @@ function menu_set_active_trail($new_trail = NULL) {
  *   menu link ('node/5' if it exists, or fallback to 'node/%').
  *
  * @return
- *   A fully translated menu link, or NULL if not matching menu link was
+ *   A fully translated menu link, or NULL if no matching menu link was
  *   found. The most specific menu link ('node/5' preferred over 'node/%') in
  *   the most preferred menu (as defined by menu_get_active_menu_names()) is
  *   returned.
@@ -2668,19 +2672,15 @@ function _menu_navigation_links_rebuild($menu) {
     }
   }
   if ($menu_links) {
+    // Keep an array of processed menu links, to allow menu_link_save() to
+    // check this for parents instead of querying the database.
+    $parent_candidates = array();
     // Make sure no child comes before its parent.
     array_multisort($sort, SORT_NUMERIC, $menu_links);
 
-    foreach ($menu_links as $item) {
+    foreach ($menu_links as $key => $item) {
       $existing_item = db_select('menu_links')
-        ->fields('menu_links', array(
-          'mlid',
-          'menu_name',
-          'plid',
-          'customized',
-          'has_children',
-          'updated',
-        ))
+        ->fields('menu_links')
         ->condition('link_path', $item['path'])
         ->condition('module', 'system')
         ->execute()->fetchAssoc();
@@ -2699,9 +2699,14 @@ function _menu_navigation_links_rebuild($menu) {
         $item['has_children'] = $existing_item['has_children'];
         $item['updated'] = $existing_item['updated'];
       }
-      if (!$existing_item || !$existing_item['customized']) {
+      if ($existing_item && $existing_item['customized']) {
+        $parent_candidates[$existing_item['mlid']] = $existing_item;
+      }
+      else {
         $item = _menu_link_build($item);
-        menu_link_save($item);
+        menu_link_save($item, $existing_item, $parent_candidates);
+        $parent_candidates[$item['mlid']] = $item;
+        unset($menu_links[$key]);
       }
     }
   }
@@ -2899,12 +2904,17 @@ function _menu_delete_item($item, $force = FALSE) {
  *     to insert a new link.
  *   - plid: (optional) The mlid of the parent.
  *   - router_path: (optional) The path of the relevant router item.
+ * @param $existing_item
+ *   Optional, the current record from the {menu_links} table as an array.
+ * @param $parent_candidates
+ *   Optional array of menu links keyed by mlid. Used by
+ *   _menu_navigation_links_rebuild() only.
  *
  * @return
  *   The mlid of the saved menu link, or FALSE if the menu link could not be
  *   saved.
  */
-function menu_link_save(&$item) {
+function menu_link_save(&$item, $existing_item = array(), $parent_candidates = array()) {
   drupal_alter('menu_link', $item);
 
   // This is the easiest way to handle the unique internal path '<front>',
@@ -2923,15 +2933,20 @@ function menu_link_save(&$item) {
     'customized' => 0,
     'updated' => 0,
   );
-  $existing_item = FALSE;
   if (isset($item['mlid'])) {
-    if ($existing_item = db_query("SELECT * FROM {menu_links} WHERE mlid = :mlid", array(':mlid' => $item['mlid']))->fetchAssoc()) {
+    if (!$existing_item) {
+      $existing_item = db_query('SELECT * FROM {menu_links} WHERE mlid = :mlid', array('mlid' => $item['mlid']))->fetchAssoc();
+    }
+    if ($existing_item) {
       $existing_item['options'] = unserialize($existing_item['options']);
     }
   }
+  else {
+    $existing_item = FALSE;
+  }
 
   // Try to find a parent link. If found, assign it and derive its menu.
-  $parent = _menu_link_find_parent($item);
+  $parent = _menu_link_find_parent($item, $parent_candidates);
   if (!empty($parent['mlid'])) {
     $item['plid'] = $parent['mlid'];
     $item['menu_name'] = $parent['menu_name'];
@@ -3065,11 +3080,13 @@ function menu_link_save(&$item) {
  *
  * @param $menu_link
  *   A menu link.
+ * @param $parent_candidates
+ *   An array of menu links keyed by mlid.
  * @return
  *   A menu link structure of the possible parent or FALSE if no valid parent
  *   has been found.
  */
-function _menu_link_find_parent($menu_link) {
+function _menu_link_find_parent($menu_link, $parent_candidates = array()) {
   $parent = FALSE;
 
   // This item is explicitely top-level, skip the rest of the parenting.
@@ -3091,7 +3108,12 @@ function _menu_link_find_parent($menu_link) {
   }
 
   foreach ($candidates as $mlid) {
-    $parent = db_query("SELECT * FROM {menu_links} WHERE mlid = :mlid", array(':mlid' => $mlid))->fetchAssoc();
+    if (isset($parent_candidates[$mlid])) {
+      $parent = $parent_candidates[$mlid];
+    }
+    else {
+      $parent = db_query("SELECT * FROM {menu_links} WHERE mlid = :mlid", array(':mlid' => $mlid))->fetchAssoc();
+    }
     if ($parent) {
       return $parent;
     }

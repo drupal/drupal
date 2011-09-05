@@ -866,7 +866,7 @@ function openid_verify_assertion_nonce($service, $response) {
     $nonce_timestamp = gmmktime($hour, $minutes, $seconds, $month, $day, $year);
   }
   else {
-    watchdog('openid', 'Nonce from @endpoint rejected because it is not correctly formatted, nonce: @nonce.', array('@endpoint' => $service['uri'], '@nonce' => $response['openid.response_nonce']), LOG_WARNING);
+    watchdog('openid', 'Nonce from @endpoint rejected because it is not correctly formatted, nonce: @nonce.', array('@endpoint' => $service['uri'], '@nonce' => $response['openid.response_nonce']), WATCHDOG_WARNING);
     return FALSE;
   }
 
@@ -875,7 +875,7 @@ function openid_verify_assertion_nonce($service, $response) {
   $time = time();
   $expiry = 900;
   if ($nonce_timestamp <= $time - $expiry || $nonce_timestamp >= $time + $expiry) {
-    watchdog('openid', 'Nonce received from @endpoint is out of range (time difference: @intervals). Check possible clock skew.', array('@endpoint' => $service['uri'], '@interval' => $time - $nonce_timestamp), LOG_WARNING);
+    watchdog('openid', 'Nonce received from @endpoint is out of range (time difference: @intervals). Check possible clock skew.', array('@endpoint' => $service['uri'], '@interval' => $time - $nonce_timestamp), WATCHDOG_WARNING);
     return FALSE;
   }
 
@@ -898,7 +898,7 @@ function openid_verify_assertion_nonce($service, $response) {
     return TRUE;
   }
   else {
-    watchdog('openid', 'Nonce replay attempt blocked from @ip, nonce: @nonce.', array('@ip' => ip_address(), '@nonce' => $response['openid.response_nonce']), LOG_CRIT);
+    watchdog('openid', 'Nonce replay attempt blocked from @ip, nonce: @nonce.', array('@ip' => ip_address(), '@nonce' => $response['openid.response_nonce']), WATCHDOG_CRITICAL);
     return FALSE;
   }
 }

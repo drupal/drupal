@@ -12,17 +12,27 @@ function field_ui_fields_list() {
   $instances = field_info_instances();
   $field_types = field_info_field_types();
   $bundles = field_info_bundles();
+
+  $modules = system_rebuild_module_data();
+
   $header = array(t('Field name'), t('Field type'), t('Used in'));
   $rows = array();
   foreach ($instances as $entity_type => $type_bundles) {
     foreach ($type_bundles as $bundle => $bundle_instances) {
       foreach ($bundle_instances as $field_name => $instance) {
         $field = field_info_field($field_name);
+
+        // Initialize the row if we encounter the field for the first time.
+        if (!isset($rows[$field_name])) {
+          $rows[$field_name]['class'] = $field['locked'] ? array('menu-disabled') : array('');
+          $rows[$field_name]['data'][0] = $field['locked'] ? t('@field_name (Locked)', array('@field_name' => $field_name)) : $field_name;
+          $module_name = $field_types[$field['type']]['module'];
+          $rows[$field_name]['data'][1] = $field_types[$field['type']]['label'] . ' ' . t('(module: !module)', array('!module' => $modules[$module_name]->info['name']));
+        }
+
+        // Add the current instance.
         $admin_path = _field_ui_bundle_admin_path($entity_type, $bundle);
-        $rows[$field_name]['data'][0] = $field['locked'] ? t('@field_name (Locked)', array('@field_name' => $field_name)) : $field_name;
-        $rows[$field_name]['data'][1] = $field_types[$field['type']]['label'];
         $rows[$field_name]['data'][2][] = $admin_path ? l($bundles[$entity_type][$bundle]['label'], $admin_path . '/fields') : $bundles[$entity_type][$bundle]['label'];
-        $rows[$field_name]['class'] = $field['locked'] ? array('menu-disabled') : array('');
       }
     }
   }
@@ -509,6 +519,10 @@ function field_ui_field_overview_form($form, &$form_state, $entity_type, $bundle
         '#cell_attributes' => array('colspan' => 3),
         '#prefix' => '<div class="add-new-placeholder">&nbsp;</div>',
       ),
+      'translatable' => array(
+        '#type' => 'value',
+        '#value' => FALSE,
+      ),
     );
   }
 
@@ -753,7 +767,7 @@ function field_ui_field_overview_form_submit($form, &$form_state) {
     $field = array(
       'field_name' => $values['field_name'],
       'type' => $values['type'],
-      'translatable' => TRUE,
+      'translatable' => $values['translatable'],
     );
     $instance = array(
       'field_name' => $field['field_name'],
@@ -1713,6 +1727,14 @@ function field_ui_field_delete_form_submit($form, &$form_state) {
 
   $admin_path = _field_ui_bundle_admin_path($entity_type, $bundle);
   $form_state['redirect'] = field_ui_get_destinations(array($admin_path . '/fields'));
+
+  // Fields are purged on cron. However field module prevents disabling modules
+  // when field types they provided are used in a field until it is fully
+  // purged. In the case that a field has minimal or no content, a single call
+  // to field_purge_batch() will remove it from the system. Call this with a
+  // low batch limit to avoid administrators having to wait for cron runs when
+  // removing instances that meet this criteria.
+  field_purge_batch(10);
 }
 
 /**
@@ -1779,12 +1801,6 @@ function field_ui_field_edit_form($form, &$form_state, $instance) {
     '#required' => TRUE,
     '#weight' => -20,
   );
-  $form['instance']['required'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Required field'),
-    '#default_value' => !empty($instance['required']),
-    '#weight' => -10,
-  );
 
   $form['instance']['description'] = array(
     '#type' => 'textarea',
@@ -1792,6 +1808,13 @@ function field_ui_field_edit_form($form, &$form_state, $instance) {
     '#default_value' => !empty($instance['description']) ? $instance['description'] : '',
     '#rows' => 5,
     '#description' => t('Instructions to present to the user below this field on the editing form.<br />Allowed HTML tags: @tags', array('@tags' => _field_filter_xss_display_allowed_tags())),
+    '#weight' => -10,
+  );
+
+  $form['instance']['required'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Required field'),
+    '#default_value' => !empty($instance['required']),
     '#weight' => -5,
   );
 
@@ -1838,7 +1861,9 @@ function field_ui_field_edit_form($form, &$form_state, $instance) {
   // Create a form structure for the field values.
   $form['field'] = array(
     '#type' => 'fieldset',
-    '#title' => t('%field field settings', array('%field' => $instance['label'])),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+    '#title' => t('Global settings'),
     '#description' => $description,
     '#tree' => TRUE,
   );
@@ -1865,8 +1890,29 @@ function field_ui_field_edit_form($form, &$form_state, $instance) {
   }
 
   $form['actions'] = array('#type' => 'actions');
-  $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save settings'));
+  $form['actions']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save settings')
+  );
+  $form['actions']['delete'] = array(
+    '#type' => 'submit',
+    '#value' => t('Delete field'),
+    '#submit' => array('field_ui_field_edit_form_delete_submit'),
+  );
   return $form;
+}
+
+/**
+ * Handle the 'Delete' button on the field instance edit form.
+ */
+function field_ui_field_edit_form_delete_submit($form, &$form_state) {
+  $destination = array();
+  if (isset($_GET['destination'])) {
+    $destination = drupal_get_destination();
+    unset($_GET['destination']);
+  }
+  $instance = $form['#instance'];
+  $form_state['redirect'] = array('admin/structure/types/manage/' . $instance['bundle'] . '/fields/' . $instance['field_name'] . '/delete', array('query' => $destination));
 }
 
 /**

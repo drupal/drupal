@@ -448,7 +448,7 @@ function module_enable($module_list, $enable_dependencies = TRUE) {
         module_invoke($module, 'install');
         // Record the fact that it was installed.
         $modules_installed[] = $module;
-        watchdog('system', '%module module installed.', array('%module' => $module), LOG_INFO);
+        watchdog('system', '%module module installed.', array('%module' => $module), WATCHDOG_INFO);
       }
 
       // Enable the module.
@@ -456,7 +456,7 @@ function module_enable($module_list, $enable_dependencies = TRUE) {
 
       // Record the fact that it was enabled.
       $modules_enabled[] = $module;
-      watchdog('system', '%module module enabled.', array('%module' => $module), LOG_INFO);
+      watchdog('system', '%module module enabled.', array('%module' => $module), WATCHDOG_INFO);
     }
   }
 
@@ -530,7 +530,7 @@ function module_disable($module_list, $disable_dependents = TRUE) {
         ->condition('name', $module)
         ->execute();
       $invoke_modules[] = $module;
-      watchdog('system', '%module module disabled.', array('%module' => $module), LOG_INFO);
+      watchdog('system', '%module module disabled.', array('%module' => $module), WATCHDOG_INFO);
     }
   }
 
@@ -786,10 +786,9 @@ function module_implements_write_cache() {
  * @return
  *   The return value of the hook implementation.
  */
-function module_invoke() {
+function module_invoke($module, $hook) {
   $args = func_get_args();
-  $module = $args[0];
-  $hook = $args[1];
+  // Remove $module and $hook from the arguments.
   unset($args[0], $args[1]);
   if (module_hook($module, $hook)) {
     return call_user_func_array($module . '_' . $hook, $args);
@@ -808,9 +807,9 @@ function module_invoke() {
  *   An array of return values of the hook implementations. If modules return
  *   arrays from their implementations, those are merged into one array.
  */
-function module_invoke_all() {
+function module_invoke_all($hook) {
   $args = func_get_args();
-  $hook = $args[0];
+  // Remove $hook from the arguments.
   unset($args[0]);
   $return = array();
   foreach (module_implements($hook) as $module) {

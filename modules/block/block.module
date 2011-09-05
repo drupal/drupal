@@ -612,7 +612,8 @@ function block_theme_initialize($theme) {
   $has_blocks = (bool) db_query_range('SELECT 1 FROM {block} WHERE theme = :theme', 0, 1, array(':theme' => $theme))->fetchField();
   if (!$has_blocks) {
     $default_theme = variable_get('theme_default', 'bartik');
-    $regions = system_region_list($theme);
+    // Apply only to new theme's visible regions.
+    $regions = system_region_list($theme, REGIONS_VISIBLE);
     $result = db_query("SELECT * FROM {block} WHERE theme = :theme", array(':theme' => $default_theme), array('fetch' => PDO::FETCH_ASSOC));
     foreach ($result as $block) {
       // If the region isn't supported by the theme, assign the block to the theme's default region.
@@ -633,14 +634,14 @@ function block_theme_initialize($theme) {
  *   The name of a region.
  *
  * @return
- *   An array of block objects, indexed with <i>module</i>_<i>delta</i>.
- *   If you are displaying your blocks in one or two sidebars, you may check
- *   whether this array is empty to see how many columns are going to be
- *   displayed.
+ *   An array of block objects, indexed with the module name and block delta
+ *   concatenated with an underscore, thus: MODULE_DELTA. If you are displaying
+ *   your blocks in one or two sidebars, you may check whether this array is
+ *   empty to see how many columns are going to be displayed.
  *
  * @todo
  *   Now that the blocks table has a primary key, we should use that as the
- *   array key instead of <i>module</i>_<i>delta</i>.
+ *   array key instead of MODULE_DELTA.
  */
 function block_list($region) {
   $blocks = &drupal_static(__FUNCTION__);
@@ -760,6 +761,12 @@ function block_block_list_alter(&$blocks) {
     else {
       $enabled = TRUE;
     }
+
+    // Limited visibility blocks must list at least one page.
+    if ($block->visibility == BLOCK_VISIBILITY_LISTED && empty($block->pages)) {
+      $enabled = FALSE;
+    }
+
     if (!$enabled) {
       unset($blocks[$key]);
       continue;
@@ -946,7 +953,7 @@ function template_preprocess_block(&$variables) {
   // Hyphens (-) and underscores (_) play a special role in theme suggestions.
   // Theme suggestions should only contain underscores, because within
   // drupal_find_theme_templates(), underscores are converted to hyphens to
-  // match template file names, and then converted back to hyphens to match
+  // match template file names, and then converted back to underscores to match
   // pre-processing and other function names. So if your theme suggestion
   // contains a hyphen, it will end up as an underscore after this conversion,
   // and your function names won't be recognized. So, we need to convert

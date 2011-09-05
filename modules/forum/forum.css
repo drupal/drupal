@@ -11,15 +11,19 @@
 #forum td.pager {
   white-space: nowrap;
 }
-#forum tr td.forum {
-  padding-left: 25px; /* LTR */
-  background-position: 2px 2px; /* LTR */
-  background-image: url(../../misc/forum-default.png);
+
+#forum td.forum .icon {
+  background-image: url(../../misc/forum-icons.png);
   background-repeat: no-repeat;
+  float: left; /* LTR */
+  height: 24px;
+  margin: 0 9px 0 0; /* LTR */
+  width: 24px;
 }
-#forum tr.new-topics td.forum {
-  background-image: url(../../misc/forum-new.png);
+#forum td.forum .forum-status-new {
+  background-position: -24px 0;
 }
+
 #forum div.indent {
   margin-left: 20px;
 }

@@ -105,6 +105,12 @@ function form_test_menu() {
     'page arguments' => array('form_test_select'),
     'access callback' => TRUE,
   );
+  $items['form-test/placeholder-text'] = array(
+    'title' => 'Placeholder',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('form_test_placeholder_test'),
+    'access callback' => TRUE,
+  );
   $items['form-test/checkboxes-radios'] = array(
     'title' => t('Checkboxes, Radios'),
     'page callback' => 'drupal_get_form',
@@ -978,6 +984,21 @@ function form_test_select($form, &$form_state) {
 function form_test_select_submit($form, &$form_state) {
   drupal_json_output($form_state['values']);
   exit();
+}
+
+/**
+ * Builds a form to test the placeholder attribute.
+ */
+function form_test_placeholder_test($form, &$form_state) {
+  foreach (array('textfield', 'textarea', 'password') as $type) {
+    $form[$type] = array(
+      '#type' => $type,
+      '#title' => $type,
+      '#placeholder' => 'placeholder-text',
+    );
+  }
+
+  return $form;
 }
 
 /**

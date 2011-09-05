@@ -264,7 +264,7 @@ tr:first-child td.category {
   border-top-width: 0;
 }
 
-span.form-required {
+abbr.form-required {
   color: #ffae00;
 }
 

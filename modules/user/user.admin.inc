@@ -352,7 +352,7 @@ function user_admin_settings() {
     $picture_path =  file_default_scheme() . '://' . variable_get('user_picture_path', 'pictures');
     if (!file_prepare_directory($picture_path, FILE_CREATE_DIRECTORY)) {
       form_set_error('user_picture_path', t('The directory %directory does not exist or is not writable.', array('%directory' => $picture_path)));
-      watchdog('file system', 'The directory %directory does not exist or is not writable.', array('%directory' => $picture_path), LOG_ERR);
+      watchdog('file system', 'The directory %directory does not exist or is not writable.', array('%directory' => $picture_path), WATCHDOG_ERROR);
     }
   }
   $picture_support = variable_get('user_pictures', 0);
@@ -712,7 +712,12 @@ function user_admin_permissions($form, $form_state, $rid = NULL) {
 
   // Have to build checkboxes here after checkbox arrays are built
   foreach ($role_names as $rid => $name) {
-    $form['checkboxes'][$rid] = array('#type' => 'checkboxes', '#options' => $options, '#default_value' => isset($status[$rid]) ? $status[$rid] : array());
+    $form['checkboxes'][$rid] = array(
+      '#type' => 'checkboxes',
+      '#options' => $options,
+      '#default_value' => isset($status[$rid]) ? $status[$rid] : array(),
+      '#attributes' => array('class' => array('rid-' . $rid)),
+    );
     $form['role_names'][$rid] = array('#markup' => check_plain($name), '#tree' => TRUE);
   }
 
@@ -836,7 +841,7 @@ function user_admin_roles($form, $form_state) {
     $form['roles'][$rid]['#weight'] = $order;
     $form['roles'][$rid]['weight'] = array(
       '#type' => 'textfield',
-      '#title' => t('Weight for @title', array('@title' => $name['label'])),
+      '#title' => t('Weight for @title', array('@title' => $name)),
       '#title_display' => 'invisible',
       '#size' => 4,
       '#default_value' => $order,

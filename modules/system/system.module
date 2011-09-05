@@ -649,7 +649,7 @@ function system_menu() {
   // Modules.
   $items['admin/modules'] = array(
     'title' => 'Modules',
-    'description' => 'Enable or disable modules.',
+    'description' => 'Extend site functionality.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_modules'),
     'access arguments' => array('administer modules'),
@@ -1790,6 +1790,13 @@ function system_authorized_get_url(array $options = array()) {
 }
 
 /**
+ * Returns the URL for the authorize.php script when it is processing a batch.
+ */
+function system_authorized_batch_processing_url() {
+  return system_authorized_get_url(array('query' => array('batch' => '1')));
+}
+
+/**
  * Setup and invoke an operation using authorize.php.
  *
  * @see system_authorized_init()
@@ -1806,7 +1813,7 @@ function system_authorized_run($callback, $file, $arguments = array(), $page_tit
  */
 function system_authorized_batch_process() {
   $finish_url = system_authorized_get_url();
-  $process_url = system_authorized_get_url(array('query' => array('batch' => '1')));
+  $process_url = system_authorized_batch_processing_url();
   batch_process($finish_url, $process_url);
 }
 
@@ -2018,6 +2025,7 @@ function system_block_info() {
   $blocks['help'] = array(
     'info' => t('System help'),
     'weight' => '5',
+    'cache' => DRUPAL_NO_CACHE,
   );
   // System-defined menu blocks.
   foreach (menu_list_system_menus() as $menu_name => $title) {
@@ -2145,22 +2153,22 @@ function system_check_directory($form_element) {
   if (!is_dir($directory) && !drupal_mkdir($directory, NULL, TRUE)) {
     // If the directory does not exists and cannot be created.
     form_set_error($form_element['#parents'][0], t('The directory %directory does not exist and could not be created.', array('%directory' => $directory)));
-    watchdog('file system', 'The directory %directory does not exist and could not be created.', array('%directory' => $directory), LOG_ERR);
+    watchdog('file system', 'The directory %directory does not exist and could not be created.', array('%directory' => $directory), WATCHDOG_ERROR);
   }
 
   if (is_dir($directory) && !is_writable($directory) && !drupal_chmod($directory)) {
     // If the directory is not writable and cannot be made so.
     form_set_error($form_element['#parents'][0], t('The directory %directory exists but is not writable and could not be made writable.', array('%directory' => $directory)));
-    watchdog('file system', 'The directory %directory exists but is not writable and could not be made writable.', array('%directory' => $directory), LOG_ERR);
+    watchdog('file system', 'The directory %directory exists but is not writable and could not be made writable.', array('%directory' => $directory), WATCHDOG_ERROR);
   }
   elseif (is_dir($directory)) {
     if ($form_element['#name'] == 'file_public_path') {
       // Create public .htaccess file.
-      file_create_htaccess($directory, FALSE);
+      file_save_htaccess($directory, FALSE);
     }
     else {
       // Create private .htaccess file.
-      file_create_htaccess($directory);
+      file_save_htaccess($directory);
     }
   }
 
@@ -2904,7 +2912,7 @@ function system_get_module_admin_tasks($module, $info) {
       ->condition('ml.hidden', 0, '>=')
       ->condition('ml.module', 'system')
       ->condition('m.number_parts', 1, '>')
-      ->condition('m.page_callback', 'system_admin_menu_block_page', '!=');
+      ->condition('m.page_callback', 'system_admin_menu_block_page', '<>');
     foreach ($query->execute() as $link) {
       _menu_link_translate($link);
       if ($link['access']) {
@@ -2987,16 +2995,16 @@ function system_cron() {
       $references = file_usage_list($file);
       if (empty($references)) {
         if (!file_delete($file)) {
-          watchdog('file system', 'Could not delete temporary file "%path" during garbage collection', array('%path' => $file->uri), LOG_ERR);
+          watchdog('file system', 'Could not delete temporary file "%path" during garbage collection', array('%path' => $file->uri), WATCHDOG_ERROR);
         }
       }
       else {
-        watchdog('file system', 'Did not delete temporary file "%path" during garbage collection, because it is in use by the following modules: %modules.', array('%path' => $file->uri, '%modules' => implode(', ', array_keys($references))), LOG_INFO);
+        watchdog('file system', 'Did not delete temporary file "%path" during garbage collection, because it is in use by the following modules: %modules.', array('%path' => $file->uri, '%modules' => implode(', ', array_keys($references))), WATCHDOG_INFO);
       }
     }
   }
 
-  $core = array('cache', 'cache_filter', 'cache_page', 'cache_form', 'cache_menu');
+  $core = array('cache', 'cache_path', 'cache_filter', 'cache_page', 'cache_form', 'cache_menu');
   $cache_tables = array_merge(module_invoke_all('flush_caches'), $core);
   foreach ($cache_tables as $table) {
     cache_clear_all(NULL, $table);
@@ -3017,6 +3025,7 @@ function system_cron() {
     ->fields(array(
       'expire' => 0,
     ))
+    ->condition('expire', 0, '<>')
     ->condition('expire', REQUEST_TIME, '<')
     ->execute();
 }
@@ -3092,7 +3101,7 @@ function system_send_email_action_form($context) {
     '#title' => t('Recipient'),
     '#default_value' => $context['recipient'],
     '#maxlength' => '254',
-    '#description' => t('The email address to which the message should be sent OR enter [node:author:mail], [comment:author:mail], etc. if you would like to send an e-mail to the author of the original post.'),
+    '#description' => t('The e-mail address to which the message should be sent OR enter [node:author:mail], [comment:author:mail], etc. if you would like to send an e-mail to the author of the original post.'),
   );
   $form['subject'] = array(
     '#type' => 'textfield',
@@ -3862,7 +3871,7 @@ function system_date_format_save($date_format, $dfid = 0) {
   if (!empty($date_format['locales'])) {
     foreach ($date_format['locales'] as $langcode) {
       // Only proceed if language is enabled.
-      if (in_array($langcode, $languages)) {
+      if (isset($languages[$langcode])) {
         $is_existing = (bool) db_query_range('SELECT 1 FROM {date_format_locale} WHERE type = :type AND language = :language', 0, 1, array(':type' => $date_format['type'], ':language' => $langcode))->fetchField();
         if (!$is_existing) {
           $locale_format['language'] = $langcode;

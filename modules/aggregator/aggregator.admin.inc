@@ -193,7 +193,7 @@ function aggregator_form_feed_submit($form, &$form_state) {
     }
   }
   else {
-    watchdog('aggregator', 'Feed %feed added.', array('%feed' => $form_state['values']['title']), LOG_NOTICE, l(t('view'), 'admin/config/services/aggregator'));
+    watchdog('aggregator', 'Feed %feed added.', array('%feed' => $form_state['values']['title']), WATCHDOG_NOTICE, l(t('view'), 'admin/config/services/aggregator'));
     drupal_set_message(t('The feed %feed has been added.', array('%feed' => $form_state['values']['title'])));
   }
 }
@@ -591,7 +591,7 @@ function aggregator_form_category_submit($form, &$form_state) {
     }
   }
   else {
-    watchdog('aggregator', 'Category %category added.', array('%category' => $form_state['values']['title']), LOG_NOTICE, l(t('view'), 'admin/config/services/aggregator'));
+    watchdog('aggregator', 'Category %category added.', array('%category' => $form_state['values']['title']), WATCHDOG_NOTICE, l(t('view'), 'admin/config/services/aggregator'));
     drupal_set_message(t('The category %category has been added.', array('%category' => $form_state['values']['title'])));
   }
 }

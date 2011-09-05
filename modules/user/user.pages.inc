@@ -222,6 +222,7 @@ function template_preprocess_user_profile_item(&$variables) {
  */
 function template_preprocess_user_profile_category(&$variables) {
   $variables['title'] = check_plain($variables['element']['#title']);
+  $variables['classes_array'][] = 'user-profile-category-' . drupal_html_class($variables['title']);
   $variables['profile_items'] = $variables['element']['#children'];
   $variables['attributes'] = '';
   if (isset($variables['element']['#attributes'])) {
@@ -443,7 +444,7 @@ function user_cancel_confirm_form_submit($form, &$form_state) {
     $account = user_save($account, $edit);
     _user_mail_notify('cancel_confirm', $account);
     drupal_set_message(t('A confirmation request to cancel your account has been sent to your e-mail address.'));
-    watchdog('user', 'Sent account cancellation request to %name %email.', array('%name' => $account->name, '%email' => '<' . $account->mail . '>'), LOG_NOTICE);
+    watchdog('user', 'Sent account cancellation request to %name %email.', array('%name' => $account->name, '%email' => '<' . $account->mail . '>'), WATCHDOG_NOTICE);
 
     $form_state['redirect'] = "user/$account->uid";
   }

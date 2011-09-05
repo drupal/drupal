@@ -28,6 +28,13 @@ function system_test_menu() {
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
+  $items['system-test/multiple-redirects/%'] = array(
+    'title' => 'Redirect',
+    'page callback' => 'system_test_multiple_redirects',
+    'page arguments' => array(2),
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
   $items['system-test/set-header'] = array(
     'page callback' => 'system_test_set_header',
     'access arguments' => array('access content'),
@@ -122,6 +129,30 @@ function system_test_redirect($code) {
   return '';
 }
 
+/**
+ * Menu callback; sends a redirect header to itself until $count argument is 0.
+ *
+ * Emulates the variable number of redirects (given by initial $count argument)
+ * to the final destination URL by continuous sending of 301 HTTP redirect
+ * headers to itself together with decrementing the $count parameter until the
+ * $count parameter reaches 0. After that it returns an empty string to render
+ * the final destination page.
+ *
+ * @param $count
+ *   The count of redirects left until the final destination page.
+ *
+ * @returns
+ *   The location redirect if the $count > 0, otherwise an empty string.
+ */
+function system_test_multiple_redirects($count) {
+  $count = (int) $count;
+  if ($count > 0) {
+    header("location: " . url('system-test/multiple-redirects/' . --$count, array('absolute' => TRUE)), TRUE, 301);
+    exit;
+  }
+  return '';
+}
+
 function system_test_set_header() {
   drupal_add_http_header($_GET['name'], $_GET['value']);
   return t('The following header was set: %name: %value', array('%name' => $_GET['name'], '%value' => $_GET['value']));
@@ -146,8 +177,10 @@ function system_test_redirect_invalid_scheme() {
  * Implements hook_modules_installed().
  */
 function system_test_modules_installed($modules) {
-  if (in_array('aggregator', $modules)) {
-    drupal_set_message(t('hook_modules_installed fired for aggregator'));
+  if (variable_get('test_verbose_module_hooks')) {
+    foreach ($modules as $module) {
+      drupal_set_message(t('hook_modules_installed fired for @module', array('@module' => $module)));
+    }
   }
 }
 
@@ -155,8 +188,10 @@ function system_test_modules_installed($modules) {
  * Implements hook_modules_enabled().
  */
 function system_test_modules_enabled($modules) {
-  if (in_array('aggregator', $modules)) {
-    drupal_set_message(t('hook_modules_enabled fired for aggregator'));
+  if (variable_get('test_verbose_module_hooks')) {
+    foreach ($modules as $module) {
+      drupal_set_message(t('hook_modules_enabled fired for @module', array('@module' => $module)));
+    }
   }
 }
 
@@ -164,8 +199,10 @@ function system_test_modules_enabled($modules) {
  * Implements hook_modules_disabled().
  */
 function system_test_modules_disabled($modules) {
-  if (in_array('aggregator', $modules)) {
-    drupal_set_message(t('hook_modules_disabled fired for aggregator'));
+  if (variable_get('test_verbose_module_hooks')) {
+    foreach ($modules as $module) {
+      drupal_set_message(t('hook_modules_disabled fired for @module', array('@module' => $module)));
+    }
   }
 }
 
@@ -173,8 +210,10 @@ function system_test_modules_disabled($modules) {
  * Implements hook_modules_uninstalled().
  */
 function system_test_modules_uninstalled($modules) {
-  if (in_array('aggregator', $modules)) {
-    drupal_set_message(t('hook_modules_uninstalled fired for aggregator'));
+  if (variable_get('test_verbose_module_hooks')) {
+    foreach ($modules as $module) {
+      drupal_set_message(t('hook_modules_uninstalled fired for @module', array('@module' => $module)));
+    }
   }
 }
 

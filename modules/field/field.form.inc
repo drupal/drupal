@@ -76,6 +76,17 @@ function field_default_form($entity_type, $entity, $field, $instance, $langcode,
           '#delta' => $delta,
         );
         if ($element = $function($form, $form_state, $field, $instance, $langcode, $items, $delta, $element)) {
+          // Allow modules to alter the field widget form element.
+          $context = array(
+            'form' => $form,
+            'field' => $field,
+            'instance' => $instance,
+            'langcode' => $langcode,
+            'items' => $items,
+            'delta' => $delta,
+          );
+          drupal_alter(array('field_widget_form', 'field_widget_' . $instance['widget']['type'] . '_form'), $element, $form_state, $context);
+
           // If we're processing a specific delta value for a field where the
           // field module handles multiples, set the delta in the result.
           // For fields that handle their own processing, we can't make
@@ -193,6 +204,18 @@ function field_multiple_value_form($field, $instance, $langcode, $items, &$form,
             '#weight' => 100,
           );
         }
+
+        // Allow modules to alter the field widget form element.
+        $context = array(
+          'form' => $form,
+          'field' => $field,
+          'instance' => $instance,
+          'langcode' => $langcode,
+          'items' => $items,
+          'delta' => $delta,
+        );
+        drupal_alter(array('field_widget_form', 'field_widget_' . $instance['widget']['type'] . '_form'), $element, $form_state, $context);
+
         $field_elements[$delta] = $element;
       }
     }
@@ -250,7 +273,7 @@ function theme_field_multiple_value_form($variables) {
   if ($element['#cardinality'] > 1 || $element['#cardinality'] == FIELD_CARDINALITY_UNLIMITED) {
     $table_id = drupal_html_id($element['#field_name'] . '_values');
     $order_class = $element['#field_name'] . '-delta-order';
-    $required = !empty($element['#required']) ? '<span class="form-required" title="' . t('This field is required. ') . '">*</span>' : '';
+    $required = !empty($element['#required']) ? '<abbr class="form-required" title="' . t('This field is required. ') . '">*</abbr>' : '';
 
     $header = array(
       array(
@@ -339,7 +362,7 @@ function field_default_form_errors($entity_type, $entity, $field, $instance, $la
     $function_exists = function_exists($function);
 
     // Locate the correct element in the the form.
-    $element = drupal_array_get_nested_value($form_state['complete form'], $field_state['array_parents']);
+    $element = drupal_array_get_nested_value($form_state['complete_form'], $field_state['array_parents']);
 
     $multiple_widget = field_behaviors_widget('multiple values', $instance) != FIELD_BEHAVIOR_DEFAULT;
     foreach ($field_state['errors'] as $delta => $delta_errors) {
@@ -373,7 +396,7 @@ function field_default_form_errors($entity_type, $entity, $field, $instance, $la
  * to return just the changed part of the form.
  */
 function field_add_more_submit($form, &$form_state) {
-  $button = $form_state['clicked_button'];
+  $button = $form_state['triggering_element'];
 
   // Go one level up in the form, to the widgets container.
   $element = drupal_array_get_nested_value($form, array_slice($button['#array_parents'], 0, -1));
@@ -398,7 +421,7 @@ function field_add_more_submit($form, &$form_state) {
  * @see field_add_more_submit()
  */
 function field_add_more_js($form, $form_state) {
-  $button = $form_state['clicked_button'];
+  $button = $form_state['triggering_element'];
 
   // Go one level up in the form, to the widgets container.
   $element = drupal_array_get_nested_value($form, array_slice($button['#array_parents'], 0, -1));

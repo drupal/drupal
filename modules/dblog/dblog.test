@@ -21,7 +21,7 @@ class DBLogTestCase extends DrupalWebTestCase {
    * Enable modules and create users with specific permissions.
    */
   function setUp() {
-    parent::setUp('dblog', 'blog', 'poll');
+    parent::setUp('dblog', 'poll');
     // Create users.
     $this->big_user = $this->drupalCreateUser(array('administer site configuration', 'access administration pages', 'access site reports', 'administer users'));
     $this->any_user = $this->drupalCreateUser(array());
@@ -94,7 +94,7 @@ class DBLogTestCase extends DrupalWebTestCase {
    * @param $severity
    *   The severity of the watchdog entry.
    */
-  private function generateLogEntries($count, $type = 'custom', $severity = LOG_NOTICE) {
+  private function generateLogEntries($count, $type = 'custom', $severity = WATCHDOG_NOTICE) {
     global $base_root;
 
     // Prepare the fields to be logged
@@ -168,13 +168,12 @@ class DBLogTestCase extends DrupalWebTestCase {
     // Invoke events.
     $this->doUser();
     $this->doNode('article');
-    $this->doNode('blog');
     $this->doNode('page');
     $this->doNode('poll');
 
     // When a user account is canceled, any content they created remains but the
-    // uid = 0. Their blog entry shows as "'s blog" on the home page. Records
-    // in the watchdog table related to that user have the uid set to zero.
+    // uid = 0. Records in the watchdog table related to that user have the uid
+    // set to zero.
   }
 
   /**
@@ -384,7 +383,7 @@ class DBLogTestCase extends DrupalWebTestCase {
       'type'        => 'custom',
       'message'     => 'Log entry added to test the doClearTest clear down.',
       'variables'   => array(),
-      'severity'    => LOG_NOTICE,
+      'severity'    => WATCHDOG_NOTICE,
       'link'        => NULL,
       'user'        => $this->big_user,
       'request_uri' => $base_root . request_uri(),
@@ -419,7 +418,7 @@ class DBLogTestCase extends DrupalWebTestCase {
     $types = array();
     for ($i = 0; $i < 3; $i++) {
       $type_names[] = $type_name = $this->randomName();
-      $severity = LOG_EMERG;
+      $severity = WATCHDOG_EMERGENCY;
       for ($j = 0; $j < 3; $j++) {
         $types[] = $type = array(
           'count' => mt_rand(1, 5),
@@ -532,14 +531,14 @@ class DBLogTestCase extends DrupalWebTestCase {
   protected function getSeverityConstant($class) {
     // Reversed array from dblog_overview().
     $map = array(
-      'dblog-debug' => LOG_DEBUG,
-      'dblog-info' => LOG_INFO,
-      'dblog-notice' => LOG_NOTICE,
-      'dblog-warning' => LOG_WARNING,
-      'dblog-error' => LOG_ERR,
-      'dblog-critical' => LOG_CRIT,
-      'dblog-alert' => LOG_ALERT,
-      'dblog-emerg' => LOG_EMERG,
+      'dblog-debug' => WATCHDOG_DEBUG,
+      'dblog-info' => WATCHDOG_INFO,
+      'dblog-notice' => WATCHDOG_NOTICE,
+      'dblog-warning' => WATCHDOG_WARNING,
+      'dblog-error' => WATCHDOG_ERROR,
+      'dblog-critical' => WATCHDOG_CRITICAL,
+      'dblog-alert' => WATCHDOG_ALERT,
+      'dblog-emerg' => WATCHDOG_EMERGENCY,
     );
 
     // Find the class that contains the severity.

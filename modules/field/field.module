@@ -306,13 +306,6 @@ define('FIELD_LOAD_REVISION', 'FIELD_LOAD_REVISION');
 class FieldUpdateForbiddenException extends FieldException {}
 
 /**
- * Implements hook_flush_caches().
- */
-function field_flush_caches() {
-  return array('cache_field');
-}
-
-/**
  * Implements hook_help().
  */
 function field_help($path, $arg) {
@@ -370,6 +363,7 @@ function field_theme() {
  * Purges some deleted Field API data, if any exists.
  */
 function field_cron() {
+  field_sync_field_status();
   $limit = variable_get('field_purge_batch_size', 10);
   field_purge_batch($limit);
 }
@@ -386,45 +380,84 @@ function field_modules_uninstalled($modules) {
 }
 
 /**
- * Implements hook_modules_enabled().
+ * Implements hook_system_info_alter().
+ *
+ * Goes through a list of all modules that provide a field type, and makes them
+ * required if there are any active fields of that type.
  */
-function field_modules_enabled($modules) {
-  foreach ($modules as $module) {
-    field_associate_fields($module);
+function field_system_info_alter(&$info, $file, $type) {
+  if ($type == 'module' && module_hook($file->name, 'field_info')) {
+    $fields = field_read_fields(array('module' => $file->name), array('include_deleted' => TRUE));
+    if ($fields) {
+      $info['required'] = TRUE;
+
+      // Provide an explanation message (only mention pending deletions if there
+      // remains no actual, non-deleted fields)
+      $non_deleted = FALSE;
+      foreach ($fields as $field) {
+        if (empty($field['deleted'])) {
+          $non_deleted = TRUE;
+          break;
+        }
+      }
+      if ($non_deleted) {
+        if (module_exists('field_ui')) {
+          $explanation = t('Field type(s) in use - see !link', array('!link' => l(t('Field list'), 'admin/reports/fields')));
+        }
+        else {
+          $explanation = t('Fields type(s) in use');
+        }
+      }
+      else {
+        $explanation = t('Fields pending deletion');
+      }
+      $info['explanation'] = $explanation;
+    }
   }
-  field_cache_clear();
 }
 
 /**
- * Implements hook_modules_disabled().
+ * Implements hook_flush_caches().
  */
-function field_modules_disabled($modules) {
-  // Track fields whose field type is being disabled.
+function field_flush_caches() {
+  field_sync_field_status();
+  return array('cache_field');
+}
+
+/**
+ * Refreshes the 'active' and 'storage_active' columns for fields.
+ */
+function field_sync_field_status() {
+  // Refresh the 'active' and 'storage_active' columns according to the current
+  // set of enabled modules.
+  $all_modules = system_rebuild_module_data();
+  $modules = array();
+  foreach ($all_modules as $module_name => $module) {
+    if ($module->status) {
+      $modules[] = $module_name;
+      field_associate_fields($module_name);
+    }
+  }
   db_update('field_config')
     ->fields(array('active' => 0))
-    ->condition('module', $modules, 'IN')
+    ->condition('module', $modules, 'NOT IN')
     ->execute();
-
-  // Track fields whose storage backend is being disabled.
   db_update('field_config')
     ->fields(array('storage_active' => 0))
-    ->condition('storage_module', $modules, 'IN')
+    ->condition('storage_module', $modules, 'NOT IN')
     ->execute();
-
-  field_cache_clear();
 }
 
 /**
  * Allows a module to update the database for fields and columns it controls.
  *
- * @param string $module
+ * @param $module
  *   The name of the module to update on.
  */
 function field_associate_fields($module) {
   // Associate field types.
-  $field_types =(array) module_invoke($module, 'field_info');
+  $field_types = (array) module_invoke($module, 'field_info');
   foreach ($field_types as $name => $field_info) {
-    watchdog('field', 'Updating field type %type with module %module.', array('%type' => $name, '%module' => $module));
     db_update('field_config')
       ->fields(array('module' => $module, 'active' => 1))
       ->condition('type', $name)
@@ -433,7 +466,6 @@ function field_associate_fields($module) {
   // Associate storage backends.
   $storage_types = (array) module_invoke($module, 'field_storage_info');
   foreach ($storage_types as $name => $storage_info) {
-    watchdog('field', 'Updating field storage %type with module %module.', array('%type' => $name, '%module' => $module));
     db_update('field_config')
       ->fields(array('storage_module' => $module, 'storage_active' => 1))
       ->condition('storage_type', $name)
@@ -445,7 +477,7 @@ function field_associate_fields($module) {
  * Helper function to get the default value for a field on an entity.
  *
  * @param $entity_type
- *   The type of $entity; e.g. 'node' or 'user'.
+ *   The type of $entity; e.g., 'node' or 'user'.
  * @param $entity
  *   The entity for the operation.
  * @param $field
@@ -569,7 +601,7 @@ function _field_sort_items_value_helper($a, $b) {
  * @endcode
  *
  * @param $entity_type
- *   The type of $entity; e.g. 'node' or 'user'.
+ *   The type of $entity; e.g., 'node' or 'user'.
  * @param $bundle
  *   The bundle name.
  * @param $settings
@@ -674,7 +706,7 @@ function field_get_display($instance, $view_mode, $entity) {
  * Returns the display settings to use for pseudo-fields in a given view mode.
  *
  * @param $entity_type
- *   The type of $entity; e.g. 'node' or 'user'.
+ *   The type of $entity; e.g., 'node' or 'user'.
  * @param $bundle
  *   The bundle name.
  * @param $view_mode
@@ -773,7 +805,7 @@ function _field_filter_xss_display_allowed_tags() {
  * Returns a renderable array for a single field value.
  *
  * @param $entity_type
- *   The type of $entity; e.g. 'node' or 'user'.
+ *   The type of $entity; e.g., 'node' or 'user'.
  * @param $entity
  *   The entity containing the field to display. Must at least contain the id
  *   key and the field data to display.
@@ -832,7 +864,7 @@ function field_view_value($entity_type, $entity, $field_name, $item, $display = 
  * field access permissions.
  *
  * @param $entity_type
- *   The type of $entity; e.g. 'node' or 'user'.
+ *   The type of $entity; e.g., 'node' or 'user'.
  * @param $entity
  *   The entity containing the field to display. Must at least contain the id
  *   key and the field data to display.
@@ -921,7 +953,7 @@ function field_view_field($entity_type, $entity, $field_name, $display = array()
  * Returns the field items in the language they currently would be displayed.
  *
  * @param $entity_type
- *   The type of $entity.
+ *   The type of $entity; e.g., 'node' or 'user'.
  * @param $entity
  *   The entity containing the data to be displayed.
  * @param $field_name
@@ -965,7 +997,7 @@ function field_has_data($field) {
  * @param $field
  *   The field on which the operation is to be performed.
  * @param $entity_type
- *   The type of $entity; e.g. 'node' or 'user'.
+ *   The type of $entity; e.g., 'node' or 'user'.
  * @param $entity
  *   (optional) The entity for the operation.
  * @param $account
@@ -995,7 +1027,7 @@ function field_access($op, $field, $entity_type, $entity = NULL, $account = NULL
  * Helper function to extract the bundle name of from a bundle object.
  *
  * @param $entity_type
- *   The type of $entity; e.g. 'node' or 'user'.
+ *   The type of $entity; e.g., 'node' or 'user'.
  * @param $bundle
  *   The bundle object (or string if bundles for this entity type do not exist
  *   as standalone objects).
@@ -1173,34 +1205,4 @@ function theme_field($variables) {
   $output = '<div class="' . $variables['classes'] . '"' . $variables['attributes'] . '>' . $output . '</div>';
 
   return $output;
-}
-
-/**
- * Helper form element validator: integer.
- */
-function _element_validate_integer($element, &$form_state) {
-  $value = $element['#value'];
-  if ($value !== '' && (!is_numeric($value) || intval($value) != $value)) {
-    form_error($element, t('%name must be an integer.', array('%name' => $element['#title'])));
-  }
-}
-
-/**
- * Helper form element validator: integer > 0.
- */
-function _element_validate_integer_positive($element, &$form_state) {
-  $value = $element['#value'];
-  if ($value !== '' && (!is_numeric($value) || intval($value) != $value || $value <= 0)) {
-    form_error($element, t('%name must be a positive integer.', array('%name' => $element['#title'])));
-  }
-}
-
-/**
- * Helper form element validator: number.
- */
-function _element_validate_number($element, &$form_state) {
-  $value = $element['#value'];
-  if ($value != '' && !is_numeric($value)) {
-    form_error($element, t('%name must be a number.', array('%name' => $element['#title'])));
-  }
 }

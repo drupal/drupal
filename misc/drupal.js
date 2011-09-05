@@ -111,6 +111,8 @@ Drupal.detachBehaviors = function (context, settings, trigger) {
 
 /**
  * Encode special characters in a plain-text string for display as HTML.
+ *
+ * @ingroup sanitization
  */
 Drupal.checkPlain = function (str) {
   var character, regex,
@@ -126,6 +128,45 @@ Drupal.checkPlain = function (str) {
 };
 
 /**
+ * Replace placeholders with sanitized values in a string.
+ *
+ * @param str
+ *   A string with placeholders.
+ * @param args
+ *   An object of replacements pairs to make. Incidences of any key in this
+ *   array are replaced with the corresponding value. Based on the first
+ *   character of the key, the value is escaped and/or themed:
+ *    - !variable: inserted as is
+ *    - @variable: escape plain text to HTML (Drupal.checkPlain)
+ *    - %variable: escape text and theme as a placeholder for user-submitted
+ *      content (checkPlain + Drupal.theme('placeholder'))
+ *
+ * @see Drupal.t()
+ * @ingroup sanitization
+ */
+Drupal.formatString = function(str, args) {
+  // Transform arguments before inserting them.
+  for (var key in args) {
+    switch (key.charAt(0)) {
+      // Escaped only.
+      case '@':
+        args[key] = Drupal.checkPlain(args[key]);
+      break;
+      // Pass-through.
+      case '!':
+        break;
+      // Escaped and placeholder.
+      case '%':
+      default:
+        args[key] = Drupal.theme('placeholder', args[key]);
+        break;
+    }
+    str = str.replace(key, args[key]);
+  }
+  return str;
+}
+
+/**
  * Translate strings to the page language or a given language.
  *
  * See the documentation of the server-side t() function for further details.
@@ -135,11 +176,7 @@ Drupal.checkPlain = function (str) {
  * @param args
  *   An object of replacements pairs to make after translation. Incidences
  *   of any key in this array are replaced with the corresponding value.
- *   Based on the first character of the key, the value is escaped and/or themed:
- *    - !variable: inserted as is
- *    - @variable: escape plain text to HTML (Drupal.checkPlain)
- *    - %variable: escape text and theme as a placeholder for user-submitted
- *      content (checkPlain + Drupal.theme('placeholder'))
+ *   See Drupal.formatString().
  * @return
  *   The translated string.
  */
@@ -150,24 +187,7 @@ Drupal.t = function (str, args) {
   }
 
   if (args) {
-    // Transform arguments before inserting them.
-    for (var key in args) {
-      switch (key.charAt(0)) {
-        // Escaped only.
-        case '@':
-          args[key] = Drupal.checkPlain(args[key]);
-        break;
-        // Pass-through.
-        case '!':
-          break;
-        // Escaped and placeholder.
-        case '%':
-        default:
-          args[key] = Drupal.theme('placeholder', args[key]);
-          break;
-      }
-      str = str.replace(key, args[key]);
-    }
+    str = Drupal.formatString(str, args);
   }
   return str;
 };
@@ -193,11 +213,7 @@ Drupal.t = function (str, args) {
  * @param args
  *   An object of replacements pairs to make after translation. Incidences
  *   of any key in this array are replaced with the corresponding value.
- *   Based on the first character of the key, the value is escaped and/or themed:
- *    - !variable: inserted as is
- *    - @variable: escape plain text to HTML (Drupal.checkPlain)
- *    - %variable: escape text and theme as a placeholder for user-submitted
- *      content (checkPlain + Drupal.theme('placeholder'))
+ *   See Drupal.formatString().
  *   Note that you do not need to include @count in this array.
  *   This replacement is done automatically for the plural case.
  * @return

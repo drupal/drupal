@@ -350,6 +350,40 @@ class TaxonomyVocabularyUnitTest extends TaxonomyWebTestCase {
     // Check that the field instance is still attached to the vocabulary.
     $this->assertTrue(field_info_instance('taxonomy_term', 'field_test', $new_name), t('The bundle name was updated correctly.'));
   }
+
+  /**
+   * Test uninstall and reinstall of the taxonomy module.
+   */
+  function testUninstallReinstall() {
+    // Fields and field instances attached to taxonomy term bundles should be
+    // removed when the module is uninstalled.
+    $this->field_name = drupal_strtolower($this->randomName() . '_field_name');
+    $this->field = array('field_name' => $this->field_name, 'type' => 'text', 'cardinality' => 4);
+    $this->field = field_create_field($this->field);
+    $this->instance = array(
+      'field_name' => $this->field_name,
+      'entity_type' => 'taxonomy_term',
+      'bundle' => $this->vocabulary->machine_name,
+      'label' => $this->randomName() . '_label',
+    );
+    field_create_instance($this->instance);
+
+    module_disable(array('taxonomy'));
+    drupal_flush_all_caches();
+    require_once DRUPAL_ROOT . '/includes/install.inc';
+    drupal_uninstall_modules(array('taxonomy'));
+    module_enable(array('taxonomy'));
+
+    // Now create a vocabulary with the same name. All field instances
+    // connected to this vocabulary name should have been removed when the
+    // module was uninstalled. Creating a new field with the same name and
+    // an instance of this field on the same bundle name should be successful.
+    unset($this->vocabulary->vid);
+    taxonomy_vocabulary_save($this->vocabulary);
+    unset($this->field['id']);
+    field_create_field($this->field);
+    field_create_instance($this->instance);
+  }
 }
 
 /**
@@ -546,7 +580,7 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
     field_create_instance($instance);
     $terms = array(
       $this->randomName(),
-      $this->randomName(),
+      $this->randomName() . ', ' . $this->randomName(),
       $this->randomName(),
     );
 
@@ -556,7 +590,7 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
     $edit["body[$langcode][0][value]"] = $this->randomName();
     // Insert the terms in a comma separated list. Vocabulary 1 is a
     // free-tagging field created by the default profile.
-    $edit[$instance['field_name'] . "[$langcode]"] = implode(', ', $terms);
+    $edit[$instance['field_name'] . "[$langcode]"] = drupal_implode_tags($terms);
 
     // Preview and verify the terms appear but are not created.
     $this->drupalPost('node/add/page', $edit, t('Preview'));
@@ -577,9 +611,9 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
     }
 
     // Get the created terms.
-    list($term1, $term2, $term3) = taxonomy_get_tree($this->vocabulary->vid);
+    list($term1, $term2, $term3) = array_values(taxonomy_term_load_multiple(FALSE));
 
-    // Delete one term.
+    // Delete term 1.
     $this->drupalPost('taxonomy/term/' . $term1->tid . '/edit', array(), t('Delete'));
     $this->drupalPost(NULL, NULL, t('Delete'));
     $term_names = array($term2->name, $term3->name);
@@ -593,10 +627,17 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
     }
     $this->assertNoText($term1->name, t('The deleted term %name does not appear on the node page.', array('%name' => $term1->name)));
 
-    // Test autocomplete on term 2.
+    // Test autocomplete on term 2 - it contains a comma, so expect the key to
+    // be quoted.
     $input = substr($term2->name, 0, 3);
     $this->drupalGet('taxonomy/autocomplete/taxonomy_' . $this->vocabulary->machine_name . '/' . $input);
-    $this->assertRaw('{"' . $term2->name . '":"' . $term2->name . '"}', t('Autocomplete returns term %term_name after typing the first 3 letters.', array('%term_name' => $term2->name)));
+    $this->assertRaw('{"\"' . $term2->name . '\"":"' . $term2->name . '"}', t('Autocomplete returns term %term_name after typing the first 3 letters.', array('%term_name' => $term2->name)));
+
+    // Test autocomplete on term 3 - it is alphanumeric only, so no extra
+    // quoting.
+    $input = substr($term3->name, 0, 3);
+    $this->drupalGet('taxonomy/autocomplete/taxonomy_' . $this->vocabulary->machine_name . '/' . $input);
+    $this->assertRaw('{"' . $term3->name . '":"' . $term3->name . '"}', t('Autocomplete returns term %term_name after typing the first 3 letters.', array('%term_name' => $term3->name)));
   }
 
   /**
@@ -724,6 +765,35 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
     $this->assertEqual($terms[1]->tid, $term2->tid, t('Term 2 was moved to back below term 1.'));
     $this->assertEqual($terms[2]->tid, $term3->tid, t('Term 3 is still below term 2.'));
     $this->assertEqual($terms[2]->parents, array($term2->tid), t('Term 3 is still a child of term 2.').var_export($terms[1]->tid,1));
+  }
+
+  /**
+   * Test saving a term with multiple parents through the UI.
+   */
+  function testTermMultipleParentsInterface() {
+    // Add a new term to the vocabulary so that we can have multiple parents.
+    $parent = $this->createTerm($this->vocabulary);
+
+    // Add a new term with multiple parents.
+    $edit = array(
+      'name' => $this->randomName(12),
+      'description[value]' => $this->randomName(100),
+      'parent[]' => array(0, $parent->tid),
+    );
+    // Save the new term.
+    $this->drupalPost('admin/structure/taxonomy/' . $this->vocabulary->machine_name . '/add', $edit, t('Save'));
+
+    // Check that the term was successfully created.
+    $terms = taxonomy_get_term_by_name($edit['name']);
+    $term = reset($terms);
+    $this->assertNotNull($term, t('Term found in database'));
+    $this->assertEqual($edit['name'], $term->name, t('Term name was successfully saved.'));
+    $this->assertEqual($edit['description[value]'], $term->description, t('Term description was successfully saved.'));
+    // Check that the parent tid is still there. The other parent (<root>) is
+    // not added by taxonomy_get_parents().
+    $parents = taxonomy_get_parents($term->tid);
+    $parent = reset($parents);
+    $this->assertEqual($edit['parent[]'][1], $parent->tid, t('Term parents were successfully saved.'));
   }
 
   /**

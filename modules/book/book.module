@@ -617,6 +617,8 @@ function _book_update_outline($node) {
           'bid' => $node->book['bid'],
         ))
         ->execute();
+      // Reset the cache of stored books.
+      drupal_static_reset('book_get_books');
     }
     else {
       if ($node->book['bid'] != db_query("SELECT bid FROM {book} WHERE nid = :nid", array(
@@ -624,6 +626,8 @@ function _book_update_outline($node) {
         ))->fetchField()) {
         // Update the bid for this page and all children.
         book_update_bid($node->book);
+        // Reset the cache of stored books.
+        drupal_static_reset('book_get_books');
       }
     }
 
@@ -895,6 +899,7 @@ function book_node_delete($node) {
     db_delete('book')
       ->condition('mlid', $node->book['mlid'])
       ->execute();
+    drupal_static_reset('book_get_books');
   }
 }
 

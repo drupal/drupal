@@ -345,14 +345,14 @@ class CommonURLUnitTest extends DrupalWebTestCase {
 }
 
 /**
- * Tests for the check_plain() and filter_xss() functions.
+ * Tests for the check_plain(), filter_xss() and format_string() functions.
  */
 class CommonXssUnitTest extends DrupalUnitTestCase {
 
   public static function getInfo() {
     return array(
       'name' => 'String filtering tests',
-      'description' => 'Confirm that check_plain(), filter_xss(), and check_url() work correctly, including invalid multi-byte sequences.',
+      'description' => 'Confirm that check_plain(), filter_xss(), format_string() and check_url() work correctly, including invalid multi-byte sequences.',
       'group' => 'System',
     );
   }
@@ -383,6 +383,22 @@ class CommonXssUnitTest extends DrupalUnitTestCase {
      $this->assertEqual($text, '&lt;script&gt;', 'check_plain() escapes &lt;script&gt;');
      $text = check_plain('<>&"\'');
      $this->assertEqual($text, '&lt;&gt;&amp;&quot;&#039;', 'check_plain() escapes reserved HTML characters.');
+  }
+
+  /**
+   * Test t() and format_string() replacement functionality.
+   */
+  function testFormatStringAndT() {
+    foreach (array('format_string', 't') as $function) {
+      $text = $function('Simple text');
+      $this->assertEqual($text, 'Simple text', $function . ' leaves simple text alone.');
+      $text = $function('Escaped text: @value', array('@value' => '<script>'));
+      $this->assertEqual($text, 'Escaped text: &lt;script&gt;', $function . ' replaces and escapes string.');
+      $text = $function('Placeholder text: %value', array('%value' => '<script>'));
+      $this->assertEqual($text, 'Placeholder text: <em class="placeholder">&lt;script&gt;</em>', $function . ' replaces, escapes and themes string.');
+      $text = $function('Verbatim text: !value', array('!value' => '<script>'));
+      $this->assertEqual($text, 'Verbatim text: <script>', $function . ' replaces verbatim string as-is.');
+    }
   }
 
   /**
@@ -1000,6 +1016,13 @@ class DrupalHTTPRequestTestCase extends DrupalWebTestCase {
 
     $redirect_307 = drupal_http_request(url('system-test/redirect/307', array('absolute' => TRUE)), array('max_redirects' => 0));
     $this->assertFalse(isset($redirect_307->redirect_code), t('drupal_http_request does not follow 307 redirect if max_redirects = 0.'));
+
+    $multiple_redirect_final_url = url('system-test/multiple-redirects/0', array('absolute' => TRUE));
+    $multiple_redirect_1 = drupal_http_request(url('system-test/multiple-redirects/1', array('absolute' => TRUE)), array('max_redirects' => 1));
+    $this->assertEqual($multiple_redirect_1->redirect_url, $multiple_redirect_final_url, t('redirect_url contains the final redirection location after 1 redirect.'));
+
+    $multiple_redirect_3 = drupal_http_request(url('system-test/multiple-redirects/3', array('absolute' => TRUE)), array('max_redirects' => 3));
+    $this->assertEqual($multiple_redirect_3->redirect_url, $multiple_redirect_final_url, t('redirect_url contains the final redirection location after 3 redirects.'));
   }
 }
 
@@ -2066,7 +2089,7 @@ class ParseInfoFilesTestCase extends DrupalWebTestCase {
   function testParseInfoFile() {
     $info_values = drupal_parse_info_file(drupal_get_path('module', 'simpletest') . '/tests/common_test_info.txt');
     $this->assertEqual($info_values['simple_string'], 'A simple string', t('Simple string value was parsed correctly.'), t('System'));
-    $this->assertEqual($info_values['simple_constant'], LOG_INFO, t('Constant value was parsed correctly.'), t('System'));
+    $this->assertEqual($info_values['simple_constant'], WATCHDOG_INFO, t('Constant value was parsed correctly.'), t('System'));
     $this->assertEqual($info_values['double_colon'], 'dummyClassName::', t('Value containing double-colon was parsed correctly.'), t('System'));
   }
 }

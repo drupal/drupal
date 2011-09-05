@@ -38,6 +38,70 @@ define('CACHE_PERMANENT', 0);
 define('CACHE_TEMPORARY', -1);
 
 /**
+ * @defgroup logging_severity_levels Logging severity levels
+ * @{
+ * Logging severity levels as defined in RFC 3164.
+ *
+ * The WATCHDOG_* constant definitions correspond to the logging severity levels
+ * defined in RFC 3164, section 4.1.1.  PHP supplies predefined LOG_* constants
+ * for use in the syslog() function, but their values on Windows builds do not
+ * correspond to RFC 3164.  The associated PHP bug report was closed with the
+ * comment, "And it's also not a bug, as Windows just have less log levels,"
+ * and "So the behavior you're seeing is perfectly normal."
+ *
+ * @see http://www.faqs.org/rfcs/rfc3164.html
+ * @see http://bugs.php.net/bug.php?id=18090
+ * @see http://php.net/manual/function.syslog.php
+ * @see http://php.net/manual/network.constants.php
+ * @see watchdog()
+ * @see watchdog_severity_levels()
+ */
+
+/**
+ * Log message severity -- Emergency: system is unusable.
+ */
+define('WATCHDOG_EMERGENCY', 0);
+
+/**
+ * Log message severity -- Alert: action must be taken immediately.
+ */
+define('WATCHDOG_ALERT', 1);
+
+/**
+ * Log message severity -- Critical: critical conditions.
+ */
+define('WATCHDOG_CRITICAL', 2);
+
+/**
+ * Log message severity -- Error: error conditions.
+ */
+define('WATCHDOG_ERROR', 3);
+
+/**
+ * Log message severity -- Warning: warning conditions.
+ */
+define('WATCHDOG_WARNING', 4);
+
+/**
+ * Log message severity -- Notice: normal but significant condition.
+ */
+define('WATCHDOG_NOTICE', 5);
+
+/**
+ * Log message severity -- Informational: informational messages.
+ */
+define('WATCHDOG_INFO', 6);
+
+/**
+ * Log message severity -- Debug: debug-level messages.
+ */
+define('WATCHDOG_DEBUG', 7);
+
+/**
+ * @} End of "defgroup logging_severity_levels".
+ */
+
+/**
  * First bootstrap phase: initialize configuration.
  */
 define('DRUPAL_BOOTSTRAP_CONFIGURATION', 0);
@@ -128,8 +192,11 @@ define('LANGUAGE_RTL', 1);
 
 /**
  * For convenience, define a short form of the request time global.
+ *
+ * REQUEST_TIME is a float with microseconds since PHP 5.4.0, but float
+ * timestamps confuses most of the PHP functions (including date_create()).
  */
-define('REQUEST_TIME', $_SERVER['REQUEST_TIME']);
+define('REQUEST_TIME', (int) $_SERVER['REQUEST_TIME']);
 
 /**
  * Flag for drupal_set_title(); text is not sanitized, so run check_plain().
@@ -159,6 +226,195 @@ define('REGISTRY_WRITE_LOOKUP_CACHE', 2);
 define('DRUPAL_PHP_FUNCTION_PATTERN', '[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*');
 
 require_once DRUPAL_ROOT . '/includes/config.inc';
+
+/**
+ * Provides a caching wrapper to be used in place of large array structures.
+ *
+ * This class should be extended by systems that need to cache large amounts
+ * of data and have it represented as an array to calling functions. These
+ * arrays can become very large, so ArrayAccess is used to allow different
+ * strategies to be used for caching internally (lazy loading, building caches
+ * over time etc.). This can dramatically reduce the amount of data that needs
+ * to be loaded from cache backends on each request, and memory usage from
+ * static caches of that same data.
+ *
+ * Note that array_* functions do not work with ArrayAccess. Systems using
+ * DrupalCacheArray should use this only internally. If providing API functions
+ * that return the full array, this can be cached separately or returned
+ * directly. However since DrupalCacheArray holds partial content by design, it
+ * should be a normal PHP array or otherwise contain the full structure.
+ *
+ * Note also that due to limitations in PHP prior to 5.3.4, it is impossible to
+ * write directly to the contents of nested arrays contained in this object.
+ * Only writes to the top-level array elements are possible. So if you
+ * previously had set $object['foo'] = array(1, 2, 'bar' => 'baz'), but later
+ * want to change the value of 'bar' from 'baz' to 'foobar', you cannot do so
+ * a targeted write like $object['foo']['bar'] = 'foobar'. Instead, you must
+ * overwrite the entire top-level 'foo' array with the entire set of new
+ * values: $object['foo'] = array(1, 2, 'bar' => 'foobar'). Due to this same
+ * limitation, attempts to create references to any contained data, nested or
+ * otherwise, will fail silently. So $var = &$object['foo'] will not throw an
+ * error, and $var will be populated with the contents of $object['foo'], but
+ * that data will be passed by value, not reference. For more information on
+ * the PHP limitation, see the note in the official PHP documentation at·
+ * http://php.net/manual/en/arrayaccess.offsetget.php on
+ * ArrayAccess::offsetGet().
+ *
+ * By default, the class accounts for caches where calling functions might
+ * request keys in the array that won't exist even after a cache rebuild. This
+ * prevents situations where a cache rebuild would be triggered over and over
+ * due to a 'missing' item. These cases are stored internally as a value of
+ * NULL. This means that the offsetGet() and offsetExists() methods
+ * must be overridden if caching an array where the top level values can
+ * legitimately be NULL, and where $object->offsetExists() needs to correctly
+ * return (equivalent to array_key_exists() vs. isset()). This should not
+ * be necessary in the majority of cases.
+ *
+ * Classes extending this class must override at least the
+ * resolveCacheMiss() method to have a working implementation.
+ *
+ * offsetSet() is not overridden by this class by default. In practice this
+ * means that assigning an offset via arrayAccess will only apply while the
+ * object is in scope and will not be written back to the persistent cache.
+ * This follows a similar pattern to static vs. persistent caching in
+ * procedural code. Extending classes may wish to alter this behaviour, for
+ * example by overriding offsetSet() and adding an automatic call to persist().
+ *
+ * @see SchemaCache
+ */
+abstract class DrupalCacheArray implements ArrayAccess {
+
+  /**
+   * A cid to pass to cache_set() and cache_get().
+   */
+  private $cid;
+
+  /**
+   * A bin to pass to cache_set() and cache_get().
+   */
+  private $bin;
+
+  /**
+   * An array of keys to add to the cache at the end of the request.
+   */
+  protected $keysToPersist = array();
+
+  /**
+   * Storage for the data itself.
+   */
+  protected $storage = array();
+
+  /**
+   * Constructor.
+   *
+   * @param $cid
+   *   The cid for the array being cached.
+   * @param $bin
+   *   The bin to cache the array.
+   */
+  public function __construct($cid, $bin) {
+    $this->cid = $cid;
+    $this->bin = $bin;
+
+    if ($cached = cache_get($this->cid, $this->bin)) {
+     $this->storage = $cached->data;
+    }
+  }
+
+  public function offsetExists($offset) {
+    return $this->offsetGet($offset) !== NULL;
+  }
+
+  public function offsetGet($offset) {
+    if (isset($this->storage[$offset]) || array_key_exists($offset, $this->storage)) {
+      return $this->storage[$offset];
+    }
+    else {
+      return $this->resolveCacheMiss($offset);
+    }
+  }
+
+  public function offsetSet($offset, $value) {
+    $this->storage[$offset] = $value;
+  }
+
+  public function offsetUnset($offset) {
+    unset($this->storage[$offset]);
+  }
+
+  /**
+   * Flags an offset value to be written to the persistent cache.
+   *
+   * If a value is assigned to a cache object with offsetSet(), by default it
+   * will not be written to the persistent cache unless it is flagged with this
+   * method. This allows items to be cached for the duration of a request,
+   * without necessarily writing back to the persistent cache at the end.
+   *
+   * @param $offset
+   *   The array offset that was request.
+   * @param $persist
+   *   Optional boolean to specify whether the offset should be persisted or
+   *   not, defaults to TRUE. When called with $persist = FALSE the offset will
+   *   be unflagged so that it will not written at the end of the request.
+   */
+  protected function persist($offset, $persist = TRUE) {
+    $this->keysToPersist[$offset] = $persist;
+  }
+
+  /**
+   * Resolves a cache miss.
+   *
+   * When an offset is not found in the object, this is treated as a cache
+   * miss. This method allows classes implementing the interface to look up
+   * the actual value and allow it to be cached.
+   *
+   * @param $offset
+   *   The offset that was requested.
+   *
+   * @return
+   *   The value of the offset, or NULL if no value was found.
+   */
+  abstract protected function resolveCacheMiss($offset);
+
+  /**
+   * Immediately write a value to the persistent cache.
+   *
+   * @param $cid
+   *   The cache ID.
+   * @param $bin
+   *   The cache bin.
+   * @param $data
+   *   The data to write to the persistent cache.
+   * @param $lock
+   *   Whether to acquire a lock before writing to cache.
+   */
+  protected function set($cid, $data, $bin, $lock = TRUE) {
+    // Lock cache writes to help avoid stampedes.
+    // To implement locking for cache misses, override __construct().
+    $lock_name = $cid . ':' . $bin;
+    if (!$lock || lock_acquire($lock_name)) {
+      if ($cached = cache_get($cid, $bin)) {
+        $data = $cached->data + $data;
+      }
+      cache_set($cid, $data, $bin);
+      if ($lock) {
+        lock_release($lock_name);
+      }
+    }
+  }
+
+  public function __destruct() {
+    $data = array();
+    foreach ($this->keysToPersist as $offset => $persist) {
+      if ($persist) {
+        $data[$offset] = $this->storage[$offset];
+      }
+    }
+    if (!empty($data)) {
+      $this->set($this->cid, $data, $this->bin);
+    }
+  }
+}
 
 /**
  * Start the timer with the specified name. If you start and stop the same
@@ -225,31 +481,30 @@ function timer_stop($name) {
 }
 
 /**
- * Find the appropriate configuration directory.
+ * Finds the appropriate configuration directory.
  *
- * Try finding a matching configuration directory by stripping the website's
+ * Finds a matching configuration directory by stripping the website's
  * hostname from left to right and pathname from right to left. The first
- * configuration file found will be used; the remaining will ignored. If no
- * configuration file is found, return a default value '$confdir/default'.
+ * configuration file found will be used and the remaining ones will be ignored.
+ * If no configuration file is found, return a default value '$confdir/default'.
  *
- * Example for a fictitious site installed at
- * http://www.drupal.org:8080/mysite/test/ the 'settings.php' is searched in
- * the following directories:
+ * With a site located at http://www.example.com:8080/mysite/test/, the file,
+ * settings.php, is searched for in the following directories:
  *
- *  1. $confdir/8080.www.drupal.org.mysite.test
- *  2. $confdir/www.drupal.org.mysite.test
- *  3. $confdir/drupal.org.mysite.test
- *  4. $confdir/org.mysite.test
+ *  1. $confdir/8080.www.example.com.mysite.test
+ *  2. $confdir/www.example.com.mysite.test
+ *  3. $confdir/example.com.mysite.test
+ *  4. $confdir/com.mysite.test
  *
- *  5. $confdir/8080.www.drupal.org.mysite
- *  6. $confdir/www.drupal.org.mysite
- *  7. $confdir/drupal.org.mysite
- *  8. $confdir/org.mysite
+ *  5. $confdir/8080.www.example.com.mysite
+ *  6. $confdir/www.example.com.mysite
+ *  7. $confdir/example.com.mysite
+ *  8. $confdir/com.mysite
  *
- *  9. $confdir/8080.www.drupal.org
- * 10. $confdir/www.drupal.org
- * 11. $confdir/drupal.org
- * 12. $confdir/org
+ *  9. $confdir/8080.www.example.com
+ * 10. $confdir/www.example.com
+ * 11. $confdir/example.com
+ * 12. $confdir/com
  *
  * 13. $confdir/default
  *
@@ -257,18 +512,18 @@ function timer_stop($name) {
  * prior to scanning for directories. It should define an associative array
  * named $sites, which maps domains to directories. It should be in the form
  * of:
- *
+ * @code
  * $sites = array(
  *   'The url to alias' => 'A directory within the sites directory'
  * );
- *
+ * @endcode
  * For example:
- *
+ * @code
  * $sites = array(
  *   'devexample.com' => 'example.com',
  *   'localhost.example' => 'example.com',
  * );
- *
+ * @endcode
  * The above array will cause Drupal to look for a directory named
  * "example.com" in the sites directory whenever a request comes from
  * "example.com", "devexample.com", or "localhost/example". That is useful
@@ -277,14 +532,15 @@ function timer_stop($name) {
  * (files, system table, etc.) this will ensure the paths are correct while
  * accessed on development servers.
  *
- * @param $require_settings
+ * @param bool $require_settings
  *   Only configuration directories with an existing settings.php file
  *   will be recognized. Defaults to TRUE. During initial installation,
  *   this is set to FALSE so that Drupal can detect a matching directory,
  *   then create a new settings.php file in it.
- * @param reset
+ * @param bool $reset
  *   Force a full search for matching directories even if one had been
- *   found previously.
+ *   found previously. Defaults to FALSE.
+ *
  * @return
  *   The path of the matching directory.
  */
@@ -418,8 +674,8 @@ function drupal_environment_initialize() {
   // e.g. "&" or "%" that have special meanings in URLs and must be encoded.
   $_GET['q'] = request_path();
 
-  // Enforce E_ALL, but allow users to set levels not part of E_ALL.
-  error_reporting(E_ALL | error_reporting());
+  // Enforce E_STRICT, but allow users to set levels not part of E_STRICT.
+  error_reporting(E_STRICT | E_ALL | error_reporting());
 
   // Override PHP settings required for Drupal to work properly.
   // sites/default/default.settings.php contains more runtime settings.
@@ -1036,13 +1292,12 @@ function drupal_serve_page_from_cache(stdClass $cache) {
     }
   }
 
-  // If a cache is served from a HTTP proxy without hitting the web server,
-  // the boot and exit hooks cannot be fired, so only allow caching in
-  // proxies if boot hooks are disabled. If the client send a session cookie,
-  // do not bother caching the page in a public proxy, because the cached copy
-  // will only be served to that particular user due to Vary: Cookie, unless
-  // the Vary header has been replaced or unset in hook_boot() (see below).
-  $max_age = !variable_get('page_cache_invoke_hooks', TRUE) && (!isset($_COOKIE[session_name()]) || isset($hook_boot_headers['vary'])) ? variable_get('page_cache_maximum_age', 0) : 0;
+  // If the client sent a session cookie, a cached copy will only be served
+  // to that one particular client due to Vary: Cookie. Thus, do not set
+  // max-age > 0, allowing the page to be cached by external proxies, when a
+  // session cookie is present unless the Vary header has been replaced or
+  // unset in hook_boot().
+  $max_age = !isset($_COOKIE[session_name()]) || isset($hook_boot_headers['vary']) ? variable_get('page_cache_maximum_age', 0) : 0;
   $default_headers['Cache-Control'] = 'public, max-age=' . $max_age;
 
   // Entity tag should change if the output changes.
@@ -1172,15 +1427,7 @@ function drupal_unpack($obj, $field = 'data') {
  *   A string containing the English string to translate.
  * @param $args
  *   An associative array of replacements to make after translation.
- *   Occurrences in $string of any key in $args are replaced with the
- *   corresponding value, after sanitization. The sanitization function depends
- *   on the first character of the key:
- *   - !variable: Inserted as is. Use this for text that has already been
- *     sanitized.
- *   - @variable: Escaped to HTML using check_plain(). Use this for anything
- *     displayed on a page on the site.
- *   - %variable: Escaped as a placeholder for user-submitted content using
- *     drupal_placeholder(), which shows up as <em>emphasized</em> text.
+ *   See format_string().
  * @param $options
  *   An associative array of additional options, with the following elements:
  *   - 'langcode' (defaults to the current language): The language code to
@@ -1226,26 +1473,50 @@ function t($string, array $args = array(), array $options = array()) {
     return $string;
   }
   else {
-    // Transform arguments before inserting them.
-    foreach ($args as $key => $value) {
-      switch ($key[0]) {
-        case '@':
-          // Escaped only.
-          $args[$key] = check_plain($value);
-          break;
-
-        case '%':
-        default:
-          // Escaped and placeholder.
-          $args[$key] = drupal_placeholder($value);
-          break;
-
-        case '!':
-          // Pass-through.
-      }
-    }
-    return strtr($string, $args);
+    return format_string($string, $args);
   }
+}
+
+/**
+ * Replace placeholders with sanitized values in a string.
+ *
+ * @param $string
+ *   A string containing placeholders.
+ * @param $args
+ *   An associative array of replacements to make. Occurrences in $string of
+ *   any key in $args are replaced with the corresponding value, after
+ *   sanitization. The sanitization function depends on the first character of
+ *   the key:
+ *   - !variable: Inserted as is. Use this for text that has already been
+ *     sanitized.
+ *   - @variable: Escaped to HTML using check_plain(). Use this for anything
+ *     displayed on a page on the site.
+ *   - %variable: Escaped as a placeholder for user-submitted content using
+ *     drupal_placeholder(), which shows up as <em>emphasized</em> text.
+ *
+ * @see t()
+ * @ingroup sanitization
+ */
+function format_string($string, array $args = array()) {
+  // Transform arguments before inserting them.
+  foreach ($args as $key => $value) {
+    switch ($key[0]) {
+      case '@':
+        // Escaped only.
+        $args[$key] = check_plain($value);
+        break;
+
+      case '%':
+      default:
+        // Escaped and placeholder.
+        $args[$key] = drupal_placeholder($value);
+        break;
+
+      case '!':
+        // Pass-through.
+    }
+  }
+  return strtr($string, $args);
 }
 
 /**
@@ -1351,7 +1622,7 @@ function request_uri() {
  * @see watchdog()
  * @see drupal_decode_exception()
  */
-function watchdog_exception($type, Exception $exception, $message = NULL, $variables = array(), $severity = LOG_ERR, $link = NULL) {
+function watchdog_exception($type, Exception $exception, $message = NULL, $variables = array(), $severity = WATCHDOG_ERROR, $link = NULL) {
 
    // Use a default value if $message is not set.
    if (empty($message)) {
@@ -1386,14 +1657,14 @@ function watchdog_exception($type, Exception $exception, $message = NULL, $varia
  *   translate.
  * @param $severity
  *   The severity of the message, as per RFC 3164. Possible values are
- *   LOG_ERR, LOG_WARNING, etc.
+ *   WATCHDOG_ERROR, WATCHDOG_WARNING, etc.
  * @param $link
  *   A link to associate with the message.
  *
  * @see watchdog_severity_levels()
  * @see hook_watchdog()
  */
-function watchdog($type, $message, $variables = array(), $severity = LOG_NOTICE, $link = NULL) {
+function watchdog($type, $message, $variables = array(), $severity = WATCHDOG_NOTICE, $link = NULL) {
   global $user, $base_root;
 
   static $in_error_state = FALSE;
@@ -2468,6 +2739,55 @@ function ip_address() {
  *   If true, the schema will be rebuilt instead of retrieved from the cache.
  */
 function drupal_get_schema($table = NULL, $rebuild = FALSE) {
+  static $schema;
+
+  if ($rebuild || !isset($table)) {
+    $schema = drupal_get_complete_schema($rebuild);
+  }
+  elseif (!isset($schema)) {
+    $schema = new SchemaCache();
+  }
+
+  if (!isset($table)) {
+    return $schema;
+  }
+  if (isset($schema[$table])) {
+    return $schema[$table];
+  }
+  else {
+    return FALSE;
+  }
+}
+
+/**
+ * Extends DrupalCacheArray to allow for dynamic building of the schema cache.
+ */
+class SchemaCache extends DrupalCacheArray {
+
+  public function __construct() {
+    // Cache by request method.
+    parent::__construct('schema:runtime:' . $_SERVER['REQUEST_METHOD'] == 'GET', 'cache');
+  }
+
+  protected function resolveCacheMiss($offset) {
+    $complete_schema = drupal_get_complete_schema();
+    $value = isset($complete_schema[$offset]) ? $complete_schema[$offset] :  NULL;
+    $this->storage[$offset] = $value;
+    $this->persist($offset);
+    return $value;
+  }
+}
+
+/**
+ * Get the whole database schema.
+ *
+ * The returned schema will include any modifications made by any
+ * module that implements hook_schema_alter().
+ *
+ * @param $rebuild
+ *   If true, the schema will be rebuilt instead of retrieved from the cache.
+ */
+function drupal_get_complete_schema($rebuild = FALSE) {
   static $schema = array();
 
   if (empty($schema) || $rebuild) {
@@ -2509,18 +2829,13 @@ function drupal_get_schema($table = NULL, $rebuild = FALSE) {
       if (!empty($schema) && (drupal_get_bootstrap_phase() == DRUPAL_BOOTSTRAP_FULL)) {
         cache_set('schema', $schema);
       }
+      if ($rebuild) {
+        cache_clear_all('schema:', 'cache', TRUE);
+      }
     }
   }
 
-  if (!isset($table)) {
-    return $schema;
-  }
-  elseif (isset($schema[$table])) {
-    return $schema[$table];
-  }
-  else {
-    return FALSE;
-  }
+  return $schema;
 }
 
 /**

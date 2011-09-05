@@ -6,7 +6,7 @@
  *
  * When enabled, the Drupal comment module creates a discussion
  * board for each Drupal node. Users can post comments to discuss
- * a forum topic, weblog post, story, collaborative book page, etc.
+ * a forum topic, story, collaborative book page, etc.
  */
 
 /**
@@ -508,6 +508,9 @@ function comment_get_recent($number = 10) {
     ->condition('c.status', COMMENT_PUBLISHED)
     ->condition('n.status', NODE_PUBLISHED)
     ->orderBy('c.created', 'DESC')
+    // Additionally order by cid to ensure that comments with the same timestamp
+    // are returned in the exact order posted.
+    ->orderBy('c.cid', 'DESC')
     ->range(0, $number)
     ->execute()
     ->fetchAll();
@@ -1366,7 +1369,7 @@ function comment_node_search_result($node) {
     // Do not make a string if comments are closed and there are currently
     // zero comments.
     if ($node->comment != COMMENT_NODE_CLOSED || $comments > 0) {
-      return format_plural($comments, '1 comment', '@count comments');
+      return array('comment' => format_plural($comments, '1 comment', '@count comments'));
     }
   }
 }
@@ -2158,7 +2161,14 @@ function comment_submit($comment) {
     // 1) Filter it into HTML
     // 2) Strip out all HTML tags
     // 3) Convert entities back to plain-text.
-    $comment->subject = truncate_utf8(trim(decode_entities(strip_tags(check_markup($comment->comment_body[LANGUAGE_NONE][0]['value'], $comment->comment_body[LANGUAGE_NONE][0]['format'])))), 29, TRUE);
+    $comment_body = $comment->comment_body[LANGUAGE_NONE][0];
+    if (isset($comment_body['format'])) {
+      $comment_text = check_markup($comment_body['value'], $comment_body['format']);
+    }
+    else {
+      $comment_text = check_plain($comment_body['value']);
+    }
+    $comment->subject = truncate_utf8(trim(decode_entities(strip_tags($comment_text))), 29, TRUE);
     // Edge cases where the comment body is populated only by HTML tags will
     // require a default subject.
     if ($comment->subject == '') {
@@ -2202,7 +2212,7 @@ function comment_form_submit($form, &$form_state) {
     $form_state['values']['cid'] = $comment->cid;
 
     // Add an entry to the watchdog log.
-    watchdog('content', 'Comment posted: %subject.', array('%subject' => $comment->subject), LOG_NOTICE, l(t('view'), 'comment/' . $comment->cid, array('fragment' => 'comment-' . $comment->cid)));
+    watchdog('content', 'Comment posted: %subject.', array('%subject' => $comment->subject), WATCHDOG_NOTICE, l(t('view'), 'comment/' . $comment->cid, array('fragment' => 'comment-' . $comment->cid)));
 
     // Explain the approval queue if necessary.
     if ($comment->status == COMMENT_NOT_PUBLISHED) {
@@ -2223,7 +2233,7 @@ function comment_form_submit($form, &$form_state) {
     $redirect = array('node/' . $node->nid, array('query' => $query, 'fragment' => 'comment-' . $comment->cid));
   }
   else {
-    watchdog('content', 'Comment: unauthorized comment submitted or comment submitted to a closed post %subject.', array('%subject' => $comment->subject), LOG_WARNING);
+    watchdog('content', 'Comment: unauthorized comment submitted or comment submitted to a closed post %subject.', array('%subject' => $comment->subject), WATCHDOG_WARNING);
     drupal_set_message(t('Comment: unauthorized comment submitted or comment submitted to a closed post %subject.', array('%subject' => $comment->subject)), 'error');
     // Redirect the user to the node they are commenting on.
     $redirect = 'node/' . $node->nid;

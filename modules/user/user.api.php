@@ -327,14 +327,24 @@ function hook_user_logout($account) {
  * @see hook_entity_view()
  */
 function hook_user_view($account, $view_mode, $langcode) {
-  if (user_access('create blog content', $account)) {
-    $account->content['summary']['blog'] =  array(
-      '#type' => 'user_profile_item',
-      '#title' => t('Blog'),
-      '#markup' => l(t('View recent blog entries'), "blog/$account->uid", array('attributes' => array('title' => t("Read !username's latest blog entries.", array('!username' => format_username($account)))))),
-      '#attributes' => array('class' => array('blog')),
-    );
+  $account->content['user_picture'] = array(
+    '#markup' => theme('user_picture', array('account' => $account)),
+    '#weight' => -10,
+  );
+  if (!isset($account->content['summary'])) {
+    $account->content['summary'] = array();
   }
+  $account->content['summary'] += array(
+    '#type' => 'user_profile_category',
+    '#attributes' => array('class' => array('user-member')),
+    '#weight' => 5,
+    '#title' => t('History'),
+  );
+  $account->content['summary']['member_for'] = array(
+    '#type' => 'user_profile_item',
+    '#title' => t('Member for'),
+    '#markup' => format_interval(REQUEST_TIME - $account->created),
+  );
 }
 
 /**
