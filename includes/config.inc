@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ * This is the API for configuration storage.
+ */
+
+/**
  * Get the randomly generated config directory name.
  *
  * @return
