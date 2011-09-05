@@ -968,6 +968,12 @@ function install_settings_form_submit($form, &$form_state) {
     'value'    => drupal_hash_base64(drupal_random_bytes(55)),
     'required' => TRUE,
   );
+  // This duplicates drupal_get_token() because that function relies on a 
+  // global hash salt which hasn't been set yet.
+  $settings['drupal_config_directory'] = array(
+    'value'     => 'config_' . drupal_hmac_base64($value, session_id() . drupal_get_private_key() . $settings['drupal_hash_salt']['value']),
+    'required'  => TRUE,
+  );
   drupal_rewrite_settings($settings);
   // Indicate that the settings file has been verified, and check the database
   // for the last completed task, now that we have a valid connection. This
