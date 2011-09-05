@@ -1065,6 +1065,7 @@ function user_account_form(&$form, &$form_state) {
         '#access' => !empty($protected_values),
         '#description' => $current_pass_description,
         '#weight' => -5,
+        '#attributes' => array('autocomplete' => 'off'),
       );
       $form['#validate'][] = 'user_validate_current_pass';
     }
