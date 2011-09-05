@@ -980,9 +980,6 @@ function install_settings_form_submit($form, &$form_state) {
   $config_path = conf_path() . '/files/' . $settings['drupal_config_directory_name']['value'];
   if (!file_prepare_directory($config_path, FILE_CREATE_DIRECTORY)) {
     // How best to handle errors here?
-    
-    // Will also want to create a default .htaccess for this dir to block
-    // reading of json, xml, yaml, ini, others?
   };
   // Indicate that the settings file has been verified, and check the database
   // for the last completed task, now that we have a valid connection. This
