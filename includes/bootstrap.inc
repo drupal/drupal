@@ -28,7 +28,7 @@ define('DRUPAL_MINIMUM_PHP_MEMORY_LIMIT', '32M');
 /**
  * Indicates that the item should never be removed unless explicitly selected.
  *
- * The item may be removed using cache_clear_all() with a cache ID.
+ * The item may be removed using cache()->delete() with a cache ID.
  */
 define('CACHE_PERMANENT', 0);
 
@@ -307,12 +307,12 @@ define('DRUPAL_PHP_FUNCTION_PATTERN', '[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*'
 abstract class DrupalCacheArray implements ArrayAccess {
 
   /**
-   * A cid to pass to cache_set() and cache_get().
+   * A cid to pass to cache()->set() and cache()->get().
    */
   private $cid;
 
   /**
-   * A bin to pass to cache_set() and cache_get().
+   * A bin to pass to cache()->set() and cache()->get().
    */
   private $bin;
 
@@ -338,7 +338,7 @@ abstract class DrupalCacheArray implements ArrayAccess {
     $this->cid = $cid;
     $this->bin = $bin;
 
-    if ($cached = cache_get($this->cid, $this->bin)) {
+    if ($cached = cache($bin)->get($this->cid)) {
      $this->storage = $cached->data;
     }
   }
@@ -415,10 +415,10 @@ abstract class DrupalCacheArray implements ArrayAccess {
     // To implement locking for cache misses, override __construct().
     $lock_name = $cid . ':' . $bin;
     if (!$lock || lock_acquire($lock_name)) {
-      if ($cached = cache_get($cid, $bin)) {
+      if ($cached = cache($bin)->get($cid)) {
         $data = $cached->data + $data;
       }
-      cache_set($cid, $data, $bin);
+      cache($bin)->set($cid, $data);
       if ($lock) {
         lock_release($lock_name);
       }
@@ -923,7 +923,7 @@ function drupal_get_filename($type, $name, $filename = NULL) {
 function variable_initialize($conf = array()) {
   // NOTE: caching the variables improves performance by 20% when serving
   // cached pages.
-  if ($cached = cache_get('variables', 'cache_bootstrap')) {
+  if ($cached = cache('bootstrap')->get('variables')) {
     $variables = $cached->data;
   }
   else {
@@ -938,7 +938,7 @@ function variable_initialize($conf = array()) {
     else {
       // Proceed with variable rebuild.
       $variables = array_map('unserialize', db_query('SELECT name, value FROM {variable}')->fetchAllKeyed());
-      cache_set('variables', $variables, 'cache_bootstrap');
+      cache('bootstrap')->set('variables', $variables);
       lock_release($name);
     }
   }
@@ -995,7 +995,7 @@ function variable_set($name, $value) {
 
   db_merge('variable')->key(array('name' => $name))->fields(array('value' => serialize($value)))->execute();
 
-  cache_clear_all('variables', 'cache_bootstrap');
+  cache('bootstrap')->delete('variables');
 
   $conf[$name] = $value;
 }
@@ -1019,7 +1019,7 @@ function variable_del($name) {
   db_delete('variable')
     ->condition('name', $name)
     ->execute();
-  cache_clear_all('variables', 'cache_bootstrap');
+  cache('bootstrap')->delete('variables');
 
   unset($conf[$name]);
 }
@@ -1048,7 +1048,7 @@ function drupal_page_get_cache($check_only = FALSE) {
   }
 
   if (drupal_page_is_cacheable()) {
-    $cache = cache_get($base_root . request_uri(), 'cache_page');
+    $cache = cache('page')->get($base_root . request_uri());
     if ($cache !== FALSE) {
       $cache_hit = TRUE;
     }
@@ -2815,7 +2815,7 @@ function drupal_get_complete_schema($rebuild = FALSE) {
 
   if (empty($schema) || $rebuild) {
     // Try to load the schema from cache.
-    if (!$rebuild && $cached = cache_get('schema')) {
+    if (!$rebuild && $cached = cache()->get('schema')) {
       $schema = $cached->data;
     }
     // Otherwise, rebuild the schema cache.
@@ -2841,7 +2841,7 @@ function drupal_get_complete_schema($rebuild = FALSE) {
         // That would break modules which use $schema further down the line.
         $current = (array) module_invoke($module, 'schema');
         // Set 'module' and 'name' keys for each table, and remove descriptions,
-        // as they needlessly slow down cache_get() for every single request.
+        // as they needlessly slow down cache()->get() for every single request.
         _drupal_schema_initialize($current, $module);
         $schema = array_merge($schema, $current);
       }
@@ -2850,10 +2850,10 @@ function drupal_get_complete_schema($rebuild = FALSE) {
       // If the schema is empty, avoid saving it: some database engines require
       // the schema to perform queries, and this could lead to infinite loops.
       if (!empty($schema) && (drupal_get_bootstrap_phase() == DRUPAL_BOOTSTRAP_FULL)) {
-        cache_set('schema', $schema);
+        cache()->set('schema', $schema);
       }
       if ($rebuild) {
-        cache_clear_all('schema:', 'cache', TRUE);
+        cache()->deletePrefix('schema:');
       }
     }
   }
@@ -2924,7 +2924,7 @@ function _registry_check_code($type, $name = NULL) {
 
   if (!isset($lookup_cache)) {
     $lookup_cache = array();
-    if ($cache = cache_get('lookup_cache', 'cache_bootstrap')) {
+    if ($cache = cache('bootstrap')->get('lookup_cache')) {
       $lookup_cache = $cache->data;
     }
   }
@@ -2941,7 +2941,7 @@ function _registry_check_code($type, $name = NULL) {
   // changes to the lookup cache for this request.
   if ($type == REGISTRY_WRITE_LOOKUP_CACHE) {
     if ($cache_update_needed) {
-      cache_set('lookup_cache', $lookup_cache, 'cache_bootstrap');
+      cache('bootstrap')->set('lookup_cache', $lookup_cache);
     }
     return;
   }
