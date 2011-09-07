@@ -158,7 +158,7 @@ Color module
 - ?
 
 Comment module
-- ?
+- Dick Olsson 'dixon_' <http://drupal.org/user/239911>
 
 Contact module
 - Dave Reid 'davereid' <http://drupal.org/user/53892>
