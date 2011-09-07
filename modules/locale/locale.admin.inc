@@ -461,37 +461,18 @@ function locale_languages_delete_form($form, &$form_state, $langcode) {
  * Process language deletion submissions.
  */
 function locale_languages_delete_form_submit($form, &$form_state) {
+  $langcode = $form_state['values']['langcode'];
   $languages = language_list();
-  if (isset($languages[$form_state['values']['langcode']])) {
-    // Remove translations first.
-    db_delete('locales_target')
-      ->condition('language', $form_state['values']['langcode'])
-      ->execute();
-    cache_clear_all('locale:' . $form_state['values']['langcode'], 'cache');
-    // With no translations, this removes existing JavaScript translations file.
-    _locale_rebuild_js($form_state['values']['langcode']);
-    // Remove the language.
-    db_delete('languages')
-      ->condition('language', $form_state['values']['langcode'])
-      ->execute();
-    db_update('node')
-      ->fields(array('language' => ''))
-      ->condition('language', $form_state['values']['langcode'])
-      ->execute();
-    if ($languages[$form_state['values']['langcode']]->enabled) {
-      variable_set('language_count', variable_get('language_count', 1) - 1);
-    }
-    module_invoke_all('multilingual_settings_changed');
-    $variables = array('%locale' => $languages[$form_state['values']['langcode']]->name);
+  $language = $languages[$langcode];
+
+  $success = locale_language_delete($langcode);
+
+  if ($success) {
+    $variables = array('%locale' => $language->name);
     drupal_set_message(t('The language %locale has been removed.', $variables));
-    watchdog('locale', 'The language %locale has been removed.', $variables);
   }
 
-  // Changing the language settings impacts the interface:
-  cache_clear_all('*', 'cache_page', TRUE);
-
   $form_state['redirect'] = 'admin/config/regional/language';
-  return;
 }
 
 /**

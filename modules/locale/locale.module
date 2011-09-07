@@ -779,6 +779,51 @@ function locale_language_list($field = 'name', $all = FALSE) {
 }
 
 /**
+ * Delete a language.
+ *
+ * @param $langcode
+ *   Language code of the language to be deleted.
+ * @return
+ *   TRUE if language is successfully deleted. Otherwise FALSE.
+ */
+function locale_language_delete($langcode) {
+  $languages = language_list();
+  if (isset($languages[$langcode])) {
+    $language = $languages[$langcode];
+
+    module_invoke_all('locale_language_delete', $language);
+
+    // Remove translations first.
+    db_delete('locales_target')
+      ->condition('language', $language->language)
+      ->execute();
+
+    // Remove the language.
+    db_delete('languages')
+      ->condition('language', $language->language)
+      ->execute();
+
+    if ($language->enabled) {
+      variable_set('language_count', variable_get('language_count', 1) - 1);
+    }
+
+    drupal_static_reset('language_list');
+    _locale_invalidate_js($language->language);
+
+    // Changing the language settings impacts the interface:
+    cache_clear_all('*', 'cache_page', TRUE);
+
+    // Clearing all locale cache from database
+    cache_clear_all('locale:' . $language->language, 'cache');
+
+    $variables = array('%locale' => $language->name);
+    watchdog('locale', 'The language %locale has been removed.', $variables);
+    return TRUE;
+  }
+  return FALSE;
+}
+
+/**
  * Implements hook_modules_installed().
  */
 function locale_modules_installed($modules) {

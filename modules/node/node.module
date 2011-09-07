@@ -3948,3 +3948,14 @@ function node_file_download_access($field, $entity_type, $entity) {
     return node_access('view', $entity);
   }
 }
+
+/**
+ * Implements hook_locale_language_delete().
+ */
+function node_locale_language_delete($language) {
+  // On nodes with this language, unset the language
+  db_update('node')
+    ->fields(array('language' => ''))
+    ->condition('language', $language->language)
+    ->execute();
+}
