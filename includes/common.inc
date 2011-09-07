@@ -6163,7 +6163,7 @@ function element_children(&$elements, $sort = FALSE) {
 }
 
 /**
- * Return the visibile children of an element.
+ * Returns the visible children of an element.
  *
  * @param $elements
  *   The parent element.
