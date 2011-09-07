@@ -83,7 +83,7 @@ class BlockTestCase extends DrupalWebTestCase {
     $this->assertTrue(array_key_exists('subject', $data) && empty($data['subject']), t('block_block_view() provides an empty block subject, since custom blocks do not have default titles.'));
     $this->assertEqual(check_markup($custom_block['body[value]'], $format), $data['content'], t('block_block_view() provides correct block content.'));
 
-    // Check if the block can be moved to all availble regions.
+    // Check whether the block can be moved to all available regions.
     $custom_block['module'] = 'block';
     $custom_block['delta'] = $bid;
     foreach ($this->regions as $region) {
@@ -307,7 +307,7 @@ class BlockTestCase extends DrupalWebTestCase {
     // Check to see if the block was created by checking that it's in the database.
     $this->assertNotNull($bid, t('Block found in database'));
 
-    // Check if the block can be moved to all availble regions.
+    // Check whether the block can be moved to all available regions.
     foreach ($this->regions as $region) {
       $this->moveBlockToRegion($block, $region);
     }
@@ -321,7 +321,7 @@ class BlockTestCase extends DrupalWebTestCase {
     $this->assertText(t('The block settings have been updated.'), t('Block successfully move to disabled region.'));
     $this->assertNoText(t($block['title']), t('Block no longer appears on page.'));
 
-    // Confirm that the regions xpath is not availble
+    // Confirm that the region's xpath is not available.
     $xpath = $this->buildXPathQuery('//div[@id=:id]/*', array(':id' => 'block-block-' . $bid));
     $this->assertNoFieldByXPath($xpath, FALSE, t('Custom block found in no regions.'));
 
