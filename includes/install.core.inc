@@ -1234,8 +1234,8 @@ function install_select_locale(&$install_state) {
  * Form API array definition for language selection.
  */
 function install_select_locale_form($form, &$form_state, $locales, $profilename) {
-  include_once DRUPAL_ROOT . '/includes/iso.inc';
-  $languages = _locale_get_predefined_list();
+  include_once DRUPAL_ROOT . '/includes/standard.inc';
+  $languages = standard_language_list();
   foreach ($locales as $locale) {
     $name = $locale->langcode;
     if (isset($languages[$name])) {
@@ -1376,8 +1376,8 @@ function install_import_locales(&$install_state) {
   include_once drupal_get_path('module', 'locale') . '/locale.bulk.inc';
   $install_locale = $install_state['parameters']['locale'];
 
-  include_once DRUPAL_ROOT . '/includes/iso.inc';
-  $predefined = _locale_get_predefined_list();
+  include_once DRUPAL_ROOT . '/includes/standard.inc';
+  $predefined = standard_language_list();
   if (!isset($predefined[$install_locale])) {
     // Drupal does not know about this language, so we prefill its values with
     // our best guess. The user will be able to edit afterwards.

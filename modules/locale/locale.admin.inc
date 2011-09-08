@@ -280,7 +280,7 @@ function _locale_languages_common_controls(&$form, $language = NULL) {
       '#required' => TRUE,
       '#default_value' => @$language->language,
       '#disabled' => (isset($language->language)),
-      '#description' => t('<a href="@rfc4646">RFC 4646</a> compliant language identifier. Language codes typically use a country code, and optionally, a script or regional variant name. <em>Examples: "en", "en-US" and "zh-Hant".</em>', array('@rfc4646' => 'http://www.ietf.org/rfc/rfc4646.txt')),
+      '#description' => t('Use language codes as <a href="@w3ctags">defined by the W3C</a> for interoperability. <em>Examples: "en", "en-gb" and "zh-hant".</em>', array('@w3ctags' => 'http://www.w3.org/International/articles/language-tags/')),
     );
   }
   $form['name'] = array('#type' => 'textfield',
@@ -331,8 +331,8 @@ function locale_languages_predefined_form_validate($form, &$form_state) {
 
   if (!isset($form_state['values']['name'])) {
     // Predefined language selection.
-    include_once DRUPAL_ROOT . '/includes/iso.inc';
-    $predefined = _locale_get_predefined_list();
+    include_once DRUPAL_ROOT . '/includes/standard.inc';
+    $predefined = standard_language_list();
     if (!isset($predefined[$langcode])) {
       form_set_error('langcode', t('Invalid language code.'));
     }
@@ -355,8 +355,8 @@ function locale_languages_predefined_form_submit($form, &$form_state) {
   }
   else {
     // Predefined language selection.
-    include_once DRUPAL_ROOT . '/includes/iso.inc';
-    $predefined = _locale_get_predefined_list();
+    include_once DRUPAL_ROOT . '/includes/standard.inc';
+    $predefined = standard_language_list();
     locale_add_language($langcode);
     drupal_set_message(t('The language %language has been created and can now be used. More information is available on the <a href="@locale-help">help screen</a>.', array('%language' => t($predefined[$langcode][0]), '@locale-help' => url('admin/help/locale'))));
   }

@@ -68,8 +68,8 @@ function locale_translate_import_form_submit($form, &$form_state) {
     $languages = language_list('language');
     $langcode = $form_state['values']['langcode'];
     if (!isset($languages[$langcode])) {
-      include_once DRUPAL_ROOT . '/includes/iso.inc';
-      $predefined = _locale_get_predefined_list();
+      include_once DRUPAL_ROOT . '/includes/standard.inc';
+      $predefined = standard_language_list();
       locale_add_language($langcode);
       drupal_set_message(t('The language %language has been created.', array('%language' => t($predefined[$langcode][0]))));
     }

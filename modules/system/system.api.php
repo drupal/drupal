@@ -4383,7 +4383,7 @@ function hook_updater_info_alter(&$updaters) {
  *   The associative array of countries keyed by ISO 3166-1 country code.
  *
  * @see country_get_list()
- * @see _country_get_predefined_list()
+ * @see standard_country_list()
  */
 function hook_countries_alter(&$countries) {
   // Elbonia is now independent, so add it to the country list.

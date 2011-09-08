@@ -466,8 +466,8 @@ function locale_add_language($langcode, $name = NULL, $native = NULL, $direction
 
   // If name was not set, we add a predefined language.
   if (!isset($name)) {
-    include_once DRUPAL_ROOT . '/includes/iso.inc';
-    $predefined = _locale_get_predefined_list();
+    include_once DRUPAL_ROOT . '/includes/standard.inc';
+    $predefined = standard_language_list();
     $name = $predefined[$langcode][0];
     $native = isset($predefined[$langcode][1]) ? $predefined[$langcode][1] : $predefined[$langcode][0];
     $direction = isset($predefined[$langcode][2]) ? $predefined[$langcode][2] : LANGUAGE_LTR;
@@ -750,9 +750,9 @@ function _locale_rebuild_js($langcode = NULL) {
  * Prepares the language code list for a select form item with only the unsupported ones
  */
 function _locale_prepare_predefined_list() {
-  include_once DRUPAL_ROOT . '/includes/iso.inc';
+  include_once DRUPAL_ROOT . '/includes/standard.inc';
   $languages = language_list();
-  $predefined = _locale_get_predefined_list();
+  $predefined = standard_language_list();
   foreach ($predefined as $key => $value) {
     if (isset($languages[$key])) {
       unset($predefined[$key]);
@@ -782,8 +782,8 @@ function _locale_prepare_predefined_list() {
  *   An array of all country code => country name pairs.
  */
 function country_get_list() {
-  include_once DRUPAL_ROOT . '/includes/iso.inc';
-  $countries = _country_get_predefined_list();
+  include_once DRUPAL_ROOT . '/includes/standard.inc';
+  $countries = standard_country_list();
   // Allow other modules to modify the country list.
   drupal_alter('countries', $countries);
   return $countries;
