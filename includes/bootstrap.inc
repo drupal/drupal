@@ -2559,14 +2559,28 @@ function language_list($field = 'language') {
 }
 
 /**
- * Default language used on the site
+ * Default language used on the site.
  *
- * @param $property
- *   Optional property of the language object to return
+ * @return
+ *   A language object.
  */
-function language_default($property = NULL) {
-  $language = variable_get('language_default', (object) array('language' => 'en', 'name' => 'English', 'native' => 'English', 'direction' => 0, 'enabled' => 1, 'plurals' => 0, 'formula' => '', 'domain' => '', 'prefix' => '', 'weight' => 0, 'javascript' => ''));
-  return $property ? $language->$property : $language;
+function language_default() {
+  return variable_get(
+    'language_default',
+    (object) array(
+      'language' => 'en',
+      'name' => 'English',
+      'native' => 'English',
+      'direction' => 0,
+      'enabled' => 1,
+      'plurals' => 0,
+      'formula' => '',
+      'domain' => '',
+      'prefix' => '',
+      'weight' => 0,
+      'javascript' => ''
+    )
+  );
 }
 
 /**

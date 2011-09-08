@@ -477,7 +477,7 @@ class PathMonolingualTestCase extends DrupalWebTestCase {
 
     // Verify that French is the only language.
     $this->assertFalse(drupal_multilingual(), t('Site is mono-lingual'));
-    $this->assertEqual(language_default('language'), 'fr', t('French is the default language'));
+    $this->assertEqual(language_default()->language, 'fr', t('French is the default language'));
 
     // Set language detection to URL.
     $edit = array('language[enabled][locale-url]' => TRUE);
