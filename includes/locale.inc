@@ -709,7 +709,7 @@ function _locale_rebuild_js($langcode = NULL) {
     // Update the default language variable if the default language has been altered.
     // This is necessary to keep the variable consistent with the database
     // version of the language and to prevent checking against an outdated hash.
-    $default_langcode = language_default('language');
+    $default_langcode = language_default()->language;
     if ($default_langcode == $language->language) {
       $default = db_query("SELECT * FROM {languages} WHERE language = :language", array(':language' => $default_langcode))->fetchObject();
       variable_set('language_default', $default);

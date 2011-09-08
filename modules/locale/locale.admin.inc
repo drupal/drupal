@@ -52,7 +52,7 @@ function locale_languages_overview_form() {
     '#title' => t('Default language'),
     '#title_display' => 'invisible',
     '#options' => $options,
-    '#default_value' => language_default('language'),
+    '#default_value' => language_default()->language,
   );
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save configuration'));
@@ -392,7 +392,7 @@ function locale_languages_edit_form_validate($form, &$form_state) {
   if (!empty($form_state['values']['domain']) && $duplicate = db_query("SELECT language FROM {languages} WHERE domain = :domain AND language <> :language", array(':domain' => $form_state['values']['domain'], ':language' => $form_state['values']['langcode']))->fetchField()) {
     form_set_error('domain', t('The domain (%domain) is already tied to a language (%language).', array('%domain' => $form_state['values']['domain'], '%language' => $duplicate->language)));
   }
-  if (empty($form_state['values']['prefix']) && language_default('language') != $form_state['values']['langcode'] && empty($form_state['values']['domain'])) {
+  if (empty($form_state['values']['prefix']) && language_default()->language != $form_state['values']['langcode'] && empty($form_state['values']['domain'])) {
     form_set_error('prefix', t('Only the default language can have both the domain and prefix empty.'));
   }
   if (!empty($form_state['values']['prefix']) && $duplicate = db_query("SELECT language FROM {languages} WHERE prefix = :prefix AND language <> :language", array(':prefix' => $form_state['values']['prefix'], ':language' => $form_state['values']['langcode']))->fetchField()) {
@@ -439,7 +439,7 @@ function locale_languages_delete_form($form, &$form_state, $langcode) {
     drupal_goto('admin/config/regional/language');
   }
 
-  if (language_default('language') == $langcode) {
+  if (language_default()->language == $langcode) {
     drupal_set_message(t('The default language cannot be deleted.'));
     drupal_goto('admin/config/regional/language');
   }
