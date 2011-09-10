@@ -1,6 +1,7 @@
 <?php
 
-/*
+/**
+ * @file
  * Base FileTransfer class.
  *
  * Classes extending this class perform file operations on directories not
@@ -61,7 +62,7 @@ abstract class FileTransfer {
   }
 
   /**
-   * Connect to the server.
+   * Connects to the server.
    */
   abstract protected function connect();
 
@@ -280,7 +281,7 @@ abstract class FileTransfer {
   abstract public function isFile($path);
 
   /**
-   * Return the chroot property for this connection.
+   * Returns the chroot property for this connection.
    *
    * It does this by moving up the tree until it finds itself. If successful,
    * it will return the chroot, otherwise FALSE.
@@ -304,7 +305,7 @@ abstract class FileTransfer {
       $check = implode($parts, '/');
       if ($this->isFile($check . '/' . basename(__FILE__))) {
         // Remove the trailing slash.
-        return substr($chroot,0,-1);
+        return substr($chroot, 0, -1);
       }
       $chroot .= array_shift($parts) . '/';
     }
