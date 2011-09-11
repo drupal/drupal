@@ -1082,8 +1082,12 @@ function drupal_validate_form($form_id, &$form, &$form_state) {
   // matches the current user's session.
   if (isset($form['#token'])) {
     if (!drupal_valid_token($form_state['values']['form_token'], $form['#token'])) {
+      $path = current_path();
+      $query = drupal_get_query_parameters();
+      $url = url($path, array('query' => $query));
+
       // Setting this error will cause the form to fail validation.
-      form_set_error('form_token', t('This form is outdated. Reload the page and try again. Contact the site administrator if the problem persists.'));
+      form_set_error('form_token', t('The form has become outdated. Copy any unsaved work in the form below and then <a href="@link">reload this page</a>.', array('@link' => $url)));
     }
   }
 
