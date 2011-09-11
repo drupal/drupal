@@ -90,7 +90,7 @@ function drupal_lookup_path($action, $path = '', $path_language = NULL) {
         $cache['map'][$path_language] = array();
         // Load system paths from cache.
         $cid = current_path();
-        if ($cached = cache_get($cid, 'cache_path')) {
+        if ($cached = cache('path')->get($cid)) {
           $cache['system_paths'] = $cached->data;
           // Now fetch the aliases corresponding to these system paths.
           $args = array(
@@ -212,7 +212,7 @@ function drupal_cache_system_paths() {
     if ($paths = current($cache['map'])) {
       $data = array_keys($paths);
       $expire = REQUEST_TIME + (60 * 60 * 24);
-      cache_set($cid, $data, 'cache_path', $expire);
+      cache('path')->set($cid, $data, $expire);
     }
   }
 }

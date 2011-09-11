@@ -168,7 +168,7 @@ function locale_languages_overview_form_submit($form, &$form_state) {
   drupal_set_message(t('Configuration saved.'));
 
   // Changing the language settings impacts the interface.
-  cache_clear_all('*', 'cache_page', TRUE);
+  cache('page')->flush();
   module_invoke_all('multilingual_settings_changed');
 
   $form_state['redirect'] = 'admin/config/regional/language';

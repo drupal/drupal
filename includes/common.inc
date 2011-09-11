@@ -4992,7 +4992,7 @@ function drupal_page_set_cache() {
       if (variable_get('page_compression', TRUE) && extension_loaded('zlib')) {
         $cache->data['body'] = gzencode($cache->data['body'], 9, FORCE_GZIP);
       }
-      cache_set($cache->cid, $cache->data, 'cache_page', $cache->expire);
+      cache('page')->set($cache->cid, $cache->data, $cache->expire);
     }
     return $cache;
   }
@@ -5813,7 +5813,7 @@ function drupal_render_cache_get($elements) {
   }
   $bin = isset($elements['#cache']['bin']) ? $elements['#cache']['bin'] : 'cache';
 
-  if (!empty($cid) && $cache = cache_get($cid, $bin)) {
+  if (!empty($cid) && $cache = cache($bin)->get($cid)) {
     // Add additional libraries, JavaScript, CSS and other data attached
     // to this element.
     if (isset($cache->data['#attached'])) {
@@ -5858,7 +5858,7 @@ function drupal_render_cache_set(&$markup, $elements) {
   }
   $bin = isset($elements['#cache']['bin']) ? $elements['#cache']['bin'] : 'cache';
   $expire = isset($elements['#cache']['expire']) ? $elements['#cache']['expire'] : CACHE_PERMANENT;
-  cache_set($cid, $data, $bin, $expire);
+  cache($bin)->set($cid, $data, $expire);
 }
 
 /**
@@ -7149,7 +7149,7 @@ function drupal_flush_all_caches() {
   $core = array('cache', 'cache_path', 'cache_filter', 'cache_bootstrap', 'cache_page');
   $cache_tables = array_merge(module_invoke_all('flush_caches'), $core);
   foreach ($cache_tables as $table) {
-    cache_clear_all('*', $table, TRUE);
+    cache($table)->flush();
   }
 
   // Rebuild the bootstrap module list. We do this here so that developers
@@ -7299,7 +7299,7 @@ function entity_get_info($entity_type = NULL) {
   $langcode = $language->language;
 
   if (empty($entity_info)) {
-    if ($cache = cache_get("entity_info:$langcode")) {
+    if ($cache = cache()->get("entity_info:$langcode")) {
       $entity_info = $cache->data;
     }
     else {
@@ -7342,7 +7342,7 @@ function entity_get_info($entity_type = NULL) {
       }
       // Let other modules alter the entity info.
       drupal_alter('entity_info', $entity_info);
-      cache_set("entity_info:$langcode", $entity_info);
+      cache()->set("entity_info:$langcode", $entity_info);
     }
   }
 
@@ -7360,7 +7360,7 @@ function entity_get_info($entity_type = NULL) {
 function entity_info_cache_clear() {
   drupal_static_reset('entity_get_info');
   // Clear all languages.
-  cache_clear_all('entity_info:', 'cache', TRUE);
+  cache()->deletePrefix('entity_info:');
 }
 
 /**
@@ -7738,13 +7738,13 @@ function archiver_get_info() {
   $archiver_info = &drupal_static(__FUNCTION__, array());
 
   if (empty($archiver_info)) {
-    $cache = cache_get('archiver_info');
+    $cache = cache()->get('archiver_info');
     if ($cache === FALSE) {
       // Rebuild the cache and save it.
       $archiver_info = module_invoke_all('archiver_info');
       drupal_alter('archiver_info', $archiver_info);
       uasort($archiver_info, 'drupal_sort_weight');
-      cache_set('archiver_info', $archiver_info);
+      cache()->set('archiver_info', $archiver_info);
     }
     else {
       $archiver_info = $cache->data;

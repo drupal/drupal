@@ -230,12 +230,12 @@ function menu_load($menu_name) {
 function menu_load_all() {
   $custom_menus = &drupal_static(__FUNCTION__);
   if (!isset($custom_menus)) {
-    if ($cached = cache_get('menu_custom', 'cache_menu')) {
+    if ($cached = cache('menu')->get('menu_custom')) {
       $custom_menus = $cached->data;
     }
     else {
       $custom_menus = db_query('SELECT * FROM {menu_custom}')->fetchAllAssoc('menu_name', PDO::FETCH_ASSOC);
-      cache_set('menu_custom', $custom_menus, 'cache_menu');
+      cache('menu')->set('menu_custom', $custom_menus);
     }
   }
   return $custom_menus;

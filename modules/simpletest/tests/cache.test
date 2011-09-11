@@ -314,16 +314,16 @@ class CacheClearCase extends CacheTestCase {
     $bins = array('cache', 'filter', 'page', 'bootstrap', 'path');
     $bins = array_merge(module_invoke_all('flush_caches'), $bins);
     foreach ($bins as $id => $bin) {
-      $id = 'test_cid_clear' . $id;
-      cache_set($id, $this->default_value, $bin);
+      $cid = 'test_cid_clear' . $id;
+      cache($bin)->set($cid, $this->default_value);
     }
 
     // Remove all caches then make sure that they are cleared.
     drupal_flush_all_caches();
 
     foreach ($bins as $id => $bin) {
-      $id = 'test_cid_clear' . $id;
-      $this->assertFalse($this->checkCacheExists($id, $this->default_value, $bin), t('All cache entries removed from @bin.', array('@bin' => $bin)));
+      $cid = 'test_cid_clear' . $id;
+      $this->assertFalse($this->checkCacheExists($cid, $this->default_value, $bin), t('All cache entries removed from @bin.', array('@bin' => $bin)));
     }
   }
 }

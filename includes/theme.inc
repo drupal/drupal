@@ -280,7 +280,7 @@ function _theme_registry_callback($callback = NULL, array $arguments = array()) 
  */
 function _theme_load_registry($theme, $base_theme = NULL, $theme_engine = NULL) {
   // Check the theme registry cache; if it exists, use it.
-  $cache = cache_get("theme_registry:$theme->name", 'cache');
+  $cache = cache()->get("theme_registry:$theme->name");
   if (isset($cache->data)) {
     $registry = $cache->data;
   }
@@ -300,7 +300,7 @@ function _theme_load_registry($theme, $base_theme = NULL, $theme_engine = NULL) 
  * Write the theme_registry cache into the database.
  */
 function _theme_save_registry($theme, $registry) {
-  cache_set("theme_registry:$theme->name", $registry);
+  cache()->set("theme_registry:$theme->name", $registry);
 }
 
 /**
@@ -309,7 +309,7 @@ function _theme_save_registry($theme, $registry) {
  * to add more theme hooks.
  */
 function drupal_theme_rebuild() {
-  cache_clear_all('theme_registry', 'cache', TRUE);
+  cache()->deletePrefix('theme_registry');
 }
 
 /**

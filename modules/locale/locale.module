@@ -638,7 +638,7 @@ function locale($string = NULL, $context = NULL, $langcode = NULL) {
     // perspective that is a really bad idea, so we have no user
     // interface for this. Be careful when turning this option off!
     if (variable_get('locale_cache_strings', 1) == 1) {
-      if ($cache = cache_get('locale:' . $langcode, 'cache')) {
+      if ($cache = cache()->get('locale:' . $langcode)) {
         $locale_t[$langcode] = $cache->data;
       }
       elseif (lock_acquire('locale_cache_' . $langcode)) {
@@ -649,7 +649,7 @@ function locale($string = NULL, $context = NULL, $langcode = NULL) {
         foreach ($result as $data) {
           $locale_t[$langcode][$data->context][$data->source] = (empty($data->translation) ? TRUE : $data->translation);
         }
-        cache_set('locale:' . $langcode, $locale_t[$langcode]);
+        cache()->set('locale:' . $langcode, $locale_t[$langcode]);
         lock_release('locale_cache_' . $langcode);
       }
     }
@@ -677,7 +677,7 @@ function locale($string = NULL, $context = NULL, $langcode = NULL) {
           ->fields(array('version' => VERSION))
           ->condition('lid', $translation->lid)
           ->execute();
-        cache_clear_all('locale:', 'cache', TRUE);
+        cache()->deletePrefix('locale:');
       }
     }
     else {
@@ -692,7 +692,7 @@ function locale($string = NULL, $context = NULL, $langcode = NULL) {
         ->execute();
       $locale_t[$langcode][$context][$string] = TRUE;
       // Clear locale cache so this string can be added in a later request.
-      cache_clear_all('locale:', 'cache', TRUE);
+      cache()->deletePrefix('locale:');
     }
   }
 
@@ -811,10 +811,10 @@ function locale_language_delete($langcode) {
     _locale_invalidate_js($language->language);
 
     // Changing the language settings impacts the interface:
-    cache_clear_all('*', 'cache_page', TRUE);
+    cache('page')->flush();
 
     // Clearing all locale cache from database
-    cache_clear_all('locale:' . $language->language, 'cache');
+    cache()->delete('locale:' . $language->language);
 
     $variables = array('%locale' => $language->name);
     watchdog('locale', 'The language %locale has been removed.', $variables);

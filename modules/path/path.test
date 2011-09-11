@@ -37,14 +37,14 @@ class PathTestCase extends DrupalWebTestCase {
 
     // Visit the system path for the node and confirm a cache entry is
     // created.
-    cache_clear_all('*', 'cache_path', TRUE);
+    cache('path')->flush();
     $this->drupalGet($edit['source']);
-    $this->assertTrue(cache_get($edit['source'], 'cache_path'), t('Cache entry was created.'));
+    $this->assertTrue(cache('path')->get($edit['source']), t('Cache entry was created.'));
 
     // Visit the alias for the node and confirm a cache entry is created.
-    cache_clear_all('*', 'cache_path', TRUE);
+    cache('path')->flush();
     $this->drupalGet($edit['alias']);
-    $this->assertTrue(cache_get($edit['source'], 'cache_path'), t('Cache entry was created.'));
+    $this->assertTrue(cache('path')->get($edit['source']), t('Cache entry was created.'));
   }
 
   /**

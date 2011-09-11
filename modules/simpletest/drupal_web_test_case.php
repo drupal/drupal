@@ -1435,7 +1435,7 @@ class DrupalWebTestCase extends DrupalTestCase {
    */
   protected function refreshVariables() {
     global $conf;
-    cache_clear_all('variables', 'cache_bootstrap');
+    cache('bootstrap')->delete('variables');
     $conf = variable_initialize();
   }
 

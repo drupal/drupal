@@ -675,7 +675,7 @@ function _node_types_build($rebuild = FALSE) {
     if (isset($_node_types)) {
       return $_node_types;
     }
-    if ($cache = cache_get($cid)) {
+    if ($cache = cache()->get($cid)) {
       $_node_types = $cache->data;
       return $_node_types;
     }
@@ -737,7 +737,7 @@ function _node_types_build($rebuild = FALSE) {
 
   asort($_node_types->names);
 
-  cache_set($cid, $_node_types);
+  cache()->set($cid, $_node_types);
 
   return $_node_types;
 }
@@ -746,7 +746,7 @@ function _node_types_build($rebuild = FALSE) {
  * Clears the node type cache.
  */
 function node_type_cache_reset() {
-  cache_clear_all('node_types:', 'cache', TRUE);
+  cache()->deletePrefix('node_types:');
   drupal_static_reset('_node_types_build');
 }
 

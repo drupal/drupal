@@ -827,7 +827,7 @@ function _block_render_blocks($region_blocks) {
       // with node_access modules. We also preserve the submission of forms in
       // blocks, by fetching from cache only if the request method is 'GET'
       // (or 'HEAD').
-      if (!count(module_implements('node_grants')) && ($_SERVER['REQUEST_METHOD'] == 'GET' || $_SERVER['REQUEST_METHOD'] == 'HEAD') && ($cid = _block_get_cache_id($block)) && ($cache = cache_get($cid, 'cache_block'))) {
+      if (!count(module_implements('node_grants')) && ($_SERVER['REQUEST_METHOD'] == 'GET' || $_SERVER['REQUEST_METHOD'] == 'HEAD') && ($cid = _block_get_cache_id($block)) && ($cache = cache('block')->get($cid))) {
         $array = $cache->data;
       }
       else {
@@ -838,7 +838,7 @@ function _block_render_blocks($region_blocks) {
         drupal_alter(array('block_view', "block_view_{$block->module}_{$block->delta}"), $array, $block);
 
         if (isset($cid)) {
-          cache_set($cid, $array, 'cache_block', CACHE_TEMPORARY);
+          cache('block')->set($cid, $array, CACHE_TEMPORARY);
         }
       }
 
