@@ -1053,24 +1053,24 @@ function hook_menu_get_item_alter(&$router_item, $path, $original_map) {
  * MENU_LOCAL_TASK. Example:
  * @code
  * // Make "Foo settings" appear on the admin Config page
- * $items['admin/config/foo'] = array(
+ * $items['admin/config/system/foo'] = array(
  *   'title' => 'Foo settings',
  *   'type' => MENU_NORMAL_ITEM,
  *   // Page callback, etc. need to be added here.
  * );
- * // Make "Global settings" the main tab on the "Foo settings" page
- * $items['admin/config/foo/global'] = array(
- *   'title' => 'Global settings',
+ * // Make "Tab 1" the main tab on the "Foo settings" page
+ * $items['admin/config/system/foo/tab1'] = array(
+ *   'title' => 'Tab 1',
  *   'type' => MENU_DEFAULT_LOCAL_TASK,
  *   // Access callback, page callback, and theme callback will be inherited
- *   // from 'admin/config/foo', if not specified here to override.
+ *   // from 'admin/config/system/foo', if not specified here to override.
  * );
- * // Make an additional tab called "Node settings" on "Foo settings"
- * $items['admin/config/foo/node'] = array(
- *   'title' => 'Node settings',
+ * // Make an additional tab called "Tab 2" on "Foo settings"
+ * $items['admin/config/system/foo/tab2'] = array(
+ *   'title' => 'Tab 2',
  *   'type' => MENU_LOCAL_TASK,
  *   // Page callback and theme callback will be inherited from
- *   // 'admin/config/foo', if not specified here to override.
+ *   // 'admin/config/system/foo', if not specified here to override.
  *   // Need to add access callback or access arguments.
  * );
  * @endcode
