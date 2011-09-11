@@ -21,8 +21,8 @@ function config_get_config_directory_name() {
  * Retrieve an iterable array which lists the children under a config 'branch'.
  *
  * Given the following configuration files:
- *   core.entity.node_type.article.json.php
- *   core.entity.node_type.page.json.php
+ *   core.entity.node_type.article.xml
+ *   core.entity.node_type.page.xml
  *
  * You can pass a prefix 'core.entity.node_type' and get back an array of the
  * filenames that match. This allows you to iterate through all files in a 
@@ -35,9 +35,9 @@ function config_get_config_directory_name() {
  *   An array of file names under a branch.
  */
 function config_get_signed_file_storage_names_with_prefix($prefix = '') {
-  $files = glob(conf_path() . '/config/' . $prefix . '*.json.php');
+  $files = glob(conf_path() . '/config/' . $prefix . '*.xml');
   $clean_name = function ($value) {
-    return basename($value, '.php');
+    return basename($value, '.xml');
   };
   return array_map($clean_name, $files);
 }
@@ -132,7 +132,7 @@ class SignedFileStorage {
   }
   
     public function getFilePath() {
-    return conf_path() . '/config/' . $this->name  . '.json.php';
+    return conf_path() . '/config/' . $this->name  . '.xml';
   }
 
   public function resign() {
