@@ -11,10 +11,10 @@
  * @return
  *   The directory name.
  */
-function config_get_config_directory_name() {
-  global $conf;
+function config_get_config_directory() {
+  global $drupal_config_directory_name;
   
-  return $conf['drupal_config_directory_name'];
+  return conf_path() . '/files/' . $drupal_config_directory_name;
 }
 
 /**
@@ -131,8 +131,8 @@ class SignedFileStorage {
     return file_exists($this->getFilePath());
   }
   
-    public function getFilePath() {
-    return conf_path() . '/config/' . $this->name  . '.xml';
+  public function getFilePath() {
+    return config_get_config_directory() . '/' . $this->name  . '.xml';
   }
 
   public function resign() {
