@@ -158,8 +158,7 @@ class SignedFileStorage {
 
   public function write($data) {
     $signature = config_sign_data($data);
-    $content = '<?php die(); ' . $signature . "\n" . $data;
-    if (!file_put_contents($this->getFilePath(), $content)) {
+    if (!file_put_contents($this->getFilePath(), $data)) {
       throw new Exception('Failed to write signed file.');
     }
   }
