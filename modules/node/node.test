@@ -2261,6 +2261,7 @@ class NodeTokenReplaceTestCase extends DrupalWebTestCase {
     $tests['[node:language]'] = check_plain($node->language);
     $tests['[node:url]'] = url('node/' . $node->nid, $url_options);
     $tests['[node:edit-url]'] = url('node/' . $node->nid . '/edit', $url_options);
+    $tests['[node:author]'] = check_plain(format_username($account));
     $tests['[node:author:uid]'] = $node->uid;
     $tests['[node:author:name]'] = check_plain(format_username($account));
     $tests['[node:created:since]'] = format_interval(REQUEST_TIME - $node->created, 2, $language->language);
