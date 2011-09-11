@@ -500,7 +500,7 @@ function block_custom_block_form($edit = array()) {
     '#maxlength' => 64,
     '#description' => t('A brief description of your block. Used on the <a href="@overview">Blocks administration page</a>.', array('@overview' => url('admin/structure/block'))),
     '#required' => TRUE,
-    '#weight' => -19,
+    '#weight' => -18,
   );
   $form['body_field']['#weight'] = -17;
   $form['body_field']['body'] = array(
