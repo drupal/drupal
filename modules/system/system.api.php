@@ -2627,17 +2627,21 @@ function hook_file_presave($file) {
 /**
  * Respond to a file being added.
  *
- * This hook is called before a file has been added to the database. The hook
+ * This hook is called after a file has been added to the database. The hook
  * doesn't distinguish between files created as a result of a copy or those
  * created by an upload.
  *
  * @param $file
- *   The file that is about to be saved.
+ *   The file that has been added.
  *
  * @see file_save()
  */
 function hook_file_insert($file) {
-
+  // Add a message to the log, if the file is a jpg
+  $validate = file_validate_extensions($file, 'jpg');
+  if (empty($validate)) {
+    watchdog('file', 'A jpg has been added.');
+  }
 }
 
 /**
