@@ -131,8 +131,8 @@ class SignedFileStorage {
     return file_exists($this->getFilePath());
   }
   
-    public function getFilePath() {
-    return conf_path() . '/config/' . $this->name  . '.xml';
+  public function getFilePath() {
+    return conf_path() . '/' . config_get_config_directory_name() . '/' . $this->name  . '.xml';
   }
 
   public function resign() {
