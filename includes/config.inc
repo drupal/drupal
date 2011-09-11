@@ -102,7 +102,7 @@ class SignedFileStorage {
   }
 
   /**
-   * Read a signed file and split the content into signature and data.
+   * Read and return a signed file and its signature.
    *
    * @return
    *   An array with "signature" and "data" keys.
@@ -110,21 +110,17 @@ class SignedFileStorage {
    * @throws
    *   Exception
    */
-  protected function readAndSplit() {
+  protected function readWithSignature() {
     // TODO: Optimize with explicit offsets?
     $content = file_get_contents($this->getFilePath());
     if ($content === FALSE) {
       throw new Exception('Read file is invalid.');
     }
-    $parts = explode("\n", $content, 2);
-    if (count($parts) !== 2) {
-      throw new Exception('Read file does not verify.');
+    $signature = file_get_contents($this->getFilePath() . '.key');
+    if ($signature === FALSE) {
+      throw new Exception('Signature file is invalid.');
     }
-    $header_parts = explode(' ', $parts[0]);
-    if (count($header_parts) !== 3) {
-      throw new Exception('Read file not valid.');
-    }
-    return array('data' => $parts[1], 'signature' => $header_parts[2]);
+    return array('data' => $content, 'signature' => $signature);
   }
 
   protected function exists() {
@@ -137,14 +133,14 @@ class SignedFileStorage {
 
   public function resign() {
     if ($this->exists()) {
-      $parts = $this->readAndSplit();
+      $parts = $this->readWithSignature();
       $this->write($parts['data']);
     }
   }
 
   public function verify($contentOnSuccess = FALSE) {
     if ($this->exists()) {
-      $split = $this->readAndSplit();
+      $split = $this->readWithSignature();
       $expected_signature = config_sign_data($split['data']);
       if ($expected_signature === $split['signature']) {
         if ($contentOnSuccess) {
@@ -159,7 +155,10 @@ class SignedFileStorage {
   public function write($data) {
     $signature = config_sign_data($data);
     if (!file_put_contents($this->getFilePath(), $data)) {
-      throw new Exception('Failed to write signed file.');
+      throw new Exception('Failed to write configuration file.');
+    }
+    if (!file_put_contents($this->getFilePath() . '.key', $signature)) {
+      throw new Exception('Failed to write signature file.');
     }
   }
 
