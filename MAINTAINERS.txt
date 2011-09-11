@@ -33,6 +33,7 @@ Batch system
 
 Cache system
 - Damien Tournoud 'DamZ' <http://drupal.org/user/22211>
+- Nathaniel Catchpole 'catch' <http://drupal.org/user/35733>
 
 Cron system
 - Károly Négyesi 'chx' <http://drupal.org/user/9446>
