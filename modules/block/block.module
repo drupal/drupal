@@ -912,7 +912,7 @@ function block_flush_caches() {
     _block_rehash($theme->name);
   }
 
-  return array('cache_block');
+  return array('block');
 }
 
 /**

@@ -421,7 +421,7 @@ function field_system_info_alter(&$info, $file, $type) {
  */
 function field_flush_caches() {
   field_sync_field_status();
-  return array('cache_field');
+  return array('field');
 }
 
 /**

@@ -262,7 +262,7 @@ function image_system_file_system_settings_submit($form, &$form_state) {
  * Implements hook_flush_caches().
  */
 function image_flush_caches() {
-  return array('cache_image');
+  return array('image');
 }
 
 /**

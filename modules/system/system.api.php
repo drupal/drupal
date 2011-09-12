@@ -2377,17 +2377,17 @@ function hook_mail($key, &$message, $params) {
 /**
  * Add a list of cache tables to be cleared.
  *
- * This hook allows your module to add cache table names to the list of cache
- * tables that will be cleared by the Clear button on the Performance page or
+ * This hook allows your module to add cache bins to the list of cache bins
+ * that will be cleared by the Clear button on the Performance page or
  * whenever drupal_flush_all_caches is invoked.
  *
  * @return
- *   An array of cache table names.
+ *   An array of cache bins.
  *
  * @see drupal_flush_all_caches()
  */
 function hook_flush_caches() {
-  return array('cache_example');
+  return array('example');
 }
 
 /**
