@@ -301,11 +301,6 @@ Drupal.tableDrag.prototype.makeDraggable = function (item) {
       $(self.oldRowElement).removeClass('drag-previous');
     }
 
-    // Hack for IE6 that flickers uncontrollably if select lists are moved.
-    if (navigator.userAgent.indexOf('MSIE 6.') != -1) {
-      $('select', this.table).css('display', 'none');
-    }
-
     // Hack for Konqueror, prevent the blur handler from firing.
     // Konqueror always gives links focus, even after returning false on mousedown.
     self.safeBlur = false;
@@ -559,11 +554,6 @@ Drupal.tableDrag.prototype.dropRow = function (event, self) {
     self.dragObject = null;
     $('body').removeClass('drag');
     clearInterval(self.scrollInterval);
-
-    // Hack for IE6 that flickers uncontrollably if select lists are moved.
-    if (navigator.userAgent.indexOf('MSIE 6.') != -1) {
-      $('select', this.table).css('display', 'block');
-    }
   }
 };
 

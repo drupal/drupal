@@ -243,7 +243,6 @@ table.screenshot {
 .exposed-filters .filters {
   float: left; /* LTR */
   margin-right: 1em; /* LTR */
-  width: 25em; /* IE6 */
 }
 .exposed-filters .form-item {
   margin: 0 0 0.1em 0;
