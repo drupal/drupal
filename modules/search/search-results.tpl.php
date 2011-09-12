@@ -21,7 +21,7 @@
  * @see template_preprocess_search_results()
  */
 ?>
-<?php if ($search_results) : ?>
+<?php if ($search_results): ?>
   <h2><?php print t('Search results');?></h2>
   <ol class="search-results <?php print $module; ?>-results">
     <?php print $search_results; ?>
