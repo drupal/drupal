@@ -675,7 +675,7 @@ function _node_types_build($rebuild = FALSE) {
     if (isset($_node_types)) {
       return $_node_types;
     }
-    if ($cache = cache_get($cid)) {
+    if ($cache = cache()->get($cid)) {
       $_node_types = $cache->data;
       return $_node_types;
     }
@@ -737,7 +737,7 @@ function _node_types_build($rebuild = FALSE) {
 
   asort($_node_types->names);
 
-  cache_set($cid, $_node_types);
+  cache()->set($cid, $_node_types);
 
   return $_node_types;
 }
@@ -746,7 +746,7 @@ function _node_types_build($rebuild = FALSE) {
  * Clears the node type cache.
  */
 function node_type_cache_reset() {
-  cache_clear_all('node_types:', 'cache', TRUE);
+  cache()->deletePrefix('node_types:');
   drupal_static_reset('_node_types_build');
 }
 
@@ -1319,8 +1319,8 @@ function node_view($node, $view_mode = 'full', $langcode = NULL) {
  * Drupal core defines the following view modes for nodes, with the following
  * default use cases:
  *   - full (default): node is being displayed on its own page (node/123)
- *   - teaser: node is being displayed on the default home page listing, on
- *     taxonomy listing pages, or on blog listing pages.
+ *   - teaser: node is being displayed on the default home page listing, or on
+ *     taxonomy listing pages.
  *   - rss: node displayed in an RSS feed.
  *   If search.module is enabled:
  *   - search_index: node is being indexed for search.
@@ -3947,4 +3947,15 @@ function node_file_download_access($field, $entity_type, $entity) {
   if ($entity_type == 'node') {
     return node_access('view', $entity);
   }
+}
+
+/**
+ * Implements hook_locale_language_delete().
+ */
+function node_locale_language_delete($language) {
+  // On nodes with this language, unset the language
+  db_update('node')
+    ->fields(array('language' => ''))
+    ->condition('language', $language->language)
+    ->execute();
 }

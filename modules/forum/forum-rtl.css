@@ -1,8 +1,7 @@
 
-#forum tr td.forum {
-  padding-left: 0.5em;
-  padding-right: 25px;
-  background-position: 98% 2px;
+#forum td.forum .icon {
+  float: right;
+  margin: 0 0 0 9px;
 }
 .forum-topic-navigation {
   padding: 1em 3em 0 0;

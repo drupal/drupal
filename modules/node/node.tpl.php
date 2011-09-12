@@ -24,7 +24,7 @@
  *   following:
  *   - node: The current template type, i.e., "theming hook".
  *   - node-[type]: The current node type. For example, if the node is a
- *     "Blog entry" it would result in "node-blog". Note that the machine
+ *     "Article" it would result in "node-article". Note that the machine
  *     name will often be in a short form of the human readable label.
  *   - node-teaser: Nodes in teaser form.
  *   - node-preview: Nodes in preview mode.
@@ -42,7 +42,7 @@
  *
  * Other variables:
  * - $node: Full node object. Contains data that may not be safe.
- * - $type: Node type, i.e. story, page, blog, etc.
+ * - $type: Node type, i.e. page, article, etc.
  * - $comment_count: Number of comments attached to the node.
  * - $uid: User ID of the node author.
  * - $created: Time the node was published formatted in Unix timestamp.

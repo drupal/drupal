@@ -129,12 +129,12 @@ function system_list($type) {
     if (isset($lists['bootstrap'])) {
       return $lists['bootstrap'];
     }
-    if ($cached = cache_get('bootstrap_modules', 'cache_bootstrap')) {
+    if ($cached = cache('bootstrap')->get('bootstrap_modules')) {
       $bootstrap_list = $cached->data;
     }
     else {
       $bootstrap_list = db_query("SELECT name, filename FROM {system} WHERE status = 1 AND bootstrap = 1 AND type = 'module' ORDER BY weight ASC, name ASC")->fetchAllAssoc('name');
-      cache_set('bootstrap_modules', $bootstrap_list, 'cache_bootstrap');
+      cache('bootstrap')->set('bootstrap_modules', $bootstrap_list);
     }
     // To avoid a separate database lookup for the filepath, prime the
     // drupal_get_filename() static cache for bootstrap modules only.
@@ -148,7 +148,7 @@ function system_list($type) {
   }
   // Otherwise build the list for enabled modules and themes.
   elseif (!isset($lists['module_enabled'])) {
-    if ($cached = cache_get('system_list', 'cache_bootstrap')) {
+    if ($cached = cache('bootstrap')->get('system_list')) {
       $lists = $cached->data;
     }
     else {
@@ -178,7 +178,7 @@ function system_list($type) {
           $lists['filepaths'][] = array('type' => $record->type, 'name' => $record->name, 'filepath' => $record->filename);
         }
       }
-      cache_set('system_list', $lists, 'cache_bootstrap');
+      cache('bootstrap')->set('system_list', $lists);
     }
     // To avoid a separate database lookup for the filepath, prime the
     // drupal_get_filename() static cache with all enabled modules and themes.
@@ -197,8 +197,7 @@ function system_list_reset() {
   drupal_static_reset('system_list');
   drupal_static_reset('system_rebuild_module_data');
   drupal_static_reset('list_themes');
-  cache_clear_all('bootstrap_modules', 'cache_bootstrap');
-  cache_clear_all('system_list', 'cache_bootstrap');
+  cache('bootstrap')->deleteMultiple(array('bootstrap_modules', 'system_list'));
 }
 
 /**
@@ -652,16 +651,16 @@ function module_implements($hook, $sort = FALSE, $reset = FALSE) {
   // per request.
   if ($reset) {
     $implementations = array();
-    cache_set('module_implements', array(), 'cache_bootstrap');
+    cache('bootstrap')->set('module_implements', array());
     drupal_static_reset('module_hook_info');
     drupal_static_reset('drupal_alter');
-    cache_clear_all('hook_info', 'cache_bootstrap');
+    cache('bootstrap')->delete('hook_info');
     return;
   }
 
   // Fetch implementations from cache.
   if (empty($implementations)) {
-    $implementations = cache_get('module_implements', 'cache_bootstrap');
+    $implementations = cache('bootstrap')->get('module_implements');
     if ($implementations === FALSE) {
       $implementations = array();
     }
@@ -730,7 +729,7 @@ function module_hook_info() {
 
   if (!isset($hook_info)) {
     $hook_info = array();
-    $cache = cache_get('hook_info', 'cache_bootstrap');
+    $cache = cache('bootstrap')->get('hook_info');
     if ($cache === FALSE) {
       // Rebuild the cache and save it.
       // We can't use module_invoke_all() here or it would cause an infinite
@@ -751,7 +750,7 @@ function module_hook_info() {
           $function($hook_info);
         }
       }
-      cache_set('hook_info', $hook_info, 'cache_bootstrap');
+      cache('bootstrap')->set('hook_info', $hook_info);
     }
     else {
       $hook_info = $cache->data;
@@ -773,7 +772,7 @@ function module_implements_write_cache() {
   // optimized as tightly, and not doing so keeps the cache entry smaller.
   if (isset($implementations['#write_cache']) && ($_SERVER['REQUEST_METHOD'] == 'GET' || $_SERVER['REQUEST_METHOD'] == 'HEAD')) {
     unset($implementations['#write_cache']);
-    cache_set('module_implements', $implementations, 'cache_bootstrap');
+    cache('bootstrap')->set('module_implements', $implementations);
   }
 }
 

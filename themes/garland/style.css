@@ -868,22 +868,22 @@ ul.inline li {
 /**
  * Aggregator.module
  */
-#aggregator {
+.aggregator {
   margin-top: 1em;
 }
-#aggregator .feed-item-title {
+.aggregator .feed-item-title {
   font-size: 160%;
   line-height: 130%;
 }
-#aggregator .feed-item {
+.aggregator .feed-item {
   border-bottom: 1px solid #e9eff3;
   margin: -1.5em -31px 1.75em;
   padding: 1.5em 31px;
 }
-#aggregator .feed-item-categories {
+.aggregator .feed-item-categories {
   font-size: 0.92em;
 }
-#aggregator .feed-item-meta {
+.aggregator .feed-item-meta {
   font-size: 0.92em;
   color: #898989;
 }

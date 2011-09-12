@@ -675,10 +675,6 @@ function hook_field_is_empty($item, $field) {
  * Widget hooks are typically called by the Field Attach API during the
  * creation of the field form structure with field_attach_form().
  *
- * @see hook_field_widget_info_alter()
- * @see hook_field_widget_form()
- * @see hook_field_widget_error()
- *
  * @return
  *   An array describing the widget types implemented by the module.
  *   The keys are widget type names. To avoid name clashes, widget type
@@ -704,6 +700,12 @@ function hook_field_is_empty($item, $field) {
  *       - FIELD_BEHAVIOR_DEFAULT: (default) If the widget accepts default
  *         values.
  *       - FIELD_BEHAVIOR_NONE: if the widget does not support default values.
+ *
+ * @see hook_field_widget_info_alter()
+ * @see hook_field_widget_form()
+ * @see hook_field_widget_form_alter()
+ * @see hook_field_widget_WIDGET_TYPE_form_alter()
+ * @see hook_field_widget_error()
  */
 function hook_field_widget_info() {
     return array(
@@ -783,8 +785,8 @@ function hook_field_widget_info_alter(&$info) {
  * properties from $field and $instance and set them as ad-hoc
  * $element['#custom'] properties, for later use by its element callbacks.
  *
- * @see field_widget_field()
- * @see field_widget_instance()
+ * Other modules may alter the form element provided by this function using
+ * hook_field_widget_form_alter().
  *
  * @param $form
  *   The form structure where widgets are being attached to. This might be a
@@ -826,6 +828,11 @@ function hook_field_widget_info_alter(&$info) {
  *
  * @return
  *   The form elements for a single widget for this field.
+ *
+ * @see field_widget_field()
+ * @see field_widget_instance()
+ * @see hook_field_widget_form_alter()
+ * @see hook_field_widget_WIDGET_TYPE_form_alter()
  */
 function hook_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
   $element += array(
@@ -833,6 +840,69 @@ function hook_field_widget_form(&$form, &$form_state, $field, $instance, $langco
     '#default_value' => isset($items[$delta]) ? $items[$delta] : '',
   );
   return $element;
+}
+
+/**
+ * Alter forms for field widgets provided by other modules.
+ *
+ * @param $element
+ *   The field widget form element as constructed by hook_field_widget_form().
+ * @param $form_state
+ *   An associative array containing the current state of the form.
+ * @param $context
+ *   An associative array containing the following key-value pairs, matching the
+ *   arguments received by hook_field_widget_form():
+ *   - "form": The form structure where widgets are being attached to. This
+ *     might be a full form structure, or a sub-element of a larger form.
+ *   - "field": The field structure.
+ *   - "instance": The field instance structure.
+ *   - "langcode": The language associated with $items.
+ *   - "items": Array of default values for this field.
+ *   - "delta": The order of this item in the array of subelements (0, 1, 2,
+ *     etc).
+ *
+ * @see hook_field_widget_form()
+ * @see hook_field_widget_WIDGET_TYPE_form_alter
+ */
+function hook_field_widget_form_alter(&$element, &$form_state, $context) {
+  // Add a css class to widget form elements for all fields of type mytype.
+  if ($context['field']['type'] == 'mytype') {
+    // Be sure not to overwrite existing attributes.
+    $element['#attributes']['class'][] = 'myclass';
+  }
+}
+
+/**
+ * Alter widget forms for a specific widget provided by another module.
+ *
+ * Modules can implement hook_field_widget_WIDGET_TYPE_form_alter() to modify a
+ * specific widget form, rather than using hook_field_widget_form_alter() and
+ * checking the widget type.
+ *
+ * @param $element
+ *   The field widget form element as constructed by hook_field_widget_form().
+ * @param $form_state
+ *   An associative array containing the current state of the form.
+ * @param $context
+ *   An associative array containing the following key-value pairs, matching the
+ *   arguments received by hook_field_widget_form():
+ *   - "form": The form structure where widgets are being attached to. This
+ *     might be a full form structure, or a sub-element of a larger form.
+ *   - "field": The field structure.
+ *   - "instance": The field instance structure.
+ *   - "langcode": The language associated with $items.
+ *   - "items": Array of default values for this field.
+ *   - "delta": The order of this item in the array of subelements (0, 1, 2,
+ *     etc).
+ *
+ * @see hook_field_widget_form()
+ * @see hook_field_widget_form_alter()
+ */
+function hook_field_widget_WIDGET_TYPE_form_alter(&$element, &$form_state, $context) {
+  // Code here will only act on widgets of type WIDGET_TYPE.  For example,
+  // hook_field_widget_mymodule_autocomplete_form_alter() will only act on
+  // widgets of type 'mymodule_autocomplete'.
+  $element['#autocomplete_path'] = 'mymodule/autocomplete_path';
 }
 
 /**

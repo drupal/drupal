@@ -824,18 +824,18 @@ class FieldAttachOtherTestCase extends FieldAttachTestCase {
     $cid = "field:$entity_type:{$entity_init->ftid}";
 
     // Check that no initial cache entry is present.
-    $this->assertFalse(cache_get($cid, 'cache_field'), t('Non-cached: no initial cache entry'));
+    $this->assertFalse(cache('field')->get($cid), t('Non-cached: no initial cache entry'));
 
     // Save, and check that no cache entry is present.
     $entity = clone($entity_init);
     $entity->{$this->field_name}[$langcode] = $values;
     field_attach_insert($entity_type, $entity);
-    $this->assertFalse(cache_get($cid, 'cache_field'), t('Non-cached: no cache entry on insert'));
+    $this->assertFalse(cache('field')->get($cid), t('Non-cached: no cache entry on insert'));
 
     // Load, and check that no cache entry is present.
     $entity = clone($entity_init);
     field_attach_load($entity_type, array($entity->ftid => $entity));
-    $this->assertFalse(cache_get($cid, 'cache_field'), t('Non-cached: no cache entry on load'));
+    $this->assertFalse(cache('field')->get($cid), t('Non-cached: no cache entry on load'));
 
 
     // Cacheable entity type.
@@ -846,24 +846,24 @@ class FieldAttachOtherTestCase extends FieldAttachTestCase {
     field_create_instance($instance);
 
     // Check that no initial cache entry is present.
-    $this->assertFalse(cache_get($cid, 'cache_field'), t('Cached: no initial cache entry'));
+    $this->assertFalse(cache('field')->get($cid), t('Cached: no initial cache entry'));
 
     // Save, and check that no cache entry is present.
     $entity = clone($entity_init);
     $entity->{$this->field_name}[$langcode] = $values;
     field_attach_insert($entity_type, $entity);
-    $this->assertFalse(cache_get($cid, 'cache_field'), t('Cached: no cache entry on insert'));
+    $this->assertFalse(cache('field')->get($cid), t('Cached: no cache entry on insert'));
 
     // Load a single field, and check that no cache entry is present.
     $entity = clone($entity_init);
     field_attach_load($entity_type, array($entity->ftid => $entity), FIELD_LOAD_CURRENT, array('field_id' => $this->field_id));
-    $cache = cache_get($cid, 'cache_field');
-    $this->assertFalse(cache_get($cid, 'cache_field'), t('Cached: no cache entry on loading a single field'));
+    $cache = cache('field')->get($cid);
+    $this->assertFalse(cache('field')->get($cid), t('Cached: no cache entry on loading a single field'));
 
     // Load, and check that a cache entry is present with the expected values.
     $entity = clone($entity_init);
     field_attach_load($entity_type, array($entity->ftid => $entity));
-    $cache = cache_get($cid, 'cache_field');
+    $cache = cache('field')->get($cid);
     $this->assertEqual($cache->data[$this->field_name][$langcode], $values, t('Cached: correct cache entry on load'));
 
     // Update with different values, and check that the cache entry is wiped.
@@ -871,12 +871,12 @@ class FieldAttachOtherTestCase extends FieldAttachTestCase {
     $entity = clone($entity_init);
     $entity->{$this->field_name}[$langcode] = $values;
     field_attach_update($entity_type, $entity);
-    $this->assertFalse(cache_get($cid, 'cache_field'), t('Cached: no cache entry on update'));
+    $this->assertFalse(cache('field')->get($cid), t('Cached: no cache entry on update'));
 
     // Load, and check that a cache entry is present with the expected values.
     $entity = clone($entity_init);
     field_attach_load($entity_type, array($entity->ftid => $entity));
-    $cache = cache_get($cid, 'cache_field');
+    $cache = cache('field')->get($cid);
     $this->assertEqual($cache->data[$this->field_name][$langcode], $values, t('Cached: correct cache entry on load'));
 
     // Create a new revision, and check that the cache entry is wiped.
@@ -885,18 +885,18 @@ class FieldAttachOtherTestCase extends FieldAttachTestCase {
     $entity = clone($entity_init);
     $entity->{$this->field_name}[$langcode] = $values;
     field_attach_update($entity_type, $entity);
-    $cache = cache_get($cid, 'cache_field');
-    $this->assertFalse(cache_get($cid, 'cache_field'), t('Cached: no cache entry on new revision creation'));
+    $cache = cache('field')->get($cid);
+    $this->assertFalse(cache('field')->get($cid), t('Cached: no cache entry on new revision creation'));
 
     // Load, and check that a cache entry is present with the expected values.
     $entity = clone($entity_init);
     field_attach_load($entity_type, array($entity->ftid => $entity));
-    $cache = cache_get($cid, 'cache_field');
+    $cache = cache('field')->get($cid);
     $this->assertEqual($cache->data[$this->field_name][$langcode], $values, t('Cached: correct cache entry on load'));
 
     // Delete, and check that the cache entry is wiped.
     field_attach_delete($entity_type, $entity);
-    $this->assertFalse(cache_get($cid, 'cache_field'), t('Cached: no cache entry after delete'));
+    $this->assertFalse(cache('field')->get($cid), t('Cached: no cache entry after delete'));
   }
 
   /**
@@ -2356,6 +2356,7 @@ class FieldCrudTestCase extends FieldTestCase {
     $this->assertTrue($field_definition <= $field, t('The field was properly read.'));
 
     module_disable($modules, FALSE);
+    drupal_flush_all_caches();
 
     $fields = field_read_fields(array('field_name' => $field_name), array('include_inactive' => TRUE));
     $this->assertTrue(isset($fields[$field_name]) && $field_definition < $field, t('The field is properly read when explicitly fetching inactive fields.'));
@@ -2368,6 +2369,7 @@ class FieldCrudTestCase extends FieldTestCase {
 
       $module = array_shift($modules);
       module_enable(array($module), FALSE);
+      drupal_flush_all_caches();
     }
 
     // Check that the field is active again after all modules have been

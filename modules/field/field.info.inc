@@ -76,12 +76,12 @@ function _field_info_collate_types($reset = FALSE) {
   if ($reset) {
     $info = NULL;
     // Clear all languages.
-    cache_clear_all('field_info_types:', 'cache_field', TRUE);
+    cache('field')->deletePrefix('field_info_types:');
     return;
   }
 
   if (!isset($info)) {
-    if ($cached = cache_get("field_info_types:$langcode", 'cache_field')) {
+    if ($cached = cache('field')->get("field_info_types:$langcode")) {
       $info = $cached->data;
     }
     else {
@@ -149,7 +149,7 @@ function _field_info_collate_types($reset = FALSE) {
       }
       drupal_alter('field_storage_info', $info['storage types']);
 
-      cache_set("field_info_types:$langcode", $info, 'cache_field');
+      cache('field')->set("field_info_types:$langcode", $info);
     }
   }
 
@@ -181,12 +181,12 @@ function _field_info_collate_fields($reset = FALSE) {
 
   if ($reset) {
     $info = NULL;
-    cache_clear_all('field_info_fields', 'cache_field');
+    cache('field')->delete('field_info_fields');
     return;
   }
 
   if (!isset($info)) {
-    if ($cached = cache_get('field_info_fields', 'cache_field')) {
+    if ($cached = cache('field')->get('field_info_fields')) {
       $info = $cached->data;
     }
     else {
@@ -238,7 +238,7 @@ function _field_info_collate_fields($reset = FALSE) {
         }
       }
 
-      cache_set('field_info_fields', $info, 'cache_field');
+      cache('field')->set('field_info_fields', $info);
     }
   }
 

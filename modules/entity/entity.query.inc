@@ -234,6 +234,8 @@ class EntityFieldQuery {
    *     literals of the same type as the column.
    *   - 'BETWEEN': This operator expects $value to be an array of two literals
    *     of the same type as the column.
+   *   The operator can be omitted, and will default to 'IN' if the value is an
+   *   array, or to '=' otherwise.
    *
    * @return EntityFieldQuery
    *   The called object.
@@ -350,6 +352,8 @@ class EntityFieldQuery {
    *     literals of the same type as the column.
    *   - 'BETWEEN': This operator expects $value to be an array of two literals
    *     of the same type as the column.
+   *   The operator can be omitted, and will default to 'IN' if the value is an
+   *   array, or to '=' otherwise.
    * @param $delta_group
    *   An arbitrary identifier: conditions in the same group must have the same
    *   $delta_group. For example, let's presume a multivalue field which has

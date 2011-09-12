@@ -35,7 +35,7 @@ define('DRUPAL_ROOT', getcwd());
 define('MAINTENANCE_MODE', 'update');
 
 /**
- * Render a 403 access denied page for authorize.php
+ * Renders a 403 access denied page for authorize.php.
  */
 function authorize_access_denied_page() {
   drupal_add_http_header('Status', '403 Forbidden');
@@ -45,7 +45,7 @@ function authorize_access_denied_page() {
 }
 
 /**
- * Determine if the current user is allowed to run authorize.php.
+ * Determines if the current user is allowed to run authorize.php.
  *
  * The killswitch in settings.php overrides all else, otherwise, the user must
  * have access to the 'administer software updates' permission.
@@ -145,7 +145,7 @@ if (authorize_access_allowed()) {
         l(t('Front page'), '<front>'),
       ));
     }
-	
+
     $output .= theme('item_list', array('items' => $links, 'title' => t('Next steps')));
   }
   // If a batch is running, let it run.

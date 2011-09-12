@@ -204,8 +204,8 @@ abstract class UpgradePathTestCase extends DrupalWebTestCase {
       ->execute();
 
     try {
-      cache_clear_all('variables', 'cache');
-      cache_clear_all('variables', 'cache_bootstrap');
+      cache()->delete('variables');
+      cache('bootstrap')->delete('variables');
     }
     // Since cache_bootstrap won't exist in a Drupal 6 site, ignore the
     // exception if the above fails.

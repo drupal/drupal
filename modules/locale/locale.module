@@ -162,7 +162,7 @@ function locale_menu() {
     'access arguments' => array('translate interface'),
     'weight' => 20,
     'type' => MENU_LOCAL_TASK,
-    'file' => 'locale.admin.inc',
+    'file' => 'locale.bulk.inc',
   );
   $items['admin/config/regional/translate/export'] = array(
     'title' => 'Export',
@@ -170,7 +170,7 @@ function locale_menu() {
     'access arguments' => array('translate interface'),
     'weight' => 30,
     'type' => MENU_LOCAL_TASK,
-    'file' => 'locale.admin.inc',
+    'file' => 'locale.bulk.inc',
   );
   $items['admin/config/regional/translate/edit/%'] = array(
     'title' => 'Edit string',
@@ -516,6 +516,7 @@ function locale_language_types_info() {
  * Implements hook_language_negotiation_info().
  */
 function locale_language_negotiation_info() {
+  require_once DRUPAL_ROOT . '/includes/locale.inc';
   $file = 'includes/locale.inc';
   $providers = array();
 
@@ -637,7 +638,7 @@ function locale($string = NULL, $context = NULL, $langcode = NULL) {
     // perspective that is a really bad idea, so we have no user
     // interface for this. Be careful when turning this option off!
     if (variable_get('locale_cache_strings', 1) == 1) {
-      if ($cache = cache_get('locale:' . $langcode, 'cache')) {
+      if ($cache = cache()->get('locale:' . $langcode)) {
         $locale_t[$langcode] = $cache->data;
       }
       elseif (lock_acquire('locale_cache_' . $langcode)) {
@@ -648,7 +649,7 @@ function locale($string = NULL, $context = NULL, $langcode = NULL) {
         foreach ($result as $data) {
           $locale_t[$langcode][$data->context][$data->source] = (empty($data->translation) ? TRUE : $data->translation);
         }
-        cache_set('locale:' . $langcode, $locale_t[$langcode]);
+        cache()->set('locale:' . $langcode, $locale_t[$langcode]);
         lock_release('locale_cache_' . $langcode);
       }
     }
@@ -676,7 +677,7 @@ function locale($string = NULL, $context = NULL, $langcode = NULL) {
           ->fields(array('version' => VERSION))
           ->condition('lid', $translation->lid)
           ->execute();
-        cache_clear_all('locale:', 'cache', TRUE);
+        cache()->deletePrefix('locale:');
       }
     }
     else {
@@ -691,7 +692,7 @@ function locale($string = NULL, $context = NULL, $langcode = NULL) {
         ->execute();
       $locale_t[$langcode][$context][$string] = TRUE;
       // Clear locale cache so this string can be added in a later request.
-      cache_clear_all('locale:', 'cache', TRUE);
+      cache()->deletePrefix('locale:');
     }
   }
 
@@ -778,6 +779,51 @@ function locale_language_list($field = 'name', $all = FALSE) {
 }
 
 /**
+ * Delete a language.
+ *
+ * @param $langcode
+ *   Language code of the language to be deleted.
+ * @return
+ *   TRUE if language is successfully deleted. Otherwise FALSE.
+ */
+function locale_language_delete($langcode) {
+  $languages = language_list();
+  if (isset($languages[$langcode])) {
+    $language = $languages[$langcode];
+
+    module_invoke_all('locale_language_delete', $language);
+
+    // Remove translations first.
+    db_delete('locales_target')
+      ->condition('language', $language->language)
+      ->execute();
+
+    // Remove the language.
+    db_delete('languages')
+      ->condition('language', $language->language)
+      ->execute();
+
+    if ($language->enabled) {
+      variable_set('language_count', variable_get('language_count', 1) - 1);
+    }
+
+    drupal_static_reset('language_list');
+    _locale_invalidate_js($language->language);
+
+    // Changing the language settings impacts the interface:
+    cache('page')->flush();
+
+    // Clearing all locale cache from database
+    cache()->delete('locale:' . $language->language);
+
+    $variables = array('%locale' => $language->name);
+    watchdog('locale', 'The language %locale has been removed.', $variables);
+    return TRUE;
+  }
+  return FALSE;
+}
+
+/**
  * Implements hook_modules_installed().
  */
 function locale_modules_installed($modules) {
@@ -805,7 +851,7 @@ function locale_themes_enabled($themes) {
  *   translations for.
  */
 function locale_system_update($components) {
-  include_once DRUPAL_ROOT . '/includes/locale.inc';
+  include_once drupal_get_path('module', 'locale') . '/locale.bulk.inc';
   if ($batch = locale_batch_by_component($components)) {
     batch_set($batch);
   }

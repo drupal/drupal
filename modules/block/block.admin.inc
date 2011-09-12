@@ -276,7 +276,7 @@ function block_admin_configure($form, &$form_state, $module, $delta) {
     '#maxlength' => 64,
     '#description' => $block->module == 'block' ? t('The title of the block as shown to the user.') : t('Override the default title for the block. Use <em>!placeholder</em> to display no title, or leave blank to use the default block title.', array('!placeholder' => '&lt;none&gt;')),
     '#default_value' => isset($block->title) ? $block->title : '',
-    '#weight' => -18,
+    '#weight' => -19,
   );
 
   // Module-specific block configuration.
@@ -364,7 +364,7 @@ function block_admin_configure($form, &$form_state, $module, $delta) {
       BLOCK_VISIBILITY_NOTLISTED => t('All pages except those listed'),
       BLOCK_VISIBILITY_LISTED => t('Only the listed pages'),
     );
-    $description = t("Specify pages by using their paths. Enter one path per line. The '*' character is a wildcard. Example paths are %blog for the blog page and %blog-wildcard for every personal blog. %front is the front page.", array('%blog' => 'blog', '%blog-wildcard' => 'blog/*', '%front' => '<front>'));
+    $description = t("Specify pages by using their paths. Enter one path per line. The '*' character is a wildcard. Example paths are %user for the current user's page and %user-wildcard for every user page. %front is the front page.", array('%user' => 'user', '%user-wildcard' => 'user/*', '%front' => '<front>'));
 
     if (module_exists('php') && $access) {
       $options += array(BLOCK_VISIBILITY_PHP => t('Pages on which this PHP code returns <code>TRUE</code> (experts only)'));

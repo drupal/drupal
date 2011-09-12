@@ -606,8 +606,33 @@ function hook_menu_get_item_alter(&$router_item, $path, $original_map) {
  *     return db_query("SELECT * FROM {mymodule_abc} WHERE abc_id = :abc_id", array(':abc_id' => $abc_id))->fetchObject();
  *   }
  * @endcode
- * This 'abc' object will then be passed into the page callback function
- * mymodule_abc_edit() to replace the integer 1 in the page arguments.
+ * This 'abc' object will then be passed into the callback functions defined
+ * for the menu item, such as the page callback function mymodule_abc_edit()
+ * to replace the integer 1 in the argument array.
+ *
+ * You can also define a %wildcard_to_arg() function (for the example menu
+ * entry above this would be 'mymodule_abc_to_arg()'). The _to_arg() function
+ * is invoked to retrieve a value that is used in the path in place of the
+ * wildcard. A good example is user.module, which defines
+ * user_uid_optional_to_arg() (corresponding to the menu entry
+ * 'user/%user_uid_optional'). This function returns the user ID of the
+ * current user.
+ *
+ * The _to_arg() function will get called with three arguments:
+ * - $arg: A string representing whatever argument may have been supplied by
+ *   the caller (this is particularly useful if you want the _to_arg()
+ *   function only supply a (default) value if no other value is specified,
+ *   as in the case of user_uid_optional_to_arg().
+ * - $map: An array of all path fragments (e.g. array('node','123','edit') for
+ *   'node/123/edit').
+ * - $index: An integer indicating which element of $map corresponds to $arg.
+ *
+ * _load() and _to_arg() functions may seem similar at first glance, but they
+ * have different purposes and are called at different times. _load()
+ * functions are called when the menu system is collecting arguments to pass
+ * to the callback functions defined for the menu item. _to_arg() functions
+ * are called when the menu system is generating links to related paths, such
+ * as the tabs for a set of MENU_LOCAL_TASK items.
  *
  * You can also make groups of menu items to be rendered (by default) as tabs
  * on a page. To do that, first create one menu item of type MENU_NORMAL_ITEM,
@@ -618,24 +643,24 @@ function hook_menu_get_item_alter(&$router_item, $path, $original_map) {
  * MENU_LOCAL_TASK. Example:
  * @code
  * // Make "Foo settings" appear on the admin Config page
- * $items['admin/config/foo'] = array(
+ * $items['admin/config/system/foo'] = array(
  *   'title' => 'Foo settings',
  *   'type' => MENU_NORMAL_ITEM,
  *   // Page callback, etc. need to be added here.
  * );
- * // Make "Global settings" the main tab on the "Foo settings" page
- * $items['admin/config/foo/global'] = array(
- *   'title' => 'Global settings',
+ * // Make "Tab 1" the main tab on the "Foo settings" page
+ * $items['admin/config/system/foo/tab1'] = array(
+ *   'title' => 'Tab 1',
  *   'type' => MENU_DEFAULT_LOCAL_TASK,
  *   // Access callback, page callback, and theme callback will be inherited
- *   // from 'admin/config/foo', if not specified here to override.
+ *   // from 'admin/config/system/foo', if not specified here to override.
  * );
- * // Make an additional tab called "Node settings" on "Foo settings"
- * $items['admin/config/foo/node'] = array(
- *   'title' => 'Node settings',
+ * // Make an additional tab called "Tab 2" on "Foo settings"
+ * $items['admin/config/system/foo/tab2'] = array(
+ *   'title' => 'Tab 2',
  *   'type' => MENU_LOCAL_TASK,
  *   // Page callback and theme callback will be inherited from
- *   // 'admin/config/foo', if not specified here to override.
+ *   // 'admin/config/system/foo', if not specified here to override.
  *   // Need to add access callback or access arguments.
  * );
  * @endcode
@@ -767,15 +792,15 @@ function hook_menu_get_item_alter(&$router_item, $path, $original_map) {
  * http://drupal.org/node/102338.
  */
 function hook_menu() {
-  $items['blog'] = array(
-    'title' => 'blogs',
-    'page callback' => 'blog_page',
+  $items['example'] = array(
+    'title' => 'Example Page',
+    'page callback' => 'example_page',
     'access arguments' => array('access content'),
     'type' => MENU_SUGGESTED_ITEM,
   );
-  $items['blog/feed'] = array(
-    'title' => 'RSS feed',
-    'page callback' => 'blog_feed',
+  $items['example/feed'] = array(
+    'title' => 'Example RSS feed',
+    'page callback' => 'example_feed',
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
@@ -1104,7 +1129,7 @@ function hook_menu_contextual_links_alter(&$links, $router_item, $root_path) {
  * page. Some legacy modules may not return structured content at all: their
  * pre-rendered markup will be located in $page['content']['main']['#markup'].
  *
- * Pages built by Drupal's core Node and Blog modules use a standard structure:
+ * Pages built by Drupal's core Node module use a standard structure:
  *
  * @code
  *   // Node body.
@@ -1942,17 +1967,17 @@ function hook_mail($key, &$message, $params) {
 /**
  * Add a list of cache tables to be cleared.
  *
- * This hook allows your module to add cache table names to the list of cache
- * tables that will be cleared by the Clear button on the Performance page or
+ * This hook allows your module to add cache bins to the list of cache bins
+ * that will be cleared by the Clear button on the Performance page or
  * whenever drupal_flush_all_caches is invoked.
  *
  * @return
- *   An array of cache table names.
+ *   An array of cache bins.
  *
  * @see drupal_flush_all_caches()
  */
 function hook_flush_caches() {
-  return array('cache_example');
+  return array('example');
 }
 
 /**
@@ -2216,17 +2241,21 @@ function hook_file_presave($file) {
 /**
  * Respond to a file being added.
  *
- * This hook is called before a file has been added to the database. The hook
+ * This hook is called after a file has been added to the database. The hook
  * doesn't distinguish between files created as a result of a copy or those
  * created by an upload.
  *
  * @param $file
- *   The file that is about to be saved.
+ *   The file that has been added.
  *
  * @see file_save()
  */
 function hook_file_insert($file) {
-
+  // Add a message to the log, if the file is a jpg
+  $validate = file_validate_extensions($file, 'jpg');
+  if (empty($validate)) {
+    watchdog('file', 'A jpg has been added.');
+  }
 }
 
 /**
@@ -3972,7 +4001,7 @@ function hook_updater_info_alter(&$updaters) {
  *   The associative array of countries keyed by ISO 3166-1 country code.
  *
  * @see country_get_list()
- * @see _country_get_predefined_list()
+ * @see standard_country_list()
  */
 function hook_countries_alter(&$countries) {
   // Elbonia is now independent, so add it to the country list.

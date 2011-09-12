@@ -478,6 +478,8 @@ function aggregator_save_category($edit) {
  *
  * @param $edit
  *   An associative array describing the feed to be added/edited/deleted.
+ * @return
+ *   The ID of the feed.
  */
 function aggregator_save_feed($edit) {
   if (!empty($edit['fid'])) {
@@ -544,6 +546,8 @@ function aggregator_save_feed($edit) {
       }
     }
   }
+
+  return $edit['fid'];
 }
 
 /**

@@ -134,15 +134,6 @@ html.js body {
 }
 
 /**
- * IE6 shows elements with position:fixed as position:static so replace
- * it with position:absolute;
- */
-* html #overlay-close,
-* html #overlay-close:hover {
-  position: absolute;
-}
-
-/**
  * Disable message.
  */
 #overlay-disable-message {

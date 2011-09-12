@@ -45,7 +45,7 @@
  * for its existence before printing. The default keys of 'type', 'user' and
  * 'date' always exist for node searches. Modules may provide other data.
  * @code
- *   <?php if (isset($info_split['comment'])) : ?>
+ *   <?php if (isset($info_split['comment'])): ?>
  *     <span class="info-comment">
  *       <?php print $info_split['comment']; ?>
  *     </span>
@@ -69,10 +69,10 @@
   </h3>
   <?php print render($title_suffix); ?>
   <div class="search-snippet-info">
-    <?php if ($snippet) : ?>
+    <?php if ($snippet): ?>
       <p class="search-snippet"<?php print $content_attributes; ?>><?php print $snippet; ?></p>
     <?php endif; ?>
-    <?php if ($info) : ?>
+    <?php if ($info): ?>
       <p class="search-info"><?php print $info; ?></p>
     <?php endif; ?>
   </div>

@@ -6,7 +6,7 @@
 
     <span class="submitted"><?php print $submitted ?></span>
 
-  <?php if ($new) : ?>
+  <?php if ($new): ?>
     <span class="new"><?php print drupal_ucfirst($new) ?></span>
   <?php endif; ?>
 

@@ -792,7 +792,6 @@ function hook_node_submit($node, $form, &$form_state) {
  * the RSS item generated for this node.
  * For details on how this is used, see node_feed().
  *
- * @see blog_node_view()
  * @see forum_node_view()
  * @see comment_node_view()
  *
@@ -849,8 +848,8 @@ function hook_node_view_alter(&$build) {
  * Define module-provided node types.
  *
  * This hook allows a module to define one or more of its own node types. For
- * example, the blog module uses it to define a blog node-type named "Blog
- * entry." The name and attributes of each desired node type are specified in
+ * example, the forum module uses it to define a forum node-type named "Forum
+ * topic." The name and attributes of each desired node type are specified in
  * an array returned by the hook.
  *
  * Only module-provided node types should be defined through this hook. User-
@@ -892,10 +891,11 @@ function hook_node_view_alter(&$build) {
  */
 function hook_node_info() {
   return array(
-    'blog' => array(
-      'name' => t('Blog entry'),
-      'base' => 'blog',
-      'description' => t('Use for multi-user blogs. Every user gets a personal blog.'),
+    'forum' => array(
+      'name' => t('Forum topic'),
+      'base' => 'forum',
+      'description' => t('A <em>forum topic</em> starts a new discussion thread within a forum.'),
+      'title_label' => t('Subject'),
     )
   );
 }

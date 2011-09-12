@@ -28,7 +28,7 @@ define('DRUPAL_MINIMUM_PHP_MEMORY_LIMIT', '32M');
 /**
  * Indicates that the item should never be removed unless explicitly selected.
  *
- * The item may be removed using cache_clear_all() with a cache ID.
+ * The item may be removed using cache()->delete() with a cache ID.
  */
 define('CACHE_PERMANENT', 0);
 
@@ -224,6 +224,195 @@ define('REGISTRY_WRITE_LOOKUP_CACHE', 2);
  * @see http://php.net/manual/en/language.functions.php
  */
 define('DRUPAL_PHP_FUNCTION_PATTERN', '[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*');
+
+/**
+ * Provides a caching wrapper to be used in place of large array structures.
+ *
+ * This class should be extended by systems that need to cache large amounts
+ * of data and have it represented as an array to calling functions. These
+ * arrays can become very large, so ArrayAccess is used to allow different
+ * strategies to be used for caching internally (lazy loading, building caches
+ * over time etc.). This can dramatically reduce the amount of data that needs
+ * to be loaded from cache backends on each request, and memory usage from
+ * static caches of that same data.
+ *
+ * Note that array_* functions do not work with ArrayAccess. Systems using
+ * DrupalCacheArray should use this only internally. If providing API functions
+ * that return the full array, this can be cached separately or returned
+ * directly. However since DrupalCacheArray holds partial content by design, it
+ * should be a normal PHP array or otherwise contain the full structure.
+ *
+ * Note also that due to limitations in PHP prior to 5.3.4, it is impossible to
+ * write directly to the contents of nested arrays contained in this object.
+ * Only writes to the top-level array elements are possible. So if you
+ * previously had set $object['foo'] = array(1, 2, 'bar' => 'baz'), but later
+ * want to change the value of 'bar' from 'baz' to 'foobar', you cannot do so
+ * a targeted write like $object['foo']['bar'] = 'foobar'. Instead, you must
+ * overwrite the entire top-level 'foo' array with the entire set of new
+ * values: $object['foo'] = array(1, 2, 'bar' => 'foobar'). Due to this same
+ * limitation, attempts to create references to any contained data, nested or
+ * otherwise, will fail silently. So $var = &$object['foo'] will not throw an
+ * error, and $var will be populated with the contents of $object['foo'], but
+ * that data will be passed by value, not reference. For more information on
+ * the PHP limitation, see the note in the official PHP documentation at·
+ * http://php.net/manual/en/arrayaccess.offsetget.php on
+ * ArrayAccess::offsetGet().
+ *
+ * By default, the class accounts for caches where calling functions might
+ * request keys in the array that won't exist even after a cache rebuild. This
+ * prevents situations where a cache rebuild would be triggered over and over
+ * due to a 'missing' item. These cases are stored internally as a value of
+ * NULL. This means that the offsetGet() and offsetExists() methods
+ * must be overridden if caching an array where the top level values can
+ * legitimately be NULL, and where $object->offsetExists() needs to correctly
+ * return (equivalent to array_key_exists() vs. isset()). This should not
+ * be necessary in the majority of cases.
+ *
+ * Classes extending this class must override at least the
+ * resolveCacheMiss() method to have a working implementation.
+ *
+ * offsetSet() is not overridden by this class by default. In practice this
+ * means that assigning an offset via arrayAccess will only apply while the
+ * object is in scope and will not be written back to the persistent cache.
+ * This follows a similar pattern to static vs. persistent caching in
+ * procedural code. Extending classes may wish to alter this behaviour, for
+ * example by overriding offsetSet() and adding an automatic call to persist().
+ *
+ * @see SchemaCache
+ */
+abstract class DrupalCacheArray implements ArrayAccess {
+
+  /**
+   * A cid to pass to cache()->set() and cache()->get().
+   */
+  private $cid;
+
+  /**
+   * A bin to pass to cache()->set() and cache()->get().
+   */
+  private $bin;
+
+  /**
+   * An array of keys to add to the cache at the end of the request.
+   */
+  protected $keysToPersist = array();
+
+  /**
+   * Storage for the data itself.
+   */
+  protected $storage = array();
+
+  /**
+   * Constructor.
+   *
+   * @param $cid
+   *   The cid for the array being cached.
+   * @param $bin
+   *   The bin to cache the array.
+   */
+  public function __construct($cid, $bin) {
+    $this->cid = $cid;
+    $this->bin = $bin;
+
+    if ($cached = cache($bin)->get($this->cid)) {
+     $this->storage = $cached->data;
+    }
+  }
+
+  public function offsetExists($offset) {
+    return $this->offsetGet($offset) !== NULL;
+  }
+
+  public function offsetGet($offset) {
+    if (isset($this->storage[$offset]) || array_key_exists($offset, $this->storage)) {
+      return $this->storage[$offset];
+    }
+    else {
+      return $this->resolveCacheMiss($offset);
+    }
+  }
+
+  public function offsetSet($offset, $value) {
+    $this->storage[$offset] = $value;
+  }
+
+  public function offsetUnset($offset) {
+    unset($this->storage[$offset]);
+  }
+
+  /**
+   * Flags an offset value to be written to the persistent cache.
+   *
+   * If a value is assigned to a cache object with offsetSet(), by default it
+   * will not be written to the persistent cache unless it is flagged with this
+   * method. This allows items to be cached for the duration of a request,
+   * without necessarily writing back to the persistent cache at the end.
+   *
+   * @param $offset
+   *   The array offset that was request.
+   * @param $persist
+   *   Optional boolean to specify whether the offset should be persisted or
+   *   not, defaults to TRUE. When called with $persist = FALSE the offset will
+   *   be unflagged so that it will not written at the end of the request.
+   */
+  protected function persist($offset, $persist = TRUE) {
+    $this->keysToPersist[$offset] = $persist;
+  }
+
+  /**
+   * Resolves a cache miss.
+   *
+   * When an offset is not found in the object, this is treated as a cache
+   * miss. This method allows classes implementing the interface to look up
+   * the actual value and allow it to be cached.
+   *
+   * @param $offset
+   *   The offset that was requested.
+   *
+   * @return
+   *   The value of the offset, or NULL if no value was found.
+   */
+  abstract protected function resolveCacheMiss($offset);
+
+  /**
+   * Immediately write a value to the persistent cache.
+   *
+   * @param $cid
+   *   The cache ID.
+   * @param $bin
+   *   The cache bin.
+   * @param $data
+   *   The data to write to the persistent cache.
+   * @param $lock
+   *   Whether to acquire a lock before writing to cache.
+   */
+  protected function set($cid, $data, $bin, $lock = TRUE) {
+    // Lock cache writes to help avoid stampedes.
+    // To implement locking for cache misses, override __construct().
+    $lock_name = $cid . ':' . $bin;
+    if (!$lock || lock_acquire($lock_name)) {
+      if ($cached = cache($bin)->get($cid)) {
+        $data = $cached->data + $data;
+      }
+      cache($bin)->set($cid, $data);
+      if ($lock) {
+        lock_release($lock_name);
+      }
+    }
+  }
+
+  public function __destruct() {
+    $data = array();
+    foreach ($this->keysToPersist as $offset => $persist) {
+      if ($persist) {
+        $data[$offset] = $this->storage[$offset];
+      }
+    }
+    if (!empty($data)) {
+      $this->set($this->cid, $data, $this->bin);
+    }
+  }
+}
 
 /**
  * Start the timer with the specified name. If you start and stop the same
@@ -710,7 +899,7 @@ function drupal_get_filename($type, $name, $filename = NULL) {
 function variable_initialize($conf = array()) {
   // NOTE: caching the variables improves performance by 20% when serving
   // cached pages.
-  if ($cached = cache_get('variables', 'cache_bootstrap')) {
+  if ($cached = cache('bootstrap')->get('variables')) {
     $variables = $cached->data;
   }
   else {
@@ -725,7 +914,7 @@ function variable_initialize($conf = array()) {
     else {
       // Proceed with variable rebuild.
       $variables = array_map('unserialize', db_query('SELECT name, value FROM {variable}')->fetchAllKeyed());
-      cache_set('variables', $variables, 'cache_bootstrap');
+      cache('bootstrap')->set('variables', $variables);
       lock_release($name);
     }
   }
@@ -782,7 +971,7 @@ function variable_set($name, $value) {
 
   db_merge('variable')->key(array('name' => $name))->fields(array('value' => serialize($value)))->execute();
 
-  cache_clear_all('variables', 'cache_bootstrap');
+  cache('bootstrap')->delete('variables');
 
   $conf[$name] = $value;
 }
@@ -806,7 +995,7 @@ function variable_del($name) {
   db_delete('variable')
     ->condition('name', $name)
     ->execute();
-  cache_clear_all('variables', 'cache_bootstrap');
+  cache('bootstrap')->delete('variables');
 
   unset($conf[$name]);
 }
@@ -835,7 +1024,7 @@ function drupal_page_get_cache($check_only = FALSE) {
   }
 
   if (drupal_page_is_cacheable()) {
-    $cache = cache_get($base_root . request_uri(), 'cache_page');
+    $cache = cache('page')->get($base_root . request_uri());
     if ($cache !== FALSE) {
       $cache_hit = TRUE;
     }
@@ -1202,10 +1391,11 @@ function drupal_unpack($obj, $field = 'data') {
  * The t() function serves two purposes. First, at run-time it translates
  * user-visible text into the appropriate language. Second, various mechanisms
  * that figure out what text needs to be translated work off t() -- the text
- * inside t() calls is added to the database of strings to be translated. So,
- * to enable a fully-translatable site, it is important that all human-readable
- * text that will be displayed on the site or sent to a user is passed through
- * the t() function, or a related function. See the
+ * inside t() calls is added to the database of strings to be translated.
+ * These strings are expected to be in English, so the first argument should
+ * always be in English. To enable a fully-translatable site, it is important
+ * that all human-readable text that will be displayed on the site or sent to
+ * a user is passed through the t() function, or a related function. See the
  * @link http://drupal.org/node/322729 Localization API @endlink pages for
  * more information, including recommendations on how to break up or not
  * break up strings for translation.
@@ -2369,14 +2559,28 @@ function language_list($field = 'language') {
 }
 
 /**
- * Default language used on the site
+ * Default language used on the site.
  *
- * @param $property
- *   Optional property of the language object to return
+ * @return
+ *   A language object.
  */
-function language_default($property = NULL) {
-  $language = variable_get('language_default', (object) array('language' => 'en', 'name' => 'English', 'native' => 'English', 'direction' => 0, 'enabled' => 1, 'plurals' => 0, 'formula' => '', 'domain' => '', 'prefix' => '', 'weight' => 0, 'javascript' => ''));
-  return $property ? $language->$property : $language;
+function language_default() {
+  return variable_get(
+    'language_default',
+    (object) array(
+      'language' => 'en',
+      'name' => 'English',
+      'native' => 'English',
+      'direction' => 0,
+      'enabled' => 1,
+      'plurals' => 0,
+      'formula' => '',
+      'domain' => '',
+      'prefix' => '',
+      'weight' => 0,
+      'javascript' => ''
+    )
+  );
 }
 
 /**
@@ -2548,11 +2752,60 @@ function ip_address() {
  *   If true, the schema will be rebuilt instead of retrieved from the cache.
  */
 function drupal_get_schema($table = NULL, $rebuild = FALSE) {
+  static $schema;
+
+  if ($rebuild || !isset($table)) {
+    $schema = drupal_get_complete_schema($rebuild);
+  }
+  elseif (!isset($schema)) {
+    $schema = new SchemaCache();
+  }
+
+  if (!isset($table)) {
+    return $schema;
+  }
+  if (isset($schema[$table])) {
+    return $schema[$table];
+  }
+  else {
+    return FALSE;
+  }
+}
+
+/**
+ * Extends DrupalCacheArray to allow for dynamic building of the schema cache.
+ */
+class SchemaCache extends DrupalCacheArray {
+
+  public function __construct() {
+    // Cache by request method.
+    parent::__construct('schema:runtime:' . $_SERVER['REQUEST_METHOD'] == 'GET', 'cache');
+  }
+
+  protected function resolveCacheMiss($offset) {
+    $complete_schema = drupal_get_complete_schema();
+    $value = isset($complete_schema[$offset]) ? $complete_schema[$offset] :  NULL;
+    $this->storage[$offset] = $value;
+    $this->persist($offset);
+    return $value;
+  }
+}
+
+/**
+ * Get the whole database schema.
+ *
+ * The returned schema will include any modifications made by any
+ * module that implements hook_schema_alter().
+ *
+ * @param $rebuild
+ *   If true, the schema will be rebuilt instead of retrieved from the cache.
+ */
+function drupal_get_complete_schema($rebuild = FALSE) {
   static $schema = array();
 
   if (empty($schema) || $rebuild) {
     // Try to load the schema from cache.
-    if (!$rebuild && $cached = cache_get('schema')) {
+    if (!$rebuild && $cached = cache()->get('schema')) {
       $schema = $cached->data;
     }
     // Otherwise, rebuild the schema cache.
@@ -2578,7 +2831,7 @@ function drupal_get_schema($table = NULL, $rebuild = FALSE) {
         // That would break modules which use $schema further down the line.
         $current = (array) module_invoke($module, 'schema');
         // Set 'module' and 'name' keys for each table, and remove descriptions,
-        // as they needlessly slow down cache_get() for every single request.
+        // as they needlessly slow down cache()->get() for every single request.
         _drupal_schema_initialize($current, $module);
         $schema = array_merge($schema, $current);
       }
@@ -2587,20 +2840,15 @@ function drupal_get_schema($table = NULL, $rebuild = FALSE) {
       // If the schema is empty, avoid saving it: some database engines require
       // the schema to perform queries, and this could lead to infinite loops.
       if (!empty($schema) && (drupal_get_bootstrap_phase() == DRUPAL_BOOTSTRAP_FULL)) {
-        cache_set('schema', $schema);
+        cache()->set('schema', $schema);
+      }
+      if ($rebuild) {
+        cache()->deletePrefix('schema:');
       }
     }
   }
 
-  if (!isset($table)) {
-    return $schema;
-  }
-  elseif (isset($schema[$table])) {
-    return $schema[$table];
-  }
-  else {
-    return FALSE;
-  }
+  return $schema;
 }
 
 /**
@@ -2666,7 +2914,7 @@ function _registry_check_code($type, $name = NULL) {
 
   if (!isset($lookup_cache)) {
     $lookup_cache = array();
-    if ($cache = cache_get('lookup_cache', 'cache_bootstrap')) {
+    if ($cache = cache('bootstrap')->get('lookup_cache')) {
       $lookup_cache = $cache->data;
     }
   }
@@ -2683,7 +2931,7 @@ function _registry_check_code($type, $name = NULL) {
   // changes to the lookup cache for this request.
   if ($type == REGISTRY_WRITE_LOOKUP_CACHE) {
     if ($cache_update_needed) {
-      cache_set('lookup_cache', $lookup_cache, 'cache_bootstrap');
+      cache('bootstrap')->set('lookup_cache', $lookup_cache);
     }
     return;
   }

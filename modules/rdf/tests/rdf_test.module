@@ -44,13 +44,6 @@ function rdf_test_rdf_mapping() {
         ),
       ),
     ),
-    array(
-      'type' => 'node',
-      'bundle' => 'blog',
-      'mapping' => array(
-        'rdftype' => array('sioct:Weblog'),
-      ),
-    ),
   );
 }
 

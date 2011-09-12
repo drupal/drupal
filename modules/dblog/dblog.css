@@ -1,4 +1,3 @@
-
 .form-item-type,
 .form-item-severity {
   float: left; /* LTR */
@@ -52,7 +51,9 @@ table#admin-dblog td.icon {
 table#admin-dblog tr.dblog-warning td.icon {
   background-image: url(../../misc/message-16-warning.png);
 }
-table#admin-dblog tr.dblog-error td.icon {
+table#admin-dblog tr.dblog-error td.icon,
+table#admin-dblog tr.dblog-critical td.icon,
+table#admin-dblog tr.dblog-alert td.icon,
+table#admin-dblog tr.dblog-emerg td.icon {
   background-image: url(../../misc/message-16-error.png);
 }
-

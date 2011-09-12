@@ -4992,7 +4992,7 @@ function drupal_page_set_cache() {
       if (variable_get('page_compression', TRUE) && extension_loaded('zlib')) {
         $cache->data['body'] = gzencode($cache->data['body'], 9, FORCE_GZIP);
       }
-      cache_set($cache->cid, $cache->data, 'cache_page', $cache->expire);
+      cache('page')->set($cache->cid, $cache->data, $cache->expire);
     }
     return $cache;
   }
@@ -5041,7 +5041,15 @@ function drupal_cron_run() {
     drupal_register_shutdown_function('drupal_cron_cleanup');
 
     // Iterate through the modules calling their cron handlers (if any):
-    module_invoke_all('cron');
+    foreach (module_implements('cron') as $module) {
+      // Do not let an exception thrown by one module disturb another.
+      try {
+        module_invoke($module, 'cron');
+      }
+      catch (Exception $e) {
+        watchdog_exception('cron', $e);
+      }
+    }
 
     // Record cron time
     variable_set('cron_last', REQUEST_TIME);
@@ -5805,7 +5813,7 @@ function drupal_render_cache_get($elements) {
   }
   $bin = isset($elements['#cache']['bin']) ? $elements['#cache']['bin'] : 'cache';
 
-  if (!empty($cid) && $cache = cache_get($cid, $bin)) {
+  if (!empty($cid) && $cache = cache($bin)->get($cid)) {
     // Add additional libraries, JavaScript, CSS and other data attached
     // to this element.
     if (isset($cache->data['#attached'])) {
@@ -5850,7 +5858,7 @@ function drupal_render_cache_set(&$markup, $elements) {
   }
   $bin = isset($elements['#cache']['bin']) ? $elements['#cache']['bin'] : 'cache';
   $expire = isset($elements['#cache']['expire']) ? $elements['#cache']['expire'] : CACHE_PERMANENT;
-  cache_set($cid, $data, $bin, $expire);
+  cache($bin)->set($cid, $data, $expire);
 }
 
 /**
@@ -6156,7 +6164,7 @@ function element_children(&$elements, $sort = FALSE) {
 }
 
 /**
- * Return the visibile children of an element.
+ * Returns the visible children of an element.
  *
  * @param $elements
  *   The parent element.
@@ -7138,10 +7146,10 @@ function drupal_flush_all_caches() {
 
   // Don't clear cache_form - in-progress form submissions may break.
   // Ordered so clearing the page cache will always be the last action.
-  $core = array('cache', 'cache_path', 'cache_filter', 'cache_bootstrap', 'cache_page');
-  $cache_tables = array_merge(module_invoke_all('flush_caches'), $core);
-  foreach ($cache_tables as $table) {
-    cache_clear_all('*', $table, TRUE);
+  $core = array('cache', 'path', 'filter', 'bootstrap', 'page');
+  $cache_bins = array_merge(module_invoke_all('flush_caches'), $core);
+  foreach ($cache_bins as $bin) {
+    cache($bin)->flush();
   }
 
   // Rebuild the bootstrap module list. We do this here so that developers
@@ -7309,13 +7317,13 @@ function archiver_get_info() {
   $archiver_info = &drupal_static(__FUNCTION__, array());
 
   if (empty($archiver_info)) {
-    $cache = cache_get('archiver_info');
+    $cache = cache()->get('archiver_info');
     if ($cache === FALSE) {
       // Rebuild the cache and save it.
       $archiver_info = module_invoke_all('archiver_info');
       drupal_alter('archiver_info', $archiver_info);
       uasort($archiver_info, 'drupal_sort_weight');
-      cache_set('archiver_info', $archiver_info);
+      cache()->set('archiver_info', $archiver_info);
     }
     else {
       $archiver_info = $cache->data;

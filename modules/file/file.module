@@ -643,9 +643,18 @@ function file_managed_file_save_upload($element) {
 function theme_file_managed_file($variables) {
   $element = $variables['element'];
 
+  $attributes = array();
+  if (isset($element['#id'])) {
+    $attributes['id'] = $element['#id'];
+  }
+  if (!empty($element['#attributes']['class'])) {
+    $attributes['class'] = (array) $element['#attributes']['class'];
+  }
+  $attributes['class'][] = 'form-managed-file';
+
   // This wrapper is required to apply JS behaviors and CSS styling.
   $output = '';
-  $output .= '<div class="form-managed-file">';
+  $output .= '<div' . drupal_attributes($attributes) . '>';
   $output .= drupal_render_children($element);
   $output .= '</div>';
   return $output;

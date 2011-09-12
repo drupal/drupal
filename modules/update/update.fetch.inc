@@ -143,7 +143,7 @@ function _update_process_fetch_task($project) {
 
   if (empty($fail[$fetch_url_base]) || $fail[$fetch_url_base] < $max_fetch_attempts) {
     $xml = drupal_http_request($url);
-    if (isset($xml->data)) {
+    if (!isset($xml->error) && isset($xml->data)) {
       $data = $xml->data;
     }
   }

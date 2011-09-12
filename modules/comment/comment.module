@@ -6,7 +6,7 @@
  *
  * When enabled, the Drupal comment module creates a discussion
  * board for each Drupal node. Users can post comments to discuss
- * a forum topic, weblog post, story, collaborative book page, etc.
+ * a forum topic, story, collaborative book page, etc.
  */
 
 /**
@@ -655,7 +655,7 @@ function comment_node_view($node, $view_mode) {
           );
         }
         else {
-          $links['comment_forbidden'] = array(
+          $links['comment-forbidden'] = array(
             'title' => theme('comment_post_forbidden', array('node' => $node)),
             'html' => TRUE,
           );
@@ -685,7 +685,7 @@ function comment_node_view($node, $view_mode) {
           }
         }
         else {
-          $links['comment_forbidden'] = array(
+          $links['comment-forbidden'] = array(
             'title' => theme('comment_post_forbidden', array('node' => $node)),
             'html' => TRUE,
           );
@@ -1066,8 +1066,8 @@ function comment_links($comment, $node) {
       );
     }
     else {
-      $links['comment_forbidden']['title'] = theme('comment_post_forbidden', array('node' => $node));
-      $links['comment_forbidden']['html'] = TRUE;
+      $links['comment-forbidden']['title'] = theme('comment_post_forbidden', array('node' => $node));
+      $links['comment-forbidden']['html'] = TRUE;
     }
   }
   return $links;

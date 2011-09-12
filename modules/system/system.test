@@ -446,39 +446,6 @@ class ModuleDependencyTestCase extends ModuleTestCase {
   }
 
   /**
-   * Tests re-enabling forum with taxonomy disabled.
-   */
-  function testEnableForumTaxonomyFieldDependency() {
-    // Enable the forum module.
-    $edit = array();
-    $edit['modules[Core][forum][enable]'] = 'forum';
-    $this->drupalPost('admin/modules', $edit, t('Save configuration'));
-    $this->assertModules(array('forum'), TRUE);
-
-    // Disable the forum module.
-    $edit = array();
-    $edit['modules[Core][forum][enable]'] = FALSE;
-    $this->drupalPost('admin/modules', $edit, t('Save configuration'));
-    $this->assertModules(array('forum'), FALSE);
-
-    // Disable the taxonomy module.
-    $edit = array();
-    $edit['modules[Core][taxonomy][enable]'] = FALSE;
-    $this->drupalPost('admin/modules', $edit, t('Save configuration'));
-    $this->assertModules(array('taxonomy'), FALSE);
-
-    // Attempt to re-enable the forum module with taxonomy disabled and ensure
-    // forum does not try to recreate the taxonomy_forums field.
-    $edit = array();
-    $edit['modules[Core][forum][enable]'] = 'forum';
-    $this->drupalPost('admin/modules', $edit, t('Save configuration'));
-    $this->assertText(t('Some required modules must be enabled'), t('Dependency required.'));
-    $this->drupalPost(NULL, NULL, t('Continue'));
-    $this->assertText(t('The configuration options have been saved.'), t('Modules status has been updated.'));
-    $this->assertModules(array('taxonomy', 'forum'), TRUE);
-  }
-
-  /**
    * Tests that module dependencies are enabled in the correct order via the
    * UI. Dependencies should be enabled before their dependents.
    */
@@ -516,18 +483,18 @@ class ModuleDependencyTestCase extends ModuleTestCase {
     $this->drupalPost('admin/modules', $edit, t('Save configuration'));
     $this->assertModules(array('forum'), TRUE);
 
-    // Disable forum and taxonomy. Both should now be installed but disabled.
+    // Disable forum and comment. Both should now be installed but disabled.
     $edit = array('modules[Core][forum][enable]' => FALSE);
     $this->drupalPost('admin/modules', $edit, t('Save configuration'));
     $this->assertModules(array('forum'), FALSE);
-    $edit = array('modules[Core][taxonomy][enable]' => FALSE);
+    $edit = array('modules[Core][comment][enable]' => FALSE);
     $this->drupalPost('admin/modules', $edit, t('Save configuration'));
-    $this->assertModules(array('taxonomy'), FALSE);
+    $this->assertModules(array('comment'), FALSE);
 
     // Check that the taxonomy module cannot be uninstalled.
     $this->drupalGet('admin/modules/uninstall');
-    $checkbox = $this->xpath('//input[@type="checkbox" and @disabled="disabled" and @name="uninstall[taxonomy]"]');
-    $this->assert(count($checkbox) == 1, t('Checkbox for uninstalling the taxonomy module is disabled.'));
+    $checkbox = $this->xpath('//input[@type="checkbox" and @disabled="disabled" and @name="uninstall[comment]"]');
+    $this->assert(count($checkbox) == 1, t('Checkbox for uninstalling the comment module is disabled.'));
 
     // Uninstall the forum module, and check that taxonomy now can also be
     // uninstalled.
@@ -535,7 +502,7 @@ class ModuleDependencyTestCase extends ModuleTestCase {
     $this->drupalPost('admin/modules/uninstall', $edit, t('Uninstall'));
     $this->drupalPost(NULL, NULL, t('Uninstall'));
     $this->assertText(t('The selected modules have been uninstalled.'), t('Modules status has been updated.'));
-    $edit = array('uninstall[taxonomy]' => 'taxonomy');
+    $edit = array('uninstall[comment]' => 'comment');
     $this->drupalPost('admin/modules/uninstall', $edit, t('Uninstall'));
     $this->drupalPost(NULL, NULL, t('Uninstall'));
     $this->assertText(t('The selected modules have been uninstalled.'), t('Modules status has been updated.'));
@@ -728,6 +695,10 @@ class CronRunTestCase extends DrupalWebTestCase {
     );
   }
 
+  function setUp() {
+    parent::setUp(array('common_test', 'common_test_cron_helper'));
+  }
+
   /**
    * Test cron runs.
    */
@@ -831,6 +802,19 @@ class CronRunTestCase extends DrupalWebTestCase {
     $this->assertTrue(file_exists($temp_new->uri), t('New temp file was correctly ignored.'));
     $this->assertTrue(file_exists($perm_old->uri), t('Old permanent file was correctly ignored.'));
     $this->assertTrue(file_exists($perm_new->uri), t('New permanent file was correctly ignored.'));
+  }
+
+  /**
+   * Make sure exceptions thrown on hook_cron() don't affect other modules.
+   */
+  function testCronExceptions() {
+    variable_del('common_test_cron');
+    // The common_test module throws an exception. If it isn't caught, the tests
+    // won't finish successfully.
+    // The common_test_cron_helper module sets the 'common_test_cron' variable.
+    $this->cronRun();
+    $result = variable_get('common_test_cron');
+    $this->assertEqual($result, 'success', t('Cron correctly handles exceptions thrown during hook_cron() invocations.'));
   }
 }
 
@@ -2466,3 +2450,68 @@ class SystemIndexPhpTest extends DrupalWebTestCase {
   }
 }
 
+/**
+ * Tests uuid.inc and related functions.
+ */
+class UuidUnitTestCase extends DrupalUnitTestCase {
+
+  /**
+   * The UUID object to be used for generating UUIDs.
+   *
+   * @var Uuid
+   */
+  protected $uuid;
+
+  public static function getInfo() {
+    return array(
+      'name' => 'UUID handling',
+      'description' => "Test the handling of Universally Unique IDentifiers (UUIDs).",
+      'group' => 'System',
+    );
+  }
+
+  public function setUp() {
+    // Initiate the generator. This will lazy-load uuid.inc.
+    $this->uuid = new Uuid();
+    parent::setUp();
+  }
+
+  /**
+   * Test generating a UUID.
+   */
+  public function testGenerateUuid() {
+    $uuid = $this->uuid->generate();
+    $this->assertTrue($this->uuid->isValid($uuid), 'UUID generation works.');
+  }
+
+  /**
+   * Test that generated UUIDs are unique.
+   */
+  public function testUuidIsUnique() {
+    $uuid1 = $this->uuid->generate();
+    $uuid2 = $this->uuid->generate();
+    $this->assertNotEqual($uuid1, $uuid2, 'Same UUID was not generated twice.');
+  }
+
+  /**
+   * Test UUID validation.
+   */
+  function testUuidValidation() {
+    // These valid UUIDs.
+    $uuid_fqdn = '6ba7b810-9dad-11d1-80b4-00c04fd430c8';
+    $uuid_min = '00000000-0000-0000-0000-000000000000';
+    $uuid_max = 'ffffffff-ffff-ffff-ffff-ffffffffffff';
+
+    $this->assertTrue($this->uuid->isValid($uuid_fqdn), t('FQDN namespace UUID (@uuid) is valid', array('@uuid' => $uuid_fqdn)));
+    $this->assertTrue($this->uuid->isValid($uuid_min), t('Minimum UUID value (@uuid) is valid', array('@uuid' => $uuid_min)));
+    $this->assertTrue($this->uuid->isValid($uuid_max), t('Maximum UUID value (@uuid) is valid', array('@uuid' => $uuid_max)));
+
+    // These are invalid UUIDs.
+    $invalid_format = '0ab26e6b-f074-4e44-9da-601205fa0e976';
+    $invalid_length = '0ab26e6b-f074-4e44-9daf-1205fa0e9761f';
+
+    $this->assertFalse($this->uuid->isValid($invalid_format), t('@uuid is not a valid UUID', array('@uuid' => $invalid_format)));
+    $this->assertFalse($this->uuid->isValid($invalid_length), t('@uuid is not a valid UUID', array('@uuid' => $invalid_length)));
+
+  }
+}

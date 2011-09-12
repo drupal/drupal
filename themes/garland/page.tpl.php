@@ -46,7 +46,7 @@
             <h1<?php print $tabs ? ' class="with-tabs"' : '' ?>><?php print $title ?></h1>
           <?php endif; ?>
           <?php print render($title_suffix); ?>
-          <?php if ($tabs = render($tabs)): ?><?php print $tabs; ?></div><?php endif; ?>
+          <?php if ($tabs): ?><?php print render($tabs); ?></div><?php endif; ?>
           <?php print render($tabs2); ?>
           <?php print $messages; ?>
           <?php print render($page['help']); ?>

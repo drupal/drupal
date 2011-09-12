@@ -2,19 +2,20 @@
 
 /**
  * @file
- * Provides a list of countries and languages based on ISO standards.
+ * Provides a list of countries and languages based on web standards.
  */
 
 /**
  * Get an array of all country code => country name pairs.
  *
  * Get an array of all country code => country name pairs as laid out
- * in ISO 3166-1 alpha-2.
- * Grabbed from location project (http://drupal.org/project/location).
+ * in ISO 3166-1 alpha-2. Originally from the location project
+ * (http://drupal.org/project/location).
+ *
  * @return
- *   An array of all country code => country name pairs.
+ *   An array of country code => country name pairs.
  */
-function _country_get_predefined_list() {
+function standard_country_list() {
   static $countries;
 
   if (isset($countries)) {
@@ -278,16 +279,18 @@ function _country_get_predefined_list() {
 }
 
 /**
- * @ingroup locale-api-predefined List of predefined languages
- * @{
- */
-
-/**
- * Some of the common languages with their English and native names
+ * Some common languages with their English and native names.
  *
- * Based on ISO 639 and http://people.w3.org/rishida/names/languages.html
+ * Language codes are defined by the W3C language tags document for
+ * interoperability. Language codes typically have a language and optionally,
+ * a script or regional variant name. See
+ * http://www.w3.org/International/articles/language-tags/ for more information.
+ *
+ * @return
+ *   An array of language code to language name information.
+ *   Language name information itself is an array of English and native names.
  */
-function _locale_get_predefined_list() {
+function standard_language_list() {
   return array(
     'aa' => array('Afar'),
     'ab' => array('Abkhazian', 'аҧсуа бызшәа'),
@@ -477,6 +480,3 @@ function _locale_get_predefined_list() {
     'zu' => array('Zulu', 'isiZulu'),
   );
 }
-/**
- * @} End of "locale-api-languages-predefined"
- */
