@@ -116,7 +116,7 @@ class SignedFileStorage {
     if ($content === FALSE) {
       throw new Exception('Read file is invalid.');
     }
-    $signature = file_get_contents($this->getFilePath() . '.key');
+    $signature = file_get_contents($this->getFilePath() . '.sig');
     if ($signature === FALSE) {
       throw new Exception('Signature file is invalid.');
     }
@@ -157,7 +157,7 @@ class SignedFileStorage {
     if (!file_put_contents($this->getFilePath(), $data)) {
       throw new Exception('Failed to write configuration file.');
     }
-    if (!file_put_contents($this->getFilePath() . '.key', $signature)) {
+    if (!file_put_contents($this->getFilePath() . '.sig', $signature)) {
       throw new Exception('Failed to write signature file.');
     }
   }
