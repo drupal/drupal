@@ -57,7 +57,7 @@ function entity_get_info($entity_type = NULL) {
   $langcode = $language->language;
 
   if (empty($entity_info)) {
-    if ($cache = cache_get("entity_info:$langcode")) {
+    if ($cache = cache()->get("entity_info:$langcode")) {
       $entity_info = $cache->data;
     }
     else {
@@ -100,7 +100,7 @@ function entity_get_info($entity_type = NULL) {
       }
       // Let other modules alter the entity info.
       drupal_alter('entity_info', $entity_info);
-      cache_set("entity_info:$langcode", $entity_info);
+      cache()->set("entity_info:$langcode", $entity_info);
     }
   }
 
@@ -118,7 +118,7 @@ function entity_get_info($entity_type = NULL) {
 function entity_info_cache_clear() {
   drupal_static_reset('entity_get_info');
   // Clear all languages.
-  cache_clear_all('entity_info:', 'cache', TRUE);
+  cache()->deletePrefix('entity_info:');
 }
 
 /**
