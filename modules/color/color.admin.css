@@ -1,0 +1,81 @@
+
+/* Farbtastic placement */
+.color-form {
+  max-width: 50em;
+  position: relative;
+}
+#placeholder {
+  position: absolute;
+  top: 0;
+  right: 0; /* LTR */
+}
+
+/* Palette */
+.color-form .form-item {
+  height: 2em;
+  line-height: 2em;
+  padding-left: 1em; /* LTR */
+  margin: 0.5em 0;
+}
+.color-form label {
+  float: left; /* LTR */
+  clear: left; /* LTR */
+  width: 10em;
+}
+.color-form .form-text,
+.color-form .form-select {
+  float: left; /* LTR */
+}
+.color-form .form-text {
+  text-align: center;
+  margin-right: 5px; /* LTR */
+  cursor: pointer;
+}
+
+#palette .hook {
+  float: left; /* LTR */
+  margin-top: 3px;
+  width: 16px;
+  height: 16px;
+}
+#palette .down,
+#palette .up,
+#palette .both {
+  background: url(images/hook.png) no-repeat 100% 0; /* LTR */
+}
+#palette .up {
+  background-position: 100% -27px; /* LTR */
+}
+#palette .both {
+  background-position: 100% -54px; /* LTR */
+}
+
+#palette .lock {
+  float: left; /* LTR */
+  position: relative;
+  top: -1.4em;
+  left: -10px; /* LTR */
+  width: 20px;
+  height: 25px;
+  background: url(images/lock.png) no-repeat 50% 2px;
+  cursor: pointer;
+}
+#palette .unlocked {
+  background-position: 50% -22px;
+}
+#palette .form-item {
+  width: 20em;
+}
+#palette .item-selected {
+  background: #eee;
+}
+
+/* Preview */
+#preview {
+  display: none;
+}
+html.js #preview {
+  display: block;
+  position: relative;
+  float: left; /* LTR */
+}
