@@ -290,9 +290,8 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
     $this->assertRaw(t('The language %locale has been removed.', array('%locale' => $name)), t('The test language has been removed.'));
     // Reload to remove $name.
     $this->drupalGet($path);
-    $this->assertNoText($langcode, t('Language code not found.'));
-    $this->assertNoText($name, t('Name not found.'));
-    $this->assertNoText($native, t('Native not found.'));
+    // Verify that language is no longer found.
+    $this->assertResponse(404, t('Language no longer found.'));
     $this->drupalLogout();
 
     // Delete the string.

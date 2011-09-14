@@ -2475,6 +2475,9 @@ function drupal_deliver_html_page($page_callback_result) {
 
         watchdog('page not found', check_plain($_GET['q']), NULL, WATCHDOG_WARNING);
 
+        // Check for and return a fast 404 page if configured.
+        drupal_fast_404();
+
         // Keep old path for reference, and to allow forms to redirect to it.
         if (!isset($_GET['destination'])) {
           $_GET['destination'] = $_GET['q'];
@@ -2491,7 +2494,7 @@ function drupal_deliver_html_page($page_callback_result) {
         if (empty($return) || $return == MENU_NOT_FOUND || $return == MENU_ACCESS_DENIED) {
           // Standard 404 handler.
           drupal_set_title(t('Page not found'));
-          $return = t('The requested page could not be found.');
+          $return = t('The requested page "@path" could not be found.', array('@path' => request_uri()));
         }
 
         drupal_set_page_content($return);
