@@ -1359,7 +1359,7 @@ function system_library() {
     ),
   );
   $libraries['ui.mouse'] = array(
-    'title' => 'jQuery UI: Droppable',
+    'title' => 'jQuery UI: Mouse',
     'website' => 'http://docs.jquery.com/UI/Mouse',
     'version' => '1.8.7',
     'js' => array(
