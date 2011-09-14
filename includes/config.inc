@@ -35,7 +35,7 @@ function config_get_config_directory() {
  *   An array of file names under a branch.
  */
 function config_get_signed_file_storage_names_with_prefix($prefix = '') {
-  $files = glob(conf_path() . '/config/' . $prefix . '*.xml');
+  $files = glob(config_get_config_directory() . '/' . $prefix . '*.xml');
   $clean_name = function ($value) {
     return basename($value, '.xml');
   };
