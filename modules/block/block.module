@@ -668,7 +668,7 @@ function block_list($region) {
  *   Name of the module that implements the block to load.
  * @param $delta
  *   Unique ID of the block within the context of $module. Pass NULL to return
- *   an empty $block object for $module.
+ *   an empty block object for $module.
  *
  * @return
  *   A block object.
