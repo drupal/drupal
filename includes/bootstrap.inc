@@ -489,22 +489,22 @@ function timer_stop($name) {
  * With a site located at http://www.example.com:8080/mysite/test/, the file,
  * settings.php, is searched for in the following directories:
  *
- *  1. $confdir/8080.www.example.com.mysite.test
- *  2. $confdir/www.example.com.mysite.test
- *  3. $confdir/example.com.mysite.test
- *  4. $confdir/com.mysite.test
+ * - $confdir/8080.www.example.com.mysite.test
+ * - $confdir/www.example.com.mysite.test
+ * - $confdir/example.com.mysite.test
+ * - $confdir/com.mysite.test
  *
- *  5. $confdir/8080.www.example.com.mysite
- *  6. $confdir/www.example.com.mysite
- *  7. $confdir/example.com.mysite
- *  8. $confdir/com.mysite
+ * - $confdir/8080.www.example.com.mysite
+ * - $confdir/www.example.com.mysite
+ * - $confdir/example.com.mysite
+ * - $confdir/com.mysite
  *
- *  9. $confdir/8080.www.example.com
- * 10. $confdir/www.example.com
- * 11. $confdir/example.com
- * 12. $confdir/com
+ * - $confdir/8080.www.example.com
+ * - $confdir/www.example.com
+ * - $confdir/example.com
+ * - $confdir/com
  *
- * 13. $confdir/default
+ * - $confdir/default
  *
  * If a file named sites.php is present in the $confdir, it will be loaded
  * prior to scanning for directories. It should define an associative array
