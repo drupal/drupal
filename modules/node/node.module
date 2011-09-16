@@ -2452,7 +2452,7 @@ function node_feed($nids = FALSE, $channel = array()) {
     $nids = db_select('node', 'n')
       ->fields('n', array('nid', 'created'))
       ->condition('n.promote', 1)
-      ->condition('status', 1)
+      ->condition('n.status', 1)
       ->orderBy('n.created', 'DESC')
       ->range(0, variable_get('feed_default_items', 10))
       ->addTag('node_access')
