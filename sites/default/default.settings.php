@@ -22,19 +22,19 @@
  * http://www.drupal.org/mysite/test/, the 'settings.php'
  * is searched in the following directories:
  *
- *  1. sites/www.drupal.org.mysite.test
- *  2. sites/drupal.org.mysite.test
- *  3. sites/org.mysite.test
+ * - sites/www.drupal.org.mysite.test
+ * - sites/drupal.org.mysite.test
+ * - sites/org.mysite.test
  *
- *  4. sites/www.drupal.org.mysite
- *  5. sites/drupal.org.mysite
- *  6. sites/org.mysite
+ * - sites/www.drupal.org.mysite
+ * - sites/drupal.org.mysite
+ * - sites/org.mysite
  *
- *  7. sites/www.drupal.org
- *  8. sites/drupal.org
- *  9. sites/org
+ * - sites/www.drupal.org
+ * - sites/drupal.org
+ * - sites/org
  *
- * 10. sites/default
+ * - sites/default
  *
  * If you are installing on a non-standard port number, prefix the
  * hostname with that number. For example,
