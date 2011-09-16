@@ -37,3 +37,6 @@ files[] = tests/theme.test
 files[] = tests/unicode.test
 files[] = tests/update.test
 files[] = tests/xmlrpc.test
+files[] = tests/upgrade/upgrade.test
+files[] = tests/upgrade/upgrade_bare.test
+files[] = tests/upgrade/upgrade_filled.test
