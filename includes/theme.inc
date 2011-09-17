@@ -1902,11 +1902,12 @@ function theme_feed_icon($variables) {
  */
 function theme_html_tag($variables) {
   $element = $variables['element'];
+  $attributes = isset($element['#attributes']) ? drupal_attributes($element['#attributes']) : '';
   if (!isset($element['#value'])) {
-    return '<' . $element['#tag'] . drupal_attributes($element['#attributes']) . " />\n";
+    return '<' . $element['#tag'] . $attributes . " />\n";
   }
   else {
-    $output = '<' . $element['#tag'] . drupal_attributes($element['#attributes']) . '>';
+    $output = '<' . $element['#tag'] . $attributes . '>';
     if (isset($element['#value_prefix'])) {
       $output .= $element['#value_prefix'];
     }
