@@ -1127,7 +1127,6 @@ function template_preprocess_forum_topic_list(&$variables) {
         $variables['topics'][$id]->title = l($topic->title, "node/$topic->nid");
         $variables['topics'][$id]->message = '';
       }
-      $topic->uid = $topic->last_comment_uid ? $topic->last_comment_uid : $topic->uid;
       $variables['topics'][$id]->created = theme('forum_submitted', array('topic' => $topic));
       $variables['topics'][$id]->last_reply = theme('forum_submitted', array('topic' => isset($topic->last_reply) ? $topic->last_reply : NULL));
 
