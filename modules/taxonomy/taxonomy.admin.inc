@@ -173,7 +173,6 @@ function taxonomy_form_vocabulary($form, &$form_state, $edit = array()) {
   if (isset($vocabulary->vid)) {
     $form['actions']['delete'] = array('#type' => 'submit', '#value' => t('Delete'));
     $form['vid'] = array('#type' => 'value', '#value' => $vocabulary->vid);
-    $form['module'] = array('#type' => 'value', '#value' => $vocabulary->module);
   }
   $form['#validate'][] = 'taxonomy_form_vocabulary_validate';
 
