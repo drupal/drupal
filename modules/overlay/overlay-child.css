@@ -17,6 +17,7 @@ html.js body {
   min-width: 700px;
   position: relative;
   padding: .2em;
+  padding-bottom: 2em;
   padding-right: 26px; /* LTR */
   width: 88%;
 }

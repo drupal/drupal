@@ -489,22 +489,22 @@ function timer_stop($name) {
  * With a site located at http://www.example.com:8080/mysite/test/, the file,
  * settings.php, is searched for in the following directories:
  *
- *  1. $confdir/8080.www.example.com.mysite.test
- *  2. $confdir/www.example.com.mysite.test
- *  3. $confdir/example.com.mysite.test
- *  4. $confdir/com.mysite.test
+ * - $confdir/8080.www.example.com.mysite.test
+ * - $confdir/www.example.com.mysite.test
+ * - $confdir/example.com.mysite.test
+ * - $confdir/com.mysite.test
  *
- *  5. $confdir/8080.www.example.com.mysite
- *  6. $confdir/www.example.com.mysite
- *  7. $confdir/example.com.mysite
- *  8. $confdir/com.mysite
+ * - $confdir/8080.www.example.com.mysite
+ * - $confdir/www.example.com.mysite
+ * - $confdir/example.com.mysite
+ * - $confdir/com.mysite
  *
- *  9. $confdir/8080.www.example.com
- * 10. $confdir/www.example.com
- * 11. $confdir/example.com
- * 12. $confdir/com
+ * - $confdir/8080.www.example.com
+ * - $confdir/www.example.com
+ * - $confdir/example.com
+ * - $confdir/com
  *
- * 13. $confdir/default
+ * - $confdir/default
  *
  * If a file named sites.php is present in the $confdir, it will be loaded
  * prior to scanning for directories. It should define an associative array
@@ -2415,6 +2415,34 @@ function drupal_generate_test_ua($prefix) {
 function drupal_maintenance_theme() {
   require_once DRUPAL_ROOT . '/includes/theme.maintenance.inc';
   _drupal_maintenance_theme();
+}
+
+/**
+ * Returns a simple 404 Not Found page.
+ *
+ * If fast 404 pages are enabled, and this is a matching page then print a
+ * simple 404 page and exit.
+ *
+ * This function is called from drupal_deliver_html_page() at the time when a
+ * a normal 404 page is generated, but it can also optionally be called directly
+ * from settings.php to prevent a Drupal bootstrap on these pages. See
+ * documentation in settings.php for the benefits and drawbacks of using this.
+ *
+ * Paths to dynamically-generated content, such as image styles, should also be
+ * accounted for in this function.
+ */
+function drupal_fast_404() {
+  $exclude_paths = variable_get('404_fast_paths_exclude', FALSE);
+  if ($exclude_paths && !preg_match($exclude_paths, $_GET['q'])) {
+    $fast_paths = variable_get('404_fast_paths', FALSE);
+    if ($fast_paths && preg_match($fast_paths, $_GET['q'])) {
+      drupal_add_http_header('Status', '404 Not Found');
+      $fast_404_html = variable_get('404_fast_html', '<html xmlns="http://www.w3.org/1999/xhtml"><head><title>404 Not Found</title></head><body><h1>Not Found</h1><p>The requested URL "@path" was not found on this server.</p></body></html>');
+      // Replace @path in the variable with the page path.
+      print strtr($fast_404_html, array('@path' => check_plain(request_uri())));
+      exit;
+    }
+  }
 }
 
 /**

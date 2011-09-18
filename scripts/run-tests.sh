@@ -67,6 +67,8 @@ if ($args['list']) {
   exit;
 }
 
+$test_list = simpletest_script_get_test_list();
+
 // Try to allocate unlimited time to run the tests.
 drupal_set_time_limit(0);
 
@@ -485,12 +487,13 @@ function simpletest_script_reporter_init() {
     echo "\n";
   }
 
-  echo "Test run started: " . format_date($_SERVER['REQUEST_TIME'], 'long') . "\n";
+  echo "Test run started:\n";
+  echo " " . format_date($_SERVER['REQUEST_TIME'], 'long') . "\n";
   timer_start('run-tests');
   echo "\n";
 
-  echo "Test summary:\n";
-  echo "-------------\n";
+  echo "Test summary\n";
+  echo "------------\n";
   echo "\n";
 }
 
@@ -571,7 +574,7 @@ function simpletest_script_reporter_timer_stop() {
   echo "\n";
   $end = timer_stop('run-tests');
   echo "Test run duration: " . format_interval($end['time'] / 1000);
-  echo "\n";
+  echo "\n\n";
 }
 
 /**

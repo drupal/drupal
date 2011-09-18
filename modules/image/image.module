@@ -259,13 +259,6 @@ function image_system_file_system_settings_submit($form, &$form_state) {
 }
 
 /**
- * Implements hook_flush_caches().
- */
-function image_flush_caches() {
-  return array('image');
-}
-
-/**
  * Implements hook_file_download().
  *
  * Control the access to files underneath the styles directory.

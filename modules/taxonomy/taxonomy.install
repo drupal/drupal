@@ -150,13 +150,6 @@ function taxonomy_schema() {
         'size' => 'tiny',
         'description' => 'The type of hierarchy allowed within the vocabulary. (0 = disabled, 1 = single, 2 = multiple)',
       ),
-      'module' => array(
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'The module which created the vocabulary.',
-      ),
       'weight' => array(
         'type' => 'int',
         'not null' => TRUE,
@@ -245,4 +238,11 @@ function taxonomy_field_schema($field) {
       ),
     ),
   );
+}
+
+/**
+ * Remove the {taxonomy_vocabulary}.module field.
+ */
+function taxonomy_update_8000() {
+  db_drop_field('taxonomy_vocabulary', 'module');
 }
