@@ -123,7 +123,7 @@ DirectoryIndex index.php index.html index.htm
 
     <FilesMatch "(\.js\.gz|\.css\.gz)$">
       # Serve correct encoding type.
-      Header append Content-Encoding gzip
+      Header set Content-Encoding gzip
       # Force proxies to cache gzipped & non-gzipped css/js files separately.
       Header append Vary Accept-Encoding
     </FilesMatch>
