@@ -296,20 +296,6 @@ function locale_language_selector_form(&$form, &$form_state, $user) {
 /**
  * Implements hook_form_FORM_ID_alter().
  */
-function locale_form_path_admin_form_alter(&$form, &$form_state) {
-  $form['language'] = array(
-    '#type' => 'select',
-    '#title' => t('Language'),
-    '#options' => array(LANGUAGE_NONE => t('All languages')) + locale_language_list('name'),
-    '#default_value' => $form['language']['#value'],
-    '#weight' => -10,
-    '#description' => t('A path alias set for a specific language will always be used when displaying this page in that language, and takes precedence over path aliases set for <em>All languages</em>.'),
-  );
-}
-
-/**
- * Implements hook_form_FORM_ID_alter().
- */
 function locale_form_node_type_form_alter(&$form, &$form_state) {
   if (isset($form['type'])) {
     $form['workflow']['language_content_type'] = array(
