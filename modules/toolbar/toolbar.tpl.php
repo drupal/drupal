@@ -31,7 +31,5 @@
     <?php endif; ?>
   </div>
 
-  <div class="<?php echo $toolbar['toolbar_drawer_classes']; ?>">
-    <?php print render($toolbar['toolbar_drawer']); ?>
-  </div>
+  <?php print render($toolbar['toolbar_drawer']); ?>
 </div>

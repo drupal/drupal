@@ -262,8 +262,8 @@ function hook_element_info_alter(&$type) {
  * page logging and specialized cleanup. This hook MUST NOT print anything.
  *
  * Only use this hook if your code must run even for cached page views.
- * If you have code which must run once on all non cached pages, use
- * hook_init instead. Thats the usual case. If you implement this hook
+ * If you have code which must run once on all non-cached pages, use
+ * hook_init() instead. That is the usual case. If you implement this hook
  * and see an error like 'Call to undefined function', it is likely that
  * you are depending on the presence of a module which has not been loaded yet.
  * It is not loaded because Drupal is still in bootstrap mode.
@@ -1334,32 +1334,36 @@ function hook_forms($form_id, $args) {
 }
 
 /**
- * Perform setup tasks. See also, hook_init.
+ * Perform setup tasks for all page requests.
  *
  * This hook is run at the beginning of the page request. It is typically
- * used to set up global parameters which are needed later in the request.
+ * used to set up global parameters that are needed later in the request.
  *
- * Only use this hook if your code must run even for cached page views.This hook
- * is called before modules or most include files are loaded into memory.
+ * Only use this hook if your code must run even for cached page views. This
+ * hook is called before modules or most include files are loaded into memory.
  * It happens while Drupal is still in bootstrap mode.
+ *
+ * @see hook_init()
  */
 function hook_boot() {
-  // we need user_access() in the shutdown function. make sure it gets loaded
+  // We need user_access() in the shutdown function. Make sure it gets loaded.
   drupal_load('module', 'user');
   drupal_register_shutdown_function('devel_shutdown');
 }
 
 /**
- * Perform setup tasks. See also, hook_boot.
+ * Perform setup tasks for non-cached page requests.
  *
  * This hook is run at the beginning of the page request. It is typically
- * used to set up global parameters which are needed later in the request.
- * when this hook is called, all modules are already loaded in memory.
+ * used to set up global parameters that are needed later in the request.
+ * When this hook is called, all modules are already loaded in memory.
  *
  * This hook is not run on cached pages.
  *
  * To add CSS or JS that should be present on all pages, modules should not
  * implement this hook, but declare these files in their .info file.
+ *
+ * @see hook_boot()
  */
 function hook_init() {
   // Since this file should only be loaded on the front page, it cannot be
