@@ -424,8 +424,9 @@ function module_enable($module_list, $enable_dependencies = TRUE) {
       registry_update();
       // Refresh the schema to include it.
       drupal_get_schema(NULL, TRUE);
-      // Clear entity cache.
-      entity_info_cache_clear();
+
+      // Allow modules to react prior to the installation of a module.
+      module_invoke_all('modules_preinstall', array($module));
 
       // Now install the module if necessary.
       if (drupal_get_installed_schema_version($module, TRUE) == SCHEMA_UNINSTALLED) {
@@ -449,6 +450,9 @@ function module_enable($module_list, $enable_dependencies = TRUE) {
         $modules_installed[] = $module;
         watchdog('system', '%module module installed.', array('%module' => $module), WATCHDOG_INFO);
       }
+
+      // Allow modules to react prior to the enabling of a module.
+      module_invoke_all('modules_preenable', array($module));
 
       // Enable the module.
       module_invoke($module, 'enable');
