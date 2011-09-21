@@ -2243,8 +2243,8 @@ function system_clean_url_settings($form, &$form_state) {
       '#type' => 'markup',
       '#markup' => '<p>' . t('Use URLs like <code>example.com/user</code> instead of <code>example.com/?q=user</code>.'),
     );
-    // Explain why the user is seeing this page and tell him what to expect
-    // after clicking the 'Run the clean URL test' button.
+    // Explain why the user is seeing this page and what to expect after
+    // clicking the 'Run the clean URL test' button.
     $form['clean_url_test_result'] = array(
       '#type' => 'markup',
       '#markup' => '<p>' . t('Clean URLs cannot be enabled. If you are directed to this page or to a <em>Page not found (404)</em> error after testing for clean URLs, see the <a href="@handbook">online handbook</a>.', array('@handbook' => 'http://drupal.org/node/15365')) . '</p>',
