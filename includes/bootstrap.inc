@@ -1596,11 +1596,12 @@ function drupal_validate_utf8($text) {
 }
 
 /**
- * Since $_SERVER['REQUEST_URI'] is only available on Apache, we
- * generate an equivalent using other environment variables.
+ * Returns the equivalent of Apache's $_SERVER['REQUEST_URI'] variable.
+ *
+ * Because $_SERVER['REQUEST_URI'] is only available on Apache, we generate an
+ * equivalent using other environment variables.
  */
 function request_uri() {
-
   if (isset($_SERVER['REQUEST_URI'])) {
     $uri = $_SERVER['REQUEST_URI'];
   }
