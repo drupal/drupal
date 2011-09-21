@@ -1079,7 +1079,7 @@ function filter_dom_serialize($dom_document) {
   foreach ($body_node->childNodes as $child_node) {
     $body_content .= $dom_document->saveXML($child_node);
   }
-  return preg_replace('|<([^> ]*)/>|i', '<$1 />', $body_content);
+  return $body_content;
 }
 
 /**
