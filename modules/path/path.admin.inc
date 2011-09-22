@@ -130,11 +130,23 @@ function path_admin_form($form, &$form_state, $path = array('source' => '', 'ali
     '#required' => TRUE,
   );
 
-  // This will be a hidden value unless locale module is enabled.
-  $form['language'] = array(
-    '#type' => 'value',
-    '#value' => $path['language']
-  );
+  // A hidden value unless locale module is enabled.
+  if (module_exists('locale')) {
+    $form['language'] = array(
+      '#type' => 'select',
+      '#title' => t('Language'),
+      '#options' => array(LANGUAGE_NONE => t('All languages')) + locale_language_list('name'),
+      '#default_value' => $path['language'],
+      '#weight' => -10,
+      '#description' => t('A path alias set for a specific language will always be used when displaying this page in that language, and takes precedence over path aliases set for <em>All languages</em>.'),
+    );
+  }
+  else {
+    $form['language'] = array(
+      '#type' => 'value',
+      '#value' => $path['language']
+    );
+  }
 
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array(

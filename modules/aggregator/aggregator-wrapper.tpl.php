@@ -12,7 +12,7 @@
  * @see template_preprocess_aggregator_wrapper()
  */
 ?>
-<div id="aggregator">
+<div class="aggregator">
   <?php print $content; ?>
   <?php print $pager; ?>
 </div>

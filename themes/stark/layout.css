@@ -10,9 +10,7 @@
  * This layout method works reasonably well, but shouldn't be used on a
  * production site because it can break. For example, if an over-large image
  * (one that is wider than 20% of the viewport) is in the left sidebar, the
- * image will overlap with the #content to the right. The exception to this
- * is IE6 which will just hide the navigation block completely in these
- * instances due to a positioning bug.
+ * image will overlap with the #content to the right.
  */
 
 #content,

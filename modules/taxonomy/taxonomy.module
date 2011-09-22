@@ -417,10 +417,6 @@ function taxonomy_vocabulary_save($vocabulary) {
     $vocabulary->old_machine_name = $vocabulary->original->machine_name;
   }
 
-  if (!isset($vocabulary->module)) {
-    $vocabulary->module = 'taxonomy';
-  }
-
   module_invoke_all('taxonomy_vocabulary_presave', $vocabulary);
   module_invoke_all('entity_presave', $vocabulary, 'taxonomy_vocabulary');
 

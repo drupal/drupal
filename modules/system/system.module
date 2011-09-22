@@ -1359,7 +1359,7 @@ function system_library() {
     ),
   );
   $libraries['ui.mouse'] = array(
-    'title' => 'jQuery UI: Droppable',
+    'title' => 'jQuery UI: Mouse',
     'website' => 'http://docs.jquery.com/UI/Mouse',
     'version' => '1.8.7',
     'js' => array(
@@ -3004,10 +3004,10 @@ function system_cron() {
     }
   }
 
-  $core = array('cache', 'cache_path', 'cache_filter', 'cache_page', 'cache_form', 'cache_menu');
-  $cache_tables = array_merge(module_invoke_all('flush_caches'), $core);
-  foreach ($cache_tables as $table) {
-    cache_clear_all(NULL, $table);
+  $core = array('cache', 'path', 'filter', 'page', 'form', 'menu');
+  $cache_bins = array_merge(module_invoke_all('flush_caches'), $core);
+  foreach ($cache_bins as $bin) {
+    cache($bin)->expire();
   }
 
   // Cleanup the batch table and the queue for failed batches.

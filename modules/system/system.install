@@ -1645,10 +1645,10 @@ function system_update_last_removed() {
  */
 
 /**
- * Placeholder update to set the schema version to 8000.
+ * Enable entity module.
  */
 function system_update_8000() {
-  // Fill in the first update to Drupal 8 when needed.
+  update_module_enable(array('entity'));
 }
 
 /**

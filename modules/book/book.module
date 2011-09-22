@@ -1262,12 +1262,12 @@ function book_menu_subtree_data($link) {
   $cid = 'links:' . $link['menu_name'] . ':subtree-cid:' . $link['mlid'];
 
   if (!isset($tree[$cid])) {
-    $cache = cache_get($cid, 'cache_menu');
+    $cache = cache('menu')->get($cid);
 
     if ($cache && isset($cache->data)) {
       // If the cache entry exists, it will just be the cid for the actual data.
       // This avoids duplication of large amounts of data.
-      $cache = cache_get($cache->data, 'cache_menu');
+      $cache = cache('menu')->get($cache->data);
 
       if ($cache && isset($cache->data)) {
         $data = $cache->data;
@@ -1300,11 +1300,11 @@ function book_menu_subtree_data($link) {
       $tree_cid = 'links:' . $item['menu_name'] . ':subtree-data:' . hash('sha256', serialize($data));
       // Cache the data, if it is not already in the cache.
 
-      if (!cache_get($tree_cid, 'cache_menu')) {
-        cache_set($tree_cid, $data, 'cache_menu');
+      if (!cache('menu')->get($tree_cid)) {
+        cache('menu')->set($tree_cid, $data);
       }
       // Cache the cid of the (shared) data using the menu and item-specific cid.
-      cache_set($cid, $tree_cid, 'cache_menu');
+      cache('menu')->set($cid, $tree_cid);
     }
     // Check access for the current user to each item in the tree.
     menu_tree_check_access($data['tree'], $data['node_links']);

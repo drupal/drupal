@@ -110,7 +110,7 @@ function hook_image_style_delete($style) {
  */
 function hook_image_style_flush($style) {
   // Empty cached data that contains information about the style.
-  cache_clear_all('*', 'cache_mymodule', TRUE);
+  cache('mymodule')->flush();
 }
 
 /**

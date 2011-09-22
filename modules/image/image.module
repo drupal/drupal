@@ -259,13 +259,6 @@ function image_system_file_system_settings_submit($form, &$form_state) {
 }
 
 /**
- * Implements hook_flush_caches().
- */
-function image_flush_caches() {
-  return array('cache_image');
-}
-
-/**
  * Implements hook_file_download().
  *
  * Control the access to files underneath the styles directory.
@@ -492,7 +485,7 @@ function image_styles() {
 
   // Grab from cache or build the array.
   if (!isset($styles)) {
-    if ($cache = cache_get('image_styles', 'cache')) {
+    if ($cache = cache()->get('image_styles')) {
       $styles = $cache->data;
     }
     else {
@@ -534,7 +527,7 @@ function image_styles() {
       }
 
       drupal_alter('image_styles', $styles);
-      cache_set('image_styles', $styles);
+      cache()->set('image_styles', $styles);
     }
   }
 
@@ -827,8 +820,8 @@ function image_style_flush($style) {
   module_invoke_all('image_style_flush', $style);
 
   // Clear image style and effect caches.
-  cache_clear_all('image_styles', 'cache');
-  cache_clear_all('image_effects:', 'cache', TRUE);
+  cache()->delete('image_styles');
+  cache()->deletePrefix('image_effects:');
   drupal_static_reset('image_styles');
   drupal_static_reset('image_effects');
 
@@ -838,9 +831,9 @@ function image_style_flush($style) {
 
   // Clear page caches when flushing.
   if (module_exists('block')) {
-    cache_clear_all('*', 'cache_block', TRUE);
+    cache('block')->flush();
   }
-  cache_clear_all('*', 'cache_page', TRUE);
+  cache('page')->flush();
 }
 
 /**
@@ -952,7 +945,7 @@ function image_effect_definitions() {
   $effects = &drupal_static(__FUNCTION__);
 
   if (!isset($effects)) {
-    if ($cache = cache_get("image_effects:$langcode") && !empty($cache->data)) {
+    if ($cache = cache()->get("image_effects:$langcode") && !empty($cache->data)) {
       $effects = $cache->data;
     }
     else {
@@ -969,7 +962,7 @@ function image_effect_definitions() {
       }
       uasort($effects, '_image_effect_definitions_sort');
       drupal_alter('image_effect_info', $effects);
-      cache_set("image_effects:$langcode", $effects);
+      cache()->set("image_effects:$langcode", $effects);
     }
   }
 

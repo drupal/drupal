@@ -5,4 +5,4 @@ version = VERSION
 core = 8.x
 files[] = aggregator.test
 configure = admin/config/services/aggregator/settings
-stylesheets[all][] = aggregator.css
+stylesheets[all][] = aggregator.theme.css

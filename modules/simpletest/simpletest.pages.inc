@@ -428,6 +428,9 @@ function simpletest_result_status_image($status) {
 
 /**
  * Provides settings form for SimpleTest variables.
+ *
+ * @ingroup forms
+ * @see simpletest_settings_form_validate()
  */
 function simpletest_settings_form($form, &$form_state) {
   $form['general'] = array(
@@ -467,16 +470,41 @@ function simpletest_settings_form($form, &$form_state) {
     ),
     '#default_value' => variable_get('simpletest_httpauth_method', CURLAUTH_BASIC),
   );
+  $username = variable_get('simpletest_httpauth_username');
+  $password = variable_get('simpletest_httpauth_password');
   $form['httpauth']['simpletest_httpauth_username'] = array(
     '#type' => 'textfield',
     '#title' => t('Username'),
-    '#default_value' => variable_get('simpletest_httpauth_username', ''),
+    '#default_value' => $username,
   );
+  if ($username && $password) {
+    $form['httpauth']['simpletest_httpauth_username']['#description'] = t('Leave this blank to delete both the existing username and password.');
+  }
   $form['httpauth']['simpletest_httpauth_password'] = array(
-    '#type' => 'textfield',
+    '#type' => 'password',
     '#title' => t('Password'),
-    '#default_value' => variable_get('simpletest_httpauth_password', ''),
   );
+  if ($password) {
+    $form['httpauth']['simpletest_httpauth_password']['#description'] = t('To change the password, enter the new password here.');
+  }
 
   return system_settings_form($form);
 }
+
+/**
+ * Validation handler for simpletest_settings_form().
+ */
+function simpletest_settings_form_validate($form, &$form_state) {
+  // If a username was provided but a password wasn't, preserve the existing
+  // password.
+  if (!empty($form_state['values']['simpletest_httpauth_username']) && empty($form_state['values']['simpletest_httpauth_password'])) {
+    $form_state['values']['simpletest_httpauth_password'] = variable_get('simpletest_httpauth_password', '');
+  }
+
+  // If a password was provided but a username wasn't, the credentials are
+  // incorrect, so throw an error.
+  if (empty($form_state['values']['simpletest_httpauth_username']) && !empty($form_state['values']['simpletest_httpauth_password'])) {
+    form_set_error('simpletest_httpauth_username', t('HTTP authentication credentials must include a username in addition to a password.'));
+  }
+}
+

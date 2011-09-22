@@ -83,7 +83,7 @@ function _registry_update() {
 
     $unchanged_resources = array();
     $lookup_cache = array();
-    if ($cache = cache_get('lookup_cache', 'cache_bootstrap')) {
+    if ($cache = cache('bootstrap')->get('lookup_cache')) {
       $lookup_cache = $cache->data;
     }
     foreach ($lookup_cache as $key => $file) {
@@ -105,7 +105,7 @@ function _registry_update() {
   // We have some unchanged resources, warm up the cache - no need to pay
   // for looking them up again.
   if (count($unchanged_resources) > 0) {
-    cache_set('lookup_cache', $unchanged_resources, 'cache_bootstrap');
+    cache('bootstrap')->set('lookup_cache', $unchanged_resources);
   }
 }
 

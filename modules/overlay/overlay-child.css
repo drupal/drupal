@@ -17,6 +17,7 @@ html.js body {
   min-width: 700px;
   position: relative;
   padding: .2em;
+  padding-bottom: 2em;
   padding-right: 26px; /* LTR */
   width: 88%;
 }
@@ -131,15 +132,6 @@ html.js body {
  */
 #overlay-titlebar .add-or-remove-shortcuts {
   padding-top: 0.9em;
-}
-
-/**
- * IE6 shows elements with position:fixed as position:static so replace
- * it with position:absolute;
- */
-* html #overlay-close,
-* html #overlay-close:hover {
-  position: absolute;
 }
 
 /**

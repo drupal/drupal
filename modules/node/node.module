@@ -675,7 +675,7 @@ function _node_types_build($rebuild = FALSE) {
     if (isset($_node_types)) {
       return $_node_types;
     }
-    if ($cache = cache_get($cid)) {
+    if ($cache = cache()->get($cid)) {
       $_node_types = $cache->data;
       return $_node_types;
     }
@@ -737,7 +737,7 @@ function _node_types_build($rebuild = FALSE) {
 
   asort($_node_types->names);
 
-  cache_set($cid, $_node_types);
+  cache()->set($cid, $_node_types);
 
   return $_node_types;
 }
@@ -746,7 +746,7 @@ function _node_types_build($rebuild = FALSE) {
  * Clears the node type cache.
  */
 function node_type_cache_reset() {
-  cache_clear_all('node_types:', 'cache', TRUE);
+  cache()->deletePrefix('node_types:');
   drupal_static_reset('_node_types_build');
 }
 
@@ -2452,7 +2452,7 @@ function node_feed($nids = FALSE, $channel = array()) {
     $nids = db_select('node', 'n')
       ->fields('n', array('nid', 'created'))
       ->condition('n.promote', 1)
-      ->condition('status', 1)
+      ->condition('n.status', 1)
       ->orderBy('n.created', 'DESC')
       ->range(0, variable_get('feed_default_items', 10))
       ->addTag('node_access')
@@ -2833,8 +2833,6 @@ function node_search_validate($form, &$form_state) {
  *   TRUE if the operation may be performed, FALSE otherwise.
  */
 function node_access($op, $node, $account = NULL) {
-  global $user;
-
   $rights = &drupal_static(__FUNCTION__, array());
 
   if (!$node || !in_array($op, array('view', 'update', 'delete', 'create'), TRUE)) {
@@ -2844,7 +2842,7 @@ function node_access($op, $node, $account = NULL) {
   }
   // If no user object is supplied, the access check is for the current user.
   if (empty($account)) {
-    $account = $user;
+    $account = $GLOBALS['user'];
   }
 
   // $node may be either an object or a node type. Since node types cannot be
@@ -3947,4 +3945,15 @@ function node_file_download_access($field, $entity_type, $entity) {
   if ($entity_type == 'node') {
     return node_access('view', $entity);
   }
+}
+
+/**
+ * Implements hook_locale_language_delete().
+ */
+function node_locale_language_delete($language) {
+  // On nodes with this language, unset the language
+  db_update('node')
+    ->fields(array('language' => ''))
+    ->condition('language', $language->language)
+    ->execute();
 }

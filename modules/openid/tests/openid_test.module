@@ -60,6 +60,19 @@ function openid_test_menu() {
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
+  $items['openid-test/redirect'] = array(
+    'title' => 'OpenID Provider Redirection Point',
+    'page callback' => 'openid_test_redirect',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+  $items['openid-test/redirected/%/%'] = array(
+    'title' => 'OpenID Provider Final URL',
+    'page callback' => 'openid_test_redirected_method',
+    'page arguments' => array(2, 3),
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
   return $items;
 }
 
@@ -210,6 +223,28 @@ function openid_test_endpoint() {
       _openid_test_endpoint_authenticate();
       break;
   }
+}
+
+/**
+ * Menu callback; redirect during Normalization/Discovery.
+ */
+function openid_test_redirect($count = 0) {
+  if ($count == 0) {
+    $url = variable_get('openid_test_redirect_url', '');
+  }
+  else {
+    $url = url('openid-test/redirect/' . --$count, array('absolute' => TRUE));
+  }
+  $http_response_code = variable_get('openid_test_redirect_http_reponse_code', 301);
+  header('Location: ' . $url, TRUE, $http_response_code);
+  exit();
+}
+
+/**
+ * Menu callback; respond with appropriate callback.
+ */
+function openid_test_redirected_method($method1, $method2) {
+  return call_user_func('openid_test_' . $method1 . '_' . $method2);
 }
 
 /**
