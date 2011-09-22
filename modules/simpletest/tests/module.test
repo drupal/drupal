@@ -86,17 +86,17 @@ class ModuleUnitTest extends DrupalWebTestCase {
    */
   function testModuleImplements() {
     // Clear the cache.
-    cache_clear_all('module_implements', 'cache_bootstrap');
-    $this->assertFalse(cache_get('module_implements', 'cache_bootstrap'), t('The module implements cache is empty.'));
+    cache('bootstrap')->delete('module_implements');
+    $this->assertFalse(cache('bootstrap')->get('module_implements'), t('The module implements cache is empty.'));
     $this->drupalGet('');
-    $this->assertTrue(cache_get('module_implements', 'cache_bootstrap'), t('The module implements cache is populated after requesting a page.'));
+    $this->assertTrue(cache('bootstrap')->get('module_implements'), t('The module implements cache is populated after requesting a page.'));
 
     // Test again with an authenticated user.
     $this->user = $this->drupalCreateUser();
     $this->drupalLogin($this->user);
-    cache_clear_all('module_implements', 'cache_bootstrap');
+    cache('bootstrap')->delete('module_implements');
     $this->drupalGet('');
-    $this->assertTrue(cache_get('module_implements', 'cache_bootstrap'), t('The module implements cache is populated after requesting a page.'));
+    $this->assertTrue(cache('bootstrap')->get('module_implements'), t('The module implements cache is populated after requesting a page.'));
 
     // Make sure group include files are detected properly even when the file is
     // already loaded when the cache is rebuilt.

@@ -231,7 +231,7 @@ function update_info_page() {
   _drupal_flush_css_js();
   // Flush the cache of all data for the update status module.
   if (db_table_exists('cache_update')) {
-    cache_clear_all('*', 'cache_update', TRUE);
+    cache('update')->flush();
   }
 
   update_task_list('info');
@@ -345,7 +345,6 @@ require_once DRUPAL_ROOT . '/includes/bootstrap.inc';
 require_once DRUPAL_ROOT . '/includes/update.inc';
 require_once DRUPAL_ROOT . '/includes/common.inc';
 require_once DRUPAL_ROOT . '/includes/file.inc';
-require_once DRUPAL_ROOT . '/includes/entity.inc';
 require_once DRUPAL_ROOT . '/includes/unicode.inc';
 update_prepare_d8_bootstrap();
 

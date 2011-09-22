@@ -299,8 +299,9 @@ function language_negotiation_info() {
     $language_providers[LANGUAGE_NEGOTIATION_DEFAULT] = array(
       'callbacks' => array('language' => 'language_from_default'),
       'weight' => 10,
-      'name' => t('Default'),
+      'name' => t('Default language'),
       'description' => t('Use the default site language (@language_name).', array('@language_name' => language_default()->native)),
+      'config' => 'admin/config/regional/language',
     );
 
     // Let other modules alter the list of language providers.

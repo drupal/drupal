@@ -52,7 +52,7 @@ function locale_languages_overview_form() {
     '#title' => t('Default language'),
     '#title_display' => 'invisible',
     '#options' => $options,
-    '#default_value' => language_default('language'),
+    '#default_value' => language_default()->language,
   );
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save configuration'));
@@ -168,7 +168,7 @@ function locale_languages_overview_form_submit($form, &$form_state) {
   drupal_set_message(t('Configuration saved.'));
 
   // Changing the language settings impacts the interface.
-  cache_clear_all('*', 'cache_page', TRUE);
+  cache('page')->flush();
   module_invoke_all('multilingual_settings_changed');
 
   $form_state['redirect'] = 'admin/config/regional/language';
@@ -280,7 +280,7 @@ function _locale_languages_common_controls(&$form, $language = NULL) {
       '#required' => TRUE,
       '#default_value' => @$language->language,
       '#disabled' => (isset($language->language)),
-      '#description' => t('<a href="@rfc4646">RFC 4646</a> compliant language identifier. Language codes typically use a country code, and optionally, a script or regional variant name. <em>Examples: "en", "en-US" and "zh-Hant".</em>', array('@rfc4646' => 'http://www.ietf.org/rfc/rfc4646.txt')),
+      '#description' => t('Use language codes as <a href="@w3ctags">defined by the W3C</a> for interoperability. <em>Examples: "en", "en-gb" and "zh-hant".</em>', array('@w3ctags' => 'http://www.w3.org/International/articles/language-tags/')),
     );
   }
   $form['name'] = array('#type' => 'textfield',
@@ -307,7 +307,7 @@ function _locale_languages_common_controls(&$form, $language = NULL) {
     '#title' => t('Language domain'),
     '#maxlength' => 128,
     '#default_value' => @$language->domain,
-    '#description' => t('URL <strong>including protocol</strong> to use for this language, if your <em>Detection and selection</em> settings use URL domains. For the default language, this value may be left blank. <strong>Modifying this value may break existing URLs. Use with caution in a production environment.</strong> Example: Specifying "http://example.de" or "http://de.example.com" as language domains for German results in URLs like "http://example.de/contact" and "http://de.example.com/contact", respectively.'),
+    '#description' => t('The domain name to use for this language if URL domains are used for <em>Detection and selection</em>. Leave blank for the default language. <strong>Changing this value may break existing URLs.</strong> Example: Specifying "de.example.com" as language domain for German will result in an URL like "http://de.example.com/contact".'),
   );
   $form['direction'] = array('#type' => 'radios',
     '#title' => t('Direction'),
@@ -331,8 +331,8 @@ function locale_languages_predefined_form_validate($form, &$form_state) {
 
   if (!isset($form_state['values']['name'])) {
     // Predefined language selection.
-    include_once DRUPAL_ROOT . '/includes/iso.inc';
-    $predefined = _locale_get_predefined_list();
+    include_once DRUPAL_ROOT . '/includes/standard.inc';
+    $predefined = standard_language_list();
     if (!isset($predefined[$langcode])) {
       form_set_error('langcode', t('Invalid language code.'));
     }
@@ -355,8 +355,8 @@ function locale_languages_predefined_form_submit($form, &$form_state) {
   }
   else {
     // Predefined language selection.
-    include_once DRUPAL_ROOT . '/includes/iso.inc';
-    $predefined = _locale_get_predefined_list();
+    include_once DRUPAL_ROOT . '/includes/standard.inc';
+    $predefined = standard_language_list();
     locale_add_language($langcode);
     drupal_set_message(t('The language %language has been created and can now be used. More information is available on the <a href="@locale-help">help screen</a>.', array('%language' => t($predefined[$langcode][0]), '@locale-help' => url('admin/help/locale'))));
   }
@@ -392,7 +392,7 @@ function locale_languages_edit_form_validate($form, &$form_state) {
   if (!empty($form_state['values']['domain']) && $duplicate = db_query("SELECT language FROM {languages} WHERE domain = :domain AND language <> :language", array(':domain' => $form_state['values']['domain'], ':language' => $form_state['values']['langcode']))->fetchField()) {
     form_set_error('domain', t('The domain (%domain) is already tied to a language (%language).', array('%domain' => $form_state['values']['domain'], '%language' => $duplicate->language)));
   }
-  if (empty($form_state['values']['prefix']) && language_default('language') != $form_state['values']['langcode'] && empty($form_state['values']['domain'])) {
+  if (empty($form_state['values']['prefix']) && language_default()->language != $form_state['values']['langcode'] && empty($form_state['values']['domain'])) {
     form_set_error('prefix', t('Only the default language can have both the domain and prefix empty.'));
   }
   if (!empty($form_state['values']['prefix']) && $duplicate = db_query("SELECT language FROM {languages} WHERE prefix = :prefix AND language <> :language", array(':prefix' => $form_state['values']['prefix'], ':language' => $form_state['values']['langcode']))->fetchField()) {
@@ -439,7 +439,7 @@ function locale_languages_delete_form($form, &$form_state, $langcode) {
     drupal_goto('admin/config/regional/language');
   }
 
-  if (language_default('language') == $langcode) {
+  if (language_default()->language == $langcode) {
     drupal_set_message(t('The default language cannot be deleted.'));
     drupal_goto('admin/config/regional/language');
   }
@@ -461,37 +461,18 @@ function locale_languages_delete_form($form, &$form_state, $langcode) {
  * Process language deletion submissions.
  */
 function locale_languages_delete_form_submit($form, &$form_state) {
+  $langcode = $form_state['values']['langcode'];
   $languages = language_list();
-  if (isset($languages[$form_state['values']['langcode']])) {
-    // Remove translations first.
-    db_delete('locales_target')
-      ->condition('language', $form_state['values']['langcode'])
-      ->execute();
-    cache_clear_all('locale:' . $form_state['values']['langcode'], 'cache');
-    // With no translations, this removes existing JavaScript translations file.
-    _locale_rebuild_js($form_state['values']['langcode']);
-    // Remove the language.
-    db_delete('languages')
-      ->condition('language', $form_state['values']['langcode'])
-      ->execute();
-    db_update('node')
-      ->fields(array('language' => ''))
-      ->condition('language', $form_state['values']['langcode'])
-      ->execute();
-    if ($languages[$form_state['values']['langcode']]->enabled) {
-      variable_set('language_count', variable_get('language_count', 1) - 1);
-    }
-    module_invoke_all('multilingual_settings_changed');
-    $variables = array('%locale' => $languages[$form_state['values']['langcode']]->name);
+  $language = $languages[$langcode];
+
+  $success = locale_language_delete($langcode);
+
+  if ($success) {
+    $variables = array('%locale' => $language->name);
     drupal_set_message(t('The language %locale has been removed.', $variables));
-    watchdog('locale', 'The language %locale has been removed.', $variables);
   }
 
-  // Changing the language settings impacts the interface:
-  cache_clear_all('*', 'cache_page', TRUE);
-
   $form_state['redirect'] = 'admin/config/regional/language';
-  return;
 }
 
 /**

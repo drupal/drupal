@@ -53,7 +53,7 @@ function _locale_import_po($file, $langcode, $mode) {
 
   // Clear cache and force refresh of JavaScript translations.
   _locale_invalidate_js($langcode);
-  cache_clear_all('locale:', 'cache', TRUE);
+  cache()->deletePrefix('locale:');
 
   // Rebuild the menu, strings may have changed.
   menu_rebuild();

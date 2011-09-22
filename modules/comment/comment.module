@@ -92,7 +92,7 @@ function comment_help($path, $arg) {
  * Implements hook_entity_info().
  */
 function comment_entity_info() {
-  $return =  array(
+  $return = array(
     'comment' => array(
       'label' => t('Comment'),
       'base table' => 'comment',
@@ -542,7 +542,7 @@ function comment_new_page_count($num_comments, $new_replies, $node) {
   elseif ($flat) {
     // Flat comments.
     $count = $num_comments - $new_replies;
-    $pageno =  $count / $comments_per_page;
+    $pageno = $count / $comments_per_page;
   }
   else {
     // Threaded comments: we build a query with a subquery to find the first
@@ -575,7 +575,7 @@ function comment_new_page_count($num_comments, $new_replies, $node) {
       ':thread' => $first_thread,
     ))->fetchField();
 
-    $pageno =  $count / $comments_per_page;
+    $pageno = $count / $comments_per_page;
   }
 
   if ($pageno >= 1) {
@@ -655,7 +655,7 @@ function comment_node_view($node, $view_mode) {
           );
         }
         else {
-          $links['comment_forbidden'] = array(
+          $links['comment-forbidden'] = array(
             'title' => theme('comment_post_forbidden', array('node' => $node)),
             'html' => TRUE,
           );
@@ -685,7 +685,7 @@ function comment_node_view($node, $view_mode) {
           }
         }
         else {
-          $links['comment_forbidden'] = array(
+          $links['comment-forbidden'] = array(
             'title' => theme('comment_post_forbidden', array('node' => $node)),
             'html' => TRUE,
           );
@@ -1066,8 +1066,8 @@ function comment_links($comment, $node) {
       );
     }
     else {
-      $links['comment_forbidden']['title'] = theme('comment_post_forbidden', array('node' => $node));
-      $links['comment_forbidden']['html'] = TRUE;
+      $links['comment-forbidden']['title'] = theme('comment_post_forbidden', array('node' => $node));
+      $links['comment-forbidden']['html'] = TRUE;
     }
   }
   return $links;
@@ -1439,7 +1439,7 @@ function comment_save($comment) {
 
   $transaction = db_transaction();
   try {
-    $defaults =  array(
+    $defaults = array(
       'mail' => '',
       'homepage' => '',
       'name' => '',
@@ -1711,7 +1711,7 @@ function comment_num_new($nid, $timestamp = 0) {
     $timestamp = ($timestamp > NODE_NEW_LIMIT ? $timestamp : NODE_NEW_LIMIT);
 
     // Use the timestamp to retrieve the number of new comments.
-    return db_query('SELECT COUNT(cid) FROM {comment} WHERE nid = :nid  AND created > :timestamp AND status = :status', array(
+    return db_query('SELECT COUNT(cid) FROM {comment} WHERE nid = :nid AND created > :timestamp AND status = :status', array(
       ':nid' => $nid,
       ':timestamp' => $timestamp,
       ':status' => COMMENT_PUBLISHED,
@@ -2279,10 +2279,10 @@ function template_preprocess_comment(&$variables) {
 
   // Set status to a string representation of comment->status.
   if (isset($comment->in_preview)) {
-    $variables['status']  = 'comment-preview';
+    $variables['status'] = 'comment-preview';
   }
   else {
-    $variables['status']  = ($comment->status == COMMENT_NOT_PUBLISHED) ? 'comment-unpublished' : 'comment-published';
+    $variables['status'] = ($comment->status == COMMENT_NOT_PUBLISHED) ? 'comment-unpublished' : 'comment-published';
   }
   // Gather comment classes.
   if ($comment->uid === 0) {

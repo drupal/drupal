@@ -227,7 +227,7 @@ html.js .js-hide {
  */
 .element-invisible {
   position: absolute !important;
-  clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
+  clip: rect(1px 1px 1px 1px); /* IE7 */
   clip: rect(1px, 1px, 1px, 1px);
 }
 
@@ -252,10 +252,6 @@ html.js .js-hide {
   height: 0;
   clear: both;
   visibility: hidden;
-}
-/* IE6 */
-* html .clearfix {
-  height: 1%;
 }
 /* IE7 */
 *:first-child + html .clearfix {

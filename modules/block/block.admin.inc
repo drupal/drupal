@@ -77,7 +77,7 @@ function block_admin_display_prepare_blocks($theme) {
  */
 function block_admin_display_form($form, &$form_state, $blocks, $theme, $block_regions = NULL) {
 
-  drupal_add_css(drupal_get_path('module', 'block') . '/block.admin.css');
+  $form['#attached']['css'] = array(drupal_get_path('module', 'block') . '/block.admin.css');
 
   // Get a list of block regions if one was not provided.
   if (!isset($block_regions)) {
@@ -276,7 +276,7 @@ function block_admin_configure($form, &$form_state, $module, $delta) {
     '#maxlength' => 64,
     '#description' => $block->module == 'block' ? t('The title of the block as shown to the user.') : t('Override the default title for the block. Use <em>!placeholder</em> to display no title, or leave blank to use the default block title.', array('!placeholder' => '&lt;none&gt;')),
     '#default_value' => isset($block->title) ? $block->title : '',
-    '#weight' => -18,
+    '#weight' => -19,
   );
 
   // Module-specific block configuration.

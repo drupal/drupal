@@ -260,7 +260,7 @@ function filter_format_save($format) {
     $return = SAVED_UPDATED;
 
     // Clear the filter cache whenever a text format is updated.
-    cache_clear_all($format->format . ':', 'cache_filter', TRUE);
+    cache('filter')->deletePrefix($format->format . ':');
   }
 
   filter_formats_reset();
@@ -290,7 +290,7 @@ function filter_format_disable($format) {
 
   // Clear the filter cache whenever a text format is disabled.
   filter_formats_reset();
-  cache_clear_all($format->format . ':', 'cache_filter', TRUE);
+  cache('filter')->deletePrefix($format->format . ':');
 }
 
 /**
@@ -395,7 +395,7 @@ function filter_formats($account = NULL) {
 
   // All available formats are cached for performance.
   if (!isset($formats['all'])) {
-    if ($cache = cache_get("filter_formats:{$language->language}")) {
+    if ($cache = cache()->get("filter_formats:{$language->language}")) {
       $formats['all'] = $cache->data;
     }
     else {
@@ -407,7 +407,7 @@ function filter_formats($account = NULL) {
         ->execute()
         ->fetchAllAssoc('format');
 
-      cache_set("filter_formats:{$language->language}", $formats['all']);
+      cache()->set("filter_formats:{$language->language}", $formats['all']);
     }
   }
 
@@ -430,8 +430,8 @@ function filter_formats($account = NULL) {
  * @see filter_formats()
  */
 function filter_formats_reset() {
-  cache_clear_all('filter_formats', 'cache', TRUE);
-  cache_clear_all('filter_list_format', 'cache', TRUE);
+  cache()->deletePrefix('filter_formats');
+  cache()->deletePrefix('filter_list_format');
   drupal_static_reset('filter_list_format');
   drupal_static_reset('filter_formats');
 }
@@ -657,7 +657,7 @@ function filter_list_format($format_id) {
   $filter_info = filter_get_filters();
 
   if (!isset($filters['all'])) {
-    if ($cache = cache_get('filter_list_format')) {
+    if ($cache = cache()->get('filter_list_format')) {
       $filters['all'] = $cache->data;
     }
     else {
@@ -665,7 +665,7 @@ function filter_list_format($format_id) {
       foreach ($result as $record) {
         $filters['all'][$record->format][$record->name] = $record;
       }
-      cache_set('filter_list_format', $filters['all']);
+      cache()->set('filter_list_format', $filters['all']);
     }
   }
 
@@ -731,7 +731,7 @@ function check_markup($text, $format_id = NULL, $langcode = '', $cache = FALSE) 
   $cache_id = '';
   if ($cache) {
     $cache_id = $format->format . ':' . $langcode . ':' . hash('sha256', $text);
-    if ($cached = cache_get($cache_id, 'cache_filter')) {
+    if ($cached = cache('filter')->get($cache_id)) {
       return $cached->data;
     }
   }
@@ -765,7 +765,7 @@ function check_markup($text, $format_id = NULL, $langcode = '', $cache = FALSE) 
   // automatically flushed when the text format is updated.
   // @see filter_format_save()
   if ($cache) {
-    cache_set($cache_id, $text, 'cache_filter');
+    cache('filter')->set($cache_id, $text);
   }
 
   return $text;
@@ -1079,7 +1079,7 @@ function filter_dom_serialize($dom_document) {
   foreach ($body_node->childNodes as $child_node) {
     $body_content .= $dom_document->saveXML($child_node);
   }
-  return preg_replace('|<([^> ]*)/>|i', '<$1 />', $body_content);
+  return $body_content;
 }
 
 /**

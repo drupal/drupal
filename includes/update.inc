@@ -82,6 +82,7 @@ function update_prepare_d8_bootstrap() {
   // Allow the database system to work even if the registry has not been
   // created yet.
   include_once DRUPAL_ROOT . '/includes/install.inc';
+  include_once DRUPAL_ROOT . '/modules/entity/entity.controller.inc';
   drupal_bootstrap(DRUPAL_BOOTSTRAP_DATABASE);
 
   // If the site has not updated to Drupal 8 yet, check to make sure that it is
@@ -117,6 +118,35 @@ function update_fix_d8_requirements() {
   if (drupal_get_installed_schema_version('system') < 8000 && !variable_get('update_d8_requirements', FALSE)) {
     // @todo: Make critical, first-run changes to the database here.
     variable_set('update_d8_requirements', TRUE);
+  }
+}
+
+/**
+ * Helper function to install a new module in Drupal 8 via hook_update_N().
+ */
+function update_module_enable(array $modules) {
+  foreach ($modules as $module) {
+    // Check for initial schema and install it. The schema version of a newly
+    // installed module is always 0. Using 8000 here would be inconsistent
+    // since $module_update_8000() may involve a schema change, and we want
+    // to install the schema as it was before any updates were added.
+    $function = $module . '_schema_0';
+    if (function_exists($function)) {
+      $schema = $function();
+      foreach ($schema as $table => $spec) {
+        db_create_table($table, $spec);
+      }
+    }
+    // Change the schema version from SCHEMA_UNINSTALLED to 0, so any module
+    // updates since the module's inception are executed in a core upgrade.
+    db_update('system')
+      ->condition('type', 'module')
+      ->condition('name', $module)
+      ->fields(array('schema_version' => 0))
+      ->execute();
+
+    system_list_reset();
+    //  @todo: figure out what to do about hook_install() and hook_enable().
   }
 }
 

@@ -428,7 +428,7 @@ function file_field_widget_settings_form($field, $instance) {
       'bar' => t('Bar with progress meter'),
     ),
     '#default_value' => $settings['progress_indicator'],
-    '#description' => t('The throbber display does not show the status of uploads but takes up space. The progress bar is helpful for monitoring progress on large uploads.'),
+    '#description' => t('The throbber display does not show the status of uploads but takes up less space. The progress bar is helpful for monitoring progress on large uploads.'),
     '#weight' => 16,
     '#access' => file_progress_implementation(),
   );
@@ -447,37 +447,18 @@ function file_field_widget_form(&$form, &$form_state, $field, $instance, $langco
     'description' => '',
   );
 
-  // Retrieve any values set in $form_state, as will be the case during Ajax
-  // rebuilds of this form.
-  if (isset($form_state['values'])) {
-    $path = array_merge($element['#field_parents'], array($field['field_name'], $langcode));
-    $path_exists = FALSE;
-    $values = drupal_array_get_nested_value($form_state['values'], $path, $path_exists);
-    if ($path_exists) {
-      $items = $values;
-      drupal_array_set_nested_value($form_state['values'], $path, NULL);
-    }
+  // Load the items for form rebuilds from the field state as they might not be
+  // in $form_state['values'] because of validation limitations. Also, they are
+  // only passed in as $items when editing existing entities.
+  $field_state = field_form_get_state($element['#field_parents'], $field['field_name'], $langcode, $form_state);
+  if (isset($field_state['items'])) {
+    $items = $field_state['items'];
   }
-
-  foreach ($items as $delta => $item) {
-    $items[$delta] = array_merge($defaults, $items[$delta]);
-    // Remove any items from being displayed that are not needed.
-    if ($items[$delta]['fid'] == 0) {
-      unset($items[$delta]);
-    }
-  }
-
-  // Re-index deltas after removing empty items.
-  $items = array_values($items);
-
-  // Update order according to weight.
-  $items = _field_sort_items($field, $items);
 
   // Essentially we use the managed_file type, extended with some enhancements.
   $element_info = element_info('managed_file');
   $element += array(
     '#type' => 'managed_file',
-    '#default_value' => isset($items[$delta]) ? $items[$delta] : $defaults,
     '#upload_location' => file_field_widget_uri($field, $instance),
     '#upload_validators' => file_field_widget_upload_validators($field, $instance),
     '#value_callback' => 'file_field_widget_value',
@@ -487,6 +468,8 @@ function file_field_widget_form(&$form, &$form_state, $field, $instance, $langco
   );
 
   if ($field['cardinality'] == 1) {
+    // Set the default value.
+    $element['#default_value'] = !empty($items) ? $items[0] : $defaults;
     // If there's only one field, return it as delta 0.
     if (empty($element['#default_value']['fid'])) {
       $element['#description'] = theme('file_upload_help', array('description' => $element['#description'], 'upload_validators' => $element['#upload_validators']));
@@ -495,15 +478,15 @@ function file_field_widget_form(&$form, &$form_state, $field, $instance, $langco
   }
   else {
     // If there are multiple values, add an element for each existing one.
-    $delta = -1;
-    foreach ($items as $delta => $item) {
+    foreach ($items as $item) {
       $elements[$delta] = $element;
       $elements[$delta]['#default_value'] = $item;
       $elements[$delta]['#weight'] = $delta;
+      $delta++;
     }
-    // And then add one more empty row for new uploads.
-    $delta++;
-    if ($field['cardinality'] == FIELD_CARDINALITY_UNLIMITED || $delta < $field['cardinality']) {
+    // And then add one more empty row for new uploads except when this is a
+    // programmed form as it is not necessary.
+    if (($field['cardinality'] == FIELD_CARDINALITY_UNLIMITED || $delta < $field['cardinality']) && empty($form_state['programmed'])) {
       $elements[$delta] = $element;
       $elements[$delta]['#default_value'] = $defaults;
       $elements[$delta]['#weight'] = $delta;
@@ -757,6 +740,32 @@ function file_field_widget_submit($form, &$form_state) {
   // so nothing is lost in doing this.
   $parents = array_slice($form_state['triggering_element']['#parents'], 0, -2);
   drupal_array_set_nested_value($form_state['input'], $parents, NULL);
+
+  $button = $form_state['triggering_element'];
+
+  // Go one level up in the form, to the widgets container.
+  $element = drupal_array_get_nested_value($form, array_slice($button['#array_parents'], 0, -1));
+  $field_name = $element['#field_name'];
+  $langcode = $element['#language'];
+  $parents = $element['#field_parents'];
+
+  $submitted_values = drupal_array_get_nested_value($form_state['values'], array_slice($button['#array_parents'], 0, -2));
+  foreach ($submitted_values as $delta => $submitted_value) {
+    if (!$submitted_value['fid']) {
+      unset($submitted_values[$delta]);
+    }
+  }
+
+  // Re-index deltas after removing empty items.
+  $submitted_values = array_values($submitted_values);
+
+  // Update form_state values.
+  drupal_array_set_nested_value($form_state['values'], array_slice($button['#array_parents'], 0, -2), $submitted_values);
+
+  // Update items.
+  $field_state = field_form_get_state($parents, $field_name, $langcode, $form_state);
+  $field_state['items'] = $submitted_values;
+  field_form_set_state($parents, $field_name, $langcode, $form_state, $field_state);
 }
 
 /**
