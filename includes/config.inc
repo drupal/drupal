@@ -43,23 +43,6 @@ function config_get_signed_file_storage_names_with_prefix($prefix = '') {
 }
 
 /**
- * Write our signing key out to the filesystem.
- *
- * @param $force_rekey
- *   Boolean to specify whether we should force a new key to be generated
- *   and written, even if a key file exists already.
- */
-function config_write_signed_file_storage_key($force_rekey = FALSE) {
-  $file_path = conf_path() . '/key.php';
-  if (!file_exists($file_path) || $force_rekey) {
-    $key = drupal_hash_base64(drupal_random_bytes(55));
-    if (!file_put_contents($file_path, '<?php die(); ' . $key . "\n")) {
-      throw new Exception('Failed to write configuration signing key.');
-    }
-  }
-}
-
-/**
  * Generate a hash of a config file's contents using our encryption key.
  * 
  * @param $data
@@ -68,17 +51,11 @@ function config_write_signed_file_storage_key($force_rekey = FALSE) {
  *   A hash of the data.
  */
 function config_sign_data($data) {
-  $file = file_get_contents(conf_path() . '/key.php');
-  if ($file === FALSE) {
-    throw new Exception('Key file not found.');
-  }
-
-  // Strip the header from the file contents.
-  $parts = explode(' ', $file);
-  $key = $parts[2];
+  // The configuration key is loaded from settings.php and imported into the global namespace
+  global $drupal_config_key;
   
   // SHA-512 is both secure and very fast on 64 bit CPUs.
-  return hash_hmac('sha512', $data, $key);
+  return hash_hmac('sha512', $data, $drupal_config_key);
 }
 
 class ConfigException extends Exception {}

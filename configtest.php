@@ -13,7 +13,6 @@ echo config('foo.bar')->foo;
 echo '<br>That should be bar';
 die();
 
-config_write_signed_file_storage_key();
 //echo config_sign_data('onetwothree');
 $sfs = new SignedFileStorage('one.two');
 
