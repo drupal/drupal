@@ -438,9 +438,17 @@ function module_enable($module_list, $enable_dependencies = TRUE) {
         $version = $versions ? max($versions) : SCHEMA_INSTALLED;
 
         // Copy any default configuration data to the system config directory/
-        // if (is_dir()) {
-        //   # code...
-        // }
+        $module_config_dir = drupal_get_path('module', $module) . '/config';
+        $drupal_config_dir = config_get_config_directory();
+        if (is_dir(drupal_get_path('module', $module) . '/config')) {
+          $files = glob($module_config_dir . '/' . '*.xml');
+          foreach ($files as $key => $file) {
+            $file = array_pop(explode('/', $file));
+            // @todo What do we want to do if this fails?
+            @copy($module_config_dir . '/' . $file, $drupal_config_dir . '/' . $file);
+          }
+        }
+
         // If the module has no current updates, but has some that were
         // previously removed, set the version to the value of
         // hook_update_last_removed().
