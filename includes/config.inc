@@ -58,6 +58,83 @@ function config_sign_data($data) {
   return hash_hmac('sha512', $data, $drupal_config_key);
 }
 
+function config_get_verified_storage_names_with_prefix($prefix = '') {
+  return DrupalVerifiedStorageSQL::getNamesWithPrefix($prefix);
+}
+
+function config_get_names_with_prefix($prefix) {
+  return config_get_verified_storage_names_with_prefix($prefix);
+}
+
+function config($name, $class = 'DrupalConfig') {
+  static $overrides;
+  if (!isset($overrides)) {
+    $storage = new SignedFileStorage('local');
+    $overrides = (array) config_decode($storage->read());
+  }
+  $key_overrides = isset($overrides[$name]) ? $overrides[$name] : array();
+  // @TODO Replace this with the appropriate factory.
+  return new $class(new DrupalVerifiedStorageSQL($name), $key_overrides);
+}
+
+/**
+ * Decode configuration data from its native format to an associative array.
+ *
+ * @param $data
+ *   Configuration data
+ * @return
+ *   An associative array representation of the data.
+ */
+function config_decode($data) {
+  if (empty($data)) {
+    return array();
+  }
+  print_r(debug_backtrace());
+  print $data;
+  $xml = new SimpleXMLElement($data);
+  $json = json_encode($xml);
+  return json_decode($json);
+}
+
+/**
+ * Encode an array into the native configuration format.
+ *
+ * @param $data
+ *   An associative array or an object
+ * @return
+ *   A representation of this array or object in the native configuration
+ *   format. 
+ * @todo
+ *   This needs to work for objects as well and currently doesn't
+ */
+function config_encode($data) {
+	return config_array_to_xml($data);
+}
+
+/**
+ * Encode an array or object into the native configuration format.
+ *
+ * @param $data
+ *   An associative array or an object
+ * @return
+ *   A representation of this array or object in the native configuration
+ *   format. 
+ */
+function config_array_to_xml($arr, $tab_count = 0) {
+  $xml = '<?xml version="1.0" encoding="UTF8"?>' . PHP_EOL . '<data>';
+  foreach ($arr as $tag => $val) { 
+    if (!is_array($val)) { 
+      $xml .= PHP_EOL . '<' . $tag . '>' . htmlentities($val) . '</' . $tag . '>'; 
+    } else { 
+      $tab_count++; 
+      $xml .= PHP_EOL . '<' . $tag . '>' . config_array_to_xml($val, $tab_count); 
+      $xml .= PHP_EOL . '</' . $tag . '>'; 
+    } 
+  } 
+  $xml .= PHP_EOL . '</data>';
+	return $xml; 
+}
+
 class ConfigException extends Exception {}
 
 class ConfigFileStorageException extends ConfigException {}
@@ -255,83 +332,6 @@ class DrupalVerifiedStorageSQL extends DrupalConfigVerifiedStorage {
   static public function getNamesWithPrefix($prefix = '') {
     return db_query('SELECT name FROM {config} WHERE name LIKE :name', array(':name' => db_like($prefix) . '%'))->fetchCol();
   }
-}
-
-function config_get_verified_storage_names_with_prefix($prefix = '') {
-  return DrupalVerifiedStorageSQL::getNamesWithPrefix($prefix);
-}
-
-function config_get_names_with_prefix($prefix) {
-  return config_get_verified_storage_names_with_prefix($prefix);
-}
-
-function config($name, $class = 'DrupalConfig') {
-  static $overrides;
-  if (!isset($overrides)) {
-    $storage = new SignedFileStorage('local');
-    $overrides = (array) config_decode($storage->read());
-  }
-  $key_overrides = isset($overrides[$name]) ? $overrides[$name] : array();
-  // @TODO Replace this with the appropriate factory.
-  return new $class(new DrupalVerifiedStorageSQL($name), $key_overrides);
-}
-
-/**
- * Decode configuration data from its native format to an associative array.
- *
- * @param $data
- *   Configuration data
- * @return
- *   An associative array representation of the data.
- */
-function config_decode($data) {
-  if (empty($data)) {
-    return array();
-  }
-  print_r(debug_backtrace());
-  print $data;
-  $xml = new SimpleXMLElement($data);
-  $json = json_encode($xml);
-  return json_decode($json);
-}
-
-/**
- * Encode an array into the native configuration format.
- *
- * @param $data
- *   An associative array or an object
- * @return
- *   A representation of this array or object in the native configuration
- *   format. 
- * @todo
- *   This needs to work for objects as well and currently doesn't
- */
-function config_encode($data) {
-	return config_array_to_xml($data);
-}
-
-/**
- * Encode an array or object into the native configuration format.
- *
- * @param $data
- *   An associative array or an object
- * @return
- *   A representation of this array or object in the native configuration
- *   format. 
- */
-function config_array_to_xml($arr, $tab_count = 0) {
-  $xml = '<?xml version="1.0" encoding="UTF8"?>' . PHP_EOL . '<data>';
-  foreach ($arr as $tag => $val) { 
-    if (!is_array($val)) { 
-      $xml .= PHP_EOL . '<' . $tag . '>' . htmlentities($val) . '</' . $tag . '>'; 
-    } else { 
-      $tab_count++; 
-      $xml .= PHP_EOL . '<' . $tag . '>' . config_array_to_xml($val, $tab_count); 
-      $xml .= PHP_EOL . '</' . $tag . '>'; 
-    } 
-  } 
-  $xml .= PHP_EOL . '</data>';
-	return $xml; 
 }
 
 class DrupalConfig {
