@@ -449,8 +449,9 @@ function module_enable($module_list, $enable_dependencies = TRUE) {
             @copy($module_config_dir . '/' . $file, $drupal_config_dir . '/' . $file);
             
             // Load config data into the active store. There is probably a
-            // better way to do this.
-            $config = config($file);
+            // better way to do this. Note config requires the filename with
+            // no extension.
+            $config = config(str_replace('.xml', '', $file));
             $config->save();            
           }
         }
