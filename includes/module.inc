@@ -443,7 +443,8 @@ function module_enable($module_list, $enable_dependencies = TRUE) {
         if (is_dir(drupal_get_path('module', $module) . '/config')) {
           $files = glob($module_config_dir . '/' . '*.xml');
           foreach ($files as $key => $file) {
-            $file = array_pop(explode('/', $file));
+            $parts = explode('/', $file);
+            $file = array_pop($parts);
             // @todo What do we want to do if this fails?
             @copy($module_config_dir . '/' . $file, $drupal_config_dir . '/' . $file);
             
