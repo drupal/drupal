@@ -307,7 +307,8 @@ function config_decode($data) {
  *   This needs to work for objects as well and currently doesn't
  */
 function config_encode($data) {
-	return config_array_to_xml($data);
+  $xml = config_array_to_xml($data);
+	return '<?xml version="1.0" encoding="UTF8"?>' . PHP_EOL . '<data>' . $xml . '</data>';
 }
 
 /**
@@ -320,7 +321,9 @@ function config_encode($data) {
  *   format. 
  */
 function config_array_to_xml($arr, $tab_count = 0) {
-  $xml = '<?xml version="1.0" encoding="UTF8"?>' . PHP_EOL . '<data>';
+  $xml = '';
+  if (is_object($arr)) return '';
+
   foreach ($arr as $tag => $val) { 
     if (!is_array($val)) { 
       $xml .= PHP_EOL . '<' . $tag . '>' . htmlentities($val) . '</' . $tag . '>'; 
@@ -330,8 +333,7 @@ function config_array_to_xml($arr, $tab_count = 0) {
       $xml .= PHP_EOL . '</' . $tag . '>'; 
     } 
   } 
-  $xml .= PHP_EOL . '</data>';
-	return $xml; 
+  return $xml; 
 }
 
 class DrupalConfig {
