@@ -91,7 +91,7 @@ function config_decode($data) {
   }
   $xml = new SimpleXMLElement($data);
   $json = json_encode($xml);
-  return json_decode($json);
+  return json_decode($json, TRUE);
 }
 
 /**
