@@ -442,19 +442,19 @@ function module_enable($module_list, $enable_dependencies = TRUE) {
         $drupal_config_dir = config_get_config_directory();
         if (is_dir(drupal_get_path('module', $module) . '/config')) {
           $files = glob($module_config_dir . '/' . '*.xml');
-          foreach ($files as $key => $file) {
-            $parts = explode('/', $file);
-            $file = array_pop($parts);
-
-            // @todo What do we want to do if this fails?
-            @copy($module_config_dir . '/' . $file, $drupal_config_dir . '/' . $file);
-            
-            // Load config data into the active store. Note the config name 
+          foreach ($files as $key => $file) {            
+            // Load config data into the active store and write it out to the 
+            // file system in the drupal config directory. Note the config name
             // needs to be the same as the file name WITHOUT the extension.
+            //
             // @todo Make this acknowledge a factory when that gets created 
             // rather than hard coding the SQL storage engine here.
-            $verified_storage = new DrupalVerifiedStorageSQL(str_replace('.xml', '', $file));
-            $verified_storage->copyFromFile()
+            $parts = explode('/', $file);
+            $file = array_pop($parts);
+            $config_name = str_replace('.xml', '', $file);
+
+            $verified_storage = new DrupalVerifiedStorageSQL($config_name);
+            $verified_storage->write(file_get_contents($module_config_dir . '/' . $file));
           }
         }
 
