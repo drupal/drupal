@@ -107,7 +107,7 @@ function config_decode($data) {
  */
 function config_encode($data) {
   $xml = config_array_to_xml($data);
-	return '<?xml version="1.0" encoding="UTF8"?>' . PHP_EOL . '<data>' . $xml . '</data>';
+	return '<?xml version="1.0" encoding="UTF8"?>' . PHP_EOL . '<config>' . $xml . '</config>';
 }
 
 /**
