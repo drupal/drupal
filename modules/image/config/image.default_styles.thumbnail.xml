@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<document>
+<config>
   <effects>
     <image_scale>
       <data>
@@ -10,4 +10,4 @@
       <weight>0</weight>
     </image_scale>
   </effects>
-</document>
+</config>
