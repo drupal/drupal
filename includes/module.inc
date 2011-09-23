@@ -446,6 +446,11 @@ function module_enable($module_list, $enable_dependencies = TRUE) {
             $file = array_pop(explode('/', $file));
             // @todo What do we want to do if this fails?
             @copy($module_config_dir . '/' . $file, $drupal_config_dir . '/' . $file);
+            
+            // Load config data into the active store. There is probably a
+            // better way to do this.
+            $config = config($file);
+            $config->save();            
           }
         }
 
