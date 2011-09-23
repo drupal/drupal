@@ -14,7 +14,7 @@
 function aggregator_page_last() {
   drupal_add_feed('aggregator/rss', variable_get('site_name', 'Drupal') . ' ' . t('aggregator'));
 
-  $items = aggregator_feed_items_load('sum');
+  $items = aggregator_load_feed_items('sum');
 
   return _aggregator_page_list($items, arg(1));
 }
@@ -33,8 +33,8 @@ function aggregator_page_source($feed) {
   $feed_source = theme('aggregator_feed_source', array('feed' => $feed));
 
   // It is safe to include the fid in the query because it's loaded from the
-  // database by aggregator_feed_load.
-  $items = aggregator_feed_items_load('source', $feed);
+  // database by aggregator_feed_load().
+  $items = aggregator_load_feed_items('source', $feed);
 
   return _aggregator_page_list($items, arg(3), $feed_source);
 }
@@ -67,8 +67,8 @@ function aggregator_page_category($category) {
   drupal_add_feed('aggregator/rss/' . $category['cid'], variable_get('site_name', 'Drupal') . ' ' . t('aggregator - @title', array('@title' => $category['title'])));
 
   // It is safe to include the cid in the query because it's loaded from the
-  // database by aggregator_category_load.
-  $items = aggregator_feed_items_load('category', $category);
+  // database by aggregator_category_load().
+  $items = aggregator_load_feed_items('category', $category);
 
   return _aggregator_page_list($items, arg(3));
 }
@@ -98,7 +98,7 @@ function aggregator_page_category_form($form, $form_state, $category) {
  * @return
  *   An array of the feed items.
  */
-function aggregator_feed_items_load($type, $data = NULL) {
+function aggregator_load_feed_items($type, $data = NULL) {
   $items = array();
   $range_limit = 20;
   switch ($type) {

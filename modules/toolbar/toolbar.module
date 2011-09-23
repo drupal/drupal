@@ -263,10 +263,11 @@ function toolbar_view() {
     'toolbar-drawer',
     'clearfix',
   );
-  if(_toolbar_is_collapsed()) {
+  if (_toolbar_is_collapsed()) {
     $toolbar_drawer_classes[] = 'collapsed';
   }
-  $build['toolbar_drawer_classes'] = implode(' ', $toolbar_drawer_classes);
+  $build['toolbar_drawer']['#type'] = 'container';
+  $build['toolbar_drawer']['#attributes']['class'] = $toolbar_drawer_classes;
 
   return $build;
 }

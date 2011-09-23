@@ -60,9 +60,9 @@
  */
 
 /**
- * Implements hook_multilingual_settings_changed().
+ * Implements hook_locale_language_delete().
  */
-function field_multilingual_settings_changed() {
+function field_locale_language_delete() {
   field_info_cache_clear();
 }
 
@@ -228,7 +228,7 @@ function field_valid_language($langcode, $default = TRUE) {
     return $langcode;
   }
   global $language_content;
-  return $default ? language_default('language') : $language_content->language;
+  return $default ? language_default()->language : $language_content->language;
 }
 
 /**

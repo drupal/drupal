@@ -28,9 +28,6 @@ function image_uninstall() {
 function image_schema() {
   $schema = array();
 
-  $schema['cache_image'] = drupal_get_schema_unprocessed('system', 'cache');
-  $schema['cache_image']['description'] = 'Cache table used to store information about image manipulations that are in-progress.';
-
   $schema['image_styles'] = array(
     'description' => 'Stores configuration options for image styles.',
     'fields' => array(

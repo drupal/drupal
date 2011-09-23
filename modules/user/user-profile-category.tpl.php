@@ -25,7 +25,7 @@
  */
 ?>
 <section class="<?php print $classes; ?>">
-  <?php if ($title) : ?>
+  <?php if ($title): ?>
     <h2><?php print $title; ?></h2>
   <?php endif; ?>
 

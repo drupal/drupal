@@ -87,7 +87,3 @@ div.vertical-tabs .vertical-tabs-panes legend {
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
 }
-* html .vertical-tabs .form-type-textfield,
-* html .vertical-tabs .form-textarea-wrapper {
-  width: 95%; /* IE6 */
-}

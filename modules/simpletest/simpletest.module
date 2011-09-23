@@ -311,7 +311,7 @@ function simpletest_test_get_all() {
   if (!$groups) {
     // Load test information from cache if available, otherwise retrieve the
     // information from each tests getInfo() method.
-    if ($cache = cache_get('simpletest', 'cache')) {
+    if ($cache = cache()->get('simpletest')) {
       $groups = $cache->data;
     }
     else {
@@ -347,7 +347,7 @@ function simpletest_test_get_all() {
 
       // Allow modules extending core tests to disable originals.
       drupal_alter('simpletest', $groups);
-      cache_set('simpletest', $groups);
+      cache()->set('simpletest', $groups);
     }
   }
   return $groups;
@@ -421,7 +421,7 @@ function simpletest_clean_environment() {
 
   // Detect test classes that have been added, renamed or deleted.
   registry_rebuild();
-  cache_clear_all('simpletest', 'cache');
+  cache()->delete('simpletest');
 }
 
 /**

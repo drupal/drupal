@@ -710,7 +710,7 @@ function field_attach_load($entity_type, $entities, $age = FIELD_LOAD_CURRENT, $
           $data[$instance['field_name']] = $queried_entities[$id]->{$instance['field_name']};
         }
         $cid = "field:$entity_type:$id";
-        cache_set($cid, $data, 'cache_field');
+        cache('field')->set($cid, $data);
       }
     }
   }
@@ -984,7 +984,7 @@ function field_attach_update($entity_type, $entity) {
 
   $entity_info = entity_get_info($entity_type);
   if ($entity_info['field cache']) {
-    cache_clear_all("field:$entity_type:$id", 'cache_field');
+    cache('field')->delete("field:$entity_type:$id");
   }
 }
 
@@ -1021,7 +1021,7 @@ function field_attach_delete($entity_type, $entity) {
 
   $entity_info = entity_get_info($entity_type);
   if ($entity_info['field cache']) {
-    cache_clear_all("field:$entity_type:$id", 'cache_field');
+    cache('field')->delete("field:$entity_type:$id");
   }
 }
 

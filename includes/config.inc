@@ -11,10 +11,10 @@
  * @return
  *   The directory name.
  */
-function config_get_config_directory_name() {
-  global $conf;
+function config_get_config_directory() {
+  global $drupal_config_directory_name;
   
-  return $conf['drupal_config_directory_name'];
+  return conf_path() . '/files/' . $drupal_config_directory_name;
 }
 
 /**
@@ -35,7 +35,7 @@ function config_get_config_directory_name() {
  *   An array of file names under a branch.
  */
 function config_get_signed_file_storage_names_with_prefix($prefix = '') {
-  $files = glob(conf_path() . '/config/' . $prefix . '*.xml');
+  $files = glob(config_get_config_directory() . '/' . $prefix . '*.xml');
   $clean_name = function ($value) {
     return basename($value, '.xml');
   };
@@ -102,7 +102,7 @@ class SignedFileStorage {
   }
 
   /**
-   * Read a signed file and split the content into signature and data.
+   * Read and return a signed file and its signature.
    *
    * @return
    *   An array with "signature" and "data" keys.
@@ -110,21 +110,17 @@ class SignedFileStorage {
    * @throws
    *   Exception
    */
-  protected function readAndSplit() {
+  protected function readWithSignature() {
     // TODO: Optimize with explicit offsets?
     $content = file_get_contents($this->getFilePath());
     if ($content === FALSE) {
       throw new Exception('Read file is invalid.');
     }
-    $parts = explode("\n", $content, 2);
-    if (count($parts) !== 2) {
-      throw new Exception('Read file does not verify.');
+    $signature = file_get_contents($this->getFilePath() . '.sig');
+    if ($signature === FALSE) {
+      throw new Exception('Signature file is invalid.');
     }
-    $header_parts = explode(' ', $parts[0]);
-    if (count($header_parts) !== 3) {
-      throw new Exception('Read file not valid.');
-    }
-    return array('data' => $parts[1], 'signature' => $header_parts[2]);
+    return array('data' => $content, 'signature' => $signature);
   }
 
   protected function exists() {
@@ -132,19 +128,20 @@ class SignedFileStorage {
   }
   
   public function getFilePath() {
-    return conf_path() . '/' . config_get_config_directory_name() . '/' . $this->name  . '.xml';
+    return config_get_config_directory() . '/' . $this->name  . '.xml';
   }
 
   public function resign() {
     if ($this->exists()) {
-      $parts = $this->readAndSplit();
+      $parts = $this->readWithSignature();
       $this->write($parts['data']);
     }
   }
 
   public function verify($contentOnSuccess = FALSE) {
     if ($this->exists()) {
-      $split = $this->readAndSplit();
+      $split = $this->readWithSignature();
+      print_r($split);
       $expected_signature = config_sign_data($split['data']);
       if ($expected_signature === $split['signature']) {
         if ($contentOnSuccess) {
@@ -159,7 +156,10 @@ class SignedFileStorage {
   public function write($data) {
     $signature = config_sign_data($data);
     if (!file_put_contents($this->getFilePath(), $data)) {
-      throw new Exception('Failed to write signed file.');
+      throw new Exception('Failed to write configuration file.');
+    }
+    if (!file_put_contents($this->getFilePath() . '.sig', $signature)) {
+      throw new Exception('Failed to write signature file.');
     }
   }
 
@@ -308,6 +308,11 @@ function config($name, $class = 'DrupalConfig') {
  *   An associative array representation of the data.
  */
 function config_decode($data) {
+  if (empty($data)) {
+    return array();
+  }
+  print_r(debug_backtrace());
+  print $data;
   $xml = new SimpleXMLElement($data);
   $json = json_encode($xml);
   return json_decode($json);
@@ -338,6 +343,7 @@ function config_encode($data) {
  *   format. 
  */
 function config_array_to_xml($arr, $tab_count = 0) {
+  $xml = '<?xml version="1.0" encoding="UTF8"?>' . PHP_EOL . '<data>';
   foreach ($arr as $tag => $val) { 
     if (!is_array($val)) { 
       $xml .= PHP_EOL . '<' . $tag . '>' . htmlentities($val) . '</' . $tag . '>'; 
@@ -347,7 +353,7 @@ function config_array_to_xml($arr, $tab_count = 0) {
       $xml .= PHP_EOL . '</' . $tag . '>'; 
     } 
   } 
-  
+  $xml .= PHP_EOL . '</data>';
 	return $xml; 
 }
 
@@ -383,7 +389,6 @@ class DrupalConfig {
         $obj->$key = $val;
       }
     }
-
     $this->_verifiedStorage->write(config_encode($obj));
   }
 }

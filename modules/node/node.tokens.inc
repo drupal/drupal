@@ -157,8 +157,9 @@ function node_tokens($type, $tokens, array $data = array(), array $options = arr
 
         // Default values for the chained tokens handled below.
         case 'author':
-          $name = ($node->uid == 0) ? variable_get('anonymous', t('Anonymous')) : $node->name;
-          $replacements[$original] = $sanitize ? filter_xss($name) : $name;
+          $account = user_load($node->uid);
+          $name = format_username($account);
+          $replacements[$original] = $sanitize ? check_plain($name) : $name;
           break;
 
         case 'created':

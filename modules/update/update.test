@@ -13,7 +13,7 @@
  * dummy .info file data (specified via hook_system_info_alter() in the
  * update_test helper module) describing what's currently installed.  Each
  * test case defines a set of projects to install, their current state (via
- * the 'update_test_system_info' variable) and the desired availabile update
+ * the 'update_test_system_info' variable) and the desired available update
  * data (via the 'update_test_xml_map' variable), and then performs a series
  * of assertions that the report matches our expectations given the specific
  * initial state and availability scenario.
@@ -32,9 +32,9 @@ class UpdateTestHelper extends DrupalWebTestCase {
    *
    * @see update_test_mock_page()
    */
-  protected function refreshUpdateStatus($xml_map) {
+  protected function refreshUpdateStatus($xml_map, $url = 'update-test') {
     // Tell update module to fetch from the URL provided by update_test module.
-    variable_set('update_fetch_url', url('update-test', array('absolute' => TRUE)));
+    variable_set('update_fetch_url', url($url, array('absolute' => TRUE)));
     // Save the map for update_test_mock_page() to use.
     variable_set('update_test_xml_map', $xml_map);
     // Manually check the update status.
@@ -213,6 +213,16 @@ class UpdateCoreTestCase extends UpdateTestHelper {
 
     $this->drupalGet('admin/reports/updates/settings');
     $this->assertNoText(t('There is a security update available for your version of Drupal.'));
+  }
+
+  /**
+   * Tests the update module when the update server returns 503 (Service unavailable) errors.
+   */
+  function testServiceUnavailable() {
+    $this->refreshUpdateStatus(array(), '503-error');
+    // Ensure that no "Warning: SimpleXMLElement..." parse errors are found.
+    $this->assertNoText('SimpleXMLElement');
+    $this->assertUniqueText(t('Failed to get available update data for one project.'));
   }
 
   protected function setSystemInfo7_0() {

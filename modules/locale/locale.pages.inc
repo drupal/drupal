@@ -410,7 +410,7 @@ function locale_translate_edit_form_submit($form, &$form_state) {
 
   // Clear locale cache.
   _locale_invalidate_js();
-  cache_clear_all('locale:', 'cache', TRUE);
+  cache()->deletePrefix('locale:');
 
   $form_state['redirect'] = 'admin/config/regional/translate/translate';
   return;
@@ -450,7 +450,7 @@ function locale_translate_delete_form_submit($form, &$form_state) {
     ->execute();
   // Force JavaScript translation file recreation for all languages.
   _locale_invalidate_js();
-  cache_clear_all('locale:', 'cache', TRUE);
+  cache()->deletePrefix('locale:');
   drupal_set_message(t('The string has been removed.'));
   $form_state['redirect'] = 'admin/config/regional/translate/translate';
 }

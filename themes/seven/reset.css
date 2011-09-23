@@ -205,13 +205,6 @@ ul.inline:after {
   display: none;
   clear: none;
 }
-/* IE6 */
-* html .form-item,
-* html ul.links,
-* html div.admin-panel .body,
-* html .clearfix {
-  height: 1%;
-}
 /* IE7 */
 *:first-child + html .form-item,
 *:first-child + html ul.links,

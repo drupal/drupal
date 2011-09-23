@@ -1238,6 +1238,10 @@ class DrupalWebTestCase extends DrupalTestCase {
       ->condition('test_id', $this->testId)
       ->execute();
 
+    // Reset all statics and variables to perform tests in a clean environment.
+    $conf = array();
+    drupal_static_reset();
+
     // Clone the current connection and replace the current prefix.
     $connection_info = Database::getConnectionInfo('default');
     Database::renameConnection('default', 'simpletest_original_default');
@@ -1284,10 +1288,6 @@ class DrupalWebTestCase extends DrupalTestCase {
     // Log fatal errors.
     ini_set('log_errors', 1);
     ini_set('error_log', $public_files_directory . '/error.log');
-
-    // Reset all statics and variables to perform tests in a clean environment.
-    $conf = array();
-    drupal_static_reset();
 
     // Set the test information for use in other parts of Drupal.
     $test_info = &$GLOBALS['drupal_test_info'];
@@ -1435,7 +1435,7 @@ class DrupalWebTestCase extends DrupalTestCase {
    */
   protected function refreshVariables() {
     global $conf;
-    cache_clear_all('variables', 'cache_bootstrap');
+    cache('bootstrap')->delete('variables');
     $conf = variable_initialize();
   }
 

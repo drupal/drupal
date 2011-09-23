@@ -472,12 +472,12 @@ function drupal_rebuild_form($form_id, &$form_state, $old_form = NULL) {
  * Fetch a form from cache.
  */
 function form_get_cache($form_build_id, &$form_state) {
-  if ($cached = cache_get('form_' . $form_build_id, 'cache_form')) {
+  if ($cached = cache('form')->get('form_' . $form_build_id)) {
     $form = $cached->data;
 
     global $user;
     if ((isset($form['#cache_token']) && drupal_valid_token($form['#cache_token'])) || (!isset($form['#cache_token']) && !$user->uid)) {
-      if ($cached = cache_get('form_state_' . $form_build_id, 'cache_form')) {
+      if ($cached = cache('form')->get('form_state_' . $form_build_id)) {
         // Re-populate $form_state for subsequent rebuilds.
         $form_state = $cached->data + $form_state;
 
@@ -511,12 +511,12 @@ function form_set_cache($form_build_id, $form, $form_state) {
     if ($GLOBALS['user']->uid) {
       $form['#cache_token'] = drupal_get_token();
     }
-    cache_set('form_' . $form_build_id, $form, 'cache_form', REQUEST_TIME + $expire);
+    cache('form')->set('form_' . $form_build_id, $form, REQUEST_TIME + $expire);
   }
 
   // Cache form state.
   if ($data = array_diff_key($form_state, array_flip(form_state_keys_no_cache()))) {
-    cache_set('form_state_' . $form_build_id, $data, 'cache_form', REQUEST_TIME + $expire);
+    cache('form')->set('form_state_' . $form_build_id, $data, REQUEST_TIME + $expire);
   }
 }
 
@@ -835,8 +835,8 @@ function drupal_process_form($form_id, &$form, &$form_state) {
       // here, as we've finished with them. The in-memory copies are still
       // here, though.
       if (!variable_get('cache', 0) && !empty($form_state['values']['form_build_id'])) {
-        cache_clear_all('form_' . $form_state['values']['form_build_id'], 'cache_form');
-        cache_clear_all('form_state_' . $form_state['values']['form_build_id'], 'cache_form');
+        cache('form')->delete('form_' . $form_state['values']['form_build_id']);
+        cache('form')->delete('form_state_' . $form_state['values']['form_build_id']);
       }
 
       // If batches were set in the submit handlers, we process them now,
@@ -1082,8 +1082,12 @@ function drupal_validate_form($form_id, &$form, &$form_state) {
   // matches the current user's session.
   if (isset($form['#token'])) {
     if (!drupal_valid_token($form_state['values']['form_token'], $form['#token'])) {
+      $path = current_path();
+      $query = drupal_get_query_parameters();
+      $url = url($path, array('query' => $query));
+
       // Setting this error will cause the form to fail validation.
-      form_set_error('form_token', t('This form is outdated. Reload the page and try again. Contact the site administrator if the problem persists.'));
+      form_set_error('form_token', t('The form has become outdated. Copy any unsaved work in the form below and then <a href="@link">reload this page</a>.', array('@link' => $url)));
     }
   }
 
@@ -2796,7 +2800,17 @@ function password_confirm_validate($element, &$element_state) {
  */
 function theme_date($variables) {
   $element = $variables['element'];
-  return '<div class="container-inline">' . drupal_render_children($element) . '</div>';
+
+  $attributes = array();
+  if (isset($element['#id'])) {
+    $attributes['id'] = $element['#id'];
+  }
+  if (!empty($element['#attributes']['class'])) {
+    $attributes['class'] = (array) $element['#attributes']['class'];
+  }
+  $attributes['class'][] = 'container-inline';
+
+  return '<div' . drupal_attributes($attributes) . '>' . drupal_render_children($element) . '</div>';
 }
 
 /**

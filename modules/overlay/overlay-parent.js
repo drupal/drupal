@@ -429,7 +429,7 @@ Drupal.overlay.eventhandlerAlterDisplacedElements = function (event) {
   var documentHeight = this.iframeWindow.document.body.clientHeight;
   var documentWidth = this.iframeWindow.document.body.clientWidth;
   // IE6 doesn't support maxWidth, use width instead.
-  var maxWidthName = (typeof document.body.style.maxWidth == 'string') ? 'maxWidth' : 'width';
+  var maxWidthName = 'maxWidth';
 
   if (Drupal.overlay.leftSidedScrollbarOffset === undefined && $(document.documentElement).attr('dir') === 'rtl') {
     // We can't use element.clientLeft to detect whether scrollbars are placed

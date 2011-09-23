@@ -207,10 +207,16 @@ function locale_language_from_url($languages) {
 
     case LOCALE_LANGUAGE_NEGOTIATION_URL_DOMAIN:
       foreach ($languages as $language) {
-        $host = parse_url($language->domain, PHP_URL_HOST);
-        if ($host && ($_SERVER['HTTP_HOST'] == $host)) {
-          $language_url = $language->language;
-          break;
+        // Skip check if the language doesn't have a domain.
+        if ($language->domain) {
+          // Only compare the domains not the protocols or ports.
+          // Remove protocol and add http:// so parse_url works
+          $host = 'http://' . str_replace(array('http://', 'https://'), '', $language->domain);
+          $host = parse_url($host, PHP_URL_HOST);
+          if ($_SERVER['HTTP_HOST'] == $host) {
+            $language_url = $language->language;
+            break;
+          }
         }
       }
       break;
@@ -460,8 +466,8 @@ function locale_add_language($langcode, $name = NULL, $native = NULL, $direction
 
   // If name was not set, we add a predefined language.
   if (!isset($name)) {
-    include_once DRUPAL_ROOT . '/includes/iso.inc';
-    $predefined = _locale_get_predefined_list();
+    include_once DRUPAL_ROOT . '/includes/standard.inc';
+    $predefined = standard_language_list();
     $name = $predefined[$langcode][0];
     $native = isset($predefined[$langcode][1]) ? $predefined[$langcode][1] : $predefined[$langcode][0];
     $direction = isset($predefined[$langcode][2]) ? $predefined[$langcode][2] : LANGUAGE_LTR;
@@ -703,7 +709,7 @@ function _locale_rebuild_js($langcode = NULL) {
     // Update the default language variable if the default language has been altered.
     // This is necessary to keep the variable consistent with the database
     // version of the language and to prevent checking against an outdated hash.
-    $default_langcode = language_default('language');
+    $default_langcode = language_default()->language;
     if ($default_langcode == $language->language) {
       $default = db_query("SELECT * FROM {languages} WHERE language = :language", array(':language' => $default_langcode))->fetchObject();
       variable_set('language_default', $default);
@@ -744,9 +750,9 @@ function _locale_rebuild_js($langcode = NULL) {
  * Prepares the language code list for a select form item with only the unsupported ones
  */
 function _locale_prepare_predefined_list() {
-  include_once DRUPAL_ROOT . '/includes/iso.inc';
+  include_once DRUPAL_ROOT . '/includes/standard.inc';
   $languages = language_list();
-  $predefined = _locale_get_predefined_list();
+  $predefined = standard_language_list();
   foreach ($predefined as $key => $value) {
     if (isset($languages[$key])) {
       unset($predefined[$key]);
@@ -776,8 +782,8 @@ function _locale_prepare_predefined_list() {
  *   An array of all country code => country name pairs.
  */
 function country_get_list() {
-  include_once DRUPAL_ROOT . '/includes/iso.inc';
-  $countries = _country_get_predefined_list();
+  include_once DRUPAL_ROOT . '/includes/standard.inc';
+  $countries = standard_country_list();
   // Allow other modules to modify the country list.
   drupal_alter('countries', $countries);
   return $countries;

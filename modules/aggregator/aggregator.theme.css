@@ -1,0 +1,4 @@
+.aggregator .feed-icon {
+  float: right; /* LTR */
+  display: block;
+}

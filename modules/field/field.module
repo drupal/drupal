@@ -421,7 +421,7 @@ function field_system_info_alter(&$info, $file, $type) {
  */
 function field_flush_caches() {
   field_sync_field_status();
-  return array('cache_field');
+  return array('field');
 }
 
 /**
@@ -772,7 +772,7 @@ function _field_extra_fields_pre_render($elements) {
  * Clear the field info and field data caches.
  */
 function field_cache_clear() {
-  cache_clear_all('*', 'cache_field', TRUE);
+  cache('field')->flush();
   field_info_cache_clear();
 }
 
