@@ -89,8 +89,6 @@ function config_decode($data) {
   if (empty($data)) {
     return array();
   }
-  print_r(debug_backtrace());
-  print $data;
   $xml = new SimpleXMLElement($data);
   $json = json_encode($xml);
   return json_decode($json);
@@ -197,7 +195,6 @@ class SignedFileStorage {
   public function verify($contentOnSuccess = FALSE) {
     if ($this->exists()) {
       $split = $this->readWithSignature();
-      print_r($split);
       $expected_signature = config_sign_data($split['data']);
       if ($expected_signature === $split['signature']) {
         if ($contentOnSuccess) {
