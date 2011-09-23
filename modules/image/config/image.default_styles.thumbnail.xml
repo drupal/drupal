@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<document>
+  <effects>
+    <image_scale>
+      <data>
+        <width>100</width>
+        <height>100</height>
+        <upscale>1</upscale>
+      </data>
+      <weight>0</weight>
+    </image_scale>
+  </effects>
+</document>
