@@ -445,14 +445,16 @@ function module_enable($module_list, $enable_dependencies = TRUE) {
           foreach ($files as $key => $file) {
             $parts = explode('/', $file);
             $file = array_pop($parts);
+
             // @todo What do we want to do if this fails?
             @copy($module_config_dir . '/' . $file, $drupal_config_dir . '/' . $file);
             
-            // Load config data into the active store. There is probably a
-            // better way to do this. Note config requires the filename with
-            // no extension.
-            $config = config(str_replace('.xml', '', $file));
-            $config->save();            
+            // Load config data into the active store. Note the config name 
+            // needs to be the same as the file name WITHOUT the extension.
+            // @todo Make this acknowledge a factory when that gets created 
+            // rather than hard coding the SQL storage engine here.
+            $verified_storage = new DrupalVerifiedStorageSQL(str_replace('.xml', '', $file));
+            $verified_storage->copyFromFile()
           }
         }
 
