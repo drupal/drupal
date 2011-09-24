@@ -482,6 +482,7 @@ function _shortcut_link_form_elements($shortcut_link = NULL) {
     '#size' => 40,
     '#maxlength' => 255,
     '#default_value' => $shortcut_link['link_title'],
+    '#required' => TRUE,
   );
 
   $form['shortcut_link']['link_path'] = array(
