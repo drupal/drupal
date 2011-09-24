@@ -49,7 +49,7 @@
 <?php endif;?>
   <?php print render($title_suffix); ?>
 
-  <div class="content"<?php print $content_attributes; ?>>
+  <div<?php print $content_attributes; ?>>
     <?php print $content ?>
   </div>
 </div>

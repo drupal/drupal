@@ -948,6 +948,9 @@ function template_preprocess_block(&$variables) {
 
   $variables['classes_array'][] = drupal_html_class('block-' . $variables['block']->module);
 
+  // Add default class for block content.
+  $variables['content_attributes_array']['class'][] = 'content';
+
   $variables['theme_hook_suggestions'][] = 'block__' . $variables['block']->region;
   $variables['theme_hook_suggestions'][] = 'block__' . $variables['block']->module;
   // Hyphens (-) and underscores (_) play a special role in theme suggestions.
