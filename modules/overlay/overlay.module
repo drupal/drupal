@@ -194,9 +194,9 @@ function overlay_exit() {
 }
 
 /**
- * Implements hook_library().
+ * Implements hook_library_info().
  */
-function overlay_library() {
+function overlay_library_info() {
   $module_path = drupal_get_path('module', 'overlay');
 
   // Overlay parent.

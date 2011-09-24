@@ -36,9 +36,9 @@ function contextual_permission() {
 }
 
 /**
- * Implements hook_library().
+ * Implements hook_library_info().
  */
-function contextual_library() {
+function contextual_library_info() {
   $path = drupal_get_path('module', 'contextual');
   $libraries['contextual-links'] = array(
     'title' => 'Contextual links',

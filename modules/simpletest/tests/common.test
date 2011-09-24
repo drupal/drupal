@@ -1401,14 +1401,14 @@ class JavaScriptTestCase extends DrupalWebTestCase {
   /**
    * Adds a JavaScript library to the page and alters it.
    *
-   * @see common_test_library_alter()
+   * @see common_test_library_info_alter()
    */
   function testLibraryAlter() {
     // Verify that common_test altered the title of Farbtastic.
     $library = drupal_get_library('system', 'farbtastic');
     $this->assertEqual($library['title'], 'Farbtastic: Altered Library', t('Registered libraries were altered.'));
 
-    // common_test_library_alter() also added a dependency on jQuery Form.
+    // common_test_library_info_alter() also added a dependency on jQuery Form.
     drupal_add_library('system', 'farbtastic');
     $scripts = drupal_get_js();
     $this->assertTrue(strpos($scripts, 'misc/jquery.form.js'), t('Altered library dependencies are added to the page.'));
@@ -1417,7 +1417,7 @@ class JavaScriptTestCase extends DrupalWebTestCase {
   /**
    * Tests that multiple modules can implement the same library.
    *
-   * @see common_test_library()
+   * @see common_test_library_info()
    */
   function testLibraryNameConflicts() {
     $farbtastic = drupal_get_library('common_test', 'farbtastic');
@@ -1455,10 +1455,10 @@ class JavaScriptTestCase extends DrupalWebTestCase {
     // Retrieve all libraries registered by a module.
     $libraries = drupal_get_library('common_test');
     $this->assertTrue(isset($libraries['farbtastic']), t('Retrieved all module libraries.'));
-    // Retrieve all libraries for a module not implementing hook_library().
+    // Retrieve all libraries for a module not implementing hook_library_info().
     // Note: This test installs Locale module.
     $libraries = drupal_get_library('locale');
-    $this->assertEqual($libraries, array(), t('Retrieving libraries from a module not implementing hook_library() returns an emtpy array.'));
+    $this->assertEqual($libraries, array(), t('Retrieving libraries from a module not implementing hook_library_info() returns an emtpy array.'));
 
     // Retrieve a specific library by module and name.
     $farbtastic = drupal_get_library('common_test', 'farbtastic');

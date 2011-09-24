@@ -1075,9 +1075,9 @@ function _system_batch_theme() {
 }
 
 /**
- * Implements hook_library().
+ * Implements hook_library_info().
  */
-function system_library() {
+function system_library_info() {
   // Drupal's Ajax framework.
   $libraries['drupal.ajax'] = array(
     'title' => 'Drupal AJAX',
