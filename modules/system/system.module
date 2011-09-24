@@ -121,7 +121,7 @@ function system_help($path, $arg) {
     case 'admin/config/development/maintenance':
       global $user;
       if ($user->uid == 1) {
-        return '<p>' . t('If you are upgrading to a newer version of Drupal or upgrading contributed modules or themes, you may need to run the <a href="@update-php">update script</a>.', array('@update-php' => $base_url . '/update.php')) . '</p>';
+        return '<p>' . t('Use maintenance mode when making major updates, particularly if the updates could disrupt visitors or the update process. Examples include upgrading, importing or exporting content, modifying a theme, modifying content types, and making backups.') . '</p>';
       }
       break;
     case 'admin/config/system/actions':
