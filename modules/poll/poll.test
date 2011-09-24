@@ -36,7 +36,7 @@ class PollTestCase extends DrupalWebTestCase {
     // Re-submit the form until all choices are filled in.
     if (count($choices) > 2) {
       while ($index < count($choices)) {
-        $this->drupalPost(NULL, $edit, t('More choices'));
+        $this->drupalPost(NULL, $edit, t('Add another choice'));
         $this->assertPollChoiceOrder($choices, $index);
         list($edit, $index) = $this->_pollGenerateEdit($title, $choices, $index);
       }
@@ -76,7 +76,7 @@ class PollTestCase extends DrupalWebTestCase {
    *     in subsequent invocations of this function.
    */
   function _pollGenerateEdit($title, array $choices, $index = 0) {
-    $max_new_choices = ($index == 0 ? 2 : 5);
+    $max_new_choices = ($index == 0 ? 2 : 1);
     $already_submitted_choices = array_slice($choices, 0, $index);
     $new_choices = array_values(array_slice($choices, $index, $max_new_choices));
 
@@ -446,7 +446,7 @@ class PollJSAddChoice extends DrupalWebTestCase {
 
     // Press 'add choice' button through Ajax, and place the expected HTML result
     // as the tested content.
-    $commands = $this->drupalPostAJAX(NULL, $edit, array('op' => t('More choices')));
+    $commands = $this->drupalPostAJAX(NULL, $edit, array('op' => t('Add another choice')));
     $this->content = $commands[1]['data'];
 
     $this->assertFieldByName('choice[chid:0][chtext]', $edit['choice[new:0][chtext]'], t('Field !i found', array('!i' => 0)));

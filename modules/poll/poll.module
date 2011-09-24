@@ -298,8 +298,7 @@ function poll_form($node, &$form_state) {
   // Ajax-enabled buttons with the id 'more'.
   $form['choice_wrapper']['poll_more'] = array(
     '#type' => 'submit',
-    '#value' => t('More choices'),
-    '#description' => t("If the amount of boxes above isn't enough, click here to add more choices."),
+    '#value' => t('Add another choice'),
     '#weight' => 1,
     '#limit_validation_errors' => array(array('choice')),
     '#submit' => array('poll_more_choices_submit'),
@@ -361,10 +360,9 @@ function poll_form($node, &$form_state) {
  * return just the changed part of the form.
  */
 function poll_more_choices_submit($form, &$form_state) {
-  // If this is a Ajax POST, add 1, otherwise add 5 more choices to the form.
+  // Add one more choice to the form.
   if ($form_state['values']['poll_more']) {
-    $n = $_GET['q'] == 'system/ajax' ? 1 : 5;
-    $form_state['choice_count'] = count($form_state['values']['choice']) + $n;
+    $form_state['choice_count'] = count($form_state['values']['choice']) + 1;
   }
   // Renumber the choices. This invalidates the corresponding key/value
   // associations in $form_state['input'], so clear that out. This requires
