@@ -152,7 +152,7 @@
  *   }
  *
  *   // $txn goes out of scope here.  Unless the transaction was rolled back, it
- *   // gets automatically commited here.
+ *   // gets automatically committed here.
  * }
  *
  * function my_other_function($id) {

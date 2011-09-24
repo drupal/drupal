@@ -1090,7 +1090,7 @@ function filter_dom_serialize($dom_document) {
  * throw exceptions.
  *
  * This function attempts to solve the problem by creating a DocumentFragment
- * and immitating the behavior in drupal_get_js(), commenting the CDATA tag.
+ * and imitating the behavior in drupal_get_js(), commenting the CDATA tag.
  *
  * @param $dom_document
  *   The DOMDocument containing the $dom_element.

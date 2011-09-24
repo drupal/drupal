@@ -74,7 +74,7 @@ drupal_bootstrap(DRUPAL_BOOTSTRAP_SESSION);
 global $conf;
 
 // We have to enable the user and system modules, even to check access and
-// display errors via the maintainence theme.
+// display errors via the maintenance theme.
 $module_list['system']['filename'] = 'modules/system/system.module';
 $module_list['user']['filename'] = 'modules/user/user.module';
 module_list(TRUE, FALSE, FALSE, $module_list);

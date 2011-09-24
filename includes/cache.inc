@@ -331,7 +331,7 @@ interface DrupalCacheInterface {
    *   match. If '*' is given as $cid, the bin $bin will be emptied.
    *
    * @todo: this method is deprecated, as it's functionality is covered by
-   * more targetted methods in the interface.
+   * more targeted methods in the interface.
    */
   function clear($cid = NULL, $wildcard = FALSE);
 

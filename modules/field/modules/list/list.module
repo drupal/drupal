@@ -248,7 +248,7 @@ function list_allowed_values($field) {
  * Parses a string of 'allowed values' into an array.
  *
  * @param $string
- *   The list of allowed values in string format descibed in
+ *   The list of allowed values in string format described in
  *   list_allowed_values_string().
  * @param $field_type
  *   The field type. Either 'list_number' or 'list_text'.

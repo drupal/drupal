@@ -1606,7 +1606,7 @@ class FileMoveTest extends FileHookTestCase {
     $result = file_move(clone $source, $desired_filepath, FILE_EXISTS_ERROR);
 
     // Check the return status and that the contents changed.
-    $this->assertTrue($result, t('File moved sucessfully.'));
+    $this->assertTrue($result, t('File moved successfully.'));
     $this->assertFalse(file_exists($source->uri));
     $this->assertEqual($contents, file_get_contents($result->uri), t('Contents of file correctly written.'));
 
@@ -1638,7 +1638,7 @@ class FileMoveTest extends FileHookTestCase {
     $result = file_move(clone $source, $target->uri, FILE_EXISTS_RENAME);
 
     // Check the return status and that the contents changed.
-    $this->assertTrue($result, t('File moved sucessfully.'));
+    $this->assertTrue($result, t('File moved successfully.'));
     $this->assertFalse(file_exists($source->uri));
     $this->assertEqual($contents, file_get_contents($result->uri), t('Contents of file correctly written.'));
 
@@ -1675,7 +1675,7 @@ class FileMoveTest extends FileHookTestCase {
     // Look at the results.
     $this->assertEqual($contents, file_get_contents($result->uri), t('Contents of file were overwritten.'));
     $this->assertFalse(file_exists($source->uri));
-    $this->assertTrue($result, t('File moved sucessfully.'));
+    $this->assertTrue($result, t('File moved successfully.'));
 
     // Check that the correct hooks were called.
     $this->assertFileHooksCalled(array('move', 'update', 'delete', 'load'));
@@ -1767,7 +1767,7 @@ class FileCopyTest extends FileHookTestCase {
     $result = file_copy(clone $source, $desired_uri, FILE_EXISTS_ERROR);
 
     // Check the return status and that the contents changed.
-    $this->assertTrue($result, t('File copied sucessfully.'));
+    $this->assertTrue($result, t('File copied successfully.'));
     $this->assertEqual($contents, file_get_contents($result->uri), t('Contents of file were copied correctly.'));
 
     // Check that the correct hooks were called.
@@ -1798,7 +1798,7 @@ class FileCopyTest extends FileHookTestCase {
     $result = file_copy(clone $source, $target->uri, FILE_EXISTS_RENAME);
 
     // Check the return status and that the contents changed.
-    $this->assertTrue($result, t('File copied sucessfully.'));
+    $this->assertTrue($result, t('File copied successfully.'));
     $this->assertEqual($contents, file_get_contents($result->uri), t('Contents of file were copied correctly.'));
     $this->assertNotEqual($result->uri, $source->uri, t('Returned file path has changed from the original.'));
 
@@ -1838,7 +1838,7 @@ class FileCopyTest extends FileHookTestCase {
     $result = file_copy(clone $source, $target->uri, FILE_EXISTS_REPLACE);
 
     // Check the return status and that the contents changed.
-    $this->assertTrue($result, t('File copied sucessfully.'));
+    $this->assertTrue($result, t('File copied successfully.'));
     $this->assertEqual($contents, file_get_contents($result->uri), t('Contents of file were overwritten.'));
     $this->assertDifferentFile($source, $result);
 
@@ -2160,7 +2160,7 @@ class FileValidateTest extends FileHookTestCase {
     $file = $this->createFile();
 
     // Empty validators.
-    $this->assertEqual(file_validate($file, array()), array(), t('Validating an empty array works succesfully.'));
+    $this->assertEqual(file_validate($file, array()), array(), t('Validating an empty array works successfully.'));
     $this->assertFileHooksCalled(array('validate'));
 
     // Use the file_test.module's test validator to ensure that passing tests
@@ -2245,7 +2245,7 @@ class FileSaveDataTest extends FileHookTestCase {
     $contents = $this->randomName(8);
 
     $result = file_save_data($contents, $existing->uri, FILE_EXISTS_RENAME);
-    $this->assertTrue($result, t("File saved sucessfully."));
+    $this->assertTrue($result, t("File saved successfully."));
 
     $this->assertEqual('public', file_uri_scheme($result->uri), t("File was placed in Drupal's files directory."));
     $this->assertEqual($result->filename, $existing->filename, t("Filename was set to the basename of the source, rather than that of the renamed file."));
@@ -2273,7 +2273,7 @@ class FileSaveDataTest extends FileHookTestCase {
     $contents = $this->randomName(8);
 
     $result = file_save_data($contents, $existing->uri, FILE_EXISTS_REPLACE);
-    $this->assertTrue($result, t('File saved sucessfully.'));
+    $this->assertTrue($result, t('File saved successfully.'));
 
     $this->assertEqual('public', file_uri_scheme($result->uri), t("File was placed in Drupal's files directory."));
     $this->assertEqual($result->filename, $existing->filename, t('Filename was set to the basename of the existing file, rather than preserving the original name.'));

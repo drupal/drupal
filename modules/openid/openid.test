@@ -324,7 +324,7 @@ class OpenIDFunctionalTestCase extends OpenIDWebTestCase {
   function addRedirectedIdentity($identity, $version = 2, $local_id = 'http://example.com/xrds', $claimed_id = NULL, $redirects = 0) {
     // Set the final destination URL which is the same as the Claimed
     // Identifier, we insert the same identifier also to the provider response,
-    // but provider could futher change the Claimed ID actually (e.g. it could
+    // but provider could further change the Claimed ID actually (e.g. it could
     // add unique fragment).
     variable_set('openid_test_redirect_url', $identity);
     variable_set('openid_test_response', array('openid.claimed_id' => $identity));

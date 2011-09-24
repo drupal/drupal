@@ -3019,7 +3019,7 @@ function drupal_sort_css_js($a, $b) {
  * are always groupable, and items of the 'external' type are never groupable.
  * This function also ensures that the process of grouping items does not change
  * their relative order. This requirement may result in multiple groups for the
- * same type, media, and browsers, if needed to accomodate other items in
+ * same type, media, and browsers, if needed to accommodate other items in
  * between.
  *
  * @param $css

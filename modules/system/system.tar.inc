@@ -169,7 +169,7 @@ class Archive_Tar // extends PEAR
     // }}}
 
     /**
-    * OS independant PHP extension load. Remember to take care
+    * OS independent PHP extension load. Remember to take care
     * on the correct extension name for case sensitive OSes.
     * The function is the copy of PEAR::loadExtension().
     *

@@ -2465,7 +2465,7 @@ function drupal_installation_attempted() {
  * non-installation time, such as while installing the module from the the
  * module administration page.
  *
- * Example useage:
+ * Example usage:
  * @code
  *   $t = get_t();
  *   $translated = $t('translate this');

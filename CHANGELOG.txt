@@ -747,7 +747,7 @@ Drupal 4.5.0, 2004-10-18
 - Filter system:
     * Added support for using multiple input formats on the site
     * Expanded the embedded PHP-code feature so it can be used everywhere
-    * Added support for role-dependant filtering, through input formats
+    * Added support for role-dependent filtering, through input formats
 - UI translation:
     * Managing translations is now completely done through the administration interface
     * Added support for importing/exporting gettext .po files

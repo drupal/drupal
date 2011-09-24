@@ -332,7 +332,7 @@ class SearchAdvancedSearchForm extends DrupalWebTestCase {
 
     // Assert that the dummy title doesn't equal the real title.
     $dummy_title = 'Lorem ipsum';
-    $this->assertNotEqual($dummy_title, $this->node->title, t("Dummy title doens't equal node title"));
+    $this->assertNotEqual($dummy_title, $this->node->title, t("Dummy title doesn't equal node title"));
 
     // Search for the dummy title with a GET query.
     $this->drupalGet('search/node/' . $dummy_title);
@@ -584,11 +584,11 @@ class SearchBlockTestCase extends DrupalWebTestCase {
   }
 
   function testSearchFormBlock() {
-    // Set block title to confirm that the interface is availble.
+    // Set block title to confirm that the interface is available.
     $this->drupalPost('admin/structure/block/manage/search/form/configure', array('title' => $this->randomName(8)), t('Save block'));
     $this->assertText(t('The block configuration has been saved.'), t('Block configuration set.'));
 
-    // Set the block to a region to confirm block is availble.
+    // Set the block to a region to confirm block is available.
     $edit = array();
     $edit['blocks[search_form][region]'] = 'footer';
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));

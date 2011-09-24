@@ -312,7 +312,7 @@ class DrupalDefaultEntityController implements DrupalEntityControllerInterface {
    * @param $queried_entities
    *   Associative array of query results, keyed on the entity ID.
    * @param $revision_id
-   *   ID of the revision that was loaded, or FALSE if teh most current revision
+   *   ID of the revision that was loaded, or FALSE if the most current revision
    *   was loaded.
    */
   protected function attachLoad(&$queried_entities, $revision_id = FALSE) {

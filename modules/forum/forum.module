@@ -215,7 +215,7 @@ function forum_menu_local_tasks_alter(&$data, $router_item, $root_path) {
  * Implements hook_entity_info_alter().
  */
 function forum_entity_info_alter(&$info) {
-  // Take over URI constuction for taxonomy terms that are forums.
+  // Take over URI construction for taxonomy terms that are forums.
   if ($vid = variable_get('forum_nav_vocabulary', 0)) {
     // Within hook_entity_info(), we can't invoke entity_load() as that would
     // cause infinite recursion, so we call taxonomy_vocabulary_get_names()

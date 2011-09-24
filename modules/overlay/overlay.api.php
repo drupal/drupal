@@ -15,7 +15,7 @@
  *
  * The parent window is initialized when a page is displayed in which the
  * overlay might be required to be displayed, so modules can act here if they
- * need to take action to accomodate the possibility of the overlay appearing
+ * need to take action to accommodate the possibility of the overlay appearing
  * within a Drupal page.
  */
 function hook_overlay_parent_initialize() {

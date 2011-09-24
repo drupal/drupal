@@ -839,7 +839,7 @@ class DeleteQuery extends Query implements QueryConditionInterface {
    * Executes the DELETE query.
    *
    * @return
-   *   The return value is dependant on the database connection.
+   *   The return value is dependent on the database connection.
    */
   public function execute() {
     $values = array();

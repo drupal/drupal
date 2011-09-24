@@ -2086,7 +2086,7 @@ function template_preprocess(&$variables, $hook) {
 }
 
 /**
- * Returns hook-independant variables to template_preprocess().
+ * Returns hook-independent variables to template_preprocess().
  */
 function _template_preprocess_default_variables() {
   global $user;
