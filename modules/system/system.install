@@ -493,7 +493,7 @@ function system_install() {
   // Clear out module list and hook implementation statics before calling
   // system_rebuild_theme_data().
   module_list(TRUE);
-  module_implements('', FALSE, TRUE);
+  module_implements_reset();
 
   // Load system theme data appropriately.
   system_rebuild_theme_data();

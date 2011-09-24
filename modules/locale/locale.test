@@ -2475,7 +2475,7 @@ class LocaleLanguageNegotiationInfoFunctionalTest extends DrupalWebTestCase {
       $function = "module_{$op}";
       $function($modules);
       // Reset hook implementation cache.
-      module_implements(NULL, FALSE, TRUE);
+      module_implements_reset();
     }
 
     drupal_static_reset('language_types_info');

@@ -93,7 +93,7 @@ function _registry_update() {
         $unchanged_resources[$key] = $file;
       }
     }
-    module_implements('', FALSE, TRUE);
+    module_implements_reset();
     _registry_check_code(REGISTRY_RESET_LOOKUP_CACHE);
   }
   catch (Exception $e) {

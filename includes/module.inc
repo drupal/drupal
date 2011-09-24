@@ -418,7 +418,7 @@ function module_enable($module_list, $enable_dependencies = TRUE) {
       // Refresh the module list to include it.
       system_list_reset();
       module_list(TRUE);
-      module_implements('', FALSE, TRUE);
+      module_implements_reset();
       _system_update_bootstrap_status();
       // Update the registry to include it.
       registry_update();
@@ -541,7 +541,7 @@ function module_disable($module_list, $disable_dependents = TRUE) {
     // Refresh the module list to exclude the disabled modules.
     system_list_reset();
     module_list(TRUE);
-    module_implements('', FALSE, TRUE);
+    module_implements_reset();
     // Invoke hook_modules_disabled before disabling modules,
     // so we can still call module hooks to get information.
     module_invoke_all('modules_disabled', $invoke_modules);
@@ -621,42 +621,19 @@ function module_hook($module, $hook) {
  * @param $sort
  *   By default, modules are ordered by weight and filename, settings this option
  *   to TRUE, module list will be ordered by module name.
- * @param $reset
- *   For internal use only: Whether to force the stored list of hook
- *   implementations to be regenerated (such as after enabling a new module,
- *   before processing hook_enable).
  *
  * @return
  *   An array with the names of the modules which are implementing this hook.
  *
  * @see module_implements_write_cache()
  */
-function module_implements($hook, $sort = FALSE, $reset = FALSE) {
+function module_implements($hook, $sort = FALSE) {
   // Use the advanced drupal_static() pattern, since this is called very often.
   static $drupal_static_fast;
   if (!isset($drupal_static_fast)) {
     $drupal_static_fast['implementations'] = &drupal_static(__FUNCTION__);
   }
   $implementations = &$drupal_static_fast['implementations'];
-
-  // We maintain a persistent cache of hook implementations in addition to the
-  // static cache to avoid looping through every module and every hook on each
-  // request. Benchmarks show that the benefit of this caching outweighs the
-  // additional database hit even when using the default database caching
-  // backend and only a small number of modules are enabled. The cost of the
-  // cache_get() is more or less constant and reduced further when non-database
-  // caching backends are used, so there will be more significant gains when a
-  // large number of modules are installed or hooks invoked, since this can
-  // quickly lead to module_hook() being called several thousand times
-  // per request.
-  if ($reset) {
-    $implementations = array();
-    cache('bootstrap')->set('module_implements', array());
-    drupal_static_reset('module_hook_info');
-    drupal_static_reset('drupal_alter');
-    cache('bootstrap')->delete('hook_info');
-    return;
-  }
 
   // Fetch implementations from cache.
   if (empty($implementations)) {
@@ -712,6 +689,27 @@ function module_implements($hook, $sort = FALSE, $reset = FALSE) {
   }
 
   return array_keys($implementations[$hook]);
+}
+
+/**
+ * Regenerate the stored list of hook implementations.
+ */
+function module_implements_reset() {
+  // We maintain a persistent cache of hook implementations in addition to the
+  // static cache to avoid looping through every module and every hook on each
+  // request. Benchmarks show that the benefit of this caching outweighs the
+  // additional database hit even when using the default database caching
+  // backend and only a small number of modules are enabled. The cost of the
+  // cache_get() is more or less constant and reduced further when non-database
+  // caching backends are used, so there will be more significant gains when a
+  // large number of modules are installed or hooks invoked, since this can
+  // quickly lead to module_hook() being called several thousand times
+  // per request.
+  drupal_static_reset('module_implements');
+  cache('bootstrap')->set('module_implements', array());
+  drupal_static_reset('module_hook_info');
+  drupal_static_reset('drupal_alter');
+  cache('bootstrap')->delete('hook_info');
 }
 
 /**

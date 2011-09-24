@@ -177,7 +177,7 @@ abstract class UpgradePathTestCase extends DrupalWebTestCase {
     // Reload module list and implementations to ensure that test module hooks
     // aren't called after tests.
     module_list(TRUE);
-    module_implements('', FALSE, TRUE);
+    module_implements_reset();
 
     // Reset the Field API.
     field_cache_clear();
@@ -302,7 +302,7 @@ abstract class UpgradePathTestCase extends DrupalWebTestCase {
     }
 
     // Reload hook implementations
-    module_implements('', FALSE, TRUE);
+    module_implements_reset();
 
     // Rebuild caches.
     drupal_static_reset();

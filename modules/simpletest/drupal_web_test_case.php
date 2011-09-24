@@ -1485,7 +1485,7 @@ class DrupalWebTestCase extends DrupalTestCase {
     // Reload module list and implementations to ensure that test module hooks
     // aren't called after tests.
     module_list(TRUE);
-    module_implements('', FALSE, TRUE);
+    module_implements_reset();
 
     // Reset the Field API.
     field_cache_clear();
