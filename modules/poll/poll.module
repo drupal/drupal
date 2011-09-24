@@ -299,7 +299,9 @@ function poll_form($node, &$form_state) {
   $form['choice_wrapper']['poll_more'] = array(
     '#type' => 'submit',
     '#value' => t('More choices'),
-    '#description' => t("If the amount of boxes above isn't enough, click here to add more choices."),
+    '#attributes' => array(
+      'title' => t("If the amount of boxes above isn't enough, click here to add more choices."),
+    ),
     '#weight' => 1,
     '#limit_validation_errors' => array(array('choice')),
     '#submit' => array('poll_more_choices_submit'),
