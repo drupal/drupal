@@ -736,11 +736,11 @@ function hook_js_alter(&$javascript) {
  * @return
  *   An array defining libraries associated with a module.
  *
- * @see system_library()
+ * @see system_library_info()
  * @see drupal_add_library()
  * @see drupal_get_library()
  */
-function hook_library() {
+function hook_library_info() {
   // Library One.
   $libraries['library-1'] = array(
     'title' => 'Library One',
@@ -794,9 +794,9 @@ function hook_library() {
  * @param $module
  *   The name of the module that registered the libraries.
  *
- * @see hook_library()
+ * @see hook_library_info()
  */
-function hook_library_alter(&$libraries, $module) {
+function hook_library_info_alter(&$libraries, $module) {
   // Update Farbtastic to version 2.0.
   if ($module == 'system' && isset($libraries['farbtastic'])) {
     // Verify existing version is older than the one we are updating to.

@@ -4499,8 +4499,8 @@ function drupal_process_states(&$elements) {
  *   its dependencies could not be added.
  *
  * @see drupal_get_library()
- * @see hook_library()
- * @see hook_library_alter()
+ * @see hook_library_info()
+ * @see hook_library_info_alter()
  */
 function drupal_add_library($module, $name, $every_page = NULL) {
   $added = &drupal_static(__FUNCTION__, array());
@@ -4550,8 +4550,8 @@ function drupal_add_library($module, $name, $every_page = NULL) {
  *   of libraries registered by $module is returned (which may be empty).
  *
  * @see drupal_add_library()
- * @see hook_library()
- * @see hook_library_alter()
+ * @see hook_library_info()
+ * @see hook_library_info_alter()
  *
  * @todo The purpose of drupal_get_*() is completely different to other page
  *   requisite API functions; find and use a different name.
@@ -4561,12 +4561,12 @@ function drupal_get_library($module, $name = NULL) {
 
   if (!isset($libraries[$module])) {
     // Retrieve all libraries associated with the module.
-    $module_libraries = module_invoke($module, 'library');
+    $module_libraries = module_invoke($module, 'library_info');
     if (empty($module_libraries)) {
       $module_libraries = array();
     }
     // Allow modules to alter the module's registered libraries.
-    drupal_alter('library', $module_libraries, $module);
+    drupal_alter('library_info', $module_libraries, $module);
 
     foreach ($module_libraries as $key => $data) {
       if (is_array($data)) {
