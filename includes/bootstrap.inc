@@ -2832,7 +2832,7 @@ class SchemaCache extends DrupalCacheArray {
 
   public function __construct() {
     // Cache by request method.
-    parent::__construct('schema:runtime:' . $_SERVER['REQUEST_METHOD'] == 'GET', 'cache');
+    parent::__construct('schema:runtime:' . ($_SERVER['REQUEST_METHOD'] == 'GET'), 'cache');
   }
 
   protected function resolveCacheMiss($offset) {
