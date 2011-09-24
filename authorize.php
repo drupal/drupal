@@ -172,4 +172,3 @@ else {
 if (!empty($output)) {
   print theme('update_page', array('content' => $output, 'show_messages' => $show_messages));
 }
-
