@@ -478,7 +478,6 @@ function _shortcut_link_form_elements($shortcut_link = NULL) {
   $form['shortcut_link']['link_title'] = array(
     '#type' => 'textfield',
     '#title' => t('Name'),
-    '#description' => t('The name of the shortcut.'),
     '#size' => 40,
     '#maxlength' => 255,
     '#default_value' => $shortcut_link['link_title'],
@@ -487,7 +486,6 @@ function _shortcut_link_form_elements($shortcut_link = NULL) {
   $form['shortcut_link']['link_path'] = array(
     '#type' => 'textfield',
     '#title' => t('Path'),
-    '#description' => t('The path to the shortcut.'),
     '#size' => 40,
     '#maxlength' => 255,
     '#field_prefix' => url(NULL, array('absolute' => TRUE)) . (variable_get('clean_url', 0) ? '' : '?q='),
