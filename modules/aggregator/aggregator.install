@@ -226,9 +226,10 @@ function aggregator_schema() {
         'description' => 'The {aggregator_feed}.fid to which this item belongs.',
       ),
       'title' => array(
-        'type' => 'text',
-        'size' => 'normal',
+        'type' => 'varchar',
+        'length' => 255,
         'not null' => TRUE,
+        'default' => '',
         'description' => 'Title of the feed item.',
       ),
       'link' => array(
