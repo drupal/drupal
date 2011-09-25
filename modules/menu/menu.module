@@ -322,6 +322,9 @@ function menu_delete($menu) {
  * @param $item
  *   The menu item or the node type for which to generate a list of parents.
  *   If $item['mlid'] == 0 then the complete tree is returned.
+ * @param $type
+ *   The node type for which to generate a list of parents.
+ *   If $item itself is a node type then $type is ignored.
  * @return
  *   An array of menu link titles keyed on the a string containing the menu name
  *   and mlid. The list excludes the given item and its children.
@@ -329,7 +332,7 @@ function menu_delete($menu) {
  * @todo This has to be turned into a #process form element callback. The
  *   'menu_override_parent_selector' variable is entirely superfluous.
  */
-function menu_parent_options($menus, $item) {
+function menu_parent_options($menus, $item, $type = '') {
   // The menu_links table can be practically any size and we need a way to
   // allow contrib modules to provide more scalable pattern choosers.
   // hook_form_alter is too late in itself because all the possible parents are
@@ -339,18 +342,22 @@ function menu_parent_options($menus, $item) {
   }
 
   $available_menus = array();
-  if (is_array($item)) {
-    // If $item is an array fill it with all menus given to this function.
+  if (!is_array($item)) {
+    // If $item is not an array then it is a node type.
+    // Use it as $type and prepare a dummy menu item for _menu_get_options().
+    $type = $item;
+    $item = array('mlid' => 0);
+  }
+  if (empty($type)) {
+    // If no node type is set, use all menus given to this function.
     $available_menus = $menus;
   }
   else {
-    // If $item is a node type, get all available menus for this type and
-    // prepare a dummy menu item for _menu_parent_depth_limit().
-    $type_menus = variable_get('menu_options_' . $item, array('main-menu' => 'main-menu'));
+    // If a node type is set, use all available menus for this type.
+    $type_menus = variable_get('menu_options_' . $type, array('main-menu' => 'main-menu'));
     foreach ($type_menus as $menu) {
       $available_menus[$menu] = $menu;
     }
-    $item = array('mlid' => 0);
   }
 
   return _menu_get_options($menus, $available_menus, $item);
@@ -600,15 +607,18 @@ function _menu_parent_depth_limit($item) {
  * @see menu_node_submit()
  */
 function menu_form_node_form_alter(&$form, $form_state) {
-  // Generate a list of possible parents.
+  // Generate a list of possible parents (not including this link or descendants).
   // @todo This must be handled in a #process handler.
+  $link = $form['#node']->menu;
   $type = $form['#node']->type;
-  $options = menu_parent_options(menu_get_menus(), $type);
+  // menu_parent_options() is goofy and can actually handle either a menu link
+  // or a node type both as second argument. Pick based on whether there is
+  // a link already (menu_node_prepare() sets mlid default to 0).
+  $options = menu_parent_options(menu_get_menus(), $link['mlid'] ? $link : $type);
   // If no possible parent menu items were found, there is nothing to display.
   if (empty($options)) {
     return;
   }
-  $link = $form['#node']->menu;
 
   $form['menu'] = array(
     '#type' => 'fieldset',
@@ -659,9 +669,13 @@ function menu_form_node_form_alter(&$form, $form_state) {
   );
 
   $default = ($link['mlid'] ? $link['menu_name'] . ':' . $link['plid'] : variable_get('menu_parent_' . $type, 'main-menu:0'));
-  // @todo This will fail with the new selective menus per content type.
+  // If the current parent menu item is not present in options, use the first
+  // available option as default value.
+  // @todo User should not be allowed to access menu link settings in such a
+  // case.
   if (!isset($options[$default])) {
-    $default = 'navigation:0';
+    $array = array_keys($options);
+    $default = reset($array);
   }
   $form['menu']['link']['parent'] = array(
     '#type' => 'select',
