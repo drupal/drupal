@@ -2192,27 +2192,32 @@ function drupal_unlink($uri, $context = NULL) {
 }
 
 /**
- * Returns the absolute path of a file or directory
+ * Returns the absolute local filesystem path of a stream URI.
  *
- * PHP's realpath() does not properly support streams, so this function
- * fills that gap. If a stream wrapped URI is provided, it will be passed
- * to the registered wrapper for handling. If the URI does not contain a
- * scheme or the wrapper implementation does not implement realpath, then
- * FALSE will be returned.
+ * This function was originally written to ease the conversion of 6.x code to
+ * use 7.x stream wrappers. However, it assumes that every URI may be resolved
+ * to an absolute local filesystem path, and this assumption fails when stream
+ * wrappers are used to support remote file storage. Remote stream wrappers
+ * may implement the realpath method by always returning FALSE. The use of
+ * drupal_realpath() is discouraged, and is slowly being removed from core
+ * functions where possible.
  *
- * @see http://php.net/manual/en/function.realpath.php
- *
- * Compatibility: normal paths and stream wrappers.
- * @see http://drupal.org/node/515192
+ * Only use this function if you know that the stream wrapper in the URI uses
+ * the local file system, and you need to pass an absolute path to a function
+ * that is incompatible with stream URIs.
  *
  * @param $uri
- *   A string containing the URI to verify.
+ *   A stream wrapper URI or a filesystem path, possibly including one or more
+ *   symbolic links.
  *
  * @return
- *   The absolute pathname, or FALSE on failure.
+ *   The absolute local filesystem path (with no symbolic links), or FALSE on
+ *   failure.
  *
- * @see realpath()
+ * @see DrupalStreamWrapperInterface::realpath()
+ * @see http://php.net/manual/function.realpath.php
  * @ingroup php_wrappers
+ * @todo: This function is deprecated, and should be removed wherever possible.
  */
 function drupal_realpath($uri) {
   // If this URI is a stream, pass it off to the appropriate stream wrapper.
