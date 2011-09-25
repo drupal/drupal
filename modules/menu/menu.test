@@ -680,5 +680,43 @@ class MenuNodeTestCase extends DrupalWebTestCase {
     $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
     $link = menu_link_load($item['mlid']);
     $this->assertTrue($link, t('Link in not allowed menu still exists after saving node'));
+
+    // Move the menu link back to the Navigation menu.
+    $item['menu_name'] = 'navigation';
+    menu_link_save($item);
+    // Create a second node.
+    $child_node = $this->drupalCreateNode(array('type' => 'article'));
+    // Assign a menu link to the second node, being a child of the first one.
+    $child_item = array(
+      'link_path' => 'node/'. $child_node->nid,
+      'link_title' => $this->randomName(16),
+      'plid' => $item['mlid'],
+    );
+    menu_link_save($child_item);
+    // Edit the first node.
+    $this->drupalGet('node/'. $node->nid .'/edit');
+    // Assert that it is not possible to set the parent of the first node to itself or the second node.
+    $this->assertNoOption('edit-menu-parent', 'navigation:'. $item['mlid']);
+    $this->assertNoOption('edit-menu-parent', 'navigation:'. $child_item['mlid']);
+  }
+
+  /**
+   * Asserts that a select option in the current page does not exist.
+   *
+   * @param $id
+   *   Id of select field to assert.
+   * @param $option
+   *   Option to assert.
+   * @param $message
+   *   Message to display.
+   * @return
+   *   TRUE on pass, FALSE on fail.
+   *
+   * @todo move to simpletest drupal_web_test_case.php.
+   */
+  protected function assertNoOption($id, $option, $message = '') {
+    $selects = $this->xpath('//select[@id=:id]', array(':id' => $id));
+    $options = $this->xpath('//select[@id=:id]//option[@value=:option]', array(':id' => $id, ':option' => $option));
+    return $this->assertTrue(isset($selects[0]) && !isset($options[0]), $message ? $message : t('Option @option for field @id does not exist.', array('@option' => $option, '@id' => $id)), t('Browser'));
   }
 }
