@@ -18,6 +18,34 @@ function config_get_config_directory() {
 }
 
 /**
+ * Move the default config supplied by a module to the live config directory.
+ *
+ * @param
+ *   The name of the module we are installing.
+ */
+function config_install_default_config($module) {
+  $module_config_dir = drupal_get_path('module', $module) . '/config';
+  $drupal_config_dir = config_get_config_directory();
+  if (is_dir(drupal_get_path('module', $module) . '/config')) {
+    $files = glob($module_config_dir . '/' . '*.xml');
+    foreach ($files as $key => $file) {            
+      // Load config data into the active store and write it out to the 
+      // file system in the drupal config directory. Note the config name
+      // needs to be the same as the file name WITHOUT the extension.
+      //
+      // @todo Make this acknowledge other storage engines rather than having
+      // SQL be hardcoded.
+      $parts = explode('/', $file);
+      $file = array_pop($parts);
+      $config_name = str_replace('.xml', '', $file);
+
+      $verified_storage = new DrupalVerifiedStorageSQL($config_name);
+      $verified_storage->write(file_get_contents($module_config_dir . '/' . $file));
+    }
+  }  
+}
+
+/**
  * Retrieve an iterable array which lists the children under a config 'branch'.
  *
  * Given the following configuration files:

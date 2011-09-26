@@ -438,25 +438,7 @@ function module_enable($module_list, $enable_dependencies = TRUE) {
         $version = $versions ? max($versions) : SCHEMA_INSTALLED;
 
         // Copy any default configuration data to the system config directory/
-        $module_config_dir = drupal_get_path('module', $module) . '/config';
-        $drupal_config_dir = config_get_config_directory();
-        if (is_dir(drupal_get_path('module', $module) . '/config')) {
-          $files = glob($module_config_dir . '/' . '*.xml');
-          foreach ($files as $key => $file) {            
-            // Load config data into the active store and write it out to the 
-            // file system in the drupal config directory. Note the config name
-            // needs to be the same as the file name WITHOUT the extension.
-            //
-            // @todo Make this acknowledge a factory when that gets created 
-            // rather than hard coding the SQL storage engine here.
-            $parts = explode('/', $file);
-            $file = array_pop($parts);
-            $config_name = str_replace('.xml', '', $file);
-
-            $verified_storage = new DrupalVerifiedStorageSQL($config_name);
-            $verified_storage->write(file_get_contents($module_config_dir . '/' . $file));
-          }
-        }
+        config_install_default_config($module);
 
         // If the module has no current updates, but has some that were
         // previously removed, set the version to the value of
