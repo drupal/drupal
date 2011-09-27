@@ -162,10 +162,16 @@ function update_manager_update_form($form, $form_state = array(), $context) {
     $needs_manual = $project['project_type'] == 'core';
 
     if ($needs_manual) {
-      // Since it won't be tableselect, #weight will add an extra column to the
-      // table if it's defined, so just unset it. The order doesn't matter that
-      // much in the manual updates table, anyway.
+      // There are no checkboxes in the 'Manual updates' table so it will be
+      // rendered by theme('table'), not theme('tableselect'). Since the data
+      // formats are incompatible, we convert now to the format expected by
+      // theme('table').
       unset($entry['#weight']);
+      $attributes = $entry['#attributes'];
+      unset($entry['#attributes']);
+      $entry = array(
+        'data' => $entry,
+      ) + $attributes;
     }
     else {
       $form['project_downloads'][$name] = array(
