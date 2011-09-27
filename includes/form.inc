@@ -76,7 +76,7 @@
  * workflow, see the
  * @link http://api.drupal.org/api/drupal/developer--topics--forms_api_reference.html Form API reference @endlink
  * and the
- * @link http://drupal.org/node/37775 Form API section of the handbook. @endlink
+ * @link http://drupal.org/node/37775 Form API documentation section. @endlink
  * In addition, there is a set of Form API tutorials in
  * @link form_example_tutorial.inc the Form Example Tutorial @endlink which
  * provide basics all the way up through multistep forms.
@@ -86,73 +86,7 @@
  * passed by reference to most functions, so they use it to communicate with
  * the form system and each other.
  *
- * The $form_state keys are:
- * - build_info: Do not change; internal information stored by Form API to be
- *   able to build and rebuild the form:
- *   - args: A list of arguments used to rebuild the form from cache.
- *   - files: A list of include files to be loaded to rebuild the form. See
- *     form_load_include().
- * - 'values': An associative array of values submitted to the form. The
- *   validation functions and submit functions use this array for nearly all
- *   their decision making. (Note that
- *   @link http://api.drupal.org/api/drupal/developer--topics--forms_api_reference.html/7#tree #tree @endlink
- *   determines whether the values are a flat array or an array whose structure
- *   parallels the $form array.)
- * - 'rebuild': If the submit function sets $form_state['rebuild'] to TRUE,
- *   submission is not completed and instead the form is rebuilt using any
- *   information that the submit function has made available to the form builder
- *   function via $form_state. This is commonly used for wizard-style
- *   multi-step forms, add-more buttons, and the like. For further information
- *   see drupal_build_form().
- * - 'redirect': $form_state['redirect'] is used to redirect the form on
- *   submission. It may either be a string containing the destination URL, or
- *   an array of arguments compatible with drupal_goto(). See
- *   drupal_redirect_form() for complete information.
- * - 'storage': $form_state['storage'] is not a special key, and no specific
- *   support is provided for it in the Form API, but by tradition it was
- *   the location where application-specific data was stored for communication
- *   between the submit, validation, and form builder functions, especially
- *   in a multi-step-style form. Form implementations may use any key(s) within
- *   $form_state (other than the keys listed here and other reserved ones used
- *   by Form API internals) for this kind of storage. The recommended way to
- *   ensure that the chosen key doesn't conflict with ones used by the Form API
- *   or other modules is to use the module name as the key name or a prefix for
- *   the key name. For example, the Node module uses $form_state['node'] in node
- *   editing forms to store information about the node being edited, and this
- *   information stays available across successive clicks of the "Preview"
- *   button as well as when the "Save" button is finally clicked.
- * - 'temporary': Since values for all non-reserved keys in $form_state persist
- *   throughout a multistep form sequence, the Form API provides the 'temporary'
- *   key for modules to use for communicating information across form-related
- *   functions during a single page request only. There is no use-case for this
- *   functionality in core.
- * - 'triggering_element': (read-only) The form element that triggered
- *   submission. This is the same as the deprecated
- *   $form_state['clicked_button']. It is the element that caused submission,
- *   which may or may not be a button (in the case of Ajax forms.) This is
- *   often used to distinguish between various buttons in a submit handler,
- *   and is also used in Ajax handlers.
- * - 'cache': The typical form workflow involves two page requests. During the
- *   first page request, a form is built and returned for the user to fill in.
- *   Then the user fills the form in and submits it, triggering a second page
- *   request in which the form must be built and processed. By default, $form
- *   and $form_state are built from scratch during each of these page requests.
- *   In some special use-cases, it is necessary or desired to persist the $form
- *   and $form_state variables from the initial page request to the one that
- *   processes the submission. A form builder function can set 'cache' to TRUE
- *   to do this. One example where this is needed is to handle Ajax submissions,
- *   so ajax_process_form() sets this for all forms that include an element with
- *   a #ajax property. (In Ajax, the handler has no way to build the form
- *   itself, so must rely on the cached version created on each page load, so
- *   it's a classic example of this use case.) Note that the persistence of
- *   $form and $form_state across successive submissions of a multi-step form
- *   happens automatically regardless of the value for 'cache'.
- * - 'input': The array of values as they were submitted by the user. These are
- *   raw and unvalidated, so should not be used without a thorough understanding
- *   of security implications. In almost all cases, code should use the data in
- *   the 'values' array exclusively. The most common use of this key is for
- *   multi-step forms that need to clear some of the user input when setting
- *   'rebuild'.
+ * See drupal_build_form() for documentation of $form_state keys.
  */
 
 /**
@@ -211,22 +145,25 @@ function drupal_get_form($form_id) {
  *   persist across page requests when the 'cache' or 'rebuild' flag is set.
  *   The following parameters may be set in $form_state to affect how the form
  *   is rendered:
- *   - build_info: A keyed array of build information that is necessary to
- *     rebuild the form from cache when the original context may no longer be
- *     available:
- *     - args: An array of arguments to pass to the form builder.
+ *   - build_info: Internal. An associative array of information stored by Form
+ *     API that is necessary to build and rebuild the form from cache when the
+ *     original context may no longer be available:
+ *     - args: A list of arguments to pass to the form constructor.
  *     - files: An optional array defining include files that need to be loaded
  *       for building the form. Each array entry may be the path to a file or
  *       another array containing values for the parameters 'type', 'module' and
  *       'name' as needed by module_load_include(). The files listed here are
  *       automatically loaded by form_get_cache(). By default the current menu
- *       router item's 'file' definition is added, if existent.
+ *       router item's 'file' definition is added, if any. Use
+ *       form_load_include() to add include files from a form constructor.
+ *   - rebuild_info: Internal. Similar to 'build_info', but pertaining to
+ *     drupal_rebuild_form().
  *   - rebuild: Normally, after the entire form processing is completed and
- *     submit handlers ran, a form is considered to be done and
+ *     submit handlers have run, a form is considered to be done and
  *     drupal_redirect_form() will redirect the user to a new page using a GET
  *     request (so a browser refresh does not re-submit the form). However, if
  *     'rebuild' has been set to TRUE, then a new copy of the form is
- *     immediately built and sent to the browser; instead of a redirect. This is
+ *     immediately built and sent to the browser, instead of a redirect. This is
  *     used for multi-step forms, such as wizards and confirmation forms.
  *     Normally, $form_state['rebuild'] is set by a submit handler, since it is
  *     usually logic within a submit handler that determines whether a form is
@@ -234,32 +171,106 @@ function drupal_get_form($form_id) {
  *     set $form_state['rebuild'] to cause the form processing to bypass submit
  *     handlers and rebuild the form instead, even if there are no validation
  *     errors.
- *   - input: An array of input that corresponds to $_POST or $_GET, depending
- *     on the 'method' chosen (see below).
+ *   - redirect: Used to redirect the form on submission. It may either be a
+ *     string containing the destination URL, or an array of arguments
+ *     compatible with drupal_goto(). See drupal_redirect_form() for complete
+ *     information.
+ *   - no_redirect: If set to TRUE the form will NOT perform a drupal_goto(),
+ *     even if 'redirect' is set.
  *   - method: The HTTP form method to use for finding the input for this form.
  *     May be 'post' or 'get'. Defaults to 'post'. Note that 'get' method
  *     forms do not use form ids so are always considered to be submitted, which
  *     can have unexpected effects. The 'get' method should only be used on
- *     forms that do not change data, as that is exclusively the domain of post.
- *   - no_redirect: If set to TRUE the form will NOT perform a drupal_goto(),
- *     even if 'redirect' is set.
+ *     forms that do not change data, as that is exclusively the domain of
+ *     'post.'
  *   - cache: If set to TRUE the original, unprocessed form structure will be
- *     cached, which allows to rebuild the entire form from cache.
+ *     cached, which allows the entire form to be rebuilt from cache. A typical
+ *     form workflow involves two page requests; first, a form is built and
+ *     rendered for the user to fill in. Then, the user fills the form in and
+ *     submits it, triggering a second page request in which the form must be
+ *     built and processed. By default, $form and $form_state are built from
+ *     scratch during each of these page requests. Often, it is necessary or
+ *     desired to persist the $form and $form_state variables from the initial
+ *     page request to the one that processes the submission. 'cache' can be set
+ *     to TRUE to do this. A prominent example is an Ajax-enabled form, in which
+ *     ajax_process_form() enables form caching for all forms that include an
+ *     element with the #ajax property. (The Ajax handler has no way to build
+ *     the form itself, so must rely on the cached version.) Note that the
+ *     persistence of $form and $form_state happens automatically for
+ *     (multi-step) forms having the 'rebuild' flag set, regardless of the value
+ *     for 'cache'.
  *   - no_cache: If set to TRUE the form will NOT be cached, even if 'cache' is
  *     set.
+ *   - values: An associative array of values submitted to the form. The
+ *     validation functions and submit functions use this array for nearly all
+ *     their decision making. (Note that
+ *     @link http://api.drupal.org/api/drupal/developer--topics--forms_api_reference.html/7#tree #tree @endlink
+ *     determines whether the values are a flat array or an array whose structure
+ *     parallels the $form array.)
+ *   - input: The array of values as they were submitted by the user. These are
+ *     raw and unvalidated, so should not be used without a thorough
+ *     understanding of security implications. In almost all cases, code should
+ *     use the data in the 'values' array exclusively. The most common use of
+ *     this key is for multi-step forms that need to clear some of the user
+ *     input when setting 'rebuild'. The values correspond to $_POST or $_GET,
+ *     depending on the 'method' chosen.
  *   - always_process: If TRUE and the method is GET, a form_id is not
  *     necessary. This should only be used on RESTful GET forms that do NOT
  *     write data, as this could lead to security issues. It is useful so that
  *     searches do not need to have a form_id in their query arguments to
  *     trigger the search.
- *   - must_validate: Ordinarily, a form is only validated once but there are
+ *   - must_validate: Ordinarily, a form is only validated once, but there are
  *     times when a form is resubmitted internally and should be validated
  *     again. Setting this to TRUE will force that to happen. This is most
- *     likely to occur during AHAH or Ajax operations.
+ *     likely to occur during Ajax operations.
+ *   - programmed: If TRUE, the form was submitted programmatically, usually
+ *     invoked via drupal_form_submit(). Defaults to FALSE.
+ *   - process_input: Boolean flag. TRUE signifies correct form submission.
+ *     This is always TRUE for programmed forms coming from drupal_form_submit()
+ *     (see 'programmed' key), or if the form_id coming from the $_POST data is
+ *     set and matches the current form_id.
+ *   - submitted: If TRUE, the form has been submitted. Defaults to FALSE.
+ *   - executed: If TRUE, the form was submitted and has been processed and
+ *     executed. Defaults to FALSE.
+ *   - triggering_element: (read-only) The form element that triggered
+ *     submission. This is the same as the deprecated
+ *     $form_state['clicked_button']. It is the element that caused submission,
+ *     which may or may not be a button (in the case of Ajax forms). This key is
+ *     often used to distinguish between various buttons in a submit handler,
+ *     and is also used in Ajax handlers.
+ *   - has_file_element: Internal. If TRUE, there is a file element and Form API
+ *     will set the appropriate 'enctype' HTML attribute on the form.
+ *   - groups: Internal. An array containing references to fieldsets to render
+ *     them within vertical tabs.
+ *   - storage: $form_state['storage'] is not a special key, and no specific
+ *     support is provided for it in the Form API. By tradition it was
+ *     the location where application-specific data was stored for communication
+ *     between the submit, validation, and form builder functions, especially
+ *     in a multi-step-style form. Form implementations may use any key(s)
+ *     within $form_state (other than the keys listed here and other reserved
+ *     ones used by Form API internals) for this kind of storage. The
+ *     recommended way to ensure that the chosen key doesn't conflict with ones
+ *     used by the Form API or other modules is to use the module name as the
+ *     key name or a prefix for the key name. For example, the Node module uses
+ *     $form_state['node'] in node editing forms to store information about the
+ *     node being edited, and this information stays available across successive
+ *     clicks of the "Preview" button as well as when the "Save" button is
+ *     finally clicked.
+ *   - buttons: A list containing copies of all submit and button elements in
+ *     the form.
+ *   - complete_form: A reference to the $form variable containing the complete
+ *     form structure. #process, #after_build, #element_validate, and other
+ *     handlers being invoked on a form element may use this reference to access
+ *     other information in the form the element is contained in.
  *   - temporary: An array holding temporary data accessible during the current
- *     page request only. It may be used to temporary save any data that doesn't
- *     need to or shouldn't be cached during the whole form workflow, e.g. data
- *     that needs to be accessed during the current form build process only.
+ *     page request only. All $form_state properties that are not reserved keys
+ *     (see form_state_keys_no_cache()) persist throughout a multistep form
+ *     sequence. Form API provides this key for modules to communicate
+ *     information across form-related functions during a single page request.
+ *     It may be used to temporarily save data that does not need to or should
+ *     not be cached during the whole form workflow; e.g., data that needs to be
+ *     accessed during the current form build process only. There is no use-case
+ *     for this functionality in Drupal core.
  *   - wrapper_callback: Modules that wish to pre-populate certain forms with
  *     common elements, such as back/next/save buttons in multi-step form
  *     wizards, may define a form builder function name that returns a form
@@ -268,8 +279,8 @@ function drupal_get_form($form_id) {
  *     hook_forms() or have to invoke drupal_build_form() (instead of
  *     drupal_get_form()) on their own in a custom menu callback to prepare
  *     $form_state accordingly.
- *   Further $form_state properties controlling the redirection behavior after
- *   form submission may be found in drupal_redirect_form().
+ *   Information on how certain $form_state properties control redirection
+ *   behavior after form submission may be found in drupal_redirect_form().
  *
  * @return
  *   The rendered form. This function may also perform a redirect and hence may
