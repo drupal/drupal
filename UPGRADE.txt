@@ -1,4 +1,3 @@
-
 INTRODUCTION
 ------------
 This document describes how to:
@@ -25,6 +24,11 @@ First steps and definitions:
     applying it to your live site. Even minor updates can cause your site's
     behavior to change.
 
+  * Each new release of Drupal has release notes, which explain the changes made
+    since the previous version and any special instructions needed to update or
+    upgrade to the new version. You can find a link to the release notes for the
+    version you are upgrading or updating to on the Drupal project page
+    (http://drupal.org/project/drupal).
 
 UPGRADE PROBLEMS
 ----------------
@@ -39,7 +43,6 @@ If you encounter errors during this process,
   * Consult one of the support options listed on http://drupal.org/support
 
 More in-depth information on upgrading can be found at http://drupal.org/upgrade
-
 
 MINOR VERSION UPDATES
 ---------------------
@@ -58,11 +61,18 @@ following the instructions in the INTRODUCTION section at the top of this file:
    If you made modifications to files like .htaccess or robots.txt, you will
    need to re-apply them from your backup, after the new files are in place.
 
-   Sometimes an update includes changes to settings.php (this will be noted in
-   the release announcement). If that's the case, replace your old settings.php
-   with the new one, and copy the site-specific entries (especially the lines
-   giving the database name, user, and password) from the old settings.php to
-   the new settings.php.
+   Sometimes an update includes changes to default.settings.php (this will be
+   noted in the release notes). If that's the case, follow these steps:
+
+   - Make a backup copy of your settings.php file, with a different file name.
+
+   - Make a copy of the new default.settings.php file, and name the copy
+     settings.php (overwriting your previous settings.php file).
+
+   - Copy the custom and site-specific entries from the backup you made into the
+     new settings.php file. You will definitely need the lines giving the
+     database information, and you will also want to copy in any other
+     customizations you have added.
 
 4. Download the latest Drupal 7.x release from http://drupal.org to a
    directory outside of your web root. Extract the archive and copy the files
@@ -109,7 +119,6 @@ following the instructions in the INTRODUCTION section at the top of this file:
 9. Go to Administration > Configuration > Development > Maintenance mode.
    Disable the "Put site into maintenance mode" checkbox and save the
    configuration.
-
 
 MAJOR VERSION UPGRADE
 ---------------------
@@ -221,4 +230,3 @@ following the instructions in the INTRODUCTION section at the top of this file:
 
 To get started with Drupal 7 administration, visit
 http://drupal.org/getting-started/7/admin
-
