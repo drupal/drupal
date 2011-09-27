@@ -2364,8 +2364,8 @@ class DatabaseSelectPagerDefaultTestCase extends DatabaseTestCase {
   }
 
   /**
-  * Confirm that every pager gets a valid non-overlaping element ID.
-  */
+   * Confirm that every pager gets a valid non-overlaping element ID.
+   */
   function testElementNumbers() {
     $_GET['page'] = '3, 2, 1, 0';
 
