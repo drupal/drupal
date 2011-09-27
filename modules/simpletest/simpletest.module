@@ -32,7 +32,7 @@ function simpletest_menu() {
     'title' => 'Testing',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('simpletest_test_form'),
-    'description' => 'Run tests against Drupal core and your active modules. These tests help assure that your site code is working as designed.',
+    'description' => 'Run tests against Drupal core and your modules. These tests help assure that your site code is working as designed.',
     'access arguments' => array('administer unit tests'),
     'file' => 'simpletest.pages.inc',
     'weight' => -5,
