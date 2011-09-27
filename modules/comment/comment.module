@@ -1633,6 +1633,9 @@ function comment_delete_multiple($cids) {
  *   values those fields must have. Instead, it is preferable to use
  *   EntityFieldQuery to retrieve a list of entity IDs loadable by
  *   this function.
+ * @param $reset
+ *   Whether to reset the internal static entity cache. Note that the static
+ *   cache is disabled in comment_entity_info() by default.
  *
  * @return
  *   An array of comment objects, indexed by comment ID.
@@ -1642,8 +1645,8 @@ function comment_delete_multiple($cids) {
  *
  * @todo Remove $conditions in Drupal 8.
  */
-function comment_load_multiple($cids = array(), $conditions = array()) {
-  return entity_load('comment', $cids, $conditions);
+function comment_load_multiple($cids = array(), $conditions = array(), $reset = FALSE) {
+  return entity_load('comment', $cids, $conditions, $reset);
 }
 
 /**
@@ -1651,11 +1654,15 @@ function comment_load_multiple($cids = array(), $conditions = array()) {
  *
  * @param $cid
  *   The identifying comment id.
+ * @param $reset
+ *   Whether to reset the internal static entity cache. Note that the static
+ *   cache is disabled in comment_entity_info() by default.
+ *
  * @return
  *   The comment object.
  */
-function comment_load($cid) {
-  $comment = comment_load_multiple(array($cid));
+function comment_load($cid, $reset = FALSE) {
+  $comment = comment_load_multiple(array($cid), array(), $reset);
   return $comment ? $comment[$cid] : FALSE;
 }
 
