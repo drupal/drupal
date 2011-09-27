@@ -1,5 +1,5 @@
 name = Aggregator
-description = "Aggregates syndicated content (RSS, RDF, and Atom feeds)."
+description = "Aggregates syndicated content (RSS, RDF, and Atom feeds) from external sources."
 package = Core
 version = VERSION
 core = 8.x
