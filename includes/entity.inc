@@ -606,7 +606,7 @@ class EntityFieldQuery {
    *   dependent on $operator.
    * @param $operator
    *   Possible values:
-   *   - '=', '!=', '>', '>=', '<', '<=', 'STARTS_WITH', 'CONTAINS': These
+   *   - '=', '<>', '>', '>=', '<', '<=', 'STARTS_WITH', 'CONTAINS': These
    *     operators expect $value to be a literal of the same type as the
    *     column.
    *   - 'IN', 'NOT IN': These operators expect $value to be an array of
@@ -620,6 +620,11 @@ class EntityFieldQuery {
    *   The called object.
    */
   public function entityCondition($name, $value, $operator = NULL) {
+    // The '!=' operator is deprecated in favour of the '<>' operator since the
+    // latter is ANSI SQL compatible.
+    if ($operator == '!=') {
+      $operator = '<>';
+    }
     $this->entityConditions[$name] = array(
       'value' => $value,
       'operator' => $operator,
@@ -724,7 +729,7 @@ class EntityFieldQuery {
    *   element in the array is dependent on $operator.
    * @param $operator
    *   Possible values:
-   *   - '=', '!=', '>', '>=', '<', '<=', 'STARTS_WITH', 'CONTAINS': These
+   *   - '=', '<>', '>', '>=', '<', '<=', 'STARTS_WITH', 'CONTAINS': These
    *     operators expect $value to be a literal of the same type as the
    *     column.
    *   - 'IN', 'NOT IN': These operators expect $value to be an array of
@@ -751,6 +756,11 @@ class EntityFieldQuery {
    *   The called object.
    */
   protected function addFieldCondition(&$conditions, $field, $column = NULL, $value = NULL, $operator = NULL, $delta_group = NULL, $language_group = NULL) {
+    // The '!=' operator is deprecated in favour of the '<>' operator since the
+    // latter is ANSI SQL compatible.
+    if ($operator == '!=') {
+      $operator = '<>';
+    }
     if (is_scalar($field)) {
       $field_definition = field_info_field($field);
       if (empty($field_definition)) {
@@ -791,7 +801,7 @@ class EntityFieldQuery {
    *   array is dependent on $operator.
    * @param $operator
    *   Possible values:
-   *   - '=', '!=', '>', '>=', '<', '<=', 'STARTS_WITH', 'CONTAINS': These
+   *   - '=', '<>', '>', '>=', '<', '<=', 'STARTS_WITH', 'CONTAINS': These
    *     operators expect $value to be a literal of the same type as the
    *     column.
    *   - 'IN', 'NOT IN': These operators expect $value to be an array of
@@ -805,6 +815,11 @@ class EntityFieldQuery {
    *   The called object.
    */
   public function propertyCondition($column, $value, $operator = NULL) {
+    // The '!=' operator is deprecated in favour of the '<>' operator since the
+    // latter is ANSI SQL compatible.
+    if ($operator == '!=') {
+      $operator = '<>';
+    }
     $this->propertyConditions[] = array(
       'column' => $column,
       'value' => $value,

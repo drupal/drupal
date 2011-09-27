@@ -722,6 +722,31 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
     $query = new EntityFieldQuery();
     $query
       ->entityCondition('entity_type', 'test_entity_bundle_key')
+      ->propertyCondition('ftid', 3, '<>');
+    $this->assertEntityFieldQuery($query, array(
+      array('test_entity_bundle_key', 1),
+      array('test_entity_bundle_key', 2),
+      array('test_entity_bundle_key', 4),
+      array('test_entity_bundle_key', 5),
+      array('test_entity_bundle_key', 6),
+    ), t('Test the "not equal to" operation on a property.'));
+
+    $query = new EntityFieldQuery();
+    $query->fieldCondition($this->fields[0], 'value', 3, '<>');
+    $this->assertEntityFieldQuery($query, array(
+      array('test_entity_bundle_key', 1),
+      array('test_entity_bundle_key', 2),
+      array('test_entity_bundle_key', 4),
+      array('test_entity_bundle_key', 5),
+      array('test_entity_bundle_key', 6),
+      array('test_entity', 1),
+      array('test_entity', 2),
+      array('test_entity', 4),
+    ), t('Test the "not equal to" operation on a field.'));
+
+    $query = new EntityFieldQuery();
+    $query
+      ->entityCondition('entity_type', 'test_entity_bundle_key')
       ->propertyCondition('ftid', 3, '!=');
     $this->assertEntityFieldQuery($query, array(
       array('test_entity_bundle_key', 1),
@@ -1088,6 +1113,15 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
     $query = new EntityFieldQuery();
     $query
       ->entityCondition('entity_type', 'test_entity', '=')
+      ->fieldLanguageCondition($this->fields[0], LANGUAGE_NONE, '<>');
+    $this->assertEntityFieldQuery($query, array(
+      array('test_entity', 1),
+    ), t('Test with a language meta condition.'));
+
+    // Test language field meta condition.
+    $query = new EntityFieldQuery();
+    $query
+      ->entityCondition('entity_type', 'test_entity', '=')
       ->fieldLanguageCondition($this->fields[0], LANGUAGE_NONE, '!=');
     $this->assertEntityFieldQuery($query, array(
       array('test_entity', 1),
@@ -1115,6 +1149,16 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
     $query
       ->entityCondition('entity_type', 'test_entity', '=')
       ->fieldCondition($this->fields[0], 'value', 0, '=', NULL, 'group')
+      ->fieldLanguageCondition($this->fields[0], 'en', '<>', NULL, 'group');
+    $this->assertEntityFieldQuery($query, array(
+      array('test_entity', 1),
+    ), t('Test with a grouped language meta condition.'));
+
+    // Test language grouping.
+    $query = new EntityFieldQuery();
+    $query
+      ->entityCondition('entity_type', 'test_entity', '=')
+      ->fieldCondition($this->fields[0], 'value', 0, '=', NULL, 'group')
       ->fieldLanguageCondition($this->fields[0], 'en', '!=', NULL, 'group');
     $this->assertEntityFieldQuery($query, array(
       array('test_entity', 1),
@@ -1124,8 +1168,26 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
     $query
       ->entityCondition('entity_type', 'test_entity', '=')
       ->fieldCondition($this->fields[0], 'value', 0, '=', NULL, 'group')
+      ->fieldLanguageCondition($this->fields[0], LANGUAGE_NONE, '<>', NULL, 'group');
+    $this->assertEntityFieldQuery($query, array(), t('Test with a grouped language meta condition (empty result set).'));
+
+    $query = new EntityFieldQuery();
+    $query
+      ->entityCondition('entity_type', 'test_entity', '=')
+      ->fieldCondition($this->fields[0], 'value', 0, '=', NULL, 'group')
       ->fieldLanguageCondition($this->fields[0], LANGUAGE_NONE, '!=', NULL, 'group');
     $this->assertEntityFieldQuery($query, array(), t('Test with a grouped language meta condition (empty result set).'));
+
+    // Test delta and language grouping.
+    $query = new EntityFieldQuery();
+    $query
+      ->entityCondition('entity_type', 'test_entity', '=')
+      ->fieldCondition($this->fields[0], 'value', 0, '=', 'delta', 'language')
+      ->fieldDeltaCondition($this->fields[0], 1, '<', 'delta', 'language')
+      ->fieldLanguageCondition($this->fields[0], 'en', '<>', 'delta', 'language');
+    $this->assertEntityFieldQuery($query, array(
+      array('test_entity', 1),
+    ), t('Test with a grouped delta + language meta condition.'));
 
     // Test delta and language grouping.
     $query = new EntityFieldQuery();
@@ -1143,6 +1205,14 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
       ->entityCondition('entity_type', 'test_entity', '=')
       ->fieldCondition($this->fields[0], 'value', 0, '=', 'delta', 'language')
       ->fieldDeltaCondition($this->fields[0], 1, '>=', 'delta', 'language')
+      ->fieldLanguageCondition($this->fields[0], 'en', '<>', 'delta', 'language');
+    $this->assertEntityFieldQuery($query, array(), t('Test with a grouped delta + language meta condition (empty result set, delta condition unsatisifed).'));
+
+    $query = new EntityFieldQuery();
+    $query
+      ->entityCondition('entity_type', 'test_entity', '=')
+      ->fieldCondition($this->fields[0], 'value', 0, '=', 'delta', 'language')
+      ->fieldDeltaCondition($this->fields[0], 1, '>=', 'delta', 'language')
       ->fieldLanguageCondition($this->fields[0], 'en', '!=', 'delta', 'language');
     $this->assertEntityFieldQuery($query, array(), t('Test with a grouped delta + language meta condition (empty result set, delta condition unsatisifed).'));
 
@@ -1151,8 +1221,24 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
       ->entityCondition('entity_type', 'test_entity', '=')
       ->fieldCondition($this->fields[0], 'value', 0, '=', 'delta', 'language')
       ->fieldDeltaCondition($this->fields[0], 1, '<', 'delta', 'language')
+      ->fieldLanguageCondition($this->fields[0], LANGUAGE_NONE, '<>', 'delta', 'language');
+    $this->assertEntityFieldQuery($query, array(), t('Test with a grouped delta + language meta condition (empty result set, language condition unsatisifed).'));
+
+    $query = new EntityFieldQuery();
+    $query
+      ->entityCondition('entity_type', 'test_entity', '=')
+      ->fieldCondition($this->fields[0], 'value', 0, '=', 'delta', 'language')
+      ->fieldDeltaCondition($this->fields[0], 1, '<', 'delta', 'language')
       ->fieldLanguageCondition($this->fields[0], LANGUAGE_NONE, '!=', 'delta', 'language');
     $this->assertEntityFieldQuery($query, array(), t('Test with a grouped delta + language meta condition (empty result set, language condition unsatisifed).'));
+
+    $query = new EntityFieldQuery();
+    $query
+      ->entityCondition('entity_type', 'test_entity', '=')
+      ->fieldCondition($this->fields[0], 'value', 0, '=', 'delta', 'language')
+      ->fieldDeltaCondition($this->fields[0], 1, '>=', 'delta', 'language')
+      ->fieldLanguageCondition($this->fields[0], LANGUAGE_NONE, '<>', 'delta', 'language');
+    $this->assertEntityFieldQuery($query, array(), t('Test with a grouped delta + language meta condition (empty result set, both conditions unsatisifed).'));
 
     $query = new EntityFieldQuery();
     $query
