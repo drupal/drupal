@@ -2682,11 +2682,13 @@ function hook_query_TAG_alter(QueryAlterableInterface $query) {
  * If the module implements hook_schema(), the database tables will
  * be created before this hook is fired.
  *
- * This hook will only be called the first time a module is enabled or after it
- * is re-enabled after being uninstalled. The module's schema version will be
- * set to the module's greatest numbered update hook. Because of this, anytime a
- * hook_update_N() is added to the module, this function needs to be updated to
- * reflect the current version of the database schema.
+ * Implementations of this hook are by convention declared in the module's
+ * .install file. The hook will only be called the first time a module is
+ * enabled or after it is re-enabled after being uninstalled. The module's
+ * schema version will be set to the module's greatest numbered update hook.
+ * Because of this, any time a hook_update_N() is added to the module, this
+ * function needs to be updated to reflect the current version of the database
+ * schema.
  *
  * See the Schema API documentation at
  * @link http://drupal.org/node/146843 http://drupal.org/node/146843 @endlink
@@ -2912,9 +2914,10 @@ function hook_update_last_removed() {
  * The module should not remove its entry from the {system} table. Database
  * tables defined by hook_schema() will be removed automatically.
  *
- * The uninstall hook will fire when the module gets uninstalled but before the
- * module's database tables are removed, allowing your module to query its own
- * tables during this routine.
+ * The uninstall hook must be implemented in the module's .install file. It
+ * will fire when the module gets uninstalled but before the module's database
+ * tables are removed, allowing your module to query its own tables during
+ * this routine.
  *
  * When hook_uninstall() is called, your module will already be disabled, so
  * its .module file will not be automatically included. If you need to call API
