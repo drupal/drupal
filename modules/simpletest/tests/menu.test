@@ -5,6 +5,122 @@
  * Provides SimpleTests for menu.inc.
  */
 
+class MenuWebTestCase extends DrupalWebTestCase {
+  function setUp() {
+    $modules = func_get_args();
+    if (isset($modules[0]) && is_array($modules[0])) {
+      $modules = $modules[0];
+    }
+    parent::setUp($modules);
+  }
+
+  /**
+   * Assert that a given path shows certain breadcrumb links.
+   *
+   * @param string $goto
+   *   (optional) A system path to pass to DrupalWebTestCase::drupalGet().
+   * @param array $trail
+   *   An associative array whose keys are expected breadcrumb link paths and
+   *   whose values are expected breadcrumb link texts (not sanitized).
+   * @param string $page_title
+   *   (optional) A page title to additionally assert via
+   *   DrupalWebTestCase::assertTitle(). Without site name suffix.
+   * @param array $tree
+   *   (optional) An associative array whose keys are link paths and whose
+   *   values are link titles (not sanitized) of an expected active trail in a
+   *   menu tree output on the page.
+   * @param $last_active
+   *   (optional) Whether the last link in $tree is expected to be active (TRUE)
+   *   or just to be in the active trail (FALSE).
+   */
+  protected function assertBreadcrumb($goto, array $trail, $page_title = NULL, array $tree = array(), $last_active = TRUE) {
+    if (isset($goto)) {
+      $this->drupalGet($goto);
+    }
+    // Compare paths with actual breadcrumb.
+    $parts = $this->getParts();
+    $pass = TRUE;
+    foreach ($trail as $path => $title) {
+      $url = url($path);
+      $part = array_shift($parts);
+      $pass = ($pass && $part['href'] === $url && $part['text'] === check_plain($title));
+    }
+    // No parts must be left, or an expected "Home" will always pass.
+    $pass = ($pass && empty($parts));
+
+    $this->assertTrue($pass, t('Breadcrumb %parts found on @path.', array(
+      '%parts' => implode(' » ', $trail),
+      '@path' => $this->getUrl(),
+    )));
+
+    // Additionally assert page title, if given.
+    if (isset($page_title)) {
+      $this->assertTitle(strtr('@title | Drupal', array('@title' => $page_title)));
+    }
+
+    // Additionally assert active trail in a menu tree output, if given.
+    if ($tree) {
+      end($tree);
+      $active_link_path = key($tree);
+      $active_link_title = array_pop($tree);
+      $xpath = '';
+      if ($tree) {
+        $i = 0;
+        foreach ($tree as $link_path => $link_title) {
+          $part_xpath = (!$i ? '//' : '/following-sibling::ul/descendant::');
+          $part_xpath .= 'li[contains(@class, :class)]/a[contains(@href, :href) and contains(text(), :title)]';
+          $part_args = array(
+            ':class' => 'active-trail',
+            ':href' => url($link_path),
+            ':title' => $link_title,
+          );
+          $xpath .= $this->buildXPathQuery($part_xpath, $part_args);
+          $i++;
+        }
+        $elements = $this->xpath($xpath);
+        $this->assertTrue(!empty($elements), t('Active trail to current page was found in menu tree.'));
+
+        // Append prefix for active link asserted below.
+        $xpath .= '/following-sibling::ul/descendant::';
+      }
+      else {
+        $xpath .= '//';
+      }
+      $xpath_last_active = ($last_active ? 'and contains(@class, :class-active)' : '');
+      $xpath .= 'li[contains(@class, :class-trail)]/a[contains(@href, :href) ' . $xpath_last_active . 'and contains(text(), :title)]';
+      $args = array(
+        ':class-trail' => 'active-trail',
+        ':class-active' => 'active',
+        ':href' => url($active_link_path),
+        ':title' => $active_link_title,
+      );
+      $elements = $this->xpath($xpath, $args);
+      $this->assertTrue(!empty($elements), t('Active link %title was found in menu tree, including active trail links %tree.', array(
+        '%title' => $active_link_title,
+        '%tree' => implode(' » ', $tree),
+      )));
+    }
+  }
+
+  /**
+   * Returns the breadcrumb contents of the current page in the internal browser.
+   */
+  protected function getParts() {
+    $parts = array();
+    $elements = $this->xpath('//div[@class="breadcrumb"]/a');
+    if (!empty($elements)) {
+      foreach ($elements as $element) {
+        $parts[] = array(
+          'text' => (string) $element,
+          'href' => (string) $element['href'],
+          'title' => (string) $element['title'],
+        );
+      }
+    }
+    return $parts;
+  }
+}
+
 class MenuRouterTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
@@ -872,7 +988,7 @@ class MenuTreeOutputTestCase extends DrupalWebTestCase {
       'group' => 'Menu',
     );
   }
-  
+
   function setUp() {
     parent::setUp();
   }
@@ -900,7 +1016,7 @@ class MenuTreeOutputTestCase extends DrupalWebTestCase {
 /**
  * Menu breadcrumbs related tests.
  */
-class MenuBreadcrumbTestCase extends DrupalWebTestCase {
+class MenuBreadcrumbTestCase extends MenuWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Breadcrumbs',
@@ -910,7 +1026,12 @@ class MenuBreadcrumbTestCase extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp(array('menu_test'));
+    $modules = func_get_args();
+    if (isset($modules[0]) && is_array($modules[0])) {
+      $modules = $modules[0];
+    }
+    $modules[] = 'menu_test';
+    parent::setUp($modules);
     $perms = array_keys(module_invoke_all('permission'));
     $this->admin_user = $this->drupalCreateUser($perms);
     $this->drupalLogin($this->admin_user);
@@ -1385,110 +1506,117 @@ class MenuBreadcrumbTestCase extends DrupalWebTestCase {
     $this->assertBreadcrumb('admin/reports/dblog', $trail, t('Recent log messages'));
     $this->assertNoResponse(403);
   }
+}
 
-  /**
-   * Assert that a given path shows certain breadcrumb links.
-   *
-   * @param string $goto
-   *   (optional) A system path to pass to DrupalWebTestCase::drupalGet().
-   * @param array $trail
-   *   An associative array whose keys are expected breadcrumb link paths and
-   *   whose values are expected breadcrumb link texts (not sanitized).
-   * @param string $page_title
-   *   (optional) A page title to additionally assert via
-   *   DrupalWebTestCase::assertTitle(). Without site name suffix.
-   * @param array $tree
-   *   (optional) An associative array whose keys are link paths and whose
-   *   values are link titles (not sanitized) of an expected active trail in a
-   *   menu tree output on the page.
-   * @param $last_active
-   *   (optional) Whether the last link in $tree is expected to be active (TRUE)
-   *   or just to be in the active trail (FALSE).
-   */
-  protected function assertBreadcrumb($goto, array $trail, $page_title = NULL, array $tree = array(), $last_active = TRUE) {
-    if (isset($goto)) {
-      $this->drupalGet($goto);
+/**
+ * Tests active menu trails.
+ */
+class MenuTrailTestCase extends MenuWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Active trail',
+      'description' => 'Tests active menu trails and alteration functionality.',
+      'group' => 'Menu',
+    );
+  }
+
+  function setUp() {
+    $modules = func_get_args();
+    if (isset($modules[0]) && is_array($modules[0])) {
+      $modules = $modules[0];
     }
-    // Compare paths with actual breadcrumb.
-    $parts = $this->getParts();
-    $pass = TRUE;
-    foreach ($trail as $path => $title) {
-      $url = url($path);
-      $part = array_shift($parts);
-      $pass = ($pass && $part['href'] === $url && $part['text'] === check_plain($title));
-    }
-    // No parts must be left, or an expected "Home" will always pass.
-    $pass = ($pass && empty($parts));
+    $modules[] = 'menu_test';
+    parent::setUp($modules);
+    $this->admin_user = $this->drupalCreateUser(array('administer site configuration', 'access administration pages'));
+    $this->drupalLogin($this->admin_user);
 
-    $this->assertTrue($pass, t('Breadcrumb %parts found on @path.', array(
-      '%parts' => implode(' » ', $trail),
-      '@path' => $this->getUrl(),
-    )));
+    // This test puts menu links in the Navigation menu and then tests for
+    // their presence on the page, so we need to ensure that the Navigation
+    // block will be displayed in all active themes.
+    db_update('block')
+      ->fields(array(
+        // Use a region that is valid for all themes.
+        'region' => 'content',
+        'status' => 1,
+      ))
+      ->condition('module', 'system')
+      ->condition('delta', 'navigation')
+      ->execute();
 
-    // Additionally assert page title, if given.
-    if (isset($page_title)) {
-      $this->assertTitle(strtr('@title | Drupal', array('@title' => $page_title)));
-    }
-
-    // Additionally assert active trail in a menu tree output, if given.
-    if ($tree) {
-      end($tree);
-      $active_link_path = key($tree);
-      $active_link_title = array_pop($tree);
-      $xpath = '';
-      if ($tree) {
-        $i = 0;
-        foreach ($tree as $link_path => $link_title) {
-          $part_xpath = (!$i ? '//' : '/following-sibling::ul/descendant::');
-          $part_xpath .= 'li[contains(@class, :class)]/a[contains(@href, :href) and contains(text(), :title)]';
-          $part_args = array(
-            ':class' => 'active-trail',
-            ':href' => url($link_path),
-            ':title' => $link_title,
-          );
-          $xpath .= $this->buildXPathQuery($part_xpath, $part_args);
-          $i++;
-        }
-        $elements = $this->xpath($xpath);
-        $this->assertTrue(!empty($elements), t('Active trail to current page was found in menu tree.'));
-
-        // Append prefix for active link asserted below.
-        $xpath .= '/following-sibling::ul/descendant::';
-      }
-      else {
-        $xpath .= '//';
-      }
-      $xpath_last_active = ($last_active ? 'and contains(@class, :class-active)' : '');
-      $xpath .= 'li[contains(@class, :class-trail)]/a[contains(@href, :href) ' . $xpath_last_active . 'and contains(text(), :title)]';
-      $args = array(
-        ':class-trail' => 'active-trail',
-        ':class-active' => 'active',
-        ':href' => url($active_link_path),
-        ':title' => $active_link_title,
-      );
-      $elements = $this->xpath($xpath, $args);
-      $this->assertTrue(!empty($elements), t('Active link %title was found in menu tree, including active trail links %tree.', array(
-        '%title' => $active_link_title,
-        '%tree' => implode(' » ', $tree),
-      )));
-    }
+    // This test puts menu links in the Management menu and then tests for
+    // their presence on the page, so we need to ensure that the Management
+    // block will be displayed in all active themes.
+    db_update('block')
+      ->fields(array(
+        // Use a region that is valid for all themes.
+        'region' => 'content',
+        'status' => 1,
+      ))
+      ->condition('module', 'system')
+      ->condition('delta', 'management')
+      ->execute();
   }
 
   /**
-   * Returns the breadcrumb contents of the current page in the internal browser.
+   * Tests active trails are properly affected by menu_tree_set_path().
    */
-  protected function getParts() {
-    $parts = array();
-    $elements = $this->xpath('//div[@class="breadcrumb"]/a');
-    if (!empty($elements)) {
-      foreach ($elements as $element) {
-        $parts[] = array(
-          'text' => (string) $element,
-          'href' => (string) $element['href'],
-          'title' => (string) $element['title'],
-        );
-      }
-    }
-    return $parts;
+  function testMenuTreeSetPath() {
+    $home = array('<front>' => 'Home');
+    $config_tree = array(
+      'admin' => t('Administration'),
+      'admin/config' => t('Configuration'),
+    );
+    $config = $home + $config_tree;
+
+    // The menu_test_menu_tree_set_path system variable controls whether or not
+    // the menu_test_menu_trail_callback() callback (used by all paths in these
+    // tests) issues an overriding call to menu_trail_set_path().
+    $test_menu_path = array(
+      'menu_name' => 'management',
+      'path' => 'admin/config/system/site-information',
+    );
+
+    $breadcrumb = $home + array(
+      'menu-test' => t('Menu test root'),
+    );
+    $tree = array(
+      'menu-test' => t('Menu test root'),
+      'menu-test/menu-trail' => t('Menu trail - Case 1'),
+    );
+
+    // Test the tree generation for the Navigation menu.
+    variable_del('menu_test_menu_tree_set_path');
+    $this->assertBreadcrumb('menu-test/menu-trail', $breadcrumb, t('Menu trail - Case 1'), $tree);
+
+    // Override the active trail for the Management tree; it should not affect
+    // the Navigation tree.
+    variable_set('menu_test_menu_tree_set_path', $test_menu_path);
+    $this->assertBreadcrumb('menu-test/menu-trail', $breadcrumb, t('Menu trail - Case 1'), $tree);
+
+    $breadcrumb = $config + array(
+      'admin/config/development' => t('Development'),
+    );
+    $tree = $config_tree + array(
+      'admin/config/development' => t('Development'),
+      'admin/config/development/menu-trail' => t('Menu trail - Case 2'),
+    );
+
+    $override_breadcrumb = $config + array(
+      'admin/config/system' => t('System'),
+      'admin/config/system/site-information' => t('Site information'),
+    );
+    $override_tree = $config_tree + array(
+      'admin/config/system' => t('System'),
+      'admin/config/system/site-information' => t('Site information'),
+    );
+
+    // Test the tree generation for the Management menu.
+    variable_del('menu_test_menu_tree_set_path');
+    $this->assertBreadcrumb('admin/config/development/menu-trail', $breadcrumb, t('Menu trail - Case 2'), $tree);
+
+    // Override the active trail for the Management tree; it should affect the
+    // breadcrumbs and Management tree.
+    variable_set('menu_test_menu_tree_set_path', $test_menu_path);
+    $this->assertBreadcrumb('admin/config/development/menu-trail', $override_breadcrumb, t('Menu trail - Case 2'), $override_tree);
   }
 }
