@@ -1073,7 +1073,7 @@ function node_save($node) {
         $node->log = '';
       }
     }
-    elseif (empty($node->log)) {
+    elseif (!isset($node->log) || $node->log === '') {
       // If we are updating an existing node without adding a new revision, we
       // need to make sure $node->log is unset whenever it is empty. As long as
       // $node->log is unset, drupal_write_record() will not attempt to update
