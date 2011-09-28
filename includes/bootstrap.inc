@@ -549,6 +549,30 @@ function conf_path($require_settings = TRUE, $reset = FALSE) {
     return $conf;
   }
 
+  $script_name = $_SERVER['SCRIPT_NAME'];
+  if (!$script_name) {
+    $script_name = $_SERVER['SCRIPT_FILENAME'];
+  }
+  $http_host = $_SERVER['HTTP_HOST'];
+  $conf = find_conf_path($script_name, $http_host, $require_settings);
+  return $conf;
+}
+
+/**
+ * Finds the appropriate configuration directory for a given host and path.
+ *
+ * @param $http_host
+ *   The hostname and optional port number, e.g. "www.example.com" or
+ *   "www.example.com:8080".
+ * @param $script_name
+ *   The part of the url following the hostname, including the leading slash.
+ *
+ * @return
+ *   The path of the matching configuration directory.
+ *
+ * @see conf_path()
+ */
+function find_conf_path($http_host, $script_name, $require_settings = TRUE) {
   $confdir = 'sites';
 
   $sites = array();
@@ -557,8 +581,8 @@ function conf_path($require_settings = TRUE, $reset = FALSE) {
     include(DRUPAL_ROOT . '/' . $confdir . '/sites.php');
   }
 
-  $uri = explode('/', $_SERVER['SCRIPT_NAME'] ? $_SERVER['SCRIPT_NAME'] : $_SERVER['SCRIPT_FILENAME']);
-  $server = explode('.', implode('.', array_reverse(explode(':', rtrim($_SERVER['HTTP_HOST'], '.')))));
+  $uri = explode('/', $script_name);
+  $server = explode('.', implode('.', array_reverse(explode(':', rtrim($http_host, '.')))));
   for ($i = count($uri) - 1; $i > 0; $i--) {
     for ($j = count($server); $j > 0; $j--) {
       $dir = implode('.', array_slice($server, -$j)) . implode('.', array_slice($uri, 0, $i));
