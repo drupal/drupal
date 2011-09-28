@@ -179,7 +179,7 @@ function statistics_menu() {
     'weight' => -15,
   );
   $items['user/%user/track/navigation'] = array(
-    'title' => 'Track page visits',
+    'title' => 'Page visits',
     'page callback' => 'statistics_user_tracker',
     'access callback' => 'user_access',
     'access arguments' => array('access statistics'),
