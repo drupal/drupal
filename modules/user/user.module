@@ -2739,6 +2739,17 @@ function user_mail_tokens(&$replacements, $data, $options) {
  *   value.
  */
 function user_roles($membersonly = FALSE, $permission = NULL) {
+  $user_roles = &drupal_static(__FUNCTION__);
+
+  // Do not cache roles for specific permissions. This data is not requested
+  // frequently enough to justify the additional memory use.
+  if (empty($permission)) {
+    $cid = $membersonly ? DRUPAL_AUTHENTICATED_RID : DRUPAL_ANONYMOUS_RID;
+    if (isset($user_roles[$cid])) {
+      return $user_roles[$cid];
+    }
+  }
+
   $query = db_select('role', 'r');
   $query->addTag('translatable');
   $query->fields('r', array('rid', 'name'));
@@ -2765,6 +2776,11 @@ function user_roles($membersonly = FALSE, $permission = NULL) {
       default:
         $roles[$role->rid] = $role->name;
     }
+  }
+
+  if (empty($permission)) {
+    $user_roles[$cid] = $roles;
+    return $user_roles[$cid];
   }
 
   return $roles;
