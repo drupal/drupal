@@ -49,21 +49,23 @@ function _drupal_session_close() {
 }
 
 /**
- * Session handler assigned by session_set_save_handler().
+ * Reads an entire session from the database (internal use only).
  *
- * This function will be called by PHP to retrieve the current user's
- * session data, which is stored in the database. It also loads the
- * current user's appropriate roles into the user object.
+ * Also initializes the $user object for the user associated with the session.
+ * This function is registered with session_set_save_handler() to support
+ * database-backed sessions. It is called on every page load when PHP sets
+ * up the $_SESSION superglobal.
  *
- * This function should not be called directly. Session data should
- * instead be accessed via the $_SESSION superglobal.
+ * This function is an internal function and must not be called directly.
+ * Doing so may result in logging out the current user, corrupting session data
+ * or other unexpected behavior. Session data must always be accessed via the
+ * $_SESSION superglobal.
  *
  * @param $sid
- *   Session ID.
+ *   The session ID of the session to retrieve.
  *
  * @return
- *   Either an array of the session data, or an empty string, if no data
- *   was found or the user is anonymous.
+ *   The user's session, or an empty string if no session exists.
  */
 function _drupal_session_read($sid) {
   global $user, $is_https;
@@ -136,21 +138,22 @@ function _drupal_session_read($sid) {
 }
 
 /**
- * Session handler assigned by session_set_save_handler().
+ * Writes an entire session to the database (internal use only).
  *
- * This function will be called by PHP to store the current user's
- * session, which Drupal saves to the database.
+ * This function is registered with session_set_save_handler() to support
+ * database-backed sessions.
  *
- * This function should not be called directly. Session data should
- * instead be accessed via the $_SESSION superglobal.
+ * This function is an internal function and must not be called directly.
+ * Doing so may result in corrupted session data or other unexpected behavior.
+ * Session data must always be accessed via the $_SESSION superglobal.
  *
  * @param $sid
- *   Session ID.
+ *   The session ID of the session to write to.
  * @param $value
- *   Serialized array of the session data.
+ *   Session data to write as a serialized string.
  *
  * @return
- *   This function will always return TRUE.
+ *   Always returns TRUE.
  */
 function _drupal_session_write($sid, $value) {
   global $user, $is_https;
