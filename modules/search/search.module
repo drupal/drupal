@@ -101,10 +101,6 @@ function search_help($path, $arg) {
  */
 function search_theme() {
   return array(
-    'search_block_form' => array(
-      'render element' => 'form',
-      'template' => 'search-block-form',
-    ),
     'search_result' => array(
       'variables' => array('result' => NULL, 'module' => NULL),
       'file' => 'search.pages.inc',
@@ -151,8 +147,18 @@ function search_block_info() {
  */
 function search_block_view($delta = '') {
   if (user_access('search content')) {
+    $block['subject'] = t('Search');
     $block['content'] = drupal_get_form('search_block_form');
     return $block;
+  }
+}
+
+/**
+ * Implements hook_preprocess_block().
+ */
+function search_preprocess_block(&$variables) {
+  if ($variables['block']->module == 'search' && $variables['block']->delta == 'form') {
+    $variables['content_attributes_array']['class'][] = 'container-inline';
   }
 }
 
@@ -1052,33 +1058,6 @@ function search_box_form_submit($form, &$form_state) {
   else {
     form_set_error(NULL, t('Search is currently disabled.'), 'error');
   }
-}
-
-/**
- * Process variables for search-block-form.tpl.php.
- *
- * The $variables array contains the following arguments:
- * - $form
- *
- * @see search-block-form.tpl.php
- */
-function template_preprocess_search_block_form(&$variables) {
-  $variables['search'] = array();
-  $hidden = array();
-  // Provide variables named after form keys so themers can print each element independently.
-  foreach (element_children($variables['form']) as $key) {
-    $type = $variables['form'][$key]['#type'];
-    if ($type == 'hidden' || $type == 'token') {
-      $hidden[] = drupal_render($variables['form'][$key]);
-    }
-    else {
-      $variables['search'][$key] = drupal_render($variables['form'][$key]);
-    }
-  }
-  // Hidden form elements have no value to themers. No need for separation.
-  $variables['search']['hidden'] = implode($hidden);
-  // Collect all form elements to make it easier to print the whole form.
-  $variables['search_form'] = implode($variables['search']);
 }
 
 /**
