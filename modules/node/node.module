@@ -272,10 +272,10 @@ function node_admin_paths() {
  * Gathers a listing of links to nodes.
  *
  * @param $result
- *   A DB result object from a query to fetch node entities. If your query
- *   joins the <code>node_comment_statistics</code> table so that the
- *   <code>comment_count</code> field is available, a title attribute will
- *   be added to show the number of comments.
+ *   A database result object from a query to fetch node entities. If your
+ *   query joins the {node_comment_statistics} table so that the comment_count
+ *   field is available, a title attribute will be added to show the number of
+ *   comments.
  * @param $title
  *   A heading for the resulting list.
  *
