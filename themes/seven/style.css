@@ -100,7 +100,6 @@ acronym {
 }
 ul,
 .block ul,
-.item-list ul,
 .item-list ul {
   list-style-type: disc;
   list-style-image: none;
@@ -599,10 +598,8 @@ div.teaser-checkbox .form-item,
   padding: 0;
 }
 .form-item label.option {
-  text-transform: none;
-}
-.form-item label.option {
   font-size: 0.923em;
+  text-transform: none;
 }
 .form-item label.option input {
   vertical-align: middle;
