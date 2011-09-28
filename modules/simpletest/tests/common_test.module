@@ -52,6 +52,12 @@ function common_test_menu() {
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
+  $items['common-test/drupal-render-invalid-keys'] = array(
+    'title' => 'Drupal Render',
+    'page callback' => 'common_test_drupal_render_invalid_keys',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
   return $items;
 }
 
@@ -98,6 +104,22 @@ function common_test_drupal_goto_alter(&$path, &$options, &$http_response_code) 
 function common_test_destination() {
   $destination = drupal_get_destination();
   print "The destination: " . check_plain($destination['destination']);
+}
+
+/**
+ * Render an element with an invalid render array key.
+ */
+function common_test_drupal_render_invalid_keys() {
+  define('SIMPLETEST_COLLECT_ERRORS', FALSE);
+
+  // Keys that begin with # may contain a value of any type, otherwise they must
+  // contain arrays.
+  $key = 'child';
+  $value = 'This should be an array.';
+  $element = array(
+    $key => $value,
+  );
+  return drupal_render($element);
 }
 
 /**

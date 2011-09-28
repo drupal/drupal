@@ -6145,9 +6145,16 @@ function element_children(&$elements, $sort = FALSE) {
   $sortable = FALSE;
   foreach ($elements as $key => $value) {
     if ($key === '' || $key[0] !== '#') {
-      $children[$key] = $value;
-      if (is_array($value) && isset($value['#weight'])) {
-        $sortable = TRUE;
+      if (is_array($value)) {
+        $children[$key] = $value;
+        if (isset($value['#weight'])) {
+          $sortable = TRUE;
+        }
+      }
+      // Only trigger an error if the value is not null.
+      // @see http://drupal.org/node/1283892
+      elseif (isset($value)) {
+        trigger_error(t('"@key" is an invalid render array key', array('@key' => $key)), E_USER_ERROR);
       }
     }
   }

@@ -158,7 +158,7 @@ function menu_overview_form_submit($form, &$form_state) {
   // are sent by $_POST, ensuring parents are saved first, then their children.
   // See http://drupal.org/node/181126#comment-632270
   $order = array_flip(array_keys($form_state['input'])); // Get the $_POST order.
-  $form = array_merge($order, $form); // Update our original form with the new order.
+  $form = array_intersect_key(array_merge($order, $form), $form); // Update our original form with the new order.
 
   $updated_items = array();
   $fields = array('weight', 'plid');
