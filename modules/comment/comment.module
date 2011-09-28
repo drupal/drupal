@@ -118,6 +118,9 @@ function comment_entity_info() {
   foreach (node_type_get_names() as $type => $name) {
     $return['comment']['bundles']['comment_node_' . $type] = array(
       'label' => t('@node_type comment', array('@node_type' => $name)),
+      // Provide the node type/bundle name for other modules, so it does not
+      // have to be extracted manually from the bundle name.
+      'node bundle' => $type,
       'admin' => array(
         // Place the Field UI paths for comments one level below the
         // corresponding paths for nodes, so that they appear in the same set
