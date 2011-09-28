@@ -119,60 +119,35 @@ function theme_locale_languages_overview_form($variables) {
  */
 function locale_languages_overview_form_submit($form, &$form_state) {
   $languages = language_list();
-  $default = language_default();
+  $old_default = language_default();
   $url_prefixes = variable_get('locale_language_negotiation_url_part', LOCALE_LANGUAGE_NEGOTIATION_URL_PREFIX) == LOCALE_LANGUAGE_NEGOTIATION_URL_PREFIX;
-  $enabled_count = 0;
 
   foreach ($languages as $langcode => $language) {
-    if ($form_state['values']['site_default'] == $langcode || $default->language == $langcode) {
+    $language->default = ($form_state['values']['site_default'] == $langcode);
+    $language->weight = $form_state['values']['weight'][$langcode];
+
+    if ($language->default || $old_default->language == $langcode) {
       // Automatically enable the default language and the language
       // which was default previously (because we will not get the
       // value from that disabled checkbox).
       $form_state['values']['enabled'][$langcode] = 1;
     }
+    $language->enabled = (int) !empty($form_state['values']['enabled'][$langcode]);
 
     // If language URL prefixes are enabled we must clear language domains and
     // assign a valid prefix to each non-default language.
     if ($url_prefixes) {
       $language->domain = '';
-      if (empty($language->prefix) && $form_state['values']['site_default'] != $langcode) {
+      if (empty($language->prefix) && !$language->default) {
         $language->prefix = $langcode;
       }
     }
 
-    if ($form_state['values']['enabled'][$langcode]) {
-      $enabled_count++;
-      $language->enabled = 1;
-    }
-    else {
-      $language->enabled = 0;
-    }
-
-    $language->weight = $form_state['values']['weight'][$langcode];
-
-    db_update('languages')
-      ->fields(array(
-        'enabled' => $language->enabled,
-        'weight' => $language->weight,
-        'prefix' => $language->prefix,
-        'domain' => $language->domain,
-      ))
-      ->condition('language', $langcode)
-      ->execute();
-
-    $languages[$langcode] = $language;
+    locale_language_save($language);
   }
 
-  variable_set('language_default', $languages[$form_state['values']['site_default']]);
-  variable_set('language_count', $enabled_count);
   drupal_set_message(t('Configuration saved.'));
-
-  // Changing the language settings impacts the interface.
-  cache('page')->flush();
-  module_invoke_all('multilingual_settings_changed');
-
   $form_state['redirect'] = 'admin/config/regional/language';
-  return;
 }
 
 /**
@@ -350,14 +325,25 @@ function locale_languages_predefined_form_submit($form, &$form_state) {
   $langcode = $form_state['values']['langcode'];
   if (isset($form_state['values']['name'])) {
     // Custom language form.
-    locale_add_language($langcode, $form_state['values']['name'], $form_state['values']['native'], $form_state['values']['direction'], $form_state['values']['domain'], $form_state['values']['prefix']);
+    $language = (object) array(
+      'language' => $langcode,
+      'name' => $form_state['values']['name'],
+      'native' => $form_state['values']['native'],
+      'direction' => $form_state['values']['direction'],
+      'domain' => $form_state['values']['domain'],
+      'prefix' => $form_state['values']['prefix'],
+    );
+    locale_language_save($language);
     drupal_set_message(t('The language %language has been created and can now be used. More information is available on the <a href="@locale-help">help screen</a>.', array('%language' => t($form_state['values']['name']), '@locale-help' => url('admin/help/locale'))));
   }
   else {
     // Predefined language selection.
     include_once DRUPAL_ROOT . '/includes/standard.inc';
     $predefined = standard_language_list();
-    locale_add_language($langcode);
+    $language = (object) array(
+      'language' => $langcode,
+    );
+    locale_language_save($language);
     drupal_set_message(t('The language %language has been created and can now be used. More information is available on the <a href="@locale-help">help screen</a>.', array('%language' => t($predefined[$langcode][0]), '@locale-help' => url('admin/help/locale'))));
   }
 
@@ -404,28 +390,17 @@ function locale_languages_edit_form_validate($form, &$form_state) {
  * Process the language editing form submission.
  */
 function locale_languages_edit_form_submit($form, &$form_state) {
-  db_update('languages')
-    ->fields(array(
-      'name' => $form_state['values']['name'],
-      'native' => $form_state['values']['native'],
-      'domain' => $form_state['values']['domain'],
-      'prefix' => $form_state['values']['prefix'],
-      'direction' => $form_state['values']['direction'],
-    ))
-    ->condition('language',  $form_state['values']['langcode'])
-    ->execute();
-  $default = language_default();
-  if ($default->language == $form_state['values']['langcode']) {
-    $properties = array('name', 'native', 'direction', 'enabled', 'plurals', 'formula', 'domain', 'prefix', 'weight');
-    foreach ($properties as $keyname) {
-      if (isset($form_state['values'][$keyname])) {
-        $default->$keyname = $form_state['values'][$keyname];
-      }
-    }
-    variable_set('language_default', $default);
-  }
+  // Prepare a language object for saving
+  $languages = language_list();
+  $langcode = $form_state['values']['langcode'];
+  $language = $languages[$langcode];
+  $language->name = $form_state['values']['name'];
+  $language->native = $form_state['values']['native'];
+  $language->direction = $form_state['values']['direction'];
+  $language->domain = $form_state['values']['domain'];
+  $language->prefix = $form_state['values']['prefix'];
+  locale_language_save($language);
   $form_state['redirect'] = 'admin/config/regional/language';
-  return;
 }
 
 /**

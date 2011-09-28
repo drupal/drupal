@@ -429,85 +429,66 @@ function locale_string_is_safe($string) {
 }
 
 /**
- * @defgroup locale-api-add Language addition API
- * @{
- * Add a language.
+ * API function to add or update a language.
  *
- * The language addition API is used to create languages and store them.
+ * @param $language
+ *   Language object with properties corresponding to 'languages' table columns.
  */
-
-/**
- * API function to add a language.
- *
- * @param $langcode
- *   Language code.
- * @param $name
- *   English name of the language
- * @param $native
- *   Native name of the language
- * @param $direction
- *   LANGUAGE_LTR or LANGUAGE_RTL
- * @param $domain
- *   Optional custom domain name with protocol, without
- *   trailing slash (eg. http://de.example.com).
- * @param $prefix
- *   Optional path prefix for the language. Defaults to the
- *   language code if omitted.
- * @param $enabled
- *   Optionally TRUE to enable the language when created or FALSE to disable.
- * @param $default
- *   Optionally set this language to be the default.
- */
-function locale_add_language($langcode, $name = NULL, $native = NULL, $direction = LANGUAGE_LTR, $domain = '', $prefix = '', $enabled = TRUE, $default = FALSE) {
-  // Default prefix on language code.
-  if (empty($prefix)) {
-    $prefix = $langcode;
+function locale_language_save($language) {
+  $language->is_new = !(bool) db_query_range('SELECT 1 FROM {languages} WHERE language = :language', 0, 1, array(':language' => $language->language))->fetchField();
+  // Default prefix on language code if not provided otherwise.
+  if (!isset($language->prefix)) {
+    $language->prefix = $language->language;
   }
 
   // If name was not set, we add a predefined language.
-  if (!isset($name)) {
+  if (!isset($language->name)) {
     include_once DRUPAL_ROOT . '/includes/standard.inc';
     $predefined = standard_language_list();
-    $name = $predefined[$langcode][0];
-    $native = isset($predefined[$langcode][1]) ? $predefined[$langcode][1] : $predefined[$langcode][0];
-    $direction = isset($predefined[$langcode][2]) ? $predefined[$langcode][2] : LANGUAGE_LTR;
+    $language->name = $predefined[$language->language][0];
+    $language->native = isset($predefined[$language->language][1]) ? $predefined[$language->language][1] : $predefined[$language->language][0];
+    $language->direction = isset($predefined[$language->language][2]) ? $predefined[$language->language][2] : LANGUAGE_LTR;
   }
 
-  db_insert('languages')
-    ->fields(array(
-      'language' => $langcode,
-      'name' => $name,
-      'native' => $native,
-      'direction' => $direction,
-      'domain' => $domain,
-      'prefix' => $prefix,
-      'enabled' => $enabled,
-    ))
-    ->execute();
+  // Set to enabled for the default language and unless specified otherwise.
+  if (!empty($language->default) || !isset($language->enabled)) {
+    $language->enabled = TRUE;
+  }
+  // Let other modules modify $language before saved.
+  module_invoke_all('locale_language_presave', $language);
 
-  // Only set it as default if enabled.
-  if ($enabled && $default) {
-    variable_set('language_default', (object) array('language' => $langcode, 'name' => $name, 'native' => $native, 'direction' => $direction, 'enabled' => (int) $enabled, 'plurals' => 0, 'formula' => '', 'domain' => '', 'prefix' => $prefix, 'weight' => 0, 'javascript' => ''));
+  // Save the record and inform others about the change.
+  if ($language->is_new) {
+    drupal_write_record('languages', $language);
+    module_invoke_all('locale_language_insert', $language);
+    watchdog('locale', 'The %language (%langcode) language has been created.', array('%language' => $language->name, '%langcode' => $language->language));
+  }
+  else {
+    drupal_write_record('languages', $language, array('language'));
+    module_invoke_all('locale_language_update', $language);
+    watchdog('locale', 'The %language (%langcode) language has been updated.', array('%language' => $language->name, '%langcode' => $language->language));
   }
 
-  if ($enabled) {
-    // Increment enabled language count if we are adding an enabled language.
-    variable_set('language_count', variable_get('language_count', 1) + 1);
+  if (!empty($language->default)) {
+    // Set the new version of this language as default in a variable.
+    $default_language = language_default();
+    variable_set('language_default', $language);
   }
+
+  // Update language count based on enabled language count.
+  variable_set('language_count', db_query('SELECT COUNT(language) FROM {languages} WHERE enabled = 1')->fetchField());
 
   // Kill the static cache in language_list().
   drupal_static_reset('language_list');
 
-  // Force JavaScript translation file creation for the newly added language.
-  _locale_invalidate_js($langcode);
+  // @todo move these two cache clears out. See http://drupal.org/node/1293252
+  // Changing the language settings impacts the interface.
+  cache_clear_all('*', 'cache_page', TRUE);
+  // Force JavaScript translation file re-creation for the modified language.
+  _locale_invalidate_js($language->language);
 
-  watchdog('locale', 'The %language language (%code) has been created.', array('%language' => $name, '%code' => $langcode));
-
-  module_invoke_all('multilingual_settings_changed');
+  return $language;
 }
-/**
- * @} End of "locale-api-add"
- */
 
 /**
  * Parses a JavaScript file, extracts strings wrapped in Drupal.t() and

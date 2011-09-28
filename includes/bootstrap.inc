@@ -2579,6 +2579,7 @@ function language_list($field = 'language') {
   $languages = &drupal_static(__FUNCTION__);
   // Init language list
   if (!isset($languages)) {
+    $default = language_default();
     if (drupal_multilingual() || module_exists('locale')) {
       $languages['language'] = db_query('SELECT * FROM {languages} ORDER BY weight ASC, name ASC')->fetchAllAssoc('language');
       // Users cannot uninstall the native English language. However, we allow
@@ -2590,8 +2591,13 @@ function language_list($field = 'language') {
     }
     else {
       // No locale module, so use the default language only.
-      $default = language_default();
       $languages['language'][$default->language] = $default;
+    }
+
+    // Initialize default property so callers have an easy reference and
+    // can save the same object without data loss.
+    foreach ($languages['language'] as $langcode => $language) {
+      $languages['language'][$langcode]->default = ($langcode == $default->language);
     }
   }
 

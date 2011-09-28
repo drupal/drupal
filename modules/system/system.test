@@ -1215,7 +1215,11 @@ class DateTimeFunctionalTest extends DrupalWebTestCase {
     $this->assertFalse($format, 'Unlocalized date format resides not in localized table.');
 
     // Enable German language
-    locale_add_language('de', NULL, NULL, LANGUAGE_LTR, '', '', TRUE, 'en');
+    $language = (object) array(
+      'language' => 'de',
+      'default' => TRUE,
+    );
+    locale_language_save($language);
 
     $date_format = array(
       'type' => 'short',

@@ -1382,11 +1382,21 @@ function install_import_locales(&$install_state) {
   if (!isset($predefined[$install_locale])) {
     // Drupal does not know about this language, so we prefill its values with
     // our best guess. The user will be able to edit afterwards.
-    locale_add_language($install_locale, $install_locale, $install_locale, LANGUAGE_LTR, '', '', TRUE, TRUE);
+    $language = (object) array(
+      'language' => $install_locale,
+      'name' => $install_locale,
+      'native' => $install_locale,
+      'default' => TRUE,
+    );
+    locale_language_save($language);
   }
   else {
     // A known predefined language, details will be filled in properly.
-    locale_add_language($install_locale, NULL, NULL, NULL, '', '', TRUE, TRUE);
+    $language = (object) array(
+      'language' => $install_locale,
+      'default' => TRUE,
+    );
+    locale_language_save($language);
   }
 
   // Collect files to import for this language.
