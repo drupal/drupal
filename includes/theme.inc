@@ -1793,12 +1793,14 @@ function theme_mark($variables) {
  *
  * @param $variables
  *   An associative array containing:
- *   - items: An array of items to be displayed in the list. If an item is a
- *     string, then it is used as is. If an item is an array, then the "data"
- *     element of the array is used as the contents of the list item. If an item
- *     is an array with a "children" element, those children are displayed in a
- *     nested list. All other elements are treated as attributes of the list
- *     item element.
+ *   - items: A list of items to render. String values are rendered as is. Each
+ *     item can also be an associative array containing:
+ *     - data: The string content of the list item.
+ *     - children: A list of nested child items to render that behave
+ *       identically to 'items', but any non-numeric string keys are treated as
+ *       HTML attributes for the child list that wraps 'children'.
+ *     Any other key/value pairs are used as HTML attributes for the list item
+ *     in 'data'.
  *   - title: The title of the list.
  *   - type: The type of list to return (e.g. "ul", "ol").
  *   - attributes: The attributes applied to the list element.
@@ -1807,51 +1809,69 @@ function theme_item_list($variables) {
   $items = $variables['items'];
   $title = $variables['title'];
   $type = $variables['type'];
-  $attributes = $variables['attributes'];
+  $list_attributes = $variables['attributes'];
 
-  $output = '<div class="item-list">';
-  if (isset($title)) {
-    $output .= '<h3>' . $title . '</h3>';
-  }
+  $output = '';
+  if ($items) {
+    $output .= '<' . $type . drupal_attributes($list_attributes) . '>';
 
-  if (!empty($items)) {
-    $output .= "<$type" . drupal_attributes($attributes) . '>';
     $num_items = count($items);
-    foreach ($items as $i => $item) {
+    $i = 0;
+    foreach ($items as $key => $item) {
+      $i++;
       $attributes = array();
-      $children = array();
-      $data = '';
+
       if (is_array($item)) {
-        foreach ($item as $key => $value) {
-          if ($key == 'data') {
-            $data = $value;
+        $value = '';
+        if (isset($item['data'])) {
+          $value .= $item['data'];
+        }
+        $attributes = array_diff_key($item, array('data' => 0, 'children' => 0));
+
+        // Append nested child list, if any.
+        if (isset($item['children'])) {
+          // HTML attributes for the outer list are defined in the 'attributes'
+          // theme variable, but not inherited by children. For nested lists,
+          // all non-numeric keys in 'children' are used as list attributes.
+          $child_list_attributes = array();
+          foreach ($item['children'] as $child_key => $child_item) {
+            if (is_string($child_key)) {
+              $child_list_attributes[$child_key] = $child_item;
+              unset($item['children'][$child_key]);
+            }
           }
-          elseif ($key == 'children') {
-            $children = $value;
-          }
-          else {
-            $attributes[$key] = $value;
-          }
+          $value .= theme('item_list', array(
+            'items' => $item['children'],
+            'type' => $type,
+            'attributes' => $child_list_attributes,
+          ));
         }
       }
       else {
-        $data = $item;
+        $value = $item;
       }
-      if (count($children) > 0) {
-        // Render nested list.
-        $data .= theme_item_list(array('items' => $children, 'title' => NULL, 'type' => $type, 'attributes' => $attributes));
-      }
-      if ($i == 0) {
+
+      $attributes['class'][] = ($i % 2 ? 'odd' : 'even');
+      if ($i == 1) {
         $attributes['class'][] = 'first';
       }
-      if ($i == $num_items - 1) {
+      if ($i == $num_items) {
         $attributes['class'][] = 'last';
       }
-      $output .= '<li' . drupal_attributes($attributes) . '>' . $data . "</li>\n";
+
+      $output .= '<li' . drupal_attributes($attributes) . '>' . $value . '</li>';
     }
     $output .= "</$type>";
   }
-  $output .= '</div>';
+
+  // Only output the list container and title, if there are any list items.
+  if ($output !== '') {
+    if ($title !== '') {
+      $title = '<h3>' . $title . '</h3>';
+    }
+    $output = '<div class="item-list">' . $title . $output . '</div>';
+  }
+
   return $output;
 }
 

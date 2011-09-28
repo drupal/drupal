@@ -164,30 +164,101 @@ class ThemeTableUnitTest extends DrupalWebTestCase {
 }
 
 /**
- * Unit tests for theme_item_list().
+ * Tests for common theme functions.
  */
-class ThemeItemListUnitTest extends DrupalWebTestCase {
+class ThemeFunctionsTestCase extends DrupalWebTestCase {
+  protected $profile = 'testing';
+
   public static function getInfo() {
     return array(
-      'name' => 'Theme item list',
-      'description' => 'Test the theme_item_list() function.',
+      'name' => 'Theme functions',
+      'description' => 'Tests common theme functions.',
       'group' => 'Theme',
     );
   }
 
   /**
-   * Test nested list rendering.
+   * Tests theme_item_list().
    */
-  function testNestedList() {
-    $items = array('a', array('data' => 'b', 'children' => array('c', 'd')), 'e');
-    $expected = '<div class="item-list"><ul><li class="first">a</li>
-<li>b<div class="item-list"><ul><li class="first">c</li>
-<li class="last">d</li>
-</ul></div></li>
-<li class="last">e</li>
-</ul></div>';
-    $output = theme('item_list', array('items' => $items));
-    $this->assertIdentical($expected, $output, 'Nested list is rendered correctly.');
+  function testItemList() {
+    // Verify that empty variables produce no output.
+    $variables = array();
+    $expected = '';
+    $this->assertThemeOutput('item_list', $variables, $expected, 'Empty %callback generates no output.');
+
+    $variables = array();
+    $variables['title'] = 'Some title';
+    $expected = '';
+    $this->assertThemeOutput('item_list', $variables, $expected, 'Empty %callback with title generates no output.');
+
+    // Verify nested item lists.
+    $variables = array();
+    $variables['title'] = 'Some title';
+    $variables['attributes'] = array(
+      'id' => 'parentlist',
+    );
+    $variables['items'] = array(
+      'a',
+      array(
+        'data' => 'b',
+        'children' => array(
+          'c',
+          // Nested children may use additional attributes.
+          array(
+            'data' => 'd',
+            'class' => array('dee'),
+          ),
+          // Any string key is treated as child list attribute.
+          'id' => 'childlist',
+        ),
+        // Any other keys are treated as item attributes.
+        'id' => 'bee',
+      ),
+      array(
+        'data' => 'e',
+        'id' => 'E',
+      ),
+    );
+    $inner = '<div class="item-list"><ul id="childlist">';
+    $inner .= '<li class="odd first">c</li>';
+    $inner .= '<li class="dee even last">d</li>';
+    $inner .= '</ul></div>';
+
+    $expected = '<div class="item-list">';
+    $expected .= '<h3>Some title</h3>';
+    $expected .= '<ul id="parentlist">';
+    $expected .= '<li class="odd first">a</li>';
+    $expected .= '<li id="bee" class="even">b' . $inner . '</li>';
+    $expected .= '<li id="E" class="odd last">e</li>';
+    $expected .= '</ul></div>';
+
+    $this->assertThemeOutput('item_list', $variables, $expected);
+  }
+
+  /**
+   * Asserts themed output.
+   *
+   * @param $callback
+   *   The name of the theme function to invoke; e.g. 'links' for theme_links().
+   * @param $variables
+   *   An array of variables to pass to the theme function.
+   * @param $expected
+   *   The expected themed output string.
+   * @param $message
+   *   (optional) An assertion message.
+   */
+  protected function assertThemeOutput($callback, array $variables = array(), $expected, $message = '') {
+    $output = theme($callback, $variables);
+    $this->verbose('Variables:' . '<pre>' .  check_plain(var_export($variables, TRUE)) . '</pre>'
+      . '<hr />' . 'Result:' . '<pre>' .  check_plain(var_export($output, TRUE)) . '</pre>'
+      . '<hr />' . 'Expected:' . '<pre>' .  check_plain(var_export($expected, TRUE)) . '</pre>'
+      . '<hr />' . $output
+    );
+    if (!$message) {
+      $message = '%callback rendered correctly.';
+    }
+    $message = t($message, array('%callback' => 'theme_' . $callback . '()'));
+    $this->assertIdentical($output, $expected, $message);
   }
 }
 
