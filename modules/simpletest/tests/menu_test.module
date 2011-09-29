@@ -217,6 +217,20 @@ function menu_test_menu() {
     'type' => MENU_LOCAL_TASK,
   ) + $base;
 
+  // Menu trail tests.
+  // @see MenuTrailTestCase
+  $items['menu-test/menu-trail'] = array(
+    'title' => 'Menu trail - Case 1',
+    'page callback' => 'menu_test_menu_trail_callback',
+    'access arguments' => array('access content'),
+  );
+  $items['admin/config/development/menu-trail'] = array(
+    'title' => 'Menu trail - Case 2',
+    'description' => 'Tests menu_tree_set_path()',
+    'page callback' => 'menu_test_menu_trail_callback',
+    'access arguments' => array('access administration pages'),
+  );
+
   // File inheritance tests. This menu item should inherit the page callback
   // system_admin_menu_block_page() and therefore render its children as links
   // on the page.
@@ -342,6 +356,17 @@ function menu_test_other_argument_load($arg1) {
  */
 function menu_test_callback() {
   return 'This is menu_test_callback().';
+}
+
+/**
+ * Callback that test menu_test_menu_tree_set_path().
+ */
+function menu_test_menu_trail_callback() {
+  $menu_path = variable_get('menu_test_menu_tree_set_path', array());
+  if (!empty($menu_path)) {
+    menu_tree_set_path($menu_path['menu_name'], $menu_path['path']);
+  }
+  return 'This is menu_test_menu_trail_callback().';
 }
 
 /**

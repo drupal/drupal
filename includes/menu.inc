@@ -1134,6 +1134,45 @@ function menu_tree_all_data($menu_name, $link = NULL, $max_depth = NULL) {
 }
 
 /**
+ * Set the path for determining the active trail of the specified menu tree.
+ *
+ * This path will also affect the breadcrumbs under some circumstances.
+ * Breadcrumbs are built using the preferred link returned by
+ * menu_link_get_preferred(). If the preferred link is inside one of the menus
+ * specified in calls to menu_tree_set_path(), the preferred link will be
+ * overridden by the corresponding path returned by menu_tree_get_path().
+ *
+ * Setting this path does not affect the main content; for that use
+ * menu_set_active_item() instead.
+ *
+ * @param $menu_name
+ *   The name of the affected menu tree.
+ * @param $path
+ *   The path to use when finding the active trail.
+ */
+function menu_tree_set_path($menu_name, $path = NULL) {
+  $paths = &drupal_static(__FUNCTION__);
+  if (isset($path)) {
+    $paths[$menu_name] = $path;
+  }
+  return isset($paths[$menu_name]) ? $paths[$menu_name] : NULL;
+}
+
+/**
+ * Get the path for determining the active trail of the specified menu tree.
+ *
+ * @param $menu_name
+ *   The menu name of the requested tree.
+ *
+ * @return
+ *   A string containing the path. If no path has been specified with
+ *   menu_tree_set_path(), NULL is returned.
+ */
+function menu_tree_get_path($menu_name) {
+  return menu_tree_set_path($menu_name);
+}
+
+/**
  * Get the data structure representing a named menu tree, based on the current page.
  *
  * The tree order is maintained by storing each parent in an individual
@@ -1158,8 +1197,10 @@ function menu_tree_all_data($menu_name, $link = NULL, $max_depth = NULL) {
 function menu_tree_page_data($menu_name, $max_depth = NULL, $only_active_trail = FALSE) {
   $tree = &drupal_static(__FUNCTION__, array());
 
+  // Check if the active trail has been overridden for this menu tree.
+  $active_path = menu_tree_get_path($menu_name);
   // Load the menu item corresponding to the current page.
-  if ($item = menu_get_item()) {
+  if ($item = menu_get_item($active_path)) {
     if (isset($max_depth)) {
       $max_depth = min($max_depth, MENU_MAX_DEPTH);
     }
@@ -1198,8 +1239,9 @@ function menu_tree_page_data($menu_name, $max_depth = NULL, $only_active_trail =
         // If the item for the current page is accessible, build the tree
         // parameters accordingly.
         if ($item['access']) {
-          // Find a menu link corresponding to the current path.
-          if ($active_link = menu_link_get_preferred()) {
+          // Find a menu link corresponding to the current path. If $active_path
+          // is NULL, let menu_link_get_preferred() determine the path.
+          if ($active_link = menu_link_get_preferred($active_path)) {
             // The active link may only be taken into account to build the
             // active trail, if it resides in the requested menu. Otherwise,
             // we'd needlessly re-run _menu_build_tree() queries for every menu
@@ -2229,38 +2271,36 @@ function menu_get_active_menu_names() {
 /**
  * Set the active path, which determines which page is loaded.
  *
- * @param $path
- *   A Drupal path - not a path alias.
- *
  * Note that this may not have the desired effect unless invoked very early
  * in the page load, such as during hook_boot, or unless you call
  * menu_execute_active_handler() to generate your page output.
+ *
+ * @param $path
+ *   A Drupal path - not a path alias.
  */
 function menu_set_active_item($path) {
   $_GET['q'] = $path;
 }
 
 /**
- * Sets or gets the active trail (path to menu tree root) of the current page.
+ * Sets the active trail (path to menu tree root) of the current page.
+ *
+ * Any trail set by this function will only be used for functionality that calls
+ * menu_get_active_trail(). Drupal core only uses trails set here for
+ * breadcrumbs and the page title and not for menu trees or page content.
+ * Additionally, breadcrumbs set by drupal_set_breadcrumb() will override any
+ * trail set here.
+ *
+ * To affect the trail used by menu trees, use menu_tree_set_path(). To affect
+ * the page content, use menu_set_active_item() instead.
  *
  * @param $new_trail
- *   Menu trail to set, or NULL to use previously-set or calculated trail. If
- *   supplying a trail, use the same format as the return value (see below).
+ *   Menu trail to set; the value is saved in a static variable and can be
+ *   retrieved by menu_get_active_trail(). The format of this array should be
+ *   the same as the return value of menu_get_active_trail().
  *
  * @return
- *   Path to menu root of the current page, as an array of menu link items,
- *   starting with the site's home page. Each link item is an associative array
- *   with the following components:
- *   - title: Title of the item.
- *   - href: Drupal path of the item.
- *   - localized_options: Options for passing into the l() function.
- *   - type: A menu type constant, such as MENU_DEFAULT_LOCAL_TASK, or 0 to
- *     indicate it's not really in the menu (used for the home page item).
- *   If $new_trail is supplied, the value is saved in a static variable and
- *   returned. If $new_trail is not supplied, and there is a saved value from
- *   a previous call, the saved value is returned. If $new_trail is not supplied
- *   and there is no saved value, the path to the current page is calculated,
- *   saved as the static value, and returned.
+ *   The active trail. See menu_get_active_trail() for details.
  */
 function menu_set_active_trail($new_trail = NULL) {
   $trail = &drupal_static(__FUNCTION__);
@@ -2419,7 +2459,20 @@ function menu_link_get_preferred($path = NULL) {
 /**
  * Gets the active trail (path to root menu root) of the current page.
  *
- * See menu_set_active_trail() for details of return value.
+ * If a trail is supplied to menu_set_active_trail(), that value is returned. If
+ * a trail is not supplied to menu_set_active_trail(), the path to the current
+ * page is calculated and returned. The calculated trail is also saved as a
+ * static value for use by subsequent calls to menu_get_active_trail().
+ *
+ * @return
+ *   Path to menu root of the current page, as an array of menu link items,
+ *   starting with the site's home page. Each link item is an associative array
+ *   with the following components:
+ *   - title: Title of the item.
+ *   - href: Drupal path of the item.
+ *   - localized_options: Options for passing into the l() function.
+ *   - type: A menu type constant, such as MENU_DEFAULT_LOCAL_TASK, or 0 to
+ *     indicate it's not really in the menu (used for the home page item).
  */
 function menu_get_active_trail() {
   return menu_set_active_trail();
