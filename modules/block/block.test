@@ -513,9 +513,6 @@ class BlockCacheTestCase extends DrupalWebTestCase {
     user_save($this->normal_user_alt, array('roles' => $this->normal_user->roles));
     $this->normal_user_alt->roles = $this->normal_user->roles;
 
-    // Enable block caching.
-    variable_set('block_cache', TRUE);
-
     // Enable our test block.
     $edit['blocks[block_test_test_cache][region]'] = 'sidebar_first';
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));

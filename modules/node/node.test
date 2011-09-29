@@ -1855,6 +1855,9 @@ class NodeBlockFunctionalTest extends DrupalWebTestCase {
 
     // Post an additional node.
     $node4 = $this->drupalCreateNode($default_settings);
+    // drupalCreateNode() does not automatically flush content caches unlike
+    // posting a node from a node form.
+    cache_clear_all();
 
     // Test that all four nodes are shown.
     $this->drupalGet('');

@@ -187,7 +187,7 @@ function dashboard_page_build(&$page) {
           }
           $block->subject = t('@title', array('@title' => $block_info[$block->module][$block->delta]['info']));
           $block_render = array($block->module . '_' . $block->delta => $block);
-          $build = _block_get_renderable_array($block_render);
+          $build = _block_get_renderable_region($block_render);
           $page['content']['dashboard'][$block->region][] = $build;
         }
       }
@@ -526,8 +526,7 @@ function dashboard_show_block_content($module, $delta) {
     ->fetchObject();
   $block_object->enabled = $block_object->page_match = TRUE;
   $blocks[$module . "_" . $delta] = $block_object;
-  $block_content = _block_render_blocks($blocks);
-  $build = _block_get_renderable_array($block_content);
+  $build = _block_get_renderable_region($blocks);
   $rendered_block = drupal_render($build);
   print $rendered_block;
   drupal_exit();
@@ -674,4 +673,3 @@ function theme_dashboard_disabled_block($variables) {
   }
   return $output;
 }
-

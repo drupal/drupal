@@ -185,3 +185,21 @@ function block_install() {
     ->condition('name', 'block')
     ->execute();
 }
+
+/**
+ * @defgroup updates-7.x-to-8.x Updates from 7.x to 8.x
+ * @{
+ * Update functions from 7.x to 8.x.
+ */
+
+/**
+ * Block cache is always enabled in 8.x.
+ */
+function block_update_8000() {
+  variable_del('block_cache');
+}
+
+/**
+ * @} End of "defgroup updates-7.x-to-8.x"
+ * The next series of updates should start at 9000.
+ */
