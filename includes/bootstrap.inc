@@ -554,7 +554,7 @@ function conf_path($require_settings = TRUE, $reset = FALSE) {
     $script_name = $_SERVER['SCRIPT_FILENAME'];
   }
   $http_host = $_SERVER['HTTP_HOST'];
-  $conf = find_conf_path($script_name, $http_host, $require_settings);
+  $conf = find_conf_path($http_host, $script_name, $require_settings);
   return $conf;
 }
 
