@@ -817,7 +817,7 @@ function taxonomy_terms_static_reset() {
 
 /**
  * Clear all static cache variables for vocabularies.
- * 
+ *
  * @param $ids
  * An array of ids to reset in entity controller cache.
  */
@@ -848,7 +848,7 @@ function taxonomy_vocabulary_get_names() {
   if (!isset($names)) {
     $names = db_query('SELECT name, machine_name, vid FROM {taxonomy_vocabulary}')->fetchAllAssoc('machine_name');
   }
-  
+
   return $names;
 }
 
@@ -1061,7 +1061,7 @@ function taxonomy_get_tree($vid, $parent = 0, $max_depth = NULL, $load_entities 
  * Provides a case-insensitive and trimmed mapping, to maximize the
  * likelihood of a successful match.
  *
- * @param name
+ * @param $name
  *   Name of the term to search for.
  *
  * @return
