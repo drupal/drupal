@@ -27,9 +27,6 @@
   display: block;
   float: right;
 }
-#book-outline {
-  min-width: 56em;
-}
 .book-outline-form .form-item {
   margin-top: 0;
   margin-bottom: 0;
