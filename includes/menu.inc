@@ -1501,18 +1501,30 @@ function _menu_tree_check_access(&$tree) {
 }
 
 /**
- * Build the data representing a menu tree.
+ * Builds the data representing a menu tree.
  *
  * @param $links
- *   An array of links (associative arrays) ordered by p1..p9.
+ *   A flat array of menu links that are part of the menu. Each array element
+ *   is an associative array of information about the menu link, containing the
+ *   fields from the {menu_links} table, and optionally additional information
+ *   from the {menu_router} table, if the menu item appears in both tables.
+ *   This array must be ordered depth-first. See _menu_build_tree() for a sample
+ *   query.
  * @param $parents
- *   An array of the plid values that represent the path from the current page
- *   to the root of the menu tree.
+ *   An array of the menu link ID values that are in the path from the current
+ *   page to the root of the menu tree.
  * @param $depth
- *   The minimum depth of any link in the $links array.
+ *   The minimum depth to include in the returned menu tree.
  *
  * @return
- *   See menu_tree_page_data for a description of the data structure.
+ *   An array of menu links in the form of a tree. Each item in the tree is an
+ *   associative array containing:
+ *   - link: The menu link item from $links, with additional element
+ *     'in_active_trail' (TRUE if the link ID was in $parents).
+ *   - below: An array containing the sub-tree of this item, where each element
+ *     is a tree item array with 'link' and 'below' elements. This array will be
+ *     empty if the menu item has no items in its sub-tree having a depth
+ *     greater than or equal to $depth.
  */
 function menu_tree_data(array $links, array $parents = array(), $depth = 1) {
   // Reverse the array so we can use the more efficient array_pop() function.
