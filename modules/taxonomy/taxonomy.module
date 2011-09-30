@@ -1049,7 +1049,7 @@ function taxonomy_get_tree($vid, $parent = 0, $max_depth = NULL, $load_entities 
  * Provides a case-insensitive and trimmed mapping, to maximize the
  * likelihood of a successful match.
  *
- * @param name
+ * @param $name
  *   Name of the term to search for.
  *
  * @return
