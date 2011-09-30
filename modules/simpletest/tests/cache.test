@@ -151,13 +151,21 @@ class CacheSavingCase extends CacheTestCase {
     $this->assertTrue(isset($cache->data) && $cache->data == $test_object, t('Object is saved and restored properly.'));
   }
 
-  /*
+  /**
    * Check or a variable is stored and restored properly.
-   **/
+   */
   function checkVariable($var) {
     cache_set('test_var', $var, 'cache');
     $cache = cache_get('test_var', 'cache');
     $this->assertTrue(isset($cache->data) && $cache->data === $var, t('@type is saved and restored properly.', array('@type' => ucfirst(gettype($var)))));
+  }
+
+  /**
+   * Test no empty cids are written in cache table.
+   */
+  function testNoEmptyCids() {
+    $this->drupalGet('user/register');
+    $this->assertFalse(cache_get(''), t('No cache entry is written with an empty cid.'));
   }
 }
 
