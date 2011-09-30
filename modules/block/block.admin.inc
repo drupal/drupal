@@ -77,7 +77,7 @@ function block_admin_display_prepare_blocks($theme) {
  */
 function block_admin_display_form($form, &$form_state, $blocks, $theme, $block_regions = NULL) {
 
-  drupal_add_css(drupal_get_path('module', 'block') . '/block.css');
+  $form['#attached']['css'] = array(drupal_get_path('module', 'block') . '/block.css');
 
   // Get a list of block regions if one was not provided.
   if (!isset($block_regions)) {
