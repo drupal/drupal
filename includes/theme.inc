@@ -512,7 +512,7 @@ function _theme_process_registry(&$cache, $name, $type, $theme, $path) {
 }
 
 /**
- * Rebuild the theme registry cache.
+ * Build the theme registry cache.
  *
  * @param $theme
  *   The loaded $theme object as returned by list_themes().
@@ -525,9 +525,20 @@ function _theme_process_registry(&$cache, $name, $type, $theme, $path) {
 function _theme_build_registry($theme, $base_theme, $theme_engine) {
   $cache = array();
   // First, process the theme hooks advertised by modules. This will
-  // serve as the basic registry.
-  foreach (module_implements('theme') as $module) {
-    _theme_process_registry($cache, $module, 'module', $module, drupal_get_path('module', $module));
+  // serve as the basic registry. Since the list of enabled modules is the same
+  // regardless of the theme used, this is cached in its own entry to save
+  // building it for every theme.
+  if ($cached = cache_get('theme_registry:build:modules')) {
+    $cache = $cached->data;
+  }
+  else {
+    foreach (module_implements('theme') as $module) {
+      _theme_process_registry($cache, $module, 'module', $module, drupal_get_path('module', $module));
+    }
+    // Only cache this registry if all modules are loaded.
+    if (module_load_all(NULL)) {
+      cache_set('theme_registry:build:modules', $cache);
+    }
   }
 
   // Process each base theme.
