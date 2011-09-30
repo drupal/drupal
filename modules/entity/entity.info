@@ -6,3 +6,4 @@ core = 8.x
 required = TRUE
 files[] = entity.query.inc
 files[] = entity.controller.inc
+files[] = tests/entity_query.test
