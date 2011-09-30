@@ -646,8 +646,15 @@ function openid_association($op_endpoint) {
  */
 function openid_authentication($response) {
   $identity = $response['openid.claimed_id'];
-
   $account = user_external_load($identity);
+
+  // Tries to load user account if user_external_load fails due to possibly
+  // incompletely stored OpenID identifier in the authmap.
+  if (!isset($account->uid) && variable_get('openid_less_obtrusive_transition', FALSE)) {
+    module_load_include('inc', 'openid');
+    $account = _openid_invalid_openid_transition($identity, $response);
+  }
+
   if (isset($account->uid)) {
     if (!variable_get('user_email_verification', TRUE) || $account->login) {
       // Check if user is blocked.
@@ -691,7 +698,7 @@ function openid_authentication($response) {
       drupal_set_message(t('Account registration using the information provided by your OpenID provider failed due to the reasons listed below. Complete the registration by filling out the form below. If you already have an account, you can <a href="@login">log in</a> now and add your OpenID under "My account".', array('@login' => url('user/login'))), 'warning');
       // Append form validation errors below the above warning.
       foreach ($messages['error'] as $message) {
-        drupal_set_message( $message, 'error');
+        drupal_set_message($message, 'error');
       }
     }
 

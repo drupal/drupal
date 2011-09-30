@@ -536,6 +536,89 @@ class OpenIDRegistrationTestCase extends OpenIDWebTestCase {
 }
 
 /**
+ * Test account registration using Simple Registration and Attribute Exchange.
+ */
+class OpenIDInvalidIdentifierTransitionTestCase extends OpenIDFunctionalTestCase  {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'OpenID account update',
+      'description' => 'Tries to correct OpenID identifiers attached to accounts if their identifiers were stripped.',
+      'group' => 'OpenID',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('openid', 'openid_test');
+    variable_set('user_register', USER_REGISTER_VISITORS);
+    variable_set('openid_less_obtrusive_transition', TRUE);
+  }
+
+  /**
+   * Test OpenID transition with e-mail mismatch.
+   */
+  function testStrippedFragmentAccountEmailMismatch() {
+    $this->drupalLogin($this->web_user);
+
+    // Use a User-supplied Identity that is the URL of an XRDS document.
+    $identity = url('openid-test/yadis/xrds', array('absolute' => TRUE, 'fragment' => $this->randomName()));
+    $identity_stripped = preg_replace('/#.*/', '', $identity);
+
+    // Add invalid identifier to the authmap (identifier has stripped fragment).
+    $this->addIdentity($identity_stripped);
+    $this->drupalLogout();
+
+    // Test logging in via the login form, provider will respond with full
+    // identifier (including fragment) but with different email, so we can't
+    // provide auto-update.
+    variable_set('openid_test_response', array(
+      'openid.claimed_id' => $identity,
+      'openid.sreg.nickname' => $this->web_user->name,
+      'openid.sreg.email' => 'invalid-' . $this->web_user->mail));
+
+    $edit = array('openid_identifier' => $identity_stripped);
+    $this->submitLoginForm($identity_stripped);
+
+    // Verify user was redirected away from user login to an accessible page.
+    $this->assertResponse(200);
+
+    // Verify the message.
+    $this->assertRaw(t('There is already an existing account associated with the OpenID identifier that you have provided.'), t('Message that OpenID identifier must be updated manually was displayed.'));
+  }
+
+  /**
+   * Test OpenID auto transition with e-mail.
+   */
+  function testStrippedFragmentAccountAutoUpdateSreg() {
+    $this->drupalLogin($this->web_user);
+
+    // Use a User-supplied Identity that is the URL of an XRDS document.
+    $identity = url('openid-test/yadis/xrds', array('absolute' => TRUE, 'fragment' => $this->randomName()));
+    $identity_stripped = preg_replace('/#.*/', '', $identity);
+
+    // Add invalid identifier to the authmap (identifier has stripped fragment).
+    $this->addIdentity($identity_stripped);
+    $this->drupalLogout();
+
+    // Test logging in via the login form, provider will respond with full
+    // identifier (including fragment) but with different email, so we can't
+    // provide auto-update.
+    variable_set('openid_test_response', array(
+      'openid.claimed_id' => $identity,
+      'openid.sreg.nickname' => $this->web_user->name,
+      'openid.sreg.email' => $this->web_user->mail));
+
+    $this->submitLoginForm($identity_stripped);
+
+    // Verify user was redirected away from user login to an accessible page.
+    $this->assertResponse(200);
+
+    // Verify the message.
+    $this->assertRaw(t('New OpenID identifier %identity was added as a replacement for invalid identifier %invalid_identity.', array('%invalid_identity' => $identity_stripped, '%identity' => $identity)), t('Message that OpenID identifier was added automatically was displayed.'));
+  }
+}
+
+/**
  * Test internal helper functions.
  */
 class OpenIDUnitTest extends DrupalWebTestCase {
