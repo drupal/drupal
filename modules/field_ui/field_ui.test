@@ -26,7 +26,7 @@ class FieldUITestCase extends DrupalWebTestCase {
     $this->drupalLogin($admin_user);
 
     // Create content type, with underscores.
-    $type_name =  strtolower($this->randomName(8)) . '_' .'test';
+    $type_name = strtolower($this->randomName(8)) . '_test';
     $type = $this->drupalCreateContentType(array('name' => $type_name, 'type' => $type_name));
     $this->type = $type->type;
     // Store a valid URL name, with hyphens instead of underscores.
@@ -343,7 +343,7 @@ class FieldUIManageFieldsTestCase extends FieldUITestCase {
     $this->fieldUIAddNewField($bundle_path1, $edit1);
 
     // Create an additional node type.
-    $type_name2 =  strtolower($this->randomName(8)) . '_' .'test';
+    $type_name2 = strtolower($this->randomName(8)) . '_test';
     $type2 = $this->drupalCreateContentType(array('name' => $type_name2, 'type' => $type_name2));
     $type_name2 = $type2->type;
     $hyphen_type2 = str_replace('_', '-', $type_name2);
