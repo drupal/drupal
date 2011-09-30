@@ -285,9 +285,10 @@ ini_set('session.cookie_lifetime', 2000000);
  * same Drupal site, you can either redirect them all to a single domain (see
  * comment in .htaccess), or uncomment the line below and specify their shared
  * base domain. Doing so assures that users remain logged in as they cross
- * between your various domains.
+ * between your various domains. Make sure to always start the $cookie_domain
+ * with a leading dot, as per RFC 2109.
  */
-# $cookie_domain = 'example.com';
+# $cookie_domain = '.example.com';
 
 /**
  * Variable overrides:
