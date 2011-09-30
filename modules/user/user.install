@@ -428,6 +428,13 @@ function user_update_7000(&$sandbox) {
     $result = db_query_range("SELECT uid, pass FROM {users} WHERE uid > 0 ORDER BY uid", $sandbox['user_from'], $count);
     foreach ($result as $account) {
       $has_rows = TRUE;
+
+      // If the $account->pass value is not a MD5 hash (a 32 character
+      // hexadecimal string) then skip it.
+      if (!preg_match('/^[0-9a-f]{32}$/', $account->pass)) {
+        continue;
+      }
+
       $new_hash = user_hash_password($account->pass, $hash_count_log2);
       if ($new_hash) {
         // Indicate an updated password.

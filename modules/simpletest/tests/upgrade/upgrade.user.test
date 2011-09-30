@@ -26,6 +26,9 @@ class UserUpgradePathPasswordTokenTestCase extends UpgradePathTestCase {
   public function testUserUpgrade() {
     $this->assertTrue($this->performUpgrade(), 'The upgrade was completed successfully.');
     $this->assertEqual(variable_get('user_mail_register_no_approval_required_body'), ', [user:name], [site:name], [site:url], [site:url-brief], [user:mail], [date:medium], [site:login-url], [user:edit-url], [user:one-time-login-url].', 'Existing email templates have been modified (password token involved).');
+    // Check that a non-md5 hash was untouched.
+    $pass = db_query('SELECT pass FROM {users} WHERE uid = 3')->fetchField();
+    $this->assertEqual('$S$DAK00p3Dkojkf4O/UizYxenguXnjv', $pass, 'Pre-existing non-MD5 password hash was not altered');
   }
 }
 
