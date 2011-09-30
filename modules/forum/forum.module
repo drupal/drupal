@@ -582,7 +582,7 @@ function forum_field_storage_pre_update($entity_type, $entity, &$skip_fields) {
  */
 function forum_form_alter(&$form, $form_state, $form_id) {
   $vid = variable_get('forum_nav_vocabulary', 0);
-  if (isset($form['vid']) && $form['vid']['#value'] == $vid) {
+  if (isset($form['vid']['#value']) && $form['vid']['#value'] == $vid) {
     // Hide critical options from forum vocabulary.
     if ($form_id == 'taxonomy_form_vocabulary') {
       $form['help_forum_vocab'] = array(
