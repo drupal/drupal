@@ -643,7 +643,11 @@ function shortcut_renderable_links($shortcut_set = NULL) {
  * Implements hook_preprocess_page().
  */
 function shortcut_preprocess_page(&$variables) {
-  if (shortcut_set_edit_access()) {
+  // Only display the shortcut link if the user has the ability to edit
+  // shortcuts and if the page's actual content is being shown (for example,
+  // we do not want to display it on "access denied" or "page not found"
+  // pages).
+  if (shortcut_set_edit_access() && ($item = menu_get_item()) && $item['access']) {
     $link = $_GET['q'];
     $query_parameters = drupal_get_query_parameters();
     if (!empty($query_parameters)) {
