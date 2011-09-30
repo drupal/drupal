@@ -331,6 +331,8 @@ class CommentInterfaceTest extends CommentHelperCase {
     $comment = $this->postComment($this->node, $comment_text);
     $comment_loaded = comment_load($comment->id);
     $this->assertTrue($this->commentExists($comment), t('Comment found.'));
+    $by_viewer_class = $this->xpath('//a[@id=:comment_id]/following-sibling::div[1][contains(@class, "comment-by-viewer")]', array(':comment_id' => 'comment-' . $comment->id));
+    $this->assertTrue(!empty($by_viewer_class), t('HTML class for comments by viewer found.'));
 
     // Set comments to have subject and preview to required.
     $this->drupalLogout();
@@ -416,6 +418,11 @@ class CommentInterfaceTest extends CommentHelperCase {
     $this->drupalGet('node/' . $this->node->nid, array('query' => array('page' => 1)));
     $this->assertTrue($this->commentExists($reply, TRUE), t('Page two exists. %s'));
     $this->setCommentsPerPage(50);
+
+    // Create comment #5 to assert HTML class.
+    $comment = $this->postComment($this->node, $this->randomName(), $this->randomName());
+    $by_node_author_class = $this->xpath('//a[@id=:comment_id]/following-sibling::div[1][contains(@class, "comment-by-node-author")]', array(':comment_id' => 'comment-' . $comment->id));
+    $this->assertTrue(!empty($by_node_author_class), t('HTML class for node author found.'));
 
     // Attempt to post to node with comments disabled.
     $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'comment' => COMMENT_NODE_HIDDEN));
@@ -963,6 +970,8 @@ class CommentAnonymous extends CommentHelperCase {
     // Post anonymous comment without contact info.
     $anonymous_comment1 = $this->postComment($this->node, $this->randomName(), $this->randomName());
     $this->assertTrue($this->commentExists($anonymous_comment1), t('Anonymous comment without contact info found.'));
+    $anonymous_class = $this->xpath('//a[@id=:comment_id]/following-sibling::div[1][contains(@class, "comment-by-anonymous")]', array(':comment_id' => 'comment-' . $anonymous_comment1->id));
+    $this->assertTrue(!empty($anonymous_class), t('HTML class for anonymous comments found.'));
 
     // Allow contact info.
     $this->drupalLogin($this->admin_user);

@@ -2288,7 +2288,7 @@ function template_preprocess_comment(&$variables) {
     $variables['status'] = ($comment->status == COMMENT_NOT_PUBLISHED) ? 'comment-unpublished' : 'comment-published';
   }
   // Gather comment classes.
-  if ($comment->uid === 0) {
+  if ($comment->uid == 0) {
     $variables['classes_array'][] = 'comment-by-anonymous';
   }
   else {
