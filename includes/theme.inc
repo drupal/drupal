@@ -275,7 +275,7 @@ function _theme_registry_callback($callback = NULL, array $arguments = array()) 
  * @param $base_theme
  *   An array of loaded $theme objects representing the ancestor themes in
  *   oldest first order.
- * @param theme_engine
+ * @param $theme_engine
  *   The name of the theme engine.
  */
 function _theme_load_registry($theme, $base_theme = NULL, $theme_engine = NULL) {
@@ -519,7 +519,7 @@ function _theme_process_registry(&$cache, $name, $type, $theme, $path) {
  * @param $base_theme
  *   An array of loaded $theme objects representing the ancestor themes in
  *   oldest first order.
- * @param theme_engine
+ * @param $theme_engine
  *   The name of the theme engine.
  */
 function _theme_build_registry($theme, $base_theme, $theme_engine) {
