@@ -1436,6 +1436,8 @@ function comment_access($op, $comment) {
  *
  * @param $comment
  *   A comment object.
+ *
+ * @see comment_int_to_alphadecimal()
  */
 function comment_save($comment) {
   global $user;
@@ -1500,7 +1502,7 @@ function comment_save($comment) {
         // Strip the "/" from the end of the thread.
         $max = rtrim($max, '/');
         // Finally, build the thread field for this new comment.
-        $thread = int2vancode(vancode2int($max) + 1) . '/';
+        $thread = comment_increment_alphadecimal($max) . '/';
       }
       else {
         // This is a comment with a parent comment, so increase the part of the
@@ -1518,7 +1520,7 @@ function comment_save($comment) {
 
         if ($max == '') {
           // First child of this parent.
-          $thread = $parent->thread . '.' . int2vancode(0) . '/';
+          $thread = $parent->thread . '.' . comment_int_to_alphadecimal(0) . '/';
         }
         else {
           // Strip the "/" at the end of the thread.
@@ -1528,7 +1530,7 @@ function comment_save($comment) {
           $parent_depth = count(explode('.', $parent->thread));
           $last = $parts[$parent_depth];
           // Finally, build the thread field for this new comment.
-          $thread = $parent->thread . '.' . int2vancode(vancode2int($last) + 1) . '/';
+          $thread = $parent->thread . '.' . comment_increment_alphadecimal($last) . '/';
         }
       }
 
@@ -1767,7 +1769,7 @@ function comment_get_display_ordinal($cid, $node_type) {
   }
   else {
     // For threaded comments, the c.thread column is used for ordering. We can
-    // use the vancode for comparison, but must remove the trailing slash.
+    // use the sorting code for comparison, but must remove the trailing slash.
     // See comment_view_multiple().
     $query->where('SUBSTRING(c1.thread, 1, (LENGTH(c1.thread) -1)) < SUBSTRING(c2.thread, 1, (LENGTH(c2.thread) -1))');
   }
@@ -2453,11 +2455,11 @@ function _comment_update_node_statistics($nid) {
 }
 
 /**
- * Generate vancode.
+ * Generate sorting code.
  *
  * Consists of a leading character indicating length, followed by N digits
- * with a numerical value in base 36. Vancodes can be sorted as strings
- * without messing up numerical order.
+ * with a numerical value in base 36 (alphadecimal). These codes can be sorted
+ * as strings without altering numerical order.
  *
  * It goes:
  * 00, 01, 02, ..., 0y, 0z,
@@ -2465,7 +2467,7 @@ function _comment_update_node_statistics($nid) {
  * 2100, 2101, ..., 2zzy, 2zzz,
  * 31000, 31001, ...
  */
-function int2vancode($i = 0) {
+function comment_int_to_alphadecimal($i = 0) {
   $num = base_convert((int) $i, 10, 36);
   $length = strlen($num);
 
@@ -2473,10 +2475,21 @@ function int2vancode($i = 0) {
 }
 
 /**
- * Decode vancode back to an integer.
+ * Decode sorting code back to an integer.
+ *
+ * @see comment_int_to_alphadecimal()
  */
-function vancode2int($c = '00') {
+function comment_alphadecimal_to_int($c = '00') {
   return base_convert(substr($c, 1), 36, 10);
+}
+
+/**
+ * Increment a sorting code to the next value.
+ *
+ * @see comment_int_to_alphadecimal()
+ */
+function comment_increment_alphadecimal($c = '00') {
+  return comment_int_to_alphadecimal(comment_alphadecimal_to_int($c) + 1);
 }
 
 /**

@@ -147,7 +147,7 @@ function comment_schema() {
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
-        'description' => "The vancode representation of the comment's place in a thread.",
+        'description' => "The alphadecimal representation of the comment's place in a thread, consisting of a base 36 string prefixed by an integer indicating its length.",
       ),
       'name' => array(
         'type' => 'varchar',
