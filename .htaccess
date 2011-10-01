@@ -63,7 +63,7 @@ DirectoryIndex index.php index.html index.htm
   # above.
   #
   # NOTE: This only works when mod_rewrite is loaded. Without mod_rewrite, it is
-  # not possible to block access to entire directories from .htaccess, because
+  # not possible to block access to entire directories from .htaccess because
   # <DirectoryMatch> is not allowed here.
   #
   # If you do not have mod_rewrite installed, you should remove these

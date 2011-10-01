@@ -53,8 +53,8 @@ function aggregator_aggregator_fetch($feed) {
       $feed->http_headers = $result->headers;
       break;
     default:
-      watchdog('aggregator', 'The feed from %site seems to be broken, due to "%error".', array('%site' => $feed->title, '%error' => $result->code . ' ' . $result->error), WATCHDOG_WARNING);
-      drupal_set_message(t('The feed from %site seems to be broken, because of error "%error".', array('%site' => $feed->title, '%error' => $result->code . ' ' . $result->error)));
+      watchdog('aggregator', 'The feed from %site seems to be broken due to "%error".', array('%site' => $feed->title, '%error' => $result->code . ' ' . $result->error), WATCHDOG_WARNING);
+      drupal_set_message(t('The feed from %site seems to be broken because of error "%error".', array('%site' => $feed->title, '%error' => $result->code . ' ' . $result->error)));
   }
 
   return $feed->source_string === FALSE ? FALSE : TRUE;

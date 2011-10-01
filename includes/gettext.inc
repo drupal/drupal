@@ -86,7 +86,7 @@ function _locale_import_read_po($op, $file, $mode = NULL, $lang = NULL) {
   // The file will get closed by PHP on returning from this function.
   $fd = fopen($file->uri, 'rb');
   if (!$fd) {
-    _locale_import_message('The translation import failed, because the file %filename could not be read.', $file);
+    _locale_import_message('The translation import failed because the file %filename could not be read.', $file);
     return FALSE;
   }
 

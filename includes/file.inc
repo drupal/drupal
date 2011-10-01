@@ -757,12 +757,12 @@ function file_usage_delete(stdClass $file, $module, $type = NULL, $id = NULL, $c
 function file_copy(stdClass $source, $destination = NULL, $replace = FILE_EXISTS_RENAME) {
   if (!file_valid_uri($destination)) {
     if (($realpath = drupal_realpath($source->uri)) !== FALSE) {
-      watchdog('file', 'File %file (%realpath) could not be copied, because the destination %destination is invalid. This is often caused by improper use of file_copy() or a missing stream wrapper.', array('%file' => $source->uri, '%realpath' => $realpath, '%destination' => $destination));
+      watchdog('file', 'File %file (%realpath) could not be copied because the destination %destination is invalid. This is often caused by improper use of file_copy() or a missing stream wrapper.', array('%file' => $source->uri, '%realpath' => $realpath, '%destination' => $destination));
     }
     else {
-      watchdog('file', 'File %file could not be copied, because the destination %destination is invalid. This is often caused by improper use of file_copy() or a missing stream wrapper.', array('%file' => $source->uri, '%destination' => $destination));
+      watchdog('file', 'File %file could not be copied because the destination %destination is invalid. This is often caused by improper use of file_copy() or a missing stream wrapper.', array('%file' => $source->uri, '%destination' => $destination));
     }
-    drupal_set_message(t('The specified file %file could not be copied, because the destination is invalid. More information is available in the system log.', array('%file' => $source->uri)), 'error');
+    drupal_set_message(t('The specified file %file could not be copied because the destination is invalid. More information is available in the system log.', array('%file' => $source->uri)), 'error');
     return FALSE;
   }
 
@@ -855,7 +855,7 @@ function file_unmanaged_copy($source, $destination = NULL, $replace = FILE_EXIST
   // Assert that the source file actually exists.
   if (!file_exists($source)) {
     // @todo Replace drupal_set_message() calls with exceptions instead.
-    drupal_set_message(t('The specified file %file could not be copied, because no file by that name exists. Please check that you supplied the correct filename.', array('%file' => $original_source)), 'error');
+    drupal_set_message(t('The specified file %file could not be copied because no file by that name exists. Please check that you supplied the correct filename.', array('%file' => $original_source)), 'error');
     if (($realpath = drupal_realpath($original_source)) !== FALSE) {
       watchdog('file', 'File %file (%realpath) could not be copied because it does not exist.', array('%file' => $original_source, '%realpath' => $realpath));
     }
@@ -881,8 +881,8 @@ function file_unmanaged_copy($source, $destination = NULL, $replace = FILE_EXIST
     $dirname = drupal_dirname($destination);
     if (!file_prepare_directory($dirname)) {
       // The destination is not valid.
-      watchdog('file', 'File %file could not be copied, because the destination directory %destination is not configured correctly.', array('%file' => $original_source, '%destination' => $dirname));
-      drupal_set_message(t('The specified file %file could not be copied, because the destination directory is not properly configured. This may be caused by a problem with file or directory permissions. More information is available in the system log.', array('%file' => $original_source)), 'error');
+      watchdog('file', 'File %file could not be copied because the destination directory %destination is not configured correctly.', array('%file' => $original_source, '%destination' => $dirname));
+      drupal_set_message(t('The specified file %file could not be copied because the destination directory is not properly configured. This may be caused by a problem with file or directory permissions. More information is available in the system log.', array('%file' => $original_source)), 'error');
       return FALSE;
     }
   }
@@ -999,12 +999,12 @@ function file_destination($destination, $replace) {
 function file_move(stdClass $source, $destination = NULL, $replace = FILE_EXISTS_RENAME) {
   if (!file_valid_uri($destination)) {
     if (($realpath = drupal_realpath($source->uri)) !== FALSE) {
-      watchdog('file', 'File %file (%realpath) could not be moved, because the destination %destination is invalid. This may be caused by improper use of file_move() or a missing stream wrapper.', array('%file' => $source->uri, '%realpath' => $realpath, '%destination' => $destination));
+      watchdog('file', 'File %file (%realpath) could not be moved because the destination %destination is invalid. This may be caused by improper use of file_move() or a missing stream wrapper.', array('%file' => $source->uri, '%realpath' => $realpath, '%destination' => $destination));
     }
     else {
-      watchdog('file', 'File %file could not be moved, because the destination %destination is invalid. This may be caused by improper use of file_move() or a missing stream wrapper.', array('%file' => $source->uri, '%destination' => $destination));
+      watchdog('file', 'File %file could not be moved because the destination %destination is invalid. This may be caused by improper use of file_move() or a missing stream wrapper.', array('%file' => $source->uri, '%destination' => $destination));
     }
-    drupal_set_message(t('The specified file %file could not be moved, because the destination is invalid. More information is available in the system log.', array('%file' => $source->uri)), 'error');
+    drupal_set_message(t('The specified file %file could not be moved because the destination is invalid. More information is available in the system log.', array('%file' => $source->uri)), 'error');
     return FALSE;
   }
 
@@ -1235,7 +1235,7 @@ function file_delete(stdClass $file, $force = FALSE) {
     else {
       watchdog('file', 'File %file could not be deleted because it is not a valid URI. This may be caused by improper use of file_delete() or a missing stream wrapper.', array('%file' => $file->uri));
     }
-    drupal_set_message(t('The specified file %file could not be deleted, because it is not a valid URI. More information is available in the system log.', array('%file' => $file->uri)), 'error');
+    drupal_set_message(t('The specified file %file could not be deleted because it is not a valid URI. More information is available in the system log.', array('%file' => $file->uri)), 'error');
     return FALSE;
   }
 
@@ -1288,7 +1288,7 @@ function file_unmanaged_delete($path) {
   // Return TRUE for non-existent file, but log that nothing was actually
   // deleted, as the current state is the intended result.
   if (!file_exists($path)) {
-    watchdog('file', 'The file %path was not deleted, because it does not exist.', array('%path' => $path), WATCHDOG_NOTICE);
+    watchdog('file', 'The file %path was not deleted because it does not exist.', array('%path' => $path), WATCHDOG_NOTICE);
     return TRUE;
   }
   // We cannot handle anything other than files and directories. Log an error
@@ -1418,12 +1418,12 @@ function file_save_upload($source, $validators = array(), $destination = FALSE, 
   switch ($_FILES['files']['error'][$source]) {
     case UPLOAD_ERR_INI_SIZE:
     case UPLOAD_ERR_FORM_SIZE:
-      drupal_set_message(t('The file %file could not be saved, because it exceeds %maxsize, the maximum allowed size for uploads.', array('%file' => $_FILES['files']['name'][$source], '%maxsize' => format_size(file_upload_max_size()))), 'error');
+      drupal_set_message(t('The file %file could not be saved because it exceeds %maxsize, the maximum allowed size for uploads.', array('%file' => $_FILES['files']['name'][$source], '%maxsize' => format_size(file_upload_max_size()))), 'error');
       return FALSE;
 
     case UPLOAD_ERR_PARTIAL:
     case UPLOAD_ERR_NO_FILE:
-      drupal_set_message(t('The file %file could not be saved, because the upload did not complete.', array('%file' => $_FILES['files']['name'][$source])), 'error');
+      drupal_set_message(t('The file %file could not be saved because the upload did not complete.', array('%file' => $_FILES['files']['name'][$source])), 'error');
       return FALSE;
 
     case UPLOAD_ERR_OK:
@@ -1499,7 +1499,7 @@ function file_save_upload($source, $validators = array(), $destination = FALSE, 
   // Assert that the destination contains a valid stream.
   $destination_scheme = file_uri_scheme($destination);
   if (!$destination_scheme || !file_stream_wrapper_valid_scheme($destination_scheme)) {
-    drupal_set_message(t('The file could not be uploaded, because the destination %destination is invalid.', array('%destination' => $destination)), 'error');
+    drupal_set_message(t('The file could not be uploaded because the destination %destination is invalid.', array('%destination' => $destination)), 'error');
     return FALSE;
   }
 
@@ -1832,7 +1832,7 @@ function file_save_data($data, $destination = NULL, $replace = FILE_EXISTS_RENAM
   }
   if (!file_valid_uri($destination)) {
     watchdog('file', 'The data could not be saved because the destination %destination is invalid. This may be caused by improper use of file_save_data() or a missing stream wrapper.', array('%destination' => $destination));
-    drupal_set_message(t('The data could not be saved, because the destination is invalid. More information is available in the system log.'), 'error');
+    drupal_set_message(t('The data could not be saved because the destination is invalid. More information is available in the system log.'), 'error');
     return FALSE;
   }
 

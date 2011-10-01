@@ -710,7 +710,7 @@ function _locale_rebuild_js($langcode = NULL) {
       watchdog('locale', 'Created JavaScript translation file for the language %language.', array('%language' => t($language->name)));
       return TRUE;
     case 'deleted':
-      watchdog('locale', 'Removed JavaScript translation file for the language %language, because no translations currently exist for that language.', array('%language' => t($language->name)));
+      watchdog('locale', 'Removed JavaScript translation file for the language %language because no translations currently exist for that language.', array('%language' => t($language->name)));
       return TRUE;
     case 'error':
       watchdog('locale', 'An error occurred during creation of the JavaScript translation file for the language %language.', array('%language' => t($language->name)), WATCHDOG_ERROR);

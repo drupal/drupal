@@ -133,7 +133,7 @@ following the instructions in the INTRODUCTION section at the top of this file:
    how to update your custom modules, and http://drupal.org/update/theme for
    custom themes.
 
-   You may decide at this point that you cannot upgrade your site, because
+   You may decide at this point that you cannot upgrade your site because
    needed modules or themes are not ready for Drupal 8
 
 2. Update to the latest available version of Drupal 7.x (if your current version
@@ -151,7 +151,7 @@ following the instructions in the INTRODUCTION section at the top of this file:
 
 6. Go to Administer > Site building > Modules. Disable all modules that are not
    listed under "Core - required" or "Core - optional". It is possible that some
-   modules cannot be disabled, because others depend on them. Repeat this step
+   modules cannot be disabled because others depend on them. Repeat this step
    until all non-core modules are disabled.
 
    If you know that you will not re-enable some modules for Drupal 8.x and you
