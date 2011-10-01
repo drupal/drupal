@@ -135,11 +135,11 @@ function node_tokens($type, $tokens, array $data = array(), array $options = arr
 
         case 'body':
         case 'summary':
-          if (!empty($node->body)) {
-            $item = $node->body[$node->language][0];
+          if ($items = field_get_items('node', $node, 'body', $language_code)) {
             $column = ($name == 'body') ? 'value' : 'summary';
             $instance = field_info_instance('node', 'body', $node->type);
-            $replacements[$original] = $sanitize ? _text_sanitize($instance, $node->language, $item, $column) : $item[$column];
+            $field_langcode = field_language('node', $node, 'body', $language_code);
+            $replacements[$original] = $sanitize ? _text_sanitize($instance, $field_langcode, $items[0], $column) : $items[0][$column];
           }
           break;
 
