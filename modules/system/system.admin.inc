@@ -1561,7 +1561,7 @@ function system_site_information_settings_validate($form, &$form_state) {
  */
 function system_cron_settings() {
   $form['description'] = array(
-    '#markup' => '<p>'.t('Cron takes care of running periodical tasks like checking for updates and indexing content for search.').'</p>',
+    '#markup' => '<p>' . t('Cron takes care of running periodic tasks like checking for updates and indexing content for search.') . '</p>',
   );
   $form['run'] = array(
     '#type' => 'submit',
