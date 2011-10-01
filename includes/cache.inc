@@ -20,9 +20,8 @@ function cache($bin = 'cache') {
   // bin names to be passed as arguments.
   $bin = str_replace('cache_', '', $bin);
 
-  // We do not use drupal_static() here because we do not want to change the
-  // storage of a cache bin mid-request.
-  static $cache_objects;
+  $cache_objects = &drupal_static('cache_objects', array());
+
   if (!isset($cache_objects[$bin])) {
     $class = variable_get('cache_class_' . $bin);
     if (!isset($class)) {
@@ -345,6 +344,50 @@ interface DrupalCacheInterface {
    *   TRUE if the cache bin specified is empty.
    */
   function isEmpty();
+}
+
+/**
+ * A stub cache implementation.
+ *
+ * The stub implementation is needed when database access is not yet available.
+ * Because Drupal's caching system never requires that cached data be present,
+ * these stub functions can short-circuit the process and sidestep the need for
+ * any persistent storage. Using this cache implementation during normal
+ * operations would have a negative impact on performance.
+ *
+ * This also can be used for testing purposes.
+ */
+class DrupalNullCache implements DrupalCacheInterface {
+
+  function __construct($bin) {}
+
+  function get($cid) {
+    return FALSE;
+  }
+
+  function getMultiple(&$cids) {
+    return array();
+  }
+
+  function set($cid, $data, $expire = CACHE_PERMANENT) {}
+
+  function delete($cid) {}
+
+  function deleteMultiple(array $cids) {}
+
+  function deletePrefix($prefix) {}
+
+  function flush() {}
+
+  function expire() {}
+
+  function garbageCollection() {}
+
+  function clear($cid = NULL, $wildcard = FALSE) {}
+
+  function isEmpty() {
+    return TRUE;
+  }
 }
 
 /**

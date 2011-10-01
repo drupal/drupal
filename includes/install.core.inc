@@ -272,8 +272,7 @@ function install_begin_request(&$install_state) {
   // because any data put in the cache during the installer is inherently
   // suspect, due to the fact that Drupal is not fully set up yet.
   require_once DRUPAL_ROOT . '/includes/cache.inc';
-  require_once DRUPAL_ROOT . '/includes/cache-install.inc';
-  $conf['cache_default_class'] = 'DrupalFakeCache';
+  $conf['cache_default_class'] = 'DrupalNullCache';
 
   // Prepare for themed output. We need to run this at the beginning of the
   // page request to avoid a different theme accidentally getting set. (We also
@@ -1514,9 +1513,14 @@ function install_finished(&$install_state) {
   $output = '<p>' . st('Congratulations, you installed @drupal!', array('@drupal' => drupal_install_profile_distribution_name())) . '</p>';
   $output .= '<p>' . (isset($messages['error']) ? st('Review the messages above before visiting <a href="@url">your new site</a>.', array('@url' => url(''))) : st('<a href="@url">Visit your new site</a>.', array('@url' => url('')))) . '</p>';
 
-  // Flush all caches to ensure that any full bootstraps during the installer
-  // do not leave stale cached data, and that any content types or other items
-  // registered by the install profile are registered correctly.
+  // Now that the install is completed, allow the default cache backend to be
+  // used. DrupalNullCache must be used up to this point to avoid cached data
+  // from the partially installed site being stored. The cache clear here
+  // ensures that any data cached from AJAX requests to the site which are
+  // outside of the install environment will also be cleared.
+  global $conf;
+  unset($conf['cache_default_class']);
+  drupal_static_reset('cache_objects');
   drupal_flush_all_caches();
 
   // Remember the profile which was used.
