@@ -245,8 +245,7 @@ function update_info_page() {
   $output .= "<li>Install your new files in the appropriate location, as described in the handbook.</li>\n";
   $output .= "</ol>\n";
   $output .= "<p>When you have performed the steps above, you may proceed.</p>\n";
-  $form_action = check_url(drupal_current_script_url(array('op' => 'selection', 'token' => $token)));
-  $output .= '<form method="post" action="' . $form_action . '"><p><input type="submit" value="Continue" class="form-submit" /></p></form>';
+  $output .= '<form method="post" action="update.php?op=selection&amp;token=' . $token . '"><p><input type="submit" value="Continue" class="form-submit" /></p></form>';
   $output .= "\n";
   return $output;
 }
@@ -317,26 +316,20 @@ function update_extra_requirements($requirements = NULL) {
 }
 
 /**
- * Check update requirements and report any errors or (optionally) warnings.
- *
- * @param $skip_warnings
- *   (optional) If set to TRUE, requirement warnings will be ignored, and a
- *   report will only be issued if there are requirement errors. Defaults to
- *   FALSE.
+ * Check update requirements and report any errors.
  */
-function update_check_requirements($skip_warnings = FALSE) {
+function update_check_requirements() {
   // Check requirements of all loaded modules.
   $requirements = module_invoke_all('requirements', 'update');
   $requirements += update_extra_requirements();
   $severity = drupal_requirements_severity($requirements);
 
-  // If there are errors, always display them. If there are only warnings, skip
-  // them if the caller has indicated they should be skipped.
-  if ($severity == REQUIREMENT_ERROR || ($severity == REQUIREMENT_WARNING && !$skip_warnings)) {
+  // If there are issues, report them.
+  if ($severity == REQUIREMENT_ERROR) {
     update_task_list('requirements');
     drupal_set_title('Requirements problem');
     $status_report = theme('status_report', array('requirements' => $requirements));
-    $status_report .= 'Check the error messages and <a href="' . check_url(drupal_requirements_url($severity)) . '">try again</a>.';
+    $status_report .= 'Check the error messages and <a href="' . check_url(request_uri()) . '">try again</a>.';
     print theme('update_page', array('content' => $status_report));
     exit();
   }
@@ -392,9 +385,8 @@ if (empty($op) && update_access_allowed()) {
   // Set up theme system for the maintenance page.
   drupal_maintenance_theme();
 
-  // Check the update requirements for Drupal. Only report on errors at this
-  // stage, since the real requirements check happens further down.
-  update_check_requirements(TRUE);
+  // Check the update requirements for Drupal.
+  update_check_requirements();
 
   // Redirect to the update information page if all requirements were met.
   install_goto('update.php?op=info');
@@ -426,12 +418,8 @@ if (update_access_allowed()) {
 
   update_fix_compatibility();
 
-  // Check the update requirements for all modules. If there are warnings, but
-  // no errors, skip reporting them if the user has provided a URL parameter
-  // acknowledging the warnings and indicating a desire to continue anyway. See
-  // drupal_requirements_url().
-  $skip_warnings = !empty($_GET['continue']);
-  update_check_requirements($skip_warnings);
+  // Check the update requirements for all modules.
+  update_check_requirements();
 
   $op = isset($_REQUEST['op']) ? $_REQUEST['op'] : '';
   switch ($op) {
@@ -445,12 +433,7 @@ if (update_access_allowed()) {
 
     case 'Apply pending updates':
       if (isset($_GET['token']) && $_GET['token'] == drupal_get_token('update')) {
-        // Generate absolute URLs for the batch processing (using $base_root),
-        // since the batch API will pass them to url() which does not handle
-        // update.php correctly by default.
-        $batch_url = $base_root . drupal_current_script_url();
-        $redirect_url = $base_root . drupal_current_script_url(array('op' => 'results'));
-        update_batch($_POST['start'], $redirect_url, $batch_url);
+        update_batch($_POST['start'], $base_url . '/update.php?op=results', $base_url . '/update.php');
         break;
       }
 
