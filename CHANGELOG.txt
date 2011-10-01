@@ -6,6 +6,7 @@ Drupal 8.0, xxxx-xx-xx (development version)
       modules with similar functionality are available:
       * Blog
       * Profile
+- Removed the Garland theme from core.
 - Universally Unique IDentifier (UUID):
     * Support for generating and validating UUIDs.
 

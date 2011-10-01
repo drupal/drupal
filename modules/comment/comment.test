@@ -569,8 +569,8 @@ class CommentInterfaceTest extends CommentHelperCase {
    */
   function testCommentLinks() {
     // Bartik theme alters comment links, so use a different theme.
-    theme_enable(array('garland'));
-    variable_set('theme_default', 'garland');
+    theme_enable(array('stark'));
+    variable_set('theme_default', 'stark');
 
     // Remove additional user permissions from $this->web_user added by setUp(),
     // since this test is limited to anonymous and authenticated roles only.

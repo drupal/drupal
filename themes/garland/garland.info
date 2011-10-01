@@ -1,8 +1,0 @@
-name = Garland
-description = A multi-column theme which can be configured to modify colors and switch between fixed and fluid width layouts.
-package = Core
-version = VERSION
-core = 8.x
-stylesheets[all][] = style.css
-stylesheets[print][] = print.css
-settings[garland_width] = fluid

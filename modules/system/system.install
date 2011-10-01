@@ -1630,6 +1630,18 @@ function system_update_8000() {
 }
 
 /**
+ * Move from the Garland theme.
+ */
+function system_update_8001() {
+  $themes = array('theme_default', 'maintenance_theme', 'admin_theme');
+  foreach ($themes as $theme) {
+    if (variable_get($theme) == 'garland') {
+      variable_set($theme, 'bartik');
+    }
+  }
+}
+
+/**
  * @} End of "defgroup updates-7.x-to-8.x"
  * The next series of updates should start at 9000.
  */
