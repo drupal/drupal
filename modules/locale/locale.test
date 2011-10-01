@@ -1929,8 +1929,8 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
     $this->assertResponse(404, "Unknown language path prefix should return 404");
 
     // Setup for domain negotiation, first configure the language to have domain
-    // URL.
-    $edit = array('prefix' => '', 'domain' => "http://$language_domain");
+    // URL. We use https and a port to make sure that only the domain name is used.
+    $edit = array('prefix' => '', 'domain' => "https://$language_domain:99");
     $this->drupalPost("admin/config/regional/language/edit/$language", $edit, t('Save language'));
     // Set the site to use domain language negotiation.
 
