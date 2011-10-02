@@ -155,9 +155,11 @@ function comment_tokens($type, $tokens, array $data = array(), array $options = 
           break;
 
         case 'body':
-          $item = $comment->comment_body[LANGUAGE_NONE][0];
-          $instance = field_info_instance('comment', 'body', 'comment_body');
-          $replacements[$original] = $sanitize ? _text_sanitize($instance, LANGUAGE_NONE, $item, 'value') : $item['value'];
+          if ($items = field_get_items('comment', $comment, 'comment_body', $language_code)) {
+            $instance = field_info_instance('comment', 'body', 'comment_body');
+            $field_langcode = field_language('comment', $comment, 'comment_body', $language_code);
+            $replacements[$original] = $sanitize ? _text_sanitize($instance, $field_langcode, $items[0], 'value') : $items[0]['value'];
+          }
           break;
 
         // Comment related URLs.
