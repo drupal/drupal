@@ -2828,8 +2828,6 @@ function node_search_validate($form, &$form_state) {
  *   TRUE if the operation may be performed, FALSE otherwise.
  */
 function node_access($op, $node, $account = NULL) {
-  global $user;
-
   $rights = &drupal_static(__FUNCTION__, array());
 
   if (!$node || !in_array($op, array('view', 'update', 'delete', 'create'), TRUE)) {
@@ -2839,7 +2837,7 @@ function node_access($op, $node, $account = NULL) {
   }
   // If no user object is supplied, the access check is for the current user.
   if (empty($account)) {
-    $account = $user;
+    $account = $GLOBALS['user'];
   }
 
   // $node may be either an object or a node type. Since node types cannot be
