@@ -20,8 +20,9 @@ function cache($bin = 'cache') {
   // bin names to be passed as arguments.
   $bin = str_replace('cache_', '', $bin);
 
-  $cache_objects = &drupal_static('cache_objects', array());
-
+  // We do not use drupal_static() here because we do not want to change the
+  // storage of a cache bin mid-request.
+  static $cache_objects;
   if (!isset($cache_objects[$bin])) {
     $class = variable_get('cache_class_' . $bin);
     if (!isset($class)) {
