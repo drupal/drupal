@@ -119,7 +119,7 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
         try {
           $count = $this->query('SELECT COUNT(*) FROM ' . $prefix . '.sqlite_master WHERE type = :type AND name NOT LIKE :pattern', array(':type' => 'table', ':pattern' => 'sqlite_%'))->fetchField();
 
-          // We can prune the database file if it doens't have any tables.
+          // We can prune the database file if it doesn't have any tables.
           if ($count == 0) {
             // Detach the database.
             $this->query('DETACH DATABASE :schema', array(':schema' => $prefix));

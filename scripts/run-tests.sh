@@ -124,7 +124,7 @@ All arguments are long options.
   --clean     Cleans up database tables or directories from previous, failed,
               tests and then exits (no tests are run).
 
-  --url       Immediately preceeds a URL to set the host and path. You will
+  --url       Immediately precedes a URL to set the host and path. You will
               need this parameter if Drupal is in a subdirectory on your
               localhost and you have not set \$base_url in settings.php. Tests
               can be run under SSL by including https:// in the URL.

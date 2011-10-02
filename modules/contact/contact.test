@@ -262,7 +262,7 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
     foreach ($categories as $category) {
       $category_name = db_query("SELECT category FROM {contact} WHERE cid = :cid", array(':cid' => $category))->fetchField();
       $this->drupalPost('admin/structure/contact/delete/' . $category, array(), t('Delete'));
-      $this->assertRaw(t('Category %category has been deleted.', array('%category' => $category_name)), t('Category deleted sucessfully.'));
+      $this->assertRaw(t('Category %category has been deleted.', array('%category' => $category_name)), t('Category deleted successfully.'));
     }
   }
 

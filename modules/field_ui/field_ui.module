@@ -17,7 +17,7 @@ function field_ui_help($path, $arg) {
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Planning fields') . '</dt>';
-      $output .= '<dd>' . t('There are several decisions you will need to make before definining a field for content, comments, etc.:') . '<dl>';
+      $output .= '<dd>' . t('There are several decisions you will need to make before defining a field for content, comments, etc.:') . '<dl>';
       $output .= '<dt>' . t('What the field will be called') . '</dt>';
       $output .= '<dd>' . t('A field has a <em>label</em> (the name displayed in the user interface) and a <em>machine name</em> (the name used internally). The label can be changed after you create the field, if needed, but the machine name cannot be changed after you have created the field.') . '</li>';
       $output .= '<dt>' . t('What type of data the field will store') . '</dt>';

@@ -200,7 +200,7 @@ function pager_find_page($element = 0) {
  * to theme('pager') will render a pager that correctly corresponds to the
  * items being displayed.
  *
- * If the items being displayed result from a database query peformed using
+ * If the items being displayed result from a database query performed using
  * Drupal's database API, and if you have control over the construction of the
  * database query, you do not need to call this function directly; instead, you
  * can simply extend the query object with the 'PagerDefault' extender before

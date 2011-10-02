@@ -919,7 +919,7 @@ function drupal_process_form($form_id, &$form, &$form_state) {
   // have set $form_state['cache'] to indicate that the form and form state
   // shall be cached. But the form may only be cached if the 'no_cache' property
   // is not set to TRUE. Only cache $form as it was prior to form_builder(),
-  // because form_builder() must run for each request to accomodate new user
+  // because form_builder() must run for each request to accommodate new user
   // input. Rebuilt forms are not cached here, because drupal_rebuild_form()
   // already takes care of that.
   if (!$form_state['rebuild'] && $form_state['cache'] && empty($form_state['no_cache'])) {
@@ -1941,7 +1941,7 @@ function _form_builder_handle_input_element($form_id, &$element, &$form_state) {
   // drupal_form_submit() must not be able to get around this. Forms that set
   // #access=FALSE on an element usually allow access for some users, so forms
   // submitted with drupal_form_submit() may bypass access restriction and be
-  // treated as high-privelege users instead.
+  // treated as high-privilege users instead.
   $process_input = empty($element['#disabled']) && ($form_state['programmed'] || ($form_state['process_input'] && (!isset($element['#access']) || $element['#access'])));
 
   // Set the element's #value property.

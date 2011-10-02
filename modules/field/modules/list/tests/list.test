@@ -303,7 +303,7 @@ class ListFieldUITestCase extends FieldTestCase {
     $this->field_name = 'field_list_boolean';
     $this->createListField('list_boolean');
 
-    // Check that the seperate 'On' and 'Off' form fields work.
+    // Check that the separate 'On' and 'Off' form fields work.
     $on = $this->randomName();
     $off = $this->randomName();
     $allowed_values = array(1 => $on, 0 => $off);

@@ -713,7 +713,7 @@ function form_label_test_form() {
   );
   $form['form_textfield_test_no_title_required'] = array(
     '#type' => 'textfield',
-    // We use an empty title, since not setting #title supresses the label
+    // We use an empty title, since not setting #title suppresses the label
     // and required marker.
     '#title' => '',
     '#required' => TRUE,

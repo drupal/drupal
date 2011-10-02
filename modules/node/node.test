@@ -1957,7 +1957,7 @@ class NodeBuildContent extends DrupalWebTestCase {
   function testNodeRebuildContent() {
     $node = $this->drupalCreateNode();
 
-    // Set a property in the content array so we can test for its existance later on.
+    // Set a property in the content array so we can test for its existence later on.
     $node->content['test_content_property'] = array('#value' => $this->randomString());
     $content = node_build_content($node);
 

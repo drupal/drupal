@@ -4429,7 +4429,7 @@ function hook_menu_site_status_alter(&$menu_site_status, $path) {
 /**
  * Register information about FileTransfer classes provided by a module.
  *
- * The FileTransfer class allows transfering files over a specific type of
+ * The FileTransfer class allows transferring files over a specific type of
  * connection. Core provides classes for FTP and SSH. Contributed modules are
  * free to extend the FileTransfer base class to add other connection types,
  * and if these classes are registered via hook_filetransfer_info(), those

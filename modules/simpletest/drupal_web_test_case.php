@@ -1446,7 +1446,7 @@ class DrupalWebTestCase extends DrupalTestCase {
   protected function tearDown() {
     global $user, $language;
 
-    // In case a fatal error occured that was not in the test process read the
+    // In case a fatal error occurred that was not in the test process read the
     // log to pick up any fatal errors.
     simpletest_log_read($this->testId, $this->databasePrefix, get_class($this), TRUE);
 

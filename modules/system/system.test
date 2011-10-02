@@ -1816,7 +1816,7 @@ class TokenReplaceTestCase extends DrupalWebTestCase {
     $result = token_replace($source, array('node' => $node), array('language' => $language, 'clear' => TRUE));
     $result = $this->assertEqual($target, $result, 'Valid tokens replaced while invalid tokens cleared out.');
 
-    // Test without using the clear parameter (non-existant token untouched).
+    // Test without using the clear parameter (non-existent token untouched).
     $target .= '[user:name]';
     $target .= '[bogus:token]';
     $result = token_replace($source, array('node' => $node), array('language' => $language));

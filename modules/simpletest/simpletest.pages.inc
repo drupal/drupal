@@ -305,7 +305,7 @@ function simpletest_result_form($form, &$form_state, $test_id) {
   );
   $form['action']['filter']['#default_value'] = ($filter['fail'] ? 'fail' : 'all');
 
-  // Catagorized test classes for to be used with selected filter value.
+  // Categorized test classes for to be used with selected filter value.
   $form['action']['filter_pass'] = array(
     '#type' => 'hidden',
     '#default_value' => implode(',', $filter['pass']),

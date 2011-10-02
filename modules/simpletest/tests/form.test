@@ -599,13 +599,13 @@ class FormsElementsLabelsTestCase extends DrupalWebTestCase {
     // Exercise various defaults for textboxes and modifications to ensure
     // appropriate override and correct behaviour.
     $elements = $this->xpath('//label[@for="edit-form-textfield-test-title-and-required"]/child::span[@class="form-required"]/parent::*/following-sibling::input[@id="edit-form-textfield-test-title-and-required"]');
-    $this->assertTrue(isset($elements[0]), t("Label preceeds textfield, with required marker inside label."));
+    $this->assertTrue(isset($elements[0]), t("Label precedes textfield, with required marker inside label."));
 
     $elements = $this->xpath('//input[@id="edit-form-textfield-test-no-title-required"]/preceding-sibling::label[@for="edit-form-textfield-test-no-title-required"]/span[@class="form-required"]');
-    $this->assertTrue(isset($elements[0]), t("Label tag with required marker preceeds required textfield with no title."));
+    $this->assertTrue(isset($elements[0]), t("Label tag with required marker precedes required textfield with no title."));
 
     $elements = $this->xpath('//input[@id="edit-form-textfield-test-title-invisible"]/preceding-sibling::label[@for="edit-form-textfield-test-title-invisible" and @class="element-invisible"]');
-    $this->assertTrue(isset($elements[0]), t("Label preceeding field and label class is element-invisible."));
+    $this->assertTrue(isset($elements[0]), t("Label preceding field and label class is element-invisible."));
 
     $elements = $this->xpath('//input[@id="edit-form-textfield-test-title"]/preceding-sibling::span[@class="form-required"]');
     $this->assertFalse(isset($elements[0]), t("No required marker on non-required field."));

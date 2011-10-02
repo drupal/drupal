@@ -272,7 +272,7 @@ function simpletest_log_read($test_id, $prefix, $test_class, $during_test = FALS
         DrupalTestCase::insertAssert($test_id, $test_class, FALSE, $match[2], $match[1], $caller);
       }
       else {
-        // Unkown format, place the entire message in the log.
+        // Unknown format, place the entire message in the log.
         DrupalTestCase::insertAssert($test_id, $test_class, FALSE, $line, 'Fatal error');
       }
       $found = TRUE;
@@ -398,7 +398,7 @@ function simpletest_generate_file($filename, $width, $lines, $type = 'binary-tex
         break;
     }
   }
-  $text = wordwrap($text, $width - 1, "\n", TRUE) . "\n"; // Add \n for symetrical file.
+  $text = wordwrap($text, $width - 1, "\n", TRUE) . "\n"; // Add \n for symmetrical file.
 
   // Create filename.
   file_put_contents('public://' . $filename . '.txt', $text);

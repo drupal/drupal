@@ -399,7 +399,7 @@ class ProfileBlockTestCase extends ProfileTestCase {
   }
 
   function testAuthorInformationBlock() {
-    // Set the block to a region to confirm the block is availble.
+    // Set the block to a region to confirm the block is available.
     $edit = array();
     $edit['blocks[profile_author-information][region]'] = 'footer';
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));

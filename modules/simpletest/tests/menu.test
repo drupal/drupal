@@ -536,7 +536,7 @@ class MenuRouterTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Test menu maintainance hooks.
+   * Test menu maintenance hooks.
    */
   function testMenuItemHooks() {
     // Create an item.

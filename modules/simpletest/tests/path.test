@@ -171,7 +171,7 @@ class UrlAlterFunctionalTest extends DrupalWebTestCase {
     $this->assertUrlInboundAlter('alias/test2', "user/$uid/edit");
     $this->assertUrlOutboundAlter("user/$uid/edit", 'alias/test2');
 
-    // Test a non-existant user is not altered.
+    // Test a non-existent user is not altered.
     $uid++;
     $this->assertUrlInboundAlter("user/$uid", "user/$uid");
     $this->assertUrlOutboundAlter("user/$uid", "user/$uid");
