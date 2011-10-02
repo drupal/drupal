@@ -265,7 +265,7 @@ class ThemeFunctionsTestCase extends DrupalWebTestCase {
 /**
  * Unit tests for theme_links().
  */
-class ThemeLinksUnitTest extends DrupalUnitTestCase {
+class ThemeLinksTest extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Links',
