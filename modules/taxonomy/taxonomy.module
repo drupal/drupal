@@ -441,7 +441,7 @@ function taxonomy_vocabulary_save($vocabulary) {
 
   unset($vocabulary->original);
   cache_clear_all();
-  entity_get_controller('taxonomy_vocabulary')->resetCache(array($vocabulary->vid));
+  taxonomy_vocabulary_static_reset(array($vocabulary->vid));
 
   return $status;
 }
@@ -473,7 +473,7 @@ function taxonomy_vocabulary_delete($vid) {
     module_invoke_all('entity_delete', $vocabulary, 'taxonomy_vocabulary');
 
     cache_clear_all();
-    entity_get_controller('taxonomy_vocabulary')->resetCache();
+    taxonomy_vocabulary_static_reset();
 
     return SAVED_DELETED;
   }
@@ -806,7 +806,7 @@ function taxonomy_term_is_page($term) {
 }
 
 /**
- * Clear all static cache variables for terms..
+ * Clear all static cache variables for terms.
  */
 function taxonomy_terms_static_reset() {
   drupal_static_reset('taxonomy_term_count_nodes');
@@ -817,6 +817,17 @@ function taxonomy_terms_static_reset() {
   drupal_static_reset('taxonomy_get_parents_all');
   drupal_static_reset('taxonomy_get_children');
   entity_get_controller('taxonomy_term')->resetCache();
+}
+
+/**
+ * Clear all static cache variables for vocabularies.
+ *
+ * @param $ids
+ * An array of ids to reset in entity controller cache.
+ */
+function taxonomy_vocabulary_static_reset($ids = NULL) {
+  drupal_static_reset('taxonomy_vocabulary_get_names');
+  entity_get_controller('taxonomy_vocabulary')->resetCache($ids);
 }
 
 /**
@@ -836,7 +847,12 @@ function taxonomy_get_vocabularies() {
  *   An array of vocabulary ids, names, machine names, keyed by machine name.
  */
 function taxonomy_vocabulary_get_names() {
-  $names = db_query('SELECT name, machine_name, vid FROM {taxonomy_vocabulary}')->fetchAllAssoc('machine_name');
+  $names = &drupal_static(__FUNCTION__);
+
+  if (!isset($names)) {
+    $names = db_query('SELECT name, machine_name, vid FROM {taxonomy_vocabulary}')->fetchAllAssoc('machine_name');
+  }
+
   return $names;
 }
 
