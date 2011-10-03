@@ -1108,7 +1108,7 @@ function st($string, array $args = array(), array $options = array()) {
       // that multiple files end with the same extension, even if unlikely.
       $po_files = file_scan_directory('./profiles/' . $install_state['parameters']['profile'] . '/translations', '/'. $install_state['parameters']['locale'] .'\.po$/', array('recurse' => FALSE));
       if (count($po_files)) {
-        require_once DRUPAL_ROOT . '/includes/locale.inc';
+        require_once DRUPAL_ROOT . '/includes/gettext.inc';
         foreach ($po_files as $po_file) {
           _locale_import_read_po('mem-store', $po_file);
         }
