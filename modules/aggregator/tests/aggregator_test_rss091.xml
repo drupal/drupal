@@ -22,7 +22,7 @@
       <description>First example feed item description.</description>
     </item>
     <item>
-      <title>Second example feed item title</title>
+      <title>Second example feed item title. This title is extremely long so that it exceeds the 255 character limit for titles in feed item storage. In fact it's so long that this sentence isn't long enough so I'm rambling a bit to make it longer, nearly there now. Ah now it's long enough so I'll shut up.</title>
       <link>http://example.com/example-turns-two</link>
       <description>Second example feed item description.</description>
     </item>
