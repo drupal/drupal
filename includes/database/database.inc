@@ -1997,7 +1997,7 @@ interface DatabaseStatementInterface extends Traversable {
    *   The numeric index of the field to return. Defaults to the first field.
    *
    * @return
-   *   A single field from the next record.
+   *   A single field from the next record, or FALSE if there is no next record.
    */
   public function fetchField($index = 0);
 
@@ -2017,7 +2017,7 @@ interface DatabaseStatementInterface extends Traversable {
    * helper method, so one is added.
    *
    * @return
-   *   An associative array.
+   *   An associative array, or FALSE if there is no next row.
    */
   public function fetchAssoc();
 
@@ -2045,7 +2045,7 @@ interface DatabaseStatementInterface extends Traversable {
    *   The index of the column number to fetch.
    *
    * @return
-   *   An indexed array.
+   *   An indexed array, or an empty array if there is no result set.
    */
   public function fetchCol($index = 0);
 
@@ -2065,7 +2065,7 @@ interface DatabaseStatementInterface extends Traversable {
    *   The numeric index of the field to use as the array value.
    *
    * @return
-   *   An associative array.
+   *   An associative array, or an empty array if there is no result set.
    */
   public function fetchAllKeyed($key_index = 0, $value_index = 1);
 
@@ -2084,7 +2084,7 @@ interface DatabaseStatementInterface extends Traversable {
    *   set for the query will be used.
    *
    * @return
-   *   An associative array.
+   *   An associative array, or an empty array if there is no result set.
    */
   public function fetchAllAssoc($key, $fetch = NULL);
 }
