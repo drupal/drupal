@@ -1183,10 +1183,11 @@ function drupal_check_module($module) {
  *    dependencies[] = dblog
  * @endcode
  *
- * @param profile
+ * @param $profile
  *   Name of profile.
- * @param locale
+ * @param $locale
  *   Name of locale used (if any).
+ *
  * @return
  *   The info array.
  */
