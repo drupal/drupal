@@ -411,6 +411,21 @@ class FieldUIManageFieldsTestCase extends FieldUITestCase {
     $this->drupalGet($bundle_path);
     $this->assertFalse($this->xpath('//select[@id="edit-add-existing-field-field-name"]//option[@value=:field_name]', array(':field_name' => $field_name)), t("The 'add existing field' select respects field types 'no_ui' property."));
   }
+
+  /**
+   * Tests renaming a bundle.
+   */
+  function testRenameBundle() {
+    $type2 = strtolower($this->randomName(8)) . '_' .'test';
+    $hyphen_type2 = str_replace('_', '-', $type2);
+
+    $options = array(
+      'type' => $type2,
+    );
+    $this->drupalPost('admin/structure/types/manage/' . $this->hyphen_type, $options, t('Save content type'));
+
+    $this->drupalGet('admin/structure/types/manage/' . $hyphen_type2 . '/fields');
+  }
 }
 
 /**

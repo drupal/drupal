@@ -48,6 +48,17 @@ function field_ui_help($path, $arg) {
 }
 
 /**
+ * Implements hook_field_attach_rename_bundle().
+ */
+function field_ui_field_attach_rename_bundle($entity_type, $bundle_old, $bundle_new) {
+  // The Field UI relies on entity_get_info() to build menu items for entity
+  // field administration pages. Clear the entity info cache and ensure that
+  // the menu is rebuilt.
+  entity_info_cache_clear();
+  menu_rebuild();
+}
+
+/**
  * Implements hook_menu().
  */
 function field_ui_menu() {
