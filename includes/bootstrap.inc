@@ -418,7 +418,7 @@ abstract class DrupalCacheArray implements ArrayAccess {
  * Start the timer with the specified name. If you start and stop the same
  * timer multiple times, the measured intervals will be accumulated.
  *
- * @param name
+ * @param $name
  *   The name of the timer.
  */
 function timer_start($name) {
@@ -431,8 +431,9 @@ function timer_start($name) {
 /**
  * Read the current timer value without stopping the timer.
  *
- * @param name
+ * @param $name
  *   The name of the timer.
+ *
  * @return
  *   The current timer value in ms.
  */
@@ -454,8 +455,9 @@ function timer_read($name) {
 /**
  * Stop the timer with the specified name.
  *
- * @param name
+ * @param $name
  *   The name of the timer.
+ *
  * @return
  *   A timer array. The array contains the number of times the timer has been
  *   started and stopped (count) and the accumulated timer value in ms (time).
