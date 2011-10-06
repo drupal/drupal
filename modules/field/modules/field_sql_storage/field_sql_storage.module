@@ -493,7 +493,7 @@ function field_sql_storage_field_storage_query(EntityFieldQuery $query) {
       $select_query->fields($table_alias, array('entity_type', 'entity_id', 'revision_id', 'bundle'));
       $field_base_table = $table_alias;
     }
-    if ($field['cardinality'] != 1) {
+    if ($field['cardinality'] != 1 || $field['translatable']) {
       $select_query->distinct();
     }
   }

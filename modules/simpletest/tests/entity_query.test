@@ -1075,6 +1075,45 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
   }
 
   /**
+   * Tests querying translatable fields.
+   */
+  function testEntityFieldQueryTranslatable() {
+
+    // Make a test field translatable AND cardinality one.
+    $this->fields[0]['translatable'] = TRUE;
+    $this->fields[0]['cardinality'] = 1;
+    field_update_field($this->fields[0]);
+    field_test_entity_info_translatable('test_entity', TRUE);
+    drupal_static_reset('field_available_languages');
+
+    // Create more items with different languages.
+    $entity = new stdClass();
+    $entity->ftid = 1;
+    $entity->ftvid = 1;
+    $entity->fttype = 'test_bundle';
+
+    // Set fields in two languages with one field value.
+    foreach (array(LANGUAGE_NONE, 'en') as $langcode) {
+      $entity->{$this->field_names[0]}[$langcode][0]['value'] = 1234;
+    }
+
+    field_attach_update('test_entity', $entity);
+
+    // Look up number of results when querying a single entity with multilingual
+    // field values.
+    $query = new EntityFieldQuery();
+    $query_count = $query
+      ->entityCondition('entity_type', 'test_entity')
+      ->entityCondition('bundle', 'test_bundle')
+      ->entityCondition('entity_id', '1')
+      ->fieldCondition($this->fields[0])
+      ->count()
+      ->execute();
+
+    $this->assertEqual($query_count, 1, t("Count on translatable cardinality one field is correct."));
+  }
+
+  /**
    * Tests field meta conditions.
    */
   function testEntityFieldQueryMetaConditions() {
