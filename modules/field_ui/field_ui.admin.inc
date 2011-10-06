@@ -254,12 +254,17 @@ function theme_field_ui_table($variables) {
         $row += $element['#attributes'];
       }
 
+      // Render children as table cells.
       foreach (element_children($element) as $cell_key) {
-        $cell = array('data' => drupal_render($element[$cell_key]));
-        if (isset($element[$cell_key]['#cell_attributes'])) {
-          $cell += $element[$cell_key]['#cell_attributes'];
+        $child = &$element[$cell_key];
+        // Do not render a cell for children of #type 'value'.
+        if (!(isset($child['#type']) && $child['#type'] == 'value')) {
+          $cell = array('data' => drupal_render($child));
+          if (isset($child['#cell_attributes'])) {
+            $cell += $child['#cell_attributes'];
+          }
+          $row['data'][] = $cell;
         }
-        $row['data'][] = $cell;
       }
       $table['rows'][] = $row;
     }
@@ -519,6 +524,8 @@ function field_ui_field_overview_form($form, &$form_state, $entity_type, $bundle
         '#cell_attributes' => array('colspan' => 3),
         '#prefix' => '<div class="add-new-placeholder">&nbsp;</div>',
       ),
+      // Place the 'translatable' property as an explicit value so that contrib
+      // modules can form_alter() the value for newly created fields.
       'translatable' => array(
         '#type' => 'value',
         '#value' => FALSE,
