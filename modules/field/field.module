@@ -515,7 +515,6 @@ function field_get_default_value($entity_type, $entity, $field, $instance, $lang
  */
 function _field_filter_items($field, $items) {
   $function = $field['module'] . '_field_is_empty';
-  function_exists($function);
   foreach ((array) $items as $delta => $item) {
     // Explicitly break if the function is undefined.
     if ($function($item, $field)) {
