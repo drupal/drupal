@@ -274,8 +274,9 @@ function book_block_view($delta = '') {
         $book_menus[$book_id] = menu_tree_output($pseudo_tree);
       }
     }
-    $book_menus['#theme'] = 'book_all_books_block';
-    $block['content'] = $book_menus;
+    if ($block['content'] = $book_menus) {
+      $book_menus['#theme'] = 'book_all_books_block';
+    }
   }
   elseif ($current_bid) {
     // Only display this block when the user is browsing a book.

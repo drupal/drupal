@@ -850,7 +850,7 @@ function _block_get_renderable_block($element) {
     // hook_block_view_alter() or hook_block_view_MODULE_DELTA_alter().
     drupal_alter(array('block_view', "block_view_{$block->module}_{$block->delta}"), $array, $block);
 
-    if (empty($array)) {
+    if (empty($array['content'])) {
       // Blocks without content should emit no markup at all.
       $element += array(
         '#access' => FALSE,

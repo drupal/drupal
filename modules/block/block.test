@@ -190,6 +190,9 @@ class BlockTestCase extends DrupalWebTestCase {
     $this->drupalLogout();
     $this->drupalGet('');
     $this->assertNoText($title, t('Block was not displayed to anonymous users.'));
+
+    // Confirm that an empty block is not displayed.
+    $this->assertNoRaw('block-system-help', t('Empty block not displayed.'));
   }
 
   /**
