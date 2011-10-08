@@ -242,19 +242,20 @@ html.js .js-hide {
 }
 
 /**
- * Markup free clearing.
+ * Float clearing.
  *
- * @see http://perishablepress.com/press/2009/12/06/new-clearfix-hack
+ * Based on the micro clearfix hack by Nicolas Gallagher, with the :before
+ * pseudo selector removed to allow normal top margin collapse.
+ *
+ * @see http://nicolasgallagher.com/micro-clearfix-hack
  */
 .clearfix:after {
-  content: ".";
-  display: block;
-  height: 0;
+  content: "";
+  display: table;
   clear: both;
-  visibility: hidden;
 }
-/* IE7 */
-*:first-child + html .clearfix {
-  min-height: 1%;
+
+.clearfix {
+  zoom: 1; /* hasLayout trigger to clear floats in IE */
 }
 
