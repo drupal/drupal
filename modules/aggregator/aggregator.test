@@ -266,10 +266,16 @@ EOF;
     return $GLOBALS['base_url'] . '/' . drupal_get_path('module', 'aggregator') . '/tests/aggregator_test_atom.xml';
   }
 
-  function createSampleNodes() {
+  /**
+   * Creates sample article nodes.
+   *
+   * @param $count
+   *   (optional) The number of nodes to generate.
+   */
+  function createSampleNodes($count = 5) {
     $langcode = LANGUAGE_NONE;
-    // Post 5 articles.
-    for ($i = 0; $i < 5; $i++) {
+    // Post $count article nodes.
+    for ($i = 0; $i < $count; $i++) {
       $edit = array();
       $edit['title'] = $this->randomName();
       $edit["body[$langcode][0][value]"] = $this->randomName();
@@ -806,6 +812,28 @@ class AggregatorRenderingTestCase extends AggregatorTestCase {
     $this->drupalGet($href);
     $correct_titles = $this->xpath('//h1[normalize-space(text())=:title]', array(':title' => $feed->title));
     $this->assertFalse(empty($correct_titles), t('Aggregator feed page is available and has the correct title.'));
+  }
+
+  /**
+   * Create a feed and check that feed's page.
+   */
+  public function testFeedPage() {
+    // Increase the number of items published in the rss.xml feed so we have
+    // enough articles to test paging.
+    variable_set('feed_default_items', 30);
+
+    // Create a feed with 30 items.
+    $this->createSampleNodes(30);
+    $feed = $this->createFeed();
+    $this->updateFeedItems($feed, 30);
+
+    // Check for the presence of a pager.
+    $this->drupalGet('aggregator/sources/' . $feed->fid);
+    $elements = $this->xpath("//ul[@class=:class]", array(':class' => 'pager'));
+    $this->assertTrue(!empty($elements), t('Individual source page contains a pager.'));
+
+    // Reset the number of items in rss.xml to the default value.
+    variable_set('feed_default_items', 10);
   }
 }
 
