@@ -82,7 +82,7 @@ function hook_field_instance_settings_form($field, $instance) {
         t('No'),
         t('Yes'),
       ),
-      '#description' => t('Display the summary to allow the user to input a summary value. Hide the summary to automatically fill it with a trimmed portion from the main post. '),
+      '#description' => t('Display the summary to allow the user to input a summary value. Hide the summary to automatically fill it with a trimmed portion from the main post.'),
       '#default_value' => !empty($settings['display_summary']) ? $settings['display_summary'] :  0,
     );
   }
