@@ -272,18 +272,6 @@ function _locale_languages_common_controls(&$form, $language = NULL) {
     '#required' => TRUE,
     '#description' => t('Name of the language in the language being added.'),
   );
-  $form['prefix'] = array('#type' => 'textfield',
-    '#title' => t('Path prefix language code'),
-    '#maxlength' => 64,
-    '#default_value' => @$language->prefix,
-    '#description' => t('Language code or other custom text to use as a path prefix for URL language detection, if your <em>Detection and selection</em> settings use URL path prefixes. For the default language, this value may be left blank. <strong>Modifying this value may break existing URLs. Use with caution in a production environment.</strong> Example: Specifying "deutsch" as the path prefix code for German results in URLs like "example.com/deutsch/contact".')
-  );
-  $form['domain'] = array('#type' => 'textfield',
-    '#title' => t('Language domain'),
-    '#maxlength' => 128,
-    '#default_value' => @$language->domain,
-    '#description' => t('The domain name to use for this language if URL domains are used for <em>Detection and selection</em>. Leave blank for the default language. <strong>Changing this value may break existing URLs.</strong> Example: Specifying "de.example.com" as language domain for German will result in an URL like "http://de.example.com/contact".'),
-  );
   $form['direction'] = array('#type' => 'radios',
     '#title' => t('Direction'),
     '#required' => TRUE,
@@ -330,8 +318,6 @@ function locale_languages_predefined_form_submit($form, &$form_state) {
       'name' => $form_state['values']['name'],
       'native' => $form_state['values']['native'],
       'direction' => $form_state['values']['direction'],
-      'domain' => $form_state['values']['domain'],
-      'prefix' => $form_state['values']['prefix'],
     );
     locale_language_save($language);
     drupal_set_message(t('The language %language has been created and can now be used. More information is available on the <a href="@locale-help">help screen</a>.', array('%language' => t($form_state['values']['name']), '@locale-help' => url('admin/help/locale'))));
@@ -371,19 +357,6 @@ function locale_languages_edit_form_validate($form, &$form_state) {
   if ($form_state['values']['native'] != check_plain($form_state['values']['native'])) {
     form_set_error('native', t('%field cannot contain any markup.', array('%field' => $form['native']['#title'])));
   }
-
-  if (!empty($form_state['values']['domain']) && !empty($form_state['values']['prefix'])) {
-    form_set_error('prefix', t('Domain and path prefix values should not be set at the same time.'));
-  }
-  if (!empty($form_state['values']['domain']) && $duplicate = db_query("SELECT language FROM {languages} WHERE domain = :domain AND language <> :language", array(':domain' => $form_state['values']['domain'], ':language' => $form_state['values']['langcode']))->fetchField()) {
-    form_set_error('domain', t('The domain (%domain) is already tied to a language (%language).', array('%domain' => $form_state['values']['domain'], '%language' => $duplicate->language)));
-  }
-  if (empty($form_state['values']['prefix']) && language_default()->language != $form_state['values']['langcode'] && empty($form_state['values']['domain'])) {
-    form_set_error('prefix', t('Only the default language can have both the domain and prefix empty.'));
-  }
-  if (!empty($form_state['values']['prefix']) && $duplicate = db_query("SELECT language FROM {languages} WHERE prefix = :prefix AND language <> :language", array(':prefix' => $form_state['values']['prefix'], ':language' => $form_state['values']['langcode']))->fetchField()) {
-    form_set_error('prefix', t('The prefix (%prefix) is already tied to a language (%language).', array('%prefix' => $form_state['values']['prefix'], '%language' => $duplicate->language)));
-  }
 }
 
 /**
@@ -397,8 +370,6 @@ function locale_languages_edit_form_submit($form, &$form_state) {
   $language->name = $form_state['values']['name'];
   $language->native = $form_state['values']['native'];
   $language->direction = $form_state['values']['direction'];
-  $language->domain = $form_state['values']['domain'];
-  $language->prefix = $form_state['values']['prefix'];
   locale_language_save($language);
   $form_state['redirect'] = 'admin/config/regional/language';
 }
@@ -672,12 +643,133 @@ function locale_language_providers_url_form($form, &$form_state) {
       LOCALE_LANGUAGE_NEGOTIATION_URL_DOMAIN => t('Domain'),
     ),
     '#default_value' => variable_get('locale_language_negotiation_url_part', LOCALE_LANGUAGE_NEGOTIATION_URL_PREFIX),
-    '#description' => t('<em>Path prefix</em>: URLs like http://example.com/de/contact set language to German (de). <em>Domain</em>: URLs like http://de.example.com/contact set the language to German. <strong>Warning: Changing this setting may break incoming URLs. Use with caution on a production site.</strong>'),
   );
+
+  $form['prefix'] = array(
+    '#type' => 'fieldset',
+    '#tree' => TRUE,
+    '#title' => t('Path prefix configuration'),
+    '#description' => t('Language codes or other custom text to use as a path prefix for URL language detection. For the default language, this value may be left blank. <strong>Modifying this value may break existing URLs. Use with caution in a production environment.</strong> Example: Specifying "deutsch" as the path prefix code for German results in URLs like "example.com/deutsch/contact".'),
+    '#states' => array(
+      'visible' => array(
+        ':input[name="locale_language_negotiation_url_part"]' => array(
+          'value' => (string) LOCALE_LANGUAGE_NEGOTIATION_URL_PREFIX,
+        ),
+      ),
+    ),
+  );
+  $form['domain'] = array(
+    '#type' => 'fieldset',
+    '#tree' => TRUE,
+    '#title' => t('Domain configuration'),
+    '#description' => t('The domain names to use for these languages. Leave blank for the default language. Use with caution in a production environment.<strong>Modifying this value may break existing URLs. Use with caution in a production environment.</strong> Example: Specifying "de.example.com" as language domain for German will result in an URL like "http://de.example.com/contact".'),
+    '#states' => array(
+      'visible' => array(
+        ':input[name="locale_language_negotiation_url_part"]' => array(
+          'value' => (string) LOCALE_LANGUAGE_NEGOTIATION_URL_DOMAIN,
+        ),
+      ),
+    ),
+  );
+
+  $languages = language_list('enabled');
+  foreach ($languages[1] as $langcode => $language) {
+    $form['prefix'][$langcode] = array(
+      '#type' => 'textfield',
+      '#title' => t('%language (%langcode) path prefix', array('%language' => $language->name, '%langcode' => $language->language)),
+      '#maxlength' => 64,
+      '#default_value' => $language->prefix,
+      '#field_prefix' => url(NULL, array('absolute' => TRUE)) . (variable_get('clean_url', 0) ? '' : '?q=')
+
+    );
+    $form['domain'][$langcode] = array(
+      '#type' => 'textfield',
+      '#title' => t('%language (%langcode) domain', array('%language' => $language->name, '%langcode' => $language->language)),
+      '#maxlength' => 128,
+      '#default_value' => $language->domain,
+    );
+  }
 
   $form_state['redirect'] = 'admin/config/regional/language/configure';
 
-  return system_settings_form($form);
+  $form['actions']['#type'] = 'actions';
+  $form['actions']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save configuration'),
+  );
+  return $form;
+}
+
+/**
+ * Validation handler for url provider configuration.
+ *
+ * Validate that the prefixes and domains are unique, and make sure that
+ * the prefix and domain are only blank for the default.
+ */
+function locale_language_providers_url_form_validate($form, &$form_state) {
+  $languages = locale_language_list();
+  $default = language_default();
+
+  // Count repeated values for uniqueness check.
+  $count = array_count_values($form_state['values']['prefix']);
+  foreach ($languages as $langcode => $name) {
+    $value = $form_state['values']['prefix'][$langcode];
+
+    if ($value === '') {
+      if ($default->language != $langcode && $form_state['values']['locale_language_negotiation_url_part'] == LOCALE_LANGUAGE_NEGOTIATION_URL_PREFIX) {
+        // Validation error if the prefix is blank for a non-default language, and value is for selected negotiation type.
+        form_error($form['prefix'][$langcode], t('The prefix may only be left blank for the default language.'));
+      }
+    }
+    else if (isset($count[$value]) && $count[$value] > 1) {
+      // Validation error if there are two languages with the same domain/prefix.
+      form_error($form['prefix'][$langcode], t('The prefix for %language, %value, is not unique.', array( '%language' => $name, '%value' => $value )));
+    }
+  }
+
+  // Count repeated values for uniqueness check.
+  $count = array_count_values($form_state['values']['domain']);
+  foreach ($languages as $langcode => $name) {
+    $value = $form_state['values']['domain'][$langcode];
+
+    if ($value === '') {
+      if ($default->language != $langcode && $form_state['values']['locale_language_negotiation_url_part'] == LOCALE_LANGUAGE_NEGOTIATION_URL_DOMAIN) {
+        // Validation error if the domain is blank for a non-default language, and value is for selected negotiation type.
+        form_error($form['domain'][$langcode], t('The domain may only be left blank for the default language.'));
+      }
+    }
+    else if (isset($count[$value]) && $count[$value] > 1) {
+      // Validation error if there are two languages with the same domain/domain.
+      form_error($form['domain'][$langcode], t('The domain for %language, %value, is not unique.', array( '%language' => $name, '%value' => $value )));
+    }
+  }
+}
+
+/**
+ * Save URL negotiation provider settings.
+ */
+function locale_language_providers_url_form_submit($form, &$form_state) {
+
+  // Save selected format (prefix or domain).
+  variable_set('locale_language_negotiation_url_part', $form_state['values']['locale_language_negotiation_url_part']);
+
+  $languages = language_list('enabled');
+  $default = language_default();
+
+  foreach ($languages[1] as $langcode => $language) {
+
+    // Add new prefix and domain settings to the language object.
+    foreach (array('prefix', 'domain') as $type) {
+      if (isset($form_state['values'][$type][$langcode])) {
+        $language->$type = $form_state['values'][$type][$langcode];
+      }
+    }
+
+    // Save the prefix and domain settings for each language.
+    locale_language_save($language);
+  }
+
+  drupal_set_message(t('Configuration saved.'));
 }
 
 /**

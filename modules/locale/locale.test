@@ -62,13 +62,10 @@ class LocaleConfigurationTest extends DrupalWebTestCase {
     $name = $this->randomName(16);
     // The native name for the language.
     $native = $this->randomName(16);
-    // The domain prefix.
-    $prefix = $langcode;
     $edit = array(
       'langcode' => $langcode,
       'name' => $name,
       'native' => $native,
-      'prefix' => $prefix,
       'direction' => '0',
     );
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add custom language'));
@@ -90,10 +87,10 @@ class LocaleConfigurationTest extends DrupalWebTestCase {
     $this->assertNoFieldChecked('edit-site-default-en', t('Default language updated.'));
     $this->assertEqual($this->getUrl(), url('admin/config/regional/language', array('absolute' => TRUE)), t('Correct page redirection.'));
 
-    // Check if a valid language prefix is added after changing the default
+    // Check if a valid language prefix is added afrer changing the default
     // language.
-    $this->drupalGet('admin/config/regional/language/edit/en');
-    $this->assertFieldByXPath('//input[@name="prefix"]', 'en', t('A valid path prefix has been added to the previous default language.'));
+    $this->drupalGet('admin/config/regional/language/configure/url');
+    $this->assertFieldByXPath('//input[@name="prefix[en]"]', 'en', t('A valid path prefix has been added to the previous default language.'));
 
     // Ensure we can't delete the default language.
     $this->drupalGet('admin/config/regional/language/delete/' . $langcode);
@@ -211,8 +208,6 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
     $name = $this->randomName(16);
     // The native name for the language.
     $native = $this->randomName(16);
-    // The domain prefix.
-    $prefix = $langcode;
     // This is the language indicator on the translation search screen for
     // untranslated strings. Copied straight from locale.inc.
     $language_indicator = "<em class=\"locale-untranslated\">$langcode</em> ";
@@ -225,7 +220,6 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
       'langcode' => $langcode,
       'name' => $name,
       'native' => $native,
-      'prefix' => $prefix,
       'direction' => '0',
     );
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add custom language'));
@@ -333,15 +327,12 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
     $name = $this->randomName(16);
     // The native name for the language.
     $native = $this->randomName(16);
-    // The domain prefix.
-    $prefix = $langcode;
 
     // Add custom language.
     $edit = array(
       'langcode' => $langcode,
       'name' => $name,
       'native' => $native,
-      'prefix' => $prefix,
       'direction' => '0',
     );
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add custom language'));
@@ -395,8 +386,6 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
     $name = $this->randomName(16);
     // The native name for the language.
     $native = $this->randomName(16);
-    // The domain prefix.
-    $prefix = $langcode;
     // This is the language indicator on the translation search screen for
     // untranslated strings. Copied straight from locale.inc.
     $language_indicator = "<em class=\"locale-untranslated\">$langcode</em> ";
@@ -415,7 +404,6 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
       'langcode' => $langcode,
       'name' => $name,
       'native' => $native,
-      'prefix' => $prefix,
       'direction' => '0',
     );
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add custom language'));
@@ -461,8 +449,6 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
     $name = $this->randomName(16);
     // The native name for the language.
     $native = $this->randomName(16);
-    // The domain prefix.
-    $prefix = $langcode;
     // This is the language indicator on the translation search screen for
     // untranslated strings. Copied straight from locale.inc.
     $language_indicator = "<em class=\"locale-untranslated\">$langcode</em> ";
@@ -475,7 +461,6 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
       'langcode' => $langcode,
       'name' => $name,
       'native' => $native,
-      'prefix' => $prefix,
       'direction' => '0',
     );
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add custom language'));
@@ -710,15 +695,12 @@ class LocaleImportFunctionalTest extends DrupalWebTestCase {
     $name = $this->randomName(16);
     // The native name for the language.
     $native = $this->randomName(16);
-    // The domain prefix.
-    $prefix = $langcode;
 
     // Create a custom language.
     $edit = array(
       'langcode' => $langcode,
       'name' => $name,
       'native' => $native,
-      'prefix' => $prefix,
       'direction' => '0',
     );
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add custom language'));
@@ -1331,13 +1313,10 @@ class LocaleUserLanguageFunctionalTest extends DrupalWebTestCase {
     $name = $this->randomName(16);
     // The native name for the language.
     $native = $this->randomName(16);
-    // The domain prefix.
-    $prefix = 'xx';
     $edit = array(
       'langcode' => $langcode,
       'name' => $name,
       'native' => $native,
-      'prefix' => $prefix,
       'direction' => '0',
     );
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add custom language'));
@@ -1349,13 +1328,10 @@ class LocaleUserLanguageFunctionalTest extends DrupalWebTestCase {
     $name_disabled = $this->randomName(16);
     // The native name for the language.
     $native_disabled = $this->randomName(16);
-    // The domain prefix.
-    $prefix_disabled = $langcode_disabled;
     $edit = array(
       'langcode' => $langcode_disabled,
       'name' => $name_disabled,
       'native' => $native_disabled,
-      'prefix' => $prefix_disabled,
       'direction' => '0',
     );
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add custom language'));
@@ -1532,10 +1508,13 @@ class LocalePathFunctionalTest extends DrupalWebTestCase {
       'langcode' => $langcode,
       'name' => $name,
       'native' => $native,
-      'prefix' => $prefix,
       'direction' => '0',
     );
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add custom language'));
+
+    // Set path prefix.
+    $edit = array( "prefix[$langcode]" => $prefix );
+    $this->drupalPost('admin/config/regional/language/configure/url', $edit, t('Save configuration'));
 
     // Check that the "xx" front page is not available when path prefixes are
     // not enabled yet.
@@ -1629,6 +1608,7 @@ class LocalePathFunctionalTest extends DrupalWebTestCase {
     // Confirm that the custom path with prefix leads to the second node.
     $this->drupalGet($prefix . '/' . $custom_path);
     $this->assertText($second_node->title, t('Custom alias with prefix returns second node.'));
+
   }
 }
 
@@ -1668,13 +1648,10 @@ class LocaleContentFunctionalTest extends DrupalWebTestCase {
     $name = $this->randomName(16);
     // The native name for the language.
     $native = $this->randomName(16);
-    // The domain prefix.
-    $prefix = $langcode;
     $edit = array(
       'langcode' => $langcode,
       'name' => $name,
       'native' => $native,
-      'prefix' => $prefix,
       'direction' => '0',
     );
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add custom language'));
@@ -1686,13 +1663,10 @@ class LocaleContentFunctionalTest extends DrupalWebTestCase {
     $name_disabled = $this->randomName(16);
     // The native name for the language.
     $native_disabled = $this->randomName(16);
-    // The domain prefix.
-    $prefix_disabled = $langcode_disabled;
     $edit = array(
       'langcode' => $langcode_disabled,
       'name' => $name_disabled,
       'native' => $native_disabled,
-      'prefix' => $prefix_disabled,
       'direction' => '0',
     );
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add custom language'));
@@ -1912,8 +1886,8 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
 
     // Setup for domain negotiation, first configure the language to have domain
     // URL. We use https and a port to make sure that only the domain name is used.
-    $edit = array('prefix' => '', 'domain' => "https://$language_domain:99");
-    $this->drupalPost("admin/config/regional/language/edit/$langcode", $edit, t('Save language'));
+    $edit = array("domain[$langcode]" => "https://$language_domain:99");
+    $this->drupalPost("admin/config/regional/language/configure/url", $edit, t('Save configuration'));
     // Set the site to use domain language negotiation.
 
     $tests = array(
@@ -1973,8 +1947,9 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
 
     // Enable the path prefix for the default language: this way any unprefixed
     // URL must have a valid fallback value.
-    $edit = array('prefix' => 'en');
-    $this->drupalPost('admin/config/regional/language/edit/en', $edit, t('Save language'));
+    $edit = array('prefix[en]' => 'en');
+    $this->drupalPost('admin/config/regional/language/configure/url', $edit, t('Save configuration'));
+
 
     // Enable browser and URL language detection.
     $edit = array(
