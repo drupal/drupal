@@ -610,16 +610,12 @@ function _field_sort_items_value_helper($a, $b) {
  *   If no $settings are passed, the current settings are returned.
  */
 function field_bundle_settings($entity_type, $bundle, $settings = NULL) {
-  $stored_settings = variable_get('field_bundle_settings', array());
-
   if (isset($settings)) {
-    $stored_settings[$entity_type][$bundle] = $settings;
-
-    variable_set('field_bundle_settings', $stored_settings);
+    variable_set('field_bundle_settings_' . $entity_type . '__' . $bundle, $settings);
     field_info_cache_clear();
   }
   else {
-    $settings = isset($stored_settings[$entity_type][$bundle]) ? $stored_settings[$entity_type][$bundle] : array();
+    $settings = variable_get('field_bundle_settings_' . $entity_type . '__' . $bundle, array());
     $settings += array(
       'view_modes' => array(),
       'extra_fields' => array(),
