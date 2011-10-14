@@ -239,6 +239,21 @@ function forum_schema() {
 }
 
 /**
+ * Implements hook_update_dependencies().
+ */
+function forum_update_dependencies() {
+  $dependencies['forum'][7003] = array(
+    // Forum update 7003 uses field API update functions, so must run after
+    // Field API has been enabled.
+    'system' => 7020,
+    // Forum update 7003 relies on updated taxonomy module schema. Ensure it
+    // runs after all taxonomy updates.
+    'taxonomy' => 7010,
+  );
+  return $dependencies;
+}
+
+/**
  * Add new index to forum table.
  */
 function forum_update_7000() {
