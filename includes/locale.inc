@@ -506,10 +506,40 @@ function _locale_parse_js_file($filepath) {
 
   // Match all calls to Drupal.t() in an array.
   // Note: \s also matches newlines with the 's' modifier.
-  preg_match_all('~[^\w]Drupal\s*\.\s*t\s*\(\s*(' . LOCALE_JS_STRING . ')\s*[,\)]~s', $file, $t_matches);
+  preg_match_all('~
+    [^\w]Drupal\s*\.\s*t\s*                       # match "Drupal.t" with whitespace
+    \(\s*                                         # match "(" argument list start
+    (' . LOCALE_JS_STRING . ')\s*                 # capture string argument
+    [,\)]                                         # match ")" or "," to finish
+    ~sx', $file, $t_matches);
 
   // Match all Drupal.formatPlural() calls in another array.
-  preg_match_all('~[^\w]Drupal\s*\.\s*formatPlural\s*\(\s*.+?\s*,\s*(' . LOCALE_JS_STRING . ')\s*,\s*((?:(?:\'(?:\\\\\'|[^\'])*@count(?:\\\\\'|[^\'])*\'|"(?:\\\\"|[^"])*@count(?:\\\\"|[^"])*")(?:\s*\+\s*)?)+)\s*[,\)]~s', $file, $plural_matches);
+  preg_match_all('~
+    [^\w]Drupal\s*\.\s*formatPlural\s*  # match "Drupal.formatPlural" with whitespace
+    \(                                  # match "(" argument list start
+    \s*.+?\s*,\s*                       # match count argument
+    (' . LOCALE_JS_STRING . ')\s*,\s*   # match singular string argument
+    (                             # capture plural string argument
+      (?:                         # non-capturing group to repeat string pieces
+        (?:
+          \'                      # match start of single-quoted string
+          (?:\\\\\'|[^\'])*       # match any character except unescaped single-quote
+          @count                  # match "@count"
+          (?:\\\\\'|[^\'])*       # match any character except unescaped single-quote
+          \'                      # match end of single-quoted string
+          |
+          "                       # match start of double-quoted string
+          (?:\\\\"|[^"])*         # match any character except unescaped double-quote
+          @count                  # match "@count"
+          (?:\\\\"|[^"])*         # match any character except unescaped double-quote
+          "                       # match end of double-quoted string
+        )
+        (?:\s*\+\s*)?             # match "+" with possible whitespace, for str concat
+      )+                          # match multiple because we supports concatenating strs
+    )\s*                          # end capturing of plural string argument
+    [,\)]
+    ~sx', $file, $plural_matches);
+
 
   // Loop through all matches and process them.
   $all_matches = array_merge($plural_matches[1], $t_matches[1]);

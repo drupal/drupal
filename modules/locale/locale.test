@@ -177,6 +177,73 @@ class LocaleConfigurationTest extends DrupalWebTestCase {
 }
 
 /**
+ * Functional tests for JavaScript parsing for translatable strings.
+ */
+class LocaleJavascriptTranslationTest extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Javascript translation',
+      'description' => 'Tests parsing js files for translatable strings',
+      'group' => 'Locale',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('locale', 'locale_test');
+  }
+
+  function testFileParsing() {
+
+    $filename = drupal_get_path('module', 'locale_test') . '/locale_test.js';
+
+    // Parse the file to look for source strings.
+    _locale_parse_js_file($filename);
+
+    // Get all of the source strings that were found.
+    $source_strings = db_select('locales_source', 's')
+      ->fields('s', array('source', 'lid'))
+      ->condition('s.location', $filename)
+      ->execute()
+      ->fetchAllKeyed();
+
+    // List of all strings that should be in the file.
+    $test_strings = array(
+      "Standard Call t",
+      "Whitespace Call t",
+
+      "Single Quote t",
+      "Single Quote \\'Escaped\\' t",
+      "Single Quote Concat strings t",
+
+      "Double Quote t",
+      "Double Quote \\\"Escaped\\\" t",
+      "Double Quote Concat strings t",
+
+      "Standard Call plural",
+      "Standard Call @count plural",
+      "Whitespace Call plural",
+      "Whitespace Call @count plural",
+
+      "Single Quote plural",
+      "Single Quote @count plural",
+      "Single Quote \\'Escaped\\' plural",
+      "Single Quote \\'Escaped\\' @count plural",
+
+      "Double Quote plural",
+      "Double Quote @count plural",
+      "Double Quote \\\"Escaped\\\" plural",
+      "Double Quote \\\"Escaped\\\" @count plural",
+    );
+
+    // Assert that all strings were found properly.
+    foreach ($test_strings as $str) {
+      $this->assertTrue(isset($source_strings[$str]), t("Found source string: %source", array('%source' => $str)));
+    }
+
+    $this->assertEqual(count($source_strings), count($test_strings), t("Found correct number of source strings."));
+  }
+}
+/**
  * Functional test for string translation and validation.
  */
 class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
