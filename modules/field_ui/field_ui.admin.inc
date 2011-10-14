@@ -799,7 +799,7 @@ function field_ui_field_overview_form_submit($form, &$form_state) {
       $form_state['fields_added']['_add_new_field'] = $field['field_name'];
     }
     catch (Exception $e) {
-      drupal_set_message(t('There was a problem creating field %label: @message.', array('%label' => $instance['label'], '@message' => $e->getMessage())));
+      drupal_set_message(t('There was a problem creating field %label: @message.', array('%label' => $instance['label'], '@message' => $e->getMessage())), 'error');
     }
   }
 
@@ -829,7 +829,7 @@ function field_ui_field_overview_form_submit($form, &$form_state) {
         $form_state['fields_added']['_add_existing_field'] = $instance['field_name'];
       }
       catch (Exception $e) {
-        drupal_set_message(t('There was a problem creating field instance %label: @message.', array('%label' => $instance['label'], '@message' => $e->getMessage())));
+        drupal_set_message(t('There was a problem creating field instance %label: @message.', array('%label' => $instance['label'], '@message' => $e->getMessage())), 'error');
       }
     }
   }
