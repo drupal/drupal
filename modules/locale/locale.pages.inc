@@ -6,37 +6,6 @@
  */
 
 /**
- * Overview screen for translations.
- */
-function locale_translate_overview_screen() {
-  drupal_static_reset('language_list');
-  $languages = language_list('language');
-  $headers = array(t('Language'), t('Interface translation status'));
-  $num_strings = db_query("SELECT COUNT(*) FROM {locales_source}")->fetchField();
-
-  // Set up overview table with default values, ensuring common order for values.
-  $rows = array();
-  foreach ($languages as $langcode => $language) {
-    $rows[$langcode] = array(
-      'name' => ($langcode == 'en' ? t('English (built-in)') : t($language->name)),
-      'status' => ($langcode == 'en' ? t('n/a') : '0/' . $num_strings . ' (0%)'),
-    );
-  }
-
-  if (!empty($num_strings)) {
-    // If we have source strings, match translations and compute progress. Not
-    // all languages may have information.
-    $translations = db_query("SELECT COUNT(*) AS translation, t.language FROM {locales_source} s INNER JOIN {locales_target} t ON s.lid = t.lid GROUP BY language");
-    foreach ($translations as $data) {
-      $ratio = ($data->translation > 0) ? round(($data->translation/$num_strings) * 100.0, 2) : 0;
-      $rows[$data->language]['status'] = $data->translation . '/' . $num_strings . " ($ratio%)";
-    }
-  }
-
-  return theme('table', array('header' => $headers, 'rows' => $rows));
-}
-
-/**
  * String search screen.
  */
 function locale_translate_seek_screen() {

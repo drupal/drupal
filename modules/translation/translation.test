@@ -31,7 +31,7 @@ class TranslationTestCase extends DrupalWebTestCase {
     $this->addLanguage('it');
 
     // Disable Italian to test the translation behavior with disabled languages.
-    $edit = array('enabled[it]' => FALSE);
+    $edit = array('languages[it][enabled]' => FALSE);
     $this->drupalPost('admin/config/regional/language', $edit, t('Save configuration'));
 
     // Set "Basic page" content type to use multilingual support with
@@ -143,7 +143,7 @@ class TranslationTestCase extends DrupalWebTestCase {
     // Leave just one language enabled and check that the translation overview
     // page is still accessible.
     $this->drupalLogin($this->admin_user);
-    $edit = array('enabled[es]' => FALSE);
+    $edit = array('languages[es][enabled]' => FALSE);
     $this->drupalPost('admin/config/regional/language', $edit, t('Save configuration'));
     $this->drupalLogin($this->translator);
     $this->drupalGet('node/' . $node->nid . '/translate');
@@ -197,7 +197,7 @@ class TranslationTestCase extends DrupalWebTestCase {
   function testLanguageSwitcherBlockIntegration() {
     // Enable Italian to have three items in the language switcher block.
     $this->drupalLogin($this->admin_user);
-    $edit = array('enabled[it]' => TRUE);
+    $edit = array('languages[it][enabled]' => TRUE);
     $this->drupalPost('admin/config/regional/language', $edit, t('Save configuration'));
     $this->drupalLogin($this->translator);
 
@@ -278,7 +278,7 @@ class TranslationTestCase extends DrupalWebTestCase {
     // Check to make sure that language has not already been installed.
     $this->drupalGet('admin/config/regional/language');
 
-    if (strpos($this->drupalGetContent(), 'enabled[' . $language_code . ']') === FALSE) {
+    if (strpos($this->drupalGetContent(), 'languages[' . $language_code . '][enabled]') === FALSE) {
       // Doesn't have language installed so add it.
       $edit = array();
       $edit['langcode'] = $language_code;
@@ -293,14 +293,14 @@ class TranslationTestCase extends DrupalWebTestCase {
         $this->assertRaw(t('The language %language has been created and can now be used. More information is available on the <a href="@locale-help">help screen</a>.', array('%language' => $languages[$language_code]->name, '@locale-help' => url('admin/help/locale'))), t('Language has been created.'));
       }
     }
-    elseif ($this->xpath('//input[@type="checkbox" and @name=:name and @checked="checked"]', array(':name' => 'enabled[' . $language_code . ']'))) {
+    elseif ($this->xpath('//input[@type="checkbox" and @name=:name and @checked="checked"]', array(':name' => 'languages[' . $language_code . '][enabled]'))) {
       // It's installed and enabled. No need to do anything.
       $this->assertTrue(true, 'Language [' . $language_code . '] already installed and enabled.');
     }
     else {
       // It's installed but not enabled. Enable it.
       $this->assertTrue(true, 'Language [' . $language_code . '] already installed.');
-      $this->drupalPost(NULL, array('enabled[' . $language_code . ']' => TRUE), t('Save configuration'));
+      $this->drupalPost(NULL, array('languages[' . $language_code . '][enabled]' => TRUE), t('Save configuration'));
       $this->assertRaw(t('Configuration saved.'), t('Language successfully enabled.'));
     }
   }

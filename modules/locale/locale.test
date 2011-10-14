@@ -70,10 +70,8 @@ class LocaleConfigurationTest extends DrupalWebTestCase {
     );
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add custom language'));
     $this->assertEqual($this->getUrl(), url('admin/config/regional/language', array('absolute' => TRUE)), t('Correct page redirection.'));
-    $this->assertText($langcode, t('Language code found.'));
-    $this->assertText($name, t('Name found.'));
-    $this->assertText($native, t('Native found.'));
-    $this->assertText($native, t('Test language added.'));
+    $this->assertRaw('"edit-site-default-' . $langcode .'"', t('Language code found.'));
+    $this->assertText(t($name), t('Test language added.'));
 
     // Check if we can change the default language.
     $path = 'admin/config/regional/language';
@@ -99,17 +97,17 @@ class LocaleConfigurationTest extends DrupalWebTestCase {
 
     // Check if we can disable a language.
     $edit = array(
-      'enabled[en]' => FALSE,
+      'languages[en][enabled]' => FALSE,
     );
     $this->drupalPost($path, $edit, t('Save configuration'));
-    $this->assertNoFieldChecked('edit-enabled-en', t('Language disabled.'));
+    $this->assertNoFieldChecked('edit-languages-en-enabled', t('Language disabled.'));
 
     // Set disabled language to be the default and ensure it is re-enabled.
     $edit = array(
       'site_default' => 'en',
     );
     $this->drupalPost(NULL, $edit, t('Save configuration'));
-    $this->assertFieldChecked('edit-enabled-en', t('Default language re-enabled.'));
+    $this->assertFieldChecked('edit-languages-en-enabled', t('Default language re-enabled.'));
 
     // Ensure 'edit' link works.
     $this->clickLink(t('edit'));
@@ -149,10 +147,10 @@ class LocaleConfigurationTest extends DrupalWebTestCase {
     // Delete a disabled language.
     // Disable an enabled language.
     $edit = array(
-      'enabled[fr]' => FALSE,
+      'languages[fr][enabled]' => FALSE,
     );
     $this->drupalPost($path, $edit, t('Save configuration'));
-    $this->assertNoFieldChecked('edit-enabled-fr', t('French language disabled.'));
+    $this->assertNoFieldChecked('edit-languages-fr-enabled', t('French language disabled.'));
     // Get the count of enabled languages.
     drupal_static_reset('language_list');
     $enabled = language_list('enabled');
@@ -294,12 +292,8 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
     t($name, array(), array('langcode' => $langcode));
     // Reset locale cache.
     locale_reset();
-    $this->assertText($langcode, t('Language code found.'));
-    $this->assertText($name, t('Name found.'));
-    $this->assertText($native, t('Native found.'));
-    // No t() here, we do not want to add this string to the database and it's
-    // surely not translated yet.
-    $this->assertText($native, t('Test language added.'));
+    $this->assertRaw('"edit-site-default-' . $langcode .'"', t('Language code found.'));
+    $this->assertText(t($name), t('Test language added.'));
     $this->drupalLogout();
 
     // Search for the name and translate it.
@@ -1404,7 +1398,7 @@ class LocaleUserLanguageFunctionalTest extends DrupalWebTestCase {
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add custom language'));
     // Disable the language.
     $edit = array(
-      'enabled[' . $langcode_disabled . ']' => FALSE,
+      'languages[' . $langcode_disabled . '][enabled]' => FALSE,
     );
     $this->drupalPost('admin/config/regional/language', $edit, t('Save configuration'));
     $this->drupalLogout();
@@ -1740,7 +1734,7 @@ class LocaleContentFunctionalTest extends DrupalWebTestCase {
     // Disable second custom language.
     $path = 'admin/config/regional/language';
     $edit = array(
-      'enabled[' . $langcode_disabled . ']' => FALSE,
+      'languages[' . $langcode_disabled . '][enabled]' => FALSE,
     );
     $this->drupalPost($path, $edit, t('Save configuration'));
 
@@ -2079,7 +2073,7 @@ class LocaleUrlRewritingTest extends DrupalWebTestCase {
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
 
     // Disable Italian language.
-    $edit = array('enabled[it]' => FALSE);
+    $edit = array('languages[it][enabled]' => FALSE);
     $this->drupalPost('admin/config/regional/language', $edit, t('Save configuration'));
 
     // Enable URL language detection and selection.

@@ -17,48 +17,103 @@
 /**
  * User interface for the language overview screen.
  */
-function locale_languages_overview_form() {
+function locale_language_overview_form($form, &$form_state) {
   drupal_static_reset('language');
   $languages = language_list('language');
+  $default = language_default();
 
-  $options = array();
-  $form['weight'] = array('#tree' => TRUE);
+  $form['languages'] = array(
+    '#languages' => $languages,
+    '#language_default' => $default,
+    '#tree' => TRUE,
+    '#header' => array(
+      t('Name'),
+      t('Enabled'),
+      t('Default'),
+      t('Weight'),
+      t('Operations'),
+    ),
+    '#theme' => 'locale_language_overview_form_table',
+  );
+
   foreach ($languages as $langcode => $language) {
-
-    $options[$langcode] = '';
-    if ($language->enabled) {
-      $enabled[] = $langcode;
-    }
-    $form['weight'][$langcode] = array(
+    $form['languages'][$langcode]['#weight'] = $language->weight;
+    $form['languages'][$langcode]['name'] = array(
+      '#markup' => check_plain($language->name),
+    );
+    $form['languages'][$langcode]['enabled'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Enable @title', array('@title' => $language->name)),
+      '#title_display' => 'invisible',
+      '#default_value' => (int) $language->enabled,
+      '#disabled' => $langcode == $default->language,
+    );
+    $form['languages'][$langcode]['default'] = array(
+      '#type' => 'radio',
+      '#parents' => array('site_default'),
+      '#title' => t('Set @title as default', array('@title' => $language->name)),
+      '#title_display' => 'invisible',
+      '#return_value' => $langcode,
+      '#default_value' => ($langcode == $default->language ? $langcode : NULL),
+      '#id' => 'edit-site-default-' . $langcode,
+    );
+    $form['languages'][$langcode]['weight'] = array(
       '#type' => 'weight',
       '#title' => t('Weight for @title', array('@title' => $language->name)),
       '#title_display' => 'invisible',
       '#default_value' => $language->weight,
-      '#attributes' => array('class' => array('language-order-weight')),
+      '#attributes' => array(
+        'class' => array('language-order-weight'),
+      ),
     );
-    $form['name'][$langcode] = array('#markup' => check_plain($language->name));
-    $form['native'][$langcode] = array('#markup' => check_plain($language->native));
-    $form['direction'][$langcode] = array('#markup' => ($language->direction == LANGUAGE_RTL ? t('Right to left') : t('Left to right')));
+    $form['languages'][$langcode]['operations'] = array(
+      '#theme_wrappers' => array('locale_language_operations'),
+      '#weight' => 100,
+    );
+    $form['languages'][$langcode]['operations']['edit'] = array(
+      '#type' => 'link',
+      '#title' => t('edit'),
+      '#href' => 'admin/config/regional/language/edit/' . $langcode,
+    );
+    $form['languages'][$langcode]['operations']['delete'] = array(
+      '#type' => 'link',
+      '#title' => t('delete'),
+      '#href' => 'admin/config/regional/language/delete/' . $langcode,
+      '#access' => $langcode != 'en' && $langcode != $default->language,
+    );
   }
-  $form['enabled'] = array(
-    '#type' => 'checkboxes',
-    '#title' => t('Enabled languages'),
-    '#title_display' => 'invisible',
-    '#options' => $options,
-    '#default_value' => $enabled,
-  );
-  $form['site_default'] = array(
-    '#type' => 'radios',
-    '#title' => t('Default language'),
-    '#title_display' => 'invisible',
-    '#options' => $options,
-    '#default_value' => language_default()->language,
-  );
+
   $form['actions'] = array('#type' => 'actions');
-  $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save configuration'));
-  $form['#theme'] = 'locale_languages_overview_form';
+  $form['actions']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save configuration'),
+  );
 
   return $form;
+}
+
+/**
+ * Returns HTML for operation links in locale_language_overview_form() table.
+ *
+ * @todo Introduce #type '[table_]operations' or just simply #type 'links'.
+ */
+function theme_locale_language_operations($variables) {
+  $links = array();
+  foreach (element_children($variables['elements']) as $key) {
+    // Children are only rendered if the current user has access.
+    if (isset($variables['elements'][$key]['#children'])) {
+      $links[$key] = $variables['elements'][$key]['#children'];
+    }
+  }
+  // If there are links, render a link list.
+  if (!empty($links)) {
+    return theme('item_list__operations', array(
+      'items' => $links,
+      'attributes' => array('class' => array('links', 'inline')),
+    ));
+  }
+  // Otherwise, ensure to produce no output.
+  return '';
 }
 
 /**
@@ -70,43 +125,27 @@ function locale_languages_overview_form() {
  *
  * @ingroup themeable
  */
-function theme_locale_languages_overview_form($variables) {
+function theme_locale_language_overview_form_table($variables) {
   $form = $variables['form'];
-  $default = language_default();
-  foreach ($form['name'] as $key => $element) {
-    // Do not take form control structures.
-    if (is_array($element) && element_child($key)) {
-      // Disable checkbox for the default language, because it cannot be disabled.
-      if ($key == $default->language) {
-        $form['enabled'][$key]['#attributes']['disabled'] = 'disabled';
-      }
 
-      // Add invisible labels for the checkboxes and radio buttons in the table
-      // for accessibility. These changes are only required and valid when the
-      // form is themed as a table, so it would be wrong to perform them in the
-      // form constructor.
-      $title = drupal_render($form['name'][$key]);
-      $form['enabled'][$key]['#title'] = t('Enable !title', array('!title' => $title));
-      $form['enabled'][$key]['#title_display'] = 'invisible';
-      $form['site_default'][$key]['#title'] = t('Set !title as default', array('!title' => $title));
-      $form['site_default'][$key]['#title_display'] = 'invisible';
-      $rows[] = array(
-        'data' => array(
-          '<strong>' . $title . '</strong>',
-          drupal_render($form['native'][$key]),
-          check_plain($key),
-          drupal_render($form['direction'][$key]),
-          array('data' => drupal_render($form['enabled'][$key]), 'align' => 'center'),
-          drupal_render($form['site_default'][$key]),
-          drupal_render($form['weight'][$key]),
-          l(t('edit'), 'admin/config/regional/language/edit/' . $key) . (($key != 'en' && $key != $default->language) ? ' ' . l(t('delete'), 'admin/config/regional/language/delete/' . $key) : '')
-        ),
-        'class' => array('draggable'),
-      );
+  $rows = array();
+  foreach (element_children($form, TRUE) as $langcode) {
+    $element = &$form[$langcode];
+    $row = array(
+      'class' => array('draggable'),
+    );
+    foreach (element_children($element, TRUE) as $column) {
+      $cell = &$element[$column];
+      $row['data'][] = drupal_render($cell);
     }
+    $rows[] = $row;
   }
-  $header = array(array('data' => t('English name')), array('data' => t('Native name')), array('data' => t('Code')), array('data' => t('Direction')), array('data' => t('Enabled')), array('data' => t('Default')), array('data' => t('Weight')), array('data' => t('Operations')));
-  $output = theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('id' => 'language-order')));
+
+  $output = theme('table', array(
+    'header' => $form['#header'],
+    'rows' => $rows,
+    'attributes' => array('id' => 'language-order'),
+  ));
   $output .= drupal_render_children($form);
 
   drupal_add_tabledrag('language-order', 'order', 'sibling', 'language-order-weight');
@@ -117,22 +156,22 @@ function theme_locale_languages_overview_form($variables) {
 /**
  * Process language overview form submissions, updating existing languages.
  */
-function locale_languages_overview_form_submit($form, &$form_state) {
+function locale_language_overview_form_submit($form, &$form_state) {
   $languages = language_list();
   $old_default = language_default();
   $url_prefixes = variable_get('locale_language_negotiation_url_part', LOCALE_LANGUAGE_NEGOTIATION_URL_PREFIX) == LOCALE_LANGUAGE_NEGOTIATION_URL_PREFIX;
 
   foreach ($languages as $langcode => $language) {
     $language->default = ($form_state['values']['site_default'] == $langcode);
-    $language->weight = $form_state['values']['weight'][$langcode];
+    $language->weight = $form_state['values']['languages'][$langcode]['weight'];
 
     if ($language->default || $old_default->language == $langcode) {
       // Automatically enable the default language and the language
       // which was default previously (because we will not get the
       // value from that disabled checkbox).
-      $form_state['values']['enabled'][$langcode] = 1;
+      $form_state['values']['languages'][$langcode]['enabled'] = 1;
     }
-    $language->enabled = (int) !empty($form_state['values']['enabled'][$langcode]);
+    $language->enabled = (int) !empty($form_state['values']['languages'][$langcode]['enabled']);
 
     // If language URL prefixes are enabled we must clear language domains and
     // assign a valid prefix to each non-default language.
@@ -147,7 +186,6 @@ function locale_languages_overview_form_submit($form, &$form_state) {
   }
 
   drupal_set_message(t('Configuration saved.'));
-  $form_state['redirect'] = 'admin/config/regional/language';
 }
 
 /**

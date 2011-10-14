@@ -472,7 +472,7 @@ class PathMonolingualTestCase extends DrupalWebTestCase {
     $this->drupalPost('admin/config/regional/language', $edit, t('Save configuration'));
 
     // Disable English.
-    $edit = array('enabled[en]' => FALSE);
+    $edit = array('languages[en][enabled]' => FALSE);
     $this->drupalPost('admin/config/regional/language', $edit, t('Save configuration'));
 
     // Verify that French is the only language.

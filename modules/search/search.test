@@ -450,7 +450,7 @@ class SearchRankingTestCase extends DrupalWebTestCase {
   function testHTMLRankings() {
     // Login with sufficient privileges.
     $this->drupalLogin($this->drupalCreateUser(array('create page content')));
-    
+
     // Test HTML tags with different weights.
     $sorted_tags = array('h1', 'h2', 'h3', 'h4', 'a', 'h5', 'h6', 'notag');
     $shuffled_tags = $sorted_tags;
@@ -482,7 +482,7 @@ class SearchRankingTestCase extends DrupalWebTestCase {
 
     // Refresh variables after the treatment.
     $this->refreshVariables();
-    
+
     // Disable all other rankings.
     $node_ranks = array('sticky', 'promote', 'recent', 'comments', 'views');
     foreach ($node_ranks as $node_rank) {
@@ -520,7 +520,7 @@ class SearchRankingTestCase extends DrupalWebTestCase {
 
       // Assert the results.
       $this->assertEqual($set[0]['node']->nid, $node->nid, 'Search tag ranking for "&lt;' . $tag . '&gt;" order.');
-      
+
       // Delete node so it doesn't show up in subsequent search results.
       node_delete($node->nid);
     }
@@ -861,7 +861,7 @@ class SearchCommentTestCase extends DrupalWebTestCase {
     $this->setRolePermissions(DRUPAL_AUTHENTICATED_RID, TRUE, TRUE);
     $this->setRolePermissions($this->admin_role, TRUE, FALSE);
     $this->checkCommentAccess('Admin user has access comments permission and no search permission, but comments should be indexed because admin user inherits authenticated user\'s permission to search', TRUE);
-    
+
   }
 
   /**
@@ -1938,9 +1938,9 @@ class SearchLanguageTestCase extends DrupalWebTestCase {
     $edit = array('site_default' => 'fr');
     $this->drupalPost(NULL, $edit, t('Save configuration'));
     $this->assertNoFieldChecked('edit-site-default-en', t('Default language updated.'));
-    $edit = array('enabled[en]' => FALSE);
+    $edit = array('languages[en][enabled]' => FALSE);
     $this->drupalPost('admin/config/regional/language', $edit, t('Save configuration'));
-    $this->assertNoFieldChecked('edit-enabled-en', t('Language disabled.'));
+    $this->assertNoFieldChecked('edit-languages-en-enabled', t('Language disabled.'));
 
     // Check that there are again no languages displayed.
     $this->drupalGet('search/node');

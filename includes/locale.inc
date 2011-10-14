@@ -769,14 +769,7 @@ function _locale_prepare_predefined_list() {
       unset($predefined[$key]);
       continue;
     }
-    // Include native name in output, if possible
-    if (count($value) > 1) {
-      $tname = t($value[0]);
-      $predefined[$key] = ($tname == $value[1]) ? $tname : "$tname ($value[1])";
-    }
-    else {
-      $predefined[$key] = t($value[0]);
-    }
+    $predefined[$key] = t($value[0]);
   }
   asort($predefined);
   return $predefined;
