@@ -2939,7 +2939,8 @@ function hook_uninstall() {
 /**
  * Perform necessary actions after module is enabled.
  *
- * The hook is called every time the module is enabled.
+ * The hook is called every time the module is enabled. It should be
+ * implemented in the module's .install file.
  *
  * @see module_enable()
  * @see hook_install()
@@ -2952,7 +2953,8 @@ function hook_enable() {
 /**
  * Perform necessary actions before module is disabled.
  *
- * The hook is called every time the module is disabled.
+ * The hook is called every time the module is disabled. It should be
+ * implemented in the module's .install file.
  *
  * @see hook_uninstall()
  * @see hook_modules_disabled()
