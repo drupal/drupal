@@ -850,7 +850,7 @@ function drupal_settings_initialize() {
 function drupal_get_filename($type, $name, $filename = NULL) {
   // The location of files will not change during the request, so do not use
   // drupal_static().
-  static $files = array();
+  static $files = array(), $dirs = array();
 
   if (!isset($files[$type])) {
     $files[$type] = array();
@@ -896,16 +896,19 @@ function drupal_get_filename($type, $name, $filename = NULL) {
         $extension = $type;
       }
 
-      if (!function_exists('drupal_system_listing')) {
-        require_once DRUPAL_ROOT . '/includes/common.inc';
-      }
-      // Scan the appropriate directories for all files with the requested
-      // extension, not just the file we are currently looking for. This
-      // prevents unnecessary scans from being repeated when this function is
-      // called more than once in the same page request.
-      $matches = drupal_system_listing("/^" . DRUPAL_PHP_FUNCTION_PATTERN . "\.$extension$/", $dir, 'name', 0);
-      foreach ($matches as $matched_name => $file) {
-        $files[$type][$matched_name] = $file->uri;
+      if (!isset($dirs[$dir][$extension])) {
+        $dirs[$dir][$extension] = TRUE;
+        if (!function_exists('drupal_system_listing')) {
+          require_once DRUPAL_ROOT . '/includes/common.inc';
+        }
+        // Scan the appropriate directories for all files with the requested
+        // extension, not just the file we are currently looking for. This
+        // prevents unnecessary scans from being repeated when this function is
+        // called more than once in the same page request.
+        $matches = drupal_system_listing("/^" . DRUPAL_PHP_FUNCTION_PATTERN . "\.$extension$/", $dir, 'name', 0);
+        foreach ($matches as $matched_name => $file) {
+          $files[$type][$matched_name] = $file->uri;
+        }
       }
     }
   }
