@@ -176,13 +176,6 @@ ul.action-links a {
   background-position: right center;
 }
 
-/* admin/content and admin/people */
-dl.multiselect,
-dl.multiselect dt,
-dl.multiselect dd {
-  margin: 0 0 0 10px;
-}
-
 /* Update options. */
 div.admin-options label,
 div.admin-options div.form-item {
