@@ -570,25 +570,25 @@ function hook_node_load($nodes, $types) {
  * block access, return NODE_ACCESS_IGNORE or simply return nothing.
  * Blindly returning FALSE will break other node access modules.
  *
- * @link http://api.drupal.org/api/group/node_access/7 More on the node access system @endlink
- * @ingroup node_access
- * @param $node
- *   The node on which the operation is to be performed, or, if it does
- *   not yet exist, the type of node to be created.
- * @param $op
+ * @param object|string $node
+ *   The node on which the operation is to be performed, or a string value
+ *   representing the type of node.
+ * @param string $op
  *   The operation to be performed. Possible values:
  *   - "create"
  *   - "delete"
  *   - "update"
  *   - "view"
- * @param $account
+ * @param object $account
  *   A user object representing the user for whom the operation is to be
  *   performed.
  *
- * @return
+ * @return integer
  *   NODE_ACCESS_ALLOW if the operation is to be allowed;
  *   NODE_ACCESS_DENY if the operation is to be denied;
  *   NODE_ACCESS_IGNORE to not affect this operation at all.
+ *
+ * @ingroup node_access
  */
 function hook_node_access($node, $op, $account) {
   $type = is_string($node) ? $node : $node->type;

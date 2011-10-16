@@ -6136,10 +6136,13 @@ function element_child($key) {
 }
 
 /**
- * Return the children of an element, optionally sorted by weight.
+ * Identifies the children of an element array, optionally sorted by weight.
+ *
+ * The children of a element array are those key/value pairs whose key does
+ * not start with a '#'. See drupal_render() for details.
  *
  * @param $elements
- *   The element to be sorted.
+ *   The element array whose children are to be identified.
  * @param $sort
  *   Boolean to indicate whether the children should be sorted by weight.
  * @return
