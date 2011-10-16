@@ -778,19 +778,6 @@ div.admin-panel h3 {
   margin-top: 0;
 }
 
-/* admin/content and admin/people */
-dl.multiselect,
-dl.multiselect dt,
-dl.multiselect dd {
-  margin: 0 10px 0 0; /* LTR */
-}
-dl.multiselect select,
-dl.multiselect dd select {
-  font-size: 0.923em;
-  background: #fff;
-  border: 1px solid #ccc;
-}
-
 /* Update options. */
 div.admin-options {
   background: #f8f8f8;
