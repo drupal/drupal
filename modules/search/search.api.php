@@ -172,7 +172,7 @@ function hook_search_admin() {
  * parameters to the search expression.
  *
  * See node_search_execute() for an example of a module that uses the search
- * index, and user_search_execute() for an example that doesn't ues the search
+ * index, and user_search_execute() for an example that doesn't use the search
  * index.
  *
  * @param $keys
