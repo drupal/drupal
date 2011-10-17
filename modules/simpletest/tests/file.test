@@ -689,7 +689,7 @@ class FileSaveUploadTest extends FileHookTestCase {
 
     $this->drupalPost('file-test/upload', $edit, t('Submit'));
     $this->assertResponse(200, t('Received a 200 response for posted test file.'));
-    $message = t('Only files with the following extensions are allowed: ') . '<em class="placeholder">' . $extensions . '</em>';
+    $message = t('Only files with the following extensions are allowed:') . ' <em class="placeholder">' . $extensions . '</em>';
     $this->assertRaw($message, t('Can\'t upload a disallowed extension'));
     $this->assertRaw(t('Epic upload FAIL!'), t('Found the failure message.'));
 
@@ -748,7 +748,7 @@ class FileSaveUploadTest extends FileHookTestCase {
 
     $this->drupalPost('file-test/upload', $edit, t('Submit'));
     $this->assertResponse(200, t('Received a 200 response for posted test file.'));
-    $message = t('For security reasons, your upload has been renamed to ') . '<em class="placeholder">' . $this->phpfile->filename . '.txt' . '</em>';
+    $message = t('For security reasons, your upload has been renamed to') . ' <em class="placeholder">' . $this->phpfile->filename . '.txt' . '</em>';
     $this->assertRaw($message, t('Dangerous file was renamed.'));
     $this->assertRaw(t('File MIME type is text/plain.'), t('Dangerous file\'s MIME type was changed.'));
     $this->assertRaw(t('You WIN!'), t('Found the success message.'));
