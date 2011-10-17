@@ -2556,9 +2556,18 @@ function language_types() {
 }
 
 /**
- * Get a list of languages set up indexed by the specified key
+ * Returns a list of installed languages, indexed by the specified key.
  *
- * @param $field The field to index the list with.
+ * @param $field
+ *   (optional) The field to index the list with.
+ *
+ * @return
+ *   An associative array, keyed on the values of $field.
+ *   - If $field is 'weight' or 'enabled', the array is nested, with the outer
+ *     array's values each being associative arrays with language codes as
+ *     keys and language objects as values.
+ *   - For all other values of $field, the array is only one level deep, and
+ *     the array's values are language objects.
  */
 function language_list($field = 'language') {
   $languages = &drupal_static(__FUNCTION__);
