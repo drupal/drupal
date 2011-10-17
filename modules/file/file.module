@@ -147,8 +147,7 @@ function file_file_download($uri, $field_type = 'file') {
   // temporary files where the host entity has not yet been saved (for example,
   // an image preview on a node/add form) in which case, allow download by the
   // file's owner.
-
-  if(empty($references) && ($file->status == FILE_STATUS_PERMANENT || $file->uid != $user->uid)) {
+  if (empty($references) && ($file->status == FILE_STATUS_PERMANENT || $file->uid != $user->uid)) {
       return;
   }
 
