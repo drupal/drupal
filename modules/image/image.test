@@ -667,6 +667,8 @@ class ImageFieldDisplayTestCase extends ImageFieldTestCase {
     $image_uri = $node->{$field_name}[LANGUAGE_NONE][0]['uri'];
     $image_info = array(
       'path' => $image_uri,
+      'width' => 40,
+      'height' => 20,
     );
     $default_output = theme('image', $image_info);
     $this->assertRaw($default_output, t('Default formatter displaying correctly on full node view.'));
@@ -712,6 +714,8 @@ class ImageFieldDisplayTestCase extends ImageFieldTestCase {
     // image style callback paths.
     $this->drupalGet(image_style_url('thumbnail', $image_uri));
     $image_info['path'] = image_style_path('thumbnail', $image_uri);
+    $image_info['width'] = 100;
+    $image_info['height'] = 50;
     $default_output = theme('image', $image_info);
     $this->drupalGet('node/' . $nid);
     $this->assertRaw($default_output, t('Image style thumbnail formatter displaying correctly on full node view.'));
@@ -761,6 +765,8 @@ class ImageFieldDisplayTestCase extends ImageFieldTestCase {
     $node = node_load($nid, NULL, TRUE);
     $image_info = array(
       'path' => image_style_url('medium', $node->{$field_name}[LANGUAGE_NONE][0]['uri']),
+      'width' => 220,
+      'height' => 110,
     );
     $default_output = theme('image', $image_info);
     $this->assertRaw($default_output, t("Preview image is displayed using 'medium' style."));
@@ -770,6 +776,8 @@ class ImageFieldDisplayTestCase extends ImageFieldTestCase {
       'path' => $node->{$field_name}[LANGUAGE_NONE][0]['uri'],
       'alt' => $this->randomName(),
       'title' => $this->randomName(),
+      'width' => 40,
+      'height' => 20,
     );
     $edit = array(
       $field_name . '[' . LANGUAGE_NONE . '][0][alt]' => $image_info['alt'],
@@ -817,6 +825,8 @@ class ImageFieldDisplayTestCase extends ImageFieldTestCase {
     $node = node_load($nid, NULL, TRUE);
     $image_info = array(
       'path' => $node->{$field_name}[LANGUAGE_NONE][0]['uri'],
+      'width' => 40,
+      'height' => 20,
     );
     $image_output = theme('image', $image_info);
     $this->drupalGet('node/' . $nid);
@@ -899,5 +909,223 @@ class ImageFieldValidateTestCase extends ImageFieldTestCase {
     $this->assertText(t('The specified file ' . $image_that_is_too_small->filename . ' could not be uploaded. The image is too small; the minimum dimensions are 50x50 pixels.'), t('Node save failed when minimum image resolution was not met.'));
     $nid = $this->uploadNodeImage($image_that_is_too_big, $field_name, 'article');
     $this->assertText(t('The image was resized to fit within the maximum allowed dimensions of 100x100 pixels.'), t('Image exceeding max resolution was properly resized.'));
+  }
+}
+
+/**
+ * Tests that images have correct dimensions when styled.
+ */
+class ImageDimensionsUnitTest extends DrupalWebTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Image dimensions',
+      'description' => 'Tests that images have correct dimensions when styled.',
+      'group' => 'Image',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('image_module_test');
+  }
+
+  /**
+   * Test styled image dimensions cumulatively.
+   */
+  function testImageDimensions() {
+    // Create a working copy of the file.
+    $files = $this->drupalGetTestFiles('image');
+    $file = reset($files);
+    $original_uri = file_unmanaged_copy($file->uri, 'public://', FILE_EXISTS_RENAME);
+
+    // Create a style.
+    $style = image_style_save(array('name' => 'test'));
+    $generated_uri = 'public://styles/test/public/'. basename($original_uri);
+    $url = image_style_url('test', $original_uri);
+
+    $variables = array(
+      'style_name' => 'test',
+      'path' => $original_uri,
+      'width' => 40,
+      'height' => 20,
+    );
+
+    // Scale an image that is wider than it is high.
+    $effect = array(
+      'name' => 'image_scale',
+      'data' => array(
+        'width' => 120,
+        'height' => 90,
+        'upscale' => TRUE,
+      ),
+      'isid' => $style['isid'],
+    );
+
+    image_effect_save($effect);
+    $img_tag = theme_image_style($variables);
+    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . $url . '" width="120" height="60" alt="" />', t('Expected img tag was found.'));
+    $this->assertFalse(file_exists($generated_uri), t('Generated file does not exist.'));
+    $this->drupalGet($url);
+    $this->assertResponse(200, t('Image was generated at the URL.'));
+    $this->assertTrue(file_exists($generated_uri), t('Generated file does exist after we accessed it.'));
+    $image_info = image_get_info($generated_uri);
+    $this->assertEqual($image_info['width'], 120, t('Expected width was found.'));
+    $this->assertEqual($image_info['height'], 60, t('Expected height was found.'));
+
+    // Rotate 90 degrees anticlockwise.
+    $effect = array(
+      'name' => 'image_rotate',
+      'data' => array(
+        'degrees' => -90,
+        'random' => FALSE,
+      ),
+      'isid' => $style['isid'],
+    );
+
+    image_effect_save($effect);
+    $img_tag = theme_image_style($variables);
+    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . $url . '" width="60" height="120" alt="" />', t('Expected img tag was found.'));
+    $this->assertFalse(file_exists($generated_uri), t('Generated file does not exist.'));
+    $this->drupalGet($url);
+    $this->assertResponse(200, t('Image was generated at the URL.'));
+    $this->assertTrue(file_exists($generated_uri), t('Generated file does exist after we accessed it.'));
+    $image_info = image_get_info($generated_uri);
+    $this->assertEqual($image_info['width'], 60, t('Expected width was found.'));
+    $this->assertEqual($image_info['height'], 120, t('Expected height was found.'));
+
+    // Scale an image that is higher than it is wide (rotated by previous effect).
+    $effect = array(
+      'name' => 'image_scale',
+      'data' => array(
+        'width' => 120,
+        'height' => 90,
+        'upscale' => TRUE,
+      ),
+      'isid' => $style['isid'],
+    );
+
+    image_effect_save($effect);
+    $img_tag = theme_image_style($variables);
+    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . $url . '" width="45" height="90" alt="" />', t('Expected img tag was found.'));
+    $this->assertFalse(file_exists($generated_uri), t('Generated file does not exist.'));
+    $this->drupalGet($url);
+    $this->assertResponse(200, t('Image was generated at the URL.'));
+    $this->assertTrue(file_exists($generated_uri), t('Generated file does exist after we accessed it.'));
+    $image_info = image_get_info($generated_uri);
+    $this->assertEqual($image_info['width'], 45, t('Expected width was found.'));
+    $this->assertEqual($image_info['height'], 90, t('Expected height was found.'));
+
+    // Test upscale disabled.
+    $effect = array(
+      'name' => 'image_scale',
+      'data' => array(
+        'width' => 400,
+        'height' => 200,
+        'upscale' => FALSE,
+      ),
+      'isid' => $style['isid'],
+    );
+
+    image_effect_save($effect);
+    $img_tag = theme_image_style($variables);
+    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . $url . '" width="45" height="90" alt="" />', t('Expected img tag was found.'));
+    $this->assertFalse(file_exists($generated_uri), t('Generated file does not exist.'));
+    $this->drupalGet($url);
+    $this->assertResponse(200, t('Image was generated at the URL.'));
+    $this->assertTrue(file_exists($generated_uri), t('Generated file does exist after we accessed it.'));
+    $image_info = image_get_info($generated_uri);
+    $this->assertEqual($image_info['width'], 45, t('Expected width was found.'));
+    $this->assertEqual($image_info['height'], 90, t('Expected height was found.'));
+
+    // Add a desaturate effect.
+    $effect = array(
+      'name' => 'image_desaturate',
+      'data' => array(),
+      'isid' => $style['isid'],
+    );
+
+    image_effect_save($effect);
+    $img_tag = theme_image_style($variables);
+    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . $url . '" width="45" height="90" alt="" />', t('Expected img tag was found.'));
+    $this->assertFalse(file_exists($generated_uri), t('Generated file does not exist.'));
+    $this->drupalGet($url);
+    $this->assertResponse(200, t('Image was generated at the URL.'));
+    $this->assertTrue(file_exists($generated_uri), t('Generated file does exist after we accessed it.'));
+    $image_info = image_get_info($generated_uri);
+    $this->assertEqual($image_info['width'], 45, t('Expected width was found.'));
+    $this->assertEqual($image_info['height'], 90, t('Expected height was found.'));
+
+    // Add a random rotate effect.
+    $effect = array(
+      'name' => 'image_rotate',
+      'data' => array(
+        'degrees' => 180,
+        'random' => TRUE,
+      ),
+      'isid' => $style['isid'],
+    );
+
+    image_effect_save($effect);
+    $img_tag = theme_image_style($variables);
+    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . $url . '" alt="" />', t('Expected img tag was found.'));
+    $this->assertFalse(file_exists($generated_uri), t('Generated file does not exist.'));
+    $this->drupalGet($url);
+    $this->assertResponse(200, t('Image was generated at the URL.'));
+    $this->assertTrue(file_exists($generated_uri), t('Generated file does exist after we accessed it.'));
+
+
+    // Add a crop effect.
+    $effect = array(
+      'name' => 'image_crop',
+      'data' => array(
+        'width' => 30,
+        'height' => 30,
+        'anchor' => 'center-center',
+      ),
+      'isid' => $style['isid'],
+    );
+
+    image_effect_save($effect);
+    $img_tag = theme_image_style($variables);
+    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . $url . '" width="30" height="30" alt="" />', t('Expected img tag was found.'));
+    $this->assertFalse(file_exists($generated_uri), t('Generated file does not exist.'));
+    $this->drupalGet($url);
+    $this->assertResponse(200, t('Image was generated at the URL.'));
+    $this->assertTrue(file_exists($generated_uri), t('Generated file does exist after we accessed it.'));
+    $image_info = image_get_info($generated_uri);
+    $this->assertEqual($image_info['width'], 30, t('Expected width was found.'));
+    $this->assertEqual($image_info['height'], 30, t('Expected height was found.'));
+
+    // Rotate to a non-multiple of 90 degrees.
+    $effect = array(
+      'name' => 'image_rotate',
+      'data' => array(
+        'degrees' => 57,
+        'random' => FALSE,
+      ),
+      'isid' => $style['isid'],
+    );
+
+    $effect = image_effect_save($effect);
+    $img_tag = theme_image_style($variables);
+    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . $url . '" alt="" />', t('Expected img tag was found.'));
+    $this->assertFalse(file_exists($generated_uri), t('Generated file does not exist.'));
+    $this->drupalGet($url);
+    $this->assertResponse(200, t('Image was generated at the URL.'));
+    $this->assertTrue(file_exists($generated_uri), t('Generated file does exist after we accessed it.'));
+
+    image_effect_delete($effect);
+
+    // Ensure that an effect with no dimensions callback unsets the dimensions.
+    // This ensures compatibility with 7.0 contrib modules.
+    $effect = array(
+      'name' => 'image_module_test_null',
+      'data' => array(),
+      'isid' => $style['isid'],
+    );
+
+    image_effect_save($effect);
+    $img_tag = theme_image_style($variables);
+    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . $url . '" alt="" />', t('Expected img tag was found.'));
   }
 }

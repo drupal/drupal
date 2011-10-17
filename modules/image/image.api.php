@@ -22,6 +22,10 @@
  *   following items:
  *   - "label": The human-readable name of the effect.
  *   - "effect callback": The function to call to perform this image effect.
+ *   - "dimensions passthrough": (optional) Set this item if the effect doesn't
+ *     change the dimensions of the image.
+ *   - "dimensions callback": (optional) The function to call to transform
+ *     dimensions for this effect.
  *   - "help": (optional) A brief description of the effect that will be shown
  *     when adding or configuring this image effect.
  *   - "form callback": (optional) The name of a function that will return a
@@ -37,7 +41,8 @@ function hook_image_effect_info() {
   $effects['mymodule_resize'] = array(
     'label' => t('Resize'),
     'help' => t('Resize an image to an exact set of dimensions, ignoring aspect ratio.'),
-    'effect callback' => 'mymodule_resize_image',
+    'effect callback' => 'mymodule_resize_effect',
+    'dimensions callback' => 'mymodule_resize_dimensions',
     'form callback' => 'mymodule_resize_form',
     'summary theme' => 'mymodule_resize_summary',
   );
@@ -56,6 +61,7 @@ function hook_image_effect_info() {
 function hook_image_effect_info_alter(&$effects) {
   // Override the Image module's crop effect with more options.
   $effects['image_crop']['effect callback'] = 'mymodule_crop_effect';
+  $effects['image_crop']['dimensions callback'] = 'mymodule_crop_dimensions';
   $effects['image_crop']['form callback'] = 'mymodule_crop_form';
 }
 

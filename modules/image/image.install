@@ -127,6 +127,16 @@ function image_field_schema($field) {
         'length' => 128,
         'not null' => FALSE,
       ),
+      'width' => array(
+        'description' => 'The width of the image in pixels.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+      ),
+      'height' => array(
+        'description' => 'The height of the image in pixels.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+      ),
     ),
     'indexes' => array(
       'fid' => array('fid'),
