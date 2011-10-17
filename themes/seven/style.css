@@ -315,7 +315,7 @@ ul.secondary {
 }
 ul.secondary li {
   margin: 0 5px;
-  float: right; /* LTR */
+  float: none; /* LTR */
 }
 ul.secondary li a {
   background-color: #ddd;
