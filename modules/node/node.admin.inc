@@ -121,10 +121,6 @@ function node_build_filter_query(SelectQueryInterface $query) {
   foreach ($filter_data as $index => $filter) {
     list($key, $value) = $filter;
     switch ($key) {
-      case 'term':
-        $alias = $query->join('taxonomy_index', 'ti', "n.nid = %alias.nid");
-        $query->condition($alias . '.tid', $value);
-        break;
       case 'status':
         // Note: no exploitable hole as $key/$value have already been checked when submitted
         list($key, $value) = explode('-', $value, 2);
