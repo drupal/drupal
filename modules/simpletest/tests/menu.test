@@ -1345,8 +1345,7 @@ class MenuBreadcrumbTestCase extends MenuWebTestCase {
       $tree += array(
         $link['link_path'] => $link['link_title'],
       );
-      // @todo Normally, you'd expect $term->name as page title here.
-      $this->assertBreadcrumb($link['link_path'], $trail, $link['link_title'], $tree);
+      $this->assertBreadcrumb($link['link_path'], $trail, $term->name, $tree);
       $this->assertRaw(check_plain($parent->title), 'Tagged node found.');
 
       // Additionally make sure that this link appears only once; i.e., the
