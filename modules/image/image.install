@@ -130,6 +130,16 @@ function image_field_schema($field) {
         'length' => 128,
         'not null' => FALSE,
       ),
+      'width' => array(
+        'description' => 'The width of the image in pixels.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+      ),
+      'height' => array(
+        'description' => 'The height of the image in pixels.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+      ),
     ),
     'indexes' => array(
       'fid' => array('fid'),
@@ -241,6 +251,126 @@ function image_update_7001() {
   if (!db_table_exists('image_effects') && db_table_exists('image_effect')) {
     db_rename_table('image_effect', 'image_effects');
   }
+}
+
+/**
+ * Add width and height columns to a specific table.
+ *
+ * @param $table
+ *   The name of the database table to be updated.
+ * @param $columns
+ *   Keyed array of columns this table is supposed to have.
+ */
+function _image_update_7002_add_columns($table, $field_name) {
+  $spec = array(
+    'type' => 'int',
+    'unsigned' => TRUE,
+  );
+
+  $spec['description'] = 'The width of the image in pixels.';
+  db_add_field($table, $field_name . '_width', $spec);
+
+  $spec['description'] = 'The height of the image in pixels.';
+  db_add_field($table, $field_name . '_height', $spec);
+}
+
+/**
+ * Populate image dimensions in a specific table.
+ *
+ * @param $table
+ *   The name of the database table to be updated.
+ * @param $columns
+ *   Keyed array of columns this table is supposed to have.
+ * @param $last_fid
+ *   The fid of the last image to have been processed.
+ *
+ * @return
+ *   The number of images that were processed.
+ */
+function _image_update_7002_populate_dimensions($table, $field_name, &$last_fid) {
+  // Define how many images to process per pass.
+  $images_per_pass = 100;
+
+  // Query the database for fid / URI pairs.
+  $query = db_select($table, NULL, array('fetch' => PDO::FETCH_ASSOC));
+  $query->join('file_managed', NULL, $table . '.' . $field_name . '_fid = file_managed.fid');
+
+  if ($last_fid) {
+    $query->condition('file_managed.fid', $last_fid, '>');
+  }
+
+  $result = $query->fields('file_managed', array('fid', 'uri'))
+    ->orderBy('file_managed.fid')
+    ->range(0, $images_per_pass)
+    ->execute();
+
+  $count = 0;
+  foreach ($result as $file) {
+    $count++;
+    $info = image_get_info($file['uri']);
+
+    if (is_array($info)) {
+      db_update($table)
+        ->fields(array(
+          $field_name . '_width' => $info['width'],
+          $field_name . '_height' => $info['height'],
+        ))
+        ->condition($field_name . '_fid', $file['fid'])
+        ->execute();
+    }
+  }
+
+  // If less than the requested number of rows were returned then this table
+  // has been fully processed.
+  $last_fid = ($count < $images_per_pass) ? NULL : $file['fid'];
+  return $count;
+}
+
+/**
+ * Add width and height columns to image field schema and populate.
+ */
+function image_update_7002(array &$sandbox) {
+  if (empty($sandbox)) {
+    $fields = _update_7000_field_read_fields(array(
+      'module' => 'image',
+      'storage_type' => 'field_sql_storage',
+      'deleted' => 0,
+    ));
+
+    if (empty($fields)) {
+      return;
+    }
+
+    // Setup the sandbox.
+    $sandbox = array(
+      'tables' => array(),
+      'total' => 0,
+      'processed' => 0,
+      'last_fid' => NULL,
+    );
+
+    foreach ($fields as $field) {
+      foreach ($field['storage']['details']['sql'] as $tables) {
+        $table = reset(array_keys($tables));
+        $sandbox['tables'][$table] = $field['field_name'];
+        $sandbox['total'] += db_select($table)->countQuery()->execute()->fetchField();
+
+        // Add the width and height columns to the table.
+        _image_update_7002_add_columns($table, $field['field_name']);
+      }
+    }
+  }
+
+  // Process the table at the top of the list.
+  $table = reset(array_keys($sandbox['tables']));
+  $sandbox['processed'] += _image_update_7002_populate_dimensions($table, $sandbox['tables'][$table], $sandbox['last_fid']);
+
+  // Has the table been fully processed?
+  if (!$sandbox['last_fid']) {
+    unset($sandbox['tables'][$table]);
+  }
+
+  $sandbox['#finished'] = count($sandbox['tables']) ? ($sandbox['processed'] / $sandbox['total']) : 1;
 }
 
 /**

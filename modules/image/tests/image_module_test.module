@@ -11,3 +11,31 @@ function image_module_test_file_download($uri) {
   }
   return -1;
 }
+
+/**
+ * Implements hook_image_effect_info().
+ */
+function image_module_test_image_effect_info() {
+  $effects = array(
+    'image_module_test_null' => array(
+    'effect callback' => 'image_module_test_null_effect',
+    ),
+  );
+
+  return $effects;
+}
+
+/**
+ * Image effect callback; Null.
+ *
+ * @param $image
+ *   An image object returned by image_load().
+ * @param $data
+ *   An array with no attributes.
+ *
+ * @return
+ *   TRUE
+ */
+function image_module_test_null_effect(array &$image, array $data) {
+  return TRUE;
+}

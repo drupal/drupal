@@ -14,6 +14,7 @@ function image_image_effect_info() {
       'label' => t('Resize'),
       'help' => t('Resizing will make images an exact set of dimensions. This may cause images to be stretched or shrunk disproportionately.'),
       'effect callback' => 'image_resize_effect',
+      'dimensions callback' => 'image_resize_dimensions',
       'form callback' => 'image_resize_form',
       'summary theme' => 'image_resize_summary',
     ),
@@ -21,6 +22,7 @@ function image_image_effect_info() {
       'label' => t('Scale'),
       'help' => t('Scaling will maintain the aspect-ratio of the original image. If only a single dimension is specified, the other dimension will be calculated.'),
       'effect callback' => 'image_scale_effect',
+      'dimensions callback' => 'image_scale_dimensions',
       'form callback' => 'image_scale_form',
       'summary theme' => 'image_scale_summary',
     ),
@@ -28,6 +30,7 @@ function image_image_effect_info() {
       'label' => t('Scale and crop'),
       'help' => t('Scale and crop will maintain the aspect-ratio of the original image, then crop the larger dimension. This is most useful for creating perfectly square thumbnails without stretching the image.'),
       'effect callback' => 'image_scale_and_crop_effect',
+      'dimensions callback' => 'image_resize_dimensions',
       'form callback' => 'image_resize_form',
       'summary theme' => 'image_resize_summary',
     ),
@@ -35,6 +38,7 @@ function image_image_effect_info() {
       'label' => t('Crop'),
       'help' => t('Cropping will remove portions of an image to make it the specified dimensions.'),
       'effect callback' => 'image_crop_effect',
+      'dimensions callback' => 'image_resize_dimensions',
       'form callback' => 'image_crop_form',
       'summary theme' => 'image_crop_summary',
     ),
@@ -42,11 +46,13 @@ function image_image_effect_info() {
       'label' => t('Desaturate'),
       'help' => t('Desaturate converts an image to grayscale.'),
       'effect callback' => 'image_desaturate_effect',
+      'dimensions passthrough' => TRUE,
     ),
     'image_rotate' => array(
       'label' => t('Rotate'),
       'help' => t('Rotating an image may cause the dimensions of an image to increase to fit the diagonal.'),
       'effect callback' => 'image_rotate_effect',
+      'dimensions callback' => 'image_rotate_dimensions',
       'form callback' => 'image_rotate_form',
       'summary theme' => 'image_rotate_summary',
     ),
@@ -80,6 +86,24 @@ function image_resize_effect(&$image, $data) {
 }
 
 /**
+ * Image dimensions callback; Resize.
+ *
+ * @param $dimensions
+ *   Dimensions to be modified - an array with components width and height, in
+ *   pixels.
+ * @param $data
+ *   An array of attributes to use when performing the resize effect with the
+ *   following items:
+ *   - "width": An integer representing the desired width in pixels.
+ *   - "height": An integer representing the desired height in pixels.
+ */
+function image_resize_dimensions(array &$dimensions, array $data) {
+  // The new image will have the exact dimensions defined for the effect.
+  $dimensions['width'] = $data['width'];
+  $dimensions['height'] = $data['height'];
+}
+
+/**
  * Image effect callback; Scale an image resource.
  *
  * @param $image
@@ -89,8 +113,8 @@ function image_resize_effect(&$image, $data) {
  *   following items:
  *   - "width": An integer representing the desired width in pixels.
  *   - "height": An integer representing the desired height in pixels.
- *   - "upscale": A Boolean indicating that the image should be upscalled if
- *     the dimensions are larger than the original image.
+ *   - "upscale": A boolean indicating that the image should be upscaled if the
+ *     dimensions are larger than the original image.
  *
  * @return
  *   TRUE on success. FALSE on failure to scale image.
@@ -112,6 +136,26 @@ function image_scale_effect(&$image, $data) {
     return FALSE;
   }
   return TRUE;
+}
+
+/**
+ * Image dimensions callback; Scale.
+ *
+ * @param $dimensions
+ *   Dimensions to be modified - an array with components width and height, in
+ *   pixels.
+ * @param $data
+ *   An array of attributes to use when performing the scale effect with the
+ *   following items:
+ *   - "width": An integer representing the desired width in pixels.
+ *   - "height": An integer representing the desired height in pixels.
+ *   - "upscale": A boolean indicating that the image should be upscaled if the
+ *     dimensions are larger than the original image.
+ */
+function image_scale_dimensions(array &$dimensions, array $data) {
+  if ($dimensions['width'] && $dimensions['height']) {
+    image_dimensions_scale($dimensions, $data['width'], $data['height'], $data['upscale']);
+  }
 }
 
 /**
@@ -198,7 +242,7 @@ function image_desaturate_effect(&$image, $data) {
  *   An array of attributes to use when performing the rotate effect containing
  *   the following items:
  *   - "degrees": The number of (clockwise) degrees to rotate the image.
- *   - "random": A Boolean indicating that a random rotation angle should be
+ *   - "random": A boolean indicating that a random rotation angle should be
  *     used for this image. The angle specified in "degrees" is used as a
  *     positive and negative maximum.
  *   - "bgcolor": The background color to use for exposed areas of the image.
@@ -240,4 +284,33 @@ function image_rotate_effect(&$image, $data) {
     return FALSE;
   }
   return TRUE;
+}
+
+/**
+ * Image dimensions callback; Rotate.
+ *
+ * @param $dimensions
+ *   Dimensions to be modified - an array with components width and height, in
+ *   pixels.
+ * @param $data
+ *   An array of attributes to use when performing the rotate effect containing
+ *   the following items:
+ *   - "degrees": The number of (clockwise) degrees to rotate the image.
+ *   - "random": A boolean indicating that a random rotation angle should be
+ *     used for this image. The angle specified in "degrees" is used as a
+ *     positive and negative maximum.
+ */
+function image_rotate_dimensions(array &$dimensions, array $data) {
+  // If the rotate is not random and the angle is a multiple of 90 degrees,
+  // then the new dimensions can be determined.
+  if (!$data['random'] && ((int) ($data['degrees']) == $data['degrees']) && ($data['degrees'] % 90 == 0)) {
+    if ($data['degrees'] % 180 != 0) {
+      $temp = $dimensions['width'];
+      $dimensions['width'] = $dimensions['height'];
+      $dimensions['height'] = $temp;
+    }
+  }
+  else {
+    $dimensions['width'] = $dimensions['height'] = NULL;
+  }
 }
