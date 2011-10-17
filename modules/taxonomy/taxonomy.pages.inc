@@ -14,6 +14,9 @@
  *   The page content.
  */
 function taxonomy_term_page($term) {
+  // Assign the term name as the page title.
+  drupal_set_title($term->name);
+
   // Build breadcrumb based on the hierarchy of the term.
   $current = (object) array(
     'tid' => $term->tid,
