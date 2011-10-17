@@ -185,6 +185,8 @@ function image_theme() {
       'variables' => array(
         'style_name' => NULL,
         'path' => NULL,
+        'width' => NULL,
+        'height' => NULL,
         'alt' => '',
         'title' => NULL,
         'attributes' => array(),
@@ -812,6 +814,39 @@ function image_style_create_derivative($style, $source, $destination) {
 }
 
 /**
+ * Determines the dimensions of the styled image.
+ *
+ * Applies all of an image style's effects to $dimensions.
+ *
+ * @param $style_name
+ *   The name of the style to be applied.
+ * @param $dimensions
+ *   Dimensions to be modified - an array with components width and height, in
+ *   pixels.
+ */
+function image_style_transform_dimensions($style_name, array &$dimensions) {
+  module_load_include('inc', 'image', 'image.effects');
+  $style = image_style_load($style_name);
+
+  if (!is_array($style)) {
+    return;
+  }
+
+  foreach ($style['effects'] as $effect) {
+    if (isset($effect['dimensions passthrough'])) {
+      continue;
+    }
+
+    if (isset($effect['dimensions callback'])) {
+      $effect['dimensions callback']($dimensions, $effect['data']);
+    }
+    else {
+      $dimensions['width'] = $dimensions['height'] = NULL;
+    }
+  }
+}
+
+/**
  * Flush cached media for a style.
  *
  * @param $style
@@ -1137,6 +1172,8 @@ function image_effect_apply($image, $effect) {
  *   - path: The path of the image file relative to the Drupal files directory.
  *     This function does not work with images outside the files directory nor
  *     with remotely hosted images.
+ *   - width: The width of the source image (if known).
+ *   - height: The height of the source image (if known).
  *   - alt: The alternative text for text-based browsers.
  *   - title: The title text is displayed when the image is hovered in some
  *     popular browsers.
@@ -1145,6 +1182,18 @@ function image_effect_apply($image, $effect) {
  * @ingroup themeable
  */
 function theme_image_style($variables) {
+  // Determine the dimensions of the styled image.
+  $dimensions = array(
+    'width' => $variables['width'],
+    'height' => $variables['height'],
+  );
+
+  image_style_transform_dimensions($variables['style_name'], $dimensions);
+
+  $variables['width'] = $dimensions['width'];
+  $variables['height'] = $dimensions['height'];
+
+  // Determine the url for the styled image.
   $variables['path'] = image_style_url($variables['style_name'], $variables['path']);
   return theme('image', $variables);
 }
