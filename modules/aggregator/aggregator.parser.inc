@@ -35,19 +35,12 @@ function aggregator_aggregator_parse($feed) {
       $image[$key] = trim($value);
     }
 
-    if (!empty($image['link']) && !empty($image['url']) && !empty($image['title'])) {
-      $image = l(theme('image', array('path' => $image['url'], 'alt' => $image['title'])), $image['link'], array('html' => TRUE));
-    }
-    else {
-      $image = '';
-    }
-
     $etag = empty($feed->http_headers['etag']) ? '' : $feed->http_headers['etag'];
 
     // Add parsed data to the feed object.
-    $feed->link = !empty($channel['LINK']) ? $channel['LINK'] : '';
-    $feed->description = !empty($channel['DESCRIPTION']) ? $channel['DESCRIPTION'] : '';
-    $feed->image = $image;
+    $feed->link = !empty($channel['link']) ? $channel['link'] : '';
+    $feed->description = !empty($channel['description']) ? $channel['description'] : '';
+    $feed->image = !empty($image['url']) ? $image['url'] : '';
     $feed->etag = $etag;
     $feed->modified = $modified;
 
