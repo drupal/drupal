@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <config>
+  <name>thumbnail</name>
   <effects>
     <image_scale>
       <data>

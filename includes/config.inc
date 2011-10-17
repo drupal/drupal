@@ -83,6 +83,7 @@ function config_sign_data($data) {
   global $drupal_config_key;
   
   // SHA-512 is both secure and very fast on 64 bit CPUs.
+  // TODO: What about 32-bit CPUs?
   return hash_hmac('sha512', $data, $drupal_config_key);
 }
 
@@ -94,6 +95,24 @@ function config_get_names_with_prefix($prefix) {
   return config_get_verified_storage_names_with_prefix($prefix);
 }
 
+/**
+ * Retrieve a configuration object.
+ *
+ * This is the main entry point to the configuration API. Calling
+ * @code config(book.admin) @endcode will return a configuration object in which
+ * the book module can store its administrative settings.
+ *
+ * @param $name
+ *   The name of the configuration object to retrieve. The name corresponds to
+ *   an XML configuration file. For @code config(book.admin) @endcode, the
+ *   config object returned will contain the contents of book.admin.xml.
+ * @param $class
+ *   The class name of the config object to be returned. Defaults to
+ *   DrupalConfig.
+ * @return
+ *   An instance of the class specified in the $class parameter.
+ *
+ */
 function config($name, $class = 'DrupalConfig') {
   static $overrides;
   if (!isset($overrides)) {
@@ -153,7 +172,8 @@ function config_array_to_xml($arr, $tab_count = 0) {
   foreach ($arr as $tag => $val) { 
     if (!is_array($val)) { 
       $xml .= PHP_EOL . '<' . $tag . '>' . htmlentities($val) . '</' . $tag . '>'; 
-    } else { 
+    }
+    else {
       $tab_count++; 
       $xml .= PHP_EOL . '<' . $tag . '>' . config_array_to_xml($val, $tab_count); 
       $xml .= PHP_EOL . '</' . $tag . '>'; 
@@ -168,22 +188,27 @@ class ConfigFileStorageException extends ConfigException {}
 class ConfigFileStorageReadException extends ConfigFileStorageException {}
 class ConfigFileStorageSignatureException extends ConfigFileStorageException {}
 
+/**
+ * Represents the signed file storage interface.
+ *
+ * Classes implementing this interface allow reading and writing configuration
+ * data to and from disk, while automatically managing and verifying
+ * cryptographic signatures.
+ */
 class SignedFileStorage {
+
   /**
-   * Constructor for the signed file storage interface.
+   * Constructs a SignedFileStorage object.
    *
-   * This class allows reading and writing configuration data from/to the
-   * disk while automatically managing and verifying cryptographic signatures.
-   *
-   * param @name
-   *   Lowercase string, the name for the configuration data.
+   * param string @name
+   *   The name for the configuration data. Should be lowercase.
    */
   public function __construct($name) {
     $this->name = $name;
   }
 
   /**
-   * Read and return a signed file and its signature.
+   * Reads and returns a signed file and its signature.
    *
    * @return
    *   An array with "signature" and "data" keys.
@@ -204,14 +229,23 @@ class SignedFileStorage {
     return array('data' => $content, 'signature' => $signature);
   }
 
+  /**
+   * Checks whether the XML configuration file already exists on disk.
+   */
   protected function exists() {
     return file_exists($this->getFilePath());
   }
-  
+
+  /**
+   * Returns the path to the XML configuration file.
+   */
   public function getFilePath() {
     return config_get_config_directory() . '/' . $this->name  . '.xml';
   }
 
+  /**
+   * Recreates the signature for the file.
+   */
   public function resign() {
     if ($this->exists()) {
       $parts = $this->readWithSignature();
@@ -219,6 +253,16 @@ class SignedFileStorage {
     }
   }
 
+  /**
+   * Cryptographically verifies the integrity of the configuration file.
+   *
+   * @param $contentOnSuccess
+   *   Whether or not to return the contents of the verified configuration file.
+   * @return mixed
+   *   If $contentOnSuccess was TRUE, returns the contents of the verified
+   *   configuration file; otherwise returns TRUE on success. Always returns
+   *   FALSE if the configuration file was not successfully verified.
+   */
   public function verify($contentOnSuccess = FALSE) {
     if ($this->exists()) {
       $split = $this->readWithSignature();
@@ -233,6 +277,15 @@ class SignedFileStorage {
     return FALSE;
   }
 
+  /**
+   * Writes the contents of the configuration file to disk.
+   *
+   * @param $data
+   *   The data to be written to the file. // TODO - what format is it in?
+   *
+   * @throws
+   *   Exception
+   */
   public function write($data) {
     $signature = config_sign_data($data);
     if (!file_put_contents($this->getFilePath(), $data)) {
@@ -243,6 +296,9 @@ class SignedFileStorage {
     }
   }
 
+  /**
+   * Returns the contents of the configuration file.
+   */
   public function read() {
     if ($this->exists()) {
       $verification = $this->verify(TRUE);
@@ -342,6 +398,9 @@ abstract class DrupalConfigVerifiedStorage implements DrupalConfigVerifiedStorag
   }
 }
 
+/**
+ * Represents an SQL-based configuration storage object.
+ */
 class DrupalVerifiedStorageSQL extends DrupalConfigVerifiedStorage {
 
   public function read() {
@@ -360,6 +419,9 @@ class DrupalVerifiedStorageSQL extends DrupalConfigVerifiedStorage {
   }
 }
 
+/**
+ * Represents the default configuration storage object.
+ */
 class DrupalConfig {
 
   /**
@@ -373,6 +435,14 @@ class DrupalConfig {
 
   protected $data = array();
 
+  /**
+   * Constructs a DrupalConfig object.
+   *
+   * @param DrupalConfigVerifiedStorageInterface $verified_storage
+   *   The storage engine where this config object should be saved.
+   * @param array $overrides
+   *   Optional. Configuration values to override the values from disk.
+   */
   public function __construct(DrupalConfigVerifiedStorageInterface $verified_storage, $overrides = array()) {
     $this->_verifiedStorage = $verified_storage;
     $original_keys = (array) config_decode($this->_verifiedStorage->read());
@@ -383,10 +453,16 @@ class DrupalConfig {
     }
   }
 
+  /**
+   * Checks whether a particular value is overridden.
+   */
   public function isOverridden($key) {
     return isset($this->_overrides[$key]);
   }
 
+  /**
+   * Set value in this config object.
+   */
   public function set($key, $value) {
     $parts = explode('.', $key);
     if (count($parts) == 1) {
@@ -397,6 +473,9 @@ class DrupalConfig {
     }
   }
 
+  /**
+   * Get value in this config object.
+   */
   public function get($key) {
     $parts = explode('.', $key);
     if (count($parts) == 1) {
@@ -407,8 +486,11 @@ class DrupalConfig {
     }
   }
 
-
+  /**
+   * Saves the configuration object to disk as XML.
+   */
   public function save() {
     $this->_verifiedStorage->write(config_encode($this->data));
   }
 }
+
