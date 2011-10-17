@@ -160,7 +160,7 @@ function image_get_info($filepath, $toolkit = FALSE) {
  *   The target height, in pixels.
  *
  * @return
- *   TRUE on success, FALSE on failure.
+ *   TRUE or FALSE, based on success.
  *
  * @see image_load()
  * @see image_resize()
@@ -178,61 +178,7 @@ function image_scale_and_crop(stdClass $image, $width, $height) {
 }
 
 /**
- * Scales image dimensions while maintaining aspect ratio.
- *
- * The resulting dimensions can be smaller for one or both target dimensions.
- *
- * @param $dimensions
- *   Dimensions to be modified - an array with components width and height, in
- *   pixels.
- * @param $width
- *   The target width, in pixels. This value is omitted then the scaling will
- *   based only on the height value.
- * @param $height
- *   The target height, in pixels. This value is omitted then the scaling will
- *   based only on the width value.
- * @param $upscale
- *   Boolean indicating that files smaller than the dimensions will be scaled
- *   up. This generally results in a low quality image.
- *
- * @return
- *   TRUE if $dimensions was modified, FALSE otherwise.
- *
- * @see image_scale()
- */
-function image_dimensions_scale(array &$dimensions, $width = NULL, $height = NULL, $upscale = FALSE) {
-  $aspect = $dimensions['height'] / $dimensions['width'];
-
-  if ($upscale) {
-    // Set width/height according to aspect ratio if either is empty.
-    $width = !empty($width) ? $width : $height / $aspect;
-    $height = !empty($height) ? $height : $width / $aspect;
-  }
-  else {
-    // Set impossibly large values if the width and height aren't set.
-    $width = !empty($width) ? $width : 9999999;
-    $height = !empty($height) ? $height : 9999999;
-
-    // Don't scale up.
-    if (round($width) >= $dimensions['width'] && round($height) >= $dimensions['height']) {
-      return FALSE;
-    }
-  }
-
-  if ($aspect < $height / $width) {
-    $dimensions['width'] = $width;
-    $dimensions['height'] = (int) round($width * $aspect);
-  }
-  else {
-    $dimensions['width'] = (int) round($height / $aspect);
-    $dimensions['height'] = $height;
-  }
-
-  return TRUE;
-}
-
-/**
- * Scales an image while maintaining aspect ratio.
+ * Scales an image to the given width and height while maintaining aspect ratio.
  *
  * The resulting image can be smaller for one or both target dimensions.
  *
@@ -249,21 +195,38 @@ function image_dimensions_scale(array &$dimensions, $width = NULL, $height = NUL
  *   up. This generally results in a low quality image.
  *
  * @return
- *   TRUE on success, FALSE on failure.
+ *   TRUE or FALSE, based on success.
  *
- * @see image_dimensions_scale()
  * @see image_load()
  * @see image_scale_and_crop()
  */
 function image_scale(stdClass $image, $width = NULL, $height = NULL, $upscale = FALSE) {
-  $dimensions = $image->info;
+  $aspect = $image->info['height'] / $image->info['width'];
 
-  // Scale the dimensions - if they don't change then just return success.
-  if (!image_dimensions_scale($dimensions, $width, $height, $upscale)) {
-    return TRUE;
+  if ($upscale) {
+    // Set width/height according to aspect ratio if either is empty.
+    $width = !empty($width) ? $width : $height / $aspect;
+    $height = !empty($height) ? $height : $width / $aspect;
+  }
+  else {
+    // Set impossibly large values if the width and height aren't set.
+    $width = !empty($width) ? $width : 9999999;
+    $height = !empty($height) ? $height : 9999999;
+
+    // Don't scale up.
+    if (round($width) >= $image->info['width'] && round($height) >= $image->info['height']) {
+      return TRUE;
+    }
   }
 
-  return image_resize($image, $dimensions['width'], $dimensions['height']);
+  if ($aspect < $height / $width) {
+    $height = $width * $aspect;
+  }
+  else {
+    $width = $height / $aspect;
+  }
+
+  return image_resize($image, $width, $height);
 }
 
 /**
@@ -277,7 +240,7 @@ function image_scale(stdClass $image, $width = NULL, $height = NULL, $upscale = 
  *   The target height, in pixels.
  *
  * @return
- *   TRUE on success, FALSE on failure.
+ *   TRUE or FALSE, based on success.
  *
  * @see image_load()
  * @see image_gd_resize()
@@ -304,7 +267,7 @@ function image_resize(stdClass $image, $width, $height) {
  *   be white.
  *
  * @return
- *   TRUE on success, FALSE on failure.
+ *   TRUE or FALSE, based on success.
  *
  * @see image_load()
  * @see image_gd_rotate()
@@ -328,7 +291,7 @@ function image_rotate(stdClass $image, $degrees, $background = NULL) {
  *   The target height, in pixels.
  *
  * @return
- *   TRUE on success, FALSE on failure.
+ *   TRUE or FALSE, based on success.
  *
  * @see image_load()
  * @see image_scale_and_crop()
@@ -352,7 +315,7 @@ function image_crop(stdClass $image, $x, $y, $width, $height) {
  *   An image object returned by image_load().
  *
  * @return
- *   TRUE on success, FALSE on failure.
+ *   TRUE or FALSE, based on success.
  *
  * @see image_load()
  * @see image_gd_desaturate()
@@ -416,7 +379,7 @@ function image_load($file, $toolkit = FALSE) {
  *   original image file will be overwritten.
  *
  * @return
- *   TRUE on success, FALSE on failure.
+ *   TRUE or FALSE, based on success.
  *
  * @see image_load()
  * @see image_gd_save()
