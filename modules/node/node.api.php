@@ -571,8 +571,8 @@ function hook_node_load($nodes, $types) {
  * Blindly returning FALSE will break other node access modules.
  *
  * @param object|string $node
- *   The node on which the operation is to be performed, or a string value
- *   representing the type of node.
+ *   Either a node object or a (machine-readable) content type on which to
+ *   perform the access check.
  * @param string $op
  *   The operation to be performed. Possible values:
  *   - "create"
@@ -580,8 +580,7 @@ function hook_node_load($nodes, $types) {
  *   - "update"
  *   - "view"
  * @param object $account
- *   A user object representing the user for whom the operation is to be
- *   performed.
+ *   A user object for which the access check operation is to be performed.
  *
  * @return integer
  *   NODE_ACCESS_ALLOW if the operation is to be allowed;
