@@ -181,11 +181,18 @@ function number_field_is_empty($item, $field) {
  */
 function number_field_formatter_info() {
   return array(
+    // The 'Default' formatter is different for integer fields on the one hand,
+    // and for decimal and float fields on the other hand, in order to be able
+    // to use different default values for the settings.
     'number_integer' => array(
       'label' => t('Default'),
       'field types' => array('number_integer'),
       'settings' =>  array(
         'thousand_separator' => ' ',
+        // The 'decimal_separator' and 'scale' settings are not configurable
+        // through the UI, and will therefore keep their default values. They
+        // are only present so that the 'number_integer' and 'number_decimal'
+        // formatters can use the same code.
         'decimal_separator' => '.',
         'scale' => 0,
         'prefix_suffix' => TRUE,
@@ -215,40 +222,42 @@ function number_field_formatter_settings_form($field, $instance, $view_mode, $fo
   $display = $instance['display'][$view_mode];
   $settings = $display['settings'];
 
-  $options = array(
-    ''  => t('<none>'),
-    '.' => t('Decimal point'),
-    ',' => t('Comma'),
-    ' ' => t('Space'),
-  );
-  $element['thousand_separator'] = array(
-    '#type' => 'select',
-    '#title' => t('Thousand marker'),
-    '#options' => $options,
-    '#default_value' => $settings['thousand_separator'],
-  );
-
-  if ($display['type'] == 'number_decimal' || $display['type'] == 'number_float') {
-    $element['decimal_separator'] = array(
-      '#type' => 'select',
-      '#title' => t('Decimal marker'),
-      '#options' => array('.' => t('Decimal point'), ',' => t('Comma')),
-      '#default_value' => $settings['decimal_separator'],
+  if ($display['type'] == 'number_decimal' || $display['type'] == 'number_integer') {
+    $options = array(
+      ''  => t('<none>'),
+      '.' => t('Decimal point'),
+      ',' => t('Comma'),
+      ' ' => t('Space'),
     );
-    $element['scale'] = array(
+    $element['thousand_separator'] = array(
       '#type' => 'select',
-      '#title' => t('Scale'),
-      '#options' => drupal_map_assoc(range(0, 10)),
-      '#default_value' => $settings['scale'],
-      '#description' => t('The number of digits to the right of the decimal.'),
+      '#title' => t('Thousand marker'),
+      '#options' => $options,
+      '#default_value' => $settings['thousand_separator'],
+    );
+
+    if ($display['type'] == 'number_decimal') {
+      $element['decimal_separator'] = array(
+        '#type' => 'select',
+        '#title' => t('Decimal marker'),
+        '#options' => array('.' => t('Decimal point'), ',' => t('Comma')),
+        '#default_value' => $settings['decimal_separator'],
+      );
+      $element['scale'] = array(
+        '#type' => 'select',
+        '#title' => t('Scale'),
+        '#options' => drupal_map_assoc(range(0, 10)),
+        '#default_value' => $settings['scale'],
+        '#description' => t('The number of digits to the right of the decimal.'),
+      );
+    }
+
+    $element['prefix_suffix'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Display prefix and suffix.'),
+      '#default_value' => $settings['prefix_suffix'],
     );
   }
-
-  $element['prefix_suffix'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Display prefix and suffix.'),
-    '#default_value' => $settings['prefix_suffix'],
-  );
 
   return $element;
 }
@@ -261,9 +270,11 @@ function number_field_formatter_settings_summary($field, $instance, $view_mode) 
   $settings = $display['settings'];
 
   $summary = array();
-  $summary[] = number_format(1234.1234567890, $settings['scale'], $settings['decimal_separator'], $settings['thousand_separator']);
-  if ($settings['prefix_suffix']) {
-    $summary[] = t('Display with prefix and suffix.');
+  if ($display['type'] == 'number_decimal' || $display['type'] == 'number_integer') {
+    $summary[] = number_format(1234.1234567890, $settings['scale'], $settings['decimal_separator'], $settings['thousand_separator']);
+    if ($settings['prefix_suffix']) {
+      $summary[] = t('Display with prefix and suffix.');
+    }
   }
 
   return implode('<br />', $summary);
