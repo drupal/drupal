@@ -221,6 +221,9 @@ require_once DRUPAL_ROOT . '/modules/field/field.form.inc';
  *     - other_mode
  *        - ...
  *
+ * The (default) render arrays produced for field instances are documented at
+ * field_attach_view().
+ *
  * Bundles are represented by two strings, an entity type and a bundle name.
  *
  * - @link field_types Field Types API @endlink. Defines field types,
