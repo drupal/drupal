@@ -185,3 +185,4 @@ function block_install() {
     ->condition('name', 'block')
     ->execute();
 }
+

@@ -994,10 +994,18 @@ function block_menu_delete($menu) {
  */
 function block_form_system_performance_settings_alter(&$form, &$form_state) {
   $disabled = count(module_implements('node_grants'));
+  $config = config('block.performance');
+  if (!isset($form['config'])) {
+    $form['config'] = array();
+  }
+  $form_state['config']['block_cache'] = array(
+    'name' => 'block.performance',
+    'path' => 'caching.block_cache',
+  );
   $form['caching']['block_cache'] = array(
     '#type' => 'checkbox',
     '#title' => t('Cache blocks'),
-    '#default_value' => variable_get('block_cache', FALSE),
+    '#default_value' => $config->get('caching.block_cache'),
     '#disabled' => $disabled,
     '#description' => $disabled ? t('Block caching is inactive because you have enabled modules defining content access restrictions.') : NULL,
     '#weight' => -1,

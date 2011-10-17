@@ -28,8 +28,8 @@ function config_install_default_config($module) {
   $drupal_config_dir = config_get_config_directory();
   if (is_dir(drupal_get_path('module', $module) . '/config')) {
     $files = glob($module_config_dir . '/' . '*.xml');
-    foreach ($files as $key => $file) {            
-      // Load config data into the active store and write it out to the 
+    foreach ($files as $key => $file) {
+      // Load config data into the active store and write it out to the
       // file system in the drupal config directory. Note the config name
       // needs to be the same as the file name WITHOUT the extension.
       //
@@ -42,7 +42,7 @@ function config_install_default_config($module) {
       $verified_storage = new DrupalVerifiedStorageSQL($config_name);
       $verified_storage->write(file_get_contents($module_config_dir . '/' . $file));
     }
-  }  
+  }
 }
 
 /**
@@ -135,7 +135,7 @@ function config_decode($data) {
  */
 function config_encode($data) {
   $xml = config_array_to_xml($data);
-	return '<?xml version="1.0" encoding="UTF8"?>' . PHP_EOL . '<config>' . $xml . '</config>';
+  return '<?xml version="1.0" encoding="UTF8"?>' . PHP_EOL . '<config>' . $xml . '</config>';
 }
 
 /**
@@ -149,7 +149,6 @@ function config_encode($data) {
  */
 function config_array_to_xml($arr, $tab_count = 0) {
   $xml = '';
-  if (is_object($arr)) return '';
 
   foreach ($arr as $tag => $val) { 
     if (!is_array($val)) { 
@@ -372,13 +371,15 @@ class DrupalConfig {
 
   protected $_overrides;
 
+  protected $data = array();
+
   public function __construct(DrupalConfigVerifiedStorageInterface $verified_storage, $overrides = array()) {
     $this->_verifiedStorage = $verified_storage;
     $original_keys = (array) config_decode($this->_verifiedStorage->read());
     $this->_overrides = $overrides;
     $active = array_merge($original_keys, $overrides);
     foreach ($active as $key => $value) {
-      $this->$key = $value;
+      $this->set($key, $value);
     }
   }
 
@@ -386,13 +387,28 @@ class DrupalConfig {
     return isset($this->_overrides[$key]);
   }
 
-  public function save() {
-    $obj = new stdClass();
-    foreach (get_object_vars($this) as $key => $val) {
-      if ($key[0] != '_') {
-        $obj->$key = $val;
-      }
+  public function set($key, $value) {
+    $parts = explode('.', $key);
+    if (count($parts) == 1) {
+      $this->data[$key] = $value;
     }
-    $this->_verifiedStorage->write(config_encode($obj));
+    else {
+      drupal_array_set_nested_value($this->data, $parts, $value);
+    }
+  }
+
+  public function get($key) {
+    $parts = explode('.', $key);
+    if (count($parts) == 1) {
+      return $this->data[$key];
+    }
+    else {
+      return drupal_array_get_nested_value($this->data, $parts);
+    }
+  }
+
+
+  public function save() {
+    $this->_verifiedStorage->write(config_encode($this->data));
   }
 }
