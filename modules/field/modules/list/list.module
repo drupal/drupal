@@ -419,7 +419,7 @@ function list_field_widget_info_alter(&$info) {
 /**
  * Implements hook_options_list().
  */
-function list_options_list($field) {
+function list_options_list($field, $instance) {
   return list_allowed_values($field);
 }
 
