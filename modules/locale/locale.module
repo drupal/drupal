@@ -42,7 +42,7 @@ function locale_help($path, $arg) {
       return $output;
 
     case 'admin/config/regional/language/add':
-      return '<p>' . t('Add a language to be supported by your site. If your desired language is not available in the <em>Language name</em> drop-down, click <em>Custom language</em> and provide a language code and other details manually. When providing a language code manually, be sure to enter a standardized language code, since this code may be used by browsers to determine an appropriate display language.') . '</p>';
+      return '<p>' . t('Add a language to be supported by your site. If your desired language is not available, pick <em>Custom language...</em> at the end and provide a language code and other details manually.') . '</p>';
 
     case 'admin/config/regional/language/configure':
       $output = '<p>' . t("Define how to decide which language is used to display page elements (primarily text provided by Drupal and modules, such as field labels and help text). This decision is made by evaluating a series of detection methods for languages; the first detection method that gets a result will determine which language is used for that type of text. Define the order of evaluation of language detection methods on this page.") . '</p>';
@@ -93,7 +93,8 @@ function locale_menu() {
   );
   $items['admin/config/regional/language/add'] = array(
     'title' => 'Add language',
-    'page callback' => 'locale_languages_add_screen', // two forms concatenated
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('locale_languages_add_form'),
     'access arguments' => array('administer languages'),
     'weight' => 5,
     'type' => MENU_LOCAL_ACTION,

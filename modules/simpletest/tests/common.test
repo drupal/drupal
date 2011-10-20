@@ -2246,6 +2246,7 @@ class FormatDateUnitTest extends DrupalWebTestCase {
     $admin_user = $this->drupalCreateUser(array('administer languages'));
     $this->drupalLogin($admin_user);
     $edit = array(
+      'predefined_langcode' => 'custom',
       'langcode' => self::LANGCODE,
       'name' => self::LANGCODE,
       'native' => self::LANGCODE,

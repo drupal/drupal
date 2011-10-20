@@ -1912,7 +1912,7 @@ class SearchLanguageTestCase extends DrupalWebTestCase {
     $this->assertNoText(t('Languages'), t('No languages to choose from.'));
 
     // Add predefined language.
-    $edit = array('langcode' => 'fr');
+    $edit = array('predefined_langcode' => 'fr');
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
     $this->assertText('fr', t('Language added successfully.'));
 

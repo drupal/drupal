@@ -49,7 +49,7 @@ class LocaleConfigurationTest extends DrupalWebTestCase {
 
     // Add predefined language.
     $edit = array(
-      'langcode' => 'fr',
+      'predefined_langcode' => 'fr',
     );
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
     $this->assertText('fr', t('Language added successfully.'));
@@ -63,6 +63,7 @@ class LocaleConfigurationTest extends DrupalWebTestCase {
     // The native name for the language.
     $native = $this->randomName(16);
     $edit = array(
+      'predefined_langcode' => 'custom',
       'langcode' => $langcode,
       'name' => $name,
       'native' => $native,
@@ -282,6 +283,7 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
     // Add custom language.
     $this->drupalLogin($admin_user);
     $edit = array(
+      'predefined_langcode' => 'custom',
       'langcode' => $langcode,
       'name' => $name,
       'native' => $native,
@@ -391,6 +393,7 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
 
     // Add custom language.
     $edit = array(
+      'predefined_langcode' => 'custom',
       'langcode' => $langcode,
       'name' => $name,
       'native' => $native,
@@ -462,6 +465,7 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
 
     // Add custom language.
     $edit = array(
+      'predefined_langcode' => 'custom',
       'langcode' => $langcode,
       'name' => $name,
       'native' => $native,
@@ -519,6 +523,7 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
     // Add custom language.
     $this->drupalLogin($admin_user);
     $edit = array(
+      'predefined_langcode' => 'custom',
       'langcode' => $langcode,
       'name' => $name,
       'native' => $native,
@@ -759,6 +764,7 @@ class LocaleImportFunctionalTest extends DrupalWebTestCase {
 
     // Create a custom language.
     $edit = array(
+      'predefined_langcode' => 'custom',
       'langcode' => $langcode,
       'name' => $name,
       'native' => $native,
@@ -1295,7 +1301,7 @@ class LocaleLanguageSwitchingFunctionalTest extends DrupalWebTestCase {
 
     // Add language.
     $edit = array(
-      'langcode' => 'fr',
+      'predefined_langcode' => 'fr',
     );
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
 
@@ -1494,6 +1500,7 @@ class LocaleUserLanguageFunctionalTest extends DrupalWebTestCase {
     // The native name for the language.
     $native = $this->randomName(16);
     $edit = array(
+      'predefined_langcode' => 'custom',
       'langcode' => $langcode,
       'name' => $name,
       'native' => $native,
@@ -1509,6 +1516,7 @@ class LocaleUserLanguageFunctionalTest extends DrupalWebTestCase {
     // The native name for the language.
     $native_disabled = $this->randomName(16);
     $edit = array(
+      'predefined_langcode' => 'custom',
       'langcode' => $langcode_disabled,
       'name' => $name_disabled,
       'native' => $native_disabled,
@@ -1576,7 +1584,7 @@ class LocaleUserCreationTest extends DrupalWebTestCase {
     // Add predefined language.
     $langcode = 'fr';
     $edit = array(
-      'langcode' => 'fr',
+      'predefined_langcode' => 'fr',
     );
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
     $this->assertText($langcode, t('Language added successfully.'));
@@ -1685,6 +1693,7 @@ class LocalePathFunctionalTest extends DrupalWebTestCase {
     // The domain prefix.
     $prefix = $langcode;
     $edit = array(
+      'predefined_langcode' => 'custom',
       'langcode' => $langcode,
       'name' => $name,
       'native' => $native,
@@ -1829,6 +1838,7 @@ class LocaleContentFunctionalTest extends DrupalWebTestCase {
     // The native name for the language.
     $native = $this->randomName(16);
     $edit = array(
+      'predefined_langcode' => 'custom',
       'langcode' => $langcode,
       'name' => $name,
       'native' => $native,
@@ -1844,6 +1854,7 @@ class LocaleContentFunctionalTest extends DrupalWebTestCase {
     // The native name for the language.
     $native_disabled = $this->randomName(16);
     $edit = array(
+      'predefined_langcode' => 'custom',
       'langcode' => $langcode_disabled,
       'name' => $name_disabled,
       'native' => $native_disabled,
@@ -2183,12 +2194,12 @@ class LocaleUrlRewritingTest extends DrupalWebTestCase {
 
     // Install French language.
     $edit = array();
-    $edit['langcode'] = 'fr';
+    $edit['predefined_langcode'] = 'fr';
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
 
     // Install Italian language.
     $edit = array();
-    $edit['langcode'] = 'it';
+    $edit['predefined_langcode'] = 'it';
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
 
     // Disable Italian language.
@@ -2387,7 +2398,7 @@ class LocaleCommentLanguageFunctionalTest extends DrupalWebTestCase {
     $this->drupalLogin($admin_user);
 
     // Add language.
-    $edit = array('langcode' => 'fr');
+    $edit = array('predefined_langcode' => 'fr');
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
 
     // Set "Article" content type to use multilingual support.
@@ -2485,7 +2496,7 @@ class LocaleDateFormatsFunctionalTest extends DrupalWebTestCase {
   function testLocalizeDateFormats() {
     // Add language.
     $edit = array(
-      'langcode' => 'fr',
+      'predefined_langcode' => 'fr',
     );
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
 
@@ -2545,7 +2556,7 @@ class LocaleLanguageNegotiationInfoFunctionalTest extends DrupalWebTestCase {
     require_once DRUPAL_ROOT .'/includes/language.inc';
     $admin_user = $this->drupalCreateUser(array('administer languages', 'access administration pages', 'view the administration theme'));
     $this->drupalLogin($admin_user);
-    $this->drupalPost('admin/config/regional/language/add', array('langcode' => 'it'), t('Add language'));
+    $this->drupalPost('admin/config/regional/language/add', array('predefined_langcode' => 'it'), t('Add language'));
   }
 
   /**

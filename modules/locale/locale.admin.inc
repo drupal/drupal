@@ -191,50 +191,45 @@ function locale_language_overview_form_submit($form, &$form_state) {
 /**
  * User interface for the language addition screen.
  */
-function locale_languages_add_screen() {
-  $build['predefined'] = drupal_get_form('locale_languages_predefined_form');
-  $build['custom'] = drupal_get_form('locale_languages_custom_form');
-  return $build;
-}
-
-/**
- * Predefined language setup form.
- */
-function locale_languages_predefined_form($form) {
-  $predefined = _locale_prepare_predefined_list();
-  $form['language list'] = array('#type' => 'fieldset',
-    '#title' => t('Predefined language'),
-    '#collapsible' => TRUE,
-  );
-  $form['language list']['langcode'] = array('#type' => 'select',
+function locale_languages_add_form($form, &$form_state) {
+  $predefined_languages = _locale_prepare_predefined_list();
+  $predefined_languages['custom'] = t('Custom language...');
+  $predefined_default = !empty($form_state['values']['predefined_langcode']) ? $form_state['values']['predefined_langcode'] : key($predefined_languages);
+  $form['predefined_langcode'] = array(
+    '#type' => 'select',
     '#title' => t('Language name'),
-    '#default_value' => key($predefined),
-    '#options' => $predefined,
-    '#description' => t('Use the <em>Custom language</em> section below if your desired language does not appear in this list.'),
+    '#default_value' => $predefined_default,
+    '#options' => $predefined_languages,
   );
-  $form['language list']['actions'] = array('#type' => 'actions');
-  $form['language list']['actions']['submit'] = array('#type' => 'submit', '#value' => t('Add language'));
-  return $form;
-}
-
-/**
- * Custom language addition form.
- */
-function locale_languages_custom_form($form) {
-  $form['custom language'] = array('#type' => 'fieldset',
-    '#title' => t('Custom language'),
-    '#collapsible' => TRUE,
-    '#collapsed' => TRUE,
-  );
-  _locale_languages_common_controls($form['custom language']);
-  $form['custom language']['actions'] = array('#type' => 'actions');
-  $form['custom language']['actions']['submit'] = array(
+  $form['predefined_submit'] = array(
     '#type' => 'submit',
-    '#value' => t('Add custom language')
+    '#value' => t('Add language'),
+    '#limit_validation_errors' => array(array('predefined_langcode'), array('predefined_submit')),
+    '#states' => array(
+      'invisible' => array(
+        'select#edit-predefined-langcode' => array('value' => 'custom'),
+      ),
+    ),
+    '#validate' => array('locale_languages_add_predefined_form_validate'),
+    '#submit' => array('locale_languages_add_predefined_form_submit'),
   );
-  // Reuse the validation and submit functions of the predefined language setup form.
-  $form['#submit'][] = 'locale_languages_predefined_form_submit';
-  $form['#validate'][] = 'locale_languages_predefined_form_validate';
+
+  $form['custom_language'] = array(
+    '#type' => 'container',
+    '#states' => array(
+      'visible' => array(
+        'select#edit-predefined-langcode' => array('value' => 'custom'),
+      ),
+    ),
+  );
+  _locale_languages_common_controls($form['custom_language']);
+  $form['custom_language']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Add custom language'),
+    '#validate' => array('locale_languages_add_custom_form_validate'),
+    '#submit' => array('locale_languages_add_custom_form_submit'),
+  );
+
   return $form;
 }
 
@@ -321,64 +316,85 @@ function _locale_languages_common_controls(&$form, $language = NULL) {
 }
 
 /**
- * Validate the language addition form.
+ * Element specific validator for the Add language button.
  */
-function locale_languages_predefined_form_validate($form, &$form_state) {
-  $langcode = $form_state['values']['langcode'];
-
-  if (($duplicate = db_query("SELECT COUNT(*) FROM {languages} WHERE language = :language", array(':language' => $langcode))->fetchField()) != 0) {
-    form_set_error('langcode', t('The language %language (%code) already exists.', array('%language' => $form_state['values']['name'], '%code' => $langcode)));
-  }
-
-  if (!isset($form_state['values']['name'])) {
-    // Predefined language selection.
-    include_once DRUPAL_ROOT . '/includes/standard.inc';
-    $predefined = standard_language_list();
-    if (!isset($predefined[$langcode])) {
-      form_set_error('langcode', t('Invalid language code.'));
-    }
+function locale_languages_add_predefined_form_validate($form, &$form_state) {
+  $langcode = $form_state['values']['predefined_langcode'];
+  if ($langcode == 'custom') {
+    form_set_error('predefined_langcode', t('Fill in the language details and save the language with <em>Add custom language</em>.'));
   }
   else {
-    // Reuse the editing form validation routine if we add a custom language.
-    locale_languages_edit_form_validate($form, $form_state);
+    $languages = language_list();
+    if (isset($languages[$langcode])) {
+      form_set_error('predefined_langcode', t('The language %language (%code) already exists.', array('%language' => $languages[$langcode]->name, '%code' => $langcode)));
+    }
   }
 }
 
 /**
- * Process the language addition form submission.
+ * Validate the language addition form on custom language button.
  */
-function locale_languages_predefined_form_submit($form, &$form_state) {
-  $langcode = $form_state['values']['langcode'];
-  if (isset($form_state['values']['name'])) {
-    // Custom language form.
-    $language = (object) array(
-      'language' => $langcode,
-      'name' => $form_state['values']['name'],
-      'native' => $form_state['values']['native'],
-      'direction' => $form_state['values']['direction'],
-    );
-    locale_language_save($language);
-    drupal_set_message(t('The language %language has been created and can now be used. More information is available on the <a href="@locale-help">help screen</a>.', array('%language' => t($form_state['values']['name']), '@locale-help' => url('admin/help/locale'))));
+function locale_languages_add_custom_form_validate($form, &$form_state) {
+  if ($form_state['values']['predefined_langcode'] == 'custom') {
+    $langcode = $form_state['values']['langcode'];
+    // Reuse the editing form validation routine if we add a custom language.
+    locale_languages_edit_form_validate($form, $form_state);
+
+    $languages = language_list();
+    if (isset($languages[$langcode])) {
+     form_set_error('langcode', t('The language %language (%code) already exists.', array('%language' => $languages[$langcode]->name, '%code' => $langcode)));
+    }
   }
   else {
-    // Predefined language selection.
-    include_once DRUPAL_ROOT . '/includes/standard.inc';
-    $predefined = standard_language_list();
-    $language = (object) array(
-      'language' => $langcode,
-    );
-    locale_language_save($language);
-    drupal_set_message(t('The language %language has been created and can now be used. More information is available on the <a href="@locale-help">help screen</a>.', array('%language' => t($predefined[$langcode][0]), '@locale-help' => url('admin/help/locale'))));
+    form_set_error('predefined_langcode', t('Use the <em>Add language</em> button to save a predefined language.'));
   }
+}
 
+/**
+ * Process the custom language addition form submission.
+ */
+function locale_languages_add_custom_form_submit($form, &$form_state) {
+  $langcode = $form_state['values']['langcode'];
+  // Custom language form.
+  $language = (object) array(
+    'language' => $langcode,
+    'name' => $form_state['values']['name'],
+    'native' => $form_state['values']['native'],
+    'direction' => $form_state['values']['direction'],
+  );
+  locale_language_save($language);
+  drupal_set_message(t('The language %language has been created and can now be used. More information is available on the <a href="@locale-help">help screen</a>.', array('%language' => t($form_state['values']['name']), '@locale-help' => url('admin/help/locale'))));
+  locale_languages_add_set_batch($langcode);
+  $form_state['redirect'] = 'admin/config/regional/language';
+}
+
+/**
+ * Process the predefined language addition form submission.
+ */
+function locale_languages_add_predefined_form_submit($form, &$form_state) {
+  // Predefined language selection.
+  $langcode = $form_state['values']['predefined_langcode'];
+  include_once DRUPAL_ROOT . '/includes/standard.inc';
+  $predefined = standard_language_list();
+  $language = (object) array(
+    'language' => $langcode,
+  );
+  locale_language_save($language);
+  drupal_set_message(t('The language %language has been created and can now be used. More information is available on the <a href="@locale-help">help screen</a>.', array('%language' => t($predefined[$langcode][0]), '@locale-help' => url('admin/help/locale'))));
+  locale_languages_add_set_batch($langcode);
+  $form_state['redirect'] = 'admin/config/regional/language';
+}
+
+/**
+ * Set a batch for newly added language.
+ */
+function locale_languages_add_set_batch($langcode) {
   // See if we have language files to import for the newly added
   // language, collect and import them.
   include_once drupal_get_path('module', 'locale') . '/locale.bulk.inc';
   if ($batch = locale_batch_by_language($langcode, '_locale_batch_language_finished')) {
     batch_set($batch);
   }
-
-  $form_state['redirect'] = 'admin/config/regional/language';
 }
 
 /**

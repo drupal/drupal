@@ -246,7 +246,7 @@ class PathLanguageTestCase extends DrupalWebTestCase {
 
     // Enable French language.
     $edit = array();
-    $edit['langcode'] = 'fr';
+    $edit['predefined_langcode'] = 'fr';
 
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
 
@@ -387,7 +387,7 @@ class PathLanguageUITestCase extends DrupalWebTestCase {
 
     // Enable French language.
     $edit = array();
-    $edit['langcode'] = 'fr';
+    $edit['predefined_langcode'] = 'fr';
 
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
 
@@ -464,7 +464,7 @@ class PathMonolingualTestCase extends DrupalWebTestCase {
 
     // Enable French language.
     $edit = array();
-    $edit['langcode'] = 'fr';
+    $edit['predefined_langcode'] = 'fr';
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
 
     // Make French the default language.
