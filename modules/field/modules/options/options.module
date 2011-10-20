@@ -231,7 +231,7 @@ function _options_properties($type, $multiple, $required, $has_value) {
  */
 function _options_get_options($field, $instance, $properties) {
   // Get the list of options.
-  $options = (array) module_invoke($field['module'], 'options_list', $field);
+  $options = (array) module_invoke($field['module'], 'options_list', $field, $instance);
 
   // Sanitize the options.
   _options_prepare_options($options, $properties);
