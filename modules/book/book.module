@@ -281,7 +281,7 @@ function book_block_view($delta = '') {
     // Only display this block when the user is browsing a book.
   $select = db_select('node', 'n')
     ->fields('n', array('title'))
-    ->condition('nid', $node->book['bid'])
+    ->condition('n.nid', $node->book['bid'])
     ->addTag('node_access');
     $title = $select->execute()->fetchField();
     // Only show the block if the user has view access for the top-level node.
