@@ -2532,6 +2532,10 @@ function hook_requirements($phase) {
  * more tables and their related keys and indexes. A schema is defined by
  * hook_schema() which must live in your module's .install file.
  *
+ * This hook is called at both install and uninstall time, and in the latter
+ * case, it cannot rely on the .module file being loaded or hooks being known.
+ * If the .module file is needed, it may be loaded with drupal_load().
+ *
  * By implementing hook_schema() and specifying the tables your module
  * declares, you can easily create and drop these tables on all
  * supported database engines. You don't have to deal with the
@@ -2694,12 +2698,12 @@ function hook_query_TAG_alter(QueryAlterableInterface $query) {
  * be created before this hook is fired.
  *
  * Implementations of this hook are by convention declared in the module's
- * .install file. The hook will only be called the first time a module is
- * enabled or after it is re-enabled after being uninstalled. The module's
- * schema version will be set to the module's greatest numbered update hook.
- * Because of this, any time a hook_update_N() is added to the module, this
- * function needs to be updated to reflect the current version of the database
- * schema.
+ * .install file. The implementation can rely on the .module file being loaded.
+ * The hook will only be called the first time a module is enabled or after it
+ * is re-enabled after being uninstalled. The module's schema version will be
+ * set to the module's greatest numbered update hook. Because of this, any time
+ * a hook_update_N() is added to the module, this function needs to be updated
+ * to reflect the current version of the database schema.
  *
  * See the Schema API documentation at
  * @link http://drupal.org/node/146843 http://drupal.org/node/146843 @endlink
@@ -2951,7 +2955,8 @@ function hook_uninstall() {
  * Perform necessary actions after module is enabled.
  *
  * The hook is called every time the module is enabled. It should be
- * implemented in the module's .install file.
+ * implemented in the module's .install file. The implementation can
+ * rely on the .module file being loaded.
  *
  * @see module_enable()
  * @see hook_install()
@@ -2965,7 +2970,8 @@ function hook_enable() {
  * Perform necessary actions before module is disabled.
  *
  * The hook is called every time the module is disabled. It should be
- * implemented in the module's .install file.
+ * implemented in the module's .install file. The implementation can rely
+ * on the .module file being loaded.
  *
  * @see hook_uninstall()
  * @see hook_modules_disabled()
