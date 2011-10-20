@@ -581,10 +581,10 @@ class DatabaseTaskException extends Exception {
  * @param $settings
  *   An array of settings that need to be updated.
  */
-function drupal_rewrite_settings($settings = array(), $prefix = '') {
+function drupal_rewrite_settings($settings = array()) {
   $default_settings = 'sites/default/default.settings.php';
   drupal_static_reset('conf_path');
-  $settings_file = conf_path(FALSE) . '/' . $prefix . 'settings.php';
+  $settings_file = conf_path(FALSE) . '/settings.php';
 
   // Build list of setting names and insert the values into the global namespace.
   $keys = array();
