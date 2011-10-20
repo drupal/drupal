@@ -29,20 +29,15 @@ function field_info_cache_clear() {
   // functions are moved to the entity API.
   entity_info_cache_clear();
 
-  _field_info_collate_types(TRUE);
-  _field_info_collate_fields(TRUE);
+  _field_info_collate_types_reset();
+  _field_info_collate_fields_reset();
 }
 
 /**
  * Collates all information on field types, widget types and related structures.
  *
- * @param $reset
- *   If TRUE, clear the cache. The information will be rebuilt from the database
- *   next time it is needed. Defaults to FALSE.
- *
  * @return
- *   If $reset is TRUE, nothing.
- *   If $reset is FALSE, an array containing the following elements:
+ *   An associative array containing:
  *   - 'field types': Array of hook_field_info() results, keyed by field_type.
  *     Each element has the following components: label, description, settings,
  *     instance_settings, default_widget, default_formatter, and behaviors
@@ -64,21 +59,23 @@ function field_info_cache_clear() {
  *     entity_type. Each element has the following components: name, id key,
  *     revision key, bundle key, cacheable, and bundles from hook_entity_info(),
  *     as well as module, giving the module that exposes the entity type.
+ *
+ * @see _field_info_collate_types_reset()
  */
-function _field_info_collate_types($reset = FALSE) {
+function _field_info_collate_types() {
   global $language;
-  static $info;
+
+  // Use the advanced drupal_static() pattern, since this is called very often.
+  static $drupal_static_fast;
+
+  if (!isset($drupal_static_fast)) {
+    $drupal_static_fast['field_info_collate_types'] = &drupal_static(__FUNCTION__);
+  }
+  $info = &$drupal_static_fast['field_info_collate_types'];
 
   // The _info() hooks invoked below include translated strings, so each
   // language is cached separately.
   $langcode = $language->language;
-
-  if ($reset) {
-    $info = NULL;
-    // Clear all languages.
-    cache('field')->deletePrefix('field_info_types:');
-    return;
-  }
 
   if (!isset($info)) {
     if ($cached = cache('field')->get("field_info_types:$langcode")) {
@@ -157,15 +154,19 @@ function _field_info_collate_types($reset = FALSE) {
 }
 
 /**
+ * Clear collated information on field and widget types and related structures.
+ */
+function _field_info_collate_types_reset() {
+  drupal_static_reset('_field_info_collate_types');
+  // Clear all languages.
+  cache('field')->deletePrefix('field_info_types:');
+}
+
+/**
  * Collates all information on existing fields and instances.
  *
- * @param $reset
- *   If TRUE, clear the cache. The information will be rebuilt from the
- *   database next time it is needed. Defaults to FALSE.
- *
  * @return
- *   If $reset is TRUE, nothing.
- *   If $reset is FALSE, an array containing the following elements:
+ *   An associative array containing:
  *   - fields: Array of existing fields, keyed by field ID. This element
  *     lists deleted and non-deleted fields, but not inactive ones.
  *     Each field has an additional element, 'bundles', which is an array
@@ -175,15 +176,17 @@ function _field_info_collate_types($reset = FALSE) {
  *   - instances: Array of existing instances, keyed by entity type, bundle
  *     name and field name. This element only lists non-deleted instances
  *     whose field is active.
+ *
+ * @see _field_info_collate_fields_reset()
  */
-function _field_info_collate_fields($reset = FALSE) {
-  static $info;
+function _field_info_collate_fields() {
+  // Use the advanced drupal_static() pattern, since this is called very often.
+  static $drupal_static_fast;
 
-  if ($reset) {
-    $info = NULL;
-    cache('field')->delete('field_info_fields');
-    return;
+  if (!isset($drupal_static_fast)) {
+    $drupal_static_fast['field_info_collate_fields'] = &drupal_static(__FUNCTION__);
   }
+  $info = &$drupal_static_fast['field_info_collate_fields'];
 
   if (!isset($info)) {
     if ($cached = cache('field')->get('field_info_fields')) {
@@ -243,6 +246,14 @@ function _field_info_collate_fields($reset = FALSE) {
   }
 
   return $info;
+}
+
+/**
+ * Clear collated information on existing fields and instances.
+ */
+function _field_info_collate_fields_reset() {
+  drupal_static_reset('_field_info_collate_fields');
+  cache('field')->delete('field_info_fields');
 }
 
 /**
