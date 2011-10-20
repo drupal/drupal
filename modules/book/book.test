@@ -24,12 +24,15 @@ class BookTestCase extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('book');
+    parent::setUp(array('book', 'node_access_test'));
+
+    // node_access_test requires a node_access_rebuild().
+    node_access_rebuild();
 
     // Create users.
     $this->book_author = $this->drupalCreateUser(array('create new books', 'create book content', 'edit own book content', 'add content to books'));
-    $this->web_user = $this->drupalCreateUser(array('access printer-friendly version'));
-    $this->admin_user = $this->drupalCreateUser(array('create new books', 'create book content', 'edit own book content', 'add content to books', 'administer blocks'));
+    $this->web_user = $this->drupalCreateUser(array('access printer-friendly version', 'node test view'));
+    $this->admin_user = $this->drupalCreateUser(array('create new books', 'create book content', 'edit own book content', 'add content to books', 'administer blocks', 'administer permissions'));
   }
 
   /**
@@ -274,6 +277,12 @@ class BookTestCase extends DrupalWebTestCase {
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
     $this->assertText(t('The block settings have been updated.'), t('Block successfully move to footer region.'));
 
+     // Give anonymous users the permission 'node test view'.
+     $edit = array();
+     $edit['1[node test view]'] = TRUE;
+     $this->drupalPost('admin/people/permissions/1', $edit, t('Save permissions'));
+     $this->assertText(t('The changes have been saved.'), t("Permission 'node test view' successfully assigned to anonymous users."));
+
     // Test correct display of the block.
     $nodes = $this->createBook();
     $this->drupalGet('<front>');
@@ -281,4 +290,46 @@ class BookTestCase extends DrupalWebTestCase {
     $this->assertText($this->book->title, t('Link to book root (@title) is displayed.', array('@title' => $nodes[0]->title)));
     $this->assertNoText($nodes[0]->title, t('No links to individual book pages are displayed.'));
   }
+
+  /**
+   * Test the book navigation block when an access module is enabled.
+   */
+   function testNavigationBlockOnAccessModuleEnabled() {
+     $this->drupalLogin($this->admin_user);
+     $edit = array();
+
+     // Set the block title.
+     $block_title = $this->randomName(16);
+     $edit['title'] = $block_title;
+
+     // Set block display to 'Show block only on book pages'.
+     $edit['book_block_mode'] = 'book pages';
+     $this->drupalPost('admin/structure/block/manage/book/navigation/configure', $edit, t('Save block'));
+     $this->assertText(t('The block configuration has been saved.'), t('Block configuration set.'));
+
+     // Set the block to a region to confirm block is available.
+     $edit = array();
+     $edit['blocks[book_navigation][region]'] = 'footer';
+     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
+     $this->assertText(t('The block settings have been updated.'), t('Block successfully move to footer region.'));
+
+     // Give anonymous users the permission 'node test view'.
+     $edit = array();
+     $edit['1[node test view]'] = TRUE;
+     $this->drupalPost('admin/people/permissions/1', $edit, t('Save permissions'));
+     $this->assertText(t('The changes have been saved.'), t('Permission \'node test view\' successfully assigned to anonymous users.'));
+
+     // Create a book.
+     $this->createBook();
+
+     // Test correct display of the block to registered users.
+     $this->drupalLogin($this->web_user);
+     $this->drupalGet('node/' . $this->book->nid);
+     $this->assertText($block_title, t('Book navigation block is displayed to registered users.'));
+     $this->drupalLogout();
+
+     // Test correct display of the block to anonymous users.
+     $this->drupalGet('node/' . $this->book->nid);
+     $this->assertText($block_title, t('Book navigation block is displayed to anonymous users.'));
+   }
 }
