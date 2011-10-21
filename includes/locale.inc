@@ -764,8 +764,9 @@ function _locale_rebuild_js($langcode = NULL) {
     // This is necessary to keep the variable consistent with the database
     // version of the language and to prevent checking against an outdated hash.
     $default_langcode = language_default()->language;
+    drupal_static_reset('language_list');
     if ($default_langcode == $language->language) {
-      $default = db_query("SELECT * FROM {languages} WHERE language = :language", array(':language' => $default_langcode))->fetchObject();
+      $default = language_load($default_langcode);
       variable_set('language_default', $default);
     }
   }

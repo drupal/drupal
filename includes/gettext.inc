@@ -32,7 +32,7 @@ function _locale_import_po($file, $langcode, $mode) {
   drupal_set_time_limit(240);
 
   // Check if we have the language already in the database.
-  if (!db_query("SELECT COUNT(language) FROM {languages} WHERE language = :language", array(':language' => $langcode))->fetchField()) {
+  if (!language_load($langcode)) {
     drupal_set_message(t('The language selected for import is not supported.'), 'error');
     return FALSE;
   }

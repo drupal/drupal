@@ -125,14 +125,14 @@ function locale_menu() {
     'file' => 'locale.admin.inc',
     'type' => MENU_VISIBLE_IN_BREADCRUMB,
   );
-  $items['admin/config/regional/language/edit/%'] = array(
+  $items['admin/config/regional/language/edit/%language'] = array(
     'title' => 'Edit language',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('locale_languages_edit_form', 5),
     'access arguments' => array('administer languages'),
     'file' => 'locale.admin.inc',
   );
-  $items['admin/config/regional/language/delete/%'] = array(
+  $items['admin/config/regional/language/delete/%language'] = array(
     'title' => 'Confirm',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('locale_languages_delete_form', 5),
@@ -253,6 +253,20 @@ function locale_permission() {
       'title' => t('Translate interface texts'),
     ),
   );
+}
+
+/**
+ * Loads a language object from the database.
+ *
+ * @param $langcode
+ *   The language code.
+ *
+ * @return
+ *   A fully-populated language object or FALSE.
+ */
+function language_load($langcode) {
+  $languages = language_list();
+  return isset($languages[$langcode]) ? $languages[$langcode] : FALSE;
 }
 
 /**
