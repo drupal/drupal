@@ -762,6 +762,15 @@ function drupal_retrieve_form($form_id, &$form_state) {
   }
 
   $form = array();
+  // Assign a default CSS class name based on $form_id.
+  // This happens here and not in drupal_prepare_form() in order to allow the
+  // form constructor function to override or remove the default class.
+  $form['#attributes']['class'][] = drupal_html_class($form_id);
+  // Same for the base form ID, if any.
+  if (isset($form_state['build_info']['base_form_id'])) {
+    $form['#attributes']['class'][] = drupal_html_class($form_state['build_info']['base_form_id']);
+  }
+
   // We need to pass $form_state by reference in order for forms to modify it,
   // since call_user_func_array() requires that referenced variables are passed
   // explicitly.

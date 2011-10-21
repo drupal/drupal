@@ -110,10 +110,9 @@ function node_form($form, &$form_state, $node) {
   // @todo D8: Remove. Modules can implement hook_form_BASE_FORM_ID_alter() now.
   $form['#node_edit_form'] = TRUE;
 
-  $form['#attributes']['class'][] = 'node-form';
-  if (!empty($node->type)) {
-    $form['#attributes']['class'][] = 'node-' . $node->type . '-form';
-  }
+  // Override the default CSS class name, since the user-defined node type name
+  // in 'TYPE-node-form' potentially clashes with third-party class names.
+  $form['#attributes']['class'][0] = drupal_html_class('node-' . $node->type . '-form');
 
   // Basic node information.
   // These elements are just values so they are not even sent to the client.

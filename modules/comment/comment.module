@@ -1858,7 +1858,6 @@ function comment_form($form, &$form_state, $comment) {
 
   // Use #comment-form as unique jump target, regardless of node type.
   $form['#id'] = drupal_html_id('comment_form');
-  $form['#attributes']['class'][] = 'comment-form';
   $form['#theme'] = array('comment_form__node_' . $node->type, 'comment_form');
 
   $anonymous_contact = variable_get('comment_anonymous_' . $node->type, COMMENT_ANONYMOUS_MAYNOT_CONTACT);

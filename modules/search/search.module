@@ -987,7 +987,6 @@ function search_form($form, &$form_state, $action = '', $keys = '', $module = NU
   $form['#action'] = url($action);
   // Record the $action for later use in redirecting.
   $form_state['action'] = $action;
-  $form['#attributes']['class'][] = 'search-form';
   $form['module'] = array('#type' => 'value', '#value' => $module);
   $form['basic'] = array('#type' => 'container', '#attributes' => array('class' => array('container-inline')));
   $form['basic']['keys'] = array(
