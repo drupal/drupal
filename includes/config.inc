@@ -445,12 +445,23 @@ class DrupalConfig {
    */
   public function __construct(DrupalConfigVerifiedStorageInterface $verified_storage, $overrides = array()) {
     $this->_verifiedStorage = $verified_storage;
-    $original_keys = (array) config_decode($this->_verifiedStorage->read());
     $this->_overrides = $overrides;
-    $active = array_merge($original_keys, $overrides);
+    $this->read();
+  }
+  
+  /**
+   * Read config data from the active store into our object.
+   *
+   * @todo: the overrides functionality is currently broken here
+   *        when arrays are nested. Currently all the overrides
+   *        is pretty half-baked and needs to be discussed.
+   */
+  public function read() {
+    $original_keys = (array) config_decode($this->_verifiedStorage->read());
+    $active = array_merge($original_keys, $this->_overrides);
     foreach ($active as $key => $value) {
       $this->set($key, $value);
-    }
+    }    
   }
 
   /**
