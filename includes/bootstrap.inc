@@ -2228,6 +2228,38 @@ function _drupal_bootstrap_configuration() {
   timer_start('page');
   // Initialize the configuration, including variables from settings.php.
   drupal_settings_initialize();
+
+  // Hook up the Symfony ClassLoader for loading PSR-0-compatible classes.
+  require_once(DRUPAL_ROOT . '/includes/Symfony/Component/ClassLoader/UniversalClassLoader.php');
+
+  // By default, use the UniversalClassLoader which is best for development,
+  // as it does not break when code is moved on the file system. It is slow,
+  // however, so for production the APC class loader should be used instead.
+  // @todo Switch to a cleaner way to switch autoloaders than variable_get().
+  switch (variable_get('autoloader_mode', 'default')) {
+    case 'apc':
+      if (function_exists('apc_store')) {
+        require_once(DRUPAL_ROOT . '/includes/Symfony/Component/ClassLoader/ApcUniversalClassLoader.php');
+        $loader = new \Symfony\Component\ClassLoader\ApcUniversalClassLoader('drupal.' . $GLOBALS['drupal_hash_salt']);
+        break;
+      }
+      // If APC was not loaded, fall through to the default loader so that
+      // the site does not fail completely.
+    case 'dev':
+    case 'default':
+    default:
+      $loader = new \Symfony\Component\ClassLoader\UniversalClassLoader();
+      break;
+  }
+
+  // Register classes with namespaces.
+  $loader->registerNamespaces(array(
+    // All Symfony-borrowed code lives in /includes/Symfony.
+    'Symfony' => DRUPAL_ROOT . '/includes',
+  ));
+
+  // Activate the autoloader.
+  $loader->register();
 }
 
 /**
