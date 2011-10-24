@@ -331,16 +331,6 @@ function _image_update_7002_populate_dimensions($table, $field_name, &$last_fid)
  */
 function image_update_7002(array &$sandbox) {
   if (empty($sandbox)) {
-    $fields = _update_7000_field_read_fields(array(
-      'module' => 'image',
-      'storage_type' => 'field_sql_storage',
-      'deleted' => 0,
-    ));
-
-    if (empty($fields)) {
-      return;
-    }
-
     // Setup the sandbox.
     $sandbox = array(
       'tables' => array(),
@@ -349,15 +339,37 @@ function image_update_7002(array &$sandbox) {
       'last_fid' => NULL,
     );
 
-    foreach ($fields as $field) {
-      foreach ($field['storage']['details']['sql'] as $tables) {
-        $table = reset(array_keys($tables));
-        $sandbox['tables'][$table] = $field['field_name'];
-        $sandbox['total'] += db_select($table)->countQuery()->execute()->fetchField();
+    $fields = _update_7000_field_read_fields(array(
+      'module' => 'image',
+      'storage_type' => 'field_sql_storage',
+      'deleted' => 0,
+    ));
 
+    foreach ($fields as $field) {
+      $tables = array(
+        _field_sql_storage_tablename($field),
+        _field_sql_storage_revision_tablename($field),
+      );
+      foreach ($tables as $table) {
         // Add the width and height columns to the table.
         _image_update_7002_add_columns($table, $field['field_name']);
+
+        // How many rows need dimensions populated?
+        $count = db_select($table)->countQuery()->execute()->fetchField();
+
+        if (!$count) {
+          continue;
+        }
+
+        $sandbox['total'] += $count;
+        $sandbox['tables'][$table] = $field['field_name'];
       }
+    }
+
+    // If no tables need rows populated with dimensions then we are done.
+    if (empty($sandbox['tables'])) {
+      $sandbox = array();
+      return;
     }
   }
 
