@@ -2531,7 +2531,7 @@ function hook_field_purge_field($field) {
  * @param $instance
  *   The instance being purged.
  */
-function hook_field_purge_field_instance($instance) {
+function hook_field_purge_instance($instance) {
   db_delete('my_module_field_instance_info')
     ->condition('id', $instance['id'])
     ->execute();
