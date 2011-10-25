@@ -1,6 +1,9 @@
 
 Drupal 8.0, xxxx-xx-xx (development version)
 ----------------------
+- Included the following Symfony2 components:
+    * ClassLoader - PSR-0-compatible autoload routines.
+    * HttpFoundation - Abstraction objects for HTTP requests and responses.
 - Removed modules from core
     * The following modules have been removed from core, because contributed
       modules with similar functionality are available:
