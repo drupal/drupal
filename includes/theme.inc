@@ -1399,7 +1399,8 @@ function theme_link($variables) {
  *     - html: (optional) Whether or not 'title' is HTML. If set, the title
  *       will not be passed through check_plain().
  *     - attributes: (optional) Attributes for the anchor, or for the <span> tag
- *       used in its place if no 'href' is supplied.
+ *       used in its place if no 'href' is supplied. If element 'class' is
+ *       included, it must be an array of one or more class names.
  *     If the 'href' element is supplied, the entire link array is passed to l()
  *     as its $options parameter.
  *   - attributes: A keyed array of attributes for the UL containing the
