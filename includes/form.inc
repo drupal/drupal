@@ -2404,11 +2404,13 @@ function form_type_token_value($element, $input = FALSE) {
 }
 
 /**
- * Change submitted form values during form validation.
+ * Changes submitted form values in $form_state.
  *
  * Use this function to change the submitted value of a form element in a form
  * validation function, so that the changed value persists in $form_state
- * through to the submission handlers.
+ * through the remaining validation and submission handlers. It does not change
+ * the value in $element['#value'], only in $form_state['values'], which is
+ * where submitted values are always stored.
  *
  * Note that form validation functions are specified in the '#validate'
  * component of the form array (the value of $form['#validate'] is an array of
