@@ -2922,12 +2922,15 @@ function hook_requirements($phase) {
  * case, it cannot rely on the .module file being loaded or hooks being known.
  * If the .module file is needed, it may be loaded with drupal_load().
  *
- * By implementing hook_schema() and specifying the tables your module
- * declares, you can easily create and drop these tables on all
- * supported database engines. You don't have to deal with the
- * different SQL dialects for table creation and alteration of the
- * supported database engines.
+ * The tables declared by this hook will be automatically created when
+ * the module is first enabled, and removed when the module is uninstalled.
+ * This happens before hook_install() is invoked, and after hook_uninstall()
+ * is invoked, respectively.
  *
+ * By declaring the tables used by your module via an implementation of
+ * hook_schema(), these tables will be available on all supported database
+ * engines. You don't have to deal with the different SQL dialects for table
+ * creation and alteration of the supported database engines *
  * See the Schema API Handbook at http://drupal.org/node/146843 for
  * details on schema definition structures.
  *
