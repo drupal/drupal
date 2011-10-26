@@ -2647,7 +2647,6 @@ class FieldTranslationsTestCase extends FieldTestCase {
       $language = (object) array(
         'language' => 'l' . $i,
         'name' => $this->randomString(),
-        'native' => $this->randomString(),
       );
       locale_language_save($language);
     }

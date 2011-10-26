@@ -449,7 +449,7 @@ function node_admin_nodes() {
     );
     if ($multilanguage) {
       if ($node->language == LANGUAGE_NONE || isset($languages[$node->language])) {
-        $options[$node->nid]['language'] = $node->language == LANGUAGE_NONE ? t('Language neutral') : t($languages[$node->language]->name);
+        $options[$node->nid]['language'] = $node->language == LANGUAGE_NONE ? t('Language neutral') : $languages[$node->language]->name;
       }
       else {
         $options[$node->nid]['language'] = t('Undefined language (@langcode)', array('@langcode' => $node->language));

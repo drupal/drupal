@@ -304,7 +304,7 @@ function locale_translate_edit_form($form, &$form_state, $lid) {
   foreach ($languages as $langcode => $language) {
     $form['translations'][$langcode] = array(
       '#type' => 'textarea',
-      '#title' => t($language->name),
+      '#title' => $language->name,
       '#rows' => $rows,
       '#default_value' => '',
     );

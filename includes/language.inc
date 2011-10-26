@@ -300,7 +300,7 @@ function language_negotiation_info() {
       'callbacks' => array('language' => 'language_from_default'),
       'weight' => 10,
       'name' => t('Default language'),
-      'description' => t('Use the default site language (@language_name).', array('@language_name' => language_default()->native)),
+      'description' => t('Use the default site language (@language_name).', array('@language_name' => language_default()->name)),
       'config' => 'admin/config/regional/language',
     );
 

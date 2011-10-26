@@ -17,7 +17,6 @@ function locale_install() {
     ->fields(array(
       'language' => 'en',
       'name' => 'English',
-      'native' => 'English',
       'direction' => 0,
       'enabled' => 1,
       'weight' => 0,
@@ -95,14 +94,7 @@ function locale_schema() {
         'length' => 64,
         'not null' => TRUE,
         'default' => '',
-        'description' => 'Language name in English.',
-      ),
-      'native' => array(
-        'type' => 'varchar',
-        'length' => 64,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'Native language name.',
+        'description' => 'Language name.',
       ),
       'direction' => array(
         'type' => 'int',
@@ -255,3 +247,20 @@ function locale_schema() {
 
   return $schema;
 }
+
+/**
+ * @addtogroup updates-7.x-to-8.x
+ * @{
+ */
+
+/**
+ * Remove the native language name column.
+ */
+function locale_update_8000() {
+  db_drop_field('languages', 'native');
+}
+
+/**
+ * @} End of "addtogroup updates-7.x-to-8.x"
+ * The next series of updates should start at 9000.
+ */

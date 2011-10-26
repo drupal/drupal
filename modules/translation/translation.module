@@ -200,7 +200,7 @@ function translation_form_node_form_alter(&$form, &$form_state) {
 /**
  * Implements hook_node_view().
  *
- * Display translation links with native language names, if this node is part of
+ * Display translation links with language names, if this node is part of
  * a translation set. If no language provider is enabled "fall back" to the
  * simple links built through the result of translation_node_get_translations().
  */
@@ -234,7 +234,7 @@ function translation_node_view($node, $view_mode) {
         else {
           $links[$key] = array(
             'href' => "node/{$translation->nid}",
-            'title' => $language->native,
+            'title' => $language->name,
             'language' => $language,
           );
         }

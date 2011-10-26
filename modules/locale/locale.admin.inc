@@ -275,7 +275,8 @@ function _locale_languages_common_controls(&$form, $language = NULL) {
     );
   }
   else {
-    $form['langcode'] = array('#type' => 'textfield',
+    $form['langcode'] = array(
+      '#type' => 'textfield',
       '#title' => t('Language code'),
       '#size' => 12,
       '#maxlength' => 60,
@@ -285,21 +286,15 @@ function _locale_languages_common_controls(&$form, $language = NULL) {
       '#description' => t('Use language codes as <a href="@w3ctags">defined by the W3C</a> for interoperability. <em>Examples: "en", "en-gb" and "zh-hant".</em>', array('@w3ctags' => 'http://www.w3.org/International/articles/language-tags/')),
     );
   }
-  $form['name'] = array('#type' => 'textfield',
-    '#title' => t('Language name in English'),
+  $form['name'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Language name'),
     '#maxlength' => 64,
     '#default_value' => @$language->name,
     '#required' => TRUE,
-    '#description' => t('Name of the language in English. Will be available for translation in all languages.'),
   );
-  $form['native'] = array('#type' => 'textfield',
-    '#title' => t('Native language name'),
-    '#maxlength' => 64,
-    '#default_value' => @$language->native,
-    '#required' => TRUE,
-    '#description' => t('Name of the language in the language being added.'),
-  );
-  $form['direction'] = array('#type' => 'radios',
+  $form['direction'] = array(
+    '#type' => 'radios',
     '#title' => t('Direction'),
     '#required' => TRUE,
     '#description' => t('Direction that text in this language is presented.'),
@@ -352,11 +347,10 @@ function locale_languages_add_custom_form_submit($form, &$form_state) {
   $language = (object) array(
     'language' => $langcode,
     'name' => $form_state['values']['name'],
-    'native' => $form_state['values']['native'],
     'direction' => $form_state['values']['direction'],
   );
   locale_language_save($language);
-  drupal_set_message(t('The language %language has been created and can now be used. More information is available on the <a href="@locale-help">help screen</a>.', array('%language' => t($form_state['values']['name']), '@locale-help' => url('admin/help/locale'))));
+  drupal_set_message(t('The language %language has been created and can now be used. More information is available on the <a href="@locale-help">help screen</a>.', array('%language' => $form_state['values']['name'], '@locale-help' => url('admin/help/locale'))));
   locale_languages_add_set_batch($langcode);
   $form_state['redirect'] = 'admin/config/regional/language';
 }
@@ -394,15 +388,12 @@ function locale_languages_add_set_batch($langcode) {
  * Validate the language editing form. Reused for custom language addition too.
  */
 function locale_languages_edit_form_validate($form, &$form_state) {
-  // Ensure sane field values for langcode, name, and native.
+  // Ensure sane field values for langcode and name.
   if (!isset($form['langcode_view']) && preg_match('@[^a-zA-Z_-]@', $form_state['values']['langcode'])) {
     form_set_error('langcode', t('%field may only contain characters a-z, underscores, or hyphens.', array('%field' => $form['langcode']['#title'])));
   }
   if ($form_state['values']['name'] != check_plain($form_state['values']['name'])) {
     form_set_error('name', t('%field cannot contain any markup.', array('%field' => $form['name']['#title'])));
-  }
-  if ($form_state['values']['native'] != check_plain($form_state['values']['native'])) {
-    form_set_error('native', t('%field cannot contain any markup.', array('%field' => $form['native']['#title'])));
   }
 }
 
@@ -415,7 +406,6 @@ function locale_languages_edit_form_submit($form, &$form_state) {
   $langcode = $form_state['values']['langcode'];
   $language = $languages[$langcode];
   $language->name = $form_state['values']['name'];
-  $language->native = $form_state['values']['native'];
   $language->direction = $form_state['values']['direction'];
   locale_language_save($language);
   $form_state['redirect'] = 'admin/config/regional/language';
@@ -446,7 +436,7 @@ function locale_languages_delete_form($form, &$form_state, $language) {
   }
   else {
     $form['langcode'] = array('#type' => 'value', '#value' => $langcode);
-    return confirm_form($form, t('Are you sure you want to delete the language %name?', array('%name' => t($languages[$langcode]->name))), 'admin/config/regional/language', t('Deleting a language will remove all interface translations associated with it, and posts in this language will be set to be language neutral. This action cannot be undone.'), t('Delete'), t('Cancel'));
+    return confirm_form($form, t('Are you sure you want to delete the language %name?', array('%name' => $languages[$langcode]->name)), 'admin/config/regional/language', t('Deleting a language will remove all interface translations associated with it, and posts in this language will be set to be language neutral. This action cannot be undone.'), t('Delete'), t('Cancel'));
   }
 }
 
@@ -880,7 +870,7 @@ function locale_date_format_language_overview_page() {
   );
 
   // Get list of languages.
-  $languages = locale_language_list('native');
+  $languages = locale_language_list();
 
   foreach ($languages as $langcode => $info) {
     $row = array();
@@ -897,7 +887,7 @@ function locale_date_format_language_overview_page() {
  * Provide date localization configuration options to users.
  */
 function locale_date_format_form($form, &$form_state, $langcode) {
-  $languages = locale_language_list('native');
+  $languages = locale_language_list();
   $language_name = $languages[$langcode];
 
   // Display the current language name.

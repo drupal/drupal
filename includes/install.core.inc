@@ -1395,7 +1395,6 @@ function install_import_locales(&$install_state) {
     $language = (object) array(
       'language' => $install_locale,
       'name' => $install_locale,
-      'native' => $install_locale,
       'default' => TRUE,
     );
     locale_language_save($language);

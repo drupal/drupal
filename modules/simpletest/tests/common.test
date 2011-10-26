@@ -2249,7 +2249,6 @@ class FormatDateUnitTest extends DrupalWebTestCase {
       'predefined_langcode' => 'custom',
       'langcode' => self::LANGCODE,
       'name' => self::LANGCODE,
-      'native' => self::LANGCODE,
       'direction' => LANGUAGE_LTR,
     );
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add custom language'));

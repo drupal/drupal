@@ -424,7 +424,7 @@ class TranslationTestCase extends DrupalWebTestCase {
     $this->drupalGet("node/$node->nid", array('language' => $page_language));
 
     foreach ($types as $type) {
-      $args = array('%translation_language' => $translation_language->native, '%page_language' => $page_language->native, '%type' => $type);
+      $args = array('%translation_language' => $translation_language->name, '%page_language' => $page_language->name, '%type' => $type);
       if ($find) {
         $message = t('[%page_language] Language switch item found for %translation_language language in the %type page area.', $args);
       }
@@ -439,7 +439,7 @@ class TranslationTestCase extends DrupalWebTestCase {
         $xpath = '//div[contains(@class, :type)]//span[@class="locale-untranslated"]';
       }
 
-      $found = $this->findContentByXPath($xpath, array(':type' => $type, ':url' => $url), $translation_language->native);
+      $found = $this->findContentByXPath($xpath, array(':type' => $type, ':url' => $url), $translation_language->name);
       $result = $this->assertTrue($found == $find, $message) && $result;
     }
 

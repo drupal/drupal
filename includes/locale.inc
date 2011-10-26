@@ -356,7 +356,7 @@ function locale_language_switcher_url($type, $path) {
   foreach ($languages[1] as $language) {
     $links[$language->language] = array(
       'href'       => $path,
-      'title'      => $language->native,
+      'title'      => $language->name,
       'language'   => $language,
       'attributes' => array('class' => array('language-link')),
     );
@@ -384,7 +384,7 @@ function locale_language_switcher_session($type, $path) {
     $langcode = $language->language;
     $links[$langcode] = array(
       'href'       => $path,
-      'title'      => $language->native,
+      'title'      => $language->name,
       'attributes' => array('class' => array('language-link')),
       'query'      => $query,
     );
@@ -519,7 +519,6 @@ function locale_language_save($language) {
     include_once DRUPAL_ROOT . '/includes/standard.inc';
     $predefined = standard_language_list();
     $language->name = $predefined[$language->language][0];
-    $language->native = isset($predefined[$language->language][1]) ? $predefined[$language->language][1] : $predefined[$language->language][0];
     $language->direction = isset($predefined[$language->language][2]) ? $predefined[$language->language][2] : LANGUAGE_LTR;
   }
 
@@ -827,20 +826,20 @@ function _locale_rebuild_js($langcode = NULL) {
   // Log the operation and return success flag.
   switch ($status) {
     case 'updated':
-      watchdog('locale', 'Updated JavaScript translation file for the language %language.', array('%language' => t($language->name)));
+      watchdog('locale', 'Updated JavaScript translation file for the language %language.', array('%language' => $language->name));
       return TRUE;
     case 'rebuilt':
       watchdog('locale', 'JavaScript translation file %file.js was lost.', array('%file' => $language->javascript), WATCHDOG_WARNING);
       // Proceed to the 'created' case as the JavaScript translation file has
       // been created again.
     case 'created':
-      watchdog('locale', 'Created JavaScript translation file for the language %language.', array('%language' => t($language->name)));
+      watchdog('locale', 'Created JavaScript translation file for the language %language.', array('%language' => $language->name));
       return TRUE;
     case 'deleted':
-      watchdog('locale', 'Removed JavaScript translation file for the language %language because no translations currently exist for that language.', array('%language' => t($language->name)));
+      watchdog('locale', 'Removed JavaScript translation file for the language %language because no translations currently exist for that language.', array('%language' => $language->name));
       return TRUE;
     case 'error':
-      watchdog('locale', 'An error occurred during creation of the JavaScript translation file for the language %language.', array('%language' => t($language->name)), WATCHDOG_ERROR);
+      watchdog('locale', 'An error occurred during creation of the JavaScript translation file for the language %language.', array('%language' => $language->name), WATCHDOG_ERROR);
       return FALSE;
     default:
       // No operation needed.

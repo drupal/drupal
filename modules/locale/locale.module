@@ -285,8 +285,7 @@ function locale_language_selector_form(&$form, &$form_state, $user) {
 
   $names = array();
   foreach ($languages as $langcode => $item) {
-    $name = t($item->name);
-    $names[$langcode] = $name . ($item->native != $name ? ' (' . $item->native . ')' : '');
+    $names[$langcode] = $item->name;
   }
   $form['locale'] = array(
     '#type' => 'fieldset',
@@ -762,8 +761,7 @@ function locale_language_name($lang) {
  * Returns array of language names
  *
  * @param $field
- *   'name' => names in current language, localized
- *   'native' => native names
+ *   Name of language object field.
  * @param $all
  *   Boolean to return all languages or only enabled ones
  */
@@ -777,7 +775,7 @@ function locale_language_list($field = 'name', $all = FALSE) {
   }
   $list = array();
   foreach ($languages as $language) {
-    $list[$language->language] = ($field == 'name') ? t($language->name) : $language->$field;
+    $list[$language->language] = $language->$field;
   }
   return $list;
 }
