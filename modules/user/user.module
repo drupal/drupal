@@ -157,7 +157,7 @@ function user_entity_info() {
       'controller class' => 'UserController',
       'base table' => 'users',
       'uri callback' => 'user_uri',
-      'label callback' => 'format_username',
+      'label callback' => 'user_label',
       'fieldable' => TRUE,
       'entity keys' => array(
         'id' => 'uid',
@@ -189,6 +189,23 @@ function user_uri($user) {
   return array(
     'path' => 'user/' . $user->uid,
   );
+}
+
+/**
+ * Entity label callback.
+ *
+ * @param $entity_type
+ *   The entity type.
+ * @param $entity
+ *   The entity object.
+ *
+ * @return
+ *   The name of the user.
+ *
+ * @see format_username
+ */
+function user_label($entity_type, $entity) {
+  return format_username($entity);
 }
 
 /**
