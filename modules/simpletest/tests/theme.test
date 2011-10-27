@@ -460,3 +460,31 @@ class ThemeHtmlTag extends DrupalUnitTestCase {
     $this->assertEqual('<title>title test</title>'."\n", theme_html_tag($tag), t('Test title tag generation.'));
   }
 }
+
+/**
+ * Functional test for attributes of html.tpl.php.
+ */
+class ThemeHtmlTplPhpAttributesTestCase extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'html.tpl.php html and body attributes',
+      'description' => 'Tests attributes inserted in the html and body elements of html.tpl.php.',
+      'group' => 'Theme',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('theme_test');
+  }
+
+  /**
+   * Tests that modules and themes can alter variables in html.tpl.php.
+   */
+  function testThemeHtmlTplPhpAttributes() {
+    $this->drupalGet('');
+    $attributes = $this->xpath('/html[@theme_test_html_attribute="theme test html attribute value"]');
+    $this->assertTrue(count($attributes) == 1, t('Attribute set in the html element via hook_preprocess_html() found.'));
+    $attributes = $this->xpath('/html/body[@theme_test_body_attribute="theme test body attribute value"]');
+    $this->assertTrue(count($attributes) == 1, t('Attribute set in the body element via hook_preprocess_html() found.'));
+  }
+}

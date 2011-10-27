@@ -461,6 +461,18 @@ function rdf_process(&$variables, $hook) {
 }
 
 /**
+ * Implements MODULE_preprocess_HOOK()
+ */
+function rdf_preprocess_html(&$variables) {
+  // Adds RDF namespace prefix bindings in the form of an RDFa 1.1 prefix
+  // attribute inside the html element.
+  $prefixes = array();
+  foreach(rdf_get_namespaces() as $prefix => $uri) {
+    $variables['html_attributes_array']['prefix'][] = $prefix . ': ' . $uri . "\n";
+  }
+}
+
+/**
  * Implements MODULE_preprocess_HOOK().
  */
 function rdf_preprocess_node(&$variables) {

@@ -2359,13 +2359,14 @@ function template_preprocess_html(&$variables) {
     $variables['classes_array'][] = drupal_html_class('node-type-' . $node->type);
   }
 
-  // RDFa allows annotation of XHTML pages with RDF data, while GRDDL provides
-  // mechanisms for extraction of this RDF content via XSLT transformation
-  // using an associated GRDDL profile.
-  $variables['rdf_namespaces']    = drupal_get_rdf_namespaces();
-  $variables['grddl_profile']     = 'http://www.w3.org/1999/xhtml/vocab';
-  $variables['language']          = $GLOBALS['language'];
-  $variables['language']->dir     = $GLOBALS['language']->direction ? 'rtl' : 'ltr';
+  // Initializes attributes which are specific to the html and body elements.
+  $variables['html_attributes_array'] = array();
+  $variables['body_attributes_array'] = array();
+
+  // HTML element attributes.
+  $variables['html_attributes_array']['xmlns'] = "http://www.w3.org/1999/xhtml";
+  $variables['html_attributes_array']['xml:lang'] = $GLOBALS['language']->language;
+  $variables['html_attributes_array']['dir'] = $GLOBALS['language']->direction ? 'rtl' : 'ltr';
 
   // Add favicon.
   if (theme_get_setting('toggle_favicon')) {
@@ -2494,6 +2495,10 @@ function template_process_page(&$variables) {
  * @see html.tpl.php
  */
 function template_process_html(&$variables) {
+  // Flatten out html_attributes and body_attributes.
+  $variables['html_attributes'] = drupal_attributes($variables['html_attributes_array']);
+  $variables['body_attributes'] = drupal_attributes($variables['body_attributes_array']);
+
   // Render page_top and page_bottom into top level variables.
   $variables['page_top'] = drupal_render($variables['page']['page_top']);
   $variables['page_bottom'] = drupal_render($variables['page']['page_bottom']);
