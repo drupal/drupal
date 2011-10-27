@@ -2467,6 +2467,10 @@ function drupal_deliver_html_page($page_callback_result) {
     drupal_add_http_header('Content-Type', 'text/html; charset=utf-8');
   }
 
+  // Send appropriate HTTP-Header for browsers and search engines.
+  global $language;
+  drupal_add_http_header('Content-Language', $language->language);
+
   // Menu status constants are integers; page content is a string or array.
   if (is_int($page_callback_result)) {
     // @todo: Break these up into separate functions?
