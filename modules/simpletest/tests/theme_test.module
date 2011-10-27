@@ -1,6 +1,17 @@
 <?php
 
 /**
+ * Implements hook_theme().
+ */
+function theme_test_theme($existing, $type, $theme, $path) {
+  $items['theme_test_template_test'] = array(
+    'template' => 'theme_test.template_test',
+  );
+
+  return $items;
+}
+
+/**
  * Implements hook_menu().
  */
 function theme_test_menu() {
@@ -20,6 +31,11 @@ function theme_test_menu() {
   );
   $items['theme-test/hook-init'] = array(
     'page callback' => 'theme_test_hook_init_page_callback',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+  $items['theme-test/template-test'] = array(
+    'page callback' => 'theme_test_template_test_page_callback',
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
@@ -67,6 +83,13 @@ function _theme_test_load_registry() {
  */
 function theme_test_hook_init_page_callback() {
   return $GLOBALS['theme_test_output'];
+}
+
+/**
+ * Menu callback for testing template overridding based on filename.
+ */
+function theme_test_template_test_page_callback() {
+  return theme('theme_test_template_test');
 }
 
 /**

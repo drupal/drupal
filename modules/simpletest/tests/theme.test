@@ -101,6 +101,15 @@ class ThemeUnitTest extends DrupalWebTestCase {
     $this->drupalGet('theme-test/suggestion');
     variable_set('preprocess_css', 0);
   }
+
+  /**
+   * Ensures a themes template is overrideable based on the 'template' filename.
+   */
+  function testTemplateOverride() {
+    variable_set('theme_default', 'test_theme');
+    $this->drupalGet('theme-test/template-test');
+    $this->assertText('Success: Template overridden.', t('Template overridden by defined \'template\' filename.'));
+  }
 }
 
 /**

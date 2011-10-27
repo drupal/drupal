@@ -1199,10 +1199,10 @@ function drupal_find_theme_templates($cache, $extension, $path) {
     if (strpos($file->uri, str_replace($subtheme_paths, '', $file->uri)) !== 0) {
       continue;
     }
-    // Chop off the remaining extensions if there are any. $template already
-    // has the rightmost extension removed, but there might still be more,
-    // such as with .tpl.php, which still has .tpl in $template at this point.
-    if (($pos = strpos($template, '.')) !== FALSE) {
+    // Chop off the remaining '.tpl' extension. $template already has the
+    // rightmost extension removed, but there might still be more, such as with
+    // .tpl.php, which still has .tpl in $template at this point.
+    if (($pos = strpos($template, '.tpl')) !== FALSE) {
       $template = substr($template, 0, $pos);
     }
     // Transform - in filenames to _ to match function naming scheme
@@ -1213,6 +1213,19 @@ function drupal_find_theme_templates($cache, $extension, $path) {
         'template' => $template,
         'path' => dirname($file->uri),
       );
+    }
+
+    // Match templates based on the 'template' filename.
+    foreach ($cache as $hook => $info) {
+      if (isset($info['template'])) {
+        $template_candidates = array($info['template'], str_replace($info['theme path'] . '/', '', $info['template']));
+        if (in_array($template, $template_candidates)) {
+          $implementations[$hook] = array(
+            'template' => $template,
+            'path' => dirname($file->uri),
+          );
+        }
+      }
     }
   }
 
