@@ -163,11 +163,36 @@ class LocaleConfigurationTest extends DrupalWebTestCase {
     // Make sure the "language_count" variable has not changed.
     $this->assertEqual(variable_get('language_count', 1), count($enabled[1]), t('Language count is correct.'));
 
-
-    // Ensure we can't delete the English language.
-    $this->drupalGet('admin/config/regional/language/delete/en');
+    // Ensure we can delete the English language. Right now English is the only
+    // language so we must add a new language and make it the default before
+    // deleting English.
+    $langcode = 'xx';
+    $name = $this->randomName(16);
+    $edit = array(
+      'predefined_langcode' => 'custom',
+      'langcode' => $langcode,
+      'name' => $name,
+      'direction' => '0',
+    );
+    $this->drupalPost('admin/config/regional/language/add', $edit, t('Add custom language'));
     $this->assertEqual($this->getUrl(), url('admin/config/regional/language', array('absolute' => TRUE)), t('Correct page redirection.'));
-    $this->assertText(t('The English language cannot be deleted.'), t('Failed to delete English language.'));
+    $this->assertText($name, t('Name found.'));
+
+    // Check if we can change the default language.
+    $path = 'admin/config/regional/language';
+    $this->drupalGet($path);
+    $this->assertFieldChecked('edit-site-default-en', t('English is the default language.'));
+    // Change the default language.
+    $edit = array(
+      'site_default' => $langcode,
+    );
+    $this->drupalPost(NULL, $edit, t('Save configuration'));
+    $this->assertNoFieldChecked('edit-site-default-en', t('Default language updated.'));
+    $this->assertEqual($this->getUrl(), url('admin/config/regional/language', array('absolute' => TRUE)), t('Correct page redirection.'));
+
+    $this->drupalPost('admin/config/regional/language/delete/en', array(), t('Delete'));
+    // We need raw here because %locale will add HTML.
+    $this->assertRaw(t('The language %locale has been removed.', array('%locale' => 'English')), t('The English language has been removed.'));
   }
 
 }
@@ -296,6 +321,7 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
     $language_indicator = "<em class=\"locale-untranslated\">$langcode</em> ";
     // This will be the translation of $name.
     $translation = $this->randomName(16);
+    $translation_to_en = $this->randomName(16);
 
     // Add custom language.
     $this->drupalLogin($admin_user);
@@ -335,13 +361,39 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
     $lid = $matches[1];
     // No t() here, it's surely not translated yet.
     $this->assertText($name, t('name found on edit screen.'));
+    $this->assertNoText('English', t('No way to translate the string to English.'));
+    $this->drupalLogout();
+    $this->drupalLogin($admin_user);
+    $this->drupalPost('admin/config/regional/language/edit/en', array('locale_translate_english' => TRUE), t('Save language'));
+    $this->drupalLogout();
+    $this->drupalLogin($translate_user);
+    $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
+    // assertText() seems to remove the input field where $name always could be
+    // found, so this is not a false assert. See how assertNoText succeeds
+    // later.
+    $this->assertText($name, t('Search found the name.'));
+    $this->assertRaw($language_indicator, t('Name is untranslated.'));
+    // Assume this is the only result, given the random name.
+    $this->clickLink(t('edit'));
+    $string_edit_url = $this->getUrl();
     $edit = array(
       "translations[$langcode]" => $translation,
+      'translations[en]' => $translation_to_en,
     );
     $this->drupalPost(NULL, $edit, t('Save translations'));
     $this->assertText(t('The string has been saved.'), t('The string has been saved.'));
     $this->assertEqual($this->getUrl(), url('admin/config/regional/translate/translate', array('absolute' => TRUE)), t('Correct page redirection.'));
-    $this->assertTrue($name != $translation && t($name, array(), array('langcode' => $langcode)) == $translation, t('t() works.'));
+    $this->drupalGet($string_edit_url);
+    $this->assertRaw($translation, t('Non-English translation properly saved.'));
+    $this->assertRaw($translation_to_en, t('English translation properly saved.'));
+    $this->assertTrue($name != $translation && t($name, array(), array('langcode' => $langcode)) == $translation, t('t() works for non-English.'));
+    // Refresh the locale() cache to get fresh data from t() below. We are in
+    // the same HTTP request and therefore t() is not refreshed by saving the
+    // translation above.
+    locale_reset();
+    // Now we should get the proper fresh translation from t().
+    $this->assertTrue($name != $translation_to_en && t($name, array(), array('langcode' => 'en')) == $translation_to_en, t('t() works for English.'));
+    $this->assertTrue(t($name, array(), array('langcode' => LANGUAGE_SYSTEM)) == $name, t('t() works for LANGUAGE_SYSTEM.'));
     $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
     // The indicator should not be here.
     $this->assertNoRaw($language_indicator, t('String is translated.'));
@@ -627,10 +679,10 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
     $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
     $this->assertNoText(t('No strings available.'), t('Search found the translation.'));
 
-    // Ensure translated string doesn't appear if searching on English.
+    // Ensure translated string doesn't appear if searching in System (English).
     $search = array(
       'string' => $translation,
-      'language' => 'en',
+      'language' => LANGUAGE_SYSTEM,
       'translation' => 'all',
     );
     $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));

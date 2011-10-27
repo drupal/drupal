@@ -1100,7 +1100,7 @@ function locale_form_locale_language_overview_form_alter(&$form, &$form_state) {
       'translated' => 0,
       'ratio' => 0,
     );
-    if ($langcode != 'en') {
+    if ($langcode != 'en' || locale_translate_english()) {
       $form['languages'][$langcode]['locale_statistics'] = array(
         '#type' => 'link',
         '#title' => t('@translated/@total (@ratio%)', array(
@@ -1113,8 +1113,36 @@ function locale_form_locale_language_overview_form_alter(&$form, &$form_state) {
     }
     else {
       $form['languages'][$langcode]['locale_statistics'] = array(
-        '#markup' => t('built-in'),
+        '#markup' => t('not applicable'),
       );
     }
   }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for locale_languages_edit_form().
+ */
+function locale_form_locale_languages_edit_form_alter(&$form, &$form_state) {
+  if ($form['langcode']['#type'] == 'value' && $form['langcode']['#value'] == 'en') {
+    $form['locale_translate_english'] = array(
+      '#title' => t('Enable interface translation to English'),
+      '#type' => 'checkbox',
+      '#default_value' => locale_translate_english(),
+    );
+    $form['#submit'][] = 'locale_form_locale_languages_edit_form_alter_submit';
+  }
+}
+
+/**
+ * Submission handler to record our custom setting.
+ */
+function locale_form_locale_languages_edit_form_alter_submit($form, $form_state) {
+  variable_set('locale_translate_english', $form_state['values']['locale_translate_english']);
+}
+
+/**
+ * Utility function to tell if locale translates to English.
+ */
+function locale_translate_english() {
+  return variable_get('locale_translate_english', FALSE);
 }

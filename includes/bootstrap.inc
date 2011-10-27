@@ -159,6 +159,13 @@ define('DRUPAL_AUTHENTICATED_RID', 2);
 define('DRUPAL_KILOBYTE', 1024);
 
 /**
+ * System language (only applicable to UI).
+ *
+ * Refers to the language used in Drupal and module/theme source code.
+ */
+define('LANGUAGE_SYSTEM', 'system');
+
+/**
  * The language code used when no language is explicitly assigned.
  *
  * Defined by ISO639-2 for "Undetermined".
@@ -1476,7 +1483,7 @@ function t($string, array $args = array(), array $options = array()) {
 
   // Merge in default.
   if (empty($options['langcode'])) {
-    $options['langcode'] = isset($language->language) ? $language->language : 'en';
+    $options['langcode'] = isset($language->language) ? $language->language : LANGUAGE_SYSTEM;
   }
   if (empty($options['context'])) {
     $options['context'] = '';
@@ -1494,7 +1501,7 @@ function t($string, array $args = array(), array $options = array()) {
     $string = $custom_strings[$options['langcode']][$options['context']][$string];
   }
   // Translate with locale module if enabled.
-  elseif ($options['langcode'] != 'en' && function_exists('locale')) {
+  elseif ($options['langcode'] != LANGUAGE_SYSTEM && ($options['langcode'] != 'en' || variable_get('locale_translate_english', FALSE)) && function_exists('locale')) {
     $string = locale($string, $options['context'], $options['langcode']);
   }
   if (empty($args)) {
@@ -2632,12 +2639,6 @@ function language_list($field = 'language') {
     $default = language_default();
     if (drupal_multilingual() || module_exists('locale')) {
       $languages['language'] = db_query('SELECT * FROM {languages} ORDER BY weight ASC, name ASC')->fetchAllAssoc('language');
-      // Users cannot uninstall the native English language. However, we allow
-      // it to be hidden from the installed languages. Therefore, at least one
-      // other language must be enabled then.
-      if (!$languages['language']['en']->enabled && !variable_get('language_native_enabled', TRUE)) {
-        unset($languages['language']['en']);
-      }
     }
     else {
       // No locale module, so use the default language only.

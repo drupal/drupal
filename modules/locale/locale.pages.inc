@@ -55,8 +55,8 @@ function _locale_translate_seek() {
     default:
       $condition = db_or()
         ->condition('s.source', '%' . db_like($query['string']) . '%', 'LIKE');
-      if ($query['language'] != 'en') {
-        // Only search in translations if the language is not forced to English.
+      if ($query['language'] != LANGUAGE_SYSTEM) {
+        // Only search in translations if the language is not forced to system language.
         $condition->condition('t.translation', '%' . db_like($query['string']) . '%', 'LIKE');
       }
       $sql_query->condition($condition);
@@ -64,7 +64,7 @@ function _locale_translate_seek() {
   }
 
   $limit_language = NULL;
-  if ($query['language'] != 'en' && $query['language'] != 'all') {
+  if ($query['language'] != LANGUAGE_SYSTEM && $query['language'] != 'all') {
     $sql_query->condition('language', $query['language']);
     $limit_language = $query['language'];
   }
@@ -114,7 +114,9 @@ function _locale_translate_language_list($translation, $limit_language) {
   drupal_add_css(drupal_get_path('module', 'locale') . '/locale.css');
 
   $languages = language_list();
-  unset($languages['en']);
+  if (!locale_translate_english()) {
+    unset($languages['en']);
+  }
   $output = '';
   foreach ($languages as $langcode => $language) {
     if (!$limit_language || $limit_language == $langcode) {
@@ -151,7 +153,9 @@ function locale_translation_filters() {
   // Get all languages, except English
   drupal_static_reset('language_list');
   $languages = locale_language_list('name');
-  unset($languages['en']);
+  if (!locale_translate_english()) {
+    unset($languages['en']);
+  }
 
   $filters['string'] = array(
     'title' => t('String contains'),
@@ -160,7 +164,7 @@ function locale_translation_filters() {
 
   $filters['language'] = array(
     'title' => t('Language'),
-    'options' => array_merge(array('all' => t('All languages'), 'en' => t('English (provided by Drupal)')), $languages),
+    'options' => array_merge(array('all' => t('All languages'), LANGUAGE_SYSTEM => t('System (English)')), $languages),
   );
 
   $filters['translation'] = array(
@@ -297,7 +301,9 @@ function locale_translate_edit_form($form, &$form_state, $lid) {
   // Include default form controls with empty values for all languages.
   // This ensures that the languages are always in the same order in forms.
   $languages = language_list();
-  unset($languages['en']);
+  if (!locale_translate_english()) {
+    unset($languages['en']);
+  }
   $form['translations'] = array('#tree' => TRUE);
   // Approximate the number of rows to use in the default textarea.
   $rows = min(ceil(str_word_count($source->source) / 12), 10);

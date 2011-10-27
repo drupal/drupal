@@ -79,7 +79,7 @@ function locale_language_overview_form($form, &$form_state) {
       '#type' => 'link',
       '#title' => t('delete'),
       '#href' => 'admin/config/regional/language/delete/' . $langcode,
-      '#access' => $langcode != 'en' && $langcode != $default->language,
+      '#access' => $langcode != $default->language,
     );
   }
 
@@ -416,11 +416,6 @@ function locale_languages_edit_form_submit($form, &$form_state) {
  */
 function locale_languages_delete_form($form, &$form_state, $language) {
   $langcode = $language->language;
-  // Do not allow deletion of English locale.
-  if ($langcode == 'en') {
-    drupal_set_message(t('The English language cannot be deleted.'));
-    drupal_goto('admin/config/regional/language');
-  }
 
   if (language_default()->language == $langcode) {
     drupal_set_message(t('The default language cannot be deleted.'));

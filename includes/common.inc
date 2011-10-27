@@ -1875,7 +1875,7 @@ function format_date($timestamp, $type = 'medium', $format = '', $timezone = NUL
   // Use the default langcode if none is set.
   global $language;
   if (empty($langcode)) {
-    $langcode = isset($language->language) ? $language->language : 'en';
+    $langcode = isset($language->language) ? $language->language : LANGUAGE_SYSTEM;
   }
 
   switch ($type) {

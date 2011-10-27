@@ -14,7 +14,9 @@ function locale_translate_import_form($form) {
   // Get all languages, except English
   drupal_static_reset('language_list');
   $names = locale_language_list('name');
-  unset($names['en']);
+  if (!locale_translate_english()) {
+    unset($names['en']);
+  }
 
   if (!count($names)) {
     $languages = _locale_prepare_predefined_list();
@@ -101,7 +103,9 @@ function locale_translate_export_screen() {
   // Get all languages, except English
   drupal_static_reset('language_list');
   $names = locale_language_list('name');
-  unset($names['en']);
+  if (!locale_translate_english()) {
+    unset($names['en']);
+  }
   $output = '';
   // Offer translation export if any language is set up.
   if (count($names)) {
@@ -215,7 +219,9 @@ function locale_batch_by_language($langcode, $finished = NULL, $skip = array()) 
 function locale_batch_by_component($components, $finished = '_locale_batch_system_finished') {
   $files = array();
   $languages = language_list('enabled');
-  unset($languages[1]['en']);
+  if (!locale_translate_english()) {
+    unset($languages[1]['en']);
+  }
   if (count($languages[1])) {
     $language_list = join('|', array_keys($languages[1]));
     // Collect all files to import for all $components.

@@ -703,7 +703,9 @@ function _locale_invalidate_js($langcode = NULL) {
   if (empty($langcode)) {
     // Invalidate all languages.
     $languages = language_list();
-    unset($languages['en']);
+    if (!locale_translate_english()) {
+      unset($languages['en']);
+    }
     foreach ($languages as $lcode => $data) {
       $parsed['refresh:' . $lcode] = 'waiting';
     }
