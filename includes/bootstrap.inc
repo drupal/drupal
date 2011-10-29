@@ -2263,6 +2263,8 @@ function _drupal_bootstrap_configuration() {
   $loader->registerNamespaces(array(
     // All Symfony-borrowed code lives in /includes/Symfony.
     'Symfony' => DRUPAL_ROOT . '/includes',
+    // All Drupal-namespaced code in core lives in /includes/Drupal.
+    'Drupal' => DRUPAL_ROOT . '/includes',
   ));
 
   // Activate the autoloader.
