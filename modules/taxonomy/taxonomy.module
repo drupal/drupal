@@ -802,7 +802,7 @@ function taxonomy_term_is_page($term) {
 }
 
 /**
- * Clear all static cache variables for terms..
+ * Clear all static cache variables for terms.
  */
 function taxonomy_terms_static_reset() {
   drupal_static_reset('taxonomy_term_count_nodes');
