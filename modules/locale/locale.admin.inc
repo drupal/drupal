@@ -379,7 +379,7 @@ function locale_languages_add_set_batch($langcode) {
   // See if we have language files to import for the newly added
   // language, collect and import them.
   include_once drupal_get_path('module', 'locale') . '/locale.bulk.inc';
-  if ($batch = locale_batch_by_language($langcode, '_locale_batch_language_finished')) {
+  if ($batch = locale_translate_batch_import_files($langcode, TRUE)) {
     batch_set($batch);
   }
 }

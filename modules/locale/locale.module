@@ -851,10 +851,16 @@ function locale_themes_enabled($themes) {
  * @param $components
  *   An array of component (theme and/or module) names to import
  *   translations for.
+ *
+ * @todo
+ *   This currently imports all .po files available, independent of
+ *   $components. Once we integrated with update status for project
+ *   identification, we should revisit and only import files for the
+ *   identified projects for the components.
  */
 function locale_system_update($components) {
   include_once drupal_get_path('module', 'locale') . '/locale.bulk.inc';
-  if ($batch = locale_batch_by_component($components)) {
+  if ($batch = locale_translate_batch_import_files(NULL, TRUE)) {
     batch_set($batch);
   }
 }
@@ -1145,4 +1151,24 @@ function locale_form_locale_languages_edit_form_alter_submit($form, $form_state)
  */
 function locale_translate_english() {
   return variable_get('locale_translate_english', FALSE);
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for system_file_system_settings().
+ *
+ * Add interface translation directory setting to directories configuration.
+ */
+function locale_form_system_file_system_settings_alter(&$form, $form_state) {
+  $form['locale_translate_file_directory'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Interface translations directory'),
+    '#default_value' => variable_get('locale_translate_file_directory', conf_path() . '/files/translations'),
+    '#maxlength' => 255,
+    '#description' => t('A local file system path where interface translation files are looked for. This directory must exist.'),
+    '#after_build' => array('system_check_directory'),
+    '#weight' => 10,
+  );
+  if ($form['file_default_scheme']) {
+    $form['file_default_scheme']['#weight'] = 20;
+  }
 }

@@ -720,6 +720,9 @@ class LocaleImportFunctionalTest extends DrupalWebTestCase {
   function setUp() {
     parent::setUp('locale', 'locale_test');
 
+    // Set the translation file directory.
+    variable_set('locale_translate_file_directory', drupal_get_path('module', 'locale_test'));
+
     $this->admin_user = $this->drupalCreateUser(array('administer languages', 'translate interface', 'access administration pages'));
     $this->drupalLogin($this->admin_user);
   }
@@ -830,7 +833,7 @@ class LocaleImportFunctionalTest extends DrupalWebTestCase {
 
     // Ensure the translation file was automatically imported when language was
     // added.
-    $this->assertText(t('One translation file imported for the enabled modules.'), t('Language file automatically imported.'));
+    $this->assertText(t('One translation file imported.'), t('Language file automatically imported.'));
 
     // Ensure strings were successfully imported.
     $search = array(

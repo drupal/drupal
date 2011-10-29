@@ -1103,14 +1103,14 @@ function st($string, array $args = array(), array $options = array()) {
     $locale_strings = array();
     if (isset($install_state['parameters']['profile']) && isset($install_state['parameters']['locale'])) {
       // If the given locale was selected, there should be at least one .po file
-      // with its name ending in {$install_state['parameters']['locale']}.po
+      // with its name ending in install.{$install_state['parameters']['locale']}.po
       // This might or might not be the entire filename. It is also possible
       // that multiple files end with the same extension, even if unlikely.
-      $po_files = file_scan_directory('./profiles/' . $install_state['parameters']['profile'] . '/translations', '/'. $install_state['parameters']['locale'] .'\.po$/', array('recurse' => FALSE));
-      if (count($po_files)) {
+      $locale_files = install_find_locale_files($install_state['parameters']['locale']);
+      if (!empty($locale_files)) {
         require_once DRUPAL_ROOT . '/includes/gettext.inc';
-        foreach ($po_files as $po_file) {
-          _locale_import_read_po('mem-store', $po_file);
+        foreach ($locale_files as $locale_file) {
+          _locale_import_read_po('mem-store', $locale_file);
         }
         $locale_strings = _locale_import_one_string('mem-report');
       }

@@ -1125,21 +1125,31 @@ function install_select_profile_form($form, &$form_state, $profile_files) {
 }
 
 /**
- * Find all .po files for the current profile.
+ * Find all .po files useful for the installer.
  */
-function install_find_locales($profilename) {
-  $locales = file_scan_directory('./profiles/' . $profilename . '/translations', '/\.po$/', array('recurse' => FALSE));
-  array_unshift($locales, (object) array('name' => 'en'));
-  foreach ($locales as $key => $locale) {
-    // The locale (file name) might be drupal-7.2.cs.po instead of cs.po.
-    $locales[$key]->langcode = preg_replace('!^(.+\.)?([^\.]+)$!', '\2', $locale->name);
+function install_find_locales() {
+  $files = install_find_locale_files();
+  // English does not need a translation file.
+  array_unshift($files, (object) array('name' => 'en'));
+  foreach ($files as $key => $file) {
+    // Strip off the file name component before the language code.
+    $files[$key]->langcode = preg_replace('!^(.+\.)?([^\.]+)$!', '\2', $file->name);
     // Language codes cannot exceed 12 characters to fit into the {languages}
     // table.
-    if (strlen($locales[$key]->langcode) > 12) {
-      unset($locales[$key]);
+    if (strlen($files[$key]->langcode) > 12) {
+      unset($files[$key]);
     }
   }
-  return $locales;
+  return $files;
+}
+
+/**
+ * Find installer translations either for a specific langcode or all languages.
+ */
+function install_find_locale_files($langcode = NULL) {
+  $directory = variable_get('locale_translate_file_directory', conf_path() . '/files/translations');
+  $files = file_scan_directory($directory, '!install\.' . (!empty($langcode) ? '\.' . preg_quote($langcode, '!') : '[^\.]+') . '\.po$!', array('recurse' => FALSE));
+  return $files;
 }
 
 /**
@@ -1409,10 +1419,8 @@ function install_import_locales(&$install_state) {
   }
 
   // Collect files to import for this language.
-  $batch = locale_batch_by_language($install_locale, NULL);
+  $batch = locale_translate_batch_import_files($install_locale);
   if (!empty($batch)) {
-    // Remember components we cover in this batch set.
-    variable_set('install_locale_batch_components', $batch['#components']);
     return $batch;
   }
 }
@@ -1479,23 +1487,22 @@ function install_configure_form($form, &$form_state, &$install_state) {
 }
 
 /**
- * Installation task; import remaining languages via a batch process.
+ * Installation task; finish importing files at end of installation.
  *
  * @param $install_state
  *   An array of information about the current installation state.
  *
  * @return
  *   The batch definition, if there are language files to import.
+ *
+ * @todo
+ *   This currently does the same as the first import step. Need to revisit
+ *   once we have l10n_update functionality integrated. See
+ *   http://drupal.org/node/1191488.
  */
 function install_import_locales_remaining(&$install_state) {
-  include_once DRUPAL_ROOT . '/includes/locale.inc';
-  // Collect files to import for this language. Skip components already covered
-  // in the initial batch set.
-  $install_locale = $install_state['parameters']['locale'];
-  $batch = locale_batch_by_language($install_locale, NULL, variable_get('install_locale_batch_components', array()));
-  // Remove temporary variable.
-  variable_del('install_locale_batch_components');
-  return $batch;
+  include_once drupal_get_path('module', 'locale') . '/locale.bulk.inc';
+  return locale_translate_batch_import_files($install_state['parameters']['locale']);
 }
 
 /**

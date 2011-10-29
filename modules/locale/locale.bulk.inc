@@ -167,99 +167,42 @@ function locale_translate_export_po_form_submit($form, &$form_state) {
 }
 
 /**
- * Prepare a batch to import translations for all enabled
- * modules in a given language.
+ * Prepare a batch to import all translations.
  *
  * @param $langcode
- *   Language code to import translations for.
- * @param $finished
- *   Optional finished callback for the batch.
- * @param $skip
- *   Array of component names to skip. Used in the installer for the
- *   second pass import, when most components are already imported.
+ *   (optional) Language code to limit files being imported.
+ * @param $finish_feedback
+ *   (optional) Whether to give feedback to the user when finished.
  *
- * @return
- *   A batch structure or FALSE if no files found.
+ * @todo
+ *   Integrate with update status to identify projects needed and integrate
+ *   l10n_update functionality to feed in translation files alike.
+ *   See http://drupal.org/node/1191488.
  */
-function locale_batch_by_language($langcode, $finished = NULL, $skip = array()) {
-  // Collect all files to import for all enabled modules and themes.
-  $files = array();
-  $components = array();
-  $query = db_select('system', 's');
-  $query->fields('s', array('name', 'filename'));
-  $query->condition('s.status', 1);
-  if (count($skip)) {
-    $query->condition('name', $skip, 'NOT IN');
-  }
-  $result = $query->execute();
-  foreach ($result as $component) {
-    // Collect all files for all components, names as $langcode.po or
-    // with names ending with $langcode.po. This allows for filenames
-    // like node-module.de.po to let translators use small files and
-    // be able to import in smaller chunks.
-    $files = array_merge($files, file_scan_directory(dirname($component->filename) . '/translations', '/(^|\.)' . $langcode . '\.po$/', array('recurse' => FALSE)));
-    $components[] = $component->name;
-  }
-
-  return _locale_batch_build($files, $finished, $components);
-}
-
-/**
- * Prepare a batch to run when installing modules or enabling themes.
- *
- * This batch will import translations for the newly added components
- * in all the languages already set up on the site.
- *
- * @param $components
- *   An array of component (theme and/or module) names to import
- *   translations for.
- * @param $finished
- *   Optional finished callback for the batch.
- */
-function locale_batch_by_component($components, $finished = '_locale_batch_system_finished') {
-  $files = array();
-  $languages = language_list('enabled');
-  if (!locale_translate_english()) {
-    unset($languages[1]['en']);
-  }
-  if (count($languages[1])) {
-    $language_list = join('|', array_keys($languages[1]));
-    // Collect all files to import for all $components.
-    $result = db_query("SELECT name, filename FROM {system} WHERE status = 1");
-    foreach ($result as $component) {
-      if (in_array($component->name, $components)) {
-        // Collect all files for this component in all enabled languages, named
-        // as $langcode.po or with names ending with $langcode.po. This allows
-        // for filenames like node-module.de.po to let translators use small
-        // files and be able to import in smaller chunks.
-        $files = array_merge($files, file_scan_directory(dirname($component->filename) . '/translations', '/(^|\.)(' . $language_list . ')\.po$/', array('recurse' => FALSE)));
-      }
-    }
-    return _locale_batch_build($files, $finished);
-  }
-  return FALSE;
+function locale_translate_batch_import_files($langcode = NULL, $finish_feedback = FALSE) {
+  $directory = variable_get('locale_translate_file_directory', conf_path() . '/files/translations');
+  $files = file_scan_directory($directory, '!' . (!empty($langcode) ? '\.' . preg_quote($langcode, '!') : '') . '\.po$!', array('recurse' => FALSE));
+  return locale_translate_batch_build($files, $finish_feedback);
 }
 
 /**
  * Build a locale batch from an array of files.
  *
  * @param $files
- *   Array of files to import.
- * @param $finished
- *   Optional finished callback for the batch.
- * @param $components
- *   Optional list of component names the batch covers. Used in the installer.
+ *   Array of file objects to import.
+ * @param $finish_feedback
+ *   (optional) Whether to give feedback to the user when finished.
  *
  * @return
- *   A batch structure.
+ *   A batch structure or FALSE if $files was empty.
  */
-function _locale_batch_build($files, $finished = NULL, $components = array()) {
+function locale_translate_batch_build($files, $finish_feedback = FALSE) {
   $t = get_t();
   if (count($files)) {
     $operations = array();
     foreach ($files as $file) {
-      // We call _locale_batch_import for every batch operation.
-      $operations[] = array('_locale_batch_import', array($file->uri));
+      // We call locale_translate_batch_import for every batch operation.
+      $operations[] = array('locale_translate_batch_import', array($file->uri));
     }
     $batch = array(
       'operations'    => $operations,
@@ -267,12 +210,9 @@ function _locale_batch_build($files, $finished = NULL, $components = array()) {
       'init_message'  => $t('Starting import'),
       'error_message' => $t('Error importing interface translations'),
       'file'          => drupal_get_path('module', 'locale') . '/locale.bulk.inc',
-      // This is not a batch API construct, but data passed along to the
-      // installer, so we know what did we import already.
-      '#components'   => $components,
     );
-    if (isset($finished)) {
-      $batch['finished'] = $finished;
+    if ($finish_feedback) {
+      $batch['finished'] = 'locale_translate_batch_finished';
     }
     return $batch;
   }
@@ -287,7 +227,7 @@ function _locale_batch_build($files, $finished = NULL, $components = array()) {
  * @param $results
  *   Contains a list of files imported.
  */
-function _locale_batch_import($filepath, &$context) {
+function locale_translate_batch_import($filepath, &$context) {
   // The filename is either {langcode}.po or {prefix}.{langcode}.po, so
   // we can extract the language code to use for the import from the end.
   if (preg_match('!(/|\.)([^\./]+)\.po$!', $filepath, $langcode)) {
@@ -299,20 +239,9 @@ function _locale_batch_import($filepath, &$context) {
 
 /**
  * Finished callback of system page locale import batch.
- * Inform the user of translation files imported.
  */
-function _locale_batch_system_finished($success, $results) {
+function locale_translate_batch_finished($success, $results) {
   if ($success) {
-    drupal_set_message(format_plural(count($results), 'One translation file imported for the newly installed modules.', '@count translation files imported for the newly installed modules.'));
-  }
-}
-
-/**
- * Finished callback of language addition locale import batch.
- * Inform the user of translation files imported.
- */
-function _locale_batch_language_finished($success, $results) {
-  if ($success) {
-    drupal_set_message(format_plural(count($results), 'One translation file imported for the enabled modules.', '@count translation files imported for the enabled modules.'));
+    drupal_set_message(format_plural(count($results), 'One translation file imported.', '@count translation files imported.'));
   }
 }
