@@ -61,8 +61,13 @@ function _locale_import_po($file, $langcode, $mode) {
   drupal_set_message(t('The translation was successfully imported. There are %number newly created translated strings, %update strings were updated and %delete strings were removed.', array('%number' => $additions, '%update' => $updates, '%delete' => $deletes)));
   watchdog('locale', 'Imported %file into %locale: %number new strings added, %update updated and %delete removed.', array('%file' => $file->filename, '%locale' => $langcode, '%number' => $additions, '%update' => $updates, '%delete' => $deletes));
   if ($skips) {
-    $skip_message = format_plural($skips, 'One translation string was skipped because it contains disallowed HTML.', '@count translation strings were skipped because they contain disallowed HTML.');
-    drupal_set_message($skip_message);
+    if (module_exists('dblog')) {
+      $skip_message = format_plural($skips, 'A translation string was skipped because of disallowed or malformed HTML. <a href="@url">See the log</a> for details.', '@count translation strings were skipped because of disallowed or malformed HTML. <a href="@url">See the log</a> for details.', array('@url' => url('admin/reports/dblog')));
+    }
+    else {
+      $skip_message = format_plural($skips, 'A translation string was skipped because of disallowed or malformed HTML. See the log for details.', '@count translation strings were skipped because of disallowed or malformed HTML. See the log for details.');
+    }
+    drupal_set_message($skip_message, 'error');
     watchdog('locale', '@count disallowed HTML string(s) in %file', array('@count' => $skips, '%file' => $file->uri), WATCHDOG_WARNING);
   }
   return TRUE;
@@ -481,6 +486,7 @@ function _locale_import_one_string_db(&$report, $langcode, $context, $source, $t
   if (!empty($translation)) {
     // Skip this string unless it passes a check for dangerous code.
     if (!locale_string_is_safe($translation)) {
+      watchdog('locale', 'Import of string "%string" was skipped because of disallowed or malformed HTML.', array('%string' => $translation), WATCHDOG_ERROR);
       $report['skips']++;
       $lid = 0;
     }

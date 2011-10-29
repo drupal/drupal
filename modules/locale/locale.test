@@ -753,7 +753,7 @@ class LocaleImportFunctionalTest extends DrupalWebTestCase {
 
     // The import should have created 1 string and rejected 2.
     $this->assertRaw(t('The translation was successfully imported. There are %number newly created translated strings, %update strings were updated and %delete strings were removed.', array('%number' => 1, '%update' => 0, '%delete' => 0)), t('The translation file was successfully imported.'));
-    $skip_message = format_plural(2, 'One translation string was skipped because it contains disallowed HTML.', '@count translation strings were skipped because they contain disallowed HTML.');
+    $skip_message = format_plural(2, 'A translation string was skipped because of disallowed or malformed HTML. <a href="@url">See the log</a> for details.', '@count translation strings were skipped because of disallowed or malformed HTML. <a href="@url">See the log</a> for details.', array('@url' => url('admin/reports/dblog')));
     $this->assertRaw($skip_message, t('Unsafe strings were skipped.'));
 
 
