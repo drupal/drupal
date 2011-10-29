@@ -1352,9 +1352,6 @@ function node_build_content($node, $view_mode = 'full', $langcode = NULL) {
     $node = node_invoke($node, 'view', $view_mode, $langcode);
   }
 
-  // Make the view mode available in the node object.
-  $node->view_mode = $view_mode;
-
   // Build fields content.
   // In case of a multiple view, node_view_multiple() already ran the
   // 'prepare_view' step. An internal flag prevents the operation from running
@@ -1424,20 +1421,6 @@ function node_show($node, $message = FALSE) {
 function node_is_page($node) {
   $page_node = menu_get_object();
   return (!empty($page_node) ? $page_node->nid == $node->nid : FALSE);
-}
-
-/**
- * Process variables for page.tpl.php
- *
- * @see page.tpl.php
- */
-function node_preprocess_page(&$variables) {
-  // In order to have properly sectioned HTML5 markup for nodes, the title is
-  // always printed inside node.tpl.php. This code prevents it from printing in
-  // page.tpl.php as well.
-  if (!empty($variables['node']->view_mode) && $variables['node']->view_mode == 'full' && node_is_page($variables['node'])) {
-    $variables['title'] = '';
-  }
 }
 
 /**
