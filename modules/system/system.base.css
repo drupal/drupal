@@ -259,3 +259,23 @@ html.js .js-hide {
   zoom: 1; /* hasLayout trigger to clear floats in IE */
 }
 
+/**
+ * Block-level HTML5 display definition.
+ *
+ * Provides display values for browsers that don't recognize the new elements
+ * and therefore display them inline by default.
+ */
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section,
+summary {
+  display: block;
+}
