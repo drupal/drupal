@@ -29,6 +29,12 @@ function ajax_forms_test_menu() {
     'page arguments' => array('ajax_forms_test_validation_form'),
     'access callback' => TRUE,
   );
+  $items['ajax_forms_test_lazy_load_form'] = array(
+    'title' => 'AJAX forms lazy load test',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('ajax_forms_test_lazy_load_form'),
+    'access callback' => TRUE,
+  );
   return $items;
 }
 
@@ -456,4 +462,39 @@ function ajax_forms_test_validation_form_callback($form, $form_state) {
   drupal_set_message("ajax_forms_test_validation_form_callback invoked");
   drupal_set_message(t("Callback: drivertext=%drivertext, spare_required_field=%spare_required_field", array('%drivertext' => $form_state['values']['drivertext'], '%spare_required_field' => $form_state['values']['spare_required_field'])));
   return '<div id="message_area">ajax_forms_test_validation_form_callback at ' . date('c') . '</div>';
+}
+
+/**
+ * Form builder: Builds a form that triggers a simple AJAX callback.
+ */
+function ajax_forms_test_lazy_load_form($form, &$form_state) {
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Submit'),
+    '#ajax' => array(
+      'callback' => 'ajax_forms_test_lazy_load_form_ajax',
+    ),
+  );
+  return $form;
+}
+
+/**
+ * Form submit handler: Adds JavaScript and CSS that wasn't on the original form.
+ */
+function ajax_forms_test_lazy_load_form_submit($form, &$form_state) {
+  drupal_add_js(array('ajax_forms_test_lazy_load_form_submit' => 'executed'), 'setting');
+  drupal_add_css(drupal_get_path('module', 'system') . '/system.admin.css');
+  drupal_add_js(drupal_get_path('module', 'system') . '/system.js');
+  $form_state['rebuild'] = TRUE;
+}
+
+/**
+ * AJAX callback for the ajax_forms_test_lazy_load_form() form.
+ *
+ * This function returns nothing, because all we're interested in testing is
+ * ajax_render() adding commands for JavaScript and CSS added during the page
+ * request, such as the ones added in ajax_forms_test_lazy_load_form_submit().
+ */
+function ajax_forms_test_lazy_load_form_ajax($form, &$form_state) {
+  return NULL;
 }

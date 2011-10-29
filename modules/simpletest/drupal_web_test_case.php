@@ -1968,6 +1968,16 @@ class DrupalWebTestCase extends DrupalTestCase {
       $id = (string) $element['id'];
       $extra_post .= '&' . urlencode('ajax_html_ids[]') . '=' . urlencode($id);
     }
+    if (isset($drupal_settings['ajaxPageState'])) {
+      $extra_post .= '&' . urlencode('ajax_page_state[theme]') . '=' . urlencode($drupal_settings['ajaxPageState']['theme']);
+      $extra_post .= '&' . urlencode('ajax_page_state[theme_token]') . '=' . urlencode($drupal_settings['ajaxPageState']['theme_token']);
+      foreach ($drupal_settings['ajaxPageState']['css'] as $key => $value) {
+        $extra_post .= '&' . urlencode("ajax_page_state[css][$key]") . '=1';
+      }
+      foreach ($drupal_settings['ajaxPageState']['js'] as $key => $value) {
+        $extra_post .= '&' . urlencode("ajax_page_state[js][$key]") . '=1';
+      }
+    }
 
     // Unless a particular path is specified, use the one specified by the
     // Ajax settings, or else 'system/ajax'.
@@ -1992,7 +2002,7 @@ class DrupalWebTestCase extends DrupalTestCase {
       foreach ($return as $command) {
         switch ($command['command']) {
           case 'settings':
-            $drupal_settings = array_merge_recursive($drupal_settings, $command['settings']);
+            $drupal_settings = drupal_array_merge_deep($drupal_settings, $command['settings']);
             break;
 
           case 'insert':

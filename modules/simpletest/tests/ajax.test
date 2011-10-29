@@ -116,6 +116,64 @@ class AJAXFrameworkTestCase extends AJAXTestCase {
     );
      $this->assertCommand($commands, $expected, t('Custom error message is output.'));
   }
+
+  /**
+   * Test that new JavaScript and CSS files added during an AJAX request are returned.
+   */
+  function testLazyLoad() {
+    $expected = array(
+      'setting_name' => 'ajax_forms_test_lazy_load_form_submit',
+      'setting_value' => 'executed',
+      'css' => drupal_get_path('module', 'system') . '/system.admin.css',
+      'js' => drupal_get_path('module', 'system') . '/system.js',
+    );
+
+    // Get the base page.
+    $this->drupalGet('ajax_forms_test_lazy_load_form');
+    $original_settings = $this->drupalGetSettings();
+    $original_css = $original_settings['ajaxPageState']['css'];
+    $original_js = $original_settings['ajaxPageState']['js'];
+
+    // Verify that the base page doesn't have the settings and files that are to
+    // be lazy loaded as part of the next request.
+    $this->assertTrue(!isset($original_settings[$expected['setting_name']]), t('Page originally lacks the %setting, as expected.', array('%setting' => $expected['setting_name'])));
+    $this->assertTrue(!isset($original_settings[$expected['css']]), t('Page originally lacks the %css file, as expected.', array('%css' => $expected['css'])));
+    $this->assertTrue(!isset($original_settings[$expected['js']]), t('Page originally lacks the %js file, as expected.', array('%js' => $expected['js'])));
+
+    // Submit the AJAX request.
+    $commands = $this->drupalPostAJAX(NULL, array(), array('op' => t('Submit')));
+    $new_settings = $this->drupalGetSettings();
+    $new_css = $new_settings['ajaxPageState']['css'];
+    $new_js = $new_settings['ajaxPageState']['js'];
+
+    // Verify the expected setting was added.
+    $this->assertIdentical($new_settings[$expected['setting_name']], $expected['setting_value'], t('Page now has the %setting.', array('%setting' => $expected['setting_name'])));
+
+    // Verify the expected CSS file was added, both to Drupal.settings, and as
+    // an AJAX command for inclusion into the HTML.
+    // @todo A drupal_css_defaults() function in Drupal 8 would be nice.
+    $expected_css_html = drupal_get_css(array($expected['css'] => array(
+      'type' => 'file',
+      'group' => CSS_DEFAULT,
+      'weight' => 0,
+      'every_page' => FALSE,
+      'media' => 'all',
+      'preprocess' => TRUE,
+      'data' => $expected['css'],
+      'browsers' => array('IE' => TRUE, '!IE' => TRUE),
+    )), TRUE);
+    $this->assertEqual($new_css, $original_css + array($expected['css'] => 1), t('Page state now has the %css file.', array('%css' => $expected['css'])));
+    $this->assertCommand($commands, array('data' => $expected_css_html), t('Page now has the %css file.', array('%css' => $expected['css'])));
+
+    // Verify the expected JS file was added, both to Drupal.settings, and as
+    // an AJAX command for inclusion into the HTML. By testing for an exact HTML
+    // string containing the SCRIPT tag, we also ensure that unexpected
+    // JavaScript code, such as a jQuery.extend() that would potentially clobber
+    // rather than properly merge settings, didn't accidentally get added.
+    $expected_js_html = drupal_get_js('header', array($expected['js'] => drupal_js_defaults($expected['js'])), TRUE);
+    $this->assertEqual($new_js, $original_js + array($expected['js'] => 1), t('Page state now has the %js file.', array('%js' => $expected['js'])));
+    $this->assertCommand($commands, array('data' => $expected_js_html), t('Page now has the %js file.', array('%js' => $expected['js'])));
+  }
 }
 
 /**
