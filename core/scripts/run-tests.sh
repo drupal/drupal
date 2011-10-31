@@ -140,7 +140,8 @@ All arguments are long options.
   --class     Run tests identified by specific class names, instead of group names.
 
   --file      Run tests identified by specific file names, instead of group names.
-              Specify the path and the extension (i.e. 'modules/user/user.test').
+              Specify the path and the extension
+              (i.e. 'core/modules/user/user.test').
 
   --xml       <path>
 
@@ -164,9 +165,9 @@ All arguments are long options.
 To run this script you will normally invoke it from the root directory of your
 Drupal installation as the webserver user (differs per configuration), or root:
 
-sudo -u [wwwrun|www-data|etc] php ./scripts/{$args['script']}
+sudo -u [wwwrun|www-data|etc] php ./core/scripts/{$args['script']}
   --url http://example.com/ --all
-sudo -u [wwwrun|www-data|etc] php ./scripts/{$args['script']}
+sudo -u [wwwrun|www-data|etc] php ./core/scripts/{$args['script']}
   --url http://example.com/ --class BlockTestCase
 \n
 EOF;
@@ -299,9 +300,9 @@ function simpletest_script_init($server_software) {
     }
   }
 
-  chdir(realpath(__DIR__ . '/..'));
+  chdir(realpath(__DIR__ . '/../..'));
   define('DRUPAL_ROOT', getcwd());
-  require_once DRUPAL_ROOT . '/includes/bootstrap.inc';
+  require_once DRUPAL_ROOT . '/core/includes/bootstrap.inc';
 }
 
 /**
@@ -391,7 +392,7 @@ function simpletest_script_run_one_test($test_id, $test_class) {
 function simpletest_script_command($test_id, $test_class) {
   global $args, $php;
 
-  $command = escapeshellarg($php) . ' ' . escapeshellarg('./scripts/' . $args['script']) . ' --url ' . escapeshellarg($args['url']);
+  $command = escapeshellarg($php) . ' ' . escapeshellarg('./core/scripts/' . $args['script']) . ' --url ' . escapeshellarg($args['url']);
   if ($args['color']) {
     $command .= ' --color';
   }

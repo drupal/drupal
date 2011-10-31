@@ -393,7 +393,7 @@ class SystemTestFileTransfer {
  * @see system_authorized_init().
  */
 function system_test_authorize_init_page($page_title) {
-  $authorize_url = $GLOBALS['base_url'] . '/authorize.php';
+  $authorize_url = $GLOBALS['base_url'] . '/core/authorize.php';
   system_authorized_init('system_test_authorize_run', drupal_get_path('module', 'system_test') . '/system_test.module', array(), $page_title);
   drupal_goto($authorize_url);
 }

@@ -78,10 +78,11 @@ while ($param = array_shift($_SERVER['argv'])) {
   }
 }
 
+chdir('../..');
 define('DRUPAL_ROOT', getcwd());
 
-include_once DRUPAL_ROOT . '/includes/password.inc';
-include_once DRUPAL_ROOT . '/includes/bootstrap.inc';
+include_once DRUPAL_ROOT . '/core/includes/password.inc';
+include_once DRUPAL_ROOT . '/core/includes/bootstrap.inc';
 
 foreach ($passwords as $password) {
   print("\npassword: $password \t\thash: ". user_hash_password($password) ."\n");

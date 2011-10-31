@@ -55,7 +55,7 @@ class SimpleTestFunctionalTest extends DrupalWebTestCase {
       // using the user-agent header. This is an important security check.
       global $base_url;
 
-      $this->drupalGet($base_url . '/install.php', array('external' => TRUE));
+      $this->drupalGet($base_url . '/core/install.php', array('external' => TRUE));
       $this->assertResponse(403, 'Cannot access install.php with a "simpletest" user-agent header.');
 
       $user = $this->drupalCreateUser();
@@ -275,7 +275,7 @@ class SimpleTestFunctionalTest extends DrupalWebTestCase {
           $assertion['file'] = $this->asText($row->td[2]);
           $assertion['line'] = $this->asText($row->td[3]);
           $assertion['function'] = $this->asText($row->td[4]);
-          $ok_url = file_create_url('misc/watchdog-ok.png');
+          $ok_url = file_create_url('core/misc/watchdog-ok.png');
           $assertion['status'] = ($row->td[5]->img['src'] == $ok_url) ? 'Pass' : 'Fail';
           $results['assertions'][] = $assertion;
         }

@@ -5,12 +5,15 @@
  * Handles incoming requests to fire off regularly-scheduled tasks (cron jobs).
  */
 
+// Change the directory to the Drupal root.
+chdir('..');
+
 /**
  * Root directory of Drupal installation.
  */
 define('DRUPAL_ROOT', getcwd());
 
-include_once DRUPAL_ROOT . '/includes/bootstrap.inc';
+include_once DRUPAL_ROOT . '/core/includes/bootstrap.inc';
 drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
 
 if (!isset($_GET['cron_key']) || variable_get('cron_key', 'drupal') != $_GET['cron_key']) {

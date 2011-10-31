@@ -529,7 +529,7 @@ abstract class DrupalTestCase {
       'line' => $exception->getLine(),
       'file' => $exception->getFile(),
     ));
-    require_once DRUPAL_ROOT . '/includes/errors.inc';
+    require_once DRUPAL_ROOT . '/core/includes/errors.inc';
     // The exception message is run through check_plain() by _drupal_decode_exception().
     $this->error(t('%type: !message in %function (line %line of %file).', _drupal_decode_exception($exception)), 'Uncaught exception', _drupal_get_last_caller($backtrace));
   }
@@ -1294,7 +1294,7 @@ class DrupalWebTestCase extends DrupalTestCase {
     $test_info['test_run_id'] = $this->databasePrefix;
     $test_info['in_child_site'] = FALSE;
 
-    include_once DRUPAL_ROOT . '/includes/install.inc';
+    include_once DRUPAL_ROOT . '/core/includes/install.inc';
     drupal_install_system();
 
     $this->preloadRegistry();
@@ -2081,7 +2081,7 @@ class DrupalWebTestCase extends DrupalTestCase {
    * Runs cron in the Drupal installed by Simpletest.
    */
   protected function cronRun() {
-    $this->drupalGet($GLOBALS['base_url'] . '/cron.php', array('external' => TRUE, 'query' => array('cron_key' => variable_get('cron_key', 'drupal'))));
+    $this->drupalGet($GLOBALS['base_url'] . '/core/cron.php', array('external' => TRUE, 'query' => array('cron_key' => variable_get('cron_key', 'drupal'))));
   }
 
   /**

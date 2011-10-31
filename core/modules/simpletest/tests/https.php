@@ -11,14 +11,14 @@ $is_https_mock = empty($_SERVER['HTTPS']);
 // Change to https.
 $_SERVER['HTTPS'] = 'on';
 foreach ($_SERVER as $key => $value) {
-  $_SERVER[$key] = str_replace('modules/simpletest/tests/https.php', 'index.php', $value);
+  $_SERVER[$key] = str_replace('core/modules/simpletest/tests/https.php', 'index.php', $value);
   $_SERVER[$key] = str_replace('http://', 'https://', $_SERVER[$key]);
 }
 
 // Change current directory to the Drupal root.
-chdir('../../..');
+chdir('../../../..');
 define('DRUPAL_ROOT', getcwd());
-require_once DRUPAL_ROOT . '/includes/bootstrap.inc';
+require_once DRUPAL_ROOT . '/core/includes/bootstrap.inc';
 
 // Make sure this file can only be used by simpletest.
 drupal_bootstrap(DRUPAL_BOOTSTRAP_CONFIGURATION);

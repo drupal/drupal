@@ -81,8 +81,8 @@ function update_check_incompatibility($name, $type = 'module') {
 function update_prepare_d8_bootstrap() {
   // Allow the database system to work even if the registry has not been
   // created yet.
-  include_once DRUPAL_ROOT . '/includes/install.inc';
-  include_once DRUPAL_ROOT . '/modules/entity/entity.controller.inc';
+  include_once DRUPAL_ROOT . '/core/includes/install.inc';
+  include_once DRUPAL_ROOT . '/core/modules/entity/entity.controller.inc';
   drupal_bootstrap(DRUPAL_BOOTSTRAP_DATABASE);
 
   // If the site has not updated to Drupal 8 yet, check to make sure that it is
@@ -212,7 +212,7 @@ function update_do_one($module, $number, $dependency_map, &$context) {
     catch (Exception $e) {
       watchdog_exception('update', $e);
 
-      require_once DRUPAL_ROOT . '/includes/errors.inc';
+      require_once DRUPAL_ROOT . '/core/includes/errors.inc';
       $variables = _drupal_decode_exception($e);
       // The exception message is run through check_plain() by _drupal_decode_exception().
       $ret['#abort'] = array('success' => FALSE, 'query' => t('%type: !message in %function (line %line of %file).', $variables));
@@ -314,7 +314,7 @@ function update_batch($start, $redirect = NULL, $url = NULL, $batch = array(), $
     'init_message' => 'Starting updates',
     'error_message' => 'An unrecoverable error has occurred. You can find the error message below. It is advised to copy it to the clipboard for reference.',
     'finished' => 'update_finished',
-    'file' => 'includes/update.inc',
+    'file' => 'core/includes/update.inc',
   );
   batch_set($batch);
   batch_process($redirect, $url, $redirect_callback);
@@ -462,7 +462,7 @@ function update_resolve_dependencies($starting_updates) {
   $graph = update_build_dependency_graph($update_functions);
 
   // Perform the depth-first search and sort the results.
-  require_once DRUPAL_ROOT . '/includes/graph.inc';
+  require_once DRUPAL_ROOT . '/core/includes/graph.inc';
   drupal_depth_first_search($graph);
   uasort($graph, 'drupal_sort_weight');
 

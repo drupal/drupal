@@ -223,7 +223,7 @@ function locale_menu() {
  */
 function locale_init() {
   global $conf, $language;
-  include_once DRUPAL_ROOT . '/includes/locale.inc';
+  include_once DRUPAL_ROOT . '/core/includes/locale.inc';
 
   // For each date type (e.g. long, short), get the localized date format
   // for the user's current language and override the default setting for it
@@ -464,7 +464,7 @@ function locale_field_language_fallback(&$display_language, $entity, $langcode) 
     }
     elseif (!empty($entity->{$field_name})) {
       if (!isset($fallback_candidates)) {
-        require_once DRUPAL_ROOT . '/includes/language.inc';
+        require_once DRUPAL_ROOT . '/core/includes/language.inc';
         $fallback_candidates = language_fallback_get_candidates();
       }
       foreach ($fallback_candidates as $fallback_language) {
@@ -498,7 +498,7 @@ function locale_entity_info_alter(&$entity_info) {
  *   detected. It is used by l() as the default language if none is specified.
  */
 function locale_language_types_info() {
-  require_once DRUPAL_ROOT . '/includes/locale.inc';
+  require_once DRUPAL_ROOT . '/core/includes/locale.inc';
   return array(
     LANGUAGE_TYPE_INTERFACE => array(
       'name' => t('User interface text'),
@@ -519,8 +519,8 @@ function locale_language_types_info() {
  * Implements hook_language_negotiation_info().
  */
 function locale_language_negotiation_info() {
-  require_once DRUPAL_ROOT . '/includes/locale.inc';
-  $file = 'includes/locale.inc';
+  require_once DRUPAL_ROOT . '/core/includes/locale.inc';
+  $file = '/core/includes/locale.inc';
   $providers = array();
 
   $providers[LOCALE_LANGUAGE_NEGOTIATION_URL] = array(
@@ -592,7 +592,7 @@ function locale_language_negotiation_info() {
  * Implements hook_modules_enabled().
  */
 function locale_modules_enabled($modules) {
-  include_once DRUPAL_ROOT . '/includes/language.inc';
+  include_once DRUPAL_ROOT . '/core/includes/language.inc';
   language_types_set();
   language_negotiation_purge();
 }
@@ -881,7 +881,7 @@ function locale_js_alter(&$javascript) {
   $files = $new_files = FALSE;
 
   // Require because locale_js_alter() could be called without locale_init().
-  require_once DRUPAL_ROOT . '/includes/locale.inc';
+  require_once DRUPAL_ROOT . '/core/includes/locale.inc';
 
   foreach ($javascript as $item) {
     if ($item['type'] == 'file') {
@@ -985,7 +985,7 @@ function locale_library_info_alter(&$libraries, $module) {
  * Implements hook_block_info().
  */
 function locale_block_info() {
-  include_once DRUPAL_ROOT . '/includes/language.inc';
+  include_once DRUPAL_ROOT . '/core/includes/language.inc';
   $block = array();
   $info = language_types_info();
   foreach (language_types_configurable(FALSE) as $type) {
@@ -1035,7 +1035,7 @@ function locale_url_outbound_alter(&$path, &$options, $original_path) {
 
     if (!isset($callbacks)) {
       $callbacks = array();
-      include_once DRUPAL_ROOT . '/includes/language.inc';
+      include_once DRUPAL_ROOT . '/core/includes/language.inc';
 
       foreach (language_types_configurable() as $type) {
         // Get url rewriter callbacks only from enabled language providers.

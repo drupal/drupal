@@ -1189,7 +1189,7 @@ function drupal_find_theme_templates($cache, $extension, $path) {
   // Escape the periods in the extension.
   $regex = '/' . str_replace('.', '\.', $extension) . '$/';
   // Get a listing of all template files in the path to search.
-  $files = drupal_system_listing($regex, $path, 'name', 0);
+  $files = file_scan_directory($path, $regex, array('key' => 'name'));
 
   // Find templates that implement registered theme hooks and include that in
   // what is returned so that the registry knows that the theme has this
@@ -1362,7 +1362,7 @@ function theme_get_setting($setting_name, $theme = NULL) {
             $cache[$theme]['favicon'] = file_create_url($favicon);
           }
           else {
-            $cache[$theme]['favicon'] = file_create_url('misc/favicon.ico');
+            $cache[$theme]['favicon'] = file_create_url('core/misc/favicon.ico');
           }
         }
         elseif ($cache[$theme]['favicon_path']) {
@@ -1776,7 +1776,7 @@ function theme_table($variables) {
 
   // Add sticky headers, if applicable.
   if (count($header) && $sticky) {
-    drupal_add_js('misc/tableheader.js');
+    drupal_add_js('core/misc/tableheader.js');
     // Add 'sticky-enabled' class to the table to identify it for JS.
     // This is needed to target tables constructed by this function.
     $attributes['class'][] = 'sticky-enabled';
@@ -1909,10 +1909,10 @@ function theme_table($variables) {
  */
 function theme_tablesort_indicator($variables) {
   if ($variables['style'] == "asc") {
-    return theme('image', array('path' => 'misc/arrow-asc.png', 'width' => 13, 'height' => 13, 'alt' => t('sort ascending'), 'title' => t('sort ascending')));
+    return theme('image', array('path' => 'core/misc/arrow-asc.png', 'width' => 13, 'height' => 13, 'alt' => t('sort ascending'), 'title' => t('sort ascending')));
   }
   else {
-    return theme('image', array('path' => 'misc/arrow-desc.png', 'width' => 13, 'height' => 13, 'alt' => t('sort descending'), 'title' => t('sort descending')));
+    return theme('image', array('path' => 'core/misc/arrow-desc.png', 'width' => 13, 'height' => 13, 'alt' => t('sort descending'), 'title' => t('sort descending')));
   }
 }
 
@@ -2046,7 +2046,7 @@ function theme_more_help_link($variables) {
  */
 function theme_feed_icon($variables) {
   $text = t('Subscribe to @feed-title', array('@feed-title' => $variables['title']));
-  if ($image = theme('image', array('path' => 'misc/feed.png', 'width' => 16, 'height' => 16, 'alt' => $text))) {
+  if ($image = theme('image', array('path' => 'core/misc/feed.png', 'width' => 16, 'height' => 16, 'alt' => $text))) {
     return l($image, $variables['url'], array('html' => TRUE, 'attributes' => array('class' => array('feed-icon'), 'title' => $text)));
   }
 }

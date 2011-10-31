@@ -18,7 +18,7 @@ class GraphUnitTest extends DrupalUnitTestCase {
   }
 
   function setUp() {
-    require_once DRUPAL_ROOT . '/includes/graph.inc';
+    require_once DRUPAL_ROOT . '/core/includes/graph.inc';
     parent::setUp();
   }
 

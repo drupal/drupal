@@ -212,7 +212,7 @@ function drupal_install_profile_distribution_name() {
  * @return
  *   The auto-detected $base_url that should be configured in settings.php
  */
-function drupal_detect_baseurl($file = 'install.php') {
+function drupal_detect_baseurl($file = 'core/install.php') {
   $proto = $_SERVER['HTTPS'] ? 'https://' : 'http://';
   $host = $_SERVER['SERVER_NAME'];
   $port = ($_SERVER['SERVER_PORT'] == 80 ? '' : ':' . $_SERVER['SERVER_PORT']);
@@ -247,13 +247,13 @@ function drupal_detect_database_types() {
 function drupal_get_database_types() {
   $databases = array();
 
-  // We define a driver as a directory in /includes/database that in turn
+  // We define a driver as a directory in /core/includes/database that in turn
   // contains a database.inc file. That allows us to drop in additional drivers
   // without modifying the installer.
   // Because we have no registry yet, we need to also include the install.inc
   // file for the driver explicitly.
-  require_once DRUPAL_ROOT . '/includes/database/database.inc';
-  foreach (file_scan_directory(DRUPAL_ROOT . '/includes/database', '/^[a-z]*$/i', array('recurse' => FALSE)) as $file) {
+  require_once DRUPAL_ROOT . '/core/includes/database/database.inc';
+  foreach (file_scan_directory(DRUPAL_ROOT . '/core/includes/database', '/^[a-z]*$/i', array('recurse' => FALSE)) as $file) {
     if (file_exists($file->uri . '/database.inc') && file_exists($file->uri . '/install.inc')) {
       $drivers[$file->filename] = $file->uri;
     }
@@ -665,8 +665,8 @@ function drupal_verify_profile($install_state) {
   $profile = $install_state['parameters']['profile'];
   $locale = $install_state['parameters']['locale'];
 
-  include_once DRUPAL_ROOT . '/includes/file.inc';
-  include_once DRUPAL_ROOT . '/includes/common.inc';
+  include_once DRUPAL_ROOT . '/core/includes/file.inc';
+  include_once DRUPAL_ROOT . '/core/includes/common.inc';
 
   $profile_file = DRUPAL_ROOT . "/profiles/$profile/$profile.profile";
 
@@ -1009,7 +1009,7 @@ function drupal_install_fix_file($file, $mask, $message = TRUE) {
  */
 function install_goto($path) {
   global $base_url;
-  include_once DRUPAL_ROOT . '/includes/common.inc';
+  include_once DRUPAL_ROOT . '/core/includes/common.inc';
   header('Location: ' . $base_url . '/' . $path);
   header('Cache-Control: no-cache'); // Not a permanent redirect.
   drupal_exit();
@@ -1108,7 +1108,7 @@ function st($string, array $args = array(), array $options = array()) {
       // that multiple files end with the same extension, even if unlikely.
       $locale_files = install_find_locale_files($install_state['parameters']['locale']);
       if (!empty($locale_files)) {
-        require_once DRUPAL_ROOT . '/includes/gettext.inc';
+        require_once DRUPAL_ROOT . '/core/includes/gettext.inc';
         foreach ($locale_files as $locale_file) {
           _locale_import_read_po('mem-store', $locale_file);
         }
@@ -1117,7 +1117,7 @@ function st($string, array $args = array(), array $options = array()) {
     }
   }
 
-  require_once DRUPAL_ROOT . '/includes/theme.inc';
+  require_once DRUPAL_ROOT . '/core/includes/theme.inc';
   // Transform arguments before inserting them
   foreach ($args as $key => $value) {
     switch ($key[0]) {
@@ -1146,7 +1146,7 @@ function st($string, array $args = array(), array $options = array()) {
  *   Array of the install profile's requirements.
  */
 function drupal_check_profile($profile) {
-  include_once DRUPAL_ROOT . '/includes/file.inc';
+  include_once DRUPAL_ROOT . '/core/includes/file.inc';
 
   $profile_file = DRUPAL_ROOT . "/profiles/$profile/$profile.profile";
 

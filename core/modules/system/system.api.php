@@ -292,7 +292,7 @@ function hook_exit($destination = NULL) {
  */
 function hook_js_alter(&$javascript) {
   // Swap out jQuery to use an updated version of the library.
-  $javascript['misc/jquery.js']['data'] = drupal_get_path('module', 'jquery_update') . '/jquery.js';
+  $javascript['core/misc/jquery.js']['data'] = drupal_get_path('module', 'jquery_update') . '/jquery.js';
 }
 
 /**
@@ -1704,10 +1704,10 @@ function hook_theme($existing, $type, $theme, $path) {
  *   'variables' => array(
  *     'account' => NULL,
  *   ),
- *   'template' => 'modules/user/user-profile',
- *   'file' => 'modules/user/user.pages.inc',
+ *   'template' => 'core/modules/user/user-profile',
+ *   'file' => 'core/modules/user/user.pages.inc',
  *   'type' => 'module',
- *   'theme path' => 'modules/user',
+ *   'theme path' => 'core/modules/user',
  *   'preprocess functions' => array(
  *     0 => 'template_preprocess',
  *     1 => 'template_preprocess_user_profile',

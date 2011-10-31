@@ -22,12 +22,12 @@ function _drupal_maintenance_theme() {
     return;
   }
 
-  require_once DRUPAL_ROOT . '/' . variable_get('path_inc', 'includes/path.inc');
-  require_once DRUPAL_ROOT . '/includes/theme.inc';
-  require_once DRUPAL_ROOT . '/includes/common.inc';
-  require_once DRUPAL_ROOT . '/includes/unicode.inc';
-  require_once DRUPAL_ROOT . '/includes/file.inc';
-  require_once DRUPAL_ROOT . '/includes/module.inc';
+  require_once DRUPAL_ROOT . '/' . variable_get('path_inc', 'core/includes/path.inc');
+  require_once DRUPAL_ROOT . '/core/includes/theme.inc';
+  require_once DRUPAL_ROOT . '/core/includes/common.inc';
+  require_once DRUPAL_ROOT . '/core/includes/unicode.inc';
+  require_once DRUPAL_ROOT . '/core/includes/file.inc';
+  require_once DRUPAL_ROOT . '/core/includes/module.inc';
   unicode_check();
 
   // Install and update pages are treated differently to prevent theming overrides.
@@ -39,7 +39,7 @@ function _drupal_maintenance_theme() {
     // environment, we need to bootstrap just enough to allow hook invocations
     // to work. See _drupal_log_error().
     if (!class_exists('Database', FALSE)) {
-      require_once DRUPAL_ROOT . '/includes/database/database.inc';
+      require_once DRUPAL_ROOT . '/core/includes/database/database.inc';
     }
 
     // We use the default theme as the maintenance theme. If a default theme
@@ -49,7 +49,7 @@ function _drupal_maintenance_theme() {
 
   // Ensure that system.module is loaded.
   if (!function_exists('_system_rebuild_theme_data')) {
-    $module_list['system']['filename'] = 'modules/system/system.module';
+    $module_list['system']['filename'] = 'core/modules/system/system.module';
     module_list(TRUE, FALSE, FALSE, $module_list);
     drupal_load('module', 'system');
   }

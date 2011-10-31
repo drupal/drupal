@@ -19,7 +19,7 @@ class UpdateDependencyOrderingTestCase extends DrupalWebTestCase {
 
   function setUp() {
     parent::setUp('update_test_1', 'update_test_2', 'update_test_3');
-    require_once DRUPAL_ROOT . '/includes/update.inc';
+    require_once DRUPAL_ROOT . '/core/includes/update.inc';
   }
 
   /**
@@ -71,7 +71,7 @@ class UpdateDependencyMissingTestCase extends DrupalWebTestCase {
     // Only install update_test_2.module, even though its updates have a
     // dependency on update_test_3.module.
     parent::setUp('update_test_2');
-    require_once DRUPAL_ROOT . '/includes/update.inc';
+    require_once DRUPAL_ROOT . '/core/includes/update.inc';
   }
 
   function testMissingUpdate() {
@@ -99,7 +99,7 @@ class UpdateDependencyHookInvocationTestCase extends DrupalWebTestCase {
 
   function setUp() {
     parent::setUp('update_test_1', 'update_test_2');
-    require_once DRUPAL_ROOT . '/includes/update.inc';
+    require_once DRUPAL_ROOT . '/core/includes/update.inc';
   }
 
   /**

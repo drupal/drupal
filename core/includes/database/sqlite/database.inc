@@ -10,7 +10,7 @@
  * @{
  */
 
-include_once DRUPAL_ROOT . '/includes/database/prefetch.inc';
+include_once DRUPAL_ROOT . '/core/includes/database/prefetch.inc';
 
 /**
  * Specific SQLite implementation of DatabaseConnection.

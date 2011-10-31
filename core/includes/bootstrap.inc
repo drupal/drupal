@@ -776,7 +776,15 @@ function drupal_settings_initialize() {
     // $_SERVER['SCRIPT_NAME'] can, in contrast to $_SERVER['PHP_SELF'], not
     // be modified by a visitor.
     if ($dir = rtrim(dirname($_SERVER['SCRIPT_NAME']), '\/')) {
-      $base_path = $dir;
+      // Remove "core" directory if present, allowing install.php, update.php,
+      // cron.php and others to auto-detect a base path.
+      $core_position = strrpos($dir, '/core');
+      if ($core_position !== FALSE && strlen($dir) - 5 == $core_position) {
+        $base_path = substr($dir, 0, $core_position);
+      }
+      else {
+        $base_path = $dir;
+      }
       $base_url .= $base_path;
       $base_path .= '/';
     }
@@ -906,7 +914,7 @@ function drupal_get_filename($type, $name, $filename = NULL) {
       if (!isset($dirs[$dir][$extension])) {
         $dirs[$dir][$extension] = TRUE;
         if (!function_exists('drupal_system_listing')) {
-          require_once DRUPAL_ROOT . '/includes/common.inc';
+          require_once DRUPAL_ROOT . '/core/includes/common.inc';
         }
         // Scan the appropriate directories for all files with the requested
         // extension, not just the file we are currently looking for. This
@@ -1670,7 +1678,7 @@ function watchdog_exception($type, Exception $exception, $message = NULL, $varia
      $variables = array();
    }
 
-   require_once DRUPAL_ROOT . '/includes/errors.inc';
+   require_once DRUPAL_ROOT . '/core/includes/errors.inc';
    $variables += _drupal_decode_exception($exception);
    watchdog($type, $message, $variables, $severity, $link);
 }
@@ -2138,7 +2146,7 @@ function drupal_bootstrap($phase = NULL, $new_phase = TRUE) {
           break;
 
         case DRUPAL_BOOTSTRAP_SESSION:
-          require_once DRUPAL_ROOT . '/' . variable_get('session_inc', 'includes/session.inc');
+          require_once DRUPAL_ROOT . '/' . variable_get('session_inc', 'core/includes/session.inc');
           drupal_session_initialize();
           break;
 
@@ -2151,7 +2159,7 @@ function drupal_bootstrap($phase = NULL, $new_phase = TRUE) {
           break;
 
         case DRUPAL_BOOTSTRAP_FULL:
-          require_once DRUPAL_ROOT . '/includes/common.inc';
+          require_once DRUPAL_ROOT . '/core/includes/common.inc';
           _drupal_bootstrap_full();
           break;
       }
@@ -2190,7 +2198,7 @@ function drupal_get_user_timezone() {
  *   An array that points to the active symbol table at the point the error occurred.
  */
 function _drupal_error_handler($error_level, $message, $filename, $line, $context) {
-  require_once DRUPAL_ROOT . '/includes/errors.inc';
+  require_once DRUPAL_ROOT . '/core/includes/errors.inc';
   _drupal_error_handler_real($error_level, $message, $filename, $line, $context);
 }
 
@@ -2205,7 +2213,7 @@ function _drupal_error_handler($error_level, $message, $filename, $line, $contex
  *   The exception object that was thrown.
  */
 function _drupal_exception_handler($exception) {
-  require_once DRUPAL_ROOT . '/includes/errors.inc';
+  require_once DRUPAL_ROOT . '/core/includes/errors.inc';
 
   try {
     // Log the message to the watchdog and return an error page to the user.
@@ -2237,7 +2245,7 @@ function _drupal_bootstrap_configuration() {
   drupal_settings_initialize();
 
   // Hook up the Symfony ClassLoader for loading PSR-0-compatible classes.
-  require_once(DRUPAL_ROOT . '/includes/Symfony/Component/ClassLoader/UniversalClassLoader.php');
+  require_once(DRUPAL_ROOT . '/core/includes/Symfony/Component/ClassLoader/UniversalClassLoader.php');
 
   // By default, use the UniversalClassLoader which is best for development,
   // as it does not break when code is moved on the file system. It is slow,
@@ -2246,7 +2254,7 @@ function _drupal_bootstrap_configuration() {
   switch (variable_get('autoloader_mode', 'default')) {
     case 'apc':
       if (function_exists('apc_store')) {
-        require_once(DRUPAL_ROOT . '/includes/Symfony/Component/ClassLoader/ApcUniversalClassLoader.php');
+        require_once(DRUPAL_ROOT . '/core/includes/Symfony/Component/ClassLoader/ApcUniversalClassLoader.php');
         $loader = new \Symfony\Component\ClassLoader\ApcUniversalClassLoader('drupal.' . $GLOBALS['drupal_hash_salt']);
         break;
       }
@@ -2261,10 +2269,10 @@ function _drupal_bootstrap_configuration() {
 
   // Register classes with namespaces.
   $loader->registerNamespaces(array(
-    // All Symfony-borrowed code lives in /includes/Symfony.
-    'Symfony' => DRUPAL_ROOT . '/includes',
-    // All Drupal-namespaced code in core lives in /includes/Drupal.
-    'Drupal' => DRUPAL_ROOT . '/includes',
+    // All Symfony-borrowed code lives in /core/includes/Symfony.
+    'Symfony' => DRUPAL_ROOT . '/core/includes',
+    // All Drupal-namespaced code in core lives in /core/includes/Drupal.
+    'Drupal' => DRUPAL_ROOT . '/core/includes',
   ));
 
   // Activate the autoloader.
@@ -2279,7 +2287,7 @@ function _drupal_bootstrap_page_cache() {
 
   // Allow specifying special cache handlers in settings.php, like
   // using memcached or files for storing cache information.
-  require_once DRUPAL_ROOT . '/includes/cache.inc';
+  require_once DRUPAL_ROOT . '/core/includes/cache.inc';
   foreach (variable_get('cache_backends', array()) as $include) {
     require_once DRUPAL_ROOT . '/' . $include;
   }
@@ -2335,8 +2343,8 @@ function _drupal_bootstrap_database() {
   // installed yet (i.e., if no $databases array has been defined in the
   // settings.php file) and we are not already installing.
   if (empty($GLOBALS['databases']) && !drupal_installation_attempted()) {
-    include_once DRUPAL_ROOT . '/includes/install.inc';
-    install_goto('install.php');
+    include_once DRUPAL_ROOT . '/core/includes/install.inc';
+    install_goto('core/install.php');
   }
 
   // The user agent header is used to pass a database prefix in the request when
@@ -2369,7 +2377,7 @@ function _drupal_bootstrap_database() {
 
   // Initialize the database system. Note that the connection
   // won't be initialized until it is actually requested.
-  require_once DRUPAL_ROOT . '/includes/database/database.inc';
+  require_once DRUPAL_ROOT . '/core/includes/database/database.inc';
 
   // Register autoload functions so that we can access classes and interfaces.
   // The database autoload routine comes first so that we can load the database
@@ -2386,13 +2394,13 @@ function _drupal_bootstrap_variables() {
   global $conf;
 
   // Initialize the lock system.
-  require_once DRUPAL_ROOT . '/' . variable_get('lock_inc', 'includes/lock.inc');
+  require_once DRUPAL_ROOT . '/' . variable_get('lock_inc', 'core/includes/lock.inc');
   lock_initialize();
 
   // Load variables from the database, but do not overwrite variables set in settings.php.
   $conf = variable_initialize(isset($conf) ? $conf : array());
   // Load bootstrap modules.
-  require_once DRUPAL_ROOT . '/includes/module.inc';
+  require_once DRUPAL_ROOT . '/core/includes/module.inc';
   module_load_all(TRUE);
 }
 
@@ -2484,7 +2492,7 @@ function drupal_generate_test_ua($prefix) {
  * @see _drupal_maintenance_theme()
  */
 function drupal_maintenance_theme() {
-  require_once DRUPAL_ROOT . '/includes/theme.maintenance.inc';
+  require_once DRUPAL_ROOT . '/core/includes/theme.maintenance.inc';
   _drupal_maintenance_theme();
 }
 
@@ -2574,7 +2582,7 @@ function drupal_language_initialize() {
     $GLOBALS[$type] = $default;
   }
   if (drupal_multilingual()) {
-    include_once DRUPAL_ROOT . '/includes/language.inc';
+    include_once DRUPAL_ROOT . '/core/includes/language.inc';
     foreach ($types as $type) {
       $GLOBALS[$type] = language_initialize($type);
     }
@@ -2930,7 +2938,7 @@ function drupal_get_complete_schema($rebuild = FALSE) {
         module_load_all_includes('install');
       }
 
-      require_once DRUPAL_ROOT . '/includes/common.inc';
+      require_once DRUPAL_ROOT . '/core/includes/common.inc';
       // Invoke hook_schema for all modules.
       foreach (module_implements('schema') as $module) {
         // Cast the result of hook_schema() to an array, as a NULL return value
@@ -3099,7 +3107,7 @@ function registry_rebuild() {
  * @see registry_rebuild()
  */
 function registry_update() {
-  require_once DRUPAL_ROOT . '/includes/registry.inc';
+  require_once DRUPAL_ROOT . '/core/includes/registry.inc';
   _registry_update();
 }
 
@@ -3341,7 +3349,7 @@ function _drupal_shutdown_function() {
   }
   catch (Exception $exception) {
     // If we are displaying errors, then do so with no possibility of a further uncaught exception being thrown.
-   require_once DRUPAL_ROOT . '/includes/errors.inc';
+   require_once DRUPAL_ROOT . '/core/includes/errors.inc';
    if (error_displayable()) {
       print '<h1>Uncaught exception thrown in shutdown function.</h1>';
       print '<p>' . _drupal_render_exception_safe($exception) . '</p><hr />';

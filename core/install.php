@@ -5,6 +5,9 @@
  * Initiates a browser-based installation of Drupal.
  */
 
+// Change the directory to the Drupal root.
+chdir('..');
+
 /**
  * Root directory of Drupal installation.
  */
@@ -25,5 +28,5 @@ if (version_compare(PHP_VERSION, '5.3.2') < 0) {
 }
 
 // Start the installer.
-require_once DRUPAL_ROOT . '/includes/install.core.inc';
+require_once DRUPAL_ROOT . '/core/includes/install.core.inc';
 install_drupal();

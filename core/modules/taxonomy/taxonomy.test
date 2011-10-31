@@ -370,7 +370,7 @@ class TaxonomyVocabularyUnitTest extends TaxonomyWebTestCase {
 
     module_disable(array('taxonomy'));
     drupal_flush_all_caches();
-    require_once DRUPAL_ROOT . '/includes/install.inc';
+    require_once DRUPAL_ROOT . '/core/includes/install.inc';
     drupal_uninstall_modules(array('taxonomy'));
     module_enable(array('taxonomy'));
 

@@ -379,7 +379,7 @@ class BatchPercentagesUnitTestCase extends DrupalUnitTestCase {
       '80' => array('total' => 1, 'current' => 400/501),
       '99.8' => array('total' => 1, 'current' => 500/501),
     );
-    require_once DRUPAL_ROOT . '/includes/batch.inc';
+    require_once DRUPAL_ROOT . '/core/includes/batch.inc';
     parent::setUp();
   }
 

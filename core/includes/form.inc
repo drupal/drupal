@@ -3221,7 +3221,7 @@ function theme_tableselect($variables) {
     // checkboxes/radios in the first table column.
     if ($element['#js_select']) {
       // Add a "Select all" checkbox.
-      drupal_add_js('misc/tableselect.js');
+      drupal_add_js('core/misc/tableselect.js');
       array_unshift($header, array('class' => array('select-all')));
     }
     else {
@@ -3388,7 +3388,7 @@ function form_process_machine_name($element, &$form_state) {
       ),
     ),
   );
-  $element['#attached']['js'][] = 'misc/machine-name.js';
+  $element['#attached']['js'][] = 'core/misc/machine-name.js';
   $element['#attached']['js'][] = $js_settings;
 
   return $element;
@@ -4375,7 +4375,7 @@ function batch_process($redirect = NULL, $url = 'batch', $redirect_callback = 'd
     else {
       // Non-progressive execution: bypass the whole progressbar workflow
       // and execute the batch in one pass.
-      require_once DRUPAL_ROOT . '/includes/batch.inc';
+      require_once DRUPAL_ROOT . '/core/includes/batch.inc';
       _batch_process();
     }
   }
@@ -4444,8 +4444,8 @@ function _batch_queue($batch_set) {
   // sure the files are manually included.
   if (!isset($queues)) {
     $queues = array();
-    require_once DRUPAL_ROOT . '/modules/system/system.queue.inc';
-    require_once DRUPAL_ROOT . '/includes/batch.queue.inc';
+    require_once DRUPAL_ROOT . '/core/modules/system/system.queue.inc';
+    require_once DRUPAL_ROOT . '/core/includes/batch.queue.inc';
   }
 
   if (isset($batch_set['queue'])) {

@@ -12,7 +12,7 @@
  * File API is needed before a bootstrap, or in an alternate order (e.g.
  * maintenance theme).
  */
-require_once DRUPAL_ROOT . '/includes/stream_wrappers.inc';
+require_once DRUPAL_ROOT . '/core/includes/stream_wrappers.inc';
 
 /**
  * @defgroup file File interface

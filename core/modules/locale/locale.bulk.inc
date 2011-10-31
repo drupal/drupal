@@ -5,7 +5,7 @@
  * Mass import-export and batch import functionality for Gettext .po files.
  */
 
-include_once DRUPAL_ROOT . '/includes/gettext.inc';
+include_once DRUPAL_ROOT . '/core/includes/gettext.inc';
 
 /**
  * User interface for the translation import screen.
@@ -70,7 +70,7 @@ function locale_translate_import_form_submit($form, &$form_state) {
     $languages = language_list('language');
     $langcode = $form_state['values']['langcode'];
     if (!isset($languages[$langcode])) {
-      include_once DRUPAL_ROOT . '/includes/standard.inc';
+      include_once DRUPAL_ROOT . '/core/includes/standard.inc';
       $predefined = standard_language_list();
       $language = (object) array(
         'language' => $langcode,

@@ -29,9 +29,9 @@ function _registry_update() {
   // registry rebuild process runs.
   $connection_info = Database::getConnectionInfo();
   $driver = $connection_info['default']['driver'];
-  require_once DRUPAL_ROOT . '/includes/database/query.inc';
-  require_once DRUPAL_ROOT . '/includes/database/select.inc';
-  require_once DRUPAL_ROOT . '/includes/database/' . $driver . '/query.inc';
+  require_once DRUPAL_ROOT . '/core/includes/database/query.inc';
+  require_once DRUPAL_ROOT . '/core/includes/database/select.inc';
+  require_once DRUPAL_ROOT . '/core/includes/database/' . $driver . '/query.inc';
 
   // Get current list of modules and their files.
   $modules = db_query("SELECT * FROM {system} WHERE type = 'module'")->fetchAll();
@@ -51,7 +51,7 @@ function _registry_update() {
       }
     }
   }
-  foreach (file_scan_directory('includes', '/\.inc$/') as $filename => $file) {
+  foreach (file_scan_directory('core/includes', '/\.inc$/') as $filename => $file) {
     $files["$filename"] = array('module' => '', 'weight' => 0);
   }
 

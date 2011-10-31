@@ -361,7 +361,7 @@ function locale_languages_add_custom_form_submit($form, &$form_state) {
 function locale_languages_add_predefined_form_submit($form, &$form_state) {
   // Predefined language selection.
   $langcode = $form_state['values']['predefined_langcode'];
-  include_once DRUPAL_ROOT . '/includes/standard.inc';
+  include_once DRUPAL_ROOT . '/core/includes/standard.inc';
   $predefined = standard_language_list();
   $language = (object) array(
     'language' => $langcode,
@@ -457,7 +457,7 @@ function locale_languages_delete_form_submit($form, &$form_state) {
  * Setting for language negotiation options
  */
 function locale_languages_configure_form() {
-  include_once DRUPAL_ROOT . '/includes/language.inc';
+  include_once DRUPAL_ROOT . '/core/includes/language.inc';
 
   $form = array(
     '#submit' => array('locale_languages_configure_form_submit'),
@@ -944,7 +944,7 @@ function locale_date_format_form($form, &$form_state, $langcode) {
  * Submit handler for configuring localized date formats on the locale_date_format_form.
  */
 function locale_date_format_form_submit($form, &$form_state) {
-  include_once DRUPAL_ROOT . '/includes/locale.inc';
+  include_once DRUPAL_ROOT . '/core/includes/locale.inc';
   $langcode = $form_state['values']['langcode'];
 
   // Get list of date format types.

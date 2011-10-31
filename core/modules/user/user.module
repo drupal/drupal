@@ -392,7 +392,7 @@ function user_save($account, $edit = array(), $category = 'account') {
   try {
     if (!empty($edit['pass'])) {
       // Allow alternate password hashing schemes.
-      require_once DRUPAL_ROOT . '/' . variable_get('password_inc', 'includes/password.inc');
+      require_once DRUPAL_ROOT . '/' . variable_get('password_inc', 'core/includes/password.inc');
       $edit['pass'] = user_hash_password(trim($edit['pass']));
       // Abort if the hashing failed and returned FALSE.
       if (!$edit['pass']) {
@@ -1149,7 +1149,7 @@ function user_validate_current_pass(&$form, &$form_state) {
     // form values like password_confirm that have their own validation
     // that prevent them from being empty if they are changed.
     if ((strlen(trim($form_state['values'][$key])) > 0) && ($form_state['values'][$key] != $account->$key)) {
-      require_once DRUPAL_ROOT . '/' . variable_get('password_inc', 'includes/password.inc');
+      require_once DRUPAL_ROOT . '/' . variable_get('password_inc', 'core/includes/password.inc');
       $current_pass_failed = empty($form_state['values']['current_pass']) || !user_check_password($form_state['values']['current_pass'], $account);
       if ($current_pass_failed) {
         form_set_error('current_pass', t("Your current password is missing or incorrect; it's required to change the %name.", array('%name' => $name)));
@@ -2155,7 +2155,7 @@ function user_authenticate($name, $password) {
     $account = user_load_by_name($name);
     if ($account) {
       // Allow alternate password hashing schemes.
-      require_once DRUPAL_ROOT . '/' . variable_get('password_inc', 'includes/password.inc');
+      require_once DRUPAL_ROOT . '/' . variable_get('password_inc', 'core/includes/password.inc');
       if (user_check_password($password, $account)) {
         // Successful authentication.
         $uid = $account->uid;

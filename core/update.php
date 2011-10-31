@@ -1,15 +1,10 @@
 <?php
 
 /**
- * Root directory of Drupal installation.
- */
-define('DRUPAL_ROOT', getcwd());
-
-/**
  * @file
  * Administrative page for handling updates from one Drupal version to another.
  *
- * Point your browser to "http://www.example.com/update.php" and follow the
+ * Point your browser to "http://www.example.com/core/update.php" and follow the
  * instructions.
  *
  * If you are not logged in using either the site maintenance account or an
@@ -18,6 +13,14 @@ define('DRUPAL_ROOT', getcwd());
  * finishing the upgrade, be sure to open settings.php again, and change it
  * back to its original state!
  */
+
+// Change the directory to the Drupal root.
+chdir('..');
+
+/**
+ * Root directory of Drupal installation.
+ */
+define('DRUPAL_ROOT', getcwd());
 
 /**
  * Global flag indicating that update.php is being run.
@@ -140,7 +143,7 @@ function update_script_selection_form($form, &$form_state) {
 
 function update_helpful_links() {
   // NOTE: we can't use l() here because the URL would point to
-  // 'update.php?q=admin'.
+  // 'core/update.php?q=admin'.
   $links[] = '<a href="' . base_path() . '">Front page</a>';
   $links[] = '<a href="' . base_path() . '?q=admin">Administration pages</a>';
   return $links;
@@ -348,11 +351,11 @@ ini_set('display_errors', FALSE);
 
 // We prepare a minimal bootstrap for the update requirements check to avoid
 // reaching the PHP memory limit.
-require_once DRUPAL_ROOT . '/includes/bootstrap.inc';
-require_once DRUPAL_ROOT . '/includes/update.inc';
-require_once DRUPAL_ROOT . '/includes/common.inc';
-require_once DRUPAL_ROOT . '/includes/file.inc';
-require_once DRUPAL_ROOT . '/includes/unicode.inc';
+require_once DRUPAL_ROOT . '/core/includes/bootstrap.inc';
+require_once DRUPAL_ROOT . '/core/includes/update.inc';
+require_once DRUPAL_ROOT . '/core/includes/common.inc';
+require_once DRUPAL_ROOT . '/core/includes/file.inc';
+require_once DRUPAL_ROOT . '/core/includes/unicode.inc';
 update_prepare_d8_bootstrap();
 
 // Determine if the current user has access to run update.php.
@@ -363,12 +366,12 @@ drupal_bootstrap(DRUPAL_BOOTSTRAP_SESSION);
 // configuration).
 $op = isset($_REQUEST['op']) ? $_REQUEST['op'] : '';
 if (empty($op) && update_access_allowed()) {
-  require_once DRUPAL_ROOT . '/includes/install.inc';
-  require_once DRUPAL_ROOT . '/modules/system/system.install';
+  require_once DRUPAL_ROOT . '/core/includes/install.inc';
+  require_once DRUPAL_ROOT . '/core/modules/system/system.install';
 
   // Load module basics.
-  include_once DRUPAL_ROOT . '/includes/module.inc';
-  $module_list['system']['filename'] = 'modules/system/system.module';
+  include_once DRUPAL_ROOT . '/core/includes/module.inc';
+  $module_list['system']['filename'] = 'core/modules/system/system.module';
   module_list(TRUE, FALSE, FALSE, $module_list);
   drupal_load('module', 'system');
 
@@ -387,14 +390,14 @@ if (empty($op) && update_access_allowed()) {
   update_check_requirements(TRUE);
 
   // Redirect to the update information page if all requirements were met.
-  install_goto('update.php?op=info');
+  install_goto('core/update.php?op=info');
 }
 
 // update_fix_d8_requirements() needs to run before bootstrapping beyond path.
 // So bootstrap to DRUPAL_BOOTSTRAP_LANGUAGE then include unicode.inc.
 
 drupal_bootstrap(DRUPAL_BOOTSTRAP_LANGUAGE);
-include_once DRUPAL_ROOT . '/includes/unicode.inc';
+include_once DRUPAL_ROOT . '/core/includes/unicode.inc';
 
 update_fix_d8_requirements();
 
@@ -410,8 +413,8 @@ ini_set('display_errors', TRUE);
 // Only proceed with updates if the user is allowed to run them.
 if (update_access_allowed()) {
 
-  include_once DRUPAL_ROOT . '/includes/install.inc';
-  include_once DRUPAL_ROOT . '/includes/batch.inc';
+  include_once DRUPAL_ROOT . '/core/includes/install.inc';
+  include_once DRUPAL_ROOT . '/core/includes/batch.inc';
   drupal_load_updates();
 
   update_fix_compatibility();

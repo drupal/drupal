@@ -312,7 +312,7 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
     if (!isset($mapping)) {
       // The default file map, defined in file.mimetypes.inc is quite big.
       // We only load it when necessary.
-      include_once DRUPAL_ROOT . '/includes/file.mimetypes.inc';
+      include_once DRUPAL_ROOT . '/core/includes/file.mimetypes.inc';
       $mapping = file_mimetype_mapping();
     }
 

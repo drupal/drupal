@@ -219,7 +219,7 @@ function _drupal_session_write($sid, $value) {
     return TRUE;
   }
   catch (Exception $exception) {
-    require_once DRUPAL_ROOT . '/includes/errors.inc';
+    require_once DRUPAL_ROOT . '/core/includes/errors.inc';
     // If we are displaying errors, then do so with no possibility of a further
     // uncaught exception being thrown.
     if (error_displayable()) {

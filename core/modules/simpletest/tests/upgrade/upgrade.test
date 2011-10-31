@@ -42,7 +42,7 @@ abstract class UpgradePathTestCase extends DrupalWebTestCase {
     }
 
     // Load the Update API.
-    require_once DRUPAL_ROOT . '/includes/update.inc';
+    require_once DRUPAL_ROOT . '/core/includes/update.inc';
 
     // Reset flags.
     $this->upgradedSite = FALSE;
@@ -243,7 +243,7 @@ abstract class UpgradePathTestCase extends DrupalWebTestCase {
    *   TRUE if the upgrade succeeded, FALSE otherwise.
    */
   protected function performUpgrade($register_errors = TRUE) {
-    $update_url = $GLOBALS['base_url'] . '/update.php';
+    $update_url = $GLOBALS['base_url'] . '/core/update.php';
 
     if (!empty($this->missing_zlib_requirement)) {
       $this->fail(t('Missing zlib requirement for upgrade tests.'));

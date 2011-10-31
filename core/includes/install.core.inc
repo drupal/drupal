@@ -222,7 +222,7 @@ function install_begin_request(&$install_state) {
   }
 
   // Allow command line scripts to override server variables used by Drupal.
-  require_once DRUPAL_ROOT . '/includes/bootstrap.inc';
+  require_once DRUPAL_ROOT . '/core/includes/bootstrap.inc';
   if (!$install_state['interactive']) {
     drupal_override_server_variables($install_state['server']);
   }
@@ -240,23 +240,23 @@ function install_begin_request(&$install_state) {
   // This must go after drupal_bootstrap(), which unsets globals!
   global $conf;
 
-  require_once DRUPAL_ROOT . '/modules/system/system.install';
-  require_once DRUPAL_ROOT . '/includes/common.inc';
-  require_once DRUPAL_ROOT . '/includes/file.inc';
-  require_once DRUPAL_ROOT . '/includes/install.inc';
-  require_once DRUPAL_ROOT . '/' . variable_get('path_inc', 'includes/path.inc');
+  require_once DRUPAL_ROOT . '/core/modules/system/system.install';
+  require_once DRUPAL_ROOT . '/core/includes/common.inc';
+  require_once DRUPAL_ROOT . '/core/includes/file.inc';
+  require_once DRUPAL_ROOT . '/core/includes/install.inc';
+  require_once DRUPAL_ROOT . '/' . variable_get('path_inc', 'core/includes/path.inc');
 
   // Load module basics (needed for hook invokes).
-  include_once DRUPAL_ROOT . '/includes/module.inc';
-  include_once DRUPAL_ROOT . '/includes/session.inc';
+  include_once DRUPAL_ROOT . '/core/includes/module.inc';
+  include_once DRUPAL_ROOT . '/core/includes/session.inc';
 
   // Set up $language, so t() caller functions will still work.
   drupal_language_initialize();
 
-  require_once DRUPAL_ROOT . '/includes/ajax.inc';
-  $module_list['system']['filename'] = 'modules/system/system.module';
-  $module_list['entity']['filename'] = 'modules/entity/entity.module';
-  $module_list['user']['filename']   = 'modules/user/user.module';
+  require_once DRUPAL_ROOT . '/core/includes/ajax.inc';
+  $module_list['system']['filename'] = 'core/modules/system/system.module';
+  $module_list['entity']['filename'] = 'core/modules/entity/entity.module';
+  $module_list['user']['filename']   = 'core/modules/user/user.module';
   module_list(TRUE, FALSE, FALSE, $module_list);
   drupal_load('module', 'system');
   drupal_load('module', 'entity');
@@ -271,8 +271,8 @@ function install_begin_request(&$install_state) {
   // continue using the cache implementation they started with) and also
   // because any data put in the cache during the installer is inherently
   // suspect, due to the fact that Drupal is not fully set up yet.
-  require_once DRUPAL_ROOT . '/includes/cache.inc';
-  require_once DRUPAL_ROOT . '/includes/cache-install.inc';
+  require_once DRUPAL_ROOT . '/core/includes/cache.inc';
+  require_once DRUPAL_ROOT . '/core/includes/cache-install.inc';
   $conf['cache_default_class'] = 'DrupalFakeCache';
 
   // Prepare for themed output. We need to run this at the beginning of the
@@ -288,7 +288,7 @@ function install_begin_request(&$install_state) {
   if ($install_state['settings_verified']) {
     // Initialize the database system. Note that the connection
     // won't be initialized until it is actually requested.
-    require_once DRUPAL_ROOT . '/includes/database/database.inc';
+    require_once DRUPAL_ROOT . '/core/includes/database/database.inc';
 
     // Verify the last completed task in the database, if there is one.
     $task = install_verify_completed_task();
@@ -378,7 +378,7 @@ function install_run_task($task, &$install_state) {
   $function = $task['function'];
 
   if ($task['type'] == 'form') {
-    require_once DRUPAL_ROOT . '/includes/form.inc';
+    require_once DRUPAL_ROOT . '/core/includes/form.inc';
     if ($install_state['interactive']) {
       // For interactive forms, build the form and ensure that it will not
       // redirect, since the installer handles its own redirection only after
@@ -449,7 +449,7 @@ function install_run_task($task, &$install_state) {
     // If we are in the middle of processing this batch, keep sending back
     // any output from the batch process, until the task is complete.
     elseif ($current_batch == $function) {
-      include_once DRUPAL_ROOT . '/includes/batch.inc';
+      include_once DRUPAL_ROOT . '/core/includes/batch.inc';
       $output = _batch_page();
       // The task is complete when we try to access the batch page and receive
       // FALSE in return, since this means we are at a URL where we are no
@@ -657,7 +657,7 @@ function install_tasks_to_display($install_state) {
  * @see install_full_redirect_url()
  */
 function install_redirect_url($install_state) {
-  return 'install.php?' . drupal_http_build_query($install_state['parameters']);
+  return 'core/install.php?' . drupal_http_build_query($install_state['parameters']);
 }
 
 /**
@@ -1020,7 +1020,7 @@ function install_select_profile(&$install_state) {
       // yet), rather just a convenience method for setting parameters in the
       // URL.
       if ($install_state['interactive']) {
-        include_once DRUPAL_ROOT . '/includes/form.inc';
+        include_once DRUPAL_ROOT . '/core/includes/form.inc';
         drupal_set_title(st('Select an installation profile'));
         $form = drupal_get_form('install_select_profile_form', $install_state['profiles']);
         return drupal_render($form);
@@ -1206,7 +1206,7 @@ function install_select_locale(&$install_state) {
           $output .= '</ul>';
         }
         else {
-          include_once DRUPAL_ROOT . '/includes/form.inc';
+          include_once DRUPAL_ROOT . '/core/includes/form.inc';
           $elements = drupal_get_form('install_select_locale_form', $locales, $profilename);
           $output = drupal_render($elements);
         }
@@ -1240,7 +1240,7 @@ function install_select_locale(&$install_state) {
       // URL.
       if ($install_state['interactive']) {
         drupal_set_title(st('Choose language'));
-        include_once DRUPAL_ROOT . '/includes/form.inc';
+        include_once DRUPAL_ROOT . '/core/includes/form.inc';
         $elements = drupal_get_form('install_select_locale_form', $locales, $profilename);
         return drupal_render($elements);
       }
@@ -1255,7 +1255,7 @@ function install_select_locale(&$install_state) {
  * Form API array definition for language selection.
  */
 function install_select_locale_form($form, &$form_state, $locales, $profilename) {
-  include_once DRUPAL_ROOT . '/includes/standard.inc';
+  include_once DRUPAL_ROOT . '/core/includes/standard.inc';
   $languages = standard_language_list();
   foreach ($locales as $locale) {
     $name = $locale->langcode;
@@ -1393,11 +1393,11 @@ function install_profile_modules(&$install_state) {
  *   The batch definition, if there are language files to import.
  */
 function install_import_locales(&$install_state) {
-  include_once DRUPAL_ROOT . '/includes/locale.inc';
+  include_once DRUPAL_ROOT . '/core/includes/locale.inc';
   include_once drupal_get_path('module', 'locale') . '/locale.bulk.inc';
   $install_locale = $install_state['parameters']['locale'];
 
-  include_once DRUPAL_ROOT . '/includes/standard.inc';
+  include_once DRUPAL_ROOT . '/core/includes/standard.inc';
   $predefined = standard_language_list();
   if (!isset($predefined[$install_locale])) {
     // Drupal does not know about this language, so we prefill its values with
@@ -1462,7 +1462,7 @@ function install_configure_form($form, &$form_state, &$install_state) {
 
   drupal_add_js(drupal_get_path('module', 'system') . '/system.js');
   // Add JavaScript time zone detection.
-  drupal_add_js('misc/timezone.js');
+  drupal_add_js('core/misc/timezone.js');
   // We add these strings as settings because JavaScript translation does not
   // work on install time.
   drupal_add_js(array('copyFieldValue' => array('edit-site-mail' => array('edit-account-mail'))), 'setting');
@@ -1656,7 +1656,7 @@ function install_check_requirements($install_state) {
         'title'       => st('Settings file'),
         'value'       => st('The settings file does not exist.'),
         'severity'    => REQUIREMENT_ERROR,
-        'description' => st('The @drupal installer requires that you create a settings file as part of the installation process. Copy the %default_file file to %file. More details about installing Drupal are available in <a href="@install_txt">INSTALL.txt</a>.', array('@drupal' => drupal_install_profile_distribution_name(), '%file' => $file, '%default_file' => $default_settings_file, '@install_txt' => base_path() . 'INSTALL.txt')),
+        'description' => st('The @drupal installer requires that you create a settings file as part of the installation process. Copy the %default_file file to %file. More details about installing Drupal are available in <a href="@install_txt">INSTALL.txt</a>.', array('@drupal' => drupal_install_profile_distribution_name(), '%file' => $file, '%default_file' => $default_settings_file, '@install_txt' => base_path() . 'core/INSTALL.txt')),
       );
     }
     else {
@@ -1684,7 +1684,7 @@ function install_check_requirements($install_state) {
           'title'       => st('Settings file'),
           'value'       => st('The settings file is owned by the web server.'),
           'severity'    => REQUIREMENT_ERROR,
-          'description' => st('The @drupal installer failed to create a settings file with proper file ownership. Log on to your web server, remove the existing %file file, and create a new one by copying the %default_file file to %file. More details about installing Drupal are available in <a href="@install_txt">INSTALL.txt</a>. If you have problems with the file permissions on your server, consult the <a href="@handbook_url">online handbook</a>.', array('@drupal' => drupal_install_profile_distribution_name(), '%file' => $file, '%default_file' => $default_settings_file, '@install_txt' => base_path() . 'INSTALL.txt', '@handbook_url' => 'http://drupal.org/server-permissions')),
+          'description' => st('The @drupal installer failed to create a settings file with proper file ownership. Log on to your web server, remove the existing %file file, and create a new one by copying the %default_file file to %file. More details about installing Drupal are available in <a href="@install_txt">INSTALL.txt</a>. If you have problems with the file permissions on your server, consult the <a href="@handbook_url">online handbook</a>.', array('@drupal' => drupal_install_profile_distribution_name(), '%file' => $file, '%default_file' => $default_settings_file, '@install_txt' => base_path() . 'core/INSTALL.txt', '@handbook_url' => 'http://drupal.org/server-permissions')),
         );
       }
     }
@@ -1696,7 +1696,7 @@ function install_check_requirements($install_state) {
  * Forms API array definition for site configuration.
  */
 function _install_configure_form($form, &$form_state, &$install_state) {
-  include_once DRUPAL_ROOT . '/includes/locale.inc';
+  include_once DRUPAL_ROOT . '/core/includes/locale.inc';
 
   $form['site_information'] = array(
     '#type' => 'fieldset',

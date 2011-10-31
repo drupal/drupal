@@ -13,9 +13,9 @@
  * test helper functions
  */
 
-require_once DRUPAL_ROOT . '/modules/field/tests/field_test.entity.inc';
-require_once DRUPAL_ROOT . '/modules/field/tests/field_test.field.inc';
-require_once DRUPAL_ROOT . '/modules/field/tests/field_test.storage.inc';
+require_once DRUPAL_ROOT . '/core/modules/field/tests/field_test.entity.inc';
+require_once DRUPAL_ROOT . '/core/modules/field/tests/field_test.field.inc';
+require_once DRUPAL_ROOT . '/core/modules/field/tests/field_test.storage.inc';
 
 /**
  * Implements hook_permission().

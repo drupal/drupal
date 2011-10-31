@@ -480,7 +480,7 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
     $this->drupalPost($url, $edit, t('Save translations'));
 
     // Trigger JavaScript translation parsing and building.
-    require_once DRUPAL_ROOT . '/includes/locale.inc';
+    require_once DRUPAL_ROOT . '/core/includes/locale.inc';
     _locale_rebuild_js($langcode);
 
     // Retrieve the JavaScript translation hash code for the custom language to
@@ -1162,7 +1162,7 @@ class LocaleInstallTest extends DrupalWebTestCase {
     parent::setUp('locale');
 
     // st() lives in install.inc, so ensure that it is loaded for all tests.
-    require_once DRUPAL_ROOT . '/includes/install.inc';
+    require_once DRUPAL_ROOT . '/core/includes/install.inc';
   }
 
   /**
@@ -1204,7 +1204,7 @@ class LocaleUninstallFunctionalTest extends DrupalWebTestCase {
     $locale_module = array('locale');
 
     // Add a new language and optionally set it as default.
-    require_once DRUPAL_ROOT . '/includes/locale.inc';
+    require_once DRUPAL_ROOT . '/core/includes/locale.inc';
 
     $language = (object) array(
       'language' => 'fr',
@@ -1270,7 +1270,7 @@ class LocaleUninstallFunctionalTest extends DrupalWebTestCase {
     $this->assertEqual($language_count, 1, t('Language count: %count', array('%count' => $language_count)));
 
     // Check language negotiation.
-    require_once DRUPAL_ROOT . '/includes/language.inc';
+    require_once DRUPAL_ROOT . '/core/includes/language.inc';
     $this->assertTrue(count(language_types()) == count(drupal_language_types()), t('Language types reset'));
     $language_negotiation = language_negotiation_get(LANGUAGE_TYPE_INTERFACE) == LANGUAGE_NEGOTIATION_DEFAULT;
     $this->assertTrue($language_negotiation, t('Interface language negotiation: %setting', array('%setting' => t($language_negotiation ? 'none' : 'set'))));
@@ -1421,7 +1421,7 @@ class LocaleBrowserDetectionTest extends DrupalUnitTestCase {
    */
   function testLanguageFromBrowser() {
     // Load the required functions.
-    require_once DRUPAL_ROOT . '/includes/locale.inc';
+    require_once DRUPAL_ROOT . '/core/includes/locale.inc';
 
     $languages = array(
       // In our test case, 'en' has priority over 'en-US'.
@@ -1997,7 +1997,7 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
 
   function setUp() {
     parent::setUp('locale', 'locale_test');
-    require_once DRUPAL_ROOT . '/includes/language.inc';
+    require_once DRUPAL_ROOT . '/core/includes/language.inc';
     drupal_load('module', 'locale');
     $admin_user = $this->drupalCreateUser(array('administer languages', 'translate interface', 'access administration pages', 'administer blocks'));
     $this->drupalLogin($admin_user);
@@ -2023,7 +2023,7 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
     $language_domain = 'example.cn';
 
     // Setup the site languages by installing two languages.
-    require_once DRUPAL_ROOT . '/includes/locale.inc';
+    require_once DRUPAL_ROOT . '/core/includes/locale.inc';
     $language = (object) array(
       'language' => $langcode_browser_fallback,
     );
@@ -2317,7 +2317,7 @@ class LocaleMultilingualFieldsFunctionalTest extends DrupalWebTestCase {
     $this->drupalLogin($admin_user);
 
     // Add a new language.
-    require_once DRUPAL_ROOT . '/includes/locale.inc';
+    require_once DRUPAL_ROOT . '/core/includes/locale.inc';
     $language = (object) array(
       'language' => 'it',
       'name' => 'Italian',
@@ -2595,7 +2595,7 @@ class LocaleLanguageNegotiationInfoFunctionalTest extends DrupalWebTestCase {
 
   function setUp() {
     parent::setUp('locale');
-    require_once DRUPAL_ROOT .'/includes/language.inc';
+    require_once DRUPAL_ROOT .'/core/includes/language.inc';
     $admin_user = $this->drupalCreateUser(array('administer languages', 'access administration pages', 'view the administration theme'));
     $this->drupalLogin($admin_user);
     $this->drupalPost('admin/config/regional/language/add', array('predefined_langcode' => 'it'), t('Add language'));

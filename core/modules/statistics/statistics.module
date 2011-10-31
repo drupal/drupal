@@ -77,7 +77,7 @@ function statistics_exit() {
     drupal_bootstrap(DRUPAL_BOOTSTRAP_SESSION);
 
     // For anonymous users unicode.inc will not have been loaded.
-    include_once DRUPAL_ROOT . '/includes/unicode.inc';
+    include_once DRUPAL_ROOT . '/core/includes/unicode.inc';
     // Log this page access.
     db_insert('accesslog')
       ->fields(array(

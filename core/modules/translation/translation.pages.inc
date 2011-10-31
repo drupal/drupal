@@ -12,7 +12,7 @@
  *   Node object.
  */
 function translation_node_overview($node) {
-  include_once DRUPAL_ROOT . '/includes/language.inc';
+  include_once DRUPAL_ROOT . '/core/includes/language.inc';
 
   if ($node->tnid) {
     // Already part of a set, grab that set.

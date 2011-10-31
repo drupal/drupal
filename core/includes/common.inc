@@ -1539,7 +1539,7 @@ function filter_xss_bad_protocol($string, $decode = TRUE) {
   //   string that needs decoding.
   if ($decode) {
     if (!function_exists('decode_entities')) {
-      require_once DRUPAL_ROOT . '/includes/unicode.inc';
+      require_once DRUPAL_ROOT . '/core/includes/unicode.inc';
     }
 
     $string = decode_entities($string);
@@ -2768,9 +2768,9 @@ function drupal_add_html_head_link($attributes, $header = FALSE) {
  *   - 'basename': Force a basename for the file being added. Modules are
  *     expected to use stylesheets with unique filenames, but integration of
  *     external libraries may make this impossible. The basename of
- *     'modules/node/node.css' is 'node.css'. If the external library "node.js"
- *     ships with a 'node.css', then a different, unique basename would be
- *     'node.js.css'.
+ *     'core/modules/node/node.css' is 'node.css'. If the external library
+ *     "node.js" ships with a 'node.css', then a different, unique basename
+ *     would be 'node.js.css'.
  *   - 'group': A number identifying the group in which to add the stylesheet.
  *     Available constants are:
  *     - CSS_SYSTEM: Any system-layer CSS.
@@ -3808,8 +3808,8 @@ function drupal_region_class($region) {
  *
  * Examples:
  * @code
- *   drupal_add_js('misc/collapse.js');
- *   drupal_add_js('misc/collapse.js', 'file');
+ *   drupal_add_js('core/misc/collapse.js');
+ *   drupal_add_js('core/misc/collapse.js', 'file');
  *   drupal_add_js('jQuery(document).ready(function () { alert("Hello!"); });', 'inline');
  *   drupal_add_js('jQuery(document).ready(function () { alert("Hello!"); });',
  *     array('type' => 'inline', 'scope' => 'footer', 'weight' => 5)
@@ -3970,8 +3970,8 @@ function drupal_add_js($data = NULL, $options = NULL) {
           'every_page' => TRUE,
           'weight' => 0,
         ),
-        'misc/drupal.js' => array(
-          'data' => 'misc/drupal.js',
+        'core/misc/drupal.js' => array(
+          'data' => 'core/misc/drupal.js',
           'type' => 'file',
           'scope' => 'header',
           'group' => JS_LIBRARY,
@@ -4692,7 +4692,7 @@ function drupal_add_tabledrag($table_id, $action, $relationship, $group, $subgro
     // to ensure that table drag behaviors are registered before any module
     // uses it.
     drupal_add_library('system', 'jquery.cookie');
-    drupal_add_js('misc/tabledrag.js', array('weight' => -1));
+    drupal_add_js('core/misc/tabledrag.js', array('weight' => -1));
     $js_added = TRUE;
   }
 
@@ -4889,20 +4889,20 @@ function _drupal_bootstrap_full() {
     return;
   }
   $called = TRUE;
-  require_once DRUPAL_ROOT . '/' . variable_get('path_inc', 'includes/path.inc');
-  require_once DRUPAL_ROOT . '/includes/theme.inc';
-  require_once DRUPAL_ROOT . '/includes/pager.inc';
-  require_once DRUPAL_ROOT . '/' . variable_get('menu_inc', 'includes/menu.inc');
-  require_once DRUPAL_ROOT . '/includes/tablesort.inc';
-  require_once DRUPAL_ROOT . '/includes/file.inc';
-  require_once DRUPAL_ROOT . '/includes/unicode.inc';
-  require_once DRUPAL_ROOT . '/includes/image.inc';
-  require_once DRUPAL_ROOT . '/includes/form.inc';
-  require_once DRUPAL_ROOT . '/includes/mail.inc';
-  require_once DRUPAL_ROOT . '/includes/actions.inc';
-  require_once DRUPAL_ROOT . '/includes/ajax.inc';
-  require_once DRUPAL_ROOT . '/includes/token.inc';
-  require_once DRUPAL_ROOT . '/includes/errors.inc';
+  require_once DRUPAL_ROOT . '/' . variable_get('path_inc', 'core/includes/path.inc');
+  require_once DRUPAL_ROOT . '/core/includes/theme.inc';
+  require_once DRUPAL_ROOT . '/core/includes/pager.inc';
+  require_once DRUPAL_ROOT . '/' . variable_get('menu_inc', 'core/includes/menu.inc');
+  require_once DRUPAL_ROOT . '/core/includes/tablesort.inc';
+  require_once DRUPAL_ROOT . '/core/includes/file.inc';
+  require_once DRUPAL_ROOT . '/core/includes/unicode.inc';
+  require_once DRUPAL_ROOT . '/core/includes/image.inc';
+  require_once DRUPAL_ROOT . '/core/includes/form.inc';
+  require_once DRUPAL_ROOT . '/core/includes/mail.inc';
+  require_once DRUPAL_ROOT . '/core/includes/actions.inc';
+  require_once DRUPAL_ROOT . '/core/includes/ajax.inc';
+  require_once DRUPAL_ROOT . '/core/includes/token.inc';
+  require_once DRUPAL_ROOT . '/core/includes/errors.inc';
 
   // Detect string handling method
   unicode_check();
@@ -5112,7 +5112,7 @@ function drupal_cron_cleanup() {
  *   The preg_match() regular expression for the files to find.
  * @param string $directory
  *   The subdirectory name in which the files are found. For example,
- *   'modules' will search in sub-directories of the top-level /modules
+ *   'core/modules' will search in sub-directories of the /core/modules
  *   directory, sub-directories of /sites/all/modules/, etc.
  * @param string $key
  *   The key to be used for the associative array returned. Possible values are
@@ -5122,7 +5122,8 @@ function drupal_cron_cleanup() {
  * @param int $min_depth
  *   Minimum depth of directories to return files from, relative to each
  *   directory searched. For instance, a minimum depth of 2 would find modules
- *   inside /modules/node/tests, but not modules directly in /modules/node.
+ *   inside /core/modules/node/tests, but not modules directly in
+ *   /core/modules/node.
  *
  * @return array
  *   An associative array of file objects, keyed on the chosen key. Each element
@@ -5133,16 +5134,16 @@ function drupal_cron_cleanup() {
  */
 function drupal_system_listing($mask, $directory, $key = 'name', $min_depth = 1) {
   $config = conf_path();
-
-  $profile = drupal_get_profile();
-
-  $searchdir = array($directory);
   $files = array();
 
+  // Search for the directory in core.
+  $searchdir = array('core/' . $directory);
+
   // The 'profiles' directory contains pristine collections of modules and
-  // themes as organized by a distribution. It is pristine in the same way
-  // that /modules is pristine for core; users should avoid changing anything
-  // there in favor of sites/all or sites/<domain> directories.
+  // themes as provided by a distribution. It is pristine in the same way that
+  // the 'core/modules' directory is pristine for core; users should avoid
+  // any modification by using the sites/all or sites/<domain> directories.
+  $profile = drupal_get_profile();
   if (file_exists("profiles/$profile/$directory")) {
     $searchdir[] = "profiles/$profile/$directory";
   }
@@ -5156,7 +5157,7 @@ function drupal_system_listing($mask, $directory, $key = 'name', $min_depth = 1)
 
   // Get current list of items
   if (!function_exists('file_scan_directory')) {
-    require_once DRUPAL_ROOT . '/includes/file.inc';
+    require_once DRUPAL_ROOT . '/core/includes/file.inc';
   }
   foreach ($searchdir as $dir) {
     $files_to_add = file_scan_directory($dir, $mask, array('key' => $key, 'min_depth' => $min_depth));
@@ -7314,7 +7315,7 @@ function drupal_check_incompatibility($v, $current_version) {
  *     failed. See xmlrpc_error().
  */
 function xmlrpc($url, $args, $options = array()) {
-  require_once DRUPAL_ROOT . '/includes/xmlrpc.inc';
+  require_once DRUPAL_ROOT . '/core/includes/xmlrpc.inc';
   return _xmlrpc($url, $args, $options);
 }
 

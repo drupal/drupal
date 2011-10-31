@@ -31,7 +31,7 @@ define('IMAGE_STORAGE_EDITABLE', IMAGE_STORAGE_NORMAL | IMAGE_STORAGE_OVERRIDE);
 define('IMAGE_STORAGE_MODULE', IMAGE_STORAGE_OVERRIDE | IMAGE_STORAGE_DEFAULT);
 
 // Load all Field module hooks for Image.
-require_once DRUPAL_ROOT . '/modules/image/image.field.inc';
+require_once DRUPAL_ROOT . '/core/modules/image/image.field.inc';
 
 /**
  * Implement of hook_help().
@@ -985,7 +985,7 @@ function image_effect_definitions() {
     }
     else {
       $effects = array();
-      include_once DRUPAL_ROOT . '/modules/image/image.effects.inc';
+      include_once DRUPAL_ROOT . '/core/modules/image/image.effects.inc';
       foreach (module_implements('image_effect_info') as $module) {
         foreach (module_invoke($module, 'image_effect_info') as $name => $effect) {
           // Ensure the current toolkit supports the effect.

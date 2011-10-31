@@ -281,7 +281,7 @@ function system_requirements($phase) {
     }
 
     $description .= ' ' . $t('You can <a href="@cron">run cron manually</a>.', array('@cron' => url('admin/reports/status/run-cron')));
-    $description .= '<br />' . $t('To run cron from outside the site, go to <a href="!cron">!cron</a>', array('!cron' => url($base_url . '/cron.php', array('external' => TRUE, 'query' => array('cron_key' => variable_get('cron_key', 'drupal'))))));
+    $description .= '<br />' . $t('To run cron from outside the site, go to <a href="!cron">!cron</a>', array('!cron' => url($base_url . '/core/cron.php', array('external' => TRUE, 'query' => array('cron_key' => variable_get('cron_key', 'drupal'))))));
 
     $requirements['cron'] = array(
       'title' => $t('Cron maintenance tasks'),
@@ -374,7 +374,7 @@ function system_requirements($phase) {
         if (max($updates) > $default) {
           $requirements['update']['severity'] = REQUIREMENT_ERROR;
           $requirements['update']['value'] = $t('Out of date');
-          $requirements['update']['description'] = $t('Some modules have database schema updates to install. You should run the <a href="@update">database update script</a> immediately.', array('@update' => base_path() . 'update.php'));
+          $requirements['update']['description'] = $t('Some modules have database schema updates to install. You should run the <a href="@update">database update script</a> immediately.', array('@update' => base_path() . 'core/update.php'));
           break;
         }
       }
@@ -447,7 +447,7 @@ function system_requirements($phase) {
   }
 
   // Test Unicode library
-  include_once DRUPAL_ROOT . '/includes/unicode.inc';
+  include_once DRUPAL_ROOT . '/core/includes/unicode.inc';
   $requirements = array_merge($requirements, unicode_requirements());
 
   if ($phase == 'runtime') {

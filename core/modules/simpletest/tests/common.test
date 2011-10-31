@@ -1188,10 +1188,10 @@ class JavaScriptTestCase extends DrupalWebTestCase {
    * Test adding a JavaScript file.
    */
   function testAddFile() {
-    $javascript = drupal_add_js('misc/collapse.js');
-    $this->assertTrue(array_key_exists('misc/jquery.js', $javascript), t('jQuery is added when a file is added.'));
-    $this->assertTrue(array_key_exists('misc/drupal.js', $javascript), t('Drupal.js is added when file is added.'));
-    $this->assertTrue(array_key_exists('misc/collapse.js', $javascript), t('JavaScript files are correctly added.'));
+    $javascript = drupal_add_js('core/misc/collapse.js');
+    $this->assertTrue(array_key_exists('core/misc/jquery.js', $javascript), t('jQuery is added when a file is added.'));
+    $this->assertTrue(array_key_exists('core/misc/drupal.js', $javascript), t('Drupal.js is added when file is added.'));
+    $this->assertTrue(array_key_exists('core/misc/collapse.js', $javascript), t('JavaScript files are correctly added.'));
     $this->assertEqual(base_path(), $javascript['settings']['data'][0]['basePath'], t('Base path JavaScript setting is correctly set.'));
     url('', array('prefix' => &$prefix));
     $this->assertEqual(empty($prefix) ? '' : $prefix, $javascript['settings']['data'][1]['pathPrefix'], t('Path prefix JavaScript setting is correctly set.'));
@@ -1232,7 +1232,7 @@ class JavaScriptTestCase extends DrupalWebTestCase {
 
     $javascript = drupal_get_js('header');
     $this->assertTrue(strpos($javascript, 'basePath') > 0, t('Rendered JavaScript header returns basePath setting.'));
-    $this->assertTrue(strpos($javascript, 'misc/jquery.js') > 0, t('Rendered JavaScript header includes jQuery.'));
+    $this->assertTrue(strpos($javascript, 'core/misc/jquery.js') > 0, t('Rendered JavaScript header includes jQuery.'));
     $this->assertTrue(strpos($javascript, 'pathPrefix') > 0, t('Rendered JavaScript header returns pathPrefix setting.'));
 
     // Test whether drupal_add_js can be used to override a previous setting.
@@ -1254,7 +1254,7 @@ class JavaScriptTestCase extends DrupalWebTestCase {
    * Test to see if resetting the JavaScript empties the cache.
    */
   function testReset() {
-    drupal_add_js('misc/collapse.js');
+    drupal_add_js('core/misc/collapse.js');
     drupal_static_reset('drupal_add_js');
     $this->assertEqual(array(), drupal_add_js(), t('Resetting the JavaScript correctly empties the cache.'));
   }
@@ -1265,7 +1265,7 @@ class JavaScriptTestCase extends DrupalWebTestCase {
   function testAddInline() {
     $inline = 'jQuery(function () { });';
     $javascript = drupal_add_js($inline, array('type' => 'inline', 'scope' => 'footer'));
-    $this->assertTrue(array_key_exists('misc/jquery.js', $javascript), t('jQuery is added when inline scripts are added.'));
+    $this->assertTrue(array_key_exists('core/misc/jquery.js', $javascript), t('jQuery is added when inline scripts are added.'));
     $data = end($javascript);
     $this->assertEqual($inline, $data['data'], t('Inline JavaScript is correctly added to the footer.'));
   }
@@ -1295,24 +1295,24 @@ class JavaScriptTestCase extends DrupalWebTestCase {
    * Test drupal_add_js() sets preproccess to false when cache is set to false.
    */
   function testNoCache() {
-    $javascript = drupal_add_js('misc/collapse.js', array('cache' => FALSE));
-    $this->assertFalse($javascript['misc/collapse.js']['preprocess'], t('Setting cache to FALSE sets proprocess to FALSE when adding JavaScript.'));
+    $javascript = drupal_add_js('core/misc/collapse.js', array('cache' => FALSE));
+    $this->assertFalse($javascript['core/misc/collapse.js']['preprocess'], t('Setting cache to FALSE sets proprocess to FALSE when adding JavaScript.'));
   }
 
   /**
    * Test adding a JavaScript file with a different group.
    */
   function testDifferentGroup() {
-    $javascript = drupal_add_js('misc/collapse.js', array('group' => JS_THEME));
-    $this->assertEqual($javascript['misc/collapse.js']['group'], JS_THEME, t('Adding a JavaScript file with a different group caches the given group.'));
+    $javascript = drupal_add_js('core/misc/collapse.js', array('group' => JS_THEME));
+    $this->assertEqual($javascript['core/misc/collapse.js']['group'], JS_THEME, t('Adding a JavaScript file with a different group caches the given group.'));
   }
 
   /**
    * Test adding a JavaScript file with a different weight.
    */
   function testDifferentWeight() {
-    $javascript = drupal_add_js('misc/collapse.js', array('weight' => 2));
-    $this->assertEqual($javascript['misc/collapse.js']['weight'], 2, t('Adding a JavaScript file with a different weight caches the given weight.'));
+    $javascript = drupal_add_js('core/misc/collapse.js', array('weight' => 2));
+    $this->assertEqual($javascript['core/misc/collapse.js']['weight'], 2, t('Adding a JavaScript file with a different weight caches the given weight.'));
   }
 
   /**
@@ -1364,9 +1364,9 @@ class JavaScriptTestCase extends DrupalWebTestCase {
     // JavaScript files are sorted first by group, then by the 'every_page'
     // flag, then by weight (see drupal_sort_css_js()), so to test the effect of
     // weight, we need the other two options to be the same.
-    drupal_add_js('misc/collapse.js', array('group' => JS_LIBRARY, 'every_page' => TRUE, 'weight' => -21));
+    drupal_add_js('core/misc/collapse.js', array('group' => JS_LIBRARY, 'every_page' => TRUE, 'weight' => -21));
     $javascript = drupal_get_js();
-    $this->assertTrue(strpos($javascript, 'misc/collapse.js') < strpos($javascript, 'misc/jquery.js'), t('Rendering a JavaScript file above jQuery.'));
+    $this->assertTrue(strpos($javascript, 'core/misc/collapse.js') < strpos($javascript, 'core/misc/jquery.js'), t('Rendering a JavaScript file above jQuery.'));
   }
 
   /**
@@ -1376,14 +1376,14 @@ class JavaScriptTestCase extends DrupalWebTestCase {
    */
   function testAlter() {
     // Add both tableselect.js and simpletest.js, with a larger weight on SimpleTest.
-    drupal_add_js('misc/tableselect.js');
+    drupal_add_js('core/misc/tableselect.js');
     drupal_add_js(drupal_get_path('module', 'simpletest') . '/simpletest.js', array('weight' => 9999));
 
     // Render the JavaScript, testing if simpletest.js was altered to be before
     // tableselect.js. See simpletest_js_alter() to see where this alteration
     // takes place.
     $javascript = drupal_get_js();
-    $this->assertTrue(strpos($javascript, 'simpletest.js') < strpos($javascript, 'misc/tableselect.js'), t('Altering JavaScript weight through the alter hook.'));
+    $this->assertTrue(strpos($javascript, 'simpletest.js') < strpos($javascript, 'core/misc/tableselect.js'), t('Altering JavaScript weight through the alter hook.'));
   }
 
   /**
@@ -1394,8 +1394,8 @@ class JavaScriptTestCase extends DrupalWebTestCase {
     $this->assertTrue($result !== FALSE, t('Library was added without errors.'));
     $scripts = drupal_get_js();
     $styles = drupal_get_css();
-    $this->assertTrue(strpos($scripts, 'misc/farbtastic/farbtastic.js'), t('JavaScript of library was added to the page.'));
-    $this->assertTrue(strpos($styles, 'misc/farbtastic/farbtastic.css'), t('Stylesheet of library was added to the page.'));
+    $this->assertTrue(strpos($scripts, 'core/misc/farbtastic/farbtastic.js'), t('JavaScript of library was added to the page.'));
+    $this->assertTrue(strpos($styles, 'core/misc/farbtastic/farbtastic.css'), t('Stylesheet of library was added to the page.'));
   }
 
   /**
@@ -1411,7 +1411,7 @@ class JavaScriptTestCase extends DrupalWebTestCase {
     // common_test_library_info_alter() also added a dependency on jQuery Form.
     drupal_add_library('system', 'farbtastic');
     $scripts = drupal_get_js();
-    $this->assertTrue(strpos($scripts, 'misc/jquery.form.js'), t('Altered library dependencies are added to the page.'));
+    $this->assertTrue(strpos($scripts, 'core/misc/jquery.form.js'), t('Altered library dependencies are added to the page.'));
   }
 
   /**
@@ -1445,7 +1445,7 @@ class JavaScriptTestCase extends DrupalWebTestCase {
     $element['#attached']['library'][] = array('system', 'farbtastic');
     drupal_render($element);
     $scripts = drupal_get_js();
-    $this->assertTrue(strpos($scripts, 'misc/farbtastic/farbtastic.js'), t('The attached_library property adds the additional libraries.'));
+    $this->assertTrue(strpos($scripts, 'core/misc/farbtastic/farbtastic.js'), t('The attached_library property adds the additional libraries.'));
   }
 
   /**
@@ -2139,14 +2139,14 @@ class DrupalSystemListingTestCase extends DrupalWebTestCase {
       // with Drupal core, the copy in the core modules directory takes
       // precedence.
       'drupal_system_listing_incompatible_test' => array(
-        'modules/simpletest/tests',
+        'core/modules/simpletest/tests',
         'profiles/testing/modules',
       ),
       // When both copies of the module are compatible with Drupal core, the
       // copy in the profile directory takes precedence.
       'drupal_system_listing_compatible_test' => array(
         'profiles/testing/modules',
-        'modules/simpletest/tests',
+        'core/modules/simpletest/tests',
       ),
     );
 

@@ -6,7 +6,7 @@
  */
 
 // Load all Field module hooks for File.
-require_once DRUPAL_ROOT . '/modules/file/file.field.inc';
+require_once DRUPAL_ROOT . '/core/modules/file/file.field.inc';
 
 /**
  * Implements hook_help().

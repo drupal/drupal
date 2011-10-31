@@ -371,11 +371,11 @@ class FileValidatorTest extends DrupalWebTestCase {
     parent::setUp();
 
     $this->image = new stdClass();
-    $this->image->uri = 'misc/druplicon.png';
+    $this->image->uri = 'core/misc/druplicon.png';
     $this->image->filename = basename($this->image->uri);
 
     $this->non_image = new stdClass();
-    $this->non_image->uri = 'misc/jquery.js';
+    $this->non_image->uri = 'core/misc/jquery.js';
     $this->non_image->filename = basename($this->non_image->uri);
   }
 
@@ -430,7 +430,7 @@ class FileValidatorTest extends DrupalWebTestCase {
     // Maximum size.
     if (image_get_toolkit()) {
       // Copy the image so that the original doesn't get resized.
-      copy('misc/druplicon.png', 'temporary://druplicon.png');
+      copy('core/misc/druplicon.png', 'temporary://druplicon.png');
       $this->image->uri = 'temporary://druplicon.png';
 
       $errors = file_validate_image_resolution($this->image, '10x5');
@@ -961,7 +961,7 @@ class FileDirectoryTest extends FileTestCase {
     // First we test against an imaginary file that does not exist in a
     // directory.
     $basename = 'xyz.txt';
-    $directory = 'misc';
+    $directory = 'core/misc';
     $original = $directory . '/' . $basename;
     $path = file_create_filename($basename, $directory);
     $this->assertEqual($path, $original, t('New filepath %new equals %original.', array('%new' => $path, '%original' => $original)), 'File');
@@ -971,7 +971,7 @@ class FileDirectoryTest extends FileTestCase {
     $original = $directory . '/' . $basename;
     $expected = $directory . '/druplicon_0.png';
     $path = file_create_filename($basename, $directory);
-    $this->assertEqual($path, $expected, t('Creating a new filepath from %original equals %new.', array('%new' => $path, '%original' => $original)), 'File');
+    $this->assertEqual($path, $expected, t('Creating a new filepath from %original equals %new (expected %expected).', array('%new' => $path, '%original' => $original, '%expected' => $expected)), 'File');
 
     // @TODO: Finally we copy a file into a directory several times, to ensure a properly iterating filename suffix.
   }
@@ -990,7 +990,7 @@ class FileDirectoryTest extends FileTestCase {
    */
   function testFileDestination() {
     // First test for non-existent file.
-    $destination = 'misc/xyz.txt';
+    $destination = 'core/misc/xyz.txt';
     $path = file_destination($destination, FILE_EXISTS_REPLACE);
     $this->assertEqual($path, $destination, t('Non-existing filepath destination is correct with FILE_EXISTS_REPLACE.'), 'File');
     $path = file_destination($destination, FILE_EXISTS_RENAME);
@@ -998,7 +998,7 @@ class FileDirectoryTest extends FileTestCase {
     $path = file_destination($destination, FILE_EXISTS_ERROR);
     $this->assertEqual($path, $destination, t('Non-existing filepath destination is correct with FILE_EXISTS_ERROR.'), 'File');
 
-    $destination = 'misc/druplicon.png';
+    $destination = 'core/misc/druplicon.png';
     $path = file_destination($destination, FILE_EXISTS_REPLACE);
     $this->assertEqual($path, $destination, t('Existing filepath destination remains the same with FILE_EXISTS_REPLACE.'), 'File');
     $path = file_destination($destination, FILE_EXISTS_RENAME);
@@ -2342,7 +2342,7 @@ class FileDownloadTest extends FileTestCase {
 
     // Test generating an URL to a shipped file (i.e. a file that is part of
     // Drupal core, a module or a theme, for example a JavaScript file).
-    $filepath = 'misc/jquery.js';
+    $filepath = 'core/misc/jquery.js';
     $url = file_create_url($filepath);
     $this->assertEqual($GLOBALS['base_url'] . '/' . $filepath, $url, t('Correctly generated a URL for a shipped file.'));
     $this->drupalHead($url);
@@ -2470,28 +2470,28 @@ class FileURLRewritingTest extends FileTestCase {
 
     // Test alteration of file URLs to use a CDN.
     variable_set('file_test_hook_file_url_alter', 'cdn');
-    $filepath = 'misc/jquery.js';
+    $filepath = 'core/misc/jquery.js';
     $url = file_create_url($filepath);
     $this->assertEqual(FILE_URL_TEST_CDN_1 . '/' . $filepath, $url, t('Correctly generated a CDN URL for a shipped file.'));
-    $filepath = 'misc/favicon.ico';
+    $filepath = 'core/misc/favicon.ico';
     $url = file_create_url($filepath);
     $this->assertEqual(FILE_URL_TEST_CDN_2 . '/' . $filepath, $url, t('Correctly generated a CDN URL for a shipped file.'));
 
     // Test alteration of file URLs to use root-relative URLs.
     variable_set('file_test_hook_file_url_alter', 'root-relative');
-    $filepath = 'misc/jquery.js';
+    $filepath = 'core/misc/jquery.js';
     $url = file_create_url($filepath);
     $this->assertEqual(base_path() . '/' . $filepath, $url, t('Correctly generated a root-relative URL for a shipped file.'));
-    $filepath = 'misc/favicon.ico';
+    $filepath = 'core/misc/favicon.ico';
     $url = file_create_url($filepath);
     $this->assertEqual(base_path() . '/' . $filepath, $url, t('Correctly generated a root-relative URL for a shipped file.'));
 
     // Test alteration of file URLs to use protocol-relative URLs.
     variable_set('file_test_hook_file_url_alter', 'protocol-relative');
-    $filepath = 'misc/jquery.js';
+    $filepath = 'core/misc/jquery.js';
     $url = file_create_url($filepath);
     $this->assertEqual('/' . base_path() . '/' . $filepath, $url, t('Correctly generated a protocol-relative URL for a shipped file.'));
-    $filepath = 'misc/favicon.ico';
+    $filepath = 'core/misc/favicon.ico';
     $url = file_create_url($filepath);
     $this->assertEqual('/' . base_path() . '/' . $filepath, $url, t('Correctly generated a protocol-relative URL for a shipped file.'));
   }

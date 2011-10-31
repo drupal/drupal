@@ -286,9 +286,9 @@ INSTALLATION
    crontab utility on Unix/Linux systems. The following crontab line uses the
    wget command to visit the cron.php page, and runs each hour, on the hour:
 
-   0 * * * * wget -O - -q -t 1 http://example.com/cron.php?cron_key=YOURKEY
+   0 * * * * wget -O - -q -t 1 http://example.com/core/cron.php?cron_key=YOURKEY
 
-   Replace the text "http://example.com/cron.php?cron_key=YOURKEY" in the
+   Replace the text "http://example.com/core/cron.php?cron_key=YOURKEY" in the
    example with the full URL displayed under "Cron maintenance tasks" on the
    "Status report" page.
 

@@ -400,7 +400,7 @@ class UserLoginTestCase extends DrupalWebTestCase {
    */
   function testPasswordRehashOnLogin() {
     // Load password hashing API.
-    require_once DRUPAL_ROOT . '/' . variable_get('password_inc', 'includes/password.inc');
+    require_once DRUPAL_ROOT . '/' . variable_get('password_inc', 'core/includes/password.inc');
     // Set initial $count_log2 to the default, DRUPAL_HASH_COUNT.
     variable_set('password_count_log2', DRUPAL_HASH_COUNT);
     // Create a new user and authenticate.
@@ -507,7 +507,7 @@ class UserCancelTestCase extends DrupalWebTestCase {
   function testUserCancelUid1() {
     // Update uid 1's name and password to we know it.
     $password = user_password();
-    require_once DRUPAL_ROOT . '/' . variable_get('password_inc', 'includes/password.inc');
+    require_once DRUPAL_ROOT . '/' . variable_get('password_inc', 'core/includes/password.inc');
     $account = array(
       'name' => 'user1',
       'pass' => user_hash_password(trim($password)),

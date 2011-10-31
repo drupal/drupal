@@ -790,7 +790,7 @@ function system_modules($form, $form_state = array()) {
   $help_arg = module_exists('help') ? drupal_help_arg() : FALSE;
 
   // Used when displaying modules that are required by the install profile.
-  require_once DRUPAL_ROOT . '/includes/install.inc';
+  require_once DRUPAL_ROOT . '/core/includes/install.inc';
   $distribution_name = check_plain(drupal_install_profile_distribution_name());
 
   // Iterate through each of the modules.
@@ -994,7 +994,7 @@ function _system_modules_build_row($info, $extra) {
   }
   else {
     $form['enable'] = array(
-      '#markup' =>  theme('image', array('path' => 'misc/watchdog-error.png', 'alt' => $status_short, 'title' => $status_short)),
+      '#markup' =>  theme('image', array('path' => 'core/misc/watchdog-error.png', 'alt' => $status_short, 'title' => $status_short)),
     );
     $form['description']['#markup'] .= theme('system_modules_incompatible', array('message' => $status_long));
   }
@@ -1059,7 +1059,7 @@ function system_modules_confirm_form($modules, $storage) {
  * Submit callback; handles modules form submission.
  */
 function system_modules_submit($form, &$form_state) {
-  include_once DRUPAL_ROOT . '/includes/install.inc';
+  include_once DRUPAL_ROOT . '/core/includes/install.inc';
 
   // Builds list of modules.
   $modules = array();
@@ -1208,7 +1208,7 @@ function system_modules_submit($form, &$form_state) {
  */
 function system_modules_uninstall($form, $form_state = NULL) {
   // Make sure the install API is available.
-  include_once DRUPAL_ROOT . '/includes/install.inc';
+  include_once DRUPAL_ROOT . '/core/includes/install.inc';
 
   // Display the confirm form if any modules have been submitted.
   if (!empty($form_state['storage']) && $confirm_form = system_modules_uninstall_confirm_form($form_state['storage'])) {
@@ -1321,7 +1321,7 @@ function system_modules_uninstall_validate($form, &$form_state) {
  */
 function system_modules_uninstall_submit($form, &$form_state) {
   // Make sure the install API is available.
-  include_once DRUPAL_ROOT . '/includes/install.inc';
+  include_once DRUPAL_ROOT . '/core/includes/install.inc';
 
   if (!empty($form['#confirmed'])) {
     // Call the uninstall routine for each selected module.
@@ -1867,7 +1867,7 @@ function system_rss_feeds_settings() {
  * @see system_regional_settings_submit()
  */
 function system_regional_settings() {
-  include_once DRUPAL_ROOT . '/includes/locale.inc';
+  include_once DRUPAL_ROOT . '/core/includes/locale.inc';
   $countries = country_get_list();
 
   // Date settings:
@@ -2272,7 +2272,7 @@ function system_clean_url_settings($form, &$form_state) {
  */
 function system_status($check = FALSE) {
   // Load .install files
-  include_once DRUPAL_ROOT . '/includes/install.inc';
+  include_once DRUPAL_ROOT . '/core/includes/install.inc';
   drupal_load_updates();
 
   // Check run-time requirements and status information.
@@ -2320,7 +2320,7 @@ function system_php() {
  * Default page callback for batches.
  */
 function system_batch_page() {
-  require_once DRUPAL_ROOT . '/includes/batch.inc';
+  require_once DRUPAL_ROOT . '/core/includes/batch.inc';
   $output = _batch_page();
 
   if ($output === FALSE) {

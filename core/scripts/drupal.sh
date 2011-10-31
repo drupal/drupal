@@ -44,7 +44,7 @@ All arguments are long options.
               i.e. if URI is set to http://default/bar/foo.php
               and bar/foo.php exists, this script will be executed without
               bootstrapping Drupal. To execute Drupal's cron.php, specify
-              http://default/cron.php as the URI.
+              http://default/core/cron.php as the URI.
 
 
 To run this script without --root argument invoke it from the root directory

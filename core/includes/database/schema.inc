@@ -268,7 +268,8 @@ abstract class DatabaseSchema implements QueryPlaceholderInterface {
    * method should be overwritten by a database driver if the database provider
    * uses alternate methods. Because information_schema.tables is used in a few
    * different functions, a database driver will only need to override this function
-   * to make all the others work. For example see includes/databases/mysql/schema.inc.
+   * to make all the others work. For example see
+   * core/includes/databases/mysql/schema.inc.
    *
    * @param $table_name
    *   The name of the table in question.

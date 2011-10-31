@@ -20,6 +20,9 @@
  * @link authorize Authorized operation helper functions @endlink
  */
 
+// Change the directory to the Drupal root.
+chdir('..');
+
 /**
  * Root directory of Drupal installation.
  */
@@ -59,12 +62,12 @@ function authorize_access_allowed() {
 
 // *** Real work of the script begins here. ***
 
-require_once DRUPAL_ROOT . '/includes/bootstrap.inc';
-require_once DRUPAL_ROOT . '/includes/session.inc';
-require_once DRUPAL_ROOT . '/includes/common.inc';
-require_once DRUPAL_ROOT . '/includes/file.inc';
-require_once DRUPAL_ROOT . '/includes/module.inc';
-require_once DRUPAL_ROOT . '/includes/ajax.inc';
+require_once DRUPAL_ROOT . '/core/includes/bootstrap.inc';
+require_once DRUPAL_ROOT . '/core/includes/session.inc';
+require_once DRUPAL_ROOT . '/core/includes/common.inc';
+require_once DRUPAL_ROOT . '/core/includes/file.inc';
+require_once DRUPAL_ROOT . '/core/includes/module.inc';
+require_once DRUPAL_ROOT . '/core/includes/ajax.inc';
 
 // We prepare only a minimal bootstrap. This includes the database and
 // variables, however, so we have access to the class autoloader registry.
@@ -75,8 +78,8 @@ global $conf;
 
 // We have to enable the user and system modules, even to check access and
 // display errors via the maintenance theme.
-$module_list['system']['filename'] = 'modules/system/system.module';
-$module_list['user']['filename'] = 'modules/user/user.module';
+$module_list['system']['filename'] = 'core/modules/system/system.module';
+$module_list['user']['filename'] = 'core/modules/user/user.module';
 module_list(TRUE, FALSE, FALSE, $module_list);
 drupal_load('module', 'system');
 drupal_load('module', 'user');
@@ -95,10 +98,10 @@ $show_messages = TRUE;
 
 if (authorize_access_allowed()) {
   // Load both the Form API and Batch API.
-  require_once DRUPAL_ROOT . '/includes/form.inc';
-  require_once DRUPAL_ROOT . '/includes/batch.inc';
+  require_once DRUPAL_ROOT . '/core/includes/form.inc';
+  require_once DRUPAL_ROOT . '/core/includes/batch.inc';
   // Load the code that drives the authorize process.
-  require_once DRUPAL_ROOT . '/includes/authorize.inc';
+  require_once DRUPAL_ROOT . '/core/includes/authorize.inc';
 
   // For the sake of Batch API and a few other low-level functions, we need to
   // initialize the URL path into $_GET['q']. However, we do not want to raise

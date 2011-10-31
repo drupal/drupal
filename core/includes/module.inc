@@ -214,7 +214,7 @@ function system_list_reset() {
  *     without this module.
  */
 function _module_build_dependencies($files) {
-  require_once DRUPAL_ROOT . '/includes/graph.inc';
+  require_once DRUPAL_ROOT . '/core/includes/graph.inc';
   foreach ($files as $filename => $file) {
     $graph[$file->name]['edges'] = array();
     if (isset($file->info['dependencies']) && is_array($file->info['dependencies'])) {
@@ -258,7 +258,7 @@ function module_exists($module) {
  */
 function module_load_install($module) {
   // Make sure the installation API is available
-  include_once DRUPAL_ROOT . '/includes/install.inc';
+  include_once DRUPAL_ROOT . '/core/includes/install.inc';
 
   return module_load_include('install', $module);
 }
@@ -391,7 +391,7 @@ function module_enable($module_list, $enable_dependencies = TRUE) {
   }
 
   // Required for module installation checks.
-  include_once DRUPAL_ROOT . '/includes/install.inc';
+  include_once DRUPAL_ROOT . '/core/includes/install.inc';
 
   $modules_installed = array();
   $modules_enabled = array();

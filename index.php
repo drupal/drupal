@@ -8,7 +8,7 @@
  * prints the appropriate page.
  *
  * All Drupal code is released under the GNU General Public License.
- * See COPYRIGHT.txt and LICENSE.txt.
+ * See COPYRIGHT.txt and LICENSE.txt files in the "core" directory.
  */
 
 /**
@@ -16,6 +16,6 @@
  */
 define('DRUPAL_ROOT', getcwd());
 
-require_once DRUPAL_ROOT . '/includes/bootstrap.inc';
+require_once DRUPAL_ROOT . '/core/includes/bootstrap.inc';
 drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
 menu_execute_active_handler();

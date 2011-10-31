@@ -706,17 +706,17 @@ class CronRunTestCase extends DrupalWebTestCase {
     global $base_url;
 
     // Run cron anonymously without any cron key.
-    $this->drupalGet($base_url . '/cron.php', array('external' => TRUE));
+    $this->drupalGet($base_url . '/core/cron.php', array('external' => TRUE));
     $this->assertResponse(403);
 
     // Run cron anonymously with a random cron key.
     $key = $this->randomName(16);
-    $this->drupalGet($base_url . '/cron.php', array('external' => TRUE, 'query' => array('cron_key' => $key)));
+    $this->drupalGet($base_url . '/core/cron.php', array('external' => TRUE, 'query' => array('cron_key' => $key)));
     $this->assertResponse(403);
 
     // Run cron anonymously with the valid cron key.
     $key = variable_get('cron_key', 'drupal');
-    $this->drupalGet($base_url . '/cron.php', array('external' => TRUE, 'query' => array('cron_key' => $key)));
+    $this->drupalGet($base_url . '/core/cron.php', array('external' => TRUE, 'query' => array('cron_key' => $key)));
     $this->assertResponse(200);
   }
 
@@ -1629,16 +1629,16 @@ class SystemThemeFunctionalTest extends DrupalWebTestCase {
     $this->drupalPost('admin/appearance', $edit, t('Save configuration'));
 
     $this->drupalGet('admin/config');
-    $this->assertRaw('themes/seven', t('Administration theme used on an administration page.'));
+    $this->assertRaw('core/themes/seven', t('Administration theme used on an administration page.'));
 
     $this->drupalGet('node/' . $this->node->nid);
-    $this->assertRaw('themes/stark', t('Site default theme used on node page.'));
+    $this->assertRaw('core/themes/stark', t('Site default theme used on node page.'));
 
     $this->drupalGet('node/add');
-    $this->assertRaw('themes/seven', t('Administration theme used on the add content page.'));
+    $this->assertRaw('core/themes/seven', t('Administration theme used on the add content page.'));
 
     $this->drupalGet('node/' . $this->node->nid . '/edit');
-    $this->assertRaw('themes/seven', t('Administration theme used on the edit content page.'));
+    $this->assertRaw('core/themes/seven', t('Administration theme used on the edit content page.'));
 
     // Disable the admin theme on the node admin pages.
     $edit = array(
@@ -1647,10 +1647,10 @@ class SystemThemeFunctionalTest extends DrupalWebTestCase {
     $this->drupalPost('admin/appearance', $edit, t('Save configuration'));
 
     $this->drupalGet('admin/config');
-    $this->assertRaw('themes/seven', t('Administration theme used on an administration page.'));
+    $this->assertRaw('core/themes/seven', t('Administration theme used on an administration page.'));
 
     $this->drupalGet('node/add');
-    $this->assertRaw('themes/stark', t('Site default theme used on the add content page.'));
+    $this->assertRaw('core/themes/stark', t('Site default theme used on the add content page.'));
 
     // Reset to the default theme settings.
     variable_set('theme_default', 'bartik');
@@ -1661,10 +1661,10 @@ class SystemThemeFunctionalTest extends DrupalWebTestCase {
     $this->drupalPost('admin/appearance', $edit, t('Save configuration'));
 
     $this->drupalGet('admin');
-    $this->assertRaw('themes/bartik', t('Site default theme used on administration page.'));
+    $this->assertRaw('core/themes/bartik', t('Site default theme used on administration page.'));
 
     $this->drupalGet('node/add');
-    $this->assertRaw('themes/bartik', t('Site default theme used on the add content page.'));
+    $this->assertRaw('core/themes/bartik', t('Site default theme used on the add content page.'));
   }
 
   /**
@@ -2091,7 +2091,7 @@ class UpdateScriptFunctionalTest extends DrupalWebTestCase {
 
   function setUp() {
     parent::setUp('update_script_test');
-    $this->update_url = $GLOBALS['base_url'] . '/update.php';
+    $this->update_url = $GLOBALS['base_url'] . '/core/update.php';
     $this->update_user = $this->drupalCreateUser(array('administer software updates'));
   }
 
@@ -2118,7 +2118,7 @@ class UpdateScriptFunctionalTest extends DrupalWebTestCase {
     // Access the update page as user 1.
     $user1 = user_load(1);
     $user1->pass_raw = user_password();
-    require_once DRUPAL_ROOT . '/' . variable_get('password_inc', 'includes/password.inc');
+    require_once DRUPAL_ROOT . '/' . variable_get('password_inc', 'core/includes/password.inc');
     $user1->pass = user_hash_password(trim($user1->pass_raw));
     db_query("UPDATE {users} SET pass = :pass WHERE uid = :uid", array(':pass' => $user1->pass, ':uid' => $user1->uid));
     $this->drupalLogin($user1);

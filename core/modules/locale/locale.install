@@ -10,7 +10,7 @@
  */
 function locale_install() {
   // Add the default language to the database too.
-  include_once DRUPAL_ROOT . '/includes/locale.inc';
+  include_once DRUPAL_ROOT . '/core/includes/locale.inc';
   locale_language_save(language_default());
 }
 

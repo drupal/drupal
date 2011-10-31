@@ -70,7 +70,7 @@ function _drupal_error_handler_real($error_level, $message, $filename, $line, $c
     $caller = _drupal_get_last_caller(debug_backtrace());
 
     if (!function_exists('filter_xss_admin')) {
-      require_once DRUPAL_ROOT . '/includes/common.inc';
+      require_once DRUPAL_ROOT . '/core/includes/common.inc';
     }
 
     // We treat recoverable errors as fatal.

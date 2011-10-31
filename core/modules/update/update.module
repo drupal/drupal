@@ -662,10 +662,10 @@ function update_verify_update_archive($project, $archive_file, $directory) {
   // Make sure this isn't a tarball of Drupal core.
   if (
     file_exists("$directory/$project/index.php")
-    && file_exists("$directory/$project/update.php")
-    && file_exists("$directory/$project/includes/bootstrap.inc")
-    && file_exists("$directory/$project/modules/node/node.module")
-    && file_exists("$directory/$project/modules/system/system.module")
+    && file_exists("$directory/$project/core/update.php")
+    && file_exists("$directory/$project/core/includes/bootstrap.inc")
+    && file_exists("$directory/$project/core/modules/node/node.module")
+    && file_exists("$directory/$project/core/modules/system/system.module")
   ) {
     return array(
       'no-core' => t('Automatic updating of Drupal core is not supported. See the <a href="@upgrade-guide">upgrade guide</a> for information on how to update Drupal core manually.', array('@upgrade-guide' => 'http://drupal.org/upgrade')),

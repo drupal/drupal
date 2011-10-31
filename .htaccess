@@ -97,6 +97,13 @@ DirectoryIndex index.php index.html index.htm
   # uncomment the following line:
   # RewriteBase /
 
+  # Redirect common PHP files to their new locations.
+  RewriteCond %{REQUEST_URI} ^(.*)?/(update.php) [OR]
+  RewriteCond %{REQUEST_URI} ^(.*)?/(install.php) [OR]
+  RewriteCond %{REQUEST_URI} ^(.*)?/(cron.php)
+  RewriteCond %{REQUEST_URI} !core
+  RewriteRule ^ %1/core/%2 [L,QSA,R=301]
+
   # Pass all requests not referring directly to files in the filesystem to
   # index.php. Clean URLs are handled in drupal_environment_initialize().
   RewriteCond %{REQUEST_FILENAME} !-f

@@ -101,14 +101,14 @@ function system_help($path, $arg) {
       $output = '<p>' . t('Download additional <a href="@modules">contributed modules</a> to extend Drupal\'s functionality.', array('@modules' => 'http://drupal.org/project/modules')) . '</p>';
       if (module_exists('update')) {
         if (update_manager_access()) {
-          $output .= '<p>' . t('Regularly review and install <a href="@updates">available updates</a> to maintain a secure and current site. Always run the <a href="@update-php">update script</a> each time a module is updated.', array('@update-php' => $base_url . '/update.php', '@updates' => url('admin/reports/updates'))) . '</p>';
+          $output .= '<p>' . t('Regularly review and install <a href="@updates">available updates</a> to maintain a secure and current site. Always run the <a href="@update-php">update script</a> each time a module is updated.', array('@update-php' => $base_url . '/core/update.php', '@updates' => url('admin/reports/updates'))) . '</p>';
         }
         else {
-          $output .= '<p>' . t('Regularly review <a href="@updates">available updates</a> to maintain a secure and current site. Always run the <a href="@update-php">update script</a> each time a module is updated.', array('@update-php' => $base_url . '/update.php', '@updates' => url('admin/reports/updates'))) . '</p>';
+          $output .= '<p>' . t('Regularly review <a href="@updates">available updates</a> to maintain a secure and current site. Always run the <a href="@update-php">update script</a> each time a module is updated.', array('@update-php' => $base_url . '/core/update.php', '@updates' => url('admin/reports/updates'))) . '</p>';
         }
       }
       else {
-        $output .= '<p>' . t('Regularly review available updates to maintain a secure and current site. Always run the <a href="@update-php">update script</a> each time a module is updated. Enable the Update manager module to update and install modules and themes.', array('@update-php' => $base_url . '/update.php')) . '</p>';
+        $output .= '<p>' . t('Regularly review available updates to maintain a secure and current site. Always run the <a href="@update-php">update script</a> each time a module is updated. Enable the Update manager module to update and install modules and themes.', array('@update-php' => $base_url . '/core/update.php')) . '</p>';
       }
       return $output;
     case 'admin/modules/uninstall':
@@ -531,7 +531,7 @@ function system_menu() {
     'access callback' => TRUE,
     'theme callback' => 'ajax_base_page_theme',
     'type' => MENU_CALLBACK,
-    'file path' => 'includes',
+    'file path' => 'core/includes',
     'file' => 'form.inc',
   );
   $items['system/timezone'] = array(
@@ -1065,7 +1065,7 @@ function _system_batch_theme() {
   // Retrieve the current state of the batch.
   $batch = &batch_get();
   if (!$batch && isset($_REQUEST['id'])) {
-    require_once DRUPAL_ROOT . '/includes/batch.inc';
+    require_once DRUPAL_ROOT . '/core/includes/batch.inc';
     $batch = batch_load($_REQUEST['id']);
   }
   // Use the same theme as the page that started the batch.
@@ -1084,7 +1084,7 @@ function system_library_info() {
     'website' => 'http://api.drupal.org/api/drupal/includes--ajax.inc/group/ajax/7',
     'version' => VERSION,
     'js' => array(
-      'misc/ajax.js' => array('group' => JS_LIBRARY, 'weight' => 2),
+      'core/misc/ajax.js' => array('group' => JS_LIBRARY, 'weight' => 2),
     ),
     'dependencies' => array(
       array('system', 'drupal.progress'),
@@ -1096,7 +1096,7 @@ function system_library_info() {
     'title' => 'Drupal batch API',
     'version' => VERSION,
     'js' => array(
-      'misc/batch.js' => array('group' => JS_DEFAULT, 'cache' => FALSE),
+      'core/misc/batch.js' => array('group' => JS_DEFAULT, 'cache' => FALSE),
     ),
     'dependencies' => array(
       array('system', 'drupal.progress'),
@@ -1108,7 +1108,7 @@ function system_library_info() {
     'title' => 'Drupal progress indicator',
     'version' => VERSION,
     'js' => array(
-      'misc/progress.js' => array('group' => JS_DEFAULT, 'cache' => FALSE),
+      'core/misc/progress.js' => array('group' => JS_DEFAULT, 'cache' => FALSE),
     ),
   );
 
@@ -1117,7 +1117,7 @@ function system_library_info() {
     'title' => 'Drupal form library',
     'version' => VERSION,
     'js' => array(
-      'misc/form.js' => array('group' => JS_LIBRARY, 'weight' => 1),
+      'core/misc/form.js' => array('group' => JS_LIBRARY, 'weight' => 1),
     ),
   );
 
@@ -1126,7 +1126,7 @@ function system_library_info() {
     'title' => 'Drupal states',
     'version' => VERSION,
     'js' => array(
-      'misc/states.js' => array('group' => JS_LIBRARY, 'weight' => 1),
+      'core/misc/states.js' => array('group' => JS_LIBRARY, 'weight' => 1),
     ),
   );
 
@@ -1135,7 +1135,7 @@ function system_library_info() {
     'title' => 'Drupal collapsible fieldset',
     'version' => VERSION,
     'js' => array(
-      'misc/collapse.js' => array('group' => JS_DEFAULT),
+      'core/misc/collapse.js' => array('group' => JS_DEFAULT),
     ),
     'dependencies' => array(
       // collapse.js relies on drupalGetSummary in form.js
@@ -1148,7 +1148,7 @@ function system_library_info() {
     'title' => 'Drupal resizable textarea',
     'version' => VERSION,
     'js' => array(
-      'misc/textarea.js' => array('group' => JS_DEFAULT),
+      'core/misc/textarea.js' => array('group' => JS_DEFAULT),
     ),
   );
 
@@ -1157,7 +1157,7 @@ function system_library_info() {
     'title' => 'Drupal autocomplete',
     'version' => VERSION,
     'js' => array(
-      'misc/autocomplete.js' => array('group' => JS_DEFAULT),
+      'core/misc/autocomplete.js' => array('group' => JS_DEFAULT),
     ),
   );
 
@@ -1167,7 +1167,7 @@ function system_library_info() {
     'website' => 'http://jquery.com',
     'version' => '1.4.4',
     'js' => array(
-      'misc/jquery.js' => array('group' => JS_LIBRARY, 'weight' => -20),
+      'core/misc/jquery.js' => array('group' => JS_LIBRARY, 'weight' => -20),
     ),
   );
 
@@ -1177,7 +1177,7 @@ function system_library_info() {
     'website' => 'http://plugins.jquery.com/project/once',
     'version' => '1.2',
     'js' => array(
-      'misc/jquery.once.js' => array('group' => JS_LIBRARY, 'weight' => -19),
+      'core/misc/jquery.once.js' => array('group' => JS_LIBRARY, 'weight' => -19),
     ),
   );
 
@@ -1187,7 +1187,7 @@ function system_library_info() {
     'website' => 'http://malsup.com/jquery/form/',
     'version' => '2.52',
     'js' => array(
-      'misc/jquery.form.js' => array(),
+      'core/misc/jquery.form.js' => array(),
     ),
     'dependencies' => array(
       array('system', 'jquery.cookie'),
@@ -1200,7 +1200,7 @@ function system_library_info() {
     'website' => 'http://benalman.com/projects/jquery-bbq-plugin/',
     'version' => '1.2.1',
     'js' => array(
-      'misc/jquery.ba-bbq.js' => array(),
+      'core/misc/jquery.ba-bbq.js' => array(),
     ),
   );
 
@@ -1210,10 +1210,10 @@ function system_library_info() {
     'website' => 'http://drupal.org/node/323112',
     'version' => '1.0',
     'js' => array(
-      'misc/vertical-tabs.js' => array(),
+      'core/misc/vertical-tabs.js' => array(),
     ),
     'css' => array(
-      'misc/vertical-tabs.css' => array(),
+      'core/misc/vertical-tabs.css' => array(),
     ),
     'dependencies' => array(
       // Vertical tabs relies on drupalGetSummary in form.js
@@ -1227,10 +1227,10 @@ function system_library_info() {
     'website' => 'http://code.google.com/p/farbtastic/',
     'version' => '1.2',
     'js' => array(
-      'misc/farbtastic/farbtastic.js' => array(),
+      'core/misc/farbtastic/farbtastic.js' => array(),
     ),
     'css' => array(
-      'misc/farbtastic/farbtastic.css' => array(),
+      'core/misc/farbtastic/farbtastic.css' => array(),
     ),
   );
 
@@ -1240,7 +1240,7 @@ function system_library_info() {
     'website' => 'http://plugins.jquery.com/project/cookie',
     'version' => '1.0',
     'js' => array(
-      'misc/jquery.cookie.js' => array(),
+      'core/misc/jquery.cookie.js' => array(),
     ),
   );
 
@@ -1250,11 +1250,11 @@ function system_library_info() {
     'website' => 'http://jqueryui.com',
     'version' => '1.8.7',
     'js' => array(
-      'misc/ui/jquery.ui.core.min.js' => array('group' => JS_LIBRARY, 'weight' => -11),
+      'core/misc/ui/jquery.ui.core.min.js' => array('group' => JS_LIBRARY, 'weight' => -11),
     ),
     'css' => array(
-      'misc/ui/jquery.ui.core.css' => array(),
-      'misc/ui/jquery.ui.theme.css' => array(),
+      'core/misc/ui/jquery.ui.core.css' => array(),
+      'core/misc/ui/jquery.ui.theme.css' => array(),
     ),
   );
   $libraries['ui.accordion'] = array(
@@ -1262,10 +1262,10 @@ function system_library_info() {
     'website' => 'http://jqueryui.com/demos/accordion/',
     'version' => '1.8.7',
     'js' => array(
-      'misc/ui/jquery.ui.accordion.min.js' => array(),
+      'core/misc/ui/jquery.ui.accordion.min.js' => array(),
     ),
     'css' => array(
-      'misc/ui/jquery.ui.accordion.css' => array(),
+      'core/misc/ui/jquery.ui.accordion.css' => array(),
     ),
     'dependencies' => array(
       array('system', 'ui.widget'),
@@ -1276,10 +1276,10 @@ function system_library_info() {
     'website' => 'http://jqueryui.com/demos/autocomplete/',
     'version' => '1.8.7',
     'js' => array(
-      'misc/ui/jquery.ui.autocomplete.min.js' => array(),
+      'core/misc/ui/jquery.ui.autocomplete.min.js' => array(),
     ),
     'css' => array(
-      'misc/ui/jquery.ui.autocomplete.css' => array(),
+      'core/misc/ui/jquery.ui.autocomplete.css' => array(),
     ),
     'dependencies' => array(
       array('system', 'ui.widget'),
@@ -1291,10 +1291,10 @@ function system_library_info() {
     'website' => 'http://jqueryui.com/demos/button/',
     'version' => '1.8.7',
     'js' => array(
-      'misc/ui/jquery.ui.button.min.js' => array(),
+      'core/misc/ui/jquery.ui.button.min.js' => array(),
     ),
     'css' => array(
-      'misc/ui/jquery.ui.button.css' => array(),
+      'core/misc/ui/jquery.ui.button.css' => array(),
     ),
     'dependencies' => array(
       array('system', 'ui.widget'),
@@ -1305,10 +1305,10 @@ function system_library_info() {
     'website' => 'http://jqueryui.com/demos/datepicker/',
     'version' => '1.8.7',
     'js' => array(
-      'misc/ui/jquery.ui.datepicker.min.js' => array(),
+      'core/misc/ui/jquery.ui.datepicker.min.js' => array(),
     ),
     'css' => array(
-      'misc/ui/jquery.ui.datepicker.css' => array(),
+      'core/misc/ui/jquery.ui.datepicker.css' => array(),
     ),
     'dependencies' => array(
       array('system', 'ui'),
@@ -1319,10 +1319,10 @@ function system_library_info() {
     'website' => 'http://jqueryui.com/demos/dialog/',
     'version' => '1.8.7',
     'js' => array(
-      'misc/ui/jquery.ui.dialog.min.js' => array(),
+      'core/misc/ui/jquery.ui.dialog.min.js' => array(),
     ),
     'css' => array(
-      'misc/ui/jquery.ui.dialog.css' => array(),
+      'core/misc/ui/jquery.ui.dialog.css' => array(),
     ),
     'dependencies' => array(
       array('system', 'ui.widget'),
@@ -1338,7 +1338,7 @@ function system_library_info() {
     'website' => 'http://jqueryui.com/demos/draggable/',
     'version' => '1.8.7',
     'js' => array(
-      'misc/ui/jquery.ui.draggable.min.js' => array(),
+      'core/misc/ui/jquery.ui.draggable.min.js' => array(),
     ),
     'dependencies' => array(
       array('system', 'ui.widget'),
@@ -1350,7 +1350,7 @@ function system_library_info() {
     'website' => 'http://jqueryui.com/demos/droppable/',
     'version' => '1.8.7',
     'js' => array(
-      'misc/ui/jquery.ui.droppable.min.js' => array(),
+      'core/misc/ui/jquery.ui.droppable.min.js' => array(),
     ),
     'dependencies' => array(
       array('system', 'ui.widget'),
@@ -1363,7 +1363,7 @@ function system_library_info() {
     'website' => 'http://docs.jquery.com/UI/Mouse',
     'version' => '1.8.7',
     'js' => array(
-      'misc/ui/jquery.ui.mouse.min.js' => array(),
+      'core/misc/ui/jquery.ui.mouse.min.js' => array(),
     ),
     'dependencies' => array(
       array('system', 'ui.widget'),
@@ -1374,7 +1374,7 @@ function system_library_info() {
     'website' => 'http://jqueryui.com/demos/position/',
     'version' => '1.8.7',
     'js' => array(
-      'misc/ui/jquery.ui.position.min.js' => array(),
+      'core/misc/ui/jquery.ui.position.min.js' => array(),
     ),
   );
   $libraries['ui.progressbar'] = array(
@@ -1382,10 +1382,10 @@ function system_library_info() {
     'website' => 'http://jqueryui.com/demos/progressbar/',
     'version' => '1.8.7',
     'js' => array(
-      'misc/ui/jquery.ui.progressbar.min.js' => array(),
+      'core/misc/ui/jquery.ui.progressbar.min.js' => array(),
     ),
     'css' => array(
-      'misc/ui/jquery.ui.progressbar.css' => array(),
+      'core/misc/ui/jquery.ui.progressbar.css' => array(),
     ),
     'dependencies' => array(
       array('system', 'ui.widget'),
@@ -1396,10 +1396,10 @@ function system_library_info() {
     'website' => 'http://jqueryui.com/demos/resizable/',
     'version' => '1.8.7',
     'js' => array(
-      'misc/ui/jquery.ui.resizable.min.js' => array(),
+      'core/misc/ui/jquery.ui.resizable.min.js' => array(),
     ),
     'css' => array(
-      'misc/ui/jquery.ui.resizable.css' => array(),
+      'core/misc/ui/jquery.ui.resizable.css' => array(),
     ),
     'dependencies' => array(
       array('system', 'ui.widget'),
@@ -1411,10 +1411,10 @@ function system_library_info() {
     'website' => 'http://jqueryui.com/demos/selectable/',
     'version' => '1.8.7',
     'js' => array(
-      'misc/ui/jquery.ui.selectable.min.js' => array(),
+      'core/misc/ui/jquery.ui.selectable.min.js' => array(),
     ),
     'css' => array(
-      'misc/ui/jquery.ui.selectable.css' => array(),
+      'core/misc/ui/jquery.ui.selectable.css' => array(),
     ),
     'dependencies' => array(
       array('system', 'ui.widget'),
@@ -1426,10 +1426,10 @@ function system_library_info() {
     'website' => 'http://jqueryui.com/demos/slider/',
     'version' => '1.8.7',
     'js' => array(
-      'misc/ui/jquery.ui.slider.min.js' => array(),
+      'core/misc/ui/jquery.ui.slider.min.js' => array(),
     ),
     'css' => array(
-      'misc/ui/jquery.ui.slider.css' => array(),
+      'core/misc/ui/jquery.ui.slider.css' => array(),
     ),
     'dependencies' => array(
       array('system', 'ui.widget'),
@@ -1441,7 +1441,7 @@ function system_library_info() {
     'website' => 'http://jqueryui.com/demos/sortable/',
     'version' => '1.8.7',
     'js' => array(
-      'misc/ui/jquery.ui.sortable.min.js' => array(),
+      'core/misc/ui/jquery.ui.sortable.min.js' => array(),
     ),
     'dependencies' => array(
       array('system', 'ui.widget'),
@@ -1453,10 +1453,10 @@ function system_library_info() {
     'website' => 'http://jqueryui.com/demos/tabs/',
     'version' => '1.8.7',
     'js' => array(
-      'misc/ui/jquery.ui.tabs.min.js' => array(),
+      'core/misc/ui/jquery.ui.tabs.min.js' => array(),
     ),
     'css' => array(
-      'misc/ui/jquery.ui.tabs.css' => array(),
+      'core/misc/ui/jquery.ui.tabs.css' => array(),
     ),
     'dependencies' => array(
       array('system', 'ui.widget'),
@@ -1467,7 +1467,7 @@ function system_library_info() {
     'website' => 'http://docs.jquery.com/UI/Widget',
     'version' => '1.8.7',
     'js' => array(
-      'misc/ui/jquery.ui.widget.min.js' => array('group' => JS_LIBRARY, 'weight' => -10),
+      'core/misc/ui/jquery.ui.widget.min.js' => array('group' => JS_LIBRARY, 'weight' => -10),
     ),
     'dependencies' => array(
       array('system', 'ui'),
@@ -1478,7 +1478,7 @@ function system_library_info() {
     'website' => 'http://jqueryui.com/demos/effect/',
     'version' => '1.8.7',
     'js' => array(
-      'misc/ui/jquery.effects.core.min.js' => array('group' => JS_LIBRARY, 'weight' => -9),
+      'core/misc/ui/jquery.effects.core.min.js' => array('group' => JS_LIBRARY, 'weight' => -9),
     ),
   );
   $libraries['effects.blind'] = array(
@@ -1486,7 +1486,7 @@ function system_library_info() {
     'website' => 'http://jqueryui.com/demos/effect/',
     'version' => '1.8.7',
     'js' => array(
-      'misc/ui/jquery.effects.blind.min.js' => array(),
+      'core/misc/ui/jquery.effects.blind.min.js' => array(),
     ),
     'dependencies' => array(
       array('system', 'effects'),
@@ -1497,7 +1497,7 @@ function system_library_info() {
     'website' => 'http://jqueryui.com/demos/effect/',
     'version' => '1.8.7',
     'js' => array(
-      'misc/ui/jquery.effects.bounce.min.js' => array(),
+      'core/misc/ui/jquery.effects.bounce.min.js' => array(),
     ),
     'dependencies' => array(
       array('system', 'effects'),
@@ -1508,7 +1508,7 @@ function system_library_info() {
     'website' => 'http://jqueryui.com/demos/effect/',
     'version' => '1.8.7',
     'js' => array(
-      'misc/ui/jquery.effects.clip.min.js' => array(),
+      'core/misc/ui/jquery.effects.clip.min.js' => array(),
     ),
     'dependencies' => array(
       array('system', 'effects'),
@@ -1519,7 +1519,7 @@ function system_library_info() {
     'website' => 'http://jqueryui.com/demos/effect/',
     'version' => '1.8.7',
     'js' => array(
-      'misc/ui/jquery.effects.drop.min.js' => array(),
+      'core/misc/ui/jquery.effects.drop.min.js' => array(),
     ),
     'dependencies' => array(
       array('system', 'effects'),
@@ -1530,7 +1530,7 @@ function system_library_info() {
     'website' => 'http://jqueryui.com/demos/effect/',
     'version' => '1.8.7',
     'js' => array(
-      'misc/ui/jquery.effects.explode.min.js' => array(),
+      'core/misc/ui/jquery.effects.explode.min.js' => array(),
     ),
     'dependencies' => array(
       array('system', 'effects'),
@@ -1541,7 +1541,7 @@ function system_library_info() {
     'website' => 'http://jqueryui.com/demos/effect/',
     'version' => '1.8.7',
     'js' => array(
-      'misc/ui/jquery.effects.fade.min.js' => array(),
+      'core/misc/ui/jquery.effects.fade.min.js' => array(),
     ),
     'dependencies' => array(
       array('system', 'effects'),
@@ -1552,7 +1552,7 @@ function system_library_info() {
     'website' => 'http://jqueryui.com/demos/effect/',
     'version' => '1.8.7',
     'js' => array(
-      'misc/ui/jquery.effects.fold.min.js' => array(),
+      'core/misc/ui/jquery.effects.fold.min.js' => array(),
     ),
     'dependencies' => array(
       array('system', 'effects'),
@@ -1563,7 +1563,7 @@ function system_library_info() {
     'website' => 'http://jqueryui.com/demos/effect/',
     'version' => '1.8.7',
     'js' => array(
-      'misc/ui/jquery.effects.highlight.min.js' => array(),
+      'core/misc/ui/jquery.effects.highlight.min.js' => array(),
     ),
     'dependencies' => array(
       array('system', 'effects'),
@@ -1574,7 +1574,7 @@ function system_library_info() {
     'website' => 'http://jqueryui.com/demos/effect/',
     'version' => '1.8.7',
     'js' => array(
-      'misc/ui/jquery.effects.pulsate.min.js' => array(),
+      'core/misc/ui/jquery.effects.pulsate.min.js' => array(),
     ),
     'dependencies' => array(
       array('system', 'effects'),
@@ -1585,7 +1585,7 @@ function system_library_info() {
     'website' => 'http://jqueryui.com/demos/effect/',
     'version' => '1.8.7',
     'js' => array(
-      'misc/ui/jquery.effects.scale.min.js' => array(),
+      'core/misc/ui/jquery.effects.scale.min.js' => array(),
     ),
     'dependencies' => array(
       array('system', 'effects'),
@@ -1596,7 +1596,7 @@ function system_library_info() {
     'website' => 'http://jqueryui.com/demos/effect/',
     'version' => '1.8.7',
     'js' => array(
-      'misc/ui/jquery.effects.shake.min.js' => array(),
+      'core/misc/ui/jquery.effects.shake.min.js' => array(),
     ),
     'dependencies' => array(
       array('system', 'effects'),
@@ -1607,7 +1607,7 @@ function system_library_info() {
     'website' => 'http://jqueryui.com/demos/effect/',
     'version' => '1.8.7',
     'js' => array(
-      'misc/ui/jquery.effects.slide.min.js' => array(),
+      'core/misc/ui/jquery.effects.slide.min.js' => array(),
     ),
     'dependencies' => array(
       array('system', 'effects'),
@@ -1618,7 +1618,7 @@ function system_library_info() {
     'website' => 'http://jqueryui.com/demos/effect/',
     'version' => '1.8.7',
     'js' => array(
-      'misc/ui/jquery.effects.transfer.min.js' => array(),
+      'core/misc/ui/jquery.effects.transfer.min.js' => array(),
     ),
     'dependencies' => array(
       array('system', 'effects'),
@@ -1786,7 +1786,7 @@ function system_authorized_get_url(array $options = array()) {
   $options['https'] = TRUE;
   // We prefix with $base_url so we get a full path even if clean URLs are
   // disabled.
-  return url($base_url . '/authorize.php', $options);
+  return url($base_url . '/core/authorize.php', $options);
 }
 
 /**
@@ -1851,7 +1851,7 @@ function system_filetransfer_info() {
       'title' => t('FTP'),
       'class' => 'FileTransferFTP',
       'file' => 'ftp.inc',
-      'file path' => 'includes/filetransfer',
+      'file path' => 'core/includes/filetransfer',
       'weight' => 0,
     );
   }
@@ -1863,7 +1863,7 @@ function system_filetransfer_info() {
       'title' => t('SSH'),
       'class' => 'FileTransferSSH',
       'file' => 'ssh.inc',
-      'file path' => 'includes/filetransfer',
+      'file path' => 'core/includes/filetransfer',
       'weight' => 20,
     );
   }
@@ -2004,7 +2004,7 @@ function system_user_timezone(&$form, &$form_state) {
   if (!isset($account->timezone) && $account->uid == $user->uid && empty($form_state['input']['timezone'])) {
     $form['timezone']['#description'] = t('Your time zone setting will be automatically detected if possible. Confirm the selection and click save.');
     $form['timezone']['timezone']['#attributes'] = array('class' => array('timezone-detect'));
-    drupal_add_js('misc/timezone.js');
+    drupal_add_js('core/misc/timezone.js');
   }
 }
 
@@ -3520,7 +3520,7 @@ function system_date_format_types() {
  * Implements hook_date_formats().
  */
 function system_date_formats() {
-  include_once DRUPAL_ROOT . '/includes/date.inc';
+  include_once DRUPAL_ROOT . '/core/includes/date.inc';
   return system_default_date_formats();
 }
 
