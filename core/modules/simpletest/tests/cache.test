@@ -1,0 +1,375 @@
+<?php
+
+class CacheTestCase extends DrupalWebTestCase {
+  protected $default_bin = 'cache_page';
+  protected $default_cid = 'test_temporary';
+  protected $default_value = 'CacheTest';
+
+  /**
+   * Check whether or not a cache entry exists.
+   *
+   * @param $cid
+   *   The cache id.
+   * @param $var
+   *   The variable the cache should contain.
+   * @param $bin
+   *   The bin the cache item was stored in.
+   * @return
+   *   TRUE on pass, FALSE on fail.
+   */
+  protected function checkCacheExists($cid, $var, $bin = NULL) {
+    if ($bin == NULL) {
+      $bin = $this->default_bin;
+    }
+
+    $cached = cache($bin)->get($cid);
+
+    return isset($cached->data) && $cached->data == $var;
+  }
+
+  /**
+   * Assert or a cache entry exists.
+   *
+   * @param $message
+   *   Message to display.
+   * @param $var
+   *   The variable the cache should contain.
+   * @param $cid
+   *   The cache id.
+   * @param $bin
+   *   The bin the cache item was stored in.
+   */
+  protected function assertCacheExists($message, $var = NULL, $cid = NULL, $bin = NULL) {
+    if ($bin == NULL) {
+      $bin = $this->default_bin;
+    }
+    if ($cid == NULL) {
+      $cid = $this->default_cid;
+    }
+    if ($var == NULL) {
+      $var = $this->default_value;
+    }
+
+    $this->assertTrue($this->checkCacheExists($cid, $var, $bin), $message);
+  }
+
+  /**
+   * Assert or a cache entry has been removed.
+   *
+   * @param $message
+   *   Message to display.
+   * @param $cid
+   *   The cache id.
+   * @param $bin
+   *   The bin the cache item was stored in.
+   */
+  function assertCacheRemoved($message, $cid = NULL, $bin = NULL) {
+    if ($bin == NULL) {
+      $bin = $this->default_bin;
+    }
+    if ($cid == NULL) {
+      $cid = $this->default_cid;
+    }
+
+    $cached = cache($bin)->get($cid);
+    $this->assertFalse($cached, $message);
+  }
+
+  /**
+   * Perform the general wipe.
+   * @param $bin
+   *   The bin to perform the wipe on.
+   */
+  protected function generalWipe($bin = NULL) {
+    if ($bin == NULL) {
+      $bin = $this->default_bin;
+    }
+
+    cache($bin)->expire();
+  }
+
+  /**
+   * Setup the lifetime settings for caching.
+   *
+   * @param $time
+   *   The time in seconds the cache should minimal live.
+   */
+  protected function setupLifetime($time) {
+    variable_set('cache_lifetime', $time);
+    variable_set('cache_flush', 0);
+  }
+}
+
+class CacheSavingCase extends CacheTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Cache saving test',
+      'description' => 'Check our variables are saved and restored the right way.',
+      'group' => 'Cache'
+    );
+  }
+
+  /**
+   * Test the saving and restoring of a string.
+   */
+  function testString() {
+    $this->checkVariable($this->randomName(100));
+  }
+
+  /**
+   * Test the saving and restoring of an integer.
+   */
+  function testInteger() {
+    $this->checkVariable(100);
+  }
+
+  /**
+   * Test the saving and restoring of a double.
+   */
+  function testDouble() {
+    $this->checkVariable(1.29);
+  }
+
+  /**
+   * Test the saving and restoring of an array.
+   */
+  function testArray() {
+    $this->checkVariable(array('drupal1', 'drupal2' => 'drupal3', 'drupal4' => array('drupal5', 'drupal6')));
+  }
+
+  /**
+   * Test the saving and restoring of an object.
+   */
+  function testObject() {
+    $test_object = new stdClass();
+    $test_object->test1 = $this->randomName(100);
+    $test_object->test2 = 100;
+    $test_object->test3 = array('drupal1', 'drupal2' => 'drupal3', 'drupal4' => array('drupal5', 'drupal6'));
+
+
+    cache()->set('test_object', $test_object);
+    $cached = cache()->get('test_object');
+    $this->assertTrue(isset($cached->data) && $cached->data == $test_object, t('Object is saved and restored properly.'));
+  }
+
+  /**
+   * Check or a variable is stored and restored properly.
+   */
+  function checkVariable($var) {
+    cache()->set('test_var', $var);
+    $cached = cache()->get('test_var');
+    $this->assertTrue(isset($cached->data) && $cached->data === $var, t('@type is saved and restored properly.', array('@type' => ucfirst(gettype($var)))));
+  }
+
+  /**
+   * Test no empty cids are written in cache table.
+   */
+  function testNoEmptyCids() {
+    $this->drupalGet('user/register');
+    $this->assertFalse(cache_get(''), t('No cache entry is written with an empty cid.'));
+  }
+}
+
+/**
+ * Test getMultiple().
+ */
+class CacheGetMultipleUnitTest extends CacheTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Fetching multiple cache items',
+      'description' => 'Confirm that multiple records are fetched correctly.',
+      'group' => 'Cache',
+    );
+  }
+
+  function setUp() {
+    $this->default_bin = 'page';
+    parent::setUp();
+  }
+
+  /**
+   * Test getMultiple().
+   */
+  function testCacheMultiple() {
+    $item1 = $this->randomName(10);
+    $item2 = $this->randomName(10);
+    $cache = cache($this->default_bin);
+    $cache->set('item1', $item1);
+    $cache->set('item2', $item2);
+    $this->assertTrue($this->checkCacheExists('item1', $item1), t('Item 1 is cached.'));
+    $this->assertTrue($this->checkCacheExists('item2', $item2), t('Item 2 is cached.'));
+
+    // Fetch both records from the database with getMultiple().
+    $item_ids = array('item1', 'item2');
+    $items = $cache->getMultiple($item_ids);
+    $this->assertEqual($items['item1']->data, $item1, t('Item was returned from cache successfully.'));
+    $this->assertEqual($items['item2']->data, $item2, t('Item was returned from cache successfully.'));
+
+    // Remove one item from the cache.
+    $cache->delete('item2');
+
+    // Confirm that only one item is returned by getMultiple().
+    $item_ids = array('item1', 'item2');
+    $items = $cache->getMultiple($item_ids);
+    $this->assertEqual($items['item1']->data, $item1, t('Item was returned from cache successfully.'));
+    $this->assertFalse(isset($items['item2']), t('Item was not returned from the cache.'));
+    $this->assertTrue(count($items) == 1, t('Only valid cache entries returned.'));
+  }
+}
+
+/**
+ * Test cache clearing methods.
+ */
+class CacheClearCase extends CacheTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Cache clear test',
+      'description' => 'Check our clearing is done the proper way.',
+      'group' => 'Cache'
+    );
+  }
+
+  function setUp() {
+    $this->default_bin = 'page';
+    $this->default_value = $this->randomName(10);
+
+    parent::setUp();
+  }
+
+  /**
+   * Test clearing using a cid.
+   */
+  function testClearCid() {
+    $cache = cache($this->default_bin);
+    $cache->set('test_cid_clear', $this->default_value);
+
+    $this->assertCacheExists(t('Cache was set for clearing cid.'), $this->default_value, 'test_cid_clear');
+    $cache->delete('test_cid_clear');
+
+    $this->assertCacheRemoved(t('Cache was removed after clearing cid.'), 'test_cid_clear');
+  }
+
+  /**
+   * Test clearing using wildcard.
+   */
+  function testClearWildcard() {
+    $cache = cache($this->default_bin);
+    $cache->set('test_cid_clear1', $this->default_value);
+    $cache->set('test_cid_clear2', $this->default_value);
+    $this->assertTrue($this->checkCacheExists('test_cid_clear1', $this->default_value)
+                      && $this->checkCacheExists('test_cid_clear2', $this->default_value),
+                      t('Two caches were created for checking cid "*" with wildcard true.'));
+    $cache->flush();
+    $this->assertFalse($this->checkCacheExists('test_cid_clear1', $this->default_value)
+                      || $this->checkCacheExists('test_cid_clear2', $this->default_value),
+                      t('Two caches removed after clearing cid "*" with wildcard true.'));
+
+    $cache->set('test_cid_clear1', $this->default_value);
+    $cache->set('test_cid_clear2', $this->default_value);
+    $this->assertTrue($this->checkCacheExists('test_cid_clear1', $this->default_value)
+                      && $this->checkCacheExists('test_cid_clear2', $this->default_value),
+                      t('Two caches were created for checking cid substring with wildcard true.'));
+    $cache->deletePrefix('test_');
+    $this->assertFalse($this->checkCacheExists('test_cid_clear1', $this->default_value)
+                      || $this->checkCacheExists('test_cid_clear2', $this->default_value),
+                      t('Two caches removed after clearing cid substring with wildcard true.'));
+  }
+
+  /**
+   * Test clearing using an array.
+   */
+  function testClearArray() {
+    // Create three cache entries.
+    $cache = cache($this->default_bin);
+    $cache->set('test_cid_clear1', $this->default_value);
+    $cache->set('test_cid_clear2', $this->default_value);
+    $cache->set('test_cid_clear3', $this->default_value);
+    $this->assertTrue($this->checkCacheExists('test_cid_clear1', $this->default_value)
+                      && $this->checkCacheExists('test_cid_clear2', $this->default_value)
+                      && $this->checkCacheExists('test_cid_clear3', $this->default_value),
+                      t('Three cache entries were created.'));
+
+    // Clear two entries using an array.
+    $cache->deleteMultiple(array('test_cid_clear1', 'test_cid_clear2'));
+    $this->assertFalse($this->checkCacheExists('test_cid_clear1', $this->default_value)
+                       || $this->checkCacheExists('test_cid_clear2', $this->default_value),
+                       t('Two cache entries removed after clearing with an array.'));
+
+    $this->assertTrue($this->checkCacheExists('test_cid_clear3', $this->default_value),
+                      t('Entry was not cleared from the cache'));
+
+    // Set the cache clear threshold to 2 to confirm that the full bin is cleared
+    // when the threshold is exceeded.
+    variable_set('cache_clear_threshold', 2);
+    $cache->set('test_cid_clear1', $this->default_value);
+    $cache->set('test_cid_clear2', $this->default_value);
+    $this->assertTrue($this->checkCacheExists('test_cid_clear1', $this->default_value)
+                      && $this->checkCacheExists('test_cid_clear2', $this->default_value),
+                      t('Two cache entries were created.'));
+    $cache->deleteMultiple(array('test_cid_clear1', 'test_cid_clear2', 'test_cid_clear3'));
+    $this->assertFalse($this->checkCacheExists('test_cid_clear1', $this->default_value)
+                       || $this->checkCacheExists('test_cid_clear2', $this->default_value)
+                       || $this->checkCacheExists('test_cid_clear3', $this->default_value),
+                       t('All cache entries removed when the array exceeded the cache clear threshold.'));
+  }
+
+  /**
+   * Test drupal_flush_all_caches().
+   */
+  function testFlushAllCaches() {
+    // Create cache entries for each flushed cache bin.
+    $bins = array('cache', 'filter', 'page', 'bootstrap', 'path');
+    $bins = array_merge(module_invoke_all('flush_caches'), $bins);
+    foreach ($bins as $id => $bin) {
+      $cid = 'test_cid_clear' . $id;
+      cache($bin)->set($cid, $this->default_value);
+    }
+
+    // Remove all caches then make sure that they are cleared.
+    drupal_flush_all_caches();
+
+    foreach ($bins as $id => $bin) {
+      $cid = 'test_cid_clear' . $id;
+      $this->assertFalse($this->checkCacheExists($cid, $this->default_value, $bin), t('All cache entries removed from @bin.', array('@bin' => $bin)));
+    }
+  }
+}
+
+/**
+ * Test isEmpty() method.
+ */
+class CacheIsEmptyCase extends CacheTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Cache emptiness test',
+      'description' => 'Check if a cache bin is empty after performing clear operations.',
+      'group' => 'Cache'
+    );
+  }
+
+  function setUp() {
+    $this->default_bin = 'page';
+    $this->default_value = $this->randomName(10);
+
+    parent::setUp();
+  }
+
+  /**
+   * Test clearing using a cid.
+   */
+  function testIsEmpty() {
+    // Clear the cache bin.
+    $cache = cache($this->default_bin);
+    $cache->flush();
+    $this->assertTrue($cache->isEmpty(), t('The cache bin is empty'));
+    // Add some data to the cache bin.
+    $cache->set($this->default_cid, $this->default_value);
+    $this->assertCacheExists(t('Cache was set.'), $this->default_value, $this->default_cid);
+    $this->assertFalse($cache->isEmpty(), t('The cache bin is not empty'));
+    // Remove the cached data.
+    $cache->delete($this->default_cid);
+    $this->assertCacheRemoved(t('Cache was removed.'), $this->default_cid);
+    $this->assertTrue($cache->isEmpty(), t('The cache bin is empty'));
+  }
+}

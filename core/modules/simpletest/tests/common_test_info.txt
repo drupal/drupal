@@ -1,0 +1,9 @@
+; Test parsing with a simple string.
+simple_string = A simple string
+
+; Test that constants can be used as values.
+simple_constant = WATCHDOG_INFO
+
+; After parsing the .info file, 'double_colon' should hold the literal value.
+; Parsing should not throw a fatal error or try to access a class constant.
+double_colon = dummyClassName::

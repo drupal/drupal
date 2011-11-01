@@ -1,0 +1,11 @@
+
+/**
+ * Image upload widget.
+ */
+div.image-preview {
+  float: right;
+  padding: 0 0 10px 10px;
+}
+div.image-widget-data {
+  float: right;
+}

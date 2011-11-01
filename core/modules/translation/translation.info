@@ -1,0 +1,7 @@
+name = Content translation
+description = Allows content to be translated into different languages.
+dependencies[] = locale
+package = Core
+version = VERSION
+core = 8.x
+files[] = translation.test

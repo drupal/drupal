@@ -1,0 +1,7 @@
+name = Locale
+description = Adds language handling functionality and enables the translation of the user interface to languages other than English.
+package = Core
+version = VERSION
+core = 8.x
+files[] = locale.test
+configure = admin/config/regional/language

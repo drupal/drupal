@@ -1,0 +1,5 @@
+name = Toolbar
+description = Provides a toolbar that shows the top-level administration menu items and links from other modules.
+core = 8.x
+package = Core
+version = VERSION

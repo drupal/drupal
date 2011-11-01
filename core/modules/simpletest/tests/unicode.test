@@ -1,0 +1,305 @@
+<?php
+
+/**
+ * @file
+ * Various unicode handling tests.
+ */
+
+/**
+ * Test unicode handling features implemented in unicode.inc.
+ */
+class UnicodeUnitTest extends DrupalWebTestCase {
+
+  /**
+   * Whether to run the extended version of the tests (including non latin1 characters).
+   *
+   * @var boolean
+   */
+  protected $extendedMode = FALSE;
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Unicode handling',
+      'description' => 'Tests Drupal Unicode handling.',
+      'group' => 'System',
+    );
+  }
+
+  /**
+   * Test full unicode features implemented using the mbstring extension.
+   */
+  function testMbStringUnicode() {
+    global $multibyte;
+
+    // mbstring was not detected on this installation, there is no way to test
+    // multibyte features. Treat that as an exception.
+    if ($multibyte == UNICODE_SINGLEBYTE) {
+      $this->error(t('Unable to test Multibyte features: mbstring extension was not detected.'));
+    }
+
+    $multibyte = UNICODE_MULTIBYTE;
+
+    $this->extendedMode = TRUE;
+    $this->pass(t('Testing in mbstring mode'));
+
+    $this->helperTestStrToLower();
+    $this->helperTestStrToUpper();
+    $this->helperTestUcFirst();
+    $this->helperTestStrLen();
+    $this->helperTestSubStr();
+    $this->helperTestTruncate();
+  }
+
+  /**
+   * Test emulated unicode features.
+   */
+  function testEmulatedUnicode() {
+    global $multibyte;
+
+    $multibyte = UNICODE_SINGLEBYTE;
+
+    $this->extendedMode = FALSE;
+
+    $this->pass(t('Testing in emulated (best-effort) mode'));
+
+    $this->helperTestStrToLower();
+    $this->helperTestStrToUpper();
+    $this->helperTestUcFirst();
+    $this->helperTestStrLen();
+    $this->helperTestSubStr();
+    $this->helperTestTruncate();
+  }
+
+  function helperTestStrToLower() {
+    $testcase = array(
+      'tHe QUIcK bRoWn' => 'the quick brown',
+      'FrançAIS is ÜBER-åwesome' => 'français is über-åwesome',
+    );
+    if ($this->extendedMode) {
+      $testcase['ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΣὨ'] = 'αβγδεζηθικλμνξοσὠ';
+    }
+
+    foreach ($testcase as $input => $output) {
+      $this->assertEqual(drupal_strtolower($input), $output, t('%input is lowercased as %output', array('%input' => $input, '%output' => $output)));
+    }
+  }
+
+  function helperTestStrToUpper() {
+    $testcase = array(
+      'tHe QUIcK bRoWn' => 'THE QUICK BROWN',
+      'FrançAIS is ÜBER-åwesome' => 'FRANÇAIS IS ÜBER-ÅWESOME',
+    );
+    if ($this->extendedMode) {
+      $testcase['αβγδεζηθικλμνξοσὠ'] = 'ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΣὨ';
+    }
+
+    foreach ($testcase as $input => $output) {
+      $this->assertEqual(drupal_strtoupper($input), $output, t('%input is uppercased as %output', array('%input' => $input, '%output' => $output)));
+    }
+  }
+
+  function helperTestUcFirst() {
+    $testcase = array(
+      'tHe QUIcK bRoWn' => 'THe QUIcK bRoWn',
+      'françAIS' => 'FrançAIS',
+      'über' => 'Über',
+      'åwesome' => 'Åwesome'
+    );
+    if ($this->extendedMode) {
+      $testcase['σion'] = 'Σion';
+    }
+
+    foreach ($testcase as $input => $output) {
+      $this->assertEqual(drupal_ucfirst($input), $output, t('%input is ucfirst-ed as %output', array('%input' => $input, '%output' => $output)));
+    }
+  }
+
+  function helperTestStrLen() {
+    $testcase = array(
+      'tHe QUIcK bRoWn' => 15,
+      'ÜBER-åwesome' => 12,
+    );
+
+    foreach ($testcase as $input => $output) {
+      $this->assertEqual(drupal_strlen($input), $output, t('%input length is %output', array('%input' => $input, '%output' => $output)));
+    }
+  }
+
+  function helperTestSubStr() {
+    $testcase = array(
+      //     012345678901234567890123
+      array('frànçAIS is über-åwesome', 0, 0,
+            ''),
+      array('frànçAIS is über-åwesome', 0, 1,
+            'f'),
+      array('frànçAIS is über-åwesome', 0, 8,
+            'frànçAIS'),
+      array('frànçAIS is über-åwesome', 0, 23,
+            'frànçAIS is über-åwesom'),
+      array('frànçAIS is über-åwesome', 0, 24,
+            'frànçAIS is über-åwesome'),
+      array('frànçAIS is über-åwesome', 0, 25,
+            'frànçAIS is über-åwesome'),
+      array('frànçAIS is über-åwesome', 0, 100,
+            'frànçAIS is über-åwesome'),
+      array('frànçAIS is über-åwesome', 4, 4,
+                'çAIS'),
+      array('frànçAIS is über-åwesome', 1, 0,
+            ''),
+      array('frànçAIS is über-åwesome', 100, 0,
+            ''),
+      array('frànçAIS is über-åwesome', -4, 2,
+                                'so'),
+      array('frànçAIS is über-åwesome', -4, 3,
+                                'som'),
+      array('frànçAIS is über-åwesome', -4, 4,
+                                'some'),
+      array('frànçAIS is über-åwesome', -4, 5,
+                                'some'),
+      array('frànçAIS is über-åwesome', -7, 10,
+                             'åwesome'),
+      array('frànçAIS is über-åwesome', 5, -10,
+                 'AIS is üb'),
+      array('frànçAIS is über-åwesome', 0, -10,
+            'frànçAIS is üb'),
+      array('frànçAIS is über-åwesome', 0, -1,
+        'frànçAIS is über-åwesom'),
+      array('frànçAIS is über-åwesome', -7, -2,
+                             'åweso'),
+      array('frànçAIS is über-åwesome', -7, -6,
+                             'å'),
+      array('frànçAIS is über-åwesome', -7, -7,
+                             ''),
+      array('frànçAIS is über-åwesome', -7, -8,
+                             ''),
+      array('...', 0, 2, '..'),
+      array('以呂波耳・ほへとち。リヌルヲ。', 1, 3,
+              '呂波耳'),
+
+    );
+
+    foreach ($testcase as $test) {
+      list($input, $start, $length, $output) = $test;
+      $result = drupal_substr($input, $start, $length);
+      $this->assertEqual($result, $output, t('%input substring at offset %offset for %length characters is %output (got %result)', array('%input' => $input, '%offset' => $start, '%length' => $length, '%output' => $output, '%result' => $result)));
+    }
+  }
+
+  /**
+   * Test decode_entities().
+   */
+  function testDecodeEntities() {
+    $testcase = array(
+      'Drupal' => 'Drupal',
+      '<script>' => '<script>',
+      '&lt;script&gt;' => '<script>',
+      '&#60;script&#62;' => '<script>',
+      '&amp;lt;script&amp;gt;' => '&lt;script&gt;',
+      '"' => '"',
+      '&#34;' => '"',
+      '&amp;#34;' => '&#34;',
+      '&quot;' => '"',
+      '&amp;quot;' => '&quot;',
+      "'" => "'",
+      '&#39;' => "'",
+      '&amp;#39;' => '&#39;',
+      '©' => '©',
+      '&copy;' => '©',
+      '&#169;' => '©',
+      '→' => '→',
+      '&#8594;' => '→',
+      '➼' => '➼',
+      '&#10172;' => '➼',
+      '&euro;' => '€',
+    );
+    foreach ($testcase as $input => $output) {
+      $this->assertEqual(decode_entities($input), $output, t('Make sure the decoded entity of @input is @output', array('@input' => $input, '@output' => $output)));
+    }
+  }
+
+  /**
+   * Tests truncate_utf8().
+   */
+  function helperTestTruncate() {
+    // Each case is an array with input string, length to truncate to, and
+    // expected return value.
+
+    // Test non-wordsafe, non-ellipsis cases.
+    $non_wordsafe_non_ellipsis_cases = array(
+      array('frànçAIS is über-åwesome', 24, 'frànçAIS is über-åwesome'),
+      array('frànçAIS is über-åwesome', 23, 'frànçAIS is über-åwesom'),
+      array('frànçAIS is über-åwesome', 17, 'frànçAIS is über-'),
+      array('以呂波耳・ほへとち。リヌルヲ。', 6, '以呂波耳・ほ'),
+    );
+    $this->runTruncateTests($non_wordsafe_non_ellipsis_cases, FALSE, FALSE);
+
+    // Test non-wordsafe, ellipsis cases.
+    $non_wordsafe_ellipsis_cases = array(
+      array('frànçAIS is über-åwesome', 24, 'frànçAIS is über-åwesome'),
+      array('frànçAIS is über-åwesome', 23, 'frànçAIS is über-åwe...'),
+      array('frànçAIS is über-åwesome', 17, 'frànçAIS is üb...'),
+    );
+    $this->runTruncateTests($non_wordsafe_ellipsis_cases, FALSE, TRUE);
+
+    // Test wordsafe, ellipsis cases.
+    $wordsafe_ellipsis_cases = array(
+      array('123', 1, '.'),
+      array('123', 2, '..'),
+      array('123', 3, '123'),
+      array('1234', 3, '...'),
+      array('1234567890', 10, '1234567890'),
+      array('12345678901', 10, '1234567...'),
+      array('12345678901', 11, '12345678901'),
+      array('123456789012', 11, '12345678...'),
+      array('12345 7890', 10, '12345 7890'),
+      array('12345 7890', 9, '12345...'),
+      array('123 567 90', 10, '123 567 90'),
+      array('123 567 901', 10, '123 567...'),
+      array('Stop. Hammertime.', 17, 'Stop. Hammertime.'),
+      array('Stop. Hammertime.', 16, 'Stop....'),
+      array('frànçAIS is über-åwesome', 24, 'frànçAIS is über-åwesome'),
+      array('frànçAIS is über-åwesome', 23, 'frànçAIS is über...'),
+      array('frànçAIS is über-åwesome', 17, 'frànçAIS is...'),
+      array('¿Dónde está el niño?', 20, '¿Dónde está el niño?'),
+      array('¿Dónde está el niño?', 19, '¿Dónde está el...'),
+      array('¿Dónde está el niño?', 15, '¿Dónde está...'),
+      array('¿Dónde está el niño?', 10, '¿Dónde...'),
+      array('Help! Help! Help!', 17, 'Help! Help! Help!'),
+      array('Help! Help! Help!', 16, 'Help! Help!...'),
+      array('Help! Help! Help!', 15, 'Help! Help!...'),
+      array('Help! Help! Help!', 14, 'Help! Help!...'),
+      array('Help! Help! Help!', 13, 'Help! Help...'),
+      array('Help! Help! Help!', 12, 'Help!...'),
+      array('Help! Help! Help!', 11, 'Help!...'),
+      array('Help! Help! Help!', 10, 'Help!...'),
+      array('Help! Help! Help!', 9, 'Help!...'),
+      array('Help! Help! Help!', 8, 'Help!...'),
+      array('Help! Help! Help!', 7, 'Help...'),
+      array('Help! Help! Help!', 6, 'Hel...'),
+      array('Help! Help! Help!', 5, 'He...'),
+    );
+    $this->runTruncateTests($wordsafe_ellipsis_cases, TRUE, TRUE);
+  }
+
+  /**
+   * Runs test cases for helperTestTruncate().
+   *
+   * Runs each test case through truncate_utf8() and compares the output
+   * to the expected output.
+   *
+   * @param $cases
+   *   Cases array. Each case is an array with the input string, length to
+   *   truncate to, and expected output.
+   * @param $wordsafe
+   *   TRUE to use word-safe truncation, FALSE to not use word-safe truncation.
+   * @param $ellipsis
+   *   TRUE to append ... if the input is truncated, FALSE to not append ....
+   */
+  function runTruncateTests($cases, $wordsafe, $ellipsis) {
+    foreach ($cases as $case) {
+      list($input, $max_length, $expected) = $case;
+      $output = truncate_utf8($input, $max_length, $wordsafe, $ellipsis);
+      $this->assertEqual($output, $expected, t('%input truncate to %length characters with %wordsafe, %ellipsis is %expected (got %output)', array('%input' => $input, '%length' => $max_length, '%output' => $output, '%expected' => $expected, '%wordsafe' => ($wordsafe ? 'word-safe' : 'not word-safe'), '%ellipsis' => ($ellipsis ? 'ellipsis' : 'not ellipsis'))));
+    }
+  }
+}

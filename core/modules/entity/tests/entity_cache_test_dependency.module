@@ -1,0 +1,17 @@
+<?php
+
+/**
+ * @file
+ * Helper module for entity cache tests.
+ */
+
+/**
+ * Implements hook_entity_info().
+ */
+function entity_cache_test_dependency_entity_info() {
+  return array(
+    'entity_cache_test' => array(
+      'label' => 'Entity Cache Test',
+    ),
+  );
+}

@@ -1,0 +1,7 @@
+name = Number
+description = Defines numeric field types.
+package = Core
+version = VERSION
+core = 8.x
+dependencies[] = field
+files[] = number.test

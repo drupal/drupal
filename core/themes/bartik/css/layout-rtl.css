@@ -1,0 +1,22 @@
+
+/* ---------- Basic Layout RTL Styles ----------- */
+
+#content,
+#sidebar-first,
+#sidebar-second,
+.region-triptych-first,
+.region-triptych-middle,
+.region-triptych-last,
+.region-footer-firstcolumn,
+.region-footer-secondcolumn,
+.region-footer-thirdcolumn,
+.region-footer-fourthcolumn {
+  float: right;
+}
+.region-header {
+  float: left;
+}
+#secondary-menu {
+  left: 0;
+  right: auto;
+}

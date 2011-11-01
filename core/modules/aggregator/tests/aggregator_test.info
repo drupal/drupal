@@ -1,0 +1,6 @@
+name = "Aggregator module tests"
+description = "Support module for aggregator related testing."
+package = Testing
+version = VERSION
+core = 8.x
+hidden = TRUE

@@ -1,0 +1,261 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the comment module.
+ */
+
+/**
+ * Implements hook_uninstall().
+ */
+function comment_uninstall() {
+  // Delete comment_body field.
+  field_delete_field('comment_body');
+
+  // Remove variables.
+  variable_del('comment_block_count');
+  $node_types = array_keys(node_type_get_types());
+  foreach ($node_types as $node_type) {
+    field_attach_delete_bundle('comment', 'comment_node_' . $node_type);
+    variable_del('comment_' . $node_type);
+    variable_del('comment_anonymous_' . $node_type);
+    variable_del('comment_controls_' . $node_type);
+    variable_del('comment_default_mode_' . $node_type);
+    variable_del('comment_default_order_' . $node_type);
+    variable_del('comment_default_per_page_' . $node_type);
+    variable_del('comment_form_location_' . $node_type);
+    variable_del('comment_preview_' . $node_type);
+    variable_del('comment_subject_field_' . $node_type);
+  }
+}
+
+/**
+ * Implements hook_enable().
+ */
+function comment_enable() {
+  // Insert records into the node_comment_statistics for nodes that are missing.
+  $query = db_select('node', 'n');
+  $query->leftJoin('node_comment_statistics', 'ncs', 'ncs.nid = n.nid');
+  $query->addField('n', 'created', 'last_comment_timestamp');
+  $query->addField('n', 'uid', 'last_comment_uid');
+  $query->addField('n', 'nid');
+  $query->addExpression('0', 'comment_count');
+  $query->addExpression('NULL', 'last_comment_name');
+  $query->isNull('ncs.comment_count');
+
+  db_insert('node_comment_statistics')
+    ->from($query)
+    ->execute();
+}
+
+/**
+ * Implements hook_modules_enabled().
+ *
+ * Creates comment body fields for node types existing before the comment module
+ * is enabled. We use hook_modules_enabled() rather than hook_enable() so we can
+ * react to node types of existing modules, and those of modules being enabled
+ * both before and after comment module in the loop of module_enable().
+ *
+ * There is a separate comment bundle for each node type to allow for
+ * per-node-type customization of comment fields. Each one of these bundles
+ * needs a comment body field instance. A comment bundle is needed even for
+ * node types whose comments are disabled by default, because individual nodes
+ * may override that default.
+ *
+ * @see comment_node_type_insert()
+ */
+function comment_modules_enabled($modules) {
+  // Only react if comment module is one of the modules being enabled.
+  // hook_node_type_insert() is used to create body fields while the comment
+  // module is enabled.
+  if (in_array('comment', $modules)) {
+    // Ensure that the list of node types reflects newly enabled modules.
+    node_types_rebuild();
+
+    // Create comment body fields for each node type, if needed.
+    foreach (node_type_get_types() as $type => $info) {
+      _comment_body_field_create($info);
+    }
+  }
+}
+
+/**
+ * Implements hook_schema().
+ */
+function comment_schema() {
+  $schema['comment'] = array(
+    'description' => 'Stores comments and associated data.',
+    'fields' => array(
+      'cid' => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Primary Key: Unique comment ID.',
+      ),
+      'pid' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The {comment}.cid to which this comment is a reply. If set to 0, this comment is not a reply to an existing comment.',
+      ),
+      'nid' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The {node}.nid to which this comment is a reply.',
+      ),
+      'uid' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The {users}.uid who authored the comment. If set to 0, this comment was created by an anonymous user.',
+      ),
+      'subject' => array(
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The comment title.',
+      ),
+      'hostname' => array(
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => "The author's host name.",
+      ),
+      'created' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The time that the comment was created, as a Unix timestamp.',
+      ),
+      'changed' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The time that the comment was last edited, as a Unix timestamp.',
+      ),
+      'status' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 1,
+        'size' => 'tiny',
+        'description' => 'The published status of a comment. (0 = Not Published, 1 = Published)',
+      ),
+      'thread' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'description' => "The alphadecimal representation of the comment's place in a thread, consisting of a base 36 string prefixed by an integer indicating its length.",
+      ),
+      'name' => array(
+        'type' => 'varchar',
+        'length' => 60,
+        'not null' => FALSE,
+        'description' => "The comment author's name. Uses {users}.name if the user is logged in, otherwise uses the value typed into the comment form.",
+      ),
+      'mail' => array(
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => FALSE,
+        'description' => "The comment author's e-mail address from the comment form, if user is anonymous, and the 'Anonymous users may/must leave their contact information' setting is turned on.",
+      ),
+      'homepage' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+        'description' => "The comment author's home page address from the comment form, if user is anonymous, and the 'Anonymous users may/must leave their contact information' setting is turned on.",
+      ),
+      'language' => array(
+        'description' => 'The {languages}.language of this comment.',
+        'type' => 'varchar',
+        'length' => 12,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+    ),
+    'indexes' => array(
+      'comment_status_pid' => array('pid', 'status'),
+      'comment_num_new' => array('nid', 'status', 'created', 'cid', 'thread'),
+      'comment_uid' => array('uid'),
+      'comment_nid_language' => array('nid', 'language'),
+      'comment_created' => array('created'),
+    ),
+    'primary key' => array('cid'),
+    'foreign keys' => array(
+      'comment_node' => array(
+        'table' => 'node',
+        'columns' => array('nid' => 'nid'),
+      ),
+      'comment_author' => array(
+        'table' => 'users',
+        'columns' => array('uid' => 'uid'),
+      ),
+    ),
+  );
+
+  $schema['node_comment_statistics'] = array(
+    'description' => 'Maintains statistics of node and comments posts to show "new" and "updated" flags.',
+    'fields' => array(
+      'nid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The {node}.nid for which the statistics are compiled.',
+      ),
+      'cid' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The {comment}.cid of the last comment.',
+      ),
+      'last_comment_timestamp' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The Unix timestamp of the last comment that was posted within this node, from {comment}.changed.',
+      ),
+      'last_comment_name' => array(
+        'type' => 'varchar',
+        'length' => 60,
+        'not null' => FALSE,
+        'description' => 'The name of the latest author to post a comment on this node, from {comment}.name.',
+      ),
+      'last_comment_uid' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The user ID of the latest author to post a comment on this node, from {comment}.uid.',
+      ),
+      'comment_count' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The total number of comments on this node.',
+      ),
+    ),
+    'primary key' => array('nid'),
+    'indexes' => array(
+      'node_comment_timestamp' => array('last_comment_timestamp'),
+      'comment_count' => array('comment_count'),
+      'last_comment_uid' => array('last_comment_uid'),
+    ),
+    'foreign keys' => array(
+      'statistics_node' => array(
+        'table' => 'node',
+        'columns' => array('nid' => 'nid'),
+      ),
+      'last_comment_author' => array(
+        'table' => 'users',
+        'columns' => array(
+          'last_comment_uid' => 'uid',
+        ),
+      ),
+    ),
+  );
+
+  return $schema;
+}

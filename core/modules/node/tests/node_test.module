@@ -1,0 +1,151 @@
+<?php
+
+/**
+ * @file
+ * Dummy module implementing node related hooks to test API interaction with
+ * the Node module.
+ */
+
+/**
+ * Implements hook_node_load().
+ */
+function node_test_node_load($nodes, $types) {
+  // Add properties to each loaded node which record the parameters that were
+  // passed in to this function, so the tests can check that (a) this hook was
+  // called, and (b) the parameters were what we expected them to be.
+  $nids = array_keys($nodes);
+  ksort($nids);
+  sort($types);
+  foreach ($nodes as $node) {
+    $node->node_test_loaded_nids = $nids;
+    $node->node_test_loaded_types = $types;
+  }
+}
+
+/**
+ * Implements hook_node_view().
+ */
+function node_test_node_view($node, $view_mode) {
+  if ($view_mode == 'rss') {
+    // Add RSS elements and namespaces when building the RSS feed.
+    $node->rss_elements[] = array(
+      'key' => 'testElement',
+      'value' => t('Value of testElement RSS element for node !nid.', array('!nid' => $node->nid)),
+    );
+    $node->rss_namespaces['xmlns:drupaltest'] = 'http://example.com/test-namespace';
+
+    // Add content that should be displayed only in the RSS feed.
+    $node->content['extra_feed_content'] = array(
+      '#markup' => '<p>' . t('Extra data that should appear only in the RSS feed for node !nid.', array('!nid' => $node->nid)) . '</p>',
+      '#weight' => 10,
+    );
+  }
+
+  if ($view_mode != 'rss') {
+    // Add content that should NOT be displayed in the RSS feed.
+    $node->content['extra_non_feed_content'] = array(
+      '#markup' => '<p>' . t('Extra data that should appear everywhere except the RSS feed for node !nid.', array('!nid' => $node->nid)) . '</p>',
+    );
+  }
+}
+
+/**
+ * Implements hook_node_grants().
+ */
+function node_test_node_grants($account, $op) {
+  // Give everyone full grants so we don't break other node tests.
+  // Our node access tests asserts three realms of access.
+  // See testGrantAlter().
+  return array(
+    'test_article_realm' => array(1),
+    'test_page_realm' => array(1),
+    'test_alter_realm' => array(2),
+  );
+}
+
+/**
+ * Implements hook_node_access_records().
+ */
+function node_test_node_access_records($node) {
+  // Return nothing when testing for empty responses.
+  if (!empty($node->disable_node_access)) {
+    return;
+  }
+  $grants = array();
+  if ($node->type == 'article') {
+    // Create grant in arbitrary article_realm for article nodes.
+    $grants[] = array(
+      'realm' => 'test_article_realm',
+      'gid' => 1,
+      'grant_view' => 1,
+      'grant_update' => 0,
+      'grant_delete' => 0,
+      'priority' => 0,
+    );
+  }
+  elseif ($node->type == 'page') {
+    // Create grant in arbitrary page_realm for page nodes.
+    $grants[] = array(
+      'realm' => 'test_page_realm',
+      'gid' => 1,
+      'grant_view' => 1,
+      'grant_update' => 0,
+      'grant_delete' => 0,
+      'priority' => 0,
+    );
+  }
+  return $grants;
+}
+
+/**
+ * Implements hook_node_access_records_alter().
+ */
+function node_test_node_access_records_alter(&$grants, $node) {
+  if (!empty($grants)) {
+    foreach ($grants as $key => $grant) {
+      // Alter grant from test_page_realm to test_alter_realm and modify the gid.
+      if ($grant['realm'] == 'test_page_realm' && $node->promote) {
+        $grants[$key]['realm'] = 'test_alter_realm';
+        $grants[$key]['gid'] = 2;
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_node_grants_alter().
+ */
+function node_test_node_grants_alter(&$grants, $account, $op) {
+  // Return an empty array of grants to prove that we can alter by reference.
+  $grants = array();
+}
+
+/**
+ * Implements hook_node_presave().
+ */
+function node_test_node_presave($node) {
+  if ($node->title == 'testing_node_presave') {
+    // Sun, 19 Nov 1978 05:00:00 GMT
+    $node->created = 280299600;
+    // Drupal 1.0 release.
+    $node->changed = 979534800;
+  }
+  // Determine changes.
+  if (!empty($node->original) && $node->original->title == 'test_changes') {
+    if ($node->original->title != $node->title) {
+      $node->title .= '_presave';
+    }
+  }
+}
+
+/**
+ * Implements hook_node_update().
+ */
+function node_test_node_update($node) {
+  // Determine changes on update.
+  if (!empty($node->original) && $node->original->title == 'test_changes') {
+    if ($node->original->title != $node->title) {
+      $node->title .= '_update';
+    }
+  }
+}

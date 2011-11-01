@@ -1,0 +1,7 @@
+
+.form-item-type,
+.form-item-severity {
+  float: right;
+  padding-right: 0;
+  padding-left: .8em;
+}

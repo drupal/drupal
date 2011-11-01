@@ -1,0 +1,13 @@
+
+/**
+ * @file
+ * RTL Styles for system messages.
+ */
+
+div.messages {
+  background-position: 99% 8px;
+  padding: 10px 50px 10px 10px;
+}
+div.messages ul {
+  margin: 0 1em 0 0;
+}

@@ -1,0 +1,248 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the taxonomy module.
+ */
+
+/**
+ * Implements hook_uninstall().
+ */
+function taxonomy_uninstall() {
+  // Remove variables.
+  variable_del('taxonomy_override_selector');
+  variable_del('taxonomy_terms_per_page_admin');
+  // Remove taxonomy_term bundles.
+  $vocabularies = db_query("SELECT machine_name FROM {taxonomy_vocabulary}")->fetchCol();
+  foreach ($vocabularies as $vocabulary) {
+    field_attach_delete_bundle('taxonomy_term', $vocabulary);
+  }
+}
+
+/**
+ * Implements hook_schema().
+ */
+function taxonomy_schema() {
+  $schema['taxonomy_term_data'] = array(
+    'description' => 'Stores term information.',
+    'fields' => array(
+      'tid' => array(
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'Primary Key: Unique term ID.',
+      ),
+      'vid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The {taxonomy_vocabulary}.vid of the vocabulary to which the term is assigned.',
+      ),
+      'name' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The term name.',
+        'translatable' => TRUE,
+      ),
+      'description' => array(
+        'type' => 'text',
+        'not null' => FALSE,
+        'size' => 'big',
+        'description' => 'A description of the term.',
+        'translatable' => TRUE,
+      ),
+      'format' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+        'description' => 'The {filter_format}.format of the description.',
+      ),
+      'weight' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The weight of this term in relation to other terms.',
+      ),
+    ),
+    'primary key' => array('tid'),
+    'foreign keys' => array(
+      'vocabulary' => array(
+        'table' => 'taxonomy_vocabulary',
+        'columns' => array('vid' => 'vid'),
+      ),
+    ),
+    'indexes' => array(
+      'taxonomy_tree' => array('vid', 'weight', 'name'),
+      'vid_name' => array('vid', 'name'),
+      'name' => array('name'),
+    ),
+  );
+
+  $schema['taxonomy_term_hierarchy'] = array(
+    'description' => 'Stores the hierarchical relationship between terms.',
+    'fields' => array(
+      'tid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Primary Key: The {taxonomy_term_data}.tid of the term.',
+      ),
+      'parent' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => "Primary Key: The {taxonomy_term_data}.tid of the term's parent. 0 indicates no parent.",
+      ),
+    ),
+    'indexes' => array(
+      'parent' => array('parent'),
+    ),
+    'foreign keys' => array(
+      'taxonomy_term_data' => array(
+        'table' => 'taxonomy_term_data',
+        'columns' => array('tid' => 'tid'),
+      ),
+    ),
+    'primary key' => array('tid', 'parent'),
+  );
+
+  $schema['taxonomy_vocabulary'] = array(
+    'description' => 'Stores vocabulary information.',
+    'fields' => array(
+      'vid' => array(
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'Primary Key: Unique vocabulary ID.',
+      ),
+      'name' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Name of the vocabulary.',
+        'translatable' => TRUE,
+      ),
+      'machine_name' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The vocabulary machine name.',
+      ),
+      'description' => array(
+        'type' => 'text',
+        'not null' => FALSE,
+        'size' => 'big',
+        'description' => 'Description of the vocabulary.',
+        'translatable' => TRUE,
+      ),
+      'hierarchy' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'tiny',
+        'description' => 'The type of hierarchy allowed within the vocabulary. (0 = disabled, 1 = single, 2 = multiple)',
+      ),
+      'weight' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The weight of this vocabulary in relation to other vocabularies.',
+      ),
+    ),
+    'primary key' => array('vid'),
+    'indexes' => array(
+      'list' => array('weight', 'name'),
+    ),
+    'unique keys' => array(
+      'machine_name' => array('machine_name'),
+    ),
+  );
+
+  $schema['taxonomy_index'] = array(
+    'description' => 'Maintains denormalized information about node/term relationships.',
+    'fields' => array(
+      'nid' => array(
+        'description' => 'The {node}.nid this record tracks.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'tid' => array(
+         'description' => 'The term ID.',
+         'type' => 'int',
+         'unsigned' => TRUE,
+         'not null' => TRUE,
+         'default' => 0,
+      ),
+      'sticky' => array(
+        'description' => 'Boolean indicating whether the node is sticky.',
+        'type' => 'int',
+        'not null' => FALSE,
+        'default' => 0,
+        'size' => 'tiny',
+      ),
+      'created' => array(
+        'description' => 'The Unix timestamp when the node was created.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default'=> 0,
+      ),
+    ),
+    'indexes' => array(
+      'term_node' => array('tid', 'sticky', 'created'),
+      'nid' => array('nid'),
+    ),
+    'foreign keys' => array(
+      'tracked_node' => array(
+        'table' => 'node',
+        'columns' => array('nid' => 'nid'),
+      ),
+      'term' => array(
+        'table' => 'taxonomy_term_data',
+        'columns' => array('tid' => 'tid'),
+      ),
+    ),
+  );
+
+  return $schema;
+}
+
+/**
+ * Implements hook_field_schema().
+ */
+function taxonomy_field_schema($field) {
+  return array(
+    'columns' => array(
+      'tid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+      ),
+    ),
+    'indexes' => array(
+      'tid' => array('tid'),
+    ),
+    'foreign keys' => array(
+      'tid' => array(
+        'table' => 'taxonomy_term_data',
+        'columns' => array('tid' => 'tid'),
+      ),
+    ),
+  );
+}
+
+/**
+ * Remove the {taxonomy_vocabulary}.module field.
+ */
+function taxonomy_update_8000() {
+  db_drop_field('taxonomy_vocabulary', 'module');
+}

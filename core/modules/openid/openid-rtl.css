@@ -1,0 +1,18 @@
+
+#edit-openid-identifier {
+  background-position: right 50%;
+  padding-left: 0;
+  padding-right: 20px;
+}
+#user-login .openid-links {
+  padding-right: 0;
+}
+html.js #user-login-form li.openid-link,
+html.js #user-login li.openid-link {
+  margin-right: 0;
+}
+#user-login-form li.openid-link a,
+#user-login li.openid-link a {
+  background-position: right top;
+  padding: 0 1.5em 0 0;
+}

@@ -1,0 +1,54 @@
+
+/**
+ * @file
+ * Generic theme-independent base styles.
+ */
+
+/**
+ * Autocomplete.
+ */
+/* Animated throbber */
+html.js input.form-autocomplete {
+  background-position: 0% 2px;
+}
+html.js input.throbbing {
+  background-position: 0% -18px;
+}
+
+/**
+ * Progress bar.
+ */
+.progress .percentage {
+  float: left;
+}
+.progress-disabled {
+  float: right;
+}
+.ajax-progress {
+  float: right;
+}
+.ajax-progress .throbber {
+  float: right;
+}
+
+/**
+ * TableDrag behavior.
+ */
+.draggable a.tabledrag-handle {
+  float: right;
+  margin: -0.4em -0.5em -0.4em 0;
+  padding: 0.42em 0.5em 0.42em 1.5em;
+}
+div.indentation {
+  float: right;
+  margin: -0.4em -0.4em -0.4em 0.2em;
+  padding: 0.42em 0.6em 0.42em 0;
+}
+div.tree-child,
+div.tree-child-last {
+  background-position: -65px center;
+}
+.tabledrag-toggle-weight-wrapper {
+  text-align: left;
+}
+

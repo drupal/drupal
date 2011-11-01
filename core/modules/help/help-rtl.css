@@ -1,0 +1,10 @@
+
+.help-items {
+  float: right;
+  padding-right: 0;
+  padding-left: 3%;
+}
+.help-items-last {
+  padding-right: 0;
+  padding-left: 0;
+}

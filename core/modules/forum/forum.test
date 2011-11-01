@@ -1,0 +1,550 @@
+<?php
+
+/**
+ * @file
+ * Tests for forum.module.
+ */
+
+class ForumTestCase extends DrupalWebTestCase {
+  protected $admin_user;
+  protected $edit_own_topics_user;
+  protected $edit_any_topics_user;
+  protected $web_user;
+  protected $container;
+  protected $forum;
+  protected $root_forum;
+  protected $nids;
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Forum functionality',
+      'description' => 'Create, view, edit, delete, and change forum entries and verify its consistency in the database.',
+      'group' => 'Forum',
+    );
+  }
+
+  /**
+   * Enable modules and create users with specific permissions.
+   */
+  function setUp() {
+    parent::setUp('taxonomy', 'comment', 'forum');
+    // Create users.
+    $this->admin_user = $this->drupalCreateUser(array(
+      'access administration pages',
+      'administer modules',
+      'administer blocks',
+      'administer forums',
+      'administer menu',
+      'administer taxonomy',
+      'create forum content',
+    ));
+    $this->edit_any_topics_user = $this->drupalCreateUser(array(
+      'access administration pages',
+      'create forum content',
+      'edit any forum content',
+      'delete any forum content',
+    ));
+    $this->edit_own_topics_user = $this->drupalCreateUser(array(
+      'create forum content',
+      'edit own forum content',
+      'delete own forum content',
+    ));
+    $this->web_user = $this->drupalCreateUser(array());
+  }
+
+  /**
+   * Tests disabling and re-enabling forum.
+   */
+  function testEnableForumField() {
+    $this->drupalLogin($this->admin_user);
+
+    // Disable the forum module.
+    $edit = array();
+    $edit['modules[Core][forum][enable]'] = FALSE;
+    $this->drupalPost('admin/modules', $edit, t('Save configuration'));
+    $this->assertText(t('The configuration options have been saved.'), t('Modules status has been updated.'));
+    module_list(TRUE);
+    $this->assertFalse(module_exists('forum'), t('Forum module is not enabled.'));
+
+    // Attempt to re-enable the forum module and ensure it does not try to
+    // recreate the taxonomy_forums field.
+    $edit = array();
+    $edit['modules[Core][forum][enable]'] = 'forum';
+    $this->drupalPost('admin/modules', $edit, t('Save configuration'));
+    $this->assertText(t('The configuration options have been saved.'), t('Modules status has been updated.'));
+    module_list(TRUE);
+    $this->assertTrue(module_exists('forum'), t('Forum module is enabled.'));
+  }
+
+  /**
+   * Login users, create forum nodes, and test forum functionality through the admin and user interfaces.
+   */
+  function testForum() {
+    //Check that the basic forum install creates a default forum topic
+    $this->drupalGet("/forum");
+    // Look for the "General discussion" default forum
+    $this->assertText(t("General discussion"), "Found the default forum at the /forum listing");
+
+    // Do the admin tests.
+    $this->doAdminTests($this->admin_user);
+    // Generate topics to populate the active forum block.
+    $this->generateForumTopics($this->forum);
+
+    // Login an unprivileged user to view the forum topics and generate an
+    // active forum topics list.
+    $this->drupalLogin($this->web_user);
+    // Verify that this user is shown a message that they may not post content.
+    $this->drupalGet('forum/' . $this->forum['tid']);
+    $this->assertText(t('You are not allowed to post new content in the forum'), "Authenticated user without permission to post forum content is shown message in local tasks to that effect.");
+
+    $this->viewForumTopics($this->nids);
+
+    // Log in, and do basic tests for a user with permission to edit any forum
+    // content.
+    $this->doBasicTests($this->edit_any_topics_user, TRUE);
+    // Create a forum node authored by this user.
+    $any_topics_user_node = $this->createForumTopic($this->forum, FALSE);
+
+    // Log in, and do basic tests for a user with permission to edit only its
+    // own forum content.
+    $this->doBasicTests($this->edit_own_topics_user, FALSE);
+    // Create a forum node authored by this user.
+    $own_topics_user_node = $this->createForumTopic($this->forum, FALSE);
+    // Verify that this user cannot edit forum content authored by another user.
+    $this->verifyForums($this->edit_any_topics_user, $any_topics_user_node, FALSE, 403);
+
+    // Verify that this user is shown a local task to add new forum content.
+    $this->drupalGet('forum');
+    $this->assertLink(t('Add new Forum topic'));
+    $this->drupalGet('forum/' . $this->forum['tid']);
+    $this->assertLink(t('Add new Forum topic'));
+
+    // Login a user with permission to edit any forum content.
+    $this->drupalLogin($this->edit_any_topics_user);
+    // Verify that this user can edit forum content authored by another user.
+    $this->verifyForums($this->edit_own_topics_user, $own_topics_user_node, TRUE);
+
+    // Verify the topic and post counts on the forum page.
+    $this->drupalGet('forum');
+
+    // Verify row for testing forum.
+    $forum_arg = array(':forum' => 'forum-list-' . $this->forum['tid']);
+
+    // Topics cell contains number of topics and number of unread topics.
+    $xpath = $this->buildXPathQuery('//tr[@id=:forum]//td[@class="topics"]', $forum_arg);
+    $topics = $this->xpath($xpath);
+    $topics = trim($topics[0]);
+    $this->assertEqual($topics, '6', t('Number of topics found.'));
+
+    // Verify the number of unread topics.
+    $unread_topics = _forum_topics_unread($this->forum['tid'], $this->edit_any_topics_user->uid);
+    $unread_topics = format_plural($unread_topics, '1 new', '@count new');
+    $xpath = $this->buildXPathQuery('//tr[@id=:forum]//td[@class="topics"]//a', $forum_arg);
+    $this->assertFieldByXPath($xpath, $unread_topics, t('Number of unread topics found.'));
+
+    // Verify total number of posts in forum.
+    $xpath = $this->buildXPathQuery('//tr[@id=:forum]//td[@class="posts"]', $forum_arg);
+    $this->assertFieldByXPath($xpath, '6', t('Number of posts found.'));
+
+    // Test loading multiple forum nodes on the front page.
+    $this->drupalLogin($this->drupalCreateUser(array('administer content types', 'create forum content')));
+    $this->drupalPost('admin/structure/types/manage/forum', array('node_options[promote]' => 'promote'), t('Save content type'));
+    $this->createForumTopic($this->forum, FALSE);
+    $this->createForumTopic($this->forum, FALSE);
+    $this->drupalGet('node');
+
+    // Test adding a comment to a forum topic.
+    $node = $this->createForumTopic($this->forum, FALSE);
+    $edit = array();
+    $edit['comment_body[' . LANGUAGE_NONE . '][0][value]'] = $this->randomName();
+    $this->drupalPost("node/$node->nid", $edit, t('Save'));
+    $this->assertResponse(200);
+
+    // Test editing a forum topic that has a comment.
+    $this->drupalLogin($this->edit_any_topics_user);
+    $this->drupalGet('forum/' . $this->forum['tid']);
+    $this->drupalPost("node/$node->nid/edit", array(), t('Save'));
+    $this->assertResponse(200);
+  }
+
+  /**
+   * Forum nodes should not be created without choosing forum from select list.
+   */
+  function testAddOrphanTopic() {
+    // Must remove forum topics to test creating orphan topics.
+    $vid = variable_get('forum_nav_vocabulary');
+    $tree = taxonomy_get_tree($vid);
+    foreach ($tree as $term) {
+      taxonomy_term_delete($term->tid);
+    }
+
+    // Create an orphan forum item.
+    $this->drupalLogin($this->admin_user);
+    $this->drupalPost('node/add/forum', array('title' => $this->randomName(10), 'body[' . LANGUAGE_NONE .'][0][value]' => $this->randomName(120)), t('Save'));
+
+    $nid_count = db_query('SELECT COUNT(nid) FROM {node}')->fetchField();
+    $this->assertEqual(0, $nid_count, t('A forum node was not created when missing a forum vocabulary.'));
+
+    // Reset the defaults for future tests.
+    module_enable(array('forum'));
+  }
+
+  /**
+   * Run admin tests on the admin user.
+   *
+   * @param object $user The logged in user.
+   */
+  private function doAdminTests($user) {
+    // Login the user.
+    $this->drupalLogin($user);
+
+    // Enable the active forum block.
+    $edit = array();
+    $edit['blocks[forum_active][region]'] = 'sidebar_second';
+    $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
+    $this->assertResponse(200);
+    $this->assertText(t('The block settings have been updated.'), t('Active forum topics forum block was enabled'));
+
+    // Enable the new forum block.
+    $edit = array();
+    $edit['blocks[forum_new][region]'] = 'sidebar_second';
+    $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
+    $this->assertResponse(200);
+    $this->assertText(t('The block settings have been updated.'), t('[New forum topics] Forum block was enabled'));
+
+    // Retrieve forum menu id.
+    $mlid = db_query_range("SELECT mlid FROM {menu_links} WHERE link_path = 'forum' AND menu_name = 'navigation' AND module = 'system' ORDER BY mlid ASC", 0, 1)->fetchField();
+
+    // Add forum to navigation menu.
+    $edit = array();
+    $this->drupalPost('admin/structure/menu/manage/navigation', $edit, t('Save configuration'));
+    $this->assertResponse(200);
+
+    // Edit forum taxonomy.
+    // Restoration of the settings fails and causes subsequent tests to fail.
+    $this->container = $this->editForumTaxonomy();
+    // Create forum container.
+    $this->container = $this->createForum('container');
+    // Verify "edit container" link exists and functions correctly.
+    $this->drupalGet('admin/structure/forum');
+    $this->clickLink('edit container');
+    $this->assertRaw('Edit container', t('Followed the link to edit the container'));
+    // Create forum inside the forum container.
+    $this->forum = $this->createForum('forum', $this->container['tid']);
+    // Verify the "edit forum" link exists and functions correctly.
+    $this->drupalGet('admin/structure/forum');
+    $this->clickLink('edit forum');
+    $this->assertRaw('Edit forum', t('Followed the link to edit the forum'));
+    // Navigate back to forum structure page.
+    $this->drupalGet('admin/structure/forum');
+    // Create second forum in container.
+    $this->delete_forum = $this->createForum('forum', $this->container['tid']);
+    // Save forum overview.
+    $this->drupalPost('admin/structure/forum/', array(), t('Save'));
+    $this->assertRaw(t('The configuration options have been saved.'));
+    // Delete this second form.
+    $this->deleteForum($this->delete_forum['tid']);
+    // Create forum at the top (root) level.
+    $this->root_forum = $this->createForum('forum');
+  }
+
+  /**
+   * Edit the forum taxonomy.
+   */
+  function editForumTaxonomy() {
+    // Backup forum taxonomy.
+    $vid = variable_get('forum_nav_vocabulary', '');
+    $original_settings = taxonomy_vocabulary_load($vid);
+
+    // Generate a random name/description.
+    $title = $this->randomName(10);
+    $description = $this->randomName(100);
+
+    $edit = array(
+      'name' => $title,
+      'description' => $description,
+      'machine_name' => drupal_strtolower(drupal_substr($this->randomName(), 3, 9)),
+    );
+
+    // Edit the vocabulary.
+    $this->drupalPost('admin/structure/taxonomy/' . $original_settings->machine_name . '/edit', $edit, t('Save'));
+    $this->assertResponse(200);
+    $this->assertRaw(t('Updated vocabulary %name.', array('%name' => $title)), t('Vocabulary was edited'));
+
+    // Grab the newly edited vocabulary.
+    entity_get_controller('taxonomy_vocabulary')->resetCache();
+    $current_settings = taxonomy_vocabulary_load($vid);
+
+    // Make sure we actually edited the vocabulary properly.
+    $this->assertEqual($current_settings->name, $title, t('The name was updated'));
+    $this->assertEqual($current_settings->description, $description, t('The description was updated'));
+
+    // Restore the original vocabulary.
+    taxonomy_vocabulary_save($original_settings);
+    drupal_static_reset('taxonomy_vocabulary_load');
+    $current_settings = taxonomy_vocabulary_load($vid);
+    $this->assertEqual($current_settings->name, $original_settings->name, 'The original vocabulary settings were restored');
+  }
+
+  /**
+   * Create a forum container or a forum.
+   *
+   * @param $type
+   *   Forum type (forum container or forum).
+   * @param $parent
+   *   Forum parent (default = 0 = a root forum; >0 = a forum container or
+   *   another forum).
+   * @return
+   *   taxonomy_term_data created.
+   */
+  function createForum($type, $parent = 0) {
+    // Generate a random name/description.
+    $name = $this->randomName(10);
+    $description = $this->randomName(100);
+
+    $edit = array(
+      'name' => $name,
+      'description' => $description,
+      'parent[0]' => $parent,
+      'weight' => '0',
+    );
+
+    // Create forum.
+    $this->drupalPost('admin/structure/forum/add/' . $type, $edit, t('Save'));
+    $this->assertResponse(200);
+    $type = ($type == 'container') ? 'forum container' : 'forum';
+    $this->assertRaw(t('Created new @type %term.', array('%term' => $name, '@type' => t($type))), t(ucfirst($type) . ' was created'));
+
+    // Verify forum.
+    $term = db_query("SELECT * FROM {taxonomy_term_data} t WHERE t.vid = :vid AND t.name = :name AND t.description = :desc", array(':vid' => variable_get('forum_nav_vocabulary', ''), ':name' => $name, ':desc' => $description))->fetchAssoc();
+    $this->assertTrue(!empty($term), 'The ' . $type . ' exists in the database');
+
+    // Verify forum hierarchy.
+    $tid = $term['tid'];
+    $parent_tid = db_query("SELECT t.parent FROM {taxonomy_term_hierarchy} t WHERE t.tid = :tid", array(':tid' => $tid))->fetchField();
+    $this->assertTrue($parent == $parent_tid, 'The ' . $type . ' is linked to its container');
+
+    return $term;
+  }
+
+  /**
+   * Delete a forum.
+   *
+   * @param $tid
+   *   The forum ID.
+   */
+  function deleteForum($tid) {
+    // Delete the forum.
+    $this->drupalPost('admin/structure/forum/edit/forum/' . $tid, array(), t('Delete'));
+    $this->drupalPost(NULL, array(), t('Delete'));
+
+    // Assert that the forum no longer exists.
+    $this->drupalGet('forum/' . $tid);
+    $this->assertResponse(404, 'The forum was not found');
+  }
+
+  /**
+   * Run basic tests on the indicated user.
+   *
+   * @param $user
+   *   The logged in user.
+   * @param $admin
+   *   User has 'access administration pages' privilege.
+   */
+  private function doBasicTests($user, $admin) {
+    // Login the user.
+    $this->drupalLogin($user);
+    // Attempt to create forum topic under a container.
+    $this->createForumTopic($this->container, TRUE);
+    // Create forum node.
+    $node = $this->createForumTopic($this->forum, FALSE);
+    // Verify the user has access to all the forum nodes.
+    $this->verifyForums($user, $node, $admin);
+  }
+
+  /**
+   * Create forum topic.
+   *
+   * @param array $forum
+   *   Forum array.
+   * @param boolean $container
+   *   True if $forum is a container.
+   *
+   * @return object
+   *   Topic node created.
+   */
+  function createForumTopic($forum, $container = FALSE) {
+    // Generate a random subject/body.
+    $title = $this->randomName(20);
+    $body = $this->randomName(200);
+
+    $langcode = LANGUAGE_NONE;
+    $edit = array(
+      "title" => $title,
+      "body[$langcode][0][value]" => $body,
+    );
+    $tid = $forum['tid'];
+
+    // Create the forum topic, preselecting the forum ID via a URL parameter.
+    $this->drupalPost('node/add/forum/' . $tid, $edit, t('Save'));
+
+    $type = t('Forum topic');
+    if ($container) {
+      $this->assertNoRaw(t('@type %title has been created.', array('@type' => $type, '%title' => $title)), t('Forum topic was not created'));
+      $this->assertRaw(t('The item %title is a forum container, not a forum.', array('%title' => $forum['name'])), t('Error message was shown'));
+      return;
+    }
+    else {
+      $this->assertRaw(t('@type %title has been created.', array('@type' => $type, '%title' => $title)), t('Forum topic was created'));
+      $this->assertNoRaw(t('The item %title is a forum container, not a forum.', array('%title' => $forum['name'])), t('No error message was shown'));
+    }
+
+    // Retrieve node object, ensure that the topic was created and in the proper forum.
+    $node = $this->drupalGetNodeByTitle($title);
+    $this->assertTrue($node != NULL, t('Node @title was loaded', array('@title' => $title)));
+    $this->assertEqual($node->taxonomy_forums[LANGUAGE_NONE][0]['tid'], $tid, 'Saved forum topic was in the expected forum');
+
+    // View forum topic.
+    $this->drupalGet('node/' . $node->nid);
+    $this->assertRaw($title, t('Subject was found'));
+    $this->assertRaw($body, t('Body was found'));
+
+    return $node;
+  }
+
+  /**
+   * Verify the logged in user has access to a forum nodes.
+   *
+   * @param $node_user
+   *   The user who creates the node.
+   * @param $node
+   *   The node being checked.
+   * @param $admin
+   *   Boolean to indicate whether the user can 'access administration pages'.
+   * @param $response
+   *   The exptected HTTP response code.
+   */
+  private function verifyForums($node_user, $node, $admin, $response = 200) {
+    $response2 = ($admin) ? 200 : 403;
+
+    // View forum help node.
+    $this->drupalGet('admin/help/forum');
+    $this->assertResponse($response2);
+    if ($response2 == 200) {
+      $this->assertTitle(t('Forum | Drupal'), t('Forum help title was displayed'));
+      $this->assertText(t('Forum'), t('Forum help node was displayed'));
+    }
+
+    // Verify the forum blocks were displayed.
+    $this->drupalGet('');
+    $this->assertResponse(200);
+    $this->assertText(t('New forum topics'), t('[New forum topics] Forum block was displayed'));
+
+    // View forum container page.
+    $this->verifyForumView($this->container);
+    // View forum page.
+    $this->verifyForumView($this->forum, $this->container);
+    // View root forum page.
+    $this->verifyForumView($this->root_forum);
+
+    // View forum node.
+    $this->drupalGet('node/' . $node->nid);
+    $this->assertResponse(200);
+    $this->assertTitle($node->title . ' | Drupal', t('Forum node was displayed'));
+    $breadcrumb = array(
+      l(t('Home'), NULL),
+      l(t('Forums'), 'forum'),
+      l($this->container['name'], 'forum/' . $this->container['tid']),
+      l($this->forum['name'], 'forum/' . $this->forum['tid']),
+    );
+    $this->assertRaw(theme('breadcrumb', array('breadcrumb' => $breadcrumb)), t('Breadcrumbs were displayed'));
+
+    // View forum edit node.
+    $this->drupalGet('node/' . $node->nid . '/edit');
+    $this->assertResponse($response);
+    if ($response == 200) {
+      $this->assertTitle('Edit Forum topic ' . $node->title . ' | Drupal', t('Forum edit node was displayed'));
+    }
+
+    if ($response == 200) {
+      // Edit forum node (including moving it to another forum).
+      $edit = array();
+      $langcode = LANGUAGE_NONE;
+      $edit["title"] = 'node/' . $node->nid;
+      $edit["body[$langcode][0][value]"] = $this->randomName(256);
+      // Assume the topic is initially associated with $forum.
+      $edit["taxonomy_forums[$langcode]"] = $this->root_forum['tid'];
+      $edit['shadow'] = TRUE;
+      $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
+      $this->assertRaw(t('Forum topic %title has been updated.', array('%title' => $edit["title"])), t('Forum node was edited'));
+
+      // Verify topic was moved to a different forum.
+      $forum_tid = db_query("SELECT tid FROM {forum} WHERE nid = :nid AND vid = :vid", array(
+        ':nid' => $node->nid,
+        ':vid' => $node->vid,
+      ))->fetchField();
+      $this->assertTrue($forum_tid == $this->root_forum['tid'], 'The forum topic is linked to a different forum');
+
+      // Delete forum node.
+      $this->drupalPost('node/' . $node->nid . '/delete', array(), t('Delete'));
+      $this->assertResponse($response);
+      $this->assertRaw(t('Forum topic %title has been deleted.', array('%title' => $edit['title'])), t('Forum node was deleted'));
+    }
+  }
+
+  /**
+   * Verify display of forum page.
+   *
+   * @param $forum
+   *   A row from taxonomy_term_data table in array.
+   */
+  private function verifyForumView($forum, $parent = NULL) {
+    // View forum page.
+    $this->drupalGet('forum/' . $forum['tid']);
+    $this->assertResponse(200);
+    $this->assertTitle($forum['name'] . ' | Drupal', t('Forum name was displayed'));
+
+    $breadcrumb = array(
+      l(t('Home'), NULL),
+      l(t('Forums'), 'forum'),
+    );
+    if (isset($parent)) {
+      $breadcrumb[] = l($parent['name'], 'forum/' . $parent['tid']);
+    }
+
+    $this->assertRaw(theme('breadcrumb', array('breadcrumb' => $breadcrumb)), t('Breadcrumbs were displayed'));
+  }
+
+  /**
+   * Generate forum topics to test display of active forum block.
+   *
+   * @param array $forum Forum array (a row from taxonomy_term_data table).
+   */
+  private function generateForumTopics($forum) {
+    $this->nids = array();
+    for ($i = 0; $i < 5; $i++) {
+      $node = $this->createForumTopic($this->forum, FALSE);
+      $this->nids[] = $node->nid;
+    }
+  }
+
+  /**
+   * View forum topics to test display of active forum block.
+   *
+   * @todo The logic here is completely incorrect, since the active
+   * forum topics block is determined by comments on the node, not by views.
+   * @todo DIE
+   *
+   * @param $nids
+   *   An array of forum node IDs.
+   */
+  private function viewForumTopics($nids) {
+    for ($i = 0; $i < 2; $i++) {
+      foreach ($nids as $nid) {
+        $this->drupalGet('node/' . $nid);
+        $this->drupalGet('node/' . $nid);
+        $this->drupalGet('node/' . $nid);
+      }
+    }
+  }
+}

@@ -1,0 +1,55 @@
+
+/**
+ * Update styles
+ */
+#update-results {
+  margin-top: 3em;
+  padding: 0.25em;
+  border: 1px solid #ccc;
+  background: #eee;
+  font-size: smaller;
+}
+#update-results h2 {
+  margin-top: 0.25em;
+}
+#update-results h4 {
+  margin-bottom: 0.25em;
+}
+#update-results li.none {
+  color: #888;
+  font-style: italic;
+}
+#update-results li.failure strong {
+  color: #b63300;
+}
+
+/**
+ * Authorize.php styles
+ */
+.connection-settings-update-filetransfer-default-wrapper {
+  float: left;
+}
+#edit-submit-connection {
+  clear: both;
+}
+.filetransfer {
+  display: none;
+  clear: both;
+}
+#edit-connection-settings-change-connection-type {
+  margin: 2.6em 0.5em 0em 1em;
+}
+
+/**
+ * Installation task list
+ */
+ol.task-list li.active {
+  font-weight: bold;
+}
+
+/**
+ * Installation clean URLs
+ */
+#clean-url.install {
+  display: none;
+}

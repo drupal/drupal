@@ -1,0 +1,6 @@
+name = "XML-RPC Test"
+description = "Support module for XML-RPC tests according to the validator1 specification."
+package = Testing
+version = VERSION
+core = 8.x
+hidden = TRUE

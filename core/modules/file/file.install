@@ -1,0 +1,98 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for File module.
+ */
+
+/**
+ * Implements hook_field_schema().
+ */
+function file_field_schema($field) {
+  return array(
+    'columns' => array(
+      'fid' => array(
+        'description' => 'The {file_managed}.fid being referenced in this field.',
+        'type' => 'int',
+        'not null' => FALSE,
+        'unsigned' => TRUE,
+      ),
+      'display' => array(
+        'description' => 'Flag to control whether this file should be displayed when viewing content.',
+        'type' => 'int',
+        'size' => 'tiny',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 1,
+      ),
+      'description' => array(
+        'description' => 'A description of the file.',
+        'type' => 'text',
+        'not null' => FALSE,
+      ),
+    ),
+    'indexes' => array(
+      'fid' => array('fid'),
+    ),
+    'foreign keys' => array(
+      'fid' => array(
+        'table' => 'file_managed',
+        'columns' => array('fid' => 'fid'),
+      ),
+    ),
+  );
+}
+
+/**
+ * Implements hook_requirements().
+ *
+ * Display information about getting upload progress bars working.
+ */
+function file_requirements($phase) {
+  $requirements = array();
+
+  // Check the server's ability to indicate upload progress.
+  if ($phase == 'runtime') {
+    $implementation = file_progress_implementation();
+    $apache = strpos($_SERVER['SERVER_SOFTWARE'], 'Apache') !== FALSE;
+    $fastcgi = strpos($_SERVER['SERVER_SOFTWARE'], 'mod_fastcgi') !== FALSE || strpos($_SERVER["SERVER_SOFTWARE"], 'mod_fcgi') !== FALSE;
+    $description = NULL;
+    if (!$apache) {
+      $value = t('Not enabled');
+      $description = t('Your server is not capable of displaying file upload progress. File upload progress requires an Apache server running PHP with mod_php.');
+      $severity = REQUIREMENT_INFO;
+    }
+    elseif ($fastcgi) {
+      $value = t('Not enabled');
+      $description = t('Your server is not capable of displaying file upload progress. File upload progress requires PHP be run with mod_php and not as FastCGI.');
+      $severity = REQUIREMENT_INFO;
+    }
+    elseif (!$implementation && extension_loaded('apc')) {
+      $value = t('Not enabled');
+      $description = t('Your server is capable of displaying file upload progress through APC, but it is not enabled. Add <code>apc.rfc1867 = 1</code> to your php.ini configuration. Alternatively, it is recommended to use <a href="http://pecl.php.net/package/uploadprogress">PECL uploadprogress</a>, which supports more than one simultaneous upload.');
+      $severity = REQUIREMENT_INFO;
+    }
+    elseif (!$implementation) {
+      $value = t('Not enabled');
+      $description = t('Your server is capable of displaying file upload progress, but does not have the required libraries. It is recommended to install the <a href="http://pecl.php.net/package/uploadprogress">PECL uploadprogress library</a> (preferred) or to install <a href="http://us2.php.net/apc">APC</a>.');
+      $severity = REQUIREMENT_INFO;
+    }
+    elseif ($implementation == 'apc') {
+      $value = t('Enabled (<a href="http://php.net/manual/en/apc.configuration.php#ini.apc.rfc1867">APC RFC1867</a>)');
+      $description = t('Your server is capable of displaying file upload progress using APC RFC1867. Note that only one upload at a time is supported. It is recommended to use the <a href="http://pecl.php.net/package/uploadprogress">PECL uploadprogress library</a> if possible.');
+      $severity = REQUIREMENT_OK;
+    }
+    elseif ($implementation == 'uploadprogress') {
+      $value = t('Enabled (<a href="http://pecl.php.net/package/uploadprogress">PECL uploadprogress</a>)');
+      $severity = REQUIREMENT_OK;
+    }
+    $requirements['file_progress'] = array(
+      'title' => t('Upload progress'),
+      'value' => $value,
+      'severity' => $severity,
+      'description' => $description,
+    );
+  }
+
+  return $requirements;
+}

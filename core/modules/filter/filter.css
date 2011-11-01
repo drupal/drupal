@@ -1,0 +1,53 @@
+
+.text-format-wrapper .form-item {
+  margin-bottom: 0;
+}
+.filter-wrapper {
+  border-top: 0;
+  margin: 0;
+  padding: 1.5em 0 1.5em;
+}
+.filter-wrapper .form-item {
+  float: left;
+  padding: 0 0 0.5em 1.5em;
+}
+.filter-wrapper .form-item label {
+  display: inline;
+}
+.filter-help {
+  float: right;
+  padding: 0 1.5em 0.5em;
+}
+.filter-help p {
+  margin: 0;
+}
+.filter-help a {
+  background: transparent url(../../misc/help.png) right center no-repeat;
+  padding: 0 20px;
+}
+.filter-guidelines {
+  clear: left;
+  padding: 0 1.5em;
+}
+.text-format-wrapper .description {
+  margin-top: 0.5em;
+}
+
+#filter-order tr .form-item {
+  padding: 0.5em 0 0 3em;
+  white-space: normal;
+}
+#filter-order tr .form-type-checkbox .description {
+  padding: 0 0 0 2.5em;
+}
+input#edit-filters-filter-html-settings-allowed-html {
+  width: 100%;
+}
+
+.tips {
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  font-size: 0.9em;
+}

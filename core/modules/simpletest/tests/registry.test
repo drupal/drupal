@@ -1,0 +1,142 @@
+<?php
+
+class RegistryParseFileTestCase extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Registry parse file test',
+      'description' => 'Parse a simple file and check that its resources are saved to the database.',
+      'group' => 'System'
+    );
+  }
+
+  function setUp() {
+    $chrs = hash('sha256', microtime() . mt_rand());
+    $this->fileName = 'registry_test_' . substr($chrs, 0, 16);
+    $this->className = 'registry_test_class' . substr($chrs, 16, 16);
+    $this->interfaceName = 'registry_test_interface' . substr($chrs, 32, 16);
+    parent::setUp();
+  }
+
+  /**
+   * testRegistryParseFile
+   */
+  function testRegistryParseFile() {
+    _registry_parse_file($this->fileName, $this->getFileContents());
+    foreach (array('className', 'interfaceName') as $resource) {
+      $foundName = db_query('SELECT name FROM {registry} WHERE name = :name', array(':name' => $this->$resource))->fetchField();
+      $this->assertTrue($this->$resource == $foundName, t('Resource "@resource" found.', array('@resource' => $this->$resource)));
+    }
+  }
+
+  /**
+   * getFileContents
+   */
+  function getFileContents() {
+    $file_contents = <<<CONTENTS
+<?php
+
+class {$this->className} {}
+
+interface {$this->interfaceName} {}
+
+CONTENTS;
+    return $file_contents;
+  }
+
+}
+
+class RegistryParseFilesTestCase extends DrupalWebTestCase {
+  protected $fileTypes = array('new', 'existing_changed');
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Registry parse files test',
+      'description' => 'Read two a simple files from disc, and check that their resources are saved to the database.',
+      'group' => 'System'
+    );
+  }
+
+  function setUp() {
+    parent::setUp();
+    // Create files with some php to parse - one 'new', one 'existing' so
+    // we test all the important code paths in _registry_parse_files.
+    foreach ($this->fileTypes as $fileType) {
+      $chrs = hash('sha256', microtime() . mt_rand());
+      $this->$fileType = new stdClass();
+      $this->$fileType->fileName = 'public://registry_test_' . substr($chrs, 0, 16);
+      $this->$fileType->className = 'registry_test_class' . substr($chrs, 16, 16);
+      $this->$fileType->interfaceName = 'registry_test_interface' . substr($chrs, 32, 16);
+      $this->$fileType->contents = $this->getFileContents($fileType);
+      file_save_data($this->$fileType->contents, $this->$fileType->fileName);
+
+      if ($fileType == 'existing_changed') {
+        // Add a record with an incorrect hash.
+        $this->$fileType->fakeHash = hash('sha256', mt_rand());
+        db_insert('registry_file')
+          ->fields(array(
+            'hash' => $this->$fileType->fakeHash,
+            'filename' => $this->$fileType->fileName,
+          ))
+          ->execute();
+
+        // Insert some fake resource records.
+        foreach (array('class', 'interface') as $type) {
+          db_insert('registry')
+            ->fields(array(
+              'name' => $type . hash('sha256', microtime() . mt_rand()),
+              'type' => $type,
+              'filename' => $this->$fileType->fileName,
+            ))
+            ->execute();
+        }
+      }
+    }
+  }
+
+  /**
+   * testRegistryParseFiles
+   */
+  function testRegistryParseFiles() {
+    _registry_parse_files($this->getFiles());
+    foreach ($this->fileTypes as $fileType) {
+      // Test that we have all the right resources.
+      foreach (array('className', 'interfaceName') as $resource) {
+        $foundName = db_query('SELECT name FROM {registry} WHERE name = :name', array(':name' => $this->$fileType->$resource))->fetchField();
+        $this->assertTrue($this->$fileType->$resource == $foundName, t('Resource "@resource" found.', array('@resource' => $this->$fileType->$resource)));
+      }
+      // Test that we have the right hash.
+      $hash = db_query('SELECT hash FROM {registry_file} WHERE filename = :filename', array(':filename' => $this->$fileType->fileName))->fetchField();
+      $this->assertTrue(hash('sha256', $this->$fileType->contents) == $hash, t('sha-256 for "@filename" matched.' . $fileType . $hash, array('@filename' => $this->$fileType->fileName)));
+    }
+  }
+
+  /**
+   * getFiles
+   */
+  function getFiles() {
+    $files = array();
+    foreach ($this->fileTypes as $fileType) {
+      $files[$this->$fileType->fileName] = array('module' => '', 'weight' => 0);
+      if ($fileType == 'existing_changed') {
+        $files[$this->$fileType->fileName]['hash'] = $this->$fileType->fakeHash;
+      }
+    }
+    return $files;
+  }
+
+  /**
+   * getFileContents
+   */
+  function getFileContents($fileType) {
+    $file_contents = <<<CONTENTS
+<?php
+
+class {$this->$fileType->className} {}
+
+interface {$this->$fileType->interfaceName} {}
+
+CONTENTS;
+    return $file_contents;
+  }
+
+}

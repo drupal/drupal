@@ -1,0 +1,18 @@
+
+/* IE7 renders legends in nested fieldsets without a width. */
+fieldset legend {
+  height: 1%;
+}
+
+/* IE renders absolute positioned legend where fieldset content starts. */
+fieldset .fieldset-legend {
+  left: 0;
+  top: 0;
+}
+
+/* IE renders monospace font too big. */
+code,
+pre,
+kbd {
+  font-size: 1em;
+}

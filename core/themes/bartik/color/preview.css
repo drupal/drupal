@@ -1,0 +1,200 @@
+
+/* ---------- Color form ----------- */
+#color_scheme_form #palette .form-item {
+  width: 25em;
+}
+#color_scheme_form #palette .form-item label {
+  width: 15em;
+}
+
+/* ---------- Preview Styles ----------- */
+
+html.js #preview {
+  clear: both;
+  float: none !important;
+}
+#preview {
+  background-color: #fff;
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-size: 14px;
+  line-height: 1.5;
+  overflow: hidden;
+  word-wrap: break-word;
+  margin-bottom: 10px;
+}
+#preview-header {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  position: relative;
+}
+#preview-logo {
+  float: left;
+  padding: 15px 15px 15px 10px;
+}
+#preview-site-name {
+  color: #686868;
+  font-weight: normal;
+  font-size: 1.821em;
+  line-height: 1;
+  margin-bottom: 30px;
+  margin-left: 15px;
+  padding-top: 34px;
+}
+#preview-main-menu {
+  clear: both;
+  padding: 0 15px 3px;
+}
+#preview-main-menu-links a {
+  color: #d9d9d9;
+  padding: 0.6em 1em 0.4em;
+}
+#preview-main-menu-links {
+  font-size: 0.929em;
+  margin: 0;
+  padding: 0;
+}
+#preview-main-menu-links a {
+  color: #333;
+  background: #ccc;
+  background: rgba(255, 255, 255, 0.7);
+  text-shadow: 0 1px #eee;
+  -khtml-border-radius-topleft: 8px;
+  -moz-border-radius-topleft: 8px;
+  -webkit-border-top-left-radius: 8px;
+  border-top-left-radius: 8px;
+  -khtml-border-radius-topright: 8px;
+  -moz-border-radius-topright: 8px;
+  -webkit-border-top-right-radius: 8px;
+  border-top-right-radius: 8px;
+}
+#preview-main-menu-links a:hover,
+#preview-main-menu-links a:focus {
+  background: #fff;
+  background: rgba(255, 255, 255, 0.95);
+}
+#preview-main-menu-links a:active {
+  background: #b3b3b3;
+  background: rgba(255, 255, 255, 1);
+}
+#preview-main-menu-links li a.active {
+  border-bottom: none;
+}
+#preview-main-menu-links li {
+  display: inline;
+  list-style-type: none;
+  padding: 0.6em 0 0.4em;
+}
+#preview-sidebar,
+#preview-content {
+  display: inline;
+  float: left;
+  position: relative;
+}
+#preview-sidebar {
+  margin-left: 15px;
+  width: 210px;
+}
+#preview-content {
+  margin-left: 30px;
+  width: 26.5em;
+}
+#preview-sidebar .preview-block {
+  border: 1px solid;
+  margin: 20px 0;
+  padding: 15px 20px;
+}
+#preview-sidebar h2 {
+  border-bottom: 1px solid #d6d6d6;
+  font-size: 1.071em;
+  font-weight: normal;
+  line-height: 1.2;
+  margin: 0 0 0.5em;
+  padding-bottom: 5px;
+  text-shadow: 0 1px 0 #fff;
+}
+#preview .preview-block .preview-content {
+  margin-top: 1em;
+}
+#preview .preview-block-menu .preview-content,
+#preview .preview-block-menu .preview-content ul {
+  margin-top: 0;
+}
+#preview-main {
+  margin-bottom: 40px;
+  margin-top: 20px;
+}
+#preview-page-title {
+  font-size: 2em;
+  font-weight: normal;
+  line-height: 1;
+  margin: 1em 0 0.5em;
+}
+#preview-footer-wrapper {
+  color: #c0c0c0;
+  color: rgba(255, 255, 255, 0.65);
+  display: block !important;
+  font-size: 0.857em;
+  padding: 20px 20px 25px;
+}
+#preview-footer-wrapper a {
+  color: #fcfcfc;
+  color: rgba(255, 255, 255, 0.8);
+}
+#preview-footer-wrapper a:hover,
+#preview-footer-wrapper a:focus {
+  color: #fefefe;
+  color: rgba(255, 255, 255, 0.95);
+  text-decoration: underline;
+}
+#preview-footer-wrapper .preview-footer-column {
+  display: inline;
+  float: left;
+  padding: 0 10px;
+  position: relative;
+  width: 220px;
+}
+#preview-footer-wrapper .preview-block {
+  border: 1px solid #444;
+  border-color: rgba(255, 255, 255, 0.1);
+  margin: 20px 0;
+  padding: 10px;
+}
+#preview-footer-columns .preview-block-menu {
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+#preview-footer-columns h2 {
+  border-bottom: 1px solid #555;
+  border-color: rgba(255, 255, 255, 0.15);
+  font-size: 1em;
+  margin-bottom: 0;
+  padding-bottom: 3px;
+  text-transform: uppercase;
+}
+#preview-footer-columns .preview-content {
+  margin-top: 0;
+}
+#preview-footer-columns .preview-content ul {
+  margin-left: 0;
+  padding-left: 0;
+}
+#preview-footer-columns .preview-content li {
+  list-style: none;
+  list-style-image: none;
+  margin: 0;
+  padding: 0;
+}
+#preview-footer-columns .preview-content li a {
+  border-bottom: 1px solid #555;
+  border-color: rgba(255, 255, 255, 0.15);
+  display: block;
+  line-height: 1.2;
+  padding: 0.8em 2px 0.8em 20px;
+  text-indent: -15px;
+}
+#preview-footer-columns .preview-content li a:hover,
+#preview-footer-columns .preview-content li a:focus {
+  background-color: #1f1f21;
+  background-color: rgba(255, 255, 255, 0.05);
+  text-decoration: none;
+}

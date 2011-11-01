@@ -1,0 +1,51 @@
+
+.poll {
+  overflow: hidden;
+}
+.poll .bar {
+  height: 1em;
+  margin: 1px 0;
+  background-color: #ddd;
+}
+.poll .bar .foreground {
+  background-color: #000;
+  height: 1em;
+  float: left; /* LTR */
+}
+.poll .links {
+  text-align: center;
+}
+.poll .percent {
+  text-align: right; /* LTR */
+}
+.poll .total {
+  text-align: center;
+}
+.poll .vote-form {
+  text-align: center;
+}
+.poll .vote-form .choices {
+  text-align: left; /* LTR */
+  margin: 0 auto;
+  display: table;
+}
+.poll .vote-form .choices .title {
+  font-weight: bold;
+}
+.node-form #edit-poll-more {
+  margin: 0;
+}
+.node-form #poll-choice-table .form-text {
+  display: inline;
+  width: auto;
+}
+.node-form #poll-choice-table td.choice-flag {
+  white-space: nowrap;
+  width: 4em;
+}
+td.poll-chtext {
+  width: 80%;
+}
+td.poll-chvotes .form-text {
+  width: 85%;
+}

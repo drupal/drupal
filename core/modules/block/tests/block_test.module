@@ -1,0 +1,28 @@
+<?php
+
+/**
+ * @file
+ *   Provide test blocks.
+ */
+
+/**
+ * Implements hook_block_info().
+ */
+function block_test_block_info() {
+  $blocks['test_cache'] = array(
+    'info' => t('Test block caching'),
+    'cache' => variable_get('block_test_caching', DRUPAL_CACHE_PER_ROLE),
+  );
+
+  $blocks['test_html_id'] = array(
+    'info' => t('Test block html id'),
+  );
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function block_test_block_view($delta = 0) {
+  return array('content' => variable_get('block_test_content', ''));
+}

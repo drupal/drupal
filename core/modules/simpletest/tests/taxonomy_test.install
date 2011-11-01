@@ -1,0 +1,34 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the taxonomy_test module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function taxonomy_test_schema() {
+  $schema['taxonomy_term_antonym'] = array(
+    'description' => 'Stores term antonym.',
+    'fields' => array(
+      'tid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The {taxonomy_term_data}.tid of the term.',
+      ),
+      'name' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The name of the antonym.',
+      ),
+    ),
+    'primary key' => array('tid'),
+  );
+
+  return $schema;
+}

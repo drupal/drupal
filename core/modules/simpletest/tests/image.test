@@ -1,0 +1,460 @@
+<?php
+
+/**
+ * @file
+ * Tests for core image handling API.
+ */
+
+/**
+ * Base class for image manipulation testing.
+ */
+class ImageToolkitTestCase extends DrupalWebTestCase {
+  protected $toolkit;
+  protected $file;
+  protected $image;
+
+  function setUp() {
+    parent::setUp('image_test');
+
+    // Use the image_test.module's test toolkit.
+    $this->toolkit = 'test';
+
+    // Pick a file for testing.
+    $file = current($this->drupalGetTestFiles('image'));
+    $this->file = $file->uri;
+
+    // Setup a dummy image to work with, this replicate image_load() so we
+    // can avoid calling it.
+    $this->image = new stdClass();
+    $this->image->source = $this->file;
+    $this->image->info = image_get_info($this->file);
+    $this->image->toolkit = $this->toolkit;
+
+    // Clear out any hook calls.
+    image_test_reset();
+  }
+
+  /**
+   * Assert that all of the specified image toolkit operations were called
+   * exactly once once, other values result in failure.
+   *
+   * @param $expected
+   *   Array with string containing with the operation name, e.g. 'load',
+   *   'save', 'crop', etc.
+   */
+  function assertToolkitOperationsCalled(array $expected) {
+    // Determine which operations were called.
+    $actual = array_keys(array_filter(image_test_get_all_calls()));
+
+    // Determine if there were any expected that were not called.
+    $uncalled = array_diff($expected, $actual);
+    if (count($uncalled)) {
+      $this->assertTrue(FALSE, t('Expected operations %expected to be called but %uncalled was not called.', array('%expected' => implode(', ', $expected), '%uncalled' => implode(', ', $uncalled))));
+    }
+    else {
+      $this->assertTrue(TRUE, t('All the expected operations were called: %expected', array('%expected' => implode(', ', $expected))));
+    }
+
+    // Determine if there were any unexpected calls.
+    $unexpected = array_diff($actual, $expected);
+    if (count($unexpected)) {
+      $this->assertTrue(FALSE, t('Unexpected operations were called: %unexpected.', array('%unexpected' => implode(', ', $unexpected))));
+    }
+    else {
+      $this->assertTrue(TRUE, t('No unexpected operations were called.'));
+    }
+  }
+}
+
+/**
+ * Test that the functions in image.inc correctly pass data to the toolkit.
+ */
+class ImageToolkitUnitTest extends ImageToolkitTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Image toolkit tests',
+      'description' => 'Check image toolkit functions.',
+      'group' => 'Image',
+    );
+  }
+
+  /**
+   * Check that hook_image_toolkits() is called and only available toolkits are
+   * returned.
+   */
+  function testGetAvailableToolkits() {
+    $toolkits = image_get_available_toolkits();
+    $this->assertTrue(isset($toolkits['test']), t('The working toolkit was returned.'));
+    $this->assertFalse(isset($toolkits['broken']), t('The toolkit marked unavailable was not returned'));
+    $this->assertToolkitOperationsCalled(array());
+  }
+
+  /**
+   * Test the image_load() function.
+   */
+  function testLoad() {
+    $image = image_load($this->file, $this->toolkit);
+    $this->assertTrue(is_object($image), t('Returned an object.'));
+    $this->assertEqual($this->toolkit, $image->toolkit, t('Image had toolkit set.'));
+    $this->assertToolkitOperationsCalled(array('load', 'get_info'));
+  }
+
+  /**
+   * Test the image_save() function.
+   */
+  function testSave() {
+    $this->assertFalse(image_save($this->image), t('Function returned the expected value.'));
+    $this->assertToolkitOperationsCalled(array('save'));
+  }
+
+  /**
+   * Test the image_resize() function.
+   */
+  function testResize() {
+    $this->assertTrue(image_resize($this->image, 1, 2), t('Function returned the expected value.'));
+    $this->assertToolkitOperationsCalled(array('resize'));
+
+    // Check the parameters.
+    $calls = image_test_get_all_calls();
+    $this->assertEqual($calls['resize'][0][1], 1, t('Width was passed correctly'));
+    $this->assertEqual($calls['resize'][0][2], 2, t('Height was passed correctly'));
+  }
+
+  /**
+   * Test the image_scale() function.
+   */
+  function testScale() {
+// TODO: need to test upscaling
+    $this->assertTrue(image_scale($this->image, 10, 10), t('Function returned the expected value.'));
+    $this->assertToolkitOperationsCalled(array('resize'));
+
+    // Check the parameters.
+    $calls = image_test_get_all_calls();
+    $this->assertEqual($calls['resize'][0][1], 10, t('Width was passed correctly'));
+    $this->assertEqual($calls['resize'][0][2], 5, t('Height was based off aspect ratio and passed correctly'));
+  }
+
+  /**
+   * Test the image_scale_and_crop() function.
+   */
+  function testScaleAndCrop() {
+    $this->assertTrue(image_scale_and_crop($this->image, 5, 10), t('Function returned the expected value.'));
+    $this->assertToolkitOperationsCalled(array('resize', 'crop'));
+
+    // Check the parameters.
+    $calls = image_test_get_all_calls();
+
+    $this->assertEqual($calls['crop'][0][1], 7.5, t('X was computed and passed correctly'));
+    $this->assertEqual($calls['crop'][0][2], 0, t('Y was computed and passed correctly'));
+    $this->assertEqual($calls['crop'][0][3], 5, t('Width was computed and passed correctly'));
+    $this->assertEqual($calls['crop'][0][4], 10, t('Height was computed and passed correctly'));
+  }
+
+  /**
+   * Test the image_rotate() function.
+   */
+  function testRotate() {
+    $this->assertTrue(image_rotate($this->image, 90, 1), t('Function returned the expected value.'));
+    $this->assertToolkitOperationsCalled(array('rotate'));
+
+    // Check the parameters.
+    $calls = image_test_get_all_calls();
+    $this->assertEqual($calls['rotate'][0][1], 90, t('Degrees were passed correctly'));
+    $this->assertEqual($calls['rotate'][0][2], 1, t('Background color was passed correctly'));
+  }
+
+  /**
+   * Test the image_crop() function.
+   */
+  function testCrop() {
+    $this->assertTrue(image_crop($this->image, 1, 2, 3, 4), t('Function returned the expected value.'));
+    $this->assertToolkitOperationsCalled(array('crop'));
+
+    // Check the parameters.
+    $calls = image_test_get_all_calls();
+    $this->assertEqual($calls['crop'][0][1], 1, t('X was passed correctly'));
+    $this->assertEqual($calls['crop'][0][2], 2, t('Y was passed correctly'));
+    $this->assertEqual($calls['crop'][0][3], 3, t('Width was passed correctly'));
+    $this->assertEqual($calls['crop'][0][4], 4, t('Height was passed correctly'));
+  }
+
+  /**
+   * Test the image_desaturate() function.
+   */
+  function testDesaturate() {
+    $this->assertTrue(image_desaturate($this->image), t('Function returned the expected value.'));
+    $this->assertToolkitOperationsCalled(array('desaturate'));
+
+    // Check the parameters.
+    $calls = image_test_get_all_calls();
+    $this->assertEqual(count($calls['desaturate'][0]), 1, t('Only the image was passed.'));
+  }
+}
+
+/**
+ * Test the core GD image manipulation functions.
+ */
+class ImageToolkitGdTestCase extends DrupalWebTestCase {
+  // Colors that are used in testing.
+  protected $black       = array(0, 0, 0, 0);
+  protected $red         = array(255, 0, 0, 0);
+  protected $green       = array(0, 255, 0, 0);
+  protected $blue        = array(0, 0, 255, 0);
+  protected $yellow      = array(255, 255, 0, 0);
+  protected $fuchsia     = array(255, 0, 255, 0); // Used as background colors.
+  protected $transparent = array(0, 0, 0, 127);
+  protected $white       = array(255, 255, 255, 0);
+
+  protected $width = 40;
+  protected $height = 20;
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Image GD manipulation tests',
+      'description' => 'Check that core image manipulations work properly: scale, resize, rotate, crop, scale and crop, and desaturate.',
+      'group' => 'Image',
+    );
+  }
+
+  /**
+   * Function to compare two colors by RGBa.
+   */
+  function colorsAreEqual($color_a, $color_b) {
+    // Fully transparent pixels are equal, regardless of RGB.
+    if ($color_a[3] == 127 && $color_b[3] == 127) {
+      return TRUE;
+    }
+
+    foreach ($color_a as $key => $value) {
+      if ($color_b[$key] != $value) {
+        return FALSE;
+      }
+    }
+
+    return TRUE;
+  }
+
+  /**
+   * Function for finding a pixel's RGBa values.
+   */
+  function getPixelColor($image, $x, $y) {
+    $color_index = imagecolorat($image->resource, $x, $y);
+
+    $transparent_index = imagecolortransparent($image->resource);
+    if ($color_index == $transparent_index) {
+      return array(0, 0, 0, 127);
+    }
+
+    return array_values(imagecolorsforindex($image->resource, $color_index));
+  }
+
+  /**
+   * Since PHP can't visually check that our images have been manipulated
+   * properly, build a list of expected color values for each of the corners and
+   * the expected height and widths for the final images.
+   */
+  function testManipulations() {
+    // If GD isn't available don't bother testing this.
+    if (!function_exists('image_gd_check_settings') || !image_gd_check_settings()) {
+      $this->pass(t('Image manipulations for the GD toolkit were skipped because the GD toolkit is not available.'));
+      return;
+    }
+
+    // Typically the corner colors will be unchanged. These colors are in the
+    // order of top-left, top-right, bottom-right, bottom-left.
+    $default_corners = array($this->red, $this->green, $this->blue, $this->transparent);
+
+    // A list of files that will be tested.
+    $files = array(
+      'image-test.png',
+      'image-test.gif',
+      'image-test.jpg',
+    );
+
+    // Setup a list of tests to perform on each type.
+    $operations = array(
+      'resize' => array(
+        'function' => 'resize',
+        'arguments' => array(20, 10),
+        'width' => 20,
+        'height' => 10,
+        'corners' => $default_corners,
+      ),
+      'scale_x' => array(
+        'function' => 'scale',
+        'arguments' => array(20, NULL),
+        'width' => 20,
+        'height' => 10,
+        'corners' => $default_corners,
+      ),
+      'scale_y' => array(
+        'function' => 'scale',
+        'arguments' => array(NULL, 10),
+        'width' => 20,
+        'height' => 10,
+        'corners' => $default_corners,
+      ),
+      'upscale_x' => array(
+        'function' => 'scale',
+        'arguments' => array(80, NULL, TRUE),
+        'width' => 80,
+        'height' => 40,
+        'corners' => $default_corners,
+      ),
+      'upscale_y' => array(
+        'function' => 'scale',
+        'arguments' => array(NULL, 40, TRUE),
+        'width' => 80,
+        'height' => 40,
+        'corners' => $default_corners,
+      ),
+      'crop' => array(
+        'function' => 'crop',
+        'arguments' => array(12, 4, 16, 12),
+        'width' => 16,
+        'height' => 12,
+        'corners' => array_fill(0, 4, $this->white),
+      ),
+      'scale_and_crop' => array(
+        'function' => 'scale_and_crop',
+        'arguments' => array(10, 8),
+        'width' => 10,
+        'height' => 8,
+        'corners' => array_fill(0, 4, $this->black),
+      ),
+    );
+
+    // Systems using non-bundled GD2 don't have imagerotate. Test if available.
+    if (function_exists('imagerotate')) {
+      $operations += array(
+        'rotate_5' => array(
+          'function' => 'rotate',
+          'arguments' => array(5, 0xFF00FF), // Fuchsia background.
+          'width' => 42,
+          'height' => 24,
+          'corners' => array_fill(0, 4, $this->fuchsia),
+        ),
+        'rotate_90' => array(
+          'function' => 'rotate',
+          'arguments' => array(90, 0xFF00FF), // Fuchsia background.
+          'width' => 20,
+          'height' => 40,
+          'corners' => array($this->fuchsia, $this->red, $this->green, $this->blue),
+        ),
+        'rotate_transparent_5' => array(
+          'function' => 'rotate',
+          'arguments' => array(5),
+          'width' => 42,
+          'height' => 24,
+          'corners' => array_fill(0, 4, $this->transparent),
+        ),
+        'rotate_transparent_90' => array(
+          'function' => 'rotate',
+          'arguments' => array(90),
+          'width' => 20,
+          'height' => 40,
+          'corners' => array($this->transparent, $this->red, $this->green, $this->blue),
+        ),
+      );
+    }
+
+    // Systems using non-bundled GD2 don't have imagefilter. Test if available.
+    if (function_exists('imagefilter')) {
+      $operations += array(
+        'desaturate' => array(
+          'function' => 'desaturate',
+          'arguments' => array(),
+          'height' => 20,
+          'width' => 40,
+          // Grayscale corners are a bit funky. Each of the corners are a shade of
+          // gray. The values of these were determined simply by looking at the
+          // final image to see what desaturated colors end up being.
+          'corners' => array(
+            array_fill(0, 3, 76) + array(3 => 0),
+            array_fill(0, 3, 149) + array(3 => 0),
+            array_fill(0, 3, 29) + array(3 => 0),
+            array_fill(0, 3, 0) + array(3 => 127)
+          ),
+        ),
+      );
+    }
+
+    foreach ($files as $file) {
+      foreach ($operations as $op => $values) {
+        // Load up a fresh image.
+        $image = image_load(drupal_get_path('module', 'simpletest') . '/files/' . $file, 'gd');
+        if (!$image) {
+          $this->fail(t('Could not load image %file.', array('%file' => $file)));
+          continue 2;
+        }
+
+        // Transparent GIFs and the imagefilter function don't work together.
+        // There is a todo in image.gd.inc to correct this.
+        if ($image->info['extension'] == 'gif') {
+          if ($op == 'desaturate') {
+            $values['corners'][3] = $this->white;
+          }
+        }
+
+        // Perform our operation.
+        $function = 'image_' . $values['function'];
+        $arguments = array();
+        $arguments[] = &$image;
+        $arguments = array_merge($arguments, $values['arguments']);
+        call_user_func_array($function, $arguments);
+
+        // To keep from flooding the test with assert values, make a general
+        // value for whether each group of values fail.
+        $correct_dimensions_real = TRUE;
+        $correct_dimensions_object = TRUE;
+        $correct_colors = TRUE;
+
+        // Check the real dimensions of the image first.
+        if (imagesy($image->resource) != $values['height'] || imagesx($image->resource) != $values['width']) {
+          $correct_dimensions_real = FALSE;
+        }
+
+        // Check that the image object has an accurate record of the dimensions.
+        if ($image->info['width'] != $values['width'] || $image->info['height'] != $values['height']) {
+          $correct_dimensions_object = FALSE;
+        }
+        // Now check each of the corners to ensure color correctness.
+        foreach ($values['corners'] as $key => $corner) {
+          // Get the location of the corner.
+          switch ($key) {
+            case 0:
+              $x = 0;
+              $y = 0;
+              break;
+            case 1:
+              $x = $values['width'] - 1;
+              $y = 0;
+              break;
+            case 2:
+              $x = $values['width'] - 1;
+              $y = $values['height'] - 1;
+              break;
+            case 3:
+              $x = 0;
+              $y = $values['height'] - 1;
+              break;
+          }
+          $color = $this->getPixelColor($image, $x, $y);
+          $correct_colors = $this->colorsAreEqual($color, $corner);
+        }
+
+        $directory = file_default_scheme() . '://imagetests';
+        file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
+        image_save($image, $directory . '/' . $op . '.' . $image->info['extension']);
+
+        $this->assertTrue($correct_dimensions_real, t('Image %file after %action action has proper dimensions.', array('%file' => $file, '%action' => $op)));
+        $this->assertTrue($correct_dimensions_object, t('Image %file object after %action action is reporting the proper height and width values.', array('%file' => $file, '%action' => $op)));
+        // JPEG colors will always be messed up due to compression.
+        if ($image->info['extension'] != 'jpg') {
+          $this->assertTrue($correct_colors, t('Image %file object after %action action has the correct color placement.', array('%file' => $file, '%action' => $op)));
+        }
+      }
+    }
+
+  }
+}

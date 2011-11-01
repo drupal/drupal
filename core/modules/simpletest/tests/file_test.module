@@ -1,0 +1,461 @@
+<?php
+
+/**
+ * @file
+ * Helper module for the file tests.
+ *
+ * The caller is must call file_test_reset() to initializing this module before
+ * calling file_test_get_calls() or file_test_set_return().
+ */
+
+
+define('FILE_URL_TEST_CDN_1', 'http://cdn1.example.com');
+define('FILE_URL_TEST_CDN_2', 'http://cdn2.example.com');
+
+
+/**
+ * Implements hook_menu().
+ */
+function file_test_menu() {
+  $items['file-test/upload'] = array(
+    'title' => 'Upload test',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('_file_test_form'),
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_stream_wrappers().
+ */
+function file_test_stream_wrappers() {
+  return array(
+    'dummy' => array(
+      'name' => t('Dummy files'),
+      'class' => 'DrupalDummyStreamWrapper',
+      'description' => t('Dummy wrapper for simpletest.'),
+    ),
+    'dummy-remote' => array(
+      'name' => t('Dummy files (remote)'),
+      'class' => 'DrupalDummyRemoteStreamWrapper',
+      'description' => t('Dummy wrapper for simpletest (remote).'),
+    ),
+  );
+}
+
+/**
+ * Form to test file uploads.
+ */
+function _file_test_form($form, &$form_state) {
+  $form['file_test_upload'] = array(
+    '#type' => 'file',
+    '#title' => t('Upload a file'),
+  );
+  $form['file_test_replace'] = array(
+    '#type' => 'select',
+    '#title' => t('Replace existing image'),
+    '#options' => array(
+      FILE_EXISTS_RENAME => t('Appends number until name is unique'),
+      FILE_EXISTS_REPLACE => t('Replace the existing file'),
+      FILE_EXISTS_ERROR => t('Fail with an error'),
+    ),
+    '#default_value' => FILE_EXISTS_RENAME,
+  );
+  $form['file_subdir'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Subdirectory for test file'),
+    '#default_value' => '',
+  );
+
+  $form['extensions'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Allowed extensions.'),
+    '#default_value' => '',
+  );
+
+  $form['allow_all_extensions'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Allow all extensions?'),
+    '#default_value' => FALSE,
+  );
+
+  $form['is_image_file'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Is this an image file?'),
+    '#default_value' => TRUE,
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Submit'),
+  );
+  return $form;
+}
+
+/**
+ * Process the upload.
+ */
+function _file_test_form_submit(&$form, &$form_state) {
+  // Process the upload and perform validation. Note: we're using the
+  // form value for the $replace parameter.
+  if (!empty($form_state['values']['file_subdir'])) {
+    $destination = 'temporary://' . $form_state['values']['file_subdir'];
+    file_prepare_directory($destination, FILE_CREATE_DIRECTORY);
+  }
+  else {
+    $destination = FALSE;
+  }
+
+  // Setup validators.
+  $validators = array();
+  if ($form_state['values']['is_image_file']) {
+    $validators['file_validate_is_image'] = array();
+  }
+
+  if ($form_state['values']['allow_all_extensions']) {
+    $validators['file_validate_extensions'] = array();
+  }
+  elseif (!empty($form_state['values']['extensions'])) {
+    $validators['file_validate_extensions'] = array($form_state['values']['extensions']);
+  }
+
+  $file = file_save_upload('file_test_upload', $validators, $destination, $form_state['values']['file_test_replace']);
+  if ($file) {
+    $form_state['values']['file_test_upload'] = $file;
+    drupal_set_message(t('File @filepath was uploaded.', array('@filepath' => $file->uri)));
+    drupal_set_message(t('File name is @filename.', array('@filename' => $file->filename)));
+    drupal_set_message(t('File MIME type is @mimetype.', array('@mimetype' => $file->filemime)));
+    drupal_set_message(t('You WIN!'));
+  }
+  elseif ($file === FALSE) {
+    drupal_set_message(t('Epic upload FAIL!'), 'error');
+  }
+}
+
+
+/**
+ * Reset/initialize the history of calls to the file_* hooks.
+ *
+ * @see file_test_get_calls() 
+ * @see file_test_reset()
+ */
+function file_test_reset() {
+  // Keep track of calls to these hooks
+  $results = array(
+    'load' => array(),
+    'validate' => array(),
+    'download' => array(),
+    'insert' => array(),
+    'update' => array(),
+    'copy' => array(),
+    'move' => array(),
+    'delete' => array(),
+  );
+  variable_set('file_test_results', $results);
+
+  // These hooks will return these values, see file_test_set_return().
+  $return = array(
+    'validate' => array(),
+    'download' => NULL,
+  );
+  variable_set('file_test_return', $return);
+}
+
+/**
+ * Get the arguments passed to invocation of a given hook since
+ * file_test_reset() was last called.
+ *
+ * @param $op
+ *   One of the hook_file_* operations: 'load', 'validate', 'download',
+ *   'insert', 'update', 'copy', 'move', 'delete'.
+ *
+ * @return
+ *   Array of the parameters passed to each call.
+ *
+ * @see _file_test_log_call()
+ * @see file_test_reset()
+ */
+function file_test_get_calls($op) {
+  $results = variable_get('file_test_results', array());
+  return $results[$op];
+}
+
+/**
+ * Get an array with the calls for all hooks.
+ *
+ * @return
+ *   An array keyed by hook name ('load', 'validate', 'download', 'insert',
+ *   'update', 'copy', 'move', 'delete') with values being arrays of parameters
+ *   passed to each call.
+ */
+function file_test_get_all_calls() {
+  return variable_get('file_test_results', array());
+}
+
+/**
+ * Store the values passed to a hook invocation.
+ *
+ * @param $op
+ *   One of the hook_file_* operations: 'load', 'validate', 'download',
+ *   'insert', 'update', 'copy', 'move', 'delete'.
+ * @param $args
+ *   Values passed to hook.
+ *
+ * @see file_test_get_calls()
+ * @see file_test_reset()
+ */
+function _file_test_log_call($op, $args) {
+  $results = variable_get('file_test_results', array());
+  $results[$op][] = $args;
+  variable_set('file_test_results', $results);
+}
+
+/**
+ * Load the appropriate return value.
+ *
+ * @param $op
+ *   One of the hook_file_[validate,download] operations.
+ *
+ * @return
+ *   Value set by file_test_set_return().
+ *
+ * @see file_test_set_return()
+ * @see file_test_reset()
+ */
+function _file_test_get_return($op) {
+  $return = variable_get('file_test_return', array($op => NULL));
+  return $return[$op];
+}
+
+/**
+ * Assign a return value for a given operation.
+ *
+ * @param $op
+ *   One of the hook_file_[validate,download] operations.
+ * @param $value
+ *   Value for the hook to return.
+ *
+ * @see _file_test_get_return()
+ * @see file_test_reset()
+ */
+function file_test_set_return($op, $value) {
+  $return = variable_get('file_test_return', array());
+  $return[$op] = $value;
+  variable_set('file_test_return', $return);
+}
+
+/**
+ * Implements hook_file_load().
+ */
+function file_test_file_load($files) {
+  foreach ($files as $file) {
+    _file_test_log_call('load', array($file));
+    // Assign a value on the object so that we can test that the $file is passed
+    // by reference.
+    $file->file_test['loaded'] = TRUE;
+  }
+}
+
+/**
+ * Implements hook_file_validate().
+ */
+function file_test_file_validate($file) {
+  _file_test_log_call('validate', array($file));
+  return _file_test_get_return('validate');
+}
+
+/**
+ * Implements hook_file_download().
+ */
+function file_test_file_download($uri) {
+  _file_test_log_call('download', array($uri));
+  return _file_test_get_return('download');
+}
+
+/**
+ * Implements hook_file_insert().
+ */
+function file_test_file_insert($file) {
+  _file_test_log_call('insert', array($file));
+}
+
+/**
+ * Implements hook_file_update().
+ */
+function file_test_file_update($file) {
+  _file_test_log_call('update', array($file));
+}
+
+/**
+ * Implements hook_file_copy().
+ */
+function file_test_file_copy($file, $source) {
+  _file_test_log_call('copy', array($file, $source));
+}
+
+/**
+ * Implements hook_file_move().
+ */
+function file_test_file_move($file, $source) {
+  _file_test_log_call('move', array($file, $source));
+}
+
+/**
+ * Implements hook_file_delete().
+ */
+function file_test_file_delete($file) {
+  _file_test_log_call('delete', array($file));
+}
+
+/**
+ * Implements hook_file_url_alter().
+ */
+function file_test_file_url_alter(&$uri) {
+  // Only run this hook when this variable is set. Otherwise, we'd have to add
+  // another hidden test module just for this hook.
+  $alter_mode = variable_get('file_test_hook_file_url_alter', FALSE);
+  if (!$alter_mode) {
+    return;
+  }
+  // Test alteration of file URLs to use a CDN.
+  elseif ($alter_mode == 'cdn') {
+    $cdn_extensions = array('css', 'js', 'gif', 'jpg', 'jpeg', 'png');
+
+    // Most CDNs don't support private file transfers without a lot of hassle,
+    // so don't support this in the common case.
+    $schemes = array('public');
+
+    $scheme = file_uri_scheme($uri);
+
+    // Only serve shipped files and public created files from the CDN.
+    if (!$scheme || in_array($scheme, $schemes)) {
+      // Shipped files.
+      if (!$scheme) {
+        $path = $uri;
+      }
+      // Public created files.
+      else {
+        $wrapper = file_stream_wrapper_get_instance_by_scheme($scheme);
+        $path = $wrapper->getDirectoryPath() . '/' . file_uri_target($uri);
+      }
+
+      // Clean up Windows paths.
+      $path = str_replace('\\', '/', $path);
+
+      // Serve files with one of the CDN extensions from CDN 1, all others from
+      // CDN 2.
+      $pathinfo = pathinfo($path);
+      if (array_key_exists('extension', $pathinfo) && in_array($pathinfo['extension'], $cdn_extensions)) {
+        $uri = FILE_URL_TEST_CDN_1 . '/' . $path;
+      }
+      else {
+        $uri = FILE_URL_TEST_CDN_2 . '/' . $path;
+      }
+    }
+  }
+  // Test alteration of file URLs to use root-relative URLs.
+  elseif ($alter_mode == 'root-relative') {
+    // Only serve shipped files and public created files with root-relative
+    // URLs.
+    $scheme = file_uri_scheme($uri);
+    if (!$scheme || $scheme == 'public') {
+      // Shipped files.
+      if (!$scheme) {
+        $path = $uri;
+      }
+      // Public created files.
+      else {
+        $wrapper = file_stream_wrapper_get_instance_by_scheme($scheme);
+        $path = $wrapper->getDirectoryPath() . '/' . file_uri_target($uri);
+      }
+
+      // Clean up Windows paths.
+      $path = str_replace('\\', '/', $path);
+
+      // Generate a root-relative URL.
+      $uri = base_path() . '/' . $path;
+    }
+  }
+  // Test alteration of file URLs to use protocol-relative URLs.
+  elseif ($alter_mode == 'protocol-relative') {
+    // Only serve shipped files and public created files with protocol-relative
+    // URLs.
+    $scheme = file_uri_scheme($uri);
+    if (!$scheme || $scheme == 'public') {
+      // Shipped files.
+      if (!$scheme) {
+        $path = $uri;
+      }
+      // Public created files.
+      else {
+        $wrapper = file_stream_wrapper_get_instance_by_scheme($scheme);
+        $path = $wrapper->getDirectoryPath() . '/' . file_uri_target($uri);
+      }
+
+      // Clean up Windows paths.
+      $path = str_replace('\\', '/', $path);
+
+      // Generate a protocol-relative URL.
+      $uri = '/' . base_path() . '/' . $path;
+    }
+  }
+}
+
+/**
+ * Implements hook_file_mimetype_mapping_alter().
+ */
+function file_test_file_mimetype_mapping_alter(&$mapping) {
+  // Add new mappings.
+  $mapping['mimetypes']['file_test_mimetype_1'] = 'madeup/file_test_1';
+  $mapping['mimetypes']['file_test_mimetype_2'] = 'madeup/file_test_2';
+  $mapping['mimetypes']['file_test_mimetype_3'] = 'madeup/doc';
+  $mapping['extensions']['file_test_1'] = 'file_test_mimetype_1';
+  $mapping['extensions']['file_test_2'] = 'file_test_mimetype_2';
+  $mapping['extensions']['file_test_3'] = 'file_test_mimetype_2';
+  // Override existing mapping.
+  $mapping['extensions']['doc'] = 'file_test_mimetype_3';
+}
+
+/**
+ * Helper class for testing the stream wrapper registry.
+ *
+ * Dummy stream wrapper implementation (dummy://).
+ */
+class DrupalDummyStreamWrapper extends DrupalLocalStreamWrapper {
+  function getDirectoryPath() {
+    return variable_get('stream_public_path', 'sites/default/files');
+  }
+
+  /**
+   * Override getInternalUri().
+   *
+   * Return a dummy path for testing.
+   */
+  function getInternalUri() {
+    return '/dummy/example.txt';
+  }
+
+  /**
+   * Override getExternalUrl().
+   *
+   * Return the HTML URI of a public file.
+   */
+  function getExternalUrl() {
+    return '/dummy/example.txt';
+  }
+}
+
+/**
+ * Helper class for testing the stream wrapper registry.
+ *
+ * Dummy remote stream wrapper implementation (dummy-remote://).
+ *
+ * Basically just the public scheme but not returning a local file for realpath.
+ */
+class DrupalDummyRemoteStreamWrapper extends DrupalPublicStreamWrapper {
+  function realpath() {
+    return FALSE;
+  }
+}

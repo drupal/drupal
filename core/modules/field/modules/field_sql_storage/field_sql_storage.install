@@ -1,0 +1,79 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the field_sql_storage module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function field_sql_storage_schema() {
+  $schema = array();
+
+  // Dynamic (data) tables.
+  if (db_table_exists('field_config')) {
+    $fields = field_read_fields(array(), array('include_deleted' => TRUE, 'include_inactive' => TRUE));
+    drupal_load('module', 'field_sql_storage');
+    foreach ($fields as $field) {
+      if ($field['storage']['type'] == 'field_sql_storage') {
+        $schema += _field_sql_storage_schema($field);
+      }
+    }
+  }
+  return $schema;
+}
+
+/**
+ * Utility function: write field data directly to SQL storage.
+ *
+ * @ingroup update-api-7.x-to-8.x
+ */
+function _update_7000_field_sql_storage_write($entity_type, $bundle, $entity_id, $revision_id, $field_name, $data) {
+  $table_name = "field_data_{$field_name}";
+  $revision_name = "field_revision_{$field_name}";
+
+  db_delete($table_name)
+    ->condition('entity_type', $entity_type)
+    ->condition('entity_id', $entity_id)
+    ->execute();
+  db_delete($revision_name)
+    ->condition('entity_type', $entity_type)
+    ->condition('entity_id', $entity_id)
+    ->condition('revision_id', $revision_id)
+    ->execute();
+
+  $columns = array();
+  foreach ($data as $langcode => $items) {
+    foreach ($items as $delta => $item) {
+      $record = array(
+        'entity_type' => $entity_type,
+        'entity_id' => $entity_id,
+        'revision_id' => $revision_id,
+        'bundle' => $bundle,
+        'delta' => $delta,
+        'language' => $langcode,
+      );
+      foreach ($item as $column => $value) {
+        $record[_field_sql_storage_columnname($field_name, $column)] = $value;
+      }
+
+      $records[] = $record;
+      // Record the columns used.
+      $columns += $record;
+    }
+  }
+
+  if ($columns) {
+    $query = db_insert($table_name)->fields(array_keys($columns));
+    $revision_query = db_insert($revision_name)->fields(array_keys($columns));
+    foreach ($records as $record) {
+      $query->values($record);
+      if ($revision_id) {
+        $revision_query->values($record);
+      }
+    }
+    $query->execute();
+    $revision_query->execute();
+  }
+}

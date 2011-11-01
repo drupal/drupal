@@ -1,0 +1,6 @@
+name = AJAX Test
+description = Support module for AJAX framework tests.
+package = Testing
+version = VERSION
+core = 8.x
+hidden = TRUE

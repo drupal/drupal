@@ -1,0 +1,65 @@
+<?php
+
+/**
+ * Implements hook_menu().
+ */
+function error_test_menu() {
+  $items['error-test/generate-warnings'] = array(
+    'title' => 'Generate warnings',
+    'page callback' => 'error_test_generate_warnings',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+  $items['error-test/generate-warnings-with-report'] = array(
+    'title' => 'Generate warnings with Simpletest reporting',
+    'page callback' => 'error_test_generate_warnings',
+    'page arguments' => array(TRUE),
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+  $items['error-test/trigger-exception'] = array(
+    'title' => 'Trigger an exception',
+    'page callback' => 'error_test_trigger_exception',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+  $items['error-test/trigger-pdo-exception'] = array(
+    'title' => 'Trigger a PDO exception',
+    'page callback' => 'error_test_trigger_pdo_exception',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
+  return $items;
+}
+
+/**
+ * Menu callback; generate warnings to test the error handler.
+ */
+function error_test_generate_warnings($collect_errors = FALSE) {
+  // Tell Drupal error reporter to send errors to Simpletest or not.
+  define('SIMPLETEST_COLLECT_ERRORS', $collect_errors);
+  // This will generate a notice.
+  $monkey_love = $bananas;
+  // This will generate a warning.
+  $awesomely_big = 1/0;
+  // This will generate a user error.
+  trigger_error("Drupal is awesome", E_USER_WARNING);
+  return "";
+}
+
+/**
+ * Menu callback; trigger an exception to test the exception handler.
+ */
+function error_test_trigger_exception() {
+  define('SIMPLETEST_COLLECT_ERRORS', FALSE);
+  throw new Exception("Drupal is awesome");
+}
+
+/**
+ * Menu callback; trigger an exception to test the exception handler.
+ */
+function error_test_trigger_pdo_exception() {
+  define('SIMPLETEST_COLLECT_ERRORS', FALSE);
+  db_query('SELECT * FROM bananas_are_awesome');
+}
