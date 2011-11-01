@@ -1,6 +1,0 @@
-name = Url_alter tests
-description = A support modules for url_alter hook testing.
-core = 8.x
-package = Testing
-version = VERSION
-hidden = TRUE

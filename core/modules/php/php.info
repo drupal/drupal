@@ -1,6 +1,0 @@
-name = PHP filter
-description = Allows embedded PHP code/snippets to be evaluated.
-package = Core
-version = VERSION
-core = 8.x
-files[] = php.test

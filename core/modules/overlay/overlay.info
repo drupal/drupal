@@ -1,5 +1,0 @@
-name = Overlay
-description = Displays the Drupal administration interface in an overlay.
-package = Core
-version = VERSION
-core = 8.x

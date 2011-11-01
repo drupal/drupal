@@ -1,7 +1,0 @@
-name = Tracker
-description = Enables tracking of recent content for users.
-dependencies[] = comment
-package = Core
-version = VERSION
-core = 8.x
-files[] = tracker.test

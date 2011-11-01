@@ -1,5 +1,0 @@
-name = BBB Update test
-description = Support module for update module testing.
-package = Testing
-core = 8.x
-hidden = TRUE

@@ -1,6 +1,0 @@
-name = File test
-description = Provides hooks for testing File module functionality.
-package = Core
-version = VERSION
-core = 8.x
-hidden = TRUE

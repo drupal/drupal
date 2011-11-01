@@ -1,9 +1,0 @@
-name = Search
-description = Enables site-wide keyword searching.
-package = Core
-version = VERSION
-core = 8.x
-files[] = search.extender.inc
-files[] = search.test
-configure = admin/config/search/settings
-stylesheets[all][] = search.css

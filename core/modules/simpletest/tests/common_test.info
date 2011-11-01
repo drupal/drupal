@@ -1,8 +1,0 @@
-name = "Common Test"
-description = "Support module for Common tests."
-package = Testing
-version = VERSION
-core = 8.x
-stylesheets[all][] = common_test.css
-stylesheets[print][] = common_test.print.css
-hidden = TRUE
