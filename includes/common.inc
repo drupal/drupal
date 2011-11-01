@@ -832,7 +832,7 @@ function drupal_http_request($url, array $options = array()) {
     // Mark that this request failed. This will trigger a check of the web
     // server's ability to make outgoing HTTP requests the next time that
     // requirements checking is performed.
-    // See system_requirements()
+    // See system_requirements().
     variable_set('drupal_http_request_fails', TRUE);
 
     return $result;
@@ -1331,21 +1331,21 @@ function filter_xss($string, $allowed_tags = array('a', 'em', 'strong', 'cite', 
   if (!drupal_validate_utf8($string)) {
     return '';
   }
-  // Store the text format
+  // Store the text format.
   _filter_xss_split($allowed_tags, TRUE);
-  // Remove NULL characters (ignored by some browsers)
+  // Remove NULL characters (ignored by some browsers).
   $string = str_replace(chr(0), '', $string);
-  // Remove Netscape 4 JS entities
+  // Remove Netscape 4 JS entities.
   $string = preg_replace('%&\s*\{[^}]*(\}\s*;?|$)%', '', $string);
 
-  // Defuse all HTML entities
+  // Defuse all HTML entities.
   $string = str_replace('&', '&amp;', $string);
-  // Change back only well-formed entities in our whitelist
-  // Decimal numeric entities
+  // Change back only well-formed entities in our whitelist:
+  // Decimal numeric entities.
   $string = preg_replace('/&amp;#([0-9]+;)/', '&#\1', $string);
-  // Hexadecimal numeric entities
+  // Hexadecimal numeric entities.
   $string = preg_replace('/&amp;#[Xx]0*((?:[0-9A-Fa-f]{2})+;)/', '&#x\1', $string);
-  // Named entities
+  // Named entities.
   $string = preg_replace('/&amp;([A-Za-z][A-Za-z0-9]*;)/', '&\1', $string);
 
   return preg_replace_callback('%
@@ -1384,16 +1384,16 @@ function _filter_xss_split($m, $store = FALSE) {
   $string = $m[1];
 
   if (substr($string, 0, 1) != '<') {
-    // We matched a lone ">" character
+    // We matched a lone ">" character.
     return '&gt;';
   }
   elseif (strlen($string) == 1) {
-    // We matched a lone "<" character
+    // We matched a lone "<" character.
     return '&lt;';
   }
 
   if (!preg_match('%^<\s*(/\s*)?([a-zA-Z0-9]+)([^>]*)>?|(<!--.*?-->)$%', $string, $matches)) {
-    // Seriously malformed
+    // Seriously malformed.
     return '';
   }
 
@@ -1407,7 +1407,7 @@ function _filter_xss_split($m, $store = FALSE) {
   }
 
   if (!isset($allowed_html[strtolower($elem)])) {
-    // Disallowed HTML element
+    // Disallowed HTML element.
     return '';
   }
 
@@ -1423,7 +1423,7 @@ function _filter_xss_split($m, $store = FALSE) {
   $attrlist = preg_replace('%(\s?)/\s*$%', '\1', $attrlist, -1, $count);
   $xhtml_slash = $count ? ' /' : '';
 
-  // Clean up attributes
+  // Clean up attributes.
   $attr2 = implode(' ', _filter_xss_attributes($attrlist));
   $attr2 = preg_replace('/[<>]/', '', $attr2);
   $attr2 = strlen($attr2) ? ' ' . $attr2 : '';
@@ -1448,7 +1448,7 @@ function _filter_xss_attributes($attr) {
 
     switch ($mode) {
       case 0:
-        // Attribute name, href for instance
+        // Attribute name, href for instance.
         if (preg_match('/^([-a-zA-Z]+)/', $attr, $match)) {
           $attrname = strtolower($match[1]);
           $skip = ($attrname == 'style' || substr($attrname, 0, 2) == 'on');
@@ -1458,7 +1458,7 @@ function _filter_xss_attributes($attr) {
         break;
 
       case 1:
-        // Equals sign or valueless ("selected")
+        // Equals sign or valueless ("selected").
         if (preg_match('/^\s*=\s*/', $attr)) {
           $working = 1; $mode = 2;
           $attr = preg_replace('/^\s*=\s*/', '', $attr);
@@ -1475,7 +1475,7 @@ function _filter_xss_attributes($attr) {
         break;
 
       case 2:
-        // Attribute value, a URL after href= for instance
+        // Attribute value, a URL after href= for instance.
         if (preg_match('/^"([^"]*)"(\s+|$)/', $attr, $match)) {
           $thisval = filter_xss_bad_protocol($match[1]);
 
@@ -1512,7 +1512,7 @@ function _filter_xss_attributes($attr) {
     }
 
     if ($working == 0) {
-      // not well formed, remove and try again
+      // Not well formed; remove and try again.
       $attr = preg_replace('/
         ^
         (
@@ -5044,7 +5044,7 @@ function drupal_cron_run() {
     foreach ($queues as $queue_name => $info) {
       DrupalQueue::get($queue_name)->createQueue();
     }
-    // Register shutdown callback
+    // Register shutdown callback.
     drupal_register_shutdown_function('drupal_cron_cleanup');
 
     // Iterate through the modules calling their cron handlers (if any):
@@ -5058,7 +5058,7 @@ function drupal_cron_run() {
       }
     }
 
-    // Record cron time
+    // Record cron time.
     variable_set('cron_last', REQUEST_TIME);
     watchdog('cron', 'Cron run completed.', array(), WATCHDOG_NOTICE);
 
@@ -5093,7 +5093,7 @@ function drupal_cron_cleanup() {
   if (variable_get('cron_semaphore', FALSE)) {
     watchdog('cron', 'Cron run exceeded the time limit and was aborted.', array(), WATCHDOG_WARNING);
 
-    // Release cron semaphore
+    // Release cron semaphore.
     variable_del('cron_semaphore');
   }
 }
@@ -5162,14 +5162,14 @@ function drupal_system_listing($mask, $directory, $key = 'name', $min_depth = 1)
     $searchdir[] = "profiles/$profile/$directory";
   }
 
-  // Always search sites/all/* as well as the global directories
+  // Always search sites/all/* as well as the global directories.
   $searchdir[] = 'sites/all/' . $directory;
 
   if (file_exists("$config/$directory")) {
     $searchdir[] = "$config/$directory";
   }
 
-  // Get current list of items
+  // Get current list of items.
   if (!function_exists('file_scan_directory')) {
     require_once DRUPAL_ROOT . '/includes/file.inc';
   }
@@ -6421,7 +6421,7 @@ function drupal_array_nested_key_exists(array $array, array $parents) {
  */
 function drupal_common_theme() {
   return array(
-    // theme.inc
+    // From theme.inc.
     'html' => array(
       'render element' => 'page',
       'template' => 'html',
@@ -6497,7 +6497,7 @@ function drupal_common_theme() {
     'html_tag' => array(
       'render element' => 'element',
     ),
-    // from theme.maintenance.inc
+    // From theme.maintenance.inc.
     'maintenance_page' => array(
       'variables' => array('content' => NULL, 'show_messages' => TRUE),
       'template' => 'maintenance-page',
@@ -6517,7 +6517,7 @@ function drupal_common_theme() {
     'authorize_report' => array(
       'variables' => array('messages' => array()),
     ),
-    // from pager.inc
+    // From pager.inc.
     'pager' => array(
       'variables' => array('tags' => array(), 'element' => 0, 'parameters' => array(), 'quantity' => 9),
     ),
@@ -6536,7 +6536,7 @@ function drupal_common_theme() {
     'pager_link' => array(
       'variables' => array('text' => NULL, 'page_new' => NULL, 'element' => NULL, 'parameters' => array(), 'attributes' => array()),
     ),
-    // from menu.inc
+    // From menu.inc.
     'menu_link' => array(
       'render element' => 'element',
     ),
@@ -6552,7 +6552,7 @@ function drupal_common_theme() {
     'menu_local_tasks' => array(
       'variables' => array('primary' => array(), 'secondary' => array()),
     ),
-    // from form.inc
+    // From form.inc.
     'select' => array(
       'render element' => 'element',
     ),
@@ -7030,19 +7030,19 @@ function drupal_parse_info_format($data) {
     )\s*$                           # Stop at the next end of a line, ignoring trailing whitespace
     @msx', $data, $matches, PREG_SET_ORDER)) {
     foreach ($matches as $match) {
-      // Fetch the key and value string
+      // Fetch the key and value string.
       $i = 0;
       foreach (array('key', 'value1', 'value2', 'value3') as $var) {
         $$var = isset($match[++$i]) ? $match[$i] : '';
       }
       $value = stripslashes(substr($value1, 1, -1)) . stripslashes(substr($value2, 1, -1)) . $value3;
 
-      // Parse array syntax
+      // Parse array syntax.
       $keys = preg_split('/\]?\[/', rtrim($key, ']'));
       $last = array_pop($keys);
       $parent = &$info;
 
-      // Create nested arrays
+      // Create nested arrays.
       foreach ($keys as $key) {
         if ($key == '') {
           $key = count($parent);
@@ -7058,7 +7058,7 @@ function drupal_parse_info_format($data) {
         $value = $constants[$value];
       }
 
-      // Insert actual value
+      // Insert actual value.
       if ($last == '') {
         $last = count($parent);
       }
