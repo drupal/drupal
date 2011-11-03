@@ -6,7 +6,11 @@
  */
 
 /**
- * Menu callback for admin/structure/block/demo.
+ * Page callback: Attaches CSS for the block region demo.
+ *
+ * Path: admin/structure/block/demo/% (for each theme)
+ *
+ * @see block_menu()
  */
 function block_admin_demo($theme = NULL) {
   drupal_add_css(drupal_get_path('module', 'block') . '/block.admin.css');
@@ -14,11 +18,15 @@ function block_admin_demo($theme = NULL) {
 }
 
 /**
- * Menu callback for admin/structure/block.
+ * Page callback: Shows the block administration page.
+ *
+ * Path: admin/structure/block
  *
  * @param $theme
  *   The theme to display the administration page for. If not provided, defaults
  *   to the currently used theme.
+ *
+ * @see block_menu()
  */
 function block_admin_display($theme = NULL) {
   global $theme_key;
@@ -57,7 +65,7 @@ function block_admin_display_prepare_blocks($theme) {
 }
 
 /**
- * Form builder for the main blocks administration form.
+ * Form constructor for the main block administration form.
  *
  * @param $blocks
  *   An array of blocks, as returned by block_admin_display_prepare_blocks().
@@ -165,7 +173,7 @@ function block_admin_display_form($form, &$form_state, $blocks, $theme, $block_r
 }
 
 /**
- * Form submission handler for the main blocks administration form.
+ * Form submission handler for block_admin_display_form().
  *
  * @see block_admin_display_form()
  */
@@ -197,10 +205,9 @@ function block_admin_display_form_submit($form, &$form_state) {
 }
 
 /**
- * Helper function for sorting blocks on admin/structure/block.
+ * Sorts active blocks by region, then by weight; sorts inactive blocks by name.
  *
- * Active blocks are sorted by region, then by weight.
- * Disabled blocks are sorted by name.
+ * Callback for usort() in block_admin_display_prepare_blocks().
  */
 function _block_compare($a, $b) {
   global $theme_key;
@@ -240,7 +247,9 @@ function _block_compare($a, $b) {
 }
 
 /**
- * Form builder for the block configuration form.
+ * Page callback: Form constructor for the block configuration form.
+ *
+ * Path: admin/structure/block/manage/%/%
  *
  * Also used by block_add_block_form() for adding a new custom block.
  *
@@ -249,6 +258,7 @@ function _block_compare($a, $b) {
  * @param $delta
  *   Unique ID of the block within the context of $module.
  *
+ * @see block_menu()
  * @see block_admin_configure_validate()
  * @see block_admin_configure_submit()
  * @ingroup forms
@@ -441,7 +451,7 @@ function block_admin_configure($form, &$form_state, $module, $delta) {
 }
 
 /**
- * Form validation handler for the block configuration form.
+ * Form validation handler for block_admin_configure().
  *
  * @see block_admin_configure()
  * @see block_admin_configure_submit()
@@ -459,7 +469,7 @@ function block_admin_configure_validate($form, &$form_state) {
 }
 
 /**
- * Form submission handler for the block configuration form.
+ * Form submission handler for block_admin_configure().
  *
  * @see block_admin_configure()
  * @see block_admin_configure_validate()
@@ -519,8 +529,11 @@ function block_admin_configure_submit($form, &$form_state) {
 }
 
 /**
- * Form builder for the add block form.
+ * Page callback: Form constructor for the add block form.
  *
+ * Path: admin/structure/block/add
+ *
+ * @see block_menu()
  * @see block_add_block_form_validate()
  * @see block_add_block_form_submit()
  * @ingroup forms
@@ -530,7 +543,7 @@ function block_add_block_form($form, &$form_state) {
 }
 
 /**
- * Form validation handler for the add block form.
+ * Form validation handler for block_add_block_form().
  *
  * @see block_add_block_form()
  * @see block_add_block_form_submit()
@@ -544,7 +557,7 @@ function block_add_block_form_validate($form, &$form_state) {
 }
 
 /**
- * Form submission handler for the add block form.
+ * Form submission handler for block_add_block_form().
  *
  * Saves the new custom block.
  *
@@ -609,7 +622,9 @@ function block_add_block_form_submit($form, &$form_state) {
 }
 
 /**
- * Form builder for the custom block deletion form.
+ * Page callback: Form constructor for the custom block deletion form.
+ *
+ * Path: admin/structure/block/manage/%/%/delete
  *
  * @param $module
  *   The name of the module that implements the block to be deleted. This should
@@ -617,6 +632,7 @@ function block_add_block_form_submit($form, &$form_state) {
  * @param $delta
  *   The unique ID of the block within the context of $module.
  *
+ * @see block_menu()
  * @see block_custom_block_delete_submit()
  */
 function block_custom_block_delete($form, &$form_state, $module, $delta) {
@@ -629,7 +645,7 @@ function block_custom_block_delete($form, &$form_state, $module, $delta) {
 }
 
 /**
- * Form submission handler for the custom block deletion form.
+ * Form submission handler for block_custom_block_delete().
  *
  * @see block_custom_block_delete()
  */
