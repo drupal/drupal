@@ -111,9 +111,6 @@ function tracker_page($account = NULL, $set_title = FALSE) {
     '#header' => array(t('Type'), t('Title'), t('Author'), t('Replies'), t('Last updated')),
     '#theme' => 'table',
     '#empty' => t('No content available.'),
-    '#attached' => array(
-      'css' => array(drupal_get_path('module', 'tracker') . '/tracker.css' => array()),
-    ),
   );
   $page['pager'] = array(
     '#theme' => 'pager',
