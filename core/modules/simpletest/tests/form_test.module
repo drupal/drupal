@@ -92,6 +92,14 @@ function form_test_menu() {
     'type' => MENU_CALLBACK,
   );
 
+  $items['form_test/form-state-values-clean-advanced'] = array(
+    'title' => 'Form state values clearance advanced test',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('form_test_form_state_values_clean_advanced_form'),
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+
   $items['form-test/checkbox'] = array(
     'title' => t('Form test'),
     'page callback' => 'drupal_get_form',
@@ -799,6 +807,33 @@ function form_test_form_state_values_clean_form($form, &$form_state) {
 function form_test_form_state_values_clean_form_submit($form, &$form_state) {
   form_state_values_clean($form_state);
   drupal_json_output($form_state['values']);
+  exit;
+}
+
+/**
+ * Form constructor for the form_state_values_clean() test.
+ */
+function form_test_form_state_values_clean_advanced_form($form, &$form_state) {
+  // Build an example form containing a managed file and a submit form element.
+  $form['image'] = array(
+    '#type' => 'managed_file',
+    '#title' => t('Image'),
+    '#upload_location' => 'public://',
+    '#default_value' => 0,
+  );
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Submit'),
+  );
+  return $form;
+}
+
+/**
+ * Form submission handler for form_test_form_state_values_clean_advanced_form().
+ */
+function form_test_form_state_values_clean_advanced_form_submit($form, &$form_state) {
+  form_state_values_clean($form_state);
+  print t('You WIN!');
   exit;
 }
 

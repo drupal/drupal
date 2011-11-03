@@ -2142,12 +2142,12 @@ function form_state_values_clean(&$form_state) {
     // $form_state['values']['foo']['bar'], which is the level where we can
     // unset 'baz' (that is stored in $last_parent).
     $parents = $button['#parents'];
-    $values = &$form_state['values'];
     $last_parent = array_pop($parents);
-    foreach ($parents as $parent) {
-      $values = &$values[$parent];
+    $key_exists = NULL;
+    $values = &drupal_array_get_nested_value($form_state['values'], $parents, $key_exists);
+    if ($key_exists && is_array($values)) {
+      unset($values[$last_parent]);
     }
-    unset($values[$last_parent]);
   }
 }
 
