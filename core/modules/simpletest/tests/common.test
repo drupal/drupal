@@ -1316,6 +1316,75 @@ class JavaScriptTestCase extends DrupalWebTestCase {
   }
 
   /**
+   * Test adding JavaScript within conditional comments.
+   *
+   * @see drupal_pre_render_conditional_comments()
+   */
+  function testBrowserConditionalComments() {
+    $default_query_string = variable_get('css_js_query_string', '0');
+
+    drupal_add_js('core/misc/collapse.js', array('browsers' => array('IE' => 'lte IE 8', '!IE' => FALSE)));
+    drupal_add_js('jQuery(function () { });', array('type' => 'inline', 'browsers' => array('IE' => FALSE)));
+    $javascript = drupal_get_js();
+
+    $expected_1 = "<!--[if lte IE 8]>\n" . '<script type="text/javascript" src="' . file_create_url('core/misc/collapse.js') . '?' . $default_query_string . '"></script>' . "\n<![endif]-->";
+    $expected_2 = "<!--[if !IE]><!-->\n" . '<script type="text/javascript">' . "\n<!--//--><![CDATA[//><!--\n" . 'jQuery(function () { });' . "\n//--><!]]>\n" . '</script>' . "\n<!--<![endif]-->";
+
+    $this->assertTrue(strpos($javascript, $expected_1) > 0, t('Rendered JavaScript within downlevel-hidden conditional comments.'));
+    $this->assertTrue(strpos($javascript, $expected_2) > 0, t('Rendered JavaScript within downlevel-revealed conditional comments.'));
+  }
+
+  /**
+   * Test JavaScript versioning.
+   */
+  function testVersionQueryString() {
+    drupal_add_js('core/misc/collapse.js', array('version' => 'foo'));
+    drupal_add_js('core/misc/ajax.js', array('version' => 'bar'));
+    $javascript = drupal_get_js();
+    $this->assertTrue(strpos($javascript, 'core/misc/collapse.js?v=foo') > 0 && strpos($javascript, 'core/misc/ajax.js?v=bar') > 0 , t('JavaScript version identifiers correctly appended to URLs'));
+  }
+
+  /**
+   * Test JavaScript grouping and aggregation.
+   */
+  function testAggregation() {
+    $default_query_string = variable_get('css_js_query_string', '0');
+
+    // To optimize aggregation, items with the 'every_page' option are ordered
+    // ahead of ones without. The order of JavaScript execution must be the
+    // same regardless of whether aggregation is enabled, so ensure this
+    // expected order, first with aggregation off.
+    drupal_add_js('core/misc/ajax.js');
+    drupal_add_js('core/misc/authorize.js', array('every_page' => TRUE));
+    drupal_add_js('core/misc/autocomplete.js');
+    drupal_add_js('core/misc/batch.js', array('every_page' => TRUE));
+    $javascript = drupal_get_js();
+    $expected = implode("\n", array(
+      '<script type="text/javascript" src="' . file_create_url('core/misc/authorize.js') . '?' . $default_query_string . '"></script>',
+      '<script type="text/javascript" src="' . file_create_url('core/misc/batch.js') . '?' . $default_query_string . '"></script>',
+      '<script type="text/javascript" src="' . file_create_url('core/misc/ajax.js') . '?' . $default_query_string . '"></script>',
+      '<script type="text/javascript" src="' . file_create_url('core/misc/autocomplete.js') . '?' . $default_query_string . '"></script>',
+    ));
+    $this->assertTrue(strpos($javascript, $expected) > 0, t('Unaggregated JavaScript is added in the expected group order.'));
+
+    // Now ensure that with aggregation on, one file is made for the
+    // 'every_page' files, and one file is made for the others.
+    drupal_static_reset('drupal_add_js');
+    variable_set('preprocess_js', 1);
+    drupal_add_js('core/misc/ajax.js');
+    drupal_add_js('core/misc/authorize.js', array('every_page' => TRUE));
+    drupal_add_js('core/misc/autocomplete.js');
+    drupal_add_js('core/misc/batch.js', array('every_page' => TRUE));
+    $js_items = drupal_add_js();
+    $javascript = drupal_get_js();
+    $expected = implode("\n", array(
+      '<script type="text/javascript" src="' . file_create_url(drupal_build_js_cache(array('core/misc/authorize.js' => $js_items['core/misc/authorize.js'], 'core/misc/batch.js' => $js_items['core/misc/batch.js']))) . '"></script>',
+      '<script type="text/javascript" src="' . file_create_url(drupal_build_js_cache(array('core/misc/ajax.js' => $js_items['core/misc/ajax.js'], 'core/misc/autocomplete.js' => $js_items['core/misc/autocomplete.js']))) . '"></script>',
+    ));
+    $this->assertTrue(strpos($javascript, $expected) > 0, t('JavaScript is aggregated in the expected groups and order.'));
+  }
+
+  /**
    * Test JavaScript ordering.
    */
   function testRenderOrder() {
