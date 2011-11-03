@@ -463,8 +463,8 @@ function _trigger_normalize_user_context($type, $account) {
 /**
  * Implements hook_user_login().
  */
-function trigger_user_login(&$edit, $account, $category) {
-  _trigger_user('user_login', $edit, $account, $category);
+function trigger_user_login(&$edit, $account) {
+  _trigger_user('user_login', $edit, $account);
 }
 
 /**
@@ -478,15 +478,15 @@ function trigger_user_logout($account) {
 /**
  * Implements hook_user_insert().
  */
-function trigger_user_insert(&$edit, $account, $category) {
-  _trigger_user('user_insert', $edit, $account, $category);
+function trigger_user_insert(&$edit, $account) {
+  _trigger_user('user_insert', $edit, $account);
 }
 
 /**
  * Implements hook_user_update().
  */
-function trigger_user_update(&$edit, $account, $category) {
-  _trigger_user('user_update', $edit, $account, $category);
+function trigger_user_update(&$edit, $account) {
+  _trigger_user('user_update', $edit, $account);
 }
 
 /**
@@ -505,7 +505,7 @@ function trigger_user_cancel($edit, $account, $method) {
  */
 function trigger_user_delete($account) {
   $edit = array();
-  _trigger_user('user_delete', $edit, $account, NULL);
+  _trigger_user('user_delete', $edit, $account);
 }
 
 /**
@@ -513,13 +513,13 @@ function trigger_user_delete($account) {
  */
 function trigger_user_view($account) {
   $edit = NULL;
-  _trigger_user('user_view', $edit, $account, NULL);
+  _trigger_user('user_view', $edit, $account);
 }
 
 /**
  * Calls action functions for user triggers.
  */
-function _trigger_user($hook, &$edit, $account, $category = NULL) {
+function _trigger_user($hook, &$edit, $account, $method = NULL) {
   // Keep objects for reuse so that changes actions make to objects can persist.
   static $objects;
   $aids = trigger_get_assigned_actions($hook);
@@ -538,7 +538,7 @@ function _trigger_user($hook, &$edit, $account, $category = NULL) {
       actions_do($aid, $objects[$type], $context);
     }
     else {
-      actions_do($aid, $account, $context, $category);
+      actions_do($aid, $account, $context, $method);
     }
   }
 }

@@ -183,29 +183,6 @@ function hook_user_operations() {
 }
 
 /**
- * Retrieve a list of user setting or profile information categories.
- *
- * @return
- *   An array of associative arrays. Each inner array has elements:
- *   - "name": The internal name of the category.
- *   - "title": The human-readable, localized name of the category.
- *   - "weight": An integer specifying the category's sort ordering.
- *   - "access callback": Name of the access callback function to use to
- *     determine whether the user can edit the category. Defaults to using
- *     user_edit_access(). See hook_menu() for more information on access
- *     callbacks.
- *   - "access arguments": Arguments for the access callback function. Defaults
- *     to array(1).
- */
-function hook_user_categories() {
-  return array(array(
-    'name' => 'account',
-    'title' => t('Account settings'),
-    'weight' => 1,
-  ));
-}
-
-/**
  * A user account is about to be created or updated.
  *
  * This hook is primarily intended for modules that want to store properties in
@@ -217,13 +194,11 @@ function hook_user_categories() {
  *   The array of form values submitted by the user.
  * @param $account
  *   The user object on which the operation is performed.
- * @param $category
- *   The active category of user information being edited.
  *
  * @see hook_user_insert()
  * @see hook_user_update()
  */
-function hook_user_presave(&$edit, $account, $category) {
+function hook_user_presave(&$edit, $account) {
   // Make sure that our form value 'mymodule_foo' is stored as 'mymodule_bar'.
   if (isset($edit['mymodule_foo'])) {
     $edit['data']['my_module_foo'] = $edit['my_module_foo'];
@@ -240,13 +215,11 @@ function hook_user_presave(&$edit, $account, $category) {
  *   The array of form values submitted by the user.
  * @param $account
  *   The user object on which the operation is being performed.
- * @param $category
- *   The active category of user information being edited.
  *
  * @see hook_user_presave()
  * @see hook_user_update()
  */
-function hook_user_insert(&$edit, $account, $category) {
+function hook_user_insert(&$edit, $account) {
   db_insert('mytable')
     ->fields(array(
       'myfield' => $edit['myfield'],
@@ -265,13 +238,11 @@ function hook_user_insert(&$edit, $account, $category) {
  *   The array of form values submitted by the user.
  * @param $account
  *   The user object on which the operation is performed.
- * @param $category
- *   The active category of user information being edited.
  *
  * @see hook_user_presave()
  * @see hook_user_insert()
  */
-function hook_user_update(&$edit, $account, $category) {
+function hook_user_update(&$edit, $account) {
   db_insert('user_changes')
     ->fields(array(
       'uid' => $account->uid,
@@ -331,17 +302,8 @@ function hook_user_view($account, $view_mode, $langcode) {
     '#markup' => theme('user_picture', array('account' => $account)),
     '#weight' => -10,
   );
-  if (!isset($account->content['summary'])) {
-    $account->content['summary'] = array();
-  }
-  $account->content['summary'] += array(
-    '#type' => 'user_profile_category',
-    '#attributes' => array('class' => array('user-member')),
-    '#weight' => 5,
-    '#title' => t('History'),
-  );
-  $account->content['summary']['member_for'] = array(
-    '#type' => 'user_profile_item',
+  $account->content['member_for'] = array(
+    '#type' => 'item',
     '#title' => t('Member for'),
     '#markup' => format_interval(REQUEST_TIME - $account->created),
   );

@@ -11,7 +11,7 @@
  * such as render($user_profile['user_picture']). Always call
  * render($user_profile) at the end in order to print all remaining items. If
  * the item is a category, it will contain all its profile items. By default,
- * $user_profile['summary'] is provided, which contains data on the user's
+ * $user_profile['member_for'] is provided, which contains data on the user's
  * history. Other data can be included by modules. $user_profile['user_picture']
  * is available for showing the account picture.
  *
@@ -25,10 +25,6 @@
  *     field language, e.g. $account->field_example['en'], thus overriding any
  *     language negotiation rule that was previously applied.
  *
- * @see user-profile-category.tpl.php
- *   Where the html is handled for the group.
- * @see user-profile-item.tpl.php
- *   Where the html is handled for each item in the group.
  * @see template_preprocess_user_profile()
  */
 ?>

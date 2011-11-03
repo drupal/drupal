@@ -198,42 +198,7 @@ function template_preprocess_user_profile(&$variables) {
 }
 
 /**
- * Process variables for user-profile-item.tpl.php.
- *
- * The $variables array contains the following arguments:
- * - $element
- *
- * @see user-profile-item.tpl.php
- */
-function template_preprocess_user_profile_item(&$variables) {
-  $variables['title'] = $variables['element']['#title'];
-  $variables['value'] = $variables['element']['#markup'];
-  $variables['attributes'] = '';
-  if (isset($variables['element']['#attributes'])) {
-    $variables['attributes'] = drupal_attributes($variables['element']['#attributes']);
-  }
-}
-
-/**
- * Process variables for user-profile-category.tpl.php.
- *
- * The $variables array contains the following arguments:
- * - $element
- *
- * @see user-profile-category.tpl.php
- */
-function template_preprocess_user_profile_category(&$variables) {
-  $variables['title'] = check_plain($variables['element']['#title']);
-  $variables['classes_array'][] = 'user-profile-category-' . drupal_html_class($variables['title']);
-  $variables['profile_items'] = $variables['element']['#children'];
-  $variables['attributes'] = '';
-  if (isset($variables['element']['#attributes'])) {
-    $variables['attributes'] = drupal_attributes($variables['element']['#attributes']);
-  }
-}
-
-/**
- * Form builder; edit a user account or one of their profile categories.
+ * Form builder; edit a user account.
  *
  * @ingroup forms
  * @see user_account_form()
@@ -242,7 +207,7 @@ function template_preprocess_user_profile_category(&$variables) {
  * @see user_profile_form_submit()
  * @see user_cancel_confirm_form_submit()
  */
-function user_profile_form($form, &$form_state, $account, $category = 'account') {
+function user_profile_form($form, &$form_state, $account) {
   global $user;
 
   // During initial form build, add the entity to the form state for use during
@@ -258,27 +223,23 @@ function user_profile_form($form, &$form_state, $account, $category = 'account')
   // @todo Legacy support. Modules are encouraged to access the entity using
   //   $form_state. Remove in Drupal 8.
   $form['#user'] = $account;
-  $form['#user_category'] = $category;
 
-  if ($category == 'account') {
-    user_account_form($form, $form_state);
-    // Attach field widgets.
-    field_attach_form('user', $account, $form, $form_state);
-  }
+
+  user_account_form($form, $form_state);
+  // Attach field widgets.
+  field_attach_form('user', $account, $form, $form_state);
 
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save'),
   );
-  if ($category == 'account') {
-    $form['actions']['cancel'] = array(
-      '#type' => 'submit',
-      '#value' => t('Cancel account'),
-      '#submit' => array('user_edit_cancel_submit'),
-      '#access' => $account->uid > 1 && (($account->uid == $user->uid && user_access('cancel account')) || user_access('administer users')),
-    );
-  }
+  $form['actions']['cancel'] = array(
+    '#type' => 'submit',
+    '#value' => t('Cancel account'),
+    '#submit' => array('user_edit_cancel_submit'),
+    '#access' => $account->uid > 1 && (($account->uid == $user->uid && user_access('cancel account')) || user_access('administer users')),
+  );
 
   $form['#validate'][] = 'user_profile_form_validate';
   // Add the final user profile form submit handler.
@@ -299,7 +260,6 @@ function user_profile_form_validate($form, &$form_state) {
  */
 function user_profile_form_submit($form, &$form_state) {
   $account = $form_state['user'];
-  $category = $form['#user_category'];
   // Remove unneeded values.
   form_state_values_clean($form_state);
 
@@ -315,10 +275,10 @@ function user_profile_form_submit($form, &$form_state) {
   // this form by taking over all values, which appear in the form values too.
   $edit = array_intersect_key((array) $account, $form_state['values']);
 
-  user_save($account_unchanged, $edit, $category);
+  user_save($account_unchanged, $edit);
   $form_state['values']['uid'] = $account->uid;
 
-  if ($category == 'account' && !empty($edit['pass'])) {
+  if (!empty($edit['pass'])) {
     // Remove the password reset tag since a new password was saved.
     unset($_SESSION['pass_reset_'. $account->uid]);
   }

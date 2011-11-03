@@ -92,13 +92,11 @@ function user_help($path, $arg) {
  * @param $account
  *   The user account object to be passed as the second parameter of the hook
  *   function.
- * @param $category
- *   The category of user information being acted upon.
  */
-function user_module_invoke($type, &$edit, $account, $category = NULL) {
+function user_module_invoke($type, &$edit, $account) {
   foreach (module_implements('user_' . $type) as $module) {
     $function = $module . '_user_' . $type;
-    $function($edit, $account, $category);
+    $function($edit, $account);
   }
 }
 
@@ -114,16 +112,6 @@ function user_theme() {
     'user_profile' => array(
       'render element' => 'elements',
       'template' => 'user-profile',
-      'file' => 'user.pages.inc',
-    ),
-    'user_profile_category' => array(
-      'render element' => 'element',
-      'template' => 'user-profile-category',
-      'file' => 'user.pages.inc',
-    ),
-    'user_profile_item' => array(
-      'render element' => 'element',
-      'template' => 'user-profile-item',
       'file' => 'user.pages.inc',
     ),
     'user_list' => array(
@@ -239,9 +227,9 @@ function user_field_extra_fields() {
       ),
     ),
     'display' => array(
-      'summary' => array(
-        'label' => t('History'),
-        'description' => t('User module history view element.'),
+      'member_for' => array(
+        'label' => t('Member for'),
+        'description' => t('User module \'member for\' view element.'),
         'weight' => 5,
       ),
     ),
@@ -379,15 +367,13 @@ function user_load_by_name($name) {
  *   An array of fields and values to save. For example array('name'
  *   => 'My name'). Key / value pairs added to the $edit['data'] will be
  *   serialized and saved in the {users.data} column.
- * @param $category
- *   (optional) The category for storing profile information in.
  *
  * @return
  *   A fully-loaded $user object upon successful save or FALSE if the save failed.
  *
  * @todo D8: Drop $edit and fix user_save() to be consistent with others.
  */
-function user_save($account, $edit = array(), $category = 'account') {
+function user_save($account, $edit = array()) {
   $transaction = db_transaction();
   try {
     if (!empty($edit['pass'])) {
@@ -425,7 +411,7 @@ function user_save($account, $edit = array(), $category = 'account') {
     }
 
     // Invoke hook_user_presave() for all modules.
-    user_module_invoke('presave', $edit, $account, $category);
+    user_module_invoke('presave', $edit, $account);
 
     // Invoke presave operations of Field Attach API and Entity API. Those APIs
     // require a fully-fledged and updated entity object. Therefore, we need to
@@ -523,7 +509,7 @@ function user_save($account, $edit = array(), $category = 'account') {
           $edit[$key] = $value;
         }
       }
-      user_module_invoke('update', $edit, $account, $category);
+      user_module_invoke('update', $edit, $account);
       module_invoke_all('entity_update', $account, 'user');
     }
     else {
@@ -548,7 +534,7 @@ function user_save($account, $edit = array(), $category = 'account') {
 
       field_attach_insert('user', $account);
       $edit = (array) $account;
-      user_module_invoke('insert', $edit, $account, $category);
+      user_module_invoke('insert', $edit, $account);
       module_invoke_all('entity_insert', $account, 'user');
 
       // Save user roles.
@@ -921,19 +907,6 @@ function user_search_execute($keys = NULL, $conditions = NULL) {
 }
 
 /**
- * Implements hook_element_info().
- */
-function user_element_info() {
-  $types['user_profile_category'] = array(
-    '#theme_wrappers' => array('user_profile_category'),
-  );
-  $types['user_profile_item'] = array(
-    '#theme' => 'user_profile_item',
-  );
-  return $types;
-}
-
-/**
  * Implements hook_user_view().
  */
 function user_user_view($account) {
@@ -941,19 +914,11 @@ function user_user_view($account) {
     '#markup' => theme('user_picture', array('account' => $account)),
     '#weight' => -10,
   );
-  if (!isset($account->content['summary'])) {
-    $account->content['summary'] = array();
-  }
-  $account->content['summary'] += array(
-    '#type' => 'user_profile_category',
-    '#attributes' => array('class' => array('user-member')),
-    '#weight' => 5,
-    '#title' => t('History'),
-  );
-  $account->content['summary']['member_for'] = array(
-    '#type' => 'user_profile_item',
+  $account->content['member_for'] = array(
+    '#type' => 'item',
     '#title' => t('Member for'),
     '#markup' => format_interval(REQUEST_TIME - $account->created),
+    '#weight' => 5,
   );
 }
 
@@ -1167,49 +1132,47 @@ function user_validate_current_pass(&$form, &$form_state) {
  * @see user_account_form()
  */
 function user_account_form_validate($form, &$form_state) {
-  if ($form['#user_category'] == 'account' || $form['#user_category'] == 'register') {
-    $account = $form['#user'];
-    // Validate new or changing username.
-    if (isset($form_state['values']['name'])) {
-      if ($error = user_validate_name($form_state['values']['name'])) {
-        form_set_error('name', $error);
-      }
-      elseif ((bool) db_select('users')->fields('users', array('uid'))->condition('uid', $account->uid, '<>')->condition('name', db_like($form_state['values']['name']), 'LIKE')->range(0, 1)->execute()->fetchField()) {
-        form_set_error('name', t('The name %name is already taken.', array('%name' => $form_state['values']['name'])));
-      }
+  $account = $form['#user'];
+  // Validate new or changing username.
+  if (isset($form_state['values']['name'])) {
+    if ($error = user_validate_name($form_state['values']['name'])) {
+      form_set_error('name', $error);
     }
-
-    // Trim whitespace from mail, to prevent confusing 'e-mail not valid'
-    // warnings often caused by cutting and pasting.
-    $mail = trim($form_state['values']['mail']);
-    form_set_value($form['account']['mail'], $mail, $form_state);
-
-    // Validate the e-mail address, and check if it is taken by an existing user.
-    if ($error = user_validate_mail($form_state['values']['mail'])) {
-      form_set_error('mail', $error);
+    elseif ((bool) db_select('users')->fields('users', array('uid'))->condition('uid', $account->uid, '<>')->condition('name', db_like($form_state['values']['name']), 'LIKE')->range(0, 1)->execute()->fetchField()) {
+      form_set_error('name', t('The name %name is already taken.', array('%name' => $form_state['values']['name'])));
     }
-    elseif ((bool) db_select('users')->fields('users', array('uid'))->condition('uid', $account->uid, '<>')->condition('mail', db_like($form_state['values']['mail']), 'LIKE')->range(0, 1)->execute()->fetchField()) {
-      // Format error message dependent on whether the user is logged in or not.
-      if ($GLOBALS['user']->uid) {
-        form_set_error('mail', t('The e-mail address %email is already taken.', array('%email' => $form_state['values']['mail'])));
-      }
-      else {
-        form_set_error('mail', t('The e-mail address %email is already registered. <a href="@password">Have you forgotten your password?</a>', array('%email' => $form_state['values']['mail'], '@password' => url('user/password'))));
-      }
+  }
+
+  // Trim whitespace from mail, to prevent confusing 'e-mail not valid'
+  // warnings often caused by cutting and pasting.
+  $mail = trim($form_state['values']['mail']);
+  form_set_value($form['account']['mail'], $mail, $form_state);
+
+  // Validate the e-mail address, and check if it is taken by an existing user.
+  if ($error = user_validate_mail($form_state['values']['mail'])) {
+    form_set_error('mail', $error);
+  }
+  elseif ((bool) db_select('users')->fields('users', array('uid'))->condition('uid', $account->uid, '<>')->condition('mail', db_like($form_state['values']['mail']), 'LIKE')->range(0, 1)->execute()->fetchField()) {
+    // Format error message dependent on whether the user is logged in or not.
+    if ($GLOBALS['user']->uid) {
+      form_set_error('mail', t('The e-mail address %email is already taken.', array('%email' => $form_state['values']['mail'])));
     }
+    else {
+      form_set_error('mail', t('The e-mail address %email is already registered. <a href="@password">Have you forgotten your password?</a>', array('%email' => $form_state['values']['mail'], '@password' => url('user/password'))));
+    }
+  }
 
-    // Make sure the signature isn't longer than the size of the database field.
-    // Signatures are disabled by default, so make sure it exists first.
-    if (isset($form_state['values']['signature'])) {
-      // Move text format for user signature into 'signature_format'.
-      $form_state['values']['signature_format'] = $form_state['values']['signature']['format'];
-      // Move text value for user signature into 'signature'.
-      $form_state['values']['signature'] = $form_state['values']['signature']['value'];
+  // Make sure the signature isn't longer than the size of the database field.
+  // Signatures are disabled by default, so make sure it exists first.
+  if (isset($form_state['values']['signature'])) {
+    // Move text format for user signature into 'signature_format'.
+    $form_state['values']['signature_format'] = $form_state['values']['signature']['format'];
+    // Move text value for user signature into 'signature'.
+    $form_state['values']['signature'] = $form_state['values']['signature']['value'];
 
-      $user_schema = drupal_get_schema('users');
-      if (drupal_strlen($form_state['values']['signature']) > $user_schema['fields']['signature']['length']) {
-        form_set_error('signature', t('The signature is too long: it must be %max characters or less.', array('%max' => $user_schema['fields']['signature']['length'])));
-      }
+    $user_schema = drupal_get_schema('users');
+    if (drupal_strlen($form_state['values']['signature']) > $user_schema['fields']['signature']['length']) {
+      form_set_error('signature', t('The signature is too long: it must be %max characters or less.', array('%max' => $user_schema['fields']['signature']['length'])));
     }
   }
 }
@@ -1217,19 +1180,17 @@ function user_account_form_validate($form, &$form_state) {
 /**
  * Implements hook_user_presave().
  */
-function user_user_presave(&$edit, $account, $category) {
-  if ($category == 'account' || $category == 'register') {
-    if (!empty($edit['picture_upload'])) {
-      $edit['picture'] = $edit['picture_upload'];
-    }
-    // Delete picture if requested, and if no replacement picture was given.
-    elseif (!empty($edit['picture_delete'])) {
-      $edit['picture'] = NULL;
-    }
-    // Prepare user roles.
-    if (isset($edit['roles'])) {
-      $edit['roles'] = array_filter($edit['roles']);
-    }
+function user_user_presave(&$edit, $account) {
+  if (!empty($edit['picture_upload'])) {
+    $edit['picture'] = $edit['picture_upload'];
+  }
+  // Delete picture if requested, and if no replacement picture was given.
+  elseif (!empty($edit['picture_delete'])) {
+    $edit['picture'] = NULL;
+  }
+  // Prepare user roles.
+  if (isset($edit['roles'])) {
+    $edit['roles'] = array_filter($edit['roles']);
   }
 
   // Move account cancellation information into $user->data.
@@ -1238,17 +1199,6 @@ function user_user_presave(&$edit, $account, $category) {
       $edit['data'][$key] = $edit[$key];
     }
   }
-}
-
-/**
- * Implements hook_user_categories().
- */
-function user_user_categories() {
-  return array(array(
-    'name' => 'account',
-    'title' => t('Account settings'),
-    'weight' => 1,
-  ));
 }
 
 function user_login_block($form) {
@@ -1734,33 +1684,6 @@ function user_menu() {
     'type' => MENU_LOCAL_TASK,
     'file' => 'user.pages.inc',
   );
-
-  $items['user/%user_category/edit/account'] = array(
-    'title' => 'Account',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-    'load arguments' => array('%map', '%index'),
-  );
-
-  if (($categories = _user_categories()) && (count($categories) > 1)) {
-    foreach ($categories as $key => $category) {
-      // 'account' is already handled by the MENU_DEFAULT_LOCAL_TASK.
-      if ($category['name'] != 'account') {
-        $items['user/%user_category/edit/' . $category['name']] = array(
-          'title callback' => 'check_plain',
-          'title arguments' => array($category['title']),
-          'page callback' => 'drupal_get_form',
-          'page arguments' => array('user_profile_form', 1, 3),
-          'access callback' => isset($category['access callback']) ? $category['access callback'] : 'user_edit_access',
-          'access arguments' => isset($category['access arguments']) ? $category['access arguments'] : array(1),
-          'type' => MENU_LOCAL_TASK,
-          'weight' => $category['weight'],
-          'load arguments' => array('%map', '%index'),
-          'tab_parent' => 'user/%/edit',
-          'file' => 'user.pages.inc',
-        );
-      }
-    }
-  }
   return $items;
 }
 
@@ -1876,44 +1799,6 @@ function user_uid_optional_load($uid = NULL) {
     $uid = $GLOBALS['user']->uid;
   }
   return user_load($uid);
-}
-
-/**
- * Return a user object after checking if any profile category in the path exists.
- */
-function user_category_load($uid, &$map, $index) {
-  static $user_categories, $accounts;
-
-  // Cache $account - this load function will get called for each profile tab.
-  if (!isset($accounts[$uid])) {
-    $accounts[$uid] = user_load($uid);
-  }
-  $valid = TRUE;
-  if ($account = $accounts[$uid]) {
-    // Since the path is like user/%/edit/category_name, the category name will
-    // be at a position 2 beyond the index corresponding to the % wildcard.
-    $category_index = $index + 2;
-    // Valid categories may contain slashes, and hence need to be imploded.
-    $category_path = implode('/', array_slice($map, $category_index));
-    if ($category_path) {
-      // Check that the requested category exists.
-      $valid = FALSE;
-      if (!isset($user_categories)) {
-        $user_categories = _user_categories();
-      }
-      foreach ($user_categories as $category) {
-        if ($category['name'] == $category_path) {
-          $valid = TRUE;
-          // Truncate the map array in case the category name had slashes.
-          $map = array_slice($map, 0, $category_index);
-          // Assign the imploded category name to the last map element.
-          $map[$category_index] = $category_path;
-          break;
-        }
-      }
-    }
-  }
-  return $valid ? $account : FALSE;
 }
 
 /**
@@ -2461,14 +2346,10 @@ function user_view_page($account) {
  *
  * When viewing a user profile, the $page array contains:
  *
- * - $page['content']['Profile Category']:
- *   Profile categories keyed by their human-readable names.
- * - $page['content']['Profile Category']['profile_machine_name']:
- *   Profile fields keyed by their machine-readable names.
  * - $page['content']['user_picture']:
  *   User's rendered picture.
- * - $page['content']['summary']:
- *   Contains the default "History" profile data for a user.
+ * - $page['content']['member_for']:
+ *   Contains the default "Member for" profile data for a user.
  * - $page['content']['#account']:
  *   The user account of the profile being viewed.
  *
@@ -3275,22 +3156,6 @@ function user_multiple_cancel_confirm_submit($form, &$form_state) {
 }
 
 /**
- * Retrieve a list of all user setting/information categories and sort them by weight.
- */
-function _user_categories() {
-  $categories = module_invoke_all('user_categories');
-  usort($categories, '_user_sort');
-
-  return $categories;
-}
-
-function _user_sort($a, $b) {
-  $a = (array) $a + array('weight' => 0, 'title' => '');
-  $b = (array) $b + array('weight' => 0, 'title' => '');
-  return $a['weight'] < $b['weight'] ? -1 : ($a['weight'] > $b['weight'] ? 1 : ($a['title'] < $b['title'] ? -1 : 1));
-}
-
-/**
  * List user administration filters that can be applied.
  */
 function user_filters() {
@@ -3676,7 +3541,6 @@ function user_register_form($form, &$form_state) {
   }
 
   $form['#user'] = drupal_anonymous_user();
-  $form['#user_category'] = 'register';
 
   $form['#attached']['library'][] = array('system', 'jquery.cookie');
   $form['#attributes']['class'][] = 'user-info-from-cookie';

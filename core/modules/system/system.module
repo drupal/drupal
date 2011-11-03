@@ -1944,12 +1944,10 @@ function system_custom_theme() {
  * Implements hook_form_FORM_ID_alter().
  */
 function system_form_user_profile_form_alter(&$form, &$form_state) {
-  if ($form['#user_category'] == 'account') {
-    if (variable_get('configurable_timezones', 1)) {
-      system_user_timezone($form, $form_state);
-    }
-    return $form;
+  if (variable_get('configurable_timezones', 1)) {
+    system_user_timezone($form, $form_state);
   }
+  return $form;
 }
 
 /**
@@ -1987,7 +1985,6 @@ function system_user_timezone(&$form, &$form_state) {
   global $user;
 
   $account = $form['#user'];
-
   $form['timezone'] = array(
     '#type' => 'fieldset',
     '#title' => t('Locale settings'),

@@ -275,7 +275,7 @@ function language_load($langcode) {
  * @ingroup forms
  * @see locale_form_alter()
  */
-function locale_language_selector_form(&$form, &$form_state, $user) {
+function locale_language_selector_form($user) {
   global $language;
   $languages = language_list('enabled');
   $languages = $languages[1];
@@ -287,15 +287,13 @@ function locale_language_selector_form(&$form, &$form_state, $user) {
   foreach ($languages as $langcode => $item) {
     $names[$langcode] = $item->name;
   }
+  // Get language negotiation settings.
+  $mode = language_negotiation_get(LANGUAGE_TYPE_INTERFACE) != LANGUAGE_NEGOTIATION_DEFAULT;
   $form['locale'] = array(
     '#type' => 'fieldset',
     '#title' => t('Language settings'),
     '#weight' => 1,
-    '#access' => ($form['#user_category'] == 'account' || ($form['#user_category'] == 'register' && user_access('administer users'))),
   );
-
-  // Get language negotiation settings.
-  $mode = language_negotiation_get(LANGUAGE_TYPE_INTERFACE) != LANGUAGE_NEGOTIATION_DEFAULT;
   $form['locale']['language'] = array(
     '#type' => (count($names) <= 5 ? 'radios' : 'select'),
     '#title' => t('Language'),
@@ -303,6 +301,7 @@ function locale_language_selector_form(&$form, &$form_state, $user) {
     '#options' => $names,
     '#description' => $mode ? t("This account's default language for e-mails, and preferred language for site presentation.") : t("This account's default language for e-mails."),
   );
+  return $form;
 }
 
 /**
@@ -340,8 +339,12 @@ function locale_form_alter(&$form, &$form_state, $form_id) {
   if (drupal_multilingual()) {
     // Display language selector when either creating a user on the admin
     // interface or editing a user account.
-    if ($form_id == 'user_register_form' || ($form_id == 'user_profile_form' && $form['#user_category'] == 'account')) {
-      locale_language_selector_form($form, $form_state, $form['#user']);
+    if ($form_id == 'user_register_form' || $form_id == 'user_profile_form') {
+      $selector = locale_language_selector_form($form['#user']);
+      if ($form_id == 'user_register_form') {
+        $selector['locale']['#access'] = user_access('administer users');
+      }
+      $form += $selector;
     }
   }
 }

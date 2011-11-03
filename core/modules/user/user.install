@@ -335,3 +335,24 @@ function user_install() {
       ->execute();
   }
 }
+
+/**
+ * @addtogroup updates-7.x-to-8.x
+ * @{
+ */
+
+/**
+ * The 'Member for' extra field has moved one level up in the array.
+ */
+function user_update_8000() {
+  $settings = field_bundle_settings('user', 'user');
+  if (isset($settings['extra_fields']['display']['summary'])) {
+    $settings['extra_fields']['display']['member_for'] = $settings['extra_fields']['display']['summary'];
+    unset($settings['extra_fields']['display']['summary']);
+    field_bundle_settings('user', 'user', $settings);
+  }
+}
+
+/**
+ * @} End of "addtogroup updates-7.x-to-8.x"
+ */

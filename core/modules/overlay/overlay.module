@@ -82,30 +82,27 @@ function overlay_theme() {
  * Implements hook_form_FORM_ID_alter().
  */
 function overlay_form_user_profile_form_alter(&$form, &$form_state) {
-  if ($form['#user_category'] == 'account') {
-    $account = $form['#user'];
-    if (user_access('access overlay', $account)) {
-      $form['overlay_control'] = array(
-        '#type' => 'fieldset',
-        '#title' => t('Administrative overlay'),
-        '#weight' => 4,
-        '#collapsible' => TRUE,
-      );
-
-      $form['overlay_control']['overlay'] = array(
-        '#type' => 'checkbox',
-        '#title' => t('Use the overlay for administrative pages.'),
-        '#description' => t('Show administrative pages on top of the page you started from.'),
-        '#default_value' => isset($account->data['overlay']) ? $account->data['overlay'] : 1,
-      );
-    }
+  $account = $form['#user'];
+  if (user_access('access overlay', $account)) {
+    $form['overlay_control'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Administrative overlay'),
+      '#weight' => 4,
+      '#collapsible' => TRUE,
+    );
+    $form['overlay_control']['overlay'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Use the overlay for administrative pages.'),
+      '#description' => t('Show administrative pages on top of the page you started from.'),
+      '#default_value' => isset($account->data['overlay']) ? $account->data['overlay'] : 1,
+    );
   }
 }
 
 /**
  * Implements hook_user_presave().
  */
-function overlay_user_presave(&$edit, $account, $category) {
+function overlay_user_presave(&$edit, $account) {
   if (isset($edit['overlay'])) {
     $edit['data']['overlay'] = $edit['overlay'];
   }

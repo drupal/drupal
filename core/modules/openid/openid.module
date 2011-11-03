@@ -83,7 +83,7 @@ function openid_help($path, $arg) {
 /**
  * Implements hook_user_insert().
  */
-function openid_user_insert(&$edit, $account, $category) {
+function openid_user_insert(&$edit, $account) {
   if (!empty($edit['openid_claimed_id'])) {
     // The user has registered after trying to log in via OpenID.
     if (variable_get('user_email_verification', TRUE)) {
