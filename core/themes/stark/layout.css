@@ -49,7 +49,3 @@ body.two-sidebars #sidebar-first {
   float: right; /* LTR */
   width: 20%;
 }
-
-.section {
-  margin: 10px;
-}
