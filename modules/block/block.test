@@ -751,3 +751,39 @@ class BlockTemplateSuggestionsUnitTest extends DrupalUnitTestCase {
     $this->assertEqual($variables2['theme_hook_suggestions'], array('block__footer', 'block__block', 'block__block__hyphen_test'), t('Hyphens (-) in block delta were replaced by underscore (_)'));
   }
 }
+
+/**
+ * Tests that hidden regions do not inherit blocks when a theme is enabled.
+ */
+class BlockHiddenRegionTestCase extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Blocks not in hidden region',
+      'description' => 'Checks that a newly enabled theme does not inherit blocks to its hidden regions.',
+      'group' => 'Block',
+    );
+  }
+
+  /**
+   * Tests that hidden regions do not inherit blocks when a theme is enabled.
+   */
+  function testBlockNotInHiddenRegion() {
+    // Create administrative user.
+    $admin_user = $this->drupalCreateUser(array('administer blocks', 'administer themes', 'search content'));
+    $this->drupalLogin($admin_user);
+
+    // Enable "block_test_theme" and set it as the default theme.
+    $theme = 'block_test_theme';
+    theme_enable(array($theme));
+    variable_set('theme_default', $theme);
+    menu_rebuild();
+
+    // Ensure that "block_test_theme" is set as the default theme.
+    $this->drupalGet('admin/structure/block');
+    $this->assertText('Block test theme(' . t('active tab') . ')', t('Default local task on blocks admin page is the block test theme.'));
+
+    // Ensure that the search form block is displayed.
+    $this->drupalGet('');
+    $this->assertText('Search form', t('Block was displayed on the front page.'));
+  }
+}
