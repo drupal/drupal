@@ -2930,7 +2930,8 @@ function hook_requirements($phase) {
  * By declaring the tables used by your module via an implementation of
  * hook_schema(), these tables will be available on all supported database
  * engines. You don't have to deal with the different SQL dialects for table
- * creation and alteration of the supported database engines *
+ * creation and alteration of the supported database engines.
+ *
  * See the Schema API Handbook at http://drupal.org/node/146843 for
  * details on schema definition structures.
  *
