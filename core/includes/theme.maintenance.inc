@@ -78,8 +78,6 @@ function _drupal_maintenance_theme() {
   $path = drupal_get_path('module', 'system');
   drupal_add_css($path . '/system.base.css');
   drupal_add_css($path . '/system.admin.css');
-  drupal_add_css($path . '/system.menus.css');
-  drupal_add_css($path . '/system.messages.css');
   drupal_add_css($path . '/system.theme.css');
   drupal_add_css($path . '/system.maintenance.css');
 }

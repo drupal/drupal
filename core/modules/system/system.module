@@ -1887,8 +1887,6 @@ function system_init() {
   if (path_is_admin(current_path())) {
     drupal_add_css($path . '/system.admin.css', array('group' => CSS_SYSTEM));
   }
-  drupal_add_css($path . '/system.menus.css', array('group' => CSS_SYSTEM, 'every_page' => TRUE));
-  drupal_add_css($path . '/system.messages.css', array('group' => CSS_SYSTEM, 'every_page' => TRUE));
   drupal_add_css($path . '/system.theme.css', array('group' => CSS_SYSTEM, 'every_page' => TRUE));
 
   // Ignore slave database servers for this request.
