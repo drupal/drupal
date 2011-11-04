@@ -851,7 +851,6 @@ ol.task-list li.active {
   color: #000;
 }
 ol.task-list li.done {
-  color: #393;
   background: transparent url(images/task-check.png) no-repeat 0 50%;
   color: green;
 }
