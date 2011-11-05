@@ -2364,8 +2364,7 @@ function template_preprocess_html(&$variables) {
   $variables['body_attributes_array'] = array();
 
   // HTML element attributes.
-  $variables['html_attributes_array']['xmlns'] = "http://www.w3.org/1999/xhtml";
-  $variables['html_attributes_array']['xml:lang'] = $GLOBALS['language']->language;
+  $variables['html_attributes_array']['lang'] = $GLOBALS['language']->language;
   $variables['html_attributes_array']['dir'] = $GLOBALS['language']->direction ? 'rtl' : 'ltr';
 
   // Add favicon.

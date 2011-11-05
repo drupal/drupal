@@ -110,8 +110,8 @@ function template_preprocess_search_result(&$variables) {
   $variables['url'] = check_url($result['link']);
   $variables['title'] = check_plain($result['title']);
   if (isset($result['language']) && $result['language'] != $language->language && $result['language'] != LANGUAGE_NONE) {
-    $variables['title_attributes_array']['xml:lang'] = $result['language'];
-    $variables['content_attributes_array']['xml:lang'] = $result['language'];
+    $variables['title_attributes_array']['lang'] = $result['language'];
+    $variables['content_attributes_array']['lang'] = $result['language'];
   }
 
   $info = array();

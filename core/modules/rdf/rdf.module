@@ -624,13 +624,13 @@ function rdf_preprocess_user_profile(&$variables) {
  * Implements MODULE_preprocess_HOOK().
  */
 function rdf_preprocess_username(&$variables) {
-  // Because xml:lang is set on the HTML element that wraps the page, the
+  // Because lang is set on the HTML element that wraps the page, the
   // username inherits this language attribute. However, since the username
   // might not be transliterated to the same language that the content is in,
   // we do not want it to inherit the language attribute, so we set the
   // attribute to an empty string.
-  if (empty($variables['attributes_array']['xml:lang'])) {
-    $variables['attributes_array']['xml:lang'] = '';
+  if (empty($variables['attributes_array']['lang'])) {
+    $variables['attributes_array']['lang'] = '';
   }
 
   // $variables['account'] is a pseudo account object, and as such, does not
