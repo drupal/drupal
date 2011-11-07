@@ -19,10 +19,6 @@
   padding: 1px 5px 2px 5px;
 }
 
-.form-managed-file div.ajax-progress div {
-  display: inline;
-}
-
 .form-managed-file div.ajax-progress-bar {
   display: none;
   margin-top: 4px;

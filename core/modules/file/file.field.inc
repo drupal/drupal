@@ -463,6 +463,7 @@ function file_field_widget_form(&$form, &$form_state, $field, $instance, $langco
     '#upload_validators' => file_field_widget_upload_validators($field, $instance),
     '#value_callback' => 'file_field_widget_value',
     '#process' => array_merge($element_info['#process'], array('file_field_widget_process')),
+    '#progress_indicator' => $instance['widget']['settings']['progress_indicator'],
     // Allows this field to return an array instead of a single value.
     '#extended' => TRUE,
   );
