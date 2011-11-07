@@ -78,7 +78,7 @@ while ($param = array_shift($_SERVER['argv'])) {
   }
 }
 
-chdir('../..');
+chdir('..');
 define('DRUPAL_ROOT', getcwd());
 
 include_once DRUPAL_ROOT . '/core/includes/password.inc';
