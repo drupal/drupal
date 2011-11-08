@@ -571,6 +571,12 @@ function install_tasks($install_state) {
 
   // Now add any tasks defined by the installation profile.
   if (!empty($install_state['parameters']['profile'])) {
+    // Load the profile install file, because it is not always loaded when
+    // hook_install_tasks() is invoked (e.g. batch processing).
+    $profile_install_file = DRUPAL_ROOT . '/profiles/' . $install_state['parameters']['profile'] . '/' . $install_state['parameters']['profile'] . '.install';
+    if (file_exists($profile_install_file)) {
+      include_once $profile_install_file;
+    }
     $function = $install_state['parameters']['profile'] . '_install_tasks';
     if (function_exists($function)) {
       $result = $function($install_state);
@@ -596,7 +602,7 @@ function install_tasks($install_state) {
   // Allow the installation profile to modify the full list of tasks.
   if (!empty($install_state['parameters']['profile'])) {
     $profile_file = DRUPAL_ROOT . '/profiles/' . $install_state['parameters']['profile'] . '/' . $install_state['parameters']['profile'] . '.profile';
-    if (is_file($profile_file)) {
+    if (file_exists($profile_file)) {
       include_once $profile_file;
       $function = $install_state['parameters']['profile'] . '_install_tasks_alter';
       if (function_exists($function)) {
@@ -1311,7 +1317,7 @@ function install_already_done_error() {
  */
 function install_load_profile(&$install_state) {
   $profile_file = DRUPAL_ROOT . '/profiles/' . $install_state['parameters']['profile'] . '/' . $install_state['parameters']['profile'] . '.profile';
-  if (is_file($profile_file)) {
+  if (file_exists($profile_file)) {
     include_once $profile_file;
     $install_state['profile_info'] = install_profile_info($install_state['parameters']['profile'], $install_state['parameters']['locale']);
   }
