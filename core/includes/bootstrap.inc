@@ -867,6 +867,11 @@ function drupal_get_filename($type, $name, $filename = NULL) {
   // drupal_static().
   static $files = array(), $dirs = array();
 
+  // Profiles are a special case: they have a fixed location and naming.
+  if ($type == 'profile') {
+    $profile_filename = "profiles/$name/$name.profile";
+    $files[$type][$name] = file_exists($profile_filename) ? $profile_filename : FALSE;
+  }
   if (!isset($files[$type])) {
     $files[$type] = array();
   }
