@@ -999,7 +999,6 @@ function drupal_install_fix_file($file, $mask, $message = TRUE) {
   }
 }
 
-
 /**
  * Send the user to a different installer page.
  *
@@ -1014,6 +1013,68 @@ function install_goto($path) {
   header('Location: ' . $base_url . '/' . $path);
   header('Cache-Control: no-cache'); // Not a permanent redirect.
   drupal_exit();
+}
+
+/**
+ * Returns the URL of the current script, with modified query parameters.
+ *
+ * This function can be called by low-level scripts (such as install.php and
+ * update.php) and returns the URL of the current script. Existing query
+ * parameters are preserved by default, but new ones can optionally be merged
+ * in.
+ *
+ * This function is used when the script must maintain certain query parameters
+ * over multiple page requests in order to work correctly. In such cases (for
+ * example, update.php, which requires the 'continue=1' parameter to remain in
+ * the URL throughout the update process if there are any requirement warnings
+ * that need to be bypassed), using this function to generate the URL for links
+ * to the next steps of the script ensures that the links will work correctly.
+ *
+ * @param $query
+ *   (optional) An array of query parameters to merge in to the existing ones.
+ *
+ * @return
+ *   The URL of the current script, with query parameters modified by the
+ *   passed-in $query. The URL is not sanitized, so it still needs to be run
+ *   through check_url() if it will be used as an HTML attribute value.
+ *
+ * @see drupal_requirements_url()
+ */
+function drupal_current_script_url($query = array()) {
+  $uri = $_SERVER['SCRIPT_NAME'];
+  $query = array_merge(drupal_get_query_parameters(), $query);
+  if (!empty($query)) {
+    $uri .= '?' . drupal_http_build_query($query);
+  }
+  return $uri;
+}
+
+/**
+ * Returns a URL for proceeding to the next page after a requirements problem.
+ *
+ * This function can be called by low-level scripts (such as install.php and
+ * update.php) and returns a URL that can be used to attempt to proceed to the
+ * next step of the script.
+ *
+ * @param $severity
+ *   The severity of the requirements problem, as returned by
+ *   drupal_requirements_severity().
+ *
+ * @return
+ *   A URL for attempting to proceed to the next step of the script. The URL is
+ *   not sanitized, so it still needs to be run through check_url() if it will
+ *   be used as an HTML attribute value.
+ *
+ * @see drupal_current_script_url()
+ */
+function drupal_requirements_url($severity) {
+  $query = array();
+  // If there are no errors, only warnings, append 'continue=1' to the URL so
+  // the user can bypass this screen on the next page load.
+  if ($severity == REQUIREMENT_WARNING) {
+    $query['continue'] = 1;
+  }
+  return drupal_current_script_url($query);
 }
 
 /**
