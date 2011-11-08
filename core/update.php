@@ -111,6 +111,9 @@ function update_script_selection_form($form, &$form_state) {
     $form['links'] = array(
       '#markup' => theme('item_list', array('items' => update_helpful_links())),
     );
+
+    // No updates to run, so caches won't get flushed later.  Clear them now.
+    drupal_flush_all_caches();
   }
   else {
     $form['help'] = array(
