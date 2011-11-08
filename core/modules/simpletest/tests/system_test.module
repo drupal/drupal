@@ -264,6 +264,14 @@ function system_test_system_info_alter(&$info, $file, $type) {
   if ($file->name == 'system_dependencies_test') {
     $info['hidden'] = FALSE;
   }
+  if (in_array($file->name, array(
+    'system_incompatible_module_version_dependencies_test',
+    'system_incompatible_core_version_dependencies_test',
+    'system_incompatible_module_version_test',
+    'system_incompatible_core_version_test',
+  ))) {
+    $info['hidden'] = FALSE;
+  }
   if ($file->name == 'requirements1_test' || $file->name == 'requirements2_test') {
     $info['hidden'] = FALSE;
   }

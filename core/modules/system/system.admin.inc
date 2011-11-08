@@ -811,10 +811,19 @@ function system_modules($form, $form_state = array()) {
       // Only display visible modules.
       elseif (isset($visible_files[$requires])) {
         $requires_name = $files[$requires]->info['name'];
+        // Disable this module if it is incompatible with the dependency's version.
         if ($incompatible_version = drupal_check_incompatibility($v, str_replace(DRUPAL_CORE_COMPATIBILITY . '-', '', $files[$requires]->info['version']))) {
           $extra['requires'][$requires] = t('@module (<span class="admin-missing">incompatible with</span> version @version)', array(
             '@module' => $requires_name . $incompatible_version,
             '@version' => $files[$requires]->info['version'],
+          ));
+          $extra['disabled'] = TRUE;
+        }
+        // Disable this module if the dependency is incompatible with this
+        // version of Drupal core.
+        elseif ($files[$requires]->info['core'] != DRUPAL_CORE_COMPATIBILITY) {
+          $extra['requires'][$requires] = t('@module (<span class="admin-missing">incompatible with</span> this version of Drupal core)', array(
+            '@module' => $requires_name,
           ));
           $extra['disabled'] = TRUE;
         }
