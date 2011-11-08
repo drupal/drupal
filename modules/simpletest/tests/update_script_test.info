@@ -1,0 +1,6 @@
+name = "Update script test"
+description = "Support module for update script testing."
+package = Testing
+version = VERSION
+core = 7.x
+hidden = TRUE
