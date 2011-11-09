@@ -3333,16 +3333,6 @@ function node_access_acquire_grants($node, $delete = TRUE) {
   if (empty($grants) && !empty($node->status)) {
     $grants[] = array('realm' => 'all', 'gid' => 0, 'grant_view' => 1, 'grant_update' => 0, 'grant_delete' => 0);
   }
-  else {
-    // Retain grants by highest priority.
-    $grant_by_priority = array();
-    foreach ($grants as $g) {
-      $grant_by_priority[intval($g['priority'])][] = $g;
-    }
-    krsort($grant_by_priority);
-    $grants = array_shift($grant_by_priority);
-  }
-
   _node_access_write_grants($node, $grants, NULL, $delete);
 }
 

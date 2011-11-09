@@ -230,10 +230,6 @@ function hook_node_grants($account, $op) {
  *   of this gid within this realm can edit this node.
  * - 'grant_delete': If set to 1 a user that has been identified as a member
  *   of this gid within this realm can delete this node.
- * - 'priority': If multiple modules seek to set permissions on a node, the
- *   realms that have the highest priority will win out, and realms with a lower
- *   priority will not be written. If there is any doubt, it is best to
- *   leave this 0.
  *
  *
  * When an implementation is interested in a node but want to deny access to
@@ -280,7 +276,6 @@ function hook_node_access_records($node) {
         'grant_view' => 1,
         'grant_update' => 0,
         'grant_delete' => 0,
-        'priority' => 0,
       );
     }
     // For the example_author array, the GID is equivalent to a UID, which
@@ -293,7 +288,6 @@ function hook_node_access_records($node) {
       'grant_view' => 1,
       'grant_update' => 1,
       'grant_delete' => 1,
-      'priority' => 0,
     );
 
     return $grants;
