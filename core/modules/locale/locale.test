@@ -483,14 +483,8 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
     require_once DRUPAL_ROOT . '/core/includes/locale.inc';
     _locale_rebuild_js($langcode);
 
-    // Retrieve the JavaScript translation hash code for the custom language to
-    // check that the translation file has been properly built.
-    $file = db_select('languages', 'l')
-      ->fields('l', array('javascript'))
-      ->condition('language', $langcode)
-      ->execute()
-      ->fetchObject();
-    $js_file = 'public://' . variable_get('locale_js_directory', 'languages') . '/' . $langcode . '_' . $file->javascript . '.js';
+    $locale_javascripts = variable_get('locale_translation_javascript', array());
+    $js_file = 'public://' . variable_get('locale_js_directory', 'languages') . '/' . $langcode . '_' . $locale_javascripts[$langcode] . '.js';
     $this->assertTrue($result = file_exists($js_file), t('JavaScript file created: %file', array('%file' => $result ? $js_file : t('not found'))));
 
     // Test JavaScript translation rebuilding.
@@ -743,7 +737,8 @@ class LocaleImportFunctionalTest extends DrupalWebTestCase {
     $this->assertRaw(t('The translation was successfully imported. There are %number newly created translated strings, %update strings were updated and %delete strings were removed.', array('%number' => 9, '%update' => 0, '%delete' => 0)), t('The translation file was successfully imported.'));
 
     // This import should have saved plural forms to have 2 variants.
-    $this->assert(db_query("SELECT plurals FROM {languages} WHERE language = 'fr'")->fetchField() == 2, t('Plural number initialized.'));
+    $locale_plurals = variable_get('locale_translation_plurals', array());
+    $this->assert($locale_plurals['fr']['plurals'] == 2, t('Plural number initialized.'));
 
     // Ensure we were redirected correctly.
     $this->assertEqual($this->getUrl(), url('admin/config/regional/translate', array('absolute' => TRUE)), t('Correct page redirection.'));
@@ -789,7 +784,8 @@ class LocaleImportFunctionalTest extends DrupalWebTestCase {
     $this->assertText(t('No strings available.'), t('String not overwritten by imported string.'));
 
     // This import should not have changed number of plural forms.
-    $this->assert(db_query("SELECT plurals FROM {languages} WHERE language = 'fr'")->fetchField() == 2, t('Plural numbers untouched.'));
+    $locale_plurals = variable_get('locale_translation_plurals', array());
+    $this->assert($locale_plurals['fr']['plurals'] == 2, t('Plural numbers untouched.'));
 
     // Try importing a .po file with overriding strings, and ensure existing
     // strings are overwritten.
@@ -809,7 +805,8 @@ class LocaleImportFunctionalTest extends DrupalWebTestCase {
     $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
     $this->assertNoText(t('No strings available.'), t('String overwritten by imported string.'));
     // This import should have changed number of plural forms.
-    $this->assert(db_query("SELECT plurals FROM {languages} WHERE language = 'fr'")->fetchField() == 3, t('Plural numbers changed.'));
+    $locale_plurals = variable_get('locale_translation_plurals', array());
+    $this->assert($locale_plurals['fr']['plurals'] == 3, t('Plural numbers changed.'));
   }
 
   /**
@@ -1233,8 +1230,8 @@ class LocaleUninstallFunctionalTest extends DrupalWebTestCase {
     $edit = array('translations[fr]' => 'french translation');
     $this->drupalPost('admin/config/regional/translate/edit/' . $string->lid, $edit, t('Save translations'));
     _locale_rebuild_js('fr');
-    $file = db_query('SELECT javascript FROM {languages} WHERE language = :language', array(':language' => 'fr'))->fetchObject();
-    $js_file = 'public://' . variable_get('locale_js_directory', 'languages') . '/fr_' . $file->javascript . '.js';
+    $locale_javascripts = variable_get('locale_translation_javascript', array());
+    $js_file = 'public://' . variable_get('locale_js_directory', 'languages') . '/fr_' . $locale_javascripts['fr'] . '.js';
     $this->assertTrue($result = file_exists($js_file), t('JavaScript file created: %file', array('%file' => $result ? $js_file : t('none'))));
 
     // Disable string caching.

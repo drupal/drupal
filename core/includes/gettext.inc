@@ -392,8 +392,8 @@ function _locale_import_one_string($op, $value = NULL, $mode = NULL, $lang = NUL
     case 'db-store':
       // We got header information.
       if ($value['msgid'] == '') {
-        $languages = language_list();
-        if (($mode != LOCALE_IMPORT_KEEP) || empty($languages[$lang]->plurals)) {
+        $locale_plurals = variable_get('locale_translation_plurals', array());
+        if (($mode != LOCALE_IMPORT_KEEP) || empty($locale_plurals[$lang]['plurals'])) {
           // Since we only need to parse the header if we ought to update the
           // plural formula, only run this if we don't need to keep existing
           // data untouched or if we don't have an existing plural formula.
@@ -401,24 +401,17 @@ function _locale_import_one_string($op, $value = NULL, $mode = NULL, $lang = NUL
 
           // Get the plural formula and update in database.
           if (isset($header["Plural-Forms"]) && $p = _locale_import_parse_plural_forms($header["Plural-Forms"], $file->uri)) {
-            list($nplurals, $plural) = $p;
-            db_update('languages')
-              ->fields(array(
-                'plurals' => $nplurals,
-                'formula' => $plural,
-              ))
-              ->condition('language', $lang)
-              ->execute();
+            list($nplurals, $formula) = $p;
           }
           else {
-            db_update('languages')
-              ->fields(array(
-                'plurals' => 0,
-                'formula' => '',
-              ))
-              ->condition('language', $lang)
-              ->execute();
+            $nplurals = 0;
+            $formula = '';
           }
+          $locale_plurals[$lang] = array(
+            'plurals' => $nplurals,
+            'formula' => $formula,
+          );
+          variable_set('locale_translation_plurals', $locale_plurals);
         }
         $header_done = TRUE;
       }
@@ -924,6 +917,8 @@ function _locale_export_get_strings($language = NULL) {
 function _locale_export_po_generate($language = NULL, $strings = array(), $header = NULL) {
   global $user;
 
+  $locale_plurals = variable_get('locale_translation_plurals', array());
+
   if (!isset($header)) {
     if (isset($language)) {
       $header = '# ' . $language->name . ' translation of ' . variable_get('site_name', 'Drupal') . "\n";
@@ -939,8 +934,8 @@ function _locale_export_po_generate($language = NULL, $strings = array(), $heade
       $header .= "\"MIME-Version: 1.0\\n\"\n";
       $header .= "\"Content-Type: text/plain; charset=utf-8\\n\"\n";
       $header .= "\"Content-Transfer-Encoding: 8bit\\n\"\n";
-      if ($language->formula && $language->plurals) {
-        $header .= "\"Plural-Forms: nplurals=" . $language->plurals . "; plural=" . strtr($language->formula, array('$' => '')) . ";\\n\"\n";
+      if (!empty($locale_plurals[$language->language]['formula'])) {
+        $header .= "\"Plural-Forms: nplurals=" . $locale_plurals[$language->language]['plurals'] . "; plural=" . strtr($locale_plurals[$language->language]['formula'], array('$' => '')) . ";\\n\"\n";
       }
     }
     else {
@@ -978,7 +973,7 @@ function _locale_export_po_generate($language = NULL, $strings = array(), $heade
         $output .= 'msgid_plural ' . _locale_export_string($strings[$plural]['source']);
         if (isset($language)) {
           $translation = $string['translation'];
-          for ($i = 0; $i < $language->plurals; $i++) {
+          for ($i = 0; $i < $locale_plurals[$language->language]['plurals']; $i++) {
             $output .= 'msgstr[' . $i . '] ' . _locale_export_string($translation);
             if ($plural) {
               $translation = _locale_export_remove_plural($strings[$plural]['translation']);

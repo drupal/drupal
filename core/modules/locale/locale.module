@@ -725,19 +725,18 @@ function locale_reset() {
  */
 function locale_get_plural($count, $langcode = NULL) {
   global $language;
-  $locale_formula = &drupal_static(__FUNCTION__, array());
+  $locale_plurals = &drupal_static(__FUNCTION__, array());
   $plurals = &drupal_static(__FUNCTION__ . ':plurals', array());
 
   $langcode = $langcode ? $langcode : $language->language;
 
   if (!isset($plurals[$langcode][$count])) {
-    if (empty($locale_formula)) {
-      $language_list = language_list();
-      $locale_formula[$langcode] = $language_list[$langcode]->formula;
+    if (empty($locale_plural_formulas)) {
+      $locale_plurals = variable_get('locale_translation_plurals', array());
     }
-    if ($locale_formula[$langcode]) {
+    if (!empty($locale_plurals[$langcode])) {
       $n = $count;
-      $plurals[$langcode][$count] = @eval('return intval(' . $locale_formula[$langcode] . ');');
+      $plurals[$langcode][$count] = @eval('return intval(' . $locale_plurals[$langcode]['formula'] . ');');
       return $plurals[$langcode][$count];
     }
     else {
@@ -925,9 +924,10 @@ function locale_js_alter(&$javascript) {
   }
 
   // Add the translation JavaScript file to the page.
-  if ($files && !empty($language->javascript)) {
+  $locale_javascripts = variable_get('locale_translation_javascript', array());
+  if ($files && !empty($locale_javascripts[$language->language])) {
     // Add the translation JavaScript file to the page.
-    $file = $dir . '/' . $language->language . '_' . $language->javascript . '.js';
+    $file = $dir . '/' . $language->language . '_' . $locale_javascripts[$language->language] . '.js';
     $javascript[$file] = drupal_js_defaults($file);
   }
 }

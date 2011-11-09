@@ -751,8 +751,9 @@ function _locale_rebuild_js($langcode = NULL) {
 
     $data = "Drupal.locale = { ";
 
-    if (!empty($language->formula)) {
-      $data .= "'pluralFormula': function (\$n) { return Number({$language->formula}); }, ";
+    $locale_plurals = variable_get('locale_translation_plurals', array());
+    if (!empty($locale_plurals[$language->language])) {
+      $data .= "'pluralFormula': function (\$n) { return Number({$locale_plurals[$language->language]['formula']}); }, ";
     }
 
     $data .= "'strings': " . drupal_json_encode($translations) . " };";
@@ -764,10 +765,11 @@ function _locale_rebuild_js($langcode = NULL) {
   $dir = 'public://' . variable_get('locale_js_directory', 'languages');
 
   // Delete old file, if we have no translations anymore, or a different file to be saved.
-  $changed_hash = $language->javascript != $data_hash;
-  if (!empty($language->javascript) && (!$data || $changed_hash)) {
-    file_unmanaged_delete($dir . '/' . $language->language . '_' . $language->javascript . '.js');
-    $language->javascript = '';
+  $locale_javascripts = variable_get('locale_translation_javascript', array());
+  $changed_hash = !isset($locale_javascripts[$language->language]) || ($locale_javascripts[$language->language] != $data_hash);
+  if (!empty($locale_javascripts[$language->language]) && (!$data || $changed_hash)) {
+    file_unmanaged_delete($dir . '/' . $language->language . '_' . $locale_javascripts[$language->language] . '.js');
+    $locale_javascripts[$language->language] = '';
     $status = 'deleted';
   }
 
@@ -780,7 +782,7 @@ function _locale_rebuild_js($langcode = NULL) {
 
     // Save the file.
     if (file_unmanaged_save_data($data, $dest)) {
-      $language->javascript = $data_hash;
+      $locale_javascripts[$language->language] = $data_hash;
       // If we deleted a previous version of the file and we replace it with a
       // new one we have an update.
       if ($status == 'deleted') {
@@ -798,7 +800,7 @@ function _locale_rebuild_js($langcode = NULL) {
       }
     }
     else {
-      $language->javascript = '';
+      $locale_javascripts[$language->language] = '';
       $status = 'error';
     }
   }
@@ -807,22 +809,7 @@ function _locale_rebuild_js($langcode = NULL) {
   // deleted). Act only if some operation was executed that changed the hash
   // code.
   if ($status && $changed_hash) {
-    db_update('languages')
-      ->fields(array(
-        'javascript' => $language->javascript,
-      ))
-      ->condition('language', $language->language)
-      ->execute();
-
-    // Update the default language variable if the default language has been altered.
-    // This is necessary to keep the variable consistent with the database
-    // version of the language and to prevent checking against an outdated hash.
-    $default_langcode = language_default()->language;
-    drupal_static_reset('language_list');
-    if ($default_langcode == $language->language) {
-      $default = language_load($default_langcode);
-      variable_set('language_default', $default);
-    }
+    variable_set('locale_translation_javascript', $locale_javascripts);
   }
 
   // Log the operation and return success flag.
@@ -831,7 +818,7 @@ function _locale_rebuild_js($langcode = NULL) {
       watchdog('locale', 'Updated JavaScript translation file for the language %language.', array('%language' => $language->name));
       return TRUE;
     case 'rebuilt':
-      watchdog('locale', 'JavaScript translation file %file.js was lost.', array('%file' => $language->javascript), WATCHDOG_WARNING);
+      watchdog('locale', 'JavaScript translation file %file.js was lost.', array('%file' => $locale_javascripts[$language->language]), WATCHDOG_WARNING);
       // Proceed to the 'created' case as the JavaScript translation file has
       // been created again.
     case 'created':

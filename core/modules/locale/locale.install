@@ -22,10 +22,10 @@ function locale_uninstall() {
   $locale_js_directory = 'public://' . variable_get('locale_js_directory', 'languages');
 
   if (is_dir($locale_js_directory)) {
-    $files = db_query('SELECT language, javascript FROM {languages}');
-    foreach ($files as $file) {
-      if (!empty($file->javascript)) {
-        file_unmanaged_delete($locale_js_directory . '/' . $file->language . '_' . $file->javascript . '.js');
+    $locale_javascripts = variable_get('locale_translation_javascript', array());
+    foreach ($locale_javascripts as $langcode => $file_suffix) {
+      if (!empty($file_suffix)) {
+        file_unmanaged_delete($locale_js_directory . '/' . $langcode . '_' . $file_suffix . '.js');
       }
     }
     // Delete the JavaScript translations directory if empty.
@@ -47,6 +47,8 @@ function locale_uninstall() {
   variable_del('javascript_parsed');
   variable_del('locale_field_language_fallback');
   variable_del('locale_cache_length');
+  variable_del('locale_translation_plurals');
+  variable_del('locale_translation_javascript');
 
   foreach (language_types() as $type) {
     variable_del("language_negotiation_$type");
@@ -97,19 +99,6 @@ function locale_schema() {
         'default' => 0,
         'description' => 'Enabled flag (1 = Enabled, 0 = Disabled).',
       ),
-      'plurals' => array(
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => 'Number of plural indexes in this language.',
-      ),
-      'formula' => array(
-        'type' => 'varchar',
-        'length' => 128,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'Plural formula in PHP code to evaluate to get plural indexes.',
-      ),
       'domain' => array(
         'type' => 'varchar',
         'length' => 128,
@@ -129,13 +118,6 @@ function locale_schema() {
         'not null' => TRUE,
         'default' => 0,
         'description' => 'Weight, used in lists of languages.',
-      ),
-      'javascript' => array(
-        'type' => 'varchar',
-        'length' => 64,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'Location of JavaScript translation file.',
       ),
     ),
     'primary key' => array('language'),
@@ -247,6 +229,32 @@ function locale_schema() {
  */
 function locale_update_8000() {
   db_drop_field('languages', 'native');
+}
+
+/**
+ * Decouple interface translation related data from language objects.
+ */
+function locale_update_8001() {
+  // Gather data from existing languages table and save in variables.
+  $languages = db_select('languages', 'l')
+    ->fields('l')
+    ->execute();
+  $plurals = array();
+  $javascript = array();
+  foreach ($languages as $language) {
+    $plurals[$language->language] = array(
+      'plurals' => $language->plurals,
+      'formula' => $language->formula,
+    );
+    $javascript[$language->language] = $language->javascript;
+  }
+  variable_set('locale_translation_plurals', $plurals);
+  variable_set('locale_translation_javascript', $javascript);
+
+  // Drop now unneeded columns.
+  db_drop_field('languages', 'plurals');
+  db_drop_field('languages', 'formula');
+  db_drop_field('languages', 'javascript');
 }
 
 /**
