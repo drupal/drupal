@@ -89,29 +89,60 @@ function aggregator_page_category_form($form, $form_state, $category) {
 }
 
 /**
- * Load feed items
+ * Loads and optionally filters feed items.
  *
  * @param $type
- *   The filter for the items. Possible values: 'sum', 'source', 'category'
+ *   The type of filter for the items. Possible values are:
+ *   - sum: No filtering.
+ *   - source: Filter the feed items, limiting the result to items from a
+ *     single source.
+ *   - category: Filter the feed items by category.
  * @param $data
- *   Feed or category data for filtering
+ *   Feed or category data used for filtering. The type and value of $data
+ *   depends on $type:
+ *   - source: $data is an object with $data->fid identifying the feed used to
+ *     as filter.
+ *   - category: $data is an array with $data['cid'] being the category id to
+ *     filter on.
+ *   The $data parameter is not used when $type is 'sum'.
+ *
  * @return
  *   An array of the feed items.
  */
 function aggregator_load_feed_items($type, $data = NULL) {
   $items = array();
-  $range_limit = 20;
   switch ($type) {
     case 'sum':
-      $result = db_query_range('SELECT i.*, f.title AS ftitle, f.link AS flink FROM {aggregator_item} i INNER JOIN {aggregator_feed} f ON i.fid = f.fid ORDER BY i.timestamp DESC, i.iid DESC', 0, $range_limit);
+      $query = db_select('aggregator_item', 'i');
+      $query->join('aggregator_feed', 'f', 'i.fid = f.fid');
+      $query->fields('i');
+      $query->addField('f', 'title', 'ftitle');
+      $query->addField('f', 'link', 'flink');
       break;
     case 'source':
-      $result = db_query_range('SELECT * FROM {aggregator_item} WHERE fid = :fid ORDER BY timestamp DESC, iid DESC', 0, $range_limit, array(':fid' => $data->fid));
+      $query = db_select('aggregator_item', 'i');
+      $query
+        ->fields('i')
+        ->condition('i.fid', $data->fid);
       break;
     case 'category':
-      $result = db_query_range('SELECT i.*, f.title AS ftitle, f.link AS flink FROM {aggregator_category_item} c LEFT JOIN {aggregator_item} i ON c.iid = i.iid LEFT JOIN {aggregator_feed} f ON i.fid = f.fid WHERE cid = :cid ORDER BY timestamp DESC, i.iid DESC', 0, $range_limit, array(':cid' => $data['cid']));
+      $query = db_select('aggregator_category_item', 'c');
+      $query->leftJoin('aggregator_item', 'i', 'c.iid = i.iid');
+      $query->leftJoin('aggregator_feed', 'f', 'i.fid = f.fid');
+      $query
+        ->fields('i')
+        ->condition('cid', $data['cid']);
+      $query->addField('f', 'title', 'ftitle');
+      $query->addField('f', 'link', 'flink');
       break;
   }
+
+  $result = $query
+    ->extend('PagerDefault')
+    ->limit(20)
+    ->orderBy('i.timestamp', 'DESC')
+    ->orderBy('i.iid', 'DESC')
+    ->execute();
 
   foreach ($result as $item) {
     $item->categories = db_query('SELECT c.title, c.cid FROM {aggregator_category_item} ci LEFT JOIN {aggregator_category} c ON ci.cid = c.cid WHERE ci.iid = :iid ORDER BY c.title', array(':iid' => $item->iid))->fetchAll();
