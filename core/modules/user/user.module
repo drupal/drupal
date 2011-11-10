@@ -132,6 +132,9 @@ function user_theme() {
     'user_signature' => array(
       'variables' => array('signature' => NULL),
     ),
+    'username' => array(
+      'variables' => array('account' => NULL),
+    ),
   );
 }
 
@@ -1349,6 +1352,29 @@ function user_block_view($delta = '') {
 }
 
 /**
+ * Format a username.
+ *
+ * By default, the passed-in object's 'name' property is used if it exists, or
+ * else, the site-defined value for the 'anonymous' variable. However, a module
+ * may override this by implementing hook_username_alter(&$name, $account).
+ *
+ * @see hook_username_alter()
+ *
+ * @param $account
+ *   The account object for the user whose name is to be formatted.
+ *
+ * @return
+ *   An unsanitized string with the username to display. The code receiving
+ *   this result must ensure that check_plain() is called on it before it is
+ *   printed to the page.
+ */
+function format_username($account) {
+  $name = !empty($account->name) ? $account->name : variable_get('anonymous', t('Anonymous'));
+  drupal_alter('username', $name, $account);
+  return $name;
+}
+
+/**
  * Process variables for user-picture.tpl.php.
  *
  * The $variables array contains the following arguments:
@@ -1395,6 +1421,117 @@ function template_preprocess_user_picture(&$variables) {
       }
     }
   }
+}
+
+/**
+ * Preprocesses variables for theme_username().
+ *
+ * Modules that make any changes to variables like 'name' or 'extra' must insure
+ * that the final string is safe to include directly in the output by using
+ * check_plain() or filter_xss().
+ *
+ * @see template_process_username()
+ */
+function template_preprocess_username(&$variables) {
+  $account = $variables['account'];
+
+  $variables['extra'] = '';
+  if (empty($account->uid)) {
+   $variables['uid'] = 0;
+   if (theme_get_setting('toggle_comment_user_verification')) {
+     $variables['extra'] = ' (' . t('not verified') . ')';
+   }
+  }
+  else {
+    $variables['uid'] = (int) $account->uid;
+  }
+
+  // Set the name to a formatted name that is safe for printing and
+  // that won't break tables by being too long. Keep an unshortened,
+  // unsanitized version, in case other preprocess functions want to implement
+  // their own shortening logic or add markup. If they do so, they must ensure
+  // that $variables['name'] is safe for printing.
+  $name = $variables['name_raw'] = format_username($account);
+  if (drupal_strlen($name) > 20) {
+    $name = drupal_substr($name, 0, 15) . '...';
+  }
+  $variables['name'] = check_plain($name);
+
+  $variables['profile_access'] = user_access('access user profiles');
+  $variables['link_attributes'] = array();
+  // Populate link path and attributes if appropriate.
+  if ($variables['uid'] && $variables['profile_access']) {
+    // We are linking to a local user.
+    $variables['link_attributes'] = array('title' => t('View user profile.'));
+    $variables['link_path'] = 'user/' . $variables['uid'];
+  }
+  elseif (!empty($account->homepage)) {
+    // Like the 'class' attribute, the 'rel' attribute can hold a
+    // space-separated set of values, so initialize it as an array to make it
+    // easier for other preprocess functions to append to it.
+    $variables['link_attributes'] = array('rel' => array('nofollow'));
+    $variables['link_path'] = $account->homepage;
+    $variables['homepage'] = $account->homepage;
+  }
+  // We do not want the l() function to check_plain() a second time.
+  $variables['link_options']['html'] = TRUE;
+  // Set a default class.
+  $variables['attributes_array'] = array('class' => array('username'));
+}
+
+/**
+ * Processes variables for theme_username().
+ *
+ * @see template_preprocess_username()
+ */
+function template_process_username(&$variables) {
+  // Finalize the link_options array for passing to the l() function.
+  // This is done in the process phase so that attributes may be added by
+  // modules or the theme during the preprocess phase.
+  if (isset($variables['link_path'])) {
+    // $variables['attributes_array'] contains attributes that should be applied
+    // regardless of whether a link is being rendered or not.
+    // $variables['link_attributes'] contains attributes that should only be
+    // applied if a link is being rendered. Preprocess functions are encouraged
+    // to use the former unless they want to add attributes on the link only.
+    // If a link is being rendered, these need to be merged. Some attributes are
+    // themselves arrays, so the merging needs to be recursive.
+    $variables['link_options']['attributes'] = array_merge_recursive($variables['link_attributes'], $variables['attributes_array']);
+  }
+}
+
+/**
+ * Returns HTML for a username, potentially linked to the user's page.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - account: The user object to format.
+ *   - name: The user's name, sanitized.
+ *   - extra: Additional text to append to the user's name, sanitized.
+ *   - link_path: The path or URL of the user's profile page, home page, or
+ *     other desired page to link to for more information about the user.
+ *   - link_options: An array of options to pass to the l() function's $options
+ *     parameter if linking the user's name to the user's page.
+ *   - attributes_array: An array of attributes to pass to the
+ *     drupal_attributes() function if not linking to the user's page.
+ *
+ * @see template_preprocess_username()
+ * @see template_process_username()
+ */
+function theme_username($variables) {
+  if (isset($variables['link_path'])) {
+    // We have a link path, so we should generate a link using l().
+    // Additional classes may be added as array elements like
+    // $variables['link_options']['attributes']['class'][] = 'myclass';
+    $output = l($variables['name'] . $variables['extra'], $variables['link_path'], $variables['link_options']);
+  }
+  else {
+    // Modules may have added important attributes so they must be included
+    // in the output. Additional classes may be added as array elements like
+    // $variables['attributes_array']['class'][] = 'myclass';
+    $output = '<span' . drupal_attributes($variables['attributes_array']) . '>' . $variables['name'] . $variables['extra'] . '</span>';
+  }
+  return $output;
 }
 
 /**

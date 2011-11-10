@@ -1966,29 +1966,6 @@ function _format_date_callback(array $matches = NULL, $new_langcode = NULL) {
 }
 
 /**
- * Format a username.
- *
- * By default, the passed-in object's 'name' property is used if it exists, or
- * else, the site-defined value for the 'anonymous' variable. However, a module
- * may override this by implementing hook_username_alter(&$name, $account).
- *
- * @see hook_username_alter()
- *
- * @param $account
- *   The account object for the user whose name is to be formatted.
- *
- * @return
- *   An unsanitized string with the username to display. The code receiving
- *   this result must ensure that check_plain() is called on it before it is
- *   printed to the page.
- */
-function format_username($account) {
-  $name = !empty($account->name) ? $account->name : variable_get('anonymous', t('Anonymous'));
-  drupal_alter('username', $name, $account);
-  return $name;
-}
-
-/**
  * @} End of "defgroup format".
  */
 
@@ -6614,9 +6591,6 @@ function drupal_common_theme() {
     ),
     'more_link' => array(
       'variables' => array('url' => NULL, 'title' => NULL)
-    ),
-    'username' => array(
-      'variables' => array('account' => NULL),
     ),
     'progress_bar' => array(
       'variables' => array('percent' => NULL, 'message' => NULL),
