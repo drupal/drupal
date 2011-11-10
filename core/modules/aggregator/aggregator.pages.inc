@@ -6,10 +6,11 @@
  */
 
 /**
- * Menu callback; displays the most recent items gathered from any feed.
+ * Page callback: Displays the most recent items gathered from any feed.
  *
- * @return
- *   The items HTML.
+ * Path: aggregator
+ *
+ * @see aggregator_menu()
  */
 function aggregator_page_last() {
   drupal_add_feed('aggregator/rss', variable_get('site_name', 'Drupal') . ' ' . t('aggregator'));
@@ -20,13 +21,14 @@ function aggregator_page_last() {
 }
 
 /**
- * Menu callback; displays all the items captured from a particular feed.
+ * Page callback: Displays all the items captured from a particular feed.
+ *
+ * Path: aggregator/sources/%aggregator_feed
  *
  * @param $feed
  *   The feed for which to display all items.
  *
- * @return
- *   The rendered list of items for a feed.
+ * @see aggregator_menu()
  */
 function aggregator_page_source($feed) {
   drupal_set_title($feed->title);
@@ -40,28 +42,31 @@ function aggregator_page_source($feed) {
 }
 
 /**
- * Menu callback; displays a form with all items captured from a feed.
+ * Page callback: Form constructor to show all items captured from a feed.
+ *
+ * Path: aggregator/sources/%aggregator_feed/categorize
  *
  * @param $feed
  *   The feed for which to list all the aggregated items.
  *
- * @return
- *   The rendered list of items for a feed.
- *
+ * @see aggregator_menu()
  * @see aggregator_page_source()
+ * @ingroup forms
  */
 function aggregator_page_source_form($form, $form_state, $feed) {
   return aggregator_page_source($feed);
 }
 
 /**
- * Menu callback; displays all the items aggregated in a particular category.
+ * Page callback: Form constructor to list items aggregated in a category.
+ *
+ * Path: aggregator/categories
  *
  * @param $category
  *   The category for which to list all the aggregated items.
  *
- * @return
-*   The rendered list of items for a category.
+ * @see aggregator_menu()
+ * @ingroup forms
  */
 function aggregator_page_category($category) {
   drupal_add_feed('aggregator/rss/' . $category['cid'], variable_get('site_name', 'Drupal') . ' ' . t('aggregator - @title', array('@title' => $category['title'])));
@@ -74,15 +79,16 @@ function aggregator_page_category($category) {
 }
 
 /**
- * Menu callback; displays a form containing items aggregated in a category.
+ * Page callback: Form constructor to list items aggregated in a category.
+ *
+ * Path: aggregator/categories/%aggregator_category/categorize
  *
  * @param $category
  *   The category for which to list all the aggregated items.
  *
- * @return
-*   The rendered list of items for a category.
- *
+ * @see aggregator_menu()
  * @see aggregator_page_category()
+ * @ingroup forms
  */
 function aggregator_page_category_form($form, $form_state, $category) {
   return aggregator_page_category($category);
@@ -160,11 +166,13 @@ function aggregator_load_feed_items($type, $data = NULL) {
  * @param $items
  *   The items to be listed.
  * @param $op
- *   Which form should be added to the items. Only 'categorize' is now recognized.
+ *   Which form should be added to the items. Only 'categorize' is now
+ *   recognized.
  * @param $feed_source
  *   The feed source URL.
+ *
  * @return
- *   The items HTML.
+ *   The rendered list of items for a feed.
  */
 function _aggregator_page_list($items, $op, $feed_source = '') {
   if (user_access('administer news feeds') && ($op == 'categorize')) {
@@ -184,14 +192,13 @@ function _aggregator_page_list($items, $op, $feed_source = '') {
 }
 
 /**
- * Form builder; build the page list form.
+ * Form constructor to build the page list form.
  *
  * @param $items
  *   An array of the feed items.
  * @param $feed_source
  *   The feed source URL.
- * @return
- *   The form structure.
+ *
  * @ingroup forms
  * @see aggregator_categorize_items_submit()
  */
@@ -236,7 +243,7 @@ function aggregator_categorize_items($items, $feed_source = '') {
 }
 
 /**
- * Process aggregator_categorize_items() form submissions.
+ * Form submission handler for aggregator_categorize_items().
  */
 function aggregator_categorize_items_submit($form, &$form_state) {
   if (!empty($form_state['values']['categories'])) {
@@ -293,7 +300,7 @@ function theme_aggregator_categorize_items($variables) {
 }
 
 /**
- * Process variables for aggregator-wrapper.tpl.php.
+ * Processes variables for aggregator-wrapper.tpl.php.
  *
  * @see aggregator-wrapper.tpl.php
  */
@@ -302,7 +309,7 @@ function template_preprocess_aggregator_wrapper(&$variables) {
 }
 
 /**
- * Process variables for aggregator-item.tpl.php.
+ * Processes variables for aggregator-item.tpl.php.
  *
  * @see aggregator-item.tpl.php
  */
@@ -333,7 +340,11 @@ function template_preprocess_aggregator_item(&$variables) {
 }
 
 /**
- * Menu callback; displays all the feeds used by the aggregator.
+ * Page callback: Displays all the feeds used by the aggregator.
+ *
+ * Path: aggregator/sources
+ *
+ * @see aggregator_menu()
  */
 function aggregator_page_sources() {
   $result = db_query('SELECT f.fid, f.title, f.description, f.image, MAX(i.timestamp) AS last FROM {aggregator_feed} f LEFT JOIN {aggregator_item} i ON f.fid = i.fid GROUP BY f.fid, f.title, f.description, f.image ORDER BY last DESC, f.title');
@@ -357,7 +368,11 @@ function aggregator_page_sources() {
 }
 
 /**
- * Menu callback; displays all the categories used by the aggregator.
+ * Page callback: Displays all the categories used by the aggregator.
+ *
+ * Path: aggregator/categories
+ *
+ * @see aggregator_menu()
  */
 function aggregator_page_categories() {
   $result = db_query('SELECT c.cid, c.title, c.description FROM {aggregator_category} c LEFT JOIN {aggregator_category_item} ci ON c.cid = ci.cid LEFT JOIN {aggregator_item} i ON ci.iid = i.iid GROUP BY c.cid, c.title, c.description');
@@ -379,7 +394,11 @@ function aggregator_page_categories() {
 }
 
 /**
- * Menu callback; generate an RSS 0.92 feed of aggregator items or categories.
+ * Page callback: Generates an RSS 0.92 feed of aggregator items or categories.
+ *
+ * Path: aggregator/rss
+ *
+ * @see aggregator_menu()
  */
 function aggregator_page_rss() {
   $result = NULL;
@@ -447,12 +466,15 @@ function theme_aggregator_page_rss($variables) {
 }
 
 /**
- * Menu callback; generates an OPML representation of all feeds.
+ * Page callback: Generates an OPML representation of all feeds.
+ *
+ * Path: aggregator/opml
  *
  * @param $cid
- *   If set, feeds are exported only from a category with this ID. Otherwise, all feeds are exported.
- * @return
- *   The output XML.
+ *   If set, feeds are exported only from a category with this ID. Otherwise,
+ *   all feeds are exported.
+ *
+ * @see aggregator_menu()
  */
 function aggregator_page_opml($cid = NULL) {
   if ($cid) {
@@ -499,7 +521,7 @@ function theme_aggregator_page_opml($variables) {
 }
 
 /**
- * Process variables for aggregator-summary-items.tpl.php.
+ * Processes variables for aggregator-summary-items.tpl.php.
  *
  * @see aggregator-summary-items.tpl.php
  */
@@ -510,7 +532,7 @@ function template_preprocess_aggregator_summary_items(&$variables) {
 }
 
 /**
- * Process variables for aggregator-summary-item.tpl.php.
+ * Processes variables for aggregator-summary-item.tpl.php.
  *
  * @see aggregator-summary-item.tpl.php
  */
@@ -530,7 +552,7 @@ function template_preprocess_aggregator_summary_item(&$variables) {
 }
 
 /**
- * Process variables for aggregator-feed-source.tpl.php.
+ * Processes variables for aggregator-feed-source.tpl.php.
  *
  * @see aggregator-feed-source.tpl.php
  */

@@ -126,14 +126,17 @@ function aggregator_form_aggregator_admin_form_alter(&$form, $form_state) {
 }
 
 /**
- * Helper function for teaser length choices.
+ * Creates display text for teaser length option values.
+ *
+ * Callback for drupal_map_assoc() within
+ * aggregator_form_aggregator_admin_form_alter().
  */
 function _aggregator_characters($length) {
   return ($length == 0) ? t('Unlimited') : format_plural($length, '1 character', '@count characters');
 }
 
 /**
- * Add/edit/delete an aggregator item.
+ * Adds/edits/deletes an aggregator item.
  *
  * @param $edit
  *   An associative array describing the item to be added/edited/deleted.
@@ -175,7 +178,7 @@ function aggregator_save_item($edit) {
 }
 
 /**
- * Expire feed items on $feed that are older than aggregator_clear.
+ * Expires items from a feed depending on expiration settings.
  *
  * @param $feed
  *   Object describing feed.
