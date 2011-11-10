@@ -74,7 +74,7 @@ function file_element_info() {
     '#upload_location' => NULL,
     '#extended' => FALSE,
     '#attached' => array(
-      'css' => array($file_path . '/file.css'),
+      'css' => array($file_path . '/file.admin.css'),
       'js' => array($file_path . '/file.js'),
     ),
   );
