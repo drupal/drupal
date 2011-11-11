@@ -128,6 +128,16 @@ class StatisticsLoggingTestCase extends DrupalWebTestCase {
     $log = db_query('SELECT * FROM {accesslog}')->fetchAll(PDO::FETCH_ASSOC);
     $this->assertTrue(is_array($log) && count($log) == 7, t('Page request was logged.'));
     $this->assertEqual(array_intersect_key($log[6], $expected), $expected);
+
+    // Create a path longer than 255 characters.
+    $long_path = $this->randomString(256);
+
+    // Test that the long path is properly truncated when logged.
+    $this->drupalGet($long_path);
+    $log = db_query('SELECT * FROM {accesslog}')->fetchAll(PDO::FETCH_ASSOC);
+    $this->assertTrue(is_array($log) && count($log) == 8, 'Page request was logged for a path over 255 characters.');
+    $this->assertEqual($log[7]['path'], truncate_utf8($long_path, 255));
+
   }
 }
 
