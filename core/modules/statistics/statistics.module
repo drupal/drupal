@@ -82,7 +82,7 @@ function statistics_exit() {
     db_insert('accesslog')
       ->fields(array(
         'title' => truncate_utf8(strip_tags(drupal_get_title()), 255),
-        'path' => $_GET['q'],
+        'path' => truncate_utf8($_GET['q'], 255),
         'url' => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '',
         'hostname' => ip_address(),
         'uid' => $user->uid,
