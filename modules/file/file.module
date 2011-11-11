@@ -45,7 +45,6 @@ function file_menu() {
   );
   $items['file/progress'] = array(
     'page callback' => 'file_ajax_progress',
-    'delivery callback' => 'ajax_deliver',
     'access arguments' => array('access content'),
     'theme callback' => 'ajax_base_page_theme',
     'type' => MENU_CALLBACK,
@@ -384,7 +383,9 @@ function file_managed_file_process($element, &$form_state, $form) {
     '#weight' => -5,
   );
 
-  $ajax_settings['progress']['type'] ? $ajax_settings['progress']['type'] == 'bar' : 'throbber';
+  // Force the progress indicator for the remove button to be either 'none' or
+  // 'throbber', even if the upload button is using something else.
+  $ajax_settings['progress']['type'] = ($element['#progress_indicator'] == 'none') ? 'none' : 'throbber';
   $ajax_settings['progress']['message'] = NULL;
   $ajax_settings['effect'] = 'none';
   $element['remove_button'] = array(
@@ -412,6 +413,9 @@ function file_managed_file_process($element, &$form_state, $form) {
         '#type' => 'hidden',
         '#value' => $upload_progress_key,
         '#attributes' => array('class' => array('file-progress')),
+        // Uploadprogress extension requires this field to be at the top of the
+        // form.
+        '#weight' => -20,
       );
     }
     elseif ($implementation == 'apc') {
@@ -419,6 +423,9 @@ function file_managed_file_process($element, &$form_state, $form) {
         '#type' => 'hidden',
         '#value' => $upload_progress_key,
         '#attributes' => array('class' => array('file-progress')),
+        // Uploadprogress extension requires this field to be at the top of the
+        // form.
+        '#weight' => -20,
       );
     }
 
