@@ -1975,7 +1975,7 @@ class SearchNodeAccessTest extends DrupalWebTestCase {
    * Tests that search returns results with punctuation in the search phrase.
    */
   function testPhraseSearchPunctuation() {
-    $node = $this->drupalCreateNode(array('body' => array(LANGUAGE_NONE => array(array('value' => "The bunny's ears were furry.")))));
+    $node = $this->drupalCreateNode(array('body' => array(LANGUAGE_NONE => array(array('value' => "The bunny's ears were fuzzy.")))));
 
     // Update the search index.
     module_invoke_all('update_index');
