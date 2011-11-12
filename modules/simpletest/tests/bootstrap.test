@@ -350,8 +350,18 @@ class BootstrapGetFilenameTestCase extends DrupalUnitTestCase {
     // Retrieving the location of a theme engine.
     $this->assertIdentical(drupal_get_filename('theme_engine', 'phptemplate'), 'themes/engines/phptemplate/phptemplate.engine', t('Retrieve theme engine location.'));
 
-    // Retrieving a file that is definitely not stored in the database.
+    // Retrieving the location of a profile. Profiles are a special case with
+    // a fixed location and naming.
     $this->assertIdentical(drupal_get_filename('profile', 'standard'), 'profiles/standard/standard.profile', t('Retrieve install profile location.'));
+
+    // When a file is not found in the database cache, drupal_get_filename()
+    // searches several locations on the filesystem, including the DRUPAL_ROOT
+    // directory. We use the '.script' extension below because this is a
+    // non-existent filetype that will definitely not exist in the database.
+    // Since there is already a scripts directory, drupal_get_filename() will
+    // automatically check there for 'script' files, just as it does for (e.g.)
+    // 'module' files in modules.
+    $this->assertIdentical(drupal_get_filename('script', 'test'), 'scripts/test.script', t('Retrieve test script location.'));
   }
 }
 
