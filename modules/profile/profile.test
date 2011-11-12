@@ -481,6 +481,46 @@ class ProfileTestBrowsing extends ProfileTestCase {
   }
 }
 
+/**
+ * Test profile integration with user CRUD operations.
+ */
+class ProfileCrudTestCase extends ProfileTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Profile CRUD tests',
+      'description' => 'Test profile integration with user create, read, update, delete.',
+      'group' => 'Profile',
+    );
+  }
+
+  /**
+   * Test profile integration with user CRUD operations.
+   */
+  public function testUserCRUD() {
+    // @todo Add profile fields in addition to base user properties.
+    $edit = array(
+      'name' => 'Test user',
+      'mail' => 'test@example.com',
+    );
+
+    // Create.
+    // @todo Add assertions.
+    $account = user_save(NULL, $edit);
+
+    // Read.
+    // @todo Add assertions.
+    $account = user_load($account->uid);
+
+    // Update.
+    // @todo Add assertions.
+    $account = user_save($account, $edit);
+
+    // Delete.
+    // @todo Add assertions.
+    user_delete($account->uid);
+  }
+}
+
   /**
    * TODO:
    * - Test field visibility
