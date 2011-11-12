@@ -74,8 +74,8 @@ function hook_field_extra_fields() {
 function hook_field_extra_fields_alter(&$info) {
   // Force node title to always be at the top of the list by default.
   foreach (node_type_get_types() as $bundle) {
-    if (isset($info['node'][$bundle->type]['title'])) {
-      $info['node'][$bundle->type]['title']['weight'] = -20;
+    if (isset($info['node'][$bundle->type]['form']['title'])) {
+      $info['node'][$bundle->type]['form']['title']['weight'] = -20;
     }
   }
 }
