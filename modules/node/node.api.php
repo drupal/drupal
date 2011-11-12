@@ -571,7 +571,7 @@ function hook_node_load($nodes, $types) {
  * Blindly returning FALSE will break other node access modules.
  *
  * @param $node
- *   Either a node object or a (machine-readable) content type on which to
+ *   Either a node object or the machine name of the content type on which to
  *   perform the access check.
  * @param $op
  *   The operation to be performed. Possible values:
@@ -583,9 +583,9 @@ function hook_node_load($nodes, $types) {
  *   The user object to perform the access check operation on.
  *
  * @return
- *   NODE_ACCESS_ALLOW if the operation is to be allowed;
- *   NODE_ACCESS_DENY if the operation is to be denied;
- *   NODE_ACCESS_IGNORE to not affect this operation at all.
+ *   - NODE_ACCESS_ALLOW: if the operation is to be allowed.
+ *   - NODE_ACCESS_DENY: if the operation is to be denied.
+ *   - NODE_ACCESS_IGNORE: to not affect this operation at all.
  *
  * @ingroup node_access
  */
