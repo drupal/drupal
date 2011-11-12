@@ -76,33 +76,29 @@ function hook_aggregator_fetch_info() {
  * finally, it is passed to all active processors which manipulate or store the
  * data.
  *
- * Modules that define this hook can be set as active parser on
+ * Modules that define this hook can be set as the active parser on
  * admin/config/services/aggregator. Only one parser can be active at a time.
  *
  * @param $feed
- *   The $feed object that describes the resource to be parsed.
- *   $feed->source_string contains the raw feed data as a string. Parse data
- *   from $feed->source_string and expose it to other modules as an array of
- *   data items on $feed->items.
- *
- *   Feed format:
- *   - $feed->description (string) - description of the feed
- *   - $feed->image (string) - image for the feed
- *   - $feed->etag (string) - value of feed's entity tag header field
- *   - $feed->modified (UNIX timestamp) - value of feed's last modified header
- *     field
- *   - $feed->items (Array) - array of feed items.
- *
- *   By convention, the common format for a single feed item is:
- *   $item[key-name] = value;
- *
- *   Recognized keys:
- *   TITLE (string) - the title of a feed item
- *   DESCRIPTION (string) - the description (body text) of a feed item
- *   TIMESTAMP (UNIX timestamp) - the feed item's published time as UNIX timestamp
- *   AUTHOR (string) - the feed item's author
- *   GUID (string) - RSS/Atom global unique identifier
- *   LINK (string) - the feed item's URL
+ *   An object describing the resource to be parsed: $feed->source_string
+ *   contains the raw feed data. The hook implementation should parse this data
+ *   and add the following properties to the $feed object:
+ *   - description: The human-readable description of the feed.
+ *   - link: A full URL that directly relates to the feed.
+ *   - image: An image URL used to display an image of the feed.
+ *   - etag: An entity tag from the HTTP header used for cache validation to
+ *     determine if the content has been changed.
+ *   - modified: The UNIX timestamp when the feed was last modified.
+ *   - items: An array of feed items. The common format for a single feed item
+ *     is an associative array containing:
+ *     - title: The human-readable title of the feed item.
+ *     - description: The full body text of the item or a summary.
+ *     - timestamp: The UNIX timestamp when the feed item was last published.
+ *     - author: The author of the feed item.
+ *     - guid: The global unique identifier (GUID) string that uniquely
+ *       identifies the item. If not available, the link is used to identify
+ *       the item.
+ *     - link: A full URL to the individual feed item.
  *
  * @return
  *   TRUE if parsing was successful, FALSE otherwise.
