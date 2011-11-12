@@ -1418,13 +1418,6 @@ function install_import_locales(&$install_state) {
  *   The form API definition for the site configuration form.
  */
 function install_configure_form($form, &$form_state, &$install_state) {
-  if (variable_get('site_name', FALSE) || variable_get('site_mail', FALSE)) {
-    // Site already configured: This should never happen, means re-running the
-    // installer, possibly by an attacker after the 'install_task' variable got
-    // accidentally blown somewhere. Stop it now.
-    throw new Exception(install_already_done_error());
-  }
-
   drupal_set_title(st('Configure site'));
 
   // Warn about settings.php permissions risk
