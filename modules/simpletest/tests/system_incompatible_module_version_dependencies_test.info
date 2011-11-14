@@ -1,0 +1,8 @@
+name = "System incompatible module version dependencies test"
+description = "Support module for testing system dependencies."
+package = Testing
+version = VERSION
+core = 7.x
+hidden = TRUE
+; system_incompatible_module_version_test declares version 1.0
+dependencies[] = system_incompatible_module_version_test (>2.0)
