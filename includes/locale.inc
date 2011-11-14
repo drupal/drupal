@@ -43,6 +43,36 @@ define('LOCALE_LANGUAGE_NEGOTIATION_SESSION', 'locale-session');
 define('LOCALE_JS_STRING', '(?:(?:\'(?:\\\\\'|[^\'])*\'|"(?:\\\\"|[^"])*")(?:\s*\+\s*)?)+');
 
 /**
+ * Regular expression pattern used to match simple JS object literal.
+ *
+ * This pattern matches a basic JS object, but will fail on an object with
+ * nested objects. Used in JS file parsing for string arg processing.
+ */
+define('LOCALE_JS_OBJECT', '\{.*?\}');
+
+/**
+ * Regular expression to match an object containing a key 'context'.
+ *
+ * Pattern to match a JS object containing a 'context key' with a string value,
+ * which is captured. Will fail if there are nested objects.
+ */
+define('LOCALE_JS_OBJECT_CONTEXT', '
+  \{              # match object literal start
+  .*?             # match anything, non-greedy
+  (?:             # match a form of "context"
+    \'context\'
+    |
+    "context"
+    |
+    context
+  )
+  \s*:\s*         # match key-value separator ":"
+  (' . LOCALE_JS_STRING . ')  # match context string
+  .*?             # match anything, non-greedy
+  \}              # match end of object literal
+');
+
+/**
  * Translation import mode overwriting all existing translations
  * if new translated version available.
  */
@@ -1447,6 +1477,9 @@ function _locale_parse_js_file($filepath) {
     [^\w]Drupal\s*\.\s*t\s*                       # match "Drupal.t" with whitespace
     \(\s*                                         # match "(" argument list start
     (' . LOCALE_JS_STRING . ')\s*                 # capture string argument
+    (?:,\s*' . LOCALE_JS_OBJECT . '\s*            # optionally capture str args
+      (?:,\s*' . LOCALE_JS_OBJECT_CONTEXT . '\s*) # optionally capture context
+    ?)?                                           # close optional args
     [,\)]                                         # match ")" or "," to finish
     ~sx', $file, $t_matches);
 
@@ -1474,54 +1507,72 @@ function _locale_parse_js_file($filepath) {
         (?:\s*\+\s*)?             # match "+" with possible whitespace, for str concat
       )+                          # match multiple because we supports concatenating strs
     )\s*                          # end capturing of plural string argument
+    (?:,\s*' . LOCALE_JS_OBJECT . '\s*          # optionally capture string args
+      (?:,\s*' . LOCALE_JS_OBJECT_CONTEXT . '\s*)?  # optionally capture context
+    )?
     [,\)]
     ~sx', $file, $plural_matches);
 
+  $matches = array();
 
-  // Loop through all matches and process them.
-  $all_matches = array_merge($plural_matches[1], $t_matches[1]);
-  foreach ($all_matches as $key => $string) {
-    $strings = array($string);
+  // Add strings from Drupal.t().
+  foreach ($t_matches[1] as $key => $string) {
+    $matches[] = array(
+      'string'  => $string,
+      'context' => $t_matches[2][$key],
+    );
+  }
+
+  // Add string from Drupal.formatPlural().
+  foreach ($plural_matches[1] as $key => $string) {
+    $matches[] = array(
+      'string'  => $string,
+      'context' => $plural_matches[3][$key],
+    );
 
     // If there is also a plural version of this string, add it to the strings array.
     if (isset($plural_matches[2][$key])) {
-      $strings[] = $plural_matches[2][$key];
+      $matches[] = array(
+        'string'  => $plural_matches[2][$key],
+        'context' => $plural_matches[3][$key],
+      );
     }
+  }
 
-    foreach ($strings as $key => $string) {
-      // Remove the quotes and string concatenations from the string.
-      $string = implode('', preg_split('~(?<!\\\\)[\'"]\s*\+\s*[\'"]~s', substr($string, 1, -1)));
+  foreach ($matches as $key => $match) {
+    // Remove the quotes and string concatenations from the string.
+    $string = implode('', preg_split('~(?<!\\\\)[\'"]\s*\+\s*[\'"]~s', substr($match['string'], 1, -1)));
+    $context = implode('', preg_split('~(?<!\\\\)[\'"]\s*\+\s*[\'"]~s', substr($match['context'], 1, -1)));
 
-      $source = db_query("SELECT lid, location FROM {locales_source} WHERE source = :source AND textgroup = 'default'", array(':source' => $string))->fetchObject();
-      if ($source) {
-        // We already have this source string and now have to add the location
-        // to the location column, if this file is not yet present in there.
-        $locations = preg_split('~\s*;\s*~', $source->location);
+    $source = db_query("SELECT lid, location FROM {locales_source} WHERE source = :source AND context = :context AND textgroup = 'default'", array(':source' => $string, ':context' => $context))->fetchObject();
+    if ($source) {
+      // We already have this source string and now have to add the location
+      // to the location column, if this file is not yet present in there.
+      $locations = preg_split('~\s*;\s*~', $source->location);
 
-        if (!in_array($filepath, $locations)) {
-          $locations[] = $filepath;
-          $locations = implode('; ', $locations);
+      if (!in_array($filepath, $locations)) {
+        $locations[] = $filepath;
+        $locations = implode('; ', $locations);
 
-          // Save the new locations string to the database.
-          db_update('locales_source')
-            ->fields(array(
-              'location' => $locations,
-            ))
-            ->condition('lid', $source->lid)
-            ->execute();
-        }
-      }
-      else {
-        // We don't have the source string yet, thus we insert it into the database.
-        db_insert('locales_source')
+        // Save the new locations string to the database.
+        db_update('locales_source')
           ->fields(array(
-            'location' => $filepath,
-            'source' => $string,
-            'context' => '',
-            'textgroup' => 'default',
+            'location' => $locations,
           ))
+          ->condition('lid', $source->lid)
           ->execute();
       }
+    }
+    else {
+      // We don't have the source string yet, thus we insert it into the database.
+      db_insert('locales_source')
+        ->fields(array(
+          'location' => $filepath,
+          'source' => $string,
+          'context' => $context,
+          'textgroup' => 'default',
+        ))
+        ->execute();
     }
   }
 }
@@ -1942,11 +1993,11 @@ function _locale_rebuild_js($langcode = NULL) {
 
   // Construct the array for JavaScript translations.
   // Only add strings with a translation to the translations array.
-  $result = db_query("SELECT s.lid, s.source, t.translation FROM {locales_source} s INNER JOIN {locales_target} t ON s.lid = t.lid AND t.language = :language WHERE s.location LIKE '%.js%' AND s.textgroup = :textgroup", array(':language' => $language->language, ':textgroup' => 'default'));
+  $result = db_query("SELECT s.lid, s.source, s.context, t.translation FROM {locales_source} s INNER JOIN {locales_target} t ON s.lid = t.lid AND t.language = :language WHERE s.location LIKE '%.js%' AND s.textgroup = :textgroup", array(':language' => $language->language, ':textgroup' => 'default'));
 
   $translations = array();
   foreach ($result as $data) {
-    $translations[$data->source] = $data->translation;
+    $translations[$data->context][$data->source] = $data->translation;
   }
 
   // Construct the JavaScript file, if there are translations.

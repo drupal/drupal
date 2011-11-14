@@ -204,43 +204,65 @@ class LocaleJavascriptTranslationTest extends DrupalWebTestCase {
 
     // Get all of the source strings that were found.
     $source_strings = db_select('locales_source', 's')
-      ->fields('s', array('source', 'lid'))
+      ->fields('s', array('source', 'context'))
       ->condition('s.location', $filename)
       ->execute()
       ->fetchAllKeyed();
 
     // List of all strings that should be in the file.
     $test_strings = array(
-      "Standard Call t",
-      "Whitespace Call t",
+      "Standard Call t" => '',
+      "Whitespace Call t" => '',
 
-      "Single Quote t",
-      "Single Quote \\'Escaped\\' t",
-      "Single Quote Concat strings t",
+      "Single Quote t" => '',
+      "Single Quote \\'Escaped\\' t" => '',
+      "Single Quote Concat strings t" => '',
 
-      "Double Quote t",
-      "Double Quote \\\"Escaped\\\" t",
-      "Double Quote Concat strings t",
+      "Double Quote t" => '',
+      "Double Quote \\\"Escaped\\\" t" => '',
+      "Double Quote Concat strings t" => '',
 
-      "Standard Call plural",
-      "Standard Call @count plural",
-      "Whitespace Call plural",
-      "Whitespace Call @count plural",
+      "Context !key Args t" => "Context string",
 
-      "Single Quote plural",
-      "Single Quote @count plural",
-      "Single Quote \\'Escaped\\' plural",
-      "Single Quote \\'Escaped\\' @count plural",
+      "Context Unquoted t" => "Context string unquoted",
+      "Context Single Quoted t" => "Context string single quoted",
+      "Context Double Quoted t" => "Context string double quoted",
 
-      "Double Quote plural",
-      "Double Quote @count plural",
-      "Double Quote \\\"Escaped\\\" plural",
-      "Double Quote \\\"Escaped\\\" @count plural",
+      "Standard Call plural" => '',
+      "Standard Call @count plural" => '',
+      "Whitespace Call plural" => '',
+      "Whitespace Call @count plural" => '',
+
+      "Single Quote plural" => '',
+      "Single Quote @count plural" => '',
+      "Single Quote \\'Escaped\\' plural" => '',
+      "Single Quote \\'Escaped\\' @count plural" => '',
+
+      "Double Quote plural" => '',
+      "Double Quote @count plural" => '',
+      "Double Quote \\\"Escaped\\\" plural" => '',
+      "Double Quote \\\"Escaped\\\" @count plural" => '',
+
+      "Context !key Args plural" => "Context string",
+      "Context !key Args @count plural" => "Context string",
+
+      "Context Unquoted plural" => "Context string unquoted",
+      "Context Unquoted @count plural" => "Context string unquoted",
+      "Context Single Quoted plural" => "Context string single quoted",
+      "Context Single Quoted @count plural" => "Context string single quoted",
+      "Context Double Quoted plural" => "Context string double quoted",
+      "Context Double Quoted @count plural" => "Context string double quoted",
     );
 
     // Assert that all strings were found properly.
-    foreach ($test_strings as $str) {
-      $this->assertTrue(isset($source_strings[$str]), t("Found source string: %source", array('%source' => $str)));
+    foreach ($test_strings as $str => $context) {
+      $args = array('%source' => $str, '%context' => $context);
+
+      // Make sure that the string was found in the file.
+      $this->assertTrue(isset($source_strings[$str]), t("Found source string: %source", $args));
+
+      // Make sure that the proper context was matched.
+      $this->assertTrue(isset($source_strings[$str]) && $source_strings[$str] === $context, strlen($context) > 0 ? t("Context for %source is %context", $args) : t("Context for %source is blank", $args));
     }
 
     $this->assertEqual(count($source_strings), count($test_strings), t("Found correct number of source strings."));

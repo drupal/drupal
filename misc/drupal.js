@@ -177,13 +177,21 @@ Drupal.formatString = function(str, args) {
  *   An object of replacements pairs to make after translation. Incidences
  *   of any key in this array are replaced with the corresponding value.
  *   See Drupal.formatString().
+ *
+ * @param options
+ *   - 'context' (defaults to the empty context): The context the source string
+ *     belongs to.
+ *
  * @return
  *   The translated string.
  */
-Drupal.t = function (str, args) {
+Drupal.t = function (str, args, options) {
+  options = options || {};
+  options.context = options.context || '';
+
   // Fetch the localized version of the string.
-  if (Drupal.locale.strings && Drupal.locale.strings[str]) {
-    str = Drupal.locale.strings[str];
+  if (Drupal.locale.strings && Drupal.locale.strings[options.context] && Drupal.locale.strings[options.context][str]) {
+    str = Drupal.locale.strings[options.context][str];
   }
 
   if (args) {
@@ -216,25 +224,27 @@ Drupal.t = function (str, args) {
  *   See Drupal.formatString().
  *   Note that you do not need to include @count in this array.
  *   This replacement is done automatically for the plural case.
+ * @param options
+ *   The options to pass to the Drupal.t() function.
  * @return
  *   A translated string.
  */
-Drupal.formatPlural = function (count, singular, plural, args) {
+Drupal.formatPlural = function (count, singular, plural, args, options) {
   var args = args || {};
   args['@count'] = count;
   // Determine the index of the plural form.
   var index = Drupal.locale.pluralFormula ? Drupal.locale.pluralFormula(args['@count']) : ((args['@count'] == 1) ? 0 : 1);
 
   if (index == 0) {
-    return Drupal.t(singular, args);
+    return Drupal.t(singular, args, options);
   }
   else if (index == 1) {
-    return Drupal.t(plural, args);
+    return Drupal.t(plural, args, options);
   }
   else {
     args['@count[' + index + ']'] = args['@count'];
     delete args['@count'];
-    return Drupal.t(plural.replace('@count', '@count[' + index + ']'), args);
+    return Drupal.t(plural.replace('@count', '@count[' + index + ']'), args, options);
   }
 };
 
