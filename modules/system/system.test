@@ -422,6 +422,35 @@ class ModuleDependencyTestCase extends ModuleTestCase {
   }
 
   /**
+   * Tests enabling a module that depends on an incompatible version of a module.
+   */
+  function testIncompatibleModuleVersionDependency() {
+    // Test that the system_incompatible_module_version_dependencies_test is
+    // marked as having an incompatible dependency.
+    $this->drupalGet('admin/modules');
+    $this->assertRaw(t('@module (<span class="admin-missing">incompatible with</span> version @version)', array(
+      '@module' => 'System incompatible module version test (>2.0)',
+      '@version' => '1.0',
+    )), 'A module that depends on an incompatible version of a module is marked as such.');
+    $checkbox = $this->xpath('//input[@type="checkbox" and @disabled="disabled" and @name="modules[Testing][system_incompatible_module_version_dependencies_test][enable]"]');
+    $this->assert(count($checkbox) == 1, t('Checkbox for the module is disabled.'));
+  }
+
+  /**
+   * Tests enabling a module that depends on a module with an incompatible core version.
+   */
+  function testIncompatibleCoreVersionDependency() {
+    // Test that the system_incompatible_core_version_dependencies_test is
+    // marked as having an incompatible dependency.
+    $this->drupalGet('admin/modules');
+    $this->assertRaw(t('@module (<span class="admin-missing">incompatible with</span> this version of Drupal core)', array(
+      '@module' => 'System incompatible core version test',
+    )), 'A module that depends on a module with an incompatible core version is marked as such.');
+    $checkbox = $this->xpath('//input[@type="checkbox" and @disabled="disabled" and @name="modules[Testing][system_incompatible_core_version_dependencies_test][enable]"]');
+    $this->assert(count($checkbox) == 1, t('Checkbox for the module is disabled.'));
+  }
+
+  /**
    * Tests enabling a module that depends on a module which fails hook_requirements().
    */
   function testEnableRequirementsFailureDependency() {
