@@ -1476,6 +1476,9 @@ function template_preprocess_node(&$variables) {
     $variables['user_picture'] = '';
   }
 
+  // Add article ARIA role.
+  $variables['attributes_array']['role'] = 'article';
+
   // Gather node classes.
   $variables['classes_array'][] = drupal_html_class('node-' . $node->type);
   if ($variables['promote']) {
