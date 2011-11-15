@@ -12,6 +12,8 @@ Drupal 8.0, xxxx-xx-xx (development version)
 - Removed the Garland theme from core.
 - Universally Unique IDentifier (UUID):
     * Support for generating and validating UUIDs.
+- JavaScript changes
+    * Updated to jQuery 1.7
 
 
 Drupal 7.0, 2011-01-05

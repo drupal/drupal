@@ -249,7 +249,9 @@ states.Trigger.states = {
 
   checked: {
     'change': function () {
-      return this.attr('checked');
+      // Use prop() here as we want a boolean of the checkbox state. See
+      // http://api.jquery.com/prop/ for more information.
+      return this.prop('checked');
     }
   },
 
