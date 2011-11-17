@@ -360,7 +360,7 @@ class RdfMappingDefinitionTestCase extends TaxonomyWebTestCase {
     $account_uri = url('user/' . $user2->uid);
     $person_uri = url('user/' . $user2->uid, array('fragment' => 'me'));
 
-    $user2_profile_about = $this->xpath('//div[@class="profile" and @typeof="sioc:UserAccount" and @about=:account-uri]', array(
+    $user2_profile_about = $this->xpath('//article[@class="profile" and @typeof="sioc:UserAccount" and @about=:account-uri]', array(
       ':account-uri' => $account_uri,
     ));
     $this->assertTrue(!empty($user2_profile_about), t('RDFa markup found on user profile page'));

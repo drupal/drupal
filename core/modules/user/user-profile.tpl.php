@@ -28,6 +28,6 @@
  * @see template_preprocess_user_profile()
  */
 ?>
-<div class="profile"<?php print $attributes; ?>>
+<article class="profile"<?php print $attributes; ?>>
   <?php print render($user_profile); ?>
-</div>
+</article>
