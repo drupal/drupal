@@ -137,15 +137,15 @@ class BookTestCase extends DrupalWebTestCase {
 
     // Check previous, up, and next links.
     if ($previous) {
-      $this->assertRaw(l('‹ ' . $previous->title, 'node/' . $previous->nid, array('attributes' => array('class' => array('page-previous'), 'title' => t('Go to previous page')))), t('Previous page link found.'));
+      $this->assertRaw(l('<b>‹</b> ' . $previous->title, 'node/' . $previous->nid, array('html'=> TRUE, 'attributes' => array('rel' => array('prev'), 'title' => t('Go to previous page')))), t('Previous page link found.'));
     }
 
     if ($up) {
-      $this->assertRaw(l('up', 'node/' . $up->nid, array('attributes' => array('class' => array('page-up'), 'title' => t('Go to parent page')))), t('Up page link found.'));
+      $this->assertRaw(l('up', 'node/' . $up->nid, array('html'=> TRUE,'attributes' => array('title' => t('Go to parent page')))), t('Up page link found.'));
     }
 
     if ($next) {
-      $this->assertRaw(l($next->title . ' ›', 'node/' . $next->nid, array('attributes' => array('class' => array('page-next'), 'title' => t('Go to next page')))), t('Next page link found.'));
+      $this->assertRaw(l($next->title . ' <b>›</b>', 'node/' . $next->nid, array('html'=> TRUE, 'attributes' => array('rel' => array('next'), 'title' => t('Go to next page')))), t('Next page link found.'));
     }
 
     // Compute the expected breadcrumb.
@@ -184,7 +184,7 @@ class BookTestCase extends DrupalWebTestCase {
       $outline .= '(node\/' . $node->nid . ')(.*?)(' . $node->title . ')(.*?)';
     }
 
-    return '/<div id="book-navigation-' . $this->book->nid . '"(.*?)<ul(.*?)' . $outline . '<\/ul>/s';
+    return '/<nav id="book-navigation-' . $this->book->nid . '"(.*?)<ul(.*?)' . $outline . '<\/ul>/s';
   }
 
   /**

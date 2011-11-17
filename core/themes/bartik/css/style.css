@@ -1648,3 +1648,13 @@ div.admin-panel .description {
 #footer-wrapper .poll .bar .foreground {
   background-color: #ddd;
 }
+
+/* ---------- book ----------- */
+.book-navigation .menu {
+  border-top: 1px solid #D6D6D6;
+}
+.book-navigation .book-pager {
+  border-bottom: 1px solid #D6D6D6;
+  border-top: 1px solid #D6D6D6;
+  margin: 0;
+}
