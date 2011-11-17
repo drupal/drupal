@@ -3972,6 +3972,7 @@ function drupal_add_js($data = NULL, $options = NULL) {
       // Register all required libraries.
       drupal_add_library('system', 'jquery', TRUE);
       drupal_add_library('system', 'jquery.once', TRUE);
+      drupal_add_library('system', 'html5shiv', TRUE);
     }
 
     switch ($options['type']) {

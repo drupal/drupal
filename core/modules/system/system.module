@@ -1240,6 +1240,20 @@ function system_library_info() {
     ),
   );
 
+  // HTML5 Shiv.
+  $libraries['html5shiv'] = array(
+    'title' => 'html5shiv',
+    'website' => 'http://code.google.com/p/html5shiv/',
+    'version' => '11',
+    'js' => array(
+      'core/misc/html5.js' => array(
+        'group' => JS_LIBRARY,
+        'weight' => -21,
+        'browsers' => array('IE' => 'lte IE 8', '!IE' => FALSE),
+      ),
+    ),
+  );
+
   // Cookie.
   $libraries['jquery.cookie'] = array(
     'title' => 'Cookie',

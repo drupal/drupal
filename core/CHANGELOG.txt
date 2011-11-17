@@ -1,6 +1,7 @@
 
 Drupal 8.0, xxxx-xx-xx (development version)
 ----------------------
+- Included the HTML5 Shiv library to support HTML5 elements in IE 8 and below.
 - Included the following Symfony2 components:
     * ClassLoader - PSR-0-compatible autoload routines.
     * HttpFoundation - Abstraction objects for HTTP requests and responses.

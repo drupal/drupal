@@ -1189,6 +1189,7 @@ class JavaScriptTestCase extends DrupalWebTestCase {
     $javascript = drupal_add_js('core/misc/collapse.js');
     $this->assertTrue(array_key_exists('core/misc/jquery.js', $javascript), t('jQuery is added when a file is added.'));
     $this->assertTrue(array_key_exists('core/misc/drupal.js', $javascript), t('Drupal.js is added when file is added.'));
+    $this->assertTrue(array_key_exists('core/misc/html5.js', $javascript), t('html5.js is added when file is added.'));
     $this->assertTrue(array_key_exists('core/misc/collapse.js', $javascript), t('JavaScript files are correctly added.'));
     $this->assertEqual(base_path(), $javascript['settings']['data'][0]['basePath'], t('Base path JavaScript setting is correctly set.'));
     url('', array('prefix' => &$prefix));
