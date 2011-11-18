@@ -299,8 +299,7 @@ function _drupal_default_html_head() {
     '#type' => 'html_tag',
     '#tag' => 'meta',
     '#attributes' => array(
-      'http-equiv' => 'Content-Type',
-      'content' => 'text/html; charset=utf-8',
+      'charset' => 'utf-8',
     ),
     // Security: This always has to be output first.
     '#weight' => -1000,
@@ -3198,16 +3197,12 @@ function drupal_pre_render_styles($elements) {
     '#type' => 'html_tag',
     '#tag' => 'link',
     '#attributes' => array(
-      'type' => 'text/css',
       'rel' => 'stylesheet',
     ),
   );
   $style_element_defaults = array(
     '#type' => 'html_tag',
     '#tag' => 'style',
-    '#attributes' => array(
-      'type' => 'text/css',
-    ),
   );
 
   // Loop through each group.

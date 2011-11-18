@@ -1682,7 +1682,7 @@ class DrupalWebTestCase extends DrupalTestCase {
       // DOM can load HTML soup. But, HTML soup can throw warnings, suppress
       // them.
       $htmlDom = new DOMDocument();
-      @$htmlDom->loadHTML($this->drupalGetContent());
+      @$htmlDom->loadHTML('<?xml encoding="UTF-8">' . $this->drupalGetContent());
       if ($htmlDom) {
         $this->pass(t('Valid HTML found on "@path"', array('@path' => $this->getUrl())), t('Browser'));
         // It's much easier to work with simplexml than DOM, luckily enough
