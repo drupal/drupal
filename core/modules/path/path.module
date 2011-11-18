@@ -136,7 +136,7 @@ function path_form_node_form_alter(&$form, $form_state) {
     '#maxlength' => 255,
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
-    '#description' => t('Optionally specify an alternative URL by which this content can be accessed. For example, type "about" when writing an about page. Use a relative path and don\'t add a trailing slash or the URL alias won\'t work.'),
+    '#description' => t('The alternative URL for this content. Use a relative path without a trailing slash. For example, enter "about" for the about page.'),
   );
   $form['path']['pid'] = array('#type' => 'value', '#value' => $path['pid']);
   $form['path']['source'] = array('#type' => 'value', '#value' => $path['source']);
