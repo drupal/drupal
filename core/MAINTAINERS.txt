@@ -286,3 +286,30 @@ Seven theme
 
 Stark theme
 - John Albin Wilkins 'JohnAlbin' <http://drupal.org/user/32095>
+
+
+Initiative owners
+-----------------
+
+The Drupal Core Initiatives owners oversee approved projects that re-architect
+or otherwise improve large areas of Drupal core. See
+http://drupal.org/community-initiatives/drupal-core for more information on
+their responsibilities. The initiative owners for Drupal 8 are:
+
+Configuration management
+- Greg Dunlap 'heyrocker' <http://drupal.org/user/128537>
+
+Design
+- Jeff Burns 'Jeff Burnz' <http://drupal.org/user/61393>
+
+HTML 5
+- Jacine Luisi 'Jacine' <http://drupal.org/user/88931>
+
+Mobile
+- John Albin Wilkins 'JohnAlbin' <http://drupal.org/user/32095>
+
+Multi-lingual
+- Gábor Hojtsy 'Gábor Hojtsy' <http://drupal.org/user/4166>
+
+Web services
+- Larry Garfield 'Crell' <http://drupal.org/user/26398>
