@@ -515,12 +515,10 @@ function _book_add_form_elements(&$form, &$form_state, $node) {
 
   // @see _book_admin_table_tree(). The weight may be larger than 15.
   $form['book']['weight'] = array(
-    // Using a textfield and a validator instead of a simple weight select to
-    // avoid unnecessarily oversized HTML for books with hundreds of pages.
-    '#type' => 'textfield',
-    '#element_validate' => array('element_validate_integer'),
+    '#type' => 'weight',
     '#title' => t('Weight'),
     '#default_value' => $node->book['weight'],
+    '#delta' => max(15, abs($node->book['weight'])),
     '#weight' => 5,
     '#description' => t('Pages at a given level are ordered first by weight and then by title.'),
   );

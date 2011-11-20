@@ -174,6 +174,10 @@ function _book_admin_table($node, &$form) {
  * @see book_admin_edit()
  */
 function _book_admin_table_tree($tree, &$form) {
+  // The delta must be big enough to give each node a distinct value.
+  $count = count($tree);
+  $delta = ($count < 30) ? 15 : intval($count / 2) + 1;
+
   foreach ($tree as $data) {
     $form['book-admin-' . $data['link']['nid']] = array(
       '#item' => $data['link'],
@@ -187,12 +191,9 @@ function _book_admin_table_tree($tree, &$form) {
         '#size' => 40,
       ),
       'weight' => array(
-        // Using a textfield and a validator instead of a simple weight select
-        // to avoid unnecessarily oversized HTML for books with hundreds of
-        // pages.
-        '#type' => 'textfield',
-        '#element_validate' => array('element_validate_integer'),
+        '#type' => 'weight',
         '#default_value' => $data['link']['weight'],
+        '#delta' => max($delta, abs($data['link']['weight'])),
         '#title' => t('Weight for @title', array('@title' => $data['link']['title'])),
         '#title_display' => 'invisible',
       ),
