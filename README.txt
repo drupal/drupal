@@ -85,4 +85,4 @@ More about developing:
  * Follow best practices:
    http://drupal.org/best-practices
  * Refer to the API documentation:
-   http://api.drupal.org/api/drupal/7
+   http://api.drupal.org/api/drupal/8
