@@ -250,3 +250,38 @@ function field_test_field_attach_view_alter(&$output, $context) {
     $output['test_field'][] = array('#markup' => 'field_test_field_attach_view_alter');
   }
 }
+
+/**
+ * Implements hook_field_widget_properties_alter().
+ */
+function field_test_field_widget_properties_alter(&$widget, $context) {
+  // Make the alter_test_text field 42 characters for nodes and comments.
+  if (in_array($context['entity_type'], array('node', 'comment')) && ($context['field']['field_name'] == 'alter_test_text')) {
+    $widget['settings']['size'] = 42;
+  }
+}
+
+/**
+ * Implements hook_field_widget_properties_ENTITY_TYPE_alter().
+ */
+function field_test_field_widget_properties_user_alter(&$widget, $context) {
+  // Always use buttons for the alter_test_options field on user forms.
+  if ($context['field']['field_name'] == 'alter_test_options') {
+    $widget['type'] = 'options_buttons';
+  }
+}
+
+/**
+ * Implements hook_field_widget_form_alter().
+ */
+function field_test_field_widget_form_alter(&$element, &$form_state, $context) {
+  switch ($context['field']['field_name']) {
+    case 'alter_test_text':
+      drupal_set_message('Field size: ' . $context['instance']['widget']['settings']['size']);
+      break;
+
+    case 'alter_test_options':
+      drupal_set_message('Widget type: ' . $context['instance']['widget']['type']);
+      break;
+  }
+}

@@ -1971,7 +1971,7 @@ function field_ui_default_value_widget($field, $instance, &$form, &$form_state) 
   $instance['description'] = '';
 
   // @todo Allow multiple values (requires more work on 'add more' JS handler).
-  $element += field_default_form(NULL, NULL, $field, $instance, LANGUAGE_NONE, $items, $element, $form_state, 0);
+  $element += field_default_form($instance['entity_type'], NULL, $field, $instance, LANGUAGE_NONE, $items, $element, $form_state, 0);
 
   return $element;
 }
