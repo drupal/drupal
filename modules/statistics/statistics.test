@@ -130,7 +130,7 @@ class StatisticsLoggingTestCase extends DrupalWebTestCase {
     $this->assertEqual(array_intersect_key($log[6], $expected), $expected);
 
     // Create a path longer than 255 characters.
-    $long_path = $this->randomString(256);
+    $long_path = $this->randomName(256);
 
     // Test that the long path is properly truncated when logged.
     $this->drupalGet($long_path);
