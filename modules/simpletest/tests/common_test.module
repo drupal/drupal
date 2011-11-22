@@ -166,6 +166,34 @@ function bartik_drupal_alter_alter(&$data, &$arg2 = NULL, &$arg3 = NULL) {
 }
 
 /**
+ * Implements hook_TYPE_alter() on behalf of block module.
+ *
+ * This is for verifying that drupal_alter(array(TYPE1, TYPE2), ...) allows
+ * hook_module_implements_alter() to affect the order in which module
+ * implementations are executed.
+ */
+function block_drupal_alter_foo_alter(&$data, &$arg2 = NULL, &$arg3 = NULL) {
+  $data['foo'] .= ' block';
+}
+
+/**
+ * Implements hook_module_implements_alter().
+ *
+ * @see block_drupal_alter_foo_alter()
+ */
+function common_test_module_implements_alter(&$implementations, $hook) {
+  // For drupal_alter(array('drupal_alter', 'drupal_alter_foo'), ...), make the
+  // block module implementations run after all the other modules. Note that
+  // when drupal_alter() is called with an array of types, the first type is
+  // considered primary and controls the module order.
+  if ($hook == 'drupal_alter_alter' && isset($implementations['block'])) {
+    $group = $implementations['block'];
+    unset($implementations['block']);
+    $implementations['block'] = $group;
+  }
+}
+
+/**
  * Implements hook_theme().
  */
 function common_test_theme() {

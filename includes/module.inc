@@ -952,10 +952,24 @@ function drupal_alter($type, &$data, &$context1 = NULL, &$context2 = NULL) {
       }
       // If any modules implement one of the extra hooks that do not implement
       // the primary hook, we need to add them to the $modules array in their
-      // appropriate order.
+      // appropriate order. module_implements() can only return ordered
+      // implementations of a single hook. To get the ordered implementations
+      // of multiple hooks, we mimic the module_implements() logic of first
+      // ordering by module_list(), and then calling
+      // drupal_alter('module_implements').
       if (array_diff($extra_modules, $modules)) {
-        // Order the modules by the order returned by module_list().
+        // Merge the arrays and order by module_list().
         $modules = array_intersect(module_list(), array_merge($modules, $extra_modules));
+        // Since module_implements() already took care of loading the necessary
+        // include files, we can safely pass FALSE for the array values.
+        $implementations = array_fill_keys($modules, FALSE);
+        // Let modules adjust the order solely based on the primary hook. This
+        // ensures the same module order regardless of whether this if block
+        // runs. Calling drupal_alter() recursively in this way does not result
+        // in an infinite loop, because this call is for a single $type, so we
+        // won't end up in this code block again.
+        drupal_alter('module_implements', $implementations, $hook);
+        $modules = array_keys($implementations);
       }
       foreach ($modules as $module) {
         // Since $modules is a merged array, for any given module, we do not

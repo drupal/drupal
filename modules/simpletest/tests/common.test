@@ -56,6 +56,14 @@ class DrupalAlterTestCase extends DrupalWebTestCase {
     $this->assertEqual($array_copy, $array_expected, t('First argument to drupal_alter() was altered.'));
     $this->assertEqual($entity_copy, $entity_expected, t('Second argument to drupal_alter() was altered.'));
     $this->assertEqual($array2_copy, $array2_expected, t('Third argument to drupal_alter() was altered.'));
+
+    // Verify alteration order when passing an array of types to drupal_alter().
+    // common_test_module_implements_alter() places 'block' implementation after
+    // other modules.
+    $array_copy = $array;
+    $array_expected = array('foo' => 'Drupal block theme');
+    drupal_alter(array('drupal_alter', 'drupal_alter_foo'), $array_copy);
+    $this->assertEqual($array_copy, $array_expected, t('hook_TYPE_alter() implementations ran in correct order.'));
   }
 }
 
