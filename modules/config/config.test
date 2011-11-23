@@ -1,0 +1,114 @@
+<?php
+
+/**
+ * @file
+ * Tests for config.module.
+ */
+
+/**
+ * Test cases for the secure file writer.
+ */
+class SecureFileTestCase extends DrupalUnitTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Secure file tests',
+      'description' => 'Tests the saving of secure files.',
+      'group' => 'Configuration',
+    );
+  }
+
+  function setUp() {
+    parent::setUp();
+  }
+
+  protected $filename = 'foo.bar';
+
+  protected $testContent = 'Good morning, Denver!';
+
+  /**
+   * Tests that a file written by this system has a valid signature.
+   */
+  public function testFileVerify() {
+    $file = new SignedFileStorage($this->filename);
+    $file->write($this->testContent);
+
+    $this->assertTrue($file->verify(), t('A file verifies after being written.'));
+
+    unset($file);
+
+    // Load the file again, so that there is no stale data from the old object.
+    $file = new SignedFileStorage($this->filename);
+    $this->assertTrue($file->verify(), t('A file verifies after being written and reloaded.'));
+  }
+
+  /**
+   * Tests that a file written by this system can be successfully read back.
+   */
+  public function testFilePersist() {
+     $file = new SignedFileStorage($this->filename);
+     $file->write($this->testContent);
+
+     unset($file);
+
+     // Reading should throw an exception in case of bad validation.
+     // Note that if any other exception is thrown, we let the test system
+     // handle catching and reporting it.
+     try {
+       $file = new SignedFileStorage($this->filename);
+       $saved_content = $file->read();
+
+       $this->assertEqual($saved_content, $this->testContent, t('A file can be read back successfully.'));
+     }
+     catch (Exception $e) {
+       $this->fail(t('File failed verification when being read.'));
+     }
+   }
+
+   /**
+    * Tests that a file fails validation if it's been monkeyed with.
+    */
+   public function testFileNotVerify() {
+     $file = new SignedFileStorage($this->filename);
+     $file->write($this->testContent);
+
+     // Manually overwrite the body of the secure file. Note that we skip the
+     // first line, which is reserved for the signature and such, to overwrite
+     // just the payload.
+     $raw_file = new SplFileObject($file->getFilePath(), 'a+');
+     $raw_file->fwrite('Good morning, Detroit!');
+     $raw_file->fflush();
+     unset($raw_file);
+
+     unset($file);
+
+     $file = new SignedFileStorage($this->filename);
+     $this->assertFalse($file->verify(), t('Corrupted file does not verify.'));
+   }
+}
+
+/**
+ * Test cases for the secure file writer.
+ */
+class FileContentsTestCase extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Config file content tests',
+      'description' => 'Tests the reading and writing of config settings.',
+      'group' => 'Configuration',
+    );
+  }
+
+  function setUp() {
+    parent::setUp();
+  }
+
+  /**
+   * Tests that a simple setting can be written and read.
+   */
+  public function testReadWriteConfig() {
+    $config = config('foo.bar');
+    $config->foo = 'bar';
+    $config->save();
+    $this->assertEqual('bar', config('foo.bar')->foo, t('Content retrived from written config data.'));
+  }
+}

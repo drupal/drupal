@@ -212,6 +212,29 @@ $update_free_access = FALSE;
 $drupal_hash_salt = '';
 
 /**
+ * Location of the site configuration files.
+ *
+ * By default, Drupal configuration files are stored in a randomly named
+ * directory under the default public files path. On install the
+ * named directory is created in the default files directory. For enhanced 
+ * security, you may set this variable to a location outside your docroot.
+ *
+ * @todo flesh this out, provide more details, etc.
+ *
+ * Example:
+ *   $drupal_config_directory_name = '/some/directory/outside/webroot';
+ *
+ */
+$drupal_config_directory_name = '';
+
+/**
+ * Configuration key.
+ * 
+ * Drupal configuration files are signed using this key.
+ */
+$drupal_config_key = '';
+
+/**
  * Base URL (optional).
  *
  * If Drupal is generating incorrect URLs on your site, which could
