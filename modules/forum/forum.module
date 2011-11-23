@@ -165,7 +165,7 @@ function forum_init() {
 /**
  * Implementation of hook_nodeapi().
  */
-function forum_nodeapi(&$node, $op, $teaser, $page) {
+function forum_nodeapi(&$node, $op, $teaser = NULL, $page = NULL) {
   // We are going to return if $node->type is not one of the node
   // types assigned to the forum vocabulary.  If forum_nav_vocabulary
   // is undefined or the vocabulary does not exist, it clearly cannot

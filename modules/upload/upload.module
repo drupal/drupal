@@ -272,7 +272,7 @@ function upload_form_alter(&$form, $form_state, $form_id) {
 /**
  * Implementation of hook_nodeapi().
  */
-function upload_nodeapi(&$node, $op, $teaser) {
+function upload_nodeapi(&$node, $op, $teaser = NULL) {
   switch ($op) {
 
     case 'load':

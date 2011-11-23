@@ -180,7 +180,7 @@ function translation_link($type, $node = NULL, $teaser = FALSE) {
  *
  * Manages translation information for nodes.
  */
-function translation_nodeapi(&$node, $op, $teaser, $page) {
+function translation_nodeapi(&$node, $op, $teaser = NULL, $page = NULL) {
   // Only act if we are dealing with a content type supporting translations.
   if (!translation_supported_type($node->type)) {
     return;

@@ -210,7 +210,7 @@ function _trigger_normalize_node_context($type, $node) {
 /**
  * Implementation of hook_nodeapi().
  */
-function trigger_nodeapi(&$node, $op, $a3, $a4) {
+function trigger_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
   // Keep objects for reuse so that changes actions make to objects can persist.
   static $objects;
   // Prevent recursion by tracking which operations have already been called.
