@@ -1058,7 +1058,7 @@ function search_form(&$form_state, $action = '', $keys = '', $type = NULL, $prom
  *
  * @ingroup forms
  * @see search_box_form_submit()
- * @see theme_search_box_form()
+ * @see search-block-form.tpl.php
  */
 function search_box(&$form_state, $form_id) {
   $form[$form_id] = array(
