@@ -1666,7 +1666,7 @@ function system_send_email_action_form($context) {
     '#default_value' => $context['message'],
     '#cols' => '80',
     '#rows' => '20',
-    '#description' => t('The message that should be sent. You may include the following variables: %site_name, %username, %node_url, %node_type, %title, %teaser, %body. Not all variables will be available in all contexts.'),
+    '#description' => t('The message that should be sent. You may include the following variables: %site_name, %username, %node_url, %node_type, %title, %teaser, %body, %term_name, %term_description, %term_id, %vocabulary_name, %vocabulary_description, %vocabulary_id. Not all variables will be available in all contexts.'),
   );
   return $form;
 }
