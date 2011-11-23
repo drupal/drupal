@@ -174,7 +174,7 @@ function _db_error_page($error = '') {
   global $db_type;
   drupal_init_language();
   drupal_maintenance_theme();
-  drupal_set_header('HTTP/1.1 503 Service Unavailable');
+  drupal_set_header($_SERVER['SERVER_PROTOCOL'] .' 503 Service Unavailable');
   drupal_set_title('Site off-line');
 
   $message = '<p>The site is currently not available due to technical problems. Please try again later. Thank you for your understanding.</p>';
