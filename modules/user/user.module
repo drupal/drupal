@@ -13,12 +13,23 @@ define('EMAIL_MAX_LENGTH', 64);
  *
  * We cannot use module_invoke() for this, because the arguments need to
  * be passed by reference.
+ *
+ * @param $op
+ *   The operation to be passed as the first parameter of the hook function.
+ * @param $edit
+ *   An associative array variable containing form values to be passed
+ *   as the second parameter of the hook function.
+ * @param $account
+ *   The user account object to be passed as the third parameter of the hook
+ *   function.
+ * @param $category
+ *   The category of user information being acted upon.
  */
-function user_module_invoke($type, &$array, &$user, $category = NULL) {
+function user_module_invoke($op, &$edit, &$account, $category = NULL) {
   foreach (module_list() as $module) {
     $function = $module .'_user';
     if (function_exists($function)) {
-      $function($type, $array, $user, $category);
+      $function($op, $edit, $account, $category);
     }
   }
 }
