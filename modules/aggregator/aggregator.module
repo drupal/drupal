@@ -298,38 +298,38 @@ function aggregator_cron() {
  * Generates blocks for the latest news items in each category and feed.
  */
 function aggregator_block($op = 'list', $delta = 0, $edit = array()) {
-  if (user_access('access news feeds')) {
-    if ($op == 'list') {
-      $result = db_query('SELECT cid, title FROM {aggregator_category} ORDER BY title');
-      while ($category = db_fetch_object($result)) {
-        $block['category-'. $category->cid]['info'] = t('!title category latest items', array('!title' => $category->title));
-      }
-      $result = db_query('SELECT fid, title FROM {aggregator_feed} ORDER BY fid');
-      while ($feed = db_fetch_object($result)) {
-        $block['feed-'. $feed->fid]['info'] = t('!title feed latest items', array('!title' => $feed->title));
-      }
+  if ($op == 'list') {
+    $result = db_query('SELECT cid, title FROM {aggregator_category} ORDER BY title');
+    while ($category = db_fetch_object($result)) {
+      $block['category-'. $category->cid]['info'] = t('!title category latest items', array('!title' => $category->title));
     }
-    else if ($op == 'configure') {
-      list($type, $id) = explode('-', $delta);
-      if ($type == 'category') {
-        $value = db_result(db_query('SELECT block FROM {aggregator_category} WHERE cid = %d', $id));
-      }
-      else {
-        $value = db_result(db_query('SELECT block FROM {aggregator_feed} WHERE fid = %d', $id));
-      }
-      $form['block'] = array('#type' => 'select', '#title' => t('Number of news items in block'), '#default_value' => $value, '#options' => drupal_map_assoc(array(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20)));
-      return $form;
+    $result = db_query('SELECT fid, title FROM {aggregator_feed} ORDER BY fid');
+    while ($feed = db_fetch_object($result)) {
+      $block['feed-'. $feed->fid]['info'] = t('!title feed latest items', array('!title' => $feed->title));
     }
-    else if ($op == 'save') {
-      list($type, $id) = explode('-', $delta);
-      if ($type == 'category') {
-        $value = db_query('UPDATE {aggregator_category} SET block = %d WHERE cid = %d', $edit['block'], $id);
-      }
-      else {
-        $value = db_query('UPDATE {aggregator_feed} SET block = %d WHERE fid = %d', $edit['block'], $id);
-      }
+  }
+  else if ($op == 'configure') {
+    list($type, $id) = explode('-', $delta);
+    if ($type == 'category') {
+      $value = db_result(db_query('SELECT block FROM {aggregator_category} WHERE cid = %d', $id));
     }
-    else if ($op == 'view') {
+    else {
+      $value = db_result(db_query('SELECT block FROM {aggregator_feed} WHERE fid = %d', $id));
+    }
+    $form['block'] = array('#type' => 'select', '#title' => t('Number of news items in block'), '#default_value' => $value, '#options' => drupal_map_assoc(array(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20)));
+    return $form;
+  }
+  else if ($op == 'save') {
+    list($type, $id) = explode('-', $delta);
+    if ($type == 'category') {
+      $value = db_query('UPDATE {aggregator_category} SET block = %d WHERE cid = %d', $edit['block'], $id);
+    }
+    else {
+      $value = db_query('UPDATE {aggregator_feed} SET block = %d WHERE fid = %d', $edit['block'], $id);
+    }
+  }
+  else if ($op == 'view') {
+    if (user_access('access news feeds')) {
       list($type, $id) = explode('-', $delta);
       switch ($type) {
         case 'feed':
@@ -358,9 +358,9 @@ function aggregator_block($op = 'list', $delta = 0, $edit = array()) {
         $block['content'] = theme('item_list', $items) . $read_more;
       }
     }
-    if (isset($block)) {
-      return $block;
-    }
+  }
+  if (isset($block)) {
+    return $block;
   }
 }
 
