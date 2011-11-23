@@ -594,7 +594,13 @@ function forum_form_alter(&$form, $form_state, $form_id) {
       $form['advanced']['parent']['#access'] = FALSE;
     }
   }
-  if (!empty($form['#node_edit_form']) && isset($form['taxonomy_forums'])) {
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function forum_form_node_form_alter(&$form, &$form_state, $form_id) {
+  if (isset($form['taxonomy_forums'])) {
     $langcode = $form['taxonomy_forums']['#language'];
     // Make the vocabulary required for 'real' forum-nodes.
     $form['taxonomy_forums'][$langcode]['#required'] = TRUE;

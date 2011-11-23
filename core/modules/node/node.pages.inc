@@ -106,10 +106,6 @@ function node_form($form, &$form_state, $node) {
     unset($node->in_preview);
   }
 
-  // Identify this as a node edit form.
-  // @todo D8: Remove. Modules can implement hook_form_BASE_FORM_ID_alter() now.
-  $form['#node_edit_form'] = TRUE;
-
   // Override the default CSS class name, since the user-defined node type name
   // in 'TYPE-node-form' potentially clashes with third-party class names.
   $form['#attributes']['class'][0] = drupal_html_class('node-' . $node->type . '-form');
