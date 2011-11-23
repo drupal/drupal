@@ -198,10 +198,14 @@ define('LANGUAGE_LTR', 0);
 define('LANGUAGE_RTL', 1);
 
 /**
- * For convenience, define a short form of the request time global.
+ * Time of the current request in seconds elapsed since the Unix Epoch.
  *
- * REQUEST_TIME is a float with microseconds since PHP 5.4.0, but float
- * timestamps confuses most of the PHP functions (including date_create()).
+ * This differs from $_SERVER['REQUEST_TIME'], which is stored as a float
+ * since PHP 5.4.0. Float timestamps confuse most PHP functions
+ * (including date_create()).
+ *
+ * @see http://php.net/manual/reserved.variables.server.php
+ * @see http://php.net/manual/function.time.php
  */
 define('REQUEST_TIME', (int) $_SERVER['REQUEST_TIME']);
 
