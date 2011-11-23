@@ -553,27 +553,24 @@ function forum_field_storage_pre_update($entity_type, $entity, &$skip_fields) {
       $first_call[$entity->nid] = FALSE;
       db_delete('forum_index')->condition('nid', $entity->nid)->execute();
     }
-    // Only save data to the table if the node is published.
-    if ($entity->status) {
-      $query = db_insert('forum_index')->fields(array('nid', 'title', 'tid', 'sticky', 'created', 'comment_count', 'last_comment_timestamp'));
-      foreach ($entity->taxonomy_forums as $language) {
-        foreach ($language as $item) {
-          $query->values(array(
-            'nid' => $entity->nid,
-            'title' => $entity->title,
-            'tid' => $item['tid'],
-            'sticky' => $entity->sticky,
-            'created' => $entity->created,
-            'comment_count' => 0,
-            'last_comment_timestamp' => $entity->created,
-          ));
-        }
+    $query = db_insert('forum_index')->fields(array('nid', 'title', 'tid', 'sticky', 'created', 'comment_count', 'last_comment_timestamp'));
+    foreach ($entity->taxonomy_forums as $language) {
+      foreach ($language as $item) {
+        $query->values(array(
+          'nid' => $entity->nid,
+          'title' => $entity->title,
+          'tid' => $item['tid'],
+          'sticky' => $entity->sticky,
+          'created' => $entity->created,
+          'comment_count' => 0,
+          'last_comment_timestamp' => $entity->created,
+        ));
       }
-      $query->execute();
-      // The logic for determining last_comment_count is fairly complex, so
-      // call _forum_update_forum_index() too.
-      _forum_update_forum_index($entity->nid);
     }
+    $query->execute();
+    // The logic for determining last_comment_count is fairly complex, so
+    // call _forum_update_forum_index() too.
+    _forum_update_forum_index($entity->nid);
   }
 }
 
