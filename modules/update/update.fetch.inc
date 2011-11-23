@@ -221,6 +221,11 @@ class update_xml_parser {
         $this->current_term = array();
         $this->current_object = &$this->current_term;
         break;
+      case 'FILE':
+        unset($this->current_object);
+        $this->current_file = array();
+        $this->current_object = &$this->current_file;
+        break;
     }
   }
 
@@ -252,6 +257,13 @@ class update_xml_parser {
       case 'TERMS':
         $this->current_object = &$this->current_release;
         break;
+      case 'FILE':
+        unset($this->current_object);
+        $this->current_release['files'][] = $this->current_file;
+        break;
+      case 'FILES':
+        $this->current_object = &$this->current_release;
+        break;
       default:
         $this->current_object[strtolower($this->current_tag)] = trim($this->current_object[strtolower($this->current_tag)]);
         $this->current_tag = '';
@@ -259,7 +271,7 @@ class update_xml_parser {
   }
 
   function data($parser, $data) {
-    if ($this->current_tag && !in_array($this->current_tag, array('PROJECT', 'RELEASE', 'RELEASES', 'TERM', 'TERMS'))) {
+    if ($this->current_tag && !in_array($this->current_tag, array('PROJECT', 'RELEASE', 'RELEASES', 'TERM', 'TERMS', 'FILE', 'FILES'))) {
       $tag = strtolower($this->current_tag);
       if (isset($this->current_object[$tag])) {
         $this->current_object[$tag] .= $data;
