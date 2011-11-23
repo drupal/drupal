@@ -863,7 +863,8 @@ function taxonomy_vocabulary_get_names() {
  *   A taxonomy term ID.
  *
  * @return
- *   An array of term objects which are the parents of the term $tid.
+ *   An array of term objects which are the parents of the term $tid, or an
+ *   empty array if parents are not found.
  */
 function taxonomy_get_parents($tid) {
   $parents = &drupal_static(__FUNCTION__, array());
