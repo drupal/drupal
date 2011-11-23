@@ -1,0 +1,12 @@
+
+/**
+ * @file
+ * Admin styles for book module.
+ */
+
+/**
+ * Book outline on book edit form.
+ */
+.js #edit-book-pick-book {
+  display: none;
+}

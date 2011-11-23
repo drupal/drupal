@@ -1,0 +1,32 @@
+
+/**
+ * @file
+ * Admin styles for file module.
+ */
+
+/**
+ * File upload widget.
+ */
+.form-managed-file .form-file,
+.form-managed-file .form-submit {
+  margin: 0;
+}
+.form-managed-file input.progress-disabled {
+  display: inline;
+  float: none;
+}
+.form-managed-file div.ajax-progress,
+.form-managed-file div.throbber {
+  display: inline;
+  float: none;
+  padding: 1px 5px 2px 5px;
+}
+.form-managed-file div.ajax-progress-bar {
+  display: none;
+  margin-top: 4px;
+  padding: 0;
+  width: 28em;
+}
+.form-managed-file div.ajax-progress-bar div.bar {
+  margin: 0;
+}

@@ -1,0 +1,1131 @@
+<?php
+
+/**
+ * @file
+ * Tests for image.module.
+ */
+
+/**
+ * TODO: Test the following functions.
+ *
+ * image.effects.inc:
+ *   image_style_generate()
+ *   image_style_create_derivative()
+ *
+ * image.module:
+ *   image_style_load()
+ *   image_style_save()
+ *   image_style_delete()
+ *   image_style_options()
+ *   image_style_flush()
+ *   image_effect_definition_load()
+ *   image_effect_load()
+ *   image_effect_save()
+ *   image_effect_delete()
+ *   image_filter_keyword()
+ */
+
+/**
+ * This class provides methods specifically for testing Image's field handling.
+ */
+class ImageFieldTestCase extends DrupalWebTestCase {
+  protected $admin_user;
+
+  function setUp() {
+    parent::setUp('image');
+    $this->admin_user = $this->drupalCreateUser(array('access content', 'access administration pages', 'administer site configuration', 'administer content types', 'administer nodes', 'create article content', 'edit any article content', 'delete any article content', 'administer image styles'));
+    $this->drupalLogin($this->admin_user);
+  }
+
+  /**
+   * Create a new image field.
+   *
+   * @param $name
+   *   The name of the new field (all lowercase), exclude the "field_" prefix.
+   * @param $type_name
+   *   The node type that this field will be added to.
+   * @param $field_settings
+   *   A list of field settings that will be added to the defaults.
+   * @param $instance_settings
+   *   A list of instance settings that will be added to the instance defaults.
+   * @param $widget_settings
+   *   A list of widget settings that will be added to the widget defaults.
+   */
+  function createImageField($name, $type_name, $field_settings = array(), $instance_settings = array(), $widget_settings = array()) {
+    $field = array(
+      'field_name' => $name,
+      'type' => 'image',
+      'settings' => array(),
+      'cardinality' => !empty($field_settings['cardinality']) ? $field_settings['cardinality'] : 1,
+    );
+    $field['settings'] = array_merge($field['settings'], $field_settings);
+    field_create_field($field);
+
+    $instance = array(
+      'field_name' => $field['field_name'],
+      'entity_type' => 'node',
+      'label' => $name,
+      'bundle' => $type_name,
+      'required' => !empty($instance_settings['required']),
+      'settings' => array(),
+      'widget' => array(
+        'type' => 'image_image',
+        'settings' => array(),
+      ),
+    );
+    $instance['settings'] = array_merge($instance['settings'], $instance_settings);
+    $instance['widget']['settings'] = array_merge($instance['widget']['settings'], $widget_settings);
+    return field_create_instance($instance);
+  }
+
+  /**
+   * Upload an image to a node.
+   *
+   * @param $image
+   *   A file object representing the image to upload.
+   * @param $field_name
+   *   Name of the image field the image should be attached to.
+   * @param $type
+   *   The type of node to create.
+   */
+  function uploadNodeImage($image, $field_name, $type) {
+    $edit = array(
+      'title' => $this->randomName(),
+    );
+    $edit['files[' . $field_name . '_' . LANGUAGE_NONE . '_0]'] = drupal_realpath($image->uri);
+    $this->drupalPost('node/add/' . $type, $edit, t('Save'));
+
+    // Retrieve ID of the newly created node from the current URL.
+    $matches = array();
+    preg_match('/node\/([0-9]+)/', $this->getUrl(), $matches);
+    return isset($matches[1]) ? $matches[1] : FALSE;
+  }
+}
+
+/**
+ * Tests the functions for generating paths and URLs for image styles.
+ */
+class ImageStylesPathAndUrlUnitTest extends DrupalWebTestCase {
+  protected $style_name;
+  protected $image_info;
+  protected $image_filepath;
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Image styles path and URL functions',
+      'description' => 'Tests functions for generating paths and URLs to image styles.',
+      'group' => 'Image',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('image_module_test');
+
+    $this->style_name = 'style_foo';
+    image_style_save(array('name' => $this->style_name));
+  }
+
+  /**
+   * Test image_style_path().
+   */
+  function testImageStylePath() {
+    $scheme = 'public';
+    $actual = image_style_path($this->style_name, "$scheme://foo/bar.gif");
+    $expected = "$scheme://styles/" . $this->style_name . "/$scheme/foo/bar.gif";
+    $this->assertEqual($actual, $expected, t('Got the path for a file URI.'));
+
+    $actual = image_style_path($this->style_name, 'foo/bar.gif');
+    $expected = "$scheme://styles/" . $this->style_name . "/$scheme/foo/bar.gif";
+    $this->assertEqual($actual, $expected, t('Got the path for a relative file path.'));
+  }
+
+  /**
+   * Test image_style_url() with a file using the "public://" scheme.
+   */
+  function testImageStyleUrlAndPathPublic() {
+    $this->_testImageStyleUrlAndPath('public');
+  }
+
+  /**
+   * Test image_style_url() with a file using the "private://" scheme.
+   */
+  function testImageStyleUrlAndPathPrivate() {
+    $this->_testImageStyleUrlAndPath('private');
+  }
+
+  /**
+   * Test image_style_url() with the "public://" scheme and unclean URLs.
+   */
+   function testImageStylUrlAndPathPublicUnclean() {
+     $this->_testImageStyleUrlAndPath('public', FALSE);
+   }
+
+  /**
+   * Test image_style_url() with the "private://" schema and unclean URLs.
+   */
+  function testImageStyleUrlAndPathPrivateUnclean() {
+    $this->_testImageStyleUrlAndPath('private', FALSE);
+  }
+
+  /**
+   * Test image_style_url().
+   */
+  function _testImageStyleUrlAndPath($scheme, $clean_url = TRUE) {
+    // Make the default scheme neither "public" nor "private" to verify the
+    // functions work for other than the default scheme.
+    variable_set('file_default_scheme', 'temporary');
+    variable_set('clean_url', $clean_url);
+
+    // Create the directories for the styles.
+    $directory = $scheme . '://styles/' . $this->style_name;
+    $status = file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
+    $this->assertNotIdentical(FALSE, $status, t('Created the directory for the generated images for the test style.'));
+
+    // Create a working copy of the file.
+    $files = $this->drupalGetTestFiles('image');
+    $file = reset($files);
+    $image_info = image_get_info($file->uri);
+    $original_uri = file_unmanaged_copy($file->uri, $scheme . '://', FILE_EXISTS_RENAME);
+    // Let the image_module_test module know about this file, so it can claim
+    // ownership in hook_file_download().
+    variable_set('image_module_test_file_download', $original_uri);
+    $this->assertNotIdentical(FALSE, $original_uri, t('Created the generated image file.'));
+
+    // Get the URL of a file that has not been generated and try to create it.
+    $generated_uri = $scheme . '://styles/' . $this->style_name . '/' . $scheme . '/'. basename($original_uri);
+    $this->assertFalse(file_exists($generated_uri), t('Generated file does not exist.'));
+    $generate_url = image_style_url($this->style_name, $original_uri);
+
+    if (!$clean_url) {
+      $this->assertTrue(strpos($generate_url, '?q=') !== FALSE, 'When using non-clean URLS, the system path contains the query string.');
+    }
+
+    // Fetch the URL that generates the file.
+    $this->drupalGet($generate_url);
+    $this->assertResponse(200, t('Image was generated at the URL.'));
+    $this->assertTrue(file_exists($generated_uri), t('Generated file does exist after we accessed it.'));
+    $this->assertRaw(file_get_contents($generated_uri), t('URL returns expected file.'));
+    $generated_image_info = image_get_info($generated_uri);
+    $this->assertEqual($this->drupalGetHeader('Content-Type'), $generated_image_info['mime_type'], t('Expected Content-Type was reported.'));
+    $this->assertEqual($this->drupalGetHeader('Content-Length'), $generated_image_info['file_size'], t('Expected Content-Length was reported.'));
+    if ($scheme == 'private') {
+      $this->assertEqual($this->drupalGetHeader('X-Image-Owned-By'), 'image_module_test', t('Expected custom header has been added.'));
+    }
+  }
+}
+
+/**
+ * Use the image_test.module's mock toolkit to ensure that the effects are
+ * properly passing parameters to the image toolkit.
+ */
+class ImageEffectsUnitTest extends ImageToolkitTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Image effects',
+      'description' => 'Test that the image effects pass parameters to the toolkit correctly.',
+      'group' => 'Image',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('image_test');
+    module_load_include('inc', 'image', 'image.effects');
+  }
+
+  /**
+   * Test the image_resize_effect() function.
+   */
+  function testResizeEffect() {
+    $this->assertTrue(image_resize_effect($this->image, array('width' => 1, 'height' => 2)), t('Function returned the expected value.'));
+    $this->assertToolkitOperationsCalled(array('resize'));
+
+    // Check the parameters.
+    $calls = image_test_get_all_calls();
+    $this->assertEqual($calls['resize'][0][1], 1, t('Width was passed correctly'));
+    $this->assertEqual($calls['resize'][0][2], 2, t('Height was passed correctly'));
+  }
+
+  /**
+   * Test the image_scale_effect() function.
+   */
+  function testScaleEffect() {
+    // @todo: need to test upscaling.
+    $this->assertTrue(image_scale_effect($this->image, array('width' => 10, 'height' => 10)), t('Function returned the expected value.'));
+    $this->assertToolkitOperationsCalled(array('resize'));
+
+    // Check the parameters.
+    $calls = image_test_get_all_calls();
+    $this->assertEqual($calls['resize'][0][1], 10, t('Width was passed correctly'));
+    $this->assertEqual($calls['resize'][0][2], 5, t('Height was based off aspect ratio and passed correctly'));
+  }
+
+  /**
+   * Test the image_crop_effect() function.
+   */
+  function testCropEffect() {
+    // @todo should test the keyword offsets.
+    $this->assertTrue(image_crop_effect($this->image, array('anchor' => 'top-1', 'width' => 3, 'height' => 4)), t('Function returned the expected value.'));
+    $this->assertToolkitOperationsCalled(array('crop'));
+
+    // Check the parameters.
+    $calls = image_test_get_all_calls();
+    $this->assertEqual($calls['crop'][0][1], 0, t('X was passed correctly'));
+    $this->assertEqual($calls['crop'][0][2], 1, t('Y was passed correctly'));
+    $this->assertEqual($calls['crop'][0][3], 3, t('Width was passed correctly'));
+    $this->assertEqual($calls['crop'][0][4], 4, t('Height was passed correctly'));
+  }
+
+  /**
+   * Test the image_scale_and_crop_effect() function.
+   */
+  function testScaleAndCropEffect() {
+    $this->assertTrue(image_scale_and_crop_effect($this->image, array('width' => 5, 'height' => 10)), t('Function returned the expected value.'));
+    $this->assertToolkitOperationsCalled(array('resize', 'crop'));
+
+    // Check the parameters.
+    $calls = image_test_get_all_calls();
+    $this->assertEqual($calls['crop'][0][1], 7.5, t('X was computed and passed correctly'));
+    $this->assertEqual($calls['crop'][0][2], 0, t('Y was computed and passed correctly'));
+    $this->assertEqual($calls['crop'][0][3], 5, t('Width was computed and passed correctly'));
+    $this->assertEqual($calls['crop'][0][4], 10, t('Height was computed and passed correctly'));
+  }
+
+  /**
+   * Test the image_desaturate_effect() function.
+   */
+  function testDesaturateEffect() {
+    $this->assertTrue(image_desaturate_effect($this->image, array()), t('Function returned the expected value.'));
+    $this->assertToolkitOperationsCalled(array('desaturate'));
+
+    // Check the parameters.
+    $calls = image_test_get_all_calls();
+    $this->assertEqual(count($calls['desaturate'][0]), 1, t('Only the image was passed.'));
+  }
+
+  /**
+   * Test the image_rotate_effect() function.
+   */
+  function testRotateEffect() {
+    // @todo: need to test with 'random' => TRUE
+    $this->assertTrue(image_rotate_effect($this->image, array('degrees' => 90, 'bgcolor' => '#fff')), t('Function returned the expected value.'));
+    $this->assertToolkitOperationsCalled(array('rotate'));
+
+    // Check the parameters.
+    $calls = image_test_get_all_calls();
+    $this->assertEqual($calls['rotate'][0][1], 90, t('Degrees were passed correctly'));
+    $this->assertEqual($calls['rotate'][0][2], 0xffffff, t('Background color was passed correctly'));
+  }
+}
+
+/**
+ * Tests creation, deletion, and editing of image styles and effects.
+ */
+class ImageAdminStylesUnitTest extends ImageFieldTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Image styles and effects UI configuration',
+      'description' => 'Tests creation, deletion, and editing of image styles and effects at the UI level.',
+      'group' => 'Image',
+    );
+  }
+
+  /**
+   * Given an image style, generate an image.
+   */
+  function createSampleImage($style) {
+    static $file_path;
+
+    // First, we need to make sure we have an image in our testing
+    // file directory. Copy over an image on the first run.
+    if (!isset($file_path)) {
+      $files = $this->drupalGetTestFiles('image');
+      $file = reset($files);
+      $file_path = file_unmanaged_copy($file->uri);
+    }
+
+    return image_style_url($style['name'], $file_path) ? $file_path : FALSE;
+  }
+
+  /**
+   * Count the number of images currently create for a style.
+   */
+  function getImageCount($style) {
+    return count(file_scan_directory('public://styles/' . $style['name'], '/.*/'));
+  }
+
+  /**
+   * General test to add a style, add/remove/edit effects to it, then delete it.
+   */
+  function testStyle() {
+    // Setup a style to be created and effects to add to it.
+    $style_name = strtolower($this->randomName(10));
+    $style_path = 'admin/config/media/image-styles/edit/' . $style_name;
+    $effect_edits = array(
+      'image_resize' => array(
+        'data[width]' => 100,
+        'data[height]' => 101,
+      ),
+      'image_scale' => array(
+        'data[width]' => 110,
+        'data[height]' => 111,
+        'data[upscale]' => 1,
+      ),
+      'image_scale_and_crop' => array(
+        'data[width]' => 120,
+        'data[height]' => 121,
+      ),
+      'image_crop' => array(
+        'data[width]' => 130,
+        'data[height]' => 131,
+        'data[anchor]' => 'center-center',
+      ),
+      'image_desaturate' => array(
+        // No options for desaturate.
+      ),
+      'image_rotate' => array(
+        'data[degrees]' => 5,
+        'data[random]' => 1,
+        'data[bgcolor]' => '#FFFF00',
+      ),
+    );
+
+    // Add style form.
+
+    $edit = array(
+      'name' => $style_name,
+    );
+    $this->drupalPost('admin/config/media/image-styles/add', $edit, t('Create new style'));
+    $this->assertRaw(t('Style %name was created.', array('%name' => $style_name)), t('Image style successfully created.'));
+
+    // Add effect form.
+
+    // Add each sample effect to the style.
+    foreach ($effect_edits as $effect => $edit) {
+      // Add the effect.
+      $this->drupalPost($style_path, array('new' => $effect), t('Add'));
+      if (!empty($edit)) {
+        $this->drupalPost(NULL, $edit, t('Add effect'));
+      }
+    }
+
+    // Edit effect form.
+
+    // Revisit each form to make sure the effect was saved.
+    drupal_static_reset('image_styles');
+    $style = image_style_load($style_name);
+
+    foreach ($style['effects'] as $ieid => $effect) {
+      $this->drupalGet($style_path . '/effects/' . $ieid);
+      foreach ($effect_edits[$effect['name']] as $field => $value) {
+        $this->assertFieldByName($field, $value, t('The %field field in the %effect effect has the correct value of %value.', array('%field' => $field, '%effect' => $effect['name'], '%value' => $value)));
+      }
+    }
+
+    // Image style overview form (ordering and renaming).
+
+    // Confirm the order of effects is maintained according to the order we
+    // added the fields.
+    $effect_edits_order = array_keys($effect_edits);
+    $effects_order = array_values($style['effects']);
+    $order_correct = TRUE;
+    foreach ($effects_order as $index => $effect) {
+      if ($effect_edits_order[$index] != $effect['name']) {
+        $order_correct = FALSE;
+      }
+    }
+    $this->assertTrue($order_correct, t('The order of the effects is correctly set by default.'));
+
+    // Test the style overview form.
+    // Change the name of the style and adjust the weights of effects.
+    $style_name = strtolower($this->randomName(10));
+    $weight = count($effect_edits);
+    $edit = array(
+      'name' => $style_name,
+    );
+    foreach ($style['effects'] as $ieid => $effect) {
+      $edit['effects[' . $ieid . '][weight]'] = $weight;
+      $weight--;
+    }
+
+    // Create an image to make sure it gets flushed after saving.
+    $image_path = $this->createSampleImage($style);
+    $this->assertEqual($this->getImageCount($style), 1, t('Image style %style image %file successfully generated.', array('%style' => $style['name'], '%file' => $image_path)));
+
+    $this->drupalPost($style_path, $edit, t('Update style'));
+
+    // Note that after changing the style name, the style path is changed.
+    $style_path = 'admin/config/media/image-styles/edit/' . $style_name;
+
+    // Check that the URL was updated.
+    $this->drupalGet($style_path);
+    $this->assertResponse(200, t('Image style %original renamed to %new', array('%original' => $style['name'], '%new' => $style_name)));
+
+    // Check that the image was flushed after updating the style.
+    // This is especially important when renaming the style. Make sure that
+    // the old image directory has been deleted.
+    $this->assertEqual($this->getImageCount($style), 0, t('Image style %style was flushed after renaming the style and updating the order of effects.', array('%style' => $style['name'])));
+
+    // Load the style by the new name with the new weights.
+    drupal_static_reset('image_styles');
+    $style = image_style_load($style_name, NULL);
+
+    // Confirm the new style order was saved.
+    $effect_edits_order = array_reverse($effect_edits_order);
+    $effects_order = array_values($style['effects']);
+    $order_correct = TRUE;
+    foreach ($effects_order as $index => $effect) {
+      if ($effect_edits_order[$index] != $effect['name']) {
+        $order_correct = FALSE;
+      }
+    }
+    $this->assertTrue($order_correct, t('The order of the effects is correctly set by default.'));
+
+    // Image effect deletion form.
+
+    // Create an image to make sure it gets flushed after deleting an effect.
+    $image_path = $this->createSampleImage($style);
+    $this->assertEqual($this->getImageCount($style), 1, t('Image style %style image %file successfully generated.', array('%style' => $style['name'], '%file' => $image_path)));
+
+    // Test effect deletion form.
+    $effect = array_pop($style['effects']);
+    $this->drupalPost($style_path . '/effects/' . $effect['ieid'] . '/delete', array(), t('Delete'));
+    $this->assertRaw(t('The image effect %name has been deleted.', array('%name' => $effect['label'])), t('Image effect deleted.'));
+
+    // Style deletion form.
+
+    // Delete the style.
+    $this->drupalPost('admin/config/media/image-styles/delete/' . $style_name, array(), t('Delete'));
+
+    // Confirm the style directory has been removed.
+    $directory = file_default_scheme() . '://styles/' . $style_name;
+    $this->assertFalse(is_dir($directory), t('Image style %style directory removed on style deletion.', array('%style' => $style['name'])));
+
+    drupal_static_reset('image_styles');
+    $this->assertFalse(image_style_load($style_name), t('Image style %style successfully deleted.', array('%style' => $style['name'])));
+
+  }
+
+  /**
+   * Test to override, edit, then revert a style.
+   */
+  function testDefaultStyle() {
+    // Setup a style to be created and effects to add to it.
+    $style_name = 'thumbnail';
+    $edit_path = 'admin/config/media/image-styles/edit/' . $style_name;
+    $delete_path = 'admin/config/media/image-styles/delete/' . $style_name;
+    $revert_path = 'admin/config/media/image-styles/revert/' . $style_name;
+
+    // Ensure deleting a default is not possible.
+    $this->drupalGet($delete_path);
+    $this->assertText(t('Page not found'), t('Default styles may not be deleted.'));
+
+    // Ensure that editing a default is not possible (without overriding).
+    $this->drupalGet($edit_path);
+    $this->assertNoField('edit-name', t('Default styles may not be renamed.'));
+    $this->assertNoField('edit-submit', t('Default styles may not be edited.'));
+    $this->assertNoField('edit-add', t('Default styles may not have new effects added.'));
+
+    // Create an image to make sure the default works before overriding.
+    drupal_static_reset('image_styles');
+    $style = image_style_load($style_name);
+    $image_path = $this->createSampleImage($style);
+    $this->assertEqual($this->getImageCount($style), 1, t('Image style %style image %file successfully generated.', array('%style' => $style['name'], '%file' => $image_path)));
+
+    // Verify that effects attached to a default style do not have an ieid key.
+    foreach ($style['effects'] as $effect) {
+      $this->assertFalse(isset($effect['ieid']), t('The %effect effect does not have an ieid.', array('%effect' => $effect['name'])));
+    }
+
+    // Override the default.
+    $this->drupalPost($edit_path, array(), t('Override defaults'));
+    $this->assertRaw(t('The %style style has been overridden, allowing you to change its settings.', array('%style' => $style_name)), t('Default image style may be overridden.'));
+
+    // Add sample effect to the overridden style.
+    $this->drupalPost($edit_path, array('new' => 'image_desaturate'), t('Add'));
+    drupal_static_reset('image_styles');
+    $style = image_style_load($style_name);
+
+    // Verify that effects attached to the style have an ieid now.
+    foreach ($style['effects'] as $effect) {
+      $this->assertTrue(isset($effect['ieid']), t('The %effect effect has an ieid.', array('%effect' => $effect['name'])));
+    }
+
+    // The style should now have 2 effect, the original scale provided by core
+    // and the desaturate effect we added in the override.
+    $effects = array_values($style['effects']);
+    $this->assertEqual($effects[0]['name'], 'image_scale', t('The default effect still exists in the overridden style.'));
+    $this->assertEqual($effects[1]['name'], 'image_desaturate', t('The added effect exists in the overridden style.'));
+
+    // Check that we are unable to rename an overridden style.
+    $this->drupalGet($edit_path);
+    $this->assertNoField('edit-name', t('Overridden styles may not be renamed.'));
+
+    // Create an image to ensure the override works properly.
+    $image_path = $this->createSampleImage($style);
+    $this->assertEqual($this->getImageCount($style), 1, t('Image style %style image %file successfully generated.', array('%style' => $style['name'], '%file' => $image_path)));
+
+    // Revert the image style.
+    $this->drupalPost($revert_path, array(), t('Revert'));
+    drupal_static_reset('image_styles');
+    $style = image_style_load($style_name);
+
+    // The style should now have the single effect for scale.
+    $effects = array_values($style['effects']);
+    $this->assertEqual($effects[0]['name'], 'image_scale', t('The default effect still exists in the reverted style.'));
+    $this->assertFalse(array_key_exists(1, $effects), t('The added effect has been removed in the reverted style.'));
+  }
+
+  /**
+   * Test deleting a style and choosing a replacement style.
+   */
+  function testStyleReplacement() {
+    // Create a new style.
+    $style_name = strtolower($this->randomName(10));
+    image_style_save(array('name' => $style_name));
+    $style_path = 'admin/config/media/image-styles/edit/' . $style_name;
+
+    // Create an image field that uses the new style.
+    $field_name = strtolower($this->randomName(10));
+    $instance = $this->createImageField($field_name, 'article');
+    $instance['display']['default']['type'] = 'image';
+    $instance['display']['default']['settings']['image_style'] = $style_name;
+    field_update_instance($instance);
+
+    // Create a new node with an image attached.
+    $test_image = current($this->drupalGetTestFiles('image'));
+    $nid = $this->uploadNodeImage($test_image, $field_name, 'article');
+    $node = node_load($nid);
+
+    // Test that image is displayed using newly created style.
+    $this->drupalGet('node/' . $nid);
+    $this->assertRaw(image_style_url($style_name, $node->{$field_name}[LANGUAGE_NONE][0]['uri']), t('Image displayed using style @style.', array('@style' => $style_name)));
+
+    // Rename the style and make sure the image field is updated.
+    $new_style_name = strtolower($this->randomName(10));
+    $edit = array(
+      'name' => $new_style_name,
+    );
+    $this->drupalPost('admin/config/media/image-styles/edit/' . $style_name, $edit, t('Update style'));
+    $this->assertText(t('Changes to the style have been saved.'), t('Style %name was renamed to %new_name.', array('%name' => $style_name, '%new_name' => $new_style_name)));
+    $this->drupalGet('node/' . $nid);
+    $this->assertRaw(image_style_url($new_style_name, $node->{$field_name}[LANGUAGE_NONE][0]['uri']), t('Image displayed using style replacement style.'));
+
+    // Delete the style and choose a replacement style.
+    $edit = array(
+      'replacement' => 'thumbnail',
+    );
+    $this->drupalPost('admin/config/media/image-styles/delete/' . $new_style_name, $edit, t('Delete'));
+    $message = t('Style %name was deleted.', array('%name' => $new_style_name));
+    $this->assertRaw($message, $message);
+
+    $this->drupalGet('node/' . $nid);
+    $this->assertRaw(image_style_url('thumbnail', $node->{$field_name}[LANGUAGE_NONE][0]['uri']), t('Image displayed using style replacement style.'));
+  }
+}
+
+/**
+ * Test class to check that formatters and display settings are working.
+ */
+class ImageFieldDisplayTestCase extends ImageFieldTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Image field display tests',
+      'description' => 'Test the display of image fields.',
+      'group' => 'Image',
+    );
+  }
+
+  /**
+   * Test image formatters on node display for public files.
+   */
+  function testImageFieldFormattersPublic() {
+    $this->_testImageFieldFormatters('public');
+  }
+
+  /**
+   * Test image formatters on node display for private files.
+   */
+  function testImageFieldFormattersPrivate() {
+    // Remove access content permission from anonymous users.
+    user_role_change_permissions(DRUPAL_ANONYMOUS_RID, array('access content' => FALSE));
+    $this->_testImageFieldFormatters('private');
+  }
+
+  /**
+   * Test image formatters on node display.
+   */
+  function _testImageFieldFormatters($scheme) {
+    $field_name = strtolower($this->randomName());
+    $this->createImageField($field_name, 'article', array('uri_scheme' => $scheme));
+    // Create a new node with an image attached.
+    $test_image = current($this->drupalGetTestFiles('image'));
+    $nid = $this->uploadNodeImage($test_image, $field_name, 'article');
+    $node = node_load($nid, NULL, TRUE);
+
+    // Test that the default formatter is being used.
+    $image_uri = $node->{$field_name}[LANGUAGE_NONE][0]['uri'];
+    $image_info = array(
+      'path' => $image_uri,
+      'width' => 40,
+      'height' => 20,
+    );
+    $default_output = theme('image', $image_info);
+    $this->assertRaw($default_output, t('Default formatter displaying correctly on full node view.'));
+
+    // Test the image linked to file formatter.
+    $instance = field_info_instance('node', $field_name, 'article');
+    $instance['display']['default']['type'] = 'image';
+    $instance['display']['default']['settings']['image_link'] = 'file';
+    field_update_instance($instance);
+    $default_output = l(theme('image', $image_info), file_create_url($image_uri), array('html' => TRUE));
+    $this->drupalGet('node/' . $nid);
+    $this->assertRaw($default_output, t('Image linked to file formatter displaying correctly on full node view.'));
+    // Verify that the image can be downloaded.
+    $this->assertEqual(file_get_contents($test_image->uri), $this->drupalGet(file_create_url($image_uri)), t('File was downloaded successfully.'));
+    if ($scheme == 'private') {
+      // Only verify HTTP headers when using private scheme and the headers are
+      // sent by Drupal.
+      $this->assertEqual($this->drupalGetHeader('Content-Type'), 'image/png; name="' . $test_image->filename . '"', t('Content-Type header was sent.'));
+      $this->assertEqual($this->drupalGetHeader('Content-Disposition'), 'inline; filename="' . $test_image->filename . '"', t('Content-Disposition header was sent.'));
+      $this->assertEqual($this->drupalGetHeader('Cache-Control'), 'private', t('Cache-Control header was sent.'));
+
+      // Log out and try to access the file.
+      $this->drupalLogout();
+      $this->drupalGet(file_create_url($image_uri));
+      $this->assertResponse('403', t('Access denied to original image as anonymous user.'));
+
+      // Log in again.
+      $this->drupalLogin($this->admin_user);
+    }
+
+    // Test the image linked to content formatter.
+    $instance['display']['default']['settings']['image_link'] = 'content';
+    field_update_instance($instance);
+    $default_output = l(theme('image', $image_info), 'node/' . $nid, array('html' => TRUE, 'attributes' => array('class' => 'active')));
+    $this->drupalGet('node/' . $nid);
+    $this->assertRaw($default_output, t('Image linked to content formatter displaying correctly on full node view.'));
+
+    // Test the image style 'thumbnail' formatter.
+    $instance['display']['default']['settings']['image_link'] = '';
+    $instance['display']['default']['settings']['image_style'] = 'thumbnail';
+    field_update_instance($instance);
+    // Ensure the derivative image is generated so we do not have to deal with
+    // image style callback paths.
+    $this->drupalGet(image_style_url('thumbnail', $image_uri));
+    $image_info['path'] = image_style_path('thumbnail', $image_uri);
+    $image_info['width'] = 100;
+    $image_info['height'] = 50;
+    $default_output = theme('image', $image_info);
+    $this->drupalGet('node/' . $nid);
+    $this->assertRaw($default_output, t('Image style thumbnail formatter displaying correctly on full node view.'));
+
+    if ($scheme == 'private') {
+      // Log out and try to access the file.
+      $this->drupalLogout();
+      $this->drupalGet(image_style_url('thumbnail', $image_uri));
+      $this->assertResponse('403', t('Access denied to image style thumbnail as anonymous user.'));
+    }
+  }
+
+  /**
+   * Tests for image field settings.
+   */
+  function testImageFieldSettings() {
+    $test_image = current($this->drupalGetTestFiles('image'));
+    list(, $test_image_extension) = explode('.', $test_image->filename);
+    $field_name = strtolower($this->randomName());
+    $instance_settings = array(
+      'alt_field' => 1,
+      'file_extensions' => $test_image_extension,
+      'max_filesize' => '50 KB',
+      'max_resolution' => '100x100',
+      'min_resolution' => '10x10',
+      'title_field' => 1,
+    );
+    $widget_settings = array(
+      'preview_image_style' => 'medium',
+    );
+    $this->createImageField($field_name, 'article', array(), $instance_settings, $widget_settings);
+    $instance = field_info_instance('node', $field_name, 'article');
+
+    $this->drupalGet('node/add/article');
+    $this->assertText(t('Files must be less than 50 KB.'), t('Image widget max file size is displayed on article form.'));
+    $this->assertText(t('Allowed file types: ' . $test_image_extension . '.'), t('Image widget allowed file types displayed on article form.'));
+    $this->assertText(t('Images must be between 10x10 and 100x100 pixels.'), t('Image widget allowed resolution displayed on article form.'));
+
+    // We have to create the article first and then edit it because the alt
+    // and title fields do not display until the image has been attached.
+    $nid = $this->uploadNodeImage($test_image, $field_name, 'article');
+    $this->drupalGet('node/' . $nid . '/edit');
+    $this->assertFieldByName($field_name . '[' . LANGUAGE_NONE . '][0][alt]', '', t('Alt field displayed on article form.'));
+    $this->assertFieldByName($field_name . '[' . LANGUAGE_NONE . '][0][title]', '', t('Title field displayed on article form.'));
+    // Verify that the attached image is being previewed using the 'medium'
+    // style.
+    $node = node_load($nid, NULL, TRUE);
+    $image_info = array(
+      'path' => image_style_url('medium', $node->{$field_name}[LANGUAGE_NONE][0]['uri']),
+      'width' => 220,
+      'height' => 110,
+    );
+    $default_output = theme('image', $image_info);
+    $this->assertRaw($default_output, t("Preview image is displayed using 'medium' style."));
+
+    // Add alt/title fields to the image and verify that they are displayed.
+    $image_info = array(
+      'path' => $node->{$field_name}[LANGUAGE_NONE][0]['uri'],
+      'alt' => $this->randomName(),
+      'title' => $this->randomName(),
+      'width' => 40,
+      'height' => 20,
+    );
+    $edit = array(
+      $field_name . '[' . LANGUAGE_NONE . '][0][alt]' => $image_info['alt'],
+      $field_name . '[' . LANGUAGE_NONE . '][0][title]' => $image_info['title'],
+    );
+    $this->drupalPost('node/' . $nid . '/edit', $edit, t('Save'));
+    $default_output = theme('image', $image_info);
+    $this->assertRaw($default_output, t('Image displayed using user supplied alt and title attributes.'));
+  }
+
+  /**
+   * Test use of a default image with an image field.
+   */
+  function testImageFieldDefaultImage() {
+    // Create a new image field.
+    $field_name = strtolower($this->randomName());
+    $this->createImageField($field_name, 'article');
+
+    // Create a new node, with no images and verify that no images are
+    // displayed.
+    $node = $this->drupalCreateNode(array('type' => 'article'));
+    $this->drupalGet('node/' . $node->nid);
+    // Verify that no image is displayed on the page by checking for the class
+    // that would be used on the image field.
+    $this->assertNoPattern('<div class="(.*?)field-name-' . strtr($field_name, '_', '-') . '(.*?)">', t('No image displayed when no image is attached and no default image specified.'));
+
+    // Add a default image to the public imagefield instance.
+    $images = $this->drupalGetTestFiles('image');
+    $edit = array(
+      'files[field_settings_default_image]' => drupal_realpath($images[0]->uri),
+    );
+    $this->drupalPost('admin/structure/types/manage/article/fields/' . $field_name, $edit, t('Save settings'));
+    // Clear field info cache so the new default image is detected.
+    field_info_cache_clear();
+    $field = field_info_field($field_name);
+    $image = file_load($field['settings']['default_image']);
+    $this->assertTrue($image->status == FILE_STATUS_PERMANENT, t('The default image status is permanent.'));
+    $default_output = theme('image', array('path' => $image->uri));
+    $this->drupalGet('node/' . $node->nid);
+    $this->assertRaw($default_output, t('Default image displayed when no user supplied image is present.'));
+
+    // Create a node with an image attached and ensure that the default image
+    // is not displayed.
+    $nid = $this->uploadNodeImage($images[1], $field_name, 'article');
+    $node = node_load($nid, NULL, TRUE);
+    $image_info = array(
+      'path' => $node->{$field_name}[LANGUAGE_NONE][0]['uri'],
+      'width' => 40,
+      'height' => 20,
+    );
+    $image_output = theme('image', $image_info);
+    $this->drupalGet('node/' . $nid);
+    $this->assertNoRaw($default_output, t('Default image is not displayed when user supplied image is present.'));
+    $this->assertRaw($image_output, t('User supplied image is displayed.'));
+
+    // Remove default image from the field and make sure it is no longer used.
+    $edit = array(
+      'field[settings][default_image][fid]' => 0,
+    );
+    $this->drupalPost('admin/structure/types/manage/article/fields/' . $field_name, $edit, t('Save settings'));
+    // Clear field info cache so the new default image is detected.
+    field_info_cache_clear();
+    $field = field_info_field($field_name);
+    $this->assertFalse($field['settings']['default_image'], t('Default image removed from field.'));
+    // Create an image field that uses the private:// scheme and test that the
+    // default image works as expected.
+    $private_field_name = strtolower($this->randomName());
+    $this->createImageField($private_field_name, 'article', array('uri_scheme' => 'private'));
+    // Add a default image to the new field.
+    $edit = array(
+      'files[field_settings_default_image]' => drupal_realpath($images[1]->uri),
+    );
+    $this->drupalPost('admin/structure/types/manage/article/fields/' . $private_field_name, $edit, t('Save settings'));
+    $private_field = field_info_field($private_field_name);
+    $image = file_load($private_field['settings']['default_image']);
+    $this->assertEqual('private', file_uri_scheme($image->uri), t('Default image uses private:// scheme.'));
+    $this->assertTrue($image->status == FILE_STATUS_PERMANENT, t('The default image status is permanent.'));
+    // Create a new node with no image attached and ensure that default private
+    // image is displayed.
+    $node = $this->drupalCreateNode(array('type' => 'article'));
+    $default_output = theme('image', array('path' => $image->uri));
+    $this->drupalGet('node/' . $node->nid);
+    $this->assertRaw($default_output, t('Default private image displayed when no user supplied image is present.'));
+  }
+}
+
+/**
+ * Test class to check for various validations.
+ */
+class ImageFieldValidateTestCase extends ImageFieldTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Image field validation tests',
+      'description' => 'Tests validation functions such as min/max resolution.',
+      'group' => 'Image',
+    );
+  }
+
+  /**
+   * Test min/max resolution settings.
+   */
+  function testResolution() {
+    $field_name = strtolower($this->randomName());
+    $min_resolution = 50;
+    $max_resolution = 100;
+    $instance_settings = array(
+      'max_resolution' => $max_resolution . 'x' . $max_resolution,
+      'min_resolution' => $min_resolution . 'x' . $min_resolution,
+    );
+    $this->createImageField($field_name, 'article', array(), $instance_settings);
+
+    // We want a test image that is too small, and a test image that is too
+    // big, so cycle through test image files until we have what we need.
+    $image_that_is_too_big = FALSE;
+    $image_that_is_too_small = FALSE;
+    foreach ($this->drupalGetTestFiles('image') as $image) {
+      $info = image_get_info($image->uri);
+      if ($info['width'] > $max_resolution) {
+        $image_that_is_too_big = $image;
+      }
+      if ($info['width'] < $min_resolution) {
+        $image_that_is_too_small = $image;
+      }
+      if ($image_that_is_too_small && $image_that_is_too_big) {
+        break;
+      }
+    }
+    $nid = $this->uploadNodeImage($image_that_is_too_small, $field_name, 'article');
+    $this->assertText(t('The specified file ' . $image_that_is_too_small->filename . ' could not be uploaded. The image is too small; the minimum dimensions are 50x50 pixels.'), t('Node save failed when minimum image resolution was not met.'));
+    $nid = $this->uploadNodeImage($image_that_is_too_big, $field_name, 'article');
+    $this->assertText(t('The image was resized to fit within the maximum allowed dimensions of 100x100 pixels.'), t('Image exceeding max resolution was properly resized.'));
+  }
+}
+
+/**
+ * Tests that images have correct dimensions when styled.
+ */
+class ImageDimensionsUnitTest extends DrupalWebTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Image dimensions',
+      'description' => 'Tests that images have correct dimensions when styled.',
+      'group' => 'Image',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('image_module_test');
+  }
+
+  /**
+   * Test styled image dimensions cumulatively.
+   */
+  function testImageDimensions() {
+    // Create a working copy of the file.
+    $files = $this->drupalGetTestFiles('image');
+    $file = reset($files);
+    $original_uri = file_unmanaged_copy($file->uri, 'public://', FILE_EXISTS_RENAME);
+
+    // Create a style.
+    $style = image_style_save(array('name' => 'test'));
+    $generated_uri = 'public://styles/test/public/'. basename($original_uri);
+    $url = image_style_url('test', $original_uri);
+
+    $variables = array(
+      'style_name' => 'test',
+      'path' => $original_uri,
+      'width' => 40,
+      'height' => 20,
+    );
+
+    // Scale an image that is wider than it is high.
+    $effect = array(
+      'name' => 'image_scale',
+      'data' => array(
+        'width' => 120,
+        'height' => 90,
+        'upscale' => TRUE,
+      ),
+      'isid' => $style['isid'],
+    );
+
+    image_effect_save($effect);
+    $img_tag = theme_image_style($variables);
+    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . $url . '" width="120" height="60" alt="" />', t('Expected img tag was found.'));
+    $this->assertFalse(file_exists($generated_uri), t('Generated file does not exist.'));
+    $this->drupalGet($url);
+    $this->assertResponse(200, t('Image was generated at the URL.'));
+    $this->assertTrue(file_exists($generated_uri), t('Generated file does exist after we accessed it.'));
+    $image_info = image_get_info($generated_uri);
+    $this->assertEqual($image_info['width'], 120, t('Expected width was found.'));
+    $this->assertEqual($image_info['height'], 60, t('Expected height was found.'));
+
+    // Rotate 90 degrees anticlockwise.
+    $effect = array(
+      'name' => 'image_rotate',
+      'data' => array(
+        'degrees' => -90,
+        'random' => FALSE,
+      ),
+      'isid' => $style['isid'],
+    );
+
+    image_effect_save($effect);
+    $img_tag = theme_image_style($variables);
+    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . $url . '" width="60" height="120" alt="" />', t('Expected img tag was found.'));
+    $this->assertFalse(file_exists($generated_uri), t('Generated file does not exist.'));
+    $this->drupalGet($url);
+    $this->assertResponse(200, t('Image was generated at the URL.'));
+    $this->assertTrue(file_exists($generated_uri), t('Generated file does exist after we accessed it.'));
+    $image_info = image_get_info($generated_uri);
+    $this->assertEqual($image_info['width'], 60, t('Expected width was found.'));
+    $this->assertEqual($image_info['height'], 120, t('Expected height was found.'));
+
+    // Scale an image that is higher than it is wide (rotated by previous effect).
+    $effect = array(
+      'name' => 'image_scale',
+      'data' => array(
+        'width' => 120,
+        'height' => 90,
+        'upscale' => TRUE,
+      ),
+      'isid' => $style['isid'],
+    );
+
+    image_effect_save($effect);
+    $img_tag = theme_image_style($variables);
+    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . $url . '" width="45" height="90" alt="" />', t('Expected img tag was found.'));
+    $this->assertFalse(file_exists($generated_uri), t('Generated file does not exist.'));
+    $this->drupalGet($url);
+    $this->assertResponse(200, t('Image was generated at the URL.'));
+    $this->assertTrue(file_exists($generated_uri), t('Generated file does exist after we accessed it.'));
+    $image_info = image_get_info($generated_uri);
+    $this->assertEqual($image_info['width'], 45, t('Expected width was found.'));
+    $this->assertEqual($image_info['height'], 90, t('Expected height was found.'));
+
+    // Test upscale disabled.
+    $effect = array(
+      'name' => 'image_scale',
+      'data' => array(
+        'width' => 400,
+        'height' => 200,
+        'upscale' => FALSE,
+      ),
+      'isid' => $style['isid'],
+    );
+
+    image_effect_save($effect);
+    $img_tag = theme_image_style($variables);
+    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . $url . '" width="45" height="90" alt="" />', t('Expected img tag was found.'));
+    $this->assertFalse(file_exists($generated_uri), t('Generated file does not exist.'));
+    $this->drupalGet($url);
+    $this->assertResponse(200, t('Image was generated at the URL.'));
+    $this->assertTrue(file_exists($generated_uri), t('Generated file does exist after we accessed it.'));
+    $image_info = image_get_info($generated_uri);
+    $this->assertEqual($image_info['width'], 45, t('Expected width was found.'));
+    $this->assertEqual($image_info['height'], 90, t('Expected height was found.'));
+
+    // Add a desaturate effect.
+    $effect = array(
+      'name' => 'image_desaturate',
+      'data' => array(),
+      'isid' => $style['isid'],
+    );
+
+    image_effect_save($effect);
+    $img_tag = theme_image_style($variables);
+    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . $url . '" width="45" height="90" alt="" />', t('Expected img tag was found.'));
+    $this->assertFalse(file_exists($generated_uri), t('Generated file does not exist.'));
+    $this->drupalGet($url);
+    $this->assertResponse(200, t('Image was generated at the URL.'));
+    $this->assertTrue(file_exists($generated_uri), t('Generated file does exist after we accessed it.'));
+    $image_info = image_get_info($generated_uri);
+    $this->assertEqual($image_info['width'], 45, t('Expected width was found.'));
+    $this->assertEqual($image_info['height'], 90, t('Expected height was found.'));
+
+    // Add a random rotate effect.
+    $effect = array(
+      'name' => 'image_rotate',
+      'data' => array(
+        'degrees' => 180,
+        'random' => TRUE,
+      ),
+      'isid' => $style['isid'],
+    );
+
+    image_effect_save($effect);
+    $img_tag = theme_image_style($variables);
+    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . $url . '" alt="" />', t('Expected img tag was found.'));
+    $this->assertFalse(file_exists($generated_uri), t('Generated file does not exist.'));
+    $this->drupalGet($url);
+    $this->assertResponse(200, t('Image was generated at the URL.'));
+    $this->assertTrue(file_exists($generated_uri), t('Generated file does exist after we accessed it.'));
+
+
+    // Add a crop effect.
+    $effect = array(
+      'name' => 'image_crop',
+      'data' => array(
+        'width' => 30,
+        'height' => 30,
+        'anchor' => 'center-center',
+      ),
+      'isid' => $style['isid'],
+    );
+
+    image_effect_save($effect);
+    $img_tag = theme_image_style($variables);
+    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . $url . '" width="30" height="30" alt="" />', t('Expected img tag was found.'));
+    $this->assertFalse(file_exists($generated_uri), t('Generated file does not exist.'));
+    $this->drupalGet($url);
+    $this->assertResponse(200, t('Image was generated at the URL.'));
+    $this->assertTrue(file_exists($generated_uri), t('Generated file does exist after we accessed it.'));
+    $image_info = image_get_info($generated_uri);
+    $this->assertEqual($image_info['width'], 30, t('Expected width was found.'));
+    $this->assertEqual($image_info['height'], 30, t('Expected height was found.'));
+
+    // Rotate to a non-multiple of 90 degrees.
+    $effect = array(
+      'name' => 'image_rotate',
+      'data' => array(
+        'degrees' => 57,
+        'random' => FALSE,
+      ),
+      'isid' => $style['isid'],
+    );
+
+    $effect = image_effect_save($effect);
+    $img_tag = theme_image_style($variables);
+    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . $url . '" alt="" />', t('Expected img tag was found.'));
+    $this->assertFalse(file_exists($generated_uri), t('Generated file does not exist.'));
+    $this->drupalGet($url);
+    $this->assertResponse(200, t('Image was generated at the URL.'));
+    $this->assertTrue(file_exists($generated_uri), t('Generated file does exist after we accessed it.'));
+
+    image_effect_delete($effect);
+
+    // Ensure that an effect with no dimensions callback unsets the dimensions.
+    // This ensures compatibility with 7.0 contrib modules.
+    $effect = array(
+      'name' => 'image_module_test_null',
+      'data' => array(),
+      'isid' => $style['isid'],
+    );
+
+    image_effect_save($effect);
+    $img_tag = theme_image_style($variables);
+    $this->assertEqual($img_tag, '<img typeof="foaf:Image" src="' . $url . '" alt="" />', t('Expected img tag was found.'));
+  }
+}

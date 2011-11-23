@@ -1,0 +1,40 @@
+
+/**
+ * @file
+ * Styling for the book module.
+ */
+
+/**
+ * Book navigation.
+ */
+.book-navigation .menu {
+  padding-bottom: 0;
+  padding-top: 1em;
+}
+.book-navigation .book-pager {
+  margin: 0;
+  overflow: auto;
+  padding: 0.5em 0;
+}
+.book-pager li {
+  display: inline-block;
+  *display: inline;
+  /* Prevents a line break caused by the float in .page-next in IE7. */
+  *float: left; /* LTR */
+  list-style-type: none;
+  vertical-align: top;
+  zoom: 1;
+}
+.book-pager .previous {
+  text-align: left; /* LTR */
+  width: 45%;
+}
+.book-pager .up {
+  text-align: center;
+  width: 8%;
+}
+.book-pager .next {
+  float: right; /* LTR */
+  text-align: right; /* LTR */
+  width: 45%;
+}

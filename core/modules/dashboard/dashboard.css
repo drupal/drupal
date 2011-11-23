@@ -1,0 +1,104 @@
+#dashboard div.dashboard-region {
+  float: left;
+  min-height: 1px;
+}
+#dashboard div#dashboard_main {
+  margin-right: 1%; /* LTR */
+  width: 65%;
+}
+#dashboard div#dashboard_sidebar {
+  width: 33%;
+}
+#dashboard div.block {
+  margin-bottom: 20px;
+}
+#dashboard .dashboard-region .block {
+  clear: both;
+}
+#dashboard .dashboard-region .block-placeholder {
+  display: block;
+  height: 1.6em;
+  margin: 0 0 20px 0;
+  padding: 0;
+  width: 100%;
+}
+#dashboard div.block h2 {
+  float: none;
+}
+#dashboard #disabled-blocks .block,
+#dashboard .block-placeholder {
+  background: #E2E1DC;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  float: left; /* LTR */
+  margin: 3px 3px 3px 0; /* LTR */
+  padding: 6px 4px 6px 8px; /* LTR */
+}
+#dashboard .dashboard-add-other-blocks {
+  margin: 10px 0 0 0;
+}
+#dashboard .ui-sortable {
+  border: 2px dashed #CCC;
+  padding: 10px;
+}
+#dashboard .canvas-content {
+  padding: 10px;
+}
+#dashboard .canvas-content a.button {
+  color: #5A5A5A;
+  margin: 0 0 0 10px; /* LTR */
+  text-decoration: none;
+}
+#dashboard .region {
+  margin: 5px;
+}
+#dashboard #disabled-blocks {
+  padding: 5px 0;
+}
+#dashboard #disabled-blocks .ui-sortable {
+  background-color: #777;
+  border: 0;
+  padding: 0;
+}
+#dashboard #disabled-blocks .region {
+  background-color: #E0E0D8;
+  border: #CCC 1px solid;
+  padding: 10px;
+}
+#dashboard #disabled-blocks h2 {
+  display: inline;
+  font-weight: normal;
+  white-space: nowrap;
+}
+#dashboard #disabled-blocks .block {
+  background: #444;
+  color: #FFF;
+}
+#dashboard.customize-inactive #disabled-blocks .block:hover {
+  background: #0074BD;
+}
+#dashboard #disabled-blocks .block-placeholder {
+  height: 1.6em;
+  width: 30px;
+}
+#dashboard #disabled-blocks .block .content,
+#dashboard .ui-sortable-helper .content {
+  display: none;
+}
+#dashboard .ui-sortable .block {
+  cursor: move;
+  min-height: 1px;
+}
+#dashboard .ui-sortable .block h2 {
+  background: transparent url(../../misc/draggable.png) no-repeat 0px -39px;
+  padding: 0 17px;
+}
+#dashboard.customize-inactive #disabled-blocks .block:hover h2 {
+  background: #0074BD url(../../misc/draggable.png) no-repeat 0px -39px;
+  color: #FFF;
+}
+#dashboard.customize-inactive .dashboard-region .ui-sortable .block:hover h2 {
+  background: #0074BD url(../../misc/draggable.png) no-repeat 3px -36px;
+  color: #FFF;
+}

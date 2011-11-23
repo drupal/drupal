@@ -1,0 +1,374 @@
+<?php
+
+/**
+ * @file
+ * Tests for list.module.
+ */
+
+/**
+ * Tests for the 'List' field types.
+ */
+class ListFieldTestCase extends FieldTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'List field',
+      'description' => 'Test the List field type.',
+      'group' => 'Field types',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('field_test');
+
+    $this->field_name = 'test_list';
+    $this->field = array(
+      'field_name' => $this->field_name,
+      'type' => 'list_integer',
+      'cardinality' => 1,
+      'settings' => array(
+        'allowed_values' => array(1 => 'One', 2 => 'Two', 3 => 'Three'),
+      ),
+    );
+    $this->field = field_create_field($this->field);
+
+    $this->instance = array(
+      'field_name' => $this->field_name,
+      'entity_type' => 'test_entity',
+      'bundle' => 'test_bundle',
+      'widget' => array(
+        'type' => 'options_buttons',
+      ),
+    );
+    $this->instance = field_create_instance($this->instance);
+  }
+
+  /**
+   * Test that allowed values can be updated.
+   */
+  function testUpdateAllowedValues() {
+    $langcode = LANGUAGE_NONE;
+
+    // All three options appear.
+    $entity = field_test_create_stub_entity();
+    $form = drupal_get_form('field_test_entity_form', $entity);
+    $this->assertTrue(!empty($form[$this->field_name][$langcode][1]), t('Option 1 exists'));
+    $this->assertTrue(!empty($form[$this->field_name][$langcode][2]), t('Option 2 exists'));
+    $this->assertTrue(!empty($form[$this->field_name][$langcode][3]), t('Option 3 exists'));
+
+    // Use one of the values in an actual entity, and check that this value
+    // cannot be removed from the list.
+    $entity = field_test_create_stub_entity();
+    $entity->{$this->field_name}[$langcode][0] = array('value' => 1);
+    field_test_entity_save($entity);
+    $this->field['settings']['allowed_values'] = array(2 => 'Two');
+    try {
+      field_update_field($this->field);
+      $this->fail(t('Cannot update a list field to not include keys with existing data.'));
+    }
+    catch (FieldException $e) {
+      $this->pass(t('Cannot update a list field to not include keys with existing data.'));
+    }
+    // Empty the value, so that we can actually remove the option.
+    $entity->{$this->field_name}[$langcode] = array();
+    field_test_entity_save($entity);
+
+    // Removed options do not appear.
+    $this->field['settings']['allowed_values'] = array(2 => 'Two');
+    field_update_field($this->field);
+    $entity = field_test_create_stub_entity();
+    $form = drupal_get_form('field_test_entity_form', $entity);
+    $this->assertTrue(empty($form[$this->field_name][$langcode][1]), t('Option 1 does not exist'));
+    $this->assertTrue(!empty($form[$this->field_name][$langcode][2]), t('Option 2 exists'));
+    $this->assertTrue(empty($form[$this->field_name][$langcode][3]), t('Option 3 does not exist'));
+
+    // Completely new options appear.
+    $this->field['settings']['allowed_values'] = array(10 => 'Update', 20 => 'Twenty');
+    field_update_field($this->field);
+    $form = drupal_get_form('field_test_entity_form', $entity);
+    $this->assertTrue(empty($form[$this->field_name][$langcode][1]), t('Option 1 does not exist'));
+    $this->assertTrue(empty($form[$this->field_name][$langcode][2]), t('Option 2 does not exist'));
+    $this->assertTrue(empty($form[$this->field_name][$langcode][3]), t('Option 3 does not exist'));
+    $this->assertTrue(!empty($form[$this->field_name][$langcode][10]), t('Option 10 exists'));
+    $this->assertTrue(!empty($form[$this->field_name][$langcode][20]), t('Option 20 exists'));
+
+    // Options are reset when a new field with the same name is created.
+    field_delete_field($this->field_name);
+    unset($this->field['id']);
+    $this->field['settings']['allowed_values'] = array(1 => 'One', 2 => 'Two', 3 => 'Three');
+    $this->field = field_create_field($this->field);
+    $this->instance = array(
+      'field_name' => $this->field_name,
+      'entity_type' => 'test_entity',
+      'bundle' => 'test_bundle',
+      'widget' => array(
+        'type' => 'options_buttons',
+      ),
+    );
+    $this->instance = field_create_instance($this->instance);
+    $entity = field_test_create_stub_entity();
+    $form = drupal_get_form('field_test_entity_form', $entity);
+    $this->assertTrue(!empty($form[$this->field_name][$langcode][1]), t('Option 1 exists'));
+    $this->assertTrue(!empty($form[$this->field_name][$langcode][2]), t('Option 2 exists'));
+    $this->assertTrue(!empty($form[$this->field_name][$langcode][3]), t('Option 3 exists'));
+  }
+}
+
+/**
+ * List module UI tests.
+ */
+class ListFieldUITestCase extends FieldTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'List field UI',
+      'description' => 'Test the List field UI functionality.',
+      'group' => 'Field types',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('field_test', 'field_ui');
+
+    // Create test user.
+    $admin_user = $this->drupalCreateUser(array('access content', 'administer content types', 'administer taxonomy'));
+    $this->drupalLogin($admin_user);
+
+    // Create content type, with underscores.
+    $type_name = 'test_' . strtolower($this->randomName());
+    $type = $this->drupalCreateContentType(array('name' => $type_name, 'type' => $type_name));
+    $this->type = $type->type;
+    // Store a valid URL name, with hyphens instead of underscores.
+    $this->hyphen_type = str_replace('_', '-', $this->type);
+  }
+
+  /**
+   * List (integer) : test 'allowed values' input.
+   */
+  function testListAllowedValuesInteger() {
+    $this->field_name = 'field_list_integer';
+    $this->createListField('list_integer');
+
+    // Flat list of textual values.
+    $string = "Zero\nOne";
+    $array = array('0' => 'Zero', '1' => 'One');
+    $this->assertAllowedValuesInput($string, $array, t('Unkeyed lists are accepted.'));
+    // Explicit integer keys.
+    $string = "0|Zero\n2|Two";
+    $array = array('0' => 'Zero', '2' => 'Two');
+    $this->assertAllowedValuesInput($string, $array, t('Integer keys are accepted.'));
+    // Check that values can be added and removed.
+    $string = "0|Zero\n1|One";
+    $array = array('0' => 'Zero', '1' => 'One');
+    $this->assertAllowedValuesInput($string, $array, t('Values can be added and removed.'));
+    // Non-integer keys.
+    $this->assertAllowedValuesInput("1.1|One", 'keys must be integers', t('Non integer keys are rejected.'));
+    $this->assertAllowedValuesInput("abc|abc", 'keys must be integers', t('Non integer keys are rejected.'));
+    // Mixed list of keyed and unkeyed values.
+    $this->assertAllowedValuesInput("Zero\n1|One", 'invalid input', t('Mixed lists are rejected.'));
+
+    // Create a node with actual data for the field.
+    $settings = array(
+      'type' => $this->type,
+      $this->field_name => array(LANGUAGE_NONE => array(array('value' => 1))),
+    );
+    $node = $this->drupalCreateNode($settings);
+
+    // Check that a flat list of values is rejected once the field has data.
+    $this->assertAllowedValuesInput( "Zero\nOne", 'invalid input', t('Unkeyed lists are rejected once the field has data.'));
+
+    // Check that values can be added but values in use cannot be removed.
+    $string = "0|Zero\n1|One\n2|Two";
+    $array = array('0' => 'Zero', '1' => 'One', '2' => 'Two');
+    $this->assertAllowedValuesInput($string, $array, t('Values can be added.'));
+    $string = "0|Zero\n1|One";
+    $array = array('0' => 'Zero', '1' => 'One');
+    $this->assertAllowedValuesInput($string, $array, t('Values not in use can be removed.'));
+    $this->assertAllowedValuesInput("0|Zero", 'some values are being removed while currently in use', t('Values in use cannot be removed.'));
+
+    // Delete the node, remove the value.
+    node_delete($node->nid);
+    $string = "0|Zero";
+    $array = array('0' => 'Zero');
+    $this->assertAllowedValuesInput($string, $array, t('Values not in use can be removed.'));
+  }
+
+  /**
+   * List (float) : test 'allowed values' input.
+   */
+  function testListAllowedValuesFloat() {
+    $this->field_name = 'field_list_float';
+    $this->createListField('list_float');
+
+    // Flat list of textual values.
+    $string = "Zero\nOne";
+    $array = array('0' => 'Zero', '1' => 'One');
+    $this->assertAllowedValuesInput($string, $array, t('Unkeyed lists are accepted.'));
+    // Explicit numeric keys.
+    $string = "0|Zero\n.5|Point five";
+    $array = array('0' => 'Zero', '0.5' => 'Point five');
+    $this->assertAllowedValuesInput($string, $array, t('Integer keys are accepted.'));
+    // Check that values can be added and removed.
+    $string = "0|Zero\n.5|Point five\n1.0|One";
+    $array = array('0' => 'Zero', '0.5' => 'Point five', '1' => 'One');
+    $this->assertAllowedValuesInput($string, $array, t('Values can be added and removed.'));
+    // Non-numeric keys.
+    $this->assertAllowedValuesInput("abc|abc\n", 'each key must be a valid integer or decimal', t('Non numeric keys are rejected.'));
+    // Mixed list of keyed and unkeyed values.
+    $this->assertAllowedValuesInput("Zero\n1|One\n", 'invalid input', t('Mixed lists are rejected.'));
+
+    // Create a node with actual data for the field.
+    $settings = array(
+      'type' => $this->type,
+      $this->field_name => array(LANGUAGE_NONE => array(array('value' => .5))),
+    );
+    $node = $this->drupalCreateNode($settings);
+
+    // Check that a flat list of values is rejected once the field has data.
+    $this->assertAllowedValuesInput("Zero\nOne", 'invalid input', t('Unkeyed lists are rejected once the field has data.'));
+
+    // Check that values can be added but values in use cannot be removed.
+    $string = "0|Zero\n.5|Point five\n2|Two";
+    $array = array('0' => 'Zero', '0.5' => 'Point five', '2' => 'Two');
+    $this->assertAllowedValuesInput($string, $array, t('Values can be added.'));
+    $string = "0|Zero\n.5|Point five";
+    $array = array('0' => 'Zero', '0.5' => 'Point five');
+    $this->assertAllowedValuesInput($string, $array, t('Values not in use can be removed.'));
+    $this->assertAllowedValuesInput("0|Zero", 'some values are being removed while currently in use', t('Values in use cannot be removed.'));
+
+    // Delete the node, remove the value.
+    node_delete($node->nid);
+    $string = "0|Zero";
+    $array = array('0' => 'Zero');
+    $this->assertAllowedValuesInput($string, $array, t('Values not in use can be removed.'));
+  }
+
+  /**
+   * List (text) : test 'allowed values' input.
+   */
+  function testListAllowedValuesText() {
+    $this->field_name = 'field_list_text';
+    $this->createListField('list_text');
+
+    // Flat list of textual values.
+    $string = "Zero\nOne";
+    $array = array('Zero' => 'Zero', 'One' => 'One');
+    $this->assertAllowedValuesInput($string, $array, t('Unkeyed lists are accepted.'));
+    // Explicit keys.
+    $string = "zero|Zero\none|One";
+    $array = array('zero' => 'Zero', 'one' => 'One');
+    $this->assertAllowedValuesInput($string, $array, t('Explicit keys are accepted.'));
+    // Check that values can be added and removed.
+    $string = "zero|Zero\ntwo|Two";
+    $array = array('zero' => 'Zero', 'two' => 'Two');
+    $this->assertAllowedValuesInput($string, $array, t('Values can be added and removed.'));
+    // Mixed list of keyed and unkeyed values.
+    $string = "zero|Zero\nOne\n";
+    $array = array('zero' => 'Zero', 'One' => 'One');
+    $this->assertAllowedValuesInput($string, $array, t('Mixed lists are accepted.'));
+    // Overly long keys.
+    $this->assertAllowedValuesInput("zero|Zero\n" . $this->randomName(256) . "|One", 'each key must be a string at most 255 characters long', t('Overly long keys are rejected.'));
+
+    // Create a node with actual data for the field.
+    $settings = array(
+      'type' => $this->type,
+      $this->field_name => array(LANGUAGE_NONE => array(array('value' => 'One'))),
+    );
+    $node = $this->drupalCreateNode($settings);
+
+    // Check that flat lists of values are still accepted once the field has
+    // data.
+    $string = "Zero\nOne";
+    $array = array('Zero' => 'Zero', 'One' => 'One');
+    $this->assertAllowedValuesInput($string, $array, t('Unkeyed lists are still accepted once the field has data.'));
+
+    // Check that values can be added but values in use cannot be removed.
+    $string = "Zero\nOne\nTwo";
+    $array = array('Zero' => 'Zero', 'One' => 'One', 'Two' => 'Two');
+    $this->assertAllowedValuesInput($string, $array, t('Values can be added.'));
+    $string = "Zero\nOne";
+    $array = array('Zero' => 'Zero', 'One' => 'One');
+    $this->assertAllowedValuesInput($string, $array, t('Values not in use can be removed.'));
+    $this->assertAllowedValuesInput("Zero", 'some values are being removed while currently in use', t('Values in use cannot be removed.'));
+
+    // Delete the node, remove the value.
+    node_delete($node->nid);
+    $string = "Zero";
+    $array = array('Zero' => 'Zero');
+    $this->assertAllowedValuesInput($string, $array, t('Values not in use can be removed.'));
+  }
+
+  /**
+   * List (boolen) : test 'On/Off' values input.
+   */
+  function testListAllowedValuesBoolean() {
+    $this->field_name = 'field_list_boolean';
+    $this->createListField('list_boolean');
+
+    // Check that the separate 'On' and 'Off' form fields work.
+    $on = $this->randomName();
+    $off = $this->randomName();
+    $allowed_values = array(1 => $on, 0 => $off);
+    $edit = array(
+      'on' => $on,
+      'off' => $off,
+    );
+    $this->drupalPost($this->admin_path, $edit, t('Save settings'));
+    $this->assertText("Saved field_list_boolean configuration.", t("The 'On' and 'Off' form fields work for boolean fields."));
+    // Test the allowed_values on the field settings form.
+    $this->drupalGet($this->admin_path);
+    $this->assertFieldByName('on', $on, t("The 'On' value is stored correctly."));
+    $this->assertFieldByName('off', $off, t("The 'Off' value is stored correctly."));
+    $field = field_info_field($this->field_name);
+    $this->assertEqual($field['settings']['allowed_values'], $allowed_values, t('The allowed value is correct'));
+    $this->assertFalse(isset($field['settings']['on']), t('The on value is not saved into settings'));
+    $this->assertFalse(isset($field['settings']['off']), t('The off value is not saved into settings'));
+  }
+
+  /**
+   * Helper function to create list field of a given type.
+   *
+   * @param string $type
+   *   'list_integer', 'list_float', 'list_text' or 'list_boolean'
+   */
+  protected function createListField($type) {
+    // Create a test field and instance.
+    $field = array(
+      'field_name' => $this->field_name,
+      'type' => $type,
+    );
+    field_create_field($field);
+    $instance = array(
+      'field_name' => $this->field_name,
+      'entity_type' => 'node',
+      'bundle' => $this->type,
+    );
+    field_create_instance($instance);
+
+    $this->admin_path = 'admin/structure/types/manage/' . $this->hyphen_type . '/fields/' . $this->field_name;
+  }
+
+  /**
+   * Tests a string input for the 'allowed values' form element.
+   *
+   * @param $input_string
+   *   The input string, in the pipe-linefeed format expected by the form
+   *   element.
+   * @param $result
+   *   Either an expected resulting array in
+   *   $field['settings']['allowed_values'], or an expected error message.
+   * @param $message
+   *   Message to display.
+   */
+  function assertAllowedValuesInput($input_string, $result, $message) {
+    $edit = array('field[settings][allowed_values]' => $input_string);
+    $this->drupalPost($this->admin_path, $edit, t('Save settings'));
+
+    if (is_string($result)) {
+      $this->assertText($result, $message);
+    }
+    else {
+      field_info_cache_clear();
+      $field = field_info_field($this->field_name);
+      $this->assertIdentical($field['settings']['allowed_values'], $result, $message);
+    }
+  }
+}

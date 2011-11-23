@@ -1,0 +1,466 @@
+<?php
+
+/**
+ * @file
+ * Tests for statistics.module.
+ */
+
+/**
+ * Sets up a base class for the Statistics module.
+ */
+class StatisticsTestCase extends DrupalWebTestCase {
+
+  function setUp() {
+    parent::setUp('statistics');
+
+    // Create user.
+    $this->blocking_user = $this->drupalCreateUser(array(
+      'access administration pages',
+      'access site reports',
+      'access statistics',
+      'block IP addresses',
+      'administer blocks',
+      'administer statistics',
+      'administer users',
+    ));
+    $this->drupalLogin($this->blocking_user);
+
+    // Enable access logging.
+    variable_set('statistics_enable_access_log', 1);
+    variable_set('statistics_count_content_views', 1);
+
+    // Insert dummy access by anonymous user into access log.
+    db_insert('accesslog')
+      ->fields(array(
+        'title' => 'test',
+        'path' => 'node/1',
+        'url' => 'http://example.com',
+        'hostname' => '192.168.1.1',
+        'uid' => 0,
+        'sid' => 10,
+        'timer' => 10,
+        'timestamp' => REQUEST_TIME,
+      ))
+      ->execute();
+  }
+}
+
+/**
+ * Tests that logging via statistics_exit() works for cached and uncached pages.
+ *
+ * Subclass DrupalWebTestCase rather than StatisticsTestCase, because we want
+ * to test requests from an anonymous user.
+ */
+class StatisticsLoggingTestCase extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Statistics logging tests',
+      'description' => 'Tests request logging for cached and uncached pages.',
+      'group' => 'Statistics'
+    );
+  }
+
+  function setUp() {
+    parent::setUp('statistics');
+
+    $this->auth_user = $this->drupalCreateUser(array('access content', 'create page content', 'edit own page content'));
+
+    // Ensure we have a node page to access.
+    $this->node = $this->drupalCreateNode(array('title' => $this->randomName(255), 'uid' => $this->auth_user->uid));
+
+    // Enable page caching.
+    variable_set('cache', TRUE);
+
+    // Enable access logging.
+    variable_set('statistics_enable_access_log', 1);
+    variable_set('statistics_count_content_views', 1);
+
+    // Clear the logs.
+    db_truncate('accesslog');
+    db_truncate('node_counter');
+  }
+
+  /**
+   * Verifies request logging for cached and uncached pages.
+   */
+  function testLogging() {
+    $path = 'node/' . $this->node->nid;
+    $expected = array(
+      'title' => $this->node->title,
+      'path' => $path,
+    );
+
+    // Verify logging of an uncached page.
+    $this->drupalGet($path);
+    $this->assertIdentical($this->drupalGetHeader('X-Drupal-Cache'), 'MISS', t('Testing an uncached page.'));
+    $log = db_query('SELECT * FROM {accesslog}')->fetchAll(PDO::FETCH_ASSOC);
+    $this->assertTrue(is_array($log) && count($log) == 1, t('Page request was logged.'));
+    $this->assertEqual(array_intersect_key($log[0], $expected), $expected);
+    $node_counter = statistics_get($this->node->nid);
+    $this->assertIdentical($node_counter['totalcount'], '1');
+
+    // Verify logging of a cached page.
+    $this->drupalGet($path);
+    $this->assertIdentical($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', t('Testing a cached page.'));
+    $log = db_query('SELECT * FROM {accesslog}')->fetchAll(PDO::FETCH_ASSOC);
+    $this->assertTrue(is_array($log) && count($log) == 2, t('Page request was logged.'));
+    $this->assertEqual(array_intersect_key($log[1], $expected), $expected);
+    $node_counter = statistics_get($this->node->nid);
+    $this->assertIdentical($node_counter['totalcount'], '2');
+
+    // Test logging from authenticated users
+    $this->drupalLogin($this->auth_user);
+    $this->drupalGet($path);
+    $log = db_query('SELECT * FROM {accesslog}')->fetchAll(PDO::FETCH_ASSOC);
+    // Check the 6th item since login and account pages are also logged
+    $this->assertTrue(is_array($log) && count($log) == 6, t('Page request was logged.'));
+    $this->assertEqual(array_intersect_key($log[5], $expected), $expected);
+    $node_counter = statistics_get($this->node->nid);
+    $this->assertIdentical($node_counter['totalcount'], '3');
+
+    // Visit edit page to generate a title greater than 255.
+    $path = 'node/' . $this->node->nid . '/edit';
+    $expected = array(
+      'title' => truncate_utf8(t('Edit Basic page') . ' ' . $this->node->title, 255),
+      'path' => $path,
+    );
+    $this->drupalGet($path);
+    $log = db_query('SELECT * FROM {accesslog}')->fetchAll(PDO::FETCH_ASSOC);
+    $this->assertTrue(is_array($log) && count($log) == 7, t('Page request was logged.'));
+    $this->assertEqual(array_intersect_key($log[6], $expected), $expected);
+
+    // Create a path longer than 255 characters.
+    $long_path = $this->randomName(256);
+
+    // Test that the long path is properly truncated when logged.
+    $this->drupalGet($long_path);
+    $log = db_query('SELECT * FROM {accesslog}')->fetchAll(PDO::FETCH_ASSOC);
+    $this->assertTrue(is_array($log) && count($log) == 8, 'Page request was logged for a path over 255 characters.');
+    $this->assertEqual($log[7]['path'], truncate_utf8($long_path, 255));
+
+  }
+}
+
+/**
+ * Tests that report pages render properly, and that access logging works.
+ */
+class StatisticsReportsTestCase extends StatisticsTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Statistics reports tests',
+      'description' => 'Tests display of statistics report pages and access logging.',
+      'group' => 'Statistics'
+    );
+  }
+
+  /**
+   * Verifies that 'Recent hits' renders properly and displays the added hit.
+   */
+  function testRecentHits() {
+    $this->drupalGet('admin/reports/hits');
+    $this->assertText('test', t('Hit title found.'));
+    $this->assertText('node/1', t('Hit URL found.'));
+    $this->assertText('Anonymous', t('Hit user found.'));
+  }
+
+  /**
+   * Verifies that 'Top pages' renders properly and displays the added hit.
+   */
+  function testTopPages() {
+    $this->drupalGet('admin/reports/pages');
+    $this->assertText('test', t('Hit title found.'));
+    $this->assertText('node/1', t('Hit URL found.'));
+  }
+
+  /**
+   * Verifies that 'Top referrers' renders properly and displays the added hit.
+   */
+  function testTopReferrers() {
+    $this->drupalGet('admin/reports/referrers');
+    $this->assertText('http://example.com', t('Hit referrer found.'));
+  }
+
+  /**
+   * Verifies that 'Details' page renders properly and displays the added hit.
+   */
+  function testDetails() {
+    $this->drupalGet('admin/reports/access/1');
+    $this->assertText('test', t('Hit title found.'));
+    $this->assertText('node/1', t('Hit URL found.'));
+    $this->assertText('Anonymous', t('Hit user found.'));
+  }
+
+  /**
+   * Verifies that access logging is working and is reported correctly.
+   */
+  function testAccessLogging() {
+    $this->drupalGet('admin/reports/referrers');
+    $this->drupalGet('admin/reports/hits');
+    $this->assertText('Top referrers in the past 3 days', t('Hit title found.'));
+    $this->assertText('admin/reports/referrers', t('Hit URL found.'));
+  }
+
+  /**
+   * Tests the "popular content" block.
+   */
+  function testPopularContentBlock() {
+    // Visit a node to have something show up in the block.
+    $node = $this->drupalCreateNode(array('type' => 'page', 'uid' => $this->blocking_user->uid));
+    $this->drupalGet('node/' . $node->nid);
+
+    // Configure and save the block.
+    $block = block_load('statistics', 'popular');
+    $block->theme = variable_get('theme_default', 'bartik');
+    $block->status = 1;
+    $block->pages = '';
+    $block->region = 'sidebar_first';
+    $block->cache = -1;
+    $block->visibility = 0;
+    $edit = array('statistics_block_top_day_num' => 3, 'statistics_block_top_all_num' => 3, 'statistics_block_top_last_num' => 3);
+    module_invoke('statistics', 'block_save', 'popular', $edit);
+    drupal_write_record('block', $block);
+
+    // Get some page and check if the block is displayed.
+    $this->drupalGet('user');
+    $this->assertText('Popular content', t('Found the popular content block.'));
+    $this->assertText("Today's", t('Found today\'s popular content.'));
+    $this->assertText('All time', t('Found the alll time popular content.'));
+    $this->assertText('Last viewed', t('Found the last viewed popular content.'));
+
+    $this->assertRaw(l($node->title, 'node/' . $node->nid), t('Found link to visited node.'));
+  }
+}
+
+/**
+ * Tests that the visitor blocking functionality works.
+ */
+class StatisticsBlockVisitorsTestCase extends StatisticsTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Top visitor blocking',
+      'description' => 'Tests blocking of IP addresses via the top visitors report.',
+      'group' => 'Statistics'
+    );
+  }
+
+  /**
+   * Blocks an IP address via the top visitors report and then unblocks it.
+   */
+  function testIPAddressBlocking() {
+    // IP address for testing.
+    $test_ip_address = '192.168.1.1';
+
+    // Verify the IP address from accesslog appears on the top visitors page
+    // and that a 'block IP address' link is displayed.
+    $this->drupalLogin($this->blocking_user);
+    $this->drupalGet('admin/reports/visitors');
+    $this->assertText($test_ip_address, t('IP address found.'));
+    $this->assertText(t('block IP address'), t('Block IP link displayed'));
+
+    // Block the IP address.
+    $this->clickLink('block IP address');
+    $this->assertText(t('IP address blocking'), t('IP blocking page displayed.'));
+    $edit = array();
+    $edit['ip'] = $test_ip_address;
+    $this->drupalPost('admin/config/people/ip-blocking', $edit, t('Add'));
+    $ip = db_query("SELECT iid from {blocked_ips} WHERE ip = :ip", array(':ip' => $edit['ip']))->fetchField();
+    $this->assertNotEqual($ip, FALSE, t('IP address found in database'));
+    $this->assertRaw(t('The IP address %ip has been blocked.', array('%ip' => $edit['ip'])), t('IP address was blocked.'));
+
+    // Verify that the block/unblock link on the top visitors page has been
+    // altered.
+    $this->drupalGet('admin/reports/visitors');
+    $this->assertText(t('unblock IP address'), t('Unblock IP address link displayed'));
+
+    // Unblock the IP address.
+    $this->clickLink('unblock IP address');
+    $this->assertRaw(t('Are you sure you want to delete %ip?', array('%ip' => $test_ip_address)), t('IP address deletion confirmation found.'));
+    $edit = array();
+    $this->drupalPost('admin/config/people/ip-blocking/delete/1', NULL, t('Delete'));
+    $this->assertRaw(t('The IP address %ip was deleted.', array('%ip' => $test_ip_address)), t('IP address deleted.'));
+  }
+}
+
+/**
+ * Test statistics administration screen.
+ */
+class StatisticsAdminTestCase extends DrupalWebTestCase {
+  protected $privileged_user;
+  protected $test_node;
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Test statistics admin.',
+      'description' => 'Tests the statistics admin.',
+      'group' => 'Statistics'
+    );
+  }
+
+  function setUp() {
+    parent::setUp('statistics');
+    $this->privileged_user = $this->drupalCreateUser(array('access statistics', 'administer statistics', 'view post access counter', 'create page content'));
+    $this->drupalLogin($this->privileged_user);
+    $this->test_node = $this->drupalCreateNode(array('type' => 'page', 'uid' => $this->privileged_user->uid));
+  }
+
+  /**
+   * Verifies that the statistics settings page works.
+   */
+  function testStatisticsSettings() {
+    $this->assertFalse(variable_get('statistics_enable_access_log', 0), t('Access log is disabled by default.'));
+    $this->assertFalse(variable_get('statistics_count_content_views', 0), t('Count content view log is disabled by default.'));
+
+    $this->drupalGet('admin/reports/pages');
+    $this->assertRaw(t('No statistics available.'), t('Verifying text shown when no statistics is available.'));
+
+    // Enable access log and counter on content view.
+    $edit['statistics_enable_access_log'] = 1;
+    $edit['statistics_count_content_views'] = 1;
+    $this->drupalPost('admin/config/system/statistics', $edit, t('Save configuration'));
+    $this->assertTrue(variable_get('statistics_enable_access_log'), t('Access log is enabled.'));
+    $this->assertTrue(variable_get('statistics_count_content_views'), t('Count content view log is enabled.'));
+
+    // Hit the node.
+    $this->drupalGet('node/' . $this->test_node->nid);
+
+    $this->drupalGet('admin/reports/pages');
+    $this->assertText('node/1', t('Test node found.'));
+
+    // Hit the node again (the counter is incremented after the hit, so
+    // "1 read" will actually be shown when the node is hit the second time).
+    $this->drupalGet('node/' . $this->test_node->nid);
+    $this->assertText('1 read', t('Node is read once.'));
+
+    $this->drupalGet('node/' . $this->test_node->nid);
+    $this->assertText('2 reads', t('Node is read 2 times.'));
+  }
+
+  /**
+   * Tests that when a node is deleted, the node counter is deleted too.
+   */
+  function testDeleteNode() {
+    variable_set('statistics_count_content_views', 1);
+
+    $this->drupalGet('node/' . $this->test_node->nid);
+
+    $result = db_select('node_counter', 'n')
+      ->fields('n', array('nid'))
+      ->condition('n.nid', $this->test_node->nid)
+      ->execute()
+      ->fetchAssoc();
+    $this->assertEqual($result['nid'], $this->test_node->nid, 'Verifying that the node counter is incremented.');
+
+    node_delete($this->test_node->nid);
+
+    $result = db_select('node_counter', 'n')
+      ->fields('n', array('nid'))
+      ->condition('n.nid', $this->test_node->nid)
+      ->execute()
+      ->fetchAssoc();
+    $this->assertFalse($result, 'Verifying that the node counter is deleted.');
+  }
+
+  /**
+   * Tests that accesslog reflects when a user is deleted.
+   */
+  function testDeleteUser() {
+    variable_set('statistics_enable_access_log', 1);
+
+    variable_set('user_cancel_method', 'user_cancel_delete');
+    $this->drupalLogout($this->privileged_user);
+    $account = $this->drupalCreateUser(array('access content', 'cancel account'));
+    $this->drupalLogin($account);
+    $this->drupalGet('node/' . $this->test_node->nid);
+
+    $account = user_load($account->uid, TRUE);
+
+    $this->drupalGet('user/' . $account->uid . '/edit');
+    $this->drupalPost(NULL, NULL, t('Cancel account'));
+
+    $timestamp = time();
+    $this->drupalPost(NULL, NULL, t('Cancel account'));
+    // Confirm account cancellation request.
+    $this->drupalGet("user/$account->uid/cancel/confirm/$timestamp/" . user_pass_rehash($account->pass, $timestamp, $account->login));
+    $this->assertFalse(user_load($account->uid, TRUE), t('User is not found in the database.'));
+
+    $this->drupalGet('admin/reports/visitors');
+    $this->assertNoText($account->name, t('Did not find user in visitor statistics.'));
+  }
+
+  /**
+   * Tests that cron clears day counts and expired access logs.
+   */
+  function testExpiredLogs() {
+    variable_set('statistics_enable_access_log', 1);
+    variable_set('statistics_count_content_views', 1);
+    variable_set('statistics_day_timestamp', 8640000);
+    variable_set('statistics_flush_accesslog_timer', 1);
+
+    $this->drupalGet('node/' . $this->test_node->nid);
+    $this->drupalGet('node/' . $this->test_node->nid);
+    $this->assertText('1 read', t('Node is read once.'));
+
+    $this->drupalGet('admin/reports/pages');
+    $this->assertText('node/' . $this->test_node->nid, t('Hit URL found.'));
+
+    // statistics_cron will subtract the statistics_flush_accesslog_timer
+    // variable from REQUEST_TIME in the delete query, so wait two secs here to
+    // make sure the access log will be flushed for the node just hit.
+    sleep(2);
+    $this->cronRun();
+
+    $this->drupalGet('admin/reports/pages');
+    $this->assertNoText('node/' . $this->test_node->nid, t('No hit URL found.'));
+
+    $result = db_select('node_counter', 'nc')
+      ->fields('nc', array('daycount'))
+      ->condition('nid', $this->test_node->nid, '=')
+      ->execute()
+      ->fetchField();
+    $this->assertFalse($result, t('Daycounter is zero.'));
+  }
+}
+
+/**
+ * Test statistics token replacement in strings.
+ */
+class StatisticsTokenReplaceTestCase extends StatisticsTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Statistics token replacement',
+      'description' => 'Generates text using placeholders for dummy content to check statistics token replacement.',
+      'group' => 'Statistics',
+    );
+  }
+
+  /**
+   * Creates a node, then tests the statistics tokens generated from it.
+   */
+  function testStatisticsTokenReplacement() {
+    global $language;
+
+    // Create user and node.
+    $user = $this->drupalCreateUser(array('create page content'));
+    $this->drupalLogin($user);
+    $node = $this->drupalCreateNode(array('type' => 'page', 'uid' => $user->uid));
+
+    // Hit the node.
+    $this->drupalGet('node/' . $node->nid);
+    $statistics = statistics_get($node->nid);
+
+    // Generate and test tokens.
+    $tests = array();
+    $tests['[node:total-count]'] = 1;
+    $tests['[node:day-count]'] = 1;
+    $tests['[node:last-view]'] = format_date($statistics['timestamp']);
+    $tests['[node:last-view:short]'] = format_date($statistics['timestamp'], 'short');
+
+    // Test to make sure that we generated something for each token.
+    $this->assertFalse(in_array(0, array_map('strlen', $tests)), t('No empty tokens generated.'));
+
+    foreach ($tests as $input => $expected) {
+      $output = token_replace($input, array('node' => $node), array('language' => $language));
+      $this->assertEqual($output, $expected, t('Statistics token %token replaced.', array('%token' => $input)));
+    }
+  }
+}

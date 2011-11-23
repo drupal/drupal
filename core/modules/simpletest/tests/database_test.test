@@ -1,0 +1,3691 @@
+<?php
+
+/**
+ * Dummy class for fetching into a class.
+ *
+ * PDO supports using a new instance of an arbitrary class for records
+ * rather than just a stdClass or array. This class is for testing that
+ * functionality. (See testQueryFetchClass() below)
+ */
+class FakeRecord { }
+
+/**
+ * Base test class for databases.
+ *
+ * Because all database tests share the same test data, we can centralize that
+ * here.
+ */
+class DatabaseTestCase extends DrupalWebTestCase {
+  protected $profile = 'testing';
+
+  function setUp() {
+    parent::setUp('database_test');
+
+    $schema['test'] = drupal_get_schema('test');
+    $schema['test_people'] = drupal_get_schema('test_people');
+    $schema['test_one_blob'] = drupal_get_schema('test_one_blob');
+    $schema['test_two_blobs'] = drupal_get_schema('test_two_blobs');
+    $schema['test_task'] = drupal_get_schema('test_task');
+
+    $this->installTables($schema);
+
+    $this->addSampleData();
+  }
+
+  /**
+   * Set up several tables needed by a certain test.
+   *
+   * @param $schema
+   *   An array of table definitions to install.
+   */
+  function installTables($schema) {
+    // This ends up being a test for table drop and create, too, which is nice.
+    foreach ($schema as $name => $data) {
+      if (db_table_exists($name)) {
+        db_drop_table($name);
+      }
+      db_create_table($name, $data);
+    }
+
+    foreach ($schema as $name => $data) {
+      $this->assertTrue(db_table_exists($name), t('Table @name created successfully.', array('@name' => $name)));
+    }
+  }
+
+  /**
+   * Set up tables for NULL handling.
+   */
+  function ensureSampleDataNull() {
+    $schema['test_null'] = drupal_get_schema('test_null');
+    $this->installTables($schema);
+
+    db_insert('test_null')
+    ->fields(array('name', 'age'))
+    ->values(array(
+      'name' => 'Kermit',
+      'age' => 25,
+    ))
+    ->values(array(
+      'name' => 'Fozzie',
+      'age' => NULL,
+    ))
+    ->values(array(
+      'name' => 'Gonzo',
+      'age' => 27,
+    ))
+    ->execute();
+  }
+
+  /**
+   * Setup our sample data.
+   *
+   * These are added using db_query(), since we're not trying to test the
+   * INSERT operations here, just populate.
+   */
+  function addSampleData() {
+    // We need the IDs, so we can't use a multi-insert here.
+    $john = db_insert('test')
+      ->fields(array(
+        'name' => 'John',
+        'age' => 25,
+        'job' => 'Singer',
+      ))
+      ->execute();
+
+    $george = db_insert('test')
+      ->fields(array(
+        'name' => 'George',
+        'age' => 27,
+        'job' => 'Singer',
+      ))
+      ->execute();
+
+    $ringo = db_insert('test')
+      ->fields(array(
+        'name' => 'Ringo',
+        'age' => 28,
+        'job' => 'Drummer',
+      ))
+      ->execute();
+
+    $paul = db_insert('test')
+      ->fields(array(
+        'name' => 'Paul',
+        'age' => 26,
+        'job' => 'Songwriter',
+      ))
+      ->execute();
+
+    db_insert('test_people')
+      ->fields(array(
+        'name' => 'Meredith',
+        'age' => 30,
+        'job' => 'Speaker',
+      ))
+      ->execute();
+
+    db_insert('test_task')
+      ->fields(array('pid', 'task', 'priority'))
+      ->values(array(
+        'pid' => $john,
+        'task' => 'eat',
+        'priority' => 3,
+      ))
+      ->values(array(
+        'pid' => $john,
+        'task' => 'sleep',
+        'priority' => 4,
+      ))
+      ->values(array(
+        'pid' => $john,
+        'task' => 'code',
+        'priority' => 1,
+      ))
+      ->values(array(
+        'pid' => $george,
+        'task' => 'sing',
+        'priority' => 2,
+      ))
+      ->values(array(
+        'pid' => $george,
+        'task' => 'sleep',
+        'priority' => 2,
+      ))
+      ->values(array(
+        'pid' => $paul,
+        'task' => 'found new band',
+        'priority' => 1,
+      ))
+      ->values(array(
+        'pid' => $paul,
+        'task' => 'perform at superbowl',
+        'priority' => 3,
+      ))
+      ->execute();
+  }
+}
+
+/**
+ * Test connection management.
+ */
+class DatabaseConnectionTestCase extends DatabaseTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Connection tests',
+      'description' => 'Tests of the core database system.',
+      'group' => 'Database',
+    );
+  }
+
+  /**
+   * Test that connections return appropriate connection objects.
+   */
+  function testConnectionRouting() {
+    // Clone the master credentials to a slave connection.
+    // Note this will result in two independent connection objects that happen
+    // to point to the same place.
+    $connection_info = Database::getConnectionInfo('default');
+    Database::addConnectionInfo('default', 'slave', $connection_info['default']);
+
+    $db1 = Database::getConnection('default', 'default');
+    $db2 = Database::getConnection('slave', 'default');
+
+    $this->assertNotNull($db1, t('default connection is a real connection object.'));
+    $this->assertNotNull($db2, t('slave connection is a real connection object.'));
+    $this->assertNotIdentical($db1, $db2, t('Each target refers to a different connection.'));
+
+    // Try to open those targets another time, that should return the same objects.
+    $db1b = Database::getConnection('default', 'default');
+    $db2b = Database::getConnection('slave', 'default');
+    $this->assertIdentical($db1, $db1b, t('A second call to getConnection() returns the same object.'));
+    $this->assertIdentical($db2, $db2b, t('A second call to getConnection() returns the same object.'));
+
+    // Try to open an unknown target.
+    $unknown_target = $this->randomName();
+    $db3 = Database::getConnection($unknown_target, 'default');
+    $this->assertNotNull($db3, t('Opening an unknown target returns a real connection object.'));
+    $this->assertIdentical($db1, $db3, t('An unknown target opens the default connection.'));
+
+    // Try to open that unknown target another time, that should return the same object.
+    $db3b = Database::getConnection($unknown_target, 'default');
+    $this->assertIdentical($db3, $db3b, t('A second call to getConnection() returns the same object.'));
+  }
+
+  /**
+   * Test that connections return appropriate connection objects.
+   */
+  function testConnectionRoutingOverride() {
+    // Clone the master credentials to a slave connection.
+    // Note this will result in two independent connection objects that happen
+    // to point to the same place.
+    $connection_info = Database::getConnectionInfo('default');
+    Database::addConnectionInfo('default', 'slave', $connection_info['default']);
+
+    Database::ignoreTarget('default', 'slave');
+
+    $db1 = Database::getConnection('default', 'default');
+    $db2 = Database::getConnection('slave', 'default');
+
+    $this->assertIdentical($db1, $db2, t('Both targets refer to the same connection.'));
+  }
+
+  /**
+   * Tests the closing of a database connection.
+   */
+  function testConnectionClosing() {
+    // Open the default target so we have an object to compare.
+    $db1 = Database::getConnection('default', 'default');
+
+    // Try to close the the default connection, then open a new one.
+    Database::closeConnection('default', 'default');
+    $db2 = Database::getConnection('default', 'default');
+
+    // Opening a connection after closing it should yield an object different than the original.
+    $this->assertNotIdentical($db1, $db2, t('Opening the default connection after it is closed returns a new object.'));
+  }
+
+  /**
+   * Tests the connection options of the active database.
+   */
+  function testConnectionOptions() {
+    $connection_info = Database::getConnectionInfo('default');
+
+    // Be sure we're connected to the default database.
+    $db = Database::getConnection('default', 'default');
+    $connectionOptions = $db->getConnectionOptions();
+
+    // In the MySQL driver, the port can be different, so check individual
+    // options.
+    $this->assertEqual($connection_info['default']['driver'], $connectionOptions['driver'], t('The default connection info driver matches the current connection options driver.'));
+    $this->assertEqual($connection_info['default']['database'], $connectionOptions['database'], t('The default connection info database matches the current connection options database.'));
+
+    // Set up identical slave and confirm connection options are identical.
+    Database::addConnectionInfo('default', 'slave', $connection_info['default']);
+    $db2 = Database::getConnection('slave', 'default');
+    $connectionOptions2 = $db2->getConnectionOptions();
+
+    // Get a fresh copy of the default connection options.
+    $connectionOptions = $db->getConnectionOptions();
+    $this->assertIdentical($connectionOptions, $connectionOptions2, t('The default and slave connection options are identical.'));
+
+    // Set up a new connection with different connection info.
+    $test = $connection_info['default'];
+    $test['database'] .= 'test';
+    Database::addConnectionInfo('test', 'default', $test);
+    $connection_info = Database::getConnectionInfo('test');
+
+    // Get a fresh copy of the default connection options.
+    $connectionOptions = $db->getConnectionOptions();
+    $this->assertNotEqual($connection_info['default']['database'], $connectionOptions['database'], t('The test connection info database does not match the current connection options database.'));
+  }
+}
+
+/**
+ * Test fetch actions, part 1.
+ *
+ * We get timeout errors if we try to run too many tests at once.
+ */
+class DatabaseFetchTestCase extends DatabaseTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Fetch tests',
+      'description' => 'Test the Database system\'s various fetch capabilities.',
+      'group' => 'Database',
+    );
+  }
+
+  /**
+   * Confirm that we can fetch a record properly in default object mode.
+   */
+  function testQueryFetchDefault() {
+    $records = array();
+    $result = db_query('SELECT name FROM {test} WHERE age = :age', array(':age' => 25));
+    $this->assertTrue($result instanceof DatabaseStatementInterface, t('Result set is a Drupal statement object.'));
+    foreach ($result as $record) {
+      $records[] = $record;
+      $this->assertTrue(is_object($record), t('Record is an object.'));
+      $this->assertIdentical($record->name, 'John', t('25 year old is John.'));
+    }
+
+    $this->assertIdentical(count($records), 1, t('There is only one record.'));
+  }
+
+  /**
+   * Confirm that we can fetch a record to an object explicitly.
+   */
+  function testQueryFetchObject() {
+    $records = array();
+    $result = db_query('SELECT name FROM {test} WHERE age = :age', array(':age' => 25), array('fetch' => PDO::FETCH_OBJ));
+    foreach ($result as $record) {
+      $records[] = $record;
+      $this->assertTrue(is_object($record), t('Record is an object.'));
+      $this->assertIdentical($record->name, 'John', t('25 year old is John.'));
+    }
+
+    $this->assertIdentical(count($records), 1, t('There is only one record.'));
+  }
+
+  /**
+   * Confirm that we can fetch a record to an array associative explicitly.
+   */
+  function testQueryFetchArray() {
+    $records = array();
+    $result = db_query('SELECT name FROM {test} WHERE age = :age', array(':age' => 25), array('fetch' => PDO::FETCH_ASSOC));
+    foreach ($result as $record) {
+      $records[] = $record;
+      if ($this->assertTrue(is_array($record), t('Record is an array.'))) {
+        $this->assertIdentical($record['name'], 'John', t('Record can be accessed associatively.'));
+      }
+    }
+
+    $this->assertIdentical(count($records), 1, t('There is only one record.'));
+  }
+
+  /**
+   * Confirm that we can fetch a record into a new instance of a custom class.
+   *
+   * @see FakeRecord
+   */
+  function testQueryFetchClass() {
+    $records = array();
+    $result = db_query('SELECT name FROM {test} WHERE age = :age', array(':age' => 25), array('fetch' => 'FakeRecord'));
+    foreach ($result as $record) {
+      $records[] = $record;
+      if ($this->assertTrue($record instanceof FakeRecord, t('Record is an object of class FakeRecord.'))) {
+        $this->assertIdentical($record->name, 'John', t('25 year old is John.'));
+      }
+    }
+
+    $this->assertIdentical(count($records), 1, t('There is only one record.'));
+  }
+}
+
+/**
+ * Test fetch actions, part 2.
+ *
+ * We get timeout errors if we try to run too many tests at once.
+ */
+class DatabaseFetch2TestCase extends DatabaseTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Fetch tests, part 2',
+      'description' => 'Test the Database system\'s various fetch capabilities.',
+      'group' => 'Database',
+    );
+  }
+
+  function setUp() {
+    parent::setUp();
+  }
+
+  // Confirm that we can fetch a record into an indexed array explicitly.
+  function testQueryFetchNum() {
+    $records = array();
+    $result = db_query('SELECT name FROM {test} WHERE age = :age', array(':age' => 25), array('fetch' => PDO::FETCH_NUM));
+    foreach ($result as $record) {
+      $records[] = $record;
+      if ($this->assertTrue(is_array($record), t('Record is an array.'))) {
+        $this->assertIdentical($record[0], 'John', t('Record can be accessed numerically.'));
+      }
+    }
+
+    $this->assertIdentical(count($records), 1, 'There is only one record');
+  }
+
+  /**
+   * Confirm that we can fetch a record into a doubly-keyed array explicitly.
+   */
+  function testQueryFetchBoth() {
+    $records = array();
+    $result = db_query('SELECT name FROM {test} WHERE age = :age', array(':age' => 25), array('fetch' => PDO::FETCH_BOTH));
+    foreach ($result as $record) {
+      $records[] = $record;
+      if ($this->assertTrue(is_array($record), t('Record is an array.'))) {
+        $this->assertIdentical($record[0], 'John', t('Record can be accessed numerically.'));
+        $this->assertIdentical($record['name'], 'John', t('Record can be accessed associatively.'));
+      }
+    }
+
+    $this->assertIdentical(count($records), 1, t('There is only one record.'));
+  }
+
+  /**
+   * Confirm that we can fetch an entire column of a result set at once.
+   */
+  function testQueryFetchCol() {
+    $records = array();
+    $result = db_query('SELECT name FROM {test} WHERE age > :age', array(':age' => 25));
+    $column = $result->fetchCol();
+    $this->assertIdentical(count($column), 3, t('fetchCol() returns the right number of records.'));
+
+    $result = db_query('SELECT name FROM {test} WHERE age > :age', array(':age' => 25));
+    $i = 0;
+    foreach ($result as $record) {
+      $this->assertIdentical($record->name, $column[$i++], t('Column matches direct accesss.'));
+    }
+  }
+}
+
+/**
+ * Test the insert builder.
+ */
+class DatabaseInsertTestCase extends DatabaseTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Insert tests',
+      'description' => 'Test the Insert query builder.',
+      'group' => 'Database',
+    );
+  }
+
+  /**
+   * Test the very basic insert functionality.
+   */
+  function testSimpleInsert() {
+    $num_records_before = db_query('SELECT COUNT(*) FROM {test}')->fetchField();
+
+    $query = db_insert('test');
+    $query->fields(array(
+      'name' => 'Yoko',
+      'age' => '29',
+    ));
+    $query->execute();
+
+    $num_records_after = db_query('SELECT COUNT(*) FROM {test}')->fetchField();
+    $this->assertIdentical($num_records_before + 1, (int) $num_records_after, t('Record inserts correctly.'));
+    $saved_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'Yoko'))->fetchField();
+    $this->assertIdentical($saved_age, '29', t('Can retrieve after inserting.'));
+  }
+
+  /**
+   * Test that we can insert multiple records in one query object.
+   */
+  function testMultiInsert() {
+    $num_records_before = (int) db_query('SELECT COUNT(*) FROM {test}')->fetchField();
+
+    $query = db_insert('test');
+    $query->fields(array(
+      'name' => 'Larry',
+      'age' => '30',
+    ));
+
+    // We should be able to specify values in any order if named.
+    $query->values(array(
+      'age' => '31',
+      'name' => 'Curly',
+    ));
+
+    // We should be able to say "use the field order".
+    // This is not the recommended mechanism for most cases, but it should work.
+    $query->values(array('Moe', '32'));
+    $query->execute();
+
+    $num_records_after = (int) db_query('SELECT COUNT(*) FROM {test}')->fetchField();
+    $this->assertIdentical($num_records_before + 3, $num_records_after, t('Record inserts correctly.'));
+    $saved_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'Larry'))->fetchField();
+    $this->assertIdentical($saved_age, '30', t('Can retrieve after inserting.'));
+    $saved_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'Curly'))->fetchField();
+    $this->assertIdentical($saved_age, '31', t('Can retrieve after inserting.'));
+    $saved_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'Moe'))->fetchField();
+    $this->assertIdentical($saved_age, '32', t('Can retrieve after inserting.'));
+  }
+
+  /**
+   * Test that an insert object can be reused with new data after it executes.
+   */
+  function testRepeatedInsert() {
+    $num_records_before = db_query('SELECT COUNT(*) FROM {test}')->fetchField();
+
+    $query = db_insert('test');
+
+    $query->fields(array(
+      'name' => 'Larry',
+      'age' => '30',
+    ));
+    $query->execute();  // This should run the insert, but leave the fields intact.
+
+    // We should be able to specify values in any order if named.
+    $query->values(array(
+      'age' => '31',
+      'name' => 'Curly',
+    ));
+    $query->execute();
+
+    // We should be able to say "use the field order".
+    $query->values(array('Moe', '32'));
+    $query->execute();
+
+    $num_records_after = db_query('SELECT COUNT(*) FROM {test}')->fetchField();
+    $this->assertIdentical((int) $num_records_before + 3, (int) $num_records_after, t('Record inserts correctly.'));
+    $saved_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'Larry'))->fetchField();
+    $this->assertIdentical($saved_age, '30', t('Can retrieve after inserting.'));
+    $saved_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'Curly'))->fetchField();
+    $this->assertIdentical($saved_age, '31', t('Can retrieve after inserting.'));
+    $saved_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'Moe'))->fetchField();
+    $this->assertIdentical($saved_age, '32', t('Can retrieve after inserting.'));
+  }
+
+  /**
+   * Test that we can specify fields without values and specify values later.
+   */
+  function testInsertFieldOnlyDefinintion() {
+    // This is useful for importers, when we want to create a query and define
+    // its fields once, then loop over a multi-insert execution.
+    db_insert('test')
+      ->fields(array('name', 'age'))
+      ->values(array('Larry', '30'))
+      ->values(array('Curly', '31'))
+      ->values(array('Moe', '32'))
+      ->execute();
+    $saved_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'Larry'))->fetchField();
+    $this->assertIdentical($saved_age, '30', t('Can retrieve after inserting.'));
+    $saved_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'Curly'))->fetchField();
+    $this->assertIdentical($saved_age, '31', t('Can retrieve after inserting.'));
+    $saved_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'Moe'))->fetchField();
+    $this->assertIdentical($saved_age, '32', t('Can retrieve after inserting.'));
+  }
+
+  /**
+   * Test that inserts return the proper auto-increment ID.
+   */
+  function testInsertLastInsertID() {
+    $id = db_insert('test')
+      ->fields(array(
+        'name' => 'Larry',
+        'age' => '30',
+      ))
+      ->execute();
+
+    $this->assertIdentical($id, '5', t('Auto-increment ID returned successfully.'));
+  }
+
+  /**
+   * Test that the INSERT INTO ... SELECT ... syntax works.
+   */
+  function testInsertSelect() {
+    $query = db_select('test_people', 'tp');
+    // The query builder will always append expressions after fields.
+    // Add the expression first to test that the insert fields are correctly
+    // re-ordered.
+    $query->addExpression('tp.age', 'age');
+    $query
+      ->fields('tp', array('name','job'))
+      ->condition('tp.name', 'Meredith');
+
+    // The resulting query should be equivalent to:
+    // INSERT INTO test (age, name, job)
+    // SELECT tp.age AS age, tp.name AS name, tp.job AS job
+    // FROM test_people tp
+    // WHERE tp.name = 'Meredith'
+    db_insert('test')
+      ->from($query)
+      ->execute();
+
+    $saved_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'Meredith'))->fetchField();
+    $this->assertIdentical($saved_age, '30', t('Can retrieve after inserting.'));
+  }
+}
+
+/**
+ * Insert tests using LOB fields, which are weird on some databases.
+ */
+class DatabaseInsertLOBTestCase extends DatabaseTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Insert tests, LOB fields',
+      'description' => 'Test the Insert query builder with LOB fields.',
+      'group' => 'Database',
+    );
+  }
+
+  /**
+   * Test that we can insert a single blob field successfully.
+   */
+  function testInsertOneBlob() {
+    $data = "This is\000a test.";
+    $this->assertTrue(strlen($data) === 15, t('Test data contains a NULL.'));
+    $id = db_insert('test_one_blob')
+      ->fields(array('blob1' => $data))
+      ->execute();
+    $r = db_query('SELECT * FROM {test_one_blob} WHERE id = :id', array(':id' => $id))->fetchAssoc();
+    $this->assertTrue($r['blob1'] === $data, t('Can insert a blob: id @id, @data.', array('@id' => $id, '@data' => serialize($r))));
+  }
+
+  /**
+   * Test that we can insert multiple blob fields in the same query.
+   */
+  function testInsertMultipleBlob() {
+    $id = db_insert('test_two_blobs')
+      ->fields(array(
+        'blob1' => 'This is',
+        'blob2' => 'a test',
+      ))
+      ->execute();
+    $r = db_query('SELECT * FROM {test_two_blobs} WHERE id = :id', array(':id' => $id))->fetchAssoc();
+    $this->assertTrue($r['blob1'] === 'This is' && $r['blob2'] === 'a test', t('Can insert multiple blobs per row.'));
+  }
+}
+
+/**
+ * Insert tests for "database default" values.
+ */
+class DatabaseInsertDefaultsTestCase extends DatabaseTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Insert tests, default fields',
+      'description' => 'Test the Insert query builder with default values.',
+      'group' => 'Database',
+    );
+  }
+
+  /**
+   * Test that we can run a query that is "default values for everything".
+   */
+  function testDefaultInsert() {
+    $query = db_insert('test')->useDefaults(array('job'));
+    $id = $query->execute();
+
+    $schema = drupal_get_schema('test');
+
+    $job = db_query('SELECT job FROM {test} WHERE id = :id', array(':id' => $id))->fetchField();
+    $this->assertEqual($job, $schema['fields']['job']['default'], t('Default field value is set.'));
+  }
+
+  /**
+   * Test that no action will be preformed if no fields are specified.
+   */
+  function testDefaultEmptyInsert() {
+    $num_records_before = (int) db_query('SELECT COUNT(*) FROM {test}')->fetchField();
+
+    try {
+      $result = db_insert('test')->execute();
+      // This is only executed if no exception has been thrown.
+      $this->fail(t('Expected exception NoFieldsException has not been thrown.'));
+    } catch (NoFieldsException $e) {
+      $this->pass(t('Expected exception NoFieldsException has been thrown.'));
+    }
+
+    $num_records_after = (int) db_query('SELECT COUNT(*) FROM {test}')->fetchField();
+    $this->assertIdentical($num_records_before, $num_records_after, t('Do nothing as no fields are specified.'));
+  }
+
+  /**
+   * Test that we can insert fields with values and defaults in the same query.
+   */
+  function testDefaultInsertWithFields() {
+    $query = db_insert('test')
+      ->fields(array('name' => 'Bob'))
+      ->useDefaults(array('job'));
+    $id = $query->execute();
+
+    $schema = drupal_get_schema('test');
+
+    $job = db_query('SELECT job FROM {test} WHERE id = :id', array(':id' => $id))->fetchField();
+    $this->assertEqual($job, $schema['fields']['job']['default'], t('Default field value is set.'));
+  }
+}
+
+/**
+ * Update builder tests.
+ */
+class DatabaseUpdateTestCase extends DatabaseTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Update tests',
+      'description' => 'Test the Update query builder.',
+      'group' => 'Database',
+    );
+  }
+
+  /**
+   * Confirm that we can update a single record successfully.
+   */
+  function testSimpleUpdate() {
+    $num_updated = db_update('test')
+      ->fields(array('name' => 'Tiffany'))
+      ->condition('id', 1)
+      ->execute();
+    $this->assertIdentical($num_updated, 1, t('Updated 1 record.'));
+
+    $saved_name = db_query('SELECT name FROM {test} WHERE id = :id', array(':id' => 1))->fetchField();
+    $this->assertIdentical($saved_name, 'Tiffany', t('Updated name successfully.'));
+  }
+
+  /**
+   * Confirm updating to NULL.
+   */
+  function testSimpleNullUpdate() {
+    $this->ensureSampleDataNull();
+    $num_updated = db_update('test_null')
+      ->fields(array('age' => NULL))
+      ->condition('name', 'Kermit')
+      ->execute();
+    $this->assertIdentical($num_updated, 1, t('Updated 1 record.'));
+
+    $saved_age = db_query('SELECT age FROM {test_null} WHERE name = :name', array(':name' => 'Kermit'))->fetchField();
+    $this->assertNull($saved_age, t('Updated name successfully.'));
+  }
+
+  /**
+   * Confirm that we can update a multiple records successfully.
+   */
+  function testMultiUpdate() {
+    $num_updated = db_update('test')
+      ->fields(array('job' => 'Musician'))
+      ->condition('job', 'Singer')
+      ->execute();
+    $this->assertIdentical($num_updated, 2, t('Updated 2 records.'));
+
+    $num_matches = db_query('SELECT COUNT(*) FROM {test} WHERE job = :job', array(':job' => 'Musician'))->fetchField();
+    $this->assertIdentical($num_matches, '2', t('Updated fields successfully.'));
+  }
+
+  /**
+   * Confirm that we can update a multiple records with a non-equality condition.
+   */
+  function testMultiGTUpdate() {
+    $num_updated = db_update('test')
+      ->fields(array('job' => 'Musician'))
+      ->condition('age', 26, '>')
+      ->execute();
+    $this->assertIdentical($num_updated, 2, t('Updated 2 records.'));
+
+    $num_matches = db_query('SELECT COUNT(*) FROM {test} WHERE job = :job', array(':job' => 'Musician'))->fetchField();
+    $this->assertIdentical($num_matches, '2', t('Updated fields successfully.'));
+  }
+
+  /**
+   * Confirm that we can update a multiple records with a where call.
+   */
+  function testWhereUpdate() {
+    $num_updated = db_update('test')
+      ->fields(array('job' => 'Musician'))
+      ->where('age > :age', array(':age' => 26))
+      ->execute();
+    $this->assertIdentical($num_updated, 2, t('Updated 2 records.'));
+
+    $num_matches = db_query('SELECT COUNT(*) FROM {test} WHERE job = :job', array(':job' => 'Musician'))->fetchField();
+    $this->assertIdentical($num_matches, '2', t('Updated fields successfully.'));
+  }
+
+  /**
+   * Confirm that we can stack condition and where calls.
+   */
+  function testWhereAndConditionUpdate() {
+    $update = db_update('test')
+      ->fields(array('job' => 'Musician'))
+      ->where('age > :age', array(':age' => 26))
+      ->condition('name', 'Ringo');
+    $num_updated = $update->execute();
+    $this->assertIdentical($num_updated, 1, t('Updated 1 record.'));
+
+    $num_matches = db_query('SELECT COUNT(*) FROM {test} WHERE job = :job', array(':job' => 'Musician'))->fetchField();
+    $this->assertIdentical($num_matches, '1', t('Updated fields successfully.'));
+  }
+
+  /**
+   * Test updating with expressions.
+   */
+  function testExpressionUpdate() {
+    // Set age = 1 for a single row for this test to work.
+    db_update('test')
+      ->condition('id', 1)
+      ->fields(array('age' => 1))
+      ->execute();
+
+    // Ensure that expressions are handled properly.  This should set every
+    // record's age to a square of itself, which will change only three of the
+    // four records in the table since 1*1 = 1. That means only three records
+    // are modified, so we should get back 3, not 4, from execute().
+    $num_rows = db_update('test')
+      ->expression('age', 'age * age')
+      ->execute();
+    $this->assertIdentical($num_rows, 3, t('Number of affected rows are returned.'));
+  }
+}
+
+/**
+ * Tests for more complex update statements.
+ */
+class DatabaseUpdateComplexTestCase extends DatabaseTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Update tests, Complex',
+      'description' => 'Test the Update query builder, complex queries.',
+      'group' => 'Database',
+    );
+  }
+
+  /**
+   * Test updates with OR conditionals.
+   */
+  function testOrConditionUpdate() {
+    $update = db_update('test')
+      ->fields(array('job' => 'Musician'))
+      ->condition(db_or()
+        ->condition('name', 'John')
+        ->condition('name', 'Paul')
+      );
+    $num_updated = $update->execute();
+    $this->assertIdentical($num_updated, 2, t('Updated 2 records.'));
+
+    $num_matches = db_query('SELECT COUNT(*) FROM {test} WHERE job = :job', array(':job' => 'Musician'))->fetchField();
+    $this->assertIdentical($num_matches, '2', t('Updated fields successfully.'));
+  }
+
+  /**
+   * Test WHERE IN clauses.
+   */
+  function testInConditionUpdate() {
+    $num_updated = db_update('test')
+      ->fields(array('job' => 'Musician'))
+      ->condition('name', array('John', 'Paul'), 'IN')
+      ->execute();
+    $this->assertIdentical($num_updated, 2, t('Updated 2 records.'));
+
+    $num_matches = db_query('SELECT COUNT(*) FROM {test} WHERE job = :job', array(':job' => 'Musician'))->fetchField();
+    $this->assertIdentical($num_matches, '2', t('Updated fields successfully.'));
+  }
+
+  /**
+   * Test WHERE NOT IN clauses.
+   */
+  function testNotInConditionUpdate() {
+    // The o is lowercase in the 'NoT IN' operator, to make sure the operators
+    // work in mixed case.
+    $num_updated = db_update('test')
+      ->fields(array('job' => 'Musician'))
+      ->condition('name', array('John', 'Paul', 'George'), 'NoT IN')
+      ->execute();
+    $this->assertIdentical($num_updated, 1, t('Updated 1 record.'));
+
+    $num_matches = db_query('SELECT COUNT(*) FROM {test} WHERE job = :job', array(':job' => 'Musician'))->fetchField();
+    $this->assertIdentical($num_matches, '1', t('Updated fields successfully.'));
+  }
+
+  /**
+   * Test BETWEEN conditional clauses.
+   */
+  function testBetweenConditionUpdate() {
+    $num_updated = db_update('test')
+      ->fields(array('job' => 'Musician'))
+      ->condition('age', array(25, 26), 'BETWEEN')
+      ->execute();
+    $this->assertIdentical($num_updated, 2, t('Updated 2 records.'));
+
+    $num_matches = db_query('SELECT COUNT(*) FROM {test} WHERE job = :job', array(':job' => 'Musician'))->fetchField();
+    $this->assertIdentical($num_matches, '2', t('Updated fields successfully.'));
+  }
+
+  /**
+   * Test LIKE conditionals.
+   */
+  function testLikeConditionUpdate() {
+    $num_updated = db_update('test')
+      ->fields(array('job' => 'Musician'))
+      ->condition('name', '%ge%', 'LIKE')
+      ->execute();
+    $this->assertIdentical($num_updated, 1, t('Updated 1 record.'));
+
+    $num_matches = db_query('SELECT COUNT(*) FROM {test} WHERE job = :job', array(':job' => 'Musician'))->fetchField();
+    $this->assertIdentical($num_matches, '1', t('Updated fields successfully.'));
+  }
+
+  /**
+   * Test update with expression values.
+   */
+  function testUpdateExpression() {
+    $before_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'Ringo'))->fetchField();
+    $GLOBALS['larry_test'] = 1;
+    $num_updated = db_update('test')
+      ->condition('name', 'Ringo')
+      ->fields(array('job' => 'Musician'))
+      ->expression('age', 'age + :age', array(':age' => 4))
+      ->execute();
+    $this->assertIdentical($num_updated, 1, t('Updated 1 record.'));
+
+    $num_matches = db_query('SELECT COUNT(*) FROM {test} WHERE job = :job', array(':job' => 'Musician'))->fetchField();
+    $this->assertIdentical($num_matches, '1', t('Updated fields successfully.'));
+
+    $person = db_query('SELECT * FROM {test} WHERE name = :name', array(':name' => 'Ringo'))->fetch();
+    $this->assertEqual($person->name, 'Ringo', t('Name set correctly.'));
+    $this->assertEqual($person->age, $before_age + 4, t('Age set correctly.'));
+    $this->assertEqual($person->job, 'Musician', t('Job set correctly.'));
+    $GLOBALS['larry_test'] = 0;
+  }
+
+  /**
+   * Test update with only expression values.
+   */
+  function testUpdateOnlyExpression() {
+    $before_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'Ringo'))->fetchField();
+    $num_updated = db_update('test')
+      ->condition('name', 'Ringo')
+      ->expression('age', 'age + :age', array(':age' => 4))
+      ->execute();
+    $this->assertIdentical($num_updated, 1, t('Updated 1 record.'));
+
+    $after_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'Ringo'))->fetchField();
+    $this->assertEqual($before_age + 4, $after_age, t('Age updated correctly'));
+  }
+}
+
+/**
+ * Test update queries involving LOB values.
+ */
+class DatabaseUpdateLOBTestCase extends DatabaseTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Update tests, LOB',
+      'description' => 'Test the Update query builder with LOB fields.',
+      'group' => 'Database',
+    );
+  }
+
+  /**
+   * Confirm that we can update a blob column.
+   */
+  function testUpdateOneBlob() {
+    $data = "This is\000a test.";
+    $this->assertTrue(strlen($data) === 15, t('Test data contains a NULL.'));
+    $id = db_insert('test_one_blob')
+      ->fields(array('blob1' => $data))
+      ->execute();
+
+    $data .= $data;
+    db_update('test_one_blob')
+      ->condition('id', $id)
+      ->fields(array('blob1' => $data))
+      ->execute();
+
+    $r = db_query('SELECT * FROM {test_one_blob} WHERE id = :id', array(':id' => $id))->fetchAssoc();
+    $this->assertTrue($r['blob1'] === $data, t('Can update a blob: id @id, @data.', array('@id' => $id, '@data' => serialize($r))));
+  }
+
+  /**
+   * Confirm that we can update two blob columns in the same table.
+   */
+  function testUpdateMultipleBlob() {
+    $id = db_insert('test_two_blobs')
+      ->fields(array(
+        'blob1' => 'This is',
+        'blob2' => 'a test',
+      ))
+      ->execute();
+
+    db_update('test_two_blobs')
+      ->condition('id', $id)
+      ->fields(array('blob1' => 'and so', 'blob2' => 'is this'))
+      ->execute();
+
+    $r = db_query('SELECT * FROM {test_two_blobs} WHERE id = :id', array(':id' => $id))->fetchAssoc();
+    $this->assertTrue($r['blob1'] === 'and so' && $r['blob2'] === 'is this', t('Can update multiple blobs per row.'));
+  }
+}
+
+/**
+ * Delete/Truncate tests.
+ *
+ * The DELETE tests are not as extensive, as all of the interesting code for
+ * DELETE queries is in the conditional which is identical to the UPDATE and
+ * SELECT conditional handling.
+ *
+ * The TRUNCATE tests are not extensive either, because the behavior of
+ * TRUNCATE queries is not consistent across database engines. We only test
+ * that a TRUNCATE query actually deletes all rows from the target table.
+ */
+class DatabaseDeleteTruncateTestCase extends DatabaseTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Delete/Truncate tests',
+      'description' => 'Test the Delete and Truncate query builders.',
+      'group' => 'Database',
+    );
+  }
+
+  /**
+   * Confirm that we can use a subselect in a delete successfully.
+   */
+  function testSubselectDelete() {
+    $num_records_before = db_query('SELECT COUNT(*) FROM {test_task}')->fetchField();
+    $pid_to_delete = db_query("SELECT * FROM {test_task} WHERE task = 'sleep'")->fetchField();
+
+    $subquery = db_select('test', 't')
+      ->fields('t', array('id'))
+      ->condition('t.id', array($pid_to_delete), 'IN');
+    $delete = db_delete('test_task')
+      ->condition('task', 'sleep')
+      ->condition('pid', $subquery, 'IN');
+
+    $num_deleted = $delete->execute();
+    $this->assertEqual($num_deleted, 1, t("Deleted 1 record."));
+
+    $num_records_after = db_query('SELECT COUNT(*) FROM {test_task}')->fetchField();
+    $this->assertEqual($num_records_before, $num_records_after + $num_deleted, t('Deletion adds up.'));
+  }
+
+  /**
+   * Confirm that we can delete a single record successfully.
+   */
+  function testSimpleDelete() {
+    $num_records_before = db_query('SELECT COUNT(*) FROM {test}')->fetchField();
+
+    $num_deleted = db_delete('test')
+      ->condition('id', 1)
+      ->execute();
+    $this->assertIdentical($num_deleted, 1, t('Deleted 1 record.'));
+
+    $num_records_after = db_query('SELECT COUNT(*) FROM {test}')->fetchField();
+    $this->assertEqual($num_records_before, $num_records_after + $num_deleted, t('Deletion adds up.'));
+  }
+
+  /**
+   * Confirm that we can truncate a whole table successfully.
+   */
+  function testTruncate() {
+    $num_records_before = db_query("SELECT COUNT(*) FROM {test}")->fetchField();
+
+    db_truncate('test')->execute();
+
+    $num_records_after = db_query("SELECT COUNT(*) FROM {test}")->fetchField();
+    $this->assertEqual(0, $num_records_after, t('Truncate really deletes everything.'));
+  }
+}
+
+/**
+ * Test the MERGE query builder.
+ */
+class DatabaseMergeTestCase extends DatabaseTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Merge tests',
+      'description' => 'Test the Merge query builder.',
+      'group' => 'Database',
+    );
+  }
+
+  /**
+   * Confirm that we can merge-insert a record successfully.
+   */
+  function testMergeInsert() {
+    $num_records_before = db_query('SELECT COUNT(*) FROM {test_people}')->fetchField();
+
+    $result = db_merge('test_people')
+      ->key(array('job' => 'Presenter'))
+      ->fields(array(
+        'age' => 31,
+        'name' => 'Tiffany',
+      ))
+      ->execute();
+
+    $this->assertEqual($result, MergeQuery::STATUS_INSERT, t('Insert status returned.'));
+
+    $num_records_after = db_query('SELECT COUNT(*) FROM {test_people}')->fetchField();
+    $this->assertEqual($num_records_before + 1, $num_records_after, t('Merge inserted properly.'));
+
+    $person = db_query('SELECT * FROM {test_people} WHERE job = :job', array(':job' => 'Presenter'))->fetch();
+    $this->assertEqual($person->name, 'Tiffany', t('Name set correctly.'));
+    $this->assertEqual($person->age, 31, t('Age set correctly.'));
+    $this->assertEqual($person->job, 'Presenter', t('Job set correctly.'));
+  }
+
+  /**
+   * Confirm that we can merge-update a record successfully.
+   */
+  function testMergeUpdate() {
+    $num_records_before = db_query('SELECT COUNT(*) FROM {test_people}')->fetchField();
+
+    $result = db_merge('test_people')
+      ->key(array('job' => 'Speaker'))
+      ->fields(array(
+        'age' => 31,
+        'name' => 'Tiffany',
+      ))
+      ->execute();
+
+    $this->assertEqual($result, MergeQuery::STATUS_UPDATE, t('Update status returned.'));
+
+    $num_records_after = db_query('SELECT COUNT(*) FROM {test_people}')->fetchField();
+    $this->assertEqual($num_records_before, $num_records_after, t('Merge updated properly.'));
+
+    $person = db_query('SELECT * FROM {test_people} WHERE job = :job', array(':job' => 'Speaker'))->fetch();
+    $this->assertEqual($person->name, 'Tiffany', t('Name set correctly.'));
+    $this->assertEqual($person->age, 31, t('Age set correctly.'));
+    $this->assertEqual($person->job, 'Speaker', t('Job set correctly.'));
+  }
+
+  /**
+   * Confirm that we can merge-update a record successfully, with different insert and update.
+   */
+  function testMergeUpdateExcept() {
+    $num_records_before = db_query('SELECT COUNT(*) FROM {test_people}')->fetchField();
+
+    db_merge('test_people')
+      ->key(array('job' => 'Speaker'))
+      ->insertFields(array('age' => 31))
+      ->updateFields(array('name' => 'Tiffany'))
+      ->execute();
+
+    $num_records_after = db_query('SELECT COUNT(*) FROM {test_people}')->fetchField();
+    $this->assertEqual($num_records_before, $num_records_after, t('Merge updated properly.'));
+
+    $person = db_query('SELECT * FROM {test_people} WHERE job = :job', array(':job' => 'Speaker'))->fetch();
+    $this->assertEqual($person->name, 'Tiffany', t('Name set correctly.'));
+    $this->assertEqual($person->age, 30, t('Age skipped correctly.'));
+    $this->assertEqual($person->job, 'Speaker', t('Job set correctly.'));
+  }
+
+  /**
+   * Confirm that we can merge-update a record successfully, with alternate replacement.
+   */
+  function testMergeUpdateExplicit() {
+    $num_records_before = db_query('SELECT COUNT(*) FROM {test_people}')->fetchField();
+
+    db_merge('test_people')
+      ->key(array('job' => 'Speaker'))
+      ->insertFields(array(
+        'age' => 31,
+        'name' => 'Tiffany',
+      ))
+      ->updateFields(array(
+        'name' => 'Joe',
+      ))
+      ->execute();
+
+    $num_records_after = db_query('SELECT COUNT(*) FROM {test_people}')->fetchField();
+    $this->assertEqual($num_records_before, $num_records_after, t('Merge updated properly.'));
+
+    $person = db_query('SELECT * FROM {test_people} WHERE job = :job', array(':job' => 'Speaker'))->fetch();
+    $this->assertEqual($person->name, 'Joe', t('Name set correctly.'));
+    $this->assertEqual($person->age, 30, t('Age skipped correctly.'));
+    $this->assertEqual($person->job, 'Speaker', t('Job set correctly.'));
+  }
+
+  /**
+   * Confirm that we can merge-update a record successfully, with expressions.
+   */
+  function testMergeUpdateExpression() {
+    $num_records_before = db_query('SELECT COUNT(*) FROM {test_people}')->fetchField();
+
+    $age_before = db_query('SELECT age FROM {test_people} WHERE job = :job', array(':job' => 'Speaker'))->fetchField();
+
+    // This is a very contrived example, as I have no idea why you'd want to
+    // change age this way, but that's beside the point.
+    // Note that we are also double-setting age here, once as a literal and
+    // once as an expression. This test will only pass if the expression wins,
+    // which is what is supposed to happen.
+    db_merge('test_people')
+      ->key(array('job' => 'Speaker'))
+      ->fields(array('name' => 'Tiffany'))
+      ->insertFields(array('age' => 31))
+      ->expression('age', 'age + :age', array(':age' => 4))
+      ->execute();
+
+    $num_records_after = db_query('SELECT COUNT(*) FROM {test_people}')->fetchField();
+    $this->assertEqual($num_records_before, $num_records_after, t('Merge updated properly.'));
+
+    $person = db_query('SELECT * FROM {test_people} WHERE job = :job', array(':job' => 'Speaker'))->fetch();
+    $this->assertEqual($person->name, 'Tiffany', t('Name set correctly.'));
+    $this->assertEqual($person->age, $age_before + 4, t('Age updated correctly.'));
+    $this->assertEqual($person->job, 'Speaker', t('Job set correctly.'));
+  }
+
+  /**
+   * Test that we can merge-insert without any update fields.
+   */
+  function testMergeInsertWithoutUpdate() {
+    $num_records_before = db_query('SELECT COUNT(*) FROM {test_people}')->fetchField();
+
+    db_merge('test_people')
+      ->key(array('job' => 'Presenter'))
+      ->execute();
+
+    $num_records_after = db_query('SELECT COUNT(*) FROM {test_people}')->fetchField();
+    $this->assertEqual($num_records_before + 1, $num_records_after, t('Merge inserted properly.'));
+
+    $person = db_query('SELECT * FROM {test_people} WHERE job = :job', array(':job' => 'Presenter'))->fetch();
+    $this->assertEqual($person->name, '', t('Name set correctly.'));
+    $this->assertEqual($person->age, 0, t('Age set correctly.'));
+    $this->assertEqual($person->job, 'Presenter', t('Job set correctly.'));
+  }
+
+  /**
+   * Confirm that we can merge-update without any update fields.
+   */
+  function testMergeUpdateWithoutUpdate() {
+    $num_records_before = db_query('SELECT COUNT(*) FROM {test_people}')->fetchField();
+
+    db_merge('test_people')
+      ->key(array('job' => 'Speaker'))
+      ->execute();
+
+    $num_records_after = db_query('SELECT COUNT(*) FROM {test_people}')->fetchField();
+    $this->assertEqual($num_records_before, $num_records_after, t('Merge skipped properly.'));
+
+    $person = db_query('SELECT * FROM {test_people} WHERE job = :job', array(':job' => 'Speaker'))->fetch();
+    $this->assertEqual($person->name, 'Meredith', t('Name skipped correctly.'));
+    $this->assertEqual($person->age, 30, t('Age skipped correctly.'));
+    $this->assertEqual($person->job, 'Speaker', t('Job skipped correctly.'));
+
+    db_merge('test_people')
+      ->key(array('job' => 'Speaker'))
+      ->insertFields(array('age' => 31))
+      ->execute();
+
+    $num_records_after = db_query('SELECT COUNT(*) FROM {test_people}')->fetchField();
+    $this->assertEqual($num_records_before, $num_records_after, t('Merge skipped properly.'));
+
+    $person = db_query('SELECT * FROM {test_people} WHERE job = :job', array(':job' => 'Speaker'))->fetch();
+    $this->assertEqual($person->name, 'Meredith', t('Name skipped correctly.'));
+    $this->assertEqual($person->age, 30, t('Age skipped correctly.'));
+    $this->assertEqual($person->job, 'Speaker', t('Job skipped correctly.'));
+  }
+
+  /**
+   * Test that an invalid merge query throws an exception like it is supposed to.
+   */
+  function testInvalidMerge() {
+    try {
+      // This query should die because there is no key field specified.
+      db_merge('test_people')
+        ->fields(array(
+          'age' => 31,
+          'name' => 'Tiffany',
+        ))
+        ->execute();
+    }
+    catch (InvalidMergeQueryException $e) {
+      $this->pass(t('InvalidMergeQueryException thrown for invalid query.'));
+      return;
+    }
+    $this->fail(t('No InvalidMergeQueryException thrown'));
+  }
+}
+
+/**
+ * Test the SELECT builder.
+ */
+class DatabaseSelectTestCase extends DatabaseTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Select tests',
+      'description' => 'Test the Select query builder.',
+      'group' => 'Database',
+    );
+  }
+
+  /**
+   * Test rudimentary SELECT statements.
+   */
+  function testSimpleSelect() {
+    $query = db_select('test');
+    $name_field = $query->addField('test', 'name');
+    $age_field = $query->addField('test', 'age', 'age');
+    $result = $query->execute();
+
+    $num_records = 0;
+    foreach ($result as $record) {
+      $num_records++;
+    }
+
+    $this->assertEqual($num_records, 4, t('Returned the correct number of rows.'));
+  }
+
+  /**
+   * Test rudimentary SELECT statement with a COMMENT.
+   */
+  function testSimpleComment() {
+    $query = db_select('test')->comment('Testing query comments');
+    $name_field = $query->addField('test', 'name');
+    $age_field = $query->addField('test', 'age', 'age');
+    $result = $query->execute();
+
+    $num_records = 0;
+    foreach ($result as $record) {
+      $num_records++;
+    }
+
+    $query = (string)$query;
+    $expected = "/* Testing query comments */ SELECT test.name AS name, test.age AS age\nFROM \n{test} test";
+
+    $this->assertEqual($num_records, 4, t('Returned the correct number of rows.'));
+    $this->assertEqual($query, $expected, t('The flattened query contains the comment string.'));
+  }
+
+  /**
+   * Test query COMMENT system against vulnerabilities.
+   */
+  function testVulnerableComment() {
+    $query = db_select('test')->comment('Testing query comments */ SELECT nid FROM {node}; --');
+    $name_field = $query->addField('test', 'name');
+    $age_field = $query->addField('test', 'age', 'age');
+    $result = $query->execute();
+
+    $num_records = 0;
+    foreach ($result as $record) {
+      $num_records++;
+    }
+
+    $query = (string)$query;
+    $expected = "/* Testing query comments SELECT nid FROM {node}; -- */ SELECT test.name AS name, test.age AS age\nFROM \n{test} test";
+
+    $this->assertEqual($num_records, 4, t('Returned the correct number of rows.'));
+    $this->assertEqual($query, $expected, t('The flattened query contains the sanitised comment string.'));
+  }
+
+  /**
+   * Test basic conditionals on SELECT statements.
+   */
+  function testSimpleSelectConditional() {
+    $query = db_select('test');
+    $name_field = $query->addField('test', 'name');
+    $age_field = $query->addField('test', 'age', 'age');
+    $query->condition('age', 27);
+    $result = $query->execute();
+
+    // Check that the aliases are being created the way we want.
+    $this->assertEqual($name_field, 'name', t('Name field alias is correct.'));
+    $this->assertEqual($age_field, 'age', t('Age field alias is correct.'));
+
+    // Ensure that we got the right record.
+    $record = $result->fetch();
+    $this->assertEqual($record->$name_field, 'George', t('Fetched name is correct.'));
+    $this->assertEqual($record->$age_field, 27, t('Fetched age is correct.'));
+  }
+
+  /**
+   * Test SELECT statements with expressions.
+   */
+  function testSimpleSelectExpression() {
+    $query = db_select('test');
+    $name_field = $query->addField('test', 'name');
+    $age_field = $query->addExpression("age*2", 'double_age');
+    $query->condition('age', 27);
+    $result = $query->execute();
+
+    // Check that the aliases are being created the way we want.
+    $this->assertEqual($name_field, 'name', t('Name field alias is correct.'));
+    $this->assertEqual($age_field, 'double_age', t('Age field alias is correct.'));
+
+    // Ensure that we got the right record.
+    $record = $result->fetch();
+    $this->assertEqual($record->$name_field, 'George', t('Fetched name is correct.'));
+    $this->assertEqual($record->$age_field, 27*2, t('Fetched age expression is correct.'));
+  }
+
+  /**
+   * Test SELECT statements with multiple expressions.
+   */
+  function testSimpleSelectExpressionMultiple() {
+    $query = db_select('test');
+    $name_field = $query->addField('test', 'name');
+    $age_double_field = $query->addExpression("age*2");
+    $age_triple_field = $query->addExpression("age*3");
+    $query->condition('age', 27);
+    $result = $query->execute();
+
+    // Check that the aliases are being created the way we want.
+    $this->assertEqual($age_double_field, 'expression', t('Double age field alias is correct.'));
+    $this->assertEqual($age_triple_field, 'expression_2', t('Triple age field alias is correct.'));
+
+    // Ensure that we got the right record.
+    $record = $result->fetch();
+    $this->assertEqual($record->$name_field, 'George', t('Fetched name is correct.'));
+    $this->assertEqual($record->$age_double_field, 27*2, t('Fetched double age expression is correct.'));
+    $this->assertEqual($record->$age_triple_field, 27*3, t('Fetched triple age expression is correct.'));
+  }
+
+  /**
+   * Test adding multiple fields to a select statement at the same time.
+   */
+  function testSimpleSelectMultipleFields() {
+    $record = db_select('test')
+      ->fields('test', array('id', 'name', 'age', 'job'))
+      ->condition('age', 27)
+      ->execute()->fetchObject();
+
+    // Check that all fields we asked for are present.
+    $this->assertNotNull($record->id, t('ID field is present.'));
+    $this->assertNotNull($record->name, t('Name field is present.'));
+    $this->assertNotNull($record->age, t('Age field is present.'));
+    $this->assertNotNull($record->job, t('Job field is present.'));
+
+    // Ensure that we got the right record.
+    // Check that all fields we asked for are present.
+    $this->assertEqual($record->id, 2, t('ID field has the correct value.'));
+    $this->assertEqual($record->name, 'George', t('Name field has the correct value.'));
+    $this->assertEqual($record->age, 27, t('Age field has the correct value.'));
+    $this->assertEqual($record->job, 'Singer', t('Job field has the correct value.'));
+  }
+
+  /**
+   * Test adding all fields from a given table to a select statement.
+   */
+  function testSimpleSelectAllFields() {
+    $record = db_select('test')
+      ->fields('test')
+      ->condition('age', 27)
+      ->execute()->fetchObject();
+
+    // Check that all fields we asked for are present.
+    $this->assertNotNull($record->id, t('ID field is present.'));
+    $this->assertNotNull($record->name, t('Name field is present.'));
+    $this->assertNotNull($record->age, t('Age field is present.'));
+    $this->assertNotNull($record->job, t('Job field is present.'));
+
+    // Ensure that we got the right record.
+    // Check that all fields we asked for are present.
+    $this->assertEqual($record->id, 2, t('ID field has the correct value.'));
+    $this->assertEqual($record->name, 'George', t('Name field has the correct value.'));
+    $this->assertEqual($record->age, 27, t('Age field has the correct value.'));
+    $this->assertEqual($record->job, 'Singer', t('Job field has the correct value.'));
+  }
+
+  /**
+   * Test that we can find a record with a NULL value.
+   */
+  function testNullCondition() {
+    $this->ensureSampleDataNull();
+
+    $names = db_select('test_null', 'tn')
+      ->fields('tn', array('name'))
+      ->isNull('age')
+      ->execute()->fetchCol();
+
+    $this->assertEqual(count($names), 1, t('Correct number of records found with NULL age.'));
+    $this->assertEqual($names[0], 'Fozzie', t('Correct record returned for NULL age.'));
+  }
+
+  /**
+   * Test that we can find a record without a NULL value.
+   */
+  function testNotNullCondition() {
+    $this->ensureSampleDataNull();
+
+    $names = db_select('test_null', 'tn')
+      ->fields('tn', array('name'))
+      ->isNotNull('tn.age')
+      ->orderBy('name')
+      ->execute()->fetchCol();
+
+    $this->assertEqual(count($names), 2, t('Correct number of records found withNOT NULL age.'));
+    $this->assertEqual($names[0], 'Gonzo', t('Correct record returned for NOT NULL age.'));
+    $this->assertEqual($names[1], 'Kermit', t('Correct record returned for NOT NULL age.'));
+  }
+
+  /**
+   * Test that we can UNION multiple Select queries together. This is
+   * semantically equal to UNION DISTINCT, so we don't explicity test that.
+   */
+  function testUnion() {
+    $query_1 = db_select('test', 't')
+      ->fields('t', array('name'))
+      ->condition('age', array(27, 28), 'IN');
+
+    $query_2 = db_select('test', 't')
+      ->fields('t', array('name'))
+      ->condition('age', 28);
+
+    $query_1->union($query_2);
+
+    $names = $query_1->execute()->fetchCol();
+
+    // Ensure we only get 2 records.
+    $this->assertEqual(count($names), 2, t('UNION correctly discarded duplicates.'));
+
+    $this->assertEqual($names[0], 'George', t('First query returned correct name.'));
+    $this->assertEqual($names[1], 'Ringo', t('Second query returned correct name.'));
+  }
+
+  /**
+   * Test that we can UNION ALL multiple Select queries together.
+   */
+  function testUnionAll() {
+    $query_1 = db_select('test', 't')
+      ->fields('t', array('name'))
+      ->condition('age', array(27, 28), 'IN');
+
+    $query_2 = db_select('test', 't')
+      ->fields('t', array('name'))
+      ->condition('age', 28);
+
+    $query_1->union($query_2, 'ALL');
+
+    $names = $query_1->execute()->fetchCol();
+
+    // Ensure we get all 3 records.
+    $this->assertEqual(count($names), 3, t('UNION ALL correctly preserved duplicates.'));
+
+    $this->assertEqual($names[0], 'George', t('First query returned correct first name.'));
+    $this->assertEqual($names[1], 'Ringo', t('Second query returned correct second name.'));
+    $this->assertEqual($names[2], 'Ringo', t('Third query returned correct name.'));
+  }
+
+  /**
+   * Test that random ordering of queries works.
+   *
+   * We take the approach of testing the Drupal layer only, rather than trying
+   * to test that the database's random number generator actually produces
+   * random queries (which is very difficult to do without an unacceptable risk
+   * of the test failing by accident).
+   *
+   * Therefore, in this test we simply run the same query twice and assert that
+   * the two results are reordered versions of each other (as well as of the
+   * same query without the random ordering). It is reasonable to assume that
+   * if we run the same select query twice and the results are in a different
+   * order each time, the only way this could happen is if we have successfully
+   * triggered the database's random ordering functionality.
+   */
+  function testRandomOrder() {
+    // Use 52 items, so the chance that this test fails by accident will be the
+    // same as the chance that a deck of cards will come out in the same order
+    // after shuffling it (in other words, nearly impossible).
+    $number_of_items = 52;
+    while (db_query("SELECT MAX(id) FROM {test}")->fetchField() < $number_of_items) {
+      db_insert('test')->fields(array('name' => $this->randomName()))->execute();
+    }
+
+    // First select the items in order and make sure we get an ordered list.
+    $expected_ids = range(1, $number_of_items);
+    $ordered_ids = db_select('test', 't')
+      ->fields('t', array('id'))
+      ->range(0, $number_of_items)
+      ->orderBy('id')
+      ->execute()
+      ->fetchCol();
+    $this->assertEqual($ordered_ids, $expected_ids, t('A query without random ordering returns IDs in the correct order.'));
+
+    // Now perform the same query, but instead choose a random ordering. We
+    // expect this to contain a differently ordered version of the original
+    // result.
+    $randomized_ids = db_select('test', 't')
+      ->fields('t', array('id'))
+      ->range(0, $number_of_items)
+      ->orderRandom()
+      ->execute()
+      ->fetchCol();
+    $this->assertNotEqual($randomized_ids, $ordered_ids, t('A query with random ordering returns an unordered set of IDs.'));
+    $sorted_ids = $randomized_ids;
+    sort($sorted_ids);
+    $this->assertEqual($sorted_ids, $ordered_ids, t('After sorting the random list, the result matches the original query.'));
+
+    // Now perform the exact same query again, and make sure the order is
+    // different.
+    $randomized_ids_second_set = db_select('test', 't')
+      ->fields('t', array('id'))
+      ->range(0, $number_of_items)
+      ->orderRandom()
+      ->execute()
+      ->fetchCol();
+    $this->assertNotEqual($randomized_ids_second_set, $randomized_ids, t('Performing the query with random ordering a second time returns IDs in a different order.'));
+    $sorted_ids_second_set = $randomized_ids_second_set;
+    sort($sorted_ids_second_set);
+    $this->assertEqual($sorted_ids_second_set, $sorted_ids, t('After sorting the second random list, the result matches the sorted version of the first random list.'));
+  }
+
+  /**
+   * Test that aliases are renamed when duplicates.
+   */
+  function testSelectDuplicateAlias() {
+    $query = db_select('test', 't');
+    $alias1 = $query->addField('t', 'name', 'the_alias');
+    $alias2 = $query->addField('t', 'age', 'the_alias');
+    $this->assertNotIdentical($alias1, $alias2, 'Duplicate aliases are renamed.');
+  }
+}
+
+/**
+ * Test case for subselects in a dynamic SELECT query.
+ */
+class DatabaseSelectSubqueryTestCase extends DatabaseTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Select tests, subqueries',
+      'description' => 'Test the Select query builder.',
+      'group' => 'Database',
+    );
+  }
+
+  /**
+   * Test that we can use a subquery in a FROM clause.
+   */
+  function testFromSubquerySelect() {
+    // Create a subquery, which is just a normal query object.
+    $subquery = db_select('test_task', 'tt');
+    $subquery->addField('tt', 'pid', 'pid');
+    $subquery->addField('tt', 'task', 'task');
+    $subquery->condition('priority', 1);
+
+    for ($i = 0; $i < 2; $i++) {
+      // Create another query that joins against the virtual table resulting
+      // from the subquery.
+      $select = db_select($subquery, 'tt2');
+      $select->join('test', 't', 't.id=tt2.pid');
+      $select->addField('t', 'name');
+      if ($i) {
+        // Use a different number of conditions here to confuse the subquery
+        // placeholder counter, testing http://drupal.org/node/1112854.
+        $select->condition('name', 'John');
+      }
+      $select->condition('task', 'code');
+
+      // The resulting query should be equivalent to:
+      // SELECT t.name
+      // FROM (SELECT tt.pid AS pid, tt.task AS task FROM test_task tt WHERE priority=1) tt
+      //   INNER JOIN test t ON t.id=tt.pid
+      // WHERE tt.task = 'code'
+      $people = $select->execute()->fetchCol();
+
+      $this->assertEqual(count($people), 1, t('Returned the correct number of rows.'));
+    }
+  }
+
+  /**
+   * Test that we can use a subquery in a FROM clause with a limit.
+   */
+  function testFromSubquerySelectWithLimit() {
+    // Create a subquery, which is just a normal query object.
+    $subquery = db_select('test_task', 'tt');
+    $subquery->addField('tt', 'pid', 'pid');
+    $subquery->addField('tt', 'task', 'task');
+    $subquery->orderBy('priority', 'DESC');
+    $subquery->range(0, 1);
+
+    // Create another query that joins against the virtual table resulting
+    // from the subquery.
+    $select = db_select($subquery, 'tt2');
+    $select->join('test', 't', 't.id=tt2.pid');
+    $select->addField('t', 'name');
+
+    // The resulting query should be equivalent to:
+    // SELECT t.name
+    // FROM (SELECT tt.pid AS pid, tt.task AS task FROM test_task tt ORDER BY priority DESC LIMIT 1 OFFSET 0) tt
+    //   INNER JOIN test t ON t.id=tt.pid
+    $people = $select->execute()->fetchCol();
+
+    $this->assertEqual(count($people), 1, t('Returned the correct number of rows.'));
+  }
+
+  /**
+   * Test that we can use a subquery in a WHERE clause.
+   */
+  function testConditionSubquerySelect() {
+    // Create a subquery, which is just a normal query object.
+    $subquery = db_select('test_task', 'tt');
+    $subquery->addField('tt', 'pid', 'pid');
+    $subquery->condition('tt.priority', 1);
+
+    // Create another query that joins against the virtual table resulting
+    // from the subquery.
+    $select = db_select('test_task', 'tt2');
+    $select->addField('tt2', 'task');
+    $select->condition('tt2.pid', $subquery, 'IN');
+
+    // The resulting query should be equivalent to:
+    // SELECT tt2.name
+    // FROM test tt2
+    // WHERE tt2.pid IN (SELECT tt.pid AS pid FROM test_task tt WHERE tt.priority=1)
+    $people = $select->execute()->fetchCol();
+    $this->assertEqual(count($people), 5, t('Returned the correct number of rows.'));
+  }
+
+  /**
+   * Test that we can use a subquery in a JOIN clause.
+   */
+  function testJoinSubquerySelect() {
+    // Create a subquery, which is just a normal query object.
+    $subquery = db_select('test_task', 'tt');
+    $subquery->addField('tt', 'pid', 'pid');
+    $subquery->condition('priority', 1);
+
+    // Create another query that joins against the virtual table resulting
+    // from the subquery.
+    $select = db_select('test', 't');
+    $select->join($subquery, 'tt', 't.id=tt.pid');
+    $select->addField('t', 'name');
+
+    // The resulting query should be equivalent to:
+    // SELECT t.name
+    // FROM test t
+    //   INNER JOIN (SELECT tt.pid AS pid FROM test_task tt WHERE priority=1) tt ON t.id=tt.pid
+    $people = $select->execute()->fetchCol();
+
+    $this->assertEqual(count($people), 2, t('Returned the correct number of rows.'));
+  }
+
+  /**
+   * Test EXISTS subquery conditionals on SELECT statements.
+   *
+   * We essentially select all rows from the {test} table that have matching
+   * rows in the {test_people} table based on the shared name column.
+   */
+  function testExistsSubquerySelect() {
+    // Put George into {test_people}.
+    db_insert('test_people')
+      ->fields(array(
+        'name' => 'George',
+        'age' => 27,
+        'job' => 'Singer',
+      ))
+      ->execute();
+    // Base query to {test}.
+    $query = db_select('test', 't')
+      ->fields('t', array('name'));
+    // Subquery to {test_people}.
+    $subquery = db_select('test_people', 'tp')
+      ->fields('tp', array('name'))
+      ->where('tp.name = t.name');
+    $query->exists($subquery);
+    $result = $query->execute();
+
+    // Ensure that we got the right record.
+    $record = $result->fetch();
+    $this->assertEqual($record->name, 'George', t('Fetched name is correct using EXISTS query.'));
+  }
+
+  /**
+   * Test NOT EXISTS subquery conditionals on SELECT statements.
+   *
+   * We essentially select all rows from the {test} table that don't have
+   * matching rows in the {test_people} table based on the shared name column.
+   */
+  function testNotExistsSubquerySelect() {
+    // Put George into {test_people}.
+    db_insert('test_people')
+      ->fields(array(
+        'name' => 'George',
+        'age' => 27,
+        'job' => 'Singer',
+      ))
+      ->execute();
+
+    // Base query to {test}.
+    $query = db_select('test', 't')
+      ->fields('t', array('name'));
+    // Subquery to {test_people}.
+    $subquery = db_select('test_people', 'tp')
+      ->fields('tp', array('name'))
+      ->where('tp.name = t.name');
+    $query->notExists($subquery);
+
+    // Ensure that we got the right number of records.
+    $people = $query->execute()->fetchCol();
+    $this->assertEqual(count($people), 3, t('NOT EXISTS query returned the correct results.'));
+  }
+}
+
+/**
+ * Test select with order by clauses.
+ */
+class DatabaseSelectOrderedTestCase extends DatabaseTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Select tests, ordered',
+      'description' => 'Test the Select query builder.',
+      'group' => 'Database',
+    );
+  }
+
+  /**
+   * Test basic order by.
+   */
+  function testSimpleSelectOrdered() {
+    $query = db_select('test');
+    $name_field = $query->addField('test', 'name');
+    $age_field = $query->addField('test', 'age', 'age');
+    $query->orderBy($age_field);
+    $result = $query->execute();
+
+    $num_records = 0;
+    $last_age = 0;
+    foreach ($result as $record) {
+      $num_records++;
+      $this->assertTrue($record->age >= $last_age, t('Results returned in correct order.'));
+      $last_age = $record->age;
+    }
+
+    $this->assertEqual($num_records, 4, t('Returned the correct number of rows.'));
+  }
+
+  /**
+   * Test multiple order by.
+   */
+  function testSimpleSelectMultiOrdered() {
+    $query = db_select('test');
+    $name_field = $query->addField('test', 'name');
+    $age_field = $query->addField('test', 'age', 'age');
+    $job_field = $query->addField('test', 'job');
+    $query->orderBy($job_field);
+    $query->orderBy($age_field);
+    $result = $query->execute();
+
+    $num_records = 0;
+    $expected = array(
+      array('Ringo', 28, 'Drummer'),
+      array('John', 25, 'Singer'),
+      array('George', 27, 'Singer'),
+      array('Paul', 26, 'Songwriter'),
+    );
+    $results = $result->fetchAll(PDO::FETCH_NUM);
+    foreach ($expected as $k => $record) {
+      $num_records++;
+      foreach ($record as $kk => $col) {
+        if ($expected[$k][$kk] != $results[$k][$kk]) {
+          $this->assertTrue(FALSE, t('Results returned in correct order.'));
+        }
+      }
+    }
+    $this->assertEqual($num_records, 4, t('Returned the correct number of rows.'));
+  }
+
+  /**
+   * Test order by descending.
+   */
+  function testSimpleSelectOrderedDesc() {
+    $query = db_select('test');
+    $name_field = $query->addField('test', 'name');
+    $age_field = $query->addField('test', 'age', 'age');
+    $query->orderBy($age_field, 'DESC');
+    $result = $query->execute();
+
+    $num_records = 0;
+    $last_age = 100000000;
+    foreach ($result as $record) {
+      $num_records++;
+      $this->assertTrue($record->age <= $last_age, t('Results returned in correct order.'));
+      $last_age = $record->age;
+    }
+
+    $this->assertEqual($num_records, 4, t('Returned the correct number of rows.'));
+  }
+}
+
+/**
+ * Test more complex select statements.
+ */
+class DatabaseSelectComplexTestCase extends DatabaseTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Select tests, complex',
+      'description' => 'Test the Select query builder with more complex queries.',
+      'group' => 'Database',
+    );
+  }
+
+  /**
+   * Test simple JOIN statements.
+   */
+  function testDefaultJoin() {
+    $query = db_select('test_task', 't');
+    $people_alias = $query->join('test', 'p', 't.pid = p.id');
+    $name_field = $query->addField($people_alias, 'name', 'name');
+    $task_field = $query->addField('t', 'task', 'task');
+    $priority_field = $query->addField('t', 'priority', 'priority');
+
+    $query->orderBy($priority_field);
+    $result = $query->execute();
+
+    $num_records = 0;
+    $last_priority = 0;
+    foreach ($result as $record) {
+      $num_records++;
+      $this->assertTrue($record->$priority_field >= $last_priority, t('Results returned in correct order.'));
+      $this->assertNotEqual($record->$name_field, 'Ringo', t('Taskless person not selected.'));
+      $last_priority = $record->$priority_field;
+    }
+
+    $this->assertEqual($num_records, 7, t('Returned the correct number of rows.'));
+  }
+
+  /**
+   * Test LEFT OUTER joins.
+   */
+  function testLeftOuterJoin() {
+    $query = db_select('test', 'p');
+    $people_alias = $query->leftJoin('test_task', 't', 't.pid = p.id');
+    $name_field = $query->addField('p', 'name', 'name');
+    $task_field = $query->addField($people_alias, 'task', 'task');
+    $priority_field = $query->addField($people_alias, 'priority', 'priority');
+
+    $query->orderBy($name_field);
+    $result = $query->execute();
+
+    $num_records = 0;
+    $last_name = 0;
+
+    foreach ($result as $record) {
+      $num_records++;
+      $this->assertTrue(strcmp($record->$name_field, $last_name) >= 0, t('Results returned in correct order.'));
+      $last_priority = $record->$name_field;
+    }
+
+    $this->assertEqual($num_records, 8, t('Returned the correct number of rows.'));
+  }
+
+  /**
+   * Test GROUP BY clauses.
+   */
+  function testGroupBy() {
+    $query = db_select('test_task', 't');
+    $count_field = $query->addExpression('COUNT(task)', 'num');
+    $task_field = $query->addField('t', 'task');
+    $query->orderBy($count_field);
+    $query->groupBy($task_field);
+    $result = $query->execute();
+
+    $num_records = 0;
+    $last_count = 0;
+    $records = array();
+    foreach ($result as $record) {
+      $num_records++;
+      $this->assertTrue($record->$count_field >= $last_count, t('Results returned in correct order.'));
+      $last_count = $record->$count_field;
+      $records[$record->$task_field] = $record->$count_field;
+    }
+
+    $correct_results = array(
+      'eat' => 1,
+      'sleep' => 2,
+      'code' => 1,
+      'found new band' => 1,
+      'perform at superbowl' => 1,
+    );
+
+    foreach ($correct_results as $task => $count) {
+      $this->assertEqual($records[$task], $count, t("Correct number of '@task' records found.", array('@task' => $task)));
+    }
+
+    $this->assertEqual($num_records, 6, t('Returned the correct number of total rows.'));
+  }
+
+  /**
+   * Test GROUP BY and HAVING clauses together.
+   */
+  function testGroupByAndHaving() {
+    $query = db_select('test_task', 't');
+    $count_field = $query->addExpression('COUNT(task)', 'num');
+    $task_field = $query->addField('t', 'task');
+    $query->orderBy($count_field);
+    $query->groupBy($task_field);
+    $query->having('COUNT(task) >= 2');
+    $result = $query->execute();
+
+    $num_records = 0;
+    $last_count = 0;
+    $records = array();
+    foreach ($result as $record) {
+      $num_records++;
+      $this->assertTrue($record->$count_field >= 2, t('Record has the minimum count.'));
+      $this->assertTrue($record->$count_field >= $last_count, t('Results returned in correct order.'));
+      $last_count = $record->$count_field;
+      $records[$record->$task_field] = $record->$count_field;
+    }
+
+    $correct_results = array(
+      'sleep' => 2,
+    );
+
+    foreach ($correct_results as $task => $count) {
+      $this->assertEqual($records[$task], $count, t("Correct number of '@task' records found.", array('@task' => $task)));
+    }
+
+    $this->assertEqual($num_records, 1, t('Returned the correct number of total rows.'));
+  }
+
+  /**
+   * Test range queries. The SQL clause varies with the database.
+   */
+  function testRange() {
+    $query = db_select('test');
+    $name_field = $query->addField('test', 'name');
+    $age_field = $query->addField('test', 'age', 'age');
+    $query->range(0, 2);
+    $result = $query->execute();
+
+    $num_records = 0;
+    foreach ($result as $record) {
+      $num_records++;
+    }
+
+    $this->assertEqual($num_records, 2, t('Returned the correct number of rows.'));
+  }
+
+  /**
+   * Test distinct queries.
+   */
+  function testDistinct() {
+    $query = db_select('test_task');
+    $task_field = $query->addField('test_task', 'task');
+    $query->distinct();
+    $result = $query->execute();
+
+    $num_records = 0;
+    foreach ($result as $record) {
+      $num_records++;
+    }
+
+    $this->assertEqual($num_records, 6, t('Returned the correct number of rows.'));
+  }
+
+  /**
+   * Test that we can generate a count query from a built query.
+   */
+  function testCountQuery() {
+    $query = db_select('test');
+    $name_field = $query->addField('test', 'name');
+    $age_field = $query->addField('test', 'age', 'age');
+    $query->orderBy('name');
+
+    $count = $query->countQuery()->execute()->fetchField();
+
+    $this->assertEqual($count, 4, t('Counted the correct number of records.'));
+
+    // Now make sure we didn't break the original query!  We should still have
+    // all of the fields we asked for.
+    $record = $query->execute()->fetch();
+    $this->assertEqual($record->$name_field, 'George', t('Correct data retrieved.'));
+    $this->assertEqual($record->$age_field, 27, t('Correct data retrieved.'));
+  }
+
+  /**
+   * Test that countQuery properly removes 'all_fields' statements and
+   * ordering clauses.
+   */
+  function testCountQueryRemovals() {
+    $query = db_select('test');
+    $query->fields('test');
+    $query->orderBy('name');
+    $count = $query->countQuery();
+
+    // Check that the 'all_fields' statement is handled properly.
+    $tables = $query->getTables();
+    $this->assertEqual($tables['test']['all_fields'], 1, t('Query correctly sets \'all_fields\' statement.'));
+    $tables = $count->getTables();
+    $this->assertFalse(isset($tables['test']['all_fields']), t('Count query correctly unsets \'all_fields\' statement.'));
+
+    // Check that the ordering clause is handled properly.
+    $orderby = $query->getOrderBy();
+    $this->assertEqual($orderby['name'], 'ASC', t('Query correctly sets ordering clause.'));
+    $orderby = $count->getOrderBy();
+    $this->assertFalse(isset($orderby['name']), t('Count query correctly unsets ordering caluse.'));
+
+    // Make sure that the count query works.
+    $count = $count->execute()->fetchField();
+
+    $this->assertEqual($count, 4, t('Counted the correct number of records.'));
+  }
+
+
+  /**
+   * Test that countQuery properly removes fields and expressions.
+   */
+  function testCountQueryFieldRemovals() {
+    // countQuery should remove all fields and expressions, so this can be
+    // tested by adding a non-existent field and expression: if it ends
+    // up in the query, an error will be thrown. If not, it will return the
+    // number of records, which in this case happens to be 4 (there are four
+    // records in the {test} table).
+    $query = db_select('test');
+    $query->fields('test', array('fail'));
+    $this->assertEqual(4, $query->countQuery()->execute()->fetchField(), t('Count Query removed fields'));
+
+    $query = db_select('test');
+    $query->addExpression('fail');
+    $this->assertEqual(4, $query->countQuery()->execute()->fetchField(), t('Count Query removed expressions'));
+  }
+
+  /**
+   * Test that we can generate a count query from a query with distinct.
+   */
+  function testCountQueryDistinct() {
+    $query = db_select('test_task');
+    $task_field = $query->addField('test_task', 'task');
+    $query->distinct();
+
+    $count = $query->countQuery()->execute()->fetchField();
+
+    $this->assertEqual($count, 6, t('Counted the correct number of records.'));
+  }
+
+  /**
+   * Test that we can generate a count query from a query with GROUP BY.
+   */
+  function testCountQueryGroupBy() {
+    $query = db_select('test_task');
+    $pid_field = $query->addField('test_task', 'pid');
+    $query->groupBy('pid');
+
+    $count = $query->countQuery()->execute()->fetchField();
+
+    $this->assertEqual($count, 3, t('Counted the correct number of records.'));
+
+    // Use a column alias as, without one, the query can succeed for the wrong
+    // reason.
+    $query = db_select('test_task');
+    $pid_field = $query->addField('test_task', 'pid', 'pid_alias');
+    $query->addExpression('COUNT(test_task.task)', 'count');
+    $query->groupBy('pid_alias');
+    $query->orderBy('pid_alias', 'asc');
+
+    $count = $query->countQuery()->execute()->fetchField();
+
+    $this->assertEqual($count, 3, t('Counted the correct number of records.'));
+  }
+
+  /**
+   * Confirm that we can properly nest conditional clauses.
+   */
+  function testNestedConditions() {
+    // This query should translate to:
+    // "SELECT job FROM {test} WHERE name = 'Paul' AND (age = 26 OR age = 27)"
+    // That should find only one record. Yes it's a non-optimal way of writing
+    // that query but that's not the point!
+    $query = db_select('test');
+    $query->addField('test', 'job');
+    $query->condition('name', 'Paul');
+    $query->condition(db_or()->condition('age', 26)->condition('age', 27));
+
+    $job = $query->execute()->fetchField();
+    $this->assertEqual($job, 'Songwriter', t('Correct data retrieved.'));
+  }
+
+  /**
+   * Confirm we can join on a single table twice with a dynamic alias.
+   */
+  function testJoinTwice() {
+    $query = db_select('test')->fields('test');
+    $alias = $query->join('test', 'test', 'test.job = %alias.job');
+    $query->addField($alias, 'name', 'othername');
+    $query->addField($alias, 'job', 'otherjob');
+    $query->where("$alias.name <> test.name");
+    $crowded_job = $query->execute()->fetch();
+    $this->assertEqual($crowded_job->job, $crowded_job->otherjob, t('Correctly joined same table twice.'));
+    $this->assertNotEqual($crowded_job->name, $crowded_job->othername, t('Correctly joined same table twice.'));
+  }
+
+}
+
+/**
+ * Test more complex select statements, part 2.
+ */
+class DatabaseSelectComplexTestCase2 extends DatabaseTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Select tests, complex 2',
+      'description' => 'Test the Select query builder with even more complex queries.',
+      'group' => 'Database',
+    );
+  }
+
+  function setUp() {
+    DrupalWebTestCase::setUp('database_test', 'node_access_test');
+
+    $schema['test'] = drupal_get_schema('test');
+    $schema['test_people'] = drupal_get_schema('test_people');
+    $schema['test_one_blob'] = drupal_get_schema('test_one_blob');
+    $schema['test_two_blobs'] = drupal_get_schema('test_two_blobs');
+    $schema['test_task'] = drupal_get_schema('test_task');
+
+    $this->installTables($schema);
+
+    $this->addSampleData();
+  }
+
+  /**
+   * Test that we can join on a query.
+   */
+  function testJoinSubquery() {
+    $acct = $this->drupalCreateUser(array('access content'));
+    $this->drupalLogin($acct);
+
+    $query = db_select('test_task', 'tt', array('target' => 'slave'));
+    $query->addExpression('tt.pid + 1', 'abc');
+    $query->condition('priority', 1, '>');
+    $query->condition('priority', 100, '<');
+
+    $subquery = db_select('test', 'tp');
+    $subquery->join('test_one_blob', 'tpb', 'tp.id = tpb.id');
+    $subquery->join('node', 'n', 'tp.id = n.nid');
+    $subquery->addTag('node_access');
+    $subquery->addMetaData('account', $acct);
+    $subquery->addField('tp', 'id');
+    $subquery->condition('age', 5, '>');
+    $subquery->condition('age', 500, '<');
+
+    $query->leftJoin($subquery, 'sq', 'tt.pid = sq.id');
+    $query->join('test_one_blob', 'tb3', 'tt.pid = tb3.id');
+
+    // Construct the query string.
+    // This is the same sequence that SelectQuery::execute() goes through.
+    $query->preExecute();
+    $query->getArguments();
+    $str = (string) $query;
+
+    // Verify that the string only has one copy of condition placeholder 0.
+    $pos = strpos($str, 'db_condition_placeholder_0', 0);
+    $pos2 = strpos($str, 'db_condition_placeholder_0', $pos + 1);
+    $this->assertFalse($pos2, "Condition placeholder is not repeated");
+  }
+}
+
+class DatabaseSelectPagerDefaultTestCase extends DatabaseTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Pager query tests',
+      'description' => 'Test the pager query extender.',
+      'group' => 'Database',
+    );
+  }
+
+  /**
+   * Confirm that a pager query returns the correct results.
+   *
+   * Note that we have to make an HTTP request to a test page handler
+   * because the pager depends on GET parameters.
+   */
+  function testEvenPagerQuery() {
+    // To keep the test from being too brittle, we determine up front
+    // what the page count should be dynamically, and pass the control
+    // information forward to the actual query on the other side of the
+    // HTTP request.
+    $limit = 2;
+    $count = db_query('SELECT COUNT(*) FROM {test}')->fetchField();
+
+    $correct_number = $limit;
+    $num_pages = floor($count / $limit);
+
+    // If there is no remainder from rounding, subtract 1 since we index from 0.
+    if (!($num_pages * $limit < $count)) {
+      $num_pages--;
+    }
+
+    for ($page = 0; $page <= $num_pages; ++$page) {
+      $this->drupalGet('database_test/pager_query_even/' . $limit, array('query' => array('page' => $page)));
+      $data = json_decode($this->drupalGetContent());
+
+      if ($page == $num_pages) {
+        $correct_number = $count - ($limit * $page);
+      }
+
+      $this->assertEqual(count($data->names), $correct_number, t('Correct number of records returned by pager: @number', array('@number' => $correct_number)));
+    }
+  }
+
+  /**
+   * Confirm that a pager query returns the correct results.
+   *
+   * Note that we have to make an HTTP request to a test page handler
+   * because the pager depends on GET parameters.
+   */
+  function testOddPagerQuery() {
+    // To keep the test from being too brittle, we determine up front
+    // what the page count should be dynamically, and pass the control
+    // information forward to the actual query on the other side of the
+    // HTTP request.
+    $limit = 2;
+    $count = db_query('SELECT COUNT(*) FROM {test_task}')->fetchField();
+
+    $correct_number = $limit;
+    $num_pages = floor($count / $limit);
+
+    // If there is no remainder from rounding, subtract 1 since we index from 0.
+    if (!($num_pages * $limit < $count)) {
+      $num_pages--;
+    }
+
+    for ($page = 0; $page <= $num_pages; ++$page) {
+      $this->drupalGet('database_test/pager_query_odd/' . $limit, array('query' => array('page' => $page)));
+      $data = json_decode($this->drupalGetContent());
+
+      if ($page == $num_pages) {
+        $correct_number = $count - ($limit * $page);
+      }
+
+      $this->assertEqual(count($data->names), $correct_number, t('Correct number of records returned by pager: @number', array('@number' => $correct_number)));
+    }
+  }
+
+  /**
+   * Confirm that a pager query with inner pager query returns valid results.
+   *
+   * This is a regression test for #467984.
+   */
+  function testInnerPagerQuery() {
+    $query = db_select('test', 't')->extend('PagerDefault');
+    $query
+      ->fields('t', array('age'))
+      ->orderBy('age')
+      ->limit(5);
+
+    $outer_query = db_select($query);
+    $outer_query->addField('subquery', 'age');
+
+    $ages = $outer_query
+      ->execute()
+      ->fetchCol();
+    $this->assertEqual($ages, array(25, 26, 27, 28), t('Inner pager query returned the correct ages.'));
+  }
+
+  /**
+   * Confirm that a paging query with a having expression returns valid results.
+   *
+   * This is a regression test for #467984.
+   */
+  function testHavingPagerQuery() {
+    $query = db_select('test', 't')->extend('PagerDefault');
+    $query
+      ->fields('t', array('name'))
+      ->orderBy('name')
+      ->groupBy('name')
+      ->having('MAX(age) > :count', array(':count' => 26))
+      ->limit(5);
+
+    $ages = $query
+      ->execute()
+      ->fetchCol();
+    $this->assertEqual($ages, array('George', 'Ringo'), t('Pager query with having expression returned the correct ages.'));
+  }
+
+  /**
+   * Confirm that every pager gets a valid non-overlaping element ID.
+   */
+  function testElementNumbers() {
+    $_GET['page'] = '3, 2, 1, 0';
+
+    $name = db_select('test', 't')->extend('PagerDefault')
+      ->element(2)
+      ->fields('t', array('name'))
+      ->orderBy('age')
+      ->limit(1)
+      ->execute()
+      ->fetchField();
+    $this->assertEqual($name, 'Paul', t('Pager query #1 with a specified element ID returned the correct results.'));
+
+    // Setting an element smaller than the previous one
+    // should not overwrite the pager $maxElement with a smaller value.
+    $name = db_select('test', 't')->extend('PagerDefault')
+      ->element(1)
+      ->fields('t', array('name'))
+      ->orderBy('age')
+      ->limit(1)
+      ->execute()
+      ->fetchField();
+    $this->assertEqual($name, 'George', t('Pager query #2 with a specified element ID returned the correct results.'));
+
+    $name = db_select('test', 't')->extend('PagerDefault')
+      ->fields('t', array('name'))
+      ->orderBy('age')
+      ->limit(1)
+      ->execute()
+      ->fetchField();
+    $this->assertEqual($name, 'John', t('Pager query #3 with a generated element ID returned the correct results.'));
+
+    unset($_GET['page']);
+  }
+}
+
+
+class DatabaseSelectTableSortDefaultTestCase extends DatabaseTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Tablesort query tests',
+      'description' => 'Test the tablesort query extender.',
+      'group' => 'Database',
+    );
+  }
+
+  /**
+   * Confirm that a tablesort query returns the correct results.
+   *
+   * Note that we have to make an HTTP request to a test page handler
+   * because the pager depends on GET parameters.
+   */
+  function testTableSortQuery() {
+    $sorts = array(
+      array('field' => t('Task ID'), 'sort' => 'desc', 'first' => 'perform at superbowl', 'last' => 'eat'),
+      array('field' => t('Task ID'), 'sort' => 'asc', 'first' => 'eat', 'last' => 'perform at superbowl'),
+      array('field' => t('Task'), 'sort' => 'asc', 'first' => 'code', 'last' => 'sleep'),
+      array('field' => t('Task'), 'sort' => 'desc', 'first' => 'sleep', 'last' => 'code'),
+      // more elements here
+
+    );
+
+    foreach ($sorts as $sort) {
+      $this->drupalGet('database_test/tablesort/', array('query' => array('order' => $sort['field'], 'sort' => $sort['sort'])));
+      $data = json_decode($this->drupalGetContent());
+
+      $first = array_shift($data->tasks);
+      $last = array_pop($data->tasks);
+
+      $this->assertEqual($first->task, $sort['first'], t('Items appear in the correct order.'));
+      $this->assertEqual($last->task, $sort['last'], t('Items appear in the correct order.'));
+    }
+  }
+
+  /**
+   * Confirm that if a tablesort's orderByHeader is called before another orderBy, that the header happens first.
+   *
+   */
+  function testTableSortQueryFirst() {
+    $sorts = array(
+      array('field' => t('Task ID'), 'sort' => 'desc', 'first' => 'perform at superbowl', 'last' => 'eat'),
+      array('field' => t('Task ID'), 'sort' => 'asc', 'first' => 'eat', 'last' => 'perform at superbowl'),
+      array('field' => t('Task'), 'sort' => 'asc', 'first' => 'code', 'last' => 'sleep'),
+      array('field' => t('Task'), 'sort' => 'desc', 'first' => 'sleep', 'last' => 'code'),
+      // more elements here
+
+    );
+
+    foreach ($sorts as $sort) {
+      $this->drupalGet('database_test/tablesort_first/', array('query' => array('order' => $sort['field'], 'sort' => $sort['sort'])));
+      $data = json_decode($this->drupalGetContent());
+
+      $first = array_shift($data->tasks);
+      $last = array_pop($data->tasks);
+
+      $this->assertEqual($first->task, $sort['first'], t('Items appear in the correct order sorting by @field @sort.', array('@field' => $sort['field'], '@sort' => $sort['sort'])));
+      $this->assertEqual($last->task, $sort['last'], t('Items appear in the correct order sorting by @field @sort.', array('@field' => $sort['field'], '@sort' => $sort['sort'])));
+    }
+  }
+
+  /**
+   * Confirm that if a sort is not set in a tableselect form there is no error thrown when using the default.
+   */
+  function testTableSortDefaultSort() {
+    $this->drupalGet('database_test/tablesort_default_sort');
+    // Any PHP errors or notices thrown would trigger a simpletest exception, so
+    // no additional assertions are needed.
+  }
+}
+
+/**
+ * Select tagging tests.
+ *
+ * Tags are a way to flag queries for alter hooks so they know
+ * what type of query it is, such as "node_access".
+ */
+class DatabaseTaggingTestCase extends DatabaseTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Query tagging tests',
+      'description' => 'Test the tagging capabilities of the Select builder.',
+      'group' => 'Database',
+    );
+  }
+
+  /**
+   * Confirm that a query has a "tag" added to it.
+   */
+  function testHasTag() {
+    $query = db_select('test');
+    $query->addField('test', 'name');
+    $query->addField('test', 'age', 'age');
+
+    $query->addTag('test');
+
+    $this->assertTrue($query->hasTag('test'), t('hasTag() returned true.'));
+    $this->assertFalse($query->hasTag('other'), t('hasTag() returned false.'));
+  }
+
+  /**
+   * Test query tagging "has all of these tags" functionality.
+   */
+  function testHasAllTags() {
+    $query = db_select('test');
+    $query->addField('test', 'name');
+    $query->addField('test', 'age', 'age');
+
+    $query->addTag('test');
+    $query->addTag('other');
+
+    $this->assertTrue($query->hasAllTags('test', 'other'), t('hasAllTags() returned true.'));
+    $this->assertFalse($query->hasAllTags('test', 'stuff'), t('hasAllTags() returned false.'));
+  }
+
+  /**
+   * Test query tagging "has at least one of these tags" functionality.
+   */
+  function testHasAnyTag() {
+    $query = db_select('test');
+    $query->addField('test', 'name');
+    $query->addField('test', 'age', 'age');
+
+    $query->addTag('test');
+
+    $this->assertTrue($query->hasAnyTag('test', 'other'), t('hasAnyTag() returned true.'));
+    $this->assertFalse($query->hasAnyTag('other', 'stuff'), t('hasAnyTag() returned false.'));
+  }
+
+  /**
+   * Test that we can attach meta data to a query object.
+   *
+   * This is how we pass additional context to alter hooks.
+   */
+  function testMetaData() {
+    $query = db_select('test');
+    $query->addField('test', 'name');
+    $query->addField('test', 'age', 'age');
+
+    $data = array(
+      'a' => 'A',
+      'b' => 'B',
+    );
+
+    $query->addMetaData('test', $data);
+
+    $return = $query->getMetaData('test');
+    $this->assertEqual($data, $return, t('Corect metadata returned.'));
+
+    $return = $query->getMetaData('nothere');
+    $this->assertNull($return, t('Non-existent key returned NULL.'));
+  }
+}
+
+/**
+ * Select alter tests.
+ *
+ * @see database_test_query_alter()
+ */
+class DatabaseAlterTestCase extends DatabaseTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Query altering tests',
+      'description' => 'Test the hook_query_alter capabilities of the Select builder.',
+      'group' => 'Database',
+    );
+  }
+
+  /**
+   * Test that we can do basic alters.
+   */
+  function testSimpleAlter() {
+    $query = db_select('test');
+    $query->addField('test', 'name');
+    $query->addField('test', 'age', 'age');
+    $query->addTag('database_test_alter_add_range');
+
+    $result = $query->execute();
+
+    $num_records = 0;
+    foreach ($result as $record) {
+      $num_records++;
+    }
+
+    $this->assertEqual($num_records, 2, t('Returned the correct number of rows.'));
+  }
+
+  /**
+   * Test that we can alter the joins on a query.
+   */
+  function testAlterWithJoin() {
+    $query = db_select('test_task');
+    $tid_field = $query->addField('test_task', 'tid');
+    $task_field = $query->addField('test_task', 'task');
+    $query->orderBy($task_field);
+    $query->addTag('database_test_alter_add_join');
+
+    $result = $query->execute();
+
+    $records = $result->fetchAll();
+
+    $this->assertEqual(count($records), 2, t('Returned the correct number of rows.'));
+
+    $this->assertEqual($records[0]->name, 'George', t('Correct data retrieved.'));
+    $this->assertEqual($records[0]->$tid_field, 4, t('Correct data retrieved.'));
+    $this->assertEqual($records[0]->$task_field, 'sing', t('Correct data retrieved.'));
+    $this->assertEqual($records[1]->name, 'George', t('Correct data retrieved.'));
+    $this->assertEqual($records[1]->$tid_field, 5, t('Correct data retrieved.'));
+    $this->assertEqual($records[1]->$task_field, 'sleep', t('Correct data retrieved.'));
+  }
+
+  /**
+   * Test that we can alter a query's conditionals.
+   */
+  function testAlterChangeConditional() {
+    $query = db_select('test_task');
+    $tid_field = $query->addField('test_task', 'tid');
+    $pid_field = $query->addField('test_task', 'pid');
+    $task_field = $query->addField('test_task', 'task');
+    $people_alias = $query->join('test', 'people', "test_task.pid = people.id");
+    $name_field = $query->addField($people_alias, 'name', 'name');
+    $query->condition('test_task.tid', '1');
+    $query->orderBy($tid_field);
+    $query->addTag('database_test_alter_change_conditional');
+
+    $result = $query->execute();
+
+    $records = $result->fetchAll();
+
+    $this->assertEqual(count($records), 1, t('Returned the correct number of rows.'));
+    $this->assertEqual($records[0]->$name_field, 'John', t('Correct data retrieved.'));
+    $this->assertEqual($records[0]->$tid_field, 2, t('Correct data retrieved.'));
+    $this->assertEqual($records[0]->$pid_field, 1, t('Correct data retrieved.'));
+    $this->assertEqual($records[0]->$task_field, 'sleep', t('Correct data retrieved.'));
+  }
+
+  /**
+   * Test that we can alter the fields of a query.
+   */
+  function testAlterChangeFields() {
+    $query = db_select('test');
+    $name_field = $query->addField('test', 'name');
+    $age_field = $query->addField('test', 'age', 'age');
+    $query->orderBy('name');
+    $query->addTag('database_test_alter_change_fields');
+
+    $record = $query->execute()->fetch();
+    $this->assertEqual($record->$name_field, 'George', t('Correct data retrieved.'));
+    $this->assertFalse(isset($record->$age_field), t('Age field not found, as intended.'));
+  }
+
+  /**
+   * Test that we can alter expressions in the query.
+   */
+  function testAlterExpression() {
+    $query = db_select('test');
+    $name_field = $query->addField('test', 'name');
+    $age_field = $query->addExpression("age*2", 'double_age');
+    $query->condition('age', 27);
+    $query->addTag('database_test_alter_change_expressions');
+    $result = $query->execute();
+
+    // Ensure that we got the right record.
+    $record = $result->fetch();
+
+    $this->assertEqual($record->$name_field, 'George', t('Fetched name is correct.'));
+    $this->assertEqual($record->$age_field, 27*3, t('Fetched age expression is correct.'));
+  }
+
+  /**
+   * Test that we can remove a range() value from a query. This also tests hook_query_TAG_alter().
+   */
+  function testAlterRemoveRange() {
+    $query = db_select('test');
+    $query->addField('test', 'name');
+    $query->addField('test', 'age', 'age');
+    $query->range(0, 2);
+    $query->addTag('database_test_alter_remove_range');
+
+    $num_records = count($query->execute()->fetchAll());
+
+    $this->assertEqual($num_records, 4, t('Returned the correct number of rows.'));
+  }
+
+  /**
+   * Test that we can do basic alters on subqueries.
+   */
+  function testSimpleAlterSubquery() {
+    // Create a sub-query with an alter tag.
+    $subquery = db_select('test', 'p');
+    $subquery->addField('p', 'name');
+    $subquery->addField('p', 'id');
+    // Pick out George.
+    $subquery->condition('age', 27);
+    $subquery->addExpression("age*2", 'double_age');
+    // This query alter should change it to age * 3.
+    $subquery->addTag('database_test_alter_change_expressions');
+
+    // Create a main query and join to sub-query.
+    $query = db_select('test_task', 'tt');
+    $query->join($subquery, 'pq', 'pq.id = tt.pid');
+    $age_field = $query->addField('pq', 'double_age');
+    $name_field = $query->addField('pq', 'name');
+
+    $record = $query->execute()->fetch();
+    $this->assertEqual($record->$name_field, 'George', t('Fetched name is correct.'));
+    $this->assertEqual($record->$age_field, 27*3, t('Fetched age expression is correct.'));
+  }
+}
+
+/**
+ * Regression tests.
+ */
+class DatabaseRegressionTestCase extends DatabaseTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Regression tests',
+      'description' => 'Regression tests cases for the database layer.',
+      'group' => 'Database',
+    );
+  }
+
+  /**
+   * Regression test for #310447.
+   *
+   * Tries to insert non-ascii UTF-8 data in a database column and checks
+   * if its stored properly.
+   */
+  function testRegression_310447() {
+    // That's a 255 character UTF-8 string.
+    $name = str_repeat("é", 255);
+    db_insert('test')
+      ->fields(array(
+        'name' => $name,
+        'age' => 20,
+        'job' => 'Dancer',
+      ))->execute();
+
+    $from_database = db_query('SELECT name FROM {test} WHERE name = :name', array(':name' => $name))->fetchField();
+    $this->assertIdentical($name, $from_database, t("The database handles UTF-8 characters cleanly."));
+  }
+
+  /**
+   * Test the db_table_exists() function.
+   */
+  function testDBTableExists() {
+    $this->assertIdentical(TRUE, db_table_exists('node'), t('Returns true for existent table.'));
+    $this->assertIdentical(FALSE, db_table_exists('nosuchtable'), t('Returns false for nonexistent table.'));
+  }
+
+  /**
+   * Test the db_field_exists() function.
+   */
+  function testDBFieldExists() {
+    $this->assertIdentical(TRUE, db_field_exists('node', 'nid'), t('Returns true for existent column.'));
+    $this->assertIdentical(FALSE, db_field_exists('node', 'nosuchcolumn'), t('Returns false for nonexistent column.'));
+  }
+
+  /**
+   * Test the db_index_exists() function.
+   */
+  function testDBIndexExists() {
+    $this->assertIdentical(TRUE, db_index_exists('node', 'node_created'), t('Returns true for existent index.'));
+    $this->assertIdentical(FALSE, db_index_exists('node', 'nosuchindex'), t('Returns false for nonexistent index.'));
+  }
+}
+
+/**
+ * Query logging tests.
+ */
+class DatabaseLoggingTestCase extends DatabaseTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Query logging',
+      'description' => 'Test the query logging facility.',
+      'group' => 'Database',
+    );
+  }
+
+  /**
+   * Test that we can log the existence of a query.
+   */
+  function testEnableLogging() {
+    Database::startLog('testing');
+
+    db_query('SELECT name FROM {test} WHERE age > :age', array(':age' => 25))->fetchCol();
+    db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'Ringo'))->fetchCol();
+
+    $queries = Database::getLog('testing', 'default');
+
+    $this->assertEqual(count($queries), 2, t('Correct number of queries recorded.'));
+
+    foreach ($queries as $query) {
+      $this->assertEqual($query['caller']['function'], __FUNCTION__, t('Correct function in query log.'));
+    }
+  }
+
+  /**
+   * Test that we can run two logs in parallel.
+   */
+  function testEnableMultiLogging() {
+    Database::startLog('testing1');
+
+    db_query('SELECT name FROM {test} WHERE age > :age', array(':age' => 25))->fetchCol();
+
+    Database::startLog('testing2');
+
+    db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'Ringo'))->fetchCol();
+
+    $queries1 = Database::getLog('testing1');
+    $queries2 = Database::getLog('testing2');
+
+    $this->assertEqual(count($queries1), 2, t('Correct number of queries recorded for log 1.'));
+    $this->assertEqual(count($queries2), 1, t('Correct number of queries recorded for log 2.'));
+  }
+
+  /**
+   * Test that we can log queries against multiple targets on the same connection.
+   */
+  function testEnableTargetLogging() {
+    // Clone the master credentials to a slave connection and to another fake
+    // connection.
+    $connection_info = Database::getConnectionInfo('default');
+    Database::addConnectionInfo('default', 'slave', $connection_info['default']);
+
+    Database::startLog('testing1');
+
+    db_query('SELECT name FROM {test} WHERE age > :age', array(':age' => 25))->fetchCol();
+
+    db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'Ringo'), array('target' => 'slave'));//->fetchCol();
+
+    $queries1 = Database::getLog('testing1');
+
+    $this->assertEqual(count($queries1), 2, t('Recorded queries from all targets.'));
+    $this->assertEqual($queries1[0]['target'], 'default', t('First query used default target.'));
+    $this->assertEqual($queries1[1]['target'], 'slave', t('Second query used slave target.'));
+  }
+
+  /**
+   * Test that logs to separate targets collapse to the same connection properly.
+   *
+   * This test is identical to the one above, except that it doesn't create
+   * a fake target so the query should fall back to running on the default
+   * target.
+   */
+  function testEnableTargetLoggingNoTarget() {
+    Database::startLog('testing1');
+
+    db_query('SELECT name FROM {test} WHERE age > :age', array(':age' => 25))->fetchCol();
+
+    // We use "fake" here as a target because any non-existent target will do.
+    // However, because all of the tests in this class share a single page
+    // request there is likely to be a target of "slave" from one of the other
+    // unit tests, so we use a target here that we know with absolute certainty
+    // does not exist.
+    db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'Ringo'), array('target' => 'fake'))->fetchCol();
+
+    $queries1 = Database::getLog('testing1');
+
+    $this->assertEqual(count($queries1), 2, t('Recorded queries from all targets.'));
+    $this->assertEqual($queries1[0]['target'], 'default', t('First query used default target.'));
+    $this->assertEqual($queries1[1]['target'], 'default', t('Second query used default target as fallback.'));
+  }
+
+  /**
+   * Test that we can log queries separately on different connections.
+   */
+  function testEnableMultiConnectionLogging() {
+    // Clone the master credentials to a fake connection.
+    // That both connections point to the same physical database is irrelevant.
+    $connection_info = Database::getConnectionInfo('default');
+    Database::addConnectionInfo('test2', 'default', $connection_info['default']);
+
+    Database::startLog('testing1');
+    Database::startLog('testing1', 'test2');
+
+    db_query('SELECT name FROM {test} WHERE age > :age', array(':age' => 25))->fetchCol();
+
+    $old_key = db_set_active('test2');
+
+    db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'Ringo'), array('target' => 'slave'))->fetchCol();
+
+    db_set_active($old_key);
+
+    $queries1 = Database::getLog('testing1');
+    $queries2 = Database::getLog('testing1', 'test2');
+
+    $this->assertEqual(count($queries1), 1, t('Correct number of queries recorded for first connection.'));
+    $this->assertEqual(count($queries2), 1, t('Correct number of queries recorded for second connection.'));
+  }
+}
+
+/**
+ * Query serialization tests.
+ */
+class DatabaseSerializeQueryTestCase extends DatabaseTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Serialize query',
+      'description' => 'Test serializing and unserializing a query.',
+      'group' => 'Database',
+    );
+  }
+
+  /**
+   * Confirm that a query can be serialized and unserialized.
+   */
+  function testSerializeQuery() {
+    $query = db_select('test');
+    $query->addField('test', 'age');
+    $query->condition('name', 'Ringo');
+    // If this doesn't work, it will throw an exception, so no need for an
+    // assertion.
+    $query = unserialize(serialize($query));
+    $results = $query->execute()->fetchCol();
+    $this->assertEqual($results[0], 28, t('Query properly executed after unserialization.'));
+  }
+}
+
+/**
+ * Range query tests.
+ */
+class DatabaseRangeQueryTestCase extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Range query test',
+      'description' => 'Test the Range query functionality.',
+      'group' => 'Database',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('database_test');
+  }
+
+  /**
+   * Confirm that range query work and return correct result.
+   */
+  function testRangeQuery() {
+    // Test if return correct number of rows.
+    $range_rows = db_query_range("SELECT name FROM {system} ORDER BY name", 2, 3)->fetchAll();
+    $this->assertEqual(count($range_rows), 3, t('Range query work and return correct number of rows.'));
+
+    // Test if return target data.
+    $raw_rows = db_query('SELECT name FROM {system} ORDER BY name')->fetchAll();
+    $raw_rows = array_slice($raw_rows, 2, 3);
+    $this->assertEqual($range_rows, $raw_rows, t('Range query work and return target data.'));
+  }
+}
+
+/**
+ * Temporary query tests.
+ */
+class DatabaseTemporaryQueryTestCase extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Temporary query test',
+      'description' => 'Test the temporary query functionality.',
+      'group' => 'Database',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('database_test');
+  }
+
+  /**
+   * Return the number of rows of a table.
+   */
+  function countTableRows($table_name) {
+    return db_select($table_name)->countQuery()->execute()->fetchField();
+  }
+
+  /**
+   * Confirm that temporary tables work and are limited to one request.
+   */
+  function testTemporaryQuery() {
+    $this->drupalGet('database_test/db_query_temporary');
+    $data = json_decode($this->drupalGetContent());
+    if ($data) {
+      $this->assertEqual($this->countTableRows("system"), $data->row_count, t('The temporary table contains the correct amount of rows.'));
+      $this->assertFalse(db_table_exists($data->table_name), t('The temporary table is, indeed, temporary.'));
+    }
+    else {
+      $this->fail(t("The creation of the temporary table failed."));
+    }
+
+    // Now try to run two db_query_temporary() in the same request.
+    $table_name_system = db_query_temporary('SELECT status FROM {system}', array());
+    $table_name_users = db_query_temporary('SELECT uid FROM {users}', array());
+
+    $this->assertEqual($this->countTableRows($table_name_system), $this->countTableRows("system"), t('A temporary table was created successfully in this request.'));
+    $this->assertEqual($this->countTableRows($table_name_users), $this->countTableRows("users"), t('A second temporary table was created successfully in this request.'));
+  }
+}
+
+/**
+ * Test how the current database driver interprets the SQL syntax.
+ *
+ * In order to ensure consistent SQL handling throughout Drupal
+ * across multiple kinds of database systems, we test that the
+ * database system interprets SQL syntax in an expected fashion.
+ */
+class DatabaseBasicSyntaxTestCase extends DatabaseTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Basic SQL syntax tests',
+      'description' => 'Test SQL syntax interpretation.',
+      'group' => 'Database',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('database_test');
+  }
+
+  /**
+   * Test for string concatenation.
+   */
+  function testBasicConcat() {
+    $result = db_query('SELECT CONCAT(:a1, CONCAT(:a2, CONCAT(:a3, CONCAT(:a4, :a5))))', array(
+      ':a1' => 'This',
+      ':a2' => ' ',
+      ':a3' => 'is',
+      ':a4' => ' a ',
+      ':a5' => 'test.',
+    ));
+    $this->assertIdentical($result->fetchField(), 'This is a test.', t('Basic CONCAT works.'));
+  }
+
+  /**
+   * Test for string concatenation with field values.
+   */
+  function testFieldConcat() {
+    $result = db_query('SELECT CONCAT(:a1, CONCAT(name, CONCAT(:a2, CONCAT(age, :a3)))) FROM {test} WHERE age = :age', array(
+      ':a1' => 'The age of ',
+      ':a2' => ' is ',
+      ':a3' => '.',
+      ':age' => 25,
+    ));
+    $this->assertIdentical($result->fetchField(), 'The age of John is 25.', t('Field CONCAT works.'));
+  }
+
+  /**
+   * Test escaping of LIKE wildcards.
+   */
+  function testLikeEscape() {
+    db_insert('test')
+      ->fields(array(
+        'name' => 'Ring_',
+      ))
+      ->execute();
+
+    // Match both "Ringo" and "Ring_".
+    $num_matches = db_select('test', 't')
+      ->condition('name', 'Ring_', 'LIKE')
+      ->countQuery()
+      ->execute()
+      ->fetchField();
+    $this->assertIdentical($num_matches, '2', t('Found 2 records.'));
+    // Match only "Ring_" using a LIKE expression with no wildcards.
+    $num_matches = db_select('test', 't')
+      ->condition('name', db_like('Ring_'), 'LIKE')
+      ->countQuery()
+      ->execute()
+      ->fetchField();
+    $this->assertIdentical($num_matches, '1', t('Found 1 record.'));
+  }
+
+  /**
+   * Test LIKE query containing a backslash.
+   */
+  function testLikeBackslash() {
+    db_insert('test')
+      ->fields(array('name'))
+      ->values(array(
+        'name' => 'abcde\f',
+      ))
+      ->values(array(
+        'name' => 'abc%\_',
+      ))
+      ->execute();
+
+    // Match both rows using a LIKE expression with two wildcards and a verbatim
+    // backslash.
+    $num_matches = db_select('test', 't')
+      ->condition('name', 'abc%\\\\_', 'LIKE')
+      ->countQuery()
+      ->execute()
+      ->fetchField();
+    $this->assertIdentical($num_matches, '2', t('Found 2 records.'));
+    // Match only the former using a LIKE expression with no wildcards.
+    $num_matches = db_select('test', 't')
+      ->condition('name', db_like('abc%\_'), 'LIKE')
+      ->countQuery()
+      ->execute()
+      ->fetchField();
+    $this->assertIdentical($num_matches, '1', t('Found 1 record.'));
+  }
+}
+
+/**
+ * Test invalid data handling.
+ */
+class DatabaseInvalidDataTestCase extends DatabaseTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Invalid data',
+      'description' => 'Test handling of some invalid data.',
+      'group' => 'Database',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('database_test');
+  }
+
+  /**
+   * Traditional SQL database systems abort inserts when invalid data is encountered.
+   */
+  function testInsertDuplicateData() {
+    // Try to insert multiple records where at least one has bad data.
+    try {
+      db_insert('test')
+        ->fields(array('name', 'age', 'job'))
+        ->values(array(
+          'name' => 'Elvis',
+          'age' => 63,
+          'job' => 'Singer',
+        ))->values(array(
+          'name' => 'John', // <-- Duplicate value on unique field.
+          'age' => 17,
+          'job' => 'Consultant',
+        ))
+        ->values(array(
+          'name' => 'Frank',
+          'age' => 75,
+          'job' => 'Singer',
+        ))
+        ->execute();
+      $this->fail(t('Insert succeedded when it should not have.'));
+    }
+    catch (Exception $e) {
+      // Check if the first record was inserted.
+      $name = db_query('SELECT name FROM {test} WHERE age = :age', array(':age' => 63))->fetchField();
+
+      if ($name == 'Elvis') {
+        if (!Database::getConnection()->supportsTransactions()) {
+          // This is an expected fail.
+          // Database engines that don't support transactions can leave partial
+          // inserts in place when an error occurs. This is the case for MySQL
+          // when running on a MyISAM table.
+          $this->pass(t("The whole transaction has not been rolled-back when a duplicate key insert occurs, this is expected because the database doesn't support transactions"));
+        }
+        else {
+          $this->fail(t('The whole transaction is rolled back when a duplicate key insert occurs.'));
+        }
+      }
+      else {
+        $this->pass(t('The whole transaction is rolled back when a duplicate key insert occurs.'));
+      }
+
+      // Ensure the other values were not inserted.
+      $record = db_select('test')
+        ->fields('test', array('name', 'age'))
+        ->condition('age', array(17, 75), 'IN')
+        ->execute()->fetchObject();
+
+      $this->assertFalse($record, t('The rest of the insert aborted as expected.'));
+    }
+  }
+
+}
+
+/**
+ * Drupal-specific SQL syntax tests.
+ */
+class DatabaseQueryTestCase extends DatabaseTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Custom query syntax tests',
+      'description' => 'Test Drupal\'s extended prepared statement syntax..',
+      'group' => 'Database',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('database_test');
+  }
+
+  /**
+   * Test that we can specify an array of values in the query by simply passing in an array.
+   */
+  function testArraySubstitution() {
+    $names = db_query('SELECT name FROM {test} WHERE age IN (:ages) ORDER BY age', array(':ages' => array(25, 26, 27)))->fetchAll();
+
+    $this->assertEqual(count($names), 3, t('Correct number of names returned'));
+  }
+}
+
+/**
+ * Test transaction support, particularly nesting.
+ *
+ * We test nesting by having two transaction layers, an outer and inner. The
+ * outer layer encapsulates the inner layer. Our transaction nesting abstraction
+ * should allow the outer layer function to call any function it wants,
+ * especially the inner layer that starts its own transaction, and be
+ * confident that, when the function it calls returns, its own transaction
+ * is still "alive."
+ *
+ * Call structure:
+ *   transactionOuterLayer()
+ *     Start transaction
+ *     transactionInnerLayer()
+ *       Start transaction (does nothing in database)
+ *       [Maybe decide to roll back]
+ *     Do more stuff
+ *     Should still be in transaction A
+ *
+ */
+class DatabaseTransactionTestCase extends DatabaseTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Transaction tests',
+      'description' => 'Test the transaction abstraction system.',
+      'group' => 'Database',
+    );
+  }
+
+  /**
+   * Helper method for transaction unit test. This "outer layer" transaction
+   * starts and then encapsulates the "inner layer" transaction. This nesting
+   * is used to evaluate whether the the database transaction API properly
+   * supports nesting. By "properly supports," we mean the outer transaction
+   * continues to exist regardless of what functions are called and whether
+   * those functions start their own transactions.
+   *
+   * In contrast, a typical database would commit the outer transaction, start
+   * a new transaction for the inner layer, commit the inner layer transaction,
+   * and then be confused when the outer layer transaction tries to commit its
+   * transaction (which was already committed when the inner transaction
+   * started).
+   *
+   * @param $suffix
+   *   Suffix to add to field values to differentiate tests.
+   * @param $rollback
+   *   Whether or not to try rolling back the transaction when we're done.
+   * @param $ddl_statement
+   *   Whether to execute a DDL statement during the inner transaction.
+   */
+  protected function transactionOuterLayer($suffix, $rollback = FALSE, $ddl_statement = FALSE) {
+    $connection = Database::getConnection();
+    $depth = $connection->transactionDepth();
+    $txn = db_transaction();
+
+    // Insert a single row into the testing table.
+    db_insert('test')
+      ->fields(array(
+        'name' => 'David' . $suffix,
+        'age' => '24',
+      ))
+      ->execute();
+
+    $this->assertTrue($connection->inTransaction(), t('In transaction before calling nested transaction.'));
+
+    // We're already in a transaction, but we call ->transactionInnerLayer
+    // to nest another transaction inside the current one.
+    $this->transactionInnerLayer($suffix, $rollback, $ddl_statement);
+
+    $this->assertTrue($connection->inTransaction(), t('In transaction after calling nested transaction.'));
+
+    if ($rollback) {
+      // Roll back the transaction, if requested.
+      // This rollback should propagate to the last savepoint.
+      $txn->rollback();
+      $this->assertTrue(($connection->transactionDepth() == $depth), t('Transaction has rolled back to the last savepoint after calling rollback().'));
+    }
+  }
+
+  /**
+   * Helper method for transaction unit tests. This "inner layer" transaction
+   * is either used alone or nested inside of the "outer layer" transaction.
+   *
+   * @param $suffix
+   *   Suffix to add to field values to differentiate tests.
+   * @param $rollback
+   *   Whether or not to try rolling back the transaction when we're done.
+   * @param $ddl_statement
+   *   Whether to execute a DDL statement during the transaction.
+   */
+  protected function transactionInnerLayer($suffix, $rollback = FALSE, $ddl_statement = FALSE) {
+    $connection = Database::getConnection();
+
+    $depth = $connection->transactionDepth();
+    // Start a transaction. If we're being called from ->transactionOuterLayer,
+    // then we're already in a transaction. Normally, that would make starting
+    // a transaction here dangerous, but the database API handles this problem
+    // for us by tracking the nesting and avoiding the danger.
+    $txn = db_transaction();
+
+    $depth2 = $connection->transactionDepth();
+    $this->assertTrue($depth < $depth2, t('Transaction depth is has increased with new transaction.'));
+
+    // Insert a single row into the testing table.
+    db_insert('test')
+      ->fields(array(
+        'name' => 'Daniel' . $suffix,
+        'age' => '19',
+      ))
+      ->execute();
+
+    $this->assertTrue($connection->inTransaction(), t('In transaction inside nested transaction.'));
+
+    if ($ddl_statement) {
+      $table = array(
+        'fields' => array(
+          'id' => array(
+            'type' => 'serial',
+            'unsigned' => TRUE,
+            'not null' => TRUE,
+          ),
+        ),
+        'primary key' => array('id'),
+      );
+      db_create_table('database_test_1', $table);
+
+      $this->assertTrue($connection->inTransaction(), t('In transaction inside nested transaction.'));
+    }
+
+    if ($rollback) {
+      // Roll back the transaction, if requested.
+      // This rollback should propagate to the last savepoint.
+      $txn->rollback();
+      $this->assertTrue(($connection->transactionDepth() == $depth), t('Transaction has rolled back to the last savepoint after calling rollback().'));
+    }
+  }
+
+  /**
+   * Test transaction rollback on a database that supports transactions.
+   *
+   * If the active connection does not support transactions, this test does nothing.
+   */
+  function testTransactionRollBackSupported() {
+    // This test won't work right if transactions are not supported.
+    if (!Database::getConnection()->supportsTransactions()) {
+      return;
+    }
+    try {
+      // Create two nested transactions. Roll back from the inner one.
+      $this->transactionOuterLayer('B', TRUE);
+
+      // Neither of the rows we inserted in the two transaction layers
+      // should be present in the tables post-rollback.
+      $saved_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'DavidB'))->fetchField();
+      $this->assertNotIdentical($saved_age, '24', t('Cannot retrieve DavidB row after commit.'));
+      $saved_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'DanielB'))->fetchField();
+      $this->assertNotIdentical($saved_age, '19', t('Cannot retrieve DanielB row after commit.'));
+    }
+    catch (Exception $e) {
+      $this->fail($e->getMessage());
+    }
+  }
+
+  /**
+   * Test transaction rollback on a database that does not support transactions.
+   *
+   * If the active driver supports transactions, this test does nothing.
+   */
+  function testTransactionRollBackNotSupported() {
+    // This test won't work right if transactions are supported.
+    if (Database::getConnection()->supportsTransactions()) {
+      return;
+    }
+    try {
+      // Create two nested transactions. Attempt to roll back from the inner one.
+      $this->transactionOuterLayer('B', TRUE);
+
+      // Because our current database claims to not support transactions,
+      // the inserted rows should be present despite the attempt to roll back.
+      $saved_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'DavidB'))->fetchField();
+      $this->assertIdentical($saved_age, '24', t('DavidB not rolled back, since transactions are not supported.'));
+      $saved_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'DanielB'))->fetchField();
+      $this->assertIdentical($saved_age, '19', t('DanielB not rolled back, since transactions are not supported.'));
+    }
+    catch (Exception $e) {
+      $this->fail($e->getMessage());
+    }
+  }
+
+  /**
+   * Test committed transaction.
+   *
+   * The behavior of this test should be identical for connections that support
+   * transactions and those that do not.
+   */
+  function testCommittedTransaction() {
+    try {
+      // Create two nested transactions. The changes should be committed.
+      $this->transactionOuterLayer('A');
+
+      // Because we committed, both of the inserted rows should be present.
+      $saved_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'DavidA'))->fetchField();
+      $this->assertIdentical($saved_age, '24', t('Can retrieve DavidA row after commit.'));
+      $saved_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'DanielA'))->fetchField();
+      $this->assertIdentical($saved_age, '19', t('Can retrieve DanielA row after commit.'));
+    }
+    catch (Exception $e) {
+      $this->fail($e->getMessage());
+    }
+  }
+
+  /**
+   * Test the compatibility of transactions with DDL statements.
+   */
+  function testTransactionWithDdlStatement() {
+    // First, test that a commit works normally, even with DDL statements.
+    try {
+      $this->transactionOuterLayer('D', FALSE, TRUE);
+
+      // Because we committed, the inserted rows should both be present.
+      $saved_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'DavidD'))->fetchField();
+      $this->assertIdentical($saved_age, '24', t('Can retrieve DavidD row after commit.'));
+      $saved_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'DanielD'))->fetchField();
+      $this->assertIdentical($saved_age, '19', t('Can retrieve DanielD row after commit.'));
+      // The created table should also exist.
+      $count = db_query('SELECT COUNT(id) FROM {database_test_1}')->fetchField();
+      $this->assertIdentical($count, '0', t('Table was successfully created inside a transaction.'));
+    }
+    catch (Exception $e) {
+      $this->fail((string) $e);
+    }
+
+    // If we rollback the transaction, an exception might be thrown.
+    try {
+      $this->transactionOuterLayer('E', TRUE, TRUE);
+
+      // Because we rolled back, the inserted rows shouldn't be present.
+      $saved_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'DavidE'))->fetchField();
+      $this->assertNotIdentical($saved_age, '24', t('Cannot retrieve DavidE row after rollback.'));
+      $saved_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'DanielE'))->fetchField();
+      $this->assertNotIdentical($saved_age, '19', t('Cannot retrieve DanielE row after rollback.'));
+    }
+    catch (Exception $e) {
+      // An exception also lets the test pass.
+      $this->assertTrue(true, t('Exception thrown on rollback after a DDL statement was executed.'));
+    }
+  }
+
+  /**
+   * Insert a single row into the testing table.
+   */
+  protected function insertRow($name) {
+    db_insert('test')
+      ->fields(array(
+        'name' => $name,
+      ))
+      ->execute();
+  }
+
+  /**
+   * Start over for a new test.
+   */
+  protected function cleanUp() {
+    db_truncate('test')
+      ->execute();
+  }
+
+  /**
+   * Assert that a given row is present in the test table.
+   *
+   * @param $name
+   *   The name of the row.
+   * @param $message
+   *   The message to log for the assertion.
+   */
+  function assertRowPresent($name, $message = NULL) {
+    if (!isset($message)) {
+      $message = t('Row %name is present.', array('%name' => $name));
+    }
+    $present = (boolean) db_query('SELECT 1 FROM {test} WHERE name = :name', array(':name' => $name))->fetchField();
+    return $this->assertTrue($present, $message);
+  }
+
+  /**
+   * Assert that a given row is absent from the test table.
+   *
+   * @param $name
+   *   The name of the row.
+   * @param $message
+   *   The message to log for the assertion.
+   */
+  function assertRowAbsent($name, $message = NULL) {
+    if (!isset($message)) {
+      $message = t('Row %name is absent.', array('%name' => $name));
+    }
+    $present = (boolean) db_query('SELECT 1 FROM {test} WHERE name = :name', array(':name' => $name))->fetchField();
+    return $this->assertFalse($present, $message);
+  }
+
+  /**
+   * Test transaction stacking and commit / rollback.
+   */
+  function testTransactionStacking() {
+    // This test won't work right if transactions are supported.
+    if (Database::getConnection()->supportsTransactions()) {
+      return;
+    }
+
+    $database = Database::getConnection();
+
+    // Standard case: pop the inner transaction before the outer transaction.
+    $transaction = db_transaction();
+    $this->insertRow('outer');
+    $transaction2 = db_transaction();
+    $this->insertRow('inner');
+    // Pop the inner transaction.
+    unset($transaction2);
+    $this->assertTrue($database->inTransaction(), t('Still in a transaction after popping the inner transaction'));
+    // Pop the outer transaction.
+    unset($transaction);
+    $this->assertFalse($database->inTransaction(), t('Transaction closed after popping the outer transaction'));
+    $this->assertRowPresent('outer');
+    $this->assertRowPresent('inner');
+
+    // Pop the transaction in a different order they have been pushed.
+    $this->cleanUp();
+    $transaction = db_transaction();
+    $this->insertRow('outer');
+    $transaction2 = db_transaction();
+    $this->insertRow('inner');
+    // Pop the outer transaction, nothing should happen.
+    unset($transaction);
+    $this->insertRow('inner-after-outer-commit');
+    $this->assertTrue($database->inTransaction(), t('Still in a transaction after popping the outer transaction'));
+    // Pop the inner transaction, the whole transaction should commit.
+    unset($transaction2);
+    $this->assertFalse($database->inTransaction(), t('Transaction closed after popping the inner transaction'));
+    $this->assertRowPresent('outer');
+    $this->assertRowPresent('inner');
+    $this->assertRowPresent('inner-after-outer-commit');
+
+    // Rollback the inner transaction.
+    $this->cleanUp();
+    $transaction = db_transaction();
+    $this->insertRow('outer');
+    $transaction2 = db_transaction();
+    $this->insertRow('inner');
+    // Now rollback the inner transaction.
+    $transaction2->rollback();
+    unset($transaction2);
+    $this->assertTrue($database->inTransaction(), t('Still in a transaction after popping the outer transaction'));
+    // Pop the outer transaction, it should commit.
+    $this->insertRow('outer-after-inner-rollback');
+    unset($transaction);
+    $this->assertFalse($database->inTransaction(), t('Transaction closed after popping the inner transaction'));
+    $this->assertRowPresent('outer');
+    $this->assertRowAbsent('inner');
+    $this->assertRowPresent('outer-after-inner-rollback');
+
+    // Rollback the inner transaction after committing the outer one.
+    $this->cleanUp();
+    $transaction = db_transaction();
+    $this->insertRow('outer');
+    $transaction2 = db_transaction();
+    $this->insertRow('inner');
+    // Pop the outer transaction, nothing should happen.
+    unset($transaction);
+    $this->assertTrue($database->inTransaction(), t('Still in a transaction after popping the outer transaction'));
+    // Now rollback the inner transaction, it should rollback.
+    $transaction2->rollback();
+    unset($transaction2);
+    $this->assertFalse($database->inTransaction(), t('Transaction closed after popping the inner transaction'));
+    $this->assertRowPresent('outer');
+    $this->assertRowAbsent('inner');
+
+    // Rollback the outer transaction while the inner transaction is active.
+    // In that case, an exception will be triggered because we cannot
+    // ensure that the final result will have any meaning.
+    $this->cleanUp();
+    $transaction = db_transaction();
+    $this->insertRow('outer');
+    $transaction2 = db_transaction();
+    $this->insertRow('inner');
+    // Rollback the outer transaction.
+    try {
+      $transaction->rollback();
+      unset($transaction);
+      $this->fail(t('Rolling back the outer transaction while the inner transaction is active resulted in an exception.'));
+    }
+    catch (Exception $e) {
+      $this->pass(t('Rolling back the outer transaction while the inner transaction is active resulted in an exception.'));
+    }
+    $this->assertFalse($database->inTransaction(), t('No more in a transaction after rolling back the outer transaction'));
+    // Try to commit the inner transaction.
+    try {
+      unset($transaction2);
+      $this->fail(t('Trying to commit the inner transaction resulted in an exception.'));
+    }
+    catch (Exception $e) {
+      $this->pass(t('Trying to commit the inner transaction resulted in an exception.'));
+    }
+    $this->assertRowAbsent('outer');
+    $this->assertRowAbsent('inner');
+  }
+}
+
+
+/**
+ * Check the sequences API.
+ */
+class DatabaseNextIdCase extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => t('Sequences API'),
+      'description' => t('Test the secondary sequences API.'),
+      'group' => t('Database'),
+    );
+  }
+
+  /**
+   * Test that the sequences API work.
+   */
+  function testDbNextId() {
+    $first = db_next_id();
+    $second = db_next_id();
+    // We can test for exact increase in here because we know there is no
+    // other process operating on these tables -- normally we could only
+    // expect $second > $first.
+    $this->assertEqual($first + 1, $second, t('The second call from a sequence provides a number increased by one.'));
+    $result = db_next_id(1000);
+    $this->assertEqual($result, 1001, t('Sequence provides a larger number than the existing ID.'));
+  }
+}
+
+/**
+ * Tests the empty pseudo-statement class.
+ */
+class DatabaseEmptyStatementTestCase extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => t('Empty statement'),
+      'description' => t('Test the empty pseudo-statement class.'),
+      'group' => t('Database'),
+    );
+  }
+
+  /**
+   * Test that the empty result set behaves as empty.
+   */
+  function testEmpty() {
+    $result = new DatabaseStatementEmpty();
+
+    $this->assertTrue($result instanceof DatabaseStatementInterface, t('Class implements expected interface'));
+    $this->assertNull($result->fetchObject(), t('Null result returned.'));
+  }
+
+  /**
+   * Test that the empty result set iterates safely.
+   */
+  function testEmptyIteration() {
+    $result = new DatabaseStatementEmpty();
+
+    foreach ($result as $record) {
+      $this->fail(t('Iterating empty result set should not iterate.'));
+      return;
+    }
+
+    $this->pass(t('Iterating empty result set skipped iteration.'));
+  }
+
+  /**
+   * Test that the empty result set mass-fetches in an expected way.
+   */
+  function testEmptyFetchAll() {
+    $result = new DatabaseStatementEmpty();
+
+    $this->assertEqual($result->fetchAll(), array(), t('Empty array returned from empty result set.'));
+  }
+}
