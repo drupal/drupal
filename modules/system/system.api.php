@@ -991,7 +991,8 @@ function hook_menu_get_item_alter(&$router_item, $path, $original_map) {
  *   );
  * @endcode
  * When path 'my-module/foo/edit' is requested, integer 1 will be replaced
- * with 'foo' and passed to the callback function.
+ * with 'foo' and passed to the callback function. Note that wildcards may not
+ * be used as the first component.
  *
  * Registered paths may also contain special "auto-loader" wildcard components
  * in the form of '%mymodule_abc', where the '%' part means that this path
