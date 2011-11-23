@@ -1090,8 +1090,8 @@ function user_menu() {
     'title' => 'Delete',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('user_confirm_delete', 1),
-    'access callback' => 'user_access',
-    'access arguments' => array('administer users'),
+    'access callback' => 'user_delete_access',
+    'access arguments' => array(1),
     'type' => MENU_CALLBACK,
     'file' => 'user.pages.inc',
   );
@@ -2550,4 +2550,14 @@ function _user_forms(&$edit, $account, $category, $hook = 'form') {
 function user_login_destination() {
   $destination = drupal_get_destination();
   return $destination == 'destination=user%2Flogin' ? 'destination=user' : $destination;
+}
+
+/**
+ * Menu access callback; limit access to account deletion pages.
+ *
+ * Limit access to administrative users, and prevent the anonymous user account
+ * from being deleted.
+ */
+function user_delete_access($account) {
+  return user_access('administer users') && $account->uid > 0;
 }
