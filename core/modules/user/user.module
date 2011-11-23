@@ -58,10 +58,11 @@ function user_help($path, $arg) {
       return '<p>' . t('Permissions let you control what users can do and see on your site. You can define a specific set of permissions for each role. (See the <a href="@role">Roles</a> page to create a role). Two important roles to consider are Authenticated Users and Administrators. Any permissions granted to the Authenticated Users role will be given to any user who can log into your site. You can make any role the Administrator role for the site, meaning this will be granted all new permissions automatically. You can do this on the <a href="@settings">User Settings</a> page. You should be careful to ensure that only trusted users are given this access and level of control of your site.', array('@role' => url('admin/people/permissions/roles'), '@settings' => url('admin/config/people/accounts'))) . '</p>';
     case 'admin/people/permissions/roles':
       $output = '<p>' . t('Roles allow you to fine tune the security and administration of Drupal. A role defines a group of users that have certain privileges as defined on the <a href="@permissions">permissions page</a>. Examples of roles include: anonymous user, authenticated user, moderator, administrator and so on. In this area you will define the names and order of the roles on your site. It is recommended to order your roles from least permissive (anonymous user) to most permissive (administrator). To delete a role choose "edit role".', array('@permissions' => url('admin/people/permissions'))) . '</p>';
-      $output .= '<p>' . t('By default, Drupal comes with two user roles:') . '</p>';
+      $output .= '<p>' . t('Drupal has three special user roles:') . '</p>';
       $output .= '<ul>';
       $output .= '<li>' . t("Anonymous user: this role is used for users that don't have a user account or that are not authenticated.") . '</li>';
       $output .= '<li>' . t('Authenticated user: this role is automatically granted to all logged in users.') . '</li>';
+      $output .= '<li>' . t('Administrator role: this role is automatically granted all new permissions when you install a new module. Configure which role is the administrator role on the <a href="@account_settings">Account settings page</a>.', array('@account_settings' => url('admin/config/people/accounts'))) . '</li>';
       $output .= '</ul>';
       return $output;
     case 'admin/config/people/accounts/fields':
