@@ -799,7 +799,7 @@ function field_ui_field_overview_form_submit($form, &$form_state) {
       $form_state['fields_added']['_add_new_field'] = $field['field_name'];
     }
     catch (Exception $e) {
-      drupal_set_message(t('There was a problem creating field %label: @message.', array('%label' => $instance['label'], '@message' => $e->getMessage())), 'error');
+      drupal_set_message(t('There was a problem creating field %label: !message', array('%label' => $instance['label'], '!message' => $e->getMessage())), 'error');
     }
   }
 
@@ -808,7 +808,7 @@ function field_ui_field_overview_form_submit($form, &$form_state) {
     $values = $form_values['_add_existing_field'];
     $field = field_info_field($values['field_name']);
     if (!empty($field['locked'])) {
-      drupal_set_message(t('The field %label cannot be added because it is locked.', array('%label' => $values['label'])));
+      drupal_set_message(t('The field %label cannot be added because it is locked.', array('%label' => $values['label'])), 'error');
     }
     else {
       $instance = array(
@@ -1670,7 +1670,7 @@ function field_ui_widget_type_form_submit($form, &$form_state) {
     drupal_set_message(t('Changed the widget for field %label.', array('%label' => $instance['label'])));
   }
   catch (Exception $e) {
-    drupal_set_message(t('There was a problem changing the widget for field %label.', array('%label' => $instance['label'])));
+    drupal_set_message(t('There was a problem changing the widget for field %label.', array('%label' => $instance['label'])), 'error');
   }
 
   $form_state['redirect'] = field_ui_next_destination($entity_type, $bundle);
@@ -1727,7 +1727,7 @@ function field_ui_field_delete_form_submit($form, &$form_state) {
     drupal_set_message(t('The field %field has been deleted from the %type content type.', array('%field' => $instance['label'], '%type' => $bundle_label)));
   }
   else {
-    drupal_set_message(t('There was a problem removing the %field from the %type content type.', array('%field' => $instance['label'], '%type' => $bundle_label)));
+    drupal_set_message(t('There was a problem removing the %field from the %type content type.', array('%field' => $instance['label'], '%type' => $bundle_label)), 'error');
   }
 
   $admin_path = _field_ui_bundle_admin_path($entity_type, $bundle);
