@@ -397,23 +397,30 @@ function node_teaser($body, $format = NULL, $size = NULL) {
 }
 
 /**
- * Builds a list of available node types, and returns all of part of this list
- * in the specified format.
+ * Builds a list of available node types, and returns all or part of this list.
  *
  * @param $op
- *   The format in which to return the list. When this is set to 'type',
- *   'module', or 'name', only the specified node type is returned. When set to
- *   'types' or 'names', all node types are returned.
+ *   The format in which to return the list: 'type', 'types', 'module', 'name',
+ *   or 'names'. See return value section below for details.
  * @param $node
- *   A node object, array, or string that indicates the node type to return.
- *   Leave at default value (NULL) to return a list of all node types.
+ *   A node object, an array representation of a node object, or a node type
+ *   name string. See return value section below for details.
  * @param $reset
  *   Whether or not to reset this function's internal cache (defaults to
  *   FALSE).
  *
  * @return
- *   Either an array of all available node types, or a single node type, in a
- *   variable format. Returns FALSE if the node type is not found.
+ *   If $node is supplied and it doesn't correspond to a known node type,
+ *   or if $op is 'type', 'name', or 'module' and $node is not given, the
+ *   function returns FALSE. Otherwise, the return value depends on the
+ *   value of $op:
+ *   - 'types': An array of all available node type objects, keyed by machine
+ *     name.
+ *   - 'type': The single node type object indicated by $node.
+ *   - 'names': An array of the display names of all available node types,
+ *     keyed by machine name and sorted by display name.
+ *   - 'name': The single node type display name indicated by $node.
+ *   - 'module': The name of the node type module indicated by $node.
  */
 function node_get_types($op = 'types', $node = NULL, $reset = FALSE) {
   static $_node_types, $_node_names;
