@@ -127,26 +127,24 @@ function _poll_menu_access($node, $perm, $inspect_allowvotes) {
  * Generates a block containing the latest poll.
  */
 function poll_block($op = 'list', $delta = 0) {
-  if (user_access('access content')) {
-    if ($op == 'list') {
-      $blocks[0]['info'] = t('Most recent poll');
-      return $blocks;
-    }
-    else if ($op == 'view') {
-      // Retrieve the latest poll.
-      $sql = db_rewrite_sql("SELECT MAX(n.created) FROM {node} n INNER JOIN {poll} p ON p.nid = n.nid WHERE n.status = 1 AND p.active = 1");
-      $timestamp = db_result(db_query($sql));
-      if ($timestamp) {
-        $poll = node_load(array('type' => 'poll', 'created' => $timestamp, 'status' => 1));
+  if ($op == 'list') {
+    $blocks[0]['info'] = t('Most recent poll');
+    return $blocks;
+  }
+  else if ($op == 'view' && user_access('access content')) {
+    // Retrieve the latest poll.
+    $sql = db_rewrite_sql("SELECT MAX(n.created) FROM {node} n INNER JOIN {poll} p ON p.nid = n.nid WHERE n.status = 1 AND p.active = 1");
+    $timestamp = db_result(db_query($sql));
+    if ($timestamp) {
+      $poll = node_load(array('type' => 'poll', 'created' => $timestamp, 'status' => 1));
 
-        if ($poll->nid) {
-          $poll = poll_view($poll, TRUE, FALSE, TRUE);
-        }
+      if ($poll->nid) {
+        $poll = poll_view($poll, TRUE, FALSE, TRUE);
       }
-      $block['subject'] = t('Poll');
-      $block['content'] = drupal_render($poll->content);
-      return $block;
     }
+    $block['subject'] = t('Poll');
+    $block['content'] = drupal_render($poll->content);
+    return $block;
   }
 }
 
