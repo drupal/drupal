@@ -1,4 +1,8 @@
 <?php
+/**
+ * @file
+ * Allows users to change the color scheme of themes.
+ */
 
 /**
  * Implements hook_help().
@@ -70,7 +74,13 @@ function _color_theme_select_form_alter(&$form, &$form_state) {
 }
 
 /**
- * Callback for the theme to alter the resources used.
+ * Replaces style sheets with color-altered style sheets.
+ *
+ * A theme that supports the color module should call this function from its
+ * THEME_process_html() function, so that the correct style sheets are
+ * included when html.tpl.php is rendered.
+ *
+ * @see theme()
  */
 function _color_html_alter(&$vars) {
   global $theme_key;
@@ -99,7 +109,13 @@ function _color_html_alter(&$vars) {
 }
 
 /**
- * Callback for the theme to alter the resources used.
+ * Replaces the logo with a color-altered logo.
+ *
+ * A theme that supports the color module should call this function from its
+ * THEME_process_page() function, so that the correct logo is included when
+ * page.tpl.php is rendered.
+ *
+ * @see theme()
  */
 function _color_page_alter(&$vars) {
   global $theme_key;
@@ -112,7 +128,7 @@ function _color_page_alter(&$vars) {
 }
 
 /**
- * Retrieve the color.module info for a particular theme.
+ * Retrieves the Color module information for a particular theme.
  */
 function color_get_info($theme) {
   static $theme_info = array();
@@ -131,7 +147,7 @@ function color_get_info($theme) {
 }
 
 /**
- * Helper function to retrieve the color palette for a particular theme.
+ * Retrieves the color palette for a particular theme.
  */
 function color_get_palette($theme, $default = FALSE) {
   // Fetch and expand default palette.
@@ -143,7 +159,14 @@ function color_get_palette($theme, $default = FALSE) {
 }
 
 /**
- * Form callback. Returns the configuration form.
+ * Form constructor for the color configuration form for a particular theme.
+ *
+ * @param $theme
+ *   The machine name of the theme whose color settings are being configured.
+ *
+ * @see color_scheme_form_validate()
+ * @see color_scheme_form_submit()
+ * @ingroup forms
  */
 function color_scheme_form($complete_form, &$form_state, $theme) {
   $base = drupal_get_path('module', 'color');
@@ -244,11 +267,11 @@ function theme_color_scheme_form($variables) {
   $info = $form['info']['#value'];
   $path = drupal_get_path('theme', $theme) . '/';
   drupal_add_css($path . $info['preview_css']);
-  
+
   $preview_js_path = isset($info['preview_js']) ? $path . $info['preview_js'] : drupal_get_path('module', 'color') . '/' . 'preview.js';
   // Add the JS at a weight below color.js.
   drupal_add_js($preview_js_path, array('weight' => -1));
-    
+
   $output  = '';
   $output .= '<div class="color-form clearfix">';
   // Color schemes
@@ -272,7 +295,9 @@ function theme_color_scheme_form($variables) {
 }
 
 /**
- * Validation handler for color change form.
+ * Form validation handler for color_scheme_form().
+ *
+ * @see color_scheme_form_submit()
  */
 function color_scheme_form_validate($form, &$form_state) {
   // Only accept hexadecimal CSS color strings to avoid XSS upon use.
@@ -284,7 +309,9 @@ function color_scheme_form_validate($form, &$form_state) {
 }
 
 /**
- * Submit handler for color change form.
+ * Form submission handler for color_scheme_form().
+ *
+ * @see color_scheme_form_validate()
  */
 function color_scheme_form_submit($form, &$form_state) {
   // Get theme coloring info.
@@ -416,7 +443,7 @@ function color_scheme_form_submit($form, &$form_state) {
 }
 
 /**
- * Rewrite the stylesheet to match the colors in the palette.
+ * Rewrites the stylesheet to match the colors in the palette.
  */
 function _color_rewrite_stylesheet($theme, &$info, &$paths, $palette, $style) {
   $themes = list_themes();
@@ -487,7 +514,7 @@ function _color_rewrite_stylesheet($theme, &$info, &$paths, $palette, $style) {
 }
 
 /**
- * Save the rewritten stylesheet to disk.
+ * Saves the rewritten stylesheet to disk.
  */
 function _color_save_stylesheet($file, $style, &$paths) {
   $filepath = file_unmanaged_save_data($style, $file, FILE_EXISTS_REPLACE);
@@ -498,7 +525,7 @@ function _color_save_stylesheet($file, $style, &$paths) {
 }
 
 /**
- * Render images that match a given palette.
+ * Renders images that match a given palette.
  */
 function _color_render_images($theme, &$info, &$paths, $palette) {
   // Prepare template image.
@@ -575,16 +602,16 @@ function _color_render_images($theme, &$info, &$paths, $palette) {
 }
 
 /**
- * Shift a given color, using a reference pair and a target blend color.
+ * Shifts a given color, using a reference pair and a target blend color.
  *
  * Note: this function is significantly different from the JS version, as it
  * is written to match the blended images perfectly.
  *
- * Constraint: if (ref2 == target + (ref1 - target) * delta) for some fraction delta
- *              then (return == target + (given - target) * delta)
+ * Constraint: if (ref2 == target + (ref1 - target) * delta) for some fraction
+ * delta then (return == target + (given - target) * delta).
  *
  * Loose constraint: Preserve relative positions in saturation and luminance
- *                   space.
+ * space.
  */
 function _color_shift($given, $ref1, $ref2, $target) {
   // We assume that ref2 is a blend of ref1 and target and find
@@ -634,7 +661,7 @@ function _color_shift($given, $ref1, $ref2, $target) {
 }
 
 /**
- * Convert a hex triplet into a GD color.
+ * Converts a hex triplet into a GD color.
  */
 function _color_gd($img, $hex) {
   $c = array_merge(array($img), _color_unpack($hex));
@@ -642,7 +669,7 @@ function _color_gd($img, $hex) {
 }
 
 /**
- * Blend two hex colors and return the GD color.
+ * Blends two hex colors and returns the GD color.
  */
 function _color_blend($img, $hex1, $hex2, $alpha) {
   $in1 = _color_unpack($hex1);
@@ -656,7 +683,7 @@ function _color_blend($img, $hex1, $hex2, $alpha) {
 }
 
 /**
- * Convert a hex color into an RGB triplet.
+ * Converts a hex color into an RGB triplet.
  */
 function _color_unpack($hex, $normalize = FALSE) {
   if (strlen($hex) == 4) {
@@ -671,7 +698,7 @@ function _color_unpack($hex, $normalize = FALSE) {
 }
 
 /**
- * Convert an RGB triplet to a hex color.
+ * Converts an RGB triplet to a hex color.
  */
 function _color_pack($rgb, $normalize = FALSE) {
   $out = 0;
@@ -683,7 +710,7 @@ function _color_pack($rgb, $normalize = FALSE) {
 }
 
 /**
- * Convert a HSL triplet into RGB.
+ * Converts an HSL triplet into RGB.
  */
 function _color_hsl2rgb($hsl) {
   $h = $hsl[0];
@@ -712,7 +739,7 @@ function _color_hue2rgb($m1, $m2, $h) {
 }
 
 /**
- * Convert an RGB triplet to HSL.
+ * Converts an RGB triplet to HSL.
  */
 function _color_rgb2hsl($rgb) {
   $r = $rgb[0];
