@@ -794,7 +794,7 @@ function node_validate($node, $form = array()) {
   // Make sure the body has the minimum number of words.
   // TODO : use a better word counting algorithm that will work in other languages
   if (!empty($type->min_word_count) && isset($node->body) && count(explode(' ', $node->body)) < $type->min_word_count) {
-    form_set_error('body', t('The body of your @type is too short. You need at least %words words.', array('%words' => $type->min_word_count, '@type' => $type->name)));
+    form_set_error('body', t('The @body_label of your @type is too short. You need at least %words words.', array('@body_label' => $type->body_label, '@type' => $type->name, '%words' => $type->min_word_count)));
   }
 
   if (isset($node->nid) && (node_last_changed($node->nid) > $node->changed)) {
