@@ -1088,7 +1088,15 @@ class NodeAccessBaseTableTestCase extends DrupalWebTestCase {
     $this->assertTaxonomyPage(TRUE);
   }
 
-  protected function assertTaxonomyPage($super) {
+  /**
+   * Checks taxonomy/term listings to ensure only accessible nodes are listed.
+   *
+   * @param $is_admin
+   *   A boolean indicating whether the current user is an administrator. If
+   *   TRUE, all nodes should be listed. If FALSE, only public nodes and the
+   *   user's own private nodes should be listed.
+   */
+  protected function assertTaxonomyPage($is_admin) {
     foreach (array($this->publicTid, $this->privateTid) as $tid_is_private => $tid) {
       $this->drupalGet("taxonomy/term/$tid");
       $this->nids_visible = array();
@@ -1101,8 +1109,9 @@ class NodeAccessBaseTableTestCase extends DrupalWebTestCase {
           // Private nodes should be visible on the private term page,
           // public nodes should be visible on the public term page.
           $should_be_visible = $tid_is_private == $is_private;
-          // Non-superusers on the private page can only see their own nodes.
-          if (!$super && $tid_is_private) {
+          // Non-administrators can only see their own nodes on the private
+          // term page.
+          if (!$is_admin && $tid_is_private) {
             $should_be_visible = $should_be_visible && $uid == $this->webUser->uid;
           }
           $this->assertIdentical(isset($this->nids_visible[$nid]), $should_be_visible, strtr('A %private node by user %uid is %visible for user %current_uid on the %tid_is_private page.', array(
