@@ -1,3 +1,7 @@
+/**
+ * @file
+ * Stylesheet specific to right-to-left languages.
+ */
 
 div.contextual-links-wrapper {
   left: 5px;
