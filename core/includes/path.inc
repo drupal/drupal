@@ -13,7 +13,8 @@
  * Initialize the $_GET['q'] variable to the proper normal path.
  */
 function drupal_path_initialize() {
-  // Ensure $_GET['q'] is set before calling drupal_normal_path().
+  // Ensure $_GET['q'] is set before calling drupal_normal_path(), to support
+  // path caching with hook_url_inbound_alter().
   if (empty($_GET['q'])) {
     $_GET['q'] = variable_get('site_frontpage', 'node');
   }
