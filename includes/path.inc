@@ -13,12 +13,12 @@
  * Initialize the $_GET['q'] variable to the proper normal path.
  */
 function drupal_path_initialize() {
-  if (!empty($_GET['q'])) {
-    $_GET['q'] = drupal_get_normal_path($_GET['q']);
+  // Ensure $_GET['q'] is set before calling drupal_normal_path(), to support
+  // path caching with hook_url_inbound_alter().
+  if (empty($_GET['q'])) {
+    $_GET['q'] = variable_get('site_frontpage', 'node');
   }
-  else {
-    $_GET['q'] = drupal_get_normal_path(variable_get('site_frontpage', 'node'));
-  }
+  $_GET['q'] = drupal_get_normal_path($_GET['q']);
 }
 
 /**

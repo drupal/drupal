@@ -30,6 +30,10 @@ function url_alter_test_foo() {
  * Implements hook_url_inbound_alter().
  */
 function url_alter_test_url_inbound_alter(&$path, $original_path, $path_language) {
+  if (!request_path() && !empty($_GET['q'])) {
+    drupal_set_message("\$_GET['q'] is non-empty with an empty request path.");
+  }
+
   // Rewrite user/username to user/uid.
   if (preg_match('!^user/([^/]+)(/.*)?!', $path, $matches)) {
     if ($account = user_load_by_name($matches[1])) {

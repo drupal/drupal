@@ -201,6 +201,14 @@ class UrlAlterFunctionalTest extends DrupalWebTestCase {
   }
 
   /**
+   * Tests that $_GET['q'] is initialized when the request path is empty.
+   */
+  function testGetQInitialized() {
+    $this->drupalGet('');
+    $this->assertText("\$_GET['q'] is non-empty with an empty request path.", "\$_GET['q'] is initialized with an empty request path.");
+  }
+
+  /**
    * Assert that an outbound path is altered to an expected value.
    *
    * @param $original
