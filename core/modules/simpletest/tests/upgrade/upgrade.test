@@ -264,7 +264,7 @@ abstract class UpgradePathTestCase extends DrupalWebTestCase {
 
     // Go!
     $this->drupalPost(NULL, array(), t('Apply pending updates'));
-    if (!$this->assertResponse(200)) {
+    if (!$this->assertText('Updates were attempted')) {
       return FALSE;
     }
 
@@ -312,7 +312,9 @@ abstract class UpgradePathTestCase extends DrupalWebTestCase {
     $this->refreshVariables();
     $this->checkPermissions(array(), TRUE);
 
-    return TRUE;
+    // Check we can load the front page of the new site.
+    $this->drupalGet('');
+    return $this->assertText('Powered by Drupal', t('The front page of the upgraded site loads successfully.'));
   }
 
   /**

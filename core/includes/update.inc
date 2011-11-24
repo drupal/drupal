@@ -142,7 +142,7 @@ function update_module_enable(array $modules) {
     db_update('system')
       ->condition('type', 'module')
       ->condition('name', $module)
-      ->fields(array('schema_version' => 0))
+      ->fields(array('schema_version' => 0, 'status' => 1))
       ->execute();
 
     system_list_reset();
