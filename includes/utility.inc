@@ -46,6 +46,13 @@ function drupal_var_export($var, $prefix = '') {
       $output = "'" . $var . "'";
     }
   }
+  elseif (is_object($var) && get_class($var) === 'stdClass') {
+    // var_export() will export stdClass objects using an undefined
+    // magic method __set_state() leaving the export broken. This
+    // workaround avoids this by casting the object as an array for
+    // export and casting it back to an object when evaluated.
+    $output .= '(object) ' . drupal_var_export((array) $var, $prefix);
+  }
   else {
     $output = var_export($var, TRUE);
   }
