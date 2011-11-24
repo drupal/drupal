@@ -1704,9 +1704,6 @@ class DatabaseCondition implements QueryConditionInterface, Countable {
       if (is_array($value)) {
         $operator = 'IN';
       }
-      elseif (!isset($value)) {
-        $operator = 'IS NULL';
-      }
       else {
         $operator = '=';
       }
@@ -1740,7 +1737,7 @@ class DatabaseCondition implements QueryConditionInterface, Countable {
    * Implements QueryConditionInterface::isNull().
    */
   public function isNull($field) {
-    return $this->condition($field);
+    return $this->condition($field, NULL, 'IS NULL');
   }
 
   /**
