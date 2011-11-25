@@ -1175,3 +1175,26 @@ function locale_form_system_file_system_settings_alter(&$form, $form_state) {
     $form['file_default_scheme']['#weight'] = 20;
   }
 }
+
+/**
+ * Implements MODULE_preprocess_HOOK().
+ */
+function locale_preprocess_node(&$variables) {
+  if ($variables['language'] != LANGUAGE_NONE) {
+    global $language;
+
+    $node_language = language_load($variables['language']);
+    if ($node_language->language != $language->language) {
+      // If the node language was different from the page language, we should
+      // add markup to identify the language. Otherwise the page language is
+      // inherited.
+      $variables['attributes_array']['lang'] = $variables['language'];
+      if ($node_language->direction != $language->direction) {
+        // If text direction is different form the page's text direction, add
+        // direction information as well.
+        $dir = array('ltr', 'rtl');
+        $variables['attributes_array']['dir'] = $dir[$node_language->direction];
+      }
+    }
+  }
+}
