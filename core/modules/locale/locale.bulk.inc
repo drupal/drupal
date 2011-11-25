@@ -181,7 +181,18 @@ function locale_translate_export_po_form_submit($form, &$form_state) {
  */
 function locale_translate_batch_import_files($langcode = NULL, $finish_feedback = FALSE) {
   $directory = variable_get('locale_translate_file_directory', conf_path() . '/files/translations');
-  $files = file_scan_directory($directory, '!' . (!empty($langcode) ? '\.' . preg_quote($langcode, '!') : '') . '\.po$!', array('recurse' => FALSE));
+  $files = array();
+  if (!empty($langcode)) {
+    $langcodes = array($langcode);
+  }
+  else {
+    // If langcode was not provided, make sure to only import files for the
+    // languages we have enabled.
+    $langcodes = array_keys(language_list());
+  }
+  foreach ($langcodes as $langcode) {
+    $files = array_merge($files, file_scan_directory($directory, '!' . (!empty($langcode) ? '\.' . preg_quote($langcode, '!') : '') . '\.po$!', array('recurse' => FALSE)));
+  }
   return locale_translate_batch_build($files, $finish_feedback);
 }
 

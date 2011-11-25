@@ -663,7 +663,7 @@ function drupal_rewrite_settings($settings = array()) {
  */
 function drupal_verify_profile($install_state) {
   $profile = $install_state['parameters']['profile'];
-  $locale = $install_state['parameters']['locale'];
+  $langcode = $install_state['parameters']['langcode'];
 
   include_once DRUPAL_ROOT . '/core/includes/file.inc';
   include_once DRUPAL_ROOT . '/core/includes/common.inc';
@@ -1092,27 +1092,27 @@ function drupal_requirements_url($severity) {
  * @ingroup sanitization
  */
 function st($string, array $args = array(), array $options = array()) {
-  static $locale_strings = NULL;
+  static $strings = NULL;
   global $install_state;
 
   if (empty($options['context'])) {
     $options['context'] = '';
   }
 
-  if (!isset($locale_strings)) {
-    $locale_strings = array();
-    if (isset($install_state['parameters']['profile']) && isset($install_state['parameters']['locale'])) {
-      // If the given locale was selected, there should be at least one .po file
-      // with its name ending in install.{$install_state['parameters']['locale']}.po
+  if (!isset($strings)) {
+    $strings = array();
+    if (isset($install_state['parameters']['profile']) && isset($install_state['parameters']['langcode'])) {
+      // If the given langcode was selected, there should be at least one .po file
+      // with its name ending in install.{$install_state['parameters']['langcode']}.po
       // This might or might not be the entire filename. It is also possible
       // that multiple files end with the same extension, even if unlikely.
-      $locale_files = install_find_locale_files($install_state['parameters']['locale']);
-      if (!empty($locale_files)) {
+      $files = install_find_translation_files($install_state['parameters']['langcode']);
+      if (!empty($files)) {
         require_once DRUPAL_ROOT . '/core/includes/gettext.inc';
-        foreach ($locale_files as $locale_file) {
-          _locale_import_read_po('mem-store', $locale_file);
+        foreach ($files as $file) {
+          _locale_import_read_po('mem-store', $file);
         }
-        $locale_strings = _locale_import_one_string('mem-report');
+        $strings = _locale_import_one_string('mem-report');
       }
     }
   }
@@ -1134,7 +1134,7 @@ function st($string, array $args = array(), array $options = array()) {
       case '!':
     }
   }
-  return strtr((!empty($locale_strings[$options['context']][$string]) ? $locale_strings[$options['context']][$string] : $string), $args);
+  return strtr((!empty($strings[$options['context']][$string]) ? $strings[$options['context']][$string] : $string), $args);
 }
 
 /**
@@ -1246,13 +1246,13 @@ function drupal_check_module($module) {
  *
  * @param $profile
  *   Name of profile.
- * @param $locale
- *   Name of locale used (if any).
+ * @param $langcode
+ *   Language code (if any).
  *
  * @return
  *   The info array.
  */
-function install_profile_info($profile, $locale = 'en') {
+function install_profile_info($profile, $langcode = 'en') {
   $cache = &drupal_static(__FUNCTION__, array());
 
   if (!isset($cache[$profile])) {
@@ -1264,12 +1264,17 @@ function install_profile_info($profile, $locale = 'en') {
       'version' => NULL,
       'hidden' => FALSE,
       'php' => DRUPAL_MINIMUM_PHP,
+      'langcode' => NULL,
+      'custom_language_selection' => FALSE,
     );
     $info = drupal_parse_info_file("profiles/$profile/$profile.info") + $defaults;
+    if (isset($info['langcode'])) {
+      $info['custom_language_selection'] = TRUE;
+    }
     $info['dependencies'] = array_unique(array_merge(
       drupal_required_modules(),
       $info['dependencies'],
-      ($locale != 'en' && !empty($locale) ? array('locale') : array()))
+      ($langcode != 'en' && !empty($langcode) ? array('locale') : array()))
     );
 
     // drupal_required_modules() includes the current profile as a dependency.
