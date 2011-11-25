@@ -781,8 +781,9 @@ function list_themes($refresh = FALSE) {
  * Generates themed output.
  *
  * All requests for themed output must go through this function. It examines
- * the request and routes it to the appropriate theme function or template, by
- * checking the theme registry.
+ * the request and routes it to the appropriate
+ * @link themeable theme function or template @endlink, by checking the theme
+ * registry.
  *
  * The first argument to this function is the name of the theme hook. For
  * instance, to theme a table, the theme hook name is 'table'. By default, this
@@ -882,6 +883,8 @@ function list_themes($refresh = FALSE) {
  *
  * @return
  *   An HTML string representing the themed output.
+ *
+ * @see themeable
  */
 function theme($hook, $variables = array()) {
   static $hooks = NULL;
