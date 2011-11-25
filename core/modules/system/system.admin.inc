@@ -154,7 +154,7 @@ function system_themes_page() {
     foreach (array_reverse($theme_keys) as $theme_key) {
       if (isset($themes[$theme_key]) && file_exists($themes[$theme_key]->info['screenshot'])) {
         $theme->screenshot = array(
-          'path' => $themes[$theme_key]->info['screenshot'],
+          'uri' => $themes[$theme_key]->info['screenshot'],
           'alt' => t('Screenshot for !theme theme', array('!theme' => $theme->info['name'])),
           'title' => t('Screenshot for !theme theme', array('!theme' => $theme->info['name'])),
           'attributes' => array('class' => array('screenshot')),
@@ -1003,7 +1003,7 @@ function _system_modules_build_row($info, $extra) {
   }
   else {
     $form['enable'] = array(
-      '#markup' =>  theme('image', array('path' => 'core/misc/watchdog-error.png', 'alt' => $status_short, 'title' => $status_short)),
+      '#markup' =>  theme('image', array('uri' => 'core/misc/watchdog-error.png', 'alt' => $status_short, 'title' => $status_short)),
     );
     $form['description']['#markup'] .= theme('system_modules_incompatible', array('message' => $status_long));
   }

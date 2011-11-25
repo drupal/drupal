@@ -1077,7 +1077,7 @@ class UserPictureTestCase extends DrupalWebTestCase {
     // Get the user picture image via xpath.
     $elements = $this->xpath('//div[@class="user-picture"]/img');
     $this->assertEqual(count($elements), 1, t("There is exactly one user picture on the user's profile page"));
-    $this->assertEqual($pic_path, (string) $elements[0]['src'], t("User picture source is correct."));
+    $this->assertEqual($pic_path, (string) $elements[0]['src'], t("User picture source is correct: " . $pic_path . " " . print_r($elements, TRUE)));
   }
 
   function saveUserPicture($image) {

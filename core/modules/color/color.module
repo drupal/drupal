@@ -67,7 +67,7 @@ function _color_theme_select_form_alter(&$form, &$form_state) {
   foreach (element_children($form) as $theme) {
     if ($screenshot = variable_get('color_' . $theme . '_screenshot')) {
       if (isset($form[$theme]['screenshot'])) {
-        $form[$theme]['screenshot']['#markup'] = theme('image', array('path' => $screenshot, 'title' => '', 'attributes' => array('class' => array('screenshot'))));
+        $form[$theme]['screenshot']['#markup'] = theme('image', array('uri' => $screenshot, 'title' => '', 'attributes' => array('class' => array('screenshot'))));
       }
     }
   }

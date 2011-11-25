@@ -1638,7 +1638,7 @@ function theme_links($variables) {
  *
  * @param $variables
  *   An associative array containing:
- *   - path: Either the path of the image file (relative to base_path()) or a
+ *   - uri: Either the path of the image file (relative to base_path()) or a
  *     full URL.
  *   - width: The width of the image (if known).
  *   - height: The height of the image (if known).
@@ -1658,10 +1658,9 @@ function theme_links($variables) {
  */
 function theme_image($variables) {
   $attributes = $variables['attributes'];
-  $attributes['src'] = file_create_url($variables['path']);
+  $attributes['src'] = file_create_url($variables['uri']);
 
   foreach (array('width', 'height', 'alt', 'title') as $key) {
-
     if (isset($variables[$key])) {
       $attributes[$key] = $variables[$key];
     }
@@ -1909,10 +1908,10 @@ function theme_table($variables) {
  */
 function theme_tablesort_indicator($variables) {
   if ($variables['style'] == "asc") {
-    return theme('image', array('path' => 'core/misc/arrow-asc.png', 'width' => 13, 'height' => 13, 'alt' => t('sort ascending'), 'title' => t('sort ascending')));
+    return theme('image', array('uri' => 'core/misc/arrow-asc.png', 'width' => 13, 'height' => 13, 'alt' => t('sort ascending'), 'title' => t('sort ascending')));
   }
   else {
-    return theme('image', array('path' => 'core/misc/arrow-desc.png', 'width' => 13, 'height' => 13, 'alt' => t('sort descending'), 'title' => t('sort descending')));
+    return theme('image', array('uri' => 'core/misc/arrow-desc.png', 'width' => 13, 'height' => 13, 'alt' => t('sort descending'), 'title' => t('sort descending')));
   }
 }
 
@@ -2046,7 +2045,7 @@ function theme_more_help_link($variables) {
  */
 function theme_feed_icon($variables) {
   $text = t('Subscribe to @feed-title', array('@feed-title' => $variables['title']));
-  if ($image = theme('image', array('path' => 'core/misc/feed.png', 'width' => 16, 'height' => 16, 'alt' => $text))) {
+  if ($image = theme('image', array('uri' => 'core/misc/feed.png', 'width' => 16, 'height' => 16, 'alt' => $text))) {
     return l($image, $variables['url'], array('html' => TRUE, 'attributes' => array('class' => array('feed-icon'), 'title' => $text)));
   }
 }

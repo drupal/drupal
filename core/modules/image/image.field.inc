@@ -360,7 +360,7 @@ function image_field_widget_process($element, &$form_state, $form) {
   if ($element['#file'] && $widget_settings['preview_image_style']) {
     $variables = array(
       'style_name' => $widget_settings['preview_image_style'],
-      'path' => $element['#file']->uri,
+      'uri' => $element['#file']->uri,
     );
 
     // Determine image dimensions.
@@ -569,33 +569,24 @@ function image_field_formatter_view($entity_type, $entity, $field, $instance, $l
  *   An associative array containing:
  *   - item: An array of image data.
  *   - image_style: An optional image style.
- *   - path: An array containing the link 'path' and link 'options'.
+ *   - path: An optional array containing the link 'path' and link 'options'.
  *
  * @ingroup themeable
  */
 function theme_image_formatter($variables) {
   $item = $variables['item'];
-  $image = array(
-    'path' => $item['uri'],
-    'alt' => $item['alt'],
-  );
-
-  if (isset($item['width']) && isset($item['height'])) {
-    $image['width'] = $item['width'];
-    $image['height'] = $item['height'];
-  }
 
   // Do not output an empty 'title' attribute.
-  if (drupal_strlen($item['title']) > 0) {
-    $image['title'] = $item['title'];
+  if (drupal_strlen($item['title']) == 0) {
+    unset($item['title']);
   }
 
   if ($variables['image_style']) {
-    $image['style_name'] = $variables['image_style'];
-    $output = theme('image_style', $image);
+    $item['style_name'] = $variables['image_style'];
+    $output = theme('image_style', $item);
   }
   else {
-    $output = theme('image', $image);
+    $output = theme('image', $item);
   }
 
   if (!empty($variables['path']['path'])) {
