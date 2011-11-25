@@ -258,6 +258,26 @@ function locale_update_8001() {
 }
 
 /**
+ * Drop textgroup support.
+ *
+ * Update assumes i18n migrated this data before the update happened. Core
+ * never used textgroups for anything, so it is not our job to find place
+ * for the data elsewhere.
+ */
+function locale_update_8002() {
+  $subquery = db_select('locales_source', 'ls')
+    ->fields('ls', array('lid'))
+    ->condition('ls.textgroup', 'default', '<>');
+  db_delete('locales_target')
+    ->condition('lid', $subquery, 'IN')
+    ->execute();
+  db_delete('locales_source')
+    ->condition('textgroup', 'default', '<>')
+    ->execute();
+  db_drop_field('locales_source', 'textgroup');
+}
+
+/**
  * @} End of "addtogroup updates-7.x-to-8.x"
  * The next series of updates should start at 9000.
  */
