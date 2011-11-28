@@ -1,8 +1,7 @@
 <?php
-
 /**
  * @file
- * Allows administrators to associate custom fields to fieldable types.
+ * Allows administrators to attach custom fields to fieldable types.
  */
 
 /**
@@ -195,7 +194,7 @@ function field_ui_menu() {
 }
 
 /**
- * Menu loader; Load a field instance based on field and bundle name.
+ * Menu loader callback: Loads a field instance based on field and bundle name.
  *
  * @param $field_name
  *   The name of the field, as contained in the path.
@@ -207,6 +206,11 @@ function field_ui_menu() {
  *   The position of $bundle_name in $map.
  * @param $map
  *   The translated menu router path argument map.
+ *
+ * @return
+ *   The field instance array.
+ *
+ * @ingroup field
  */
 function field_ui_menu_load($field_name, $entity_type, $bundle_name, $bundle_pos, $map) {
   // Extract the actual bundle name from the translated argument map.
@@ -235,14 +239,25 @@ function field_ui_menu_load($field_name, $entity_type, $bundle_name, $bundle_pos
 }
 
 /**
- * Menu title callback.
+ * Title callback: Returns the name of a given instance.
+ *
+ * Path: BUNDLE_ADMIN_PATH/fields/%field, where BUNDLE_ADMIN_PATH is the path
+ * stored in the ['admin']['info'] property in the return value of
+ * hook_entity_info().
+ *
+ * @see field_ui_menu()
  */
 function field_ui_menu_title($instance) {
   return $instance['label'];
 }
 
 /**
- * Menu access callback for the 'view mode display settings' pages.
+ * Access callback: Checks access for the 'view mode display settings' pages.
+ *
+ * Path: BUNDLE_ADMIN_PATH/display, where BUNDLE_ADMIN_PATH is the path stored
+ * in the ['admin']['info'] property in the return value of hook_entity_info().
+ *
+ * @see field_ui_menu()
  */
 function _field_ui_view_mode_menu_access($entity_type, $bundle, $view_mode, $access_callback) {
   // First, determine visibility according to the 'use custom display'
@@ -307,7 +322,7 @@ function field_ui_field_attach_create_bundle($entity_type, $bundle) {
 }
 
 /**
- * Helper function to create the right administration path for a bundle.
+ * Determines the adminstration path for a bundle.
  */
 function _field_ui_bundle_admin_path($entity_type, $bundle_name) {
   $bundles = field_info_bundles($entity_type);
@@ -318,7 +333,7 @@ function _field_ui_bundle_admin_path($entity_type, $bundle_name) {
 }
 
 /**
- * Helper function to identify inactive fields within a bundle.
+ * Identifies inactive fields within a bundle.
  */
 function field_ui_inactive_instances($entity_type, $bundle_name = NULL) {
   if (!empty($bundle_name)) {
@@ -345,7 +360,12 @@ function field_ui_inactive_instances($entity_type, $bundle_name = NULL) {
 }
 
 /**
- * Add a button Save and add fields to Create content type form.
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * Adds a button 'Save and add fields' to the 'Create content type' form.
+ *
+ * @see node_type_form()
+ * @see field_ui_form_node_type_form_submit()
  */
 function field_ui_form_node_type_form_alter(&$form, $form_state) {
   // We want to display the button only on add page.
@@ -360,7 +380,9 @@ function field_ui_form_node_type_form_alter(&$form, $form_state) {
 }
 
 /**
- * Redirect to manage fields form.
+ * Form submission handler for the 'Save and add fields' button.
+ *
+ * @see field_ui_form_node_type_form_alter()
  */
 function field_ui_form_node_type_form_submit($form, &$form_state) {
   if ($form_state['triggering_element']['#parents'][0] === 'save_continue') {
