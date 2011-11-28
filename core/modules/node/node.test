@@ -6,7 +6,7 @@
  */
 
 /**
- * Test the node_load_multiple() function.
+ * Tests the node_load_multiple() function.
  */
 class NodeLoadMultipleUnitTest extends DrupalWebTestCase {
 
@@ -25,7 +25,7 @@ class NodeLoadMultipleUnitTest extends DrupalWebTestCase {
   }
 
   /**
-   * Create four nodes and ensure they're loaded correctly.
+   * Creates four nodes and ensures that they are loaded correctly.
    */
   function testNodeMultipleLoad() {
     $node1 = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1));
@@ -102,7 +102,7 @@ class NodeLoadHooksTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Test that hook_node_load() is invoked correctly.
+   * Tests that hook_node_load() is invoked correctly.
    */
   function testHookNodeLoad() {
     // Create some sample articles and pages.

@@ -177,9 +177,6 @@
  * sure to restore your {node_access} record after node_access_rebuild() is
  * called.
  *
- * @see node_access_view_all_nodes()
- * @see node_access_rebuild()
- *
  * @param $account
  *   The user object whose grants are requested.
  * @param $op
@@ -191,6 +188,8 @@
  *
  * For a detailed example, see node_access_example.module.
  *
+ * @see node_access_view_all_nodes()
+ * @see node_access_rebuild()
  * @ingroup node_access
  */
 function hook_node_grants($account, $op) {
@@ -252,14 +251,13 @@ function hook_node_grants($account, $op) {
  *
  * Note: a deny all grant is not written to the database; denies are implicit.
  *
- * @see _node_access_write_grants()
- *
  * @param $node
  *   The node that has just been saved.
  *
  * @return
  *   An array of grants as defined above.
  *
+ * @see _node_access_write_grants()
  * @ingroup node_access
  */
 function hook_node_access_records($node) {
@@ -304,17 +302,12 @@ function hook_node_access_records($node) {
  * modules to modify the $grants array by reference before it is stored, so
  * custom or advanced business logic can be applied.
  *
- * @see hook_node_access_records()
- *
  * Upon viewing, editing or deleting a node, hook_node_grants() builds a
  * permissions array that is compared against the stored access records. The
  * user must have one or more matching permissions in order to complete the
  * requested operation.
  *
  * A module may deny all access to a node by setting $grants to an empty array.
- *
- * @see hook_node_grants()
- * @see hook_node_grants_alter()
  *
  * @param $grants
  *   The $grants array returned by hook_node_access_records().
@@ -325,6 +318,9 @@ function hook_node_access_records($node) {
  * access modules with a configurable behavior, as shown in the example with the
  * 'is_preview' field.
  *
+ * @see hook_node_access_records()
+ * @see hook_node_grants()
+ * @see hook_node_grants_alter()
  * @ingroup node_access
  */
 function hook_node_access_records_alter(&$grants, $node) {
@@ -351,15 +347,15 @@ function hook_node_access_records_alter(&$grants, $node) {
  * multiple node access modules can be altered or advanced business logic can be
  * applied.
  *
- * @see hook_node_grants()
- *
  * The resulting grants are then checked against the records stored in the
  * {node_access} table to determine if the operation may be completed.
  *
  * A module may deny all access to a user by setting $grants to an empty array.
  *
- * @see hook_node_access_records()
- * @see hook_node_access_records_alter()
+ * Developers may use this hook to either add additional grants to a user
+ * or to remove existing grants. These rules are typically based on either the
+ * permissions assigned to a user role, or specific attributes of a user
+ * account.
  *
  * @param $grants
  *   The $grants array returned by hook_node_grants().
@@ -368,11 +364,9 @@ function hook_node_access_records_alter(&$grants, $node) {
  * @param $op
  *   The operation being performed, 'view', 'update' or 'delete'.
  *
- * Developers may use this hook to either add additional grants to a user
- * or to remove existing grants. These rules are typically based on either the
- * permissions assigned to a user role, or specific attributes of a user
- * account.
- *
+ * @see hook_node_grants()
+ * @see hook_node_access_records()
+ * @see hook_node_access_records_alter()
  * @ingroup node_access
  */
 function hook_node_grants_alter(&$grants, $account, $op) {
@@ -549,7 +543,7 @@ function hook_node_load($nodes, $types) {
 }
 
 /**
- * Control access to a node.
+ * Controls access to a node.
  *
  * Modules may implement this hook if they want to have a say in whether or not
  * a given user has access to perform a given operation on a node.
@@ -785,9 +779,6 @@ function hook_node_submit($node, $form, &$form_state) {
  * the RSS item generated for this node.
  * For details on how this is used, see node_feed().
  *
- * @see forum_node_view()
- * @see comment_node_view()
- *
  * @param $node
  *   The node that is being assembled for rendering.
  * @param $view_mode
@@ -795,6 +786,8 @@ function hook_node_submit($node, $form, &$form_state) {
  * @param $langcode
  *   The language code used for rendering.
  *
+ * @see forum_node_view()
+ * @see comment_node_view()
  * @see hook_entity_view()
  *
  * @ingroup node_api_hooks
@@ -1231,8 +1224,9 @@ function hook_validate($node, $form, &$form_state) {
  *   The node to be displayed, as returned by node_load().
  * @param $view_mode
  *   View mode, e.g. 'full', 'teaser', ...
+ *
  * @return
- *   $node. The passed $node parameter should be modified as necessary and
+ *   The passed $node parameter should be modified as necessary and
  *   returned so it can be properly presented. Nodes are prepared for display
  *   by assembling a structured array, formatted as in the Form API, in
  *   $node->content. As with Form API arrays, the #weight property can be

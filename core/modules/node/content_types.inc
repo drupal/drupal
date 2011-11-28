@@ -6,7 +6,11 @@
  */
 
 /**
- * Displays the content type admin overview page.
+ * Page callback: Displays the content type admin overview page.
+ *
+ * Path: admin/structure/types
+ *
+ * @see node_menu()
  */
 function node_overview_types() {
   $types = node_type_get_types();
@@ -54,7 +58,7 @@ function node_overview_types() {
 }
 
 /**
- * Returns HTML for a node type description for the content type admin overview page.
+ * Returns HTML for a node type description for the content type admin page.
  *
  * @param $variables
  *   An associative array containing:
@@ -409,7 +413,17 @@ function node_type_reset($type) {
 }
 
 /**
- * Menu callback; delete a single content type.
+ * Page callback: Form constructor for the content type delete form.
+ *
+ * Path: admin/structure/types/manage/%node_type/delete
+ *
+ * @param $type
+ *   Content type object.
+ *
+ * @return
+ *   Form array for delete confirmation form.
+ *
+ * @see node_type_delete_confirm_submit()
  */
 function node_type_delete_confirm($form, &$form_state, $type) {
   $form['type'] = array('#type' => 'value', '#value' => $type->type);
@@ -429,7 +443,7 @@ function node_type_delete_confirm($form, &$form_state, $type) {
 }
 
 /**
- * Process content type delete confirm submissions.
+ * Form submission handler for node_type_delete_confirm().
  */
 function node_type_delete_confirm_submit($form, &$form_state) {
   node_type_delete($form_state['values']['type']);
