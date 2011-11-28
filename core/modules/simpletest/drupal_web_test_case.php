@@ -74,6 +74,18 @@ abstract class DrupalTestCase {
   protected $skipClasses = array(__CLASS__ => TRUE);
 
   /**
+   * Flag to indicate whether the test has been set up.
+   *
+   * The setUp() method isolates the test from the parent Drupal site by
+   * creating a random prefix for the database and setting up a clean file
+   * storage directory. The tearDown() method then cleans up this test
+   * environment. We must ensure that setUp() has been run. Otherwise,
+   * tearDown() will act on the parent Drupal site rather than the test
+   * environment, destroying live data.
+   */
+  protected $setup = FALSE;
+
+  /**
    * Constructor for DrupalTestCase.
    *
    * @param $test_id
@@ -127,7 +139,15 @@ abstract class DrupalTestCase {
     );
 
     // Store assertion for display after the test has completed.
-    Database::getConnection('default', 'simpletest_original_default')
+    try {
+      $connection = Database::getConnection('default', 'simpletest_original_default');
+    }
+    catch (DatabaseConnectionNotDefinedException $e) {
+      // If the test was not set up, the simpletest_original_default
+      // connection does not exist.
+      $connection = Database::getConnection('default', 'default');
+    }
+    $connection
       ->insert('simpletest')
       ->fields($assertion)
       ->execute();
@@ -474,14 +494,19 @@ abstract class DrupalTestCase {
         );
         $completion_check_id = DrupalTestCase::insertAssert($this->testId, $class, FALSE, t('The test did not complete due to a fatal error.'), 'Completion check', $caller);
         $this->setUp();
-        try {
-          $this->$method();
-          // Finish up.
+        if ($this->setup) {
+          try {
+            $this->$method();
+            // Finish up.
+          }
+          catch (Exception $e) {
+            $this->exceptionHandler($e);
+          }
+          $this->tearDown();
         }
-        catch (Exception $e) {
-          $this->exceptionHandler($e);
+        else {
+          $this->fail(t("The test cannot be executed because it has not been set up properly."));
         }
-        $this->tearDown();
         // Remove the completion check record.
         DrupalTestCase::deleteAssert($completion_check_id);
       }
@@ -691,6 +716,7 @@ class DrupalUnitTestCase extends DrupalTestCase {
       unset($module_list['locale']);
       module_list(TRUE, FALSE, FALSE, $module_list);
     }
+    $this->setup = TRUE;
   }
 
   protected function tearDown() {
@@ -1357,6 +1383,7 @@ class DrupalWebTestCase extends DrupalTestCase {
     variable_set('mail_system', array('default-system' => 'TestingMailSystem'));
 
     drupal_set_time_limit($this->timeLimit);
+    $this->setup = TRUE;
   }
 
   /**
