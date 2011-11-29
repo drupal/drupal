@@ -3,72 +3,72 @@
 /**
  * Indicates that a module has not been installed yet.
  */
-define('SCHEMA_UNINSTALLED', -1);
+const SCHEMA_UNINSTALLED = -1;
 
 /**
  * Indicates that a module has been installed.
  */
-define('SCHEMA_INSTALLED', 0);
+const SCHEMA_INSTALLED = 0;
 
 /**
  * Requirement severity -- Informational message only.
  */
-define('REQUIREMENT_INFO', -1);
+const REQUIREMENT_INFO = -1;
 
 /**
  * Requirement severity -- Requirement successfully met.
  */
-define('REQUIREMENT_OK', 0);
+const REQUIREMENT_OK = 0;
 
 /**
  * Requirement severity -- Warning condition; proceed but flag warning.
  */
-define('REQUIREMENT_WARNING', 1);
+const REQUIREMENT_WARNING = 1;
 
 /**
  * Requirement severity -- Error condition; abort installation.
  */
-define('REQUIREMENT_ERROR', 2);
+const REQUIREMENT_ERROR = 2;
 
 /**
  * File permission check -- File exists.
  */
-define('FILE_EXIST', 1);
+const FILE_EXIST = 1;
 
 /**
  * File permission check -- File is readable.
  */
-define('FILE_READABLE', 2);
+const FILE_READABLE = 2;
 
 /**
  * File permission check -- File is writable.
  */
-define('FILE_WRITABLE', 4);
+const FILE_WRITABLE = 4;
 
 /**
  * File permission check -- File is executable.
  */
-define('FILE_EXECUTABLE', 8);
+const FILE_EXECUTABLE = 8;
 
 /**
  * File permission check -- File does not exist.
  */
-define('FILE_NOT_EXIST', 16);
+const FILE_NOT_EXIST = 16;
 
 /**
  * File permission check -- File is not readable.
  */
-define('FILE_NOT_READABLE', 32);
+const FILE_NOT_READABLE = 32;
 
 /**
  * File permission check -- File is not writable.
  */
-define('FILE_NOT_WRITABLE', 64);
+const FILE_NOT_WRITABLE = 64;
 
 /**
  * File permission check -- File is not executable.
  */
-define('FILE_NOT_EXECUTABLE', 128);
+const FILE_NOT_EXECUTABLE = 128;
 
 /**
  * Initialize the update system by loading all installed module's .install files.

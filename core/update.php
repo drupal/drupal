@@ -28,7 +28,7 @@ define('DRUPAL_ROOT', getcwd());
  * When this flag is set, various operations do not take place, such as invoking
  * hook_init() and hook_exit(), css/js preprocessing, and translation.
  */
-define('MAINTENANCE_MODE', 'update');
+const MAINTENANCE_MODE = 'update';
 
 function update_selection_page() {
   drupal_set_title('Drupal database update');

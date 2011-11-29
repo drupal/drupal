@@ -4,9 +4,9 @@
  * This script runs Drupal tests from command line.
  */
 
-define('SIMPLETEST_SCRIPT_COLOR_PASS', 32); // Green.
-define('SIMPLETEST_SCRIPT_COLOR_FAIL', 31); // Red.
-define('SIMPLETEST_SCRIPT_COLOR_EXCEPTION', 33); // Brown.
+const SIMPLETEST_SCRIPT_COLOR_PASS = 32; // Green.
+const SIMPLETEST_SCRIPT_COLOR_FAIL = 31; // Red.
+const SIMPLETEST_SCRIPT_COLOR_EXCEPTION = 33; // Brown.
 
 // Set defaults and get overrides.
 list($args, $count) = simpletest_script_parse_args();

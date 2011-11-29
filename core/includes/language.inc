@@ -8,7 +8,7 @@
 /**
  * No language negotiation. The default language is used.
  */
-define('LANGUAGE_NEGOTIATION_DEFAULT', 'language-default');
+const LANGUAGE_NEGOTIATION_DEFAULT = 'language-default';
 
 /**
  * Return all the defined language types.

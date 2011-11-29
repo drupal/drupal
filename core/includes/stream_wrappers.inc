@@ -29,27 +29,27 @@
 /**
  * Stream wrapper bit flag -- a filter that matches all wrappers.
  */
-define('STREAM_WRAPPERS_ALL', 0x0000);
+const STREAM_WRAPPERS_ALL = 0x0000;
 
 /**
  * Stream wrapper bit flag -- refers to a local file system location.
  */
-define('STREAM_WRAPPERS_LOCAL', 0x0001);
+const STREAM_WRAPPERS_LOCAL = 0x0001;
 
 /**
  * Stream wrapper bit flag -- wrapper is readable (almost always true).
  */
-define('STREAM_WRAPPERS_READ', 0x0004);
+const STREAM_WRAPPERS_READ = 0x0004;
 
 /**
  * Stream wrapper bit flag -- wrapper is writeable.
  */
-define('STREAM_WRAPPERS_WRITE', 0x0008);
+const STREAM_WRAPPERS_WRITE = 0x0008;
 
 /**
  * Stream wrapper bit flag -- exposed in the UI and potentially web accessible.
  */
-define('STREAM_WRAPPERS_VISIBLE', 0x0010);
+const STREAM_WRAPPERS_VISIBLE = 0x0010;
 
 /**
  * Composite stream wrapper bit flags that are usually used as the types.

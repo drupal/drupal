@@ -18,17 +18,17 @@
 /**
  * Mark content as read.
  */
-define('MARK_READ', 0);
+const MARK_READ = 0;
 
 /**
  * Mark content as being new.
  */
-define('MARK_NEW', 1);
+const MARK_NEW = 1;
 
 /**
  * Mark content as being updated.
  */
-define('MARK_UPDATED', 2);
+const MARK_UPDATED = 2;
 
 /**
  * @} End of "Content markers".

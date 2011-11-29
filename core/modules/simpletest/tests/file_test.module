@@ -9,8 +9,8 @@
  */
 
 
-define('FILE_URL_TEST_CDN_1', 'http://cdn1.example.com');
-define('FILE_URL_TEST_CDN_2', 'http://cdn2.example.com');
+const FILE_URL_TEST_CDN_1 = 'http://cdn1.example.com';
+const FILE_URL_TEST_CDN_2 = 'http://cdn2.example.com';
 
 
 /**

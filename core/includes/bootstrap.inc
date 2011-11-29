@@ -8,34 +8,34 @@
 /**
  * The current system version.
  */
-define('VERSION', '8.0-dev');
+const VERSION = '8.0-dev';
 
 /**
  * Core API compatibility.
  */
-define('DRUPAL_CORE_COMPATIBILITY', '8.x');
+const DRUPAL_CORE_COMPATIBILITY = '8.x';
 
 /**
  * Minimum supported version of PHP.
  */
-define('DRUPAL_MINIMUM_PHP', '5.3.2');
+const DRUPAL_MINIMUM_PHP = '5.3.2';
 
 /**
  * Minimum recommended value of PHP memory_limit.
  */
-define('DRUPAL_MINIMUM_PHP_MEMORY_LIMIT', '32M');
+const DRUPAL_MINIMUM_PHP_MEMORY_LIMIT = '32M';
 
 /**
  * Indicates that the item should never be removed unless explicitly selected.
  *
  * The item may be removed using cache()->delete() with a cache ID.
  */
-define('CACHE_PERMANENT', 0);
+const CACHE_PERMANENT = 0;
 
 /**
  * Indicates that the item should be removed at the next general cache wipe.
  */
-define('CACHE_TEMPORARY', -1);
+const CACHE_TEMPORARY = -1;
 
 /**
  * @defgroup logging_severity_levels Logging severity levels
@@ -60,42 +60,42 @@ define('CACHE_TEMPORARY', -1);
 /**
  * Log message severity -- Emergency: system is unusable.
  */
-define('WATCHDOG_EMERGENCY', 0);
+const WATCHDOG_EMERGENCY = 0;
 
 /**
  * Log message severity -- Alert: action must be taken immediately.
  */
-define('WATCHDOG_ALERT', 1);
+const WATCHDOG_ALERT = 1;
 
 /**
  * Log message severity -- Critical: critical conditions.
  */
-define('WATCHDOG_CRITICAL', 2);
+const WATCHDOG_CRITICAL = 2;
 
 /**
  * Log message severity -- Error: error conditions.
  */
-define('WATCHDOG_ERROR', 3);
+const WATCHDOG_ERROR = 3;
 
 /**
  * Log message severity -- Warning: warning conditions.
  */
-define('WATCHDOG_WARNING', 4);
+const WATCHDOG_WARNING = 4;
 
 /**
  * Log message severity -- Notice: normal but significant condition.
  */
-define('WATCHDOG_NOTICE', 5);
+const WATCHDOG_NOTICE = 5;
 
 /**
  * Log message severity -- Informational: informational messages.
  */
-define('WATCHDOG_INFO', 6);
+const WATCHDOG_INFO = 6;
 
 /**
  * Log message severity -- Debug: debug-level messages.
  */
-define('WATCHDOG_DEBUG', 7);
+const WATCHDOG_DEBUG = 7;
 
 /**
  * @} End of "defgroup logging_severity_levels".
@@ -104,98 +104,98 @@ define('WATCHDOG_DEBUG', 7);
 /**
  * First bootstrap phase: initialize configuration.
  */
-define('DRUPAL_BOOTSTRAP_CONFIGURATION', 0);
+const DRUPAL_BOOTSTRAP_CONFIGURATION = 0;
 
 /**
  * Second bootstrap phase: try to serve a cached page.
  */
-define('DRUPAL_BOOTSTRAP_PAGE_CACHE', 1);
+const DRUPAL_BOOTSTRAP_PAGE_CACHE = 1;
 
 /**
  * Third bootstrap phase: initialize database layer.
  */
-define('DRUPAL_BOOTSTRAP_DATABASE', 2);
+const DRUPAL_BOOTSTRAP_DATABASE = 2;
 
 /**
  * Fourth bootstrap phase: initialize the variable system.
  */
-define('DRUPAL_BOOTSTRAP_VARIABLES', 3);
+const DRUPAL_BOOTSTRAP_VARIABLES = 3;
 
 /**
  * Fifth bootstrap phase: initialize session handling.
  */
-define('DRUPAL_BOOTSTRAP_SESSION', 4);
+const DRUPAL_BOOTSTRAP_SESSION = 4;
 
 /**
  * Sixth bootstrap phase: set up the page header.
  */
-define('DRUPAL_BOOTSTRAP_PAGE_HEADER', 5);
+const DRUPAL_BOOTSTRAP_PAGE_HEADER = 5;
 
 /**
  * Seventh bootstrap phase: find out language of the page.
  */
-define('DRUPAL_BOOTSTRAP_LANGUAGE', 6);
+const DRUPAL_BOOTSTRAP_LANGUAGE = 6;
 
 /**
  * Final bootstrap phase: Drupal is fully loaded; validate and fix
  * input data.
  */
-define('DRUPAL_BOOTSTRAP_FULL', 7);
+const DRUPAL_BOOTSTRAP_FULL = 7;
 
 /**
  * Role ID for anonymous users; should match what's in the "role" table.
  */
-define('DRUPAL_ANONYMOUS_RID', 1);
+const DRUPAL_ANONYMOUS_RID = 1;
 
 /**
  * Role ID for authenticated users; should match what's in the "role" table.
  */
-define('DRUPAL_AUTHENTICATED_RID', 2);
+const DRUPAL_AUTHENTICATED_RID = 2;
 
 /**
  * The number of bytes in a kilobyte. For more information, visit
  * http://en.wikipedia.org/wiki/Kilobyte.
  */
-define('DRUPAL_KILOBYTE', 1024);
+const DRUPAL_KILOBYTE = 1024;
 
 /**
  * System language (only applicable to UI).
  *
  * Refers to the language used in Drupal and module/theme source code.
  */
-define('LANGUAGE_SYSTEM', 'system');
+const LANGUAGE_SYSTEM = 'system';
 
 /**
  * The language code used when no language is explicitly assigned.
  *
  * Defined by ISO639-2 for "Undetermined".
  */
-define('LANGUAGE_NONE', 'und');
+const LANGUAGE_NONE = 'und';
 
 /**
  * The type of language used to define the content language.
  */
-define('LANGUAGE_TYPE_CONTENT', 'language_content');
+const LANGUAGE_TYPE_CONTENT = 'language_content';
 
 /**
  * The type of language used to select the user interface.
  */
-define('LANGUAGE_TYPE_INTERFACE', 'language');
+const LANGUAGE_TYPE_INTERFACE = 'language';
 
 /**
  * The type of language used for URLs.
  */
-define('LANGUAGE_TYPE_URL', 'language_url');
+const LANGUAGE_TYPE_URL = 'language_url';
 
 /**
  * Language written left to right. Possible value of $language->direction.
  */
-define('LANGUAGE_LTR', 0);
+const LANGUAGE_LTR = 0;
 
 /**
  * Language written right to left. Possible value of $language->direction.
  */
-define('LANGUAGE_RTL', 1);
+const LANGUAGE_RTL = 1;
 
 /**
  * Time of the current request in seconds elapsed since the Unix Epoch.
@@ -212,29 +212,29 @@ define('REQUEST_TIME', (int) $_SERVER['REQUEST_TIME']);
 /**
  * Flag for drupal_set_title(); text is not sanitized, so run check_plain().
  */
-define('CHECK_PLAIN', 0);
+const CHECK_PLAIN = 0;
 
 /**
  * Flag for drupal_set_title(); text has already been sanitized.
  */
-define('PASS_THROUGH', -1);
+const PASS_THROUGH = -1;
 
 /**
  * Signals that the registry lookup cache should be reset.
  */
-define('REGISTRY_RESET_LOOKUP_CACHE', 1);
+const REGISTRY_RESET_LOOKUP_CACHE = 1;
 
 /**
  * Signals that the registry lookup cache should be written to storage.
  */
-define('REGISTRY_WRITE_LOOKUP_CACHE', 2);
+const REGISTRY_WRITE_LOOKUP_CACHE = 2;
 
 /**
  * Regular expression to match PHP function names.
  *
  * @see http://php.net/manual/en/language.functions.php
  */
-define('DRUPAL_PHP_FUNCTION_PATTERN', '[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*');
+const DRUPAL_PHP_FUNCTION_PATTERN = '[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*';
 
 /**
  * Provides a caching wrapper to be used in place of large array structures.

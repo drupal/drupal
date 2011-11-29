@@ -8,28 +8,28 @@
 /**
  * Maximum length of username text field.
  */
-define('USERNAME_MAX_LENGTH', 60);
+const USERNAME_MAX_LENGTH = 60;
 
 /**
  * Maximum length of user e-mail text field.
  */
-define('EMAIL_MAX_LENGTH', 254);
+const EMAIL_MAX_LENGTH = 254;
 
 /**
  * Only administrators can create user accounts.
  */
-define('USER_REGISTER_ADMINISTRATORS_ONLY', 0);
+const USER_REGISTER_ADMINISTRATORS_ONLY = 0;
 
 /**
  * Visitors can create their own accounts.
  */
-define('USER_REGISTER_VISITORS', 1);
+const USER_REGISTER_VISITORS = 1;
 
 /**
  * Visitors can create accounts, but they don't become active without
  * administrative approval.
  */
-define('USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL', 2);
+const USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL = 2;
 
 /**
  * Implement hook_help().

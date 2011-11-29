@@ -11,32 +11,32 @@
 /**
  * Denotes that the node is not published.
  */
-define('NODE_NOT_PUBLISHED', 0);
+const NODE_NOT_PUBLISHED = 0;
 
 /**
  * Denotes that the node is published.
  */
-define('NODE_PUBLISHED', 1);
+const NODE_PUBLISHED = 1;
 
 /**
  * Denotes that the node is not promoted to the front page.
  */
-define('NODE_NOT_PROMOTED', 0);
+const NODE_NOT_PROMOTED = 0;
 
 /**
  * Denotes that the node is promoted to the front page.
  */
-define('NODE_PROMOTED', 1);
+const NODE_PROMOTED = 1;
 
 /**
  * Denotes that the node is not sticky at the top of the page.
  */
-define('NODE_NOT_STICKY', 0);
+const NODE_NOT_STICKY = 0;
 
 /**
  * Denotes that the node is sticky at the top of the page.
  */
-define('NODE_STICKY', 1);
+const NODE_STICKY = 1;
 
 /**
  * Denotes the time cutoff for nodes marked as read.
@@ -53,7 +53,7 @@ define('NODE_NEW_LIMIT', REQUEST_TIME - 30 * 24 * 60 * 60);
  * Modules should return this value from hook_node_access() to allow access to a
  * node.
  */
-define('NODE_ACCESS_ALLOW', 'allow');
+const NODE_ACCESS_ALLOW = 'allow';
 
 /**
  * Denotes that access is denied for a node.
@@ -61,7 +61,7 @@ define('NODE_ACCESS_ALLOW', 'allow');
  * Modules should return this value from hook_node_access() to deny access to a
  * node.
  */
-define('NODE_ACCESS_DENY', 'deny');
+const NODE_ACCESS_DENY = 'deny';
 
 /**
  * Denotes that access is unaffected for a node.
@@ -69,7 +69,7 @@ define('NODE_ACCESS_DENY', 'deny');
  * Modules should return this value from hook_node_access() to indicate no
  * effect on node access.
  */
-define('NODE_ACCESS_IGNORE', NULL);
+const NODE_ACCESS_IGNORE = NULL;
 
 /**
  * Implements hook_help().

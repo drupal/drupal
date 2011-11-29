@@ -16,7 +16,7 @@
  * check the Drupal 7 version once the update process has begun, so instead
  * we check the schema version of system.module in the system table.
  */
-define('REQUIRED_D7_SCHEMA_VERSION', '7069');
+const REQUIRED_D7_SCHEMA_VERSION = '7069';
 
 /**
  * Disable any items in the {system} table that are not core compatible.

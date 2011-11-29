@@ -18,22 +18,22 @@
  * increase by 1 every Drupal version in order to counteract increases in the
  * speed and power of computers available to crack the hashes.
  */
-define('DRUPAL_HASH_COUNT', 16);
+const DRUPAL_HASH_COUNT = 16;
 
 /**
  * The minimum allowed log2 number of iterations for password stretching.
  */
-define('DRUPAL_MIN_HASH_COUNT', 7);
+const DRUPAL_MIN_HASH_COUNT = 7;
 
 /**
  * The maximum allowed log2 number of iterations for password stretching.
  */
-define('DRUPAL_MAX_HASH_COUNT', 30);
+const DRUPAL_MAX_HASH_COUNT = 30;
 
 /**
  * The expected (and maximum) number of characters in a hashed password.
  */
-define('DRUPAL_HASH_LENGTH', 55);
+const DRUPAL_HASH_LENGTH = 55;
 
 /**
  * Returns a string for mapping an int to the corresponding base 64 character.

@@ -22,7 +22,7 @@
 /**
  * Identifies a content type which has translation support enabled.
  */
-define('TRANSLATION_ENABLED', 2);
+const TRANSLATION_ENABLED = 2;
 
 /**
  * Implements hook_help().

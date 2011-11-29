@@ -52,14 +52,14 @@ class FieldValidationException extends FieldException {
  * This is used in hook_field_storage_write when updating an
  * existing entity.
  */
-define('FIELD_STORAGE_UPDATE', 'update');
+const FIELD_STORAGE_UPDATE = 'update';
 
 /**
  * Argument for an insert operation.
  *
  * This is used in hook_field_storage_write when inserting a new entity.
  */
-define('FIELD_STORAGE_INSERT', 'insert');
+const FIELD_STORAGE_INSERT = 'insert';
 
 /**
  * @} End of "defgroup field_storage"

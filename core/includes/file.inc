@@ -38,27 +38,27 @@ require_once DRUPAL_ROOT . '/core/includes/stream_wrappers.inc';
 /**
  * Flag used by file_prepare_directory() -- create directory if not present.
  */
-define('FILE_CREATE_DIRECTORY', 1);
+const FILE_CREATE_DIRECTORY = 1;
 
 /**
  * Flag used by file_prepare_directory() -- file permissions may be changed.
  */
-define('FILE_MODIFY_PERMISSIONS', 2);
+const FILE_MODIFY_PERMISSIONS = 2;
 
 /**
  * Flag for dealing with existing files: Appends number until name is unique.
  */
-define('FILE_EXISTS_RENAME', 0);
+const FILE_EXISTS_RENAME = 0;
 
 /**
  * Flag for dealing with existing files: Replace the existing file.
  */
-define('FILE_EXISTS_REPLACE', 1);
+const FILE_EXISTS_REPLACE = 1;
 
 /**
  * Flag for dealing with existing files: Do nothing and return FALSE.
  */
-define('FILE_EXISTS_ERROR', 2);
+const FILE_EXISTS_ERROR = 2;
 
 /**
  * Indicates that the file is permanent and should not be deleted.
@@ -67,7 +67,7 @@ define('FILE_EXISTS_ERROR', 2);
  * during cron runs, but permanent files will not be removed during the file
  * garbage collection process.
  */
-define('FILE_STATUS_PERMANENT', 1);
+const FILE_STATUS_PERMANENT = 1;
 
 /**
  * Methods to manage a registry of stream wrappers.

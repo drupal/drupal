@@ -13,7 +13,7 @@
 /**
  * The name by which to obtain a lock for retrive the next insert id.
  */
-define('POSTGRESQL_NEXTID_LOCK', 1000);
+const POSTGRESQL_NEXTID_LOCK = 1000;
 
 class DatabaseConnection_pgsql extends DatabaseConnection {
 

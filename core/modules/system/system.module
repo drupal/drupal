@@ -8,56 +8,56 @@
 /**
  * Maximum age of temporary files in seconds.
  */
-define('DRUPAL_MAXIMUM_TEMP_FILE_AGE', 21600);
+const DRUPAL_MAXIMUM_TEMP_FILE_AGE = 21600;
 
 /**
  * Default interval for automatic cron executions in seconds.
  */
-define('DRUPAL_CRON_DEFAULT_THRESHOLD', 10800);
+const DRUPAL_CRON_DEFAULT_THRESHOLD = 10800;
 
 /**
  * New users will be set to the default time zone at registration.
  */
-define('DRUPAL_USER_TIMEZONE_DEFAULT', 0);
+const DRUPAL_USER_TIMEZONE_DEFAULT = 0;
 
 /**
  * New users will get an empty time zone at registration.
  */
-define('DRUPAL_USER_TIMEZONE_EMPTY', 1);
+const DRUPAL_USER_TIMEZONE_EMPTY = 1;
 
 /**
  * New users will select their own timezone at registration.
  */
-define('DRUPAL_USER_TIMEZONE_SELECT', 2);
+const DRUPAL_USER_TIMEZONE_SELECT = 2;
 
  /**
  * Disabled option on forms and settings
  */
-define('DRUPAL_DISABLED', 0);
+const DRUPAL_DISABLED = 0;
 
 /**
  * Optional option on forms and settings
  */
-define('DRUPAL_OPTIONAL', 1);
+const DRUPAL_OPTIONAL = 1;
 
 /**
  * Required option on forms and settings
  */
-define('DRUPAL_REQUIRED', 2);
+const DRUPAL_REQUIRED = 2;
 
 /**
  * Return only visible regions.
  *
  * @see system_region_list()
  */
-define('REGIONS_VISIBLE', 'visible');
+const REGIONS_VISIBLE = 'visible';
 
 /**
  * Return all regions.
  *
  * @see system_region_list()
  */
-define('REGIONS_ALL', 'all');
+const REGIONS_ALL = 'all';
 
 /**
  * Implements hook_help().
