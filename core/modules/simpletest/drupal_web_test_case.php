@@ -1288,7 +1288,13 @@ class DrupalWebTestCase extends DrupalTestCase {
     // Set to English to prevent exceptions from utf8_truncate() from t()
     // during install if the current language is not 'en'.
     // The following array/object conversion is copied from language_default().
-    $language = (object) array('language' => 'en', 'name' => 'English', 'native' => 'English', 'direction' => 0, 'enabled' => 1, 'plurals' => 0, 'formula' => '', 'domain' => '', 'prefix' => '', 'weight' => 0, 'javascript' => '');
+    $language = (object) array(
+      'language' => 'en',
+      'name' => 'English',
+      'direction' => 0,
+      'enabled' => 1,
+      'weight' => 0,
+    );
 
     // Save and clean shutdown callbacks array because it static cached and
     // will be changed by the test run. If we don't, then it will contain

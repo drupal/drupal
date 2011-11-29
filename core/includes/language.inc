@@ -424,8 +424,9 @@ function language_url_split_prefix($path, $languages) {
   $prefix = array_shift($args);
 
   // Search prefix within enabled languages.
+  $prefixes = locale_language_negotiation_url_prefixes();
   foreach ($languages as $language) {
-    if (!empty($language->prefix) && $language->prefix == $prefix) {
+    if (isset($prefixes[$language->language]) && $prefixes[$language->language] == $prefix) {
       // Rebuild $path with the language removed.
       return array($language, implode('/', $args));
     }

@@ -173,15 +173,6 @@ function locale_language_overview_form_submit($form, &$form_state) {
     }
     $language->enabled = (int) !empty($form_state['values']['languages'][$langcode]['enabled']);
 
-    // If language URL prefixes are enabled we must clear language domains and
-    // assign a valid prefix to each non-default language.
-    if ($url_prefixes) {
-      $language->domain = '';
-      if (empty($language->prefix) && !$language->default) {
-        $language->prefix = $langcode;
-      }
-    }
-
     locale_language_save($language);
   }
 
@@ -704,20 +695,21 @@ function locale_language_providers_url_form($form, &$form_state) {
   );
 
   $languages = language_list('enabled');
+  $prefixes = locale_language_negotiation_url_prefixes();
+  $domains = locale_language_negotiation_url_domains();
   foreach ($languages[1] as $langcode => $language) {
     $form['prefix'][$langcode] = array(
       '#type' => 'textfield',
       '#title' => t('%language (%langcode) path prefix', array('%language' => $language->name, '%langcode' => $language->language)),
       '#maxlength' => 64,
-      '#default_value' => $language->prefix,
-      '#field_prefix' => url(NULL, array('absolute' => TRUE)) . (variable_get('clean_url', 0) ? '' : '?q=')
-
+      '#default_value' => isset($prefixes[$langcode]) ? $prefixes[$langcode] : '',
+      '#field_prefix' => url('', array('absolute' => TRUE)) . (variable_get('clean_url', 0) ? '' : '?q=')
     );
     $form['domain'][$langcode] = array(
       '#type' => 'textfield',
       '#title' => t('%language (%langcode) domain', array('%language' => $language->name, '%langcode' => $language->language)),
       '#maxlength' => 128,
-      '#default_value' => $language->domain,
+      '#default_value' => isset($domains[$langcode]) ? $domains[$langcode] : '',
     );
   }
 
@@ -784,21 +776,9 @@ function locale_language_providers_url_form_submit($form, &$form_state) {
   // Save selected format (prefix or domain).
   variable_set('locale_language_negotiation_url_part', $form_state['values']['locale_language_negotiation_url_part']);
 
-  $languages = language_list('enabled');
-  $default = language_default();
-
-  foreach ($languages[1] as $langcode => $language) {
-
-    // Add new prefix and domain settings to the language object.
-    foreach (array('prefix', 'domain') as $type) {
-      if (isset($form_state['values'][$type][$langcode])) {
-        $language->$type = $form_state['values'][$type][$langcode];
-      }
-    }
-
-    // Save the prefix and domain settings for each language.
-    locale_language_save($language);
-  }
+  // Save new domain and prefix values.
+  locale_language_negotiation_url_prefixes_save($form_state['values']['prefix']);
+  locale_language_negotiation_url_domains_save($form_state['values']['domain']);
 
   drupal_set_message(t('Configuration saved.'));
 }

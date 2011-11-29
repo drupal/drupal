@@ -279,12 +279,13 @@ function locale_language_from_url($languages) {
       break;
 
     case LOCALE_LANGUAGE_NEGOTIATION_URL_DOMAIN:
+      $domains = locale_language_negotiation_url_domains();
       foreach ($languages as $language) {
         // Skip check if the language doesn't have a domain.
-        if ($language->domain) {
+        if (!empty($domains[$language->language])) {
           // Only compare the domains not the protocols or ports.
           // Remove protocol and add http:// so parse_url works
-          $host = 'http://' . str_replace(array('http://', 'https://'), '', $language->domain);
+          $host = 'http://' . str_replace(array('http://', 'https://'), '', $domains[$language->language]);
           $host = parse_url($host, PHP_URL_HOST);
           if ($_SERVER['HTTP_HOST'] == $host) {
             $language_url = $language->language;
@@ -337,7 +338,9 @@ function locale_language_url_fallback($language = NULL, $language_type = LANGUAG
   // If the default language is not configured to convey language information,
   // a missing URL language information indicates that URL language should be
   // the default one, otherwise we fall back to an already detected language.
-  if (($prefix && empty($default->prefix)) || (!$prefix && empty($default->domain))) {
+  $domains = locale_language_negotiation_url_domains();
+  $prefixes = locale_language_negotiation_url_prefixes();
+  if (($prefix && empty($prefixes[$default->language])) || (!$prefix && empty($domains[$default->language]))) {
     return $default->language;
   }
   else {
@@ -428,20 +431,50 @@ function locale_language_url_rewrite_url(&$path, &$options) {
   if (isset($options['language'])) {
     switch (variable_get('locale_language_negotiation_url_part', LOCALE_LANGUAGE_NEGOTIATION_URL_PREFIX)) {
       case LOCALE_LANGUAGE_NEGOTIATION_URL_DOMAIN:
-        if ($options['language']->domain) {
+        $domains = locale_language_negotiation_url_domains();
+        if (!empty($domains[$options['language']->language])) {
           // Ask for an absolute URL with our modified base_url.
           $options['absolute'] = TRUE;
-          $options['base_url'] = $options['language']->domain;
+          $options['base_url'] = $domains[$options['language']->language];
         }
         break;
 
       case LOCALE_LANGUAGE_NEGOTIATION_URL_PREFIX:
-        if (!empty($options['language']->prefix)) {
-          $options['prefix'] = $options['language']->prefix . '/';
+        $prefixes = locale_language_negotiation_url_prefixes();
+        if (!empty($prefixes[$options['language']->language])) {
+          $options['prefix'] = $prefixes[$options['language']->language] . '/';
         }
         break;
     }
   }
+}
+
+/**
+ * Reads language prefixes and uses the langcode if no prefix is set.
+ */
+function locale_language_negotiation_url_prefixes() {
+  return variable_get('locale_language_negotiation_url_prefixes', array());
+}
+
+/**
+ * Saves language prefix settings.
+ */
+function locale_language_negotiation_url_prefixes_save(array $prefixes) {
+  variable_set('locale_language_negotiation_url_prefixes', $prefixes);
+}
+
+/**
+ * Reads language domains.
+ */
+function locale_language_negotiation_url_domains() {
+  return variable_get('locale_language_negotiation_url_domains', array());
+}
+
+/**
+ * Saves the language domain settings.
+ */
+function locale_language_negotiation_url_domains_save(array $domains) {
+  variable_set('locale_language_negotiation_url_domains', $domains);
 }
 
 /**
@@ -509,10 +542,6 @@ function locale_string_is_safe($string) {
  */
 function locale_language_save($language) {
   $language->is_new = !(bool) db_query_range('SELECT 1 FROM {languages} WHERE language = :language', 0, 1, array(':language' => $language->language))->fetchField();
-  // Default prefix on language code if not provided otherwise.
-  if (!isset($language->prefix)) {
-    $language->prefix = $language->language;
-  }
 
   // If name was not set, we add a predefined language.
   if (!isset($language->name)) {

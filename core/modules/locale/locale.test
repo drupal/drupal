@@ -2346,7 +2346,6 @@ class LocaleUrlRewritingTest extends DrupalWebTestCase {
     // Check URL rewriting with a non-installed language.
     $non_existing = language_default();
     $non_existing->language = $this->randomName();
-    $non_existing->prefix = $this->randomName();
     $this->checkUrl($non_existing, t('Path language is ignored if language is not installed.'), t('URL language negotiation does not work with non-installed languages'));
   }
 
@@ -2364,11 +2363,15 @@ class LocaleUrlRewritingTest extends DrupalWebTestCase {
     $segments = explode('/', $rewritten_path, 2);
     $prefix = $segments[0];
     $path = isset($segments[1]) ? $segments[1] : $prefix;
-    // If the rewritten URL has not a language prefix we pick the right one from
-    // the language object so we can always check the prefixed URL.
-    if ($this->assertNotEqual($language->prefix, $prefix, $message1)) {
-      $prefix = $language->prefix;
+
+    // If the rewritten URL has not a language prefix we pick a random prefix so
+    // we can always check the prefixed URL.
+    $prefixes = locale_language_negotiation_url_prefixes();
+    $stored_prefix = isset($prefixes[$language->language]) ? $prefixes[$language->language] : $this->randomName();
+    if ($this->assertNotEqual($stored_prefix, $prefix, $message1)) {
+      $prefix = $stored_prefix;
     }
+
     $this->drupalGet("$prefix/$path");
     $this->assertResponse(404, $message2);
   }
@@ -2568,9 +2571,10 @@ class LocaleCommentLanguageFunctionalTest extends DrupalWebTestCase {
       $this->drupalPost("node/add/article", $edit, t('Save'));
       $node = $this->drupalGetNodeByTitle($title);
 
+      $prefixes = locale_language_negotiation_url_prefixes();
       foreach (language_list() as $langcode => $language) {
         // Post a comment with content language $langcode.
-        $prefix = empty($language->prefix) ? '' : $language->prefix . '/';
+        $prefix = empty($prefixes[$langcode]) ? '' : $prefixes[$langcode] . '/';
         $edit = array("comment_body[$langcode_none][0][value]" => $this->randomName());
         $this->drupalPost("{$prefix}node/{$node->nid}", $edit, t('Save'));
 
