@@ -63,7 +63,7 @@ DirectoryIndex index.php index.html index.htm
   # above.
   #
   # NOTE: This only works when mod_rewrite is loaded. Without mod_rewrite, it is
-  # not possible to block access to entire directories from .htaccess, because
+  # not possible to block access to entire directories from .htaccess because
   # <DirectoryMatch> is not allowed here.
   #
   # If you do not have mod_rewrite installed, you should remove these
@@ -96,6 +96,13 @@ DirectoryIndex index.php index.html index.htm
   # If your site is running in a VirtualDocumentRoot at http://example.com/,
   # uncomment the following line:
   # RewriteBase /
+
+  # Redirect common PHP files to their new locations.
+  RewriteCond %{REQUEST_URI} ^(.*)?/(update.php) [OR]
+  RewriteCond %{REQUEST_URI} ^(.*)?/(install.php) [OR]
+  RewriteCond %{REQUEST_URI} ^(.*)?/(cron.php)
+  RewriteCond %{REQUEST_URI} !core
+  RewriteRule ^ %1/core/%2 [L,QSA,R=301]
 
   # Pass all requests not referring directly to files in the filesystem to
   # index.php. Clean URLs are handled in drupal_environment_initialize().

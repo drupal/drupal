@@ -1,0 +1,18 @@
+<?php
+
+/**
+ * @file
+ * This file provides testing functionality for update.php.
+ */
+
+/**
+ * Implements hook_flush_caches().
+ *
+ * This sets a message to confirm that all caches are cleared whenever
+ * update.php completes.
+ *
+ * @see UpdateScriptFunctionalTest::testRequirements()
+ */
+function update_script_test_flush_caches() {
+  drupal_set_message(t('hook_flush_caches() invoked for update_script_test.module.'));
+}

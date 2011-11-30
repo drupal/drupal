@@ -1,8 +1,0 @@
-name = Entity
-description = API for managing entities like nodes and users.
-package = Core
-version = VERSION
-core = 8.x
-required = TRUE
-files[] = entity.query.inc
-files[] = entity.controller.inc

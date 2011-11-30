@@ -1,0 +1,471 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the node module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function node_schema() {
+  $schema['node'] = array(
+    'description' => 'The base table for nodes.',
+    'fields' => array(
+      'nid' => array(
+        'description' => 'The primary identifier for a node.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'vid' => array(
+        'description' => 'The current {node_revision}.vid version identifier.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'type' => array(
+        'description' => 'The {node_type}.type of this node.',
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'language' => array(
+        'description' => 'The {languages}.language of this node.',
+        'type' => 'varchar',
+        'length' => 12,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'title' => array(
+        'description' => 'The title of this node, always treated as non-markup plain text.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'uid' => array(
+        'description' => 'The {users}.uid that owns this node; initially, this is the user that created it.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'status' => array(
+        'description' => 'Boolean indicating whether the node is published (visible to non-administrators).',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 1,
+      ),
+      'created' => array(
+        'description' => 'The Unix timestamp when the node was created.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'changed' => array(
+        'description' => 'The Unix timestamp when the node was most recently saved.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'comment' => array(
+        'description' => 'Whether comments are allowed on this node: 0 = no, 1 = closed (read only), 2 = open (read/write).',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'promote' => array(
+        'description' => 'Boolean indicating whether the node should be displayed on the front page.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'sticky' => array(
+        'description' => 'Boolean indicating whether the node should be displayed at the top of lists in which it appears.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'tnid' => array(
+        'description' => 'The translation set id for this node, which equals the node id of the source post in each set.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'translate' => array(
+        'description' => 'A boolean indicating whether this translation page needs to be updated.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'indexes' => array(
+      'node_changed'        => array('changed'),
+      'node_created'        => array('created'),
+      'node_frontpage'      => array('promote', 'status', 'sticky', 'created'),
+      'node_status_type'    => array('status', 'type', 'nid'),
+      'node_title_type'     => array('title', array('type', 4)),
+      'node_type'           => array(array('type', 4)),
+      'uid'                 => array('uid'),
+      'tnid'                => array('tnid'),
+      'translate'           => array('translate'),
+    ),
+    'unique keys' => array(
+      'vid' => array('vid'),
+    ),
+    'foreign keys' => array(
+      'node_revision' => array(
+        'table' => 'node_revision',
+        'columns' => array('vid' => 'vid'),
+      ),
+      'node_author' => array(
+        'table' => 'users',
+        'columns' => array('uid' => 'uid'),
+      ),
+    ),
+    'primary key' => array('nid'),
+  );
+
+  $schema['node_access'] = array(
+    'description' => 'Identifies which realm/grant pairs a user must possess in order to view, update, or delete specific nodes.',
+    'fields' => array(
+      'nid' => array(
+        'description' => 'The {node}.nid this record affects.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'gid' => array(
+        'description' => "The grant ID a user must possess in the specified realm to gain this row's privileges on the node.",
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'realm' => array(
+        'description' => 'The realm in which the user must possess the grant ID. Each node access node can define one or more realms.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'grant_view' => array(
+        'description' => 'Boolean indicating whether a user with the realm/grant pair can view this node.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'tiny',
+      ),
+      'grant_update' => array(
+        'description' => 'Boolean indicating whether a user with the realm/grant pair can edit this node.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'tiny',
+      ),
+      'grant_delete' => array(
+        'description' => 'Boolean indicating whether a user with the realm/grant pair can delete this node.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'tiny',
+      ),
+    ),
+    'primary key' => array('nid', 'gid', 'realm'),
+    'foreign keys' => array(
+      'affected_node' => array(
+        'table' => 'node',
+        'columns' => array('nid' => 'nid'),
+      ),
+     ),
+  );
+
+  $schema['node_revision'] = array(
+    'description' => 'Stores information about each saved version of a {node}.',
+    'fields' => array(
+      'nid' => array(
+        'description' => 'The {node} this version belongs to.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'vid' => array(
+        'description' => 'The primary identifier for this version.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'uid' => array(
+        'description' => 'The {users}.uid that created this version.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'title' => array(
+        'description' => 'The title of this version.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'log' => array(
+        'description' => 'The log entry explaining the changes in this version.',
+        'type' => 'text',
+        'not null' => TRUE,
+        'size' => 'big',
+      ),
+      'timestamp' => array(
+        'description' => 'A Unix timestamp indicating when this version was created.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'status' => array(
+        'description' => 'Boolean indicating whether the node (at the time of this revision) is published (visible to non-administrators).',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 1,
+      ),
+      'comment' => array(
+        'description' => 'Whether comments are allowed on this node (at the time of this revision): 0 = no, 1 = closed (read only), 2 = open (read/write).',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'promote' => array(
+        'description' => 'Boolean indicating whether the node (at the time of this revision) should be displayed on the front page.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'sticky' => array(
+        'description' => 'Boolean indicating whether the node (at the time of this revision) should be displayed at the top of lists in which it appears.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'indexes' => array(
+      'nid' => array('nid'),
+      'uid' => array('uid'),
+    ),
+    'primary key' => array('vid'),
+    'foreign keys' => array(
+      'versioned_node' => array(
+        'table' => 'node',
+        'columns' => array('nid' => 'nid'),
+      ),
+      'version_author' => array(
+        'table' => 'users',
+        'columns' => array('uid' => 'uid'),
+      ),
+    ),
+  );
+
+  $schema['node_type'] = array(
+    'description' => 'Stores information about all defined {node} types.',
+    'fields' => array(
+      'type' => array(
+        'description' => 'The machine-readable name of this type.',
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+      ),
+      'name' => array(
+        'description' => 'The human-readable name of this type.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'translatable' => TRUE,
+      ),
+      'base' => array(
+        'description' => 'The base string used to construct callbacks corresponding to this node type.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+      ),
+      'module' => array(
+        'description' => 'The module defining this node type.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+      ),
+      'description' => array(
+        'description' => 'A brief description of this type.',
+        'type' => 'text',
+        'not null' => TRUE,
+        'size' => 'medium',
+        'translatable' => TRUE,
+      ),
+      'help' => array(
+        'description' => 'Help information shown to the user when creating a {node} of this type.',
+        'type' => 'text',
+        'not null' => TRUE,
+        'size' => 'medium',
+        'translatable' => TRUE,
+      ),
+      'has_title' => array(
+        'description' => 'Boolean indicating whether this type uses the {node}.title field.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'size' => 'tiny',
+      ),
+      'title_label' => array(
+        'description' => 'The label displayed for the title field on the edit form.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'translatable' => TRUE,
+      ),
+      'custom' => array(
+        'description' => 'A boolean indicating whether this type is defined by a module (FALSE) or by a user via Add content type (TRUE).',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'tiny',
+      ),
+      'modified' => array(
+        'description' => 'A boolean indicating whether this type has been modified by an administrator; currently not used in any way.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'tiny',
+      ),
+      'locked' => array(
+        'description' => 'A boolean indicating whether the administrator can change the machine name of this type.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'tiny',
+      ),
+      'disabled' => array(
+        'description' => 'A boolean indicating whether the node type is disabled.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'tiny'
+      ),
+      'orig_type' => array(
+        'description' => 'The original machine-readable name of this node type. This may be different from the current type name if the locked field is 0.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+    ),
+    'primary key' => array('type'),
+  );
+
+  $schema['block_node_type'] = array(
+    'description' => 'Sets up display criteria for blocks based on content types',
+    'fields' => array(
+      'module' => array(
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+        'description' => "The block's origin module, from {block}.module.",
+      ),
+      'delta' => array(
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'description' => "The block's unique delta within module, from {block}.delta.",
+      ),
+      'type' => array(
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'description' => "The machine-readable name of this type from {node_type}.type.",
+      ),
+    ),
+    'primary key' => array('module', 'delta', 'type'),
+    'indexes' => array(
+      'type' => array('type'),
+    ),
+  );
+
+  $schema['history'] = array(
+    'description' => 'A record of which {users} have read which {node}s.',
+    'fields' => array(
+      'uid' => array(
+        'description' => 'The {users}.uid that read the {node} nid.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'nid' => array(
+        'description' => 'The {node}.nid that was read.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'timestamp' => array(
+        'description' => 'The Unix timestamp at which the read occurred.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('uid', 'nid'),
+    'indexes' => array(
+      'nid' => array('nid'),
+    ),
+  );
+
+  return $schema;
+}
+
+/**
+ * Implements hook_install().
+ */
+function node_install() {
+  // Populate the node access table.
+  db_insert('node_access')
+    ->fields(array(
+      'nid' => 0,
+      'gid' => 0,
+      'realm' => 'all',
+      'grant_view' => 1,
+      'grant_update' => 0,
+      'grant_delete' => 0,
+    ))
+    ->execute();
+}
+
+/**
+ * Fetches node types directly from the database.
+ *
+ * @ingroup update-api-7.x-to-8.x
+ */
+function _update_7000_node_get_types() {
+  $node_types = db_query('SELECT * FROM {node_type}')->fetchAllAssoc('type', PDO::FETCH_OBJ);
+
+  // Create default settings for orphaned nodes.
+  $all_types = db_query('SELECT DISTINCT type FROM {node}')->fetchCol();
+  $extra_types = array_diff($all_types, array_keys($node_types));
+
+  foreach ($extra_types as $type) {
+    $type_object = new stdClass();
+    $type_object->type = $type;
+    // In Drupal 6, whether you have a body field or not is a flag in the node
+    // type table. If it's enabled, nodes may or may not have an empty string
+    // for the bodies. As we can't detect what this setting should be in
+    // Drupal 7 without access to the Drupal 6 node type settings, we assume
+    // the default, which is to enable the body field.
+    $type_object->has_body = 1;
+    $type_object->body_label = 'Body';
+    $node_types[$type_object->type] = $type_object;
+  }
+  return $node_types;
+}

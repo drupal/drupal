@@ -17,7 +17,7 @@ Drupal community at http://drupal.org/community.
 
 Legal information about Drupal:
  * Know your rights when using Drupal:
-   See LICENSE.txt in the same directory as this document.
+   See LICENSE.txt in the "core" directory.
  * Learn about the Drupal trademark and logo policy:
    http://drupal.com/trademark
 
@@ -35,7 +35,7 @@ core) available for download.
 
 More about configuration:
  * Install, upgrade, and maintain Drupal:
-   See INSTALL.txt and UPGRADE.txt in the same directory as this document.
+   See INSTALL.txt and UPGRADE.txt in the "core" directory.
  * Learn about how to use Drupal to create your site:
    http://drupal.org/documentation
  * Download contributed modules to sites/all/modules to extend Drupal's
@@ -85,4 +85,4 @@ More about developing:
  * Follow best practices:
    http://drupal.org/best-practices
  * Refer to the API documentation:
-   http://api.drupal.org/api/drupal/7
+   http://api.drupal.org/api/drupal/8

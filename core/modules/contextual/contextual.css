@@ -1,0 +1,103 @@
+/**
+ * @file
+ * Stylesheet for the Contextual module.
+ */
+
+/**
+ * Contextual links regions.
+ */
+.contextual-links-region {
+  outline: none;
+  position: relative;
+}
+.contextual-links-region-active {
+  outline: #999 dashed 1px;
+}
+
+/**
+ * Contextual links.
+ */
+div.contextual-links-wrapper {
+  display: none;
+  font-size: 90%;
+  position: absolute;
+  right: 5px; /* LTR */
+  top: 2px;
+  z-index: 999;
+}
+html.js div.contextual-links-wrapper {
+  display: block;
+}
+a.contextual-links-trigger {
+  background: transparent url(images/gear-select.png) no-repeat 2px 0;
+  border: 1px solid transparent;
+  display: none;
+  height: 18px;
+  margin: 0;
+  padding: 0 2px;
+  outline: none;
+  text-indent: 34px; /* LTR */
+  width: 28px;
+  overflow: hidden;
+  -khtml-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+}
+a.contextual-links-trigger:hover,
+div.contextual-links-active a.contextual-links-trigger {
+  background-position: 2px -18px;
+}
+div.contextual-links-active a.contextual-links-trigger {
+  background-color: #fff;
+  border-color: #ccc;
+  border-bottom: none;
+  position: relative;
+  z-index: 1;
+  -moz-border-radius: 4px 4px 0 0;
+  -webkit-border-bottom-left-radius: 0;
+  -webkit-border-bottom-right-radius: 0;
+  border-radius: 4px 4px 0 0;
+}
+div.contextual-links-wrapper ul.contextual-links {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  display: none;
+  margin: 0;
+  padding: 0.25em 0;
+  position: absolute;
+  right: 0;
+  text-align: left;
+  top: 18px;
+  white-space: nowrap;
+  -moz-border-radius: 4px 0 4px 4px; /* LTR */
+  -webkit-border-bottom-left-radius: 4px;
+  -webkit-border-bottom-right-radius: 4px;
+  -webkit-border-top-right-radius: 0; /* LTR */
+  -webkit-border-top-left-radius: 4px; /* LTR */
+  border-radius: 4px 0 4px 4px; /* LTR */
+}
+.contextual-links-region:hover a.contextual-links-trigger,
+div.contextual-links-active a.contextual-links-trigger,
+div.contextual-links-active ul.contextual-links {
+  display: block;
+}
+ul.contextual-links li {
+  line-height: 100%;
+  list-style: none;
+  list-style-image: none;
+  margin: 0;
+  padding: 0;
+}
+div.contextual-links-wrapper a {
+  text-decoration: none;
+}
+ul.contextual-links li a {
+  color: #333 !important;
+  display: block;
+  margin: 0.25em 0;
+  padding: 0.25em 1em 0.25em 0.5em;
+}
+ul.contextual-links li a:hover {
+  background-color: #bfdcee;
+}

@@ -153,6 +153,29 @@
  * @endcode
  * NOTE: MySQL and SQLite's definition of a schema is a database.
  *
+ * Advanced users can add or override initial commands to execute when
+ * connecting to the database server, as well as PDO connection settings. For
+ * example, to enable MySQL SELECT queries to exceed the max_join_size system
+ * variable, and to reduce the database connection timeout to 5 seconds:
+ *
+ * @code
+ * $databases['default']['default'] = array(
+ *   'init_commands' => array(
+ *     'big_selects' => 'SET SQL_BIG_SELECTS=1',
+ *   ),
+ *   'pdo' => array(
+ *     PDO::ATTR_TIMEOUT => 5,
+ *   ),
+ * );
+ * @endcode
+ *
+ * WARNING: These defaults are designed for database portability. Changing them
+ * may cause unexpected behavior, including potential data loss.
+ *
+ * @see DatabaseConnection_mysql::__construct
+ * @see DatabaseConnection_pgsql::__construct
+ * @see DatabaseConnection_sqlite::__construct
+ *
  * Database configuration format:
  * @code
  *   $databases['default']['default'] = array(
@@ -308,9 +331,10 @@ ini_set('session.cookie_lifetime', 2000000);
  * same Drupal site, you can either redirect them all to a single domain (see
  * comment in .htaccess), or uncomment the line below and specify their shared
  * base domain. Doing so assures that users remain logged in as they cross
- * between your various domains.
+ * between your various domains. Make sure to always start the $cookie_domain
+ * with a leading dot, as per RFC 2109.
  */
-# $cookie_domain = 'example.com';
+# $cookie_domain = '.example.com';
 
 /**
  * Variable overrides:
@@ -330,7 +354,7 @@ ini_set('session.cookie_lifetime', 2000000);
  * Remove the leading hash signs to enable.
  */
 # $conf['site_name'] = 'My Drupal site';
-# $conf['theme_default'] = 'garland';
+# $conf['theme_default'] = 'stark';
 # $conf['anonymous'] = 'Visitor';
 
 /**
@@ -338,47 +362,55 @@ ini_set('session.cookie_lifetime', 2000000);
  * is explicitly set to maintenance mode through the administration page or when
  * the database is inactive due to an error. It can be set through the
  * 'maintenance_theme' key. The template file should also be copied into the
- * theme. It is located inside 'modules/system/maintenance-page.tpl.php'.
+ * theme. It is located inside 'core/modules/system/maintenance-page.tpl.php'.
  * Note: This setting does not apply to installation and update pages.
  */
 # $conf['maintenance_theme'] = 'bartik';
 
 /**
- * Enable this setting to determine the correct IP address of the remote
- * client by examining information stored in the X-Forwarded-For headers.
- * X-Forwarded-For headers are a standard mechanism for identifying client
- * systems connecting through a reverse proxy server, such as Squid or
- * Pound. Reverse proxy servers are often used to enhance the performance
+ * Reverse Proxy Configuration:
+ *
+ * Reverse proxy servers are often used to enhance the performance
  * of heavily visited sites and may also provide other site caching,
- * security or encryption benefits. If this Drupal installation operates
- * behind a reverse proxy, this setting should be enabled so that correct
- * IP address information is captured in Drupal's session management,
- * logging, statistics and access management systems; if you are unsure
- * about this setting, do not have a reverse proxy, or Drupal operates in
- * a shared hosting environment, this setting should remain commented out.
+ * security, or encryption benefits. In an environment where Drupal
+ * is behind a reverse proxy, the real IP address of the client should
+ * be determined such that the correct client IP address is available
+ * to Drupal's logging, statistics, and access management systems. In
+ * the most simple scenario, the proxy server will add an
+ * X-Forwarded-For header to the request that contains the client IP
+ * address. However, HTTP headers are vulnerable to spoofing, where a
+ * malicious client could bypass restrictions by setting the
+ * X-Forwarded-For header directly. Therefore, Drupal's proxy
+ * configuration requires the IP addresses of all remote proxies to be
+ * specified in $conf['reverse_proxy_addresses'] to work correctly.
+ *
+ * Enable this setting to get Drupal to determine the client IP from
+ * the X-Forwarded-For header (or $conf['reverse_proxy_header'] if set).
+ * If you are unsure about this setting, do not have a reverse proxy,
+ * or Drupal operates in a shared hosting environment, this setting
+ * should remain commented out.
+ *
+ * In order for this setting to be used you must specify every possible
+ * reverse proxy IP address in $conf['reverse_proxy_addresses'].
+ * If a complete list of reverse proxies is not available in your
+ * environment (for example, if you use a CDN) you may set the
+ * $_SERVER['REMOTE_ADDR'] variable directly in settings.php.
+ * Be aware, however, that it is likely that this would allow IP
+ * address spoofing unless more advanced precautions are taken.
  */
 # $conf['reverse_proxy'] = TRUE;
 
 /**
- * Set this value if your proxy server sends the client IP in a header other
- * than X-Forwarded-For.
- *
- * The "X-Forwarded-For" header is a comma+space separated list of IP addresses,
- * only the last one (the left-most) will be used.
- */
-# $conf['reverse_proxy_header'] = 'HTTP_X_CLUSTER_CLIENT_IP';
-
-/**
- * reverse_proxy accepts an array of IP addresses.
- *
- * Each element of this array is the IP address of any of your reverse
- * proxies. Filling this array Drupal will trust the information stored
- * in the X-Forwarded-For headers only if Remote IP address is one of
- * these, that is the request reaches the web server from one of your
- * reverse proxies. Otherwise, the client could directly connect to
- * your web server spoofing the X-Forwarded-For headers.
+ * Specify every reverse proxy IP address in your environment.
+ * This setting is required if $conf['reverse_proxy'] is TRUE.
  */
 # $conf['reverse_proxy_addresses'] = array('a.b.c.d', ...);
+
+/**
+ * Set this value if your proxy server sends the client IP in a header
+ * other than X-Forwarded-For.
+ */
+# $conf['reverse_proxy_header'] = 'HTTP_X_CLUSTER_CLIENT_IP';
 
 /**
  * Page caching:

@@ -1,0 +1,241 @@
+
+/**
+ * Generic elements.
+ */
+dl dd,
+dl dl {
+  margin-right: 20px;
+}
+ul,
+.block ul,
+.item-list ul {
+  margin: 0.25em 1.5em 0.25em 0;
+}
+ol {
+  margin: 0.25em 2em 0.25em 0;
+}
+
+/**
+ * Skip link.
+ */
+#skip-link {
+  right: 50%;
+  margin-right: -5.25em;
+}
+#skip-link a,
+#skip-link a:link,
+#skip-link a:visited {
+  padding: 1px 10px 2px 10px;
+}
+
+/**
+ * Branding.
+ */
+#branding {
+  padding: 20px 20px 0 20px;
+}
+
+#branding div.block {
+  float: left;
+  padding-left: 0;
+  padding-right: 10px;
+}
+#branding div.block form div.form-item {
+  float: right;
+}
+#branding div.block form input.form-text {
+  margin-left: 10px;
+  margin-right: 0;
+}
+
+/**
+ * Help.
+ */
+#help div.more-help-link {
+  text-align: left;
+}
+
+/**
+ * Page title.
+ */
+#branding h1.page-title {
+  float: right;
+}
+
+/**
+ * Tabs.
+ */
+ul.primary li,
+ul.primary li a:link,
+ul.primary li a.active {
+  float: right;
+}
+ul.primary,
+ul.secondary {
+  float: left;
+}
+ul.secondary li {
+ float: none;
+}
+ul.primary {
+ padding-top: 0;
+}
+
+/**
+ * Page layout.
+ */
+#page {
+  padding: 20px 0 40px 0;
+  margin-left: 40px;
+  margin-right: 40px;
+}
+#secondary-links ul.links li {
+  padding: 0 0 10px 10px;
+}
+ul.links li,
+ul.inline li {
+  padding-left: 1em;
+  padding-right: 0;
+}
+ul.admin-list li {
+  padding: 9px 30px 0 0;
+  margin-right: 0;
+  background: url(images/list-item-rtl.png) no-repeat right 11px;
+}
+ul.admin-list li a {
+  margin-right: -30px;
+  margin-left: 0;
+  padding: 0 30px 4px 0;
+}
+ul.admin-list.compact li a {
+  margin-right: 0;
+}
+ul.admin-list li div.description a {
+  margin-right: 0;
+}
+
+/**
+ * Tables.
+ */
+table th.active a {
+  padding: 0 0 0 25px;
+}
+table th.active img {
+  left: 3px;
+  right: auto;
+}
+/**
+ * Exception for webkit bug with the right border of the last cell
+ * in some tables, since it's webkit only, we can use :last-child
+ */
+tr td:last-child {
+  border-left: 1px solid #bebfb9;
+  border-right: none;
+}
+
+/**
+ * Fieldsets.
+ */
+fieldset {
+  padding: 2.5em 0 0 0;
+}
+fieldset .fieldset-legend {
+  padding-right: 15px;
+  right: 0;
+}
+fieldset .fieldset-wrapper {
+  padding: 0 15px 13px 13px;
+}
+
+/* Filter */
+.filter-wrapper .form-item,
+.filter-wrapper .filter-guidelines,
+.filter-wrapper .filter-help {
+  padding: 2px 0 0 0;
+}
+ul.tips li {
+  margin: 0.25em 1.5em 0.25em 0;
+}
+body div.form-type-radio div.description,
+body div.form-type-checkbox div.description {
+  margin-left: 0;
+  margin-right: 1.5em;
+}
+input.form-submit,
+a.button {
+  margin-left: 1em;
+  margin-right: 0;
+}
+ul.action-links li {
+  float: right;
+  margin: 0 0 0 1em;
+}
+ul.action-links a {
+  padding-left: 0;
+  padding-right: 15px;
+  background-position: right center;
+}
+
+/* Update options. */
+div.admin-options label,
+div.admin-options div.form-item {
+  margin-left: 10px;
+  margin-right: 0;
+  float: right;
+}
+
+/* Maintenance theming */
+body.in-maintenance #sidebar-first {
+  float: right;
+}
+body.in-maintenance #content {
+  float: left;
+  padding-left: 20px;
+  padding-right: 0;
+}
+ol.task-list {
+  margin-right: 0;
+}
+ol.task-list li {
+  padding: 0.5em 20px 0.5em 1em;
+}
+ol.task-list li.active {
+  background: transparent url(images/task-item-rtl.png) no-repeat right 50%;
+  padding: 0.5em 20px 0.5em 1em;
+}
+
+/* Overlay theming */
+.overlay #branding div.breadcrumb {
+  float: right;
+}
+.overlay ul.secondary {
+  margin: -1.4em 0 0.3em 0;
+}
+
+/* Shortcut theming */
+div.add-or-remove-shortcuts {
+  float: none;
+  padding-left: 0;
+  padding-right: 6px;
+}
+
+/* Dashboard */
+#dashboard div.block div.content {
+  padding: 10px 5px 5px 5px;
+}
+#dashboard div.block div.content ul.menu {
+  margin-right: 20px;
+}
+
+/* Recent content block */
+#block-node-recent .more-link {
+  padding: 0 0 5px 5px;
+}
+
+/* User login block */
+#user-login-form .openid-links {
+  margin-right: 0;
+}
+#user-login-form .openid-links .user-link {
+  margin-right: 1.5em;
+}
