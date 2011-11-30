@@ -8,37 +8,37 @@
 /**
  * Denotes that a block is not enabled in any region and should not be shown.
  */
-const BLOCK_REGION_NONE = -1;
+define('BLOCK_REGION_NONE', -1);
 
 /**
  * Users cannot control whether or not they see this block.
  */
-const BLOCK_CUSTOM_FIXED = 0;
+define('BLOCK_CUSTOM_FIXED', 0);
 
 /**
- *  Shows this block by default, but lets individual users hide it.
+ *  Show this block by default, but let individual users hide it.
  */
-const BLOCK_CUSTOM_ENABLED = 1;
+define('BLOCK_CUSTOM_ENABLED', 1);
 
 /**
- * Hides this block by default but lets individual users show it.
+ * Hide this block by default but let individual users show it.
  */
-const BLOCK_CUSTOM_DISABLED = 2;
+define('BLOCK_CUSTOM_DISABLED', 2);
 
 /**
- * Shows this block on every page except the listed pages.
+ * Show this block on every page except the listed pages.
  */
-const BLOCK_VISIBILITY_NOTLISTED = 0;
+define('BLOCK_VISIBILITY_NOTLISTED', 0);
 
 /**
- * Shows this block on only the listed pages.
+ * Show this block on only the listed pages.
  */
-const BLOCK_VISIBILITY_LISTED = 1;
+define('BLOCK_VISIBILITY_LISTED', 1);
 
 /**
- * Shows this block if the associated PHP code returns TRUE.
+ * Show this block if the associated PHP code returns TRUE.
  */
-const BLOCK_VISIBILITY_PHP = 2;
+define('BLOCK_VISIBILITY_PHP', 2);
 
 /**
  * Implements hook_help().
@@ -177,35 +177,21 @@ function block_menu() {
 }
 
 /**
- * Access callback: Only admin or enabled themes can be accessed.
- *
- * Path:
- * - admin/structure/block/list/% (for each theme)
- * - admin/structure/block/demo/% (for each theme)
- *
- * @param $theme
- *   Either the name of a theme or a full theme object.
- *
- * @see block_menu()
+ * Menu item access callback - only admin or enabled themes can be accessed.
  */
 function _block_themes_access($theme) {
   return user_access('administer blocks') && drupal_theme_access($theme);
 }
 
 /**
- * Theme callback: Uses the theme specified in the parameter.
- *
- * Path: admin/structure/block/demo/% (for each theme)
+ * Theme callback for the block configuration pages.
  *
  * @param $theme
  *   The theme whose blocks are being configured. If not set, the default theme
  *   is assumed.
- *
  * @return
  *   The theme that should be used for the block configuration page, or NULL
  *   to indicate that the default theme should be used.
- *
- * @see block_menu()
  */
 function _block_custom_theme($theme = NULL) {
   // We return exactly what was passed in, to guarantee that the page will
@@ -263,7 +249,7 @@ function block_block_view($delta = '') {
 /**
  * Implements hook_page_build().
  *
- * Renders blocks into their regions.
+ * Render blocks into their regions.
  */
 function block_page_build(&$page) {
   global $theme;
@@ -319,68 +305,33 @@ function block_page_build(&$page) {
 }
 
 /**
- * Gets a renderable array of a region containing all enabled blocks.
+ * Get a renderable array of a region containing all enabled blocks.
  *
  * @param $region
  *   The requested region.
- *
- * @return
- *   A renderable array of a region containing all enabled blocks.
  */
 function block_get_blocks_by_region($region) {
   $build = array();
   if ($list = block_list($region)) {
-    $build = _block_get_renderable_region($list);
+    $build = _block_get_renderable_array($list);
   }
   return $build;
 }
 
 /**
- * Gets an array of blocks suitable for drupal_render().
+ * Get an array of blocks suitable for drupal_render().
  *
  * @param $list
  *   A list of blocks such as that returned by block_list().
- *
  * @return
  *   A renderable array.
  */
-function _block_get_renderable_region($list = array()) {
+function _block_get_renderable_array($list = array()) {
   $weight = 0;
   $build = array();
   foreach ($list as $key => $block) {
-    $build[$key] = array(
-      '#block' => $block,
-      '#weight' => ++$weight,
-      '#theme_wrappers' => array('block'),
-    );
-
-    // Block caching is not compatible with node_access modules. We also
-    // preserve the submission of forms in blocks, by fetching from cache
-    // only if the request method is 'GET' (or 'HEAD'). User 1 being out of
-    // the regular 'roles define permissions' schema, it brings too many
-    // chances of having unwanted output get in the cache and later be served
-    // to other users. We therefore exclude user 1 from block caching.
-    if (
-      $GLOBALS['user']->uid == 1 ||
-      count(module_implements('node_grants')) ||
-      !in_array($_SERVER['REQUEST_METHOD'], array('GET', 'HEAD')) ||
-      in_array($block->cache, array(DRUPAL_NO_CACHE, DRUPAL_CACHE_CUSTOM))
-    ) {
-      // Non-cached blocks get built immediately. Provides more content
-      // that can be easily manipulated during hook_page_alter().
-      $build[$key] = _block_get_renderable_block($build[$key]);
-    }
-    else {
-      $build[$key] += array(
-        '#pre_render' => array('_block_get_renderable_block'),
-        '#cache' => array(
-          'keys' => array($block->module, $block->delta),
-          'granularity' => $block->cache,
-          'bin' => 'block',
-          'expire' => CACHE_TEMPORARY,
-        ),
-      );
-    }
+    $build[$key] = $block->content;
+    unset($block->content);
 
     // Add contextual links for this block; skip the main content block, since
     // contextual links are basically output as tabs/local tasks already. Also
@@ -390,13 +341,19 @@ function _block_get_renderable_region($list = array()) {
     if ($key != 'system_main' && $key != 'system_help') {
       $build[$key]['#contextual_links']['block'] = array('admin/structure/block/manage', array($block->module, $block->delta));
     }
+
+    $build[$key] += array(
+      '#block' => $block,
+      '#weight' => ++$weight,
+    );
+    $build[$key]['#theme_wrappers'][] ='block';
   }
   $build['#sorted'] = TRUE;
   return $build;
 }
 
 /**
- * Updates the 'block' DB table with the blocks currently exported by modules.
+ * Update the 'block' DB table with the blocks currently exported by modules.
  *
  * @param $theme
  *   The theme to rehash blocks for. If not provided, defaults to the currently
@@ -516,7 +473,6 @@ function _block_rehash($theme = NULL) {
  *
  * @param $bid
  *   ID of the block to get information for.
- *
  * @return
  *   Associative array of information stored in the database for this block.
  *   Array keys:
@@ -530,14 +486,7 @@ function block_custom_block_get($bid) {
 }
 
 /**
- * Form constructor for the custom block form.
- *
- * @param $edit
- *   (optional) An associative array of information retrieved by
- *   block_custom_get_block() if an existing block is being edited, or an empty
- *   array otherwise. Defaults to array().
- *
- * @ingroup forms
+ * Define the custom block form.
  */
 function block_custom_block_form($edit = array()) {
   $edit += array(
@@ -579,7 +528,6 @@ function block_custom_block_form($edit = array()) {
  *     - format: Filter ID of the filter format for the body.
  * @param $delta
  *   Block ID of the block to save.
- *
  * @return
  *   Always returns TRUE.
  */
@@ -596,52 +544,51 @@ function block_custom_block_save($edit, $delta) {
 }
 
 /**
- * Implements hook_form_FORM_ID_alter() for user_profile_form().
+ * Implements hook_form_FORM_ID_alter().
  */
 function block_form_user_profile_form_alter(&$form, &$form_state) {
-  $account = $form['#user'];
-  $rids = array_keys($account->roles);
-  $result = db_query("SELECT DISTINCT b.* FROM {block} b LEFT JOIN {block_role} r ON b.module = r.module AND b.delta = r.delta WHERE b.status = 1 AND b.custom <> 0 AND (r.rid IN (:rids) OR r.rid IS NULL) ORDER BY b.weight, b.module", array(':rids' => $rids));
+  if ($form['#user_category'] == 'account') {
+    $account = $form['#user'];
+    $rids = array_keys($account->roles);
+    $result = db_query("SELECT DISTINCT b.* FROM {block} b LEFT JOIN {block_role} r ON b.module = r.module AND b.delta = r.delta WHERE b.status = 1 AND b.custom <> 0 AND (r.rid IN (:rids) OR r.rid IS NULL) ORDER BY b.weight, b.module", array(':rids' => $rids));
 
-  $blocks = array();
-  foreach ($result as $block) {
-    $data = module_invoke($block->module, 'block_info');
-    if ($data[$block->delta]['info']) {
-      $blocks[$block->module][$block->delta] = array(
-        '#type' => 'checkbox',
-        '#title' => check_plain($data[$block->delta]['info']),
-        '#default_value' => isset($account->data['block'][$block->module][$block->delta]) ? $account->data['block'][$block->module][$block->delta] : ($block->custom == 1),
-      );
+    $blocks = array();
+    foreach ($result as $block) {
+      $data = module_invoke($block->module, 'block_info');
+      if ($data[$block->delta]['info']) {
+        $blocks[$block->module][$block->delta] = array(
+          '#type' => 'checkbox',
+          '#title' => check_plain($data[$block->delta]['info']),
+          '#default_value' => isset($account->data['block'][$block->module][$block->delta]) ? $account->data['block'][$block->module][$block->delta] : ($block->custom == 1),
+        );
+      }
     }
-  }
-  // Only display the fieldset if there are any personalizable blocks.
-  if ($blocks) {
-    $form['block'] = array(
-      '#type' => 'fieldset',
-      '#title' => t('Personalize blocks'),
-      '#description' => t('Blocks consist of content or information that complements the main content of the page. Enable or disable optional blocks using the checkboxes below.'),
-      '#weight' => 3,
-      '#collapsible' => TRUE,
-      '#tree' => TRUE,
-    );
-    $form['block'] += $blocks;
+    // Only display the fieldset if there are any personalizable blocks.
+    if ($blocks) {
+      $form['block'] = array(
+        '#type' => 'fieldset',
+        '#title' => t('Personalize blocks'),
+        '#description' => t('Blocks consist of content or information that complements the main content of the page. Enable or disable optional blocks using the checkboxes below.'),
+        '#weight' => 3,
+        '#collapsible' => TRUE,
+        '#tree' => TRUE,
+      );
+      $form['block'] += $blocks;
+    }
   }
 }
 
 /**
  * Implements hook_user_presave().
  */
-function block_user_presave(&$edit, $account) {
+function block_user_presave(&$edit, $account, $category) {
   if (isset($edit['block'])) {
     $edit['data']['block'] = $edit['block'];
   }
 }
 
 /**
- * Initializes blocks for enabled themes.
- *
- * @param $theme_list
- *   An array of theme names.
+ * Initialize blocks for enabled themes.
  */
 function block_themes_enabled($theme_list) {
   foreach ($theme_list as $theme) {
@@ -650,7 +597,7 @@ function block_themes_enabled($theme_list) {
 }
 
 /**
- * Assigns an initial, default set of blocks for a theme.
+ * Assign an initial, default set of blocks for a theme.
  *
  * This function is called the first time a new theme is enabled. The new theme
  * gets a copy of the default theme's blocks, with the difference that if a
@@ -681,7 +628,7 @@ function block_theme_initialize($theme) {
 }
 
 /**
- * Returns all blocks in the specified region for the current user.
+ * Return all blocks in the specified region for the current user.
  *
  * @param $region
  *   The name of a region.
@@ -693,7 +640,7 @@ function block_theme_initialize($theme) {
  *   empty to see how many columns are going to be displayed.
  *
  * @todo
- *   Now that the block table has a primary key, we should use that as the
+ *   Now that the blocks table has a primary key, we should use that as the
  *   array key instead of MODULE_DELTA.
  */
 function block_list($region) {
@@ -707,12 +654,15 @@ function block_list($region) {
   if (!isset($blocks[$region])) {
     $blocks[$region] = array();
   }
+  else {
+    $blocks[$region] = _block_render_blocks($blocks[$region]);
+  }
 
   return $blocks[$region];
 }
 
 /**
- * Loads a block object from the database.
+ * Load a block object from the database.
  *
  * @param $module
  *   Name of the module that implements the block to load.
@@ -740,16 +690,12 @@ function block_load($module, $delta) {
 }
 
 /**
- * Loads blocks' information from the database.
- *
- * @return
- *   An array of blocks grouped by region.
+ * Load blocks information from the database.
  */
 function _block_load_blocks() {
   global $theme_key;
 
   $query = db_select('block', 'b');
-  $query->addField('b', 'title', 'subject');
   $result = $query
     ->fields('b')
     ->condition('b.theme', $theme_key)
@@ -775,8 +721,8 @@ function _block_load_blocks() {
 /**
  * Implements hook_block_list_alter().
  *
- * Checks the page, user role, and user-specific visibilty settings.
- * Removes the block if the visibility conditions are not met.
+ * Check the page, user role and user specific visibilty settings.
+ * Remove the block if the visibility conditions are not met.
  */
 function block_block_list_alter(&$blocks) {
   global $user, $theme_key;
@@ -862,59 +808,96 @@ function block_block_list_alter(&$blocks) {
 }
 
 /**
- * Builds the content and subject for a block.
+ * Render the content and subject for a set of blocks.
  *
- * For cacheable blocks, this is called during #pre_render.
- *
- * @param $element
- *   A renderable array.
+ * @param $region_blocks
+ *   An array of block objects such as returned for one region by _block_load_blocks().
  *
  * @return
- *   A renderable array.
+ *   An array of visible blocks as expected by drupal_render().
  */
-function _block_get_renderable_block($element) {
-  $block = $element['#block'];
+function _block_render_blocks($region_blocks) {
+  foreach ($region_blocks as $key => $block) {
+    // Render the block content if it has not been created already.
+    if (!isset($block->content)) {
+      // Erase the block from the static array - we'll put it back if it has
+      // content.
+      unset($region_blocks[$key]);
+      // Try fetching the block from cache. Block caching is not compatible
+      // with node_access modules. We also preserve the submission of forms in
+      // blocks, by fetching from cache only if the request method is 'GET'
+      // (or 'HEAD').
+      if (!count(module_implements('node_grants')) && ($_SERVER['REQUEST_METHOD'] == 'GET' || $_SERVER['REQUEST_METHOD'] == 'HEAD') && ($cid = _block_get_cache_id($block)) && ($cache = cache('block')->get($cid))) {
+        $array = $cache->data;
+      }
+      else {
+        $array = module_invoke($block->module, 'block_view', $block->delta);
 
-  // Render the block content if it has not been created already.
-  if (!isset($block->content)) {
-    $array = module_invoke($block->module, 'block_view', $block->delta);
+        // Allow modules to modify the block before it is viewed, via either
+        // hook_block_view_alter() or hook_block_view_MODULE_DELTA_alter().
+        drupal_alter(array('block_view', "block_view_{$block->module}_{$block->delta}"), $array, $block);
 
-    // Allow modules to modify the block before it is viewed, via either
-    // hook_block_view_alter() or hook_block_view_MODULE_DELTA_alter().
-    drupal_alter(array('block_view', "block_view_{$block->module}_{$block->delta}"), $array, $block);
+        if (isset($cid)) {
+          cache('block')->set($cid, $array, CACHE_TEMPORARY);
+        }
+      }
 
-    if (empty($array['content'])) {
-      // Blocks without content should emit no markup at all.
-      $element += array(
-        '#access' => FALSE,
-        '#printed' => TRUE,
-      );
-    }
-    elseif (isset($array) && is_array($array)) {
-      foreach ($array as $k => $v) {
-        $block->$k = $v;
+      if (isset($array) && is_array($array)) {
+        foreach ($array as $k => $v) {
+          $block->$k = $v;
+        }
+      }
+      if (isset($block->content) && $block->content) {
+        // Normalize to the drupal_render() structure.
+        if (is_string($block->content)) {
+          $block->content = array('#markup' => $block->content);
+        }
+        // Override default block title if a custom display title is present.
+        if ($block->title) {
+          // Check plain here to allow module generated titles to keep any
+          // markup.
+          $block->subject = $block->title == '<none>' ? '' : check_plain($block->title);
+        }
+        if (!isset($block->subject)) {
+          $block->subject = '';
+        }
+        $region_blocks["{$block->module}_{$block->delta}"] = $block;
       }
     }
   }
+  return $region_blocks;
+}
 
-  if (isset($block->content) && $block->content) {
-    // Normalize to the drupal_render() structure.
-    if (is_string($block->content)) {
-      $block->content = array('#markup' => $block->content);
-    }
-    // Override default block title if a custom display title is present.
-    if ($block->title) {
-      // Check plain here to allow module generated titles to keep any
-      // markup.
-      $block->subject = $block->title == '<none>' ? '' : check_plain($block->title);
-    }
+/**
+ * Assemble the cache_id to use for a given block.
+ *
+ * The cache_id string reflects the viewing context for the current block
+ * instance, obtained by concatenating the relevant context information
+ * (user, page, ...) according to the block's cache settings (BLOCK_CACHE_*
+ * constants). Two block instances can use the same cached content when
+ * they share the same cache_id.
+ *
+ * Theme and language contexts are automatically differentiated.
+ *
+ * @param $block
+ * @return
+ *   The string used as cache_id for the block.
+ */
+function _block_get_cache_id($block) {
+  global $user;
 
-    // Add the content renderable array to the main element.
-    $element['content'] = $block->content;
-    unset($block->content);
-    $element['#block'] = $block;
+  // User 1 being out of the regular 'roles define permissions' schema,
+  // it brings too many chances of having unwanted output get in the cache
+  // and later be served to other users. We therefore exclude user 1 from
+  // block caching.
+  if (variable_get('block_cache', FALSE) && !in_array($block->cache, array(DRUPAL_NO_CACHE, DRUPAL_CACHE_CUSTOM)) && $user->uid != 1) {
+    // Start with common sub-patterns: block identification, theme, language.
+    $cid_parts[] = $block->module;
+    $cid_parts[] = $block->delta;
+    $cid_parts = array_merge($cid_parts, drupal_render_cid_parts($block->cache));
+
+    return implode(':', $cid_parts);
   }
-  return $element;
 }
 
 /**
@@ -933,9 +916,9 @@ function block_flush_caches() {
 }
 
 /**
- * Processes variables for block.tpl.php.
+ * Process variables for block.tpl.php
  *
- * Prepares the values passed to the theme_block function to be passed
+ * Prepare the values passed to the theme_block function to be passed
  * into a pluggable template engine. Uses block properties to generate a
  * series of template file suggestions. If none are found, the default
  * block.tpl.php is used.
@@ -965,9 +948,6 @@ function template_preprocess_block(&$variables) {
 
   $variables['classes_array'][] = drupal_html_class('block-' . $variables['block']->module);
 
-  // Add default class for block content.
-  $variables['content_attributes_array']['class'][] = 'content';
-
   $variables['theme_hook_suggestions'][] = 'block__' . $variables['block']->region;
   $variables['theme_hook_suggestions'][] = 'block__' . $variables['block']->module;
   // Hyphens (-) and underscores (_) play a special role in theme suggestions.
@@ -987,7 +967,7 @@ function template_preprocess_block(&$variables) {
 /**
  * Implements hook_user_role_delete().
  *
- * Removes deleted role from blocks that use it.
+ * Remove deleted role from blocks that use it.
  */
 function block_user_role_delete($role) {
   db_delete('block_role')
@@ -1010,6 +990,29 @@ function block_menu_delete($menu) {
 }
 
 /**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function block_form_system_performance_settings_alter(&$form, &$form_state) {
+  $disabled = count(module_implements('node_grants'));
+  $config = config('block.performance');
+  if (!isset($form['config'])) {
+    $form['config'] = array();
+  }
+  $form_state['config']['block_cache'] = array(
+    'name' => 'block.performance',
+    'path' => 'caching.block_cache',
+  );
+  $form['caching']['block_cache'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Cache blocks'),
+    '#default_value' => $config->get('caching.block_cache'),
+    '#disabled' => $disabled,
+    '#description' => $disabled ? t('Block caching is inactive because you have enabled modules defining content access restrictions.') : NULL,
+    '#weight' => -1,
+  );
+}
+
+/**
  * Implements hook_admin_paths().
  */
 function block_admin_paths() {
@@ -1024,7 +1027,7 @@ function block_admin_paths() {
 /**
  * Implements hook_modules_uninstalled().
  *
- * Cleans up {block} and {block_role} tables from modules' blocks.
+ * Cleanup {block} and {block_role} tables from modules' blocks.
  */
 function block_modules_uninstalled($modules) {
   db_delete('block')
