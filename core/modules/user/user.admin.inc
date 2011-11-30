@@ -115,12 +115,7 @@ function user_filter_form_submit($form, &$form_state) {
       // Apply every filter that has a choice selected other than 'any'.
       foreach ($filters as $filter => $options) {
         if (isset($form_state['values'][$filter]) && $form_state['values'][$filter] != '[any]') {
-          // Merge an array of arrays into one if necessary.
-          $options = ($filter == 'permission') ? form_options_flatten($filters[$filter]['options']) : $filters[$filter]['options'];
-          // Only accept valid selections offered on the dropdown, block bad input.
-          if (isset($options[$form_state['values'][$filter]])) {
-            $_SESSION['user_overview_filter'][] = array($filter, $form_state['values'][$filter]);
-          }
+          $_SESSION['user_overview_filter'][] = array($filter, $form_state['values'][$filter]);
         }
       }
       break;

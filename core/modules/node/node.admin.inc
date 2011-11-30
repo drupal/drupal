@@ -242,12 +242,7 @@ function node_filter_form_submit($form, &$form_state) {
       // Apply every filter that has a choice selected other than 'any'.
       foreach ($filters as $filter => $options) {
         if (isset($form_state['values'][$filter]) && $form_state['values'][$filter] != '[any]') {
-          // Flatten the options array to accommodate hierarchical/nested options.
-          $flat_options = form_options_flatten($filters[$filter]['options']);
-          // Only accept valid selections offered on the dropdown, block bad input.
-          if (isset($flat_options[$form_state['values'][$filter]])) {
-            $_SESSION['node_overview_filter'][] = array($filter, $form_state['values'][$filter]);
-          }
+          $_SESSION['node_overview_filter'][] = array($filter, $form_state['values'][$filter]);
         }
       }
       break;
