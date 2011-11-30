@@ -15,7 +15,7 @@
  * Maximum length of menu name as entered by the user. Database length is 32
  * and we add a menu- prefix.
  */
-define('MENU_MAX_MENU_NAME_LENGTH_UI', 27);
+const MENU_MAX_MENU_NAME_LENGTH_UI = 27;
 
 /**
  * Implements hook_help().

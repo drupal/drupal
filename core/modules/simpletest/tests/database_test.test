@@ -1454,9 +1454,23 @@ class DatabaseSelectTestCase extends DatabaseTestCase {
   }
 
   /**
-   * Test that we can find a record with a NULL value.
+   * Test that a comparison with NULL is always FALSE.
    */
   function testNullCondition() {
+    $this->ensureSampleDataNull();
+
+    $names = db_select('test_null', 'tn')
+      ->fields('tn', array('name'))
+      ->condition('age', NULL)
+      ->execute()->fetchCol();
+
+    $this->assertEqual(count($names), 0, t('No records found when comparing to NULL.'));
+  }
+
+  /**
+   * Test that we can find a record with a NULL value.
+   */
+  function testIsNullCondition() {
     $this->ensureSampleDataNull();
 
     $names = db_select('test_null', 'tn')
@@ -1471,7 +1485,7 @@ class DatabaseSelectTestCase extends DatabaseTestCase {
   /**
    * Test that we can find a record without a NULL value.
    */
-  function testNotNullCondition() {
+  function testIsNotNullCondition() {
     $this->ensureSampleDataNull();
 
     $names = db_select('test_null', 'tn')

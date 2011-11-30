@@ -57,6 +57,8 @@
  *   even disabled by modules implementing hook_field_language_alter(), making
  *   it possible to choose the first approach. The display language for each
  *   field is returned by field_language().
+ *
+ * @see field
  */
 
 /**

@@ -444,7 +444,7 @@ function node_install() {
 }
 
 /**
- * Utility function: fetch the node types directly from the database.
+ * Fetches node types directly from the database.
  *
  * @ingroup update-api-7.x-to-8.x
  */

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @ingroup field_fieldable_type
+ * @ingroup hooks
  * @{
  */
 
@@ -81,10 +81,6 @@ function hook_field_extra_fields_alter(&$info) {
 }
 
 /**
- * @} End of "ingroup field_fieldable_type"
- */
-
-/**
  * @defgroup field_types Field Types API
  * @{
  * Define field types, widget types, display formatter types, storage types.
@@ -119,6 +115,8 @@ function hook_field_extra_fields_alter(&$info) {
  *
  * A third kind of pluggable handlers, storage backends, is defined by the
  * @link field_storage Field Storage API @endlink.
+ *
+ * @see field
  */
 
 /**
@@ -1505,10 +1503,6 @@ function hook_field_attach_delete_bundle($entity_type, $bundle, $instances) {
  * @} End of "ingroup field_attach"
  */
 
-/**********************************************************************
- * Field Storage API
- **********************************************************************/
-
 /**
  * @ingroup field_storage
  * @{
@@ -2346,10 +2340,6 @@ function hook_field_widget_properties_ENTITY_TYPE_alter(&$widget, $context) {
  * @} End of "ingroup field_storage"
  */
 
-/**********************************************************************
- * Field CRUD API
- **********************************************************************/
-
 /**
  * @ingroup field_crud
  * @{
@@ -2603,10 +2593,6 @@ function hook_field_storage_purge($entity_type, $entity, $field, $instance) {
  * @} End of "ingroup field_crud"
  */
 
-/**********************************************************************
- * TODO: I'm not sure where these belong yet.
- **********************************************************************/
-
 /**
  * Determine whether the user has access to a given field.
  *
@@ -2633,3 +2619,7 @@ function hook_field_access($op, $field, $entity_type, $entity, $account) {
   }
   return TRUE;
 }
+
+/**
+ * @} End of "ingroup hooks"
+ */

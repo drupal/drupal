@@ -22,52 +22,52 @@ define('OPENID_DH_DEFAULT_MOD', '155172898181473697471232257763715539915724801' 
 /**
  * Diffie-Hellman generator; used for Diffie-Hellman key exchange computations.
  */
-define('OPENID_DH_DEFAULT_GEN', '2');
+const OPENID_DH_DEFAULT_GEN = '2';
 
 /**
  * SHA-1 hash block size; used for Diffie-Hellman key exchange computations.
  */
-define('OPENID_SHA1_BLOCKSIZE', 64);
+const OPENID_SHA1_BLOCKSIZE = 64;
 
 /**
  * Random number generator; used for Diffie-Hellman key exchange computations.
  */
-define('OPENID_RAND_SOURCE', '/dev/urandom');
+const OPENID_RAND_SOURCE = '/dev/urandom';
 
 /**
  * OpenID Authentication 2.0 namespace URL.
  */
-define('OPENID_NS_2_0', 'http://specs.openid.net/auth/2.0');
+const OPENID_NS_2_0 = 'http://specs.openid.net/auth/2.0';
 
 /**
  * OpenID Authentication 1.1 namespace URL; used for backwards-compatibility.
  */
-define('OPENID_NS_1_1', 'http://openid.net/signon/1.1');
+const OPENID_NS_1_1 = 'http://openid.net/signon/1.1';
 
 /**
  * OpenID Authentication 1.0 namespace URL; used for backwards-compatibility.
  */
-define('OPENID_NS_1_0', 'http://openid.net/signon/1.0');
+const OPENID_NS_1_0 = 'http://openid.net/signon/1.0';
 
 /**
  * OpenID namespace used in Yadis documents.
  */
-define('OPENID_NS_OPENID', 'http://openid.net/xmlns/1.0');
+const OPENID_NS_OPENID = 'http://openid.net/xmlns/1.0';
 
 /**
  * OpenID Simple Registration extension.
  */
-define('OPENID_NS_SREG', 'http://openid.net/extensions/sreg/1.1');
+const OPENID_NS_SREG = 'http://openid.net/extensions/sreg/1.1';
 
 /**
  * OpenID Attribute Exchange extension.
  */
-define('OPENID_NS_AX', 'http://openid.net/srv/ax/1.0');
+const OPENID_NS_AX = 'http://openid.net/srv/ax/1.0';
 
 /**
  * Extensible Resource Descriptor documents.
  */
-define('OPENID_NS_XRD', 'xri://$xrd*($v*2.0)');
+const OPENID_NS_XRD = 'xri://$xrd*($v*2.0)';
 
 /**
  * Performs an HTTP 302 redirect (for the 1.x protocol).

@@ -8,37 +8,37 @@
 /**
  * Denotes that a block is not enabled in any region and should not be shown.
  */
-define('BLOCK_REGION_NONE', -1);
+const BLOCK_REGION_NONE = -1;
 
 /**
  * Users cannot control whether or not they see this block.
  */
-define('BLOCK_CUSTOM_FIXED', 0);
+const BLOCK_CUSTOM_FIXED = 0;
 
 /**
  *  Shows this block by default, but lets individual users hide it.
  */
-define('BLOCK_CUSTOM_ENABLED', 1);
+const BLOCK_CUSTOM_ENABLED = 1;
 
 /**
  * Hides this block by default but lets individual users show it.
  */
-define('BLOCK_CUSTOM_DISABLED', 2);
+const BLOCK_CUSTOM_DISABLED = 2;
 
 /**
  * Shows this block on every page except the listed pages.
  */
-define('BLOCK_VISIBILITY_NOTLISTED', 0);
+const BLOCK_VISIBILITY_NOTLISTED = 0;
 
 /**
  * Shows this block on only the listed pages.
  */
-define('BLOCK_VISIBILITY_LISTED', 1);
+const BLOCK_VISIBILITY_LISTED = 1;
 
 /**
  * Shows this block if the associated PHP code returns TRUE.
  */
-define('BLOCK_VISIBILITY_PHP', 2);
+const BLOCK_VISIBILITY_PHP = 2;
 
 /**
  * Implements hook_help().

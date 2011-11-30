@@ -16,7 +16,7 @@ define('DRUPAL_ROOT', getcwd());
 /**
  * Global flag to indicate that site is in installation mode.
  */
-define('MAINTENANCE_MODE', 'install');
+const MAINTENANCE_MODE = 'install';
 
 // Exit early if running an incompatible PHP version to avoid fatal errors.
 // The minimum version is specified explicitly, as DRUPAL_MINIMUM_PHP is not

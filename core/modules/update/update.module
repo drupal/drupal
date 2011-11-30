@@ -11,64 +11,64 @@
 /**
  * URL to check for updates, if a given project doesn't define its own.
  */
-define('UPDATE_DEFAULT_URL', 'http://updates.drupal.org/release-history');
+const UPDATE_DEFAULT_URL = 'http://updates.drupal.org/release-history';
 
 // These are internally used constants for this code, do not modify.
 
 /**
  * Project is missing security update(s).
  */
-define('UPDATE_NOT_SECURE', 1);
+const UPDATE_NOT_SECURE = 1;
 
 /**
  * Current release has been unpublished and is no longer available.
  */
-define('UPDATE_REVOKED', 2);
+const UPDATE_REVOKED = 2;
 
 /**
  * Current release is no longer supported by the project maintainer.
  */
-define('UPDATE_NOT_SUPPORTED', 3);
+const UPDATE_NOT_SUPPORTED = 3;
 
 /**
  * Project has a new release available, but it is not a security release.
  */
-define('UPDATE_NOT_CURRENT', 4);
+const UPDATE_NOT_CURRENT = 4;
 
 /**
  * Project is up to date.
  */
-define('UPDATE_CURRENT', 5);
+const UPDATE_CURRENT = 5;
 
 /**
  * Project's status cannot be checked.
  */
-define('UPDATE_NOT_CHECKED', -1);
+const UPDATE_NOT_CHECKED = -1;
 
 /**
  * No available update data was found for project.
  */
-define('UPDATE_UNKNOWN', -2);
+const UPDATE_UNKNOWN = -2;
 
 /**
  * There was a failure fetching available update data for this project.
  */
-define('UPDATE_NOT_FETCHED', -3);
+const UPDATE_NOT_FETCHED = -3;
 
 /**
  * We need to (re)fetch available update data for this project.
  */
-define('UPDATE_FETCH_PENDING', -4);
+const UPDATE_FETCH_PENDING = -4;
 
 /**
  * Maximum number of attempts to fetch available update data from a given host.
  */
-define('UPDATE_MAX_FETCH_ATTEMPTS', 2);
+const UPDATE_MAX_FETCH_ATTEMPTS = 2;
 
 /**
  * Maximum number of seconds to try fetching available update data at a time.
  */
-define('UPDATE_MAX_FETCH_TIME', 5);
+const UPDATE_MAX_FETCH_TIME = 5;
 
 /**
  * Implements hook_help().

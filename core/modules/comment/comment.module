@@ -12,62 +12,62 @@
 /**
  * Comment is awaiting approval.
  */
-define('COMMENT_NOT_PUBLISHED', 0);
+const COMMENT_NOT_PUBLISHED = 0;
 
 /**
  * Comment is published.
  */
-define('COMMENT_PUBLISHED', 1);
+const COMMENT_PUBLISHED = 1;
 
 /**
  * Comments are displayed in a flat list - expanded.
  */
-define('COMMENT_MODE_FLAT', 0);
+const COMMENT_MODE_FLAT = 0;
 
 /**
  * Comments are displayed as a threaded list - expanded.
  */
-define('COMMENT_MODE_THREADED', 1);
+const COMMENT_MODE_THREADED = 1;
 
 /**
  * Anonymous posters cannot enter their contact information.
  */
-define('COMMENT_ANONYMOUS_MAYNOT_CONTACT', 0);
+const COMMENT_ANONYMOUS_MAYNOT_CONTACT = 0;
 
 /**
  * Anonymous posters may leave their contact information.
  */
-define('COMMENT_ANONYMOUS_MAY_CONTACT', 1);
+const COMMENT_ANONYMOUS_MAY_CONTACT = 1;
 
 /**
  * Anonymous posters are required to leave their contact information.
  */
-define('COMMENT_ANONYMOUS_MUST_CONTACT', 2);
+const COMMENT_ANONYMOUS_MUST_CONTACT = 2;
 
 /**
  * Comment form should be displayed on a separate page.
  */
-define('COMMENT_FORM_SEPARATE_PAGE', 0);
+const COMMENT_FORM_SEPARATE_PAGE = 0;
 
 /**
  * Comment form should be shown below post or list of comments.
  */
-define('COMMENT_FORM_BELOW', 1);
+const COMMENT_FORM_BELOW = 1;
 
 /**
  * Comments for this node are hidden.
  */
-define('COMMENT_NODE_HIDDEN', 0);
+const COMMENT_NODE_HIDDEN = 0;
 
 /**
  * Comments for this node are closed.
  */
-define('COMMENT_NODE_CLOSED', 1);
+const COMMENT_NODE_CLOSED = 1;
 
 /**
  * Comments for this node are open.
  */
-define('COMMENT_NODE_OPEN', 2);
+const COMMENT_NODE_OPEN = 2;
 
 /**
  * Implements hook_help().

@@ -65,7 +65,7 @@ function node_access_test_permission() {
 /**
  * Implements hook_menu().
  *
- * Sets up a page that lists nodes.
+ * Sets up a test page that lists nodes.
  */
 function node_access_test_menu() {
   $items = array();
@@ -85,13 +85,17 @@ function node_access_test_menu() {
 }
 
 /**
- * Page callback for node access test page.
+ * Page callback: Creates the node access test page.
+ *
+ * Path: node_access_test_page
  *
  * Page should say "No nodes" if there are no nodes, and "Yes, # nodes" (with
  * the number filled in) if there were nodes the user could access. Also, the
  * database query is shown, and a list of the node IDs, for debugging purposes.
  * And if there is a query exception, the page says "Exception" and gives the
  * error.
+ *
+ * @see node_access_test_menu()
  */
 function node_access_test_page() {
   $output = '';
@@ -125,13 +129,17 @@ function node_access_test_page() {
 }
 
 /**
- * Page callback for node access entity test page.
+ * Page callback: Creates the node access entity test page.
+ *
+ * Path: node_access_entity_test_page
  *
  * Page should say "No nodes" if there are no nodes, and "Yes, # nodes" (with
  * the number filled in) if there were nodes the user could access. Also, the
  * database query is shown, and a list of the node IDs, for debugging purposes.
  * And if there is a query exception, the page says "Exception" and gives the
  * error.
+ *
+ * @see node_access_test_menu()
  */
 function node_access_entity_test_page() {
   $output = '';

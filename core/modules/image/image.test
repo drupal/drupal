@@ -666,7 +666,7 @@ class ImageFieldDisplayTestCase extends ImageFieldTestCase {
     // Test that the default formatter is being used.
     $image_uri = $node->{$field_name}[LANGUAGE_NONE][0]['uri'];
     $image_info = array(
-      'path' => $image_uri,
+      'uri' => $image_uri,
       'width' => 40,
       'height' => 20,
     );
@@ -713,7 +713,7 @@ class ImageFieldDisplayTestCase extends ImageFieldTestCase {
     // Ensure the derivative image is generated so we do not have to deal with
     // image style callback paths.
     $this->drupalGet(image_style_url('thumbnail', $image_uri));
-    $image_info['path'] = image_style_path('thumbnail', $image_uri);
+    $image_info['uri'] = image_style_path('thumbnail', $image_uri);
     $image_info['width'] = 100;
     $image_info['height'] = 50;
     $default_output = theme('image', $image_info);
@@ -764,7 +764,7 @@ class ImageFieldDisplayTestCase extends ImageFieldTestCase {
     // style.
     $node = node_load($nid, NULL, TRUE);
     $image_info = array(
-      'path' => image_style_url('medium', $node->{$field_name}[LANGUAGE_NONE][0]['uri']),
+      'uri' => image_style_url('medium', $node->{$field_name}[LANGUAGE_NONE][0]['uri']),
       'width' => 220,
       'height' => 110,
     );
@@ -773,7 +773,7 @@ class ImageFieldDisplayTestCase extends ImageFieldTestCase {
 
     // Add alt/title fields to the image and verify that they are displayed.
     $image_info = array(
-      'path' => $node->{$field_name}[LANGUAGE_NONE][0]['uri'],
+      'uri' => $node->{$field_name}[LANGUAGE_NONE][0]['uri'],
       'alt' => $this->randomName(),
       'title' => $this->randomName(),
       'width' => 40,
@@ -815,7 +815,7 @@ class ImageFieldDisplayTestCase extends ImageFieldTestCase {
     $field = field_info_field($field_name);
     $image = file_load($field['settings']['default_image']);
     $this->assertTrue($image->status == FILE_STATUS_PERMANENT, t('The default image status is permanent.'));
-    $default_output = theme('image', array('path' => $image->uri));
+    $default_output = theme('image', array('uri' => $image->uri));
     $this->drupalGet('node/' . $node->nid);
     $this->assertRaw($default_output, t('Default image displayed when no user supplied image is present.'));
 
@@ -824,7 +824,7 @@ class ImageFieldDisplayTestCase extends ImageFieldTestCase {
     $nid = $this->uploadNodeImage($images[1], $field_name, 'article');
     $node = node_load($nid, NULL, TRUE);
     $image_info = array(
-      'path' => $node->{$field_name}[LANGUAGE_NONE][0]['uri'],
+      'uri' => $node->{$field_name}[LANGUAGE_NONE][0]['uri'],
       'width' => 40,
       'height' => 20,
     );
@@ -858,7 +858,7 @@ class ImageFieldDisplayTestCase extends ImageFieldTestCase {
     // Create a new node with no image attached and ensure that default private
     // image is displayed.
     $node = $this->drupalCreateNode(array('type' => 'article'));
-    $default_output = theme('image', array('path' => $image->uri));
+    $default_output = theme('image', array('uri' => $image->uri));
     $this->drupalGet('node/' . $node->nid);
     $this->assertRaw($default_output, t('Default private image displayed when no user supplied image is present.'));
   }
@@ -945,7 +945,7 @@ class ImageDimensionsUnitTest extends DrupalWebTestCase {
 
     $variables = array(
       'style_name' => 'test',
-      'path' => $original_uri,
+      'uri' => $original_uri,
       'width' => 40,
       'height' => 20,
     );

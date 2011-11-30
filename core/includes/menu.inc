@@ -83,42 +83,42 @@
 /**
  * Internal menu flag -- menu item is the root of the menu tree.
  */
-define('MENU_IS_ROOT', 0x0001);
+const MENU_IS_ROOT = 0x0001;
 
 /**
  * Internal menu flag -- menu item is visible in the menu tree.
  */
-define('MENU_VISIBLE_IN_TREE', 0x0002);
+const MENU_VISIBLE_IN_TREE = 0x0002;
 
 /**
  * Internal menu flag -- menu item is visible in the breadcrumb.
  */
-define('MENU_VISIBLE_IN_BREADCRUMB', 0x0004);
+const MENU_VISIBLE_IN_BREADCRUMB = 0x0004;
 
 /**
  * Internal menu flag -- menu item links back to its parent.
  */
-define('MENU_LINKS_TO_PARENT', 0x0008);
+const MENU_LINKS_TO_PARENT = 0x0008;
 
 /**
  * Internal menu flag -- menu item can be modified by administrator.
  */
-define('MENU_MODIFIED_BY_ADMIN', 0x0020);
+const MENU_MODIFIED_BY_ADMIN = 0x0020;
 
 /**
  * Internal menu flag -- menu item was created by administrator.
  */
-define('MENU_CREATED_BY_ADMIN', 0x0040);
+const MENU_CREATED_BY_ADMIN = 0x0040;
 
 /**
  * Internal menu flag -- menu item is a local task.
  */
-define('MENU_IS_LOCAL_TASK', 0x0080);
+const MENU_IS_LOCAL_TASK = 0x0080;
 
 /**
  * Internal menu flag -- menu item is a local action.
  */
-define('MENU_IS_LOCAL_ACTION', 0x0100);
+const MENU_IS_LOCAL_ACTION = 0x0100;
 
 /**
  * @} End of "Menu flags".
@@ -148,7 +148,7 @@ define('MENU_NORMAL_ITEM', MENU_VISIBLE_IN_TREE | MENU_VISIBLE_IN_BREADCRUMB);
  * Callbacks simply register a path so that the correct function is fired
  * when the URL is accessed. They do not appear in menus or breadcrumbs.
  */
-define('MENU_CALLBACK', 0x0000);
+const MENU_CALLBACK = 0x0000;
 
 /**
  * Menu type -- A normal menu item, hidden until enabled by an administrator.
@@ -201,17 +201,17 @@ define('MENU_LOCAL_ACTION', MENU_IS_LOCAL_TASK | MENU_IS_LOCAL_ACTION | MENU_VIS
  * This flag may be used for local tasks like "Delete", so custom modules and
  * themes can alter the default context and expose the task by altering menu.
  */
-define('MENU_CONTEXT_NONE', 0x0000);
+const MENU_CONTEXT_NONE = 0x0000;
 
 /**
  * Internal menu flag: Local task should be displayed in page context.
  */
-define('MENU_CONTEXT_PAGE', 0x0001);
+const MENU_CONTEXT_PAGE = 0x0001;
 
 /**
  * Internal menu flag: Local task should be displayed inline.
  */
-define('MENU_CONTEXT_INLINE', 0x0002);
+const MENU_CONTEXT_INLINE = 0x0002;
 
 /**
  * @} End of "Menu context types".
@@ -226,27 +226,27 @@ define('MENU_CONTEXT_INLINE', 0x0002);
 /**
  * Internal menu status code -- Menu item was found.
  */
-define('MENU_FOUND', 1);
+const MENU_FOUND = 1;
 
 /**
  * Internal menu status code -- Menu item was not found.
  */
-define('MENU_NOT_FOUND', 2);
+const MENU_NOT_FOUND = 2;
 
 /**
  * Internal menu status code -- Menu item access is denied.
  */
-define('MENU_ACCESS_DENIED', 3);
+const MENU_ACCESS_DENIED = 3;
 
 /**
  * Internal menu status code -- Menu item inaccessible because site is offline.
  */
-define('MENU_SITE_OFFLINE', 4);
+const MENU_SITE_OFFLINE = 4;
 
 /**
  * Internal menu status code -- Everything is working fine.
  */
-define('MENU_SITE_ONLINE', 5);
+const MENU_SITE_ONLINE = 5;
 
 /**
  * @} End of "Menu status codes".
@@ -261,13 +261,13 @@ define('MENU_SITE_ONLINE', 5);
  /**
  * The maximum number of path elements for a menu callback
  */
-define('MENU_MAX_PARTS', 9);
+const MENU_MAX_PARTS = 9;
 
 
 /**
  * The maximum depth of a menu links tree - matches the number of p columns.
  */
-define('MENU_MAX_DEPTH', 9);
+const MENU_MAX_DEPTH = 9;
 
 
 /**

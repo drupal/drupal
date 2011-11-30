@@ -8,7 +8,7 @@
 /**
  * Minimum value of PHP memory_limit for SimpleTest.
  */
-define('SIMPLETEST_MINIMUM_PHP_MEMORY_LIMIT', '64M');
+const SIMPLETEST_MINIMUM_PHP_MEMORY_LIMIT = '64M';
 
 /**
  * Implements hook_requirements().

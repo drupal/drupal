@@ -17,7 +17,7 @@
  * also uses this flag to skip language import tasks when the installation is
  * being performed in English.
  */
-define('INSTALL_TASK_SKIP', 1);
+const INSTALL_TASK_SKIP = 1;
 
 /**
  * Global flag to indicate that a task should be run on each installation
@@ -25,7 +25,7 @@ define('INSTALL_TASK_SKIP', 1);
  *
  * This is primarily used by the Drupal installer for bootstrap-related tasks.
  */
-define('INSTALL_TASK_RUN_IF_REACHED', 2);
+const INSTALL_TASK_RUN_IF_REACHED = 2;
 
 /**
  * Global flag to indicate that a task should be run on each installation
@@ -39,7 +39,7 @@ define('INSTALL_TASK_RUN_IF_REACHED', 2);
  * modules on the new site, and also for the configuration form that collects
  * basic site information and sets up the site maintenance account.
  */
-define('INSTALL_TASK_RUN_IF_NOT_COMPLETED', 3);
+const INSTALL_TASK_RUN_IF_NOT_COMPLETED = 3;
 
 /**
  * Installs Drupal either interactively or via an array of passed-in settings.
@@ -115,7 +115,7 @@ function install_drupal($settings = array()) {
  * Non-interactive Drupal installations can override some of these default
  * settings by passing in an array to the installation script, most notably
  * 'parameters' (which contains one-time parameters such as 'profile' and
- * 'locale' that are normally passed in via the URL) and 'forms' (which can
+ * 'langcode' that are normally passed in via the URL) and 'forms' (which can
  * be used to programmatically submit forms during the installation; the keys
  * of each element indicate the name of the installation task that the form
  * submission is for, and the values are used as the $form_state['values']
@@ -148,12 +148,12 @@ function install_state_defaults() {
     // Whether or not this installation is interactive. By default this will
     // be set to FALSE if settings are passed in to install_drupal().
     'interactive' => TRUE,
-    // An array of available languages for the installation.
-    'locales' => array(),
+    // An array of available translation files for the installation.
+    'translations' => array(),
     // An array of parameters for the installation, pre-populated by the URL
     // or by the settings passed in to install_drupal(). This is primarily
     // used to store 'profile' (the name of the chosen installation profile)
-    // and 'locale' (the name of the chosen installation language), since
+    // and 'langcode' (the code of the chosen installation language), since
     // these settings need to persist from page request to page request before
     // the database is available for storage.
     'parameters' => array(),
@@ -213,12 +213,17 @@ function install_begin_request(&$install_state) {
   // Add any installation parameters passed in via the URL.
   $install_state['parameters'] += $_GET;
 
+  // @todo: remove this testbot compatibility layer once the testbot is fixed.
+  if (isset($_GET['locale'])) {
+    $install_state['parameters']['langcode'] = $_GET['locale'];
+  }
+
   // Validate certain core settings that are used throughout the installation.
   if (!empty($install_state['parameters']['profile'])) {
     $install_state['parameters']['profile'] = preg_replace('/[^a-zA-Z_0-9]/', '', $install_state['parameters']['profile']);
   }
-  if (!empty($install_state['parameters']['locale'])) {
-    $install_state['parameters']['locale'] = preg_replace('/[^a-zA-Z_0-9\-]/', '', $install_state['parameters']['locale']);
+  if (!empty($install_state['parameters']['langcode'])) {
+    $install_state['parameters']['langcode'] = preg_replace('/[^a-zA-Z_0-9\-]/', '', $install_state['parameters']['langcode']);
   }
 
   // Allow command line scripts to override server variables used by Drupal.
@@ -309,6 +314,9 @@ function install_begin_request(&$install_state) {
   // Modify the installation state as appropriate.
   $install_state['completed_task'] = $task;
   $install_state['database_tables_exist'] = !empty($task);
+
+  // Add the list of available profiles to the installation state.
+  $install_state['profiles'] += install_find_profiles();
 }
 
 /**
@@ -523,18 +531,18 @@ function install_tasks_to_perform($install_state) {
  */
 function install_tasks($install_state) {
   // Determine whether translation import tasks will need to be performed.
-  $needs_translations = count($install_state['locales']) > 1 && !empty($install_state['parameters']['locale']) && $install_state['parameters']['locale'] != 'en';
+  $needs_translations = count($install_state['translations']) > 1 && !empty($install_state['parameters']['langcode']) && $install_state['parameters']['langcode'] != 'en';
 
-  // Start with the core installation tasks that run before handing control
-  // to the install profile.
+  // The first two installation tasks are (by default) language selection and
+  // profile selection.
   $tasks = array(
+    'install_select_language' => array(
+      'display_name' => st('Choose language'),
+      'run' => INSTALL_TASK_RUN_IF_REACHED,
+    ),
     'install_select_profile' => array(
       'display_name' => st('Choose profile'),
       'display' => count($install_state['profiles']) != 1,
-      'run' => INSTALL_TASK_RUN_IF_REACHED,
-    ),
-    'install_select_locale' => array(
-      'display_name' => st('Choose language'),
       'run' => INSTALL_TASK_RUN_IF_REACHED,
     ),
     'install_load_profile' => array(
@@ -557,7 +565,7 @@ function install_tasks($install_state) {
       'display_name' => count($install_state['profiles']) == 1 ? st('Install site') : st('Install profile'),
       'type' => 'batch',
     ),
-    'install_import_locales' => array(
+    'install_import_translations' => array(
       'display_name' => st('Set up translations'),
       'display' => $needs_translations,
       'type' => 'batch',
@@ -588,7 +596,7 @@ function install_tasks($install_state) {
 
   // Finish by adding the remaining core tasks.
   $tasks += array(
-    'install_import_locales_remaining' => array(
+    'install_import_translations_remaining' => array(
       'display_name' => st('Finish translations'),
       'display' => $needs_translations,
       'type' => 'batch',
@@ -856,7 +864,6 @@ function install_verify_pdo() {
 function install_settings_form($form, &$form_state, &$install_state) {
   global $databases;
   $profile = $install_state['parameters']['profile'];
-  $install_locale = $install_state['parameters']['locale'];
 
   drupal_static_reset('conf_path');
   $conf_path = './' . conf_path(FALSE);
@@ -1015,7 +1022,6 @@ function install_find_profiles() {
  *   thrown if a profile cannot be chosen automatically.
  */
 function install_select_profile(&$install_state) {
-  $install_state['profiles'] += install_find_profiles();
   if (empty($install_state['parameters']['profile'])) {
     // Try to find a profile.
     $profile = _install_select_profile($install_state['profiles']);
@@ -1133,8 +1139,8 @@ function install_select_profile_form($form, &$form_state, $profile_files) {
 /**
  * Find all .po files useful for the installer.
  */
-function install_find_locales() {
-  $files = install_find_locale_files();
+function install_find_translations() {
+  $files = install_find_translation_files();
   // English does not need a translation file.
   array_unshift($files, (object) array('name' => 'en'));
   foreach ($files as $key => $file) {
@@ -1152,94 +1158,91 @@ function install_find_locales() {
 /**
  * Find installer translations either for a specific langcode or all languages.
  */
-function install_find_locale_files($langcode = NULL) {
+function install_find_translation_files($langcode = NULL) {
   $directory = variable_get('locale_translate_file_directory', conf_path() . '/files/translations');
   $files = file_scan_directory($directory, '!install\.' . (!empty($langcode) ? '\.' . preg_quote($langcode, '!') : '[^\.]+') . '\.po$!', array('recurse' => FALSE));
   return $files;
 }
 
 /**
- * Installation task; select which locale to use for the current profile.
+ * Installation task; select which language to use.
  *
  * @param $install_state
  *   An array of information about the current installation state. The chosen
- *   locale will be added here, if it was not already selected previously, as
- *   will a list of all available locales.
+ *   langcode will be added here, if it was not already selected previously, as
+ *   will a list of all available languages.
  *
  * @return
  *   For interactive installations, a form or other page output allowing the
- *   locale to be selected or providing information about locale selection, if
- *   a locale has not been chosen. Otherwise, an exception is thrown if a
- *   locale cannot be chosen automatically.
+ *   language to be selected or providing information about language selection,
+ *   if a language has not been chosen. Otherwise, an exception is thrown if a
+ *   language cannot be chosen automatically.
  */
-function install_select_locale(&$install_state) {
-  // Find all available locales.
-  $profilename = $install_state['parameters']['profile'];
-  $locales = install_find_locales($profilename);
-  $install_state['locales'] += $locales;
+function install_select_language(&$install_state) {
+  // Find all available translations.
+  $files = install_find_translations();
+  $install_state['translations'] += $files;
 
-  if (!empty($_POST['locale'])) {
-    foreach ($locales as $locale) {
-      if ($_POST['locale'] == $locale->langcode) {
-        $install_state['parameters']['locale'] = $locale->langcode;
+  if (!empty($_POST['langcode'])) {
+    foreach ($files as $file) {
+      if ($_POST['langcode'] == $file->langcode) {
+        $install_state['parameters']['langcode'] = $file->langcode;
         return;
       }
     }
   }
 
-  if (empty($install_state['parameters']['locale'])) {
+  if (empty($install_state['parameters']['langcode'])) {
     // If only the built-in (English) language is available, and we are
     // performing an interactive installation, inform the user that the
-    // installer can be localized. Otherwise we assume the user knows what he
+    // installer can be translated. Otherwise we assume the user knows what he
     // is doing.
-    if (count($locales) == 1) {
+    if (count($files) == 1) {
       if ($install_state['interactive']) {
+        $directory = variable_get('locale_translate_file_directory', conf_path() . '/files/translations');
+
         drupal_set_title(st('Choose language'));
-        if (!empty($install_state['parameters']['localize'])) {
+        if (!empty($install_state['parameters']['translate'])) {
           $output = '<p>Follow these steps to translate Drupal into your language:</p>';
           $output .= '<ol>';
           $output .= '<li>Download a translation from the <a href="http://localize.drupal.org/download" target="_blank">translation server</a>.</li>';
-          $output .= '<li>Place it into the following directory:
-<pre>
-/profiles/' . $profilename . '/translations/
-</pre></li>';
+          $output .= '<li>Place it into the following directory:<pre>' . $directory . '</pre></li>';
           $output .= '</ol>';
           $output .= '<p>For more information on installing Drupal in different languages, visit the <a href="http://drupal.org/localize" target="_blank">drupal.org handbook page</a>.</p>';
           $output .= '<p>How should the installation continue?</p>';
           $output .= '<ul>';
-          $output .= '<li><a href="install.php?profile=' . $profilename . '">Reload the language selection page after adding translations</a></li>';
-          $output .= '<li><a href="install.php?profile=' . $profilename . '&amp;locale=en">Continue installation in English</a></li>';
+          $output .= '<li><a href="' . check_url(drupal_current_script_url(array('translate' => NULL))) . '">Reload the language selection page after adding translations</a></li>';
+          $output .= '<li><a href="' . check_url(drupal_current_script_url(array('langcode' => 'en', 'translate' => NULL))) . '">Continue installation in English</a></li>';
           $output .= '</ul>';
         }
         else {
           include_once DRUPAL_ROOT . '/core/includes/form.inc';
-          $elements = drupal_get_form('install_select_locale_form', $locales, $profilename);
+          $elements = drupal_get_form('install_select_language_form', $files);
           $output = drupal_render($elements);
         }
         return $output;
       }
       // One language, but not an interactive installation. Assume the user
       // knows what he is doing.
-      $locale = current($locales);
-      $install_state['parameters']['locale'] = $locale->name;
+      $langcode = current($files);
+      $install_state['parameters']['langcode'] = $file->langcode;
       return;
     }
     else {
       // Allow profile to pre-select the language, skipping the selection.
-      $function = $profilename . '_profile_details';
-      if (function_exists($function)) {
-        $details = $function();
-        if (isset($details['language'])) {
-          foreach ($locales as $locale) {
-            if ($details['language'] == $locale->name) {
-              $install_state['parameters']['locale'] = $locale->name;
+      if (isset($install_state['parameters']['profile'])) {
+        $info = install_profile_info($install_state['parameters']['profile']);
+        if (isset($info['langcode'])) {
+          foreach ($files as $file) {
+            if ($info['langcode'] == $file->langcode) {
+              $install_state['parameters']['langcode'] = $file->langcode;
               return;
             }
           }
         }
       }
 
-      // We still don't have a locale, so display a form for selecting one.
+      // We still don't have a langcode, so display a form for selecting one.
       // Only do this in the case of interactive installations, since this is
       // not a real form with submit handlers (the database isn't even set up
       // yet), rather just a convenience method for setting parameters in the
@@ -1247,7 +1250,7 @@ function install_select_locale(&$install_state) {
       if ($install_state['interactive']) {
         drupal_set_title(st('Choose language'));
         include_once DRUPAL_ROOT . '/core/includes/form.inc';
-        $elements = drupal_get_form('install_select_locale_form', $locales, $profilename);
+        $elements = drupal_get_form('install_select_language_form', $files);
         return drupal_render($elements);
       }
       else {
@@ -1260,25 +1263,41 @@ function install_select_locale(&$install_state) {
 /**
  * Form API array definition for language selection.
  */
-function install_select_locale_form($form, &$form_state, $locales, $profilename) {
+function install_select_language_form($form, &$form_state, $files) {
   include_once DRUPAL_ROOT . '/core/includes/standard.inc';
-  $languages = standard_language_list();
-  foreach ($locales as $locale) {
-    $name = $locale->langcode;
-    if (isset($languages[$name])) {
-      $name = $languages[$name][0] . (isset($languages[$name][1]) ? ' ' . st('(@language)', array('@language' => $languages[$name][1])) : '');
+  include_once DRUPAL_ROOT . '/core/includes/locale.inc';
+
+  $standard_languages = standard_language_list();
+  $select_options = array();
+  $languages = array();
+
+  foreach ($files as $file) {
+    if (isset($standard_languages[$file->langcode])) {
+      // Build a list of select list options based on files we found.
+      $select_options[$file->langcode] = $standard_languages[$file->langcode][1];
     }
-    $form['locale'][$locale->langcode] = array(
-      '#type' => 'radio',
-      '#return_value' => $locale->langcode,
-      '#default_value' => $locale->langcode == 'en' ? 'en' : '',
-      '#title' => $name . ($locale->langcode == 'en' ? ' ' . st('(built-in)') : ''),
-      '#parents' => array('locale')
+    else {
+      // If language not found in standard.inc, display it's langcode
+      $select_options[$file->langcode] = $file->langcode;
+    }
+    // Build a list of languages simulated for browser detection.
+    $languages[$file->langcode] = (object) array(
+      'language' => $file->langcode,
     );
   }
-  if (count($locales) == 1) {
+
+  $browser_langcode = locale_language_from_browser($languages);
+  $form['langcode'] = array(
+    '#type' => 'select',
+    '#options' => $select_options,
+    // Use the browser detected language as default or English if nothing found.
+    '#default_value' => !empty($browser_langcode) ? $browser_langcode : 'en',
+    '#size' => min(count($select_options), 10),
+  );
+
+  if (count($files) == 1) {
     $form['help'] = array(
-      '#markup' => '<p><a href="install.php?profile=' . $profilename . '&amp;localize=true">' . st('Learn how to install Drupal in other languages') . '</a></p>',
+      '#markup' => '<p><a href="' . check_url(drupal_current_script_url(array('translate' => 'true'))) . '">' . st('Learn how to install Drupal in other languages') . '</a></p>',
     );
   }
   $form['actions'] = array('#type' => 'actions');
@@ -1319,7 +1338,7 @@ function install_load_profile(&$install_state) {
   $profile_file = DRUPAL_ROOT . '/profiles/' . $install_state['parameters']['profile'] . '/' . $install_state['parameters']['profile'] . '.profile';
   if (file_exists($profile_file)) {
     include_once $profile_file;
-    $install_state['profile_info'] = install_profile_info($install_state['parameters']['profile'], $install_state['parameters']['locale']);
+    $install_state['profile_info'] = install_profile_info($install_state['parameters']['profile'], $install_state['parameters']['langcode']);
   }
   else {
     throw new Exception(st('Sorry, the profile you have chosen cannot be loaded.'));
@@ -1398,19 +1417,19 @@ function install_profile_modules(&$install_state) {
  * @return
  *   The batch definition, if there are language files to import.
  */
-function install_import_locales(&$install_state) {
+function install_import_translations(&$install_state) {
   include_once DRUPAL_ROOT . '/core/includes/locale.inc';
   include_once drupal_get_path('module', 'locale') . '/locale.bulk.inc';
-  $install_locale = $install_state['parameters']['locale'];
+  $langcode = $install_state['parameters']['langcode'];
 
   include_once DRUPAL_ROOT . '/core/includes/standard.inc';
-  $predefined = standard_language_list();
-  if (!isset($predefined[$install_locale])) {
+  $standard_languages = standard_language_list();
+  if (!isset($standard_languages[$langcode])) {
     // Drupal does not know about this language, so we prefill its values with
     // our best guess. The user will be able to edit afterwards.
     $language = (object) array(
-      'language' => $install_locale,
-      'name' => $install_locale,
+      'language' => $langcode,
+      'name' => $langcode,
       'default' => TRUE,
     );
     locale_language_save($language);
@@ -1418,14 +1437,14 @@ function install_import_locales(&$install_state) {
   else {
     // A known predefined language, details will be filled in properly.
     $language = (object) array(
-      'language' => $install_locale,
+      'language' => $langcode,
       'default' => TRUE,
     );
     locale_language_save($language);
   }
 
   // Collect files to import for this language.
-  $batch = locale_translate_batch_import_files($install_locale);
+  $batch = locale_translate_batch_import_files($langcode);
   if (!empty($batch)) {
     return $batch;
   }
@@ -1499,9 +1518,9 @@ function install_configure_form($form, &$form_state, &$install_state) {
  *   once we have l10n_update functionality integrated. See
  *   http://drupal.org/node/1191488.
  */
-function install_import_locales_remaining(&$install_state) {
+function install_import_translations_remaining(&$install_state) {
   include_once drupal_get_path('module', 'locale') . '/locale.bulk.inc';
-  return locale_translate_batch_import_files($install_state['parameters']['locale']);
+  return locale_translate_batch_import_files($install_state['parameters']['langcode']);
 }
 
 /**
@@ -1843,7 +1862,7 @@ function install_configure_form_submit($form, &$form_state) {
 
   // We precreated user 1 with placeholder values. Let's save the real values.
   $account = user_load(1);
-  $merge_data = array('init' => $form_state['values']['account']['mail'], 'roles' => !empty($account->roles) ? $account->roles : array(), 'status' => 1);
+  $merge_data = array('init' => $form_state['values']['account']['mail'], 'roles' => !empty($account->roles) ? $account->roles : array(), 'status' => 1, 'timezone' => $form_state['values']['date_default_timezone']);
   user_save($account, array_merge($form_state['values']['account'], $merge_data));
   // Load global $user and perform final login tasks.
   $user = user_load(1);

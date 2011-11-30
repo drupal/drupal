@@ -810,8 +810,7 @@ class LocaleImportFunctionalTest extends DrupalWebTestCase {
   }
 
   /**
-   * Test automatic import of a module's translation files when a language is
-   * enabled.
+   * Test automatic import of a module's translation files.
    */
   function testAutomaticModuleTranslationImportLanguageEnable() {
     // Code for the language - manually set to match the test translation file.
@@ -974,8 +973,7 @@ EOF;
   }
 
   /**
-   * Helper function that returns a proper .po file, for testing overwriting
-   * existing translations.
+   * Helper function that returns a proper .po file for testing.
    */
   function getOverwritePoFile() {
     return <<< EOF
@@ -1864,8 +1862,7 @@ class LocaleContentFunctionalTest extends DrupalWebTestCase {
   }
 
   /**
-   * Test if a content type can be set to multilingual and language setting is
-   * present on node add and edit forms.
+   * Test if a content type can be set to multilingual and language is present.
    */
   function testContentTypeLanguageConfiguration() {
     global $base_url;
@@ -1956,10 +1953,92 @@ class LocaleContentFunctionalTest extends DrupalWebTestCase {
 
     $this->drupalLogout();
   }
+
+  /**
+   * Test if a dir and lang tags exist in node's attributes.
+   */
+  function testContentTypeDirLang() {
+    // User to add and remove language.
+    $admin_user = $this->drupalCreateUser(array('administer languages', 'administer content types', 'access administration pages'));
+    // User to create a node.
+    $web_user = $this->drupalCreateUser(array('create article content', 'edit own article content'));
+
+    // Login as admin.
+    $this->drupalLogin($admin_user);
+
+    // Install Arabic language.
+    $edit = array();
+    $edit['predefined_langcode'] = 'ar';
+    $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
+
+    // Install Spanish language.
+    $edit = array();
+    $edit['predefined_langcode'] = 'es';
+    $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
+
+    // Set "Article" content type to use multilingual support.
+    $this->drupalGet('admin/structure/types/manage/article');
+    $edit = array(
+      'language_content_type' => 1,
+    );
+    $this->drupalPost('admin/structure/types/manage/article', $edit, t('Save content type'));
+    $this->assertRaw(t('The content type %type has been updated.', array('%type' => 'Article')), t('Article content type has been updated.'));
+    $this->drupalLogout();
+
+    // Login as web user to add new article.
+    $this->drupalLogin($web_user);
+
+    // Create three nodes: English, Arabic and Spanish.
+    $node_en = $this->createNodeArticle('en');
+    $node_ar = $this->createNodeArticle('ar');
+    $node_es = $this->createNodeArticle('es');
+
+    $this->drupalGet('node');
+
+    // Check if English node does not have lang tag.
+    $pattern = '|id="node-' . $node_en->nid . '"[^<>]*lang="en"|';
+    $this->assertNoPattern($pattern, t('The lang tag has not been assigned to the English node.'));
+
+    // Check if English node does not have dir tag.
+    $pattern = '|id="node-' . $node_en->nid . '"[^<>]*dir="ltr"|';
+    $this->assertNoPattern($pattern, t('The dir tag has not been assigned to the English node.'));
+
+    // Check if Arabic node has lang="ar" & dir="rtl" tags.
+    $pattern = '|id="node-' . $node_ar->nid . '"[^<>]*lang="ar" dir="rtl"|';
+    $this->assertPattern($pattern, t('The lang and dir tags have been assigned correctly to the Arabic node.'));
+
+    // Check if Spanish node has lang="es" tag.
+    $pattern = '|id="node-' . $node_es->nid . '"[^<>]*lang="es"|';
+    $this->assertPattern($pattern, t('The lang tag has been assigned correctly to the Spanish node.'));
+
+    // Check if Spanish node does not have dir="ltr" tag.
+    $pattern = '|id="node-' . $node_es->nid . '"[^<>]*lang="es" dir="ltr"|';
+    $this->assertNoPattern($pattern, t('The dir tag has not been assigned to the Spanish node.'));
+
+    $this->drupalLogout();
+  }
+
+  /**
+   * Create node in a specific language.
+   */
+  protected function createNodeArticle($langcode) {
+    $this->drupalGet('node/add/article');
+    $node_title = $this->randomName();
+    $node_body =  $this->randomName();
+    $edit = array(
+      'type' => 'article',
+      'title' => $node_title,
+      'body' => array($langcode => array(array('value' => $node_body))),
+      'language' => $langcode,
+      'promote' => 1,
+    );
+    return $this->drupalCreateNode($edit);
+  }
 }
 
 /**
  * Test UI language negotiation
+ *
  * 1. URL (PATH) > DEFAULT
  *    UI Language base on URL prefix, browser language preference has no
  *    influence:
@@ -2069,6 +2148,7 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
         'language_negotiation' => array(LOCALE_LANGUAGE_NEGOTIATION_URL, LANGUAGE_NEGOTIATION_DEFAULT),
         'path' => 'admin/config',
         'expect' => $default_string,
+        'expected_provider' => LANGUAGE_NEGOTIATION_DEFAULT,
         'http_header' => $http_header_browser_fallback,
         'message' => 'URL (PATH) > DEFAULT: no language prefix, UI language is default and the browser language preference setting is not used.',
       ),
@@ -2077,6 +2157,7 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
         'language_negotiation' => array(LOCALE_LANGUAGE_NEGOTIATION_URL, LANGUAGE_NEGOTIATION_DEFAULT),
         'path' => "$langcode/admin/config",
         'expect' => $language_string,
+        'expected_provider' => LOCALE_LANGUAGE_NEGOTIATION_URL,
         'http_header' => $http_header_browser_fallback,
         'message' => 'URL (PATH) > DEFAULT: with language prefix, UI language is switched based on path prefix',
       ),
@@ -2085,6 +2166,7 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
         'language_negotiation' => array(LOCALE_LANGUAGE_NEGOTIATION_URL, LOCALE_LANGUAGE_NEGOTIATION_BROWSER),
         'path' => 'admin/config',
         'expect' => $language_browser_fallback_string,
+        'expected_provider' => LOCALE_LANGUAGE_NEGOTIATION_BROWSER,
         'http_header' => $http_header_browser_fallback,
         'message' => 'URL (PATH) > BROWSER: no language prefix, UI language is determined by browser language preference',
       ),
@@ -2093,6 +2175,7 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
         'language_negotiation' => array(LOCALE_LANGUAGE_NEGOTIATION_URL, LOCALE_LANGUAGE_NEGOTIATION_BROWSER),
         'path' => "$langcode/admin/config",
         'expect' => $language_string,
+        'expected_provider' => LOCALE_LANGUAGE_NEGOTIATION_URL,
         'http_header' => $http_header_browser_fallback,
         'message' => 'URL (PATH) > BROWSER: with langage prefix, UI language is based on path prefix',
       ),
@@ -2101,6 +2184,7 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
         'language_negotiation' => array(LOCALE_LANGUAGE_NEGOTIATION_URL, LOCALE_LANGUAGE_NEGOTIATION_BROWSER, LANGUAGE_NEGOTIATION_DEFAULT),
         'path' => 'admin/config',
         'expect' => $default_string,
+        'expected_provider' => LANGUAGE_NEGOTIATION_DEFAULT,
         'http_header' => $http_header_blah,
         'message' => 'URL (PATH) > BROWSER > DEFAULT: no language prefix and browser language preference set to unknown language should use default language',
       ),
@@ -2128,6 +2212,7 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
         'locale_language_negotiation_url_part' => LOCALE_LANGUAGE_NEGOTIATION_URL_DOMAIN,
         'path' => 'admin/config',
         'expect' => $default_string,
+        'expected_provider' => LANGUAGE_NEGOTIATION_DEFAULT,
         'http_header' => $http_header_browser_fallback,
         'message' => 'URL (DOMAIN) > DEFAULT: default domain should get default language',
       ),
@@ -2139,6 +2224,7 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
         'locale_test_domain' => $language_domain,
         'path' => 'admin/config',
         'expect' => $language_string,
+        'expected_provider' => LOCALE_LANGUAGE_NEGOTIATION_URL,
         'http_header' => $http_header_browser_fallback,
         'message' => 'URL (DOMAIN) > DEFAULT: domain example.cn should switch to Chinese',
       ),
@@ -2149,7 +2235,7 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
     }
   }
 
-  private function runTest($test) {
+  protected function runTest($test) {
     if (!empty($test['language_negotiation'])) {
       $negotiation = array_flip($test['language_negotiation']);
       language_negotiation_set(LANGUAGE_TYPE_INTERFACE, $negotiation);
@@ -2162,6 +2248,7 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
     }
     $this->drupalGet($test['path'], array(), $test['http_header']);
     $this->assertText($test['expect'], $test['message']);
+    $this->assertText(t('Language negotiation provider: @name', array('@name' => $test['expected_provider'])));
   }
 
   /**
@@ -2267,7 +2354,6 @@ class LocaleUrlRewritingTest extends DrupalWebTestCase {
     // Check URL rewriting with a non-installed language.
     $non_existing = language_default();
     $non_existing->language = $this->randomName();
-    $non_existing->prefix = $this->randomName();
     $this->checkUrl($non_existing, t('Path language is ignored if language is not installed.'), t('URL language negotiation does not work with non-installed languages'));
   }
 
@@ -2285,11 +2371,15 @@ class LocaleUrlRewritingTest extends DrupalWebTestCase {
     $segments = explode('/', $rewritten_path, 2);
     $prefix = $segments[0];
     $path = isset($segments[1]) ? $segments[1] : $prefix;
-    // If the rewritten URL has not a language prefix we pick the right one from
-    // the language object so we can always check the prefixed URL.
-    if ($this->assertNotEqual($language->prefix, $prefix, $message1)) {
-      $prefix = $language->prefix;
+
+    // If the rewritten URL has not a language prefix we pick a random prefix so
+    // we can always check the prefixed URL.
+    $prefixes = locale_language_negotiation_url_prefixes();
+    $stored_prefix = isset($prefixes[$language->language]) ? $prefixes[$language->language] : $this->randomName();
+    if ($this->assertNotEqual($stored_prefix, $prefix, $message1)) {
+      $prefix = $stored_prefix;
     }
+
     $this->drupalGet("$prefix/$path");
     $this->assertResponse(404, $message2);
   }
@@ -2489,9 +2579,10 @@ class LocaleCommentLanguageFunctionalTest extends DrupalWebTestCase {
       $this->drupalPost("node/add/article", $edit, t('Save'));
       $node = $this->drupalGetNodeByTitle($title);
 
+      $prefixes = locale_language_negotiation_url_prefixes();
       foreach (language_list() as $langcode => $language) {
         // Post a comment with content language $langcode.
-        $prefix = empty($language->prefix) ? '' : $language->prefix . '/';
+        $prefix = empty($prefixes[$langcode]) ? '' : $prefixes[$langcode] . '/';
         $edit = array("comment_body[$langcode_none][0][value]" => $this->randomName());
         $this->drupalPost("{$prefix}node/{$node->nid}", $edit, t('Save'));
 
@@ -2508,6 +2599,7 @@ class LocaleCommentLanguageFunctionalTest extends DrupalWebTestCase {
     }
   }
 }
+
 /**
  * Functional tests for localizing date formats.
  */
@@ -2691,7 +2783,7 @@ class LocaleLanguageNegotiationInfoFunctionalTest extends DrupalWebTestCase {
    * they would not be invoked after enabling/disabling locale_test the first
    * time.
    */
-  private function languageNegotiationUpdate($op = 'enable') {
+  protected function languageNegotiationUpdate($op = 'enable') {
     static $last_op = NULL;
     $modules = array('locale_test');
 
@@ -2716,7 +2808,7 @@ class LocaleLanguageNegotiationInfoFunctionalTest extends DrupalWebTestCase {
   /**
    * Check that language negotiation for fixed types matches the stored one.
    */
-  private function checkFixedLanguageTypes() {
+  protected function checkFixedLanguageTypes() {
     drupal_static_reset('language_types_info');
     foreach (language_types_info() as $type => $info) {
       if (isset($info['fixed'])) {

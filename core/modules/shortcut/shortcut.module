@@ -11,7 +11,7 @@
  * This set will be displayed to any user that does not have another set
  * assigned, unless overridden by a hook_shortcut_default_set() implementation.
  */
-define('SHORTCUT_DEFAULT_SET_NAME', 'shortcut-set-1');
+const SHORTCUT_DEFAULT_SET_NAME = 'shortcut-set-1';
 
 /**
  * Implements hook_help().

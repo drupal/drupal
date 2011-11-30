@@ -71,7 +71,7 @@ function rdf_help($path, $arg) {
  * Each bundle will inherit the default mappings defined for the entity type
  * unless the bundle defines its own specific mappings.
  */
-define('RDF_DEFAULT_BUNDLE', '');
+const RDF_DEFAULT_BUNDLE = '';
 
 /**
  * Implements hook_rdf_namespaces().

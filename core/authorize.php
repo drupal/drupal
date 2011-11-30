@@ -35,7 +35,7 @@ define('DRUPAL_ROOT', getcwd());
  * solve some theming issues. This flag is checked on several places
  * in Drupal code (not just authorize.php).
  */
-define('MAINTENANCE_MODE', 'update');
+const MAINTENANCE_MODE = 'update';
 
 /**
  * Renders a 403 access denied page for authorize.php.

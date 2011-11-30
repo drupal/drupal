@@ -42,59 +42,59 @@
 /**
  * Return status for saving which involved creating a new item.
  */
-define('SAVED_NEW', 1);
+const SAVED_NEW = 1;
 
 /**
  * Return status for saving which involved an update to an existing item.
  */
-define('SAVED_UPDATED', 2);
+const SAVED_UPDATED = 2;
 
 /**
  * Return status for saving which deleted an existing item.
  */
-define('SAVED_DELETED', 3);
+const SAVED_DELETED = 3;
 
 /**
  * The default group for system CSS files added to the page.
  */
-define('CSS_SYSTEM', -100);
+const CSS_SYSTEM = -100;
 
 /**
  * The default group for module CSS files added to the page.
  */
-define('CSS_DEFAULT', 0);
+const CSS_DEFAULT = 0;
 
 /**
  * The default group for theme CSS files added to the page.
  */
-define('CSS_THEME', 100);
+const CSS_THEME = 100;
 
 /**
  * The default group for JavaScript libraries or jQuery plugins added
  * to the page.
  */
-define('JS_LIBRARY', -100);
+const JS_LIBRARY = -100;
 
 /**
  * The default group for module JavaScript code added to the page.
  */
-define('JS_DEFAULT', 0);
+const JS_DEFAULT = 0;
 
 /**
  * The default group for theme JavaScript code added to the page.
  */
-define('JS_THEME', 100);
+const JS_THEME = 100;
 
 /**
  * The default group for JavaScript settings added to the page.
  */
-define('JS_SETTING', 200);
+const JS_SETTING = 200;
 
 /**
  * Error code indicating that the request made by drupal_http_request() exceeded
  * the specified timeout.
  */
-define('HTTP_REQUEST_TIMEOUT', -1);
+const HTTP_REQUEST_TIMEOUT = -1;
 
 /**
  * Constants defining cache granularity for blocks and renderable arrays.
@@ -121,7 +121,7 @@ define('HTTP_REQUEST_TIMEOUT', -1);
  * the content.
  * - for blocks that change too frequently.
  */
-define('DRUPAL_NO_CACHE', -1);
+const DRUPAL_NO_CACHE = -1;
 
 /**
  * The block is handling its own caching in its hook_block_view(). From the
@@ -129,31 +129,31 @@ define('DRUPAL_NO_CACHE', -1);
  * Useful when time based expiration is needed or a site uses a node access
  * which invalidates standard block cache.
  */
-define('DRUPAL_CACHE_CUSTOM', -2);
+const DRUPAL_CACHE_CUSTOM = -2;
 
 /**
  * The block or element can change depending on the roles the user viewing the
  * page belongs to. This is the default setting for blocks, used when the block
  * does not specify anything.
  */
-define('DRUPAL_CACHE_PER_ROLE', 0x0001);
+const DRUPAL_CACHE_PER_ROLE = 0x0001;
 
 /**
  * The block or element can change depending on the user viewing the page.
  * This setting can be resource-consuming for sites with large number of users,
  * and thus should only be used when DRUPAL_CACHE_PER_ROLE is not sufficient.
  */
-define('DRUPAL_CACHE_PER_USER', 0x0002);
+const DRUPAL_CACHE_PER_USER = 0x0002;
 
 /**
  * The block or element can change depending on the page being viewed.
  */
-define('DRUPAL_CACHE_PER_PAGE', 0x0004);
+const DRUPAL_CACHE_PER_PAGE = 0x0004;
 
 /**
  * The block or element is the same for every user on every page where it is visible.
  */
-define('DRUPAL_CACHE_GLOBAL', 0x0008);
+const DRUPAL_CACHE_GLOBAL = 0x0008;
 
 /**
  * Add content to a specified region.
@@ -6559,7 +6559,7 @@ function drupal_common_theme() {
       // - http://dev.w3.org/html5/spec/Overview.html#alt
       // The title attribute is optional in all cases, so it is omitted by
       // default.
-      'variables' => array('path' => NULL, 'width' => NULL, 'height' => NULL, 'alt' => '', 'title' => NULL, 'attributes' => array()),
+      'variables' => array('uri' => NULL, 'width' => NULL, 'height' => NULL, 'alt' => '', 'title' => NULL, 'attributes' => array()),
     ),
     'breadcrumb' => array(
       'variables' => array('breadcrumb' => NULL),

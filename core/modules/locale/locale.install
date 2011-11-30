@@ -39,6 +39,8 @@ function locale_uninstall() {
   variable_del('language_count');
   variable_del('language_types');
   variable_del('locale_language_negotiation_url_part');
+  variable_del('locale_language_negotiation_url_prefixes');
+  variable_del('locale_language_negotiation_url_domains');
   variable_del('locale_language_negotiation_session_param');
   variable_del('language_content_type_default');
   variable_del('language_content_type_negotiation');
@@ -98,20 +100,6 @@ function locale_schema() {
         'not null' => TRUE,
         'default' => 0,
         'description' => 'Enabled flag (1 = Enabled, 0 = Disabled).',
-      ),
-      'domain' => array(
-        'type' => 'varchar',
-        'length' => 128,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'Domain to use for this language.',
-      ),
-      'prefix' => array(
-        'type' => 'varchar',
-        'length' => 128,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'Path prefix to use for this language.',
       ),
       'weight' => array(
         'type' => 'int',
@@ -255,6 +243,57 @@ function locale_update_8001() {
   db_drop_field('languages', 'plurals');
   db_drop_field('languages', 'formula');
   db_drop_field('languages', 'javascript');
+}
+
+/**
+ * Drop textgroup support.
+ *
+ * Update assumes i18n migrated this data before the update happened. Core
+ * never used textgroups for anything, so it is not our job to find place
+ * for the data elsewhere.
+ */
+function locale_update_8002() {
+  $subquery = db_select('locales_source', 'ls')
+    ->fields('ls', array('lid'))
+    ->condition('ls.textgroup', 'default', '<>');
+  db_delete('locales_target')
+    ->condition('lid', $subquery, 'IN')
+    ->execute();
+  db_delete('locales_source')
+    ->condition('textgroup', 'default', '<>')
+    ->execute();
+  db_drop_field('locales_source', 'textgroup');
+}
+
+/**
+ * Removes the prefix and domain columns from the language table.
+ *
+ * Load all prefixes and domains from the languages table, save the values in
+ * two new variables. Then remove the prefix and domain columns from the
+ * languages table.
+ */
+function locale_update_8003() {
+
+  // Look up languages directly instead of using language_list().
+  $languages = db_select('languages', 'l')
+    ->fields('l')
+    ->execute();
+
+  // Collect all domains and prefixes.
+  $prefixes = array();
+  $domains = array();
+  foreach ($languages as $language) {
+    $prefixes[$language->language] = $language->prefix;
+    $domains[$language->language] = $language->domain;
+  }
+
+  // Save the prefix and domain values in a variable.
+  variable_set('locale_language_negotiation_url_prefixes', $prefixes);
+  variable_set('locale_language_negotiation_url_domains', $domains);
+
+  // Remove the prefix and domain columns.
+  db_drop_field('languages', 'prefix');
+  db_drop_field('languages', 'domain');
 }
 
 /**

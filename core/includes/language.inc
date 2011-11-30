@@ -8,7 +8,7 @@
 /**
  * No language negotiation. The default language is used.
  */
-define('LANGUAGE_NEGOTIATION_DEFAULT', 'language-default');
+const LANGUAGE_NEGOTIATION_DEFAULT = 'language-default';
 
 /**
  * Return all the defined language types.
@@ -350,7 +350,10 @@ function language_provider_invoke($provider_id, $provider = NULL) {
     $results[$provider_id] = isset($languages[$langcode]) ? $languages[$langcode] : FALSE;
   }
 
-  return $results[$provider_id];
+  // Since objects are resources we need to return a clone to prevent the
+  // provider cache to be unintentionally altered. The same providers might be
+  // used with different language types based on configuration.
+  return !empty($results[$provider_id]) ? clone($results[$provider_id]) : $results[$provider_id];
 }
 
 /**
@@ -381,15 +384,18 @@ function language_initialize($type) {
   // first valid language found.
   $negotiation = variable_get("language_negotiation_$type", array());
 
-  foreach ($negotiation as $id => $provider) {
-    $language = language_provider_invoke($id, $provider);
+  foreach ($negotiation as $provider_id => $provider) {
+    $language = language_provider_invoke($provider_id, $provider);
     if ($language) {
+      $language->provider = $provider_id;
       return $language;
     }
   }
 
   // If no other language was found use the default one.
-  return language_default();
+  $language = language_default();
+  $language->provider = LANGUAGE_NEGOTIATION_DEFAULT;
+  return $language;
 }
 
 /**
@@ -424,8 +430,9 @@ function language_url_split_prefix($path, $languages) {
   $prefix = array_shift($args);
 
   // Search prefix within enabled languages.
+  $prefixes = locale_language_negotiation_url_prefixes();
   foreach ($languages as $language) {
-    if (!empty($language->prefix) && $language->prefix == $prefix) {
+    if (isset($prefixes[$language->language]) && $prefixes[$language->language] == $prefix) {
       // Rebuild $path with the language removed.
       return array($language, implode('/', $args));
     }

@@ -42,7 +42,7 @@ function aggregator_page_source($feed) {
 }
 
 /**
- * Page callback: Form constructor to show all items captured from a feed.
+ * Form constructor to show all items captured from a feed.
  *
  * Path: aggregator/sources/%aggregator_feed/categorize
  *
@@ -58,7 +58,7 @@ function aggregator_page_source_form($form, $form_state, $feed) {
 }
 
 /**
- * Page callback: Form constructor to list items aggregated in a category.
+ * Form constructor to list items aggregated in a category.
  *
  * Path: aggregator/categories
  *
@@ -79,7 +79,7 @@ function aggregator_page_category($category) {
 }
 
 /**
- * Page callback: Form constructor to list items aggregated in a category.
+ * Form constructor to list items aggregated in a category.
  *
  * Path: aggregator/categories/%aggregator_category/categorize
  *

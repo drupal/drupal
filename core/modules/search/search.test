@@ -7,9 +7,9 @@
 
 // The search index can contain different types of content. Typically the type is 'node'.
 // Here we test with _test_ and _test2_ as the type.
-define('SEARCH_TYPE', '_test_');
-define('SEARCH_TYPE_2', '_test2_');
-define('SEARCH_TYPE_JPN', '_test3_');
+const SEARCH_TYPE = '_test_';
+const SEARCH_TYPE_2 = '_test2_';
+const SEARCH_TYPE_JPN = '_test3_';
 
 class SearchMatchTestCase extends DrupalWebTestCase {
   public static function getInfo() {

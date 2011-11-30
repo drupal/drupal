@@ -607,6 +607,56 @@ function locale_modules_disabled($modules) {
   locale_modules_enabled($modules);
 }
 
+/**
+ * Implements hook_locale_language_insert().
+ */
+function locale_locale_language_insert($language) {
+  // Add new language to the list of language prefixes.
+  $prefixes = locale_language_negotiation_url_prefixes();
+  $prefixes[$language->language] = (empty($language->default) ? $language->language : '');
+  locale_language_negotiation_url_prefixes_save($prefixes);
+
+  // Add language to the list of language domains.
+  $domains = locale_language_negotiation_url_domains();
+  $domains[$language->language] = '';
+  locale_language_negotiation_url_domains_save($domains);
+}
+
+/**
+ * Implements hook_locale_language_update().
+ */
+function locale_locale_language_update($language) {
+
+  // If the language is the default, then ensure that no other languages have
+  // blank prefix codes.
+  if (!empty($language->default)) {
+    $prefixes = locale_language_negotiation_url_prefixes();
+    foreach ($prefixes as $langcode => $prefix) {
+      if ($prefix == '' && $langcode != $language->language) {
+        $prefixes[$langcode] = $langcode;
+      }
+    }
+    locale_language_negotiation_url_prefixes_save($prefixes);
+  }
+
+}
+
+/**
+ * Implements hook_locale_language_delete().
+ */
+function locale_locale_language_delete($language) {
+  // Remove language from language prefix list.
+  $prefixes = locale_language_negotiation_url_prefixes();
+  unset($prefixes[$language->language]);
+  locale_language_negotiation_url_prefixes_save($prefixes);
+
+  // Remove language from language domain list.
+  $domains = locale_language_negotiation_url_domains();
+  unset($domains[$language->language]);
+  locale_language_negotiation_url_domains_save($domains);
+}
+
+
 // ---------------------------------------------------------------------------------
 // Locale core functionality
 
@@ -1173,5 +1223,28 @@ function locale_form_system_file_system_settings_alter(&$form, $form_state) {
   );
   if ($form['file_default_scheme']) {
     $form['file_default_scheme']['#weight'] = 20;
+  }
+}
+
+/**
+ * Implements MODULE_preprocess_HOOK().
+ */
+function locale_preprocess_node(&$variables) {
+  if ($variables['language'] != LANGUAGE_NONE) {
+    global $language;
+
+    $node_language = language_load($variables['language']);
+    if ($node_language->language != $language->language) {
+      // If the node language was different from the page language, we should
+      // add markup to identify the language. Otherwise the page language is
+      // inherited.
+      $variables['attributes_array']['lang'] = $variables['language'];
+      if ($node_language->direction != $language->direction) {
+        // If text direction is different form the page's text direction, add
+        // direction information as well.
+        $dir = array('ltr', 'rtl');
+        $variables['attributes_array']['dir'] = $dir[$node_language->direction];
+      }
+    }
   }
 }

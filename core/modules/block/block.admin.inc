@@ -247,7 +247,7 @@ function _block_compare($a, $b) {
 }
 
 /**
- * Page callback: Form constructor for the block configuration form.
+ * Form constructor for the block configuration form.
  *
  * Path: admin/structure/block/manage/%/%
  *
@@ -529,7 +529,7 @@ function block_admin_configure_submit($form, &$form_state) {
 }
 
 /**
- * Page callback: Form constructor for the add block form.
+ * Form constructor for the add block form.
  *
  * Path: admin/structure/block/add
  *
@@ -622,7 +622,7 @@ function block_add_block_form_submit($form, &$form_state) {
 }
 
 /**
- * Page callback: Form constructor for the custom block deletion form.
+ * Form constructor for the custom block deletion form.
  *
  * Path: admin/structure/block/manage/%/%/delete
  *
