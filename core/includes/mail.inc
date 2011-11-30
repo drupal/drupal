@@ -57,11 +57,30 @@ define('MAIL_LINE_ENDINGS', isset($_SERVER['WINDIR']) || strpos($_SERVER['SERVER
  *     user_mail_tokens($variables, $data, $options);
  *     switch($key) {
  *       case 'notice':
+ *         // If the recipient can receive such notices by instant-message, do
+ *         // not send by email.
+ *         if (example_im_send($key, $message, $params)) {
+ *           $message['send'] = FALSE;
+ *           break;
+ *         }
  *         $langcode = $message['language']->language;
  *         $message['subject'] = t('Notification from !site', $variables, array('langcode' => $langcode));
  *         $message['body'][] = t("Dear !username\n\nThere is new content available on the site.", $variables, array('langcode' => $langcode));
  *         break;
  *     }
+ *   }
+ * @endcode
+ *
+ * Another example, which uses drupal_mail() to format a message for sending
+ * later:
+ *
+ * @code
+ *   $params = array('current_conditions' => $data);
+ *   $to = 'user@example.com';
+ *   $message = drupal_mail('example', 'notice', $to, $language, $params, FALSE);
+ *   // Only add to the spool if sending was not canceled.
+ *   if ($message['send']) {
+ *     example_spool_message($message);
  *   }
  * @endcode
  *
@@ -86,8 +105,10 @@ define('MAIL_LINE_ENDINGS', isset($_SERVER['WINDIR']) || strpos($_SERVER['SERVER
  * @param $from
  *   Sets From to this value, if given.
  * @param $send
- *   Send the message directly, without calling drupal_mail_system()->mail()
- *   manually.
+ *   If TRUE, drupal_mail() will call drupal_mail_system()->mail() to deliver
+ *   the message, and store the result in $message['result']. Modules
+ *   implementing hook_mail_alter() may cancel sending by setting
+ *   $message['send'] to FALSE.
  *
  * @return
  *   The $message array structure containing all details of the
@@ -108,6 +129,7 @@ function drupal_mail($module, $key, $to, $language, $params = array(), $from = N
     'from'     => isset($from) ? $from : $default_from,
     'language' => $language,
     'params'   => $params,
+    'send'     => TRUE,
     'subject'  => '',
     'body'     => array()
   );
@@ -148,12 +170,20 @@ function drupal_mail($module, $key, $to, $language, $params = array(), $from = N
 
   // Optionally send e-mail.
   if ($send) {
-    $message['result'] = $system->mail($message);
-
-    // Log errors
-    if (!$message['result']) {
-      watchdog('mail', 'Error sending e-mail (from %from to %to).', array('%from' => $message['from'], '%to' => $message['to']), WATCHDOG_ERROR);
-      drupal_set_message(t('Unable to send e-mail. Contact the site administrator if the problem persists.'), 'error');
+    // The original caller requested sending. Sending was canceled by one or
+    // more hook_mail_alter() implementations. We set 'result' to NULL, because
+    // FALSE indicates an error in sending.
+    if (empty($message['send'])) {
+      $message['result'] = NULL;
+    }
+    // Sending was originally requested and was not canceled.
+    else {
+      $message['result'] = $system->mail($message);
+      // Log errors.
+      if (!$message['result']) {
+        watchdog('mail', 'Error sending e-mail (from %from to %to).', array('%from' => $message['from'], '%to' => $message['to']), WATCHDOG_ERROR);
+        drupal_set_message(t('Unable to send e-mail. Contact the site administrator if the problem persists.'), 'error');
+      }
     }
   }
 

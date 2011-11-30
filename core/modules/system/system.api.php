@@ -1452,11 +1452,19 @@ function hook_image_toolkits() {
  *  - 'language':
  *     The language object used to build the message before hook_mail_alter()
  *     is invoked.
+ *  - 'send':
+ *     Set to FALSE to abort sending this email message.
  *
  * @see drupal_mail()
  */
 function hook_mail_alter(&$message) {
   if ($message['id'] == 'modulename_messagekey') {
+    if (!example_notifications_optin($message['to'], $message['id'])) {
+      // If the recipient has opted to not receive such messages, cancel
+      // sending.
+      $message['send'] = FALSE;
+      return;
+    }
     $message['body'][] = "--\nMail sent out from " . variable_get('sitename', t('Drupal'));
   }
 }
