@@ -57,7 +57,7 @@ function aggregator_view() {
 }
 
 /**
- * Page callback: Form constructor for adding and editing feed sources.
+ * Form constructor for adding and editing feed sources.
  *
  * Path: admin/config/services/aggregator/add/feed
  *
@@ -250,7 +250,7 @@ function aggregator_admin_remove_feed_submit($form, &$form_state) {
 }
 
 /**
- * Page callback: Form constructor for importing feeds from OPML.
+ * Form constructor for importing feeds from OPML.
  *
  * Path: admin/config/services/aggregator/add/opml
  *
@@ -426,7 +426,7 @@ function aggregator_admin_refresh_feed($feed) {
 }
 
 /**
- * Page callback: Form constructor for the aggregator system settings.
+ * Form constructor for the aggregator system settings.
  *
  * Path: admin/config/services/aggregator/settings
  *
@@ -550,7 +550,7 @@ function aggregator_admin_form_submit($form, &$form_state) {
 }
 
 /**
- * Page callback: Form constructor to add/edit/delete aggregator categories.
+ * Form constructor to add/edit/delete aggregator categories.
  *
  * Path: admin/config/services/aggregator/add/category
  *
