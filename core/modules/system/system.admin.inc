@@ -1640,8 +1640,9 @@ function system_logging_settings() {
  * @ingroup forms
  * @see system_settings_form()
  */
-function system_performance_settings() {
+function system_performance_settings($form, &$form_state) {
   drupal_add_js(drupal_get_path('module', 'system') . '/system.js');
+  $config = config('system.performance');
 
   $form['clear_cache'] = array(
     '#type' => 'fieldset',
@@ -1654,16 +1655,47 @@ function system_performance_settings() {
     '#submit' => array('system_clear_cache_submit'),
   );
 
+  // TODO: This is a complete hack. The idea is - we need to stash some state
+  // with this form, so that when it comes time to save, we can go from a key
+  // in $form_state['values'] to that state. I started trying to put this state
+  // with each form element, but I have NFI how to get to a form element from
+  // a key in $form_state['values'].
+  $form_state['config'] = array(
+    'cache' => array(
+      'name' => 'system.performance',
+      'path' => 'caching.cache',
+    ),
+    'cache_lifetime' => array(
+      'name' => 'system.performance',
+      'path' => 'caching.cache_lifetime',
+    ),
+    'page_cache_maximum_age' => array(
+      'name' => 'system.performance',
+      'path' => 'caching.page_cache_maximum_age',
+    ),
+    'page_compression' => array(
+      'name' => 'system.performance',
+      'path' => 'bandwidth_optimization.page_compression',
+    ),
+    'preprocess_css' => array(
+      'name' => 'system.performance',
+      'path' => 'bandwidth_optimization.preprocess_css',
+    ),
+    'preprocess_js' => array(
+      'name' => 'system.performance',
+      'path' => 'bandwidth_optimization.preprocess_js',
+    ),
+  );
+
   $form['caching'] = array(
     '#type' => 'fieldset',
     '#title' => t('Caching'),
   );
 
-  $cache = variable_get('cache', 0);
   $form['caching']['cache'] = array(
     '#type' => 'checkbox',
     '#title' => t('Cache pages for anonymous users'),
-    '#default_value' => $cache,
+    '#default_value' => $config->get('caching.cache'),
     '#weight' => -2,
   );
   $period = drupal_map_assoc(array(0, 60, 180, 300, 600, 900, 1800, 2700, 3600, 10800, 21600, 32400, 43200, 86400), 'format_interval');
@@ -1671,16 +1703,16 @@ function system_performance_settings() {
   $form['caching']['cache_lifetime'] = array(
     '#type' => 'select',
     '#title' => t('Minimum cache lifetime'),
-    '#default_value' => variable_get('cache_lifetime', 0),
+    '#default_value' => $config->get('caching.cache_lifetime'),
     '#options' => $period,
-    '#description' => t('Cached pages will not be re-created until at least this much time has elapsed.')
+    '#description' => t('Cached pages will not be re-created until at least this much time has elapsed.'),
   );
   $form['caching']['page_cache_maximum_age'] = array(
     '#type' => 'select',
     '#title' => t('Expiration of cached pages'),
-    '#default_value' => variable_get('page_cache_maximum_age', 0),
+    '#default_value' => $config->get('caching.page_cache_maximum_age'),
     '#options' => $period,
-    '#description' => t('The maximum time an external cache can use an old version of a page.')
+    '#description' => t('The maximum time an external cache can use an old version of a page.'),
   );
 
   $directory = 'public://';
@@ -1697,24 +1729,24 @@ function system_performance_settings() {
     '#description' => t('External resources can be optimized automatically, which can reduce both the size and number of requests made to your website.') . $disabled_message,
   );
 
-  $js_hide = $cache ? '' : ' class="js-hide"';
+  $js_hide = $config->get('caching') ? '' : ' class="js-hide"';
   $form['bandwidth_optimization']['page_compression'] = array(
     '#type' => 'checkbox',
     '#title' => t('Compress cached pages.'),
-    '#default_value' => variable_get('page_compression', TRUE),
+    '#default_value' => $config->get('bandwidth_optimization.page_compression'),
     '#prefix' => '<div id="page-compression-wrapper"' . $js_hide . '>',
     '#suffix' => '</div>',
   );
   $form['bandwidth_optimization']['preprocess_css'] = array(
     '#type' => 'checkbox',
     '#title' => t('Aggregate and compress CSS files.'),
-    '#default_value' => intval(variable_get('preprocess_css', 0) && $is_writable),
+    '#default_value' => $config->get('bandwidth_optimization.preprocess_css'),
     '#disabled' => $disabled,
   );
   $form['bandwidth_optimization']['preprocess_js'] = array(
     '#type' => 'checkbox',
     '#title' => t('Aggregate JavaScript files.'),
-    '#default_value' => intval(variable_get('preprocess_js', 0) && $is_writable),
+    '#default_value' => $config->get('bandwidth_optimization.preprocess_js'),
     '#disabled' => $disabled,
   );
 

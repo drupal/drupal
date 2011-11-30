@@ -437,6 +437,9 @@ function module_enable($module_list, $enable_dependencies = TRUE) {
         $versions = drupal_get_schema_versions($module);
         $version = $versions ? max($versions) : SCHEMA_INSTALLED;
 
+        // Copy any default configuration data to the system config directory/
+        config_install_default_config($module);
+
         // If the module has no current updates, but has some that were
         // previously removed, set the version to the value of
         // hook_update_last_removed().

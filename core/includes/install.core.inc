@@ -992,7 +992,26 @@ function install_settings_form_submit($form, &$form_state) {
     'value'    => drupal_hash_base64(drupal_random_bytes(55)),
     'required' => TRUE,
   );
+  
+  $settings['drupal_config_key'] = array(
+    'value'    => drupal_hash_base64(drupal_random_bytes(55)),
+    'required' => TRUE,
+  );
+  
+  // This duplicates drupal_get_token() because that function can't work yet.
+  // Wondering if it makes sense to move this later in the process, but its
+  // nice having all the settings stuff here.
+  $settings['drupal_config_directory_name'] = array(
+    'value'     => 'config_' . drupal_hmac_base64('', session_id() . $settings['drupal_config_key']['value'] . $settings['drupal_hash_salt']['value']),
+    'required'  => TRUE,
+  );
+  
   drupal_rewrite_settings($settings);
+  // Actually create the config directory named above.
+  $config_path = conf_path() . '/files/' . $settings['drupal_config_directory_name']['value'];
+  if (!file_prepare_directory($config_path, FILE_CREATE_DIRECTORY)) {
+    // How best to handle errors here?
+  };
   // Indicate that the settings file has been verified, and check the database
   // for the last completed task, now that we have a valid connection. This
   // last step is important since we want to trigger an error if the new
