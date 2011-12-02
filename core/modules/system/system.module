@@ -46,6 +46,13 @@ const DRUPAL_OPTIONAL = 1;
 const DRUPAL_REQUIRED = 2;
 
 /**
+ * Maximum number of values in a weight select element.
+ *
+ * If the number of values is over the maximum, a text field is used instead.
+ */
+const DRUPAL_WEIGHT_SELECT_MAX = 100;
+
+/**
  * Return only visible regions.
  *
  * @see system_region_list()
