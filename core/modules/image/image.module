@@ -480,41 +480,19 @@ function image_styles() {
  *
  * @param $name
  *   The name of the style.
- * @param $isid
- *   Optional. The numeric id of a style if the name is not known.
- * @param $include
- *   If set, this loader will restrict to a specific type of image style, may be
- *   one of the defined Image style storage constants.
  * @return
  *   An image style array containing the following keys:
- *   - "isid": The unique image style ID.
  *   - "name": The unique image style name.
  *   - "effects": An array of image effects within this image style.
- *   If the image style name or ID is not valid, an empty array is returned.
+ *   If the image style name is not valid, an empty array is returned.
  * @see image_effect_load()
  */
-function image_style_load($name = NULL, $isid = NULL, $include = NULL) {
+function image_style_load($name = NULL) {
   $styles = image_styles();
 
   // If retrieving by name.
   if (isset($name) && isset($styles[$name])) {
-    $style = $styles[$name];
-  }
-
-  // If retrieving by image style id.
-  if (!isset($name) && isset($isid)) {
-    foreach ($styles as $name => $database_style) {
-      if (isset($database_style['isid']) && $database_style['isid'] == $isid) {
-        $style = $database_style;
-        break;
-      }
-    }
-  }
-
-  // Restrict to the specific type of flag. This bitwise operation basically
-  // states "if the storage is X, then allow".
-  if (isset($style) && (!isset($include) || ($style['storage'] & (int) $include))) {
-    return $style;
+    return $styles[$name];
   }
 
   // Otherwise the style was not found.
