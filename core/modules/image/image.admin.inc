@@ -646,31 +646,19 @@ function image_rotate_form($data) {
 function theme_image_style_list($variables) {
   $styles = $variables['styles'];
 
-  $header = array(t('Style name'), t('Settings'), array('data' => t('Operations'), 'colspan' => 3));
+  $header = array(t('Style name'), array('data' => t('Operations'), 'colspan' => 3));
   $rows = array();
+  $link_attributes = array(
+    'attributes' => array(
+      'class' => array('image-style-link'),
+    ),
+  );
+
   foreach ($styles as $style) {
     $row = array();
     $row[] = l($style['name'], 'admin/config/media/image-styles/edit/' . $style['name']);
-    $link_attributes = array(
-      'attributes' => array(
-        'class' => array('image-style-link'),
-      ),
-    );
-    if ($style['storage'] == IMAGE_STORAGE_NORMAL) {
-      $row[] = t('Custom');
-      $row[] = l(t('edit'), 'admin/config/media/image-styles/edit/' . $style['name'], $link_attributes);
-      $row[] = l(t('delete'), 'admin/config/media/image-styles/delete/' . $style['name'], $link_attributes);
-    }
-    elseif ($style['storage'] == IMAGE_STORAGE_OVERRIDE) {
-      $row[] = t('Overridden');
-      $row[] = l(t('edit'), 'admin/config/media/image-styles/edit/' . $style['name'], $link_attributes);
-      $row[] = l(t('revert'), 'admin/config/media/image-styles/revert/' . $style['name'], $link_attributes);
-    }
-    else {
-      $row[] = t('Default');
-      $row[] = l(t('edit'), 'admin/config/media/image-styles/edit/' . $style['name'], $link_attributes);
-      $row[] = '';
-    }
+    $row[] = l(t('edit'), 'admin/config/media/image-styles/edit/' . $style['name'], $link_attributes);
+    $row[] = l(t('delete'), 'admin/config/media/image-styles/delete/' . $style['name'], $link_attributes);
     $rows[] = $row;
   }
 
