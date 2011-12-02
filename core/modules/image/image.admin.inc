@@ -38,13 +38,6 @@ function image_style_form($form, &$form_state, $style) {
   $title = t('Edit %name style', array('%name' => $style['name']));
   drupal_set_title($title, PASS_THROUGH);
 
-  // Adjust this form for styles that must be overridden to edit.
-  $editable = (bool) ($style['storage'] & IMAGE_STORAGE_EDITABLE);
-
-  if (!$editable && empty($form_state['input'])) {
-    drupal_set_message(t('This image style is currently being provided by a module. Click the "Override defaults" button to change its settings.'), 'warning');
-  }
-
   $form_state['image_style'] = $style;
   $form['#tree'] = TRUE;
   $form['#attached']['css'][drupal_get_path('module', 'image') . '/image.admin.css'] = array();
@@ -56,27 +49,15 @@ function image_style_form($form, &$form_state, $style) {
     '#markup' => theme('image_style_preview', array('style' => $style)),
   );
 
-  // Allow the name of the style to be changed, unless this style is
-  // provided by a module's hook_default_image_styles().
-  if ($style['storage'] & IMAGE_STORAGE_MODULE) {
-    $form['name'] = array(
-      '#type' => 'item',
-      '#title' => t('Image style name'),
-      '#markup' => $style['name'],
-      '#description' => t('This image style is being provided by %module module and may not be renamed.', array('%module' => $style['module'])),
-    );
-  }
-  else {
-    $form['name'] = array(
-      '#type' => 'textfield',
-      '#size' => '64',
-      '#title' => t('Image style name'),
-      '#default_value' => $style['name'],
-      '#description' => t('The name is used in URLs for generated images. Use only lowercase alphanumeric characters, underscores (_), and hyphens (-).'),
-      '#element_validate' => array('image_style_name_validate'),
-      '#required' => TRUE,
-    );
-  }
+  $form['name'] = array(
+    '#type' => 'textfield',
+    '#size' => '64',
+    '#title' => t('Image style name'),
+    '#default_value' => $style['name'],
+    '#description' => t('The name is used in URLs for generated images. Use only lowercase alphanumeric characters, underscores (_), and hyphens (-).'),
+    '#element_validate' => array('image_style_name_validate'),
+    '#required' => TRUE,
+  );
 
   // Build the list of existing image effects for this image style.
   $form['effects'] = array(
@@ -95,25 +76,19 @@ function image_style_form($form, &$form_state, $style) {
       '#title' => t('Weight for @title', array('@title' => $effect['label'])),
       '#title_display' => 'invisible',
       '#default_value' => $effect['weight'],
-      '#access' => $editable,
     );
 
-    // Only attempt to display these fields for editable styles as the 'ieid'
-    // key is not set for styles defined in code.
-    if ($editable) {
-      $form['effects'][$key]['configure'] = array(
-        '#type' => 'link',
-        '#title' => t('edit'),
-        '#href' => 'admin/config/media/image-styles/edit/' . $style['name'] . '/effects/' . $effect['ieid'],
-        '#access' => $editable && isset($effect['form callback']),
-      );
-      $form['effects'][$key]['remove'] = array(
-        '#type' => 'link',
-        '#title' => t('delete'),
-        '#href' => 'admin/config/media/image-styles/edit/' . $style['name'] . '/effects/' . $effect['ieid'] . '/delete',
-        '#access' => $editable,
-      );
-    }
+    $form['effects'][$key]['configure'] = array(
+      '#type' => 'link',
+      '#title' => t('edit'),
+      '#href' => 'admin/config/media/image-styles/edit/' . $style['name'] . '/effects/' . $effect['ieid'],
+      '#access' => isset($effect['form callback']),
+    );
+    $form['effects'][$key]['remove'] = array(
+      '#type' => 'link',
+      '#title' => t('delete'),
+      '#href' => 'admin/config/media/image-styles/edit/' . $style['name'] . '/effects/' . $effect['ieid'] . '/delete',
+    );
   }
 
   // Build the new image effect addition form and add it to the effect list.
@@ -124,7 +99,6 @@ function image_style_form($form, &$form_state, $style) {
   $form['effects']['new'] = array(
     '#tree' => FALSE,
     '#weight' => isset($form_state['input']['weight']) ? $form_state['input']['weight'] : NULL,
-    '#access' => $editable,
   );
   $form['effects']['new']['new'] = array(
     '#type' => 'select',
@@ -148,17 +122,9 @@ function image_style_form($form, &$form_state, $style) {
 
   // Show the Override or Submit button for this style.
   $form['actions'] = array('#type' => 'actions');
-  $form['actions']['override'] = array(
-    '#type' => 'submit',
-    '#value' => t('Override defaults'),
-    '#validate' => array(),
-    '#submit' => array('image_style_form_override_submit'),
-    '#access' => !$editable,
-  );
   $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Update style'),
-    '#access' => $editable,
   );
 
   return $form;
