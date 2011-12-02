@@ -331,45 +331,6 @@ function image_file_delete($file) {
 }
 
 /**
- * Implements hook_image_default_styles().
- */
-function image_image_default_styles() {
-  $styles = array();
-
-  $styles['thumbnail'] = array(
-    'effects' => array(
-      array(
-        'name' => 'image_scale',
-        'data' => array('width' => 100, 'height' => 100, 'upscale' => 1),
-        'weight' => 0,
-      ),
-    )
-  );
-
-  $styles['medium'] = array(
-    'effects' => array(
-      array(
-        'name' => 'image_scale',
-        'data' => array('width' => 220, 'height' => 220, 'upscale' => 1),
-        'weight' => 0,
-      ),
-    )
-  );
-
-  $styles['large'] = array(
-    'effects' => array(
-      array(
-        'name' => 'image_scale',
-        'data' => array('width' => 480, 'height' => 480, 'upscale' => 0),
-        'weight' => 0,
-      ),
-    )
-  );
-
-  return $styles;
-}
-
-/**
  * Implements hook_image_style_save().
  */
 function image_image_style_save($style) {
