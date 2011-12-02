@@ -8,17 +8,17 @@
 /**
  * Image style constant for user presets in the database.
  */
-const IMAGE_STORAGE_NORMAL = 1;
+define('IMAGE_STORAGE_NORMAL', 1);
 
 /**
  * Image style constant for user presets that override module-defined presets.
  */
-const IMAGE_STORAGE_OVERRIDE = 2;
+define('IMAGE_STORAGE_OVERRIDE', 2);
 
 /**
  * Image style constant for module-defined presets in code.
  */
-const IMAGE_STORAGE_DEFAULT = 4;
+define('IMAGE_STORAGE_DEFAULT', 4);
 
 /**
  * Image style constant to represent an editable preset.
@@ -493,39 +493,17 @@ function image_styles() {
     else {
       $styles = array();
 
-      // Select the module-defined styles.
-      foreach (module_implements('image_default_styles') as $module) {
-        $module_styles = module_invoke($module, 'image_default_styles');
-        foreach ($module_styles as $style_name => $style) {
-          $style['name'] = $style_name;
-          $style['module'] = $module;
-          $style['storage'] = IMAGE_STORAGE_DEFAULT;
-          foreach ($style['effects'] as $key => $effect) {
-            $definition = image_effect_definition_load($effect['name']);
-            $effect = array_merge($definition, $effect);
-            $style['effects'][$key] = $effect;
-          }
-          $styles[$style_name] = $style;
+      // Select the styles we have configured.
+      foreach (config_get_signed_file_storage_names_with_prefix('image.styles') as $config_name) {
+        $config = config($config_name);
+        $style['name'] = $config->get('name');
+        $style['storage'] = IMAGE_STORAGE_DEFAULT;
+        foreach ($config->get('effects') as $key => $effect) {
+          $definition = image_effect_definition_load($key);
+          $effect = array_merge($definition, $effect);
+          $style['effects'][$key] = $effect;
         }
-      }
-
-      // Select all the user-defined styles.
-      $user_styles = db_select('image_styles', NULL, array('fetch' => PDO::FETCH_ASSOC))
-        ->fields('image_styles')
-        ->orderBy('name')
-        ->execute()
-        ->fetchAllAssoc('name', PDO::FETCH_ASSOC);
-
-      // Allow the user styles to override the module styles.
-      foreach ($user_styles as $style_name => $style) {
-        $style['module'] = NULL;
-        $style['storage'] = IMAGE_STORAGE_NORMAL;
-        $style['effects'] = image_style_effects($style);
-        if (isset($styles[$style_name]['module'])) {
-          $style['module'] = $styles[$style_name]['module'];
-          $style['storage'] = IMAGE_STORAGE_OVERRIDE;
-        }
-        $styles[$style_name] = $style;
+        $styles[$style['name']] = $style;
       }
 
       drupal_alter('image_styles', $styles);
@@ -876,15 +854,15 @@ function image_style_flush($style) {
  *
  * @param $style_name
  *   The name of the style to be used with this image.
- * @param $uri
+ * @param $path
  *   The path to the image.
  * @return
  *   The absolute URL where a style image can be downloaded, suitable for use
  *   in an <img> tag. Requesting the URL will cause the image to be created.
  * @see image_style_deliver()
  */
-function image_style_url($style_name, $uri) {
-  $uri = image_style_path($style_name, $uri);
+function image_style_url($style_name, $path) {
+  $uri = image_style_path($style_name, $path);
 
   // If not using clean URLs, the image derivative callback is only available
   // with the query string. If the file does not exist, use url() to ensure
@@ -1162,7 +1140,7 @@ function image_effect_apply($image, $effect) {
  * @param $variables
  *   An associative array containing:
  *   - style_name: The name of the style to be used to alter the original image.
- *   - uri: The path of the image file relative to the Drupal files directory.
+ *   - path: The path of the image file relative to the Drupal files directory.
  *     This function does not work with images outside the files directory nor
  *     with remotely hosted images.
  *   - width: The width of the source image (if known).
@@ -1187,7 +1165,7 @@ function theme_image_style($variables) {
   $variables['height'] = $dimensions['height'];
 
   // Determine the url for the styled image.
-  $variables['uri'] = image_style_url($variables['style_name'], $variables['uri']);
+  $variables['path'] = image_style_url($variables['style_name'], $variables['path']);
   return theme('image', $variables);
 }
 
