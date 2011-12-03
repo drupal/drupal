@@ -995,8 +995,8 @@ function image_effects() {
 /**
  * Load a single image effect.
  *
- * @param $ieid
- *   The image effect ID.
+ * @param $name
+ *   The image effect name.
  * @param $style_name
  *   The image style name.
  * @param $include
@@ -1015,9 +1015,9 @@ function image_effects() {
  * @see image_style_load()
  * @see image_effect_definition_load()
  */
-function image_effect_load($ieid, $style_name, $include = NULL) {
-  if (($style = image_style_load($style_name, NULL, $include)) && isset($style['effects'][$ieid])) {
-    return $style['effects'][$ieid];
+function image_effect_load($name, $style_name) {
+  if (($style = image_style_load($style_name)) && isset($style['effects'][$name])) {
+    return $style['effects'][$name];
   }
   return FALSE;
 }
