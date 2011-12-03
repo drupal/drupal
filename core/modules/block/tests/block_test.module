@@ -6,6 +6,14 @@
  */
 
 /**
+ * Implements hook_system_theme_info().
+ */
+function block_test_system_theme_info() {
+  $themes['block_test_theme'] = drupal_get_path('module', 'block_test') . '/themes/block_test_theme/block_test_theme.info';
+  return $themes;
+}
+
+/**
  * Implements hook_block_info().
  */
 function block_test_block_info() {
