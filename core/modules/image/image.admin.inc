@@ -81,13 +81,13 @@ function image_style_form($form, &$form_state, $style) {
     $form['effects'][$key]['configure'] = array(
       '#type' => 'link',
       '#title' => t('edit'),
-      '#href' => 'admin/config/media/image-styles/edit/' . $style['name'] . '/effects/' . $effect['ieid'],
+      '#href' => 'admin/config/media/image-styles/edit/' . $style['name'] . '/effects/' . $key,
       '#access' => isset($effect['form callback']),
     );
     $form['effects'][$key]['remove'] = array(
       '#type' => 'link',
       '#title' => t('delete'),
-      '#href' => 'admin/config/media/image-styles/edit/' . $style['name'] . '/effects/' . $effect['ieid'] . '/delete',
+      '#href' => 'admin/config/media/image-styles/edit/' . $style['name'] . '/effects/' . $key . '/delete',
     );
   }
 
@@ -119,7 +119,7 @@ function image_style_form($form, &$form_state, $style) {
     '#validate' => array('image_style_form_add_validate'),
     '#submit' => array('image_style_form_submit', 'image_style_form_add_submit'),
   );
-
+  
   // Show the Override or Submit button for this style.
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array(
@@ -649,13 +649,13 @@ function theme_image_style_list($variables) {
  */
 function theme_image_style_effects($variables) {
   $form = $variables['form'];
-
+  
   $rows = array();
 
   foreach (element_children($form) as $key) {
     $row = array();
     $form[$key]['weight']['#attributes']['class'] = array('image-effect-order-weight');
-    if (is_numeric($key)) {
+    if ($key != 'new') {
       $summary = drupal_render($form[$key]['summary']);
       $row[] = drupal_render($form[$key]['label']) . (empty($summary) ? '' : ' ' . $summary);
       $row[] = drupal_render($form[$key]['weight']);
