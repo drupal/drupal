@@ -1457,20 +1457,19 @@ function template_preprocess_username(&$variables) {
     $name = drupal_substr($name, 0, 15) . '...';
   }
   $variables['name'] = check_plain($name);
-
   $variables['profile_access'] = user_access('access user profiles');
-  $variables['link_attributes'] = array();
+
   // Populate link path and attributes if appropriate.
   if ($variables['uid'] && $variables['profile_access']) {
     // We are linking to a local user.
-    $variables['link_attributes'] = array('title' => t('View user profile.'));
+    $variables['link_attributes']['title'] = t('View user profile.');
     $variables['link_path'] = 'user/' . $variables['uid'];
   }
   elseif (!empty($account->homepage)) {
     // Like the 'class' attribute, the 'rel' attribute can hold a
     // space-separated set of values, so initialize it as an array to make it
     // easier for other preprocess functions to append to it.
-    $variables['link_attributes'] = array('rel' => array('nofollow'));
+    $variables['link_attributes']['rel'] = 'nofollow';
     $variables['link_path'] = $account->homepage;
     $variables['homepage'] = $account->homepage;
   }

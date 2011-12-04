@@ -1490,7 +1490,10 @@ function template_preprocess_node(&$variables) {
   $node = $variables['node'];
 
   $variables['date']      = format_date($node->created);
-  $variables['name']      = theme('username', array('account' => $node));
+  $variables['name']      = theme('username', array(
+    'account' => $node,
+    'link_attributes' => array('rel' => 'author'),
+  ));
 
   $uri = entity_uri('node', $node);
   $variables['node_url']  = url($uri['path'], $uri['options']);
