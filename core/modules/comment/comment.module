@@ -2263,20 +2263,20 @@ function comment_form_submit($form, &$form_state) {
 function template_preprocess_comment(&$variables) {
   $comment = $variables['elements']['#comment'];
   $node = $variables['elements']['#node'];
-  $variables['comment']   = $comment;
-  $variables['node']      = $node;
-  $variables['author']    = theme('username', array('account' => $comment));
-  $variables['created']   = format_date($comment->created);
-  $variables['changed']   = format_date($comment->changed);
+  $variables['comment'] = $comment;
+  $variables['node'] = $node;
+  $variables['author'] = theme('username', array('account' => $comment));
+  $variables['created'] = format_date($comment->created);
+  $variables['changed'] = format_date($comment->changed);
 
-  $variables['new']       = !empty($comment->new) ? t('new') : '';
-  $variables['picture']   = theme_get_setting('toggle_comment_user_picture') ? theme('user_picture', array('account' => $comment)) : '';
+  $variables['new'] = !empty($comment->new) ? t('new') : '';
+  $variables['user_picture'] = theme_get_setting('toggle_comment_user_picture') ? theme('user_picture', array('account' => $comment)) : '';
   $variables['signature'] = $comment->signature;
 
   $uri = entity_uri('comment', $comment);
   $uri['options'] += array('attributes' => array('class' => 'permalink', 'rel' => 'bookmark'));
 
-  $variables['title']     = l($comment->subject, $uri['path'], $uri['options']);
+  $variables['title'] = l($comment->subject, $uri['path'], $uri['options']);
   $variables['permalink'] = l(t('Permalink'), $uri['path'], $uri['options']);
   $variables['submitted'] = t('Submitted by !username on !datetime', array('!username' => $variables['author'], '!datetime' => $variables['created']));
 

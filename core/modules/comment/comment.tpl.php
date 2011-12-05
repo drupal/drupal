@@ -20,7 +20,7 @@
  * - $permalink: Comment permalink.
  * - $submitted: Submission information created from $author and $created during
  *   template_preprocess_comment().
- * - $picture: Authors picture.
+ * - $user_picture: The comment author's picture from user-picture.tpl.php.
  * - $signature: Authors signature.
  * - $status: Comment status. Possible values are:
  *   comment-unpublished, comment-published or comment-preview.
@@ -57,34 +57,33 @@
  * @see theme_comment()
  */
 ?>
-<div class="<?php print $classes; ?> clearfix"<?php print $attributes; ?>>
-  <?php print $picture ?>
-
-  <?php if ($new): ?>
-    <span class="new"><?php print $new ?></span>
-  <?php endif; ?>
+<article class="<?php print $classes; ?> clearfix"<?php print $attributes; ?>>
 
   <?php print render($title_prefix); ?>
-  <h3<?php print $title_attributes; ?>><?php print $title ?></h3>
+  <?php if ($new): ?>
+    <mark class="new"><?php print $new; ?></mark>
+  <?php endif; ?>
+  <h3<?php print $title_attributes; ?>><?php print $title; ?></h3>
   <?php print render($title_suffix); ?>
 
-  <div class="submitted">
+  <footer>
+    <?php print $user_picture; ?>
+    <p class="submitted"><?php print $submitted; ?></p>
     <?php print $permalink; ?>
-    <?php print $submitted; ?>
-  </div>
+  </footer>
 
   <div class="content"<?php print $content_attributes; ?>>
     <?php
-      // We hide the comments and links now so that we can render them later.
+      // We hide the links now so that we can render them later.
       hide($content['links']);
       print render($content);
     ?>
     <?php if ($signature): ?>
-    <div class="user-signature clearfix">
-      <?php print $signature ?>
+    <div class="user-signature">
+      <?php print $signature; ?>
     </div>
     <?php endif; ?>
   </div>
 
   <?php print render($content['links']) ?>
-</div>
+</article>

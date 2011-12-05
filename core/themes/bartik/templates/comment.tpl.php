@@ -61,7 +61,7 @@
 
   <div class="attribution">
 
-    <?php print $picture; ?>
+    <?php print $user_picture; ?>
 
     <div class="submitted">
       <p class="commenter-name">
