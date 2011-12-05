@@ -134,6 +134,10 @@ function tablesort_header($cell, $header, $ts) {
   if (is_array($cell) && isset($cell['field'])) {
     $title = t('sort by @s', array('@s' => $cell['data']));
     if ($cell['data'] == $ts['name']) {
+      // aria-sort is a WAI-ARIA property that indicates if items in a table
+      // or grid are sorted in ascending or descending order. See
+      // http://www.w3.org/TR/wai-aria/states_and_properties#aria-sort
+      $cell['aria-sort'] = ($ts['sort'] == 'asc') ? 'ascending' : 'descending';
       $ts['sort'] = (($ts['sort'] == 'asc') ? 'desc' : 'asc');
       $cell['class'][] = 'active';
       $image = theme('tablesort_indicator', array('style' => $ts['sort']));
