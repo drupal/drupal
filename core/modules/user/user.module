@@ -1231,7 +1231,7 @@ function user_login_block($form) {
     $items[] = l(t('Create new account'), 'user/register', array('attributes' => array('title' => t('Create a new user account.'))));
   }
   $items[] = l(t('Request new password'), 'user/password', array('attributes' => array('title' => t('Request new password via e-mail.'))));
-  $form['links'] = array('#markup' => theme('item_list', array('items' => $items)));
+  $form['links'] = array('#theme' => 'item_list', '#items' => $items);
   return $form;
 }
 
