@@ -1,0 +1,70 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the entity_test module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function entity_test_install() {
+  // Auto-create a field for testing.
+  $field = array(
+    'field_name' => 'field_test_text',
+    'type' => 'text',
+    'cardinality' => 1,
+    'translatable' => FALSE,
+  );
+  field_create_field($field);
+
+  $instance = array(
+    'entity_type' => 'entity_test',
+    'field_name' => 'field_test_text',
+    'bundle' => 'entity_test',
+    'label' => 'Test text-field',
+    'widget' => array(
+      'type' => 'text_textfield',
+      'weight' => 0,
+    ),
+  );
+  field_create_instance($instance);
+}
+
+/**
+ * Implements hook_schema().
+ */
+function entity_test_schema() {
+  $schema['entity_test'] = array(
+    'description' => 'Stores entity_test items.',
+    'fields' => array(
+      'id' => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Primary Key: Unique entity-test item ID.',
+      ),
+      'name' => array(
+        'description' => 'The name of the test entity.',
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'uid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'default' => NULL,
+        'description' => "The {users}.uid of the associated user.",
+      ),
+    ),
+    'indexes' => array(
+      'uid' => array('uid'),
+    ),
+    'foreign keys' => array(
+      'uid' => array('users' => 'uid'),
+    ),
+    'primary key' => array('id'),
+  );
+  return $schema;
+}

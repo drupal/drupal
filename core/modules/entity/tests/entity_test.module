@@ -1,0 +1,68 @@
+<?php
+
+/**
+ * @file
+ * Test module for the entity API providing an entity type for testing.
+ */
+
+/**
+ * Implements hook_entity_info().
+ */
+function entity_test_entity_info() {
+  $return = array(
+    'entity_test' => array(
+      'label' => t('Test entity'),
+      'entity class' => 'Entity',
+      'controller class' => 'EntityDatabaseStorageController',
+      'base table' => 'entity_test',
+      'fieldable' => TRUE,
+      'entity keys' => array(
+        'id' => 'id',
+      ),
+    ),
+  );
+  return $return;
+}
+
+/**
+ * Loads a test entity.
+ *
+ * @param $id
+ *   A test entity ID.
+ * @param $reset
+ *   A boolean indicating that the internal cache should be reset.
+ *
+ * @return Entity
+ *   The loaded entity object, or FALSE if the entity cannot be loaded.
+ */
+function entity_test_load($id, $reset = FALSE) {
+  $result = entity_load('entity_test', array($id), array(), $reset);
+  return reset($result);
+}
+
+/**
+ * Loads multiple test entities based on certain conditions.
+ *
+ * @param $ids
+ *   An array of entity IDs.
+ * @param $conditions
+ *   An array of conditions to match against the {entity} table.
+ * @param $reset
+ *   A boolean indicating that the internal cache should be reset.
+ *
+ * @return
+ *   An array of test entity objects, indexed by ID.
+ */
+function entity_test_load_multiple($ids = array(), $conditions = array(), $reset = FALSE) {
+  return entity_load('entity_test', $ids, $conditions, $reset);
+}
+
+/**
+ * Deletes multiple test entities.
+ *
+ * @param $ids
+ *   An array of test entity IDs.
+ */
+function entity_test_delete_multiple(array $ids) {
+  entity_get_controller('entity_test')->delete($ids);
+}

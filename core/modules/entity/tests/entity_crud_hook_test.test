@@ -66,7 +66,7 @@ class EntityCrudHookTestCase extends DrupalWebTestCase {
     node_save($node);
     $nid = $node->nid;
 
-    $comment = (object) array(
+    $comment = entity_create('comment', array(
       'cid' => NULL,
       'pid' => 0,
       'nid' => $nid,
@@ -76,7 +76,7 @@ class EntityCrudHookTestCase extends DrupalWebTestCase {
       'changed' => REQUEST_TIME,
       'status' => 1,
       'language' => LANGUAGE_NONE,
-    );
+    ));
     $_SESSION['entity_crud_hook_test'] = array();
     comment_save($comment);
 

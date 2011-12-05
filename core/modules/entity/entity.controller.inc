@@ -6,7 +6,7 @@
  */
 
 /**
- * Interface for entity controller classes.
+ * Defines a common interface for entity controller classes.
  *
  * All entity controller classes specified via the 'controller class' key
  * returned by hook_entity_info() or hook_entity_info_alter() have to implement
@@ -19,7 +19,7 @@
 interface DrupalEntityControllerInterface {
 
   /**
-   * Constructor.
+   * Constructs a new DrupalEntityControllerInterface object.
    *
    * @param $entityType
    *   The entity type for which the instance is created.
@@ -50,6 +50,8 @@ interface DrupalEntityControllerInterface {
 }
 
 /**
+ * Defines a base entity controller class.
+ *
  * Default implementation of DrupalEntityControllerInterface.
  *
  * This class can be used as-is by most simple entity types. Entity types
@@ -122,7 +124,9 @@ class DrupalDefaultEntityController implements DrupalEntityControllerInterface {
   protected $cache;
 
   /**
-   * Constructor: sets basic variables.
+   * Implements DrupalEntityControllerInterface::__construct().
+   *
+   * Sets basic variables.
    */
   public function __construct($entityType) {
     $this->entityType = $entityType;
@@ -194,11 +198,16 @@ class DrupalDefaultEntityController implements DrupalEntityControllerInterface {
     // is set to FALSE (so we load all entities), if there are any ids left to
     // load, if loading a revision, or if $conditions was passed without $ids.
     if ($ids === FALSE || $ids || $revision_id || ($conditions && !$passed_ids)) {
-      // Build the query.
-      $query = $this->buildQuery($ids, $conditions, $revision_id);
-      $queried_entities = $query
-        ->execute()
-        ->fetchAllAssoc($this->idKey);
+      // Build and execute the query.
+      $query_result = $this->buildQuery($ids, $conditions, $revision_id)->execute();
+
+      if (!empty($this->entityInfo['entity class'])) {
+        // We provide the necessary arguments for PDO to create objects of the
+        // specified entity class.
+        // @see EntityInterface::__construct()
+        $query_result->setFetchMode(PDO::FETCH_CLASS, $this->entityInfo['entity class'], array(array(), $this->entityType));
+      }
+      $queried_entities = $query_result->fetchAllAssoc($this->idKey);
     }
 
     // Pass all entities loaded from the database through $this->attachLoad(),
@@ -386,5 +395,171 @@ class DrupalDefaultEntityController implements DrupalEntityControllerInterface {
    */
   protected function cacheSet($entities) {
     $this->entityCache += $entities;
+  }
+}
+
+/**
+ * Defines a common interface for entity storage controllers.
+ */
+interface EntityStorageControllerInterface extends DrupalEntityControllerInterface {
+
+  /**
+   * Deletes permanently saved entities.
+   *
+   * @param $ids
+   *   An array of entity IDs.
+   *
+   * @throws EntityStorageException
+   *   In case of failures, an exception is thrown.
+   */
+  public function delete($ids);
+
+  /**
+   * Saves the entity permanently.
+   *
+   * @param EntityInterface $entity
+   *   The entity to save.
+   *
+   * @return
+   *   SAVED_NEW or SAVED_UPDATED is returned depending on the operation
+   *   performed.
+   *
+   * @throws EntityStorageException
+   *   In case of failures, an exception is thrown.
+   */
+  public function save(EntityInterface $entity);
+
+}
+
+/**
+ * Defines an exception thrown when storage operations fail.
+ */
+class EntityStorageException extends Exception { }
+
+/**
+ * Implements the entity storage controller interface for the database.
+ */
+class EntityDatabaseStorageController extends DrupalDefaultEntityController implements EntityStorageControllerInterface {
+
+  /**
+   * Implements EntityStorageControllerInterface::delete().
+   */
+  public function delete($ids) {
+    $entities = $ids ? $this->load($ids) : FALSE;
+    if (!$entities) {
+      // If no IDs or invalid IDs were passed, do nothing.
+      return;
+    }
+    $transaction = db_transaction();
+
+    try {
+      $this->preDelete($entities);
+      $ids = array_keys($entities);
+
+      db_delete($this->entityInfo['base table'])
+        ->condition($this->idKey, $ids, 'IN')
+        ->execute();
+      // Reset the cache as soon as the changes have been applied.
+      $this->resetCache($ids);
+
+      $this->postDelete($entities);
+      foreach ($entities as $id => $entity) {
+        $this->invokeHook('delete', $entity);
+      }
+      // Ignore slave server temporarily.
+      db_ignore_slave();
+    }
+    catch (Exception $e) {
+      $transaction->rollback();
+      watchdog_exception($this->entityType, $e);
+      throw new EntityStorageException($e->getMessage, $e->getCode, $e);
+    }
+  }
+
+  /**
+   * Implements EntityStorageControllerInterface::save().
+   */
+  public function save(EntityInterface $entity) {
+    $transaction = db_transaction();
+    try {
+      // Load the stored entity, if any.
+      if (!$entity->isNew() && !isset($entity->original)) {
+        $entity->original = entity_load_unchanged($this->entityType, $entity->id());
+      }
+
+      $this->preSave($entity);
+      $this->invokeHook('presave', $entity);
+
+      if (!$entity->isNew()) {
+        $return = drupal_write_record($this->entityInfo['base table'], $entity, $this->idKey);
+        $this->resetCache(array($entity->{$this->idKey}));
+        $this->postSave($entity);
+        $this->invokeHook('update', $entity);
+      }
+      else {
+        $return = drupal_write_record($this->entityInfo['base table'], $entity);
+        $this->postSave($entity);
+        $this->invokeHook('insert', $entity);
+      }
+
+      // Ignore slave server temporarily.
+      db_ignore_slave();
+      unset($entity->is_new);
+      unset($entity->original);
+
+      return $return;
+    }
+    catch (Exception $e) {
+      $transaction->rollback();
+      watchdog_exception($this->entityType, $e);
+      throw new EntityStorageException($e->getMessage(), $e->getCode(), $e);
+    }
+  }
+
+  /**
+   * Acts on an entity before the presave hook is invoked.
+   *
+   * Used before the entity is saved and before invoking the presave hook.
+   */
+  protected function preSave(EntityInterface $entity) { }
+
+  /**
+   * Acts on a saved entity before the insert or update hook is invoked.
+   *
+   * Used after the entity is saved, but before invoking the insert or update
+   * hook.
+   */
+  protected function postSave(EntityInterface $entity) { }
+
+  /**
+   * Acts on entities before they are deleted.
+   *
+   * Used before the entities are deleted and before invoking the delete hook.
+   */
+  protected function preDelete($entities) { }
+
+  /**
+   * Acts on deleted entities before the delete hook is invoked.
+   *
+   * Used after the entities are deleted but before invoking the delete hook.
+   */
+  protected function postDelete($entities) { }
+
+  /**
+   * Invokes a hook on behalf of the entity.
+   *
+   * @param $op
+   *   One of 'presave', 'insert', 'update', or 'delete'.
+   * @param $entity
+   *   The entity object.
+   */
+  protected function invokeHook($hook, EntityInterface $entity) {
+    if (!empty($this->entityInfo['fieldable']) && function_exists($function = 'field_attach_' . $hook)) {
+      $function($this->entityType, $entity);
+    }
+    // Invoke the hook.
+    module_invoke_all($this->entityType . '_' . $hook, $entity);
+    // Invoke the respective entity-level hook.
+    module_invoke_all('entity_' . $hook, $entity, $this->entityType);
   }
 }

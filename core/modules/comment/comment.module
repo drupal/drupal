@@ -98,7 +98,8 @@ function comment_entity_info() {
       'base table' => 'comment',
       'uri callback' => 'comment_uri',
       'fieldable' => TRUE,
-      'controller class' => 'CommentController',
+      'controller class' => 'CommentStorageController',
+      'entity class' => 'Comment',
       'entity keys' => array(
         'id' => 'cid',
         'bundle' => 'node_type',
@@ -738,8 +739,8 @@ function comment_node_page_additions($node) {
 
   // Append comment form if needed.
   if (user_access('post comments') && $node->comment == COMMENT_NODE_OPEN && (variable_get('comment_form_location_' . $node->type, COMMENT_FORM_BELOW) == COMMENT_FORM_BELOW)) {
-    $build = drupal_get_form("comment_node_{$node->type}_form", (object) array('nid' => $node->nid));
-    $additions['comment_form'] = $build;
+    $comment = entity_create('comment', array('nid' => $node->nid));
+    $additions['comment_form'] = drupal_get_form("comment_node_{$node->type}_form", $comment);
   }
 
   if ($additions) {
@@ -1436,151 +1437,9 @@ function comment_access($op, $comment) {
  *
  * @param $comment
  *   A comment object.
- *
- * @see comment_int_to_alphadecimal()
  */
 function comment_save($comment) {
-  global $user;
-
-  $transaction = db_transaction();
-  try {
-    $defaults = array(
-      'mail' => '',
-      'homepage' => '',
-      'name' => '',
-      'status' => user_access('skip comment approval') ? COMMENT_PUBLISHED : COMMENT_NOT_PUBLISHED,
-    );
-    foreach ($defaults as $key => $default) {
-      if (!isset($comment->$key)) {
-        $comment->$key = $default;
-      }
-    }
-    // Make sure we have a bundle name.
-    if (!isset($comment->node_type)) {
-      $node = node_load($comment->nid);
-      $comment->node_type = 'comment_node_' . $node->type;
-    }
-
-    // Load the stored entity, if any.
-    if (!empty($comment->cid) && !isset($comment->original)) {
-      $comment->original = entity_load_unchanged('comment', $comment->cid);
-    }
-
-    field_attach_presave('comment', $comment);
-
-    // Allow modules to alter the comment before saving.
-    module_invoke_all('comment_presave', $comment);
-    module_invoke_all('entity_presave', $comment, 'comment');
-
-    if ($comment->cid) {
-
-      drupal_write_record('comment', $comment, 'cid');
-
-      // Ignore slave server temporarily to give time for the
-      // saved comment to be propagated to the slave.
-      db_ignore_slave();
-
-      // Update the {node_comment_statistics} table prior to executing hooks.
-      _comment_update_node_statistics($comment->nid);
-
-      field_attach_update('comment', $comment);
-      // Allow modules to respond to the updating of a comment.
-      module_invoke_all('comment_update', $comment);
-      module_invoke_all('entity_update', $comment, 'comment');
-    }
-    else {
-      // Add the comment to database. This next section builds the thread field.
-      // Also see the documentation for comment_view().
-      if (!empty($comment->thread)) {
-        // Allow calling code to set thread itself.
-        $thread = $comment->thread;
-      }
-      elseif ($comment->pid == 0) {
-        // This is a comment with no parent comment (depth 0): we start
-        // by retrieving the maximum thread level.
-        $max = db_query('SELECT MAX(thread) FROM {comment} WHERE nid = :nid', array(':nid' => $comment->nid))->fetchField();
-        // Strip the "/" from the end of the thread.
-        $max = rtrim($max, '/');
-        // Finally, build the thread field for this new comment.
-        $thread = comment_increment_alphadecimal($max) . '/';
-      }
-      else {
-        // This is a comment with a parent comment, so increase the part of the
-        // thread value at the proper depth.
-
-        // Get the parent comment:
-        $parent = comment_load($comment->pid);
-        // Strip the "/" from the end of the parent thread.
-        $parent->thread = (string) rtrim((string) $parent->thread, '/');
-        // Get the max value in *this* thread.
-        $max = db_query("SELECT MAX(thread) FROM {comment} WHERE thread LIKE :thread AND nid = :nid", array(
-          ':thread' => $parent->thread . '.%',
-          ':nid' => $comment->nid,
-        ))->fetchField();
-
-        if ($max == '') {
-          // First child of this parent.
-          $thread = $parent->thread . '.' . comment_int_to_alphadecimal(0) . '/';
-        }
-        else {
-          // Strip the "/" at the end of the thread.
-          $max = rtrim($max, '/');
-          // Get the value at the correct depth.
-          $parts = explode('.', $max);
-          $parent_depth = count(explode('.', $parent->thread));
-          $last = $parts[$parent_depth];
-          // Finally, build the thread field for this new comment.
-          $thread = $parent->thread . '.' . comment_increment_alphadecimal($last) . '/';
-        }
-      }
-
-      if (empty($comment->created)) {
-        $comment->created = REQUEST_TIME;
-      }
-
-      if (empty($comment->changed)) {
-        $comment->changed = $comment->created;
-      }
-
-      if ($comment->uid === $user->uid && isset($user->name)) { // '===' Need to modify anonymous users as well.
-        $comment->name = $user->name;
-      }
-
-      // Ensure the parent id (pid) has a value set.
-      if (empty($comment->pid)) {
-        $comment->pid = 0;
-      }
-
-      // Add the values which aren't passed into the function.
-      $comment->thread = $thread;
-      $comment->hostname = ip_address();
-
-      drupal_write_record('comment', $comment);
-
-      // Ignore slave server temporarily to give time for the
-      // created comment to be propagated to the slave.
-      db_ignore_slave();
-
-      // Update the {node_comment_statistics} table prior to executing hooks.
-      _comment_update_node_statistics($comment->nid);
-
-      field_attach_insert('comment', $comment);
-
-      // Tell the other modules a new comment has been submitted.
-      module_invoke_all('comment_insert', $comment);
-      module_invoke_all('entity_insert', $comment, 'comment');
-    }
-    if ($comment->status == COMMENT_PUBLISHED) {
-      module_invoke_all('comment_publish', $comment);
-    }
-    unset($comment->original);
-  }
-  catch (Exception $e) {
-    $transaction->rollback('comment');
-    watchdog_exception('comment', $e);
-    throw $e;
-  }
-
+  $comment->save();
 }
 
 /**
@@ -1600,31 +1459,7 @@ function comment_delete($cid) {
  *   The comment to delete.
  */
 function comment_delete_multiple($cids) {
-  $comments = comment_load_multiple($cids);
-  if ($comments) {
-    $transaction = db_transaction();
-    try {
-      // Delete the comments.
-      db_delete('comment')
-        ->condition('cid', array_keys($comments), 'IN')
-        ->execute();
-      foreach ($comments as $comment) {
-        field_attach_delete('comment', $comment);
-        module_invoke_all('comment_delete', $comment);
-        module_invoke_all('entity_delete', $comment, 'comment');
-
-        // Delete the comment's replies.
-        $child_cids = db_query('SELECT cid FROM {comment} WHERE pid = :cid', array(':cid' => $comment->cid))->fetchCol();
-        comment_delete_multiple($child_cids);
-        _comment_update_node_statistics($comment->nid);
-      }
-    }
-    catch (Exception $e) {
-      $transaction->rollback();
-      watchdog_exception('comment', $e);
-      throw $e;
-    }
-  }
+  entity_delete_multiple('comment', $cids);
 }
 
 /**
@@ -1669,37 +1504,6 @@ function comment_load_multiple($cids = array(), $conditions = array(), $reset = 
 function comment_load($cid, $reset = FALSE) {
   $comment = comment_load_multiple(array($cid), array(), $reset);
   return $comment ? $comment[$cid] : FALSE;
-}
-
-/**
- * Controller class for comments.
- *
- * This extends the DrupalDefaultEntityController class, adding required
- * special handling for comment objects.
- */
-class CommentController extends DrupalDefaultEntityController {
-
-  protected function buildQuery($ids, $conditions = array(), $revision_id = FALSE) {
-    $query = parent::buildQuery($ids, $conditions, $revision_id);
-    // Specify additional fields from the user and node tables.
-    $query->innerJoin('node', 'n', 'base.nid = n.nid');
-    $query->addField('n', 'type', 'node_type');
-    $query->innerJoin('users', 'u', 'base.uid = u.uid');
-    $query->addField('u', 'name', 'registered_name');
-    $query->fields('u', array('uid', 'signature', 'signature_format', 'picture'));
-    return $query;
-  }
-
-  protected function attachLoad(&$comments, $revision_id = FALSE) {
-    // Setup standard comment properties.
-    foreach ($comments as $key => $comment) {
-      $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
-      $comment->new = node_mark($comment->nid, $comment->changed);
-      $comment->node_type = 'comment_node_' . $comment->node_type;
-      $comments[$key] = $comment;
-    }
-    parent::attachLoad($comments, $revision_id);
-  }
 }
 
 /**
@@ -1831,22 +1635,6 @@ function comment_form($form, &$form_state, $comment) {
   // use during form building and processing. During a rebuild, use what is in
   // the form state.
   if (!isset($form_state['comment'])) {
-    $defaults = array(
-      'name' => '',
-      'mail' => '',
-      'homepage' => '',
-      'subject' => '',
-      'comment' => '',
-      'cid' => NULL,
-      'pid' => NULL,
-      'language' => LANGUAGE_NONE,
-      'uid' => 0,
-    );
-    foreach ($defaults as $key => $value) {
-      if (!isset($comment->$key)) {
-        $comment->$key = $value;
-      }
-    }
     $form_state['comment'] = $comment;
   }
   else {
@@ -2143,12 +1931,6 @@ function comment_form_validate($form, &$form_state) {
  * Prepare a comment for submission.
  */
 function comment_submit($comment) {
-  // @todo Legacy support. Remove in Drupal 8.
-  if (is_array($comment)) {
-    $comment += array('subject' => '');
-    $comment = (object) $comment;
-  }
-
   if (empty($comment->date)) {
     $comment->date = 'now';
   }
@@ -2396,61 +2178,6 @@ function _comment_get_modes() {
  */
 function _comment_per_page() {
   return drupal_map_assoc(array(10, 30, 50, 70, 90, 150, 200, 250, 300));
-}
-
-/**
- * Updates the comment statistics for a given node. This should be called any
- * time a comment is added, deleted, or updated.
- *
- * The following fields are contained in the node_comment_statistics table.
- * - last_comment_timestamp: the timestamp of the last comment for this node or the node create stamp if no comments exist for the node.
- * - last_comment_name: the name of the anonymous poster for the last comment
- * - last_comment_uid: the uid of the poster for the last comment for this node or the node authors uid if no comments exists for the node.
- * - comment_count: the total number of approved/published comments on this node.
- */
-function _comment_update_node_statistics($nid) {
-  // Allow bulk updates and inserts to temporarily disable the
-  // maintenance of the {node_comment_statistics} table.
-  if (!variable_get('comment_maintain_node_statistics', TRUE)) {
-    return;
-  }
-
-  $count = db_query('SELECT COUNT(cid) FROM {comment} WHERE nid = :nid AND status = :status', array(
-    ':nid' => $nid,
-    ':status' => COMMENT_PUBLISHED,
-  ))->fetchField();
-
-  if ($count > 0) {
-    // Comments exist.
-    $last_reply = db_query_range('SELECT cid, name, changed, uid FROM {comment} WHERE nid = :nid AND status = :status ORDER BY cid DESC', 0, 1, array(
-      ':nid' => $nid,
-      ':status' => COMMENT_PUBLISHED,
-    ))->fetchObject();
-    db_update('node_comment_statistics')
-      ->fields(array(
-        'cid' => $last_reply->cid,
-        'comment_count' => $count,
-        'last_comment_timestamp' => $last_reply->changed,
-        'last_comment_name' => $last_reply->uid ? '' : $last_reply->name,
-        'last_comment_uid' => $last_reply->uid,
-      ))
-      ->condition('nid', $nid)
-      ->execute();
-  }
-  else {
-    // Comments do not exist.
-    $node = db_query('SELECT uid, created FROM {node} WHERE nid = :nid', array(':nid' => $nid))->fetchObject();
-    db_update('node_comment_statistics')
-      ->fields(array(
-        'cid' => 0,
-        'comment_count' => 0,
-        'last_comment_timestamp' => $node->created,
-        'last_comment_name' => '',
-        'last_comment_uid' => $node->uid,
-      ))
-      ->condition('nid', $nid)
-      ->execute();
-  }
 }
 
 /**

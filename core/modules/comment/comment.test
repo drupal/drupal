@@ -87,7 +87,7 @@ class CommentHelperCase extends DrupalWebTestCase {
     }
 
     if (isset($match[1])) {
-      return (object) array('id' => $match[1], 'subject' => $subject, 'comment' => $comment);
+      return entity_create('comment', array('id' => $match[1], 'subject' => $subject, 'comment' => $comment));
     }
   }
 
@@ -269,7 +269,7 @@ class CommentHelperCase extends DrupalWebTestCase {
 
     // Create a new comment. This helper function may be run with different
     // comment settings so use comment_save() to avoid complex setup.
-    $comment = (object) array(
+    $comment = entity_create('comment', array(
       'cid' => NULL,
       'nid' => $this->node->nid,
       'node_type' => $this->node->type,
@@ -280,7 +280,7 @@ class CommentHelperCase extends DrupalWebTestCase {
       'hostname' => ip_address(),
       'language' => LANGUAGE_NONE,
       'comment_body' => array(LANGUAGE_NONE => array($this->randomName())),
-    );
+    ));
     comment_save($comment);
     $this->drupalLogout();
 
@@ -661,7 +661,7 @@ class CommentInterfaceTest extends CommentHelperCase {
       if ($info['comment count']) {
         // Create a comment via CRUD API functionality, since
         // $this->postComment() relies on actual user permissions.
-        $comment = (object) array(
+        $comment = entity_create('comment', array(
           'cid' => NULL,
           'nid' => $this->node->nid,
           'node_type' => $this->node->type,
@@ -672,7 +672,7 @@ class CommentInterfaceTest extends CommentHelperCase {
           'hostname' => ip_address(),
           'language' => LANGUAGE_NONE,
           'comment_body' => array(LANGUAGE_NONE => array($this->randomName())),
-        );
+        ));
         comment_save($comment);
         $this->comment = $comment;
 
@@ -1463,7 +1463,7 @@ class CommentApprovalTest extends CommentHelperCase {
     // Get unapproved comment id.
     $this->drupalLogin($this->admin_user);
     $anonymous_comment4 = $this->getUnapprovedComment($subject);
-    $anonymous_comment4 = (object) array('id' => $anonymous_comment4, 'subject' => $subject, 'comment' => $body);
+    $anonymous_comment4 = entity_create('comment', array('id' => $anonymous_comment4, 'subject' => $subject, 'comment' => $body));
     $this->drupalLogout();
 
     $this->assertFalse($this->commentExists($anonymous_comment4), t('Anonymous comment was not published.'));
@@ -1527,7 +1527,7 @@ class CommentApprovalTest extends CommentHelperCase {
     // Get unapproved comment id.
     $this->drupalLogin($this->admin_user);
     $anonymous_comment4 = $this->getUnapprovedComment($subject);
-    $anonymous_comment4 = (object) array('id' => $anonymous_comment4, 'subject' => $subject, 'comment' => $body);
+    $anonymous_comment4 = entity_create('comment', array('id' => $anonymous_comment4, 'subject' => $subject, 'comment' => $body));
     $this->drupalLogout();
 
     $this->assertFalse($this->commentExists($anonymous_comment4), t('Anonymous comment was not published.'));
