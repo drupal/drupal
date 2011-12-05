@@ -1,6 +1,22 @@
 
-Drupal 7.10, xxxx-xx-xx (development version)
------------------------
+Drupal 7.10, 2011-12-05
+----------------------
+- Fixed Content-Language HTTP header to not cause issues with Drush 5.x.
+- Reduce memory usage of theme registry (performance).
+- Fixed PECL upload progress bar for FileField
+- Fixed running update.php doesn't always clear the cache.
+- Fixed PDO exceptions on long titles.
+- Fixed Overlay redirect does not include query string.
+- Fixed D6 modules satisfy D7 module dependencies.
+- Fixed the ordering of module hooks when using module_implements_alter().
+- Fixed "floating" submit buttons during AJAX requests.
+- Fixed timezone selected on install not propogating to admin account.
+- Added msgctx context to JS translation functions, for feature parity with t().
+- Profiles' .install files now available during hook_install_tasks().
+- Added test coverage of 7.0 -> 7.x upgrade path.
+- Numerous notice fixes.
+- Numerous documentation improvements.
+- Additional automated test coverage.
 
 
 Drupal 7.9, 2011-10-26
