@@ -1962,6 +1962,11 @@ class DrupalDataApiTest extends DrupalWebTestCase {
    * Test the drupal_write_record() API function.
    */
   function testDrupalWriteRecord() {
+    // Insert a record with no columns populated.
+    $record = array();
+    $insert_result = drupal_write_record('test', $record);
+    $this->assertTrue($insert_result == SAVED_NEW, t('Correct value returned when an empty record is inserted with drupal_write_record().'));
+
     // Insert a record - no columns allow NULL values.
     $person = new stdClass();
     $person->name = 'John';

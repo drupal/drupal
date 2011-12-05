@@ -6901,6 +6901,7 @@ function drupal_write_record($table, &$record, $primary_keys = array()) {
 
   $object = (object) $record;
   $fields = array();
+  $default_fields = array();
 
   // Go through the schema to determine fields to write.
   foreach ($schema['fields'] as $field => $info) {
@@ -6923,6 +6924,7 @@ function drupal_write_record($table, &$record, $primary_keys = array()) {
     if (!property_exists($object, $field)) {
       // Skip fields that are not provided, default values are already known
       // by the database.
+      $default_fields[] = $field;
       continue;
     }
 
@@ -6953,10 +6955,6 @@ function drupal_write_record($table, &$record, $primary_keys = array()) {
     }
   }
 
-  if (empty($fields)) {
-    return;
-  }
-
   // Build the SQL.
   if (empty($primary_keys)) {
     // We are doing an insert.
@@ -6973,10 +6971,16 @@ function drupal_write_record($table, &$record, $primary_keys = array()) {
         unset($fields[$serial]);
       }
     }
-    $query = db_insert($table, $options)->fields($fields);
+    // Create an INSERT query. useDefaults() is necessary for the SQL to be
+    // valid when $fields is empty.
+    $query = db_insert($table, $options)
+      ->fields($fields)
+      ->useDefaults($default_fields);
+
     $return = SAVED_NEW;
   }
   else {
+    // Create an UPDATE query.
     $query = db_update($table)->fields($fields);
     foreach ($primary_keys as $key) {
       $query->condition($key, $object->$key);
