@@ -2076,6 +2076,16 @@ class DatabaseSelectComplexTestCase extends DatabaseTestCase {
     $this->assertEqual($record->$age_field, 27, t('Correct data retrieved.'));
   }
 
+  function testHavingCountQuery() {
+    $query = db_select('test')
+      ->extend('PagerDefault')
+      ->having('age + 1 > 0');
+    $query->addField('test', 'age');
+    $query->addExpression('age + 1');
+    $count = count($query->execute()->fetchCol());
+    $this->assertEqual($count, 4, t('Counted the correct number of records.'));
+  }
+
   /**
    * Test that countQuery properly removes 'all_fields' statements and
    * ordering clauses.
