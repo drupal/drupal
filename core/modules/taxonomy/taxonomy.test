@@ -627,11 +627,11 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
     }
     $this->assertNoText($term1->name, t('The deleted term %name does not appear on the node page.', array('%name' => $term1->name)));
 
-    // Test autocomplete on term 2 - it contains a comma, so expect the key to
-    // be quoted.
+    // Test autocomplete on term 2, which contains a comma.
+    // The term will be quoted, and the " will be encoded in unicode (\u0022).
     $input = substr($term2->name, 0, 3);
     $this->drupalGet('taxonomy/autocomplete/taxonomy_' . $this->vocabulary->machine_name . '/' . $input);
-    $this->assertRaw('{"\"' . $term2->name . '\"":"' . $term2->name . '"}', t('Autocomplete returns term %term_name after typing the first 3 letters.', array('%term_name' => $term2->name)));
+    $this->assertRaw('{"\u0022' . $term2->name . '\u0022":"' . $term2->name . '"}', t('Autocomplete returns term %term_name after typing the first 3 letters.', array('%term_name' => $term2->name)));
 
     // Test autocomplete on term 3 - it is alphanumeric only, so no extra
     // quoting.
