@@ -56,7 +56,7 @@ function file_menu() {
 /**
  * Implements hook_element_info().
  *
- * The managed file element may be used independently anywhere in Drupal.
+ * The managed file element may be used anywhere in Drupal.
  */
 function file_element_info() {
   $file_path = drupal_get_path('module', 'file');
@@ -223,12 +223,16 @@ function file_file_download($uri, $field_type = 'file') {
 }
 
 /**
- * Menu callback; Shared Ajax callback for file uploads and deletions.
+ * Ajax callback: Processes file uploads and deletions.
+ *
+ * Path: file/ajax
  *
  * This rebuilds the form element for a particular field item. As long as the
  * form processing is properly encapsulated in the widget element the form
  * should rebuild correctly using FAPI without the need for additional callbacks
  * or processing.
+ *
+ * @see file_menu()
  */
 function file_ajax_upload() {
   $form_parents = func_get_args();
@@ -286,7 +290,9 @@ function file_ajax_upload() {
 }
 
 /**
- * Menu callback for upload progress.
+ * Ajax callback: Retrieves upload progress.
+ *
+ * Path: file/progress
  *
  * @param $key
  *   The unique key for this upload process.
@@ -317,7 +323,7 @@ function file_ajax_progress($key) {
 }
 
 /**
- * Determine the preferred upload progress implementation.
+ * Determines the preferred upload progress implementation.
  *
  * @return
  *   A string indicating which upload progress system is available. Either "apc"
@@ -348,10 +354,12 @@ function file_file_delete($file) {
 }
 
 /**
- * Process function to expand the managed_file element type.
+ * Render API callback: Expands the managed_file element type.
  *
  * Expands the file type to include Upload and Remove buttons, as well as
  * support for a default value.
+ *
+ * This function is assigned as a #process callback in file_element_info().
  */
 function file_managed_file_process($element, &$form_state, $form) {
   $fid = isset($element['#value']['fid']) ? $element['#value']['fid'] : 0;
@@ -471,7 +479,9 @@ function file_managed_file_process($element, &$form_state, $form) {
 }
 
 /**
- * The #value_callback for a managed_file type element.
+ * Render API callback: Determines the value for a managed_file type element.
+ *
+ * This function is assigned as a #value_callback in file_element_info().
  */
 function file_managed_file_value(&$element, $input = FALSE, $form_state = NULL) {
   $fid = 0;
@@ -537,7 +547,10 @@ function file_managed_file_value(&$element, $input = FALSE, $form_state = NULL) 
 }
 
 /**
- * An #element_validate callback for the managed_file element.
+ * Render API callback: Validates the managed_file element.
+ *
+ * This function is assigned as a #element_validate callback in
+ * file_element_info().
  */
 function file_managed_file_validate(&$element, &$form_state) {
   // If referencing an existing file, only allow if there are existing
@@ -570,7 +583,9 @@ function file_managed_file_validate(&$element, &$form_state) {
 }
 
 /**
- * Submit handler for upload and remove buttons of managed_file elements.
+ * Form submission handler for upload / remove buttons of managed_file elements.
+ *
+ * @see file_managed_file_process()
  */
 function file_managed_file_submit($form, &$form_state) {
   // Determine whether it was the upload or the remove button that was clicked,
@@ -611,10 +626,11 @@ function file_managed_file_submit($form, &$form_state) {
 }
 
 /**
- * Given a managed_file element, save any files that have been uploaded into it.
+ * Saves any files that have been uploaded into a managed_file element.
  *
  * @param $element
  *   The FAPI element whose values are being saved.
+ *
  * @return
  *   The file object representing the file that was saved, or FALSE if no file
  *   was saved.
@@ -671,7 +687,7 @@ function theme_file_managed_file($variables) {
 }
 
 /**
- * #pre_render callback to hide display of the upload or remove controls.
+ * Render API callback: Hides display of the upload or remove controls.
  *
  * Upload controls are hidden when a file is already uploaded. Remove controls
  * are hidden when there is no file attached. Controls are hidden here instead
@@ -685,6 +701,8 @@ function theme_file_managed_file($variables) {
  * were enabled. The form processing functions for these elements should not
  * assume that the buttons can't be "clicked" just because they are not
  * displayed.
+ *
+ * This function is assigned as a #pre_render callback in file_element_info().
  *
  * @see file_managed_file_process()
  * @see form_builder()
@@ -761,13 +779,14 @@ function theme_file_icon($variables) {
 }
 
 /**
- * Given a file object, create a URL to a matching icon.
+ * Creates a URL to the icon for a file object.
  *
  * @param $file
  *   A file object.
  * @param $icon_directory
  *   (optional) A path to a directory of icons to be used for files. Defaults to
  *   the value of the "file_icon_directory" variable.
+ *
  * @return
  *   A URL string to the icon, or FALSE if an appropriate icon cannot be found.
  */
@@ -779,13 +798,14 @@ function file_icon_url($file, $icon_directory = NULL) {
 }
 
 /**
- * Given a file object, create a path to a matching icon.
+ * Creates a path to the icon for a file object.
  *
  * @param $file
  *   A file object.
  * @param $icon_directory
  *   (optional) A path to a directory of icons to be used for files. Defaults to
  *   the value of the "file_icon_directory" variable.
+ *
  * @return
  *   A string to the icon as a local path, or FALSE if an appropriate icon could
  *   not be found.
@@ -831,10 +851,11 @@ function file_icon_path($file, $icon_directory = NULL) {
 }
 
 /**
- * Determine the generic icon MIME package based on a file's MIME type.
+ * Determines the generic icon MIME package based on a file's MIME type.
  *
  * @param $file
  *   A file object.
+ *
  * @return
  *   The generic icon MIME package expected for this file.
  */
@@ -962,7 +983,7 @@ function file_icon_map($file) {
  */
 
 /**
- * Gets a list of references to a file.
+ * Retrieves a list of references to a file.
  *
  * @param $file
  *   A file object.
