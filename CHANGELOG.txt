@@ -1,4 +1,8 @@
 
+Drupal 7.11 xxxx-xx-xx (development version)
+----------------------
+
+
 Drupal 7.10, 2011-12-05
 ----------------------
 - Fixed Content-Language HTTP header to not cause issues with Drush 5.x.
@@ -17,7 +21,6 @@ Drupal 7.10, 2011-12-05
 - Numerous notice fixes.
 - Numerous documentation improvements.
 - Additional automated test coverage.
-
 
 Drupal 7.9, 2011-10-26
 ----------------------
