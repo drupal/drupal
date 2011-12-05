@@ -194,7 +194,7 @@ abstract class DatabaseConnection extends PDO {
 
   /**
    * The key representing this connection.
-   * 
+   *
    * The key is a unique string which identifies a database connection. A
    * connection can be a single server or a cluster of master and slaves (use
    * target to pick between master and slave).
@@ -2553,13 +2553,18 @@ function db_escape_field($field) {
  * a backslash. Use this to do a search for a verbatim string without any
  * wildcard behavior.
  *
+ * You must use a query builder like db_select() in order to use db_like() on
+ * all supported database systems. Using db_like() with db_query() or
+ * db_query_range() is not supported.
+ *
  * For example, the following does a case-insensitive query for all rows whose
  * name starts with $prefix:
  * @code
- * $result = db_query(
- *   'SELECT * FROM person WHERE name LIKE :pattern',
- *   array(':pattern' => db_like($prefix) . '%')
- * );
+ * $result = db_select('person', 'p')
+ *   ->fields('p')
+ *   ->condition('name', db_like($prefix) . '%', 'LIKE')
+ *   ->execute()
+ *   ->fetchAll();
  * @endcode
  *
  * Backslash is defined as escape character for LIKE patterns in
