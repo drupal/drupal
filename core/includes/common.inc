@@ -5064,7 +5064,8 @@ function _drupal_bootstrap_full() {
  */
 function drupal_page_set_cache() {
   global $base_root;
-
+  $config = config('system.performance');
+  
   if (drupal_page_is_cacheable()) {
     $cache = (object) array(
       'cid' => $base_root . request_uri(),
@@ -5090,7 +5091,7 @@ function drupal_page_set_cache() {
     }
 
     if ($cache->data['body']) {
-      if (variable_get('page_compression', TRUE) && extension_loaded('zlib')) {
+      if ($config->get('page_compression') && extension_loaded('zlib')) {
         $cache->data['body'] = gzencode($cache->data['body'], 9, FORCE_GZIP);
       }
       cache('page')->set($cache->cid, $cache->data, $cache->expire);

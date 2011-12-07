@@ -1323,8 +1323,10 @@ function drupal_page_header() {
  * response is sent.
  */
 function drupal_serve_page_from_cache(stdClass $cache) {
+  $config = config('system.performance');
+
   // Negotiate whether to use compression.
-  $page_compression = variable_get('page_compression', TRUE) && extension_loaded('zlib');
+  $page_compression = $config->get('page_compression') && extension_loaded('zlib');
   $return_compressed = $page_compression && isset($_SERVER['HTTP_ACCEPT_ENCODING']) && strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') !== FALSE;
 
   // Get headers set in hook_boot(). Keys are lower-case.
@@ -1350,7 +1352,6 @@ function drupal_serve_page_from_cache(stdClass $cache) {
   // max-age > 0, allowing the page to be cached by external proxies, when a
   // session cookie is present unless the Vary header has been replaced or
   // unset in hook_boot().
-  $config = config('system.performance');
   $max_age = !isset($_COOKIE[session_name()]) || isset($hook_boot_headers['vary']) ? $config->get('page_cache_maximum_age') : 0;
   $default_headers['Cache-Control'] = 'public, max-age=' . $max_age;
 
