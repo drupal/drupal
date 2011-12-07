@@ -2308,7 +2308,8 @@ function _drupal_bootstrap_page_cache() {
   }
   else {
     drupal_bootstrap(DRUPAL_BOOTSTRAP_VARIABLES, FALSE);
-    $cache_enabled = variable_get('cache');
+    $config = config('system.performance');
+    $cache_enabled = $config->get('caching.cache');
   }
   drupal_block_denied(ip_address());
   // If there is no session cookie and cache is enabled (or forced), try
