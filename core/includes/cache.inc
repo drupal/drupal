@@ -470,7 +470,7 @@ class DrupalDatabaseCache implements DrupalCacheInterface {
     // in session.inc. If the data is permanent or we're not enforcing a minimum
     // cache lifetime always return the cached data.
     $config = config('system.performance');
-    if ($cache->expire != CACHE_PERMANENT && config->get('caching.cache_lifetime') && $user->cache > $cache->created) {
+    if ($cache->expire != CACHE_PERMANENT && $config->get('caching.cache_lifetime') && $user->cache > $cache->created) {
       // This cache data is too old and thus not valid for us, ignore it.
       return FALSE;
     }
