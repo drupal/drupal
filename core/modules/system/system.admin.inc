@@ -1655,38 +1655,6 @@ function system_performance_settings($form, &$form_state) {
     '#submit' => array('system_clear_cache_submit'),
   );
 
-  // TODO: This is a complete hack. The idea is - we need to stash some state
-  // with this form, so that when it comes time to save, we can go from a key
-  // in $form_state['values'] to that state. I started trying to put this state
-  // with each form element, but I have NFI how to get to a form element from
-  // a key in $form_state['values'].
-  $form_state['config'] = array(
-    'cache' => array(
-      'name' => 'system.performance',
-      'path' => 'caching.cache',
-    ),
-    'cache_lifetime' => array(
-      'name' => 'system.performance',
-      'path' => 'caching.cache_lifetime',
-    ),
-    'page_cache_maximum_age' => array(
-      'name' => 'system.performance',
-      'path' => 'caching.page_cache_maximum_age',
-    ),
-    'page_compression' => array(
-      'name' => 'system.performance',
-      'path' => 'bandwidth_optimization.page_compression',
-    ),
-    'preprocess_css' => array(
-      'name' => 'system.performance',
-      'path' => 'bandwidth_optimization.preprocess_css',
-    ),
-    'preprocess_js' => array(
-      'name' => 'system.performance',
-      'path' => 'bandwidth_optimization.preprocess_js',
-    ),
-  );
-
   $form['caching'] = array(
     '#type' => 'fieldset',
     '#title' => t('Caching'),
@@ -1756,7 +1724,12 @@ function system_performance_settings($form, &$form_state) {
   // invalidate the page cache, so it needs to be cleared on form submit.
   $form['#submit'][] = 'system_clear_page_cache_submit';
 
-  return system_settings_form($form);
+  $form['submit'] = array(
+    '#type' => 'submit', 
+    '#value' => t('Save configuration')
+  );
+
+  return $form;
 }
 
 /**
