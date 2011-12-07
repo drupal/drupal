@@ -469,7 +469,8 @@ class DrupalDatabaseCache implements DrupalCacheInterface {
     // timer. The cache variable is loaded into the $user object by _drupal_session_read()
     // in session.inc. If the data is permanent or we're not enforcing a minimum
     // cache lifetime always return the cached data.
-    if ($cache->expire != CACHE_PERMANENT && variable_get('cache_lifetime', 0) && $user->cache > $cache->created) {
+    $config = config('system.performance');
+    if ($cache->expire != CACHE_PERMANENT && config->get('caching.cache_lifetime') && $user->cache > $cache->created) {
       // This cache data is too old and thus not valid for us, ignore it.
       return FALSE;
     }
@@ -534,7 +535,8 @@ class DrupalDatabaseCache implements DrupalCacheInterface {
   }
 
   function expire() {
-    if (variable_get('cache_lifetime', 0)) {
+    $config = config('system.performance');
+    if ($config->get('cache_lifetime')) {
       // We store the time in the current user's $user->cache variable which
       // will be saved into the sessions bin by _drupal_session_write(). We then
       // simulate that the cache was flushed for this user by not returning
@@ -546,7 +548,7 @@ class DrupalDatabaseCache implements DrupalCacheInterface {
         // This is the first request to clear the cache, start a timer.
         variable_set('cache_flush_' . $this->bin, REQUEST_TIME);
       }
-      elseif (REQUEST_TIME > ($cache_flush + variable_get('cache_lifetime', 0))) {
+      elseif (REQUEST_TIME > ($cache_flush + $config->get('cache_lifetime'))) {
         // Clear the cache for everyone, cache_lifetime seconds have
         // passed since the first request to clear the cache.
         db_delete($this->bin)
@@ -567,11 +569,12 @@ class DrupalDatabaseCache implements DrupalCacheInterface {
 
   function garbageCollection() {
     global $user;
-
+    $config = config('system.performance');
+    
     // When cache lifetime is in force, avoid running garbage collection too
     // often since this will remove temporary cache items indiscriminately.
     $cache_flush = variable_get('cache_flush_' . $this->bin, 0);
-    if ($cache_flush && ($cache_flush + variable_get('cache_lifetime', 0) <= REQUEST_TIME)) {
+    if ($cache_flush && ($cache_flush + $config->get('cache_lifetime') <= REQUEST_TIME)) {
       // Reset the variable immediately to prevent a meltdown in heavy load situations.
       variable_set('cache_flush_' . $this->bin, 0);
       // Time to flush old cache data
