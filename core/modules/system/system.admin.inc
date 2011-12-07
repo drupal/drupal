@@ -1638,7 +1638,6 @@ function system_logging_settings() {
  * Form builder; Configure site performance settings.
  *
  * @ingroup forms
- * @see system_settings_form()
  */
 function system_performance_settings($form, &$form_state) {
   drupal_add_js(drupal_get_path('module', 'system') . '/system.js');
@@ -1718,18 +1717,36 @@ function system_performance_settings($form, &$form_state) {
     '#disabled' => $disabled,
   );
 
+  $form['actions'] = array('#type' => 'actions');
+  $form['actions']['submit'] = array(
+    '#type' => 'submit', 
+    '#value' => t('Save configuration')
+  );
+
   $form['#submit'][] = 'drupal_clear_css_cache';
   $form['#submit'][] = 'drupal_clear_js_cache';
   // This form allows page compression settings to be changed, which can
   // invalidate the page cache, so it needs to be cleared on form submit.
   $form['#submit'][] = 'system_clear_page_cache_submit';
-
-  $form['submit'] = array(
-    '#type' => 'submit', 
-    '#value' => t('Save configuration')
-  );
+  $form['#submit'][] = 'system_performance_settings_submit';
 
   return $form;
+}
+
+/**
+ * Submit callback; save performance settings.
+ *
+ * @ingroup forms
+ */
+function system_performance_settings_submit($form, &$form_state) {
+  $config = config('system.performance');
+  $config->set('caching.cache', $form_state['values']['cache']);
+  $config->set('caching.cache_lifetime', $form_state['values']['cache_lifetime']);
+  $config->set('caching.page_cache_maximum_age', $form_state['values']['page_cache_maximum_age']);
+  $config->set('bandwidth_optimization.page_compression', $form_state['values']['page_compression']);
+  $config->set('bandwidth_optimization.preprocess_css', $form_state['values']['preprocess_css']);
+  $config->set('bandwidth_optimization.preprocess_js', $form_state['values']['preprocess_js']);
+  $config->save();
 }
 
 /**
