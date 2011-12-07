@@ -2,7 +2,8 @@
 <config>
   <name>large</name>
   <effects>
-    <image_scale>
+    <effect_1>
+      <name>image_scale</name>
       <data>
         <width>480</width>
         <height>480</height>

@@ -2,13 +2,14 @@
 <config>
   <name>thumbnail</name>
   <effects>
-    <image_scale>
+    <effect_1>
+      <name>image_scale</name>
       <data>
         <width>100</width>
         <height>100</height>
         <upscale>1</upscale>
       </data>
       <weight>0</weight>
-    </image_scale>
+    </effect_1>
   </effects>
 </config>
