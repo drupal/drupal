@@ -142,6 +142,39 @@ function config_decode($data) {
 }
 
 /**
+ * Helper function for standardizing SimpleXML object output into simple
+ * arrays for easier use.
+ *
+ * @param $xmlObject
+ *  A valid XML string.
+ *
+ * @return
+ *  An array representation of A SimpleXML object.
+ */
+function config_xml_to_array($data) {
+  $out = array();
+  $xmlObject = simplexml_load_string($data);
+  
+  if (is_object($xmlObject)) {
+    $attributes = (array)$xmlObject->attributes();
+    if (isset($attributes['@attributes'])) {
+      $out['#attributes'] = $attributes['@attributes'];
+    }
+  }
+  if (trim((string)$xmlObject)) {
+    $out = trim((string)$xmlObject);
+    return $out;
+  }
+  foreach ($xmlObject as $index => $content) {
+    if (is_object($content)) {
+      $out[$index] = config_xml2array($content);
+    }
+  }
+
+  return $out;
+}
+
+/**
  * Encode an array into the native configuration format.
  *
  * @param $data
@@ -153,35 +186,37 @@ function config_decode($data) {
  *   This needs to work for objects as well and currently doesn't
  */
 function config_encode($data) {
-  $xml = config_array_to_xml($data);
-  return '<?xml version="1.0" encoding="UTF8"?>' . PHP_EOL . '<config>' . $xml . '</config>';
+  // creating object of SimpleXMLElement
+  $xml_object = new SimpleXMLElement("<?xml version=\"1.0\"?><config></config>");
+
+  // function call to convert array to xml
+  config_array_to_xml($data, $xml_object);
+
+  // Pretty print the result
+  $dom = new DOMDocument('1.0');
+  $dom->preserveWhiteSpace = false;
+  $dom->formatOutput = true;
+  $dom->loadXML($xml_object->asXML());
+  return $dom->saveXML();
 }
 
-/**
- * Encode an array or object into the native configuration format.
- *
- * @param $data
- *   An associative array or an object
- * @return
- *   A representation of this array or object in the native configuration
- *   format. 
- */
-function config_array_to_xml($arr, $tab_count = 0) {
-  $xml = '';
-
-  foreach ($arr as $tag => $val) { 
-    if (!is_array($val)) { 
-      $xml .= PHP_EOL . '<' . $tag . '>' . htmlentities($val) . '</' . $tag . '>'; 
+// function defination to convert array to xml
+function config_array_to_xml($student_info, &$xml_student_info) {
+    foreach($student_info as $key => $value) {
+        if(is_array($value)) {
+            if(!is_numeric($key)){
+                $subnode = $xml_student_info->addChild("$key");
+                config_array_to_xml($value, $subnode);
+            }
+            else{
+                config_array_to_xml($value, $xml_student_info);
+            }
+        }
+        else {
+            $xml_student_info->addChild("$key","$value");
+        }
     }
-    else {
-      $tab_count++; 
-      $xml .= PHP_EOL . '<' . $tag . '>' . config_array_to_xml($val, $tab_count); 
-      $xml .= PHP_EOL . '</' . $tag . '>'; 
-    } 
-  } 
-  return $xml; 
 }
-
 class ConfigException extends Exception {}
 
 class ConfigFileStorageException extends ConfigException {}
