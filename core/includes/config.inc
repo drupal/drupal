@@ -200,23 +200,34 @@ function config_encode($data) {
   return $dom->saveXML();
 }
 
-// function defination to convert array to xml
-function config_array_to_xml($student_info, &$xml_student_info) {
-    foreach($student_info as $key => $value) {
-        if(is_array($value)) {
-            if(!is_numeric($key)){
-                $subnode = $xml_student_info->addChild("$key");
-                config_array_to_xml($value, $subnode);
-            }
-            else{
-                config_array_to_xml($value, $xml_student_info);
-            }
-        }
-        else {
-            $xml_student_info->addChild("$key","$value");
-        }
+/**
+ * Encode an array into XML
+ *
+ * @param $data
+ *   An associative array or an object
+ * @return
+ *   A representation of this array or object in the native configuration
+ *   format. 
+ * @todo
+ *   This needs to work for objects as well and currently doesn't
+ */
+function config_array_to_xml($array, &$xml_object) {
+  foreach ($array as $key => $value) {
+    if (is_array($value)) {
+      if (!is_numeric($key)){
+        $subnode = $xml_object->addChild("$key");
+        config_array_to_xml($value, $subnode);
+      }
+      else {
+        config_array_to_xml($value, $xml_object);
+      }
     }
+    else {
+      $xml_object->addChild("$key","$value");
+    }
+  }
 }
+
 class ConfigException extends Exception {}
 
 class ConfigFileStorageException extends ConfigException {}
