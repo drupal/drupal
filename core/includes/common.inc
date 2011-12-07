@@ -3087,7 +3087,8 @@ function drupal_group_css($css) {
  * @see drupal_pre_render_styles()
  */
 function drupal_aggregate_css(&$css_groups) {
-  $preprocess_css = (variable_get('preprocess_css', FALSE) && (!defined('MAINTENANCE_MODE') || MAINTENANCE_MODE != 'update'));
+  $config = config('system.performance');
+  $preprocess_css = ($config->get('preprocess_css') && (!defined('MAINTENANCE_MODE') || MAINTENANCE_MODE != 'update'));
 
   // For each group that needs aggregation, aggregate its items.
   foreach ($css_groups as $key => $group) {
