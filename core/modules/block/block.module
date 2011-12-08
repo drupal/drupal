@@ -1015,7 +1015,7 @@ function block_form_system_performance_settings_alter(&$form, &$form_state) {
  */
 function block_system_performance_settings_submit($form, &$form_state) {
   $config = config('block.performance');
-  $config->set('caching.block_cache', $form_state['values']['block_cache']);
+  $config->set('block_cache', $form_state['values']['block_cache']);
   $config->save();
 }
 
