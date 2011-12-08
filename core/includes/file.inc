@@ -1138,7 +1138,7 @@ function file_munge_filename($filename, $extensions, $alerts = TRUE) {
 }
 
 /**
- * Undo the effect of upload_munge_filename().
+ * Undo the effect of file_munge_filename().
  *
  * @param $filename
  *   String with the filename to be unmunged.
