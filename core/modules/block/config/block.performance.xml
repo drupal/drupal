@@ -1,6 +1,4 @@
 <?xml version="1.0"?>
 <config>
-  <caching>
 	<block_cache>0</block_cache>
-  </caching>
 </config>
