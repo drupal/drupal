@@ -1465,7 +1465,7 @@ function hook_mail_alter(&$message) {
       $message['send'] = FALSE;
       return;
     }
-    $message['body'][] = "--\nMail sent out from " . variable_get('sitename', t('Drupal'));
+    $message['body'][] = "--\nMail sent out from " . variable_get('site_name', t('Drupal'));
   }
 }
 
