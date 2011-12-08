@@ -1662,7 +1662,7 @@ function system_performance_settings($form, &$form_state) {
   $form['caching']['cache'] = array(
     '#type' => 'checkbox',
     '#title' => t('Cache pages for anonymous users'),
-    '#default_value' => $config->get('caching.cache'),
+    '#default_value' => $config->get('cache'),
     '#weight' => -2,
   );
   $period = drupal_map_assoc(array(0, 60, 180, 300, 600, 900, 1800, 2700, 3600, 10800, 21600, 32400, 43200, 86400), 'format_interval');
@@ -1670,14 +1670,14 @@ function system_performance_settings($form, &$form_state) {
   $form['caching']['cache_lifetime'] = array(
     '#type' => 'select',
     '#title' => t('Minimum cache lifetime'),
-    '#default_value' => $config->get('caching.cache_lifetime'),
+    '#default_value' => $config->get('cache_lifetime'),
     '#options' => $period,
     '#description' => t('Cached pages will not be re-created until at least this much time has elapsed.'),
   );
   $form['caching']['page_cache_maximum_age'] = array(
     '#type' => 'select',
     '#title' => t('Expiration of cached pages'),
-    '#default_value' => $config->get('caching.page_cache_maximum_age'),
+    '#default_value' => $config->get('page_cache_maximum_age'),
     '#options' => $period,
     '#description' => t('The maximum time an external cache can use an old version of a page.'),
   );
@@ -1696,24 +1696,24 @@ function system_performance_settings($form, &$form_state) {
     '#description' => t('External resources can be optimized automatically, which can reduce both the size and number of requests made to your website.') . $disabled_message,
   );
 
-  $js_hide = $config->get('caching.cache') ? '' : ' class="js-hide"';
+  $js_hide = $config->get('cache') ? '' : ' class="js-hide"';
   $form['bandwidth_optimization']['page_compression'] = array(
     '#type' => 'checkbox',
     '#title' => t('Compress cached pages.'),
-    '#default_value' => $config->get('bandwidth_optimization.page_compression'),
+    '#default_value' => $config->get('page_compression'),
     '#prefix' => '<div id="page-compression-wrapper"' . $js_hide . '>',
     '#suffix' => '</div>',
   );
   $form['bandwidth_optimization']['preprocess_css'] = array(
     '#type' => 'checkbox',
     '#title' => t('Aggregate and compress CSS files.'),
-    '#default_value' => $config->get('bandwidth_optimization.preprocess_css'),
+    '#default_value' => $config->get('preprocess_css'),
     '#disabled' => $disabled,
   );
   $form['bandwidth_optimization']['preprocess_js'] = array(
     '#type' => 'checkbox',
     '#title' => t('Aggregate JavaScript files.'),
-    '#default_value' => $config->get('bandwidth_optimization.preprocess_js'),
+    '#default_value' => $config->get('preprocess_js'),
     '#disabled' => $disabled,
   );
 
@@ -1740,12 +1740,12 @@ function system_performance_settings($form, &$form_state) {
  */
 function system_performance_settings_submit($form, &$form_state) {
   $config = config('system.performance');
-  $config->set('caching.cache', $form_state['values']['cache']);
-  $config->set('caching.cache_lifetime', $form_state['values']['cache_lifetime']);
-  $config->set('caching.page_cache_maximum_age', $form_state['values']['page_cache_maximum_age']);
-  $config->set('bandwidth_optimization.page_compression', $form_state['values']['page_compression']);
-  $config->set('bandwidth_optimization.preprocess_css', $form_state['values']['preprocess_css']);
-  $config->set('bandwidth_optimization.preprocess_js', $form_state['values']['preprocess_js']);
+  $config->set('cache', $form_state['values']['cache']);
+  $config->set('cache_lifetime', $form_state['values']['cache_lifetime']);
+  $config->set('page_cache_maximum_age', $form_state['values']['page_cache_maximum_age']);
+  $config->set('page_compression', $form_state['values']['page_compression']);
+  $config->set('preprocess_css', $form_state['values']['preprocess_css']);
+  $config->set('preprocess_js', $form_state['values']['preprocess_js']);
   $config->save();
 }
 

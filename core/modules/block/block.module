@@ -998,7 +998,7 @@ function block_form_system_performance_settings_alter(&$form, &$form_state) {
   $form['caching']['block_cache'] = array(
     '#type' => 'checkbox',
     '#title' => t('Cache blocks'),
-    '#default_value' => $config->get('caching.block_cache'),
+    '#default_value' => $config->get('block_cache'),
     '#disabled' => $disabled,
     '#description' => $disabled ? t('Block caching is inactive because you have enabled modules defining content access restrictions.') : NULL,
     '#weight' => -1,
