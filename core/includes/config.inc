@@ -450,7 +450,13 @@ abstract class DrupalConfigVerifiedStorage implements DrupalConfigVerifiedStorag
 class DrupalVerifiedStorageSQL extends DrupalConfigVerifiedStorage {
 
   public function read() {
-    return db_query('SELECT data FROM {config} WHERE name = :name', array(':name' => $this->name))->fetchField();
+    // There are situations, like in the installer, where we may attempt a 
+    // read without actually having the database available. This is a 
+    // workaround and there is probably a better solution to be had at
+    // some point.
+    if (!empty($GLOBALS['databases'])) {
+      return db_query('SELECT data FROM {config} WHERE name = :name', array(':name' => $this->name))->fetchField();
+    }
   }
 
   public function writeToActive($data) {
