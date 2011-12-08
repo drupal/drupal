@@ -454,7 +454,7 @@ class DrupalVerifiedStorageSQL extends DrupalConfigVerifiedStorage {
     // read without actually having the database available. This is a 
     // workaround and there is probably a better solution to be had at
     // some point.
-    if (!empty($GLOBALS['databases'])) {
+    if (!empty($GLOBALS['databases']) && !drupal_installation_attempted()) {
       return db_query('SELECT data FROM {config} WHERE name = :name', array(':name' => $this->name))->fetchField();
     }
   }
