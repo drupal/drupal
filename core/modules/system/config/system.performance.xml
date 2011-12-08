@@ -1,13 +1,9 @@
 <?xml version="1.0"?>
 <config>
-  <caching>
-  	<cache>0</cache>
-  	<cache_lifetime>0</cache_lifetime>
-  	<page_cache_maximum_age>0</page_cache_maximum_age>
-  </caching>
-  <bandwidth_optimization>
-  	<page_compression>0</page_compression>
-  	<preprocess_css>0</preprocess_css>
-  	<preprocess_js>0</preprocess_js>
-  </bandwidth_optimization>
+	<cache>0</cache>
+	<cache_lifetime>0</cache_lifetime>
+	<page_cache_maximum_age>0</page_cache_maximum_age>
+	<page_compression>0</page_compression>
+	<preprocess_css>0</preprocess_css>
+	<preprocess_js>0</preprocess_js>
 </config>
