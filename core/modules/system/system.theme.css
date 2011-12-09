@@ -173,11 +173,11 @@ abbr.form-required, abbr.tabledrag-changed, abbr.ajax-changed {
  *
  * @see collapse.js
  */
-html.js fieldset.collapsible .fieldset-legend {
+html.js fieldset.collapsible > legend .fieldset-legend {
   background: url(../../misc/menu-expanded.png) 5px 65% no-repeat; /* LTR */
   padding-left: 15px; /* LTR */
 }
-html.js fieldset.collapsed .fieldset-legend {
+html.js fieldset.collapsed > legend .fieldset-legend {
   background-image: url(../../misc/menu-collapsed.png); /* LTR */
   background-position: 5px 50%; /* LTR */
 }
