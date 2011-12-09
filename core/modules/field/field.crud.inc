@@ -44,10 +44,11 @@
  *       system variable.
  *     - settings: each omitted setting is given the default value specified in
  *       hook_field_storage_info().
+ *
  * @return
  *   The $field array with the id property filled in.
- * @throw
- *   FieldException
+ *
+ * @throws FieldException
  *
  * See: @link field Field API data structures @endlink.
  */
@@ -444,8 +445,8 @@ function field_delete_field($field_name) {
  *
  * @return
  *   The $instance array with the id property filled in.
- * @throw
- *   FieldException
+ *
+ * @throws FieldException
  *
  * See: @link field Field API data structures @endlink.
  */
@@ -512,8 +513,7 @@ function field_create_instance($instance) {
  *   properties specified in $instance overwrite the existing values for
  *   the instance.
  *
- * @throw
- *   FieldException
+ * @throws FieldException
  *
  * @see field_create_instance()
  */
