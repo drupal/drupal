@@ -3894,7 +3894,10 @@ function system_date_format_save($date_format, $dfid = 0) {
     drupal_write_record('date_formats', $info, $keys);
   }
 
+  // Retrieve an array of language objects for enabled languages.
   $languages = language_list('enabled');
+  // This list is keyed off the value of $language->enabled; we want the ones
+  // that are enabled (value of 1).
   $languages = $languages[1];
 
   $locale_format = array();
