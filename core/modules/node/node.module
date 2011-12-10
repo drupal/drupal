@@ -934,7 +934,7 @@ function node_load_multiple($nids = array(), $conditions = array(), $reset = FAL
  *   (optional) Whether to reset the node_load_multiple() cache.
  *
  * @return
- *   A fully-populated node object.
+ *   A fully-populated node object, or FALSE if the node is not found.
  */
 function node_load($nid = NULL, $vid = NULL, $reset = FALSE) {
   $nids = (isset($nid) ? array($nid) : array());
