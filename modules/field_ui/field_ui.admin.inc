@@ -215,9 +215,9 @@ function theme_field_ui_table($variables) {
 
   // Determine the colspan to use for region rows, by checking the number of
   // columns in the headers.
-  $colums_count = 0;
+  $columns_count = 0;
   foreach ($table['header'] as $header) {
-    $colums_count += (is_array($header) && isset($header['colspan']) ? $header['colspan'] : 1);
+    $columns_count += (is_array($header) && isset($header['colspan']) ? $header['colspan'] : 1);
   }
 
   // Render rows, region by region.
@@ -230,7 +230,7 @@ function theme_field_ui_table($variables) {
         'class' => array('region-title', 'region-' . $region_name_class . '-title'),
         'no_striping' => TRUE,
         'data' => array(
-          array('data' => $region['title'], 'colspan' => $colums_count),
+          array('data' => $region['title'], 'colspan' => $columns_count),
         ),
       );
     }
@@ -240,7 +240,7 @@ function theme_field_ui_table($variables) {
         'class' => array('region-message', 'region-' . $region_name_class . '-message', $class),
         'no_striping' => TRUE,
         'data' => array(
-          array('data' => $region['message'], 'colspan' => $colums_count),
+          array('data' => $region['message'], 'colspan' => $columns_count),
         ),
       );
     }
