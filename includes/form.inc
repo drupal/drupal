@@ -3786,13 +3786,27 @@ function theme_password($variables) {
  * Expand weight elements into selects.
  */
 function form_process_weight($element) {
-  for ($n = (-1 * $element['#delta']); $n <= $element['#delta']; $n++) {
-    $weights[$n] = $n;
-  }
-  $element['#options'] = $weights;
-  $element['#type'] = 'select';
   $element['#is_weight'] = TRUE;
-  $element += element_info('select');
+
+  // If the number of options is small enough, use a select field.
+  $max_elements = variable_get('drupal_weight_select_max', DRUPAL_WEIGHT_SELECT_MAX);
+  if ($element['#delta'] <= $max_elements) {
+    $element['#type'] = 'select';
+    for ($n = (-1 * $element['#delta']); $n <= $element['#delta']; $n++) {
+      $weights[$n] = $n;
+    }
+    $element['#options'] = $weights;
+    $element += element_info('select');
+  }
+  // Otherwise, use a text field.
+  else {
+    $element['#type'] = 'textfield';
+    // Use a field big enough to fit most weights.
+    $element['#size'] = 10;
+    $element['#element_validate'] = array('element_validate_integer');
+    $element += element_info('textfield');
+  }
+
   return $element;
 }
 
