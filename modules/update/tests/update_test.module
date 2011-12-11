@@ -1,6 +1,15 @@
 <?php
 
 /**
+ * Implements hook_system_theme_info().
+ */
+function update_test_system_theme_info() {
+  $themes['update_test_basetheme'] = drupal_get_path('module', 'update_test') . '/themes/update_test_basetheme/update_test_basetheme.info';
+  $themes['update_test_subtheme'] = drupal_get_path('module', 'update_test') . '/themes/update_test_subtheme/update_test_subtheme.info';
+  return $themes;
+}
+
+/**
  * Implements hook_menu().
  */
 function update_test_menu() {

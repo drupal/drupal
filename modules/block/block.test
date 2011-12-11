@@ -764,6 +764,10 @@ class BlockHiddenRegionTestCase extends DrupalWebTestCase {
     );
   }
 
+  function setUp() {
+    parent::setUp(array('block_test'));
+  }
+
   /**
    * Tests that hidden regions do not inherit blocks when a theme is enabled.
    */

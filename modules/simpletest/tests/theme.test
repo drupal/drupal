@@ -9,6 +9,8 @@
  * Unit tests for the Theme API.
  */
 class ThemeUnitTest extends DrupalWebTestCase {
+  protected $profile = 'testing';
+
   public static function getInfo() {
     return array(
       'name' => 'Theme API',

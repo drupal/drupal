@@ -2472,6 +2472,18 @@ function _system_update_bootstrap_status() {
 function _system_rebuild_theme_data() {
   // Find themes
   $themes = drupal_system_listing('/^' . DRUPAL_PHP_FUNCTION_PATTERN . '\.info$/', 'themes');
+  // Allow modules to add further themes.
+  if ($module_themes = module_invoke_all('system_theme_info')) {
+    foreach ($module_themes as $name => $uri) {
+      // @see file_scan_directory()
+      $themes[$name] = (object) array(
+        'uri' => $uri,
+        'filename' => pathinfo($uri, PATHINFO_FILENAME),
+        'name' => $name,
+      );
+    }
+  }
+
   // Find theme engines
   $engines = drupal_system_listing('/^' . DRUPAL_PHP_FUNCTION_PATTERN . '\.engine$/', 'themes/engines');
 
