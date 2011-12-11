@@ -141,15 +141,19 @@ following the instructions in the INTRODUCTION section at the top of this file:
    download Drupal 6.x and follow the instructions in its UPGRADE.txt. This
    document only applies for upgrades from 6.x to 7.x.
 
-3. Log in as user ID 1 (the site maintenance user).
+3. In addition to updating to the latest available version of Drupal 7.x core,
+   you must also upgrade all of your contributed modules for Drupal to their
+   latest Drupal 6.x versions.
 
-4. Go to Administer > Site configuration > Site maintenance. Select
+4. Log in as user ID 1 (the site maintenance user).
+
+5. Go to Administer > Site configuration > Site maintenance. Select
    "Off-line" and save the configuration.
 
-5. Go to Administer > Site building > Themes. Enable "Garland" and select it as
+6. Go to Administer > Site building > Themes. Enable "Garland" and select it as
    the default theme.
 
-6. Go to Administer > Site building > Modules. Disable all modules that are not
+7. Go to Administer > Site building > Modules. Disable all modules that are not
    listed under "Core - required" or "Core - optional". It is possible that some
    modules cannot be disabled, because others depend on them. Repeat this step
    until all non-core modules are disabled.
@@ -158,21 +162,21 @@ following the instructions in the INTRODUCTION section at the top of this file:
    no longer need their data, then you can uninstall them under the Uninstall
    tab after disabling them.
 
-7. On the command line or in your FTP client, remove the file
+8. On the command line or in your FTP client, remove the file
 
      sites/default/default.settings.php
 
-8. Remove all old core files and directories, except for the 'sites' directory
+9. Remove all old core files and directories, except for the 'sites' directory
    and any custom files you added elsewhere.
 
    If you made modifications to files like .htaccess or robots.txt, you will
    need to re-apply them from your backup, after the new files are in place.
 
-9. If you uninstalled any modules, remove them from the sites/all/modules and
+10. If you uninstalled any modules, remove them from the sites/all/modules and
    other sites/*/modules directories. Leave other modules in place, even though
    they are incompatible with Drupal 7.x.
 
-10. Download the latest Drupal 7.x release from http://drupal.org to a
+11. Download the latest Drupal 7.x release from http://drupal.org to a
    directory outside of your web root. Extract the archive and copy the files
    into your Drupal directory.
 
@@ -191,14 +195,14 @@ following the instructions in the INTRODUCTION section at the top of this file:
    from http://drupal.org using your web browser, extract it, and then use an
    FTP client to upload the files to your web root.
 
-11. Re-apply any modifications to files such as .htaccess or robots.txt.
+12. Re-apply any modifications to files such as .htaccess or robots.txt.
 
-12. Make your settings.php file writeable, so that the update process can
+13. Make your settings.php file writeable, so that the update process can
    convert it to the format of Drupal 7.x. settings.php is usually located in
 
      sites/default/settings.php
 
-13. Run update.php by visiting http://www.example.com/update.php (replace
+14. Run update.php by visiting http://www.example.com/update.php (replace
    www.example.com with your domain name). This will update the core database
    tables.
 
@@ -214,17 +218,17 @@ following the instructions in the INTRODUCTION section at the top of this file:
 
    - Once the upgrade is done, $update_free_access must be reverted to FALSE.
 
-14. Backup your database after the core upgrade has run.
+15. Backup your database after the core upgrade has run.
 
-15. Replace and update your non-core modules and themes, following the
+16. Replace and update your non-core modules and themes, following the
    procedures at http://drupal.org/node/948216
 
-16. Go to Administration > Reports > Status report. Verify that everything is
+17. Go to Administration > Reports > Status report. Verify that everything is
    working as expected.
 
-17. Ensure that $update_free_access is FALSE in settings.php.
+18. Ensure that $update_free_access is FALSE in settings.php.
 
-18. Go to Administration > Configuration > Development > Maintenance mode.
+19. Go to Administration > Configuration > Development > Maintenance mode.
    Disable the "Put site into maintenance mode" checkbox and save the
    configuration.
 
