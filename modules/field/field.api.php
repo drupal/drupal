@@ -115,6 +115,8 @@ function hook_field_extra_fields_alter(&$info) {
  *
  * A third kind of pluggable handlers, storage backends, is defined by the
  * @link field_storage Field Storage API @endlink.
+ *
+ * @see field
  */
 
 /**
