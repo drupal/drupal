@@ -2341,8 +2341,10 @@ class DrupalJSONTest extends DrupalUnitTestCase {
       $str .= chr($i);
     }
     // Characters that must be escaped.
-    $html_unsafe = array('<', '>', '&');
-    $html_unsafe_escaped = array('\u003c', '\u003e', '\u0026');
+    // We check for unescaped " separately.
+    $html_unsafe = array('<', '>', '\'', '&');
+    // The following are the encoded forms of: < > ' & "
+    $html_unsafe_escaped = array('\u003C', '\u003E', '\u0027', '\u0026', '\u0022');
 
     // Verify there aren't character encoding problems with the source string.
     $this->assertIdentical(strlen($str), 128, t('A string with the full ASCII table has the correct length.'));
@@ -2353,6 +2355,11 @@ class DrupalJSONTest extends DrupalUnitTestCase {
     // Verify that JSON encoding produces a string with all of the characters.
     $json = drupal_json_encode($str);
     $this->assertTrue(strlen($json) > strlen($str), t('A JSON encoded string is larger than the source string.'));
+
+    // The first and last characters should be ", and no others.
+    $this->assertTrue($json[0] == '"', t('A JSON encoded string begins with ".'));
+    $this->assertTrue($json[strlen($json) - 1] == '"', t('A JSON encoded string ends with ".'));
+    $this->assertTrue(substr_count($json, '"') == 2, t('A JSON encoded string contains exactly two ".'));
 
     // Verify that encoding/decoding is reversible.
     $json_decoded = drupal_json_decode($json);
