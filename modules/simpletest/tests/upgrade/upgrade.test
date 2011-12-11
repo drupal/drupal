@@ -171,6 +171,7 @@ abstract class UpgradePathTestCase extends DrupalWebTestCase {
     $this->variable_set('site_mail', 'simpletest@example.com');
 
     drupal_set_time_limit($this->timeLimit);
+    $this->setup = TRUE;
   }
 
   /**
