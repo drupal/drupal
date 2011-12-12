@@ -4003,7 +4003,7 @@ function theme_form_element_label($variables) {
   $t = get_t();
 
   // If title and required marker are both empty, output no label.
-  if (empty($element['#title']) && empty($element['#required'])) {
+  if ((!isset($element['#title']) || $element['#title'] === '') && empty($element['#required'])) {
     return '';
   }
 
