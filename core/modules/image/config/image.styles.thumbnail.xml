@@ -4,6 +4,7 @@
   <effects>
     <effect_1>
       <name>image_scale</name>
+      <ieid>effect_1</ieid>
       <data>
         <width>100</width>
         <height>100</height>
