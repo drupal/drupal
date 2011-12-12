@@ -385,7 +385,7 @@ function image_effect_form($form, &$form_state, $style, $effect) {
 function image_effect_form_submit($form, &$form_state) {
   $style = $form_state['image_style'];
   $effect = array_merge($form_state['image_effect'], $form_state['values']);
-  $effect['isid'] = $style['isid'];
+  $effect['style_name'] = $style['name'];
   image_effect_save($effect);
   drupal_set_message(t('The image effect was successfully applied.'));
   $form_state['redirect'] = 'admin/config/media/image-styles/edit/' . $style['name'];

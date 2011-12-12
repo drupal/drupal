@@ -1031,13 +1031,19 @@ function image_effect_load($name, $style_name) {
  *   An image effect array. In the case of a new effect, 'ieid' will be set.
  */
 function image_effect_save($effect) {
+  $config = config('image.styles.' . $effect['style_name']);
   if (!empty($effect['ieid'])) {
-    drupal_write_record('image_effects', $effect, 'ieid');
+    $old_effect = $config->get('effects.' . $effect['ieid']);
+    foreach ($old_effect as $key => $value) {
+      $old_effect[$key] = $effect[$key];
+      $config->set('effects.' . $effect['ieid'], $old_effect);
+    }
   }
   else {
     drupal_write_record('image_effects', $effect);
   }
-  $style = image_style_load(NULL, $effect['isid']);
+  $config->save();
+  $style = image_style_load(NULL, $effect['style_name']);
   image_style_flush($style);
   return $effect;
 }
