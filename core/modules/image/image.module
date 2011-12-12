@@ -459,10 +459,10 @@ function image_styles() {
         $config = config($config_name);
         $style['name'] = $config->get('name');
         $style['storage'] = IMAGE_STORAGE_DEFAULT;
-        foreach ($config->get('effects') as $key => $effect) {
-          $definition = image_effect_definition_load($key);
+        foreach ($config->get('effects') as $effect) {
+          $definition = image_effect_definition_load($effect['name']);
           $effect = array_merge($definition, $effect);
-          $style['effects'][$key] = $effect;
+          $style['effects'][$effect['name']] = $effect;
         }
         $styles[$style['name']] = $style;
       }
