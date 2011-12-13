@@ -84,7 +84,12 @@ function book_permission() {
 }
 
 /**
- * Inject links into $node as needed.
+ * Adds relevant book links to the node's links.
+ *
+ * @param $node
+ *   The book page node to add links to.
+ * @param $view_mode
+ *   The view mode of the node.
  */
 function book_node_view_link($node, $view_mode) {
   $links = array();
@@ -190,14 +195,30 @@ function book_menu() {
 }
 
 /**
- * Menu item access callback - determine if the outline tab is accessible.
+ * Access callback: Determines if the outline tab is accessible.
+ *
+ * Path:
+ * - admin/content/book/%node
+ * - node/%node/outline
+ *
+ * @param $node
+ *   The node whose outline tab is to be viewed.
+ *
+ * @see book_menu()
  */
 function _book_outline_access($node) {
   return user_access('administer book outlines') && node_access('view', $node);
 }
 
 /**
- * Menu item access callback - determine if the user can remove nodes from the outline.
+ * Access callback: Determines if the user can remove nodes from the outline.
+ *
+ * Path: node/%node/outline/remove
+ *
+ * @param $node
+ *   The node to remove from the outline.
+ *
+ * @see book_menu()
  */
 function _book_outline_remove_access($node) {
   return isset($node->book) && ($node->book['bid'] != $node->nid) && _book_outline_access($node);
@@ -348,6 +369,9 @@ function theme_book_title_link($variables) {
  *
  * This list may be used for generating a list of all the books, or for building
  * the options for a form select.
+ *
+ * @return
+ *   An array of all books.
  */
 function book_get_books() {
   $all_books = &drupal_static(__FUNCTION__);
@@ -416,7 +440,7 @@ function book_form_node_form_alter(&$form, &$form_state, $form_id) {
 }
 
 /**
- * Submit handler to change a node's book.
+ * Form submission handler for node_form().
  *
  * This handler is run when JavaScript is disabled. It triggers the form to
  * rebuild so that the "Parent item" options are changed to reflect the newly
@@ -425,6 +449,7 @@ function book_form_node_form_alter(&$form, &$form_state, $form_id) {
  * book_form_update() Ajax callback instead.
  *
  * @see book_form_update()
+ * @see book_form_node_form_alter()
  */
 function book_pick_book_nojs_submit($form, &$form_state) {
   $form_state['node']->book = $form_state['values']['book'];
@@ -432,11 +457,17 @@ function book_pick_book_nojs_submit($form, &$form_state) {
 }
 
 /**
- * Build the parent selection form element for the node form or outline tab.
+ * Builds the parent selection form element for the node form or outline tab.
  *
  * This function is also called when generating a new set of options during the
- * Ajax callback, so an array is returned that can be used to replace an existing
- * form element.
+ * Ajax callback, so an array is returned that can be used to replace an
+ * existing form element.
+ *
+ * @param $book_link
+ *   A fully loaded menu link that is part of the book hierarchy.
+ *
+ * @return
+ *   A parent selection form element.
  */
 function _book_parent_select($book_link) {
   if (variable_get('menu_override_parent_selector', FALSE)) {
@@ -479,7 +510,10 @@ function _book_parent_select($book_link) {
 }
 
 /**
- * Build the common elements of the book form for the node and outline forms.
+ * Builds the common elements of the book form for the node and outline forms.
+ *
+ * @param $node
+ *   The node whose form is being viewed.
  */
 function _book_add_form_elements(&$form, &$form_state, $node) {
   // If the form is being processed during the Ajax callback of our book bid
@@ -577,10 +611,17 @@ function book_form_update($form, $form_state) {
 }
 
 /**
- * Common helper function to handles additions and updates to the book outline.
+ * Handles additions and updates to the book outline.
  *
- * Performs all additions and updates to the book outline through node addition,
- * node editing, node deletion, or the outline tab.
+ * This common helper function performs all additions and updates to the book
+ * outline through node addition, node editing, node deletion, or the outline
+ * tab.
+ *
+ * @param $node
+ *   The node that is being saved, added, deleted, or moved.
+ *
+ * @return
+ *   TRUE if the menu link was saved; FALSE otherwise.
  */
 function _book_update_outline($node) {
   if (empty($node->book['bid'])) {
@@ -643,7 +684,7 @@ function _book_update_outline($node) {
 }
 
 /**
- * Update the bid for a page and its children when it is moved to a new book.
+ * Updates the book ID of a page and its children when it moves to a new book.
  *
  * @param $book_link
  *   A fully loaded menu link that is part of the book hierarchy.
@@ -665,16 +706,17 @@ function book_update_bid($book_link) {
 }
 
 /**
- * Get the book menu tree for a page, and return it as a linear array.
+ * Gets the book menu tree for a page and returns it as a linear array.
  *
  * @param $book_link
  *   A fully loaded menu link that is part of the book hierarchy.
+ *
  * @return
  *   A linear array of menu links in the order that the links are shown in the
  *   menu, so the previous and next pages are the elements before and after the
- *   element corresponding to $node. The children of $node (if any) will come
- *   immediately after it in the array, and links will only be fetched as deep
- *   as one level deeper than $book_link.
+ *   element corresponding to the current node. The children of the current node
+ *   (if any) will come immediately after it in the array, and links will only
+ *   be fetched as deep as one level deeper than $book_link.
  */
 function book_get_flat_menu($book_link) {
   $flat = &drupal_static(__FUNCTION__, array());
@@ -690,7 +732,14 @@ function book_get_flat_menu($book_link) {
 }
 
 /**
- * Recursive helper function for book_get_flat_menu().
+ * Recursively converts a tree of menu links to a flat array.
+ *
+ * @param $tree
+ *   A tree of menu links in an array.
+ * @param $flat
+ *   A flat array of the menu links from $tree.
+ *
+ * @see book_get_flat_menu().
  */
 function _book_flatten_menu($tree, &$flat) {
   foreach ($tree as $data) {
@@ -705,6 +754,13 @@ function _book_flatten_menu($tree, &$flat) {
 
 /**
  * Fetches the menu link for the previous page of the book.
+ *
+ * @param $book_link
+ *   A fully loaded menu link that is part of the book hierarchy.
+ *
+ * @return
+ *   A fully loaded menu link for the page before the one represented in
+ *   $book_link.
  */
 function book_prev($book_link) {
   // If the parent is zero, we are at the start of a book.
@@ -740,6 +796,13 @@ function book_prev($book_link) {
 
 /**
  * Fetches the menu link for the next page of the book.
+ *
+ * @param $book_link
+ *   A fully loaded menu link that is part of the book hierarchy.
+ *
+ * @return
+ *   A fully loaded menu link for the page after the one represented in
+ *   $book_link.
  */
 function book_next($book_link) {
   $flat = book_get_flat_menu($book_link);
@@ -755,7 +818,13 @@ function book_next($book_link) {
 }
 
 /**
- * Format the menu links for the child pages of the current page.
+ * Formats the menu links for the child pages of the current page.
+ *
+ * @param $book_link
+ *   A fully loaded menu link that is part of the book hierarchy.
+ *
+ * @return
+ *   HTML for the links to the child pages of the current page.
  */
 function book_children($book_link) {
   $flat = book_get_flat_menu($book_link);
@@ -784,7 +853,13 @@ function book_children($book_link) {
 }
 
 /**
- * Generate the corresponding menu name from a book ID.
+ * Generates the corresponding menu name from a book ID.
+ *
+ * @param $bid
+ *   The book ID for which to make a menu name.
+ *
+ * @return
+ *   The menu name.
  */
 function book_menu_name($bid) {
   return 'book-toc-' . $bid;
@@ -824,7 +899,7 @@ function book_node_view($node, $view_mode) {
 /**
  * Implements hook_page_alter().
  *
- * Add the book menu to the list of menus used to build the active trail when
+ * Adds the book menu to the list of menus used to build the active trail when
  * viewing a book page.
  */
 function book_page_alter(&$page) {
@@ -940,14 +1015,24 @@ function book_node_prepare($node) {
 }
 
 /**
- * Find the depth limit for items in the parent select.
+ * Finds the depth limit for items in the parent select.
+ *
+ * @param $book_link
+ *   A fully loaded menu link that is part of the book hierarchy.
+ *
+ * @return
+ *   The depth limit for items in the parent select.
  */
 function _book_parent_depth_limit($book_link) {
   return MENU_MAX_DEPTH - 1 - (($book_link['mlid'] && $book_link['has_children']) ? menu_link_children_relative_depth($book_link) : 0);
 }
 
 /**
- * Form altering function for the confirm form for a single node deletion.
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * Alters the confirm form for a single node deletion.
+ *
+ * @see node_delete_confirm()
  */
 function book_form_node_delete_confirm_alter(&$form, $form_state) {
   $node = node_load($form['nid']['#value']);
@@ -961,23 +1046,29 @@ function book_form_node_delete_confirm_alter(&$form, $form_state) {
 }
 
 /**
- * Return an array with default values for a book link.
+ * Returns an array with default values for a book page's menu link.
+ *
+ * @param $nid
+ *   The ID of the node whose menu link is being created.
+ *
+ * @return
+ *   The default values for the menu link.
  */
 function _book_link_defaults($nid) {
   return array('original_bid' => 0, 'menu_name' => '', 'nid' => $nid, 'bid' => 0, 'router_path' => 'node/%', 'plid' => 0, 'mlid' => 0, 'has_children' => 0, 'weight' => 0, 'module' => 'book', 'options' => array());
 }
 
 /**
- * Process variables for book-all-books-block.tpl.php.
+ * Processes variables for book-all-books-block.tpl.php.
  *
- * The $variables array contains the following arguments:
- * - $book_menus
+ * All non-renderable elements are removed so that the template has full access
+ * to the structured data but can also simply iterate over all elements and
+ * render them (as in the default template).
  *
- * All non-renderable elements are removed so that the template has full
- * access to the structured data but can also simply iterate over all
- * elements and render them (as in the default template).
+ * The $variables array contains the following elements:
+ * - book_menus
  *
- * @see book-navigation.tpl.php
+ * @see book-all-books-block.tpl.php
  */
 function template_preprocess_book_all_books_block(&$variables) {
   // Remove all non-renderable elements.
@@ -989,10 +1080,10 @@ function template_preprocess_book_all_books_block(&$variables) {
 }
 
 /**
- * Process variables for book-navigation.tpl.php.
+ * Processes variables for book-navigation.tpl.php.
  *
- * The $variables array contains the following arguments:
- * - $book_link
+ * The $variables array contains the following elements:
+ * - book_link
  *
  * @see book-navigation.tpl.php
  */
@@ -1049,13 +1140,13 @@ function template_preprocess_book_navigation(&$variables) {
 /**
  * Recursively processes and formats menu items for book_toc().
  *
- * This helper function recursively modifies the $toc array for each item in
- * $tree, ignoring items in the exclude array or at a depth greater than the
- * limit.  Truncates titles over thirty characters and appends an indentation
- * string incremented by depth.
+ * This helper function recursively modifies the table of contents array for
+ * each item in the menu tree, ignoring items in the exclude array or at a depth
+ * greater than the limit. Truncates titles over thirty characters and appends
+ * an indentation string incremented by depth.
  *
  * @param $tree
- *   The data structure of the book's menu tree.  Includes hidden links.
+ *   The data structure of the book's menu tree. Includes hidden links.
  * @param $indent
  *   A string appended to each menu item title. Increments by '--' per depth
  *   level.
@@ -1063,8 +1154,8 @@ function template_preprocess_book_navigation(&$variables) {
  *   Reference to the table of contents array. This is modified in place, so the
  *   function does not have a return value.
  * @param $exclude
- *   Optional array of mlid values. Any link whose mlid is in this array will be
- *   excluded (along with its children).
+ *   Optional array of menu link ID values. Any link whose menu link ID is in
+ *   this array will be excluded (along with its children).
  * @param $depth_limit
  *   Any link deeper than this value will be excluded (along with its children).
  */
@@ -1092,10 +1183,12 @@ function _book_toc_recurse($tree, $indent, &$toc, $exclude, $depth_limit) {
  * @param $depth_limit
  *   Any link deeper than this value will be excluded (along with its children).
  * @param $exclude
- *   Optional array of mlid values. Any link whose mlid is in this array
- *   will be excluded (along with its children).
+ *   Optional array of menu link ID values. Any link whose menu link ID is in
+ *   this array will be excluded (along with its children).
+ *
  * @return
- *   An array of mlid, title pairs for use as options for selecting a book page.
+ *   An array of (menu link ID, title) pairs for use as options for selecting a
+ *   book page.
  */
 function book_toc($bid, $depth_limit, $exclude = array()) {
   $tree = menu_tree_all_data(book_menu_name($bid));
@@ -1106,12 +1199,12 @@ function book_toc($bid, $depth_limit, $exclude = array()) {
 }
 
 /**
- * Process variables for book-export-html.tpl.php.
+ * Processes variables for book-export-html.tpl.php.
  *
- * The $variables array contains the following arguments:
- * - $title
- * - $contents
- * - $depth
+ * The $variables array contains the following elements:
+ * - title
+ * - contents
+ * - depth
  *
  * @see book-export-html.tpl.php
  */
@@ -1126,16 +1219,16 @@ function template_preprocess_book_export_html(&$variables) {
 }
 
 /**
- * Traverse the book tree to build printable or exportable output.
+ * Traverses the book tree to build printable or exportable output.
  *
- * During the traversal, the $visit_func() callback is applied to each
- * node, and is called recursively for each child of the node (in weight,
- * title order).
+ * During the traversal, the $visit_func() callback is applied to each node and
+ * is called recursively for each child of the node (in weight, title order).
  *
  * @param $tree
  *   A subtree of the book menu hierarchy, rooted at the current page.
  * @param $visit_func
  *   A function callback to be called upon visiting a node in the tree.
+ *
  * @return
  *   The output generated in visiting each node.
  */
@@ -1167,14 +1260,15 @@ function book_export_traverse($tree, $visit_func) {
 /**
  * Generates printer-friendly HTML for a node.
  *
- * @see book_export_traverse()
- *
  * @param $node
  *   The node that will be output.
  * @param $children
  *   All the rendered child nodes within the current node.
+ *
  * @return
  *   The HTML generated for the given node.
+ *
+ * @see book_export_traverse()
  */
 function book_node_export($node, $children = '') {
   $build = node_view($node, 'print');
@@ -1186,11 +1280,11 @@ function book_node_export($node, $children = '') {
 }
 
 /**
- * Process variables for book-node-export-html.tpl.php.
+ * Processes variables for book-node-export-html.tpl.php.
  *
- * The $variables array contains the following arguments:
- * - $node
- * - $children
+ * The $variables array contains the following elements:
+ * - node
+ * - children
  *
  * @see book-node-export-html.tpl.php
  */
@@ -1201,7 +1295,7 @@ function template_preprocess_book_node_export_html(&$variables) {
 }
 
 /**
- * Determine if a given node type is in the list of types allowed for books.
+ * Determines if a given node type is in the list of types allowed for books.
  */
 function book_type_is_allowed($type) {
   return in_array($type, variable_get('book_allowed_types', array('book')));
@@ -1210,8 +1304,8 @@ function book_type_is_allowed($type) {
 /**
  * Implements hook_node_type_update().
  *
- * Update book module's persistent variables if the machine-readable name of a
- * node type is changed.
+ * Updates the Book module's persistent variables if the machine-readable name
+ * of a node type is changed.
  */
 function book_node_type_update($type) {
   if (!empty($type->old_type) && $type->old_type != $type->type) {
@@ -1233,9 +1327,18 @@ function book_node_type_update($type) {
 }
 
 /**
+ * Gets a book menu link by its menu link ID.
+ *
  * Like menu_link_load(), but adds additional data from the {book} table.
  *
  * Do not call when loading a node, since this function may call node_load().
+ *
+ * @param $mlid
+ *   The menu link ID of the menu item.
+ *
+ * @return
+ *   A menu link, with the link translated for rendering and data added from the
+ *   {book} table.
  */
 function book_link_load($mlid) {
   if ($item = db_query("SELECT * FROM {menu_links} ml INNER JOIN {book} b ON b.mlid = ml.mlid LEFT JOIN {menu_router} m ON m.path = ml.router_path WHERE ml.mlid = :mlid", array(
@@ -1249,13 +1352,15 @@ function book_link_load($mlid) {
 }
 
 /**
- * Get the data representing a subtree of the book hierarchy.
+ * Gets the data representing a subtree of the book hierarchy.
  *
  * The root of the subtree will be the link passed as a parameter, so the
- * returned tree will contain this item and all its descendents in the menu tree.
+ * returned tree will contain this item and all its descendents in the menu
+ * tree.
  *
  * @param $link
  *   A fully loaded menu link.
+ *
  * @return
  *   An subtree of menu links in an array, in the order they should be rendered.
  */
