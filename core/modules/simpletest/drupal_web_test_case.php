@@ -1093,28 +1093,35 @@ class DrupalWebTestCase extends DrupalTestCase {
   }
 
   /**
-   * Create a user with a given set of permissions. The permissions correspond to the
-   * names given on the privileges page.
+   * Create a user with a given set of permissions.
    *
-   * @param $permissions
-   *   Array of permission names to assign to user.
-   * @return
+   * @param array $permissions
+   *   Array of permission names to assign to user. Note that the user always
+   *   has the default permissions derived from the "authenticated users" role.
+   *
+   * @return object|false
    *   A fully loaded user object with pass_raw property, or FALSE if account
    *   creation fails.
    */
-  protected function drupalCreateUser($permissions = array('access comments', 'access content', 'post comments', 'skip comment approval')) {
-    // Create a role with the given permission set.
-    if (!($rid = $this->drupalCreateRole($permissions))) {
-      return FALSE;
+  protected function drupalCreateUser(array $permissions = array()) {
+    // Create a role with the given permission set, if any.
+    $rid = FALSE;
+    if ($permissions) {
+      $rid = $this->drupalCreateRole($permissions);
+      if (!$rid) {
+        return FALSE;
+      }
     }
 
     // Create a user assigned to that role.
     $edit = array();
     $edit['name']   = $this->randomName();
     $edit['mail']   = $edit['name'] . '@example.com';
-    $edit['roles']  = array($rid => $rid);
     $edit['pass']   = user_password();
     $edit['status'] = 1;
+    if ($rid) {
+      $edit['roles'] = array($rid => $rid);
+    }
 
     $account = user_save(drupal_anonymous_user(), $edit);
 
