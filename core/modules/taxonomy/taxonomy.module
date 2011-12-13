@@ -312,21 +312,7 @@ function taxonomy_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'taxonomy.pages.inc',
   );
-  // We append /%menu_tail so the search text may contain slashes.
-  $items['taxonomy/autocomplete/%/%menu_tail'] = array(
-    'title' => 'Autocomplete taxonomy',
-    'page callback' => 'taxonomy_autocomplete',
-    'page arguments' => array(2, 3),
-    'access arguments' => array('access content'),
-    'type' => MENU_CALLBACK,
-    'file' => 'taxonomy.pages.inc',
-    // Needed for menu_tail_load().
-    'load arguments' => array('%map', '%index'),
-  );
-  // This matches the vocabulary name without any search text. Even though this
-  // path is never called, its existence is checked by theme_textfield() and
-  // tested in ProfileTestAutocomplete.
-  $items['taxonomy/autocomplete/%'] = array(
+  $items['taxonomy/autocomplete'] = array(
     'title' => 'Autocomplete taxonomy',
     'page callback' => 'taxonomy_autocomplete',
     'access arguments' => array('access content'),
