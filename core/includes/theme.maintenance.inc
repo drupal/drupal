@@ -44,6 +44,12 @@ function _drupal_maintenance_theme() {
 
     // We use the default theme as the maintenance theme. If a default theme
     // isn't specified in the database or in settings.php, we use Bartik.
+    // @todo Should use the actual default theme configured, but that depends on
+    //   configuration being available while possibly not having a working
+    //   database connection (yet). And only if that fails, should fall back to
+    //   Stark otherwise. Since there is no low-level access to configuration
+    //   currently, we only consult settings.php and fall back to Bartik
+    //   otherwise, as it looks generic enough and way more user-friendly.
     $custom_theme = variable_get('maintenance_theme', variable_get('theme_default', 'bartik'));
   }
 

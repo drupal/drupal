@@ -62,8 +62,14 @@ function standard_install() {
   $full_html_format = (object) $full_html_format;
   filter_format_save($full_html_format);
 
+  // Enable Bartik theme and set it as default theme instead of Stark.
+  // @see system_install()
+  $default_theme = 'bartik';
+  variable_set('theme_default', $default_theme);
+  theme_enable(array($default_theme));
+  theme_disable(array('stark'));
+
   // Enable some standard blocks.
-  $default_theme = variable_get('theme_default', 'bartik');
   $admin_theme = 'seven';
   $values = array(
     array(

@@ -420,7 +420,7 @@ function ajax_base_page_theme() {
     // to see the default theme, token validation isn't required for that, and
     // bypassing it allows most use-cases to work even when accessed from the
     // page cache.
-    if ($theme === variable_get('theme_default', 'bartik') || drupal_valid_token($token, $theme)) {
+    if ($theme === variable_get('theme_default', 'stark') || drupal_valid_token($token, $theme)) {
       return $theme;
     }
   }

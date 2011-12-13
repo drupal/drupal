@@ -499,11 +499,11 @@ function system_install() {
   system_rebuild_theme_data();
 
   // Enable the default theme.
-  variable_set('theme_default', 'bartik');
+  variable_set('theme_default', 'stark');
   db_update('system')
     ->fields(array('status' => 1))
     ->condition('type', 'theme')
-    ->condition('name', 'bartik')
+    ->condition('name', 'stark')
     ->execute();
 
   // Populate the cron key variable.
@@ -1638,6 +1638,25 @@ function system_update_8001() {
     if (variable_get($theme) == 'garland') {
       variable_set($theme, 'bartik');
     }
+  }
+}
+
+/**
+ * Set Bartik as default theme if it implicitly was the default before.
+ *
+ * The default theme for Drupal core was changed from Bartik to Stark.
+ * Installation profiles (including Standard and Minimal) were changed to
+ * explicitly configure Bartik as default theme. Since Bartik was the default
+ * theme by default and may not have been explicitly configured as such
+ * previously, this update ensures that the implicit Bartik default is still the
+ * default.
+ *
+ * @see http://drupal.org/node/1181776
+ */
+function system_update_8002() {
+  $theme = variable_get('theme_default');
+  if (!isset($theme)) {
+    variable_set('theme_default', 'bartik');
   }
 }
 

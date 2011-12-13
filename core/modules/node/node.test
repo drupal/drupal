@@ -1881,7 +1881,7 @@ class NodeBlockFunctionalTest extends DrupalWebTestCase {
     $custom_block['title'] = $this->randomName();
     $custom_block['types[article]'] = TRUE;
     $custom_block['body[value]'] = $this->randomName(32);
-    $custom_block['regions[' . variable_get('theme_default', 'bartik') . ']'] = 'content';
+    $custom_block['regions[' . variable_get('theme_default', 'stark') . ']'] = 'content';
     if ($admin_theme = variable_get('admin_theme')) {
       $custom_block['regions[' . $admin_theme . ']'] = 'content';
     }

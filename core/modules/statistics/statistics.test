@@ -210,7 +210,7 @@ class StatisticsReportsTestCase extends StatisticsTestCase {
 
     // Configure and save the block.
     $block = block_load('statistics', 'popular');
-    $block->theme = variable_get('theme_default', 'bartik');
+    $block->theme = variable_get('theme_default', 'stark');
     $block->status = 1;
     $block->pages = '';
     $block->region = 'sidebar_first';

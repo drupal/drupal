@@ -130,7 +130,7 @@ function system_themes_page() {
   $themes = system_rebuild_theme_data();
   uasort($themes, 'system_sort_modules_by_info_name');
 
-  $theme_default = variable_get('theme_default', 'bartik');
+  $theme_default = variable_get('theme_default', 'stark');
   $theme_groups  = array();
 
   foreach ($themes as &$theme) {
@@ -315,7 +315,7 @@ function system_theme_disable() {
 
     // Check if the specified theme is one recognized by the system.
     if (!empty($themes[$theme])) {
-      if ($theme == variable_get('theme_default', 'bartik')) {
+      if ($theme == variable_get('theme_default', 'stark')) {
         // Don't disable the default theme.
         drupal_set_message(t('%theme is the default theme and cannot be disabled.', array('%theme' => $themes[$theme]->info['name'])), 'error');
       }
