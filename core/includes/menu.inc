@@ -1339,6 +1339,8 @@ function menu_tree_page_data($menu_name, $max_depth = NULL, $only_active_trail =
  *     Defaults to 1, which is the default to build a whole tree for a menu, i.e.
  *     excluding menu container itself.
  *   - max_depth: The maximum depth of menu links in the resulting tree.
+ *   - conditions: An associative array of custom database select query
+ *     condition key/value pairs; see _menu_build_tree() for the actual query.
  *
  * @return
  *   A fully built menu tree.
@@ -1421,6 +1423,12 @@ function _menu_build_tree($menu_name, array $parameters = array()) {
     }
     if (isset($parameters['max_depth'])) {
       $query->condition('ml.depth', $parameters['max_depth'], '<=');
+    }
+    // Add custom query conditions, if any were passed.
+    if (isset($parameters['conditions'])) {
+      foreach ($parameters['conditions'] as $column => $value) {
+        $query->condition($column, $value);
+      }
     }
 
     // Build an ordered array of links using the query result object.
