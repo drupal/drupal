@@ -366,6 +366,29 @@ class FormsTestCase extends DrupalWebTestCase {
     $this->drupalPost(NULL, array('checkboxes[one]' => TRUE, 'checkboxes[two]' => TRUE), t('Submit'));
     $this->assertText('An illegal choice has been detected.', t('Input forgery was detected.'));
   }
+
+  /**
+   * Tests required attribute.
+   */
+  function testRequiredAttribute() {
+    $this->drupalGet('form-test/required-attribute');
+    $expected = 'required';
+    // Test to make sure the elements have the proper required attribute.
+    foreach (array('textfield', 'password') as $type) {
+      $element = $this->xpath('//input[@id=:id and @required=:expected]', array(
+        ':id' => 'edit-' . $type,
+        ':expected' => $expected,
+      ));
+      $this->assertTrue(!empty($element), t('The @type has the proper required attribute.', array('@type' => $type)));
+    }
+
+    // Test to make sure textarea has the proper required attribute.
+    $element = $this->xpath('//textarea[@id=:id and @required=:expected]', array(
+      ':id' => 'edit-textarea',
+      ':expected' => $expected,
+    ));
+    $this->assertTrue(!empty($element), t('Placeholder text placed in textarea.'));
+  }
 }
 
 /**
