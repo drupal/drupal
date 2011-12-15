@@ -1150,10 +1150,7 @@ function image_effect_delete($effect) {
 function image_effect_apply($image, $effect) {
   module_load_include('inc', 'image', 'image.effects');
   $function = $effect['effect callback'];
-  if (function_exists($function)) {
-    return $function($image, $effect['data']);
-  }
-  return FALSE;
+  return $function($image, $effect['data']);
 }
 
 /**

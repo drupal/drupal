@@ -281,7 +281,7 @@ function _field_ui_view_mode_menu_access($entity_type, $bundle, $view_mode, $acc
       if ($access_callback == 'user_access') {
         return (count($args) == 1) ? user_access($args[0]) : user_access($args[0], $args[1]);
       }
-      elseif (function_exists($access_callback)) {
+      else {
         return call_user_func_array($access_callback, $args);
       }
     }

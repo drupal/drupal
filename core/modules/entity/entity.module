@@ -373,7 +373,7 @@ function entity_uri($entity_type, $entity) {
   }
 
   // Invoke the callback to get the URI. If there is no callback, return NULL.
-  if (isset($uri_callback) && function_exists($uri_callback)) {
+  if (isset($uri_callback)) {
     $uri = $uri_callback($entity);
     // Pass the entity data to url() so that alter functions do not need to
     // lookup this entity again.
@@ -403,7 +403,7 @@ function entity_uri($entity_type, $entity) {
 function entity_label($entity_type, $entity) {
   $label = FALSE;
   $info = entity_get_info($entity_type);
-  if (isset($info['label callback']) && function_exists($info['label callback'])) {
+  if (isset($info['label callback'])) {
     $label = $info['label callback']($entity_type, $entity);
   }
   elseif (!empty($info['entity keys']['label']) && isset($entity->{$info['entity keys']['label']})) {

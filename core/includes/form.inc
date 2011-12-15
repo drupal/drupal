@@ -784,7 +784,7 @@ function drupal_retrieve_form($form_id, &$form_state) {
   // the actual form builder function ($callback) expects. This allows for
   // pre-populating a form with common elements for certain forms, such as
   // back/next/save buttons in multi-step form wizards. See drupal_build_form().
-  if (isset($form_state['wrapper_callback']) && function_exists($form_state['wrapper_callback'])) {
+  if (isset($form_state['wrapper_callback'])) {
     $form = call_user_func_array($form_state['wrapper_callback'], $args);
     // Put the prepopulated $form into $args.
     $args[0] = $form;
@@ -4391,9 +4391,7 @@ function batch_process($redirect = NULL, $url = 'batch', $redirect_callback = 'd
 
       // Redirect for processing.
       $function = $batch['redirect_callback'];
-      if (function_exists($function)) {
-        $function($batch['url'], array('query' => array('op' => 'start', 'id' => $batch['id'])));
-      }
+      $function($batch['url'], array('query' => array('op' => 'start', 'id' => $batch['id'])));
     }
     else {
       // Non-progressive execution: bypass the whole progressbar workflow

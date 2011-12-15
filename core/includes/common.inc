@@ -4489,10 +4489,8 @@ function drupal_process_attached($elements, $group = JS_DEFAULT, $dependency_che
   // Libraries, JavaScript and CSS have been added already, as they require
   // special handling.
   foreach ($elements['#attached'] as $callback => $options) {
-    if (function_exists($callback)) {
-      foreach ($elements['#attached'][$callback] as $args) {
-        call_user_func_array($callback, $args);
-      }
+    foreach ($elements['#attached'][$callback] as $args) {
+      call_user_func_array($callback, $args);
     }
   }
 
@@ -5784,9 +5782,7 @@ function drupal_render(&$elements) {
   // element is rendered into the final text.
   if (isset($elements['#pre_render'])) {
     foreach ($elements['#pre_render'] as $function) {
-      if (function_exists($function)) {
-        $elements = $function($elements);
-      }
+      $elements = $function($elements);
     }
   }
 
@@ -5830,9 +5826,7 @@ function drupal_render(&$elements) {
   // which allows the output'ed text to be filtered.
   if (isset($elements['#post_render'])) {
     foreach ($elements['#post_render'] as $function) {
-      if (function_exists($function)) {
-        $elements['#children'] = $function($elements['#children'], $elements);
-      }
+      $elements['#children'] = $function($elements['#children'], $elements);
     }
   }
 
@@ -7668,16 +7662,14 @@ function drupal_get_filetransfer_info() {
     $info = array();
     foreach (module_implements('filetransfer_info') as $module) {
       $function = $module . '_filetransfer_info';
-      if (function_exists($function)) {
-        $result = $function();
-        if (isset($result) && is_array($result)) {
-          foreach ($result as &$values) {
-            if (empty($values['file path'])) {
-              $values['file path'] = drupal_get_path('module', $module);
-            }
+      $result = $function();
+      if (isset($result) && is_array($result)) {
+        foreach ($result as &$values) {
+          if (empty($values['file path'])) {
+            $values['file path'] = drupal_get_path('module', $module);
           }
-          $info = array_merge_recursive($info, $result);
         }
+        $info = array_merge_recursive($info, $result);
       }
     }
     drupal_alter('filetransfer_info', $info);

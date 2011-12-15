@@ -86,7 +86,7 @@ function token_replace($text, array $data = array(), array $options = array()) {
   }
 
   // Optionally alter the list of replacement values.
-  if (!empty($options['callback']) && function_exists($options['callback'])) {
+  if (!empty($options['callback'])) {
     $function = $options['callback'];
     $function($replacements, $data, $options);
   }

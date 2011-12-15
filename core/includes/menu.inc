@@ -632,7 +632,7 @@ function _menu_check_access(&$item, $map) {
     if ($callback == 'user_access') {
       $item['access'] = (count($arguments) == 1) ? user_access($arguments[0]) : user_access($arguments[0], $arguments[1]);
     }
-    elseif (function_exists($callback)) {
+    else {
       $item['access'] = call_user_func_array($callback, $arguments);
     }
   }
@@ -692,7 +692,7 @@ function _menu_item_localize(&$item, $map, $link_translate = FALSE) {
         $item['title'] = t($item['title'], menu_unserialize($item['title_arguments'], $map));
       }
     }
-    elseif ($callback && function_exists($callback)) {
+    elseif ($callback) {
       if (empty($item['title_arguments'])) {
         $item['title'] = $callback($item['title']);
       }
@@ -1750,7 +1750,7 @@ function menu_get_custom_theme($initialize = FALSE) {
     // If this returns a valid theme, it will override any theme that was set
     // by a hook_custom_theme() implementation above.
     $router_item = menu_get_item();
-    if (!empty($router_item['access']) && !empty($router_item['theme_callback']) && function_exists($router_item['theme_callback'])) {
+    if (!empty($router_item['access']) && !empty($router_item['theme_callback'])) {
       $theme_name = call_user_func_array($router_item['theme_callback'], $router_item['theme_arguments']);
       if (drupal_theme_access($theme_name)) {
         $custom_theme = $theme_name;

@@ -1244,7 +1244,7 @@ function book_export_traverse($tree, $visit_func) {
         $children = book_export_traverse($data['below'], $visit_func);
       }
 
-      if (function_exists($visit_func)) {
+      if (!empty($visit_func)) {
         $output .= call_user_func($visit_func, $node, $children);
       }
       else {

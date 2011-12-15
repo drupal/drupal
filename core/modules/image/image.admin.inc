@@ -389,9 +389,8 @@ function image_effect_form($form, &$form_state, $style, $effect) {
 
   $form['#tree'] = TRUE;
   $form['#attached']['css'][drupal_get_path('module', 'image') . '/image.admin.css'] = array();
-  if (function_exists($effect['form callback'])) {
-    $form['data'] = call_user_func($effect['form callback'], $effect['data']);
-  }
+
+  $form['data'] = call_user_func($effect['form callback'], $effect['data']);
 
   // Check the URL for a weight, then the image effect, otherwise use default.
   $form['weight'] = array(

@@ -494,9 +494,7 @@ function field_get_default_value($entity_type, $entity, $field, $instance, $lang
   $items = array();
   if (!empty($instance['default_value_function'])) {
     $function = $instance['default_value_function'];
-    if (function_exists($function)) {
-      $items = $function($entity_type, $entity, $field, $instance, $langcode);
-    }
+    $items = $function($entity_type, $entity, $field, $instance, $langcode);
   }
   elseif (!empty($instance['default_value'])) {
     $items = $instance['default_value'];
