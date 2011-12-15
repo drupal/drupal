@@ -210,13 +210,6 @@ function form_test_menu() {
     'type' => MENU_CALLBACK,
   );
 
-  $items['form-test/required-attribute'] = array(
-    'title' => 'Required',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('form_test_required_attribute'),
-    'access callback' => TRUE,
-  );
-
   return $items;
 }
 
@@ -1689,19 +1682,4 @@ function form_test_checkboxes_zero($form, &$form_state, $json = TRUE) {
 
 function _form_test_checkboxes_zero_no_redirect($form, &$form_state) {
   $form_state['redirect'] = FALSE;
-}
-
-/**
- * Builds a form to test the placeholder attribute.
- */
-function form_test_required_attribute($form, &$form_state) {
-  foreach (array('textfield', 'textarea', 'password') as $type) {
-    $form[$type] = array(
-      '#type' => $type,
-      '#required' => TRUE,
-      '#title' => $type,
-    );
-  }
-
-  return $form;
 }

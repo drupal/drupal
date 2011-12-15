@@ -1944,15 +1944,6 @@ function _form_builder_handle_input_element($form_id, &$element, &$form_state) {
     }
   }
 
-  // The 'required' attribute should only be printed when #required is true.
-  // The presence of a boolean attribute on an element represents the true
-  // value, and the absence of the attribute represents the false value.
-  // http://www.w3.org/TR/html5/common-microsyntaxes.html#boolean-attribute.
-  if (!empty($element['#required'])) {
-    $element['#attributes']['required'] = 'required';
-    $element['#attributes']['aria-required'] = 'true';
-  }
-
   // With JavaScript or other easy hacking, input can be submitted even for
   // elements with #access=FALSE or #disabled=TRUE. For security, these must
   // not be processed. Forms that set #disabled=TRUE on an element do not
