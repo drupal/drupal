@@ -323,9 +323,9 @@ function image_file_move($file, $source) {
 }
 
 /**
- * Implements hook_file_delete().
+ * Implements hook_file_predelete().
  */
-function image_file_delete($file) {
+function image_file_predelete($file) {
   // Delete any image derivatives of this image.
   image_path_flush($file->uri);
 }

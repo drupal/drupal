@@ -844,9 +844,9 @@ function user_file_move($file, $source) {
 }
 
 /**
- * Implements hook_file_delete().
+ * Implements hook_file_predelete().
  */
-function user_file_delete($file) {
+function user_file_predelete($file) {
   // Remove any references to the file.
   db_update('users')
     ->fields(array('picture' => 0))
@@ -2356,7 +2356,9 @@ function user_cancel($edit, $uid, $method) {
   );
   batch_set($batch);
 
-  // Modules use hook_user_delete() to respond to deletion.
+  // When the 'user_cancel_delete' method is used, user_delete() is called,
+  // which invokes hook_user_predelete() and hook_user_delete(). Modules
+  // should use those hooks to respond to the account deletion.
   if ($method != 'user_cancel_delete') {
     // Allow modules to add further sets to this batch.
     module_invoke_all('user_cancel', $edit, $account, $method);
@@ -2436,6 +2438,9 @@ function user_delete($uid) {
  *
  * @param $uids
  *   An array of user IDs.
+ *
+ * @see hook_user_predelete()
+ * @see hook_user_delete()
  */
 function user_delete_multiple(array $uids) {
   if (!empty($uids)) {
@@ -2444,8 +2449,10 @@ function user_delete_multiple(array $uids) {
     $transaction = db_transaction();
     try {
       foreach ($accounts as $uid => $account) {
-        module_invoke_all('user_delete', $account);
-        module_invoke_all('entity_delete', $account, 'user');
+        // Allow modules to act prior to user deletion.
+        module_invoke_all('user_predelete', $account);
+        module_invoke_all('entity_predelete', $account, 'user');
+
         field_attach_delete('user', $account);
         drupal_session_destroy_uid($account->uid);
       }
@@ -2459,6 +2466,10 @@ function user_delete_multiple(array $uids) {
       db_delete('authmap')
         ->condition('uid', $uids, 'IN')
         ->execute();
+
+        // Allow modules to respond to user deletion.
+        module_invoke_all('user_delete', $account);
+        module_invoke_all('entity_delete', $account, 'user');
     }
     catch (Exception $e) {
       $transaction->rollback();

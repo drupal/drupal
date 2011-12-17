@@ -1225,6 +1225,7 @@ function file_create_filename($basename, $directory) {
  * @see file_unmanaged_delete()
  * @see file_usage_list()
  * @see file_usage_delete()
+ * @see hook_file_predelete()
  * @see hook_file_delete()
  */
 function file_delete(stdClass $file, $force = FALSE) {
@@ -1246,15 +1247,20 @@ function file_delete(stdClass $file, $force = FALSE) {
     return $references;
   }
 
-  // Let other modules clean up any references to the deleted file.
-  module_invoke_all('file_delete', $file);
-  module_invoke_all('entity_delete', $file, 'file');
+  // Let other modules clean up any references to the file prior to deletion.
+  module_invoke_all('file_predelete', $file);
+  module_invoke_all('entity_predelete', $file, 'file');
 
   // Make sure the file is deleted before removing its row from the
   // database, so UIs can still find the file in the database.
   if (file_unmanaged_delete($file->uri)) {
     db_delete('file_managed')->condition('fid', $file->fid)->execute();
     db_delete('file_usage')->condition('fid', $file->fid)->execute();
+
+    // Let other modules respond to file deletion.
+    module_invoke_all('file_delete', $file);
+    module_invoke_all('entity_delete', $file, 'file');
+
     return TRUE;
   }
   return FALSE;

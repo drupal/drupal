@@ -449,12 +449,19 @@ function taxonomy_vocabulary_save($vocabulary) {
  *   A vocabulary ID.
  * @return
  *   Constant indicating items were deleted.
+ *
+ * @see hook_taxonomy_vocabulary_predelete()
+ * @see hook_taxonomy_vocabulary_delete()
  */
 function taxonomy_vocabulary_delete($vid) {
   $vocabulary = taxonomy_vocabulary_load($vid);
 
   $transaction = db_transaction();
   try {
+    // Allow modules to act before vocabulary deletion.
+    module_invoke_all('taxonomy_vocabulary_predelete', $vocabulary);
+    module_invoke_all('entity_predelete', $vocabulary, 'taxonomy_vocabulary');
+
     // Only load terms without a parent, child terms will get deleted too.
     $result = db_query('SELECT t.tid FROM {taxonomy_term_data} t INNER JOIN {taxonomy_term_hierarchy} th ON th.tid = t.tid WHERE t.vid = :vid AND th.parent = 0', array(':vid' => $vid))->fetchCol();
     foreach ($result as $tid) {
@@ -465,6 +472,8 @@ function taxonomy_vocabulary_delete($vid) {
       ->execute();
 
     field_attach_delete_bundle('taxonomy_term', $vocabulary->machine_name);
+
+    // Allow modules to respond to vocabulary deletion.
     module_invoke_all('taxonomy_vocabulary_delete', $vocabulary);
     module_invoke_all('entity_delete', $vocabulary, 'taxonomy_vocabulary');
 
@@ -659,6 +668,9 @@ function taxonomy_term_save($term) {
  *   The term ID.
  * @return
  *   Status constant indicating deletion.
+ *
+ * @see hook_taxonomy_term_predelete()
+ * @see hook_taxonomy_term_delete()
  */
 function taxonomy_term_delete($tid) {
   $transaction = db_transaction();
@@ -667,6 +679,12 @@ function taxonomy_term_delete($tid) {
     while ($tids) {
       $children_tids = $orphans = array();
       foreach ($tids as $tid) {
+        // Allow modules to act before term deletion.
+        if ($term = taxonomy_term_load($tid)) {
+          module_invoke_all('taxonomy_term_predelete', $term);
+          module_invoke_all('entity_predelete', $term, 'taxonomy_term');
+        }
+
         // See if any of the term's children are about to be become orphans:
         if ($children = taxonomy_get_children($tid)) {
           foreach ($children as $child) {
@@ -678,7 +696,7 @@ function taxonomy_term_delete($tid) {
           }
         }
 
-        if ($term = taxonomy_term_load($tid)) {
+        if ($term) {
           db_delete('taxonomy_term_data')
             ->condition('tid', $tid)
             ->execute();
@@ -687,6 +705,8 @@ function taxonomy_term_delete($tid) {
             ->execute();
 
           field_attach_delete('taxonomy_term', $term);
+
+          // Allow modules to respond to term deletion.
           module_invoke_all('taxonomy_term_delete', $term);
           module_invoke_all('entity_delete', $term, 'taxonomy_term');
           taxonomy_terms_static_reset();
@@ -1806,9 +1826,9 @@ function taxonomy_node_update($node) {
 }
 
 /**
- * Implements hook_node_delete().
+ * Implements hook_node_predelete().
  */
-function taxonomy_node_delete($node) {
+function taxonomy_node_predelete($node) {
   // Clean up the {taxonomy_index} table when nodes are deleted.
   taxonomy_delete_node_index($node);
 }

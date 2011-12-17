@@ -986,9 +986,9 @@ function poll_user_cancel($edit, $account, $method) {
 }
 
 /**
- * Implements hook_user_delete().
+ * Implements hook_user_predelete().
  */
-function poll_user_delete($account) {
+function poll_user_predelete($account) {
   db_delete('poll_vote')
     ->condition('uid', $account->uid)
     ->execute();

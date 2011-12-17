@@ -303,9 +303,9 @@ function file_test_file_move($file, $source) {
 }
 
 /**
- * Implements hook_file_delete().
+ * Implements hook_file_predelete().
  */
-function file_test_file_delete($file) {
+function file_test_file_predelete($file) {
   _file_test_log_call('delete', array($file));
 }
 

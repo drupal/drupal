@@ -88,10 +88,12 @@
  * - Deleting a node (calling node_delete() or node_delete_multiple()):
  *   - Node is loaded (see Loading section above)
  *   - hook_delete() (node-type-specific)
- *   - hook_node_delete() (all)
- *   - hook_entity_delete() (all)
+ *   - hook_node_predelete() (all)
+ *   - hook_entity_predelete() (all)
  *   - field_attach_delete()
  *   - Node and revision information are deleted from database
+ *   - hook_node_delete() (all)
+ *   - hook_entity_delete() (all)
  * - Deleting a node revision (calling node_revision_delete()):
  *   - Node is loaded (see Loading section above)
  *   - Revision information is deleted from database
@@ -447,22 +449,41 @@ function hook_node_operations() {
 }
 
 /**
- * Respond to node deletion.
+ * Act before node deletion.
  *
  * This hook is invoked from node_delete_multiple() after the type-specific
- * hook_delete() has been invoked, but before hook_entity_delete and
+ * hook_delete() has been invoked, but before hook_entity_predelete() and
  * field_attach_delete() are called, and before the node is removed from the
  * node table in the database.
  *
  * @param $node
- *   The node that is being deleted.
+ *   The node that is about to be deleted.
  *
+ * @see hook_node_predelete()
+ * @see node_delete_multiple()
  * @ingroup node_api_hooks
  */
-function hook_node_delete($node) {
+function hook_node_predelete($node) {
   db_delete('mytable')
     ->condition('nid', $node->nid)
     ->execute();
+}
+
+/**
+ * Respond to node deletion.
+ *
+ * This hook is invoked from node_delete_multiple() after field_attach_delete()
+ * has been called and after the node has been removed from the database.
+ *
+ * @param $node
+ *   The node that has been deleted.
+ *
+ * @see hook_node_predelete()
+ * @see node_delete_multiple()
+ * @ingroup node_api_hooks
+ */
+function hook_node_delete($node) {
+  drupal_set_message(t('Node: @title has been deleted', array('@title' => $node->title)));
 }
 
 /**

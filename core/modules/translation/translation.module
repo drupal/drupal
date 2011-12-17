@@ -387,9 +387,9 @@ function translation_node_validate($node, $form) {
 }
 
 /**
- * Implements hook_node_delete().
+ * Implements hook_node_predelete().
  */
-function translation_node_delete($node) {
+function translation_node_predelete($node) {
   // Only act if we are dealing with a content type supporting translations.
   if (translation_supported_type($node->type)) {
     translation_remove_from_set($node);

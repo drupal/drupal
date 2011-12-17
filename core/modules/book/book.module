@@ -959,9 +959,9 @@ function book_node_update($node) {
 }
 
 /**
- * Implements hook_node_delete().
+ * Implements hook_node_predelete().
  */
-function book_node_delete($node) {
+function book_node_predelete($node) {
   if (!empty($node->book['bid'])) {
     if ($node->nid == $node->book['bid']) {
       // Handle deletion of a top-level post.

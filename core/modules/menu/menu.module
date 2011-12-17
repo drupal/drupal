@@ -550,9 +550,9 @@ function menu_node_save($node) {
 }
 
 /**
- * Implements hook_node_delete().
+ * Implements hook_node_predelete().
  */
-function menu_node_delete($node) {
+function menu_node_predelete($node) {
   // Delete all menu module links that point to this node.
   $result = db_query("SELECT mlid FROM {menu_links} WHERE link_path = :path AND module = 'menu'", array(':path' => 'node/' . $node->nid), array('fetch' => PDO::FETCH_ASSOC));
   foreach ($result as $m) {

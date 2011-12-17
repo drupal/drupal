@@ -2394,11 +2394,33 @@ function hook_file_move($file, $source) {
 }
 
 /**
- * Respond to a file being deleted.
+ * Act prior to file deletion.
+ *
+ * This hook is invoked from file_delete() before the file is removed from the
+ * filesystem and before its records are removed from the database.
+ *
+ * @param $file
+ *   The file that is about to be deleted.
+ *
+ * @see hook_file_delete()
+ * @see file_delete()
+ * @see upload_file_delete()
+ */
+function hook_file_predelete($file) {
+  // Delete all information associated with the file.
+  db_delete('upload')->condition('fid', $file->fid)->execute();
+}
+
+/**
+ * Respond to file deletion.
+ *
+ * This hook is invoked from file_delete() after the file has been removed from
+ * the filesystem and after its records have been removed from the database.
  *
  * @param $file
  *   The file that has just been deleted.
  *
+ * @see hook_file_predelete()
  * @see file_delete()
  */
 function hook_file_delete($file) {

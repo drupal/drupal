@@ -1221,6 +1221,9 @@ function node_delete($nid) {
  *
  * @param $nids
  *   An array of node IDs.
+ *
+ * @see hook_node_predelete()
+ * @see hook_node_delete()
  */
 function node_delete_multiple($nids) {
   $transaction = db_transaction();
@@ -1231,8 +1234,11 @@ function node_delete_multiple($nids) {
       foreach ($nodes as $nid => $node) {
         // Call the node-specific callback (if any):
         node_invoke($node, 'delete');
-        module_invoke_all('node_delete', $node);
-        module_invoke_all('entity_delete', $node, 'node');
+
+        // Allow modules to act prior to node deletion.
+        module_invoke_all('node_predelete', $node);
+        module_invoke_all('entity_predelete', $node, 'node');
+
         field_attach_delete('node', $node);
 
         // Remove this node from the search index if needed.
@@ -1257,6 +1263,12 @@ function node_delete_multiple($nids) {
       db_delete('node_access')
        ->condition('nid', $nids, 'IN')
        ->execute();
+
+      foreach ($nodes as $nid => $node) {
+        // Allow modules to respond to node deletion.
+        module_invoke_all('node_delete', $node);
+        module_invoke_all('entity_delete', $node, 'node');
+      }
     }
     catch (Exception $e) {
       $transaction->rollback();
@@ -1815,9 +1827,9 @@ function node_user_cancel($edit, $account, $method) {
 }
 
 /**
- * Implements hook_user_delete().
+ * Implements hook_user_predelete().
  */
-function node_user_delete($account) {
+function node_user_predelete($account) {
   // Delete nodes (current revisions).
   // @todo Introduce node_mass_delete() or make node_mass_update() more flexible.
   $nodes = db_select('node', 'n')

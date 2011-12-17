@@ -31,23 +31,44 @@ function hook_user_load($users) {
 }
 
 /**
- * Respond to user deletion.
+ * Act before user deletion.
  *
- * This hook is invoked from user_delete_multiple() before field_attach_delete()
- * is called and before users are actually removed from the database.
+ * This hook is invoked from user_delete_multiple() before
+ * field_attach_delete() is called and before the user is actually removed from
+ * the database.
  *
  * Modules should additionally implement hook_user_cancel() to process stored
  * user data for other account cancellation methods.
  *
  * @param $account
- *   The account that is being deleted.
+ *   The account that is about to be deleted.
  *
+ * @see hook_user_delete()
  * @see user_delete_multiple()
  */
-function hook_user_delete($account) {
+function hook_user_predelete($account) {
   db_delete('mytable')
     ->condition('uid', $account->uid)
     ->execute();
+}
+
+/**
+ * Respond to user deletion.
+ *
+ * This hook is invoked from user_delete_multiple() after field_attach_delete()
+ * has been called and after the user has been removed from the database.
+ *
+ * Modules should additionally implement hook_user_cancel() to process stored
+ * user data for other account cancellation methods.
+ *
+ * @param $account
+ *   The account that has been deleted.
+ *
+ * @see hook_user_predelete()
+ * @see user_delete_multiple()
+ */
+function hook_user_delete($account) {
+  drupal_set_message(t('User: @name has been deleted.', array('@name' => $account->name)));
 }
 
 /**
@@ -60,7 +81,8 @@ function hook_user_delete($account) {
  * Modules may add further methods via hook_user_cancel_methods_alter().
  *
  * This hook is NOT invoked for the 'user_cancel_delete' account cancellation
- * method. To react on this method, implement hook_user_delete() instead.
+ * method. To react to that method, implement hook_user_predelete() or
+ * hook_user_delete() instead.
  *
  * Expensive operations should be added to the global account cancellation batch
  * by using batch_set().

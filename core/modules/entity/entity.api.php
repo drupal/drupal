@@ -270,7 +270,7 @@ function hook_entity_insert($entity, $type) {
  * @param $entity
  *   The entity object.
  * @param $type
- *   The type of entity being updated (i.e. node, user, comment).
+ *   The type of entity being updated (e.g. node, user, comment).
  */
 function hook_entity_update($entity, $type) {
   // Update the entity's entry in a fictional table of all entities.
@@ -286,10 +286,42 @@ function hook_entity_update($entity, $type) {
 }
 
 /**
- * Act on entities when deleted.
+ * Act before entity deletion.
+ *
+ * This hook runs after the entity type-specific predelete hook.
  *
  * @param $entity
- *   The entity object.
+ *   The entity object for the entity that is about to be deleted.
+ * @param $type
+ *   The type of entity being deleted (e.g. node, user, comment).
+ */
+function hook_entity_predelete($entity, $type) {
+  // Count references to this entity in a custom table before they are removed
+  // upon entity deletion.
+  list($id) = entity_extract_ids($type, $entity);
+  $count = db_select('example_entity_data')
+    ->condition('type', $type)
+    ->condition('id', $id)
+    ->countQuery()
+    ->execute()
+    ->fetchField();
+
+  // Log the count in a table that records this statistic for deleted entities.
+  $ref_count_record = (object) array(
+    'count' => $count,
+    'type' => $type,
+    'id' => $id,
+  );
+  drupal_write_record('example_deleted_entity_statistics', $ref_count_record);
+}
+
+/**
+ * Respond to entity deletion.
+ *
+ * This hook runs after the entity type-specific delete hook.
+ *
+ * @param $entity
+ *   The entity object for the entity that has been deleted.
  * @param $type
  *   The type of entity being deleted (i.e. node, user, comment).
  */

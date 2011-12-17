@@ -454,6 +454,9 @@ class EntityDatabaseStorageController extends DrupalDefaultEntityController impl
 
     try {
       $this->preDelete($entities);
+      foreach ($entities as $id => $entity) {
+        $this->invokeHook('predelete', $entity);
+      }
       $ids = array_keys($entities);
 
       db_delete($this->entityInfo['base table'])
@@ -548,8 +551,8 @@ class EntityDatabaseStorageController extends DrupalDefaultEntityController impl
   /**
    * Invokes a hook on behalf of the entity.
    *
-   * @param $op
-   *   One of 'presave', 'insert', 'update', or 'delete'.
+   * @param $hook
+   *   One of 'presave', 'insert', 'update', 'predelete', or 'delete'.
    * @param $entity
    *   The entity object.
    */

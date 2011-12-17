@@ -129,12 +129,39 @@ function hook_comment_unpublish($comment) {
 }
 
 /**
- * The comment is being deleted by the moderator.
+ * Act before comment deletion.
+ *
+ * This hook is invoked from comment_delete_multiple() before
+ * field_attach_delete() is called and before the comment is actually removed
+ * from the database.
  *
  * @param $comment
- *   Passes in the comment the action is being performed on.
- * @return
- *   Nothing.
+ *   The comment object for the comment that is about to be deleted.
+ *
+ * @see hook_comment_delete()
+ * @see comment_delete_multiple()
+ * @see entity_delete_multiple()
+ */
+function hook_comment_predelete($comment) {
+  // Delete a record associated with the comment in a custom table.
+  db_delete('example_comment_table')
+    ->condition('cid', $comment->cid)
+    ->execute();
+}
+
+/**
+ * Respond to comment deletion.
+ *
+ * This hook is invoked from comment_delete_multiple() after
+ * field_attach_delete() has called and after the comment has been removed from
+ * the database.
+ *
+ * @param $comment
+ *   The comment object for the comment that has been deleted.
+ *
+ * @see hook_comment_predelete()
+ * @see comment_delete_multiple()
+ * @see entity_delete_multiple()
  */
 function hook_comment_delete($comment) {
   drupal_set_message(t('Comment: @subject has been deleted', array('@subject' => $comment->subject)));

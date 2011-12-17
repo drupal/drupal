@@ -347,9 +347,9 @@ function file_progress_implementation() {
 }
 
 /**
- * Implements hook_file_delete().
+ * Implements hook_file_predelete().
  */
-function file_file_delete($file) {
+function file_file_predelete($file) {
   // TODO: Remove references to a file that is in-use.
 }
 

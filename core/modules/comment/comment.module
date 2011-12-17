@@ -1304,9 +1304,9 @@ function comment_node_insert($node) {
 }
 
 /**
- * Implements hook_node_delete().
+ * Implements hook_node_predelete().
  */
-function comment_node_delete($node) {
+function comment_node_predelete($node) {
   $cids = db_query('SELECT cid FROM {comment} WHERE nid = :nid', array(':nid' => $node->nid))->fetchCol();
   comment_delete_multiple($cids);
   db_delete('node_comment_statistics')
@@ -1402,9 +1402,9 @@ function comment_user_cancel($edit, $account, $method) {
 }
 
 /**
- * Implements hook_user_delete().
+ * Implements hook_user_predelete().
  */
-function comment_user_delete($account) {
+function comment_user_predelete($account) {
   $cids = db_query('SELECT c.cid FROM {comment} c WHERE uid = :uid', array(':uid' => $account->uid))->fetchCol();
   comment_delete_multiple($cids);
 }
@@ -1457,6 +1457,9 @@ function comment_delete($cid) {
  *
  * @param $cids
  *   The comment to delete.
+ *
+ * @see hook_comment_predelete()
+ * @see hook_comment_delete()
  */
 function comment_delete_multiple($cids) {
   entity_delete_multiple('comment', $cids);
