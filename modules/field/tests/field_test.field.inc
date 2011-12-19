@@ -350,11 +350,13 @@ function field_test_field_formatter_view($entity_type, $entity, $field, $instanc
       break;
 
     case 'field_test_multiple':
-      $array = array();
-      foreach ($items as $delta => $item) {
-        $array[] = $delta . ':' . $item['value'];
+      if (!empty($items)) {
+        $array = array();
+        foreach ($items as $delta => $item) {
+          $array[] = $delta . ':' . $item['value'];
+        }
+        $element[0] = array('#markup' => $settings['test_formatter_setting_multiple'] . '|' . implode('|', $array));
       }
-      $element[0] = array('#markup' => $settings['test_formatter_setting_multiple'] . '|' . implode('|', $array));
       break;
   }
 

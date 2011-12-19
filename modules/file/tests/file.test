@@ -760,6 +760,19 @@ class FileFieldDisplayTestCase extends FileFieldTestCase {
     $field = field_info_field($field_name);
     $instance = field_info_instance('node', $field_name, $type_name);
 
+    // Create a new node *without* the file field set, and check that the field
+    // is not shown for each node display.
+    $node = $this->drupalCreateNode(array('type' => $type_name));
+    $file_formatters = array('file_default', 'file_table', 'file_url_plain', 'hidden');
+    foreach ($file_formatters as $formatter) {
+      $edit = array(
+        "fields[$field_name][type]" => $formatter,
+      );
+      $this->drupalPost("admin/structure/types/manage/$type_name/display", $edit, t('Save'));
+      $this->drupalGet('node/' . $node->nid);
+      $this->assertNoText($field_name, t('Field label is hidden when no file attached for formatter %formatter', array('%formatter' => $formatter)));
+    }
+
     $test_file = $this->getTestFile('text');
 
     // Create a new node with the uploaded file.

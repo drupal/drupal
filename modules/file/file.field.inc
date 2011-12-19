@@ -970,11 +970,13 @@ function file_field_formatter_view($entity_type, $entity, $field, $instance, $la
       break;
 
     case 'file_table':
-      // Display all values in a single element..
-      $element[0] = array(
-        '#theme' => 'file_formatter_table',
-        '#items' => $items,
-      );
+      if (!empty($items)) {
+        // Display all values in a single element..
+        $element[0] = array(
+          '#theme' => 'file_formatter_table',
+          '#items' => $items,
+        );
+      }
       break;
   }
 
