@@ -22,7 +22,7 @@
  * - $a1, $a2: Optional additional information, which can be passed into
  *   actions_do() and will be passed along to the action function.
  *
- * @} End of "defgroup actions".
+ * @}
  */
 
 /**
@@ -386,4 +386,3 @@ function actions_delete($aid) {
     ->execute();
   module_invoke_all('actions_delete', $aid);
 }
-
