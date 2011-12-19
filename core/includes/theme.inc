@@ -1561,73 +1561,79 @@ function theme_link($variables) {
  *     http://www.w3.org/TR/WCAG-TECHS/H42.html for more information.
  */
 function theme_links($variables) {
+  global $language_url;
+
   $links = $variables['links'];
   $attributes = $variables['attributes'];
   $heading = $variables['heading'];
-  global $language_url;
   $output = '';
 
-  if (count($links) > 0) {
-    $output = '';
-
-    // Treat the heading first if it is present to prepend it to the
-    // list of links.
+  if (!empty($links)) {
+    // Prepend the heading to the list, if any.
     if (!empty($heading)) {
+      // Convert a string heading into an array, using a H2 tag by default.
       if (is_string($heading)) {
-        // Prepare the array that will be used when the passed heading
-        // is a string.
-        $heading = array(
-          'text' => $heading,
-          // Set the default level of the heading.
-          'level' => 'h2',
-        );
+        $heading = array('text' => $heading);
       }
-      $output .= '<' . $heading['level'];
-      if (!empty($heading['class'])) {
-        $output .= drupal_attributes(array('class' => $heading['class']));
+      // Merge in default array properties into $heading.
+      $heading += array(
+        'level' => 'h2',
+        'attributes' => array(),
+      );
+      // @todo Remove backwards compatibility for $heading['class'].
+      if (isset($heading['class'])) {
+        $heading['attributes']['class'] = $heading['class'];
       }
-      $output .= '>' . check_plain($heading['text']) . '</' . $heading['level'] . '>';
+
+      $output .= '<' . $heading['level'] . drupal_attributes($heading['attributes']) . '>';
+      $output .= check_plain($heading['text']);
+      $output .= '</' . $heading['level'] . '>';
     }
 
     $output .= '<ul' . drupal_attributes($attributes) . '>';
 
     $num_links = count($links);
-    $i = 1;
-
+    $i = 0;
     foreach ($links as $key => $link) {
-      $class = array($key);
+      $i++;
 
-      // Add first, last and active classes to the list of links to help out themers.
+      $class = array();
+      // Use the array key as class name.
+      $class[] = drupal_html_class($key);
+      // Add odd/even, first, and last classes.
+      $class[] = ($i % 2 ? 'odd' : 'even');
       if ($i == 1) {
         $class[] = 'first';
       }
       if ($i == $num_links) {
         $class[] = 'last';
       }
-      if (isset($link['href']) && ($link['href'] == $_GET['q'] || ($link['href'] == '<front>' && drupal_is_front_page()))
-          && (empty($link['language']) || $link['language']->language == $language_url->language)) {
-        $class[] = 'active';
-      }
-      $output .= '<li' . drupal_attributes(array('class' => $class)) . '>';
 
+      // Handle links.
       if (isset($link['href'])) {
+        $is_current_path = ($link['href'] == $_GET['q'] || ($link['href'] == '<front>' && drupal_is_front_page()));
+        $is_current_language = (empty($link['language']) || $link['language']->language == $language_url->language);
+        if ($is_current_path && $is_current_language) {
+          $class[] = 'active';
+        }
         // Pass in $link as $options, they share the same keys.
-        $output .= l($link['title'], $link['href'], $link);
+        $item = l($link['title'], $link['href'], $link);
       }
-      elseif (!empty($link['title'])) {
-        // Some links are actually not links, but we wrap these in <span> for adding title and class attributes.
-        if (empty($link['html'])) {
-          $link['title'] = check_plain($link['title']);
-        }
-        $span_attributes = '';
-        if (isset($link['attributes'])) {
-          $span_attributes = drupal_attributes($link['attributes']);
-        }
-        $output .= '<span' . $span_attributes . '>' . $link['title'] . '</span>';
+      // Handle title-only text items.
+      else {
+        // Merge in default array properties into $link.
+        $link += array(
+          'html' => FALSE,
+          'attributes' => array(),
+        );
+        $item = '<span' . drupal_attributes($link['attributes']) . '>';
+        $item .= ($link['html'] ? $link['title'] : check_plain($link['title']));
+        $item .= '</span>';
       }
 
-      $i++;
-      $output .= "</li>\n";
+      $output .= '<li' . drupal_attributes(array('class' => $class)) . '>';
+      $output .= $item;
+      $output .= '</li>';
     }
 
     $output .= '</ul>';

@@ -6647,7 +6647,7 @@ function drupal_common_theme() {
       'variables' => array('text' => NULL, 'path' => NULL, 'options' => array()),
     ),
     'links' => array(
-      'variables' => array('links' => NULL, 'attributes' => array('class' => array('links')), 'heading' => array()),
+      'variables' => array('links' => array(), 'attributes' => array('class' => array('links')), 'heading' => array()),
     ),
     'image' => array(
       // HTML 4 and XHTML 1.0 always require an alt attribute. The HTML 5 draft

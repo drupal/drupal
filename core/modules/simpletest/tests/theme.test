@@ -247,6 +247,69 @@ class ThemeFunctionsTestCase extends DrupalWebTestCase {
   }
 
   /**
+   * Tests theme_links().
+   */
+  function testLinks() {
+    // Verify that empty variables produce no output.
+    $variables = array();
+    $expected = '';
+    $this->assertThemeOutput('links', $variables, $expected, 'Empty %callback generates no output.');
+
+    $variables = array();
+    $variables['heading'] = 'Some title';
+    $expected = '';
+    $this->assertThemeOutput('links', $variables, $expected, 'Empty %callback with heading generates no output.');
+
+    // Set the current path to the front page path.
+    // Required to verify the "active" class in expected links below, and
+    // because the current path is different when running tests manually via
+    // simpletest.module ('batch') and via the testing framework ('').
+    $_GET['q'] = variable_get('site_frontpage', 'node');
+
+    // Verify that a list of links is properly rendered.
+    $variables = array();
+    $variables['attributes'] = array('id' => 'somelinks');
+    $variables['links'] = array(
+      'a link' => array(
+        'title' => 'A <link>',
+        'href' => 'a/link',
+      ),
+      'plain text' => array(
+        'title' => 'Plain "text"',
+      ),
+      'front page' => array(
+        'title' => 'Front page',
+        'href' => '<front>',
+      ),
+    );
+
+    $expected_links = '';
+    $expected_links .= '<ul id="somelinks">';
+    $expected_links .= '<li class="a-link odd first"><a href="' . url('a/link') . '">' . check_plain('A <link>') . '</a></li>';
+    $expected_links .= '<li class="plain-text even"><span>' . check_plain('Plain "text"') . '</span></li>';
+    $expected_links .= '<li class="front-page odd last active"><a href="' . url('<front>') . '" class="active">' . check_plain('Front page') . '</a></li>';
+    $expected_links .= '</ul>';
+
+    // Verify that passing a string as heading works.
+    $variables['heading'] = 'Links heading';
+    $expected_heading = '<h2>Links heading</h2>';
+    $expected = $expected_heading . $expected_links;
+    $this->assertThemeOutput('links', $variables, $expected);
+
+    // Verify that passing an array as heading works (core support).
+    $variables['heading'] = array('text' => 'Links heading', 'level' => 'h3', 'class' => 'heading');
+    $expected_heading = '<h3 class="heading">Links heading</h3>';
+    $expected = $expected_heading . $expected_links;
+    $this->assertThemeOutput('links', $variables, $expected);
+
+    // Verify that passing attributes for the heading works.
+    $variables['heading'] = array('text' => 'Links heading', 'level' => 'h3', 'attributes' => array('id' => 'heading'));
+    $expected_heading = '<h3 id="heading">Links heading</h3>';
+    $expected = $expected_heading . $expected_links;
+    $this->assertThemeOutput('links', $variables, $expected);
+  }
+
+  /**
    * Asserts themed output.
    *
    * @param $callback
@@ -270,19 +333,6 @@ class ThemeFunctionsTestCase extends DrupalWebTestCase {
     }
     $message = t($message, array('%callback' => 'theme_' . $callback . '()'));
     $this->assertIdentical($output, $expected, $message);
-  }
-}
-
-/**
- * Unit tests for theme_links().
- */
-class ThemeLinksTest extends DrupalWebTestCase {
-  public static function getInfo() {
-    return array(
-      'name' => 'Links',
-      'description' => 'Test the theme_links() function and rendering groups of links.',
-      'group' => 'Theme',
-    );
   }
 
   /**
