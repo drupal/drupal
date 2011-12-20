@@ -107,9 +107,7 @@
       </nav>
     <?php endif; ?>
 
-    <?php if ($breadcrumb): ?>
-      <div id="breadcrumb"><?php print $breadcrumb; ?></div>
-    <?php endif; ?>
+    <?php print $breadcrumb; ?>
 
     <?php if ($messages): ?>
       <div id="messages"><?php print $messages; ?></div>

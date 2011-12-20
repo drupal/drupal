@@ -1732,7 +1732,7 @@ class NodeTitleTestCase extends DrupalWebTestCase {
 
     // Test breadcrumb in comment preview.
     $this->drupalGet("comment/reply/$node->nid");
-    $xpath = '//div[@class="breadcrumb"]/a[last()]';
+    $xpath = '//nav[@class="breadcrumb"]/ol/li[last()]/a';
     $this->assertEqual(current($this->xpath($xpath)), $node->title, 'Node breadcrumb is equal to node title.', 'Node');
 
     // Test node title in comment preview.

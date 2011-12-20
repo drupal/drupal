@@ -107,7 +107,7 @@ class MenuWebTestCase extends DrupalWebTestCase {
    */
   protected function getParts() {
     $parts = array();
-    $elements = $this->xpath('//div[@class="breadcrumb"]/a');
+    $elements = $this->xpath('//nav[@class="breadcrumb"]/ol/li/a');
     if (!empty($elements)) {
       foreach ($elements as $element) {
         $parts[] = array(
