@@ -1311,6 +1311,7 @@ function field_attach_rename_bundle($entity_type, $bundle_old, $bundle_new) {
 
   // Clear the cache.
   field_cache_clear();
+  entity_info_cache_clear();
 
   // Update bundle settings.
   $settings = variable_get('field_bundle_settings_' . $entity_type . '__' . $bundle_old, array());

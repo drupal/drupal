@@ -228,6 +228,7 @@ function node_entity_info() {
 
   // Bundles must provide a human readable name so we can create help and error
   // messages, and the path to attach Field admin pages to.
+  node_type_cache_reset();
   foreach (node_type_get_names() as $type => $name) {
     $return['node']['bundles'][$type] = array(
       'label' => $name,
