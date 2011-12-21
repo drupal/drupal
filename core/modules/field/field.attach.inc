@@ -120,6 +120,9 @@ const FIELD_STORAGE_INSERT = 'insert';
  * Field Storage API is essentially the "fallback mechanism" for any fields
  * that aren't being intercepted explicitly by pre-operation hooks.
  *
+ * @link field_language Field language API @endlink provides information about
+ * the structure of field objects.
+ *
  * @see field
  */
 
