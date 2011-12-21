@@ -579,9 +579,9 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
     $instance['bundle'] = 'page';
     field_create_instance($instance);
     $terms = array(
-      $this->randomName(),
-      $this->randomName() . ', ' . $this->randomName(),
-      $this->randomName(),
+      'term1' => $this->randomName(),
+      'term2' => $this->randomName() . ', ' . $this->randomName(),
+      'term3' => $this->randomName(),
     );
 
     $edit = array();
@@ -611,33 +611,37 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
     }
 
     // Get the created terms.
-    list($term1, $term2, $term3) = array_values(taxonomy_term_load_multiple(FALSE));
+    $term_objects = array();
+    foreach ($terms as $key => $term) {
+      $term_objects[$key] = taxonomy_get_term_by_name($term);
+      $term_objects[$key] = reset($term_objects[$key]);
+    }
 
     // Delete term 1.
-    $this->drupalPost('taxonomy/term/' . $term1->tid . '/edit', array(), t('Delete'));
+    $this->drupalPost('taxonomy/term/' . $term_objects['term1']->tid . '/edit', array(), t('Delete'));
     $this->drupalPost(NULL, NULL, t('Delete'));
-    $term_names = array($term2->name, $term3->name);
+    $term_names = array($term_objects['term2']->name, $term_objects['term3']->name);
 
     // Get the node.
     $node = $this->drupalGetNodeByTitle($edit["title"]);
     $this->drupalGet('node/' . $node->nid);
 
     foreach ($term_names as $term_name) {
-      $this->assertText($term_name, t('The term %name appears on the node page after one term %deleted was deleted', array('%name' => $term_name, '%deleted' => $term1->name)));
+      $this->assertText($term_name, t('The term %name appears on the node page after one term %deleted was deleted', array('%name' => $term_name, '%deleted' => $term_objects['term1']->name)));
     }
-    $this->assertNoText($term1->name, t('The deleted term %name does not appear on the node page.', array('%name' => $term1->name)));
+    $this->assertNoText($term_objects['term1']->name, t('The deleted term %name does not appear on the node page.', array('%name' => $term_objects['term1']->name)));
 
     // Test autocomplete on term 2, which contains a comma.
     // The term will be quoted, and the " will be encoded in unicode (\u0022).
-    $input = substr($term2->name, 0, 3);
+    $input = substr($term_objects['term2']->name, 0, 3);
     $this->drupalGet('taxonomy/autocomplete/taxonomy_' . $this->vocabulary->machine_name . '/' . $input);
-    $this->assertRaw('{"\u0022' . $term2->name . '\u0022":"' . $term2->name . '"}', t('Autocomplete returns term %term_name after typing the first 3 letters.', array('%term_name' => $term2->name)));
+    $this->assertRaw('{"\u0022' . $term_objects['term2']->name . '\u0022":"' . $term_objects['term2']->name . '"}', t('Autocomplete returns term %term_name after typing the first 3 letters.', array('%term_name' => $term_objects['term2']->name)));
 
     // Test autocomplete on term 3 - it is alphanumeric only, so no extra
     // quoting.
-    $input = substr($term3->name, 0, 3);
+    $input = substr($term_objects['term3']->name, 0, 3);
     $this->drupalGet('taxonomy/autocomplete/taxonomy_' . $this->vocabulary->machine_name . '/' . $input);
-    $this->assertRaw('{"' . $term3->name . '":"' . $term3->name . '"}', t('Autocomplete returns term %term_name after typing the first 3 letters.', array('%term_name' => $term3->name)));
+    $this->assertRaw('{"' . $term_objects['term3']->name . '":"' . $term_objects['term3']->name . '"}', t('Autocomplete returns term %term_name after typing the first 3 letters.', array('%term_name' => $term_objects['term3']->name)));
   }
 
   /**
