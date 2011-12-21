@@ -290,6 +290,20 @@ class SearchPageText extends DrupalWebTestCase {
     $this->drupalGet('search/node/' . $arg);
     $input = $this->xpath("//input[@id='edit-keys' and @value='{$arg}']");
     $this->assertFalse(empty($input), 'Search keys with a / are correctly set as the default value in the search box.');
+
+    // Test a search input exceeding the limit of AND/OR combinations to test
+    // the Denial-of-Service protection.
+    $limit = variable_get('search_and_or_limit', 7);
+    $keys = array();
+    for ($i = 0; $i < $limit + 1; $i++) {
+      $keys[] = $this->randomName(3);
+      if ($i % 2 == 0) {
+        $keys[] = 'OR';
+      }
+    }
+    $edit['keys'] = implode(' ', $keys);
+    $this->drupalPost('search/node', $edit, t('Search'));
+    $this->assertRaw(t('Your search used too many AND/OR expressions. Only the first @count terms were included in this search.', array('@count' => $limit)));
   }
 }
 
