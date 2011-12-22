@@ -588,8 +588,16 @@ class FormsElementsLabelsTestCase extends DrupalWebTestCase {
     $elements = $this->xpath('//input[@id="edit-form-checkboxes-test-third-checkbox"]/following-sibling::label[@for="edit-form-checkboxes-test-third-checkbox" and @class="option"]');
     $this->assertTrue(isset($elements[0]), t("Label follows field and label option class correct for regular checkboxes."));
 
+    // Make sure the label is rendered for checkboxes.
+    $elements = $this->xpath('//input[@id="edit-form-checkboxes-test-0"]/following-sibling::label[@for="edit-form-checkboxes-test-0" and @class="option"]');
+    $this->assertTrue(isset($elements[0]), t("Label 0 found checkbox."));
+
     $elements = $this->xpath('//input[@id="edit-form-radios-test-second-radio"]/following-sibling::label[@for="edit-form-radios-test-second-radio" and @class="option"]');
     $this->assertTrue(isset($elements[0]), t("Label follows field and label option class correct for regular radios."));
+
+    // Make sure the label is rendered for radios.
+    $elements = $this->xpath('//input[@id="edit-form-radios-test-0"]/following-sibling::label[@for="edit-form-radios-test-0" and @class="option"]');
+    $this->assertTrue(isset($elements[0]), t("Label 0 found radios."));
 
     // Exercise various defaults for checkboxes and modifications to ensure
     // appropriate override and correct behaviour.

@@ -688,6 +688,7 @@ function form_label_test_form() {
       'first-checkbox' => t('First checkbox'),
       'second-checkbox' => t('Second checkbox'),
       'third-checkbox' => t('Third checkbox'),
+      '0' => t('0'),
     ),
   );
   $form['form_radios_test'] = array(
@@ -697,6 +698,7 @@ function form_label_test_form() {
       'first-radio' => t('First radio'),
       'second-radio' => t('Second radio'),
       'third-radio' => t('Third radio'),
+      '0' => t('0'),
     ),
     // Test #field_prefix and #field_suffix placement.
     '#field_prefix' => '<span id="form-test-radios-field-prefix">' . t('Radios #field_prefix element') . '</span>',
