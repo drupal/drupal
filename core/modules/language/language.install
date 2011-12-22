@@ -1,0 +1,75 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the language module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function language_install() {
+  // Add the default language to the database too.
+  language_save(language_default());
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function language_uninstall() {
+  // Clear variables.
+  variable_del('language_default');
+  variable_del('language_count');
+
+  // Re-initialize the language system so successive calls to t() and other
+  // functions will not expect languages to be present.
+  drupal_language_initialize();
+}
+
+/**
+ * Implements hook_schema().
+ */
+function language_schema() {
+  $schema['language'] = array(
+    'description' => 'List of all available languages in the system.',
+    'fields' => array(
+      'language' => array(
+        'type' => 'varchar',
+        'length' => 12,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => "Language code, e.g. 'de' or 'en-US'.",
+      ),
+      'name' => array(
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Language name.',
+      ),
+      'direction' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Direction of language (Left-to-Right = 0, Right-to-Left = 1).',
+      ),
+      'enabled' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Enabled flag (1 = Enabled, 0 = Disabled).',
+      ),
+      'weight' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Weight, used in lists of languages.',
+      ),
+    ),
+    'primary key' => array('language'),
+    'indexes' => array(
+      'list' => array('weight', 'name'),
+    ),
+  );
+  return $schema;
+}

@@ -2648,7 +2648,7 @@ class FieldTranslationsTestCase extends FieldTestCase {
         'language' => 'l' . $i,
         'name' => $this->randomString(),
       );
-      locale_language_save($language);
+      language_save($language);
     }
   }
 

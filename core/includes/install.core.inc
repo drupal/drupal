@@ -1146,7 +1146,7 @@ function install_find_translations() {
   foreach ($files as $key => $file) {
     // Strip off the file name component before the language code.
     $files[$key]->langcode = preg_replace('!^(.+\.)?([^\.]+)$!', '\2', $file->name);
-    // Language codes cannot exceed 12 characters to fit into the {languages}
+    // Language codes cannot exceed 12 characters to fit into the {language}
     // table.
     if (strlen($files[$key]->langcode) > 12) {
       unset($files[$key]);
@@ -1432,7 +1432,7 @@ function install_import_translations(&$install_state) {
       'name' => $langcode,
       'default' => TRUE,
     );
-    locale_language_save($language);
+    language_save($language);
   }
   else {
     // A known predefined language, details will be filled in properly.
@@ -1440,7 +1440,7 @@ function install_import_translations(&$install_state) {
       'language' => $langcode,
       'default' => TRUE,
     );
-    locale_language_save($language);
+    language_save($language);
   }
 
   // Collect files to import for this language.

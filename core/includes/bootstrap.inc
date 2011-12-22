@@ -2686,8 +2686,8 @@ function language_list($field = 'language') {
   // Init language list
   if (!isset($languages)) {
     $default = language_default();
-    if (drupal_multilingual() || module_exists('locale')) {
-      $languages['language'] = db_query('SELECT * FROM {languages} ORDER BY weight ASC, name ASC')->fetchAllAssoc('language');
+    if (drupal_multilingual() || module_exists('language')) {
+      $languages['language'] = db_query('SELECT * FROM {language} ORDER BY weight ASC, name ASC')->fetchAllAssoc('language');
     }
     else {
       // No locale module, so use the default language only.

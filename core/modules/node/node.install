@@ -33,7 +33,7 @@ function node_schema() {
         'default' => '',
       ),
       'language' => array(
-        'description' => 'The {languages}.language of this node.',
+        'description' => 'The {language}.language of this node.',
         'type' => 'varchar',
         'length' => 12,
         'not null' => TRUE,

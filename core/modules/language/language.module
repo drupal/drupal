@@ -1,0 +1,200 @@
+<?php
+
+/**
+ * @file
+ * Add language handling functionality to Drupal.
+ */
+
+/**
+ * Implements hook_help().
+ */
+function language_help($path, $arg) {
+  switch ($path) {
+    case 'admin/help#language':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Language module allows you to maintain a list of languages used on your Drupal site for providing language information for content and for interface translation (using the Locale module). For more information, see the online handbook entry for <a href="@language">Language module</a>.', array('@language' => 'http://drupal.org/handbook/modules/language/')) . '</p>';
+      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Configuring the list of languages') . '</dt>';
+      $output .= '<dd>' . t('<a href="@configure-languages">Configure the list of languages</a> either using the built-in language list or providing any custom languages you wish.', array('@configure-languages' => url('admin/config/regional/language'))) . '</dd>';
+      $output .= '</dl>';
+      return $output;
+
+    case 'admin/config/regional/language':
+      return '<p>' . t('With multiple languages enabled, registered users may select their preferred language and authors can assign a specific language to content.') . '</p>';
+
+    case 'admin/config/regional/language/add':
+      return '<p>' . t('Add a language to be supported by your site. If your desired language is not available, pick <em>Custom language...</em> at the end and provide a language code and other details manually.') . '</p>';
+  }
+}
+
+/**
+ * Implements hook_menu().
+ */
+function language_menu() {
+  $items['admin/config/regional/language'] = array(
+    'title' => 'Languages',
+    'description' => 'Configure languages for content and the user interface.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('language_admin_overview_form'),
+    'access arguments' => array('administer languages'),
+    'file' => 'language.admin.inc',
+    'weight' => -10,
+  );
+  $items['admin/config/regional/language/list'] = array(
+    'title' => 'List',
+    'weight' => 0,
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+  );
+  $items['admin/config/regional/language/add'] = array(
+    'title' => 'Add language',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('language_admin_add_form'),
+    'access arguments' => array('administer languages'),
+    'weight' => 5,
+    'type' => MENU_LOCAL_ACTION,
+    'file' => 'language.admin.inc',
+  );
+  $items['admin/config/regional/language/edit/%language'] = array(
+    'title' => 'Edit language',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('language_admin_edit_form', 5),
+    'access arguments' => array('administer languages'),
+    'file' => 'language.admin.inc',
+  );
+  $items['admin/config/regional/language/delete/%language'] = array(
+    'title' => 'Confirm delete',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('language_admin_delete_form', 5),
+    'access arguments' => array('administer languages'),
+    'file' => 'language.admin.inc',
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_permission().
+ */
+function language_permission() {
+  return array(
+    'administer languages' => array(
+      'title' => t('Administer languages'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_theme().
+ */
+function language_theme() {
+  return array(
+    'language_admin_overview_form_table' => array(
+      'render element' => 'form',
+      'file' => 'language.admin.inc',
+    ),
+    'language_admin_operations' => array(
+      'render element' => 'elements',
+      'file' => 'language.admin.inc',
+    ),
+  );
+}
+
+/**
+ * Loads a language object from the database.
+ *
+ * @param $langcode
+ *   The language code.
+ *
+ * @return
+ *   A fully-populated language object or FALSE.
+ */
+function language_load($langcode) {
+  $languages = language_list();
+  return isset($languages[$langcode]) ? $languages[$langcode] : FALSE;
+}
+
+/**
+ * API function to add or update a language.
+ *
+ * @param $language
+ *   Language object with properties corresponding to 'language' table columns.
+ */
+function language_save($language) {
+  $language->is_new = !(bool) db_query_range('SELECT 1 FROM {language} WHERE language = :language', 0, 1, array(':language' => $language->language))->fetchField();
+
+  // If name was not set, we add a predefined language.
+  if (!isset($language->name)) {
+    include_once DRUPAL_ROOT . '/core/includes/standard.inc';
+    $predefined = standard_language_list();
+    $language->name = $predefined[$language->language][0];
+    $language->direction = isset($predefined[$language->language][2]) ? $predefined[$language->language][2] : LANGUAGE_LTR;
+  }
+
+  // Set to enabled for the default language and unless specified otherwise.
+  if (!empty($language->default) || !isset($language->enabled)) {
+    $language->enabled = TRUE;
+  }
+  // Let other modules modify $language before saved.
+  module_invoke_all('language_presave', $language);
+
+  // Save the record and inform others about the change.
+  $t_args = array('%language' => $language->name, '%langcode' => $language->language);
+  if ($language->is_new) {
+    drupal_write_record('language', $language);
+    module_invoke_all('language_insert', $language);
+    watchdog('language', 'The %language (%langcode) language has been created.', $t_args);
+  }
+  else {
+    drupal_write_record('language', $language, array('language'));
+    module_invoke_all('language_update', $language);
+    watchdog('language', 'The %language (%langcode) language has been updated.', $t_args);
+  }
+
+  if (!empty($language->default)) {
+    // Set the new version of this language as default in a variable.
+    $default_language = language_default();
+    variable_set('language_default', $language);
+  }
+
+  // Update language count based on enabled language count.
+  variable_set('language_count', db_query('SELECT COUNT(language) FROM {language} WHERE enabled = 1')->fetchField());
+
+  // Kill the static cache in language_list().
+  drupal_static_reset('language_list');
+
+  return $language;
+}
+
+/**
+ * Delete a language.
+ *
+ * @param $langcode
+ *   Language code of the language to be deleted.
+ * @return
+ *   TRUE if language is successfully deleted. Otherwise FALSE.
+ */
+function language_delete($langcode) {
+  $languages = language_list();
+  if (isset($languages[$langcode])) {
+    $language = $languages[$langcode];
+
+    module_invoke_all('language_delete', $language);
+
+    // Remove the language.
+    db_delete('language')
+      ->condition('language', $language->language)
+      ->execute();
+
+    if ($language->enabled) {
+      variable_set('language_count', variable_get('language_count', 1) - 1);
+    }
+
+    drupal_static_reset('language_list');
+
+    $t_args = array('%language' => $language->name, '%langcode' => $language->language);
+    watchdog('language', 'The %language (%langcode) language has been removed.', $t_args);
+    return TRUE;
+  }
+  return FALSE;
+}

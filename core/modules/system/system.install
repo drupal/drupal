@@ -770,7 +770,7 @@ function system_schema() {
         'not null' => TRUE,
       ),
       'language' => array(
-        'description' => 'A {languages}.language for this format to be used with.',
+        'description' => 'A {language}.language for this format to be used with.',
         'type' => 'varchar',
         'length' => 12,
         'not null' => TRUE,

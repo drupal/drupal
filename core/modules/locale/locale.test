@@ -22,13 +22,13 @@
 
 
 /**
- * Functional tests for the language configuration forms.
+ * Functional tests for language configuration's effect on negotiation setup.
  */
 class LocaleConfigurationTest extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => 'Language configuration',
-      'description' => 'Adds a new locale and tests changing its status and the default language.',
+      'name' => 'Language negotiation autoconfiguration',
+      'description' => 'Adds and configures languages to check negotiation changes.',
       'group' => 'Locale',
     );
   }
@@ -47,6 +47,10 @@ class LocaleConfigurationTest extends DrupalWebTestCase {
     $admin_user = $this->drupalCreateUser(array('administer languages', 'access administration pages'));
     $this->drupalLogin($admin_user);
 
+    // Check if the Default English language has no path prefix.
+    $this->drupalGet('admin/config/regional/language/configure/url');
+    $this->assertFieldByXPath('//input[@name="prefix[en]"]', '', t('Default English has no path prefix.'));
+
     // Add predefined language.
     $edit = array(
       'predefined_langcode' => 'fr',
@@ -55,29 +59,19 @@ class LocaleConfigurationTest extends DrupalWebTestCase {
     $this->assertText('fr', t('Language added successfully.'));
     $this->assertEqual($this->getUrl(), url('admin/config/regional/language', array('absolute' => TRUE)), t('Correct page redirection.'));
 
-    // Add custom language.
-    // Code for the language.
-    $langcode = 'xx';
-    // The English name for the language.
-    $name = $this->randomName(16);
-    $edit = array(
-      'predefined_langcode' => 'custom',
-      'langcode' => $langcode,
-      'name' => $name,
-      'direction' => '0',
-    );
-    $this->drupalPost('admin/config/regional/language/add', $edit, t('Add custom language'));
-    $this->assertEqual($this->getUrl(), url('admin/config/regional/language', array('absolute' => TRUE)), t('Correct page redirection.'));
-    $this->assertRaw('"edit-site-default-' . $langcode .'"', t('Language code found.'));
-    $this->assertText(t($name), t('Test language added.'));
+    // Check if the Default English language has no path prefix.
+    $this->drupalGet('admin/config/regional/language/configure/url');
+    $this->assertFieldByXPath('//input[@name="prefix[en]"]', '', t('Default English has no path prefix.'));
+    // Check if French has a path prefix.
+    $this->drupalGet('admin/config/regional/language/configure/url');
+    $this->assertFieldByXPath('//input[@name="prefix[fr]"]', 'fr', t('French has a path prefix.'));
 
     // Check if we can change the default language.
-    $path = 'admin/config/regional/language';
-    $this->drupalGet($path);
+    $this->drupalGet('admin/config/regional/language');
     $this->assertFieldChecked('edit-site-default-en', t('English is the default language.'));
     // Change the default language.
     $edit = array(
-      'site_default' => $langcode,
+      'site_default' => 'fr',
     );
     $this->drupalPost(NULL, $edit, t('Save configuration'));
     $this->assertNoFieldChecked('edit-site-default-en', t('Default language updated.'));
@@ -87,114 +81,10 @@ class LocaleConfigurationTest extends DrupalWebTestCase {
     // language.
     $this->drupalGet('admin/config/regional/language/configure/url');
     $this->assertFieldByXPath('//input[@name="prefix[en]"]', 'en', t('A valid path prefix has been added to the previous default language.'));
-
-    // Ensure we can't delete the default language.
-    $this->drupalGet('admin/config/regional/language/delete/' . $langcode);
-    $this->assertEqual($this->getUrl(), url('admin/config/regional/language', array('absolute' => TRUE)), t('Correct page redirection.'));
-    $this->assertText(t('The default language cannot be deleted.'), t('Failed to delete the default language.'));
-
-    // Check if we can disable a language.
-    $edit = array(
-      'languages[en][enabled]' => FALSE,
-    );
-    $this->drupalPost($path, $edit, t('Save configuration'));
-    $this->assertNoFieldChecked('edit-languages-en-enabled', t('Language disabled.'));
-
-    // Set disabled language to be the default and ensure it is re-enabled.
-    $edit = array(
-      'site_default' => 'en',
-    );
-    $this->drupalPost(NULL, $edit, t('Save configuration'));
-    $this->assertFieldChecked('edit-languages-en-enabled', t('Default language re-enabled.'));
-
-    // Ensure 'edit' link works.
-    $this->clickLink(t('edit'));
-    $this->assertTitle(t('Edit language | Drupal'), t('Page title is "Edit language".'));
-    // Edit a language.
-    $name = $this->randomName(16);
-    $edit = array(
-      'name' => $name,
-    );
-    $this->drupalPost('admin/config/regional/language/edit/' . $langcode, $edit, t('Save language'));
-    $this->assertRaw($name, t('The language has been updated.'));
-    $this->assertEqual($this->getUrl(), url('admin/config/regional/language', array('absolute' => TRUE)), t('Correct page redirection.'));
-
-    // Ensure 'delete' link works.
-    $this->drupalGet('admin/config/regional/language');
-    $this->clickLink(t('delete'));
-    $this->assertText(t('Are you sure you want to delete the language'), t('"delete" link is correct.'));
-    // Delete an enabled language.
-    $this->drupalGet('admin/config/regional/language/delete/' . $langcode);
-    // First test the 'cancel' link.
-    $this->clickLink(t('Cancel'));
-    $this->assertEqual($this->getUrl(), url('admin/config/regional/language', array('absolute' => TRUE)), t('Correct page redirection.'));
-    $this->assertRaw($name, t('The language was not deleted.'));
-    // Delete the language for real. This a confirm form, we do not need any
-    // fields changed.
-    $this->drupalPost('admin/config/regional/language/delete/' . $langcode, array(), t('Delete'));
-    // We need raw here because %locale will add HTML.
-    $this->assertRaw(t('The language %locale has been removed.', array('%locale' => $name)), t('The test language has been removed.'));
-    $this->assertEqual($this->getUrl(), url('admin/config/regional/language', array('absolute' => TRUE)), t('Correct page redirection.'));
-    // Verify that language is no longer found.
-    $this->drupalGet('admin/config/regional/language/delete/' . $langcode);
-    $this->assertResponse(404, t('Language no longer found.'));
-    // Make sure the "language_count" variable has been updated correctly.
-    drupal_static_reset('language_list');
-    $enabled = language_list('enabled');
-    $this->assertEqual(variable_get('language_count', 1), count($enabled[1]), t('Language count is correct.'));
-    // Delete a disabled language.
-    // Disable an enabled language.
-    $edit = array(
-      'languages[fr][enabled]' => FALSE,
-    );
-    $this->drupalPost($path, $edit, t('Save configuration'));
-    $this->assertNoFieldChecked('edit-languages-fr-enabled', t('French language disabled.'));
-    // Get the count of enabled languages.
-    drupal_static_reset('language_list');
-    $enabled = language_list('enabled');
-    // Delete the disabled language.
-    $this->drupalPost('admin/config/regional/language/delete/fr', array(), t('Delete'));
-    // We need raw here because %locale will add HTML.
-    $this->assertRaw(t('The language %locale has been removed.', array('%locale' => 'French')), t('Disabled language has been removed.'));
-    $this->assertEqual($this->getUrl(), url('admin/config/regional/language', array('absolute' => TRUE)), t('Correct page redirection.'));
-    // Verify that language is no longer found.
-    $this->drupalGet('admin/config/regional/language/delete/fr');
-    $this->assertResponse(404, t('Language no longer found.'));
-    // Make sure the "language_count" variable has not changed.
-    $this->assertEqual(variable_get('language_count', 1), count($enabled[1]), t('Language count is correct.'));
-
-    // Ensure we can delete the English language. Right now English is the only
-    // language so we must add a new language and make it the default before
-    // deleting English.
-    $langcode = 'xx';
-    $name = $this->randomName(16);
-    $edit = array(
-      'predefined_langcode' => 'custom',
-      'langcode' => $langcode,
-      'name' => $name,
-      'direction' => '0',
-    );
-    $this->drupalPost('admin/config/regional/language/add', $edit, t('Add custom language'));
-    $this->assertEqual($this->getUrl(), url('admin/config/regional/language', array('absolute' => TRUE)), t('Correct page redirection.'));
-    $this->assertText($name, t('Name found.'));
-
-    // Check if we can change the default language.
-    $path = 'admin/config/regional/language';
-    $this->drupalGet($path);
-    $this->assertFieldChecked('edit-site-default-en', t('English is the default language.'));
-    // Change the default language.
-    $edit = array(
-      'site_default' => $langcode,
-    );
-    $this->drupalPost(NULL, $edit, t('Save configuration'));
-    $this->assertNoFieldChecked('edit-site-default-en', t('Default language updated.'));
-    $this->assertEqual($this->getUrl(), url('admin/config/regional/language', array('absolute' => TRUE)), t('Correct page redirection.'));
-
-    $this->drupalPost('admin/config/regional/language/delete/en', array(), t('Delete'));
-    // We need raw here because %locale will add HTML.
-    $this->assertRaw(t('The language %locale has been removed.', array('%locale' => 'English')), t('The English language has been removed.'));
+    // Check if French still has a path prefix.
+    $this->drupalGet('admin/config/regional/language/configure/url');
+    $this->assertFieldByXPath('//input[@name="prefix[fr]"]', 'fr', t('French still has a path prefix.'));
   }
-
 }
 
 /**
@@ -411,8 +301,9 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
     $path = 'admin/config/regional/language/delete/' . $langcode;
     // This a confirm form, we do not need any fields changed.
     $this->drupalPost($path, array(), t('Delete'));
-    // We need raw here because %locale will add HTML.
-    $this->assertRaw(t('The language %locale has been removed.', array('%locale' => $name)), t('The test language has been removed.'));
+    // We need raw here because %language and %langcode will add HTML.
+    $t_args = array('%language' => $name, '%langcode' => $langcode);
+    $this->assertRaw(t('The %language (%langcode) language has been removed.', $t_args), t('The test language has been removed.'));
     // Reload to remove $name.
     $this->drupalGet($path);
     // Verify that language is no longer found.
@@ -1196,7 +1087,7 @@ class LocaleUninstallFunctionalTest extends DrupalWebTestCase {
    * Check if the values of the Locale variables are correct after uninstall.
    */
   function testUninstallProcess() {
-    $locale_module = array('locale');
+    $locale_module = array('locale', 'language');
 
     // Add a new language and optionally set it as default.
     require_once DRUPAL_ROOT . '/core/includes/locale.inc';
@@ -1206,7 +1097,7 @@ class LocaleUninstallFunctionalTest extends DrupalWebTestCase {
       'name' => 'French',
       'default' => $this->language == 'fr',
     );
-    locale_language_save($language);
+    language_save($language);
 
     // Check the UI language.
     drupal_language_initialize();
@@ -2131,11 +2022,11 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
     $language = (object) array(
       'language' => $langcode_browser_fallback,
     );
-    locale_language_save($language);
+    language_save($language);
     $language = (object) array(
       'language' => $langcode,
     );
-    locale_language_save($language);
+    language_save($language);
 
     // We will look for this string in the admin/config screen to see if the
     // corresponding translated string is shown.
@@ -2288,7 +2179,7 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
     $language = (object) array(
       'language' => $langcode_browser_fallback,
     );
-    locale_language_save($language);
+    language_save($language);
     $languages = language_list();
 
     // Enable the path prefix for the default language: this way any unprefixed
@@ -2437,7 +2328,7 @@ class LocaleMultilingualFieldsFunctionalTest extends DrupalWebTestCase {
       'language' => 'it',
       'name' => 'Italian',
     );
-    locale_language_save($language);
+    language_save($language);
 
     // Enable URL language detection and selection.
     $edit = array('language[enabled][locale-url]' => '1');

@@ -38,11 +38,7 @@ function locale_help($path, $arg) {
       return $output;
 
     case 'admin/config/regional/language':
-      $output = '<p>' . t('With multiple languages enabled, interface text can be translated, registered users may select their preferred language, and authors can assign a specific language to content. <a href="@translations">Download contributed translations</a> from Drupal.org.', array('@translations' => 'http://localize.drupal.org')) . '</p>';
-      return $output;
-
-    case 'admin/config/regional/language/add':
-      return '<p>' . t('Add a language to be supported by your site. If your desired language is not available, pick <em>Custom language...</em> at the end and provide a language code and other details manually.') . '</p>';
+      return '<p>' . t('Interface text can be translated. <a href="@translations">Download contributed translations</a> from Drupal.org.', array('@translations' => 'http://localize.drupal.org')) . '</p>';
 
     case 'admin/config/regional/language/configure':
       $output = '<p>' . t("Define how to decide which language is used to display page elements (primarily text provided by Drupal and modules, such as field labels and help text). This decision is made by evaluating a series of detection methods for languages; the first detection method that gets a result will determine which language is used for that type of text. Define the order of evaluation of language detection methods on this page.") . '</p>';
@@ -76,30 +72,7 @@ function locale_help($path, $arg) {
  * Implements hook_menu().
  */
 function locale_menu() {
-  // Manage languages
-  $items['admin/config/regional/language'] = array(
-    'title' => 'Languages',
-    'description' => 'Configure languages for content and the user interface.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('locale_language_overview_form'),
-    'access arguments' => array('administer languages'),
-    'file' => 'locale.admin.inc',
-    'weight' => -10,
-  );
-  $items['admin/config/regional/language/overview'] = array(
-    'title' => 'List',
-    'weight' => 0,
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-  );
-  $items['admin/config/regional/language/add'] = array(
-    'title' => 'Add language',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('locale_languages_add_form'),
-    'access arguments' => array('administer languages'),
-    'weight' => 5,
-    'type' => MENU_LOCAL_ACTION,
-    'file' => 'locale.admin.inc',
-  );
+  // Language negotiation.
   $items['admin/config/regional/language/configure'] = array(
     'title' => 'Detection and selection',
     'page callback' => 'drupal_get_form',
@@ -125,22 +98,8 @@ function locale_menu() {
     'file' => 'locale.admin.inc',
     'type' => MENU_VISIBLE_IN_BREADCRUMB,
   );
-  $items['admin/config/regional/language/edit/%language'] = array(
-    'title' => 'Edit language',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('locale_languages_edit_form', 5),
-    'access arguments' => array('administer languages'),
-    'file' => 'locale.admin.inc',
-  );
-  $items['admin/config/regional/language/delete/%language'] = array(
-    'title' => 'Confirm',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('locale_languages_delete_form', 5),
-    'access arguments' => array('administer languages'),
-    'file' => 'locale.admin.inc',
-  );
 
-  // Translation functionality
+  // Translation functionality.
   $items['admin/config/regional/translate'] = array(
     'title' => 'User interface translation',
     'description' => 'Translate the built-in user interface.',
@@ -246,27 +205,10 @@ function locale_init() {
  */
 function locale_permission() {
   return array(
-    'administer languages' => array(
-      'title' => t('Administer languages'),
-    ),
     'translate interface' => array(
       'title' => t('Translate interface texts'),
     ),
   );
-}
-
-/**
- * Loads a language object from the database.
- *
- * @param $langcode
- *   The language code.
- *
- * @return
- *   A fully-populated language object or FALSE.
- */
-function language_load($langcode) {
-  $languages = language_list();
-  return isset($languages[$langcode]) ? $languages[$langcode] : FALSE;
 }
 
 /**
@@ -408,14 +350,6 @@ function locale_field_node_form_submit($form, &$form_state) {
  */
 function locale_theme() {
   return array(
-    'locale_language_overview_form_table' => array(
-      'render element' => 'form',
-      'file' => 'locale.admin.inc',
-    ),
-    'locale_language_operations' => array(
-      'render element' => 'elements',
-      'file' => 'locale.admin.inc',
-    ),
     'locale_languages_configure_form' => array(
       'render element' => 'form',
     ),
@@ -608,9 +542,9 @@ function locale_modules_disabled($modules) {
 }
 
 /**
- * Implements hook_locale_language_insert().
+ * Implements hook_language_insert().
  */
-function locale_locale_language_insert($language) {
+function locale_language_insert($language) {
   // Add new language to the list of language prefixes.
   $prefixes = locale_language_negotiation_url_prefixes();
   $prefixes[$language->language] = (empty($language->default) ? $language->language : '');
@@ -620,12 +554,18 @@ function locale_locale_language_insert($language) {
   $domains = locale_language_negotiation_url_domains();
   $domains[$language->language] = '';
   locale_language_negotiation_url_domains_save($domains);
+
+  // @todo move these two cache clears out. See http://drupal.org/node/1293252
+  // Changing the language settings impacts the interface.
+  cache('page')->flush();
+  // Force JavaScript translation file re-creation for the new language.
+  _locale_invalidate_js($language->language);
 }
 
 /**
- * Implements hook_locale_language_update().
+ * Implements hook_language_update().
  */
-function locale_locale_language_update($language) {
+function locale_language_update($language) {
 
   // If the language is the default, then ensure that no other languages have
   // blank prefix codes.
@@ -639,12 +579,17 @@ function locale_locale_language_update($language) {
     locale_language_negotiation_url_prefixes_save($prefixes);
   }
 
+  // @todo move these two cache clears out. See http://drupal.org/node/1293252
+  // Changing the language settings impacts the interface.
+  cache('page')->flush();
+  // Force JavaScript translation file re-creation for the modified language.
+  _locale_invalidate_js($language->language);
 }
 
 /**
- * Implements hook_locale_language_delete().
+ * Implements hook_language_delete().
  */
-function locale_locale_language_delete($language) {
+function locale_language_delete($language) {
   // Remove language from language prefix list.
   $prefixes = locale_language_negotiation_url_prefixes();
   unset($prefixes[$language->language]);
@@ -654,6 +599,19 @@ function locale_locale_language_delete($language) {
   $domains = locale_language_negotiation_url_domains();
   unset($domains[$language->language]);
   locale_language_negotiation_url_domains_save($domains);
+
+  // Remove translations.
+  db_delete('locales_target')
+    ->condition('language', $language->language)
+    ->execute();
+
+  _locale_invalidate_js($language->language);
+
+  // Changing the language settings impacts the interface:
+  cache('page')->flush();
+
+  // Clearing all locale cache from database
+  cache()->delete('locale:' . $language->language);
 }
 
 
@@ -830,51 +788,6 @@ function locale_language_list($field = 'name', $all = FALSE) {
     $list[$language->language] = $language->$field;
   }
   return $list;
-}
-
-/**
- * Delete a language.
- *
- * @param $langcode
- *   Language code of the language to be deleted.
- * @return
- *   TRUE if language is successfully deleted. Otherwise FALSE.
- */
-function locale_language_delete($langcode) {
-  $languages = language_list();
-  if (isset($languages[$langcode])) {
-    $language = $languages[$langcode];
-
-    module_invoke_all('locale_language_delete', $language);
-
-    // Remove translations first.
-    db_delete('locales_target')
-      ->condition('language', $language->language)
-      ->execute();
-
-    // Remove the language.
-    db_delete('languages')
-      ->condition('language', $language->language)
-      ->execute();
-
-    if ($language->enabled) {
-      variable_set('language_count', variable_get('language_count', 1) - 1);
-    }
-
-    drupal_static_reset('language_list');
-    _locale_invalidate_js($language->language);
-
-    // Changing the language settings impacts the interface:
-    cache('page')->flush();
-
-    // Clearing all locale cache from database
-    cache()->delete('locale:' . $language->language);
-
-    $variables = array('%locale' => $language->name);
-    watchdog('locale', 'The language %locale has been removed.', $variables);
-    return TRUE;
-  }
-  return FALSE;
 }
 
 /**
@@ -1133,9 +1046,9 @@ function locale_form_comment_form_alter(&$form, &$form_state, $form_id) {
 }
 
 /**
- * Implements hook_form_FORM_ID_alter() for locale_language_overview_form().
+ * Implements hook_form_FORM_ID_alter() for language_admin_overview_form().
  */
-function locale_form_locale_language_overview_form_alter(&$form, &$form_state) {
+function locale_form_language_admin_overview_form_alter(&$form, &$form_state) {
   $languages = $form['languages']['#languages'];
 
   $total_strings = db_query("SELECT COUNT(*) FROM {locales_source}")->fetchField();
@@ -1179,23 +1092,46 @@ function locale_form_locale_language_overview_form_alter(&$form, &$form_state) {
 }
 
 /**
- * Implements hook_form_FORM_ID_alter() for locale_languages_edit_form().
+ * Implements hook_form_FORM_ID_alter() for language_admin_add_form(().
  */
-function locale_form_locale_languages_edit_form_alter(&$form, &$form_state) {
+function locale_form_language_admin_add_form_alter(&$form, &$form_state) {
+  $form['predefined_submit']['#submit'][] = 'locale_form_language_admin_add_form_alter_submit';
+  $form['custom_language']['submit']['#submit'][] = 'locale_form_language_admin_add_form_alter_submit';
+}
+
+/**
+ * Set a batch for newly added language.
+ */
+function locale_form_language_admin_add_form_alter_submit($form, $form_state) {
+  if (empty($form_state['values']['predefined_langcode']) || $form_state['values']['predefined_langcode'] == 'custom') {
+    $langcode = $form_state['values']['langcode'];
+  }
+  else {
+    $langcode = $form_state['values']['predefined_langcode'];
+  }
+
+  include_once drupal_get_path('module', 'locale') . '/locale.bulk.inc';
+  locale_translate_add_language_set_batch($langcode);
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for language_admin_edit_form().
+ */
+function locale_form_language_admin_edit_form_alter(&$form, &$form_state) {
   if ($form['langcode']['#type'] == 'value' && $form['langcode']['#value'] == 'en') {
     $form['locale_translate_english'] = array(
       '#title' => t('Enable interface translation to English'),
       '#type' => 'checkbox',
       '#default_value' => locale_translate_english(),
     );
-    $form['#submit'][] = 'locale_form_locale_languages_edit_form_alter_submit';
+    $form['#submit'][] = 'locale_form_language_admin_edit_form_alter_submit';
   }
 }
 
 /**
  * Submission handler to record our custom setting.
  */
-function locale_form_locale_languages_edit_form_alter_submit($form, $form_state) {
+function locale_form_language_admin_edit_form_alter_submit($form, $form_state) {
   variable_set('locale_translate_english', $form_state['values']['locale_translate_english']);
 }
 
