@@ -39,7 +39,6 @@ a.contextual-links-trigger {
   text-indent: 34px; /* LTR */
   width: 28px;
   overflow: hidden;
-  -khtml-border-radius: 4px;
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
   border-radius: 4px;
