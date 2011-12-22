@@ -45,7 +45,8 @@ class FieldValidationException extends FieldException {
  * Each field defines which storage backend it uses. The Drupal system variable
  * 'field_storage_default' identifies the storage backend used by default.
  *
- * @see field
+ * See @link field Field API @endlink for information about the other parts of
+ * the Field API.
  */
 
 /**
@@ -120,7 +121,8 @@ define('FIELD_STORAGE_INSERT', 'insert');
  * Field Storage API is essentially the "fallback mechanism" for any fields
  * that aren't being intercepted explicitly by pre-operation hooks.
  *
- * @see field
+ * See @link field Field API @endlink for information about the other parts of
+ * the Field API.
  */
 
 /**
