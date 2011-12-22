@@ -769,6 +769,9 @@ function rdf_field_attach_view_alter(&$output, $context) {
  * Implements MODULE_preprocess_HOOK().
  */
 function rdf_preprocess_image(&$variables) {
+  // Adds the RDF type for image. We cannot use the usual entity-based mapping
+  // to get 'foaf:Image' because image does not have its own entity type or
+  // bundle.
   $variables['attributes']['typeof'] = array('foaf:Image');
 }
 
