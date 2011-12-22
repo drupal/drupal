@@ -5,8 +5,18 @@
  * Tests for help.module.
  */
 
+/**
+ * Tests help display and user access for all modules implementing help.
+ */
 class HelpTestCase extends DrupalWebTestCase {
+  /**
+   * The admin user that will be created.
+   */
   protected $big_user;
+
+  /**
+   * The anonymous user that will be created.
+   */
   protected $any_user;
 
   public static function getInfo() {
@@ -17,9 +27,6 @@ class HelpTestCase extends DrupalWebTestCase {
     );
   }
 
-  /**
-   * Enable modules and create users with specific permissions.
-   */
   function setUp() {
     parent::setUp('blog', 'poll');
 
@@ -31,7 +38,7 @@ class HelpTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Login users, create dblog events, and test dblog functionality through the admin and user interfaces.
+   * Logs in users, creates dblog events, and tests dblog functionality.
    */
   function testHelp() {
     // Login the admin user.
@@ -60,9 +67,10 @@ class HelpTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Verify the logged in user has the desired access to the various help nodes and the nodes display help.
+   * Verifies the logged in user has access to the various help nodes.
    *
-   * @param integer $response HTTP response code.
+   * @param integer $response
+   *   An HTTP response code.
    */
   protected function verifyHelp($response = 200) {
     foreach ($this->modules as $module => $name) {
@@ -77,9 +85,10 @@ class HelpTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Get list of enabled modules that implement hook_help().
+   * Gets the list of enabled modules that implement hook_help().
    *
-   * @return array Enabled modules.
+   * @return array
+   *   A list of enabled modules.
    */
   protected function getModuleList() {
     $this->modules = array();
@@ -94,9 +103,12 @@ class HelpTestCase extends DrupalWebTestCase {
 }
 
 /**
- * Tests module without help to verify it is not listed in help page.
+ * Tests a module without help to verify it is not listed in the help page.
  */
 class NoHelpTestCase extends DrupalWebTestCase {
+  /**
+   * The user who will be created.
+   */
   protected $big_user;
 
   public static function getInfo() {
@@ -114,7 +126,7 @@ class NoHelpTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Ensure modules not implementing help do not appear on admin/help.
+   * Ensures modules not implementing help do not appear on admin/help.
    */
   function testMainPageNoHelp() {
     $this->drupalLogin($this->big_user);

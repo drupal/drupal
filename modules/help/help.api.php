@@ -42,6 +42,7 @@
  *   the current page's help. Note that depending on which module is invoking
  *   hook_help, $arg may contain only empty strings. Regardless, $arg[0] to
  *   $arg[11] will always be set.
+ *
  * @return
  *   A localized string containing the help text.
  */
