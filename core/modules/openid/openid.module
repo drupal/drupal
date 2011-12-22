@@ -657,13 +657,13 @@ function openid_authentication($response) {
         // Load global $user and perform final login tasks.
         $form_state['uid'] = $account->uid;
         user_login_submit(array(), $form_state);
-        // Let other modules act on OpenID login
-        module_invoke_all('openid_response', $response, $account);
       }
     }
     else {
       drupal_set_message(t('You must validate your email address for this account before logging in via OpenID.'));
     }
+    // Let other modules act on OpenID login
+    module_invoke_all('openid_response', $response, $account);
   }
   elseif (variable_get('user_register', USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL)) {
     // Register new user.
@@ -675,7 +675,10 @@ function openid_authentication($response) {
     $form_state['values']['op'] = t('Create new account');
     drupal_form_submit('user_register_form', $form_state);
 
-    if (!empty($form_state['user'])) {
+    if (empty($form_state['user'])) {
+      module_invoke_all('openid_response', $response, NULL);
+    }
+    else {
       module_invoke_all('openid_response', $response, $form_state['user']);
       drupal_goto();
     }
@@ -703,6 +706,7 @@ function openid_authentication($response) {
   }
   else {
     drupal_set_message(t('Only site administrators can create new user accounts.'), 'error');
+    module_invoke_all('openid_response', $response, NULL);
   }
   drupal_goto();
 }
@@ -773,7 +777,7 @@ function openid_authentication_request($claimed_id, $identity, $return_to = '', 
     $request['openid.ax.type.name_son'] = 'http://schema.openid.net/namePerson/friendly';
   }
 
-  $request = array_merge($request, module_invoke_all('openid', 'request', $request));
+  drupal_alter('openid_request', $request, $service);
 
   return $request;
 }
