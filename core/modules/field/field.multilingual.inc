@@ -58,7 +58,8 @@
  *   it possible to choose the first approach. The display language for each
  *   field is returned by field_language().
  *
- * @see field
+ * See @link field Field API @endlink for information about the other parts of
+ * the Field API.
  */
 
 /**

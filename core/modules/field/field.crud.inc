@@ -16,7 +16,8 @@
  * The Field CRUD API uses
  * @link field Field API data structures @endlink.
  *
- * @see field
+ * See @link field Field API @endlink for information about the other parts of
+ * the Field API.
  */
 
 /**
@@ -827,7 +828,8 @@ function field_delete_instance($instance, $field_cleanup = TRUE) {
  *   );
  * @endcode
  *
- * @see field
+ * See @link field Field API @endlink for information about the other parts of
+ * the Field API.
  */
 
 /**

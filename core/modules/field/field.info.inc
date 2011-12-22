@@ -14,7 +14,8 @@
  * instances, bundles, widget types, display formatters, behaviors,
  * and settings defined by or with the Field API.
  *
- * @see field
+ * See @link field Field API @endlink for information about the other parts of
+ * the Field API.
  */
 
 /**
