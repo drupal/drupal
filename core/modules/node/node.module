@@ -4080,6 +4080,28 @@ function node_modules_enabled($modules) {
 }
 
 /**
+ * Implements hook_modules_disabled().
+ */
+function node_modules_disabled($modules) {
+  // Check whether any of the disabled modules implemented hook_node_grants(),
+  // in which case the node access table needs to be rebuilt.
+  foreach ($modules as $module) {
+    // At this point, the module is already disabled, but its code is still
+    // loaded in memory. Module functions must no longer be called. We only
+    // check whether a hook implementation function exists and do not invoke it.
+    if (!node_access_needs_rebuild() && module_hook($module, 'node_grants')) {
+      node_access_needs_rebuild(TRUE);
+    }
+  }
+
+  // If there remains no more node_access module, rebuilding will be
+  // straightforward, we can do it right now.
+  if (node_access_needs_rebuild() && count(module_implements('node_grants')) == 0) {
+    node_access_rebuild();
+  }
+}
+
+/**
  * Controller class for nodes.
  *
  * This extends the DrupalDefaultEntityController class, adding required

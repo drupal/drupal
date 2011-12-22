@@ -2,6 +2,7 @@ name = Standard
 description = Install with commonly used features pre-configured.
 version = VERSION
 core = 8.x
+dependencies[] = node
 dependencies[] = block
 dependencies[] = color
 dependencies[] = comment

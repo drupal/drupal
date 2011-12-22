@@ -6,6 +6,15 @@
  */
 
 if (defined('LOG_LOCAL0')) {
+  /**
+   * Sets the proper logging facility.
+   *
+   * Note that LOG_LOCAL0 through LOG_LOCAL7 are not available on Windows, so we
+   * check for availability. If LOG_LOCAL0 is defined by the PHP environment, we
+   * set that as the default; if not, we use LOG_USER.
+   *
+   * @see http://php.net/manual/function.syslog.php
+   */
   define('DEFAULT_SYSLOG_FACILITY', LOG_LOCAL0);
 }
 else {
