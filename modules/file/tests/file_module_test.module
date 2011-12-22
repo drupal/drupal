@@ -22,7 +22,10 @@ function file_module_test_menu() {
 }
 
 /**
- * Form builder for testing a 'managed_file' element.
+ * Form constructor for testing a 'managed_file' element.
+ *
+ * @see file_module_test_form_submit()
+ * @ingroup forms
  */
 function file_module_test_form($form, &$form_state, $tree = TRUE, $extended = FALSE, $default_fid = NULL) {
   $form['#tree'] = (bool) $tree;

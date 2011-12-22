@@ -6,7 +6,7 @@
  */
 
 /**
- * This class provides methods specifically for testing File's field handling.
+ * Provides methods specifically for testing File module's field handling.
  */
 class FileFieldTestCase extends DrupalWebTestCase {
   protected $admin_user;
@@ -27,7 +27,7 @@ class FileFieldTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Get a sample file of the specified type.
+   * Retrieves a sample file of the specified type.
    */
   function getTestFile($type_name, $size = NULL) {
     // Get a file to upload.
@@ -40,14 +40,14 @@ class FileFieldTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Get the fid of the last inserted file.
+   * Retrieves the fid of the last inserted file.
    */
   function getLastFileId() {
     return (int) db_query('SELECT MAX(fid) FROM {file_managed}')->fetchField();
   }
 
   /**
-   * Create a new file field.
+   * Creates a new file field.
    *
    * @param $name
    *   The name of the new field (all lowercase), exclude the "field_" prefix.
@@ -74,7 +74,7 @@ class FileFieldTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Attach a file field to an entity.
+   * Attaches a file field to an entity.
    *
    * @param $name
    *   The name of the new field (all lowercase), exclude the "field_" prefix.
@@ -108,7 +108,7 @@ class FileFieldTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Update an existing file field with new settings.
+   * Updates an existing file field with new settings.
    */
   function updateFileField($name, $type_name, $instance_settings = array(), $widget_settings = array()) {
     $instance = field_info_instance('node', $name, $type_name);
@@ -119,7 +119,7 @@ class FileFieldTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Upload a file to a node.
+   * Uploads a file to a node.
    */
   function uploadNodeFile($file, $field_name, $nid_or_type, $new_revision = TRUE, $extras = array()) {
     $langcode = LANGUAGE_NONE;
@@ -150,7 +150,7 @@ class FileFieldTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Remove a file from a node.
+   * Removes a file from a node.
    *
    * Note that if replacing a file, it must first be removed then added again.
    */
@@ -164,7 +164,7 @@ class FileFieldTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Replace a file within a node.
+   * Replaces a file within a node.
    */
   function replaceNodeFile($file, $field_name, $nid, $new_revision = TRUE) {
     $edit = array(
@@ -177,7 +177,7 @@ class FileFieldTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Assert that a file exists physically on disk.
+   * Asserts that a file exists physically on disk.
    */
   function assertFileExists($file, $message = NULL) {
     $message = isset($message) ? $message : t('File %file exists on the disk.', array('%file' => $file->uri));
@@ -185,7 +185,7 @@ class FileFieldTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Assert that a file exists in the database.
+   * Asserts that a file exists in the database.
    */
   function assertFileEntryExists($file, $message = NULL) {
     entity_get_controller('file')->resetCache();
@@ -195,7 +195,7 @@ class FileFieldTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Assert that a file does not exist on disk.
+   * Asserts that a file does not exist on disk.
    */
   function assertFileNotExists($file, $message = NULL) {
     $message = isset($message) ? $message : t('File %file exists on the disk.', array('%file' => $file->uri));
@@ -203,7 +203,7 @@ class FileFieldTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Assert that a file does not exist in the database.
+   * Asserts that a file does not exist in the database.
    */
   function assertFileEntryNotExists($file, $message) {
     entity_get_controller('file')->resetCache();
@@ -212,7 +212,7 @@ class FileFieldTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Assert that a file's status is set to permanent in the database.
+   * Asserts that a file's status is set to permanent in the database.
    */
   function assertFileIsPermanent($file, $message = NULL) {
     $message = isset($message) ? $message : t('File %file is permanent.', array('%file' => $file->uri));
@@ -221,7 +221,7 @@ class FileFieldTestCase extends DrupalWebTestCase {
 }
 
 /**
- * Test class for testing the 'managed_file' element type on its own, not as part of a file field.
+ * Tests the 'managed_file' element type.
  *
  * @todo Create a FileTestCase base class and move FileFieldTestCase methods
  *   that aren't related to fields into it.
@@ -311,7 +311,7 @@ class FileManagedFileElementTestCase extends FileFieldTestCase {
 }
 
 /**
- * Test class to test file field widget, single and multi-valued, with and without Ajax, with public and private files.
+ * Tests file field widget.
  */
 class FileFieldWidgetTestCase extends FileFieldTestCase {
   public static function getInfo() {
@@ -323,7 +323,7 @@ class FileFieldWidgetTestCase extends FileFieldTestCase {
   }
 
   /**
-   * Tests upload and remove buttons, with and without Ajax, for a single-valued File field.
+   * Tests upload and remove buttons for a single-valued File field.
    */
   function testSingleValuedWidget() {
     // Use 'page' instead of 'article', so that the 'article' image field does
@@ -380,7 +380,7 @@ class FileFieldWidgetTestCase extends FileFieldTestCase {
   }
 
   /**
-   * Tests upload and remove buttons, with and without Ajax, for multiple multi-valued File field.
+   * Tests upload and remove buttons for multiple multi-valued File fields.
    */
   function testMultiValuedWidget() {
     // Use 'page' instead of 'article', so that the 'article' image field does
@@ -616,7 +616,7 @@ class FileFieldWidgetTestCase extends FileFieldTestCase {
 }
 
 /**
- * Test class to test file handling with node revisions.
+ * Tests file handling with node revisions.
  */
 class FileFieldRevisionTestCase extends FileFieldTestCase {
   public static function getInfo() {
@@ -628,7 +628,7 @@ class FileFieldRevisionTestCase extends FileFieldTestCase {
   }
 
   /**
-   * Test creating multiple revisions of a node and managing the attached files.
+   * Tests creating multiple revisions of a node and managing attached files.
    *
    * Expected behaviors:
    *  - Adding a new revision will make another entry in the field table, but
@@ -731,7 +731,7 @@ class FileFieldRevisionTestCase extends FileFieldTestCase {
 }
 
 /**
- * Test class to check that formatters are working properly.
+ * Tests that formatters are working properly.
  */
 class FileFieldDisplayTestCase extends FileFieldTestCase {
   public static function getInfo() {
@@ -743,7 +743,7 @@ class FileFieldDisplayTestCase extends FileFieldTestCase {
   }
 
   /**
-   * Test normal formatter display on node display.
+   * Tests normal formatter display on node display.
    */
   function testNodeDisplay() {
     $field_name = strtolower($this->randomName());
@@ -795,7 +795,7 @@ class FileFieldDisplayTestCase extends FileFieldTestCase {
 }
 
 /**
- * Test class to check for various validations.
+ * Tests various validations.
  */
 class FileFieldValidateTestCase extends FileFieldTestCase {
   protected $field;
@@ -810,7 +810,7 @@ class FileFieldValidateTestCase extends FileFieldTestCase {
   }
 
   /**
-   * Test required property on file fields.
+   * Tests the required property on file fields.
    */
   function testRequired() {
     $type_name = 'article';
@@ -858,7 +858,7 @@ class FileFieldValidateTestCase extends FileFieldTestCase {
   }
 
   /**
-   * Test the max file size validator.
+   * Tests the max file size validator.
    */
   function testFileMaxSize() {
     $type_name = 'article';
@@ -910,7 +910,7 @@ class FileFieldValidateTestCase extends FileFieldTestCase {
   }
 
   /**
-   * Test the file extension, do additional checks if mimedetect is installed.
+   * Tests file extension checking.
    */
   function testFileExtension() {
     $type_name = 'article';
@@ -956,7 +956,7 @@ class FileFieldValidateTestCase extends FileFieldTestCase {
 }
 
 /**
- * Test class to check that files are uploaded to proper locations.
+ * Tests that files are uploaded to proper locations.
  */
 class FileFieldPathTestCase extends FileFieldTestCase {
   public static function getInfo() {
@@ -968,7 +968,7 @@ class FileFieldPathTestCase extends FileFieldTestCase {
   }
 
   /**
-   * Test normal formatter display on node display.
+   * Tests the normal formatter display on node display.
    */
   function testUploadPath() {
     $field_name = strtolower($this->randomName());
@@ -1013,7 +1013,7 @@ class FileFieldPathTestCase extends FileFieldTestCase {
   }
 
   /**
-   * A loose assertion to check that a file is uploaded to the right location.
+   * Asserts that a file is uploaded to the right location.
    *
    * @param $expected_path
    *   The location where the file is expected to be uploaded. Duplicate file
@@ -1036,7 +1036,7 @@ class FileFieldPathTestCase extends FileFieldTestCase {
 }
 
 /**
- * Test file token replacement in strings.
+ * Tests the file token replacement in strings.
  */
 class FileTokenReplaceTestCase extends FileFieldTestCase {
   public static function getInfo() {
@@ -1108,7 +1108,7 @@ class FileTokenReplaceTestCase extends FileFieldTestCase {
 }
 
 /**
- * Test class to test file access on private nodes.
+ * Tests file access on private nodes.
  */
 class FilePrivateTestCase extends FileFieldTestCase {
   public static function getInfo() {
@@ -1126,7 +1126,7 @@ class FilePrivateTestCase extends FileFieldTestCase {
   }
 
   /**
-   * Uploads a file to a private node, then tests that access is allowed and denied when appropriate.
+   * Tests file access for file uploaded to a private node.
    */
   function testPrivateFile() {
     // Use 'page' instead of 'article', so that the 'article' image field does

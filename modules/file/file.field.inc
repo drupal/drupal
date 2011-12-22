@@ -312,7 +312,7 @@ function file_field_delete_revision($entity_type, $entity, $field, $instance, $l
 }
 
 /**
- * Decrements a file usage count and attempts to delete it.
+ * Decrements the usage count for a file and attempts to delete it.
  *
  * This function only has an effect if the file being deleted is used only by
  * File module.
@@ -358,12 +358,13 @@ function file_field_is_empty($item, $field) {
 }
 
 /**
- * Determine whether a file should be displayed when outputting field content.
+ * Determines whether a file should be displayed when outputting field content.
  *
  * @param $item
  *   A field item array.
  * @param $field
  *   A field array.
+ *
  * @return
  *   Boolean TRUE if the file will be displayed, FALSE if the file is hidden.
  */
@@ -516,10 +517,11 @@ function file_field_widget_form(&$form, &$form_state, $field, $instance, $langco
 }
 
 /**
- * Get the upload validators for a file field.
+ * Retrieves the upload validators for a file field.
  *
  * @param $field
  *   A field array.
+ *
  * @return
  *   An array suitable for passing to file_save_upload() or the file field
  *   element's '#upload_validators' property.
@@ -545,7 +547,7 @@ function file_field_widget_upload_validators($field, $instance) {
 }
 
 /**
- * Determine the URI for a file field instance.
+ * Determines the URI for a file field instance.
  *
  * @param $field
  *   A field array.
@@ -553,6 +555,7 @@ function file_field_widget_upload_validators($field, $instance) {
  *   A field instance array.
  * @param $data
  *   An array of token objects to pass to token_replace().
+ *
  * @return
  *   A file directory URI with tokens replaced.
  *
@@ -704,10 +707,13 @@ function file_field_widget_process_multiple($element, &$form_state, $form) {
 }
 
 /**
- * Helper function for file_field_widget_process_multiple().
+ * Retrieves the file description from a field field element.
+ *
+ * This helper function is used by file_field_widget_process_multiple().
  *
  * @param $element
  *   The element being processed.
+ *
  * @return
  *   A description of the file suitable for use in the administrative interface.
  */
@@ -725,7 +731,7 @@ function _file_field_get_description_from_element($element) {
 }
 
 /**
- * Submit handler for upload and remove buttons of file_generic fields.
+ * Form submission handler for upload/remove button of file_field_widget_form().
  *
  * This runs in addition to and after file_managed_file_submit().
  *
