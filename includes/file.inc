@@ -828,6 +828,10 @@ function file_valid_uri($uri) {
  *   is reported.
  * - If file already exists in $destination either the call will error out,
  *   replace the file or rename the file based on the $replace parameter.
+ * - Provides a fallback using realpaths if the move fails using stream
+ *   wrappers. This can occur because PHP's copy() function does not properly
+ *   support streams if safe_mode or open_basedir are enabled. See
+ *   https://bugs.php.net/bug.php?id=60456
  *
  * @param $source
  *   A string specifying the filepath or URI of the source file.
@@ -907,8 +911,12 @@ function file_unmanaged_copy($source, $destination = NULL, $replace = FILE_EXIST
   file_ensure_htaccess();
   // Perform the copy operation.
   if (!@copy($source, $destination)) {
-    watchdog('file', 'The specified file %file could not be copied to %destination.', array('%file' => $source, '%destination' => $destination), WATCHDOG_ERROR);
-    return FALSE;
+    // If the copy failed and realpaths exist, retry the operation using them
+    // instead.
+    if ($real_source === FALSE || $real_destination === FALSE || !@copy($real_source, $real_destination)) {
+      watchdog('file', 'The specified file %file could not be copied to %destination.', array('%file' => $source, '%destination' => $destination), WATCHDOG_ERROR);
+      return FALSE;
+    }
   }
 
   // Set the permissions on the new file.
