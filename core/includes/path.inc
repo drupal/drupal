@@ -16,7 +16,7 @@ function drupal_path_initialize() {
   // Ensure $_GET['q'] is set before calling drupal_normal_path(), to support
   // path caching with hook_url_inbound_alter().
   if (empty($_GET['q'])) {
-    $_GET['q'] = variable_get('site_frontpage', 'user');
+    $_GET['q'] = variable_get('site_frontpage', 'node');
   }
   $_GET['q'] = drupal_get_normal_path($_GET['q']);
 }
@@ -292,7 +292,7 @@ function drupal_is_front_page() {
   if (!isset($is_front_page)) {
     // As drupal_path_initialize updates $_GET['q'] with the 'site_frontpage' path,
     // we can check it against the 'site_frontpage' variable.
-    $is_front_page = ($_GET['q'] == variable_get('site_frontpage', 'user'));
+    $is_front_page = ($_GET['q'] == variable_get('site_frontpage', 'node'));
   }
 
   return $is_front_page;
@@ -323,7 +323,7 @@ function drupal_match_path($path, $patterns) {
     $replacements = array(
       '|',
       '.*',
-      '\1' . preg_quote(variable_get('site_frontpage', 'user'), '/') . '\2'
+      '\1' . preg_quote(variable_get('site_frontpage', 'node'), '/') . '\2'
     );
     $patterns_quoted = preg_quote($patterns, '/');
     $regexps[$patterns] = '/^(' . preg_replace($to_replace, $replacements, $patterns_quoted) . ')$/';

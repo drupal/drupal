@@ -2,7 +2,6 @@ name = Minimal
 description = Start with only a few modules enabled.
 version = VERSION
 core = 8.x
-dependencies[] = node
 dependencies[] = block
 dependencies[] = dblog
 files[] = minimal.profile

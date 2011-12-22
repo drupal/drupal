@@ -7367,11 +7367,7 @@ function drupal_flush_all_caches() {
   system_rebuild_theme_data();
   drupal_theme_rebuild();
 
-  // @todo D8: Split cache flushing from rebuilding.
-  // @see http://drupal.org/node/996236
-  if (module_exists('node')) {
-    node_types_rebuild();
-  }
+  node_types_rebuild();
   // node_menu() defines menu items based on node types so it needs to come
   // after node types are rebuilt.
   menu_rebuild();

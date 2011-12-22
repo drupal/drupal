@@ -4,4 +4,3 @@ package = Testing
 version = VERSION
 core = 8.x
 hidden = TRUE
-dependencies[] = rdf

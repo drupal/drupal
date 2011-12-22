@@ -66,8 +66,7 @@ class ThemeUnitTest extends DrupalWebTestCase {
     $q = $_GET['q'];
     // Set $_GET['q'] to node because theme_get_suggestions() will query it to
     // see if we are on the front page.
-    variable_set('site_frontpage', 'node');
-    $_GET['q'] = 'node';
+    $_GET['q'] = variable_get('site_frontpage', 'node');
     $suggestions = theme_get_suggestions(explode('/', $_GET['q']), 'page');
     // Set it back to not annoy the batch runner.
     $_GET['q'] = $q;
