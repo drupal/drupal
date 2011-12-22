@@ -1908,7 +1908,7 @@ function hook_image_toolkits() {
  */
 function hook_mail_alter(&$message) {
   if ($message['id'] == 'modulename_messagekey') {
-    $message['body'][] = "--\nMail sent out from " . variable_get('sitename', t('Drupal'));
+    $message['body'][] = "--\nMail sent out from " . variable_get('site_name', t('Drupal'));
   }
 }
 
