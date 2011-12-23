@@ -224,19 +224,14 @@ const MENU_CONTEXT_INLINE = 0x0002;
  */
 
 /**
- * Internal menu status code -- Menu item was found.
- */
-const MENU_FOUND = 1;
-
-/**
  * Internal menu status code -- Menu item was not found.
  */
-const MENU_NOT_FOUND = 2;
+const MENU_NOT_FOUND = 404;
 
 /**
  * Internal menu status code -- Menu item access is denied.
  */
-const MENU_ACCESS_DENIED = 3;
+const MENU_ACCESS_DENIED = 403;
 
 /**
  * Internal menu status code -- Menu item inaccessible because site is offline.
