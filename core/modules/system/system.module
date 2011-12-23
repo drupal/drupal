@@ -1979,19 +1979,21 @@ function system_form_user_profile_form_alter(&$form, &$form_state) {
  * Implements hook_form_FORM_ID_alter().
  */
 function system_form_user_register_form_alter(&$form, &$form_state) {
-  if (variable_get('configurable_timezones', 1)) {
-    if (variable_get('user_default_timezone', DRUPAL_USER_TIMEZONE_DEFAULT) == DRUPAL_USER_TIMEZONE_SELECT) {
-      system_user_timezone($form, $form_state);
-    }
-    else {
-      $form['account']['timezone'] = array(
-        '#type' => 'hidden',
-        '#value' => variable_get('user_default_timezone', DRUPAL_USER_TIMEZONE_DEFAULT) ? '' : variable_get('date_default_timezone', ''),
-      );
-    }
+  if (variable_get('configurable_timezones', 1) && variable_get('user_default_timezone', DRUPAL_USER_TIMEZONE_DEFAULT) == DRUPAL_USER_TIMEZONE_SELECT) {
+    system_user_timezone($form, $form_state);
     return $form;
   }
 }
+
+/**
+ * Implements hook_user_insert().
+ */
+function system_user_presave(&$edit, $account) {
+  if (variable_get('configurable_timezones', 1) && empty($account->timezone) && !variable_get('user_default_timezone', DRUPAL_USER_TIMEZONE_DEFAULT)) {
+    $account->timezone = variable_get('date_default_timezone', '');
+  }
+}
+
 
 /**
  * Implements hook_user_login().

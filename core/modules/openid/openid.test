@@ -399,9 +399,16 @@ class OpenIDRegistrationTestCase extends OpenIDWebTestCase {
    */
   function testRegisterUserWithEmailVerification() {
     variable_set('user_email_verification', TRUE);
+    variable_get('configurable_timezones', 1);
+    variable_set('date_default_timezone', 'Europe/Brussels');
 
     // Tell openid_test.module to respond with these SREG fields.
-    variable_set('openid_test_response', array('openid.sreg.nickname' => 'john', 'openid.sreg.email' => 'john@example.com'));
+    variable_set('openid_test_response', array(
+      'openid.sreg.nickname' => 'john',
+      'openid.sreg.email' => 'john@example.com',
+      'openid.sreg.language' => 'en-GB',
+      'openid.sreg.timezone' => 'Europe/London',
+    ));
 
     // Use a User-supplied Identity that is the URL of an XRDS document.
     $identity = url('openid-test/yadis/xrds', array('absolute' => TRUE));
@@ -413,6 +420,8 @@ class OpenIDRegistrationTestCase extends OpenIDWebTestCase {
     $user = user_load_by_name('john');
     $this->assertTrue($user, t('User was registered with right username.'));
     $this->assertEqual($user->mail, 'john@example.com', t('User was registered with right email address.'));
+    $this->assertEqual($user->timezone, 'Europe/London', t('User was registered with right timezone.'));
+    $this->assertEqual($user->language, 'en', t('User was registered with right language.'));
     $this->assertFalse($user->data, t('No additional user info was saved.'));
 
     $this->submitLoginForm($identity);
@@ -434,9 +443,16 @@ class OpenIDRegistrationTestCase extends OpenIDWebTestCase {
    */
   function testRegisterUserWithoutEmailVerification() {
     variable_set('user_email_verification', FALSE);
+    variable_get('configurable_timezones', 1);
+    variable_set('date_default_timezone', 'Europe/Brussels');
 
     // Tell openid_test.module to respond with these SREG fields.
-    variable_set('openid_test_response', array('openid.sreg.nickname' => 'john', 'openid.sreg.email' => 'john@example.com'));
+    variable_set('openid_test_response', array(
+      'openid.sreg.nickname' => 'john',
+      'openid.sreg.email' => 'john@example.com',
+      'openid.sreg.language' => 'en-GB',
+      'openid.sreg.timezone' => 'Europe/London',
+    ));
 
     // Use a User-supplied Identity that is the URL of an XRDS document.
     $identity = url('openid-test/yadis/xrds', array('absolute' => TRUE));
@@ -446,6 +462,8 @@ class OpenIDRegistrationTestCase extends OpenIDWebTestCase {
     $user = user_load_by_name('john');
     $this->assertTrue($user, t('User was registered with right username.'));
     $this->assertEqual($user->mail, 'john@example.com', t('User was registered with right email address.'));
+    $this->assertEqual($user->timezone, 'Europe/London', t('User was registered with right timezone.'));
+    $this->assertEqual($user->language, 'en', t('User was registered with right language.'));
     $this->assertFalse($user->data, t('No additional user info was saved.'));
 
     $this->drupalLogout();
@@ -459,9 +477,17 @@ class OpenIDRegistrationTestCase extends OpenIDWebTestCase {
    * information (a username that is already taken, and no e-mail address).
    */
   function testRegisterUserWithInvalidSreg() {
+    variable_get('configurable_timezones', 1);
+    variable_set('date_default_timezone', 'Europe/Brussels');
+
     // Tell openid_test.module to respond with these SREG fields.
     $web_user = $this->drupalCreateUser(array());
-    variable_set('openid_test_response', array('openid.sreg.nickname' => $web_user->name, 'openid.sreg.email' => 'mail@invalid#'));
+    variable_set('openid_test_response', array(
+      'openid.sreg.nickname' => $web_user->name,
+      'openid.sreg.email' => 'mail@invalid#',
+      'openid.sreg.timezone' => 'Foo/Bar',
+      'openid.sreg.language' => 'foobar',
+    ));
 
     // Use a User-supplied Identity that is the URL of an XRDS document.
     $identity = url('openid-test/yadis/xrds', array('absolute' => TRUE));
@@ -482,6 +508,7 @@ class OpenIDRegistrationTestCase extends OpenIDWebTestCase {
 
     $user = user_load_by_name('john');
     $this->assertTrue($user, t('User was registered with right username.'));
+    $this->assertFalse($user->language, t('No user language was saved.'));
     $this->assertFalse($user->data, t('No additional user info was saved.'));
 
     // Follow the one-time login that was sent in the welcome e-mail.
@@ -501,6 +528,8 @@ class OpenIDRegistrationTestCase extends OpenIDWebTestCase {
    * information (i.e. no username or e-mail address).
    */
   function testRegisterUserWithoutSreg() {
+    variable_get('configurable_timezones', 1);
+
     // Load the front page to get the user login block.
     $this->drupalGet('');
 
@@ -519,6 +548,7 @@ class OpenIDRegistrationTestCase extends OpenIDWebTestCase {
 
     $user = user_load_by_name('john');
     $this->assertTrue($user, t('User was registered with right username.'));
+    $this->assertFalse($user->language, t('No user language was saved.'));
     $this->assertFalse($user->data, t('No additional user info was saved.'));
 
     // Follow the one-time login that was sent in the welcome e-mail.
@@ -538,6 +568,7 @@ class OpenIDRegistrationTestCase extends OpenIDWebTestCase {
    */
   function testRegisterUserWithAXButNoSREG() {
     variable_set('user_email_verification', FALSE);
+    variable_set('date_default_timezone', 'Europe/Brussels');
 
     // Tell openid_test.module to respond with these AX fields.
     variable_set('openid_test_response', array(
@@ -547,6 +578,10 @@ class OpenIDRegistrationTestCase extends OpenIDWebTestCase {
       'openid.ext123.type.name789' => 'http://schema.openid.net/namePerson/friendly',
       'openid.ext123.count.name789' => '1',
       'openid.ext123.value.name789.1' => 'john',
+      'openid.ext123.type.timezone' => 'http://axschema.org/pref/timezone',
+      'openid.ext123.value.timezone' => 'Europe/London',
+      'openid.ext123.type.language' => 'http://axschema.org/pref/language',
+      'openid.ext123.value.language' => 'en-GB',
     ));
 
     // Use a User-supplied Identity that is the URL of an XRDS document.
@@ -557,6 +592,8 @@ class OpenIDRegistrationTestCase extends OpenIDWebTestCase {
     $user = user_load_by_name('john');
     $this->assertTrue($user, t('User was registered with right username.'));
     $this->assertEqual($user->mail, 'john@example.com', t('User was registered with right email address.'));
+    $this->assertEqual($user->timezone, 'Europe/London', t('User was registered with right timezone.'));
+    $this->assertEqual($user->language, 'en', t('User was registered with right language.'));
   }
 }
 
