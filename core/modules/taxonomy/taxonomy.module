@@ -6,6 +6,21 @@
  */
 
 /**
+ * Denotes that no term in the vocabulary has a parent.
+ */
+const TAXONOMY_HIERARCHY_DISABLED = 0;
+
+/**
+ * Denotes that one or more terms in the vocabulary has a single parent.
+ */
+const TAXONOMY_HIERARCHY_SINGLE = 1;
+
+/**
+ * Denotes that one or more terms in the vocabulary have multiple parents.
+ */
+const TAXONOMY_HIERARCHY_MULTIPLE = 2;
+
+/**
  * Users can create new terms in a free-tagging vocabulary when
  * submitting a taxonomy_autocomplete_widget. We store a term object
  * whose tid is 'autocreate' as a field data item during widget
@@ -51,11 +66,11 @@ function taxonomy_help($path, $arg) {
     case 'admin/structure/taxonomy/%':
       $vocabulary = taxonomy_vocabulary_machine_name_load($arg[3]);
       switch ($vocabulary->hierarchy) {
-        case 0:
+        case TAXONOMY_HIERARCHY_DISABLED:
           return '<p>' . t('You can reorganize the terms in %capital_name using their drag-and-drop handles, and group terms under a parent term by sliding them under and to the right of the parent.', array('%capital_name' => drupal_ucfirst($vocabulary->name), '%name' => $vocabulary->name)) . '</p>';
-        case 1:
+        case TAXONOMY_HIERARCHY_SINGLE:
           return '<p>' . t('%capital_name contains terms grouped under parent terms. You can reorganize the terms in %capital_name using their drag-and-drop handles.', array('%capital_name' => drupal_ucfirst($vocabulary->name), '%name' => $vocabulary->name)) . '</p>';
-        case 2:
+        case TAXONOMY_HIERARCHY_MULTIPLE:
           return '<p>' . t('%capital_name contains terms with multiple parents. Drag and drop of terms with multiple parents is not supported, but you can re-enable drag-and-drop support by editing each term to include only a single parent.', array('%capital_name' => drupal_ucfirst($vocabulary->name))) . '</p>';
       }
   }
@@ -519,10 +534,11 @@ function taxonomy_taxonomy_vocabulary_update($vocabulary) {
  *
  * Checks the current parents of all terms in a vocabulary and updates the
  * vocabulary's hierarchy setting to the lowest possible level. If no term
- * has parent terms then the vocabulary will be given a hierarchy of 0.
- * If any term has a single parent then the vocabulary will be given a
- * hierarchy of 1. If any term has multiple parents then the vocabulary
- * will be given a hierarchy of 2.
+ * has parent terms then the vocabulary will be given a hierarchy of
+ * TAXONOMY_HIERARCHY_DISABLED. If any term has a single parent then the
+ * vocabulary will be given a hierarchy of TAXONOMY_HIERARCHY_SINGLE. If any
+ * term has multiple parents then the vocabulary will be given a hierarchy of
+ * TAXONOMY_HIERARCHY_MULTIPLE.
  *
  * @param $vocabulary
  *   A vocabulary object.
@@ -534,7 +550,7 @@ function taxonomy_taxonomy_vocabulary_update($vocabulary) {
  */
 function taxonomy_check_vocabulary_hierarchy($vocabulary, $changed_term) {
   $tree = taxonomy_get_tree($vocabulary->vid);
-  $hierarchy = 0;
+  $hierarchy = TAXONOMY_HIERARCHY_DISABLED;
   foreach ($tree as $term) {
     // Update the changed term with the new parent value before comparison.
     if ($term->tid == $changed_term['tid']) {
@@ -543,11 +559,11 @@ function taxonomy_check_vocabulary_hierarchy($vocabulary, $changed_term) {
     }
     // Check this term's parent count.
     if (count($term->parents) > 1) {
-      $hierarchy = 2;
+      $hierarchy = TAXONOMY_HIERARCHY_MULTIPLE;
       break;
     }
     elseif (count($term->parents) == 1 && 0 !== array_shift($term->parents)) {
-      $hierarchy = 1;
+      $hierarchy = TAXONOMY_HIERARCHY_SINGLE;
     }
   }
   if ($hierarchy != $vocabulary->hierarchy) {
