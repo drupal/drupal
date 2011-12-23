@@ -78,13 +78,13 @@ class OpenIDFunctionalTestCase extends OpenIDWebTestCase {
     // the URL of the OpenID Provider Endpoint.
 
     // Identifier is the URL of an XRDS document.
-    // The URL scheme is stripped in order to test that the supplied identifier
-    // is normalized in openid_begin().
+    // On HTTP test environments, the URL scheme is stripped in order to test
+    // that the supplied identifier is normalized in openid_begin().
     $identity = url('openid-test/yadis/xrds', array('absolute' => TRUE));
-    $this->addIdentity(preg_replace('@^https?://@', '', $identity), 2, 'http://example.com/xrds', $identity);
+    $this->addIdentity(preg_replace('@^http://@', '', $identity), 2, 'http://example.com/xrds', $identity);
 
     $identity = url('openid-test/yadis/xrds/delegate', array('absolute' => TRUE));
-    $this->addIdentity(preg_replace('@^https?://@', '', $identity), 2, 'http://example.com/xrds-delegate', $identity);
+    $this->addIdentity(preg_replace('@^http://@', '', $identity), 2, 'http://example.com/xrds-delegate', $identity);
 
     // Identifier is the URL of an XRDS document containing an OP Identifier
     // Element. The Relying Party sends the special value
@@ -92,8 +92,8 @@ class OpenIDFunctionalTestCase extends OpenIDWebTestCase {
     // Identifier. The OpenID Provider responds with the actual identifier
     // including the fragment.
     $identity = url('openid-test/yadis/xrds/dummy-user', array('absolute' => TRUE, 'fragment' => $this->randomName()));
-    // Tell openid_test.module to respond with this identifier. We test if
-    // openid_complete() processes it right.
+    // Tell openid_test.module to respond with this identifier. If the fragment
+    // part is present in the identifier, it should be retained.
     variable_set('openid_test_response', array('openid.claimed_id' => $identity));
     $this->addIdentity(url('openid-test/yadis/xrds/server', array('absolute' => TRUE)), 2, 'http://specs.openid.net/auth/2.0/identifier_select', $identity);
     variable_set('openid_test_response', array());
