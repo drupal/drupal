@@ -746,7 +746,10 @@ class ImageFieldDisplayTestCase extends ImageFieldTestCase {
     $widget_settings = array(
       'preview_image_style' => 'medium',
     );
-    $this->createImageField($field_name, 'article', array(), $instance_settings, $widget_settings);
+    $field = $this->createImageField($field_name, 'article', array(), $instance_settings, $widget_settings);
+    $field['deleted'] = 0;
+    $table = _field_sql_storage_tablename($field);
+    $schema = drupal_get_schema($table, TRUE);
     $instance = field_info_instance('node', $field_name, 'article');
 
     $this->drupalGet('node/add/article');
@@ -789,18 +792,17 @@ class ImageFieldDisplayTestCase extends ImageFieldTestCase {
 
     // Verify that alt/title longer than allowed results in a validation error.
     $test_size = 2000;
-    $max_size = 128;
     $edit = array(
       $field_name . '[' . LANGUAGE_NONE . '][0][alt]' => $this->randomName($test_size),
       $field_name . '[' . LANGUAGE_NONE . '][0][title]' => $this->randomName($test_size),
     );
     $this->drupalPost('node/' . $nid . '/edit', $edit, t('Save'));
     $this->assertRaw(t('Alternate text cannot be longer than %max characters but is currently %length characters long.', array(
-      '%max' => $max_size,
+      '%max' => $schema['fields'][$field_name .'_alt']['length'],
       '%length' => $test_size,
     )));
     $this->assertRaw(t('Title cannot be longer than %max characters but is currently %length characters long.', array(
-      '%max' => $max_size,
+      '%max' => $schema['fields'][$field_name .'_title']['length'],
       '%length' => $test_size,
     )));
   }
