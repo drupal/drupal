@@ -183,6 +183,28 @@ function menu_update_7002(&$sandbox) {
   }
 }
 /**
+ * Add missing custom menus to active menus list.
+ */
+function menu_update_7003(&$sandbox) {
+  // Make sure all custom menus are present in the active menus variable so that
+  // their items may appear in the active trail.
+  // @see menu_set_active_menu_names()
+  $active_menus = variable_get('menu_default_active_menus', array_keys(menu_list_system_menus()));
+  $update_variable = FALSE;
+  foreach (menu_get_names() as $menu_name) {
+    if (!in_array($menu_name, $active_menus) && (strpos($menu_name, 'menu-') === 0)) {
+      $active_menus[] = $menu_name;
+      $update_variable = TRUE;
+    }
+  }
+  if ($update_variable) {
+    variable_set('menu_default_active_menus', $active_menus);
+  }
+  // Clear the menu cache.
+  cache_clear_all(NULL, 'cache_menu');
+}
+
+/**
  * @} End of "defgroup updates-7.x-extra"
  * The next series of updates should start at 8000.
  */

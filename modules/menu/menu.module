@@ -268,6 +268,15 @@ function menu_save($menu) {
 
   switch ($status) {
     case SAVED_NEW:
+      // Make sure the menu is present in the active menus variable so that its
+      // items may appear in the menu active trail.
+      // @see menu_set_active_menu_names()
+      $active_menus = variable_get('menu_default_active_menus', array_keys(menu_get_menus()));
+      if (!in_array($menu['menu_name'], $active_menus)) {
+        $active_menus[] = $menu['menu_name'];
+        variable_set('menu_default_active_menus', $active_menus);
+      }
+
       module_invoke_all('menu_insert', $menu);
       break;
 
@@ -304,6 +313,15 @@ function menu_save($menu) {
 function menu_delete($menu) {
   // Delete all links from the menu.
   menu_delete_links($menu['menu_name']);
+
+  // Remove menu from active menus variable.
+  $active_menus = variable_get('menu_default_active_menus', array_keys(menu_get_menus()));
+  foreach ($active_menus as $i => $menu_name) {
+    if ($menu['menu_name'] == $menu_name) {
+      unset($active_menus[$i]);
+      variable_set('menu_default_active_menus', $active_menus);
+    }
+  }
 
   // Delete the custom menu.
   db_delete('menu_custom')
