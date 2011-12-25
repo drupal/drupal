@@ -2653,7 +2653,7 @@ function hook_stream_wrappers_alter(&$wrappers) {
  *   An array of file objects, indexed by fid.
  *
  * @see file_load_multiple()
- * @see upload_file_load()
+ * @see file_load()
  */
 function hook_file_load($files) {
   // Add the upload specific data into the file object.
@@ -2778,7 +2778,6 @@ function hook_file_move($file, $source) {
  *   The file that has just been deleted.
  *
  * @see file_delete()
- * @see upload_file_delete()
  */
 function hook_file_delete($file) {
   // Delete all information associated with the file.
