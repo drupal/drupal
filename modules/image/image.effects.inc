@@ -124,12 +124,10 @@ function image_resize_dimensions(array &$dimensions, array $data) {
 function image_scale_effect(&$image, $data) {
   // Set sane default values.
   $data += array(
+    'width' => NULL,
+    'height' => NULL,
     'upscale' => FALSE,
   );
-
-  // Set impossibly large values if the width and height aren't set.
-  $data['width'] = empty($data['width']) ? PHP_INT_MAX : $data['width'];
-  $data['height'] = empty($data['height']) ? PHP_INT_MAX : $data['height'];
 
   if (!image_scale($image, $data['width'], $data['height'], $data['upscale'])) {
     watchdog('image', 'Image scale failed using the %toolkit toolkit on %path (%mimetype, %dimensions)', array('%toolkit' => $image->toolkit, '%path' => $image->source, '%mimetype' => $image->info['mime_type'], '%dimensions' => $image->info['width'] . 'x' . $image->info['height']), WATCHDOG_ERROR);
