@@ -266,7 +266,10 @@ function aggregator_menu() {
 }
 
 /**
- * Title callback for aggregatory category pages.
+ * Title callback: Returns a title for aggregatory category pages.
+ *
+ * @param $category
+ *   An aggregator category.
  *
  * @return
  *   An aggregator category title.
@@ -276,11 +279,11 @@ function _aggregator_category_title($category) {
 }
 
 /**
- * Find out whether there are any aggregator categories.
+ * Determines whether there are any aggregator categories.
  *
  * @return
- *   TRUE if there is at least one category and the user has access to them, FALSE
- *   otherwise.
+ *   TRUE if there is at least one category and the user has access to them;
+ *   FALSE otherwise.
  */
 function _aggregator_has_categories() {
   return user_access('access news feeds') && (bool) db_query_range('SELECT 1 FROM {aggregator_category}', 0, 1)->fetchField();
@@ -425,7 +428,7 @@ function aggregator_block_view($delta = '') {
 }
 
 /**
- * Add/edit/delete aggregator categories.
+ * Adds/edits/deletes aggregator categories.
  *
  * @param $edit
  *   An associative array describing the category to be added/edited/deleted.
@@ -574,6 +577,12 @@ function aggregator_remove($feed) {
     ->execute();
 }
 
+/**
+ * Gets the fetcher, parser, and processors.
+ *
+ * @return
+ *   An array containing the fetcher, parser, and processors.
+ */
 function _aggregator_get_variables() {
   // Fetch the feed.
   $fetcher = variable_get('aggregator_fetcher', 'aggregator');
@@ -660,10 +669,11 @@ function aggregator_refresh($feed) {
 }
 
 /**
- * Load an aggregator feed.
+ * Loads an aggregator feed.
  *
  * @param $fid
  *   The feed id.
+ *
  * @return
  *   An object describing the feed.
  */
@@ -677,10 +687,11 @@ function aggregator_feed_load($fid) {
 }
 
 /**
- * Load an aggregator category.
+ * Loads an aggregator category.
  *
  * @param $cid
  *   The category id.
+ *
  * @return
  *   An associative array describing the category.
  */
@@ -709,10 +720,11 @@ function theme_aggregator_block_item($variables) {
 }
 
 /**
- * Safely render HTML content, as allowed.
+ * Safely renders HTML content, as allowed.
  *
  * @param $value
  *   The content to be filtered.
+ *
  * @return
  *   The filtered content.
  */
@@ -721,14 +733,13 @@ function aggregator_filter_xss($value) {
 }
 
 /**
- * Check and sanitize aggregator configuration.
+ * Checks and sanitizes the aggregator configuration.
  *
- * Goes through all fetchers, parsers and processors and checks whether they are
- * available.
- * If one is missing resets to standard configuration.
+ * Goes through all fetchers, parsers and processors and checks whether they
+ * are available. If one is missing resets to standard configuration.
  *
  * @return
- *   TRUE if this function reset the configuration FALSE if not.
+ *   TRUE if this function resets the configuration; FALSE if not.
  */
 function aggregator_sanitize_configuration() {
   $reset = FALSE;
@@ -759,6 +770,7 @@ function aggregator_sanitize_configuration() {
  *
  * @param $count
  *   Items count.
+ *
  * @return
  *   Plural-formatted "@count items"
  */

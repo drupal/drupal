@@ -54,12 +54,13 @@ function aggregator_aggregator_parse($feed) {
 }
 
 /**
- * Parse a feed and store its items.
+ * Parses a feed and stores its items.
  *
  * @param $data
  *   The feed data.
  * @param $feed
  *   An object describing the feed to be parsed.
+ *
  * @return
  *   FALSE on error, TRUE otherwise.
  */
@@ -164,7 +165,9 @@ function aggregator_parse_feed(&$data, $feed) {
 }
 
 /**
- * Callback function used by the XML parser.
+ * Performs an action when an opening tag is encountered.
+ *
+ * Callback function used by xml_parse() within aggregator_parse_feed().
  */
 function aggregator_element_start($parser, $name, $attributes) {
   global $item, $element, $tag, $items, $channel;
@@ -212,7 +215,9 @@ function aggregator_element_start($parser, $name, $attributes) {
 }
 
 /**
- * Call-back function used by the XML parser.
+ * Performs an action when a closing tag is encountered.
+ *
+ * Callback function used by xml_parse() within aggregator_parse_feed().
  */
 function aggregator_element_end($parser, $name) {
   global $element;
@@ -234,7 +239,9 @@ function aggregator_element_end($parser, $name) {
 }
 
 /**
- * Callback function used by the XML parser.
+ * Performs an action when data is encountered.
+ *
+ * Callback function used by xml_parse() within aggregator_parse_feed().
  */
 function aggregator_element_data($parser, $data) {
   global $channel, $element, $items, $item, $image, $tag;
@@ -281,14 +288,15 @@ function aggregator_element_data($parser, $data) {
 }
 
 /**
- * Parse the W3C date/time format, a subset of ISO 8601.
+ * Parses the W3C date/time format, a subset of ISO 8601.
  *
- * PHP date parsing functions do not handle this format.
- * See http://www.w3.org/TR/NOTE-datetime for more information.
- * Originally from MagpieRSS (http://magpierss.sourceforge.net/).
+ * PHP date parsing functions do not handle this format. See
+ * http://www.w3.org/TR/NOTE-datetime for more information. Originally from
+ * MagpieRSS (http://magpierss.sourceforge.net/).
  *
  * @param $date_str
  *   A string with a potentially W3C DTF date.
+ *
  * @return
  *   A timestamp if parsed successfully or FALSE if not.
  */
