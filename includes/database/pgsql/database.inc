@@ -47,7 +47,12 @@ class DatabaseConnection_pgsql extends DatabaseConnection {
     $this->connectionOptions = $connection_options;
 
     $dsn = 'pgsql:host=' . $connection_options['host'] . ' dbname=' . $connection_options['database'] . ' port=' . $connection_options['port'];
-    parent::__construct($dsn, $connection_options['username'], $connection_options['password'], array(
+
+    // Allow PDO options to be overridden.
+    $connection_options += array(
+      'pdo' => array(),
+    );
+    $connection_options['pdo'] += array(
       // Prepared statements are most effective for performance when queries
       // are recycled (used several times). However, if they are not re-used,
       // prepared statements become ineffecient. Since most of Drupal's
@@ -59,10 +64,16 @@ class DatabaseConnection_pgsql extends DatabaseConnection {
       PDO::ATTR_STRINGIFY_FETCHES => TRUE,
       // Force column names to lower case.
       PDO::ATTR_CASE => PDO::CASE_LOWER,
-    ));
+    );
+    parent::__construct($dsn, $connection_options['username'], $connection_options['password'], $connection_options['pdo']);
 
     // Force PostgreSQL to use the UTF-8 character set by default.
     $this->exec("SET NAMES 'UTF8'");
+
+    // Execute PostgreSQL init_commands.
+    if (isset($connection_options['init_commands'])) {
+      $this->exec(implode('; ', $connection_options['init_commands']));
+    }
   }
 
   public function query($query, array $args = array(), $options = array()) {

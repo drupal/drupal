@@ -63,12 +63,17 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
 
     $this->connectionOptions = $connection_options;
 
-    parent::__construct('sqlite:' . $connection_options['database'], '', '', array(
+    // Allow PDO options to be overridden.
+    $connection_options += array(
+      'pdo' => array(),
+    );
+    $connection_options['pdo'] += array(
       // Force column names to lower case.
       PDO::ATTR_CASE => PDO::CASE_LOWER,
       // Convert numeric values to strings when fetching.
       PDO::ATTR_STRINGIFY_FETCHES => TRUE,
-    ));
+    );
+    parent::__construct('sqlite:' . $connection_options['database'], '', '', $connection_options['pdo']);
 
     // Attach one database for each registered prefix.
     $prefixes = $this->prefixes;
@@ -103,6 +108,11 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
     $this->sqliteCreateFunction('substring', array($this, 'sqlFunctionSubstring'), 3);
     $this->sqliteCreateFunction('substring_index', array($this, 'sqlFunctionSubstringIndex'), 3);
     $this->sqliteCreateFunction('rand', array($this, 'sqlFunctionRand'));
+
+    // Execute sqlite init_commands.
+    if (isset($connection_options['init_commands'])) {
+      $this->exec(implode('; ', $connection_options['init_commands']));
+    }
   }
 
   /**
