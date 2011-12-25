@@ -21,6 +21,8 @@
  *
  * @see template_preprocess_block_admin_display_form()
  * @see theme_block_admin_display()
+ *
+ * @ingroup themeable
  */
 ?>
 <?php

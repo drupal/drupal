@@ -16,27 +16,27 @@ define('BLOCK_REGION_NONE', -1);
 define('BLOCK_CUSTOM_FIXED', 0);
 
 /**
- *  Show this block by default, but let individual users hide it.
+ *  Shows this block by default, but lets individual users hide it.
  */
 define('BLOCK_CUSTOM_ENABLED', 1);
 
 /**
- * Hide this block by default but let individual users show it.
+ * Hides this block by default but lets individual users show it.
  */
 define('BLOCK_CUSTOM_DISABLED', 2);
 
 /**
- * Show this block on every page except the listed pages.
+ * Shows this block on every page except the listed pages.
  */
 define('BLOCK_VISIBILITY_NOTLISTED', 0);
 
 /**
- * Show this block on only the listed pages.
+ * Shows this block on only the listed pages.
  */
 define('BLOCK_VISIBILITY_LISTED', 1);
 
 /**
- * Show this block if the associated PHP code returns TRUE.
+ * Shows this block if the associated PHP code returns TRUE.
  */
 define('BLOCK_VISIBILITY_PHP', 2);
 
@@ -249,7 +249,7 @@ function block_block_view($delta = '') {
 /**
  * Implements hook_page_build().
  *
- * Render blocks into their regions.
+ * Renders blocks into their regions.
  */
 function block_page_build(&$page) {
   global $theme;
@@ -305,10 +305,13 @@ function block_page_build(&$page) {
 }
 
 /**
- * Get a renderable array of a region containing all enabled blocks.
+ * Gets a renderable array of a region containing all enabled blocks.
  *
  * @param $region
  *   The requested region.
+ *
+ * @return
+ *   A renderable array of a region containing all enabled blocks.
  */
 function block_get_blocks_by_region($region) {
   $build = array();
@@ -319,10 +322,11 @@ function block_get_blocks_by_region($region) {
 }
 
 /**
- * Get an array of blocks suitable for drupal_render().
+ * Gets an array of blocks suitable for drupal_render().
  *
  * @param $list
  *   A list of blocks such as that returned by block_list().
+ *
  * @return
  *   A renderable array.
  */
@@ -353,7 +357,7 @@ function _block_get_renderable_array($list = array()) {
 }
 
 /**
- * Update the 'block' DB table with the blocks currently exported by modules.
+ * Updates the 'block' DB table with the blocks currently exported by modules.
  *
  * @param $theme
  *   The theme to rehash blocks for. If not provided, defaults to the currently
@@ -473,6 +477,7 @@ function _block_rehash($theme = NULL) {
  *
  * @param $bid
  *   ID of the block to get information for.
+ *
  * @return
  *   Associative array of information stored in the database for this block.
  *   Array keys:
@@ -486,7 +491,14 @@ function block_custom_block_get($bid) {
 }
 
 /**
- * Define the custom block form.
+ * Form constructor for the custom block form.
+ *
+ * @param $edit
+ *   (optional) An associative array of information retrieved by
+ *   block_custom_get_block() if an existing block is being edited, or an empty
+ *   array otherwise. Defaults to array().
+ *
+ * @ingroup forms
  */
 function block_custom_block_form($edit = array()) {
   $edit += array(
@@ -528,6 +540,7 @@ function block_custom_block_form($edit = array()) {
  *     - format: Filter ID of the filter format for the body.
  * @param $delta
  *   Block ID of the block to save.
+ *
  * @return
  *   Always returns TRUE.
  */
@@ -544,7 +557,7 @@ function block_custom_block_save($edit, $delta) {
 }
 
 /**
- * Implements hook_form_FORM_ID_alter().
+ * Implements hook_form_FORM_ID_alter() for user_profile_form().
  */
 function block_form_user_profile_form_alter(&$form, &$form_state) {
   if ($form['#user_category'] == 'account') {
@@ -588,7 +601,10 @@ function block_user_presave(&$edit, $account, $category) {
 }
 
 /**
- * Initialize blocks for enabled themes.
+ * Initializes blocks for enabled themes.
+ *
+ * @param $theme_list
+ *   An array of theme names.
  */
 function block_themes_enabled($theme_list) {
   foreach ($theme_list as $theme) {
@@ -597,7 +613,7 @@ function block_themes_enabled($theme_list) {
 }
 
 /**
- * Assign an initial, default set of blocks for a theme.
+ * Assigns an initial, default set of blocks for a theme.
  *
  * This function is called the first time a new theme is enabled. The new theme
  * gets a copy of the default theme's blocks, with the difference that if a
@@ -628,7 +644,7 @@ function block_theme_initialize($theme) {
 }
 
 /**
- * Return all blocks in the specified region for the current user.
+ * Returns all blocks in the specified region for the current user.
  *
  * @param $region
  *   The name of a region.
@@ -640,7 +656,7 @@ function block_theme_initialize($theme) {
  *   empty to see how many columns are going to be displayed.
  *
  * @todo
- *   Now that the blocks table has a primary key, we should use that as the
+ *   Now that the block table has a primary key, we should use that as the
  *   array key instead of MODULE_DELTA.
  */
 function block_list($region) {
@@ -662,7 +678,7 @@ function block_list($region) {
 }
 
 /**
- * Load a block object from the database.
+ * Loads a block object from the database.
  *
  * @param $module
  *   Name of the module that implements the block to load.
@@ -690,7 +706,10 @@ function block_load($module, $delta) {
 }
 
 /**
- * Load blocks information from the database.
+ * Loads blocks' information from the database.
+ *
+ * @return
+ *   An array of blocks grouped by region.
  */
 function _block_load_blocks() {
   global $theme_key;
@@ -721,8 +740,8 @@ function _block_load_blocks() {
 /**
  * Implements hook_block_list_alter().
  *
- * Check the page, user role and user specific visibilty settings.
- * Remove the block if the visibility conditions are not met.
+ * Checks the page, user role, and user-specific visibilty settings.
+ * Removes the block if the visibility conditions are not met.
  */
 function block_block_list_alter(&$blocks) {
   global $user, $theme_key;
@@ -916,9 +935,9 @@ function block_flush_caches() {
 }
 
 /**
- * Process variables for block.tpl.php
+ * Processes variables for block.tpl.php.
  *
- * Prepare the values passed to the theme_block function to be passed
+ * Prepares the values passed to the theme_block function to be passed
  * into a pluggable template engine. Uses block properties to generate a
  * series of template file suggestions. If none are found, the default
  * block.tpl.php is used.
@@ -967,7 +986,7 @@ function template_preprocess_block(&$variables) {
 /**
  * Implements hook_user_role_delete().
  *
- * Remove deleted role from blocks that use it.
+ * Removes deleted role from blocks that use it.
  */
 function block_user_role_delete($role) {
   db_delete('block_role')
@@ -1019,7 +1038,7 @@ function block_admin_paths() {
 /**
  * Implements hook_modules_uninstalled().
  *
- * Cleanup {block} and {block_role} tables from modules' blocks.
+ * Cleans up {block} and {block_role} tables from modules' blocks.
  */
 function block_modules_uninstalled($modules) {
   db_delete('block')
