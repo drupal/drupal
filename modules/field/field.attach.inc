@@ -121,6 +121,9 @@ define('FIELD_STORAGE_INSERT', 'insert');
  * Field Storage API is essentially the "fallback mechanism" for any fields
  * that aren't being intercepted explicitly by pre-operation hooks.
  *
+ * @link field_language Field Language API @endlink provides information about
+ * the structure of field objects.
+ *
  * See @link field Field API @endlink for information about the other parts of
  * the Field API.
  */
