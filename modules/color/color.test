@@ -6,7 +6,7 @@
  */
 
 /**
- * Test color functionality.
+ * Tests the Color module functionality.
  */
 class ColorTestCase extends DrupalWebTestCase {
   protected $big_user;
@@ -57,7 +57,7 @@ class ColorTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Test color module functionality.
+   * Tests the Color module functionality.
    */
   function testColor() {
     foreach ($this->themes as $theme => $test_values) {
@@ -66,7 +66,7 @@ class ColorTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Tests color module functionality using the given theme.
+   * Tests the Color module functionality using the given theme.
    */
   function _testColor($theme, $test_values) {
     variable_set('theme_default', $theme);
@@ -109,7 +109,7 @@ class ColorTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Test to see if the provided color is valid
+   * Tests whether the provided color is valid.
    */
   function testValidColor() {
     variable_set('theme_default', 'bartik');
