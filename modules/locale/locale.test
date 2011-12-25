@@ -1881,6 +1881,34 @@ class LocaleContentFunctionalTest extends DrupalWebTestCase {
   }
 
   /**
+   * Verifies that machine name fields are always LTR.
+   */
+  function testMachineNameLTR() {
+    // User to add and remove language.
+    $admin_user = $this->drupalCreateUser(array('administer languages', 'administer content types', 'access administration pages'));
+
+    // Log in as admin.
+    $this->drupalLogin($admin_user);
+
+    // Verify that the machine name field is LTR for a new content type.
+    $this->drupalGet('admin/structure/types/add');
+    $this->assertFieldByXpath('//input[@name="type" and @dir="ltr"]', NULL, 'The machine name field is LTR when no additional language is configured.');
+
+    // Install the Arabic language (which is RTL) and configure as the default.
+    $edit = array();
+    $edit['langcode'] = 'ar';
+    $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
+
+    $edit = array();
+    $edit['site_default'] = 'ar';
+    $this->drupalPost(NULL, $edit, t('Save configuration'));
+
+    // Verify that the machine name field is still LTR for a new content type.
+    $this->drupalGet('admin/structure/types/add');
+    $this->assertFieldByXpath('//input[@name="type" and @dir="ltr"]', NULL, 'The machine name field is LTR when the default language is RTL.');
+  }
+
+  /**
    * Test if a content type can be set to multilingual and language setting is
    * present on node add and edit forms.
    */

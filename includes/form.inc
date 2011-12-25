@@ -3351,6 +3351,13 @@ function form_process_machine_name($element, &$form_state) {
     'replace' => '_',
   );
 
+  // By default, machine names are restricted to Latin alphanumeric characters.
+  // So, default to LTR directionality.
+  if (!isset($element['#attributes'])) {
+    $element['#attributes'] = array();
+  }
+  $element['#attributes'] += array('dir' => 'ltr');
+
   // The source element defaults to array('name'), but may have been overidden.
   if (empty($element['#machine_name']['source'])) {
     return $element;
