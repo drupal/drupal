@@ -786,6 +786,23 @@ class ImageFieldDisplayTestCase extends ImageFieldTestCase {
     $this->drupalPost('node/' . $nid . '/edit', $edit, t('Save'));
     $default_output = theme('image', $image_info);
     $this->assertRaw($default_output, t('Image displayed using user supplied alt and title attributes.'));
+
+    // Verify that alt/title longer than allowed results in a validation error.
+    $test_size = 2000;
+    $max_size = 128;
+    $edit = array(
+      $field_name . '[' . LANGUAGE_NONE . '][0][alt]' => $this->randomName($test_size),
+      $field_name . '[' . LANGUAGE_NONE . '][0][title]' => $this->randomName($test_size),
+    );
+    $this->drupalPost('node/' . $nid . '/edit', $edit, t('Save'));
+    $this->assertRaw(t('Alternate text cannot be longer than %max characters but is currently %length characters long.', array(
+      '%max' => $max_size,
+      '%length' => $test_size,
+    )));
+    $this->assertRaw(t('Title cannot be longer than %max characters but is currently %length characters long.', array(
+      '%max' => $max_size,
+      '%length' => $test_size,
+    )));
   }
 
   /**

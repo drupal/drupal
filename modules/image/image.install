@@ -386,6 +386,15 @@ function image_update_7002(array &$sandbox) {
 }
 
 /**
+ * Remove the variables that set alt and title length since they were not
+ * used for database column size and could cause PDO exceptions.
+ */
+function image_update_7003() {
+  variable_del('image_alt_length');
+  variable_del('image_title_length');
+}
+
+/**
  * Implements hook_requirements() to check the PHP GD Library.
  *
  * @param $phase
