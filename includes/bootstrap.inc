@@ -1427,10 +1427,10 @@ function drupal_unpack($obj, $field = 'data') {
  * $text = t("@name's blog", array('@name' => format_username($account)));
  * @endcode
  * Basically, you can put variables like @name into your string, and t() will
- * substitute their sanitized values at translation time (see $args below or
- * the Localization API pages referenced above for details). Translators can
- * then rearrange the string as necessary for the language (e.g., in Spanish,
- * it might be "blog de @name").
+ * substitute their sanitized values at translation time. (See the
+ * Localization API pages referenced above and the documentation of
+ * format_string() for details.) Translators can then rearrange the string as
+ * necessary for the language (e.g., in Spanish, it might be "blog de @name").
  *
  * During the Drupal installation phase, some resources used by t() wil not be
  * available to code that needs localization. See st() and get_t() for
@@ -1439,8 +1439,9 @@ function drupal_unpack($obj, $field = 'data') {
  * @param $string
  *   A string containing the English string to translate.
  * @param $args
- *   An associative array of replacements to make after translation.
- *   See format_string().
+ *   An associative array of replacements to make after translation. Based
+ *   on the first character of the key, the value is escaped and/or themed.
+ *   See format_string() for details.
  * @param $options
  *   An associative array of additional options, with the following elements:
  *   - 'langcode' (defaults to the current language): The language code to
@@ -1453,6 +1454,7 @@ function drupal_unpack($obj, $field = 'data') {
  *
  * @see st()
  * @see get_t()
+ * @see format_string()
  * @ingroup sanitization
  */
 function t($string, array $args = array(), array $options = array()) {
