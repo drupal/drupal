@@ -110,10 +110,7 @@ function contact_menu() {
  * Menu access callback for a user's personal contact form.
  *
  * @param $account
- *   A user account object.
- * @return
- *   TRUE if the current user has access to the requested user's contact form,
- *   or FALSE otherwise.
+ *   The user object of the user whose contact form is being requested.
  */
 function _contact_personal_tab_access($account) {
   global $user;
@@ -148,10 +145,11 @@ function _contact_personal_tab_access($account) {
 }
 
 /**
- * Load a contact category.
+ * Loads a contact category.
  *
  * @param $cid
  *   The contact category ID.
+ *
  * @return
  *   An array with the contact category's data.
  */
@@ -211,6 +209,8 @@ function contact_mail($key, &$message, $params) {
  * Implements hook_form_FORM_ID_alter().
  *
  * Add the enable personal contact form to an individual user's account page.
+ *
+ * @see user_profile_form()
  */
 function contact_form_user_profile_form_alter(&$form, &$form_state) {
   if ($form['#user_category'] == 'account') {
@@ -241,6 +241,8 @@ function contact_user_presave(&$edit, $account, $category) {
  * Implements hook_form_FORM_ID_alter().
  *
  * Add the default personal contact setting on the user settings page.
+ *
+ * @see user_admin_settings()
  */
 function contact_form_user_admin_settings_alter(&$form, &$form_state) {
   $form['contact'] = array(
