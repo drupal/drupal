@@ -1,4 +1,8 @@
-
+/**
+ * @file
+ * Attaches the behaviors for the Field UI module.
+ */
+ 
 (function($) {
 
 Drupal.behaviors.fieldUIFieldOverview = {
