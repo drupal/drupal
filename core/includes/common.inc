@@ -1,5 +1,7 @@
 <?php
 
+use Drupal\Database\Database;
+
 /**
  * @file
  * Common functions that many Drupal modules will need to reference.

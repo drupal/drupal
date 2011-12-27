@@ -1,9 +1,6 @@
 <?php
 
-/**
- * @file
- * Logging classes for the database layer.
- */
+namespace Drupal\Database;
 
 /**
  * Database query logger.

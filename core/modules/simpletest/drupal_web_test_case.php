@@ -1,5 +1,7 @@
 <?php
 
+use Drupal\Database\Database;
+
 /**
  * Global variable that holds information about the tests being run.
  *

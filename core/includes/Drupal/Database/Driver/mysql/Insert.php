@@ -1,17 +1,10 @@
 <?php
 
-/**
- * @ingroup database
- * @{
- */
+namespace Drupal\Database\Driver\mysql;
 
-/**
- * @file
- * Query code for MySQL embedded database engine.
- */
+use Drupal\Database\Query\Insert as QueryInsert;
 
-
-class InsertQuery_mysql extends InsertQuery {
+class Insert extends QueryInsert {
 
   public function execute() {
     if (!$this->preExecute()) {
@@ -85,23 +78,3 @@ class InsertQuery_mysql extends InsertQuery {
     return $query;
   }
 }
-
-class TruncateQuery_mysql extends TruncateQuery {
-  public function __toString() {
-    // TRUNCATE is actually a DDL statement on MySQL, and DDL statements are
-    // not transactional, and result in an implicit COMMIT. When we are in a
-    // transaction, fallback to the slower, but transactional, DELETE.
-    if ($this->connection->inTransaction()) {
-      // Create a comment string to prepend to the query.
-      $comments = $this->connection->makeComment($this->comments);
-      return $comments . 'DELETE FROM {' . $this->connection->escapeTable($this->table) . '}';
-    }
-    else {
-      return parent::__toString();
-    }
-  }
-}
-
-/**
- * @} End of "ingroup database".
- */

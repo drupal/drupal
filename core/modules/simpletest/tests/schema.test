@@ -1,5 +1,7 @@
 <?php
 
+use Drupal\Database\Database;
+
 /**
  * @file
  * Tests for the Database Schema API.

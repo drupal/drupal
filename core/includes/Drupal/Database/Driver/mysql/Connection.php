@@ -1,16 +1,17 @@
 <?php
 
-/**
- * @file
- * Database interface code for MySQL database servers.
- */
+namespace Drupal\Database\Driver\mysql;
+
+use Drupal\Database\Connection as DatabaseConnection;
+
+use PDO;
 
 /**
  * @ingroup database
  * @{
  */
 
-class DatabaseConnection_mysql extends DatabaseConnection {
+class Connection extends DatabaseConnection {
 
   /**
    * Flag to indicate if we have registered the nextID cleanup function.

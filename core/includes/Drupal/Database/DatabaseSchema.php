@@ -1,11 +1,8 @@
 <?php
 
-/**
- * @file
- * Generic Database schema code.
- */
+namespace Drupal\Database;
 
-require_once __DIR__ . '/query.inc';
+use Drupal\Database\Query\PlaceholderInterface;
 
 /**
  * @defgroup schemaapi Schema API
@@ -156,7 +153,7 @@ require_once __DIR__ . '/query.inc';
  * @see drupal_install_schema()
  */
 
-abstract class DatabaseSchema implements QueryPlaceholderInterface {
+abstract class DatabaseSchema implements PlaceholderInterface {
 
   protected $connection;
 
@@ -194,14 +191,14 @@ abstract class DatabaseSchema implements QueryPlaceholderInterface {
   }
 
   /**
-   * Implements QueryPlaceHolderInterface::uniqueIdentifier().
+   * Implements PlaceHolderInterface::uniqueIdentifier().
    */
   public function uniqueIdentifier() {
     return $this->uniqueIdentifier;
   }
 
   /**
-   * Implements QueryPlaceHolderInterface::nextPlaceholder().
+   * Implements PlaceHolderInterface::nextPlaceholder().
    */
   public function nextPlaceholder() {
     return $this->placeholder++;
@@ -698,26 +695,3 @@ abstract class DatabaseSchema implements QueryPlaceholderInterface {
     return $this->connection->quote($comment);
   }
 }
-
-/**
- * Exception thrown if an object being created already exists.
- *
- * For example, this exception should be thrown whenever there is an attempt to
- * create a new database table, field, or index that already exists in the
- * database schema.
- */
-class DatabaseSchemaObjectExistsException extends Exception {}
-
-/**
- * Exception thrown if an object being modified doesn't exist yet.
- *
- * For example, this exception should be thrown whenever there is an attempt to
- * modify a database table, field, or index that does not currently exist in
- * the database schema.
- */
-class DatabaseSchemaObjectDoesNotExistException extends Exception {}
-
-/**
- * @} End of "defgroup schemaapi".
- */
-

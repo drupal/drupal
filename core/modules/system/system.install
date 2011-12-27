@@ -1,5 +1,7 @@
 <?php
 
+use Drupal\Database\Database;
+
 /**
  * @file
  * Install, update and uninstall functions for the system module.

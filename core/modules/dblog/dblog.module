@@ -1,5 +1,7 @@
 <?php
 
+use Drupal\Database\Database;
+
 /**
  * @file
  * System monitoring and logging for administrators.

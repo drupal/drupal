@@ -1,17 +1,10 @@
 <?php
 
-/**
- * @file
- * Database interface code for engines that need complete control over their
- * result sets. For example, SQLite will prefix some column names by the name
- * of the table. We post-process the data, by renaming the column names
- * using the same convention as MySQL and PostgreSQL.
- */
+namespace Drupal\Database;
 
-/**
- * @ingroup database
- * @{
- */
+use Drupal\Database\Connection;
+use Iterator;
+use PDO;
 
 /**
  * An implementation of DatabaseStatementInterface that prefetches all data.
@@ -125,7 +118,7 @@ class DatabaseStatementPrefetch implements Iterator, DatabaseStatementInterface 
     'column' => 0,
   );
 
-  public function __construct(DatabaseConnection $connection, $query, array $driver_options = array()) {
+  public function __construct(Connection $connection, $query, array $driver_options = array()) {
     $this->dbh = $connection;
     $this->queryString = $query;
     $this->driverOptions = $driver_options;
@@ -500,8 +493,3 @@ class DatabaseStatementPrefetch implements Iterator, DatabaseStatementInterface 
   }
 
 }
-
-/**
- * @} End of "ingroup database".
- */
-

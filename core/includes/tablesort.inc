@@ -1,5 +1,8 @@
 <?php
 
+use Drupal\Database\Query\SelectExtender;
+use Drupal\Database\Query\SelectInterface;
+
 /**
  * @file
  * Functions to aid in the creation of sortable tables.
@@ -8,11 +11,10 @@
  * column headers that the user can click on to sort the table by that column.
  */
 
-
 /**
  * Query extender class for tablesort queries.
  */
-class TableSort extends SelectQueryExtender {
+class TableSort extends SelectExtender {
 
   /**
    * The array of fields that can be sorted by.
@@ -21,7 +23,7 @@ class TableSort extends SelectQueryExtender {
    */
   protected $header = array();
 
-  public function __construct(SelectQueryInterface $query, DatabaseConnection $connection) {
+  public function __construct(SelectInterface $query, DatabaseConnection $connection) {
     parent::__construct($query, $connection);
 
     // Add convenience tag to mark that this is an extended query. We have to

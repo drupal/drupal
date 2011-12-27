@@ -1,5 +1,7 @@
 <?php
 
+use Drupal\Database\Query\AlterableInterface;
+
 /**
  * @file
  * The core module that allows content to be submitted to the site.
@@ -3260,7 +3262,7 @@ function node_access_view_all_nodes($account = NULL) {
  * the 'op' meta-data (or 'view' if not provided; other possible values are
  * 'update' and 'delete').
  */
-function node_query_node_access_alter(QueryAlterableInterface $query) {
+function node_query_node_access_alter(AlterableInterface $query) {
   _node_query_node_access_alter($query, 'node');
 }
 
@@ -3271,7 +3273,7 @@ function node_query_node_access_alter(QueryAlterableInterface $query) {
  * node_query_node_access_alter() for the SQL field storage engine. Node access
  * conditions are added for field values belonging to nodes only.
  */
-function node_query_entity_field_access_alter(QueryAlterableInterface $query) {
+function node_query_entity_field_access_alter(AlterableInterface $query) {
   _node_query_node_access_alter($query, 'entity');
 }
 

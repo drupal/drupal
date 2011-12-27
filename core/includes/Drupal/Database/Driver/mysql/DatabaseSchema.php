@@ -1,17 +1,15 @@
 <?php
 
-/**
- * @file
- * Database schema code for MySQL database servers.
- */
+namespace Drupal\Database\Driver\mysql;
 
+use Drupal\Database\DatabaseSchema as DatabaseDatabaseSchema;
 
 /**
  * @ingroup schemaapi
  * @{
  */
 
-class DatabaseSchema_mysql extends DatabaseSchema {
+class DatabaseSchema extends DatabaseDatabaseSchema {
 
   /**
    * Maximum length of a table comment in MySQL.

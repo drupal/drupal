@@ -1,10 +1,11 @@
 <?php
 
+use Drupal\Database\Database;
+
 /**
  * @file
  * Install functions for PostgreSQL embedded database engine.
  */
-
 
 // PostgreSQL specific install functions
 
