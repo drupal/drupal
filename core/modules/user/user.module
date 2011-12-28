@@ -1,5 +1,7 @@
 <?php
 
+use Drupal\Database\Query\SelectInterface;
+
 /**
  * @file
  * Enables the user registration and login system.
@@ -3357,7 +3359,7 @@ function user_filters() {
  * @param $query
  *   Query object that should be filtered.
  */
-function user_build_filter_query(SelectQuery $query) {
+function user_build_filter_query(SelectInterface $query) {
   $filters = user_filters();
   // Extend Query with filter conditions.
   foreach (isset($_SESSION['user_overview_filter']) ? $_SESSION['user_overview_filter'] : array() as $filter) {
