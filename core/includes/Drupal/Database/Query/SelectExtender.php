@@ -136,9 +136,7 @@ class SelectExtender implements SelectInterface {
   /* Implementations of QueryExtendableInterface. */
 
   public function extend($extender_name) {
-    // The extender can be anywhere so this needs to go to the registry, which
-    // is surely loaded by now.
-    $class = $this->connection->getDriverClass($extender_name, array(), TRUE);
+    $class = $this->connection->getDriverClass($extender_name);
     return new $class($this, $this->connection);
   }
 

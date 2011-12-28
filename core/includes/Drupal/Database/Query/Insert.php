@@ -171,7 +171,7 @@ class Insert extends Query {
    * @return InsertQuery
    *   The called object.
    */
-  public function from(SelectQueryInterface $query) {
+  public function from(SelectInterface $query) {
     $this->fromQuery = $query;
     return $this;
   }

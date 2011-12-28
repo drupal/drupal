@@ -22,18 +22,12 @@ use Drupal\Database\Database;
  */
 function _registry_update() {
 
-  // The registry serves as a central autoloader for all classes, including
-  // the database query builders. However, the registry rebuild process
-  // requires write ability to the database, which means having access to the
-  // query builders that require the registry in order to be loaded. That
-  // causes a fatal race condition. Therefore we manually include the
-  // appropriate query builders for the currently active database before the
-  // registry rebuild process runs.
+  // The registry serves as a central autoloader for all non-namespaced classes.
+  // It is backed by the database, but the database system is autoloaded using
+  // a PSR-0 class loader.  That avoids a fata circular dependency here, since
+  // the other class loader will be able to load the database for us.
   $connection_info = Database::getConnectionInfo();
   $driver = $connection_info['default']['driver'];
-  require_once DRUPAL_ROOT . '/core/includes/database/query.inc';
-  require_once DRUPAL_ROOT . '/core/includes/database/select.inc';
-  require_once DRUPAL_ROOT . '/core/includes/database/' . $driver . '/query.inc';
 
   // Get current list of modules and their files.
   $modules = db_query("SELECT * FROM {system} WHERE type = 'module'")->fetchAll();

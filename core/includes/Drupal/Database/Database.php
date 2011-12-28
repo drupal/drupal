@@ -423,33 +423,4 @@ abstract class Database {
   public static function ignoreTarget($key, $target) {
     self::$ignoreTargets[$key][$target] = TRUE;
   }
-
-  /**
-   * Load a file for the database that might hold a class.
-   *
-   * @param $driver
-   *   The name of the driver.
-   * @param array $files
-   *   The name of the files the driver specific class can be.
-   */
-  public static function loadDriverFile($driver, array $files = array()) {
-    static $base_path;
-
-    if (empty($base_path)) {
-      $base_path = dirname(realpath(__FILE__));
-    }
-
-    $driver_base_path = "$base_path/$driver";
-    foreach ($files as $file) {
-      // Load the base file first so that classes extending base classes will
-      // have the base class loaded.
-      foreach (array("$base_path/$file", "$driver_base_path/$file") as $filename) {
-        // The OS caches file_exists() and PHP caches require_once(), so
-        // we'll let both of those take care of performance here.
-        if (file_exists($filename)) {
-          require_once $filename;
-        }
-      }
-    }
-  }
 }

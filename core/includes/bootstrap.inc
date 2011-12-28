@@ -1,6 +1,9 @@
 <?php
 
 use Drupal\Database\Database;
+use Symfony\Component\ClassLoader\UniversalClassLoader;
+use Symfony\Component\ClassLoader\ApcUniversalClassLoader;
+
 
 /**
  * @file
@@ -2290,6 +2293,19 @@ function _drupal_bootstrap_configuration() {
   // Initialize the configuration, including variables from settings.php.
   drupal_settings_initialize();
 
+  drupal_initialize_classloader();
+}
+
+/**
+ * Initializes the class loader.
+ *
+ * The class loader is responsible for lazy-loading all PSR-0 compatible
+ * classes, interfaces, and traits (PHP 5.4 and later).  Its only dependency
+ * is that variable_get() be defined and DRUPAL_ROOT be defined.  Otherwise it
+ * may be called as early as possible.
+ */
+function drupal_initialize_classloader() {
+
   // Hook up the Symfony ClassLoader for loading PSR-0-compatible classes.
   require_once(DRUPAL_ROOT . '/core/includes/Symfony/Component/ClassLoader/UniversalClassLoader.php');
 
@@ -2301,7 +2317,7 @@ function _drupal_bootstrap_configuration() {
     case 'apc':
       if (function_exists('apc_store')) {
         require_once(DRUPAL_ROOT . '/core/includes/Symfony/Component/ClassLoader/ApcUniversalClassLoader.php');
-        $loader = new \Symfony\Component\ClassLoader\ApcUniversalClassLoader('drupal.' . $GLOBALS['drupal_hash_salt']);
+        $loader = new ApcUniversalClassLoader('drupal.' . $GLOBALS['drupal_hash_salt']);
         break;
       }
       // If APC was not loaded, fall through to the default loader so that
@@ -2309,7 +2325,7 @@ function _drupal_bootstrap_configuration() {
     case 'dev':
     case 'default':
     default:
-      $loader = new \Symfony\Component\ClassLoader\UniversalClassLoader();
+      $loader = new UniversalClassLoader();
       break;
   }
 

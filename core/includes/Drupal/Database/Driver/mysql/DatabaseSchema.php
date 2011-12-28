@@ -4,6 +4,8 @@ namespace Drupal\Database\Driver\mysql;
 
 use Drupal\Database\DatabaseSchema as DatabaseDatabaseSchema;
 
+use Exception;
+
 /**
  * @ingroup schemaapi
  * @{

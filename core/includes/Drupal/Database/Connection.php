@@ -583,15 +583,10 @@ abstract class Connection extends PDO {
    *
    * @param string $class
    *   The class for which we want the potentially driver-specific class.
-   * @param array $files
-   *   The name of the files in which the driver-specific class can be.
-   * @param $use_autoload
-   *   If TRUE, attempt to load classes using PHP's autoload capability
-   *   as well as the manual approach here.
    * @return string
    *   The name of the class that should be used for this driver.
    */
-  public function getDriverClass($class, array $files = array(), $use_autoload = FALSE) {
+  public function getDriverClass($class) {
     if (empty($this->driverClasses[$class])) {
       $driver = $this->driver();
       $this->driverClasses[$class] = "Drupal\\Database\\Driver\\{$driver}\\{$class}";
@@ -619,7 +614,7 @@ abstract class Connection extends PDO {
    * @see SelectQuery
    */
   public function select($table, $alias = NULL, array $options = array()) {
-    $class = $this->getDriverClass('Select', array('query.inc', 'select.inc'));
+    $class = $this->getDriverClass('Select');
     return new $class($table, $alias, $this, $options);
   }
 
@@ -635,7 +630,7 @@ abstract class Connection extends PDO {
    * @see InsertQuery
    */
   public function insert($table, array $options = array()) {
-    $class = $this->getDriverClass('Insert', array('query.inc'));
+    $class = $this->getDriverClass('Insert');
     return new $class($this, $table, $options);
   }
 
@@ -651,7 +646,7 @@ abstract class Connection extends PDO {
    * @see MergeQuery
    */
   public function merge($table, array $options = array()) {
-    $class = $this->getDriverClass('Merge', array('query.inc'));
+    $class = $this->getDriverClass('Merge');
     return new $class($this, $table, $options);
   }
 
@@ -668,7 +663,7 @@ abstract class Connection extends PDO {
    * @see UpdateQuery
    */
   public function update($table, array $options = array()) {
-    $class = $this->getDriverClass('Update', array('query.inc'));
+    $class = $this->getDriverClass('Update');
     return new $class($this, $table, $options);
   }
 
@@ -684,7 +679,7 @@ abstract class Connection extends PDO {
    * @see DeleteQuery
    */
   public function delete($table, array $options = array()) {
-    $class = $this->getDriverClass('Delete', array('query.inc'));
+    $class = $this->getDriverClass('Delete');
     return new $class($this, $table, $options);
   }
 
@@ -700,7 +695,7 @@ abstract class Connection extends PDO {
    * @see TruncateQuery
    */
   public function truncate($table, array $options = array()) {
-    $class = $this->getDriverClass('Truncate', array('query.inc'));
+    $class = $this->getDriverClass('Truncate');
     return new $class($this, $table, $options);
   }
 
@@ -714,7 +709,7 @@ abstract class Connection extends PDO {
    */
   public function schema() {
     if (empty($this->schema)) {
-      $class = $this->getDriverClass('DatabaseSchema', array('schema.inc'));
+      $class = $this->getDriverClass('DatabaseSchema');
       if (class_exists($class)) {
         $this->schema = new $class($this);
       }

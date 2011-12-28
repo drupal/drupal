@@ -1,5 +1,8 @@
 <?php
 
+use Drupal\Database\Database;
+use Drupal\Database\Install\TaskException;
+
 /**
  * @file
  * API functions for installing Drupal.
@@ -228,6 +231,11 @@ function install_begin_request(&$install_state) {
 
   // Allow command line scripts to override server variables used by Drupal.
   require_once DRUPAL_ROOT . '/core/includes/bootstrap.inc';
+
+  // Ensure that the class loader is available so that we can leverage classes
+  // as part of the install routine.
+  drupal_initialize_classloader();
+
   if (!$install_state['interactive']) {
     drupal_override_server_variables($install_state['server']);
   }
@@ -967,7 +975,7 @@ function install_database_errors($database, $settings_file) {
     try {
       db_run_tasks($driver);
     }
-    catch (DatabaseTaskException $e) {
+    catch (TaskException $e) {
       // These are generic errors, so we do not have any specific key of the
       // database connection array to attach them to; therefore, we just put
       // them in the error array with standard numeric keys.
