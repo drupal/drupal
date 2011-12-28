@@ -2,6 +2,10 @@
 
 namespace Drupal\Database\Driver\mysql;
 
+use Drupal\Database\Database;
+use Drupal\Database\Query\DatabaseCondition;
+use Drupal\Database\DatabaseSchemaObjectExistsException;
+use Drupal\Database\DatabaseSchemaObjectDoesNotExistException;
 use Drupal\Database\DatabaseSchema as DatabaseDatabaseSchema;
 
 use Exception;

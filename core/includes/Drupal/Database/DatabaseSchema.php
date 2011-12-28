@@ -2,6 +2,8 @@
 
 namespace Drupal\Database;
 
+use Drupal\Database\DatabaseSchemaObjectExistsException;
+use Drupal\Database\Query\DatabaseCondition;
 use Drupal\Database\Query\PlaceholderInterface;
 
 /**
