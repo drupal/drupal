@@ -53,7 +53,7 @@ class SelectExtender implements SelectInterface {
     return $this->placeholder++;
   }
 
-  /* Implementations of QueryAlterableInterface. */
+  /* Implementations of AlterableInterface. */
 
   public function addTag($tag) {
     $this->query->addTag($tag);
