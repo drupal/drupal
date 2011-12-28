@@ -1194,6 +1194,8 @@ function taxonomy_vocabulary_load_multiple($vids = array(), $conditions = array(
  * @return
  *   The vocabulary object with all of its metadata, if exists, FALSE otherwise.
  *   Results are statically cached.
+ *
+ * @see taxonomy_vocabulary_machine_name_load()
  */
 function taxonomy_vocabulary_load($vid) {
   $vocabularies = taxonomy_vocabulary_load_multiple(array($vid));
@@ -1209,6 +1211,8 @@ function taxonomy_vocabulary_load($vid) {
  * @return
  *   The vocabulary object with all of its metadata, if exists, FALSE otherwise.
  *   Results are statically cached.
+ *
+ * @see taxonomy_vocabulary_load()
  */
 function taxonomy_vocabulary_machine_name_load($name) {
   $vocabularies = taxonomy_vocabulary_load_multiple(NULL, array('machine_name' => $name));
