@@ -182,7 +182,7 @@ function system_requirements($phase) {
   }
   else {
     // Database information.
-    $class = 'DatabaseTasks_' . Database::getConnection()->driver();
+    $class = Database::getConnection()->getDriverClass('Install\\Tasks');
     $tasks = new $class();
     $requirements['database_system'] = array(
       'title' => $t('Database system'),

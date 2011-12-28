@@ -1010,6 +1010,6 @@ function db_run_tasks($driver) {
  *   The name of the driver.
  */
 function db_installer_object($driver) {
-  $task_class = "Drupal\\Database\\Driver\\{$driver}\\Install\\Tasks";
-  return new $task_class();
+  $class = Database::getConnection()->getDriverClass('Install\\Tasks');
+  return new $class();
 }

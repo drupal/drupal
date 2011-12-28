@@ -589,7 +589,8 @@ abstract class Connection extends PDO {
   public function getDriverClass($class) {
     if (empty($this->driverClasses[$class])) {
       $driver = $this->driver();
-      $this->driverClasses[$class] = "Drupal\\Database\\Driver\\{$driver}\\{$class}";
+      $driver_class = "Drupal\\Database\\Driver\\{$driver}\\{$class}";
+      $this->driverClasses[$class] = class_exists($driver_class) ? $driver_class : $class;
     }
     return $this->driverClasses[$class];
   }
