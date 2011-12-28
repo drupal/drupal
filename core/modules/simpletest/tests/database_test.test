@@ -1,6 +1,11 @@
 <?php
 
 use Drupal\Database\Database;
+use Drupal\Database\DatabaseStatementEmpty;
+use Drupal\Database\DatabaseStatementInterface;
+use Drupal\Database\NoFieldsException;
+use Drupal\Database\InvalidMergeQueryException;
+use Drupal\Database\Query\Merge;
 
 /**
  * Dummy class for fetching into a class.
@@ -1091,7 +1096,7 @@ class DatabaseMergeTestCase extends DatabaseTestCase {
       ))
       ->execute();
 
-    $this->assertEqual($result, MergeQuery::STATUS_INSERT, t('Insert status returned.'));
+    $this->assertEqual($result, Merge::STATUS_INSERT, t('Insert status returned.'));
 
     $num_records_after = db_query('SELECT COUNT(*) FROM {test_people}')->fetchField();
     $this->assertEqual($num_records_before + 1, $num_records_after, t('Merge inserted properly.'));
@@ -1116,7 +1121,7 @@ class DatabaseMergeTestCase extends DatabaseTestCase {
       ))
       ->execute();
 
-    $this->assertEqual($result, MergeQuery::STATUS_UPDATE, t('Update status returned.'));
+    $this->assertEqual($result, Merge::STATUS_UPDATE, t('Update status returned.'));
 
     $num_records_after = db_query('SELECT COUNT(*) FROM {test_people}')->fetchField();
     $this->assertEqual($num_records_before, $num_records_after, t('Merge updated properly.'));

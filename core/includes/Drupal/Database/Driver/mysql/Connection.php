@@ -3,6 +3,7 @@
 namespace Drupal\Database\Driver\mysql;
 
 use Drupal\Database\Database;
+use Drupal\Database\DatabaseTransactionCommitFailedException;
 use Drupal\Database\Connection as DatabaseConnection;
 
 use PDO;

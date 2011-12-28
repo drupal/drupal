@@ -3,6 +3,8 @@
 namespace Drupal\Database\Query;
 
 use Drupal\Database\Database;
+use Drupal\Database\NoFieldsException;
+use Drupal\Database\FieldsOverlapException;
 
 /**
  * General class for an abstracted INSERT query.

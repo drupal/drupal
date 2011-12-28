@@ -1,6 +1,7 @@
 <?php
 
 use Drupal\Database\Database;
+use Drupal\Database\DatabaseConnectionNotDefinedException;
 
 /**
  * Global variable that holds information about the tests being run.
