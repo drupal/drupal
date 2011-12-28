@@ -1,5 +1,6 @@
 <?php
 
+use Drupal\Database\Connection;
 use Drupal\Database\Query\SelectExtender;
 use Drupal\Database\Query\SelectInterface;
 
@@ -23,7 +24,7 @@ class TableSort extends SelectExtender {
    */
   protected $header = array();
 
-  public function __construct(SelectInterface $query, DatabaseConnection $connection) {
+  public function __construct(SelectInterface $query, Connection $connection) {
     parent::__construct($query, $connection);
 
     // Add convenience tag to mark that this is an extended query. We have to

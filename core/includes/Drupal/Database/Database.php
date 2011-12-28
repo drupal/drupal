@@ -144,7 +144,7 @@ abstract class Database {
    * @param $key
    *   The database connection key. Defaults to NULL which means the active key.
    *
-   * @return DatabaseConnection
+   * @return Connection
    *   The corresponding connection object.
    */
   final public static function getConnection($target = 'default', $key = NULL) {
