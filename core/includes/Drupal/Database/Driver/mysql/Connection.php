@@ -7,6 +7,7 @@ use Drupal\Database\DatabaseTransactionCommitFailedException;
 use Drupal\Database\Connection as DatabaseConnection;
 
 use PDO;
+use PDOException;
 
 /**
  * @ingroup database
