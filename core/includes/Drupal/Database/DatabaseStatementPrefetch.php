@@ -5,6 +5,7 @@ namespace Drupal\Database;
 use Drupal\Database\Connection;
 use Iterator;
 use PDO;
+use PDOException;
 
 /**
  * An implementation of DatabaseStatementInterface that prefetches all data.

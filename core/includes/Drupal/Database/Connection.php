@@ -3,6 +3,7 @@
 namespace Drupal\Database;
 
 use PDO;
+use PDOException;
 
 /**
  * Base Database API class.
