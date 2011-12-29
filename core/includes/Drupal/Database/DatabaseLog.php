@@ -125,9 +125,12 @@ class DatabaseLog {
    * Determine the routine that called this query.
    *
    * We define "the routine that called this query" as the first entry in
-   * the call stack that is not inside includes/database. That makes the
-   * climbing logic very simple, and handles the variable stack depth caused
-   * by the query builders.
+   * the call stack that is not inside the includes/Drupal/Database directory
+   * and does not begin with db_. That makes the climbing logic very simple, and
+   * handles the variable stack depth caused by the query builders.
+   *
+   * @todo Revisit this logic to not be dependent on file path, so that we can
+   *       split most of the DB layer out of Drupal.
    *
    * @link http://www.php.net/debug_backtrace
    * @return
@@ -140,8 +143,10 @@ class DatabaseLog {
   public function findCaller() {
     $stack = debug_backtrace();
     $stack_count = count($stack);
+    $blacklist_fragment = 'includes' . DIRECTORY_SEPARATOR . 'Drupal' . DIRECTORY_SEPARATOR . 'Database';
+
     for ($i = 0; $i < $stack_count; ++$i) {
-      if (strpos($stack[$i]['file'], 'includes' . DIRECTORY_SEPARATOR . 'database') === FALSE) {
+      if (strpos($stack[$i]['file'], $blacklist_fragment) === FALSE && strpos($stack[$i + 1]['function'], 'db_') === FALSE) {
         return array(
           'file' => $stack[$i]['file'],
           'line' => $stack[$i]['line'],
