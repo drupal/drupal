@@ -1,5 +1,7 @@
 <?php
 
+use Drupal\Database\Query\Select;
+
 /**
  * @file
  * Entity query API.
@@ -935,7 +937,7 @@ class EntityFieldQuery {
    *   HAVING or WHERE. This is necessary because SQL can't handle WHERE
    *   conditions on aliased columns.
    */
-  public function addCondition(SelectQuery $select_query, $sql_field, $condition, $having = FALSE) {
+  public function addCondition(Select $select_query, $sql_field, $condition, $having = FALSE) {
     $method = $having ? 'havingCondition' : 'condition';
     $like_prefix = '';
     switch ($condition['operator']) {

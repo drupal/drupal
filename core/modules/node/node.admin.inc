@@ -1,5 +1,7 @@
 <?php
 
+use Drupal\Database\Query\SelectInterface;
+
 /**
  * @file
  * Content administration and module settings UI.
@@ -123,7 +125,7 @@ function node_filters() {
  * @param $query
  *   A SelectQuery to which the filters should be applied.
  */
-function node_build_filter_query(SelectQueryInterface $query) {
+function node_build_filter_query(SelectInterface $query) {
   // Build query
   $filter_data = isset($_SESSION['node_overview_filter']) ? $_SESSION['node_overview_filter'] : array();
   foreach ($filter_data as $index => $filter) {

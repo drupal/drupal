@@ -1,6 +1,8 @@
 <?php
 
 use Drupal\Database\Query\AlterableInterface;
+use Drupal\Database\Query\SelectExtender;
+use Drupal\Database\Query\SelectInterface;
 
 /**
  * @file
@@ -1617,7 +1619,7 @@ function node_permission() {
  * @param $query
  *   A query object that has been extended with the Search DB Extender.
  */
-function _node_rankings(SelectQueryExtender $query) {
+function _node_rankings(SelectExtender $query) {
   if ($ranking = module_invoke_all('ranking')) {
     $tables = &$query->getTables();
     foreach ($ranking as $rank => $values) {
@@ -3318,7 +3320,7 @@ function _node_query_node_access_alter($query, $type) {
   if (!$base_table) {
     $fallback = '';
     foreach ($tables as $alias => $table_info) {
-      if (!($table_info instanceof SelectQueryInterface)) {
+      if (!($table_info instanceof SelectInterface)) {
         $table = $table_info['table'];
         // If the node table is in the query, it wins immediately.
         if ($table == 'node') {
@@ -3390,7 +3392,7 @@ function _node_query_node_access_alter($query, $type) {
   }
   foreach ($tables as $nalias => $tableinfo) {
     $table = $tableinfo['table'];
-    if (!($table instanceof SelectQueryInterface) && $table == $base_table) {
+    if (!($table instanceof SelectInterface) && $table == $base_table) {
 
       // The node_access table has the access grants for any given node so JOIN
       // it to the table containing the nid which can be either the node
