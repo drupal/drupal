@@ -3753,7 +3753,7 @@ function hook_url_inbound_alter(&$path, $original_path, $path_language) {
  * @param $path
  *   The outbound path to alter, not adjusted for path aliases yet. It won't be
  *   adjusted for path aliases until all modules are finished altering it, thus
- *   being consistent with hook_url_alter_inbound(), which adjusts for all path
+ *   being consistent with hook_url_inbound_alter(), which adjusts for all path
  *   aliases before allowing modules to alter it. This may have been altered by
  *   other modules before this one.
  * @param $options

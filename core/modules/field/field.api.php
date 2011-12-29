@@ -705,6 +705,7 @@ function hook_field_is_empty($item, $field) {
  * @see hook_field_widget_form_alter()
  * @see hook_field_widget_WIDGET_TYPE_form_alter()
  * @see hook_field_widget_error()
+ * @see hook_field_widget_settings_form()
  */
 function hook_field_widget_info() {
     return array(

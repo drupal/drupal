@@ -117,11 +117,11 @@ Drupal.behaviors.blockDrag = {
         var select = $(this);
         tableDrag.rowObject = new tableDrag.row(row);
 
-        // Find the correct region and insert the row as the last in the region.
+        // Find the correct region and insert the row as the first in the region.
         $('tr.region-message', table).each(function () {
           if ($(this).is('.region-' + select[0].value + '-message')) {
             // Add the new row and remove the old one.
-            $(this).nextUntil('.region-title').last().after(row);
+            $(this).after(row);
             // Manually update weights and restripe.
             tableDrag.updateFields(row.get(0));
             tableDrag.rowObject.changed = true;
