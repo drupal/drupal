@@ -334,7 +334,7 @@ Drupal.overlay.setFocusBefore = function ($element, document) {
   $placeholder.one('blur', function () {
     $(this).remove();
   });
-}
+};
 
 /**
  * Check if the given link is in the administrative section of the site.
@@ -961,7 +961,7 @@ Drupal.overlay._recordTabindex = function () {
   var $element = $(this);
   var tabindex = $(this).attr('tabindex');
   $element.data('drupalOverlayOriginalTabIndex', tabindex);
-}
+};
 
 /**
  * Restore an element's original tabindex.
