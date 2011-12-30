@@ -1471,7 +1471,7 @@ function system_schema() {
         'default' => 0,
       ),
       'cache' => array(
-        'description' => "The time of this user's last post. This is used when the site has specified a minimum_cache_lifetime. See cache_get().",
+        'description' => "The time of this user's last post. This is used when the site has specified a minimum_cache_lifetime. See DrupalCacheInterface::get().",
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,

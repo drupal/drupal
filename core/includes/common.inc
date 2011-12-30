@@ -6090,7 +6090,7 @@ function drupal_render_collect_attached($elements, $return = FALSE) {
  *   added to this string and is also part of the cache key in
  *   drupal_render_cache_set() and drupal_render_cache_get().
  * @param $expire
- *   The cache expire time, passed eventually to cache_set().
+ *   The cache expire time, passed eventually to cache()->set().
  * @param $granularity
  *   One or more granularity constants passed to drupal_render_cid_parts().
  *

@@ -700,10 +700,10 @@ function module_implements_reset() {
   // request. Benchmarks show that the benefit of this caching outweighs the
   // additional database hit even when using the default database caching
   // backend and only a small number of modules are enabled. The cost of the
-  // cache_get() is more or less constant and reduced further when non-database
-  // caching backends are used, so there will be more significant gains when a
-  // large number of modules are installed or hooks invoked, since this can
-  // quickly lead to module_hook() being called several thousand times
+  // cache('bootstrap')->get() is more or less constant and reduced further when
+  // non-database caching backends are used, so there will be more significant
+  // gains when a large number of modules are installed or hooks invoked, since
+  // this can quickly lead to module_hook() being called several thousand times
   // per request.
   drupal_static_reset('module_implements');
   cache('bootstrap')->set('module_implements', array());
