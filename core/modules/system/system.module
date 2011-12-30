@@ -1121,7 +1121,7 @@ function system_library_info() {
     'title' => 'Drupal progress indicator',
     'version' => VERSION,
     'js' => array(
-      'core/misc/progress.js' => array('group' => JS_DEFAULT, 'cache' => FALSE),
+      'core/misc/progress.js' => array('group' => JS_DEFAULT),
     ),
   );
 
