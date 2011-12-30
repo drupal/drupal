@@ -25,11 +25,6 @@ define('OPENID_DH_DEFAULT_MOD', '155172898181473697471232257763715539915724801' 
 const OPENID_DH_DEFAULT_GEN = '2';
 
 /**
- * SHA-1 hash block size; used for Diffie-Hellman key exchange computations.
- */
-const OPENID_SHA1_BLOCKSIZE = 64;
-
-/**
  * Random number generator; used for Diffie-Hellman key exchange computations.
  */
 const OPENID_RAND_SOURCE = '/dev/urandom';
@@ -414,23 +409,9 @@ function _openid_signature($association, $message_array, $keys_to_sign) {
 
   $message = _openid_create_message($sign_data);
   $secret = base64_decode($association->mac_key);
-  $signature = _openid_hmac($secret, $message);
+  $signature = hash_hmac('sha1', $message, $secret, TRUE);
 
   return base64_encode($signature);
-}
-
-function _openid_hmac($key, $text) {
-  if (strlen($key) > OPENID_SHA1_BLOCKSIZE) {
-    $key = sha1($key, TRUE);
-  }
-
-  $key = str_pad($key, OPENID_SHA1_BLOCKSIZE, chr(0x00));
-  $ipad = str_repeat(chr(0x36), OPENID_SHA1_BLOCKSIZE);
-  $opad = str_repeat(chr(0x5c), OPENID_SHA1_BLOCKSIZE);
-  $hash1 = sha1(($key ^ $ipad) . $text, TRUE);
-  $hmac = sha1(($key ^ $opad) . $hash1, TRUE);
-
-  return $hmac;
 }
 
 function _openid_dh_base64_to_long($str) {
