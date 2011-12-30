@@ -1652,15 +1652,6 @@ function system_library_info() {
     ),
   );
 
-  // These library names are deprecated. Earlier versions of Drupal 7 didn't
-  // consistently namespace their libraries, so these names are included for
-  // backwards compatibility with those versions.
-  $libraries['once'] = &$libraries['jquery.once'];
-  $libraries['form'] = &$libraries['jquery.form'];
-  $libraries['jquery-bbq'] = &$libraries['jquery.bbq'];
-  $libraries['vertical-tabs'] = &$libraries['drupal.vertical-tabs'];
-  $libraries['cookie'] = &$libraries['jquery.cookie'];
-
   return $libraries;
 }
 
