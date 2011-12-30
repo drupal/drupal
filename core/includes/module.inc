@@ -1018,4 +1018,3 @@ function drupal_alter($type, &$data, &$context1 = NULL, &$context2 = NULL) {
     $function($data, $context1, $context2);
   }
 }
-

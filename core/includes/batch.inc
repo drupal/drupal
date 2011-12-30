@@ -537,4 +537,3 @@ function _batch_shutdown() {
       ->execute();
   }
 }
-

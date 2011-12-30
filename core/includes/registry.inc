@@ -183,4 +183,3 @@ function _registry_parse_file($filename, $contents, $module = '', $weight = 0) {
 /**
  * @} End of "defgroup registry".
  */
-
