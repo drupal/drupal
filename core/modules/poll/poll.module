@@ -582,8 +582,10 @@ function poll_update($node) {
           'weight' => $choice['weight'],
         ))
         ->insertFields(array(
-           'nid' => $node->nid,
-           'chtext' => $choice['chtext'],
+          'nid' => $node->nid,
+          'chtext' => $choice['chtext'],
+          'chvotes' => (int) $choice['chvotes'],
+          'weight' => $choice['weight'],
         ))
         ->execute();
     }
