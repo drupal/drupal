@@ -2679,7 +2679,7 @@ class FieldTranslationsTestCase extends FieldTestCase {
 
     // Test field_available_languages() behavior for untranslatable fields.
     $this->field['translatable'] = FALSE;
-    $this->field_name = $this->field['field_name'] = $this->instance['field_name'] = drupal_strtolower($this->randomName() . '_field_name');
+    field_update_field($this->field);
     $available_languages = field_available_languages($this->entity_type, $this->field);
     $this->assertTrue(count($available_languages) == 1 && $available_languages[0] === LANGUAGE_NONE, t('For untranslatable fields only LANGUAGE_NONE is available.'));
   }
