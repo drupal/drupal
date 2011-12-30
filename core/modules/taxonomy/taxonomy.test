@@ -703,6 +703,10 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
     // Check that the term feed page is working.
     $this->drupalGet('taxonomy/term/' . $term->tid . '/feed');
 
+    // Check that the term edit page does not try to interpret additional path
+    // components as arguments for taxonomy_form_term().
+    $this->drupalGet('taxonomy/term/' . $term->tid . '/edit/' . $this->randomName());
+
     // Delete the term.
     $this->drupalPost('taxonomy/term/' . $term->tid . '/edit', array(), t('Delete'));
     $this->drupalPost(NULL, NULL, t('Delete'));
