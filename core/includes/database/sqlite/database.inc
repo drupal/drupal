@@ -59,7 +59,7 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
     $this->statementClass = NULL;
 
     // This driver defaults to transaction support, except if explicitly passed FALSE.
-    $this->transactionSupport = !isset($connection_options['transactions']) || $connection_options['transactions'] !== FALSE;
+    $this->transactionSupport = $this->transactionalDDLSupport = !isset($connection_options['transactions']) || $connection_options['transactions'] !== FALSE;
 
     $this->connectionOptions = $connection_options;
 
