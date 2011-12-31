@@ -1084,7 +1084,6 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
     $this->fields[0]['cardinality'] = 1;
     field_update_field($this->fields[0]);
     field_test_entity_info_translatable('test_entity', TRUE);
-    drupal_static_reset('field_available_languages');
 
     // Create more items with different languages.
     $entity = new stdClass();
@@ -1121,7 +1120,6 @@ class EntityFieldQueryTestCase extends DrupalWebTestCase {
     $this->fields[0]['translatable'] = TRUE;
     field_update_field($this->fields[0]);
     field_test_entity_info_translatable('test_entity', TRUE);
-    drupal_static_reset('field_available_languages');
 
     // Create more items with different languages.
     $entity = new stdClass();
