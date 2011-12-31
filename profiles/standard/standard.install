@@ -65,7 +65,7 @@ function standard_install() {
   // Enable some standard blocks.
   $default_theme = variable_get('theme_default', 'bartik');
   $admin_theme = 'seven';
-  $values = array(
+  $blocks = array(
     array(
       'module' => 'system',
       'delta' => 'main',
@@ -188,8 +188,8 @@ function standard_install() {
     ),
   );
   $query = db_insert('block')->fields(array('module', 'delta', 'theme', 'status', 'weight', 'region', 'pages', 'cache'));
-  foreach ($values as $record) {
-    $query->values($record);
+  foreach ($blocks as $block) {
+    $query->values($block);
   }
   $query->execute();
 
