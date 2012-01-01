@@ -72,12 +72,13 @@ class FieldTestCase extends DrupalWebTestCase {
 }
 
 class FieldAttachTestCase extends FieldTestCase {
-  function setUp($modules = array()) {
+  function setUp() {
     // Since this is a base class for many test cases, support the same
     // flexibility that DrupalWebTestCase::setUp() has for the modules to be
     // passed in as either an array or a variable number of string arguments.
-    if (!is_array($modules)) {
-      $modules = func_get_args();
+    $modules = func_get_args();
+    if (isset($modules[0]) && is_array($modules[0])) {
+      $modules = $modules[0];
     }
     if (!in_array('field_test', $modules)) {
       $modules[] = 'field_test';
