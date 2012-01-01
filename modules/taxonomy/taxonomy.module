@@ -295,7 +295,9 @@ function taxonomy_menu() {
   $items['taxonomy/term/%taxonomy_term/edit'] = array(
     'title' => 'Edit',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('taxonomy_form_term', 2),
+    // Pass a NULL argument to ensure that additional path components are not
+    // passed to taxonomy_form_term() as the vocabulary machine name argument.
+    'page arguments' => array('taxonomy_form_term', 2, NULL),
     'access callback' => 'taxonomy_term_edit_access',
     'access arguments' => array(2),
     'type' => MENU_LOCAL_TASK,
