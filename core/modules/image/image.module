@@ -450,7 +450,6 @@ function image_styles() {
         $style = array();
         $config = config($config_name);
         $style['name'] = $config->get('name');
-        $style['storage'] = IMAGE_STORAGE_DEFAULT;
         $style['effects'] = array();
         foreach ($config->get('effects') as $key => $effect) {
           $definition = image_effect_definition_load($effect['name']);
