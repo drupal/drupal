@@ -916,8 +916,6 @@ function image_effect_definitions() {
  *
  * @param $effect
  *   The name of the effect definition to load.
- * @param $style
- *   An image style array to which this effect will be added.
  * @return
  *   An array containing the image effect definition with the following keys:
  *   - "effect": The unique name for the effect being performed. Usually prefixed
@@ -929,18 +927,8 @@ function image_effect_definitions() {
  *   - "summary": (optional) The name of a theme function that will display a
  *     one-line summary of the effect. Does not include the "theme_" prefix.
  */
-function image_effect_definition_load($effect, $style_name = NULL) {
+function image_effect_definition_load($effect) {
   $definitions = image_effect_definitions();
-  // If a style is specified, do not allow loading of default style
-  // effects.
-  if (isset($style_name)) {
-    $style = image_style_load($style_name, NULL);
-    if ($style['storage'] == IMAGE_STORAGE_DEFAULT) {
-      return FALSE;
-    }
-  }
-
-  die();
   return isset($definitions[$effect]) ? $definitions[$effect] : FALSE;
 }
 
