@@ -2,9 +2,9 @@
 
 namespace Drupal\Database;
 
-use Exception;
+use RuntimeException;
 
 /**
  * Exception thrown if no driver is specified for a database connection.
  */
-class DatabaseDriverNotSpecifiedException extends Exception {}
+class DriverNotSpecifiedException extends RuntimeException {}

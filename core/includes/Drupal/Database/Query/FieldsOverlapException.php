@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\Database;
+namespace Drupal\Database\Query;
 
-use Exception;
+use RuntimeException;
 
 /**
  * Exception thrown if an insert query specifies a field twice.
@@ -10,4 +10,4 @@ use Exception;
  * It is not allowed to specify a field as default and insert field, this
  * exception is thrown if that is the case.
  */
-class FieldsOverlapException extends Exception {}
+class FieldsOverlapException extends RuntimeException {}

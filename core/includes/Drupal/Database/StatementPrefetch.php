@@ -13,7 +13,7 @@ use PDOException;
  * This class behaves very similar to a PDOStatement but as it always fetches
  * every row it is possible to manipulate those results.
  */
-class DatabaseStatementPrefetch implements Iterator, DatabaseStatementInterface {
+class StatementPrefetch implements Iterator, StatementInterface {
 
   /**
    * The query string.

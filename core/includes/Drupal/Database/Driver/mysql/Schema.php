@@ -4,9 +4,9 @@ namespace Drupal\Database\Driver\mysql;
 
 use Drupal\Database\Database;
 use Drupal\Database\Query\DatabaseCondition;
-use Drupal\Database\DatabaseSchemaObjectExistsException;
-use Drupal\Database\DatabaseSchemaObjectDoesNotExistException;
-use Drupal\Database\DatabaseSchema as DatabaseDatabaseSchema;
+use Drupal\Database\SchemaObjectExistsException;
+use Drupal\Database\SchemaObjectDoesNotExistException;
+use Drupal\Database\Schema as DatabaseSchema;
 
 use Exception;
 
@@ -15,7 +15,7 @@ use Exception;
  * @{
  */
 
-class DatabaseSchema extends DatabaseDatabaseSchema {
+class Schema extends DatabaseSchema {
 
   /**
    * Maximum length of a table comment in MySQL.
@@ -300,10 +300,10 @@ class DatabaseSchema extends DatabaseDatabaseSchema {
 
   public function renameTable($table, $new_name) {
     if (!$this->tableExists($table)) {
-      throw new DatabaseSchemaObjectDoesNotExistException(t("Cannot rename %table to %table_new: table %table doesn't exist.", array('%table' => $table, '%table_new' => $new_name)));
+      throw new SchemaObjectDoesNotExistException(t("Cannot rename %table to %table_new: table %table doesn't exist.", array('%table' => $table, '%table_new' => $new_name)));
     }
     if ($this->tableExists($new_name)) {
-      throw new DatabaseSchemaObjectExistsException(t("Cannot rename %table to %table_new: table %table_new already exists.", array('%table' => $table, '%table_new' => $new_name)));
+      throw new SchemaObjectExistsException(t("Cannot rename %table to %table_new: table %table_new already exists.", array('%table' => $table, '%table_new' => $new_name)));
     }
 
     $info = $this->getPrefixInfo($new_name);
@@ -321,10 +321,10 @@ class DatabaseSchema extends DatabaseDatabaseSchema {
 
   public function addField($table, $field, $spec, $keys_new = array()) {
     if (!$this->tableExists($table)) {
-      throw new DatabaseSchemaObjectDoesNotExistException(t("Cannot add field %table.%field: table doesn't exist.", array('%field' => $field, '%table' => $table)));
+      throw new SchemaObjectDoesNotExistException(t("Cannot add field %table.%field: table doesn't exist.", array('%field' => $field, '%table' => $table)));
     }
     if ($this->fieldExists($table, $field)) {
-      throw new DatabaseSchemaObjectExistsException(t("Cannot add field %table.%field: field already exists.", array('%field' => $field, '%table' => $table)));
+      throw new SchemaObjectExistsException(t("Cannot add field %table.%field: field already exists.", array('%field' => $field, '%table' => $table)));
     }
 
     $fixnull = FALSE;
@@ -360,7 +360,7 @@ class DatabaseSchema extends DatabaseDatabaseSchema {
 
   public function fieldSetDefault($table, $field, $default) {
     if (!$this->fieldExists($table, $field)) {
-      throw new DatabaseSchemaObjectDoesNotExistException(t("Cannot set default value of field %table.%field: field doesn't exist.", array('%table' => $table, '%field' => $field)));
+      throw new SchemaObjectDoesNotExistException(t("Cannot set default value of field %table.%field: field doesn't exist.", array('%table' => $table, '%field' => $field)));
     }
 
     if (!isset($default)) {
@@ -375,7 +375,7 @@ class DatabaseSchema extends DatabaseDatabaseSchema {
 
   public function fieldSetNoDefault($table, $field) {
     if (!$this->fieldExists($table, $field)) {
-      throw new DatabaseSchemaObjectDoesNotExistException(t("Cannot remove default value of field %table.%field: field doesn't exist.", array('%table' => $table, '%field' => $field)));
+      throw new SchemaObjectDoesNotExistException(t("Cannot remove default value of field %table.%field: field doesn't exist.", array('%table' => $table, '%field' => $field)));
     }
 
     $this->connection->query('ALTER TABLE {' . $table . '} ALTER COLUMN `' . $field . '` DROP DEFAULT');
@@ -390,10 +390,10 @@ class DatabaseSchema extends DatabaseDatabaseSchema {
 
   public function addPrimaryKey($table, $fields) {
     if (!$this->tableExists($table)) {
-      throw new DatabaseSchemaObjectDoesNotExistException(t("Cannot add primary key to table %table: table doesn't exist.", array('%table' => $table)));
+      throw new SchemaObjectDoesNotExistException(t("Cannot add primary key to table %table: table doesn't exist.", array('%table' => $table)));
     }
     if ($this->indexExists($table, 'PRIMARY')) {
-      throw new DatabaseSchemaObjectExistsException(t("Cannot add primary key to table %table: primary key already exists.", array('%table' => $table)));
+      throw new SchemaObjectExistsException(t("Cannot add primary key to table %table: primary key already exists.", array('%table' => $table)));
     }
 
     $this->connection->query('ALTER TABLE {' . $table . '} ADD PRIMARY KEY (' . $this->createKeySql($fields) . ')');
@@ -410,10 +410,10 @@ class DatabaseSchema extends DatabaseDatabaseSchema {
 
   public function addUniqueKey($table, $name, $fields) {
     if (!$this->tableExists($table)) {
-      throw new DatabaseSchemaObjectDoesNotExistException(t("Cannot add unique key %name to table %table: table doesn't exist.", array('%table' => $table, '%name' => $name)));
+      throw new SchemaObjectDoesNotExistException(t("Cannot add unique key %name to table %table: table doesn't exist.", array('%table' => $table, '%name' => $name)));
     }
     if ($this->indexExists($table, $name)) {
-      throw new DatabaseSchemaObjectExistsException(t("Cannot add unique key %name to table %table: unique key already exists.", array('%table' => $table, '%name' => $name)));
+      throw new SchemaObjectExistsException(t("Cannot add unique key %name to table %table: unique key already exists.", array('%table' => $table, '%name' => $name)));
     }
 
     $this->connection->query('ALTER TABLE {' . $table . '} ADD UNIQUE KEY `' . $name . '` (' . $this->createKeySql($fields) . ')');
@@ -430,10 +430,10 @@ class DatabaseSchema extends DatabaseDatabaseSchema {
 
   public function addIndex($table, $name, $fields) {
     if (!$this->tableExists($table)) {
-      throw new DatabaseSchemaObjectDoesNotExistException(t("Cannot add index %name to table %table: table doesn't exist.", array('%table' => $table, '%name' => $name)));
+      throw new SchemaObjectDoesNotExistException(t("Cannot add index %name to table %table: table doesn't exist.", array('%table' => $table, '%name' => $name)));
     }
     if ($this->indexExists($table, $name)) {
-      throw new DatabaseSchemaObjectExistsException(t("Cannot add index %name to table %table: index already exists.", array('%table' => $table, '%name' => $name)));
+      throw new SchemaObjectExistsException(t("Cannot add index %name to table %table: index already exists.", array('%table' => $table, '%name' => $name)));
     }
 
     $this->connection->query('ALTER TABLE {' . $table . '} ADD INDEX `' . $name . '` (' . $this->createKeySql($fields) . ')');
@@ -450,10 +450,10 @@ class DatabaseSchema extends DatabaseDatabaseSchema {
 
   public function changeField($table, $field, $field_new, $spec, $keys_new = array()) {
     if (!$this->fieldExists($table, $field)) {
-      throw new DatabaseSchemaObjectDoesNotExistException(t("Cannot change the definition of field %table.%name: field doesn't exist.", array('%table' => $table, '%name' => $field)));
+      throw new SchemaObjectDoesNotExistException(t("Cannot change the definition of field %table.%name: field doesn't exist.", array('%table' => $table, '%name' => $field)));
     }
     if (($field != $field_new) && $this->fieldExists($table, $field_new)) {
-      throw new DatabaseSchemaObjectExistsException(t("Cannot rename field %table.%name to %name_new: target field already exists.", array('%table' => $table, '%name' => $field, '%name_new' => $field_new)));
+      throw new SchemaObjectExistsException(t("Cannot rename field %table.%name to %name_new: target field already exists.", array('%table' => $table, '%name' => $field, '%name_new' => $field_new)));
     }
 
     $sql = 'ALTER TABLE {' . $table . '} CHANGE `' . $field . '` ' . $this->createFieldSql($field_new, $this->processField($spec));

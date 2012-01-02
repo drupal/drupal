@@ -436,7 +436,7 @@ class SearchQuery extends SelectExtender {
       $this->executeFirstPass();
     }
     if (!$this->normalize) {
-      return new DatabaseStatementEmpty();
+      return new StatementEmpty();
     }
 
     // Add conditions to query.

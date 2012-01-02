@@ -1,7 +1,5 @@
 <?php
 
-use Drupal\Database\Query\AlterableInterface;
-
 /**
  * @file
  * Hooks provided by Drupal core and the System module.
@@ -2746,7 +2744,7 @@ function hook_schema_alter(&$schema) {
  * @see AlterableInterface
  * @see SelectInterface
  */
-function hook_query_alter(AlterableInterface $query) {
+function hook_query_alter(Drupal\Database\Query\AlterableInterface $query) {
   if ($query->hasTag('micro_limit')) {
     $query->range(0, 2);
   }
@@ -2763,7 +2761,7 @@ function hook_query_alter(AlterableInterface $query) {
  * @see AlterableInterface
  * @see SelectInterface
  */
-function hook_query_TAG_alter(AlterableInterface $query) {
+function hook_query_TAG_alter(Drupal\Database\Query\AlterableInterface $query) {
   // Skip the extra expensive alterations if site has no node access control modules.
   if (!node_access_view_all_nodes()) {
     // Prevent duplicates records.

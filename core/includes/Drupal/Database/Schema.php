@@ -155,7 +155,7 @@ use Drupal\Database\Query\PlaceholderInterface;
  * @see drupal_install_schema()
  */
 
-abstract class DatabaseSchema implements PlaceholderInterface {
+abstract class Schema implements PlaceholderInterface {
 
   protected $connection;
 
@@ -649,7 +649,7 @@ abstract class DatabaseSchema implements PlaceholderInterface {
    */
   public function createTable($name, $table) {
     if ($this->tableExists($name)) {
-      throw new DatabaseSchemaObjectExistsException(t('Table %name already exists.', array('%name' => $name)));
+      throw new SchemaObjectExistsException(t('Table %name already exists.', array('%name' => $name)));
     }
     $statements = $this->createTableSql($name, $table);
     foreach ($statements as $statement) {

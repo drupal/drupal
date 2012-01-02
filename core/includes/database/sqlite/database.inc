@@ -37,7 +37,7 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
   /**
    * All databases attached to the current database. This is used to allow
    * prefixes to be safely handled without locking the table
-   * 
+   *
    * @var array
    */
   protected $attachedDatabases = array();
@@ -46,10 +46,10 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
    * Whether or not a table has been dropped this request: the destructor will
    * only try to get rid of unnecessary databases if there is potential of them
    * being empty.
-   * 
+   *
    * This variable is set to public because DatabaseSchema_sqlite needs to
    * access it. However, it should not be manually set.
-   * 
+   *
    * @var boolean
    */
   var $tableDropped = FALSE;
@@ -304,7 +304,7 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
     }
 
     if (!$this->inTransaction()) {
-      throw new DatabaseTransactionNoActiveException();
+      throw new TransactionNoActiveException();
     }
     // A previous rollback to an earlier savepoint may mean that the savepoint
     // in question has already been rolled back.
@@ -340,7 +340,7 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
       return;
     }
     if (isset($this->transactionLayers[$name])) {
-      throw new DatabaseTransactionNameNonUniqueException($name . " is already in use.");
+      throw new TransactionNameNonUniqueException($name . " is already in use.");
     }
     if (!$this->inTransaction()) {
       PDO::beginTransaction();
@@ -356,7 +356,7 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
       return;
     }
     if (!$this->inTransaction()) {
-      throw new DatabaseTransactionNoActiveException();
+      throw new TransactionNoActiveException();
     }
 
     // Commit everything since SAVEPOINT $name.
@@ -371,7 +371,7 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
           PDO::rollBack();
         }
         elseif (!PDO::commit()) {
-          throw new DatabaseTransactionCommitFailedException();
+          throw new TransactionCommitFailedException();
         }
       }
       else {
@@ -390,7 +390,7 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
  *
  * @see DatabaseConnection_sqlite::PDOPrepare()
  */
-class DatabaseStatement_sqlite extends DatabaseStatementPrefetch implements Iterator, DatabaseStatementInterface {
+class DatabaseStatement_sqlite extends StatementPrefetch implements Iterator, StatementInterface {
 
   /**
    * SQLite specific implementation of getStatement().

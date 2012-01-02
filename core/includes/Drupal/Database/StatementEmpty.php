@@ -15,7 +15,7 @@ use Iterator;
  *
  * @see SearchQuery
  */
-class DatabaseStatementEmpty implements Iterator, DatabaseStatementInterface {
+class StatementEmpty implements Iterator, StatementInterface {
 
   public function execute($args = array(), $options = array()) {
     return FALSE;

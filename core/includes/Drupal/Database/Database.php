@@ -90,11 +90,11 @@ abstract class Database {
    *   methods than the few exposed through the Database class, so in some
    *   cases it may be desirable to access it directly.
    *
-   * @see DatabaseLog
+   * @see Log
    */
   final public static function startLog($logging_key, $key = 'default') {
     if (empty(self::$logs[$key])) {
-      self::$logs[$key] = new DatabaseLog($key);
+      self::$logs[$key] = new Log($key);
 
       // Every target already active for this connection key needs to have the
       // logging object associated with it.
@@ -125,7 +125,7 @@ abstract class Database {
    * @return array
    *   The query log for the specified logging key and connection.
    *
-   * @see DatabaseLog
+   * @see Log
    */
   final public static function getLog($logging_key, $key = 'default') {
     if (empty(self::$logs[$key])) {
@@ -351,8 +351,8 @@ abstract class Database {
    * @param $target
    *   The database target to open.
    *
-   * @throws DatabaseConnectionNotDefinedException
-   * @throws DatabaseDriverNotSpecifiedException
+   * @throws ConnectionNotDefinedException
+   * @throws DriverNotSpecifiedException
    */
   final protected static function openConnection($key, $target) {
     if (empty(self::$databaseInfo)) {
@@ -362,11 +362,11 @@ abstract class Database {
     // If the requested database does not exist then it is an unrecoverable
     // error.
     if (!isset(self::$databaseInfo[$key])) {
-      throw new DatabaseConnectionNotDefinedException('The specified database connection is not defined: ' . $key);
+      throw new ConnectionNotDefinedException('The specified database connection is not defined: ' . $key);
     }
 
     if (!$driver = self::$databaseInfo[$key][$target]['driver']) {
-      throw new DatabaseDriverNotSpecifiedException('Driver not specified for this database connection: ' . $key);
+      throw new DriverNotSpecifiedException('Driver not specified for this database connection: ' . $key);
     }
 
     // We cannot rely on the registry yet, because the registry requires an

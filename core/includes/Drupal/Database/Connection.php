@@ -43,7 +43,7 @@ abstract class Connection extends PDO {
   /**
    * The current database logging object for this connection.
    *
-   * @var DatabaseLog
+   * @var Log
    */
   protected $logger = NULL;
 
@@ -70,7 +70,7 @@ abstract class Connection extends PDO {
    *
    * @var string
    */
-  protected $statementClass = '\\Drupal\\Database\\DatabaseStatementBase';
+  protected $statementClass = '\\Drupal\\Database\\StatementBase';
 
   /**
    * Whether this database connection supports transactions.
@@ -357,7 +357,7 @@ abstract class Connection extends PDO {
    * @param $logger
    *   The logging object we want to use.
    */
-  public function setLogger(DatabaseLog $logger) {
+  public function setLogger(Log $logger) {
     $this->logger = $logger;
   }
 
@@ -714,7 +714,7 @@ abstract class Connection extends PDO {
    */
   public function schema() {
     if (empty($this->schema)) {
-      $class = $this->getDriverClass('DatabaseSchema');
+      $class = $this->getDriverClass('Schema');
       if (class_exists($class)) {
         $this->schema = new $class($this);
       }
@@ -833,7 +833,7 @@ abstract class Connection extends PDO {
    *   The name of the savepoint. The default, 'drupal_transaction', will roll
    *   the entire transaction back.
    *
-   * @throws DatabaseTransactionNoActiveException
+   * @throws TransactionNoActiveException
    *
    * @see DatabaseTransaction::rollback()
    */
@@ -842,12 +842,12 @@ abstract class Connection extends PDO {
       return;
     }
     if (!$this->inTransaction()) {
-      throw new DatabaseTransactionNoActiveException();
+      throw new TransactionNoActiveException();
     }
     // A previous rollback to an earlier savepoint may mean that the savepoint
     // in question has already been accidentally committed.
     if (!isset($this->transactionLayers[$savepoint_name])) {
-      throw new DatabaseTransactionNoActiveException();
+      throw new TransactionNoActiveException();
      }
 
     // We need to find the point we're rolling back to, all other savepoints
@@ -865,7 +865,7 @@ abstract class Connection extends PDO {
         $this->query('ROLLBACK TO SAVEPOINT ' . $savepoint);
         $this->popCommittableTransactions();
         if ($rolled_back_other_active_savepoints) {
-          throw new DatabaseTransactionOutOfOrderException();
+          throw new TransactionOutOfOrderException();
         }
         return;
       }
@@ -875,7 +875,7 @@ abstract class Connection extends PDO {
     }
     parent::rollBack();
     if ($rolled_back_other_active_savepoints) {
-      throw new DatabaseTransactionOutOfOrderException();
+      throw new TransactionOutOfOrderException();
     }
   }
 
@@ -884,7 +884,7 @@ abstract class Connection extends PDO {
    *
    * If no transaction is already active, we begin a new transaction.
    *
-   * @throws DatabaseTransactionNameNonUniqueException
+   * @throws TransactionNameNonUniqueException
    *
    * @see DatabaseTransaction
    */
@@ -893,7 +893,7 @@ abstract class Connection extends PDO {
       return;
     }
     if (isset($this->transactionLayers[$name])) {
-      throw new DatabaseTransactionNameNonUniqueException($name . " is already in use.");
+      throw new TransactionNameNonUniqueException($name . " is already in use.");
     }
     // If we're already in a transaction then we want to create a savepoint
     // rather than try to create another transaction.
@@ -916,8 +916,8 @@ abstract class Connection extends PDO {
    * @param $name
    *   The name of the savepoint
    *
-   * @throws DatabaseTransactionNoActiveException
-   * @throws DatabaseTransactionCommitFailedException
+   * @throws TransactionNoActiveException
+   * @throws TransactionCommitFailedException
    *
    * @see DatabaseTransaction
    */
@@ -953,7 +953,7 @@ abstract class Connection extends PDO {
       unset($this->transactionLayers[$name]);
       if (empty($this->transactionLayers)) {
         if (!parent::commit()) {
-          throw new DatabaseTransactionCommitFailedException();
+          throw new TransactionCommitFailedException();
         }
       }
       else {
@@ -1094,12 +1094,12 @@ abstract class Connection extends PDO {
    * A direct commit bypasses all of the safety checks we've built on top of
    * PDO's transaction routines.
    *
-   * @throws DatabaseTransactionExplicitCommitNotAllowedException
+   * @throws TransactionExplicitCommitNotAllowedException
    *
    * @see DatabaseTransaction
    */
   public function commit() {
-    throw new DatabaseTransactionExplicitCommitNotAllowedException();
+    throw new TransactionExplicitCommitNotAllowedException();
   }
 
   /**

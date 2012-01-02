@@ -23,7 +23,7 @@ use Traversable;
  * class DatabaseStatement_oracle implements Iterator, DatabaseStatementInterface {}
  * @endcode
  */
-interface DatabaseStatementInterface extends Traversable {
+interface StatementInterface extends Traversable {
 
   /**
    * Executes a prepared statement

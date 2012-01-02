@@ -2,9 +2,9 @@
 
 namespace Drupal\Database;
 
-use Exception;
+use RuntimeException;
 
 /**
  * Exception thrown if an undefined database connection is requested.
  */
-class DatabaseConnectionNotDefinedException extends Exception {}
+class ConnectionNotDefinedException extends RuntimeException {}

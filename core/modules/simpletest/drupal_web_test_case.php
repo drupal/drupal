@@ -1,7 +1,7 @@
 <?php
 
 use Drupal\Database\Database;
-use Drupal\Database\DatabaseConnectionNotDefinedException;
+use Drupal\Database\ConnectionNotDefinedException;
 
 /**
  * Global variable that holds information about the tests being run.
@@ -155,7 +155,7 @@ abstract class DrupalTestCase {
     try {
       $connection = Database::getConnection('default', 'simpletest_original_default');
     }
-    catch (DatabaseConnectionNotDefinedException $e) {
+    catch (ConnectionNotDefinedException $e) {
       // If the test was not set up, the simpletest_original_default
       // connection does not exist.
       $connection = Database::getConnection('default', 'default');

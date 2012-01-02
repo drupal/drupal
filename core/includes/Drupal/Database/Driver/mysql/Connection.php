@@ -169,7 +169,7 @@ class Connection extends DatabaseConnection {
       unset($this->transactionLayers[$name]);
       if (empty($this->transactionLayers)) {
         if (!PDO::commit()) {
-          throw new DatabaseTransactionCommitFailedException();
+          throw new TransactionCommitFailedException();
         }
       }
       else {

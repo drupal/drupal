@@ -13,7 +13,7 @@ namespace Drupal\Database;
  * Every connection has one and only one logging object on it for all targets
  * and logging keys.
  */
-class DatabaseLog {
+class Log {
 
   /**
    * Cache of logged queries. This will only be used if the query logger is enabled.
@@ -109,7 +109,7 @@ class DatabaseLog {
    * @param $time
    *   The time in milliseconds the query took to execute.
    */
-  public function log(DatabaseStatementInterface $statement, $args, $time) {
+  public function log(StatementInterface $statement, $args, $time) {
     foreach (array_keys($this->queryLog) as $key) {
       $this->queryLog[$key][] = array(
         'query' => $statement->getQueryString(),

@@ -2,8 +2,6 @@
 
 namespace Drupal\Database;
 
-use Exception;
-
 /**
  * Exception thrown if an object being modified doesn't exist yet.
  *
@@ -11,4 +9,4 @@ use Exception;
  * modify a database table, field, or index that does not currently exist in
  * the database schema.
  */
-class DatabaseSchemaObjectDoesNotExistException extends Exception {}
+class SchemaObjectDoesNotExistException extends SchemaException {}

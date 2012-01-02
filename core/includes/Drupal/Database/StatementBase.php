@@ -16,7 +16,7 @@ use PDOStatement;
  *
  * @see http://us.php.net/pdostatement
  */
-class DatabaseStatementBase extends PDOStatement implements DatabaseStatementInterface {
+class StatementBase extends PDOStatement implements StatementInterface {
 
   /**
    * Reference to the database connection object for this statement.
