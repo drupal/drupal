@@ -643,7 +643,7 @@ function field_attach_load($entity_type, $entities, $age = FIELD_LOAD_CURRENT, $
     foreach ($entities as $id => $entity) {
       $cids[] = "field:$entity_type:$id";
     }
-    $cache = cache_get_multiple($cids, 'cache_field');
+    $cache = cache('field')->getMultiple($cids);
     // Put the cached field values back into the entities and remove them from
     // the list of entities to query.
     foreach ($entities as $id => $entity) {

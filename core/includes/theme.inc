@@ -652,7 +652,7 @@ function _theme_build_registry($theme, $base_theme, $theme_engine) {
   // serve as the basic registry. Since the list of enabled modules is the same
   // regardless of the theme used, this is cached in its own entry to save
   // building it for every theme.
-  if ($cached = cache_get('theme_registry:build:modules')) {
+  if ($cached = cache()->get('theme_registry:build:modules')) {
     $cache = $cached->data;
   }
   else {
@@ -661,7 +661,7 @@ function _theme_build_registry($theme, $base_theme, $theme_engine) {
     }
     // Only cache this registry if all modules are loaded.
     if (module_load_all(NULL)) {
-      cache_set('theme_registry:build:modules', $cache);
+      cache()->set('theme_registry:build:modules', $cache);
     }
   }
 

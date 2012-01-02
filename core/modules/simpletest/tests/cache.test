@@ -1,7 +1,7 @@
 <?php
 
 class CacheTestCase extends DrupalWebTestCase {
-  protected $default_bin = 'cache_page';
+  protected $default_bin = 'page';
   protected $default_cid = 'test_temporary';
   protected $default_value = 'CacheTest';
 
@@ -166,7 +166,7 @@ class CacheSavingCase extends CacheTestCase {
    */
   function testNoEmptyCids() {
     $this->drupalGet('user/register');
-    $this->assertFalse(cache_get(''), t('No cache entry is written with an empty cid.'));
+    $this->assertFalse(cache()->get(''), t('No cache entry is written with an empty cid.'));
   }
 }
 
