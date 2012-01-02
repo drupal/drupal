@@ -238,9 +238,6 @@ function image_style_add_form_submit($form, &$form_state) {
 function image_style_name_validate($element, $form_state) {
   // Check for duplicates.
   $styles = image_styles();
-  // kpr($form_state);
-  // kpr($element);
-  // die();
   if (isset($styles[$element['#value']]) && (!isset($form_state['image_style']['name']) || $styles[$element['#value']]['name'] != $form_state['image_style']['name'])) {
     form_set_error($element['#name'], t('The image style name %name is already in use.', array('%name' => $element['#value'])));
   }
@@ -288,30 +285,6 @@ function image_style_delete_form_submit($form, &$form_state) {
 
   image_style_delete($style, $form_state['values']['replacement']);
   drupal_set_message(t('Style %name was deleted.', array('%name' => $style['name'])));
-  $form_state['redirect'] = 'admin/config/media/image-styles';
-}
-
-/**
- * Confirmation form to revert a database style to its default.
- */
-function image_style_revert_form($form, $form_state, $style) {
-  $form_state['image_style'] = $style;
-
-  return confirm_form(
-    $form,
-    t('Revert the %style style?', array('%style' => $style['name'])),
-    'admin/config/media/image-styles',
-    t('Reverting this style will delete the customized settings and restore the defaults provided by the @module module.', array('@module' => $style['module'])),
-    t('Revert'),  t('Cancel')
-  );
-}
-
-/**
- * Submit handler to convert an overridden style to its default.
- */
-function image_style_revert_form_submit($form, &$form_state) {
-  drupal_set_message(t('The %style style has been revert to its defaults.', array('%style' => $form_state['image_style']['name'])));
-  image_default_style_revert($form_state['image_style']);
   $form_state['redirect'] = 'admin/config/media/image-styles';
 }
 

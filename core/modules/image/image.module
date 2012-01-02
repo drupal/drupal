@@ -135,15 +135,6 @@ function image_menu() {
     'access arguments' => array('administer image styles'),
     'file' => 'image.admin.inc',
   );
-  $items['admin/config/media/image-styles/revert/%image_style'] = array(
-    'title' => 'Revert style',
-    'description' => 'Revert an image style.',
-    'load arguments' => array(NULL, (string) IMAGE_STORAGE_OVERRIDE),
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('image_style_revert_form', 5),
-    'access arguments' => array('administer image styles'),
-    'file' => 'image.admin.inc',
-  );
   $items['admin/config/media/image-styles/edit/%image_style/effects/%image_effect'] = array(
     'title' => 'Edit image effect',
     'description' => 'Edit an existing effect within a style.',
@@ -940,7 +931,6 @@ function image_effect_definitions() {
  */
 function image_effect_definition_load($effect, $style_name = NULL) {
   $definitions = image_effect_definitions();
-
   // If a style is specified, do not allow loading of default style
   // effects.
   if (isset($style_name)) {
@@ -950,6 +940,7 @@ function image_effect_definition_load($effect, $style_name = NULL) {
     }
   }
 
+  die();
   return isset($definitions[$effect]) ? $definitions[$effect] : FALSE;
 }
 
