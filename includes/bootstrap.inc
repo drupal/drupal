@@ -289,12 +289,12 @@ abstract class DrupalCacheArray implements ArrayAccess {
   /**
    * A cid to pass to cache_set() and cache_get().
    */
-  protected $cid;
+  private $cid;
 
   /**
    * A bin to pass to cache_set() and cache_get().
    */
-  protected $bin;
+  private $bin;
 
   /**
    * An array of keys to add to the cache at the end of the request.
