@@ -4325,7 +4325,7 @@ function drupal_aggregate_js(&$js_groups) {
   }
   else {
     $config = config('system.performance');
-    $preprocess_js = ($config->get('preprocess_ks'));
+    $preprocess_js = ($config->get('preprocess_js'));
   }
 
   // Only aggregate when the site is configured to do so, and not during an
