@@ -238,7 +238,10 @@ function image_style_add_form_submit($form, &$form_state) {
 function image_style_name_validate($element, $form_state) {
   // Check for duplicates.
   $styles = image_styles();
-  if (isset($styles[$element['#value']]) && (!isset($form_state['image_style']['isid']) || $styles[$element['#value']]['isid'] != $form_state['image_style']['isid'])) {
+  // kpr($form_state);
+  // kpr($element);
+  // die();
+  if (isset($styles[$element['#value']]) && (!isset($form_state['image_style']['name']) || $styles[$element['#value']]['name'] != $form_state['image_style']['name'])) {
     form_set_error($element['#name'], t('The image style name %name is already in use.', array('%name' => $element['#value'])));
   }
 
