@@ -508,19 +508,11 @@ function image_style_load($name = NULL) {
  *   An image style array. In the case of a new style, 'isid' will be populated.
  */
 function image_style_save($style) {
-  if (isset($style['isid']) && is_numeric($style['isid'])) {
-    // Load the existing style to make sure we account for renamed styles.
-    $old_style = image_style_load(NULL, $style['isid']);
-    image_style_flush($old_style);
-    drupal_write_record('image_styles', $style, 'isid');
-    if ($old_style['name'] != $style['name']) {
-      $style['old_name'] = $old_style['name'];
-    }
-  }
-  else {
-    drupal_write_record('image_styles', $style);
-    $style['is_new'] = TRUE;
-  }
+  $config = config('image.styles.' . $style['name']);
+  $config->set('name', $style['name']);
+  $config->set('effects', array());
+  $config->save();
+  $style['is_new'] = TRUE;
 
   // Let other modules update as necessary on save.
   module_invoke_all('image_style_save', $style);

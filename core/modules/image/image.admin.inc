@@ -154,7 +154,6 @@ function image_style_form_add_submit($form, &$form_state) {
   }
   // If there's no form, immediately add the image effect.
   else {
-    $effect['isid'] = $style['isid'];
     $effect['weight'] = $form_state['values']['weight'];
     image_effect_save($effect);
     drupal_set_message(t('The image effect was successfully applied.'));
