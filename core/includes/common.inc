@@ -6136,7 +6136,7 @@ function drupal_render_cid_parts($granularity = NULL) {
   $cid_parts[] = $theme;
   // If Locale is enabled but we have only one language we do not need it as cid
   // part.
-  if (drupal_multilingual()) {
+  if (language_multilingual()) {
     foreach (language_types_configurable() as $language_type) {
       $cid_parts[] = $GLOBALS[$language_type]->language;
     }

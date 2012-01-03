@@ -278,7 +278,7 @@ function locale_multilingual_node_type($type_name) {
  */
 function locale_form_alter(&$form, &$form_state, $form_id) {
   // Only alter user forms if there is more than one language.
-  if (drupal_multilingual()) {
+  if (language_multilingual()) {
     // Display language selector when either creating a user on the admin
     // interface or editing a user account.
     if ($form_id == 'user_register_form' || $form_id == 'user_profile_form') {
@@ -977,7 +977,7 @@ function locale_block_info() {
  * Displays a language switcher. Only show if we have at least two languages.
  */
 function locale_block_view($type) {
-  if (drupal_multilingual()) {
+  if (language_multilingual()) {
     $path = drupal_is_front_page() ? '<front>' : $_GET['q'];
     $links = language_negotiation_get_switch_links($type, $path);
 
@@ -999,7 +999,7 @@ function locale_block_view($type) {
  */
 function locale_url_outbound_alter(&$path, &$options, $original_path) {
   // Only modify internal URLs.
-  if (!$options['external'] && drupal_multilingual()) {
+  if (!$options['external'] && language_multilingual()) {
     static $drupal_static_fast;
     if (!isset($drupal_static_fast)) {
       $drupal_static_fast['callbacks'] = &drupal_static(__FUNCTION__);
