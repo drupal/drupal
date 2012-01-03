@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Install, update and uninstall functions for the comment module.
+ * Install, update and uninstall functions for the Comment module.
  */
 
 /**
@@ -51,10 +51,10 @@ function comment_enable() {
 /**
  * Implements hook_modules_enabled().
  *
- * Creates comment body fields for node types existing before the comment module
+ * Creates comment body fields for node types existing before the Comment module
  * is enabled. We use hook_modules_enabled() rather than hook_enable() so we can
  * react to node types of existing modules, and those of modules being enabled
- * both before and after comment module in the loop of module_enable().
+ * both before and after the Comment module in the loop of module_enable().
  *
  * There is a separate comment bundle for each node type to allow for
  * per-node-type customization of comment fields. Each one of these bundles
@@ -65,7 +65,7 @@ function comment_enable() {
  * @see comment_node_type_insert()
  */
 function comment_modules_enabled($modules) {
-  // Only react if comment module is one of the modules being enabled.
+  // Only react if the Comment module is one of the modules being enabled.
   // hook_node_type_insert() is used to create body fields while the comment
   // module is enabled.
   if (in_array('comment', $modules)) {
