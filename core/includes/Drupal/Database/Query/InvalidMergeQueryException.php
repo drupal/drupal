@@ -2,7 +2,7 @@
 
 namespace Drupal\Database\Query;
 
-use Exception;
+use RuntimeException;
 
 /**
  * Exception thrown for merge queries that do not make semantic sense.
