@@ -3,7 +3,7 @@
 namespace Drupal\Database\Driver\mysql;
 
 use Drupal\Database\Database;
-use Drupal\Database\Query\DatabaseCondition;
+use Drupal\Database\Query\Condition;
 use Drupal\Database\SchemaObjectExistsException;
 use Drupal\Database\SchemaObjectDoesNotExistException;
 use Drupal\Database\Schema as DatabaseSchema;
@@ -63,7 +63,7 @@ class Schema extends DatabaseSchema {
 
     $table_info = $this->getPrefixInfo($table_name, $add_prefix);
 
-    $condition = new DatabaseCondition('AND');
+    $condition = new Condition('AND');
     $condition->condition('table_schema', $table_info['database']);
     $condition->condition('table_name', $table_info['table'], $operator);
     return $condition;

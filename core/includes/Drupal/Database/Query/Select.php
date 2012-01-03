@@ -67,14 +67,14 @@ class Select extends Query implements SelectInterface {
   /**
    * The conditional object for the WHERE clause.
    *
-   * @var DatabaseCondition
+   * @var Condition
    */
   protected $where;
 
   /**
    * The conditional object for the HAVING clause.
    *
-   * @var DatabaseCondition
+   * @var Condition
    */
   protected $having;
 
@@ -119,8 +119,8 @@ class Select extends Query implements SelectInterface {
   public function __construct($table, $alias = NULL, Connection $connection, $options = array()) {
     $options['return'] = Database::RETURN_STATEMENT;
     parent::__construct($connection, $options);
-    $this->where = new DatabaseCondition('AND');
-    $this->having = new DatabaseCondition('AND');
+    $this->where = new Condition('AND');
+    $this->having = new Condition('AND');
     $this->addJoin(NULL, $table, $alias);
   }
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Database;
+namespace Drupal\Database\Query;
 
 use Exception;
 

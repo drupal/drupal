@@ -1,7 +1,7 @@
 <?php
 
 use Drupal\Database\Database;
-use Drupal\Database\Query\DatabaseCondition;
+use Drupal\Database\Query\Condition;
 
 /**
  * @file
@@ -530,28 +530,28 @@ function db_next_id($existing_id = 0) {
 /**
  * Returns a new DatabaseCondition, set to "OR" all conditions together.
  *
- * @return DatabaseCondition
+ * @return Condition
  */
 function db_or() {
-  return new DatabaseCondition('OR');
+  return new Condition('OR');
 }
 
 /**
  * Returns a new DatabaseCondition, set to "AND" all conditions together.
  *
- * @return DatabaseCondition
+ * @return Condition
  */
 function db_and() {
-  return new DatabaseCondition('AND');
+  return new Condition('AND');
 }
 
 /**
  * Returns a new DatabaseCondition, set to "XOR" all conditions together.
  *
- * @return DatabaseCondition
+ * @return Condition
  */
 function db_xor() {
-  return new DatabaseCondition('XOR');
+  return new Condition('XOR');
 }
 
 /**
@@ -562,10 +562,10 @@ function db_xor() {
  *
  * @param $conjunction
  *   The conjunction to use for query conditions (AND, OR or XOR).
- * @return DatabaseCondition
+ * @return Condition
  */
 function db_condition($conjunction) {
-  return new DatabaseCondition($conjunction);
+  return new Condition($conjunction);
 }
 
 /**

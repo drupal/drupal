@@ -2,8 +2,8 @@
 
 namespace Drupal\Database;
 
-use Drupal\Database\DatabaseSchemaObjectExistsException;
-use Drupal\Database\Query\DatabaseCondition;
+use Drupal\Database\SchemaObjectExistsException;
+use Drupal\Database\Query\Condition;
 use Drupal\Database\Query\PlaceholderInterface;
 
 /**
@@ -286,7 +286,7 @@ abstract class Schema implements PlaceholderInterface {
     // Retrive the table name and schema
     $table_info = $this->getPrefixInfo($table_name, $add_prefix);
 
-    $condition = new DatabaseCondition('AND');
+    $condition = new Condition('AND');
     $condition->condition('table_catalog', $info['database']);
     $condition->condition('table_schema', $table_info['schema']);
     $condition->condition('table_name', $table_info['table'], $operator);

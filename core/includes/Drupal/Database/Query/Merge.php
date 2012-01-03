@@ -134,7 +134,7 @@ class Merge extends Query implements ConditionInterface {
     parent::__construct($connection, $options);
     $this->table = $table;
     $this->conditionTable = $table;
-    $this->condition = new DatabaseCondition('AND');
+    $this->condition = new Condition('AND');
   }
 
   /**

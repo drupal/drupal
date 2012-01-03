@@ -9,7 +9,7 @@ use Countable;
 /**
  * Generic class for a series of conditions in a query.
  */
-class DatabaseCondition implements ConditionInterface, Countable {
+class Condition implements ConditionInterface, Countable {
 
   /**
    * Array of conditions.

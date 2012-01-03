@@ -22,7 +22,7 @@ class Delete extends Query implements ConditionInterface {
    *
    * Condition handling is handled via composition.
    *
-   * @var DatabaseCondition
+   * @var Condition
    */
   protected $condition;
 
@@ -41,7 +41,7 @@ class Delete extends Query implements ConditionInterface {
     parent::__construct($connection, $options);
     $this->table = $table;
 
-    $this->condition = new DatabaseCondition('AND');
+    $this->condition = new Condition('AND');
   }
 
   /**
