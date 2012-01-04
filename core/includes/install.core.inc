@@ -533,8 +533,8 @@ function install_tasks($install_state) {
   // Determine whether translation import tasks will need to be performed.
   $needs_translations = count($install_state['translations']) > 1 && !empty($install_state['parameters']['langcode']) && $install_state['parameters']['langcode'] != 'en';
 
-  // The first two installation tasks are (by default) language selection and
-  // profile selection.
+  // Start with the core installation tasks that run before handing control
+  // to the install profile.
   $tasks = array(
     'install_select_language' => array(
       'display_name' => st('Choose language'),
@@ -1229,19 +1229,6 @@ function install_select_language(&$install_state) {
       return;
     }
     else {
-      // Allow profile to pre-select the language, skipping the selection.
-      if (isset($install_state['parameters']['profile'])) {
-        $info = install_profile_info($install_state['parameters']['profile']);
-        if (isset($info['langcode'])) {
-          foreach ($files as $file) {
-            if ($info['langcode'] == $file->langcode) {
-              $install_state['parameters']['langcode'] = $file->langcode;
-              return;
-            }
-          }
-        }
-      }
-
       // We still don't have a langcode, so display a form for selecting one.
       // Only do this in the case of interactive installations, since this is
       // not a real form with submit handlers (the database isn't even set up
@@ -1277,7 +1264,7 @@ function install_select_language_form($form, &$form_state, $files) {
       $select_options[$file->langcode] = $standard_languages[$file->langcode][1];
     }
     else {
-      // If language not found in standard.inc, display it's langcode
+      // If the language was not found in standard.inc, display its langcode.
       $select_options[$file->langcode] = $file->langcode;
     }
     // Build a list of languages simulated for browser detection.

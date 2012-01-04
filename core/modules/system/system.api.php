@@ -3350,8 +3350,6 @@ function hook_html_head_alter(&$head_elements) {
  *   steps within the installation process.
  * @param $install_state
  *   An array of information about the current installation state.
- *
- * @see install_profile_info()
  */
 function hook_install_tasks_alter(&$tasks, $install_state) {
   // Replace the entire site configuration form provided by Drupal core
