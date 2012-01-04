@@ -632,7 +632,7 @@ function menu_form_node_form_alter(&$form, $form_state) {
   // menu_parent_options() is goofy and can actually handle either a menu link
   // or a node type both as second argument. Pick based on whether there is
   // a link already (menu_node_prepare() sets mlid default to 0).
-  $options = menu_parent_options(menu_get_menus(), $link['mlid'] ? $link : $type);
+  $options = menu_parent_options(menu_get_menus(), $link['mlid'] ? $link : $type, $type);
   // If no possible parent menu items were found, there is nothing to display.
   if (empty($options)) {
     return;
