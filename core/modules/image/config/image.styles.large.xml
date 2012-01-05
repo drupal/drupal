@@ -2,9 +2,9 @@
 <config>
   <name>large</name>
   <effects>
-    <effect_1>
+    <image_scale_480_480_1>
       <name>image_scale</name>
-      <ieid>effect_1</ieid>
+      <ieid>image_scale_480_480_1</ieid>
       <data>
         <width>480</width>
         <height>480</height>
