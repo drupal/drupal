@@ -1002,7 +1002,7 @@ function image_effect_load($name, $style_name) {
  *   An image effect array. In the case of a new effect, 'ieid' will be set.
  */
 function image_effect_save($effect) {
-  $config = config('image.styles.' . $effect['style_name']);
+  $config = config('image.styles.' . $effect['name']);
   if (!empty($effect['ieid'])) {
     $old_effect = $config->get('effects.' . $effect['ieid']);
     foreach ($old_effect as $key => $value) {
