@@ -1011,8 +1011,15 @@ function image_effect_save($effect) {
     }
   }
   else {
-    // HERE
-    drupal_write_record('image_effects', $effect);
+    // We need to generate the ieid and save the new effect.
+    // The machine name is all the elements of the data array concatenated
+    // together, delimited by underscores. 
+    $machine_name = $data['name'];
+    foreach ($effect['data'] as $key => $value) {
+      $machine_name .= '_' . $value;
+    }
+    $effect['ieid'] = $machine_name;
+    $config->set('effects.' . $effect[$machine_name], $effect);
   }
   $config->save();
   $style = image_style_load(NULL, $effect['style_name']);
