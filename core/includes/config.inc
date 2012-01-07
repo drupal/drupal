@@ -537,6 +537,19 @@ class DrupalConfig {
   }
 
   /**
+   * Unset value in this config object.
+   */
+  public function delete($key) {
+    $parts = explode('.', $key);
+    if (count($parts) == 1) {
+      unset($this->data[$key]);
+    }
+    else {
+      drupal_array_unset_nested_value($this->data, $parts);
+    }
+  }
+
+  /**
    * Get value in this config object.
    */
   public function get($key) {
