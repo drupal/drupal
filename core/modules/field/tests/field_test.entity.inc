@@ -58,7 +58,7 @@ function field_test_entity_info() {
         'id' => 'ftid',
         'bundle' => 'fttype',
       ),
-      'bundles' => array('bundle1' => array('label' => 'Bundle1'), 'bundle2' => array('label' => 'Bundle2')),
+      'bundles' => array('bundle1' => array('label' => 'Bundle1'), 'bundle2' => array('label' => 'Bundle2')) + $bundles,
       'view modes' => $test_entity_modes,
     ),
     // In this case, the bundle key is not stored in the database.
@@ -72,7 +72,7 @@ function field_test_entity_info() {
         'id' => 'ftid',
         'bundle' => 'fttype',
       ),
-      'bundles' => array('test_entity_2' => array('label' => 'Test entity 2')),
+      'bundles' => array('test_entity_2' => array('label' => 'Test entity 2')) + $bundles,
       'view modes' => $test_entity_modes,
     ),
     // @see EntityPropertiesTestCase::testEntityLabel()
