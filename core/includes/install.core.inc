@@ -1119,12 +1119,15 @@ function install_select_profile_form($form, &$form_state, $profile_files) {
   }
 
   foreach ($names as $profile => $name) {
+    // The profile name and description are extracted for translation from the
+    // .info file, so we can use st() on them even though they are dynamic data
+    // at this point.
     $form['profile'][$name] = array(
       '#type' => 'radio',
       '#value' => 'standard',
       '#return_value' => $profile,
-      '#title' => $name,
-      '#description' => isset($profiles[$profile]['description']) ? $profiles[$profile]['description'] : '',
+      '#title' => st($name),
+      '#description' => isset($profiles[$profile]['description']) ? st($profiles[$profile]['description']) : '',
       '#parents' => array('profile'),
     );
   }
