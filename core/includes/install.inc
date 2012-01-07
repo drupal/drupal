@@ -1100,7 +1100,7 @@ function st($string, array $args = array(), array $options = array()) {
 
   if (!isset($strings)) {
     $strings = array();
-    if (isset($install_state['parameters']['profile']) && isset($install_state['parameters']['langcode'])) {
+    if (isset($install_state['parameters']['langcode'])) {
       // If the given langcode was selected, there should be at least one .po file
       // with its name ending in install.{$install_state['parameters']['langcode']}.po
       // This might or might not be the entire filename. It is also possible
