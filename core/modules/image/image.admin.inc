@@ -184,6 +184,7 @@ function image_style_form_submit($form, &$form_state) {
       if (isset($style['effects'][$ieid])) {
         $effect = $style['effects'][$ieid];
         $effect['weight'] = $effect_data['weight'];
+        $effect['style_name'] = $style['name'];
         image_effect_save($effect);
       }
     }
@@ -358,9 +359,12 @@ function image_effect_form($form, &$form_state, $style, $effect) {
  * Submit handler for updating an image effect.
  */
 function image_effect_form_submit($form, &$form_state) {
-  $style = $form_state['image_style'];
-  $effect = array_merge($form_state['image_effect'], $form_state['values']);
-  $effect['style_name'] = $style['name'];
+  $effect = array(
+    'name' => $form_state['image_effect']['name'],
+    'data' => $form_state['values']['data'],
+    'weight' => $form_state['values']['weight'],
+    'style_name' => $form_state['image_style']['name'],
+  );
   image_effect_save($effect);
   drupal_set_message(t('The image effect was successfully applied.'));
   $form_state['redirect'] = 'admin/config/media/image-styles/edit/' . $style['name'];

@@ -501,7 +501,12 @@ function image_style_load($name = NULL) {
 function image_style_save($style) {
   $config = config('image.styles.' . $style['name']);
   $config->set('name', $style['name']);
-  $config->set('effects', array());
+  if ($style['effects']) {
+    $config->set('effects', $style['effects']);
+  }
+  else {
+    $config->set('effects', array());    
+  }
   $config->save();
   $style['is_new'] = TRUE;
 
@@ -1002,7 +1007,10 @@ function image_effect_load($name, $style_name) {
  *   An image effect array. In the case of a new effect, 'ieid' will be set.
  */
 function image_effect_save($effect) {
-  $config = config('image.styles.' . $effect['name']);
+  $style_name = $effect['style_name'];
+  unset($effect['style_name']);
+  $config = config('image.styles.' . $style_name);
+
   if (!empty($effect['ieid'])) {
     $old_effect = $config->get('effects.' . $effect['ieid']);
     foreach ($old_effect as $key => $value) {
@@ -1013,16 +1021,17 @@ function image_effect_save($effect) {
   else {
     // We need to generate the ieid and save the new effect.
     // The machine name is all the elements of the data array concatenated
-    // together, delimited by underscores. 
-    $machine_name = $data['name'];
+    // together, delimited by underscores.     
+    $machine_name = $effect['name'];
+    
     foreach ($effect['data'] as $key => $value) {
       $machine_name .= '_' . $value;
     }
     $effect['ieid'] = $machine_name;
-    $config->set('effects.' . $effect[$machine_name], $effect);
+    $config->set('effects.' . $machine_name, $effect);
   }
   $config->save();
-  $style = image_style_load(NULL, $effect['style_name']);
+  $style = image_style_load(NULL, $style_name);
   image_style_flush($style);
   return $effect;
 }
