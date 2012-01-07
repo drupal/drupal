@@ -165,14 +165,6 @@ function image_style_form_add_submit($form, &$form_state) {
 }
 
 /**
- * Submit handler for overriding a module-defined style.
- */
-function image_style_form_override_submit($form, &$form_state) {
-  drupal_set_message(t('The %style style has been overridden, allowing you to change its settings.', array('%style' => $form_state['image_style']['name'])));
-  image_default_style_save($form_state['image_style']);
-}
-
-/**
  * Submit handler for saving an image style.
  */
 function image_style_form_submit($form, &$form_state) {

@@ -830,27 +830,6 @@ function image_style_path($style_name, $uri) {
 }
 
 /**
- * Save a default image style to the database.
- *
- * @param style
- *   An image style array provided by a module.
- * @return
- *   An image style array. The returned style array will include the new 'isid'
- *   assigned to the style.
- */
-function image_default_style_save($style) {
-  $style = image_style_save($style);
-  $effects = array();
-  foreach ($style['effects'] as $effect) {
-    $effect['isid'] = $style['isid'];
-    $effect = image_effect_save($style['name'], $effect);
-    $effects[$effect['ieid']] = $effect;
-  }
-  $style['effects'] = $effects;
-  return $style;
-}
-
-/**
  * Revert the changes made by users to a default image style.
  *
  * @param style
