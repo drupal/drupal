@@ -168,11 +168,7 @@ function image_style_form_add_submit($form, &$form_state) {
  * Submit handler for saving an image style.
  */
 function image_style_form_submit($form, &$form_state) {
-  // Update the image style name if it has changed.
   $style = $form_state['image_style'];
-  if (isset($form_state['values']['name']) && $style['name'] != $form_state['values']['name']) {
-    $style['name'] = $form_state['values']['name'];
-  }
 
   // Update image effect weights.
   if (!empty($form_state['values']['effects'])) {
@@ -186,6 +182,14 @@ function image_style_form_submit($form, &$form_state) {
         $style['effects'][$ieid] = $effect;
       }
     }
+  }
+
+  // Update the image style name if it has changed. We also need to delete the
+  // old style, because there is no concept of rename at the moment, just 
+  // create and delete. 
+  if (isset($form_state['values']['name']) && $style['name'] != $form_state['values']['name']) {
+    image_style_delete($style);
+    $style['name'] = $form_state['values']['name'];
   }
 
   image_style_save($style);
