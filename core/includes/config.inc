@@ -361,6 +361,7 @@ class SignedFileStorage {
   public function delete() {
     // Needs error handling and etc.
     @drupal_unlink($this->getFilePath());
+    @drupal_unlink($this->getFilePath() . '.sig');
   }
 }
 
