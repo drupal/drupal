@@ -472,6 +472,9 @@ function poll_validate($node, $form) {
 function poll_field_attach_prepare_translation_alter(&$entity, $context) {
   if ($context['entity_type'] == 'node' && $entity->type == 'poll') {
     $entity->choice = $context['source_entity']->choice;
+    foreach ($entity->choice as $i => $choice) {
+      $entity->choice[$i]['chvotes'] = 0;
+    }
   }
 }
 
