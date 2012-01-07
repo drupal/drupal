@@ -1001,12 +1001,16 @@ function image_effect_save($style_name, $effect) {
 /**
  * Delete an image effect.
  *
+ * @param $style_name
+ *   The image style this effect belongs to.
  * @param $effect
  *   An image effect array.
  */
-function image_effect_delete($effect) {
-  db_delete('image_effects')->condition('ieid', $effect['ieid'])->execute();
-  $style = image_style_load(NULL, $effect['isid']);
+function image_effect_delete($style_name, $effect) {
+  $config = config('image.styles.' . $style_name);
+  $config->delete('effects.' . $effect['ieid']);
+  $config->save();
+  $style = image_style_load($style_name);
   image_style_flush($style);
 }
 

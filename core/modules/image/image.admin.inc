@@ -392,7 +392,7 @@ function image_effect_delete_form_submit($form, &$form_state) {
   $style = $form_state['image_style'];
   $effect = $form_state['image_effect'];
 
-  image_effect_delete($effect);
+  image_effect_delete($style['name'], $effect);
   drupal_set_message(t('The image effect %name has been deleted.', array('%name' => $effect['label'])));
   $form_state['redirect'] = 'admin/config/media/image-styles/edit/' . $style['name'];
 }
