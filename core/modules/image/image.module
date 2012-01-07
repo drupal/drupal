@@ -830,23 +830,6 @@ function image_style_path($style_name, $uri) {
 }
 
 /**
- * Revert the changes made by users to a default image style.
- *
- * @param style
- *   An image style array.
- * @return
- *   Boolean TRUE if the operation succeeded.
- */
-function image_default_style_revert($style) {
-  image_style_flush($style);
-
-  db_delete('image_effects')->condition('isid', $style['isid'])->execute();
-  db_delete('image_styles')->condition('isid', $style['isid'])->execute();
-
-  return TRUE;
-}
-
-/**
  * Pull in image effects exposed by modules implementing hook_image_effect_info().
  *
  * @return
