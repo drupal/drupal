@@ -114,14 +114,8 @@ function config_get_names_with_prefix($prefix) {
  *
  */
 function config($name, $class = 'DrupalConfig') {
-  static $overrides;
-  if (!isset($overrides)) {
-    $storage = new SignedFileStorage('local');
-    $overrides = (array) config_decode($storage->read());
-  }
-  $key_overrides = isset($overrides[$name]) ? $overrides[$name] : array();
   // @TODO Replace this with the appropriate factory.
-  return new $class(new DrupalVerifiedStorageSQL($name), $key_overrides);
+  return new $class(new DrupalVerifiedStorageSQL($name));
 }
 
 /**
@@ -512,8 +506,6 @@ class DrupalConfig {
    */
   protected $_verifiedStorage;
 
-  protected $_overrides;
-
   protected $data = array();
 
   /**
@@ -521,25 +513,17 @@ class DrupalConfig {
    *
    * @param DrupalConfigVerifiedStorageInterface $verified_storage
    *   The storage engine where this config object should be saved.
-   * @param array $overrides
-   *   Optional. Configuration values to override the values from disk.
    */
-  public function __construct(DrupalConfigVerifiedStorageInterface $verified_storage, $overrides = array()) {
+  public function __construct(DrupalConfigVerifiedStorageInterface $verified_storage) {
     $this->_verifiedStorage = $verified_storage;
-    $this->_overrides = $overrides;
     $this->read();
   }
   
   /**
    * Read config data from the active store into our object.
-   *
-   * @todo: the overrides functionality is currently broken here
-   *        when arrays are nested. Currently all the overrides
-   *        is pretty half-baked and needs to be discussed.
    */
   public function read() {
-    $original_keys = (array) config_decode($this->_verifiedStorage->read());
-    $active = array_merge($original_keys, $this->_overrides);
+    $active = (array) config_decode($this->_verifiedStorage->read());
     foreach ($active as $key => $value) {
       $this->set($key, $value);
     }    
