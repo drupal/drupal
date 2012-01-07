@@ -354,6 +354,13 @@ class SignedFileStorage {
       return $verification;
     }
   }
+  
+  /**
+   * Delete a configuration file.
+   */
+  public function delete() {
+    @drupal_unlink($this->getFilePath());
+  }
 }
 
 interface DrupalConfigVerifiedStorageInterface {
@@ -384,6 +391,11 @@ interface DrupalConfigVerifiedStorageInterface {
    * Copy the configuration data from the file into the verified storage.
    */
   function copyFromFile();
+
+  /**
+   * Delete the configuration data file.
+   */
+  function deleteFile();
 
   /**
    * Check whether the file and the verified storage is in sync.
@@ -425,6 +437,10 @@ abstract class DrupalConfigVerifiedStorage implements DrupalConfigVerifiedStorag
   public function copyTofile() {
     return $this->signedFileStorage()->write($this->read());
   }
+  
+  public function deleteFile() {
+    return $this->signedFileStorage()->delete();
+  }
 
   public function copyFromFile() {
     return $this->writeToActive($this->readFromFile());
@@ -441,6 +457,11 @@ abstract class DrupalConfigVerifiedStorage implements DrupalConfigVerifiedStorag
   public function write($data) {
     $this->writeToActive($data);
     $this->copyToFile();
+  }
+
+  public function delete() {
+    $this->deleteFromActive();
+    $this->deleteFile();
   }
 }
 
@@ -463,6 +484,12 @@ class DrupalVerifiedStorageSQL extends DrupalConfigVerifiedStorage {
     return db_merge('config')
       ->key(array('name' => $this->name))
       ->fields(array('data' => $data))
+      ->execute();
+  }
+
+  public function deleteFromActive() {
+    db_delete('config')
+      ->condition('name', $this->name)
       ->execute();
   }
 
@@ -568,5 +595,11 @@ class DrupalConfig {
   public function save() {
     $this->_verifiedStorage->write(config_encode($this->data));
   }
-}
 
+  /**
+   * Deletes the configuration object on disk.
+   */
+  public function delete() {
+    $this->_verifiedStorage->delete();
+  }
+}
