@@ -537,10 +537,10 @@ class DrupalConfig {
   }
 
   /**
-   * Unset a value in this config object.
+   * Removes a value in this config object.
    */
-  public function unset($key) {
-    if isset($this->data[$key]) {
+  public function delete($key) {
+    if (isset($this->data[$key])) {
       unset($this->data[$key]);
     }
   }
