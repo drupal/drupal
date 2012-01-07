@@ -533,8 +533,8 @@ function image_style_save($style) {
 function image_style_delete($style, $replacement_style_name = '') {
   image_style_flush($style);
 
-  db_delete('image_effects')->condition('isid', $style['isid'])->execute();
-  db_delete('image_styles')->condition('isid', $style['isid'])->execute();
+  $config = config('image.styles.' . $style['name']);
+  $config->delete();
 
   // Let other modules update as necessary on save.
   $style['old_name'] = $style['name'];
