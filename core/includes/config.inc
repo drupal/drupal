@@ -537,6 +537,15 @@ class DrupalConfig {
   }
 
   /**
+   * Unset a value in this config object.
+   */
+  public function unset($key) {
+    if isset($this->data[$key]) {
+      unset($this->data[$key]);
+    }
+  }
+
+  /**
    * Get value in this config object.
    */
   public function get($key) {
