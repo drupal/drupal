@@ -404,6 +404,7 @@ function _poll_choice_form($key, $chid = NULL, $value = '', $votes = 0, $weight 
     '#maxlength' => 7,
     '#parents' => array('choice', $key, 'chvotes'),
     '#access' => user_access('administer nodes'),
+    '#element_validate' => array('element_validate_integer'),
   );
 
   $form['weight'] = array(
@@ -447,10 +448,8 @@ function poll_node_form_submit(&$form, &$form_state) {
  */
 function poll_validate($node, $form) {
   if (isset($node->title)) {
-    // Check for at least two options and validate amount of votes:
+    // Check for at least two options and validate amount of votes.
     $realchoices = 0;
-    // Renumber fields
-    $node->choice = array_values($node->choice);
     foreach ($node->choice as $i => $choice) {
       if ($choice['chtext'] != '') {
         $realchoices++;

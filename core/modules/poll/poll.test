@@ -24,13 +24,26 @@ class PollTestCase extends DrupalWebTestCase {
   function pollCreate($title, $choices, $preview = TRUE) {
     $this->assertTrue(TRUE, 'Create a poll');
 
+    $admin_user = $this->drupalCreateUser(array('create poll content', 'administer nodes'));
     $web_user = $this->drupalCreateUser(array('create poll content', 'access content', 'edit own poll content'));
-    $this->drupalLogin($web_user);
+    $this->drupalLogin($admin_user);
 
     // Get the form first to initialize the state of the internal browser.
     $this->drupalGet('node/add/poll');
 
     // Prepare a form with two choices.
+    list($edit, $index) = $this->_pollGenerateEdit($title, $choices);
+
+    // Verify that the vote count element only allows non-negative integers.
+    $edit['choice[new:1][chvotes]'] = -1;
+    $edit['choice[new:0][chvotes]'] = $this->randomString(7);
+    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->assertText(t('Negative values are not allowed.'));
+    $this->assertText(t('Vote count for new choice must be an integer.'));
+
+    // Repeat steps for initializing the state of the internal browser.
+    $this->drupalLogin($web_user);
+    $this->drupalGet('node/add/poll');
     list($edit, $index) = $this->_pollGenerateEdit($title, $choices);
 
     // Re-submit the form until all choices are filled in.
