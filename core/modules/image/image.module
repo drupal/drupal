@@ -843,7 +843,7 @@ function image_default_style_save($style) {
   $effects = array();
   foreach ($style['effects'] as $effect) {
     $effect['isid'] = $style['isid'];
-    $effect = image_effect_save($effect);
+    $effect = image_effect_save($style['name'], $effect);
     $effects[$effect['ieid']] = $effect;
   }
   $style['effects'] = $effects;
@@ -1001,14 +1001,14 @@ function image_effect_load($name, $style_name) {
 /**
  * Save an image effect.
  *
+ * @param $style_name
+ *   The image style this effect belongs to.
  * @param $effect
  *   An image effect array.
  * @return
  *   An image effect array. In the case of a new effect, 'ieid' will be set.
  */
-function image_effect_save($effect) {
-  $style_name = $effect['style_name'];
-  unset($effect['style_name']);
+function image_effect_save($style_name, $effect) {
   $config = config('image.styles.' . $style_name);
 
   if (!empty($effect['ieid'])) {

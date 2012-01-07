@@ -154,8 +154,12 @@ function image_style_form_add_submit($form, &$form_state) {
   }
   // If there's no form, immediately add the image effect.
   else {
-    $effect['weight'] = $form_state['values']['weight'];
-    image_effect_save($effect);
+    $effect = array(
+      'name' => $style['effects'][$ieid]['name'],
+      'data' => $style['effects'][$ieid]['data'],
+      'weight' => $form_state['values']['weight'],
+    );        
+    image_effect_save($style['name'], $effect);
     drupal_set_message(t('The image effect was successfully applied.'));
   }
 }
@@ -365,9 +369,8 @@ function image_effect_form_submit($form, &$form_state) {
     'name' => $form_state['image_effect']['name'],
     'data' => $form_state['values']['data'],
     'weight' => $form_state['values']['weight'],
-    'style_name' => $form_state['image_style']['name'],
   );
-  image_effect_save($effect);
+  image_effect_save($form_state['image_style']['name'], $effect);
   drupal_set_message(t('The image effect was successfully applied.'));
   $form_state['redirect'] = 'admin/config/media/image-styles/edit/' . $form_state['image_style']['name'];
 }
