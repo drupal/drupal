@@ -359,6 +359,7 @@ class SignedFileStorage {
    * Delete a configuration file.
    */
   public function delete() {
+    // Needs error handling and etc.
     @drupal_unlink($this->getFilePath());
   }
 }
