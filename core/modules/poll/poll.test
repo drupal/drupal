@@ -101,10 +101,6 @@ class PollTestCase extends DrupalWebTestCase {
     }
     foreach ($new_choices as $k => $text) {
       $edit['choice[new:' . $k . '][chtext]'] = $text;
-      // To test poll choice weights, every new choice is sorted in front of
-      // existing choices. Existing/already submitted choices should keep their
-      // weight.
-      $edit['choice[new:' . $k . '][weight]'] = (- $index - $k);
     }
     return array($edit, count($already_submitted_choices) + count($new_choices));
   }
@@ -135,11 +131,11 @@ class PollTestCase extends DrupalWebTestCase {
    */
   function assertPollChoiceOrder(array $choices, $index = 0, $preview = FALSE) {
     $expected = array();
+    $weight = 0;
     foreach ($choices as $id => $label) {
       if ($id < $index) {
-        // The expected weight of each choice is exactly the negated id.
-        // @see PollTestCase::_pollGenerateEdit()
-        $weight = -$id;
+        // The expected weight of each choice is higher than the previous one.
+        $weight++;
         // Directly assert the weight form element value for this choice.
         $this->assertFieldByName('choice[chid:' . $id . '][weight]', $weight, t('Found choice @id with weight @weight.', array(
           '@id' => $id,

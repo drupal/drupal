@@ -288,9 +288,10 @@ function poll_form($node, &$form_state) {
 
   // Add initial or additional choices.
   $existing_delta = $delta;
-  $weight++;
   for ($delta; $delta < $choice_count; $delta++) {
     $key = 'new:' . ($delta - $existing_delta);
+    // Increase the weight of each new choice.
+    $weight++;
     $form['choice_wrapper']['choice'][$key] = _poll_choice_form($key, NULL, '', 0, $weight, $choice_count);
   }
 
