@@ -155,8 +155,8 @@ function image_style_form_add_submit($form, &$form_state) {
   // If there's no form, immediately add the image effect.
   else {
     $effect = array(
-      'name' => $style['effects'][$ieid]['name'],
-      'data' => $style['effects'][$ieid]['data'],
+      'name' => $effect['name'],
+      'data' => array(),
       'weight' => $form_state['values']['weight'],
     );        
     image_effect_save($style['name'], $effect);
