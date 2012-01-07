@@ -1001,6 +1001,11 @@ function install_settings_form_submit($form, &$form_state) {
   // This duplicates drupal_get_token() because that function can't work yet.
   // Wondering if it makes sense to move this later in the process, but its
   // nice having all the settings stuff here.
+  //
+  // @todo This is actually causing a bug right now, because you can install
+  // without hitting install_settings_form_submit() if your settings.php
+  // already has the db stuff in it, and right now in that case your
+  // config directory never gets created. So this needs to be moved elsewhere.
   $settings['drupal_config_directory_name'] = array(
     'value'     => 'config_' . drupal_hmac_base64('', session_id() . $settings['drupal_config_key']['value'] . $settings['drupal_hash_salt']['value']),
     'required'  => TRUE,
