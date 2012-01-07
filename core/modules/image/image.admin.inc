@@ -182,10 +182,12 @@ function image_style_form_submit($form, &$form_state) {
   if (!empty($form_state['values']['effects'])) {
     foreach ($form_state['values']['effects'] as $ieid => $effect_data) {
       if (isset($style['effects'][$ieid])) {
-        $effect = $style['effects'][$ieid];
-        $effect['weight'] = $effect_data['weight'];
-        $effect['style_name'] = $style['name'];
-        image_effect_save($effect);
+        $effect = array(
+          'name' => $style['effects'][$ieid]['name'],
+          'data' => $style['effects'][$ieid]['data'],
+          'weight' => $effect_data['weight'],
+        );        
+        $style['effects'][$ieid] = $effect;
       }
     }
   }
@@ -367,7 +369,7 @@ function image_effect_form_submit($form, &$form_state) {
   );
   image_effect_save($effect);
   drupal_set_message(t('The image effect was successfully applied.'));
-  $form_state['redirect'] = 'admin/config/media/image-styles/edit/' . $style['name'];
+  $form_state['redirect'] = 'admin/config/media/image-styles/edit/' . $form_state['image_style']['name'];
 }
 
 /**
