@@ -309,9 +309,9 @@ function trigger_node_insert($node) {
 }
 
 /**
- * Implements hook_node_delete().
+ * Implements hook_node_predelete().
  */
-function trigger_node_delete($node) {
+function trigger_node_predelete($node) {
   _trigger_node($node, 'node_delete');
 }
 
@@ -501,9 +501,9 @@ function trigger_user_cancel($edit, $account, $method) {
 }
 
 /**
- * Implements hook_user_delete().
+ * Implements hook_user_predelete().
  */
-function trigger_user_delete($account) {
+function trigger_user_predelete($account) {
   $edit = array();
   _trigger_user('user_delete', $edit, $account);
 }

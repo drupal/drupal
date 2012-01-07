@@ -52,7 +52,7 @@ function search_view($module = NULL, $keys = '') {
   // the search query URL clean as a whistle.
   if (empty($_POST['form_id']) || $_POST['form_id'] != 'search_form') {
     $conditions =  NULL;
-    if (isset($info['conditions_callback']) && function_exists($info['conditions_callback'])) {
+    if (isset($info['conditions_callback'])) {
       // Build an optional array of more search conditions.
       $conditions = call_user_func($info['conditions_callback'], $keys);
     }

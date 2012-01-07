@@ -143,4 +143,3 @@ function _drupal_depth_first_search(&$graph, &$state, $start, &$component = NULL
   // topological order if the graph is acyclic.
   $state['last_visit_order'][] = $start;
 }
-

@@ -6,6 +6,21 @@
  */
 
 /**
+ * Denotes that no term in the vocabulary has a parent.
+ */
+const TAXONOMY_HIERARCHY_DISABLED = 0;
+
+/**
+ * Denotes that one or more terms in the vocabulary has a single parent.
+ */
+const TAXONOMY_HIERARCHY_SINGLE = 1;
+
+/**
+ * Denotes that one or more terms in the vocabulary have multiple parents.
+ */
+const TAXONOMY_HIERARCHY_MULTIPLE = 2;
+
+/**
  * Users can create new terms in a free-tagging vocabulary when
  * submitting a taxonomy_autocomplete_widget. We store a term object
  * whose tid is 'autocreate' as a field data item during widget
@@ -51,11 +66,11 @@ function taxonomy_help($path, $arg) {
     case 'admin/structure/taxonomy/%':
       $vocabulary = taxonomy_vocabulary_machine_name_load($arg[3]);
       switch ($vocabulary->hierarchy) {
-        case 0:
+        case TAXONOMY_HIERARCHY_DISABLED:
           return '<p>' . t('You can reorganize the terms in %capital_name using their drag-and-drop handles, and group terms under a parent term by sliding them under and to the right of the parent.', array('%capital_name' => drupal_ucfirst($vocabulary->name), '%name' => $vocabulary->name)) . '</p>';
-        case 1:
+        case TAXONOMY_HIERARCHY_SINGLE:
           return '<p>' . t('%capital_name contains terms grouped under parent terms. You can reorganize the terms in %capital_name using their drag-and-drop handles.', array('%capital_name' => drupal_ucfirst($vocabulary->name), '%name' => $vocabulary->name)) . '</p>';
-        case 2:
+        case TAXONOMY_HIERARCHY_MULTIPLE:
           return '<p>' . t('%capital_name contains terms with multiple parents. Drag and drop of terms with multiple parents is not supported, but you can re-enable drag-and-drop support by editing each term to include only a single parent.', array('%capital_name' => drupal_ucfirst($vocabulary->name))) . '</p>';
       }
   }
@@ -295,7 +310,9 @@ function taxonomy_menu() {
   $items['taxonomy/term/%taxonomy_term/edit'] = array(
     'title' => 'Edit',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('taxonomy_form_term', 2),
+    // Pass a NULL argument to ensure that additional path components are not
+    // passed to taxonomy_form_term() as the vocabulary machine name argument.
+    'page arguments' => array('taxonomy_form_term', 2, NULL),
     'access callback' => 'taxonomy_term_edit_access',
     'access arguments' => array(2),
     'type' => MENU_LOCAL_TASK,
@@ -312,21 +329,7 @@ function taxonomy_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'taxonomy.pages.inc',
   );
-  // We append /%menu_tail so the search text may contain slashes.
-  $items['taxonomy/autocomplete/%/%menu_tail'] = array(
-    'title' => 'Autocomplete taxonomy',
-    'page callback' => 'taxonomy_autocomplete',
-    'page arguments' => array(2, 3),
-    'access arguments' => array('access content'),
-    'type' => MENU_CALLBACK,
-    'file' => 'taxonomy.pages.inc',
-    // Needed for menu_tail_load().
-    'load arguments' => array('%map', '%index'),
-  );
-  // This matches the vocabulary name without any search text. Even though this
-  // path is never called, its existence is checked by theme_textfield() and
-  // tested in ProfileTestAutocomplete.
-  $items['taxonomy/autocomplete/%'] = array(
+  $items['taxonomy/autocomplete'] = array(
     'title' => 'Autocomplete taxonomy',
     'page callback' => 'taxonomy_autocomplete',
     'access arguments' => array('access content'),
@@ -436,6 +439,7 @@ function taxonomy_vocabulary_save($vocabulary) {
 
   if (!empty($vocabulary->vid) && !empty($vocabulary->name)) {
     $status = drupal_write_record('taxonomy_vocabulary', $vocabulary, 'vid');
+    taxonomy_vocabulary_static_reset(array($vocabulary->vid));
     if ($vocabulary->old_machine_name != $vocabulary->machine_name) {
       field_attach_rename_bundle('taxonomy_term', $vocabulary->old_machine_name, $vocabulary->machine_name);
     }
@@ -444,6 +448,7 @@ function taxonomy_vocabulary_save($vocabulary) {
   }
   elseif (empty($vocabulary->vid)) {
     $status = drupal_write_record('taxonomy_vocabulary', $vocabulary);
+    taxonomy_vocabulary_static_reset();
     field_attach_create_bundle('taxonomy_term', $vocabulary->machine_name);
     module_invoke_all('taxonomy_vocabulary_insert', $vocabulary);
     module_invoke_all('entity_insert', $vocabulary, 'taxonomy_vocabulary');
@@ -451,7 +456,6 @@ function taxonomy_vocabulary_save($vocabulary) {
 
   unset($vocabulary->original);
   cache_clear_all();
-  taxonomy_vocabulary_static_reset(array($vocabulary->vid));
 
   return $status;
 }
@@ -463,12 +467,19 @@ function taxonomy_vocabulary_save($vocabulary) {
  *   A vocabulary ID.
  * @return
  *   Constant indicating items were deleted.
+ *
+ * @see hook_taxonomy_vocabulary_predelete()
+ * @see hook_taxonomy_vocabulary_delete()
  */
 function taxonomy_vocabulary_delete($vid) {
   $vocabulary = taxonomy_vocabulary_load($vid);
 
   $transaction = db_transaction();
   try {
+    // Allow modules to act before vocabulary deletion.
+    module_invoke_all('taxonomy_vocabulary_predelete', $vocabulary);
+    module_invoke_all('entity_predelete', $vocabulary, 'taxonomy_vocabulary');
+
     // Only load terms without a parent, child terms will get deleted too.
     $result = db_query('SELECT t.tid FROM {taxonomy_term_data} t INNER JOIN {taxonomy_term_hierarchy} th ON th.tid = t.tid WHERE t.vid = :vid AND th.parent = 0', array(':vid' => $vid))->fetchCol();
     foreach ($result as $tid) {
@@ -479,6 +490,8 @@ function taxonomy_vocabulary_delete($vid) {
       ->execute();
 
     field_attach_delete_bundle('taxonomy_term', $vocabulary->machine_name);
+
+    // Allow modules to respond to vocabulary deletion.
     module_invoke_all('taxonomy_vocabulary_delete', $vocabulary);
     module_invoke_all('entity_delete', $vocabulary, 'taxonomy_vocabulary');
 
@@ -524,10 +537,11 @@ function taxonomy_taxonomy_vocabulary_update($vocabulary) {
  *
  * Checks the current parents of all terms in a vocabulary and updates the
  * vocabulary's hierarchy setting to the lowest possible level. If no term
- * has parent terms then the vocabulary will be given a hierarchy of 0.
- * If any term has a single parent then the vocabulary will be given a
- * hierarchy of 1. If any term has multiple parents then the vocabulary
- * will be given a hierarchy of 2.
+ * has parent terms then the vocabulary will be given a hierarchy of
+ * TAXONOMY_HIERARCHY_DISABLED. If any term has a single parent then the
+ * vocabulary will be given a hierarchy of TAXONOMY_HIERARCHY_SINGLE. If any
+ * term has multiple parents then the vocabulary will be given a hierarchy of
+ * TAXONOMY_HIERARCHY_MULTIPLE.
  *
  * @param $vocabulary
  *   A vocabulary object.
@@ -539,7 +553,7 @@ function taxonomy_taxonomy_vocabulary_update($vocabulary) {
  */
 function taxonomy_check_vocabulary_hierarchy($vocabulary, $changed_term) {
   $tree = taxonomy_get_tree($vocabulary->vid);
-  $hierarchy = 0;
+  $hierarchy = TAXONOMY_HIERARCHY_DISABLED;
   foreach ($tree as $term) {
     // Update the changed term with the new parent value before comparison.
     if ($term->tid == $changed_term['tid']) {
@@ -548,11 +562,11 @@ function taxonomy_check_vocabulary_hierarchy($vocabulary, $changed_term) {
     }
     // Check this term's parent count.
     if (count($term->parents) > 1) {
-      $hierarchy = 2;
+      $hierarchy = TAXONOMY_HIERARCHY_MULTIPLE;
       break;
     }
     elseif (count($term->parents) == 1 && 0 !== array_shift($term->parents)) {
-      $hierarchy = 1;
+      $hierarchy = TAXONOMY_HIERARCHY_SINGLE;
     }
   }
   if ($hierarchy != $vocabulary->hierarchy) {
@@ -673,6 +687,9 @@ function taxonomy_term_save($term) {
  *   The term ID.
  * @return
  *   Status constant indicating deletion.
+ *
+ * @see hook_taxonomy_term_predelete()
+ * @see hook_taxonomy_term_delete()
  */
 function taxonomy_term_delete($tid) {
   $transaction = db_transaction();
@@ -681,6 +698,12 @@ function taxonomy_term_delete($tid) {
     while ($tids) {
       $children_tids = $orphans = array();
       foreach ($tids as $tid) {
+        // Allow modules to act before term deletion.
+        if ($term = taxonomy_term_load($tid)) {
+          module_invoke_all('taxonomy_term_predelete', $term);
+          module_invoke_all('entity_predelete', $term, 'taxonomy_term');
+        }
+
         // See if any of the term's children are about to be become orphans:
         if ($children = taxonomy_get_children($tid)) {
           foreach ($children as $child) {
@@ -692,7 +715,7 @@ function taxonomy_term_delete($tid) {
           }
         }
 
-        if ($term = taxonomy_term_load($tid)) {
+        if ($term) {
           db_delete('taxonomy_term_data')
             ->condition('tid', $tid)
             ->execute();
@@ -701,6 +724,8 @@ function taxonomy_term_delete($tid) {
             ->execute();
 
           field_attach_delete('taxonomy_term', $term);
+
+          // Allow modules to respond to term deletion.
           module_invoke_all('taxonomy_term_delete', $term);
           module_invoke_all('entity_delete', $term, 'taxonomy_term');
           taxonomy_terms_static_reset();
@@ -1204,6 +1229,8 @@ function taxonomy_vocabulary_load_multiple($vids = array(), $conditions = array(
  * @return
  *   The vocabulary object with all of its metadata, if exists, FALSE otherwise.
  *   Results are statically cached.
+ *
+ * @see taxonomy_vocabulary_machine_name_load()
  */
 function taxonomy_vocabulary_load($vid) {
   $vocabularies = taxonomy_vocabulary_load_multiple(array($vid));
@@ -1219,6 +1246,8 @@ function taxonomy_vocabulary_load($vid) {
  * @return
  *   The vocabulary object with all of its metadata, if exists, FALSE otherwise.
  *   Results are statically cached.
+ *
+ * @see taxonomy_vocabulary_load()
  */
 function taxonomy_vocabulary_machine_name_load($name) {
   $vocabularies = taxonomy_vocabulary_load_multiple(NULL, array('machine_name' => $name));
@@ -1734,48 +1763,75 @@ function taxonomy_field_presave($entity_type, $entity, $field, $instance, $langc
 }
 
 /**
- * Implements hook_field_insert().
+ * Implements hook_node_insert().
  */
-function taxonomy_field_insert($entity_type, $entity, $field, $instance, $langcode, &$items) {
-  // We maintain a denormalized table of term/node relationships, containing
-  // only data for current, published nodes.
-  if (variable_get('taxonomy_maintain_index_table', TRUE) && $field['storage']['type'] == 'field_sql_storage' && $entity_type == 'node' && $entity->status) {
-    $query = db_insert('taxonomy_index')->fields(array('nid', 'tid', 'sticky', 'created', ));
-    foreach ($items as $item) {
-      $query->values(array(
-        'nid' => $entity->nid,
-        'tid' => $item['tid'],
-        'sticky' => $entity->sticky,
-        'created' => $entity->created,
-      ));
-    }
-    $query->execute();
-  }
+function taxonomy_node_insert($node) {
+  // Add taxonomy index entries for the node.
+  taxonomy_build_node_index($node);
 }
 
 /**
- * Implements hook_field_update().
+ * Builds and inserts taxonomy index entries for a given node.
+ *
+ * The index lists all terms that are related to a given node entity, and is
+ * therefore maintained at the entity level.
+ *
+ * @param $node
+ *   The node object.
  */
-function taxonomy_field_update($entity_type, $entity, $field, $instance, $langcode, &$items) {
-  if (variable_get('taxonomy_maintain_index_table', TRUE) && $field['storage']['type'] == 'field_sql_storage' && $entity_type == 'node') {
-    $first_call = &drupal_static(__FUNCTION__, array());
-
-    // We don't maintain data for old revisions, so clear all previous values
-    // from the table. Since this hook runs once per field, per object, make
-    // sure we only wipe values once.
-    if (!isset($first_call[$entity->nid])) {
-      $first_call[$entity->nid] = FALSE;
-      db_delete('taxonomy_index')->condition('nid', $entity->nid)->execute();
+function taxonomy_build_node_index($node) {
+  // We maintain a denormalized table of term/node relationships, containing
+  // only data for current, published nodes.
+  $status = NULL;
+  if (variable_get('taxonomy_maintain_index_table', TRUE)) {
+    // If a node property is not set in the node object when node_save() is
+    // called, the old value from $node->original is used.
+    if (!empty($node->original)) {
+      $status = (int)(!empty($node->status) || (!isset($node->status) && !empty($node->original->status)));
+      $sticky = (int)(!empty($node->sticky) || (!isset($node->sticky) && !empty($node->original->sticky)));
     }
-    // Only save data to the table if the node is published.
-    if ($entity->status) {
+    else {
+      $status = (int)(!empty($node->status));
+      $sticky = (int)(!empty($node->sticky));
+    }
+  }
+  // We only maintain the taxonomy index for published nodes.
+  if ($status) {
+    // Collect a unique list of all the term IDs from all node fields.
+    $tid_all = array();
+    foreach (field_info_instances('node', $node->type) as $instance) {
+      $field_name = $instance['field_name'];
+      $field = field_info_field($field_name);
+      if ($field['module'] == 'taxonomy' && $field['storage']['type'] == 'field_sql_storage') {
+        // If a field value is not set in the node object when node_save() is
+        // called, the old value from $node->original is used.
+        if (isset($node->{$field_name})) {
+          $items = $node->{$field_name};
+        }
+        elseif (isset($node->original->{$field_name})) {
+          $items = $node->original->{$field_name};
+        }
+        else {
+          continue;
+        }
+        foreach (field_available_languages('node', $field) as $langcode) {
+          if (!empty($items[$langcode])) {
+            foreach ($items[$langcode] as $item) {
+              $tid_all[$item['tid']] = $item['tid'];
+            }
+          }
+        }
+      }
+    }
+    // Insert index entries for all the node's terms.
+    if (!empty($tid_all)) {
       $query = db_insert('taxonomy_index')->fields(array('nid', 'tid', 'sticky', 'created'));
-      foreach ($items as $item) {
+      foreach ($tid_all as $tid) {
         $query->values(array(
-          'nid' => $entity->nid,
-          'tid' => $item['tid'],
-          'sticky' => $entity->sticky,
-          'created' => $entity->created,
+          'nid' => $node->nid,
+          'tid' => $tid,
+          'sticky' => $sticky,
+          'created' => $node->created,
         ));
       }
       $query->execute();
@@ -1784,11 +1840,30 @@ function taxonomy_field_update($entity_type, $entity, $field, $instance, $langco
 }
 
 /**
- * Implements hook_node_delete().
+ * Implements hook_node_update().
  */
-function taxonomy_node_delete($node) {
+function taxonomy_node_update($node) {
+  // Always rebuild the node's taxonomy index entries on node save.
+  taxonomy_delete_node_index($node);
+  taxonomy_build_node_index($node);
+}
+
+/**
+ * Implements hook_node_predelete().
+ */
+function taxonomy_node_predelete($node) {
+  // Clean up the {taxonomy_index} table when nodes are deleted.
+  taxonomy_delete_node_index($node);
+}
+
+/**
+ * Deletes taxonomy index entries for a given node.
+ *
+ * @param $node
+ *   The node object.
+ */
+function taxonomy_delete_node_index($node) {
   if (variable_get('taxonomy_maintain_index_table', TRUE)) {
-    // Clean up the {taxonomy_index} table when nodes are deleted.
     db_delete('taxonomy_index')->condition('nid', $node->nid)->execute();
   }
 }

@@ -156,6 +156,8 @@ function drupal_get_form($form_id) {
  *       automatically loaded by form_get_cache(). By default the current menu
  *       router item's 'file' definition is added, if any. Use
  *       form_load_include() to add include files from a form constructor.
+ *     - base_form_id: Identification for a base form, as declared in a
+ *       hook_forms() implementation.
  *   - rebuild_info: Internal. Similar to 'build_info', but pertaining to
  *     drupal_rebuild_form().
  *   - rebuild: Normally, after the entire form processing is completed and
@@ -782,7 +784,7 @@ function drupal_retrieve_form($form_id, &$form_state) {
   // the actual form builder function ($callback) expects. This allows for
   // pre-populating a form with common elements for certain forms, such as
   // back/next/save buttons in multi-step form wizards. See drupal_build_form().
-  if (isset($form_state['wrapper_callback']) && function_exists($form_state['wrapper_callback'])) {
+  if (isset($form_state['wrapper_callback'])) {
     $form = call_user_func_array($form_state['wrapper_callback'], $args);
     // Put the prepopulated $form into $args.
     $args[0] = $form;
@@ -3355,6 +3357,13 @@ function form_process_machine_name($element, &$form_state) {
     'replace' => '_',
   );
 
+  // By default, machine names are restricted to Latin alphanumeric characters.
+  // So, default to LTR directionality.
+  if (!isset($element['#attributes'])) {
+    $element['#attributes'] = array();
+  }
+  $element['#attributes'] += array('dir' => 'ltr');
+
   // The source element defaults to array('name'), but may have been overidden.
   if (empty($element['#machine_name']['source'])) {
     return $element;
@@ -3792,13 +3801,27 @@ function theme_password($variables) {
  * Expand weight elements into selects.
  */
 function form_process_weight($element) {
-  for ($n = (-1 * $element['#delta']); $n <= $element['#delta']; $n++) {
-    $weights[$n] = $n;
-  }
-  $element['#options'] = $weights;
-  $element['#type'] = 'select';
   $element['#is_weight'] = TRUE;
-  $element += element_info('select');
+
+  // If the number of options is small enough, use a select field.
+  $max_elements = variable_get('drupal_weight_select_max', DRUPAL_WEIGHT_SELECT_MAX);
+  if ($element['#delta'] <= $max_elements) {
+    $element['#type'] = 'select';
+    for ($n = (-1 * $element['#delta']); $n <= $element['#delta']; $n++) {
+      $weights[$n] = $n;
+    }
+    $element['#options'] = $weights;
+    $element += element_info('select');
+  }
+  // Otherwise, use a text field.
+  else {
+    $element['#type'] = 'textfield';
+    // Use a field big enough to fit most weights.
+    $element['#size'] = 10;
+    $element['#element_validate'] = array('element_validate_integer');
+    $element += element_info('textfield');
+  }
+
   return $element;
 }
 
@@ -3982,7 +4005,7 @@ function theme_form_element_label($variables) {
   $t = get_t();
 
   // If title and required marker are both empty, output no label.
-  if (empty($element['#title']) && empty($element['#required'])) {
+  if ((!isset($element['#title']) || $element['#title'] === '') && empty($element['#required'])) {
     return '';
   }
 
@@ -4368,9 +4391,7 @@ function batch_process($redirect = NULL, $url = 'batch', $redirect_callback = 'd
 
       // Redirect for processing.
       $function = $batch['redirect_callback'];
-      if (function_exists($function)) {
-        $function($batch['url'], array('query' => array('op' => 'start', 'id' => $batch['id'])));
-      }
+      $function($batch['url'], array('query' => array('op' => 'start', 'id' => $batch['id'])));
     }
     else {
       // Non-progressive execution: bypass the whole progressbar workflow

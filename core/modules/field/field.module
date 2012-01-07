@@ -372,17 +372,6 @@ function field_cron() {
 }
 
 /**
- * Implements hook_modules_uninstalled().
- */
-function field_modules_uninstalled($modules) {
-  module_load_include('inc', 'field', 'field.crud');
-  foreach ($modules as $module) {
-    // TODO D7: field_module_delete is not yet implemented
-    // field_module_delete($module);
-  }
-}
-
-/**
  * Implements hook_system_info_alter().
  *
  * Goes through a list of all modules that provide a field type, and makes them
@@ -494,9 +483,7 @@ function field_get_default_value($entity_type, $entity, $field, $instance, $lang
   $items = array();
   if (!empty($instance['default_value_function'])) {
     $function = $instance['default_value_function'];
-    if (function_exists($function)) {
-      $items = $function($entity_type, $entity, $field, $instance, $langcode);
-    }
+    $items = $function($entity_type, $entity, $field, $instance, $langcode);
   }
   elseif (!empty($instance['default_value'])) {
     $items = $instance['default_value'];

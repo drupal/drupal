@@ -404,9 +404,9 @@ function forum_node_insert($node) {
 }
 
 /**
- * Implements hook_node_delete().
+ * Implements hook_node_predelete().
  */
-function forum_node_delete($node) {
+function forum_node_predelete($node) {
   if (_forum_node_check_node_type($node)) {
     db_delete('forum')
       ->condition('nid', $node->nid)

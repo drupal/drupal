@@ -18,7 +18,9 @@ class FieldUITestCase extends DrupalWebTestCase {
     if (isset($modules[0]) && is_array($modules[0])) {
       $modules = $modules[0];
     }
+    $modules[] = 'field_ui';
     $modules[] = 'field_test';
+    $modules[] = 'taxonomy';
     parent::setUp($modules);
 
     // Create test user.
@@ -134,6 +136,8 @@ class FieldUITestCase extends DrupalWebTestCase {
  * Tests the functionality of the 'Manage fields' screen.
  */
 class FieldUIManageFieldsTestCase extends FieldUITestCase {
+  protected $profile = 'testing';
+
   public static function getInfo() {
     return array(
       'name' => 'Manage fields',
@@ -149,6 +153,31 @@ class FieldUIManageFieldsTestCase extends FieldUITestCase {
     $this->field_label = $this->randomName(8);
     $this->field_name_input =  strtolower($this->randomName(8));
     $this->field_name = 'field_'. $this->field_name_input;
+
+    // Create Basic page and Article node types.
+    $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
+    $this->drupalCreateContentType(array('type' => 'article', 'name' => 'Article'));
+
+    // Create a vocabulary named "Tags".
+    $vocabulary = (object) array(
+      'name' => 'Tags',
+      'machine_name' => 'tags',
+    );
+    taxonomy_vocabulary_save($vocabulary);
+
+    $field = array(
+      'field_name' => 'field_' . $vocabulary->machine_name,
+      'type' => 'taxonomy_term_reference',
+    );
+    field_create_field($field);
+
+    $instance = array(
+      'field_name' => 'field_' . $vocabulary->machine_name,
+      'entity_type' => 'node',
+      'label' => 'Tags',
+      'bundle' => 'article',
+    );
+    field_create_instance($instance);
   }
 
   /**

@@ -192,10 +192,10 @@ function node_access_test_node_load($nodes, $types) {
 }
 
 /**
- * Implements hook_node_delete().
+ * Implements hook_node_predelete().
  */
 
-function node_access_test_node_delete($node) {
+function node_access_test_node_predelete($node) {
   db_delete('node_access_test')->condition('nid', $node->nid)->execute();
 }
 

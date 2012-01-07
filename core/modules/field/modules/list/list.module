@@ -231,7 +231,7 @@ function list_allowed_values($field) {
 
   if (!isset($allowed_values[$field['id']])) {
     $function = $field['settings']['allowed_values_function'];
-    if (!empty($function) && function_exists($function)) {
+    if (!empty($function)) {
       $values = $function($field);
     }
     else {

@@ -425,7 +425,7 @@ class NewDefaultThemeBlocks extends DrupalWebTestCase {
 
     // Ensure no other theme's blocks are in the block table yet.
     $themes = array();
-    $themes['default'] = variable_get('theme_default', 'bartik');
+    $themes['default'] = variable_get('theme_default', 'stark');
     if ($admin_theme = variable_get('admin_theme')) {
       $themes['admin'] = $admin_theme;
     }
@@ -766,6 +766,10 @@ class BlockHiddenRegionTestCase extends DrupalWebTestCase {
       'description' => 'Checks that a newly enabled theme does not inherit blocks to its hidden regions.',
       'group' => 'Block',
     );
+  }
+
+  function setUp() {
+    parent::setUp(array('block_test'));
   }
 
   /**

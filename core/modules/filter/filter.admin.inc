@@ -230,7 +230,7 @@ function filter_admin_format_form($form, &$form_state, $format) {
   );
 
   foreach ($filter_info as $name => $filter) {
-    if (isset($filter['settings callback']) && function_exists($filter['settings callback'])) {
+    if (isset($filter['settings callback'])) {
       $function = $filter['settings callback'];
       // Pass along stored filter settings and default settings, but also the
       // format object and all filters to allow for complex implementations.

@@ -96,7 +96,7 @@ function dashboard_permission() {
  */
 function dashboard_block_info_alter(&$blocks, $theme, $code_blocks) {
   $admin_theme = variable_get('admin_theme');
-  if (($admin_theme && $theme == $admin_theme) || (!$admin_theme && $theme == variable_get('theme_default', 'bartik'))) {
+  if (($admin_theme && $theme == $admin_theme) || (!$admin_theme && $theme == variable_get('theme_default', 'stark'))) {
     foreach ($blocks as $module => &$module_blocks) {
       foreach ($module_blocks as $delta => &$block) {
         // Make administrative blocks that are not already in use elsewhere

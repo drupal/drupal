@@ -828,6 +828,10 @@ function file_valid_uri($uri) {
  *   is reported.
  * - If file already exists in $destination either the call will error out,
  *   replace the file or rename the file based on the $replace parameter.
+ * - Provides a fallback using realpaths if the move fails using stream
+ *   wrappers. This can occur because PHP's copy() function does not properly
+ *   support streams if safe_mode or open_basedir are enabled. See
+ *   https://bugs.php.net/bug.php?id=60456
  *
  * @param $source
  *   A string specifying the filepath or URI of the source file.
@@ -907,8 +911,12 @@ function file_unmanaged_copy($source, $destination = NULL, $replace = FILE_EXIST
   file_ensure_htaccess();
   // Perform the copy operation.
   if (!@copy($source, $destination)) {
-    watchdog('file', 'The specified file %file could not be copied to %destination.', array('%file' => $source, '%destination' => $destination), WATCHDOG_ERROR);
-    return FALSE;
+    // If the copy failed and realpaths exist, retry the operation using them
+    // instead.
+    if ($real_source === FALSE || $real_destination === FALSE || !@copy($real_source, $real_destination)) {
+      watchdog('file', 'The specified file %file could not be copied to %destination.', array('%file' => $source, '%destination' => $destination), WATCHDOG_ERROR);
+      return FALSE;
+    }
   }
 
   // Set the permissions on the new file.
@@ -1138,7 +1146,7 @@ function file_munge_filename($filename, $extensions, $alerts = TRUE) {
 }
 
 /**
- * Undo the effect of upload_munge_filename().
+ * Undo the effect of file_munge_filename().
  *
  * @param $filename
  *   String with the filename to be unmunged.
@@ -1225,6 +1233,7 @@ function file_create_filename($basename, $directory) {
  * @see file_unmanaged_delete()
  * @see file_usage_list()
  * @see file_usage_delete()
+ * @see hook_file_predelete()
  * @see hook_file_delete()
  */
 function file_delete(stdClass $file, $force = FALSE) {
@@ -1246,15 +1255,20 @@ function file_delete(stdClass $file, $force = FALSE) {
     return $references;
   }
 
-  // Let other modules clean up any references to the deleted file.
-  module_invoke_all('file_delete', $file);
-  module_invoke_all('entity_delete', $file, 'file');
+  // Let other modules clean up any references to the file prior to deletion.
+  module_invoke_all('file_predelete', $file);
+  module_invoke_all('entity_predelete', $file, 'file');
 
   // Make sure the file is deleted before removing its row from the
   // database, so UIs can still find the file in the database.
   if (file_unmanaged_delete($file->uri)) {
     db_delete('file_managed')->condition('fid', $file->fid)->execute();
     db_delete('file_usage')->condition('fid', $file->fid)->execute();
+
+    // Let other modules respond to file deletion.
+    module_invoke_all('file_delete', $file);
+    module_invoke_all('entity_delete', $file, 'file');
+
     return TRUE;
   }
   return FALSE;

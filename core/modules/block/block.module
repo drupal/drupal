@@ -63,7 +63,7 @@ function block_help($path, $arg) {
       return '<p>' . t('Use this page to create a new custom block.') . '</p>';
   }
   if ($arg[0] == 'admin' && $arg[1] == 'structure' && $arg['2'] == 'block' && (empty($arg[3]) || $arg[3] == 'list')) {
-    $demo_theme = !empty($arg[4]) ? $arg[4] : variable_get('theme_default', 'bartik');
+    $demo_theme = !empty($arg[4]) ? $arg[4] : variable_get('theme_default', 'stark');
     $themes = list_themes();
     $output = '<p>' . t('This page provides a drag-and-drop interface for assigning a block to a region, and for controlling the order of blocks within regions. Since not all themes implement the same regions, or display regions in the same way, blocks are positioned on a per-theme basis. Remember that your changes will not be saved until you click the <em>Save blocks</em> button at the bottom of the page. Click the <em>configure</em> link next to each block to configure its specific title and visibility settings.') . '</p>';
     $output .= '<p>' . l(t('Demonstrate block regions (@theme)', array('@theme' => $themes[$demo_theme]->info['name'])), 'admin/structure/block/demo/' . $demo_theme) . '</p>';
@@ -103,7 +103,7 @@ function block_permission() {
  * Implements hook_menu().
  */
 function block_menu() {
-  $default_theme = variable_get('theme_default', 'bartik');
+  $default_theme = variable_get('theme_default', 'stark');
   $items['admin/structure/block'] = array(
     'title' => 'Blocks',
     'description' => 'Configure what block content appears in your site\'s sidebars and other regions.',
@@ -294,7 +294,7 @@ function block_page_build(&$page) {
       $page['page_top']['backlink'] = array(
         '#type' => 'link',
         '#title' => t('Exit block region demonstration'),
-        '#href' => 'admin/structure/block' . (variable_get('theme_default', 'bartik') == $theme ? '' : '/list/' . $theme),
+        '#href' => 'admin/structure/block' . (variable_get('theme_default', 'stark') == $theme ? '' : '/list/' . $theme),
         // Add the "overlay-restore" class to indicate this link should restore
         // the context in which the region demonstration page was opened.
         '#options' => array('attributes' => array('class' => array('block-demo-backlink', 'overlay-restore'))),
@@ -611,7 +611,7 @@ function block_theme_initialize($theme) {
   // Initialize theme's blocks if none already registered.
   $has_blocks = (bool) db_query_range('SELECT 1 FROM {block} WHERE theme = :theme', 0, 1, array(':theme' => $theme))->fetchField();
   if (!$has_blocks) {
-    $default_theme = variable_get('theme_default', 'bartik');
+    $default_theme = variable_get('theme_default', 'stark');
     // Apply only to new theme's visible regions.
     $regions = system_region_list($theme, REGIONS_VISIBLE);
     $result = db_query("SELECT * FROM {block} WHERE theme = :theme", array(':theme' => $default_theme), array('fetch' => PDO::FETCH_ASSOC));

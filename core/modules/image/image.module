@@ -314,9 +314,9 @@ function image_file_move($file, $source) {
 }
 
 /**
- * Implements hook_file_delete().
+ * Implements hook_file_predelete().
  */
-function image_file_delete($file) {
+function image_file_predelete($file) {
   // Delete any image derivatives of this image.
   image_path_flush($file->uri);
 }
@@ -1027,10 +1027,7 @@ function image_effect_delete($style_name, $effect) {
 function image_effect_apply($image, $effect) {
   module_load_include('inc', 'image', 'image.effects');
   $function = $effect['effect callback'];
-  if (function_exists($function)) {
-    return $function($image, $effect['data']);
-  }
-  return FALSE;
+  return $function($image, $effect['data']);
 }
 
 /**

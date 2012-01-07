@@ -290,6 +290,20 @@ class SearchPageText extends DrupalWebTestCase {
     $this->drupalGet('search/node/' . $arg);
     $input = $this->xpath("//input[@id='edit-keys' and @value='{$arg}']");
     $this->assertFalse(empty($input), 'Search keys with a / are correctly set as the default value in the search box.');
+
+    // Test a search input exceeding the limit of AND/OR combinations to test
+    // the Denial-of-Service protection.
+    $limit = variable_get('search_and_or_limit', 7);
+    $keys = array();
+    for ($i = 0; $i < $limit + 1; $i++) {
+      $keys[] = $this->randomName(3);
+      if ($i % 2 == 0) {
+        $keys[] = 'OR';
+      }
+    }
+    $edit['keys'] = implode(' ', $keys);
+    $this->drupalPost('search/node', $edit, t('Search'));
+    $this->assertRaw(t('Your search used too many AND/OR expressions. Only the first @count terms were included in this search.', array('@count' => $limit)));
   }
 }
 
@@ -1585,6 +1599,12 @@ class SearchExcerptTestCase extends DrupalUnitTestCase {
     $result = preg_replace('| +|', ' ', search_excerpt('nothing', $entities));
     $this->assertFalse(strpos($result, '&'), 'Entities are not present in excerpt');
     $this->assertTrue(strpos($result, 'í') > 0, 'Entities are converted in excerpt');
+
+    // The node body that will produce this rendered $text is:
+    // 123456789 HTMLTest +123456789+&lsquo;  +&lsquo;  +&lsquo;  +&lsquo;  +12345678  &nbsp;&nbsp;  +&lsquo;  +&lsquo;  +&lsquo;   &lsquo;
+    $text = "<div class=\"field field-name-body field-type-text-with-summary field-label-hidden\"><div class=\"field-items\"><div class=\"field-item even\" property=\"content:encoded\"><p>123456789 HTMLTest +123456789+‘  +‘  +‘  +‘  +12345678      +‘  +‘  +‘   ‘</p>\n</div></div></div> ";
+    $result = search_excerpt('HTMLTest', $text);
+    $this->assertFalse(empty($result),  'Rendered Multi-byte HTML encodings are not corrupted in search excerpts');
   }
 
   /**

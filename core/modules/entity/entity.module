@@ -173,19 +173,20 @@ function entity_extract_ids($entity_type, $entity) {
  *   2: bundle name of the entity, or NULL if $entity_type has no bundles
  *
  * @return
- *   An entity structure, initialized with the ids provided.
+ *   An entity object, initialized with the IDs provided.
  */
 function entity_create_stub_entity($entity_type, $ids) {
-  $entity = new stdClass();
+  $values = array();
   $info = entity_get_info($entity_type);
-  $entity->{$info['entity keys']['id']} = $ids[0];
+  $values[$info['entity keys']['id']] = $ids[0];
   if (!empty($info['entity keys']['revision']) && isset($ids[1])) {
-    $entity->{$info['entity keys']['revision']} = $ids[1];
+    $values[$info['entity keys']['revision']] = $ids[1];
   }
   if (!empty($info['entity keys']['bundle']) && isset($ids[2])) {
-    $entity->{$info['entity keys']['bundle']} = $ids[2];
+    $values[$info['entity keys']['bundle']] = $ids[2];
   }
-  return $entity;
+  // @todo Once all entities are converted, just rely on entity_create().
+  return isset($info['entity class']) ? entity_create($entity_type, $values) : (object) $values;
 }
 
 /**
@@ -256,6 +257,36 @@ function entity_load_unchanged($entity_type, $id) {
 }
 
 /**
+ * Deletes multiple entities permanently.
+ *
+ * @param $entity_type
+ *   The type of the entity.
+ * @param $ids
+ *   An array of entity IDs of the entities to delete.
+ */
+function entity_delete_multiple($entity_type, $ids) {
+  entity_get_controller($entity_type)->delete($ids);
+}
+
+/**
+ * Constructs a new entity object, without saving it to the database.
+ *
+ * @param $entity_type
+ *   The type of the entity.
+ * @param $values
+ *   An array of values to set, keyed by property name. If the entity type has
+ *   bundles the bundle key has to be specified.
+ *
+ * @return EntityInterface
+ *   A new entity object.
+ */
+function entity_create($entity_type, array $values) {
+  $info = entity_get_info($entity_type) + array('entity class' => 'Entity');
+  $class = $info['entity class'];
+  return new $class($values, $entity_type);
+}
+
+/**
  * Gets the entity controller class for an entity type.
  */
 function entity_get_controller($entity_type) {
@@ -321,6 +352,9 @@ function entity_prepare_view($entity_type, $entities) {
  *   An array containing the 'path' and 'options' keys used to build the uri of
  *   the entity, and matching the signature of url(). NULL if the entity has no
  *   uri of its own.
+ *
+ * @todo
+ *   Remove once all entity types are implementing the EntityInterface.
  */
 function entity_uri($entity_type, $entity) {
   $info = entity_get_info($entity_type);
@@ -339,7 +373,7 @@ function entity_uri($entity_type, $entity) {
   }
 
   // Invoke the callback to get the URI. If there is no callback, return NULL.
-  if (isset($uri_callback) && function_exists($uri_callback)) {
+  if (isset($uri_callback)) {
     $uri = $uri_callback($entity);
     // Pass the entity data to url() so that alter functions do not need to
     // lookup this entity again.
@@ -362,11 +396,14 @@ function entity_uri($entity_type, $entity) {
  *
  * @return
  *   The entity label, or FALSE if not found.
+ *
+ * @todo
+ *   Remove once all entity types are implementing the EntityInterface.
  */
 function entity_label($entity_type, $entity) {
   $label = FALSE;
   $info = entity_get_info($entity_type);
-  if (isset($info['label callback']) && function_exists($info['label callback'])) {
+  if (isset($info['label callback'])) {
     $label = $info['label callback']($entity_type, $entity);
   }
   elseif (!empty($info['entity keys']['label']) && isset($entity->{$info['entity keys']['label']})) {
@@ -439,4 +476,3 @@ function entity_form_submit_build_entity($entity_type, $entity, $form, &$form_st
  * Exception thrown when a malformed entity is passed.
  */
 class EntityMalformedException extends Exception { }
-

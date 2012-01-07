@@ -218,6 +218,58 @@ function openid_form_user_register_form_alter(&$form, &$form_state) {
       $form['account']['pass']['#value'] = user_password();
     }
 
+    $timezone = FALSE;
+    if (!empty($sreg_values['timezone'])) {
+      $timezone = $sreg_values['timezone'];
+    }
+    elseif ($ax_timezone_values = openid_extract_ax_values($ax_values, array('http://axschema.org/pref/timezone', 'http://openid.net/schema/timezone'))) {
+      $timezone = current($ax_timezone_values);
+    }
+    if (in_array($timezone, timezone_identifiers_list())) {
+      $form['#user']->timezone = $timezone;
+    }
+
+    $language = FALSE;
+    if (!empty($sreg_values['language'])) {
+      $language = $sreg_values['language'];
+    }
+    elseif ($ax_language_values = openid_extract_ax_values($ax_values, array('http://axschema.org/pref/language', 'http://openid.net/schema/language/pref'))) {
+      $language = current($ax_language_values);
+    }
+    if ($language) {
+      // The OpenID Simple Registration Extension specification is unclear about
+      // the format of openid.sreg.language. Codes like "EN" and "ZH_CN" have
+      // been observed.
+      // AX values are in RFC 4646 format, e.g. "de", "en-GB", "en-Latn-GB",
+      // "zh-Hans", or "zh-Hans-CN". The first part is the language, the second
+      // is the script, and the third is the region. Other parts are also
+      // defined, but we will not use them here. All parts except the first are
+      // optional.
+      // We generate a list of all permutations of the first three parts and
+      // match them against the list of enabled languages. E.g. if the user's
+      // preferred langugage is "en-GB", we look for "en-gb" (Drupal's language
+      // codes are lower-case) or fall back to "en".
+      $parts = preg_split('/[_-]/', strtolower($language));
+      $candidate_languages[] = $parts[0];
+      if (count($parts) > 1) {
+        $candidate_languages[] = $parts[0] . '-' . $parts[1];
+      }
+      if (count($parts) > 2) {
+        $candidate_languages[] = $parts[0] . '-' . $parts[2];
+        $candidate_languages[] = $parts[0] . '-' . $parts[1] . '-' . $parts[2];
+      }
+      $all_languages = language_list('enabled');
+      $enabled_languages = $all_languages[1];
+      // Iterate over the generated permutations starting with the longest (most
+      // specific) strings.
+      foreach (array_reverse($candidate_languages) as $candidate_language) {
+        if (isset($enabled_languages[$candidate_language])) {
+          $form['locale']['language']['#type'] = 'hidden';
+          $form['locale']['language']['#value'] = $candidate_language;
+        }
+      }
+    }
+
     $form['openid_claimed_id'] = array(
       '#type' => 'value',
       '#default_value' => $response['openid.claimed_id'],
@@ -657,13 +709,13 @@ function openid_authentication($response) {
         // Load global $user and perform final login tasks.
         $form_state['uid'] = $account->uid;
         user_login_submit(array(), $form_state);
-        // Let other modules act on OpenID login
-        module_invoke_all('openid_response', $response, $account);
       }
     }
     else {
       drupal_set_message(t('You must validate your email address for this account before logging in via OpenID.'));
     }
+    // Let other modules act on OpenID login
+    module_invoke_all('openid_response', $response, $account);
   }
   elseif (variable_get('user_register', USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL)) {
     // Register new user.
@@ -675,7 +727,10 @@ function openid_authentication($response) {
     $form_state['values']['op'] = t('Create new account');
     drupal_form_submit('user_register_form', $form_state);
 
-    if (!empty($form_state['user'])) {
+    if (empty($form_state['user'])) {
+      module_invoke_all('openid_response', $response, NULL);
+    }
+    else {
       module_invoke_all('openid_response', $response, $form_state['user']);
       drupal_goto();
     }
@@ -703,6 +758,7 @@ function openid_authentication($response) {
   }
   else {
     drupal_set_message(t('Only site administrators can create new user accounts.'), 'error');
+    module_invoke_all('openid_response', $response, NULL);
   }
   drupal_goto();
 }
@@ -750,6 +806,7 @@ function openid_authentication_request($claimed_id, $identity, $return_to = '', 
   // that the Endpoint advertise OPENID_NS_SREG in the service description.
   $request['openid.ns.sreg'] = OPENID_NS_SREG;
   $request['openid.sreg.required'] = 'nickname,email';
+  $request['openid.sreg.optional'] = 'timezone,language';
 
   // Request Attribute Exchange, if available.
   // We only request the minimum attributes we need here, contributed modules
@@ -758,6 +815,7 @@ function openid_authentication_request($claimed_id, $identity, $return_to = '', 
     $request['openid.ns.ax'] = OPENID_NS_AX;
     $request['openid.ax.mode'] = 'fetch_request';
     $request['openid.ax.required'] = 'mail_ao,name_ao,mail_son,name_son';
+    $request['openid.ax.if_available'] = 'timezone_ao,language_ao,timezone_son,language_son';
 
     // Implementors disagree on which URIs to use, even for simple
     // attributes like name and email (*sigh*). We ask for both axschema.org
@@ -767,13 +825,17 @@ function openid_authentication_request($claimed_id, $identity, $return_to = '', 
     // Attributes as defined by axschema.org.
     $request['openid.ax.type.mail_ao'] = 'http://axschema.org/contact/email';
     $request['openid.ax.type.name_ao'] = 'http://axschema.org/namePerson/friendly';
+    $request['openid.ax.type.timezone_ao'] = 'http://axschema.org/pref/timezone';
+    $request['openid.ax.type.language_ao'] = 'http://axschema.org/pref/language';
 
     // Attributes as defined by schema.openid.net.
     $request['openid.ax.type.mail_son'] = 'http://schema.openid.net/contact/email';
     $request['openid.ax.type.name_son'] = 'http://schema.openid.net/namePerson/friendly';
+    $request['openid.ax.type.timezone_son'] = 'http://openid.net/schema/timezone';
+    $request['openid.ax.type.language_son'] = 'http://openid.net/schema/language/pref';
   }
 
-  $request = array_merge($request, module_invoke_all('openid', 'request', $request));
+  drupal_alter('openid_request', $request, $service);
 
   return $request;
 }

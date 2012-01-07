@@ -6,6 +6,7 @@
  * - hook_entity_insert()
  * - hook_entity_load()
  * - hook_entity_update()
+ * - hook_entity_predelete()
  * - hook_entity_delete()
  * As well as all type-specific hooks, like hook_node_insert(),
  * hook_comment_update(), etc.
@@ -27,24 +28,28 @@ class EntityCrudHookTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Pass if the message $text was set by one of the CRUD hooks in
-   * entity_crud_hook_test.module, i.e., if the $text is an element of
-   * $_SESSION['entity_crud_hook_test'].
+   * Checks the order of CRUD hook execution messages.
    *
-   * @param $text
-   *   Plain text to look for.
-   * @param $message
-   *   Message to display.
-   * @param $group
-   *   The group this message belongs to, defaults to 'Other'.
-   * @return
-   *   TRUE on pass, FALSE on fail.
+   * entity_crud_hook_test.module implements all core entity CRUD hooks and
+   * stores a message for each in $_SESSION['entity_crud_hook_test'].
+   *
+   * @param $messages
+   *   An array of plain-text messages in the order they should appear.
    */
-  protected function assertHookMessage($text, $message = NULL, $group = 'Other') {
-    if (!isset($message)) {
-      $message = $text;
+  protected function assertHookMessageOrder($messages) {
+    $positions = array();
+    foreach ($messages as $message) {
+      // Verify that each message is found and record its position.
+      $position = array_search($message, $_SESSION['entity_crud_hook_test']);
+      if ($this->assertTrue($position !== FALSE, $message)) {
+        $positions[] = $position;
+      }
     }
-    return $this->assertTrue(array_search($text, $_SESSION['entity_crud_hook_test']) !== FALSE, $message, $group);
+
+    // Sort the positions and ensure they remain in the same order.
+    $sorted = $positions;
+    sort($sorted);
+    $this->assertTrue($sorted == $positions, 'The hook messages appear in the correct order.');
   }
 
   /**
@@ -66,7 +71,7 @@ class EntityCrudHookTestCase extends DrupalWebTestCase {
     node_save($node);
     $nid = $node->nid;
 
-    $comment = (object) array(
+    $comment = entity_create('comment', array(
       'cid' => NULL,
       'pid' => 0,
       'nid' => $nid,
@@ -76,35 +81,46 @@ class EntityCrudHookTestCase extends DrupalWebTestCase {
       'changed' => REQUEST_TIME,
       'status' => 1,
       'language' => LANGUAGE_NONE,
-    );
+    ));
+
     $_SESSION['entity_crud_hook_test'] = array();
     comment_save($comment);
 
-    $this->assertHookMessage('entity_crud_hook_test_entity_presave called for type comment');
-    $this->assertHookMessage('entity_crud_hook_test_comment_presave called');
-    $this->assertHookMessage('entity_crud_hook_test_entity_insert called for type comment');
-    $this->assertHookMessage('entity_crud_hook_test_comment_insert called');
+    $this->assertHookMessageOrder(array(
+      'entity_crud_hook_test_comment_presave called',
+      'entity_crud_hook_test_entity_presave called for type comment',
+      'entity_crud_hook_test_comment_insert called',
+      'entity_crud_hook_test_entity_insert called for type comment',
+    ));
 
     $_SESSION['entity_crud_hook_test'] = array();
     $comment = comment_load($comment->cid);
 
-    $this->assertHookMessage('entity_crud_hook_test_entity_load called for type comment');
-    $this->assertHookMessage('entity_crud_hook_test_comment_load called');
+    $this->assertHookMessageOrder(array(
+      'entity_crud_hook_test_entity_load called for type comment',
+      'entity_crud_hook_test_comment_load called',
+    ));
 
     $_SESSION['entity_crud_hook_test'] = array();
     $comment->subject = 'New subject';
     comment_save($comment);
 
-    $this->assertHookMessage('entity_crud_hook_test_entity_presave called for type comment');
-    $this->assertHookMessage('entity_crud_hook_test_comment_presave called');
-    $this->assertHookMessage('entity_crud_hook_test_entity_update called for type comment');
-    $this->assertHookMessage('entity_crud_hook_test_comment_update called');
+    $this->assertHookMessageOrder(array(
+      'entity_crud_hook_test_comment_presave called',
+      'entity_crud_hook_test_entity_presave called for type comment',
+      'entity_crud_hook_test_comment_update called',
+      'entity_crud_hook_test_entity_update called for type comment',
+    ));
 
     $_SESSION['entity_crud_hook_test'] = array();
     comment_delete($comment->cid);
 
-    $this->assertHookMessage('entity_crud_hook_test_entity_delete called for type comment');
-    $this->assertHookMessage('entity_crud_hook_test_comment_delete called');
+    $this->assertHookMessageOrder(array(
+      'entity_crud_hook_test_comment_predelete called',
+      'entity_crud_hook_test_entity_predelete called for type comment',
+      'entity_crud_hook_test_comment_delete called',
+      'entity_crud_hook_test_entity_delete called for type comment',
+    ));
   }
 
   /**
@@ -126,31 +142,41 @@ class EntityCrudHookTestCase extends DrupalWebTestCase {
     $_SESSION['entity_crud_hook_test'] = array();
     file_save($file);
 
-    $this->assertHookMessage('entity_crud_hook_test_entity_presave called for type file');
-    $this->assertHookMessage('entity_crud_hook_test_file_presave called');
-    $this->assertHookMessage('entity_crud_hook_test_entity_insert called for type file');
-    $this->assertHookMessage('entity_crud_hook_test_file_insert called');
+    $this->assertHookMessageOrder(array(
+      'entity_crud_hook_test_file_presave called',
+      'entity_crud_hook_test_entity_presave called for type file',
+      'entity_crud_hook_test_file_insert called',
+      'entity_crud_hook_test_entity_insert called for type file',
+    ));
 
     $_SESSION['entity_crud_hook_test'] = array();
     $file = file_load($file->fid);
 
-    $this->assertHookMessage('entity_crud_hook_test_entity_load called for type file');
-    $this->assertHookMessage('entity_crud_hook_test_file_load called');
+    $this->assertHookMessageOrder(array(
+      'entity_crud_hook_test_entity_load called for type file',
+      'entity_crud_hook_test_file_load called',
+    ));
 
     $_SESSION['entity_crud_hook_test'] = array();
     $file->filename = 'new.entity_crud_hook_test.file';
     file_save($file);
 
-    $this->assertHookMessage('entity_crud_hook_test_entity_presave called for type file');
-    $this->assertHookMessage('entity_crud_hook_test_file_presave called');
-    $this->assertHookMessage('entity_crud_hook_test_entity_update called for type file');
-    $this->assertHookMessage('entity_crud_hook_test_file_update called');
+    $this->assertHookMessageOrder(array(
+      'entity_crud_hook_test_file_presave called',
+      'entity_crud_hook_test_entity_presave called for type file',
+      'entity_crud_hook_test_file_update called',
+      'entity_crud_hook_test_entity_update called for type file',
+    ));
 
     $_SESSION['entity_crud_hook_test'] = array();
     file_delete($file);
 
-    $this->assertHookMessage('entity_crud_hook_test_entity_delete called for type file');
-    $this->assertHookMessage('entity_crud_hook_test_file_delete called');
+    $this->assertHookMessageOrder(array(
+      'entity_crud_hook_test_file_predelete called',
+      'entity_crud_hook_test_entity_predelete called for type file',
+      'entity_crud_hook_test_file_delete called',
+      'entity_crud_hook_test_entity_delete called for type file',
+    ));
   }
 
   /**
@@ -172,31 +198,41 @@ class EntityCrudHookTestCase extends DrupalWebTestCase {
     $_SESSION['entity_crud_hook_test'] = array();
     node_save($node);
 
-    $this->assertHookMessage('entity_crud_hook_test_entity_presave called for type node');
-    $this->assertHookMessage('entity_crud_hook_test_node_presave called');
-    $this->assertHookMessage('entity_crud_hook_test_entity_insert called for type node');
-    $this->assertHookMessage('entity_crud_hook_test_node_insert called');
+    $this->assertHookMessageOrder(array(
+      'entity_crud_hook_test_node_presave called',
+      'entity_crud_hook_test_entity_presave called for type node',
+      'entity_crud_hook_test_node_insert called',
+      'entity_crud_hook_test_entity_insert called for type node',
+    ));
 
     $_SESSION['entity_crud_hook_test'] = array();
     $node = node_load($node->nid);
 
-    $this->assertHookMessage('entity_crud_hook_test_entity_load called for type node');
-    $this->assertHookMessage('entity_crud_hook_test_node_load called');
+    $this->assertHookMessageOrder(array(
+      'entity_crud_hook_test_entity_load called for type node',
+      'entity_crud_hook_test_node_load called',
+    ));
 
     $_SESSION['entity_crud_hook_test'] = array();
     $node->title = 'New title';
     node_save($node);
 
-    $this->assertHookMessage('entity_crud_hook_test_entity_presave called for type node');
-    $this->assertHookMessage('entity_crud_hook_test_node_presave called');
-    $this->assertHookMessage('entity_crud_hook_test_entity_update called for type node');
-    $this->assertHookMessage('entity_crud_hook_test_node_update called');
+    $this->assertHookMessageOrder(array(
+      'entity_crud_hook_test_node_presave called',
+      'entity_crud_hook_test_entity_presave called for type node',
+      'entity_crud_hook_test_node_update called',
+      'entity_crud_hook_test_entity_update called for type node',
+    ));
 
     $_SESSION['entity_crud_hook_test'] = array();
     node_delete($node->nid);
 
-    $this->assertHookMessage('entity_crud_hook_test_entity_delete called for type node');
-    $this->assertHookMessage('entity_crud_hook_test_node_delete called');
+    $this->assertHookMessageOrder(array(
+      'entity_crud_hook_test_node_predelete called',
+      'entity_crud_hook_test_entity_predelete called for type node',
+      'entity_crud_hook_test_node_delete called',
+      'entity_crud_hook_test_entity_delete called for type node',
+    ));
   }
 
   /**
@@ -220,31 +256,41 @@ class EntityCrudHookTestCase extends DrupalWebTestCase {
     $_SESSION['entity_crud_hook_test'] = array();
     taxonomy_term_save($term);
 
-    $this->assertHookMessage('entity_crud_hook_test_entity_presave called for type taxonomy_term');
-    $this->assertHookMessage('entity_crud_hook_test_taxonomy_term_presave called');
-    $this->assertHookMessage('entity_crud_hook_test_entity_insert called for type taxonomy_term');
-    $this->assertHookMessage('entity_crud_hook_test_taxonomy_term_insert called');
+    $this->assertHookMessageOrder(array(
+      'entity_crud_hook_test_taxonomy_term_presave called',
+      'entity_crud_hook_test_entity_presave called for type taxonomy_term',
+      'entity_crud_hook_test_taxonomy_term_insert called',
+      'entity_crud_hook_test_entity_insert called for type taxonomy_term',
+    ));
 
     $_SESSION['entity_crud_hook_test'] = array();
     $term = taxonomy_term_load($term->tid);
 
-    $this->assertHookMessage('entity_crud_hook_test_entity_load called for type taxonomy_term');
-    $this->assertHookMessage('entity_crud_hook_test_taxonomy_term_load called');
+    $this->assertHookMessageOrder(array(
+      'entity_crud_hook_test_entity_load called for type taxonomy_term',
+      'entity_crud_hook_test_taxonomy_term_load called',
+    ));
 
     $_SESSION['entity_crud_hook_test'] = array();
     $term->name = 'New name';
     taxonomy_term_save($term);
 
-    $this->assertHookMessage('entity_crud_hook_test_entity_presave called for type taxonomy_term');
-    $this->assertHookMessage('entity_crud_hook_test_taxonomy_term_presave called');
-    $this->assertHookMessage('entity_crud_hook_test_entity_update called for type taxonomy_term');
-    $this->assertHookMessage('entity_crud_hook_test_taxonomy_term_update called');
+    $this->assertHookMessageOrder(array(
+      'entity_crud_hook_test_taxonomy_term_presave called',
+      'entity_crud_hook_test_entity_presave called for type taxonomy_term',
+      'entity_crud_hook_test_taxonomy_term_update called',
+      'entity_crud_hook_test_entity_update called for type taxonomy_term',
+    ));
 
     $_SESSION['entity_crud_hook_test'] = array();
     taxonomy_term_delete($term->tid);
 
-    $this->assertHookMessage('entity_crud_hook_test_entity_delete called for type taxonomy_term');
-    $this->assertHookMessage('entity_crud_hook_test_taxonomy_term_delete called');
+    $this->assertHookMessageOrder(array(
+      'entity_crud_hook_test_taxonomy_term_predelete called',
+      'entity_crud_hook_test_entity_predelete called for type taxonomy_term',
+      'entity_crud_hook_test_taxonomy_term_delete called',
+      'entity_crud_hook_test_entity_delete called for type taxonomy_term',
+    ));
   }
 
   /**
@@ -260,31 +306,41 @@ class EntityCrudHookTestCase extends DrupalWebTestCase {
     $_SESSION['entity_crud_hook_test'] = array();
     taxonomy_vocabulary_save($vocabulary);
 
-    $this->assertHookMessage('entity_crud_hook_test_entity_presave called for type taxonomy_vocabulary');
-    $this->assertHookMessage('entity_crud_hook_test_taxonomy_vocabulary_presave called');
-    $this->assertHookMessage('entity_crud_hook_test_entity_insert called for type taxonomy_vocabulary');
-    $this->assertHookMessage('entity_crud_hook_test_taxonomy_vocabulary_insert called');
+    $this->assertHookMessageOrder(array(
+      'entity_crud_hook_test_taxonomy_vocabulary_presave called',
+      'entity_crud_hook_test_entity_presave called for type taxonomy_vocabulary',
+      'entity_crud_hook_test_taxonomy_vocabulary_insert called',
+      'entity_crud_hook_test_entity_insert called for type taxonomy_vocabulary',
+    ));
 
     $_SESSION['entity_crud_hook_test'] = array();
     $vocabulary = taxonomy_vocabulary_load($vocabulary->vid);
 
-    $this->assertHookMessage('entity_crud_hook_test_entity_load called for type taxonomy_vocabulary');
-    $this->assertHookMessage('entity_crud_hook_test_taxonomy_vocabulary_load called');
+    $this->assertHookMessageOrder(array(
+      'entity_crud_hook_test_entity_load called for type taxonomy_vocabulary',
+      'entity_crud_hook_test_taxonomy_vocabulary_load called',
+    ));
 
     $_SESSION['entity_crud_hook_test'] = array();
     $vocabulary->name = 'New name';
     taxonomy_vocabulary_save($vocabulary);
 
-    $this->assertHookMessage('entity_crud_hook_test_entity_presave called for type taxonomy_vocabulary');
-    $this->assertHookMessage('entity_crud_hook_test_taxonomy_vocabulary_presave called');
-    $this->assertHookMessage('entity_crud_hook_test_entity_update called for type taxonomy_vocabulary');
-    $this->assertHookMessage('entity_crud_hook_test_taxonomy_vocabulary_update called');
+    $this->assertHookMessageOrder(array(
+      'entity_crud_hook_test_taxonomy_vocabulary_presave called',
+      'entity_crud_hook_test_entity_presave called for type taxonomy_vocabulary',
+      'entity_crud_hook_test_taxonomy_vocabulary_update called',
+      'entity_crud_hook_test_entity_update called for type taxonomy_vocabulary',
+    ));
 
     $_SESSION['entity_crud_hook_test'] = array();
     taxonomy_vocabulary_delete($vocabulary->vid);
 
-    $this->assertHookMessage('entity_crud_hook_test_entity_delete called for type taxonomy_vocabulary');
-    $this->assertHookMessage('entity_crud_hook_test_taxonomy_vocabulary_delete called');
+    $this->assertHookMessageOrder(array(
+      'entity_crud_hook_test_taxonomy_vocabulary_predelete called',
+      'entity_crud_hook_test_entity_predelete called for type taxonomy_vocabulary',
+      'entity_crud_hook_test_taxonomy_vocabulary_delete called',
+      'entity_crud_hook_test_entity_delete called for type taxonomy_vocabulary',
+    ));
   }
 
   /**
@@ -302,31 +358,41 @@ class EntityCrudHookTestCase extends DrupalWebTestCase {
     $_SESSION['entity_crud_hook_test'] = array();
     $account = user_save($account, $edit);
 
-    $this->assertHookMessage('entity_crud_hook_test_entity_presave called for type user');
-    $this->assertHookMessage('entity_crud_hook_test_user_presave called');
-    $this->assertHookMessage('entity_crud_hook_test_entity_insert called for type user');
-    $this->assertHookMessage('entity_crud_hook_test_user_insert called');
+    $this->assertHookMessageOrder(array(
+      'entity_crud_hook_test_user_presave called',
+      'entity_crud_hook_test_entity_presave called for type user',
+      'entity_crud_hook_test_user_insert called',
+      'entity_crud_hook_test_entity_insert called for type user',
+    ));
 
     $_SESSION['entity_crud_hook_test'] = array();
     $account = user_load($account->uid);
 
-    $this->assertHookMessage('entity_crud_hook_test_entity_load called for type user');
-    $this->assertHookMessage('entity_crud_hook_test_user_load called');
+    $this->assertHookMessageOrder(array(
+      'entity_crud_hook_test_entity_load called for type user',
+      'entity_crud_hook_test_user_load called',
+    ));
 
     $_SESSION['entity_crud_hook_test'] = array();
     $edit['name'] = 'New name';
     $account = user_save($account, $edit);
 
-    $this->assertHookMessage('entity_crud_hook_test_entity_presave called for type user');
-    $this->assertHookMessage('entity_crud_hook_test_user_presave called');
-    $this->assertHookMessage('entity_crud_hook_test_entity_update called for type user');
-    $this->assertHookMessage('entity_crud_hook_test_user_update called');
+    $this->assertHookMessageOrder(array(
+      'entity_crud_hook_test_user_presave called',
+      'entity_crud_hook_test_entity_presave called for type user',
+      'entity_crud_hook_test_user_update called',
+      'entity_crud_hook_test_entity_update called for type user',
+    ));
 
     $_SESSION['entity_crud_hook_test'] = array();
     user_delete($account->uid);
 
-    $this->assertHookMessage('entity_crud_hook_test_entity_delete called for type user');
-    $this->assertHookMessage('entity_crud_hook_test_user_delete called');
+    $this->assertHookMessageOrder(array(
+      'entity_crud_hook_test_user_predelete called',
+      'entity_crud_hook_test_entity_predelete called for type user',
+      'entity_crud_hook_test_user_delete called',
+      'entity_crud_hook_test_entity_delete called for type user',
+    ));
   }
 
 }

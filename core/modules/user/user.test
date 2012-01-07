@@ -732,7 +732,7 @@ class UserCancelTestCase extends DrupalWebTestCase {
     $this->drupalPost('comment/reply/' . $node->nid, $edit, t('Preview'));
     $this->drupalPost(NULL, array(), t('Save'));
     $this->assertText(t('Your comment has been posted.'));
-    $comments = comment_load_multiple(array(), array('subject' => $edit['subject']));
+    $comments = comment_load_multiple(FALSE, array('subject' => $edit['subject']));
     $comment = reset($comments);
     $this->assertTrue($comment->cid, t('Comment found.'));
 

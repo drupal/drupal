@@ -744,6 +744,6 @@ function shortcut_toolbar_pre_render($toolbar) {
  *   shortcut_set_load().
  */
 function shortcut_set_title($shortcut_set) {
-  return check_plain($shortcut_set->title);
+  return $shortcut_set->title;
 }
 

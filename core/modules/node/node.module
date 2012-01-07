@@ -228,6 +228,7 @@ function node_entity_info() {
 
   // Bundles must provide a human readable name so we can create help and error
   // messages, and the path to attach Field admin pages to.
+  node_type_cache_reset();
   foreach (node_type_get_names() as $type => $name) {
     $return['node']['bundles'][$type] = array(
       'label' => $name,
@@ -934,7 +935,7 @@ function node_load_multiple($nids = array(), $conditions = array(), $reset = FAL
  *   (optional) Whether to reset the node_load_multiple() cache.
  *
  * @return
- *   A fully-populated node object.
+ *   A fully-populated node object, or FALSE if the node is not found.
  */
 function node_load($nid = NULL, $vid = NULL, $reset = FALSE) {
   $nids = (isset($nid) ? array($nid) : array());
@@ -1221,6 +1222,9 @@ function node_delete($nid) {
  *
  * @param $nids
  *   An array of node IDs.
+ *
+ * @see hook_node_predelete()
+ * @see hook_node_delete()
  */
 function node_delete_multiple($nids) {
   $transaction = db_transaction();
@@ -1231,8 +1235,11 @@ function node_delete_multiple($nids) {
       foreach ($nodes as $nid => $node) {
         // Call the node-specific callback (if any):
         node_invoke($node, 'delete');
-        module_invoke_all('node_delete', $node);
-        module_invoke_all('entity_delete', $node, 'node');
+
+        // Allow modules to act prior to node deletion.
+        module_invoke_all('node_predelete', $node);
+        module_invoke_all('entity_predelete', $node, 'node');
+
         field_attach_delete('node', $node);
 
         // Remove this node from the search index if needed.
@@ -1257,6 +1264,12 @@ function node_delete_multiple($nids) {
       db_delete('node_access')
        ->condition('nid', $nids, 'IN')
        ->execute();
+
+      foreach ($nodes as $nid => $node) {
+        // Allow modules to respond to node deletion.
+        module_invoke_all('node_delete', $node);
+        module_invoke_all('entity_delete', $node, 'node');
+      }
     }
     catch (Exception $e) {
       $transaction->rollback();
@@ -1490,7 +1503,10 @@ function template_preprocess_node(&$variables) {
   $node = $variables['node'];
 
   $variables['date']      = format_date($node->created);
-  $variables['name']      = theme('username', array('account' => $node));
+  $variables['name']      = theme('username', array(
+    'account' => $node,
+    'link_attributes' => array('rel' => 'author'),
+  ));
 
   $uri = entity_uri('node', $node);
   $variables['node_url']  = url($uri['path'], $uri['options']);
@@ -1812,9 +1828,9 @@ function node_user_cancel($edit, $account, $method) {
 }
 
 /**
- * Implements hook_user_delete().
+ * Implements hook_user_predelete().
  */
-function node_user_delete($account) {
+function node_user_predelete($account) {
   // Delete nodes (current revisions).
   // @todo Introduce node_mass_delete() or make node_mass_update() more flexible.
   $nodes = db_select('node', 'n')
@@ -2903,13 +2919,14 @@ function node_search_validate($form, &$form_state) {
  * that this table is a list of grants; any matching row is sufficient to
  * grant access to the node.
  *
- * In node listings, the process above is followed except that
- * hook_node_access() is not called on each node for performance reasons and for
- * proper functioning of the pager system. When adding a node listing to your
- * module, be sure to use a dynamic query created by db_select() and add a tag
- * of "node_access". This will allow modules dealing with node access to ensure
- * only nodes to which the user has access are retrieved, through the use of
- * hook_query_TAG_alter().
+ * In node listings (lists of nodes generated from a select query, such as the
+ * default home page at path 'node', an RSS feed, a recent content block, etc.),
+ * the process above is followed except that hook_node_access() is not called on
+ * each node for performance reasons and for proper functioning of the pager
+ * system. When adding a node listing to your module, be sure to use a dynamic
+ * query created by db_select() and add a tag of "node_access". This will allow
+ * modules dealing with node access to ensure only nodes to which the user has
+ * access are retrieved, through the use of hook_query_TAG_alter().
  *
  * Note: Even a single module returning NODE_ACCESS_DENY from hook_node_access()
  * will block access to the node. Therefore, implementers should take care to
@@ -4122,9 +4139,9 @@ function node_file_download_access($field, $entity_type, $entity) {
 }
 
 /**
- * Implements hook_locale_language_delete().
+ * Implements hook_language_delete().
  */
-function node_locale_language_delete($language) {
+function node_language_delete($language) {
   // On nodes with this language, unset the language
   db_update('node')
     ->fields(array('language' => ''))

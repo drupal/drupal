@@ -17,7 +17,7 @@ class TranslationTestCase extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('locale', 'translation', 'translation_test');
+    parent::setUp('language', 'locale', 'translation', 'translation_test');
 
     // Setup users.
     $this->admin_user = $this->drupalCreateUser(array('bypass node access', 'administer nodes', 'administer languages', 'administer content types', 'administer blocks', 'access administration pages', 'translate content'));
@@ -291,7 +291,7 @@ class TranslationTestCase extends DrupalWebTestCase {
       $this->assertTrue(array_key_exists($language_code, $languages), t('Language was installed successfully.'));
 
       if (array_key_exists($language_code, $languages)) {
-        $this->assertRaw(t('The language %language has been created and can now be used. More information is available on the <a href="@locale-help">help screen</a>.', array('%language' => $languages[$language_code]->name, '@locale-help' => url('admin/help/locale'))), t('Language has been created.'));
+        $this->assertRaw(t('The language %language has been created and can now be used.', array('%language' => $languages[$language_code]->name)), t('Language has been created.'));
       }
     }
     elseif ($this->xpath('//input[@type="checkbox" and @name=:name and @checked="checked"]', array(':name' => 'languages[' . $language_code . '][enabled]'))) {

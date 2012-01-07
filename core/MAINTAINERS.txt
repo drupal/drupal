@@ -251,6 +251,7 @@ System module
 - ?
 
 Taxonomy module
+- Jess Myrbo 'xjm' <http://drupal.org/user/65776>
 - Nathaniel Catchpole 'catch' <http://drupal.org/user/35733>
 - Benjamin Doherty 'bangpound' <http://drupal.org/user/100456>
 

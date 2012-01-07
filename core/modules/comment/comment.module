@@ -4,9 +4,9 @@
  * @file
  * Enables users to comment on published content.
  *
- * When enabled, the Drupal comment module creates a discussion
- * board for each Drupal node. Users can post comments to discuss
- * a forum topic, story, collaborative book page, etc.
+ * When enabled, the Comment module creates a discussion board for each Drupal
+ * node. Users can post comments to discuss a forum topic, story, collaborative
+ * book page, etc.
  */
 
 /**
@@ -98,7 +98,8 @@ function comment_entity_info() {
       'base table' => 'comment',
       'uri callback' => 'comment_uri',
       'fieldable' => TRUE,
-      'controller class' => 'CommentController',
+      'controller class' => 'CommentStorageController',
+      'entity class' => 'Comment',
       'entity keys' => array(
         'id' => 'cid',
         'bundle' => 'node_type',
@@ -140,9 +141,19 @@ function comment_entity_info() {
 }
 
 /**
- * Menu loader callback for Field UI paths.
+ * Loads the comment bundle name corresponding a given content type.
  *
- * Return a comment bundle name from a node type in the URL.
+ * This function is used as a menu loader callback in comment_menu().
+ *
+ * @param $name
+ *   The URL-formatted machine name of the node type whose comment fields are
+ *   to be edited. 'URL-formatted' means that underscores are replaced by
+ *   hyphens.
+ *
+ * @return
+ *   The comment bundle name corresponding to the node type.
+ *
+ * @see comment_menu_alter()
  */
 function comment_node_type_load($name) {
   if ($type = node_type_get_type(strtr($name, array('-' => '_')))) {
@@ -317,8 +328,8 @@ function comment_count_unpublished() {
 /**
  * Implements hook_node_type_insert().
  *
- * Creates a comment body field for a node type created while the comment module
- * is enabled. For node types created before the comment module is enabled,
+ * Creates a comment body field for a node type created while the Comment module
+ * is enabled. For node types created before the Comment module is enabled,
  * hook_modules_enabled() serves to create the body fields.
  *
  * @see comment_modules_enabled()
@@ -357,6 +368,11 @@ function comment_node_type_delete($info) {
 
  /**
  * Creates a comment_body field instance for a given node type.
+ *
+ * @param $info
+ *   An object representing the content type. The only property that is
+ *   currently used is $info->type, which is the machine name of the content
+ *   type for which the body field (instance) is to be created.
  */
 function _comment_body_field_create($info) {
   // Create the field if needed.
@@ -472,6 +488,7 @@ function comment_block_view($delta = '') {
  *
  * @param $cid
  *   A comment identifier.
+ *
  * @return
  *   The comment listing set to the page on which the comment appears.
  */
@@ -493,7 +510,7 @@ function comment_permalink($cid) {
 }
 
 /**
- * Find the most recent comments that are available to the current user.
+ * Finds the most recent comments that are available to the current user.
  *
  * @param integer $number
  *   (optional) The maximum number of comments to find. Defaults to 10.
@@ -522,7 +539,7 @@ function comment_get_recent($number = 10) {
 }
 
 /**
- * Calculate page number for first new comment.
+ * Calculates the page number for the first new comment.
  *
  * @param $num_comments
  *   Number of comments.
@@ -530,6 +547,7 @@ function comment_get_recent($number = 10) {
  *   Number of new replies.
  * @param $node
  *   The first new comment node.
+ *
  * @return
  *   "page=X" if the page number is greater than zero; empty string otherwise.
  */
@@ -589,7 +607,7 @@ function comment_new_page_count($num_comments, $new_replies, $node) {
 }
 
 /**
- * Returns HTML for a list of recent comments to be displayed in the comment block.
+ * Returns HTML for a list of recent comments.
  *
  * @ingroup themeable
  */
@@ -713,10 +731,14 @@ function comment_node_view($node, $view_mode) {
 }
 
 /**
- * Build the comment-related elements for node detail pages.
+ * Builds the comment-related elements for node detail pages.
  *
  * @param $node
- *  A node object.
+ *   The node object for which to build the comment-related elements.
+ *
+ * @return
+ *   A renderable array representing the comment-related page elements for the
+ *   node.
  */
 function comment_node_page_additions($node) {
   $additions = array();
@@ -738,8 +760,8 @@ function comment_node_page_additions($node) {
 
   // Append comment form if needed.
   if (user_access('post comments') && $node->comment == COMMENT_NODE_OPEN && (variable_get('comment_form_location_' . $node->type, COMMENT_FORM_BELOW) == COMMENT_FORM_BELOW)) {
-    $build = drupal_get_form("comment_node_{$node->type}_form", (object) array('nid' => $node->nid));
-    $additions['comment_form'] = $build;
+    $comment = entity_create('comment', array('nid' => $node->nid));
+    $additions['comment_form'] = drupal_get_form("comment_node_{$node->type}_form", $comment);
   }
 
   if ($additions) {
@@ -755,7 +777,7 @@ function comment_node_page_additions($node) {
 }
 
 /**
- * Retrieve comments for a thread.
+ * Retrieves comments for a thread.
  *
  * @param $node
  *   The node whose comment(s) needs rendering.
@@ -763,6 +785,9 @@ function comment_node_page_additions($node) {
  *   The comment display mode; COMMENT_MODE_FLAT or COMMENT_MODE_THREADED.
  * @param $comments_per_page
  *   The amount of comments to display per page.
+ *
+ * @return
+ *   An array of the IDs of the comment to be displayed.
  *
  * To display threaded comments in the correct order we keep a 'thread' field
  * and order by that value. This field keeps this data in
@@ -858,12 +883,14 @@ function comment_get_thread($node, $mode, $comments_per_page) {
 }
 
 /**
- * Loop over comment thread, noting indentation level.
+ * Calculates the indentation level of each comment in a comment thread.
+ *
+ * This function loops over an array representing a comment thread. For each
+ * comment, the function calculates the indentation level and saves it in the
+ * 'divs' property of the comment object.
  *
  * @param array $comments
- *   An array of comment objects, keyed by cid.
- * @return
- *   The $comments argument is altered by reference with indentation information.
+ *   An array of comment objects, keyed by comment ID.
  */
 function comment_prepare_thread(&$comments) {
   // A flag stating if we are still searching for first new comment on the thread.
@@ -901,10 +928,10 @@ function comment_prepare_thread(&$comments) {
 }
 
 /**
- * Generate an array for rendering the given comment.
+ * Generates an array for rendering a comment.
  *
  * @param $comment
- *   A comment object.
+ *   The comment object.
  * @param $node
  *   The node the comment is attached to.
  * @param $view_mode
@@ -970,8 +997,8 @@ function comment_view($comment, $node, $view_mode = 'full', $langcode = NULL) {
 /**
  * Builds a structured array representing the comment's content.
  *
- * The content built for the comment (field values, comments, file attachments or
- * other comment components) will vary depending on the $view_mode parameter.
+ * The content built for the comment (field values, comments, file attachments
+ * or other comment components) will vary depending on the $view_mode parameter.
  *
  * @param $comment
  *   A comment object.
@@ -1015,14 +1042,13 @@ function comment_build_content($comment, $node, $view_mode = 'full', $langcode =
 }
 
 /**
- * Helper function, build links for an individual comment.
- *
- * Adds reply, edit, delete etc. depending on the current user permissions.
+ * Adds reply, edit, delete, etc. links, depending on user permissions.
  *
  * @param $comment
  *   The comment object.
  * @param $node
  *   The node the comment is attached to.
+ *
  * @return
  *   A structured array of links.
  */
@@ -1077,7 +1103,7 @@ function comment_links($comment, $node) {
 }
 
 /**
- * Construct a drupal_render() style array from an array of loaded comments.
+ * Constructs render array from an array of loaded comments.
  *
  * @param $comments
  *   An array of comments as returned by comment_load_multiple().
@@ -1093,6 +1119,8 @@ function comment_links($comment, $node) {
  *
  * @return
  *   An array in the format expected by drupal_render().
+ *
+ * @see drupal_render()
  */
 function comment_view_multiple($comments, $node, $view_mode = 'full', $weight = 0, $langcode = NULL) {
   field_attach_prepare_view('comment', $comments, $view_mode, $langcode);
@@ -1303,9 +1331,9 @@ function comment_node_insert($node) {
 }
 
 /**
- * Implements hook_node_delete().
+ * Implements hook_node_predelete().
  */
-function comment_node_delete($node) {
+function comment_node_predelete($node) {
   $cids = db_query('SELECT cid FROM {comment} WHERE nid = :nid', array(':nid' => $node->nid))->fetchCol();
   comment_delete_multiple($cids);
   db_delete('node_comment_statistics')
@@ -1401,9 +1429,9 @@ function comment_user_cancel($edit, $account, $method) {
 }
 
 /**
- * Implements hook_user_delete().
+ * Implements hook_user_predelete().
  */
-function comment_user_delete($account) {
+function comment_user_predelete($account) {
   $cids = db_query('SELECT c.cid FROM {comment} c WHERE uid = :uid', array(':uid' => $account->uid))->fetchCol();
   comment_delete_multiple($cids);
 }
@@ -1420,6 +1448,7 @@ function comment_user_delete($account) {
  *   recognized now.
  * @param $comment
  *   The comment object.
+ *
  * @return
  *   TRUE if the current user has acces to the comment, FALSE otherwise.
  */
@@ -1436,199 +1465,36 @@ function comment_access($op, $comment) {
  *
  * @param $comment
  *   A comment object.
- *
- * @see comment_int_to_alphadecimal()
  */
 function comment_save($comment) {
-  global $user;
-
-  $transaction = db_transaction();
-  try {
-    $defaults = array(
-      'mail' => '',
-      'homepage' => '',
-      'name' => '',
-      'status' => user_access('skip comment approval') ? COMMENT_PUBLISHED : COMMENT_NOT_PUBLISHED,
-    );
-    foreach ($defaults as $key => $default) {
-      if (!isset($comment->$key)) {
-        $comment->$key = $default;
-      }
-    }
-    // Make sure we have a bundle name.
-    if (!isset($comment->node_type)) {
-      $node = node_load($comment->nid);
-      $comment->node_type = 'comment_node_' . $node->type;
-    }
-
-    // Load the stored entity, if any.
-    if (!empty($comment->cid) && !isset($comment->original)) {
-      $comment->original = entity_load_unchanged('comment', $comment->cid);
-    }
-
-    field_attach_presave('comment', $comment);
-
-    // Allow modules to alter the comment before saving.
-    module_invoke_all('comment_presave', $comment);
-    module_invoke_all('entity_presave', $comment, 'comment');
-
-    if ($comment->cid) {
-
-      drupal_write_record('comment', $comment, 'cid');
-
-      // Ignore slave server temporarily to give time for the
-      // saved comment to be propagated to the slave.
-      db_ignore_slave();
-
-      // Update the {node_comment_statistics} table prior to executing hooks.
-      _comment_update_node_statistics($comment->nid);
-
-      field_attach_update('comment', $comment);
-      // Allow modules to respond to the updating of a comment.
-      module_invoke_all('comment_update', $comment);
-      module_invoke_all('entity_update', $comment, 'comment');
-    }
-    else {
-      // Add the comment to database. This next section builds the thread field.
-      // Also see the documentation for comment_view().
-      if (!empty($comment->thread)) {
-        // Allow calling code to set thread itself.
-        $thread = $comment->thread;
-      }
-      elseif ($comment->pid == 0) {
-        // This is a comment with no parent comment (depth 0): we start
-        // by retrieving the maximum thread level.
-        $max = db_query('SELECT MAX(thread) FROM {comment} WHERE nid = :nid', array(':nid' => $comment->nid))->fetchField();
-        // Strip the "/" from the end of the thread.
-        $max = rtrim($max, '/');
-        // Finally, build the thread field for this new comment.
-        $thread = comment_increment_alphadecimal($max) . '/';
-      }
-      else {
-        // This is a comment with a parent comment, so increase the part of the
-        // thread value at the proper depth.
-
-        // Get the parent comment:
-        $parent = comment_load($comment->pid);
-        // Strip the "/" from the end of the parent thread.
-        $parent->thread = (string) rtrim((string) $parent->thread, '/');
-        // Get the max value in *this* thread.
-        $max = db_query("SELECT MAX(thread) FROM {comment} WHERE thread LIKE :thread AND nid = :nid", array(
-          ':thread' => $parent->thread . '.%',
-          ':nid' => $comment->nid,
-        ))->fetchField();
-
-        if ($max == '') {
-          // First child of this parent.
-          $thread = $parent->thread . '.' . comment_int_to_alphadecimal(0) . '/';
-        }
-        else {
-          // Strip the "/" at the end of the thread.
-          $max = rtrim($max, '/');
-          // Get the value at the correct depth.
-          $parts = explode('.', $max);
-          $parent_depth = count(explode('.', $parent->thread));
-          $last = $parts[$parent_depth];
-          // Finally, build the thread field for this new comment.
-          $thread = $parent->thread . '.' . comment_increment_alphadecimal($last) . '/';
-        }
-      }
-
-      if (empty($comment->created)) {
-        $comment->created = REQUEST_TIME;
-      }
-
-      if (empty($comment->changed)) {
-        $comment->changed = $comment->created;
-      }
-
-      if ($comment->uid === $user->uid && isset($user->name)) { // '===' Need to modify anonymous users as well.
-        $comment->name = $user->name;
-      }
-
-      // Ensure the parent id (pid) has a value set.
-      if (empty($comment->pid)) {
-        $comment->pid = 0;
-      }
-
-      // Add the values which aren't passed into the function.
-      $comment->thread = $thread;
-      $comment->hostname = ip_address();
-
-      drupal_write_record('comment', $comment);
-
-      // Ignore slave server temporarily to give time for the
-      // created comment to be propagated to the slave.
-      db_ignore_slave();
-
-      // Update the {node_comment_statistics} table prior to executing hooks.
-      _comment_update_node_statistics($comment->nid);
-
-      field_attach_insert('comment', $comment);
-
-      // Tell the other modules a new comment has been submitted.
-      module_invoke_all('comment_insert', $comment);
-      module_invoke_all('entity_insert', $comment, 'comment');
-    }
-    if ($comment->status == COMMENT_PUBLISHED) {
-      module_invoke_all('comment_publish', $comment);
-    }
-    unset($comment->original);
-  }
-  catch (Exception $e) {
-    $transaction->rollback('comment');
-    watchdog_exception('comment', $e);
-    throw $e;
-  }
-
+  $comment->save();
 }
 
 /**
- * Delete a comment and all its replies.
+ * Deletes a comment and all its replies.
  *
  * @param $cid
- *   The comment to delete.
+ *   The ID of the comment to delete.
  */
 function comment_delete($cid) {
   comment_delete_multiple(array($cid));
 }
 
 /**
- * Delete comments and all their replies.
+ * Deletes comments and all their replies.
  *
  * @param $cids
- *   The comment to delete.
+ *   The IDs of the comments to delete.
+ *
+ * @see hook_comment_predelete()
+ * @see hook_comment_delete()
  */
 function comment_delete_multiple($cids) {
-  $comments = comment_load_multiple($cids);
-  if ($comments) {
-    $transaction = db_transaction();
-    try {
-      // Delete the comments.
-      db_delete('comment')
-        ->condition('cid', array_keys($comments), 'IN')
-        ->execute();
-      foreach ($comments as $comment) {
-        field_attach_delete('comment', $comment);
-        module_invoke_all('comment_delete', $comment);
-        module_invoke_all('entity_delete', $comment, 'comment');
-
-        // Delete the comment's replies.
-        $child_cids = db_query('SELECT cid FROM {comment} WHERE pid = :cid', array(':cid' => $comment->cid))->fetchCol();
-        comment_delete_multiple($child_cids);
-        _comment_update_node_statistics($comment->nid);
-      }
-    }
-    catch (Exception $e) {
-      $transaction->rollback();
-      watchdog_exception('comment', $e);
-      throw $e;
-    }
-  }
+  entity_delete_multiple('comment', $cids);
 }
 
 /**
- * Load comments from the database.
+ * Loads comments from the database.
  *
  * @param $cids
  *   An array of comment IDs.
@@ -1645,20 +1511,20 @@ function comment_delete_multiple($cids) {
  * @return
  *   An array of comment objects, indexed by comment ID.
  *
+ * @todo Remove $conditions in Drupal 8.
+ *
  * @see entity_load()
  * @see EntityFieldQuery
- *
- * @todo Remove $conditions in Drupal 8.
  */
 function comment_load_multiple($cids = array(), $conditions = array(), $reset = FALSE) {
   return entity_load('comment', $cids, $conditions, $reset);
 }
 
 /**
- * Load the entire comment by cid.
+ * Loads the entire comment by comment ID.
  *
  * @param $cid
- *   The identifying comment id.
+ *   The ID of the comment to be loaded.
  * @param $reset
  *   Whether to reset the internal static entity cache. Note that the static
  *   cache is disabled in comment_entity_info() by default.
@@ -1672,45 +1538,16 @@ function comment_load($cid, $reset = FALSE) {
 }
 
 /**
- * Controller class for comments.
- *
- * This extends the DrupalDefaultEntityController class, adding required
- * special handling for comment objects.
- */
-class CommentController extends DrupalDefaultEntityController {
-
-  protected function buildQuery($ids, $conditions = array(), $revision_id = FALSE) {
-    $query = parent::buildQuery($ids, $conditions, $revision_id);
-    // Specify additional fields from the user and node tables.
-    $query->innerJoin('node', 'n', 'base.nid = n.nid');
-    $query->addField('n', 'type', 'node_type');
-    $query->innerJoin('users', 'u', 'base.uid = u.uid');
-    $query->addField('u', 'name', 'registered_name');
-    $query->fields('u', array('uid', 'signature', 'signature_format', 'picture'));
-    return $query;
-  }
-
-  protected function attachLoad(&$comments, $revision_id = FALSE) {
-    // Setup standard comment properties.
-    foreach ($comments as $key => $comment) {
-      $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
-      $comment->new = node_mark($comment->nid, $comment->changed);
-      $comment->node_type = 'comment_node_' . $comment->node_type;
-      $comments[$key] = $comment;
-    }
-    parent::attachLoad($comments, $revision_id);
-  }
-}
-
-/**
- * Get number of new comments for current user and specified node.
+ * Gets the number of new comments for the current user and the specified node.
  *
  * @param $nid
- *   Node-id to count comments for.
+ *   Node ID to count comments for.
  * @param $timestamp
  *   Time to count from (defaults to time of last user access
  *   to node).
- * @return The result or FALSE on error.
+ *
+ * @return
+ *   The number of new comments or FALSE if the user is not logged in.
  */
 function comment_num_new($nid, $timestamp = 0) {
   global $user;
@@ -1736,7 +1573,7 @@ function comment_num_new($nid, $timestamp = 0) {
 }
 
 /**
- * Get the display ordinal for a comment, starting from 0.
+ * Gets the display ordinal for a comment, starting from 0.
  *
  * Count the number of comments which appear before the comment we want to
  * display, taking into account display settings and threading.
@@ -1745,8 +1582,10 @@ function comment_num_new($nid, $timestamp = 0) {
  *   The comment ID.
  * @param $node_type
  *   The node type of the comment's parent.
+ *
  * @return
  *   The display ordinal for the comment.
+ *
  * @see comment_get_display_page()
  */
 function comment_get_display_ordinal($cid, $node_type) {
@@ -1778,7 +1617,7 @@ function comment_get_display_ordinal($cid, $node_type) {
 }
 
 /**
- * Return the page number for a comment.
+ * Returns the page number for a comment.
  *
  * Finds the correct page number for a comment taking into account display
  * and paging settings.
@@ -1787,6 +1626,7 @@ function comment_get_display_ordinal($cid, $node_type) {
  *   The comment ID.
  * @param $node_type
  *   The node type the comment is attached to.
+ *
  * @return
  *   The page number.
  */
@@ -1797,7 +1637,14 @@ function comment_get_display_page($cid, $node_type) {
 }
 
 /**
- * Page callback for comment editing.
+ * Page callback: Displays the comment editing form.
+ *
+ * Path: comment/%comment/edit
+ *
+ * @param $comment
+ *   The comment object representing the comment to be edited.
+ *
+ * @see comment_menu()
  */
 function comment_edit_page($comment) {
   drupal_set_title(t('Edit comment %comment', array('%comment' => $comment->subject)), PASS_THROUGH);
@@ -1817,11 +1664,11 @@ function comment_forms() {
 }
 
 /**
- * Generate the basic commenting form, for appending to a node or display on a separate page.
+ * Form constructor for the basic commenting form.
  *
  * @see comment_form_validate()
  * @see comment_form_submit()
- *
+ * @see comment_form_build_preview()
  * @ingroup forms
  */
 function comment_form($form, &$form_state, $comment) {
@@ -1831,22 +1678,6 @@ function comment_form($form, &$form_state, $comment) {
   // use during form building and processing. During a rebuild, use what is in
   // the form state.
   if (!isset($form_state['comment'])) {
-    $defaults = array(
-      'name' => '',
-      'mail' => '',
-      'homepage' => '',
-      'subject' => '',
-      'comment' => '',
-      'cid' => NULL,
-      'pid' => NULL,
-      'language' => LANGUAGE_NONE,
-      'uid' => 0,
-    );
-    foreach ($defaults as $key => $value) {
-      if (!isset($comment->$key)) {
-        $comment->$key = $value;
-      }
-    }
     $form_state['comment'] = $comment;
   }
   else {
@@ -2032,7 +1863,7 @@ function comment_form($form, &$form_state, $comment) {
 }
 
 /**
- * Build a preview from submitted form values.
+ * Form submission handler for the 'preview' button in comment_form().
  */
 function comment_form_build_preview($form, &$form_state) {
   $comment = comment_form_submit_build_comment($form, $form_state);
@@ -2041,7 +1872,9 @@ function comment_form_build_preview($form, &$form_state) {
 }
 
 /**
- * Generate a comment preview.
+ * Generates a comment preview.
+ *
+ * @see comment_form_build_preview()
  */
 function comment_preview($comment) {
   global $user;
@@ -2095,7 +1928,9 @@ function comment_preview($comment) {
 }
 
 /**
- * Validate comment form submissions.
+ * Form validation handler for comment_form().
+ *
+ * @see comment_form_submit()
  */
 function comment_form_validate($form, &$form_state) {
   global $user;
@@ -2143,12 +1978,6 @@ function comment_form_validate($form, &$form_state) {
  * Prepare a comment for submission.
  */
 function comment_submit($comment) {
-  // @todo Legacy support. Remove in Drupal 8.
-  if (is_array($comment)) {
-    $comment += array('subject' => '');
-    $comment = (object) $comment;
-  }
-
   if (empty($comment->date)) {
     $comment->date = 'now';
   }
@@ -2190,7 +2019,7 @@ function comment_submit($comment) {
 }
 
 /**
- * Updates the form state's comment entity by processing this submission's values.
+ * Updates the comment entity by processing the submission's values.
  *
  * This is the default builder function for the comment form. It is called
  * during the "Save" and "Preview" submit handlers to retrieve the entity to
@@ -2199,6 +2028,8 @@ function comment_submit($comment) {
  * before proceeding to the next step.
  *
  * @see comment_form()
+ * @see comment_form_preview()
+ * @see comment_form_submit()
  */
 function comment_form_submit_build_comment($form, &$form_state) {
   $comment = $form_state['comment'];
@@ -2208,7 +2039,10 @@ function comment_form_submit_build_comment($form, &$form_state) {
 }
 
 /**
- * Process comment form submissions; prepare the comment, store it, and set a redirection target.
+ * Form submission handler for comment_form().
+ *
+ * @see comment_form_validate()
+ * @see comment_form_submit_build_comment()
  */
 function comment_form_submit($form, &$form_state) {
   $node = node_load($form_state['values']['nid']);
@@ -2256,27 +2090,27 @@ function comment_form_submit($form, &$form_state) {
 }
 
 /**
- * Process variables for comment.tpl.php.
+ * Preprocesses variables for comment.tpl.php.
  *
  * @see comment.tpl.php
  */
 function template_preprocess_comment(&$variables) {
   $comment = $variables['elements']['#comment'];
   $node = $variables['elements']['#node'];
-  $variables['comment']   = $comment;
-  $variables['node']      = $node;
-  $variables['author']    = theme('username', array('account' => $comment));
-  $variables['created']   = format_date($comment->created);
-  $variables['changed']   = format_date($comment->changed);
+  $variables['comment'] = $comment;
+  $variables['node'] = $node;
+  $variables['author'] = theme('username', array('account' => $comment));
+  $variables['created'] = format_date($comment->created);
+  $variables['changed'] = format_date($comment->changed);
 
-  $variables['new']       = !empty($comment->new) ? t('new') : '';
-  $variables['picture']   = theme_get_setting('toggle_comment_user_picture') ? theme('user_picture', array('account' => $comment)) : '';
+  $variables['new'] = !empty($comment->new) ? t('new') : '';
+  $variables['user_picture'] = theme_get_setting('toggle_comment_user_picture') ? theme('user_picture', array('account' => $comment)) : '';
   $variables['signature'] = $comment->signature;
 
   $uri = entity_uri('comment', $comment);
   $uri['options'] += array('attributes' => array('class' => 'permalink', 'rel' => 'bookmark'));
 
-  $variables['title']     = l($comment->subject, $uri['path'], $uri['options']);
+  $variables['title'] = l($comment->subject, $uri['path'], $uri['options']);
   $variables['permalink'] = l(t('Permalink'), $uri['path'], $uri['options']);
   $variables['submitted'] = t('Submitted by !username on !datetime', array('!username' => $variables['author'], '!datetime' => $variables['created']));
 
@@ -2364,7 +2198,7 @@ function theme_comment_post_forbidden($variables) {
 }
 
 /**
- * Process variables for comment-wrapper.tpl.php.
+ * Preprocesses variables for comment-wrapper.tpl.php.
  *
  * @see comment-wrapper.tpl.php
  * @see theme_comment_wrapper()
@@ -2378,10 +2212,10 @@ function template_preprocess_comment_wrapper(&$variables) {
 }
 
 /**
- * Return an array of viewing modes for comment listings.
+ * Returns an array of viewing modes for comment listings.
  *
  * We can't use a global variable array because the locale system
- * is not initialized yet when the comment module is loaded.
+ * is not initialized yet when the Comment module is loaded.
  */
 function _comment_get_modes() {
   return array(
@@ -2391,70 +2225,14 @@ function _comment_get_modes() {
 }
 
 /**
- * Return an array of "comments per page" settings from which the user
- * can choose.
+ * Returns an array of "comments per page" values that users can select from.
  */
 function _comment_per_page() {
   return drupal_map_assoc(array(10, 30, 50, 70, 90, 150, 200, 250, 300));
 }
 
 /**
- * Updates the comment statistics for a given node. This should be called any
- * time a comment is added, deleted, or updated.
- *
- * The following fields are contained in the node_comment_statistics table.
- * - last_comment_timestamp: the timestamp of the last comment for this node or the node create stamp if no comments exist for the node.
- * - last_comment_name: the name of the anonymous poster for the last comment
- * - last_comment_uid: the uid of the poster for the last comment for this node or the node authors uid if no comments exists for the node.
- * - comment_count: the total number of approved/published comments on this node.
- */
-function _comment_update_node_statistics($nid) {
-  // Allow bulk updates and inserts to temporarily disable the
-  // maintenance of the {node_comment_statistics} table.
-  if (!variable_get('comment_maintain_node_statistics', TRUE)) {
-    return;
-  }
-
-  $count = db_query('SELECT COUNT(cid) FROM {comment} WHERE nid = :nid AND status = :status', array(
-    ':nid' => $nid,
-    ':status' => COMMENT_PUBLISHED,
-  ))->fetchField();
-
-  if ($count > 0) {
-    // Comments exist.
-    $last_reply = db_query_range('SELECT cid, name, changed, uid FROM {comment} WHERE nid = :nid AND status = :status ORDER BY cid DESC', 0, 1, array(
-      ':nid' => $nid,
-      ':status' => COMMENT_PUBLISHED,
-    ))->fetchObject();
-    db_update('node_comment_statistics')
-      ->fields(array(
-        'cid' => $last_reply->cid,
-        'comment_count' => $count,
-        'last_comment_timestamp' => $last_reply->changed,
-        'last_comment_name' => $last_reply->uid ? '' : $last_reply->name,
-        'last_comment_uid' => $last_reply->uid,
-      ))
-      ->condition('nid', $nid)
-      ->execute();
-  }
-  else {
-    // Comments do not exist.
-    $node = db_query('SELECT uid, created FROM {node} WHERE nid = :nid', array(':nid' => $nid))->fetchObject();
-    db_update('node_comment_statistics')
-      ->fields(array(
-        'cid' => 0,
-        'comment_count' => 0,
-        'last_comment_timestamp' => $node->created,
-        'last_comment_name' => '',
-        'last_comment_uid' => $node->uid,
-      ))
-      ->condition('nid', $nid)
-      ->execute();
-  }
-}
-
-/**
- * Generate sorting code.
+ * Generates a sorting code.
  *
  * Consists of a leading character indicating length, followed by N digits
  * with a numerical value in base 36 (alphadecimal). These codes can be sorted
@@ -2474,7 +2252,7 @@ function comment_int_to_alphadecimal($i = 0) {
 }
 
 /**
- * Decode sorting code back to an integer.
+ * Decodes a sorting code back to an integer.
  *
  * @see comment_int_to_alphadecimal()
  */
@@ -2483,7 +2261,7 @@ function comment_alphadecimal_to_int($c = '00') {
 }
 
 /**
- * Increment a sorting code to the next value.
+ * Increments a sorting code to the next value.
  *
  * @see comment_int_to_alphadecimal()
  */
@@ -2606,7 +2384,7 @@ function comment_unpublish_by_keyword_action($comment, $context) {
 }
 
 /**
- * Form builder; Prepare a form for blacklisted keywords.
+ * Form constructor for the blacklisted keywords form.
  *
  * @ingroup forms
  * @see comment_unpublish_by_keyword_action()
@@ -2624,7 +2402,7 @@ function comment_unpublish_by_keyword_action_form($context) {
 }
 
 /**
- * Process comment_unpublish_by_keyword_action_form form submissions.
+ * Form submission handler for comment_unpublish_by_keyword_action_form().
  *
  * @see comment_unpublish_by_keyword_action()
  */

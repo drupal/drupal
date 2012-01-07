@@ -746,7 +746,7 @@ function check_markup($text, $format_id = NULL, $langcode = '', $cache = FALSE) 
 
   // Give filters the chance to escape HTML-like data such as code or formulas.
   foreach ($filters as $name => $filter) {
-    if ($filter->status && isset($filter_info[$name]['prepare callback']) && function_exists($filter_info[$name]['prepare callback'])) {
+    if ($filter->status && isset($filter_info[$name]['prepare callback'])) {
       $function = $filter_info[$name]['prepare callback'];
       $text = $function($text, $filter, $format, $langcode, $cache, $cache_id);
     }
@@ -754,7 +754,7 @@ function check_markup($text, $format_id = NULL, $langcode = '', $cache = FALSE) 
 
   // Perform filtering.
   foreach ($filters as $name => $filter) {
-    if ($filter->status && isset($filter_info[$name]['process callback']) && function_exists($filter_info[$name]['process callback'])) {
+    if ($filter->status && isset($filter_info[$name]['process callback'])) {
       $function = $filter_info[$name]['process callback'];
       $text = $function($text, $filter, $format, $langcode, $cache, $cache_id);
     }
@@ -1015,7 +1015,7 @@ function _filter_tips($format_id, $long = FALSE) {
     $filters = filter_list_format($format->format);
     $tips[$format->name] = array();
     foreach ($filters as $name => $filter) {
-      if ($filter->status && isset($filter_info[$name]['tips callback']) && function_exists($filter_info[$name]['tips callback'])) {
+      if ($filter->status && isset($filter_info[$name]['tips callback'])) {
         $tip = $filter_info[$name]['tips callback']($filter, $format, $long);
         if (isset($tip)) {
           $tips[$format->name][$name] = array('tip' => $tip, 'id' => $name);
