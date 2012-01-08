@@ -1683,7 +1683,7 @@ function system_update_8002() {
 }
 
 /**
- * Add {config} table for new Configuration system.
+ * Adds {config} table for new Configuration system.
  */
 function system_update_8003() {
   // @todo Temporary.
