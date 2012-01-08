@@ -1103,12 +1103,25 @@ function taxonomy_get_tree($vid, $parent = 0, $max_depth = NULL, $load_entities 
  *
  * @param $name
  *   Name of the term to search for.
+ * @param $vocabulary
+ *   (optional) Vocabulary machine name to limit the search. Defaults to NULL.
  *
  * @return
  *   An array of matching term objects.
  */
-function taxonomy_get_term_by_name($name) {
-  return taxonomy_term_load_multiple(array(), array('name' => trim($name)));
+function taxonomy_get_term_by_name($name, $vocabulary = NULL) {
+  $conditions = array('name' => trim($name));
+  if (isset($vocabulary)) {
+    $vocabularies = taxonomy_vocabulary_get_names();
+    if (isset($vocabularies[$vocabulary])){
+      $conditions['vid'] = $vocabularies[$vocabulary]->vid;
+    }
+    else {
+      // Return an empty array when filtering by a non-existing vocabulary.
+      return array();
+    }
+  }
+  return taxonomy_term_load_multiple(array(), $conditions);
 }
 
 /**
