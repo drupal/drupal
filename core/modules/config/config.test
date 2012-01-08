@@ -6,11 +6,14 @@
  */
 
 /**
- * Test cases for the secure file writer.
+ * Tests the secure file writer.
  */
 class SecureFileTestCase extends DrupalUnitTestCase {
   protected $filename = 'foo.bar';
 
+  /**
+   * @todo
+   */
   protected $testContent = 'Good morning, Denver!';
 
   public static function getInfo() {
@@ -83,7 +86,7 @@ class SecureFileTestCase extends DrupalUnitTestCase {
 }
 
 /**
- * Test cases for the secure file writer.
+ * Tests reading and writing file contents.
  */
 class FileContentsTestCase extends DrupalWebTestCase {
   public static function getInfo() {
