@@ -992,7 +992,7 @@ function install_settings_form_submit($form, &$form_state) {
     'required' => TRUE,
   );
 
-  $settings['drupal_config_key'] = array(
+  $settings['config_signature_key'] = array(
     'value'    => drupal_hash_base64(drupal_random_bytes(55)),
     'required' => TRUE,
   );
@@ -1005,14 +1005,14 @@ function install_settings_form_submit($form, &$form_state) {
   // without hitting install_settings_form_submit() if your settings.php
   // already has the db stuff in it, and right now in that case your
   // config directory never gets created. So this needs to be moved elsewhere.
-  $settings['drupal_config_directory_name'] = array(
-    'value'     => 'config_' . drupal_hmac_base64('', session_id() . $settings['drupal_config_key']['value'] . $settings['drupal_hash_salt']['value']),
+  $settings['config_directory_name'] = array(
+    'value'     => 'config_' . drupal_hmac_base64('', session_id() . $settings['config_signature_key']['value'] . $settings['drupal_hash_salt']['value']),
     'required'  => TRUE,
   );
 
   drupal_rewrite_settings($settings);
   // Actually create the config directory named above.
-  $config_path = conf_path() . '/files/' . $settings['drupal_config_directory_name']['value'];
+  $config_path = conf_path() . '/files/' . $settings['config_directory_name']['value'];
   if (!file_prepare_directory($config_path, FILE_CREATE_DIRECTORY)) {
     // How best to handle errors here?
   };

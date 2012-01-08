@@ -12,9 +12,9 @@
  *   The directory name.
  */
 function config_get_config_directory() {
-  global $drupal_config_directory_name;
+  global $config_directory_name;
 
-  return conf_path() . '/files/' . $drupal_config_directory_name;
+  return conf_path() . '/files/' . $config_directory_name;
 }
 
 /**
@@ -81,11 +81,11 @@ function config_get_signed_file_storage_names_with_prefix($prefix = '') {
  */
 function config_sign_data($data) {
   // The configuration key is loaded from settings.php and imported into the global namespace
-  global $drupal_config_key;
+  global $config_signature_key;
 
   // SHA-512 is both secure and very fast on 64 bit CPUs.
   // @todo What about 32-bit CPUs?
-  return hash_hmac('sha512', $data, $drupal_config_key);
+  return hash_hmac('sha512', $data, $config_signature_key);
 }
 
 /**
