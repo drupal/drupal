@@ -29,7 +29,7 @@ formatPlural
 (
 1,
 "Whitespace Call plural",
-"Whitespace Call @count plural",
+"Whitespace Call @count plural"
 )
 ;
 
