@@ -6,7 +6,7 @@
  */
 
 /**
- * Get the randomly generated config directory name.
+ * Gets the randomly generated config directory name.
  *
  * @return
  *   The directory name.
@@ -18,7 +18,7 @@ function config_get_config_directory() {
 }
 
 /**
- * Move the default config supplied by a module to the live config directory.
+ * Moves the default config supplied by a module to the live config directory.
  *
  * @param
  *   The name of the module we are installing.
@@ -45,7 +45,7 @@ function config_install_default_config($module) {
 }
 
 /**
- * Retrieve an iterable array which lists the children under a config 'branch'.
+ * Retrieves an iterable array which lists the children under a config 'branch'.
  *
  * Given the following configuration files:
  * - core.entity.node_type.article.xml
@@ -71,10 +71,11 @@ function config_get_signed_file_storage_names_with_prefix($prefix = '') {
 }
 
 /**
- * Generate a hash of a config file's contents using our encryption key.
+ * Generates a hash of a config file's contents using our encryption key.
  *
  * @param $data
  *   The contents of a configuration file.
+ *
  * @return
  *   A hash of the data.
  */
@@ -87,16 +88,34 @@ function config_sign_data($data) {
   return hash_hmac('sha512', $data, $drupal_config_key);
 }
 
+/**
+ * @todo
+ *
+ * @param $prefix
+ *   @todo
+ *
+ * @return
+ *   @todo
+ */
 function config_get_verified_storage_names_with_prefix($prefix = '') {
   return DrupalVerifiedStorageSQL::getNamesWithPrefix($prefix);
 }
 
+/**
+ * @todo
+ *
+ * @param $prefix
+ *   @todo
+ *
+ * @return
+ *   @todo
+ */
 function config_get_names_with_prefix($prefix) {
   return config_get_verified_storage_names_with_prefix($prefix);
 }
 
 /**
- * Retrieve a configuration object.
+ * Retrieves a configuration object.
  *
  * This is the main entry point to the configuration API. Calling
  * @code config(book.admin) @endcode will return a configuration object in which
@@ -120,7 +139,7 @@ function config($name, $class = 'DrupalConfig') {
 }
 
 /**
- * Decode configuration data from its native format to an associative array.
+ * Decodes configuration data from its native format to an associative array.
  *
  * @param $data
  *   Configuration data.
@@ -169,10 +188,11 @@ function config_xml_to_array($data) {
 }
 
 /**
- * Encode an array into the native configuration format.
+ * Encodes an array into the native configuration format.
  *
  * @param $data
  *   An associative array or an object
+ *
  * @return
  *   A representation of this array or object in the native configuration
  *   format.
@@ -195,10 +215,11 @@ function config_encode($data) {
 }
 
 /**
- * Encode an array into XML
+ * Encodes an array into XML
  *
  * @param $data
  *   An associative array or an object
+ *
  * @return
  *   A representation of this array or object in the native configuration
  *   format.
@@ -222,10 +243,24 @@ function config_array_to_xml($array, &$xml_object) {
   }
 }
 
+/**
+ * @todo
+ */
 class ConfigException extends Exception {}
 
+/**
+ * @todo
+ */
 class ConfigFileStorageException extends ConfigException {}
+
+/**
+ * @todo
+ */
 class ConfigFileStorageReadException extends ConfigFileStorageException {}
+
+/**
+ * @todo
+ */
 class ConfigFileStorageSignatureException extends ConfigFileStorageException {}
 
 /**
@@ -240,7 +275,7 @@ class SignedFileStorage {
   /**
    * Constructs a SignedFileStorage object.
    *
-   * param string @name
+   * @param string $name
    *   The name for the configuration data. Should be lowercase.
    */
   public function __construct($name) {
@@ -271,6 +306,9 @@ class SignedFileStorage {
 
   /**
    * Checks whether the XML configuration file already exists on disk.
+   *
+   * @return
+   *   @todo
    */
   protected function exists() {
     return file_exists($this->getFilePath());
@@ -278,6 +316,9 @@ class SignedFileStorage {
 
   /**
    * Returns the path to the XML configuration file.
+   *
+   * @return
+   *   @todo
    */
   public function getFilePath() {
     return config_get_config_directory() . '/' . $this->name  . '.xml';
@@ -323,10 +364,11 @@ class SignedFileStorage {
    *
    * @param $data
    *   The data to be written to the file.
-   * @todo What format is $data in?
    *
    * @throws
    *   Exception
+   *
+   * @todo What format is $data in?
    */
   public function write($data) {
     $signature = config_sign_data($data);
@@ -340,6 +382,9 @@ class SignedFileStorage {
 
   /**
    * Returns the contents of the configuration file.
+   *
+   * @return
+   *   @todo
    */
   public function read() {
     if ($this->exists()) {
@@ -352,7 +397,7 @@ class SignedFileStorage {
   }
 
   /**
-   * Delete a configuration file.
+   * Deletes a configuration file.
    */
   public function delete() {
     // Needs error handling and etc.
@@ -361,42 +406,44 @@ class SignedFileStorage {
   }
 }
 
+/**
+ * Defines an interface for verified storage manipulation.
+ *
+ * This class allows reading and writing configuration data from/to the
+ * verified storage and copying to/from the signed file storing the same data.
+ */
 interface DrupalConfigVerifiedStorageInterface {
 
   /**
-   * Constructor for the verified storage manipulation class.
+   * Constructs a verified storage manipulation class.
    *
-   * This class allows reading and writing configuration data from/to the
-   * verified storage and copying to/from the signed file storing the same
-   * data.
-   *
-   * @param @name
+   * @param $name
    *   Lowercase string, the name for the configuration data.
    */
   function __construct($name);
 
   /**
-   * Read the configuration data from the verified storage.
+   * Reads the configuration data from the verified storage.
    */
   function read();
 
   /**
-   * Copy the configuration data from the verified storage into a file.
+   * Copies the configuration data from the verified storage into a file.
    */
   function copyToFile();
 
   /**
-   * Copy the configuration data from the file into the verified storage.
+   * Copies the configuration data from the file into the verified storage.
    */
   function copyFromFile();
 
   /**
-   * Delete the configuration data file.
+   * Deletes the configuration data file.
    */
   function deleteFile();
 
   /**
-   * Check whether the file and the verified storage is in sync.
+   * Checks whether the file and the verified storage is in sync.
    *
    * @return
    *   TRUE if the file and the verified storage contains the same data, FALSE
@@ -405,58 +452,104 @@ interface DrupalConfigVerifiedStorageInterface {
   function isOutOfSync();
 
   /**
-   * Write the configuration data into the active storage but not the file.
+   * Writes the configuration data into the active storage but not the file.
    *
    * Use this function if you need to make temporary changes to your
    * configuration.
+   *
+   * @param $data
+   *   The configuration data to write into active storage.
    */
   function writeToActive($data);
 
   /**
-   * Write the configuration data into the active storage and the file.
+   * Writes the configuration data into the active storage and the file.
+   *
+   * @param $data
+   *   The configuration data to write.
    */
   function write($data);
 
   /**
-   * Get names starting with this prefix.
+   * Gets names starting with this prefix.
+   *
+   * @param $prefix
+   *   @todo
    */
   static function getNamesWithPrefix($prefix);
 }
 
+/**
+ * @todo
+ */
 abstract class DrupalConfigVerifiedStorage implements DrupalConfigVerifiedStorageInterface {
+
+  /**
+   * Implements DrupalConfigVerifiedStorageInterface::__construct().
+   */
   function __construct($name) {
     $this->name = $name;
   }
 
+  /**
+   * @todo
+   *
+   * @return
+   *   @todo
+   */
   protected function signedFileStorage() {
     return new SignedFileStorage($this->name);
   }
 
+  /**
+   * Implements DrupalConfigVerifiedStorageInterface::copyToFile().
+   */
   public function copyToFile() {
     return $this->signedFileStorage()->write($this->read());
   }
 
+  /**
+   * Implements DrupalConfigVerifiedStorageInterface::deleteFile().
+   */
   public function deleteFile() {
     return $this->signedFileStorage()->delete();
   }
 
+  /**
+   * Implements DrupalConfigVerifiedStorageInterface::copyFromFile().
+   */
   public function copyFromFile() {
     return $this->writeToActive($this->readFromFile());
   }
 
+  /**
+   * @todo
+   *
+   * @return
+   *   @todo
+   */
   public function readFromFile() {
     return $this->signedFileStorage()->read($this->name);
   }
 
+  /**
+   * Implements DrupalConfigVerifiedStorageInterface::isOutOfSync().
+   */
   public function isOutOfSync() {
     return $this->read() !== $this->readFromFile();
   }
 
+  /**
+   * Implements DrupalConfigVerifiedStorageInterface::write().
+   */
   public function write($data) {
     $this->writeToActive($data);
     $this->copyToFile();
   }
 
+  /**
+   * Implements DrupalConfigVerifiedStorageInterface::delete().
+   */
   public function delete() {
     $this->deleteFromActive();
     $this->deleteFile();
@@ -468,6 +561,9 @@ abstract class DrupalConfigVerifiedStorage implements DrupalConfigVerifiedStorag
  */
 class DrupalVerifiedStorageSQL extends DrupalConfigVerifiedStorage {
 
+  /**
+   * Overrides DrupalConfigVerifiedStorage::read().
+   */
   public function read() {
     // There are situations, like in the installer, where we may attempt a
     // read without actually having the database available. This is a
@@ -478,6 +574,9 @@ class DrupalVerifiedStorageSQL extends DrupalConfigVerifiedStorage {
     }
   }
 
+  /**
+   * Implements DrupalConfigVerifiedStorageInterface::writeToActive().
+   */
   public function writeToActive($data) {
     return db_merge('config')
       ->key(array('name' => $this->name))
@@ -485,12 +584,18 @@ class DrupalVerifiedStorageSQL extends DrupalConfigVerifiedStorage {
       ->execute();
   }
 
+  /**
+   * @todo
+   */
   public function deleteFromActive() {
     db_delete('config')
       ->condition('name', $this->name)
       ->execute();
   }
 
+  /**
+   * Implements DrupalConfigVerifiedStorageInterface::getNamesWithPrefix().
+   */
   static public function getNamesWithPrefix($prefix = '') {
     return db_query('SELECT name FROM {config} WHERE name LIKE :name', array(':name' => db_like($prefix) . '%'))->fetchCol();
   }
@@ -533,6 +638,12 @@ class DrupalConfig {
 
   /**
    * Checks whether a particular value is overridden.
+   *
+   * @param $key
+   *   @todo
+   *
+   * @return
+   *   @todo
    */
   public function isOverridden($key) {
     return isset($this->_overrides[$key]);
@@ -540,6 +651,12 @@ class DrupalConfig {
 
   /**
    * Gets value in this config object.
+   *
+   * @param $key
+   *   @todo
+   *
+   * @return
+   *   @todo
    */
   public function get($key) {
     $parts = explode('.', $key);
@@ -553,6 +670,11 @@ class DrupalConfig {
 
   /**
    * Sets value in this config object.
+   *
+   * @param $key
+   *   @todo
+   * @param $value
+   *   @todo
    */
   public function set($key, $value) {
     $parts = explode('.', $key);
@@ -566,6 +688,9 @@ class DrupalConfig {
 
   /**
    * Unsets value in this config object.
+   *
+   * @param $key
+   *   @todo
    */
   public function clear($key) {
     $parts = explode('.', $key);
