@@ -3135,14 +3135,13 @@ function drupal_group_css($css) {
  * @see system_element_info()
  */
 function drupal_aggregate_css(&$css_groups) {
-  // Only aggregate when the site is configured to do so, and not during an
-  // update.
-  if (defined('MAINTENANCE_MODE') && (MAINTENANCE_MODE == 'install' || MAINTENANCE_MODE == 'update')) {
-    $preprocess_css = FALSE;    
+  // Only aggregate during normal site operation.
+  if (defined('MAINTENANCE_MODE')) {
+    $preprocess_css = FALSE;
   }
   else {
     $config = config('system.performance');
-    $preprocess_css = ($config->get('preprocess_css'));
+    $preprocess_css = $config->get('preprocess_css');
   }
 
   // For each group that needs aggregation, aggregate its items.
@@ -4376,12 +4375,13 @@ function drupal_group_js($javascript) {
  * @see drupal_pre_render_scripts()
  */
 function drupal_aggregate_js(&$js_groups) {
-  if (defined('MAINTENANCE_MODE') && (MAINTENANCE_MODE == 'install' || MAINTENANCE_MODE == 'update')) {
-    $preprocess_js = FALSE;    
+  // Only aggregate during normal site operation.
+  if (defined('MAINTENANCE_MODE')) {
+    $preprocess_js = FALSE;
   }
   else {
     $config = config('system.performance');
-    $preprocess_js = ($config->get('preprocess_js'));
+    $preprocess_js = $config->get('preprocess_js');
   }
 
   // Only aggregate when the site is configured to do so, and not during an
@@ -6560,7 +6560,7 @@ function drupal_array_set_nested_value(array &$array, array $parents, $value, $f
  * @code array('signature_settings', 'user', 'signature') @endcode in the second
  * case.
  *
- * Without this helper function the only way to unset the signature element in 
+ * Without this helper function the only way to unset the signature element in
  * one line would be using eval(), which should be avoided:
  * @code
  * // Do not do this! Avoid eval().

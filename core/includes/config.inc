@@ -13,7 +13,7 @@
  */
 function config_get_config_directory() {
   global $drupal_config_directory_name;
-  
+
   return conf_path() . '/files/' . $drupal_config_directory_name;
 }
 
@@ -32,9 +32,8 @@ function config_install_default_config($module) {
       // Load config data into the active store and write it out to the
       // file system in the drupal config directory. Note the config name
       // needs to be the same as the file name WITHOUT the extension.
-      //
       // @todo Make this acknowledge other storage engines rather than having
-      // SQL be hardcoded.
+      //   SQL be hardcoded.
       $parts = explode('/', $file);
       $file = array_pop($parts);
       $config_name = str_replace('.xml', '', $file);
@@ -49,16 +48,17 @@ function config_install_default_config($module) {
  * Retrieve an iterable array which lists the children under a config 'branch'.
  *
  * Given the following configuration files:
- *   core.entity.node_type.article.xml
- *   core.entity.node_type.page.xml
+ * - core.entity.node_type.article.xml
+ * - core.entity.node_type.page.xml
  *
  * You can pass a prefix 'core.entity.node_type' and get back an array of the
- * filenames that match. This allows you to iterate through all files in a 
+ * filenames that match. This allows you to iterate through all files in a
  * branch. Note that this will only work on the level above the tips, so
  * a prefix of 'core.entity' would return an empty array.
  *
  * @param $prefix
  *   The prefix of the files we are searching for.
+ *
  * @return
  *   An array of file names under a branch.
  */
@@ -72,7 +72,7 @@ function config_get_signed_file_storage_names_with_prefix($prefix = '') {
 
 /**
  * Generate a hash of a config file's contents using our encryption key.
- * 
+ *
  * @param $data
  *   The contents of a configuration file.
  * @return
@@ -81,9 +81,9 @@ function config_get_signed_file_storage_names_with_prefix($prefix = '') {
 function config_sign_data($data) {
   // The configuration key is loaded from settings.php and imported into the global namespace
   global $drupal_config_key;
-  
+
   // SHA-512 is both secure and very fast on 64 bit CPUs.
-  // TODO: What about 32-bit CPUs?
+  // @todo What about 32-bit CPUs?
   return hash_hmac('sha512', $data, $drupal_config_key);
 }
 
@@ -109,12 +109,13 @@ function config_get_names_with_prefix($prefix) {
  * @param $class
  *   The class name of the config object to be returned. Defaults to
  *   DrupalConfig.
+ *
  * @return
  *   An instance of the class specified in the $class parameter.
  *
  */
 function config($name, $class = 'DrupalConfig') {
-  // @TODO Replace this with the appropriate factory.
+  // @todo Replace this with an appropriate factory.
   return new $class(new DrupalVerifiedStorageSQL($name));
 }
 
@@ -122,7 +123,8 @@ function config($name, $class = 'DrupalConfig') {
  * Decode configuration data from its native format to an associative array.
  *
  * @param $data
- *   Configuration data
+ *   Configuration data.
+ *
  * @return
  *   An associative array representation of the data.
  */
@@ -136,28 +138,26 @@ function config_decode($data) {
 }
 
 /**
- * Helper function for standardizing SimpleXML object output into simple
- * arrays for easier use.
+ * Standardizes SimpleXML object output into simple arrays for easier use.
  *
  * @param $xmlObject
- *  A valid XML string.
+ *   A valid XML string.
  *
  * @return
- *  An array representation of A SimpleXML object.
+ *   An array representation of A SimpleXML object.
  */
 function config_xml_to_array($data) {
   $out = array();
   $xmlObject = simplexml_load_string($data);
-  
+
   if (is_object($xmlObject)) {
-    $attributes = (array)$xmlObject->attributes();
+    $attributes = (array) $xmlObject->attributes();
     if (isset($attributes['@attributes'])) {
       $out['#attributes'] = $attributes['@attributes'];
     }
   }
-  if (trim((string)$xmlObject)) {
-    $out = trim((string)$xmlObject);
-    return $out;
+  if (trim((string) $xmlObject)) {
+    return trim((string) $xmlObject);
   }
   foreach ($xmlObject as $index => $content) {
     if (is_object($content)) {
@@ -175,9 +175,9 @@ function config_xml_to_array($data) {
  *   An associative array or an object
  * @return
  *   A representation of this array or object in the native configuration
- *   format. 
- * @todo
- *   This needs to work for objects as well and currently doesn't
+ *   format.
+ *
+ * @todo This needs to work for objects as well and currently doesn't.
  */
 function config_encode($data) {
   // creating object of SimpleXMLElement
@@ -201,9 +201,9 @@ function config_encode($data) {
  *   An associative array or an object
  * @return
  *   A representation of this array or object in the native configuration
- *   format. 
- * @todo
- *   This needs to work for objects as well and currently doesn't
+ *   format.
+ *
+ * @todo This needs to work for objects as well and currently doesn't.
  */
 function config_array_to_xml($array, &$xml_object) {
   foreach ($array as $key => $value) {
@@ -217,7 +217,7 @@ function config_array_to_xml($array, &$xml_object) {
       }
     }
     else {
-      $xml_object->addChild("$key","$value");
+      $xml_object->addChild("$key", "$value");
     }
   }
 }
@@ -257,7 +257,7 @@ class SignedFileStorage {
    *   Exception
    */
   protected function readWithSignature() {
-    // TODO: Optimize with explicit offsets?
+    // @todo Optimize with explicit offsets?
     $content = file_get_contents($this->getFilePath());
     if ($content === FALSE) {
       throw new Exception('Read file is invalid.');
@@ -298,6 +298,7 @@ class SignedFileStorage {
    *
    * @param $contentOnSuccess
    *   Whether or not to return the contents of the verified configuration file.
+   *
    * @return mixed
    *   If $contentOnSuccess was TRUE, returns the contents of the verified
    *   configuration file; otherwise returns TRUE on success. Always returns
@@ -321,7 +322,8 @@ class SignedFileStorage {
    * Writes the contents of the configuration file to disk.
    *
    * @param $data
-   *   The data to be written to the file. // TODO - what format is it in?
+   *   The data to be written to the file.
+   * @todo What format is $data in?
    *
    * @throws
    *   Exception
@@ -348,7 +350,7 @@ class SignedFileStorage {
       return $verification;
     }
   }
-  
+
   /**
    * Delete a configuration file.
    */
@@ -368,7 +370,7 @@ interface DrupalConfigVerifiedStorageInterface {
    * verified storage and copying to/from the signed file storing the same
    * data.
    *
-   * param @name
+   * @param @name
    *   Lowercase string, the name for the configuration data.
    */
   function __construct($name);
@@ -430,10 +432,10 @@ abstract class DrupalConfigVerifiedStorage implements DrupalConfigVerifiedStorag
     return new SignedFileStorage($this->name);
   }
 
-  public function copyTofile() {
+  public function copyToFile() {
     return $this->signedFileStorage()->write($this->read());
   }
-  
+
   public function deleteFile() {
     return $this->signedFileStorage()->delete();
   }
@@ -467,8 +469,8 @@ abstract class DrupalConfigVerifiedStorage implements DrupalConfigVerifiedStorag
 class DrupalVerifiedStorageSQL extends DrupalConfigVerifiedStorage {
 
   public function read() {
-    // There are situations, like in the installer, where we may attempt a 
-    // read without actually having the database available. This is a 
+    // There are situations, like in the installer, where we may attempt a
+    // read without actually having the database available. This is a
     // workaround and there is probably a better solution to be had at
     // some point.
     if (!empty($GLOBALS['databases']) && db_table_exists('config')) {
@@ -518,15 +520,15 @@ class DrupalConfig {
     $this->_verifiedStorage = $verified_storage;
     $this->read();
   }
-  
+
   /**
-   * Read config data from the active store into our object.
+   * Reads config data from the active store into our object.
    */
   public function read() {
     $active = (array) config_decode($this->_verifiedStorage->read());
     foreach ($active as $key => $value) {
       $this->set($key, $value);
-    }    
+    }
   }
 
   /**
@@ -537,7 +539,20 @@ class DrupalConfig {
   }
 
   /**
-   * Set value in this config object.
+   * Gets value in this config object.
+   */
+  public function get($key) {
+    $parts = explode('.', $key);
+    if (count($parts) == 1) {
+      return isset($this->data[$key]) ? $this->data[$key] : NULL;
+    }
+    else {
+      return drupal_array_get_nested_value($this->data, $parts);
+    }
+  }
+
+  /**
+   * Sets value in this config object.
    */
   public function set($key, $value) {
     $parts = explode('.', $key);
@@ -550,7 +565,7 @@ class DrupalConfig {
   }
 
   /**
-   * Unset value in this config object.
+   * Unsets value in this config object.
    */
   public function clear($key) {
     $parts = explode('.', $key);
@@ -559,19 +574,6 @@ class DrupalConfig {
     }
     else {
       drupal_array_unset_nested_value($this->data, $parts);
-    }
-  }
-
-  /**
-   * Get value in this config object.
-   */
-  public function get($key) {
-    $parts = explode('.', $key);
-    if (count($parts) == 1) {
-      return $this->data[$key];
-    }
-    else {
-      return drupal_array_get_nested_value($this->data, $parts);
     }
   }
 

@@ -1719,8 +1719,8 @@ function system_performance_settings($form, &$form_state) {
 
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array(
-    '#type' => 'submit', 
-    '#value' => t('Save configuration')
+    '#type' => 'submit',
+    '#value' => t('Save configuration'),
   );
 
   $form['#submit'][] = 'drupal_clear_css_cache';
