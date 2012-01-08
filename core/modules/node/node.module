@@ -2896,6 +2896,31 @@ function node_search_validate($form, &$form_state) {
 }
 
 /**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * Alters the theme form to use the admin theme on node editing.
+ *
+ * @see node_form_system_themes_admin_form_submit()
+ */
+function node_form_system_themes_admin_form_alter(&$form, &$form_state, $form_id) {
+  $form['admin_theme']['node_admin_theme'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Use the administration theme when editing or creating content'),
+    '#default_value' => variable_get('node_admin_theme', '0'),
+  );
+  $form['#submit'][] = 'node_form_system_themes_admin_form_submit';
+}
+
+/**
+ * Form submission handler for system_themes_admin_form().
+ *
+ * @see node_form_system_themes_admin_form_alter()
+ */
+function node_form_system_themes_admin_form_submit($form, &$form_state) {
+  variable_set('node_admin_theme', $form_state['values']['node_admin_theme']);
+}
+
+/**
  * @defgroup node_access Node access rights
  * @{
  * The node access system determines who can do what to which nodes.
@@ -4077,6 +4102,28 @@ function node_modules_enabled($modules) {
   // be rebuilt.
   if (!node_access_needs_rebuild() && array_intersect($modules, module_implements('node_grants'))) {
     node_access_needs_rebuild(TRUE);
+  }
+}
+
+/**
+ * Implements hook_modules_disabled().
+ */
+function node_modules_disabled($modules) {
+  // Check whether any of the disabled modules implemented hook_node_grants(),
+  // in which case the node access table needs to be rebuilt.
+  foreach ($modules as $module) {
+    // At this point, the module is already disabled, but its code is still
+    // loaded in memory. Module functions must no longer be called. We only
+    // check whether a hook implementation function exists and do not invoke it.
+    if (!node_access_needs_rebuild() && module_hook($module, 'node_grants')) {
+      node_access_needs_rebuild(TRUE);
+    }
+  }
+
+  // If there remains no more node_access module, rebuilding will be
+  // straightforward, we can do it right now.
+  if (node_access_needs_rebuild() && count(module_implements('node_grants')) == 0) {
+    node_access_rebuild();
   }
 }
 

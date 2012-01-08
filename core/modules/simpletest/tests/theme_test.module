@@ -26,14 +26,14 @@ function theme_test_menu() {
   $items['theme-test/suggestion'] = array(
     'title' => 'Suggestion',
     'page callback' => '_theme_test_suggestion',
-    'access arguments' => array('access content'),
+    'access callback' => TRUE,
     'theme callback' => '_theme_custom_theme',
     'type' => MENU_CALLBACK,
   );
   $items['theme-test/alter'] = array(
     'title' => 'Suggestion',
     'page callback' => '_theme_test_alter',
-    'access arguments' => array('access content'),
+    'access callback' => TRUE,
     'theme callback' => '_theme_custom_theme',
     'type' => MENU_CALLBACK,
   );
