@@ -436,7 +436,7 @@ function image_path_flush($path) {
  */
 function image_styles() {
   $styles = &drupal_static(__FUNCTION__);
-  
+
   // Grab from cache or build the array.
   if (!isset($styles)) {
     if ($cache = cache()->get('image_styles')) {
@@ -505,7 +505,7 @@ function image_style_save($style) {
     $config->set('effects', $style['effects']);
   }
   else {
-    $config->set('effects', array());    
+    $config->set('effects', array());
   }
   $config->save();
   $style['is_new'] = TRUE;
@@ -983,9 +983,9 @@ function image_effect_save($style_name, $effect) {
   else {
     // We need to generate the ieid and save the new effect.
     // The machine name is all the elements of the data array concatenated
-    // together, delimited by underscores.     
+    // together, delimited by underscores.
     $machine_name = $effect['name'];
-    
+
     foreach ($effect['data'] as $key => $value) {
       $machine_name .= '_' . $value;
     }

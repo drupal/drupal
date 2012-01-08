@@ -119,7 +119,7 @@ function image_style_form($form, &$form_state, $style) {
     '#validate' => array('image_style_form_add_validate'),
     '#submit' => array('image_style_form_submit', 'image_style_form_add_submit'),
   );
-  
+
   // Show the Override or Submit button for this style.
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array(
@@ -158,7 +158,7 @@ function image_style_form_add_submit($form, &$form_state) {
       'name' => $effect['name'],
       'data' => array(),
       'weight' => $form_state['values']['weight'],
-    );        
+    );
     image_effect_save($style['name'], $effect);
     drupal_set_message(t('The image effect was successfully applied.'));
   }
@@ -178,15 +178,15 @@ function image_style_form_submit($form, &$form_state) {
           'name' => $style['effects'][$ieid]['name'],
           'data' => $style['effects'][$ieid]['data'],
           'weight' => $effect_data['weight'],
-        );        
+        );
         $style['effects'][$ieid] = $effect;
       }
     }
   }
 
   // Update the image style name if it has changed. We also need to delete the
-  // old style, because there is no concept of rename at the moment, just 
-  // create and delete. 
+  // old style, because there is no concept of rename at the moment, just
+  // create and delete.
   if (isset($form_state['values']['name']) && $style['name'] != $form_state['values']['name']) {
     image_style_delete($style);
     $style['name'] = $form_state['values']['name'];
@@ -628,7 +628,6 @@ function theme_image_style_list($variables) {
  */
 function theme_image_style_effects($variables) {
   $form = $variables['form'];
-  
   $rows = array();
 
   foreach (element_children($form) as $key) {
