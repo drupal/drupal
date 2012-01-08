@@ -102,8 +102,8 @@ class FileContentsTestCase extends DrupalWebTestCase {
    */
   public function testReadWriteConfig() {
     $config = config('foo.bar');
-    $config->foo = 'bar';
+    $config->set('foo', 'bar');
     $config->save();
-    $this->assertEqual('bar', config('foo.bar')->foo, 'Content retrived from written config data.');
+    $this->assertEqual('bar', config('foo.bar')->get('foo'), 'Content retrived from written config data.');
   }
 }
