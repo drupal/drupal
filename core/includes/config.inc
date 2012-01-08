@@ -522,7 +522,7 @@ class DrupalConfig {
   }
 
   /**
-   * Read config data from the active store into our object.
+   * Reads config data from the active store into our object.
    */
   public function read() {
     $active = (array) config_decode($this->_verifiedStorage->read());
@@ -539,7 +539,20 @@ class DrupalConfig {
   }
 
   /**
-   * Set value in this config object.
+   * Gets value in this config object.
+   */
+  public function get($key) {
+    $parts = explode('.', $key);
+    if (count($parts) == 1) {
+      return isset($this->data[$key]) ? $this->data[$key] : NULL;
+    }
+    else {
+      return drupal_array_get_nested_value($this->data, $parts);
+    }
+  }
+
+  /**
+   * Sets value in this config object.
    */
   public function set($key, $value) {
     $parts = explode('.', $key);
@@ -552,7 +565,7 @@ class DrupalConfig {
   }
 
   /**
-   * Unset value in this config object.
+   * Unsets value in this config object.
    */
   public function clear($key) {
     $parts = explode('.', $key);
@@ -561,19 +574,6 @@ class DrupalConfig {
     }
     else {
       drupal_array_unset_nested_value($this->data, $parts);
-    }
-  }
-
-  /**
-   * Get value in this config object.
-   */
-  public function get($key) {
-    $parts = explode('.', $key);
-    if (count($parts) == 1) {
-      return $this->data[$key];
-    }
-    else {
-      return drupal_array_get_nested_value($this->data, $parts);
     }
   }
 
