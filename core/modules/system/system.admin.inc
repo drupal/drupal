@@ -1638,6 +1638,7 @@ function system_logging_settings() {
  * Form builder; Configure site performance settings.
  *
  * @ingroup forms
+ * @see system_performance_settings_submit().
  */
 function system_performance_settings($form, &$form_state) {
   drupal_add_js(drupal_get_path('module', 'system') . '/system.js');
@@ -1734,7 +1735,7 @@ function system_performance_settings($form, &$form_state) {
 }
 
 /**
- * Submit callback; save performance settings.
+ * Form submission handler for system_performance_settings().
  *
  * @ingroup forms
  */
