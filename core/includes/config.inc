@@ -52,7 +52,7 @@ function config_install_default_config($module) {
  * - core.entity.node_type.page.xml
  *
  * You can pass a prefix 'core.entity.node_type' and get back an array of the
- * filenames that match. This allows you to iterate through all files in a 
+ * filenames that match. This allows you to iterate through all files in a
  * branch. Note that this will only work on the level above the tips, so
  * a prefix of 'core.entity' would return an empty array.
  *
@@ -72,7 +72,7 @@ function config_get_signed_file_storage_names_with_prefix($prefix = '') {
 
 /**
  * Generate a hash of a config file's contents using our encryption key.
- * 
+ *
  * @param $data
  *   The contents of a configuration file.
  * @return
@@ -175,9 +175,9 @@ function config_xml_to_array($data) {
  *   An associative array or an object
  * @return
  *   A representation of this array or object in the native configuration
- *   format. 
- * @todo
- *   This needs to work for objects as well and currently doesn't
+ *   format.
+ *
+ * @todo This needs to work for objects as well and currently doesn't.
  */
 function config_encode($data) {
   // creating object of SimpleXMLElement
@@ -201,9 +201,9 @@ function config_encode($data) {
  *   An associative array or an object
  * @return
  *   A representation of this array or object in the native configuration
- *   format. 
- * @todo
- *   This needs to work for objects as well and currently doesn't
+ *   format.
+ *
+ * @todo This needs to work for objects as well and currently doesn't.
  */
 function config_array_to_xml($array, &$xml_object) {
   foreach ($array as $key => $value) {
@@ -432,10 +432,10 @@ abstract class DrupalConfigVerifiedStorage implements DrupalConfigVerifiedStorag
     return new SignedFileStorage($this->name);
   }
 
-  public function copyTofile() {
+  public function copyToFile() {
     return $this->signedFileStorage()->write($this->read());
   }
-  
+
   public function deleteFile() {
     return $this->signedFileStorage()->delete();
   }
