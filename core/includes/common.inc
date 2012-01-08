@@ -2566,7 +2566,8 @@ function drupal_page_footer() {
   // Commit the user session, if needed.
   drupal_session_commit();
 
-  if (variable_get('cache', 0) && ($cache = drupal_page_set_cache())) {
+  $config = config('system.performance');
+  if ($config->get('cache') && ($cache = drupal_page_set_cache())) {
     drupal_serve_page_from_cache($cache);
   }
   else {
@@ -5135,7 +5136,7 @@ function _drupal_bootstrap_full() {
 function drupal_page_set_cache() {
   global $base_root;
   $config = config('system.performance');
-  
+
   if (drupal_page_is_cacheable()) {
     $cache = (object) array(
       'cid' => $base_root . request_uri(),
