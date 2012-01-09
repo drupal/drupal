@@ -1,4 +1,4 @@
 <?xml version="1.0"?>
 <config>
-	<block_cache>0</block_cache>
+  <block_cache>0</block_cache>
 </config>
