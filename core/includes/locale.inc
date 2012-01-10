@@ -535,63 +535,6 @@ function locale_string_is_safe($string) {
 }
 
 /**
- * API function to add or update a language.
- *
- * @param $language
- *   Language object with properties corresponding to 'languages' table columns.
- */
-function locale_language_save($language) {
-  $language->is_new = !(bool) db_query_range('SELECT 1 FROM {languages} WHERE language = :language', 0, 1, array(':language' => $language->language))->fetchField();
-
-  // If name was not set, we add a predefined language.
-  if (!isset($language->name)) {
-    include_once DRUPAL_ROOT . '/core/includes/standard.inc';
-    $predefined = standard_language_list();
-    $language->name = $predefined[$language->language][0];
-    $language->direction = isset($predefined[$language->language][2]) ? $predefined[$language->language][2] : LANGUAGE_LTR;
-  }
-
-  // Set to enabled for the default language and unless specified otherwise.
-  if (!empty($language->default) || !isset($language->enabled)) {
-    $language->enabled = TRUE;
-  }
-  // Let other modules modify $language before saved.
-  module_invoke_all('locale_language_presave', $language);
-
-  // Save the record and inform others about the change.
-  if ($language->is_new) {
-    drupal_write_record('languages', $language);
-    module_invoke_all('locale_language_insert', $language);
-    watchdog('locale', 'The %language (%langcode) language has been created.', array('%language' => $language->name, '%langcode' => $language->language));
-  }
-  else {
-    drupal_write_record('languages', $language, array('language'));
-    module_invoke_all('locale_language_update', $language);
-    watchdog('locale', 'The %language (%langcode) language has been updated.', array('%language' => $language->name, '%langcode' => $language->language));
-  }
-
-  if (!empty($language->default)) {
-    // Set the new version of this language as default in a variable.
-    $default_language = language_default();
-    variable_set('language_default', $language);
-  }
-
-  // Update language count based on enabled language count.
-  variable_set('language_count', db_query('SELECT COUNT(language) FROM {languages} WHERE enabled = 1')->fetchField());
-
-  // Kill the static cache in language_list().
-  drupal_static_reset('language_list');
-
-  // @todo move these two cache clears out. See http://drupal.org/node/1293252
-  // Changing the language settings impacts the interface.
-  cache_clear_all('*', 'cache_page', TRUE);
-  // Force JavaScript translation file re-creation for the modified language.
-  _locale_invalidate_js($language->language);
-
-  return $language;
-}
-
-/**
  * Parses a JavaScript file, extracts strings wrapped in Drupal.t() and
  * Drupal.formatPlural() and inserts them into the database.
  */
@@ -864,34 +807,6 @@ function _locale_rebuild_js($langcode = NULL) {
       return TRUE;
   }
 }
-
-/**
- * @defgroup locale-api-predefined List of predefined languages
- * @{
- * API to provide a list of predefined languages.
- */
-
-/**
- * Prepares the language code list for a select form item with only the unsupported ones
- */
-function _locale_prepare_predefined_list() {
-  include_once DRUPAL_ROOT . '/core/includes/standard.inc';
-  $languages = language_list();
-  $predefined = standard_language_list();
-  foreach ($predefined as $key => $value) {
-    if (isset($languages[$key])) {
-      unset($predefined[$key]);
-      continue;
-    }
-    $predefined[$key] = t($value[0]);
-  }
-  asort($predefined);
-  return $predefined;
-}
-
-/**
- * @} End of "locale-api-languages-predefined"
- */
 
 /**
  * Get list of all predefined and custom countries.

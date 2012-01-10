@@ -16,7 +16,7 @@
  * \@see user_pass_validate().
  * \@see user_pass_submit().
  *
- * @}
+ * @} End of "defgroup forms".
  */
 
 /**

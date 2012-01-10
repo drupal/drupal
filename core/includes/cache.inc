@@ -40,158 +40,19 @@ function cache($bin = 'cache') {
 }
 
 /**
- * Returns data from the persistent cache.
- *
- * Data may be stored as either plain text or as serialized data. cache_get
- * will automatically return unserialized objects and arrays.
- *
- * @param $cid
- *   The cache ID of the data to retrieve.
- * @param $bin
- *   The cache bin to store the data in. Valid core values are 'cache_block',
- *   'cache_bootstrap', 'cache_field', 'cache_filter', 'cache_form',
- *   'cache_menu', 'cache_page', 'cache_path', 'cache_update' or 'cache' for
- *   the default cache.
- *
- * @return
- *   The cache or FALSE on failure.
+ * Expires data from the block and page caches.
  */
-function cache_get($cid, $bin = 'cache') {
-  return cache($bin)->get($cid);
-}
-
-/**
- * Returns data from the persistent cache when given an array of cache IDs.
- *
- * @param $cids
- *   An array of cache IDs for the data to retrieve. This is passed by
- *   reference, and will have the IDs successfully returned from cache removed.
- * @param $bin
- *   The cache bin where the data is stored.
- *
- * @return
- *   An array of the items successfully returned from cache indexed by cid.
- */
-function cache_get_multiple(array &$cids, $bin = 'cache') {
-  return cache($bin)->getMultiple($cids);
-}
-
-/**
- * Stores data in the persistent cache.
- *
- * The persistent cache is split up into several cache bins. In the default
- * cache implementation, each cache bin corresponds to a database table by the
- * same name. Other implementations might want to store several bins in data
- * structures that get flushed together. While it is not a problem for most
- * cache bins if the entries in them are flushed before their expire time, some
- * might break functionality or are extremely expensive to recalculate. These
- * will be marked with a (*). The other bins expired automatically by core.
- * Contributed modules can add additional bins and get them expired
- * automatically by implementing hook_flush_caches().
- *
- *  - cache: Generic cache storage bin (used for variables, theme registry,
- *  locale date, list of simpletest tests etc).
- *
- *  - cache_block: Stores the content of various blocks.
- *
- *  - cache field: Stores the field data belonging to a given object.
- *
- *  - cache_filter: Stores filtered pieces of content.
- *
- *  - cache_form(*): Stores multistep forms. Flushing this bin means that some
- *  forms displayed to users lose their state and the data already submitted
- *  to them.
- *
- *  - cache_menu: Stores the structure of visible navigation menus per page.
- *
- *  - cache_page: Stores generated pages for anonymous users. It is flushed
- *  very often, whenever a page changes, at least for every ode and comment
- *  submission. This is the only bin affected by the page cache setting on
- *  the administrator panel.
- *
- *  - cache path: Stores the system paths that have an alias.
- *
- *  - cache update(*): Stores available releases. The update server (for
- *  example, drupal.org) needs to produce the relevant XML for every project
- *  installed on the current site. As this is different for (almost) every
- *  site, it's very expensive to recalculate for the update server.
- *
- * The reasons for having several bins are as follows:
- *
- * - smaller bins mean smaller database tables and allow for faster selects and
- *   inserts
- * - we try to put fast changing cache items and rather static ones into
- *   different bins. The effect is that only the fast changing bins will need a
- *   lot of writes to disk. The more static bins will also be better cacheable
- *   with MySQL's query cache.
- *
- * @param $cid
- *   The cache ID of the data to store.
- * @param $data
- *   The data to store in the cache. Complex data types will be automatically
- *   serialized before insertion.
- *   Strings will be stored as plain text and not serialized.
- * @param $bin
- *   The cache bin to store the data in. Valid core values are 'cache_block',
- *   'cache_bootstrap', 'cache_field', 'cache_filter', 'cache_form',
- *   'cache_menu', 'cache_page', 'cache_update' or 'cache' for the default
- *   cache.
- * @param $expire
- *   One of the following values:
- *   - CACHE_PERMANENT: Indicates that the item should never be removed unless
- *     explicitly told to using cache_clear_all() with a cache ID.
- *   - CACHE_TEMPORARY: Indicates that the item should be removed at the next
- *     general cache wipe.
- *   - A Unix timestamp: Indicates that the item should be kept at least until
- *     the given time, after which it behaves like CACHE_TEMPORARY.
- */
-function cache_set($cid, $data, $bin = 'cache', $expire = CACHE_PERMANENT) {
-  return cache($bin)->set($cid, $data, $expire);
-}
-
-/**
- * Expires data from the cache.
- *
- * If called without arguments, expirable entries will be cleared from the
- * cache_page and cache_block bins.
- *
- * @param $cid
- *   If set, the cache ID to delete. Otherwise, all cache entries that can
- *   expire are deleted.
- * @param $bin
- *   If set, the cache bin to delete from. Mandatory argument if $cid is set.
- * @param $wildcard
- *   If TRUE, cache IDs starting with $cid are deleted in addition to the
- *   exact cache ID specified by $cid. If $wildcard is TRUE and $cid is '*',
- *   the entire cache bin is emptied.
- */
-function cache_clear_all($cid = NULL, $bin = NULL, $wildcard = FALSE) {
-  if (!isset($cid) && !isset($bin)) {
-    // Clear the block cache first, so stale data will
-    // not end up in the page cache.
-    if (module_exists('block')) {
-      cache('block')->expire();
-    }
-    cache('page')->expire();
-    return;
+function cache_clear_all() {
+  // @todo: remove before release.
+  if (func_get_args()) {
+    throw new Exception(t('cache_clear_all() no longer takes arguments, use cache() instead.'));
   }
-  return cache($bin)->clear($cid, $wildcard);
-}
-
-/**
- * Checks if a cache bin is empty.
- *
- * A cache bin is considered empty if it does not contain any valid data for any
- * cache ID.
- *
- * @param $bin
- *   The cache bin to check.
- *
- * @return
- *   TRUE if the cache bin specified is empty.
- */
-function cache_is_empty($bin) {
-  return cache($bin)->isEmpty();
+  // Clear the block cache first, so stale data will
+  // not end up in the page cache.
+  if (module_exists('block')) {
+    cache('block')->expire();
+  }
+  cache('page')->expire();
 }
 
 /**
@@ -327,25 +188,6 @@ interface DrupalCacheInterface {
   function garbageCollection();
 
   /**
-   * Expires data from the cache.
-   *
-   * If called without arguments, expirable entries will be cleared from the
-   * cache_page and cache_block bins.
-   *
-   * @param $cid
-   *   If set, the cache ID to delete. Otherwise, all cache entries that can
-   *   expire are deleted.
-   * @param $wildcard
-   *   If set to TRUE, the $cid is treated as a substring
-   *   to match rather than a complete ID. The match is a right hand
-   *   match. If '*' is given as $cid, the bin $bin will be emptied.
-   *
-   * @todo: This method is deprecated, as its functionality is covered by more
-   *   targeted methods in the interface.
-   */
-  function clear($cid = NULL, $wildcard = FALSE);
-
-  /**
    * Checks if a cache bin is empty.
    *
    * A cache bin is considered empty if it does not contain any valid data for
@@ -425,11 +267,6 @@ class DrupalNullCache implements DrupalCacheInterface {
   function garbageCollection() {}
 
   /**
-   * Implements DrupalCacheInterface::clear().
-   */
-  function clear($cid = NULL, $wildcard = FALSE) {}
-
-  /**
    * Implements DrupalCacheInterface::isEmpty().
    */
   function isEmpty() {
@@ -450,8 +287,8 @@ class DrupalDatabaseCache implements DrupalCacheInterface {
    * Constructs a new DrupalDatabaseCache object.
    */
   function __construct($bin) {
-    // All cache tables should be prefixed with 'cache_', apart from the
-    // default 'cache' bin, which would look silly.
+    // All cache tables should be prefixed with 'cache_', except for the
+    // default 'cache' bin.
     if ($bin != 'cache') {
       $bin = 'cache_' . $bin;
     }
@@ -522,9 +359,9 @@ class DrupalDatabaseCache implements DrupalCacheInterface {
     // If enforcing a minimum cache lifetime, validate that the data is
     // currently valid for this user before we return it by making sure the cache
     // entry was created before the timestamp in the current session's cache
-    // timer. The cache variable is loaded into the $user object by _drupal_session_read()
-    // in session.inc. If the data is permanent or we're not enforcing a minimum
-    // cache lifetime always return the cached data.
+    // timer. The cache variable is loaded into the $user object by
+    // _drupal_session_read() in session.inc. If the data is permanent or we're
+    // not enforcing a minimum cache lifetime always return the cached data.
     if ($cache->expire != CACHE_PERMANENT && variable_get('cache_lifetime', 0) && $user->cache > $cache->created) {
       // This cache data is too old and thus not valid for us, ignore it.
       return FALSE;
@@ -562,7 +399,7 @@ class DrupalDatabaseCache implements DrupalCacheInterface {
         ->execute();
     }
     catch (Exception $e) {
-      // The database may not be available, so we'll ignore cache_set requests.
+      // The database may not be available, so we'll ignore these calls.
     }
   }
 
@@ -617,12 +454,12 @@ class DrupalDatabaseCache implements DrupalCacheInterface {
 
       $cache_flush = variable_get('cache_flush_' . $this->bin, 0);
       if ($cache_flush == 0) {
-        // This is the first request to clear the cache, start a timer.
+        // This is the first request to clear the cache; start a timer.
         variable_set('cache_flush_' . $this->bin, REQUEST_TIME);
       }
       elseif (REQUEST_TIME > ($cache_flush + variable_get('cache_lifetime', 0))) {
-        // Clear the cache for everyone, cache_lifetime seconds have
-        // passed since the first request to clear the cache.
+        // Clear the cache for everyone; cache_lifetime seconds have passed
+        // since the first request to clear the cache.
         db_delete($this->bin)
           ->condition('expire', CACHE_PERMANENT, '<>')
           ->condition('expire', REQUEST_TIME, '<')
@@ -631,7 +468,7 @@ class DrupalDatabaseCache implements DrupalCacheInterface {
       }
     }
     else {
-      // No minimum cache lifetime, flush all temporary cache entries now.
+      // No minimum cache lifetime; flush all temporary cache entries now.
       db_delete($this->bin)
         ->condition('expire', CACHE_PERMANENT, '<>')
         ->condition('expire', REQUEST_TIME, '<')
@@ -649,40 +486,14 @@ class DrupalDatabaseCache implements DrupalCacheInterface {
     // often since this will remove temporary cache items indiscriminately.
     $cache_flush = variable_get('cache_flush_' . $this->bin, 0);
     if ($cache_flush && ($cache_flush + variable_get('cache_lifetime', 0) <= REQUEST_TIME)) {
-      // Reset the variable immediately to prevent a meltdown in heavy load situations.
+      // Reset the variable immediately to prevent a meltdown in heavy load
+      // situations.
       variable_set('cache_flush_' . $this->bin, 0);
       // Time to flush old cache data
       db_delete($this->bin)
         ->condition('expire', CACHE_PERMANENT, '<>')
         ->condition('expire', $cache_flush, '<=')
         ->execute();
-    }
-  }
-
-  /**
-   * Implements DrupalCacheInterface::clear().
-   */
-  function clear($cid = NULL, $wildcard = FALSE) {
-    global $user;
-
-    if (empty($cid)) {
-      $this->expire();
-    }
-    else {
-      if ($wildcard) {
-        if ($cid == '*') {
-          $this->flush();
-        }
-        else {
-          $this->deletePrefix($cid);
-        }
-      }
-      elseif (is_array($cid)) {
-        $this->deleteMultiple($cid);
-      }
-      else {
-        $this->delete($cid);
-      }
     }
   }
 

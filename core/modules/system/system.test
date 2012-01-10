@@ -379,10 +379,10 @@ class ModuleDependencyTestCase extends ModuleTestCase {
     $this->drupalPost('admin/modules', $edit, t('Save configuration'));
     $this->assertText(t('Some required modules must be enabled'), t('Dependency required.'));
 
-    $this->assertModules(array('translation', 'locale'), FALSE);
+    $this->assertModules(array('translation', 'locale', 'language'), FALSE);
 
     // Assert that the locale tables weren't enabled.
-    $this->assertTableCount('languages', FALSE);
+    $this->assertTableCount('language', FALSE);
     $this->assertTableCount('locale', FALSE);
 
     $this->drupalPost(NULL, NULL, t('Continue'));
@@ -391,7 +391,7 @@ class ModuleDependencyTestCase extends ModuleTestCase {
     $this->assertModules(array('translation', 'locale'), TRUE);
 
     // Assert that the locale tables were enabled.
-    $this->assertTableCount('languages', TRUE);
+    $this->assertTableCount('language', TRUE);
     $this->assertTableCount('locale', TRUE);
   }
 
@@ -1248,7 +1248,7 @@ class DateTimeFunctionalTest extends DrupalWebTestCase {
       'language' => 'de',
       'default' => TRUE,
     );
-    locale_language_save($language);
+    language_save($language);
 
     $date_format = array(
       'type' => 'short',

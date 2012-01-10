@@ -533,8 +533,8 @@ function install_tasks($install_state) {
   // Determine whether translation import tasks will need to be performed.
   $needs_translations = count($install_state['translations']) > 1 && !empty($install_state['parameters']['langcode']) && $install_state['parameters']['langcode'] != 'en';
 
-  // The first two installation tasks are (by default) language selection and
-  // profile selection.
+  // Start with the core installation tasks that run before handing control
+  // to the install profile.
   $tasks = array(
     'install_select_language' => array(
       'display_name' => st('Choose language'),
@@ -1119,12 +1119,15 @@ function install_select_profile_form($form, &$form_state, $profile_files) {
   }
 
   foreach ($names as $profile => $name) {
+    // The profile name and description are extracted for translation from the
+    // .info file, so we can use st() on them even though they are dynamic data
+    // at this point.
     $form['profile'][$name] = array(
       '#type' => 'radio',
       '#value' => 'standard',
       '#return_value' => $profile,
-      '#title' => $name,
-      '#description' => isset($profiles[$profile]['description']) ? $profiles[$profile]['description'] : '',
+      '#title' => st($name),
+      '#description' => isset($profiles[$profile]['description']) ? st($profiles[$profile]['description']) : '',
       '#parents' => array('profile'),
     );
   }
@@ -1146,7 +1149,7 @@ function install_find_translations() {
   foreach ($files as $key => $file) {
     // Strip off the file name component before the language code.
     $files[$key]->langcode = preg_replace('!^(.+\.)?([^\.]+)$!', '\2', $file->name);
-    // Language codes cannot exceed 12 characters to fit into the {languages}
+    // Language codes cannot exceed 12 characters to fit into the {language}
     // table.
     if (strlen($files[$key]->langcode) > 12) {
       unset($files[$key]);
@@ -1229,19 +1232,6 @@ function install_select_language(&$install_state) {
       return;
     }
     else {
-      // Allow profile to pre-select the language, skipping the selection.
-      if (isset($install_state['parameters']['profile'])) {
-        $info = install_profile_info($install_state['parameters']['profile']);
-        if (isset($info['langcode'])) {
-          foreach ($files as $file) {
-            if ($info['langcode'] == $file->langcode) {
-              $install_state['parameters']['langcode'] = $file->langcode;
-              return;
-            }
-          }
-        }
-      }
-
       // We still don't have a langcode, so display a form for selecting one.
       // Only do this in the case of interactive installations, since this is
       // not a real form with submit handlers (the database isn't even set up
@@ -1277,7 +1267,7 @@ function install_select_language_form($form, &$form_state, $files) {
       $select_options[$file->langcode] = $standard_languages[$file->langcode][1];
     }
     else {
-      // If language not found in standard.inc, display it's langcode
+      // If the language was not found in standard.inc, display its langcode.
       $select_options[$file->langcode] = $file->langcode;
     }
     // Build a list of languages simulated for browser detection.
@@ -1432,7 +1422,7 @@ function install_import_translations(&$install_state) {
       'name' => $langcode,
       'default' => TRUE,
     );
-    locale_language_save($language);
+    language_save($language);
   }
   else {
     // A known predefined language, details will be filled in properly.
@@ -1440,7 +1430,7 @@ function install_import_translations(&$install_state) {
       'language' => $langcode,
       'default' => TRUE,
     );
-    locale_language_save($language);
+    language_save($language);
   }
 
   // Collect files to import for this language.

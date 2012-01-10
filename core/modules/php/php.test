@@ -6,7 +6,7 @@
  */
 
 /**
- * Base PHP test case class.
+ * Defines a base PHP test case class.
  */
 class PHPTestCase extends DrupalWebTestCase {
   protected $php_code_format;
@@ -38,7 +38,7 @@ class PHPTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Create a test node with PHP code in the body.
+   * Creates a test node with PHP code in the body.
    *
    * @return stdObject Node object.
    */
@@ -60,7 +60,7 @@ class PHPFilterTestCase extends PHPTestCase {
   }
 
   /**
-   * Make sure that the PHP filter evaluates PHP code when used.
+   * Makes sure that the PHP filter evaluates PHP code when used.
    */
   function testPHPFilter() {
     // Log in as a user with permission to use the PHP code text format.
@@ -101,7 +101,7 @@ class PHPAccessTestCase extends PHPTestCase {
   }
 
   /**
-   * Make sure that user can't use the PHP filter when not given access.
+   * Makes sure that the user can't use the PHP filter when not given access.
    */
   function testNoPrivileges() {
     // Create node with PHP filter enabled.

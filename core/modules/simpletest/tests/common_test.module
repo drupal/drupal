@@ -241,7 +241,7 @@ function common_test_library_info_alter(&$libraries, $module) {
     // Change the title of Farbtastic to "Farbtastic: Altered Library".
     $libraries['farbtastic']['title'] = 'Farbtastic: Altered Library';
     // Make Farbtastic depend on jQuery Form to test library dependencies.
-    $libraries['farbtastic']['dependencies'][] = array('system', 'form');
+    $libraries['farbtastic']['dependencies'][] = array('system', 'jquery.form');
   }
 }
 

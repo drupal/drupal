@@ -6,6 +6,21 @@
  */
 
 /**
+ * Denotes that no term in the vocabulary has a parent.
+ */
+const TAXONOMY_HIERARCHY_DISABLED = 0;
+
+/**
+ * Denotes that one or more terms in the vocabulary has a single parent.
+ */
+const TAXONOMY_HIERARCHY_SINGLE = 1;
+
+/**
+ * Denotes that one or more terms in the vocabulary have multiple parents.
+ */
+const TAXONOMY_HIERARCHY_MULTIPLE = 2;
+
+/**
  * Users can create new terms in a free-tagging vocabulary when
  * submitting a taxonomy_autocomplete_widget. We store a term object
  * whose tid is 'autocreate' as a field data item during widget
@@ -51,11 +66,11 @@ function taxonomy_help($path, $arg) {
     case 'admin/structure/taxonomy/%':
       $vocabulary = taxonomy_vocabulary_machine_name_load($arg[3]);
       switch ($vocabulary->hierarchy) {
-        case 0:
+        case TAXONOMY_HIERARCHY_DISABLED:
           return '<p>' . t('You can reorganize the terms in %capital_name using their drag-and-drop handles, and group terms under a parent term by sliding them under and to the right of the parent.', array('%capital_name' => drupal_ucfirst($vocabulary->name), '%name' => $vocabulary->name)) . '</p>';
-        case 1:
+        case TAXONOMY_HIERARCHY_SINGLE:
           return '<p>' . t('%capital_name contains terms grouped under parent terms. You can reorganize the terms in %capital_name using their drag-and-drop handles.', array('%capital_name' => drupal_ucfirst($vocabulary->name), '%name' => $vocabulary->name)) . '</p>';
-        case 2:
+        case TAXONOMY_HIERARCHY_MULTIPLE:
           return '<p>' . t('%capital_name contains terms with multiple parents. Drag and drop of terms with multiple parents is not supported, but you can re-enable drag-and-drop support by editing each term to include only a single parent.', array('%capital_name' => drupal_ucfirst($vocabulary->name))) . '</p>';
       }
   }
@@ -295,7 +310,9 @@ function taxonomy_menu() {
   $items['taxonomy/term/%taxonomy_term/edit'] = array(
     'title' => 'Edit',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('taxonomy_form_term', 2),
+    // Pass a NULL argument to ensure that additional path components are not
+    // passed to taxonomy_form_term() as the vocabulary machine name argument.
+    'page arguments' => array('taxonomy_form_term', 2, NULL),
     'access callback' => 'taxonomy_term_edit_access',
     'access arguments' => array(2),
     'type' => MENU_LOCAL_TASK,
@@ -422,6 +439,7 @@ function taxonomy_vocabulary_save($vocabulary) {
 
   if (!empty($vocabulary->vid) && !empty($vocabulary->name)) {
     $status = drupal_write_record('taxonomy_vocabulary', $vocabulary, 'vid');
+    taxonomy_vocabulary_static_reset(array($vocabulary->vid));
     if ($vocabulary->old_machine_name != $vocabulary->machine_name) {
       field_attach_rename_bundle('taxonomy_term', $vocabulary->old_machine_name, $vocabulary->machine_name);
     }
@@ -430,6 +448,7 @@ function taxonomy_vocabulary_save($vocabulary) {
   }
   elseif (empty($vocabulary->vid)) {
     $status = drupal_write_record('taxonomy_vocabulary', $vocabulary);
+    taxonomy_vocabulary_static_reset();
     field_attach_create_bundle('taxonomy_term', $vocabulary->machine_name);
     module_invoke_all('taxonomy_vocabulary_insert', $vocabulary);
     module_invoke_all('entity_insert', $vocabulary, 'taxonomy_vocabulary');
@@ -437,7 +456,6 @@ function taxonomy_vocabulary_save($vocabulary) {
 
   unset($vocabulary->original);
   cache_clear_all();
-  taxonomy_vocabulary_static_reset(array($vocabulary->vid));
 
   return $status;
 }
@@ -519,10 +537,11 @@ function taxonomy_taxonomy_vocabulary_update($vocabulary) {
  *
  * Checks the current parents of all terms in a vocabulary and updates the
  * vocabulary's hierarchy setting to the lowest possible level. If no term
- * has parent terms then the vocabulary will be given a hierarchy of 0.
- * If any term has a single parent then the vocabulary will be given a
- * hierarchy of 1. If any term has multiple parents then the vocabulary
- * will be given a hierarchy of 2.
+ * has parent terms then the vocabulary will be given a hierarchy of
+ * TAXONOMY_HIERARCHY_DISABLED. If any term has a single parent then the
+ * vocabulary will be given a hierarchy of TAXONOMY_HIERARCHY_SINGLE. If any
+ * term has multiple parents then the vocabulary will be given a hierarchy of
+ * TAXONOMY_HIERARCHY_MULTIPLE.
  *
  * @param $vocabulary
  *   A vocabulary object.
@@ -534,7 +553,7 @@ function taxonomy_taxonomy_vocabulary_update($vocabulary) {
  */
 function taxonomy_check_vocabulary_hierarchy($vocabulary, $changed_term) {
   $tree = taxonomy_get_tree($vocabulary->vid);
-  $hierarchy = 0;
+  $hierarchy = TAXONOMY_HIERARCHY_DISABLED;
   foreach ($tree as $term) {
     // Update the changed term with the new parent value before comparison.
     if ($term->tid == $changed_term['tid']) {
@@ -543,11 +562,11 @@ function taxonomy_check_vocabulary_hierarchy($vocabulary, $changed_term) {
     }
     // Check this term's parent count.
     if (count($term->parents) > 1) {
-      $hierarchy = 2;
+      $hierarchy = TAXONOMY_HIERARCHY_MULTIPLE;
       break;
     }
     elseif (count($term->parents) == 1 && 0 !== array_shift($term->parents)) {
-      $hierarchy = 1;
+      $hierarchy = TAXONOMY_HIERARCHY_SINGLE;
     }
   }
   if ($hierarchy != $vocabulary->hierarchy) {
@@ -1084,12 +1103,25 @@ function taxonomy_get_tree($vid, $parent = 0, $max_depth = NULL, $load_entities 
  *
  * @param $name
  *   Name of the term to search for.
+ * @param $vocabulary
+ *   (optional) Vocabulary machine name to limit the search. Defaults to NULL.
  *
  * @return
  *   An array of matching term objects.
  */
-function taxonomy_get_term_by_name($name) {
-  return taxonomy_term_load_multiple(array(), array('name' => trim($name)));
+function taxonomy_get_term_by_name($name, $vocabulary = NULL) {
+  $conditions = array('name' => trim($name));
+  if (isset($vocabulary)) {
+    $vocabularies = taxonomy_vocabulary_get_names();
+    if (isset($vocabularies[$vocabulary])){
+      $conditions['vid'] = $vocabularies[$vocabulary]->vid;
+    }
+    else {
+      // Return an empty array when filtering by a non-existing vocabulary.
+      return array();
+    }
+  }
+  return taxonomy_term_load_multiple(array(), $conditions);
 }
 
 /**
@@ -1210,6 +1242,8 @@ function taxonomy_vocabulary_load_multiple($vids = array(), $conditions = array(
  * @return
  *   The vocabulary object with all of its metadata, if exists, FALSE otherwise.
  *   Results are statically cached.
+ *
+ * @see taxonomy_vocabulary_machine_name_load()
  */
 function taxonomy_vocabulary_load($vid) {
   $vocabularies = taxonomy_vocabulary_load_multiple(array($vid));
@@ -1225,6 +1259,8 @@ function taxonomy_vocabulary_load($vid) {
  * @return
  *   The vocabulary object with all of its metadata, if exists, FALSE otherwise.
  *   Results are statically cached.
+ *
+ * @see taxonomy_vocabulary_load()
  */
 function taxonomy_vocabulary_machine_name_load($name) {
   $vocabularies = taxonomy_vocabulary_load_multiple(NULL, array('machine_name' => $name));

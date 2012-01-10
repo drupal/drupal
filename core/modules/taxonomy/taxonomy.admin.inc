@@ -115,7 +115,7 @@ function taxonomy_form_vocabulary($form, &$form_state, $edit = array()) {
       'name' => '',
       'machine_name' => '',
       'description' => '',
-      'hierarchy' => 0,
+      'hierarchy' => TAXONOMY_HIERARCHY_DISABLED,
       'weight' => 0,
     );
     foreach ($defaults as $key => $value) {
@@ -368,7 +368,7 @@ function taxonomy_overview_terms($form, &$form_state, $vocabulary) {
     }
 
     $form[$key]['view'] = array('#type' => 'link', '#title' => $term->name, '#href' => "taxonomy/term/$term->tid");
-    if ($vocabulary->hierarchy < 2 && count($tree) > 1) {
+    if ($vocabulary->hierarchy != TAXONOMY_HIERARCHY_MULTIPLE && count($tree) > 1) {
       $form['#parent_fields'] = TRUE;
       $form[$key]['tid'] = array(
         '#type' => 'hidden',
@@ -402,7 +402,7 @@ function taxonomy_overview_terms($form, &$form_state, $vocabulary) {
   $form['#forward_step'] = $forward_step;
   $form['#empty_text'] = t('No terms available. <a href="@link">Add term</a>.', array('@link' => url('admin/structure/taxonomy/' . $vocabulary->machine_name . '/add')));
 
-  if ($vocabulary->hierarchy < 2 && count($tree) > 1) {
+  if ($vocabulary->hierarchy != TAXONOMY_HIERARCHY_MULTIPLE && count($tree) > 1) {
     $form['actions'] = array('#type' => 'actions', '#tree' => FALSE);
     $form['actions']['submit'] = array(
       '#type' => 'submit',
@@ -449,7 +449,8 @@ function taxonomy_overview_terms_submit($form, &$form_state) {
   uasort($form_state['values'], 'drupal_sort_weight');
 
   $vocabulary = $form['#vocabulary'];
-  $hierarchy = 0; // Update the current hierarchy type as we go.
+  // Update the current hierarchy type as we go.
+  $hierarchy = TAXONOMY_HIERARCHY_DISABLED;
 
   $changed_terms = array();
   $tree = taxonomy_get_tree($vocabulary->vid);
@@ -468,7 +469,7 @@ function taxonomy_overview_terms_submit($form, &$form_state) {
       $changed_terms[$term['tid']] = $term;
     }
     $weight++;
-    $hierarchy = $term['parents'][0] != 0 ? 1 : $hierarchy;
+    $hierarchy = $term['parents'][0] != 0 ? TAXONOMY_HIERARCHY_SINGLE : $hierarchy;
     $term = (array) $tree[$weight];
   }
 
@@ -495,7 +496,7 @@ function taxonomy_overview_terms_submit($form, &$form_state) {
         $term['parent'] = $values['parent'];
         $changed_terms[$term['tid']] = $term;
       }
-      $hierarchy = $term['parent'] != 0 ? 1 : $hierarchy;
+      $hierarchy = $term['parent'] != 0 ? TAXONOMY_HIERARCHY_SINGLE : $hierarchy;
       $weight++;
     }
   }
@@ -508,7 +509,7 @@ function taxonomy_overview_terms_submit($form, &$form_state) {
       $term['weight'] = $weight;
       $changed_terms[$term['tid']] = $term;
     }
-    $hierarchy = $term['parents'][0] != 0 ? 1 : $hierarchy;
+    $hierarchy = $term['parents'][0] != 0 ? TAXONOMY_HIERARCHY_SINGLE : $hierarchy;
   }
 
   // Save all updated terms.
@@ -702,7 +703,7 @@ function taxonomy_form_term($form, &$form_state, $edit = array(), $vocabulary = 
     '#type' => 'fieldset',
     '#title' => t('Relations'),
     '#collapsible' => TRUE,
-    '#collapsed' => $vocabulary->hierarchy < 2,
+    '#collapsed' => ($vocabulary->hierarchy != TAXONOMY_HIERARCHY_MULTIPLE),
     '#weight' => 10,
   );
 
@@ -840,8 +841,8 @@ function taxonomy_form_term_submit($form, &$form_state) {
   }
   // If we've increased the number of parents and this is a single or flat
   // hierarchy, update the vocabulary immediately.
-  elseif ($current_parent_count > $previous_parent_count && $form['#vocabulary']->hierarchy < 2) {
-    $form['#vocabulary']->hierarchy = $current_parent_count == 1 ? 1 : 2;
+  elseif ($current_parent_count > $previous_parent_count && $form['#vocabulary']->hierarchy != TAXONOMY_HIERARCHY_MULTIPLE) {
+    $form['#vocabulary']->hierarchy = $current_parent_count == 1 ? TAXONOMY_HIERARCHY_SINGLE : TAXONOMY_HIERARCHY_MULTIPLE;
     taxonomy_vocabulary_save($form['#vocabulary']);
   }
 

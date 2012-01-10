@@ -100,6 +100,91 @@ function update_prepare_d8_bootstrap() {
         'description' => $has_required_schema ? '' : 'Please update your Drupal 7 installation to the most recent version before attempting to upgrade to Drupal 8',
       ),
     );
+    if ($has_required_schema) {
+      // Update the environment for the language bootstrap if needed.
+      update_prepare_d8_language();
+    }
+  }
+}
+
+/**
+ * Prepare Drupal 8 language changes for the bootstrap if needed.
+ */
+function update_prepare_d8_language() {
+  if (db_table_exists('languages')) {
+    $languages = db_select('languages', 'l')
+      ->fields('l')
+      ->execute();
+    $plurals = array();
+    $javascript = array();
+    $prefixes = array();
+    $domains = array();
+    foreach ($languages as $language) {
+      $plurals[$language->language] = array(
+        'plurals' => $language->plurals,
+        'formula' => $language->formula,
+      );
+      $javascript[$language->language] = $language->javascript;
+      $prefixes[$language->language] = $language->prefix;
+      $domains[$language->language] = $language->domain;
+    }
+    variable_set('locale_translation_plurals', $plurals);
+    variable_set('locale_translation_javascript', $javascript);
+    variable_set('locale_language_negotiation_url_prefixes', $prefixes);
+    variable_set('locale_language_negotiation_url_domains', $domains);
+
+    // Drop now unneeded columns.
+    db_drop_field('languages', 'plurals');
+    db_drop_field('languages', 'formula');
+    db_drop_field('languages', 'javascript');
+    db_drop_field('languages', 'prefix');
+    db_drop_field('languages', 'domain');
+    db_drop_field('languages', 'native');
+
+    // Rename the languages table to language.
+    db_rename_table('languages', 'language');
+
+    // Finally install/enable the language module. We need to use the update
+    // specific version of this function to ensure schema conflicts don't happen
+    // due to our updated data.
+    $modules = array('language');
+    update_module_add_to_system($modules);
+    update_module_enable($modules);
+  }
+}
+
+/**
+ * Adds modules to the system table in a Drupal core update.
+ *
+ * @param $modules
+ *   Array of module names.
+ */
+function update_module_add_to_system($modules = array()) {
+  // Insert module data, so we can enable the module. Calling a full module
+  // list rebuild so early is costly and complex, so we just have a stop-gap.
+  $info_defaults = array(
+    'dependencies' => array(),
+    'description' => '',
+    'package' => 'Other',
+    'version' => NULL,
+    'php' => DRUPAL_MINIMUM_PHP,
+    'files' => array(),
+    'bootstrap' => 0,
+  );
+  foreach ($modules as $module) {
+    $module_info = drupal_parse_info_file('core/modules/' . $module . '/' . $module . '.info');
+    db_insert('system')
+      ->fields(array(
+        'filename' => 'core/modules/' . $module . '/' . $module . '.module',
+        'name' => $module,
+        'type' => 'module',
+        'status' => 0,
+        'bootstrap' => 0,
+        'schema_version' => -1,
+        'weight' => 0,
+        'info' => serialize($module_info + $info_defaults),
+      ))
+      ->execute();
   }
 }
 
@@ -145,6 +230,9 @@ function update_module_enable(array $modules) {
       ->fields(array('schema_version' => 0, 'status' => 1))
       ->execute();
 
+    // system_list_reset() is in module.inc but that would only be available
+    // once the variable bootstrap is done.
+    require_once DRUPAL_ROOT . '/core/includes/module.inc';
     system_list_reset();
     //  @todo: figure out what to do about hook_install() and hook_enable().
   }

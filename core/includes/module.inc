@@ -520,11 +520,6 @@ function module_disable($module_list, $disable_dependents = TRUE) {
 
   foreach ($module_list as $module) {
     if (module_exists($module)) {
-      // Check if node_access table needs rebuilding.
-      if (!node_access_needs_rebuild() && module_hook($module, 'node_grants')) {
-        node_access_needs_rebuild(TRUE);
-      }
-
       module_load_install($module);
       module_invoke($module, 'disable');
       db_update('system')
@@ -548,12 +543,6 @@ function module_disable($module_list, $disable_dependents = TRUE) {
     // Update the registry to remove the newly-disabled module.
     registry_update();
     _system_update_bootstrap_status();
-  }
-
-  // If there remains no more node_access module, rebuilding will be
-  // straightforward, we can do it right now.
-  if (node_access_needs_rebuild() && count(module_implements('node_grants')) == 0) {
-    node_access_rebuild();
   }
 }
 
@@ -700,10 +689,10 @@ function module_implements_reset() {
   // request. Benchmarks show that the benefit of this caching outweighs the
   // additional database hit even when using the default database caching
   // backend and only a small number of modules are enabled. The cost of the
-  // cache_get() is more or less constant and reduced further when non-database
-  // caching backends are used, so there will be more significant gains when a
-  // large number of modules are installed or hooks invoked, since this can
-  // quickly lead to module_hook() being called several thousand times
+  // cache('bootstrap')->get() is more or less constant and reduced further when
+  // non-database caching backends are used, so there will be more significant
+  // gains when a large number of modules are installed or hooks invoked, since
+  // this can quickly lead to module_hook() being called several thousand times
   // per request.
   drupal_static_reset('module_implements');
   cache('bootstrap')->set('module_implements', array());
@@ -1018,4 +1007,3 @@ function drupal_alter($type, &$data, &$context1 = NULL, &$context2 = NULL) {
     $function($data, $context1, $context2);
   }
 }
-

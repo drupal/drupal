@@ -14,7 +14,8 @@
  * instances, bundles, widget types, display formatters, behaviors,
  * and settings defined by or with the Field API.
  *
- * @see field
+ * See @link field Field API @endlink for information about the other parts of
+ * the Field API.
  */
 
 /**
@@ -26,6 +27,7 @@
  */
 function field_info_cache_clear() {
   drupal_static_reset('field_view_mode_settings');
+  drupal_static_reset('field_available_languages');
 
   // @todo: Remove this when field_attach_*_bundle() bundle management
   // functions are moved to the entity API.

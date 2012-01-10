@@ -2957,8 +2957,13 @@ function drupal_get_css($css = NULL, $skip_alter = FALSE) {
 
   // Provide the page with information about the individual CSS files used,
   // information not otherwise available when CSS aggregation is enabled.
-  $setting['ajaxPageState']['css'] = array_fill_keys(array_keys($css), 1);
-  $styles['#attached']['js'][] = array('type' => 'setting', 'data' => $setting);
+  // Skip if no files were added to the page or jQuery.extend() will overwrite
+  // the Drupal.settings.ajaxPageState.css object with an empty array.
+  // Cast the array to an object to be on the safe side even if not empty.
+  if (!empty($css)) {
+    $setting['ajaxPageState']['css'] = (object) array_fill_keys(array_keys($css), 1);
+    $styles['#attached']['js'][] = array('type' => 'setting', 'data' => $setting);
+  }
 
   return drupal_render($styles);
 }
@@ -6090,7 +6095,7 @@ function drupal_render_collect_attached($elements, $return = FALSE) {
  *   added to this string and is also part of the cache key in
  *   drupal_render_cache_set() and drupal_render_cache_get().
  * @param $expire
- *   The cache expire time, passed eventually to cache_set().
+ *   The cache expire time, passed eventually to cache()->set().
  * @param $granularity
  *   One or more granularity constants passed to drupal_render_cid_parts().
  *
@@ -6136,7 +6141,7 @@ function drupal_render_cid_parts($granularity = NULL) {
   $cid_parts[] = $theme;
   // If Locale is enabled but we have only one language we do not need it as cid
   // part.
-  if (drupal_multilingual()) {
+  if (language_multilingual()) {
     foreach (language_types_configurable() as $language_type) {
       $cid_parts[] = $GLOBALS[$language_type]->language;
     }
@@ -7367,7 +7372,11 @@ function drupal_flush_all_caches() {
   system_rebuild_theme_data();
   drupal_theme_rebuild();
 
-  node_types_rebuild();
+  // @todo D8: Split cache flushing from rebuilding.
+  // @see http://drupal.org/node/996236
+  if (module_exists('node')) {
+    node_types_rebuild();
+  }
   // node_menu() defines menu items based on node types so it needs to come
   // after node types are rebuilt.
   menu_rebuild();

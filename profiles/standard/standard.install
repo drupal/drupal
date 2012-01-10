@@ -71,7 +71,7 @@ function standard_install() {
 
   // Enable some standard blocks.
   $admin_theme = 'seven';
-  $values = array(
+  $blocks = array(
     array(
       'module' => 'system',
       'delta' => 'main',
@@ -194,10 +194,13 @@ function standard_install() {
     ),
   );
   $query = db_insert('block')->fields(array('module', 'delta', 'theme', 'status', 'weight', 'region', 'pages', 'cache'));
-  foreach ($values as $record) {
-    $query->values($record);
+  foreach ($blocks as $block) {
+    $query->values($block);
   }
   $query->execute();
+
+  // Set front page to "node".
+  variable_set('site_frontpage', 'node');
 
   // Insert default pre-defined node types into the database. For a complete
   // list of available node type attributes, refer to the node type API

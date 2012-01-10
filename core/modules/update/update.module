@@ -724,10 +724,10 @@ function update_verify_update_archive($project, $archive_file, $directory) {
  * plug-able cache system that assumes volatile caches.
  *
  * Update module still uses the {cache_update} table, but instead of using
- * cache_set(), cache_get(), and cache_clear_all(), there are private helper
- * functions that implement these same basic tasks but ensure that the cache
- * is not prematurely cleared, and that the data is always stored in the
- * database, even if memcache or another cache backend is in use.
+ * the cache API, there are private helper functions that implement these same
+ * basic tasks but ensure that the cache is not prematurely cleared, and that
+ * the data is always stored in the database, even if memcache or another cache
+ * backend is in use.
  */
 
 /**

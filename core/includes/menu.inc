@@ -224,19 +224,14 @@ const MENU_CONTEXT_INLINE = 0x0002;
  */
 
 /**
- * Internal menu status code -- Menu item was found.
- */
-const MENU_FOUND = 1;
-
-/**
  * Internal menu status code -- Menu item was not found.
  */
-const MENU_NOT_FOUND = 2;
+const MENU_NOT_FOUND = 404;
 
 /**
  * Internal menu status code -- Menu item access is denied.
  */
-const MENU_ACCESS_DENIED = 3;
+const MENU_ACCESS_DENIED = 403;
 
 /**
  * Internal menu status code -- Menu item inaccessible because site is offline.
@@ -2617,17 +2612,7 @@ function menu_link_load($mlid) {
  * Clears the cached cached data for a single named menu.
  */
 function menu_cache_clear($menu_name = 'navigation') {
-  $cache_cleared = &drupal_static(__FUNCTION__, array());
-
-  if (empty($cache_cleared[$menu_name])) {
-    cache('menu')->deletePrefix('links:' . $menu_name . ':');
-    $cache_cleared[$menu_name] = 1;
-  }
-  elseif ($cache_cleared[$menu_name] == 1) {
-    drupal_register_shutdown_function('cache_clear_all', 'links:' . $menu_name . ':', 'cache_menu', TRUE);
-    $cache_cleared[$menu_name] = 2;
-  }
-
+  cache('menu')->deletePrefix('links:' . $menu_name . ':');
   // Also clear the menu system static caches.
   menu_reset_static_cache();
 }

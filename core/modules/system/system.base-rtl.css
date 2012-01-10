@@ -27,9 +27,6 @@ html.js input.throbbing {
 .ajax-progress {
   float: right;
 }
-.ajax-progress .throbber {
-  float: right;
-}
 
 /**
  * TableDrag behavior.

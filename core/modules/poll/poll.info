@@ -3,5 +3,6 @@ description = Allows your site to capture votes on different topics in the form 
 package = Core
 version = VERSION
 core = 8.x
+dependencies[] = node
 files[] = poll.test
 stylesheets[all][] = poll.css

@@ -66,7 +66,8 @@ class ThemeUnitTest extends DrupalWebTestCase {
     $q = $_GET['q'];
     // Set $_GET['q'] to node because theme_get_suggestions() will query it to
     // see if we are on the front page.
-    $_GET['q'] = variable_get('site_frontpage', 'node');
+    variable_set('site_frontpage', 'node');
+    $_GET['q'] = 'node';
     $suggestions = theme_get_suggestions(explode('/', $_GET['q']), 'page');
     // Set it back to not annoy the batch runner.
     $_GET['q'] = $q;
@@ -264,7 +265,7 @@ class ThemeFunctionsTestCase extends DrupalWebTestCase {
     // Required to verify the "active" class in expected links below, and
     // because the current path is different when running tests manually via
     // simpletest.module ('batch') and via the testing framework ('').
-    $_GET['q'] = variable_get('site_frontpage', 'node');
+    $_GET['q'] = variable_get('site_frontpage', 'user');
 
     // Verify that a list of links is properly rendered.
     $variables = array();

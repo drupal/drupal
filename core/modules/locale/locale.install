@@ -6,12 +6,30 @@
  */
 
 /**
- * Implements hook_install().
+ * Fill in the path prefixes and domains when enabled.
+ *
+ * Language module might change the list of languages, so we need to sync our
+ * configuration for domains and paths with the current language list. This
+ * should run every time the module is enabled.
  */
-function locale_install() {
-  // Add the default language to the database too.
-  include_once DRUPAL_ROOT . '/core/includes/locale.inc';
-  locale_language_save(language_default());
+function locale_enable() {
+  require_once DRUPAL_ROOT . '/core/includes/locale.inc';
+
+  $languages = language_list();
+  $prefixes_old = locale_language_negotiation_url_prefixes();
+  $domains_old = locale_language_negotiation_url_domains();
+
+  $prefixes = array();
+  $domains = array();
+  foreach ($languages as $langcode => $language) {
+    // Keep the old prefix or fill in based on whether the language is default.
+    $prefixes[$langcode] = empty($prefixes_old[$langcode]) ? (empty($language->default) ? $langcode : '') : $prefixes_old[$langcode];
+    // Keep the old domain or fill in empty value.
+    $domains[$langcode] = empty($domains_old[$langcode]) ? '' : $domains_old[$langcode];
+  }
+
+  locale_language_negotiation_url_prefixes_save($prefixes);
+  locale_language_negotiation_url_domains_save($domains);
 }
 
 /**
@@ -35,8 +53,6 @@ function locale_uninstall() {
   }
 
   // Clear variables.
-  variable_del('language_default');
-  variable_del('language_count');
   variable_del('language_types');
   variable_del('locale_language_negotiation_url_part');
   variable_del('locale_language_negotiation_url_prefixes');
@@ -57,63 +73,17 @@ function locale_uninstall() {
     variable_del("locale_language_providers_weight_$type");
   }
 
-  foreach (node_type_get_types() as $type => $content_type) {
-    $setting = variable_del("language_content_type_$type");
-  }
-
-  // Switch back to English: with a $language->language value different from 'en'
-  // successive calls of t() might result in calling locale(), which in turn might
-  // try to query the unexisting {locales_source} and {locales_target} tables.
-  drupal_language_initialize();
-
+  // Remove all node type language variables. Node module might have been
+  // enabled, but may be disabled, so use a wildcard delete.
+  db_delete('variable')
+    ->condition('name', db_like('language_content_type_') . '%', 'LIKE')
+    ->execute();
 }
 
 /**
  * Implements hook_schema().
  */
 function locale_schema() {
-  $schema['languages'] = array(
-    'description' => 'List of all available languages in the system.',
-    'fields' => array(
-      'language' => array(
-        'type' => 'varchar',
-        'length' => 12,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => "Language code, e.g. 'de' or 'en-US'.",
-      ),
-      'name' => array(
-        'type' => 'varchar',
-        'length' => 64,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'Language name.',
-      ),
-      'direction' => array(
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => 'Direction of language (Left-to-Right = 0, Right-to-Left = 1).',
-      ),
-      'enabled' => array(
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => 'Enabled flag (1 = Enabled, 0 = Disabled).',
-      ),
-      'weight' => array(
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => 'Weight, used in lists of languages.',
-      ),
-    ),
-    'primary key' => array('language'),
-    'indexes' => array(
-      'list' => array('weight', 'name'),
-    ),
-  );
-
   $schema['locales_source'] = array(
     'description' => 'List of English source strings.',
     'fields' => array(
@@ -175,7 +145,7 @@ function locale_schema() {
         'length' => 12,
         'not null' => TRUE,
         'default' => '',
-        'description' => 'Language code. References {languages}.language.',
+        'description' => 'Language code. References {language}.language.',
       ),
       'plid' => array(
         'type' => 'int',
@@ -213,46 +183,13 @@ function locale_schema() {
  */
 
 /**
- * Remove the native language name column.
- */
-function locale_update_8000() {
-  db_drop_field('languages', 'native');
-}
-
-/**
- * Decouple interface translation related data from language objects.
- */
-function locale_update_8001() {
-  // Gather data from existing languages table and save in variables.
-  $languages = db_select('languages', 'l')
-    ->fields('l')
-    ->execute();
-  $plurals = array();
-  $javascript = array();
-  foreach ($languages as $language) {
-    $plurals[$language->language] = array(
-      'plurals' => $language->plurals,
-      'formula' => $language->formula,
-    );
-    $javascript[$language->language] = $language->javascript;
-  }
-  variable_set('locale_translation_plurals', $plurals);
-  variable_set('locale_translation_javascript', $javascript);
-
-  // Drop now unneeded columns.
-  db_drop_field('languages', 'plurals');
-  db_drop_field('languages', 'formula');
-  db_drop_field('languages', 'javascript');
-}
-
-/**
  * Drop textgroup support.
  *
  * Update assumes i18n migrated this data before the update happened. Core
  * never used textgroups for anything, so it is not our job to find place
  * for the data elsewhere.
  */
-function locale_update_8002() {
+function locale_update_8000() {
   $subquery = db_select('locales_source', 'ls')
     ->fields('ls', array('lid'))
     ->condition('ls.textgroup', 'default', '<>');
@@ -263,37 +200,6 @@ function locale_update_8002() {
     ->condition('textgroup', 'default', '<>')
     ->execute();
   db_drop_field('locales_source', 'textgroup');
-}
-
-/**
- * Removes the prefix and domain columns from the language table.
- *
- * Load all prefixes and domains from the languages table, save the values in
- * two new variables. Then remove the prefix and domain columns from the
- * languages table.
- */
-function locale_update_8003() {
-
-  // Look up languages directly instead of using language_list().
-  $languages = db_select('languages', 'l')
-    ->fields('l')
-    ->execute();
-
-  // Collect all domains and prefixes.
-  $prefixes = array();
-  $domains = array();
-  foreach ($languages as $language) {
-    $prefixes[$language->language] = $language->prefix;
-    $domains[$language->language] = $language->domain;
-  }
-
-  // Save the prefix and domain values in a variable.
-  variable_set('locale_language_negotiation_url_prefixes', $prefixes);
-  variable_set('locale_language_negotiation_url_domains', $domains);
-
-  // Remove the prefix and domain columns.
-  db_drop_field('languages', 'prefix');
-  db_drop_field('languages', 'domain');
 }
 
 /**

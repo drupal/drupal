@@ -579,6 +579,10 @@ function hook_node_load($nodes, $types) {
  * block access, return NODE_ACCESS_IGNORE or simply return nothing.
  * Blindly returning FALSE will break other node access modules.
  *
+ * Also note that this function isn't called for node listings (e.g., RSS feeds,
+ * the default home page at path 'node', a recent content block, etc.) See
+ * @link node_access Node access rights @endlink for a full explanation.
+ *
  * @param object|string $node
  *   Either a node object or the machine name of the content type on which to
  *   perform the access check.

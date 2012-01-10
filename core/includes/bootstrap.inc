@@ -296,12 +296,12 @@ abstract class DrupalCacheArray implements ArrayAccess {
   /**
    * A cid to pass to cache()->set() and cache()->get().
    */
-  protected $cid;
+  private $cid;
 
   /**
    * A bin to pass to cache()->set() and cache()->get().
    */
-  protected $bin;
+  private $bin;
 
   /**
    * An array of keys to add to the cache at the end of the request.
@@ -2624,7 +2624,7 @@ function drupal_language_initialize() {
   foreach ($types as $type) {
     $GLOBALS[$type] = $default;
   }
-  if (drupal_multilingual()) {
+  if (language_multilingual()) {
     include_once DRUPAL_ROOT . '/core/includes/language.inc';
     foreach ($types as $type) {
       $GLOBALS[$type] = language_initialize($type);
@@ -2653,7 +2653,7 @@ function drupal_language_types() {
 /**
  * Returns TRUE if there is more than one language enabled.
  */
-function drupal_multilingual() {
+function language_multilingual() {
   // The "language_count" variable stores the number of enabled languages to
   // avoid unnecessarily querying the database when building the list of
   // enabled languages on monolingual sites.
@@ -2686,8 +2686,8 @@ function language_list($field = 'language') {
   // Init language list
   if (!isset($languages)) {
     $default = language_default();
-    if (drupal_multilingual() || module_exists('locale')) {
-      $languages['language'] = db_query('SELECT * FROM {languages} ORDER BY weight ASC, name ASC')->fetchAllAssoc('language');
+    if (language_multilingual() || module_exists('language')) {
+      $languages['language'] = db_query('SELECT * FROM {language} ORDER BY weight ASC, name ASC')->fetchAllAssoc('language');
     }
     else {
       // No locale module, so use the default language only.

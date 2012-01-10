@@ -22,6 +22,9 @@ interface QueryConditionInterface {
    * parameters, they are taken as $field and $value with $operator having a
    * value of IN if $value is an array and = otherwise.
    *
+   * Do not use this method to test for NULL values. Instead, use
+   * QueryConditionInterface::isNull() or QueryConditionInterface::isNotNull().
+   *
    * @param $field
    *   The name of the field to check. If you would like to add a more complex
    *   condition involving operators or functions, use where().
@@ -36,6 +39,9 @@ interface QueryConditionInterface {
    *
    * @return QueryConditionInterface
    *   The called object.
+   *
+   * @see QueryConditionInterface::isNull()
+   * @see QueryConditionInterface::isNotNull()
    */
   public function condition($field, $value = NULL, $operator = NULL);
 
