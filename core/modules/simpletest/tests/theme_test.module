@@ -7,6 +7,9 @@ function theme_test_theme($existing, $type, $theme, $path) {
   $items['theme_test_template_test'] = array(
     'template' => 'theme_test.template_test',
   );
+  $items['theme_test_template_test_2'] = array(
+    'template' => 'theme_test.template_test',
+  );
 
   return $items;
 }

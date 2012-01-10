@@ -2336,7 +2336,7 @@ function l($text, $path, array $options = array()) {
     // rendering.
     if (variable_get('theme_link', TRUE)) {
       drupal_theme_initialize();
-      $registry = theme_get_registry();
+      $registry = theme_get_registry(FALSE);
       // We don't want to duplicate functionality that's in theme(), so any
       // hint of a module or theme doing anything at all special with the 'link'
       // theme hook should simply result in theme() being called. This includes
