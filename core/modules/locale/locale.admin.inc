@@ -262,14 +262,14 @@ function locale_language_providers_url_form($form, &$form_state) {
   foreach ($languages[1] as $langcode => $language) {
     $form['prefix'][$langcode] = array(
       '#type' => 'textfield',
-      '#title' => t('%language (%langcode) path prefix', array('%language' => $language->name, '%langcode' => $language->language)),
+      '#title' => t('%language (%langcode) path prefix', array('%language' => $language->name, '%langcode' => $language->langcode)),
       '#maxlength' => 64,
       '#default_value' => isset($prefixes[$langcode]) ? $prefixes[$langcode] : '',
       '#field_prefix' => url('', array('absolute' => TRUE)) . (variable_get('clean_url', 0) ? '' : '?q=')
     );
     $form['domain'][$langcode] = array(
       '#type' => 'textfield',
-      '#title' => t('%language (%langcode) domain', array('%language' => $language->name, '%langcode' => $language->language)),
+      '#title' => t('%language (%langcode) domain', array('%language' => $language->name, '%langcode' => $language->langcode)),
       '#maxlength' => 128,
       '#default_value' => isset($domains[$langcode]) ? $domains[$langcode] : '',
     );
@@ -301,7 +301,7 @@ function locale_language_providers_url_form_validate($form, &$form_state) {
     $value = $form_state['values']['prefix'][$langcode];
 
     if ($value === '') {
-      if ($default->language != $langcode && $form_state['values']['locale_language_negotiation_url_part'] == LOCALE_LANGUAGE_NEGOTIATION_URL_PREFIX) {
+      if ($default->langcode != $langcode && $form_state['values']['locale_language_negotiation_url_part'] == LOCALE_LANGUAGE_NEGOTIATION_URL_PREFIX) {
         // Validation error if the prefix is blank for a non-default language, and value is for selected negotiation type.
         form_error($form['prefix'][$langcode], t('The prefix may only be left blank for the default language.'));
       }
@@ -318,7 +318,7 @@ function locale_language_providers_url_form_validate($form, &$form_state) {
     $value = $form_state['values']['domain'][$langcode];
 
     if ($value === '') {
-      if ($default->language != $langcode && $form_state['values']['locale_language_negotiation_url_part'] == LOCALE_LANGUAGE_NEGOTIATION_URL_DOMAIN) {
+      if ($default->langcode != $langcode && $form_state['values']['locale_language_negotiation_url_part'] == LOCALE_LANGUAGE_NEGOTIATION_URL_DOMAIN) {
         // Validation error if the domain is blank for a non-default language, and value is for selected negotiation type.
         form_error($form['domain'][$langcode], t('The domain may only be left blank for the default language.'));
       }

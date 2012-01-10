@@ -1081,8 +1081,8 @@ class FileTokenReplaceTestCase extends FileFieldTestCase {
     $tests['[file:mime]'] = check_plain($file->filemime);
     $tests['[file:size]'] = format_size($file->filesize);
     $tests['[file:url]'] = check_plain(file_create_url($file->uri));
-    $tests['[file:timestamp]'] = format_date($file->timestamp, 'medium', '', NULL, $language->language);
-    $tests['[file:timestamp:short]'] = format_date($file->timestamp, 'short', '', NULL, $language->language);
+    $tests['[file:timestamp]'] = format_date($file->timestamp, 'medium', '', NULL, $language->langcode);
+    $tests['[file:timestamp:short]'] = format_date($file->timestamp, 'short', '', NULL, $language->langcode);
     $tests['[file:owner]'] = check_plain(format_username($this->admin_user));
     $tests['[file:owner:uid]'] = $file->uid;
 

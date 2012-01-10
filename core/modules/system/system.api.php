@@ -3836,7 +3836,7 @@ function hook_tokens($type, $tokens, array $data = array(), array $options = arr
   $url_options = array('absolute' => TRUE);
   if (isset($options['language'])) {
     $url_options['language'] = $options['language'];
-    $language_code = $options['language']->language;
+    $language_code = $options['language']->langcode;
   }
   else {
     $language_code = NULL;
@@ -3909,7 +3909,7 @@ function hook_tokens_alter(array &$replacements, array $context) {
 
   if (isset($options['language'])) {
     $url_options['language'] = $options['language'];
-    $language_code = $options['language']->language;
+    $language_code = $options['language']->langcode;
   }
   else {
     $language_code = NULL;

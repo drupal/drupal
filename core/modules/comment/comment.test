@@ -1779,8 +1779,8 @@ class CommentTokenReplaceTestCase extends CommentHelperCase {
     $tests['[comment:body]'] = _text_sanitize($instance, LANGUAGE_NONE, $comment->comment_body[LANGUAGE_NONE][0], 'value');
     $tests['[comment:url]'] = url('comment/' . $comment->cid, $url_options + array('fragment' => 'comment-' . $comment->cid));
     $tests['[comment:edit-url]'] = url('comment/' . $comment->cid . '/edit', $url_options);
-    $tests['[comment:created:since]'] = format_interval(REQUEST_TIME - $comment->created, 2, $language->language);
-    $tests['[comment:changed:since]'] = format_interval(REQUEST_TIME - $comment->changed, 2, $language->language);
+    $tests['[comment:created:since]'] = format_interval(REQUEST_TIME - $comment->created, 2, $language->langcode);
+    $tests['[comment:changed:since]'] = format_interval(REQUEST_TIME - $comment->changed, 2, $language->langcode);
     $tests['[comment:parent:cid]'] = $comment->pid;
     $tests['[comment:parent:title]'] = check_plain($parent_comment->subject);
     $tests['[comment:node:nid]'] = $comment->nid;

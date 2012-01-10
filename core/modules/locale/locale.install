@@ -145,7 +145,7 @@ function locale_schema() {
         'length' => 12,
         'not null' => TRUE,
         'default' => '',
-        'description' => 'Language code. References {language}.language.',
+        'description' => 'Language code. References {language}.langcode.',
       ),
       'plid' => array(
         'type' => 'int',

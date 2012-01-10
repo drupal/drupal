@@ -1272,7 +1272,7 @@ function install_select_language_form($form, &$form_state, $files) {
     }
     // Build a list of languages simulated for browser detection.
     $languages[$file->langcode] = (object) array(
-      'language' => $file->langcode,
+      'langcode' => $file->langcode,
     );
   }
 
@@ -1418,7 +1418,7 @@ function install_import_translations(&$install_state) {
     // Drupal does not know about this language, so we prefill its values with
     // our best guess. The user will be able to edit afterwards.
     $language = (object) array(
-      'language' => $langcode,
+      'langcode' => $langcode,
       'name' => $langcode,
       'default' => TRUE,
     );
@@ -1427,7 +1427,7 @@ function install_import_translations(&$install_state) {
   else {
     // A known predefined language, details will be filled in properly.
     $language = (object) array(
-      'language' => $langcode,
+      'langcode' => $langcode,
       'default' => TRUE,
     );
     language_save($language);

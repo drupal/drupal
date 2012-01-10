@@ -54,7 +54,7 @@ function entity_get_info($entity_type = NULL) {
 
   // hook_entity_info() includes translated strings, so each language is cached
   // separately.
-  $langcode = $language->language;
+  $langcode = $language->langcode;
 
   if (empty($entity_info)) {
     if ($cache = cache()->get("entity_info:$langcode")) {

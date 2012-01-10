@@ -68,13 +68,13 @@ function locale_translate_import_form_submit($form, &$form_state) {
 
     // Add language, if not yet supported
     drupal_static_reset('language_list');
-    $languages = language_list('language');
+    $languages = language_list();
     $langcode = $form_state['values']['langcode'];
     if (!isset($languages[$langcode])) {
       include_once DRUPAL_ROOT . '/core/includes/standard.inc';
       $predefined = standard_language_list();
       $language = (object) array(
-        'language' => $langcode,
+        'langcode' => $langcode,
       );
       language_save($language);
       drupal_set_message(t('The language %language has been created.', array('%language' => t($predefined[$langcode][0]))));

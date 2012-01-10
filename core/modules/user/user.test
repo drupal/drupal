@@ -1918,10 +1918,10 @@ class UserTokenReplaceTestCase extends DrupalWebTestCase {
     $tests['[user:mail]'] = check_plain($account->mail);
     $tests['[user:url]'] = url("user/$account->uid", $url_options);
     $tests['[user:edit-url]'] = url("user/$account->uid/edit", $url_options);
-    $tests['[user:last-login]'] = format_date($account->login, 'medium', '', NULL, $language->language);
-    $tests['[user:last-login:short]'] = format_date($account->login, 'short', '', NULL, $language->language);
-    $tests['[user:created]'] = format_date($account->created, 'medium', '', NULL, $language->language);
-    $tests['[user:created:short]'] = format_date($account->created, 'short', '', NULL, $language->language);
+    $tests['[user:last-login]'] = format_date($account->login, 'medium', '', NULL, $language->langcode);
+    $tests['[user:last-login:short]'] = format_date($account->login, 'short', '', NULL, $language->langcode);
+    $tests['[user:created]'] = format_date($account->created, 'medium', '', NULL, $language->langcode);
+    $tests['[user:created:short]'] = format_date($account->created, 'short', '', NULL, $language->langcode);
     $tests['[current-user:name]'] = check_plain(format_username($global_account));
 
     // Test to make sure that we generated something for each token.

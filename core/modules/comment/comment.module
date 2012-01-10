@@ -945,7 +945,7 @@ function comment_prepare_thread(&$comments) {
  */
 function comment_view($comment, $node, $view_mode = 'full', $langcode = NULL) {
   if (!isset($langcode)) {
-    $langcode = $GLOBALS['language_content']->language;
+    $langcode = $GLOBALS['language_content']->langcode;
   }
 
   // Populate $comment->content with a render() array.
@@ -1012,7 +1012,7 @@ function comment_view($comment, $node, $view_mode = 'full', $langcode = NULL) {
  */
 function comment_build_content($comment, $node, $view_mode = 'full', $langcode = NULL) {
   if (!isset($langcode)) {
-    $langcode = $GLOBALS['language_content']->language;
+    $langcode = $GLOBALS['language_content']->langcode;
   }
 
   // Remove previously built content, if exists.

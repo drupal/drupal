@@ -2646,7 +2646,7 @@ class FieldTranslationsTestCase extends FieldTestCase {
     require_once DRUPAL_ROOT . '/core/includes/locale.inc';
     for ($i = 0; $i < 3; ++$i) {
       $language = (object) array(
-        'language' => 'l' . $i,
+        'langcode' => 'l' . $i,
         'name' => $this->randomString(),
       );
       language_save($language);

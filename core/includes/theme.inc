@@ -1624,7 +1624,7 @@ function theme_links($variables) {
       // Handle links.
       if (isset($link['href'])) {
         $is_current_path = ($link['href'] == $_GET['q'] || ($link['href'] == '<front>' && drupal_is_front_page()));
-        $is_current_language = (empty($link['language']) || $link['language']->language == $language_url->language);
+        $is_current_language = (empty($link['language']) || $link['language']->langcode == $language_url->langcode);
         if ($is_current_path && $is_current_language) {
           $class[] = 'active';
         }
@@ -2353,7 +2353,7 @@ function template_preprocess_html(&$variables) {
   $variables['body_attributes_array'] = array();
 
   // HTML element attributes.
-  $variables['html_attributes_array']['lang'] = $GLOBALS['language']->language;
+  $variables['html_attributes_array']['lang'] = $GLOBALS['language']->langcode;
   $variables['html_attributes_array']['dir'] = $GLOBALS['language']->direction ? 'rtl' : 'ltr';
 
   // Add favicon.

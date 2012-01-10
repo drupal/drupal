@@ -168,7 +168,7 @@ function comment_schema() {
         'description' => "The comment author's home page address from the comment form, if user is anonymous, and the 'Anonymous users may/must leave their contact information' setting is turned on.",
       ),
       'language' => array(
-        'description' => 'The {language}.language of this comment.',
+        'description' => 'The {language}.langcode of this comment.',
         'type' => 'varchar',
         'length' => 12,
         'not null' => TRUE,

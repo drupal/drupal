@@ -682,7 +682,7 @@ function node_type_update_nodes($old_type, $type) {
  *   type object by $type->disabled being set to TRUE.
  */
 function _node_types_build($rebuild = FALSE) {
-  $cid = 'node_types:' . $GLOBALS['language']->language;
+  $cid = 'node_types:' . $GLOBALS['language']->langcode;
 
   if (!$rebuild) {
     $_node_types = &drupal_static(__FUNCTION__);
@@ -1326,7 +1326,7 @@ function node_revision_delete($revision_id) {
  */
 function node_view($node, $view_mode = 'full', $langcode = NULL) {
   if (!isset($langcode)) {
-    $langcode = $GLOBALS['language_content']->language;
+    $langcode = $GLOBALS['language_content']->langcode;
   }
 
   // Populate $node->content with a render() array.
@@ -1388,7 +1388,7 @@ function node_view($node, $view_mode = 'full', $langcode = NULL) {
  */
 function node_build_content($node, $view_mode = 'full', $langcode = NULL) {
   if (!isset($langcode)) {
-    $langcode = $GLOBALS['language_content']->language;
+    $langcode = $GLOBALS['language_content']->langcode;
   }
 
   // Remove previously built content, if exists.
@@ -2628,7 +2628,7 @@ function node_feed($nids = FALSE, $channel = array()) {
     'title'       => variable_get('site_name', 'Drupal'),
     'link'        => $base_url,
     'description' => variable_get('feed_description', ''),
-    'language'    => $language_content->language
+    'language'    => $language_content->langcode
   );
   $channel_extras = array_diff_key($channel, $channel_defaults);
   $channel = array_merge($channel_defaults, $channel);
@@ -2848,7 +2848,7 @@ function node_form_search_form_alter(&$form, $form_state) {
 
     // Languages:
     $language_options = array();
-    foreach (language_list('language') as $key => $entity) {
+    foreach (language_list() as $key => $entity) {
       if ($entity->enabled) {
         $language_options[$key] = $entity->name;
       }
@@ -4208,6 +4208,6 @@ function node_language_delete($language) {
   // On nodes with this language, unset the language
   db_update('node')
     ->fields(array('language' => ''))
-    ->condition('language', $language->language)
+    ->condition('language', $language->langcode)
     ->execute();
 }

@@ -759,7 +759,7 @@ function taxonomy_term_delete($tid) {
  */
 function taxonomy_term_view($term, $view_mode = 'full', $langcode = NULL) {
   if (!isset($langcode)) {
-    $langcode = $GLOBALS['language_content']->language;
+    $langcode = $GLOBALS['language_content']->langcode;
   }
 
   field_attach_prepare_view('taxonomy_term', array($term->tid => $term), $view_mode, $langcode);

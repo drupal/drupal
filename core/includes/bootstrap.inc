@@ -1520,7 +1520,7 @@ function t($string, array $args = array(), array $options = array()) {
 
   // Merge in default.
   if (empty($options['langcode'])) {
-    $options['langcode'] = isset($language->language) ? $language->language : LANGUAGE_SYSTEM;
+    $options['langcode'] = isset($language->langcode) ? $language->langcode : LANGUAGE_SYSTEM;
   }
   if (empty($options['context'])) {
     $options['context'] = '';
@@ -2677,33 +2677,33 @@ function language_types() {
  *   - For all other values of $field, the array is only one level deep, and
  *     the array's values are language objects.
  */
-function language_list($field = 'language') {
+function language_list($field = 'langcode') {
   $languages = &drupal_static(__FUNCTION__);
   // Init language list
   if (!isset($languages)) {
     $default = language_default();
     if (language_multilingual() || module_exists('language')) {
-      $languages['language'] = db_query('SELECT * FROM {language} ORDER BY weight ASC, name ASC')->fetchAllAssoc('language');
+      $languages['langcode'] = db_query('SELECT * FROM {language} ORDER BY weight ASC, name ASC')->fetchAllAssoc('langcode');
     }
     else {
       // No locale module, so use the default language only.
-      $languages['language'][$default->language] = $default;
+      $languages['langcode'][$default->langcode] = $default;
     }
 
     // Initialize default property so callers have an easy reference and
     // can save the same object without data loss.
-    foreach ($languages['language'] as $langcode => $language) {
-      $languages['language'][$langcode]->default = ($langcode == $default->language);
+    foreach ($languages['langcode'] as $langcode => $language) {
+      $languages['langcode'][$langcode]->default = ($langcode == $default->langcode);
     }
   }
 
   // Return the array indexed by the right field
   if (!isset($languages[$field])) {
     $languages[$field] = array();
-    foreach ($languages['language'] as $lang) {
+    foreach ($languages['langcode'] as $lang) {
       // Some values should be collected into an array
       if (in_array($field, array('enabled', 'weight'))) {
-        $languages[$field][$lang->$field][$lang->language] = $lang;
+        $languages[$field][$lang->$field][$lang->langcode] = $lang;
       }
       else {
         $languages[$field][$lang->$field] = $lang;
@@ -2723,7 +2723,7 @@ function language_default() {
   $default = variable_get(
     'language_default',
     (object) array(
-      'language' => 'en',
+      'langcode' => 'en',
       'name' => 'English',
       'direction' => 0,
       'enabled' => 1,
@@ -3174,7 +3174,7 @@ function registry_update() {
  *
  * Example:
  * @code
- * function language_list($field = 'language') {
+ * function language_list($field = 'langcode') {
  *   $languages = &drupal_static(__FUNCTION__);
  *   if (!isset($languages)) {
  *     // If this function is being called for the first time after a reset,

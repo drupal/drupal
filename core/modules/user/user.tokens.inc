@@ -65,7 +65,7 @@ function user_tokens($type, $tokens, array $data = array(), array $options = arr
   $url_options = array('absolute' => TRUE);
   if (isset($options['language'])) {
     $url_options['language'] = $options['language'];
-    $language_code = $options['language']->language;
+    $language_code = $options['language']->langcode;
   }
   else {
     $language_code = NULL;

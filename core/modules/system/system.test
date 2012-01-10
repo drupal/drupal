@@ -1245,7 +1245,7 @@ class DateTimeFunctionalTest extends DrupalWebTestCase {
 
     // Enable German language
     $language = (object) array(
-      'language' => 'de',
+      'langcode' => 'de',
       'default' => TRUE,
     );
     language_save($language);
@@ -1841,9 +1841,9 @@ class TokenReplaceTestCase extends DrupalWebTestCase {
 
     $target  = check_plain($node->title);
     $target .= check_plain($account->name);
-    $target .= format_interval(REQUEST_TIME - $node->created, 2, $language->language);
+    $target .= format_interval(REQUEST_TIME - $node->created, 2, $language->langcode);
     $target .= check_plain($user->name);
-    $target .= format_date(REQUEST_TIME, 'short', '', NULL, $language->language);
+    $target .= format_date(REQUEST_TIME, 'short', '', NULL, $language->langcode);
 
     // Test that the clear parameter cleans out non-existent tokens.
     $result = token_replace($source, array('node' => $node), array('language' => $language, 'clear' => TRUE));
@@ -1948,11 +1948,11 @@ class TokenReplaceTestCase extends DrupalWebTestCase {
 
     // Generate and test tokens.
     $tests = array();
-    $tests['[date:short]'] = format_date($date, 'short', '', NULL, $language->language);
-    $tests['[date:medium]'] = format_date($date, 'medium', '', NULL, $language->language);
-    $tests['[date:long]'] = format_date($date, 'long', '', NULL, $language->language);
-    $tests['[date:custom:m/j/Y]'] = format_date($date, 'custom', 'm/j/Y', NULL, $language->language);
-    $tests['[date:since]'] = format_interval((REQUEST_TIME - $date), 2, $language->language);
+    $tests['[date:short]'] = format_date($date, 'short', '', NULL, $language->langcode);
+    $tests['[date:medium]'] = format_date($date, 'medium', '', NULL, $language->langcode);
+    $tests['[date:long]'] = format_date($date, 'long', '', NULL, $language->langcode);
+    $tests['[date:custom:m/j/Y]'] = format_date($date, 'custom', 'm/j/Y', NULL, $language->langcode);
+    $tests['[date:since]'] = format_interval((REQUEST_TIME - $date), 2, $language->langcode);
     $tests['[date:raw]'] = filter_xss($date);
 
     // Test to make sure that we generated something for each token.

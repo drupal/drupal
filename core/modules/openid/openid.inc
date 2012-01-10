@@ -84,9 +84,9 @@ function openid_redirect_http($url, $message) {
  */
 function openid_redirect($url, $message) {
   global $language;
-  
+
   $output = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">' . "\n";
-  $output .= '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="' . $language->language . '" lang="' . $language->language . '">' . "\n";
+  $output .= '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="' . $language->langcode . '" lang="' . $language->langcode . '">' . "\n";
   $output .= "<head>\n";
   $output .= "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n";
   $output .= "<title>" . t('OpenID redirect') . "</title>\n";

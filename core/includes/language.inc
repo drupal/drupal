@@ -405,7 +405,7 @@ function language_initialize($type) {
  *   The default language code.
  */
 function language_from_default() {
-  return language_default()->language;
+  return language_default()->langcode;
 }
 
 /**
@@ -432,7 +432,7 @@ function language_url_split_prefix($path, $languages) {
   // Search prefix within enabled languages.
   $prefixes = locale_language_negotiation_url_prefixes();
   foreach ($languages as $language) {
-    if (isset($prefixes[$language->language]) && $prefixes[$language->language] == $prefix) {
+    if (isset($prefixes[$language->langcode]) && $prefixes[$language->langcode] == $prefix) {
       // Rebuild $path with the language removed.
       return array($language, implode('/', $args));
     }
@@ -460,7 +460,7 @@ function language_fallback_get_candidates($type = LANGUAGE_TYPE_CONTENT) {
     // Use array keys to avoid duplicated entries.
     foreach (language_list('weight') as $languages) {
       foreach ($languages as $language) {
-        $fallback_candidates[$language->language] = NULL;
+        $fallback_candidates[$language->langcode] = NULL;
       }
     }
 

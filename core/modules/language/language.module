@@ -121,14 +121,14 @@ function language_load($langcode) {
  *   Language object with properties corresponding to 'language' table columns.
  */
 function language_save($language) {
-  $language->is_new = !(bool) db_query_range('SELECT 1 FROM {language} WHERE language = :language', 0, 1, array(':language' => $language->language))->fetchField();
+  $language->is_new = !(bool) db_query_range('SELECT 1 FROM {language} WHERE langcode = :langcode', 0, 1, array(':langcode' => $language->langcode))->fetchField();
 
   // If name was not set, we add a predefined language.
   if (!isset($language->name)) {
     include_once DRUPAL_ROOT . '/core/includes/standard.inc';
     $predefined = standard_language_list();
-    $language->name = $predefined[$language->language][0];
-    $language->direction = isset($predefined[$language->language][2]) ? $predefined[$language->language][2] : LANGUAGE_LTR;
+    $language->name = $predefined[$language->langcode][0];
+    $language->direction = isset($predefined[$language->langcode][2]) ? $predefined[$language->langcode][2] : LANGUAGE_LTR;
   }
 
   // Set to enabled for the default language and unless specified otherwise.
@@ -139,14 +139,14 @@ function language_save($language) {
   module_invoke_all('language_presave', $language);
 
   // Save the record and inform others about the change.
-  $t_args = array('%language' => $language->name, '%langcode' => $language->language);
+  $t_args = array('%language' => $language->name, '%langcode' => $language->langcode);
   if ($language->is_new) {
     drupal_write_record('language', $language);
     module_invoke_all('language_insert', $language);
     watchdog('language', 'The %language (%langcode) language has been created.', $t_args);
   }
   else {
-    drupal_write_record('language', $language, array('language'));
+    drupal_write_record('language', $language, array('langcode'));
     module_invoke_all('language_update', $language);
     watchdog('language', 'The %language (%langcode) language has been updated.', $t_args);
   }
@@ -158,7 +158,7 @@ function language_save($language) {
   }
 
   // Update language count based on enabled language count.
-  variable_set('language_count', db_query('SELECT COUNT(language) FROM {language} WHERE enabled = 1')->fetchField());
+  variable_set('language_count', db_query('SELECT COUNT(langcode) FROM {language} WHERE enabled = 1')->fetchField());
 
   // Kill the static cache in language_list().
   drupal_static_reset('language_list');
@@ -183,7 +183,7 @@ function language_delete($langcode) {
 
     // Remove the language.
     db_delete('language')
-      ->condition('language', $language->language)
+      ->condition('langcode', $language->langcode)
       ->execute();
 
     if ($language->enabled) {
@@ -192,7 +192,7 @@ function language_delete($langcode) {
 
     drupal_static_reset('language_list');
 
-    $t_args = array('%language' => $language->name, '%langcode' => $language->language);
+    $t_args = array('%language' => $language->name, '%langcode' => $language->langcode);
     watchdog('language', 'The %language (%langcode) language has been removed.', $t_args);
     return TRUE;
   }

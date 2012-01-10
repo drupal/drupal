@@ -1318,7 +1318,7 @@ class DrupalWebTestCase extends DrupalTestCase {
     // during install if the current language is not 'en'.
     // The following array/object conversion is copied from language_default().
     $language = (object) array(
-      'language' => 'en',
+      'langcode' => 'en',
       'name' => 'English',
       'direction' => 0,
       'enabled' => 1,
