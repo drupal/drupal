@@ -962,6 +962,15 @@ function forum_get_topics($tid, $sortby, $forum_per_page) {
 }
 
 /**
+ * Implements hook_preprocess_block().
+ */
+function forum_preprocess_block(&$variables) {
+  if ($variables['block']->module == 'forum') {
+    $variables['attributes_array']['role'] = 'navigation';
+  }
+}
+
+/**
  * Process variables for forums.tpl.php
  *
  * The $variables array contains the following arguments:

@@ -158,6 +158,7 @@ function search_block_view($delta = '') {
  */
 function search_preprocess_block(&$variables) {
   if ($variables['block']->module == 'search' && $variables['block']->delta == 'form') {
+    $variables['attributes_array']['role'] = 'search';
     $variables['content_attributes_array']['class'][] = 'container-inline';
   }
 }
@@ -1325,4 +1326,3 @@ function search_forms() {
   );
   return $forms;
 }
-

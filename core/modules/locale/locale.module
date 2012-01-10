@@ -993,6 +993,15 @@ function locale_block_view($type) {
 }
 
 /**
+ * Implements hook_preprocess_block().
+ */
+function locale_preprocess_block(&$variables) {
+  if ($variables['block']->module == 'locale') {
+    $variables['attributes_array']['role'] = 'navigation';
+  }
+}
+
+/**
  * Implements hook_url_outbound_alter().
  *
  * Rewrite outbound URLs with language based prefixes.

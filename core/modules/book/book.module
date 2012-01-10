@@ -1058,6 +1058,15 @@ function _book_link_defaults($nid) {
   return array('original_bid' => 0, 'menu_name' => '', 'nid' => $nid, 'bid' => 0, 'router_path' => 'node/%', 'plid' => 0, 'mlid' => 0, 'has_children' => 0, 'weight' => 0, 'module' => 'book', 'options' => array());
 }
 
+ /**
+ * Implements hook_preprocess_block().
+ */
+function book_preprocess_block(&$variables) {
+  if ($variables['block']-> module == 'book') {
+    $variables['attributes_array']['role'] = 'navigation';
+  }
+}
+
 /**
  * Processes variables for book-all-books-block.tpl.php.
  *

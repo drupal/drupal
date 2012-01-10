@@ -2089,9 +2089,23 @@ function system_block_view($delta = '') {
  * Implements hook_preprocess_block().
  */
 function system_preprocess_block(&$variables) {
-  // System menu blocks should get the same class as menu module blocks.
-  if ($variables['block']->module == 'system' && in_array($variables['block']->delta, array_keys(menu_list_system_menus()))) {
-    $variables['classes_array'][] = 'block-menu';
+  if ($variables['block']->module == 'system') {
+
+    switch ($variables['block']->delta) {
+      case 'powered-by':
+        $variables['attributes_array']['role'] = 'complementary';
+        break;
+      case 'help':
+        $variables['attributes_array']['role'] = 'complementary';
+        break;
+
+      // System menu blocks should get the same class as menu module blocks.
+      default:
+        if (in_array($variables['block']->delta, array_keys(menu_list_system_menus()))) {
+          $variables['attributes_array']['role'] = 'navigation';
+          $variables['classes_array'][] = 'block-menu';
+        }
+    }
   }
 }
 

@@ -64,3 +64,12 @@ function help_help($path, $arg) {
       return $output;
   }
 }
+
+/**
+ * Implements hook_preprocess_block().
+ */
+function help_preprocess_block(&$variables) {
+  if ($variables['block']->module == 'help') {
+    $variables['attributes_array']['role'] = 'complementary';
+  }
+}

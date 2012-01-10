@@ -1353,6 +1353,25 @@ function user_block_view($delta = '') {
 }
 
 /**
+ * Implements hook_preprocess_block().
+ */
+function user_preprocess_block(&$variables) {
+  if ($variables['block']->module == 'user') {
+    switch ($variables['block']->delta) {
+      case 'login':
+        $variables['attributes_array']['role'] = 'form';
+        break;
+      case 'new':
+        $variables['attributes_array']['role'] = 'complementary';
+        break;
+      case 'online':
+        $variables['attributes_array']['role'] = 'complementary';
+        break;
+    }
+  }
+}
+
+/**
  * Format a username.
  *
  * By default, the passed-in object's 'name' property is used if it exists, or

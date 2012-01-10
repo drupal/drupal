@@ -1480,6 +1480,22 @@ function node_is_page($node) {
   return (!empty($page_node) ? $page_node->nid == $node->nid : FALSE);
 }
 
+ /**
+ * Implements hook_preprocess_block().
+ */
+function node_preprocess_block(&$variables) {
+  if ($variables['block']->module == 'node') {
+    switch ($variables['block']->delta) {
+      case 'syndicate':
+        $variables['attributes_array']['role'] = 'complementary';
+        break;
+      case 'recent':
+        $variables['attributes_array']['role'] = 'navigation';
+        break;
+    }
+  }
+}
+
 /**
  * Processes variables for node.tpl.php.
  *
