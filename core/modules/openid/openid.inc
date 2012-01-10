@@ -366,24 +366,36 @@ function _openid_nonce() {
  * Pull the href attribute out of an html link element.
  */
 function _openid_link_href($rel, $html) {
-  $rel = preg_quote($rel);
-  preg_match('|<link\s+rel=["\'](.*)' . $rel . '(.*)["\'](.*)/?>|iUs', $html, $matches);
-  if (isset($matches[3])) {
-    preg_match('|href=["\']([^"]+)["\']|iU', $matches[3], $href);
-    return trim($href[1]);
+  $html_dom = new DOMDocument();
+  if (@$html_dom->loadHTML($html)) {
+    $html_element = simplexml_import_dom($html_dom);
+    if (isset($html_element->head->link)) {
+      foreach ($html_element->head->link as $link) {
+        // The rel attribute contains a space-separated list of case-insensitive
+        // link types.
+        if (preg_match('@(?:\s|^)' . preg_quote($rel, '@') . '(?:\s|$)@i', $link['rel'])) {
+          return trim($link['href']);
+        }
+      }
+    }
   }
   return FALSE;
 }
 
 /**
- * Pull the http-equiv attribute out of an html meta element
+ * Pull the content attribute out of an X-XRDS-Location meta http-equiv element.
  */
-function _openid_meta_httpequiv($equiv, $html) {
-  preg_match('|<meta\s+http-equiv=["\']' . $equiv . '["\'](.*)/?>|iUs', $html, $matches);
-  if (isset($matches[1])) {
-    preg_match('|content=["\']([^"]+)["\']|iUs', $matches[1], $content);
-    if (isset($content[1])) {
-      return $content[1];
+function _openid_meta_httpequiv($html) {
+  $html_dom = new DOMDocument();
+  if (@$html_dom->loadHTML($html)) {
+    $html_element = simplexml_import_dom($html_dom);
+    if (isset($html_element->head->meta)) {
+      foreach ($html_element->head->meta as $meta) {
+        // The http-equiv attribute is case-insensitive.
+        if (strtolower(trim($meta['http-equiv'])) == 'x-xrds-location') {
+          return trim($meta['content']);
+        }
+      }
     }
   }
   return FALSE;
