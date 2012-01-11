@@ -224,19 +224,14 @@ const MENU_CONTEXT_INLINE = 0x0002;
  */
 
 /**
- * Internal menu status code -- Menu item was found.
- */
-const MENU_FOUND = 1;
-
-/**
  * Internal menu status code -- Menu item was not found.
  */
-const MENU_NOT_FOUND = 2;
+const MENU_NOT_FOUND = 404;
 
 /**
  * Internal menu status code -- Menu item access is denied.
  */
-const MENU_ACCESS_DENIED = 3;
+const MENU_ACCESS_DENIED = 403;
 
 /**
  * Internal menu status code -- Menu item inaccessible because site is offline.
@@ -273,6 +268,20 @@ const MENU_MAX_DEPTH = 9;
 /**
  * @} End of "Menu tree parameters".
  */
+
+/**
+ * Reserved key to identify the most specific menu link for a given path.
+ *
+ * The value of this constant is a hash of the constant name. We use the hash
+ * so that the reserved key is over 32 characters in length and will not
+ * collide with allowed menu names:
+ * @code
+ * sha1('MENU_PREFERRED_LINK') = 1cf698d64d1aa4b83907cf6ed55db3a7f8e92c91
+ * @endcode
+ *
+ * @see menu_link_get_preferred()
+ */
+const MENU_PREFERRED_LINK = '1cf698d64d1aa4b83907cf6ed55db3a7f8e92c91';
 
 /**
  * Returns the ancestors (and relevant placeholders) for any given path.
@@ -618,7 +627,7 @@ function _menu_check_access(&$item, $map) {
     if ($callback == 'user_access') {
       $item['access'] = (count($arguments) == 1) ? user_access($arguments[0]) : user_access($arguments[0], $arguments[1]);
     }
-    elseif (function_exists($callback)) {
+    else {
       $item['access'] = call_user_func_array($callback, $arguments);
     }
   }
@@ -678,7 +687,7 @@ function _menu_item_localize(&$item, $map, $link_translate = FALSE) {
         $item['title'] = t($item['title'], menu_unserialize($item['title_arguments'], $map));
       }
     }
-    elseif ($callback && function_exists($callback)) {
+    elseif ($callback) {
       if (empty($item['title_arguments'])) {
         $item['title'] = $callback($item['title']);
       }
@@ -1241,7 +1250,7 @@ function menu_tree_page_data($menu_name, $max_depth = NULL, $only_active_trail =
         if ($item['access']) {
           // Find a menu link corresponding to the current path. If $active_path
           // is NULL, let menu_link_get_preferred() determine the path.
-          if ($active_link = menu_link_get_preferred($active_path)) {
+          if ($active_link = menu_link_get_preferred($active_path, $menu_name)) {
             // The active link may only be taken into account to build the
             // active trail, if it resides in the requested menu. Otherwise,
             // we'd needlessly re-run _menu_build_tree() queries for every menu
@@ -1325,6 +1334,8 @@ function menu_tree_page_data($menu_name, $max_depth = NULL, $only_active_trail =
  *     Defaults to 1, which is the default to build a whole tree for a menu, i.e.
  *     excluding menu container itself.
  *   - max_depth: The maximum depth of menu links in the resulting tree.
+ *   - conditions: An associative array of custom database select query
+ *     condition key/value pairs; see _menu_build_tree() for the actual query.
  *
  * @return
  *   A fully built menu tree.
@@ -1407,6 +1418,12 @@ function _menu_build_tree($menu_name, array $parameters = array()) {
     }
     if (isset($parameters['max_depth'])) {
       $query->condition('ml.depth', $parameters['max_depth'], '<=');
+    }
+    // Add custom query conditions, if any were passed.
+    if (isset($parameters['conditions'])) {
+      foreach ($parameters['conditions'] as $column => $value) {
+        $query->condition($column, $value);
+      }
     }
 
     // Build an ordered array of links using the query result object.
@@ -1728,7 +1745,7 @@ function menu_get_custom_theme($initialize = FALSE) {
     // If this returns a valid theme, it will override any theme that was set
     // by a hook_custom_theme() implementation above.
     $router_item = menu_get_item();
-    if (!empty($router_item['access']) && !empty($router_item['theme_callback']) && function_exists($router_item['theme_callback'])) {
+    if (!empty($router_item['access']) && !empty($router_item['theme_callback'])) {
       $theme_name = call_user_func_array($router_item['theme_callback'], $router_item['theme_arguments']);
       if (drupal_theme_access($theme_name)) {
         $custom_theme = $theme_name;
@@ -2244,6 +2261,13 @@ function theme_menu_local_tasks(&$variables) {
 
 /**
  * Set (or get) the active menu for the current page - determines the active trail.
+ *
+ * @return
+ *   An array of menu machine names, in order of preference. The
+ *   'menu_default_active_menus' variable may be used to assert a menu order
+ *   different from the order of creation, or to prevent a particular menu from
+ *   being used at all in the active trail.
+ *   E.g., $conf['menu_default_active_menus'] = array('navigation', 'main-menu')
  */
 function menu_set_active_menu_names($menu_names = NULL) {
   $active = &drupal_static(__FUNCTION__);
@@ -2374,23 +2398,30 @@ function menu_set_active_trail($new_trail = NULL) {
  * @param $path
  *   The path, for example 'node/5'. The function will find the corresponding
  *   menu link ('node/5' if it exists, or fallback to 'node/%').
+ * @param $selected_menu
+ *   The name of a menu used to restrict the search for a preferred menu link.
+ *   If not specified, all the menus returned by menu_get_active_menu_names()
+ *   will be used.
  *
  * @return
- *   A fully translated menu link, or NULL if no matching menu link was
+ *   A fully translated menu link, or FALSE if no matching menu link was
  *   found. The most specific menu link ('node/5' preferred over 'node/%') in
  *   the most preferred menu (as defined by menu_get_active_menu_names()) is
  *   returned.
  */
-function menu_link_get_preferred($path = NULL) {
+function menu_link_get_preferred($path = NULL, $selected_menu = NULL) {
   $preferred_links = &drupal_static(__FUNCTION__);
 
   if (!isset($path)) {
     $path = $_GET['q'];
   }
 
-  if (!isset($preferred_links[$path])) {
-    $preferred_links[$path] = FALSE;
+  if (empty($selected_menu)) {
+    // Use an illegal menu name as the key for the preferred menu link.
+    $selected_menu = MENU_PREFERRED_LINK;
+  }
 
+  if (!isset($preferred_links[$path])) {
     // Look for the correct menu link by building a list of candidate paths,
     // which are ordered by priority (translated hrefs are preferred over
     // untranslated paths). Afterwards, the most relevant path is picked from
@@ -2412,6 +2443,8 @@ function menu_link_get_preferred($path = NULL) {
 
     // Retrieve a list of menu names, ordered by preference.
     $menu_names = menu_get_active_menu_names();
+    // Put the selected menu at the front of the list.
+    array_unshift($menu_names, $selected_menu);
 
     $query = db_select('menu_links', 'ml', array('fetch' => PDO::FETCH_ASSOC));
     $query->leftJoin('menu_router', 'm', 'm.path = ml.router_path');
@@ -2419,7 +2452,6 @@ function menu_link_get_preferred($path = NULL) {
     // Weight must be taken from {menu_links}, not {menu_router}.
     $query->addField('ml', 'weight', 'link_weight');
     $query->fields('m');
-    $query->condition('ml.menu_name', $menu_names, 'IN');
     $query->condition('ml.link_path', $path_candidates, 'IN');
 
     // Sort candidates by link path and menu name.
@@ -2427,29 +2459,35 @@ function menu_link_get_preferred($path = NULL) {
     foreach ($query->execute() as $candidate) {
       $candidate['weight'] = $candidate['link_weight'];
       $candidates[$candidate['link_path']][$candidate['menu_name']] = $candidate;
+      // Add any menus not already in the menu name search list.
+      if (!in_array($candidate['menu_name'], $menu_names)) {
+        $menu_names[] = $candidate['menu_name'];
+      }
     }
 
-    // Pick the most specific link, in the most preferred menu.
+    // Store the most specific link for each menu. Also save the most specific
+    // link of the most preferred menu in $preferred_link.
     foreach ($path_candidates as $link_path) {
-      if (!isset($candidates[$link_path])) {
-        continue;
-      }
-      foreach ($menu_names as $menu_name) {
-        if (!isset($candidates[$link_path][$menu_name])) {
-          continue;
+      if (isset($candidates[$link_path])) {
+        foreach ($menu_names as $menu_name) {
+          if (empty($preferred_links[$path][$menu_name]) && isset($candidates[$link_path][$menu_name])) {
+            $candidate_item = $candidates[$link_path][$menu_name];
+            $map = explode('/', $path);
+            _menu_translate($candidate_item, $map);
+            if ($candidate_item['access']) {
+              $preferred_links[$path][$menu_name] = $candidate_item;
+              if (empty($preferred_links[$path][MENU_PREFERRED_LINK])) {
+                // Store the most specific link.
+                $preferred_links[$path][MENU_PREFERRED_LINK] = $candidate_item;
+              }
+            }
+          }
         }
-        $candidate_item = $candidates[$link_path][$menu_name];
-        $map = explode('/', $path);
-        _menu_translate($candidate_item, $map);
-        if ($candidate_item['access']) {
-          $preferred_links[$path] = $candidate_item;
-        }
-        break 2;
       }
     }
   }
 
-  return $preferred_links[$path];
+  return isset($preferred_links[$path][$selected_menu]) ? $preferred_links[$path][$selected_menu] : FALSE;
 }
 
 /**
@@ -2574,17 +2612,7 @@ function menu_link_load($mlid) {
  * Clears the cached cached data for a single named menu.
  */
 function menu_cache_clear($menu_name = 'navigation') {
-  $cache_cleared = &drupal_static(__FUNCTION__, array());
-
-  if (empty($cache_cleared[$menu_name])) {
-    cache('menu')->deletePrefix('links:' . $menu_name . ':');
-    $cache_cleared[$menu_name] = 1;
-  }
-  elseif ($cache_cleared[$menu_name] == 1) {
-    drupal_register_shutdown_function('cache_clear_all', 'links:' . $menu_name . ':', 'cache_menu', TRUE);
-    $cache_cleared[$menu_name] = 2;
-  }
-
+  cache('menu')->deletePrefix('links:' . $menu_name . ':');
   // Also clear the menu system static caches.
   menu_reset_static_cache();
 }

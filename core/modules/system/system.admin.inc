@@ -130,7 +130,7 @@ function system_themes_page() {
   $themes = system_rebuild_theme_data();
   uasort($themes, 'system_sort_modules_by_info_name');
 
-  $theme_default = variable_get('theme_default', 'bartik');
+  $theme_default = variable_get('theme_default', 'stark');
   $theme_groups  = array();
 
   foreach ($themes as &$theme) {
@@ -315,7 +315,7 @@ function system_theme_disable() {
 
     // Check if the specified theme is one recognized by the system.
     if (!empty($themes[$theme])) {
-      if ($theme == variable_get('theme_default', 'bartik')) {
+      if ($theme == variable_get('theme_default', 'stark')) {
         // Don't disable the default theme.
         drupal_set_message(t('%theme is the default theme and cannot be disabled.', array('%theme' => $themes[$theme]->info['name'])), 'error');
       }
@@ -1638,6 +1638,7 @@ function system_logging_settings() {
  * Form builder; Configure site performance settings.
  *
  * @ingroup forms
+ * @see system_performance_settings_submit().
  */
 function system_performance_settings($form, &$form_state) {
   drupal_add_js(drupal_get_path('module', 'system') . '/system.js');
@@ -1719,8 +1720,8 @@ function system_performance_settings($form, &$form_state) {
 
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array(
-    '#type' => 'submit', 
-    '#value' => t('Save configuration')
+    '#type' => 'submit',
+    '#value' => t('Save configuration'),
   );
 
   $form['#submit'][] = 'drupal_clear_css_cache';
@@ -1734,7 +1735,7 @@ function system_performance_settings($form, &$form_state) {
 }
 
 /**
- * Submit callback; save performance settings.
+ * Form submission handler for system_performance_settings().
  *
  * @ingroup forms
  */

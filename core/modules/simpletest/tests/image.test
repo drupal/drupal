@@ -216,6 +216,16 @@ class ImageToolkitGdTestCase extends DrupalWebTestCase {
     );
   }
 
+  protected function checkRequirements() {
+    image_get_available_toolkits();
+    if (!function_exists('image_gd_check_settings') || !image_gd_check_settings()) {
+      return array(
+        'Image manipulations for the GD toolkit cannot run because the GD toolkit is not available.',
+      );
+    }
+    return parent::checkRequirements();
+  }
+
   /**
    * Function to compare two colors by RGBa.
    */
@@ -254,12 +264,6 @@ class ImageToolkitGdTestCase extends DrupalWebTestCase {
    * the expected height and widths for the final images.
    */
   function testManipulations() {
-    // If GD isn't available don't bother testing this.
-    if (!function_exists('image_gd_check_settings') || !image_gd_check_settings()) {
-      $this->pass(t('Image manipulations for the GD toolkit were skipped because the GD toolkit is not available.'));
-      return;
-    }
-
     // Typically the corner colors will be unchanged. These colors are in the
     // order of top-left, top-right, bottom-right, bottom-left.
     $default_corners = array($this->red, $this->green, $this->blue, $this->transparent);

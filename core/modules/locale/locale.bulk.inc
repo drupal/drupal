@@ -10,7 +10,7 @@ include_once DRUPAL_ROOT . '/core/includes/gettext.inc';
 /**
  * User interface for the translation import screen.
  */
-function locale_translate_import_form($form) {
+function locale_translate_import_form($form, &$form_state) {
   // Get all languages, except English
   drupal_static_reset('language_list');
   $names = locale_language_list('name');
@@ -18,14 +18,15 @@ function locale_translate_import_form($form) {
     unset($names['en']);
   }
 
+  form_load_include($form_state, 'inc', 'language', 'language.admin');
   if (!count($names)) {
-    $languages = _locale_prepare_predefined_list();
+    $languages = language_admin_predefined_list();
     $default = key($languages);
   }
   else {
     $languages = array(
       t('Already added languages') => $names,
-      t('Languages not yet added') => _locale_prepare_predefined_list()
+      t('Languages not yet added') => language_admin_predefined_list()
     );
     $default = key($names);
   }
@@ -75,7 +76,7 @@ function locale_translate_import_form_submit($form, &$form_state) {
       $language = (object) array(
         'language' => $langcode,
       );
-      locale_language_save($language);
+      language_save($language);
       drupal_set_message(t('The language %language has been created.', array('%language' => t($predefined[$langcode][0]))));
     }
 
@@ -164,6 +165,17 @@ function locale_translate_export_po_form_submit($form, &$form_state) {
     $language = $languages[$form_state['values']['langcode']];
   }
   _locale_export_po($language, _locale_export_po_generate($language, _locale_export_get_strings($language)));
+}
+
+/**
+ * Set a batch for newly added language.
+ */
+function locale_translate_add_language_set_batch($langcode) {
+  // See if we have language files to import for the newly added language,
+  // collect and import them.
+  if ($batch = locale_translate_batch_import_files($langcode, TRUE)) {
+    batch_set($batch);
+  }
 }
 
 /**

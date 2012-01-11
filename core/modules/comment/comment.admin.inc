@@ -2,11 +2,20 @@
 
 /**
  * @file
- * Admin page callbacks for the comment module.
+ * Admin page callbacks for the Comment module.
  */
 
 /**
- * Menu callback; present an administrative comment listing.
+ * Page callback: Presents an administrative comment listing.
+ *
+ * Path: admin/content/comment
+ *
+ * @param $type
+ *   The type of the overview form ('approval' or 'new'). See
+ *   comment_admin_overview() for details.
+ *
+ * @see comment_menu()
+ * @see comment_multiple_delete_confirm()
  */
 function comment_admin($type = 'new') {
   $edit = $_POST;
@@ -20,13 +29,13 @@ function comment_admin($type = 'new') {
 }
 
 /**
- * Form builder for the comment overview administration form.
+ * Form constructor for the comment overview administration form.
  *
  * @param $arg
- *   Current path's fourth component: the type of overview form ('approval' or
- *   'new').
+ *   The type of overview form ('approval' or 'new').
  *
  * @ingroup forms
+ * @see comment_admin()
  * @see comment_admin_overview_validate()
  * @see comment_admin_overview_submit()
  * @see theme_comment_admin_overview()
@@ -140,7 +149,9 @@ function comment_admin_overview($form, &$form_state, $arg) {
 }
 
 /**
- * Validate comment_admin_overview form submissions.
+ * Form validation handler for comment_admin_overview().
+ *
+ * @see comment_admin_overview_submit()
  */
 function comment_admin_overview_validate($form, &$form_state) {
   $form_state['values']['comments'] = array_diff($form_state['values']['comments'], array(0));
@@ -151,10 +162,12 @@ function comment_admin_overview_validate($form, &$form_state) {
 }
 
 /**
- * Process comment_admin_overview form submissions.
+ * Form submission handler for comment_admin_overview().
  *
- * Execute the chosen 'Update option' on the selected comments, such as
+ * Executes the chosen 'Update option' on the selected comments, such as
  * publishing, unpublishing or deleting.
+ *
+ * @see comment_admin_overview_validate()
  */
 function comment_admin_overview_submit($form, &$form_state) {
   $operation = $form_state['values']['operation'];
@@ -182,13 +195,10 @@ function comment_admin_overview_submit($form, &$form_state) {
 }
 
 /**
- * List the selected comments and verify that the admin wants to delete them.
+ * Form constructor for the confirmation form for bulk comment deletion.
  *
- * @param $form_state
- *   An associative array containing the current state of the form.
- * @return
- *   TRUE if the comments should be deleted, FALSE otherwise.
  * @ingroup forms
+ * @see comment_admin()
  * @see comment_multiple_delete_confirm_submit()
  */
 function comment_multiple_delete_confirm($form, &$form_state) {
@@ -224,7 +234,7 @@ function comment_multiple_delete_confirm($form, &$form_state) {
 }
 
 /**
- * Process comment_multiple_delete_confirm form submissions.
+ * Form submission handler for comment_multiple_delete_confirm().
  */
 function comment_multiple_delete_confirm_submit($form, &$form_state) {
   if ($form_state['values']['confirm']) {
@@ -238,7 +248,15 @@ function comment_multiple_delete_confirm_submit($form, &$form_state) {
 }
 
 /**
- * Page callback for comment deletions.
+ * Page callback: Shows a confirmation page for comment deletions.
+ *
+ * Path: comment/%/delete
+ *
+ * @param $cid
+ *   The ID of the comment that is about to be deleted.
+ *
+ * @see comment_menu()
+ * @see comment_confirm_delete()
  */
 function comment_confirm_delete_page($cid) {
   if ($comment = comment_load($cid)) {
@@ -248,10 +266,15 @@ function comment_confirm_delete_page($cid) {
 }
 
 /**
- * Form builder; Builds the confirmation form for deleting a single comment.
+ * Form constructor for the confirmation form for comment deletion.
+ *
+ * @param $comment
+ *   The comment that is about to be deleted.
  *
  * @ingroup forms
+ * @see comment_confirm_delete_page()
  * @see comment_confirm_delete_submit()
+ * @see confirm_form()
  */
 function comment_confirm_delete($form, &$form_state, $comment) {
   $form['#comment'] = $comment;
@@ -268,7 +291,7 @@ function comment_confirm_delete($form, &$form_state, $comment) {
 }
 
 /**
- * Process comment_confirm_delete form submissions.
+ * Form submission handler for comment_confirm_delete().
  */
 function comment_confirm_delete_submit($form, &$form_state) {
   $comment = $form['#comment'];

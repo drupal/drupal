@@ -31,9 +31,9 @@ function openid_user_identities($account) {
   drupal_add_css(drupal_get_path('module', 'openid') . '/openid.css');
 
   // Check to see if we got a response
-  $result = openid_complete();
-  if ($result['status'] == 'success') {
-    $identity = $result['openid.claimed_id'];
+  $response = openid_complete();
+  if ($response['status'] == 'success') {
+    $identity = $response['openid.claimed_id'];
     $query = db_insert('authmap')
       ->fields(array(
         'uid' => $account->uid,
@@ -42,6 +42,8 @@ function openid_user_identities($account) {
       ))
       ->execute();
     drupal_set_message(t('Successfully added %identity', array('%identity' => $identity)));
+    // Let other modules act on OpenID authentication.
+    module_invoke_all('openid_response', $response, $account);
   }
 
   $header = array(t('OpenID'), t('Operations'));

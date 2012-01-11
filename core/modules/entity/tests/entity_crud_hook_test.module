@@ -213,6 +213,59 @@ function entity_crud_hook_test_user_update() {
 }
 
 //
+// Predelete hooks
+//
+
+/**
+ * Implements hook_entity_predelete().
+ */
+function entity_crud_hook_test_entity_predelete($entity, $type) {
+  $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called for type ' . $type);
+}
+
+/**
+ * Implements hook_comment_predelete().
+ */
+function entity_crud_hook_test_comment_predelete() {
+  $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_file_predelete().
+ */
+function entity_crud_hook_test_file_predelete() {
+  $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_node_predelete().
+ */
+function entity_crud_hook_test_node_predelete() {
+  $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_taxonomy_term_predelete().
+ */
+function entity_crud_hook_test_taxonomy_term_predelete() {
+  $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_taxonomy_vocabulary_predelete().
+ */
+function entity_crud_hook_test_taxonomy_vocabulary_predelete() {
+  $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_user_predelete().
+ */
+function entity_crud_hook_test_user_predelete() {
+  $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+//
 // Delete hooks
 //
 

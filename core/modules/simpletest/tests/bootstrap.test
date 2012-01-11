@@ -291,14 +291,18 @@ class HookBootExitTestCase extends DrupalWebTestCase {
    */
   function testHookBootExit() {
     // Test with cache disabled. Boot and exit should always fire.
-    variable_set('cache', 0);
+    $config = config('system.performance');
+    $config->set('cache', 0);
+    $config->save();
+
     $this->drupalGet('');
     $calls = 1;
     $this->assertEqual(db_query('SELECT COUNT(*) FROM {watchdog} WHERE type = :type AND message = :message', array(':type' => 'system_test', ':message' => 'hook_boot'))->fetchField(), $calls, t('hook_boot called with disabled cache.'));
     $this->assertEqual(db_query('SELECT COUNT(*) FROM {watchdog} WHERE type = :type AND message = :message', array(':type' => 'system_test', ':message' => 'hook_exit'))->fetchField(), $calls, t('hook_exit called with disabled cache.'));
 
     // Test with normal cache. Boot and exit should be called.
-    variable_set('cache', 1);
+    $config->set('cache', 1);
+    $config->save();
     $this->drupalGet('');
     $calls++;
     $this->assertEqual(db_query('SELECT COUNT(*) FROM {watchdog} WHERE type = :type AND message = :message', array(':type' => 'system_test', ':message' => 'hook_boot'))->fetchField(), $calls, t('hook_boot called with normal cache.'));

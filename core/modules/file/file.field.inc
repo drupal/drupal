@@ -120,9 +120,13 @@ function file_field_instance_settings_form($field, $instance) {
 }
 
 /**
- * Element validate callback for the maximum upload size field.
+ * Render API callback: Validates the maximum uplodad size field.
  *
- * Ensure a size that can be parsed by parse_size() has been entered.
+ * Ensures that a size has been entered and that it can be parsed by
+ * parse_size().
+ *
+ * This function is assigned as an #element_validate callback in
+ * file_field_instance_settings_form().
  */
 function _file_generic_settings_max_filesize($element, &$form_state) {
   if (!empty($element['#value']) && !is_numeric(parse_size($element['#value']))) {
@@ -131,7 +135,10 @@ function _file_generic_settings_max_filesize($element, &$form_state) {
 }
 
 /**
- * Element validate callback for the allowed file extensions field.
+ * Render API callback: Validates the allowed file extensions field.
+ *
+ * This function is assigned as an #element_validate callback in
+ * file_field_instance_settings_form().
  *
  * This doubles as a convenience clean-up function and a validation routine.
  * Commas are allowed by the end-user, but ultimately the value will be stored
@@ -152,10 +159,14 @@ function _file_generic_settings_extensions($element, &$form_state) {
 }
 
 /**
- * Element validate callback for the file destination field.
+ * Render API callback: Validates the file destination field.
  *
- * Remove slashes from the beginning and end of the destination value and ensure
- * that the file directory path is not included at the beginning of the value.
+ * Removes slashes from the beginning and end of the destination value and
+ * ensures that the file directory path is not included at the beginning of the
+ * value.
+ *
+ * This function is assigned as an #element_validate callback in
+ * file_field_instance_settings_form().
  */
 function _file_generic_settings_file_directory_validate($element, &$form_state) {
   // Strip slashes from the beginning and end of $widget['file_directory'].
@@ -312,7 +323,7 @@ function file_field_delete_revision($entity_type, $entity, $field, $instance, $l
 }
 
 /**
- * Decrements a file usage count and attempts to delete it.
+ * Decrements the usage count for a file and attempts to delete it.
  *
  * This function only has an effect if the file being deleted is used only by
  * File module.
@@ -358,12 +369,13 @@ function file_field_is_empty($item, $field) {
 }
 
 /**
- * Determine whether a file should be displayed when outputting field content.
+ * Determines whether a file should be displayed when outputting field content.
  *
  * @param $item
  *   A field item array.
  * @param $field
  *   A field array.
+ *
  * @return
  *   Boolean TRUE if the file will be displayed, FALSE if the file is hidden.
  */
@@ -516,10 +528,11 @@ function file_field_widget_form(&$form, &$form_state, $field, $instance, $langco
 }
 
 /**
- * Get the upload validators for a file field.
+ * Retrieves the upload validators for a file field.
  *
  * @param $field
  *   A field array.
+ *
  * @return
  *   An array suitable for passing to file_save_upload() or the file field
  *   element's '#upload_validators' property.
@@ -545,7 +558,7 @@ function file_field_widget_upload_validators($field, $instance) {
 }
 
 /**
- * Determine the URI for a file field instance.
+ * Determines the URI for a file field instance.
  *
  * @param $field
  *   A field array.
@@ -553,6 +566,7 @@ function file_field_widget_upload_validators($field, $instance) {
  *   A field instance array.
  * @param $data
  *   An array of token objects to pass to token_replace().
+ *
  * @return
  *   A file directory URI with tokens replaced.
  *
@@ -568,7 +582,9 @@ function file_field_widget_uri($field, $instance, $data = array()) {
 }
 
 /**
- * The #value_callback for the file_generic field element.
+ * Render API callback: Retrieves the value for the file_generic field element.
+ *
+ * This function is assigned as a #value callback in file_field_widget_form().
  */
 function file_field_widget_value($element, $input = FALSE, $form_state) {
   if ($input) {
@@ -594,9 +610,11 @@ function file_field_widget_value($element, $input = FALSE, $form_state) {
 }
 
 /**
- * An element #process callback for the file_generic field type.
+ * Render API callback: Processes a file_generic field element.
  *
  * Expands the file_generic type to include the description and display fields.
+ *
+ * This function is assigned as a #process callback in file_field_widget_form().
  */
 function file_field_widget_process($element, &$form_state, $form) {
   $item = $element['#value'];
@@ -665,10 +683,12 @@ function file_field_widget_process($element, &$form_state, $form) {
 }
 
 /**
- * An element #process callback for a group of file_generic fields.
+ * Render API callback: Processes a group of file_generic field elements.
  *
  * Adds the weight field to each row so it can be ordered and adds a new Ajax
  * wrapper around the entire group so it can be replaced all at once.
+ *
+ * This function is assigned as a #process callback in file_field_widget_form().
  */
 function file_field_widget_process_multiple($element, &$form_state, $form) {
   $element_children = element_children($element, TRUE);
@@ -704,10 +724,13 @@ function file_field_widget_process_multiple($element, &$form_state, $form) {
 }
 
 /**
- * Helper function for file_field_widget_process_multiple().
+ * Retrieves the file description from a field field element.
+ *
+ * This helper function is used by file_field_widget_process_multiple().
  *
  * @param $element
  *   The element being processed.
+ *
  * @return
  *   A description of the file suitable for use in the administrative interface.
  */
@@ -725,7 +748,7 @@ function _file_field_get_description_from_element($element) {
 }
 
 /**
- * Submit handler for upload and remove buttons of file_generic fields.
+ * Form submission handler for upload/remove button of file_field_widget_form().
  *
  * This runs in addition to and after file_managed_file_submit().
  *
@@ -970,11 +993,13 @@ function file_field_formatter_view($entity_type, $entity, $field, $instance, $la
       break;
 
     case 'file_table':
-      // Display all values in a single element..
-      $element[0] = array(
-        '#theme' => 'file_formatter_table',
-        '#items' => $items,
-      );
+      if (!empty($items)) {
+        // Display all values in a single element..
+        $element[0] = array(
+          '#theme' => 'file_formatter_table',
+          '#items' => $items,
+        );
+      }
       break;
   }
 

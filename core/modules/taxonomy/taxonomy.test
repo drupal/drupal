@@ -343,9 +343,15 @@ class TaxonomyVocabularyUnitTest extends TaxonomyWebTestCase {
     field_create_instance($instance);
 
     // Change the machine name.
+    $old_name = $this->vocabulary->machine_name;
     $new_name = drupal_strtolower($this->randomName());
     $this->vocabulary->machine_name = $new_name;
     taxonomy_vocabulary_save($this->vocabulary);
+
+    // Check that entity bundles are properly updated.
+    $info = entity_get_info('taxonomy_term');
+    $this->assertFalse(isset($info['bundles'][$old_name]), t('The old bundle name does not appear in entity_get_info().'));
+    $this->assertTrue(isset($info['bundles'][$new_name]), t('The new bundle name appears in entity_get_info().'));
 
     // Check that the field instance is still attached to the vocabulary.
     $this->assertTrue(field_info_instance('taxonomy_term', 'field_test', $new_name), t('The bundle name was updated correctly.'));
@@ -579,9 +585,9 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
     $instance['bundle'] = 'page';
     field_create_instance($instance);
     $terms = array(
-      $this->randomName(),
-      $this->randomName() . ', ' . $this->randomName(),
-      $this->randomName(),
+      'term1' => $this->randomName(),
+      'term2' => $this->randomName() . ', ' . $this->randomName(),
+      'term3' => $this->randomName(),
     );
 
     $edit = array();
@@ -611,68 +617,37 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
     }
 
     // Get the created terms.
-    list($term1, $term2, $term3) = array_values(taxonomy_term_load_multiple(FALSE));
+    $term_objects = array();
+    foreach ($terms as $key => $term) {
+      $term_objects[$key] = taxonomy_get_term_by_name($term);
+      $term_objects[$key] = reset($term_objects[$key]);
+    }
 
     // Delete term 1.
-    $this->drupalPost('taxonomy/term/' . $term1->tid . '/edit', array(), t('Delete'));
+    $this->drupalPost('taxonomy/term/' . $term_objects['term1']->tid . '/edit', array(), t('Delete'));
     $this->drupalPost(NULL, NULL, t('Delete'));
-    $term_names = array($term2->name, $term3->name);
+    $term_names = array($term_objects['term2']->name, $term_objects['term3']->name);
 
     // Get the node.
     $node = $this->drupalGetNodeByTitle($edit["title"]);
     $this->drupalGet('node/' . $node->nid);
 
     foreach ($term_names as $term_name) {
-      $this->assertText($term_name, t('The term %name appears on the node page after one term %deleted was deleted', array('%name' => $term_name, '%deleted' => $term1->name)));
+      $this->assertText($term_name, t('The term %name appears on the node page after one term %deleted was deleted', array('%name' => $term_name, '%deleted' => $term_objects['term1']->name)));
     }
-    $this->assertNoText($term1->name, t('The deleted term %name does not appear on the node page.', array('%name' => $term1->name)));
+    $this->assertNoText($term_objects['term1']->name, t('The deleted term %name does not appear on the node page.', array('%name' => $term_objects['term1']->name)));
 
-    // Test autocomplete on term 2 - it contains a comma, so expect the key to
-    // be quoted.
-    $input = substr($term2->name, 0, 3);
+    // Test autocomplete on term 2, which contains a comma.
+    // The term will be quoted, and the " will be encoded in unicode (\u0022).
+    $input = substr($term_objects['term2']->name, 0, 3);
     $this->drupalGet('taxonomy/autocomplete/taxonomy_' . $this->vocabulary->machine_name . '/' . $input);
-    $this->assertRaw('{"\"' . $term2->name . '\"":"' . $term2->name . '"}', t('Autocomplete returns term %term_name after typing the first 3 letters.', array('%term_name' => $term2->name)));
+    $this->assertRaw('{"\u0022' . $term_objects['term2']->name . '\u0022":"' . $term_objects['term2']->name . '"}', t('Autocomplete returns term %term_name after typing the first 3 letters.', array('%term_name' => $term_objects['term2']->name)));
 
     // Test autocomplete on term 3 - it is alphanumeric only, so no extra
     // quoting.
-    $input = substr($term3->name, 0, 3);
+    $input = substr($term_objects['term3']->name, 0, 3);
     $this->drupalGet('taxonomy/autocomplete/taxonomy_' . $this->vocabulary->machine_name . '/' . $input);
-    $this->assertRaw('{"' . $term3->name . '":"' . $term3->name . '"}', t('Autocomplete returns term %term_name after typing the first 3 letters.', array('%term_name' => $term3->name)));
-  }
-
-  /**
-   * Tests term autocompletion edge cases with slashes in the names.
-   */
-  function testTermAutocompletion() {
-    // Add a term with a slash in the name.
-    $first_term = $this->createTerm($this->vocabulary);
-    $first_term->name = '10/16/2011';
-    taxonomy_term_save($first_term);
-    // Add another term that differs after the slash character.
-    $second_term = $this->createTerm($this->vocabulary);
-    $second_term->name = '10/17/2011';
-    taxonomy_term_save($second_term);
-
-    // Try to autocomplete a term name that matches both terms.
-    // We should get both term in a json encoded string.
-    $input = '10/';
-    $path = 'taxonomy/autocomplete/taxonomy_';
-    $path .= $this->vocabulary->machine_name . '/' . $input;
-    // The result order is not guaranteed, so check each term separately.
-    $url = url($path, array('absolute' => TRUE));
-    $result = drupal_http_request($url);
-    $data = drupal_json_decode($result->data);
-    $this->assertEqual($data[$first_term->name], check_plain($first_term->name), t('Autocomplete returned the first matching term'));
-    $this->assertEqual($data[$second_term->name], check_plain($second_term->name), t('Autocomplete returned the second matching term'));
-
-    // Try to autocomplete a term name that matches first term.
-    // We should only get the first term in a json encoded string.
-    $input = '10/16';
-    $url = 'taxonomy/autocomplete/taxonomy_';
-    $url .= $this->vocabulary->machine_name . '/' . $input;
-    $this->drupalGet($url);
-    $target = array($first_term->name => check_plain($first_term->name));
-    $this->assertRaw(drupal_json_encode($target), t('Autocomplete returns only the expected matching term.'));
+    $this->assertRaw('{"' . $term_objects['term3']->name . '":"' . $term_objects['term3']->name . '"}', t('Autocomplete returns term %term_name after typing the first 3 letters.', array('%term_name' => $term_objects['term3']->name)));
   }
 
   /**
@@ -733,6 +708,10 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
 
     // Check that the term feed page is working.
     $this->drupalGet('taxonomy/term/' . $term->tid . '/feed');
+
+    // Check that the term edit page does not try to interpret additional path
+    // components as arguments for taxonomy_form_term().
+    $this->drupalGet('taxonomy/term/' . $term->tid . '/edit/' . $this->randomName());
 
     // Delete the term.
     $this->drupalPost('taxonomy/term/' . $term->tid . '/edit', array(), t('Delete'));
@@ -860,6 +839,208 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
     // Try to load the term using a substring of the name.
     $terms = taxonomy_get_term_by_name(drupal_substr($term->name, 2));
     $this->assertFalse($terms);
+  }
+}
+
+/**
+ * Tests the hook implementations that maintain the taxonomy index.
+ */
+class TaxonomyTermIndexTestCase extends TaxonomyWebTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Taxonomy term index',
+      'description' => 'Tests the hook implementations that maintain the taxonomy index.',
+      'group' => 'Taxonomy',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('taxonomy');
+
+    // Create an administrative user.
+    $this->admin_user = $this->drupalCreateUser(array('administer taxonomy', 'bypass node access'));
+    $this->drupalLogin($this->admin_user);
+
+    // Create a vocabulary and add two term reference fields to article nodes.
+    $this->vocabulary = $this->createVocabulary();
+
+    $this->field_name_1 = drupal_strtolower($this->randomName());
+    $this->field_1 = array(
+      'field_name' => $this->field_name_1,
+      'type' => 'taxonomy_term_reference',
+      'cardinality' => FIELD_CARDINALITY_UNLIMITED,
+      'settings' => array(
+        'allowed_values' => array(
+          array(
+            'vocabulary' => $this->vocabulary->machine_name,
+            'parent' => 0,
+          ),
+        ),
+      ),
+    );
+    field_create_field($this->field_1);
+    $this->instance_1 = array(
+      'field_name' => $this->field_name_1,
+      'bundle' => 'article',
+      'entity_type' => 'node',
+      'widget' => array(
+        'type' => 'options_select',
+      ),
+      'display' => array(
+        'default' => array(
+          'type' => 'taxonomy_term_reference_link',
+        ),
+      ),
+    );
+    field_create_instance($this->instance_1);
+
+    $this->field_name_2 = drupal_strtolower($this->randomName());
+    $this->field_2 = array(
+      'field_name' => $this->field_name_2,
+      'type' => 'taxonomy_term_reference',
+      'cardinality' => FIELD_CARDINALITY_UNLIMITED,
+      'settings' => array(
+        'allowed_values' => array(
+          array(
+            'vocabulary' => $this->vocabulary->machine_name,
+            'parent' => 0,
+          ),
+        ),
+      ),
+    );
+    field_create_field($this->field_2);
+    $this->instance_2 = array(
+      'field_name' => $this->field_name_2,
+      'bundle' => 'article',
+      'entity_type' => 'node',
+      'widget' => array(
+        'type' => 'options_select',
+      ),
+      'display' => array(
+        'default' => array(
+          'type' => 'taxonomy_term_reference_link',
+        ),
+      ),
+    );
+    field_create_instance($this->instance_2);
+  }
+
+  /**
+   * Tests that the taxonomy index is maintained properly.
+   */
+  function testTaxonomyIndex() {
+    // Create terms in the vocabulary.
+    $term_1 = $this->createTerm($this->vocabulary);
+    $term_2 = $this->createTerm($this->vocabulary);
+
+    // Post an article.
+    $edit = array();
+    $langcode = LANGUAGE_NONE;
+    $edit["title"] = $this->randomName();
+    $edit["body[$langcode][0][value]"] = $this->randomName();
+    $edit["{$this->field_name_1}[$langcode][]"] = $term_1->tid;
+    $edit["{$this->field_name_2}[$langcode][]"] = $term_1->tid;
+    $this->drupalPost('node/add/article', $edit, t('Save'));
+
+    // Check that the term is indexed, and only once.
+    $node = $this->drupalGetNodeByTitle($edit["title"]);
+    $index_count = db_query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid', array(
+      ':nid' => $node->nid,
+      ':tid' => $term_1->tid,
+    ))->fetchField();
+    $this->assertEqual(1, $index_count, t('Term 1 is indexed once.'));
+
+    // Update the article to change one term.
+    $edit["{$this->field_name_1}[$langcode][]"] = $term_2->tid;
+    $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
+
+    // Check that both terms are indexed.
+    $index_count = db_query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid', array(
+      ':nid' => $node->nid,
+      ':tid' => $term_1->tid,
+    ))->fetchField();
+    $this->assertEqual(1, $index_count, t('Term 1 is indexed.'));
+    $index_count = db_query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid', array(
+      ':nid' => $node->nid,
+      ':tid' => $term_2->tid,
+    ))->fetchField();
+    $this->assertEqual(1, $index_count, t('Term 2 is indexed.'));
+
+    // Update the article to change another term.
+    $edit["{$this->field_name_2}[$langcode][]"] = $term_2->tid;
+    $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
+
+    // Check that only one term is indexed.
+    $index_count = db_query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid', array(
+      ':nid' => $node->nid,
+      ':tid' => $term_1->tid,
+    ))->fetchField();
+    $this->assertEqual(0, $index_count, t('Term 1 is not indexed.'));
+    $index_count = db_query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid', array(
+      ':nid' => $node->nid,
+      ':tid' => $term_2->tid,
+    ))->fetchField();
+    $this->assertEqual(1, $index_count, t('Term 2 is indexed once.'));
+
+    // Redo the above tests without interface.
+    $update_node = array(
+      'nid' => $node->nid,
+      'vid' => $node->vid,
+      'uid' => $node->uid,
+      'type' => $node->type,
+      'title' => $this->randomName(),
+    );
+
+    // Update the article with no term changed.
+    $updated_node = (object) $update_node;
+    node_save($updated_node);
+
+    // Check that the index was not changed.
+    $index_count = db_query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid', array(
+      ':nid' => $node->nid,
+      ':tid' => $term_1->tid,
+    ))->fetchField();
+    $this->assertEqual(0, $index_count, t('Term 1 is not indexed.'));
+    $index_count = db_query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid', array(
+      ':nid' => $node->nid,
+      ':tid' => $term_2->tid,
+    ))->fetchField();
+    $this->assertEqual(1, $index_count, t('Term 2 is indexed once.'));
+
+    // Update the article to change one term.
+    $update_node[$this->field_name_1][$langcode] = array(array('tid' => $term_1->tid));
+    $updated_node = (object) $update_node;
+    node_save($updated_node);
+
+    // Check that both terms are indexed.
+    $index_count = db_query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid', array(
+      ':nid' => $node->nid,
+      ':tid' => $term_1->tid,
+    ))->fetchField();
+    $this->assertEqual(1, $index_count, t('Term 1 is indexed.'));
+    $index_count = db_query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid', array(
+      ':nid' => $node->nid,
+      ':tid' => $term_2->tid,
+    ))->fetchField();
+    $this->assertEqual(1, $index_count, t('Term 2 is indexed.'));
+
+    // Update the article to change another term.
+    $update_node[$this->field_name_2][$langcode] = array(array('tid' => $term_1->tid));
+    $updated_node = (object) $update_node;
+    node_save($updated_node);
+
+    // Check that only one term is indexed.
+    $index_count = db_query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid', array(
+      ':nid' => $node->nid,
+      ':tid' => $term_1->tid,
+    ))->fetchField();
+    $this->assertEqual(1, $index_count, t('Term 1 is indexed once.'));
+    $index_count = db_query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid', array(
+      ':nid' => $node->nid,
+      ':tid' => $term_2->tid,
+    ))->fetchField();
+    $this->assertEqual(0, $index_count, t('Term 2 is not indexed.'));
   }
 }
 

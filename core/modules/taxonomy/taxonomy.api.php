@@ -70,13 +70,37 @@ function hook_taxonomy_vocabulary_update($vocabulary) {
 }
 
 /**
- * Respond to the deletion of taxonomy vocabularies.
+ * Act before taxonomy vocabulary deletion.
  *
- * Modules implementing this hook can respond to the deletion of taxonomy
- * vocabularies from the database.
+ * This hook is invoked from taxonomy_vocabulary_delete() before
+ * field_attach_delete_bundle() is called and before the vocabulary is actually
+ * removed from the database.
  *
  * @param $vocabulary
- *   A taxonomy vocabulary object.
+ *   The taxonomy vocabulary object for the vocabulary that is about to be
+ *   deleted.
+ *
+ * @see hook_taxonomy_vocabulary_delete()
+ * @see taxonomy_vocabulary_delete()
+ */
+function hook_taxonomy_vocabulary_predelete($vocabulary) {
+  if (variable_get('taxonomy_' . $vocabulary->vid . '_synonyms', FALSE)) {
+    variable_del('taxonomy_' . $vocabulary->vid . '_synonyms');
+  }
+}
+
+/**
+ * Respond to taxonomy vocabulary deletion.
+ *
+ * This hook is invoked from taxonomy_vocabulary_delete() after
+ * field_attach_delete_bundle() has been called and after the vocabulary has
+ * been removed from the database.
+ *
+ * @param $vocabulary
+ *   The taxonomy vocabulary object for the vocabulary that has been deleted.
+ *
+ * @see hook_taxonomy_vocabulary_predelete()
+ * @see taxonomy_vocabulary_delete()
  */
 function hook_taxonomy_vocabulary_delete($vocabulary) {
   if (variable_get('taxonomy_' . $vocabulary->vid . '_synonyms', FALSE)) {
@@ -169,13 +193,31 @@ function hook_taxonomy_term_update($term) {
 }
 
 /**
- * Respond to the deletion of taxonomy terms.
+ * Act before taxonomy term deletion.
  *
- * Modules implementing this hook can respond to the deletion of taxonomy
- * terms from the database.
+ * This hook is invoked from taxonomy_term_delete() before
+ * field_attach_delete() is called and before the term is actually removed from
+ * the database.
  *
  * @param $term
- *   A taxonomy term object.
+ *   The taxonomy term object for the term that is about to be deleted.
+ *
+ * @see taxonomy_term_delete()
+ */
+function hook_taxonomy_term_predelete($term) {
+  db_delete('term_synoynm')->condition('tid', $term->tid)->execute();
+}
+
+/**
+ * Respond to taxonomy term deletion.
+ *
+ * This hook is invoked from taxonomy_term_delete() after field_attach_delete()
+ * has been called and after the term has been removed from the database.
+ *
+ * @param $term
+ *   The taxonomy term object for the term that has been deleted.
+ *
+ * @see taxonomy_term_delete()
  */
 function hook_taxonomy_term_delete($term) {
   db_delete('term_synoynm')->condition('tid', $term->tid)->execute();

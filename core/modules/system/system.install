@@ -499,11 +499,11 @@ function system_install() {
   system_rebuild_theme_data();
 
   // Enable the default theme.
-  variable_set('theme_default', 'bartik');
+  variable_set('theme_default', 'stark');
   db_update('system')
     ->fields(array('status' => 1))
     ->condition('type', 'theme')
-    ->condition('name', 'bartik')
+    ->condition('name', 'stark')
     ->execute();
 
   // Populate the cron key variable.
@@ -792,7 +792,7 @@ function system_schema() {
         'not null' => TRUE,
       ),
       'language' => array(
-        'description' => 'A {languages}.language for this format to be used with.',
+        'description' => 'A {language}.language for this format to be used with.',
         'type' => 'varchar',
         'length' => 12,
         'not null' => TRUE,
@@ -1493,7 +1493,7 @@ function system_schema() {
         'default' => 0,
       ),
       'cache' => array(
-        'description' => "The time of this user's last post. This is used when the site has specified a minimum_cache_lifetime. See cache_get().",
+        'description' => "The time of this user's last post. This is used when the site has specified a minimum_cache_lifetime. See DrupalCacheInterface::get().",
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
@@ -1661,6 +1661,55 @@ function system_update_8001() {
       variable_set($theme, 'bartik');
     }
   }
+}
+
+/**
+ * Set Bartik as default theme if it implicitly was the default before.
+ *
+ * The default theme for Drupal core was changed from Bartik to Stark.
+ * Installation profiles (including Standard and Minimal) were changed to
+ * explicitly configure Bartik as default theme. Since Bartik was the default
+ * theme by default and may not have been explicitly configured as such
+ * previously, this update ensures that the implicit Bartik default is still the
+ * default.
+ *
+ * @see http://drupal.org/node/1181776
+ */
+function system_update_8002() {
+  $theme = variable_get('theme_default');
+  if (!isset($theme)) {
+    variable_set('theme_default', 'bartik');
+  }
+}
+
+/**
+ * Adds {config} table for new Configuration system.
+ */
+function system_update_8003() {
+  // @todo Temporary.
+  if (db_table_exists('config')) {
+    db_drop_table('config');
+  }
+  db_create_table('config', array(
+    'description' => 'Default active store for the configuration system.',
+    'fields' => array(
+      'name' => array(
+        'description' => 'The identifier for the configuration entry, such as module.example (the name of the file, minus .json.php).',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'data' => array(
+        'description' => 'The raw JSON data for this configuration entry.',
+        'type' => 'blob',
+        'not null' => TRUE,
+        'size' => 'big',
+        'translatable' => TRUE,
+      ),
+    ),
+    'primary key' => array('name'),
+  ));
 }
 
 /**

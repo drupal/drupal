@@ -663,7 +663,6 @@ function drupal_rewrite_settings($settings = array()) {
  */
 function drupal_verify_profile($install_state) {
   $profile = $install_state['parameters']['profile'];
-  $langcode = $install_state['parameters']['langcode'];
 
   include_once DRUPAL_ROOT . '/core/includes/file.inc';
   include_once DRUPAL_ROOT . '/core/includes/common.inc';
@@ -1102,7 +1101,7 @@ function st($string, array $args = array(), array $options = array()) {
 
   if (!isset($strings)) {
     $strings = array();
-    if (isset($install_state['parameters']['profile']) && isset($install_state['parameters']['langcode'])) {
+    if (isset($install_state['parameters']['langcode'])) {
       // If the given langcode was selected, there should be at least one .po file
       // with its name ending in install.{$install_state['parameters']['langcode']}.po
       // This might or might not be the entire filename. It is also possible
@@ -1265,13 +1264,8 @@ function install_profile_info($profile, $langcode = 'en') {
       'version' => NULL,
       'hidden' => FALSE,
       'php' => DRUPAL_MINIMUM_PHP,
-      'langcode' => NULL,
-      'custom_language_selection' => FALSE,
     );
     $info = drupal_parse_info_file("profiles/$profile/$profile.info") + $defaults;
-    if (isset($info['langcode'])) {
-      $info['custom_language_selection'] = TRUE;
-    }
     $info['dependencies'] = array_unique(array_merge(
       drupal_required_modules(),
       $info['dependencies'],

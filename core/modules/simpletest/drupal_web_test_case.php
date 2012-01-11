@@ -96,6 +96,16 @@ abstract class DrupalTestCase {
   }
 
   /**
+   * Checks the matching requirements for DrupalTestCase.
+   *
+   * @return
+   *   Array of errors containing a list of unmet requirements.
+   */
+  protected function checkRequirements() {
+    return array();
+  }
+
+  /**
    * Internal helper: stores the assert.
    *
    * @param $status
@@ -481,34 +491,46 @@ abstract class DrupalTestCase {
     if ($methods) {
       $class_methods = array_intersect($class_methods, $methods);
     }
-    foreach ($class_methods as $method) {
-      // If the current method starts with "test", run it - it's a test.
-      if (strtolower(substr($method, 0, 4)) == 'test') {
-        // Insert a fail record. This will be deleted on completion to ensure
-        // that testing completed.
-        $method_info = new ReflectionMethod($class, $method);
-        $caller = array(
-          'file' => $method_info->getFileName(),
-          'line' => $method_info->getStartLine(),
-          'function' => $class . '->' . $method . '()',
-        );
-        $completion_check_id = DrupalTestCase::insertAssert($this->testId, $class, FALSE, t('The test did not complete due to a fatal error.'), 'Completion check', $caller);
-        $this->setUp();
-        if ($this->setup) {
-          try {
-            $this->$method();
-            // Finish up.
+    $missing_requirements = $this->checkRequirements();
+    if (!empty($missing_requirements)) {
+      $missing_requirements_object = new ReflectionObject($this);
+      $caller = array(
+        'file' => $missing_requirements_object->getFileName(),
+      );
+      foreach ($missing_requirements as $missing_requirement) {
+        DrupalTestCase::insertAssert($this->testId, $class, FALSE, $missing_requirement, 'Requirements check.', $caller);
+      }
+    }
+    else {
+      foreach ($class_methods as $method) {
+        // If the current method starts with "test", run it - it's a test.
+        if (strtolower(substr($method, 0, 4)) == 'test') {
+          // Insert a fail record. This will be deleted on completion to ensure
+          // that testing completed.
+          $method_info = new ReflectionMethod($class, $method);
+          $caller = array(
+            'file' => $method_info->getFileName(),
+            'line' => $method_info->getStartLine(),
+            'function' => $class . '->' . $method . '()',
+          );
+          $completion_check_id = DrupalTestCase::insertAssert($this->testId, $class, FALSE, t('The test did not complete due to a fatal error.'), 'Completion check', $caller);
+          $this->setUp();
+          if ($this->setup) {
+            try {
+              $this->$method();
+              // Finish up.
+            }
+            catch (Exception $e) {
+              $this->exceptionHandler($e);
+            }
+            $this->tearDown();
           }
-          catch (Exception $e) {
-            $this->exceptionHandler($e);
+          else {
+            $this->fail(t("The test cannot be executed because it has not been set up properly."));
           }
-          $this->tearDown();
+          // Remove the completion check record.
+          DrupalTestCase::deleteAssert($completion_check_id);
         }
-        else {
-          $this->fail(t("The test cannot be executed because it has not been set up properly."));
-        }
-        // Remove the completion check record.
-        DrupalTestCase::deleteAssert($completion_check_id);
       }
     }
     // Clear out the error messages and restore error handler.
@@ -1071,28 +1093,35 @@ class DrupalWebTestCase extends DrupalTestCase {
   }
 
   /**
-   * Create a user with a given set of permissions. The permissions correspond to the
-   * names given on the privileges page.
+   * Create a user with a given set of permissions.
    *
-   * @param $permissions
-   *   Array of permission names to assign to user.
-   * @return
+   * @param array $permissions
+   *   Array of permission names to assign to user. Note that the user always
+   *   has the default permissions derived from the "authenticated users" role.
+   *
+   * @return object|false
    *   A fully loaded user object with pass_raw property, or FALSE if account
    *   creation fails.
    */
-  protected function drupalCreateUser($permissions = array('access comments', 'access content', 'post comments', 'skip comment approval')) {
-    // Create a role with the given permission set.
-    if (!($rid = $this->drupalCreateRole($permissions))) {
-      return FALSE;
+  protected function drupalCreateUser(array $permissions = array()) {
+    // Create a role with the given permission set, if any.
+    $rid = FALSE;
+    if ($permissions) {
+      $rid = $this->drupalCreateRole($permissions);
+      if (!$rid) {
+        return FALSE;
+      }
     }
 
     // Create a user assigned to that role.
     $edit = array();
     $edit['name']   = $this->randomName();
     $edit['mail']   = $edit['name'] . '@example.com';
-    $edit['roles']  = array($rid => $rid);
     $edit['pass']   = user_password();
     $edit['status'] = 1;
+    if ($rid) {
+      $edit['roles'] = array($rid => $rid);
+    }
 
     $account = user_save(drupal_anonymous_user(), $edit);
 
@@ -1325,6 +1354,13 @@ class DrupalWebTestCase extends DrupalTestCase {
     $test_info = &$GLOBALS['drupal_test_info'];
     $test_info['test_run_id'] = $this->databasePrefix;
     $test_info['in_child_site'] = FALSE;
+
+    // Preset the 'install_profile' system variable, so the first call into
+    // system_rebuild_module_data() (in drupal_install_system()) will register
+    // the test's profile as a module. Without this, the installation profile of
+    // the parent site (executing the test) is registered, and the test
+    // profile's hook_install() and other hook implementations are never invoked.
+    $conf['install_profile'] = $this->profile;
 
     include_once DRUPAL_ROOT . '/core/includes/install.inc';
     drupal_install_system();

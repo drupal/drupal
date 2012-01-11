@@ -704,13 +704,20 @@ select.form-select {
   border-top-color: #999;
   background: #fff;
   color: #333;
+  -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
+  -moz-transition: border linear 0.2s, box-shadow linear 0.2s;
+  transition: border linear 0.2s, box-shadow linear 0.2s;
 }
 input.form-text:focus,
 input.form-file:focus,
 textarea.form-textarea:focus,
 select.form-select:focus {
   color: #000;
-  border-color: #ace;
+  border-color: rgba(0, 116, 189, 0.8);
+  -webkit-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 8px rgba(220, 220, 220, 0.4);
+  -moz-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 8px rgba(220, 220, 220, 0.4);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 8px rgba(220, 220, 220, 0.4);
+  outline-color: rgba(0, 116, 189, 0.5);
 }
 html.js input.form-autocomplete {
   background-position: 100% 4px;

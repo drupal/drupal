@@ -177,9 +177,9 @@ function tracker_node_update($node, $arg = 0) {
 }
 
 /**
- * Implements hook_node_delete().
+ * Implements hook_node_predelete().
  */
-function tracker_node_delete($node, $arg = 0) {
+function tracker_node_predelete($node, $arg = 0) {
   db_delete('tracker_node')
     ->condition('nid', $node->nid)
     ->execute();

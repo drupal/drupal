@@ -207,7 +207,7 @@ function translation_form_node_form_alter(&$form, &$form_state) {
 function translation_node_view($node, $view_mode) {
   // If the site has no translations or is not multilingual we have no content
   // translation links to display.
-  if (isset($node->tnid) && drupal_multilingual() && $translations = translation_node_get_translations($node->tnid)) {
+  if (isset($node->tnid) && language_multilingual() && $translations = translation_node_get_translations($node->tnid)) {
     $languages = language_list('enabled');
     $languages = $languages[1];
 
@@ -387,9 +387,9 @@ function translation_node_validate($node, $form) {
 }
 
 /**
- * Implements hook_node_delete().
+ * Implements hook_node_predelete().
  */
-function translation_node_delete($node) {
+function translation_node_predelete($node) {
   // Only act if we are dealing with a content type supporting translations.
   if (translation_supported_type($node->type)) {
     translation_remove_from_set($node);

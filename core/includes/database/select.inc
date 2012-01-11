@@ -637,16 +637,16 @@ class SelectQueryExtender implements SelectQueryInterface {
   /* Implementations of QueryConditionInterface for the HAVING clause. */
 
   public function havingCondition($field, $value = NULL, $operator = '=') {
-    $this->query->condition($field, $value, $operator, $num_args);
+    $this->query->havingCondition($field, $value, $operator);
     return $this;
   }
 
   public function &havingConditions() {
-    return $this->having->conditions();
+    return $this->query->havingConditions();
   }
 
   public function havingArguments() {
-    return $this->having->arguments();
+    return $this->query->havingArguments();
   }
 
   public function having($snippet, $args = array()) {
@@ -790,31 +790,7 @@ class SelectQueryExtender implements SelectQueryInterface {
   }
 
   public function countQuery() {
-    // Create our new query object that we will mutate into a count query.
-    $count = clone($this);
-
-    // Zero-out existing fields and expressions.
-    $fields =& $count->getFields();
-    $fields = array();
-    $expressions =& $count->getExpressions();
-    $expressions = array();
-
-    // Also remove 'all_fields' statements, which are expanded into tablename.*
-    // when the query is executed.
-    $tables = &$count->getTables();
-    foreach ($tables as $alias => &$table) {
-      unset($table['all_fields']);
-    }
-
-    // Ordering a count query is a waste of cycles, and breaks on some
-    // databases anyway.
-    $orders = &$count->getOrderBy();
-    $orders = array();
-
-    // COUNT() is an expression, so we add that back in.
-    $count->addExpression('COUNT(*)');
-
-    return $count;
+    return $this->query->countQuery();
   }
 
   function isNull($field) {
@@ -836,7 +812,7 @@ class SelectQueryExtender implements SelectQueryInterface {
     $this->query->notExists($select);
     return $this;
   }
-  
+
   public function __toString() {
     return (string) $this->query;
   }
@@ -1088,7 +1064,7 @@ class SelectQuery extends Query implements SelectQueryInterface {
     $this->where->notExists($select);
     return $this;
   }
-  
+
   public function compile(DatabaseConnection $connection, QueryPlaceholderInterface $queryPlaceholder) {
     $this->where->compile($connection, $queryPlaceholder);
     $this->having->compile($connection, $queryPlaceholder);
@@ -1172,17 +1148,17 @@ class SelectQuery extends Query implements SelectQueryInterface {
     $this->having->isNotNull($field);
     return $this;
   }
-  
+
   public function havingExists(SelectQueryInterface $select) {
     $this->having->exists($select);
     return $this;
   }
-  
+
   public function havingNotExists(SelectQueryInterface $select) {
     $this->having->notExists($select);
     return $this;
   }
-  
+
   public function forUpdate($set = TRUE) {
     if (isset($set)) {
       $this->forUpdate = $set;
@@ -1451,17 +1427,20 @@ class SelectQuery extends Query implements SelectQueryInterface {
     $count = clone($this);
 
     $group_by = $count->getGroupBy();
+    $having = $count->havingConditions();
 
-    if (!$count->distinct) {
+    if (!$count->distinct && !isset($having[0])) {
       // When not executing a distinct query, we can zero-out existing fields
-      // and expressions that are not used by a GROUP BY.  Fields listed in
-      // the GROUP BY clause need to be present in the query.
+      // and expressions that are not used by a GROUP BY or HAVING. Fields
+      // listed in a GROUP BY or HAVING clause need to be present in the
+      // query.
       $fields =& $count->getFields();
       foreach (array_keys($fields) as $field) {
         if (empty($group_by[$field])) {
           unset($fields[$field]);
         }
       }
+
       $expressions =& $count->getExpressions();
       foreach (array_keys($expressions) as $field) {
         if (empty($group_by[$field])) {

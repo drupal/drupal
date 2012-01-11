@@ -119,7 +119,7 @@ function image_style_form($form, &$form_state, $style) {
     '#validate' => array('image_style_form_add_validate'),
     '#submit' => array('image_style_form_submit', 'image_style_form_add_submit'),
   );
-  
+
   // Show the Override or Submit button for this style.
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array(
@@ -154,39 +154,42 @@ function image_style_form_add_submit($form, &$form_state) {
   }
   // If there's no form, immediately add the image effect.
   else {
-    $effect['weight'] = $form_state['values']['weight'];
-    image_effect_save($effect);
+    $effect = array(
+      'name' => $effect['name'],
+      'data' => array(),
+      'weight' => $form_state['values']['weight'],
+    );
+    image_effect_save($style['name'], $effect);
     drupal_set_message(t('The image effect was successfully applied.'));
   }
-}
-
-/**
- * Submit handler for overriding a module-defined style.
- */
-function image_style_form_override_submit($form, &$form_state) {
-  drupal_set_message(t('The %style style has been overridden, allowing you to change its settings.', array('%style' => $form_state['image_style']['name'])));
-  image_default_style_save($form_state['image_style']);
 }
 
 /**
  * Submit handler for saving an image style.
  */
 function image_style_form_submit($form, &$form_state) {
-  // Update the image style name if it has changed.
   $style = $form_state['image_style'];
-  if (isset($form_state['values']['name']) && $style['name'] != $form_state['values']['name']) {
-    $style['name'] = $form_state['values']['name'];
-  }
 
   // Update image effect weights.
   if (!empty($form_state['values']['effects'])) {
     foreach ($form_state['values']['effects'] as $ieid => $effect_data) {
       if (isset($style['effects'][$ieid])) {
-        $effect = $style['effects'][$ieid];
-        $effect['weight'] = $effect_data['weight'];
-        image_effect_save($effect);
+        $effect = array(
+          'name' => $style['effects'][$ieid]['name'],
+          'data' => $style['effects'][$ieid]['data'],
+          'weight' => $effect_data['weight'],
+        );
+        $style['effects'][$ieid] = $effect;
       }
     }
+  }
+
+  // Update the image style name if it has changed. We also need to delete the
+  // old style, because there is no concept of rename at the moment, just
+  // create and delete.
+  if (isset($form_state['values']['name']) && $style['name'] != $form_state['values']['name']) {
+    image_style_delete($style);
+    $style['name'] = $form_state['values']['name'];
   }
 
   image_style_save($style);
@@ -330,9 +333,8 @@ function image_effect_form($form, &$form_state, $style, $effect) {
 
   $form['#tree'] = TRUE;
   $form['#attached']['css'][drupal_get_path('module', 'image') . '/image.admin.css'] = array();
-  if (function_exists($effect['form callback'])) {
-    $form['data'] = call_user_func($effect['form callback'], $effect['data']);
-  }
+
+  $form['data'] = call_user_func($effect['form callback'], $effect['data']);
 
   // Check the URL for a weight, then the image effect, otherwise use default.
   $form['weight'] = array(
@@ -358,12 +360,14 @@ function image_effect_form($form, &$form_state, $style, $effect) {
  * Submit handler for updating an image effect.
  */
 function image_effect_form_submit($form, &$form_state) {
-  $style = $form_state['image_style'];
-  $effect = array_merge($form_state['image_effect'], $form_state['values']);
-  $effect['style_name'] = $style['name'];
-  image_effect_save($effect);
+  $effect = array(
+    'name' => $form_state['image_effect']['name'],
+    'data' => $form_state['values']['data'],
+    'weight' => $form_state['values']['weight'],
+  );
+  image_effect_save($form_state['image_style']['name'], $effect);
   drupal_set_message(t('The image effect was successfully applied.'));
-  $form_state['redirect'] = 'admin/config/media/image-styles/edit/' . $style['name'];
+  $form_state['redirect'] = 'admin/config/media/image-styles/edit/' . $form_state['image_style']['name'];
 }
 
 /**
@@ -391,7 +395,7 @@ function image_effect_delete_form_submit($form, &$form_state) {
   $style = $form_state['image_style'];
   $effect = $form_state['image_effect'];
 
-  image_effect_delete($effect);
+  image_effect_delete($style['name'], $effect);
   drupal_set_message(t('The image effect %name has been deleted.', array('%name' => $effect['label'])));
   $form_state['redirect'] = 'admin/config/media/image-styles/edit/' . $style['name'];
 }
@@ -624,7 +628,6 @@ function theme_image_style_list($variables) {
  */
 function theme_image_style_effects($variables) {
   $form = $variables['form'];
-  
   $rows = array();
 
   foreach (element_children($form) as $key) {

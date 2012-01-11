@@ -160,18 +160,18 @@ table.sticky-header {
 /* Throbber */
 .ajax-progress {
   display: inline-block;
+  padding: 1px 5px 2px 5px;
 }
-.ajax-progress .throbber {
+.ajax-progress-throbber .throbber {
   background: transparent url(../../misc/throbber.gif) no-repeat 0px -18px;
-  float: left; /* LTR */
-  height: 15px;
-  margin: 2px;
-  width: 15px;
+  display: inline;
+  padding: 1px 5px 2px;
 }
-.ajax-progress .message {
-  padding-left: 20px;
+.ajax-progress-throbber .message {
+  display: inline;
+  padding: 1px 5px 2px;
 }
-tr .ajax-progress .throbber {
+tr .ajax-progress-throbber .throbber {
   margin: 0 2px;
 }
 .ajax-progress-bar {

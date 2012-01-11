@@ -8,17 +8,17 @@
 /**
  * Image style constant for user presets in the database.
  */
-define('IMAGE_STORAGE_NORMAL', 1);
+const IMAGE_STORAGE_NORMAL = 1;
 
 /**
  * Image style constant for user presets that override module-defined presets.
  */
-define('IMAGE_STORAGE_OVERRIDE', 2);
+const IMAGE_STORAGE_OVERRIDE = 2;
 
 /**
  * Image style constant for module-defined presets in code.
  */
-define('IMAGE_STORAGE_DEFAULT', 4);
+const IMAGE_STORAGE_DEFAULT = 4;
 
 /**
  * Image style constant to represent an editable preset.
@@ -314,9 +314,9 @@ function image_file_move($file, $source) {
 }
 
 /**
- * Implements hook_file_delete().
+ * Implements hook_file_predelete().
  */
-function image_file_delete($file) {
+function image_file_predelete($file) {
   // Delete any image derivatives of this image.
   image_path_flush($file->uri);
 }
@@ -436,7 +436,7 @@ function image_path_flush($path) {
  */
 function image_styles() {
   $styles = &drupal_static(__FUNCTION__);
-  
+
   // Grab from cache or build the array.
   if (!isset($styles)) {
     if ($cache = cache()->get('image_styles')) {
@@ -501,7 +501,12 @@ function image_style_load($name = NULL) {
 function image_style_save($style) {
   $config = config('image.styles.' . $style['name']);
   $config->set('name', $style['name']);
-  $config->set('effects', array());
+  if ($style['effects']) {
+    $config->set('effects', $style['effects']);
+  }
+  else {
+    $config->set('effects', array());
+  }
   $config->save();
   $style['is_new'] = TRUE;
 
@@ -528,8 +533,8 @@ function image_style_save($style) {
 function image_style_delete($style, $replacement_style_name = '') {
   image_style_flush($style);
 
-  db_delete('image_effects')->condition('isid', $style['isid'])->execute();
-  db_delete('image_styles')->condition('isid', $style['isid'])->execute();
+  $config = config('image.styles.' . $style['name']);
+  $config->delete();
 
   // Let other modules update as necessary on save.
   $style['old_name'] = $style['name'];
@@ -825,44 +830,6 @@ function image_style_path($style_name, $uri) {
 }
 
 /**
- * Save a default image style to the database.
- *
- * @param style
- *   An image style array provided by a module.
- * @return
- *   An image style array. The returned style array will include the new 'isid'
- *   assigned to the style.
- */
-function image_default_style_save($style) {
-  $style = image_style_save($style);
-  $effects = array();
-  foreach ($style['effects'] as $effect) {
-    $effect['isid'] = $style['isid'];
-    $effect = image_effect_save($effect);
-    $effects[$effect['ieid']] = $effect;
-  }
-  $style['effects'] = $effects;
-  return $style;
-}
-
-/**
- * Revert the changes made by users to a default image style.
- *
- * @param style
- *   An image style array.
- * @return
- *   Boolean TRUE if the operation succeeded.
- */
-function image_default_style_revert($style) {
-  image_style_flush($style);
-
-  db_delete('image_effects')->condition('isid', $style['isid'])->execute();
-  db_delete('image_styles')->condition('isid', $style['isid'])->execute();
-
-  return TRUE;
-}
-
-/**
  * Pull in image effects exposed by modules implementing hook_image_effect_info().
  *
  * @return
@@ -996,13 +963,16 @@ function image_effect_load($name, $style_name) {
 /**
  * Save an image effect.
  *
+ * @param $style_name
+ *   The image style this effect belongs to.
  * @param $effect
  *   An image effect array.
  * @return
  *   An image effect array. In the case of a new effect, 'ieid' will be set.
  */
-function image_effect_save($effect) {
-  $config = config('image.styles.' . $effect['style_name']);
+function image_effect_save($style_name, $effect) {
+  $config = config('image.styles.' . $style_name);
+
   if (!empty($effect['ieid'])) {
     $old_effect = $config->get('effects.' . $effect['ieid']);
     foreach ($old_effect as $key => $value) {
@@ -1011,11 +981,19 @@ function image_effect_save($effect) {
     }
   }
   else {
-    // HERE
-    drupal_write_record('image_effects', $effect);
+    // We need to generate the ieid and save the new effect.
+    // The machine name is all the elements of the data array concatenated
+    // together, delimited by underscores.
+    $machine_name = $effect['name'];
+
+    foreach ($effect['data'] as $key => $value) {
+      $machine_name .= '_' . $value;
+    }
+    $effect['ieid'] = $machine_name;
+    $config->set('effects.' . $machine_name, $effect);
   }
   $config->save();
-  $style = image_style_load(NULL, $effect['style_name']);
+  $style = image_style_load(NULL, $style_name);
   image_style_flush($style);
   return $effect;
 }
@@ -1023,12 +1001,16 @@ function image_effect_save($effect) {
 /**
  * Delete an image effect.
  *
+ * @param $style_name
+ *   The image style this effect belongs to.
  * @param $effect
  *   An image effect array.
  */
-function image_effect_delete($effect) {
-  db_delete('image_effects')->condition('ieid', $effect['ieid'])->execute();
-  $style = image_style_load(NULL, $effect['isid']);
+function image_effect_delete($style_name, $effect) {
+  $config = config('image.styles.' . $style_name);
+  $config->clear('effects.' . $effect['ieid']);
+  $config->save();
+  $style = image_style_load($style_name);
   image_style_flush($style);
 }
 
@@ -1045,10 +1027,7 @@ function image_effect_delete($effect) {
 function image_effect_apply($image, $effect) {
   module_load_include('inc', 'image', 'image.effects');
   $function = $effect['effect callback'];
-  if (function_exists($function)) {
-    return $function($image, $effect['data']);
-  }
-  return FALSE;
+  return $function($image, $effect['data']);
 }
 
 /**

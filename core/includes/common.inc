@@ -70,8 +70,7 @@ const CSS_DEFAULT = 0;
 const CSS_THEME = 100;
 
 /**
- * The default group for JavaScript libraries or jQuery plugins added
- * to the page.
+ * The default group for JavaScript and jQuery libraries added to the page.
  */
 const JS_LIBRARY = -100;
 
@@ -91,8 +90,9 @@ const JS_THEME = 100;
 const JS_SETTING = 200;
 
 /**
- * Error code indicating that the request made by drupal_http_request() exceeded
- * the specified timeout.
+ * Error code indicating that the request exceeded the specified timeout.
+ *
+ * @see drupal_http_request()
  */
 const HTTP_REQUEST_TIMEOUT = -1;
 
@@ -115,31 +115,36 @@ const HTTP_REQUEST_TIMEOUT = -1;
  */
 
 /**
- * The block should not get cached. This setting should be used:
- * - for simple blocks (notably those that do not perform any db query),
- * where querying the db cache would be more expensive than directly generating
- * the content.
- * - for blocks that change too frequently.
+ * The block should not get cached.
+ *
+ * This setting should be used:
+ * - For simple blocks (notably those that do not perform any db query), where
+ *   querying the db cache would be more expensive than directly generating the
+ *   content.
+ * - For blocks that change too frequently.
  */
 const DRUPAL_NO_CACHE = -1;
 
 /**
- * The block is handling its own caching in its hook_block_view(). From the
- * perspective of the block cache system, this is equivalent to DRUPAL_NO_CACHE.
- * Useful when time based expiration is needed or a site uses a node access
- * which invalidates standard block cache.
+ * The block is handling its own caching in its hook_block_view().
+ *
+ * From the perspective of the block cache system, this is equivalent to
+ * DRUPAL_NO_CACHE. Useful when time based expiration is needed or a site uses
+ * a node access which invalidates standard block cache.
  */
 const DRUPAL_CACHE_CUSTOM = -2;
 
 /**
- * The block or element can change depending on the roles the user viewing the
- * page belongs to. This is the default setting for blocks, used when the block
- * does not specify anything.
+ * The block or element can change depending on the user's roles.
+ *
+ * This is the default setting for blocks, used when the block does not specify
+ * anything.
  */
 const DRUPAL_CACHE_PER_ROLE = 0x0001;
 
 /**
- * The block or element can change depending on the user viewing the page.
+ * The block or element can change depending on the user.
+ *
  * This setting can be resource-consuming for sites with large number of users,
  * and thus should only be used when DRUPAL_CACHE_PER_ROLE is not sufficient.
  */
@@ -151,12 +156,12 @@ const DRUPAL_CACHE_PER_USER = 0x0002;
 const DRUPAL_CACHE_PER_PAGE = 0x0004;
 
 /**
- * The block or element is the same for every user on every page where it is visible.
+ * The block or element is the same for every user and page that it is visible.
  */
 const DRUPAL_CACHE_GLOBAL = 0x0008;
 
 /**
- * Add content to a specified region.
+ * Adds content to a specified region.
  *
  * @param $region
  *   Page region the content is added to.
@@ -173,7 +178,7 @@ function drupal_add_region_content($region = NULL, $data = NULL) {
 }
 
 /**
- * Get assigned content for a given region.
+ * Gets assigned content for a given region.
  *
  * @param $region
  *   A specified region to fetch content for. If NULL, all regions will be
@@ -199,13 +204,13 @@ function drupal_get_region_content($region = NULL, $delimiter = ' ') {
 }
 
 /**
- * Get the name of the currently active install profile.
+ * Gets the name of the currently active install profile.
  *
  * When this function is called during Drupal's initial installation process,
  * the name of the profile that's about to be installed is stored in the global
  * installation state. At all other times, the standard Drupal systems variable
- * table contains the name of the current profile, and we can call variable_get()
- * to determine what one is active.
+ * table contains the name of the current profile, and we can call
+ * variable_get() to determine what one is active.
  *
  * @return $profile
  *   The name of the install profile.
@@ -225,7 +230,7 @@ function drupal_get_profile() {
 
 
 /**
- * Set the breadcrumb trail for the current page.
+ * Sets the breadcrumb trail for the current page.
  *
  * @param $breadcrumb
  *   Array of links, starting with "home" and proceeding up to but not including
@@ -241,7 +246,7 @@ function drupal_set_breadcrumb($breadcrumb = NULL) {
 }
 
 /**
- * Get the breadcrumb trail for the current page.
+ * Gets the breadcrumb trail for the current page.
  */
 function drupal_get_breadcrumb() {
   $breadcrumb = drupal_set_breadcrumb();
@@ -254,7 +259,7 @@ function drupal_get_breadcrumb() {
 }
 
 /**
- * Add output to the head tag of the HTML page.
+ * Adds output to the HEAD tag of the HTML page.
  *
  * This function can be called as long as the headers aren't sent. Pass no
  * arguments (or NULL for both) to retrieve the currently stored elements.
@@ -321,7 +326,7 @@ function _drupal_default_html_head() {
 }
 
 /**
- * Retrieve output to be displayed in the HEAD tag of the HTML page.
+ * Retrieves output to be displayed in the HEAD tag of the HTML page.
  */
 function drupal_get_html_head() {
   $elements = drupal_add_html_head();
@@ -330,7 +335,7 @@ function drupal_get_html_head() {
 }
 
 /**
- * Add a feed URL for the current page.
+ * Adds a feed URL for the current page.
  *
  * This function can be called as long the HTML header hasn't been sent.
  *
@@ -358,7 +363,7 @@ function drupal_add_feed($url = NULL, $title = '') {
 }
 
 /**
- * Get the feed URLs for the current page.
+ * Gets the feed URLs for the current page.
  *
  * @param $delimiter
  *   A delimiter to split feeds by.
@@ -375,7 +380,7 @@ function drupal_get_feeds($delimiter = "\n") {
  */
 
 /**
- * Process a URL query parameter array to remove unwanted elements.
+ * Processes a URL query parameter array to remove unwanted elements.
  *
  * @param $query
  *   (optional) An array to be processed. Defaults to $_GET.
@@ -420,7 +425,7 @@ function drupal_get_query_parameters(array $query = NULL, array $exclude = array
 }
 
 /**
- * Split an URL-encoded query string into an array.
+ * Splits a URL-encoded query string into an array.
  *
  * @param $query
  *   The query string to split.
@@ -440,7 +445,7 @@ function drupal_get_query_array($query) {
 }
 
 /**
- * Parse an array into a valid, rawurlencoded query string.
+ * Parses an array into a valid, rawurlencoded query string.
  *
  * This differs from http_build_query() as we need to rawurlencode() (instead of
  * urlencode()) all query parameters.
@@ -481,7 +486,7 @@ function drupal_http_build_query(array $query, $parent = '') {
 }
 
 /**
- * Prepare a 'destination' URL query parameter for use in combination with drupal_goto().
+ * Prepares a 'destination' URL query parameter for use with drupal_goto().
  *
  * Used to direct the user back to the referring page after completing a form.
  * By default the current URL is returned. If a destination exists in the
@@ -512,7 +517,7 @@ function drupal_get_destination() {
 }
 
 /**
- * Wrapper around parse_url() to parse a system URL string into an associative array, suitable for url().
+ * Parses a system URL string into an associative array suitable for url().
  *
  * This function should only be used for URLs that have been generated by the
  * system, resp. url(). It should not be used for URLs that come from external
@@ -609,7 +614,7 @@ function drupal_encode_path($path) {
 }
 
 /**
- * Send the user to a different Drupal page.
+ * Sends the user to a different Drupal page.
  *
  * This issues an on-site HTTP redirect. The function makes sure the redirected
  * URL is formatted correctly.
@@ -675,7 +680,7 @@ function drupal_goto($path = '', array $options = array(), $http_response_code =
 }
 
 /**
- * Deliver a "site is under maintenance" message to the browser.
+ * Delivers a "site is under maintenance" message to the browser.
  *
  * Page callback functions wanting to report a "site offline" message should
  * return MENU_SITE_OFFLINE instead of calling drupal_site_offline(). However,
@@ -687,7 +692,7 @@ function drupal_site_offline() {
 }
 
 /**
- * Deliver a "page not found" error to the browser.
+ * Delivers a "page not found" error to the browser.
  *
  * Page callback functions wanting to report a "page not found" message should
  * return MENU_NOT_FOUND instead of calling drupal_not_found(). However,
@@ -699,19 +704,20 @@ function drupal_not_found() {
 }
 
 /**
- * Deliver a "access denied" error to the browser.
+ * Delivers an "access denied" error to the browser.
  *
  * Page callback functions wanting to report an "access denied" message should
  * return MENU_ACCESS_DENIED instead of calling drupal_access_denied(). However,
  * functions that are invoked in contexts where that return value might not
- * bubble up to menu_execute_active_handler() should call drupal_access_denied().
+ * bubble up to menu_execute_active_handler() should call
+ * drupal_access_denied().
  */
 function drupal_access_denied() {
   drupal_deliver_page(MENU_ACCESS_DENIED);
 }
 
 /**
- * Perform an HTTP request.
+ * Performs an HTTP request.
  *
  * This is a flexible and powerful HTTP client implementation. Correctly
  * handles GET, POST, PUT or any other HTTP requests. Handles redirects.
@@ -1012,6 +1018,14 @@ function drupal_http_request($url, array $options = array()) {
  * @} End of "HTTP handling".
  */
 
+/**
+ * Strips slashes from a string or array of strings.
+ *
+ * Callback for array_walk() within fix_gpx_magic().
+ *
+ * @param $item
+ *   An individual string or array of strings from superglobals.
+ */
 function _fix_gpc_magic(&$item) {
   if (is_array($item)) {
     array_walk($item, '_fix_gpc_magic');
@@ -1022,11 +1036,19 @@ function _fix_gpc_magic(&$item) {
 }
 
 /**
- * Helper function to strip slashes from $_FILES skipping over the tmp_name keys
- * since PHP generates single backslashes for file paths on Windows systems.
+ * Strips slashes from $_FILES items.
  *
- * tmp_name does not have backslashes added see
- * http://php.net/manual/en/features.file-upload.php#42280
+ * Callback for array_walk() within fix_gpc_magic().
+ *
+ * The tmp_name key is skipped keys since PHP generates single backslashes for
+ * file paths on Windows systems.
+ *
+ * @param $item
+ *   An item from $_FILES.
+ * @param $key
+ *   The key for the item within $_FILES.
+ *
+ * @see http://php.net/manual/en/features.file-upload.php#42280
  */
 function _fix_gpc_magic_files(&$item, $key) {
   if ($key != 'tmp_name') {
@@ -1040,7 +1062,10 @@ function _fix_gpc_magic_files(&$item, $key) {
 }
 
 /**
- * Fix double-escaping problems caused by "magic quotes" in some PHP installations.
+ * Fixes double-escaping caused by "magic quotes" in some PHP installations.
+ *
+ * @see _fix_gpc_magic()
+ * @see _fix_gpc_magic_files()
  */
 function fix_gpc_magic() {
   static $fixed = FALSE;
@@ -1061,12 +1086,13 @@ function fix_gpc_magic() {
  */
 
 /**
- * Verify the syntax of the given e-mail address.
+ * Verifies the syntax of the given e-mail address.
  *
  * Empty e-mail addresses are allowed. See RFC 2822 for details.
  *
  * @param $mail
  *   A string containing an e-mail address.
+ *
  * @return
  *   TRUE if the address is in a valid format.
  */
@@ -1075,7 +1101,7 @@ function valid_email_address($mail) {
 }
 
 /**
- * Verify the syntax of the given URL.
+ * Verifies the syntax of the given URL.
  *
  * This function should only be used on actual URLs. It should not be used for
  * Drupal menu paths, which can contain arbitrary characters.
@@ -1084,6 +1110,7 @@ function valid_email_address($mail) {
  *   The URL to verify.
  * @param $absolute
  *   Whether the URL is absolute (beginning with a scheme such as "http:").
+ *
  * @return
  *   TRUE if the URL is in a valid format.
  */
@@ -1116,7 +1143,7 @@ function valid_url($url, $absolute = FALSE) {
  */
 
 /**
- * Register an event for the current visitor to the flood control mechanism.
+ * Registers an event for the current visitor to the flood control mechanism.
  *
  * @param $name
  *   The name of an event.
@@ -1143,7 +1170,7 @@ function flood_register_event($name, $window = 3600, $identifier = NULL) {
 }
 
 /**
- * Make the flood control mechanism forget about an event for the current visitor.
+ * Makes the flood control mechanism forget an event for the current visitor.
  *
  * @param $name
  *   The name of an event.
@@ -1161,7 +1188,7 @@ function flood_clear_event($name, $identifier = NULL) {
 }
 
 /**
- * Checks whether user is allowed to proceed with the specified event.
+ * Checks whether a user is allowed to proceed with the specified event.
  *
  * Events can have thresholds saying that each user can only do that event
  * a certain number of times in a time window. This function verifies that the
@@ -1255,7 +1282,7 @@ function drupal_strip_dangerous_protocols($uri) {
 }
 
 /**
- * Strips dangerous protocols (e.g. 'javascript:') from a URI and encodes it for output to an HTML attribute value.
+ * Strips dangerous protocols from a URI and encodes it for output to HTML.
  *
  * @param $uri
  *   A plain-text URI that might contain dangerous protocols.
@@ -1275,7 +1302,7 @@ function check_url($uri) {
 }
 
 /**
- * Very permissive XSS/HTML filter for admin-only use.
+ * Applies a very permissive XSS/HTML filter for admin-only use.
  *
  * Use only for fields where it is impractical to use the
  * whole filter system, but where some (mainly inline) mark-up
@@ -1289,7 +1316,7 @@ function filter_xss_admin($string) {
 }
 
 /**
- * Filters an HTML string to prevent cross-site-scripting (XSS) vulnerabilities.
+ * Filters HTML to prevent cross-site-scripting (XSS) vulnerabilities.
  *
  * Based on kses by Ulf Harnhammar, see http://sourceforge.net/projects/kses.
  * For examples of various XSS attacks, see: http://ha.ckers.org/xss.html.
@@ -1358,6 +1385,7 @@ function filter_xss($string, $allowed_tags = array('a', 'em', 'strong', 'cite', 
  *   If $store is FALSE then the array has one element, the HTML tag to process.
  * @param $store
  *   Whether to store $m.
+ *
  * @return
  *   If the element isn't allowed, an empty string. Otherwise, the cleaned up
  *   version of the HTML element.
@@ -1525,15 +1553,16 @@ function _filter_xss_attributes($attr) {
 }
 
 /**
- * Processes an HTML attribute value and ensures it does not contain an URL with a disallowed protocol (e.g. javascript:).
+ * Processes an HTML attribute value and strips dangerous protocols from URLs.
  *
  * @param $string
  *   The string with the attribute value.
  * @param $decode
- *   (Deprecated) Whether to decode entities in the $string. Set to FALSE if the
+ *   (deprecated) Whether to decode entities in the $string. Set to FALSE if the
  *   $string is in plain text, TRUE otherwise. Defaults to TRUE. This parameter
  *   is deprecated and will be removed in Drupal 8. To process a plain-text URI,
  *   call drupal_strip_dangerous_protocols() or check_url() instead.
+ *
  * @return
  *   Cleaned up and HTML-escaped version of $string.
  */
@@ -1587,7 +1616,7 @@ function format_rss_channel($title, $link, $description, $items, $langcode = NUL
 }
 
 /**
- * Format a single RSS item.
+ * Formats a single RSS item.
  *
  * Arbitrary elements may be added using the $args associative array.
  */
@@ -1603,7 +1632,7 @@ function format_rss_item($title, $link, $description, $args = array()) {
 }
 
 /**
- * Format XML elements.
+ * Formats XML elements.
  *
  * @param $array
  *   An array where each item represents an element and is either a:
@@ -1642,7 +1671,7 @@ function format_xml_elements($array) {
 }
 
 /**
- * Format a string containing a count of items.
+ * Formats a string containing a count of items.
  *
  * This function ensures that the string is pluralized correctly. Since t() is
  * called by this function, make sure not to pass already-localized strings to
@@ -1664,31 +1693,27 @@ function format_xml_elements($array) {
  * @param $count
  *   The item count to display.
  * @param $singular
- *   The string for the singular case. Please make sure it is clear this is
- *   singular, to ease translation (e.g. use "1 new comment" instead of "1 new").
- *   Do not use @count in the singular string.
+ *   The string for the singular case. Make sure it is clear this is singular,
+ *   to ease translation (e.g. use "1 new comment" instead of "1 new"). Do not
+ *   use @count in the singular string.
  * @param $plural
- *   The string for the plural case. Please make sure it is clear this is plural,
- *   to ease translation. Use @count in place of the item count, as in "@count
- *   new comments".
+ *   The string for the plural case. Make sure it is clear this is plural, to
+ *   ease translation. Use @count in place of the item count, as in
+ *   "@count new comments".
  * @param $args
- *   An associative array of replacements to make after translation. Incidences
+ *   An associative array of replacements to make after translation. Instances
  *   of any key in this array are replaced with the corresponding value.
- *   Based on the first character of the key, the value is escaped and/or themed:
- *    - !variable: inserted as is
- *    - @variable: escape plain text to HTML (check_plain)
- *    - %variable: escape text and theme as a placeholder for user-submitted
- *      content (check_plain + drupal_placeholder)
- *   Note that you do not need to include @count in this array.
- *   This replacement is done automatically for the plural case.
+ *   Based on the first character of the key, the value is escaped and/or
+ *   themed. See format_string(). Note that you do not need to include @count
+ *   in this array; this replacement is done automatically for the plural case.
  * @param $options
- *   An associative array of additional options, with the following keys:
- *     - 'langcode' (default to the current language) The language code to
- *       translate to a language other than what is used to display the page.
- *     - 'context' (default to the empty context) The context the source string
- *       belongs to.
+ *   An associative array of additional options. See t() for allowed keys.
+ *
  * @return
  *   A translated string.
+ *
+ * @see t()
+ * @see format_string()
  */
 function format_plural($count, $singular, $plural, array $args = array(), array $options = array()) {
   $args['@count'] = $count;
@@ -1717,11 +1742,12 @@ function format_plural($count, $singular, $plural, array $args = array(), array 
 }
 
 /**
- * Parse a given byte count.
+ * Parses a given byte count.
  *
  * @param $size
  *   A size expressed as a number of bytes with optional SI or IEC binary unit
  *   prefix (e.g. 2, 3K, 5MB, 10G, 6GiB, 8 bytes, 9mbytes).
+ *
  * @return
  *   An integer representation of the size in bytes.
  */
@@ -1738,13 +1764,14 @@ function parse_size($size) {
 }
 
 /**
- * Generate a string representation for the given byte count.
+ * Generates a string representation for the given byte count.
  *
  * @param $size
  *   A size in bytes.
  * @param $langcode
  *   Optional language code to translate to a language other than what is used
  *   to display the page.
+ *
  * @return
  *   A translated string representation of the size.
  */
@@ -1777,7 +1804,7 @@ function format_size($size, $langcode = NULL) {
 }
 
 /**
- * Format a time interval with the requested granularity.
+ * Formats a time interval with the requested granularity.
  *
  * @param $timestamp
  *   The length of the interval in seconds.
@@ -1786,6 +1813,7 @@ function format_size($size, $langcode = NULL) {
  * @param $langcode
  *   Optional language code to translate to a language other than
  *   what is used to display the page.
+ *
  * @return
  *   A translated string representation of the interval.
  */
@@ -1917,10 +1945,11 @@ function format_date($timestamp, $type = 'medium', $format = '', $timezone = NUL
 /**
  * Returns an ISO8601 formatted date based on the given date.
  *
- * Can be used as a callback for RDF mappings.
+ * Callback for use within hook_rdf_mapping() implementations.
  *
  * @param $date
  *   A UNIX timestamp.
+ *
  * @return string
  *   An ISO8601 formatted date.
  */
@@ -1931,7 +1960,9 @@ function date_iso8601($date) {
 }
 
 /**
- * Callback function for preg_replace_callback().
+ * Translates a formatted date string.
+ *
+ * Callback for preg_replace_callback() within format_date().
  */
 function _format_date_callback(array $matches = NULL, $new_langcode = NULL) {
   // We cache translations to avoid redundant and rather costly calls to t().
@@ -2023,8 +2054,8 @@ function _format_date_callback(array $matches = NULL, $new_langcode = NULL) {
  *     Drupal on a web server that cannot be configured to automatically find
  *     index.php, then hook_url_outbound_alter() can be implemented to force
  *     this value to 'index.php'.
- *   - 'entity_type': The entity type of the object that called url(). Only set if
- *     url() is invoked by entity_uri().
+ *   - 'entity_type': The entity type of the object that called url(). Only
+ *     set if url() is invoked by entity_uri().
  *   - 'entity': The entity object (such as a node) for which the URL is being
  *     generated. Only set if url() is invoked by entity_uri().
  *
@@ -2149,7 +2180,7 @@ function url($path = NULL, array $options = array()) {
 }
 
 /**
- * Return TRUE if a path is external to Drupal (e.g. http://example.com).
+ * Returns TRUE if a path is external to Drupal (e.g. http://example.com).
  *
  * If a path cannot be assessed by Drupal's menu handler, then we must
  * treat it as potentially insecure.
@@ -2157,6 +2188,7 @@ function url($path = NULL, array $options = array()) {
  * @param $path
  *   The internal path or external URL being linked to, such as "node/34" or
  *   "http://example.com/foo".
+ *
  * @return
  *   Boolean TRUE or FALSE, where TRUE indicates an external path.
  */
@@ -2169,7 +2201,7 @@ function url_is_external($path) {
 }
 
 /**
- * Format an attribute string for a HTTP header.
+ * Formats an attribute string for an HTTP header.
  *
  * @param $attributes
  *   An associative array of attributes such as 'rel'.
@@ -2191,7 +2223,7 @@ function drupal_http_header_attributes(array $attributes = array()) {
 }
 
 /**
- * Converts an associative array to an attribute string for use in XML/HTML tags.
+ * Converts an associative array to an XML/HTML tag attribute string.
  *
  * Each array key and its value will be formatted into an attribute string.
  * If a value is itself an array, then its elements are concatenated to a single
@@ -2412,7 +2444,7 @@ function drupal_deliver_page($page_callback_result, $default_delivery_callback =
 }
 
 /**
- * Package and send the result of a page callback to the browser as HTML.
+ * Packages and sends the result of a page callback to the browser as HTML.
  *
  * @param $page_callback_result
  *   The result of a page callback. Can be one of:
@@ -2521,7 +2553,7 @@ function drupal_deliver_html_page($page_callback_result) {
 }
 
 /**
- * Perform end-of-request tasks.
+ * Performs end-of-request tasks.
  *
  * This function sets the page cache if appropriate, and allows modules to
  * react to the closing of the page by calling hook_exit().
@@ -2534,7 +2566,8 @@ function drupal_page_footer() {
   // Commit the user session, if needed.
   drupal_session_commit();
 
-  if (variable_get('cache', 0) && ($cache = drupal_page_set_cache())) {
+  $config = config('system.performance');
+  if ($config->get('cache') && ($cache = drupal_page_set_cache())) {
     drupal_serve_page_from_cache($cache);
   }
   else {
@@ -2548,7 +2581,7 @@ function drupal_page_footer() {
 }
 
 /**
- * Perform end-of-request tasks.
+ * Performs end-of-request tasks.
  *
  * In some cases page requests need to end without calling drupal_page_footer().
  * In these cases, call drupal_exit() instead. There should rarely be a reason
@@ -2570,7 +2603,7 @@ function drupal_exit($destination = NULL) {
 }
 
 /**
- * Form an associative array from a linear array.
+ * Forms an associative array from a linear array.
  *
  * This function walks through the provided array and constructs an associative
  * array out of it. The keys of the resulting array will be the values of the
@@ -2646,10 +2679,10 @@ function drupal_get_path($type, $name) {
 }
 
 /**
- * Return the base URL path (i.e., directory) of the Drupal installation.
+ * Returns the base URL path (i.e., directory) of the Drupal installation.
  *
- * base_path() prefixes and suffixes a "/" onto the returned path if the path is
- * not empty. At the very least, this will return "/".
+ * base_path() adds a "/" to the beginning and end of the returned path if the
+ * path is not empty. At the very least, this will return "/".
  *
  * Examples:
  * - http://example.com returns "/" because the path is empty.
@@ -2660,12 +2693,12 @@ function base_path() {
 }
 
 /**
- * Add a LINK tag with a distinct 'rel' attribute to the page's HEAD.
+ * Adds a LINK tag with a distinct 'rel' attribute to the page's HEAD.
  *
- * This function can be called as long the HTML header hasn't been sent,
- * which on normal pages is up through the preprocess step of theme('html').
- * Adding a link will overwrite a prior link with the exact same 'rel' and
- * 'href' attributes.
+ * This function can be called as long the HTML header hasn't been sent, which
+ * on normal pages is up through the preprocess step of theme('html'). Adding
+ * a link will overwrite a prior link with the exact same 'rel' and 'href'
+ * attributes.
  *
  * @param $attributes
  *   Associative array of element attributes including 'href' and 'rel'.
@@ -2729,8 +2762,8 @@ function drupal_add_html_head_link($attributes, $header = FALSE) {
  *     See drupal_get_css() where the overrides are performed. Also, if the
  *     direction of the current language is right-to-left (Hebrew, Arabic,
  *     etc.), the function will also look for an RTL CSS file and append it to
- *     the list. The name of this file should have an '-rtl.css' suffix.  For
- *     example a CSS file called 'mymodule-name.css' will have a
+ *     the list. The name of this file should have an '-rtl.css' suffix. For
+ *     example, a CSS file called 'mymodule-name.css' will have a
  *     'mymodule-name-rtl.css' file added to the list, if exists in the same
  *     directory. This CSS file should contain overrides for properties which
  *     should be reversed or otherwise different in a right-to-left display.
@@ -2862,7 +2895,7 @@ function drupal_add_css($data = NULL, $options = NULL) {
 }
 
 /**
- * Returns a themed representation of all stylesheets that should be attached to the page.
+ * Returns a themed representation of all stylesheets to attach to the page.
  *
  * It loads the CSS in order, with 'module' first, then 'theme' afterwards.
  * This ensures proper cascading of styles so themes can easily override
@@ -2932,11 +2965,24 @@ function drupal_get_css($css = NULL, $skip_alter = FALSE) {
 }
 
 /**
- * Function used by uasort to sort the array structures returned by drupal_add_css() and drupal_add_js().
+ * Sorts CSS and JavaScript resources.
+ *
+ * Callback for uasort() within:
+ * - drupal_get_css()
+ * - drupal_get_js()
  *
  * This sort order helps optimize front-end performance while providing modules
  * and themes with the necessary control for ordering the CSS and JavaScript
  * appearing on a page.
+ *
+ * @param $a
+ *   First item for comparison. The compared items should be associative arrays
+ *   of member items from drupal_add_css() or drupal_add_js().
+ * @param $b
+ *   Second item for comparison.
+ *
+ * @see drupal_add_css()
+ * @see drupal_add_js()
  */
 function drupal_sort_css_js($a, $b) {
   // First order by group, so that, for example, all items in the CSS_SYSTEM
@@ -2972,7 +3018,7 @@ function drupal_sort_css_js($a, $b) {
 }
 
 /**
- * Default callback to group CSS items.
+ * Grouping callback: Groups CSS items by their types, media, and browsers.
  *
  * This function arranges the CSS items that are in the #items property of the
  * styles element into groups. Arranging the CSS items into groups serves two
@@ -3003,6 +3049,7 @@ function drupal_sort_css_js($a, $b) {
  *   'items' key, which is the subset of items from $css that are in the group.
  *
  * @see drupal_pre_render_styles()
+ * @see system_element_info()
  */
 function drupal_group_css($css) {
   $groups = array();
@@ -3069,7 +3116,7 @@ function drupal_group_css($css) {
 }
 
 /**
- * Default callback to aggregate CSS files and inline content.
+ * Aggregation callback: Aggregates CSS files and inline content.
  *
  * Having the browser load fewer CSS files results in much faster page loads
  * than when it loads many small files. This function aggregates files within
@@ -3085,16 +3132,16 @@ function drupal_group_css($css) {
  *
  * @see drupal_group_css()
  * @see drupal_pre_render_styles()
+ * @see system_element_info()
  */
 function drupal_aggregate_css(&$css_groups) {
-  // Only aggregate when the site is configured to do so, and not during an
-  // update.
-  if (defined('MAINTENANCE_MODE') && (MAINTENANCE_MODE == 'install' || MAINTENANCE_MODE == 'update')) {
-    $preprocess_css = FALSE;    
+  // Only aggregate during normal site operation.
+  if (defined('MAINTENANCE_MODE')) {
+    $preprocess_css = FALSE;
   }
   else {
     $config = config('system.performance');
-    $preprocess_css = ($config->get('preprocess_css'));
+    $preprocess_css = $config->get('preprocess_css');
   }
 
   // For each group that needs aggregation, aggregate its items.
@@ -3119,7 +3166,7 @@ function drupal_aggregate_css(&$css_groups) {
 }
 
 /**
- * #pre_render callback to add the elements needed for CSS tags to be rendered.
+ * Pre-render callback: Adds the elements needed for CSS tags to be rendered.
  *
  * For production websites, LINK tags are preferable to STYLE tags with @import
  * statements, because:
@@ -3350,8 +3397,8 @@ function drupal_pre_render_styles($elements) {
  * in $css while the value is the cache file name. The cache file is generated
  * in two cases. First, if there is no file name value for the key, which will
  * happen if a new file name has been added to $css or after the lookup
- * variable is emptied to force a rebuild of the cache.  Second, the cache
- * file is generated if it is missing on disk. Old cache files are not deleted
+ * variable is emptied to force a rebuild of the cache. Second, the cache file
+ * is generated if it is missing on disk. Old cache files are not deleted
  * immediately when the lookup variable is emptied, but are deleted after a set
  * period by drupal_delete_file_if_stale(). This ensures that files referenced
  * by a cached page will still be available.
@@ -3429,9 +3476,7 @@ function drupal_build_css_cache($css) {
 }
 
 /**
- * Helper function for drupal_build_css_cache().
- *
- * This function will prefix all paths within a CSS file.
+ * Prefixes all paths within a CSS file for drupal_build_css_cache().
  */
 function _drupal_build_css_path($matches, $base = NULL) {
   $_base = &drupal_static(__FUNCTION__);
@@ -3502,13 +3547,14 @@ function drupal_load_stylesheet($file, $optimize = NULL, $reset_basepath = TRUE)
 }
 
 /**
- * Process the contents of a stylesheet for aggregation.
+ * Processes the contents of a stylesheet for aggregation.
  *
  * @param $contents
  *   The contents of the stylesheet.
  * @param $optimize
  *   (optional) Boolean whether CSS contents should be minified. Defaults to
  *   FALSE.
+ *
  * @return
  *   Contents of the stylesheet including the imported stylesheets.
  */
@@ -3594,7 +3640,11 @@ function drupal_clear_css_cache() {
 }
 
 /**
- * Callback to delete files modified more than a set time ago.
+ * Deletes files modified more than a set time ago.
+ *
+ * Callback for file_scan_directory() within:
+ * - drupal_clear_css_cache()
+ * - drupal_clear_js_cache()
  */
 function drupal_delete_file_if_stale($uri) {
   // Default stale file threshold is 30 days.
@@ -3604,7 +3654,7 @@ function drupal_delete_file_if_stale($uri) {
 }
 
 /**
- * Prepare a string for use as a valid CSS identifier (element, class or ID name).
+ * Prepares a string for use as a CSS identifier (element, class, or ID name).
  *
  * http://www.w3.org/TR/CSS21/syndata.html#characters shows the syntax for valid
  * CSS identifiers (including element names, classes, and IDs in selectors.)
@@ -3613,6 +3663,7 @@ function drupal_delete_file_if_stale($uri) {
  *   The identifier to clean.
  * @param $filter
  *   An array of string replacements to use on the identifier.
+ *
  * @return
  *   The cleaned identifier.
  */
@@ -3634,13 +3685,14 @@ function drupal_clean_css_identifier($identifier, $filter = array(' ' => '-', '_
 }
 
 /**
- * Prepare a string for use as a valid class name.
+ * Prepares a string for use as a valid class name.
  *
  * Do not pass one string containing multiple classes as they will be
  * incorrectly concatenated with dashes, i.e. "one two" will become "one-two".
  *
  * @param $class
  *   The class name to clean.
+ *
  * @return
  *   The cleaned class name.
  */
@@ -3649,7 +3701,7 @@ function drupal_html_class($class) {
 }
 
 /**
- * Prepare a string for use as a valid HTML ID and guarantee uniqueness.
+ * Prepares a string for use as a valid HTML ID and guarantees uniqueness.
  *
  * This function ensures that each passed HTML ID value only exists once on the
  * page. By tracking the already returned ids, this function enables forms,
@@ -3780,7 +3832,7 @@ function drupal_region_class($region) {
  *   to tell the user that a new message arrived, by opening a pop up, alert
  *   box, etc.). This should only be used for JavaScript that cannot be executed
  *   from a file. When adding inline code, make sure that you are not relying on
- *   $() being the jQuery function.  Wrap your code in
+ *   $() being the jQuery function. Wrap your code in
  *   @code (function ($) {... })(jQuery); @endcode
  *   or use jQuery() instead of $().
  * - Add external JavaScript ('external'): Allows the inclusion of external
@@ -3900,7 +3952,7 @@ function drupal_region_class($region) {
  *       happened later in the page request gets added to the page after one for
  *       which drupal_add_js() happened earlier in the page request.
  *   - defer: If set to TRUE, the defer attribute is set on the &lt;script&gt;
- *     tag.  Defaults to FALSE.
+ *     tag. Defaults to FALSE.
  *   - cache: If set to FALSE, the JavaScript file is loaded anew on every page
  *     call; in other words, it is not cached. Used only when 'type' references
  *     a JavaScript file. Defaults to TRUE.
@@ -4003,6 +4055,7 @@ function drupal_add_js($data = NULL, $options = NULL) {
  *
  * @param $data
  *   (optional) The default data parameter for the JavaScript item array.
+ *
  * @see drupal_get_js()
  * @see drupal_add_js()
  */
@@ -4047,8 +4100,10 @@ function drupal_js_defaults($data = NULL) {
  *   (optional) If set to TRUE, this function skips calling drupal_alter() on
  *   $javascript, useful when the calling function passes a $javascript array
  *   that has already been altered.
+ *
  * @return
  *   All JavaScript code segments and includes for the scope as HTML tags.
+ *
  * @see drupal_add_js()
  * @see locale_js_alter()
  * @see drupal_js_defaults()
@@ -4320,12 +4375,13 @@ function drupal_group_js($javascript) {
  * @see drupal_pre_render_scripts()
  */
 function drupal_aggregate_js(&$js_groups) {
-  if (defined('MAINTENANCE_MODE') && (MAINTENANCE_MODE == 'install' || MAINTENANCE_MODE == 'update')) {
-    $preprocess_js = FALSE;    
+  // Only aggregate during normal site operation.
+  if (defined('MAINTENANCE_MODE')) {
+    $preprocess_js = FALSE;
   }
   else {
     $config = config('system.performance');
-    $preprocess_js = ($config->get('preprocess_js'));
+    $preprocess_js = $config->get('preprocess_js');
   }
 
   // Only aggregate when the site is configured to do so, and not during an
@@ -4353,7 +4409,7 @@ function drupal_aggregate_js(&$js_groups) {
  * );
  * @endcode
  *
- * 'js', 'css', and 'library' are types that get special handling.  For any
+ * 'js', 'css', and 'library' are types that get special handling. For any
  * other kind of attached data, the array key must be the full name of the
  * callback function and each value an array of arguments. For example:
  * @code
@@ -4450,10 +4506,8 @@ function drupal_process_attached($elements, $group = JS_DEFAULT, $dependency_che
   // Libraries, JavaScript and CSS have been added already, as they require
   // special handling.
   foreach ($elements['#attached'] as $callback => $options) {
-    if (function_exists($callback)) {
-      foreach ($elements['#attached'][$callback] as $args) {
-        call_user_func_array($callback, $args);
-      }
+    foreach ($elements['#attached'][$callback] as $args) {
+      call_user_func_array($callback, $args);
     }
   }
 
@@ -4704,16 +4758,16 @@ function drupal_get_library($module, $name = NULL) {
 }
 
 /**
- * Assist in adding the tableDrag JavaScript behavior to a themed table.
+ * Assists in adding the tableDrag JavaScript behavior to a themed table.
  *
  * Draggable tables should be used wherever an outline or list of sortable items
  * needs to be arranged by an end-user. Draggable tables are very flexible and
  * can manipulate the value of form elements placed within individual columns.
  *
- * To set up a table to use drag and drop in place of weight select-lists or
- * in place of a form that contains parent relationships, the form must be
- * themed into a table. The table must have an id attribute set. If using
- * theme_table(), the id may be set as such:
+ * To set up a table to use drag and drop in place of weight select-lists or in
+ * place of a form that contains parent relationships, the form must be themed
+ * into a table. The table must have an ID attribute set. If using
+ * theme_table(), the ID may be set as follows:
  * @code
  * $output = theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('id' => 'my-module-table')));
  * return $output;
@@ -4728,8 +4782,8 @@ function drupal_get_library($module, $name = NULL) {
  * $form['my_elements'][$delta]['weight']['#attributes']['class'] = array('my-elements-weight');
  * @endcode
  *
- * Each row of the table must also have a class of "draggable" in order to enable the
- * drag handles:
+ * Each row of the table must also have a class of "draggable" in order to
+ * enable the drag handles:
  * @code
  * $row = array(...);
  * $rows[] = array(
@@ -4749,8 +4803,8 @@ function drupal_get_library($module, $name = NULL) {
  * @endcode
  *
  * In a more complex case where there are several groups in one column (such as
- * the block regions on the admin/structure/block page), a separate subgroup class
- * must also be added to differentiate the groups.
+ * the block regions on the admin/structure/block page), a separate subgroup
+ * class must also be added to differentiate the groups.
  * @code
  * $form['my_elements'][$region][$delta]['weight']['#attributes']['class'] = array('my-elements-weight', 'my-elements-weight-' . $region);
  * @endcode
@@ -4767,14 +4821,14 @@ function drupal_get_library($module, $name = NULL) {
  *
  * In a situation where tree relationships are present, adding multiple
  * subgroups is not necessary, because the table will contain indentations that
- * provide enough information about the sibling and parent relationships.
- * See theme_menu_overview_form() for an example creating a table containing
- * parent relationships.
+ * provide enough information about the sibling and parent relationships. See
+ * theme_menu_overview_form() for an example creating a table containing parent
+ * relationships.
  *
- * Please note that this function should be called from the theme layer, such as
- * in a .tpl.php file, theme_ function, or in a template_preprocess function,
- * not in a form declaration. Though the same JavaScript could be added to the
- * page using drupal_add_js() directly, this function helps keep template files
+ * Note that this function should be called from the theme layer, such as in a
+ * .tpl.php file, theme_ function, or in a template_preprocess function, not in
+ * a form declaration. Though the same JavaScript could be added to the page
+ * using drupal_add_js() directly, this function helps keep template files
  * clean and readable. It also prevents tabledrag.js from being added twice
  * accidentally.
  *
@@ -4847,8 +4901,8 @@ function drupal_add_tabledrag($table_id, $action, $relationship, $group, $subgro
  * $files while the value is the cache file name. The cache file is generated
  * in two cases. First, if there is no file name value for the key, which will
  * happen if a new file name has been added to $files or after the lookup
- * variable is emptied to force a rebuild of the cache.  Second, the cache
- * file is generated if it is missing on disk. Old cache files are not deleted
+ * variable is emptied to force a rebuild of the cache. Second, the cache file
+ * is generated if it is missing on disk. Old cache files are not deleted
  * immediately when the lookup variable is emptied, but are deleted after a set
  * period by drupal_delete_file_if_stale(). This ensures that files referenced
  * by a cached page will still be available.
@@ -4914,14 +4968,14 @@ function drupal_clear_js_cache() {
 /**
  * Converts a PHP variable into its JavaScript equivalent.
  *
- * We use HTML-safe strings, i.e. with <, > and & escaped.
+ * We use HTML-safe strings, with several characters escaped.
  *
  * @see drupal_json_decode()
  * @ingroup php_wrappers
  */
 function drupal_json_encode($var) {
-  // json_encode() does not escape <, > and &, so we do it with str_replace().
-  return str_replace(array('<', '>', '&'), array('\u003c', '\u003e', '\u0026'), json_encode($var));
+  // Encode <, >, ', &, and " using the json_encode() options parameter.
+  return json_encode($var, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT);
 }
 
 /**
@@ -4935,7 +4989,7 @@ function drupal_json_decode($var) {
 }
 
 /**
- * Return data in JSON format.
+ * Returns data in JSON format.
  *
  * This function should be used for JavaScript callback functions returning
  * data in JSON format. It sets the header for JavaScript output.
@@ -4953,7 +5007,7 @@ function drupal_json_output($var = NULL) {
 }
 
 /**
- * Get a salt useful for hardening against SQL injection.
+ * Gets a salt useful for hardening against SQL injection.
  *
  * @return
  *   A salt based on information in settings.php, not in the database.
@@ -4966,7 +5020,7 @@ function drupal_get_hash_salt() {
 }
 
 /**
- * Ensure the private key variable used to generate tokens is set.
+ * Ensures the private key variable used to generate tokens is set.
  *
  * @return
  *   The private key.
@@ -4980,7 +5034,7 @@ function drupal_get_private_key() {
 }
 
 /**
- * Generate a token based on $value, the current user session and private key.
+ * Generates a token based on $value, the user session, and the private key.
  *
  * @param $value
  *   An additional value to base the token on.
@@ -4990,7 +5044,7 @@ function drupal_get_token($value = '') {
 }
 
 /**
- * Validate a token based on $value, the current user session and private key.
+ * Validates a token based on $value, the user session, and the private key.
  *
  * @param $token
  *   The token to be validated.
@@ -4998,6 +5052,7 @@ function drupal_get_token($value = '') {
  *   An additional value to base the token on.
  * @param $skip_anonymous
  *   Set to true to skip token validation for anonymous users.
+ *
  * @return
  *   True for a valid token, false for an invalid token. When $skip_anonymous
  *   is true, the return value will always be true for anonymous users.
@@ -5066,7 +5121,7 @@ function _drupal_bootstrap_full() {
 }
 
 /**
- * Store the current page in the cache.
+ * Stores the current page in the cache.
  *
  * If page_compression is enabled, a gzipped version of the page is stored in
  * the cache to avoid compressing the output on each request. The cache entry
@@ -5081,7 +5136,7 @@ function _drupal_bootstrap_full() {
 function drupal_page_set_cache() {
   global $base_root;
   $config = config('system.performance');
-  
+
   if (drupal_page_is_cacheable()) {
     $cache = (object) array(
       'cid' => $base_root . request_uri(),
@@ -5119,10 +5174,10 @@ function drupal_page_set_cache() {
 /**
  * Executes a cron run when called.
  *
- * Do not call this function from test, use $this->cronRun() instead.
+ * Do not call this function from a test. Use $this->cronRun() instead.
  *
  * @return
- *   Returns TRUE if ran successfully
+ *   TRUE if cron ran successfully.
  */
 function drupal_cron_run() {
   // Allow execution to continue even if the request gets canceled.
@@ -5197,7 +5252,10 @@ function drupal_cron_run() {
 }
 
 /**
- * Shutdown function for cron cleanup.
+ * Shutdown function: Performs cron cleanup.
+ *
+ * @see drupal_cron_run()
+ * @see drupal_register_shutdown_function()
  */
 function drupal_cron_cleanup() {
   // See if the semaphore is still locked.
@@ -5317,7 +5375,7 @@ function drupal_system_listing($mask, $directory, $key = 'name', $min_depth = 1)
 }
 
 /**
- * Set the main page content value for later use.
+ * Sets the main page content value for later use.
  *
  * Given the nature of the Drupal page handling, this will be called once with
  * a string or array. We store that and return it later as the block is being
@@ -5325,6 +5383,7 @@ function drupal_system_listing($mask, $directory, $key = 'name', $min_depth = 1)
  *
  * @param $content
  *   A string or renderable array representing the body of the page.
+ *
  * @return
  *   If called without $content, a renderable array representing the body of
  *   the page.
@@ -5347,7 +5406,7 @@ function drupal_set_page_content($content = NULL) {
 }
 
 /**
- * #pre_render callback to render #browsers into #prefix and #suffix.
+ * Pre-render callback: Renders #browsers into #prefix and #suffix.
  *
  * @param $elements
  *   A render array with a '#browsers' property. The '#browsers' property can
@@ -5423,7 +5482,7 @@ function drupal_pre_render_conditional_comments($elements) {
 }
 
 /**
- * #pre_render callback to render a link into #markup.
+ * Pre-render callback: Renders a link into #markup.
  *
  * Doing so during pre_render gives modules a chance to alter the link parts.
  *
@@ -5477,7 +5536,7 @@ function drupal_pre_render_link($element) {
 }
 
 /**
- * #pre_render callback that collects child links into a single array.
+ * Pre-render callback: Collects child links into a single array.
  *
  * This function can be added as a pre_render callback for a renderable array,
  * usually one which will be themed by theme_links(). It iterates through all
@@ -5568,20 +5627,20 @@ function drupal_pre_render_links($element) {
 }
 
 /**
- * #pre_render callback to append contents in #markup to #children.
+ * Pre-render callback: Appends contents in #markup to #children.
  *
  * This needs to be a #pre_render callback, because eventually assigned
  * #theme_wrappers will expect the element's rendered content in #children.
  * Note that if also a #theme is defined for the element, then the result of
  * the theme callback will override #children.
  *
- * @see drupal_render()
- *
  * @param $elements
  *   A structured array using the #markup key.
  *
  * @return
  *   The passed-in elements, but #markup appended to #children.
+ *
+ * @see drupal_render()
  */
 function drupal_pre_render_markup($elements) {
   $elements['#children'] = $elements['#markup'];
@@ -5594,8 +5653,10 @@ function drupal_pre_render_markup($elements) {
  * @param $page
  *   A string or array representing the content of a page. The array consists of
  *   the following keys:
- *   - #type: Value is always 'page'. This pushes the theming through page.tpl.php (required).
- *   - #show_messages: Suppress drupal_get_message() items. Used by Batch API (optional).
+ *   - #type: Value is always 'page'. This pushes the theming through
+ *     page.tpl.php (required).
+ *   - #show_messages: Suppress drupal_get_message() items. Used by Batch
+ *     API (optional).
  *
  * @see hook_page_alter()
  * @see element_info()
@@ -5672,20 +5733,20 @@ function drupal_render_page($page) {
  * drupal_render() can optionally cache the rendered output of elements to
  * improve performance. To use drupal_render() caching, set the element's #cache
  * property to an associative array with one or several of the following keys:
- *    - 'keys': An array of one or more keys that identify the element. If 'keys'
- *       is set, the cache ID is created automatically from these keys. See
- *       drupal_render_cid_create().
- *    - 'granularity' (optional): Define the cache granularity using binary
- *       combinations of the cache granularity constants, e.g. DRUPAL_CACHE_PER_USER
- *       to cache for each user separately or
- *       DRUPAL_CACHE_PER_PAGE | DRUPAL_CACHE_PER_ROLE to cache separately for each
- *       page and role. If not specified the element is cached globally for each
- *       theme and language.
- *    - 'cid': Specify the cache ID directly. Either 'keys' or 'cid' is required.
- *       If 'cid' is set, 'keys' and 'granularity' are ignored. Use only if you
- *       have special requirements.
- *    - 'expire': Set to one of the cache lifetime constants.
- *    - 'bin': Specify a cache bin to cache the element in. Defaults to 'cache'.
+ * - 'keys': An array of one or more keys that identify the element. If 'keys'
+ *   is set, the cache ID is created automatically from these keys. See
+ *   drupal_render_cid_create().
+ * - 'granularity' (optional): Define the cache granularity using binary
+ *   combinations of the cache granularity constants, e.g.
+ *   DRUPAL_CACHE_PER_USER to cache for each user separately or
+ *   DRUPAL_CACHE_PER_PAGE | DRUPAL_CACHE_PER_ROLE to cache separately for each
+ *   page and role. If not specified the element is cached globally for each
+ *   theme and language.
+ * - 'cid': Specify the cache ID directly. Either 'keys' or 'cid' is required.
+ *   If 'cid' is set, 'keys' and 'granularity' are ignored. Use only if you
+ *   have special requirements.
+ * - 'expire': Set to one of the cache lifetime constants.
+ * - 'bin': Specify a cache bin to cache the element in. Defaults to 'cache'.
  *
  * This function is usually called from within another function, like
  * drupal_get_form() or a theme function. Elements are sorted internally
@@ -5702,6 +5763,7 @@ function drupal_render_page($page) {
  *
  * @param $elements
  *   The structured array describing the data to be rendered.
+ *
  * @return
  *   The rendered HTML.
  */
@@ -5738,9 +5800,7 @@ function drupal_render(&$elements) {
   // element is rendered into the final text.
   if (isset($elements['#pre_render'])) {
     foreach ($elements['#pre_render'] as $function) {
-      if (function_exists($function)) {
-        $elements = $function($elements);
-      }
+      $elements = $function($elements);
     }
   }
 
@@ -5784,9 +5844,7 @@ function drupal_render(&$elements) {
   // which allows the output'ed text to be filtered.
   if (isset($elements['#post_render'])) {
     foreach ($elements['#post_render'] as $function) {
-      if (function_exists($function)) {
-        $elements['#children'] = $function($elements['#children'], $elements);
-      }
+      $elements['#children'] = $function($elements['#children'], $elements);
     }
   }
 
@@ -5815,7 +5873,7 @@ function drupal_render(&$elements) {
 }
 
 /**
- * Render children of an element and concatenate them.
+ * Renders children of an element and concatenates them.
  *
  * This renders all children of an element using drupal_render() and then
  * joins them together into a single string.
@@ -5840,7 +5898,7 @@ function drupal_render_children(&$element, $children_keys = NULL) {
 }
 
 /**
- * Render an element.
+ * Renders an element.
  *
  * This function renders an element using drupal_render(). The top level
  * element is shown with show() before rendering, so it will always be rendered
@@ -5869,7 +5927,7 @@ function render(&$element) {
 }
 
 /**
- * Hide an element from later rendering.
+ * Hides an element from later rendering.
  *
  * The first time render() or drupal_render() is called on an element tree,
  * as each element in the tree is rendered, it is marked with a #printed flag
@@ -5895,7 +5953,7 @@ function hide(&$element) {
 }
 
 /**
- * Show a hidden element for later rendering.
+ * Shows a hidden element for later rendering.
  *
  * You can also use render($element), which shows the element while rendering
  * it.
@@ -5924,16 +5982,17 @@ function show(&$element) {
 }
 
 /**
- * Get the rendered output of a renderable element from cache.
- *
- * @see drupal_render()
- * @see drupal_render_cache_set()
+ * Gets the rendered output of a renderable element from the cache.
  *
  * @param $elements
  *   A renderable array.
+ *
  * @return
  *   A markup string containing the rendered content of the element, or FALSE
  *   if no cached copy of the element is available.
+ *
+ * @see drupal_render()
+ * @see drupal_render_cache_set()
  */
 function drupal_render_cache_get($elements) {
   if (!in_array($_SERVER['REQUEST_METHOD'], array('GET', 'HEAD')) || !$cid = drupal_render_cid_create($elements)) {
@@ -5954,17 +6013,17 @@ function drupal_render_cache_get($elements) {
 }
 
 /**
- * Cache the rendered output of a renderable element.
+ * Caches the rendered output of a renderable element.
  *
- * This is called by drupal_render() if the #cache property is set on an element.
- *
- * @see drupal_render()
- * @see drupal_render_cache_get()
+ * This is called by drupal_render() if the #cache property is set on an
+ * element.
  *
  * @param $markup
  *   The rendered output string of $elements.
  * @param $elements
  *   A renderable array.
+ *
+ * @see drupal_render_cache_get()
  */
 function drupal_render_cache_set(&$markup, $elements) {
   // Create the cache ID for the element.
@@ -5990,7 +6049,7 @@ function drupal_render_cache_set(&$markup, $elements) {
 }
 
 /**
- * Collect #attached for an element and all child elements into a single array.
+ * Collects #attached for an element and its children into a single array.
  *
  * When caching elements, it is necessary to collect all libraries, JavaScript
  * and CSS into a single array, from both the element itself and all child
@@ -6033,9 +6092,10 @@ function drupal_render_collect_attached($elements, $return = FALSE) {
 }
 
 /**
- * Prepare an element for caching based on a query. This smart caching strategy
- * saves Drupal from querying and rendering to HTML when the underlying query is
- * unchanged.
+ * Prepares an element for caching based on a query.
+ *
+ * This smart caching strategy saves Drupal from querying and rendering to HTML
+ * when the underlying query is unchanged.
  *
  * Expensive queries should use the query builder to create the query and then
  * call this function. Executing the query and formatting results should happen
@@ -6048,7 +6108,7 @@ function drupal_render_collect_attached($elements, $return = FALSE) {
  *   added to this string and is also part of the cache key in
  *   drupal_render_cache_set() and drupal_render_cache_get().
  * @param $expire
- *   The cache expire time, passed eventually to cache_set().
+ *   The cache expire time, passed eventually to cache()->set().
  * @param $granularity
  *   One or more granularity constants passed to drupal_render_cid_parts().
  *
@@ -6073,12 +6133,15 @@ function drupal_render_cache_by_query($query, $function, $expire = CACHE_TEMPORA
 }
 
 /**
- * Helper function for building cache ids.
+ * Returns cache ID parts for building a cache ID.
  *
  * @param $granularity
- *   One or more cache granularity constants, e.g. DRUPAL_CACHE_PER_USER to cache
- *   for each user separately or DRUPAL_CACHE_PER_PAGE | DRUPAL_CACHE_PER_ROLE to
- *   cache separately for each page and role.
+ *   One or more cache granularity constants. For example, to cache separately
+ *   for each user, use DRUPAL_CACHE_PER_USER. To cache separately for each
+ *   page and role, use the expression:
+ *   @code
+ *   DRUPAL_CACHE_PER_PAGE | DRUPAL_CACHE_PER_ROLE
+ *   @endcode
  *
  * @return
  *   An array of cache ID parts, always containing the active theme. If the
@@ -6091,7 +6154,7 @@ function drupal_render_cid_parts($granularity = NULL) {
   $cid_parts[] = $theme;
   // If Locale is enabled but we have only one language we do not need it as cid
   // part.
-  if (drupal_multilingual()) {
+  if (language_multilingual()) {
     foreach (language_types_configurable() as $language_type) {
       $cid_parts[] = $GLOBALS[$language_type]->language;
     }
@@ -6117,7 +6180,7 @@ function drupal_render_cid_parts($granularity = NULL) {
 }
 
 /**
- * Create the cache ID for a renderable element.
+ * Creates the cache ID for a renderable element.
  *
  * This creates the cache ID string, either by returning the #cache['cid']
  * property if present or by building the cache ID out of the #cache['keys']
@@ -6143,7 +6206,15 @@ function drupal_render_cid_create($elements) {
 }
 
 /**
- * Function used by uasort to sort structured arrays by weight.
+ * Sorts a structured array by '#weight' property.
+ *
+ * Callback for uasort() within element_children().
+ *
+ * @param $a
+ *   First item for comparison. The compared items should be associative arrays
+ *   that optionally include a '#weight' key.
+ * @param $b
+ *   Second item for comparison.
  */
 function element_sort($a, $b) {
   $a_weight = (is_array($a) && isset($a['#weight'])) ? $a['#weight'] : 0;
@@ -6155,7 +6226,17 @@ function element_sort($a, $b) {
 }
 
 /**
- * Array sorting callback; sorts elements by title.
+ * Sorts a structured array by '#title' property.
+ *
+ * Callback for uasort() within:
+ * - system_modules()
+ * - theme_simpletest_test_table()
+ *
+ * @param $a
+ *   First item for comparison. The compared items should be associative arrays
+ *   that optionally include a '#title' key.
+ * @param $b
+ *   Second item for comparison.
  */
 function element_sort_by_title($a, $b) {
   $a_title = (is_array($a) && isset($a['#title'])) ? $a['#title'] : '';
@@ -6164,7 +6245,7 @@ function element_sort_by_title($a, $b) {
 }
 
 /**
- * Retrieve the default properties for the defined element type.
+ * Retrieves the default properties for the defined element type.
  *
  * @param $type
  *   An element type as defined by hook_element_info().
@@ -6190,7 +6271,7 @@ function element_info($type) {
 }
 
 /**
- * Retrieve a single property for the defined element type.
+ * Retrieves a single property for the defined element type.
  *
  * @param $type
  *   An element type as defined by hook_element_info().
@@ -6205,7 +6286,20 @@ function element_info_property($type, $property_name, $default = NULL) {
 }
 
 /**
- * Function used by uasort to sort structured arrays by weight, without the property weight prefix.
+ * Sorts a structured array by 'weight' key (no # prefix).
+ *
+ * Callback for uasort() within:
+ * - _field_ui_reduce_order()
+ * - update_resolve_dependencies()
+ * - archiver_get_info()
+ * - drupal_get_updaters()
+ * - drupal_get_filetransfer_info()
+ *
+ * @param $a
+ *   First item for comparison. The compared items should be associative arrays
+ *   that optionally include a 'weight' key.
+ * @param $b
+ *   Second item for comparison.
  */
 function drupal_sort_weight($a, $b) {
   $a_weight = (is_array($a) && isset($a['weight'])) ? $a['weight'] : 0;
@@ -6217,7 +6311,15 @@ function drupal_sort_weight($a, $b) {
 }
 
 /**
- * Array sorting callback; sorts elements by 'title' key.
+ * Sorts a structured array by 'title' key (no # prefix).
+ *
+ * Callback for uasort() within system_admin_index().
+ *
+ * @param $a
+ *   First item for comparison. The compared items should be associative arrays
+ *   that optionally include a 'title' key.
+ * @param $b
+ *   Second item for comparison.
  */
 function drupal_sort_title($a, $b) {
   if (!isset($b['title'])) {
@@ -6230,21 +6332,21 @@ function drupal_sort_title($a, $b) {
 }
 
 /**
- * Check if the key is a property.
+ * Checks if the key is a property.
  */
 function element_property($key) {
   return $key[0] == '#';
 }
 
 /**
- * Get properties of a structured array element. Properties begin with '#'.
+ * Gets properties of a structured array element (keys beginning with '#').
  */
 function element_properties($element) {
   return array_filter(array_keys((array) $element), 'element_property');
 }
 
 /**
- * Check if the key is a child.
+ * Checks if the key is a child.
  */
 function element_child($key) {
   return !isset($key[0]) || $key[0] != '#';
@@ -6260,6 +6362,7 @@ function element_child($key) {
  *   The element array whose children are to be identified.
  * @param $sort
  *   Boolean to indicate whether the children should be sorted by weight.
+ *
  * @return
  *   The array keys of the element's children.
  */
@@ -6306,6 +6409,7 @@ function element_children(&$elements, $sort = FALSE) {
  *
  * @param $elements
  *   The parent element.
+ *
  * @return
  *   The array keys of the element's visible children.
  */
@@ -6430,6 +6534,69 @@ function drupal_array_set_nested_value(array &$array, array $parents, $value, $f
 }
 
 /**
+ * Unsets a value in a nested array with variable depth.
+ *
+ * This helper function should be used when the depth of the array element you
+ * are changing may vary (that is, the number of parent keys is variable). It
+ * is primarily used for form structures and renderable arrays.
+ *
+ * Example:
+ * @code
+ * // Assume you have a 'signature' element somewhere in a form. It might be:
+ * $form['signature_settings']['signature'] = array(
+ *   '#type' => 'text_format',
+ *   '#title' => t('Signature'),
+ * );
+ * // Or, it might be further nested:
+ * $form['signature_settings']['user']['signature'] = array(
+ *   '#type' => 'text_format',
+ *   '#title' => t('Signature'),
+ * );
+ * @endcode
+ *
+ * To deal with the situation, the code needs to figure out the route to the
+ * element, given an array of parents that is either
+ * @code array('signature_settings', 'signature') @endcode in the first case or
+ * @code array('signature_settings', 'user', 'signature') @endcode in the second
+ * case.
+ *
+ * Without this helper function the only way to unset the signature element in
+ * one line would be using eval(), which should be avoided:
+ * @code
+ * // Do not do this! Avoid eval().
+ * eval('unset($form[\'' . implode("']['", $parents) . '\']);');
+ * @endcode
+ *
+ * Instead, use this helper function:
+ * @code
+ * drupal_array_unset_nested_value($form, $parents, $element);
+ * @endcode
+ *
+ * However if the number of array parent keys is static, the value should always
+ * be set directly rather than calling this function. For instance, for the
+ * first example we could just do:
+ * @code
+ * unset($form['signature_settings']['signature']);
+ * @endcode
+ *
+ * @param $array
+ *   A reference to the array to modify.
+ * @param $parents
+ *   An array of parent keys, starting with the outermost key and including the
+ *   key to be unset.
+ *
+ * @see drupal_array_set_nested_value()
+ */
+function drupal_array_unset_nested_value(array &$array, array $parents) {
+  $ref = &$array;
+  $unset_key = array_pop($parents);
+  foreach ($parents as $parent) {
+    $ref = &$ref[$parent];
+  }
+  unset($ref[$unset_key]);
+}
+
+/**
  * Retrieves a value from a nested array with variable depth.
  *
  * This helper function should be used when the depth of the array element being
@@ -6501,7 +6668,7 @@ function &drupal_array_get_nested_value(array &$array, array $parents, &$key_exi
 }
 
 /**
- * Determines whether a nested array with variable depth contains all of the requested keys.
+ * Determines whether a nested array contains the requested keys.
  *
  * This helper function should be used when the depth of the array element to be
  * checked may vary (that is, the number of parent keys is variable). See
@@ -6537,7 +6704,7 @@ function drupal_array_nested_key_exists(array $array, array $parents) {
 }
 
 /**
- * Provide theme registration for themes across .inc files.
+ * Provides theme registration for themes across .inc files.
  */
 function drupal_common_theme() {
   return array(
@@ -6561,7 +6728,7 @@ function drupal_common_theme() {
       'variables' => array('text' => NULL, 'path' => NULL, 'options' => array()),
     ),
     'links' => array(
-      'variables' => array('links' => NULL, 'attributes' => array('class' => array('links')), 'heading' => array()),
+      'variables' => array('links' => array(), 'attributes' => array('class' => array('links')), 'heading' => array()),
     ),
     'image' => array(
       // HTML 4 and XHTML 1.0 always require an alt attribute. The HTML 5 draft
@@ -6745,7 +6912,7 @@ function drupal_common_theme() {
  */
 
 /**
- * Creates all tables in a module's hook_schema() implementation.
+ * Creates all tables defined in a module's hook_schema().
  *
  * Note: This function does not pass the module's schema through
  * hook_schema_alter(). The module's tables will be created exactly as the
@@ -6764,7 +6931,7 @@ function drupal_install_schema($module) {
 }
 
 /**
- * Remove all tables that a module defines in its hook_schema().
+ * Removes all tables defined in a module's hook_schema().
  *
  * Note: This function does not pass the module's schema through
  * hook_schema_alter(). The module's tables will be created exactly as the
@@ -6772,6 +6939,7 @@ function drupal_install_schema($module) {
  *
  * @param $module
  *   The module for which the tables will be removed.
+ *
  * @return
  *   An array of arrays with the following key/value pairs:
  *    - success: a boolean indicating whether the query succeeded.
@@ -6827,7 +6995,7 @@ function drupal_get_schema_unprocessed($module, $table = NULL) {
 }
 
 /**
- * Fill in required default values for table definitions returned by hook_schema().
+ * Fills in required default values for table definitions from hook_schema().
  *
  * @param $schema
  *   The schema definition array as it was returned by the module's
@@ -6858,7 +7026,9 @@ function _drupal_schema_initialize(&$schema, $module, $remove_descriptions = TRU
 }
 
 /**
- * Retrieve a list of fields from a table schema. The list is suitable for use in a SQL query.
+ * Retrieves a list of fields from a table schema.
+ *
+ * The returned list is suitable for use in an SQL query.
  *
  * @param $table
  *   The name of the table from which to retrieve fields.
@@ -6866,7 +7036,7 @@ function _drupal_schema_initialize(&$schema, $module, $remove_descriptions = TRU
  *   An optional prefix to to all fields.
  *
  * @return An array of fields.
- **/
+ */
 function drupal_schema_fields_sql($table, $prefix = NULL) {
   $schema = drupal_get_schema($table);
   $fields = array_keys($schema['fields']);
@@ -6918,6 +7088,7 @@ function drupal_write_record($table, &$record, $primary_keys = array()) {
 
   $object = (object) $record;
   $fields = array();
+  $default_fields = array();
 
   // Go through the schema to determine fields to write.
   foreach ($schema['fields'] as $field => $info) {
@@ -6940,6 +7111,7 @@ function drupal_write_record($table, &$record, $primary_keys = array()) {
     if (!property_exists($object, $field)) {
       // Skip fields that are not provided, default values are already known
       // by the database.
+      $default_fields[] = $field;
       continue;
     }
 
@@ -6970,10 +7142,6 @@ function drupal_write_record($table, &$record, $primary_keys = array()) {
     }
   }
 
-  if (empty($fields)) {
-    return;
-  }
-
   // Build the SQL.
   if (empty($primary_keys)) {
     // We are doing an insert.
@@ -6990,10 +7158,16 @@ function drupal_write_record($table, &$record, $primary_keys = array()) {
         unset($fields[$serial]);
       }
     }
-    $query = db_insert($table, $options)->fields($fields);
+    // Create an INSERT query. useDefaults() is necessary for the SQL to be
+    // valid when $fields is empty.
+    $query = db_insert($table, $options)
+      ->fields($fields)
+      ->useDefaults($default_fields);
+
     $return = SAVED_NEW;
   }
   else {
+    // Create an UPDATE query.
     $query = db_update($table)->fields($fields);
     foreach ($primary_keys as $key) {
       $query->condition($key, $object->$key);
@@ -7094,7 +7268,7 @@ function drupal_parse_info_file($filename) {
 }
 
 /**
- * Parse data in Drupal's .info format.
+ * Parses data in Drupal's .info format.
  *
  * Data should be in an .ini-like format to specify values. White-space
  * generally doesn't matter, except inside values:
@@ -7124,6 +7298,7 @@ function drupal_parse_info_file($filename) {
  *
  * @param $data
  *   A string to parse.
+ *
  * @return
  *   The info array.
  *
@@ -7187,11 +7362,12 @@ function drupal_parse_info_format($data) {
 }
 
 /**
- * Severity levels, as defined in RFC 3164: http://www.ietf.org/rfc/rfc3164.txt.
+ * Returns a list of severity levels, as defined in RFC 3164.
  *
  * @return
  *   Array of the possible severity levels for log messages.
  *
+ * @see http://www.ietf.org/rfc/rfc3164.txt
  * @see watchdog()
  * @ingroup logging_severity_levels
  */
@@ -7210,7 +7386,7 @@ function watchdog_severity_levels() {
 
 
 /**
- * Explode a string of given tags into an array.
+ * Explodes a string of tags into an array.
  *
  * @see drupal_implode_tags()
  */
@@ -7236,7 +7412,7 @@ function drupal_explode_tags($tags) {
 }
 
 /**
- * Implode an array of tags into a string.
+ * Implodes an array of tags into a string.
  *
  * @see drupal_explode_tags()
  */
@@ -7254,7 +7430,7 @@ function drupal_implode_tags($tags) {
 }
 
 /**
- * Flush all cached data on the site.
+ * Flushes all cached data on the site.
  *
  * Empties cache tables, rebuilds the menu cache and theme registries, and
  * invokes a hook so that other modules' cache data can be cleared as well.
@@ -7295,10 +7471,10 @@ function drupal_flush_all_caches() {
 }
 
 /**
- * Helper function to change query-strings on css/js files.
+ * Changes the dummy query string added to all CSS and JavaScript files.
  *
- * Changes the character added to all css/js files as dummy query-string, so
- * that all browsers are forced to reload fresh files.
+ * Changing the dummy query string appended to CSS and JavaScript files forces
+ * all browsers to reload fresh files.
  */
 function _drupal_flush_css_js() {
   // The timestamp is converted to base 36 in order to make it more compact.
@@ -7306,7 +7482,7 @@ function _drupal_flush_css_js() {
 }
 
 /**
- * Debug function used for outputting debug information.
+ * Outputs debug information.
  *
  * The debug information is passed on to trigger_error() after being converted
  * to a string using _drupal_debug_message().
@@ -7331,10 +7507,11 @@ function debug($data, $label = NULL, $print_r = FALSE) {
 }
 
 /**
- * Parse a dependency for comparison by drupal_check_incompatibility().
+ * Parses a dependency for comparison by drupal_check_incompatibility().
  *
  * @param $dependency
  *   A dependency string, for example 'foo (>=8.x-4.5-beta5, 3.x)'.
+ *
  * @return
  *   An associative array with three keys:
  *   - 'name' includes the name of the thing to depend on (e.g. 'foo').
@@ -7388,12 +7565,13 @@ function drupal_parse_dependency($dependency) {
 }
 
 /**
- * Check whether a version is compatible with a given dependency.
+ * Checks whether a version is compatible with a given dependency.
  *
  * @param $v
  *   The parsed dependency structure from drupal_parse_dependency().
  * @param $current_version
  *   The version to check against (like 4.2).
+ *
  * @return
  *   NULL if compatible, otherwise the original dependency version string that
  *   caused the incompatibility.
@@ -7491,11 +7669,12 @@ function archiver_get_extensions() {
 }
 
 /**
- * Create the appropriate archiver for the specified file.
+ * Creates the appropriate archiver for the specified file.
  *
  * @param $file
- *   The full path of the archive file.  Note that stream wrapper
- *   paths are supported, but not remote ones.
+ *   The full path of the archive file. Note that stream wrapper paths are
+ *   supported, but not remote ones.
+ *
  * @return
  *   A newly created instance of the archiver class appropriate
  *   for the specified file, already bound to that file.
@@ -7524,14 +7703,14 @@ function archiver_get_archiver($file) {
 }
 
 /**
- * Drupal Updater registry.
+ * Assembles the Drupal Updater registry.
  *
  * An Updater is a class that knows how to update various parts of the Drupal
  * file system, for example to update modules that have newer releases, or to
  * install a new theme.
  *
  * @return
- *   Returns the Drupal Updater class registry.
+ *   The Drupal Updater class registry.
  *
  * @see hook_updater_info()
  * @see hook_updater_info_alter()
@@ -7547,10 +7726,10 @@ function drupal_get_updaters() {
 }
 
 /**
- * Drupal FileTransfer registry.
+ * Assembles the Drupal FileTransfer registry.
  *
  * @return
- *   Returns the Drupal FileTransfer class registry.
+ *   The Drupal FileTransfer class registry.
  *
  * @see FileTransfer
  * @see hook_filetransfer_info()
@@ -7564,16 +7743,14 @@ function drupal_get_filetransfer_info() {
     $info = array();
     foreach (module_implements('filetransfer_info') as $module) {
       $function = $module . '_filetransfer_info';
-      if (function_exists($function)) {
-        $result = $function();
-        if (isset($result) && is_array($result)) {
-          foreach ($result as &$values) {
-            if (empty($values['file path'])) {
-              $values['file path'] = drupal_get_path('module', $module);
-            }
+      $result = $function();
+      if (isset($result) && is_array($result)) {
+        foreach ($result as &$values) {
+          if (empty($values['file path'])) {
+            $values['file path'] = drupal_get_path('module', $module);
           }
-          $info = array_merge_recursive($info, $result);
         }
+        $info = array_merge_recursive($info, $result);
       }
     }
     drupal_alter('filetransfer_info', $info);

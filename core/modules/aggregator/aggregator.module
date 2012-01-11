@@ -456,10 +456,12 @@ function aggregator_save_category($edit) {
         ->condition('cid', $edit['cid'])
         ->execute();
       // Make sure there is no active block for this category.
-      db_delete('block')
-        ->condition('module', 'aggregator')
-        ->condition('delta', 'category-' . $edit['cid'])
-        ->execute();
+      if (module_exists('block')) {
+        db_delete('block')
+          ->condition('module', 'aggregator')
+          ->condition('delta', 'category-' . $edit['cid'])
+          ->execute();
+      }
       $edit['title'] = '';
       $op = 'delete';
     }
@@ -521,10 +523,12 @@ function aggregator_save_feed($edit) {
       ->condition('fid', $edit['fid'])
       ->execute();
     // Make sure there is no active block for this feed.
-    db_delete('block')
-      ->condition('module', 'aggregator')
-      ->condition('delta', 'feed-' . $edit['fid'])
-      ->execute();
+    if (module_exists('block')) {
+      db_delete('block')
+        ->condition('module', 'aggregator')
+        ->condition('delta', 'feed-' . $edit['fid'])
+        ->execute();
+    }
   }
   elseif (!empty($edit['title'])) {
     $edit['fid'] = db_insert('aggregator_feed')

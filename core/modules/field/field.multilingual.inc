@@ -58,27 +58,28 @@
  *   it possible to choose the first approach. The display language for each
  *   field is returned by field_language().
  *
- * @see field
+ * See @link field Field API @endlink for information about the other parts of
+ * the Field API.
  */
 
 /**
- * Implements hook_locale_language_insert().
+ * Implements hook_language_insert().
  */
-function field_locale_language_insert() {
+function field_language_insert() {
   field_info_cache_clear();
 }
 
 /**
- * Implements hook_locale_language_update().
+ * Implements hook_language_update().
  */
-function field_locale_language_update() {
+function field_language_update() {
   field_info_cache_clear();
 }
 
 /**
- * Implements hook_locale_language_delete().
+ * Implements hook_language_delete().
  */
-function field_locale_language_delete() {
+function field_language_delete() {
   field_info_cache_clear();
 }
 

@@ -217,9 +217,9 @@ function path_node_update($node) {
 }
 
 /**
- * Implements hook_node_delete().
+ * Implements hook_node_predelete().
  */
-function path_node_delete($node) {
+function path_node_predelete($node) {
   // Delete all aliases associated with this node.
   path_delete(array('source' => 'node/' . $node->nid));
 }

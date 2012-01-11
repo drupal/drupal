@@ -45,7 +45,8 @@ class FieldValidationException extends FieldException {
  * Each field defines which storage backend it uses. The Drupal system variable
  * 'field_storage_default' identifies the storage backend used by default.
  *
- * @see field
+ * See @link field Field API @endlink for information about the other parts of
+ * the Field API.
  */
 
 /**
@@ -120,7 +121,11 @@ const FIELD_STORAGE_INSERT = 'insert';
  * Field Storage API is essentially the "fallback mechanism" for any fields
  * that aren't being intercepted explicitly by pre-operation hooks.
  *
- * @see field
+ * @link field_language Field language API @endlink provides information about
+ * the structure of field objects.
+ *
+ * See @link field Field API @endlink for information about the other parts of
+ * the Field API.
  */
 
 /**
@@ -638,7 +643,7 @@ function field_attach_load($entity_type, $entities, $age = FIELD_LOAD_CURRENT, $
     foreach ($entities as $id => $entity) {
       $cids[] = "field:$entity_type:$id";
     }
-    $cache = cache_get_multiple($cids, 'cache_field');
+    $cache = cache('field')->getMultiple($cids);
     // Put the cached field values back into the entities and remove them from
     // the list of entities to query.
     foreach ($entities as $id => $entity) {
@@ -1311,6 +1316,7 @@ function field_attach_rename_bundle($entity_type, $bundle_old, $bundle_new) {
 
   // Clear the cache.
   field_cache_clear();
+  entity_info_cache_clear();
 
   // Update bundle settings.
   $settings = variable_get('field_bundle_settings_' . $entity_type . '__' . $bundle_old, array());

@@ -156,7 +156,7 @@ class BookTestCase extends DrupalWebTestCase {
     }
 
     // Fetch links in the current breadcrumb.
-    $links = $this->xpath('//div[@class="breadcrumb"]/a');
+    $links = $this->xpath('//nav[@class="breadcrumb"]/ol/li/a');
     $got_breadcrumb = array();
     foreach ($links as $link) {
       $got_breadcrumb[] = (string) $link['href'];

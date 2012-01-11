@@ -28,18 +28,22 @@ abstract class UpgradePathTestCase extends DrupalWebTestCase {
   var $loadedModules = array();
 
   /**
+   * Checks that zlib is enabled in order to run the upgrade tests.
+   */
+  protected function checkRequirements() {
+    if (!function_exists('gzopen')) {
+      return array(
+        'Missing zlib requirement for upgrade tests.',
+      );
+    }
+    return parent::checkRequirements();
+  }
+
+  /**
    * Override of DrupalWebTestCase::setUp() specialized for upgrade testing.
    */
   protected function setUp() {
     global $user, $language, $conf;
-
-    // We are going to set a missing zlib requirement property for usage during
-    // the performUpgrade() and tearDown() calls. Also set that the tests failed.
-    if (!function_exists('gzopen')) {
-      $this->missing_zlib_requirement = TRUE;
-      parent::setUp();
-      return;
-    }
 
     // Load the Update API.
     require_once DRUPAL_ROOT . '/core/includes/update.inc';
@@ -145,11 +149,6 @@ abstract class UpgradePathTestCase extends DrupalWebTestCase {
   protected function tearDown() {
     global $user, $language;
 
-    if (!empty($this->missing_zlib_requirement)) {
-      parent::tearDown();
-      return;
-    }
-
     // In case a fatal error occurred that was not in the test process read the
     // log to pick up any fatal errors.
     simpletest_log_read($this->testId, $this->databasePrefix, get_class($this), TRUE);
@@ -245,11 +244,6 @@ abstract class UpgradePathTestCase extends DrupalWebTestCase {
    */
   protected function performUpgrade($register_errors = TRUE) {
     $update_url = $GLOBALS['base_url'] . '/core/update.php';
-
-    if (!empty($this->missing_zlib_requirement)) {
-      $this->fail(t('Missing zlib requirement for upgrade tests.'));
-      return FALSE;
-    }
 
     // Load the first update screen.
     $this->drupalGet($update_url, array('external' => TRUE));

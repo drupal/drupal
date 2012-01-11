@@ -533,8 +533,8 @@ function install_tasks($install_state) {
   // Determine whether translation import tasks will need to be performed.
   $needs_translations = count($install_state['translations']) > 1 && !empty($install_state['parameters']['langcode']) && $install_state['parameters']['langcode'] != 'en';
 
-  // The first two installation tasks are (by default) language selection and
-  // profile selection.
+  // Start with the core installation tasks that run before handing control
+  // to the install profile.
   $tasks = array(
     'install_select_language' => array(
       'display_name' => st('Choose language'),
@@ -992,20 +992,25 @@ function install_settings_form_submit($form, &$form_state) {
     'value'    => drupal_hash_base64(drupal_random_bytes(55)),
     'required' => TRUE,
   );
-  
+
   $settings['drupal_config_key'] = array(
     'value'    => drupal_hash_base64(drupal_random_bytes(55)),
     'required' => TRUE,
   );
-  
+
   // This duplicates drupal_get_token() because that function can't work yet.
   // Wondering if it makes sense to move this later in the process, but its
   // nice having all the settings stuff here.
+  //
+  // @todo This is actually causing a bug right now, because you can install
+  // without hitting install_settings_form_submit() if your settings.php
+  // already has the db stuff in it, and right now in that case your
+  // config directory never gets created. So this needs to be moved elsewhere.
   $settings['drupal_config_directory_name'] = array(
     'value'     => 'config_' . drupal_hmac_base64('', session_id() . $settings['drupal_config_key']['value'] . $settings['drupal_hash_salt']['value']),
     'required'  => TRUE,
   );
-  
+
   drupal_rewrite_settings($settings);
   // Actually create the config directory named above.
   $config_path = conf_path() . '/files/' . $settings['drupal_config_directory_name']['value'];
@@ -1138,12 +1143,15 @@ function install_select_profile_form($form, &$form_state, $profile_files) {
   }
 
   foreach ($names as $profile => $name) {
+    // The profile name and description are extracted for translation from the
+    // .info file, so we can use st() on them even though they are dynamic data
+    // at this point.
     $form['profile'][$name] = array(
       '#type' => 'radio',
       '#value' => 'standard',
       '#return_value' => $profile,
-      '#title' => $name,
-      '#description' => isset($profiles[$profile]['description']) ? $profiles[$profile]['description'] : '',
+      '#title' => st($name),
+      '#description' => isset($profiles[$profile]['description']) ? st($profiles[$profile]['description']) : '',
       '#parents' => array('profile'),
     );
   }
@@ -1165,7 +1173,7 @@ function install_find_translations() {
   foreach ($files as $key => $file) {
     // Strip off the file name component before the language code.
     $files[$key]->langcode = preg_replace('!^(.+\.)?([^\.]+)$!', '\2', $file->name);
-    // Language codes cannot exceed 12 characters to fit into the {languages}
+    // Language codes cannot exceed 12 characters to fit into the {language}
     // table.
     if (strlen($files[$key]->langcode) > 12) {
       unset($files[$key]);
@@ -1248,19 +1256,6 @@ function install_select_language(&$install_state) {
       return;
     }
     else {
-      // Allow profile to pre-select the language, skipping the selection.
-      if (isset($install_state['parameters']['profile'])) {
-        $info = install_profile_info($install_state['parameters']['profile']);
-        if (isset($info['langcode'])) {
-          foreach ($files as $file) {
-            if ($info['langcode'] == $file->langcode) {
-              $install_state['parameters']['langcode'] = $file->langcode;
-              return;
-            }
-          }
-        }
-      }
-
       // We still don't have a langcode, so display a form for selecting one.
       // Only do this in the case of interactive installations, since this is
       // not a real form with submit handlers (the database isn't even set up
@@ -1296,7 +1291,7 @@ function install_select_language_form($form, &$form_state, $files) {
       $select_options[$file->langcode] = $standard_languages[$file->langcode][1];
     }
     else {
-      // If language not found in standard.inc, display it's langcode
+      // If the language was not found in standard.inc, display its langcode.
       $select_options[$file->langcode] = $file->langcode;
     }
     // Build a list of languages simulated for browser detection.
@@ -1342,7 +1337,7 @@ function install_already_done_error() {
   global $base_url;
 
   drupal_set_title(st('Drupal already installed'));
-  return st('<ul><li>To start over, you must empty your existing database.</li><li>To install to a different database, edit the appropriate <em>settings.php</em> file in the <em>sites</em> folder.</li><li>To upgrade an existing installation, proceed to the <a href="@base-url/update.php">update script</a>.</li><li>View your <a href="@base-url">existing site</a>.</li></ul>', array('@base-url' => $base_url));
+  return st('<ul><li>To start over, you must empty your existing database.</li><li>To install to a different database, edit the appropriate <em>settings.php</em> file in the <em>sites</em> folder.</li><li>To upgrade an existing installation, proceed to the <a href="@base-url/core/update.php">update script</a>.</li><li>View your <a href="@base-url">existing site</a>.</li></ul>', array('@base-url' => $base_url));
 }
 
 /**
@@ -1451,7 +1446,7 @@ function install_import_translations(&$install_state) {
       'name' => $langcode,
       'default' => TRUE,
     );
-    locale_language_save($language);
+    language_save($language);
   }
   else {
     // A known predefined language, details will be filled in properly.
@@ -1459,7 +1454,7 @@ function install_import_translations(&$install_state) {
       'language' => $langcode,
       'default' => TRUE,
     );
-    locale_language_save($language);
+    language_save($language);
   }
 
   // Collect files to import for this language.

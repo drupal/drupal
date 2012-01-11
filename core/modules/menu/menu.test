@@ -205,7 +205,7 @@ class MenuTestCase extends DrupalWebTestCase {
 
     // Add menu links.
     $item1 = $this->addMenuLink(0, 'node/' . $node1->nid, $menu_name);
-    $item2 = $this->addMenuLink($item1['mlid'], 'node/' . $node2->nid, $menu_name);
+    $item2 = $this->addMenuLink($item1['mlid'], 'node/' . $node2->nid, $menu_name, FALSE);
     $item3 = $this->addMenuLink($item2['mlid'], 'node/' . $node3->nid, $menu_name);
     $this->assertMenuLink($item1['mlid'], array('depth' => 1, 'has_children' => 1, 'p1' => $item1['mlid'], 'p2' => 0));
     $this->assertMenuLink($item2['mlid'], array('depth' => 2, 'has_children' => 1, 'p1' => $item1['mlid'], 'p2' => $item2['mlid'], 'p3' => 0));
@@ -283,7 +283,7 @@ class MenuTestCase extends DrupalWebTestCase {
    * @param string $menu_name Menu name.
    * @return array Menu link created.
    */
-  function addMenuLink($plid = 0, $link = '<front>', $menu_name = 'navigation') {
+  function addMenuLink($plid = 0, $link = '<front>', $menu_name = 'navigation', $expanded = TRUE) {
     // View add menu link page.
     $this->drupalGet("admin/structure/menu/manage/$menu_name/add");
     $this->assertResponse(200);
@@ -294,7 +294,7 @@ class MenuTestCase extends DrupalWebTestCase {
       'link_title' => $title,
       'description' => '',
       'enabled' => TRUE, // Use this to disable the menu and test.
-      'expanded' => TRUE, // Setting this to true should test whether it works when we do the std_user tests.
+      'expanded' => $expanded, // Setting this to true should test whether it works when we do the std_user tests.
       'parent' =>  $menu_name . ':' . $plid,
       'weight' => '0',
     );
@@ -345,7 +345,7 @@ class MenuTestCase extends DrupalWebTestCase {
     if (isset($parent)) {
       // Verify menu link.
       $title = $parent['link_title'];
-      $this->assertText($title, 'Parent menu link was displayed');
+      $this->assertLink($title, 0, 'Parent menu link was displayed');
 
       // Verify menu link link.
       $this->clickLink($title);
@@ -355,7 +355,7 @@ class MenuTestCase extends DrupalWebTestCase {
 
     // Verify menu link.
     $title = $item['link_title'];
-    $this->assertText($title, 'Menu link was displayed');
+    $this->assertLink($title, 0, 'Menu link was displayed');
 
     // Verify menu link link.
     $this->clickLink($title);
@@ -698,6 +698,8 @@ class MenuNodeTestCase extends DrupalWebTestCase {
     // Assert that it is not possible to set the parent of the first node to itself or the second node.
     $this->assertNoOption('edit-menu-parent', 'navigation:'. $item['mlid']);
     $this->assertNoOption('edit-menu-parent', 'navigation:'. $child_item['mlid']);
+    // Assert that unallowed Management menu is not available in options.
+    $this->assertNoOption('edit-menu-parent', 'management:0');
   }
 
   /**

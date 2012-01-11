@@ -350,3 +350,21 @@ function _openid_test_endpoint_authenticate() {
   drupal_add_http_header('Content-Type', 'text/plain');
   header('Location: ' . url($_REQUEST['openid_return_to'], array('query' => $response, 'external' => TRUE)));
 }
+
+/**
+ * Implements hook_openid_request_alter().
+ */
+function openid_test_openid_request_alter(&$request, $service) {
+  $parameters = variable_get('openid_test_request_alter', array());
+  if (isset($parameters[$request['openid.mode']])) {
+    $request = $parameters[$request['openid.mode']] + $request;
+  }
+}
+
+/**
+ * Implements hook_openid_response().
+ */
+function openid_test_openid_response($response, $account) {
+  variable_set('openid_test_hook_openid_response_response', $response);
+  variable_set('openid_test_hook_openid_response_account', $account ? $account : FALSE);
+}

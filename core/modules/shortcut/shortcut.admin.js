@@ -42,6 +42,15 @@ Drupal.behaviors.shortcutDrag = {
         if (total == -1) {
           var disabled = $(table).find('tr.shortcut-status-disabled');
           disabled.after(disabled.prevAll().filter(':not(.shortcut-slot-empty)').get(0));
+          if ($(swappedRow).hasClass('draggable')) {
+            // The dropped element will automatically be marked as changed by
+            // the tableDrag system. However, the row that swapped with it
+            // has moved to the "disabled" section, so we need to force its
+            // status to be disabled and mark it also as changed.
+            swappedRowObject = new tableDrag.row(swappedRow, 'mouse', self.indentEnabled, self.maxDepth, true);
+            swappedRowObject.markChanged();
+            rowStatusChange(swappedRowObject);
+          }
         }
         else if (total != visibleLength) {
           if (total > visibleLength) {
@@ -59,13 +68,17 @@ Drupal.behaviors.shortcutDrag = {
 
       // Add a handler so when a row is dropped, update fields dropped into new regions.
       tableDrag.onDrop = function () {
+        rowStatusChange(this.rowObject);
+        return true;
+      };
+
+      function rowStatusChange(rowObject) {
         // Use "status-message" row instead of "status" row because
         // "status-{status_name}-message" is less prone to regexp match errors.
-        var statusRow = $(this.rowObject.element).prevAll('tr.shortcut-status').get(0);
+        var statusRow = $(rowObject.element).prevAll('tr.shortcut-status').get(0);
         var statusName = statusRow.className.replace(/([^ ]+[ ]+)*shortcut-status-([^ ]+)([ ]+[^ ]+)*/, '$2');
-        var statusField = $('select.shortcut-status-select', this.rowObject.element);
+        var statusField = $('select.shortcut-status-select', rowObject.element);
         statusField.val(statusName);
-        return true;
       };
 
       tableDrag.restripeTable = function () {

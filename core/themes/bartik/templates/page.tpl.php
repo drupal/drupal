@@ -172,9 +172,7 @@
 
   <div id="main-wrapper" class="clearfix"><div id="main" class="clearfix">
 
-    <?php if ($breadcrumb): ?>
-      <div id="breadcrumb"><?php print $breadcrumb; ?></div>
-    <?php endif; ?>
+    <?php print $breadcrumb; ?>
 
     <?php if ($page['sidebar_first']): ?>
       <div id="sidebar-first" class="column sidebar"><div class="section">

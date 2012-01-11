@@ -1095,6 +1095,7 @@ function _locale_export_wrap($str, $len) {
 function _locale_export_remove_plural($entry) {
   return preg_replace('/(@count)\[[0-9]\]/', '\\1', $entry);
 }
+
 /**
  * @} End of "locale-api-import-export"
  */

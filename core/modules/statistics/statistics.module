@@ -218,9 +218,9 @@ function statistics_user_cancel($edit, $account, $method) {
 }
 
 /**
- * Implements hook_user_delete().
+ * Implements hook_user_predelete().
  */
-function statistics_user_delete($account) {
+function statistics_user_predelete($account) {
   db_delete('accesslog')
     ->condition('uid', $account->uid)
     ->execute();
@@ -391,9 +391,9 @@ function _statistics_format_item($title, $path) {
 }
 
 /**
- * Implements hook_node_delete().
+ * Implements hook_node_predelete().
  */
-function statistics_node_delete($node) {
+function statistics_node_predelete($node) {
   // clean up statistics table when node is deleted
   db_delete('node_counter')
     ->condition('nid', $node->nid)

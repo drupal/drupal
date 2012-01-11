@@ -183,8 +183,11 @@ class DatabaseConnection_mysql extends DatabaseConnection {
           // succeed for MySQL error code 1305 ("SAVEPOINT does not exist").
           if ($e->errorInfo[1] == '1305') {
             // If one SAVEPOINT was released automatically, then all were.
-            // Therefore, we keep just the topmost transaction.
-            $this->transactionLayers = array('drupal_transaction' => 'drupal_transaction');
+            // Therefore, clean the transaction stack.
+            $this->transactionLayers = array();
+            // We also have to explain to PDO that the transaction stack has
+            // been cleaned-up.
+            PDO::commit();
           }
           else {
             throw $e;

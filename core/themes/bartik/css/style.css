@@ -85,7 +85,6 @@ kbd {
   color: #666;
   display: inline-block;
   padding: 0 6px;
-  -khtml-border-radius: 5px;
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
   border-radius: 5px;
@@ -279,7 +278,6 @@ ul.tips {
   line-height: 1.7;
   padding: 1px 10px 2px 10px;
   text-decoration: none;
-  -khtml-border-radius: 0 0 10px 10px;
   -moz-border-radius: 0 0 10px 10px;
   -webkit-border-top-left-radius: 0;
   -webkit-border-top-right-radius: 0;
@@ -480,8 +478,6 @@ h1#site-name {
   padding: 0 0.8em;
   text-decoration: none;
   text-shadow: 0 1px #eee;
-  -khtml-border-radius-topleft: 8px;
-  -khtml-border-radius-topright: 8px;
   -moz-border-radius-topleft: 8px;
   -moz-border-radius-topright: 8px;
   -webkit-border-top-left-radius: 8px;
@@ -982,11 +978,9 @@ ul.links {
   padding: 0 10px 3px;
   margin: 0;
   text-shadow: 0 1px 0 #fff;
-  -khtml-border-radius-topleft: 6px;
   -moz-border-radius-topleft: 6px;
   -webkit-border-top-left-radius: 6px;
   border-top-left-radius: 6px;
-  -khtml-border-radius-topright: 6px;
   -moz-border-radius-topright: 6px;
   -webkit-border-top-right-radius: 6px;
   border-top-right-radius: 6px;
@@ -1016,7 +1010,6 @@ ul.links {
   border-bottom: none;
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
-  -khtml-border-radius: 5px;
   border-radius: 5px;
 }
 ul.action-links {
@@ -1100,7 +1093,6 @@ a.button {
   margin-bottom: 1em;
   margin-right: 0.6em; /* LTR */
   padding: 4px 17px;
-  -khtml-border-radius: 15px;
   -moz-border-radius: 20px;
   -webkit-border-radius: 15px;
   border-radius: 15px;
@@ -1124,7 +1116,6 @@ fieldset {
   padding: 0 0 10px;
   position: relative;
   top: 12px; /* Offsets the negative margin of legends */
-  -khtml-border-radius: 4px;
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
   border-radius: 4px;
@@ -1138,8 +1129,6 @@ fieldset {
 .filter-wrapper {
   top: 0;
   padding: 1em 0 0.2em;
-  -khtml-border-radius-topright: 0;
-  -khtml-border-radius-topleft: 0;
   -moz-border-radius-topright: 0;
   -moz-border-radius-topleft: 0;
   -webkit-border-top-left-radius: 0;
@@ -1162,7 +1151,6 @@ fieldset {
 }
 fieldset.collapsed {
   background: transparent;
-  -khtml-border-radius: 0;
   -moz-border-radius: 0;
   -webkit-border-radius: 0;
   border-radius: 0;
@@ -1183,17 +1171,14 @@ fieldset legend {
   text-shadow: 0 1px 0 #fff;
   top: -12px;
   width: 100%;
-  -khtml-border-radius-topleft: 4px;
   -moz-border-radius-topleft: 4px;
   -webkit-border-top-left-radius: 4px;
   border-top-left-radius: 4px;
-  -khtml-border-radius-topright: 4px;
   -moz-border-radius-topright: 4px;
   -webkit-border-top-right-radius: 4px;
   border-top-right-radius: 4px;
 }
 fieldset.collapsed legend {
-  -khtml-border-radius: 4px;
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
   border-radius: 4px;
@@ -1264,29 +1249,24 @@ input.form-submit:focus {
 /* Contact Form */
 .contact-form #edit-name {
   width: 75%;
-  -khtml-border-radius: 4px;
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
   border-radius: 4px;
 }
 .contact-form #edit-mail {
   width: 75%;
-  -khtml-border-radius: 4px;
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
   border-radius: 4px;
 }
 .contact-form #edit-subject {
   width: 75%;
-  -khtml-border-radius: 4px;
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
   border-radius: 4px;
 }
 .contact-form #edit-message {
   width: 76.3%;
-  -khtml-border-top-left-radius: 4px;
-  -khtml-border-top-right-radius: 4px;
   -moz-border-radius-topleft: 4px;
   -moz-border-radius-topright: 4px;
   -webkit-border-top-left-radius: 4px;
@@ -1296,8 +1276,6 @@ input.form-submit:focus {
 }
 .contact-form .resizable-textarea .grippie {
   width: 76%;
-  -khtml-border-bottom-left-radius: 4px;
-  -khtml-border-bottom-right-radius: 4px;
   -moz-border-radius-bottomleft: 4px;
   -moz-border-radius-bottomright: 4px;
   -webkit-border-bottom-left-radius: 4px;
@@ -1343,7 +1321,6 @@ html.js input.throbbing {
 .comment-form input,
 .comment-form .form-select {
   margin: 0;
-  -khtml-border-radius: 4px;
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
   border-radius: 4px;
@@ -1388,8 +1365,6 @@ html.js input.throbbing {
   margin-bottom: 0.5em;
 }
 .comment-form .form-textarea {
-  -khtml-border-radius-topleft: 4px;
-  -khtml-border-radius-topright: 4px;
   -moz-border-radius-topleft: 4px;
   -moz-border-radius-topright: 4px;
   -webkit-border-top-left-radius: 4px;

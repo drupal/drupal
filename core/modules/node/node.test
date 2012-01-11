@@ -1732,7 +1732,7 @@ class NodeTitleTestCase extends DrupalWebTestCase {
 
     // Test breadcrumb in comment preview.
     $this->drupalGet("comment/reply/$node->nid");
-    $xpath = '//div[@class="breadcrumb"]/a[last()]';
+    $xpath = '//nav[@class="breadcrumb"]/ol/li[last()]/a';
     $this->assertEqual(current($this->xpath($xpath)), $node->title, 'Node breadcrumb is equal to node title.', 'Node');
 
     // Test node title in comment preview.
@@ -1881,7 +1881,7 @@ class NodeBlockFunctionalTest extends DrupalWebTestCase {
     $custom_block['title'] = $this->randomName();
     $custom_block['types[article]'] = TRUE;
     $custom_block['body[value]'] = $this->randomName(32);
-    $custom_block['regions[' . variable_get('theme_default', 'bartik') . ']'] = 'content';
+    $custom_block['regions[' . variable_get('theme_default', 'stark') . ']'] = 'content';
     if ($admin_theme = variable_get('admin_theme')) {
       $custom_block['regions[' . $admin_theme . ']'] = 'content';
     }

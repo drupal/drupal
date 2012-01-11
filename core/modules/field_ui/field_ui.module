@@ -51,9 +51,7 @@ function field_ui_help($path, $arg) {
  */
 function field_ui_field_attach_rename_bundle($entity_type, $bundle_old, $bundle_new) {
   // The Field UI relies on entity_get_info() to build menu items for entity
-  // field administration pages. Clear the entity info cache and ensure that
-  // the menu is rebuilt.
-  entity_info_cache_clear();
+  // field administration pages. Ensure that the menu is rebuilt.
   menu_rebuild();
 }
 
@@ -281,7 +279,7 @@ function _field_ui_view_mode_menu_access($entity_type, $bundle, $view_mode, $acc
       if ($access_callback == 'user_access') {
         return (count($args) == 1) ? user_access($args[0]) : user_access($args[0], $args[1]);
       }
-      elseif (function_exists($access_callback)) {
+      else {
         return call_user_func_array($access_callback, $args);
       }
     }
