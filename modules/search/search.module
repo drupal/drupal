@@ -1188,7 +1188,7 @@ function search_excerpt($keys, $text) {
           if (($s = strrpos($end, ' ')) !== FALSE) {
             // Account for the added spaces.
             $q = max($q - 1, 0);
-            $s = min($s, drupal_strlen($end) - 1);
+            $s = min($s, strlen($end) - 1);
             $ranges[$q] = $p + $s;
             $length += $p + $s - $q;
             $included[$key] = $p + 1;
