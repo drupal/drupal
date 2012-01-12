@@ -976,7 +976,7 @@ function system_menu() {
   );
   $items['admin/config/system/site-information'] = array(
     'title' => 'Site information',
-    'description' => t('Change site name, e-mail address, slogan, default front page, and number of posts per page, error pages.'),
+    'description' => 'Change site name, e-mail address, slogan, default front page, and number of posts per page, error pages.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_site_information_settings'),
     'access arguments' => array('administer site configuration'),
@@ -984,8 +984,8 @@ function system_menu() {
     'weight' => -20,
   );
   $items['admin/config/system/cron'] = array(
-    'title' => t('Cron'),
-    'description' => t('Manage automatic site maintenance tasks.'),
+    'title' => 'Cron',
+    'description' => 'Manage automatic site maintenance tasks.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_cron_settings'),
     'access arguments' => array('administer site configuration'),
