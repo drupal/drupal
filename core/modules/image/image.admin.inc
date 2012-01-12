@@ -342,7 +342,7 @@ function image_style_revert_form($form, $form_state, $style) {
  * Submit handler to convert an overridden style to its default.
  */
 function image_style_revert_form_submit($form, &$form_state) {
-  drupal_set_message(t('The %style style has been revert to its defaults.', array('%style' => $form_state['image_style']['name'])));
+  drupal_set_message(t('The %style style has been reverted to its defaults.', array('%style' => $form_state['image_style']['name'])));
   image_default_style_revert($form_state['image_style']);
   $form_state['redirect'] = 'admin/config/media/image-styles';
 }
