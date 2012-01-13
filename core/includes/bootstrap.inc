@@ -1,5 +1,8 @@
 <?php
 
+use Symfony\Component\ClassLoader\UniversalClassLoader;
+use Symfony\Component\ClassLoader\ApcUniversalClassLoader;
+
 /**
  * @file
  * Functions that need to be loaded on every Drupal request.
@@ -2284,39 +2287,24 @@ function _drupal_bootstrap_configuration() {
   // Initialize the configuration, including variables from settings.php.
   drupal_settings_initialize();
 
-  // Hook up the Symfony ClassLoader for loading PSR-0-compatible classes.
-  require_once(DRUPAL_ROOT . '/core/includes/Symfony/Component/ClassLoader/UniversalClassLoader.php');
+  // Include and activate the class loader.
+  $loader = drupal_classloader();
 
-  // By default, use the UniversalClassLoader which is best for development,
-  // as it does not break when code is moved on the file system. It is slow,
-  // however, so for production the APC class loader should be used instead.
-  // @todo Switch to a cleaner way to switch autoloaders than variable_get().
-  switch (variable_get('autoloader_mode', 'default')) {
-    case 'apc':
-      if (function_exists('apc_store')) {
-        require_once(DRUPAL_ROOT . '/core/includes/Symfony/Component/ClassLoader/ApcUniversalClassLoader.php');
-        $loader = new \Symfony\Component\ClassLoader\ApcUniversalClassLoader('drupal.' . $GLOBALS['drupal_hash_salt']);
-        break;
-      }
-      // If APC was not loaded, fall through to the default loader so that
-      // the site does not fail completely.
-    case 'dev':
-    case 'default':
-    default:
-      $loader = new \Symfony\Component\ClassLoader\UniversalClassLoader();
-      break;
-  }
-
-  // Register classes with namespaces.
+  // Register explicit vendor namespaces.
   $loader->registerNamespaces(array(
     // All Symfony-borrowed code lives in /core/includes/Symfony.
     'Symfony' => DRUPAL_ROOT . '/core/includes',
+  ));
+  // Register the Drupal namespace for classes in core as a fallback.
+  // This allows to register additional namespaces within the Drupal namespace
+  // (e.g., for modules) and avoids an additional file_exists() on the Drupal
+  // core namespace, since the class loader can already determine the best
+  // namespace match based on a string comparison. It further allows modules to
+  // register/overload namespaces in Drupal core.
+  $loader->registerNamespaceFallbacks(array(
     // All Drupal-namespaced code in core lives in /core/includes/Drupal.
     'Drupal' => DRUPAL_ROOT . '/core/includes',
   ));
-
-  // Activate the autoloader.
-  $loader->register();
 }
 
 /**
@@ -3019,6 +3007,48 @@ function drupal_get_complete_schema($rebuild = FALSE) {
  * @ingroup registry
  * @{
  */
+
+/**
+ * Initializes and returns the class loader.
+ *
+ * The class loader is responsible for lazy-loading all PSR-0 compatible
+ * classes, interfaces, and traits (PHP 5.4 and later). Its only dependencies
+ * are DRUPAL_ROOT and variable_get(). Otherwise it may be called as early as
+ * possible.
+ *
+ * @return Symfony\Component\ClassLoader\UniversalClassLoader
+ *   A UniversalClassLoader class instance (or extension thereof).
+ */
+function drupal_classloader() {
+  // Include the Symfony ClassLoader for loading PSR-0-compatible classes.
+  require_once DRUPAL_ROOT . '/core/includes/Symfony/Component/ClassLoader/UniversalClassLoader.php';
+
+  // By default, use the UniversalClassLoader which is best for development,
+  // as it does not break when code is moved on the file system. However, as it
+  // is slow, allow to use the APC class loader in production.
+  static $loader;
+
+  if (!isset($loader)) {
+    // @todo Use a cleaner way than variable_get() to switch autoloaders.
+    switch (variable_get('autoloader_mode', 'default')) {
+      case 'apc':
+        if (function_exists('apc_store')) {
+          require_once DRUPAL_ROOT . '/core/includes/Symfony/Component/ClassLoader/ApcUniversalClassLoader.php';
+          $loader = new ApcUniversalClassLoader('drupal.' . $GLOBALS['drupal_hash_salt']);
+          break;
+        }
+      // Fall through to the default loader if APC was not loaded, so that the
+      // site does not fail completely.
+      case 'dev':
+      case 'default':
+      default:
+        $loader = new UniversalClassLoader();
+        break;
+    }
+    $loader->register();
+  }
+  return $loader;
+}
 
 /**
  * Confirms that an interface is available.
