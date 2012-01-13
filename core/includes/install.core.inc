@@ -277,8 +277,7 @@ function install_begin_request(&$install_state) {
   // because any data put in the cache during the installer is inherently
   // suspect, due to the fact that Drupal is not fully set up yet.
   require_once DRUPAL_ROOT . '/core/includes/cache.inc';
-  require_once DRUPAL_ROOT . '/core/includes/cache-install.inc';
-  $conf['cache_default_class'] = 'DrupalFakeCache';
+  $conf['cache_default_class'] = 'Drupal\\Cache\\InstallBackend';
 
   // Prepare for themed output. We need to run this at the beginning of the
   // page request to avoid a different theme accidentally getting set. (We also
