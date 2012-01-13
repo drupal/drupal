@@ -6,7 +6,7 @@ Branch maintainers
 ------------------
 
 The Drupal Core branch maintainers oversee the development of Drupal as a
-whole. The branch mainainers for Drupal 8 are:
+whole. The branch maintainers for Drupal 8 are:
 
 - Dries Buytaert 'dries' <http://drupal.org/user/1>
 - Nathaniel Catchpole 'catch' <http://drupal.org/user/35733>
