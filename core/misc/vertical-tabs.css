@@ -18,7 +18,7 @@ div.vertical-tabs {
   padding: 0 1em;
   border: 0;
 }
-.vertical-tabs legend {
+fieldset.vertical-tabs-pane > legend {
   display: none;
 }
 
