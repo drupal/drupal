@@ -221,7 +221,7 @@ function toolbar_view() {
   if ($user->uid) {
     $links = array(
       'account' => array(
-        'title' => t('Hello <strong>@username</strong>', array('@username' => format_username($user))),
+        'title' => t('Hello <strong>@username</strong>', array('@username' => user_format_name($user))),
         'href' => 'user',
         'html' => TRUE,
         'attributes' => array('title' => t('User account')),

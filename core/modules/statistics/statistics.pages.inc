@@ -75,7 +75,7 @@ function statistics_user_tracker() {
         l(t('details'), "admin/reports/access/$log->aid"));
     }
 
-    drupal_set_title(format_username($account));
+    drupal_set_title(user_format_name($account));
     $build['statistics_table'] = array(
       '#theme' => 'table',
       '#header' => $header,

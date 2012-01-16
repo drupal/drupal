@@ -176,7 +176,7 @@ function contact_mail($key, &$message, $params) {
     '!subject' => $params['subject'],
     '!category' => isset($params['category']['category']) ? $params['category']['category'] : '',
     '!form-url' => url($_GET['q'], array('absolute' => TRUE, 'language' => $language)),
-    '!sender-name' => format_username($params['sender']),
+    '!sender-name' => user_format_name($params['sender']),
     '!sender-url' => $params['sender']->uid ? url('user/' . $params['sender']->uid, array('absolute' => TRUE, 'language' => $language)) : $params['sender']->mail,
   );
 
@@ -196,7 +196,7 @@ function contact_mail($key, &$message, $params) {
     case 'user_mail':
     case 'user_copy':
       $variables += array(
-        '!recipient-name' => format_username($params['recipient']),
+        '!recipient-name' => user_format_name($params['recipient']),
         '!recipient-edit-url' => url('user/' . $params['recipient']->uid . '/edit', array('absolute' => TRUE, 'language' => $language)),
       );
       $message['subject'] .= t('[!site-name] !subject', $variables, array('langcode' => $language->langcode));

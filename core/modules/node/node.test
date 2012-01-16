@@ -2273,9 +2273,9 @@ class NodeTokenReplaceTestCase extends DrupalWebTestCase {
     $tests['[node:language]'] = check_plain($node->language);
     $tests['[node:url]'] = url('node/' . $node->nid, $url_options);
     $tests['[node:edit-url]'] = url('node/' . $node->nid . '/edit', $url_options);
-    $tests['[node:author]'] = check_plain(format_username($account));
+    $tests['[node:author]'] = check_plain(user_format_name($account));
     $tests['[node:author:uid]'] = $node->uid;
-    $tests['[node:author:name]'] = check_plain(format_username($account));
+    $tests['[node:author:name]'] = check_plain(user_format_name($account));
     $tests['[node:created:since]'] = format_interval(REQUEST_TIME - $node->created, 2, $language->langcode);
     $tests['[node:changed:since]'] = format_interval(REQUEST_TIME - $node->changed, 2, $language->langcode);
 
@@ -2292,7 +2292,7 @@ class NodeTokenReplaceTestCase extends DrupalWebTestCase {
     $tests['[node:body]'] = $node->body[$node->language][0]['value'];
     $tests['[node:summary]'] = $node->body[$node->language][0]['summary'];
     $tests['[node:language]'] = $node->language;
-    $tests['[node:author:name]'] = format_username($account);
+    $tests['[node:author:name]'] = user_format_name($account);
 
     foreach ($tests as $input => $expected) {
       $output = token_replace($input, array('node' => $node), array('language' => $language, 'sanitize' => FALSE));

@@ -116,7 +116,7 @@ print t(\'Welcome visitor! Thank you for visiting.\');
 <pre>
 global $user;
 if ($user->uid) {
-  print t(\'Welcome @name! Thank you for visiting.\', array(\'@name\' => format_username($user)));
+  print t(\'Welcome @name! Thank you for visiting.\', array(\'@name\' => user_format_name($user)));
 }
 else {
   print t(\'Welcome visitor! Thank you for visiting.\');

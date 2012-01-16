@@ -2024,7 +2024,7 @@ function hook_mail($key, &$message, $params) {
   $context = $params['context'];
   $variables = array(
     '%site_name' => variable_get('site_name', 'Drupal'),
-    '%username' => format_username($account),
+    '%username' => user_format_name($account),
   );
   if ($context['hook'] == 'taxonomy') {
     $entity = $params['entity'];
@@ -3773,28 +3773,6 @@ function hook_url_outbound_alter(&$path, &$options, $original_path) {
     if ($user->uid == $matches[1]) {
       $path = 'user/me/edit' . $matches[2];
     }
-  }
-}
-
-/**
- * Alter the username that is displayed for a user.
- *
- * Called by format_username() to allow modules to alter the username that's
- * displayed. Can be used to ensure user privacy in situations where
- * $account->name is too revealing.
- *
- * @param $name
- *   The string that format_username() will return.
- *
- * @param $account
- *   The account object passed to format_username().
- *
- * @see format_username()
- */
-function hook_username_alter(&$name, $account) {
-  // Display the user's uid instead of name.
-  if (isset($account->uid)) {
-    $name = t('User !uid', array('!uid' => $account->uid));
   }
 }
 

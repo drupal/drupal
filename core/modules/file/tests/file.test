@@ -1083,7 +1083,7 @@ class FileTokenReplaceTestCase extends FileFieldTestCase {
     $tests['[file:url]'] = check_plain(file_create_url($file->uri));
     $tests['[file:timestamp]'] = format_date($file->timestamp, 'medium', '', NULL, $language->langcode);
     $tests['[file:timestamp:short]'] = format_date($file->timestamp, 'short', '', NULL, $language->langcode);
-    $tests['[file:owner]'] = check_plain(format_username($this->admin_user));
+    $tests['[file:owner]'] = check_plain(user_format_name($this->admin_user));
     $tests['[file:owner:uid]'] = $file->uid;
 
     // Test to make sure that we generated something for each token.
