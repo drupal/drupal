@@ -5,6 +5,8 @@ namespace Drupal\Database\Driver\sqlite\Install;
 
 use Drupal\Database\Install\Tasks as InstallTasks;
 
+use SplFileInfo;
+
 class Tasks extends InstallTasks {
   protected $pdoDriver = 'sqlite';
 

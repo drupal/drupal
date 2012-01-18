@@ -1,16 +1,12 @@
 <?php
 
-/**
- * @file
- * Database interface code for SQLite embedded database engine.
- */
+namespace Drupal\Database\Driver\sqlite;
 
-/**
- * @ingroup database
- * @{
- */
+use Drupal\Database\StatementPrefetch;
+use Drupal\Database\StatementInterface;
 
-include_once DRUPAL_ROOT . '/core/includes/database/prefetch.inc';
+use Iterator;
+use PDOException;
 
 /**
  * Specific SQLite implementation of DatabaseConnection.
@@ -20,7 +16,7 @@ include_once DRUPAL_ROOT . '/core/includes/database/prefetch.inc';
  *
  * @see DatabaseConnection_sqlite::PDOPrepare()
  */
-class DatabaseStatement_sqlite extends StatementPrefetch implements Iterator, StatementInterface {
+class Statement extends StatementPrefetch implements Iterator, StatementInterface {
 
   /**
    * SQLite specific implementation of getStatement().
@@ -145,7 +141,3 @@ class DatabaseStatement_sqlite extends StatementPrefetch implements Iterator, St
     return $return;
   }
 }
-
-/**
- * @} End of "ingroup database".
- */

@@ -715,9 +715,7 @@ abstract class Connection extends PDO {
   public function schema() {
     if (empty($this->schema)) {
       $class = $this->getDriverClass('Schema');
-      if (class_exists($class)) {
-        $this->schema = new $class($this);
-      }
+      $this->schema = new $class($this);
     }
     return $this->schema;
   }
