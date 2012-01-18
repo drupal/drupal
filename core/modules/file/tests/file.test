@@ -1065,6 +1065,9 @@ class FileTokenReplaceTestCase extends FileFieldTestCase {
     $instance = field_info_instance('node', $field_name, $type_name);
 
     $test_file = $this->getTestFile('text');
+    // Coping a file to test uploads with non-latin filenames.
+    $filename = drupal_dirname($test_file->uri) . '/текстовый файл.txt';
+    $test_file = file_copy($test_file, $filename);
 
     // Create a new node with the uploaded file.
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);

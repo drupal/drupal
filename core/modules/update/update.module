@@ -695,14 +695,14 @@ function update_verify_update_archive($project, $archive_file, $directory) {
   }
 
   if (empty($files)) {
-    $errors[] = t('%archive_file does not contain any .info files.', array('%archive_file' => basename($archive_file)));
+    $errors[] = t('%archive_file does not contain any .info files.', array('%archive_file' => drupal_basename($archive_file)));
   }
   elseif (!$compatible_project) {
     $errors[] = format_plural(
       count($incompatible),
       '%archive_file contains a version of %names that is not compatible with Drupal !version.',
       '%archive_file contains versions of modules or themes that are not compatible with Drupal !version: %names',
-      array('!version' => DRUPAL_CORE_COMPATIBILITY, '%archive_file' => basename($archive_file), '%names' => implode(', ', $incompatible))
+      array('!version' => DRUPAL_CORE_COMPATIBILITY, '%archive_file' => drupal_basename($archive_file), '%names' => implode(', ', $incompatible))
     );
   }
 
