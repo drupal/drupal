@@ -308,6 +308,7 @@ class AggregatorConfigurationTestCase extends AggregatorTestCase {
       'aggregator_teaser_length' => 200,
     );
     $this->drupalPost('admin/config/services/aggregator/settings', $edit, t('Save configuration'));
+    $this->assertText(t('The configuration options have been saved.'));
 
     foreach ($edit as $name => $value) {
       $this->assertFieldByName($name, $value, t('"@name" has correct default value.', array('@name' => $name)));
