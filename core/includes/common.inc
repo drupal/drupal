@@ -7444,6 +7444,8 @@ function drupal_flush_all_caches() {
   system_rebuild_theme_data();
   drupal_theme_rebuild();
 
+  entity_info_cache_clear();
+
   // @todo D8: Split cache flushing from rebuilding.
   // @see http://drupal.org/node/996236
   if (module_exists('node')) {
