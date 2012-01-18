@@ -8,12 +8,12 @@
 /**
  * Tests for URL generation functions.
  */
-class DrupalAlterTestCase extends DrupalWebTestCase {
+class CommonDrupalAlterTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => 'drupal_alter() tests',
-      'description' => 'Confirm that alteration of arguments passed to drupal_alter() works correctly.',
-      'group' => 'System',
+      'name' => 'Alter hook functionality',
+      'description' => 'Tests alteration of arguments passed to drupal_alter().',
+      'group' => 'Common',
     );
   }
 
@@ -73,12 +73,12 @@ class DrupalAlterTestCase extends DrupalWebTestCase {
  * url() calls module_implements(), which may issue a db query, which requires
  * inheriting from a web test case rather than a unit test case.
  */
-class CommonURLUnitTest extends DrupalWebTestCase {
+class CommonURLUnitTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'URL generation tests',
       'description' => 'Confirm that url(), drupal_get_query_parameters(), drupal_http_build_query(), and l() work correctly with various input.',
-      'group' => 'System',
+      'group' => 'Common',
     );
   }
 
@@ -355,13 +355,13 @@ class CommonURLUnitTest extends DrupalWebTestCase {
 /**
  * Tests for the check_plain(), filter_xss() and format_string() functions.
  */
-class CommonXssUnitTest extends DrupalUnitTestCase {
+class CommonXssUnitTestCase extends DrupalUnitTestCase {
 
   public static function getInfo() {
     return array(
       'name' => 'String filtering tests',
       'description' => 'Confirm that check_plain(), filter_xss(), format_string() and check_url() work correctly, including invalid multi-byte sequences.',
-      'group' => 'System',
+      'group' => 'Common',
     );
   }
 
@@ -424,7 +424,7 @@ class CommonXssUnitTest extends DrupalUnitTestCase {
   }
 }
 
-class CommonSizeTestCase extends DrupalUnitTestCase {
+class CommonSizeUnitTestCase extends DrupalUnitTestCase {
   protected $exact_test_cases;
   protected $rounded_test_cases;
 
@@ -432,7 +432,7 @@ class CommonSizeTestCase extends DrupalUnitTestCase {
     return array(
       'name' => 'Size parsing test',
       'description' => 'Parse a predefined amount of bytes and compare the output with the expected value.',
-      'group' => 'System'
+      'group' => 'Common',
     );
   }
 
@@ -524,7 +524,7 @@ class CommonSizeTestCase extends DrupalUnitTestCase {
 /**
  * Test drupal_explode_tags() and drupal_implode_tags().
  */
-class DrupalTagsHandlingTestCase extends DrupalWebTestCase {
+class CommonAutocompleteTagsTestCase extends DrupalWebTestCase {
   var $validTags = array(
     'Drupal' => 'Drupal',
     'Drupal with some spaces' => 'Drupal with some spaces',
@@ -534,9 +534,9 @@ class DrupalTagsHandlingTestCase extends DrupalWebTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => 'Drupal tags handling',
-      'description' => "Performs tests on Drupal's handling of tags, both explosion and implosion tactics used.",
-      'group' => 'System'
+      'name' => 'Autocomplete tags',
+      'description' => 'Tests explosion and implosion of autocomplete tags.',
+      'group' => 'Common',
     );
   }
 
@@ -581,12 +581,12 @@ class DrupalTagsHandlingTestCase extends DrupalWebTestCase {
 /**
  * Test the Drupal CSS system.
  */
-class CascadingStylesheetsTestCase extends DrupalWebTestCase {
+class CommonCascadingStylesheetsTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Cascading stylesheets',
       'description' => 'Tests adding various cascading stylesheets to the page.',
-      'group' => 'System',
+      'group' => 'Common',
     );
   }
 
@@ -811,12 +811,12 @@ class CascadingStylesheetsTestCase extends DrupalWebTestCase {
 /**
  * Test for cleaning HTML identifiers.
  */
-class DrupalHTMLIdentifierTestCase extends DrupalUnitTestCase {
+class CommonHTMLIdentifierTestCase extends DrupalUnitTestCase {
   public static function getInfo() {
     return array(
       'name' => 'HTML identifiers',
       'description' => 'Test the functions drupal_html_class(), drupal_html_id() and drupal_clean_css_identifier() for expected behavior',
-      'group' => 'System',
+      'group' => 'Common',
     );
   }
 
@@ -871,12 +871,12 @@ class DrupalHTMLIdentifierTestCase extends DrupalUnitTestCase {
 /**
  * CSS Unit Tests.
  */
-class CascadingStylesheetsUnitTest extends DrupalUnitTestCase {
+class CommonCascadingStylesheetsUnitTestCase extends DrupalUnitTestCase {
   public static function getInfo() {
     return array(
       'name' => 'CSS Unit Tests',
       'description' => 'Unit tests on CSS functions like aggregation.',
-      'group' => 'System',
+      'group' => 'Common',
     );
   }
 
@@ -923,12 +923,12 @@ class CascadingStylesheetsUnitTest extends DrupalUnitTestCase {
 /**
  * Test drupal_http_request().
  */
-class DrupalHTTPRequestTestCase extends DrupalWebTestCase {
+class CommonDrupalHTTPRequestTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Drupal HTTP request',
       'description' => "Performs tests on Drupal's HTTP request mechanism.",
-      'group' => 'System'
+      'group' => 'Common',
     );
   }
 
@@ -1033,17 +1033,16 @@ class DrupalHTTPRequestTestCase extends DrupalWebTestCase {
 }
 
 /**
- * Testing drupal_add_region_content and drupal_get_region_content.
+ * Tests drupal_add_region_content() and drupal_get_region_content().
  */
-class DrupalSetContentTestCase extends DrupalWebTestCase {
+class CommonRegionContentTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => 'Drupal set/get regions',
-      'description' => 'Performs tests on setting and retrieiving content from theme regions.',
-      'group' => 'System'
+      'name' => 'Region content',
+      'description' => 'Tests setting and retrieving content from theme regions.',
+      'group' => 'Common',
     );
   }
-
 
   /**
    * Test setting and retrieving content for theme regions.
@@ -1079,14 +1078,14 @@ class DrupalSetContentTestCase extends DrupalWebTestCase {
 }
 
 /**
- * Testing drupal_goto and hook_drupal_goto_alter().
+ * Tests drupal_goto() and hook_drupal_goto_alter().
  */
-class DrupalGotoTest extends DrupalWebTestCase {
+class CommonDrupalGotoTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => 'Drupal goto',
-      'description' => 'Performs tests on the drupal_goto function and hook_drupal_goto_alter',
-      'group' => 'System'
+      'name' => 'Redirect functionality',
+      'description' => 'Tests the drupal_goto() and hook_drupal_goto_alter() functionality.',
+      'group' => 'Common',
     );
   }
 
@@ -1150,7 +1149,7 @@ class DrupalGotoTest extends DrupalWebTestCase {
 /**
  * Tests for the JavaScript system.
  */
-class JavaScriptTestCase extends DrupalWebTestCase {
+class CommonJavaScriptTestCase extends DrupalWebTestCase {
   /**
    * Store configured value for JavaScript preprocessing.
    */
@@ -1160,7 +1159,7 @@ class JavaScriptTestCase extends DrupalWebTestCase {
     return array(
       'name' => 'JavaScript',
       'description' => 'Tests the JavaScript system.',
-      'group' => 'System'
+      'group' => 'Common',
     );
   }
 
@@ -1558,12 +1557,12 @@ class JavaScriptTestCase extends DrupalWebTestCase {
 /**
  * Tests for drupal_render().
  */
-class DrupalRenderTestCase extends DrupalWebTestCase {
+class CommonDrupalRenderTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'drupal_render()',
       'description' => 'Performs functional tests on drupal_render().',
-      'group' => 'System',
+      'group' => 'Common',
     );
   }
 
@@ -1835,14 +1834,14 @@ class DrupalRenderTestCase extends DrupalWebTestCase {
 }
 
 /**
- * Test for valid_url().
+ * Tests URL validation by valid_url().
  */
-class ValidUrlTestCase extends DrupalUnitTestCase {
+class CommonValidUrlUnitTestCase extends DrupalUnitTestCase {
   public static function getInfo() {
     return array(
-      'name' => 'Valid Url',
-      'description' => "Performs tests on Drupal's valid url function.",
-      'group' => 'System'
+      'name' => 'URL validation',
+      'description' => 'Tests URL validation by valid_url()',
+      'group' => 'Common',
     );
   }
 
@@ -1943,14 +1942,14 @@ class ValidUrlTestCase extends DrupalUnitTestCase {
 }
 
 /**
- * Tests for CRUD API functions.
+ * Tests writing of data records with drupal_write_record().
  */
-class DrupalDataApiTest extends DrupalWebTestCase {
+class CommonDrupalWriteRecordTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => 'Data API functions',
-      'description' => 'Tests the performance of CRUD APIs.',
-      'group' => 'System',
+      'name' => 'Data record write functionality',
+      'description' => 'Tests writing of data records with drupal_write_record().',
+      'group' => 'Common',
     );
   }
 
@@ -2079,9 +2078,9 @@ class DrupalDataApiTest extends DrupalWebTestCase {
 }
 
 /**
- * Tests Simpletest error and exception collector.
+ * Tests SimpleTest error and exception collector.
  */
-class DrupalErrorCollectionUnitTest extends DrupalWebTestCase {
+class CommonSimpleTestErrorCollectorTestCase extends DrupalWebTestCase {
 
   /**
    * Errors triggered during the test.
@@ -2097,7 +2096,7 @@ class DrupalErrorCollectionUnitTest extends DrupalWebTestCase {
     return array(
       'name' => 'SimpleTest error collector',
       'description' => 'Performs tests on the Simpletest error and exception collector.',
-      'group' => 'SimpleTest',
+      'group' => 'Common',
     );
   }
 
@@ -2170,14 +2169,14 @@ class DrupalErrorCollectionUnitTest extends DrupalWebTestCase {
 }
 
 /**
- * Test the drupal_parse_info_file() API function.
+ * Tests the drupal_parse_info_file() API function.
  */
-class ParseInfoFilesTestCase extends DrupalWebTestCase {
+class CommonDrupalParseInfoFileTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Parsing .info files',
-      'description' => 'Tests parsing .info files.',
-      'group' => 'System',
+      'description' => 'Tests the drupal_parse_info_file() API function.',
+      'group' => 'Common',
     );
   }
 
@@ -2193,9 +2192,9 @@ class ParseInfoFilesTestCase extends DrupalWebTestCase {
 }
 
 /**
- * Tests for the drupal_system_listing() function.
+ * Tests scanning system directories in drupal_system_listing().
  */
-class DrupalSystemListingTestCase extends DrupalWebTestCase {
+class CommonDrupalSystemListingTestCase extends DrupalWebTestCase {
   /**
    * Use the testing profile; this is needed for testDirectoryPrecedence().
    */
@@ -2204,8 +2203,8 @@ class DrupalSystemListingTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Drupal system listing',
-      'description' => 'Tests the mechanism for scanning system directories in drupal_system_listing().',
-      'group' => 'System',
+      'description' => 'Tests scanning system directories in drupal_system_listing().',
+      'group' => 'Common',
     );
   }
 
@@ -2253,9 +2252,9 @@ class DrupalSystemListingTestCase extends DrupalWebTestCase {
 }
 
 /**
- * Tests for the format_date() function.
+ * Tests the format_date() function.
  */
-class FormatDateUnitTest extends DrupalWebTestCase {
+class CommonFormatDateTestCase extends DrupalWebTestCase {
 
   /**
    * Arbitrary langcode for a custom language.
@@ -2266,7 +2265,7 @@ class FormatDateUnitTest extends DrupalWebTestCase {
     return array(
       'name' => 'Format date',
       'description' => 'Test the format_date() function.',
-      'group' => 'System',
+      'group' => 'Common',
     );
   }
 
@@ -2372,14 +2371,14 @@ class FormatDateUnitTest extends DrupalWebTestCase {
 }
 
 /**
- * Tests for the format_date() function.
+ * Tests the drupal_attributes() functionality.
  */
-class DrupalAttributesUnitTest extends DrupalUnitTestCase {
+class CommonDrupalAttributesUnitTestCase extends DrupalUnitTestCase {
   public static function getInfo() {
     return array(
       'name' => 'HTML Attributes',
-      'description' => 'Perform unit tests on the drupal_attributes() function.',
-      'group' => 'System',
+      'description' => 'Tests the drupal_attributes() functionality.',
+      'group' => 'Common',
     );
   }
 
@@ -2524,14 +2523,14 @@ class CommonDrupalArrayUnitTest extends DrupalUnitTestCase {
 }
 
 /**
- * Tests converting PHP variables to JSON strings and back.
+ * Tests the drupal_json_encode() and drupal_json_decode() functions.
  */
-class DrupalJSONTest extends DrupalUnitTestCase {
+class CommonJSONUnitTestCase extends DrupalUnitTestCase {
   public static function getInfo() {
     return array(
       'name' => 'JSON',
-      'description' => 'Perform unit tests on the drupal_json_encode() and drupal_json_decode() functions.',
-      'group' => 'System',
+      'description' => 'Tests the drupal_json_encode() and drupal_json_decode() functions to convert PHP variables to JSON strings and back.',
+      'group' => 'Common',
     );
   }
 
@@ -2590,12 +2589,12 @@ class DrupalJSONTest extends DrupalUnitTestCase {
 /**
  * Basic tests for drupal_add_feed().
  */
-class DrupalAddFeedTestCase extends DrupalWebTestCase {
+class CommonDrupalAddFeedTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'drupal_add_feed() tests',
       'description' => 'Make sure that drupal_add_feed() works correctly with various constructs.',
-      'group' => 'System',
+      'group' => 'Common',
     );
   }
 
