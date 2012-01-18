@@ -133,7 +133,6 @@ Accessibility
 - Brandon Bowersox 'brandonojc' <http://drupal.org/user/186415> 
 
 Documentation
-- Ariane Khachatourians 'arianek' <http://drupal.org/user/158886>
 - Jennifer Hodgdon 'jhodgdon' <http://drupal.org/user/155601>
 
 Security
