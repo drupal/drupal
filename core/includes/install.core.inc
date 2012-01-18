@@ -1159,10 +1159,21 @@ function install_find_translations() {
 
 /**
  * Find installer translations either for a specific langcode or all languages.
+ *
+ * @param $langcode
+ *   (optional) The language code corresponding to the language for which we
+ *   want to find translation files. If omitted, information on all available
+ *   files will be returned.
+ *
+ * @return
+ *   An associative array of file information objects keyed by file URIs as
+ *   returned by file_scan_directory().
+ *
+ * @see file_scan_directory()
  */
 function install_find_translation_files($langcode = NULL) {
   $directory = variable_get('locale_translate_file_directory', conf_path() . '/files/translations');
-  $files = file_scan_directory($directory, '!install\.' . (!empty($langcode) ? '\.' . preg_quote($langcode, '!') : '[^\.]+') . '\.po$!', array('recurse' => FALSE));
+  $files = file_scan_directory($directory, '!install\.' . (!empty($langcode) ? preg_quote($langcode, '!') : '[^\.]+') . '\.po$!', array('recurse' => FALSE));
   return $files;
 }
 
