@@ -5766,8 +5766,11 @@ function drupal_render(&$elements) {
   }
 
   // Try to fetch the element's markup from cache and return.
-  if (isset($elements['#cache']) && $cached_output = drupal_render_cache_get($elements)) {
-    return $cached_output;
+  if (isset($elements['#cache'])) {
+    $cached_output = drupal_render_cache_get($elements);
+    if ($cached_output !== FALSE) {
+      return $cached_output;
+    }
   }
 
   // If #markup is set, ensure #type is set. This allows to specify just #markup

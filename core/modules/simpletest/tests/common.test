@@ -1831,6 +1831,37 @@ class CommonDrupalRenderTestCase extends DrupalWebTestCase {
       '@type' => var_export($element['#type'], TRUE),
     )));
   }
+
+  /**
+   * Tests caching of an empty render item.
+   */
+  function testDrupalRenderCache() {
+    // Force a request via GET.
+    $request_method = $_SERVER['REQUEST_METHOD'];
+    $_SERVER['REQUEST_METHOD'] = 'GET';
+    // Create an empty element.
+    $test_element = array(
+      '#cache' => array(
+        'cid' => 'render_cache_test',
+      ),
+      '#markup' => '',
+    );
+
+    // Render the element and confirm that it goes through the rendering
+    // process (which will set $element['#printed']).
+    $element = $test_element;
+    drupal_render($element);
+    $this->assertTrue(isset($element['#printed']), t('No cache hit'));
+
+    // Render the element again and confirm that it is retrieved from the cache
+    // instead (so $element['#printed'] will not be set).
+    $element = $test_element;
+    drupal_render($element);
+    $this->assertFalse(isset($element['#printed']), t('Cache hit'));
+
+    // Restore the previous request method.
+    $_SERVER['REQUEST_METHOD'] = $request_method;
+  }
 }
 
 /**
